@@ -28,13 +28,18 @@ const ErrorWrapper = styled.div`
   color: #da4433;
 `
 
-export default class ErrorBoundary extends Component {
+type State = any
+
+export default class ErrorBoundary extends Component<
+  { caption?: string },
+  State
+> {
   state = {
     errorInfo: null,
     error: null
   }
 
-  componentDidCatch(error, errorInfo) {
+  componentDidCatch(error: any, errorInfo: any) {
     this.setState({ errorInfo, error })
   }
 
@@ -43,8 +48,9 @@ export default class ErrorBoundary extends Component {
       return (
         <ErrorWrapper>
           <p>
-            Something went wrong: <em>"{this.state.error.toString()}"</em> and
-            the application can't recover.
+            Something went wrong:{' '}
+            <em>"{(this.state.error || '').toString()}"</em> and the application
+            can't recover.
           </p>
           <div style={{ marginTop: '5px' }}>
             <StyledErrorBoundaryButton onClick={() => window.location.reload()}>

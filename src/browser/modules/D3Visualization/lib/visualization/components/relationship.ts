@@ -19,9 +19,15 @@
  */
 
 export default class Relationship {
+  id: any
+  propertyList: any
+  propertyMap: any
+  source: any
+  target: any
+  type: any
   isNode = false
   isRelationship = true
-  constructor(id, source, target, type, properties) {
+  constructor(id: any, source: any, target: any, type: any, properties: any) {
     this.id = id
     this.source = source
     this.target = target

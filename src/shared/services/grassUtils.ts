@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-export function parseGrass(string) {
+export function parseGrass(string: any) {
   let result
   try {
     result = JSON.parse(string)
@@ -27,14 +27,14 @@ export function parseGrass(string) {
   return result
 }
 
-function parseGrassCSS(string) {
+function parseGrassCSS(string: any) {
   const chars = string.split('')
   let insideString = false
   let insideProps = false
   let insideBinding = false
   let keyword = ''
   let props = ''
-  const rules = {}
+  const rules: any = {}
   let i, j
 
   for (i = 0; i < chars.length; i++) {
@@ -100,7 +100,7 @@ function parseGrassCSS(string) {
   return rules
 }
 
-export const objToCss = obj => {
+export const objToCss = (obj?: any) => {
   if (typeof obj !== 'object') {
     return false
   }
@@ -128,13 +128,14 @@ export const objToCss = obj => {
   return output
 }
 
-const shouldQuoteStyle = style => ['defaultCaption', 'caption'].includes(style)
-const quoteSpecialStyles = (style, value) =>
+const shouldQuoteStyle = (style: any) =>
+  ['defaultCaption', 'caption'].includes(style)
+const quoteSpecialStyles = (style: any, value: any) =>
   (shouldQuoteStyle(style) ? '"' : '') +
   value +
   (shouldQuoteStyle(style) ? '"' : '')
 
-export const selectorStringToArray = selector => {
+export const selectorStringToArray = (selector: any) => {
   // Negative lookbehind simulation since js support is very limited.
   // We want to match all . that are not preceded by \\
   // Instead we reverse and look
@@ -160,7 +161,7 @@ export const selectorStringToArray = selector => {
     .map(r => r.replace(/\\./g, '.'))
 }
 
-export const selectorArrayToString = selectors => {
-  const escaped = selectors.map(r => r.replace(/\./g, '\\.'))
+export const selectorArrayToString = (selectors: any) => {
+  const escaped = selectors.map((r: any) => r.replace(/\./g, '\\.'))
   return escaped.join('.')
 }

@@ -25,20 +25,20 @@ test('focuses correctly and submits on enter in last input', async () => {
   const { container, getByDisplayValue } = render(
     <InputEnterStepping
       submitAction={myFn}
-      render={({ getInputPropsForIndex, setRefForIndex }) => {
+      render={({ getInputPropsForIndex, setRefForIndex }: any) => {
         return (
           <>
             <input
               {...getInputPropsForIndex(0, {
                 initialFocus: true,
                 defaultValue: 'first',
-                ref: ref => setRefForIndex(0, ref)
+                ref: (ref: any) => setRefForIndex(0, ref)
               })}
             />
             <input
               {...getInputPropsForIndex(1, {
                 defaultValue: 'second',
-                ref: ref => setRefForIndex(1, ref)
+                ref: (ref: any) => setRefForIndex(1, ref)
               })}
             />
           </>
@@ -87,19 +87,23 @@ test('submits on button click', async () => {
   const { container, getByText } = render(
     <InputEnterStepping
       submitAction={myFn}
-      render={({ getInputPropsForIndex, getSubmitProps, setRefForIndex }) => {
+      render={({
+        getInputPropsForIndex,
+        getSubmitProps,
+        setRefForIndex
+      }: any) => {
         return (
           <>
             <input
               {...getInputPropsForIndex(0, {
                 defaultValue: 'first',
-                ref: ref => setRefForIndex(0, ref)
+                ref: (ref: any) => setRefForIndex(0, ref)
               })}
             />
             <input
               {...getInputPropsForIndex(1, {
                 defaultValue: 'second',
-                ref: ref => setRefForIndex(1, ref)
+                ref: (ref: any) => setRefForIndex(1, ref)
               })}
             />
             <button {...getSubmitProps()}>Send</button>

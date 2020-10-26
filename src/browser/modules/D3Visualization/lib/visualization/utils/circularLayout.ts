@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default function circularLayout(nodes, center, radius) {
+export default function circularLayout(nodes: any[], center: any, radius: any) {
   const unlocatedNodes = []
   for (const node of Array.from(nodes)) {
     if (!(node.x != null && node.y != null)) {

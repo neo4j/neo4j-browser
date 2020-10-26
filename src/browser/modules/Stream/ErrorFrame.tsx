@@ -33,12 +33,16 @@ import {
 } from './styled'
 import AutoExecButton from './auto-exec-button'
 
-export const ErrorView = ({ frame }) => {
+export const ErrorView = ({ frame }: any) => {
   if (!frame) return null
   const error = frame.error || false
   let errorContents = error.message || 'No error message found'
-  const errorCode = error.type || error.code || 'UndefinedError'
-  if (!error.message && errorCode && typeof e[errorCode] !== 'undefined') {
+  const errorCode: string = error.type || error.code || 'UndefinedError'
+  if (
+    !error.message &&
+    errorCode &&
+    typeof (e as any)[errorCode] !== 'undefined'
+  ) {
     const eObj = createErrorObject(errorCode, error)
     errorContents = eObj.message
   }
@@ -69,7 +73,7 @@ export const ErrorView = ({ frame }) => {
   )
 }
 
-const ErrorFrame = ({ frame }) => {
+const ErrorFrame = ({ frame }: any) => {
   return <FrameTemplate header={frame} contents={<ErrorView frame={frame} />} />
 }
 export default ErrorFrame

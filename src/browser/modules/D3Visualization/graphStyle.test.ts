@@ -23,7 +23,7 @@ import Grass from './graphStyle'
 describe('grass', () => {
   it('can generate a default style', () => {
     // Given
-    const grass = new Grass()
+    const grass = Grass()
 
     // When
     const styleStr = grass.toString()
@@ -54,7 +54,7 @@ relationship {
   })
   it('can generate a style for a node with a simple label', () => {
     // Given
-    const grass = new Grass()
+    const grass = Grass()
     const node = {
       labels: ['foo']
     }
@@ -94,7 +94,7 @@ node.foo {
   })
   it('can generate a style for a node with a label with a dot', () => {
     // Given
-    const grass = new Grass()
+    const grass = Grass()
     const node = {
       labels: ['foo.bar']
     }
@@ -134,7 +134,7 @@ node.foo\\.bar {
   })
   it('can generate a style for a relationship with a type with a dot', () => {
     // Given
-    const grass = new Grass()
+    const grass = Grass()
 
     // When
     grass.loadRules()

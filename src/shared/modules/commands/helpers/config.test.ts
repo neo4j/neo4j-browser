@@ -23,8 +23,10 @@ import * as config from './config'
 import { update, replace } from 'shared/modules/settings/settingsDuck'
 import dbMetaReducer, { updateSettings } from 'shared/modules/dbMeta/dbMetaDuck'
 
-function FetchError(message) {
+function FetchError(message: any) {
+  // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
   this.name = 'FetchError'
+  // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
   this.message = message
 }
 FetchError.prototype = Object.create(Error.prototype)
@@ -155,7 +157,7 @@ describe('commandsDuck config helper', () => {
     const updatedStore = {
       getState: () => ({
         meta: dbMetaReducer(
-          store.getState(),
+          store.getState() as any,
           updateSettings({
             'browser.remote_content_hostname_whitelist': 'replaceUrl.com'
           })
@@ -206,6 +208,7 @@ describe('commandsDuck config helper', () => {
     return expect(p)
       .rejects.toEqual(
         new Error(
+          // @ts-expect-error ts-migrate(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
           new FetchError(
             'invalid json response body at https://okurl.com/cnf.json reason: Unexpected token o in JSON at position 1'
           )

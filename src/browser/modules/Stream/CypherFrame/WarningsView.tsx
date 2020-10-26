@@ -32,7 +32,7 @@ import {
   StyledHelpFrame
 } from '../styled'
 
-const getWarningComponent = severity => {
+const getWarningComponent = (severity: any) => {
   if (severity === 'ERROR') {
     return <StyledCypherErrorMessage>{severity}</StyledCypherErrorMessage>
   } else if (severity === 'WARNING') {
@@ -42,8 +42,8 @@ const getWarningComponent = severity => {
   }
 }
 
-export class WarningsView extends Component {
-  shouldComponentUpdate(props, state) {
+export class WarningsView extends Component<any> {
+  shouldComponentUpdate(props: any) {
     if (!this.props.result) return true
     return !deepEquals(props.result.summary, this.props.result.summary)
   }
@@ -57,7 +57,7 @@ export class WarningsView extends Component {
       return null
     }
     const cypherLines = cypher.split('\n')
-    const notificationsList = notifications.map(notification => {
+    const notificationsList = notifications.map((notification: any) => {
       // Detect generic warning without position information
       const position = Object.keys(notification.position).length
         ? notification.position
@@ -90,7 +90,7 @@ export class WarningsView extends Component {
 }
 
 export class WarningsStatusbar extends Component {
-  shouldComponentUpdate(props, state) {
+  shouldComponentUpdate() {
     return false
   }
 

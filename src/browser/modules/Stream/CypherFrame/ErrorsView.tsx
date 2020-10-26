@@ -53,8 +53,8 @@ import {
   ErrorText
 } from '../styled'
 
-export class ErrorsView extends Component {
-  shouldComponentUpdate(props, state) {
+export class ErrorsView extends Component<any> {
+  shouldComponentUpdate(props: any) {
     return !deepEquals(props.result, this.props.result)
   }
 
@@ -110,15 +110,15 @@ export class ErrorsView extends Component {
   }
 }
 
-const onItemClick = (bus, statement) => {
+const onItemClick = (bus: any, statement: any) => {
   const action = executeCommand(statement, { source: commandSources.button })
   bus.send(action.type, action)
 }
 
 export const ErrorsViewBus = withBus(ErrorsView)
 
-export class ErrorsStatusbar extends Component {
-  shouldComponentUpdate(props, state) {
+export class ErrorsStatusbar extends Component<any> {
+  shouldComponentUpdate(props: any) {
     return !deepEquals(props.result, this.props.result)
   }
 

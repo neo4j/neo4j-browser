@@ -44,7 +44,7 @@ describe('experimentalFeatures reducer', () => {
   test('handles FEATURE_ON with initial state', () => {
     const action = enableExperimentalFeature(experimentalFeatureSelfName)
     const nextState = reducer(
-      { [experimentalFeatureSelfName]: { on: false } },
+      { [experimentalFeatureSelfName]: { on: false } as any },
       action
     )
     expect(nextState[experimentalFeatureSelfName].on).toEqual(true)
@@ -52,7 +52,7 @@ describe('experimentalFeatures reducer', () => {
   test('handles FEATURE_OFF with initial state', () => {
     const action = disableExperimentalFeature(experimentalFeatureSelfName)
     const nextState = reducer(
-      { [experimentalFeatureSelfName]: { on: true } },
+      { [experimentalFeatureSelfName]: { on: true } as any },
       action
     )
     expect(nextState[experimentalFeatureSelfName].on).toEqual(false)
@@ -62,7 +62,7 @@ describe('experimentalFeatures reducer', () => {
     const action = {
       type: APP_START
     }
-    const stateFromLocalStorage = {
+    const stateFromLocalStorage: any = {
       nonExistingFeature: {
         on: true
       },

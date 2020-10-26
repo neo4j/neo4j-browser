@@ -21,12 +21,12 @@
 import React, { useContext } from 'react'
 import { H3 } from 'browser-components/headers'
 import { Lead } from 'browser-components/Text'
-import { DARK_THEME, LIGHT_THEME } from 'shared/modules/settings/settingsDuck'
+import { DARK_THEME } from 'shared/modules/settings/settingsDuck'
 import { ThemeContext } from 'styled-components'
 
-function FrameAside(props) {
+function FrameAside(props: any) {
   const theme = useContext(ThemeContext)
-  const { subtitle, selectedTheme } = props
+  const { subtitle } = props
   let { title } = props
 
   // Use logo as title if title is only Neo4j

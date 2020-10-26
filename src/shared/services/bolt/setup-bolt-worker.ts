@@ -27,16 +27,16 @@ import {
 } from './boltWorkerMessages'
 
 export const setupBoltWorker = (
-  boltWorkPool,
-  id,
-  workFn,
-  onLostConnection = () => {}
+  boltWorkPool: any,
+  id: any,
+  workFn: any,
+  onLostConnection: any = () => {}
 ) => {
   const workerPromise = new Promise((resolve, reject) => {
     const work = boltWorkPool.doWork({
       id,
       payload: workFn,
-      onmessage: msg => {
+      onmessage: (msg: any) => {
         if (msg.data.type === BOLT_CONNECTION_ERROR_MESSAGE) {
           work.finish()
           onLostConnection(msg.data.error)
@@ -57,8 +57,8 @@ export const setupBoltWorker = (
   return workerPromise
 }
 
-export const addTypesAsField = result => {
-  const records = result.records.map(record => {
+export const addTypesAsField = (result: any) => {
+  const records = result.records.map((record: any) => {
     const typedRecord = new types.Record(
       record.keys,
       record._fields,

@@ -21,7 +21,7 @@ import React from 'react'
 import styles from './style.less'
 import { StyledSlide } from './styled'
 
-const Slide = React.forwardRef(({ children, content, html }, ref) => {
+const Slide = React.forwardRef<any, any>(({ children, content, html }, ref) => {
   if (children) {
     return (
       <StyledSlide ref={ref} className={styles.slide}>

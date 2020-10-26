@@ -19,15 +19,16 @@
  */
 
 export default class AngleList {
-  constructor(list) {
+  list: any
+  constructor(list: any) {
     this.list = list
   }
 
-  getAngle(index) {
+  getAngle(index: any) {
     return this.list[index].angle
   }
 
-  fixed(index) {
+  fixed(index: any) {
     return this.list[index].fixed
   }
 
@@ -35,7 +36,7 @@ export default class AngleList {
     return this.list.length
   }
 
-  length(run) {
+  length(run: any) {
     if (run.start < run.end) {
       return run.end - run.start
     } else {
@@ -43,7 +44,7 @@ export default class AngleList {
     }
   }
 
-  angle(run) {
+  angle(run: any) {
     if (run.start < run.end) {
       return this.list[run.end].angle - this.list[run.start].angle
     } else {
@@ -51,7 +52,7 @@ export default class AngleList {
     }
   }
 
-  wrapIndex(index) {
+  wrapIndex(index: any) {
     if (index === -1) {
       return this.list.length - 1
     } else if (index >= this.list.length) {

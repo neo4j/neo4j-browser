@@ -36,9 +36,13 @@ const Closed = 'CLOSED'
 const Open = 'OPEN'
 const Opening = 'OPENING'
 
-class Navigation extends Component {
-  state = {}
-  constructor(props) {
+type State = any
+
+class Navigation extends Component<any, State> {
+  _onTransitionEnd: any
+  transitionState: any
+  state: any = {}
+  constructor(props: {}) {
     super(props)
     this._onTransitionEnd = this.onTransitionEnd.bind(this)
   }
@@ -49,9 +53,9 @@ class Navigation extends Component {
     })
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps: any, prevState: State) {
     if (prevProps.openDrawer !== this.props.openDrawer) {
-      const newState = {}
+      const newState: any = {}
       if (this.props.openDrawer) {
         newState.drawerContent = this.props.openDrawer
         if (
@@ -90,8 +94,8 @@ class Navigation extends Component {
   render() {
     const { onNavClick, topNavItems, bottomNavItems = [] } = this.props
 
-    const buildNavList = (list, selected) =>
-      list.map(item => {
+    const buildNavList = (list: any, selected: any) =>
+      list.map((item: any) => {
         const isOpen = item.name.toLowerCase() === selected
         return (
           <NavigationButtonContainer
@@ -108,11 +112,11 @@ class Navigation extends Component {
         )
       })
 
-    const getContentToShow = openDrawer => {
+    const getContentToShow = (openDrawer: any) => {
       if (openDrawer) {
         const filteredList = topNavItems
           .concat(bottomNavItems)
-          .filter(item => item.name.toLowerCase() === openDrawer)
+          .filter((item: any) => item.name.toLowerCase() === openDrawer)
         const TabContent = filteredList[0].content
         return <TabContent />
       }
@@ -135,7 +139,7 @@ class Navigation extends Component {
             this.state.transitionState === Open ||
             this.state.transitionState === Opening
           }
-          ref={ref => {
+          ref={(ref: any) => {
             if (ref) {
               // Remove old listeners so we don't get multiple callbacks.
               // This function is called more than once with same html element

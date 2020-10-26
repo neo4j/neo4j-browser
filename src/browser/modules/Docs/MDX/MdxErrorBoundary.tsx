@@ -20,12 +20,14 @@
 
 import React from 'react'
 
-export class MdxErrorBoundary extends React.Component {
+type State = any
+
+export class MdxErrorBoundary extends React.Component<{}, State> {
   state = {
     error: null
   }
 
-  componentDidCatch(error) {
+  componentDidCatch(error: any) {
     this.setState({ error })
   }
 
@@ -35,7 +37,7 @@ export class MdxErrorBoundary extends React.Component {
         <>
           Error parsing MDX slide:
           <pre className="code">
-            <code>{this.state.error.toString()}</code>
+            <code>{(this.state.error as any).toString()}</code>
           </pre>
         </>
       )

@@ -20,7 +20,10 @@
 import AngleListClass from './angleList'
 import AdjacentAngles from './adjacentAngles'
 
-export default function distributeCircular(arrowAngles, minSeparation) {
+export default function distributeCircular(
+  arrowAngles: any,
+  minSeparation: any
+) {
   let angle
   const list = []
   for (var key in arrowAngles.floating) {
@@ -48,7 +51,7 @@ export default function distributeCircular(arrowAngles, minSeparation) {
     minSeparation
   )
 
-  const wrapAngle = function(angle) {
+  const wrapAngle = function(angle: any) {
     if (angle >= 360) {
       return angle - 360
     } else if (angle < 0) {
@@ -58,9 +61,9 @@ export default function distributeCircular(arrowAngles, minSeparation) {
     }
   }
 
-  const result = {}
+  const result: any = {}
 
-  const splitByFixedArrows = function(run) {
+  const splitByFixedArrows = function(run: any) {
     let asc, i
     let end
     const runs = []

@@ -23,7 +23,7 @@ import reducer, { NAME, APP_START, getHostedUrl } from './appDuck'
 test('reducer stores hostedUrl', () => {
   // Given
   const url = 'xxx'
-  const initState = {}
+  const initState: any = {}
   const action = { type: APP_START, url }
 
   // When
@@ -36,7 +36,7 @@ test('reducer stores hostedUrl', () => {
 test('selector getHostedUrl returns whats in the store', () => {
   // Given
   const url = 'xxx'
-  const initState = {}
+  const initState: any = {}
   const action = { type: APP_START, url }
 
   // Then

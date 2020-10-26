@@ -25,9 +25,9 @@ export const ADD = 'history/ADD'
 export const CLEAR = 'history/CLEAR'
 
 // Selectors
-export const getHistory = state => state[NAME]
+export const getHistory = (state: any) => state[NAME]
 
-function addHistoryHelper(state, newState, maxHistory) {
+function addHistoryHelper(state: any, newState: any, maxHistory: any) {
   // If it's the same as the last entry, don't add it
   if (state && state.length && state[0] === newState) {
     return state
@@ -38,8 +38,8 @@ function addHistoryHelper(state, newState, maxHistory) {
 }
 
 // Reducer
-const initialState = []
-export default function(state = initialState, action) {
+const initialState: any = []
+export default function(state = initialState, action: any) {
   switch (action.type) {
     case ADD:
       return addHistoryHelper(state, action.state, action.maxHistory)
@@ -53,7 +53,7 @@ export default function(state = initialState, action) {
 }
 
 // Actions
-export const addHistory = (state, maxHistory) => {
+export const addHistory = (state: any, maxHistory: any) => {
   return {
     type: ADD,
     state,

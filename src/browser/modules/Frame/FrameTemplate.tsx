@@ -30,8 +30,11 @@ import {
   StyledFrameAside
 } from './styled'
 
-class FrameTemplate extends Component {
-  constructor(props) {
+type State = any
+
+class FrameTemplate extends Component<any, State> {
+  frameContentElement: any
+  constructor(props: {}) {
     super(props)
     this.state = {
       fullscreen: false,
@@ -96,7 +99,7 @@ class FrameTemplate extends Component {
     }
   }
 
-  setFrameContentElement = el => {
+  setFrameContentElement = (el: any) => {
     this.frameContentElement = el
   }
 

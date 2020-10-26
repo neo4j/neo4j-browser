@@ -39,7 +39,7 @@ import deepmerge from 'deepmerge'
 
 const wrapperStyle = (styles && styles.wrapper) || ''
 
-const ShowMore = ({ total, shown, moreStep, onMore }) => {
+const ShowMore = ({ total, shown, moreStep, onMore }: any) => {
   const numMore = total - shown > moreStep ? moreStep : total - shown
   return (
     <Render if={shown < total}>
@@ -56,14 +56,14 @@ const ShowMore = ({ total, shown, moreStep, onMore }) => {
   )
 }
 
-function createStyleGetter(graphStyleData, kind) {
+function createStyleGetter(graphStyleData: any, kind: string) {
   const graphStyle = neoGraphStyle()
   if (graphStyleData) {
     graphStyle.loadRules(deepmerge(graphStyle.toSheet(), graphStyleData || {}))
   }
 
   if (kind === 'node') {
-    return function(text) {
+    return function(text: string) {
       if (graphStyleData) {
         const styleForItem = graphStyle.forNode({
           labels: [text]
@@ -77,7 +77,7 @@ function createStyleGetter(graphStyleData, kind) {
     }
   }
   if (kind === 'relationship') {
-    return function(text) {
+    return function(text: string) {
       if (graphStyleData) {
         const styleForItem = graphStyle.forRelationship({
           type: text
@@ -92,21 +92,21 @@ function createStyleGetter(graphStyleData, kind) {
   }
   throw new Error(`Unsupported argument: ${kind}`)
 }
-function createNodeStyleGetter(graphStyleData) {
+function createNodeStyleGetter(graphStyleData: any) {
   return createStyleGetter(graphStyleData, 'node')
 }
-function createRelationshipStyleGetter(graphStyleData) {
+function createRelationshipStyleGetter(graphStyleData: any) {
   return createStyleGetter(graphStyleData, 'relationship')
 }
 
 const createItems = (
-  originalList,
-  onItemClick,
-  RenderType,
-  editorCommandTemplate,
+  originalList: any,
+  onItemClick: any,
+  RenderType: any,
+  editorCommandTemplate: any,
   showStar = true,
-  count,
-  styleGetter = () => ({})
+  count?: number,
+  styleGetter: any = () => ({})
 ) => {
   const items = [...originalList]
   if (showStar) {
@@ -140,10 +140,10 @@ const LabelItems = ({
   onMoreClick,
   count,
   graphStyleData
-}) => {
-  let labelItems = <p>There are no labels in database</p>
+}: any) => {
+  let labelItems: any = <p>There are no labels in database</p>
   if (labels.length) {
-    const editorCommandTemplate = (text, i) => {
+    const editorCommandTemplate = (text: any, i: any) => {
       if (i === 0) {
         return 'MATCH (n) RETURN n LIMIT 25'
       }
@@ -182,10 +182,10 @@ const RelationshipItems = ({
   onMoreClick,
   count,
   graphStyleData
-}) => {
-  let relationshipItems = <p>No relationships in database</p>
+}: any) => {
+  let relationshipItems: any = <p>No relationships in database</p>
   if (relationshipTypes.length > 0) {
-    const editorCommandTemplate = (text, i) => {
+    const editorCommandTemplate = (text: any, i: any) => {
       if (i === 0) {
         return 'MATCH p=()-->() RETURN p LIMIT 25'
       }
@@ -224,10 +224,10 @@ const PropertyItems = ({
   onItemClick,
   moreStep,
   onMoreClick
-}) => {
-  let propertyItems = <p>There are no properties in database</p>
+}: any) => {
+  let propertyItems: any = <p>There are no properties in database</p>
   if (properties.length > 0) {
-    const editorCommandTemplate = text => {
+    const editorCommandTemplate = (text: any) => {
       return `MATCH (n) WHERE EXISTS(n.${escapeCypherIdentifier(
         text
       )}) RETURN DISTINCT "node" as entity, n.${escapeCypherIdentifier(

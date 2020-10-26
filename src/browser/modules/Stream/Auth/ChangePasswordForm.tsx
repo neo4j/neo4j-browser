@@ -31,8 +31,10 @@ import Render from 'browser-components/Render'
 import InputEnterStepping from 'browser-components/InputEnterStepping/InputEnterStepping'
 import RevealablePasswordInput from './revealable-password-input'
 
-export default class ChangePasswordForm extends Component {
-  constructor(props) {
+type State = any
+
+export default class ChangePasswordForm extends Component<any, State> {
+  constructor(props: {}) {
     super(props)
     this.state = {
       password: '',
@@ -42,17 +44,17 @@ export default class ChangePasswordForm extends Component {
     }
   }
 
-  onExistingPasswordChange = event => {
+  onExistingPasswordChange = (event: any) => {
     const password = event.target.value
     this.setState({ password }, () => this.props.onChange())
   }
 
-  onNewPasswordChange = event => {
+  onNewPasswordChange = (event: any) => {
     const newPassword = event.target.value
     this.setState({ newPassword }, () => this.props.onChange())
   }
 
-  onNewPasswordChange2 = event => {
+  onNewPasswordChange2 = (event: any) => {
     const newPassword2 = event.target.value
     this.setState({ newPassword2 }, () => this.props.onChange())
   }
@@ -69,7 +71,9 @@ export default class ChangePasswordForm extends Component {
   }
 
   togglePasswordRevealed = () =>
-    this.setState(state => ({ revealNewPassword: !state.revealNewPassword }))
+    this.setState((state: any) => ({
+      revealNewPassword: !state.revealNewPassword
+    }))
 
   validateSame = () => {
     if (
@@ -86,7 +90,7 @@ export default class ChangePasswordForm extends Component {
     }
 
     if (this.props.showExistingPasswordInput && this.props.tryConnect) {
-      this.props.tryConnect(this.state.password, res => {
+      this.props.tryConnect(this.state.password, (res: any) => {
         if (res.success) {
           this.props.onChangePasswordClick({
             newPassword: this.state.newPassword
@@ -118,7 +122,7 @@ export default class ChangePasswordForm extends Component {
             getSubmitProps,
             getInputPropsForIndex,
             setRefForIndex
-          }) => {
+          }: any) => {
             return (
               <>
                 <Render if={this.props.showExistingPasswordInput}>
@@ -132,7 +136,7 @@ export default class ChangePasswordForm extends Component {
                         type: 'password',
                         onChange: this.onExistingPasswordChange,
                         value: this.state.password,
-                        ref: ref => setRefForIndex(0, ref),
+                        ref: (ref: any) => setRefForIndex(0, ref),
                         disabled: isLoading
                       })}
                     />
@@ -147,7 +151,7 @@ export default class ChangePasswordForm extends Component {
                       type: 'password',
                       onChange: this.onNewPasswordChange,
                       value: this.state.newPassword,
-                      setRef: ref => setRefForIndex(indexStart, ref),
+                      setRef: (ref: any) => setRefForIndex(indexStart, ref),
                       disabled: isLoading,
                       isRevealed: this.state.revealNewPassword,
                       toggleReveal: this.togglePasswordRevealed
@@ -168,7 +172,7 @@ export default class ChangePasswordForm extends Component {
                       type: 'password',
                       onChange: this.onNewPasswordChange2,
                       value: this.state.newPassword2,
-                      setRef: ref => setRefForIndex(indexStart + 1, ref),
+                      setRef: (ref: any) => setRefForIndex(indexStart + 1, ref),
                       disabled: isLoading,
                       isRevealed: this.state.revealNewPassword,
                       toggleReveal: this.togglePasswordRevealed

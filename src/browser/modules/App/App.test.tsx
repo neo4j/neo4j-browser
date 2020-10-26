@@ -30,7 +30,7 @@ const mockStore = configureMockStore()
 const store = mockStore({})
 
 jest.mock('../FeatureToggle/FeatureToggleProvider', () => {
-  return ({ children }) => <div>{children}</div>
+  return ({ children }: any) => <div>{children}</div>
 })
 jest.mock('./styled', () => {
   const orig = jest.requireActual('./styled')

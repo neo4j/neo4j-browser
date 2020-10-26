@@ -20,7 +20,7 @@
 import d3 from 'd3'
 import measureText from '../utils/textMeasurement'
 
-function queryPlan(element) {
+function queryPlan(this: any, element: any) {
   const maxChildOperators = 2 // Fact we know about the cypher compiler
   const maxComparableRows = 1000000 // link widths are comparable between plans if all operators are below this row count
   const maxComparableDbHits = 1000000 // db hits are comparable between plans if all operators are below this db hit count
@@ -51,7 +51,7 @@ function queryPlan(element) {
     '#08306b'
   ]
 
-  const operatorCategories = {
+  const operatorCategories: { [key: string]: string[] } = {
     result: ['result'],
     seek: ['scan', 'seek', 'argument'],
     rows: ['limit', 'top', 'skip', 'sort', 'union', 'projection'],
@@ -61,7 +61,7 @@ function queryPlan(element) {
     eager: ['eager']
   }
 
-  const augment = color => ({
+  const augment = (color: any) => ({
     color,
     'border-color': d3.rgb(color).darker(),
     'text-color-internal': d3.hsl(color).l < 0.7 ? '#FFFFFF' : '#000000'
@@ -72,7 +72,7 @@ function queryPlan(element) {
     .domain(d3.keys(operatorCategories))
     .range(operatorColors)
 
-  const color = function(d) {
+  const color = function(d: any) {
     for (const name in operatorCategories) {
       const keywords = operatorCategories[name]
       for (const keyword of Array.from(keywords)) {
@@ -84,7 +84,7 @@ function queryPlan(element) {
     return augment(colors('other'))
   }
 
-  const rows = function(operator) {
+  const rows = function(operator: any) {
     let left
     return (left =
       operator.Rows != null ? operator.Rows : operator.EstimatedRows) != null
@@ -92,7 +92,7 @@ function queryPlan(element) {
       : 0
   }
 
-  const plural = function(noun, count) {
+  const plural = function(noun: any, count: any) {
     if (count === 1) {
       return noun
     } else {
@@ -102,16 +102,16 @@ function queryPlan(element) {
 
   const formatNumber = d3.format(',.0f')
 
-  const operatorDetails = function(operator) {
+  const operatorDetails = function(operator: any): any {
     let expression, identifiers, index, left, left1
     if (!operator.expanded) {
       return []
     }
 
-    const details = []
+    const details: any[] = []
 
-    const wordWrap = function(string, className) {
-      const measure = text => measureText(text, fixedWidthFont, 10)
+    const wordWrap = function(string: any, className: any) {
+      const measure = (text: any) => measureText(text, fixedWidthFont, 10)
 
       const words = string.split(/([^a-zA-Z\d])/)
 
@@ -147,7 +147,7 @@ function queryPlan(element) {
           : undefined)
     ) {
       wordWrap(
-        identifiers.filter(d => !/^ {2}/.test(d)).join(', '),
+        identifiers.filter((d: any) => !/^ {2}/.test(d)).join(', '),
         'identifiers'
       )
       details.push({ className: 'padding' })
@@ -243,22 +243,22 @@ function queryPlan(element) {
     return details
   }
 
-  const transform = function(queryPlan) {
-    const operators = []
-    const links = []
+  const transform = function(queryPlan: any) {
+    const operators: any = []
+    const links: any = []
 
     const result = {
       operatorType: 'Result',
       children: [queryPlan.root]
     }
 
-    const collectLinks = function(operator, rank) {
+    const collectLinks = function(operator: any, rank: any) {
       operators.push(operator)
       operator.rank = rank
       return (() => {
         const result1 = []
         for (const child of Array.from(operator.children)) {
-          child.parent = operator
+          ;(child as any).parent = operator
           collectLinks(child, rank + 1)
           result1.push(
             links.push({
@@ -276,23 +276,23 @@ function queryPlan(element) {
     return [operators, links]
   }
 
-  const layout = function(operators, links) {
+  const layout = function(operators: any[], links: any[]) {
     const costHeight = (function() {
       const scale = d3.scale
         .log()
         .domain([
           1,
           Math.max(
-            d3.max(operators, operator => operator.DbHits || 0),
+            d3.max(operators, (operator: any) => operator.DbHits || 0),
             maxComparableDbHits
           )
         ])
         .range([0, maxCostHeight])
-      return operator =>
+      return (operator: any) =>
         scale((operator.DbHits != null ? operator.DbHits : 0) + 1)
     })()
 
-    const operatorHeight = function(operator) {
+    const operatorHeight = function(operator: any) {
       let height = operatorHeaderHeight
       if (operator.expanded) {
         height += operatorDetails(operator).slice(-1)[0].y + operatorPadding * 2
@@ -307,7 +307,7 @@ function queryPlan(element) {
         .domain([
           1,
           Math.max(
-            d3.max(operators, operator => rows(operator) + 1),
+            d3.max(operators, (operator: any) => rows(operator) + 1),
             maxComparableRows
           )
         ])
@@ -315,7 +315,7 @@ function queryPlan(element) {
           2,
           (operatorWidth - operatorCornerRadius * 2) / maxChildOperators
         ])
-      return operator => scale(rows(operator) + 1)
+      return (operator: any) => scale(rows(operator) + 1)
     })()
 
     for (var operator of Array.from(operators)) {
@@ -327,7 +327,7 @@ function queryPlan(element) {
       const childrenWidth = d3.sum(operator.children, linkWidth)
       let tx = (operatorWidth - childrenWidth) / 2
       for (const child of Array.from(operator.children)) {
-        child.tx = tx
+        ;(child as any).tx = tx
         tx += linkWidth(child)
       }
     }
@@ -338,7 +338,7 @@ function queryPlan(element) {
 
     const ranks = d3
       .nest()
-      .key(operator => operator.rank)
+      .key((operator: any) => operator.rank)
       .entries(operators)
 
     let currentY = 0
@@ -352,7 +352,9 @@ function queryPlan(element) {
     }
 
     let width = d3.max(
-      ranks.map(rank => rank.values.length * (operatorWidth + operatorMargin))
+      ranks.map(
+        (rank: any) => rank.values.length * (operatorWidth + operatorMargin)
+      )
     )
     const height = -currentY
 
@@ -395,9 +397,9 @@ function queryPlan(element) {
         return result
       })()
 
-    const center = operator => operator.x + operatorWidth / 2
+    const center = (operator: any) => operator.x + operatorWidth / 2
 
-    const relaxUpwards = alpha =>
+    const relaxUpwards = (alpha: any) =>
       (() => {
         const result = []
         for (rank of Array.from(ranks)) {
@@ -410,7 +412,7 @@ function queryPlan(element) {
                   const x =
                     d3.sum(
                       operator.children,
-                      child => linkWidth(child) * center(child)
+                      (child: any) => linkWidth(child) * center(child)
                     ) / d3.sum(operator.children, linkWidth)
                   item = operator.x += (x - center(operator)) * alpha
                 }
@@ -423,7 +425,7 @@ function queryPlan(element) {
         return result
       })()
 
-    const relaxDownwards = alpha =>
+    const relaxDownwards = (alpha: any) =>
       (() => {
         const result = []
         for (rank of Array.from(ranks.slice().reverse())) {
@@ -457,12 +459,20 @@ function queryPlan(element) {
     }
 
     width =
-      d3.max(operators, o => o.x) - d3.min(operators, o => o.x) + operatorWidth
+      d3.max(operators, (o: any) => o.x) -
+      d3.min(operators, (o: any) => o.x) +
+      operatorWidth
 
     return [width, height]
   }
 
-  const render = function(operators, links, width, height, redisplay) {
+  const render = function(
+    operators: any,
+    links: any,
+    width: any,
+    height: any,
+    redisplay: any
+  ) {
     const svg = d3.select(element)
 
     svg
@@ -472,17 +482,17 @@ function queryPlan(element) {
       .attr(
         'viewBox',
         [
-          d3.min(operators, o => o.x) - margin,
+          d3.min(operators, (o: any) => o.x) - margin,
           -margin - height,
           width + margin * 2,
           height + margin * 2
         ].join(' ')
       )
 
-    var join = (parent, children) =>
-      (() => {
+    var join = (parent: any, children: any) =>
+      ((): any[] => {
         const result = []
-        for (const child of Array.from(d3.entries(children))) {
+        for (const child of Array.from(d3.entries<any>(children))) {
           let item
           const selection = parent.selectAll(child.key).data(child.value.data)
           child.value.selections(selection.enter(), selection, selection.exit())
@@ -497,26 +507,26 @@ function queryPlan(element) {
     return join(svg, {
       'g.layer.links': {
         data: [links],
-        selections(enter) {
+        selections(enter: any) {
           return enter.append('g').attr('class', 'layer links')
         },
         children: {
           '.link': {
-            data(d) {
+            data(d: any) {
               return d
             },
-            selections(enter) {
+            selections(enter: any) {
               return enter.append('g').attr('class', 'link')
             },
             children: {
               path: {
-                data(d) {
+                data(d: any) {
                   return [d]
                 },
-                selections(enter, update) {
+                selections(enter: any, update: any) {
                   enter.append('path').attr('fill', linkColor)
 
-                  return update.transition().attr('d', d => {
+                  return update.transition().attr('d', (d: any) => {
                     const width = Math.max(1, d.width)
                     const sourceX = d.source.x + operatorWidth / 2
                     const targetX = d.target.x + d.source.tx
@@ -564,7 +574,7 @@ function queryPlan(element) {
               },
 
               text: {
-                data(d) {
+                data(d: any) {
                   const x = d.source.x + operatorWidth / 2
                   const y = d.source.y + d.source.height + operatorDetailHeight
                   const { source } = d
@@ -592,7 +602,7 @@ function queryPlan(element) {
                     return []
                   }
                 },
-                selections(enter, update) {
+                selections(enter: any, update: any) {
                   enter
                     .append('text')
                     .attr('font-size', detailFontSize)
@@ -600,10 +610,10 @@ function queryPlan(element) {
 
                   return update
                     .transition()
-                    .attr('x', d => d.x)
-                    .attr('y', d => d.y)
-                    .attr('text-anchor', d => d.anchor)
-                    .text(d => d.text)
+                    .attr('x', (d: any) => d.x)
+                    .attr('y', (d: any) => d.y)
+                    .attr('text-anchor', (d: any) => d.anchor)
+                    .text((d: any) => d.text)
                 }
               }
             }
@@ -613,33 +623,33 @@ function queryPlan(element) {
 
       'g.layer.operators': {
         data: [operators],
-        selections(enter) {
+        selections(enter: any) {
           return enter.append('g').attr('class', 'layer operators')
         },
         children: {
           '.operator': {
-            data(d) {
+            data(d: any) {
               return d
             },
-            selections(enter, update) {
+            selections(enter: any, update: any) {
               enter.append('g').attr('class', 'operator')
 
               return update
                 .transition()
-                .attr('transform', d => `translate(${d.x},${d.y})`)
+                .attr('transform', (d: any) => `translate(${d.x},${d.y})`)
             },
             children: {
               'rect.background': {
-                data(d) {
+                data(d: any) {
                   return [d]
                 },
-                selections(enter, update) {
+                selections(enter: any, update: any) {
                   enter.append('rect').attr('class', 'background')
 
                   return update
                     .transition()
                     .attr('width', operatorWidth)
-                    .attr('height', d => d.height)
+                    .attr('height', (d: any) => d.height)
                     .attr('rx', operatorCornerRadius)
                     .attr('ry', operatorCornerRadius)
                     .attr('fill', 'white')
@@ -648,29 +658,29 @@ function queryPlan(element) {
               },
 
               'g.header': {
-                data(d) {
+                data(d: any) {
                   return [d]
                 },
-                selections(enter) {
+                selections(enter: any) {
                   return enter
                     .append('g')
                     .attr('class', 'header')
                     .attr('pointer-events', 'all')
-                    .on('click', d => {
+                    .on('click', (d: any) => {
                       d.expanded = !d.expanded
                       return redisplay()
                     })
                 },
                 children: {
                   'path.banner': {
-                    data(d) {
+                    data(d: any) {
                       return [d]
                     },
-                    selections(enter, update) {
+                    selections(enter: any, update: any) {
                       enter.append('path').attr('class', 'banner')
 
                       return update
-                        .attr('d', d => {
+                        .attr('d', (d: any) => {
                           const shaving =
                             d.height <= operatorHeaderHeight
                               ? operatorCornerRadius
@@ -735,20 +745,21 @@ function queryPlan(element) {
                             'Z'
                           ].join(' ')
                         })
-                        .style('fill', d => color(d.operatorType).color)
+                        .style('fill', (d: any) => color(d.operatorType).color)
                     }
                   },
 
                   'path.expand': {
-                    data(d) {
+                    data(d: any) {
                       if (d.operatorType === 'Result') {
                         return []
                       } else {
                         return [d]
                       }
                     },
-                    selections(enter, update) {
-                      const rotateForExpand = function(d) {
+                    selections(enter: any, update: any) {
+                      const rotateForExpand = function(d: any) {
+                        // @ts-expect-error
                         d3.transform()
                         return `translate(${operatorHeaderHeight /
                           2}, ${operatorHeaderHeight / 2}) rotate(${
@@ -761,24 +772,25 @@ function queryPlan(element) {
                         .attr('class', 'expand')
                         .attr(
                           'fill',
-                          d => color(d.operatorType)['text-color-internal']
+                          (d: any) =>
+                            color(d.operatorType)['text-color-internal']
                         )
                         .attr('d', 'M -5 -10 L 8.66 0 L -5 10 Z')
                         .attr('transform', rotateForExpand)
 
                       return update
                         .transition()
-                        .attrTween('transform', (d, i, a) =>
+                        .attrTween('transform', (d: any, _i: any, a: any) =>
                           d3.interpolateString(a, rotateForExpand(d))
                         )
                     }
                   },
 
                   'text.title': {
-                    data(d) {
+                    data(d: any) {
                       return [d]
                     },
-                    selections(enter) {
+                    selections(enter: any) {
                       return enter
                         .append('text')
                         .attr('class', 'title')
@@ -788,9 +800,10 @@ function queryPlan(element) {
                         .attr('y', 13)
                         .attr(
                           'fill',
-                          d => color(d.operatorType)['text-color-internal']
+                          (d: any) =>
+                            color(d.operatorType)['text-color-internal']
                         )
-                        .text(d => d.operatorType)
+                        .text((d: any) => d.operatorType)
                     }
                   }
                 }
@@ -798,16 +811,16 @@ function queryPlan(element) {
 
               'g.detail': {
                 data: operatorDetails,
-                selections(enter, update, exit) {
+                selections(enter: any, update: any, exit: any) {
                   enter.append('g')
 
                   update
-                    .attr('class', d => `detail ${d.className}`)
+                    .attr('class', (d: any) => `detail ${d.className}`)
                     .attr(
                       'transform',
-                      d => `translate(0, ${operatorHeaderHeight + d.y})`
+                      (d: any) => `translate(0, ${operatorHeaderHeight + d.y})`
                     )
-                    .attr('font-family', d => {
+                    .attr('font-family', (d: any) => {
                       if (
                         d.className === 'expression' ||
                         d.className === 'identifiers'
@@ -822,7 +835,7 @@ function queryPlan(element) {
                 },
                 children: {
                   text: {
-                    data(d) {
+                    data(d: any) {
                       if (d.key) {
                         return [
                           {
@@ -838,29 +851,29 @@ function queryPlan(element) {
                         ]
                       }
                     },
-                    selections(enter, update, exit) {
+                    selections(enter: any, update: any, exit: any) {
                       enter.append('text').attr('font-size', detailFontSize)
 
                       update
-                        .attr('x', d => d.x)
-                        .attr('text-anchor', d => d.anchor)
+                        .attr('x', (d: any) => d.x)
+                        .attr('text-anchor', (d: any) => d.anchor)
                         .attr('fill', 'black')
                         .transition()
-                        .each('end', () => update.text(d => d.text))
+                        .each('end', () => update.text((d: any) => d.text))
 
                       return exit.remove()
                     }
                   },
 
                   'path.divider': {
-                    data(d) {
+                    data(d: any) {
                       if (d.className === 'padding') {
                         return [d]
                       } else {
                         return []
                       }
                     },
-                    selections(enter, update) {
+                    selections(enter: any, update: any) {
                       enter
                         .append('path')
                         .attr('class', 'divider')
@@ -887,16 +900,16 @@ function queryPlan(element) {
               },
 
               'path.cost': {
-                data(d) {
+                data(d: any) {
                   return [d]
                 },
-                selections(enter, update) {
+                selections(enter: any, update: any) {
                   enter
                     .append('path')
                     .attr('class', 'cost')
                     .attr('fill', costColor)
 
-                  return update.transition().attr('d', d => {
+                  return update.transition().attr('d', (d: any) => {
                     if (d.costHeight < operatorCornerRadius) {
                       const shaving =
                         operatorCornerRadius -
@@ -967,7 +980,7 @@ function queryPlan(element) {
               },
 
               'text.cost': {
-                data(d) {
+                data(d: any) {
                   if (d.alwaysShowCost) {
                     const y = d.height - d.costHeight + operatorDetailHeight
                     return [
@@ -982,7 +995,7 @@ function queryPlan(element) {
                     return []
                   }
                 },
-                selections(enter, update) {
+                selections(enter: any, update: any) {
                   enter
                     .append('text')
                     .attr('class', 'cost')
@@ -992,29 +1005,32 @@ function queryPlan(element) {
 
                   return update
                     .attr('x', operatorWidth / 2)
-                    .attr('text-anchor', d => d.anchor)
+                    .attr('text-anchor', (d: any) => d.anchor)
                     .transition()
-                    .attr('y', d => d.y)
-                    .each('end', () => update.text(d => d.text))
+                    .attr('y', (d: any) => d.y)
+                    .each('end', () => update.text((d: any) => d.text))
                 }
               },
 
               'rect.outline': {
-                data(d) {
+                data(d: any) {
                   return [d]
                 },
-                selections(enter, update) {
+                selections(enter: any, update: any) {
                   enter.append('rect').attr('class', 'outline')
 
                   return update
                     .transition()
                     .attr('width', operatorWidth)
-                    .attr('height', d => d.height)
+                    .attr('height', (d: any) => d.height)
                     .attr('rx', operatorCornerRadius)
                     .attr('ry', operatorCornerRadius)
                     .attr('fill', 'none')
                     .attr('stroke-width', 1)
-                    .style('stroke', d => color(d.operatorType)['border-color'])
+                    .style(
+                      'stroke',
+                      (d: any) => color(d.operatorType)['border-color']
+                    )
                 }
               }
             }
@@ -1024,7 +1040,7 @@ function queryPlan(element) {
     })
   }
 
-  const display = function(queryPlan) {
+  const display = function(queryPlan: any) {
     const [operators, links] = Array.from(transform(queryPlan))
     const [width, height] = Array.from(layout(operators, links))
     return render(operators, links, width, height, () => display(queryPlan))

@@ -21,7 +21,7 @@ import React from 'react'
 import FrameTemplate from '../Frame/FrameTemplate'
 import { PaddedDiv } from './styled'
 
-const PreFrame = ({ frame }) => {
+const PreFrame = ({ frame }: any) => {
   return (
     <FrameTemplate
       header={frame}

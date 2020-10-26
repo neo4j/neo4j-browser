@@ -5,7 +5,7 @@ import { createMediaListenerMatch } from './testUtils'
 
 describe('useDetectColorScheme', () => {
   it('returns null if no window.matchMedia support', () => {
-    window.matchMedia = undefined
+    ;(window as any).matchMedia = undefined
 
     let scheme
     const Comp = () => {
@@ -22,10 +22,10 @@ describe('useDetectColorScheme', () => {
     expect(scheme).toBe(null)
   })
   it('returns null if no theme found', () => {
-    let listenerFn
-    window.matchMedia = jest.fn(() => {
+    let listenerFn: any
+    ;(window as any).matchMedia = jest.fn(() => {
       return {
-        addListener: listener => {
+        addListener: (listener: any) => {
           listenerFn = listener
         },
         removeListener: () => {}
@@ -50,11 +50,11 @@ describe('useDetectColorScheme', () => {
   })
   it('returns "dark" if dark theme found', () => {
     // Given
-    let listenerFn
+    let listenerFn: any
     const darkTheme = 'dark'
-    window.matchMedia = jest.fn(() => {
+    ;(window as any).matchMedia = jest.fn(() => {
       return {
-        addListener: listener => {
+        addListener: (listener: any) => {
           listenerFn = listener
         },
         removeListener: () => {}
@@ -79,11 +79,11 @@ describe('useDetectColorScheme', () => {
   })
   it('stays at null if unknown theme found', () => {
     // Given
-    let listenerFn
+    let listenerFn: any
     const nonExistingTheme = 'non-existing-theme'
-    window.matchMedia = jest.fn(() => {
+    ;(window as any).matchMedia = jest.fn(() => {
       return {
-        addListener: listener => {
+        addListener: (listener: any) => {
           listenerFn = listener
         },
         removeListener: () => {}

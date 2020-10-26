@@ -139,9 +139,7 @@ Cypress.Commands.add('addUser', (userName, password, role, force) => {
   if (force === true) {
     cy.get('[type=checkbox]').click()
   }
-  cy.get('[class*=Button]')
-    .contains('Add User')
-    .click()
+  cy.get('[data-testid="Add User"]').click()
 })
 Cypress.Commands.add('enableMultiStatement', () => {
   cy.get('[data-testid="drawerSettings"]').click()

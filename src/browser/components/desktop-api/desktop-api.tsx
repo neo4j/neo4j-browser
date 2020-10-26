@@ -20,13 +20,13 @@
 import { useEffect } from 'react'
 import { eventToHandler } from './desktop-api.utils'
 
-const DEFAULT_INTEGRATION_POINT = window.neo4jDesktopApi
+const DEFAULT_INTEGRATION_POINT = (window as any).neo4jDesktopApi
 
 function DesktopApi({
   integrationPoint = DEFAULT_INTEGRATION_POINT,
   setEventMetricsCallback,
   ...rest
-}) {
+}: any) {
   const getKerberosTicket =
     (integrationPoint && integrationPoint.getKerberosTicket) || undefined
 
@@ -35,7 +35,7 @@ function DesktopApi({
     integrationPoint &&
     integrationPoint.sendMetrics
   ) {
-    const takeMetrics = ({ category, label, data }) => {
+    const takeMetrics = ({ category, label, data }: any) => {
       integrationPoint.sendMetrics(category, label, data)
     }
     setEventMetricsCallback(takeMetrics)
@@ -63,13 +63,15 @@ function DesktopApi({
       // Regular events
       if (integrationPoint && integrationPoint.onContextUpdate) {
         // Setup generic event listener
-        integrationPoint.onContextUpdate((event, context, oldContext) => {
-          const handlerName = eventToHandler(event.type)
-          // If we have a prop that's interested in this event, call it
-          if (handlerName && typeof rest[handlerName] !== 'undefined') {
-            rest[handlerName](event, context, oldContext, getKerberosTicket)
+        integrationPoint.onContextUpdate(
+          (event: any, context: any, oldContext: any) => {
+            const handlerName = eventToHandler(event.type)
+            // If we have a prop that's interested in this event, call it
+            if (handlerName && typeof rest[handlerName] !== 'undefined') {
+              rest[handlerName](event, context, oldContext, getKerberosTicket)
+            }
           }
-        })
+        )
       }
     }
 

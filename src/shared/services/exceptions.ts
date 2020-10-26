@@ -20,7 +20,8 @@
 
 import * as messages from './exceptionMessages'
 
-export function getErrorMessage(errorObject) {
+export function getErrorMessage(errorObject: any) {
+  // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
   let str = messages[errorObject.type]
   if (!str) return
   const keys = Object.keys(errorObject)
@@ -31,7 +32,7 @@ export function getErrorMessage(errorObject) {
   return str
 }
 
-export function createErrorObject(ErrorType, ...rest) {
+export function createErrorObject(ErrorType: any, ...rest: any[]) {
   let Co = ErrorType
   if (typeof ErrorType === 'string' && errorFunctions[ErrorType]) {
     Co = errorFunctions[ErrorType]
@@ -42,7 +43,7 @@ export function createErrorObject(ErrorType, ...rest) {
   return obj
 }
 
-const errorFunctions = {}
+const errorFunctions: any = {}
 
 export function BoltConnectionError() {
   return {
@@ -51,7 +52,7 @@ export function BoltConnectionError() {
 }
 errorFunctions.BoltConnectionError = BoltConnectionError
 
-export function BoltError(obj) {
+export function BoltError(obj: any) {
   return {
     type: 'BoltError',
     code: obj.fields[0].code,
@@ -60,7 +61,7 @@ export function BoltError(obj) {
 }
 errorFunctions.BoltError = BoltError
 
-export function Neo4jError(obj) {
+export function Neo4jError(obj: any) {
   return {
     type: 'Neo4jError',
     message: obj.message
@@ -68,7 +69,7 @@ export function Neo4jError(obj) {
 }
 errorFunctions.Neo4jError = Neo4jError
 
-export function UnknownCommandError(error) {
+export function UnknownCommandError(error: any) {
   return {
     type: 'UnknownCommandError',
     cmd: error.cmd
@@ -76,7 +77,7 @@ export function UnknownCommandError(error) {
 }
 errorFunctions.UnknownCommandError = UnknownCommandError
 
-export function UndefinedError(error) {
+export function UndefinedError(error: any) {
   return {
     type: 'UndefinedError',
     cmd: error.cmd
@@ -84,7 +85,7 @@ export function UndefinedError(error) {
 }
 errorFunctions.UndefinedError = UndefinedError
 
-export function CouldNotFetchRemoteGuideError(error) {
+export function CouldNotFetchRemoteGuideError(error: any) {
   return {
     type: 'CouldNotFetchRemoteGuideError',
     error: error.error
@@ -92,7 +93,7 @@ export function CouldNotFetchRemoteGuideError(error) {
 }
 errorFunctions.CouldNotFetchRemoteGuideError = CouldNotFetchRemoteGuideError
 
-export function FetchURLError(error) {
+export function FetchURLError(error: any) {
   return {
     type: 'FetchURLError',
     error: error.error
@@ -100,7 +101,7 @@ export function FetchURLError(error) {
 }
 errorFunctions.FetchURLError = FetchURLError
 
-export function UnsupportedError(message) {
+export function UnsupportedError(message: any) {
   return {
     type: 'UnsupportedError',
     message
@@ -108,7 +109,7 @@ export function UnsupportedError(message) {
 }
 errorFunctions.UnsupportedError = UnsupportedError
 
-export function NotFoundError(message) {
+export function NotFoundError(message: any) {
   return {
     type: 'NotFoundError',
     message
@@ -116,7 +117,7 @@ export function NotFoundError(message) {
 }
 errorFunctions.NotFoundError = NotFoundError
 
-export function InvalidGrassError(message) {
+export function InvalidGrassError(message: any) {
   return {
     type: 'InvalidGrassError',
     message

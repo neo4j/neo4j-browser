@@ -104,15 +104,15 @@ const PLAY_FRAME_TYPES = ['play', 'play-remote']
 const availableCommands = [
   {
     name: 'clear',
-    match: cmd => cmd === 'clear',
-    exec(action, put) {
+    match: (cmd: any) => cmd === 'clear',
+    exec(_action: any, put: any) {
       put(frames.clear())
     }
   },
   {
     name: 'noop',
-    match: cmd => /^noop$/.test(cmd),
-    exec(action, put, store) {
+    match: (cmd: any) => /^noop$/.test(cmd),
+    exec(action: any, put: any, store: any) {
       put(
         frames.add({
           useDb: getUseDb(store.getState()),
@@ -125,10 +125,10 @@ const availableCommands = [
   },
   {
     name: 'config',
-    match: cmd => /^config(\s|$)/.test(cmd),
-    exec(action, put, store) {
+    match: (cmd: any) => /^config(\s|$)/.test(cmd),
+    exec(action: any, put: any, store: any) {
       handleUpdateConfigCommand(action, put, store)
-        .then(res => {
+        .then(() => {
           put(
             frames.add({
               useDb: getUseDb(store.getState()),
@@ -144,8 +144,8 @@ const availableCommands = [
   },
   {
     name: 'set-params',
-    match: cmd => /^params?\s/.test(cmd),
-    exec(action, put, store) {
+    match: (cmd: any) => /^params?\s/.test(cmd),
+    exec(action: any, put: any, store: any) {
       return handleParamsCommand(action, put, getUseDb(store.getState()))
         .then(res => {
           const params =
@@ -185,8 +185,8 @@ const availableCommands = [
   },
   {
     name: 'params',
-    match: cmd => /^params$/.test(cmd),
-    exec(action, put, store) {
+    match: (cmd: any) => /^params$/.test(cmd),
+    exec(action: any, put: any, store: any) {
       put(
         frames.add({
           useDb: getUseDb(store.getState()),
@@ -199,8 +199,8 @@ const availableCommands = [
   },
   {
     name: 'use-db',
-    match: cmd => new RegExp(`^${useDbCommand}\\s[^$]+$`).test(cmd),
-    async exec(action, put, store) {
+    match: (cmd: any) => new RegExp(`^${useDbCommand}\\s[^$]+$`).test(cmd),
+    async exec(action: any, put: any, store: any): Promise<any> {
       const [dbName] = getCommandAndParam(action.cmd.substr(1))
       try {
         const supportsMultiDb = await bolt.hasMultiDbSupport()
@@ -215,22 +215,26 @@ const availableCommands = [
         const cleanDbName = unescapeCypherIdentifier(normalizedName)
 
         const dbMeta = getDatabases(store.getState()).find(
-          db => db.name.toLowerCase() === cleanDbName
+          (db: any) => db.name.toLowerCase() === cleanDbName
         )
 
-        function UseDbError({ code, message }) {
+        function UseDbError({ code, message }: any) {
+          // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
           this.code = code
+          // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
           this.message = message
         }
 
         // Do we have a db with that name?
         if (!dbMeta) {
+          // @ts-expect-error ts-migrate(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
           throw new UseDbError({
             code: 'NotFound',
             message: `A database with the "${dbName}" name could not be found.`
           })
         }
         if (dbMeta.status !== 'online') {
+          // @ts-expect-error ts-migrate(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
           throw new UseDbError({
             code: 'DatabaseUnavailable',
             message: `Database "${dbName}" is unavailable, its status is "${dbMeta.status}."`
@@ -267,8 +271,8 @@ const availableCommands = [
   },
   {
     name: 'reset-db',
-    match: cmd => new RegExp(`^${useDbCommand}$`).test(cmd),
-    async exec(action, put, store) {
+    match: (cmd: any) => new RegExp(`^${useDbCommand}$`).test(cmd),
+    async exec(action: any, put: any, store: any) {
       const supportsMultiDb = await bolt.hasMultiDbSupport()
       if (supportsMultiDb) {
         put(useDb(null))
@@ -297,8 +301,8 @@ const availableCommands = [
   },
   {
     name: 'dbs',
-    match: cmd => new RegExp(`^${listDbsCommand}$`).test(cmd),
-    async exec(action, put, store) {
+    match: (cmd: any) => new RegExp(`^${listDbsCommand}$`).test(cmd),
+    async exec(action: any, put: any, store: any) {
       const supportsMultiDb = await bolt.hasMultiDbSupport()
       if (supportsMultiDb) {
         put(
@@ -326,8 +330,8 @@ const availableCommands = [
   },
   {
     name: 'schema',
-    match: cmd => /^schema$/.test(cmd),
-    exec(action, put, store) {
+    match: (cmd: any) => /^schema$/.test(cmd),
+    exec(action: any, put: any, store: any) {
       put(
         frames.add({
           useDb: getUseDb(store.getState()),
@@ -340,8 +344,8 @@ const availableCommands = [
   },
   {
     name: 'client-debug',
-    match: cmd => /^debug$/.test(cmd),
-    exec: function(action, put, store) {
+    match: (cmd: any) => /^debug$/.test(cmd),
+    exec: function(action: any, put: any, store: any) {
       const out = {
         userCapabilities: getUserCapabilities(store.getState()),
         serverConfig: getAvailableSettings(store.getState()),
@@ -359,8 +363,8 @@ const availableCommands = [
   },
   {
     name: 'sysinfo',
-    match: cmd => /^sysinfo$/.test(cmd),
-    exec(action, put, store) {
+    match: (cmd: any) => /^sysinfo$/.test(cmd),
+    exec(action: any, put: any, store: any) {
       put(
         frames.add({
           useDb: getUseDb(store.getState()),
@@ -372,10 +376,10 @@ const availableCommands = [
   },
   {
     name: 'cypher',
-    match: cmd =>
+    match: (cmd: any) =>
       /^cypher$/.test(cmd) ||
       new RegExp(`^${autoCommitTxCommand}`, 'i').test(cmd),
-    exec: (action, put, store) => {
+    exec: (action: any, put: any, store: any) => {
       const state = store.getState()
 
       // Since we now also handle queries with the :auto prefix,
@@ -384,8 +388,8 @@ const availableCommands = [
 
       const autoPrefix = `:${autoCommitTxCommand} `
       const blankedComments = query
-        .replace(/\/\*(.|\n)*?\*\//g, match => ' '.repeat(match.length)) // mutliline comment
-        .replace(/\/\/[^\n]*\n/g, match => ' '.repeat(match.length)) // singleline comment
+        .replace(/\/\*(.|\n)*?\*\//g, (match: any) => ' '.repeat(match.length)) // mutliline comment
+        .replace(/\/\/[^\n]*\n/g, (match: any) => ' '.repeat(match.length)) // singleline comment
 
       const isAutocommit = blankedComments.trim().startsWith(autoPrefix)
       action.autoCommit = isAutocommit
@@ -421,12 +425,12 @@ const availableCommands = [
         })
       )
       return request
-        .then(res => {
+        .then((res: any) => {
           put(updateQueryResult(id, res, REQUEST_STATUS_SUCCESS))
           put(successfulCypher(action.cmd))
           return res
         })
-        .catch(e => {
+        .catch((e: any) => {
           const request = getRequest(store.getState(), id)
           // Only update error statuses for pending queries
           if (request.status !== REQUEST_STATUS_PENDING) {
@@ -443,11 +447,11 @@ const availableCommands = [
   },
   {
     name: 'server',
-    match: cmd => /^server(\s)/.test(cmd),
-    exec: (action, put, store) => {
+    match: (cmd: any) => /^server(\s)/.test(cmd),
+    exec: (action: any, put: any, store: any) => {
       const response = handleServerCommand(action, put, store)
       if (response && response.then) {
-        response.then(res => {
+        response.then((res: any) => {
           if (res) {
             put(
               frames.add({
@@ -472,9 +476,9 @@ const availableCommands = [
   },
   {
     name: 'play-remote',
-    match: cmd => /^play(\s|$)https?/.test(cmd),
-    exec(action, put, store) {
-      let id
+    match: (cmd: any) => /^play(\s|$)https?/.test(cmd),
+    exec(action: any, put: any, store: any) {
+      let id: any
       // We have a frame that generated this command
       if (action.id) {
         const originFrame = frames.getFrame(store.getState(), action.id)
@@ -531,8 +535,8 @@ const availableCommands = [
   },
   {
     name: 'play',
-    match: cmd => /^play(\s|$)/.test(cmd),
-    exec(action, put, store) {
+    match: (cmd: any) => /^play(\s|$)/.test(cmd),
+    exec(action: any, put: any, store: any) {
       let id
       // We have a frame that generated this command
       if (action.id) {
@@ -562,8 +566,8 @@ const availableCommands = [
   },
   {
     name: 'history',
-    match: cmd => /^history(\s+clear)?/.test(cmd),
-    exec(action, put, store) {
+    match: (cmd: any) => /^history(\s+clear)?/.test(cmd),
+    exec(action: any, put: any, store: any) {
       const match = action.cmd.match(/^:history(\s+clear)?/)
       if (match[0] !== match.input) {
         return put(
@@ -593,8 +597,8 @@ const availableCommands = [
   },
   {
     name: 'queries',
-    match: cmd => cmd === 'queries',
-    exec: (action, put, store) => {
+    match: (cmd: any) => cmd === 'queries',
+    exec: (action: any, put: any, store: any) => {
       put(
         frames.add({
           useDb: getUseDb(store.getState()),
@@ -607,8 +611,8 @@ const availableCommands = [
   },
   {
     name: 'help',
-    match: cmd => /^(help|\?)(\s|$)/.test(cmd),
-    exec(action, put, store) {
+    match: (cmd: any) => /^(help|\?)(\s|$)/.test(cmd),
+    exec(action: any, put: any, store: any) {
       const HELP_FRAME_TYPE = 'help'
       let id
 
@@ -638,10 +642,10 @@ const availableCommands = [
   },
   {
     name: 'http',
-    match: cmd => /^(get|post|put|delete|head)/i.test(cmd),
-    exec: (action, put, store) => {
+    match: (cmd: any) => /^(get|post|put|delete|head)/i.test(cmd),
+    exec: (action: any, put: any, store: any) => {
       return parseHttpVerbCommand(action.cmd)
-        .then(r => {
+        .then((r: any) => {
           const hostedUrl = getHostedUrl(store.getState())
           const isLocal = isLocalRequest(hostedUrl, r.url, {
             hostnameOnly: false
@@ -683,6 +687,7 @@ const availableCommands = [
               )
             })
             .catch(e => {
+              // @ts-expect-error ts-migrate(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
               const error = new FetchURLError({ error: e.message })
               put(
                 frames.add({
@@ -708,8 +713,8 @@ const availableCommands = [
   },
   {
     name: 'style',
-    match: cmd => /^style(\s|$)/.test(cmd),
-    exec(action, put, store) {
+    match: (cmd: any) => /^style(\s|$)/.test(cmd),
+    exec(action: any, put: any, store: any) {
       const param = action.cmd
         .trim()
         .split(':style')[1]
@@ -727,12 +732,12 @@ const availableCommands = [
         )
       }
 
-      function updateAndShowGrass(newGrass) {
+      function updateAndShowGrass(newGrass: any) {
         put(updateGraphStyleData(newGrass))
         showGrass()
       }
 
-      function putGrassErrorFrame(message) {
+      function putGrassErrorFrame(message: any) {
         put(
           frames.add({
             useDb: getUseDb(store.getState()),
@@ -790,8 +795,8 @@ ${param}`)
   },
   {
     name: 'edit',
-    match: cmd => cmd.startsWith('edit'),
-    exec: (action, put) => {
+    match: (cmd: any) => cmd.startsWith('edit'),
+    exec: (action: any, put: any) => {
       put(
         frames.add({
           ...action,
@@ -804,7 +809,7 @@ ${param}`)
   {
     name: 'catch-all',
     match: () => true,
-    exec: (action, put, store) => {
+    exec: (action: any, put: any, store: any) => {
       put(
         frames.add({
           useDb: getUseDb(store.getState()),
@@ -818,8 +823,8 @@ ${param}`)
 ]
 
 // First to match wins
-const interpret = cmd => {
-  return availableCommands.reduce((match, candidate) => {
+const interpret = (cmd: any) => {
+  return availableCommands.reduce((match: any, candidate) => {
     if (match) return match
     const isMatch = candidate.match(cmd.toLowerCase())
     return isMatch ? candidate : null

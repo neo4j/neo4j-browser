@@ -36,12 +36,12 @@ export const REQUEST_STATUS_CANCELED = 'canceled'
 
 const initialState = {}
 
-export const getRequest = (state, id) => state[NAME][id]
-export const getRequests = state => state[NAME]
-export const isCancelStatus = status =>
+export const getRequest = (state: any, id: any) => state[NAME][id]
+export const getRequests = (state: any) => state[NAME]
+export const isCancelStatus = (status: any) =>
   [REQUEST_STATUS_CANCELED, REQUEST_STATUS_CANCELING].includes(status)
 
-export default function reducer(state = initialState, action) {
+export default function reducer(state: any = initialState, action: any) {
   switch (action.type) {
     case APP_START:
       return { ...initialState, ...state }
@@ -73,7 +73,7 @@ export default function reducer(state = initialState, action) {
   }
 }
 
-export const send = (requestType, id) => {
+export const send = (requestType: any, id: any) => {
   return {
     type: REQUEST_SENT,
     requestType,
@@ -81,7 +81,7 @@ export const send = (requestType, id) => {
   }
 }
 
-export const update = (id, result, status) => {
+export const update = (id: any, result: any, status: any) => {
   return {
     type: REQUEST_UPDATED,
     id,
@@ -90,7 +90,7 @@ export const update = (id, result, status) => {
   }
 }
 
-export const cancel = id => {
+export const cancel = (id: any) => {
   return {
     type: CANCEL_REQUEST,
     status: REQUEST_STATUS_CANCELING,
@@ -98,7 +98,7 @@ export const cancel = id => {
   }
 }
 
-const canceled = id => {
+const canceled = (id: any) => {
   return {
     type: REQUEST_CANCELED,
     status: REQUEST_STATUS_CANCELED,
@@ -108,9 +108,9 @@ const canceled = id => {
 }
 
 // Epics
-export const cancelRequestEpic = (action$, store) =>
-  action$.ofType(CANCEL_REQUEST).mergeMap(action => {
-    return new Promise((resolve, reject) => {
+export const cancelRequestEpic = (action$: any) =>
+  action$.ofType(CANCEL_REQUEST).mergeMap((action: any) => {
+    return new Promise(resolve => {
       bolt.cancelTransaction(action.id, () => {
         resolve(canceled(action.id))
       })

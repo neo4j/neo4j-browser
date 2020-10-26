@@ -33,7 +33,7 @@ const mockStore = configureMockStore([
 ])
 
 describe('streamDuckEpics', () => {
-  let store
+  let store: any
   beforeAll(() => {
     store = mockStore({
       settings: {
@@ -54,7 +54,7 @@ describe('streamDuckEpics', () => {
   test('listens on UPDATE and sets new maxFrames', done => {
     // Given
     const action = updateSettings({ maxFrames: 3 })
-    bus.take('NOOP', currentAction => {
+    bus.take('NOOP', _currentAction => {
       // Then
       expect(store.getActions()).toEqual([
         action,

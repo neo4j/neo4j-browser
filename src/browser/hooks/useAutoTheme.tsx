@@ -24,7 +24,7 @@ import useDetectColorScheme from './useDetectColorScheme'
 export default function useAutoTheme(defaultTheme = 'light') {
   const detectedScheme = useDetectColorScheme()
   const [autoTheme, setAutoTheme] = useState(detectedScheme || defaultTheme)
-  const [overriddenTheme, overrideAutoTheme] = useState(null)
+  const [overriddenTheme, overrideAutoTheme] = useState<string | null>(null)
 
   useEffect(() => {
     if (overriddenTheme) {
@@ -35,7 +35,7 @@ export default function useAutoTheme(defaultTheme = 'light') {
       setAutoTheme(defaultTheme)
       return
     }
-    setAutoTheme(detectedScheme)
+    setAutoTheme(detectedScheme as string)
   }, [detectedScheme, overriddenTheme])
   return [autoTheme, overrideAutoTheme]
 }

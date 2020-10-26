@@ -37,26 +37,26 @@ describe('boltMappings', () => {
       const tests = [
         {
           val: 'hello',
-          checker: _ => false,
-          converter: _ => false,
+          checker: (_: any) => false,
+          converter: (_: any) => false,
           expected: 'hello'
         },
         {
           val: ['hello'],
-          checker: _ => false,
-          converter: val => false,
+          checker: (_: any) => false,
+          converter: (_: any) => false,
           expected: ['hello']
         },
         {
           val: null,
-          checker: _ => false,
-          converter: _ => false,
+          checker: (_: any) => false,
+          converter: (_: any) => false,
           expected: null
         },
         {
           val: { str: 'hello' },
-          checker: _ => true,
-          converter: val => {
+          checker: (_: any) => true,
+          converter: (val: any) => {
             val.str = val.str.toUpperCase()
             return val
           },
@@ -81,20 +81,20 @@ describe('boltMappings', () => {
       const tests = [
         {
           val: ['hello', 1],
-          checker: _ => false,
-          converter: val => false,
+          checker: (_: any) => false,
+          converter: (_: any) => false,
           expected: ['hello', '1.0']
         },
         {
           val: ['hello', ['ola', 'hi']],
-          checker: val => typeof val === 'string',
-          converter: val => val.toUpperCase(),
+          checker: (val: any) => typeof val === 'string',
+          converter: (val: any) => val.toUpperCase(),
           expected: ['HELLO', ['OLA', 'HI']]
         },
         {
           val: ['hello', 1],
-          checker: val => typeof val === 'string',
-          converter: val => val.toUpperCase(),
+          checker: (val: any) => typeof val === 'string',
+          converter: (val: any) => val.toUpperCase(),
           expected: ['HELLO', '1.0']
         }
       ]
@@ -116,8 +116,8 @@ describe('boltMappings', () => {
       const tests = [
         {
           val: { arr: ['hello'] },
-          checker: _ => false,
-          converter: val => false,
+          checker: (_: any) => false,
+          converter: (_: any) => false,
           expected: { arr: ['hello'] }
         },
         {
@@ -130,8 +130,8 @@ describe('boltMappings', () => {
               str: 'inner hello'
             }
           },
-          checker: val => typeof val === 'string',
-          converter: val => val.toUpperCase(),
+          checker: (val: any) => typeof val === 'string',
+          converter: (val: any) => val.toUpperCase(),
           expected: {
             arr: ['HELLO', ['OLA', 'HI']],
             str: 'HELLO',
@@ -150,7 +150,7 @@ describe('boltMappings', () => {
           objIntToString(test.val, {
             intChecker: test.checker,
             intConverter: test.converter,
-            objectConverter: obj => obj
+            objectConverter: (obj: any) => obj
           })
         ).toEqual(test.expected)
       })
@@ -180,7 +180,7 @@ describe('boltMappings', () => {
       const path = new neo4j.types.Path(startNode, endNode, [pathSegment])
       const boltRecord = {
         keys: ['p'],
-        get: key => path
+        get: () => path
       }
 
       const { nodes, relationships } = extractNodesAndRelationshipsFromRecords(
@@ -213,7 +213,7 @@ describe('boltMappings', () => {
       })
       const boltRecord = {
         keys: ['p'],
-        get: key => [startNode, endNode]
+        get: () => [startNode, endNode]
       }
 
       const { nodes, relationships } = extractNodesAndRelationshipsFromRecords(
@@ -245,7 +245,7 @@ describe('boltMappings', () => {
       )
       const boltRecord = {
         keys: ['r', 'n1', 'n2'],
-        get: key => {
+        get: (key: any) => {
           if (key === 'r') {
             return relationship
           }
@@ -301,7 +301,7 @@ describe('boltMappings', () => {
       }
     }
 
-    const checkExtractedPlan = extractedPlan => {
+    const checkExtractedPlan = (extractedPlan: any) => {
       expect(extractedPlan).not.toBeNull()
       expect(extractedPlan.operatorType).toEqual('operatorType')
       expect(extractedPlan.identifiers).toEqual([])
@@ -326,13 +326,13 @@ describe('boltMappings', () => {
           plan: createPlan()
         }
       }
-      const extractedPlan = extractPlan(result).root
+      const extractedPlan = (extractPlan(result) as any).root
       checkExtractedPlan(extractedPlan)
     })
 
     test('should extract profile from result summary', () => {
       // Given
-      const profile = createPlan()
+      const profile: any = createPlan()
       profile.dbHits = 20
       profile.rows = 14
       const result = {
@@ -340,7 +340,7 @@ describe('boltMappings', () => {
           profile
         }
       }
-      const extractedPlan = extractPlan(result).root
+      const extractedPlan = (extractPlan(result) as any).root
       checkExtractedPlan(extractedPlan)
       expect(extractedPlan.DbHits).toEqual(20)
       expect(extractedPlan.Rows).toEqual(14)
@@ -389,7 +389,7 @@ describe('boltMappings', () => {
       ]
       const boltRecord = {
         keys: ['n', 'c'],
-        get: key => {
+        get: (key: any) => {
           if (key === 'n') {
             return firstNode
           }
@@ -407,7 +407,7 @@ describe('boltMappings', () => {
         false,
         {
           intChecker: () => true,
-          intConverter: a => a
+          intConverter: (a: any) => a
         }
       )
 
@@ -418,7 +418,7 @@ describe('boltMappings', () => {
       // Given
       const converters = {
         intChecker: () => false,
-        intConverter: a => a,
+        intConverter: (a: any) => a,
         objectConverter: extractFromNeoObjects
       }
       const start = new neo4j.types.Node(1, ['X'], { x: 1 })
@@ -433,7 +433,7 @@ describe('boltMappings', () => {
       const path = new neo4j.types.Path(start, end, segments)
       const boltRecord = {
         keys: ['p'],
-        get: key => {
+        get: (key: any) => {
           if (key === 'p') return path
         }
       }
@@ -454,16 +454,16 @@ describe('boltMappings', () => {
       // Given
       const converters = {
         intChecker: () => false,
-        intConverter: a => a,
+        intConverter: (a: any) => a,
         objectConverter: extractFromNeoObjects
       }
       const start = new neo4j.types.Node(1, ['X'], { x: 2 })
       const end = start
-      const segments = []
+      const segments: any = []
       const path = new neo4j.types.Path(start, end, segments)
       const boltRecord = {
         keys: ['p'],
-        get: key => {
+        get: (key: any) => {
           if (key === 'p') return path
         }
       }
@@ -487,12 +487,12 @@ describe('boltMappings', () => {
       // Given
       const converters = {
         intChecker: () => false,
-        intConverter: a => a,
+        intConverter: (a: any) => a,
         objectConverter: extractFromNeoObjects
       }
       const start = new neo4j.types.Node(1, ['X'], { x: 1 })
       const end = start
-      const segments = []
+      const segments: any = []
       const path = new neo4j.types.Path(start, end, segments)
 
       // When
@@ -505,7 +505,7 @@ describe('boltMappings', () => {
       // Given
       const converters = {
         intChecker: () => false,
-        intConverter: a => a,
+        intConverter: (a: any) => a,
         objectConverter: extractFromNeoObjects
       }
       const start = new neo4j.types.Node(1, ['X'], { x: 1 })
@@ -527,7 +527,7 @@ describe('boltMappings', () => {
       // Given
       const converters = {
         intChecker: () => false,
-        intConverter: a => a,
+        intConverter: (a: any) => a,
         objectConverter: extractFromNeoObjects
       }
       const start = new neo4j.types.Node(1, ['X'], { x: 1 })

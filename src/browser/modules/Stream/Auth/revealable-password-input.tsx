@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Icon } from 'semantic-ui-react'
 
 import {
@@ -27,7 +27,7 @@ export default function RevealablePasswordInput({
   isRevealed,
   toggleReveal,
   ...props
-}) {
+}: any) {
   const inputRef = useReveal(isRevealed)
 
   return (
@@ -38,8 +38,8 @@ export default function RevealablePasswordInput({
   )
 }
 
-function useReveal(isRevealed) {
-  const inputRef = useRef(null)
+function useReveal(isRevealed: any) {
+  const inputRef = useRef<any>(null)
 
   useEffect(() => {
     if (!inputRef.current) {

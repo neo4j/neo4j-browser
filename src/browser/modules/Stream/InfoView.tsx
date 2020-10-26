@@ -27,8 +27,8 @@ import {
   StyledHelpFrame
 } from './styled'
 
-export class InfoView extends Component {
-  shouldComponentUpdate(props, state) {
+export class InfoView extends Component<any> {
+  shouldComponentUpdate() {
     return false
   }
 

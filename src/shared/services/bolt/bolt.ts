@@ -37,13 +37,14 @@ import {
 import { NATIVE } from 'services/bolt/boltHelpers'
 import { setupBoltWorker, addTypesAsField } from './setup-bolt-worker'
 
-import BoltWorkerModule from 'worker-loader?inline!./boltWorker.js'
+// @ts-expect-error ts-migrate(2307) FIXME: Cannot find module 'worker-loader?inline!./boltWor... Remove this comment to see the full error message
+import BoltWorkerModule from 'worker-loader?inline!./boltWorker'
 
-let connectionProperties = null
-let _useDb = null
+let connectionProperties: any = null
+let _useDb: any = null
 const boltWorkPool = new WorkPool(() => new BoltWorkerModule(), 10)
 
-function openConnection(props, opts = {}, onLostConnection) {
+function openConnection(props: any, opts = {}, onLostConnection?: any) {
   return new Promise((resolve, reject) => {
     boltConnection
       .openConnection(props, opts, onLostConnection)
@@ -64,7 +65,7 @@ function openConnection(props, opts = {}, onLostConnection) {
   })
 }
 
-function cancelTransaction(id, cb) {
+function cancelTransaction(id: any, cb: any) {
   const work = boltWorkPool.getWorkById(id)
   if (work) {
     work.onFinish(cb)
@@ -74,7 +75,11 @@ function cancelTransaction(id, cb) {
   }
 }
 
-function routedWriteTransaction(input, parameters, requestMetaData = {}) {
+function routedWriteTransaction(
+  input: any,
+  parameters: any,
+  requestMetaData: any = {}
+) {
   const {
     useCypherThread = false,
     requestId = null,
@@ -117,7 +122,11 @@ function routedWriteTransaction(input, parameters, requestMetaData = {}) {
   }
 }
 
-function routedReadTransaction(input, parameters, requestMetaData = {}) {
+function routedReadTransaction(
+  input: any,
+  parameters: any,
+  requestMetaData: any = {}
+) {
   const {
     useCypherThread = false,
     requestId = null,
@@ -157,7 +166,11 @@ function routedReadTransaction(input, parameters, requestMetaData = {}) {
   }
 }
 
-function directTransaction(input, parameters, requestMetaData = {}) {
+function directTransaction(
+  input: any,
+  parameters: any,
+  requestMetaData: any = {}
+) {
   const {
     useCypherThread = false,
     requestId = null,
@@ -206,7 +219,7 @@ export default {
     const supportsMultiDb = await boltConnection.hasMultiDbSupport()
     return supportsMultiDb
   },
-  useDb: db => (_useDb = db),
+  useDb: (db: any) => (_useDb = db),
   directConnect: boltConnection.directConnect,
   openConnection,
   closeConnection: () => {
@@ -218,22 +231,25 @@ export default {
   routedReadTransaction,
   routedWriteTransaction,
   cancelTransaction,
-  recordsToTableArray: (records, convertInts = true) => {
+  recordsToTableArray: (records: any, convertInts = true) => {
     const intChecker = convertInts ? neo4j.isInt : () => true
     const intConverter = convertInts
-      ? item =>
+      ? (item: any) =>
           mappings.itemIntToString(item, {
             intChecker: neo4j.isInt,
-            intConverter: val => val.toNumber()
+            intConverter: (val: any) => val.toNumber()
           })
-      : val => val
+      : (val: any) => val
     return mappings.recordsToTableArray(records, {
       intChecker,
       intConverter,
       objectConverter: mappings.extractFromNeoObjects
     })
   },
-  extractNodesAndRelationshipsFromRecords: (records, maxFieldItems) => {
+  extractNodesAndRelationshipsFromRecords: (
+    records: any,
+    maxFieldItems: any
+  ) => {
     return mappings.extractNodesAndRelationshipsFromRecords(
       records,
       neo4j.types,
@@ -241,12 +257,12 @@ export default {
     )
   },
   extractNodesAndRelationshipsFromRecordsForOldVis: (
-    records,
+    records: any,
     filterRels = true,
-    maxFieldItems
+    maxFieldItems: any
   ) => {
     const intChecker = neo4j.isInt
-    const intConverter = val => val.toString()
+    const intConverter = (val: any) => val.toString()
 
     return mappings.extractNodesAndRelationshipsFromRecordsForOldVis(
       records,
@@ -260,14 +276,14 @@ export default {
       maxFieldItems
     )
   },
-  extractPlan: (result, calculateTotalDbHits) => {
+  extractPlan: (result: any, calculateTotalDbHits?: any) => {
     return mappings.extractPlan(result, calculateTotalDbHits)
   },
   retrieveFormattedUpdateStatistics: mappings.retrieveFormattedUpdateStatistics,
-  itemIntToNumber: item =>
+  itemIntToNumber: (item: any) =>
     mappings.itemIntToString(item, {
       intChecker: neo4j.isInt,
-      intConverter: val => val.toNumber(),
+      intConverter: (val: any) => val.toNumber(),
       objectConverter: mappings.extractFromNeoObjects
     }),
   addTypesAsField

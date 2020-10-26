@@ -24,8 +24,14 @@ import * as vizRenderers from '../renders/init'
 import { menu as menuRenderer } from '../renders/menu'
 import vizClickHandler from '../utils/clickHandler'
 
-const vizFn = function(el, measureSize, graph, layout, style) {
-  const viz = { style }
+const vizFn = function(
+  el: any,
+  measureSize: any,
+  graph: any,
+  layout: any,
+  style: any
+) {
+  const viz: any = { style }
 
   const root = d3.select(el)
   const baseGroup = root.append('g').attr('transform', 'translate(0,0)')
@@ -54,32 +60,32 @@ const vizFn = function(el, measureSize, graph, layout, style) {
   let updateViz = true
 
   // To be overridden
-  viz.trigger = function(event, ...args) {}
+  viz.trigger = function(_event: any, ..._args: any[]) {}
 
-  const onNodeClick = node => {
+  const onNodeClick = (node: any) => {
     updateViz = false
     return viz.trigger('nodeClicked', node)
   }
 
-  const onNodeDblClick = node => viz.trigger('nodeDblClicked', node)
+  const onNodeDblClick = (node: any) => viz.trigger('nodeDblClicked', node)
 
-  const onNodeDragToggle = node => viz.trigger('nodeDragToggle', node)
+  const onNodeDragToggle = (node: any) => viz.trigger('nodeDragToggle', node)
 
-  const onRelationshipClick = relationship => {
-    d3.event.stopPropagation()
+  const onRelationshipClick = (relationship: any) => {
+    ;(d3.event as Event).stopPropagation()
     updateViz = false
     return viz.trigger('relationshipClicked', relationship)
   }
 
-  const onNodeMouseOver = node => viz.trigger('nodeMouseOver', node)
-  const onNodeMouseOut = node => viz.trigger('nodeMouseOut', node)
+  const onNodeMouseOver = (node: any) => viz.trigger('nodeMouseOver', node)
+  const onNodeMouseOut = (node: any) => viz.trigger('nodeMouseOut', node)
 
-  const onRelMouseOver = rel => viz.trigger('relMouseOver', rel)
-  const onRelMouseOut = rel => viz.trigger('relMouseOut', rel)
+  const onRelMouseOver = (rel: any) => viz.trigger('relMouseOver', rel)
+  const onRelMouseOut = (rel: any) => viz.trigger('relMouseOut', rel)
 
   let zoomLevel = null
 
-  const zoomed = function() {
+  const zoomed = function(): any {
     draw = true
     return container.attr(
       'transform',
@@ -92,15 +98,18 @@ const vizFn = function(el, measureSize, graph, layout, style) {
     .scaleExtent([0.2, 1])
     .on('zoom', zoomed)
 
-  const interpolateZoom = (translate, scale) =>
+  const interpolateZoom = (translate: any, scale: any) =>
     d3
       .transition()
       .duration(500)
       .tween('zoom', () => {
-        const t = d3.interpolate(zoomBehavior.translate(), translate)
+        const t = d3.interpolate<number, number>(
+          zoomBehavior.translate(),
+          translate
+        )
         const s = d3.interpolate(zoomBehavior.scale(), scale)
-        return function(a) {
-          zoomBehavior.scale(s(a)).translate(t(a))
+        return function(a: number) {
+          zoomBehavior.scale(s(a)).translate(t(a) as [number, number])
           return zoomed()
         }
       })
@@ -117,7 +126,7 @@ const vizFn = function(el, measureSize, graph, layout, style) {
     return zoomClick(this)
   }
 
-  const zoomClick = function(element) {
+  const zoomClick = function(_element: any) {
     draw = true
     const limitsReached = { zoomInLimit: false, zoomOutLimit: false }
 
@@ -150,20 +159,20 @@ const vizFn = function(el, measureSize, graph, layout, style) {
 
   baseGroup
     .call(zoomBehavior)
-    .on('dblclick.zoom', null)
+    .on('dblclick.zoom', null as any)
     // Single click is not panning
     .on('click.zoom', () => (draw = false))
-    .on('DOMMouseScroll.zoom', null)
-    .on('wheel.zoom', null)
-    .on('mousewheel.zoom', null)
+    .on('DOMMouseScroll.zoom', null as any)
+    .on('wheel.zoom', null as any)
+    .on('mousewheel.zoom', null as any)
 
   const newStatsBucket = function() {
-    const bucket = {
+    const bucket: any = {
       frameCount: 0,
       geometry: 0,
       relationshipRenderers: (function() {
-        const timings = {}
-        vizRenderers.relationship.forEach(r => (timings[r.name] = 0))
+        const timings: any = {}
+        vizRenderers.relationship.forEach((r: any) => (timings[r.name] = 0))
         return timings
       })()
     }
@@ -218,9 +227,9 @@ const vizFn = function(el, measureSize, graph, layout, style) {
 
     const nodeGroups = container
       .selectAll('g.node')
-      .attr('transform', d => `translate(${d.x},${d.y})`)
+      .attr('transform', (d: any) => `translate(${d.x},${d.y})`)
 
-    for (var renderer of Array.from(vizRenderers.node)) {
+    for (var renderer of Array.from<any>(vizRenderers.node)) {
       nodeGroups.call(renderer.onTick, viz)
     }
 
@@ -228,12 +237,12 @@ const vizFn = function(el, measureSize, graph, layout, style) {
       .selectAll('g.relationship')
       .attr(
         'transform',
-        d =>
+        (d: any) =>
           `translate(${d.source.x} ${d.source.y}) rotate(${d.naturalAngle +
             180})`
       )
 
-    for (renderer of Array.from(vizRenderers.relationship)) {
+    for (renderer of Array.from<any>(vizRenderers.relationship)) {
       const startRenderer = now()
       relationshipGroups.call(renderer.onTick, viz)
       currentStats.relationshipRenderers[renderer.name] += now() - startRenderer
@@ -247,7 +256,8 @@ const vizFn = function(el, measureSize, graph, layout, style) {
   // Add custom drag event listeners
   force
     .drag()
-    .on('dragstart.node', d => onNodeDragToggle(d))
+    .on('dragstart.node', (d: any) => onNodeDragToggle(d))
+    // @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
     .on('dragend.node', () => onNodeDragToggle())
 
   viz.collectStats = function() {
@@ -268,7 +278,7 @@ const vizFn = function(el, measureSize, graph, layout, style) {
     layers
       .enter()
       .append('g')
-      .attr('class', d => `layer ${d}`)
+      .attr('class', (d: any) => `layer ${d}`)
 
     const nodes = graph.nodes()
     const relationships = graph.relationships()
@@ -276,7 +286,7 @@ const vizFn = function(el, measureSize, graph, layout, style) {
     const relationshipGroups = container
       .select('g.layer.relationships')
       .selectAll('g.relationship')
-      .data(relationships, d => d.id)
+      .data(relationships, (d: any) => d.id)
 
     relationshipGroups
       .enter()
@@ -288,12 +298,12 @@ const vizFn = function(el, measureSize, graph, layout, style) {
 
     relationshipGroups.classed(
       'selected',
-      relationship => relationship.selected
+      (relationship: any) => relationship.selected
     )
 
     geometry.onGraphChange(graph)
 
-    for (var renderer of Array.from(vizRenderers.relationship)) {
+    for (var renderer of Array.from<any>(vizRenderers.relationship)) {
       relationshipGroups.call(renderer.onGraphChange, viz)
     }
 
@@ -302,7 +312,7 @@ const vizFn = function(el, measureSize, graph, layout, style) {
     const nodeGroups = container
       .select('g.layer.nodes')
       .selectAll('g.node')
-      .data(nodes, d => d.id)
+      .data(nodes, (d: any) => d.id)
 
     nodeGroups
       .enter()
@@ -313,7 +323,7 @@ const vizFn = function(el, measureSize, graph, layout, style) {
       .on('mouseover', onNodeMouseOver)
       .on('mouseout', onNodeMouseOut)
 
-    nodeGroups.classed('selected', node => node.selected)
+    nodeGroups.classed('selected', (node: any) => node.selected)
 
     for (renderer of Array.from(vizRenderers.node)) {
       nodeGroups.call(renderer.onGraphChange, viz)
@@ -348,6 +358,7 @@ const vizFn = function(el, measureSize, graph, layout, style) {
     )
   }
 
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'boundingBox' does not exist on type '{ s... Remove this comment to see the full error message
   viz.boundingBox = () => container.node().getBBox()
 
   const clickHandler = vizClickHandler()

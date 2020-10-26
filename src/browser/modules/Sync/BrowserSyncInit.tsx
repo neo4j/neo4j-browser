@@ -37,19 +37,22 @@ import { getBrowserSyncConfig } from 'shared/modules/settings/settingsDuck'
 import { BrowserSyncAuthIframe } from './BrowserSyncAuthIframes'
 import { deepEquals } from 'services/utils'
 
-export function hasAuthData(props) {
+export function hasAuthData(props: any) {
   return props.authData && props.authData.data_token
 }
 
-export class BrowserSyncInit extends Component {
-  constructor(props) {
-    super()
+type BrowserSyncInitState = any
+
+export class BrowserSyncInit extends Component<any, BrowserSyncInitState> {
+  syncManager: any
+  constructor(props: {}) {
+    super(props)
     this.state = {
       pendingSignIn: false
     }
   }
 
-  shouldComponentUpdate(props) {
+  shouldComponentUpdate(props: {}) {
     return !deepEquals(this.props, props)
   }
 
@@ -65,7 +68,7 @@ export class BrowserSyncInit extends Component {
         this.importSyncManager().then(syncManager => {
           syncManager.authenticateWithDataAndBind(
             this.props.authData,
-            data => {
+            (data: any) => {
               this.setAuthStatus(SIGNED_IN)
               this.props.onSignIn(data)
               this.setState({ pendingSignIn: false })
@@ -94,11 +97,11 @@ export class BrowserSyncInit extends Component {
     )
   }
 
-  setAuthStatus(status) {
+  setAuthStatus(status: any) {
     this.props.onUserAuthStatusChange(status)
   }
 
-  setServiceStatus(status) {
+  setServiceStatus(status: any) {
     this.props.onServiceStatusChange(status)
   }
 
@@ -124,29 +127,29 @@ export class BrowserSyncInit extends Component {
 
 const mapStateToProps = getBrowserSyncConfig
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
-    onSync: syncObject => {
+    onSync: (syncObject: any) => {
       dispatch(setSyncMetadata(syncObject))
       dispatch(setSyncData(syncObject))
     },
-    onSignIn: data => {
+    onSignIn: (data: any) => {
       const profileAction = authorizedAs(data.profile)
       dispatch(profileAction)
     },
     onSignOut: () => {
       dispatch(clearSync)
     },
-    onServiceStatusChange: status => {
+    onServiceStatusChange: (status: any) => {
       dispatch(updateServiceStatus(status))
     },
-    onUserAuthStatusChange: status => {
+    onUserAuthStatusChange: (status: any) => {
       dispatch(updateUserAuthStatus(status))
     },
     resetSyncMetadata: () => {
       dispatch(resetSyncMetadata())
     },
-    onTokensReceived: data => {
+    onTokensReceived: (data: any) => {
       if (data) {
         dispatch(setSyncAuthData(data))
       }

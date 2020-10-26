@@ -25,7 +25,7 @@ export const inspectorFooterContractedHeight = 22
 const pMarginTop = 6
 
 // Themes is here because the colors are unique to this component
-const getColor = (theme, name) => {
+const getColor = (theme: 'normal' | 'dark', name: 'svgBackground') => {
   const themes = {
     normal: {
       svgBackground: '#f9fbfd'
@@ -194,7 +194,7 @@ export const StyledStatusBarWrapper = styled.div`
   height: 68px;
   display: none;
 `
-export const StyledStatusBar = styled.div`
+export const StyledStatusBar: any = styled.div`
   min-height: 39px;
   line-height: 39px;
   color: ${props => props.theme.secondaryText};
@@ -340,7 +340,7 @@ export const StyledCaptionSelector = styled.a`
   }
 `
 
-export const StyledFullSizeContainer = styled.div`
+export const StyledFullSizeContainer: any = styled.div`
   position: relative;
   height: 100%;
 `

@@ -45,7 +45,7 @@ export const Sysinfo = ({
   cc,
   ha,
   haInstances
-}) => {
+}: any) => {
   return (
     <SysInfoTableContainer>
       <SysInfoTable key="StoreSizes" header="Store Sizes">
@@ -96,8 +96,8 @@ export const Sysinfo = ({
   )
 }
 
-export const responseHandler = setState =>
-  function(res) {
+export const responseHandler = (setState: any) =>
+  function(res: any) {
     if (!res.success) {
       setState({ error: 'No results', success: false })
       return
@@ -111,14 +111,16 @@ export const responseHandler = setState =>
     } = getTableDataFromRecords(res.result.records)
 
     if (ha) {
-      const instancesInCluster = ha.InstancesInCluster.map(({ properties }) => {
-        return [
-          properties.instanceId,
-          properties.alive.toString(),
-          properties.available.toString(),
-          properties.haRole === 'master' ? 'yes' : '-'
-        ]
-      })
+      const instancesInCluster = ha.InstancesInCluster.map(
+        ({ properties }: any) => {
+          return [
+            properties.instanceId,
+            properties.alive.toString(),
+            properties.available.toString(),
+            properties.haRole === 'master' ? 'yes' : '-'
+          ]
+        }
+      )
 
       setState({
         ha: [
@@ -145,13 +147,13 @@ export const responseHandler = setState =>
       {
         label: 'Hit Ratio',
         value: cache.HitRatio,
-        mapper: v => `${(v * 100).toFixed(2)}%`,
+        mapper: (v: any) => `${(v * 100).toFixed(2)}%`,
         optional: true
       },
       {
         label: 'Usage Ratio',
         value: cache.UsageRatio,
-        mapper: v => `${(v * 100).toFixed(2)}%`,
+        mapper: (v: any) => `${(v * 100).toFixed(2)}%`,
         optional: true
       }
     ]
@@ -235,15 +237,15 @@ export const responseHandler = setState =>
     })
   }
 
-export const clusterResponseHandler = setState =>
-  function(res) {
+export const clusterResponseHandler = (setState: any) =>
+  function(res: any) {
     if (!res.success) {
       setState({ error: 'No causal cluster results', success: false })
       return
     }
     const mappedResult = mapLegacySysInfoRecords(res.result.records)
-    const mappedTableComponents = mappedResult.map(ccRecord => {
-      const httpUrlForMember = ccRecord.addresses.filter(address => {
+    const mappedTableComponents = mappedResult.map((ccRecord: any) => {
+      const httpUrlForMember = ccRecord.addresses.filter((address: any) => {
         return (
           !address.includes(window.location.href) &&
           (window.location.protocol.startsWith('file:')

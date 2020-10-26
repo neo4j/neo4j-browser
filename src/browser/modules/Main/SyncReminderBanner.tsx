@@ -41,8 +41,11 @@ import {
   setSyncData
 } from 'shared/modules/sync/syncDuck'
 
-class SyncReminderBanner extends Component {
-  state = {}
+type SyncReminderBannerState = any
+
+class SyncReminderBanner extends Component<any, SyncReminderBannerState> {
+  syncManager: any
+  state: any = {}
   importSyncManager = () => {
     if (this.syncManager) return Promise.resolve(this.syncManager)
     return import(
@@ -57,12 +60,12 @@ class SyncReminderBanner extends Component {
     })
   }
 
-  serviceReady(status) {
+  serviceReady(status: any) {
     this.setState({ status })
   }
 
   logIn() {
-    this.importSyncManager().then(syncManager => {
+    this.importSyncManager().then(() => {
       BrowserSyncAuthWindow(
         this.props.browserSyncConfig.authWindowUrl,
         this.syncManager.authCallBack.bind(this.syncManager)
@@ -106,7 +109,7 @@ class SyncReminderBanner extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   return {
     syncConsent: state.syncConsent,
     authStatus: getUserAuthStatus(state),
@@ -115,9 +118,9 @@ const mapStateToProps = state => {
   }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
-    onSync: syncObject => {
+    onSync: (syncObject: any) => {
       dispatch(setSyncData(syncObject))
     },
     optOutSync: () => {

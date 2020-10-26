@@ -26,7 +26,7 @@ import '@testing-library/jest-dom/extend-expect'
 describe('<Accordion>', () => {
   test('does not open any content by default and toggles content on title click', () => {
     // Given
-    const renderProp = ({ getChildProps }) => {
+    const renderProp = ({ getChildProps }: any) => {
       const p0 = getChildProps({ index: 0 })
       const p1 = getChildProps({ index: 1 })
       return (
@@ -81,7 +81,7 @@ describe('<Accordion>', () => {
 
   test('can have content panes open by default and works as usual after that', () => {
     // Given
-    const renderProp = ({ getChildProps }) => {
+    const renderProp = ({ getChildProps }: any) => {
       const p0 = getChildProps({ index: 0, defaultActive: true })
       const p1 = getChildProps({ index: 1 })
       const p2 = getChildProps({ index: 2, defaultActive: true })
@@ -139,7 +139,7 @@ describe('<Accordion>', () => {
 
   test('can have content panes always open', () => {
     // Given
-    const renderProp = ({ getChildProps }) => {
+    const renderProp = ({ getChildProps }: any) => {
       const p0 = getChildProps({ index: 0, forceActive: true })
       const p1 = getChildProps({ index: 1 })
       const p2 = getChildProps({ index: 2, forceActive: true })

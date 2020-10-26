@@ -21,20 +21,24 @@ import viz from './visualization'
 import layout from './layout'
 
 export default class graphView {
-  constructor(element, measureSize, graph, style) {
+  callbacks: any
+  graph: any
+  style: any
+  viz: any
+  constructor(element: any, measureSize: any, graph: any, style: any) {
     this.graph = graph
     this.style = style
     const forceLayout = layout.force()
     this.viz = viz(element, measureSize, this.graph, forceLayout, this.style)
     this.callbacks = {}
     const { callbacks } = this
-    this.viz.trigger = (() => (event, ...args) =>
-      Array.from(callbacks[event] || []).map(callback =>
+    this.viz.trigger = (() => (event: any, ...args: any[]) =>
+      Array.from(callbacks[event] || []).map((callback: any) =>
         callback.apply(null, args)
       ))()
   }
 
-  on(event, callback) {
+  on(event: any, callback: any) {
     ;(this.callbacks[event] != null
       ? this.callbacks[event]
       : (this.callbacks[event] = [])
@@ -42,7 +46,7 @@ export default class graphView {
     return this
   }
 
-  layout(value) {
+  layout(value: any) {
     if (!arguments.length) {
       return this.layout
     }
@@ -50,7 +54,7 @@ export default class graphView {
     return this
   }
 
-  grass(value) {
+  grass(value: any) {
     if (!arguments.length) {
       return this.style.toSheet()
     }
@@ -76,11 +80,11 @@ export default class graphView {
     return this.viz.collectStats()
   }
 
-  zoomIn(elem) {
+  zoomIn(elem: any) {
     return this.viz.zoomInClick(elem)
   }
 
-  zoomOut(elem) {
+  zoomOut(elem: any) {
     return this.viz.zoomOutClick(elem)
   }
 }

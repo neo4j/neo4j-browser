@@ -27,7 +27,7 @@ import {
 } from 'browser-components/icons/Icons'
 import { WarningSpan, ErrorSpan, SuccessSpan } from './styled'
 
-export const Icon = ({ status }) => {
+export const Icon = ({ status }: any) => {
   switch (status) {
     case 'pending':
       return <SmallSpinner />
@@ -53,6 +53,6 @@ export const Icon = ({ status }) => {
         </ErrorSpan>
       )
     default:
-      return '???'
+      return <>???</>
   }
 }

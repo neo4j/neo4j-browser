@@ -19,7 +19,7 @@
  */
 
 /* global HTMLElement */
-const addClass = (node, className) => {
+const addClass = (node: any, className: any) => {
   if (!(node instanceof HTMLElement && typeof className === 'string')) {
     return
   }
@@ -31,7 +31,7 @@ const addClass = (node, className) => {
   }
 }
 
-const prependIcon = (element, classname) => {
+const prependIcon = (element: any, classname: any) => {
   const icon = document.createElement('i')
   addClass(icon, classname)
   icon.setAttribute('style', 'padding-right:4px')

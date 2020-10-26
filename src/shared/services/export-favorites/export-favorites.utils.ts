@@ -46,8 +46,8 @@ import { SLASH, CYPHER_FILE_EXTENSION } from './export-favorites.constants'
  * @return    {Object[]}                        new user favorites objects ("my scripts")
  */
 export function mapOldFavoritesAndFolders(
-  favorites,
-  folders,
+  favorites: any,
+  folders: any,
   isAllowed = isNonStatic
 ) {
   const oldFoldersMap = new Map(
@@ -81,7 +81,7 @@ export function mapOldFavoritesAndFolders(
  * @param     {Boolean}     oldFavoriteOrFolder.isStatic
  * @return    {Boolean}
  */
-function isNonStatic({ isStatic }) {
+function isNonStatic({ isStatic }: any) {
   return !isStatic
 }
 
@@ -91,7 +91,7 @@ function isNonStatic({ isStatic }) {
  * @param     {String}      oldFavorite.content
  * @return    {Boolean}
  */
-function hasContent({ content }) {
+function hasContent({ content }: any) {
   return Boolean(content)
 }
 
@@ -100,11 +100,11 @@ function hasContent({ content }) {
  * @param     {Object[]}    favorites
  * @param     {Object[]}    folders
  */
-export function exportFavorites(favorites) {
+export function exportFavorites(favorites: any) {
   const grouped = sortAndGroupScriptsByPath(SLASH, favorites)
   const zipArchive = new JSZip()
   const dirMap = new Map([[SLASH, zipArchive]])
-  const joinPathParts = pathParts => `${SLASH}${join(pathParts, SLASH)}`
+  const joinPathParts = (pathParts: any) => `${SLASH}${join(pathParts, SLASH)}`
 
   zipArchive.file('.placeholder', 'forces directory creation')
   forEach(grouped, ([path, favorites]) => {
@@ -132,7 +132,7 @@ export function exportFavorites(favorites) {
  * @param     {Object[]}  favorites   scripts to save
  * @return    {JSZip}                 created dir
  */
-function createZipDirAndFiles(parent, name, favorites) {
+function createZipDirAndFiles(parent: any, name: any, favorites: any) {
   const dir = parent.folder(name)
 
   forEach(favorites, favorite => {

@@ -19,7 +19,7 @@
  */
 
 import React from 'react'
-import styled from 'styled-components'
+import styled, { StyledComponent } from 'styled-components'
 import { dim } from 'browser-styles/constants'
 
 import SVGInline from 'react-svg-inline'
@@ -28,11 +28,11 @@ import { hexToRgba } from '../../styles/utils'
 
 import styles from './style.css'
 
-export const CloseButton = props => {
+export const CloseButton = (props: any) => {
   return <button {...props}>×</button>
 }
 
-export const EditorButton = props => {
+export const EditorButton = (props: any) => {
   const { icon, title, color, width, onClick, ...rest } = props
   const overrideColor = { ...(color ? { color } : {}) }
   return (
@@ -52,7 +52,7 @@ export const EditorButton = props => {
   )
 }
 
-const BaseButton = styled.span`
+const BaseButton: any = styled.span`
   font-family: ${props => props.theme.streamlineFontFamily};
   font-style: normal !important;
   font-weight: 400 !important;
@@ -89,10 +89,10 @@ export const StyledNavigationButton = styled.button`
   }
 `
 
-export const NavigationButtonContainer = styled.li`
+export const NavigationButtonContainer: any = styled.li`
   min-height: 70px;
   height: 70px;
-  background-color: ${props =>
+  background-color: ${(props: any) =>
     !props.isOpen ? 'transparent' : props.theme.drawerBackground};
   &:focus {
     outline: none;
@@ -208,7 +208,7 @@ const StyledDrawerFormButton = styled(StyledSecondaryFormButton)`
   }
 `
 
-const buttonTypes = {
+const buttonTypes: Record<string, StyledComponent<'button', any, {}, never>> = {
   primary: StyledFormButton,
   secondary: StyledSecondaryFormButton,
   drawer: StyledDrawerFormButton,
@@ -216,9 +216,23 @@ const buttonTypes = {
   tag: StyledTagButton
 }
 
-export const FormButton = props => {
+interface ButtonTypeProps {
+  buttonType?: string
+  icon?: JSX.Element
+  label?: string
+  children?: any
+  tabIndex?: any
+  onClick?: any
+  type?: any
+  style?: any
+  disabled?: any
+  className?: any
+}
+
+export const FormButton = (props: ButtonTypeProps) => {
   const { icon, label, children, ...rest } = props
-  const ButtonType = buttonTypes[props.buttonType] || buttonTypes.primary
+  const ButtonType =
+    buttonTypes[props.buttonType as string] || buttonTypes.primary
 
   if (icon && label) {
     return (
@@ -248,7 +262,7 @@ export const FormButton = props => {
   )
 }
 
-export const CypherFrameButton = props => {
+export const CypherFrameButton = (props: any) => {
   const { selected, ...rest } = props
   return selected ? (
     <StyledSelectedCypherFrameButton {...rest} />
@@ -282,7 +296,7 @@ const StyledSelectedCypherFrameButton = styled(StyledCypherFrameButton)`
   color: ${props => props.theme.secondaryButtonTextHover};
   fill: ${props => props.theme.secondaryButtonTextHover};
 `
-export const FrameButton = props => {
+export const FrameButton = (props: any) => {
   const { pressed, children, ...rest } = props
   return pressed ? (
     <StyledFrameButtonPressed {...rest}>{children}</StyledFrameButtonPressed>
@@ -347,7 +361,7 @@ export const FrameButtonAChild = styled(DefaultA)`
   }
 `
 
-export const ActionButton = props => {
+export const ActionButton = (props: any) => {
   const { className, ...rest } = props
   return <button className={className + ' ' + styles.action} {...rest} />
 }
@@ -432,7 +446,7 @@ const BaseCarouselButton = styled.button`
   }
 `
 
-export const CarouselButton = props => {
+export const CarouselButton = (props: any) => {
   const { children, ...rest } = props
   return <BaseCarouselButton {...rest}>{children}</BaseCarouselButton>
 }

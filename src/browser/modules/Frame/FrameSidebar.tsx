@@ -20,7 +20,7 @@
 import React from 'react'
 import { StyledFrameSidebar } from './styled'
 
-const FrameSidebar = props => {
+const FrameSidebar = (props: any) => {
   if (!props || !props.children) return null
   return <StyledFrameSidebar>{props.children}</StyledFrameSidebar>
 }

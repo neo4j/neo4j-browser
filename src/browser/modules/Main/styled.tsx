@@ -22,7 +22,7 @@ import styled, { keyframes } from 'styled-components'
 import { StyledCodeBlock } from '../ClickToCode/styled'
 import { SyncSignInButton } from 'browser-components/buttons'
 
-const grow = height => {
+const grow = (height: any) => {
   return keyframes`
     0% {
       max-height: 0px;
@@ -82,13 +82,13 @@ export const StyledCodeBlockFrame = styled(StyledCodeBlock)`
   cursor: pointer;
 `
 
-export const SyncDisconnectedBanner = styled(Banner)`
+export const SyncDisconnectedBanner: any = styled(Banner)`
   background-color: ${props => props.theme.auth};
   display: flex;
   justify-content: space-between;
 `
 
-export const SyncSignInBarButton = styled(SyncSignInButton)`
+export const SyncSignInBarButton: any = styled(SyncSignInButton)`
   padding: 0 8px 0 8px;
   margin: 0 12px 0 12px;
   vertical-align: baseline;

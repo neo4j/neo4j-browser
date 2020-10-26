@@ -21,7 +21,7 @@
 const csvDelimiter = ','
 const csvNewline = '\n'
 
-const csvEscape = str => {
+const csvEscape = (str: any) => {
   if (!isString(str)) return str
   if (isEmptyString(str)) return '""'
   if (hasQuotes(str) || hasDelimiterChars(str)) {
@@ -29,26 +29,26 @@ const csvEscape = str => {
   }
   return str
 }
-const serializeObject = input =>
+const serializeObject = (input: any) =>
   isObject(input) ? JSON.stringify(input) : input
 
-const hasDelimiterChars = str => str && str.indexOf(csvDelimiter) > -1
-const hasQuotes = str => str && str.indexOf('"') > -1
-const isString = str => typeof str === 'string'
-const isObject = str => typeof str === 'object' && str !== null
-const isEmpty = str => typeof str === 'undefined' || str === null
-const isEmptyString = str => str === ''
+const hasDelimiterChars = (str: any) => str && str.indexOf(csvDelimiter) > -1
+const hasQuotes = (str: any) => str && str.indexOf('"') > -1
+const isString = (str: any) => typeof str === 'string'
+const isObject = (str: any) => typeof str === 'object' && str !== null
+const isEmpty = (str: any) => typeof str === 'undefined' || str === null
+const isEmptyString = (str: any) => str === ''
 
-const csvChain = input =>
+const csvChain = (input: any) =>
   (Array.isArray(input) ? input : [])
     .map(serializeObject)
     .map(csvEscape)
     .join(csvDelimiter)
 
-export const CSVSerializer = cols => {
+export const CSVSerializer = (cols: any) => {
   const _cols = cols
-  const _data = []
-  const append = row => {
+  const _data: any = []
+  const append = (row?: any) => {
     const emptyRowInOneCol = isEmpty(row) && _cols.length === 1
     if (emptyRowInOneCol) return _data.push(row)
     if (!row || row.length !== _cols.length) {
@@ -58,7 +58,7 @@ export const CSVSerializer = cols => {
   }
   return {
     append,
-    appendRows: rows => rows.forEach(append),
+    appendRows: (rows: any) => rows.forEach(append),
     output: () =>
       csvChain(_cols) +
       (!_data.length ? '' : csvNewline + _data.map(csvChain).join(csvNewline))

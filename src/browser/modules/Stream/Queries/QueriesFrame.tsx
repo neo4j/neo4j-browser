@@ -60,7 +60,10 @@ import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { getDefaultBoltScheme } from 'shared/modules/features/versionedFeatures'
 import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 
-export class QueriesFrame extends Component {
+type QueriesFrameState = any
+
+export class QueriesFrame extends Component<any, QueriesFrameState> {
+  timer: any
   state = {
     queries: [],
     autoRefresh: false,
@@ -77,7 +80,7 @@ export class QueriesFrame extends Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps: any, prevState: QueriesFrameState) {
     if (prevState.autoRefresh !== this.state.autoRefresh) {
       if (this.state.autoRefresh) {
         this.timer = setInterval(
@@ -112,17 +115,21 @@ export class QueriesFrame extends Component {
         query: listQueriesProcedure(),
         queryType: NEO4J_BROWSER_USER_ACTION_QUERY
       },
-      response => {
+      (response: any) => {
         if (response.success) {
           const queries = this.extractQueriesFromBoltResult(response.result)
-          const errors = queries.filter(_ => _.error).map(e => ({ ...e.error }))
-          const validQueries = queries.filter(_ => !_.error)
+          const errors = queries
+            .filter((_: any) => _.error)
+            .map((e: any) => ({
+              ...e.error
+            }))
+          const validQueries = queries.filter((_: any) => !_.error)
           const resultMessage = this.constructOverviewMessage(
             validQueries,
             errors
           )
 
-          this.setState((prevState, props) => {
+          this.setState((prevState: any) => {
             return {
               queries: validQueries,
               errors,
@@ -132,7 +139,7 @@ export class QueriesFrame extends Component {
             }
           })
         } else {
-          const errors = this.state.errors || []
+          const errors: any[] = this.state.errors || []
           this.setState({
             errors: errors.concat([response.error]),
             success: false
@@ -142,11 +149,11 @@ export class QueriesFrame extends Component {
     )
   }
 
-  killQueries(host, queryIdList) {
+  killQueries(host: any, queryIdList: any) {
     this.props.bus.self(
       this.isCC() ? AD_HOC_CYPHER_REQUEST : CYPHER_REQUEST,
       { host, query: killQueriesProcedure(queryIdList) },
-      response => {
+      (response: any) => {
         if (response.success) {
           this.setState({
             success: 'Query successfully cancelled',
@@ -154,7 +161,7 @@ export class QueriesFrame extends Component {
           })
           this.getRunningQueries(true)
         } else {
-          const errors = this.state.errors || []
+          const errors: any[] = this.state.errors || []
           this.setState({
             errors: errors.concat([response.error]),
             success: false
@@ -164,13 +171,13 @@ export class QueriesFrame extends Component {
     )
   }
 
-  extractQueriesFromBoltResult(result) {
-    return result.records.map(({ keys, _fields, host, error }) => {
+  extractQueriesFromBoltResult(result: any) {
+    return result.records.map(({ keys, _fields, host, error }: any) => {
       if (error) {
         return { error }
       }
-      const queryInfo = {}
-      keys.forEach((key, idx) => {
+      const queryInfo: any = {}
+      keys.forEach((key: any, idx: any) => {
         queryInfo[key] = bolt.itemIntToNumber(_fields[idx])
       })
       if (host) {
@@ -184,12 +191,12 @@ export class QueriesFrame extends Component {
     })
   }
 
-  onCancelQuery(host, queryId) {
+  onCancelQuery(host: any, queryId: any) {
     this.killQueries(host, [queryId])
   }
 
-  constructOverviewMessage(queries, errors) {
-    const clusterCount = new Set(queries.map(query => query.host)).size
+  constructOverviewMessage(queries: any, errors: any) {
+    const clusterCount = new Set(queries.map((query: any) => query.host)).size
 
     const numMachinesMsg =
       clusterCount > 1
@@ -209,7 +216,7 @@ export class QueriesFrame extends Component {
     )
   }
 
-  constructViewFromQueryList(queries, errors) {
+  constructViewFromQueryList(queries: any, errors: any) {
     if (queries.length === 0) {
       return null
     }
@@ -222,7 +229,7 @@ export class QueriesFrame extends Component {
       ['Elapsed time', '95px'],
       ['Kill', '95px']
     ]
-    const tableRows = queries.map((query, i) => {
+    const tableRows = queries.map((query: any, i: any) => {
       return (
         <tr key={`rows${i}`}>
           <StyledTd
@@ -268,7 +275,7 @@ export class QueriesFrame extends Component {
       )
     })
 
-    const errorRows = errors.map((error, i) => (
+    const errorRows = errors.map((error: any, i: any) => (
       <tr key={`error${i}`}>
         <StyledTd colSpan="7" title={error.message}>
           <Code>Error connecting to: {error.host}</Code>
@@ -276,7 +283,7 @@ export class QueriesFrame extends Component {
       </tr>
     ))
 
-    const tableHeaders = tableHeaderSizes.map((heading, i) => {
+    const tableHeaders = tableHeaderSizes.map(heading => {
       return (
         <StyledTh width={heading[1]} key={heading[0]}>
           {heading[0]}
@@ -298,7 +305,7 @@ export class QueriesFrame extends Component {
     )
   }
 
-  setAutoRefresh(autoRefresh) {
+  setAutoRefresh(autoRefresh: any) {
     this.setState({ autoRefresh: autoRefresh })
 
     if (autoRefresh) {
@@ -321,7 +328,7 @@ export class QueriesFrame extends Component {
           <Render if={this.state.errors && !this.state.success}>
             <FrameError
               message={(this.state.errors || [])
-                .map(e => `${e.host}: ${e.message}`)
+                .map((e: any) => `${e.host}: ${e.message}`)
                 .join(', ')}
             />
           </Render>
@@ -331,7 +338,7 @@ export class QueriesFrame extends Component {
               <AutoRefreshSpan>
                 <AutoRefreshToggle
                   checked={this.state.autoRefresh}
-                  onChange={e => this.setAutoRefresh(e.target.checked)}
+                  onChange={(e: any) => this.setAutoRefresh(e.target.checked)}
                 />
               </AutoRefreshSpan>
             </StyledStatusBar>
@@ -358,7 +365,7 @@ export class QueriesFrame extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   return {
     availableProcedures: getAvailableProcedures(state) || [],
     connectionState: getConnectionState(state),

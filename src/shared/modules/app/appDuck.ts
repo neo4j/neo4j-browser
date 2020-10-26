@@ -36,17 +36,18 @@ const SECURE_SCHEMES = ['neo4j+s', 'bolt+s']
 const INSECURE_SCHEMES = ['neo4j', 'bolt']
 
 // Selectors
-export const getHostedUrl = state => (state[NAME] || {}).hostedUrl || null
-export const getEnv = state => (state[NAME] || {}).env || WEB
-export const hasDiscoveryEndpoint = state =>
+export const getHostedUrl = (state: any) =>
+  (state[NAME] || {}).hostedUrl || null
+export const getEnv = (state: any) => (state[NAME] || {}).env || WEB
+export const hasDiscoveryEndpoint = (state: any) =>
   [WEB, CLOUD].includes(getEnv(state))
-export const inWebEnv = state => getEnv(state) === WEB
-export const inCloudEnv = state => getEnv(state) === CLOUD
-export const inWebBrowser = state => [WEB, CLOUD].includes(getEnv(state))
-export const getAllowedAuthSchemes = state =>
+export const inWebEnv = (state: any) => getEnv(state) === WEB
+export const inCloudEnv = (state: any) => getEnv(state) === CLOUD
+export const inWebBrowser = (state: any) => [WEB, CLOUD].includes(getEnv(state))
+export const getAllowedAuthSchemes = (state: any) =>
   inCloudEnv(state) ? [] : [NATIVE, NO_AUTH]
 
-export const getAllowedBoltSchemes = (state, encryptionFlag) => {
+export const getAllowedBoltSchemes = (state: any, encryptionFlag?: any) => {
   if (inCloudEnv(state) /* Aura only allows neo4j+s */) {
     return ['neo4j+s']
   }
@@ -62,14 +63,14 @@ export const getAllowedBoltSchemes = (state, encryptionFlag) => {
     : INSECURE_SCHEMES
 }
 // currently only Desktop specific
-export const isRelateAvailable = state =>
+export const isRelateAvailable = (state: any) =>
   state[NAME].relateUrl &&
   state[NAME].relateApiToken &&
   state[NAME].neo4jDesktopProjectId
-export const getProjectId = state => state[NAME].neo4jDesktopProjectId
+export const getProjectId = (state: any) => state[NAME].neo4jDesktopProjectId
 
 // Reducer
-export default function reducer(state = { hostedUrl: null }, action) {
+export default function reducer(state = { hostedUrl: null }, action: any) {
   switch (action.type) {
     case APP_START:
       return {

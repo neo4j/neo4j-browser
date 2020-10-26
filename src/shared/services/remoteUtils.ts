@@ -21,33 +21,33 @@
 /* global btoa */
 import { getUrlInfo } from 'services/utils'
 
-const removeJavascriptFromHref = string => {
+const removeJavascriptFromHref = (string: any) => {
   const localString = string.replace(/href=".*javascript:[^"]*"/, 'href=""')
   return localString.replace(/href='.*javascript:[^']*'/, "href=''")
 }
-const removeScriptTags = string =>
+const removeScriptTags = (string: any) =>
   string.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*(<\/script>)?/gi, '')
-const removeOnHandlersFromHtml = string =>
+const removeOnHandlersFromHtml = (string: any) =>
   string.replace(
     /(\s+(on[^\s=]+)[^\s=]*\s*=\s*("[^"]*"|'[^']*'|[\w\-.:]+\s*))/gi,
     ''
   )
 
-export function cleanHtml(string) {
+export function cleanHtml(string: any) {
   if (typeof string !== 'string') return string
   const stringWithoutHandlers = removeOnHandlersFromHtml(string)
   const stringWithoutScript = removeScriptTags(stringWithoutHandlers)
   return removeJavascriptFromHref(stringWithoutScript)
 }
 
-export const authHeaderFromCredentials = (username, password) => {
+export const authHeaderFromCredentials = (username: any, password: any) => {
   if (!btoa) throw new Error('btoa not defined') // Non browser env
   return btoa(`${username}:${password}`)
 }
 
 export const isLocalRequest = (
-  localUrl,
-  requestUrl,
+  localUrl: any,
+  requestUrl: any,
   opts = { hostnameOnly: false }
 ) => {
   if (!localUrl) return false

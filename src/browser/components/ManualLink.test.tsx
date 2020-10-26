@@ -23,7 +23,7 @@ import { render } from '@testing-library/react'
 
 import { ManualLink } from './ManualLink'
 
-const tests = [
+const tests: [Record<string, string | null>, string][] = [
   [
     { neo4jVersion: null, chapter: 'graph-algorithms', page: '/' },
     'https://neo4j.com/docs/graph-algorithms/current/'
@@ -73,7 +73,7 @@ test.each(tests)('Render correct url for props %o', (props, expected) => {
   expect(url).toEqual(expected)
 })
 
-const movedPages = [
+const movedPages: [Record<string, string>, Record<string, string>][] = [
   [
     { neo4jVersion: '3.5.0', page: '/administration/' },
     {

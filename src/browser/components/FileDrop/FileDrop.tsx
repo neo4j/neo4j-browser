@@ -50,7 +50,7 @@ import {
 import icon from 'icons/task-list-download.svg'
 import arrayHasItems from '../../../shared/utils/array-has-items'
 
-export function FileDrop(props) {
+export function FileDrop(props: any) {
   const [fileHoverState, setFileHoverState] = useState(false)
   const [userSelect, setUserSelect] = useState(false)
   const [file, setFile] = useState(null)
@@ -67,14 +67,14 @@ export function FileDrop(props) {
     setFile(null)
   }
 
-  const pasteInEditor = content => {
+  const pasteInEditor = (content: any) => {
     props.bus && props.bus.send(editor.SET_CONTENT, editor.setContent(content))
   }
 
-  const fileLoader = (file, callback) => {
+  const fileLoader = (file: any, callback: any) => {
     const reader = new FileReader()
     reader.onload = fileEvent => {
-      callback(fileEvent.target.result)
+      callback((fileEvent.target as FileReader).result)
       resetState()
     }
     reader.onerror = () => {
@@ -84,12 +84,12 @@ export function FileDrop(props) {
     reader.readAsText(file)
   }
 
-  const handleDragOver = event => {
+  const handleDragOver = (event: any) => {
     event.stopPropagation()
     event.preventDefault()
   }
 
-  const handleDragEnter = event => {
+  const handleDragEnter = (event: any) => {
     if (
       !fileHoverState &&
       event.dataTransfer.types &&
@@ -100,7 +100,7 @@ export function FileDrop(props) {
     }
   }
 
-  const handleDragLeave = event => {
+  const handleDragLeave = (event: any) => {
     // Check if we're leaving the browser window
     if (
       event.clientX <= 0 ||
@@ -112,7 +112,7 @@ export function FileDrop(props) {
     }
   }
 
-  const handleDrop = event => {
+  const handleDrop = (event: any) => {
     const files = event.dataTransfer.files
 
     if (files.length !== 1) {
@@ -142,7 +142,7 @@ export function FileDrop(props) {
     }
 
     if (extension === 'grass') {
-      fileLoader(files[0], result => {
+      fileLoader(files[0], (result: any) => {
         importGrass(result)
         const action = executeCommand(':style', { source: commandSources.auto })
         props.bus.send(action.type, action)
@@ -202,15 +202,15 @@ export function FileDrop(props) {
   )
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: any) => ({
   folders: foldersDuck.getFolders(state)
 })
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
-    saveCypherToFavorites: file => {
+    saveCypherToFavorites: (file: any) => {
       dispatch(favoritesDuck.addFavorite(file))
     },
-    saveManyFavorites: (favoritesToAdd, allFolders) => {
+    saveManyFavorites: (favoritesToAdd: any, allFolders: any) => {
       const folderNames = getFolderNamesFromFavorites(favoritesToAdd)
       const missingFolders = getMissingFoldersFromNames(folderNames, allFolders)
       const allFoldersIncludingMissing = [...allFolders, ...missingFolders]
@@ -225,7 +225,7 @@ const mapDispatchToProps = dispatch => {
         )
       )
     },
-    importGrass: file => {
+    importGrass: (file: any) => {
       const parsedGrass = parseGrass(file)
       if (parsedGrass) {
         dispatch(updateGraphStyleData(parsedGrass))
@@ -233,13 +233,13 @@ const mapDispatchToProps = dispatch => {
         dispatch(showErrorMessage('Could not parse grass data'))
       }
     },
-    dispatchErrorMessage: message => dispatch(showErrorMessage(message))
+    dispatchErrorMessage: (message: any) => dispatch(showErrorMessage(message))
   }
 }
-const mergeProps = (stateProps, dispatchProps, ownProps) => ({
+const mergeProps = (stateProps: any, dispatchProps: any, ownProps: any) => ({
   ...stateProps,
   ...dispatchProps,
-  saveManyFavorites: favorites =>
+  saveManyFavorites: (favorites: any) =>
     dispatchProps.saveManyFavorites(favorites, stateProps.folders),
   ...ownProps
 })

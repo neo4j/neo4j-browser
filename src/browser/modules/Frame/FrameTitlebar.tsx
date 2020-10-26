@@ -25,13 +25,11 @@ import { saveAs } from 'file-saver'
 import { map } from 'lodash-es'
 import SVGInline from 'react-svg-inline'
 import controlsPlay from 'icons/controls-play.svg'
-import uuid from 'uuid'
 
 import * as app from 'shared/modules/app/appDuck'
 import * as editor from 'shared/modules/editor/editorDuck'
 import * as commands from 'shared/modules/commands/commandsDuck'
 import * as sidebar from 'shared/modules/sidebar/sidebarDuck'
-import * as favorites from 'shared/modules/favorites/favoritesDuck'
 import {
   cancel as cancelRequest,
   getRequest,
@@ -50,11 +48,8 @@ import {
   DownloadIcon,
   ExpandIcon,
   PinIcon,
-  PlainPlayIcon,
   RefreshIcon,
   UpIcon,
-  FavoritesIcon,
-  ProjectFilesIcon,
   SaveFavorite,
   SaveFile
 } from 'browser-components/icons/Icons'
@@ -83,12 +78,12 @@ import { csvFormat, stringModifier } from 'services/bolt/cypherTypesFormatting'
 import arrayHasItems from 'shared/utils/array-has-items'
 import { stringifyMod } from 'services/utils'
 
-class FrameTitlebar extends Component {
+class FrameTitlebar extends Component<any> {
   hasData() {
     return this.props.numRecords > 0
   }
 
-  exportCSV(records) {
+  exportCSV(records: any) {
     const exportData = stringifyResultArray(
       csvFormat,
       transformResultRecordsToResultArray(records)
@@ -107,7 +102,7 @@ class FrameTitlebar extends Component {
 
     if (frame.type === 'history') {
       const asTxt = frame.result
-        .map(result => {
+        .map((result: any) => {
           const safe = `${result}`.trim()
 
           if (safe.startsWith(':')) {
@@ -125,7 +120,7 @@ class FrameTitlebar extends Component {
     }
   }
 
-  exportJSON(records) {
+  exportJSON(records: any) {
     const exportData = map(records, recordToJSONMapper)
     const data = stringifyMod(exportData, stringModifier, true)
     const blob = new Blob([data], {
@@ -144,7 +139,7 @@ class FrameTitlebar extends Component {
     downloadSVG(svgElement, graphElement, type)
   }
 
-  exportGrass(data) {
+  exportGrass(data: any) {
     const blob = new Blob([data], {
       type: 'text/plain;charset=utf-8'
     })
@@ -192,6 +187,7 @@ class FrameTitlebar extends Component {
               props.newFavorite(frame.cmd)
             }}
           >
+            {/* @ts-expect-error ts-migrate(2322) FIXME: Property 'width' does not exist on type 'Intrinsic... Remove this comment to see the full error message */}
             <SaveFavorite width={12} />
           </FrameButton>
           <Render if={props.isRelateAvailable}>
@@ -201,6 +197,7 @@ class FrameTitlebar extends Component {
                 props.newProjectFile(frame.cmd)
               }}
             >
+              {/* @ts-expect-error ts-migrate(2322) FIXME: Property 'width' does not exist on type 'Intrinsic... Remove this comment to see the full error message */}
               <SaveFile width={12} />
             </FrameButton>
           </Render>
@@ -303,7 +300,7 @@ class FrameTitlebar extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: any, ownProps: any) => {
   const request = ownProps.frame.requestId
     ? getRequest(state, ownProps.frame.requestId)
     : null
@@ -314,18 +311,18 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch: any, ownProps: any) => {
   return {
-    newFavorite: cmd => {
+    newFavorite: (cmd: any) => {
       dispatch(sidebar.setDraftScript(cmd, 'favorites'))
     },
-    newProjectFile: cmd => {
+    newProjectFile: (cmd: any) => {
       dispatch(sidebar.setDraftScript(cmd, 'project files'))
     },
-    onTitlebarClick: cmd => {
+    onTitlebarClick: (cmd: any) => {
       ownProps.bus.send(editor.SET_CONTENT, editor.setContent(cmd))
     },
-    onCloseClick: async (id, requestId, request) => {
+    onCloseClick: async (id: any, requestId: any, request: any) => {
       if (request && request.status === REQUEST_STATUS_PENDING) {
         dispatch(cancelRequest(requestId))
         await sleep(3000) // sleep for 3000 ms to let user read the cancel info
@@ -335,7 +332,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onRunClick: () => {
       ownProps.runQuery()
     },
-    onReRunClick: ({ cmd, useDb, id, requestId }) => {
+    onReRunClick: ({ cmd, useDb, id, requestId }: any) => {
       if (requestId) {
         dispatch(cancelRequest(requestId))
       }
@@ -348,7 +345,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         })
       )
     },
-    togglePinning: (id, isPinned) => {
+    togglePinning: (id: any, isPinned: any) => {
       isPinned ? dispatch(unpin(id)) : dispatch(pin(id))
     }
   }

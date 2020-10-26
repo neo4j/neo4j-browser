@@ -21,7 +21,7 @@
 import * as utils from './boltscheme.utils'
 
 describe('stripScheme', () => {
-  const tests = [
+  const tests: [any, any][] = [
     [null, ''],
     [undefined, ''],
     ['localhost:7687', 'localhost:7687'],
@@ -41,7 +41,7 @@ describe('stripScheme', () => {
   })
 })
 describe('isSecureBoltScheme', () => {
-  const tests = [
+  const tests: [any, any][] = [
     [null, false],
     [undefined, false],
     ['localhost:7687', false],
@@ -63,7 +63,7 @@ describe('isSecureBoltScheme', () => {
   )
 })
 describe('getSchemeFlag', () => {
-  const tests = [
+  const tests: [any, any][] = [
     [null, ''],
     [undefined, ''],
     ['localhost:7687', ''],
@@ -85,7 +85,7 @@ describe('getSchemeFlag', () => {
   )
 })
 describe('toggleSchemeRouting', () => {
-  const tests = [
+  const tests: [any, any][] = [
     [null, ''],
     [undefined, ''],
     ['localhost:7687', 'localhost:7687'],
@@ -110,7 +110,7 @@ describe('toggleSchemeRouting', () => {
   )
 })
 describe('generateBoltUrl', () => {
-  const tests = [
+  const tests: [any, any, any, any][] = [
     // wrong types
     [null, undefined, undefined, 'neo4j://'],
     [undefined, undefined, undefined, 'neo4j://'],

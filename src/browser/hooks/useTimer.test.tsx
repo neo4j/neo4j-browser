@@ -27,7 +27,7 @@ jest.useFakeTimers()
 describe('useTimer', () => {
   test('children are revealed after the specified time', () => {
     // Given
-    const MyComp = ({ delay, children }) => {
+    const MyComp = ({ delay, children }: any) => {
       const show = useTimer(delay)
       return show ? children : null
     }
@@ -44,13 +44,17 @@ describe('useTimer', () => {
     expect(queryByText(text)).toBeNull()
 
     // When moving timer not enough
-    act(() => jest.advanceTimersByTime(delay - 1))
+    act(() => {
+      jest.advanceTimersByTime(delay - 1)
+    })
 
     // Then, still nothing
     expect(queryByText(text)).toBeNull()
 
     // When moving to match the delay
-    act(() => jest.advanceTimersByTime(1))
+    act(() => {
+      jest.advanceTimersByTime(1)
+    })
 
     // Then we should see something
     expect(getByText(text)).not.toBeNull()

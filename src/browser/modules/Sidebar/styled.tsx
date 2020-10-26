@@ -34,7 +34,7 @@ export const StyledErrorListContainer = styled.div`
   color: #ffaf00;
 `
 
-export const StyledSettingTextInput = styled.input`
+export const StyledSettingTextInput: any = styled.input`
   height: 34px;
   color: #555;
   font-size: 14px;
@@ -63,7 +63,7 @@ const StyledDocumentText = styled.a`
   }
 `
 
-export const StyledDocumentActionLink = props => {
+export const StyledDocumentActionLink = (props: any) => {
   const { name, ...rest } = props
   return (
     <StyledHelpItem onClick={props.onClick}>

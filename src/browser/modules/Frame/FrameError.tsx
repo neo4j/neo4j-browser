@@ -23,7 +23,7 @@ import Ellipsis from 'browser-components/Ellipsis'
 import { errorMessageFormater } from '../Stream/errorMessageFormater'
 import { ErrorText } from '../Stream/styled'
 
-const FrameError = props => {
+const FrameError = (props: any) => {
   if (!props || (!props.code && !props.message)) return null
   const fullError = errorMessageFormater(props.code, props.message)
   return (

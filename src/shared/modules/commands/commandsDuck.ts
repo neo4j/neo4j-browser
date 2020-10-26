@@ -69,10 +69,10 @@ export const listDbsCommand = 'dbs'
 export const autoCommitTxCommand = 'auto'
 
 const initialState = {}
-export const getErrorMessage = state => state[NAME].errorMessage
+export const getErrorMessage = (state: any) => state[NAME].errorMessage
 export const allowlistedMultiCommands = () => [':param', ':use']
 
-export default function reducer(state = initialState, action) {
+export default function reducer(state = initialState, action: any) {
   switch (action.type) {
     case APP_START:
       return { ...initialState, ...state }
@@ -101,7 +101,7 @@ export const commandSources = {
   url: 'URL'
 }
 export const executeCommand = (
-  cmd,
+  cmd: any,
   {
     id = undefined,
     requestId = undefined,
@@ -109,7 +109,7 @@ export const executeCommand = (
     useDb = undefined,
     isRerun = false,
     source = undefined
-  } = {}
+  }: any = {}
 ) => {
   return {
     type: COMMAND_QUEUED,
@@ -124,8 +124,8 @@ export const executeCommand = (
 }
 
 export const executeSingleCommand = (
-  cmd,
-  { id, requestId, useDb, isRerun = false } = {}
+  cmd: any,
+  { id, requestId, useDb, isRerun = false }: any = {}
 ) => {
   return {
     type: SINGLE_COMMAND_QUEUED,
@@ -137,19 +137,19 @@ export const executeSingleCommand = (
   }
 }
 
-export const executeSystemCommand = cmd => {
+export const executeSystemCommand = (cmd: any) => {
   return {
     type: SYSTEM_COMMAND_QUEUED,
     cmd
   }
 }
 
-export const unknownCommand = cmd => ({
+export const unknownCommand = (cmd: any) => ({
   type: UNKNOWN_COMMAND,
   cmd
 })
 
-export const showErrorMessage = errorMessage => ({
+export const showErrorMessage = (errorMessage: any) => ({
   type: SHOW_ERROR_MESSAGE,
   errorMessage
 })
@@ -157,20 +157,29 @@ export const clearErrorMessage = () => ({
   type: CLEAR_ERROR_MESSAGE
 })
 
-export const cypher = query => ({ type: CYPHER, query })
-export const successfulCypher = query => ({ type: CYPHER_SUCCEEDED, query })
-export const unsuccessfulCypher = query => ({ type: CYPHER_FAILED, query })
-export const fetchGuideFromAllowlistAction = url => ({
+export const cypher = (query: any) => ({
+  type: CYPHER,
+  query
+})
+export const successfulCypher = (query: any) => ({
+  type: CYPHER_SUCCEEDED,
+  query
+})
+export const unsuccessfulCypher = (query: any) => ({
+  type: CYPHER_FAILED,
+  query
+})
+export const fetchGuideFromAllowlistAction = (url: any) => ({
   type: FETCH_GUIDE_FROM_ALLOWLIST,
   url
 })
 
 // Epics
 
-export const handleCommandEpic = (action$, store) =>
+export const handleCommandEpic = (action$: any, store: any) =>
   action$
     .ofType(COMMAND_QUEUED)
-    .do(action => {
+    .do((action: any) => {
       // Map some commands to the help command
       if (['?', 'help', ':'].includes(action.cmd)) {
         action.cmd = ':help'
@@ -198,9 +207,13 @@ export const handleCommandEpic = (action$, store) =>
       }
       const parentId = action.parentId || v4()
       store.dispatch(
-        addFrame({ type: 'cypher-script', id: parentId, cmd: action.cmd })
+        addFrame({
+          type: 'cypher-script',
+          id: parentId,
+          cmd: action.cmd
+        } as any)
       )
-      const jobs = statements.map(cmd => {
+      const jobs = statements.map((cmd: any) => {
         const cleanCmd = cleanCommand(cmd)
         const requestId = v4()
         const cmdId = v4()
@@ -235,13 +248,13 @@ export const handleCommandEpic = (action$, store) =>
     })
     .mapTo({ type: 'NOOP' })
 
-export const handleSingleCommandEpic = (action$, store) =>
+export const handleSingleCommandEpic = (action$: any, store: any) =>
   action$
     .ofType(SINGLE_COMMAND_QUEUED)
     .merge(action$.ofType(SYSTEM_COMMAND_QUEUED))
-    .map(action => buildCommandObject(action, helper.interpret))
-    .mergeMap(({ action, interpreted }) => {
-      return new Promise((resolve, reject) => {
+    .map((action: any) => buildCommandObject(action, helper.interpret))
+    .mergeMap(({ action, interpreted }: any) => {
+      return new Promise(resolve => {
         const noop = { type: 'NOOP' }
         if (!(action.cmd || '').trim().length) {
           resolve(noop)
@@ -256,15 +269,15 @@ export const handleSingleCommandEpic = (action$, store) =>
           resolve(noop)
         } else {
           res
-            .then(r => {
+            .then(() => {
               resolve(noop)
             })
-            .catch(e => resolve(noop))
+            .catch(() => resolve(noop))
         }
       })
     })
 
-export const postConnectCmdEpic = (some$, store) =>
+export const postConnectCmdEpic = (some$: any, store: any) =>
   some$.ofType(CONNECTION_SUCCESS).mergeMap(() =>
     some$
       .ofType(UPDATE_SETTINGS)
@@ -278,7 +291,7 @@ export const postConnectCmdEpic = (some$, store) =>
             store.getState()
           )
           if (playImplicitInitCommands && cmds !== undefined) {
-            cmds.forEach(cmd => {
+            cmds.forEach((cmd: any) => {
               store.dispatch(executeSystemCommand(`:${cmd}`))
             })
           }
@@ -288,8 +301,8 @@ export const postConnectCmdEpic = (some$, store) =>
       .take(1)
   )
 
-export const fetchGuideFromAllowlistEpic = (some$, store) =>
-  some$.ofType(FETCH_GUIDE_FROM_ALLOWLIST).mergeMap(action => {
+export const fetchGuideFromAllowlistEpic = (some$: any, store: any) =>
+  some$.ofType(FETCH_GUIDE_FROM_ALLOWLIST).mergeMap((action: any) => {
     if (!action.$$responseChannel || !action.url) {
       return Rx.Observable.of({ type: 'NOOP' })
     }
@@ -303,16 +316,16 @@ export const fetchGuideFromAllowlistEpic = (some$, store) =>
       defaultAllowlist
     )
     const urlAllowlist = addProtocolsToUrlList(resolvedWildcardAllowlist)
-    const guidesUrls = urlAllowlist.map(url => `${url}/${action.url}`)
+    const guidesUrls = urlAllowlist.map((url: any) => `${url}/${action.url}`)
 
-    return firstSuccessPromise(guidesUrls, url => {
+    return firstSuccessPromise(guidesUrls, (url: any) => {
       // Get first successful fetch
       return fetchRemoteGuide(url, allowlistStr).then(r => ({
         type: action.$$responseChannel,
         success: true,
         result: r
       }))
-    }).catch(e => ({
+    }).catch((e: any) => ({
       type: action.$$responseChannel,
       success: false,
       error: e

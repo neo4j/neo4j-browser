@@ -20,7 +20,7 @@
 
 import { useState, useEffect } from 'react'
 
-export default function useTimer(ms) {
+export default function useTimer(ms: any) {
   const [didPling, pling] = useState(false)
   useEffect(() => {
     const timer = setTimeout(() => pling(true), ms)

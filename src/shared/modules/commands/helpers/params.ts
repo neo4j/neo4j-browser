@@ -23,7 +23,7 @@ import { update, replace } from 'shared/modules/params/paramsDuck'
 import { collectLambdaValues, parseLambdaStatement } from './lambdas'
 import { SYSTEM_DB } from 'shared/modules/dbMeta/dbMetaDuck'
 
-export const extractParams = param => {
+export const extractParams = (param: any) => {
   // early bail, now handled by parser
   if (param.includes('=>')) {
     return {
@@ -57,7 +57,7 @@ export const extractParams = param => {
   }
 }
 
-const resolveAndStoreJsonValue = (param, put) => {
+const resolveAndStoreJsonValue = (param: any, put: any) => {
   try {
     const json = `{${param}}`
     const res = jsonic(json)
@@ -68,14 +68,14 @@ const resolveAndStoreJsonValue = (param, put) => {
   }
 }
 
-export const getParamName = input => {
+export const getParamName = (input: any) => {
   const strippedCmd = input.cmd.substr(1)
   const parts = splitStringOnFirst(strippedCmd, ' ')
 
   return parts[0].trim()
 }
 
-export const handleParamsCommand = (action, put, targetDb) => {
+export const handleParamsCommand = (action: any, put: any, targetDb?: any) => {
   if (targetDb === SYSTEM_DB) {
     return Promise.reject(
       new Error('Parameters cannot be declared when using system database.')

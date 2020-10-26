@@ -84,14 +84,14 @@ describe('<DesktopApi>', () => {
   })
   test('calls onXxx with data on event XXX', () => {
     // Given
-    let componentOnContextUpdate
+    let componentOnContextUpdate = (_e: any, _nc: any, _oc: any) => undefined
     const fn = jest.fn()
     const oldContext = { projects: [] }
     const newContext = { projects: [{ project: {} }] }
     const event = { type: 'XXX' }
     const nonListenEvent = { type: 'YYY' }
     const integrationPoint = {
-      onContextUpdate: fn => (componentOnContextUpdate = fn),
+      onContextUpdate: (fn: any) => (componentOnContextUpdate = fn),
       getKerberosTicket: jest.fn()
     }
 
@@ -141,11 +141,11 @@ describe('<DesktopApi>', () => {
   })
   test('calls onArgumentsChange when args change', () => {
     // Given
-    let componentOnArgumentsChange
+    let componentOnArgumentsChange = (_s: string) => undefined
     const newArgsString = 'test=1&test2=2'
     const fn = jest.fn()
     const integrationPoint = {
-      onArgumentsChange: fn => (componentOnArgumentsChange = fn)
+      onArgumentsChange: (fn: any) => (componentOnArgumentsChange = fn)
     }
 
     // When
@@ -165,13 +165,13 @@ describe('<DesktopApi>', () => {
   })
   test('calls sendMetrics callback if setEventMetricsCallback is set', () => {
     // Given
-    let componentMetricsCallback
+    let componentMetricsCallback = (_: any) => undefined
     const metricsCallArgs = {
       category: 'metrics_test',
       label: 'runs',
       data: { x: 1 }
     }
-    const fn = takeMetrics => (componentMetricsCallback = takeMetrics)
+    const fn = (takeMetrics: any) => (componentMetricsCallback = takeMetrics)
     const integrationPoint = {
       sendMetrics: jest.fn()
     }

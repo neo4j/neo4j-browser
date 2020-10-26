@@ -36,8 +36,8 @@ export default function Docs({
   onSlide,
   originFrameId,
   lastUpdate
-}) {
-  const [stateSlides, setStateSlides] = useState([])
+}: any) {
+  const [stateSlides, setStateSlides] = useState<JSX.Element[]>([])
 
   useEffect(() => {
     if (slides && slides.length) {

@@ -35,7 +35,7 @@ import { trimStart, trimEnd } from 'lodash-es'
  * for the chain to continue
  */
 
-export const serialExecution = (...args) => {
+export const serialExecution = (...args: any[]) => {
   if (!args.length) {
     return Promise.reject(Error('Nothing to do'))
   }
@@ -48,7 +48,7 @@ export const serialExecution = (...args) => {
   return out
 }
 
-const linkPromises = next => {
+const linkPromises = (next: any) => {
   if (!next || !next.workFn) {
     return Promise.reject(Error('Nothing to do'))
   }
@@ -59,7 +59,7 @@ const linkPromises = next => {
     next.prior
       // Set `catch` before `then` not to catch it's own rejection
       // so only following promises catches it
-      .catch(e => {
+      .catch((e: any) => {
         next.onSkip && next.onSkip()
         return Promise.reject(e) // Continue rejection chain
       })
@@ -76,11 +76,11 @@ const linkPromises = next => {
             return resolve(res)
           }
           return res
-            .then(r => {
+            .then((r: any) => {
               next.onSuccess && next.onSuccess(r)
               resolve(r)
             })
-            .catch(e => {
+            .catch((e: any) => {
               next.onError && next.onError(e)
               reject(e)
             })
@@ -89,7 +89,7 @@ const linkPromises = next => {
   )
 }
 
-export const deepEquals = (x, y) => {
+export const deepEquals = (x: any, y: any): any => {
   if (x && y && typeof x === 'object' && typeof y === 'object') {
     if (Object.keys(x).length !== Object.keys(y).length) return false
     return Object.keys(x).every(key => deepEquals(x[key], y[key]))
@@ -100,29 +100,32 @@ export const deepEquals = (x, y) => {
   return x === y
 }
 
-export const shallowEquals = (a, b) => {
+export const shallowEquals = (a: any, b: any) => {
   for (const key in a) if (a[key] !== b[key]) return false
   for (const key in b) if (!(key in a)) return false
   return true
 }
 
-export const flatten = arr =>
-  arr.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), [])
+export const flatten = (arr: any) =>
+  arr.reduce(
+    (a: any, b: any) => a.concat(Array.isArray(b) ? flatten(b) : b),
+    []
+  )
 
-export const moveInArray = (fromIndex, toIndex, arr) => {
+export const moveInArray = (fromIndex: any, toIndex: any, arr: any) => {
   if (!Array.isArray(arr)) return []
   if (fromIndex < 0 || fromIndex >= arr.length) return arr
   if (toIndex < 0 || toIndex >= arr.length) return arr
-  const newArr = [].concat(arr)
+  const newArr = ([] as any[]).concat(arr)
   const el = arr[fromIndex]
   newArr.splice(fromIndex, 1)
   newArr.splice(toIndex, 0, el)
   return newArr
 }
 
-export const debounce = (fn, time, context = null) => {
-  let pending
-  return (...args) => {
+export const debounce = (fn: any, time: any, context: any = null) => {
+  let pending: any
+  return (...args: any[]) => {
     if (pending) clearTimeout(pending)
     pending = setTimeout(
       () => typeof fn === 'function' && fn.apply(context, args),
@@ -131,9 +134,9 @@ export const debounce = (fn, time, context = null) => {
   }
 }
 
-export const throttle = (fn, time, context = null) => {
-  let blocking
-  return (...args) => {
+export const throttle = (fn: any, time: any, context = null) => {
+  let blocking: any
+  return (...args: any[]) => {
     if (blocking) return
     blocking = true
     typeof fn === 'function' && fn.apply(context, args)
@@ -141,13 +144,13 @@ export const throttle = (fn, time, context = null) => {
   }
 }
 
-export const firstSuccessPromise = (list, fn) => {
-  return list.reduce((promise, item) => {
-    return promise.catch(() => fn(item)).then(r => Promise.resolve(r))
+export const firstSuccessPromise = (list: any, fn: any) => {
+  return list.reduce((promise: any, item: any) => {
+    return promise.catch(() => fn(item)).then((r: any) => Promise.resolve(r))
   }, Promise.reject(new Error()))
 }
 
-export const hostIsAllowed = (uri, allowlist = null) => {
+export const hostIsAllowed = (uri: any, allowlist: any = null) => {
   if (allowlist === '*') return true
   const urlInfo = getUrlInfo(uri)
   const hostname = urlInfo.hostname
@@ -162,11 +165,11 @@ export const hostIsAllowed = (uri, allowlist = null) => {
   )
 }
 
-export const extractAllowlistFromConfigString = str =>
-  str.split(',').map(s => s.trim().replace(/\/$/, ''))
+export const extractAllowlistFromConfigString = (str: any) =>
+  str.split(',').map((s: any) => s.trim().replace(/\/$/, ''))
 
-export const addProtocolsToUrlList = list => {
-  return list.reduce((all, uri) => {
+export const addProtocolsToUrlList = (list: any) => {
+  return list.reduce((all: any, uri: any) => {
     if (!uri || uri === '*') return all
     const urlInfo = getUrlInfo(uri)
     if (urlInfo.protocol) return all.concat(uri)
@@ -174,13 +177,16 @@ export const addProtocolsToUrlList = list => {
   }, [])
 }
 
-export const resolveAllowlistWildcard = (list, resolveTo = []) => {
-  return list.reduce((all, entry) => {
+export const resolveAllowlistWildcard = (
+  list: any,
+  resolveTo: string[] = []
+) => {
+  return list.reduce((all: any, entry: any) => {
     return all.concat(entry && entry.trim() === '*' ? resolveTo : entry)
   }, [])
 }
 
-export const getUrlInfo = url => {
+export const getUrlInfo = (url: any) => {
   const protocolMissing = url.match(/^(.+:\/\/)?/)[1] === undefined
   // prepend a default protocol, if none was found
   const urlWithProtocol = protocolMissing ? `http://${url}` : url
@@ -210,7 +216,7 @@ export const getUrlInfo = url => {
   }
 }
 
-export const getUrlParamValue = (name, url) => {
+export const getUrlParamValue = (name: any, url: any) => {
   if (!url) return false
   const out = []
   const re = new RegExp(`[\\?&]${name}=([^&#]*)`, 'g')
@@ -222,7 +228,7 @@ export const getUrlParamValue = (name, url) => {
   return out
 }
 
-export const toHumanReadableBytes = input => {
+export const toHumanReadableBytes = (input: any) => {
   let number = +input
   if (!isFinite(number)) {
     return '-'
@@ -246,19 +252,20 @@ export const toHumanReadableBytes = input => {
 }
 
 export const getBrowserName = function() {
-  if (!!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0) {
+  if (!!(window as any).opera || navigator.userAgent.indexOf(' OPR/') >= 0) {
     return 'Opera'
   }
+  // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'InstallTrigger'.
   if (typeof InstallTrigger !== 'undefined') {
     return 'Firefox'
   }
   if (navigator.userAgent.match(/Version\/[\d.]+.*Safari/)) {
     return 'Safari'
   }
-  if (window.chrome) {
+  if ((window as any).chrome) {
     return 'Chrome'
   }
-  if (document.documentMode) {
+  if ((document as any).documentMode) {
     return 'Internet Explorer'
   }
   if (window.StyleMedia) {
@@ -281,16 +288,16 @@ export const canUseDOM = () =>
     window.document.createElement
   )
 
-export const escapeCypherIdentifier = str =>
+export const escapeCypherIdentifier = (str: any) =>
   /^[A-Za-z][A-Za-z0-9_]*$/.test(str) ? str : `\`${str.replace(/`/g, '``')}\``
 
-export const unescapeCypherIdentifier = str =>
+export const unescapeCypherIdentifier = (str: any) =>
   [str]
     .map(s => trimStart(s, '`'))
     .map(s => trimEnd(s, '`'))
     .map(s => s.replace(/``/g, '`'))[0]
 
-export const parseTimeMillis = timeWithOrWithoutUnit => {
+export const parseTimeMillis = (timeWithOrWithoutUnit: any) => {
   const time = String(timeWithOrWithoutUnit) // cast to string
   const readUnit = time.match(/\D+/)
   const value = parseInt(time)
@@ -309,8 +316,8 @@ export const parseTimeMillis = timeWithOrWithoutUnit => {
   }
 }
 
-export const arrayToObject = array =>
-  array.reduce((obj, item) => {
+export const arrayToObject = (array: any) =>
+  array.reduce((obj: any, item: any) => {
     const key = Object.keys(item)[0]
     const value = Object.values(item)[0]
     obj[key] = value
@@ -318,11 +325,11 @@ export const arrayToObject = array =>
   }, {})
 
 export const stringifyMod = (
-  value,
-  modFn = null,
-  pretty = false,
+  value: any,
+  modFn: any = null,
+  pretty: any = false,
   skipOpeningIndentation = false
-) => {
+): any => {
   const prettyLevel = !pretty ? false : pretty === true ? 1 : parseInt(pretty)
   const nextPrettyLevel = prettyLevel ? prettyLevel + 1 : false
   const newLine = prettyLevel ? '\n' : ''
@@ -340,7 +347,7 @@ export const stringifyMod = (
     function(a) {
       return toString.call(a) === '[object Array]'
     }
-  const escMap = {
+  const escMap: any = {
     '"': '\\"',
     '\\': '\\',
     '\b': '\b',
@@ -349,12 +356,12 @@ export const stringifyMod = (
     '\r': '\r',
     '\t': '\t'
   }
-  const escFunc = function(m) {
+  const escFunc = function(m: any) {
     return (
       escMap[m] || `\\u${(m.charCodeAt(0) + 0x10000).toString(16).substr(1)}`
     )
   }
-  const escRE = /[\\"\u0000-\u001F\u2028\u2029]/g // eslint-disable-line no-control-regex
+  const escRE = /[\\"\u0000-\u001F\u2028\u2029]/g
   if (modFn) {
     const modVal = modFn && modFn(value)
     if (typeof modVal !== 'undefined') return indentation + modVal
@@ -404,15 +411,16 @@ export const stringifyMod = (
   return `${indentation}"${value.toString().replace(escRE, escFunc)}"`
 }
 
-export const unescapeDoubleQuotesForDisplay = str => str.replace(/\\"/g, '"')
+export const unescapeDoubleQuotesForDisplay = (str: any) =>
+  str.replace(/\\"/g, '"')
 
-export const safetlyAddObjectProp = (obj, prop, val) => {
+export const safetlyAddObjectProp = (obj: any, prop: any, val: any): any => {
   const localObj = escapeReservedProps(obj, prop)
   localObj[prop] = val
   return localObj
 }
 
-export const safetlyRemoveObjectProp = (obj, prop) => {
+export const safetlyRemoveObjectProp = (obj: any, prop: any) => {
   if (!hasReservedProp(obj, prop)) {
     return obj
   }
@@ -420,7 +428,7 @@ export const safetlyRemoveObjectProp = (obj, prop) => {
   return unEscapeReservedProps(obj, prop)
 }
 
-export const escapeReservedProps = (obj, prop) => {
+export const escapeReservedProps = (obj: any, prop: any) => {
   if (!hasReservedProp(obj, prop)) {
     return obj
   }
@@ -433,7 +441,7 @@ export const escapeReservedProps = (obj, prop) => {
   return localObj
 }
 
-export const unEscapeReservedProps = (obj, prop) => {
+export const unEscapeReservedProps = (obj: any, prop: any) => {
   let propName = getEscapedObjectProp(prop)
   if (!hasReservedProp(obj, propName)) {
     return obj
@@ -449,32 +457,32 @@ export const unEscapeReservedProps = (obj, prop) => {
   return obj
 }
 
-const getEscapedObjectProp = prop => `\\${prop}`
-const getUnescapedObjectProp = prop =>
+const getEscapedObjectProp = (prop: any) => `\\${prop}`
+const getUnescapedObjectProp = (prop: any) =>
   prop.indexOf('\\') === 0 ? prop.substr(1) : prop // A bit weird because of escape chars
 
-export const hasReservedProp = (obj, propName) =>
+export const hasReservedProp = (obj: any, propName: any) =>
   Object.prototype.hasOwnProperty.call(obj, propName)
 
 // Epic helpers
-export const put = dispatch => action => dispatch(action)
+export const put = (dispatch: any) => (action: any) => dispatch(action)
 
-export const optionalToString = v =>
+export const optionalToString = (v: any) =>
   ![null, undefined].includes(v) && typeof v.toString === 'function'
     ? v.toString()
     : v
 
-export const toKeyString = str => btoa(encodeURIComponent(str))
+export const toKeyString = (str: any) => btoa(encodeURIComponent(str))
 
 export function flushPromises() {
   return new Promise(resolve => setImmediate(resolve))
 }
 
-export async function sleep(ms) {
+export async function sleep(ms: any) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-export function detectRuntimeEnv(win, cloudDomains = []) {
+export function detectRuntimeEnv(win?: any, cloudDomains: string[] = []) {
   if (win && win.neo4jDesktopApi) {
     return DESKTOP
   }

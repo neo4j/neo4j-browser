@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { render, fireEvent } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import React from 'react'
 import configureMockStore from 'redux-mock-store'
 
@@ -60,7 +60,7 @@ jest.mock(
 describe('<Main />', () => {
   it('should display an ErrorBanner when useDb is not in databases list', () => {
     const useDb = 'some database'
-    const databases = []
+    const databases: any = []
 
     const { queryByText } = render(
       <Main

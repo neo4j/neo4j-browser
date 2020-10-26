@@ -32,9 +32,7 @@ import {
   getMaxRows
 } from 'shared/modules/settings/settingsDuck'
 import { stringModifier } from 'services/bolt/cypherTypesFormatting'
-import ClickableUrls, {
-  convertUrlsToHrefTags
-} from '../../../components/ClickableUrls'
+import ClickableUrls from '../../../components/ClickableUrls'
 import { StyledStatsBar, StyledTruncatedMessage } from '../styled'
 import Ellipsis from '../../../components/Ellipsis'
 import { RelatableStyleWrapper, StyledJsonPre } from './relatable-view.styled'
@@ -47,7 +45,11 @@ const RelatableView = connect(state => ({
 
 export default RelatableView
 
-export function RelatableViewComponent({ maxRows, result, maxFieldItems }) {
+export function RelatableViewComponent({
+  maxRows,
+  result,
+  maxFieldItems
+}: any) {
   const { records = [] } = result
   const columns = useMemo(() => getColumns(records, Number(maxFieldItems)), [
     result,
@@ -66,12 +68,12 @@ export function RelatableViewComponent({ maxRows, result, maxFieldItems }) {
   )
 }
 
-function getColumns(records, maxFieldItems) {
+function getColumns(records: any, maxFieldItems: any) {
   const keys = get(head(records), 'keys', [])
 
   return map(keys, key => ({
     Header: key,
-    accessor: record => {
+    accessor: (record: any) => {
       const fieldItem = record.get(key)
 
       if (!Array.isArray(fieldItem)) return fieldItem
@@ -82,12 +84,12 @@ function getColumns(records, maxFieldItems) {
   }))
 }
 
-function CypherCell({ cell }) {
+function CypherCell({ cell }: any) {
   const { value } = cell
   return renderCell(value)
 }
 
-const renderCell = entry => {
+const renderCell = (entry: any) => {
   if (Array.isArray(entry)) {
     const children = entry.map((item, index) => (
       <span key={index}>
@@ -108,7 +110,7 @@ const renderCell = entry => {
     )
   }
 }
-const renderObject = entry => {
+const renderObject = (entry: any) => {
   if (isInt(entry)) return entry.toString()
   if (entry === null) return <em>null</em>
   return (
@@ -116,12 +118,12 @@ const renderObject = entry => {
       text={unescapeDoubleQuotesForDisplay(
         stringifyMod(entry, stringModifier, true)
       )}
-      WrappingTag={StyledJsonPre}
+      WrappingTag={StyledJsonPre as any}
     />
   )
 }
 
-export function RelatableBodyMessage({ maxRows, result }) {
+export function RelatableBodyMessage({ maxRows, result }: any) {
   const { bodyMessage } = getBodyAndStatusBarMessages(result, maxRows)
 
   return (
@@ -140,7 +142,7 @@ export function RelatableStatusbarComponent({
   maxRows,
   result,
   maxFieldItems
-}) {
+}: any) {
   const hasTruncatedFields = useMemo(
     () => resultHasTruncatedFields(result, maxFieldItems),
     [result, maxFieldItems]

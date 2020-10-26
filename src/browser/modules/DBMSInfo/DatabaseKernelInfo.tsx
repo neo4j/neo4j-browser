@@ -57,7 +57,7 @@ export const DatabaseKernelInfo = ({
   storeSize,
   onItemClick,
   databases
-}) => {
+}: any) => {
   return (
     <DrawerSection className="database-kernel-info">
       <DrawerSubHeader>DBMS</DrawerSubHeader>
@@ -123,7 +123,7 @@ export const DatabaseKernelInfo = ({
   )
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   return {
     version: getVersion(state),
     edition: getEdition(state),
@@ -133,9 +133,9 @@ const mapStateToProps = state => {
     databases: getDatabases(state)
   }
 }
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (_dispatch: any, ownProps: any) => {
   return {
-    onItemClick: cmd => {
+    onItemClick: (cmd: any) => {
       const action = executeCommand(cmd, { source: commandSources.button })
       ownProps.bus.send(action.type, action)
     }

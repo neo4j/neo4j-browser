@@ -97,7 +97,7 @@ describe('utils', () => {
       }
 
       const res = utils.serialExecution(w1, w2, w3)
-      res.catch(e => {}) // catch error from promise chain not to break test
+      res.catch(() => {}) // catch error from promise chain not to break test
 
       return utils.flushPromises().then(() => {
         expect(w1.onStart).toHaveBeenCalledTimes(1)
@@ -198,12 +198,16 @@ describe('utils', () => {
     jest.useFakeTimers()
     const callMe = jest.fn()
     function TestFn() {
+      // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       this.val = 'hello'
-      this.fn = function(extVal) {
+      // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
+      this.fn = function(extVal: any) {
         callMe(this.val, extVal)
       }
+      // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       this.dbFn = utils.debounce(this.fn, 500, this)
     }
+    // @ts-expect-error ts-migrate(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
     const testFn = new TestFn()
 
     // When
@@ -243,12 +247,16 @@ describe('utils', () => {
     jest.useFakeTimers()
     const callMe = jest.fn()
     function TestFn() {
+      // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       this.val = 'hello'
-      this.fn = function(extVal) {
+      // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
+      this.fn = function(extVal: any) {
         callMe(this.val, extVal)
       }
+      // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       this.thFn = utils.throttle(this.fn, 500, this)
     }
+    // @ts-expect-error ts-migrate(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
     const testFn = new TestFn()
 
     // When
@@ -491,7 +499,7 @@ describe('utils', () => {
 
   test('stringifyMod works just as JSON.stringify with modFn', () => {
     // Given
-    const modFn = val => {
+    const modFn = (val: any) => {
       if (Number.isInteger(val)) return val.toString()
     }
     const tests = [null, false, [[], [0]], '4', 4, ['string']]
@@ -693,7 +701,7 @@ describe('toKeyString', () => {
     })
   })
   describe('detectRuntimeEnv', () => {
-    const tests = [
+    const tests: [any, any, any][] = [
       [
         'Injected Desktop API',
         [
@@ -742,7 +750,7 @@ describe('toKeyString', () => {
 
     test.each(tests)(
       'Detects correct environment for test named %s',
-      (name, input, output) => {
+      (_name, input: any[], output) => {
         expect(utils.detectRuntimeEnv(...input)).toEqual(output)
       }
     )

@@ -23,11 +23,12 @@ import StraightArrow from './straightArrow'
 import ArcArrow from './arcArrow'
 
 export default class PairwiseArcsRelationshipRouting {
-  constructor(style) {
+  style: any
+  constructor(style: any) {
     this.style = style
   }
 
-  measureRelationshipCaption(relationship, caption) {
+  measureRelationshipCaption(relationship: any, caption: any) {
     const fontFamily = 'sans-serif'
     const padding = parseFloat(
       this.style.forRelationship(relationship).get('padding')
@@ -37,14 +38,14 @@ export default class PairwiseArcsRelationshipRouting {
     )
   }
 
-  captionFitsInsideArrowShaftWidth(relationship) {
+  captionFitsInsideArrowShaftWidth(relationship: any) {
     return (
       parseFloat(this.style.forRelationship(relationship).get('shaft-width')) >
       relationship.captionHeight
     )
   }
 
-  measureRelationshipCaptions(relationships) {
+  measureRelationshipCaptions(relationships: Iterable<any>) {
     return (() => {
       const result = []
       for (const relationship of Array.from(relationships)) {
@@ -67,7 +68,7 @@ export default class PairwiseArcsRelationshipRouting {
     })()
   }
 
-  shortenCaption(relationship, caption, targetWidth) {
+  shortenCaption(relationship: any, caption: any, targetWidth: any) {
     let shortCaption = caption || 'caption'
     while (true) {
       if (shortCaption.length <= 2) {
@@ -81,8 +82,10 @@ export default class PairwiseArcsRelationshipRouting {
     }
   }
 
-  computeGeometryForNonLoopArrows(nodePairs) {
-    const square = distance => distance * distance
+  computeGeometryForNonLoopArrows(
+    nodePairs: Iterable<{ relationships: Iterable<any>; [key: string]: any }>
+  ) {
+    const square = (distance: any) => distance * distance
     return (() => {
       const result = []
       for (var nodePair of Array.from(nodePairs)) {
@@ -112,7 +115,10 @@ export default class PairwiseArcsRelationshipRouting {
     })()
   }
 
-  distributeAnglesForLoopArrows(nodePairs, relationships) {
+  distributeAnglesForLoopArrows(
+    nodePairs: Iterable<any>,
+    relationships: Iterable<any>
+  ) {
     return (() => {
       const result = []
       for (var nodePair of Array.from(nodePairs)) {
@@ -183,8 +189,11 @@ export default class PairwiseArcsRelationshipRouting {
     })()
   }
 
-  layoutRelationships(graph) {
-    const nodePairs = graph.groupedRelationships()
+  layoutRelationships(graph: any) {
+    const nodePairs: Iterable<{
+      relationships: any[]
+      [key: string]: any
+    }> = graph.groupedRelationships()
     this.computeGeometryForNonLoopArrows(nodePairs)
     this.distributeAnglesForLoopArrows(nodePairs, graph.relationships())
 

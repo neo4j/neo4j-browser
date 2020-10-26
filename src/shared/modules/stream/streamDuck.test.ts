@@ -24,8 +24,8 @@ describe('streamDuck', () => {
   test('limits the number of frames in the reducer', () => {
     // Given
     const init = { ...initialState, maxFrames: 1 }
-    const action = add({ cmd: 'xxx', id: 1 })
-    const action2 = add({ cmd: 'yyy', id: 2 })
+    const action: any = add({ cmd: 'xxx', id: 1 } as any)
+    const action2 = add({ cmd: 'yyy', id: 2 } as any)
 
     // When
     const newState = reducer(init, action)
@@ -41,13 +41,13 @@ describe('streamDuck', () => {
   })
   test('cuts the number of frames when config is set', () => {
     // Given
-    const init = {
+    const init: any = {
       ...initialState,
       maxFrames: 2,
       allIds: [1, 2],
       byId: { 1: { stack: [{ id: 1 }] }, 2: { stack: [{ id: 2 }] } }
     }
-    const action = { type: SET_MAX_FRAMES, maxFrames: 1 }
+    const action: any = { type: SET_MAX_FRAMES, maxFrames: 1 }
 
     // When
     const newState = reducer(init, action)
@@ -63,8 +63,8 @@ describe('streamDuck', () => {
       1: { stack: [{}], isPinned: 1 },
       2: { stack: [{}], isPinned: 1 }
     }
-    const init = { ...initialState, maxFrames: 2, allIds: [1, 2], byId }
-    const action = { type: SET_MAX_FRAMES, maxFrames: 1 }
+    const init: any = { ...initialState, maxFrames: 2, allIds: [1, 2], byId }
+    const action: any = { type: SET_MAX_FRAMES, maxFrames: 1 }
 
     // When
     const newState = reducer(init, action)
@@ -79,8 +79,8 @@ describe('streamDuck', () => {
     const BEFORE = 'before'
     const AFTER = 'after'
     const byId = { [ID]: { stack: [{ type: BEFORE }] }, 2: { stack: [{}] } }
-    const init = { ...initialState, allIds: [ID, 2], byId }
-    const action = add({ id: ID, type: AFTER })
+    const init: any = { ...initialState, allIds: [ID, 2], byId }
+    const action = add({ id: ID, type: AFTER } as any)
 
     // Then
     expect(init.byId).toMatchInlineSnapshot(`

@@ -29,9 +29,9 @@ import {
 import { MessageArea, PaddedStatsBar } from './styled'
 import { allowlistedMultiCommands } from 'shared/modules/commands/commandsDuck'
 
-const ucFirst = str => str[0].toUpperCase() + str.slice(1)
+const ucFirst = (str: any) => str[0].toUpperCase() + str.slice(1)
 
-const GenericSummary = ({ status }) => {
+const GenericSummary = ({ status }: any): any => {
   switch (status) {
     case 'skipped':
       return (
@@ -76,7 +76,7 @@ const GenericSummary = ({ status }) => {
   }
 }
 
-export const CypherSummary = ({ status, request }) => {
+export const CypherSummary = ({ status, request }: any): any => {
   switch (status) {
     case 'skipped':
       return <GenericSummary status={status} />
@@ -109,7 +109,7 @@ export const CypherSummary = ({ status, request }) => {
   }
 }
 
-export const Summary = ({ status, request }) => {
+export const Summary = ({ status, request }: any): any => {
   switch (status) {
     case 'ignored':
       return <GenericSummary status={status} />

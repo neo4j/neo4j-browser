@@ -34,6 +34,7 @@ describe('getErrorMessage', () => {
     const msg = getErrorMessage(obj)
 
     // Then
+    // @ts-expect-error ts-migrate(7053) FIXME: No index signature with a parameter of type 'strin... Remove this comment to see the full error message
     expect(msg).toEqual(messages[obj.type])
   })
   test('should interpolate messages', () => {

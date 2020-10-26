@@ -24,14 +24,14 @@ import FrameTemplate from '../Frame/FrameTemplate'
 import { UnstyledList, PaddedDiv } from './styled'
 import HistoryRow from './HistoryRow'
 
-export const HistoryFrame = props => {
+export const HistoryFrame = (props: any) => {
   const { frame, bus } = props
-  const onHistoryClick = cmd => {
+  const onHistoryClick = (cmd: any) => {
     bus.send(editor.SET_CONTENT, editor.setContent(cmd))
   }
   const historyRows =
     frame.result.length > 0 ? (
-      frame.result.map((entry, index) => {
+      frame.result.map((entry: any, index: any) => {
         return (
           <HistoryRow
             key={index}

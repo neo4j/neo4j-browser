@@ -27,7 +27,7 @@ import { ClickToCode } from './index'
 import { SET_CONTENT } from 'shared/modules/editor/editorDuck'
 
 describe('ClickToCode', () => {
-  let bus
+  let bus: any
   beforeEach(() => {
     bus = createBus()
   })

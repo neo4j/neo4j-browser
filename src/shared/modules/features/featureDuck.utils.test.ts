@@ -21,7 +21,7 @@
 import { guessSemverVersion } from './featureDuck.utils'
 
 describe('guessSemverVersion', () => {
-  const tests = [
+  const tests: [any, any][] = [
     [, null],
     [null, null],
     ['', null],

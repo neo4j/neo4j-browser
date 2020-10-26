@@ -19,11 +19,11 @@
  */
 
 export default class AdjacentAngles {
-  findRuns(AngleList, minSeparation) {
+  findRuns(AngleList: any, minSeparation: any) {
     let p = 0
     let start = 0
     let end = 0
-    const runs = []
+    const runs: any = []
     const minStart = function() {
       if (runs.length === 0) {
         return 0
@@ -76,7 +76,7 @@ export default class AdjacentAngles {
       }
     }
 
-    const tooDense = function(start, end) {
+    const tooDense = function(start: any, end: any) {
       const run = {
         start,
         end
@@ -86,6 +86,7 @@ export default class AdjacentAngles {
 
     let stepCount = 0
     let step = scanForDensePair
+    // @ts-expect-error ts-migrate(2367) FIXME: This condition will always return 'true' since the... Remove this comment to see the full error message
     while (step !== 'done') {
       if (stepCount++ > AngleList.totalLength() * 10) {
         console.log(
@@ -102,6 +103,7 @@ export default class AdjacentAngles {
         )
         break
       }
+      // @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type '() => ...... Remove this comment to see the full error message
       step = step()
     }
 

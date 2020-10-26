@@ -27,13 +27,13 @@ import {
 import { parseTimeMillis } from 'services/utils'
 
 // Local variables (used in epics)
-let timer = null
+let timer: any = null
 
 // Epics
-export const credentialsTimeoutEpic = (action$, store) =>
+export const credentialsTimeoutEpic = (action$: any, store: any) =>
   action$
     .ofType(USER_INTERACTION)
-    .do(action => {
+    .do((_action: any) => {
       const cTimeout = parseTimeMillis(credentialsTimeout(store.getState()))
       if (!cTimeout) return clearTimeout(timer)
       clearTimeout(timer)

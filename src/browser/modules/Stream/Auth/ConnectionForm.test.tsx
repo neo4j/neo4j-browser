@@ -25,8 +25,7 @@ import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
 
 test('should print correct state for retaining credentials', async () => {
   const bus = {
-    //  eslint-disable-next-line
-    self: jest.fn((x, y, cb) => cb({ success: true })),
+    self: jest.fn((_x, _y, cb) => cb({ success: true })),
     send: jest.fn()
   }
   const updateConnection = jest.fn()

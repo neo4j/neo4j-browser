@@ -23,26 +23,27 @@ import Graph from './lib/visualization/components/graph'
 import Node from './lib/visualization/components/node'
 import Relationship from './lib/visualization/components/relationship'
 
-const mapProperties = _ => Object.assign({}, ...stringifyValues(_))
-const stringifyValues = obj =>
+const mapProperties = (_: any) => Object.assign({}, ...stringifyValues(_))
+const stringifyValues = (obj: any) =>
   Object.keys(obj).map(k => ({ [k]: optionalToString(obj[k]) }))
 
-export function createGraph(nodes, relationships) {
+export function createGraph(nodes: any, relationships: any) {
   const graph = new Graph()
   graph.addNodes(mapNodes(nodes))
   graph.addRelationships(mapRelationships(relationships, graph))
-  graph.display = { initialNodeDisplay: 300, nodeCount: 1 }
+  ;(graph as any).display = { initialNodeDisplay: 300, nodeCount: 1 }
   return graph
 }
 
-export function mapNodes(nodes) {
+export function mapNodes(nodes: any) {
   return nodes.map(
-    node => new Node(node.id, node.labels, mapProperties(node.properties))
+    (node: any) =>
+      new Node(node.id, node.labels, mapProperties(node.properties))
   )
 }
 
-export function mapRelationships(relationships, graph) {
-  return relationships.map(rel => {
+export function mapRelationships(relationships: any, graph: any) {
+  return relationships.map((rel: any) => {
     const source = graph.findNode(rel.startNodeId)
     const target = graph.findNode(rel.endNodeId)
     return new Relationship(
@@ -55,11 +56,11 @@ export function mapRelationships(relationships, graph) {
   })
 }
 
-export function getGraphStats(graph) {
-  const labelStats = {}
-  const relTypeStats = {}
-  graph.nodes().forEach(node => {
-    node.labels.forEach(label => {
+export function getGraphStats(graph: any) {
+  const labelStats: any = {}
+  const relTypeStats: any = {}
+  graph.nodes().forEach((node: any) => {
+    node.labels.forEach((label: any) => {
       if (labelStats['*']) {
         labelStats['*'].count = labelStats['*'].count + 1
       } else {
@@ -82,7 +83,7 @@ export function getGraphStats(graph) {
       }
     })
   })
-  graph.relationships().forEach(rel => {
+  graph.relationships().forEach((rel: any) => {
     if (relTypeStats['*']) {
       relTypeStats['*'].count = relTypeStats['*'].count + 1
     } else {

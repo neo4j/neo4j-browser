@@ -18,8 +18,6 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
 import { render, fireEvent } from '@testing-library/react'
-import { createStore } from 'redux'
-import { Provider } from 'react-redux'
 
 import { AutoExecButtonComponent } from './auto-exec-button'
 

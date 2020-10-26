@@ -43,22 +43,22 @@ const {
   play: { chapters }
 } = docs
 
-const checkHtmlForSlides = html => {
+const checkHtmlForSlides = (html: any) => {
   const el = document.createElement('html')
   el.innerHTML = html
   const slides = el.getElementsByTagName('slide')
   return !!slides.length
 }
 
-export function PlayFrame({ stack, bus }) {
+export function PlayFrame({ stack, bus }: any) {
   const [stackIndex, setStackIndex] = useState(0)
-  const [atSlideStart, setAtSlideStart] = useState(null)
-  const [atSlideEnd, setAtSlideEnd] = useState(null)
-  const [guideObj, setGuideObj] = useState({})
+  const [atSlideStart, setAtSlideStart] = useState<boolean | null>(null)
+  const [atSlideEnd, setAtSlideEnd] = useState<boolean | null>(null)
+  const [guideObj, setGuideObj] = useState<any>({})
   const [initialPlay, setInitialPlay] = useState(true)
   const currentFrame = stack[stackIndex]
 
-  const onSlide = ({ hasPrev, hasNext }) => {
+  const onSlide = ({ hasPrev, hasNext }: any) => {
     setAtSlideStart(!hasPrev)
     setAtSlideEnd(!hasNext)
   }
@@ -146,7 +146,12 @@ export function PlayFrame({ stack, bus }) {
   )
 }
 
-function generateContent(stackFrame, bus, onSlide, shouldUseSlidePointer) {
+function generateContent(
+  stackFrame: any,
+  bus: any,
+  onSlide: any,
+  shouldUseSlidePointer: any
+): any {
   // Not found
   if (stackFrame.response && stackFrame.response.status === 404) {
     return unfound(stackFrame, chapters.unfound, onSlide)
@@ -255,7 +260,7 @@ function generateContent(stackFrame, bus, onSlide, shouldUseSlidePointer) {
     const topicInput = (splitStringOnFirst(stackFrame.cmd, ' ')[1] || '').trim()
     const action = fetchGuideFromAllowlistAction(topicInput)
     return new Promise(resolve => {
-      bus.self(action.type, action, res => {
+      bus.self(action.type, action, (res: any) => {
         if (!res.success) {
           // No luck
           return resolve(unfound(stackFrame, chapters.unfound, onSlide))
@@ -282,7 +287,11 @@ function generateContent(stackFrame, bus, onSlide, shouldUseSlidePointer) {
   }
 }
 
-const unfound = (frame, { content, title, subtitle }, onSlide) => {
+const unfound = (
+  frame: any,
+  { content, title, subtitle }: any,
+  onSlide: any
+) => {
   return {
     guide: (
       <Docs

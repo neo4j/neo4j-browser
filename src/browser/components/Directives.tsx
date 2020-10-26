@@ -30,57 +30,57 @@ import { addClass, prependIcon } from 'shared/services/dom-helpers'
 const directives = [
   {
     selector: '[exec-topic]',
-    valueExtractor: elem => {
+    valueExtractor: (elem: any) => {
       return `:${elem.getAttribute('exec-topic')}`
     },
     autoExec: true
   },
   {
     selector: '[play-topic]',
-    valueExtractor: elem => {
+    valueExtractor: (elem: any) => {
       return `:play ${elem.getAttribute('play-topic')}`
     },
     autoExec: true
   },
   {
     selector: '[server-topic]',
-    valueExtractor: elem => {
+    valueExtractor: (elem: any) => {
       return `:server ${elem.getAttribute('server-topic')}`
     },
     autoExec: true
   },
   {
     selector: '[help-topic]',
-    valueExtractor: elem => {
+    valueExtractor: (elem: any) => {
       return `:help ${elem.getAttribute('help-topic')}`
     },
     autoExec: true
   },
   {
     selector: '.runnable pre',
-    valueExtractor: elem => {
+    valueExtractor: (elem: any) => {
       return elem.textContent.trim()
     },
     autoExec: false
   },
   {
     selector: 'pre.runnable',
-    valueExtractor: elem => {
+    valueExtractor: (elem: any) => {
       return elem.textContent.trim()
     },
     autoExec: false
   }
 ]
 
-const prependPlayIcon = element => {
+const prependPlayIcon = (element: any) => {
   prependIcon(element, 'fa fa-play-circle-o')
 }
 
-const bindDynamicInputToDom = element => {
+const bindDynamicInputToDom = (element: any) => {
   const valueForElems = element.querySelectorAll('[value-for]')
   const valueKeyElems = element.querySelectorAll('[value-key]')
   if (valueForElems.length > 0 && valueKeyElems.length > 0) {
-    valueForElems.forEach(valueForElem => {
+    valueForElems.forEach((valueForElem: any) => {
       const newArray = [...valueKeyElems]
       const filteredValueKeyElems = newArray.filter(e => {
         return (
@@ -88,7 +88,7 @@ const bindDynamicInputToDom = element => {
         )
       })
       if (filteredValueKeyElems.length > 0) {
-        valueForElem.onkeyup = event => {
+        valueForElem.onkeyup = (event: any) => {
           filteredValueKeyElems.forEach(elm => {
             elm.innerText = event.target.value
           })
@@ -98,12 +98,12 @@ const bindDynamicInputToDom = element => {
   }
 }
 
-export const Directives = props => {
-  const callback = elem => {
+export const Directives = (props: any) => {
+  const callback = (elem: any) => {
     if (elem) {
       directives.forEach(directive => {
         const elems = elem.querySelectorAll(directive.selector)
-        Array.from(elems).forEach(e => {
+        Array.from(elems).forEach((e: any) => {
           if (e.firstChild.nodeName !== 'I') {
             prependPlayIcon(e)
           }
@@ -124,9 +124,9 @@ export const Directives = props => {
   return <div ref={callback}>{props.content}</div>
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (_dispatch: any, ownProps: any) => {
   return {
-    onItemClick: (cmd, autoExec, id) => {
+    onItemClick: (cmd: any, autoExec: any, id: any) => {
       if (!cmd.endsWith(' null') && !cmd.endsWith(':null')) {
         if (autoExec) {
           const action = executeCommand(cmd, {

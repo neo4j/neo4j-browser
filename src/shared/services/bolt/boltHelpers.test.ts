@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import neo4j from 'neo4j-driver'
 import { buildTxFunctionByMode } from './boltHelpers'
 
 const WRITE = 'WRITE'

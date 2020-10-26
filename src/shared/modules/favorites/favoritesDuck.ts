@@ -33,13 +33,13 @@ export const SYNC_FAVORITES = 'favorites/SYNC_FAVORITES'
 export const UPDATE_FAVORITE = 'favorites/UPDATE_FAVORITE'
 export const UPDATE_FAVORITES = 'favorites/UPDATE_FAVORITES'
 
-export const getFavorites = state => state[NAME]
-export const getFavorite = (state, id) =>
-  state.filter(favorite => favorite.id === id)[0]
-export const removeFavoriteById = (state, id) =>
-  state.filter(favorite => favorite.id !== id)
-export const removeFavoritesById = (state, ids) =>
-  state.filter(favorite => !ids.includes(favorite.id))
+export const getFavorites = (state: any) => state[NAME]
+export const getFavorite = (state: any, id: any) =>
+  state.filter((favorite: any) => favorite.id === id)[0]
+export const removeFavoriteById = (state: any, id: any) =>
+  state.filter((favorite: any) => favorite.id !== id)
+export const removeFavoritesById = (state: any, ids: any) =>
+  state.filter((favorite: any) => !ids.includes(favorite.id))
 const versionSize = 20
 
 // reducer
@@ -48,7 +48,7 @@ const initialState = staticScriptsList.map(script => ({
   isStatic: true
 }))
 
-export default function reducer(state = initialState, action) {
+export default function reducer(state: any = initialState, action: any) {
   switch (action.type) {
     case REMOVE_FAVORITE:
       return removeFavoriteById(state, action.id)
@@ -61,7 +61,7 @@ export default function reducer(state = initialState, action) {
         ...getFavorite(state, action.id),
         content: action.cmd
       }
-      const updatedFavorites = state.map(_ =>
+      const updatedFavorites = state.map((_: any) =>
         _.id === action.id ? mergedFavorite : _
       )
       return mergeFavorites(initialState, updatedFavorites)
@@ -77,54 +77,56 @@ export default function reducer(state = initialState, action) {
   }
 }
 
-export function removeFavorite(id) {
+export function removeFavorite(id: any) {
   return {
     type: REMOVE_FAVORITE,
     id
   }
 }
-export function removeFavorites(ids) {
+export function removeFavorites(ids: any) {
   return {
     type: REMOVE_FAVORITES,
     ids
   }
 }
-export function addFavorite(cmd, id) {
+export function addFavorite(cmd: any, id?: any) {
   return {
     type: ADD_FAVORITE,
     cmd,
     id
   }
 }
-export function loadFavorites(favorites) {
+export function loadFavorites(favorites: any) {
   return {
     type: LOAD_FAVORITES,
     favorites
   }
 }
-export function syncFavorites(favorites) {
+export function syncFavorites(favorites: any) {
   return {
     type: SYNC_FAVORITES,
     favorites
   }
 }
-export function updateFavorite(id, cmd) {
+export function updateFavorite(id: any, cmd: any) {
   return {
     type: UPDATE_FAVORITE,
     id,
     cmd
   }
 }
-export function updateFavorites(favorites) {
+export function updateFavorites(favorites: any) {
   return {
     type: UPDATE_FAVORITES,
     favorites
   }
 }
 
-export const composeDocumentsToSync = (store, syncValue) => {
+export const composeDocumentsToSync = (store: any, syncValue: any) => {
   const documents = syncValue.syncObj.documents || []
-  const favorites = getFavorites(store.getState()).filter(fav => !fav.isStatic)
+  const favorites = getFavorites(store.getState()).filter(
+    (fav: any) => !fav.isStatic
+  )
 
   const newDocuments = [
     {
@@ -137,16 +139,17 @@ export const composeDocumentsToSync = (store, syncValue) => {
   return newDocuments
 }
 
-export const mergeFavorites = (list1, list2) => {
+export const mergeFavorites = (list1: any, list2: any) => {
   return list1.concat(
     list2.filter(
-      favInList2 =>
-        list1.findIndex(favInList1 => favInList1.id === favInList2.id) < 0
+      (favInList2: any) =>
+        list1.findIndex((favInList1: any) => favInList1.id === favInList2.id) <
+        0
     )
   )
 }
 
-export const favoritesToLoad = (action, store) => {
+export const favoritesToLoad = (action: any, store: any) => {
   const favoritesFromSync =
     action.obj.syncObj && action.obj.syncObj.documents.length > 0
       ? action.obj.syncObj.documents[0].data || []
@@ -158,9 +161,11 @@ export const favoritesToLoad = (action, store) => {
 
     if (
       existingFavs.every(
-        exFav =>
+        (exFav: any) =>
           exFav.isStatic ||
-          favoritesFromSync.findIndex(syncFav => syncFav.id === exFav.id) >= 0
+          favoritesFromSync.findIndex(
+            (syncFav: any) => syncFav.id === exFav.id
+          ) >= 0
       )
     ) {
       return {

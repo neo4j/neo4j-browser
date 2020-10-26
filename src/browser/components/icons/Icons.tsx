@@ -93,7 +93,9 @@ const credits = css`
   animation-timing-function: ease-in-out;
 `
 
-const databaseConnectionStateStyles = {
+const databaseConnectionStateStyles: {
+  [key: string]: { active: string; inactive: string; classModifier: string }
+} = {
   connected: {
     active: green,
     inactive: inactive,
@@ -111,7 +113,7 @@ const databaseConnectionStateStyles = {
   }
 }
 
-export const DatabaseIcon = props => {
+export const DatabaseIcon = (props: any) => {
   const { connectionState, ...rest } = props
   return (
     <IconContainer
@@ -125,7 +127,7 @@ export const DatabaseIcon = props => {
   )
 }
 
-export const FavoritesIcon = props => (
+export const FavoritesIcon = (props: any) => (
   <IconContainer
     activeStyle={white}
     inactiveStyle={inactive}
@@ -134,7 +136,7 @@ export const FavoritesIcon = props => (
     {...props}
   />
 )
-export const ProjectFilesIcon = props => (
+export const ProjectFilesIcon = (props: any) => (
   <IconContainer
     activeStyle={white}
     inactiveStyle={inactive}
@@ -144,7 +146,7 @@ export const ProjectFilesIcon = props => (
   />
 )
 
-export const DocumentsIcon = props => (
+export const DocumentsIcon = (props: any) => (
   <IconContainer
     activeStyle={white}
     inactiveStyle={inactive}
@@ -154,7 +156,7 @@ export const DocumentsIcon = props => (
   />
 )
 
-export const CloudIcon = props => (
+export const CloudIcon = (props: any) => (
   <IconContainer
     activeStyle={successGreen}
     inactiveStyle={inactive}
@@ -163,7 +165,7 @@ export const CloudIcon = props => (
     {...props}
   />
 )
-export const CloudDisconnectedIcon = props => (
+export const CloudDisconnectedIcon = (props: any) => (
   <IconContainer
     activeStyle={warningRed}
     inactiveStyle={warningRed}
@@ -172,7 +174,7 @@ export const CloudDisconnectedIcon = props => (
     {...props}
   />
 )
-export const CloudSyncIcon = props => {
+export const CloudSyncIcon = (props: any) => {
   const { connected, ...rest } = props
   return (
     <IconContainer
@@ -185,7 +187,7 @@ export const CloudSyncIcon = props => {
   )
 }
 
-export const SettingsIcon = props => (
+export const SettingsIcon = (props: any) => (
   <IconContainer
     activeStyle={white}
     inactiveStyle={inactive}
@@ -194,7 +196,7 @@ export const SettingsIcon = props => (
     {...props}
   />
 )
-export const AboutIcon = props => (
+export const AboutIcon = (props: any) => (
   <IconContainer
     activeStyle={credits}
     inactiveStyle={inactive}
@@ -257,7 +259,7 @@ export const ZoomOutIcon = () => (
   />
 )
 
-export const BinIcon = props => (
+export const BinIcon = (props: any) => (
   <IconContainer
     activeStyle={props.deleteAction ? warningRed : white}
     inactiveStyle={props.deleteAction ? warningRed : white}
@@ -325,7 +327,7 @@ export const PlayIcon = () => (
 export const PlainPlayIcon = () => (
   <IconContainer className="fa fa-play-circle" />
 )
-export const QuestionIcon = props => (
+export const QuestionIcon = (props: any) => (
   <IconContainer
     activeStyle={lightBlue}
     inactiveStyle={blue}

@@ -29,39 +29,40 @@ export const ADD_FOLDER = 'folders/ADD_FOLDER'
 export const REMOVE_FOLDER = 'folders/REMOVE_FOLDER'
 export const UPDATE_FOLDERS = 'folders/UPDATE_FOLDERS'
 
-export const getFolders = state => state[NAME]
+export const getFolders = (state: any) => state[NAME]
 
 const versionSize = 20
 const initialState = folders
 
-const mergeFolders = (list1, list2) => {
+const mergeFolders = (list1: any, list2: any) => {
   return list1.concat(
     list2.filter(
-      favInList2 =>
-        list1.findIndex(favInList1 => favInList1.id === favInList2.id) < 0
+      (favInList2: any) =>
+        list1.findIndex((favInList1: any) => favInList1.id === favInList2.id) <
+        0
     )
   )
 }
 
-export const addFolder = (id, name) => {
+export const addFolder = (id: any, name: any) => {
   return { type: ADD_FOLDER, id, name }
 }
-export const updateFolders = folders => {
+export const updateFolders = (folders: any) => {
   return { type: UPDATE_FOLDERS, folders }
 }
-export const removeFolder = id => {
+export const removeFolder = (id: any) => {
   return { type: REMOVE_FOLDER, id }
 }
 
-export const loadFolders = folders => {
+export const loadFolders = (folders: any) => {
   return { type: LOAD_FOLDERS, folders }
 }
 
-export const syncFolders = folders => {
+export const syncFolders = (folders: any) => {
   return { type: SYNC_FOLDERS, folders }
 }
 
-export default function reducer(state = initialState, action) {
+export default function reducer(state = initialState, action: any) {
   switch (action.type) {
     case LOAD_FOLDERS:
     case UPDATE_FOLDERS:
@@ -71,7 +72,7 @@ export default function reducer(state = initialState, action) {
     case REMOVE_FOLDER:
       return state.filter(folder => folder.id !== action.id)
     case ADD_FOLDER:
-      return state.concat([{ id: action.id, name: action.name }])
+      return state.concat([{ id: action.id, name: action.name } as any])
     case USER_CLEAR:
       return initialState
     default:
@@ -79,10 +80,10 @@ export default function reducer(state = initialState, action) {
   }
 }
 
-export const composeFoldersToSync = (store, syncValue) => {
+export const composeFoldersToSync = (store: any, syncValue: any) => {
   const folders = syncValue.syncObj.folders || []
   const stateFolders = getFolders(store.getState()).filter(
-    fold => !fold.isStatic
+    (fold: any) => !fold.isStatic
   )
 
   const newFolders = [
@@ -96,7 +97,7 @@ export const composeFoldersToSync = (store, syncValue) => {
   return newFolders
 }
 
-export const foldersToLoad = (action, store) => {
+export const foldersToLoad = (action: any, store: any) => {
   const foldersFromSync =
     action.obj.syncObj &&
     action.obj.syncObj.folders &&
@@ -110,9 +111,11 @@ export const foldersToLoad = (action, store) => {
 
     if (
       existingFolders.every(
-        exFold =>
+        (exFold: any) =>
           exFold.isStatic ||
-          foldersFromSync.findIndex(syncFold => syncFold.id === exFold.id) >= 0
+          foldersFromSync.findIndex(
+            (syncFold: any) => syncFold.id === exFold.id
+          ) >= 0
       )
     ) {
       return { folders: allFolders, syncFolders: false, loadFolders: true }

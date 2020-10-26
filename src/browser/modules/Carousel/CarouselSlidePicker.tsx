@@ -24,9 +24,9 @@ import {
   StyledUl
 } from './styled'
 
-const CarouselSlidePicker = ({ slides, visibleSlide, onClickEvent }) => {
+const CarouselSlidePicker = ({ slides, visibleSlide, onClickEvent }: any) => {
   if (!slides || slides.length === 0) return null
-  const Indicators = slides.map((_, i) =>
+  const Indicators = slides.map((_: any, i: any) =>
     i !== visibleSlide ? (
       <CarouselIndicatorInactive
         key={i}

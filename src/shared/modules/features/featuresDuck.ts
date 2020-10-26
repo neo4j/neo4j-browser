@@ -37,16 +37,17 @@ export const UPDATE_USER_CAPABILITIES = 'features/UPDATE_USER_CAPABILITIES'
 export const FEATURE_DETECTION_DONE = 'features/FEATURE_DETECTION_DONE'
 export const DETECTED_CLIENT_CONFIG = 'features/DETECTED_CLIENT_CONFIG'
 
-export const getAvailableProcedures = state => state[NAME].availableProcedures
-export const isACausalCluster = state =>
+export const getAvailableProcedures = (state: any) =>
+  state[NAME].availableProcedures
+export const isACausalCluster = (state: any) =>
   getAvailableProcedures(state).includes('dbms.cluster.overview')
-export const isMultiDatabase = state =>
+export const isMultiDatabase = (state: any) =>
   getAvailableProcedures(state).includes('dbms.databases.overview')
-export const canAssignRolesToUser = state =>
+export const canAssignRolesToUser = (state: any) =>
   getAvailableProcedures(state).includes('dbms.security.addRoleToUser')
-export const hasClientConfig = state => state[NAME].clientConfig
-export const utilizeBrowserSync = state => !!state[NAME].browserSync
-export const getUserCapabilities = state => state[NAME].userCapabilities
+export const hasClientConfig = (state: any) => state[NAME].clientConfig
+export const utilizeBrowserSync = (state: any) => !!state[NAME].browserSync
+export const getUserCapabilities = (state: any) => state[NAME].userCapabilities
 
 export const USER_CAPABILITIES = {
   serverConfigReadable: 'serverConfigReadable',
@@ -54,7 +55,7 @@ export const USER_CAPABILITIES = {
 }
 
 const initialState = {
-  availableProcedures: [],
+  availableProcedures: [] as any[],
   browserSync: true,
   clientConfig: null,
   userCapabilities: {
@@ -63,7 +64,7 @@ const initialState = {
   }
 }
 
-export default function(state = initialState, action) {
+export default function(state = initialState, action: any) {
   switch (action.type) {
     case APP_START:
       return {
@@ -91,19 +92,22 @@ export default function(state = initialState, action) {
 }
 
 // Helper functions
-const shouldUtilizeBrowserSync = action => {
+const shouldUtilizeBrowserSync = (action: any) => {
   return ![DESKTOP, CLOUD].includes(action.env)
 }
 
 // Action creators
-export const updateFeatures = availableProcedures => {
+export const updateFeatures = (availableProcedures: any) => {
   return {
     type: UPDATE_ALL_FEATURES,
     availableProcedures
   }
 }
 
-export const updateUserCapability = (capabilityName, capabilityValue) => {
+export const updateUserCapability = (
+  capabilityName: any,
+  capabilityValue: any
+) => {
   return {
     type: UPDATE_USER_CAPABILITIES,
     capabilityName,
@@ -111,14 +115,14 @@ export const updateUserCapability = (capabilityName, capabilityValue) => {
   }
 }
 
-export const setClientConfig = isAvailable => {
+export const setClientConfig = (isAvailable: any) => {
   return {
     type: DETECTED_CLIENT_CONFIG,
     isAvailable
   }
 }
 
-export const featuresDiscoveryEpic = (action$, store) => {
+export const featuresDiscoveryEpic = (action$: any, store: any) => {
   return action$
     .ofType(CONNECTION_SUCCESS)
     .mergeMap(() => {
@@ -139,16 +143,16 @@ export const featuresDiscoveryEpic = (action$, store) => {
           .then(resolve)
           .catch(reject)
       })
-        .then(res => {
+        .then((res: any) => {
           store.dispatch(
-            updateFeatures(res.records.map(record => record.get('name')))
+            updateFeatures(res.records.map((record: any) => record.get('name')))
           )
           store.dispatch(
             updateUserCapability(USER_CAPABILITIES.proceduresReadable, true)
           )
           return Rx.Observable.of(null)
         })
-        .catch(e => {
+        .catch(() => {
           store.dispatch(
             updateUserCapability(USER_CAPABILITIES.proceduresReadable, false)
           )
@@ -158,5 +162,5 @@ export const featuresDiscoveryEpic = (action$, store) => {
     .mapTo({ type: FEATURE_DETECTION_DONE })
 }
 
-export const clearOnDisconnectEpic = some$ =>
+export const clearOnDisconnectEpic = (some$: any) =>
   some$.ofType(DISCONNECTION_SUCCESS).mapTo({ type: CLEAR })

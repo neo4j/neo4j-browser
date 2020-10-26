@@ -63,19 +63,17 @@ const suberMiddleware = createSuberReduxMiddleware(bus)
 const epicMiddleware = createEpicMiddleware(epics)
 const localStorageMiddleware = createReduxMiddleware()
 
-// @ts-expect-error ts-migrate(2345) FIXME: Type 'AnyAction' is missing the following properti... Remove this comment to see the full error message
-const reducer = combineReducers({ ...reducers })
+const reducer = combineReducers({ ...(reducers as any) })
 
 const enhancer = compose(
   applyMiddleware(suberMiddleware, epicMiddleware, localStorageMiddleware),
-  // @ts-expect-error ts-migrate(2339) FIXME: Property '__REDUX_DEVTOOLS_EXTENSION__' does not e... Remove this comment to see the full error message
-  process.env.NODE_ENV !== 'production' && window.__REDUX_DEVTOOLS_EXTENSION__
-    ? // @ts-expect-error ts-migrate(2339) FIXME: Property '__REDUX_DEVTOOLS_EXTENSION__' does not e... Remove this comment to see the full error message
-      window.__REDUX_DEVTOOLS_EXTENSION__()
+  process.env.NODE_ENV !== 'production' &&
+    (window as any).__REDUX_DEVTOOLS_EXTENSION__
+    ? (window as any).__REDUX_DEVTOOLS_EXTENSION__()
     : (f: any) => f
 )
 
-const store = createStore(
+const store: any = createStore(
   reducer,
   getAll(), // rehydrate from local storage on app start
   enhancer
@@ -87,7 +85,6 @@ bus.applyMiddleware(
     // No loop-backs
     if (source === 'redux') return
     // Send to Redux with the channel as the action type
-    // @ts-expect-error ts-migrate(2698) FIXME: Spread types may only be created from object types... Remove this comment to see the full error message
     store.dispatch({ ...message, type: channel, ...origin })
   }
 )
@@ -114,7 +111,6 @@ async function setupSentry() {
 setupSentry()
 
 // Introduce environment to be able to fork functionality
-// @ts-expect-error ts-migrate(2345) FIXME: Type 'string' is not assignable to type 'never'.
 const env = detectRuntimeEnv(window, NEO4J_CLOUD_DOMAINS)
 
 // URL we're on
@@ -175,7 +171,6 @@ const client = new ApolloClient({
 
 const AppInit = () => {
   return (
-    // @ts-expect-error ts-migrate(2769) FIXME: Type 'Store<unknown>' is not assignable to type 'S... Remove this comment to see the full error message
     <Provider store={store}>
       <BusProvider bus={bus}>
         <>

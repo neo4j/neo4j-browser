@@ -26,7 +26,7 @@ import {
 import { SysInfoTable, SysInfoTableEntry } from 'browser-components/Tables'
 import { toKeyString } from 'services/utils'
 
-export const getTableDataFromRecords = records => {
+export const getTableDataFromRecords = (records: any) => {
   if (!records || !records.length) {
     return {}
   }
@@ -34,7 +34,7 @@ export const getTableDataFromRecords = records => {
   const jmxQueryPrefix = mappedJMXresults[0].name.split(',')[0]
   const result = Object.assign(
     {},
-    ...mappedJMXresults.map(item => {
+    ...mappedJMXresults.map((item: any) => {
       return { [item.name]: item }
     })
   )
@@ -63,8 +63,8 @@ export const getTableDataFromRecords = records => {
   }
 }
 
-const mappedJMXresult = records => {
-  return records.map(record => {
+const mappedJMXresult = (records: any) => {
+  return records.map((record: any) => {
     const origAttributes = record.get('attributes')
     return {
       name: record.get('name'),
@@ -78,8 +78,8 @@ const mappedJMXresult = records => {
   })
 }
 
-export const mapSysInfoRecords = records => {
-  return records.map(record => {
+export const mapSysInfoRecords = (records: any) => {
+  return records.map((record: any) => {
     return {
       id: record.get('id'),
       addresses: record.get('addresses'),
@@ -89,8 +89,8 @@ export const mapSysInfoRecords = records => {
   })
 }
 
-export const mapLegacySysInfoRecords = records => {
-  return records.map(record => {
+export const mapLegacySysInfoRecords = (records: any) => {
+  return records.map((record: any) => {
     return {
       id: record.get('id'),
       addresses: record.get('addresses'),
@@ -101,14 +101,14 @@ export const mapLegacySysInfoRecords = records => {
   })
 }
 
-export const flattenAttributes = data => {
+export const flattenAttributes = (data: any) => {
   if (data && data.attributes) {
     return Object.assign(
       {},
-      ...data.attributes.map(({ name, value }) => ({
+      ...data.attributes.map(({ name, value }: any) => ({
         [name]: itemIntToString(value, {
           intChecker: neo4j.isInt,
-          intConverter: val => val.toString(),
+          intConverter: (val: any) => val.toString(),
           objectConverter: extractFromNeoObjects
         })
       }))
@@ -118,9 +118,9 @@ export const flattenAttributes = data => {
   }
 }
 
-export function buildTableData(data) {
+export function buildTableData(data: any) {
   if (!data) return null
-  return data.map(props => {
+  return data.map((props: any) => {
     const { value } = props
     if (value instanceof Array) {
       return value.map(v => {
@@ -132,7 +132,7 @@ export function buildTableData(data) {
   })
 }
 
-export function buildDatabaseTable(mappedDatabases) {
+export function buildDatabaseTable(mappedDatabases: any) {
   return (
     <SysInfoTable key="database-table" header="Databases" colspan="6">
       <SysInfoTableEntry

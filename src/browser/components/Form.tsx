@@ -105,30 +105,35 @@ const StyledRadioEntry = styled.div`
   margin: 10px 0;
 `
 
-export const TextInput = props => {
+export const TextInput = (props: any) => {
   const { children, ...rest } = props
   return <StyledSettingTextInput {...rest}>{children}</StyledSettingTextInput>
 }
 
-export const CheckboxSelector = props => (
+export const CheckboxSelector = (props: any) => (
   <StyledCheckbox type="checkbox" {...props} />
 )
 
-export class RadioSelector extends Component {
-  state = {}
-  constructor(props) {
-    super(props)
+type RadioSelectorState = any
+
+export class RadioSelector extends Component<
+  { onChange?: any; options: any[]; selectedValue?: string },
+  RadioSelectorState
+> {
+  state: RadioSelectorState = {}
+  constructor(props: {} = { options: [] }) {
+    super(props as any)
     this.state.selectedValue = this.props.selectedValue || null
   }
 
-  isSelectedValue(option) {
+  isSelectedValue(option: any) {
     return option === this.state.selectedValue
   }
 
   render() {
     return (
       <form>
-        {this.props.options.map(option => {
+        {this.props.options.map((option: any) => {
           return (
             <StyledRadioEntry key={option}>
               <StyledRadio

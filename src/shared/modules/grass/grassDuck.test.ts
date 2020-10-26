@@ -35,7 +35,7 @@ describe('grass reducer', () => {
   })
 
   test('handles UPDATE_GRAPH_STYLE_DATA', () => {
-    const initialState = { labels: ['Person'], styleData: 'style' }
+    const initialState: any = { labels: ['Person'], styleData: 'style' }
     const action = {
       type: UPDATE_GRAPH_STYLE_DATA,
       styleData: 'style updated again'

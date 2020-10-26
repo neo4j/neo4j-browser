@@ -75,7 +75,7 @@ describe('tx metadata with cypher', () => {
     const bus = createBus()
     bus.applyReduxMiddleware(createEpicMiddleware(handleSingleCommandEpic))
     const $$responseChannel = 'test-channel'
-    const action = executeSingleCommand('RETURN 1', {
+    const action: any = executeSingleCommand('RETURN 1', {
       id: 'id',
       requestId: 'rqid'
     })
@@ -100,7 +100,7 @@ describe('tx metadata with cypher', () => {
     const bus = createBus()
     bus.applyReduxMiddleware(createEpicMiddleware(handleSingleCommandEpic))
     const $$responseChannel = 'test-channel2'
-    const action = executeSystemCommand('RETURN 1')
+    const action: any = executeSystemCommand('RETURN 1')
     action.$$responseChannel = $$responseChannel
 
     bus.send(action.type, action)
@@ -127,7 +127,7 @@ describe('Implicit vs explicit transactions', () => {
     const bus = createBus()
     bus.applyReduxMiddleware(createEpicMiddleware(handleSingleCommandEpic))
     const $$responseChannel = 'test-channel3'
-    const action = executeSingleCommand(`:${autoCommitTxCommand} RETURN 1`)
+    const action: any = executeSingleCommand(`:${autoCommitTxCommand} RETURN 1`)
     action.$$responseChannel = $$responseChannel
 
     bus.send(action.type, action)
@@ -148,7 +148,7 @@ describe('Implicit vs explicit transactions', () => {
     const bus = createBus()
     bus.applyReduxMiddleware(createEpicMiddleware(handleSingleCommandEpic))
     const $$responseChannel = 'test-channel3'
-    const action = executeSingleCommand(
+    const action: any = executeSingleCommand(
       `// comment
 /* 
 multiline comment
@@ -185,7 +185,7 @@ multiline comment
     const bus = createBus()
     bus.applyReduxMiddleware(createEpicMiddleware(handleSingleCommandEpic))
     const $$responseChannel = 'test-channel4'
-    const action = executeSingleCommand('RETURN 1')
+    const action: any = executeSingleCommand('RETURN 1')
     action.$$responseChannel = $$responseChannel
 
     bus.send(action.type, action)

@@ -32,12 +32,14 @@ const Off = () => {
   return <h1>No</h1>
 }
 
-class ErrorB extends React.Component {
+type ErrorBState = any
+
+class ErrorB extends React.Component<{}, ErrorBState> {
   state = {
     error: ''
   }
 
-  componentDidCatch(e) {
+  componentDidCatch(e: any) {
     this.setState({ error: e })
   }
 

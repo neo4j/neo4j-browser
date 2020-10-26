@@ -28,7 +28,7 @@ describe('hydrating state', () => {
     const action = { type: APP_START }
 
     // When
-    const hydratedState = reducer({ foo: 'bar' }, action)
+    const hydratedState = reducer({ foo: 'bar' } as any, action)
 
     // Then
     expect(hydratedState).toMatchSnapshot()
@@ -176,7 +176,7 @@ describe('updating metadata', () => {
   })
   test('can update server settings', () => {
     // Given
-    const initState = {
+    const initState: any = {
       shouldKeep: true
     }
     const action = {
@@ -195,7 +195,7 @@ describe('updating metadata', () => {
 
   test('can update server info', () => {
     // Given
-    const initState = {
+    const initState: any = {
       shouldKeep: true
     }
     const action = {
@@ -214,7 +214,7 @@ describe('updating metadata', () => {
 
   test('can CLEAR to reset state', () => {
     // Given
-    const initState = {
+    const initState: any = {
       shouldKeep: false,
       server: {
         edition: 'enterprise',
@@ -235,7 +235,7 @@ describe('updating metadata', () => {
 
   test('can update meta values with UPDATE', () => {
     // Given
-    const initState = {
+    const initState: any = {
       myKey: 'val',
       noKey: true
     }

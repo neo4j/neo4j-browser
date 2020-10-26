@@ -33,18 +33,32 @@ const rollDownAnimation = keyframes`
 `
 
 // Frames
-export const StyledFrame = styled.article`
+export const StyledFrame: any = styled.article`
   width: auto;
   background-color: ${props => props.theme.secondaryBackground};
   animation: ${rollDownAnimation} 0.4s ease-in;
   border: ${props => props.theme.frameBorder};
-  margin: ${props => (props.fullscreen ? '0' : '0 0 10px 0')};
-  ${props => (props.fullscreen ? 'position: fixed' : null)};
-  ${props => (props.fullscreen ? 'left: 0' : null)};
-  ${props => (props.fullscreen ? 'top: 0' : null)};
-  ${props => (props.fullscreen ? 'bottom: 0' : null)};
-  ${props => (props.fullscreen ? 'right: 0' : null)};
-  ${props => (props.fullscreen ? 'z-index: 1030' : null)};
+  margin: ${props =>
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'fullscreen' does not exist on type 'Them... Remove this comment to see the full error message
+    props.fullscreen ? '0' : '0 0 10px 0'};
+  ${props =>
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'fullscreen' does not exist on type 'Them... Remove this comment to see the full error message
+    props.fullscreen ? 'position: fixed' : null};
+  ${props =>
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'fullscreen' does not exist on type 'Them... Remove this comment to see the full error message
+    props.fullscreen ? 'left: 0' : null};
+  ${props =>
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'fullscreen' does not exist on type 'Them... Remove this comment to see the full error message
+    props.fullscreen ? 'top: 0' : null};
+  ${props =>
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'fullscreen' does not exist on type 'Them... Remove this comment to see the full error message
+    props.fullscreen ? 'bottom: 0' : null};
+  ${props =>
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'fullscreen' does not exist on type 'Them... Remove this comment to see the full error message
+    props.fullscreen ? 'right: 0' : null};
+  ${props =>
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'fullscreen' does not exist on type 'Them... Remove this comment to see the full error message
+    props.fullscreen ? 'z-index: 1030' : null};
 
   &:hover .carousel-intro-animation {
     opacity: 0;
@@ -54,19 +68,23 @@ export const StyledFrame = styled.article`
   border-radius: 2px;
 `
 
-export const StyledFrameBody = styled.div`
+export const StyledFrameBody: any = styled.div`
   overflow: auto;
   min-height: ${dim.frameBodyHeight / 2}px;
   max-height: ${props => {
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'collapsed' does not exist on type 'Theme... Remove this comment to see the full error message
     if (props.collapsed) {
       return 0
     }
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'fullscreen' does not exist on type 'Them... Remove this comment to see the full error message
     if (props.fullscreen) {
       return '100%'
     }
     return dim.frameBodyHeight - dim.frameStatusbarHeight + 1 + 'px'
   }};
-  display: ${props => (props.collapsed ? 'none' : 'flex')};
+  display: ${props =>
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'collapsed' does not exist on type 'Theme... Remove this comment to see the full error message
+    props.collapsed ? 'none' : 'flex'};
   flex-direction: row;
   width: 100%;
   padding: 30px;
@@ -104,15 +122,18 @@ export const StyledFrameAside = styled.div`
   min-width: 120px;
 `
 
-export const StyledFrameContents = styled.div`
+export const StyledFrameContents: any = styled.div`
   font-size: 14px;
   overflow: auto;
   min-height: ${dim.frameBodyHeight / 2}px;
   max-height: ${props =>
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'fullscreen' does not exist on type 'Them... Remove this comment to see the full error message
     props.fullscreen
       ? '100vh'
       : dim.frameBodyHeight - dim.frameStatusbarHeight * 2 + 'px'};
-  ${props => (props.fullscreen ? 'height: 100vh' : null)};
+  ${props =>
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'fullscreen' does not exist on type 'Them... Remove this comment to see the full error message
+    props.fullscreen ? 'height: 100vh' : null};
   flex: auto;
   display: flex;
   width: 100%;
@@ -126,10 +147,12 @@ export const StyledFrameContents = styled.div`
   }
 `
 
-export const StyledFrameStatusbar = styled.div`
+export const StyledFrameStatusbar: any = styled.div`
   border-top: ${props => props.theme.inFrameBorder};
   height: ${dim.frameStatusbarHeight + 1}px;
-  ${props => (props.fullscreen ? 'margin-top: -78px;' : '')};
+  ${props =>
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'fullscreen' does not exist on type 'Them... Remove this comment to see the full error message
+    props.fullscreen ? 'margin-top: -78px;' : ''};
   display: flex;
   flex-direction: row;
   flex: none;
@@ -176,7 +199,7 @@ export const StyledFrameStatusbarText = styled.label`
   flex: 1 1 auto;
 `
 
-export const StyledFrameCommand = styled.label`
+export const StyledFrameCommand: any = styled.label`
   font-family: ${props => props.theme.editorFont};
   color: ${props => props.theme.secondaryButtonText};
   background-color: ${props => props.theme.frameSidebarBackground};
@@ -193,7 +216,9 @@ export const StyledFrameCommand = styled.label`
   display: block;
   &::before {
     color: ${props => props.theme.promptText};
-    content: "${props => (props.selectedDb || '') + '$ '}";
+    content: "${props =>
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'selectedDb' does not exist on type 'Them... Remove this comment to see the full error message
+      (props.selectedDb || '') + '$ '}";
   }
   .disable-font-ligatures & {
     font-variant-ligatures: none !important;

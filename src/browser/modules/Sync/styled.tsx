@@ -20,7 +20,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-export const ConsentCheckBox = props => {
+export const ConsentCheckBox = (props: any) => {
   return (
     <StyledP>
       <CheckBoxLabel htmlFor="syncConsentCheckbox">
@@ -50,7 +50,7 @@ export const ConsentCheckBox = props => {
   )
 }
 
-export const AlertBox = props => {
+export const AlertBox = (props: any) => {
   return (
     <AlertDiv>
       <CloseButton {...props}>×</CloseButton>
@@ -62,7 +62,7 @@ export const AlertBox = props => {
   )
 }
 
-export const ClearLocalConfirmationBox = props => {
+export const ClearLocalConfirmationBox = (props: any) => {
   return (
     <div>
       <AlertP>

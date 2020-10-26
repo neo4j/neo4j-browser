@@ -43,12 +43,12 @@ import numberToUSLocale from 'shared/utils/number-to-US-locale'
 import { StyledTruncatedMessage } from 'browser/modules/Stream/styled'
 import { Icon } from 'semantic-ui-react'
 
-const mapItemProperties = itemProperties =>
+const mapItemProperties = (itemProperties: any) =>
   itemProperties
-    .sort(({ key: keyA }, { key: keyB }) =>
+    .sort(({ key: keyA }: any, { key: keyB }: any) =>
       keyA < keyB ? -1 : keyA === keyB ? 0 : 1
     )
-    .map((prop, i) => (
+    .map((prop: any, i: any) => (
       <StyledInspectorFooterRowListPair className="pair" key={'prop' + i}>
         <StyledInspectorFooterRowListKey className="key">
           {prop.key + ': '}
@@ -59,8 +59,8 @@ const mapItemProperties = itemProperties =>
       </StyledInspectorFooterRowListPair>
     ))
 
-const mapLabels = (graphStyle, itemLabels) => {
-  return itemLabels.map((label, i) => {
+const mapLabels = (graphStyle: any, itemLabels: any) => {
+  return itemLabels.map((label: any, i: any) => {
     const graphStyleForLabel = graphStyle.forNode({ labels: [label] })
     const style = {
       backgroundColor: graphStyleForLabel.get('color'),
@@ -78,8 +78,14 @@ const mapLabels = (graphStyle, itemLabels) => {
   })
 }
 
-export class InspectorComponent extends Component {
-  constructor(props) {
+type InspectorComponentState = any
+
+export class InspectorComponent extends Component<
+  any,
+  InspectorComponentState
+> {
+  footerRowElem: any
+  constructor(props: any) {
     super(props)
     this.state = {
       contracted: true,
@@ -87,7 +93,7 @@ export class InspectorComponent extends Component {
     }
   }
 
-  setFooterRowELem(elem) {
+  setFooterRowELem(elem: any) {
     if (elem) {
       this.footerRowElem = elem
     }
@@ -254,7 +260,7 @@ export class InspectorComponent extends Component {
     })
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: any) {
     if (!deepEquals(this.props.selectedItem, prevProps.selectedItem)) {
       this.setState({ contracted: true })
       this.props.onExpandToggled && this.props.onExpandToggled(true, 0)

@@ -41,7 +41,7 @@ describe('settings reducer', () => {
   })
 
   test('handles UPDATE', () => {
-    const initialState = { greeting: 'hello', type: 'human' }
+    const initialState: any = { greeting: 'hello', type: 'human' }
     const action = {
       type: UPDATE,
       state: {
@@ -54,7 +54,7 @@ describe('settings reducer', () => {
     expect(nextState.type).toEqual('dog')
   })
   test('handles REPLACE', () => {
-    const initialState = { greeting: 'hello', type: 'human' }
+    const initialState: any = { greeting: 'hello', type: 'human' }
     const action = {
       type: REPLACE,
       state: {

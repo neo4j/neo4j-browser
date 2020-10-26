@@ -37,7 +37,7 @@ test('ConfirmationButton renders changes state on clicks and finally calls the o
   const initialIcon = container.querySelector(
     '[data-testid="confirmation-button-initial"]'
   )
-  fireEvent.click(initialIcon)
+  fireEvent.click(initialIcon as Element)
 
   // Then
   expect(container).toMatchSnapshot()
@@ -46,7 +46,7 @@ test('ConfirmationButton renders changes state on clicks and finally calls the o
   const cancelIcon = container.querySelector(
     '[data-testid="confirmation-button-cancel"]'
   )
-  fireEvent.click(cancelIcon)
+  fireEvent.click(cancelIcon as Element)
 
   // Then
   expect(container).toMatchSnapshot()
@@ -55,11 +55,11 @@ test('ConfirmationButton renders changes state on clicks and finally calls the o
   const initialIcon2 = container.querySelector(
     '[data-testid="confirmation-button-initial"]'
   )
-  fireEvent.click(initialIcon2)
+  fireEvent.click(initialIcon2 as Element)
   const confirmIcon = container.querySelector(
     '[data-testid="confirmation-button-confirm"]'
   )
-  fireEvent.click(confirmIcon)
+  fireEvent.click(confirmIcon as Element)
 
   // Then
   expect(container).toMatchSnapshot()

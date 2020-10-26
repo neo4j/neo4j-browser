@@ -21,18 +21,20 @@ import PairwiseArcsRelationshipRouting from '../utils/pairwiseArcsRelationshipRo
 import measureText from '../utils/textMeasurement'
 
 export default class NeoD3Geometry {
-  constructor(style) {
+  relationshipRouting: any
+  style: any
+  constructor(style: any) {
     this.style = style
     this.relationshipRouting = new PairwiseArcsRelationshipRouting(this.style)
   }
 
-  formatNodeCaptions(nodes) {
+  formatNodeCaptions(nodes: any[]) {
     return Array.from(nodes).map(
       node => (node.caption = fitCaptionIntoCircle(node, this.style))
     )
   }
 
-  formatRelationshipCaptions(relationships) {
+  formatRelationshipCaptions(relationships: any[]) {
     return (() => {
       const result = []
       for (const relationship of Array.from(relationships)) {
@@ -48,14 +50,14 @@ export default class NeoD3Geometry {
     })()
   }
 
-  setNodeRadii(nodes) {
+  setNodeRadii(nodes: any[]) {
     return Array.from(nodes).map(
       node =>
         (node.radius = parseFloat(this.style.forNode(node).get('diameter')) / 2)
     )
   }
 
-  onGraphChange(graph) {
+  onGraphChange(graph: any) {
     this.setNodeRadii(graph.nodes())
     this.formatNodeCaptions(graph.nodes())
     this.formatRelationshipCaptions(graph.relationships())
@@ -64,13 +66,13 @@ export default class NeoD3Geometry {
     )
   }
 
-  onTick(graph) {
+  onTick(graph: any) {
     return this.relationshipRouting.layoutRelationships(graph)
   }
 }
 
-const square = distance => distance * distance
-const addShortenedNextWord = (line, word, measure) => {
+const square = (distance: any) => distance * distance
+const addShortenedNextWord = (line: any, word: any, measure: any) => {
   const result = []
   while (!(word.length <= 2)) {
     word = `${word.substr(0, word.length - 2)}\u2026`
@@ -83,7 +85,7 @@ const addShortenedNextWord = (line, word, measure) => {
   }
   return result
 }
-const noEmptyLines = function(lines) {
+const noEmptyLines = function(lines: any[]) {
   for (const line of Array.from(lines)) {
     if (line.text.length === 0) {
       return false
@@ -92,17 +94,17 @@ const noEmptyLines = function(lines) {
   return true
 }
 
-const fitCaptionIntoCircle = function(node, style) {
+const fitCaptionIntoCircle = function(node: any, style: any) {
   const template = style.forNode(node).get('caption')
   const captionText = style.interpolate(template, node)
   const fontFamily = 'sans-serif'
   const fontSize = parseFloat(style.forNode(node).get('font-size'))
   const lineHeight = fontSize
-  const measure = text => measureText(text, fontFamily, fontSize)
+  const measure = (text: any) => measureText(text, fontFamily, fontSize)
 
   const words = captionText.split(' ')
 
-  const emptyLine = function(lineCount, iLine) {
+  const emptyLine = function(lineCount: any, iLine: any) {
     let baseline = (1 + iLine - lineCount / 2) * lineHeight
     if (style.forNode(node).get('icon-code')) {
       baseline = baseline + node.radius / 3
@@ -119,7 +121,7 @@ const fitCaptionIntoCircle = function(node, style) {
     }
   }
 
-  const fitOnFixedNumberOfLines = function(lineCount) {
+  const fitOnFixedNumberOfLines = function(lineCount: any): [any, number] {
     const lines = []
     let iWord = 0
     for (

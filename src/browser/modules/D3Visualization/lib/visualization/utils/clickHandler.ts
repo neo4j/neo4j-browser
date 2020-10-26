@@ -19,17 +19,18 @@
  */
 import d3 from 'd3'
 export default function clickHandler() {
-  const cc = function(selection) {
+  const cc = function(selection: any) {
     // euclidean distance
-    const dist = (a, b) =>
+    const dist = (a: any, b: any) =>
+      // @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 2.
       Math.sqrt(Math.pow(a[0] - b[0], 2), Math.pow(a[1] - b[1], 2))
-    let down
+    let down: any
     const tolerance = 5
-    let wait = null
+    let wait: any = null
     selection.on('mousedown', () => {
-      d3.event.target.__data__.fixed = true
+      ;((d3.event as Event).target as any).__data__.fixed = true
       down = d3.mouse(document.body)
-      return d3.event.stopPropagation()
+      return (d3.event as Event).stopPropagation()
     })
 
     return selection.on('mouseup', () => {
@@ -38,11 +39,11 @@ export default function clickHandler() {
         if (wait) {
           window.clearTimeout(wait)
           wait = null
-          return event.dblclick(d3.event.target.__data__)
+          return event.dblclick((d3.event as any).target.__data__)
         } else {
-          event.click(d3.event.target.__data__)
+          event.click((d3.event as any).target.__data__)
           return (wait = window.setTimeout(
-            (e => () => (wait = null))(d3.event),
+            (_e => () => (wait = null))(d3.event),
             250
           ))
         }

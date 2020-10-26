@@ -18,7 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import d3 from 'd3'
-export const prepareForExport = (svgElement, graphElement, type) => {
+export const prepareForExport = (
+  svgElement: any,
+  graphElement: any,
+  type: any
+) => {
   const dimensions = getSvgDimensions(graphElement)
   let svg = d3.select(
     document.createElementNS('http://www.w3.org/2000/svg', 'svg')
@@ -48,7 +52,7 @@ export const prepareForExport = (svgElement, graphElement, type) => {
   return svg
 }
 
-const getSvgDimensions = view => {
+const getSvgDimensions = (view: any) => {
   const boundingBox = view.boundingBox()
   const dimensions = {
     width: boundingBox.width,
@@ -63,13 +67,14 @@ const getSvgDimensions = view => {
   return dimensions
 }
 
-const appendGraphLayers = (svgElement, svg) => {
+const appendGraphLayers = (svgElement: any, svg: any) => {
   window.d3
     .select(svgElement)
     .selectAll('g.layer')
-    .each(function(node) {
+    .each(function() {
       svg.node().appendChild(
         window.d3
+          // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
           .select(this)
           .node()
           .cloneNode(true)
@@ -77,13 +82,14 @@ const appendGraphLayers = (svgElement, svg) => {
     })
   return svg
 }
-const appendPlanLayers = (svgElement, svg) => {
+const appendPlanLayers = (svgElement: any, svg: any) => {
   window.d3
     .select(svgElement)
     .selectAll('g.layer')
-    .each(function(node) {
+    .each(function() {
       svg.node().appendChild(
         window.d3
+          // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
           .select(this)
           .node()
           .cloneNode(true)

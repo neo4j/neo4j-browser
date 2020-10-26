@@ -38,15 +38,15 @@ export function useSlowConnectionState({
   connectionState,
   errorMessage,
   lastConnectionUpdate
-}) {
+}: any) {
   const [past5Sec, setPast5Sec] = useState(false)
   const [past10Sec, setPast10Sec] = useState(false)
   const DELAY_5SEC = 5 * 1000 // five seconds
   const DELAY_10SEC = 10 * 1000 // ten seconds
   const shouldTimeConnection = () =>
     [CONNECTING_STATE, PENDING_STATE].includes(connectionState) && !errorMessage
-  let timeout5Sec = null
-  let timeout10Sec = null
+  let timeout5Sec: any = null
+  let timeout10Sec: any = null
 
   useEffect(() => {
     if (!shouldTimeConnection()) {

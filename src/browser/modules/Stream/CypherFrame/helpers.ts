@@ -47,7 +47,7 @@ import { stringModifier } from 'services/bolt/cypherTypesFormatting'
  * @param     {Number}    maxFieldItems
  * @return    {boolean}
  */
-export const resultHasTruncatedFields = (result, maxFieldItems) => {
+export const resultHasTruncatedFields = (result: any, maxFieldItems: any) => {
   if (!maxFieldItems || !result) {
     return false
   }
@@ -61,7 +61,7 @@ export const resultHasTruncatedFields = (result, maxFieldItems) => {
   )
 }
 
-export function getBodyAndStatusBarMessages(result, maxRows) {
+export function getBodyAndStatusBarMessages(result: any, maxRows: any) {
   if (!result || !result.summary || !result.summary.resultAvailableAfter) {
     return {}
   }
@@ -111,16 +111,16 @@ export function getBodyAndStatusBarMessages(result, maxRows) {
   }
 }
 
-export const getRecordsToDisplayInTable = (result, maxRows) => {
+export const getRecordsToDisplayInTable = (result: any, maxRows: any) => {
   if (!result) return []
   return result && result.records && result.records.length > maxRows
     ? result.records.slice(0, maxRows)
     : result.records
 }
 
-export const flattenArrayDeep = arr => {
+export const flattenArrayDeep = (arr: any) => {
   let toFlatten = arr
-  let result = []
+  let result: any = []
 
   while (toFlatten.length > 0) {
     result = [...result, ...filter(toFlatten, item => !Array.isArray(item))]
@@ -132,11 +132,11 @@ export const flattenArrayDeep = arr => {
 
 const VIS_MAX_SAFE_LIMIT = 1000
 
-export const requestExceedsVisLimits = ({ result } = {}) => {
+export const requestExceedsVisLimits = ({ result }: any = {}) => {
   return resultHasTruncatedFields(result, VIS_MAX_SAFE_LIMIT)
 }
 
-export const resultHasNodes = (request, types = neo4j.types) => {
+export const resultHasNodes = (request: any, types = neo4j.types) => {
   if (!request) return false
   const { result = {} } = request
   if (!result || !result.records) return false
@@ -144,9 +144,9 @@ export const resultHasNodes = (request, types = neo4j.types) => {
   if (!records || !records.length) return false
   const keys = records[0].keys
   for (let i = 0; i < records.length; i++) {
-    const graphItems = keys.map(key => records[i].get(key))
+    const graphItems = keys.map((key: any) => records[i].get(key))
     const items = recursivelyExtractGraphItems(types, graphItems)
-    const flat = flattenArrayDeep(items)
+    const flat: any[] = flattenArrayDeep(items)
     const nodes = flat.filter(
       item => item instanceof types.Node || item instanceof types.Path
     )
@@ -155,7 +155,7 @@ export const resultHasNodes = (request, types = neo4j.types) => {
   return false
 }
 
-export const resultHasRows = request => {
+export const resultHasRows = (request: any) => {
   return !!(
     request &&
     request.result &&
@@ -164,7 +164,7 @@ export const resultHasRows = request => {
   )
 }
 
-export const resultHasWarnings = request => {
+export const resultHasWarnings = (request: any) => {
   return !!(
     request &&
     request.result &&
@@ -174,7 +174,7 @@ export const resultHasWarnings = request => {
   )
 }
 
-export const resultHasPlan = request => {
+export const resultHasPlan = (request: any) => {
   return !!(
     request &&
     request.result &&
@@ -183,11 +183,11 @@ export const resultHasPlan = request => {
   )
 }
 
-export const resultIsError = request => {
+export const resultIsError = (request: any) => {
   return !!(request && request.result && request.result.code)
 }
 
-export const initialView = (props, state = {}) => {
+export const initialView = (props: any, state: any = {}) => {
   // Views that should override and always show if they exist
   if (
     props === undefined ||
@@ -228,12 +228,12 @@ export const initialView = (props, state = {}) => {
  */
 export const stringifyResultArray = (
   formatter = stringModifier,
-  arr = [],
+  arr: any[] = [],
   unescapeDoubleQuotes = false
 ) => {
   return arr.map(col => {
     if (!col) return col
-    return col.map(fVal => {
+    return col.map((fVal: any) => {
       const res = stringifyMod(fVal, formatter)
       return unescapeDoubleQuotes ? unescapeDoubleQuotesForDisplay(res) : res
     })
@@ -245,10 +245,14 @@ export const stringifyResultArray = (
  * Flattens graph items so only their props are left.
  * Leaves Neo4j Integers as they were.
  */
-export const transformResultRecordsToResultArray = (records, maxFieldItems) => {
+export const transformResultRecordsToResultArray = (
+  records: any,
+  maxFieldItems?: any
+) => {
   return records && records.length
     ? [records]
         .map(recs => extractRecordsToResultArray(recs, maxFieldItems))
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'flatMap' does not exist on type 'any[][]... Remove this comment to see the full error message
         .flatMap(
           flattenGraphItemsInResultArray.bind(null, neo4j.types, neo4j.isInt)
         )
@@ -259,12 +263,15 @@ export const transformResultRecordsToResultArray = (records, maxFieldItems) => {
  * Transforms an array of neo4j driver records to an array of objects.
  * Leaves all values as they were, just changing the data structure.
  */
-export const extractRecordsToResultArray = (records = [], maxFieldItems) => {
+export const extractRecordsToResultArray = (
+  records: any[] = [],
+  maxFieldItems?: any
+) => {
   records = Array.isArray(records) ? records : []
   const keys = records[0] ? [records[0].keys] : undefined
   return (keys || []).concat(
     records.map(record => {
-      return record.keys.map((key, i) => {
+      return record.keys.map((_key: any, i: any) => {
         const val = record._fields[i]
 
         if (!maxFieldItems || !Array.isArray(val)) {
@@ -280,7 +287,7 @@ export const extractRecordsToResultArray = (records = [], maxFieldItems) => {
 export const flattenGraphItemsInResultArray = (
   types = neo4j.types,
   intChecker = neo4j.isInt,
-  result = []
+  result: any[] = []
 ) => {
   return result.map(flattenGraphItems.bind(null, types, intChecker))
 }
@@ -292,8 +299,8 @@ export const flattenGraphItemsInResultArray = (
 export const flattenGraphItems = (
   types = neo4j.types,
   intChecker = neo4j.isInt,
-  item
-) => {
+  item: any
+): any => {
   if (Array.isArray(item)) {
     return item.map(flattenGraphItems.bind(null, types, intChecker))
   }
@@ -303,7 +310,7 @@ export const flattenGraphItems = (
     !isGraphItem(types, item) &&
     !intChecker(item)
   ) {
-    const out = {}
+    const out: any = {}
     const keys = Object.keys(item)
     for (let i = 0; i < keys.length; i++) {
       out[keys[i]] = flattenGraphItems(types, intChecker, item[keys[i]])
@@ -316,7 +323,7 @@ export const flattenGraphItems = (
   return item
 }
 
-export const isGraphItem = (types = neo4j.types, item) => {
+export const isGraphItem = (types = neo4j.types, item: any) => {
   return (
     item instanceof types.Node ||
     item instanceof types.Relationship ||
@@ -332,7 +339,7 @@ export const isGraphItem = (types = neo4j.types, item) => {
   )
 }
 
-export function extractPropertiesFromGraphItems(types = neo4j.types, obj) {
+export function extractPropertiesFromGraphItems(types = neo4j.types, obj: any) {
   if (obj instanceof types.Node || obj instanceof types.Relationship) {
     return obj.properties
   } else if (obj instanceof types.Path) {
@@ -341,13 +348,13 @@ export function extractPropertiesFromGraphItems(types = neo4j.types, obj) {
   return obj
 }
 
-const arrayifyPath = (types = neo4j.types, path) => {
+const arrayifyPath = (types = neo4j.types, path: any) => {
   let segments = path.segments
   // Zero length path. No relationship, end === start
   if (!Array.isArray(path.segments) || path.segments.length < 1) {
     segments = [{ ...path, end: null }]
   }
-  return segments.map(segment =>
+  return segments.map((segment: any) =>
     [
       extractPropertiesFromGraphItems(types, segment.start),
       extractPropertiesFromGraphItems(types, segment.relationship),
@@ -364,7 +371,7 @@ const arrayifyPath = (types = neo4j.types, path) => {
  * @param     {Record}    record
  * @return    {*}
  */
-export function recordToJSONMapper(record) {
+export function recordToJSONMapper(record: any) {
   const keys = get(record, 'keys', [])
 
   const recordObj = reduce(
@@ -387,7 +394,7 @@ export function recordToJSONMapper(record) {
  * @param     {*}     values
  * @return    {*}
  */
-export function mapNeo4jValuesToPlainValues(values) {
+export function mapNeo4jValuesToPlainValues(values: any): any {
   if (neo4j.isInt(values)) {
     return values
   }
@@ -429,7 +436,7 @@ export function mapNeo4jValuesToPlainValues(values) {
  * @param     {*}   value
  * @return    {*}
  */
-function neo4jValueToPlainValue(value) {
+function neo4jValueToPlainValue(value: any) {
   switch (get(value, 'constructor')) {
     case neo4j.types.Date:
     case neo4j.types.DateTime:
@@ -448,7 +455,7 @@ function neo4jValueToPlainValue(value) {
  * @param value
  * @return {boolean}
  */
-function isNeo4jValue(value) {
+function isNeo4jValue(value: any) {
   switch (get(value, 'constructor')) {
     case neo4j.types.Date:
     case neo4j.types.DateTime:

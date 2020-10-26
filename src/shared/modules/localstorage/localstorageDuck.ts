@@ -28,7 +28,7 @@ export const NAME = 'localstorage'
 export const CLEAR_LOCALSTORAGE = `${NAME}/CLEAR_LOCALSTORAGE`
 
 // Epics
-export const clearLocalstorageEpic = (some$, store) =>
+export const clearLocalstorageEpic = (some$: any, store: any) =>
   some$.ofType(CLEAR_LOCALSTORAGE).map(() => {
     const activeConnection = getActiveConnection(store.getState())
     if (activeConnection) {

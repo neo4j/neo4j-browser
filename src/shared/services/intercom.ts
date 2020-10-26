@@ -20,8 +20,8 @@
 
 import { canUseDOM } from 'services/utils'
 
-export const hasIntercom = () => canUseDOM() && window.Intercom
+export const hasIntercom = () => canUseDOM() && (window as any).Intercom
 
-export default function api(...args) {
-  if (hasIntercom()) window.Intercom.apply(null, args)
+export default function api(...args: any[]) {
+  if (hasIntercom()) (window as any).Intercom.apply(null, args)
 }

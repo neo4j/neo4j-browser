@@ -18,12 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const error = title => ({
+const error = (title: any) => ({
   title,
   message: title
 })
 
-export const errorMessageFormater = (code, message) => {
+export const errorMessageFormater = (code: any, message?: any) => {
   const title = `${code || code === 0 ? code : ''}${
     code && message ? ': ' : ''
   }${message || ''}`

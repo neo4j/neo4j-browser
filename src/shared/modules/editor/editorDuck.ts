@@ -20,10 +20,7 @@
 
 import Rx from 'rxjs/Rx'
 import { getUrlParamValue } from 'services/utils'
-import {
-  getSettings,
-  DISABLE_IMPLICIT_INIT_COMMANDS
-} from 'shared/modules/settings/settingsDuck'
+import { DISABLE_IMPLICIT_INIT_COMMANDS } from 'shared/modules/settings/settingsDuck'
 import { APP_START, URL_ARGUMENTS_CHANGE } from 'shared/modules/app/appDuck'
 import {
   commandSources,
@@ -38,26 +35,26 @@ export const EXPAND = `${NAME}/EXPAND`
 export const NOT_SUPPORTED_URL_PARAM_COMMAND = `${NAME}/NOT_SUPPORTED_URL_PARAM_COMMAND`
 
 // Supported commands
-const validCommandTypes = {
-  play: args => `:play ${args.join(' ')}`,
-  edit: args => args.join('\n'),
-  param: args => `:param ${args.join(' ')}`,
-  params: args => `:params ${args.join(' ')}`
+const validCommandTypes: any = {
+  play: (args: any) => `:play ${args.join(' ')}`,
+  edit: (args: any) => args.join('\n'),
+  param: (args: any) => `:param ${args.join(' ')}`,
+  params: (args: any) => `:params ${args.join(' ')}`
 }
 
-export const setContent = newContent => ({
+export const setContent = (newContent: any) => ({
   type: SET_CONTENT,
   message: newContent
 })
 export const editContent = (
-  id,
-  message,
+  id: any,
+  message: any,
   {
     directory = null,
     name = null,
     isStatic = false,
     isProjectFile = false
-  } = {}
+  }: any = {}
 ) => ({
   type: EDIT_CONTENT,
   message,
@@ -68,12 +65,12 @@ export const editContent = (
   directory
 })
 
-export const populateEditorFromUrlEpic = (some$, store) => {
+export const populateEditorFromUrlEpic = (some$: any, _store: any) => {
   return some$
     .ofType(APP_START)
     .merge(some$.ofType(URL_ARGUMENTS_CHANGE))
     .delay(1) // Timing issue. Needs to be detached like this
-    .mergeMap(action => {
+    .mergeMap((action: any) => {
       if (!action.url) {
         return Rx.Observable.never()
       }
@@ -111,6 +108,6 @@ export const populateEditorFromUrlEpic = (some$, store) => {
         ]
       }
 
-      return Rx.Observable.of({ type: SET_CONTENT, ...setContent(fullCommand) })
+      return Rx.Observable.of(setContent(fullCommand))
     })
 }

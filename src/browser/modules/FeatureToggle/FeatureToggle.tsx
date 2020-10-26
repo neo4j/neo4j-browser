@@ -1,10 +1,10 @@
 import React from 'react'
 import { Consumer } from './FeatureToggleProvider'
 
-const FeatureToggle = ({ name, on, off }) => {
+const FeatureToggle = ({ name, on, off }: any) => {
   return (
     <Consumer>
-      {showFeature => {
+      {(showFeature: any) => {
         if (!name) {
           throw new Error(
             'No "name" property provided to FeatureToggle component.'

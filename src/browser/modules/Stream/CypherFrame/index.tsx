@@ -71,9 +71,11 @@ import RelatableView, {
 } from 'browser/modules/Stream/CypherFrame/relatable-view'
 import { requestExceedsVisLimits } from 'browser/modules/Stream/CypherFrame/helpers'
 
-export class CypherFrame extends Component {
-  visElement = null
-  state = {
+type CypherFrameState = any
+
+export class CypherFrame extends Component<any, CypherFrameState> {
+  visElement: any = null
+  state: any = {
     openView: undefined,
     fullscreen: false,
     collapse: false,
@@ -81,14 +83,14 @@ export class CypherFrame extends Component {
     hasVis: false
   }
 
-  changeView(view) {
+  changeView(view: any) {
     this.setState({ openView: view })
     if (this.props.onRecentViewChanged) {
       this.props.onRecentViewChanged(view)
     }
   }
 
-  onResize = (fullscreen, collapse, frameHeight) => {
+  onResize = (fullscreen: any, collapse: any, frameHeight: any) => {
     if (frameHeight) {
       this.setState({ fullscreen, collapse, frameHeight })
     } else {
@@ -96,7 +98,7 @@ export class CypherFrame extends Component {
     }
   }
 
-  shouldComponentUpdate(props, state) {
+  shouldComponentUpdate(props: any, state: CypherFrameState) {
     return (
       this.props.request.updated !== props.request.updated ||
       this.state.openView !== state.openView ||
@@ -238,7 +240,7 @@ export class CypherFrame extends Component {
     )
   }
 
-  getFrameContents(request, result, query) {
+  getFrameContents(request: any, result: any, query: any) {
     return (
       <StyledFrameBody
         data-testid="frame-loaded-contents"
@@ -289,7 +291,7 @@ export class CypherFrame extends Component {
             result={result}
             updated={this.props.request.updated}
             setParentState={this.setState.bind(this)}
-            assignVisElement={(svgElement, graphElement) => {
+            assignVisElement={(svgElement: any, graphElement: any) => {
               this.visElement = { svgElement, graphElement, type: 'plan' }
               this.setState({ hasVis: true })
             }}
@@ -302,7 +304,7 @@ export class CypherFrame extends Component {
             updated={this.props.request.updated}
             setParentState={this.setState.bind(this)}
             frameHeight={this.state.frameHeight}
-            assignVisElement={(svgElement, graphElement) => {
+            assignVisElement={(svgElement: any, graphElement: any) => {
               this.visElement = { svgElement, graphElement, type: 'graph' }
               this.setState({ hasVis: true })
             }}
@@ -315,7 +317,7 @@ export class CypherFrame extends Component {
     )
   }
 
-  getStatusbar(result) {
+  getStatusbar(result: any) {
     return (
       <StyledStatsBarContainer>
         <Display if={this.state.openView === viewTypes.TEXT} lazy>
@@ -410,7 +412,7 @@ export class CypherFrame extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: any, ownProps: any) => {
   return {
     maxRows: getMaxRows(state),
     initialNodeDisplay: getInitialNodeDisplay(state),
@@ -421,9 +423,9 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
-    onRecentViewChanged: view => {
+    onRecentViewChanged: (view: any) => {
       dispatch(setRecentView(view))
     }
   }

@@ -30,7 +30,7 @@ import { APP_START, URL_ARGUMENTS_CHANGE } from '../app/appDuck'
 import { COMMAND_QUEUED, executeCommand } from '../commands/commandsDuck'
 
 describe('editorDuck Epics', () => {
-  let store
+  let store: any
   const bus = createBus()
   const epicMiddleware = createEpicMiddleware(populateEditorFromUrlEpic)
   const mockStore = configureMockStore([
@@ -72,7 +72,7 @@ describe('editorDuck Epics', () => {
       url: `http://url.com?cmd=${cmd}&arg=${arg}`
     }
 
-    bus.take(SET_CONTENT, currentAction => {
+    bus.take(SET_CONTENT, _currentAction => {
       // Then
       expect(store.getActions()).toEqual([
         action,
@@ -92,7 +92,7 @@ describe('editorDuck Epics', () => {
       url: `?cmd=${cmd}&arg=${arg}`
     }
 
-    bus.take(SET_CONTENT, currentAction => {
+    bus.take(SET_CONTENT, _currentAction => {
       // Then
       expect(store.getActions()).toEqual([
         action,
@@ -112,7 +112,7 @@ describe('editorDuck Epics', () => {
       url: `?cmd=${cmd}&arg=${encodeURIComponent(arg)}`
     }
 
-    bus.take(SET_CONTENT, currentAction => {
+    bus.take(SET_CONTENT, _currentAction => {
       // Then
       expect(store.getActions()).toEqual([
         action,
@@ -132,7 +132,7 @@ describe('editorDuck Epics', () => {
       url: `?cmd=${cmd}&arg=${encodeURIComponent(arg)}`
     }
 
-    bus.take(SET_CONTENT, currentAction => {
+    bus.take(SET_CONTENT, _currentAction => {
       // Then
       expect(store.getActions()).toEqual([
         action,

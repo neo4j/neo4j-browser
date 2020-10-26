@@ -25,9 +25,9 @@ import { Provider } from 'react-redux'
 
 import { SchemaFrame } from './SchemaFrame'
 
-function renderWithRedux(children) {
+function renderWithRedux(children: any) {
   return render(
-    <Provider store={createStore(() => ({}), {})}>{children}</Provider>
+    <Provider store={createStore(() => ({}), {}) as any}>{children}</Provider>
   )
 }
 
@@ -78,8 +78,8 @@ test('SchemaFrame renders results for Neo4j < 4.0', () => {
       ]
     }
   }
-  const firstIndexRecord = indexResult.result.records[0]
-  firstIndexRecord.get = key =>
+  const firstIndexRecord: any = indexResult.result.records[0]
+  firstIndexRecord.get = (key: any) =>
     firstIndexRecord._fields[firstIndexRecord.keys.indexOf(key)]
 
   const constraintResult = {
@@ -93,8 +93,8 @@ test('SchemaFrame renders results for Neo4j < 4.0', () => {
       ]
     }
   }
-  const firstConstraintRecord = constraintResult.result.records[0]
-  firstConstraintRecord.get = key =>
+  const firstConstraintRecord: any = constraintResult.result.records[0]
+  firstConstraintRecord.get = (key: any) =>
     firstConstraintRecord._fields[firstConstraintRecord.keys.indexOf(key)]
 
   const { container } = renderWithRedux(

@@ -39,7 +39,7 @@ const IMPLICIT = 'implicit'
 const NEARLEY_ERROR_SPLIT =
   'Instead, I was expecting to see one of the following:'
 
-export function parseLambdaStatement(lambda) {
+export function parseLambdaStatement(lambda: any) {
   return Promise.resolve()
     .then(() => {
       const ast = parseLambda(trim(lambda))
@@ -75,7 +75,10 @@ export function parseLambdaStatement(lambda) {
     })
 }
 
-export function collectLambdaValues({ parameters, query, variant }, requestId) {
+export function collectLambdaValues(
+  { parameters, query, variant }: any,
+  requestId: any
+) {
   return bolt
     .routedWriteTransaction(
       query,
@@ -86,9 +89,9 @@ export function collectLambdaValues({ parameters, query, variant }, requestId) {
         cancelable: false
       }
     )
-    .then(({ records }) => {
+    .then(({ records }: { records: any[] }) => {
       if (variant === IMPLICIT) {
-        const firstResult = head(records)
+        const firstResult: any = head(records)
 
         return firstResult
           ? recursivelyTypeGraphItems({

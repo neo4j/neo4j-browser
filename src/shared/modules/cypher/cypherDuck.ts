@@ -48,15 +48,20 @@ export const CLUSTER_CYPHER_REQUEST = `${NAME}/CLUSTER_REQUEST`
 export const FORCE_CHANGE_PASSWORD = `${NAME}/FORCE_CHANGE_PASSWORD`
 
 // Helpers
-const queryAndResolve = async (driver, action, host, useDb = {}) => {
+const queryAndResolve = async (
+  driver: any,
+  action: any,
+  host: any,
+  useDb = {}
+) => {
   return new Promise(resolve => {
     const session = driver.session({
       defaultAccessMode: neo4j.session.WRITE,
       ...useDb
     })
     const txFn = buildTxFunctionByMode(session)
-    txFn(tx => tx.run(action.query, action.parameters))
-      .then(r => {
+    txFn((tx: any) => tx.run(action.query, action.parameters))
+      .then((r: any) => {
         session.close()
         resolve({
           type: action.$$responseChannel,
@@ -67,7 +72,7 @@ const queryAndResolve = async (driver, action, host, useDb = {}) => {
           }
         })
       })
-      .catch(e => {
+      .catch((e: any) => {
         session.close()
         resolve({
           type: action.$$responseChannel,
@@ -78,7 +83,7 @@ const queryAndResolve = async (driver, action, host, useDb = {}) => {
       })
   })
 }
-const callClusterMember = async (connection, action, store) => {
+const callClusterMember = async (connection: any, action: any, _store: any) => {
   return new Promise(resolve => {
     bolt
       .directConnect(connection, undefined, undefined, false) // Ignore validation errors
@@ -99,8 +104,8 @@ const callClusterMember = async (connection, action, store) => {
 }
 
 // Epics
-export const cypherRequestEpic = (some$, store) =>
-  some$.ofType(CYPHER_REQUEST).mergeMap(action => {
+export const cypherRequestEpic = (some$: any, store: any) =>
+  some$.ofType(CYPHER_REQUEST).mergeMap((action: any) => {
     if (!action.$$responseChannel) return Rx.Observable.of(null)
     return bolt
       .directTransaction(action.query, action.params || undefined, {
@@ -110,16 +115,20 @@ export const cypherRequestEpic = (some$, store) =>
         }),
         useDb: action.useDb
       })
-      .then(r => ({ type: action.$$responseChannel, success: true, result: r }))
-      .catch(e => ({
+      .then((r: any) => ({
+        type: action.$$responseChannel,
+        success: true,
+        result: r
+      }))
+      .catch((e: any) => ({
         type: action.$$responseChannel,
         success: false,
         error: e
       }))
   })
 
-export const routedCypherRequestEpic = (some$, store) =>
-  some$.ofType(ROUTED_CYPHER_WRITE_REQUEST).mergeMap(action => {
+export const routedCypherRequestEpic = (some$: any, store: any) =>
+  some$.ofType(ROUTED_CYPHER_WRITE_REQUEST).mergeMap((action: any) => {
     if (!action.$$responseChannel) return Rx.Observable.of(null)
 
     const [id, promise] = bolt.routedWriteTransaction(
@@ -135,20 +144,20 @@ export const routedCypherRequestEpic = (some$, store) =>
       }
     )
     return promise
-      .then(result => ({
+      .then((result: any) => ({
         type: action.$$responseChannel,
         success: true,
         result
       }))
-      .catch(error => ({
+      .catch((error: any) => ({
         type: action.$$responseChannel,
         success: false,
         error
       }))
   })
 
-export const adHocCypherRequestEpic = (some$, store) =>
-  some$.ofType(AD_HOC_CYPHER_REQUEST).mergeMap(action => {
+export const adHocCypherRequestEpic = (some$: any, store: any) =>
+  some$.ofType(AD_HOC_CYPHER_REQUEST).mergeMap((action: any) => {
     const connection = getActiveConnectionData(store.getState())
     const tempConnection = {
       ...connection,
@@ -157,10 +166,10 @@ export const adHocCypherRequestEpic = (some$, store) =>
     return callClusterMember(tempConnection, action, store)
   })
 
-export const clusterCypherRequestEpic = (some$, store) =>
+export const clusterCypherRequestEpic = (some$: any, store: any) =>
   some$
     .ofType(CLUSTER_CYPHER_REQUEST)
-    .mergeMap(action => {
+    .mergeMap((action: any) => {
       if (!action.$$responseChannel) return Rx.Observable.of(null)
       return bolt
         .directTransaction(
@@ -168,13 +177,13 @@ export const clusterCypherRequestEpic = (some$, store) =>
           {},
           { useCypherThread: shouldUseCypherThread(store.getState()) }
         )
-        .then(res => {
+        .then((res: any) => {
           const addresses = flatten(
-            res.records.map(record => record.get('addresses'))
-          ).filter(address => address.startsWith('bolt://'))
+            res.records.map((record: any) => record.get('addresses'))
+          ).filter((address: any) => address.startsWith('bolt://'))
           return {
             action,
-            observables: addresses.map(host => {
+            observables: addresses.map((host: any) => {
               const connection = getActiveConnectionData(store.getState())
               const tempConnection = {
                 ...connection,
@@ -186,16 +195,16 @@ export const clusterCypherRequestEpic = (some$, store) =>
             })
           }
         })
-        .catch(error => {
+        .catch((error: any) => {
           return Rx.Observable.of({ action, error })
         })
     })
-    .flatMap(({ action, observables, value }) => {
+    .flatMap(({ action, observables, value }: any) => {
       if (value) return Rx.Observable.of(value)
       observables.push(Rx.Observable.of(action))
       return Rx.Observable.forkJoin(...observables)
     })
-    .map(value => {
+    .map((value: any) => {
       if (value && value.error) {
         return {
           type: value.action.$$responseChannel,
@@ -204,24 +213,27 @@ export const clusterCypherRequestEpic = (some$, store) =>
         }
       }
       const action = value.pop()
-      const records = value.reduce((acc, { result, success, error, host }) => {
-        if (!success) {
-          return [
-            {
-              error: {
-                host,
-                message: error.message,
-                code: error.code
+      const records = value.reduce(
+        (acc: any, { result, success, error, host }: any) => {
+          if (!success) {
+            return [
+              {
+                error: {
+                  host,
+                  message: error.message,
+                  code: error.code
+                }
               }
-            }
-          ]
-        }
-        const mappedRes = result.records.map(record => ({
-          ...record,
-          host: result.summary.server.address
-        }))
-        return [...acc, ...mappedRes]
-      }, [])
+            ]
+          }
+          const mappedRes = result.records.map((record: any) => ({
+            ...record,
+            host: result.summary.server.address
+          }))
+          return [...acc, ...mappedRes]
+        },
+        []
+      )
       return {
         type: action.$$responseChannel,
         success: true,
@@ -231,11 +243,11 @@ export const clusterCypherRequestEpic = (some$, store) =>
 
 // We need this because this is the only case where we still
 // want to execute cypher even though we get an connection error back
-export const handleForcePasswordChangeEpic = (some$, store) =>
-  some$.ofType(FORCE_CHANGE_PASSWORD).mergeMap(action => {
+export const handleForcePasswordChangeEpic = (some$: any, store: any) =>
+  some$.ofType(FORCE_CHANGE_PASSWORD).mergeMap((action: any) => {
     if (!action.$$responseChannel) return Rx.Observable.of(null)
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, _reject) => {
       bolt
         .directConnect(
           action,
@@ -246,7 +258,7 @@ export const handleForcePasswordChangeEpic = (some$, store) =>
         .then(async driver => {
           // Let's establish what server version we're connected to if not in state
           if (!getVersion(store.getState())) {
-            const versionRes = await queryAndResolve(
+            const versionRes: any = await queryAndResolve(
               driver,
               { ...action, query: serverInfoQuery, parameters: {} },
               undefined

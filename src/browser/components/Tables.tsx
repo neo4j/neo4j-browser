@@ -54,7 +54,7 @@ export const SysInfoTableContainer = styled.div`
   padding: 30px;
   width: 100%;
 `
-export const SysInfoTable = ({ header, colspan, children }) => {
+export const SysInfoTable = ({ header, colspan, children }: any) => {
   return (
     <StyledTable>
       <thead>
@@ -74,13 +74,13 @@ export const SysInfoTableEntry = ({
   headers,
   mapper,
   optional
-}) => {
+}: any) => {
   const missingValuePlaceholder = '-'
-  const getValue = (v, m) => (m && v ? mapper(v) : v)
+  const getValue = (v: any, m: any) => (m && v ? mapper(v) : v)
   if (headers) {
     return (
       <StyledTr key="headers-row">
-        {headers.map(value => {
+        {headers.map((value: any) => {
           const mappedValue = getValue(value, mapper)
           const val = mappedValue || missingValuePlaceholder
           return mappedValue || !optional ? (
@@ -93,7 +93,7 @@ export const SysInfoTableEntry = ({
   if (values) {
     return (
       <StyledTr key="values-row">
-        {values.map((value, rowIndex) => {
+        {values.map((value: any, rowIndex: any) => {
           const mappedValue = getValue(value, mapper)
           const val = mappedValue || missingValuePlaceholder
           return mappedValue || !optional ? (

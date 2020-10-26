@@ -19,11 +19,8 @@
  */
 
 import {
-  getCredentials,
   getActiveGraph,
   eventToHandler,
-  didChangeActiveGraph,
-  getActiveCredentials,
   createConnectionCredentialsObject
 } from './desktop-api.utils'
 import { KERBEROS, NATIVE } from 'services/bolt/boltHelpers'
@@ -41,7 +38,7 @@ describe('getActiveGraph', () => {
   ]
 
   // When && Then
-  test.each(graphs)('getActiveGraph handles %o as projects', graph => {
+  test.each(graphs)('getActiveGraph handles %o as projects', (graph: any) => {
     expect(getActiveGraph(graph)).toEqual(null)
   })
 
@@ -70,7 +67,7 @@ describe('getActiveGraph', () => {
 })
 
 describe('eventToHandler', () => {
-  const tests = [
+  const tests: [any, any][] = [
     [undefined, null],
     [true, null],
     ['XXX', 'onXxx'],
@@ -160,7 +157,7 @@ const https = {
   host: 'abc',
   port: 'xyz'
 }
-const createApiResponse = graphs => ({
+const createApiResponse = (graphs: any) => ({
   projects: [{ graphs }]
 })
 

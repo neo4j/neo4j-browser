@@ -30,8 +30,13 @@ import { Lead } from 'browser-components/Text'
 import { StyledConnectionAside } from './styled'
 import { getActiveConnection } from 'shared/modules/connections/connectionsDuck'
 
-export class ChangePasswordFrame extends Component {
-  constructor(props) {
+type ChangePasswordFrameState = any
+
+export class ChangePasswordFrame extends Component<
+  any,
+  ChangePasswordFrameState
+> {
+  constructor(props: any) {
     super(props)
     const connection = this.props.frame.connectionData
     this.state = {
@@ -42,7 +47,7 @@ export class ChangePasswordFrame extends Component {
     }
   }
 
-  error = e => {
+  error = (e: any) => {
     if (e.code === 'N/A') {
       e.message = 'Existing password is incorrect'
     }
@@ -97,7 +102,7 @@ export class ChangePasswordFrame extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   return {
     activeConnection: getActiveConnection(state)
   }

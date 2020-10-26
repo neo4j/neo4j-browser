@@ -33,30 +33,35 @@ import {
 import { RowExpandToggleComponent } from './RowExpandToggle'
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
 
-export class LegendComponent extends Component {
-  constructor(props) {
+type State = any
+
+export class LegendComponent extends Component<any, State> {
+  labelRowELem: any
+  typeRowElem: any
+  constructor(props: {}) {
     super(props)
-    this.state = {}
-    this.state.typeRowContracted = true
-    this.state.labelRowContracted = true
+    this.state = {
+      typeRowContracted: true,
+      labelRowContracted: true
+    }
     this.typeRowElem = null
     this.labelRowELem = null
   }
 
-  setTypeRowELem(elem) {
+  setTypeRowELem(elem: any) {
     if (elem) {
       this.typeRowElem = elem
     }
   }
 
-  setLabelRowELem(elem) {
+  setLabelRowELem(elem: any) {
     if (elem) {
       this.labelRowELem = elem
     }
   }
 
   render() {
-    const mapLabels = labels => {
+    const mapLabels = (labels: any) => {
       const labelList = Object.keys(labels).map((legendItemKey, i) => {
         const styleForItem = this.props.graphStyle.forNode({
           labels: [legendItemKey]
@@ -111,7 +116,7 @@ export class LegendComponent extends Component {
         </StyledLegendRow>
       )
     }
-    const mapRelTypes = legendItems => {
+    const mapRelTypes = (legendItems: any) => {
       if (!legendItems || !Object.keys(legendItems).length) {
         return null
       }

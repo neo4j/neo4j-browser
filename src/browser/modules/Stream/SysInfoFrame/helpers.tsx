@@ -32,7 +32,7 @@ import { StyledInfoMessage } from './../../Stream/styled'
 
 const jmxPrefix = 'neo4j.metrics:name='
 
-export const sysinfoQuery = useDb => `
+export const sysinfoQuery = (useDb: any) => `
 // Store size. Per db
 CALL dbms.queryJmx("${jmxPrefix}neo4j.${useDb}.store.size.total") YIELD name, attributes
 RETURN "Store Size" AS group, name, attributes
@@ -92,13 +92,11 @@ export const Sysinfo = ({
   storeSizes,
   idAllocation,
   transactions,
-  isACausalCluster,
-  isEnterpriseEdition,
-  cc
-}) => {
+  isEnterpriseEdition
+}: any) => {
   const mappedDatabases = [
     {
-      value: databases.map(db => {
+      value: databases.map((db: any) => {
         return [
           db.name,
           db.address,
@@ -139,28 +137,31 @@ export const Sysinfo = ({
   )
 }
 
-export const responseHandler = (setState, useDb) =>
-  function(res) {
+export const responseHandler = (setState: any, useDb: any) =>
+  function(res: any): any {
     if (!res || !res.result || !res.result.records) {
       setState({ success: false })
       return null
     }
-    const intoGroups = res.result.records.reduce((grouped, record) => {
-      if (!grouped.hasOwnProperty(record.get('group'))) {
-        grouped[record.get('group')] = {
-          name: record.get('group'),
-          attributes: []
+    const intoGroups = res.result.records.reduce(
+      (grouped: any, record: any) => {
+        if (!grouped.hasOwnProperty(record.get('group'))) {
+          grouped[record.get('group')] = {
+            name: record.get('group'),
+            attributes: []
+          }
         }
-      }
-      const mappedRecord = {
-        name: record.get('name').replace(jmxPrefix, ''),
-        value: (
-          record.get('attributes').Count || record.get('attributes').Value
-        ).value
-      }
-      grouped[record.get('group')].attributes.push(mappedRecord)
-      return grouped
-    }, {})
+        const mappedRecord = {
+          name: record.get('name').replace(jmxPrefix, ''),
+          value: (
+            record.get('attributes').Count || record.get('attributes').Value
+          ).value
+        }
+        grouped[record.get('group')].attributes.push(mappedRecord)
+        return grouped
+      },
+      {}
+    )
 
     // Page cache
     const size = flattenAttributes(intoGroups['Store Size'])
@@ -181,13 +182,13 @@ export const responseHandler = (setState, useDb) =>
       {
         label: 'Hit Ratio',
         value: cache['neo4j.page_cache.hit_ratio'],
-        mapper: v => `${(v * 100).toFixed(2)}%`,
+        mapper: (v: any) => `${(v * 100).toFixed(2)}%`,
         optional: true
       },
       {
         label: 'Usage Ratio',
         value: cache['neo4j.page_cache.usage_ratio'],
-        mapper: v => `${(v * 100).toFixed(2)}%`,
+        mapper: (v: any) => `${(v * 100).toFixed(2)}%`,
         optional: true
       }
     ]
@@ -235,15 +236,15 @@ export const responseHandler = (setState, useDb) =>
     })
   }
 
-export const clusterResponseHandler = setState =>
-  function(res) {
+export const clusterResponseHandler = (setState: any) =>
+  function(res: any) {
     if (!res.success) {
       setState({ error: 'No causal cluster results', success: false })
       return
     }
     const mappedResult = mapSysInfoRecords(res.result.records)
-    const mappedTableComponents = mappedResult.map(ccRecord => {
-      const httpUrlForMember = ccRecord.addresses.filter(address => {
+    const mappedTableComponents = mappedResult.map((ccRecord: any) => {
+      const httpUrlForMember = ccRecord.addresses.filter((address: any) => {
         return (
           !address.includes(window.location.href) &&
           (window.location.protocol.startsWith('file:')

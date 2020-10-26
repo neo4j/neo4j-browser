@@ -60,7 +60,7 @@ jest.mock('shared/modules/dbMeta/dbMetaDuck', () => {
 describe('Specified target database, using web workers', () => {
   beforeAll(() => {
     // Fake window worker object
-    window.Worker = true
+    ;(window as any).Worker = true
     bolt.useDb('autoDb') // Fake setting the db
   })
   test('it uses the db in store if no specific db specified with the action', done => {
@@ -69,7 +69,7 @@ describe('Specified target database, using web workers', () => {
     const bus = createBus()
     bus.applyReduxMiddleware(createEpicMiddleware(handleSingleCommandEpic))
     const $$responseChannel = 'test-channel'
-    const action = executeSingleCommand(`RETURN 1`)
+    const action: any = executeSingleCommand(`RETURN 1`)
     action.$$responseChannel = $$responseChannel
 
     bus.send(action.type, action)
@@ -93,7 +93,7 @@ describe('Specified target database, using web workers', () => {
     const bus = createBus()
     bus.applyReduxMiddleware(createEpicMiddleware(handleSingleCommandEpic))
     const $$responseChannel = 'test-channel'
-    const action = executeSingleCommand(`RETURN 1`, { useDb: 'manualDb' }) // <-- specify db
+    const action: any = executeSingleCommand(`RETURN 1`, { useDb: 'manualDb' }) // <-- specify db
     action.$$responseChannel = $$responseChannel
 
     bus.send(action.type, action)

@@ -23,8 +23,8 @@ import { parseGrass } from 'shared/services/grassUtils'
 
 jest.mock('services/remote', () => {
   return {
-    get: url => {
-      return new Promise((resolve, reject) => {
+    get: (url: any) => {
+      return new Promise(resolve => {
         resolve(url)
       })
     }
@@ -33,7 +33,7 @@ jest.mock('services/remote', () => {
 
 describe('Grass remote fetch', () => {
   test('should not fetch from url not in the allowlist', () => {
-    const allowlist = 'http://foo'
+    const allowlist: any = 'http://foo'
     const urlNotInAllowlist = 'http://bar'
     return expect(
       fetchRemoteGrass(urlNotInAllowlist, allowlist)
@@ -42,7 +42,7 @@ describe('Grass remote fetch', () => {
     )
   })
   test('should fetch from url in the allowlist', () => {
-    const allowlist = 'http://foo'
+    const allowlist: any = 'http://foo'
     const urlInAllowlist = 'http://foo'
     return expect(fetchRemoteGrass(urlInAllowlist, allowlist)).resolves.toBe(
       urlInAllowlist

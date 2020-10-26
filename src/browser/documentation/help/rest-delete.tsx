@@ -44,6 +44,7 @@ const content = (
     </table>
     <section className="example">
       <figure>
+        {/* @ts-expect-error ts-migrate(2322) FIXME: Property 'mode' does not exist on type 'DetailedHT... Remove this comment to see the full error message */}
         <pre mode="rest" className="code runnable">
           :DELETE /db/data/transaction/2
         </pre>

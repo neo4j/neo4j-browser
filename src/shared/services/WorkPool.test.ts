@@ -22,10 +22,10 @@ import { v4 as uuid } from 'uuid'
 import WorkPool from './WorkPool'
 
 describe('Workpool', () => {
-  let createWorker
-  let register
-  let id
-  let postMessage
+  let createWorker: any
+  let register: any
+  let id: any
+  let postMessage: any
   beforeEach(() => {
     postMessage = jest.fn()
     createWorker = jest.fn(() => {
@@ -190,9 +190,9 @@ describe('Workpool', () => {
     const id4 = { id: uuid() }
 
     // When
-    const workObj1 = localRegister.doWork(id1)
-    const workObj2 = localRegister.doWork(id2)
-    const workObj3 = localRegister.doWork(id3)
+    const workObj1: any = localRegister.doWork(id1)
+    const workObj2: any = localRegister.doWork(id2)
+    const workObj3: any = localRegister.doWork(id3)
 
     // Then
     expect(localRegister.getPoolSize()).toEqual(poolSize)
@@ -214,7 +214,7 @@ describe('Workpool', () => {
     expect(localRegister.getQueueSize()).toEqual(0)
 
     // When
-    const workObj4 = localRegister.doWork(id4)
+    const workObj4: any = localRegister.doWork(id4)
 
     // Then
     expect(localRegister.getPoolSize()).toEqual(poolSize)

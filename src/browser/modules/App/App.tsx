@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React, { useEffect, useCallback, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { ThemeProvider } from 'styled-components'
@@ -28,7 +28,6 @@ import {
   codeFontLigatures,
   LIGHT_THEME
 } from 'shared/modules/settings/settingsDuck'
-import { FOCUS, EXPAND } from 'shared/modules/editor/editorDuck'
 import { utilizeBrowserSync } from 'shared/modules/features/featuresDuck'
 import { getOpenDrawer } from 'shared/modules/sidebar/sidebarDuck'
 import { getErrorMessage } from 'shared/modules/commands/commandsDuck'
@@ -83,21 +82,22 @@ import {
 import { METRICS_EVENT, udcInit } from 'shared/modules/udc/udcDuck'
 import { useKeyboardShortcuts } from './keyboardShortcuts'
 
-export function App(props) {
+export function App(props: any) {
   const [derivedTheme, setEnvironmentTheme] = useDerivedTheme(
     props.theme,
     LIGHT_THEME
   )
+  // @ts-expect-error ts-migrate(7053) FIXME: No index signature with a parameter of type 'strin... Remove this comment to see the full error message
   const themeData = themes[derivedTheme] || themes[LIGHT_THEME]
 
   useKeyboardShortcuts(props.bus)
 
-  const eventMetricsCallback = useRef(() => {})
+  const eventMetricsCallback = useRef((_: any) => {})
 
   useEffect(() => {
     const unsub =
       props.bus &&
-      props.bus.take(METRICS_EVENT, ({ category, label, data }) => {
+      props.bus.take(METRICS_EVENT, ({ category, label, data }: any) => {
         eventMetricsCallback &&
           eventMetricsCallback.current &&
           eventMetricsCallback.current({ category, label, data })
@@ -132,14 +132,14 @@ export function App(props) {
   if (!codeFontLigatures) {
     wrapperClassNames.push('disable-font-ligatures')
   }
-  const setEventMetricsCallback = fn => {
+  const setEventMetricsCallback = (fn: any) => {
     eventMetricsCallback.current = fn
   }
 
   return (
     <ErrorBoundary>
       <DesktopApi
-        onMount={(...args) => {
+        onMount={(...args: any[]) => {
           buildConnectionCreds(...args, { defaultConnectionData })
             .then(creds => props.bus.send(INJECTED_DISCOVERY, creds))
             .catch(() => props.bus.send(INITIAL_SWITCH_CONNECTION_FAILED))
@@ -147,18 +147,18 @@ export function App(props) {
             .then(theme => setEnvironmentTheme(theme))
             .catch(setEnvironmentTheme(null))
         }}
-        onGraphActive={(...args) => {
+        onGraphActive={(...args: any[]) => {
           buildConnectionCreds(...args, { defaultConnectionData })
             .then(creds => props.bus.send(SWITCH_CONNECTION, creds))
-            .catch(e => props.bus.send(SWITCH_CONNECTION_FAILED))
+            .catch(() => props.bus.send(SWITCH_CONNECTION_FAILED))
         }}
         onGraphInactive={() => props.bus.send(SILENT_DISCONNECT)}
-        onColorSchemeUpdated={(...args) =>
+        onColorSchemeUpdated={(...args: any[]) =>
           getDesktopTheme(...args)
             .then(theme => setEnvironmentTheme(theme))
             .catch(setEnvironmentTheme(null))
         }
-        onArgumentsChange={argsString =>
+        onArgumentsChange={(argsString: any) =>
           props.bus.send(URL_ARGUMENTS_CHANGE, { url: `?${argsString}` })
         }
         setEventMetricsCallback={setEventMetricsCallback}
@@ -166,6 +166,7 @@ export function App(props) {
       <ThemeProvider theme={themeData}>
         <FeatureToggleProvider features={experimentalFeatures}>
           <FileDrop store={store}>
+            {/* @ts-expect-error ts-migrate(2769) FIXME: Type 'string[]' is not assignable to type 'string'... Remove this comment to see the full error message */}
             <StyledWrapper className={wrapperClassNames}>
               <DocTitle titleString={props.titleString} />
               <UserInteraction />
@@ -205,7 +206,7 @@ export function App(props) {
   )
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   const connectionData = getActiveConnectionData(state)
   return {
     experimentalFeatures: getExperimentalFeatures(state),
@@ -231,9 +232,9 @@ const mapStateToProps = state => {
   }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
-    handleNavClick: id => {
+    handleNavClick: (id: any) => {
       dispatch(toggle(id))
     }
   }

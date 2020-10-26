@@ -24,7 +24,7 @@ import { render, fireEvent } from '@testing-library/react'
 import Navigation from './Navigation'
 
 describe('<Navigation />', () => {
-  const div = testid =>
+  const div = (testid: any) =>
     function Testdiv() {
       return <div data-testid={testid}></div>
     }
@@ -45,12 +45,12 @@ describe('<Navigation />', () => {
   ]
 
   // recreation of reducer logic
-  const toggleDrawer = (current, clicked) =>
+  const toggleDrawer = (current: any, clicked: any) =>
     clicked && clicked !== current ? clicked : null
 
   it('should open drawer when button is clicked on closed drawer', () => {
     let openDrawer = ''
-    const onNavClick = clickedDrawer => {
+    const onNavClick = (clickedDrawer: any) => {
       openDrawer = toggleDrawer(openDrawer, clickedDrawer)
     }
 
@@ -81,7 +81,7 @@ describe('<Navigation />', () => {
 
   it('should close drawer when button is clicked on open drawer', () => {
     let openDrawer = 'documents'
-    const onNavClick = clickedDrawer => {
+    const onNavClick = (clickedDrawer: any) => {
       openDrawer = toggleDrawer(openDrawer, clickedDrawer)
     }
 
@@ -113,7 +113,7 @@ describe('<Navigation />', () => {
 
   it('should switch drawer when different button is clicked than currently open', () => {
     let openDrawer = 'documents'
-    const onNavClick = clickedDrawer => {
+    const onNavClick = (clickedDrawer: any) => {
       openDrawer = toggleDrawer(openDrawer, clickedDrawer)
     }
 

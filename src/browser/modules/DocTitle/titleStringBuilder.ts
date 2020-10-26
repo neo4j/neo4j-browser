@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const asTitleString = connectionData => {
+const asTitleString = (connectionData: any) => {
   const buildTitleFromConnectionData = () => {
     if (!connectionData) return null
     const dbPath = connectionData.db ? `/${connectionData.db}` : ''

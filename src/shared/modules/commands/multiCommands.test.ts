@@ -37,7 +37,7 @@ const mockStore = configureMockStore([
 ])
 
 describe('handleCommandEpic', () => {
-  let store
+  let store: any
   const maxHistory = 20
   beforeEach(() => {
     bolt.routedWriteTransaction = originalRoutedWriteTransaction
@@ -69,7 +69,7 @@ describe('handleCommandEpic', () => {
     const id = 2
     const requestId = 'xxx'
     const action = commands.executeCommand(cmd, { id, requestId })
-    bus.take('NOOP', currentAction => {
+    bus.take('NOOP', _currentAction => {
       // Then
       expect(store.getActions()).toEqual([
         action,
@@ -99,14 +99,18 @@ describe('handleCommandEpic', () => {
       parentId
     })
 
-    bus.take('NOOP', currentAction => {
+    bus.take('NOOP', _currentAction => {
       // Then
       expect(store.getActions()).toContainEqual(action)
       expect(store.getActions()).toContainEqual(
         addHistory(action.cmd, maxHistory)
       )
       expect(store.getActions()).toContainEqual(
-        addFrame({ type: 'cypher-script', id: parentId, cmd: action.cmd })
+        addFrame({
+          type: 'cypher-script',
+          id: parentId,
+          cmd: action.cmd
+        } as any)
       )
       // Non deterministic id:s in the commands, so skip
       expect(store.getActions()).toContainEqual({ type: 'NOOP' })

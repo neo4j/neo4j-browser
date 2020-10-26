@@ -3,10 +3,10 @@
 exports[`CodeViews CodeStatusbar displays no statusBarMessage 1`] = `
 <div>
   <div
-    class="styled__StyledStatsBar-sc-1dtvgs1-24 fieQou"
+    class="sc-ckVGcZ fsAzIa"
   >
     <div
-      class="Ellipsis-sc-1dn9bou-0 gzqRPC"
+      class="sc-hzDkRC ksLWOp"
     />
   </div>
 </div>
@@ -15,10 +15,10 @@ exports[`CodeViews CodeStatusbar displays no statusBarMessage 1`] = `
 exports[`CodeViews CodeStatusbar displays statusBarMessage 1`] = `
 <div>
   <div
-    class="styled__StyledStatsBar-sc-1dtvgs1-24 fieQou"
+    class="sc-ckVGcZ fsAzIa"
   >
     <div
-      class="Ellipsis-sc-1dn9bou-0 gzqRPC"
+      class="sc-hzDkRC ksLWOp"
     >
       Started streaming 1 records after 5 ms and completed after 10  ms.
     </div>
@@ -31,88 +31,88 @@ exports[`CodeViews CodeView displays nothing if not successful query 1`] = `<div
 exports[`CodeViews CodeView displays request and response info if successful query 1`] = `
 <div>
   <div
-    class="styled__PaddedDiv-sc-1dtvgs1-2 dOjNWv"
+    class="sc-htpNat fsSTsy"
   >
     <table
-      class="styled__StyledTable-sc-1dtvgs1-38 beEZpD"
+      class="sc-jDwBTQ iYfCXq"
     >
       <tbody
-        class="styled__StyledTBody-sc-1dtvgs1-39 cCEsqv"
+        class="sc-gPEVay jLduWs"
       >
         <tr
-          class="styled__StyledAlteringTr-sc-1dtvgs1-41 faSVCw"
+          class="sc-jlyJG iSVHbw"
         >
           <td
-            class="styled__StyledStrongTd-sc-1dtvgs1-42 fcLvDX"
+            class="sc-gipzik ctJpCp"
           >
             Server version
           </td>
           <td
-            class="styled__StyledTd-sc-1dtvgs1-43 dDtSSc"
+            class="sc-csuQGl CQhxV"
           >
             xx1
           </td>
         </tr>
         <tr
-          class="styled__StyledAlteringTr-sc-1dtvgs1-41 faSVCw"
+          class="sc-jlyJG iSVHbw"
         >
           <td
-            class="styled__StyledStrongTd-sc-1dtvgs1-42 fcLvDX"
+            class="sc-gipzik ctJpCp"
           >
             Server address
           </td>
           <td
-            class="styled__StyledTd-sc-1dtvgs1-43 dDtSSc"
+            class="sc-csuQGl CQhxV"
           >
             xx2
           </td>
         </tr>
         <tr
-          class="styled__StyledAlteringTr-sc-1dtvgs1-41 faSVCw"
+          class="sc-jlyJG iSVHbw"
         >
           <td
-            class="styled__StyledStrongTd-sc-1dtvgs1-42 fcLvDX"
+            class="sc-gipzik ctJpCp"
           >
             Query
           </td>
           <td
-            class="styled__StyledTd-sc-1dtvgs1-43 dDtSSc"
+            class="sc-csuQGl CQhxV"
           >
             MATCH xx0
           </td>
         </tr>
         <tr
-          class="styled__StyledAlteringTr-sc-1dtvgs1-41 faSVCw"
+          class="sc-jlyJG iSVHbw"
         >
           <td
-            class="styled__StyledStrongTd-sc-1dtvgs1-42 fcLvDX"
+            class="sc-gipzik ctJpCp"
           >
             Summary
             <div
-              class="styled__StyledExpandable-sc-1dtvgs1-40 fHShEJ fa fa-caret-right"
+              class="sc-iRbamj gVOsNP fa fa-caret-right"
               title="Expand section"
             />
           </td>
           <td
-            class="styled__StyledTd-sc-1dtvgs1-43 dDtSSc"
+            class="sc-csuQGl CQhxV"
           >
             {,  "server": {,    "version": "xx1", ...
           </td>
         </tr>
         <tr
-          class="styled__StyledAlteringTr-sc-1dtvgs1-41 faSVCw"
+          class="sc-jlyJG iSVHbw"
         >
           <td
-            class="styled__StyledStrongTd-sc-1dtvgs1-42 fcLvDX"
+            class="sc-gipzik ctJpCp"
           >
             Response
             <div
-              class="styled__StyledExpandable-sc-1dtvgs1-40 fHShEJ fa fa-caret-right"
+              class="sc-iRbamj gVOsNP fa fa-caret-right"
               title="Expand section"
             />
           </td>
           <td
-            class="styled__StyledTd-sc-1dtvgs1-43 dDtSSc"
+            class="sc-csuQGl CQhxV"
           >
             [,  {,    "res": "xx3" ...
           </td>

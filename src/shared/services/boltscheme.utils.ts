@@ -21,18 +21,18 @@
 const BOLT_DIRECT_SCHEME = 'bolt'
 const BOLT_ROUTING_SCHEME = 'neo4j'
 
-export const isNonSupportedRoutingSchemeError = e =>
+export const isNonSupportedRoutingSchemeError = (e: any) =>
   e.code === 'ServiceUnavailable' &&
   e.message.includes('Could not perform discovery')
 
 export const isNonRoutingScheme = (url = '') =>
   typeof url === 'string' && url.startsWith(`${BOLT_DIRECT_SCHEME}://`)
 
-export const toNonRoutingScheme = url =>
+export const toNonRoutingScheme = (url: any) =>
   typeof url === 'string' &&
   `${BOLT_DIRECT_SCHEME}${getSchemeFlag(url)}://${stripScheme(url)}`
 
-export const getScheme = url => {
+export const getScheme = (url: any) => {
   if (!url) {
     return ''
   }
@@ -43,7 +43,7 @@ export const getScheme = url => {
   return scheme
 }
 
-export const stripScheme = url => {
+export const stripScheme = (url: any) => {
   const [_scheme, ...rest] = (url || '').split('://')
   if (!rest || !rest.length) {
     return _scheme
@@ -51,7 +51,7 @@ export const stripScheme = url => {
   return rest.join('://')
 }
 
-export const isSecureBoltScheme = url => {
+export const isSecureBoltScheme = (url: any) => {
   if (url && !url.includes('://')) {
     return false
   }
@@ -72,7 +72,7 @@ export const getSchemeFlag = (url = '') => {
   }
   return `+${scheme.split('+').pop()}`
 }
-const stripSchemeFlag = url => {
+const stripSchemeFlag = (url: any) => {
   if (url && !url.includes('://')) {
     return ''
   }
@@ -83,7 +83,7 @@ const stripSchemeFlag = url => {
   return scheme.split('+')[0]
 }
 
-const toggleSchemeSecurity = url => {
+const toggleSchemeSecurity = (url: any) => {
   if (url && !url.includes('://')) {
     return url
   }
@@ -110,8 +110,12 @@ export const toggleSchemeRouting = (url = '') => {
   return url
 }
 
-export const generateBoltUrl = (allowedSchemes, url, fallbackScheme) => {
-  const rewrites = {
+export const generateBoltUrl = (
+  allowedSchemes: any,
+  url: any,
+  fallbackScheme?: any
+) => {
+  const rewrites: any = {
     'bolt+routing://': `${BOLT_ROUTING_SCHEME}://`
   }
 

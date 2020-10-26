@@ -1,23 +1,25 @@
 import { Component } from 'react'
 
-export default class InputEnterStepping extends Component {
+type State = any
+
+export default class InputEnterStepping extends Component<any, State> {
   state = {
     initial: true
   }
 
-  steps = []
+  steps: any[] = []
   getSubmitProps = () => {
     return {
       onClick: this.props.submitAction
     }
   }
 
-  getInputPropsForIndex = (i, props = {}) => {
+  getInputPropsForIndex = (i: any, props: any = {}) => {
     this.steps[i] = this.steps[i] || {}
     const { initialFocus, ...cleanProps } = props
     const out = {
       ...cleanProps,
-      onKeyDown: e => {
+      onKeyDown: (e: any) => {
         // merge with users onKeyDown
         this.onKeyDown(e, i)
         props.onKeyDown && props.onKeyDown(e)
@@ -29,7 +31,7 @@ export default class InputEnterStepping extends Component {
     return out
   }
 
-  onKeyDown = (e, i) => {
+  onKeyDown = (e: any, i: any) => {
     const ENTER_KEYCODE = 13
     if (e.keyCode === ENTER_KEYCODE) {
       e.preventDefault()
@@ -41,7 +43,7 @@ export default class InputEnterStepping extends Component {
     }
   }
 
-  setRefForIndex = (i, ref) => {
+  setRefForIndex = (i: any, ref: any) => {
     this.steps[i] = this.steps[i] || {}
     this.steps[i].focusFn = () => ref.focus()
     if (this.state.initial && this.steps[i].focusOnRef) {

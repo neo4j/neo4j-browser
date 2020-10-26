@@ -19,14 +19,18 @@
  */
 
 export default class LoopArrow {
+  midShaftPoint: any
+  outline: any
+  overlay: any
+  shaftLength: any
   constructor(
-    nodeRadius,
-    straightLength,
-    spreadDegrees,
-    shaftWidth,
-    headWidth,
-    headLength,
-    captionHeight
+    nodeRadius: any,
+    straightLength: any,
+    spreadDegrees: any,
+    shaftWidth: any,
+    headWidth: any,
+    headLength: any,
+    captionHeight: any
   ) {
     const spread = (spreadDegrees * Math.PI) / 180
     const r1 = nodeRadius
@@ -37,7 +41,9 @@ export default class LoopArrow {
     this.shaftLength = loopRadius * 3 + shaftWidth
 
     class Point {
-      constructor(x, y) {
+      x: any
+      y: any
+      constructor(x: any, y: any) {
         this.x = x
         this.y = y
       }
@@ -47,7 +53,7 @@ export default class LoopArrow {
       }
     }
 
-    const normalPoint = function(sweep, radius, displacement) {
+    const normalPoint = function(sweep: any, radius: any, displacement: any) {
       const localLoopRadius = radius * Math.tan(spread / 2)
       const cy = radius / Math.cos(spread / 2)
       return new Point(
@@ -56,9 +62,9 @@ export default class LoopArrow {
       )
     }
     this.midShaftPoint = normalPoint(0, r3, shaftRadius + captionHeight / 2 + 2)
-    const startPoint = (radius, displacement) =>
+    const startPoint = (radius: any, displacement: any) =>
       normalPoint((Math.PI + spread) / 2, radius, displacement)
-    const endPoint = (radius, displacement) =>
+    const endPoint = (radius: any, displacement: any) =>
       normalPoint(-(Math.PI + spread) / 2, radius, displacement)
 
     this.outline = function() {
@@ -101,7 +107,7 @@ export default class LoopArrow {
       ].join(' ')
     }
 
-    this.overlay = function(minWidth) {
+    this.overlay = function(minWidth: any) {
       const displacement = Math.max(minWidth / 2, shaftRadius)
       const inner = loopRadius - displacement
       const outer = loopRadius + displacement

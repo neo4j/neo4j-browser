@@ -24,12 +24,12 @@ import { getGlobalDrivers } from './globalDrivers'
 import { buildTxFunctionByMode } from './boltHelpers'
 import { BoltConnectionError, createErrorObject } from '../exceptions'
 
-const runningQueryRegister = {}
+const runningQueryRegister: any = {}
 
 function _trackedTransaction(
-  input,
+  input: any,
   parameters = {},
-  session,
+  session: any,
   requestId = null,
   txMetadata = undefined,
   autoCommit = false
@@ -55,49 +55,54 @@ function _trackedTransaction(
   if (!autoCommit) {
     const txFn = buildTxFunctionByMode(session)
     // Use same fn signature as session.run
-    runFn = (input, parameters, metadata) =>
-      txFn(tx => tx.run(input, parameters), metadata)
+    runFn = (input: any, parameters: any, metadata: any) =>
+      txFn((tx: any) => tx.run(input, parameters), metadata)
   } else {
     // Auto-Commit transaction, only used for PERIODIC COMMIT etc.
     runFn = session.run.bind(session)
   }
 
   const queryPromise = runFn(input, parameters, metadata)
-    .then(result => {
+    .then((result: any) => {
       closeFn()
       return result
     })
-    .catch(e => {
+    .catch((e: any) => {
       closeFn()
       throw e
     })
   return [id, queryPromise]
 }
 
-function _transaction(input, parameters, session, txMetadata = undefined) {
+function _transaction(
+  input: any,
+  parameters: any,
+  session: any,
+  txMetadata = undefined
+) {
   if (!session) return Promise.reject(createErrorObject(BoltConnectionError))
 
   const metadata = txMetadata ? { metadata: txMetadata } : undefined
   const txFn = buildTxFunctionByMode(session)
 
-  return txFn(tx => tx.run(input, parameters), metadata)
-    .then(r => {
+  return txFn((tx: any) => tx.run(input, parameters), metadata)
+    .then((r: any) => {
       session.close()
       return r
     })
-    .catch(e => {
+    .catch((e: any) => {
       session.close()
       throw e
     })
 }
 
-export function cancelTransaction(id, cb) {
+export function cancelTransaction(id: any, cb: any) {
   if (runningQueryRegister[id]) {
     runningQueryRegister[id](cb)
   }
 }
 
-export function directTransaction(input, parameters, opts = {}) {
+export function directTransaction(input: any, parameters: any, opts: any = {}) {
   const {
     requestId = null,
     cancelable = false,
@@ -113,7 +118,11 @@ export function directTransaction(input, parameters, opts = {}) {
   return _trackedTransaction(input, parameters, session, requestId, txMetadata)
 }
 
-export function routedReadTransaction(input, parameters, opts = {}) {
+export function routedReadTransaction(
+  input: any,
+  parameters: any,
+  opts: any = {}
+) {
   const {
     requestId = null,
     cancelable = false,
@@ -129,7 +138,11 @@ export function routedReadTransaction(input, parameters, opts = {}) {
   return _trackedTransaction(input, parameters, session, requestId, txMetadata)
 }
 
-export function routedWriteTransaction(input, parameters, opts = {}) {
+export function routedWriteTransaction(
+  input: any,
+  parameters: any,
+  opts: any = {}
+) {
   const {
     requestId = null,
     cancelable = false,

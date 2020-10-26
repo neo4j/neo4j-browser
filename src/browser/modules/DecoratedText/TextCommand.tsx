@@ -44,15 +44,15 @@ const ExecutableText = styled.a`
   background-color: ${props => props.theme.topicBackground};
   color: ${props => props.theme.topicText};
 `
-export const TextCommand = ({ command, onClick, ...rest }) => (
+export const TextCommand = ({ command, onClick, ...rest }: any) => (
   <ExecutableText {...rest} onClick={() => onClick(`:${command}`)}>
     <ExecutableIcon className="fa fa-play-circle-o" />:{command}
   </ExecutableText>
 )
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
-    onClick: cmd =>
+    onClick: (cmd: any) =>
       dispatch(executeCommand(cmd, { source: commandSources.button }))
   }
 }

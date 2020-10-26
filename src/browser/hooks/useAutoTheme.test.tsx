@@ -6,7 +6,7 @@ import { colorSchemes } from './useDetectColorScheme'
 
 describe('useAutoTheme', () => {
   it('uses light as default theme if no default is passed in', () => {
-    window.matchMedia = undefined
+    ;(window as any).matchMedia = undefined
     let resolvedTheme
     const lightTheme = 'light'
 
@@ -24,12 +24,12 @@ describe('useAutoTheme', () => {
   })
   it('uses default theme if no can be detected + it can be overridden', () => {
     let resolvedTheme
-    let overrideThemeFn
+    let overrideThemeFn: any
     const lightTheme = 'light'
     const outlineTheme = 'outline'
-    window.matchMedia = undefined
+    ;(window as any).matchMedia = undefined
 
-    const Comp = ({ defaultTheme }) => {
+    const Comp = ({ defaultTheme }: any) => {
       const [autoTheme, setOverrideTheme] = useAutoTheme(defaultTheme)
       resolvedTheme = autoTheme
       overrideThemeFn = setOverrideTheme
@@ -57,20 +57,20 @@ describe('useAutoTheme', () => {
   it('detects theme and allows theme to be overridden', () => {
     // Given
     let resolvedTheme
-    let overrideThemeFn
-    let listenerFn
+    let overrideThemeFn: any
+    let listenerFn: any
     const lightTheme = 'light'
     const darkTheme = 'dark'
     const outlineTheme = 'outline'
-    window.matchMedia = jest.fn(() => {
+    ;(window as any).matchMedia = jest.fn(() => {
       return {
-        addListener: listener => {
+        addListener: (listener: any) => {
           listenerFn = listener
         },
         removeListener: () => {}
       }
     })
-    const Comp = ({ defaultTheme }) => {
+    const Comp = ({ defaultTheme }: any) => {
       const [autoTheme, setOverrideTheme] = useAutoTheme(defaultTheme)
       resolvedTheme = autoTheme
       overrideThemeFn = setOverrideTheme

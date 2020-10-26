@@ -19,10 +19,14 @@
  */
 
 export default class Node {
+  id: any
+  labels: any
+  propertyList: any
+  propertyMap: any
   isNode = true
   isRelationship = false
 
-  constructor(id, labels, properties) {
+  constructor(id: any, labels: any, properties: any) {
     this.id = id
     this.labels = labels
     this.propertyMap = properties
@@ -40,10 +44,11 @@ export default class Node {
     return this.propertyMap
   }
 
-  relationshipCount(graph) {
+  relationshipCount(graph: any) {
     const node = this
     const rels = []
     for (const relationship of Array.from(graph.relationships())) {
+      // @ts-expect-error ts-migrate(2571) FIXME: Object is of type 'unknown'.
       if (relationship.source === node || relationship.target === node) {
         rels.push(relationship)
       }

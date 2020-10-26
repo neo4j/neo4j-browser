@@ -50,7 +50,7 @@ describe('postConnectCmdEpic', () => {
     })
     const action = { type: CONNECTION_SUCCESS }
     const action2 = { type: UPDATE_SETTINGS }
-    bus.take('NOOP', currentAction => {
+    bus.take('NOOP', _currentAction => {
       // Then
       expect(store.getActions()).toEqual([
         action,
@@ -90,7 +90,7 @@ describe('postConnectCmdEpic', () => {
     })
     const action = { type: CONNECTION_SUCCESS }
     const action2 = { type: UPDATE_SETTINGS }
-    bus.take('NOOP', currentAction => {
+    bus.take('NOOP', _currentAction => {
       // Then
       expect(store.getActions()).toEqual([
         action,
@@ -126,7 +126,7 @@ describe('postConnectCmdEpic', () => {
     })
     const action = { type: CONNECTION_SUCCESS }
     const action2 = { type: UPDATE_SETTINGS }
-    bus.take('NOOP', currentAction => {
+    bus.take('NOOP', _currentAction => {
       // Then
       expect(store.getActions()).toEqual([action, action2, { type: 'NOOP' }])
       done()

@@ -52,7 +52,7 @@ const ToggleLabel = styled.label`
   cursor: pointer;
 `
 
-export const AutoRefreshToggle = props => {
+export const AutoRefreshToggle = (props: any) => {
   return (
     <ToggleLabel>
       AUTO-REFRESH &nbsp;

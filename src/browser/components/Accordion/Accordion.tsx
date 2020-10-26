@@ -21,19 +21,29 @@
 import React, { Component } from 'react'
 import { BorderedWrapper, TitleBar, ContentArea } from './styled'
 
-class Accordion extends Component {
+type AccordionState = any
+
+class Accordion extends Component<{ render: any }, AccordionState> {
+  static Title: any
+
+  static Content: any
+
   state = {
     activeIndex: -1,
     initialLoad: true
   }
 
-  titleClick = index => {
+  titleClick = (index: any) => {
     const newIndex = this.state.activeIndex === index ? -1 : index
     this.setState({ activeIndex: newIndex, initialLoad: false })
   }
 
-  getChildProps = ({ index, defaultActive = false, forceActive = false }) => {
-    const props = {
+  getChildProps = ({
+    index,
+    defaultActive = false,
+    forceActive = false
+  }: any) => {
+    const props: any = {
       titleProps: {
         onClick: () => this.titleClick(index)
       },
@@ -70,12 +80,12 @@ class Accordion extends Component {
   }
 }
 
-const Title = ({ children, ...rest }) => {
+const Title = ({ children, ...rest }: any) => {
   return <TitleBar {...rest}>{children}</TitleBar>
 }
 Accordion.Title = Title
 
-const Content = ({ children, active, ...rest }) => {
+const Content = ({ children, active, ...rest }: any) => {
   if (!active) return null
   return <ContentArea {...rest}>{children}</ContentArea>
 }

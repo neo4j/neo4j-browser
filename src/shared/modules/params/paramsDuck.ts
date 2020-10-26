@@ -27,10 +27,10 @@ const REPLACE = `${NAME}/REPLACE`
 const initialState = {}
 
 // Selectors
-export const getParams = state => state[NAME]
+export const getParams = (state: any) => state[NAME]
 
 // Reducer
-export default function reducer(state = initialState, action) {
+export default function reducer(state = initialState, action: any) {
   switch (action.type) {
     case APP_START:
       return { ...initialState, ...state }
@@ -44,13 +44,13 @@ export default function reducer(state = initialState, action) {
 }
 
 // Action creators
-export const update = obj => {
+export const update = (obj: any) => {
   return {
     type: UPDATE,
     params: obj
   }
 }
-export const replace = obj => {
+export const replace = (obj: any) => {
   return {
     type: REPLACE,
     params: obj

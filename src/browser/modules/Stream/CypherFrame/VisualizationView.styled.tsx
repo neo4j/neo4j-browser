@@ -21,11 +21,11 @@
 import styled from 'styled-components'
 import { dim } from 'browser-styles/constants'
 
-export const StyledVisContainer = styled.div`
+export const StyledVisContainer: any = styled.div`
   width: 100%;
   overflow: hidden;
-  ${props => (props.fullscreen ? 'padding-bottom: 39px' : null)};
-  height: ${props =>
+  ${(props: any) => (props.fullscreen ? 'padding-bottom: 39px' : null)};
+  height: ${(props: any) =>
     props.fullscreen
       ? '100vh'
       : dim.frameBodyHeight - dim.frameTitlebarHeight * 2 + 'px'};

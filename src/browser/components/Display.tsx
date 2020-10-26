@@ -20,7 +20,12 @@
 
 import React, { PureComponent } from 'react'
 
-export default class Display extends PureComponent {
+type State = any
+
+export default class Display extends PureComponent<
+  { if: boolean; lazy?: boolean; inline?: boolean; style?: any },
+  State
+> {
   state = {
     mounted: false
   }
@@ -31,7 +36,7 @@ export default class Display extends PureComponent {
     }
   }
 
-  static getDerivedStateFromProps(props, state) {
+  static getDerivedStateFromProps(props: any, state: any) {
     if (state.mounted === false && props.if) {
       return { mounted: true }
     }

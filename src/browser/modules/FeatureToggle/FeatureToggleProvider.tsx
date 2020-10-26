@@ -2,10 +2,11 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { getExperimentalFeatures } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
 
-const FeatureToggleContext = new React.createContext(() => true) // eslint-disable-line new-cap
+// @ts-expect-error ts-migrate(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
+const FeatureToggleContext = new React.createContext(() => true)
 
-class FeatureToggleProvider extends React.Component {
-  showFeature = featureName => {
+class FeatureToggleProvider extends React.Component<any> {
+  showFeature = (featureName: any) => {
     if (
       !this.props.features ||
       !this.props.features.hasOwnProperty(featureName)
@@ -24,7 +25,7 @@ class FeatureToggleProvider extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   const features = getExperimentalFeatures(state)
   return {
     features
@@ -33,5 +34,7 @@ const mapStateToProps = state => {
 
 const Consumer = FeatureToggleContext.Consumer
 
-export default connect(mapStateToProps)(FeatureToggleProvider)
+export default connect<any, any, any, any>(mapStateToProps)(
+  FeatureToggleProvider
+)
 export { Consumer, FeatureToggleProvider }

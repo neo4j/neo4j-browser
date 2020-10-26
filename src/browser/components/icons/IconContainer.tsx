@@ -28,7 +28,7 @@ const StyledIconWrapper = ({
   isOpen,
   children,
   ...rest
-}) => {
+}: any) => {
   const I = styled.i`
     ${isOpen ? activeStyle : inactiveStyle};
     &:hover {
@@ -45,8 +45,10 @@ const StyledText = styled.div`
   padding: 0;
 `
 
-export class IconContainer extends Component {
-  constructor(props) {
+type IconContainerState = any
+
+export class IconContainer extends Component<any, IconContainerState> {
+  constructor(props: {}) {
     super(props)
     this.state = {
       mouseover: false

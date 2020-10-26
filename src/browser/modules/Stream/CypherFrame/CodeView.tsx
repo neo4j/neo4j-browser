@@ -37,8 +37,10 @@ import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
 import { connect } from 'react-redux'
 import { map, take } from 'lodash-es'
 
-class ExpandableContent extends Component {
-  state = {}
+type ExpandableContentState = any
+
+class ExpandableContent extends Component<any, ExpandableContentState> {
+  state: any = {}
   render() {
     return (
       <StyledAlteringTr>
@@ -60,7 +62,7 @@ class ExpandableContent extends Component {
   }
 }
 
-const fieldLimiterFactory = maxFieldItems => (key, val) => {
+const fieldLimiterFactory = (maxFieldItems: any) => (key: any, val: any) => {
   if (!maxFieldItems || key !== '_fields') {
     return val
   }
@@ -70,8 +72,8 @@ const fieldLimiterFactory = maxFieldItems => (key, val) => {
   })
 }
 
-export class CodeViewComponent extends Component {
-  shouldComponentUpdate(props) {
+export class CodeViewComponent extends Component<any> {
+  shouldComponentUpdate(props: any) {
     return !this.props.result || !deepEquals(props.result, this.props.result)
   }
   render() {

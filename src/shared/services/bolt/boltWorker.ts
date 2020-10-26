@@ -44,22 +44,25 @@ import {
 } from './boltWorkerMessages'
 import { applyGraphTypes } from 'services/bolt/boltMappings'
 
-const connectionTypeMap = {
+const connectionTypeMap: any = {
   [ROUTED_WRITE_CONNECTION]: {
     create: routedWriteTransaction,
-    getPromise: res => res[1]
+    getPromise: (res: any) => res[1]
   },
   [ROUTED_READ_CONNECTION]: {
     create: routedReadTransaction,
-    getPromise: res => res
+    getPromise: (res: any) => res
   },
-  [DIRECT_CONNECTION]: { create: directTransaction, getPromise: res => res }
+  [DIRECT_CONNECTION]: {
+    create: directTransaction,
+    getPromise: (res: any) => res
+  }
 }
 
 let busy = false
-const workQue = []
+const workQue: any = []
 
-const onmessage = function(message) {
+const onmessage = function(message: any) {
   const messageType = message.data.type
 
   if (messageType === RUN_CYPHER_MESSAGE) {
@@ -73,8 +76,8 @@ const onmessage = function(message) {
     } = message.data
     beforeWork()
     const { txMetadata, useDb, autoCommit } = connectionProperties
-    ensureConnection(connectionProperties, connectionProperties.opts, e => {
-      self.postMessage(
+    ensureConnection(connectionProperties, connectionProperties.opts, () => {
+      ;(self as any).postMessage(
         boltConnectionErrorMessage(createErrorObject(BoltConnectionError))
       )
     })
@@ -86,33 +89,33 @@ const onmessage = function(message) {
         )
         connectionTypeMap[connectionType]
           .getPromise(res)
-          .then(r => {
+          .then((r: any) => {
             afterWork()
-            self.postMessage(cypherResponseMessage(r))
+            ;(self as any).postMessage(cypherResponseMessage(r))
           })
-          .catch(e => {
+          .catch((e: any) => {
             afterWork()
-            self.postMessage(
+            ;(self as any).postMessage(
               cypherErrorMessage({ code: e.code, message: e.message })
             )
           })
       })
       .catch(e => {
         afterWork()
-        self.postMessage(
+        ;(self as any).postMessage(
           cypherErrorMessage({ code: e.code, message: e.message })
         )
       })
   } else if (messageType === CANCEL_TRANSACTION_MESSAGE) {
     cancelTransaction(message.data.id, () => {
-      self.postMessage(postCancelTransactionMessage())
+      ;(self as any).postMessage(postCancelTransactionMessage())
     })
   } else if (messageType === CLOSE_CONNECTION_MESSAGE) {
     queueWork(() => {
       closeConnection()
     })
   } else {
-    self.postMessage(
+    ;(self as any).postMessage(
       cypherErrorMessage({
         code: -1,
         message: `Unknown message to Bolt Worker: ${messageType}`
@@ -130,7 +133,7 @@ const afterWork = () => {
   doWork()
 }
 
-const queueWork = fn => {
+const queueWork = (fn: any) => {
   workQue.push(fn)
   doWork()
 }

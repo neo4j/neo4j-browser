@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const shouldTriggerConnectEvent = (state, todayDate = null) => {
+export const shouldTriggerConnectEvent = (state: any, todayDate = null) => {
   const pingDate = new Date(state.pingTime || 0)
   const localTodayDate = todayDate || getTodayDate()
   if (pingDate < localTodayDate) return true

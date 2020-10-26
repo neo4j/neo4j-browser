@@ -24,7 +24,7 @@ import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 import DocumentItems from './DocumentItems'
 import { Drawer, DrawerBody, DrawerHeader } from 'browser-components/drawer'
 
-export const formatDocVersion = v => {
+export const formatDocVersion = (v: any) => {
   if (!semver.valid(v)) {
     return 'current'
   }
@@ -33,7 +33,7 @@ export const formatDocVersion = v => {
   }
   return `${semver.major(v)}.${semver.minor(v)}` || 'current'
 }
-export const shouldLinkToNewRefs = v => {
+export const shouldLinkToNewRefs = (v: any) => {
   if (!semver.valid(v)) return false
   return semver.gte(v, '3.5.0-alpha01')
 }
@@ -50,7 +50,7 @@ const help = [
   { name: 'Keyboard shortcuts', command: ':help keys', type: 'help' }
 ]
 
-const getReferences = (version, v) => {
+const getReferences = (version: any, v: any) => {
   const newRefs = [
     {
       name: 'Getting Started',
@@ -117,10 +117,13 @@ const getReferences = (version, v) => {
       type: 'link'
     }
   ]
-  return [].concat(shouldLinkToNewRefs(version) ? newRefs : oldRefs, commonRefs)
+  return ([] as any[]).concat(
+    shouldLinkToNewRefs(version) ? newRefs : oldRefs,
+    commonRefs
+  )
 }
 
-const getStaticItems = (version, urlVersion) => {
+const getStaticItems = (version: any, urlVersion: any) => {
   return {
     help,
     intro,
@@ -128,7 +131,7 @@ const getStaticItems = (version, urlVersion) => {
   }
 }
 
-const Documents = ({ version, urlVersion }) => {
+const Documents = ({ version, urlVersion }: any) => {
   const items = getStaticItems(version, urlVersion)
   return (
     <Drawer id="db-documents">
@@ -142,7 +145,7 @@ const Documents = ({ version, urlVersion }) => {
   )
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   const version = getVersion(state)
   return {
     version,

@@ -31,7 +31,7 @@ export const FIRST_MULTI_DB_SUPPORT = NEO4J_4_0
 // compatible bolt server.
 export const FIRST_NO_MULTI_DB_SUPPORT = '3.4.0'
 
-export const canSendTxMetadata = state => {
+export const canSendTxMetadata = (state: any) => {
   const serverVersion = guessSemverVersion(getVersion(state))
 
   if (!semver.valid(serverVersion)) {
@@ -40,7 +40,7 @@ export const canSendTxMetadata = state => {
   return semver.gt(serverVersion, NEO4J_TX_METADATA_VERSION)
 }
 
-export const getShowCurrentUserProcedure = serverVersion => {
+export const getShowCurrentUserProcedure = (serverVersion: any) => {
   serverVersion = guessSemverVersion(serverVersion)
 
   const pre4 = 'CALL dbms.security.showCurrentUser()'
@@ -53,7 +53,7 @@ export const getShowCurrentUserProcedure = serverVersion => {
   return pre4
 }
 
-export const getDbClusterRole = state => {
+export const getDbClusterRole = (state: any) => {
   const pre4 = 'CALL dbms.cluster.role() YIELD role'
   const serverVersion = guessSemverVersion(getVersion(state))
   if (!semver.valid(serverVersion)) {
@@ -66,7 +66,7 @@ export const getDbClusterRole = state => {
   return pre4
 }
 
-export const hasMultiDbSupport = state => {
+export const hasMultiDbSupport = (state: any) => {
   const serverVersion = guessSemverVersion(getVersion(state))
   if (!semver.valid(serverVersion)) {
     return false
@@ -77,7 +77,7 @@ export const hasMultiDbSupport = state => {
   return false
 }
 
-export const getUsedDbName = state => {
+export const getUsedDbName = (state: any) => {
   const serverVersion = guessSemverVersion(getVersion(state))
   if (!semver.valid(serverVersion)) {
     return undefined
@@ -88,7 +88,7 @@ export const getUsedDbName = state => {
   return getActiveDbName(state)
 }
 
-export const getDefaultBoltScheme = serverVersion => {
+export const getDefaultBoltScheme = (serverVersion: any) => {
   serverVersion = guessSemverVersion(serverVersion)
   const pre4 = 'bolt://'
   if (!semver.valid(serverVersion)) {
@@ -100,7 +100,7 @@ export const getDefaultBoltScheme = serverVersion => {
   return pre4
 }
 
-export const changeUserPasswordQuery = (state, oldPw, newPw) => {
+export const changeUserPasswordQuery = (state: any, oldPw: any, newPw: any) => {
   const pre4 = {
     query: 'CALL dbms.security.changePassword($password)',
     parameters: { password: newPw }
@@ -118,7 +118,7 @@ export const changeUserPasswordQuery = (state, oldPw, newPw) => {
   return pre4
 }
 
-export const driverDatabaseSelection = (state, database) => {
+export const driverDatabaseSelection = (state: any, database: any) => {
   const pre4 = undefined
   const serverVersion = guessSemverVersion(getVersion(state))
   if (!semver.valid(serverVersion)) {

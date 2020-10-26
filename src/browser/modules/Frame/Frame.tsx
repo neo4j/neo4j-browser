@@ -20,7 +20,7 @@
 import React from 'react'
 import FrameTemplate from './FrameTemplate'
 
-const Frame = ({ frame }) => {
+const Frame = ({ frame }: any) => {
   const errors = frame.errors || false
   const contents = frame.contents || false
   let frameContents = contents

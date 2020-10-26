@@ -25,12 +25,12 @@ export const NAME = 'grass'
 export const UPDATE_GRAPH_STYLE_DATA = 'grass/UPDATE_GRAPH_STYLE_DATA'
 export const SYNC_GRASS = 'grass/SYNC_GRASS'
 
-export const getGraphStyleData = state => state[NAME]
+export const getGraphStyleData = (state: any) => state[NAME]
 
 const versionSize = 20
-const initialState = null
+const initialState: any = null
 
-export const composeGrassToSync = (store, syncValue) => {
+export const composeGrassToSync = (store: any, syncValue: any) => {
   const grassFromSync = syncValue.syncObj.grass || []
   const grassFromState = getGraphStyleData(store.getState())
   const stringifyedGrassFromState = JSON.stringify(grassFromState)
@@ -53,11 +53,11 @@ export const composeGrassToSync = (store, syncValue) => {
   return grassFromSync
 }
 
-function updateStyleData(state, styleData) {
+function updateStyleData(_state: any, styleData: any) {
   return styleData
 }
 
-export default function visualization(state = initialState, action) {
+export default function visualization(state = initialState, action: any) {
   switch (action.type) {
     case APP_START:
       return !state ? state : { ...initialState, ...state }
@@ -68,20 +68,20 @@ export default function visualization(state = initialState, action) {
   }
 }
 
-export const updateGraphStyleData = graphStyleData => {
+export const updateGraphStyleData = (graphStyleData: any) => {
   return {
     type: UPDATE_GRAPH_STYLE_DATA,
     styleData: graphStyleData
   }
 }
-export function syncGrass(grass) {
+export function syncGrass(grass: any) {
   return {
     type: SYNC_GRASS,
     grass
   }
 }
 
-export const grassToLoad = (action, store) => {
+export const grassToLoad = (action: any, store: any) => {
   const grassFromSync =
     action.obj.syncObj &&
     action.obj.syncObj.grass &&

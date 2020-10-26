@@ -30,19 +30,26 @@ import { getBrowserName } from 'services/utils'
 import { UP, DOWN } from 'shared/modules/sync/syncDuck'
 
 class SyncSignInManager {
+  _downTimer: any
+  authData: any
+  error: any
+  onDisconnect: any
+  onSync: any
+  serviceAuthenticated: any
+  syncRef: any
   constructor({
     dbConfig,
     serviceReadyCallback,
     onSyncCallback,
     disconnectCallback = null
-  }) {
+  }: any) {
     initialize(dbConfig)
     this.isServiceUp(serviceReadyCallback)
     this.onSync = onSyncCallback
     this.onDisconnect = disconnectCallback
   }
 
-  isServiceUp(serviceReadyCallback) {
+  isServiceUp(serviceReadyCallback: any) {
     status().on('value', v => {
       if (v.val()) {
         if (this._downTimer) {
@@ -57,7 +64,7 @@ class SyncSignInManager {
     })
   }
 
-  authCallBack(data, error, successFn = null, errorFn = null) {
+  authCallBack(data: any, error: any, successFn = null, errorFn: any = null) {
     if (error) {
       this.serviceAuthenticated = false
       this.error = error
@@ -67,10 +74,14 @@ class SyncSignInManager {
     }
   }
 
-  authenticateWithDataAndBind(authData, successFn = null, errorFn = null) {
+  authenticateWithDataAndBind(
+    authData: any,
+    successFn: any = null,
+    errorFn: any = null
+  ) {
     this.authData = authData
     authenticate(this.authData.data_token, this.onDisconnect)
-      .then(a => {
+      .then(() => {
         this.serviceAuthenticated = true
         this.error = null
         this.bindToResource()
@@ -85,7 +96,7 @@ class SyncSignInManager {
 
   bindToResource() {
     this.syncRef = getResourceFor(this.authData.profile.user_id)
-    this.syncRef.on('value', v => {
+    this.syncRef.on('value', (v: any) => {
       if (v.val() === null) {
         setupUser(this.authData.profile.user_id, {
           documents: [
@@ -105,7 +116,7 @@ class SyncSignInManager {
     signOut()
   }
 
-  setSyncData(value) {
+  setSyncData(value: any) {
     this.onSync({
       key: this.authData.profile.user_id,
       syncObj: value,

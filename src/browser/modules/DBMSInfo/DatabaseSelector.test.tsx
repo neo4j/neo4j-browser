@@ -27,7 +27,7 @@ const testId = 'database-selection-list'
 describe('DatabaseSelector', () => {
   it('renders empty if no databases in list', () => {
     // Given
-    const databases = []
+    const databases: any = []
 
     // When
     const { container } = render(<DatabaseSelector databases={databases} />)

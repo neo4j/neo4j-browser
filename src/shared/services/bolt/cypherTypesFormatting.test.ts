@@ -21,7 +21,7 @@
 import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 
 describe('Cypher Types Number modifier only modifies where needed', () => {
-  const tests = [
+  const tests: [number, any][] = [
     [Number(123), '123.0'],
     [Number(123.1), undefined],
     [Number(-123.1), undefined],

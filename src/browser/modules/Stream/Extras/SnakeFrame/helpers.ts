@@ -9,7 +9,7 @@ export const foodColor = '#77AF53'
 export const snakeColor = '#FFFFFF'
 export const worldColor = '#3C8ABC'
 
-export const transitionDirection = (current, next) => {
+export const transitionDirection = (current: any, next: any) => {
   if (current === UP && next !== DOWN) {
     return next
   }
@@ -57,7 +57,7 @@ export const getInitialState = (
   return state
 }
 
-export const newFood = state => {
+export const newFood = (state: any) => {
   const size = state.snake.width
   const foodX = Math.max(Math.random() * state.world.width - size, 0)
   const foodY = Math.max(Math.random() * state.world.height - size, 0)
@@ -67,7 +67,7 @@ export const newFood = state => {
   }
 }
 
-export const doesCollide = ({ x, y }, state) => {
+export const doesCollide = ({ x, y }: any, state: any) => {
   const { body } = state.snake
   if (x < 0 || x > state.world.width - state.snake.width) {
     return true
@@ -84,7 +84,7 @@ export const doesCollide = ({ x, y }, state) => {
   return false
 }
 
-export const rect = props => {
+export const rect = (props: any) => {
   const { ctx, x, y, width, height } = props
   ctx.fillRect(x, y, width, height)
 }

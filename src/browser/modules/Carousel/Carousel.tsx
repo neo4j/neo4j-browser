@@ -46,7 +46,7 @@ export default function Carousel({
   originFrameId,
   initialSlide = 1,
   slides = []
-}) {
+}: any) {
   const [visibleSlide, setVisibleSlide] = useState(() => {
     if (initialSlide <= slides.length) {
       return initialSlide - 1
@@ -54,7 +54,7 @@ export default function Carousel({
     return 0
   })
   const [wasClicked, setWasClicked] = useState(false)
-  const myRef = useRef()
+  const myRef = useRef<any>()
 
   useEffect(() => {
     let showSlideIndex = 0
@@ -74,7 +74,7 @@ export default function Carousel({
     }
   }, [visibleSlide])
 
-  const onKeyDown = ev => {
+  const onKeyDown = (ev: any) => {
     if (ev.keyCode === 37 && visibleSlide !== 0) {
       prev()
     }
@@ -96,18 +96,18 @@ export default function Carousel({
     myRef.current.scrollTop = 0
   }
 
-  const getSlide = slideNumber => {
+  const getSlide = (slideNumber: any) => {
     return slides[slideNumber]
   }
 
-  const goToSlide = slideNumber => {
+  const goToSlide = (slideNumber: any) => {
     setVisibleSlide(slideNumber)
   }
 
   return (
     <StyledCarousel
       data-testid="carousel"
-      onKeyUp={e => onKeyDown(e)}
+      onKeyUp={(e: any) => onKeyDown(e)}
       tabIndex="0"
     >
       {visibleSlide > 0 && (
@@ -142,7 +142,7 @@ export default function Carousel({
           <CarouselSlidePicker
             slides={slides}
             visibleSlide={visibleSlide}
-            onClickEvent={slideNumber => goToSlide(slideNumber)}
+            onClickEvent={(slideNumber: any) => goToSlide(slideNumber)}
           />
           <CarouselButton
             className="next-slide"

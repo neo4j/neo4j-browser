@@ -30,14 +30,14 @@ import { H3 } from 'browser-components/headers'
 import Render from 'browser-components/Render'
 import ClickToCode from '../../ClickToCode'
 
-const connectionFailed = frame => {
+const connectionFailed = (frame: any) => {
   return frame.type === 'switch-fail'
 }
 
 const connectionSuccess = (
-  frame,
-  activeConnectionData,
-  dynamicConnectionData
+  frame: any,
+  activeConnectionData: any,
+  dynamicConnectionData: any
 ) => {
   return (
     frame.type === 'switch-success' &&
@@ -47,7 +47,7 @@ const connectionSuccess = (
   )
 }
 
-export const ServerSwitchFrame = props => {
+export const ServerSwitchFrame = (props: any) => {
   const { frame, activeConnectionData: dynamicConnectionData = {} } = props
   const { activeConnectionData, storeCredentials } = frame
   return (
@@ -122,7 +122,7 @@ export const ServerSwitchFrame = props => {
   )
 }
 
-const Frame = props => {
+const Frame = (props: any) => {
   return (
     <FrameTemplate
       header={props.frame}

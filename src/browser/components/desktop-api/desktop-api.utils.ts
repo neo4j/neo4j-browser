@@ -21,13 +21,13 @@
 
 import { NATIVE, KERBEROS } from 'services/bolt/boltHelpers'
 
-const notEmpty = str => str.length > 0
-const splitOnUnderscore = str => str.split('_')
-const toLower = str => str.toLowerCase()
-const upperFirst = str => str[0].toUpperCase() + str.substring(1)
+const notEmpty = (str: any) => str.length > 0
+const splitOnUnderscore = (str: any) => str.split('_')
+const toLower = (str: any) => str.toLowerCase()
+const upperFirst = (str: any) => str[0].toUpperCase() + str.substring(1)
 
 // XXX_YYY -> onXxxYyy
-export const eventToHandler = type => {
+export const eventToHandler = (type: any) => {
   if (typeof type !== 'string') return null
   return `on${splitOnUnderscore(type)
     .filter(notEmpty)
@@ -36,20 +36,20 @@ export const eventToHandler = type => {
     .join('')}`
 }
 
-export const getActiveGraph = (context = {}) => {
+export const getActiveGraph = (context: any = {}) => {
   if (!context) return null
   const { projects } = context
   if (!Array.isArray(projects)) return null
   const activeProject = projects.find(project => {
     if (!project) return false
     if (!(project.graphs && Array.isArray(project.graphs))) return false
-    return project.graphs.find(({ status }) => status === 'ACTIVE')
+    return project.graphs.find(({ status }: any) => status === 'ACTIVE')
   })
   if (!activeProject) return null
-  return activeProject.graphs.find(({ status }) => status === 'ACTIVE')
+  return activeProject.graphs.find(({ status }: any) => status === 'ACTIVE')
 }
 
-const getCredentialsForGraph = (protocol, graph = null) => {
+const getCredentialsForGraph = (protocol: any, graph: any = null) => {
   if (!graph || !graph.connection) return null
   const { configuration = null } = graph.connection
   if (!configuration) {
@@ -65,9 +65,9 @@ const getCredentialsForGraph = (protocol, graph = null) => {
 }
 
 export async function createConnectionCredentialsObject(
-  activeGraph,
-  existingData,
-  getKerberosTicket = () => {}
+  activeGraph: any,
+  existingData: any,
+  getKerberosTicket = (_: any) => {}
 ) {
   const creds = getCredentialsForGraph('bolt', activeGraph)
   if (!creds) return // No connection. Ignore and let browser show connection lost msgs.
@@ -93,7 +93,7 @@ export async function createConnectionCredentialsObject(
   return connectionCreds
 }
 
-const isKerberosEnabled = activeGraph => {
+const isKerberosEnabled = (activeGraph: any) => {
   if (!activeGraph || typeof activeGraph.connection === 'undefined') {
     return false
   }

@@ -18,10 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const parseHttpVerbCommand = input => {
+export const parseHttpVerbCommand = (input: any) => {
   const p = new Promise((resolve, reject) => {
     const re = /^[^\w]*(get|post|put|delete|head)\s+(\S+)?\s*([\S\s]+)?$/i
-    const result = re.exec(input)
+    const result: any = re.exec(input)
     let method, url, data
     try {
       ;[method, url, data] = [result[1], result[2] || null, result[3] || null]
@@ -49,7 +49,7 @@ export const parseHttpVerbCommand = input => {
 }
 
 // Check if valid url, from http://stackoverflow.com/questions/5717093/check-if-a-javascript-string-is-a-url
-export function isValidURL(string) {
+export function isValidURL(string: any) {
   let url
 
   try {

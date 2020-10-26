@@ -46,8 +46,10 @@ import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { driverDatabaseSelection } from 'shared/modules/features/versionedFeatures'
 import { connect } from 'react-redux'
 
-export class UserInformation extends Component {
-  constructor(props) {
+type UserInformationState = any
+
+export class UserInformation extends Component<any, UserInformationState> {
+  constructor(props: {}) {
     super(props)
     this.state = {
       edit: false,
@@ -57,7 +59,7 @@ export class UserInformation extends Component {
     }
   }
 
-  removeClick(thing) {
+  removeClick() {
     this.props.bus.self(
       CYPHER_REQUEST,
       {
@@ -124,7 +126,7 @@ export class UserInformation extends Component {
     return (
       !!this.state.roles.length && (
         <StyleRolesContainer>
-          {this.state.roles.map(role => {
+          {this.state.roles.map((role: any) => {
             return (
               <FormButton
                 key={v4()}
@@ -158,7 +160,7 @@ export class UserInformation extends Component {
     )
   }
 
-  onRoleSelect(event) {
+  onRoleSelect(event: any) {
     this.props.bus.self(
       CYPHER_REQUEST,
       {
@@ -178,14 +180,14 @@ export class UserInformation extends Component {
     )
   }
 
-  handleResponse(response) {
+  handleResponse(response: any) {
     if (!response.success) return this.setState({ errors: [response.error] })
     return this.props.refresh()
   }
 
   availableRoles() {
     return this.state.availableRoles.filter(
-      role => this.props.user.roles.indexOf(role) < 0
+      (role: any) => this.props.user.roles.indexOf(role) < 0
     )
   }
 
@@ -199,6 +201,7 @@ export class UserInformation extends Component {
         </StyledUserTd>
         <StyledUserTd className="roles" aria-labelledby="roles">
           <RolesSelector
+            // @ts-expect-error ts-migrate(2349) FIXME: This expression is not callable.
             id={`roles-selector-${uuid()}`}
             roles={this.availableRoles()}
             onChange={this.onRoleSelect.bind(this)}
@@ -235,7 +238,7 @@ export class UserInformation extends Component {
     )
   }
 }
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   const { database } = driverDatabaseSelection(state, 'system') || {}
 
   return {

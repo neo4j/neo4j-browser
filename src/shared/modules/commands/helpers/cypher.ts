@@ -24,9 +24,9 @@ import { arrayToObject } from 'services/utils'
 import { send } from 'shared/modules/requests/requestsDuck'
 
 export const handleCypherCommand = (
-  action,
-  put,
-  params = {},
+  action: any,
+  put: any,
+  params = {} as any,
   shouldUseCypherThread = false,
   txMetadata = {},
   autoCommit = false

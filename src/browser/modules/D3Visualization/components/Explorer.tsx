@@ -29,9 +29,9 @@ import { StyledFullSizeContainer } from './styled'
 import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
 import { connect } from 'react-redux'
 
-const deduplicateNodes = nodes => {
+const deduplicateNodes = (nodes: any) => {
   return nodes.reduce(
-    (all, curr) => {
+    (all: any, curr: any) => {
       if (all.taken.indexOf(curr.id) > -1) {
         return all
       } else {
@@ -44,18 +44,21 @@ const deduplicateNodes = nodes => {
   ).nodes
 }
 
-export class ExplorerComponent extends Component {
-  constructor(props) {
+type ExplorerComponentState = any
+
+export class ExplorerComponent extends Component<any, ExplorerComponentState> {
+  defaultStyle: any
+  constructor(props: any) {
     super(props)
     const graphStyle = neoGraphStyle()
     this.defaultStyle = graphStyle.toSheet()
     let relationships = this.props.relationships
     let nodes = deduplicateNodes(this.props.nodes)
-    let selectedItem = ''
+    let selectedItem: any = ''
     if (nodes.length > parseInt(this.props.initialNodeDisplay)) {
       nodes = nodes.slice(0, this.props.initialNodeDisplay)
-      relationships = this.props.relationships.filter(item => {
-        return nodes.filter(node => node.id === item.startNodeId) > 0
+      relationships = this.props.relationships.filter((item: any) => {
+        return nodes.filter((node: any) => node.id === item.startNodeId) > 0
       })
       selectedItem = {
         type: 'status-item',
@@ -79,12 +82,12 @@ export class ExplorerComponent extends Component {
     }
   }
 
-  getNodeNeighbours(node, currentNeighbours, callback) {
+  getNodeNeighbours(node: any, currentNeighbours: any, callback: any) {
     if (currentNeighbours.length > this.props.maxNeighbours) {
       callback(null, { nodes: [], relationships: [] })
     }
     this.props.getNeighbours(node.id, currentNeighbours).then(
-      result => {
+      (result: any) => {
         const nodes = result.nodes
         if (
           result.count >
@@ -108,20 +111,20 @@ export class ExplorerComponent extends Component {
     )
   }
 
-  onItemMouseOver(item) {
+  onItemMouseOver(item: any) {
     this.setState({ hoveredItem: item })
   }
 
-  onItemSelect(item) {
+  onItemSelect(item: any) {
     this.setState({ selectedItem: item })
   }
 
-  onGraphModelChange(stats) {
+  onGraphModelChange(stats: any) {
     this.setState({ stats: stats })
     this.props.updateStyle(this.state.graphStyle.toSheet())
   }
 
-  onSelectedLabel(label, propertyKeys) {
+  onSelectedLabel(label: any, propertyKeys: any) {
     this.setState({
       selectedItem: {
         type: 'legend-item',
@@ -133,7 +136,7 @@ export class ExplorerComponent extends Component {
     })
   }
 
-  onSelectedRelType(relType, propertyKeys) {
+  onSelectedRelType(relType: any, propertyKeys: any) {
     this.setState({
       selectedItem: {
         type: 'legend-item',
@@ -145,7 +148,7 @@ export class ExplorerComponent extends Component {
     })
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: any) {
     if (!deepEquals(prevProps.graphStyleData, this.props.graphStyleData)) {
       if (this.props.graphStyleData) {
         const rebasedStyle = deepmerge(
@@ -170,7 +173,7 @@ export class ExplorerComponent extends Component {
     }
   }
 
-  onInspectorExpandToggled(contracted, inspectorHeight) {
+  onInspectorExpandToggled(contracted: any, inspectorHeight: any) {
     this.setState({
       inspectorContracted: contracted,
       forcePaddingBottom: inspectorHeight

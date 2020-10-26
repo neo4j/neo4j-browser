@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Score = ({ score, initialLoad, playing }) => {
+const Score = ({ score, initialLoad, playing }: any) => {
   if (initialLoad) {
     return null
   }

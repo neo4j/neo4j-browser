@@ -28,9 +28,15 @@ import 'codemirror/addon/lint/lint.css'
 import 'cypher-codemirror/dist/cypher-codemirror-syntax.css'
 import { debounce } from 'services/utils'
 
-export default class CodeMirror extends Component {
+type State = any
+
+export default class CodeMirror extends Component<any, State> {
+  codeMirror: any
+  debouncedOnParse: any
+  editorReference: any
+  editorSupport: any
   lastChange = null
-  constructor(props) {
+  constructor(props: any) {
     super(props)
     this.state = {
       isFocused: false
@@ -59,7 +65,7 @@ export default class CodeMirror extends Component {
     }
   }
 
-  goToPosition(position) {
+  goToPosition(position: any) {
     for (let i = 0; i < position.line; i++) {
       this.codeMirror.execCommand('goLineDown')
     }
@@ -69,7 +75,7 @@ export default class CodeMirror extends Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: any) {
     if (typeof this.props.options === 'object') {
       for (const optionName in this.props.options) {
         if (this.props.options.hasOwnProperty(optionName)) {
@@ -98,18 +104,18 @@ export default class CodeMirror extends Component {
     }
   }
 
-  focusChanged(focused) {
+  focusChanged(focused: any) {
     this.setState({
       isFocused: focused
     })
     this.props.onFocusChange && this.props.onFocusChange(focused)
   }
 
-  scrollChanged(cm) {
+  scrollChanged(cm: any) {
     this.props.onScroll && this.props.onScroll(cm.getScrollInfo())
   }
 
-  codemirrorValueChange = (doc, change) => {
+  codemirrorValueChange = (doc: any, change: any) => {
     this.lastChange = change
     if (this.props.onChange && change.origin !== 'setValue') {
       this.props.onChange(doc.getValue(), change)
@@ -117,10 +123,10 @@ export default class CodeMirror extends Component {
     this.debouncedOnParse()
   }
 
-  codemirrorValueChanges = (doc, changes) => {
+  codemirrorValueChanges = (doc: any, changes: any) => {
     if (
       this.props.onChanges &&
-      changes.some(change => change.origin !== 'setValue')
+      changes.some((change: any) => change.origin !== 'setValue')
     ) {
       this.props.onChanges(doc.getValue(), changes)
     }
@@ -141,7 +147,7 @@ export default class CodeMirror extends Component {
       this.props.classNames
     ].join(' ')
 
-    const setEditorReference = ref => {
+    const setEditorReference = (ref: any) => {
       this.editorReference = ref
     }
     return (

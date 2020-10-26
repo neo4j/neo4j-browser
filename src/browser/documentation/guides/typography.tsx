@@ -197,6 +197,7 @@ const content = (
           }
         </pre>
         <figure>
+          {/* @ts-expect-error ts-migrate(2322) FIXME: Property 'mode' does not exist on type 'DetailedHT... Remove this comment to see the full error message */}
           <pre mode="cypher" className="pre-scrollable code">
             MATCH (tom:Person) WHERE tom.name = "Tom Hanks" RETURN tom
           </pre>
@@ -211,6 +212,7 @@ const content = (
           }
         </pre>
         <figure>
+          {/* @ts-expect-error ts-migrate(2322) FIXME: Property 'mode' does not exist on type 'DetailedHT... Remove this comment to see the full error message */}
           <pre mode="cypher" className="pre-scrollable code runnable">
             {
               'MATCH (tom:Person)-[r]->(movies) WHERE tom.name = "Tom Hanks" RETURN tom, r, movies'

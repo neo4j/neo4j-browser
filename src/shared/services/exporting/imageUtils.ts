@@ -23,36 +23,36 @@ import canvg from 'canvg'
 import { prepareForExport } from './svgUtils'
 import FileSaver from 'file-saver'
 
-export const downloadPNGFromSVG = (svg, graph, type) => {
+export const downloadPNGFromSVG = (svg: any, graph: any, type: any) => {
   const svgObj = prepareForExport(svg, graph, type)
   const svgData = htmlCharacterRefToNumericalRef(svgObj.node())
 
   const canvas = document.createElement('canvas')
-  canvas.width = svgObj.attr('width')
-  canvas.height = svgObj.attr('height')
+  canvas.width = svgObj.attr('width') as any
+  canvas.height = svgObj.attr('height') as any
 
   canvg(canvas, svgData)
   return downloadWithDataURI(`${type}.png`, canvas.toDataURL('image/png'))
 }
 
-export const downloadSVG = (svg, graph, type) => {
+export const downloadSVG = (svg: any, graph: any, type: any) => {
   const svgObj = prepareForExport(svg, graph, type)
   const svgData = htmlCharacterRefToNumericalRef(svgObj.node())
 
   return download(`${type}.svg`, 'image/svg+xml;charset=utf-8', svgData)
 }
 
-const htmlCharacterRefToNumericalRef = node =>
+const htmlCharacterRefToNumericalRef = (node: any) =>
   new window.XMLSerializer()
     .serializeToString(node)
     .replace(/&nbsp;/g, '&#160;')
 
-const download = (filename, mime, data) => {
+const download = (filename: any, mime: any, data: any) => {
   const blob = new Blob([data], { type: mime })
   return FileSaver.saveAs(blob, filename)
 }
 
-const downloadWithDataURI = (filename, dataURI) => {
+const downloadWithDataURI = (filename: any, dataURI: any) => {
   let byteString, i, j, ref
   byteString = null
   if (dataURI.split(',')[0].indexOf('base64') >= 0) {

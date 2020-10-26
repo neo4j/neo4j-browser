@@ -61,9 +61,9 @@ describe('fetchGuideFromAllowlistEpic', () => {
       () => 'testurl1.test, testurl2.test'
     )
     const $$responseChannel = 'test-channel'
-    const action = fetchGuideFromAllowlistAction('reco')
+    const action: any = fetchGuideFromAllowlistAction('reco')
     action.$$responseChannel = $$responseChannel
-    bus.one($$responseChannel, res => {
+    bus.one($$responseChannel, () => {
       // Then
       expect(dbMeta.getRemoteContentHostnameAllowlist).toHaveBeenCalledTimes(1)
       expect(
@@ -103,9 +103,9 @@ describe('fetchGuideFromAllowlistEpic', () => {
       () => 'test1.test, test2.test'
     )
     const $$responseChannel = 'test-channel'
-    const action = fetchGuideFromAllowlistAction('reco')
+    const action: any = fetchGuideFromAllowlistAction('reco')
     action.$$responseChannel = $$responseChannel
-    bus.one($$responseChannel, res => {
+    bus.one($$responseChannel, () => {
       // Then
       expect(dbMeta.getRemoteContentHostnameAllowlist).toHaveBeenCalledTimes(1)
       expect(

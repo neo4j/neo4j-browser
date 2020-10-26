@@ -18,12 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const hydrate = (initialState, state) => {
+export const hydrate = (initialState: any, state: any) => {
   if (!state) return state
   return state.hydrated ? state : { ...initialState, ...state, hydrated: true }
 }
 
-export const dehydrate = state => {
+export const dehydrate = (state: any) => {
   if (state) {
     delete state.hydrated
   }

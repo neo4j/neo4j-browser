@@ -28,17 +28,13 @@ import {
   updateConnection,
   CONNECT,
   VERIFY_CREDENTIALS,
-  isConnected,
-  USE_DB
+  isConnected
 } from 'shared/modules/connections/connectionsDuck'
 import {
   getInitCmd,
   getPlayImplicitInitCommands
 } from 'shared/modules/settings/settingsDuck'
-import {
-  executeSystemCommand,
-  executeSingleCommand
-} from 'shared/modules/commands/commandsDuck'
+import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
 import { FORCE_CHANGE_PASSWORD } from 'shared/modules/cypher/cypherDuck'
 import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
@@ -60,8 +56,10 @@ import {
 } from 'services/boltscheme.utils'
 import { StyledConnectionBody } from './styled'
 
-export class ConnectionForm extends Component {
-  constructor(props) {
+type ConnectionFormState = any
+
+export class ConnectionForm extends Component<any, ConnectionFormState> {
+  constructor(props: any) {
     super(props)
     const connection =
       this.props.activeConnectionData || this.props.frame.connectionData || {}
@@ -81,16 +79,18 @@ export class ConnectionForm extends Component {
     }
   }
 
-  tryConnect = (password, doneFn) => {
+  tryConnect = (password: any, doneFn: any) => {
     this.props.error({})
-    this.props.bus.self(VERIFY_CREDENTIALS, { ...this.state, password }, res =>
-      doneFn(res)
+    this.props.bus.self(
+      VERIFY_CREDENTIALS,
+      { ...this.state, password },
+      (res: any) => doneFn(res)
     )
   }
 
   connect = (
     doneFn = () => {},
-    onError = null,
+    onError: any = null,
     noResetConnectionOnFail = false
   ) => {
     this.props.error({})
@@ -100,7 +100,7 @@ export class ConnectionForm extends Component {
         ...this.state,
         noResetConnectionOnFail
       },
-      res => {
+      (res: any) => {
         if (res.success) {
           doneFn()
           this.saveAndStart()
@@ -140,25 +140,25 @@ export class ConnectionForm extends Component {
     )
   }
 
-  onDatebaseChange = event => {
+  onDatebaseChange = (event: any) => {
     const requestedUseDb = event.target.value
     this.setState({ requestedUseDb })
     this.props.error({})
   }
 
-  onUsernameChange = event => {
+  onUsernameChange = (event: any) => {
     const username = event.target.value
     this.setState({ username })
     this.props.error({})
   }
 
-  onPasswordChange = event => {
+  onPasswordChange = (event: any) => {
     const password = event.target.value
     this.setState({ password })
     this.props.error({})
   }
 
-  onAuthenticationMethodChange(event) {
+  onAuthenticationMethodChange(event: any) {
     const authenticationMethod = event.target.value
     const username =
       authenticationMethod === NO_AUTH ? '' : this.state.username || 'neo4j'
@@ -167,7 +167,7 @@ export class ConnectionForm extends Component {
     this.props.error({})
   }
 
-  onHostChange(fallbackScheme, val) {
+  onHostChange(fallbackScheme: any, val: any) {
     const url = generateBoltUrl(this.props.allowedSchemes, val, fallbackScheme)
     this.setState({
       host: url,
@@ -180,7 +180,7 @@ export class ConnectionForm extends Component {
     this.props.error({})
   }
 
-  onChangePassword({ newPassword, error }) {
+  onChangePassword({ newPassword, error }: any) {
     this.setState({ isLoading: true })
     if (error && error.code) {
       this.setState({ isLoading: false })
@@ -199,11 +199,11 @@ export class ConnectionForm extends Component {
         password: this.state.password,
         newPassword
       },
-      response => {
+      (response: any) => {
         if (response.success) {
           return this.setState({ password: newPassword }, () => {
             let retries = 5
-            const retryFn = res => {
+            const retryFn = (res: any) => {
               // New password not accepted yet, initiate retry
               if (res.error.code === 'Neo.ClientError.Security.Unauthorized') {
                 retries--
@@ -271,7 +271,7 @@ export class ConnectionForm extends Component {
           showExistingPasswordInput={this.props.showExistingPasswordInput}
           onChangePasswordClick={this.onChangePassword.bind(this)}
           onChange={this.onChangePasswordChange.bind(this)}
-          tryConnect={(password, doneFn) => {
+          tryConnect={(password: any, doneFn: any) => {
             this.setState({ isLoading: true }, () =>
               this.tryConnect(password, doneFn)
             )
@@ -331,7 +331,7 @@ export class ConnectionForm extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   return {
     initCmd: getInitCmd(state),
     activeConnection: getActiveConnection(state),
@@ -344,17 +344,17 @@ const mapStateToProps = state => {
   }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
-    updateConnection: connection => {
+    updateConnection: (connection: any) => {
       dispatch(updateConnection(connection))
     },
-    setActiveConnection: id => dispatch(setActiveConnection(id)),
-    dispatchInitCmd: initCmd => dispatch(executeSystemCommand(initCmd))
+    setActiveConnection: (id: any) => dispatch(setActiveConnection(id)),
+    dispatchInitCmd: (initCmd: any) => dispatch(executeSystemCommand(initCmd))
   }
 }
 
-const mergeProps = (stateProps, dispatchProps, ownProps) => {
+const mergeProps = (stateProps: any, dispatchProps: any, ownProps: any) => {
   return {
     playImplicitInitCommands: stateProps.playImplicitInitCommands,
     activeConnection: stateProps.activeConnection,

@@ -22,7 +22,7 @@ import { hostIsAllowed } from 'services/utils'
 import { cleanHtml } from 'services/remoteUtils'
 import remote from 'services/remote'
 
-export const fetchRemoteGuide = (url, allowlist = null) => {
+export const fetchRemoteGuide = (url: any, allowlist = null) => {
   return new Promise((resolve, reject) => {
     if (!hostIsAllowed(url, allowlist)) {
       return reject(

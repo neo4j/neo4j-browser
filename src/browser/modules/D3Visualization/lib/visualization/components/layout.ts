@@ -25,15 +25,15 @@ import cloneArray from '../utils/arrays'
 const layout = {
   force: () => {
     return {
-      init: render => {
-        const forceLayout = {}
+      init: (render: any) => {
+        const forceLayout: any = {}
 
         const linkDistance = 45
 
         const d3force = d3.layout
           .force()
           .linkDistance(
-            relationship =>
+            (relationship: any) =>
               relationship.source.radius +
               relationship.target.radius +
               linkDistance
@@ -83,17 +83,17 @@ const layout = {
             }
             render()
             return false
-          })
+          } as any)
         }
 
         accelerateLayout()
 
-        const oneRelationshipPerPairOfNodes = graph =>
+        const oneRelationshipPerPairOfNodes = (graph: any) =>
           Array.from(graph.groupedRelationships()).map(
-            pair => pair.relationships[0]
+            (pair: any) => pair.relationships[0]
           )
 
-        forceLayout.update = function(graph, size) {
+        forceLayout.update = function(graph: any, size: any) {
           const nodes = cloneArray(graph.nodes())
           const relationships = oneRelationshipPerPairOfNodes(graph)
 

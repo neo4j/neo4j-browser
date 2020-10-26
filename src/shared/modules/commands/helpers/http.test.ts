@@ -40,7 +40,7 @@ describe('HTTP verbs command', () => {
     const p = parseHttpVerbCommand(input)
 
     // Then
-    p.then(r => {
+    p.then(() => {
       expect(1).toBe(2)
       done()
     }).catch(e => {
@@ -56,7 +56,7 @@ describe('HTTP verbs command', () => {
     const p = parseHttpVerbCommand(input)
 
     // Then
-    p.then(r => {
+    p.then(() => {
       expect(1).toBe(2)
       done()
     }).catch(e => {
@@ -72,7 +72,7 @@ describe('HTTP verbs command', () => {
     const p = parseHttpVerbCommand(input)
 
     // Then
-    p.then(r => {
+    p.then(() => {
       expect(1).toBe(2)
       done()
     }).catch(e => {
@@ -88,10 +88,10 @@ describe('HTTP verbs command', () => {
     const p = parseHttpVerbCommand(input)
 
     // Then
-    p.then(r => {
+    p.then((r: any) => {
       expect(r.method).toBe('post')
       done()
-    }).catch(e => {
+    }).catch(() => {
       expect(1).toEqual(2)
       done()
     })
@@ -105,11 +105,11 @@ describe('HTTP verbs command', () => {
     const p = parseHttpVerbCommand(input)
 
     // Then
-    p.then(r => {
+    p.then((r: any) => {
       expect(r.method).toBe('post')
       expect(r.data).toEqual(data)
       done()
-    }).catch(e => {
+    }).catch(() => {
       expect(1).toEqual(2)
       done()
     })

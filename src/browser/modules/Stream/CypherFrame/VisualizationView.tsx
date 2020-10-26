@@ -33,8 +33,12 @@ import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
 import { resultHasTruncatedFields } from 'browser/modules/Stream/CypherFrame/helpers'
 
-export class Visualization extends Component {
-  state = {
+type VisualizationState = any
+
+export class Visualization extends Component<any, VisualizationState> {
+  autoCompleteCallback: any
+  graph: any
+  state: any = {
     nodes: [],
     relationships: []
   }
@@ -46,7 +50,7 @@ export class Visualization extends Component {
     }
   }
 
-  shouldComponentUpdate(props, state) {
+  shouldComponentUpdate(props: any, state: VisualizationState) {
     return (
       this.props.updated !== props.updated ||
       !deepEquals(props.graphStyleData, this.props.graphStyleData) ||
@@ -56,7 +60,7 @@ export class Visualization extends Component {
     )
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: any) {
     if (
       this.props.updated !== prevProps.updated ||
       this.props.autoComplete !== prevProps.autoComplete
@@ -65,7 +69,7 @@ export class Visualization extends Component {
     }
   }
 
-  populateDataToStateFromProps(props) {
+  populateDataToStateFromProps(props: any) {
     const {
       nodes,
       relationships
@@ -86,23 +90,25 @@ export class Visualization extends Component {
     })
   }
 
-  autoCompleteRelationships(existingNodes, newNodes) {
+  autoCompleteRelationships(existingNodes: any, newNodes: any) {
     if (this.props.autoComplete) {
-      const existingNodeIds = existingNodes.map(node => parseInt(node.id))
-      const newNodeIds = newNodes.map(node => parseInt(node.id))
+      const existingNodeIds = existingNodes.map((node: any) =>
+        parseInt(node.id)
+      )
+      const newNodeIds = newNodes.map((node: any) => parseInt(node.id))
 
       this.getInternalRelationships(existingNodeIds, newNodeIds)
         .then(graph => {
           this.autoCompleteCallback &&
             this.autoCompleteCallback(graph.relationships)
         })
-        .catch(e => {})
+        .catch(_e => {})
     } else {
       this.autoCompleteCallback && this.autoCompleteCallback([])
     }
   }
 
-  getNeighbours(id, currentNeighbourIds = []) {
+  getNeighbours(id: any, currentNeighbourIds = []) {
     const query = `MATCH path = (a)--(o)
                    WHERE id(a) = ${id}
                    AND NOT (id(o) IN[${currentNeighbourIds.join(',')}])
@@ -115,7 +121,7 @@ export class Visualization extends Component {
         this.props.bus.self(
           CYPHER_REQUEST,
           { query: query, queryType: NEO4J_BROWSER_USER_ACTION_QUERY },
-          response => {
+          (response: any) => {
             if (!response.success) {
               reject(new Error())
             } else {
@@ -139,13 +145,13 @@ export class Visualization extends Component {
     })
   }
 
-  getInternalRelationships(existingNodeIds, newNodeIds) {
+  getInternalRelationships(existingNodeIds: any, newNodeIds: any) {
     newNodeIds = newNodeIds.map(neo4j.int)
     existingNodeIds = existingNodeIds.map(neo4j.int)
     existingNodeIds = existingNodeIds.concat(newNodeIds)
     const query =
       'MATCH (a)-[r]->(b) WHERE id(a) IN $existingNodeIds AND id(b) IN $newNodeIds RETURN r;'
-    return new Promise((resolve, reject) => {
+    return new Promise<any>((resolve, reject) => {
       this.props.bus &&
         this.props.bus.self(
           CYPHER_REQUEST,
@@ -154,7 +160,7 @@ export class Visualization extends Component {
             params: { existingNodeIds, newNodeIds },
             queryType: NEO4J_BROWSER_USER_ACTION_QUERY
           },
-          response => {
+          (response: any) => {
             if (!response.success) {
               reject(new Error())
             } else {
@@ -171,7 +177,7 @@ export class Visualization extends Component {
     })
   }
 
-  setGraph(graph) {
+  setGraph(graph: any) {
     this.graph = graph
     this.autoCompleteRelationships([], this.graph._nodes)
   }
@@ -193,7 +199,7 @@ export class Visualization extends Component {
           fullscreen={this.props.fullscreen}
           frameHeight={this.props.frameHeight}
           assignVisElement={this.props.assignVisElement}
-          getAutoCompleteCallback={callback => {
+          getAutoCompleteCallback={(callback: any) => {
             this.autoCompleteCallback = callback
           }}
           setGraph={this.setGraph.bind(this)}
@@ -203,16 +209,16 @@ export class Visualization extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   return {
     graphStyleData: grassActions.getGraphStyleData(state),
     maxFieldItems: getMaxFieldItems(state)
   }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
-    updateStyle: graphStyleData => {
+    updateStyle: (graphStyleData: any) => {
       dispatch(grassActions.updateGraphStyleData(graphStyleData))
     }
   }

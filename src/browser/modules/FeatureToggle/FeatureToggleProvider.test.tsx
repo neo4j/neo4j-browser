@@ -27,7 +27,7 @@ const MyConsumer = () => {
   return (
     <h1>
       <Consumer>
-        {showFeature => {
+        {(showFeature: any) => {
           return showFeature('testFeature') ? 'Yes' : 'No'
         }}
       </Consumer>

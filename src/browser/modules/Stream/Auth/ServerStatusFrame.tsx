@@ -37,7 +37,7 @@ import {
 import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
 import { ClickToCode } from 'browser/modules/ClickToCode/index'
 
-export const ServerStatusFrame = props => {
+export const ServerStatusFrame = (props: any) => {
   const { activeConnectionData, storeCredentials, isConnected } = props
 
   return (
@@ -87,7 +87,7 @@ export const ServerStatusFrame = props => {
   )
 }
 
-const Frame = props => {
+const Frame = (props: any) => {
   return (
     <FrameTemplate
       header={props.frame}
@@ -96,7 +96,7 @@ const Frame = props => {
   )
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   return {
     activeConnection: getActiveConnection(state),
     activeConnectionData: getActiveConnectionData(state),

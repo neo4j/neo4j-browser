@@ -170,12 +170,13 @@ export const Settings = ({
   experimentalFeatures = {},
   onSettingsSave = () => {},
   onFeatureChange
-}) => {
+}: any) => {
   if (!settings) return null
-  const mappedSettings = visualSettings.map(visualSetting => {
+  const mappedSettings = visualSettings.map((visualSetting: any) => {
     const title = <DrawerSubHeader>{visualSetting.title}</DrawerSubHeader>
     const mapSettings = visualSetting.settings
-      .map(settingObj => {
+      // @ts-expect-error ts-migrate(7030) FIXME: Not all code paths return a value.
+      .map((settingObj: any) => {
         const setting = Object.keys(settingObj)[0]
         if (typeof settings[setting] === 'undefined') return null
         const visual = settingObj[setting].displayName
@@ -188,7 +189,7 @@ export const Settings = ({
               <StyledSettingLabel title={tooltip}>
                 {visual}
                 <StyledSettingTextInput
-                  onChange={event => {
+                  onChange={(event: any) => {
                     settings[setting] = event.target.value
                     onSettingsSave(settings)
                   }}
@@ -207,7 +208,7 @@ export const Settings = ({
               <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
               <RadioSelector
                 options={settingObj[setting].options}
-                onChange={event => {
+                onChange={(event: any) => {
                   settings[setting] = event.target.value
                   onSettingsSave(settings)
                 }}
@@ -222,7 +223,7 @@ export const Settings = ({
             <StyledSetting key={toKeyString(visual)}>
               <StyledSettingLabel title={tooltip}>
                 <CheckboxSelector
-                  onChange={event => {
+                  onChange={(event: any) => {
                     settings[setting] = event.target.checked
                     onSettingsSave(settings)
                   }}
@@ -235,7 +236,7 @@ export const Settings = ({
           )
         }
       })
-      .filter(setting => setting !== null)
+      .filter((setting: any) => setting !== null)
 
     return (
       <React.Fragment key={toKeyString(visualSetting.title)}>
@@ -257,7 +258,7 @@ export const Settings = ({
       return (
         <StyledSetting key={toKeyString(feature.name)}>
           <CheckboxSelector
-            onChange={event => {
+            onChange={(event: any) => {
               const on = event.target.checked
               onFeatureChange(feature.name, on)
             }}
@@ -294,7 +295,7 @@ export const Settings = ({
   )
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   return {
     experimentalFeatures: getExperimentalFeatures(state),
     settings: state.settings,
@@ -302,12 +303,12 @@ const mapStateToProps = state => {
   }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
-    onSettingsSave: settings => {
+    onSettingsSave: (settings: any) => {
       dispatch(actions.update(settings))
     },
-    onFeatureChange: (name, on) => {
+    onFeatureChange: (name: any, on: any) => {
       if (on) {
         dispatch(enableExperimentalFeature(name))
       } else {

@@ -28,7 +28,7 @@ import { PaddedDiv, ErrorText, SuccessText, StyledStatsBar } from './styled'
 import { applyGraphTypes } from 'services/bolt/boltMappings'
 import AutoExecButton from './auto-exec-button'
 
-const ParamsFrame = ({ frame }) => {
+const ParamsFrame = ({ frame }: any) => {
   const params = applyGraphTypes(frame.params)
   const contents = (
     <PaddedDiv>

@@ -24,9 +24,7 @@ import {
 } from './localstorageMiddleware'
 
 const connection = {
-  reducer: (initialState, action) => {
-    return {}
-  }
+  reducer: () => ({})
 }
 
 describe('localstorageMiddleware', () => {

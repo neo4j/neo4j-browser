@@ -20,7 +20,7 @@
 
 import 'isomorphic-fetch'
 
-function request(method, url, data = null, extraHeaders = {}) {
+function request(method: any, url: any, data = null, extraHeaders = {}) {
   const headers = {
     'Content-Type': 'application/json',
     'X-Ajax-Browser-Auth': 'true',
@@ -34,7 +34,7 @@ function request(method, url, data = null, extraHeaders = {}) {
   }).then(checkStatus)
 }
 
-function get(url, headers = {}) {
+function get(url: any, headers = {}) {
   return fetch(url, {
     method: 'get',
     headers
@@ -43,7 +43,7 @@ function get(url, headers = {}) {
     .then(response => response.text())
 }
 
-export function getJSON(url) {
+export function getJSON(url: any) {
   return fetch(url, {
     method: 'get',
     headers: {
@@ -58,11 +58,11 @@ export function getJSON(url) {
     })
 }
 
-function checkStatus(response) {
+function checkStatus(response: any) {
   if (response.status >= 200 && response.status < 300) {
     return response
   } else {
-    const error = new Error(`${response.status} ${response.statusText}`)
+    const error: any = new Error(`${response.status} ${response.statusText}`)
     error.response = response
     throw error
   }

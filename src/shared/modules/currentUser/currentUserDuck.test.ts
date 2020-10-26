@@ -35,7 +35,7 @@ describe('user reducer current info', () => {
       username: 'username',
       roles: ['king']
     }
-    const nextState = reducer({ a: 'b' }, action)
+    const nextState = reducer({ a: 'b' } as any, action)
     expect(nextState).toEqual({ username: 'username', roles: ['king'] })
   })
 })

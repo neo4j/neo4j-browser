@@ -28,7 +28,7 @@ import { APP_START, WEB, CLOUD } from 'shared/modules/app/appDuck'
 import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
 
 describe('discoveryOnStartupEpic', () => {
-  let store
+  let store: any
   const bus = createBus()
   const epicMiddleware = createEpicMiddleware(discovery.discoveryOnStartupEpic)
   const mockStore = configureMockStore([
@@ -56,7 +56,7 @@ describe('discoveryOnStartupEpic', () => {
       .get('/')
       .reply(200, { http: 'http://localhost:7474' })
 
-    bus.take(discovery.DONE, currentAction => {
+    bus.take(discovery.DONE, _currentAction => {
       // Then
       expect(store.getActions()).toEqual([action, { type: discovery.DONE }])
       done()
@@ -73,7 +73,7 @@ describe('discoveryOnStartupEpic', () => {
       .get('/')
       .reply(500)
 
-    bus.take(discovery.DONE, currentAction => {
+    bus.take(discovery.DONE, _currentAction => {
       // Then
       expect(store.getActions()).toEqual([action, { type: discovery.DONE }])
       done()
@@ -90,7 +90,7 @@ describe('discoveryOnStartupEpic', () => {
     nock(getDiscoveryEndpoint())
       .get('/')
       .reply(200, { bolt: expectedHost })
-    bus.take(discovery.DONE, currentAction => {
+    bus.take(discovery.DONE, _currentAction => {
       // Then
       expect(store.getActions()).toEqual([
         action,
@@ -114,7 +114,7 @@ describe('discoveryOnStartupEpic', () => {
     nock(getDiscoveryEndpoint())
       .get('/')
       .reply(200, { bolt_direct: expectedHost })
-    bus.take(discovery.DONE, currentAction => {
+    bus.take(discovery.DONE, _currentAction => {
       // Then
       expect(store.getActions()).toEqual([
         action,
@@ -138,7 +138,7 @@ describe('discoveryOnStartupEpic', () => {
     nock(getDiscoveryEndpoint())
       .get('/')
       .reply(200, { bolt_direct: expectedHost, bolt: 'very://bad:1337' })
-    bus.take(discovery.DONE, currentAction => {
+    bus.take(discovery.DONE, _currentAction => {
       // Then
       expect(store.getActions()).toEqual([
         action,
@@ -165,7 +165,7 @@ describe('discoveryOnStartupEpic', () => {
         bolt_direct: 'bolt://myhost:666',
         bolt: 'very://bad:1337'
       })
-    bus.take(discovery.DONE, currentAction => {
+    bus.take(discovery.DONE, _currentAction => {
       // Then
       expect(store.getActions()).toEqual([
         action,
@@ -301,7 +301,7 @@ describe('discoveryOnStartupEpic', () => {
 })
 
 describe('discoveryOnStartupEpic cloud env', () => {
-  let store
+  let store: any
   const bus = createBus()
   const epicMiddleware = createEpicMiddleware(discovery.discoveryOnStartupEpic)
   const mockStore = configureMockStore([
@@ -328,7 +328,7 @@ describe('discoveryOnStartupEpic cloud env', () => {
     nock(getDiscoveryEndpoint())
       .get('/')
       .reply(200, { bolt: expectedHost })
-    bus.take(discovery.DONE, currentAction => {
+    bus.take(discovery.DONE, _currentAction => {
       // Then
       expect(store.getActions()).toEqual([
         action,
@@ -347,7 +347,7 @@ describe('discoveryOnStartupEpic cloud env', () => {
 })
 
 describe('injectDiscoveryEpic', () => {
-  let store
+  let store: any
   const bus = createBus()
   const epicMiddleware = createEpicMiddleware(discovery.injectDiscoveryEpic)
   const mockStore = configureMockStore([

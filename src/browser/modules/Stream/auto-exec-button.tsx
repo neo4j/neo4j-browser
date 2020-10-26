@@ -16,7 +16,6 @@
  */
 
 import React, { useCallback } from 'react'
-import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import styled from 'styled-components'
 
@@ -41,7 +40,7 @@ const StyledAutoExecButton = styled.button`
   outline: transparent;
 `
 
-export function AutoExecButtonComponent({ bus, cmd, ...rest }) {
+export function AutoExecButtonComponent({ bus, cmd, ...rest }: any) {
   const onClick = useCallback(() => {
     const action = executeCommand(`:${cmd}`, { source: commandSources.button })
 

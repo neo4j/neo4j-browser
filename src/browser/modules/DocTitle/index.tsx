@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const DocTitle = ({ titleString }) => {
+const DocTitle = ({ titleString }: any) => {
   document.title = titleString
   return null
 }

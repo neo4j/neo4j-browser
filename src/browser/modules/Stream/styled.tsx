@@ -34,7 +34,7 @@ export const Padding = styled.div`
 // Frames
 export const PaddedDiv = styled.div`
   padding: 0 20px 20px 20px;
-  padding-bottom: ${props =>
+  padding-bottom: ${(props: any) =>
     props.fullscreen ? dim.frameTitlebarHeight + 20 + 'px' : '20px'};
 `
 

@@ -38,7 +38,7 @@ jest.mock('services/bolt/bolt', () => {
 
 describe('connections reducer', () => {
   test('handles connections.SET_ACTIVE', () => {
-    const initialState = {
+    const initialState: any = {
       allConnectionIds: [1, 2, 3],
       connectionsById: {
         1: { id: 1, name: 'bm1' },
@@ -55,7 +55,7 @@ describe('connections reducer', () => {
   })
 
   test('handles connections.REMOVE', () => {
-    const initialState = {
+    const initialState: any = {
       allConnectionIds: [1, 2, 3],
       connectionsById: {
         1: { id: 1, name: 'bm1' },
@@ -73,7 +73,7 @@ describe('connections reducer', () => {
   })
 
   test('handles connections.MERGE (update connection)', () => {
-    const initialState = {
+    const initialState: any = {
       allConnectionIds: [1, 2, 3],
       connectionsById: {
         1: { id: 1, name: 'bm1' },
@@ -126,7 +126,7 @@ describe('connectionsDucks Epics', () => {
     epicMiddleware,
     createReduxMiddleware(bus)
   ])
-  let store
+  let store: any
   beforeAll(() => {
     store = mockStore({
       connections: {
@@ -156,7 +156,7 @@ describe('connectionsDucks Epics', () => {
     epicMiddleware.replaceEpic(connections.disconnectEpic)
     store.dispatch(connections.setActiveConnection(id)) // set an active connection
     store.clearActions()
-    bus.take(connections.SET_ACTIVE, currentAction => {
+    bus.take(connections.SET_ACTIVE, _currentAction => {
       // Then
       expect(store.getActions()).toEqual([
         action,
@@ -173,7 +173,7 @@ describe('connectionsDucks Epics', () => {
     const action = {
       type: DISCOVERY_DONE
     }
-    bolt.openConnection.mockReturnValueOnce(Promise.resolve())
+    ;(bolt.openConnection as jest.Mock).mockReturnValueOnce(Promise.resolve())
 
     const p = new Promise((resolve, reject) => {
       bus.take(connections.STARTUP_CONNECTION_FAILED, currentAction => {
@@ -228,9 +228,9 @@ describe('startupConnectEpic', () => {
     epicMiddleware,
     createReduxMiddleware(bus)
   ])
-  let store
+  let store: any
   beforeAll(() => {
-    bolt.openConnection.mockReset()
+    ;(bolt.openConnection as jest.Mock).mockReset()
     store = mockStore({
       settings: {
         connectionTimeout: 30
@@ -258,7 +258,7 @@ describe('startupConnectEpic', () => {
     const action = {
       type: DISCOVERY_DONE
     }
-    bolt.openConnection.mockReturnValue(Promise.reject()) // eslint-disable-line
+    ;(bolt.openConnection as jest.Mock).mockReturnValue(Promise.reject())
 
     const p = new Promise((resolve, reject) => {
       bus.take(connections.STARTUP_CONNECTION_FAILED, currentAction => {
@@ -300,7 +300,7 @@ describe('retainCredentialsSettingsEpic', () => {
     epicMiddleware,
     createReduxMiddleware(bus)
   ])
-  let store
+  let store: any
   beforeAll(() => {
     bus.reset()
     store = myMockStore({
@@ -345,9 +345,9 @@ describe('switchConnectionEpic', () => {
     epicMiddleware,
     createReduxMiddleware(bus)
   ])
-  let store
+  let store: any
   beforeAll(() => {
-    bolt.openConnection.mockReset()
+    ;(bolt.openConnection as jest.Mock).mockReset()
     store = mockStore({
       connections: {
         activeConnection: null,
@@ -377,7 +377,7 @@ describe('switchConnectionEpic', () => {
       encrypted: true
     }
     const connectionInfo = { id: CONNECTION_ID, ...action }
-    bolt.openConnection.mockReturnValue(Promise.resolve()) // eslint-disable-line
+    ;(bolt.openConnection as jest.Mock).mockReturnValue(Promise.resolve())
 
     const p = new Promise((resolve, reject) => {
       bus.take(connections.SWITCH_CONNECTION_SUCCESS, currentAction => {
@@ -418,7 +418,7 @@ describe('switchConnectionEpic', () => {
       encrypted: true
     }
     const connectionInfo = { id: CONNECTION_ID, ...action }
-    bolt.openConnection.mockReturnValue(Promise.reject()) // eslint-disable-line
+    ;(bolt.openConnection as jest.Mock).mockReturnValue(Promise.reject())
 
     const p = new Promise((resolve, reject) => {
       bus.take(connections.SWITCH_CONNECTION_FAILED, currentAction => {

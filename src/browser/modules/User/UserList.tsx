@@ -46,8 +46,10 @@ import { isEnterprise } from 'shared/modules/dbMeta/dbMetaDuck'
 import FrameAside from '../Frame/FrameAside'
 import { EnterpriseOnlyFrame } from 'browser-components/EditionView'
 
-export class UserList extends Component {
-  constructor(props) {
+type UserListState = any
+
+export class UserList extends Component<any, UserListState> {
+  constructor(props: {}) {
     super(props)
     this.state = {
       userList: this.props.users || [],
@@ -61,7 +63,7 @@ export class UserList extends Component {
       this.getRoles()
     }
   }
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: any) {
     if (
       this.props.frame.ts !== prevProps.frame.ts &&
       this.props.frame.isRerun
@@ -73,13 +75,13 @@ export class UserList extends Component {
     }
   }
 
-  extractUserNameAndRolesFromBolt(result) {
+  extractUserNameAndRolesFromBolt(result: any) {
     const tableArray = bolt.recordsToTableArray(result.records)
     tableArray.shift()
     return tableArray
   }
 
-  recordToUserObject = record => {
+  recordToUserObject = (record: any) => {
     const is40 = Boolean(this.props.useSystemDb)
 
     if (is40) {
@@ -109,7 +111,7 @@ export class UserList extends Component {
         queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
         useDb: this.props.useSystemDb
       },
-      response => {
+      (response: any) => {
         if (response.success) {
           this.setState({
             userList: map(response.result.records, this.recordToUserObject)
@@ -128,7 +130,7 @@ export class UserList extends Component {
         queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
         useDb: this.props.useSystemDb
       },
-      response => {
+      (response: any) => {
         if (response.success) {
           this.setState({
             listRoles: map(response.result.records, record =>
@@ -140,8 +142,8 @@ export class UserList extends Component {
     )
   }
 
-  makeTable(data) {
-    const tableHeaderValues = {
+  makeTable(data: any) {
+    const tableHeaderValues: any = {
       username: 'Username',
       roles: 'Add Role',
       'current-roles': 'Current Roles(s)',
@@ -151,7 +153,7 @@ export class UserList extends Component {
       delete: 'Delete'
     }
 
-    const items = data.map(row => {
+    const items = data.map((row: any) => {
       return (
         <UserInformation
           className="user-information"
@@ -224,7 +226,7 @@ export class UserList extends Component {
     )
   }
 }
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   const { database } = driverDatabaseSelection(state, 'system') || {}
   const isEnterpriseEdition = isEnterprise(state)
 

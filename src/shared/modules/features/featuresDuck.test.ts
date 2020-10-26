@@ -48,7 +48,7 @@ describe('features reducer', () => {
   })
 
   test('handles UPDATE_ALL_FEATURES', () => {
-    const initialState = { availableProcedures: ['a', 'b'] }
+    const initialState: any = { availableProcedures: ['a', 'b'] }
     const action = {
       type: features.UPDATE_ALL_FEATURES,
       availableProcedures: ['c']
@@ -64,10 +64,9 @@ describe('feature getters', () => {
     expect(features.getAvailableProcedures({ features: nextState })).toEqual([])
   })
   test('should return list of availableProcedures', () => {
-    const nextState = reducer(
-      { availableProcedures: ['foo.bar'] },
-      { type: '' }
-    )
+    const nextState = reducer({ availableProcedures: ['foo.bar'] } as any, {
+      type: ''
+    })
     expect(features.getAvailableProcedures({ features: nextState })).toContain(
       'foo.bar'
     )
@@ -78,7 +77,7 @@ describe('feature getters', () => {
   })
   test('should be in a causal cluster', () => {
     const nextState = reducer(
-      { availableProcedures: ['dbms.cluster.overview'] },
+      { availableProcedures: ['dbms.cluster.overview'] } as any,
       { type: '' }
     )
     expect(features.isACausalCluster({ features: nextState })).toBe(true)
@@ -89,7 +88,7 @@ describe('feature getters', () => {
   })
   test('should be able to assign roles to user', () => {
     const nextState = reducer(
-      { availableProcedures: ['dbms.security.addRoleToUser'] },
+      { availableProcedures: ['dbms.security.addRoleToUser'] } as any,
       { type: '' }
     )
     expect(features.canAssignRolesToUser({ features: nextState })).toBe(true)
@@ -109,4 +108,6 @@ describe('canSendTxMetadata', () => {
   })
 })
 
-const createVersionState = version => ({ [META_NAME]: { server: { version } } })
+const createVersionState = (version: any) => ({
+  [META_NAME]: { server: { version } }
+})

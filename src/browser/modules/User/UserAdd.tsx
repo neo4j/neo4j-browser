@@ -57,8 +57,10 @@ import { driverDatabaseSelection } from 'shared/modules/features/versionedFeatur
 import { isEnterprise } from 'shared/modules/dbMeta/dbMetaDuck'
 import { EnterpriseOnlyFrame } from 'browser-components/EditionView'
 
-export class UserAdd extends Component {
-  constructor(props) {
+type UserAddState = any
+
+export class UserAdd extends Component<any, UserAddState> {
+  constructor(props: {}) {
     super(props)
     this.state = {
       availableRoles: this.props.availableRoles || [],
@@ -75,13 +77,13 @@ export class UserAdd extends Component {
     this.getRoles()
   }
 
-  extractUserNameAndRolesFromBolt(result) {
+  extractUserNameAndRolesFromBolt(result: any) {
     const tableArray = bolt.recordsToTableArray(result.records)
     tableArray.shift()
     return tableArray
   }
 
-  removeRole(role) {
+  removeRole(role: any) {
     const roles = this.state.roles.slice()
     roles.splice(this.state.roles.indexOf(role), 1)
     return roles
@@ -91,7 +93,7 @@ export class UserAdd extends Component {
     return (
       !!this.state.roles.length && (
         <StyleRolesContainer className="roles-inline">
-          {this.state.roles.map((role, i) => {
+          {this.state.roles.map((role: any, i: any) => {
             return (
               <FormButton
                 key={i}
@@ -110,8 +112,8 @@ export class UserAdd extends Component {
   }
 
   addRoles() {
-    const errors = []
-    this.state.roles.forEach(role => {
+    const errors: any = []
+    this.state.roles.forEach((role: any) => {
       this.props.bus &&
         this.props.bus.self(
           ROUTED_CYPHER_WRITE_REQUEST,
@@ -128,7 +130,7 @@ export class UserAdd extends Component {
             queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
             useDb: this.props.useSystemDb
           },
-          response => {
+          (response: any) => {
             if (!response.success) {
               return errors.push(response.error)
             }
@@ -158,7 +160,7 @@ export class UserAdd extends Component {
           queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
           useDb: this.props.useSystemDb
         },
-        response => {
+        (response: any) => {
           if (!response.success) {
             const error =
               response.error && response.error.message
@@ -177,7 +179,7 @@ export class UserAdd extends Component {
       )
   }
 
-  submit = event => {
+  submit = (event: any) => {
     event.preventDefault()
 
     this.setState({ isLoading: true, success: null, errors: null })
@@ -211,7 +213,7 @@ export class UserAdd extends Component {
           queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
           useDb: this.props.useSystemDb
         },
-        response => {
+        (response: any) => {
           if (!response.success) {
             const error =
               response.error && response.error.message
@@ -227,15 +229,15 @@ export class UserAdd extends Component {
       )
   }
 
-  updateUsername(event) {
+  updateUsername(event: any) {
     return this.setState({ username: event.target.value })
   }
 
-  updatePassword(event) {
+  updatePassword(event: any) {
     return this.setState({ password: event.target.value })
   }
 
-  confirmUpdatePassword(event) {
+  confirmUpdatePassword(event: any) {
     return this.setState({ confirmPassword: event.target.value })
   }
 
@@ -247,7 +249,7 @@ export class UserAdd extends Component {
 
   availableRoles() {
     return this.state.availableRoles.filter(
-      role => this.state.roles.indexOf(role) < 0
+      (role: any) => this.state.roles.indexOf(role) < 0
     )
   }
 
@@ -263,14 +265,14 @@ export class UserAdd extends Component {
     let aside
     let frameContents
 
-    const listOfAvailableRoles = rolesSelectorId =>
+    const listOfAvailableRoles = (rolesSelectorId: any) =>
       this.state.availableRoles ? (
         <RolesSelector
           roles={this.availableRoles()}
           className="roles"
           name={rolesSelectorId}
           id={rolesSelectorId}
-          onChange={event => {
+          onChange={(event: any) => {
             this.setState({
               roles: this.state.roles.concat([event.target.value])
             })
@@ -281,6 +283,7 @@ export class UserAdd extends Component {
       )
 
     let errors = this.state.errors ? this.state.errors.join(', ') : null
+    // @ts-expect-error ts-migrate(2349) FIXME: This expression is not callable.
     const formId = uuid()
     const usernameId = `username-${formId}`
     const passwordId = `password-${formId}`
@@ -365,7 +368,7 @@ export class UserAdd extends Component {
           </StyledFormElement>
 
           <StyledFormElement>
-            <FormButton type="submit" label="Add User" disabled={isLoading} />
+            <FormButton data-testid="Add User" type="submit" label="Add User" disabled={isLoading} />
           </StyledFormElement>
 
           <StyledLink onClick={this.openListUsersFrame.bind(this)}>
@@ -394,7 +397,7 @@ export class UserAdd extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   const { database } = driverDatabaseSelection(state, 'system') || {}
   const isEnterpriseEdition = isEnterprise(state)
 

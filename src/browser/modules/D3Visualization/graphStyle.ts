@@ -172,7 +172,7 @@ export default function neoGraphStyle() {
     }
   ]
   const Selector = (function() {
-    function Selector(tag1, classes1) {
+    function Selector(this: any, tag1: any, classes1: any) {
       this.tag = tag1
       this.classes = classes1 != null ? classes1 : []
     }
@@ -185,12 +185,12 @@ export default function neoGraphStyle() {
   })()
 
   const StyleRule = (function() {
-    function StyleRule(selector1, props1) {
+    function StyleRule(this: any, selector1: any, props1: any) {
       this.selector = selector1
       this.props = props1
     }
 
-    StyleRule.prototype.matches = function(selector) {
+    StyleRule.prototype.matches = function(selector: any) {
       if (this.selector.tag !== selector.tag) {
         return false
       }
@@ -203,7 +203,7 @@ export default function neoGraphStyle() {
       return true
     }
 
-    StyleRule.prototype.matchesExact = function(selector) {
+    StyleRule.prototype.matchesExact = function(selector: any) {
       return (
         this.matches(selector) &&
         this.selector.classes.length === selector.classes.length
@@ -214,12 +214,12 @@ export default function neoGraphStyle() {
   })()
 
   const StyleElement = (function() {
-    function StyleElement(selector) {
+    function StyleElement(this: any, selector: any) {
       this.selector = selector
       this.props = {}
     }
 
-    StyleElement.prototype.applyRules = function(rules) {
+    StyleElement.prototype.applyRules = function(rules: any) {
       for (let i = 0; i < rules.length; i++) {
         const rule = rules[i]
         if (rule.matches(this.selector)) {
@@ -230,7 +230,7 @@ export default function neoGraphStyle() {
       return this
     }
 
-    StyleElement.prototype.get = function(attr) {
+    StyleElement.prototype.get = function(attr: any) {
       return this.props[attr] || ''
     }
 
@@ -238,7 +238,7 @@ export default function neoGraphStyle() {
   })()
 
   const GraphStyle = (function() {
-    function GraphStyle() {
+    function GraphStyle(this: any) {
       this.rules = []
       try {
         this.loadRules()
@@ -247,12 +247,13 @@ export default function neoGraphStyle() {
       }
     }
 
-    const parseSelector = function(key) {
+    const parseSelector = function(key: any) {
       const tokens = selectorStringToArray(key)
+      // @ts-expect-error ts-migrate(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
       return new Selector(tokens[0], tokens.slice(1))
     }
 
-    const selector = function(item) {
+    const selector = function(item: any) {
       if (item.isNode) {
         return nodeSelector(item)
       } else if (item.isRelationship) {
@@ -260,17 +261,19 @@ export default function neoGraphStyle() {
       }
     }
 
-    const nodeSelector = function(node = {}) {
+    const nodeSelector = function(node: any = {}) {
       const classes = node.labels != null ? node.labels : []
+      // @ts-expect-error ts-migrate(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
       return new Selector('node', classes)
     }
 
-    const relationshipSelector = function(rel = {}) {
+    const relationshipSelector = function(rel: any = {}) {
       const classes = rel.type != null ? [rel.type] : []
+      // @ts-expect-error ts-migrate(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
       return new Selector('relationship', classes)
     }
 
-    const findRule = function(selector, rules) {
+    const findRule = function(selector: any, rules: any) {
       for (let i = 0; i < rules.length; i++) {
         const rule = rules[i]
         if (rule.matchesExact(selector)) {
@@ -279,22 +282,24 @@ export default function neoGraphStyle() {
       }
     }
 
-    const findAvailableDefaultColor = function(rules) {
+    const findAvailableDefaultColor = function(rules: any) {
       const usedColors = rules
-        .filter(rule => {
+        .filter((rule: any) => {
           return rule.props.color != null
         })
-        .map(rule => {
+        .map((rule: any) => {
           return rule.props.color
         })
       const index =
+        // @ts-expect-error ts-migrate(2365) FIXME: Operator '>' cannot be applied to types 'number' a... Remove this comment to see the full error message
         usedColors.length - 1 > defaultColors ? 0 : usedColors.length - 1
       return defaultColors[index]
     }
 
-    const getDefaultNodeCaption = function(item) {
+    const getDefaultNodeCaption = function(item: any) {
       if (
         !item ||
+        // @ts-expect-error ts-migrate(2365) FIXME: Operator '>' cannot be applied to types 'boolean' ... Remove this comment to see the full error message
         !(item.propertyList != null ? item.propertyList.length : 0) > 0
       ) {
         return {
@@ -310,7 +315,9 @@ export default function neoGraphStyle() {
         /^.+/
       ]
       let defaultCaption = captionPrioOrder.reduceRight((leading, current) => {
-        const hits = item.propertyList.filter(prop => current.test(prop.key))
+        const hits = item.propertyList.filter((prop: any) =>
+          current.test(prop.key)
+        )
         if (hits.length) {
           return `{${hits[0].key}}`
         } else {
@@ -323,15 +330,19 @@ export default function neoGraphStyle() {
       }
     }
 
-    GraphStyle.prototype.calculateStyle = function(selector) {
+    GraphStyle.prototype.calculateStyle = function(selector: any) {
+      // @ts-expect-error ts-migrate(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
       return new StyleElement(selector).applyRules(this.rules)
     }
 
-    GraphStyle.prototype.forEntity = function(item) {
+    GraphStyle.prototype.forEntity = function(item: any) {
       return this.calculateStyle(selector(item))
     }
 
-    GraphStyle.prototype.setDefaultNodeStyling = function(selector, item) {
+    GraphStyle.prototype.setDefaultNodeStyling = function(
+      selector: any,
+      item: any
+    ) {
       let defaultColor = true
       let defaultCaption = true
       for (let i = 0; i < this.rules.length; i++) {
@@ -345,6 +356,7 @@ export default function neoGraphStyle() {
           }
         }
       }
+      // @ts-expect-error ts-migrate(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
       const minimalSelector = new Selector(
         selector.tag,
         selector.classes.sort().slice(0, 1)
@@ -363,9 +375,13 @@ export default function neoGraphStyle() {
       }
     }
 
-    GraphStyle.prototype.changeForSelector = function(selector, props) {
+    GraphStyle.prototype.changeForSelector = function(
+      selector: any,
+      props: any
+    ) {
       let rule = findRule(selector, this.rules)
       if (rule == null) {
+        // @ts-expect-error ts-migrate(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
         rule = new StyleRule(selector, props)
         this.rules.push(rule)
       }
@@ -373,14 +389,14 @@ export default function neoGraphStyle() {
       return rule
     }
 
-    GraphStyle.prototype.destroyRule = function(rule) {
+    GraphStyle.prototype.destroyRule = function(rule: any) {
       const idx = this.rules.indexOf(rule)
       if (idx != null) {
         this.rules.splice(idx, 1)
       }
     }
 
-    GraphStyle.prototype.importGrass = function(string) {
+    GraphStyle.prototype.importGrass = function(string: any) {
       try {
         const rules = this.parse(string)
         return this.loadRules(rules)
@@ -389,13 +405,13 @@ export default function neoGraphStyle() {
       }
     }
 
-    GraphStyle.prototype.parse = function(string) {
+    GraphStyle.prototype.parse = function(string: any) {
       const chars = string.split('')
       let insideString = false
       let insideProps = false
       let keyword = ''
       let props = ''
-      const rules = {}
+      const rules: any = {}
       for (let i = 0; i < chars.length; i++) {
         const c = chars[i]
         let skipThis = true
@@ -418,6 +434,7 @@ export default function neoGraphStyle() {
             }
             break
           case "'":
+            // @ts-expect-error ts-migrate(2447) FIXME: The '^=' operator is not allowed for boolean types... Remove this comment to see the full error message
             insideString ^= true
             break
           default:
@@ -437,7 +454,7 @@ export default function neoGraphStyle() {
       for (const k in rules) {
         const v = rules[k]
         rules[k] = {}
-        v.split(';').forEach(prop => {
+        v.split(';').forEach((prop: any) => {
           const [key, val] = prop.split(':')
           if (key && val) {
             rules[k][key.trim()] = val.trim()
@@ -453,8 +470,8 @@ export default function neoGraphStyle() {
     }
 
     GraphStyle.prototype.toSheet = function() {
-      const sheet = {}
-      this.rules.forEach(rule => {
+      const sheet: any = {}
+      this.rules.forEach((rule: any) => {
         sheet[rule.selector.toString()] = rule.props
       })
       return sheet
@@ -462,7 +479,7 @@ export default function neoGraphStyle() {
 
     GraphStyle.prototype.toString = function() {
       let str = ''
-      this.rules.forEach(r => {
+      this.rules.forEach((r: any) => {
         str += `${r.selector.toString()} {\n`
         for (const k in r.props) {
           let v = r.props[k]
@@ -476,11 +493,12 @@ export default function neoGraphStyle() {
       return str
     }
 
-    GraphStyle.prototype.loadRules = function(data) {
+    GraphStyle.prototype.loadRules = function(data: any) {
       const localData = typeof data === 'object' ? data : defaultStyle
       this.rules.length = 0
       for (const key in localData) {
         const props = localData[key]
+        // @ts-expect-error ts-migrate(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
         this.rules.push(new StyleRule(parseSelector(key), props))
       }
       return this
@@ -502,8 +520,8 @@ export default function neoGraphStyle() {
       return defaultColors
     }
 
-    GraphStyle.prototype.interpolate = function(str, item) {
-      let ips = str.replace(/\{([^{}]*)\}/g, (a, b) => {
+    GraphStyle.prototype.interpolate = function(str: any, item: any) {
+      let ips = str.replace(/\{([^{}]*)\}/g, (_a: any, b: any) => {
         const r = item.propertyMap[b]
         if (typeof r === 'object') {
           return r.join(', ')
@@ -519,7 +537,7 @@ export default function neoGraphStyle() {
       if (ips.length < 1 && str === '{id}' && item.isNode) {
         ips = '<id>'
       }
-      return ips.replace(/^<(id|type)>$/, (a, b) => {
+      return ips.replace(/^<(id|type)>$/, (_a: any, b: any) => {
         const r = item[b]
         if (typeof r === 'string' || typeof r === 'number') {
           return r
@@ -528,7 +546,7 @@ export default function neoGraphStyle() {
       })
     }
 
-    GraphStyle.prototype.forNode = function(node = {}) {
+    GraphStyle.prototype.forNode = function(node: any = {}) {
       const selector = nodeSelector(node)
       if ((node.labels != null ? node.labels.length : 0) > 0) {
         this.setDefaultNodeStyling(selector, node)
@@ -536,12 +554,13 @@ export default function neoGraphStyle() {
       return this.calculateStyle(selector)
     }
 
-    GraphStyle.prototype.forRelationship = function(rel) {
+    GraphStyle.prototype.forRelationship = function(rel: any) {
       const selector = relationshipSelector(rel)
       return this.calculateStyle(selector)
     }
 
     return GraphStyle
   })()
+  // @ts-expect-error ts-migrate(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
   return new GraphStyle()
 }

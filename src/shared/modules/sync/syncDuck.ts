@@ -75,7 +75,7 @@ export const UNKNOWN = 'UNKNOWN'
 export const SIGNED_IN = 'SIGNED_IN'
 export const SIGNED_OUT = 'SIGNED_OUT'
 
-const initialState = null
+const initialState: any = null
 const initialConsentState = { consented: false, optedOut: false }
 const initialMetadataState = {
   serviceStatus: UNKNOWN,
@@ -88,27 +88,27 @@ const initialMetadataState = {
 /**
  * Selectors
  */
-export function getSync(state) {
+export function getSync(state: any) {
   return state[NAME]
 }
 
-export function getMetadata(state) {
+export function getMetadata(state: any) {
   return state[NAME_META] || null
 }
 
-export function getServiceStatus(state) {
+export function getServiceStatus(state: any) {
   return (state[NAME_META] || initialMetadataState).serviceStatus
 }
-export function getUserAuthStatus(state) {
+export function getUserAuthStatus(state: any) {
   return (state[NAME_META] || {}).userAuthStatus || SIGNED_OUT
 }
-export function isUserSignedIn(state) {
+export function isUserSignedIn(state: any) {
   return (state[NAME_META] || {}).userAuthStatus === SIGNED_IN
 }
-export function getUserData(state) {
+export function getUserData(state: any) {
   return (state[NAME_META] || {}).profile
 }
-export function getLastSyncedAt(state) {
+export function getLastSyncedAt(state: any) {
   return (
     (state[NAME_META] || {}).lastSyncedAt || initialMetadataState.lastSyncedAt
   )
@@ -118,7 +118,7 @@ export function getLastSyncedAt(state) {
  * Reducer
  */
 
-export function syncReducer(state = initialState, action) {
+export function syncReducer(state = initialState, action: any) {
   switch (action.type) {
     case APP_START:
       return { ...initialState, ...state }
@@ -135,7 +135,7 @@ export function syncReducer(state = initialState, action) {
   }
 }
 
-export function syncConsentReducer(state = initialConsentState, action) {
+export function syncConsentReducer(state = initialConsentState, action: any) {
   switch (action.type) {
     case APP_START:
       return { ...initialState, ...state }
@@ -162,7 +162,7 @@ export function syncConsentReducer(state = initialConsentState, action) {
   }
 }
 
-export function syncMetaDataReducer(state = initialMetadataState, action) {
+export function syncMetaDataReducer(state = initialMetadataState, action: any) {
   switch (action.type) {
     case APP_START:
       return { ...initialMetadataState, ...state }
@@ -191,14 +191,14 @@ export function syncMetaDataReducer(state = initialMetadataState, action) {
 }
 
 // Action creators
-export function setSyncData(obj) {
+export function setSyncData(obj: any) {
   return {
     type: SET_SYNC_DATA,
     obj
   }
 }
 
-export function syncItems(itemKey, items) {
+export function syncItems(itemKey: any, items: any) {
   return {
     type: SYNC_ITEMS,
     itemKey,
@@ -214,7 +214,7 @@ export const clearSyncAndLocal = {
   type: CLEAR_SYNC_AND_LOCAL
 }
 
-export function consentSync(consent) {
+export function consentSync(consent: any) {
   return {
     type: CONSENT_SYNC,
     consent
@@ -227,21 +227,21 @@ export function optOutSync() {
   }
 }
 
-export const authorizedAs = userData => {
+export const authorizedAs = (userData: any) => {
   return {
     type: AUTHORIZED,
     userData
   }
 }
 
-export const setSyncAuthData = data => {
+export const setSyncAuthData = (data: any) => {
   return {
     type: SET_AUTH_DATA,
     data
   }
 }
 
-export function setSyncMetadata(obj) {
+export function setSyncMetadata(obj: any) {
   return {
     type: SET_SYNC_METADATA,
     ...obj
@@ -254,13 +254,13 @@ export function resetSyncMetadata() {
   }
 }
 
-export function updateServiceStatus(status) {
+export function updateServiceStatus(status: any) {
   return {
     type: SERVICE_STATUS_UPDATED,
     status
   }
 }
-export function updateUserAuthStatus(status) {
+export function updateUserAuthStatus(status: any) {
   return {
     type: USER_AUTH_STATUS_UPDATED,
     status
@@ -268,19 +268,19 @@ export function updateUserAuthStatus(status) {
 }
 
 // Epics
-export const syncItemsEpic = (action$, store) =>
+export const syncItemsEpic = (action$: any, store: any) =>
   action$
     .ofType(SYNC_ITEMS)
-    .do(action => {
+    .do((action: any) => {
       const userId = store.getState().sync.key
       syncResourceFor(userId, action.itemKey, action.items)
     })
     .mapTo({ type: 'NOOP' })
 
-export const clearSyncEpic = (action$, store) =>
+export const clearSyncEpic = (action$: any) =>
   action$
     .ofType(CLEAR_SYNC_AND_LOCAL)
-    .do(action => {
+    .do(() => {
       setItem('documents', null)
       setItem('folders', null)
       setItem('syncConsent', false)
@@ -288,9 +288,9 @@ export const clearSyncEpic = (action$, store) =>
     })
     .mapTo({ type: CLEAR_LOCALSTORAGE })
 
-export const syncFavoritesEpic = (action$, store) =>
+export const syncFavoritesEpic = (action$: any, store: any) =>
   action$
-    .filter(action =>
+    .filter((action: any) =>
       [
         ADD_FAVORITE,
         REMOVE_FAVORITE,
@@ -298,7 +298,7 @@ export const syncFavoritesEpic = (action$, store) =>
         UPDATE_FAVORITES
       ].includes(action.type)
     )
-    .map(action => {
+    .map(() => {
       const syncValue = getSync(store.getState())
       if (syncValue && syncValue.syncObj !== undefined) {
         const documents = composeDocumentsToSync(store, syncValue)
@@ -307,10 +307,10 @@ export const syncFavoritesEpic = (action$, store) =>
       return { type: 'NOOP' }
     })
 
-export const loadFavoritesFromSyncEpic = (action$, store) =>
+export const loadFavoritesFromSyncEpic = (action$: any, store: any) =>
   action$
     .ofType(SET_SYNC_DATA)
-    .do(action => {
+    .do((action: any) => {
       const favoritesStatus = favoritesToLoad(action, store)
 
       if (favoritesStatus.loadFavorites) {
@@ -323,10 +323,10 @@ export const loadFavoritesFromSyncEpic = (action$, store) =>
     })
     .mapTo({ type: 'NOOP' })
 
-export const loadGrassFromSyncEpic = (action$, store) =>
+export const loadGrassFromSyncEpic = (action$: any, store: any) =>
   action$
     .ofType(SET_SYNC_DATA)
-    .do(action => {
+    .do((action: any) => {
       const grass = grassToLoad(action, store)
       if (grass.loadGrass) {
         store.dispatch(updateGraphStyleData(grass.grass))
@@ -337,14 +337,14 @@ export const loadGrassFromSyncEpic = (action$, store) =>
     })
     .mapTo({ type: 'NOOP' })
 
-export const syncFoldersEpic = (action$, store) =>
+export const syncFoldersEpic = (action$: any, store: any) =>
   action$
-    .filter(action =>
+    .filter((action: any) =>
       [ADD_FOLDER, REMOVE_FOLDER, SYNC_FOLDERS, UPDATE_FOLDERS].includes(
         action.type
       )
     )
-    .map(action => {
+    .map(() => {
       const syncValue = getSync(store.getState())
 
       if (syncValue && syncValue.syncObj) {
@@ -354,12 +354,12 @@ export const syncFoldersEpic = (action$, store) =>
       return { type: 'NOOP' }
     })
 
-export const syncGrassEpic = (action$, store) =>
+export const syncGrassEpic = (action$: any, store: any) =>
   action$
-    .filter(action =>
+    .filter((action: any) =>
       [SYNC_GRASS, UPDATE_GRAPH_STYLE_DATA].includes(action.type)
     )
-    .map(action => {
+    .map(() => {
       const syncValue = getSync(store.getState())
 
       if (syncValue && syncValue.syncObj) {
@@ -369,10 +369,10 @@ export const syncGrassEpic = (action$, store) =>
       return { type: 'NOOP' }
     })
 
-export const loadFoldersFromSyncEpic = (action$, store) =>
+export const loadFoldersFromSyncEpic = (action$: any, store: any) =>
   action$
     .ofType(SET_SYNC_DATA)
-    .do(action => {
+    .do((action: any) => {
       const folderStatus = foldersToLoad(action, store)
 
       if (folderStatus.loadFolders) {

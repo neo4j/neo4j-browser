@@ -49,14 +49,14 @@ const initialState = {
  * Selectors
  */
 
-export function getCurrentUser(state) {
+export function getCurrentUser(state: any) {
   return state[NAME]
 }
 
 /**
  * Reducer
  */
-export default function user(state = initialState, action) {
+export default function user(state = initialState, action: any) {
   switch (action.type) {
     case APP_START:
       return { ...initialState, ...state }
@@ -71,7 +71,7 @@ export default function user(state = initialState, action) {
 }
 
 // actions
-export function updateCurrentUser(username, roles) {
+export function updateCurrentUser(username: any, roles: any) {
   return {
     type: UPDATE_CURRENT_USER,
     username,
@@ -86,7 +86,7 @@ export function forceFetch() {
 }
 
 // Epics
-export const getCurrentUserEpic = (some$, store) =>
+export const getCurrentUserEpic = (some$: any, store: any) =>
   some$
     .ofType(CONNECTION_SUCCESS)
     .merge(some$.ofType(DB_META_DONE))
@@ -113,11 +113,11 @@ export const getCurrentUserEpic = (some$, store) =>
               useDb: supportsMultiDb ? SYSTEM_DB : ''
             }
           )
-          .then(res => resolve(res))
+          .then((res: any) => resolve(res))
           .catch(() => resolve(null))
       })
     })
-    .map(result => {
+    .map((result: any) => {
       if (!result) return { type: CLEAR }
       const keys = result.records[0].keys
 
@@ -131,5 +131,5 @@ export const getCurrentUserEpic = (some$, store) =>
       return updateCurrentUser(username, roles)
     })
 
-export const clearCurrentUserOnDisconnectEpic = (some$, store) =>
+export const clearCurrentUserOnDisconnectEpic = (some$: any, _store: any) =>
   some$.ofType(DISCONNECTION_SUCCESS).mapTo({ type: CLEAR })

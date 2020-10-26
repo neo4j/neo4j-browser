@@ -32,9 +32,9 @@ import { Summary, CypherSummary } from './Summary'
 import { Icon } from './Icon'
 import { getLatestFromFrameStack } from '../stream.utils'
 
-const isCypher = str => !str.startsWith(':')
+const isCypher = (str: any) => !str.startsWith(':')
 
-class CypherScriptFrame extends Component {
+class CypherScriptFrame extends Component<any> {
   render() {
     const { frame, frames, requests = {} } = this.props
     const contents = (
@@ -42,10 +42,10 @@ class CypherScriptFrame extends Component {
         <ContentSizer>
           <Accordion
             data-testid="multi-statement-list"
-            render={({ getChildProps }) => {
+            render={({ getChildProps }: any) => {
               return (
                 <div>
-                  {(frame.statements || []).map((id, index) => {
+                  {(frame.statements || []).map((id: any, index: any) => {
                     if (!requests[frames[id].requestId]) {
                       return
                     }
@@ -106,11 +106,11 @@ class CypherScriptFrame extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: any, ownProps: any) => {
   if (!ownProps.frame.statements) return {}
   const frames = ownProps.frame.statements
-    .map(id => getLatestFromFrameStack(getFrame(state, id)))
-    .reduce((all, curr) => {
+    .map((id: any) => getLatestFromFrameStack(getFrame(state, id)))
+    .reduce((all: any, curr: any) => {
       all[curr.id] = curr
       return all
     }, {})

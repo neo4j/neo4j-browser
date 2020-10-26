@@ -90,7 +90,7 @@ export const StyledLink = styled.a`
     text-decoration: none;
   }
 `
-export const Link = props => {
+export const Link = (props: any) => {
   const { children, ...rest } = props
   return (
     <StyledLink {...rest}>

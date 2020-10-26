@@ -30,7 +30,7 @@ const node = new neo4j.types.Node('1', ['Person'], {
   prop1: '<b>String</b> with HTML <strong>in</strong> it'
 })
 const mockResult = {
-  records: [{ keys: ['0'], __fields: [node], get: key => node }]
+  records: [{ keys: ['0'], __fields: [node], get: (_key: any) => node }]
 }
 
 test('Visualization renders', () => {

@@ -39,7 +39,9 @@ export const getBackgroundTxMetadata = ({ hasServerSupport = false }) => {
   }
 }
 
-export const getUserTxMetadata = type => ({ hasServerSupport = false }) => {
+export const getUserTxMetadata = (type: any) => ({
+  hasServerSupport = false
+}) => {
   if (!hasServerSupport || !type) {
     return {}
   }

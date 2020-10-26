@@ -35,8 +35,23 @@ const IconButton = styled.button`
   }
 `
 
-export class ConfirmationButton extends Component {
-  constructor(props) {
+type State = any
+
+interface ConfirmationButtonProps {
+  onConfirmed: () => void
+  confirmIcon?: JSX.Element
+  cancelIcon?: JSX.Element
+  requestIcon?: JSX.Element
+}
+
+export class ConfirmationButton extends Component<
+  ConfirmationButtonProps,
+  State
+> {
+  cancelIcon: any
+  confirmIcon: any
+  requestIcon: any
+  constructor(props: ConfirmationButtonProps) {
     super(props)
 
     this.state = {

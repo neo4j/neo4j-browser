@@ -36,19 +36,19 @@ import { DatabaseSelector } from './DatabaseSelector'
 import { getUseDb } from 'shared/modules/connections/connectionsDuck'
 import { getDatabases } from 'shared/modules/dbMeta/dbMetaDuck'
 
-export function DBMSInfo(props) {
+export function DBMSInfo(props: any) {
   const moreStep = 50
   const [labelsMax, setLabelsMax] = useState(moreStep)
   const [relationshipsMax, setRelationshipsMax] = useState(moreStep)
   const [propertiesMax, setPropertiesMax] = useState(moreStep)
 
-  function onMoreClick(type, currentMax) {
-    const map = {
+  function onMoreClick(type: any, currentMax: any) {
+    const map: any = {
       labels: setLabelsMax,
       relationships: setRelationshipsMax,
       properties: setPropertiesMax
     }
-    return num => map[type](currentMax + num)
+    return (num: any) => map[type](currentMax + num)
   }
 
   const {
@@ -72,7 +72,7 @@ export function DBMSInfo(props) {
         />
         <LabelItems
           count={nodes}
-          labels={labels.slice(0, labelsMax).map(l => l.val)}
+          labels={labels.slice(0, labelsMax).map((l: any) => l.val)}
           totalNumItems={labels.length}
           onItemClick={onItemClick}
           onMoreClick={onMoreClick('labels', labelsMax)}
@@ -83,7 +83,7 @@ export function DBMSInfo(props) {
           count={relationships}
           relationshipTypes={relationshipTypes
             .slice(0, relationshipsMax)
-            .map(l => l.val)}
+            .map((l: any) => l.val)}
           onItemClick={onItemClick}
           totalNumItems={relationshipTypes.length}
           onMoreClick={onMoreClick('relationships', relationshipsMax)}
@@ -91,7 +91,7 @@ export function DBMSInfo(props) {
           graphStyleData={props.graphStyleData}
         />
         <PropertyItems
-          properties={properties.slice(0, propertiesMax).map(l => l.val)}
+          properties={properties.slice(0, propertiesMax).map((l: any) => l.val)}
           onItemClick={onItemClick}
           totalNumItems={properties.length}
           onMoreClick={onMoreClick('properties', propertiesMax)}
@@ -107,7 +107,7 @@ export function DBMSInfo(props) {
   )
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   const useDb = getUseDb(state)
   const databases = getDatabases(state)
   return {
@@ -118,13 +118,13 @@ const mapStateToProps = state => {
     databases
   }
 }
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch: any, ownProps: any) => {
   return {
-    onItemClick: cmd => {
+    onItemClick: (cmd: any) => {
       const action = executeCommand(cmd, { source: commandSources.button })
       ownProps.bus.send(action.type, action)
     },
-    onDbSelect: dbName =>
+    onDbSelect: (dbName: any) =>
       dispatch(executeCommand(`:${useDbCommand} ${dbName || ''}`), {
         source: commandSources.button
       })

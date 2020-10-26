@@ -22,9 +22,9 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { Provider } from 'react-redux'
 
-import { CypherFrame } from './index.tsx'
+import { CypherFrame } from './index'
 
-const createProps = (status, result) => ({
+const createProps = (status: any, result: any) => ({
   recentView: undefined,
   frame: {},
   request: {
@@ -33,7 +33,7 @@ const createProps = (status, result) => ({
     result
   }
 })
-const withProvider = (store, children) => {
+const withProvider = (store: any, children: any) => {
   return <Provider store={store}>{children}</Provider>
 }
 

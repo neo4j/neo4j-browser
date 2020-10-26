@@ -21,13 +21,20 @@
 import { mapNodes, mapRelationships, getGraphStats } from './mapper'
 
 export class GraphEventHandler {
+  getNodeNeighbours: any
+  graph: any
+  graphView: any
+  onGraphModelChange: any
+  onItemMouseOver: any
+  onItemSelected: any
+  selectedItem: any
   constructor(
-    graph,
-    graphView,
-    getNodeNeighbours,
-    onItemMouseOver,
-    onItemSelected,
-    onGraphModelChange
+    graph: any,
+    graphView: any,
+    getNodeNeighbours: any,
+    onItemMouseOver: any,
+    onItemSelected: any,
+    onGraphModelChange: any
   ) {
     this.graph = graph
     this.graphView = graphView
@@ -42,7 +49,7 @@ export class GraphEventHandler {
     this.onGraphModelChange(getGraphStats(this.graph))
   }
 
-  selectItem(item) {
+  selectItem(item: any) {
     if (this.selectedItem) {
       this.selectedItem.selected = false
     }
@@ -66,7 +73,7 @@ export class GraphEventHandler {
     this.graphView.update()
   }
 
-  nodeClose(d) {
+  nodeClose(d: any) {
     this.graph.removeConnectedRelationships(d)
     this.graph.removeNode(d)
     this.deselectItem()
@@ -74,7 +81,7 @@ export class GraphEventHandler {
     this.graphModelChanged()
   }
 
-  nodeClicked(d) {
+  nodeClicked(d: any) {
     if (!d) {
       return
     }
@@ -90,7 +97,7 @@ export class GraphEventHandler {
     }
   }
 
-  nodeUnlock(d) {
+  nodeUnlock(d: any) {
     if (!d) {
       return
     }
@@ -98,7 +105,7 @@ export class GraphEventHandler {
     this.deselectItem()
   }
 
-  nodeDblClicked(d) {
+  nodeDblClicked(d: any) {
     if (d.expanded) {
       this.nodeCollapse(d)
       return
@@ -110,7 +117,7 @@ export class GraphEventHandler {
     this.getNodeNeighbours(
       d,
       this.graph.findNodeNeighbourIds(d.id),
-      (err, { nodes, relationships }) => {
+      (err: any, { nodes, relationships }: any) => {
         if (err) return
         graph.addExpandedNodes(d, mapNodes(nodes))
         graph.addRelationships(mapRelationships(relationships, graph))
@@ -120,14 +127,14 @@ export class GraphEventHandler {
     )
   }
 
-  nodeCollapse(d) {
+  nodeCollapse(d: any) {
     d.expanded = false
     this.graph.collapseNode(d)
     this.graphView.update()
     this.graphModelChanged()
   }
 
-  onNodeMouseOver(node) {
+  onNodeMouseOver(node: any) {
     if (!node.contextMenu) {
       this.onItemMouseOver({
         type: 'node',
@@ -140,7 +147,7 @@ export class GraphEventHandler {
     }
   }
 
-  onMenuMouseOver(itemWithMenu) {
+  onMenuMouseOver(itemWithMenu: any) {
     this.onItemMouseOver({
       type: 'context-menu-item',
       item: {
@@ -151,7 +158,7 @@ export class GraphEventHandler {
     })
   }
 
-  onRelationshipMouseOver(relationship) {
+  onRelationshipMouseOver(relationship: any) {
     this.onItemMouseOver({
       type: 'relationship',
       item: {
@@ -162,7 +169,7 @@ export class GraphEventHandler {
     })
   }
 
-  onRelationshipClicked(relationship) {
+  onRelationshipClicked(relationship: any) {
     if (!relationship.selected) {
       this.selectItem(relationship)
       this.onItemSelected({
@@ -182,7 +189,7 @@ export class GraphEventHandler {
     this.deselectItem()
   }
 
-  onItemMouseOut(item) {
+  onItemMouseOut() {
     this.onItemMouseOver({
       type: 'canvas',
       item: {

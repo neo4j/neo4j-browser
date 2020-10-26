@@ -27,17 +27,23 @@ import { StyledZoomHolder, StyledSvgWrapper, StyledZoomButton } from './styled'
 import { ZoomInIcon, ZoomOutIcon } from 'browser-components/icons/Icons'
 import graphView from '../lib/visualization/components/graphView'
 
-export class GraphComponent extends Component {
+type State = any
+
+export class GraphComponent extends Component<any, State> {
+  graph: any
+  graphEH: any
+  graphView: any
+  svgElement: any
   state = {
     zoomInLimitReached: true,
     zoomOutLimitReached: false
   }
 
-  graphInit(el) {
+  graphInit(el: any) {
     this.svgElement = el
   }
 
-  zoomInClicked(el) {
+  zoomInClicked(el: any) {
     const limits = this.graphView.zoomIn(el)
     this.setState({
       zoomInLimitReached: limits.zoomInLimit,
@@ -45,7 +51,7 @@ export class GraphComponent extends Component {
     })
   }
 
-  zoomOutClicked(el) {
+  zoomOutClicked(el: any) {
     const limits = this.graphView.zoomOut(el)
     this.setState({
       zoomInLimitReached: limits.zoomInLimit,
@@ -103,7 +109,7 @@ export class GraphComponent extends Component {
     }
   }
 
-  addInternalRelationships = internalRelationships => {
+  addInternalRelationships = (internalRelationships: any) => {
     if (this.graph) {
       this.graph.addInternalRelationships(
         mapRelationships(internalRelationships, this.graph)
@@ -114,7 +120,7 @@ export class GraphComponent extends Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: any) {
     if (prevProps.styleVersion !== this.props.styleVersion) {
       this.graphView.update()
     }

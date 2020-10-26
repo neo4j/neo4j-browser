@@ -45,7 +45,7 @@ const SyncReminderBanner = React.memo(function SyncReminderBanner({
   optOutSync,
   authStatus,
   onGetstartedClicked
-}) {
+}: any) {
   const dbConnected = dbConnectionState === CONNECTED_STATE
   const syncConsentGiven = syncConsent && syncConsent.consented === true
 
@@ -72,7 +72,7 @@ const SyncReminderBanner = React.memo(function SyncReminderBanner({
   )
 })
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   return {
     syncConsent: state.syncConsent,
     authStatus: getUserAuthStatus(state),
@@ -80,7 +80,7 @@ const mapStateToProps = state => {
   }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     optOutSync: () => {
       dispatch(optOutSync())

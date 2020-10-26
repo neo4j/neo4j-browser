@@ -22,10 +22,10 @@ import useAutoTheme from './useAutoTheme'
 import { AUTO_THEME, LIGHT_THEME } from 'shared/modules/settings/settingsDuck'
 
 export default function useDerivedTheme(
-  selectedTheme,
+  selectedTheme: any,
   defaultTheme = LIGHT_THEME
 ) {
-  const [derivedTheme, overrideAutoTheme] = useAutoTheme(defaultTheme)
+  const [derivedTheme, overrideAutoTheme]: any[] = useAutoTheme(defaultTheme)
   const [environmentTheme, setEnvironmentTheme] = useState(null)
 
   useEffect(() => {

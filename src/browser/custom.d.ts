@@ -3,6 +3,15 @@ declare module '*.svg' {
   export default content
 }
 
+declare module '*.css'
+declare module '*.less'
+declare module '@mdx-js/runtime'
+declare module '@literal-jsx/parser'
+declare module 'cypher-codemirror'
+declare module 'ascii-data-table'
+declare module 'react-timeago'
+declare module '@neo4j/browser-lambda-parser'
+
 declare module 'react-suber' {
   interface BusProps {
     bus: Bus
@@ -10,7 +19,7 @@ declare module 'react-suber' {
   const withBus: (
     comp: React.ComponentType<P>
   ) => React.ComponentType<P & BusProps>
-  const BusProvider: React.ComponentType
+  const BusProvider: React.ComponentType<BusProps>
   export { withBus, BusProvider, BusProps }
 }
 
@@ -33,10 +42,14 @@ declare module 'suber' {
     send: (channel: string, message: any, source?: string) => void
     self: (channel: string, message: any, fn: MessageHandler) => void
     reset: () => void
+    applyMiddleware: (...args: ((_: never, source: object) => void)[]) => void
+    applyReduxMiddleware: any
   }
 
   const createBus: () => Bus
-  export { Bus, createBus }
+  const createReduxMiddleware: (bus: Bus) => () => (next) => (action) => action
+
+  export { Bus, createBus, createReduxMiddleware }
 }
 
 declare module 'cypher-editor-support/src/_generated/CypherLexer' {
@@ -60,4 +73,11 @@ declare module 'cypher-editor-support' {
       queriesAndCommands: { getText: () => string; start: { line: number } }[]
     }
   }
+}
+
+declare module 'neo4j-driver' {
+  const { auth, driver, int, isInt, session } = await import('neo4j-driver')
+  // overwrite types export to silence type warnings
+  const types: any
+  export { auth, driver, int, isInt, session, types }
 }

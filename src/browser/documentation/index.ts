@@ -207,6 +207,6 @@ export default {
         title: 'Query Templates',
         category: 'guides'
       }
-    }
+    } as any
   }
 }

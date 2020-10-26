@@ -38,7 +38,7 @@ describe('<Favorites />', () => {
       : script.content.replace('Show meta-graph', 'Show meta-graph v4')
   }))
 
-  const renderWithDBMSVersion = version => {
+  const renderWithDBMSVersion = (version: any) => {
     const state = {
       documents,
       folders,
@@ -46,7 +46,7 @@ describe('<Favorites />', () => {
     }
 
     return render(
-      <Provider store={createStore(() => state, state)}>
+      <Provider store={createStore(() => state, state) as any}>
         <Favorites />
       </Provider>
     )
@@ -56,7 +56,7 @@ describe('<Favorites />', () => {
     const version = null
     const { queryByText } = renderWithDBMSVersion(version)
 
-    fireEvent.click(queryByText('Basic Queries'))
+    fireEvent.click(queryByText('Basic Queries') as HTMLElement)
 
     expect(queryByText('Connect to DBMS')).toBeTruthy()
   })
@@ -65,7 +65,7 @@ describe('<Favorites />', () => {
     const version = '3.5.14'
     const { queryByText } = renderWithDBMSVersion(version)
 
-    fireEvent.click(queryByText('Common Procedures'))
+    fireEvent.click(queryByText('Common Procedures') as HTMLElement)
 
     expect(queryByText('Show meta-graph v3')).toBeTruthy()
     expect(queryByText('Show meta-graph v4')).toBeFalsy()
@@ -75,7 +75,7 @@ describe('<Favorites />', () => {
     const version = '4.0.3'
     const { queryByText } = renderWithDBMSVersion(version)
 
-    fireEvent.click(queryByText('Common Procedures'))
+    fireEvent.click(queryByText('Common Procedures') as HTMLElement)
 
     expect(queryByText('Show meta-graph v3')).toBeFalsy()
     expect(queryByText('Show meta-graph v4')).toBeTruthy()

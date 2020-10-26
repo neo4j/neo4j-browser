@@ -25,7 +25,7 @@ import { SysInfoFrame } from './index'
 jest.mock(
   'browser/modules/Frame/FrameTemplate',
   // eslint-disable-next-line
-  () => ({ contents, children }) => (
+  () => ({ contents, children }: any) => (
     <div>
       {contents}
       {children}

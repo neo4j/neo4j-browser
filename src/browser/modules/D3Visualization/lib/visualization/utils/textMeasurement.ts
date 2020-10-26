@@ -19,7 +19,8 @@
  */
 import d3 from 'd3'
 
-const measureUsingCanvas = function(text, font) {
+const measureUsingCanvas = function(text: any, font: any) {
+  // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
   const canvasSelection = d3.select('canvas#textMeasurementCanvas').data([this])
   canvasSelection
     .enter()
@@ -27,17 +28,17 @@ const measureUsingCanvas = function(text, font) {
     .attr('id', 'textMeasurementCanvas')
     .style('display', 'none')
 
-  const canvas = canvasSelection.node()
-  const context = canvas.getContext('2d')
+  const canvas = canvasSelection.node() as HTMLCanvasElement
+  const context = canvas.getContext('2d') as CanvasRenderingContext2D
   context.font = font
   return context.measureText(text).width
 }
 
 const cache = function() {
   const cacheSize = 10000
-  const map = {}
-  const list = []
-  return (key, calc) => {
+  const map: any = {}
+  const list: any = []
+  return (key: any, calc: any) => {
     const cached = map[key]
     if (cached) {
       return cached
@@ -52,7 +53,7 @@ const cache = function() {
   }
 }
 
-export default function(text, fontFamily, fontSize) {
+export default function(text: any, fontFamily: any, fontSize: any) {
   const font = `normal normal normal ${fontSize}px/normal ${fontFamily}`
   return cache()(text + font, () => measureUsingCanvas(text, font))
 }

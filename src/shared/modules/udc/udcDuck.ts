@@ -98,14 +98,14 @@ export const typeToMetricsObject = {
 }
 
 // Selectors
-const getData = state => {
-  const { events, ...rest } = state[NAME] || initialState // eslint-disable-line
+const getData = (state: any) => {
+  const { events, ...rest } = state[NAME] || initialState
   return rest
 }
-const getLastSnapshotTime = state =>
+const getLastSnapshotTime = (state: any) =>
   (state[NAME] && state[NAME].lastSnapshot) || initialState.lastSnapshot
-const getName = state => state[NAME].name || 'Graph Friend'
-const getCompanies = state => {
+const getName = (state: any) => state[NAME].name || 'Graph Friend'
+const getCompanies = (state: any) => {
   if (getVersion(state) && getStoreId(state)) {
     return [
       {
@@ -117,7 +117,7 @@ const getCompanies = state => {
   }
   return null
 }
-const getEvents = state => state[NAME].events || initialState.events
+const getEvents = (state: any) => state[NAME].events || initialState.events
 
 const initialState = {
   uuid: v4(),
@@ -132,7 +132,7 @@ const initialState = {
 }
 
 // Reducer
-export default function reducer(state = initialState, action) {
+export default function reducer(state: any = initialState, action: any) {
   switch (action.type) {
     case INCREMENT:
       return { ...state, [action.what]: (state[action.what] || 0) + 1 }
@@ -146,7 +146,7 @@ export default function reducer(state = initialState, action) {
     case USER_CLEAR:
       return initialState
     case UPDATE_DATA:
-      const { type, ...rest } = action // eslint-disable-line
+      const { type, ...rest } = action
       return { ...state, ...rest }
     default:
       return state
@@ -154,7 +154,7 @@ export default function reducer(state = initialState, action) {
 }
 
 // Action creators
-const increment = what => {
+const increment = (what: any) => {
   return {
     type: INCREMENT,
     what
@@ -165,7 +165,7 @@ export const udcInit = () => {
     type: UDC_STARTUP
   }
 }
-export const addToEventQueue = (name, data) => {
+export const addToEventQueue = (name: any, data: any) => {
   return {
     type: EVENT_QUEUE,
     event: {
@@ -174,7 +174,7 @@ export const addToEventQueue = (name, data) => {
     }
   }
 }
-const eventFired = (name, data = null) => {
+const eventFired = (name: any, data = null) => {
   return {
     type: EVENT_FIRED,
     name,
@@ -182,21 +182,21 @@ const eventFired = (name, data = null) => {
   }
 }
 
-const metricsEvent = payload => {
+const metricsEvent = (payload: any) => {
   return {
     type: METRICS_EVENT,
     ...payload
   }
 }
 
-export const updateData = obj => {
+export const updateData = (obj: any) => {
   return {
     type: UPDATE_DATA,
     ...obj
   }
 }
 
-function aWeekSinceLastSnapshot(store) {
+function aWeekSinceLastSnapshot(store: any) {
   const now = Math.round(Date.now() / 1000)
   const lastSnapshot = getLastSnapshotTime(store.getState())
   const aWeekInSeconds = 60 * 60 * 24 * 7
@@ -204,7 +204,7 @@ function aWeekSinceLastSnapshot(store) {
 }
 
 // Epics
-export const udcStartupEpic = (action$, store) =>
+export const udcStartupEpic = (action$: any, store: any) =>
   action$
     .ofType(UDC_STARTUP)
     .do(() =>
@@ -248,7 +248,7 @@ export const udcStartupEpic = (action$, store) =>
       const favorites = getFavorites(store.getState())
 
       if (favorites) {
-        const count = favorites.filter(script => !script.isStatic).length
+        const count = favorites.filter((script: any) => !script.isStatic).length
         store.dispatch(
           metricsEvent({
             category: 'favorites',
@@ -263,18 +263,18 @@ export const udcStartupEpic = (action$, store) =>
     })
     .mapTo(increment(typeToEventName[EVENT_APP_STARTED]))
 
-export const incrementEventEpic = (action$, store) =>
+export const incrementEventEpic = (action$: any, store: any) =>
   action$
     .ofType(CYPHER)
     .merge(action$.ofType(CYPHER_FAILED))
     .merge(action$.ofType(CYPHER_SUCCEEDED))
-    .do(action =>
+    .do((action: any) =>
       store.dispatch(metricsEvent(typeToMetricsObject[action.type]))
     )
-    .map(action => increment(typeToEventName[action.type]))
+    .map((action: any) => increment(typeToEventName[action.type]))
 
-export const trackCommandUsageEpic = (action$, store) =>
-  action$.ofType(COMMAND_QUEUED).map(action => {
+export const trackCommandUsageEpic = (action$: any) =>
+  action$.ofType(COMMAND_QUEUED).map((action: any) => {
     const isCypher = !action.cmd.startsWith(':')
     const label = isCypher
       ? 'cypher'
@@ -290,7 +290,7 @@ export const trackCommandUsageEpic = (action$, store) =>
     })
   })
 
-export const trackSyncLogoutEpic = (action$, store) =>
+export const trackSyncLogoutEpic = (action$: any, store: any) =>
   action$
     .ofType(CLEAR_SYNC)
     .merge(action$.ofType(CLEAR_SYNC_AND_LOCAL))
@@ -299,9 +299,9 @@ export const trackSyncLogoutEpic = (action$, store) =>
         metricsEvent(typeToMetricsObject[EVENT_BROWSER_SYNC_LOGOUT])
       )
     )
-    .map(action => eventFired('syncLogout'))
+    .map(() => eventFired('syncLogout'))
 
-export const bootEpic = (action$, store) => {
+export const bootEpic = (action$: any, store: any) => {
   return action$
     .ofType(AUTHORIZED) // Browser sync auth
     .do(() =>
@@ -309,13 +309,13 @@ export const bootEpic = (action$, store) => {
         metricsEvent(typeToMetricsObject[EVENT_BROWSER_SYNC_LOGIN])
       )
     )
-    .map(action => {
+    .map((action: any) => {
       // Store name locally
       if (!action.userData || !action.userData.name) return action
       store.dispatch(updateData({ name: action.userData.name }))
       return action
     })
-    .map(action => {
+    .map((action: any) => {
       if (booted) return false
       if (!action.userData || !action.userData.user_id) return false // No info
       if (!isBeta(store.getState()) && !shouldReportUdc(store.getState())) {
@@ -335,14 +335,14 @@ export const bootEpic = (action$, store) => {
         })
         const waitingEvents = getEvents(store.getState())
         waitingEvents.forEach(
-          event => event && api('trackEvent', event.name, event.data)
+          (event: any) => event && api('trackEvent', event.name, event.data)
         )
         store.dispatch({ type: CLEAR_EVENTS })
       }
       booted = true
       return true
     })
-    .map(didBoot => {
+    .map((didBoot: any) => {
       return didBoot ? { type: BOOTED } : { type: 'NOOP' }
     })
 }
@@ -357,17 +357,17 @@ const actionsOfInterest = [
   REMOVE_FAVORITE,
   LAST_GUIDE_SLIDE
 ]
-export const trackReduxActionsEpic = (action$, store) =>
+export const trackReduxActionsEpic = (action$: any) =>
   action$
-    .filter(action => actionsOfInterest.includes(action.type))
-    .map(action => {
+    .filter((action: any) => actionsOfInterest.includes(action.type))
+    .map((action: any) => {
       const [category, label] = action.type.split('/')
       return metricsEvent({ category, label })
     })
 
 export const trackConnectsEpic = (
-  action$,
-  store // Decide what to do with events
+  action$: any,
+  store: any // Decide what to do with events
 ) =>
   action$
     .ofType(CONNECTION_SUCCESS)
@@ -375,9 +375,9 @@ export const trackConnectsEpic = (
     .do(() =>
       store.dispatch(metricsEvent(typeToMetricsObject[EVENT_DRIVER_CONNECTED]))
     )
-    .map(action => {
+    .map(() => {
       const state = store.getState()
-      const data = {
+      const data: any = {
         store_id: getStoreId(state),
         neo4j_version: getVersion(state),
         client_starts: state[NAME] ? state[NAME].client_starts : 0,
@@ -388,8 +388,8 @@ export const trackConnectsEpic = (
       return eventFired('connect', data)
     })
 
-export const trackErrorFramesEpic = (action$, store) =>
-  action$.ofType(ADD).map(action => {
+export const trackErrorFramesEpic = (action$: any) =>
+  action$.ofType(ADD).map((action: any) => {
     const error = action.state.error
     if (error) {
       const { code, type } = error
@@ -404,10 +404,10 @@ export const trackErrorFramesEpic = (action$, store) =>
   })
 
 export const eventFiredEpic = (
-  action$,
-  store // Decide what to do with events
+  action$: any,
+  store: any // Decide what to do with events
 ) =>
-  action$.ofType(EVENT_FIRED).map(action => {
+  action$.ofType(EVENT_FIRED).map((action: any) => {
     if (
       action.name === 'connect' &&
       !shouldTriggerConnectEvent(store.getState()[NAME])

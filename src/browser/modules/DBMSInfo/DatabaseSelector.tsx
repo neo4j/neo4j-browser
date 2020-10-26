@@ -40,11 +40,11 @@ export const DatabaseSelector = ({
   databases = [],
   selectedDb = '',
   onChange = () => {}
-}) => {
+}: any) => {
   if (!Array.isArray(databases) || databases.length < 1) {
     return null
   }
-  const selectionChange = ({ target }) => {
+  const selectionChange = ({ target }: any) => {
     if (target.value === EMPTY_OPTION) {
       return
     }
@@ -53,7 +53,10 @@ export const DatabaseSelector = ({
 
   let databasesList = databases
   if (!selectedDb) {
-    databasesList = [].concat([{ name: EMPTY_OPTION, status: null }], databases)
+    databasesList = ([] as any[]).concat(
+      [{ name: EMPTY_OPTION, status: null }],
+      databases
+    )
   }
   const uniqDatabases = uniqBy(databasesList, 'name')
 

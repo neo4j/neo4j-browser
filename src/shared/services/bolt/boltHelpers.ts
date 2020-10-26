@@ -24,17 +24,17 @@ export const KERBEROS = 'KERBEROS'
 export const NATIVE = 'NATIVE'
 export const NO_AUTH = 'NO_AUTH'
 
-export const getDiscoveryEndpoint = url => {
+export const getDiscoveryEndpoint = (url?: any) => {
   const info = getUrlInfo(url || 'http://localhost:7474/')
   return `${info.protocol}//${info.host}/`
 }
 
-export const isConfigValTruthy = val =>
+export const isConfigValTruthy = (val: any) =>
   [true, 'true', 'yes', 1, '1'].indexOf(val) > -1
-export const isConfigValFalsy = val =>
+export const isConfigValFalsy = (val: any) =>
   [false, 'false', 'no', 0, '0'].indexOf(val) > -1
 
-export const buildTxFunctionByMode = session => {
+export const buildTxFunctionByMode = (session: any) => {
   if (!session) {
     return null
   }

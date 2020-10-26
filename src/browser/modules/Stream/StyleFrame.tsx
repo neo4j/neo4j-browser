@@ -32,8 +32,8 @@ import {
 import { FireExtinguisherIcon } from 'browser-components/icons/Icons'
 import { InfoView } from './InfoView'
 
-const StyleFrame = ({ frame }) => {
-  let grass = ''
+const StyleFrame = ({ frame }: any) => {
+  let grass: string | false = ''
   let contents = (
     <InfoView
       title="No styles yet"
@@ -63,7 +63,11 @@ const StyleFrame = ({ frame }) => {
   )
 }
 
-const StyleStatusbar = ({ resetStyleAction, rerunAction, onResetClick }) => {
+const StyleStatusbar = ({
+  resetStyleAction,
+  rerunAction,
+  onResetClick
+}: any) => {
   return (
     <StyledOneRowStatsBar>
       <StyledRightPartial>
@@ -80,7 +84,7 @@ const StyleStatusbar = ({ resetStyleAction, rerunAction, onResetClick }) => {
   )
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (_state: any, ownProps: any) => {
   return {
     resetStyleAction: executeSystemCommand(':style reset'),
     rerunAction: executeCommand(ownProps.frame.cmd, {
@@ -89,8 +93,8 @@ const mapStateToProps = (state, ownProps) => {
     })
   }
 }
-const mapDispatchToProps = dispatch => ({
-  onResetClick: (resetStyleAction, rerunAction) => {
+const mapDispatchToProps = (dispatch: any) => ({
+  onResetClick: (resetStyleAction: any, rerunAction: any) => {
     dispatch(resetStyleAction)
     dispatch(rerunAction)
   }

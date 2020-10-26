@@ -34,8 +34,12 @@ import { StyledFrameTitlebarButtonSection } from 'browser/modules/Frame/styled'
 import Ellipsis from 'browser-components/Ellipsis'
 import queryPlan from '../../D3Visualization/lib/visualization/components/queryPlan'
 
-export class PlanView extends Component {
-  constructor(props) {
+type PlanViewState = any
+
+export class PlanView extends Component<any, PlanViewState> {
+  el: any
+  plan: any
+  constructor(props: any) {
     super(props)
     this.state = {
       extractedPlan: null
@@ -45,10 +49,10 @@ export class PlanView extends Component {
   componentDidMount() {
     this.extractPlan(this.props.result)
       .then(() => this.props.setParentState({ _planExpand: 'EXPAND' }))
-      .catch(e => {})
+      .catch(() => {})
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: any): any {
     if (prevProps.updated !== this.props.updated) {
       return this.extractPlan(this.props.result || {})
         .then(() => {
@@ -63,7 +67,7 @@ export class PlanView extends Component {
       this.props.assignVisElement(this.el, this.plan)
   }
 
-  shouldComponentUpdate(props, state) {
+  shouldComponentUpdate(props: any, state: PlanViewState) {
     if (this.props.result === undefined) return true
     return (
       props.fullscreen !== this.props.fullscreen ||
@@ -73,18 +77,19 @@ export class PlanView extends Component {
     )
   }
 
-  extractPlan(result) {
+  extractPlan(result: any) {
     if (result === undefined) return Promise.reject(new Error('No result'))
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       const extractedPlan = bolt.extractPlan(result)
-      if (extractedPlan) return this.setState({ extractedPlan }, resolve())
+      if (extractedPlan)
+        return this.setState({ extractedPlan }, resolve() as any)
       resolve()
     })
   }
 
-  planInit(el) {
+  planInit(el: any) {
     if (el != null && !this.plan) {
-      const NeoConstructor = queryPlan
+      const NeoConstructor: any = queryPlan
       this.el = el
       this.plan = new NeoConstructor(this.el)
       this.plan.display(this.state.extractedPlan)
@@ -97,7 +102,7 @@ export class PlanView extends Component {
     }
   }
 
-  ensureToggleExpand(prevProps) {
+  ensureToggleExpand(prevProps: any) {
     if (
       this.props._planExpand &&
       this.props._planExpand !== prevProps._planExpand
@@ -115,11 +120,11 @@ export class PlanView extends Component {
     }
   }
 
-  toggleExpanded(expanded) {
-    const visit = operator => {
+  toggleExpanded(expanded: any) {
+    const visit = (operator: any) => {
       operator.expanded = expanded
       if (operator.children) {
-        operator.children.forEach(child => {
+        operator.children.forEach((child: any) => {
           visit(child)
         })
       }
@@ -136,7 +141,8 @@ export class PlanView extends Component {
         data-testid="planSvg"
         style={
           this.props.fullscreen
-            ? { 'padding-bottom': dim.frameStatusbarHeight + 'px' }
+            ? // @ts-expect-error ts-migrate(2769) FIXME: Object literal may only specify known properties, ... Remove this comment to see the full error message
+              { 'padding-bottom': dim.frameStatusbarHeight + 'px' }
             : {}
         }
         ref={this.planInit.bind(this)}
@@ -145,7 +151,9 @@ export class PlanView extends Component {
   }
 }
 
-export class PlanStatusbar extends Component {
+type PlanStatusbarState = any
+
+export class PlanStatusbar extends Component<any, PlanStatusbarState> {
   state = {
     extractedPlan: null
   }
@@ -156,7 +164,7 @@ export class PlanStatusbar extends Component {
     if (extractedPlan) this.setState({ extractedPlan })
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: any) {
     if (this.props.result === undefined) return
     if (
       prevProps.result === undefined ||
@@ -167,13 +175,13 @@ export class PlanStatusbar extends Component {
     }
   }
 
-  shouldComponentUpdate(props, state) {
+  shouldComponentUpdate(_props: {}, state: PlanStatusbarState) {
     if (this.props.result === undefined) return true
     return !deepEquals(state, this.state)
   }
 
   render() {
-    const plan = this.state.extractedPlan
+    const plan: any = this.state.extractedPlan
     if (!plan) return null
     const { result = {} } = this.props
     return (

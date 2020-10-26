@@ -28,9 +28,9 @@ import reducers from 'shared/rootReducer'
 
 describe('<GrassEditor />', () => {
   it('loads style rules on style option click', () => {
-    const reducer = combineReducers({ ...reducers })
-    const store = createStore(reducer)
-    const { container, rerender } = render(
+    const reducer = combineReducers({ ...(reducers as any) })
+    const store: any = createStore(reducer)
+    const { container } = render(
       <Provider store={store}>
         <GrassEditor
           selectedLabel={{
@@ -44,7 +44,7 @@ describe('<GrassEditor />', () => {
     // No test ID on options so grab last one in list through DOM
     const largestSizeOption = container.querySelector(
       '.style-picker .size-picker li:last-of-type a'
-    )
+    ) as HTMLElement
 
     // Click style option to trigger redux action resulting in new graphStyleData
     largestSizeOption.click()

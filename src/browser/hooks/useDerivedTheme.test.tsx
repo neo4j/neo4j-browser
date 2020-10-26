@@ -33,7 +33,7 @@ describe('useDerivedTheme', () => {
     let resolvedTheme
 
     const Comp = () => {
-      const [theme] = useDerivedTheme()
+      const [theme] = useDerivedTheme(undefined)
       resolvedTheme = theme
       return null
     }
@@ -46,9 +46,9 @@ describe('useDerivedTheme', () => {
   })
   it('uses default theme if no can be detected + it can be overridden when user has AUTO theme selected', () => {
     let resolvedTheme
-    let overrideThemeFn
+    let overrideThemeFn: any
 
-    const Comp = ({ selectedTheme, defaultTheme }) => {
+    const Comp = ({ selectedTheme, defaultTheme }: any) => {
       const [derivedTheme, setEnvTheme] = useDerivedTheme(
         selectedTheme,
         defaultTheme

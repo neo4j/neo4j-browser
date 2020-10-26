@@ -41,7 +41,7 @@ jest.mock('shared/modules/dbMeta/dbMetaDuck')
 const dbMeta = require.requireMock('shared/modules/dbMeta/dbMetaDuck')
 
 describe('cypherRequestEpic', () => {
-  let store
+  let store: any
   const bus = createBus()
   const epicMiddleware = createEpicMiddleware(cypherRequestEpic)
   const mockStore = configureMockStore([

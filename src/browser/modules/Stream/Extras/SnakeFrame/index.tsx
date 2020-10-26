@@ -29,14 +29,14 @@ import { worldColor, foodColor } from './helpers'
 const width = 600
 const height = 300
 
-const GameDiv = styled.div`
+const GameDiv: any = styled.div`
   margin: 30px auto;
-  width: ${props => props.width}px;
-  height: ${props => props.height + 50}px;
+  width: ${props => (props as any).width}px;
+  height: ${props => (props as any).height + 50}px;
 `
 
 const SplashScreen = styled(GameDiv)`
-  background-color: ${props => props.backgroundColor};
+  background-color: ${props => (props as any).backgroundColor};
 `
 
 const SplashContents = styled.div`
@@ -56,19 +56,21 @@ const SplashContents = styled.div`
   }
 `
 
-export const InitialStartButton = styled(FormButton)`
-  background-color: ${props => props.backgroundColor};
+export const InitialStartButton: any = styled(FormButton)`
+  background-color: ${(props: any) => props.backgroundColor};
   color: #ffffff;
 `
 
-export class SnakeFrame extends React.Component {
+type SnakeFrameState = any
+
+export class SnakeFrame extends React.Component<{}, SnakeFrameState> {
   state = {
     score: 0,
     play: false,
     initialLoad: true
   }
 
-  setScore = score => {
+  setScore = (score: any) => {
     this.setState({ score: score - 1 })
   }
 
@@ -130,7 +132,7 @@ export class SnakeFrame extends React.Component {
   }
 }
 
-const Frame = props => {
+const Frame = (props: any) => {
   return (
     <FrameTemplate header={props.frame} contents={<SnakeFrame {...props} />} />
   )

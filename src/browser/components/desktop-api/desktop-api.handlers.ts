@@ -24,11 +24,11 @@ import {
 } from './desktop-api.utils'
 
 export const buildConnectionCreds = async (
-  _event,
-  context,
-  _oldContext,
-  getKerberosTicket,
-  extra = {}
+  _event?: any,
+  context?: any,
+  _oldContext?: any,
+  getKerberosTicket?: any,
+  extra: any = {}
 ) => {
   const activeGraph = getActiveGraph(context) || {}
   const connectionsCredentialsObject = await createConnectionCredentialsObject(
@@ -43,7 +43,7 @@ export const buildConnectionCreds = async (
   return connectionsCredentialsObject
 }
 
-export const getDesktopTheme = (_, newContext) => {
+export const getDesktopTheme = (_?: any, newContext?: any) => {
   if (newContext.global && newContext.global.prefersColorScheme) {
     return Promise.resolve(newContext.global.prefersColorScheme)
   }

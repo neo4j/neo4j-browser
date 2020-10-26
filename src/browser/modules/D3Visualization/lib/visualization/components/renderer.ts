@@ -18,9 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 export default class Renderer {
-  onGraphChange = null
-  onTick = null
-  constructor(opts) {
+  onGraphChange: any = null
+  onTick: any = null
+  constructor(opts: any) {
     Object.assign(this, opts == null ? {} : opts)
     if (this.onGraphChange === null) {
       this.onGraphChange = function() {}

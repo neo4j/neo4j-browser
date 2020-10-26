@@ -18,11 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const makeConnectionsInitialState = connectionsReducer => {
-  return (key, val) => {
+export const makeConnectionsInitialState = (connectionsReducer: any) => {
+  return (key: any, val: any) => {
     if (key !== 'connections') return val
     const localVal = val || connectionsReducer(undefined, '')
-    const out = {}
+    const out: any = {}
     out.allConnectionIds = [].concat(localVal.allConnectionIds)
     out.connectionsById = {
       ...localVal.connectionsById
@@ -42,10 +42,10 @@ export const makeConnectionsInitialState = connectionsReducer => {
 }
 
 export const makeConnectionsPersistedState = () => {
-  return (key, val) => {
+  return (key: any, val: any) => {
     if (key !== 'connections') return val
     if (!val) return val
-    const out = {}
+    const out: any = {}
     out.allConnectionIds = [].concat(val.allConnectionIds)
     out.connectionsById = {
       ...val.connectionsById

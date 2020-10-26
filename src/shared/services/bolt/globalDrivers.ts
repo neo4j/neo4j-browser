@@ -27,18 +27,18 @@ import {
   isNonSupportedRoutingSchemeError
 } from 'services/boltscheme.utils'
 
-let _drivers = null
+let _drivers: any = null
 
 export const getGlobalDrivers = () => _drivers
-export const setGlobalDrivers = drivers => (_drivers = drivers)
+export const setGlobalDrivers = (drivers: any) => (_drivers = drivers)
 export const unsetGlobalDrivers = () => (_drivers = null)
 
 export const buildGlobalDriversObject = async (
-  props,
+  props: any,
   opts = {},
-  failFn = () => {}
+  failFn: any = () => {}
 ) => {
-  const driversObj = {}
+  const driversObj: any = {}
   const auth = buildAuthObj(props)
   let routingSupported = !isNonRoutingScheme(props.host)
 
@@ -80,7 +80,7 @@ export const buildGlobalDriversObject = async (
   }
 }
 
-export const buildAuthObj = props => {
+export const buildAuthObj = (props: any) => {
   let auth
   if (props.authenticationMethod === KERBEROS) {
     auth = neo4j.auth.kerberos(props.password)

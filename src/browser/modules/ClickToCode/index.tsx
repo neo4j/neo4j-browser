@@ -26,11 +26,11 @@ import {
   commandSources
 } from 'shared/modules/commands/commandsDuck'
 
-const setOnClick = (bus, code) => {
+const setOnClick = (bus: any, code: any) => {
   code = Array.isArray(code) ? code.join('') : code
   bus.send(SET_CONTENT, setContent(code))
 }
-const execOnClick = (bus, code) => {
+const execOnClick = (bus: any, code: any) => {
   const cmd = executeCommand(code, { source: commandSources.button })
   bus.send(cmd.type, cmd)
 }
@@ -43,7 +43,7 @@ export const ClickToCode = ({
   children,
   className,
   ...rest
-}) => {
+}: any) => {
   if (!children || children.length === 0) return null
   code = code || children
   const fn = !execute

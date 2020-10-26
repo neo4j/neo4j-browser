@@ -31,7 +31,7 @@ import Render from 'browser-components/Render/index'
 import TextCommand from 'browser/modules/DecoratedText/TextCommand'
 import { listDbsCommand } from 'shared/modules/commands/commandsDuck'
 
-export const UseDbFrame = props => {
+export const UseDbFrame = (props: any) => {
   const { frame } = props
   const { useDb } = frame
   return (
@@ -63,7 +63,7 @@ export const UseDbFrame = props => {
   )
 }
 
-const Frame = props => {
+const Frame = (props: any) => {
   return (
     <FrameTemplate header={props.frame} contents={<UseDbFrame {...props} />} />
   )

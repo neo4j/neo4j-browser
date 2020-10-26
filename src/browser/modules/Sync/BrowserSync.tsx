@@ -64,8 +64,10 @@ import {
 import BrowserSyncAuthWindow from './BrowserSyncAuthWindow'
 import { BrowserSyncSignoutIframe } from './BrowserSyncAuthIframes'
 
-export class BrowserSync extends Component {
-  constructor(props) {
+type BrowserSyncState = any
+
+export class BrowserSync extends Component<any, BrowserSyncState> {
+  constructor(props: any) {
     super(props)
 
     this.state = {
@@ -81,7 +83,7 @@ export class BrowserSync extends Component {
       const { onSignIn } = this.props
       BrowserSyncAuthWindow(
         this.props.browserSyncConfig.authWindowUrl,
-        (data, error) => {
+        (data: any) => {
           onSignIn(data)
         }
       )
@@ -226,7 +228,7 @@ export class BrowserSync extends Component {
               <DrawerSection>
                 <ConsentCheckBox
                   checked={this.state.userConsented === true}
-                  onChange={e => {
+                  onChange={(e: any) => {
                     this.setState({
                       userConsented: e.target.checked,
                       showConsentAlert:
@@ -271,7 +273,7 @@ export class BrowserSync extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   return {
     lastSyncedAt: getLastSyncedAt(state),
     userData: getUserData(state),
@@ -284,25 +286,25 @@ const mapStateToProps = state => {
   }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
-    onSignIn: data => {
+    onSignIn: (data: any) => {
       const profileAction = authorizedAs(data.profile)
       dispatch(profileAction)
       const authDataAction = setSyncAuthData(data)
       dispatch(authDataAction)
     },
-    onSync: syncObject => {
+    onSync: (syncObject: any) => {
       dispatch(setSyncMetadata(syncObject))
       dispatch(setSyncData(syncObject))
     },
     sendActionToDispatch: dispatch,
-    onConsentSyncChanged: consent => {
+    onConsentSyncChanged: (consent: any) => {
       dispatch(consentSync(consent))
     }
   }
 }
-const mergeProps = (stateProps, dispatchProps, ownProps) => {
+const mergeProps = (stateProps: any, dispatchProps: any, ownProps: any) => {
   return {
     ...ownProps,
     ...stateProps,

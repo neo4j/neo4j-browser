@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* eslint-disable new-cap */
 import neo4j from 'neo4j-driver'
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
 import {
@@ -157,7 +156,7 @@ describe('helpers', () => {
     })
     test('should return false if no nodes are found', () => {
       // Given
-      const mappedGet = map => key => map[key]
+      const mappedGet = (map: any) => (key: any) => map[key]
       const request = {
         result: {
           records: [
@@ -182,7 +181,7 @@ describe('helpers', () => {
     test('should return true if nodes are found, even nested', () => {
       // Given
       const node = new neo4j.types.Node('2', ['Movie'], { prop2: 'prop2' })
-      const mappedGet = map => key => map[key]
+      const mappedGet = (map: any) => (key: any) => map[key]
       const request = {
         result: {
           records: [
@@ -301,7 +300,7 @@ describe('helpers', () => {
     test('should return the viz view if nodes are existent', () => {
       // Given
       const node = new neo4j.types.Node('2', ['Movie'], { prop2: 'prop2' })
-      const mappedGet = map => key => map[key]
+      const mappedGet = (map: any) => (key: any) => map[key]
       const request = {
         result: {
           records: [
@@ -330,7 +329,7 @@ describe('helpers', () => {
     })
     test('should return the table view if nodes are not existent', () => {
       // Given
-      const mappedGet = map => key => map[key]
+      const mappedGet = (map: any) => (key: any) => map[key]
       const request = {
         result: {
           records: [
@@ -387,7 +386,7 @@ describe('helpers', () => {
     test('should return the ascii if thats the last view', () => {
       // Given
       const node = new neo4j.types.Node('2', ['Movie'], { prop2: 'prop2' })
-      const mappedGet = map => key => map[key]
+      const mappedGet = (map: any) => (key: any) => map[key]
       const request = {
         result: {
           records: [
@@ -416,7 +415,7 @@ describe('helpers', () => {
     })
     test('should return the table if viz the last view but no viz elements exists', () => {
       // Given
-      const mappedGet = map => key => map[key]
+      const mappedGet = (map: any) => (key: any) => map[key]
       const request = {
         result: {
           records: [
@@ -442,7 +441,7 @@ describe('helpers', () => {
     })
     test('should not change view if state.openView exists', () => {
       // Given
-      const mappedGet = map => key => map[key]
+      const mappedGet = (map: any) => (key: any) => map[key]
       const request = {
         result: {
           records: [
@@ -483,7 +482,7 @@ describe('helpers', () => {
     test('should return viz if the last view was plan but no plan exists and viz elements exists', () => {
       // Given
       const node = new neo4j.types.Node('2', ['Movie'], { prop2: 'prop2' })
-      const mappedGet = map => key => map[key]
+      const mappedGet = (map: any) => (key: any) => map[key]
       const request = {
         result: {
           records: [
@@ -512,7 +511,7 @@ describe('helpers', () => {
     })
     test('should return table if the last view was plan but no plan exists and no viz elements exists', () => {
       // Given
-      const mappedGet = map => key => map[key]
+      const mappedGet = (map: any) => (key: any) => map[key]
       const request = {
         result: {
           records: [
@@ -540,7 +539,7 @@ describe('helpers', () => {
   describe('record transformations', () => {
     test('extractRecordsToResultArray handles empty records', () => {
       // Given
-      const records = null
+      const records: any = null
 
       // When
       const res = extractRecordsToResultArray(records)

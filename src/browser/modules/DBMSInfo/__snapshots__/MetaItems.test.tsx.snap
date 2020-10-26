@@ -3,15 +3,15 @@
 exports[`LabelItems renders empty 1`] = `
 <div>
   <div
-    class="Drawer__DrawerSection-sc-5bct1g-4 bEhGCY"
+    class="sc-ifAKCX kHWkUt"
   >
     <h5
-      class="Drawer__DrawerSubHeader-sc-5bct1g-3 laKfsi"
+      class="sc-bxivhb jqgGlu"
     >
       Node Labels
     </h5>
     <div
-      class="Drawer__DrawerSectionBody-sc-5bct1g-5 RMcRs"
+      class="sc-EHOje fyzZhj"
     >
       <p>
         There are no labels in database
@@ -24,30 +24,30 @@ exports[`LabelItems renders empty 1`] = `
 exports[`LabelItems renders labels 1`] = `
 <div>
   <div
-    class="Drawer__DrawerSection-sc-5bct1g-4 bEhGCY"
+    class="sc-ifAKCX kHWkUt"
   >
     <h5
-      class="Drawer__DrawerSubHeader-sc-5bct1g-3 laKfsi"
+      class="sc-bxivhb jqgGlu"
     >
       Node Labels
     </h5>
     <div
-      class="Drawer__DrawerSectionBody-sc-5bct1g-5 RMcRs"
+      class="sc-EHOje fyzZhj"
     >
       <div
-        class="styled__chip-t72hk3-0 styled__StyledLabel-t72hk3-1 hThrTr"
+        class="sc-dnqmqq sc-iwsKbI kcQYkx"
         data-testid="sidebarMetaItem"
       >
         *
       </div>
       <div
-        class="styled__chip-t72hk3-0 styled__StyledLabel-t72hk3-1 hThrTr"
+        class="sc-dnqmqq sc-iwsKbI kcQYkx"
         data-testid="sidebarMetaItem"
       >
         MyLabel
       </div>
       <div
-        class="styled__chip-t72hk3-0 styled__StyledLabel-t72hk3-1 hThrTr"
+        class="sc-dnqmqq sc-iwsKbI kcQYkx"
         data-testid="sidebarMetaItem"
       >
         MyLabel2
@@ -60,15 +60,15 @@ exports[`LabelItems renders labels 1`] = `
 exports[`PropertyItems renders empty 1`] = `
 <div>
   <div
-    class="Drawer__DrawerSection-sc-5bct1g-4 bEhGCY"
+    class="sc-ifAKCX kHWkUt"
   >
     <h5
-      class="Drawer__DrawerSubHeader-sc-5bct1g-3 laKfsi"
+      class="sc-bxivhb jqgGlu"
     >
       Property Keys
     </h5>
     <div
-      class="Drawer__DrawerSectionBody-sc-5bct1g-5 RMcRs"
+      class="sc-EHOje fyzZhj"
     >
       <p>
         There are no properties in database
@@ -81,24 +81,24 @@ exports[`PropertyItems renders empty 1`] = `
 exports[`PropertyItems renders properties 1`] = `
 <div>
   <div
-    class="Drawer__DrawerSection-sc-5bct1g-4 bEhGCY"
+    class="sc-ifAKCX kHWkUt"
   >
     <h5
-      class="Drawer__DrawerSubHeader-sc-5bct1g-3 laKfsi"
+      class="sc-bxivhb jqgGlu"
     >
       Property Keys
     </h5>
     <div
-      class="Drawer__DrawerSectionBody-sc-5bct1g-5 RMcRs"
+      class="sc-EHOje fyzZhj"
     >
       <div
-        class="styled__chip-t72hk3-0 styled__StyledProperty-t72hk3-3 EbItw"
+        class="sc-dnqmqq sc-gqjmRU afICD"
         data-testid="sidebarMetaItem"
       >
         prop1
       </div>
       <div
-        class="styled__chip-t72hk3-0 styled__StyledProperty-t72hk3-3 EbItw"
+        class="sc-dnqmqq sc-gqjmRU afICD"
         data-testid="sidebarMetaItem"
       >
         prop2
@@ -111,15 +111,15 @@ exports[`PropertyItems renders properties 1`] = `
 exports[`RelationshipItems renders empty 1`] = `
 <div>
   <div
-    class="Drawer__DrawerSection-sc-5bct1g-4 bEhGCY"
+    class="sc-ifAKCX kHWkUt"
   >
     <h5
-      class="Drawer__DrawerSubHeader-sc-5bct1g-3 laKfsi"
+      class="sc-bxivhb jqgGlu"
     >
       Relationship Types
     </h5>
     <div
-      class="Drawer__DrawerSectionBody-sc-5bct1g-5 RMcRs"
+      class="sc-EHOje fyzZhj"
     >
       <p>
         No relationships in database
@@ -132,30 +132,30 @@ exports[`RelationshipItems renders empty 1`] = `
 exports[`RelationshipItems renders relationshipTypes 1`] = `
 <div>
   <div
-    class="Drawer__DrawerSection-sc-5bct1g-4 bEhGCY"
+    class="sc-ifAKCX kHWkUt"
   >
     <h5
-      class="Drawer__DrawerSubHeader-sc-5bct1g-3 laKfsi"
+      class="sc-bxivhb jqgGlu"
     >
       Relationship Types
     </h5>
     <div
-      class="Drawer__DrawerSectionBody-sc-5bct1g-5 RMcRs"
+      class="sc-EHOje fyzZhj"
     >
       <div
-        class="styled__chip-t72hk3-0 styled__StyledRelationship-t72hk3-2 jIILpR"
+        class="sc-dnqmqq sc-gZMcBi hmKQnQ"
         data-testid="sidebarMetaItem"
       >
         *
       </div>
       <div
-        class="styled__chip-t72hk3-0 styled__StyledRelationship-t72hk3-2 jIILpR"
+        class="sc-dnqmqq sc-gZMcBi hmKQnQ"
         data-testid="sidebarMetaItem"
       >
         MY_TYPE
       </div>
       <div
-        class="styled__chip-t72hk3-0 styled__StyledRelationship-t72hk3-2 jIILpR"
+        class="sc-dnqmqq sc-gZMcBi hmKQnQ"
         data-testid="sidebarMetaItem"
       >
         MY_TYPE2

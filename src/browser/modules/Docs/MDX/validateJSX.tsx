@@ -21,7 +21,7 @@
 import { parseAST } from '@literal-jsx/parser'
 import visit from 'unist-util-visit'
 
-export const validateJSX = () => tree => {
+export const validateJSX = () => (tree: any) => {
   return visit(tree, node => {
     if (node.type !== 'jsx') {
       return
@@ -32,11 +32,13 @@ export const validateJSX = () => tree => {
     visit(jsxTree, jsxNode => {
       const eventBinder =
         jsxNode.attributes &&
-        jsxNode.attributes
-          .map(attribute => attribute.name.name)
-          .find(name => name.startsWith('on'))
+        (jsxNode.attributes as any[])
+          .map((attribute: any) => attribute.name.name)
+          .find((name: any) => name.startsWith('on'))
       if (eventBinder) {
-        throw `Event binder ${eventBinder} found in ${jsxNode.name.name}`
+        throw `Event binder ${eventBinder} found in ${
+          (jsxNode.name as any).name
+        }`
       }
     })
   })

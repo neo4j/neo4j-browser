@@ -22,8 +22,6 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { ErrorView } from './ErrorFrame'
-import { createStore } from 'redux'
-import { Provider } from 'react-redux'
 
 describe('ErrorFrame', () => {
   test('displays UndefinedError if no error specified', async () => {

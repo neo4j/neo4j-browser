@@ -24,7 +24,7 @@ import { render } from '@testing-library/react'
 import { LabelItems, RelationshipItems, PropertyItems } from './MetaItems'
 
 test('LabelItems renders empty', () => {
-  const items = []
+  const items: any = []
   const { container } = render(<LabelItems labels={items} />)
   expect(container).toMatchSnapshot()
 })
@@ -34,7 +34,7 @@ test('LabelItems renders labels', () => {
   expect(container).toMatchSnapshot()
 })
 test('RelationshipItems renders empty', () => {
-  const items = []
+  const items: any = []
   const { container } = render(<RelationshipItems relationshipTypes={items} />)
   expect(container).toMatchSnapshot()
 })
@@ -44,7 +44,7 @@ test('RelationshipItems renders relationshipTypes', () => {
   expect(container).toMatchSnapshot()
 })
 test('PropertyItems renders empty', () => {
-  const items = []
+  const items: any = []
   const { container } = render(<PropertyItems properties={items} />)
   expect(container).toMatchSnapshot()
 })

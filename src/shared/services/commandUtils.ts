@@ -20,33 +20,33 @@
 import { includes, last, split, startsWith } from 'lodash-es'
 import { extractStatements } from 'cypher-codemirror'
 
-export function cleanCommand(cmd) {
+export function cleanCommand(cmd: any) {
   const noComments = stripCommandComments(cmd)
   const noEmptyLines = stripEmptyCommandLines(noComments)
   return noEmptyLines
 }
 
-export function stripEmptyCommandLines(str) {
-  const skipEmptyLines = e => !/^\s*$/.test(e)
+export function stripEmptyCommandLines(str: any) {
+  const skipEmptyLines = (e: any) => !/^\s*$/.test(e)
   return str
     .split('\n')
     .filter(skipEmptyLines)
     .join('\n')
 }
 
-export function stripCommandComments(str) {
+export function stripCommandComments(str: any) {
   return str
     .split('\n')
-    .filter(line => !line.trim().startsWith('//'))
+    .filter((line: any) => !line.trim().startsWith('//'))
     .join('\n')
 }
 
-export function splitStringOnFirst(str, delimiter) {
+export function splitStringOnFirst(str: any, delimiter: any) {
   const parts = str.split(delimiter)
-  return [].concat(parts[0], parts.slice(1).join(delimiter))
+  return ([] as any[]).concat(parts[0], parts.slice(1).join(delimiter))
 }
 
-export function splitStringOnLast(str, delimiter) {
+export function splitStringOnLast(str: any, delimiter: any) {
   const parts = str.split(delimiter)
   return [].concat(
     parts.slice(0, parts.length - 1).join(delimiter),
@@ -54,56 +54,56 @@ export function splitStringOnLast(str, delimiter) {
   )
 }
 
-export const isCypherCommand = cmd => {
+export const isCypherCommand = (cmd: any) => {
   const cleanCmd = cleanCommand(cmd)
   return cleanCmd[0] !== ':'
 }
 
-export const buildCommandObject = (action, interpret) => {
+export const buildCommandObject = (action: any, interpret: any) => {
   const interpreted = getInterpreter(interpret, action.cmd, action.ignore)
   return { action, interpreted, useDb: action.useDb }
 }
 
-export const getInterpreter = (interpret, cmd, ignore = false) => {
+export const getInterpreter = (interpret: any, cmd: any, ignore = false) => {
   if (ignore) return interpret('noop')
   if (isCypherCommand(cmd)) return interpret('cypher')
   return interpret(cleanCommand(cmd).substr(1))
 }
 
-export const isNamedInterpreter = interpreter =>
+export const isNamedInterpreter = (interpreter: any) =>
   interpreter && interpreter.name !== 'catch-all'
 
-export const extractPostConnectCommandsFromServerConfig = str => {
+export const extractPostConnectCommandsFromServerConfig = (str: any) => {
   const substituteStr = '@@semicolon@@'
   const substituteRe = new RegExp(substituteStr, 'g')
-  const replaceFn = m => m.replace(/;/g, substituteStr)
+  const replaceFn = (m: any) => m.replace(/;/g, substituteStr)
   const qs = [/(`[^`]*?`)/g, /("[^"]*?")/g, /('[^']*?')/g]
   qs.forEach(q => (str = str.replace(q, replaceFn)))
   const splitted = str
     .split(';')
-    .map(item => item.trim())
-    .map(item => item.replace(substituteRe, ';'))
-    .filter(item => item && item.length)
+    .map((item: any) => item.trim())
+    .map((item: any) => item.replace(substituteRe, ';'))
+    .filter((item: any) => item && item.length)
   return splitted && splitted.length ? splitted : undefined
 }
 
-const getHelpTopic = str => splitStringOnFirst(str, ' ')[1] || 'help' // Map empty input to :help help
-const stripPound = str => splitStringOnFirst(str, '#')[0]
-const lowerCase = str => str.toLowerCase()
-const trim = str => str.trim()
-const replaceSpaceWithDash = str => str.replace(/\s/g, '-')
-const snakeToCamel = str =>
-  str.replace(/(-\w)/g, match => match[1].toUpperCase())
-const camelToSnake = (name, separator) => {
+const getHelpTopic = (str: any) => splitStringOnFirst(str, ' ')[1] || 'help' // Map empty input to :help help
+const stripPound = (str: any) => splitStringOnFirst(str, '#')[0]
+const lowerCase = (str: any) => str.toLowerCase()
+const trim = (str: any) => str.trim()
+const replaceSpaceWithDash = (str: any) => str.replace(/\s/g, '-')
+const snakeToCamel = (str: any) =>
+  str.replace(/(-\w)/g, (match: any) => match[1].toUpperCase())
+const camelToSnake = (name: any, separator: any) => {
   return name
     .replace(
       /([a-z]|(?:[A-Z0-9]+))([A-Z0-9]|$)/g,
-      (_, $1, $2) => $1 + ($2 && (separator || '_') + $2)
+      (_: any, $1: any, $2: any) => $1 + ($2 && (separator || '_') + $2)
     )
     .toLowerCase()
 }
 
-export const transformCommandToHelpTopic = inputStr =>
+export const transformCommandToHelpTopic = (inputStr: any) =>
   [inputStr || '']
     .map(stripPound)
     .map(getHelpTopic)
@@ -112,7 +112,7 @@ export const transformCommandToHelpTopic = inputStr =>
     .map(replaceSpaceWithDash)
     .map(snakeToCamel)[0]
 
-export const transformHelpTopicToCommand = inputStr => {
+export const transformHelpTopicToCommand = (inputStr: any) => {
   if (inputStr.indexOf('-') > -1) {
     return inputStr
   }
@@ -122,14 +122,14 @@ export const transformHelpTopicToCommand = inputStr => {
 const quotedRegex = /^"(.*)"|'(.*)'/
 const arrowFunctionRegex = /^.*=>\s*([^$]*)$/
 
-export const mapParamToCypherStatement = (key, param) => {
+export const mapParamToCypherStatement = (key: any, param: any) => {
   const quotedKey = key.match(quotedRegex)
   const cleanKey = quotedKey
     ? `\`${quotedKey[1]}\``
     : typeof key !== 'string'
     ? `\`${key}\``
     : key
-  const returnAs = value => `RETURN ${value} as ${cleanKey}`
+  const returnAs = (value: any) => `RETURN ${value} as ${cleanKey}`
 
   const matchParamFunction = param.toString().match(arrowFunctionRegex)
   if (matchParamFunction) {
@@ -138,17 +138,17 @@ export const mapParamToCypherStatement = (key, param) => {
   return returnAs(param)
 }
 
-export const extractStatementsFromString = str => {
+export const extractStatementsFromString = (str: any) => {
   const cleanCmd = cleanCommand(str)
   const parsed = extractStatements(cleanCmd)
   const { statements } = parsed.referencesListener
   return statements[0]
     .raw()
-    .map(stmt => stmt.getText().trim())
-    .filter(_ => _)
+    .map((stmt: any) => stmt.getText().trim())
+    .filter((_: any) => _)
 }
 
-export const getCommandAndParam = str => {
+export const getCommandAndParam = (str: any) => {
   const [serverCmd, props] = splitStringOnFirst(
     splitStringOnFirst(str, ' ')[1],
     ' '
@@ -156,7 +156,7 @@ export const getCommandAndParam = str => {
   return [serverCmd, props]
 }
 
-export function tryGetRemoteInitialSlideFromUrl(url) {
+export function tryGetRemoteInitialSlideFromUrl(url: any) {
   const hashBang = includes(url, '#') ? last(split(url, '#')) : ''
 
   if (!startsWith(hashBang, 'slide-')) return 0

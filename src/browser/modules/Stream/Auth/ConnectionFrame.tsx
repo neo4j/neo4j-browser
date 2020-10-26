@@ -32,15 +32,17 @@ import { connect } from 'react-redux'
 import { getAllowedAuthSchemes } from 'shared/modules/app/appDuck'
 import { NO_AUTH } from 'services/bolt/boltHelpers'
 
-export class ConnectionFrame extends Component {
-  constructor(props) {
+type State = any
+
+export class ConnectionFrame extends Component<any, State> {
+  constructor(props: {}) {
     super(props)
     this.state = {
       error: {}
     }
   }
 
-  error(e) {
+  error(e: any) {
     this.setState({ error: e })
   }
 
@@ -93,7 +95,7 @@ export class ConnectionFrame extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   return {
     mightRequireAuth: getAllowedAuthSchemes(state).includes(NO_AUTH)
   }

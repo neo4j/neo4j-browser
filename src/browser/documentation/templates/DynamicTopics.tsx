@@ -31,8 +31,8 @@ const unlistedCommands = [
   'guides'
 ]
 
-const categorize = commands => {
-  const categories = {
+const categorize = (commands: any) => {
+  const categories: Record<string, any> = {
     browserUiCommands: { title: 'Browser UI Commands' },
     boltProtocol: { title: 'Bolt Protocol' },
     cypherQueries: { title: 'Cypher Queries' },
@@ -48,7 +48,7 @@ const categorize = commands => {
     undefined: { title: 'Other' }
   }
 
-  Object.entries(commands).forEach(command => {
+  Object.entries(commands).forEach((command: [string, any]) => {
     const value = command[1]
     const cmd = transformHelpTopicToCommand(command[0])
 
@@ -79,7 +79,7 @@ const categorize = commands => {
     .map(category => category[1])
 }
 
-const Entry = ({ type, command }) => {
+const Entry = ({ type, command }: any) => {
   const topic = type === 'play' ? 'play' : 'help'
   const attrs = { [`${topic}-topic`]: command.command }
   return (
@@ -92,14 +92,14 @@ const Entry = ({ type, command }) => {
   )
 }
 
-const Section = ({ section, type, i }) => {
+const Section = ({ section, type, i }: any) => {
   return (
     <>
       <tr className="table-help--subheader">
         <th>{section.title}</th>
         <th />
       </tr>
-      {section.entries.map((command, k) => (
+      {section.entries.map((command: any, k: any) => (
         <Entry
           key={`${command.title}-${i}-${k}`}
           type={type}
@@ -110,7 +110,7 @@ const Section = ({ section, type, i }) => {
   )
 }
 
-const Categories = ({ types, type, i }) => {
+const Categories = ({ types, type, i }: any) => {
   const showCategoryHeadline = !!Object.keys(types).length
   return (
     <>
@@ -120,7 +120,7 @@ const Categories = ({ types, type, i }) => {
           <th />
         </tr>
       )}
-      {types[type].categories.map((section, j) => (
+      {types[type].categories.map((section: any, j: any) => (
         <Section
           key={`${type}-${i}-${j}`}
           section={section}
@@ -133,12 +133,12 @@ const Categories = ({ types, type, i }) => {
 }
 
 export const DynamicTopics = ({
-  docs = {},
+  docs = {} as any,
   description = '',
   footer = '',
-  filter = []
+  filter = [] as any[]
 }) => {
-  let filteredDocs = {}
+  let filteredDocs: any = {}
   if (filter.length) {
     Object.keys(docs)
       .filter(type => filter.includes(type))
@@ -149,7 +149,7 @@ export const DynamicTopics = ({
     filteredDocs = docs
   }
 
-  const types = {}
+  const types: any = {}
   Object.keys(filteredDocs).forEach(key => {
     const { title, chapters } = filteredDocs[key]
     types[key] = {

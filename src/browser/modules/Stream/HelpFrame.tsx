@@ -20,7 +20,6 @@
 import React, { useEffect, useState } from 'react'
 import Docs from '../Docs/Docs'
 import docs from '../../documentation'
-import Directives from 'browser-components/Directives'
 import FrameTemplate from '../Frame/FrameTemplate'
 import FrameAside from '../Frame/FrameAside'
 import { transformCommandToHelpTopic } from 'services/commandUtils'
@@ -31,7 +30,7 @@ import {
   StackPreviousIcon
 } from 'browser-components/icons/Icons'
 
-const HelpFrame = ({ frame, stack = [] }) => {
+const HelpFrame = ({ stack = [] }: any) => {
   const [currentFrameIndex, setCurrentFrameIndex] = useState(0)
   const currentFrame = stack[currentFrameIndex]
 
@@ -84,15 +83,15 @@ const HelpFrame = ({ frame, stack = [] }) => {
   )
 }
 
-function generateContent(frame) {
+function generateContent(frame: any) {
   const { help, cypher, bolt } = docs
-  const chapters = {
+  const chapters: any = {
     ...help.chapters,
     ...cypher.chapters,
     ...bolt.chapters
   }
 
-  let main = 'Help topic not specified'
+  let main: JSX.Element | string = 'Help topic not specified'
   let aside
 
   if (frame.result) {

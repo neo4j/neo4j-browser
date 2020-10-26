@@ -29,12 +29,12 @@ export const BOLT_CONNECTION_ERROR_MESSAGE = 'BOLT_CONNECTION_ERROR_MESSAGE'
 export const CLOSE_CONNECTION_MESSAGE = 'CLOSE_CONNECTION_MESSAGE'
 
 export const runCypherMessage = (
-  input,
-  parameters,
+  input: any,
+  parameters: any,
   connectionType = ROUTED_WRITE_CONNECTION,
   requestId = null,
   cancelable = false,
-  connectionProperties
+  connectionProperties: any
 ) => {
   return {
     type: RUN_CYPHER_MESSAGE,
@@ -47,21 +47,21 @@ export const runCypherMessage = (
   }
 }
 
-export const cancelTransactionMessage = id => {
+export const cancelTransactionMessage = (id: any) => {
   return {
     type: CANCEL_TRANSACTION_MESSAGE,
     id
   }
 }
 
-export const cypherResponseMessage = result => {
+export const cypherResponseMessage = (result: any) => {
   return {
     type: CYPHER_RESPONSE_MESSAGE,
     result: recursivelyTypeGraphItems(result)
   }
 }
 
-export const cypherErrorMessage = error => {
+export const cypherErrorMessage = (error: any) => {
   return {
     type: CYPHER_ERROR_MESSAGE,
     error
@@ -74,7 +74,7 @@ export const postCancelTransactionMessage = () => {
   }
 }
 
-export const boltConnectionErrorMessage = error => {
+export const boltConnectionErrorMessage = (error: any) => {
   return {
     type: BOLT_CONNECTION_ERROR_MESSAGE,
     error

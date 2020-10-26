@@ -34,31 +34,34 @@ export const DARK_THEME = 'dark'
 
 export const NEO4J_CLOUD_DOMAINS = ['neo4j.io']
 
-export const getSettings = state => state[NAME]
-export const getMaxHistory = state =>
+export const getSettings = (state: any) => state[NAME]
+export const getMaxHistory = (state: any) =>
   state[NAME].maxHistory || initialState.maxHistory
-export const getInitCmd = state => (state[NAME].initCmd || '').trim()
-export const getPlayImplicitInitCommands = state =>
+export const getInitCmd = (state: any) => (state[NAME].initCmd || '').trim()
+export const getPlayImplicitInitCommands = (state: any) =>
   state[NAME].playImplicitInitCommands
-export const getTheme = state => state[NAME].theme || initialState.theme
-export const getUseBoltRouting = state =>
+export const getTheme = (state: any) => state[NAME].theme || initialState.theme
+export const getUseBoltRouting = (state: any) =>
   state[NAME].useBoltRouting || initialState.useBoltRouting
 export const getBrowserSyncConfig = (
-  state,
+  state: any,
   host = getSettings(state).browserSyncDebugServer
 ) => browserSyncConfig(host || undefined)
-export const getMaxNeighbours = state =>
+export const getMaxNeighbours = (state: any) =>
   state[NAME].maxNeighbours || initialState.maxNeighbours
-export const getMaxRows = state => state[NAME].maxRows || initialState.maxRows
-export const getMaxFieldItems = state =>
+export const getMaxRows = (state: any) =>
+  state[NAME].maxRows || initialState.maxRows
+export const getMaxFieldItems = (state: any) =>
   get(state, [NAME, 'maxFieldItems'], initialState.maxFieldItems)
-export const getInitialNodeDisplay = state =>
+export const getInitialNodeDisplay = (state: any) =>
   state[NAME].initialNodeDisplay || initialState.initialNodeDisplay
-export const getScrollToTop = state => state[NAME].scrollToTop
-export const shouldReportUdc = state => state[NAME].shouldReportUdc !== false
-export const shouldAutoComplete = state => state[NAME].autoComplete !== false
-export const shouldEditorLint = state => state[NAME].editorLint === true
-export const shouldEnableMultiStatementMode = state =>
+export const getScrollToTop = (state: any) => state[NAME].scrollToTop
+export const shouldReportUdc = (state: any) =>
+  state[NAME].shouldReportUdc !== false
+export const shouldAutoComplete = (state: any) =>
+  state[NAME].autoComplete !== false
+export const shouldEditorLint = (state: any) => state[NAME].editorLint === true
+export const shouldEnableMultiStatementMode = (state: any) =>
   state[NAME].enableMultiStatementMode
 
 const browserSyncConfig = (host = 'https://auth.neo4j.com') => ({
@@ -72,13 +75,13 @@ const browserSyncConfig = (host = 'https://auth.neo4j.com') => ({
     messagingSenderId: '352959348981'
   }
 })
-export const getUseNewVisualization = state => state[NAME].useNewVis
-export const shouldEditorAutocomplete = state =>
+export const getUseNewVisualization = (state: any) => state[NAME].useNewVis
+export const shouldEditorAutocomplete = (state: any) =>
   state[NAME].editorAutocomplete !== false
-export const shouldUseCypherThread = state => state[NAME].useCypherThread
-export const getConnectionTimeout = state =>
+export const shouldUseCypherThread = (state: any) => state[NAME].useCypherThread
+export const getConnectionTimeout = (state: any) =>
   state[NAME].connectionTimeout || initialState.connectionTimeout
-export const codeFontLigatures = state => state[NAME].codeFontLigatures
+export const codeFontLigatures = (state: any) => state[NAME].codeFontLigatures
 
 const initialState = {
   maxHistory: 30,
@@ -97,13 +100,14 @@ const initialState = {
   maxFrames: 30,
   codeFontLigatures: true,
   editorAutocomplete: true,
+  useBoltRouting: false,
   editorLint: false,
   useCypherThread: true,
   enableMultiStatementMode: true,
   connectionTimeout: 30 * 1000 // 30 seconds
 }
 
-export default function settings(state = initialState, action) {
+export default function settings(state = initialState, action: any) {
   switch (action.type) {
     case APP_START:
       return { ...initialState, ...state }
@@ -126,14 +130,14 @@ export default function settings(state = initialState, action) {
   }
 }
 
-export const update = settings => {
+export const update = (settings: any) => {
   return {
     type: UPDATE,
     state: settings
   }
 }
 
-export const replace = settings => {
+export const replace = (settings: any) => {
   return {
     type: REPLACE,
     state: settings

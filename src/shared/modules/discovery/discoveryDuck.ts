@@ -44,7 +44,7 @@ export const DONE = `${NAME}/DONE`
 export const INJECTED_DISCOVERY = `${NAME}/INJECTED_DISCOVERY`
 
 // Reducer
-export default function reducer(state = initialState, action = {}) {
+export default function reducer(state = initialState, action: any = {}) {
   switch (action.type) {
     case APP_START:
       return { ...initialState, ...state }
@@ -59,14 +59,14 @@ export default function reducer(state = initialState, action = {}) {
 }
 
 // Action Creators
-export const setBoltHost = bolt => {
+export const setBoltHost = (bolt: any) => {
   return {
     type: SET,
     boltHost: bolt
   }
 }
 
-export const updateDiscoveryConnection = props => {
+export const updateDiscoveryConnection = (props: any) => {
   return updateConnection({
     ...props,
     id: CONNECTION_ID,
@@ -75,11 +75,11 @@ export const updateDiscoveryConnection = props => {
   })
 }
 
-export const getBoltHost = state => {
+export const getBoltHost = (state: any) => {
   return state.discovery.boltHost
 }
 
-const updateDiscoveryState = (action, store) => {
+const updateDiscoveryState = (action: any, store: any) => {
   const keysToCopy = [
     'username',
     'password',
@@ -87,7 +87,7 @@ const updateDiscoveryState = (action, store) => {
     'restApi',
     'supportsMultiDb'
   ]
-  const updateObj = keysToCopy.reduce(
+  const updateObj: any = keysToCopy.reduce(
     (accObj, key) => (action[key] ? { ...accObj, [key]: action[key] } : accObj),
     { host: action.forceURL }
   )
@@ -100,10 +100,10 @@ const updateDiscoveryState = (action, store) => {
   store.dispatch(updateAction)
 }
 
-export const injectDiscoveryEpic = (action$, store) =>
+export const injectDiscoveryEpic = (action$: any, store: any) =>
   action$
     .ofType(INJECTED_DISCOVERY)
-    .map(action => {
+    .map((action: any) => {
       const connectUrl = generateBoltUrl(
         getAllowedBoltSchemes(store.getState(), action.encrypted),
         action.host
@@ -112,10 +112,10 @@ export const injectDiscoveryEpic = (action$, store) =>
     })
     .mapTo({ type: DONE })
 
-export const discoveryOnStartupEpic = (some$, store) => {
+export const discoveryOnStartupEpic = (some$: any, store: any) => {
   return some$
     .ofType(APP_START)
-    .map(action => {
+    .map((action: any) => {
       if (!action.url) return action
       const passedURL =
         getUrlParamValue('dbms', action.url) ||
@@ -129,7 +129,7 @@ export const discoveryOnStartupEpic = (some$, store) => {
       return action
     })
     .merge(some$.ofType(USER_CLEAR))
-    .mergeMap(action => {
+    .mergeMap((action: any) => {
       // Only when in a environment were we can guess discovery endpoint
       if (!hasDiscoveryEndpoint(store.getState())) {
         return Promise.resolve({ type: 'NOOP' })
@@ -175,12 +175,12 @@ export const discoveryOnStartupEpic = (some$, store) => {
             store.dispatch(updateDiscoveryConnection({ host, supportsMultiDb })) // Update discovery host in redux
             return { type: DONE }
           })
-          .catch(e => {
+          .catch(() => {
             throw new Error('No info from endpoint')
           })
-      ).catch(e => {
+      ).catch(() => {
         return Promise.resolve({ type: DONE })
       })
     })
-    .map(a => a)
+    .map((a: any) => a)
 }

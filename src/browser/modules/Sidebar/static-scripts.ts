@@ -34,8 +34,8 @@ import {
   SLASH
 } from '../../../shared/services/export-favorites'
 
-const mapFavoritesStateToProps = state => {
-  const version = semver.coerce(getVersion(state) || '0')
+const mapFavoritesStateToProps = (state: any) => {
+  const version = semver.coerce(getVersion(state) || '0') ?? '0'
   const scripts = mapOldFavoritesAndFolders(
     favorites.getFavorites(state),
     folders.getFolders(state),
@@ -50,13 +50,13 @@ const mapFavoritesStateToProps = state => {
     isStatic: true
   }
 }
-const mapFavoritesDispatchToProps = (dispatch, ownProps) => ({
-  onSelectScript: favorite =>
+const mapFavoritesDispatchToProps = (dispatch: any, ownProps: any) => ({
+  onSelectScript: (favorite: any) =>
     ownProps.bus.send(
       editor.EDIT_CONTENT,
       editor.editContent(favorite.id, favorite.contents, { isStatic: true })
     ),
-  onExecScript: favorite =>
+  onExecScript: (favorite: any) =>
     dispatch(executeCommand(favorite.contents), {
       source: commandSources.sidebar
     }),

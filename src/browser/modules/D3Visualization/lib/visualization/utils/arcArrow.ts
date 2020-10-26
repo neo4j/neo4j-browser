@@ -19,18 +19,23 @@
  */
 
 export default class ArcArrow {
+  deflection: any
+  midShaftPoint: any
+  outline: any
+  overlay: any
+  shaftLength: any
   constructor(
-    startRadius,
-    endRadius,
-    endCentre,
-    deflection,
-    arrowWidth,
-    headWidth,
-    headLength,
-    captionLayout
+    startRadius: any,
+    endRadius: any,
+    endCentre: any,
+    deflection: any,
+    arrowWidth: any,
+    headWidth: any,
+    headLength: any,
+    captionLayout: any
   ) {
     this.deflection = deflection
-    const square = l => l * l
+    const square = (l: any) => l * l
 
     const deflectionRadians = (this.deflection * Math.PI) / 180
     const startAttach = {
@@ -42,10 +47,10 @@ export default class ArcArrow {
     const homotheticCenter = (-endCentre * radiusRatio) / (1 - radiusRatio)
 
     const intersectWithOtherCircle = function(
-      fixedPoint,
-      radius,
-      xCenter,
-      polarity
+      fixedPoint: any,
+      radius: any,
+      xCenter: any,
+      polarity: any
     ) {
       const gradient = fixedPoint.y / (fixedPoint.x - homotheticCenter)
       const hc = fixedPoint.y - gradient * fixedPoint.x
@@ -54,7 +59,7 @@ export default class ArcArrow {
       const B = 2 * (gradient * hc - xCenter)
       const C = square(hc) + square(xCenter) - square(radius)
 
-      const intersection = {
+      const intersection: any = {
         x: (-B + polarity * Math.sqrt(square(B) - 4 * A * C)) / (2 * A)
       }
       intersection.y = (intersection.x - homotheticCenter) * gradient
@@ -102,7 +107,7 @@ export default class ArcArrow {
       y: cy - arcRadius * Math.cos(midShaftAngle)
     }
 
-    const startTangent = function(dr) {
+    const startTangent = function(dr: any) {
       const dx = (dr < 0 ? 1 : -1) * Math.sqrt(square(dr) / (1 + square(g1)))
       const dy = g1 * dx
       return {
@@ -111,7 +116,7 @@ export default class ArcArrow {
       }
     }
 
-    const endTangent = function(dr) {
+    const endTangent = function(dr: any) {
       const dx = (dr < 0 ? -1 : 1) * Math.sqrt(square(dr) / (1 + square(g2)))
       const dy = g2 * dx
       return {
@@ -120,12 +125,12 @@ export default class ArcArrow {
       }
     }
 
-    const angleTangent = (angle, dr) => ({
+    const angleTangent = (angle: any, dr: any) => ({
       x: cx + (arcRadius + dr) * Math.sin(angle),
       y: cy - (arcRadius + dr) * Math.cos(angle)
     })
 
-    const endNormal = function(dc) {
+    const endNormal = function(dc: any) {
       const dx =
         (dc < 0 ? -1 : 1) * Math.sqrt(square(dc) / (1 + square(1 / g2)))
       const dy = dx / g2
@@ -135,7 +140,7 @@ export default class ArcArrow {
       }
     }
 
-    const endOverlayCorner = function(dr, dc) {
+    const endOverlayCorner = function(dr: any, dc: any) {
       const shoulder = endTangent(dr)
       const arrowTip = endNormal(dc)
       return {
@@ -144,14 +149,14 @@ export default class ArcArrow {
       }
     }
 
-    const coord = point => `${point.x},${point.y}`
+    const coord = (point: any) => `${point.x},${point.y}`
 
     const shaftRadius = arrowWidth / 2
     const headRadius = headWidth / 2
     const positiveSweep = startAttach.y > 0 ? 0 : 1
     const negativeSweep = startAttach.y < 0 ? 0 : 1
 
-    this.outline = function(shortCaptionLength) {
+    this.outline = function(shortCaptionLength: any) {
       if (startAngle > endAngle) {
         return [
           'M',
@@ -254,7 +259,7 @@ export default class ArcArrow {
       }
     }
 
-    this.overlay = function(minWidth) {
+    this.overlay = function(minWidth: any) {
       const radius = Math.max(minWidth / 2, shaftRadius)
 
       return [

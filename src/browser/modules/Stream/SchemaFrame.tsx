@@ -38,12 +38,12 @@ import {
 import Directives from 'browser-components/Directives'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 
-const Indexes = ({ indexes, neo4jVersion }) => {
+const Indexes = ({ indexes, neo4jVersion }: any) => {
   if (
     !semver.valid(neo4jVersion) ||
     semver.satisfies(neo4jVersion, '<4.0.0-rc01')
   ) {
-    const rows = indexes.map(index => [
+    const rows = indexes.map((index: any) => [
       `${replace(index.description, 'INDEX', '')} ${toUpper(index.state)} ${
         index.type === 'node_unique_property'
           ? '(for uniqueness constraint)'
@@ -60,7 +60,7 @@ const Indexes = ({ indexes, neo4jVersion }) => {
     )
   }
 
-  const rows = indexes.map(index => [
+  const rows = indexes.map((index: any) => [
     index.name,
     index.type,
     index.uniqueness,
@@ -85,8 +85,8 @@ const Indexes = ({ indexes, neo4jVersion }) => {
   )
 }
 
-const Constraints = ({ constraints }) => {
-  const rows = constraints.map(constraint => [
+const Constraints = ({ constraints }: any) => {
+  const rows = constraints.map((constraint: any) => [
     replace(constraint.description, 'CONSTRAINT', '')
   ])
 
@@ -99,13 +99,15 @@ const Constraints = ({ constraints }) => {
   )
 }
 
-const SchemaTable = ({ testid, header, rows }) => {
+const SchemaTable = ({ testid, header, rows }: any) => {
   const rowsOrNone =
-    rows && rows.length ? rows : [header.map((_, i) => (i === 0 ? 'None' : ''))]
+    rows && rows.length
+      ? rows
+      : [header.map((_: any, i: any) => (i === 0 ? 'None' : ''))]
 
-  const body = rowsOrNone.map(row => (
+  const body = rowsOrNone.map((row: any) => (
     <StyledBodyTr className="table-row" key={v4()}>
-      {row.map(cell => (
+      {row.map((cell: any) => (
         <StyledTd className="table-properties" key={v4()}>
           {cell}
         </StyledTd>
@@ -117,7 +119,7 @@ const SchemaTable = ({ testid, header, rows }) => {
     <StyledTable data-testid={testid}>
       <thead>
         <tr>
-          {header.map(cell => (
+          {header.map((cell: any) => (
             <StyledTh className="table-header" key={v4()}>
               {cell}
             </StyledTh>
@@ -129,8 +131,10 @@ const SchemaTable = ({ testid, header, rows }) => {
   )
 }
 
-export class SchemaFrame extends Component {
-  constructor(props) {
+type SchemaFrameState = any
+
+export class SchemaFrame extends Component<any, SchemaFrameState> {
+  constructor(props: {}) {
     super(props)
     this.state = {
       indexes: [],
@@ -138,14 +142,14 @@ export class SchemaFrame extends Component {
     }
   }
 
-  responseHandler(name) {
-    return res => {
+  responseHandler(name: any) {
+    return (res: any) => {
       if (!res.success || !res.result || !res.result.records.length) {
         this.setState({ [name]: [] })
         return
       }
-      const out = res.result.records.map(rec =>
-        rec.keys.reduce((acc, key) => {
+      const out = res.result.records.map((rec: any) =>
+        rec.keys.reduce((acc: any, key: any) => {
           acc[key] = rec.get(key)
           return acc
         }, {})
@@ -186,7 +190,7 @@ export class SchemaFrame extends Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: any) {
     if (
       this.props.frame &&
       this.props.frame.schemaRequestId !== prevProps.frame.schemaRequestId
@@ -225,13 +229,13 @@ export class SchemaFrame extends Component {
   }
 }
 
-const Frame = props => {
+const Frame = (props: any) => {
   return (
     <FrameTemplate header={props.frame} contents={<SchemaFrame {...props} />} />
   )
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: any) => ({
   neo4jVersion: getVersion(state)
 })
 

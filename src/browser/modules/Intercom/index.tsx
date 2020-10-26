@@ -23,7 +23,7 @@ import { connect } from 'react-redux'
 import { canUseDOM } from 'services/utils'
 import { updateData } from 'shared/modules/udc/udcDuck'
 
-export class Intercom extends Component {
+export class Intercom extends Component<any> {
   componentDidMount() {
     const {
       appID,
@@ -34,13 +34,13 @@ export class Intercom extends Component {
     if (!appID || !canUseDOM()) {
       return
     }
-    if (!window.Intercom) {
-      ;(function(w, d, id, s, x) {
+    if (!(window as any).Intercom) {
+      ;(function(w: any, d: Document, id: string, s?: any, x?: any) {
         function i() {
           i.c(arguments)
         }
-        i.q = []
-        i.c = function(args) {
+        i.q = [] as any[]
+        i.c = function(args: any) {
           i.q.push(args)
         }
         w.Intercom = i
@@ -69,10 +69,11 @@ export class Intercom extends Component {
     return false
   }
 
+  // @ts-expect-error ts-migrate(7030) FIXME: Not all code paths return a value.
   componentWillUnmount() {
     if (!canUseDOM()) return false
-    window.Intercom('shutdown')
-    delete window.Intercom
+    ;(window as any).Intercom('shutdown')
+    delete (window as any).Intercom
   }
 
   render() {
@@ -80,9 +81,9 @@ export class Intercom extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
-    updateData: data => dispatch(updateData(data))
+    updateData: (data: any) => dispatch(updateData(data))
   }
 }
-export default connect(null, mapDispatchToProps)(Intercom)
+export default connect<any, any, any, any>(null, mapDispatchToProps)(Intercom)

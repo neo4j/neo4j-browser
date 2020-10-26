@@ -19,24 +19,24 @@
  */
 
 export const BrowserSyncAuthIframe = (
-  silentAuthUrl,
-  delegationTokenUrl,
-  callback
+  silentAuthUrl: any,
+  delegationTokenUrl: any,
+  callback: any
 ) => {
-  setupIframe(silentAuthUrl, 'auth0:silent-authentication', data => {
+  setupIframe(silentAuthUrl, 'auth0:silent-authentication', (data: any) => {
     setupIframe(
       `${delegationTokenUrl}${data.hash}`,
       'auth0:delegation-token',
-      ({ userData }) => callback(userData)
+      ({ userData }: any) => callback(userData)
     )
   })
 }
 
-export const BrowserSyncSignoutIframe = (logoutUrl, callback = () => {}) =>
+export const BrowserSyncSignoutIframe = (logoutUrl: any, callback = () => {}) =>
   setupIframe(logoutUrl, undefined, callback)
 
-function setupIframe(url, type, cb) {
-  const iframe = document.createElement('iframe')
+function setupIframe(url: any, type: any, cb: any) {
+  const iframe: any = document.createElement('iframe')
   iframe.style.display = 'none'
   iframe.src = url
   if (!type) {
@@ -49,7 +49,7 @@ function setupIframe(url, type, cb) {
   const pollInterval = setInterval(() => {
     iframe.contentWindow.postMessage(`Polling ${url} for results`, url)
   }, 3000)
-  const listener = event => {
+  const listener = (event: any) => {
     if (url.indexOf(event.origin) !== 0) return
     if (!event.data || event.data.type !== type) return
     clearInterval(pollInterval)

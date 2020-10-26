@@ -116,7 +116,7 @@ describe('applyGraphTypes', () => {
     const inputArray = nativeTypesToCustom(['str1', 'str2', 'srtr3'])
     const result = applyGraphTypes(inputArray)
     expect(Array.isArray(result)).toEqual(true)
-    inputArray.forEach((item, index) => {
+    inputArray.forEach((item: any, index: any) => {
       expect(item).toEqual(result[index])
     })
   })
@@ -461,7 +461,7 @@ describe('applyGraphTypes', () => {
   })
   test('recursivelyTypeGraphItems with a bolt response data structure', () => {
     // Given
-    const createDate = hour =>
+    const createDate = (hour: any) =>
       new neo4j.types.Time(
         neo4j.int(hour),
         neo4j.int(0),
@@ -552,7 +552,7 @@ describe('applyGraphTypes', () => {
   })
 })
 
-const nativeTypesToCustom = x => {
+const nativeTypesToCustom = (x?: any) => {
   if (Array.isArray(x)) {
     return typeHintArray(x)
   }
@@ -560,13 +560,13 @@ const nativeTypesToCustom = x => {
   return typeHintArray([x])[0]
 }
 
-const typeHintArray = x =>
+const typeHintArray = (x: any) =>
   x
-    .map(x => recursivelyTypeGraphItems(x, neo4j.types))
+    .map((x: any) => recursivelyTypeGraphItems(x, neo4j.types))
     .map(JSON.stringify)
     .map(JSON.parse)
 
-const getAPathSegment = (startId, relId, endId) => {
+const getAPathSegment = (startId: any, relId: any, endId: any) => {
   const start = new neo4j.types.Node(neo4j.int(startId), ['From'], {})
   const end = new neo4j.types.Node(neo4j.int(endId), ['To'], {})
   const rel = new neo4j.types.Relationship(
@@ -579,8 +579,8 @@ const getAPathSegment = (startId, relId, endId) => {
   return new neo4j.types.PathSegment(start, rel, end)
 }
 
-const getAPath = segmentList => {
-  const segments = segmentList.map(segment =>
+const getAPath = (segmentList: any) => {
+  const segments = segmentList.map((segment: any) =>
     getAPathSegment(segment.start, segment.relationship, segment.end)
   )
   return new neo4j.types.Path(

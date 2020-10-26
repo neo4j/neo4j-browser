@@ -34,17 +34,17 @@ import {
   maxSpeed
 } from './helpers'
 
-const SnakeCanvas = styled.canvas`
+const SnakeCanvas: any = styled.canvas`
   border: 1px solid #787878;
   &:focus {
     outline: none;
   }
 `
 
-class SnakeFrame extends React.Component {
-  canvas = React.createRef()
-  ctx = null
-  gameState = getInitialState(
+class SnakeFrame extends React.Component<any> {
+  canvas = React.createRef<any>()
+  ctx: any = null
+  gameState: any = getInitialState(
     this.props.play,
     this.props.width,
     this.props.height,
@@ -54,12 +54,12 @@ class SnakeFrame extends React.Component {
   blockInput = false
   componentDidMount() {
     this.ctx = this.canvas.current.getContext('2d')
-    this.canvas.current.addEventListener('keydown', ev => {
+    this.canvas.current.addEventListener('keydown', (ev: any) => {
       const { key } = ev
       if (this.blockInput) {
         return
       }
-      const allowedKeys = {
+      const allowedKeys: any = {
         ArrowDown: DOWN,
         ArrowUp: UP,
         ArrowLeft: LEFT,
@@ -115,7 +115,7 @@ class SnakeFrame extends React.Component {
   drawSnake = () => {
     this.ctx.fillStyle = snakeColor
     const { snake } = this.gameState
-    snake.body.forEach(part => {
+    snake.body.forEach((part: any) => {
       rect({
         ctx: this.ctx,
         x: part.x,
@@ -138,7 +138,7 @@ class SnakeFrame extends React.Component {
     })
   }
 
-  calcNextHeadPos = () => {
+  calcNextHeadPos = (): any => {
     let { x, y } = this.gameState.snake.body[0]
     if (this.gameState.snake.direction === UP) {
       y -= this.gameState.step

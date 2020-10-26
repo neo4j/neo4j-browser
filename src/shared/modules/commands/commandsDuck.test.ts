@@ -54,7 +54,7 @@ const mockStore = configureMockStore([
 ])
 
 describe('commandsDuck', () => {
-  let store
+  let store: any
   const maxHistory = 20
   beforeEach(() => {
     bolt.routedWriteTransaction = originalRoutedWriteTransaction
@@ -94,13 +94,13 @@ describe('commandsDuck', () => {
         id,
         requestId
       })
-      bus.take('NOOP', currentAction => {
+      bus.take('NOOP', _currentAction => {
         // Then
         expect(store.getActions()).toEqual([
           action,
           send('cypher', requestId),
           commands.cypher(cmd),
-          frames.add({ ...action, type: 'cypher' }),
+          frames.add({ ...action, type: 'cypher' } as any),
           updateQueryResult(
             requestId,
             createErrorObject(BoltConnectionError),
@@ -123,7 +123,7 @@ describe('commandsDuck', () => {
       // Given
       const cmd = ' '
       const id = 2
-      const action = commands.executeSystemCommand(cmd, id)
+      const action = commands.executeSystemCommand(cmd)
       bus.take('NOOP', () => {
         // Then
         const actions = store.getActions()
@@ -144,7 +144,7 @@ describe('commandsDuck', () => {
         id
       })
 
-      bus.take('NOOP', currentAction => {
+      bus.take('NOOP', _currentAction => {
         // Then
         expect(store.getActions()).toEqual([
           action,
@@ -154,7 +154,7 @@ describe('commandsDuck', () => {
             success: true,
             type: 'param',
             params: { x: 2 }
-          }),
+          } as any),
           updateQueryResult(
             undefined,
             { result: { x: 2 }, type: 'param' },
@@ -185,7 +185,7 @@ describe('commandsDuck', () => {
         })
       )
 
-      bus.take('frames/ADD', currentAction => {
+      bus.take('frames/ADD', _currentAction => {
         // Then
         expect(store.getActions()).toEqual([
           action,
@@ -195,7 +195,7 @@ describe('commandsDuck', () => {
             success: true,
             type: 'param',
             params: { x: 2 }
-          })
+          } as any)
         ])
         done()
       })
@@ -214,12 +214,17 @@ describe('commandsDuck', () => {
       const action = commands.executeSingleCommand(cmdString, {
         id
       })
-      bus.take('NOOP', currentAction => {
+      bus.take('NOOP', _currentAction => {
         // Then
         expect(store.getActions()).toEqual([
           action,
           replaceParams({ x: 2, y: 3 }),
-          frames.add({ ...action, success: true, type: 'params', params: {} }),
+          frames.add({
+            ...action,
+            success: true,
+            type: 'params',
+            params: {}
+          } as any),
           updateQueryResult(
             undefined,
             { result: { x: 2, y: 3 }, type: 'params' },
@@ -243,11 +248,11 @@ describe('commandsDuck', () => {
       const action = commands.executeSingleCommand(cmdString, {
         id
       })
-      bus.take('NOOP', currentAction => {
+      bus.take('NOOP', _currentAction => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          frames.add({ ...action, type: 'params', params: {} }),
+          frames.add({ ...action, type: 'params', params: {} } as any),
           { type: 'NOOP' }
         ])
         done()
@@ -267,7 +272,7 @@ describe('commandsDuck', () => {
       const action = commands.executeSingleCommand(cmdString, {
         id
       })
-      bus.take('NOOP', currentAction => {
+      bus.take('NOOP', _currentAction => {
         // Then
         expect(store.getActions()).toEqual([
           action,
@@ -276,7 +281,7 @@ describe('commandsDuck', () => {
             ...action,
             type: 'pre',
             result: JSON.stringify({ maxHistory: 20 }, null, 2)
-          }),
+          } as any),
           { type: 'NOOP' }
         ])
         done()
@@ -296,7 +301,7 @@ describe('commandsDuck', () => {
       const action = commands.executeSingleCommand(cmdString, {
         id
       })
-      bus.take('NOOP', currentAction => {
+      bus.take('NOOP', _currentAction => {
         // Then
         expect(store.getActions()).toEqual([
           action,
@@ -305,7 +310,7 @@ describe('commandsDuck', () => {
             ...action,
             type: 'pre',
             result: JSON.stringify({ maxHistory: 20 }, null, 2)
-          }),
+          } as any),
           { type: 'NOOP' }
         ])
         done()
@@ -326,7 +331,7 @@ describe('commandsDuck', () => {
       const action = commands.executeSingleCommand(cmdString, {
         id
       })
-      bus.take('NOOP', currentAction => {
+      bus.take('NOOP', _currentAction => {
         // Then
         expect(store.getActions()).toEqual([
           action,
@@ -334,7 +339,7 @@ describe('commandsDuck', () => {
             ...action,
             type: 'pre',
             result: JSON.stringify({ maxHistory: 20 }, null, 2)
-          }),
+          } as any),
           { type: 'NOOP' }
         ])
         done()
@@ -355,7 +360,7 @@ describe('commandsDuck', () => {
       const action = commands.executeSingleCommand(cmdString, {
         id
       })
-      bus.take('NOOP', currentAction => {
+      bus.take('NOOP', _currentAction => {
         // Then
         expect(store.getActions()).toEqual([
           action,
@@ -363,7 +368,7 @@ describe('commandsDuck', () => {
             ...action,
             type: 'style',
             result: { node: { color: '#000' } }
-          }),
+          } as any),
           { type: 'NOOP' }
         ])
         done()
@@ -381,14 +386,14 @@ describe('commandsDuck', () => {
       const id = 1
       const action = commands.executeSingleCommand(cmd, { id })
 
-      bus.take('NOOP', currentAction => {
+      bus.take('NOOP', _currentAction => {
         expect(store.getActions()).toEqual([
           action,
           frames.add({
             ...action,
             type: 'queries',
             result: "{res : 'QUERIES RESULT'}"
-          }),
+          } as any),
           { type: 'NOOP' }
         ])
         done()
@@ -407,13 +412,13 @@ describe('commandsDuck', () => {
         id,
         requestId
       })
-      bus.take('NOOP', currentAction => {
+      bus.take('NOOP', _currentAction => {
         // Then
         expect(store.getActions()).toEqual([
           action,
           send('cypher', requestId),
           commands.cypher(cmd),
-          frames.add({ ...action, type: 'cypher' }),
+          frames.add({ ...action, type: 'cypher' } as any),
           updateQueryResult(
             requestId,
             createErrorObject(BoltConnectionError),
@@ -436,13 +441,13 @@ describe('commandsDuck', () => {
       const id = 1
       const action = commands.executeSingleCommand(cmd, { id })
 
-      bus.take('NOOP', currentAction => {
+      bus.take('NOOP', _currentAction => {
         // Then
         expect(store.getActions()).toEqual([
           action,
           getInterpreter(helper.interpret, action.cmd).exec(
             Object.assign(action, { cmd: cleanCommand(action.cmd) }),
-            a => a,
+            (a: any) => a,
             store
           ),
           { type: 'NOOP' }
@@ -461,12 +466,12 @@ describe('commandsDuck', () => {
       const cmd = `:server ${serverCmd}`
       const id = 3
       const action = commands.executeSingleCommand(cmd, { id })
-      bus.take('NOOP', currentAction => {
+      bus.take('NOOP', _currentAction => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          frames.add({ ...action, type: 'disconnect' }),
-          disconnectAction(null),
+          frames.add({ ...action, type: 'disconnect' } as any),
+          disconnectAction(null as any),
           { type: 'NOOP' }
         ])
         done()

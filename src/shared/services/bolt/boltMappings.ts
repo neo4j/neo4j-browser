@@ -31,22 +31,22 @@ import {
 
 export const reservedTypePropertyName = 'transport-class'
 
-export function toObjects(records, converters) {
-  const recordValues = records.map(record => {
-    const out = []
-    record.forEach(val => out.push(itemIntToString(val, converters)))
+export function toObjects(records: any, converters: any) {
+  const recordValues = records.map((record: any) => {
+    const out: any = []
+    record.forEach((val: any) => out.push(itemIntToString(val, converters)))
     return out
   })
   return recordValues
 }
 
-export function recordsToTableArray(records, converters) {
+export function recordsToTableArray(records: any, converters: any) {
   const recordValues = toObjects(records, converters)
   const keys = records[0].keys
   return [[...keys], ...recordValues]
 }
 
-export function itemIntToString(item, converters) {
+export function itemIntToString(item: any, converters: any) {
   const res = stringModifier(item)
   if (res) return res
   if (converters.intChecker(item)) return converters.intConverter(item)
@@ -56,13 +56,13 @@ export function itemIntToString(item, converters) {
   if (typeof item === 'object') return objIntToString(item, converters)
 }
 
-export function arrayIntToString(arr, converters) {
-  return arr.map(item => itemIntToString(item, converters))
+export function arrayIntToString(arr: any, converters: any) {
+  return arr.map((item: any) => itemIntToString(item, converters))
 }
 
-export function objIntToString(obj, converters) {
+export function objIntToString(obj: any, converters: any) {
   const entry = converters.objectConverter(obj, converters)
-  let newObj = null
+  let newObj: any = null
   if (Array.isArray(entry)) {
     newObj = entry.map(item => itemIntToString(item, converters))
   } else if (entry !== null && typeof entry === 'object') {
@@ -74,25 +74,25 @@ export function objIntToString(obj, converters) {
   return newObj
 }
 
-export function extractFromNeoObjects(obj, converters) {
+export function extractFromNeoObjects(obj: any, converters: any) {
   if (
-    obj instanceof neo4j.types.Node ||
-    obj instanceof neo4j.types.Relationship
+    obj instanceof (neo4j.types.Node as any) ||
+    obj instanceof (neo4j.types.Relationship as any)
   ) {
     return obj.properties
-  } else if (obj instanceof neo4j.types.Path) {
+  } else if (obj instanceof (neo4j.types.Path as any)) {
     return [].concat.apply([], extractPathForRows(obj, converters))
   }
   return obj
 }
 
-const extractPathForRows = (path, converters) => {
+const extractPathForRows = (path: any, converters: any) => {
   let segments = path.segments
   // Zero length path. No relationship, end === start
   if (!Array.isArray(path.segments) || path.segments.length < 1) {
     segments = [{ ...path, end: null }]
   }
-  return segments.map(segment =>
+  return segments.map((segment: any) =>
     [
       objIntToString(segment.start, converters),
       objIntToString(segment.relationship, converters),
@@ -101,16 +101,16 @@ const extractPathForRows = (path, converters) => {
   )
 }
 
-export function extractPlan(result, calculateTotalDbHits = false) {
+export function extractPlan(result: any, calculateTotalDbHits = false) {
   if (result.summary && (result.summary.plan || result.summary.profile)) {
     const rawPlan = result.summary.profile || result.summary.plan
-    const boltPlanToRESTPlanShared = plan => {
+    const boltPlanToRESTPlanShared = (plan: any) => {
       return {
         operatorType: plan.operatorType,
         DbHits: plan.dbHits,
         Rows: plan.rows,
         identifiers: plan.identifiers,
-        children: plan.children.map(_ => ({
+        children: plan.children.map((_: any) => ({
           ...transformPlanArguments(_.arguments),
           ...boltPlanToRESTPlanShared(_)
         }))
@@ -130,7 +130,7 @@ export function extractPlan(result, calculateTotalDbHits = false) {
   return null
 }
 
-const transformPlanArguments = args => {
+const transformPlanArguments = (args: any) => {
   const res = { ...args }
   if (res.PageCacheHits) {
     res.PageCacheHits = res.PageCacheHits.toNumber()
@@ -141,10 +141,10 @@ const transformPlanArguments = args => {
   return res
 }
 
-const collectHits = function(operator) {
+const collectHits = function(operator: any) {
   let hits = operator.DbHits || 0
   if (operator.children) {
-    hits = operator.children.reduce((acc, subOperator) => {
+    hits = operator.children.reduce((acc: any, subOperator: any) => {
       return acc + collectHits(subOperator)
     }, hits)
   }
@@ -152,9 +152,9 @@ const collectHits = function(operator) {
 }
 
 export function extractNodesAndRelationshipsFromRecords(
-  records,
+  records: any,
   types = neo4j.types,
-  maxFieldItems
+  maxFieldItems?: any
 ) {
   if (records.length === 0) {
     return { nodes: [], relationships: [] }
@@ -170,11 +170,11 @@ export function extractNodesAndRelationshipsFromRecords(
 }
 
 export function extractNodesAndRelationshipsFromRecordsForOldVis(
-  records,
-  types,
-  filterRels,
-  converters,
-  maxFieldItems
+  records: any,
+  types: any,
+  filterRels: any,
+  converters: any,
+  maxFieldItems?: any
 ) {
   if (records.length === 0) {
     return { nodes: [], relationships: [] }
@@ -212,7 +212,7 @@ export function extractNodesAndRelationshipsFromRecordsForOldVis(
   return { nodes, relationships }
 }
 
-export const recursivelyExtractGraphItems = (types, item) => {
+export const recursivelyExtractGraphItems = (types: any, item: any): any => {
   if (item instanceof types.Node) return item
   if (item instanceof types.Relationship) return item
   if (item instanceof types.Path) return item
@@ -230,15 +230,15 @@ export const recursivelyExtractGraphItems = (types, item) => {
 }
 
 export function extractRawNodesAndRelationShipsFromRecords(
-  records,
+  records: any,
   types = neo4j.types,
-  maxFieldItems
+  maxFieldItems: any
 ) {
-  const items = new Set()
-  const paths = new Set()
-  const segments = new Set()
-  const rawNodes = new Set()
-  const rawRels = new Set()
+  const items = new Set<any>()
+  const paths = new Set<any>()
+  const segments = new Set<any>()
+  const rawNodes = new Set<any>()
+  const rawRels = new Set<any>()
 
   for (const record of records) {
     for (const key of record.keys) {
@@ -252,16 +252,16 @@ export function extractRawNodesAndRelationShipsFromRecords(
     )
   )
 
-  const findAllEntities = item => {
-    if (item instanceof types.Relationship) {
+  const findAllEntities = (item: any) => {
+    if (item instanceof (types.Relationship as any)) {
       rawRels.add(item)
       return
     }
-    if (item instanceof types.Node) {
+    if (item instanceof (types.Node as any)) {
       rawNodes.add(item)
       return
     }
-    if (item instanceof types.Path) {
+    if (item instanceof (types.Path as any)) {
       paths.add(item)
       return
     }
@@ -308,7 +308,7 @@ export function extractRawNodesAndRelationShipsFromRecords(
   return { rawNodes: [...rawNodes], rawRels: [...rawRels] }
 }
 
-export const retrieveFormattedUpdateStatistics = result => {
+export const retrieveFormattedUpdateStatistics = (result: any) => {
   if (result.summary.counters) {
     const stats = result.summary.counters._stats
     const statsMessages = updateStatsFields
@@ -325,13 +325,15 @@ export const retrieveFormattedUpdateStatistics = result => {
   }
 }
 
-export const flattenProperties = rows => {
-  return rows.map(row =>
-    row.map(entry => (entry && entry.properties ? entry.properties : entry))
+export const flattenProperties = (rows: any) => {
+  return rows.map((row: any) =>
+    row.map((entry: any) =>
+      entry && entry.properties ? entry.properties : entry
+    )
   )
 }
 
-export const applyGraphTypes = (rawItem, types = neo4j.types) => {
+export const applyGraphTypes = (rawItem: any, types = neo4j.types): any => {
   if (rawItem === null || rawItem === undefined) {
     return rawItem
   } else if (Array.isArray(rawItem)) {
@@ -367,7 +369,7 @@ export const applyGraphTypes = (rawItem, types = neo4j.types) => {
         return new types[className](
           applyGraphTypes(item.start, types),
           applyGraphTypes(item.end, types),
-          item.segments.map(x => applyGraphTypes(x, types))
+          item.segments.map((x: any) => applyGraphTypes(x, types))
         )
       case 'Point':
         return new types[className](
@@ -432,7 +434,7 @@ export const applyGraphTypes = (rawItem, types = neo4j.types) => {
         return item
     }
   } else if (typeof rawItem === 'object') {
-    let typedObject = {}
+    let typedObject: Record<string, any> = {}
     Object.keys(rawItem).forEach(key => {
       typedObject[key] = applyGraphTypes(rawItem[key], types)
     })
@@ -443,7 +445,10 @@ export const applyGraphTypes = (rawItem, types = neo4j.types) => {
   }
 }
 
-export const recursivelyTypeGraphItems = (item, types = neo4j.types) => {
+export const recursivelyTypeGraphItems = (
+  item: any,
+  types = neo4j.types
+): any => {
   if (item === null || item === undefined) {
     return item
   }
@@ -514,7 +519,7 @@ export const recursivelyTypeGraphItems = (item, types = neo4j.types) => {
     return tmp
   }
   if (typeof item === 'object') {
-    const typedObject = {}
+    const typedObject: Record<string, any> = {}
     const localItem = escapeReservedProps(item, reservedTypePropertyName)
     Object.keys(localItem).forEach(key => {
       typedObject[key] = recursivelyTypeGraphItems(localItem[key], types)
@@ -524,9 +529,9 @@ export const recursivelyTypeGraphItems = (item, types = neo4j.types) => {
   return item
 }
 
-function copyAndType(any, types = neo4j.types) {
+function copyAndType(any: any, types = neo4j.types) {
   const keys = Object.keys(any)
-  const tmp = {}
+  const tmp: Record<string, any> = {}
   keys.forEach(key => (tmp[key] = recursivelyTypeGraphItems(any[key], types)))
   return tmp
 }

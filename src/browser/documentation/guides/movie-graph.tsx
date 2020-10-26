@@ -21,9 +21,6 @@
 import React from 'react'
 import ManualLink from 'browser-components/ManualLink'
 import Slide from '../../modules/Carousel/Slide'
-import { useDbCommand } from 'shared/modules/commands/commandsDuck'
-import createDatabase from '../help/create-database'
-import { useDb, USE_DB } from 'shared/modules/connections/connectionsDuck'
 import TextCommand from 'browser/modules/DecoratedText/TextCommand'
 
 const title = 'Movie Graph'
@@ -62,6 +59,7 @@ const slides = [
           <li>
             Create a new database called movies{' '}
             <pre
+              // @ts-expect-error ts-migrate(2322) FIXME: Property 'mode' does not exist on type 'DetailedHT... Remove this comment to see the full error message
               mode="cypher"
               className="pre-scrollable code runnable"
               style={{ width: 'fit-content' }}

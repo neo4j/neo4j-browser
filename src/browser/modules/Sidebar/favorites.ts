@@ -41,7 +41,7 @@ import {
   updateFolder
 } from './favorites.utils'
 
-const mapFavoritesStateToProps = state => {
+const mapFavoritesStateToProps = (state: any) => {
   const folders = foldersDuck.getFolders(state)
   const scripts = mapOldFavoritesAndFolders(
     favoritesDuck.getFavorites(state),
@@ -55,20 +55,25 @@ const mapFavoritesStateToProps = state => {
     title: 'Local Scripts'
   }
 }
-const mapFavoritesDispatchToProps = (dispatch, ownProps) => ({
-  onSelectScript: favorite =>
+const mapFavoritesDispatchToProps = (dispatch: any, ownProps: any) => ({
+  onSelectScript: (favorite: any) =>
     ownProps.bus.send(
       editor.EDIT_CONTENT,
       editor.editContent(favorite.id, favorite.contents)
     ),
-  onExecScript: favorite =>
+  onExecScript: (favorite: any) =>
     dispatch(
       executeCommand(favorite.contents, { source: commandSources.favorite })
     ),
-  onExportScripts: scripts => exportFavorites(scripts),
-  onRemoveScript: favorite =>
+  onExportScripts: (scripts: any) => exportFavorites(scripts),
+  onRemoveScript: (favorite: any) =>
     dispatch(favoritesDuck.removeFavorite(favorite.id)),
-  onUpdateFolder(favorites, payload, allFavorites, allFolders) {
+  onUpdateFolder(
+    favorites: any,
+    payload: any,
+    allFavorites: any,
+    allFolders: any
+  ) {
     // favorite name update
     if (payload.name) {
       dispatch(
@@ -83,7 +88,7 @@ const mapFavoritesDispatchToProps = (dispatch, ownProps) => ({
     // future proofing
     if (!payload.path) return
 
-    const { folder: sourceFolder } = getFirstFavorite(favorites) || {}
+    const { folder: sourceFolder } = (getFirstFavorite(favorites) as any) || {}
     const { id: folderId, name: folderName } = generateFolderNameAndIdForPath(
       payload.path
     )
@@ -120,8 +125,8 @@ const mapFavoritesDispatchToProps = (dispatch, ownProps) => ({
       dispatch(foldersDuck.removeFolder(sourceFolder.id))
     }
   },
-  onRemoveFolder(favorites) {
-    const { folder } = getFirstFavorite(favorites) || {}
+  onRemoveFolder(favorites: any) {
+    const { folder } = (getFirstFavorite(favorites) as any) || {}
 
     if (!folder) return
 
@@ -129,12 +134,12 @@ const mapFavoritesDispatchToProps = (dispatch, ownProps) => ({
     dispatch(favoritesDuck.removeFavorites(getFavoriteIds(favorites)))
   }
 })
-const mergeProps = (stateProps, dispatchProps) => {
+const mergeProps = (stateProps: any, dispatchProps: any) => {
   return {
     ...stateProps,
     ...dispatchProps,
     onExportScripts: () => dispatchProps.onExportScripts(stateProps.scripts),
-    onUpdateFolder: (favorites, payload) =>
+    onUpdateFolder: (favorites: any, payload: any) =>
       dispatchProps.onUpdateFolder(
         favorites,
         payload,

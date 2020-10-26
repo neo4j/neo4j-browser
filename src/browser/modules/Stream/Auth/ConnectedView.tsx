@@ -32,7 +32,7 @@ const ConnectedView = ({
   hideStoreCredentials = false,
   additionalFooter = null,
   showHost = true
-}) => {
+}: any) => {
   return (
     <StyledConnectionBody>
       <Render if={username}>

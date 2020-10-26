@@ -28,7 +28,7 @@ import {
 } from 'shared/modules/connections/connectionsDuck'
 
 // eslint-disable-next-line
-jest.mock('../../Frame/FrameTemplate', () => ({ contents, statusbar }) => (
+jest.mock('../../Frame/FrameTemplate', () => ({ contents, statusbar }: any) => (
   <div>
     {contents}
     {statusbar}
@@ -49,7 +49,7 @@ it('can list and kill queries', () => {
   const bus = createBus()
   bus.self = jest
     .fn()
-    .mockImplementationOnce((type, fn, cb) =>
+    .mockImplementationOnce((_type, _fn, cb) =>
       cb({
         success: true,
         result: {
@@ -64,12 +64,12 @@ it('can list and kill queries', () => {
         }
       })
     )
-    .mockImplementationOnce((type, fn, cb) =>
+    .mockImplementationOnce((_type, _fn, cb) =>
       cb({
         success: true
       })
     )
-    .mockImplementationOnce((type, fn, cb) => {
+    .mockImplementationOnce(() => {
       // Do not call here to let react render the
       // killed state update before adding the new queries
     })

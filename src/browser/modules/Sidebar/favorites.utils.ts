@@ -43,7 +43,7 @@ import arrayHasItems from 'shared/utils/array-has-items'
  * @param     {Object[]}        favorites
  * @return    {Object|null}
  */
-export function getFirstFavorite(favorites) {
+export function getFirstFavorite(favorites: any) {
   return head(favorites)
 }
 
@@ -52,7 +52,7 @@ export function getFirstFavorite(favorites) {
  * @param     {Object[]}        favorites
  * @return    {string[]}
  */
-export function getFavoriteIds(favorites) {
+export function getFavoriteIds(favorites: any) {
   return map(favorites, 'id')
 }
 
@@ -62,7 +62,7 @@ export function getFavoriteIds(favorites) {
  * @param     {Object[]}  folders
  * @return    {string}
  */
-export function getFolderFromPath(path, folders) {
+export function getFolderFromPath(path: any, folders: any) {
   const name = omitScriptPathPrefix(SLASH, path)
 
   return find(folders, folder => folder.name === name)
@@ -74,7 +74,7 @@ export function getFolderFromPath(path, folders) {
  * @param     {Object[]}    allFavorites
  * @return    {Object[]}
  */
-export function getFolderFavorites(folderId, allFavorites) {
+export function getFolderFavorites(folderId: any, allFavorites: any) {
   return filter(allFavorites, ({ folder }) => folder && folderId === folder.id)
 }
 
@@ -85,7 +85,11 @@ export function getFolderFavorites(folderId, allFavorites) {
  * @param     {Object[]}    allFavorites
  * @return    {Object[]}
  */
-export function folderHasRemainingFavorites(folderId, favorites, allFavorites) {
+export function folderHasRemainingFavorites(
+  folderId: any,
+  favorites: any,
+  allFavorites: any
+) {
   const folderFavorites = getFolderFavorites(folderId, allFavorites)
 
   return arrayHasItems(
@@ -98,7 +102,7 @@ export function folderHasRemainingFavorites(folderId, favorites, allFavorites) {
  * @param     {string}                      path
  * @return    {{id: string, name: string}}
  */
-export function generateFolderNameAndIdForPath(path) {
+export function generateFolderNameAndIdForPath(path: any) {
   return {
     id: uuid.v4(),
     name: omitScriptPathPrefix(SLASH, path)
@@ -111,10 +115,10 @@ export function generateFolderNameAndIdForPath(path) {
  * @param     {string}    newName
  * @return    {string}
  */
-export function addNameComment(contents, newName) {
+export function addNameComment(contents: any, newName: any) {
   const parts = split(contents, '\n')
   const first = trim(head(parts) || '')
-  const oldName = trim(getScriptDisplayName({ contents }))
+  const oldName = trim(getScriptDisplayName({ contents } as any))
 
   if (startsWith(first, '//') && first === `// ${oldName}`) {
     return join([`// ${newName}`, ...tail(parts)], '\n')
@@ -129,7 +133,7 @@ export function addNameComment(contents, newName) {
  * @param     {Object}      update
  * @return    {Object[]}
  */
-export function mapNewFavoritesToOld(newFavorites, update = {}) {
+export function mapNewFavoritesToOld(newFavorites: any, update: any = {}) {
   return map(newFavorites, ({ id, folder, contents }) =>
     assign(
       {
@@ -142,14 +146,14 @@ export function mapNewFavoritesToOld(newFavorites, update = {}) {
   )
 }
 
-export function updateFolder(folder, update, allFolders) {
+export function updateFolder(folder: any, update: any, allFolders: any) {
   return [
     ...filter(allFolders, ({ id }) => folder.id !== id),
     { ...folder, ...update }
   ]
 }
 
-export function defaultFavoriteName(cmd) {
+export function defaultFavoriteName(cmd: any) {
   const firstLine = cmd.split('\n')[0]
 
   if (firstLine.startsWith('//')) {

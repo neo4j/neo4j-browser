@@ -1,0 +1,144 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`WarningsViews WarningsView displays nothing if no notifications 1`] = `<div />`;
+
+exports[`WarningsViews WarningsView does displays a warning 1`] = `
+<div>
+  <div
+    class="sc-EHOje cIIfFE"
+  >
+    <div
+      class="sc-bZQynM gsCChu"
+    >
+      <div
+        class="sc-gzVnrw esLgqb"
+      >
+        <div
+          class="sc-gZMcBi PYRZg"
+        >
+          WARNING xx0
+        </div>
+        <h4
+          class="sc-cSHVUG CAuLq"
+        >
+          My xx1 warning
+        </h4>
+      </div>
+      <div
+        class="sc-htoDjs bZzhDu"
+      >
+        <div
+          class="sc-gzVnrw esLgqb"
+        >
+          This is xx2 warning
+        </div>
+        <div
+          class="sc-htoDjs bZzhDu"
+        >
+          <pre
+            class="sc-kgoBCf gihJwG"
+          >
+            EXPLAIN MATCH xx3
+            <br
+              class="sc-chPdSV byfFmt"
+            />
+                   
+            ^
+          </pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`WarningsViews WarningsView does displays multiple warnings 1`] = `
+<div>
+  <div
+    class="sc-EHOje cIIfFE"
+  >
+    <div
+      class="sc-bZQynM gsCChu"
+    >
+      <div
+        class="sc-gzVnrw esLgqb"
+      >
+        <div
+          class="sc-gZMcBi PYRZg"
+        >
+          WARNING xx0
+        </div>
+        <h4
+          class="sc-cSHVUG CAuLq"
+        >
+          My xx1 warning
+        </h4>
+      </div>
+      <div
+        class="sc-htoDjs bZzhDu"
+      >
+        <div
+          class="sc-gzVnrw esLgqb"
+        >
+          This is xx2 warning
+        </div>
+        <div
+          class="sc-htoDjs bZzhDu"
+        >
+          <pre
+            class="sc-kgoBCf gihJwG"
+          >
+            EXPLAIN MATCH zz3
+            <br
+              class="sc-chPdSV byfFmt"
+            />
+                   
+            ^
+          </pre>
+        </div>
+      </div>
+    </div>
+    <div
+      class="sc-bZQynM gsCChu"
+    >
+      <div
+        class="sc-gzVnrw esLgqb"
+      >
+        <div
+          class="sc-gZMcBi PYRZg"
+        >
+          WARNING yy0
+        </div>
+        <h4
+          class="sc-cSHVUG CAuLq"
+        >
+          My yy1 warning
+        </h4>
+      </div>
+      <div
+        class="sc-htoDjs bZzhDu"
+      >
+        <div
+          class="sc-gzVnrw esLgqb"
+        >
+          This is yy2 warning
+        </div>
+        <div
+          class="sc-htoDjs bZzhDu"
+        >
+          <pre
+            class="sc-kgoBCf gihJwG"
+          >
+            EXPLAIN MATCH zz3
+            <br
+              class="sc-chPdSV byfFmt"
+            />
+               
+            ^
+          </pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

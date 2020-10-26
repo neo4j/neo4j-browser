@@ -74,8 +74,8 @@ export const SYSTEM_DB = 'system'
 /**
  * Selectors
  */
-export function getMetaInContext(state, context) {
-  const inCurrentContext = e => e.context === context
+export function getMetaInContext(state: any, context: any) {
+  const inCurrentContext = (e: any) => e.context === context
 
   const labels = state.labels.filter(inCurrentContext)
   const relationshipTypes = state.relationshipTypes.filter(inCurrentContext)
@@ -92,41 +92,42 @@ export function getMetaInContext(state, context) {
   }
 }
 
-export const getVersion = state =>
+export const getVersion = (state: any) =>
   (state[NAME] || {}).server ? (state[NAME] || {}).server.version : 0
-export const getEdition = state => state[NAME].server.edition
-export const getStoreSize = state => state[NAME].server.storeSize
-export const getClusterRole = state => state[NAME].role
-export const isEnterprise = state =>
+export const getEdition = (state: any) => state[NAME].server.edition
+export const getStoreSize = (state: any) => state[NAME].server.storeSize
+export const getClusterRole = (state: any) => state[NAME].role
+export const isEnterprise = (state: any) =>
   ['enterprise', 'auraenterprise'].includes(state[NAME].server.edition)
-export const isBeta = state => /-/.test(state[NAME].server.version)
-export const getStoreId = state =>
+export const isBeta = (state: any) => /-/.test(state[NAME].server.version)
+export const getStoreId = (state: any) =>
   state[NAME] && state[NAME].server ? state[NAME].server.storeId : null
 
-export const getAvailableSettings = state =>
+export const getAvailableSettings = (state: any) =>
   (state[NAME] || initialState).settings
-export const allowOutgoingConnections = state =>
+export const allowOutgoingConnections = (state: any) =>
   getAvailableSettings(state)['browser.allow_outgoing_connections']
-export const credentialsTimeout = state =>
+export const credentialsTimeout = (state: any) =>
   getAvailableSettings(state)['browser.credential_timeout'] || 0
-export const getRemoteContentHostnameAllowlist = state =>
+export const getRemoteContentHostnameAllowlist = (state: any) =>
   getAvailableSettings(state)['browser.remote_content_hostname_allowlist']
-export const getDefaultRemoteContentHostnameAllowlist = state =>
+export const getDefaultRemoteContentHostnameAllowlist = (_state: any) =>
   initialState.settings['browser.remote_content_hostname_allowlist']
-export const shouldRetainConnectionCredentials = state => {
+export const shouldRetainConnectionCredentials = (state: any) => {
   const settings = getAvailableSettings(state)
   const conf = settings['browser.retain_connection_credentials']
   if (conf === null || typeof conf === 'undefined') return false
   return !isConfigValFalsy(conf)
 }
-export const getDatabases = state => (state[NAME] || initialState).databases
-export const getActiveDbName = state =>
+export const getDatabases = (state: any) =>
+  (state[NAME] || initialState).databases
+export const getActiveDbName = (state: any) =>
   ((state[NAME] || {}).settings || {})['dbms.active_database']
 /**
  * Helpers
  */
 
-function updateMetaForContext(state, meta, context) {
+function updateMetaForContext(state: any, meta: any, context: any) {
   if (!meta || !meta.records || !meta.records.length) {
     return {
       labels: initialState.labels,
@@ -138,12 +139,15 @@ function updateMetaForContext(state, meta, context) {
       relationships: initialState.relationships
     }
   }
-  const notInCurrentContext = e => e.context !== context
-  const mapResult = (metaIndex, mapFunction) =>
+  const notInCurrentContext = (e: any) => e.context !== context
+  const mapResult = (metaIndex: any, mapFunction: any) =>
     meta.records[metaIndex].get(0).data.map(mapFunction)
-  const mapSingleValue = r => ({ val: r, context })
-  const mapInteger = r => (neo4j.isInt(r) ? r.toNumber() || 0 : r || 0)
-  const mapInvocableValue = r => {
+  const mapSingleValue = (r: any) => ({
+    val: r,
+    context
+  })
+  const mapInteger = (r: any) => (neo4j.isInt(r) ? r.toNumber() || 0 : r || 0)
+  const mapInvocableValue = (r: any) => {
     const { name, signature, description } = r
     return {
       val: name,
@@ -153,7 +157,7 @@ function updateMetaForContext(state, meta, context) {
     }
   }
 
-  const compareMetaItems = (a, b) =>
+  const compareMetaItems = (a: any, b: any) =>
     a.val < b.val ? -1 : a.val > b.val ? 1 : 0
 
   const labels = state.labels
@@ -218,7 +222,7 @@ const initialState = {
 /**
  * Reducer
  */
-export default function meta(state = initialState, unalteredAction) {
+export default function meta(state = initialState, unalteredAction: any) {
   let action = unalteredAction
   if (unalteredAction && unalteredAction.settings) {
     const allowlist =
@@ -241,7 +245,7 @@ export default function meta(state = initialState, unalteredAction) {
     case APP_START:
       return { ...initialState, ...state }
     case UPDATE:
-      const { type, ...rest } = action // eslint-disable-line
+      const { type, ...rest } = action
       return { ...state, ...rest }
     case UPDATE_META:
       return {
@@ -250,7 +254,7 @@ export default function meta(state = initialState, unalteredAction) {
       }
     case UPDATE_SERVER:
       const { type: serverType, ...serverRest } = action
-      const serverState = {}
+      const serverState: any = {}
       Object.keys(serverRest).forEach(key => {
         serverState[key] = action[key]
       })
@@ -268,7 +272,7 @@ export default function meta(state = initialState, unalteredAction) {
 }
 
 // Actions
-export function updateMeta(meta, context) {
+export function updateMeta(meta: any, context?: any) {
   return {
     type: UPDATE_META,
     meta,
@@ -286,21 +290,21 @@ export function fetchServerInfo() {
   }
 }
 
-export const update = obj => {
+export const update = (obj: any) => {
   return {
     type: UPDATE,
     ...obj
   }
 }
 
-export const updateSettings = settings => {
+export const updateSettings = (settings: any) => {
   return {
     type: UPDATE_SETTINGS,
     settings
   }
 }
 
-export const updateServerInfo = res => {
+export const updateServerInfo = (res: any) => {
   const extrated = extractServerInfo(res)
   return {
     ...extrated,
@@ -332,7 +336,7 @@ MATCH ()-[]->() RETURN { name:'relationships', data: count(*)} AS result
 export const serverInfoQuery =
   'CALL dbms.components() YIELD name, versions, edition'
 
-const databaseList = store =>
+const databaseList = (store: any) =>
   Rx.Observable.fromPromise(
     new Promise(async (resolve, reject) => {
       const supportsMultiDb = await bolt.hasMultiDbSupport()
@@ -355,17 +359,18 @@ const databaseList = store =>
         .catch(reject)
     })
   )
-    .catch(e => {
+    .catch(() => {
       return Rx.Observable.of(null)
     })
-    .do(res => {
+    .do((res: any) => {
       if (!res) return Rx.Observable.of(null)
-      const databases = res.records.map(record => ({
+      const databases = res.records.map((record: any) => ({
         ...reduce(
           record.keys,
           (agg, key) => assign(agg, { [key]: record.get(key) }),
           {}
         ),
+
         status: record.get('currentStatus')
       }))
 
@@ -374,7 +379,7 @@ const databaseList = store =>
       return Rx.Observable.of(null)
     })
 
-const getLabelsAndTypes = store =>
+const getLabelsAndTypes = (store: any) =>
   Rx.Observable.of(null).mergeMap(() => {
     const db = getUseDb(store.getState())
 
@@ -403,13 +408,13 @@ const getLabelsAndTypes = store =>
         }
         return Rx.Observable.of(null)
       })
-      .catch(e => {
+      .catch(() => {
         store.dispatch(updateMeta([]))
         return Rx.Observable.of(null)
       })
   })
 
-const clusterRole = store =>
+const clusterRole = (store: any) =>
   Rx.Observable.fromPromise(
     new Promise((resolve, reject) => {
       if (!isACausalCluster(store.getState())) {
@@ -430,17 +435,17 @@ const clusterRole = store =>
         .catch(reject)
     })
   )
-    .catch(e => {
+    .catch(() => {
       return Rx.Observable.of(null)
     })
-    .do(res => {
+    .do((res: any) => {
       if (!res) return Rx.Observable.of(null)
       const role = res.records[0].get(0)
       store.dispatch(update({ role }))
       return Rx.Observable.of(null)
     })
 
-const switchToRequestedDb = store => {
+const switchToRequestedDb = (store: any) => {
   if (getUseDb(store.getState())) return Rx.Observable.of(null)
 
   const databases = getDatabases(store.getState())
@@ -448,7 +453,7 @@ const switchToRequestedDb = store => {
   const requestedUseDb = activeConnection?.requestedUseDb
 
   const useDefaultDb = () => {
-    const defaultDb = databases.find(db => db.default)
+    const defaultDb = databases.find((db: any) => db.default)
     if (defaultDb) {
       store.dispatch(useDb(defaultDb.name))
     }
@@ -456,7 +461,7 @@ const switchToRequestedDb = store => {
 
   if (requestedUseDb) {
     const wantedDb = databases.find(
-      ({ name }) => name.toLowerCase() === requestedUseDb.toLowerCase()
+      ({ name }: any) => name.toLowerCase() === requestedUseDb.toLowerCase()
     )
     store.dispatch(
       updateConnection({
@@ -481,10 +486,10 @@ const switchToRequestedDb = store => {
   return Rx.Observable.of(null)
 }
 
-export const dbMetaEpic = (some$, store) =>
+export const dbMetaEpic = (some$: any, store: any) =>
   some$
     .ofType(UPDATE_CONNECTION_STATE)
-    .filter(s => s.state === CONNECTED_STATE)
+    .filter((s: any) => s.state === CONNECTED_STATE)
     .merge(some$.ofType(CONNECTION_SUCCESS))
     .mergeMap(() => {
       return (
@@ -512,7 +517,7 @@ export const dbMetaEpic = (some$, store) =>
       )
     })
 
-export const serverConfigEpic = (some$, store) =>
+export const serverConfigEpic = (some$: any, store: any) =>
   some$
     .ofType(FEATURE_DETECTION_DONE)
     .merge(some$.ofType(DB_META_DONE))
@@ -537,14 +542,14 @@ export const serverConfigEpic = (some$, store) =>
                 })
               }
             )
-            .then(r => {
+            .then((r: any) => {
               // This is not set yet
               if (hasClientConfig(store.getState()) === null) {
                 store.dispatch(setClientConfig(true))
               }
               resolve(r)
             })
-            .catch(e => {
+            .catch((e: any) => {
               // Try older procedure if the new one doesn't exist
               if (e.code === 'Neo.ClientError.Procedure.ProcedureNotFound') {
                 // Store that dbms.clientConfig isn't available
@@ -570,15 +575,15 @@ export const serverConfigEpic = (some$, store) =>
             })
         })
       )
-        .catch(e => {
+        .catch(() => {
           store.dispatch(
             updateUserCapability(USER_CAPABILITIES.serverConfigReadable, false)
           )
           return Rx.Observable.of(null)
         })
-        .do(res => {
+        .do((res: any) => {
           if (!res) return Rx.Observable.of(null)
-          const settings = res.records.reduce((all, record) => {
+          const settings = res.records.reduce((all: any, record: any) => {
             const name = record.get('name')
             let value = record.get('value')
             if (name === 'browser.retain_connection_credentials') {
@@ -612,7 +617,7 @@ export const serverConfigEpic = (some$, store) =>
     })
     .mapTo({ type: 'SERVER_CONFIG_DONE' })
 
-export const serverInfoEpic = (some$, store) =>
+export const serverInfoEpic = (some$: any, store: any) =>
   some$
     .ofType(FETCH_SERVER_INFO)
     .mergeMap(() => {
@@ -631,7 +636,7 @@ export const serverInfoEpic = (some$, store) =>
           }
         )
       )
-        .catch(e => {
+        .catch(() => {
           return Rx.Observable.of(null)
         })
         .do(res => {
@@ -643,5 +648,5 @@ export const serverInfoEpic = (some$, store) =>
     })
     .mapTo({ type: 'NOOP' })
 
-export const clearMetaOnDisconnectEpic = (some$, store) =>
+export const clearMetaOnDisconnectEpic = (some$: any, _store: any) =>
   some$.ofType(DISCONNECTION_SUCCESS).mapTo({ type: CLEAR })

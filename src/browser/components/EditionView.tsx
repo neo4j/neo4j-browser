@@ -20,7 +20,7 @@
 import React from 'react'
 import { Code } from '../modules/Stream/Queries/styled'
 
-export const EnterpriseOnlyFrame = ({ command }) => {
+export const EnterpriseOnlyFrame = ({ command }: any) => {
   return (
     <div>
       <p>

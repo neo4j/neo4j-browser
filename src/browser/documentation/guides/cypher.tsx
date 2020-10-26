@@ -20,7 +20,6 @@
 
 import React from 'react'
 import ManualLink from 'browser-components/ManualLink'
-import Carousel from '../../modules/Carousel/Carousel'
 import Slide from '../../modules/Carousel/Slide'
 
 const title = 'Cypher'
@@ -50,6 +49,7 @@ const slides = [
     <div className="col-sm-9">
       <p>Let's use Cypher to generate a small social graph.</p>
       <figure>
+        {/* @ts-expect-error ts-migrate(2322) FIXME: Property 'mode' does not exist on type 'DetailedHT... Remove this comment to see the full error message */}
         <pre mode="cypher" className="pre-scrollable code runnable">
           {'CREATE (ee:Person { name: "Emil", from: "Sweden", klout: 99 })'}
         </pre>
@@ -79,6 +79,7 @@ const slides = [
     <div className="col-sm-9">
       <p>Now find the node representing Emil:</p>
       <figure>
+        {/* @ts-expect-error ts-migrate(2322) FIXME: Property 'mode' does not exist on type 'DetailedHT... Remove this comment to see the full error message */}
         <pre mode="cypher" className="pre-scrollable code runnable">
           MATCH (ee:Person) WHERE ee.name = "Emil" RETURN ee;
         </pre>
@@ -116,6 +117,7 @@ const slides = [
         clauses can create many nodes and relationships at once.
       </p>
       <figure>
+        {/* @ts-expect-error ts-migrate(2322) FIXME: Property 'mode' does not exist on type 'DetailedHT... Remove this comment to see the full error message */}
         <pre mode="cypher" className="pre-scrollable code runnable">
           {`MATCH (ee:Person) WHERE ee.name = "Emil"
 CREATE (js:Person { name: "Johan", from: "Sweden", learn: "surfing" }),
@@ -140,6 +142,7 @@ CREATE (js:Person { name: "Johan", from: "Sweden", learn: "surfing" }),
         For instance, a pattern can be used to find Emil's friends:
       </p>
       <figure>
+        {/* @ts-expect-error ts-migrate(2322) FIXME: Property 'mode' does not exist on type 'DetailedHT... Remove this comment to see the full error message */}
         <pre mode="cypher" className="pre-scrollable code runnable">
           {`MATCH (ee:Person)-[:KNOWS]-(friends)
 WHERE ee.name = "Emil" RETURN ee, friends`}
@@ -176,6 +179,7 @@ WHERE ee.name = "Emil" RETURN ee, friends`}
         to surf, so he may want to find a new friend who already does:
       </p>
       <figure>
+        {/* @ts-expect-error ts-migrate(2322) FIXME: Property 'mode' does not exist on type 'DetailedHT... Remove this comment to see the full error message */}
         <pre mode="cypher" className="pre-scrollable code runnable">
           {`MATCH (js:Person)-[:KNOWS]-()-[:KNOWS]-(surfer)
 WHERE js.name = "Johan" AND surfer.hobby = "surfing"
@@ -209,6 +213,7 @@ RETURN DISTINCT surfer`}
         <code>PROFILE</code>:
       </p>
       <figure>
+        {/* @ts-expect-error ts-migrate(2322) FIXME: Property 'mode' does not exist on type 'DetailedHT... Remove this comment to see the full error message */}
         <pre mode="cypher" className="pre-scrollable code runnable">
           {`PROFILE MATCH (js:Person)-[:KNOWS]-()-[:KNOWS]-(surfer)
 WHERE js.name = "Johan" AND surfer.hobby = "surfing"

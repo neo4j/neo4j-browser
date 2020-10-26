@@ -24,7 +24,7 @@ import 'firebase/database'
 
 const appIsInitialized = () => firebase.apps.length && firebase.apps.length > 0
 
-export const authenticate = (dataToken, onSignout = null) => {
+export const authenticate = (dataToken: any, onSignout: any = null) => {
   return firebase
     .auth()
     .signInWithCustomToken(dataToken)
@@ -38,7 +38,7 @@ export const authenticate = (dataToken, onSignout = null) => {
     })
 }
 
-export const initialize = config => {
+export const initialize = (config: any) => {
   if (appIsInitialized()) {
     return
   }
@@ -50,16 +50,16 @@ export const status = () => {
   return firebase.database().ref('.info/connected')
 }
 
-export const getResourceFor = userId => {
+export const getResourceFor = (userId: any) => {
   return firebase.database().ref(`users/${userId}`)
 }
 
-export const syncResourceFor = (userId, key, value) => {
+export const syncResourceFor = (userId: any, key: any, value: any) => {
   const userRef = firebase.database().ref(`users/${userId}`)
   userRef.child(key).set(value)
 }
 
-export const setupUser = (userId, initialData) => {
+export const setupUser = (userId: any, initialData: any) => {
   firebase
     .database()
     .ref(`users/${userId}`)

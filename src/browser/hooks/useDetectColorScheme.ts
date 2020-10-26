@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react'
 
 // Define available themes
-export const colorSchemes = {
+export const colorSchemes: Record<string, string> = {
   DARK: '(prefers-color-scheme: dark)',
   LIGHT: '(prefers-color-scheme: light)'
 }
 
 export default function useDetectColorScheme() {
-  const [scheme, setScheme] = useState(null)
+  const [scheme, setScheme] = useState<string | null>(null)
 
   useEffect(() => {
     if (!window.matchMedia) {
@@ -15,7 +15,7 @@ export default function useDetectColorScheme() {
     }
 
     // The listener
-    const listener = e => {
+    const listener = (e: any) => {
       if (!e || !e.matches) {
         return
       }
@@ -30,7 +30,7 @@ export default function useDetectColorScheme() {
     }
 
     // Add listener for all themes
-    let activeMatches = []
+    let activeMatches: any = []
     Object.keys(colorSchemes).forEach(schemeName => {
       const mq = window.matchMedia(colorSchemes[schemeName])
       mq.addListener(listener)
@@ -40,7 +40,7 @@ export default function useDetectColorScheme() {
 
     // Remove listeners, no memory leaks
     return () => {
-      activeMatches.forEach(mq => mq.removeListener(listener))
+      activeMatches.forEach((mq: any) => mq.removeListener(listener))
       activeMatches = []
     }
   }, [])

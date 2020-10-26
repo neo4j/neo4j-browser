@@ -45,12 +45,12 @@ interface ConnectFormProps {
   allowedAuthMethods: AuthenticationMethod[]
   authenticationMethod: string
   host: string
-  onAuthenticationMethodChange: () => void
+  onAuthenticationMethodChange: (event: any) => void
   onConnectClick: (doneFn?: () => void) => void
   onHostChange: (fallbackScheme: string, newHost: string) => void
-  onUsernameChange: () => void
-  onPasswordChange: () => void
-  onDatabaseChange: () => void
+  onUsernameChange: (event: any) => void
+  onPasswordChange: (event: any) => void
+  onDatabaseChange: (event: any) => void
   database: string
   password: string
   username: string

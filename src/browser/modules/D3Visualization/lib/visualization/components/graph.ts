@@ -19,6 +19,11 @@
  */
 
 export default class Graph {
+  _nodes: any
+  _relationships: any[]
+  expandedNodeMap: any
+  nodeMap: any
+  relationshipMap: any
   constructor() {
     this.addNodes = this.addNodes.bind(this)
     this.removeNode = this.removeNode.bind(this)
@@ -49,9 +54,9 @@ export default class Graph {
   }
 
   groupedRelationships() {
-    const groups = {}
+    const groups: any = {}
     for (const relationship of Array.from(this._relationships)) {
-      let nodePair = new NodePair(relationship.source, relationship.target)
+      let nodePair: any = new NodePair(relationship.source, relationship.target)
       nodePair = groups[nodePair] != null ? groups[nodePair] : nodePair
       nodePair.relationships.push(relationship)
       groups[nodePair] = nodePair
@@ -66,7 +71,7 @@ export default class Graph {
     })()
   }
 
-  addNodes(nodes) {
+  addNodes(nodes: any[]) {
     for (const node of Array.from(nodes)) {
       if (this.findNode(node.id) == null) {
         this.nodeMap[node.id] = node
@@ -76,7 +81,7 @@ export default class Graph {
     return this
   }
 
-  addExpandedNodes = (node, nodes) => {
+  addExpandedNodes = (node: any, nodes: any[]) => {
     for (const eNode of Array.from(nodes)) {
       if (this.findNode(eNode.id) == null) {
         this.nodeMap[eNode.id] = eNode
@@ -88,7 +93,7 @@ export default class Graph {
     }
   }
 
-  removeNode(node) {
+  removeNode(node: any) {
     if (this.findNode(node.id) != null) {
       delete this.nodeMap[node.id]
       this._nodes.splice(this._nodes.indexOf(node), 1)
@@ -96,11 +101,11 @@ export default class Graph {
     return this
   }
 
-  collapseNode = node => {
+  collapseNode = (node: any) => {
     if (!this.expandedNodeMap[node.id]) {
       return
     }
-    this.expandedNodeMap[node.id].forEach(id => {
+    this.expandedNodeMap[node.id].forEach((id: any) => {
       const eNode = this.nodeMap[id]
       this.collapseNode(eNode)
       this.removeConnectedRelationships(eNode)
@@ -109,7 +114,7 @@ export default class Graph {
     this.expandedNodeMap[node.id] = []
   }
 
-  updateNode(node) {
+  updateNode(node: any) {
     if (this.findNode(node.id) != null) {
       this.removeNode(node)
       node.expanded = false
@@ -119,7 +124,7 @@ export default class Graph {
     return this
   }
 
-  removeConnectedRelationships(node) {
+  removeConnectedRelationships(node: any) {
     for (const r of Array.from(this.findAllRelationshipToNode(node))) {
       this.updateNode(r.source)
       this.updateNode(r.target)
@@ -129,7 +134,7 @@ export default class Graph {
     return this
   }
 
-  addRelationships(relationships) {
+  addRelationships(relationships: any[]) {
     for (const relationship of Array.from(relationships)) {
       const existingRelationship = this.findRelationship(relationship.id)
       if (existingRelationship != null) {
@@ -143,7 +148,7 @@ export default class Graph {
     return this
   }
 
-  addInternalRelationships(relationships) {
+  addInternalRelationships(relationships: any[]) {
     for (const relationship of Array.from(relationships)) {
       relationship.internal = true
       if (this.findRelationship(relationship.id) == null) {
@@ -156,24 +161,24 @@ export default class Graph {
 
   pruneInternalRelationships() {
     const relationships = this._relationships.filter(
-      relationship => !relationship.internal
+      (relationship: any) => !relationship.internal
     )
     this.relationshipMap = {}
     this._relationships = []
     return this.addRelationships(relationships)
   }
 
-  findNode(id) {
+  findNode(id: any) {
     return this.nodeMap[id]
   }
 
-  findNodeNeighbourIds(id) {
+  findNodeNeighbourIds(id: any) {
     return this._relationships
       .filter(
-        relationship =>
+        (relationship: any) =>
           relationship.source.id === id || relationship.target.id === id
       )
-      .map(relationship => {
+      .map((relationship: any) => {
         if (relationship.target.id === id) {
           return relationship.source.id
         }
@@ -181,13 +186,13 @@ export default class Graph {
       })
   }
 
-  findRelationship(id) {
+  findRelationship(id: any) {
     return this.relationshipMap[id]
   }
 
-  findAllRelationshipToNode(node) {
+  findAllRelationshipToNode(node: any) {
     return this._relationships.filter(
-      relationship =>
+      (relationship: any) =>
         relationship.source.id === node.id || relationship.target.id === node.id
     )
   }
@@ -201,7 +206,10 @@ export default class Graph {
 }
 
 class NodePair {
-  constructor(node1, node2) {
+  nodeA: any
+  nodeB: any
+  relationships: any
+  constructor(node1: any, node2: any) {
     this.relationships = []
     if (node1.id < node2.id) {
       this.nodeA = node1

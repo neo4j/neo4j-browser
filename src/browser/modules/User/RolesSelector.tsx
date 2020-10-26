@@ -25,7 +25,7 @@ const RolesSelector = ({
   onChange = null,
   selectedValue = 0,
   id
-}) => {
+}: any) => {
   let options = [
     <option key="-1" value={0}>
       {' '}
@@ -33,7 +33,7 @@ const RolesSelector = ({
   ]
   if (roles.length > 0) {
     options = options.concat(
-      roles.map((role, i) => {
+      (roles as any[]).map((role, i) => {
         return (
           <option key={i} value={role}>
             {role}

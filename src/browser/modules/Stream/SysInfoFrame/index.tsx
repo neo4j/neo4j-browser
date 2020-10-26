@@ -45,8 +45,12 @@ import { getDatabases } from 'shared/modules/dbMeta/dbMetaDuck'
 import * as legacyHelpers from './legacyHelpers'
 import * as helpers from './helpers'
 
-export class SysInfoFrame extends Component {
-  constructor(props) {
+type SysInfoFrameState = any
+
+export class SysInfoFrame extends Component<any, SysInfoFrameState> {
+  helpers: any
+  timer: any
+  constructor(props: {}) {
     super(props)
     this.state = {
       lastFetch: null,
@@ -70,7 +74,7 @@ export class SysInfoFrame extends Component {
     this.getSysInfo()
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps: any, prevState: SysInfoFrameState) {
     if (prevState.autoRefresh !== this.state.autoRefresh) {
       if (this.state.autoRefresh) {
         this.timer = setInterval(
@@ -116,7 +120,7 @@ export class SysInfoFrame extends Component {
     }
   }
 
-  setAutoRefresh(autoRefresh) {
+  setAutoRefresh(autoRefresh: any) {
     this.setState({ autoRefresh: autoRefresh })
 
     if (autoRefresh) {
@@ -157,7 +161,7 @@ export class SysInfoFrame extends Component {
                 <AutoRefreshSpan>
                   <AutoRefreshToggle
                     checked={this.state.autoRefresh}
-                    onChange={e => this.setAutoRefresh(e.target.checked)}
+                    onChange={(e: any) => this.setAutoRefresh(e.target.checked)}
                   />
                 </AutoRefreshSpan>
               </StyledStatusBar>
@@ -169,7 +173,7 @@ export class SysInfoFrame extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   return {
     hasMultiDbSupport: hasMultiDbSupport(state),
     isACausalCluster: isACausalCluster(state),

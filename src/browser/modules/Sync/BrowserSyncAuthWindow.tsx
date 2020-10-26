@@ -18,8 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const BrowserSyncAuthWindow = (url, callback) => {
-  const win = window.open(
+const BrowserSyncAuthWindow = (url: any, callback: any) => {
+  const win: any = window.open(
     url,
     'loginWindow',
     'location=0,status=0,scrollbars=0, width=1080,height=720'
@@ -32,7 +32,7 @@ const BrowserSyncAuthWindow = (url, callback) => {
   } catch (e) {
     callback(null, e)
   }
-  const listener = event => {
+  const listener = (event: any) => {
     if (url.indexOf(event.origin) !== 0) return
     clearInterval(pollInterval)
     window.removeEventListener('message', listener)

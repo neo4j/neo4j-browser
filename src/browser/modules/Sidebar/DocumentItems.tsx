@@ -32,8 +32,8 @@ import {
   StyledDocumentActionLink
 } from './styled'
 
-export const DocumentItems = ({ header, items, onItemClick = null }) => {
-  const listOfItems = items.map(item => {
+export const DocumentItems = ({ header, items, onItemClick = null }: any) => {
+  const listOfItems = items.map((item: any) => {
     switch (item.type) {
       case 'link':
         return (
@@ -68,9 +68,9 @@ export const DocumentItems = ({ header, items, onItemClick = null }) => {
   )
 }
 
-const mapDispatchToProps = (_dispatch, ownProps) => {
+const mapDispatchToProps = (_dispatch: any, ownProps: any) => {
   return {
-    onItemClick: cmd => {
+    onItemClick: (cmd: any) => {
       ownProps.bus.send(SET_CONTENT, setContent(cmd))
     }
   }

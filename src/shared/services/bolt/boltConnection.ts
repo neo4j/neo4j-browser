@@ -45,7 +45,7 @@ export const hasMultiDbSupport = async () => {
   return supportsMultiDb
 }
 
-export const validateConnection = (driver, res, rej) => {
+export const validateConnection = (driver: any, res: any, rej: any) => {
   if (driver === null) {
     rej()
     return
@@ -53,19 +53,19 @@ export const validateConnection = (driver, res, rej) => {
 
   driver
     .supportsMultiDb()
-    .then(multiDbSupport => {
+    .then((multiDbSupport: any) => {
       if (!driver || !driver.session) return rej('No connection')
       const session = driver.session({
         defaultAccessMode: neo4j.session.READ,
         database: multiDbSupport ? 'system' : undefined
       })
       const txFn = buildTxFunctionByMode(session)
-      txFn(tx => tx.run('CALL db.indexes()'))
+      txFn((tx: any) => tx.run('CALL db.indexes()'))
         .then(() => {
           session.close()
           res(driver)
         })
-        .catch(e => {
+        .catch((e: any) => {
           session.close()
           // Only invalidate the connection if not available
           // or not authed
@@ -87,14 +87,14 @@ export const validateConnection = (driver, res, rej) => {
 }
 
 export function directConnect(
-  props,
+  props: any,
   opts = {},
-  onLostConnection = () => {},
+  onLostConnection: (any: any) => any = () => {},
   shouldValidateConnection = true
 ) {
-  const p = new Promise((resolve, reject) => {
+  const p = new Promise<any>((resolve, reject) => {
     const auth = buildAuthObj(props)
-    const driver = createDriverOrFailFn(props.host, auth, opts, e => {
+    const driver = createDriverOrFailFn(props.host, auth, opts, (e: any) => {
       onLostConnection(e)
       reject(e)
     })
@@ -107,9 +107,13 @@ export function directConnect(
   return p
 }
 
-export function openConnection(props, opts = {}, onLostConnection = () => {}) {
+export function openConnection(
+  props: any,
+  opts = {},
+  onLostConnection: any = () => {}
+) {
   const p = new Promise(async (resolve, reject) => {
-    const onConnectFail = e => {
+    const onConnectFail = (e: any) => {
       onLostConnection(e)
       unsetGlobalDrivers()
       reject(e)
@@ -120,11 +124,11 @@ export function openConnection(props, opts = {}, onLostConnection = () => {}) {
       onConnectFail
     )
     const driver = driversObj.getDirectDriver()
-    const myResolve = driver => {
+    const myResolve = (driver: any) => {
       setGlobalDrivers(driversObj)
       resolve(driver)
     }
-    const myReject = err => {
+    const myReject = (err: any) => {
       onLostConnection(err)
       unsetGlobalDrivers()
       driversObj.close()
@@ -142,7 +146,11 @@ export const closeConnection = () => {
   }
 }
 
-export const ensureConnection = (props, opts, onLostConnection) => {
+export const ensureConnection = (
+  props: any,
+  opts: any,
+  onLostConnection: any
+) => {
   const session = getGlobalDrivers()
     ? getGlobalDrivers()
         .getDirectDriver()

@@ -18,33 +18,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function toLabel(label) {
+export function toLabel(label: any) {
   return `:${label.val}`
 }
 
-export function toRelationshipType(relationshipType) {
+export function toRelationshipType(relationshipType: any) {
   return `:${relationshipType.val}`
 }
 
-export function toPropertyKey(propertyKey) {
+export function toPropertyKey(propertyKey: any) {
   return propertyKey.val
 }
 
-export function toFunction(func) {
+export function toFunction(func: any) {
   return {
     name: func.val,
     signature: func.signature.replace(func.val, '')
   }
 }
 
-export function toProcedure(procedure) {
+export function toProcedure(procedure: any) {
   const name = procedure.val
   const signature = procedure.signature.replace(procedure.val, '')
 
   let returnItems = []
   const matches = signature.match(/\([^)]*\) :: \((.*)\)/i)
   if (matches) {
-    returnItems = matches[1].split(', ').map(returnItem => {
+    returnItems = matches[1].split(', ').map((returnItem: any) => {
       const returnItemMatches = returnItem.match(/(.*) :: (.*)/)
       return {
         name: returnItemMatches[1],

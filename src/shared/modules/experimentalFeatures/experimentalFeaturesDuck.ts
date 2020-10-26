@@ -4,8 +4,9 @@ export const NAME = 'experimentalFeatures'
 const FEATURE_ON = `${NAME}/FEATURE_ON`
 const FEATURE_OFF = `${NAME}/FEATURE_OFF`
 
-export const getExperimentalFeatures = state => state[NAME]
-export const showFeature = (state, name) => !!(state[NAME][name] || {}).on
+export const getExperimentalFeatures = (state: any) => state[NAME]
+export const showFeature = (state: any, name: any) =>
+  !!(state[NAME][name] || {}).on
 
 export const experimentalFeatureSelfName = 'showSelf'
 
@@ -19,12 +20,12 @@ export const initialState = {
 }
 
 // Helpers
-const cherrypickAndMergeStates = (base, stored) => {
+const cherrypickAndMergeStates = (base: any, stored: any) => {
   if (!stored) {
     return { ...base }
   }
   const existingFeatures = Object.keys(base)
-  return existingFeatures.reduce((all, name) => {
+  return existingFeatures.reduce((all: any, name) => {
     if (!stored.hasOwnProperty(name) || stored[name].on === undefined) {
       all[name] = base[name]
       return all
@@ -35,7 +36,10 @@ const cherrypickAndMergeStates = (base, stored) => {
 }
 
 // Reducer
-export default function experimentalFeatures(state = initialState, action) {
+export default function experimentalFeatures(
+  state: any = initialState,
+  action: any
+) {
   switch (action.type) {
     case APP_START:
       return cherrypickAndMergeStates(initialState, state)
@@ -56,14 +60,14 @@ export default function experimentalFeatures(state = initialState, action) {
   }
 }
 
-export const enableExperimentalFeature = name => {
+export const enableExperimentalFeature = (name: any) => {
   return {
     type: FEATURE_ON,
     name
   }
 }
 
-export const disableExperimentalFeature = name => {
+export const disableExperimentalFeature = (name: any) => {
   return {
     type: FEATURE_OFF,
     name

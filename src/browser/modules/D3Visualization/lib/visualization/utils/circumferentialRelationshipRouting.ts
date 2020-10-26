@@ -23,11 +23,12 @@ import StraightArrow from './straightArrow'
 import ArcArrow from './arcArrow'
 
 export default class circumferentialRelationshipRouting {
-  constructor(style) {
+  style: any
+  constructor(style: any) {
     this.style = style
   }
 
-  measureRelationshipCaption(relationship, caption) {
+  measureRelationshipCaption(relationship: any, caption: any) {
     const fontFamily = 'sans-serif'
     const fontSize = parseFloat(
       this.style.forRelationship(relationship).get('font-size')
@@ -38,14 +39,14 @@ export default class circumferentialRelationshipRouting {
     return measureText(caption, fontFamily, fontSize) + padding * 2
   }
 
-  captionFitsInsideArrowShaftWidth(relationship) {
+  captionFitsInsideArrowShaftWidth(relationship: any) {
     return (
       parseFloat(this.style.forRelationship(relationship).get('shaft-width')) >
       parseFloat(this.style.forRelationship(relationship).get('font-size'))
     )
   }
 
-  measureRelationshipCaptions(relationships) {
+  measureRelationshipCaptions(relationships: any[]) {
     return (() => {
       const result = []
       for (const relationship of Array.from(relationships)) {
@@ -65,7 +66,7 @@ export default class circumferentialRelationshipRouting {
     })()
   }
 
-  shortenCaption(relationship, caption, targetWidth) {
+  shortenCaption(relationship: any, caption: any, targetWidth: any) {
     let shortCaption = caption
     while (true) {
       if (shortCaption.length <= 2) {
@@ -79,9 +80,9 @@ export default class circumferentialRelationshipRouting {
     }
   }
 
-  layoutRelationships(graph) {
+  layoutRelationships(graph: any) {
     let dx, dy
-    for (var relationship of Array.from(graph.relationships())) {
+    for (var relationship of Array.from<any>(graph.relationships())) {
       dx = relationship.target.x - relationship.source.x
       dy = relationship.target.y - relationship.source.y
       relationship.naturalAngle =
@@ -91,21 +92,24 @@ export default class circumferentialRelationshipRouting {
 
     const sortedNodes = graph
       .nodes()
-      .sort((a, b) => b.relationshipCount(graph) - a.relationshipCount(graph))
+      .sort(
+        (a: any, b: any) =>
+          b.relationshipCount(graph) - a.relationshipCount(graph)
+      )
 
     return (() => {
       const result = []
       for (var node of Array.from(sortedNodes)) {
         var angle
-        const relationships = []
+        const relationships: any[] = []
         for (relationship of Array.from(graph.relationships())) {
           if (relationship.source === node || relationship.target === node) {
             relationships.push(relationship)
           }
         }
 
-        const arrowAngles = { floating: {}, fixed: {} }
-        var relationshipMap = {}
+        const arrowAngles: any = { floating: {}, fixed: {} }
+        var relationshipMap: any = {}
         for (relationship of Array.from(relationships)) {
           relationshipMap[relationship.id] = relationship
 
@@ -131,7 +135,7 @@ export default class circumferentialRelationshipRouting {
           }
         }
 
-        var distributedAngles = {}
+        var distributedAngles: any = {}
         for (var id in arrowAngles.floating) {
           angle = arrowAngles.floating[id]
           distributedAngles[id] = angle
@@ -152,11 +156,11 @@ export default class circumferentialRelationshipRouting {
               angle = distributedAngles[id]
               relationship = relationshipMap[id]
               if (!relationship.hasOwnProperty('arrow')) {
-                let ref
+                let ref: any
                 const deflection =
                   node === relationship.source
                     ? angle - relationship.naturalAngle
-                    : (relationship.naturalAngle - angle + 180) % 360
+                    : relationship.naturalAngle - angle + (180 % 360)
 
                 const shaftRadius =
                   parseFloat(
@@ -168,10 +172,13 @@ export default class circumferentialRelationshipRouting {
                 dx = relationship.target.x - relationship.source.x
                 dy = relationship.target.y - relationship.source.y
 
-                const square = distance => distance * distance
+                const square = (distance: any) => distance * distance
                 const centreDistance = Math.sqrt(square(dx) + square(dy))
 
-                if (Math.abs(deflection) < Math.PI / 180) {
+                if (
+                  Math.abs((deflection as unknown) as number) <
+                  Math.PI / 180
+                ) {
                   relationship.arrow = new StraightArrow(
                     relationship.source.radius,
                     relationship.target.radius,
