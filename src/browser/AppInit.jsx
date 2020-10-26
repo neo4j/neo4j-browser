@@ -38,6 +38,10 @@ import { APP_START } from 'shared/modules/app/appDuck'
 import { GlobalStyle } from './styles/global-styles.js'
 import { detectRuntimeEnv } from 'services/utils.js'
 import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck.js'
+import * as Sentry from '@sentry/browser'
+import { Integrations } from '@sentry/tracing'
+import { version } from 'project-root/package.json'
+import { allowOutgoingConnections } from 'shared/modules/dbMeta/dbMetaDuck'
 
 // Configure localstorage sync
 applyKeys(
@@ -81,6 +85,27 @@ bus.applyMiddleware((_, origin) => (channel, message, source) => {
   // Send to Redux with the channel as the action type
   store.dispatch({ ...message, type: channel, ...origin })
 })
+
+async function setupSentry() {
+  if (process.env.NODE_ENV === 'production') {
+    let isCanary = false
+    try {
+      const json = await (await fetch('./manifest.json')).json()
+      isCanary = Boolean(json && json.name.toLowerCase().includes('canary'))
+    } catch {}
+
+    Sentry.init({
+      dsn:
+        'https://1ea9f7ebd51441cc95906afb2d31d841@o110884.ingest.sentry.io/1232865',
+      release: `neo4j-browser@${version}${isCanary ? '-canary' : ''}`,
+      integrations: [new Integrations.BrowserTracing()],
+      tracesSampleRate: 0.2,
+      beforeSend: event =>
+        allowOutgoingConnections(store.getState()) ? event : null
+    })
+  }
+}
+setupSentry()
 
 // Introduce environment to be able to fork functionality
 const env = detectRuntimeEnv(window, NEO4J_CLOUD_DOMAINS)

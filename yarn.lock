@@ -1860,6 +1860,69 @@
     exenv "^1.2.2"
     prop-types "^15.6.2"
 
+"@sentry/browser@^5.27.0":
+  version "5.27.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@sentry/browser/-/browser-5.27.0.tgz#35b77f076fb5f08c91eff23f3c067ee15df0ab90"
+  integrity sha1-Nbd/B2+18IyR7/I/PAZ+4V3wq5A=
+  dependencies:
+    "@sentry/core" "5.27.0"
+    "@sentry/types" "5.27.0"
+    "@sentry/utils" "5.27.0"
+    tslib "^1.9.3"
+
+"@sentry/core@5.27.0":
+  version "5.27.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@sentry/core/-/core-5.27.0.tgz#661b2fd1beecaa37c013a6c364330fa29c847b3c"
+  integrity sha1-Zhsv0b7sqjfAE6bDZDMPopyEezw=
+  dependencies:
+    "@sentry/hub" "5.27.0"
+    "@sentry/minimal" "5.27.0"
+    "@sentry/types" "5.27.0"
+    "@sentry/utils" "5.27.0"
+    tslib "^1.9.3"
+
+"@sentry/hub@5.27.0":
+  version "5.27.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@sentry/hub/-/hub-5.27.0.tgz#dcd7b36d216997f0283bd3334cbce8004d56ef89"
+  integrity sha1-3NezbSFpl/AoO9MzTLzoAE1W74k=
+  dependencies:
+    "@sentry/types" "5.27.0"
+    "@sentry/utils" "5.27.0"
+    tslib "^1.9.3"
+
+"@sentry/minimal@5.27.0":
+  version "5.27.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@sentry/minimal/-/minimal-5.27.0.tgz#8c2fdcf9cd1e59d8ff1848a7905bac304f8e206b"
+  integrity sha1-jC/c+c0eWdj/GEinkFusME+OIGs=
+  dependencies:
+    "@sentry/hub" "5.27.0"
+    "@sentry/types" "5.27.0"
+    tslib "^1.9.3"
+
+"@sentry/tracing@^5.27.0":
+  version "5.27.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@sentry/tracing/-/tracing-5.27.0.tgz#133b03a02640a0d63d11f341a00e96315c9d0303"
+  integrity sha1-EzsDoCZAoNY9EfNBoA6WMVydAwM=
+  dependencies:
+    "@sentry/hub" "5.27.0"
+    "@sentry/minimal" "5.27.0"
+    "@sentry/types" "5.27.0"
+    "@sentry/utils" "5.27.0"
+    tslib "^1.9.3"
+
+"@sentry/types@5.27.0":
+  version "5.27.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@sentry/types/-/types-5.27.0.tgz#cea288d02c727ef83541768b8738e6a829dfc831"
+  integrity sha1-zqKI0Cxyfvg1QXaLhzjmqCnfyDE=
+
+"@sentry/utils@5.27.0":
+  version "5.27.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@sentry/utils/-/utils-5.27.0.tgz#21c15401b43041b1208521465c09c64eafc2e0ff"
+  integrity sha1-IcFUAbQwQbEghSFGXAnGTq/C4P8=
+  dependencies:
+    "@sentry/types" "5.27.0"
+    tslib "^1.9.3"
+
 "@sinonjs/commons@^1.7.0":
   version "1.8.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@sinonjs/commons/-/commons-1.8.1.tgz#e7df00f98a203324f6dc7cc606cad9d4a8ab2217"

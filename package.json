@@ -153,6 +153,8 @@
     "@relate-by-ui/css": "1.0.5",
     "@relate-by-ui/relatable": "1.0.1",
     "@relate-by-ui/saved-scripts": "^1.0.5",
+    "@sentry/browser": "^5.27.0",
+    "@sentry/tracing": "^5.27.0",
     "antlr4": "^4.8.0",
     "apollo-upload-client": "^14.1.2",
     "ascii-data-table": "^2.1.1",
