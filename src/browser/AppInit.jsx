@@ -87,17 +87,17 @@ bus.applyMiddleware((_, origin) => (channel, message, source) => {
 })
 
 async function setupSentry() {
-  let isCanary = false
-  try {
-    const json = await (await fetch('./manifest.json')).json()
-    isCanary = Boolean(json && json.name.toLowerCase().includes('canary'))
-  } catch {}
-
   if (process.env.NODE_ENV === 'production') {
+    let isCanary = false
+    try {
+      const json = await (await fetch('./manifest.json')).json()
+      isCanary = Boolean(json && json.name.toLowerCase().includes('canary'))
+    } catch {}
+
     Sentry.init({
       dsn:
         'https://1ea9f7ebd51441cc95906afb2d31d841@o110884.ingest.sentry.io/1232865',
-      release: `neo4j-browser${isCanary ? '-canary' : ''}@${version}`,
+      release: `neo4j-browser@${version}${isCanary ? '-canary' : ''}`,
       integrations: [new Integrations.BrowserTracing()],
       tracesSampleRate: 0.2,
       beforeSend: event =>
@@ -105,6 +105,7 @@ async function setupSentry() {
     })
   }
 }
+setupSentry()
 
 // Introduce environment to be able to fork functionality
 const env = detectRuntimeEnv(window, NEO4J_CLOUD_DOMAINS)
