@@ -55,6 +55,11 @@ export const Frame = styled.div<FullscreenProps>`
   border-radius: 0;
   z-index: 1030;
   margin: 0;
+
+  .CodeMirror-scroll {
+    height: calc(100vh - 20px) !important;
+    max-height: calc(100vh - 20px) !important;
+  }
   `
     }
     return ''
