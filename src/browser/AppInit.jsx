@@ -86,16 +86,24 @@ bus.applyMiddleware((_, origin) => (channel, message, source) => {
   store.dispatch({ ...message, type: channel, ...origin })
 })
 
-if (process.env.NODE_ENV === 'production') {
-  Sentry.init({
-    dsn:
-      'https://1ea9f7ebd51441cc95906afb2d31d841@o110884.ingest.sentry.io/1232865',
-    release: `neo4j-browser@${version}`,
-    integrations: [new Integrations.BrowserTracing()],
-    tracesSampleRate: 0.2,
-    beforeSend: event =>
-      allowOutgoingConnections(store.getState()) ? event : null
-  })
+async function setupSentry() {
+  let isCanary = false
+  try {
+    const json = await (await fetch('./manifest.json')).json()
+    isCanary = Boolean(json && json.name.toLowerCase().includes('canary'))
+  } catch {}
+
+  if (process.env.NODE_ENV === 'production') {
+    Sentry.init({
+      dsn:
+        'https://1ea9f7ebd51441cc95906afb2d31d841@o110884.ingest.sentry.io/1232865',
+      release: `neo4j-browser${isCanary ? '-canary' : ''}@${version}`,
+      integrations: [new Integrations.BrowserTracing()],
+      tracesSampleRate: 0.2,
+      beforeSend: event =>
+        allowOutgoingConnections(store.getState()) ? event : null
+    })
+  }
 }
 
 // Introduce environment to be able to fork functionality
