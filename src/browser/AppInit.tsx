@@ -35,9 +35,9 @@ import { createUploadLink } from 'apollo-upload-client'
 
 import { createReduxMiddleware, getAll, applyKeys } from 'services/localstorage'
 import { APP_START } from 'shared/modules/app/appDuck'
-import { GlobalStyle } from './styles/global-styles.js'
-import { detectRuntimeEnv } from 'services/utils.js'
-import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck.js'
+import { GlobalStyle } from './styles/global-styles'
+import { detectRuntimeEnv } from 'services/utils'
+import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
 import * as Sentry from '@sentry/browser'
 import { Integrations } from '@sentry/tracing'
 import { version } from 'project-root/package.json'
@@ -63,13 +63,16 @@ const suberMiddleware = createSuberReduxMiddleware(bus)
 const epicMiddleware = createEpicMiddleware(epics)
 const localStorageMiddleware = createReduxMiddleware()
 
+// @ts-expect-error ts-migrate(2345) FIXME: Type 'AnyAction' is missing the following properti... Remove this comment to see the full error message
 const reducer = combineReducers({ ...reducers })
 
 const enhancer = compose(
   applyMiddleware(suberMiddleware, epicMiddleware, localStorageMiddleware),
+  // @ts-expect-error ts-migrate(2339) FIXME: Property '__REDUX_DEVTOOLS_EXTENSION__' does not e... Remove this comment to see the full error message
   process.env.NODE_ENV !== 'production' && window.__REDUX_DEVTOOLS_EXTENSION__
-    ? window.__REDUX_DEVTOOLS_EXTENSION__()
-    : f => f
+    ? // @ts-expect-error ts-migrate(2339) FIXME: Property '__REDUX_DEVTOOLS_EXTENSION__' does not e... Remove this comment to see the full error message
+      window.__REDUX_DEVTOOLS_EXTENSION__()
+    : (f: any) => f
 )
 
 const store = createStore(
@@ -79,12 +82,15 @@ const store = createStore(
 )
 
 // Send everything from suber into Redux
-bus.applyMiddleware((_, origin) => (channel, message, source) => {
-  // No loop-backs
-  if (source === 'redux') return
-  // Send to Redux with the channel as the action type
-  store.dispatch({ ...message, type: channel, ...origin })
-})
+bus.applyMiddleware(
+  (_, origin) => (channel: any, message: any, source: any) => {
+    // No loop-backs
+    if (source === 'redux') return
+    // Send to Redux with the channel as the action type
+    // @ts-expect-error ts-migrate(2698) FIXME: Spread types may only be created from object types... Remove this comment to see the full error message
+    store.dispatch({ ...message, type: channel, ...origin })
+  }
+)
 
 async function setupSentry() {
   if (process.env.NODE_ENV === 'production') {
@@ -108,6 +114,7 @@ async function setupSentry() {
 setupSentry()
 
 // Introduce environment to be able to fork functionality
+// @ts-expect-error ts-migrate(2345) FIXME: Type 'string' is not assignable to type 'never'.
 const env = detectRuntimeEnv(window, NEO4J_CLOUD_DOMAINS)
 
 // URL we're on
@@ -168,6 +175,7 @@ const client = new ApolloClient({
 
 const AppInit = () => {
   return (
+    // @ts-expect-error ts-migrate(2769) FIXME: Type 'Store<unknown>' is not assignable to type 'S... Remove this comment to see the full error message
     <Provider store={store}>
       <BusProvider bus={bus}>
         <>

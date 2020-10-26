@@ -22,7 +22,7 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { Provider } from 'react-redux'
 
-import { CypherFrame } from './index.jsx'
+import { CypherFrame } from './index.tsx'
 
 const createProps = (status, result) => ({
   recentView: undefined,

@@ -28,7 +28,7 @@ module.exports = {
   node: {
     fs: 'empty'
   },
-  entry: [path.resolve(helpers.browserPath, 'index.jsx')],
+  entry: [path.resolve(helpers.browserPath, 'index.tsx')],
   output: {
     filename: 'app-[hash].js',
     chunkFilename: '[name].chunkhash.bundle.js',
@@ -51,7 +51,7 @@ module.exports = {
       'browser-styles': path.resolve(helpers.browserPath, 'styles'),
       icons: path.resolve(helpers.browserPath, 'icons')
     },
-    extensions: ['.tsx', '.ts', '.js', '.jsx']
+    extensions: ['.tsx', '.ts', '.js']
   },
   module: {
     rules

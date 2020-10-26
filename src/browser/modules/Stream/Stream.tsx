@@ -50,7 +50,7 @@ import DbsFrame from './Auth/DbsFrame'
 import { getLatestFromFrameStack } from './stream.utils'
 import EditFrame from './EditFrame'
 
-const getFrame = type => {
+const getFrame = (type: any) => {
   const trans = {
     error: ErrorFrame,
     cypher: CypherFrame,
@@ -80,18 +80,22 @@ const getFrame = type => {
     edit: EditFrame,
     default: Frame
   }
+  // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
   return trans[type] || trans.default
 }
 
 class Stream extends PureComponent {
+  base: any
   componentDidMount() {
     this.base = React.createRef()
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: any) {
     // If we want to scroll to top when a new frame is added
     if (
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'frames' does not exist on type 'Readonly... Remove this comment to see the full error message
       prevProps.frames.length < this.props.frames.length &&
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'scrollToTop' does not exist on type 'Rea... Remove this comment to see the full error message
       this.props.scrollToTop &&
       this.base &&
       this.base.current
@@ -103,10 +107,12 @@ class Stream extends PureComponent {
   render() {
     return (
       <StyledStream ref={this.base} data-testid="stream">
-        {this.props.frames.map(frameObject => {
+        {/* @ts-expect-error ts-migrate(2339) FIXME: Property 'frames' does not exist on type 'Readonly... Remove this comment to see the full error message */}
+        {this.props.frames.map((frameObject: any) => {
           const frame = getLatestFromFrameStack(frameObject)
           const frameProps = {
             frame: { ...frame, isPinned: frameObject.isPinned },
+            // @ts-expect-error ts-migrate(2339) FIXME: Property 'activeConnectionData' does not exist on ... Remove this comment to see the full error message
             activeConnectionData: this.props.activeConnectionData,
             stack: frameObject.stack
           }
@@ -115,7 +121,7 @@ class Stream extends PureComponent {
             try {
               const cmd = frame.cmd.replace(/^:/, '')
               const Frame = cmd[0].toUpperCase() + cmd.slice(1) + 'Frame'
-              MyFrame = require('./Extras/index.js')[Frame]
+              MyFrame = require('./Extras/index.ts')[Frame]
               if (!MyFrame) {
                 MyFrame = getFrame(frame.type)
               }
@@ -129,7 +135,7 @@ class Stream extends PureComponent {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   const frames = getFrames(state)
   return {
     frames,

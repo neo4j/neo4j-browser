@@ -96,7 +96,7 @@ class FrameTitlebar extends Component {
     const data = exportData.slice()
     const csv = CSVSerializer(data.shift())
     csv.appendRows(data)
-    var blob = new Blob([csv.output()], {
+    const blob = new Blob([csv.output()], {
       type: 'text/plain;charset=utf-8'
     })
     saveAs(blob, 'export.csv')
@@ -145,7 +145,7 @@ class FrameTitlebar extends Component {
   }
 
   exportGrass(data) {
-    var blob = new Blob([data], {
+    const blob = new Blob([data], {
       type: 'text/plain;charset=utf-8'
     })
     saveAs(blob, 'style.grass')

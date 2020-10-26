@@ -235,9 +235,4 @@ const mapStateToProps = state => ({
   neo4jVersion: getVersion(state)
 })
 
-export default withBus(
-  connect(
-    mapStateToProps,
-    null
-  )(Frame)
-)
+export default withBus(connect(mapStateToProps, null)(Frame))

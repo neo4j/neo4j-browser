@@ -85,7 +85,4 @@ const mapDispatchToProps = dispatch => {
     updateData: data => dispatch(updateData(data))
   }
 }
-export default connect(
-  null,
-  mapDispatchToProps
-)(Intercom)
+export default connect(null, mapDispatchToProps)(Intercom)

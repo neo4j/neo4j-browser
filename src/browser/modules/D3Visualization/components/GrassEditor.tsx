@@ -43,7 +43,7 @@ export class GrassEditorComponent extends Component {
     }
     this.nodeDisplaySizes = []
     this.widths = []
-    for (var index = 0; index < 10; index++) {
+    for (let index = 0; index < 10; index++) {
       this.nodeDisplaySizes.push(`${12 + 2 * index}px`)
       this.widths.push(`${5 + 3 * index}px`)
     }

@@ -30,12 +30,7 @@ module.exports = {
       '<rootDir>/node_modules/monaco-editor/esm/vs/editor/editor.main.js'
   },
   modulePaths: ['<rootDir>/src', '<rootDir>/src/shared'],
-  collectCoverageFrom: [
-    '**/src/**/*.js',
-    '**/src/**/*.jsx',
-    '**/src/**/*.ts',
-    '**/src/**/*.tsx'
-  ],
+  collectCoverageFrom: ['**/src/**/*.ts', '**/src/**/*.tsx'],
   coverageThreshold: {
     global: {
       statements: 45,

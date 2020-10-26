@@ -17,40 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import './init'
 import React from 'react'
-import styles from './style.less'
-import { StyledSlide } from './styled.jsx'
+import ReactDOM from 'react-dom'
+import AppInit from './AppInit'
 
-const Slide = React.forwardRef(({ children, content, html }, ref) => {
-  if (children) {
-    return (
-      <StyledSlide ref={ref} className={styles.slide}>
-        {children}
-      </StyledSlide>
-    )
-  }
-
-  if (content) {
-    return (
-      <StyledSlide ref={ref} className={styles.slide}>
-        {content}
-      </StyledSlide>
-    )
-  }
-
-  if (html) {
-    return (
-      <StyledSlide
-        ref={ref}
-        className={styles.slide}
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
-    )
-  }
-
-  return null
-})
-
-Slide.displayName = 'Slide'
-
-export default Slide
+ReactDOM.render(<AppInit />, document.getElementById('mount'))
