@@ -67,7 +67,10 @@ export interface Favorite {
 }
 
 export interface ProjectFilesResult {
-  getProject: { files: ProjectFile[] }
+  getProject: {
+    id: string
+    files: ProjectFile[]
+  }
 }
 
 export interface ProjectFilesVariables {
@@ -77,6 +80,7 @@ export interface ProjectFilesVariables {
 export const GET_PROJECT_FILES = gql`
   query GetProject($projectId: String!, $filterValue: String!) {
     getProject(name: $projectId) {
+      id
       files(
         filters: [{ field: "extension", type: EQUALS, value: $filterValue }]
       ) {

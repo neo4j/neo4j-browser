@@ -138,6 +138,7 @@ const writeCacheQuery = (
     query: GET_PROJECT_FILES,
     data: {
       getProject: {
+        id: projectId,
         files
       }
     },
