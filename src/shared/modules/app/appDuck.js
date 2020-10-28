@@ -39,8 +39,13 @@ export const getEnv = state => (state[NAME] || {}).env || WEB
 export const hasDiscoveryEndpoint = state =>
   [WEB, CLOUD].includes(getEnv(state))
 export const inWebEnv = state => getEnv(state) === WEB
+export const inCloudEnv = state => getEnv(state) === CLOUD
 export const inWebBrowser = state => [WEB, CLOUD].includes(getEnv(state))
 export const getAllowedBoltSchemes = (state, encryptionFlag) => {
+  if (inCloudEnv(state) /* Aura only allows neo4j+s */) {
+    return ['neo4j+s']
+  }
+
   const isHosted = inWebBrowser(state)
   const hostedUrl = getHostedUrl(state)
   return !isHosted

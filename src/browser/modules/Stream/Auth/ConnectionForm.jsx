@@ -46,7 +46,7 @@ import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
 import ConnectForm from './ConnectForm'
 import ConnectedView from './ConnectedView'
 import ChangePasswordForm from './ChangePasswordForm'
-import { getAllowedBoltSchemes } from 'shared/modules/app/appDuck'
+import { getAllowedBoltSchemes, inCloudEnv } from 'shared/modules/app/appDuck'
 import { FOCUS } from 'shared/modules/editor/editorDuck'
 import {
   generateBoltUrl,
@@ -293,7 +293,7 @@ export class ConnectionForm extends Component {
     } else if (
       this.props.isConnected &&
       this.props.activeConnectionData &&
-      this.props.activeConnectionData.authEnabled === false // excplicit false = auth disabled for sure
+      this.props.activeConnectionData.authEnabled === false // explicit false = auth disabled for sure
     ) {
       view = (
         <StyledConnectionBody>
@@ -315,6 +315,9 @@ export class ConnectionForm extends Component {
           username={this.state.username}
           password={this.state.password}
           database={this.state.requestedUseDb}
+          allowedAuthMethods={
+            this.props.inCloudEnv ? [NATIVE] : [NATIVE, NO_AUTH]
+          }
           authenticationMethod={this.state.authenticationMethod}
           used={this.state.used}
           allowedSchemes={this.props.allowedSchemes}
@@ -334,7 +337,8 @@ const mapStateToProps = state => {
     playImplicitInitCommands: getPlayImplicitInitCommands(state),
     storeCredentials: shouldRetainConnectionCredentials(state),
     isConnected: isConnected(state),
-    allowedSchemes: getAllowedBoltSchemes(state)
+    allowedSchemes: getAllowedBoltSchemes(state),
+    inCloudEnv: inCloudEnv(state)
   }
 }
 
@@ -356,6 +360,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     storeCredentials: stateProps.storeCredentials,
     isConnected: stateProps.isConnected,
     allowedSchemes: stateProps.allowedSchemes,
+    inCloudEnv: stateProps.onAura,
     ...ownProps,
     ...dispatchProps,
     executeInitCmd: () => {

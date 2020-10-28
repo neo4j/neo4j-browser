@@ -28,6 +28,8 @@ import { Lead } from 'browser-components/Text'
 
 import Render from 'browser-components/Render'
 import { StyledConnectionAside, StyledConnectionBodyContainer } from './styled'
+import { connect } from 'react-redux'
+import { inCloudEnv } from 'shared/modules/app/appDuck'
 
 export class ConnectionFrame extends Component {
   constructor(props) {
@@ -58,20 +60,21 @@ export class ConnectionFrame extends Component {
         contents={
           <>
             <StyledConnectionAside>
-              <Render if={!this.state.success}>
-                <React.Fragment>
-                  <H3>Connect to Neo4j</H3>
-                  <Lead>
-                    Database access might require an authenticated connection.
-                  </Lead>
-                </React.Fragment>
-              </Render>
-              <Render if={this.state.success}>
-                <React.Fragment>
+              {this.state.success ? (
+                <>
                   <H3>Connected to Neo4j</H3>
                   <Lead>Nice to meet you.</Lead>
-                </React.Fragment>
-              </Render>
+                </>
+              ) : (
+                <>
+                  <H3>Connect to Neo4j</H3>
+                  <Lead>
+                    {this.props.inCloudEnv
+                      ? 'Database access on Neo4j Aura requires an authenticated connection'
+                      : 'Database access might require an authenticated connection.'}
+                  </Lead>
+                </>
+              )}
             </StyledConnectionAside>
             <StyledConnectionBodyContainer>
               <ConnectionForm
@@ -87,4 +90,10 @@ export class ConnectionFrame extends Component {
   }
 }
 
-export default ConnectionFrame
+const mapStateToProps = state => {
+  return {
+    inCloudEnv: inCloudEnv(state)
+  }
+}
+
+export default connect(mapStateToProps)(ConnectionFrame)
