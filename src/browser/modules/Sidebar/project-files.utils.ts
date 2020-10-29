@@ -32,7 +32,9 @@ import {
   GET_PROJECT_FILES,
   AddProjectFile,
   RemoveProjectFile,
-  ProjectFileMapping
+  ProjectFileMapping,
+  PROHIBITED_FILENAME_CHAR_TESTS,
+  ProhibitedFilenameErrors
 } from './project-files.constants'
 
 export const ProjectFilesQueryVars = (
@@ -107,7 +109,8 @@ export const setProjectFileDefaultFileName = (contents: string): string => {
     ? trim(firstLine.slice(COMMENT_PREFIX.length))
     : firstLine
 
-  // @todo: this should be ok but could do with looking at again
+  // this should be ok but may need adjusting
+  // if scenarios come up that require it
   return firstLineStr
     .replace(/\/|\\/g, '') // replace any forward or back slashes
     .replace(/[^\w]/g, '-') // replace any non-word chars with dashes
@@ -117,6 +120,55 @@ export const setProjectFileDefaultFileName = (contents: string): string => {
 
 export const createFilePath = (paths: string[]): string => {
   return paths.join(/Win32/.test(navigator.platform) ? '\\' : '/')
+}
+
+export const checkFileNameInput = (fileName: string): string => {
+  if (!fileName.length) {
+    return 'File name cannot be empty'
+  }
+
+  const errors: ProhibitedFilenameErrors = { chars: [], tests: [] }
+
+  PROHIBITED_FILENAME_CHAR_TESTS.forEach(charObj => {
+    if (charObj.test) {
+      // if a Regex test exists
+      if (charObj.platform) {
+        if (
+          new RegExp(charObj.platform).test(navigator.platform) &&
+          charObj.test.test(fileName)
+        ) {
+          errors.tests.push(charObj.test)
+        }
+      } else {
+        if (charObj.test.test(fileName)) {
+          errors.tests.push(charObj.test)
+        }
+      }
+    }
+    if (charObj.char) {
+      // otherwise default to .includes check
+      if (charObj.platform) {
+        if (
+          new RegExp(charObj.platform).test(navigator.platform) &&
+          fileName.includes(charObj.char)
+        ) {
+          errors.chars.push(charObj.char)
+        }
+      } else {
+        if (fileName.includes(charObj.char)) {
+          errors.chars.push(charObj.char)
+        }
+      }
+    }
+  })
+
+  return errors.chars.length || errors.tests.length
+    ? `File name cannot contain ${
+        errors.chars.length ? `${errors.chars.join(', ')}` : ''
+      }${errors.chars.length && errors.tests.length ? ' or ' : ''}${
+        errors.tests.length ? `${errors.tests.join(', ')}` : ''
+      }`
+    : ''
 }
 
 const readCacheQuery = (
