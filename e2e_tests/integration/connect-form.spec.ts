@@ -22,7 +22,8 @@ import {
   schemeWithEncryptionFlag,
   schemeWithInvertedEncryptionFlag,
   stripScheme,
-  isEnterpriseEdition
+  isEnterpriseEdition,
+  isAura
 } from '../support/utils'
 
 /* global Cypress, cy, before */
@@ -161,19 +162,21 @@ describe('Connect form', () => {
       })
     }
 
-    it('extracts params and prefills form', () => {
-      cy.disconnect()
-      cy.visit('/?dbms=bolt://username@localhost:7687&db=system')
+    if (!isAura()) {
+      it('extracts params and prefills form', () => {
+        cy.disconnect()
+        cy.visit('/?dbms=bolt://username@localhost:7687&db=system')
 
-      cy.get('[data-testid=database]').should('have.value', 'system')
-      cy.get('[data-testid=username]')
-        .should('have.value', 'username')
-        .clear()
-        .type('neo4j')
-      cy.get('[data-testid=password]')
-        .type(Cypress.config('password'))
-        .type('{enter}')
-      cy.get('[data-testid="editor-wrapper"]').contains('system')
-    })
+        cy.get('[data-testid=database]').should('have.value', 'system')
+        cy.get('[data-testid=username]')
+          .should('have.value', 'username')
+          .clear()
+          .type('neo4j')
+        cy.get('[data-testid=password]')
+          .type(Cypress.config('password'))
+          .type('{enter}')
+        cy.get('[data-testid="editor-wrapper"]').contains('system')
+      })
+    }
   }
 })
