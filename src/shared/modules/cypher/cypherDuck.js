@@ -27,6 +27,10 @@ import { buildTxFunctionByMode } from 'services/bolt/boltHelpers'
 import { flatten } from 'services/utils'
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 import { getUserTxMetadata } from 'services/bolt/txMetadata'
+import { applyGraphTypes } from 'services/bolt/boltMappings'
+import { arrayToObject } from 'services/utils'
+import { send } from 'shared/modules/requests/requestsDuck'
+import { map } from 'lodash-es'
 import {
   canSendTxMetadata,
   changeUserPasswordQuery,
@@ -42,6 +46,7 @@ import {
 
 const NAME = 'cypher'
 export const CYPHER_REQUEST = `${NAME}/REQUEST`
+export const ROUTED_CYPHER_REQUEST = `${NAME}/ROUTED_REQUEST`
 export const AD_HOC_CYPHER_REQUEST = `${NAME}/AD_HOC_REQUEST`
 export const CLUSTER_CYPHER_REQUEST = `${NAME}/CLUSTER_REQUEST`
 export const FORCE_CHANGE_PASSWORD = `${NAME}/FORCE_CHANGE_PASSWORD`
@@ -114,6 +119,34 @@ export const cypherRequestEpic = (some$, store) =>
         type: action.$$responseChannel,
         success: false,
         error: e
+      }))
+  })
+
+export const routedCypherRequestEpic = (some$, store) =>
+  some$.ofType(ROUTED_CYPHER_REQUEST).mergeMap(action => {
+    if (!action.$$responseChannel) return Rx.Observable.of(null)
+
+    const [id, promise] = bolt.routedWriteTransaction(
+      action.query,
+      action.params,
+      {
+        useCypherThread: shouldUseCypherThread(store.getState()),
+        ...getUserTxMetadata(action.queryType || null)({
+          hasServerSupport: canSendTxMetadata(store.getState())
+        }),
+        useDb: action.useDb
+      }
+    )
+    return promise
+      .then(result => ({
+        type: action.$$responseChannel,
+        success: true,
+        result
+      }))
+      .catch(error => ({
+        type: action.$$responseChannel,
+        success: false,
+        error
       }))
   })
 

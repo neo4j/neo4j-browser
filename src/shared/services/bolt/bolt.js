@@ -78,7 +78,6 @@ function routedWriteTransaction(input, parameters, requestMetaData = {}) {
   const {
     useCypherThread = false,
     requestId = null,
-    cancelable = false,
     onLostConnection = () => {},
     txMetadata = undefined,
     autoCommit = false,
@@ -91,7 +90,7 @@ function routedWriteTransaction(input, parameters, requestMetaData = {}) {
       mappings.recursivelyTypeGraphItems(parameters),
       boltConnection.ROUTED_WRITE_CONNECTION,
       id,
-      cancelable,
+      true /* later assumed to be cancelable  */,
       {
         ...connectionProperties,
         txMetadata,
