@@ -84,22 +84,18 @@ const onmessage = function(message) {
           applyGraphTypes(parameters),
           { requestId, cancelable, txMetadata, useDb, autoCommit }
         )
-        try {
-          connectionTypeMap[connectionType]
-            .getPromise(res)
-            .then(r => {
-              afterWork()
-              self.postMessage(cypherResponseMessage(r))
-            })
-            .catch(e => {
-              afterWork()
-              self.postMessage(
-                cypherErrorMessage({ code: e.code, message: e.message })
-              )
-            })
-        } catch (error) {
-          console.log(error, connectionType, connectionTypeMap, res)
-        }
+        connectionTypeMap[connectionType]
+          .getPromise(res)
+          .then(r => {
+            afterWork()
+            self.postMessage(cypherResponseMessage(r))
+          })
+          .catch(e => {
+            afterWork()
+            self.postMessage(
+              cypherErrorMessage({ code: e.code, message: e.message })
+            )
+          })
       })
       .catch(e => {
         afterWork()

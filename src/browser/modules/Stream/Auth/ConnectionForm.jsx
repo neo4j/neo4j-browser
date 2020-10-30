@@ -46,7 +46,7 @@ import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
 import ConnectForm from './ConnectForm'
 import ConnectedView from './ConnectedView'
 import ChangePasswordForm from './ChangePasswordForm'
-import { getAllowedBoltSchemes, inCloudEnv } from 'shared/modules/app/appDuck'
+import { getAllowedBoltSchemes } from 'shared/modules/app/appDuck'
 import { FOCUS } from 'shared/modules/editor/editorDuck'
 import {
   generateBoltUrl,
@@ -316,10 +316,9 @@ export class ConnectionForm extends Component {
           password={this.state.password}
           database={this.state.requestedUseDb}
           authenticationMethod={this.state.authenticationMethod}
-          supportsMultiDb={this.state.supportsMultiDb}
           used={this.state.used}
           allowedSchemes={this.props.allowedSchemes}
-          allowedAuthMethods={this.props.allowedAuthMethods}
+          supportsMultiDb={this.state.supportsMultiDb}
         />
       )
     }
@@ -335,8 +334,7 @@ const mapStateToProps = state => {
     playImplicitInitCommands: getPlayImplicitInitCommands(state),
     storeCredentials: shouldRetainConnectionCredentials(state),
     isConnected: isConnected(state),
-    allowedSchemes: getAllowedBoltSchemes(state),
-    allowedAuthMethods: inCloudEnv(state) ? [NATIVE] : [NATIVE, NO_AUTH]
+    allowedSchemes: getAllowedBoltSchemes(state)
   }
 }
 
@@ -358,7 +356,6 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     storeCredentials: stateProps.storeCredentials,
     isConnected: stateProps.isConnected,
     allowedSchemes: stateProps.allowedSchemes,
-    allowedAuthMethods: stateProps.allowedAuthMethods,
     ...ownProps,
     ...dispatchProps,
     executeInitCmd: () => {

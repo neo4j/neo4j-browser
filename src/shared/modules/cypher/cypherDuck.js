@@ -27,10 +27,6 @@ import { buildTxFunctionByMode } from 'services/bolt/boltHelpers'
 import { flatten } from 'services/utils'
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 import { getUserTxMetadata } from 'services/bolt/txMetadata'
-import { applyGraphTypes } from 'services/bolt/boltMappings'
-import { arrayToObject } from 'services/utils'
-import { send } from 'shared/modules/requests/requestsDuck'
-import { map } from 'lodash-es'
 import {
   canSendTxMetadata,
   changeUserPasswordQuery,
@@ -134,6 +130,7 @@ export const routedCypherRequestEpic = (some$, store) =>
         ...getUserTxMetadata(action.queryType || null)({
           hasServerSupport: canSendTxMetadata(store.getState())
         }),
+        cancelable: true,
         useDb: action.useDb
       }
     )
