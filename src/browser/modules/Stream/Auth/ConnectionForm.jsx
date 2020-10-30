@@ -315,13 +315,11 @@ export class ConnectionForm extends Component {
           username={this.state.username}
           password={this.state.password}
           database={this.state.requestedUseDb}
-          allowedAuthMethods={
-            this.props.inCloudEnv ? [NATIVE] : [NATIVE, NO_AUTH]
-          }
-          authenticationMethod={this.state.authenticationMethod}
+          supportsMultiDb={this.state.supportsMultiDb}
           used={this.state.used}
           allowedSchemes={this.props.allowedSchemes}
-          supportsMultiDb={this.state.supportsMultiDb}
+          allowedAuthMethods={this.props.allowedAuthMethods}
+          authenticationMethod={this.state.authenticationMethod}
         />
       )
     }
@@ -338,7 +336,7 @@ const mapStateToProps = state => {
     storeCredentials: shouldRetainConnectionCredentials(state),
     isConnected: isConnected(state),
     allowedSchemes: getAllowedBoltSchemes(state),
-    inCloudEnv: inCloudEnv(state)
+    allowedAuthMethods: inCloudEnv(state) ? [NATIVE] : [NATIVE, NO_AUTH]
   }
 }
 
@@ -360,7 +358,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     storeCredentials: stateProps.storeCredentials,
     isConnected: stateProps.isConnected,
     allowedSchemes: stateProps.allowedSchemes,
-    inCloudEnv: stateProps.onAura,
+    allowedAuthMethods: stateProps.allowedAuthMethods,
     ...ownProps,
     ...dispatchProps,
     executeInitCmd: () => {
