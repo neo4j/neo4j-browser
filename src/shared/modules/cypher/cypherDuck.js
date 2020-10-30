@@ -42,7 +42,7 @@ import {
 
 const NAME = 'cypher'
 export const CYPHER_REQUEST = `${NAME}/REQUEST`
-export const ROUTED_CYPHER_REQUEST = `${NAME}/ROUTED_REQUEST`
+export const ROUTED_CYPHER_WRITE_REQUEST = `${NAME}/ROUTED_WRITE_REQUEST`
 export const AD_HOC_CYPHER_REQUEST = `${NAME}/AD_HOC_REQUEST`
 export const CLUSTER_CYPHER_REQUEST = `${NAME}/CLUSTER_REQUEST`
 export const FORCE_CHANGE_PASSWORD = `${NAME}/FORCE_CHANGE_PASSWORD`
@@ -119,7 +119,7 @@ export const cypherRequestEpic = (some$, store) =>
   })
 
 export const routedCypherRequestEpic = (some$, store) =>
-  some$.ofType(ROUTED_CYPHER_REQUEST).mergeMap(action => {
+  some$.ofType(ROUTED_CYPHER_WRITE_REQUEST).mergeMap(action => {
     if (!action.$$responseChannel) return Rx.Observable.of(null)
 
     const [id, promise] = bolt.routedWriteTransaction(

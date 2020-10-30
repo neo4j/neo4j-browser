@@ -23,7 +23,7 @@ import React from 'react'
 import { createBus } from 'suber'
 
 import { UserList } from './UserList'
-import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import { ROUTED_CYPHER_WRITE_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import {
   listRolesQuery,
   listUsersQuery
@@ -44,7 +44,7 @@ describe('<UserList />', () => {
     }
 
     const busCallback = jest.fn()
-    bus.take(CYPHER_REQUEST, busCallback)
+    bus.take(ROUTED_CYPHER_WRITE_REQUEST, busCallback)
 
     render(<UserList {...props} />)
 
@@ -68,7 +68,7 @@ describe('<UserList />', () => {
     }
 
     const busCallback = jest.fn()
-    bus.take(CYPHER_REQUEST, busCallback)
+    bus.take(ROUTED_CYPHER_WRITE_REQUEST, busCallback)
 
     render(<UserList {...props} />)
 

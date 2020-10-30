@@ -32,7 +32,7 @@ import {
   createDatabaseUser,
   addRoleToUser
 } from 'shared/modules/cypher/boltUserHelper'
-import { ROUTED_CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import { ROUTED_CYPHER_WRITE_REQUEST } from 'shared/modules/cypher/cypherDuck'
 
 import RolesSelector from './RolesSelector'
 import FrameTemplate from 'browser/modules/Frame/FrameTemplate'
@@ -111,7 +111,7 @@ export class UserAdd extends Component {
     this.state.roles.forEach(role => {
       this.props.bus &&
         this.props.bus.self(
-          ROUTED_CYPHER_REQUEST,
+          ROUTED_CYPHER_WRITE_REQUEST,
           {
             query: addRoleToUser(
               this.state.username,
@@ -149,7 +149,7 @@ export class UserAdd extends Component {
   getRoles() {
     this.props.bus &&
       this.props.bus.self(
-        ROUTED_CYPHER_REQUEST,
+        ROUTED_CYPHER_WRITE_REQUEST,
         {
           query: listRolesQuery(Boolean(this.props.useSystemDb)),
           queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
@@ -195,7 +195,7 @@ export class UserAdd extends Component {
   createUser() {
     this.props.bus &&
       this.props.bus.self(
-        ROUTED_CYPHER_REQUEST,
+        ROUTED_CYPHER_WRITE_REQUEST,
         {
           query: createDatabaseUser(
             this.state,

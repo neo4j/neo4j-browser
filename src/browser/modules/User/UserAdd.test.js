@@ -23,7 +23,7 @@ import React from 'react'
 import { createBus } from 'suber'
 
 import { UserAdd } from './UserAdd'
-import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import { ROUTED_CYPHER_WRITE_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { listRolesQuery } from 'shared/modules/cypher/boltUserHelper'
 
 // Stubbing out title bar as it depends on store
@@ -41,7 +41,7 @@ describe('<UserAdd />', () => {
     }
 
     const busCallback = jest.fn()
-    bus.one(CYPHER_REQUEST, busCallback)
+    bus.one(ROUTED_CYPHER_WRITE_REQUEST, busCallback)
 
     render(<UserAdd {...props} />)
 
