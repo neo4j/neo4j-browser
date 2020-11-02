@@ -68,6 +68,7 @@ export const UPDATE_DATA = `${NAME}/UPDATE_DATA`
 export const BOOTED = `${NAME}/BOOTED`
 export const METRICS_EVENT = `${NAME}/METRICS_EVENT`
 export const UDC_STARTUP = `${NAME}/STARTUP`
+export const LAST_GUIDE_SLIDE = `${NAME}/LAST_GUIDE_SLIDE`
 
 let booted = false
 
@@ -340,7 +341,8 @@ const actionsOfInterest = [
   LOAD_FAVORITES,
   UPDATE_FAVORITE,
   REMOVE_FAVORITE,
-  UPDATE
+  UPDATE,
+  LAST_GUIDE_SLIDE
 ]
 export const trackReduxActionsEpic = (action$, store) =>
   action$

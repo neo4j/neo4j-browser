@@ -37,6 +37,7 @@ import {
   StackNextIcon
 } from 'browser-components/icons/Icons'
 import { splitMdxSlides } from '../Docs/MDX/splitMdx'
+import { LAST_GUIDE_SLIDE } from 'shared/modules/udc/udcDuck'
 
 const {
   play: { chapters }
@@ -61,6 +62,8 @@ export function PlayFrame({ stack, bus }) {
     setAtSlideStart(!hasPrev)
     setAtSlideEnd(!hasNext)
   }
+
+  useEffect(() => atSlideEnd && bus && bus.send(LAST_GUIDE_SLIDE), [atSlideEnd])
 
   useEffect(() => {
     async function generate() {
