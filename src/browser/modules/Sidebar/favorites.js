@@ -20,7 +20,10 @@ import { connect } from 'react-redux'
 import MyScripts from '@relate-by-ui/saved-scripts'
 
 import * as editor from 'shared/modules/editor/editorDuck'
-import { executeCommand } from 'shared/modules/commands/commandsDuck'
+import {
+  commandSources,
+  executeCommand
+} from 'shared/modules/commands/commandsDuck'
 import * as favoritesDuck from 'shared/modules/favorites/favoritesDuck'
 import * as foldersDuck from 'shared/modules/favorites/foldersDuck'
 import {
@@ -59,7 +62,9 @@ const mapFavoritesDispatchToProps = (dispatch, ownProps) => ({
       editor.editContent(favorite.id, favorite.contents)
     ),
   onExecScript: favorite =>
-    dispatch(executeCommand(favorite.contents, { source: 'sidebar' })),
+    dispatch(
+      executeCommand(favorite.contents, { source: commandSources.favorite })
+    ),
   onExportScripts: scripts => exportFavorites(scripts),
   onRemoveScript: favorite =>
     dispatch(favoritesDuck.removeFavorite(favorite.id)),

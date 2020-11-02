@@ -24,6 +24,7 @@ import { withBus } from 'react-suber'
 import { withTheme } from 'styled-components'
 import uuid from 'uuid'
 import {
+  commandSources,
   executeCommand,
   executeSystemCommand
 } from 'shared/modules/commands/commandsDuck'
@@ -462,7 +463,7 @@ export class Editor extends Component {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onExecute: cmd => {
-      const action = executeCommand(cmd, { source: 'editor' })
+      const action = executeCommand(cmd, { source: commandSources.editor })
       ownProps.bus.send(action.type, action)
     }
   }

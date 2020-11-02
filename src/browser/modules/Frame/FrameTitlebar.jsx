@@ -344,7 +344,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           id,
           useDb,
           isRerun: true,
-          source: 'button-press'
+          source: commands.commandSources.rerunFrame
         })
       )
     },

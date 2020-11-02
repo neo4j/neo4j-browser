@@ -89,9 +89,27 @@ export default function reducer(state = initialState, action) {
 
 // Action creators
 
+export const commandSources = {
+  button: 'BUTTON',
+  playButton: 'PLAY-BUTTON',
+  auto: 'AUTOMATIC',
+  editor: 'EDITOR',
+  rerunFrame: 'RERUN',
+  favorite: 'FAVORITE',
+  projectFile: 'PROJECT-FILE',
+  sidebar: 'SIDEBAR',
+  url: 'URL'
+}
 export const executeCommand = (
   cmd,
-  { id, requestId, parentId, useDb, isRerun = false, source } = {}
+  {
+    id = null,
+    requestId = null,
+    parentId = null,
+    useDb = null,
+    isRerun = false,
+    source = null
+  } = {}
 ) => {
   return {
     type: COMMAND_QUEUED,

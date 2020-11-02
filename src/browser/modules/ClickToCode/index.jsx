@@ -21,14 +21,17 @@ import React from 'react'
 import { withBus } from 'react-suber'
 import { SET_CONTENT, setContent } from 'shared/modules/editor/editorDuck'
 import { StyledCodeBlock } from './styled'
-import { executeCommand } from 'shared/modules/commands/commandsDuck'
+import {
+  executeCommand,
+  commandSources
+} from 'shared/modules/commands/commandsDuck'
 
 const setOnClick = (bus, code) => {
   code = Array.isArray(code) ? code.join('') : code
   bus.send(SET_CONTENT, setContent(code))
 }
 const execOnClick = (bus, code) => {
-  const cmd = executeCommand(code, { source: 'button-press' })
+  const cmd = executeCommand(code, { source: commandSources.button })
   bus.send(cmd.type, cmd)
 }
 

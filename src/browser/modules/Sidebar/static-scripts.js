@@ -21,7 +21,10 @@ import MyScripts from '@relate-by-ui/saved-scripts'
 import semver from 'semver'
 
 import * as editor from 'shared/modules/editor/editorDuck'
-import { executeCommand } from 'shared/modules/commands/commandsDuck'
+import {
+  commandSources,
+  executeCommand
+} from 'shared/modules/commands/commandsDuck'
 import * as favorites from '../../../shared/modules/favorites/favoritesDuck'
 import * as folders from '../../../shared/modules/favorites/foldersDuck'
 import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
@@ -54,7 +57,9 @@ const mapFavoritesDispatchToProps = (dispatch, ownProps) => ({
       editor.editContent(favorite.id, favorite.contents, { isStatic: true })
     ),
   onExecScript: favorite =>
-    dispatch(executeCommand(favorite.contents), { source: 'sidebar' }),
+    dispatch(executeCommand(favorite.contents), {
+      source: commandSources.sidebar
+    }),
   onExportScripts: Function.prototype,
   onRemoveScript: Function.prototype,
   onUpdateFolder: Function.prototype,

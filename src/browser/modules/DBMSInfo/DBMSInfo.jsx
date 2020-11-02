@@ -22,6 +22,7 @@ import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import {
+  commandSources,
   executeCommand,
   useDbCommand
 } from 'shared/modules/commands/commandsDuck'
@@ -119,7 +120,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onItemClick: cmd => {
-      const action = executeCommand(cmd, { source: 'button-press' })
+      const action = executeCommand(cmd, { source: commandSources.button })
       ownProps.bus.send(action.type, action)
     },
     onDbSelect: dbName =>

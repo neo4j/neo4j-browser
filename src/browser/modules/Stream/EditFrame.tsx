@@ -28,7 +28,10 @@ import Monaco from '../Editor/Monaco'
 import FrameTemplate from '../Frame/FrameTemplate'
 import { StyledFrameBody } from '../Frame/styled'
 import useDerivedTheme from 'browser-hooks/useDerivedTheme'
-import { executeCommand } from 'shared/modules/commands/commandsDuck'
+import {
+  commandSources,
+  executeCommand
+} from 'shared/modules/commands/commandsDuck'
 import {
   getTheme,
   LIGHT_THEME,
@@ -84,7 +87,7 @@ const mapStateToProps = (state: GlobalState) => ({
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
   runQuery(query: string) {
-    dispatch(executeCommand(query))
+    dispatch(executeCommand(query, { source: commandSources.playButton }))
   }
 })
 

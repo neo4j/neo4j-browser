@@ -24,7 +24,10 @@ import { useQuery, useMutation, ApolloError } from '@apollo/client'
 import { filter, size } from 'lodash-es'
 
 import * as editor from 'shared/modules/editor/editorDuck'
-import { executeCommand } from 'shared/modules/commands/commandsDuck'
+import {
+  commandSources,
+  executeCommand
+} from 'shared/modules/commands/commandsDuck'
 import { DOT } from 'shared/services/export-favorites'
 import {
   ProjectFilesQueryVars,
@@ -234,7 +237,9 @@ const mapFavoritesDispatchToProps = (
 ) => ({
   onExecScript: (favorite: Favorite) => {
     ownProps.bus.send(EXECUTE_COMMAND_ORIGIN, EXECUTE_COMMAND_ORIGINS.SIDEBAR)
-    dispatch(executeCommand(favorite.contents))
+    dispatch(
+      executeCommand(favorite.contents, { source: commandSources.projectFile })
+    )
   }
 })
 

@@ -20,7 +20,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
-import { executeCommand } from 'shared/modules/commands/commandsDuck'
+import {
+  executeCommand,
+  commandSources
+} from 'shared/modules/commands/commandsDuck'
 import * as editor from 'shared/modules/editor/editorDuck'
 import { addClass, prependIcon } from 'shared/services/dom-helpers'
 
@@ -126,7 +129,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onItemClick: (cmd, autoExec, id) => {
       if (!cmd.endsWith(' null') && !cmd.endsWith(':null')) {
         if (autoExec) {
-          const action = executeCommand(cmd, { id, source: 'button-press' })
+          const action = executeCommand(cmd, {
+            id,
+            source: commandSources.button
+          })
           ownProps.bus.send(action.type, action)
         } else {
           ownProps.bus.send(editor.SET_CONTENT, editor.setContent(cmd))
