@@ -124,13 +124,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       ownProps.bus.send(action.type, action)
     },
     onDbSelect: dbName =>
-      dbName
-        ? dispatch(executeCommand(`:${useDbCommand} ${dbName}`), {
-            source: 'button-press'
-          })
-        : dispatch(executeCommand(`:${useDbCommand}`), {
-            source: 'button-press'
-          })
+      dispatch(executeCommand(`:${useDbCommand} ${dbName || ''}`), {
+        source: commandSources.button
+      })
   }
 }
 
