@@ -50,7 +50,6 @@ import {
   REPLACE,
   UPDATE
 } from 'shared/modules/settings/settingsDuck'
-import { EXPAND } from 'shared/modules/editor/editorDuck'
 import { CONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
 import { shouldTriggerConnectEvent, getTodayDate } from './udcHelpers'
 import api from 'services/intercom'
@@ -352,12 +351,10 @@ const actionsOfInterest = [
   PIN,
   UNPIN,
   REMOVE,
-  EXPAND,
   ADD_FAVORITE,
   LOAD_FAVORITES,
   UPDATE_FAVORITE,
   REMOVE_FAVORITE,
-  UPDATE,
   LAST_GUIDE_SLIDE
 ]
 export const trackReduxActionsEpic = (action$, store) =>

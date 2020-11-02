@@ -64,7 +64,7 @@ export function PlayFrame({ stack, bus }) {
   }
 
   useEffect(() => {
-    atSlideEnd && bus && bus.send(LAST_GUIDE_SLIDE)
+    stackIndex !== 0 && atSlideEnd && bus && bus.send(LAST_GUIDE_SLIDE)
   }, [atSlideEnd])
 
   useEffect(() => {
