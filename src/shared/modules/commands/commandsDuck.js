@@ -103,12 +103,12 @@ export const commandSources = {
 export const executeCommand = (
   cmd,
   {
-    id = null,
-    requestId = null,
-    parentId = null,
-    useDb = null,
+    id = undefined,
+    requestId = undefined,
+    parentId = undefined,
+    useDb = undefined,
     isRerun = false,
-    source = null
+    source = undefined
   } = {}
 ) => {
   return {

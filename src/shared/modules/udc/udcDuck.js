@@ -103,8 +103,8 @@ const getData = state => {
   const { events, ...rest } = state[NAME] || initialState // eslint-disable-line
   return rest
 }
-const getLastSnapshotTime =
-  state[NAME].lastSnapShot || initialState.lastSnapShot
+const getLastSnapshotTime = state =>
+  (state[NAME] && state[NAME].lastSnapshot) || initialState.lastSnapshot
 const getName = state => state[NAME].name || 'Graph Friend'
 const getCompanies = state => {
   if (getVersion(state) && getStoreId(state)) {
@@ -128,7 +128,7 @@ const initialState = {
   cypher_wins: 0,
   cypher_fails: 0,
   pingTime: 0,
-  lastSnapShot: 0,
+  lastSnapshot: 0,
   events: []
 }
 
@@ -259,7 +259,7 @@ export const udcStartupEpic = (action$, store) =>
         )
       }
       store.dispatch(
-        updateData({ lastSnapShot: Math.round(Date.now() / 1000) })
+        updateData({ lastSnapshot: Math.round(Date.now() / 1000) })
       )
     })
     .mapTo(increment(typeToEventName[EVENT_APP_STARTED]))
