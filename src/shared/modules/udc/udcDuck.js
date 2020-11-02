@@ -103,6 +103,8 @@ const getData = state => {
   const { events, ...rest } = state[NAME] || initialState // eslint-disable-line
   return rest
 }
+const getLastSnapshotTime =
+  state[NAME].lastSnapShot || initialState.lastSnapShot
 const getName = state => state[NAME].name || 'Graph Friend'
 const getCompanies = state => {
   if (getVersion(state) && getStoreId(state)) {
@@ -126,6 +128,7 @@ const initialState = {
   cypher_wins: 0,
   cypher_fails: 0,
   pingTime: 0,
+  lastSnapShot: 0,
   events: []
 }
 
@@ -193,6 +196,14 @@ export const updateData = obj => {
     ...obj
   }
 }
+
+function aMonthSinceLastSnapshot(store) {
+  const now = Math.round(Date.now() / 1000)
+  const lastSnapshot = getLastSnapshotTime(store.getState())
+  const aMonthInSeconds = 60 * 60 * 24 * 30
+  return now - lastSnapshot > aMonthInSeconds
+}
+
 // Epics
 export const udcStartupEpic = (action$, store) =>
   action$
@@ -201,6 +212,10 @@ export const udcStartupEpic = (action$, store) =>
       store.dispatch(metricsEvent(typeToMetricsObject[EVENT_APP_STARTED]))
     )
     .do(() => {
+      if (!aMonthSinceLastSnapshot(store)) {
+        return
+      }
+
       const settings = getSettings(store.getState())
       const nonSensitiveSettings = [
         'cmdchar',
@@ -231,8 +246,6 @@ export const udcStartupEpic = (action$, store) =>
           metricsEvent({ category: 'settings', label: 'snapshot', data })
         )
       }
-    })
-    .do(() => {
       const favorites = getFavorites(store.getState())
 
       if (favorites) {
@@ -245,6 +258,9 @@ export const udcStartupEpic = (action$, store) =>
           })
         )
       }
+      store.dispatch(
+        updateData({ lastSnapShot: Math.round(Date.now() / 1000) })
+      )
     })
     .mapTo(increment(typeToEventName[EVENT_APP_STARTED]))
 
