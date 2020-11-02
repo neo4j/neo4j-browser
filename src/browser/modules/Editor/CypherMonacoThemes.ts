@@ -281,7 +281,7 @@ const lightThemeRules = [
 
 export const monacoDarkTheme: editor.IStandaloneThemeData = {
   base: 'vs-dark',
-  inherit: false,
+  inherit: true,
   rules: darkThemeRules,
   colors: {
     'editorLineNumber.foreground': CypherColor.white,
@@ -290,7 +290,7 @@ export const monacoDarkTheme: editor.IStandaloneThemeData = {
 }
 export const monacoLightTheme: editor.IStandaloneThemeData = {
   base: 'vs',
-  inherit: false,
+  inherit: true,
   rules: lightThemeRules,
   colors: {
     'editor.background': base.preBackground,
