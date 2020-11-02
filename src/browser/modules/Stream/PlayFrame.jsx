@@ -63,7 +63,9 @@ export function PlayFrame({ stack, bus }) {
     setAtSlideEnd(!hasNext)
   }
 
-  useEffect(() => atSlideEnd && bus && bus.send(LAST_GUIDE_SLIDE), [atSlideEnd])
+  useEffect(() => {
+    atSlideEnd && bus && bus.send(LAST_GUIDE_SLIDE)
+  }, [atSlideEnd])
 
   useEffect(() => {
     async function generate() {
