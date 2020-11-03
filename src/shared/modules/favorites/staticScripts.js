@@ -40,7 +40,21 @@ export const scripts = [
     not_executable: true,
     content:
       "// Create an index\n// Replace:\n//   'LabelName' with label to index\n//   'propertyKey' with property to be indexed\nCREATE INDEX ON :<LabelName>(<propertyKey>)",
-    versionRange: '>=3'
+    versionRange: '>=3 <4'
+  },
+  {
+    folder: 'basics',
+    not_executable: true,
+    content: `// Create an index
+// Replace:
+//   'IndexName' with name of index (optional)
+//   'LabelName' with label to index
+//   'propertyName' with property to be indexed
+CREATE INDEX [IndexName] 
+FOR (n:LabelName)
+ON (n.propertyName)
+`,
+    versionRange: '>=4'
   },
   {
     folder: 'basics',

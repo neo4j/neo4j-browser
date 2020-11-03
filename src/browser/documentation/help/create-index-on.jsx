@@ -52,6 +52,11 @@ const content = (
     </div>
     <section className="example">
       <figure>
+        <p>On neo4j version 4.X</p>
+        <pre className="code runnable standalone-example">
+          CREATE INDEX [optionalName] FOR (p:Person) ON (p.name)
+        </pre>
+        <p>On neo4j version 3.X</p>
         <pre className="code runnable standalone-example">
           CREATE INDEX ON :Person(name)
         </pre>
