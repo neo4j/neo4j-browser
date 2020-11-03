@@ -29,9 +29,22 @@ import {
 import { MessageArea, PaddedStatsBar } from './styled'
 import { allowlistedMultiCommands } from 'shared/modules/commands/commandsDuck'
 
-const ucFirst = (str: any) => str[0].toUpperCase() + str.slice(1)
+export type Status =
+  | 'ignored'
+  | 'skipped'
+  | 'pending'
+  | 'success'
+  | 'waiting'
+  | 'error'
 
-const GenericSummary = ({ status }: any): any => {
+const ucFirst = (str: string) => str[0].toUpperCase() + str.slice(1)
+interface GenericSummaryProps {
+  status: Status
+}
+
+const GenericSummary = ({
+  status
+}: GenericSummaryProps): JSX.Element | null => {
   switch (status) {
     case 'skipped':
       return (
@@ -73,10 +86,20 @@ const GenericSummary = ({ status }: any): any => {
           </MessageArea>
         </PaddedStatsBar>
       )
+    default:
+      return null
   }
 }
 
-export const CypherSummary = ({ status, request }: any): any => {
+interface CypherSummaryProps {
+  status: Status
+  request: any
+}
+
+export const CypherSummary = ({
+  status,
+  request
+}: CypherSummaryProps): JSX.Element | null => {
   switch (status) {
     case 'skipped':
       return <GenericSummary status={status} />
@@ -92,7 +115,7 @@ export const CypherSummary = ({ status, request }: any): any => {
       return (
         <PaddedStatsBar>
           <StyledCypherSuccessMessage>SUCCESS</StyledCypherSuccessMessage>
-          <MessageArea>{ucFirst(bodyMessage)}</MessageArea>
+          <MessageArea>{ucFirst(bodyMessage || '')}</MessageArea>
         </PaddedStatsBar>
       )
     case 'error':
@@ -106,10 +129,20 @@ export const CypherSummary = ({ status, request }: any): any => {
           <MessageArea>{fullError.message}</MessageArea>
         </PaddedStatsBar>
       )
+    default:
+      return null
   }
 }
 
-export const Summary = ({ status, request }: any): any => {
+interface SummaryProps {
+  status: Status
+  request: any
+}
+
+export const Summary = ({
+  status,
+  request
+}: SummaryProps): JSX.Element | null => {
   switch (status) {
     case 'ignored':
       return <GenericSummary status={status} />
@@ -135,5 +168,7 @@ export const Summary = ({ status, request }: any): any => {
           </MessageArea>
         </PaddedStatsBar>
       )
+    default:
+      return null
   }
 }
