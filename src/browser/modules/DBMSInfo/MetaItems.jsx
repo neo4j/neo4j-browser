@@ -95,7 +95,7 @@ function createStyleGetter(graphStyleData, kind) {
 function createNodeStyleGetter(graphStyleData) {
   return createStyleGetter(graphStyleData, 'node')
 }
-function createRelationStyleGetter(graphStyleData) {
+function createRelationshipStyleGetter(graphStyleData) {
   return createStyleGetter(graphStyleData, 'relationship')
 }
 
@@ -200,7 +200,7 @@ const RelationshipItems = ({
       editorCommandTemplate,
       true,
       count,
-      createRelationStyleGetter(graphStyleData)
+      createRelationshipStyleGetter(graphStyleData)
     )
   }
   return (
