@@ -4621,17 +4621,17 @@ cyclist@^1.0.1:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/cyclist/-/cyclist-1.0.1.tgz#596e9698fd0c80e12038c2b82d6eb1b35b6224d9"
   integrity sha1-WW6WmP0MgOEgOMK4LW6xs1tiJNk=
 
-cypher-codemirror@1.1.6:
-  version "1.1.6"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypher-codemirror/-/cypher-codemirror-1.1.6.tgz#cd306c38c9922e8328b992bc779ba10b0bf48931"
-  integrity sha1-zTBsOMmSLoMouZK8d5uhCwv0iTE=
+cypher-codemirror@1.1.7:
+  version "1.1.7"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypher-codemirror/-/cypher-codemirror-1.1.7.tgz#4207b96ca5b6649404ab32a2ebc20099b2ee3de4"
+  integrity sha1-Qge5bKW2ZJQEqzKi68IAmbLuPeQ=
   dependencies:
-    cypher-editor-support "1.1.6"
+    cypher-editor-support "1.1.7"
 
-cypher-editor-support@1.1.6, cypher-editor-support@^1.1.6:
-  version "1.1.6"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypher-editor-support/-/cypher-editor-support-1.1.6.tgz#a9bad1e9c67a91d8bcd7066e0498130de43ed84a"
-  integrity sha1-qbrR6cZ6kdi81wZuBJgTDeQ+2Eo=
+cypher-editor-support@1.1.7, cypher-editor-support@^1.1.7:
+  version "1.1.7"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypher-editor-support/-/cypher-editor-support-1.1.7.tgz#14daa7dde9ad8128c06bfc51e31d513ba9cd0fa0"
+  integrity sha1-FNqn3emtgSjAa/xR4x1RO6nND6A=
   dependencies:
     antlr4 "4.7.0"
     fuzzaldrin "2.1.0"
