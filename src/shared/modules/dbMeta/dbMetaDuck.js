@@ -38,7 +38,10 @@ import {
   getActiveConnectionData,
   updateConnection
 } from 'shared/modules/connections/connectionsDuck'
-import { executeSingleCommand } from 'shared/modules/commands/commandsDuck'
+import {
+  commandSources,
+  executeCommand
+} from 'shared/modules/commands/commandsDuck'
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
 import {
@@ -467,7 +470,9 @@ const switchToRequestedDb = store => {
       return getLabelsAndTypes(store)
     } else {
       // this will show the db not found frame
-      store.dispatch(executeSingleCommand(`:use ${requestedUseDb}`))
+      store.dispatch(executeCommand(`:use ${requestedUseDb}`), {
+        source: commandSources.auto
+      })
       useDefaultDb()
     }
   } else {

@@ -196,11 +196,11 @@ export const updateData = obj => {
   }
 }
 
-function aMonthSinceLastSnapshot(store) {
+function aWeekSinceLastSnapshot(store) {
   const now = Math.round(Date.now() / 1000)
   const lastSnapshot = getLastSnapshotTime(store.getState())
-  const aMonthInSeconds = 60 * 60 * 24 * 30
-  return now - lastSnapshot > aMonthInSeconds
+  const aWeekInSeconds = 60 * 60 * 24 * 7
+  return now - lastSnapshot > aWeekInSeconds
 }
 
 // Epics
@@ -211,7 +211,7 @@ export const udcStartupEpic = (action$, store) =>
       store.dispatch(metricsEvent(typeToMetricsObject[EVENT_APP_STARTED]))
     )
     .do(() => {
-      if (!aMonthSinceLastSnapshot(store)) {
+      if (!aWeekSinceLastSnapshot(store)) {
         return
       }
 
