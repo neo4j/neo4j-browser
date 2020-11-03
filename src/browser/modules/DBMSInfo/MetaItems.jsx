@@ -56,6 +56,49 @@ const ShowMore = ({ total, shown, moreStep, onMore }) => {
   )
 }
 
+function createStyleGetter(graphStyleData, kind) {
+  const graphStyle = neoGraphStyle()
+  if (graphStyleData) {
+    graphStyle.loadRules(deepmerge(graphStyle.toSheet(), graphStyleData || {}))
+  }
+
+  if (kind === 'node') {
+    return function(text) {
+      if (graphStyleData) {
+        const styleForItem = graphStyle.forNode({
+          labels: [text]
+        })
+        return {
+          backgroundColor: styleForItem.get('color'),
+          color: styleForItem.get('text-color-internal')
+        }
+      }
+      return {}
+    }
+  }
+  if (kind === 'relationship') {
+    return function(text) {
+      if (graphStyleData) {
+        const styleForItem = graphStyle.forRelationship({
+          type: text
+        })
+        return {
+          backgroundColor: styleForItem.get('color'),
+          color: styleForItem.get('text-color-internal')
+        }
+      }
+      return {}
+    }
+  }
+  throw new Error(`Unsupported argument: ${kind}`)
+}
+function createNodeStyleGetter(graphStyleData) {
+  return createStyleGetter(graphStyleData, 'node')
+}
+function createRelationshipStyleGetter(graphStyleData) {
+  return createStyleGetter(graphStyleData, 'relationship')
+}
+
 const createItems = (
   originalList,
   onItemClick,
@@ -63,7 +106,7 @@ const createItems = (
   editorCommandTemplate,
   showStar = true,
   count,
-  graphStyleData
+  styleGetter = () => ({})
 ) => {
   const items = [...originalList]
   if (showStar) {
@@ -73,29 +116,15 @@ const createItems = (
     }
     items.unshift(str)
   }
-  const graphStyle = neoGraphStyle()
-  if (graphStyleData) {
-    graphStyle.loadRules(deepmerge(graphStyle.toSheet(), graphStyleData || {}))
-  }
 
   return items.map((text, index) => {
-    let style = {}
-    if (graphStyleData) {
-      const styleForItem = graphStyle.forNode({
-        labels: [text]
-      })
-      style = {
-        backgroundColor: styleForItem.get('color'),
-        color: styleForItem.get('text-color-internal')
-      }
-    }
     const getNodesCypher = editorCommandTemplate(text, index)
     return (
       <RenderType.component
         data-testid="sidebarMetaItem"
         key={index}
         onClick={() => onItemClick(getNodesCypher)}
-        style={style}
+        style={styleGetter(text)}
       >
         {text}
       </RenderType.component>
@@ -127,7 +156,7 @@ const LabelItems = ({
       editorCommandTemplate,
       true,
       count,
-      graphStyleData
+      createNodeStyleGetter(graphStyleData)
     )
   }
   return (
@@ -151,7 +180,8 @@ const RelationshipItems = ({
   onItemClick,
   moreStep,
   onMoreClick,
-  count
+  count,
+  graphStyleData
 }) => {
   let relationshipItems = <p>No relationships in database</p>
   if (relationshipTypes.length > 0) {
@@ -169,7 +199,8 @@ const RelationshipItems = ({
       { component: StyledRelationship },
       editorCommandTemplate,
       true,
-      count
+      count,
+      createRelationshipStyleGetter(graphStyleData)
     )
   }
   return (
