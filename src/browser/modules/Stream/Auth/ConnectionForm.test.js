@@ -21,6 +21,7 @@
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { ConnectionForm } from './ConnectionForm'
+import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
 
 test('should print correct state for retaining credentials', async () => {
   const bus = {
@@ -53,6 +54,7 @@ test('should print correct state for retaining credentials', async () => {
       executeInitCmd={executeInitCmd}
       isConnected={false}
       allowedSchemes={['neo4j']}
+      allowedAuthMethods={[NATIVE, NO_AUTH]}
     />
   )
 
@@ -84,6 +86,7 @@ test('should print correct state for retaining credentials', async () => {
       executeInitCmd={executeInitCmd}
       isConnected={true}
       allowedSchemes={['neo4j']}
+      allowedAuthMethods={[NATIVE, NO_AUTH]}
     />
   )
 
@@ -108,6 +111,7 @@ test('should print correct state for retaining credentials', async () => {
       executeInitCmd={executeInitCmd}
       isConnected={true}
       allowedSchemes={['neo4j']}
+      allowedAuthMethods={[NATIVE, NO_AUTH]}
     />
   )
 
