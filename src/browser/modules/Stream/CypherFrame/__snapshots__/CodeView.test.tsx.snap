@@ -1,0 +1,124 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CodeViews CodeStatusbar displays no statusBarMessage 1`] = `
+<div>
+  <div
+    class="sc-ckVGcZ fsAzIa"
+  >
+    <div
+      class="sc-hzDkRC ksLWOp"
+    />
+  </div>
+</div>
+`;
+
+exports[`CodeViews CodeStatusbar displays statusBarMessage 1`] = `
+<div>
+  <div
+    class="sc-ckVGcZ fsAzIa"
+  >
+    <div
+      class="sc-hzDkRC ksLWOp"
+    >
+      Started streaming 1 records after 5 ms and completed after 10  ms.
+    </div>
+  </div>
+</div>
+`;
+
+exports[`CodeViews CodeView displays nothing if not successful query 1`] = `<div />`;
+
+exports[`CodeViews CodeView displays request and response info if successful query 1`] = `
+<div>
+  <div
+    class="sc-htpNat fsSTsy"
+  >
+    <table
+      class="sc-jDwBTQ iYfCXq"
+    >
+      <tbody
+        class="sc-gPEVay jLduWs"
+      >
+        <tr
+          class="sc-jlyJG iSVHbw"
+        >
+          <td
+            class="sc-gipzik ctJpCp"
+          >
+            Server version
+          </td>
+          <td
+            class="sc-csuQGl CQhxV"
+          >
+            xx1
+          </td>
+        </tr>
+        <tr
+          class="sc-jlyJG iSVHbw"
+        >
+          <td
+            class="sc-gipzik ctJpCp"
+          >
+            Server address
+          </td>
+          <td
+            class="sc-csuQGl CQhxV"
+          >
+            xx2
+          </td>
+        </tr>
+        <tr
+          class="sc-jlyJG iSVHbw"
+        >
+          <td
+            class="sc-gipzik ctJpCp"
+          >
+            Query
+          </td>
+          <td
+            class="sc-csuQGl CQhxV"
+          >
+            MATCH xx0
+          </td>
+        </tr>
+        <tr
+          class="sc-jlyJG iSVHbw"
+        >
+          <td
+            class="sc-gipzik ctJpCp"
+          >
+            Summary
+            <div
+              class="sc-iRbamj gVOsNP fa fa-caret-right"
+              title="Expand section"
+            />
+          </td>
+          <td
+            class="sc-csuQGl CQhxV"
+          >
+            {,  "server": {,    "version": "xx1", ...
+          </td>
+        </tr>
+        <tr
+          class="sc-jlyJG iSVHbw"
+        >
+          <td
+            class="sc-gipzik ctJpCp"
+          >
+            Response
+            <div
+              class="sc-iRbamj gVOsNP fa fa-caret-right"
+              title="Expand section"
+            />
+          </td>
+          <td
+            class="sc-csuQGl CQhxV"
+          >
+            [,  {,    "res": "xx3" ...
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+`;

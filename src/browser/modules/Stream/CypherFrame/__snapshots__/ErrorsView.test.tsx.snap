@@ -1,0 +1,108 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ErrorsViews ErrorsStatusbar displays error 1`] = `
+<div>
+  <div
+    class="sc-bdVaJa kwzqrW"
+  >
+    <span
+      class="sc-dxgOiQ eBOcVg"
+      title="Test.Error: Test error description"
+    >
+      <i
+        class="sc-dVhcbM kwzCmP fa fa-exclamation-triangle"
+      />
+       
+      Test.Error: Test error description
+    </span>
+  </div>
+</div>
+`;
+
+exports[`ErrorsViews ErrorsStatusbar displays nothing if no error 1`] = `<div />`;
+
+exports[`ErrorsViews ErrorsView displays nothing if no errors 1`] = `<div />`;
+
+exports[`ErrorsViews ErrorsView displays procedure link if unknown procedure 1`] = `
+<div>
+  <div
+    class="sc-gzVnrw ksKCRj"
+  >
+    <div
+      class="sc-htoDjs MMTIn"
+    >
+      <div
+        class="sc-dnqmqq bpbKgH"
+      >
+        <div
+          class="sc-VigVT sc-fjdhpX egUJPX"
+        >
+          ERROR
+        </div>
+        <h4
+          class="sc-kgoBCf kvyvll"
+        >
+          Neo.ClientError.Procedure.ProcedureNotFound
+        </h4>
+      </div>
+      <div
+        class="sc-iwsKbI jQhHGA"
+      >
+        <pre
+          class="sc-kpOJdX hkuHeU"
+        >
+          not found
+        </pre>
+      </div>
+      <div
+        class="sc-gqjmRU kjuOwi"
+      >
+        <a
+          class="sc-gZMcBi jPwkqT"
+        >
+          <i
+            class="sc-fBuWsC cQhmQa fa fa-play-circle-o"
+          />
+           List available procedures
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ErrorsViews ErrorsView does displays an error 1`] = `
+<div>
+  <div
+    class="sc-gzVnrw ksKCRj"
+  >
+    <div
+      class="sc-htoDjs MMTIn"
+    >
+      <div
+        class="sc-dnqmqq bpbKgH"
+      >
+        <div
+          class="sc-VigVT sc-fjdhpX egUJPX"
+        >
+          ERROR
+        </div>
+        <h4
+          class="sc-kgoBCf kvyvll"
+        >
+          Test.Error
+        </h4>
+      </div>
+      <div
+        class="sc-iwsKbI jQhHGA"
+      >
+        <pre
+          class="sc-kpOJdX hkuHeU"
+        >
+          Test error description
+        </pre>
+      </div>
+    </div>
+  </div>
+</div>
+`;

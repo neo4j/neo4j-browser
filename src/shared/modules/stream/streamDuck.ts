@@ -79,7 +79,7 @@ function addFrame(state: FramesState, newState: Frame) {
   if (newState.parentId) {
     const currentStatements = byId[newState.parentId].stack[0].statements || []
     // Need to add this id to parent's list of statements
-    if (!currentStatements.includes(newState.id)) {
+    if (!currentStatements.includes(newState.id as any)) {
       byId = {
         ...byId,
         [newState.parentId]: {
@@ -87,7 +87,7 @@ function addFrame(state: FramesState, newState: Frame) {
           stack: [
             {
               ...byId[newState.parentId].stack[0],
-              statements: currentStatements.concat(newState.id)
+              statements: currentStatements.concat(newState.id as any)
             }
           ]
         }
@@ -108,10 +108,10 @@ function insertIntoAllIds(
   allIds: string[],
   newState: Frame
 ) {
-  if (allIds.indexOf(newState.id) < 0) {
+  if (allIds.indexOf(newState.id as any) < 0) {
     // new frame
     const pos = findFirstFreePos(state)
-    allIds.splice(pos, 0, newState.id)
+    allIds.splice(pos, 0, newState.id as any)
   }
   return allIds
 }
@@ -215,7 +215,7 @@ export interface Frame {
   cmd: string
   connectionData: ConnectionData
   error: FrameError
-  id: string
+  id: string | number
   initialSlide: number
   isRerun: boolean
   parentId: string

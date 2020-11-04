@@ -99,6 +99,10 @@ describe('Connect form', () => {
         'contain',
         `Automatic retry using the "${schemeWithEncryptionFlag('bolt')}"`
       )
+      getFirstFrameStatusbar().should(
+        'not.contain',
+        `Automatic retry using the "${schemeWithEncryptionFlag('bolt')}"`
+      )
       cy.wait(7000) // auto retry is in 5 secs
       getFirstFrameCommand().should('contain', ':play start')
       cy.executeCommand(':server disconnect')

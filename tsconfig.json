@@ -7,7 +7,7 @@
     "strict": true,
     "sourceMap": true,
     "noImplicitAny": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "noUnusedParameters": true,
     "moduleResolution": "node",
     "experimentalDecorators": true,

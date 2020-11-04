@@ -2058,6 +2058,16 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/color-name/-/color-name-1.1.1.tgz#1c1261bbeaa10a8055bbc5d8ab84b7b2afc846a0"
   integrity sha1-HBJhu+qhCoBVu8XYq4S3sq/IRqA=
 
+"@types/d3@^3":
+  version "3.5.44"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/d3/-/d3-3.5.44.tgz#28635f8bb9adf1cef5bbef2b06778174a9d34383"
+  integrity sha1-KGNfi7mt8c71u+8rBneBdKnTQ4M=
+
+"@types/dateformat@^3.0.1":
+  version "3.0.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/dateformat/-/dateformat-3.0.1.tgz#98d747a2e5e9a56070c6bf14e27bff56204e34cc"
+  integrity sha1-mNdHouXppWBwxr8U4nv/ViBONMw=
+
 "@types/eslint-visitor-keys@^1.0.0":
   version "1.0.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/eslint-visitor-keys/-/eslint-visitor-keys-1.0.0.tgz#1ee30d79544ca84d68d4b3cdb0af4f205663dd2d"
@@ -2067,6 +2077,11 @@
   version "8.1.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/extract-files/-/extract-files-8.1.0.tgz#4728440e1d92a6d1d11ac47f5a10e3f9ce47f044"
   integrity sha1-RyhEDh2SptHRGsR/WhDj+c5H8EQ=
+
+"@types/file-saver@^2.0.1":
+  version "2.0.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/file-saver/-/file-saver-2.0.1.tgz#e18eb8b069e442f7b956d313f4fadd3ef887354e"
+  integrity sha1-4Y64sGnkQve5VtMT9PrdPviHNU4=
 
 "@types/glob@^7.1.1":
   version "7.1.3"
@@ -2154,6 +2169,11 @@
   version "0.0.29"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
+
+"@types/jsonic@^0.3.0":
+  version "0.3.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/jsonic/-/jsonic-0.3.0.tgz#2f50d613b1485bf53393ce55ceaacb5358f90814"
+  integrity sha1-L1DWE7FIW/Uzk85VzqrLU1j5CBQ=
 
 "@types/lodash-es@^4.17.3":
   version "4.17.3"
@@ -2277,6 +2297,11 @@
   dependencies:
     redux "^4.0.5"
 
+"@types/semver@^7.3.4":
+  version "7.3.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/semver/-/semver-7.3.4.tgz#43d7168fec6fa0988bb1a513a697b29296721afb"
+  integrity sha1-Q9cWj+xvoJiLsaUTppeykpZyGvs=
+
 "@types/shallowequal@^1.1.1":
   version "1.1.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/shallowequal/-/shallowequal-1.1.1.tgz#aad262bb3f2b1257d94c71d545268d592575c9b1"
@@ -2343,6 +2368,11 @@
   version "2.0.3"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/unist/-/unist-2.0.3.tgz#9c088679876f374eb5983f150d4787aa6fb32d7e"
   integrity sha1-nAiGeYdvN061mD8VDUeHqm+zLX4=
+
+"@types/url-parse@^1.4.3":
+  version "1.4.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/url-parse/-/url-parse-1.4.3.tgz#fba49d90f834951cb000a674efee3d6f20968329"
+  integrity sha1-+6SdkPg0lRywAKZ07+49byCWgyk=
 
 "@types/uuid@^8.3.0":
   version "8.3.0"

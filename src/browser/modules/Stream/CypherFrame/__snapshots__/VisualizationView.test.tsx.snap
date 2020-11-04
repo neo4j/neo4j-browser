@@ -1,0 +1,167 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Visualization renders 1`] = `<div />`;
+
+exports[`Visualization renders with result and escapes any HTML 1`] = `
+<div>
+  <div
+    class="sc-jwKygS dBdGzX"
+  >
+    <div
+      class="sc-iAyFgw ikvPvE one-legend-row"
+      id="svg-vis"
+    >
+      <div
+        class="sc-dxgOiQ kpiaUr one-row"
+      >
+        <div
+          class="sc-kpOJdX TkCyn contracted"
+        >
+          <ul
+            class="sc-dnqmqq sc-ckVGcZ edBnTi list-inline"
+          >
+            <li
+              class="sc-iwsKbI sc-jKJlTe bpIrLV"
+              data-testid="viz-legend-labels"
+            >
+              <ul
+                class="sc-kGXeez ijQsDt contents"
+              >
+                <li
+                  class="sc-iwsKbI sc-fjdhpX sc-jzJRlG kiLeKN token token-label"
+                  style="background-color: rgb(247, 151, 103); color: rgb(255, 255, 255);"
+                >
+                  *
+                  <span
+                    class="sc-kgoBCf heNWOu count"
+                  >
+                    (1)
+                  </span>
+                </li>
+              </ul>
+            </li>
+            <li
+              class="sc-iwsKbI sc-jKJlTe bpIrLV"
+              data-testid="viz-legend-labels"
+            >
+              <ul
+                class="sc-kGXeez ijQsDt contents"
+              >
+                <li
+                  class="sc-iwsKbI sc-fjdhpX sc-jzJRlG kiLeKN token token-label"
+                  style="background-color: rgb(201, 144, 192); color: rgb(255, 255, 255);"
+                >
+                  Person
+                  <span
+                    class="sc-kgoBCf heNWOu count"
+                  >
+                    (1)
+                  </span>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div
+        class="sc-bdVaJa hfwGEH"
+      >
+        <svg
+          class="neod3viz"
+          viewBox="0 100 200 0"
+        >
+          <g
+            transform="translate(0,0)"
+          >
+            <rect
+              height="5000"
+              style="fill: none; pointer-events: all;"
+              transform="scale(1)"
+              width="5000"
+              x="-2500"
+              y="-2500"
+            />
+            <g>
+              <g
+                class="layer relationships"
+              />
+              <g
+                class="layer nodes"
+              >
+                <g
+                  class="node"
+                >
+                  <circle
+                    class="ring"
+                    cx="0"
+                    cy="0"
+                    r="29"
+                    stroke-width="8px"
+                  />
+                  <circle
+                    class="outline"
+                    cx="0"
+                    cy="0"
+                    fill="#C990C0"
+                    r="25"
+                    stroke="#b261a5"
+                    stroke-width="2px"
+                  />
+                  <text
+                    dy="1.5625"
+                    fill="#FFFFFF"
+                    font-family="streamline"
+                    font-size="25"
+                    pointer-events="none"
+                    text-anchor="middle"
+                  />
+                  <text
+                    fill="#FFFFFF"
+                    font-size="10px"
+                    pointer-events="none"
+                    text-anchor="middle"
+                    x="0"
+                    y="5"
+                  >
+                     &lt;b&gt;…
+                  </text>
+                </g>
+              </g>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <div
+        class="sc-gqjmRU dwJWly status-bar"
+      >
+        <div
+          class="sc-VigVT joQvFy status"
+        >
+          <div
+            class="sc-EHOje dyhqxD contracted inspector-footer"
+          >
+            <ul
+              class="sc-bZQynM bQKKoY inspector-footer-row"
+              data-testid="vizInspector"
+            >
+              <ul
+                class="sc-dnqmqq bGMIpP list-inline"
+              >
+                <li
+                  class="sc-iwsKbI sc-jTzLTM bnPPYH pair"
+                >
+                  <div
+                    class="sc-htoDjs icDRie value"
+                  >
+                    Displaying 1 nodes, 0 relationships.
+                  </div>
+                </li>
+              </ul>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
