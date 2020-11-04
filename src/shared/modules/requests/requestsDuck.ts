@@ -37,12 +37,11 @@ export const REQUEST_STATUS_CANCELED = 'canceled'
 type RequestStatus = 'pending' | 'success' | 'error' | 'canceling' | 'canceled'
 // hmm look into this
 
-type RequestId = string
-export type RequestState = Record<RequestId, Request>
+export type RequestState = Record<string, Request>
 type GlobalState = { [NAME]: RequestState }
 const initialState: RequestState = {}
 
-export const getRequest = (state: GlobalState, id: RequestId): Request =>
+export const getRequest = (state: GlobalState, id: string): Request =>
   state[NAME][id]
 export const getRequests = (state: GlobalState): RequestState => state[NAME]
 export const isCancelStatus = (status: RequestStatus): boolean =>
@@ -60,7 +59,7 @@ export type Request = {
   result?: any
   status: Status
   type: any
-  id?: string
+  id: string
   updated?: number
 }
 // does it make sense to put the id in the object?
@@ -100,26 +99,26 @@ export default function reducer(
   }
 }
 
-export const send = (requestType: any, id: RequestId) => ({
+export const send = (requestType: any, id: RequestringstId) => ({
   type: REQUEST_SENT,
   requestType,
   id
 })
 
-export const update = (id: RequestId, result: any, status: Status) => ({
+export const update = (id: string, result: any, status: Status) => ({
   type: REQUEST_UPDATED,
   id,
   result,
   status
 })
 
-export const cancel = (id: RequestId) => ({
+export const cancel = (id: string) => ({
   type: CANCEL_REQUEST,
   status: REQUEST_STATUS_CANCELING,
   id
 })
 
-const canceled = (id: RequestId) => ({
+const canceled = (id: string) => ({
   type: REQUEST_CANCELED,
   status: REQUEST_STATUS_CANCELED,
   result: null,
@@ -129,7 +128,7 @@ const canceled = (id: RequestId) => ({
 // Epics
 export const cancelRequestEpic = (action$: any) =>
   action$.ofType(CANCEL_REQUEST).mergeMap(
-    (action: any) =>
+    (action: { id: string }) =>
       new Promise(resolve => {
         bolt.cancelTransaction(action.id, () => {
           resolve(canceled(action.id))

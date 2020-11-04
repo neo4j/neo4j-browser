@@ -21,8 +21,8 @@
 import { connect } from 'react-redux'
 import React from 'react'
 import FrameTemplate from '../../Frame/FrameTemplate'
-import { getRequest } from 'shared/modules/requests/requestsDuck'
-import { getFrame } from 'shared/modules/stream/streamDuck'
+import { getRequest, Request } from 'shared/modules/requests/requestsDuck'
+import { Frame, getFrame } from 'shared/modules/stream/streamDuck'
 import { StyledStatusSection } from 'browser-components/buttons'
 
 import { StyledFrameTitlebarButtonSection } from 'browser/modules/Frame/styled'
@@ -33,13 +33,14 @@ import { Icon } from './Icon'
 import { getLatestFromFrameStack } from '../stream.utils'
 import { RequestState } from 'shared/modules/requests/requestsDuck'
 
-const isCypher = (str: any) => !str.startsWith(':')
+const isCypher = (str: string) => !str.startsWith(':')
 
 interface FrameProps {
-  frame: any
+  frame: Frame
 }
+
 interface CypherScriptFrameProps extends FrameProps {
-  frames: any
+  frames: Record<string, Frame>
   requests: RequestState
 }
 
@@ -47,62 +48,60 @@ function CypherScriptFrame({
   frame,
   frames,
   requests = {}
-}: CypherScriptFrameProps) {
+}: CypherScriptFrameProps): JSX.Element {
   const contents = (
     <WrapperCenter>
       <ContentSizer>
         <Accordion
           data-testid="multi-statement-list"
-          render={({ getChildProps }: any) => {
-            return (
-              <div>
-                {(frame.statements || []).map((id: any, index: any) => {
-                  if (!requests[frames[id].requestId]) {
-                    return
-                  }
-                  const status = frames[id].ignore
-                    ? 'ignored'
-                    : requests[frames[id].requestId].status
-                  const { titleProps, contentProps } = getChildProps({
-                    index,
-                    defaultActive: ['error'].includes(status)
-                  })
-                  const SummaryC = isCypher(frames[id].cmd)
-                    ? CypherSummary
-                    : Summary
-                  return (
-                    <div key={id}>
-                      <Accordion.Title
-                        data-testid="multi-statement-list-title"
-                        {...titleProps}
-                      >
-                        <PointerFrameCommand title={frames[id].cmd}>
-                          {frames[id].cmd}
-                        </PointerFrameCommand>
-                        <StyledFrameTitlebarButtonSection>
-                          <StyledStatusSection
-                            data-testid="multi-statement-list-icon"
-                            title={`Status: ${status}`}
-                          >
-                            <Icon status={status} />
-                          </StyledStatusSection>
-                        </StyledFrameTitlebarButtonSection>
-                      </Accordion.Title>
-                      <Accordion.Content
-                        data-testid="multi-statement-list-content"
-                        {...contentProps}
-                      >
-                        <SummaryC
-                          status={status}
-                          request={requests[frames[id].requestId]}
-                        />
-                      </Accordion.Content>
-                    </div>
-                  )
-                })}
-              </div>
-            )
-          }}
+          render={({ getChildProps }: any) => (
+            <div>
+              {(frame.statements || []).map((id: string, index: number) => {
+                if (!requests[frames[id].requestId]) {
+                  return
+                }
+                const status = frames[id].ignore
+                  ? 'ignored'
+                  : requests[frames[id].requestId].status
+                const { titleProps, contentProps } = getChildProps({
+                  index,
+                  defaultActive: ['error'].includes(status)
+                })
+                const SummaryC = isCypher(frames[id].cmd)
+                  ? CypherSummary
+                  : Summary
+                return (
+                  <div key={id}>
+                    <Accordion.Title
+                      data-testid="multi-statement-list-title"
+                      {...titleProps}
+                    >
+                      <PointerFrameCommand title={frames[id].cmd}>
+                        {frames[id].cmd}
+                      </PointerFrameCommand>
+                      <StyledFrameTitlebarButtonSection>
+                        <StyledStatusSection
+                          data-testid="multi-statement-list-icon"
+                          title={`Status: ${status}`}
+                        >
+                          <Icon status={status} />
+                        </StyledStatusSection>
+                      </StyledFrameTitlebarButtonSection>
+                    </Accordion.Title>
+                    <Accordion.Content
+                      data-testid="multi-statement-list-content"
+                      {...contentProps}
+                    >
+                      <SummaryC
+                        status={status}
+                        request={requests[frames[id].requestId]}
+                      />
+                    </Accordion.Content>
+                  </div>
+                )
+              })}
+            </div>
+          )}
         />
       </ContentSizer>
     </WrapperCenter>
@@ -112,25 +111,35 @@ function CypherScriptFrame({
   )
 }
 
-const mapStateToProps = (state: any, ownProps: any) => {
+const mapStateToProps = (state: any, ownProps: FrameProps) => {
   if (!ownProps.frame.statements) return {}
   const frames = ownProps.frame.statements
-    .map((id: any) => getLatestFromFrameStack(getFrame(state, id)))
-    .reduce((all: any, curr: any) => {
+    .map(id => getLatestFromFrameStack(getFrame(state, id)))
+    .reduce((all: Record<string, Frame>, curr) => {
+      if (!curr) {
+        return all
+      }
+
       all[curr.id] = curr
       return all
     }, {})
+
   const requests = Object.keys(frames)
     .map(id => {
       const requestId = frames[id].requestId
       if (!requestId) return false
+
       const request = getRequest(state, requestId)
       if (!request) return false
+
       request.id = requestId
       return request
     })
-    .filter(a => !!a)
-    .reduce((all, curr) => {
+    .reduce((all: Record<string, Request>, curr: Request | false) => {
+      if (!curr) {
+        return all
+      }
+
       all[curr.id] = curr
       return all
     }, {})

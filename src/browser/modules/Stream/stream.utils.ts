@@ -18,7 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function getLatestFromFrameStack(frameObj: any) {
+import { Frame, FrameStack } from 'shared/modules/stream/streamDuck'
+
+export function getLatestFromFrameStack(frameObj: FrameStack): Frame | null {
   if (!frameObj.stack) {
     return null
   }

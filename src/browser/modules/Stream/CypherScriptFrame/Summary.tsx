@@ -29,11 +29,10 @@ import {
 import { MessageArea, PaddedStatsBar } from './styled'
 import { allowlistedMultiCommands } from 'shared/modules/commands/commandsDuck'
 import { Status } from 'shared/modules/requests/requestsDuck'
+import { Request } from 'shared/modules/requests/requestsDuck'
 
-const ucFirst = (str: string) => str[0].toUpperCase() + str.slice(1)
-interface GenericSummaryProps {
-  status: Status
-}
+const ucFirst = (str: string): string => str[0].toUpperCase() + str.slice(1)
+type GenericSummaryProps = { status: Status }
 
 const GenericSummary = ({
   status
@@ -86,7 +85,7 @@ const GenericSummary = ({
 
 interface CypherSummaryProps {
   status: Status
-  request: any
+  request: Request
 }
 
 export const CypherSummary = ({
@@ -129,7 +128,7 @@ export const CypherSummary = ({
 
 interface SummaryProps {
   status: Status
-  request: any
+  request: Request
 }
 
 export const Summary = ({

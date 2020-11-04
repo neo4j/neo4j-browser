@@ -19,7 +19,6 @@
  */
 
 import React from 'react'
-import Carousel from '../../modules/Carousel/Carousel'
 import Slide from '../../modules/Carousel/Slide'
 
 const title = 'Intro'

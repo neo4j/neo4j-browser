@@ -229,7 +229,7 @@ export interface Frame {
   useDb: string | null
 }
 
-interface FrameStack {
+export interface FrameStack {
   stack: Frame[]
   isPinned: boolean
 }
