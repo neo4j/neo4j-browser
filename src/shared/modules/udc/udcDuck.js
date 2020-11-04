@@ -392,11 +392,11 @@ export const trackErrorFramesEpic = (action$, store) =>
   action$.ofType(ADD).map(action => {
     const error = action.state.error
     if (error) {
-      const { message, code, type } = error
+      const { code, type } = error
       return metricsEvent({
         category: 'stream',
         label: 'errorframe',
-        data: { message, code, type }
+        data: { code, type }
       })
     } else {
       return { type: 'NOOP' }
