@@ -28,6 +28,7 @@ import {
 import { deepEquals } from 'services/utils'
 import Render from 'browser-components/Render'
 import {
+  commandSources,
   executeCommand,
   listDbsCommand
 } from 'shared/modules/commands/commandsDuck'
@@ -110,7 +111,7 @@ export class ErrorsView extends Component {
 }
 
 const onItemClick = (bus, statement) => {
-  const action = executeCommand(statement)
+  const action = executeCommand(statement, { source: commandSources.button })
   bus.send(action.type, action)
 }
 

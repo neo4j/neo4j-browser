@@ -29,6 +29,7 @@ import {
 } from 'shared/modules/dbMeta/dbMetaDuck'
 import {
   executeCommand,
+  commandSources,
   listDbsCommand
 } from 'shared/modules/commands/commandsDuck'
 import { toHumanReadableBytes } from 'services/utils'
@@ -135,7 +136,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onItemClick: cmd => {
-      const action = executeCommand(cmd)
+      const action = executeCommand(cmd, { source: commandSources.button })
       ownProps.bus.send(action.type, action)
     }
   }

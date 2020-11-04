@@ -31,7 +31,10 @@ import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { useMutation } from '@apollo/client'
 import { withTheme } from 'styled-components'
-import { executeCommand } from 'shared/modules/commands/commandsDuck'
+import {
+  commandSources,
+  executeCommand
+} from 'shared/modules/commands/commandsDuck'
 import {
   REMOVE_FAVORITE,
   updateFavorite
@@ -80,7 +83,7 @@ import { defaultFavoriteName } from 'browser/modules/Sidebar/favorites.utils'
 type EditorFrameProps = {
   bus: Bus
   theme: { linkHover: string }
-  executeCommand: (cmd: string) => void
+  executeCommand: (cmd: string, source: string) => void
   updateFavorite: (id: string, value: string) => void
   projectId: string
 }
@@ -205,10 +208,12 @@ export function EditorFrame({
     height: currentlyEditing ? 'auto' : 0
   })
 
-  function runCommand() {
-    executeCommand(editorRef.current?.getValue() || '')
-    editorRef.current?.setValue('')
-    setCurrentlyEditing(null)
+  function createRunCommandFunction(source: string) {
+    return () => {
+      executeCommand(editorRef.current?.getValue() || '', source)
+      editorRef.current?.setValue('')
+      setCurrentlyEditing(null)
+    }
   }
 
   function getName({ name, content, isProjectFile }: SavedScript) {
@@ -251,7 +256,7 @@ export function EditorFrame({
               onChange={() => {
                 setUnsaved(true)
               }}
-              runCommand={runCommand}
+              runCommand={createRunCommandFunction(commandSources.editor)}
             />
           </EditorContainer>
           {currentlyEditing && !currentlyEditing.isStatic && (
@@ -291,7 +296,7 @@ export function EditorFrame({
           )}
           <EditorButton
             data-testid="editor-Run"
-            onClick={runCommand}
+            onClick={createRunCommandFunction(commandSources.playButton)}
             title={isMac ? 'Run (⌘↩)' : 'Run (ctrl+enter)'}
             icon={run_icon}
             color={theme.linkHover}
@@ -323,8 +328,8 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
     updateFavorite: (id: string, cmd: string) => {
       dispatch(updateFavorite(id, cmd))
     },
-    executeCommand: (cmd: string) => {
-      dispatch(executeCommand(cmd))
+    executeCommand: (cmd: string, source: string) => {
+      dispatch(executeCommand(cmd, { source }))
     }
   }
 }

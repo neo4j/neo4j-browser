@@ -30,11 +30,11 @@ import {
   METRICS_EVENT,
   typeToMetricsObject,
   EVENT_APP_STARTED,
+  UDC_STARTUP,
   EVENT_BROWSER_SYNC_LOGOUT,
   EVENT_BROWSER_SYNC_LOGIN,
   EVENT_DRIVER_CONNECTED
 } from './udcDuck'
-import { APP_START } from '../app/appDuck'
 import {
   CYPHER,
   CYPHER_SUCCEEDED,
@@ -54,7 +54,7 @@ describe('Udc Epics', () => {
     const store = mockStore({})
     test('sends metric event when app start happens', done => {
       // Given
-      const action = { type: APP_START }
+      const action = { type: UDC_STARTUP }
       bus.take(METRICS_EVENT, currentAction => {
         // Then
         expect(currentAction).toEqual(

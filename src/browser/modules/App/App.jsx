@@ -80,7 +80,7 @@ import {
   buildConnectionCreds,
   getDesktopTheme
 } from 'browser-components/desktop-api/desktop-api.handlers'
-import { METRICS_EVENT } from 'shared/modules/udc/udcDuck'
+import { METRICS_EVENT, udcInit } from 'shared/modules/udc/udcDuck'
 import { useKeyboardShortcuts } from './keyboardShortcuts'
 
 export function App(props) {
@@ -102,6 +102,8 @@ export function App(props) {
           eventMetricsCallback.current &&
           eventMetricsCallback.current({ category, label, data })
       })
+    const initAction = udcInit()
+    props.bus && props.bus.send(initAction.type, initAction)
     return () => unsub && unsub()
   }, [])
 

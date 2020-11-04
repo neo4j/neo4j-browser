@@ -23,7 +23,10 @@ import { withBus } from 'react-suber'
 import uuid from 'uuid'
 import { map } from 'lodash-es'
 
-import { executeCommand } from 'shared/modules/commands/commandsDuck'
+import {
+  commandSources,
+  executeCommand
+} from 'shared/modules/commands/commandsDuck'
 import { canAssignRolesToUser } from 'shared/modules/features/featuresDuck'
 
 import bolt from 'services/bolt/bolt'
@@ -249,7 +252,9 @@ export class UserAdd extends Component {
   }
 
   openListUsersFrame() {
-    const action = executeCommand(':server user list')
+    const action = executeCommand(':server user list', {
+      source: commandSources.button
+    })
     this.props.bus.send(action.type, action)
   }
 

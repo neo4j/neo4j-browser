@@ -18,7 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { executeCommand } from 'shared/modules/commands/commandsDuck'
+import {
+  commandSources,
+  executeCommand
+} from 'shared/modules/commands/commandsDuck'
 import React, { Component } from 'react'
 import uuid from 'uuid'
 import { withBus } from 'react-suber'
@@ -189,7 +192,9 @@ export class UserList extends Component {
   }
 
   openAddNewUserFrame() {
-    const action = executeCommand(':server user add')
+    const action = executeCommand(':server user add', {
+      source: commandSources.button
+    })
     this.props.bus.send(action.type, action)
   }
 

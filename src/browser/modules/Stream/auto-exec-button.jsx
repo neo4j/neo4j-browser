@@ -20,7 +20,10 @@ import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import styled from 'styled-components'
 
-import { executeCommand } from '../../../shared/modules/commands/commandsDuck'
+import {
+  commandSources,
+  executeCommand
+} from '../../../shared/modules/commands/commandsDuck'
 
 const StyledAutoExecButton = styled.button`
   border-radius: 3px;
@@ -40,7 +43,7 @@ const StyledAutoExecButton = styled.button`
 
 export function AutoExecButtonComponent({ bus, cmd, ...rest }) {
   const onClick = useCallback(() => {
-    const action = executeCommand(`:${cmd}`)
+    const action = executeCommand(`:${cmd}`, { source: commandSources.button })
 
     bus.send(action.type, action)
   }, [cmd])

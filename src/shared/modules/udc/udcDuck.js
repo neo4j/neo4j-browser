@@ -30,15 +30,30 @@ import {
   getStoreId,
   isBeta
 } from 'shared/modules/dbMeta/dbMetaDuck'
+import { ADD, PIN, UNPIN, REMOVE } from 'shared/modules/stream/streamDuck'
 import {
   CYPHER,
   CYPHER_SUCCEEDED,
-  CYPHER_FAILED
+  CYPHER_FAILED,
+  COMMAND_QUEUED
 } from 'shared/modules/commands/commandsDuck'
-import { shouldReportUdc } from 'shared/modules/settings/settingsDuck'
+import {
+  ADD_FAVORITE,
+  LOAD_FAVORITES,
+  UPDATE_FAVORITE,
+  REMOVE_FAVORITE,
+  getFavorites
+} from 'shared/modules/favorites/favoritesDuck'
+import {
+  shouldReportUdc,
+  getSettings,
+  REPLACE,
+  UPDATE
+} from 'shared/modules/settings/settingsDuck'
 import { CONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
 import { shouldTriggerConnectEvent, getTodayDate } from './udcHelpers'
 import api from 'services/intercom'
+import cmdHelper from 'shared/services/commandInterpreterHelper'
 
 // Action types
 export const NAME = 'udc'
@@ -51,6 +66,8 @@ export const UPDATE_SETTINGS = `${NAME}/UPDATE_SETTINGS`
 export const UPDATE_DATA = `${NAME}/UPDATE_DATA`
 export const BOOTED = `${NAME}/BOOTED`
 export const METRICS_EVENT = `${NAME}/METRICS_EVENT`
+export const UDC_STARTUP = `${NAME}/STARTUP`
+export const LAST_GUIDE_SLIDE = `${NAME}/LAST_GUIDE_SLIDE`
 
 let booted = false
 
@@ -85,6 +102,8 @@ const getData = state => {
   const { events, ...rest } = state[NAME] || initialState // eslint-disable-line
   return rest
 }
+const getLastSnapshotTime = state =>
+  (state[NAME] && state[NAME].lastSnapshot) || initialState.lastSnapshot
 const getName = state => state[NAME].name || 'Graph Friend'
 const getCompanies = state => {
   if (getVersion(state) && getStoreId(state)) {
@@ -108,6 +127,7 @@ const initialState = {
   cypher_wins: 0,
   cypher_fails: 0,
   pingTime: 0,
+  lastSnapshot: 0,
   events: []
 }
 
@@ -138,6 +158,11 @@ const increment = what => {
   return {
     type: INCREMENT,
     what
+  }
+}
+export const udcInit = () => {
+  return {
+    type: UDC_STARTUP
   }
 }
 export const addToEventQueue = (name, data) => {
@@ -171,13 +196,71 @@ export const updateData = obj => {
   }
 }
 
+function aWeekSinceLastSnapshot(store) {
+  const now = Math.round(Date.now() / 1000)
+  const lastSnapshot = getLastSnapshotTime(store.getState())
+  const aWeekInSeconds = 60 * 60 * 24 * 7
+  return now - lastSnapshot > aWeekInSeconds
+}
+
 // Epics
 export const udcStartupEpic = (action$, store) =>
   action$
-    .ofType(APP_START)
+    .ofType(UDC_STARTUP)
     .do(() =>
       store.dispatch(metricsEvent(typeToMetricsObject[EVENT_APP_STARTED]))
     )
+    .do(() => {
+      if (!aWeekSinceLastSnapshot(store)) {
+        return
+      }
+
+      const settings = getSettings(store.getState())
+      const nonSensitiveSettings = [
+        'cmdchar',
+        'maxHistory',
+        'theme',
+        'playImplicitInitCommands',
+        'initialNodeDisplay',
+        'maxNeighbours',
+        'showSampleScripts',
+        'maxRows',
+        'maxFieldItems',
+        'autoComplete',
+        'scrollToTop',
+        'maxFrames',
+        'codeFontLigatures',
+        'editorAutocomplete',
+        'editorLint',
+        'useCypherThread',
+        'enableMultiStatementMode',
+        'connectionTimeout'
+      ]
+      if (settings) {
+        const data = nonSensitiveSettings.reduce(
+          (acc, curr) => ({ ...acc, [curr]: settings[curr] }),
+          {}
+        )
+        store.dispatch(
+          metricsEvent({ category: 'settings', label: 'snapshot', data })
+        )
+      }
+      const favorites = getFavorites(store.getState())
+
+      if (favorites) {
+        const count = favorites.filter(script => !script.isStatic).length
+        store.dispatch(
+          metricsEvent({
+            category: 'favorites',
+            label: 'snapshot',
+            data: { count }
+          })
+        )
+      }
+      store.dispatch(
+        updateData({ lastSnapshot: Math.round(Date.now() / 1000) })
+      )
+    })
     .mapTo(increment(typeToEventName[EVENT_APP_STARTED]))
 
 export const incrementEventEpic = (action$, store) =>
@@ -189,6 +272,23 @@ export const incrementEventEpic = (action$, store) =>
       store.dispatch(metricsEvent(typeToMetricsObject[action.type]))
     )
     .map(action => increment(typeToEventName[action.type]))
+
+export const trackCommandUsageEpic = (action$, store) =>
+  action$.ofType(COMMAND_QUEUED).map(action => {
+    const isCypher = !action.cmd.startsWith(':')
+    const label = isCypher
+      ? 'cypher'
+      : cmdHelper.interpret(action.cmd.slice(1))?.name
+    if (label === 'catch-all') {
+      // already tracked as error frame
+      return { type: 'NOOP' }
+    }
+    return metricsEvent({
+      category: 'command',
+      label,
+      data: { source: action.source || 'unknown' }
+    })
+  })
 
 export const trackSyncLogoutEpic = (action$, store) =>
   action$
@@ -247,6 +347,24 @@ export const bootEpic = (action$, store) => {
     })
 }
 
+const actionsOfInterest = [
+  PIN,
+  UNPIN,
+  REMOVE,
+  ADD_FAVORITE,
+  LOAD_FAVORITES,
+  UPDATE_FAVORITE,
+  REMOVE_FAVORITE,
+  LAST_GUIDE_SLIDE
+]
+export const trackReduxActionsEpic = (action$, store) =>
+  action$
+    .filter(action => actionsOfInterest.includes(action.type))
+    .map(action => {
+      const [category, label] = action.type.split('/')
+      return metricsEvent({ category, label })
+    })
+
 export const trackConnectsEpic = (
   action$,
   store // Decide what to do with events
@@ -269,6 +387,21 @@ export const trackConnectsEpic = (
       }
       return eventFired('connect', data)
     })
+
+export const trackErrorFramesEpic = (action$, store) =>
+  action$.ofType(ADD).map(action => {
+    const error = action.state.error
+    if (error) {
+      const { code, type } = error
+      return metricsEvent({
+        category: 'stream',
+        label: 'errorframe',
+        data: { code, type }
+      })
+    } else {
+      return { type: 'NOOP' }
+    }
+  })
 
 export const eventFiredEpic = (
   action$,

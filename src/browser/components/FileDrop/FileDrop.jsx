@@ -30,7 +30,8 @@ import { parseGrass } from 'shared/services/grassUtils'
 import { updateGraphStyleData } from 'shared/modules/grass/grassDuck'
 import {
   showErrorMessage,
-  executeCommand
+  executeCommand,
+  commandSources
 } from 'shared/modules/commands/commandsDuck'
 import {
   createLoadFavoritesPayload,
@@ -143,7 +144,7 @@ export function FileDrop(props) {
     if (extension === 'grass') {
       fileLoader(files[0], result => {
         importGrass(result)
-        const action = executeCommand(':style')
+        const action = executeCommand(':style', { source: commandSources.auto })
         props.bus.send(action.type, action)
       })
 

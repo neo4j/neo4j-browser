@@ -25,7 +25,10 @@ import {
   DISABLE_IMPLICIT_INIT_COMMANDS
 } from 'shared/modules/settings/settingsDuck'
 import { APP_START, URL_ARGUMENTS_CHANGE } from 'shared/modules/app/appDuck'
-import { executeCommand } from 'shared/modules/commands/commandsDuck'
+import {
+  commandSources,
+  executeCommand
+} from 'shared/modules/commands/commandsDuck'
 
 const NAME = 'editor'
 export const SET_CONTENT = `${NAME}/SET_CONTENT`
@@ -103,7 +106,7 @@ export const populateEditorFromUrlEpic = (some$, store) => {
       // When running the explicit command, also set flag to skip any implicit init commands
       if (commandType === 'play') {
         return [
-          executeCommand(fullCommand),
+          executeCommand(fullCommand, { source: commandSources.url }),
           { type: DISABLE_IMPLICIT_INIT_COMMANDS }
         ]
       }

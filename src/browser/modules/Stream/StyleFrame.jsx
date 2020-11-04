@@ -26,7 +26,8 @@ import { FrameButton } from 'browser-components/buttons'
 import { objToCss } from 'services/grassUtils'
 import {
   executeSystemCommand,
-  executeCommand
+  executeCommand,
+  commandSources
 } from 'shared/modules/commands/commandsDuck'
 import { FireExtinguisherIcon } from 'browser-components/icons/Icons'
 import { InfoView } from './InfoView'
@@ -83,7 +84,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     resetStyleAction: executeSystemCommand(':style reset'),
     rerunAction: executeCommand(ownProps.frame.cmd, {
-      id: ownProps.frame.id
+      id: ownProps.frame.id,
+      source: commandSources.button
     })
   }
 }

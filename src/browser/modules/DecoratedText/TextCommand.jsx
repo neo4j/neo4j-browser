@@ -21,7 +21,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import { executeCommand } from 'shared/modules/commands/commandsDuck'
+import {
+  commandSources,
+  executeCommand
+} from 'shared/modules/commands/commandsDuck'
 
 const ExecutableIcon = styled.i`
   padding-right: 4px;
@@ -49,7 +52,8 @@ export const TextCommand = ({ command, onClick, ...rest }) => (
 
 const mapDispatchToProps = dispatch => {
   return {
-    onClick: cmd => dispatch(executeCommand(cmd))
+    onClick: cmd =>
+      dispatch(executeCommand(cmd, { source: commandSources.button }))
   }
 }
 
