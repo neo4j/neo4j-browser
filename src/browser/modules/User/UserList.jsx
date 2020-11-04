@@ -29,7 +29,7 @@ import {
 } from 'shared/modules/cypher/boltUserHelper'
 import UserInformation from './UserInformation'
 import bolt from 'services/bolt/bolt'
-import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import { ROUTED_CYPHER_WRITE_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { StyledLink } from 'browser-components/buttons'
 import { StyledTable, StyledTh } from 'browser-components/DataTables'
 import { StyledButtonContainer } from './styled'
@@ -100,7 +100,7 @@ export class UserList extends Component {
 
   getUserList() {
     this.props.bus.self(
-      CYPHER_REQUEST,
+      ROUTED_CYPHER_WRITE_REQUEST,
       {
         query: listUsersQuery(Boolean(this.props.useSystemDb)),
         queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
@@ -119,7 +119,7 @@ export class UserList extends Component {
 
   getRoles() {
     this.props.bus.self(
-      CYPHER_REQUEST,
+      ROUTED_CYPHER_WRITE_REQUEST,
       {
         query: listRolesQuery(Boolean(this.props.useSystemDb)),
         queryType: NEO4J_BROWSER_USER_ACTION_QUERY,

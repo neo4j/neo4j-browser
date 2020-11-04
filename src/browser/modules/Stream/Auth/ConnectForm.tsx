@@ -187,7 +187,6 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
               data-testid="username"
               onChange={props.onUsernameChange}
               defaultValue={props.username}
-              required
             />
           </StyledConnectionLabel>
         </StyledConnectionFormEntry>
@@ -202,7 +201,6 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
               onChange={props.onPasswordChange}
               defaultValue={props.password}
               type="password"
-              required
             />
           </StyledConnectionLabel>
         </StyledConnectionFormEntry>

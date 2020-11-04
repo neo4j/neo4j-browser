@@ -58,6 +58,7 @@ import { clearLocalstorageEpic } from './modules/localstorage/localstorageDuck'
 import { populateEditorFromUrlEpic } from './modules/editor/editorDuck'
 import {
   adHocCypherRequestEpic,
+  routedCypherRequestEpic,
   cypherRequestEpic,
   clusterCypherRequestEpic,
   handleForcePasswordChangeEpic
@@ -121,6 +122,7 @@ export default combineEpics(
   injectDiscoveryEpic,
   populateEditorFromUrlEpic,
   adHocCypherRequestEpic,
+  routedCypherRequestEpic,
   cypherRequestEpic,
   clusterCypherRequestEpic,
   clearLocalstorageEpic,
