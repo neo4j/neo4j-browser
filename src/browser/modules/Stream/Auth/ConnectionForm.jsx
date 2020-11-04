@@ -46,7 +46,11 @@ import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
 import ConnectForm from './ConnectForm'
 import ConnectedView from './ConnectedView'
 import ChangePasswordForm from './ChangePasswordForm'
-import { getAllowedBoltSchemes } from 'shared/modules/app/appDuck'
+import {
+  getAllowedAuthSchemes,
+  getAllowedBoltSchemes,
+  inCloudEnv
+} from 'shared/modules/app/appDuck'
 import { FOCUS } from 'shared/modules/editor/editorDuck'
 import {
   generateBoltUrl,
@@ -293,7 +297,7 @@ export class ConnectionForm extends Component {
     } else if (
       this.props.isConnected &&
       this.props.activeConnectionData &&
-      this.props.activeConnectionData.authEnabled === false // excplicit false = auth disabled for sure
+      this.props.activeConnectionData.authEnabled === false // explicit false = auth disabled for sure
     ) {
       view = (
         <StyledConnectionBody>
@@ -315,10 +319,11 @@ export class ConnectionForm extends Component {
           username={this.state.username}
           password={this.state.password}
           database={this.state.requestedUseDb}
-          authenticationMethod={this.state.authenticationMethod}
+          supportsMultiDb={this.state.supportsMultiDb}
           used={this.state.used}
           allowedSchemes={this.props.allowedSchemes}
-          supportsMultiDb={this.state.supportsMultiDb}
+          allowedAuthMethods={this.props.allowedAuthMethods}
+          authenticationMethod={this.state.authenticationMethod}
         />
       )
     }
@@ -334,7 +339,8 @@ const mapStateToProps = state => {
     playImplicitInitCommands: getPlayImplicitInitCommands(state),
     storeCredentials: shouldRetainConnectionCredentials(state),
     isConnected: isConnected(state),
-    allowedSchemes: getAllowedBoltSchemes(state)
+    allowedSchemes: getAllowedBoltSchemes(state),
+    allowedAuthMethods: getAllowedAuthSchemes(state)
   }
 }
 
@@ -356,6 +362,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     storeCredentials: stateProps.storeCredentials,
     isConnected: stateProps.isConnected,
     allowedSchemes: stateProps.allowedSchemes,
+    allowedAuthMethods: stateProps.allowedAuthMethods,
     ...ownProps,
     ...dispatchProps,
     executeInitCmd: () => {

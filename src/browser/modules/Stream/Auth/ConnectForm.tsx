@@ -35,7 +35,6 @@ import { toKeyString } from 'services/utils'
 import { stripScheme, getScheme } from 'services/boltscheme.utils'
 
 type AuthenticationMethod = typeof NATIVE | typeof NO_AUTH
-const authMethods: AuthenticationMethod[] = [NATIVE, NO_AUTH]
 const readableauthenticationMethods: Record<AuthenticationMethod, string> = {
   [NATIVE]: 'Username / Password',
   [NO_AUTH]: 'No authentication'
@@ -43,6 +42,7 @@ const readableauthenticationMethods: Record<AuthenticationMethod, string> = {
 
 interface ConnectFormProps {
   allowedSchemes: string[]
+  allowedAuthMethods: AuthenticationMethod[]
   authenticationMethod: string
   host: string
   onAuthenticationMethodChange: () => void
@@ -102,16 +102,27 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
     props.onConnectClick(() => setConnecting(false))
   }
 
+  const hasSecureSchemes = ['neo4j+s', 'bolt+s'].every(scheme =>
+    props.allowedSchemes.includes(scheme)
+  )
+  const hoverText = `Pick neo4j${
+    hasSecureSchemes ? '+s' : ''
+  }:// for a routed connection, bolt${
+    hasSecureSchemes ? '+s' : ''
+  }:// for a direct connection to a DBMS instance.`
+
+  const schemeRestriction = props.allowedSchemes.length > 0
+
   return (
     <StyledConnectionForm onSubmit={onConnectClick}>
       <StyledConnectionFormEntry>
         <StyledConnectionLabel
           htmlFor="url-input"
-          title="Pick neo4j:// for a routed connection, bolt:// for a direct connection to a DBMS instance."
+          title={schemeRestriction ? hoverText : ''}
         >
           Connect URL
         </StyledConnectionLabel>
-        {props.allowedSchemes && props.allowedSchemes.length ? (
+        {schemeRestriction ? (
           <>
             <StyledSegment>
               <StyledConnectionSelect
@@ -137,8 +148,7 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
               />
             </StyledSegment>
             <StyledBoltUrlHintText className="url-hint-text">
-              Pick neo4j:// for a routed connection, bolt:// for a direct
-              connection to a DBMS.
+              {hoverText}
             </StyledBoltUrlHintText>
           </>
         ) : (
@@ -162,22 +172,24 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
         </StyledConnectionFormEntry>
       )}
 
-      <StyledConnectionFormEntry>
-        <StyledConnectionLabel>
-          Authentication type
-          <StyledConnectionSelect
-            data-testid="authenticationMethod"
-            onChange={props.onAuthenticationMethodChange}
-            value={props.authenticationMethod}
-          >
-            {authMethods.map(auth => (
-              <option value={auth} key={auth}>
-                {readableauthenticationMethods[auth]}
-              </option>
-            ))}
-          </StyledConnectionSelect>
-        </StyledConnectionLabel>
-      </StyledConnectionFormEntry>
+      {props.allowedAuthMethods.length > 1 && (
+        <StyledConnectionFormEntry>
+          <StyledConnectionLabel>
+            Authentication type
+            <StyledConnectionSelect
+              data-testid="authenticationMethod"
+              onChange={props.onAuthenticationMethodChange}
+              value={props.authenticationMethod}
+            >
+              {props.allowedAuthMethods.map(auth => (
+                <option value={auth} key={auth}>
+                  {readableauthenticationMethods[auth]}
+                </option>
+              ))}
+            </StyledConnectionSelect>
+          </StyledConnectionLabel>
+        </StyledConnectionFormEntry>
+      )}
 
       {props.authenticationMethod === NATIVE && (
         <StyledConnectionFormEntry>
