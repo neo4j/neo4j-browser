@@ -42,6 +42,7 @@ import {
 
 const NAME = 'cypher'
 export const CYPHER_REQUEST = `${NAME}/REQUEST`
+export const ROUTED_CYPHER_WRITE_REQUEST = `${NAME}/ROUTED_WRITE_REQUEST`
 export const AD_HOC_CYPHER_REQUEST = `${NAME}/AD_HOC_REQUEST`
 export const CLUSTER_CYPHER_REQUEST = `${NAME}/CLUSTER_REQUEST`
 export const FORCE_CHANGE_PASSWORD = `${NAME}/FORCE_CHANGE_PASSWORD`
@@ -114,6 +115,35 @@ export const cypherRequestEpic = (some$, store) =>
         type: action.$$responseChannel,
         success: false,
         error: e
+      }))
+  })
+
+export const routedCypherRequestEpic = (some$, store) =>
+  some$.ofType(ROUTED_CYPHER_WRITE_REQUEST).mergeMap(action => {
+    if (!action.$$responseChannel) return Rx.Observable.of(null)
+
+    const [id, promise] = bolt.routedWriteTransaction(
+      action.query,
+      action.params,
+      {
+        useCypherThread: shouldUseCypherThread(store.getState()),
+        ...getUserTxMetadata(action.queryType || null)({
+          hasServerSupport: canSendTxMetadata(store.getState())
+        }),
+        cancelable: true,
+        useDb: action.useDb
+      }
+    )
+    return promise
+      .then(result => ({
+        type: action.$$responseChannel,
+        success: true,
+        result
+      }))
+      .catch(error => ({
+        type: action.$$responseChannel,
+        success: false,
+        error
       }))
   })
 

@@ -32,7 +32,7 @@ import {
   createDatabaseUser,
   addRoleToUser
 } from 'shared/modules/cypher/boltUserHelper'
-import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import { ROUTED_CYPHER_WRITE_REQUEST } from 'shared/modules/cypher/cypherDuck'
 
 import RolesSelector from './RolesSelector'
 import FrameTemplate from 'browser/modules/Frame/FrameTemplate'
@@ -111,7 +111,7 @@ export class UserAdd extends Component {
     this.state.roles.forEach(role => {
       this.props.bus &&
         this.props.bus.self(
-          CYPHER_REQUEST,
+          ROUTED_CYPHER_WRITE_REQUEST,
           {
             query: addRoleToUser(
               this.state.username,
@@ -149,7 +149,7 @@ export class UserAdd extends Component {
   getRoles() {
     this.props.bus &&
       this.props.bus.self(
-        CYPHER_REQUEST,
+        ROUTED_CYPHER_WRITE_REQUEST,
         {
           query: listRolesQuery(Boolean(this.props.useSystemDb)),
           queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
@@ -174,7 +174,9 @@ export class UserAdd extends Component {
       )
   }
 
-  submit() {
+  submit = event => {
+    event.preventDefault()
+
     this.setState({ isLoading: true, success: null, errors: null })
     const errors = []
     if (!this.state.username) errors.push('Missing username')
@@ -193,7 +195,7 @@ export class UserAdd extends Component {
   createUser() {
     this.props.bus &&
       this.props.bus.self(
-        CYPHER_REQUEST,
+        ROUTED_CYPHER_WRITE_REQUEST,
         {
           query: createDatabaseUser(
             this.state,
@@ -297,7 +299,7 @@ export class UserAdd extends Component {
         />
       )
       frameContents = (
-        <StyledForm id={`user-add-${formId}`}>
+        <StyledForm id={`user-add-${formId}`} onSubmit={this.submit}>
           <StyledFormElement>
             <StyledLabel htmlFor={usernameId}>Username</StyledLabel>
             <StyledInput
@@ -358,11 +360,7 @@ export class UserAdd extends Component {
           </StyledFormElement>
 
           <StyledFormElement>
-            <FormButton
-              onClick={this.submit.bind(this)}
-              label="Add User"
-              disabled={isLoading}
-            />
+            <FormButton type="submit" label="Add User" disabled={isLoading} />
           </StyledFormElement>
 
           <StyledLink onClick={this.openListUsersFrame.bind(this)}>
@@ -402,9 +400,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withBus(
-  connect(
-    mapStateToProps,
-    null
-  )(UserAdd)
-)
+export default withBus(connect(mapStateToProps, null)(UserAdd))
