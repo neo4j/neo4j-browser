@@ -29,7 +29,8 @@ import { Lead } from 'browser-components/Text'
 import Render from 'browser-components/Render'
 import { StyledConnectionAside, StyledConnectionBodyContainer } from './styled'
 import { connect } from 'react-redux'
-import { inCloudEnv } from 'shared/modules/app/appDuck'
+import { getAllowedAuthSchemes } from 'shared/modules/app/appDuck'
+import { NO_AUTH } from 'services/bolt/boltHelpers'
 
 export class ConnectionFrame extends Component {
   constructor(props) {
@@ -69,9 +70,11 @@ export class ConnectionFrame extends Component {
                 <>
                   <H3>Connect to Neo4j</H3>
                   <Lead>
-                    {this.props.inCloudEnv
-                      ? 'Database access on Neo4j Aura requires an authenticated connection'
-                      : 'Database access might require an authenticated connection.'}
+                    Database access
+                    {this.props.mightRequireAuth
+                      ? ' might require '
+                      : ' requires '}
+                    an authenticated connection
                   </Lead>
                 </>
               )}
@@ -92,7 +95,7 @@ export class ConnectionFrame extends Component {
 
 const mapStateToProps = state => {
   return {
-    inCloudEnv: inCloudEnv(state)
+    mightRequireAuth: getAllowedAuthSchemes(state).includes(NO_AUTH)
   }
 }
 

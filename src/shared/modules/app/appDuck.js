@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
+
 // Action type constants
 export const NAME = 'app'
 export const APP_START = `${NAME}/APP_START`
@@ -41,6 +43,9 @@ export const hasDiscoveryEndpoint = state =>
 export const inWebEnv = state => getEnv(state) === WEB
 export const inCloudEnv = state => getEnv(state) === CLOUD
 export const inWebBrowser = state => [WEB, CLOUD].includes(getEnv(state))
+export const getAllowedAuthSchemes = state =>
+  inCloudEnv(state) ? [] : [NATIVE, NO_AUTH]
+
 export const getAllowedBoltSchemes = (state, encryptionFlag) => {
   if (inCloudEnv(state) /* Aura only allows neo4j+s */) {
     return ['neo4j+s']

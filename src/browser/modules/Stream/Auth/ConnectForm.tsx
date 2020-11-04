@@ -111,18 +111,18 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
     hasSecureSchemes ? '+s' : ''
   }:// for a direct connection to a DBMS instance.`
 
-  const multipleSchemesAllowed = props.allowedSchemes.length > 1
+  const schemeRestriction = props.allowedSchemes.length > 0
 
   return (
     <StyledConnectionForm onSubmit={onConnectClick}>
       <StyledConnectionFormEntry>
         <StyledConnectionLabel
           htmlFor="url-input"
-          title={multipleSchemesAllowed ? hoverText : ''}
+          title={schemeRestriction ? hoverText : ''}
         >
           Connect URL
         </StyledConnectionLabel>
-        {multipleSchemesAllowed ? (
+        {schemeRestriction ? (
           <>
             <StyledSegment>
               <StyledConnectionSelect

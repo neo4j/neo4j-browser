@@ -46,7 +46,11 @@ import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
 import ConnectForm from './ConnectForm'
 import ConnectedView from './ConnectedView'
 import ChangePasswordForm from './ChangePasswordForm'
-import { getAllowedBoltSchemes, inCloudEnv } from 'shared/modules/app/appDuck'
+import {
+  getAllowedAuthSchemes,
+  getAllowedBoltSchemes,
+  inCloudEnv
+} from 'shared/modules/app/appDuck'
 import { FOCUS } from 'shared/modules/editor/editorDuck'
 import {
   generateBoltUrl,
@@ -336,7 +340,7 @@ const mapStateToProps = state => {
     storeCredentials: shouldRetainConnectionCredentials(state),
     isConnected: isConnected(state),
     allowedSchemes: getAllowedBoltSchemes(state),
-    allowedAuthMethods: inCloudEnv(state) ? [NATIVE] : [NATIVE, NO_AUTH]
+    allowedAuthMethods: getAllowedAuthSchemes(state)
   }
 }
 
