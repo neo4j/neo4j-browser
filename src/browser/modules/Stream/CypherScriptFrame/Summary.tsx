@@ -28,14 +28,7 @@ import {
 } from 'browser/modules/Stream/styled'
 import { MessageArea, PaddedStatsBar } from './styled'
 import { allowlistedMultiCommands } from 'shared/modules/commands/commandsDuck'
-
-export type Status =
-  | 'ignored'
-  | 'skipped'
-  | 'pending'
-  | 'success'
-  | 'waiting'
-  | 'error'
+import { Status } from 'shared/modules/requests/requestsDuck'
 
 const ucFirst = (str: string) => str[0].toUpperCase() + str.slice(1)
 interface GenericSummaryProps {

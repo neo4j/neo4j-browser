@@ -26,7 +26,7 @@ import {
   ExclamationTriangleIcon
 } from 'browser-components/icons/Icons'
 import { WarningSpan, ErrorSpan, SuccessSpan } from './styled'
-import { Status } from './Summary'
+import { Status } from 'shared/modules/requests/requestsDuck'
 
 interface IconProps {
   status: Status
