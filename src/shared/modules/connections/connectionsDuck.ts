@@ -20,8 +20,8 @@
 
 import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
-import { NO_AUTH } from 'services/bolt/boltHelpers'
 import * as discovery from 'shared/modules/discovery/discoveryDuck'
+import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
 import {
   fetchMetaData,
   CLEAR as CLEAR_META
@@ -79,6 +79,11 @@ interface ConnectionsState {
   useDb: null | string
 }
 
+/* 
+Architectural note. Browser was originally meant to keep multiple connections 
+at the same time. However that's not been put into practise. Therefore
+this duck is more complicated than it needs to be.
+*/
 const initialState: ConnectionsState = {
   allConnectionIds: [],
   connectionsById: {},
@@ -87,11 +92,24 @@ const initialState: ConnectionsState = {
   lastUpdate: 0,
   useDb: null
 }
+export interface Connection {
+  id: string
+  name: string
+  db: string
+  host: string
+  username: string
+  password: string
+  authenticationMethod: AuthenticationMethod
+  authEnabled: boolean
+  requestedUseDb?: string
+}
+
+export type AuthenticationMethod = typeof NATIVE | typeof NO_AUTH
 
 /**
  * Selectors
  */
-export function getConnection(state: any, id: any) {
+export function getConnection(state: any, id: string): Connection | null {
   return (
     getConnections(state).find(
       connection => connection && connection.id === id
@@ -119,11 +137,12 @@ export function isConnected(state: any) {
   return getConnectionState(state) === CONNECTED_STATE
 }
 
-export function getActiveConnection(state: any) {
+// TODO rename to id
+export function getActiveConnection(state: any): string {
   return state[NAME].activeConnection || initialState.activeConnection
 }
 
-export function getActiveConnectionData(state: any) {
+export function getActiveConnectionData(state: any): Connection | null {
   if (!state[NAME].activeConnection) return null
   return getConnectionData(state, state[NAME].activeConnection)
 }
@@ -648,6 +667,10 @@ export const retainCredentialsSettingsEpic = (action$: any, store: any) => {
     .ofType(UPDATE_RETAIN_CREDENTIALS)
     .do((action: any) => {
       const connection = getActiveConnectionData(store.getState())
+      if (!connection) {
+        return
+      }
+
       if (
         !action.shouldRetain &&
         (connection.username || connection.password)

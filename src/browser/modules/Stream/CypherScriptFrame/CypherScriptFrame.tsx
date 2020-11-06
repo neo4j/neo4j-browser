@@ -30,18 +30,13 @@ import { WrapperCenter, ContentSizer, PointerFrameCommand } from './styled'
 import Accordion from 'browser-components/Accordion/Accordion'
 import { Summary, CypherSummary } from './Summary'
 import { Icon } from './Icon'
-import { getLatestFromFrameStack } from '../stream.utils'
-import { RequestState } from 'shared/modules/requests/requestsDuck'
+import { BaseFrameProps } from '../Stream'
 
 const isCypher = (str: string) => !str.startsWith(':')
 
-interface FrameProps {
-  frame: Frame
-}
-
-interface CypherScriptFrameProps extends FrameProps {
+interface CypherScriptFrameProps extends BaseFrameProps {
   frames: Record<string, Frame>
-  requests: RequestState
+  requests: Record<string, Request>
 }
 
 function CypherScriptFrame({
@@ -60,9 +55,7 @@ function CypherScriptFrame({
                 if (!requests[frames[id].requestId]) {
                   return
                 }
-                const status = frames[id].ignore
-                  ? 'ignored'
-                  : requests[frames[id].requestId].status
+                const status = requests[frames[id].requestId].status
                 const { titleProps, contentProps } = getChildProps({
                   index,
                   defaultActive: ['error'].includes(status)
@@ -111,18 +104,15 @@ function CypherScriptFrame({
   )
 }
 
-const mapStateToProps = (state: any, ownProps: FrameProps) => {
-  if (!ownProps.frame.statements) return {}
+const mapStateToProps = (state: any, ownProps: BaseFrameProps) => {
+  // TODO  when could this happen?
+  // if (!ownProps.frame.statements) return {}
   const frames = ownProps.frame.statements
-    .map(id => getLatestFromFrameStack(getFrame(state, id)))
-    .reduce((all: Record<string, Frame>, curr) => {
-      if (!curr) {
-        return all
-      }
-
-      all[curr.id] = curr
-      return all
-    }, {})
+    .map(id => getFrame(state, id).stack[0])
+    .reduce(
+      (all: Record<string, Frame>, curr) => ({ ...all, [curr.id]: curr }),
+      {}
+    )
 
   const requests = Object.keys(frames)
     .map(id => {

@@ -99,7 +99,7 @@ export default function reducer(
   }
 }
 
-export const send = (requestType: any, id: RequestringstId) => ({
+export const send = (requestType: any, id: string) => ({
   type: REQUEST_SENT,
   requestType,
   id

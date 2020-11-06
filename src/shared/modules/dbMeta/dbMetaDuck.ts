@@ -452,14 +452,14 @@ const switchToRequestedDb = (store: any) => {
   const activeConnection = getActiveConnectionData(store.getState())
   const requestedUseDb = activeConnection?.requestedUseDb
 
-  const useDefaultDb = () => {
+  const switchToDefaultDb = () => {
     const defaultDb = databases.find((db: any) => db.default)
     if (defaultDb) {
       store.dispatch(useDb(defaultDb.name))
     }
   }
 
-  if (requestedUseDb) {
+  if (activeConnection && requestedUseDb) {
     const wantedDb = databases.find(
       ({ name }: any) => name.toLowerCase() === requestedUseDb.toLowerCase()
     )
@@ -478,10 +478,10 @@ const switchToRequestedDb = (store: any) => {
       store.dispatch(executeCommand(`:use ${requestedUseDb}`), {
         source: commandSources.auto
       })
-      useDefaultDb()
+      switchToDefaultDb()
     }
   } else {
-    useDefaultDb()
+    switchToDefaultDb()
   }
   return Rx.Observable.of(null)
 }

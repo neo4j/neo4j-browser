@@ -25,7 +25,7 @@ import { StyledStream, Padding } from './styled'
 import CypherFrame from './CypherFrame/index'
 import HistoryFrame from './HistoryFrame'
 import PlayFrame from './PlayFrame'
-import Frame from '../Frame/Frame'
+import DefaultFrame from '../Frame/Frame'
 import PreFrame from './PreFrame'
 import ParamsFrame from './ParamsFrame'
 import ErrorFrame from './ErrorFrame'
@@ -43,15 +43,18 @@ import ChangePasswordFrame from './Auth/ChangePasswordFrame'
 import QueriesFrame from './Queries/QueriesFrame'
 import UserList from '../User/UserList'
 import UserAdd from '../User/UserAdd'
-import { getFrames } from 'shared/modules/stream/streamDuck'
-import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
+import { FrameStack, Frame, getFrames } from 'shared/modules/stream/streamDuck'
+import {
+  getActiveConnectionData,
+  Connection
+} from 'shared/modules/connections/connectionsDuck'
 import { getScrollToTop } from 'shared/modules/settings/settingsDuck'
 import DbsFrame from './Auth/DbsFrame'
-import { getLatestFromFrameStack } from './stream.utils'
 import EditFrame from './EditFrame'
+import { SnakeFrame } from './Extras/index'
 
-const getFrame = (type: any) => {
-  const trans: any = {
+const getFrame = (type: string) => {
+  const trans: Record<string, any> = {
     error: ErrorFrame,
     cypher: CypherFrame,
     'cypher-script': CypherScriptFrame,
@@ -78,22 +81,31 @@ const getFrame = (type: any) => {
     dbs: DbsFrame,
     style: StyleFrame,
     edit: EditFrame,
-    default: Frame
+    default: DefaultFrame
   }
   return trans[type] || trans.default
 }
 
-class Stream extends PureComponent<any> {
-  base: any
-  componentDidMount() {
-    this.base = React.createRef()
-  }
+type StreamProps = {
+  frames: FrameStack[]
+  activeConnectionData: Connection | null
+  shouldScrollToTop: boolean
+}
 
-  componentDidUpdate(prevProps: any) {
+export interface BaseFrameProps {
+  frame: Frame & { isPinned: boolean }
+  activeConnectionData: Connection | null
+  stack: Frame[]
+}
+
+class Stream extends PureComponent<StreamProps> {
+  base = React.createRef<HTMLDivElement>()
+
+  componentDidUpdate(prevProps: StreamProps) {
     // If we want to scroll to top when a new frame is added
     if (
       prevProps.frames.length < this.props.frames.length &&
-      this.props.scrollToTop &&
+      this.props.shouldScrollToTop &&
       this.base &&
       this.base.current
     ) {
@@ -104,24 +116,22 @@ class Stream extends PureComponent<any> {
   render() {
     return (
       <StyledStream ref={this.base} data-testid="stream">
-        {this.props.frames.map((frameObject: any) => {
-          const frame = getLatestFromFrameStack(frameObject)
-          const frameProps = {
+        {this.props.frames.map(frameObject => {
+          const frame = frameObject.stack[0]
+
+          // TODO
+          // why not send the frame obj instead of the stack and moving ispinned?
+          const frameProps: BaseFrameProps = {
             frame: { ...frame, isPinned: frameObject.isPinned },
             activeConnectionData: this.props.activeConnectionData,
             stack: frameObject.stack
           }
-          let MyFrame = getFrame(frame.type)
-          if (frame.type === 'error') {
-            try {
-              const cmd = frame.cmd.replace(/^:/, '')
-              const Frame = cmd[0].toUpperCase() + cmd.slice(1) + 'Frame'
-              MyFrame = require('./Extras/index')[Frame]
-              if (!MyFrame) {
-                MyFrame = getFrame(frame.type)
-              }
-            } catch (e) {}
-          }
+
+          const MyFrame =
+            frame.cmd.slice(1).toLowerCase() === 'snake'
+              ? SnakeFrame
+              : getFrame(frame.type)
+
           return <MyFrame {...frameProps} key={frame.id} />
         })}
         <Padding />
@@ -130,13 +140,10 @@ class Stream extends PureComponent<any> {
   }
 }
 
-const mapStateToProps = (state: any) => {
-  const frames = getFrames(state)
-  return {
-    frames,
-    activeConnectionData: getActiveConnectionData(state),
-    scrollToTop: getScrollToTop(state)
-  }
-}
+const mapStateToProps = (state: any) => ({
+  frames: getFrames(state),
+  activeConnectionData: getActiveConnectionData(state),
+  shouldScrollToTop: getScrollToTop(state)
+})
 
 export default connect(mapStateToProps)(Stream)

@@ -27,12 +27,12 @@ import SVGInline from 'react-svg-inline'
 import controlsPlay from 'icons/controls-play.svg'
 
 import * as app from 'shared/modules/app/appDuck'
-import * as editor from 'shared/modules/editor/editorDuck'
 import * as commands from 'shared/modules/commands/commandsDuck'
 import * as sidebar from 'shared/modules/sidebar/sidebarDuck'
 import {
   cancel as cancelRequest,
   getRequest,
+  Request,
   REQUEST_STATUS_PENDING
 } from 'shared/modules/requests/requestsDuck'
 import { remove, pin, unpin } from 'shared/modules/stream/streamDuck'
@@ -40,7 +40,6 @@ import { removeComments, sleep } from 'shared/services/utils'
 import { FrameButton } from 'browser-components/buttons'
 import Render from 'browser-components/Render'
 import { CSVSerializer } from 'services/serializer'
-
 import {
   CloseIcon,
   ContractIcon,
@@ -78,7 +77,31 @@ import { csvFormat, stringModifier } from 'services/bolt/cypherTypesFormatting'
 import arrayHasItems from 'shared/utils/array-has-items'
 import { stringifyMod } from 'services/utils'
 
-class FrameTitlebar extends Component<any> {
+type FrameTitleBarBaseProps = {
+  frame: any
+  fullscreen: boolean
+  fullscreenToggle: () => void
+  collapse: boolean
+  collapseToggle: () => void
+  pinned: boolean
+  togglePin: () => void
+  numRecords: number
+  getRecords: () => any
+  visElement: any
+  runQuery: () => any
+}
+
+type FrameTitleBarProps = FrameTitleBarBaseProps & {
+  request: Request | null
+  isRelateAvailable: boolean
+  newFavorite: (cmd: string) => void
+  newProjectFile: (cmd: string) => void
+  onCloseClick: (a: any, b: any, c: any) => void
+  onRunClick: () => void
+  onReRunClick: (obj: any) => void
+  togglePinning: (id: string, isPinned: boolean) => void
+}
+class FrameTitlebar extends Component<FrameTitleBarProps> {
   hasData() {
     return this.props.numRecords > 0
   }
@@ -172,12 +195,7 @@ class FrameTitlebar extends Component<any> {
     return (
       <StyledFrameTitleBar>
         <StyledFrameCommand selectedDb={frame.useDb}>
-          <DottedLineHover
-            data-testid="frameCommand"
-            onClick={() => props.onTitlebarClick(frame.cmd)}
-          >
-            {cmd}
-          </DottedLineHover>
+          <DottedLineHover data-testid="frameCommand">{cmd}</DottedLineHover>
         </StyledFrameCommand>
         <StyledFrameTitlebarButtonSection>
           <FrameButton
@@ -300,7 +318,7 @@ class FrameTitlebar extends Component<any> {
   }
 }
 
-const mapStateToProps = (state: any, ownProps: any) => {
+const mapStateToProps = (state: any, ownProps: FrameTitleBarBaseProps) => {
   const request = ownProps.frame.requestId
     ? getRequest(state, ownProps.frame.requestId)
     : null
@@ -311,18 +329,18 @@ const mapStateToProps = (state: any, ownProps: any) => {
   }
 }
 
-const mapDispatchToProps = (dispatch: any, ownProps: any) => {
+const mapDispatchToProps = (
+  dispatch: any,
+  ownProps: FrameTitleBarBaseProps
+) => {
   return {
-    newFavorite: (cmd: any) => {
+    newFavorite: (cmd: string) => {
       dispatch(sidebar.setDraftScript(cmd, 'favorites'))
     },
-    newProjectFile: (cmd: any) => {
+    newProjectFile: (cmd: string) => {
       dispatch(sidebar.setDraftScript(cmd, 'project files'))
     },
-    onTitlebarClick: (cmd: any) => {
-      ownProps.bus.send(editor.SET_CONTENT, editor.setContent(cmd))
-    },
-    onCloseClick: async (id: any, requestId: any, request: any) => {
+    onCloseClick: async (id: string, requestId: string, request?: Request) => {
       if (request && request.status === REQUEST_STATUS_PENDING) {
         dispatch(cancelRequest(requestId))
         await sleep(3000) // sleep for 3000 ms to let user read the cancel info
@@ -345,7 +363,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => {
         })
       )
     },
-    togglePinning: (id: any, isPinned: any) => {
+    togglePinning: (id: string, isPinned: boolean) => {
       isPinned ? dispatch(unpin(id)) : dispatch(pin(id))
     }
   }
