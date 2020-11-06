@@ -19,7 +19,7 @@
  */
 
 import { connect } from 'react-redux'
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import { withBus } from 'react-suber'
 import { saveAs } from 'file-saver'
 import { map } from 'lodash-es'
@@ -35,7 +35,7 @@ import {
   Request,
   REQUEST_STATUS_PENDING
 } from 'shared/modules/requests/requestsDuck'
-import { remove, pin, unpin } from 'shared/modules/stream/streamDuck'
+import { remove, pin, unpin, Frame } from 'shared/modules/stream/streamDuck'
 import { removeComments, sleep } from 'shared/services/utils'
 import { FrameButton } from 'browser-components/buttons'
 import Render from 'browser-components/Render'
@@ -98,15 +98,18 @@ type FrameTitleBarProps = FrameTitleBarBaseProps & {
   newProjectFile: (cmd: string) => void
   onCloseClick: (a: any, b: any, c: any) => void
   onRunClick: () => void
-  onReRunClick: (obj: any) => void
+  onReRunClick: (obj: Frame, cmd: string) => void
   togglePinning: (id: string, isPinned: boolean) => void
 }
-class FrameTitlebar extends Component<FrameTitleBarProps> {
-  hasData() {
-    return this.props.numRecords > 0
+
+function FrameTitlebar(props: FrameTitleBarProps) {
+  const [editorValue, setEditorValue] = useState(props.frame.cmd)
+
+  function hasData() {
+    return props.numRecords > 0
   }
 
-  exportCSV(records: any) {
+  function exportCSV(records: any) {
     const exportData = stringifyResultArray(
       csvFormat,
       transformResultRecordsToResultArray(records)
@@ -120,8 +123,8 @@ class FrameTitlebar extends Component<FrameTitleBarProps> {
     saveAs(blob, 'export.csv')
   }
 
-  exportTXT = () => {
-    const { frame } = this.props
+  function exportTXT() {
+    const { frame } = props
 
     if (frame.type === 'history') {
       const asTxt = frame.result
@@ -143,7 +146,7 @@ class FrameTitlebar extends Component<FrameTitleBarProps> {
     }
   }
 
-  exportJSON(records: any) {
+  function exportJSON(records: any) {
     const exportData = map(records, recordToJSONMapper)
     const data = stringifyMod(exportData, stringModifier, true)
     const blob = new Blob([data], {
@@ -152,170 +155,173 @@ class FrameTitlebar extends Component<FrameTitleBarProps> {
     saveAs(blob, 'records.json')
   }
 
-  exportPNG() {
-    const { svgElement, graphElement, type } = this.props.visElement
+  function exportPNG() {
+    const { svgElement, graphElement, type } = props.visElement
     downloadPNGFromSVG(svgElement, graphElement, type)
   }
 
-  exportSVG() {
-    const { svgElement, graphElement, type } = this.props.visElement
+  function exportSVG() {
+    const { svgElement, graphElement, type } = props.visElement
     downloadSVG(svgElement, graphElement, type)
   }
 
-  exportGrass(data: any) {
+  function exportGrass(data: any) {
     const blob = new Blob([data], {
       type: 'text/plain;charset=utf-8'
     })
     saveAs(blob, 'style.grass')
   }
 
-  canExport = () => {
-    const props = this.props
-    const { frame = {} } = props
+  function canExport() {
+    const { frame = {}, visElement } = props
 
     return (
-      this.canExportTXT() ||
-      (frame.type === 'cypher' && (this.hasData() || this.props.visElement)) ||
-      (frame.type === 'style' && this.hasData())
+      canExportTXT() ||
+      (frame.type === 'cypher' && (hasData() || visElement)) ||
+      (frame.type === 'style' && hasData())
     )
   }
 
-  canExportTXT() {
-    const { frame = {} } = this.props
+  function canExportTXT() {
+    const { frame = {} } = props
 
     return frame.type === 'history' && arrayHasItems(frame.result)
   }
 
-  render() {
-    const props = this.props
-    const { frame = {} } = props
-    const fullscreenIcon = props.fullscreen ? <ContractIcon /> : <ExpandIcon />
-    const expandCollapseIcon = props.collapse ? <DownIcon /> : <UpIcon />
-    const cmd = removeComments(frame.cmd)
-    return (
-      <StyledFrameTitleBar>
-        <StyledFrameCommand selectedDb={frame.useDb}>
-          <DottedLineHover data-testid="frameCommand">{cmd}</DottedLineHover>
-        </StyledFrameCommand>
-        <StyledFrameTitlebarButtonSection>
+  const { frame = {} } = props
+  const fullscreenIcon = props.fullscreen ? <ContractIcon /> : <ExpandIcon />
+  const expandCollapseIcon = props.collapse ? <DownIcon /> : <UpIcon />
+  // TODO thnk about removing comments
+  function onSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    // TODO rename to just rerun
+    props.onReRunClick(frame, editorValue)
+  }
+
+  return (
+    <StyledFrameTitleBar>
+      <StyledFrameCommand selectedDb={frame.useDb}>
+        <form onSubmit={onSubmit}>
+          <DottedLineHover
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              e.preventDefault()
+              setEditorValue(e.target.value)
+            }}
+            value={editorValue}
+            data-testid="frameCommand"
+          />
+        </form>
+      </StyledFrameCommand>
+      <StyledFrameTitlebarButtonSection>
+        <FrameButton
+          title="Save as Favorite"
+          data-testid="frame-Favorite"
+          onClick={() => {
+            props.newFavorite(frame.cmd)
+          }}
+        >
+          {/* @ts-expect-error ts-migrate(2322) FIXME: Property 'width' does not exist on type 'Intrinsic... Remove this comment to see the full error message */}
+          <SaveFavorite width={12} />
+        </FrameButton>
+        <Render if={props.isRelateAvailable}>
           <FrameButton
-            title="Save as Favorite"
-            data-testid="frame-Favorite"
+            title="Save as project file"
             onClick={() => {
-              props.newFavorite(frame.cmd)
+              props.newProjectFile(frame.cmd)
             }}
           >
             {/* @ts-expect-error ts-migrate(2322) FIXME: Property 'width' does not exist on type 'Intrinsic... Remove this comment to see the full error message */}
-            <SaveFavorite width={12} />
+            <SaveFile width={12} />
           </FrameButton>
-          <Render if={props.isRelateAvailable}>
-            <FrameButton
-              title="Save as project file"
-              onClick={() => {
-                props.newProjectFile(frame.cmd)
-              }}
-            >
-              {/* @ts-expect-error ts-migrate(2322) FIXME: Property 'width' does not exist on type 'Intrinsic... Remove this comment to see the full error message */}
-              <SaveFile width={12} />
-            </FrameButton>
-          </Render>
-          <Render if={this.canExport()}>
-            <DropdownButton data-testid="frame-export-dropdown">
-              <DownloadIcon />
-              <DropdownList>
-                <DropdownContent>
-                  <Render if={this.hasData() && frame.type === 'cypher'}>
-                    <DropdownItem
-                      onClick={() => this.exportCSV(props.getRecords())}
-                    >
-                      Export CSV
-                    </DropdownItem>
-                    <DropdownItem
-                      onClick={() => this.exportJSON(props.getRecords())}
-                    >
-                      Export JSON
-                    </DropdownItem>
-                  </Render>
-                  <Render if={props.visElement}>
-                    <DropdownItem onClick={() => this.exportPNG()}>
-                      Export PNG
-                    </DropdownItem>
-                    <DropdownItem onClick={() => this.exportSVG()}>
-                      Export SVG
-                    </DropdownItem>
-                  </Render>
-                  <Render if={this.canExportTXT()}>
-                    <DropdownItem onClick={this.exportTXT}>
-                      Export TXT
-                    </DropdownItem>
-                  </Render>
-                  <Render if={this.hasData() && frame.type === 'style'}>
-                    <DropdownItem
-                      data-testid="exportGrassButton"
-                      onClick={() => this.exportGrass(props.getRecords())}
-                    >
-                      Export GraSS
-                    </DropdownItem>
-                  </Render>
-                </DropdownContent>
-              </DropdownList>
-            </DropdownButton>
-          </Render>
+        </Render>
+        <Render if={canExport()}>
+          <DropdownButton data-testid="frame-export-dropdown">
+            <DownloadIcon />
+            <DropdownList>
+              <DropdownContent>
+                <Render if={hasData() && frame.type === 'cypher'}>
+                  <DropdownItem onClick={() => exportCSV(props.getRecords())}>
+                    Export CSV
+                  </DropdownItem>
+                  <DropdownItem onClick={() => exportJSON(props.getRecords())}>
+                    Export JSON
+                  </DropdownItem>
+                </Render>
+                <Render if={props.visElement}>
+                  <DropdownItem onClick={() => exportPNG()}>
+                    Export PNG
+                  </DropdownItem>
+                  <DropdownItem onClick={() => exportSVG()}>
+                    Export SVG
+                  </DropdownItem>
+                </Render>
+                <Render if={canExportTXT()}>
+                  <DropdownItem onClick={exportTXT}>Export TXT</DropdownItem>
+                </Render>
+                <Render if={hasData() && frame.type === 'style'}>
+                  <DropdownItem
+                    data-testid="exportGrassButton"
+                    onClick={() => exportGrass(props.getRecords())}
+                  >
+                    Export GraSS
+                  </DropdownItem>
+                </Render>
+              </DropdownContent>
+            </DropdownList>
+          </DropdownButton>
+        </Render>
+        <FrameButton
+          title="Pin at top"
+          onClick={() => {
+            props.togglePin()
+            // using frame.isPinned causes issues when there are multiple frames in one
+            props.togglePinning(frame.id, props.pinned)
+          }}
+          pressed={props.pinned}
+        >
+          <PinIcon />
+        </FrameButton>
+        <Render
+          if={['cypher', 'play', 'play-remote', 'queries'].includes(frame.type)}
+        >
           <FrameButton
-            title="Pin at top"
-            onClick={() => {
-              props.togglePin()
-              // using frame.isPinned causes issues when there are multiple frames in one
-              props.togglePinning(frame.id, props.pinned)
-            }}
-            pressed={props.pinned}
+            title={props.fullscreen ? 'Close fullscreen' : 'Fullscreen'}
+            onClick={() => props.fullscreenToggle()}
           >
-            <PinIcon />
+            {fullscreenIcon}
           </FrameButton>
-          <Render
-            if={['cypher', 'play', 'play-remote', 'queries'].includes(
-              frame.type
-            )}
-          >
-            <FrameButton
-              title={props.fullscreen ? 'Close fullscreen' : 'Fullscreen'}
-              onClick={() => props.fullscreenToggle()}
-            >
-              {fullscreenIcon}
-            </FrameButton>
-          </Render>
+        </Render>
+        <FrameButton
+          title={props.collapse ? 'Expand' : 'Collapse'}
+          onClick={() => props.collapseToggle()}
+        >
+          {expandCollapseIcon}
+        </FrameButton>
+        <Render if={frame.type === 'edit'}>
+          <FrameButton title="Run" onClick={() => props.onRunClick()}>
+            <SVGInline svg={controlsPlay} width="12px" />
+          </FrameButton>
+        </Render>
+        <Render if={frame.type !== 'edit'}>
           <FrameButton
-            title={props.collapse ? 'Expand' : 'Collapse'}
-            onClick={() => props.collapseToggle()}
+            data-testid="rerunFrameButton"
+            title="Rerun"
+            onClick={() => props.onReRunClick(frame, editorValue)}
           >
-            {expandCollapseIcon}
+            <RefreshIcon />
           </FrameButton>
-          <Render if={frame.type === 'edit'}>
-            <FrameButton title="Run" onClick={() => props.onRunClick()}>
-              <SVGInline svg={controlsPlay} width="12px" />
-            </FrameButton>
-          </Render>
-          <Render if={frame.type !== 'edit'}>
-            <FrameButton
-              data-testid="rerunFrameButton"
-              title="Rerun"
-              onClick={() => props.onReRunClick(frame)}
-            >
-              <RefreshIcon />
-            </FrameButton>
-          </Render>
-          <FrameButton
-            title="Close"
-            onClick={() =>
-              props.onCloseClick(frame.id, frame.requestId, props.request)
-            }
-          >
-            <CloseIcon />
-          </FrameButton>
-        </StyledFrameTitlebarButtonSection>
-      </StyledFrameTitleBar>
-    )
-  }
+        </Render>
+        <FrameButton
+          title="Close"
+          onClick={() =>
+            props.onCloseClick(frame.id, frame.requestId, props.request)
+          }
+        >
+          <CloseIcon />
+        </FrameButton>
+      </StyledFrameTitlebarButtonSection>
+    </StyledFrameTitleBar>
+  )
 }
 
 const mapStateToProps = (state: any, ownProps: FrameTitleBarBaseProps) => {
@@ -350,10 +356,11 @@ const mapDispatchToProps = (
     onRunClick: () => {
       ownProps.runQuery()
     },
-    onReRunClick: ({ cmd, useDb, id, requestId }: any) => {
+    onReRunClick: ({ useDb, id, requestId }: Frame, cmd: string) => {
       if (requestId) {
         dispatch(cancelRequest(requestId))
       }
+
       dispatch(
         commands.executeCommand(cmd, {
           id,

@@ -102,6 +102,7 @@ export interface Connection {
   authenticationMethod: AuthenticationMethod
   authEnabled: boolean
   requestedUseDb?: string
+  restApi?: string
 }
 
 export type AuthenticationMethod = typeof NATIVE | typeof NO_AUTH
