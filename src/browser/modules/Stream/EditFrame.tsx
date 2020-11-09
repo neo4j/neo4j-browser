@@ -26,7 +26,7 @@ import styled from 'styled-components'
 import { BrowserTheme } from '../Editor/CypherMonacoThemes'
 import Monaco from '../Editor/Monaco'
 import FrameTemplate from '../Frame/FrameTemplate'
-import { StyledFrameBody } from '../Frame/styled'
+import { StyledFrameBody, StyledFrameContents } from '../Frame/styled'
 import useDerivedTheme from 'browser-hooks/useDerivedTheme'
 import {
   commandSources,
@@ -49,6 +49,10 @@ interface EditFrameProps {
 const ForceFullSizeFrameContent = styled.div`
   ${StyledFrameBody} {
     padding: 0;
+    overflow: unset;
+  }
+  ${StyledFrameContents} {
+    overflow: unset;
   }
 `
 

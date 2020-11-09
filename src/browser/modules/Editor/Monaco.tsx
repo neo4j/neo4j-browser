@@ -223,7 +223,7 @@ const Monaco = ({
     <div
       id={monacoId}
       style={{
-        overflow: 'hidden',
+        height: '100%',
         width: '100%'
       }}
     />
