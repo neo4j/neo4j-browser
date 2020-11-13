@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Dispatch, useState } from 'react'
+import React, { Dispatch, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { Action } from 'redux'
@@ -26,7 +26,7 @@ import styled from 'styled-components'
 import { Bus } from 'suber'
 
 import { BrowserTheme } from '../Editor/CypherMonacoThemes'
-import Monaco from '../Editor/Monaco'
+import Monaco, { MonacoHandles } from '../Editor/Monaco'
 import FrameTemplate from '../Frame/FrameTemplate'
 import { StyledFrameBody, StyledFrameContents } from '../Frame/styled'
 import useDerivedTheme from 'browser-hooks/useDerivedTheme'
@@ -39,11 +39,13 @@ import {
   LIGHT_THEME,
   shouldEnableMultiStatementMode
 } from 'shared/modules/settings/settingsDuck'
-import { Frame, GlobalState } from 'shared/modules/stream/streamDuck'
+import { getOpenDrawer } from 'shared/modules/sidebar/sidebarDuck'
+import { Frame } from 'shared/modules/stream/streamDuck'
 
 interface EditFrameProps {
   browserTheme: BrowserTheme
   bus: Bus
+  drawer: string | null
   enableMultiStatementMode: boolean
   frame: Frame
   runQuery: (query: string) => void
@@ -65,6 +67,12 @@ const EditFrame = (props: EditFrameProps): JSX.Element => {
   const [theme] = useDerivedTheme(props.browserTheme, LIGHT_THEME) as [
     BrowserTheme
   ]
+  const editorRef = useRef<MonacoHandles>(null)
+
+  useEffect(() => {
+    // After the sidebar animation has finished, the editor needs to resize its width
+    setTimeout(() => editorRef.current?.resize(true, 275), 200)
+  }, [editorRef, props.drawer])
 
   return (
     <ForceFullSizeFrameContent>
@@ -72,9 +80,10 @@ const EditFrame = (props: EditFrameProps): JSX.Element => {
         contents={
           <Monaco
             bus={props.bus}
-            id={props.frame.id}
             enableMultiStatementMode={props.enableMultiStatementMode}
+            id={props.frame.id}
             onChange={setText}
+            ref={editorRef}
             theme={theme}
             value={text}
           />
@@ -88,8 +97,9 @@ const EditFrame = (props: EditFrameProps): JSX.Element => {
   )
 }
 
-const mapStateToProps = (state: GlobalState) => ({
+const mapStateToProps = (state: any) => ({
   browserTheme: getTheme(state),
+  drawer: getOpenDrawer(state),
   enableMultiStatementMode: shouldEnableMultiStatementMode(state)
 })
 

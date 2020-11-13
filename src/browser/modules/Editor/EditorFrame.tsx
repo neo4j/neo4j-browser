@@ -86,34 +86,37 @@ import {
 } from 'shared/modules/settings/settingsDuck'
 import useDerivedTheme from 'browser-hooks/useDerivedTheme'
 import { BrowserTheme } from './CypherMonacoThemes'
+import { getOpenDrawer } from 'shared/modules/sidebar/sidebarDuck'
 
 type EditorFrameProps = {
-  bus: Bus
-  theme: { linkHover: string }
-  executeCommand: (cmd: string, source: string) => void
-  updateFavorite: (id: string, value: string) => void
-  projectId: string
-  enableMultiStatementMode: boolean
   browserTheme: BrowserTheme
+  bus: Bus
+  drawer: string | null
+  enableMultiStatementMode: boolean
+  executeCommand: (cmd: string, source: string) => void
+  projectId: string
+  theme: { linkHover: string }
+  updateFavorite: (id: string, value: string) => void
 }
 
 type SavedScript = {
-  id: string
   content: string
+  directory?: string
+  id: string
   isProjectFile: boolean
   isStatic: boolean
   name?: string
-  directory?: string
 }
 
 export function EditorFrame({
+  browserTheme,
   bus,
-  theme,
-  executeCommand,
-  updateFavorite,
-  projectId,
+  drawer,
   enableMultiStatementMode,
-  browserTheme
+  executeCommand,
+  projectId,
+  theme,
+  updateFavorite
 }: EditorFrameProps): JSX.Element {
   const [addFile] = useMutation(ADD_PROJECT_FILE)
   const [unsaved, setUnsaved] = useState(false)
@@ -241,8 +244,9 @@ export function EditorFrame({
   }
 
   useEffect(() => {
-    editorRef.current?.resize(isFullscreen)
-  }, [lineCount, editorRef])
+    // After the sidebar animation has finished, the editor needs to resize its width
+    setTimeout(() => editorRef.current?.resize(isFullscreen), 200)
+  }, [lineCount, editorRef, drawer])
 
   const showUnsaved = !!(
     unsaved &&
@@ -346,9 +350,10 @@ export function EditorFrame({
 
 const mapStateToProps = (state: any) => {
   return {
+    browserTheme: getTheme(state),
+    drawer: getOpenDrawer(state),
     enableMultiStatementMode: shouldEnableMultiStatementMode(state),
-    projectId: getProjectId(state),
-    browserTheme: getTheme(state)
+    projectId: getProjectId(state)
   }
 }
 
