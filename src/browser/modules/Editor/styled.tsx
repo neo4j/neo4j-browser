@@ -56,9 +56,8 @@ export const Frame = styled.div<FullscreenProps>`
   z-index: 1030;
   margin: 0;
 
-  .CodeMirror-scroll {
+  [id^=monaco-] .monaco-editor {
     height: calc(100vh - 20px) !important;
-    max-height: calc(100vh - 20px) !important;
   }
   `
     }
@@ -70,10 +69,6 @@ export const EditorContainer = styled.div`
   flex-grow: 1;
   width: 0; // needed to prevent the editor from growing the text field
   font-family: 'Fira Code', Monaco, 'Courier New', Terminal, monospace;
-  .CodeMirror {
-    color: ${(props): string => props.theme.editorCommandColor};
-    font-size: 17px;
-  }
 
   .disable-font-ligatures & {
     font-variant-ligatures: none !important;

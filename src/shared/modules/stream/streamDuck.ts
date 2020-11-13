@@ -215,7 +215,7 @@ export interface Frame {
   cmd: string
   connectionData: ConnectionData
   error: FrameError
-  id: string | number
+  id: string
   initialSlide: number
   isRerun: boolean
   parentId: string

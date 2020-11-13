@@ -20,8 +20,10 @@
 
 import React, { Dispatch, useState } from 'react'
 import { connect } from 'react-redux'
+import { withBus } from 'react-suber'
 import { Action } from 'redux'
 import styled from 'styled-components'
+import { Bus } from 'suber'
 
 import { BrowserTheme } from '../Editor/CypherMonacoThemes'
 import Monaco from '../Editor/Monaco'
@@ -41,6 +43,7 @@ import { Frame, GlobalState } from 'shared/modules/stream/streamDuck'
 
 interface EditFrameProps {
   browserTheme: BrowserTheme
+  bus: Bus
   enableMultiStatementMode: boolean
   frame: Frame
   runQuery: (query: string) => void
@@ -68,6 +71,7 @@ const EditFrame = (props: EditFrameProps): JSX.Element => {
       <FrameTemplate
         contents={
           <Monaco
+            bus={props.bus}
             id={props.frame.id}
             enableMultiStatementMode={props.enableMultiStatementMode}
             onChange={setText}
@@ -95,4 +99,4 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
   }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditFrame)
+export default withBus(connect(mapStateToProps, mapDispatchToProps)(EditFrame))

@@ -69,7 +69,6 @@ import update_file from 'icons/update_file.svg'
 import update_favorite from 'icons/update_favorite.svg'
 import file from 'icons/file.svg'
 import run_icon from 'icons/run_icon.svg'
-import Editor from './Editor'
 import {
   ADD_PROJECT_FILE,
   REMOVE_PROJECT_FILE
@@ -79,6 +78,14 @@ import {
   createFilePath
 } from 'browser/modules/Sidebar/project-files.utils'
 import { defaultFavoriteName } from 'browser/modules/Sidebar/favorites.utils'
+import Monaco, { MonacoHandles } from './Monaco'
+import {
+  getTheme,
+  LIGHT_THEME,
+  shouldEnableMultiStatementMode
+} from 'shared/modules/settings/settingsDuck'
+import useDerivedTheme from 'browser-hooks/useDerivedTheme'
+import { BrowserTheme } from './CypherMonacoThemes'
 
 type EditorFrameProps = {
   bus: Bus
@@ -86,10 +93,8 @@ type EditorFrameProps = {
   executeCommand: (cmd: string, source: string) => void
   updateFavorite: (id: string, value: string) => void
   projectId: string
-}
-type CodeEditor = {
-  getValue: () => string | null
-  setValue: (newText: string) => void
+  enableMultiStatementMode: boolean
+  browserTheme: BrowserTheme
 }
 
 type SavedScript = {
@@ -106,7 +111,9 @@ export function EditorFrame({
   theme,
   executeCommand,
   updateFavorite,
-  projectId
+  projectId,
+  enableMultiStatementMode,
+  browserTheme
 }: EditorFrameProps): JSX.Element {
   const [addFile] = useMutation(ADD_PROJECT_FILE)
   const [unsaved, setUnsaved] = useState(false)
@@ -114,11 +121,17 @@ export function EditorFrame({
   const [currentlyEditing, setCurrentlyEditing] = useState<SavedScript | null>(
     null
   )
-  const editorRef = useRef<CodeEditor>(null)
+  const editorRef = useRef<MonacoHandles>(null)
+  const [lineCount, setLineCount] = useState(1)
 
-  const toggleFullscreen = useCallback(() => setFullscreen(!isFullscreen), [
-    isFullscreen
-  ])
+  const toggleFullscreen = useCallback(() => {
+    setFullscreen(!isFullscreen)
+    editorRef.current?.resize(!isFullscreen)
+  }, [isFullscreen])
+
+  const [derivedTheme] = useDerivedTheme(browserTheme, LIGHT_THEME) as [
+    BrowserTheme
+  ]
 
   useEffect(() => bus && bus.take(EXPAND, toggleFullscreen), [
     bus,
@@ -178,11 +191,12 @@ export function EditorFrame({
       }),
     [bus]
   )
-
+  3
   function discardEditor() {
     editorRef.current?.setValue('')
     setCurrentlyEditing(null)
     setFullscreen(false)
+    editorRef.current?.resize(false)
   }
 
   const buttons = [
@@ -202,7 +216,6 @@ export function EditorFrame({
     }
   ]
 
-  const TypedEditor: any = Editor // delete this when editor is ts
   const props = useSpring({
     opacity: currentlyEditing ? 1 : 0.5,
     height: currentlyEditing ? 'auto' : 0
@@ -226,6 +239,10 @@ export function EditorFrame({
 
     return defaultFavoriteName(content)
   }
+
+  useEffect(() => {
+    editorRef.current?.resize(isFullscreen)
+  }, [lineCount, editorRef])
 
   const showUnsaved = !!(
     unsaved &&
@@ -251,12 +268,20 @@ export function EditorFrame({
       <FlexContainer>
         <Header>
           <EditorContainer>
-            <TypedEditor
-              editorRef={editorRef}
+            <Monaco
+              bus={bus}
+              enableMultiStatementMode={enableMultiStatementMode}
+              id={'main-editor'}
               onChange={() => {
                 setUnsaved(true)
               }}
-              runCommand={createRunCommandFunction(commandSources.editor)}
+              onChangeLineCount={count => {
+                if (count !== lineCount) {
+                  setLineCount(count)
+                }
+              }}
+              ref={editorRef}
+              theme={derivedTheme}
             />
           </EditorContainer>
           {currentlyEditing && !currentlyEditing.isStatic && (
@@ -320,7 +345,11 @@ export function EditorFrame({
 }
 
 const mapStateToProps = (state: any) => {
-  return { projectId: getProjectId(state) }
+  return {
+    enableMultiStatementMode: shouldEnableMultiStatementMode(state),
+    projectId: getProjectId(state),
+    browserTheme: getTheme(state)
+  }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
