@@ -132,6 +132,9 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
           lineHeight: 23,
           links: false,
           minimap: { enabled: false },
+          scrollbar: {
+            alwaysConsumeMouseWheel: false
+          },
           scrollBeyondLastColumn: 0,
           scrollBeyondLastLine: false,
           theme: LIGHT_THEME,
