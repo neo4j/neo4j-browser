@@ -68,11 +68,6 @@ export const Frame = styled.div<FullscreenProps>`
 export const EditorContainer = styled.div`
   flex-grow: 1;
   width: 0; // needed to prevent the editor from growing the text field
-  font-family: 'Fira Code', Monaco, 'Courier New', Terminal, monospace;
-
-  .disable-font-ligatures & {
-    font-variant-ligatures: none !important;
-  }
 `
 export const FlexContainer = styled.div`
   display: flex;
