@@ -27,7 +27,6 @@ import {
   executeCommand,
   executeSystemCommand
 } from 'shared/modules/commands/commandsDuck'
-import { FOCUS } from 'shared/modules/editor/editorDuck'
 import { getHistory } from 'shared/modules/history/historyDuck'
 import {
   shouldEditorAutocomplete,
@@ -35,27 +34,13 @@ import {
   shouldEnableMultiStatementMode
 } from 'shared/modules/settings/settingsDuck'
 import { add } from 'shared/modules/stream/streamDuck'
-import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import { deepEquals, shallowEquals } from 'services/utils'
+import { deepEquals } from 'services/utils'
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
 import Codemirror from './Codemirror'
 import * as schemaConvert from './editorSchemaConverter'
 import cypherFunctions from './cypher/functions'
-import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { getUseDb } from 'shared/modules/connections/connectionsDuck'
 import { isRelateAvailable } from 'shared/modules/app/appDuck'
-
-export const shouldCheckForHints = (code: any) =>
-  code.trim().length > 0 &&
-  !code.trimLeft().startsWith(':') &&
-  !code
-    .trimLeft()
-    .toUpperCase()
-    .startsWith('EXPLAIN') &&
-  !code
-    .trimLeft()
-    .toUpperCase()
-    .startsWith('PROFILE')
 
 type EditorState = any
 
@@ -72,38 +57,14 @@ export class Editor extends Component<any, EditorState> {
       lastPosition: { line: 0, column: 0 },
       contentId: null
     }
-    if (this.props.bus) {
-      this.props.bus.take(FOCUS, this.focusEditor.bind(this))
-    }
   }
 
   shouldComponentUpdate(nextProps: any, nextState: EditorState) {
     return !(
       nextState.contentId === this.state.contentId &&
-      shallowEquals(nextState.notifications, this.state.notifications) &&
       deepEquals(nextProps.schema, this.props.schema) &&
-      nextProps.useDb === this.props.useDb &&
-      nextProps.enableMultiStatementMode === this.props.enableMultiStatementMode
+      nextProps.useDb === this.props.useDb
     )
-  }
-
-  focusEditor() {
-    this.codeMirror.focus()
-    this.codeMirror.setCursor(this.codeMirror.lineCount(), 0)
-  }
-
-  clearEditor = () => {
-    this.setEditorValue('')
-    this.setContentId(null)
-  }
-
-  handleEnter(cm: any) {
-    const multiline = cm.lineCount() > 1
-    if (multiline) {
-      this.newlineAndIndent(cm)
-    } else {
-      this.execCurrent()
-    }
   }
 
   newlineAndIndent(cm: any) {
@@ -112,21 +73,6 @@ export class Editor extends Component<any, EditorState> {
 
   execCommand(cmd: any) {
     this.props.onExecute(cmd)
-  }
-
-  execCurrent = () => {
-    const cmd = this.getEditorValue()
-    const onlyWhitespace = cmd.trim() === ''
-
-    if (!onlyWhitespace) {
-      this.props.runCommand()
-      this.clearEditor()
-      this.setState({
-        notifications: [],
-        historyIndex: -1,
-        buffer: null
-      })
-    }
   }
 
   moveCursorToEndOfLine(cm: any) {
@@ -161,7 +107,7 @@ export class Editor extends Component<any, EditorState> {
     this.setState({
       historyIndex: this.state.historyIndex + 1
     })
-    this.setEditorValue(this.props.history[this.state.historyIndex])
+    // this.setEditorValue(this.props.history[this.state.historyIndex])
   }
 
   historyNext(_cm: any) {
@@ -170,13 +116,13 @@ export class Editor extends Component<any, EditorState> {
     if (this.state.historyIndex === 0) {
       // Should read from buffer
       this.setState({ historyIndex: -1 })
-      this.setEditorValue(this.state.buffer)
+      // this.setEditorValue(this.state.buffer)
       return
     }
     this.setState({
       historyIndex: this.state.historyIndex - 1
     })
-    this.setEditorValue(this.props.history[this.state.historyIndex])
+    // this.setEditorValue(this.props.history[this.state.historyIndex])
   }
 
   triggerAutocompletion = (cm: any, changed: any) => {
@@ -239,60 +185,11 @@ export class Editor extends Component<any, EditorState> {
     return this.codeMirror ? this.codeMirror.getValue().trim() : ''
   }
 
-  setEditorValue(cmd: any) {
-    this.codeMirror.setValue(cmd)
-    this.updateCode(undefined, undefined, () => {
-      this.focusEditor()
-    })
-  }
-
   setContentId(id: any) {
     this.setState({ contentId: id })
   }
 
-  componentDidUpdate(prevProps: any) {
-    if (
-      prevProps.enableMultiStatementMode !== this.props.enableMultiStatementMode
-    ) {
-      // Set value to current value to trigger warning checks
-      this.setEditorValue(this.getEditorValue())
-    }
-  }
-
-  checkForMultiStatementWarnings(statements: any) {
-    if (statements.length > 1 && !this.props.enableMultiStatementMode) {
-      const { offset, line, column } = statements[1].start
-      const message =
-        'To use multi statement queries, please enable multi statement in the settings panel.'
-      this.setState({
-        notifications: [
-          {
-            code: 'frontendWarning',
-            description: message,
-            position: {
-              offset,
-              line,
-              column
-            },
-            severity: 'WARNING',
-            errors: {
-              message
-            },
-            title: 'Multi Statement Query'
-          }
-        ]
-      })
-    } else {
-      this.setState({ notifications: [] })
-    }
-  }
-
-  updateCode = (statements: any, change: any, cb = () => {}) => {
-    if (statements) {
-      this.checkForHints(statements)
-      this.checkForMultiStatementWarnings(statements)
-    }
-
+  updateCode = (_statements: any, change: any, cb = () => {}) => {
     const lastPosition = change && change.to
     this.setState(
       {
@@ -306,49 +203,6 @@ export class Editor extends Component<any, EditorState> {
       cb
     )
   }
-
-  checkForHints(statements: any) {
-    if (!statements.length) return
-    statements.forEach((stmt: any) => {
-      const text = stmt.getText()
-      if (!shouldCheckForHints(text)) {
-        return
-      }
-      const offset = stmt.start.line - 1
-      ;((text, offset) => {
-        this.props.bus.self(
-          CYPHER_REQUEST,
-          {
-            query: 'EXPLAIN ' + text,
-            queryType: NEO4J_BROWSER_USER_ACTION_QUERY
-          },
-          (response: any) => {
-            if (
-              response.success === true &&
-              response.result.summary.notifications.length > 0
-            ) {
-              const notifications = response.result.summary.notifications.map(
-                (n: any) => ({
-                  ...n,
-
-                  position: {
-                    ...n.position,
-                    line: n.position.line + offset
-                  },
-
-                  statement: response.result.summary.query.text
-                })
-              )
-              this.setState((state: any) => ({
-                notifications: state.notifications.concat(notifications)
-              }))
-            }
-          }
-        )
-      })(text, offset)
-    })
-  }
-
   setGutterMarkers() {
     if (this.codeMirror) {
       this.codeMirror.clearGutter('cypher-hints')
@@ -400,10 +254,6 @@ export class Editor extends Component<any, EditorState> {
       lint: this.props.enableEditorLint,
       extraKeys: {
         'Ctrl-Space': 'autocomplete',
-        Enter: this.handleEnter.bind(this),
-        'Shift-Enter': this.newlineAndIndent.bind(this),
-        'Cmd-Enter': this.execCurrent.bind(this),
-        'Ctrl-Enter': this.execCurrent.bind(this),
         'Cmd-Up': this.historyPrev.bind(this),
         'Ctrl-Up': this.historyPrev.bind(this),
         Up: this.handleUp.bind(this),
@@ -447,7 +297,7 @@ export class Editor extends Component<any, EditorState> {
 const mapDispatchToProps = (_dispatch: any, ownProps: any) => {
   return {
     onExecute: (cmd: any) => {
-      const action = executeCommand(cmd, { source: commandSources.editor })
+      const action = executeCommand(cmd, { source: commandSources.editor }) // bubble to frame, but not clear
       ownProps.bus.send(action.type, action)
     }
   }

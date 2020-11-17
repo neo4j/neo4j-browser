@@ -50,6 +50,7 @@ import { getProjectId } from 'shared/modules/app/appDuck'
 import {
   EDIT_CONTENT,
   EXPAND,
+  FOCUS,
   SET_CONTENT
 } from 'shared/modules/editor/editorDuck'
 import {
@@ -87,6 +88,7 @@ import {
 import useDerivedTheme from 'browser-hooks/useDerivedTheme'
 import { BrowserTheme } from './CypherMonacoThemes'
 import { getOpenDrawer } from 'shared/modules/sidebar/sidebarDuck'
+import { getUseDb } from 'shared/modules/connections/connectionsDuck'
 
 type EditorFrameProps = {
   browserTheme: BrowserTheme
@@ -97,6 +99,7 @@ type EditorFrameProps = {
   projectId: string
   theme: { linkHover: string }
   updateFavorite: (id: string, value: string) => void
+  useDb: null | string
 }
 
 type SavedScript = {
@@ -116,7 +119,8 @@ export function EditorFrame({
   executeCommand,
   projectId,
   theme,
-  updateFavorite
+  updateFavorite,
+  useDb
 }: EditorFrameProps): JSX.Element {
   const [addFile] = useMutation(ADD_PROJECT_FILE)
   const [unsaved, setUnsaved] = useState(false)
@@ -184,6 +188,12 @@ export function EditorFrame({
     [bus]
   )
 
+  useEffect(() => {
+    bus.take(FOCUS, () => {
+      editorRef.current?.focus()
+    })
+  }, [bus])
+
   useEffect(
     () =>
       bus &&
@@ -191,6 +201,7 @@ export function EditorFrame({
         setUnsaved(false)
         setCurrentlyEditing(null)
         editorRef.current?.setValue(message)
+        editorRef.current?.resize(isFullscreen)
       }),
     [bus]
   )
@@ -229,6 +240,8 @@ export function EditorFrame({
       executeCommand(editorRef.current?.getValue() || '', source)
       editorRef.current?.setValue('')
       setCurrentlyEditing(null)
+      setFullscreen(false)
+      editorRef.current?.resize(false)
     }
   }
 
@@ -284,8 +297,10 @@ export function EditorFrame({
                   setLineCount(count)
                 }
               }}
+              onExecute={createRunCommandFunction(commandSources.editor)}
               ref={editorRef}
               theme={derivedTheme}
+              useDb={useDb}
             />
           </EditorContainer>
           {currentlyEditing && !currentlyEditing.isStatic && (
@@ -353,7 +368,8 @@ const mapStateToProps = (state: any) => {
     browserTheme: getTheme(state),
     drawer: getOpenDrawer(state),
     enableMultiStatementMode: shouldEnableMultiStatementMode(state),
-    projectId: getProjectId(state)
+    projectId: getProjectId(state),
+    useDb: getUseDb(state)
   }
 }
 

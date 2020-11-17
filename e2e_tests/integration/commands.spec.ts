@@ -56,7 +56,10 @@ describe('Commands', () => {
     // lose focus
     cy.get('[data-testid=drawerFavorites]').click()
     cy.get('[data-testid=drawerFavorites]').click()
-    cy.get('.ReactCodeMirror textarea').should('not.be', 'focused')
+    cy.get('#monaco-main-editor > .monaco-editor').should(
+      'not.have.class',
+      'focused'
+    )
 
     // we now have 2 cards, and some hidden padding
     cy.get('[data-testid="stream"]')
@@ -65,12 +68,12 @@ describe('Commands', () => {
 
     // focus editor
     cy.get('body').type('/')
-    cy.get('.ReactCodeMirror textarea')
-      .should('be', 'focused')
+    cy.get('#monaco-main-editor > .monaco-editor')
+      .should('have.class', 'focused')
       .type(':clear{shift}{enter}')
 
     // we see line number in multiline view
-    cy.get('.CodeMirror-linenumber').should('contain', '1')
+    cy.get('.line-numbers').should('contain', '1')
     // we can run command with ctrl enter
     cy.get('[data-testid="activeEditor"] textarea').type('{ctrl}{enter}')
     // editor is now cleared

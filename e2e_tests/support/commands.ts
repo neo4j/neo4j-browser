@@ -1,6 +1,6 @@
 const SubmitQueryButton = '[data-testid="editor-Run"]'
 const EditorTextField = '[data-testid="activeEditor"] textarea'
-const VisibleEditor = '[data-testid="editor-wrapper"]'
+const VisibleEditor = '#monaco-main-editor'
 
 /* global Cypress, cy */
 
@@ -103,6 +103,7 @@ Cypress.Commands.add('disconnect', () => {
 })
 
 Cypress.Commands.add('executeCommand', (query, options = {}) => {
+  cy.get(VisibleEditor).click()
   cy.get(EditorTextField).type(query, { force: true, ...options })
   cy.wait(100)
   cy.get(SubmitQueryButton).click()

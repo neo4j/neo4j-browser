@@ -179,7 +179,10 @@ describe('Connect form', () => {
         cy.get('[data-testid=password]')
           .type(Cypress.config('password'))
           .type('{enter}')
-        cy.get('[data-testid="editor-wrapper"]').contains('system')
+
+        cy.get('[data-testid="drawerDBMS"]').click()
+        cy.wait(200) // wait for open close animation to finish
+        cy.get('[data-testid="database-selection-list"]').contains('system')
       })
     }
   }

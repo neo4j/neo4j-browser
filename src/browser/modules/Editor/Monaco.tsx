@@ -22,6 +22,9 @@ import { parse } from 'cypher-editor-support'
 import { debounce } from 'lodash-es'
 import {
   editor,
+  IPosition,
+  KeyCode,
+  KeyMod,
   languages,
   MarkerSeverity
 } from 'monaco-editor/esm/vs/editor/editor.api'
@@ -45,9 +48,21 @@ import {
   monacoLightTheme
 } from './CypherMonacoThemes'
 import { CypherTokensProvider } from './CypherTokensProvider'
-import { shouldCheckForHints } from './Editor'
+
+const shouldCheckForHints = (code: any) =>
+  code.trim().length > 0 &&
+  !code.trimLeft().startsWith(':') &&
+  !code
+    .trimLeft()
+    .toUpperCase()
+    .startsWith('EXPLAIN') &&
+  !code
+    .trimLeft()
+    .toUpperCase()
+    .startsWith('PROFILE')
 
 export interface MonacoHandles {
+  focus: () => void
   getValue: () => string
   setValue: (value: string) => void
   resize: (fillContainer?: boolean, fixedHeight?: number) => void
@@ -60,8 +75,10 @@ interface MonacoProps {
   value?: string
   onChange?: (value: string) => void
   onChangeLineCount?: (value: number) => void
+  onExecute?: () => void
   options?: editor.IGlobalEditorOptions
   theme?: BrowserTheme
+  useDb?: null | string
 }
 
 const Monaco = forwardRef<MonacoHandles, MonacoProps>(
@@ -73,7 +90,9 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       value = '',
       onChange = () => undefined,
       onChangeLineCount = () => undefined,
-      theme = LIGHT_THEME
+      onExecute = () => undefined,
+      theme = LIGHT_THEME,
+      useDb
     }: MonacoProps,
     ref
   ): JSX.Element => {
@@ -81,11 +100,21 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
     const monacoId = `monaco-${id}`
 
     useImperativeHandle(ref, () => ({
+      focus() {
+        editorRef.current?.focus()
+      },
       getValue() {
         return editorRef.current?.getValue() || ''
       },
       setValue(value: string) {
         editorRef.current?.setValue(value)
+        editorRef.current?.focus()
+        const lines = editorRef.current?.getModel()?.getLinesContent() || []
+        const linesLength = lines.length
+        editorRef.current?.setPosition({
+          lineNumber: linesLength,
+          column: lines[linesLength - 1].length + 1
+        })
       },
       resize(fillContainer = false, fixedHeight) {
         const container = document.getElementById(monacoId) as HTMLElement
@@ -105,6 +134,14 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
         })
       }
     }))
+
+    // The monaco render method does not redraw line numbers
+    // Getting and setting content and cursor is done to force a redraw
+    useEffect(() => {
+      const cursorPosition = editorRef?.current?.getPosition() as IPosition
+      editorRef.current?.setValue(editorRef.current?.getValue() || '')
+      editorRef.current?.setPosition(cursorPosition)
+    }, [useDb])
 
     // Create monaco instance, listen to text changes and destroy
     useEffect(() => {
@@ -130,6 +167,8 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
           language: 'cypher',
           lightbulb: { enabled: false },
           lineHeight: 23,
+          lineNumbers: (line: number) =>
+            isMultiLine() ? '' + line : `${useDbRef.current || ''}$`,
           links: false,
           minimap: { enabled: false },
           scrollbar: {
@@ -142,6 +181,33 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
           wordWrap: 'on',
           wrappingStrategy: 'advanced'
         }
+      )
+
+      // autocomplete shortcut doesn't work on Mac, Ctrl+Space changes keyboard language, Cmd+Space opens spotlight search
+      editorRef.current.addCommand(KeyMod.WinCtrl | KeyCode.Space, autocomplete)
+      editorRef.current.addCommand(KeyCode.Enter, () =>
+        isMultiLine() ? newLine() : execute()
+      )
+      editorRef.current.addCommand(KeyCode.UpArrow, handleUp)
+      editorRef.current.addCommand(KeyCode.DownArrow, handleDown)
+      editorRef.current.addCommand(KeyMod.Shift | KeyCode.Enter, newLine)
+      editorRef.current.addCommand(KeyMod.CtrlCmd | KeyCode.Enter, execute)
+      editorRef.current.addCommand(KeyMod.WinCtrl | KeyCode.Enter, execute)
+      editorRef.current.addCommand(
+        KeyMod.CtrlCmd | KeyCode.UpArrow,
+        viewHistoryPrevious
+      )
+      editorRef.current.addCommand(
+        KeyMod.CtrlCmd | KeyCode.DownArrow,
+        viewHistoryNext
+      )
+      editorRef.current.addCommand(
+        KeyMod.CtrlCmd | KeyCode.US_SLASH,
+        displayKeyboardShortcuts
+      )
+      editorRef.current.addCommand(
+        KeyMod.CtrlCmd | KeyCode.US_DOT,
+        displayKeyboardShortcuts
       )
 
       onContentUpdate()
@@ -165,6 +231,48 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [enableMultiStatementMode])
 
+    const useDbRef = useRef<string | null>(null)
+
+    useEffect(() => {
+      useDbRef.current = useDb || ''
+    }, [useDb])
+
+    const autocomplete = () => {
+      console.log('TODO autocomplete')
+    }
+
+    const newLine = () => {
+      editorRef.current?.trigger('keyboard', 'type', { text: '\n' })
+    }
+
+    const execute = () => {
+      const value = editorRef.current?.getValue() || ''
+      const onlyWhitespace = value.trim() === ''
+
+      if (!onlyWhitespace) {
+        onExecute()
+      }
+    }
+
+    const isMultiLine = () =>
+      (editorRef.current?.getModel()?.getLineCount() as number) > 1
+
+    const handleUp = () => {
+      console.log('TODO Up history or move cursor')
+    }
+    const handleDown = () => {
+      console.log('TODO Down history or move cursor')
+    }
+    const displayKeyboardShortcuts = () => {
+      console.log('TODO execute :help keys')
+    }
+    const viewHistoryPrevious = () => {
+      console.log('TODO Ctrl-Up history previous')
+    }
+    const viewHistoryNext = () => {
+      console.log('TODO Ctrl-Up history next')
+    }
+
     // Share current text with parent and add warnings
     const updateCode = () => {
       const text =
@@ -186,8 +294,8 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
         monacoId,
         []
       )
-      const lines = editorRef.current?.getModel()?.getLinesContent() || []
-      onChangeLineCount(lines.length)
+
+      onChangeLineCount(editorRef.current?.getModel()?.getLineCount() || 0)
       debouncedUpdateCode()
     }
 
