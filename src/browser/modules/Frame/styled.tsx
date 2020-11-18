@@ -182,26 +182,40 @@ export const StyledFrameStatusbarText = styled.label`
   flex: 1 1 auto;
 `
 
-export const StyledFrameCommand = styled.label<{ selectedDb?: string }>`
-  font-family: ${props => props.theme.editorFont};
+export const CurrentDbText = styled.div`
+  color: ${props => props.theme.promptText};
+`
+
+export const FormContainer = styled.form<{ selectedDb?: string }>`
   color: ${props => props.theme.secondaryButtonText};
   background-color: ${props => props.theme.frameSidebarBackground};
-  border-radius: 2px;
-  padding-left: 6px;
-  font-size: 1.2em;
-  line-height: 2.2em;
-  margin: 3px 5px 3px 3px;
-  flex: 1 1 auto;
-  min-width: 0;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  display: block;
-  &::before {
-    color: ${props => props.theme.promptText};
-    content: "${props => (props.selectedDb || '') + '$ '}";
+
+  &::focus {
+    border: 0;
+    outline: 0;
   }
+
   .disable-font-ligatures & {
     font-variant-ligatures: none !important;
-  } 
+  }
+
+  font-family: ${props => props.theme.editorFont};
+  font-size: 1.2em;
+  border-radius: 2px;
+  padding-left: 6px;
+  line-height: 2.2em;
+  margin: 3px 5px 3px 3px;
+  flex-grow: 1;
+  min-width: 0;
+  //overflow: hidden;
+`
+
+export const StyledFrameCommand = styled.input`
+  background-color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  border: 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  flex-grow: 1;
 `

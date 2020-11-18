@@ -62,7 +62,9 @@ import {
 import {
   StyledFrameTitleBar,
   StyledFrameTitlebarButtonSection,
-  StyledFrameCommand
+  StyledFrameCommand,
+  FormContainer,
+  CurrentDbText
 } from './styled'
 import {
   downloadPNGFromSVG,
@@ -108,6 +110,9 @@ function FrameTitlebar(props: FrameTitleBarProps) {
   function hasData() {
     return props.numRecords > 0
   }
+  // TODO Ecport these functinos to util file.
+  // CSS is messed up for reusable frame
+  // there's something odd in the dataflow. simplify FrameProps
 
   function exportCSV(records: any) {
     const exportData = stringifyResultArray(
@@ -128,7 +133,7 @@ function FrameTitlebar(props: FrameTitleBarProps) {
 
     if (frame.type === 'history') {
       const asTxt = frame.result
-        .map((result: any) => {
+        .map((result: string) => {
           const safe = `${result}`.trim()
 
           if (safe.startsWith(':')) {
@@ -200,18 +205,17 @@ function FrameTitlebar(props: FrameTitleBarProps) {
 
   return (
     <StyledFrameTitleBar>
-      <StyledFrameCommand selectedDb={frame.useDb}>
-        <form onSubmit={onSubmit}>
-          <DottedLineHover
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              e.preventDefault()
-              setEditorValue(e.target.value)
-            }}
-            value={editorValue}
-            data-testid="frameCommand"
-          />
-        </form>
-      </StyledFrameCommand>
+      <FormContainer onSubmit={onSubmit}>
+        <CurrentDbText> {`${frame.useDb || ''}$ `} </CurrentDbText>
+        <StyledFrameCommand
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            e.preventDefault()
+            setEditorValue(e.target.value)
+          }}
+          value={editorValue}
+          data-testid="frameCommand"
+        />
+      </FormContainer>
       <StyledFrameTitlebarButtonSection>
         <FrameButton
           title="Save as Favorite"
@@ -220,8 +224,7 @@ function FrameTitlebar(props: FrameTitleBarProps) {
             props.newFavorite(frame.cmd)
           }}
         >
-          {/* @ts-expect-error ts-migrate(2322) FIXME: Property 'width' does not exist on type 'Intrinsic... Remove this comment to see the full error message */}
-          <SaveFavorite width={12} />
+          <SaveFavorite />
         </FrameButton>
         <Render if={props.isRelateAvailable}>
           <FrameButton
@@ -230,8 +233,7 @@ function FrameTitlebar(props: FrameTitleBarProps) {
               props.newProjectFile(frame.cmd)
             }}
           >
-            {/* @ts-expect-error ts-migrate(2322) FIXME: Property 'width' does not exist on type 'Intrinsic... Remove this comment to see the full error message */}
-            <SaveFile width={12} />
+            <SaveFile />
           </FrameButton>
         </Render>
         <Render if={canExport()}>
