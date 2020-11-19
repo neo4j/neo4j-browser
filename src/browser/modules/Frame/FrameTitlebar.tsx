@@ -47,7 +47,7 @@ import {
   DownloadIcon,
   ExpandIcon,
   PinIcon,
-  RefreshIcon,
+  RunIcon,
   UpIcon,
   SaveFavorite,
   SaveFile
@@ -238,6 +238,15 @@ function FrameTitlebar(props: FrameTitleBarProps) {
             <SaveFile />
           </FrameButton>
         </Render>
+        <Render if={frame.type !== 'edit'}>
+          <FrameButton
+            data-testid="rerunFrameButton"
+            title="Rerun"
+            onClick={() => props.onReRunClick(frame, editorValue)}
+          >
+            <RunIcon />
+          </FrameButton>
+        </Render>
         <Render if={canExport()}>
           <DropdownButton data-testid="frame-export-dropdown">
             <DownloadIcon />
@@ -306,15 +315,6 @@ function FrameTitlebar(props: FrameTitleBarProps) {
             <SVGInline svg={controlsPlay} width="12px" />
           </FrameButton>
         </Render>
-        <Render if={frame.type !== 'edit'}>
-          <FrameButton
-            data-testid="rerunFrameButton"
-            title="Rerun"
-            onClick={() => props.onReRunClick(frame, editorValue)}
-          >
-            <RefreshIcon />
-          </FrameButton>
-        </Render>
         <FrameButton
           title="Close"
           onClick={() =>
@@ -360,6 +360,8 @@ const mapDispatchToProps = (
     onRunClick: () => {
       ownProps.runQuery()
     },
+    // TODO styling is off for framesize
+    // TODO look closer into  frame vs frame-stack. reusing with guides is buggy. also. server disconnect is weird.
     onReRunClick: ({ useDb, id, requestId }: Frame, cmd: string) => {
       if (requestId) {
         dispatch(cancelRequest(requestId))

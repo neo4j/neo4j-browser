@@ -42,6 +42,7 @@ import skipPrev from 'icons/skip-prev.svg'
 import file from 'icons/file.svg'
 import save_file from 'icons/save_file.svg'
 import save_favorite from 'icons/save_favorite.svg'
+import run_icon from 'icons/run_icon.svg'
 import help from 'icons/help.svg'
 
 const inactive = `
@@ -271,6 +272,8 @@ export const ContractIcon = () => <IconContainer icon={shrink} width={12} />
 export const RefreshIcon = () => (
   <IconContainer icon={buttonRefreshArrow} width={12} />
 )
+export const RunIcon = () => <IconContainer icon={run_icon} width={12} />
+
 export const CloseIcon = () => <IconContainer icon={close} width={12} />
 export const UpIcon = () => <IconContainer className="sl-chevron-up" />
 export const DownIcon = () => <IconContainer className="sl-chevron-down" />
