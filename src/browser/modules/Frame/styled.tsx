@@ -175,7 +175,6 @@ export const StyledFrameTitleBar = styled.div`
   line-height: ${dim.frameTitlebarHeight}px;
   color: ${props => props.theme.frameTitlebarText};
   display: flex;
-  flex-direction: row;
 `
 
 export const StyledFrameStatusbarText = styled.label`
@@ -186,28 +185,22 @@ export const CurrentDbText = styled.div`
   color: ${props => props.theme.promptText};
 `
 
-export const FormContainer = styled.form<{ selectedDb?: string }>`
+export const FrameTitleEditorContainer = styled.div`
+  border-radius: 2px;
+  padding-left: 6px;
+  margin: 3px 5px 3px 3px;
+
+  flex-grow: 1;
+  display: flex;
+
+  font-family: ${props => props.theme.editorFont};
+  line-height: 2.2em;
+  font-size: 1.2em;
   color: ${props => props.theme.secondaryButtonText};
   background-color: ${props => props.theme.frameSidebarBackground};
-
-  &::focus {
-    border: 0;
-    outline: 0;
-  }
-
   .disable-font-ligatures & {
     font-variant-ligatures: none !important;
   }
-
-  font-family: ${props => props.theme.editorFont};
-  font-size: 1.2em;
-  border-radius: 2px;
-  padding-left: 6px;
-  line-height: 2.2em;
-  margin: 3px 5px 3px 3px;
-  flex-grow: 1;
-  min-width: 0;
-  //overflow: hidden;
 `
 
 export const StyledFrameCommand = styled.input`

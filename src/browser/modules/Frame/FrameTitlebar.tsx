@@ -62,8 +62,7 @@ import {
 import {
   StyledFrameTitleBar,
   StyledFrameTitlebarButtonSection,
-  StyledFrameCommand,
-  FormContainer,
+  FrameTitleEditorContainer,
   CurrentDbText
 } from './styled'
 import {
@@ -78,7 +77,9 @@ import {
 import { csvFormat, stringModifier } from 'services/bolt/cypherTypesFormatting'
 import arrayHasItems from 'shared/utils/array-has-items'
 import { stringifyMod } from 'services/utils'
+import Monaco from '../Editor/Monaco'
 
+// Remove comments in editor?
 type FrameTitleBarBaseProps = {
   frame: any
   fullscreen: boolean
@@ -196,26 +197,27 @@ function FrameTitlebar(props: FrameTitleBarProps) {
   const { frame = {} } = props
   const fullscreenIcon = props.fullscreen ? <ContractIcon /> : <ExpandIcon />
   const expandCollapseIcon = props.collapse ? <DownIcon /> : <UpIcon />
-  // TODO thnk about removing comments
-  function onSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    // TODO rename to just rerun
-    props.onReRunClick(frame, editorValue)
-  }
 
   return (
     <StyledFrameTitleBar>
-      <FormContainer onSubmit={onSubmit}>
+      <FrameTitleEditorContainer>
         <CurrentDbText> {`${frame.useDb || ''}$ `} </CurrentDbText>
-        <StyledFrameCommand
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            e.preventDefault()
-            setEditorValue(e.target.value)
-          }}
+        <Monaco
+          id={`editor-${frame.id}`}
+          enableMultiStatementMode={true}
+          theme={'LIGHT'}
+          onChange={setEditorValue}
           value={editorValue}
-          data-testid="frameCommand"
+          options={{
+            lineNumbers: 'off',
+            glyphMargin: false,
+            folding: false,
+            lineDecorationsWidth: 0,
+            lineNumbersMinChars: 0 // check if these are needed
+          }}
+          style={{ paddingTop: '4px', marginLeft: '7px' }}
         />
-      </FormContainer>
+      </FrameTitleEditorContainer>
       <StyledFrameTitlebarButtonSection>
         <FrameButton
           title="Save as Favorite"
