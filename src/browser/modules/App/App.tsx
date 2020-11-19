@@ -26,7 +26,8 @@ import {
   getTheme,
   getBrowserSyncConfig,
   codeFontLigatures,
-  LIGHT_THEME
+  LIGHT_THEME,
+  shouldShowPerfomanceOverlay
 } from 'shared/modules/settings/settingsDuck'
 import { utilizeBrowserSync } from 'shared/modules/features/featuresDuck'
 import { getOpenDrawer } from 'shared/modules/sidebar/sidebarDuck'
@@ -163,6 +164,22 @@ export function App(props: any) {
         }
         setEventMetricsCallback={setEventMetricsCallback}
       />
+      {props.showPerformanceOverlay && (
+        <div
+          style={{
+            color: 'red',
+            width: '100px',
+            height: '100px',
+            backgroundColor: 'blue',
+            position: 'absolute',
+            bottom: '10px',
+            right: '10px',
+            zIndex: 99999999999
+          }}
+        >
+          Very Overlay
+        </div>
+      )}
       <ThemeProvider theme={themeData}>
         <FeatureToggleProvider features={experimentalFeatures}>
           <FileDrop store={store}>
@@ -228,7 +245,8 @@ const mapStateToProps = (state: any) => {
     loadSync: utilizeBrowserSync(state),
     isWebEnv: inWebEnv(state),
     useDb: getUseDb(state),
-    databases: getDatabases(state)
+    databases: getDatabases(state),
+    showPerformanceOverlay: shouldShowPerfomanceOverlay(state)
   }
 }
 
