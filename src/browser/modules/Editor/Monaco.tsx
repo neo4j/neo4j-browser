@@ -75,6 +75,7 @@ interface MonacoProps {
   value?: string
   onChange?: (value: string) => void
   onChangeLineCount?: (value: number) => void
+  onDisplayHelpKeys?: () => void
   onExecute?: () => void
   options?: editor.IGlobalEditorOptions
   theme?: BrowserTheme
@@ -90,6 +91,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       value = '',
       onChange = () => undefined,
       onChangeLineCount = () => undefined,
+      onDisplayHelpKeys = () => undefined,
       onExecute = () => undefined,
       theme = LIGHT_THEME,
       useDb
@@ -183,8 +185,6 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
         }
       )
 
-      // autocomplete shortcut doesn't work on Mac, Ctrl+Space changes keyboard language, Cmd+Space opens spotlight search
-      editorRef.current.addCommand(KeyMod.WinCtrl | KeyCode.Space, autocomplete)
       editorRef.current.addCommand(KeyCode.Enter, () =>
         isMultiLine() ? newLine() : execute()
       )
@@ -203,11 +203,11 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       )
       editorRef.current.addCommand(
         KeyMod.CtrlCmd | KeyCode.US_SLASH,
-        displayKeyboardShortcuts
+        onDisplayHelpKeys
       )
       editorRef.current.addCommand(
         KeyMod.CtrlCmd | KeyCode.US_DOT,
-        displayKeyboardShortcuts
+        onDisplayHelpKeys
       )
 
       onContentUpdate()
@@ -237,10 +237,6 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       useDbRef.current = useDb || ''
     }, [useDb])
 
-    const autocomplete = () => {
-      console.log('TODO autocomplete')
-    }
-
     const newLine = () => {
       editorRef.current?.trigger('keyboard', 'type', { text: '\n' })
     }
@@ -262,9 +258,6 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
     }
     const handleDown = () => {
       console.log('TODO Down history or move cursor')
-    }
-    const displayKeyboardShortcuts = () => {
-      console.log('TODO execute :help keys')
     }
     const viewHistoryPrevious = () => {
       console.log('TODO Ctrl-Up history previous')

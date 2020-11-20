@@ -297,6 +297,9 @@ export function EditorFrame({
                   setLineCount(count)
                 }
               }}
+              onDisplayHelpKeys={() =>
+                executeCommand(':help keys', commandSources.editor)
+              }
               onExecute={createRunCommandFunction(commandSources.editor)}
               ref={editorRef}
               theme={derivedTheme}
