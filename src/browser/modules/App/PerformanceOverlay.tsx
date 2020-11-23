@@ -4,14 +4,16 @@ import { connect } from 'react-redux'
 import { shouldShowPerfomanceOverlay } from 'shared/modules/settings/settingsDuck'
 
 const Overlay = styled.div`
-  width: 100px;
-  height: 100px;
+  width: 250px;
+  height: 200px;
   background-color: black;
   color: white;
   position: absolute;
   bottom: 10px;
   right: 10px;
   z-index: 99999999999;
+  padding: 10px;
+  opacity: 0.95;
 `
 
 function perfTracker() {
@@ -38,12 +40,27 @@ function PerformanceOverlay({
   useEffect(() => {
     const tick = perfTracker()
 
+    let samples: number[] = []
+
     let requestId = requestAnimationFrame(function loop() {
       tick((fps: number) => {
         // Avoid using react state to not tie number to reacts re-render cycle
         const fpsCounter = document.getElementById('fps-counter')
         if (fpsCounter) {
-          fpsCounter.textContent = fps.toFixed(2).toString()
+          samples = [fps, ...samples]
+          const limit = 10
+          if (samples.length > limit) {
+            samples = samples.slice(0, limit)
+          }
+          const low = Math.min(...samples)
+          const add = (a: number, b: number) => a + b
+          const average = samples.reduce(add, 0) / samples.length
+
+          fpsCounter.textContent = `
+Current FPS: ${fps.toFixed(2).toString()}
+Average in the last minute: ${average.toFixed(2)}
+Lowest in last minute: ${low.toFixed(2)}
+          `
         }
       })
 
@@ -54,7 +71,7 @@ function PerformanceOverlay({
 
   return shouldShow ? (
     <Overlay>
-      <div id="fps-counter" /> OVERLAY
+      <div style={{ whiteSpace: 'pre' }} id="fps-counter" />
     </Overlay>
   ) : null
 }
