@@ -35,8 +35,10 @@ import React, {
   useRef
 } from 'react'
 import { Bus } from 'suber'
+
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import { HistoryState } from 'shared/modules/history/historyDuck'
 import {
   DARK_THEME,
   LIGHT_THEME,
@@ -71,6 +73,7 @@ export interface MonacoHandles {
 interface MonacoProps {
   bus: Bus
   enableMultiStatementMode?: boolean
+  history?: HistoryState
   id: string
   value?: string
   onChange?: (value: string) => void
@@ -87,6 +90,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
     {
       bus,
       enableMultiStatementMode = true,
+      history = [],
       id,
       value = '',
       onChange = () => undefined,
@@ -109,14 +113,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
         return editorRef.current?.getValue() || ''
       },
       setValue(value: string) {
-        editorRef.current?.setValue(value)
-        editorRef.current?.focus()
-        const lines = editorRef.current?.getModel()?.getLinesContent() || []
-        const linesLength = lines.length
-        editorRef.current?.setPosition({
-          lineNumber: linesLength,
-          column: lines[linesLength - 1].length + 1
-        })
+        setValue(value)
       },
       resize(fillContainer = false, fixedHeight) {
         const container = document.getElementById(monacoId) as HTMLElement
@@ -247,6 +244,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
 
       if (!onlyWhitespace) {
         onExecute()
+        historyIndexRef.current = -1
       }
     }
 
@@ -254,16 +252,72 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       (editorRef.current?.getModel()?.getLineCount() as number) > 1
 
     const handleUp = () => {
-      console.log('TODO Up history or move cursor')
+      if (isMultiLine()) {
+        const { column = 1, lineNumber = 1 } =
+          editorRef.current?.getPosition() || {}
+        editorRef.current?.setPosition({ column, lineNumber: lineNumber - 1 })
+      } else {
+        viewHistoryPrevious()
+      }
     }
+
     const handleDown = () => {
-      console.log('TODO Down history or move cursor')
+      if (isMultiLine()) {
+        const { column = 1, lineNumber = 1 } =
+          editorRef.current?.getPosition() || {}
+        editorRef.current?.setPosition({ column, lineNumber: lineNumber + 1 })
+      } else {
+        viewHistoryNext()
+      }
     }
+
+    const setValue = (value: string) => {
+      editorRef.current?.setValue(value)
+      editorRef.current?.focus()
+      const lines = editorRef.current?.getModel()?.getLinesContent() || []
+      const linesLength = lines.length
+      editorRef.current?.setPosition({
+        lineNumber: linesLength,
+        column: lines[linesLength - 1].length + 1
+      })
+    }
+
+    useEffect(() => {
+      historyRef.current = [...history]
+    }, [history])
+
+    const historyRef = useRef<string[]>([])
+    const historyIndexRef = useRef<number>(-1)
+    const draftRef = useRef<string>('')
+
     const viewHistoryPrevious = () => {
-      console.log('TODO Ctrl-Up history previous')
+      const localHistory = historyRef.current
+      const localHistoryIndex = historyIndexRef.current
+
+      if (!localHistory.length) return
+      if (localHistoryIndex + 1 === localHistory.length) return
+      if (localHistoryIndex === -1) {
+        // Save what's currently in the editor as a local draft
+        draftRef.current = editorRef.current?.getValue() || ''
+      }
+      historyIndexRef.current = localHistoryIndex + 1
+      setValue(history[localHistoryIndex + 1])
     }
+
     const viewHistoryNext = () => {
-      console.log('TODO Ctrl-Up history next')
+      const localHistory = historyRef.current
+      const localHistoryIndex = historyIndexRef.current
+
+      if (!localHistory.length) return
+      if (localHistoryIndex <= -1) return
+      if (localHistoryIndex === 0) {
+        // Read saved draft
+        historyIndexRef.current = localHistoryIndex - 1
+        setValue(draftRef.current)
+        return
+      }
+      historyIndexRef.current = localHistoryIndex - 1
+      setValue(localHistory[localHistoryIndex])
     }
 
     // Share current text with parent and add warnings

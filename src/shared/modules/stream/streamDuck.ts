@@ -40,6 +40,7 @@ export const SET_MAX_FRAMES = 'frames/SET_MAX_FRAMES'
 
 export interface GlobalState {
   [NAME]: FramesState
+  history: string[]
   [key: string]: Record<string, any>
 }
 

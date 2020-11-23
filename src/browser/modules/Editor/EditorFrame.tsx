@@ -87,8 +87,9 @@ import {
 } from 'shared/modules/settings/settingsDuck'
 import useDerivedTheme from 'browser-hooks/useDerivedTheme'
 import { BrowserTheme } from './CypherMonacoThemes'
-import { getOpenDrawer } from 'shared/modules/sidebar/sidebarDuck'
 import { getUseDb } from 'shared/modules/connections/connectionsDuck'
+import { getHistory, HistoryState } from 'shared/modules/history/historyDuck'
+import { getOpenDrawer } from 'shared/modules/sidebar/sidebarDuck'
 
 type EditorFrameProps = {
   browserTheme: BrowserTheme
@@ -96,6 +97,7 @@ type EditorFrameProps = {
   drawer: string | null
   enableMultiStatementMode: boolean
   executeCommand: (cmd: string, source: string) => void
+  history: HistoryState
   projectId: string
   theme: { linkHover: string }
   updateFavorite: (id: string, value: string) => void
@@ -117,6 +119,7 @@ export function EditorFrame({
   drawer,
   enableMultiStatementMode,
   executeCommand,
+  history,
   projectId,
   theme,
   updateFavorite,
@@ -288,6 +291,7 @@ export function EditorFrame({
             <Monaco
               bus={bus}
               enableMultiStatementMode={enableMultiStatementMode}
+              history={history}
               id={'main-editor'}
               onChange={() => {
                 setUnsaved(true)
@@ -371,6 +375,7 @@ const mapStateToProps = (state: any) => {
     browserTheme: getTheme(state),
     drawer: getOpenDrawer(state),
     enableMultiStatementMode: shouldEnableMultiStatementMode(state),
+    history: getHistory(state),
     projectId: getProjectId(state),
     useDb: getUseDb(state)
   }

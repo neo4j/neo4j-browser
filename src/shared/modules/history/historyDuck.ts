@@ -18,16 +18,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { USER_CLEAR } from 'shared/modules/app/appDuck'
+import { USER_CLEAR } from '../app/appDuck'
+import { GlobalState } from '../stream/streamDuck'
 
 export const NAME = 'history'
 export const ADD = 'history/ADD'
 export const CLEAR = 'history/CLEAR'
 
-// Selectors
-export const getHistory = (state: any) => state[NAME]
+export const getHistory = (state: GlobalState): HistoryState => state[NAME]
 
-function addHistoryHelper(state: any, newState: any, maxHistory: any) {
+function addHistoryHelper(
+  state: HistoryState,
+  newState: string,
+  maxHistory: number
+) {
   // If it's the same as the last entry, don't add it
   if (state && state.length && state[0] === newState) {
     return state
@@ -37,23 +41,21 @@ function addHistoryHelper(state: any, newState: any, maxHistory: any) {
   return newHistory.slice(0, maxHistory)
 }
 
-// Reducer
-const initialState: any = []
-export default function(state = initialState, action: any) {
+export type HistoryState = string[]
+
+export default function(state = [], action: any) {
   switch (action.type) {
     case ADD:
       return addHistoryHelper(state, action.state, action.maxHistory)
     case CLEAR:
-      return initialState
     case USER_CLEAR:
-      return initialState
+      return []
     default:
       return state
   }
 }
 
-// Actions
-export const addHistory = (state: any, maxHistory: any) => {
+export const addHistory = (state: string, maxHistory: number) => {
   return {
     type: ADD,
     state,

@@ -22,25 +22,12 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { withTheme } from 'styled-components'
-import {
-  commandSources,
-  executeCommand,
-  executeSystemCommand
-} from 'shared/modules/commands/commandsDuck'
 import { getHistory } from 'shared/modules/history/historyDuck'
-import {
-  shouldEditorAutocomplete,
-  shouldEditorLint,
-  shouldEnableMultiStatementMode
-} from 'shared/modules/settings/settingsDuck'
-import { add } from 'shared/modules/stream/streamDuck'
+import { shouldEditorLint } from 'shared/modules/settings/settingsDuck'
 import { deepEquals } from 'services/utils'
-import * as viewTypes from 'shared/modules/stream/frameViewTypes'
 import Codemirror from './Codemirror'
 import * as schemaConvert from './editorSchemaConverter'
 import cypherFunctions from './cypher/functions'
-import { getUseDb } from 'shared/modules/connections/connectionsDuck'
-import { isRelateAvailable } from 'shared/modules/app/appDuck'
 
 type EditorState = any
 
@@ -52,77 +39,13 @@ export class Editor extends Component<any, EditorState> {
     this.state = {
       historyIndex: -1,
       buffer: '',
-      mode: 'cypher',
       notifications: [],
-      lastPosition: { line: 0, column: 0 },
-      contentId: null
+      lastPosition: { line: 0, column: 0 }
     }
   }
 
-  shouldComponentUpdate(nextProps: any, nextState: EditorState) {
-    return !(
-      nextState.contentId === this.state.contentId &&
-      deepEquals(nextProps.schema, this.props.schema) &&
-      nextProps.useDb === this.props.useDb
-    )
-  }
-
-  newlineAndIndent(cm: any) {
-    cm.execCommand('newlineAndIndent')
-  }
-
-  execCommand(cmd: any) {
-    this.props.onExecute(cmd)
-  }
-
-  moveCursorToEndOfLine(cm: any) {
-    cm.setCursor(cm.lineCount(), 0)
-  }
-
-  handleUp(cm: any) {
-    if (cm.lineCount() === 1) {
-      this.historyPrev(cm)
-      this.moveCursorToEndOfLine(cm)
-    } else {
-      cm.execCommand('goLineUp')
-    }
-  }
-
-  handleDown(cm: any) {
-    if (cm.lineCount() === 1) {
-      this.historyNext(cm)
-      this.moveCursorToEndOfLine(cm)
-    } else {
-      cm.execCommand('goLineDown')
-    }
-  }
-
-  historyPrev(cm: any) {
-    if (!this.props.history.length) return
-    if (this.state.historyIndex + 1 === this.props.history.length) return
-    if (this.state.historyIndex === -1) {
-      // Save what's currently in the editor
-      this.setState({ buffer: cm.getValue() })
-    }
-    this.setState({
-      historyIndex: this.state.historyIndex + 1
-    })
-    // this.setEditorValue(this.props.history[this.state.historyIndex])
-  }
-
-  historyNext(_cm: any) {
-    if (!this.props.history.length) return
-    if (this.state.historyIndex <= -1) return
-    if (this.state.historyIndex === 0) {
-      // Should read from buffer
-      this.setState({ historyIndex: -1 })
-      // this.setEditorValue(this.state.buffer)
-      return
-    }
-    this.setState({
-      historyIndex: this.state.historyIndex - 1
-    })
-    // this.setEditorValue(this.props.history[this.state.historyIndex])
+  shouldComponentUpdate(nextProps: any) {
+    return !deepEquals(nextProps.schema, this.props.schema)
   }
 
   triggerAutocompletion = (cm: any, changed: any) => {
@@ -156,10 +79,6 @@ export class Editor extends Component<any, EditorState> {
     this.loadCodeMirror()
   }
 
-  componentWillUnmount() {
-    clearInterval(this.codeMirror.display.blinker)
-  }
-
   loadCodeMirror = () => {
     if (this.codeMirror) {
       return
@@ -181,90 +100,11 @@ export class Editor extends Component<any, EditorState> {
     }
   }
 
-  getEditorValue() {
-    return this.codeMirror ? this.codeMirror.getValue().trim() : ''
-  }
-
-  setContentId(id: any) {
-    this.setState({ contentId: id })
-  }
-
-  updateCode = (_statements: any, change: any, cb = () => {}) => {
-    const lastPosition = change && change.to
-    this.setState(
-      {
-        lastPosition: lastPosition
-          ? {
-              line: lastPosition.line,
-              column: lastPosition.ch
-            }
-          : this.state.lastPosition
-      },
-      cb
-    )
-  }
-  setGutterMarkers() {
-    if (this.codeMirror) {
-      this.codeMirror.clearGutter('cypher-hints')
-      this.state.notifications.forEach((notification: any) => {
-        this.codeMirror.setGutterMarker(
-          (notification.position.line || 1) - 1,
-          'cypher-hints',
-          (() => {
-            const gutter = document.createElement('div')
-            gutter.style.color = '#822'
-            gutter.innerHTML =
-              '<i class="fa fa-exclamation-triangle gutter-warning gutter-warning" aria-hidden="true"></i>'
-            gutter.title = `${notification.title}\n${notification.description}`
-            gutter.onclick = () => {
-              const action =
-                notification.code === 'frontendWarning'
-                  ? add(notification)
-                  : {
-                      ...executeSystemCommand(notification.statement),
-                      forceView: viewTypes.WARNINGS
-                    }
-              this.props.bus.send(action.type, action)
-            }
-            return gutter
-          })()
-        )
-      })
-    }
-  }
-
-  lineNumberFormatter = (line: any) => {
-    if (this.codeMirror && this.codeMirror.lineCount() > 1) {
-      return line
-    } else {
-      return `${this.props.useDb || ''}$`
-    }
-  }
-
   render() {
     const options = {
-      lineNumbers: true,
-      mode: this.state.mode,
-      theme: 'cypher',
-      gutters: ['cypher-hints'],
-      lineWrapping: true,
       autofocus: true,
       smartIndent: false,
-      lineNumberFormatter: this.lineNumberFormatter,
       lint: this.props.enableEditorLint,
-      extraKeys: {
-        'Ctrl-Space': 'autocomplete',
-        'Cmd-Up': this.historyPrev.bind(this),
-        'Ctrl-Up': this.historyPrev.bind(this),
-        Up: this.handleUp.bind(this),
-        'Cmd-Down': this.historyNext.bind(this),
-        'Ctrl-Down': this.historyNext.bind(this),
-        'Cmd-/': this.execCommand.bind(this, ':help keys'),
-        'Ctrl-/': this.execCommand.bind(this, ':help keys'),
-        'Cmd-.': this.execCommand.bind(this, ':help keys'),
-        'Ctrl-.': this.execCommand.bind(this, ':help keys'),
-        Down: this.handleDown.bind(this)
-      },
       hintOptions: {
         completeSingle: false,
         closeOnUnfocus: false,
@@ -273,19 +113,14 @@ export class Editor extends Component<any, EditorState> {
       },
       autoCloseBrackets: {
         explode: ''
-      },
-      ...(!this.props.enableEditorAutocomplete ? { mode: '', theme: '' } : {})
+      }
     }
-
-    this.setGutterMarkers()
 
     return (
       <Codemirror
         ref={ref => {
           this.editor = ref
         }}
-        onParsed={this.updateCode}
-        onChanges={this.props.onChange}
         options={options}
         schema={this.props.schema}
         initialPosition={this.state.lastPosition}
@@ -294,19 +129,8 @@ export class Editor extends Component<any, EditorState> {
   }
 }
 
-const mapDispatchToProps = (_dispatch: any, ownProps: any) => {
-  return {
-    onExecute: (cmd: any) => {
-      const action = executeCommand(cmd, { source: commandSources.editor }) // bubble to frame, but not clear
-      ownProps.bus.send(action.type, action)
-    }
-  }
-}
-
 const mapStateToProps = (state: any) => {
   return {
-    useDb: getUseDb(state),
-    enableEditorAutocomplete: shouldEditorAutocomplete(state),
     enableEditorLint: shouldEditorLint(state),
     history: getHistory(state),
     schema: {
@@ -321,12 +145,8 @@ const mapStateToProps = (state: any) => {
         ...state.meta.functions.map(schemaConvert.toFunction)
       ],
       procedures: state.meta.procedures.map(schemaConvert.toProcedure)
-    },
-    enableMultiStatementMode: shouldEnableMultiStatementMode(state),
-    isRelateAvailable: isRelateAvailable(state)
+    }
   }
 }
 
-export default withTheme(
-  withBus(connect(mapStateToProps, mapDispatchToProps)(Editor))
-)
+export default withTheme(withBus(connect(mapStateToProps)(Editor)))
