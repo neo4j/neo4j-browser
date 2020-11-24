@@ -63,8 +63,8 @@ export const shouldAutoComplete = (state: any) =>
 export const shouldEditorLint = (state: any) => state[NAME].editorLint === true
 export const shouldEnableMultiStatementMode = (state: any) =>
   state[NAME].enableMultiStatementMode
-export const shouldShowPerfomanceOverlay = (state: any): boolean =>
-  state[NAME].showPerfomanceOverlay === true
+export const shouldshowPerformanceOverlay = (state: any): boolean =>
+  state[NAME].showPerformanceOverlay === true
 
 const browserSyncConfig = (host = 'https://auth.neo4j.com') => ({
   authWindowUrl: `${host}/indexNewBrowser.html`,
@@ -107,7 +107,7 @@ const initialState = {
   useCypherThread: true,
   enableMultiStatementMode: true,
   connectionTimeout: 30 * 1000, // 30 seconds
-  showPerfomanceOverlay: false
+  showPerformanceOverlay: false
 }
 
 export default function settings(state = initialState, action: any) {
