@@ -1,18 +1,7 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
 import { shouldShowPerfomanceOverlay } from 'shared/modules/settings/settingsDuck'
 import styled from 'styled-components'
-
-const Overlay = styled.div`
-  width: 23em;
-  background-color: rgba(28, 28, 28, 0.8);
-  color: #fff;
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  z-index: 99999999999;
-  padding: 10px;
-`
 
 function perfTracker() {
   let lastTime = performance.now()
@@ -49,24 +38,27 @@ type Metric =
 function PerformanceOverlay({
   shouldShow
 }: PerformanceOverlayProps): JSX.Element | null {
+  const samples = useRef<number[]>([])
+  const limit = 100
+
   useEffect(() => {
     const tick = perfTracker()
-
-    let samples: number[] = []
 
     let requestId = requestAnimationFrame(function loop() {
       tick((fps: number) => {
         updateStats('fps', fps)
 
-        samples = [fps, ...samples]
-        const limit = 10
-        if (samples.length > limit) {
-          samples = samples.slice(0, limit)
+        samples.current = [fps, ...samples.current]
+        if (samples.current.length > limit) {
+          samples.current = samples.current.slice(0, limit)
         }
-        updateStats('minFps', Math.min(...samples))
+        updateStats('minFps', Math.min(...samples.current))
 
         const add = (a: number, b: number) => a + b
-        updateStats('meanFps', samples.reduce(add, 0) / samples.length)
+        updateStats(
+          'meanFps',
+          samples.current.reduce(add, 0) / samples.current.length
+        )
 
         const memory: { usedJSHeapSize: number; jsHeapSizeLimit: number } =
           // @ts-ignore chrome only field
@@ -91,24 +83,54 @@ function PerformanceOverlay({
     return () => cancelAnimationFrame(requestId)
   }, [])
 
+  function dumpStats() {
+    console.log(['fps', ...samples.current].join('\n'))
+  }
+
   return shouldShow ? (
     <Overlay>
       {['fps', 'meanFps', 'minFps', 'memUsage', 'percentOfTotalMemUsed'].map(
         metric => (
-          <div key={metric} style={{ display: 'flex' }}>
+          <FlexContainer key={metric}>
             <Label>{metric}</Label> <span id={metric}> - </span>
-          </div>
+          </FlexContainer>
         )
       )}
+      <DumpButton onClick={dumpStats}>
+        Dump last {limit} fps samples in console
+      </DumpButton>
     </Overlay>
   ) : null
 }
 
+const FlexContainer = styled.div`
+  display: flex;
+`
 const Label = styled.div`
   width: 200px;
   text-align: right;
   font-weight: 600;
   margin-right: 10px;
+`
+const DumpButton = styled.button`
+  background-color: white;
+  color: black;
+  margin-left: 50px;
+  margin-top: 20px;
+  padding: 1px;
+  border: none;
+  border-radius: 2px;
+`
+
+const Overlay = styled.div`
+  width: 23em;
+  background-color: rgba(28, 28, 28, 0.8);
+  color: #fff;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  z-index: 99999999999;
+  padding: 10px;
 `
 
 const mapStateToProps = (state: any) => ({
