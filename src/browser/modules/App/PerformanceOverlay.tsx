@@ -1,19 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import styled from 'styled-components'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { shouldShowPerfomanceOverlay } from 'shared/modules/settings/settingsDuck'
+import styled from 'styled-components'
 
 const Overlay = styled.div`
-  width: 250px;
-  height: 200px;
-  background-color: black;
-  color: white;
+  width: 23em;
+  background-color: rgba(28, 28, 28, 0.8);
+  color: #fff;
   position: absolute;
   bottom: 10px;
   right: 10px;
   z-index: 99999999999;
   padding: 10px;
-  opacity: 0.95;
 `
 
 function perfTracker() {
@@ -32,7 +30,21 @@ function perfTracker() {
   }
 }
 
+function updateStats(name: Metric, value: string | number) {
+  const ref = document.getElementById(name)
+  if (ref) {
+    ref.textContent =
+      typeof value === 'string' ? value : value.toFixed(2).toString()
+  }
+}
+
 type PerformanceOverlayProps = { shouldShow: boolean }
+type Metric =
+  | 'memUsage'
+  | 'percentOfTotalMemUsed'
+  | 'minFps'
+  | 'meanFps'
+  | 'fps'
 
 function PerformanceOverlay({
   shouldShow
@@ -44,23 +56,33 @@ function PerformanceOverlay({
 
     let requestId = requestAnimationFrame(function loop() {
       tick((fps: number) => {
-        // Avoid using react state to not tie number to reacts re-render cycle
-        const fpsCounter = document.getElementById('fps-counter')
-        if (fpsCounter) {
-          samples = [fps, ...samples]
-          const limit = 10
-          if (samples.length > limit) {
-            samples = samples.slice(0, limit)
-          }
-          const low = Math.min(...samples)
-          const add = (a: number, b: number) => a + b
-          const average = samples.reduce(add, 0) / samples.length
+        updateStats('fps', fps)
 
-          fpsCounter.textContent = `
-Current FPS: ${fps.toFixed(2).toString()}
-Average in the last minute: ${average.toFixed(2)}
-Lowest in last minute: ${low.toFixed(2)}
-          `
+        samples = [fps, ...samples]
+        const limit = 10
+        if (samples.length > limit) {
+          samples = samples.slice(0, limit)
+        }
+        updateStats('minFps', Math.min(...samples))
+
+        const add = (a: number, b: number) => a + b
+        updateStats('meanFps', samples.reduce(add, 0) / samples.length)
+
+        const memory: { usedJSHeapSize: number; jsHeapSizeLimit: number } =
+          // @ts-ignore chrome only field
+          performance.memory
+
+        if (memory) {
+          const { usedJSHeapSize, jsHeapSizeLimit } = memory
+          const percentageMemoryUsed = `${(
+            (100 * usedJSHeapSize) /
+            jsHeapSizeLimit
+          ).toFixed(2)}%`
+          updateStats('percentOfTotalMemUsed', percentageMemoryUsed)
+
+          const bytesInMegaByte = 1048576
+          const MBused = usedJSHeapSize / bytesInMegaByte
+          updateStats('memUsage', `${MBused.toFixed(2)}MB`)
         }
       })
 
@@ -71,10 +93,23 @@ Lowest in last minute: ${low.toFixed(2)}
 
   return shouldShow ? (
     <Overlay>
-      <div style={{ whiteSpace: 'pre' }} id="fps-counter" />
+      {['fps', 'meanFps', 'minFps', 'memUsage', 'percentOfTotalMemUsed'].map(
+        metric => (
+          <div key={metric} style={{ display: 'flex' }}>
+            <Label>{metric}</Label> <span id={metric}> - </span>
+          </div>
+        )
+      )}
     </Overlay>
   ) : null
 }
+
+const Label = styled.div`
+  width: 200px;
+  text-align: right;
+  font-weight: 600;
+  margin-right: 10px;
+`
 
 const mapStateToProps = (state: any) => ({
   shouldShow: shouldShowPerfomanceOverlay(state)
