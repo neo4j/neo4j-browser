@@ -66,8 +66,8 @@ export const getAllowedBoltSchemes = (state: any, encryptionFlag?: any) => {
 export const isRelateAvailable = (state: any) =>
   state[NAME].relateUrl &&
   state[NAME].relateApiToken &&
-  state[NAME].neo4jDesktopProjectId
-export const getProjectId = (state: any) => state[NAME].neo4jDesktopProjectId
+  state[NAME].relateProjectId
+export const getProjectId = (state: any) => state[NAME].relateProjectId
 
 // Reducer
 export default function reducer(state = { hostedUrl: null }, action: any) {
@@ -79,7 +79,7 @@ export default function reducer(state = { hostedUrl: null }, action: any) {
         env: action.env,
         relateUrl: action.relateUrl,
         relateApiToken: action.relateApiToken,
-        neo4jDesktopProjectId: action.neo4jDesktopProjectId,
+        relateProjectId: action.relateProjectId,
         neo4jDesktopGraphAppId: action.neo4jDesktopGraphAppId
       }
     default:

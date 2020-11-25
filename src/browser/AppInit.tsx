@@ -121,7 +121,9 @@ const searchParams = new URL(url).searchParams
 // Desktop/Relate params
 const relateUrl = searchParams.get('relateUrl')
 const relateApiToken = searchParams.get('relateApiToken')
-const neo4jDesktopProjectId = searchParams.get('neo4jDesktopProjectId')
+const relateProjectId =
+  searchParams.get('relateProjectId') ||
+  searchParams.get('neo4jDesktopProjectId')
 const neo4jDesktopGraphAppId = searchParams.get('neo4jDesktopGraphAppId')
 
 // Signal app upstart (for epics)
@@ -131,7 +133,7 @@ store.dispatch({
   env,
   relateUrl,
   relateApiToken,
-  neo4jDesktopProjectId,
+  relateProjectId,
   neo4jDesktopGraphAppId
 })
 

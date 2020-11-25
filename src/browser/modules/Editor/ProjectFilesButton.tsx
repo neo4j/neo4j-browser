@@ -229,8 +229,8 @@ const mapStateToProps = (state: any) => {
     isRelateAvailable:
       state.app.relateUrl &&
       state.app.relateApiToken &&
-      state.app.neo4jDesktopProjectId,
-    projectId: state.app.neo4jDesktopProjectId
+      state.app.relateProjectId,
+    projectId: state.app.relateProjectId
   }
 }
 
