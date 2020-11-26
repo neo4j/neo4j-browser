@@ -78,6 +78,7 @@ import { csvFormat, stringModifier } from 'services/bolt/cypherTypesFormatting'
 import arrayHasItems from 'shared/utils/array-has-items'
 import { stringifyMod } from 'services/utils'
 import Monaco from '../Editor/Monaco'
+import { Bus } from 'suber'
 
 // Remove comments in editor?
 type FrameTitleBarBaseProps = {
@@ -103,6 +104,7 @@ type FrameTitleBarProps = FrameTitleBarBaseProps & {
   onRunClick: () => void
   onReRunClick: (obj: Frame, cmd: string) => void
   togglePinning: (id: string, isPinned: boolean) => void
+  bus: Bus
 }
 
 function FrameTitlebar(props: FrameTitleBarProps) {
@@ -204,8 +206,9 @@ function FrameTitlebar(props: FrameTitleBarProps) {
         <CurrentDbText> {`${frame.useDb || ''}$ `} </CurrentDbText>
         <Monaco
           id={`editor-${frame.id}`}
+          bus={props.bus}
           enableMultiStatementMode={true}
-          theme={'LIGHT'}
+          theme={'normal'}
           onChange={setEditorValue}
           value={editorValue}
           options={{

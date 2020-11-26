@@ -198,7 +198,7 @@ export function EditorFrame({
         setCurrentlyEditing(null)
         editorRef.current?.setValue(message)
       }),
-    [bus]
+    [bus, isFullscreen]
   )
 
   function discardEditor() {
