@@ -47,8 +47,8 @@ left: 0;
 top: 0;
 bottom: 0;
 right: 0;
-z-index: 1300`
-      : 'margin 0 0 10px 0'}
+z-index: 1300;`
+      : 'margin 0 0 10px 0;'}
 
   &:hover .carousel-intro-animation {
     opacity: 0;
@@ -134,7 +134,7 @@ export const StyledFrameContents = styled.div<FullscreenProps>`
 
 export const StyledFrameStatusbar = styled.div<FullscreenProps>`
   border-top: ${props => props.theme.inFrameBorder};
-  height: ${dim.frameStatusbarHeight + 1}px;
+  height: ${dim.frameStatusbarHeight - 1}px;
   ${props => (props.fullscreen ? 'margin-top: -78px;' : '')};
   display: flex;
   flex-direction: row;
@@ -188,6 +188,7 @@ export const CurrentDbText = styled.div`
 export const FrameTitleEditorContainer = styled.div`
   border-radius: 2px;
   padding-left: 6px;
+  padding-top: 3px;
   margin: 3px 5px 3px 3px;
 
   flex-grow: 1;

@@ -178,16 +178,6 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
         '!suggestWidgetVisible'
       )
       editorRef.current.addCommand(KeyMod.Shift | KeyCode.Enter, newLine)
-      editorRef.current.addCommand(KeyMod.CtrlCmd | KeyCode.Enter, execute)
-      editorRef.current.addCommand(KeyMod.WinCtrl | KeyCode.Enter, execute)
-      editorRef.current.addCommand(
-        KeyMod.CtrlCmd | KeyCode.UpArrow,
-        viewHistoryPrevious
-      )
-      editorRef.current.addCommand(
-        KeyMod.CtrlCmd | KeyCode.DownArrow,
-        viewHistoryNext
-      )
       editorRef.current.addCommand(
         KeyMod.CtrlCmd | KeyCode.US_DOT,
         onDisplayHelpKeys
@@ -260,7 +250,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       const onlyWhitespace = value.trim() === ''
 
       if (!onlyWhitespace) {
-        onExecute()
+        onExecute(value)
         historyIndexRef.current = -1
       }
     }
@@ -308,8 +298,10 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
     const draftRef = useRef<string>('')
 
     const viewHistoryPrevious = () => {
+      console.log('handl')
       const localHistory = historyRef.current
       const localHistoryIndex = historyIndexRef.current
+      console.log(localHistory, localHistoryIndex)
 
       if (!localHistory.length) return
       if (localHistoryIndex + 1 === localHistory.length) return

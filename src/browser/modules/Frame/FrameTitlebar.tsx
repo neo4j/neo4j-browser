@@ -109,6 +109,7 @@ type FrameTitleBarProps = FrameTitleBarBaseProps & {
 
 function FrameTitlebar(props: FrameTitleBarProps) {
   const [editorValue, setEditorValue] = useState(props.frame.cmd)
+  const [history, setHistory] = useState<string[]>([])
 
   function hasData() {
     return props.numRecords > 0
@@ -203,13 +204,18 @@ function FrameTitlebar(props: FrameTitleBarProps) {
   return (
     <StyledFrameTitleBar>
       <FrameTitleEditorContainer>
-        <CurrentDbText> {`${frame.useDb || ''}$ `} </CurrentDbText>
         <Monaco
+          history={history}
+          useDb={frame.useDb}
+          enableMultiStatementMode={true}
           id={`editor-${frame.id}`}
           bus={props.bus}
-          enableMultiStatementMode={true}
           theme={'normal'}
           onChange={setEditorValue}
+          onExecute={value => {
+            props.onReRunClick(frame, value)
+            setHistory([...history, value])
+          }}
           value={editorValue}
           options={{
             lineNumbers: 'off',
@@ -218,7 +224,7 @@ function FrameTitlebar(props: FrameTitleBarProps) {
             lineDecorationsWidth: 0,
             lineNumbersMinChars: 0 // check if these are needed
           }}
-          style={{ paddingTop: '4px', marginLeft: '7px' }}
+          customStyle={{ border: 'none' }}
         />
       </FrameTitleEditorContainer>
       <StyledFrameTitlebarButtonSection>
