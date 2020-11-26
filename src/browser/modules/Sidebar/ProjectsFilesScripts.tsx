@@ -224,7 +224,7 @@ function ProjectFilesScripts(props: ProjectFilesScripts): JSX.Element {
 
 const mapFavoritesStateToProps = (state: any) => {
   return {
-    projectId: state.app.neo4jDesktopProjectId,
+    projectId: state.app.relateProjectId,
     relateApiToken: state.app.relateApiToken,
     neo4jDesktopGraphAppId: state.app.neo4jDesktopGraphAppId,
     relateUrl: state.app.relateUrl
