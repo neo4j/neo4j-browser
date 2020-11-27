@@ -57,7 +57,7 @@ export const getInitialNodeDisplay = (state: any) =>
   state[NAME].initialNodeDisplay || initialState.initialNodeDisplay
 export const getScrollToTop = (state: any) => state[NAME].scrollToTop
 export const getZoomOnSmallFrames = (state: any) =>
-  state[NAME].zoomOnSmallFrames
+  state[NAME]?.zoomOnSmallFrames
 export const shouldReportUdc = (state: any) =>
   state[NAME].shouldReportUdc !== false
 export const shouldAutoComplete = (state: any) =>

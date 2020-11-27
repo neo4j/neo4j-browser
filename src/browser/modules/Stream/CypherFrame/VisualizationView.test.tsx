@@ -20,6 +20,8 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
 import neo4j from 'neo4j-driver'
 import { Visualization } from './VisualizationView'
 
@@ -33,12 +35,18 @@ const mockResult = {
   records: [{ keys: ['0'], __fields: [node], get: (_key: any) => node }]
 }
 
+function renderWithRedux(children: any) {
+  return render(
+    <Provider store={createStore(() => ({}), {}) as any}>{children}</Provider>
+  )
+}
+
 test('Visualization renders', () => {
   const { container } = render(<Visualization result={mockEmptyResult} />)
   expect(container).toMatchSnapshot()
 })
 test('Visualization renders with result and escapes any HTML', () => {
-  const { container } = render(
+  const { container } = renderWithRedux(
     <Visualization updateStyle={() => {}} autoComplete result={mockResult} />
   )
   expect(container).toMatchSnapshot()

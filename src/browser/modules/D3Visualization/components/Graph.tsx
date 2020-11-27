@@ -31,7 +31,7 @@ import graphView from '../lib/visualization/components/graphView'
 
 type State = any
 
-class Graph extends Component<any, State> {
+class GraphComp extends Component<any, State> {
   graph: any
   graphEH: any
   graphView: any
@@ -174,4 +174,4 @@ const mapStateToProps = (state: any) => ({
   zoomOnSmallFrames: getZoomOnSmallFrames(state)
 })
 
-export const GraphComponent = connect(mapStateToProps)(Graph)
+export const GraphComponent = connect(mapStateToProps)(GraphComp)
