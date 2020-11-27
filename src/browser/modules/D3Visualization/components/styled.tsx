@@ -362,7 +362,6 @@ export const StyledZoomHolder = styled.div`
 export const StyledZoomButton = styled.button`
   display: list-item;
   list-style-type: none;
-  font-size: 2em;
   margin-bottom: 10px;
   border: none;
   color: #9b9da2;

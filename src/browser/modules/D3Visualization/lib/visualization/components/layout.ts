@@ -58,8 +58,8 @@ const layout = {
 
         const accelerateLayout = function() {
           let maxStepsPerTick = 100
-          const maxAnimationFramesPerSecond = 60
-          const maxComputeTime = 1000 / maxAnimationFramesPerSecond
+          const maxAnimationSmallFramesPerSecond = 60
+          const maxComputeTime = 1000 / maxAnimationSmallFramesPerSecond
           const now =
             window.performance && window.performance.now
               ? () => window.performance.now()

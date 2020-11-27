@@ -127,6 +127,13 @@ const visualSettings = [
           tooltip: 'Automatically scroll stream to top on new frames.',
           type: 'checkbox'
         }
+      },
+      {
+        zoomOnSmallFrames: {
+          displayName: 'Zoom on Small Frames',
+          tooltip: 'Show zoom buttons on non-fullscreen frames.',
+          type: 'checkbox'
+        }
       }
     ]
   },
