@@ -217,13 +217,6 @@ function FrameTitlebar(props: FrameTitleBarProps) {
             setHistory([...history, value])
           }}
           value={editorValue}
-          options={{
-            lineNumbers: 'off',
-            glyphMargin: false,
-            folding: false,
-            lineDecorationsWidth: 0,
-            lineNumbersMinChars: 0 // check if these are needed
-          }}
           customStyle={{ border: 'none' }}
         />
       </FrameTitleEditorContainer>
