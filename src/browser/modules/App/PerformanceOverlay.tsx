@@ -42,46 +42,50 @@ function PerformanceOverlay({
   const limit = 100
 
   useEffect(() => {
-    const tick = perfTracker()
+    if (shouldShow) {
+      const tick = perfTracker()
 
-    let requestId = requestAnimationFrame(function loop() {
-      tick((fps: number) => {
-        updateStats('fps', fps)
+      let requestId = requestAnimationFrame(function loop() {
+        tick((fps: number) => {
+          updateStats('fps', fps)
 
-        samples.current = [fps, ...samples.current]
-        if (samples.current.length > limit) {
-          samples.current = samples.current.slice(0, limit)
-        }
-        updateStats('minFps', Math.min(...samples.current))
+          samples.current = [fps, ...samples.current]
+          if (samples.current.length > limit) {
+            samples.current = samples.current.slice(0, limit)
+          }
+          updateStats('minFps', Math.min(...samples.current))
 
-        const add = (a: number, b: number) => a + b
-        updateStats(
-          'meanFps',
-          samples.current.reduce(add, 0) / samples.current.length
-        )
+          const add = (a: number, b: number) => a + b
+          updateStats(
+            'meanFps',
+            samples.current.reduce(add, 0) / samples.current.length
+          )
 
-        const memory: { usedJSHeapSize: number; jsHeapSizeLimit: number } =
-          // @ts-ignore chrome only field
-          performance.memory
+          const memory: { usedJSHeapSize: number; jsHeapSizeLimit: number } =
+            // @ts-ignore chrome only field
+            performance.memory
 
-        if (memory) {
-          const { usedJSHeapSize, jsHeapSizeLimit } = memory
-          const percentageMemoryUsed = `${(
-            (100 * usedJSHeapSize) /
-            jsHeapSizeLimit
-          ).toFixed(2)}%`
-          updateStats('percentOfTotalMemUsed', percentageMemoryUsed)
+          if (memory) {
+            const { usedJSHeapSize, jsHeapSizeLimit } = memory
+            const percentageMemoryUsed = `${(
+              100 *
+              (usedJSHeapSize / jsHeapSizeLimit)
+            ).toFixed(2)}%`
+            updateStats('percentOfTotalMemUsed', percentageMemoryUsed)
 
-          const bytesInMegaByte = 1048576
-          const MBused = usedJSHeapSize / bytesInMegaByte
-          updateStats('memUsage', `${MBused.toFixed(2)}MB`)
-        }
+            const bytesInMegaByte = 1048576
+            const MBused = usedJSHeapSize / bytesInMegaByte
+            updateStats('memUsage', `${MBused.toFixed(2)}MB`)
+          }
+        })
+
+        requestId = requestAnimationFrame(loop)
       })
-
-      requestId = requestAnimationFrame(loop)
-    })
-    return () => cancelAnimationFrame(requestId)
-  }, [])
+      return () => cancelAnimationFrame(requestId)
+    } else {
+      return undefined
+    }
+  }, [shouldShow])
 
   function dumpStats() {
     console.log(['fps', ...samples.current].join('\n'))
