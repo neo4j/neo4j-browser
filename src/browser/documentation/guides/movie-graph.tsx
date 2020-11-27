@@ -46,33 +46,9 @@ const slides = [
       </ol>
       <p></p>
       <p>
-        WARNING: This guide will modify the data in the currently active
+        <b>WARNING:</b> This guide will modify the data in the currently active
         database.{' '}
       </p>
-      <div>
-        If you don't want to modify your data:
-        <ol>
-          <li>
-            Switch to system database{' '}
-            <TextCommand command={'use system'}></TextCommand>
-          </li>
-          <li>
-            Create a new database called movies{' '}
-            <pre
-              // @ts-expect-error ts-migrate(2322) FIXME: Property 'mode' does not exist on type 'DetailedHT... Remove this comment to see the full error message
-              mode="cypher"
-              className="pre-scrollable code runnable"
-              style={{ width: 'fit-content' }}
-            >
-              create database movies
-            </pre>
-          </li>
-          <li>
-            Switch to the new movies database{' '}
-            <TextCommand command={'use movies'}></TextCommand>
-          </li>
-        </ol>
-      </div>
     </div>
   </Slide>,
   <Slide key="s2">
