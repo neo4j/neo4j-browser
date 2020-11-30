@@ -19,12 +19,11 @@
  */
 
 import styled from 'styled-components'
-import { animated } from 'react-spring'
 import { dim } from 'browser-styles/constants'
 
 type FullscreenProps = { fullscreen: boolean }
 
-export const StyledFrame = styled(animated.article)<FullscreenProps>`
+export const StyledFrame = styled.article<FullscreenProps>`
   width: auto;
   background-color: ${props => props.theme.secondaryBackground};
   border: ${props => props.theme.frameBorder};
@@ -160,7 +159,6 @@ export const StyledFrameTitlebarButtonSection = styled.ul`
 `
 
 export const StyledFrameTitleBar = styled.div`
-  height: ${dim.frameTitlebarHeight}px;
   border-bottom: transparent;
   line-height: ${dim.frameTitlebarHeight}px;
   color: ${props => props.theme.frameTitlebarText};

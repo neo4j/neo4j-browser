@@ -95,7 +95,6 @@ function addFrame(state: FramesState, newState: Frame) {
       }
     }
   } else {
-    console.log(allIds, newState)
     allIds = insertIntoAllIds(state, allIds, newState)
   }
   return ensureFrameLimit({
