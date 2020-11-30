@@ -218,23 +218,28 @@ const availableCommands = [
           (db: any) => db.name.toLowerCase() === cleanDbName
         )
 
-        function UseDbError({ code, message }: any) {
-          // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-          this.code = code
-          // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-          this.message = message
+        class UseDbError extends Error {
+          code: string
+          message: string
+
+          constructor(
+            { code, message }: { code: string; message: string },
+            ...params: any[]
+          ) {
+            super(...params)
+            this.code = code
+            this.message = message
+          }
         }
 
         // Do we have a db with that name?
         if (!dbMeta) {
-          // @ts-expect-error ts-migrate(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
           throw new UseDbError({
             code: 'NotFound',
             message: `A database with the "${dbName}" name could not be found.`
           })
         }
         if (dbMeta.status !== 'online') {
-          // @ts-expect-error ts-migrate(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
           throw new UseDbError({
             code: 'DatabaseUnavailable',
             message: `Database "${dbName}" is unavailable, its status is "${dbMeta.status}."`
@@ -495,10 +500,13 @@ const availableCommands = [
       // We have a frame that generated this command
       if (action.id) {
         const originFrame = frames.getFrame(store.getState(), action.id)
-        // Only replace when the origin is a help frame
+        // Only replace when the origin is a play frame or the frame is reused
         if (originFrame) {
           const latest = getLatestFromFrameStack(originFrame)
-          if (latest && PLAY_FRAME_TYPES.includes(latest.type)) {
+          if (
+            (latest && PLAY_FRAME_TYPES.includes(latest.type)) ||
+            action.isRerun
+          ) {
             id = action.id
           }
         } else {
@@ -554,10 +562,13 @@ const availableCommands = [
       // We have a frame that generated this command
       if (action.id) {
         const originFrame = frames.getFrame(store.getState(), action.id)
-        // Only replace when the origin is a help frame
+        // Only replace when the origin is a play frame or the frame is reused
         if (originFrame) {
           const latest = getLatestFromFrameStack(originFrame)
-          if (latest && PLAY_FRAME_TYPES.includes(latest.type)) {
+          if (
+            (latest && PLAY_FRAME_TYPES.includes(latest.type)) ||
+            action.isRerun
+          ) {
             id = action.id
           }
         } else {
@@ -632,10 +643,10 @@ const availableCommands = [
       // We have a frame that generated this command
       if (action.id) {
         const originFrame = frames.getFrame(store.getState(), action.id)
-        // Only replace when the origin is a help frame
+        // Only replace when the origin is a help frame or re-run command
         if (originFrame) {
           const latest = getLatestFromFrameStack(originFrame)
-          if (latest && latest.type === HELP_FRAME_TYPE) {
+          if ((latest && latest.type === HELP_FRAME_TYPE) || action.isRerun) {
             id = action.id
           }
         } else {
@@ -643,6 +654,7 @@ const availableCommands = [
           id = v4()
         }
       }
+
       put(
         frames.add({
           useDb: getUseDb(store.getState()),
@@ -784,7 +796,7 @@ const availableCommands = [
         const url = param.startsWith('http') ? param : `http://${param}`
         const allowlist = getRemoteContentHostnameAllowlist(store.getState())
 
-        fetchRemoteGrass(param, allowlist)
+        fetchRemoteGrass(url, allowlist)
           .then(response => {
             const parsedGrass = parseGrass(response)
             if (parsedGrass) {

@@ -191,6 +191,7 @@ export const FrameTitleEditorContainer = styled.div`
   padding-top: 3px;
   margin: 3px 5px 3px 3px;
 
+  width: 0; // Prevents the editor from growing past flex-grow: 1
   flex-grow: 1;
   display: flex;
 

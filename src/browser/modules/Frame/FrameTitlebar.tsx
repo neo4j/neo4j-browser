@@ -102,7 +102,7 @@ type FrameTitleBarProps = FrameTitleBarBaseProps & {
   newProjectFile: (cmd: string) => void
   onCloseClick: (a: any, b: any, c: any) => void
   onRunClick: () => void
-  onReRunClick: (obj: Frame, cmd: string) => void
+  reRun: (obj: Frame, cmd: string) => void
   togglePinning: (id: string, isPinned: boolean) => void
   bus: Bus
 }
@@ -196,6 +196,11 @@ function FrameTitlebar(props: FrameTitleBarProps) {
 
     return frame.type === 'history' && arrayHasItems(frame.result)
   }
+  function run(cmd: string) {
+    console.log(frame, cmd)
+    props.reRun(frame, cmd)
+    setHistory([...history, cmd])
+  }
 
   const { frame = {} } = props
   const fullscreenIcon = props.fullscreen ? <ContractIcon /> : <ExpandIcon />
@@ -212,14 +217,16 @@ function FrameTitlebar(props: FrameTitleBarProps) {
           bus={props.bus}
           theme={'normal'}
           onChange={setEditorValue}
-          onExecute={value => {
-            props.onReRunClick(frame, value)
-            setHistory([...history, value])
-          }}
+          onExecute={run}
           value={editorValue}
           customStyle={{ border: 'none' }}
         />
       </FrameTitleEditorContainer>
+      <Render if={frame.type !== 'edit'}>
+        <FrameButton data-testid="rerunFrameButton" title="Rerun" onClick={run}>
+          <RunIcon />
+        </FrameButton>
+      </Render>
       <StyledFrameTitlebarButtonSection>
         <FrameButton
           title="Save as Favorite"
@@ -238,15 +245,6 @@ function FrameTitlebar(props: FrameTitleBarProps) {
             }}
           >
             <SaveFile />
-          </FrameButton>
-        </Render>
-        <Render if={frame.type !== 'edit'}>
-          <FrameButton
-            data-testid="rerunFrameButton"
-            title="Rerun"
-            onClick={() => props.onReRunClick(frame, editorValue)}
-          >
-            <RunIcon />
           </FrameButton>
         </Render>
         <Render if={canExport()}>
@@ -364,7 +362,7 @@ const mapDispatchToProps = (
     },
     // TODO styling is off for framesize
     // TODO look closer into  frame vs frame-stack. reusing with guides is buggy. also. server disconnect is weird.
-    onReRunClick: ({ useDb, id, requestId }: Frame, cmd: string) => {
+    reRun: ({ useDb, id, requestId }: Frame, cmd: string) => {
       if (requestId) {
         dispatch(cancelRequest(requestId))
       }
