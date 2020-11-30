@@ -24,6 +24,5 @@ Object {
   "theme": "auto",
   "useBoltRouting": false,
   "useCypherThread": true,
-  "zoomOnSmallFrames": false,
 }
 `;

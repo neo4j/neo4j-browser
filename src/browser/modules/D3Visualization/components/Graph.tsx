@@ -19,19 +19,17 @@
  */
 
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import { createGraph, mapRelationships, getGraphStats } from '../mapper'
 import { GraphEventHandler } from '../GraphEventHandler'
 import '../lib/visualization/index'
 import { dim } from 'browser-styles/constants'
 import { StyledZoomHolder, StyledSvgWrapper, StyledZoomButton } from './styled'
 import { ZoomInIcon, ZoomOutIcon } from 'browser-components/icons/Icons'
-import { getZoomOnSmallFrames } from 'shared/modules/settings/settingsDuck'
 import graphView from '../lib/visualization/components/graphView'
 
 type State = any
 
-class GraphComp extends Component<any, State> {
+export class GraphComponent extends Component<any, State> {
   graph: any
   graphEH: any
   graphView: any
@@ -135,29 +133,26 @@ class GraphComp extends Component<any, State> {
   }
 
   zoomButtons() {
-    if (this.props.fullscreen || this.props.zoomOnSmallFrames) {
-      return (
-        <StyledZoomHolder>
-          <StyledZoomButton
-            className={
-              this.state.zoomInLimitReached ? 'faded zoom-in' : 'zoom-in'
-            }
-            onClick={this.zoomInClicked.bind(this)}
-          >
-            <ZoomInIcon regulateSize={this.props.fullscreen ? 2 : 1} />
-          </StyledZoomButton>
-          <StyledZoomButton
-            className={
-              this.state.zoomOutLimitReached ? 'faded zoom-out' : 'zoom-out'
-            }
-            onClick={this.zoomOutClicked.bind(this)}
-          >
-            <ZoomOutIcon regulateSize={this.props.fullscreen ? 2 : 1} />
-          </StyledZoomButton>
-        </StyledZoomHolder>
-      )
-    }
-    return null
+    return (
+      <StyledZoomHolder>
+        <StyledZoomButton
+          className={
+            this.state.zoomInLimitReached ? 'faded zoom-in' : 'zoom-in'
+          }
+          onClick={this.zoomInClicked.bind(this)}
+        >
+          <ZoomInIcon regulateSize={this.props.fullscreen ? 2 : 1} />
+        </StyledZoomButton>
+        <StyledZoomButton
+          className={
+            this.state.zoomOutLimitReached ? 'faded zoom-out' : 'zoom-out'
+          }
+          onClick={this.zoomOutClicked.bind(this)}
+        >
+          <ZoomOutIcon regulateSize={this.props.fullscreen ? 2 : 1} />
+        </StyledZoomButton>
+      </StyledZoomHolder>
+    )
   }
 
   render() {
@@ -169,9 +164,3 @@ class GraphComp extends Component<any, State> {
     )
   }
 }
-
-const mapStateToProps = (state: any) => ({
-  zoomOnSmallFrames: getZoomOnSmallFrames(state)
-})
-
-export const GraphComponent = connect(mapStateToProps)(GraphComp)

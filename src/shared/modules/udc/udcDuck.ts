@@ -228,7 +228,6 @@ export const udcStartupEpic = (action$: any, store: any) =>
         'maxFieldItems',
         'autoComplete',
         'scrollToTop',
-        'zoomOnSmallFrames',
         'maxFrames',
         'codeFontLigatures',
         'editorAutocomplete',

@@ -56,8 +56,6 @@ export const getMaxFieldItems = (state: any) =>
 export const getInitialNodeDisplay = (state: any) =>
   state[NAME].initialNodeDisplay || initialState.initialNodeDisplay
 export const getScrollToTop = (state: any) => state[NAME].scrollToTop
-export const getZoomOnSmallFrames = (state: any) =>
-  state[NAME]?.zoomOnSmallFrames
 export const shouldReportUdc = (state: any) =>
   state[NAME].shouldReportUdc !== false
 export const shouldAutoComplete = (state: any) =>
@@ -99,7 +97,6 @@ const initialState = {
   shouldReportUdc: true,
   autoComplete: true,
   scrollToTop: true,
-  zoomOnSmallFrames: false,
   maxFrames: 30,
   codeFontLigatures: true,
   editorAutocomplete: true,
