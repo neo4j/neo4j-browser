@@ -221,7 +221,11 @@ function FrameTitlebar(props: FrameTitleBarProps) {
         />
       </FrameTitleEditorContainer>
       <Render if={frame.type !== 'edit'}>
-        <FrameButton data-testid="rerunFrameButton" title="Rerun" onClick={run}>
+        <FrameButton
+          data-testid="rerunFrameButton"
+          title="Rerun"
+          onClick={() => run(editorValue)}
+        >
           <RunIcon />
         </FrameButton>
       </Render>
