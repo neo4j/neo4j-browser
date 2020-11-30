@@ -19,7 +19,7 @@
  */
 
 import { connect } from 'react-redux'
-import React, { PureComponent } from 'react'
+import React, { memo, useRef, useEffect } from 'react'
 import { StyledStream, Padding } from './styled'
 
 import CypherFrame from './CypherFrame/index'
@@ -98,46 +98,46 @@ export interface BaseFrameProps {
   stack: Frame[]
 }
 
-class Stream extends PureComponent<StreamProps> {
-  base = React.createRef<HTMLDivElement>()
+function Stream(props: StreamProps): JSX.Element {
+  const base = useRef<HTMLDivElement>(null)
+  const lastFrameCount = useRef(0)
 
-  componentDidUpdate(prevProps: StreamProps) {
+  useEffect(() => {
     // If we want to scroll to top when a new frame is added
     if (
-      prevProps.frames.length < this.props.frames.length &&
-      this.props.shouldScrollToTop &&
-      this.base &&
-      this.base.current
+      lastFrameCount.current < props.frames.length &&
+      props.shouldScrollToTop &&
+      base.current
     ) {
-      this.base.current.scrollTop = 0
+      base.current.scrollTop = 0
     }
-  }
 
-  render() {
-    return (
-      <StyledStream ref={this.base} data-testid="stream">
-        {this.props.frames.map(frameObject => {
-          const frame = frameObject.stack[0]
+    lastFrameCount.current = props.frames.length
+  })
 
-          // TODO
-          // why not send the frame obj instead of the stack and moving ispinned?
-          const frameProps: BaseFrameProps = {
-            frame: { ...frame, isPinned: frameObject.isPinned },
-            activeConnectionData: this.props.activeConnectionData,
-            stack: frameObject.stack
-          }
+  return (
+    <StyledStream ref={base} data-testid="stream">
+      {props.frames.map(frameObject => {
+        const frame = frameObject.stack[0]
 
-          const MyFrame =
-            frame.cmd.slice(1).toLowerCase() === 'snake'
-              ? SnakeFrame
-              : getFrame(frame.type)
+        // TODO
+        // why not send the frame obj instead of the stack and moving ispinned?
+        const frameProps: BaseFrameProps = {
+          frame: { ...frame, isPinned: frameObject.isPinned },
+          activeConnectionData: props.activeConnectionData,
+          stack: frameObject.stack
+        }
 
-          return <MyFrame {...frameProps} key={frame.id} />
-        })}
-        <Padding />
-      </StyledStream>
-    )
-  }
+        const MyFrame =
+          frame.cmd.slice(1).toLowerCase() === 'snake'
+            ? SnakeFrame
+            : getFrame(frame.type)
+
+        return <MyFrame {...frameProps} key={frame.id} />
+      })}
+      <Padding />
+    </StyledStream>
+  )
 }
 
 const mapStateToProps = (state: any) => ({
@@ -146,4 +146,4 @@ const mapStateToProps = (state: any) => ({
   shouldScrollToTop: getScrollToTop(state)
 })
 
-export default connect(mapStateToProps)(Stream)
+export default connect(mapStateToProps)(memo(Stream))

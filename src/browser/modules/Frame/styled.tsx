@@ -19,11 +19,12 @@
  */
 
 import styled from 'styled-components'
+import { animated } from 'react-spring'
 import { dim } from 'browser-styles/constants'
 
 type FullscreenProps = { fullscreen: boolean }
 // Frames
-export const StyledFrame = styled.article<FullscreenProps>`
+export const StyledFrame = styled(animated.article)<FullscreenProps>`
   width: auto;
   background-color: ${props => props.theme.secondaryBackground};
   border: ${props => props.theme.frameBorder};
