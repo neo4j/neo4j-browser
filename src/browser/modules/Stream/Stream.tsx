@@ -20,7 +20,9 @@
 
 import { connect } from 'react-redux'
 import React, { memo, useRef, useEffect } from 'react'
+import { animated, useTransition } from 'react-spring'
 import { StyledStream, Padding } from './styled'
+import { dim } from 'browser-styles/constants'
 
 import CypherFrame from './CypherFrame/index'
 import HistoryFrame from './HistoryFrame'
@@ -115,9 +117,22 @@ function Stream(props: StreamProps): JSX.Element {
     lastFrameCount.current = props.frames.length
   })
 
+  const transitions = useTransition(props.frames, frame => frame.stack[0].id, {
+    from: {
+      transform: `translate(0, -${dim.frameBodyHeight}px)`,
+      maxHeight: '0vh',
+      opacity: 0.5
+    },
+    enter: {
+      transform: 'translate(0,0)',
+      maxHeight: '500px' /* greater than any used frame height */,
+      opacity: 1
+    }
+  })
+
   return (
     <StyledStream ref={base} data-testid="stream">
-      {props.frames.map(frameObject => {
+      {transitions.map(({ item: frameObject, key, props: styleProps }) => {
         const frame = frameObject.stack[0]
 
         // TODO
@@ -133,7 +148,11 @@ function Stream(props: StreamProps): JSX.Element {
             ? SnakeFrame
             : getFrame(frame.type)
 
-        return <MyFrame {...frameProps} key={frame.id} />
+        return (
+          <animated.div key={key} style={styleProps}>
+            <MyFrame {...frameProps} />
+          </animated.div>
+        )
       })}
       <Padding />
     </StyledStream>
