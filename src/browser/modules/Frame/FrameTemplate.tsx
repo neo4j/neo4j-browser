@@ -18,9 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
+import { Frame } from 'shared/modules/stream/streamDuck'
 import FrameTitlebar from './FrameTitlebar'
-import Render from 'browser-components/Render'
+
 import {
   StyledFrame,
   StyledFrameBody,
@@ -30,137 +31,137 @@ import {
   StyledFrameAside
 } from './styled'
 
-type State = any
+type FrameTemplateProps = {
+  contents: JSX.Element | null | string
+  header?: Frame
+  className?: string
+  onResize?: (fullscreen: boolean, collapsed: boolean, height?: number) => void
+  numRecords?: number
+  getRecords?: () => any
+  visElement?: any
+  runQuery?: () => any
+  sidebar?: () => JSX.Element | null
+  aside?: JSX.Element | null
+  statusbar?: JSX.Element | null
+}
 
-class FrameTemplate extends Component<any, State> {
-  frameContentElement: any
-  constructor(props: {}) {
-    super(props)
-    this.state = {
-      fullscreen: false,
-      collapse: false,
-      pinned: false,
-      lastHeight: 10
+// TODO Resize callback only used in cypher frame, extra ögon på att detta inte har fel
+
+function FrameTemplate({
+  header,
+  contents,
+  onResize = () => {
+    /*noop*/
+  },
+  className,
+  numRecords = 0,
+  getRecords,
+  visElement,
+  runQuery,
+  sidebar,
+  aside,
+  statusbar
+}: FrameTemplateProps): JSX.Element {
+  const [lastHeight, setLastHeight] = useState(10)
+  const frameContentElementRef = useRef<any>(null)
+
+  const {
+    isFullscreen,
+    isCollapsed,
+    isPinned,
+    toggleFullScreen,
+    toggleCollapse,
+    togglePin
+  } = useSizeToggles()
+
+  useEffect(() => {
+    if (!frameContentElementRef.current?.clientHeight) return
+    const currHeight = frameContentElementRef.current.clientHeight
+    if (currHeight < 300) return // No need to report a transition
+
+    if (lastHeight !== currHeight) {
+      onResize(isFullscreen, isCollapsed, currHeight)
+      setLastHeight(currHeight)
     }
+  }, [lastHeight, isPinned, isFullscreen, isCollapsed, onResize])
+
+  const classNames = []
+  if (className) {
+    classNames.push(className)
+  }
+  if (isFullscreen) {
+    classNames.push('is-fullscreen')
   }
 
-  toggleFullScreen() {
-    this.setState(
-      { fullscreen: !this.state.fullscreen },
-      () =>
-        this.props.onResize &&
-        this.props.onResize(
-          this.state.fullscreen,
-          this.state.collapse,
-          this.frameContentElement.clientHeight
-        )
-    )
-  }
+  return (
+    <StyledFrame
+      className={classNames.join(' ')}
+      data-testid="frame"
+      fullscreen={isFullscreen}
+    >
+      {header && (
+        <FrameTitlebar
+          frame={header}
+          fullscreen={isFullscreen}
+          fullscreenToggle={toggleFullScreen}
+          collapse={isCollapsed}
+          collapseToggle={toggleCollapse}
+          pinned={isPinned}
+          togglePin={togglePin}
+          numRecords={numRecords}
+          getRecords={getRecords}
+          visElement={visElement}
+          runQuery={runQuery}
+        />
+      )}
 
-  toggleCollapse() {
-    this.setState(
-      { collapse: !this.state.collapse },
-      () =>
-        this.props.onResize &&
-        this.props.onResize(
-          this.state.fullscreen,
-          this.state.collapse,
-          this.state.lastHeight
-        )
-    )
-  }
-
-  togglePin() {
-    this.setState(
-      { pinned: !this.state.pinned },
-      () =>
-        this.props.onResize &&
-        this.props.onResize(
-          this.state.fullscreen,
-          this.state.collapse,
-          this.state.lastHeight
-        )
-    )
-  }
-
-  componentDidUpdate() {
-    if (this.frameContentElement.clientHeight < 300) return // No need to report a transition
-    if (
-      this.frameContentElement &&
-      this.state.lastHeight !== this.frameContentElement.clientHeight
-    ) {
-      this.props.onResize &&
-        this.props.onResize(
-          this.state.fullscreen,
-          this.state.collapse,
-          this.frameContentElement.clientHeight
-        )
-      this.setState({ lastHeight: this.frameContentElement.clientHeight })
-    }
-  }
-
-  setFrameContentElement = (el: any) => {
-    this.frameContentElement = el
-  }
-
-  render() {
-    const { className } = this.props
-    const classNames = []
-    if (className) {
-      classNames.push(className)
-    }
-    if (this.state.fullscreen) {
-      classNames.push('is-fullscreen')
-    }
-    return (
-      <StyledFrame
-        className={classNames.join(' ')}
-        data-testid="frame"
-        fullscreen={this.state.fullscreen}
-      >
-        {this.props.header && (
-          <FrameTitlebar
-            frame={this.props.header}
-            fullscreen={this.state.fullscreen}
-            fullscreenToggle={this.toggleFullScreen.bind(this)}
-            collapse={this.state.collapse}
-            collapseToggle={this.toggleCollapse.bind(this)}
-            pinned={this.state.pinned}
-            togglePin={this.togglePin.bind(this)}
-            numRecords={this.props.numRecords || 0}
-            getRecords={this.props.getRecords}
-            visElement={this.props.visElement}
-            runQuery={this.props.runQuery}
-          />
-        )}
-        <StyledFrameBody
-          fullscreen={this.state.fullscreen}
-          collapsed={this.state.collapse}
-        >
-          {this.props.sidebar ? this.props.sidebar() : null}
-          {this.props.aside && (
-            <StyledFrameAside>{this.props.aside}</StyledFrameAside>
-          )}
-          <StyledFrameMainSection>
-            <StyledFrameContents
-              fullscreen={this.state.fullscreen}
-              ref={this.setFrameContentElement}
-              data-testid="frameContents"
-            >
-              {this.props.contents}
-            </StyledFrameContents>
-          </StyledFrameMainSection>
-        </StyledFrameBody>
-        <Render if={this.props.statusbar}>
-          <StyledFrameStatusbar
-            fullscreen={this.state.fullscreen}
-            data-testid="frameStatusbar"
+      <StyledFrameBody fullscreen={isFullscreen} collapsed={isCollapsed}>
+        {sidebar && sidebar()}
+        {aside && <StyledFrameAside>{aside}</StyledFrameAside>}
+        <StyledFrameMainSection>
+          <StyledFrameContents
+            fullscreen={isFullscreen}
+            ref={frameContentElementRef}
+            data-testid="frameContents"
           >
-            {this.props.statusbar}
-          </StyledFrameStatusbar>
-        </Render>
-      </StyledFrame>
-    )
+            {contents}
+          </StyledFrameContents>
+        </StyledFrameMainSection>
+      </StyledFrameBody>
+
+      {statusbar && (
+        <StyledFrameStatusbar
+          fullscreen={isFullscreen}
+          data-testid="frameStatusbar"
+        >
+          {statusbar}
+        </StyledFrameStatusbar>
+      )}
+    </StyledFrame>
+  )
+}
+
+function useSizeToggles() {
+  const [isFullscreen, setFullscreen] = useState(false)
+  const [isCollapsed, setCollapsed] = useState(false)
+  const [isPinned, setPinned] = useState(false)
+
+  function toggleFullScreen() {
+    setFullscreen(!isFullscreen)
+  }
+  function toggleCollapse() {
+    setCollapsed(!isCollapsed)
+  }
+  function togglePin() {
+    setPinned(!isPinned)
+  }
+  return {
+    isFullscreen,
+    isCollapsed,
+    isPinned,
+    toggleFullScreen,
+    toggleCollapse,
+    togglePin
   }
 }
 

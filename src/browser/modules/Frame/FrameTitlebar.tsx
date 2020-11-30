@@ -53,7 +53,6 @@ import {
   SaveFile
 } from 'browser-components/icons/Icons'
 import {
-  DottedLineHover,
   DropdownList,
   DropdownContent,
   DropdownButton,
@@ -62,8 +61,7 @@ import {
 import {
   StyledFrameTitleBar,
   StyledFrameTitlebarButtonSection,
-  FrameTitleEditorContainer,
-  CurrentDbText
+  FrameTitleEditorContainer
 } from './styled'
 import {
   downloadPNGFromSVG,

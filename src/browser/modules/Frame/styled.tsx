@@ -18,25 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import styled, { keyframes } from 'styled-components'
+import styled from 'styled-components'
 import { dim } from 'browser-styles/constants'
 
-const rollDownAnimation = keyframes`
-  from {
-    transform: translate(0, -${dim.frameBodyHeight}px);
-    max-height: 0;
-  }
-  to {
-    transform: translateY(0);
-    max-height: 500px; /* Greater than a frame can be */
-  }
-`
 type FullscreenProps = { fullscreen: boolean }
 // Frames
 export const StyledFrame = styled.article<FullscreenProps>`
   width: auto;
   background-color: ${props => props.theme.secondaryBackground};
-  animation: ${rollDownAnimation} 0.4s ease-in;
   border: ${props => props.theme.frameBorder};
 
   ${props =>
