@@ -298,10 +298,8 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
     const draftRef = useRef<string>('')
 
     const viewHistoryPrevious = () => {
-      console.log('handl')
       const localHistory = historyRef.current
       const localHistoryIndex = historyIndexRef.current
-      console.log(localHistory, localHistoryIndex)
 
       if (!localHistory.length) return
       if (localHistoryIndex + 1 === localHistory.length) return

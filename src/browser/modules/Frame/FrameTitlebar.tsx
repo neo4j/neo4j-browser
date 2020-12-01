@@ -19,7 +19,7 @@
  */
 
 import { connect } from 'react-redux'
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { withBus } from 'react-suber'
 import { saveAs } from 'file-saver'
 import { map } from 'lodash-es'
@@ -75,7 +75,7 @@ import {
 import { csvFormat, stringModifier } from 'services/bolt/cypherTypesFormatting'
 import arrayHasItems from 'shared/utils/array-has-items'
 import { stringifyMod } from 'services/utils'
-import Monaco from '../Editor/Monaco'
+import Monaco, { MonacoHandles } from '../Editor/Monaco'
 import { Bus } from 'suber'
 
 // Remove comments in editor?
@@ -108,6 +108,14 @@ type FrameTitleBarProps = FrameTitleBarBaseProps & {
 function FrameTitlebar(props: FrameTitleBarProps) {
   const [editorValue, setEditorValue] = useState(props.frame.cmd)
   const [history, setHistory] = useState<string[]>([])
+  const editorRef = useRef<MonacoHandles>(null)
+
+  useEffect(() => {
+    /* Keep focus when new frame type is rendered */
+    if (props.frame.isRerun) {
+      editorRef.current?.focus()
+    }
+  }, [props.frame])
 
   function hasData() {
     return props.numRecords > 0
@@ -217,6 +225,7 @@ function FrameTitlebar(props: FrameTitleBarProps) {
           onExecute={run}
           value={editorValue}
           customStyle={{ border: 'none' }}
+          ref={editorRef}
         />
       </FrameTitleEditorContainer>
       <Render if={frame.type !== 'edit'}>

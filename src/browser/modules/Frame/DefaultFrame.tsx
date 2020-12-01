@@ -20,7 +20,7 @@
 import React from 'react'
 import FrameTemplate from './FrameTemplate'
 
-const Frame = ({ frame }: any) => {
+const DefaultFrame = ({ frame }: any): JSX.Element => {
   const errors = frame.errors || false
   const contents = frame.contents || false
   let frameContents = contents
@@ -33,6 +33,7 @@ const Frame = ({ frame }: any) => {
   } else if (frame.type === 'unknown') {
     frameContents = 'Unknown command'
   }
+
   return <FrameTemplate header={frame} contents={frameContents} />
 }
-export default Frame
+export default DefaultFrame
