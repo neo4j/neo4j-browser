@@ -127,14 +127,17 @@ function Stream(props: StreamProps): JSX.Element {
       transform: 'translate(0,0)',
       maxHeight: '500px' /* greater than any used frame height */,
       opacity: 1
+    },
+    leave: {
+      opacity: 0
     }
   })
-  transitions
 
   return (
     <StyledStream ref={base} data-testid="stream">
-      {//transitions.map(({ item: frameObject, key, props: styleProps }) => {
-      props.frames.map(frameObject => {
+      {transitions.map(({ item: frameObject, key, props: styleProps }) => {
+        //{props.frames.map(frameObject => {
+        // transitions
         const frame = frameObject.stack[0]
 
         // TODO
@@ -151,9 +154,10 @@ function Stream(props: StreamProps): JSX.Element {
             : getFrame(frame.type)
 
         return (
-          //  <animated.div key={key} style={styleProps}>
-          <MyFrame key={frame.id} {...frameProps} />
-          // </animated.div>
+          <animated.div key={key} style={styleProps}>
+            <MyFrame {...frameProps} />
+          </animated.div>
+          // <MyFrame key={frame.id} {...frameProps} />
         )
       })}
       <Padding />
