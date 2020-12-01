@@ -19,7 +19,7 @@
  */
 
 import { connect } from 'react-redux'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { withBus } from 'react-suber'
 import { saveAs } from 'file-saver'
 import { map } from 'lodash-es'
@@ -78,7 +78,7 @@ import { stringifyMod } from 'services/utils'
 import Monaco, { MonacoHandles } from '../Editor/Monaco'
 import { Bus } from 'suber'
 
-// Remove comments in editor?
+// TODO Remove comments in editor?
 type FrameTitleBarBaseProps = {
   frame: any
   fullscreen: boolean
@@ -110,18 +110,32 @@ function FrameTitlebar(props: FrameTitleBarProps) {
   const [history, setHistory] = useState<string[]>([])
   const editorRef = useRef<MonacoHandles>(null)
 
-  useEffect(() => {
-    /* Keep focus when new frame type is rendered */
+  /* When the frametype is changed the titlebar is unmounted
+  and replaced with a new instance. This means focus cursor position are lost.
+  To regain editor focus we run an effect dependant on the isRerun prop.
+  However, when the frame prop changes in some way the effect is retriggered
+  although the "isRun" is still true. Use effect does not check for equality
+  but instead re-runs the effect to take focus again. To prevent this
+  we use the useCallback hook as well. As a best effort we set the cursor position
+  to be at the end of the query.
+
+  A better solution is to change the frame titlebar to reside outside of the 
+  frame contents.
+  */
+
+  const gainFocusCallback = useCallback(() => {
     if (props.frame.isRerun) {
       editorRef.current?.focus()
+      editorRef.current?.setPosition({ lineNumber: 999, column: 999 })
     }
-  }, [props.frame])
+  }, [props.frame.isRerun])
+  useEffect(gainFocusCallback, [gainFocusCallback])
 
   function hasData() {
     return props.numRecords > 0
   }
+
   // TODO Ecport these functinos to util file.
-  // CSS is messed up for reusable frame
   // there's something odd in the dataflow. simplify FrameProps
 
   function exportCSV(records: any) {

@@ -129,10 +129,12 @@ function Stream(props: StreamProps): JSX.Element {
       opacity: 1
     }
   })
+  transitions
 
   return (
     <StyledStream ref={base} data-testid="stream">
-      {transitions.map(({ item: frameObject, key, props: styleProps }) => {
+      {//transitions.map(({ item: frameObject, key, props: styleProps }) => {
+      props.frames.map(frameObject => {
         const frame = frameObject.stack[0]
 
         // TODO
@@ -149,9 +151,9 @@ function Stream(props: StreamProps): JSX.Element {
             : getFrame(frame.type)
 
         return (
-          <animated.div key={key} style={styleProps}>
-            <MyFrame {...frameProps} />
-          </animated.div>
+          //  <animated.div key={key} style={styleProps}>
+          <MyFrame key={frame.id} {...frameProps} />
+          // </animated.div>
         )
       })}
       <Padding />

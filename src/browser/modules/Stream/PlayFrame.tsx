@@ -50,7 +50,7 @@ const checkHtmlForSlides = (html: any) => {
   return !!slides.length
 }
 
-export function PlayFrame({ stack, bus }: any) {
+export function PlayFrame({ stack, bus }: any): JSX.Element {
   const [stackIndex, setStackIndex] = useState(0)
   const [atSlideStart, setAtSlideStart] = useState<boolean | null>(null)
   const [atSlideEnd, setAtSlideEnd] = useState<boolean | null>(null)
@@ -65,9 +65,10 @@ export function PlayFrame({ stack, bus }: any) {
 
   useEffect(() => {
     stackIndex !== 0 && atSlideEnd && bus && bus.send(LAST_GUIDE_SLIDE)
-  }, [atSlideEnd])
+  }, [stackIndex, bus, atSlideEnd])
 
   useEffect(() => {
+    let stillMounted = true
     async function generate() {
       const shouldUseSlidePointer = initialPlay
       const { guide, aside, hasCarousel, isRemote } = await generateContent(
@@ -76,11 +77,17 @@ export function PlayFrame({ stack, bus }: any) {
         onSlide,
         shouldUseSlidePointer
       )
-      setInitialPlay(false)
-      setGuideObj({ guide, aside, hasCarousel, isRemote })
+      if (stillMounted) {
+        setInitialPlay(false)
+        setGuideObj({ guide, aside, hasCarousel, isRemote })
+      }
     }
     generate()
-  }, [currentFrame])
+
+    return () => {
+      stillMounted = false
+    }
+  }, [bus, initialPlay, currentFrame])
 
   const { guide, aside, hasCarousel, isRemote } = guideObj
 

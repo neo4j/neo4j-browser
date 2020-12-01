@@ -57,6 +57,7 @@ export interface MonacoHandles {
   focus: () => void
   getValue: () => string
   setValue: (value: string) => void
+  setPosition: (position: { lineNumber: number; column: number }) => void
   resize: (fillContainer?: boolean, fixedHeight?: number) => void
 }
 
