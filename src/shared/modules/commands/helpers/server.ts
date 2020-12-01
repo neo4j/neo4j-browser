@@ -70,7 +70,7 @@ function handleUserCommand(action: any, props: any) {
   }
 }
 
-function handleChangePasswordCommand(action: any, _props: any) {
+function handleChangePasswordCommand(action: any) {
   return { ...action, type: 'change-password' }
 }
 

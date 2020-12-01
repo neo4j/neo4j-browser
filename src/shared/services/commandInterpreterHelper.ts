@@ -467,29 +467,33 @@ const availableCommands = [
     name: 'server',
     match: (cmd: any) => /^server(\s)/.test(cmd),
     exec: (action: any, put: any, store: any) => {
+      console.log('action', action, put, store)
       const response = handleServerCommand(action, put, store)
-      if (response && response.then) {
-        response.then((res: any) => {
-          if (res) {
-            put(
-              frames.add({
-                useDb: getUseDb(store.getState()),
-                ...action,
-                ...res
-              })
-            )
-          }
-        })
-      } else if (response) {
-        put(
-          frames.add({
-            useDb: getUseDb(store.getState()),
-            ...action,
-            ...response
+      console.log(response)
+      if (response) {
+        if (response.then) {
+          response.then((res: any) => {
+            if (res) {
+              console.log(res)
+              put(
+                frames.add({
+                  useDb: getUseDb(store.getState()),
+                  ...action,
+                  ...res
+                })
+              )
+            }
           })
-        )
+        } else
+          put(
+            frames.add({
+              useDb: getUseDb(store.getState()),
+              ...action,
+              ...response
+            })
+          )
+        return response
       }
-      return response
     }
   },
   {
