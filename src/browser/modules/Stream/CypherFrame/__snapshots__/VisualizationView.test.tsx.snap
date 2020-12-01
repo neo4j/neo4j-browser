@@ -130,6 +130,26 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
             </g>
           </g>
         </svg>
+        <div
+          class="sc-eHgmQL fbpore"
+        >
+          <button
+            class="sc-cvbbAY ZoyPP faded zoom-in"
+          >
+            <i
+              class="sc-bYSBpT eYFbay sl-zoom-in"
+              style="font-size: 1em;"
+            />
+          </button>
+          <button
+            class="sc-cvbbAY ZoyPP zoom-out"
+          >
+            <i
+              class="sc-elJkPf OBknV sl-zoom-out"
+              style="font-size: 1em;"
+            />
+          </button>
+        </div>
       </div>
       <div
         class="sc-gqjmRU dwJWly status-bar"

@@ -244,17 +244,19 @@ export const ErrorIcon = () => (
   <IconContainer className="fa fa-file-text-o" text="Error" />
 )
 
-export const ZoomInIcon = () => (
+export const ZoomInIcon = (props: any) => (
   <IconContainer
     activeStyle={inactive}
     inactiveStyle={inactive}
+    {...props}
     className="sl-zoom-in"
   />
 )
-export const ZoomOutIcon = () => (
+export const ZoomOutIcon = (props: any) => (
   <IconContainer
     activeStyle={inactive}
     inactiveStyle={inactive}
+    {...props}
     className="sl-zoom-out"
   />
 )

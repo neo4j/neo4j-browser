@@ -133,29 +133,26 @@ export class GraphComponent extends Component<any, State> {
   }
 
   zoomButtons() {
-    if (this.props.fullscreen) {
-      return (
-        <StyledZoomHolder>
-          <StyledZoomButton
-            className={
-              this.state.zoomInLimitReached ? 'faded zoom-in' : 'zoom-in'
-            }
-            onClick={this.zoomInClicked.bind(this)}
-          >
-            <ZoomInIcon />
-          </StyledZoomButton>
-          <StyledZoomButton
-            className={
-              this.state.zoomOutLimitReached ? 'faded zoom-out' : 'zoom-out'
-            }
-            onClick={this.zoomOutClicked.bind(this)}
-          >
-            <ZoomOutIcon />
-          </StyledZoomButton>
-        </StyledZoomHolder>
-      )
-    }
-    return null
+    return (
+      <StyledZoomHolder>
+        <StyledZoomButton
+          className={
+            this.state.zoomInLimitReached ? 'faded zoom-in' : 'zoom-in'
+          }
+          onClick={this.zoomInClicked.bind(this)}
+        >
+          <ZoomInIcon regulateSize={this.props.fullscreen ? 2 : 1} />
+        </StyledZoomButton>
+        <StyledZoomButton
+          className={
+            this.state.zoomOutLimitReached ? 'faded zoom-out' : 'zoom-out'
+          }
+          onClick={this.zoomOutClicked.bind(this)}
+        >
+          <ZoomOutIcon regulateSize={this.props.fullscreen ? 2 : 1} />
+        </StyledZoomButton>
+      </StyledZoomHolder>
+    )
   }
 
   render() {
