@@ -46,8 +46,6 @@ type FrameTemplateProps = {
   statusbar?: JSX.Element | null
 }
 
-// TODO Resize callback only used in cypher frame, extra ögon på att detta inte har fel
-
 function FrameTemplate({
   header,
   contents,

@@ -677,8 +677,6 @@ const availableCommands = [
           })
           const connectionData = getActiveConnectionData(store.getState())
           if (!connectionData) {
-            // TODO
-            // error frame instead?
             throw new Error('No connection')
           }
           const isSameHostnameAsConnection = isLocalRequest(
@@ -688,7 +686,6 @@ const availableCommands = [
               hostnameOnly: true
             }
           )
-          // TODO where does this .restApi come from
           const url =
             !isValidURL(r.url) && connectionData.restApi
               ? `${connectionData.restApi}${r.url}`

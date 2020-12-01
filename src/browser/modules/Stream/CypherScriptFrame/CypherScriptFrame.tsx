@@ -105,8 +105,7 @@ function CypherScriptFrame({
 }
 
 const mapStateToProps = (state: any, ownProps: BaseFrameProps) => {
-  // TODO  when could this happen?
-  // if (!ownProps.frame.statements) return {}
+  if (!ownProps.frame.statements) return {}
   const frames = ownProps.frame.statements
     .map(id => getFrame(state, id).stack[0])
     .reduce(

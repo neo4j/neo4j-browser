@@ -78,7 +78,6 @@ import { stringifyMod } from 'services/utils'
 import Monaco, { MonacoHandles } from '../Editor/Monaco'
 import { Bus } from 'suber'
 
-// TODO Remove comments in editor?
 type FrameTitleBarBaseProps = {
   frame: any
   fullscreen: boolean
@@ -134,9 +133,6 @@ function FrameTitlebar(props: FrameTitleBarProps) {
   function hasData() {
     return props.numRecords > 0
   }
-
-  // TODO Ecport these functinos to util file.
-  // there's something odd in the dataflow. simplify FrameProps
 
   function exportCSV(records: any) {
     const exportData = stringifyResultArray(
@@ -384,8 +380,6 @@ const mapDispatchToProps = (
     onRunClick: () => {
       ownProps.runQuery()
     },
-    // TODO styling is off for framesize
-    // TODO look closer into  frame vs frame-stack. reusing with guides is buggy. also. server disconnect is weird.
     reRun: ({ useDb, id, requestId }: Frame, cmd: string) => {
       if (requestId) {
         dispatch(cancelRequest(requestId))

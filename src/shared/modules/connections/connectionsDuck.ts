@@ -138,7 +138,6 @@ export function isConnected(state: any) {
   return getConnectionState(state) === CONNECTED_STATE
 }
 
-// TODO rename to id
 export function getActiveConnection(state: any): string {
   return state[NAME].activeConnection || initialState.activeConnection
 }

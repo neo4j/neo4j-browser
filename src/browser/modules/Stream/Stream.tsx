@@ -136,12 +136,8 @@ function Stream(props: StreamProps): JSX.Element {
   return (
     <StyledStream ref={base} data-testid="stream">
       {transitions.map(({ item: frameObject, key, props: styleProps }) => {
-        //{props.frames.map(frameObject => {
-        // transitions
         const frame = frameObject.stack[0]
 
-        // TODO
-        // why not send the frame obj instead of the stack and moving ispinned?
         const frameProps: BaseFrameProps = {
           frame: { ...frame, isPinned: frameObject.isPinned },
           activeConnectionData: props.activeConnectionData,
@@ -157,7 +153,6 @@ function Stream(props: StreamProps): JSX.Element {
           <animated.div key={key} style={styleProps}>
             <MyFrame {...frameProps} />
           </animated.div>
-          // <MyFrame key={frame.id} {...frameProps} />
         )
       })}
       <Padding />
