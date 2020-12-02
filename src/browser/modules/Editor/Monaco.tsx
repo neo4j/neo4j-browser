@@ -81,6 +81,7 @@ interface MonacoProps {
   onDisplayHelpKeys?: () => void
   onExecute?: () => void
   useDb?: null | string
+  toggleFullscreen?: () => void
 }
 
 const Monaco = forwardRef<MonacoHandles, MonacoProps>(

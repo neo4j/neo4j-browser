@@ -236,6 +236,7 @@ function FrameTitlebar(props: FrameTitleBarProps) {
           value={editorValue}
           customStyle={{ border: 'none' }}
           ref={editorRef}
+          toggleFullscreen={props.fullscreenToggle}
         />
       </FrameTitleEditorContainer>
       <Render if={frame.type !== 'edit'}>
