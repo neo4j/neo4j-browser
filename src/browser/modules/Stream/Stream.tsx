@@ -20,10 +20,7 @@
 
 import { connect } from 'react-redux'
 import React, { memo, useRef, useEffect } from 'react'
-import { animated, useTransition } from 'react-spring'
-import { StyledStream, Padding } from './styled'
-import { dim } from 'browser-styles/constants'
-
+import { StyledStream, Padding, AnimationContainer } from './styled'
 import CypherFrame from './CypherFrame/index'
 import HistoryFrame from './HistoryFrame'
 import PlayFrame from './PlayFrame'
@@ -117,25 +114,9 @@ function Stream(props: StreamProps): JSX.Element {
     lastFrameCount.current = props.frames.length
   })
 
-  const transitions = useTransition(props.frames, frame => frame.stack[0].id, {
-    from: {
-      transform: `translate(0, -${dim.frameBodyHeight}px)`,
-      maxHeight: '0vh',
-      opacity: 0.5
-    },
-    enter: {
-      transform: 'translate(0,0)',
-      maxHeight: '500px' /* greater than any used frame height */,
-      opacity: 1
-    },
-    leave: {
-      opacity: 0
-    }
-  })
-
   return (
     <StyledStream ref={base} data-testid="stream">
-      {transitions.map(({ item: frameObject, key, props: styleProps }) => {
+      {props.frames.map(frameObject => {
         const frame = frameObject.stack[0]
 
         const frameProps: BaseFrameProps = {
@@ -148,11 +129,10 @@ function Stream(props: StreamProps): JSX.Element {
           frame.cmd.slice(1).toLowerCase() === 'snake'
             ? SnakeFrame
             : getFrame(frame.type)
-
         return (
-          <animated.div key={key} style={styleProps}>
+          <AnimationContainer key={frame.id}>
             <MyFrame {...frameProps} />
-          </animated.div>
+          </AnimationContainer>
         )
       })}
       <Padding />

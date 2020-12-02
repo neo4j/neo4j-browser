@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { dim } from 'browser-styles/constants'
 
 export const StyledStream = styled.div`
@@ -369,4 +369,18 @@ export const StyledHistoryRow = styled.li`
   &:hover {
     background-color: ${props => props.theme.primaryBackground};
   }
+`
+
+const rollDownAnimation = keyframes`
+  from {
+    transform: translate(0, -${dim.frameBodyHeight}px);
+    max-height: 0;
+  }
+  to {
+    transform: translateY(0);
+    max-height: 500px; /* Greater than a frame can be */
+  }
+`
+export const AnimationContainer = styled.div`
+  animation: ${rollDownAnimation} 0.4s ease-in;
 `

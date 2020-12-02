@@ -20,7 +20,6 @@
 
 import React, { useRef, useState, useEffect } from 'react'
 import { Frame } from 'shared/modules/stream/streamDuck'
-import { MonacoHandles } from '../Editor/Monaco'
 import FrameTitlebar from './FrameTitlebar'
 
 import {
