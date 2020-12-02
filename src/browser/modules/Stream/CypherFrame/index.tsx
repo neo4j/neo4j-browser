@@ -123,7 +123,6 @@ export class CypherFrame extends Component<any, CypherFrameState> {
   }
 
   componentDidUpdate() {
-    debugger
     // When going from REQUEST_STATUS_PENDING to some other status
     // we want to show an initial view.
     // This happens on first render of a response and on re-runs

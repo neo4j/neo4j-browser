@@ -193,12 +193,26 @@ export const FrameTitleEditorContainer = styled.div`
   }
 `
 
-export const StyledFrameCommand = styled.input`
-  background-color: inherit;
-  font-family: inherit;
-  font-size: inherit;
-  border: 0;
+export const StyledFrameCommand = styled.label<{ selectedDb: string }>`
+  font-family: ${props => props.theme.editorFont};
+  color: ${props => props.theme.secondaryButtonText};
+  background-color: ${props => props.theme.frameSidebarBackground};
+  border-radius: 2px;
+  padding-left: 6px;
+  font-size: 1.2em;
+  line-height: 2.2em;
+  margin: 3px 5px 3px 3px;
+  flex: 1 1 auto;
+  min-width: 0;
   white-space: nowrap;
   text-overflow: ellipsis;
-  flex-grow: 1;
+  overflow: hidden;
+  display: block;
+  &::before {
+    color: ${props => props.theme.promptText};
+    content: "${props => (props.selectedDb || '') + '$ '}";
+  }
+  .disable-font-ligatures & {
+    font-variant-ligatures: none !important;
+  } 
 `
