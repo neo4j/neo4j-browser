@@ -66,6 +66,42 @@ declare module 'cypher-editor-support/src/_generated/CypherLexer' {
 }
 
 declare module 'cypher-editor-support' {
+  interface EditorSupportPosition {
+    line: number
+    column: number
+  }
+
+  interface EditorSupportCompletionItem {
+    type: string
+    view: string
+    content: string
+    postfix: null
+  }
+
+  interface EditorSupportSchema {
+    labels?: string[]
+    relationshipTypes?: string[]
+    propertyKeys?: string[]
+    functions?: string[]
+    procedures?: string[]
+    consoleCommands?: string[]
+    parameters?: string[]
+  }
+
+  export class CypherEditorSupport {
+    constructor(input: string)
+    getCompletion(
+      line: number,
+      column: number,
+      doFilter?: boolean
+    ): {
+      from: EditorSupportPosition
+      to: EditorSupportPosition
+      items: EditorSupportCompletionItem[]
+    }
+    setSchema(schema: EditorSupportSchema): void
+    update(input: string): void
+  }
   export function parse(
     input: string
   ): {

@@ -87,9 +87,21 @@ import {
 } from 'shared/modules/settings/settingsDuck'
 import useDerivedTheme from 'browser-hooks/useDerivedTheme'
 import { BrowserTheme } from './CypherMonacoThemes'
+import * as schemaConvert from './editorSchemaConverter'
+import cypherFunctions from './cypher/functions'
 import { getUseDb } from 'shared/modules/connections/connectionsDuck'
 import { getHistory, HistoryState } from 'shared/modules/history/historyDuck'
 import { getOpenDrawer } from 'shared/modules/sidebar/sidebarDuck'
+
+interface EditorSupportSchema {
+  labels?: string[]
+  relationshipTypes?: string[]
+  propertyKeys?: string[]
+  functions?: string[]
+  procedures?: string[]
+  consoleCommands: string[]
+  parameters?: string[]
+}
 
 type EditorFrameProps = {
   browserTheme: BrowserTheme
@@ -99,6 +111,7 @@ type EditorFrameProps = {
   executeCommand: (cmd: string, source: string) => void
   history: HistoryState
   projectId: string
+  schema: EditorSupportSchema
   theme: { linkHover: string }
   updateFavorite: (id: string, value: string) => void
   useDb: null | string
@@ -121,6 +134,7 @@ export function EditorFrame({
   executeCommand,
   history,
   projectId,
+  schema,
   theme,
   updateFavorite,
   useDb
@@ -306,6 +320,7 @@ export function EditorFrame({
               }
               onExecute={createRunCommandFunction(commandSources.editor)}
               ref={editorRef}
+              schema={schema}
               theme={derivedTheme}
               useDb={useDb}
             />
@@ -377,6 +392,23 @@ const mapStateToProps = (state: any) => {
     enableMultiStatementMode: shouldEnableMultiStatementMode(state),
     history: getHistory(state),
     projectId: getProjectId(state),
+    schema: {
+      parameters: Object.keys(state.params),
+      labels: state.meta.labels.map(schemaConvert.toLabel) as string[],
+      relationshipTypes: state.meta.relationshipTypes.map(
+        schemaConvert.toRelationshipType
+      ) as string[],
+      propertyKeys: state.meta.properties.map(
+        schemaConvert.toPropertyKey
+      ) as string[],
+      functions: [
+        ...cypherFunctions,
+        ...state.meta.functions.map(schemaConvert.toFunction)
+      ] as string[],
+      procedures: state.meta.procedures.map(
+        schemaConvert.toProcedure
+      ) as string[]
+    } as EditorSupportSchema,
     useDb: getUseDb(state)
   }
 }

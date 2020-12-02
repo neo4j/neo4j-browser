@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { parse } from 'cypher-editor-support'
+import { CypherEditorSupport, parse } from 'cypher-editor-support'
 import { debounce } from 'lodash-es'
 import {
   editor,
@@ -70,6 +70,16 @@ export interface MonacoHandles {
   resize: (fillContainer?: boolean, fixedHeight?: number) => void
 }
 
+interface EditorSupportSchema {
+  labels?: string[]
+  relationshipTypes?: string[]
+  propertyKeys?: string[]
+  functions?: string[]
+  procedures?: string[]
+  consoleCommands: string[]
+  parameters?: string[]
+}
+
 interface MonacoProps {
   bus: Bus
   enableMultiStatementMode?: boolean
@@ -81,6 +91,7 @@ interface MonacoProps {
   onDisplayHelpKeys?: () => void
   onExecute?: () => void
   options?: editor.IGlobalEditorOptions
+  schema?: EditorSupportSchema
   theme?: BrowserTheme
   useDb?: null | string
 }
@@ -97,6 +108,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       onChangeLineCount = () => undefined,
       onDisplayHelpKeys = () => undefined,
       onExecute = () => undefined,
+      schema,
       theme = LIGHT_THEME,
       useDb
     }: MonacoProps,
@@ -134,6 +146,8 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       }
     }))
 
+    const editorSupportRef = useRef<CypherEditorSupport | null>(null)
+
     // The monaco render method does not redraw line numbers
     // Getting and setting content and cursor is done to force a redraw
     useEffect(() => {
@@ -147,6 +161,39 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       languages.register({ id: 'cypher' })
       languages.setTokensProvider('cypher', new CypherTokensProvider())
 
+      editorSupportRef.current = new CypherEditorSupport(value)
+      if (schema) {
+        editorSupportRef.current.setSchema(schema)
+      }
+
+      languages.registerCompletionItemProvider('cypher', {
+        triggerCharacters: ['.', ':', '[', '(', '{'],
+        provideCompletionItems: (model, position) => {
+          var { startColumn, endColumn } = model.getWordUntilPosition(position)
+          const range = {
+            startLineNumber: position.lineNumber,
+            endLineNumber: position.lineNumber,
+            startColumn,
+            endColumn
+          }
+          editorSupportRef.current?.update(editorRef.current?.getValue() || '')
+          const items =
+            editorSupportRef.current?.getCompletion(
+              position.lineNumber,
+              position.column
+            ).items || []
+
+          return {
+            suggestions: items.map(item => ({
+              label: item.view,
+              kind: languages.CompletionItemKind.Keyword,
+              insertText: item.content,
+              range
+            }))
+          }
+        }
+      })
+
       editor.defineTheme(DARK_THEME, monacoDarkTheme)
       editor.defineTheme(LIGHT_THEME, monacoLightTheme)
       editor.defineTheme(OUTLINE_THEME, monacoLightTheme)
@@ -157,6 +204,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       editorRef.current = editor.create(
         document.getElementById(monacoId) as HTMLElement,
         {
+          autoClosingOvertype: 'always',
           automaticLayout: true,
           contextmenu: false,
           cursorStyle: 'block',
@@ -170,6 +218,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
             isMultiLine() ? '' + line : `${useDbRef.current || ''}$`,
           links: false,
           minimap: { enabled: false },
+          quickSuggestions: false,
           scrollbar: {
             alwaysConsumeMouseWheel: false
           },
@@ -182,11 +231,21 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
         }
       )
 
-      editorRef.current.addCommand(KeyCode.Enter, () =>
-        isMultiLine() ? newLine() : execute()
+      editorRef.current.addCommand(
+        KeyCode.Enter,
+        () => (isMultiLine() ? newLine() : execute()),
+        '!suggestWidgetVisible'
       )
-      editorRef.current.addCommand(KeyCode.UpArrow, handleUp)
-      editorRef.current.addCommand(KeyCode.DownArrow, handleDown)
+      editorRef.current.addCommand(
+        KeyCode.UpArrow,
+        handleUp,
+        '!suggestWidgetVisible'
+      )
+      editorRef.current.addCommand(
+        KeyCode.DownArrow,
+        handleDown,
+        '!suggestWidgetVisible'
+      )
       editorRef.current.addCommand(KeyMod.Shift | KeyCode.Enter, newLine)
       editorRef.current.addCommand(KeyMod.CtrlCmd | KeyCode.Enter, execute)
       editorRef.current.addCommand(KeyMod.WinCtrl | KeyCode.Enter, execute)
@@ -285,6 +344,14 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
     useEffect(() => {
       historyRef.current = [...history]
     }, [history])
+
+    useEffect(() => {
+      if (schema) {
+        editorSupportRef.current?.update(editorRef.current?.getValue() || '')
+
+        editorSupportRef.current?.setSchema(schema)
+      }
+    }, [schema])
 
     const historyRef = useRef<string[]>([])
     const historyIndexRef = useRef<number>(-1)
