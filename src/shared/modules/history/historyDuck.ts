@@ -43,7 +43,7 @@ function addHistoryHelper(
 
 export type HistoryState = string[]
 
-export default function(state = [], action: any) {
+export default function(state: HistoryState = [], action: any) {
   switch (action.type) {
     case ADD:
       return addHistoryHelper(state, action.state, action.maxHistory)
