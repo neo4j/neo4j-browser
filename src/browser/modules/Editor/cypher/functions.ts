@@ -24,7 +24,7 @@
  * - (name :: TYPE?, name = default :: INTEGER?) :: VOID
  * - () :: (TYPE?)
  */
-function func(name: any, signature: any) {
+function func(name: string, signature: string) {
   return { name, signature }
 }
 
