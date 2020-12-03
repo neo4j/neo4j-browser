@@ -81,6 +81,7 @@ import {
 } from 'browser-components/desktop-api/desktop-api.handlers'
 import { METRICS_EVENT, udcInit } from 'shared/modules/udc/udcDuck'
 import { useKeyboardShortcuts } from './keyboardShortcuts'
+import PerformanceOverlay from './PerformanceOverlay'
 
 export function App(props: any) {
   const [derivedTheme, setEnvironmentTheme] = useDerivedTheme(
@@ -163,6 +164,7 @@ export function App(props: any) {
         }
         setEventMetricsCallback={setEventMetricsCallback}
       />
+      <PerformanceOverlay />
       <ThemeProvider theme={themeData}>
         <FeatureToggleProvider features={experimentalFeatures}>
           <FileDrop store={store}>
