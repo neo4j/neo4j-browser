@@ -67,7 +67,6 @@ export interface MonacoHandles {
   focus: () => void
   getValue: () => string
   setValue: (value: string) => void
-  resize: (fillContainer?: boolean, fixedHeight?: number) => void
 }
 
 interface EditorSupportSchema {
@@ -126,23 +125,6 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       },
       setValue(value: string) {
         setValue(value)
-      },
-      resize(fillContainer = false, fixedHeight) {
-        const container = document.getElementById(monacoId) as HTMLElement
-        const contentHeight = editorRef.current?.getContentHeight() || 0
-
-        const height =
-          fixedHeight ||
-          (fillContainer
-            ? container.scrollHeight
-            : // lower bound 39px is height of editor frame, upper bound is 12 lines * 23px line height = 276px
-              Math.min(276, Math.max(39, contentHeight)))
-
-        container.style.height = `${height}px`
-        editorRef.current?.layout({
-          height,
-          width: container.offsetWidth
-        })
       }
     }))
 
@@ -205,7 +187,6 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
         document.getElementById(monacoId) as HTMLElement,
         {
           autoClosingOvertype: 'always',
-          automaticLayout: true,
           contextmenu: false,
           cursorStyle: 'block',
           fontFamily: 'Fira Code',
@@ -269,6 +250,24 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       onContentUpdate()
 
       editorRef.current?.onDidChangeModelContent(onContentUpdate)
+
+      const updateHeight = () => {
+        const container = document.getElementById(monacoId) as HTMLElement
+        const contentHeight = Math.min(
+          1000,
+          editorRef.current?.getContentHeight() || 0
+        )
+        container.style.height = `${contentHeight}px`
+        editorRef.current?.layout()
+      }
+      editorRef.current?.onDidContentSizeChange(updateHeight)
+
+      const container = document.getElementById(monacoId) as HTMLElement
+      // @ts-ignore - needs polyfill on safari. works in firefox/chrome
+      const resizeObserver = new ResizeObserver(() => {
+        editorRef.current?.layout()
+      })
+      resizeObserver.observe(container)
 
       return () => {
         editorRef.current?.dispose()
@@ -494,8 +493,6 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
         id={monacoId}
         style={{
           height: '100%',
-          maxWidth: '100%',
-          minWidth: '100%',
           width: '100%'
         }}
       />
