@@ -17,6 +17,8 @@ jobs:
         node-version: 12.x
     - name: Build project
       run: yarn && yarn build
+    - name: Echo new vars
+      run: echo $NEW_VARS
     - name: Deploy to surge.sh
       env:
         SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
