@@ -248,6 +248,7 @@ export function EditorFrame({
     currentlyEditing &&
     !currentlyEditing?.isStatic
   )
+
   return (
     <Frame fullscreen={isFullscreen} data-testid="activeEditor">
       {currentlyEditing && (
