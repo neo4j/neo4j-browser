@@ -35,7 +35,6 @@ export const REQUEST_STATUS_CANCELING = 'canceling'
 export const REQUEST_STATUS_CANCELED = 'canceled'
 
 type RequestStatus = 'pending' | 'success' | 'error' | 'canceling' | 'canceled'
-// hmm look into this
 
 export type RequestState = Record<string, Request>
 type GlobalState = { [NAME]: RequestState }
@@ -62,7 +61,6 @@ export type Request = {
   id: string
   updated?: number
 }
-// does it make sense to put the id in the object?
 
 export default function reducer(
   state: RequestState = initialState,
