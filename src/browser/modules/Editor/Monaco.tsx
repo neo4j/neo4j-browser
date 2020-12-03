@@ -384,7 +384,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
         return
       }
       historyIndexRef.current = localHistoryIndex - 1
-      setValue(localHistory[localHistoryIndex])
+      setValue(localHistory[localHistoryIndex - 1])
     }
 
     // Share current text with parent and add warnings
