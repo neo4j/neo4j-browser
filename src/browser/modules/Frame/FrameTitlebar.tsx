@@ -36,7 +36,7 @@ import {
   REQUEST_STATUS_PENDING
 } from 'shared/modules/requests/requestsDuck'
 import { remove, pin, unpin, Frame } from 'shared/modules/stream/streamDuck'
-import { removeComments, sleep } from 'shared/services/utils'
+import { sleep } from 'shared/services/utils'
 import { FrameButton } from 'browser-components/buttons'
 import Render from 'browser-components/Render'
 import { CSVSerializer } from 'services/serializer'

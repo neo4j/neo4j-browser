@@ -145,13 +145,13 @@ function useSizeToggles() {
   const [isPinned, setPinned] = useState(false)
 
   function toggleFullScreen() {
-    setFullscreen(!isFullscreen)
+    setFullscreen(full => !full)
   }
   function toggleCollapse() {
-    setCollapsed(!isCollapsed)
+    setCollapsed(coll => !coll)
   }
   function togglePin() {
-    setPinned(!isPinned)
+    setPinned(pin => !pin)
   }
   return {
     isFullscreen,
