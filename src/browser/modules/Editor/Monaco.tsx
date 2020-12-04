@@ -222,6 +222,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
 
       return () => {
         editorRef.current?.dispose()
+        debouncedUpdateCode.cancel()
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])

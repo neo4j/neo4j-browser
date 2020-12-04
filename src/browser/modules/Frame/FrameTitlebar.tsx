@@ -217,9 +217,10 @@ function FrameTitlebar(props: FrameTitleBarProps) {
 
     return frame.type === 'history' && arrayHasItems(frame.result)
   }
+
   function run(cmd: string) {
-    props.reRun(frame, cmd)
     setHistory([...history, cmd])
+    props.reRun(frame, cmd)
   }
 
   const { frame = {} } = props
