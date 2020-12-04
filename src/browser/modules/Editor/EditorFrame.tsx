@@ -290,7 +290,7 @@ export function EditorFrame({
       )}
       <FlexContainer>
         <Header>
-          <EditorContainer>
+          <EditorContainer onClick={() => editorRef.current?.focus()}>
             <Monaco
               bus={bus}
               enableMultiStatementMode={enableMultiStatementMode}
