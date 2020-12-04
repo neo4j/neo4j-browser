@@ -243,9 +243,9 @@ function FrameTitlebar(props: FrameTitleBarProps) {
               onChange={setEditorValue}
               onExecute={run}
               value={editorValue}
-              customStyle={{ border: 'none' }}
               ref={editorRef}
               toggleFullscreen={props.fullscreenToggle}
+              customStyle={{ maxHeight: props.fullscreen ? 'unset' : '345px' }}
             />
           </FrameTitleEditorContainer>
         }

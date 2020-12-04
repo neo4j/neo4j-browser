@@ -144,7 +144,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
           lightbulb: { enabled: false },
           lineHeight: 23,
           lineNumbers: (line: number) =>
-            isMultiLine() ? '' + line : `${useDbRef.current || ''}$`,
+            isMultiLine() ? line.toString() : `${useDbRef.current || ''}$`,
           links: false,
           minimap: { enabled: false },
           overviewRulerBorder: false,
