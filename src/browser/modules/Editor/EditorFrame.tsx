@@ -146,8 +146,9 @@ export function EditorFrame({
   const [lineCount, setLineCount] = useState(1)
 
   const toggleFullscreen = useCallback(() => {
-    setFullscreen(fs => !fs)
-  }, [])
+    setFullscreen(!isFullscreen)
+    editorRef.current?.resize(!isFullscreen)
+  }, [isFullscreen])
 
   const [derivedTheme] = useDerivedTheme(browserTheme, LIGHT_THEME) as [
     BrowserTheme

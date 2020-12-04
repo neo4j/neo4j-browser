@@ -67,6 +67,7 @@ export interface MonacoHandles {
   focus: () => void
   getValue: () => string
   setValue: (value: string) => void
+  resize: (fillContainer?: boolean, fixedHeight?: number) => void
 }
 
 interface EditorSupportSchema {
@@ -125,6 +126,9 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       },
       setValue(value: string) {
         setValue(value)
+      },
+      resize(fillContainer = false, fixedHeight) {
+        resize(fillContainer, fixedHeight)
       }
     }))
 
@@ -251,16 +255,9 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
 
       editorRef.current?.onDidChangeModelContent(onContentUpdate)
 
-      const updateHeight = () => {
-        const container = document.getElementById(monacoId) as HTMLElement
-        const contentHeight = Math.min(
-          1000,
-          editorRef.current?.getContentHeight() || 0
-        )
-        container.style.height = `${contentHeight}px`
-        editorRef.current?.layout()
-      }
-      editorRef.current?.onDidContentSizeChange(updateHeight)
+      editorRef.current?.onDidContentSizeChange(() =>
+        resize(isFullscreenRef.current)
+      )
 
       const container = document.getElementById(monacoId) as HTMLElement
       // @ts-ignore - needs polyfill on safari. works in firefox/chrome
@@ -274,6 +271,28 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
+    const isFullscreenRef = useRef<boolean>(false)
+
+    const resize = (fillContainer: boolean, fixedHeight?: number) => {
+      const container = document.getElementById(monacoId) as HTMLElement
+      const contentHeight = editorRef.current?.getContentHeight() || 0
+
+      isFullscreenRef.current = fillContainer
+
+      const height =
+        fixedHeight ||
+        (fillContainer
+          ? container.scrollHeight
+          : // lower bound 39px is height of editor frame, upper bound is 12 lines * 23px line height = 276px
+            Math.min(276, Math.max(39, contentHeight)))
+
+      container.style.height = `${height}px`
+      editorRef.current?.layout({
+        height,
+        width: container.offsetWidth
+      })
+    }
 
     // Update theme when setting is changed
     useEffect(() => {
