@@ -66,6 +66,9 @@ export const Frame = styled.div<FullscreenProps>`
 `
 
 export const EditorContainer = styled.div`
+  cursor: text;
+  display: flex;
+  align-items: center;
   flex-grow: 1;
   width: 0; // needed to prevent the editor from growing the text field
 `

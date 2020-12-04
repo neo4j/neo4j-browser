@@ -19,7 +19,7 @@
  */
 
 import { editor } from 'monaco-editor/esm/vs/editor/editor.api'
-import { base } from 'browser-styles/themes'
+import { base, dark } from 'browser-styles/themes'
 import {
   LIGHT_THEME,
   OUTLINE_THEME,
@@ -351,6 +351,7 @@ export const monacoDarkTheme: editor.IStandaloneThemeData = {
   inherit: true,
   rules: darkThemeRules,
   colors: {
+    'editor.background': dark.frameCommandBackground,
     'editorLineNumber.foreground': CypherColor.white,
     foreground: CypherColor.white
   }
@@ -360,7 +361,7 @@ export const monacoLightTheme: editor.IStandaloneThemeData = {
   inherit: true,
   rules: lightThemeRules,
   colors: {
-    'editor.background': base.preBackground,
+    'editor.background': base.frameCommandBackground,
     'editorLineNumber.foreground': CypherColor.light_grey,
     foreground: CypherColor.black
   }

@@ -196,6 +196,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
           fontFamily: 'Fira Code',
           fontSize: 17,
           fontWeight: '500',
+          hideCursorInOverviewRuler: true,
           language: 'cypher',
           lightbulb: { enabled: false },
           lineHeight: 23,
@@ -203,12 +204,16 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
             isMultiLine() ? '' + line : `${useDbRef.current || ''}$`,
           links: false,
           minimap: { enabled: false },
+          overviewRulerBorder: false,
           quickSuggestions: false,
+          renderLineHighlight: 'none',
           scrollbar: {
-            alwaysConsumeMouseWheel: false
+            alwaysConsumeMouseWheel: false,
+            useShadows: false
           },
           scrollBeyondLastColumn: 0,
           scrollBeyondLastLine: false,
+          selectionHighlight: false,
           theme: LIGHT_THEME,
           value,
           wordWrap: 'on',
@@ -285,7 +290,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
         (fillContainer
           ? container.scrollHeight
           : // lower bound 39px is height of editor frame, upper bound is 12 lines * 23px line height = 276px
-            Math.min(276, Math.max(39, contentHeight)))
+            Math.min(276, contentHeight))
 
       container.style.height = `${height}px`
       editorRef.current?.layout({
