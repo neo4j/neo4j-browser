@@ -28,5 +28,8 @@ global.document.createRange = () => {
     getClientRects: () => []
   }
 }
-// needed for jest to import monaco
+// needed for testing monaco
 document.queryCommandSupported = () => false
+window.ResizeObserver = class {
+  observe() {}
+}
