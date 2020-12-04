@@ -250,14 +250,16 @@ export const Settings = ({
       const tooltip = feature.tooltip || ''
       return (
         <StyledSetting key={toKeyString(feature.name)}>
-          <CheckboxSelector
-            onChange={(event: any) => {
-              const on = event.target.checked
-              onFeatureChange(feature.name, on)
-            }}
-            checked={experimentalFeatures[feature.name].on}
-          />
-          <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
+          <StyledSettingLabel title={tooltip}>
+            <CheckboxSelector
+              onChange={(event: any) => {
+                const on = event.target.checked
+                onFeatureChange(feature.name, on)
+              }}
+              checked={experimentalFeatures[feature.name].on}
+            />
+            {visual}
+          </StyledSettingLabel>
         </StyledSetting>
       )
     })

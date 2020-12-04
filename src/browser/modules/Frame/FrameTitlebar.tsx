@@ -29,6 +29,7 @@ import controlsPlay from 'icons/controls-play.svg'
 import * as app from 'shared/modules/app/appDuck'
 import * as commands from 'shared/modules/commands/commandsDuck'
 import * as sidebar from 'shared/modules/sidebar/sidebarDuck'
+import * as editor from 'shared/modules/editor/editorDuck'
 import {
   cancel as cancelRequest,
   getRequest,
@@ -61,7 +62,8 @@ import {
 import {
   StyledFrameTitleBar,
   StyledFrameTitlebarButtonSection,
-  FrameTitleEditorContainer
+  FrameTitleEditorContainer,
+  StyledFrameCommand
 } from './styled'
 import {
   downloadPNGFromSVG,
@@ -77,6 +79,8 @@ import arrayHasItems from 'shared/utils/array-has-items'
 import { stringifyMod } from 'services/utils'
 import Monaco, { MonacoHandles } from '../Editor/Monaco'
 import { Bus } from 'suber'
+import FeatureToggle from '../FeatureToggle/FeatureToggle'
+import { reusableFrame } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
 
 type FrameTitleBarBaseProps = {
   frame: any
@@ -90,6 +94,7 @@ type FrameTitleBarBaseProps = {
   getRecords: () => any
   visElement: any
   runQuery: () => any
+  bus: Bus
 }
 
 type FrameTitleBarProps = FrameTitleBarBaseProps & {
@@ -101,7 +106,7 @@ type FrameTitleBarProps = FrameTitleBarBaseProps & {
   onRunClick: () => void
   reRun: (obj: Frame, cmd: string) => void
   togglePinning: (id: string, isPinned: boolean) => void
-  bus: Bus
+  onTitlebarClick: (cmd: string) => void
 }
 
 function FrameTitlebar(props: FrameTitleBarProps) {
@@ -223,22 +228,35 @@ function FrameTitlebar(props: FrameTitleBarProps) {
 
   return (
     <StyledFrameTitleBar>
-      <FrameTitleEditorContainer>
-        <Monaco
-          history={history}
-          useDb={frame.useDb}
-          enableMultiStatementMode={true}
-          id={`editor-${frame.id}`}
-          bus={props.bus}
-          theme={'normal'}
-          onChange={setEditorValue}
-          onExecute={run}
-          value={editorValue}
-          customStyle={{ border: 'none' }}
-          ref={editorRef}
-          toggleFullscreen={props.fullscreenToggle}
-        />
-      </FrameTitleEditorContainer>
+      <FeatureToggle
+        name={reusableFrame}
+        on={
+          <FrameTitleEditorContainer>
+            <Monaco
+              history={history}
+              useDb={frame.useDb}
+              enableMultiStatementMode={true}
+              id={`editor-${frame.id}`}
+              bus={props.bus}
+              theme={'normal'}
+              onChange={setEditorValue}
+              onExecute={run}
+              value={editorValue}
+              customStyle={{ border: 'none' }}
+              ref={editorRef}
+              toggleFullscreen={props.fullscreenToggle}
+            />
+          </FrameTitleEditorContainer>
+        }
+        off={
+          <StyledFrameCommand
+            selectedDb={frame.useDb}
+            onClick={() => props.onTitlebarClick(editorValue)}
+          >
+            {editorValue}
+          </StyledFrameCommand>
+        }
+      />
       <Render if={frame.type !== 'edit'}>
         <FrameButton
           data-testid="rerunFrameButton"
@@ -397,6 +415,9 @@ const mapDispatchToProps = (
     },
     togglePinning: (id: string, isPinned: boolean) => {
       isPinned ? dispatch(unpin(id)) : dispatch(pin(id))
+    },
+    onTitlebarClick: (cmd: any) => {
+      ownProps.bus.send(editor.SET_CONTENT, editor.setContent(cmd))
     }
   }
 }
