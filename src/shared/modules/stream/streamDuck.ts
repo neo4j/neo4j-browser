@@ -40,8 +40,8 @@ export const SET_MAX_FRAMES = 'frames/SET_MAX_FRAMES'
 
 export interface GlobalState {
   [NAME]: FramesState
-  history: string[]
   [key: string]: Record<string, any>
+  history: string[]
 }
 
 export function getFrame(state: GlobalState, id: string): FrameStack {
@@ -66,10 +66,15 @@ function addFrame(state: FramesState, newState: Frame) {
   }
 
   const frameObject = state.byId[newState.id] || { stack: [], isPinned: false }
+  // shoehorned history for re-usable frame. Should be kept in local state after refractor
+  const newFrame = {
+    ...newState,
+    history: [newState.cmd, ...(frameObject.stack[0]?.history || [])]
+  }
   if (newState.isRerun) {
-    frameObject.stack = [newState]
+    frameObject.stack = [newFrame]
   } else {
-    frameObject.stack.unshift(newState)
+    frameObject.stack.unshift(newFrame)
   }
   let byId = {
     ...state.byId,
@@ -227,6 +232,7 @@ export interface Frame {
   ts: number
   type: string
   useDb: string | null
+  history?: string[]
 }
 
 export interface FrameStack {

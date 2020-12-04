@@ -219,7 +219,7 @@ function FrameTitlebar(props: FrameTitleBarProps) {
   }
 
   function run(cmd: string) {
-    setHistory([...history, cmd])
+    setHistory([cmd, ...history])
     props.reRun(frame, cmd)
   }
 
@@ -234,7 +234,7 @@ function FrameTitlebar(props: FrameTitleBarProps) {
         on={
           <FrameTitleEditorContainer>
             <Monaco
-              history={history}
+              history={frame.history || []}
               useDb={frame.useDb}
               enableMultiStatementMode={true}
               id={`editor-${frame.id}`}
