@@ -1,7 +1,14 @@
-<svg
-    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21.5 24">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21.5 24">
     <defs>
-        <style>.a{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.5px;}</style>
+        <style>
+            .a {
+                fill: none;
+                stroke: currentColor;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+                stroke-width: 1.5px;
+            }
+        </style>
     </defs>
     <title>Text2</title>
     <path d="M2.85,23.25,10.46,1.1c.17-.47.42-.47.58,0l7.61,22.15" class="a" />
