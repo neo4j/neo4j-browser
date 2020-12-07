@@ -30,17 +30,26 @@ import {
   commandSources,
   executeCommand
 } from 'shared/modules/commands/commandsDuck'
+import { Bus } from 'suber'
 
-type DocumentItemsProps = {
+type DocumentItemsOwnProps = {
   header: string
-  items: DocumentItem[]
+  items: (Link | Command)[]
+  bus: Bus
+}
+
+type DocumentItemsProps = DocumentItemsOwnProps & {
   executeCommand: (item: string) => void
 }
 
-type DocumentItem = {
+type Link = {
+  name: string
+  url: string
+}
+
+type Command = {
   name: string
   command: string
-  type: 'command' | 'link'
 }
 
 export const DocumentItems = ({
@@ -48,20 +57,19 @@ export const DocumentItems = ({
   items,
   executeCommand
 }: DocumentItemsProps): JSX.Element => {
-  const listOfItems = items.map(({ type, command, name }) =>
-    type === 'link' ? (
-      <StyledHelpItem key={command}>
-        <StyledHelpLink href={command} target="_blank" rel="noreferrer">
-          {name}
+  const listOfItems = items.map(item =>
+    'url' in item ? (
+      <StyledHelpItem key={item.url}>
+        <StyledHelpLink href={item.url} target="_blank" rel="noreferrer">
+          {item.name}
         </StyledHelpLink>
       </StyledHelpItem>
     ) : (
       <CommandItem
-        key={command}
-        name={name}
-        command={command}
+        key={item.command}
+        name={item.name}
+        command={item.command}
         executeCommand={executeCommand}
-        type={type}
       />
     )
   )
@@ -76,9 +84,9 @@ export const DocumentItems = ({
   )
 }
 
-type CommandItemProps = DocumentItem & { executeCommand: (cmd: string) => void }
+type CommandItemProps = Command & { executeCommand: (cmd: string) => void }
 
-const CommandItem = ({ name, type, command }: CommandItemProps) => (
+const CommandItem = ({ name }: CommandItemProps) => (
   <StyledHelpItem>
     <StyledDocumentText>
       &nbsp;
@@ -87,7 +95,10 @@ const CommandItem = ({ name, type, command }: CommandItemProps) => (
   </StyledHelpItem>
 )
 
-const mapDispatchToProps = (_dispatch: any, ownProps: any) => ({
+const mapDispatchToProps = (
+  _dispatch: any,
+  ownProps: DocumentItemsOwnProps
+) => ({
   executeCommand: (cmd: string) => {
     const action = executeCommand(cmd, {
       source: commandSources.sidebar
