@@ -70,6 +70,10 @@ const getReferences = (version: string, v: string) => {
     {
       name: 'Drivers Manual',
       url: `https://neo4j.com/docs/driver-manual/current/`
+    },
+    {
+      name: 'All Neo4j docs',
+      url: `https://neo4j.com/docs/`
     }
   ]
 
