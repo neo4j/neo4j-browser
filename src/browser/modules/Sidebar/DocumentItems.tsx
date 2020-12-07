@@ -78,21 +78,36 @@ export const DocumentItems = ({
     <DrawerSection>
       <DrawerSubHeader>{header}</DrawerSubHeader>
       <DrawerSectionBody>
-        <ul className="document">{listOfItems}</ul>
+        <ul>{listOfItems}</ul>
       </DrawerSectionBody>
     </DrawerSection>
   )
 }
+import styled from 'styled-components'
+export const StyledCommandListItem = styled.li`
+  margin: 0px -39px 0 -24px; // Get full width background hover effect
+  list-style-type: none;
+  &:hover {
+    background-color: blue;
+  }
+  cursor: pointer;
+  -webkit-text-decoration: none;
+`
+
+export const StyledCommandContainer = styled.div`
+  margin: 0px 39px 0 24px; // Restore normal width
+  padding: 10px 0;
+`
 
 type CommandItemProps = Command & { executeCommand: (cmd: string) => void }
 
-const CommandItem = ({ name }: CommandItemProps) => (
-  <StyledHelpItem>
-    <StyledDocumentText>
-      &nbsp;
+const CommandItem = ({ name, command, executeCommand }: CommandItemProps) => (
+  <StyledCommandListItem onClick={() => executeCommand(command)}>
+    <StyledCommandContainer>
       {name}
-    </StyledDocumentText>
-  </StyledHelpItem>
+      {command}
+    </StyledCommandContainer>
+  </StyledCommandListItem>
 )
 
 const mapDispatchToProps = (
