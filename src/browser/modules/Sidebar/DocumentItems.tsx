@@ -20,44 +20,52 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
-import { SET_CONTENT, setContent } from 'shared/modules/editor/editorDuck'
 import {
   DrawerSubHeader,
   DrawerSection,
   DrawerSectionBody
 } from 'browser-components/drawer'
+import { StyledHelpLink, StyledHelpItem, StyledDocumentText } from './styled'
 import {
-  StyledHelpLink,
-  StyledHelpItem,
-  StyledDocumentActionLink
-} from './styled'
+  commandSources,
+  executeCommand
+} from 'shared/modules/commands/commandsDuck'
 
-export const DocumentItems = ({ header, items, onItemClick = null }: any) => {
-  const listOfItems = items.map((item: any) => {
-    switch (item.type) {
-      case 'link':
-        return (
-          <StyledHelpItem key={item.command}>
-            <StyledHelpLink
-              href={item.command}
-              target="_blank"
-              rel="noreferrer"
-            >
-              {item.name}
-            </StyledHelpLink>
-          </StyledHelpItem>
-        )
-      default:
-        return (
-          <StyledDocumentActionLink
-            key={item.command}
-            onClick={() => onItemClick(item.command)}
-            name={item.name}
-            type={item.type}
-          />
-        )
-    }
-  })
+type DocumentItemsProps = {
+  header: string
+  items: DocumentItem[]
+  executeCommand: (item: string) => void
+}
+
+type DocumentItem = {
+  name: string
+  command: string
+  type: 'command' | 'link'
+}
+
+export const DocumentItems = ({
+  header,
+  items,
+  executeCommand
+}: DocumentItemsProps): JSX.Element => {
+  const listOfItems = items.map(({ type, command, name }) =>
+    type === 'link' ? (
+      <StyledHelpItem key={command}>
+        <StyledHelpLink href={command} target="_blank" rel="noreferrer">
+          {name}
+        </StyledHelpLink>
+      </StyledHelpItem>
+    ) : (
+      <CommandItem
+        key={command}
+        name={name}
+        command={command}
+        executeCommand={executeCommand}
+        type={type}
+      />
+    )
+  )
+
   return (
     <DrawerSection>
       <DrawerSubHeader>{header}</DrawerSubHeader>
@@ -68,12 +76,24 @@ export const DocumentItems = ({ header, items, onItemClick = null }: any) => {
   )
 }
 
-const mapDispatchToProps = (_dispatch: any, ownProps: any) => {
-  return {
-    onItemClick: (cmd: any) => {
-      ownProps.bus.send(SET_CONTENT, setContent(cmd))
-    }
+type CommandItemProps = DocumentItem & { executeCommand: (cmd: string) => void }
+
+const CommandItem = ({ name, type, command }: CommandItemProps) => (
+  <StyledHelpItem>
+    <StyledDocumentText>
+      &nbsp;
+      {name}
+    </StyledDocumentText>
+  </StyledHelpItem>
+)
+
+const mapDispatchToProps = (_dispatch: any, ownProps: any) => ({
+  executeCommand: (cmd: string) => {
+    const action = executeCommand(cmd, {
+      source: commandSources.sidebar
+    })
+    ownProps.bus.send(action.type, action)
   }
-}
+})
 
 export default withBus(connect(null, mapDispatchToProps)(DocumentItems))

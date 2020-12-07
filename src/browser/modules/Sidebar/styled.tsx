@@ -17,9 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React from 'react'
 import styled from 'styled-components'
-import { QuestionIcon, PlayIcon } from 'browser-components/icons/Icons'
 
 export const StyledSetting = styled.div`
   padding-bottom: 15px;
@@ -51,7 +49,7 @@ export const StyledHelpItem = styled.li`
   margin: 8px 0 0 0;
 `
 
-const StyledDocumentText = styled.a`
+export const StyledDocumentText = styled.a`
   cursor: pointer;
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -62,16 +60,3 @@ const StyledDocumentText = styled.a`
     text-decoration: none;
   }
 `
-
-export const StyledDocumentActionLink = (props: any) => {
-  const { name, ...rest } = props
-  return (
-    <StyledHelpItem onClick={props.onClick}>
-      <StyledDocumentText {...rest}>
-        {props.type === 'play' ? <PlayIcon /> : <QuestionIcon />}
-        &nbsp;
-        {name}
-      </StyledDocumentText>
-    </StyledHelpItem>
-  )
-}

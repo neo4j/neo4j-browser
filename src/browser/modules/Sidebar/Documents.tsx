@@ -23,8 +23,7 @@ import semver from 'semver'
 import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 import DocumentItems from './DocumentItems'
 import { Drawer, DrawerBody, DrawerHeader } from 'browser-components/drawer'
-
-export const formatDocVersion = (v: any) => {
+export const formatDocVersion = (v: string): string => {
   if (!semver.valid(v)) {
     return 'current'
   }
@@ -33,7 +32,7 @@ export const formatDocVersion = (v: any) => {
   }
   return `${semver.major(v)}.${semver.minor(v)}` || 'current'
 }
-export const shouldLinkToNewRefs = (v: any) => {
+export const shouldLinkToNewRefs = (v: string): boolean => {
   if (!semver.valid(v)) return false
   return semver.gte(v, '3.5.0-alpha01')
 }
@@ -50,7 +49,7 @@ const help = [
   { name: 'Keyboard shortcuts', command: ':help keys', type: 'help' }
 ]
 
-const getReferences = (version: any, v: any) => {
+const getReferences = (version: string, v: string) => {
   const newRefs = [
     {
       name: 'Getting Started',
@@ -117,13 +116,10 @@ const getReferences = (version: any, v: any) => {
       type: 'link'
     }
   ]
-  return ([] as any[]).concat(
-    shouldLinkToNewRefs(version) ? newRefs : oldRefs,
-    commonRefs
-  )
+  return [shouldLinkToNewRefs(version) ? newRefs : oldRefs, commonRefs]
 }
 
-const getStaticItems = (version: any, urlVersion: any) => {
+const getStaticItems = (version: string, urlVersion: string) => {
   return {
     help,
     intro,
@@ -131,15 +127,16 @@ const getStaticItems = (version: any, urlVersion: any) => {
   }
 }
 
-const Documents = ({ version, urlVersion }: any) => {
+type DocumentsProps = { version: string; urlVersion: string }
+const Documents = ({ version, urlVersion }: DocumentsProps) => {
   const items = getStaticItems(version, urlVersion)
   return (
     <Drawer id="db-documents">
-      <DrawerHeader>Help &amp; Resources</DrawerHeader>
+      <DrawerHeader>Help &amp; Learn</DrawerHeader>
       <DrawerBody>
         <DocumentItems header="Introduction" items={items.intro} />
-        <DocumentItems header="Help" items={items.help} />
-        <DocumentItems header="Useful Resources" items={items.reference} />
+        <DocumentItems header="Documentation" items={items.help} />
+        <DocumentItems header="Other Resources" items={items.reference} />
       </DrawerBody>
     </Drawer>
   )
