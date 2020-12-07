@@ -34,6 +34,7 @@ import React, {
   useImperativeHandle,
   useRef
 } from 'react'
+import ResizeObserver from 'resize-observer-polyfill'
 import { Bus } from 'suber'
 
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
@@ -265,9 +266,11 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       )
 
       const container = document.getElementById(monacoId) as HTMLElement
-      // @ts-ignore - needs polyfill on safari. works in firefox/chrome
       const resizeObserver = new ResizeObserver(() => {
-        editorRef.current?.layout()
+        // Wrapped in requestAnimationFrame to avoid the error "ResizeObserver loop limit exceeded"
+        window.requestAnimationFrame(() => {
+          editorRef.current?.layout()
+        })
       })
       resizeObserver.observe(container)
 
