@@ -84,15 +84,15 @@ module.exports = () => {
       openAnalyzer: false,
       reportFilename: './../bundle-report.html'
     }),
-    //new ForkTsCheckerWebpackPlugin({
-    //eslint: {
-    //files: './src/**/*.{ts,tsx,js,jsx}'
-    //}
-    //}),
-    //new ForkTsCheckerNotifierWebpackPlugin({
-    //title: 'TypeScript',
-    //excludeWarnings: false
-    //}),
+    new ForkTsCheckerWebpackPlugin({
+      eslint: {
+        files: './src/**/*.{ts,tsx,js,jsx}'
+      }
+    }),
+    new ForkTsCheckerNotifierWebpackPlugin({
+      title: 'TypeScript',
+      excludeWarnings: false
+    }),
     new MonacoWebpackPlugin({
       features: [
         '!accessibilityHelp',

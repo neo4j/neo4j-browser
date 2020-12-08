@@ -924,6 +924,13 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
+"@babel/runtime@^7.10.4", "@babel/runtime@^7.10.5":
+  version "7.12.5"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@babel/runtime/-/runtime-7.12.5.tgz#410e7e487441e1b360c29be715d870d9b985882e"
+  integrity sha1-QQ5+SHRB4bNgwpvnFdhw2bmFiC4=
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
 "@babel/template@^7.10.4", "@babel/template@^7.3.3":
   version "7.10.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@babel/template/-/template-7.10.4.tgz#3251996c4200ebc71d1a8fc405fba940f36ba278"
@@ -1365,6 +1372,21 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@firebase/webchannel-wrapper/-/webchannel-wrapper-0.3.0.tgz#d1689566b94c25423d1fb2cb031c5c2ea4c9f939"
   integrity sha1-0WiVZrlMJUI9H7LLAxxcLqTJ+Tk=
 
+"@fluentui/react-component-event-listener@~0.51.1":
+  version "0.51.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@fluentui/react-component-event-listener/-/react-component-event-listener-0.51.3.tgz#c1e64244eefb1802930eb6e74cc046775d257315"
+  integrity sha1-weZCRO77GAKTDrbnTMBGd10lcxU=
+  dependencies:
+    "@babel/runtime" "^7.10.4"
+
+"@fluentui/react-component-ref@~0.51.1":
+  version "0.51.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@fluentui/react-component-ref/-/react-component-ref-0.51.3.tgz#d8a2d87e5830d8da048072d7c615a94364bb5dca"
+  integrity sha1-2KLYflgw2NoEgHLXxhWpQ2S7Xco=
+  dependencies:
+    "@babel/runtime" "^7.10.4"
+    react-is "^16.6.3"
+
 "@graphql-typed-document-node/core@^3.0.0":
   version "3.1.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@graphql-typed-document-node/core/-/core-3.1.0.tgz#0eee6373e11418bfe0b5638f654df7a4ca6a3950"
@@ -1756,6 +1778,11 @@
     native-url "^0.2.6"
     schema-utils "^2.6.5"
     source-map "^0.7.3"
+
+"@popperjs/core@^2.5.2":
+  version "2.5.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@popperjs/core/-/core-2.5.4.tgz#de25b5da9f727985a3757fd59b5d028aba75841a"
+  integrity sha1-3iW12p9yeYWjdX/Vm10Cirp1hBo=
 
 "@protobufjs/aspromise@^1.1.1", "@protobufjs/aspromise@^1.1.2":
   version "1.1.2"
@@ -4100,6 +4127,11 @@ clone@^1.0.2:
   version "1.0.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/clone/-/clone-1.0.4.tgz#da309cc263df15994c688ca902179ca3c7cd7c7e"
   integrity sha1-2jCcwmPfFZlMaIypAheco8fNfH4=
+
+clsx@^1.1.1:
+  version "1.1.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/clsx/-/clsx-1.1.1.tgz#98b3134f9abbdf23b2663491ace13c5c03a73188"
+  integrity sha1-mLMTT5q73yOyZjSRrOE8XAOnMYg=
 
 co@^4.6.0:
   version "4.6.0"
@@ -8243,7 +8275,7 @@ jws@^4.0.0:
     jwa "^2.0.0"
     safe-buffer "^5.0.1"
 
-keyboard-key@^1.0.4:
+keyboard-key@^1.0.4, keyboard-key@^1.1.0:
   version "1.1.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/keyboard-key/-/keyboard-key-1.1.0.tgz#6f2e8e37fa11475bb1f1d65d5174f1b35653f5b7"
   integrity sha1-by6ON/oRR1ux8dZdUXTxs1ZT9bc=
@@ -10857,6 +10889,11 @@ react-dom@^16.8.6, react-dom@^16.9.0:
     prop-types "^15.6.2"
     scheduler "^0.19.1"
 
+react-fast-compare@^3.0.1:
+  version "3.2.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-fast-compare/-/react-fast-compare-3.2.0.tgz#641a9da81b6a6320f270e89724fb45a0b39e43bb"
+  integrity sha1-ZBqdqBtqYyDycOiXJPtFoLOeQ7s=
+
 react-hot-loader@^4.12.20:
   version "4.12.21"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/react-hot-loader/-/react-hot-loader-4.12.21.tgz#332e830801fb33024b5a147d6b13417f491eb975"
@@ -10899,6 +10936,14 @@ react-popper@^1.3.4:
     popper.js "^1.14.4"
     prop-types "^15.6.1"
     typed-styles "^0.0.7"
+    warning "^4.0.2"
+
+react-popper@^2.2.3:
+  version "2.2.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-popper/-/react-popper-2.2.4.tgz#d2ad3d2474ac9f1abf93df3099d408e5aa6a2e22"
+  integrity sha1-0q09JHSsnxq/k98wmdQI5apqLiI=
+  dependencies:
+    react-fast-compare "^3.0.1"
     warning "^4.0.2"
 
 react-redux@^5.0.7:
@@ -11664,6 +11709,25 @@ semantic-ui-react@0.88.2:
     prop-types "^15.7.2"
     react-is "^16.8.6"
     react-popper "^1.3.4"
+    shallowequal "^1.1.0"
+
+semantic-ui-react@^2.0.1:
+  version "2.0.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/semantic-ui-react/-/semantic-ui-react-2.0.1.tgz#a69aa65001c437ae0b3ed747d1f43ee5b4e88407"
+  integrity sha1-ppqmUAHEN64LPtdH0fQ+5bTohAc=
+  dependencies:
+    "@babel/runtime" "^7.10.5"
+    "@fluentui/react-component-event-listener" "~0.51.1"
+    "@fluentui/react-component-ref" "~0.51.1"
+    "@popperjs/core" "^2.5.2"
+    "@semantic-ui-react/event-stack" "^3.1.0"
+    clsx "^1.1.1"
+    keyboard-key "^1.1.0"
+    lodash "^4.17.19"
+    lodash-es "^4.17.15"
+    prop-types "^15.7.2"
+    react-is "^16.8.6"
+    react-popper "^2.2.3"
     shallowequal "^1.1.0"
 
 "semver@2 || 3 || 4 || 5", semver@^5.4.1, semver@^5.5.0, semver@^5.5.1, semver@^5.6.0:
