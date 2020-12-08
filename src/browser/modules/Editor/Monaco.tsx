@@ -88,7 +88,6 @@ interface MonacoProps {
   id: string
   value?: string
   onChange?: (value: string) => void
-  onChangeLineCount?: (value: number) => void
   onDisplayHelpKeys?: () => void
   onExecute?: () => void
   options?: editor.IGlobalEditorOptions
@@ -106,7 +105,6 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       id,
       value = '',
       onChange = () => undefined,
-      onChangeLineCount = () => undefined,
       onDisplayHelpKeys = () => undefined,
       onExecute = () => undefined,
       schema,
@@ -435,7 +433,6 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
         []
       )
 
-      onChangeLineCount(editorRef.current?.getModel()?.getLineCount() || 0)
       debouncedUpdateCode()
     }
 

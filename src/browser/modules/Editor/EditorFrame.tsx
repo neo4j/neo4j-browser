@@ -143,7 +143,6 @@ export function EditorFrame({
     null
   )
   const editorRef = useRef<MonacoHandles>(null)
-  const [lineCount, setLineCount] = useState(1)
 
   const toggleFullscreen = useCallback(() => {
     setFullscreen(!isFullscreen)
@@ -298,11 +297,6 @@ export function EditorFrame({
               id={'main-editor'}
               onChange={() => {
                 setUnsaved(true)
-              }}
-              onChangeLineCount={count => {
-                if (count !== lineCount) {
-                  setLineCount(count)
-                }
               }}
               onDisplayHelpKeys={() =>
                 executeCommand(':help keys', commandSources.editor)
