@@ -70,3 +70,45 @@ export const StyledDocumentText = styled.a`
     text-decoration: none;
   }
 `
+
+export const StyledCommandListItem = styled.li`
+  margin: 0px -39px 0 -24px; // Get full width background hover effect
+  list-style-type: none;
+  cursor: pointer;
+  -webkit-text-decoration: none;
+  position: relative;
+
+  &:hover {
+    background-color: blue;
+
+    &:after {
+      content: ' ';
+      position: absolute;
+      top: 15px;
+      right: 22px;
+      background-image: url("data:image/svg+xml;utf8,<svg fill='none' xmlns='http://www.w3.org/2000/svg'><path fill-rule='evenodd' clip-rule='evenodd' d='M12.7791 6.65634C13.3966 7.04929 13.3966 7.95071 12.7791 8.34366L4.64174 13.522C3.97601 13.9456 3.10486 13.4674 3.10486 12.6783L3.10486 2.32167C3.10486 1.53258 3.97601 1.05437 4.64173 1.47801L12.7791 6.65634Z'  stroke='%2368BDF4' stroke-linejoin='round' /></svg>");
+      height: 15px;
+      width: 15px;
+    }
+  }
+`
+
+export const StyledCommandNamePair = styled.div`
+  margin: 0px 39px 0 24px; // Restore normal width
+  padding: 10px 0;
+  display: flex;
+`
+export const StyledName = styled.div`
+  width: 50%;
+  margin-right: 5%;
+`
+
+export const StyledCommand = styled.div`
+  background-color: red;
+  border-radius: 2px;
+  font-family: Fira Code;
+  padding: 3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 45%;
+`

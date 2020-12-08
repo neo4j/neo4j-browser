@@ -119,9 +119,9 @@ const Documents = ({ version, urlVersion }: DocumentsProps) => {
   ]
 
   const guides = [
-    { name: 'Cypher basics', command: ':help cypher' },
-    { name: 'Available commands', command: ':help commands' },
-    { name: 'Keyboard shortcuts', command: ':help keys' }
+    { name: 'Intro to Neo4j Browser', command: ':play intro' },
+    { name: 'Cypher basics', command: ':play cypher' },
+    { name: 'Queries with Cypher - Movies use case', command: ':play movies' }
   ]
 
   const { docs, other } = getReferences(version, urlVersion)

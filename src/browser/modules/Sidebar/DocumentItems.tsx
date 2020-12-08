@@ -19,23 +19,27 @@
  */
 import React from 'react'
 import { connect } from 'react-redux'
-import { withBus } from 'react-suber'
 import {
   DrawerSubHeader,
   DrawerSection,
   DrawerSectionBody
 } from 'browser-components/drawer'
-import { StyledHelpLink, StyledHelpItem, StyledDocumentText } from './styled'
+import {
+  StyledHelpLink,
+  StyledHelpItem,
+  StyledCommandListItem,
+  StyledCommandNamePair,
+  StyledName,
+  StyledCommand
+} from './styled'
 import {
   commandSources,
   executeCommand
 } from 'shared/modules/commands/commandsDuck'
-import { Bus } from 'suber'
 
 type DocumentItemsOwnProps = {
   header: string
   items: (Link | Command)[]
-  bus: Bus
 }
 
 type DocumentItemsProps = DocumentItemsOwnProps & {
@@ -83,43 +87,25 @@ export const DocumentItems = ({
     </DrawerSection>
   )
 }
-import styled from 'styled-components'
-export const StyledCommandListItem = styled.li`
-  margin: 0px -39px 0 -24px; // Get full width background hover effect
-  list-style-type: none;
-  &:hover {
-    background-color: blue;
-  }
-  cursor: pointer;
-  -webkit-text-decoration: none;
-`
-
-export const StyledCommandContainer = styled.div`
-  margin: 0px 39px 0 24px; // Restore normal width
-  padding: 10px 0;
-`
 
 type CommandItemProps = Command & { executeCommand: (cmd: string) => void }
-
 const CommandItem = ({ name, command, executeCommand }: CommandItemProps) => (
   <StyledCommandListItem onClick={() => executeCommand(command)}>
-    <StyledCommandContainer>
-      {name}
-      {command}
-    </StyledCommandContainer>
+    <StyledCommandNamePair>
+      <StyledName> {name} </StyledName>
+      <StyledCommand> {command} </StyledCommand>
+    </StyledCommandNamePair>
   </StyledCommandListItem>
 )
 
-const mapDispatchToProps = (
-  _dispatch: any,
-  ownProps: DocumentItemsOwnProps
-) => ({
+const mapDispatchToProps = (dispatch: any) => ({
   executeCommand: (cmd: string) => {
-    const action = executeCommand(cmd, {
-      source: commandSources.sidebar
-    })
-    ownProps.bus.send(action.type, action)
+    dispatch(
+      executeCommand(cmd, {
+        source: commandSources.sidebar
+      })
+    )
   }
 })
 
-export default withBus(connect(null, mapDispatchToProps)(DocumentItems))
+export default connect(null, mapDispatchToProps)(DocumentItems)
