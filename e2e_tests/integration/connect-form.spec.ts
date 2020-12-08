@@ -181,7 +181,6 @@ describe('Connect form', () => {
           .type('{enter}')
 
         cy.get('[data-testid="drawerDBMS"]').click()
-        cy.wait(200) // wait for open close animation to finish
         cy.get('[data-testid="database-selection-list"]').contains('system')
       })
     }

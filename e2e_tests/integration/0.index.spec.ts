@@ -113,7 +113,6 @@ describe('Neo4j Browser', () => {
   it('can display meta items from side drawer', () => {
     cy.executeCommand(':clear')
     cy.get('[data-testid="drawerDBMS"]').click()
-    cy.wait(200) // wait for sidebar close animation to finish before next test
 
     cy.executeCommand('MATCH (n) RETURN DISTINCT labels(n);')
     cy.contains('Movie')
@@ -122,12 +121,10 @@ describe('Neo4j Browser', () => {
       17
     )
     cy.get('[data-testid="drawerDBMS"]').click()
-    cy.wait(200) // wait for sidebar close animation to finish before next test
   })
   it('displays user info in sidebar (when connected)', () => {
     cy.executeCommand(':clear')
     cy.get('[data-testid="drawerDBMS"]').click()
-    cy.wait(200) // wait for sidebar close animation to finish before next test
     cy.get('[data-testid="user-details-username"]').should('contain', 'neo4j')
     cy.get('[data-testid="user-details-roles"]', { timeout: 30000 }).should(
       'contain',
@@ -153,7 +150,6 @@ describe('Neo4j Browser', () => {
         : '-'
     )
     cy.get('[data-testid="drawerDBMS"]').click()
-    cy.wait(200) // wait for sidebar close animation to finish before next test
   })
 
   // Browser sync is disabled on Aura
