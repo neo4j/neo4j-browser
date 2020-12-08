@@ -84,6 +84,7 @@ interface EditorSupportSchema {
 interface MonacoProps {
   bus: Bus
   enableMultiStatementMode?: boolean
+  fontLigatures?: boolean
   history?: HistoryState
   id: string
   value?: string
@@ -101,6 +102,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
     {
       bus,
       enableMultiStatementMode = true,
+      fontLigatures = true,
       history = [],
       id,
       value = '',
@@ -193,6 +195,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
           contextmenu: false,
           cursorStyle: 'block',
           fontFamily: 'Fira Code',
+          fontLigatures,
           fontSize: 17,
           fontWeight: '500',
           hideCursorInOverviewRuler: true,
@@ -307,6 +310,10 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       onContentUpdate()
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [enableMultiStatementMode])
+
+    useEffect(() => {
+      editorRef.current?.updateOptions({ fontLigatures })
+    }, [fontLigatures])
 
     const useDbRef = useRef<string | null>(null)
 

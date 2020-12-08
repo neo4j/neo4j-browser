@@ -81,6 +81,7 @@ import {
 import { defaultFavoriteName } from 'browser/modules/Sidebar/favorites.utils'
 import Monaco, { MonacoHandles } from './Monaco'
 import {
+  codeFontLigatures,
   getTheme,
   LIGHT_THEME,
   shouldEnableMultiStatementMode
@@ -105,6 +106,7 @@ interface EditorSupportSchema {
 type EditorFrameProps = {
   browserTheme: BrowserTheme
   bus: Bus
+  codeFontLigatures: boolean
   enableMultiStatementMode: boolean
   executeCommand: (cmd: string, source: string) => void
   history: HistoryState
@@ -127,6 +129,7 @@ type SavedScript = {
 export function EditorFrame({
   browserTheme,
   bus,
+  codeFontLigatures,
   enableMultiStatementMode,
   executeCommand,
   history,
@@ -295,6 +298,7 @@ export function EditorFrame({
               enableMultiStatementMode={enableMultiStatementMode}
               history={history}
               id={'main-editor'}
+              fontLigatures={codeFontLigatures}
               onChange={() => {
                 setUnsaved(true)
               }}
@@ -371,6 +375,7 @@ export function EditorFrame({
 const mapStateToProps = (state: any) => {
   return {
     browserTheme: getTheme(state),
+    codeFontLigatures: codeFontLigatures(state),
     enableMultiStatementMode: shouldEnableMultiStatementMode(state),
     history: getHistory(state),
     projectId: getProjectId(state),

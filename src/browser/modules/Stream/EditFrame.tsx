@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Dispatch, useEffect, useRef, useState } from 'react'
+import React, { Dispatch, useState } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { Action } from 'redux'
@@ -35,6 +35,7 @@ import {
   executeCommand
 } from 'shared/modules/commands/commandsDuck'
 import {
+  codeFontLigatures,
   getTheme,
   LIGHT_THEME,
   shouldEnableMultiStatementMode
@@ -44,6 +45,7 @@ import { Frame } from 'shared/modules/stream/streamDuck'
 interface EditFrameProps {
   browserTheme: BrowserTheme
   bus: Bus
+  codeFontLigatures: boolean
   enableMultiStatementMode: boolean
   frame: Frame
   runQuery: (query: string) => void
@@ -73,6 +75,7 @@ const EditFrame = (props: EditFrameProps): JSX.Element => {
           <Monaco
             bus={props.bus}
             enableMultiStatementMode={props.enableMultiStatementMode}
+            fontLigatures={props.codeFontLigatures}
             id={props.frame.id}
             onChange={setText}
             theme={theme}
@@ -90,7 +93,8 @@ const EditFrame = (props: EditFrameProps): JSX.Element => {
 
 const mapStateToProps = (state: any) => ({
   browserTheme: getTheme(state),
-  enableMultiStatementMode: shouldEnableMultiStatementMode(state)
+  enableMultiStatementMode: shouldEnableMultiStatementMode(state),
+  codeFontLigatures: codeFontLigatures(state)
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
