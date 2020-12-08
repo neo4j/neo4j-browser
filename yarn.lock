@@ -11649,7 +11649,7 @@ selfsigned@^1.10.7:
   dependencies:
     node-forge "^0.10.0"
 
-semantic-ui-react@0.88.2, semantic-ui-react@^0.88.0:
+semantic-ui-react@0.88.2:
   version "0.88.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/semantic-ui-react/-/semantic-ui-react-0.88.2.tgz#3d4b54f8b799769b412435c8531475fd34aa4149"
   integrity sha1-PUtU+LeZdptBJDXIUxR1/TSqQUk=

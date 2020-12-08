@@ -70,10 +70,6 @@ const getReferences = (version: string, v: string) => {
     {
       name: 'Drivers Manual',
       url: `https://neo4j.com/docs/driver-manual/current/`
-    },
-    {
-      name: 'All Neo4j docs',
-      url: `https://neo4j.com/docs/`
     }
   ]
 
@@ -85,10 +81,6 @@ const getReferences = (version: string, v: string) => {
     {
       name: 'Operations Manual',
       url: `https://neo4j.com/docs/operations-manual/${v}/`
-    },
-    {
-      name: 'GraphGists',
-      url: 'https://neo4j.com/graphgists/'
     },
     {
       name: 'Developer Site',
@@ -121,7 +113,11 @@ const Documents = ({ version, urlVersion }: DocumentsProps) => {
   const guides = [
     { name: 'Intro to Neo4j Browser', command: ':play intro' },
     { name: 'Cypher basics', command: ':play cypher' },
-    { name: 'Queries with Cypher - Movies use case', command: ':play movies' }
+    { name: 'Queries with Cypher - Movies use case', command: ':play movies' },
+    {
+      name: 'More guides',
+      url: 'https://neo4j.com/graphgists/'
+    }
   ]
 
   const { docs, other } = getReferences(version, urlVersion)
