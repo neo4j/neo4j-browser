@@ -40,7 +40,7 @@ import {
   LIGHT_THEME,
   shouldEnableMultiStatementMode
 } from 'shared/modules/settings/settingsDuck'
-import { Frame } from 'shared/modules/stream/streamDuck'
+import { Frame, GlobalState } from 'shared/modules/stream/streamDuck'
 
 interface EditFrameProps {
   browserTheme: BrowserTheme
@@ -91,7 +91,7 @@ const EditFrame = (props: EditFrameProps): JSX.Element => {
   )
 }
 
-const mapStateToProps = (state: any) => ({
+const mapStateToProps = (state: GlobalState) => ({
   browserTheme: getTheme(state),
   enableMultiStatementMode: shouldEnableMultiStatementMode(state),
   codeFontLigatures: codeFontLigatures(state)
