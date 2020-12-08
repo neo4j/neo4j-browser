@@ -288,10 +288,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
 
       const height =
         fixedHeight ||
-        (fillContainer
-          ? container.scrollHeight
-          : // lower bound 39px is height of editor frame, upper bound is 12 lines * 23px line height = 276px
-            Math.min(276, contentHeight))
+        (fillContainer ? container.scrollHeight : Math.min(276, contentHeight)) // Upper bound is 12 lines * 23px line height = 276px
 
       container.style.height = `${height}px`
       editorRef.current?.layout({
