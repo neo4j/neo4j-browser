@@ -79,7 +79,7 @@ export const StyledCommandListItem = styled.li`
   position: relative;
 
   &:hover {
-    background-color: blue;
+    background-color: #40444e;
 
     &:after {
       content: ' ';
@@ -104,11 +104,15 @@ export const StyledName = styled.div`
 `
 
 export const StyledCommand = styled.div`
-  background-color: red;
+  background-color: #2a2c33;
   border-radius: 2px;
-  font-family: Fira Code;
   padding: 3px;
+
+  color: #e36962;
+  font-family: Fira Code;
+
   overflow: hidden;
   text-overflow: ellipsis;
+
   max-width: 45%;
 `
