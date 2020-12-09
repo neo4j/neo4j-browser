@@ -396,7 +396,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
         draftRef.current = editorRef.current?.getValue() || ''
       }
       historyIndexRef.current = localHistoryIndex + 1
-      setValue(history[localHistoryIndex + 1])
+      setValue(localHistory[localHistoryIndex + 1])
     }
 
     const viewHistoryNext = () => {
