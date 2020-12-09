@@ -32,16 +32,17 @@ import reducers from 'shared/rootReducer'
 import epics from 'shared/rootEpic'
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
 import { createUploadLink } from 'apollo-upload-client'
+import * as Sentry from '@sentry/react'
+import { Integrations } from '@sentry/tracing'
 
 import { createReduxMiddleware, getAll, applyKeys } from 'services/localstorage'
 import { APP_START } from 'shared/modules/app/appDuck'
 import { GlobalStyle } from './styles/global-styles'
 import { detectRuntimeEnv } from 'services/utils'
 import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
-import * as Sentry from '@sentry/browser'
-import { Integrations } from '@sentry/tracing'
 import { version } from 'project-root/package.json'
 import { allowOutgoingConnections } from 'shared/modules/dbMeta/dbMetaDuck'
+import { getUuid } from 'shared/modules/udc/udcDuck'
 
 // Configure localstorage sync
 applyKeys(
@@ -89,26 +90,29 @@ bus.applyMiddleware(
   }
 )
 
-async function setupSentry() {
+export function setupSentry() {
   if (process.env.NODE_ENV === 'production') {
-    let isCanary = false
-    try {
-      const json = await (await fetch('./manifest.json')).json()
-      isCanary = Boolean(json && json.name.toLowerCase().includes('canary'))
-    } catch {}
-
     Sentry.init({
       dsn:
         'https://1ea9f7ebd51441cc95906afb2d31d841@o110884.ingest.sentry.io/1232865',
-      release: `neo4j-browser@${version}${isCanary ? '-canary' : ''}`,
+      release: `neo4j-browser@${version}`,
       integrations: [new Integrations.BrowserTracing()],
       tracesSampleRate: 0.2,
       beforeSend: event =>
         allowOutgoingConnections(store.getState()) ? event : null
     })
+    Sentry.setUser({ id: getUuid(store.getState()) })
+
+    fetch('./manifest.json')
+      .then(res => res.json())
+      .then(json => {
+        const isCanary = Boolean(
+          json && json.name.toLowerCase().includes('canary')
+        )
+        Sentry.setTag('deployment', isCanary ? 'canary' : 'prod')
+      })
   }
 }
-setupSentry()
 
 // Introduce environment to be able to fork functionality
 const env = detectRuntimeEnv(window, NEO4J_CLOUD_DOMAINS)

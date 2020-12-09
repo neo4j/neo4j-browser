@@ -6,6 +6,8 @@
     "target": "ES6",
     "strict": true,
     "sourceMap": true,
+    "inlineSources": true,
+    "sourceRoot": "/",
     "noImplicitAny": true,
     "noUnusedLocals": false,
     "noUnusedParameters": true,
