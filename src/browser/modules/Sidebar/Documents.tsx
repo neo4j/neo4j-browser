@@ -23,8 +23,9 @@ import semver from 'semver'
 import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 import DocumentItems from './DocumentItems'
 import { Drawer, DrawerBody, DrawerHeader } from 'browser-components/drawer'
-export const formatDocVersion = (v: string): string => {
+export const formatDocVersion = (v = ''): string => {
   if (!semver.valid(v)) {
+    // All non-strings reutrn
     return 'current'
   }
   if (semver.prerelease(v)) {
