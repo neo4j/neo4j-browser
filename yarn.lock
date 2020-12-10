@@ -1899,6 +1899,16 @@
     "@sentry/utils" "5.29.0"
     tslib "^1.9.3"
 
+"@sentry/integrations@^5.29.0":
+  version "5.29.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@sentry/integrations/-/integrations-5.29.0.tgz#65523b3e01c4ae6ebacf5f0a882811661bb3db0b"
+  integrity sha1-ZVI7PgHErm66z18KiCgRZhuz2ws=
+  dependencies:
+    "@sentry/types" "5.29.0"
+    "@sentry/utils" "5.29.0"
+    localforage "1.8.1"
+    tslib "^1.9.3"
+
 "@sentry/minimal@5.27.0":
   version "5.27.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@sentry/minimal/-/minimal-5.27.0.tgz#8c2fdcf9cd1e59d8ff1848a7905bac304f8e206b"
@@ -8363,6 +8373,13 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
+lie@3.1.1:
+  version "3.1.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/lie/-/lie-3.1.1.tgz#9a436b2cc7746ca59de7a41fa469b3efb76bd87e"
+  integrity sha1-mkNrLMd0bKWd56QfpGmz77dr2H4=
+  dependencies:
+    immediate "~3.0.5"
+
 lie@~3.3.0:
   version "3.3.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/lie/-/lie-3.3.0.tgz#dcf82dee545f46074daf200c7c1c5a08e0f40f6a"
@@ -8528,6 +8545,13 @@ loader-utils@^2.0.0:
     big.js "^5.2.2"
     emojis-list "^3.0.0"
     json5 "^2.1.2"
+
+localforage@1.8.1:
+  version "1.8.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/localforage/-/localforage-1.8.1.tgz#f6c0a24b41ab33b10e4dc84342dd696f6f3e3433"
+  integrity sha1-9sCiS0GrM7EOTchDQt1pb28+NDM=
+  dependencies:
+    lie "3.1.1"
 
 locate-path@^2.0.0:
   version "2.0.0"

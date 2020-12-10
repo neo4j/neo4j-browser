@@ -34,6 +34,7 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
 import { createUploadLink } from 'apollo-upload-client'
 import * as Sentry from '@sentry/react'
 import { Integrations } from '@sentry/tracing'
+import { CaptureConsole } from '@sentry/integrations'
 
 import { createReduxMiddleware, getAll, applyKeys } from 'services/localstorage'
 import { APP_START } from 'shared/modules/app/appDuck'
@@ -96,7 +97,10 @@ export function setupSentry() {
     dsn:
       'https://1ea9f7ebd51441cc95906afb2d31d841@o110884.ingest.sentry.io/1232865',
     release: `neo4j-browser@${version}`,
-    integrations: [new Integrations.BrowserTracing()],
+    integrations: [
+      new Integrations.BrowserTracing(),
+      new CaptureConsole({ levels: ['error'] })
+    ],
     //     tracesSampleRate: 0.2,
     tracesSampleRate: 1,
     beforeSend: event =>

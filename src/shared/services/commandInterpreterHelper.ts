@@ -436,6 +436,7 @@ const availableCommands = [
         description:
           'Time from all actions dispatched until request is resolved'
       })
+      throw new Error('pang!')
       return request
         .then((res: any) => {
           put(updateQueryResult(id, res, REQUEST_STATUS_SUCCESS))
@@ -456,7 +457,6 @@ const availableCommands = [
           put(fetchMetaData())
           finishRequestSpan.finish()
           transaction.finish()
-          throw new Error('pang!')
         })
     }
   },
