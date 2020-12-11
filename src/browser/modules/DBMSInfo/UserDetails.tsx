@@ -81,6 +81,20 @@ export class UserDetails extends Component<any> {
                     </StyledValue>
                   </tr>
                 </Render>
+                <tr>
+                  <StyledKey className="user-list-button">
+                    Disconnect:
+                  </StyledKey>
+                  <StyledValue>
+                    <Link
+                      onClick={() =>
+                        this.props.onItemClick(':server disconnect')
+                      }
+                    >
+                      :server disconnect
+                    </Link>
+                  </StyledValue>
+                </tr>
               </tbody>
             </StyledTable>
           </DrawerSectionBody>
