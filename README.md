@@ -56,7 +56,7 @@ Example: `CYPRESS_E2E_TEST_ENV="local" CYPRESS_BASE_URL=http://localhost:8081 cy
 
 ## Devtools
 
-Redux and React have useful devtools, the chrome versions are linked bellow: 
+Redux and React have useful devtools, the chrome versions are linked below: 
 
 - [Redux devtools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en)
 - [React devtools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)

@@ -66,7 +66,7 @@ const slides = [
           node
         </li>
         <li>
-          <code>{}</code> brackets to add properties to the node
+          <code>{'{}'}</code> brackets to add properties to the node
         </li>
       </ul>
     </div>
