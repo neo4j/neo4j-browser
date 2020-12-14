@@ -153,6 +153,12 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
     useEffect(() => {
       languages.register({ id: 'cypher' })
       languages.setTokensProvider('cypher', new CypherTokensProvider())
+      languages.setLanguageConfiguration('cypher', {
+        comments: {
+          blockComment: ['/*', '*/'],
+          lineComment: '// '
+        }
+      })
 
       editorSupportRef.current = new CypherEditorSupport(value)
       if (schema) {
