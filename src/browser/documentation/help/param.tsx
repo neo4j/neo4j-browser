@@ -42,6 +42,10 @@ const content = (
       <br /> To set a param as an integer, do
       <code>:param x {'=>'} 1</code> and to set it as a float, do
       <code>:param x {'=>'} 1.0</code>.
+      <br /> To set a param as an object, do
+      <code>
+        {':param obj => ({props:{ name:"Andy", position:"Developer"}})'}
+      </code>
     </p>
     <p>
       Cypher query example with a param:
