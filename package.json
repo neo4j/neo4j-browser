@@ -70,7 +70,7 @@
     "@testing-library/react-hooks": "^2.0.1",
     "@types/antlr4": "^4.7.2",
     "@types/apollo-upload-client": "^14.1.0",
-    "@types/d3": "^6.2.0",
+    "@types/d3": "^3",
     "@types/dateformat": "^3.0.1",
     "@types/file-saver": "^2.0.1",
     "@types/jest": "^24.9.0",

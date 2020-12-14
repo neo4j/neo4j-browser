@@ -5,7 +5,7 @@ exports[`Visualization renders 1`] = `<div />`;
 exports[`Visualization renders with result and escapes any HTML 1`] = `
 <div>
   <div
-    class="sc-jwKygS dBdGzX"
+    class="sc-btzYZH dMIXFh"
   >
     <div
       class="sc-iAyFgw ikvPvE one-legend-row"
@@ -137,7 +137,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
             class="sc-cvbbAY ZoyPP faded zoom-in"
           >
             <i
-              class="sc-bYSBpT eYFbay sl-zoom-in"
+              class="sc-elJkPf OBknV sl-zoom-in"
               style="font-size: 1em;"
             />
           </button>
@@ -145,7 +145,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
             class="sc-cvbbAY ZoyPP zoom-out"
           >
             <i
-              class="sc-elJkPf OBknV sl-zoom-out"
+              class="sc-jtRfpW cNTFAN sl-zoom-out"
               style="font-size: 1em;"
             />
           </button>

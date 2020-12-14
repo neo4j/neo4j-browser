@@ -38,7 +38,7 @@ export function handleServerCommand(action: any, put: any, store: any) {
     return handleUserCommand(action, props)
   }
   if (serverCmd === 'change-password') {
-    return handleChangePasswordCommand(action)
+    return handleChangePasswordCommand(action, props)
   }
   if (serverCmd === 'status') {
     return handleServerStatusCommand(action)
