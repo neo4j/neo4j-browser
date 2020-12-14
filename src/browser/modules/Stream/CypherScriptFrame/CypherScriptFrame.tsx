@@ -69,7 +69,7 @@ function CypherScriptFrame({
                       data-testid="multi-statement-list-title"
                       {...titleProps}
                     >
-                      <PointerFrameCommand title={frames[id].cmd}>
+                      <PointerFrameCommand selectedDb={frames[id].cmd}>
                         {frames[id].cmd}
                       </PointerFrameCommand>
                       <StyledFrameTitlebarButtonSection>
@@ -105,7 +105,6 @@ function CypherScriptFrame({
 }
 
 const mapStateToProps = (state: any, ownProps: BaseFrameProps) => {
-  if (!ownProps.frame.statements) return {}
   const frames = ownProps.frame.statements
     .map(id => getFrame(state, id).stack[0])
     .reduce(
