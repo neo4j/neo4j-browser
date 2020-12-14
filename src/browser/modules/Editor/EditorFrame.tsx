@@ -92,7 +92,6 @@ import * as schemaConvert from './editorSchemaConverter'
 import cypherFunctions from './cypher/functions'
 import { getUseDb } from 'shared/modules/connections/connectionsDuck'
 import { getHistory, HistoryState } from 'shared/modules/history/historyDuck'
-import consoleCommands from './language/consoleCommands'
 
 interface ConsoleCommand {
   name: string
@@ -387,7 +386,6 @@ const mapStateToProps = (state: any) => {
     history: getHistory(state),
     projectId: getProjectId(state),
     schema: {
-      consoleCommands,
       parameters: Object.keys(state.params),
       labels: state.meta.labels.map(schemaConvert.toLabel) as string[],
       relationshipTypes: state.meta.relationshipTypes.map(
