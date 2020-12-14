@@ -72,6 +72,7 @@ const vizFn = function(
   const onNodeDragToggle = (node: any) => viz.trigger('nodeDragToggle', node)
 
   const onRelationshipClick = (relationship: any) => {
+    // @ts-ignore
     ;(d3.event as Event).stopPropagation()
     updateViz = false
     return viz.trigger('relationshipClicked', relationship)
@@ -93,6 +94,7 @@ const vizFn = function(
     )
   }
 
+  // @ts-ignore
   const zoomBehavior = d3.behavior
     .zoom()
     .scaleExtent([0.2, 1])
@@ -103,12 +105,14 @@ const vizFn = function(
       .transition()
       .duration(500)
       .tween('zoom', () => {
+        // @ts-ignore
         const t = d3.interpolate<number, number>(
           zoomBehavior.translate(),
           translate
         )
         const s = d3.interpolate(zoomBehavior.scale(), scale)
         return function(a: number) {
+          // @ts-ignore
           zoomBehavior.scale(s(a)).translate(t(a) as [number, number])
           return zoomed()
         }

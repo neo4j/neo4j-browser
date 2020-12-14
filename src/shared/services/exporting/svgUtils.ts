@@ -74,10 +74,10 @@ const appendGraphLayers = (svgElement: any, svg: any) => {
     .each(function() {
       svg.node().appendChild(
         window.d3
-          // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-          .select(this)
-          .node()
-          .cloneNode(true)
+          ?.select(this)
+          ?.node()
+          // @ts-expect-error
+          ?.cloneNode(true)
       )
     })
   return svg
@@ -88,11 +88,11 @@ const appendPlanLayers = (svgElement: any, svg: any) => {
     .selectAll('g.layer')
     .each(function() {
       svg.node().appendChild(
-        window.d3
-          // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-          .select(this)
-          .node()
-          .cloneNode(true)
+        window?.d3
+          ?.select(this)
+          ?.node()
+          // @ts-expect-error
+          ?.cloneNode(true)
       )
     })
   return svg

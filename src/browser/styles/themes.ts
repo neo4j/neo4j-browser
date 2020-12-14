@@ -122,7 +122,6 @@ export const dark = {
   link: '#5CA6D9',
   topicText: '#fff',
   preText: '#fff',
-  // @ts-expect-error
   asideText: rgb(255, 255, 255, 0.87),
 
   // Backgrounds
