@@ -381,8 +381,9 @@ const availableCommands = [
       /^cypher$/.test(cmd) ||
       new RegExp(`^${autoCommitTxCommand}`, 'i').test(cmd),
     exec: (action: any, put: any, store: any) => {
+      // Sentry crashes tests without the ?. when it's not been initiated
       const transaction = Sentry.startTransaction({ name: 'Cypher query' })
-      const startingRequest = transaction.startChild({
+      const startingRequest = transaction?.startChild({
         op: 'Starting request and dispatching'
       })
 
@@ -430,13 +431,12 @@ const availableCommands = [
           requestId: id
         })
       )
-      startingRequest.finish()
-      const finishRequestSpan = transaction.startChild({
+      startingRequest?.finish()
+      const finishRequestSpan = transaction?.startChild({
         op: 'Resolve request',
         description:
           'Time from all actions dispatched until request is resolved'
       })
-      throw new Error('pang!')
       return request
         .then((res: any) => {
           put(updateQueryResult(id, res, REQUEST_STATUS_SUCCESS))
@@ -455,8 +455,8 @@ const availableCommands = [
         })
         .finally(() => {
           put(fetchMetaData())
-          finishRequestSpan.finish()
-          transaction.finish()
+          finishRequestSpan?.finish()
+          transaction?.finish()
         })
     }
   },
