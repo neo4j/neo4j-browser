@@ -195,6 +195,14 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
         KeyMod.CtrlCmd | KeyCode.DownArrow,
         viewHistoryNext
       )
+      editorRef.current.addCommand(
+        KeyMod.CtrlCmd | KeyCode.US_SLASH,
+        onDisplayHelpKeys
+      )
+      editorRef.current.addCommand(
+        KeyMod.CtrlCmd | KeyCode.US_DOT,
+        onDisplayHelpKeys
+      )
       editorRef.current.addCommand(KeyCode.Enter, () =>
         isMultiLine() ? newLine() : execute()
       )
@@ -211,7 +219,6 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       )
 
       const container = document.getElementById(monacoId) as HTMLElement
-      // @ts-ignore - needs polyfill on safari. works in firefox/chrome
       const resizeObserver = new ResizeObserver(() => {
         // Wrapped in requestAnimationFrame to avoid the error "ResizeObserver loop limit exceeded"
         window.requestAnimationFrame(() => {
