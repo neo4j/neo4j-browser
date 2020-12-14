@@ -7,7 +7,6 @@ declare module '*.css'
 declare module '*.less'
 declare module '@mdx-js/runtime'
 declare module '@literal-jsx/parser'
-declare module 'cypher-codemirror'
 declare module 'ascii-data-table'
 declare module 'react-timeago'
 declare module '@neo4j/browser-lambda-parser'
@@ -114,6 +113,11 @@ declare module 'cypher-editor-support' {
     referencesListener: {
       queriesAndCommands: { getText: () => string; start: { line: number } }[]
     }
+  }
+  export function extractStatements(
+    input: string
+  ): {
+    referencesListener: { statements: [{ raw: () => {}[] }] }
   }
 }
 

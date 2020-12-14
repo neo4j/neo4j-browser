@@ -19,7 +19,7 @@
  */
 
 // polyfill for jsdom (for tests only)
-// tests with codemirror breaks without it
+// tests with cypher-editor-support breaks without it
 global.document.createRange = () => {
   return {
     setEnd: () => {},

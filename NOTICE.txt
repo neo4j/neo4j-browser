@@ -316,6 +316,30 @@ Third-party licenses
 │  ├─ @protobufjs/utf8@1.1.0
 │  │  ├─ URL: https://github.com/dcodeIO/protobuf.js.git
 │  │  └─ VendorName: Daniel Wirtz
+│  ├─ @sentry/browser@5.27.0
+│  │  ├─ URL: git://github.com/getsentry/sentry-javascript.git
+│  │  ├─ VendorName: Sentry
+│  │  └─ VendorUrl: https://github.com/getsentry/sentry-javascript/tree/master/packages/browser
+│  ├─ @sentry/core@5.27.0
+│  │  ├─ URL: git://github.com/getsentry/sentry-javascript.git
+│  │  ├─ VendorName: Sentry
+│  │  └─ VendorUrl: https://github.com/getsentry/sentry-javascript/tree/master/packages/core
+│  ├─ @sentry/hub@5.27.0
+│  │  ├─ URL: git://github.com/getsentry/sentry-javascript.git
+│  │  ├─ VendorName: Sentry
+│  │  └─ VendorUrl: https://github.com/getsentry/sentry-javascript/tree/master/packages/hub
+│  ├─ @sentry/minimal@5.27.0
+│  │  ├─ URL: git://github.com/getsentry/sentry-javascript.git
+│  │  ├─ VendorName: Sentry
+│  │  └─ VendorUrl: https://github.com/getsentry/sentry-javascript/tree/master/packages/minimal
+│  ├─ @sentry/types@5.27.0
+│  │  ├─ URL: git://github.com/getsentry/sentry-javascript.git
+│  │  ├─ VendorName: Sentry
+│  │  └─ VendorUrl: https://github.com/getsentry/sentry-javascript/tree/master/packages/types
+│  ├─ @sentry/utils@5.27.0
+│  │  ├─ URL: git://github.com/getsentry/sentry-javascript.git
+│  │  ├─ VendorName: Sentry
+│  │  └─ VendorUrl: https://github.com/getsentry/sentry-javascript/tree/master/packages/utils
 │  ├─ antlr4@4.8.0
 │  │  ├─ URL: https://github.com/antlr/antlr4.git
 │  │  └─ VendorUrl: https://github.com/antlr/antlr4
@@ -373,10 +397,7 @@ Third-party licenses
 │     ├─ VendorName: Tab Atkins Jr.
 │     └─ VendorUrl: https://github.com/tabatkins/railroad-diagrams
 ├─ GPL-3.0
-│  ├─ cypher-codemirror@1.1.6
-│  │  ├─ URL: git://github.com/neo4j-contrib/cypher-editor.git
-│  │  └─ VendorName: Neo Technology Inc.
-│  └─ cypher-editor-support@1.1.6
+│  └─ cypher-editor-support@1.1.7
 │     ├─ URL: git://github.com/neo4j-contrib/cypher-editor.git
 │     └─ VendorName: Neo Technology Inc.
 ├─ ISC
@@ -598,6 +619,10 @@ Third-party licenses
 │  ├─ @semantic-ui-react/event-stack@3.1.1
 │  │  ├─ URL: https://github.com/layershifter/event-stack
 │  │  └─ VendorName: layershifter
+│  ├─ @sentry/tracing@5.27.0
+│  │  ├─ URL: git://github.com/getsentry/sentry-javascript.git
+│  │  ├─ VendorName: Sentry
+│  │  └─ VendorUrl: https://github.com/getsentry/sentry-javascript/tree/master/packages/tracing
 │  ├─ @stardust-ui/react-component-event-listener@0.38.0
 │  │  ├─ URL: https://github.com/stardust-ui/react.git
 │  │  ├─ VendorName: Oleksandr Fediashov
@@ -610,12 +635,20 @@ Third-party licenses
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
 │  ├─ @types/color-name@1.1.1
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
+│  ├─ @types/d3@3.5.44
+│  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
+│  ├─ @types/dateformat@3.0.1
+│  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
+│  ├─ @types/file-saver@2.0.1
+│  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
 │  ├─ @types/hast@2.3.1
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
 │  ├─ @types/hoist-non-react-statics@3.3.1
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
 │  ├─ @types/invariant@2.2.34
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
+│  ├─ @types/jsonic@0.3.0
+│  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git.git
 │  ├─ @types/long@4.0.1
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
 │  ├─ @types/mdast@3.0.3
@@ -632,9 +665,13 @@ Third-party licenses
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
 │  ├─ @types/react@16.9.49
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
+│  ├─ @types/semver@7.3.4
+│  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
 │  ├─ @types/shallowequal@1.1.1
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
 │  ├─ @types/unist@2.0.3
+│  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
+│  ├─ @types/url-parse@1.4.3
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
 │  ├─ @types/zen-observable@0.8.1
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
@@ -797,10 +834,6 @@ Third-party licenses
 │  ├─ classnames@2.2.6
 │  │  ├─ URL: https://github.com/JedWatson/classnames.git
 │  │  └─ VendorName: Jed Watson
-│  ├─ codemirror@5.57.0
-│  │  ├─ URL: https://github.com/codemirror/CodeMirror.git
-│  │  ├─ VendorName: Marijn Haverbeke
-│  │  └─ VendorUrl: https://codemirror.net/
 │  ├─ collapse-white-space@1.0.6
 │  │  ├─ URL: https://github.com/wooorm/collapse-white-space.git
 │  │  ├─ VendorName: Titus Wormer

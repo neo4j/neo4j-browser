@@ -42,14 +42,6 @@ jest.mock(
     }
 )
 jest.mock(
-  '../Editor/Editor',
-  () =>
-    function EmptyDiv() {
-      return <div />
-    }
-)
-
-jest.mock(
   '../Stream/auto-exec-button',
   () =>
     function EmptyDiv() {

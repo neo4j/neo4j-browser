@@ -4111,11 +4111,6 @@ code-point-at@^1.0.0:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
   integrity sha1-DQcLTQQ6W+ozovGkDi7bPZpMz3c=
 
-codemirror@^5.29.0:
-  version "5.57.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/codemirror/-/codemirror-5.57.0.tgz#d26365b72f909f5d2dbb6b1209349ca1daeb2d50"
-  integrity sha1-0mNlty+Qn10tu2sSCTScodrrLVA=
-
 collapse-white-space@^1.0.2:
   version "1.0.6"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/collapse-white-space/-/collapse-white-space-1.0.6.tgz#e63629c0016665792060dbbeb79c42239d2c5287"
@@ -4651,14 +4646,7 @@ cyclist@^1.0.1:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/cyclist/-/cyclist-1.0.1.tgz#596e9698fd0c80e12038c2b82d6eb1b35b6224d9"
   integrity sha1-WW6WmP0MgOEgOMK4LW6xs1tiJNk=
 
-cypher-codemirror@1.1.7:
-  version "1.1.7"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypher-codemirror/-/cypher-codemirror-1.1.7.tgz#4207b96ca5b6649404ab32a2ebc20099b2ee3de4"
-  integrity sha1-Qge5bKW2ZJQEqzKi68IAmbLuPeQ=
-  dependencies:
-    cypher-editor-support "1.1.7"
-
-cypher-editor-support@1.1.7, cypher-editor-support@^1.1.7:
+cypher-editor-support@^1.1.7:
   version "1.1.7"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/cypher-editor-support/-/cypher-editor-support-1.1.7.tgz#14daa7dde9ad8128c06bfc51e31d513ba9cd0fa0"
   integrity sha1-FNqn3emtgSjAa/xR4x1RO6nND6A=
