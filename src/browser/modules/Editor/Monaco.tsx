@@ -167,7 +167,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
 
       languages.registerCompletionItemProvider('cypher', {
         triggerCharacters: ['.', ':', '[', '(', '{', '$'],
-        provideCompletionItems: (model, position) => {
+        provideCompletionItems: (model, position, { triggerCharacter }) => {
           var { startColumn, endColumn } = model.getWordUntilPosition(position)
           const range = {
             startLineNumber: position.lineNumber,
@@ -179,7 +179,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
           const items =
             editorSupportRef.current?.getCompletion(
               position.lineNumber,
-              position.column - 1
+              triggerCharacter === ':' ? position.column - 1 : position.column
             ).items || []
 
           return {
@@ -187,7 +187,9 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
               label: item.view || item.content,
               kind: languages.CompletionItemKind.Keyword,
               insertText: item.content,
-              range: ['label', 'relationshipType'].includes(item.type)
+              range: ['consoleCommand', 'label', 'relationshipType'].includes(
+                item.type
+              )
                 ? { ...range, startColumn: range.startColumn - 1 }
                 : item.type === 'procedure'
                 ? {
