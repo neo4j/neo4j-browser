@@ -187,9 +187,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
               label: item.view || item.content,
               kind: languages.CompletionItemKind.Keyword,
               insertText: item.content,
-              range: ['consoleCommand', 'label', 'relationshipType'].includes(
-                item.type
-              )
+              range: ['label', 'relationshipType'].includes(item.type)
                 ? { ...range, startColumn: range.startColumn - 1 }
                 : item.type === 'procedure'
                 ? {
