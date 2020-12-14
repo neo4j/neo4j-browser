@@ -57,6 +57,7 @@ export interface MonacoHandles {
   focus: () => void
   getValue: () => string
   setValue: (value: string) => void
+  resize: (fillContainer?: boolean, fixedHeight?: number) => void
   setPosition: (position: { lineNumber: number; column: number }) => void
 }
 
@@ -203,9 +204,6 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
         KeyMod.CtrlCmd | KeyCode.US_DOT,
         onDisplayHelpKeys
       )
-      editorRef.current.addCommand(KeyCode.Enter, () =>
-        isMultiLine() ? newLine() : execute()
-      )
       if (toggleFullscreen) {
         editorRef.current?.addCommand(KeyCode.Escape, toggleFullscreen)
       }
@@ -229,6 +227,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
 
       return () => {
         editorRef.current?.dispose()
+        langSupportDisposable.dispose()
         debouncedUpdateCode.cancel()
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
