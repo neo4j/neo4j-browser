@@ -71,13 +71,19 @@ export interface MonacoHandles {
   resize: (fillContainer?: boolean, fixedHeight?: number) => void
 }
 
+interface ConsoleCommand {
+  name: string
+  description?: string
+  commands?: ConsoleCommand[]
+}
+
 interface EditorSupportSchema {
   labels?: string[]
   relationshipTypes?: string[]
   propertyKeys?: string[]
   functions?: string[]
   procedures?: string[]
-  consoleCommands: string[]
+  consoleCommands: ConsoleCommand[]
   parameters?: string[]
 }
 
@@ -154,7 +160,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       }
 
       languages.registerCompletionItemProvider('cypher', {
-        triggerCharacters: ['.', ':', '[', '(', '{'],
+        triggerCharacters: ['.', ':', '[', '(', '{', '$'],
         provideCompletionItems: (model, position) => {
           var { startColumn, endColumn } = model.getWordUntilPosition(position)
           const range = {
@@ -167,15 +173,26 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
           const items =
             editorSupportRef.current?.getCompletion(
               position.lineNumber,
-              position.column
+              position.column - 1
             ).items || []
 
           return {
             suggestions: items.map(item => ({
-              label: item.view,
+              label: item.view || item.content,
               kind: languages.CompletionItemKind.Keyword,
               insertText: item.content,
-              range
+              range: ['consoleCommand', 'label', 'relationshipType'].includes(
+                item.type
+              )
+                ? { ...range, startColumn: range.startColumn - 1 }
+                : item.type === 'procedure'
+                ? {
+                    ...range,
+                    startColumn:
+                      range.startColumn - (item.view.indexOf('.') + 1)
+                  }
+                : range,
+              detail: item.postfix || undefined
             }))
           }
         }

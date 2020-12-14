@@ -78,13 +78,19 @@ declare module 'cypher-editor-support' {
     postfix: null
   }
 
+  interface ConsoleCommand {
+    name: string
+    description?: string
+    commands?: ConsoleCommand[]
+  }
+
   interface EditorSupportSchema {
     labels?: string[]
     relationshipTypes?: string[]
     propertyKeys?: string[]
     functions?: string[]
     procedures?: string[]
-    consoleCommands?: string[]
+    consoleCommands?: ConsoleCommand[]
     parameters?: string[]
   }
 
