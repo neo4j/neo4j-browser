@@ -92,39 +92,38 @@ bus.applyMiddleware(
 )
 
 export function setupSentry() {
-  //if (process.env.NODE_ENV === 'production') {
-  Sentry.init({
-    dsn:
-      'https://1ea9f7ebd51441cc95906afb2d31d841@o110884.ingest.sentry.io/1232865',
-    release: `neo4j-browser@${version}`,
-    integrations: [
-      new Integrations.BrowserTracing(),
-      new CaptureConsole({ levels: ['error'] })
-    ],
-    //     tracesSampleRate: 0.2,
-    tracesSampleRate: 1,
-    beforeSend: event =>
-      allowOutgoingConnections(store.getState()) ? event : null,
-    environment: 'unset'
-  })
-  Sentry.setUser({ id: getUuid(store.getState()) })
-
-  fetch('./manifest.json')
-    .then(res => res.json())
-    .then(json => {
-      const isCanary = Boolean(
-        json && json.name.toLowerCase().includes('canary')
-      )
-
-      Sentry.configureScope(scope =>
-        scope.addEventProcessor(event => ({
-          ...event,
-          environment: isCanary ? 'canary' : 'production'
-        }))
-      )
+  if (process.env.NODE_ENV === 'production') {
+    Sentry.init({
+      dsn:
+        'https://1ea9f7ebd51441cc95906afb2d31d841@o110884.ingest.sentry.io/1232865',
+      release: `neo4j-browser@${version}`,
+      integrations: [
+        new Integrations.BrowserTracing(),
+        new CaptureConsole({ levels: ['error'] })
+      ],
+      tracesSampleRate: 0.2,
+      beforeSend: event =>
+        allowOutgoingConnections(store.getState()) ? event : null,
+      environment: 'unset'
     })
-    .catch(() => {})
-  //  }
+    Sentry.setUser({ id: getUuid(store.getState()) })
+
+    fetch('./manifest.json')
+      .then(res => res.json())
+      .then(json => {
+        const isCanary = Boolean(
+          json && json.name.toLowerCase().includes('canary')
+        )
+
+        Sentry.configureScope(scope =>
+          scope.addEventProcessor(event => ({
+            ...event,
+            environment: isCanary ? 'canary' : 'production'
+          }))
+        )
+      })
+      .catch(() => {})
+  }
 }
 
 // Introduce environment to be able to fork functionality
