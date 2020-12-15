@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { ConsoleCommand, EditorSupportSchema } from 'cypher-editor-support'
 import React, {
   useState,
   Dispatch,
@@ -93,22 +94,6 @@ import cypherFunctions from './cypher/functions'
 import { getUseDb } from 'shared/modules/connections/connectionsDuck'
 import { getHistory, HistoryState } from 'shared/modules/history/historyDuck'
 import consoleCommands from './language/consoleCommands'
-
-interface ConsoleCommand {
-  name: string
-  description?: string
-  commands?: ConsoleCommand[]
-}
-
-interface EditorSupportSchema {
-  labels?: string[]
-  relationshipTypes?: string[]
-  propertyKeys?: string[]
-  functions?: string[]
-  procedures?: string[]
-  consoleCommands: ConsoleCommand[]
-  parameters?: string[]
-}
 
 type EditorFrameProps = {
   browserTheme: BrowserTheme

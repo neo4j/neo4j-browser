@@ -18,7 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { CypherEditorSupport, parse } from 'cypher-editor-support'
+import {
+  ConsoleCommand,
+  CypherEditorSupport,
+  EditorSupportSchema,
+  parse
+} from 'cypher-editor-support'
 import { debounce } from 'lodash-es'
 import {
   editor,
@@ -69,22 +74,6 @@ export interface MonacoHandles {
   getValue: () => string
   setValue: (value: string) => void
   resize: (fillContainer?: boolean, fixedHeight?: number) => void
-}
-
-interface ConsoleCommand {
-  name: string
-  description?: string
-  commands?: ConsoleCommand[]
-}
-
-interface EditorSupportSchema {
-  labels?: string[]
-  relationshipTypes?: string[]
-  propertyKeys?: string[]
-  functions?: string[]
-  procedures?: string[]
-  consoleCommands: ConsoleCommand[]
-  parameters?: string[]
 }
 
 interface MonacoProps {
