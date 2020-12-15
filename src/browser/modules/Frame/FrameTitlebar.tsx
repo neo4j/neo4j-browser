@@ -102,7 +102,11 @@ type FrameTitleBarProps = FrameTitleBarBaseProps & {
   isRelateAvailable: boolean
   newFavorite: (cmd: string) => void
   newProjectFile: (cmd: string) => void
-  onCloseClick: (a: any, b: any, c: any) => void
+  onCloseClick: (
+    frameId: string,
+    requestId: string,
+    request: Request | null
+  ) => void
   onRunClick: () => void
   reRun: (obj: Frame, cmd: string) => void
   togglePinning: (id: string, isPinned: boolean) => void
@@ -393,7 +397,11 @@ const mapDispatchToProps = (
     newProjectFile: (cmd: string) => {
       dispatch(sidebar.setDraftScript(cmd, 'project files'))
     },
-    onCloseClick: async (id: string, requestId: string, request?: Request) => {
+    onCloseClick: async (
+      id: string,
+      requestId: string,
+      request: Request | null
+    ) => {
       if (request && request.status === REQUEST_STATUS_PENDING) {
         dispatch(cancelRequest(requestId))
         await sleep(3000) // sleep for 3000 ms to let user read the cancel info
