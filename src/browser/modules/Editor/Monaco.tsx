@@ -154,6 +154,12 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       languages.register({ id: 'cypher' })
       languages.setTokensProvider('cypher', new CypherTokensProvider())
       languages.setLanguageConfiguration('cypher', {
+        brackets: [
+          ['(', ')'],
+          ['{', '}'],
+          ['[', ']'],
+          ['"', '"']
+        ],
         comments: {
           blockComment: ['/*', '*/'],
           lineComment: '// '
