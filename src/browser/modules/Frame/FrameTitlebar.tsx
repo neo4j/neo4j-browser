@@ -266,15 +266,13 @@ function FrameTitlebar(props: FrameTitleBarProps) {
           </StyledFrameCommand>
         }
       />
-      <Render if={frame.type !== 'edit'}>
-        <FrameButton
-          data-testid="rerunFrameButton"
-          title="Rerun"
-          onClick={() => run(editorValue)}
-        >
-          <RunIcon />
-        </FrameButton>
-      </Render>
+      <FrameButton
+        data-testid="rerunFrameButton"
+        title="Rerun"
+        onClick={() => run(editorValue)}
+      >
+        <RunIcon />
+      </FrameButton>
       <StyledFrameTitlebarButtonSection>
         <FrameButton
           title="Save as Favorite"
