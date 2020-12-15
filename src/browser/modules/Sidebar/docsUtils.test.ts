@@ -22,10 +22,7 @@ import { formatDocVersion } from './Documents'
 
 test('formatDocVersion', () => {
   const tests = [
-    { test: null, expect: 'current' },
     { test: undefined, expect: 'current' },
-    { test: true, expect: 'current' },
-    { test: false, expect: 'current' },
     { test: '', expect: 'current' },
     { test: '1.1.0', expect: '1.1' },
     { test: '1.1.0-beta01', expect: '1.1-preview' },

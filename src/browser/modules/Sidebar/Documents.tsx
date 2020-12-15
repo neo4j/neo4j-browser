@@ -23,9 +23,14 @@ import semver from 'semver'
 import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 import DocumentItems from './DocumentItems'
 import { Drawer, DrawerBody, DrawerHeader } from 'browser-components/drawer'
+import styled from 'styled-components'
+const FullSizeDrawerBody = styled(DrawerBody)`
+  padding: 0;
+`
 
-export const formatDocVersion = (v: any) => {
+export const formatDocVersion = (v = ''): string => {
   if (!semver.valid(v)) {
+    // All non-strings return
     return 'current'
   }
   if (semver.prerelease(v)) {
@@ -33,114 +38,104 @@ export const formatDocVersion = (v: any) => {
   }
   return `${semver.major(v)}.${semver.minor(v)}` || 'current'
 }
-export const shouldLinkToNewRefs = (v: any) => {
+export const shouldLinkToNewRefs = (v: string): boolean => {
   if (!semver.valid(v)) return false
   return semver.gte(v, '3.5.0-alpha01')
 }
 
-const intro = [
-  { name: 'Getting started', command: ':play intro', type: 'play' },
-  { name: 'Basic graph concepts', command: ':play concepts', type: 'play' },
-  { name: 'Writing Cypher queries', command: ':play cypher', type: 'play' }
-]
-const help = [
-  { name: 'Help', command: ':help help', type: 'help' },
-  { name: 'Cypher syntax', command: ':help cypher', type: 'help' },
-  { name: 'Available commands', command: ':help commands', type: 'help' },
-  { name: 'Keyboard shortcuts', command: ':help keys', type: 'help' }
-]
-
-const getReferences = (version: any, v: any) => {
+const getReferences = (version: string, v: string) => {
   const newRefs = [
     {
-      name: 'Getting Started',
-      command: `https://neo4j.com/docs/getting-started/${v}`,
-      type: 'link'
+      name: 'Getting Started with Neo4j',
+      url: `https://neo4j.com/docs/getting-started/${v}`
     },
     {
       name: 'Cypher Introduction',
-      command: ` https://neo4j.com/docs/cypher-manual/${v}/introduction/ `,
-      type: 'link'
+      url: ` https://neo4j.com/docs/cypher-manual/${v}/introduction/ `
     }
   ]
   const oldRefs = [
     {
       name: 'Getting Started',
-      command: `https://neo4j.com/docs/developer-manual/${v}/get-started/`,
-      type: 'link'
+      url: `https://neo4j.com/docs/developer-manual/${v}/get-started/`
     },
     {
       name: 'Developer Manual',
-      command: `https://neo4j.com/docs/developer-manual/${v}/`,
-      type: 'link'
+      url: `https://neo4j.com/docs/developer-manual/${v}/`
     },
     {
       name: 'Cypher Introduction',
-      command: `https://neo4j.com/docs/developer-manual/${v}/cypher/`,
-      type: 'link'
+      url: `https://neo4j.com/docs/developer-manual/${v}/cypher/`
     }
   ]
-  const commonRefs = [
+  const common = [
     {
-      name: 'Operations Manual',
-      command: `https://neo4j.com/docs/operations-manual/${v}/`,
-      type: 'link'
+      name: 'Cypher Refcard',
+      url: `https://neo4j.com/docs/cypher-refcard/${v}/`
     },
     {
       name: 'Drivers Manual',
-      command: `https://neo4j.com/docs/driver-manual/current/`,
-      type: 'link'
-    },
+      url: `https://neo4j.com/docs/driver-manual/current/`
+    }
+  ]
+
+  const docs = [
+    ...(shouldLinkToNewRefs(version) ? newRefs : oldRefs),
+    ...common
+  ]
+  const other = [
     {
-      name: 'Cypher Refcard',
-      command: `https://neo4j.com/docs/cypher-refcard/${v}/`,
-      type: 'link'
-    },
-    {
-      name: 'GraphGists',
-      command: 'https://neo4j.com/graphgists/',
-      type: 'link'
+      name: 'Operations Manual',
+      url: `https://neo4j.com/docs/operations-manual/${v}/`
     },
     {
       name: 'Developer Site',
-      command: 'https://www.neo4j.com/developer/',
-      type: 'link'
+      url: 'https://www.neo4j.com/developer/'
     },
     {
       name: 'Knowledge Base',
-      command: 'https://neo4j.com/developer/kb/',
-      type: 'link'
+      url: 'https://neo4j.com/developer/kb/'
     },
     {
       name: 'Neo4j Browser Developer Pages',
-      command: 'https://neo4j.com/developer/neo4j-browser/',
-      type: 'link'
+      url: 'https://neo4j.com/developer/neo4j-browser/'
     }
   ]
-  return ([] as any[]).concat(
-    shouldLinkToNewRefs(version) ? newRefs : oldRefs,
-    commonRefs
-  )
+  return { docs, other }
 }
 
-const getStaticItems = (version: any, urlVersion: any) => {
-  return {
-    help,
-    intro,
-    reference: getReferences(version, urlVersion)
-  }
-}
+type DocumentsProps = { version: string; urlVersion: string }
+const Documents = ({ version, urlVersion }: DocumentsProps) => {
+  const useful = [
+    { name: 'Help by topic', command: ':help' },
+    { name: 'Cypher help', command: ':help cypher' },
+    { name: 'Available commands', command: ':help commands' },
+    { name: 'Keybindings', command: ':help keys' },
+    { name: 'Command history', command: ':history' },
+    { name: 'Show schema', command: 'CALL db.schema.visualization()' },
+    { name: 'System info', command: ':sysinfo' }
+  ]
 
-const Documents = ({ version, urlVersion }: any) => {
-  const items = getStaticItems(version, urlVersion)
+  const guides = [
+    { name: 'Intro to Neo4j Browser', command: ':play intro' },
+    { name: 'Cypher basics', command: ':play cypher' },
+    { name: 'Queries with Cypher - Movies use case', command: ':play movies' },
+    {
+      name: 'More guides',
+      url: 'https://neo4j.com/graphgists/'
+    }
+  ]
+
+  const { docs, other } = getReferences(version, urlVersion)
   return (
     <Drawer id="db-documents">
-      <DrawerHeader>Help &amp; Resources</DrawerHeader>
-      <DrawerBody>
-        <DocumentItems header="Introduction" items={items.intro} />
-        <DocumentItems header="Help" items={items.help} />
-        <DocumentItems header="Useful Resources" items={items.reference} />
-      </DrawerBody>
+      <DrawerHeader>Help &amp; Learn</DrawerHeader>
+      <FullSizeDrawerBody>
+        <DocumentItems header="Useful commands" items={useful} />
+        <DocumentItems header="Built-in guides" items={guides} />
+        <DocumentItems header="Documentation links" items={docs} />
+        <DocumentItems header="Other Resources" items={other} />
+      </FullSizeDrawerBody>
     </Drawer>
   )
 }
