@@ -66,7 +66,6 @@ function addFrame(state: FramesState, newState: Frame) {
   }
 
   const frameObject = state.byId[newState.id] || { stack: [], isPinned: false }
-  // shoehorned history for re-usable frame. Should be kept in local state after refractor
   const newFrame = {
     ...newState,
     history: [newState.cmd, ...(frameObject.stack[0]?.history || [])]

@@ -154,12 +154,14 @@ describe('commandsDuck', () => {
             type: 'param',
             params: { x: 2 }
           } as any),
-          updateQueryResult(
-            // @ts-expect-error
-            undefined,
-            { result: { x: 2 }, type: 'param' },
-            'success'
-          ),
+          {
+            ...updateQueryResult(
+              'id',
+              { result: { x: 2 }, type: 'param' },
+              'success'
+            ),
+            id: undefined
+          },
           { type: 'NOOP' }
         ])
         done()
@@ -225,12 +227,14 @@ describe('commandsDuck', () => {
             type: 'params',
             params: {}
           } as any),
-          updateQueryResult(
-            // @ts-expect-error
-            undefined,
-            { result: { x: 2, y: 3 }, type: 'params' },
-            'success'
-          ),
+          {
+            ...updateQueryResult(
+              'id',
+              { result: { x: 2, y: 3 }, type: 'params' },
+              'success'
+            ),
+            id: undefined
+          },
           { type: 'NOOP' }
         ])
         done()
@@ -435,7 +439,6 @@ describe('commandsDuck', () => {
     })
     test('does the right thing for history command with comments', done => {
       // Given
-      const comment = '//COMMENT FOR HISTORY'
       const cmdString = 'history'
       const cmd = `:${cmdString}`
       const id = 1
