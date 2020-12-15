@@ -23,9 +23,14 @@ import semver from 'semver'
 import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 import DocumentItems from './DocumentItems'
 import { Drawer, DrawerBody, DrawerHeader } from 'browser-components/drawer'
+import styled from 'styled-components'
+const FullSizeDrawerBody = styled(DrawerBody)`
+  padding: 0;
+`
+
 export const formatDocVersion = (v = ''): string => {
   if (!semver.valid(v)) {
-    // All non-strings reutrn
+    // All non-strings return
     return 'current'
   }
   if (semver.prerelease(v)) {
@@ -125,12 +130,12 @@ const Documents = ({ version, urlVersion }: DocumentsProps) => {
   return (
     <Drawer id="db-documents">
       <DrawerHeader>Help &amp; Learn</DrawerHeader>
-      <DrawerBody>
+      <FullSizeDrawerBody>
         <DocumentItems header="Useful commands" items={useful} />
         <DocumentItems header="Built-in guides" items={guides} />
         <DocumentItems header="Documentation links" items={docs} />
         <DocumentItems header="Other Resources" items={other} />
-      </DrawerBody>
+      </FullSizeDrawerBody>
     </Drawer>
   )
 }

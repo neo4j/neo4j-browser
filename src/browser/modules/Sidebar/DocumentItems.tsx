@@ -36,6 +36,10 @@ import {
   commandSources,
   executeCommand
 } from 'shared/modules/commands/commandsDuck'
+import styled from 'styled-components'
+const DrawerSubHeaderWithMargin = styled(DrawerSubHeader)`
+  margin: 0 24px 0 24px;
+`
 
 type DocumentItemsOwnProps = {
   header: string
@@ -80,7 +84,7 @@ export const DocumentItems = ({
 
   return (
     <DrawerSection>
-      <DrawerSubHeader>{header}</DrawerSubHeader>
+      <DrawerSubHeaderWithMargin>{header}</DrawerSubHeaderWithMargin>
       <DrawerSectionBody>
         <ul>{listOfItems}</ul>
       </DrawerSectionBody>

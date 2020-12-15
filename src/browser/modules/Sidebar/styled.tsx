@@ -45,9 +45,12 @@ export const StyledSettingTextInput: any = styled.input`
 
 export const StyledHelpLink = styled.a`
   cursor: pointer;
-  -webkit-text-decoration: none;
   text-decoration: none;
   color: #68bdf4;
+
+  &:active {
+    text-decoration: none;
+  }
 
   &:before {
     display: inline-block;
@@ -60,11 +63,10 @@ export const StyledHelpLink = styled.a`
 `
 export const StyledHelpItem = styled.li`
   list-style-type: none;
-  margin: 8px 0 0 0;
+  margin: 8px 24px 0 24px;
 `
 
 export const StyledCommandListItem = styled.li`
-  margin: 0px -39px 0 -24px; // Get full width background hover effect
   list-style-type: none;
   cursor: pointer;
   -webkit-text-decoration: none;
@@ -77,7 +79,7 @@ export const StyledCommandListItem = styled.li`
       content: ' ';
       position: absolute;
       top: 15px;
-      right: 22px;
+      right: 5px;
       background-image: url("data:image/svg+xml;utf8,<svg fill='none' xmlns='http://www.w3.org/2000/svg'><path fill-rule='evenodd' clip-rule='evenodd' d='M12.7791 6.65634C13.3966 7.04929 13.3966 7.95071 12.7791 8.34366L4.64174 13.522C3.97601 13.9456 3.10486 13.4674 3.10486 12.6783L3.10486 2.32167C3.10486 1.53258 3.97601 1.05437 4.64173 1.47801L12.7791 6.65634Z'  stroke='%2368BDF4' stroke-linejoin='round' /></svg>");
       height: 15px;
       width: 15px;
@@ -86,7 +88,7 @@ export const StyledCommandListItem = styled.li`
 `
 
 export const StyledCommandNamePair = styled.div`
-  margin: 0px 39px 0 24px; // Restore normal width
+  margin: 0px 24px;
   padding: 10px 0;
   display: flex;
 `
@@ -104,6 +106,7 @@ export const StyledCommand = styled.div`
   font-family: Fira Code;
 
   overflow: hidden;
+  white-space: nowrap
   text-overflow: ellipsis;
 
   max-width: 45%;
