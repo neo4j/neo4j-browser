@@ -151,7 +151,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
         ],
         comments: {
           blockComment: ['/*', '*/'],
-          lineComment: '// '
+          lineComment: '//'
         }
       })
 
@@ -266,10 +266,6 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       editorRef.current.addCommand(
         KeyMod.CtrlCmd | KeyCode.DownArrow,
         viewHistoryNext
-      )
-      editorRef.current.addCommand(
-        KeyMod.CtrlCmd | KeyCode.US_SLASH,
-        onDisplayHelpKeys
       )
       editorRef.current.addCommand(
         KeyMod.CtrlCmd | KeyCode.US_DOT,
