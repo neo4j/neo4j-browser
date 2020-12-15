@@ -54,6 +54,7 @@ import { CONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
 import { shouldTriggerConnectEvent, getTodayDate } from './udcHelpers'
 import api from 'services/intercom'
 import cmdHelper from 'shared/services/commandInterpreterHelper'
+import { extractStatementsFromString } from 'services/commandUtils'
 
 // Action types
 export const NAME = 'udc'
@@ -277,13 +278,27 @@ export const incrementEventEpic = (action$: any, store: any) =>
 export const trackCommandUsageEpic = (action$: any) =>
   action$.ofType(COMMAND_QUEUED).map((action: any) => {
     const isCypher = !action.cmd.startsWith(':')
-    const label = isCypher
-      ? 'cypher'
-      : cmdHelper.interpret(action.cmd.slice(1))?.name
+    if (isCypher) {
+      const numberOfStatments =
+        extractStatementsFromString(action.cmd)?.length || 1
+      return metricsEvent({
+        category: 'command',
+        label: 'cypher',
+        data: {
+          source: action.source || 'unknown',
+          averageWordCount: action.cmd.split(' ').length / numberOfStatments,
+          averageLineCount: action.cmd.split('\n').length / numberOfStatments,
+          numberOfStatments
+        }
+      })
+    }
+
+    const label = cmdHelper.interpret(action.cmd.slice(1))?.name
     if (label === 'catch-all') {
       // already tracked as error frame
       return { type: 'NOOP' }
     }
+
     return metricsEvent({
       category: 'command',
       label,
