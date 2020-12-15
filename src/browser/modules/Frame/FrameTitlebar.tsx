@@ -111,7 +111,6 @@ type FrameTitleBarProps = FrameTitleBarBaseProps & {
 
 function FrameTitlebar(props: FrameTitleBarProps) {
   const [editorValue, setEditorValue] = useState(props.frame.cmd)
-  const [history, setHistory] = useState<string[]>([])
   const editorRef = useRef<MonacoHandles>(null)
 
   /* When the frametype is changed the titlebar is unmounted
@@ -130,7 +129,13 @@ function FrameTitlebar(props: FrameTitleBarProps) {
   const gainFocusCallback = useCallback(() => {
     if (props.frame.isRerun) {
       editorRef.current?.focus()
-      editorRef.current?.setPosition({ lineNumber: 999, column: 999 })
+
+      const lines = (editorRef.current?.getValue() || '').split('\n')
+      const linesLength = lines.length
+      editorRef.current?.setPosition({
+        lineNumber: linesLength,
+        column: lines[linesLength - 1].length + 1
+      })
     }
   }, [props.frame.isRerun])
   useEffect(gainFocusCallback, [gainFocusCallback])
@@ -219,7 +224,6 @@ function FrameTitlebar(props: FrameTitleBarProps) {
   }
 
   function run(cmd: string) {
-    setHistory([cmd, ...history])
     props.reRun(frame, cmd)
   }
 
