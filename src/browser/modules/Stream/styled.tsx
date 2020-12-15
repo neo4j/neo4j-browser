@@ -42,7 +42,7 @@ export const PaddedTableViewDiv = styled(PaddedDiv)`
   width: 100%;
 `
 
-export const DottedLineHover = styled.input`
+export const DottedLineHover = styled.span`
   cursor: pointer;
   &:hover {
     cursor: pointer;

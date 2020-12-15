@@ -57,7 +57,8 @@ import {
   DropdownList,
   DropdownContent,
   DropdownButton,
-  DropdownItem
+  DropdownItem,
+  DottedLineHover
 } from '../Stream/styled'
 import {
   StyledFrameTitleBar,
@@ -261,7 +262,7 @@ function FrameTitlebar(props: FrameTitleBarProps) {
             selectedDb={frame.useDb}
             onClick={() => props.onTitlebarClick(editorValue)}
           >
-            {editorValue}
+            <DottedLineHover>{editorValue}</DottedLineHover>
           </StyledFrameCommand>
         }
       />
