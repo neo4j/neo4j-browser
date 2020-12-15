@@ -20,6 +20,7 @@
 import './init'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import AppInit from './AppInit'
+import AppInit, { setupSentry } from './AppInit'
 
+setupSentry()
 ReactDOM.render(<AppInit />, document.getElementById('mount'))

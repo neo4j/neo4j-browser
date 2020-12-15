@@ -19,6 +19,7 @@
  */
 import React, { Component } from 'react'
 import styled from 'styled-components'
+import * as Sentry from '@sentry/react'
 import { StyledErrorBoundaryButton } from 'browser-components/buttons/index'
 
 const ErrorWrapper = styled.div`
@@ -27,39 +28,29 @@ const ErrorWrapper = styled.div`
   text-align: center;
   color: #da4433;
 `
+type ErrorBoundaryProps = {
+  caption?: string
+  children: React.ReactNode
+}
 
-type State = any
-
-export default class ErrorBoundary extends Component<
-  { caption?: string },
-  State
-> {
-  state = {
-    errorInfo: null,
-    error: null
-  }
-
-  componentDidCatch(error: any, errorInfo: any) {
-    this.setState({ errorInfo, error })
-  }
-
-  render() {
-    if (this.state.error) {
-      return (
+export default function ErrorBoundary(props: ErrorBoundaryProps): JSX.Element {
+  return (
+    <Sentry.ErrorBoundary
+      fallback={({ error }) => (
         <ErrorWrapper>
           <p>
-            Something went wrong:{' '}
-            <em>"{(this.state.error || '').toString()}"</em> and the application
-            can't recover.
+            Something went wrong: <em>"{(error || '').toString()}"</em> and the
+            application can't recover.
           </p>
           <div style={{ marginTop: '5px' }}>
             <StyledErrorBoundaryButton onClick={() => window.location.reload()}>
-              {this.props.caption || 'Reload application'}
+              {props.caption || 'Reload application'}
             </StyledErrorBoundaryButton>
           </div>
         </ErrorWrapper>
-      )
-    }
-    return this.props.children
-  }
+      )}
+    >
+      {props.children}
+    </Sentry.ErrorBoundary>
+  )
 }

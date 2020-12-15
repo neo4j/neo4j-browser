@@ -118,6 +118,7 @@ const getCompanies = (state: any) => {
   return null
 }
 const getEvents = (state: any) => state[NAME].events || initialState.events
+export const getUuid = (state: any) => state[NAME].uuid || initialState.uuid
 
 const initialState = {
   uuid: v4(),
