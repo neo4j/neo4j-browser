@@ -110,14 +110,6 @@ Cypress.Commands.add('executeCommand', (query, options = {}) => {
   cy.wait(1000)
 })
 
-Cypress.Commands.add('disableEditorAutocomplete', () => {
-  cy.executeCommand(':config editorAutocomplete: false')
-  cy.executeCommand(':clear')
-})
-Cypress.Commands.add('enableEditorAutocomplete', () => {
-  cy.executeCommand(':config editorAutocomplete: true')
-  cy.executeCommand(':clear')
-})
 Cypress.Commands.add('waitForCommandResult', () => {
   cy.get('[data-testid="frame-loaded-contents"]', { timeout: 40000 }).should(
     'be.visible'

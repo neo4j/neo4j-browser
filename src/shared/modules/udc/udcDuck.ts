@@ -230,7 +230,6 @@ export const udcStartupEpic = (action$: any, store: any) =>
         'scrollToTop',
         'maxFrames',
         'codeFontLigatures',
-        'editorAutocomplete',
         'editorLint',
         'useCypherThread',
         'enableMultiStatementMode',

@@ -6,7 +6,6 @@ Object {
   "browserSyncDebugServer": null,
   "codeFontLigatures": true,
   "connectionTimeout": 30000,
-  "editorAutocomplete": true,
   "editorLint": false,
   "enableMultiStatementMode": true,
   "initCmd": ":play start",

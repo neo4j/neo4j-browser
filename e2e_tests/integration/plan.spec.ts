@@ -28,12 +28,8 @@ describe('Plan output', () => {
       .title()
       .should('include', 'Neo4j Browser')
     cy.wait(3000)
-    cy.disableEditorAutocomplete()
     const password = Cypress.config('password')
     cy.connect('neo4j', password)
-  })
-  after(function() {
-    cy.enableEditorAutocomplete()
   })
   it('displays the expanded details by default and displays/hides details when clicking the plan expand/collapse buttons respectively', () => {
     cy.executeCommand(':clear')

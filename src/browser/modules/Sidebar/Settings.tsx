@@ -69,13 +69,6 @@ const visualSettings = [
         }
       },
       {
-        editorAutocomplete: {
-          displayName: 'Enhanced query editor',
-          tooltip: 'Autocomplete and syntax highlighting in query editor',
-          type: 'checkbox'
-        }
-      },
-      {
         enableMultiStatementMode: {
           displayName: 'Enable multi statement query editor',
           tooltip: 'Allows query editor to execute multiple statements',
