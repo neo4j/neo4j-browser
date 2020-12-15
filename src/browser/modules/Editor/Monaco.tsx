@@ -86,7 +86,6 @@ interface MonacoProps {
   onChange?: (value: string) => void
   onDisplayHelpKeys?: () => void
   onExecute?: () => void
-  options?: editor.IGlobalEditorOptions
   schema?: EditorSupportSchema
   theme?: BrowserTheme
   useDb?: null | string
