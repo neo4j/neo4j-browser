@@ -155,13 +155,17 @@ export function EditorFrame({
   const editorRef = useRef<MonacoHandles>(null)
 
   const toggleFullscreen = useCallback(() => {
-    setFullscreen(!isFullscreen)
-    editorRef.current?.resize(!isFullscreen)
+    updateFullscreen(!isFullscreen)
   }, [isFullscreen])
 
   const [derivedTheme] = useDerivedTheme(browserTheme, LIGHT_THEME) as [
     BrowserTheme
   ]
+
+  const updateFullscreen = (fullScreen: boolean) => {
+    setFullscreen(fullScreen)
+    editorRef.current?.resize(fullScreen)
+  }
 
   useEffect(() => bus && bus.take(EXPAND, toggleFullscreen), [
     bus,
@@ -231,7 +235,7 @@ export function EditorFrame({
   function discardEditor() {
     editorRef.current?.setValue('')
     setCurrentlyEditing(null)
-    setFullscreen(false)
+    updateFullscreen(false)
   }
 
   const buttons = [
@@ -261,7 +265,7 @@ export function EditorFrame({
       executeCommand(editorRef.current?.getValue() || '', source)
       editorRef.current?.setValue('')
       setCurrentlyEditing(null)
-      setFullscreen(false)
+      updateFullscreen(false)
     }
   }
 
