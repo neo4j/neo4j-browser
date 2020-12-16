@@ -38,12 +38,12 @@ describe('Neo4j Browser', () => {
     cy.setInitialPassword(newPassword)
     cy.disconnect()
   })
-  it('populates the editor when clicking the connect banner', () => {
+
+  it(':server connect frame is re-runnable', () => {
     cy.get('[data-testid="disconnectedBannerCode"]').click()
-    cy.get('[data-testid="frameCommand"]')
-      .first()
-      .should('contain', ':server connect')
-    cy.get('[data-testid="activeEditor"] [data-testid="editor-discard"]')
+    cy.get('[data-testid="frameCommand"]').contains(':server connect')
+    cy.typeInFrame(':play movies{enter}', 0)
+    cy.get('[data-testid=frame]').contains('the Bacon Path')
   })
   it('can connect', () => {
     const password = Cypress.config('password')

@@ -241,7 +241,7 @@ function FrameTitlebar(props: FrameTitleBarProps) {
       <FeatureToggle
         name={reusableFrame}
         on={
-          <FrameTitleEditorContainer>
+          <FrameTitleEditorContainer data-testid="frameCommand">
             <Monaco
               history={frame.history || []}
               useDb={frame.useDb}
@@ -261,6 +261,7 @@ function FrameTitlebar(props: FrameTitleBarProps) {
           <StyledFrameCommand
             selectedDb={frame.useDb}
             onClick={() => props.onTitlebarClick(editorValue)}
+            data-testid="frameCommand"
           >
             <DottedLineHover>{editorValue}</DottedLineHover>
           </StyledFrameCommand>

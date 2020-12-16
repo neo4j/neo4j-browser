@@ -102,6 +102,17 @@ Cypress.Commands.add('disconnect', () => {
   cy.executeCommand(query)
 })
 
+Cypress.Commands.add('typeInFrame', (cmd: string, frameIndex = 0) => {
+  cy.get('[data-testid=monaco-editors]')
+    .eq(frameIndex + 1) // the first monaco editor is the main one
+    .type(
+      Cypress.platform === 'darwin'
+        ? '{cmd}a {backspace}{backspace}'
+        : '{ctrl}a {backspace}{backspace}'
+    )
+    .type(cmd)
+})
+
 Cypress.Commands.add('executeCommand', (query, options = {}) => {
   cy.get(VisibleEditor).click()
   cy.get(EditorTextField).type(query, { force: true, ...options })
