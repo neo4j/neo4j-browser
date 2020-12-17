@@ -42,7 +42,7 @@ describe('Neo4j Desktop environment', () => {
       frames.should('have.length', 2)
 
       // Auto connected = :play start
-      frames.first().should('contain', ':play start')
+      frames.first().contains(':play start')
       cy.wait(1000)
     })
     it('switches connection when that event is triggered using host + port fields', () => {
@@ -57,7 +57,7 @@ describe('Neo4j Desktop environment', () => {
       const frames = cy.get('[data-testid="frameCommand"]', { timeout: 10000 })
       frames.should('have.length', 1)
 
-      frames.first().should('contain', ':server switch success')
+      frames.first().contains(':server switch success')
 
       cy.get('[data-testid="frame"]', { timeout: 10000 })
         .first()
@@ -79,7 +79,7 @@ describe('Neo4j Desktop environment', () => {
       const frames = cy.get('[data-testid="frameCommand"]', { timeout: 10000 })
       frames.should('have.length', 1)
 
-      frames.first().should('contain', ':server switch fail')
+      frames.first().contains(':server switch fail')
 
       cy.get('[data-testid="disconnectedBanner"]', { timeout: 10000 })
         .first()

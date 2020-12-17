@@ -67,9 +67,9 @@ describe('Multi statements', () => {
 
     // Then
     // Error expected
-    cy.get('[data-testid="frameCommand"]', { timeout: 10000 })
-      .first()
-      .should('contain', validQuery)
+    cy.get('[data-testid="frameCommand"]', { timeout: 10000 }).contains(
+      validQuery
+    )
     cy.get('[data-testid="frameContents"]', { timeout: 10000 })
       .first()
       .should('contain', 'Error')

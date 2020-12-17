@@ -31,9 +31,7 @@ describe('Help topics', () => {
     cy.executeCommand(':clear')
     const query = ':help commands'
     cy.executeCommand(query)
-    cy.get('[data-testid="frameCommand"]', { timeout: 10000 })
-      .first()
-      .should('contain', query)
+    cy.get('[data-testid="frameCommand"]', { timeout: 10000 }).contains(query)
     cy.get('[data-testid="frameContents"]', { timeout: 10000 })
       .first()
       .should('contain', ':help style')
@@ -42,9 +40,7 @@ describe('Help topics', () => {
     cy.executeCommand(':clear')
     const query = ':help style'
     cy.executeCommand(query)
-    cy.get('[data-testid="frameCommand"]', { timeout: 10000 })
-      .first()
-      .should('contain', query)
+    cy.get('[data-testid="frameCommand"]', { timeout: 10000 }).contains(query)
     cy.get('[data-testid="frameContents"]', { timeout: 10000 })
       .first()
       .should('contain', 'style command')

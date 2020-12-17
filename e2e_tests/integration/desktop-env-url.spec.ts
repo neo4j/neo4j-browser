@@ -48,7 +48,7 @@ describe('Neo4j Desktop environment using url field', () => {
       frames.should('have.length', 2)
 
       // Auto connected = :play start
-      frames.first().should('contain', ':play start')
+      frames.first().contains(':play start')
       cy.wait(1000)
     })
     it('switches connection when that event is triggered using url field', () => {
@@ -63,7 +63,7 @@ describe('Neo4j Desktop environment using url field', () => {
       const frames = cy.get('[data-testid="frameCommand"]', { timeout: 10000 })
       frames.should('have.length', 1)
 
-      frames.first().should('contain', ':server switch success')
+      frames.first().contains(':server switch success')
 
       cy.get('[data-testid="frame"]', { timeout: 10000 })
         .first()

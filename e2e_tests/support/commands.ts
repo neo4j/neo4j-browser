@@ -54,8 +54,8 @@ Cypress.Commands.add(
     cy.get('button[data-testid="changePassword"]').click()
 
     cy.get('input[data-testid="changePassword"]').should('not.be.visible')
-    cy.get('[data-testid="frameCommand"]', { timeout: 30000 }).should(
-      'contain',
+    cy.get('[data-testid="frame"]', { timeout: 25000 }).should('have.length', 2)
+    cy.get('[data-testid="frameCommand"]', { timeout: 30000 }).contains(
       ':play start'
     )
   }
@@ -90,9 +90,7 @@ Cypress.Commands.add(
         2
       )
       cy.wait(500)
-      cy.get('[data-testid="frameCommand"]')
-        .first()
-        .should('contain', ':play start')
+      cy.get('[data-testid="frameCommand"]').contains(':server connect')
       cy.executeCommand(':clear')
     }
   }

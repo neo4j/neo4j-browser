@@ -99,4 +99,12 @@ describe('Commands', () => {
       cy.executeCommand(':clear')
     })
   })
+
+  it('can re-run all simple commands while connected without blowing up', () => {
+    cy.executeCommand('return 1')
+    commands.forEach(cmd => {
+      cy.typeInFrame(`${cmd}{enter}`)
+      cy.wait(300)
+    })
+  })
 })

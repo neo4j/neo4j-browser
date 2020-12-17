@@ -108,9 +108,9 @@ describe('Multi database', () => {
 
         // Select to use db, make sure backticked
         databaseOptionList().select('name-with-dash')
-        cy.get('[data-testid="frameCommand"]', { timeout: 10000 })
-          .first()
-          .should('contain', ':use `name-with-dash`')
+        cy.get('[data-testid="frameCommand"]', { timeout: 10000 }).contains(
+          ':use `name-with-dash`'
+        )
         cy.resultContains(
           'Queries from this point and forward are using the database'
         )
