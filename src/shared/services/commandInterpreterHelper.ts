@@ -55,7 +55,6 @@ import { handleServerCommand } from 'shared/modules/commands/helpers/server'
 import { handleCypherCommand } from 'shared/modules/commands/helpers/cypher'
 import {
   showErrorMessage,
-  cypher,
   successfulCypher,
   unsuccessfulCypher,
   SINGLE_COMMAND_QUEUED,
@@ -422,7 +421,6 @@ const availableCommands = [
             }),
         isAutocommit
       )
-      put(cypher(action.cmd))
       put(
         frames.add({
           ...action,

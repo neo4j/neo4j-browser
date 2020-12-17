@@ -35,11 +35,7 @@ import {
   EVENT_BROWSER_SYNC_LOGIN,
   EVENT_DRIVER_CONNECTED
 } from './udcDuck'
-import {
-  CYPHER,
-  CYPHER_SUCCEEDED,
-  CYPHER_FAILED
-} from '../commands/commandsDuck'
+import { CYPHER_SUCCEEDED, CYPHER_FAILED } from '../commands/commandsDuck'
 import { AUTHORIZED, CLEAR_SYNC } from '../sync/syncDuck'
 import { CONNECTION_SUCCESS } from '../connections/connectionsDuck'
 
@@ -82,23 +78,7 @@ describe('Udc Epics', () => {
       store.clearActions()
       bus.reset()
     })
-    test('sends metric event when a cypher query is sent by the user', done => {
-      // Given
-      const action = { type: CYPHER }
-      bus.take(METRICS_EVENT, currentAction => {
-        // Then
-        expect(currentAction).toEqual(
-          expect.objectContaining(typeToMetricsObject[CYPHER])
-        )
-        expect(store.getActions()).toEqual([action, currentAction])
-        done()
-      })
-      // When
-      store.dispatch(action)
 
-      // Then
-      // See above
-    })
     test('sends metric event when a successful cypher query is sent by the user', done => {
       // Given
       const action = { type: CYPHER_SUCCEEDED }
