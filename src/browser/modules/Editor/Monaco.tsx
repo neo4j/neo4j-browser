@@ -18,19 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  ConsoleCommand,
-  CypherEditorSupport,
-  EditorSupportSchema,
-  parse
-} from 'cypher-editor-support'
+import { parse } from 'cypher-editor-support'
 import { debounce } from 'lodash-es'
 import {
   editor,
   IPosition,
   KeyCode,
   KeyMod,
-  languages,
   MarkerSeverity
 } from 'monaco-editor/esm/vs/editor/editor.api'
 import React, {
@@ -45,17 +39,6 @@ import { Bus } from 'suber'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { HistoryState } from 'shared/modules/history/historyDuck'
-import {
-  DARK_THEME,
-  LIGHT_THEME,
-  OUTLINE_THEME
-} from 'shared/modules/settings/settingsDuck'
-import {
-  BrowserTheme,
-  monacoDarkTheme,
-  monacoLightTheme
-} from './CypherMonacoThemes'
-import { CypherTokensProvider } from './CypherTokensProvider'
 
 const shouldCheckForHints = (code: any) =>
   code.trim().length > 0 &&
@@ -86,8 +69,6 @@ interface MonacoProps {
   onChange?: (value: string) => void
   onDisplayHelpKeys?: () => void
   onExecute?: () => void
-  schema?: EditorSupportSchema
-  theme?: BrowserTheme
   useDb?: null | string
 }
 
@@ -103,8 +84,6 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       onChange = () => undefined,
       onDisplayHelpKeys = () => undefined,
       onExecute = () => undefined,
-      schema,
-      theme = LIGHT_THEME,
       useDb
     }: MonacoProps,
     ref
@@ -127,8 +106,6 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       }
     }))
 
-    const editorSupportRef = useRef<CypherEditorSupport | null>(null)
-
     // The monaco render method does not redraw line numbers
     // Getting and setting content and cursor is done to force a redraw
     useEffect(() => {
@@ -139,72 +116,6 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
 
     // Create monaco instance, listen to text changes and destroy
     useEffect(() => {
-      languages.register({ id: 'cypher' })
-      languages.setTokensProvider('cypher', new CypherTokensProvider())
-      languages.setLanguageConfiguration('cypher', {
-        brackets: [
-          ['(', ')'],
-          ['{', '}'],
-          ['[', ']'],
-          ['"', '"']
-        ],
-        comments: {
-          blockComment: ['/*', '*/'],
-          lineComment: '//'
-        }
-      })
-
-      editorSupportRef.current = new CypherEditorSupport(value)
-      if (schema) {
-        editorSupportRef.current.setSchema(schema)
-      }
-
-      languages.registerCompletionItemProvider('cypher', {
-        triggerCharacters: ['.', ':', '[', '(', '{', '$'],
-        provideCompletionItems: (model, position, { triggerCharacter }) => {
-          var { startColumn, endColumn } = model.getWordUntilPosition(position)
-          const range = {
-            startLineNumber: position.lineNumber,
-            endLineNumber: position.lineNumber,
-            startColumn,
-            endColumn
-          }
-          editorSupportRef.current?.update(editorRef.current?.getValue() || '')
-          const items =
-            editorSupportRef.current?.getCompletion(
-              position.lineNumber,
-              triggerCharacter === ':' ? position.column - 1 : position.column
-            ).items || []
-
-          return {
-            suggestions: items.map(item => ({
-              label: item.view || item.content,
-              kind: languages.CompletionItemKind.Keyword,
-              insertText: item.content,
-              range: ['consoleCommand', 'label', 'relationshipType'].includes(
-                item.type
-              )
-                ? { ...range, startColumn: range.startColumn - 1 }
-                : item.type === 'procedure'
-                ? {
-                    ...range,
-                    startColumn:
-                      range.startColumn - (item.view.indexOf('.') + 1)
-                  }
-                : range,
-              detail: item.postfix || undefined
-            }))
-          }
-        }
-      })
-
-      editor.defineTheme(DARK_THEME, monacoDarkTheme)
-      editor.defineTheme(LIGHT_THEME, monacoLightTheme)
-      editor.defineTheme(OUTLINE_THEME, monacoLightTheme)
-      // Browser's light theme is called 'normal', but OS's light theme is called 'light'
-      // 'light' is used when theme is set to light in OS and auto in browser
-      editor.defineTheme('light', monacoLightTheme)
-
       editorRef.current = editor.create(
         document.getElementById(monacoId) as HTMLElement,
         {
@@ -233,7 +144,6 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
           scrollBeyondLastColumn: 0,
           scrollBeyondLastLine: false,
           selectionHighlight: false,
-          theme: LIGHT_THEME,
           value,
           wordWrap: 'on',
           wrappingStrategy: 'advanced'
@@ -313,11 +223,6 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       })
     }
 
-    // Update theme when setting is changed
-    useEffect(() => {
-      editor.setTheme(theme)
-    }, [theme])
-
     // Trigger update when multi statement setting is changed to update warnings
     useEffect(() => {
       onContentUpdate()
@@ -385,14 +290,6 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
     useEffect(() => {
       historyRef.current = [...history]
     }, [history])
-
-    useEffect(() => {
-      if (schema) {
-        editorSupportRef.current?.update(editorRef.current?.getValue() || '')
-
-        editorSupportRef.current?.setSchema(schema)
-      }
-    }, [schema])
 
     const historyRef = useRef<string[]>([])
     const historyIndexRef = useRef<number>(-1)

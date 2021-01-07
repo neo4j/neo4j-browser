@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ConsoleCommand, EditorSupportSchema } from 'cypher-editor-support'
 import React, {
   useState,
   Dispatch,
@@ -83,27 +82,18 @@ import { defaultFavoriteName } from 'browser/modules/Sidebar/favorites.utils'
 import Monaco, { MonacoHandles } from './Monaco'
 import {
   codeFontLigatures,
-  getTheme,
-  LIGHT_THEME,
   shouldEnableMultiStatementMode
 } from 'shared/modules/settings/settingsDuck'
-import useDerivedTheme from 'browser-hooks/useDerivedTheme'
-import { BrowserTheme } from './CypherMonacoThemes'
-import * as schemaConvert from './editorSchemaConverter'
-import cypherFunctions from './cypher/functions'
 import { getUseDb } from 'shared/modules/connections/connectionsDuck'
 import { getHistory, HistoryState } from 'shared/modules/history/historyDuck'
-import consoleCommands from './language/consoleCommands'
 
 type EditorFrameProps = {
-  browserTheme: BrowserTheme
   bus: Bus
   codeFontLigatures: boolean
   enableMultiStatementMode: boolean
   executeCommand: (cmd: string, source: string) => void
   history: HistoryState
   projectId: string
-  schema: EditorSupportSchema
   theme: { linkHover: string }
   updateFavorite: (id: string, value: string) => void
   useDb: null | string
@@ -119,14 +109,12 @@ type SavedScript = {
 }
 
 export function EditorFrame({
-  browserTheme,
   bus,
   codeFontLigatures,
   enableMultiStatementMode,
   executeCommand,
   history,
   projectId,
-  schema,
   theme,
   updateFavorite,
   useDb
@@ -142,10 +130,6 @@ export function EditorFrame({
   const toggleFullscreen = useCallback(() => {
     updateFullscreen(!isFullscreen)
   }, [isFullscreen])
-
-  const [derivedTheme] = useDerivedTheme(browserTheme, LIGHT_THEME) as [
-    BrowserTheme
-  ]
 
   const updateFullscreen = (fullScreen: boolean) => {
     setFullscreen(fullScreen)
@@ -303,8 +287,6 @@ export function EditorFrame({
               }
               onExecute={createRunCommandFunction(commandSources.editor)}
               ref={editorRef}
-              schema={schema}
-              theme={derivedTheme}
               useDb={useDb}
             />
           </EditorContainer>
@@ -370,29 +352,10 @@ export function EditorFrame({
 
 const mapStateToProps = (state: any) => {
   return {
-    browserTheme: getTheme(state),
     codeFontLigatures: codeFontLigatures(state),
     enableMultiStatementMode: shouldEnableMultiStatementMode(state),
     history: getHistory(state),
     projectId: getProjectId(state),
-    schema: {
-      consoleCommands,
-      parameters: Object.keys(state.params),
-      labels: state.meta.labels.map(schemaConvert.toLabel) as string[],
-      relationshipTypes: state.meta.relationshipTypes.map(
-        schemaConvert.toRelationshipType
-      ) as string[],
-      propertyKeys: state.meta.properties.map(
-        schemaConvert.toPropertyKey
-      ) as string[],
-      functions: [
-        ...cypherFunctions,
-        ...state.meta.functions.map(schemaConvert.toFunction)
-      ] as string[],
-      procedures: state.meta.procedures.map(
-        schemaConvert.toProcedure
-      ) as string[]
-    } as EditorSupportSchema,
     useDb: getUseDb(state)
   }
 }

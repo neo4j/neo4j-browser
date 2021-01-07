@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+import { editor } from 'monaco-editor'
 import React, { useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
@@ -90,6 +92,11 @@ export function App(props: any) {
   )
   // @ts-expect-error ts-migrate(7053) FIXME: No index signature with a parameter of type 'strin... Remove this comment to see the full error message
   const themeData = themes[derivedTheme] || themes[LIGHT_THEME]
+
+  // update cypher editor theme
+  useEffect(() => {
+    editor.setTheme(derivedTheme)
+  }, [derivedTheme])
 
   useKeyboardShortcuts(props.bus)
 

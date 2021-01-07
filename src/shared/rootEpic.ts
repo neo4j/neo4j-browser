@@ -55,7 +55,11 @@ import {
   injectDiscoveryEpic
 } from './modules/discovery/discoveryDuck'
 import { clearLocalstorageEpic } from './modules/localstorage/localstorageDuck'
-import { populateEditorFromUrlEpic } from './modules/editor/editorDuck'
+import {
+  initializeCypherEditorEpic,
+  populateEditorFromUrlEpic,
+  updateEditorSupportSchemaEpic
+} from './modules/editor/editorDuck'
 import {
   adHocCypherRequestEpic,
   routedCypherRequestEpic,
@@ -152,5 +156,7 @@ export default combineEpics(
   clearCurrentUserOnDisconnectEpic,
   trackCommandUsageEpic,
   trackErrorFramesEpic,
-  trackReduxActionsEpic
+  trackReduxActionsEpic,
+  initializeCypherEditorEpic,
+  updateEditorSupportSchemaEpic
 )
