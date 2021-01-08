@@ -91,6 +91,13 @@ bus.applyMiddleware(
   }
 )
 
+function scrubQueryparams(event: Sentry.Event): Sentry.Event {
+  if (event.request?.query_string) {
+    event.request.query_string = ''
+  }
+  return event
+}
+
 export function setupSentry() {
   if (process.env.NODE_ENV === 'production') {
     Sentry.init({
@@ -103,7 +110,9 @@ export function setupSentry() {
       ],
       tracesSampleRate: 0.2,
       beforeSend: event =>
-        allowOutgoingConnections(store.getState()) ? event : null,
+        allowOutgoingConnections(store.getState())
+          ? scrubQueryparams(event)
+          : null,
       environment: 'unset'
     })
     Sentry.setUser({ id: getUuid(store.getState()) })
