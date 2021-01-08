@@ -99,7 +99,6 @@ describe('commandsDuck', () => {
         expect(store.getActions()).toEqual([
           action,
           send('cypher', requestId),
-          commands.cypher(cmd),
           frames.add({ ...action, type: 'cypher' } as any),
           updateQueryResult(
             requestId,
@@ -417,7 +416,6 @@ describe('commandsDuck', () => {
         expect(store.getActions()).toEqual([
           action,
           send('cypher', requestId),
-          commands.cypher(cmd),
           frames.add({ ...action, type: 'cypher' } as any),
           updateQueryResult(
             requestId,
