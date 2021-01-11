@@ -3,7 +3,7 @@
 exports[`Settings renders with strange characters in display name 1`] = `
 <div>
   <div
-    class="sc-bdVaJa HuWkI"
+    class="sc-bdVaJa jNsmtV"
     id="db-settings"
   >
     <h4
@@ -26,15 +26,15 @@ exports[`Settings renders with strange characters in display name 1`] = `
             Test åäö settings
           </h5>
           <div
-            class="sc-chPdSV eGhoub"
+            class="sc-kAzzGY fnYWtX"
           >
             <label
-              class="sc-kgoBCf lbJgVL"
+              class="sc-chPdSV jsUXtn"
               title=""
             >
               åäö üüü
               <input
-                class="sc-kpOJdX lazVFV testSetting"
+                class="sc-kGXeez khypDc testSetting"
                 title=""
                 value="true"
               />

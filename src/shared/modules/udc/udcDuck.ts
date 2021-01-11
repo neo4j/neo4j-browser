@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2020 "Neo4j,"
+ * Copyright (c) 2002-2021 "Neo4j,"
  * Neo4j Sweden AB [http://neo4j.com]
  *
  * This file is part of Neo4j.
@@ -32,7 +32,6 @@ import {
 } from 'shared/modules/dbMeta/dbMetaDuck'
 import { ADD, PIN, UNPIN, REMOVE } from 'shared/modules/stream/streamDuck'
 import {
-  CYPHER,
   CYPHER_SUCCEEDED,
   CYPHER_FAILED,
   COMMAND_QUEUED
@@ -54,6 +53,7 @@ import { CONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
 import { shouldTriggerConnectEvent, getTodayDate } from './udcHelpers'
 import api from 'services/intercom'
 import cmdHelper from 'shared/services/commandInterpreterHelper'
+import { extractStatementsFromString } from 'services/commandUtils'
 
 // Action types
 export const NAME = 'udc'
@@ -78,14 +78,12 @@ export const EVENT_BROWSER_SYNC_LOGIN = 'EVENT_BROWSER_SYNC_LOGIN'
 export const EVENT_DRIVER_CONNECTED = 'EVENT_DRIVER_CONNECTED'
 
 const typeToEventName = {
-  [CYPHER]: 'cypher_attempts',
   [CYPHER_SUCCEEDED]: 'cypher_wins',
   [CYPHER_FAILED]: 'cypher_fails',
   [EVENT_APP_STARTED]: 'client_starts'
 }
 
 export const typeToMetricsObject = {
-  [CYPHER]: { category: 'cypher', label: 'sent' },
   [CYPHER_SUCCEEDED]: { category: 'cypher', label: 'succeeded' },
   [CYPHER_FAILED]: { category: 'cypher', label: 'failed' },
   [EVENT_APP_STARTED]: { category: 'app', label: 'started' },
@@ -118,12 +116,12 @@ const getCompanies = (state: any) => {
   return null
 }
 const getEvents = (state: any) => state[NAME].events || initialState.events
+export const getUuid = (state: any) => state[NAME].uuid || initialState.uuid
 
 const initialState = {
   uuid: v4(),
   created_at: Math.round(Date.now() / 1000),
   client_starts: 0,
-  cypher_attempts: 0,
   cypher_wins: 0,
   cypher_fails: 0,
   pingTime: 0,
@@ -264,8 +262,7 @@ export const udcStartupEpic = (action$: any, store: any) =>
 
 export const incrementEventEpic = (action$: any, store: any) =>
   action$
-    .ofType(CYPHER)
-    .merge(action$.ofType(CYPHER_FAILED))
+    .ofType(CYPHER_FAILED)
     .merge(action$.ofType(CYPHER_SUCCEEDED))
     .do((action: any) =>
       store.dispatch(metricsEvent(typeToMetricsObject[action.type]))
@@ -275,13 +272,23 @@ export const incrementEventEpic = (action$: any, store: any) =>
 export const trackCommandUsageEpic = (action$: any) =>
   action$.ofType(COMMAND_QUEUED).map((action: any) => {
     const isCypher = !action.cmd.startsWith(':')
-    const label = isCypher
-      ? 'cypher'
-      : cmdHelper.interpret(action.cmd.slice(1))?.name
-    if (label === 'catch-all') {
-      // already tracked as error frame
-      return { type: 'NOOP' }
+    if (isCypher) {
+      const numberOfStatments =
+        extractStatementsFromString(action.cmd)?.length || 1
+      return metricsEvent({
+        category: 'command',
+        label: 'cypher',
+        data: {
+          source: action.source || 'unknown',
+          averageWordCount: action.cmd.split(' ').length / numberOfStatments,
+          averageLineCount: action.cmd.split('\n').length / numberOfStatments,
+          numberOfStatments
+        }
+      })
     }
+
+    const label = cmdHelper.interpret(action.cmd.slice(1))?.name
+
     return metricsEvent({
       category: 'command',
       label,
@@ -380,7 +387,6 @@ export const trackConnectsEpic = (
         store_id: getStoreId(state),
         neo4j_version: getVersion(state),
         client_starts: state[NAME] ? state[NAME].client_starts : 0,
-        cypher_attempts: state[NAME] ? state[NAME].cypher_attempts : 0,
         cypher_wins: state[NAME] ? state[NAME].cypher_wins : 0,
         cypher_fails: state[NAME] ? state[NAME].cypher_fails : 0
       }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2020 "Neo4j,"
+ * Copyright (c) 2002-2021 "Neo4j,"
  * Neo4j Sweden AB [http://neo4j.com]
  *
  * This file is part of Neo4j.
@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import * as Sentry from '@sentry/react'
 import bolt from 'services/bolt/bolt'
 import * as frames from 'shared/modules/stream/streamDuck'
 import { getHostedUrl } from 'shared/modules/app/appDuck'
@@ -54,7 +55,6 @@ import { handleServerCommand } from 'shared/modules/commands/helpers/server'
 import { handleCypherCommand } from 'shared/modules/commands/helpers/cypher'
 import {
   showErrorMessage,
-  cypher,
   successfulCypher,
   unsuccessfulCypher,
   SINGLE_COMMAND_QUEUED,
@@ -380,6 +380,12 @@ const availableCommands = [
       /^cypher$/.test(cmd) ||
       new RegExp(`^${autoCommitTxCommand}`, 'i').test(cmd),
     exec: (action: any, put: any, store: any) => {
+      // Sentry crashes tests without the ?. when it's not been initiated
+      const transaction = Sentry.startTransaction({ name: 'Cypher query' })
+      const startingRequest = transaction?.startChild({
+        op: 'Starting request and dispatching'
+      })
+
       const state = store.getState()
 
       // Since we now also handle queries with the :auto prefix,
@@ -415,7 +421,6 @@ const availableCommands = [
             }),
         isAutocommit
       )
-      put(cypher(action.cmd))
       put(
         frames.add({
           ...action,
@@ -424,6 +429,12 @@ const availableCommands = [
           requestId: id
         })
       )
+      startingRequest?.finish()
+      const finishRequestSpan = transaction?.startChild({
+        op: 'Resolve request',
+        description:
+          'Time from all actions dispatched until request is resolved'
+      })
       return request
         .then((res: any) => {
           put(updateQueryResult(id, res, REQUEST_STATUS_SUCCESS))
@@ -442,6 +453,8 @@ const availableCommands = [
         })
         .finally(() => {
           put(fetchMetaData())
+          finishRequestSpan?.finish()
+          transaction?.finish()
         })
     }
   },

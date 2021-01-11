@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2020 "Neo4j,"
+ * Copyright (c) 2002-2021 "Neo4j,"
  * Neo4j Sweden AB [http://neo4j.com]
  *
  * This file is part of Neo4j.
@@ -42,6 +42,10 @@ const content = (
       <br /> To set a param as an integer, do
       <code>:param x {'=>'} 1</code> and to set it as a float, do
       <code>:param x {'=>'} 1.0</code>.
+      <br /> To set a param as an object, do
+      <code>
+        {':param obj => ({props:{ name:"Andy", position:"Developer"}})'}
+      </code>
     </p>
     <p>
       Cypher query example with a param:

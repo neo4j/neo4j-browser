@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2020 "Neo4j,"
+ * Copyright (c) 2002-2021 "Neo4j,"
  * Neo4j Sweden AB [http://neo4j.com]
  *
  * This file is part of Neo4j.
@@ -99,7 +99,6 @@ describe('commandsDuck', () => {
         expect(store.getActions()).toEqual([
           action,
           send('cypher', requestId),
-          commands.cypher(cmd),
           frames.add({ ...action, type: 'cypher' } as any),
           updateQueryResult(
             requestId,
@@ -417,7 +416,6 @@ describe('commandsDuck', () => {
         expect(store.getActions()).toEqual([
           action,
           send('cypher', requestId),
-          commands.cypher(cmd),
           frames.add({ ...action, type: 'cypher' } as any),
           updateQueryResult(
             requestId,

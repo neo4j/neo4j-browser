@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2020 "Neo4j,"
+ * Copyright (c) 2002-2021 "Neo4j,"
  * Neo4j Sweden AB [http://neo4j.com]
  *
  * This file is part of Neo4j.
@@ -20,6 +20,7 @@
 import './init'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import AppInit from './AppInit'
+import AppInit, { setupSentry } from './AppInit'
 
+setupSentry()
 ReactDOM.render(<AppInit />, document.getElementById('mount'))

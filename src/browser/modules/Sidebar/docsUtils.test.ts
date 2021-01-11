@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2020 "Neo4j,"
+ * Copyright (c) 2002-2021 "Neo4j,"
  * Neo4j Sweden AB [http://neo4j.com]
  *
  * This file is part of Neo4j.
@@ -22,10 +22,7 @@ import { formatDocVersion } from './Documents'
 
 test('formatDocVersion', () => {
   const tests = [
-    { test: null, expect: 'current' },
     { test: undefined, expect: 'current' },
-    { test: true, expect: 'current' },
-    { test: false, expect: 'current' },
     { test: '', expect: 'current' },
     { test: '1.1.0', expect: '1.1' },
     { test: '1.1.0-beta01', expect: '1.1-preview' },

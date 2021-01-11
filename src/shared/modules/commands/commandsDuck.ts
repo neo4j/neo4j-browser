@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2020 "Neo4j,"
+ * Copyright (c) 2002-2021 "Neo4j,"
  * Neo4j Sweden AB [http://neo4j.com]
  *
  * This file is part of Neo4j.
@@ -59,7 +59,6 @@ export const SYSTEM_COMMAND_QUEUED = `${NAME}/SYSTEM_COMMAND_QUEUED`
 export const UNKNOWN_COMMAND = `${NAME}/UNKNOWN_COMMAND`
 export const SHOW_ERROR_MESSAGE = `${NAME}/SHOW_ERROR_MESSAGE`
 export const CLEAR_ERROR_MESSAGE = `${NAME}/CLEAR_ERROR_MESSAGE`
-export const CYPHER = `${NAME}/CYPHER`
 export const CYPHER_SUCCEEDED = `${NAME}/CYPHER_SUCCEEDED`
 export const CYPHER_FAILED = `${NAME}/CYPHER_FAILED`
 export const FETCH_GUIDE_FROM_ALLOWLIST = `${NAME}FETCH_GUIDE_FROM_ALLOWLIST`
@@ -157,10 +156,6 @@ export const clearErrorMessage = () => ({
   type: CLEAR_ERROR_MESSAGE
 })
 
-export const cypher = (query: any) => ({
-  type: CYPHER,
-  query
-})
 export const successfulCypher = (query: any) => ({
   type: CYPHER_SUCCEEDED,
   query
