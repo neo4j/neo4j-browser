@@ -18,7 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { CypherEditorSupport } from 'cypher-editor-support'
+import {
+  CypherEditorSupport,
+  EditorSupportCompletionItem
+} from 'cypher-editor-support'
 import { editor, languages } from 'monaco-editor'
 import { Action, Store } from 'redux'
 import { ActionsObservable, Epic } from 'redux-observable'
@@ -173,10 +176,14 @@ export const initializeCypherEditorEpic = (
             endColumn
           }
           editorSupport.update(model.getValue())
-          const items = editorSupport.getCompletion(
-            position.lineNumber,
-            position.column - 1
-          ).items
+          let items: EditorSupportCompletionItem[] = []
+          // Cypher editor support repo has internal type errors
+          try {
+            items = editorSupport.getCompletion(
+              position.lineNumber,
+              position.column - 1
+            ).items
+          } catch {}
 
           const { CompletionItemKind } = languages
           const completionTypes: Record<
