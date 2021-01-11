@@ -229,9 +229,9 @@ export const initializeCypherEditorEpic = (
     .ignoreElements()
 }
 function encodeNumberAsSortableString(number: number): string {
-  // use letterprefix to encode numbers. breaks after numbers are have more than ~28 digits
-  // Monaco by default sorts it's suggestion by label text. But our langauge suppport sorts
-  // after relevance first and then alfabethically.
+  // use letter prefix to encode numbers. breaks after numbers are have more than ~28 digits
+  // Monaco by default sorts its suggestion by label text. But our language support sorts
+  // after relevance first and then alphabetically.
   const A_CHAR = 65
   const prefix = String.fromCharCode(A_CHAR + number.toString().length)
   return `${prefix}${number}`
