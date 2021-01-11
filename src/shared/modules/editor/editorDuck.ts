@@ -162,8 +162,10 @@ export const initializeCypherEditorEpic = (
 
       languages.registerCompletionItemProvider('cypher', {
         triggerCharacters: ['.', ':', '[', '(', '{', '$'],
-        provideCompletionItems: (model, position, { triggerCharacter }) => {
-          var { startColumn, endColumn } = model.getWordUntilPosition(position)
+        provideCompletionItems: (model, position) => {
+          const { startColumn, endColumn } = model.getWordUntilPosition(
+            position
+          )
           const range = {
             startLineNumber: position.lineNumber,
             endLineNumber: position.lineNumber,
@@ -173,13 +175,31 @@ export const initializeCypherEditorEpic = (
           editorSupport.update(model.getValue())
           const items = editorSupport.getCompletion(
             position.lineNumber,
-            triggerCharacter === ':' ? position.column - 1 : position.column
+            position.column - 1
           ).items
 
+          const { CompletionItemKind } = languages
+          const completionTypes: Record<
+            string,
+            languages.CompletionItemKind
+          > = {
+            keyword: CompletionItemKind.Keyword,
+            label: CompletionItemKind.Field,
+            relationshipType: CompletionItemKind.Reference,
+            variable: CompletionItemKind.Variable,
+            procedure: CompletionItemKind.Function,
+            function: CompletionItemKind.Function,
+            parameter: CompletionItemKind.TypeParameter,
+            propertyKey: CompletionItemKind.Property,
+            consoleCommand: CompletionItemKind.Function,
+            consoleCommandSubcommand: CompletionItemKind.Function,
+            procedureOutput: CompletionItemKind.Operator
+          }
+
           return {
-            suggestions: items.map(item => ({
+            suggestions: items.map((item, index) => ({
               label: item.view || item.content,
-              kind: languages.CompletionItemKind.Keyword,
+              kind: completionTypes[item.type],
               insertText: item.content,
               range: ['consoleCommand', 'label', 'relationshipType'].includes(
                 item.type
@@ -192,7 +212,8 @@ export const initializeCypherEditorEpic = (
                       range.startColumn - (item.view.indexOf('.') + 1)
                   }
                 : range,
-              detail: item.postfix || undefined
+              detail: item.postfix || undefined,
+              sortText: encodeNumberAsSortableString(index)
             }))
           }
         }
@@ -206,6 +227,14 @@ export const initializeCypherEditorEpic = (
       editor.defineTheme('light', monacoLightTheme)
     })
     .ignoreElements()
+}
+function encodeNumberAsSortableString(number: number): string {
+  // use letterprefix to encode numbers. breaks after numbers are have more than ~28 digits
+  // Monaco by default sorts it's suggestion by label text. But our langauge suppport sorts
+  // after relevance first and then alfabethically.
+  const A_CHAR = 65
+  const prefix = String.fromCharCode(A_CHAR + number.toString().length)
+  return `${prefix}${number}`
 }
 
 export const updateEditorSupportSchemaEpic: Epic<Action, any> = (
