@@ -34,6 +34,7 @@ import React, {
   useRef
 } from 'react'
 import ResizeObserver from 'resize-observer-polyfill'
+import styled from 'styled-components'
 import { Bus } from 'suber'
 
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
@@ -58,6 +59,15 @@ export interface MonacoHandles {
   setValue: (value: string) => void
   resize: (fillContainer?: boolean, fixedHeight?: number) => void
 }
+
+const MonacoStyleWrapper = styled.div`
+  height: 100%;
+  width: 100%;
+
+  .margin .margin-view-overlays {
+    margin-left: 10px;
+  }
+`
 
 interface MonacoProps {
   bus: Bus
@@ -112,6 +122,8 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       const cursorPosition = editorRef?.current?.getPosition() as IPosition
       editorRef.current?.setValue(editorRef.current?.getValue() || '')
       editorRef.current?.setPosition(cursorPosition)
+
+      updateGutterCharWidth(useDb || '')
     }, [useDb])
 
     // Create monaco instance, listen to text changes and destroy
@@ -339,6 +351,13 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
 
     const debouncedUpdateCode = debounce(updateCode, 300)
 
+    const updateGutterCharWidth = (dbName: string) => {
+      editorRef.current?.updateOptions({
+        lineNumbersMinChars:
+          dbName.length && !isMultiLine() ? dbName.length * 1.2 : 2
+      })
+    }
+
     // On each text change, clear warnings and reset countdown to adding warnings
     const onContentUpdate = () => {
       editor.setModelMarkers(
@@ -347,6 +366,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
         []
       )
 
+      updateGutterCharWidth(useDbRef.current || '')
       debouncedUpdateCode()
     }
 
@@ -426,15 +446,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       })
     }
 
-    return (
-      <div
-        id={monacoId}
-        style={{
-          height: '100%',
-          width: '100%'
-        }}
-      />
-    )
+    return <MonacoStyleWrapper id={monacoId} />
   }
 )
 
