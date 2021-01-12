@@ -58,7 +58,6 @@ const numbers: string[] = [
   'hexinteger',
   'decimalinteger',
   'octalinteger',
-  'hexletter',
   'hexdigit',
   'digit',
   'nonzerodigit',
