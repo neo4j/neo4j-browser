@@ -225,7 +225,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       isFullscreenRef.current = fillContainer
 
       const height = fillContainer
-        ? container.scrollHeight
+        ? Math.min(window.innerHeight - 20, container.scrollHeight)
         : Math.min(276, contentHeight) // Upper bound is 12 lines * 23px line height = 276px
 
       container.style.height = `${height}px`
