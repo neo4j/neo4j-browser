@@ -14,6 +14,7 @@ export default function SavedScriptsEditButton({
     <SavedScriptsEditButtonButton
       className="saved-scripts__button saved-scripts__edit-button"
       title="Edit"
+      data-testid="savedScriptEditButton"
       onClick={onEdit}
     >
       <Icon name="pencil" />

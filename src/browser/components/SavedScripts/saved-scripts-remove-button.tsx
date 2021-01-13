@@ -18,6 +18,7 @@ export default function SavedScriptsRemoveButton({
         <SavedScriptsButton
           className="saved-scripts__button saved-scripts__remove-button saved-scripts__remove-button--danger"
           title="Remove"
+          data-testid="confirmDeleteScript"
           onClick={onRemove}
         >
           <Icon name="trash alternate outline" />
@@ -37,6 +38,7 @@ export default function SavedScriptsRemoveButton({
     <SavedScriptsButton
       className="saved-scripts__button saved-scripts__remove-button"
       title="Remove"
+      data-testid="deleteScript"
       onClick={() => setIsConfirming(true)}
     >
       <Icon name="trash alternate outline" />

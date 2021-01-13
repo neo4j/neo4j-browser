@@ -14,6 +14,7 @@ export default function SavedScriptsExecButton({
     <SavedScriptsButton
       className="saved-scripts__button saved-scripts__exec-button"
       onClick={onExec}
+      data-testid="execScript"
     >
       <Icon name="play" />
     </SavedScriptsButton>

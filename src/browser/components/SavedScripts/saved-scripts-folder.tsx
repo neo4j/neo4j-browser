@@ -110,7 +110,7 @@ function SavedScriptsFolder({
   }
 
   return connectDropTarget!(
-    <div>
+    <div data-testid={`savedScriptsFolder-${folderName}`}>
       <SavedScriptsFolderMain className="saved-scripts-folder">
         <SavedScriptsFolderHeader
           title={folderName}
@@ -127,10 +127,12 @@ function SavedScriptsFolder({
               }}
               value={omitScriptPathPrefix(scriptsNamespace, labelInput)}
               onChange={({ target }) => setLabelInput(target.value)}
+              data-testid="editSavedScriptFolderName"
             />
           ) : (
             <SavedScriptsFolderLabel
               className="saved-scripts-folder__label"
+              data-testid={`expandFolder-${folderName}`}
               onClick={() => setExpanded(!expanded)}
             >
               <SavedScriptsFolderCollapseIcon className="saved-scripts-folder__collapse-icon">

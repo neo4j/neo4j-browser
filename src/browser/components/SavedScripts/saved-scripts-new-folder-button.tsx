@@ -17,6 +17,7 @@ export default function SavedScriptsNewFolderButton({
       className="saved-scripts__button saved-scripts__new-folder-button"
       disabled={Boolean(disabled)}
       title="Add folder"
+      data-testid="newFavoriteFolder"
       onClick={onAdd}
     >
       <Icon name="folder open outline" />

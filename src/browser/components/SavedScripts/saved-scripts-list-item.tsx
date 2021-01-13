@@ -74,6 +74,7 @@ function SavedScriptsListItem({
       ) : (
         <SavedScriptsListItemDisplayName
           className="saved-scripts-list-item__display-name"
+          data-testid={`scriptTitle-${displayName}`}
           onClick={() =>
             (isProjectFiles || !isEditing) && onSelectScript(script)
           }
@@ -82,13 +83,13 @@ function SavedScriptsListItem({
         </SavedScriptsListItemDisplayName>
       )}
       <SavedScriptsButtonWrapper className="saved-scripts__button-wrapper">
-        {isStatic || isEditing ? null : (
+        {isStatic || isEditing ? (
+          <SavedScriptsRemoveButton onRemove={() => onRemoveScript(script)} />
+        ) : (
           <SavedScriptsEditButton onEdit={() => setIsEditing(!isEditing)} />
         )}
-        {isStatic || !isEditing ? null : (
-          <SavedScriptsRemoveButton onRemove={() => onRemoveScript(script)} />
-        )}
-        {script.isSuggestion || isEditing ? null : (
+
+        {script.isSuggestion || isEditing || (
           <SavedScriptsExecButton onExec={() => onExecScript(script)} />
         )}
       </SavedScriptsButtonWrapper>

@@ -14,6 +14,7 @@ export default function SavedScriptsExportButton({
     <SavedScriptsButton
       className="saved-scripts__button saved-scripts__export-button"
       onClick={onExport}
+      data-testid="exportScript"
     >
       <Icon name="download" />
     </SavedScriptsButton>
