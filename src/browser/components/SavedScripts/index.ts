@@ -1,4 +1,4 @@
-import SavedScripts from './saved-scripts'
+import SavedScripts from './SavedScripts'
 
 export default SavedScripts
 export {

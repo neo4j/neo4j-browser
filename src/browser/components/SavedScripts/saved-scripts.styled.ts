@@ -1,10 +1,7 @@
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 
 export const SavedScriptsMain = styled.div``
 
-/**
- * Static content
- */
 export const SavedScriptsBody = styled.div`
   padding: 0 24px;
 `
@@ -93,9 +90,6 @@ export const SavedScriptsFolderCollapseIcon = styled.span`
   display: inline-block;
 `
 
-/**
- * Buttons
- */
 export const SavedScriptsButtonWrapper = styled.div`
   min-width: 21px;
 
@@ -130,9 +124,6 @@ export const SavedScriptsEditButtonButton = styled(SavedScriptsButton)`
   visibility: hidden;
 `
 
-/**
- * Input fields
- */
 export const SavedScriptsInput = styled.input`
   flex: 1;
   border: none;

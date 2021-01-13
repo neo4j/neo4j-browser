@@ -33,7 +33,7 @@ import {
 import {
   getScriptDisplayName,
   omitScriptPathPrefix
-} from '@relate-by-ui/saved-scripts'
+} from 'browser/components/SavedScripts'
 
 import { SLASH } from 'shared/services/export-favorites'
 import arrayHasItems from 'shared/utils/array-has-items'

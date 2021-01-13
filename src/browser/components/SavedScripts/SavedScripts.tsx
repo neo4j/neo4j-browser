@@ -43,21 +43,20 @@ export interface ISavedScriptsProps {
   onRemoveFolder: AnyFunc
 }
 
-export default function SavedScripts(props: ISavedScriptsProps) {
-  const {
-    title,
-    isStatic,
-    scriptsNamespace,
-    scripts,
-    isProjectFiles,
-    newFolderPathGenerator,
-    onSelectScript,
-    onExportScripts,
-    onExecScript,
-    onRemoveScript,
-    onUpdateFolder,
-    onRemoveFolder
-  } = props
+export default function SavedScripts({
+  title = 'Saved Scripts',
+  isStatic,
+  scriptsNamespace,
+  scripts,
+  isProjectFiles,
+  newFolderPathGenerator,
+  onSelectScript,
+  onExportScripts,
+  onExecScript,
+  onRemoveScript,
+  onUpdateFolder,
+  onRemoveFolder
+}: ISavedScriptsProps) {
   const [rootFolder, subFolders] = useScriptsFolders(scriptsNamespace, scripts)
   // lodash-es typings cant handle tuples
   const allSavedFolderNames = compact([
@@ -157,8 +156,4 @@ export default function SavedScripts(props: ISavedScriptsProps) {
       </DndProvider>
     </SavedScriptsMain>
   )
-}
-
-SavedScripts.defaultProps = {
-  title: 'Saved Scripts'
 }
