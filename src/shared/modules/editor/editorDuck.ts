@@ -216,7 +216,7 @@ export const initializeCypherEditorEpic = (
                 ? {
                     ...range,
                     startColumn:
-                      range.startColumn - (item.view.indexOf('.') + 1)
+                      range.startColumn - (item.view.lastIndexOf('.') + 1)
                   }
                 : range,
               detail: item.postfix || undefined,
