@@ -8,12 +8,15 @@ import {
   addScriptPathPrefix,
   getScriptDisplayName,
   omitScriptPathPrefix
-} from './saved-scripts.utils'
-import { useCustomBlur, useNameUpdate } from './saved-scripts.hooks'
+} from './utils'
+import { useCustomBlur, useNameUpdate } from './hooks'
 
-import SavedScriptsListItem from './saved-scripts-list-item'
+import SavedScriptsListItem from './SavedScriptsListItem'
 import { EditButton, RemoveButton } from './SavedScriptsButton'
-import { CollapseMenuIcon, ExpandMenuRightIcon } from './icons'
+import {
+  CollapseMenuIcon,
+  ExpandMenuRightIcon
+} from 'browser-components/icons/Icons'
 
 import {
   SavedScriptsButtonWrapper,
@@ -23,7 +26,7 @@ import {
   SavedScriptsFolderLabel,
   SavedScriptsFolderMain,
   SavedScriptsInput
-} from './saved-scripts.styled'
+} from './styled'
 
 interface SavedScriptsFolderProps {
   isRoot?: boolean

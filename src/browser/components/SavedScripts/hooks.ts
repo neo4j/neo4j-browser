@@ -7,7 +7,7 @@ import {
   getRootLevelFolder,
   getSubLevelFolders,
   sortAndGroupScriptsByPath
-} from './saved-scripts.utils'
+} from './utils'
 
 /**
  * Maintains a state of script folders, separated into root and sub folders

@@ -19,6 +19,7 @@
  */
 
 import React from 'react'
+import { Icon } from 'semantic-ui-react'
 import { keyframes, css } from 'styled-components'
 import { IconContainer } from './IconContainer'
 import ratingStar from 'icons/rating-star.svg'
@@ -371,3 +372,7 @@ export const ExclamationTriangleIcon = () => (
 export const FireExtinguisherIcon = ({ title = 'Reset' }) => (
   <IconContainer className="fa fa-fire-extinguisher" title={title} />
 )
+
+export const ExpandMenuRightIcon = () => <Icon name="caret right" />
+
+export const CollapseMenuIcon = () => <Icon name="caret down" />

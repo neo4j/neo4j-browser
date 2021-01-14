@@ -6,7 +6,7 @@ import {
   getSubLevelFolders,
   omitScriptPathPrefix,
   sortAndGroupScriptsByPath
-} from './saved-scripts.utils'
+} from './utils'
 
 describe('saved-scripts.utils', () => {
   describe('getScriptDisplayName', () => {
