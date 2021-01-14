@@ -4,7 +4,6 @@ import { DropTarget } from 'react-dnd'
 
 import { AnyFunc, IScript } from './types'
 
-import { ENTER_KEY_CODE } from './saved-scripts.constants'
 import {
   addScriptPathPrefix,
   getScriptDisplayName,
@@ -13,8 +12,7 @@ import {
 import { useCustomBlur, useNameUpdate } from './saved-scripts.hooks'
 
 import SavedScriptsListItem from './saved-scripts-list-item'
-import SavedScriptsEditButton from './saved-scripts-edit-button'
-import SavedScriptsRemoveButton from './saved-scripts-remove-button'
+import { EditButton, RemoveButton } from './SavedScriptsButton'
 import { CollapseMenuIcon, ExpandMenuRightIcon } from './icons'
 
 import {
@@ -122,8 +120,8 @@ function SavedScriptsFolder({
               className="saved-scripts-folder__label-input"
               type="text"
               autoFocus
-              onKeyPress={({ charCode }) => {
-                charCode === ENTER_KEY_CODE && setIsEditing(false)
+              onKeyPress={({ key }) => {
+                key === 'Enter' && setIsEditing(false)
               }}
               value={omitScriptPathPrefix(scriptsNamespace, labelInput)}
               onChange={({ target }) => setLabelInput(target.value)}
@@ -143,12 +141,10 @@ function SavedScriptsFolder({
           )}
           <SavedScriptsButtonWrapper className="saved-scripts__button-wrapper">
             {isStatic || isProjectFiles || isEditing ? null : (
-              <SavedScriptsEditButton onEdit={() => setIsEditing(!isEditing)} />
+              <EditButton onClick={() => setIsEditing(!isEditing)} />
             )}
             {isStatic || isProjectFiles || !isEditing ? null : (
-              <SavedScriptsRemoveButton
-                onRemove={() => onRemoveFolder(scripts)}
-              />
+              <RemoveButton onClick={() => onRemoveFolder(scripts)} />
             )}
           </SavedScriptsButtonWrapper>
         </SavedScriptsFolderHeader>
