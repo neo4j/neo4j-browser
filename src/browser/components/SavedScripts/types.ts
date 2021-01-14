@@ -4,7 +4,6 @@ export interface Script {
   contents: string
   path: string
   isSuggestion?: boolean // dummy prop for static scripts
-  directory?: string // used in project files
 }
 
 export type ScriptFolder = [string, Script[]]
