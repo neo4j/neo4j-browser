@@ -15,17 +15,17 @@ import {
   isEmpty
 } from 'lodash-es'
 
-import { IScript, ScriptFolder } from './types'
+import { Script, ScriptFolder } from './types'
 
 const COMMENT_PREFIX = '//'
 /**
  * Gets the display name of a script
- * @param     {IScript}   script
+ * @param     {Script}   script
  * @param     {string}    script.name         script name
  * @param     {string}    script.contents     script contents
  * @return    {string}                        script display name
  */
-export function getScriptDisplayName({ name, contents }: IScript) {
+export function getScriptDisplayName({ name, contents }: Script) {
   if (name) {
     return name
   }
@@ -45,12 +45,12 @@ export function getScriptDisplayName({ name, contents }: IScript) {
 /**
  * groups and sorts scripts by path
  * @param     {string}                  namespace
- * @param     {IScript[]}               scripts
+ * @param     {Script[]}               scripts
  * @return    {ScriptFolder[]}                     sorted, grouped, scripts
  */
 export function sortAndGroupScriptsByPath(
   namespace: string,
-  scripts: IScript[]
+  scripts: Script[]
 ): ScriptFolder[] {
   const namespaceScripts = filter(scripts, ({ path }) =>
     startsWith(path, namespace)

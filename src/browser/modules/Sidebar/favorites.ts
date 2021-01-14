@@ -56,24 +56,19 @@ const mapFavoritesStateToProps = (state: any) => {
   }
 }
 const mapFavoritesDispatchToProps = (dispatch: any, ownProps: any) => ({
-  onSelectScript: (favorite: any) =>
+  selectScript: (favorite: any) =>
     ownProps.bus.send(
       editor.EDIT_CONTENT,
       editor.editContent(favorite.id, favorite.contents)
     ),
-  onExecScript: (favorite: any) =>
+  execScript: (favorite: any) =>
     dispatch(
       executeCommand(favorite.contents, { source: commandSources.favorite })
     ),
-  onExportScripts: (scripts: any) => exportFavorites(scripts),
-  onRemoveScript: (favorite: any) =>
+  exportScripts: (scripts: any) => exportFavorites(scripts),
+  removeScript: (favorite: any) =>
     dispatch(favoritesDuck.removeFavorite(favorite.id)),
-  onUpdateFolder(
-    favorites: any,
-    payload: any,
-    allFavorites: any,
-    allFolders: any
-  ) {
+  updateFolder(favorites: any, payload: any, allFolders: any) {
     // favorite name update
     if (payload.name) {
       dispatch(
@@ -109,9 +104,6 @@ const mapFavoritesDispatchToProps = (dispatch: any, ownProps: any) => ({
 
     const targetFolder = getFolderFromPath(payload.path, allFolders)
     const targetId = targetFolder ? targetFolder.id : folderId
-    const sourceHasRemaining = sourceFolder
-      ? folderHasRemainingFavorites(sourceFolder.id, favorites, allFavorites)
-      : true
 
     dispatch(
       favoritesDuck.updateFavorites(
@@ -120,12 +112,8 @@ const mapFavoritesDispatchToProps = (dispatch: any, ownProps: any) => ({
         })
       )
     )
-
-    if (sourceFolder && !sourceHasRemaining) {
-      dispatch(foldersDuck.removeFolder(sourceFolder.id))
-    }
   },
-  onRemoveFolder(favorites: any) {
+  removeFolder(favorites: any) {
     const { folder } = (getFirstFavorite(favorites) as any) || {}
 
     if (!folder) return
@@ -134,18 +122,14 @@ const mapFavoritesDispatchToProps = (dispatch: any, ownProps: any) => ({
     dispatch(favoritesDuck.removeFavorites(getFavoriteIds(favorites)))
   }
 })
+
 const mergeProps = (stateProps: any, dispatchProps: any) => {
   return {
     ...stateProps,
     ...dispatchProps,
-    onExportScripts: () => dispatchProps.onExportScripts(stateProps.scripts),
-    onUpdateFolder: (favorites: any, payload: any) =>
-      dispatchProps.onUpdateFolder(
-        favorites,
-        payload,
-        stateProps.scripts,
-        stateProps.folders
-      )
+    exportScripts: () => dispatchProps.exportScripts(stateProps.scripts),
+    updateFolder: (favorites: any, payload: any) =>
+      dispatchProps.updateFolder(favorites, payload, stateProps.folders)
   }
 }
 

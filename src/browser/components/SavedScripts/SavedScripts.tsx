@@ -11,7 +11,7 @@ import {
   isEmpty
 } from 'lodash-es'
 
-import { AnyFunc, IScript, NewFolderPathGenerator } from './types'
+import { Script, NewFolderPathGenerator, FolderUpdate } from './types'
 
 import { useEmptyFolders, useScriptsFolders } from './saved-scripts.hooks'
 
@@ -27,19 +27,19 @@ import {
 } from './saved-scripts.styled'
 import { getEmptyFolderDefaultPath } from './saved-scripts.utils'
 
-export interface ISavedScriptsProps {
+interface SavedScriptsProps {
   title?: string
   isStatic?: boolean
   scriptsNamespace: string
-  scripts: IScript[]
+  scripts: Script[]
   isProjectFiles?: boolean
   newFolderPathGenerator?: NewFolderPathGenerator
-  onSelectScript: AnyFunc
-  onExportScripts: AnyFunc
-  onExecScript: AnyFunc
-  onRemoveScript: AnyFunc
-  onUpdateFolder: AnyFunc
-  onRemoveFolder: AnyFunc
+  selectScript: (script: Script) => void
+  exportScripts: () => void
+  execScript: (script: Script) => void
+  removeScript: (script: Script) => void
+  updateFolder: (scripts: Script[], updates: FolderUpdate) => void
+  removeFolder: (scripts: Script[]) => void
 }
 
 export default function SavedScripts({
@@ -49,13 +49,13 @@ export default function SavedScripts({
   scripts,
   isProjectFiles,
   newFolderPathGenerator,
-  onSelectScript,
-  onExportScripts,
-  onExecScript,
-  onRemoveScript,
-  onUpdateFolder,
-  onRemoveFolder
-}: ISavedScriptsProps) {
+  selectScript,
+  exportScripts,
+  execScript,
+  removeScript,
+  updateFolder,
+  removeFolder
+}: SavedScriptsProps) {
   const [rootFolder, subFolders] = useScriptsFolders(scriptsNamespace, scripts)
   // lodash-es typings cant handle tuples
   const allSavedFolderNames = compact([
@@ -89,7 +89,7 @@ export default function SavedScripts({
               <SavedScriptsButtonWrapper className="saved-scripts__button-wrapper">
                 {isStatic || isProjectFiles ? null : (
                   <>
-                    <ExportButton onClick={() => onExportScripts()} />
+                    <ExportButton onClick={() => exportScripts()} />
                     <NewFolderButton onClick={() => addEmptyFolder()} />
                   </>
                 )}
@@ -101,13 +101,12 @@ export default function SavedScripts({
               scriptsNamespace={scriptsNamespace}
               allFolderNames={allFolderNames}
               folderName={first(rootFolder) as string}
-              scripts={last(rootFolder) as IScript[]}
+              scripts={last(rootFolder) as Script[]}
               isProjectFiles={isProjectFiles}
-              onSelectScript={onSelectScript}
-              onExecScript={onExecScript}
-              onRemoveScript={onRemoveScript}
-              onUpdateFolder={onUpdateFolder}
-              onRemoveFolder={Function.prototype}
+              selectScript={selectScript}
+              execScript={execScript}
+              removeScript={removeScript}
+              updateFolder={updateFolder}
             />
             {map(sortedSubFolders, ([folderName, subScripts]) => (
               <SavedScriptsFolder
@@ -118,11 +117,11 @@ export default function SavedScripts({
                 folderName={folderName}
                 scripts={subScripts}
                 isProjectFiles={isProjectFiles}
-                onSelectScript={onSelectScript}
-                onExecScript={onExecScript}
-                onRemoveScript={onRemoveScript}
-                onUpdateFolder={onUpdateFolder}
-                onRemoveFolder={onRemoveFolder}
+                selectScript={selectScript}
+                execScript={execScript}
+                removeScript={removeScript}
+                updateFolder={updateFolder}
+                removeFolder={removeFolder}
               />
             ))}
             {map(emptyFolders, folderName => (
@@ -134,15 +133,12 @@ export default function SavedScripts({
                 folderName={folderName}
                 scripts={[]}
                 isProjectFiles={isProjectFiles}
-                onSelectScript={Function.prototype}
-                onExecScript={Function.prototype}
-                onRemoveScript={Function.prototype}
-                onUpdateFolder={(folderScripts: IScript[], { path }: any) =>
+                updateFolder={(folderScripts: Script[], { path }: any) =>
                   !isEmpty(folderScripts)
-                    ? onUpdateFolder(folderScripts, { isNewFolder: true, path })
+                    ? updateFolder(folderScripts, { isNewFolder: true, path })
                     : updateEmptyFolder(folderName, path)
                 }
-                onRemoveFolder={() => removeEmptyFolder(folderName)}
+                removeFolder={() => removeEmptyFolder(folderName)}
               />
             ))}
           </SavedScriptsBodySection>

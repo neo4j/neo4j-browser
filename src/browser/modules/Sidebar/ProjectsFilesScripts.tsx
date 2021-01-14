@@ -104,11 +104,11 @@ export const ProjectFilesError = ({
 
 interface ProjectFilesScripts {
   bus: Bus
-  onSelectScript: (favorite: Favorite) => void
-  onExecScript: (favorite: Favorite) => void
-  onExportScripts: () => void
-  onUpdateFolder: () => void
-  onRemoveFolder: () => void
+  selectScript: (favorite: Favorite) => void
+  execScript: (favorite: Favorite) => void
+  exportScripts: () => void
+  updateFolder: () => void
+  removeFolder: () => void
   scriptsNamespace: string
   title: string
   projectId: string
@@ -168,12 +168,12 @@ function ProjectFilesScripts(props: ProjectFilesScripts): JSX.Element {
   }, [data, refetch])
 
   const myScriptsProps = {
-    onExecScript: props.onExecScript,
+    execScript: props.execScript,
     scripts: projectFiles,
     isProjectFiles: true,
     scriptsNamespace: DOT,
     title: 'Cypher files',
-    onRemoveScript: async (favorite: Favorite) => {
+    removeScript: async (favorite: Favorite) => {
       try {
         const { data } = await removeFile({
           variables: ProjectFileMutationVars(
@@ -192,7 +192,7 @@ function ProjectFilesScripts(props: ProjectFilesScripts): JSX.Element {
         console.log(e)
       }
     },
-    onSelectScript: (favorite: Favorite) => {
+    selectScript: (favorite: Favorite) => {
       const directory =
         favorite.path.length == 1 && favorite.path === DOT
           ? DOT
@@ -206,14 +206,12 @@ function ProjectFilesScripts(props: ProjectFilesScripts): JSX.Element {
           isProjectFile: true
         })
       )
-    },
-    onExportScripts: Function.prototype,
-    onUpdateFolder: Function.prototype,
-    onRemoveFolder: Function.prototype
+    }
   }
 
   return (
     <>
+      {/* @ts-ignore */}
       <MyScripts {...myScriptsProps} />
       <ProjectFilesError
         apolloErrors={[getProjectFilesError, removeProjectFileError]}
@@ -235,7 +233,7 @@ const mapFavoritesDispatchToProps = (
   dispatch: Dispatch<Action>,
   ownProps: { bus: Bus }
 ) => ({
-  onExecScript: (favorite: Favorite) => {
+  execScript: (favorite: Favorite) => {
     ownProps.bus.send(EXECUTE_COMMAND_ORIGIN, EXECUTE_COMMAND_ORIGINS.SIDEBAR)
     dispatch(
       executeCommand(favorite.contents, { source: commandSources.projectFile })

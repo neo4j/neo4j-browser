@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { isEmpty, indexOf, join, slice, without } from 'lodash-es'
 
-import { AnyFunc, IScript, ScriptFolder, NewFolderPathGenerator } from './types'
+import { Script, ScriptFolder, NewFolderPathGenerator } from './types'
 
 import {
   getRootLevelFolder,
@@ -11,13 +11,10 @@ import {
 
 /**
  * Maintains a state of script folders, separated into root and sub folders
- * @param     {string}                            namespace
- * @param     {IScript[]}                         scripts
- * @return    {[ScriptFolder, ScriptFolder[]]}                root and sub folders
  */
 export function useScriptsFolders(
   namespace: string,
-  scripts: IScript[]
+  scripts: Script[]
 ): [ScriptFolder | null, ScriptFolder[]] {
   const [sortedScriptGroups, setSortedScriptGroups] = useState(
     sortAndGroupScriptsByPath(namespace, scripts)
@@ -35,20 +32,17 @@ export function useScriptsFolders(
 
 /**
  * Maintains a state of a name and calls update action whenever user exits editing
- * @param     {string}                                  name
- * @param     {AnyFunc}                                 onUpdate
- * @return    {[boolean, string, AnyFunc, AnyFunc]}
  */
 export function useNameUpdate(
   name: string,
-  onUpdate: AnyFunc
-): [boolean, string, AnyFunc, AnyFunc] {
+  update: (name: string) => void
+): [boolean, string, (isEditing: boolean) => void, (newName: string) => void] {
   const [inputValue, setNameInput] = useState(name)
   const [isEditing, setIsEditing] = useState(false)
 
   useEffect(() => {
     if (!isEditing && inputValue !== name) {
-      onUpdate(inputValue)
+      update(inputValue)
     }
   }, [isEditing])
 
@@ -57,16 +51,18 @@ export function useNameUpdate(
 
 /**
  * Maintains a state of empty folders
- * @param   {string}                                      namespace
- * @param   {NewFolderPathGenerator}                      pathGenerator
- * @param   {string[]}                                    allSavedFolderNames
- * @return  {[string[], AnyFunc, AnyFunc, AnyFunc]}
  */
 export function useEmptyFolders(
   namespace: string,
   pathGenerator: NewFolderPathGenerator,
   allSavedFolderNames: string[]
-): [string[], boolean, AnyFunc, AnyFunc, AnyFunc] {
+): [
+  string[],
+  boolean,
+  () => void,
+  (oldPath: string, newPath: string) => void,
+  (path: string) => void
+] {
   const [emptyFolders, setEmptyFolders] = useState([] as string[])
   const canAddFolder = isEmpty(emptyFolders)
   const addEmptyFolder = () =>
@@ -101,15 +97,17 @@ export function useEmptyFolders(
 
 /**
  * Fires an onBlur only when clicked outside ref
- * @param     {AnyFunc}               onBlur
- * @return    {[MutableRefObject]}
  */
-export function useCustomBlur(onBlur: AnyFunc) {
-  const ref = useRef(null)
+export function useCustomBlur(onBlur: () => void) {
+  const ref = useRef<HTMLDivElement>(null)
   const clickHandler = (event: Event) => {
-    // i honestly dont know whats wrong with ts here
-    // @ts-ignore
-    if (ref.current && !ref.current.contains(event.target)) {
+    // We can't technically be sure the event target is an element
+    const clickedEl = event.target
+    if (
+      ref.current &&
+      clickedEl instanceof Element &&
+      !ref.current.contains(clickedEl)
+    ) {
       onBlur()
     }
   }
