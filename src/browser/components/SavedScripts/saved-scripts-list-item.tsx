@@ -1,7 +1,7 @@
 import React from 'react'
 import { DragSource } from 'react-dnd'
 
-import { AnyFunc, IScript } from './types'
+import { FolderUpdate, Script } from './types'
 
 import { getScriptDisplayName } from './saved-scripts.utils'
 import { useCustomBlur, useNameUpdate } from './saved-scripts.hooks'
@@ -17,13 +17,13 @@ import {
 
 export interface ISavedScriptsListItemProps {
   isStatic?: boolean
-  script: IScript
+  script: Script
   isProjectFiles?: boolean
-  onSelectScript: AnyFunc
-  onExecScript: AnyFunc
-  onUpdateScript: AnyFunc
-  onRemoveScript: AnyFunc
-  connectDragSource?: AnyFunc
+  selectScript: (script: Script) => void
+  execScript: (script: Script) => void
+  updateScript: (script: Script, updates: FolderUpdate) => void
+  removeScript: (script: Script) => void
+  connectDragSource?: any
 }
 
 export default DragSource<ISavedScriptsListItemProps>(
@@ -40,10 +40,10 @@ function SavedScriptsListItem({
   isStatic,
   script,
   isProjectFiles,
-  onSelectScript,
-  onExecScript,
-  onUpdateScript,
-  onRemoveScript,
+  selectScript,
+  execScript,
+  updateScript,
+  removeScript,
   connectDragSource
 }: ISavedScriptsListItemProps) {
   const displayName = getScriptDisplayName(script)
@@ -52,7 +52,7 @@ function SavedScriptsListItem({
     nameValue,
     setIsEditing,
     setLabelInput
-  ] = useNameUpdate(displayName, name => onUpdateScript(script, { name }))
+  ] = useNameUpdate(displayName, name => updateScript(script, { name }))
   const [blurRef] = useCustomBlur(() => setIsEditing(false))
 
   return (
@@ -72,22 +72,20 @@ function SavedScriptsListItem({
         <SavedScriptsListItemDisplayName
           className="saved-scripts-list-item__display-name"
           data-testid={`scriptTitle-${displayName}`}
-          onClick={() =>
-            (isProjectFiles || !isEditing) && onSelectScript(script)
-          }
+          onClick={() => (isProjectFiles || !isEditing) && selectScript(script)}
         >
           {connectDragSource!(<span>{displayName}</span>)}
         </SavedScriptsListItemDisplayName>
       )}
       <SavedScriptsButtonWrapper className="saved-scripts__button-wrapper">
         {isStatic || isEditing ? (
-          <RemoveButton onClick={() => onRemoveScript(script)} />
+          <RemoveButton onClick={() => removeScript(script)} />
         ) : (
           <EditButton onClick={() => setIsEditing(!isEditing)} />
         )}
 
         {script.isSuggestion || isEditing || (
-          <RunButton onClick={() => onExecScript(script)} />
+          <RunButton onClick={() => execScript(script)} />
         )}
       </SavedScriptsButtonWrapper>
     </SavedScriptsListItemMain>

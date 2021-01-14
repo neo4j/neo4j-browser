@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { lowerCase, map, sortBy, without } from 'lodash-es'
 import { DropTarget } from 'react-dnd'
 
-import { AnyFunc, IScript } from './types'
+import { Script, FolderUpdate } from './types'
 
 import {
   addScriptPathPrefix,
@@ -25,30 +25,33 @@ import {
   SavedScriptsInput
 } from './saved-scripts.styled'
 
-export interface ISavedScriptsFolderProps {
+interface SavedScriptsFolderProps {
   isRoot?: boolean
   scriptsNamespace: string
   allFolderNames: string[]
   folderName: string
-  scripts: IScript[]
+  scripts: Script[]
   isProjectFiles?: boolean
-  onSelectScript: AnyFunc
-  onExecScript: AnyFunc
-  onRemoveScript: AnyFunc
-  onUpdateFolder: AnyFunc
-  onRemoveFolder: AnyFunc
+  selectScript?: (script: Script) => void
+  removeScript?: (script: Script) => void
+  execScript?: (script: Script) => void
+  updateFolder: (scripts: Script[], updates: FolderUpdate) => void
+  removeFolder?: (scripts: Script[]) => void
   isStatic?: boolean
-  connectDropTarget?: AnyFunc
+  connectDropTarget?: any
+}
+const noOp = () => {
+  /* No operation */
 }
 
-export default DropTarget<ISavedScriptsFolderProps>(
+export default DropTarget<SavedScriptsFolderProps>(
   ({ allFolderNames, folderName }) =>
     map(without(allFolderNames, folderName), name => name),
   {
-    drop({ onUpdateFolder, folderName }, monitor) {
+    drop({ updateFolder, folderName }, monitor) {
       const item = monitor.getItem()
 
-      onUpdateFolder([item], { path: folderName })
+      updateFolder([item], { path: folderName })
     }
   },
   connect => ({
@@ -63,20 +66,20 @@ function SavedScriptsFolder({
   scripts,
   isProjectFiles,
   isStatic,
-  onSelectScript,
-  onExecScript,
-  onRemoveScript,
-  onUpdateFolder,
-  onRemoveFolder,
+  selectScript = noOp,
+  execScript = noOp,
+  removeScript = noOp,
+  removeFolder = noOp,
+  updateFolder,
   connectDropTarget
-}: ISavedScriptsFolderProps) {
+}: SavedScriptsFolderProps) {
   const sortedScripts = sortBy(scripts, script =>
     lowerCase(getScriptDisplayName(script))
   )
   const [isEditing, labelInput, setIsEditing, setLabelInput] = useNameUpdate(
     folderName,
     name =>
-      onUpdateFolder(scripts, {
+      updateFolder(scripts, {
         isFolderName: true,
         path: addScriptPathPrefix(scriptsNamespace, name)
       })
@@ -94,12 +97,12 @@ function SavedScriptsFolder({
               isStatic={isStatic}
               script={script}
               isProjectFiles={isProjectFiles}
-              onSelectScript={onSelectScript}
-              onExecScript={onExecScript}
-              onUpdateScript={(script: IScript, payload: any) =>
-                onUpdateFolder([script], payload)
+              selectScript={selectScript}
+              execScript={execScript}
+              updateScript={(script: Script, payload: FolderUpdate) =>
+                updateFolder([script], payload)
               }
-              onRemoveScript={onRemoveScript}
+              removeScript={removeScript}
             />
           ))}
         </SavedScriptsFolderMain>
@@ -144,7 +147,7 @@ function SavedScriptsFolder({
               <EditButton onClick={() => setIsEditing(!isEditing)} />
             )}
             {isStatic || isProjectFiles || !isEditing ? null : (
-              <RemoveButton onClick={() => onRemoveFolder(scripts)} />
+              <RemoveButton onClick={() => removeFolder(scripts)} />
             )}
           </SavedScriptsButtonWrapper>
         </SavedScriptsFolderHeader>
@@ -156,12 +159,12 @@ function SavedScriptsFolder({
                 isStatic={isStatic}
                 script={script}
                 isProjectFiles={isProjectFiles}
-                onSelectScript={onSelectScript}
-                onExecScript={onExecScript}
-                onUpdateScript={(script: IScript, payload: any) =>
-                  onUpdateFolder([script], payload)
+                selectScript={selectScript}
+                execScript={execScript}
+                updateScript={(script: Script, payload: any) =>
+                  updateFolder([script], payload)
                 }
-                onRemoveScript={onRemoveScript}
+                removeScript={removeScript}
               />
             ))}
           </SavedScriptsFolderBody>

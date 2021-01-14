@@ -51,19 +51,15 @@ const mapFavoritesStateToProps = (state: any) => {
   }
 }
 const mapFavoritesDispatchToProps = (dispatch: any, ownProps: any) => ({
-  onSelectScript: (favorite: any) =>
+  selectScript: (favorite: any) =>
     ownProps.bus.send(
       editor.EDIT_CONTENT,
       editor.editContent(favorite.id, favorite.contents, { isStatic: true })
     ),
-  onExecScript: (favorite: any) =>
+  execScript: (favorite: any) =>
     dispatch(executeCommand(favorite.contents), {
       source: commandSources.sidebar
-    }),
-  onExportScripts: Function.prototype,
-  onRemoveScript: Function.prototype,
-  onUpdateFolder: Function.prototype,
-  onRemoveFolder: Function.prototype
+    })
 })
 const Favorites = withBus(
   connect(mapFavoritesStateToProps, mapFavoritesDispatchToProps)(MyScripts)
