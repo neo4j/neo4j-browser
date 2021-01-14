@@ -203,6 +203,12 @@ export const initializeCypherEditorEpic = (
             procedureOutput: CompletionItemKind.Operator
           }
 
+          // word preceding trigger character, used to determine range (where to insert) procedure suggestions
+          const { word } = model.getWordUntilPosition({
+            lineNumber: position.lineNumber,
+            column: position.column - 1
+          })
+
           return {
             suggestions: items.map((item, index) => ({
               label: item.view || item.content,
@@ -216,7 +222,8 @@ export const initializeCypherEditorEpic = (
                 ? {
                     ...range,
                     startColumn:
-                      range.startColumn - (item.view.lastIndexOf('.') + 1)
+                      range.startColumn -
+                      (item.view.lastIndexOf(word) + word.length + 1)
                   }
                 : range,
               detail: item.postfix || undefined,
