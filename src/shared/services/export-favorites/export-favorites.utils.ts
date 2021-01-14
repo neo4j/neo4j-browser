@@ -35,6 +35,8 @@ import {
   getScriptDisplayName,
   sortAndGroupScriptsByPath
 } from 'browser/components/SavedScripts'
+import { Favorite } from 'shared/modules/favorites/favoritesDuck'
+import { Folder } from 'shared/modules/favorites/foldersDuck'
 
 import { SLASH, CYPHER_FILE_EXTENSION } from './export-favorites.constants'
 
@@ -46,16 +48,16 @@ import { SLASH, CYPHER_FILE_EXTENSION } from './export-favorites.constants'
  * @return    {Object[]}                        new user favorites objects ("my scripts")
  */
 export function mapOldFavoritesAndFolders(
-  favorites: any,
-  folders: any,
-  isAllowed = isNonStatic
+  favorites: Favorite[],
+  folders: Folder[],
+  isAllowed: (fav: Favorite) => boolean = isNonStatic
 ) {
   const oldFoldersMap = new Map(
     map(filter(folders, isAllowed), folder => [folder.id, folder])
   )
   const oldFilteredFavorites = filter(
     favorites,
-    favorite => isAllowed(favorite) && hasContent(favorite)
+    favorite => isAllowed(favorite) && !!favorite.content
   )
 
   return map(oldFilteredFavorites, favorite => {
@@ -77,22 +79,9 @@ export function mapOldFavoritesAndFolders(
 
 /**
  * Array.prototype.filter predicate for removing static favorites and folders (old structure)
- * @param     {Object}      oldFavoriteOrFolder
- * @param     {Boolean}     oldFavoriteOrFolder.isStatic
- * @return    {Boolean}
  */
-function isNonStatic({ isStatic }: any) {
-  return !isStatic
-}
-
-/**
- * Array.prototype.filter predicate for removing old favorites without content
- * @param     {Object}      oldFavorite
- * @param     {String}      oldFavorite.content
- * @return    {Boolean}
- */
-function hasContent({ content }: any) {
-  return Boolean(content)
+function isNonStatic(fav: Favorite): boolean {
+  return !fav.isStatic
 }
 
 /**
