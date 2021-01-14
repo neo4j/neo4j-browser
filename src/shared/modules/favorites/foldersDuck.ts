@@ -31,7 +31,7 @@ export const UPDATE_FOLDERS = 'folders/UPDATE_FOLDERS'
 
 export const getFolders = (state: any): Folder[] => state[NAME]
 
-type Folder = {
+export type Folder = {
   id: string //generated id or basics|graphs|profile|procudures
   name: string
   isStatic?: boolean

@@ -313,11 +313,11 @@ export const loadFavoritesFromSyncEpic = (action$: any, store: any) =>
     .do((action: any) => {
       const favoritesStatus = favoritesToLoad(action, store)
 
-      if (favoritesStatus.loadFavorites) {
+      if (favoritesStatus.loadFavorites && favoritesStatus.favorites) {
         store.dispatch(loadFavorites(favoritesStatus.favorites))
       }
 
-      if (favoritesStatus.syncFavorites) {
+      if (favoritesStatus.syncFavorites && favoritesStatus.favorites) {
         store.dispatch(syncFavorites(favoritesStatus.favorites))
       }
     })

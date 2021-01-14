@@ -34,7 +34,6 @@ import {
 import {
   generateFolderNameAndIdForPath,
   mapNewFavoritesToOld,
-  folderHasRemainingFavorites,
   getFirstFavorite,
   getFavoriteIds,
   getFolderFromPath,
