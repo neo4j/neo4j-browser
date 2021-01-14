@@ -98,7 +98,7 @@ export const SavedScriptsButtonWrapper = styled.div`
   }
 `
 
-export const SavedScriptsButton = styled.button`
+export const StyledSavedScriptsButton = styled.button`
   color: #bcc0c9;
   background: transparent;
   border: none;
@@ -110,18 +110,6 @@ export const SavedScriptsButton = styled.button`
   &:hover {
     color: inherit;
   }
-`
-
-export const SavedScriptsNewFolderButtonButton = styled(SavedScriptsButton)`
-  &[disabled] {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-`
-
-export const SavedScriptsEditButtonButton = styled(SavedScriptsButton)`
-  min-width: 26px;
-  visibility: hidden;
 `
 
 export const SavedScriptsInput = styled.input`

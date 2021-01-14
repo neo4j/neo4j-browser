@@ -16,8 +16,7 @@ import { AnyFunc, IScript, NewFolderPathGenerator } from './types'
 import { useEmptyFolders, useScriptsFolders } from './saved-scripts.hooks'
 
 import SavedScriptsFolder from './saved-scripts-folder'
-import SavedScriptsNewFolderButton from './saved-scripts-new-folder-button'
-import SavedScriptsExportButton from './saved-scripts-export-button'
+import { ExportButton, NewFolderButton } from './SavedScriptsButton'
 
 import {
   SavedScriptsMain,
@@ -90,13 +89,8 @@ export default function SavedScripts({
               <SavedScriptsButtonWrapper className="saved-scripts__button-wrapper">
                 {isStatic || isProjectFiles ? null : (
                   <>
-                    <SavedScriptsExportButton
-                      onExport={() => onExportScripts()}
-                    />
-                    <SavedScriptsNewFolderButton
-                      disabled={!canAddFolder}
-                      onAdd={() => addEmptyFolder()}
-                    />
+                    <ExportButton onClick={() => onExportScripts()} />
+                    <NewFolderButton onClick={() => addEmptyFolder()} />
                   </>
                 )}
               </SavedScriptsButtonWrapper>

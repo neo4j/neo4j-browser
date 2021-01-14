@@ -3,13 +3,10 @@ import { DragSource } from 'react-dnd'
 
 import { AnyFunc, IScript } from './types'
 
-import { ENTER_KEY_CODE } from './saved-scripts.constants'
 import { getScriptDisplayName } from './saved-scripts.utils'
 import { useCustomBlur, useNameUpdate } from './saved-scripts.hooks'
 
-import SavedScriptsExecButton from './saved-scripts-exec-button'
-import SavedScriptsEditButton from './saved-scripts-edit-button'
-import SavedScriptsRemoveButton from './saved-scripts-remove-button'
+import { RemoveButton, RunButton, EditButton } from './SavedScriptsButton'
 
 import {
   SavedScriptsButtonWrapper,
@@ -65,8 +62,8 @@ function SavedScriptsListItem({
           className="saved-scripts-list-item__name-input"
           type="text"
           autoFocus
-          onKeyPress={({ charCode }) => {
-            charCode === ENTER_KEY_CODE && setIsEditing(false)
+          onKeyPress={({ key }) => {
+            key === 'Enter' && setIsEditing(false)
           }}
           value={nameValue}
           onChange={({ target }) => setLabelInput(target.value)}
@@ -84,13 +81,13 @@ function SavedScriptsListItem({
       )}
       <SavedScriptsButtonWrapper className="saved-scripts__button-wrapper">
         {isStatic || isEditing ? (
-          <SavedScriptsRemoveButton onRemove={() => onRemoveScript(script)} />
+          <RemoveButton onClick={() => onRemoveScript(script)} />
         ) : (
-          <SavedScriptsEditButton onEdit={() => setIsEditing(!isEditing)} />
+          <EditButton onClick={() => setIsEditing(!isEditing)} />
         )}
 
         {script.isSuggestion || isEditing || (
-          <SavedScriptsExecButton onExec={() => onExecScript(script)} />
+          <RunButton onClick={() => onExecScript(script)} />
         )}
       </SavedScriptsButtonWrapper>
     </SavedScriptsListItemMain>

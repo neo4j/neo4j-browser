@@ -17,8 +17,7 @@ import {
 
 import { IScript, ScriptFolder } from './types'
 
-import { COMMENT_PREFIX, NEW_LINE } from './saved-scripts.constants'
-
+const COMMENT_PREFIX = '//'
 /**
  * Gets the display name of a script
  * @param     {IScript}   script
@@ -31,7 +30,7 @@ export function getScriptDisplayName({ name, contents }: IScript) {
     return name
   }
 
-  const lines = split(contents, NEW_LINE)
+  const lines = split(contents, '\n')
   const firstLine = trim(head(lines) || '')
 
   if (isEmpty(firstLine)) {
