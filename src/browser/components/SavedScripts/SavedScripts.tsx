@@ -13,9 +13,9 @@ import {
 
 import { Script, NewFolderPathGenerator, FolderUpdate } from './types'
 
-import { useEmptyFolders, useScriptsFolders } from './saved-scripts.hooks'
+import { useEmptyFolders, useScriptsFolders } from './hooks'
 
-import SavedScriptsFolder from './saved-scripts-folder'
+import SavedScriptsFolder from './SavedScriptsFolder'
 import { ExportButton, NewFolderButton } from './SavedScriptsButton'
 
 import {
@@ -24,8 +24,8 @@ import {
   SavedScriptsBodySection,
   SavedScriptsHeader,
   SavedScriptsButtonWrapper
-} from './saved-scripts.styled'
-import { getEmptyFolderDefaultPath } from './saved-scripts.utils'
+} from './styled'
+import { getEmptyFolderDefaultPath } from './utils'
 
 interface SavedScriptsProps {
   title?: string
@@ -55,7 +55,7 @@ export default function SavedScripts({
   removeScript,
   updateFolder,
   removeFolder
-}: SavedScriptsProps) {
+}: SavedScriptsProps): JSX.Element {
   const [rootFolder, subFolders] = useScriptsFolders(scriptsNamespace, scripts)
   // lodash-es typings cant handle tuples
   const allSavedFolderNames = compact([

@@ -6,4 +6,4 @@ export {
   getScriptDisplayName,
   sortAndGroupScriptsByPath,
   omitScriptPathPrefix
-} from './saved-scripts.utils'
+} from './utils'

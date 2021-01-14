@@ -18,14 +18,8 @@ import {
 import { Script, ScriptFolder } from './types'
 
 const COMMENT_PREFIX = '//'
-/**
- * Gets the display name of a script
- * @param     {Script}   script
- * @param     {string}    script.name         script name
- * @param     {string}    script.contents     script contents
- * @return    {string}                        script display name
- */
-export function getScriptDisplayName({ name, contents }: Script) {
+
+export function getScriptDisplayName({ name, contents }: Script): string {
   if (name) {
     return name
   }
@@ -42,12 +36,6 @@ export function getScriptDisplayName({ name, contents }: Script) {
     : firstLine
 }
 
-/**
- * groups and sorts scripts by path
- * @param     {string}                  namespace
- * @param     {Script[]}               scripts
- * @return    {ScriptFolder[]}                     sorted, grouped, scripts
- */
 export function sortAndGroupScriptsByPath(
   namespace: string,
   scripts: Script[]
@@ -62,13 +50,7 @@ export function sortAndGroupScriptsByPath(
   )
 }
 
-/**
- * Omits script path prefix from path
- * @param     {string}    namespace
- * @param     {string}    path
- * @return    {string}
- */
-export function omitScriptPathPrefix(namespace: string, path: string) {
+export function omitScriptPathPrefix(namespace: string, path: string): string {
   if (!isEmpty(path)) {
     return startsWith(path, namespace) ? path.slice(namespace.length) : path
   }
@@ -76,13 +58,7 @@ export function omitScriptPathPrefix(namespace: string, path: string) {
   return ''
 }
 
-/**
- * Adds script path prefix to path
- * @param     {string}    namespace
- * @param     {string}    path
- * @return    {string}
- */
-export function addScriptPathPrefix(namespace: string, path: string) {
+export function addScriptPathPrefix(namespace: string, path: string): string {
   if (!isEmpty(path)) {
     return startsWith(path, namespace) ? path : `${namespace}${path}`
   }
@@ -92,34 +68,28 @@ export function addScriptPathPrefix(namespace: string, path: string) {
 
 /**
  *  Finds the root level folder returned from {@link sortAndGroupScriptsByPath}
- * @param     {string}                    namespace
- * @param     {ScriptFolder[]}           folders     return of {@link sortAndGroupScriptsByPath}
- * @return    {ScriptFolder}                         root level script group
  */
-export function getRootLevelFolder(namespace: string, folders: ScriptFolder[]) {
+export function getRootLevelFolder(
+  namespace: string,
+  folders: ScriptFolder[]
+): ScriptFolder {
   return find(folders, ([path]) => path === namespace) || [namespace, []]
 }
 
 /**
  *  Finds the sub level folders returned from {@link sortAndGroupScriptsByPath}
- * @param     {string}                    namespace
- * @param     {ScriptFolder[]}           folders     return of {@link sortAndGroupScriptsByPath}
- * @return    {ScriptFolder[]}                       sub level script groups
  */
-export function getSubLevelFolders(namespace: string, folders: ScriptFolder[]) {
+export function getSubLevelFolders(
+  namespace: string,
+  folders: ScriptFolder[]
+): ScriptFolder[] {
   return without(folders, getRootLevelFolder(namespace, folders))
 }
 
-/**
- * Returns the default path for an empty folder
- * @param     {string}      namespace
- * @param     {string[]}    allFolderPaths
- * @return    {string}
- */
 export function getEmptyFolderDefaultPath(
   namespace: string,
   allFolderPaths: string[]
-) {
+): string {
   const defaultPath = `${namespace}New Folder`
 
   if (!includes(allFolderPaths, defaultPath)) return defaultPath
@@ -128,9 +98,9 @@ export function getEmptyFolderDefaultPath(
     map(allFolderPaths, path => {
       const numberEOL = path.match(/\d+$/)
 
-      if (!numberEOL) return ''
+      if (!numberEOL || !numberEOL[0]) return ''
 
-      return parseInt(head(numberEOL)!)
+      return parseInt(numberEOL[0])
     })
   )
 

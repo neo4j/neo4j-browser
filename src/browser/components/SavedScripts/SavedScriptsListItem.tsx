@@ -3,8 +3,8 @@ import { DragSource } from 'react-dnd'
 
 import { FolderUpdate, Script } from './types'
 
-import { getScriptDisplayName } from './saved-scripts.utils'
-import { useCustomBlur, useNameUpdate } from './saved-scripts.hooks'
+import { getScriptDisplayName } from './utils'
+import { useCustomBlur, useNameUpdate } from './hooks'
 
 import { RemoveButton, RunButton, EditButton } from './SavedScriptsButton'
 
@@ -13,9 +13,9 @@ import {
   SavedScriptsInput,
   SavedScriptsListItemDisplayName,
   SavedScriptsListItemMain
-} from './saved-scripts.styled'
+} from './styled'
 
-export interface ISavedScriptsListItemProps {
+export interface SavedScriptsListItemProps {
   isStatic?: boolean
   script: Script
   isProjectFiles?: boolean
@@ -26,7 +26,7 @@ export interface ISavedScriptsListItemProps {
   connectDragSource?: any
 }
 
-export default DragSource<ISavedScriptsListItemProps>(
+export default DragSource<SavedScriptsListItemProps>(
   ({ script }) => script.path,
   {
     beginDrag: ({ script }) => script
@@ -45,7 +45,7 @@ function SavedScriptsListItem({
   updateScript,
   removeScript,
   connectDragSource
-}: ISavedScriptsListItemProps) {
+}: SavedScriptsListItemProps) {
   const displayName = getScriptDisplayName(script)
   const [
     isEditing,

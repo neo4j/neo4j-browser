@@ -1,7 +1,7 @@
 import React, { ReactEventHandler } from 'react'
 import { Icon, SemanticICONS } from 'semantic-ui-react'
 
-import { StyledSavedScriptsButton } from './saved-scripts.styled'
+import { StyledSavedScriptsButton } from './styled'
 
 type SavedScriptsButtonProps = {
   onClick: ReactEventHandler
