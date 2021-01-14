@@ -153,7 +153,6 @@
     "@neo4j/browser-lambda-parser": "1.0.5",
     "@relate-by-ui/css": "1.0.5",
     "@relate-by-ui/relatable": "1.0.1",
-    "@relate-by-ui/saved-scripts": "^1.0.5",
     "@sentry/integrations": "^5.29.0",
     "@sentry/react": "^5.29.0",
     "@sentry/tracing": "^5.27.0",

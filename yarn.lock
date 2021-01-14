@@ -1831,15 +1831,6 @@
     react-table "7.0.4"
     semantic-ui-react "0.88.2"
 
-"@relate-by-ui/saved-scripts@^1.0.5":
-  version "1.0.5"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@relate-by-ui/saved-scripts/-/saved-scripts-1.0.5.tgz#40b8833bc07771398f605fd7f07bf50923e1a629"
-  integrity sha1-QLiDO8B3cTmPYF/X8Hv1CSPhpik=
-  dependencies:
-    "@emotion/core" "10.0.10"
-    "@emotion/styled" "10.0.10"
-    lodash-es "4.17.15"
-
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@samverschueren/stream-to-observable/-/stream-to-observable-0.3.1.tgz#a21117b19ee9be70c379ec1877537ef2e1c63301"

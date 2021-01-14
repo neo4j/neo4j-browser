@@ -85,7 +85,12 @@ function NewSavedScript({
   return (
     <StyledSaveArea onSubmit={formSubmit}>
       <StyledHeaderText> {headerText} </StyledHeaderText>
-      <StyledInputField value={name} onChange={onChange} required />
+      <StyledInputField
+        data-testid="scriptName"
+        value={name}
+        onChange={onChange}
+        required
+      />
       <StyledSubmitButton data-testid="saveScript" type="submit">
         Save
       </StyledSubmitButton>
