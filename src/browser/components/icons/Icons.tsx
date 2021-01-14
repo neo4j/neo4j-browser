@@ -373,6 +373,6 @@ export const FireExtinguisherIcon = ({ title = 'Reset' }) => (
   <IconContainer className="fa fa-fire-extinguisher" title={title} />
 )
 
-export const ExpandMenuRightIcon = () => <Icon name="caret right" />
+export const SavedScriptsExpandMenuRightIcon = () => <Icon name="caret right" />
 
-export const CollapseMenuIcon = () => <Icon name="caret down" />
+export const SavedScriptsCollapseMenuIcon = () => <Icon name="caret down" />

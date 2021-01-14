@@ -1,13 +1,9 @@
 import React from 'react'
-import { DragSource } from 'react-dnd'
-
+import { DragSource, DragElementWrapper, DragSourceOptions } from 'react-dnd'
 import { FolderUpdate, Script } from './types'
-
 import { getScriptDisplayName } from './utils'
 import { useCustomBlur, useNameUpdate } from './hooks'
-
 import { RemoveButton, RunButton, EditButton } from './SavedScriptsButton'
-
 import {
   SavedScriptsButtonWrapper,
   SavedScriptsInput,
@@ -15,7 +11,7 @@ import {
   SavedScriptsListItemMain
 } from './styled'
 
-export interface SavedScriptsListItemProps {
+interface SavedScriptsListItemProps {
   isStatic?: boolean
   script: Script
   isProjectFiles?: boolean
@@ -23,18 +19,10 @@ export interface SavedScriptsListItemProps {
   execScript: (script: Script) => void
   updateScript: (script: Script, updates: FolderUpdate) => void
   removeScript: (script: Script) => void
-  connectDragSource?: any
 }
-
-export default DragSource<SavedScriptsListItemProps>(
-  ({ script }) => script.path,
-  {
-    beginDrag: ({ script }) => script
-  },
-  connect => ({
-    connectDragSource: connect.dragSource()
-  })
-)(SavedScriptsListItem)
+type DragProp = {
+  connectDragSource: DragElementWrapper<DragSourceOptions>
+}
 
 function SavedScriptsListItem({
   isStatic,
@@ -45,7 +33,7 @@ function SavedScriptsListItem({
   updateScript,
   removeScript,
   connectDragSource
-}: SavedScriptsListItemProps) {
+}: SavedScriptsListItemProps & DragProp) {
   const displayName = getScriptDisplayName(script)
   const [
     isEditing,
@@ -74,7 +62,7 @@ function SavedScriptsListItem({
           data-testid={`scriptTitle-${displayName}`}
           onClick={() => (isProjectFiles || !isEditing) && selectScript(script)}
         >
-          {connectDragSource!(<span>{displayName}</span>)}
+          {connectDragSource(<span>{displayName}</span>)}
         </SavedScriptsListItemDisplayName>
       )}
       <SavedScriptsButtonWrapper className="saved-scripts__button-wrapper">
@@ -91,3 +79,13 @@ function SavedScriptsListItem({
     </SavedScriptsListItemMain>
   )
 }
+
+export default DragSource<SavedScriptsListItemProps, DragProp>(
+  props => props.script.path,
+  {
+    beginDrag: props => props.script
+  },
+  connect => ({
+    connectDragSource: connect.dragSource()
+  })
+)(SavedScriptsListItem)

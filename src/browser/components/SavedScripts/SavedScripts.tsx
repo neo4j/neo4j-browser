@@ -10,14 +10,10 @@ import {
   compact,
   isEmpty
 } from 'lodash-es'
-
 import { Script, NewFolderPathGenerator, FolderUpdate } from './types'
-
 import { useEmptyFolders, useScriptsFolders } from './hooks'
-
 import SavedScriptsFolder from './SavedScriptsFolder'
 import { ExportButton, NewFolderButton } from './SavedScriptsButton'
-
 import {
   SavedScriptsMain,
   SavedScriptsBody,
