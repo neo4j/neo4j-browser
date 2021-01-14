@@ -29,12 +29,19 @@ export const ADD_FOLDER = 'folders/ADD_FOLDER'
 export const REMOVE_FOLDER = 'folders/REMOVE_FOLDER'
 export const UPDATE_FOLDERS = 'folders/UPDATE_FOLDERS'
 
-export const getFolders = (state: any) => state[NAME]
+export const getFolders = (state: any): Folder[] => state[NAME]
+
+type Folder = {
+  id: string //generated id or basics|graphs|profile|procudures
+  name: string
+  isStatic?: boolean
+  versionRange?: string
+}
 
 const versionSize = 20
 const initialState = folders
 
-const mergeFolders = (list1: any, list2: any) => {
+const mergeFolders = (list1: Folder[], list2: Folder[]) => {
   return list1.concat(
     list2.filter(
       (favInList2: any) =>
@@ -44,25 +51,28 @@ const mergeFolders = (list1: any, list2: any) => {
   )
 }
 
-export const addFolder = (id: any, name: any) => {
+export const addFolder = (id: string, name: string) => {
   return { type: ADD_FOLDER, id, name }
 }
-export const updateFolders = (folders: any) => {
+export const updateFolders = (folders: Folder[]) => {
   return { type: UPDATE_FOLDERS, folders }
 }
-export const removeFolder = (id: any) => {
+export const removeFolder = (id: string) => {
   return { type: REMOVE_FOLDER, id }
 }
 
-export const loadFolders = (folders: any) => {
+export const loadFolders = (folders: Folder[]) => {
   return { type: LOAD_FOLDERS, folders }
 }
 
-export const syncFolders = (folders: any) => {
+export const syncFolders = (folders: Folder[]) => {
   return { type: SYNC_FOLDERS, folders }
 }
 
-export default function reducer(state = initialState, action: any) {
+export default function reducer(
+  state: Folder[] = initialState,
+  action: any
+): Folder[] {
   switch (action.type) {
     case LOAD_FOLDERS:
     case UPDATE_FOLDERS:
@@ -72,7 +82,7 @@ export default function reducer(state = initialState, action: any) {
     case REMOVE_FOLDER:
       return state.filter(folder => folder.id !== action.id)
     case ADD_FOLDER:
-      return state.concat([{ id: action.id, name: action.name } as any])
+      return state.concat([{ id: action.id, name: action.name }])
     case USER_CLEAR:
       return initialState
     default:
