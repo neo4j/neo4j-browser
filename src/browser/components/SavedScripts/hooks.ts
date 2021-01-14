@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { isEmpty, indexOf, join, slice, without } from 'lodash-es'
-
 import { Script, ScriptFolder, NewFolderPathGenerator } from './types'
-
 import {
   getRootLevelFolder,
   getSubLevelFolders,

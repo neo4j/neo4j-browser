@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { lowerCase, map, sortBy, without } from 'lodash-es'
-import { DropTarget } from 'react-dnd'
-
+import { DropTarget, DragElementWrapper } from 'react-dnd'
 import { Script, FolderUpdate } from './types'
 
 import {
@@ -14,8 +13,8 @@ import { useCustomBlur, useNameUpdate } from './hooks'
 import SavedScriptsListItem from './SavedScriptsListItem'
 import { EditButton, RemoveButton } from './SavedScriptsButton'
 import {
-  CollapseMenuIcon,
-  ExpandMenuRightIcon
+  SavedScriptsCollapseMenuIcon,
+  SavedScriptsExpandMenuRightIcon
 } from 'browser-components/icons/Icons'
 
 import {
@@ -41,26 +40,14 @@ interface SavedScriptsFolderProps {
   updateFolder: (scripts: Script[], updates: FolderUpdate) => void
   removeFolder?: (scripts: Script[]) => void
   isStatic?: boolean
-  connectDropTarget?: any
 }
+type DropProp = {
+  connectDropTarget: DragElementWrapper<any>
+}
+
 const noOp = () => {
   /* No operation */
 }
-
-export default DropTarget<SavedScriptsFolderProps>(
-  ({ allFolderNames, folderName }) =>
-    map(without(allFolderNames, folderName), name => name),
-  {
-    drop({ updateFolder, folderName }, monitor) {
-      const item = monitor.getItem()
-
-      updateFolder([item], { path: folderName })
-    }
-  },
-  connect => ({
-    connectDropTarget: connect.dropTarget()
-  })
-)(SavedScriptsFolder)
 
 function SavedScriptsFolder({
   isRoot = false,
@@ -75,7 +62,7 @@ function SavedScriptsFolder({
   removeFolder = noOp,
   updateFolder,
   connectDropTarget
-}: SavedScriptsFolderProps) {
+}: SavedScriptsFolderProps & DropProp) {
   const sortedScripts = sortBy(scripts, script =>
     lowerCase(getScriptDisplayName(script))
   )
@@ -91,7 +78,7 @@ function SavedScriptsFolder({
   const [blurRef] = useCustomBlur(() => setIsEditing(false))
 
   if (isRoot) {
-    return connectDropTarget!(
+    return connectDropTarget(
       <div style={{ paddingTop: 16 }}>
         <SavedScriptsFolderMain className="saved-scripts-folder saved-scripts-folder--root">
           {map(sortedScripts, (script, index) => (
@@ -113,7 +100,7 @@ function SavedScriptsFolder({
     )
   }
 
-  return connectDropTarget!(
+  return connectDropTarget(
     <div data-testid={`savedScriptsFolder-${folderName}`}>
       <SavedScriptsFolderMain className="saved-scripts-folder">
         <SavedScriptsFolderHeader
@@ -140,7 +127,11 @@ function SavedScriptsFolder({
               onClick={() => setExpanded(!expanded)}
             >
               <SavedScriptsFolderCollapseIcon className="saved-scripts-folder__collapse-icon">
-                {expanded ? <CollapseMenuIcon /> : <ExpandMenuRightIcon />}
+                {expanded ? (
+                  <SavedScriptsCollapseMenuIcon />
+                ) : (
+                  <SavedScriptsExpandMenuRightIcon />
+                )}
               </SavedScriptsFolderCollapseIcon>
               {omitScriptPathPrefix(scriptsNamespace, folderName)}
             </SavedScriptsFolderLabel>
@@ -176,3 +167,18 @@ function SavedScriptsFolder({
     </div>
   )
 }
+
+export default DropTarget<SavedScriptsFolderProps, DropProp>(
+  ({ allFolderNames, folderName }) =>
+    map(without(allFolderNames, folderName), name => name),
+  {
+    drop({ updateFolder, folderName }, monitor) {
+      const item = monitor.getItem()
+
+      updateFolder([item], { path: folderName })
+    }
+  },
+  connect => ({
+    connectDropTarget: connect.dropTarget()
+  })
+)(SavedScriptsFolder)

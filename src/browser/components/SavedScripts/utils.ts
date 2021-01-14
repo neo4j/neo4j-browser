@@ -14,7 +14,6 @@ import {
   map,
   isEmpty
 } from 'lodash-es'
-
 import { Script, ScriptFolder } from './types'
 
 const COMMENT_PREFIX = '//'
