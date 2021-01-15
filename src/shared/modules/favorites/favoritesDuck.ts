@@ -30,7 +30,9 @@ export const REMOVE_FAVORITE = 'favorites/REMOVE_FAVORITE'
 export const REMOVE_FAVORITES = 'favorites/REMOVE_FAVORITES'
 export const LOAD_FAVORITES = 'favorites/LOAD_FAVORITES'
 export const SYNC_FAVORITES = 'favorites/SYNC_FAVORITES'
-export const UPDATE_FAVORITE = 'favorites/UPDATE_FAVORITE'
+export const UPDATE_FAVORITE_CONTENT = 'favorites/UPDATE_FAVORITE_CONTENT'
+export const MOVE_FAVORITE = 'favorites/MOVE_FAVORITES'
+export const RENAME_FAVORITE = 'favorites/RENAME_FAVORITES'
 export const UPDATE_FAVORITES = 'favorites/UPDATE_FAVORITES'
 
 export const getFavorites = (state: any): Favorite[] => state[NAME]
@@ -59,7 +61,10 @@ const removeFavoriteById = (state: any, id: any) =>
 const removeFavoritesById = (state: any, ids: any) =>
   state.filter((favorite: any) => !ids.includes(favorite.id))
 
-export default function reducer(state: Favorite[] = initialState, action: any) {
+export default function reducer(
+  state: Favorite[] = initialState,
+  action: any
+): Favorite[] {
   switch (action.type) {
     case REMOVE_FAVORITE:
       return removeFavoriteById(state, action.id)
@@ -67,15 +72,30 @@ export default function reducer(state: Favorite[] = initialState, action: any) {
       return removeFavoritesById(state, action.ids)
     case ADD_FAVORITE:
       return state.concat([{ id: action.id || uuid.v4(), content: action.cmd }])
-    case UPDATE_FAVORITE:
-      const mergedFavorite = {
-        ...getFavorite(state, action.id),
+    case MOVE_FAVORITE:
+      const updatedFavorites = updateFavoriteFields(state, action.id, {
         content: action.cmd
-      }
-      const updatedFavorites = state.map(fav =>
-        fav.id === action.id ? mergedFavorite : fav
-      )
+      })
       return mergeFavorites(initialState, updatedFavorites)
+    case RENAME_FAVORITE:
+      const fav = getFavorite(state, action.id)
+      if (!fav) {
+        return state
+      }
+
+      const newContent = contentWithNewName(fav, action.name)
+      const updated = updateFavoriteFields(state, action.id, {
+        content: newContent
+      })
+
+      return mergeFavorites(initialState, updated)
+    case UPDATE_FAVORITE_CONTENT:
+      return mergeFavorites(
+        initialState,
+        updateFavoriteFields(state, action.id, {
+          content: action.cmd
+        })
+      )
     case LOAD_FAVORITES:
     case UPDATE_FAVORITES:
       return mergeFavorites(action.favorites, state)
@@ -119,13 +139,29 @@ export function syncFavorites(favorites: Favorite[]) {
     favorites
   }
 }
-export function updateFavorite(id: string, cmd: string) {
+export function updateFavoriteContent(id: string, cmd: string) {
   return {
-    type: UPDATE_FAVORITE,
+    type: UPDATE_FAVORITE_CONTENT,
     id,
     cmd
   }
 }
+export function moveFavorite(id: string, folder: string) {
+  return {
+    type: MOVE_FAVORITE,
+    id,
+    folder
+  }
+}
+
+export function renameFavorite(id: string, name: string) {
+  return {
+    type: RENAME_FAVORITE,
+    id,
+    name
+  }
+}
+
 export function updateFavorites(favorites: Favorite[]) {
   return {
     type: UPDATE_FAVORITES,
@@ -197,4 +233,32 @@ export const favoritesToLoad = (action: any, store: any) => {
   } else {
     return { favorites: null, syncFavorites: false, loadFavorites: false }
   }
+}
+
+function updateFavoriteFields(
+  state: Favorite[],
+  id: string,
+  updates: Partial<Favorite>
+): Favorite[] {
+  const fav = getFavorite(state, id)
+  if (!fav) {
+    return state
+  }
+
+  const mergedFavorite: Favorite = {
+    ...fav,
+    ...updates
+  }
+  return state.map(fav => (fav.id === id ? mergedFavorite : fav))
+}
+
+function contentWithNewName(script: Favorite, newName: string): string {
+  // Name of favorite is the comment on the first line by convention
+  const [nameLine, ...contents] = script.content.split('\n')
+  const alreadyHasName = nameLine.startsWith('//')
+  return alreadyHasName
+    ? `// ${newName}
+  ${contents.join('\n')}`
+    : `// ${newName}
+${script.content}`
 }

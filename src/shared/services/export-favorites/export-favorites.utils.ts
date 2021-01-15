@@ -53,6 +53,7 @@ export function mapOldFavoritesAndFolders(
   isAllowed: (fav: Favorite) => boolean = isNonStatic
 ) {
   const oldFoldersMap = new Map(
+    // @ts-ignore
     map(filter(folders, isAllowed), folder => [folder.id, folder])
   )
   const oldFilteredFavorites = filter(

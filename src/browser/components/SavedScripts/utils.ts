@@ -14,25 +14,12 @@ import {
   map,
   isEmpty
 } from 'lodash-es'
+import { Favorite } from 'shared/modules/favorites/favoritesDuck'
 import { Script, ScriptFolder } from './types'
 
-const COMMENT_PREFIX = '//'
-
-export function getScriptDisplayName({ name, contents }: Script): string {
-  if (name) {
-    return name
-  }
-
-  const lines = split(contents, '\n')
-  const firstLine = trim(head(lines) || '')
-
-  if (isEmpty(firstLine)) {
-    return ''
-  }
-
-  return startsWith(firstLine, COMMENT_PREFIX)
-    ? trim(firstLine.slice(COMMENT_PREFIX.length))
-    : firstLine
+export function getScriptDisplayName(script: Favorite): string {
+  const nameLine = script.content.split('\n')[0]
+  return nameLine.startsWith('//') ? nameLine.substr(2).trimLeft() : nameLine
 }
 
 export function sortAndGroupScriptsByPath(

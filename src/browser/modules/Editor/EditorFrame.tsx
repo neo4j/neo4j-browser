@@ -37,7 +37,7 @@ import {
 } from 'shared/modules/commands/commandsDuck'
 import {
   REMOVE_FAVORITE,
-  updateFavorite
+  updateFavoriteContent
 } from 'shared/modules/favorites/favoritesDuck'
 import { Bus } from 'suber'
 import {
@@ -353,7 +353,7 @@ const mapStateToProps = (state: any) => {
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
   return {
     updateFavorite: (id: string, cmd: string) => {
-      dispatch(updateFavorite(id, cmd))
+      dispatch(updateFavoriteContent(id, cmd))
     },
     executeCommand: (cmd: string, source: string) => {
       dispatch(executeCommand(cmd, { source }))
