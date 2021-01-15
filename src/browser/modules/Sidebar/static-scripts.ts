@@ -26,12 +26,12 @@ import {
   executeCommand
 } from 'shared/modules/commands/commandsDuck'
 import * as favorites from '../../../shared/modules/favorites/favoritesDuck'
-import * as folders from '../../../shared/modules/favorites/foldersDuck'
+import { getFolders } from '../../../shared/modules/favorites/foldersDuck'
 import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 
-// TODO static behöver separeras typmässigt från vanliga
 const mapFavoritesStateToProps = (state: any) => {
   const version = semver.coerce(getVersion(state) || '0') ?? '0'
+  const folders = getFolders(state).filter(folder => folder.isStatic)
   const scripts = favorites
     .getFavorites(state)
     .filter(
@@ -43,8 +43,8 @@ const mapFavoritesStateToProps = (state: any) => {
 
   return {
     title: 'Sample Scripts',
-    scripts,
-    isStatic: true
+    folders,
+    scripts
   }
 }
 const mapFavoritesDispatchToProps = (dispatch: any, ownProps: any) => ({

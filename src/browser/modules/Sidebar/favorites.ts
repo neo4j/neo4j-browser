@@ -28,28 +28,21 @@ import * as favoritesDuck from 'shared/modules/favorites/favoritesDuck'
 import * as foldersDuck from 'shared/modules/favorites/foldersDuck'
 import { exportFavorites } from 'shared/services/export-favorites'
 
-import {
-  generateFolderNameAndIdForPath,
-  mapNewFavoritesToOld,
-  getFirstFavorite,
-  getFavoriteIds,
-  getFolderFromPath,
-  updateFolder
-} from './favorites.utils'
-
 const mapFavoritesStateToProps = (state: any) => {
-  const folders = foldersDuck.getFolders(state)
-  const scripts = favoritesDuck.getFavorites(state)
+  const folders = foldersDuck
+    .getFolders(state)
+    .filter(folder => !folder.isStatic)
+  const scripts = favoritesDuck
+    .getFavorites(state)
+    .filter(script => !script.isStatic)
 
   return {
-    scripts,
     folders,
+    scripts,
     title: 'Local Scripts'
   }
 }
-// is suggestion är _exec grejen
-// content contents
-// path finns ej
+
 const mapFavoritesDispatchToProps = (dispatch: any, ownProps: any) => ({
   selectScript: (favorite: favoritesDuck.Favorite) =>
     ownProps.bus.send(
@@ -60,7 +53,7 @@ const mapFavoritesDispatchToProps = (dispatch: any, ownProps: any) => ({
     dispatch(
       executeCommand(favorite.content, { source: commandSources.favorite })
     ),
-  exportScripts: (scripts: any) => exportFavorites(scripts),
+  exportScripts: () => exportFavorites(),
   removeScript: (favorite: favoritesDuck.Favorite) =>
     favorite.id && dispatch(favoritesDuck.removeFavorite(favorite.id)),
   updateFolder() {
