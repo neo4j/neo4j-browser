@@ -31,25 +31,25 @@ export function useCustomBlur(
   onBlur: () => void
 ): React.RefObject<HTMLDivElement> {
   const ref = useRef<HTMLDivElement>(null)
-  const clickHandler = (event: Event) => {
-    // We can't technically be sure the event target is an element
-    const clickedEl = event.target
-    if (
-      ref.current &&
-      clickedEl instanceof Element &&
-      !ref.current.contains(clickedEl)
-    ) {
-      onBlur()
-    }
-  }
 
   useEffect(() => {
+    const clickHandler = (event: Event) => {
+      // We can't technically be sure the event target is an element
+      const clickedEl = event.target
+      if (
+        ref.current &&
+        clickedEl instanceof Element &&
+        !ref.current.contains(clickedEl)
+      ) {
+        onBlur()
+      }
+    }
     document.addEventListener('mousedown', clickHandler)
 
     return () => {
       document.removeEventListener('mousedown', clickHandler)
     }
-  }, [])
+  }, [onBlur])
 
   return ref
 }
