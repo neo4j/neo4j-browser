@@ -48,13 +48,13 @@ const mapFavoritesStateToProps = (state: any) => {
   }
 }
 const mapFavoritesDispatchToProps = (dispatch: any, ownProps: any) => ({
-  selectScript: (favorite: any) =>
+  selectScript: (favorite: favorites.Favorite) =>
     ownProps.bus.send(
       editor.EDIT_CONTENT,
-      editor.editContent(favorite.id, favorite.contents, { isStatic: true })
+      editor.editContent(favorite.id, favorite.content, { isStatic: true })
     ),
   execScript: (favorite: any) =>
-    dispatch(executeCommand(favorite.contents), {
+    dispatch(executeCommand(favorite.content), {
       source: commandSources.sidebar
     })
 })

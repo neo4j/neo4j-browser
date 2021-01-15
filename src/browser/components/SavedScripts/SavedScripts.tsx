@@ -17,11 +17,8 @@ import { getScriptDisplayName } from './utils'
 
 interface SavedScriptsProps {
   title?: string
-  isStatic?: boolean
-  scriptsNamespace: string
   scripts: Favorite[]
   folders: Folder[]
-  isProjectFiles?: boolean
   selectScript: (script: Favorite) => void
   execScript: (script: Favorite) => void
   // When optional callbacks aren't provided, respective UI elements are hidden
@@ -38,24 +35,26 @@ export default function SavedScripts({
   title = 'Saved Scripts',
   scripts,
   folders,
-  createNewFolder,
+  selectScript,
+  execScript,
+  renameScript,
+  removeScript,
   renameFolder,
   removeFolder,
   exportScripts,
-  selectScript,
-  execScript,
-  removeScript,
-  renameScript
+  createNewFolder
 }: SavedScriptsProps): JSX.Element {
   const scriptsOutsideFolder = scripts
     .filter(script => !script.folder)
     .sort(sortScriptsAlfabethically)
+
   const foldersWithScripts = folders.map(folder => ({
     folder,
     scripts: scripts
       .filter(script => script.folder === folder.id)
       .sort(sortScriptsAlfabethically)
   }))
+
   return (
     <SavedScriptsMain className="saved-scripts">
       <DndProvider backend={HTML5Backend}>
@@ -108,7 +107,7 @@ export default function SavedScripts({
 }
 
 function getUniqueScriptKey(script: Favorite) {
-  /* static scripts don't have ids but their names are unique*/
+  // static scripts don't have ids but their names are unique
   return script.id || getScriptDisplayName(script)
 }
 

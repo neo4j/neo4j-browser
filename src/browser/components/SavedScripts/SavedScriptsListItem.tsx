@@ -12,7 +12,6 @@ import { Favorite } from 'shared/modules/favorites/favoritesDuck'
 
 interface SavedScriptsListItemProps {
   script: Favorite
-  isProjectFiles?: boolean
   selectScript: (script: Favorite) => void
   execScript: (script: Favorite) => void
   renameScript?: (script: Favorite, name: string) => void
@@ -29,7 +28,6 @@ function getScriptDisplayName(script: Favorite): string {
 
 function SavedScriptsListItem({
   script,
-  isProjectFiles,
   selectScript,
   execScript,
   renameScript,
@@ -66,7 +64,7 @@ function SavedScriptsListItem({
         <SavedScriptsListItemDisplayName
           className="saved-scripts-list-item__display-name"
           data-testid={`scriptTitle-${displayName}`}
-          onClick={() => (isProjectFiles || !isEditing) && selectScript(script)}
+          onClick={() => !isEditing && selectScript(script)}
         >
           {connectDragSource(<span>{displayName}</span>)}
         </SavedScriptsListItemDisplayName>
