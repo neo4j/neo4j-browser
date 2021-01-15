@@ -35,8 +35,20 @@ export const MOVE_FAVORITE = 'favorites/MOVE_FAVORITES'
 export const RENAME_FAVORITE = 'favorites/RENAME_FAVORITES'
 export const UPDATE_FAVORITES = 'favorites/UPDATE_FAVORITES'
 
+type FavoriteAction =
+  | AddFavoriteAction
+  | RemoveFavoriteAction
+  | LoadFavoritesAction
+  | RemoveFavoriteAction
+  | RemoveFavoritesAction
+  | UpdateFavoriteContentAction
+  | SyncFavoriteAction
+  | MoveFavoriteAction
+  | RenameFavoriteAction
+  | UpdateFavoriteAction
+
 export const getFavorites = (state: any): Favorite[] => state[NAME]
-export const getFavorite = (state: any, id: any): Favorite | undefined =>
+export const getFavorite = (state: any, id: string): Favorite | undefined =>
   state.find((favorite: any) => favorite.id === id)
 
 const versionSize = 20
@@ -63,7 +75,7 @@ const removeFavoritesById = (state: any, ids: any) =>
 
 export default function reducer(
   state: Favorite[] = initialState,
-  action: any
+  action: FavoriteAction
 ): Favorite[] {
   switch (action.type) {
     case REMOVE_FAVORITE:
@@ -74,7 +86,7 @@ export default function reducer(
       return state.concat([{ id: action.id || uuid.v4(), content: action.cmd }])
     case MOVE_FAVORITE:
       const updatedFavorites = updateFavoriteFields(state, action.id, {
-        content: action.cmd
+        folder: action.folder
       })
       return mergeFavorites(initialState, updatedFavorites)
     case RENAME_FAVORITE:
@@ -108,45 +120,79 @@ export default function reducer(
   }
 }
 
-export function removeFavorite(id: string) {
+type RemoveFavoriteAction = {
+  type: typeof REMOVE_FAVORITE
+  id: string
+}
+export function removeFavorite(id: string): RemoveFavoriteAction {
   return {
     type: REMOVE_FAVORITE,
     id
   }
 }
-export function removeFavorites(ids: string[]) {
+
+type RemoveFavoritesAction = {
+  type: typeof REMOVE_FAVORITES
+  ids: string[]
+}
+export function removeFavorites(ids: string[]): RemoveFavoritesAction {
   return {
     type: REMOVE_FAVORITES,
     ids
   }
 }
-export function addFavorite(cmd: string, id?: string) {
+type AddFavoriteAction = {
+  type: typeof ADD_FAVORITE
+  cmd: string
+  id?: string
+}
+export function addFavorite(cmd: string, id?: string): AddFavoriteAction {
   return {
     type: ADD_FAVORITE,
     cmd,
     id
   }
 }
-export function loadFavorites(favorites: Favorite[]) {
+
+type LoadFavoritesAction = {
+  type: typeof LOAD_FAVORITES
+  favorites: Favorite[]
+}
+export function loadFavorites(favorites: Favorite[]): LoadFavoritesAction {
   return {
     type: LOAD_FAVORITES,
     favorites
   }
 }
-export function syncFavorites(favorites: Favorite[]) {
+
+type SyncFavoriteAction = { type: typeof SYNC_FAVORITES; favorites: Favorite[] }
+export function syncFavorites(favorites: Favorite[]): SyncFavoriteAction {
   return {
     type: SYNC_FAVORITES,
     favorites
   }
 }
-export function updateFavoriteContent(id: string, cmd: string) {
+type UpdateFavoriteContentAction = {
+  type: typeof UPDATE_FAVORITE_CONTENT
+  id: string
+  cmd: string
+}
+export function updateFavoriteContent(
+  id: string,
+  cmd: string
+): UpdateFavoriteContentAction {
   return {
     type: UPDATE_FAVORITE_CONTENT,
     id,
     cmd
   }
 }
-export function moveFavorite(id: string, folder: string) {
+type MoveFavoriteAction = {
+  type: typeof MOVE_FAVORITE
+  id: string
+  folder: string
+}
+export function moveFavorite(id: string, folder: string): MoveFavoriteAction {
   return {
     type: MOVE_FAVORITE,
     id,
@@ -154,7 +200,12 @@ export function moveFavorite(id: string, folder: string) {
   }
 }
 
-export function renameFavorite(id: string, name: string) {
+type RenameFavoriteAction = {
+  type: typeof RENAME_FAVORITE
+  id: string
+  name: string
+}
+export function renameFavorite(id: string, name: string): RenameFavoriteAction {
   return {
     type: RENAME_FAVORITE,
     id,
@@ -162,7 +213,11 @@ export function renameFavorite(id: string, name: string) {
   }
 }
 
-export function updateFavorites(favorites: Favorite[]) {
+type UpdateFavoriteAction = {
+  type: typeof UPDATE_FAVORITES
+  favorites: Favorite[]
+}
+export function updateFavorites(favorites: Favorite[]): UpdateFavoriteAction {
   return {
     type: UPDATE_FAVORITES,
     favorites
