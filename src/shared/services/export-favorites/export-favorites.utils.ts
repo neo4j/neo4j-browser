@@ -22,7 +22,6 @@ import {
   compact,
   filter,
   forEach,
-  get,
   join,
   kebabCase,
   last,
@@ -30,11 +29,7 @@ import {
   slice,
   split
 } from 'lodash-es'
-import {
-  addScriptPathPrefix,
-  getScriptDisplayName,
-  sortAndGroupScriptsByPath
-} from 'browser/components/SavedScripts'
+import { getScriptDisplayName } from 'browser/components/SavedScripts'
 import { Favorite } from 'shared/modules/favorites/favoritesDuck'
 import { Folder } from 'shared/modules/favorites/foldersDuck'
 
@@ -66,7 +61,7 @@ export function mapOldFavoritesAndFolders(
     const newFavorite = {
       id: favorite.id,
       contents: favorite.content,
-      path: addScriptPathPrefix(SLASH, get(folder, 'name', '')),
+      path: '',
       isSuggestion: favorite.not_executable
     }
 
@@ -90,8 +85,8 @@ function isNonStatic(fav: Favorite): boolean {
  * @param     {Object[]}    favorites
  * @param     {Object[]}    folders
  */
-export function exportFavorites(favorites: any) {
-  const grouped = sortAndGroupScriptsByPath(SLASH, favorites)
+export function exportFavorites() {
+  const grouped = ''
   const zipArchive = new JSZip()
   const dirMap = new Map([[SLASH, zipArchive]])
   const joinPathParts = (pathParts: any) => `${SLASH}${join(pathParts, SLASH)}`

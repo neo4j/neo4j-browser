@@ -1,8 +1,6 @@
 import React from 'react'
 import { DndProvider } from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
-import { map, first, last, isEmpty } from 'lodash-es'
-import { NewFolderPathGenerator, FolderUpdate } from './types'
 import SavedScriptsFolder from './SavedScriptsFolder'
 import { ExportButton, NewFolderButton } from './SavedScriptsButton'
 import {
@@ -10,12 +8,12 @@ import {
   SavedScriptsBody,
   SavedScriptsBodySection,
   SavedScriptsHeader,
-  SavedScriptsButtonWrapper,
-  SavedScriptsInput
+  SavedScriptsButtonWrapper
 } from './styled'
 import { Favorite } from 'shared/modules/favorites/favoritesDuck'
 import { Folder } from 'shared/modules/favorites/foldersDuck'
 import SavedScriptsListItem from './SavedScriptsListItem'
+import { getScriptDisplayName } from './utils'
 
 interface SavedScriptsProps {
   title?: string
@@ -24,32 +22,40 @@ interface SavedScriptsProps {
   scripts: Favorite[]
   folders: Folder[]
   isProjectFiles?: boolean
-  newFolderPathGenerator?: NewFolderPathGenerator
   selectScript: (script: Favorite) => void
-  exportScripts: () => void
   execScript: (script: Favorite) => void
-  renameScript: (script: Favorite, name: string) => void
-  moveScript: (script: Favorite, folder: string) => void
-  removeScript: (script: Favorite) => void
-  updateFolder: (scripts: Favorite[], updates: FolderUpdate) => void
-  removeFolder: (scripts: Favorite[]) => void
+  // When optional callbacks aren't provided, respective UI elements are hidden
+  exportScripts?: () => void
+  renameScript?: (script: Favorite, name: string) => void
+  moveScript?: (script: Favorite, folder: string) => void
+  removeScript?: (script: Favorite) => void
+  renameFolder?: (folder: Folder, name: string) => void
+  removeFolder?: (folder: Folder) => void
+  createNewFolder?: () => void
 }
 
-// räkna med att alla är dynamiska?
 export default function SavedScripts({
   title = 'Saved Scripts',
   scripts,
-  //folders,
-  //updateFolder,
-  //removeFolder,
+  folders,
+  createNewFolder,
+  renameFolder,
+  removeFolder,
   exportScripts,
   selectScript,
   execScript,
   removeScript,
-  //moveScript,
   renameScript
 }: SavedScriptsProps): JSX.Element {
-  const scriptsOutsideFolder = scripts.filter(script => !script.folder)
+  const scriptsOutsideFolder = scripts
+    .filter(script => !script.folder)
+    .sort(sortScriptsAlfabethically)
+  const foldersWithScripts = folders.map(folder => ({
+    folder,
+    scripts: scripts
+      .filter(script => script.folder === folder.id)
+      .sort(sortScriptsAlfabethically)
+  }))
   return (
     <SavedScriptsMain className="saved-scripts">
       <DndProvider backend={HTML5Backend}>
@@ -58,12 +64,10 @@ export default function SavedScripts({
             <SavedScriptsHeader className="saved-scripts__header">
               {title}
               <SavedScriptsButtonWrapper className="saved-scripts__button-wrapper">
-                <ExportButton onClick={() => exportScripts()} />
-                <NewFolderButton
-                  onClick={() => {
-                    /* noop */
-                  }}
-                />
+                {exportScripts && <ExportButton onClick={exportScripts} />}
+                {createNewFolder && (
+                  <NewFolderButton onClick={createNewFolder} />
+                )}
               </SavedScriptsButtonWrapper>
             </SavedScriptsHeader>
 
@@ -74,13 +78,42 @@ export default function SavedScripts({
                 removeScript={removeScript}
                 renameScript={renameScript}
                 script={script}
-                key={script.id}
+                key={getUniqueScriptKey(script)}
               />
             ))}
-            {/* alla mappar med innehåll */}
+            {foldersWithScripts.map(({ folder, scripts }) => (
+              <SavedScriptsFolder
+                folder={folder}
+                renameFolder={renameFolder}
+                removeFolder={removeFolder}
+                key={folder.id}
+              >
+                {scripts.map(script => (
+                  <SavedScriptsListItem
+                    selectScript={selectScript}
+                    execScript={execScript}
+                    removeScript={removeScript}
+                    renameScript={renameScript}
+                    script={script}
+                    key={getUniqueScriptKey(script)}
+                  />
+                ))}
+              </SavedScriptsFolder>
+            ))}
           </SavedScriptsBodySection>
         </SavedScriptsBody>
       </DndProvider>
     </SavedScriptsMain>
   )
+}
+
+function getUniqueScriptKey(script: Favorite) {
+  /* static scripts don't have ids but their names are unique*/
+  return script.id || getScriptDisplayName(script)
+}
+
+function sortScriptsAlfabethically(a: Favorite, b: Favorite) {
+  const name1 = getScriptDisplayName(a).toLowerCase()
+  const name2 = getScriptDisplayName(b).toLowerCase()
+  return name1.localeCompare(name2)
 }

@@ -1,7 +1,5 @@
 import React from 'react'
 import { DragSource, DragElementWrapper, DragSourceOptions } from 'react-dnd'
-import { FolderUpdate, Script } from './types'
-import { getScriptDisplayName } from './utils'
 import { useCustomBlur, useNameUpdate } from './hooks'
 import { RemoveButton, RunButton, EditButton } from './SavedScriptsButton'
 import {
@@ -17,11 +15,16 @@ interface SavedScriptsListItemProps {
   isProjectFiles?: boolean
   selectScript: (script: Favorite) => void
   execScript: (script: Favorite) => void
-  renameScript: (script: Favorite, name: string) => void
-  removeScript: (script: Favorite) => void
+  renameScript?: (script: Favorite, name: string) => void
+  removeScript?: (script: Favorite) => void
 }
 type DragProp = {
   connectDragSource: DragElementWrapper<DragSourceOptions>
+}
+
+function getScriptDisplayName(script: Favorite): string {
+  const nameLine = script.content.split('\n')[0]
+  return nameLine.startsWith('//') ? nameLine.substr(2).trimLeft() : nameLine
 }
 
 function SavedScriptsListItem({
@@ -34,13 +37,16 @@ function SavedScriptsListItem({
   connectDragSource
 }: SavedScriptsListItemProps & DragProp) {
   const displayName = getScriptDisplayName(script)
-  const [
+  const {
     isEditing,
-    nameValue,
+    currentNameValue,
     setIsEditing,
-    setLabelInput
-  ] = useNameUpdate(displayName, name => renameScript(script, name))
-  const [blurRef] = useCustomBlur(() => setIsEditing(false))
+    setNameValue
+  } = useNameUpdate(
+    displayName,
+    name => renameScript && renameScript(script, name)
+  )
+  const blurRef = useCustomBlur(() => setIsEditing(false))
   const canRunScript = !script.not_executable && !isEditing
 
   return (
@@ -53,8 +59,8 @@ function SavedScriptsListItem({
           onKeyPress={({ key }) => {
             key === 'Enter' && setIsEditing(false)
           }}
-          value={nameValue}
-          onChange={({ target }) => setLabelInput(target.value)}
+          value={currentNameValue}
+          onChange={e => setNameValue(e.target.value)}
         />
       ) : (
         <SavedScriptsListItemDisplayName
@@ -66,12 +72,12 @@ function SavedScriptsListItem({
         </SavedScriptsListItemDisplayName>
       )}
       <SavedScriptsButtonWrapper className="saved-scripts__button-wrapper">
-        {script.isStatic || isEditing ? (
+        {removeScript && isEditing && (
           <RemoveButton onClick={() => removeScript(script)} />
-        ) : (
+        )}
+        {renameScript && !isEditing && (
           <EditButton onClick={() => setIsEditing(!isEditing)} />
         )}
-
         {canRunScript && <RunButton onClick={() => execScript(script)} />}
       </SavedScriptsButtonWrapper>
     </SavedScriptsListItemMain>

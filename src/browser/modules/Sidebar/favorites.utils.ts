@@ -30,10 +30,11 @@ import {
   trim,
   without
 } from 'lodash-es'
-import {
-  getScriptDisplayName,
-  omitScriptPathPrefix
-} from 'browser/components/SavedScripts'
+import { getScriptDisplayName } from 'browser/components/SavedScripts'
+
+function omitScriptPathPrefix(namespace: string, path: string): string {
+  return path.startsWith(namespace) ? path.slice(namespace.length) : path
+}
 
 import { SLASH } from 'shared/services/export-favorites'
 import arrayHasItems from 'shared/utils/array-has-items'
