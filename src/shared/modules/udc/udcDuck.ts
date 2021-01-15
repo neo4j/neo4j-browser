@@ -39,7 +39,7 @@ import {
 import {
   ADD_FAVORITE,
   LOAD_FAVORITES,
-  UPDATE_FAVORITE,
+  UPDATE_FAVORITE_CONTENT,
   REMOVE_FAVORITE,
   getFavorites
 } from 'shared/modules/favorites/favoritesDuck'
@@ -357,7 +357,7 @@ const actionsOfInterest = [
   REMOVE,
   ADD_FAVORITE,
   LOAD_FAVORITES,
-  UPDATE_FAVORITE,
+  UPDATE_FAVORITE_CONTENT,
   REMOVE_FAVORITE,
   LAST_GUIDE_SLIDE
 ]

@@ -10,27 +10,26 @@ import {
   SavedScriptsListItemDisplayName,
   SavedScriptsListItemMain
 } from './styled'
+import { Favorite } from 'shared/modules/favorites/favoritesDuck'
 
 interface SavedScriptsListItemProps {
-  isStatic?: boolean
-  script: Script
+  script: Favorite
   isProjectFiles?: boolean
-  selectScript: (script: Script) => void
-  execScript: (script: Script) => void
-  updateScript: (script: Script, updates: FolderUpdate) => void
-  removeScript: (script: Script) => void
+  selectScript: (script: Favorite) => void
+  execScript: (script: Favorite) => void
+  renameScript: (script: Favorite, name: string) => void
+  removeScript: (script: Favorite) => void
 }
 type DragProp = {
   connectDragSource: DragElementWrapper<DragSourceOptions>
 }
 
 function SavedScriptsListItem({
-  isStatic,
   script,
   isProjectFiles,
   selectScript,
   execScript,
-  updateScript,
+  renameScript,
   removeScript,
   connectDragSource
 }: SavedScriptsListItemProps & DragProp) {
@@ -40,12 +39,13 @@ function SavedScriptsListItem({
     nameValue,
     setIsEditing,
     setLabelInput
-  ] = useNameUpdate(displayName, name => updateScript(script, { name }))
+  ] = useNameUpdate(displayName, name => renameScript(script, name))
   const [blurRef] = useCustomBlur(() => setIsEditing(false))
+  const canRunScript = !script.not_executable && !isEditing
 
   return (
     <SavedScriptsListItemMain ref={blurRef} className="saved-scripts-list-item">
-      {isEditing && !isProjectFiles ? (
+      {isEditing ? (
         <SavedScriptsInput
           className="saved-scripts-list-item__name-input"
           type="text"
@@ -66,22 +66,20 @@ function SavedScriptsListItem({
         </SavedScriptsListItemDisplayName>
       )}
       <SavedScriptsButtonWrapper className="saved-scripts__button-wrapper">
-        {isStatic || isEditing ? (
+        {script.isStatic || isEditing ? (
           <RemoveButton onClick={() => removeScript(script)} />
         ) : (
           <EditButton onClick={() => setIsEditing(!isEditing)} />
         )}
 
-        {script.isSuggestion || isEditing || (
-          <RunButton onClick={() => execScript(script)} />
-        )}
+        {canRunScript && <RunButton onClick={() => execScript(script)} />}
       </SavedScriptsButtonWrapper>
     </SavedScriptsListItemMain>
   )
 }
 
 export default DragSource<SavedScriptsListItemProps, DragProp>(
-  props => props.script.path,
+  props => props.script.id || props.script.content, //TODO Fix drag and drop
   {
     beginDrag: props => props.script
   },

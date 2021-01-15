@@ -29,23 +29,20 @@ import * as favorites from '../../../shared/modules/favorites/favoritesDuck'
 import * as folders from '../../../shared/modules/favorites/foldersDuck'
 import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 
-import {
-  mapOldFavoritesAndFolders,
-  SLASH
-} from '../../../shared/services/export-favorites'
-
+// TODO static behöver separeras typmässigt från vanliga
 const mapFavoritesStateToProps = (state: any) => {
   const version = semver.coerce(getVersion(state) || '0') ?? '0'
-  const scripts = mapOldFavoritesAndFolders(
-    favorites.getFavorites(state),
-    folders.getFolders(state),
-    ({ isStatic, versionRange }) =>
-      isStatic && semver.satisfies(version, versionRange)
-  )
+  const scripts = favorites
+    .getFavorites(state)
+    .filter(
+      fav =>
+        fav.isStatic &&
+        fav.versionRange &&
+        semver.satisfies(version, fav.versionRange)
+    )
 
   return {
     title: 'Sample Scripts',
-    scriptsNamespace: SLASH,
     scripts,
     isStatic: true
   }
@@ -61,6 +58,7 @@ const mapFavoritesDispatchToProps = (dispatch: any, ownProps: any) => ({
       source: commandSources.sidebar
     })
 })
+
 const Favorites = withBus(
   connect(mapFavoritesStateToProps, mapFavoritesDispatchToProps)(MyScripts)
 )

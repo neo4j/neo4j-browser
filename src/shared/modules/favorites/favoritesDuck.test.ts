@@ -120,7 +120,7 @@ describe('favorites reducer', () => {
     const initialState = [favoriteScript1, favoriteScript2]
     const newContent = '//Foobar'
     const action = {
-      type: favorites.UPDATE_FAVORITE,
+      type: favorites.UPDATE_FAVORITE_CONTENT,
       id: favoriteScript1.id,
       cmd: newContent
     }
