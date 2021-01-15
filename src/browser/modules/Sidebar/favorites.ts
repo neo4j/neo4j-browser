@@ -60,11 +60,6 @@ const mapFavoritesDispatchToProps = (dispatch: any, ownProps: any) => ({
       dispatch(favoritesDuck.renameFavorite(favorite.id, name))
     }
   },
-  moveScript: (favorite: favoritesDuck.Favorite, folder: string) => {
-    if (favorite.id) {
-      dispatch(favoritesDuck.moveFavorite(favorite.id, folder))
-    }
-  },
   updateFolders(folders: foldersDuck.Folder[]) {
     dispatch(foldersDuck.updateFolders(folders))
   },
@@ -74,6 +69,9 @@ const mapFavoritesDispatchToProps = (dispatch: any, ownProps: any) => ({
   dispatchRemoveFolderAndItsScripts(folderId: string, favoriteIds: string[]) {
     dispatch(foldersDuck.removeFolder(folderId))
     dispatch(favoritesDuck.removeFavorites(favoriteIds))
+  },
+  moveScript(favoriteId: string, folderId: string) {
+    dispatch(favoritesDuck.moveFavorite(favoriteId, folderId))
   }
 })
 
@@ -81,7 +79,6 @@ const mergeProps = (stateProps: any, dispatchProps: any) => {
   return {
     ...stateProps,
     ...dispatchProps,
-    //exportScripts: () => dispatchProps.exportScripts(stateProps.scripts),
     renameFolder: (folderToRename: foldersDuck.Folder, name: string) => {
       dispatchProps.updateFolders(
         stateProps.folders.map((folder: foldersDuck.Folder) =>
@@ -93,7 +90,6 @@ const mergeProps = (stateProps: any, dispatchProps: any) => {
       const scriptsToRemove = stateProps.scripts
         .filter((script: favoritesDuck.Favorite) => script.folder === folder.id)
         .map((script: favoritesDuck.Favorite) => script.id)
-      //TODO dubbelkolla så detta funkar
       dispatchProps.dispatchRemoveFolderAndItsScripts(
         folder.id,
         scriptsToRemove
