@@ -1,5 +1,5 @@
 import React from 'react'
-import { DragSource, DragElementWrapper, DragSourceOptions } from 'react-dnd'
+import { useDrag } from 'react-dnd'
 import { useCustomBlur, useNameUpdate } from './hooks'
 import { RemoveButton, RunButton, EditButton } from './SavedScriptsButton'
 import {
@@ -17,9 +17,6 @@ interface SavedScriptsListItemProps {
   renameScript?: (script: Favorite, name: string) => void
   removeScript?: (script: Favorite) => void
 }
-type DragProp = {
-  connectDragSource: DragElementWrapper<DragSourceOptions>
-}
 
 function getScriptDisplayName(script: Favorite): string {
   const nameLine = script.content.split('\n')[0]
@@ -31,9 +28,8 @@ function SavedScriptsListItem({
   selectScript,
   execScript,
   renameScript,
-  removeScript,
-  connectDragSource
-}: SavedScriptsListItemProps & DragProp) {
+  removeScript
+}: SavedScriptsListItemProps): JSX.Element {
   const displayName = getScriptDisplayName(script)
   const {
     isEditing,
@@ -46,6 +42,9 @@ function SavedScriptsListItem({
   )
   const blurRef = useCustomBlur(() => setIsEditing(false))
   const canRunScript = !script.not_executable && !isEditing
+  const drag = useDrag({
+    item: { id: script.id, type: 'script' }
+  })[1]
 
   return (
     <SavedScriptsListItemMain ref={blurRef} className="saved-scripts-list-item">
@@ -65,8 +64,9 @@ function SavedScriptsListItem({
           className="saved-scripts-list-item__display-name"
           data-testid={`scriptTitle-${displayName}`}
           onClick={() => !isEditing && selectScript(script)}
+          ref={drag}
         >
-          {connectDragSource(<span>{displayName}</span>)}
+          {displayName}
         </SavedScriptsListItemDisplayName>
       )}
       <SavedScriptsButtonWrapper className="saved-scripts__button-wrapper">
@@ -82,12 +82,4 @@ function SavedScriptsListItem({
   )
 }
 
-export default DragSource<SavedScriptsListItemProps, DragProp>(
-  props => props.script.id || props.script.content, //TODO Fix drag and drop
-  {
-    beginDrag: props => props.script
-  },
-  connect => ({
-    connectDragSource: connect.dragSource()
-  })
-)(SavedScriptsListItem)
+export default SavedScriptsListItem

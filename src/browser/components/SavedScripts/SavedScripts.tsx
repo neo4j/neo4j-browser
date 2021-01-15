@@ -24,7 +24,7 @@ interface SavedScriptsProps {
   // When optional callbacks aren't provided, respective UI elements are hidden
   exportScripts?: () => void
   renameScript?: (script: Favorite, name: string) => void
-  moveScript?: (script: Favorite, folder: string) => void
+  moveScript?: (scriptId: string, folderId: string) => void
   removeScript?: (script: Favorite) => void
   renameFolder?: (folder: Folder, name: string) => void
   removeFolder?: (folder: Folder) => void
@@ -39,6 +39,7 @@ export default function SavedScripts({
   execScript,
   renameScript,
   removeScript,
+  moveScript,
   renameFolder,
   removeFolder,
   exportScripts,
@@ -85,6 +86,7 @@ export default function SavedScripts({
                 folder={folder}
                 renameFolder={renameFolder}
                 removeFolder={removeFolder}
+                moveScript={moveScript}
                 key={folder.id}
               >
                 {scripts.map(script => (

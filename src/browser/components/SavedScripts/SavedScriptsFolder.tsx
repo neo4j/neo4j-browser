@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { DropTarget, DragElementWrapper } from 'react-dnd'
+import { useDrop } from 'react-dnd'
 import { useCustomBlur, useNameUpdate } from './hooks'
 
 import { EditButton, RemoveButton } from './SavedScriptsButton'
@@ -22,19 +22,17 @@ interface SavedScriptsFolderProps {
   folder: Folder
   renameFolder?: (folder: Folder, name: string) => void
   removeFolder?: (folder: Folder) => void
+  moveScript?: (scriptId: string, folderId: string) => void
   children: JSX.Element[]
-}
-type DropProp = {
-  connectDropTarget: DragElementWrapper<any>
 }
 
 function SavedScriptsFolder({
   folder,
+  moveScript,
   renameFolder,
   removeFolder,
-  connectDropTarget,
   children
-}: SavedScriptsFolderProps & DropProp) {
+}: SavedScriptsFolderProps): JSX.Element {
   const {
     isEditing,
     currentNameValue,
@@ -46,9 +44,19 @@ function SavedScriptsFolder({
   )
   const [expanded, setExpanded] = useState(false)
   const blurRef = useCustomBlur(() => setIsEditing(false))
+  const drop = useDrop<
+    { id: string; type: string },
+    any, // Return type of "drop"
+    any // return type of "collect"
+  >({
+    accept: 'script',
+    drop: item => {
+      moveScript && moveScript(item.id, folder.id)
+    }
+  })[1]
 
-  return connectDropTarget(
-    <div data-testid={`savedScriptsFolder-${folder.name}`}>
+  return (
+    <div ref={drop} data-testid={`savedScriptsFolder-${folder.name}`}>
       <SavedScriptsFolderMain className="saved-scripts-folder">
         <SavedScriptsFolderHeader
           title={folder.name}
@@ -98,18 +106,4 @@ function SavedScriptsFolder({
   )
 }
 
-export default DropTarget<SavedScriptsFolderProps, DropProp>(
-  props => props.folder.name,
-  {
-    drop({ folder }, monitor) {
-      //const item = monitor.getItem()
-      //updateFolder(folder, { name: 'abc' })
-
-      folder
-      monitor
-    }
-  },
-  connect => ({
-    connectDropTarget: connect.dropTarget()
-  })
-)(SavedScriptsFolder)
+export default SavedScriptsFolder
