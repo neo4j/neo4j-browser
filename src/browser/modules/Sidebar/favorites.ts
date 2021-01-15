@@ -27,7 +27,6 @@ import {
 } from 'shared/modules/commands/commandsDuck'
 import * as favoritesDuck from 'shared/modules/favorites/favoritesDuck'
 import * as foldersDuck from 'shared/modules/favorites/foldersDuck'
-import { exportFavorites } from 'shared/services/export-favorites'
 
 const mapFavoritesStateToProps = (state: any) => {
   const folders = foldersDuck
@@ -56,9 +55,6 @@ const mapFavoritesDispatchToProps = (dispatch: any, ownProps: any) => ({
     ),
   removeScript: (favorite: favoritesDuck.Favorite) =>
     favorite.id && dispatch(favoritesDuck.removeFavorite(favorite.id)),
-  updateFolder() {
-    /* TODO implement */
-  },
   renameScript: (favorite: favoritesDuck.Favorite, name: string) => {
     if (favorite.id) {
       dispatch(favoritesDuck.renameFavorite(favorite.id, name))
@@ -69,22 +65,15 @@ const mapFavoritesDispatchToProps = (dispatch: any, ownProps: any) => ({
       dispatch(favoritesDuck.moveFavorite(favorite.id, folder))
     }
   },
-  removeFolder(folder: foldersDuck.Folder) {
-    dispatch(foldersDuck.removeFolder(folder.id))
-    // TODO kod för att ta bort alla som var i mappen
-    // dispatch(favoritesDuck.removeFavorites(getFavoriteIds(favorites)))
-  },
-  renameFolder(folder: foldersDuck.Folder, newName: string) {
-    const folders = foldersDuck.getFolders()
-    dispatch(foldersDuck.updateFolders(folder.id))
-    // TODO kod för att ta bort alla som var i mappen
-    // dispatch(favoritesDuck.removeFavorites(getFavoriteIds(favorites)))
-  },
   updateFolders(folders: foldersDuck.Folder[]) {
     dispatch(foldersDuck.updateFolders(folders))
   },
   createNewFolder() {
     dispatch(foldersDuck.addFolder(uuid.v4(), 'New Folder'))
+  },
+  dispatchRemoveFolderAndItsScripts(folderId: string, favoriteIds: string[]) {
+    dispatch(foldersDuck.removeFolder(folderId))
+    dispatch(favoritesDuck.removeFavorites(favoriteIds))
   }
 })
 
@@ -92,12 +81,22 @@ const mergeProps = (stateProps: any, dispatchProps: any) => {
   return {
     ...stateProps,
     ...dispatchProps,
-    exportScripts: () => dispatchProps.exportScripts(stateProps.scripts),
+    //exportScripts: () => dispatchProps.exportScripts(stateProps.scripts),
     renameFolder: (folderToRename: foldersDuck.Folder, name: string) => {
       dispatchProps.updateFolders(
         stateProps.folders.map((folder: foldersDuck.Folder) =>
           folderToRename.id === folder.id ? { ...folder, name } : folder
         )
+      )
+    },
+    removeFolder(folder: foldersDuck.Folder) {
+      const scriptsToRemove = stateProps.scripts
+        .filter((script: favoritesDuck.Favorite) => script.folder === folder.id)
+        .map((script: favoritesDuck.Favorite) => script.id)
+      //TODO dubbelkolla så detta funkar
+      dispatchProps.dispatchRemoveFolderAndItsScripts(
+        folder.id,
+        scriptsToRemove
       )
     }
   }
