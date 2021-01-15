@@ -17,6 +17,7 @@
 
 import { withBus } from 'react-suber'
 import { connect } from 'react-redux'
+import uuid from 'uuid'
 import MyScripts from 'browser/components/SavedScripts'
 
 import * as editor from 'shared/modules/editor/editorDuck'
@@ -53,7 +54,6 @@ const mapFavoritesDispatchToProps = (dispatch: any, ownProps: any) => ({
     dispatch(
       executeCommand(favorite.content, { source: commandSources.favorite })
     ),
-  exportScripts: () => exportFavorites(),
   removeScript: (favorite: favoritesDuck.Favorite) =>
     favorite.id && dispatch(favoritesDuck.removeFavorite(favorite.id)),
   updateFolder() {
@@ -73,6 +73,18 @@ const mapFavoritesDispatchToProps = (dispatch: any, ownProps: any) => ({
     dispatch(foldersDuck.removeFolder(folder.id))
     // TODO kod för att ta bort alla som var i mappen
     // dispatch(favoritesDuck.removeFavorites(getFavoriteIds(favorites)))
+  },
+  renameFolder(folder: foldersDuck.Folder, newName: string) {
+    const folders = foldersDuck.getFolders()
+    dispatch(foldersDuck.updateFolders(folder.id))
+    // TODO kod för att ta bort alla som var i mappen
+    // dispatch(favoritesDuck.removeFavorites(getFavoriteIds(favorites)))
+  },
+  updateFolders(folders: foldersDuck.Folder[]) {
+    dispatch(foldersDuck.updateFolders(folders))
+  },
+  createNewFolder() {
+    dispatch(foldersDuck.addFolder(uuid.v4(), 'New Folder'))
   }
 })
 
@@ -81,8 +93,13 @@ const mergeProps = (stateProps: any, dispatchProps: any) => {
     ...stateProps,
     ...dispatchProps,
     exportScripts: () => dispatchProps.exportScripts(stateProps.scripts),
-    updateFolder: (favorites: any, payload: any) =>
-      dispatchProps.updateFolder(favorites, payload, stateProps.folders)
+    renameFolder: (folderToRename: foldersDuck.Folder, name: string) => {
+      dispatchProps.updateFolders(
+        stateProps.folders.map((folder: foldersDuck.Folder) =>
+          folderToRename.id === folder.id ? { ...folder, name } : folder
+        )
+      )
+    }
   }
 }
 
