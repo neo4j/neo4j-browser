@@ -17,7 +17,7 @@
 
 import { withBus } from 'react-suber'
 import { connect } from 'react-redux'
-import MyScripts from '@relate-by-ui/saved-scripts'
+import MyScripts from 'browser/components/SavedScripts'
 import semver from 'semver'
 
 import * as editor from 'shared/modules/editor/editorDuck'

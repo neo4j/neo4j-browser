@@ -34,7 +34,7 @@ import {
   addScriptPathPrefix,
   getScriptDisplayName,
   sortAndGroupScriptsByPath
-} from '@relate-by-ui/saved-scripts'
+} from 'browser/components/SavedScripts'
 
 import { SLASH, CYPHER_FILE_EXTENSION } from './export-favorites.constants'
 

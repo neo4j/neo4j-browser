@@ -19,7 +19,7 @@ import { useEffect, useState, Dispatch } from 'react'
 import { Action } from 'redux'
 import { withBus } from 'react-suber'
 import { connect } from 'react-redux'
-import MyScripts from '@relate-by-ui/saved-scripts'
+import MyScripts from 'browser/components/SavedScripts'
 import { useQuery, useMutation, ApolloError } from '@apollo/client'
 import { filter, size } from 'lodash-es'
 

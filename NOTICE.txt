@@ -181,8 +181,6 @@ Third-party licenses
 │  │  └─ URL: https://github.com/neo4j-apps/relate-by-ui
 │  ├─ @relate-by-ui/relatable@1.0.1
 │  │  └─ URL: https://github.com/neo4j-apps/relatable
-│  ├─ @relate-by-ui/saved-scripts@1.0.5
-│  │  └─ URL: https://github.com/neo4j-apps/relate-by-ui
 │  ├─ aws-sign2@0.7.0
 │  │  ├─ URL: https://github.com/mikeal/aws-sign
 │  │  ├─ VendorName: Mikeal Rogers
@@ -218,6 +216,10 @@ Third-party licenses
 │  ├─ google-auth-library@6.0.6
 │  │  ├─ URL: https://github.com/googleapis/google-auth-library-nodejs.git
 │  │  └─ VendorName: Google Inc.
+│  ├─ localforage@1.8.1
+│  │  ├─ URL: git://github.com/localForage/localForage.git
+│  │  ├─ VendorName: Mozilla
+│  │  └─ VendorUrl: https://github.com/localForage/localForage
 │  ├─ long@4.0.0
 │  │  ├─ URL: https://github.com/dcodeIO/long.js.git
 │  │  └─ VendorName: Daniel Wirtz
@@ -316,11 +318,11 @@ Third-party licenses
 │  ├─ @protobufjs/utf8@1.1.0
 │  │  ├─ URL: https://github.com/dcodeIO/protobuf.js.git
 │  │  └─ VendorName: Daniel Wirtz
-│  ├─ @sentry/browser@5.27.0
+│  ├─ @sentry/browser@5.29.0
 │  │  ├─ URL: git://github.com/getsentry/sentry-javascript.git
 │  │  ├─ VendorName: Sentry
 │  │  └─ VendorUrl: https://github.com/getsentry/sentry-javascript/tree/master/packages/browser
-│  ├─ @sentry/core@5.27.0
+│  ├─ @sentry/core@5.29.0
 │  │  ├─ URL: git://github.com/getsentry/sentry-javascript.git
 │  │  ├─ VendorName: Sentry
 │  │  └─ VendorUrl: https://github.com/getsentry/sentry-javascript/tree/master/packages/core
@@ -328,15 +330,39 @@ Third-party licenses
 │  │  ├─ URL: git://github.com/getsentry/sentry-javascript.git
 │  │  ├─ VendorName: Sentry
 │  │  └─ VendorUrl: https://github.com/getsentry/sentry-javascript/tree/master/packages/hub
+│  ├─ @sentry/hub@5.29.0
+│  │  ├─ URL: git://github.com/getsentry/sentry-javascript.git
+│  │  ├─ VendorName: Sentry
+│  │  └─ VendorUrl: https://github.com/getsentry/sentry-javascript/tree/master/packages/hub
+│  ├─ @sentry/integrations@5.29.0
+│  │  ├─ URL: git://github.com/getsentry/sentry-javascript.git
+│  │  ├─ VendorName: Sentry
+│  │  └─ VendorUrl: https://github.com/getsentry/sentry-javascript/tree/master/packages/integrations
 │  ├─ @sentry/minimal@5.27.0
 │  │  ├─ URL: git://github.com/getsentry/sentry-javascript.git
 │  │  ├─ VendorName: Sentry
 │  │  └─ VendorUrl: https://github.com/getsentry/sentry-javascript/tree/master/packages/minimal
+│  ├─ @sentry/minimal@5.29.0
+│  │  ├─ URL: git://github.com/getsentry/sentry-javascript.git
+│  │  ├─ VendorName: Sentry
+│  │  └─ VendorUrl: https://github.com/getsentry/sentry-javascript/tree/master/packages/minimal
+│  ├─ @sentry/react@5.29.0
+│  │  ├─ URL: git://github.com/getsentry/sentry-javascript.git
+│  │  ├─ VendorName: Sentry
+│  │  └─ VendorUrl: https://github.com/getsentry/sentry-javascript/tree/master/packages/react
 │  ├─ @sentry/types@5.27.0
 │  │  ├─ URL: git://github.com/getsentry/sentry-javascript.git
 │  │  ├─ VendorName: Sentry
 │  │  └─ VendorUrl: https://github.com/getsentry/sentry-javascript/tree/master/packages/types
+│  ├─ @sentry/types@5.29.0
+│  │  ├─ URL: git://github.com/getsentry/sentry-javascript.git
+│  │  ├─ VendorName: Sentry
+│  │  └─ VendorUrl: https://github.com/getsentry/sentry-javascript/tree/master/packages/types
 │  ├─ @sentry/utils@5.27.0
+│  │  ├─ URL: git://github.com/getsentry/sentry-javascript.git
+│  │  ├─ VendorName: Sentry
+│  │  └─ VendorUrl: https://github.com/getsentry/sentry-javascript/tree/master/packages/utils
+│  ├─ @sentry/utils@5.29.0
 │  │  ├─ URL: git://github.com/getsentry/sentry-javascript.git
 │  │  ├─ VendorName: Sentry
 │  │  └─ VendorUrl: https://github.com/getsentry/sentry-javascript/tree/master/packages/utils
@@ -1263,6 +1289,8 @@ Third-party licenses
 │  │  ├─ URL: git://github.com/gkz/levn.git
 │  │  ├─ VendorName: George Zahariev
 │  │  └─ VendorUrl: https://github.com/gkz/levn
+│  ├─ lie@3.1.1
+│  │  └─ URL: https://github.com/calvinmetcalf/lie.git
 │  ├─ lie@3.3.0
 │  │  └─ URL: https://github.com/calvinmetcalf/lie.git
 │  ├─ lines-and-columns@1.1.6

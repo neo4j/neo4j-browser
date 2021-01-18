@@ -258,7 +258,7 @@ export function EditorFrame({
     <Frame fullscreen={isFullscreen} data-testid="activeEditor">
       {currentlyEditing && (
         <animated.div style={props}>
-          <ScriptTitle unsaved={showUnsaved}>
+          <ScriptTitle data-testid="currentlyEditing" unsaved={showUnsaved}>
             <SVGInline
               svg={currentlyEditing.isProjectFile ? file : update_favorite}
               width="12px"
