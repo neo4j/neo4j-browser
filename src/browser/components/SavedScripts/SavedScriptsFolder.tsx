@@ -36,14 +36,15 @@ function SavedScriptsFolder({
   const {
     isEditing,
     currentNameValue,
-    setIsEditing,
+    beginEditing,
+    doneEditing,
     setNameValue
   } = useNameUpdate(
     folder.name,
-    name => renameFolder && renameFolder(folder, name)
+    () => renameFolder && renameFolder(folder, currentNameValue)
   )
+  const blurRef = useCustomBlur(doneEditing)
   const [expanded, setExpanded] = useState(false)
-  const blurRef = useCustomBlur(() => setIsEditing(false))
   const drop = useDrop<
     { id: string; type: string },
     any, // Return type of "drop"
@@ -69,7 +70,7 @@ function SavedScriptsFolder({
               type="text"
               autoFocus
               onKeyPress={({ key }) => {
-                key === 'Enter' && setIsEditing(false)
+                key === 'Enter' && doneEditing()
               }}
               value={currentNameValue}
               onChange={e => setNameValue(e.target.value)}
@@ -96,7 +97,7 @@ function SavedScriptsFolder({
               <RemoveButton onClick={() => removeFolder(folder)} />
             )}
             {renameFolder && !isEditing && (
-              <EditButton onClick={() => setIsEditing(!isEditing)} />
+              <EditButton onClick={beginEditing} />
             )}
           </SavedScriptsButtonWrapper>
         </SavedScriptsFolderHeader>

@@ -78,22 +78,19 @@ describe('Saved Scripts', () => {
       .clear()
       .type('fldr{enter}')
 
-    cy.get('[data-testid="scriptTitle-:help cypher"]')
-      .children()
-      .first()
-      .trigger('dragstart')
+    cy.get('[data-testid="scriptTitle-:help cypher"]').trigger('dragstart')
 
-    cy.get('[data-testid="savedScriptsFolder-/fldr"]').trigger('drop', {
+    cy.get('[data-testid=expandFolder-fldr]').trigger('drop', {
       // this is to make react-dnd happy
       dataTransfer: { files: [] }
     })
 
     cy.wait(500)
-    cy.get('[data-testid="savedScriptsFolder-/fldr"]').trigger('dragend')
+    cy.get('[data-testid=expandFolder-fldr]').trigger('dragend')
 
     // moved script should be in the folder
     cy.get('[data-testid="scriptTitle-:help cypher"]').should('not.exist')
-    cy.get('[data-testid="expandFolder-/fldr"]').click()
+    cy.get('[data-testid=expandFolder-fldr]').click()
     cy.get('[data-testid="scriptTitle-:help cypher"]').should('exist')
 
     // cleanup and delete the folder as well
@@ -101,6 +98,6 @@ describe('Saved Scripts', () => {
       .first()
       .click({ force: true })
     cy.get('[data-testid="savedScriptsButton-Remove"]').click()
-    cy.get('[data-testid="savedScriptsFolder-/fldr"]').should('not.exist')
+    cy.get('[data-testid=expandFolder-fldr]').should('not.exist')
   })
 })

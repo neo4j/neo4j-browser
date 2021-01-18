@@ -34,17 +34,19 @@ function SavedScriptsListItem({
   const {
     isEditing,
     currentNameValue,
-    setIsEditing,
+    beginEditing,
+    doneEditing,
     setNameValue
   } = useNameUpdate(
     displayName,
-    name => renameScript && renameScript(script, name)
+    () => renameScript && renameScript(script, currentNameValue)
   )
-  const blurRef = useCustomBlur(() => setIsEditing(false))
-  const canRunScript = !script.not_executable && !isEditing
+  const blurRef = useCustomBlur(doneEditing)
   const drag = useDrag({
     item: { id: script.id, type: 'script' }
   })[1]
+
+  const canRunScript = !script.not_executable && !isEditing
 
   return (
     <SavedScriptsListItemMain ref={blurRef} className="saved-scripts-list-item">
@@ -54,7 +56,7 @@ function SavedScriptsListItem({
           type="text"
           autoFocus
           onKeyPress={({ key }) => {
-            key === 'Enter' && setIsEditing(false)
+            key === 'Enter' && doneEditing()
           }}
           value={currentNameValue}
           onChange={e => setNameValue(e.target.value)}
@@ -73,9 +75,7 @@ function SavedScriptsListItem({
         {removeScript && isEditing && (
           <RemoveButton onClick={() => removeScript(script)} />
         )}
-        {renameScript && !isEditing && (
-          <EditButton onClick={() => setIsEditing(!isEditing)} />
-        )}
+        {renameScript && !isEditing && <EditButton onClick={beginEditing} />}
         {canRunScript && <RunButton onClick={() => execScript(script)} />}
       </SavedScriptsButtonWrapper>
     </SavedScriptsListItemMain>
