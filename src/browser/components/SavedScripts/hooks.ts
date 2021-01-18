@@ -1,27 +1,41 @@
 import { useState, useEffect, useRef } from 'react'
 
+type NameUpdateFns = {
+  isEditing: boolean
+  doneEditing: () => void
+  beginEditing: () => void
+  currentNameValue: string
+  setNameValue: (newName: string) => void
+}
 /**
  * Maintains a state of a name and calls update action whenever user exits editing
  */
-export function useNameUpdate(
-  name: string,
-  update: (name: string) => void
-): {
-  isEditing: boolean
-  currentNameValue: string
-  setIsEditing: (isEditing: boolean) => void
-  setNameValue: (newName: string) => void
-} {
+export function useNameUpdate(name: string, update: () => void): NameUpdateFns {
   const [currentNameValue, setNameValue] = useState(name)
   const [isEditing, setIsEditing] = useState(false)
 
-  useEffect(() => {
-    if (!isEditing && currentNameValue !== name) {
-      update(currentNameValue)
-    }
-  }, [isEditing, currentNameValue, name, update])
+  // Reset starting name when favorite is renamed through editing the comment
+  useEffect(() => setNameValue(name), [name])
 
-  return { isEditing, currentNameValue, setIsEditing, setNameValue }
+  function doneEditing() {
+    // only update if we have a change
+    if (currentNameValue !== name) {
+      update()
+      setIsEditing(false)
+    }
+  }
+
+  function beginEditing() {
+    setIsEditing(true)
+  }
+
+  return {
+    isEditing,
+    beginEditing,
+    doneEditing,
+    currentNameValue,
+    setNameValue
+  }
 }
 
 /**
