@@ -41,16 +41,9 @@ describe('Saved Scripts', () => {
     cy.get('[data-testid="scriptTitle-script name"]').click()
     cy.get('[data-testid="currentlyEditing"]').contains('script name')
     // Editing script updates name and content
-    cy.get('[data-testid="activeEditor"] textarea').type(
-      `// Guide
-:play movies${
-        '{del}'.repeat(
-          22
-        ) /* normal clear doesn't seem to work with code-mirror text field*/
-      } 
-`,
-      { force: true }
-    )
+    cy.get('[data-testid="activeEditor"] textarea')
+      .type('{meta}a{del}') // select all and delete
+      .type('// Guide{shift}{enter}:play movies', { force: true })
     cy.get('[title="Update favorite"]').click()
 
     cy.get('[data-testid="scriptTitle-Guide"]').should('exist')
