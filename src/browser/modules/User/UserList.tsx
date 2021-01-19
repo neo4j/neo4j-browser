@@ -45,6 +45,8 @@ import { connect } from 'react-redux'
 import { isEnterprise } from 'shared/modules/dbMeta/dbMetaDuck'
 import FrameAside from '../Frame/FrameAside'
 import { EnterpriseOnlyFrame } from 'browser-components/EditionView'
+import UserManagementOnAura from './UserManagementOnaura'
+import { inCloudEnv } from 'shared/modules/app/appDuck'
 
 type UserListState = any
 
@@ -203,7 +205,15 @@ export class UserList extends Component<any, UserListState> {
   render() {
     let aside = null
     let frameContents
-    if (!this.props.isEnterpriseEdition) {
+    if (this.props.isAura) {
+      aside = (
+        <FrameAside
+          title="Frame unavailable"
+          subtitle="Frame not currently available on aura."
+        />
+      )
+      frameContents = <UserManagementOnAura />
+    } else if (!this.props.isEnterpriseEdition) {
       aside = (
         <FrameAside
           title="Frame unavailable"
@@ -229,10 +239,12 @@ export class UserList extends Component<any, UserListState> {
 const mapStateToProps = (state: any) => {
   const { database } = driverDatabaseSelection(state, 'system') || {}
   const isEnterpriseEdition = isEnterprise(state)
+  const isAura = inCloudEnv(state)
 
   return {
     useSystemDb: database,
-    isEnterpriseEdition
+    isEnterpriseEdition,
+    isAura
   }
 }
 
