@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { guessSemverVersion } from '../features/featureDuck.utils'
+
 export function extractServerInfo(res: any) {
   const serverInfo = {
     version: 'unknown',
@@ -42,14 +44,8 @@ export function extractServerInfo(res: any) {
     serverInfo.edition = res.records[0].get('edition')
   }
 
-  // Temporarily hardcoded solutions for Aura
-  if (['4.0-aura', '4.0-AuraProfessional'].includes(serverInfo.version)) {
-    serverInfo.version = '4.0.0'
-    serverInfo.edition = 'aura'
-  }
-  if (serverInfo.version === '4.0-AuraEnterprise') {
-    serverInfo.version = '4.0.0'
-    serverInfo.edition = 'auraenterprise'
+  if (serverInfo.version.includes('-aura')) {
+    serverInfo.version = guessSemverVersion(serverInfo.version)
   }
 
   return serverInfo

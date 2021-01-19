@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { isEnterpriseEdition } from '../support/utils'
+import { isAura, isEnterpriseEdition } from '../support/utils'
 
 /* global Cypress, cy, before */
 
@@ -29,36 +29,39 @@ describe('User: ', () => {
     const password = Cypress.config('password')
     cy.connect('neo4j', password)
   })
-  it("Doesn't throw when listing users", () => {
-    cy.executeCommand(':clear')
-    cy.executeCommand(':server user list')
-    cy.get('[data-testid="frame"]', { timeout: 10000 }).should(
-      'contain',
-      isEnterpriseEdition() ? 'Username' : 'Unable to display'
-    )
-  })
-  // Only on enterprise
-  if (isEnterpriseEdition()) {
-    it('Add User', () => {
-      cy.executeCommand(':clear')
-      cy.executeCommand(':server user add')
-      cy.addUser('Bob', 'hi', 'editor', false)
+  if (!isAura()) {
+    // usermanagement in frames disabled on aura
+    it("Doesn't throw when listing users", () => {
       cy.executeCommand(':clear')
       cy.executeCommand(':server user list')
-      cy.get('.user-info > .username').should('have.length', 2)
-      cy.get('.user-info > .username').contains('Bob')
+      cy.get('[data-testid="frame"]', { timeout: 10000 }).should(
+        'contain',
+        isEnterpriseEdition() ? 'Username' : 'Unable to display'
+      )
     })
+    // Only on enterprise
+    if (isEnterpriseEdition()) {
+      it('Add User', () => {
+        cy.executeCommand(':clear')
+        cy.executeCommand(':server user add')
+        cy.addUser('Bob', 'hi', 'editor', false)
+        cy.executeCommand(':clear')
+        cy.executeCommand(':server user list')
+        cy.get('.user-info > .username').should('have.length', 2)
+        cy.get('.user-info > .username').contains('Bob')
+      })
 
-    it('Add User with forced pw change', () => {
-      cy.executeCommand(':clear')
-      cy.executeCommand(':server user add')
-      cy.addUser('Rob', 'hi', 'editor', true)
-      cy.executeCommand(':clear')
-      cy.executeCommand(':server user list')
-      cy.get('.user-info > .username').should('have.length', 3)
-      cy.get('.user-info > .username').contains('Rob')
-      cy.dropUser('Bob')
-      cy.dropUser('Rob')
-    })
+      it('Add User with forced pw change', () => {
+        cy.executeCommand(':clear')
+        cy.executeCommand(':server user add')
+        cy.addUser('Rob', 'hi', 'editor', true)
+        cy.executeCommand(':clear')
+        cy.executeCommand(':server user list')
+        cy.get('.user-info > .username').should('have.length', 3)
+        cy.get('.user-info > .username').contains('Rob')
+        cy.dropUser('Bob')
+        cy.dropUser('Rob')
+      })
+    }
   }
 })

@@ -44,16 +44,19 @@ describe('Connect form', () => {
     cy.wait(3000)
   })
 
-  it('extracts the scheme from the bolt url entered', () => {
-    const scheme = schemeWithEncryptionFlag('bolt')
-    const host = 'localhost:1212'
-    getBoltUrlField()
-      .clear()
-      .type(scheme + host)
+  if (!isAura()) {
+    it('extracts the scheme from the bolt url entered', () => {
+      // Bolt is not pickable on aura
+      const scheme = schemeWithEncryptionFlag('bolt')
+      const host = 'localhost:1212'
+      getBoltUrlField()
+        .clear()
+        .type(scheme + host)
 
-    getBoltUrlField().should('have.value', host)
-    getBoltSchemeSelect().should('have.value', scheme)
-  })
+      getBoltUrlField().should('have.value', host)
+      getBoltSchemeSelect().should('have.value', scheme)
+    })
+  }
   it('extracts the scheme from the bolt url entered with encryption flag', () => {
     const input = schemeWithInvertedEncryptionFlag('neo4j')
     const output = schemeWithEncryptionFlag('neo4j')
