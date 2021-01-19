@@ -44,7 +44,7 @@ describe('Connect form', () => {
     cy.wait(3000)
   })
 
-  if (!isAura) {
+  if (!isAura()) {
     it('extracts the scheme from the bolt url entered', () => {
       // Bolt is not pickable on aura
       const scheme = schemeWithEncryptionFlag('bolt')
