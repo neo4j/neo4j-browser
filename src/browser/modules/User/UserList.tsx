@@ -45,7 +45,6 @@ import { connect } from 'react-redux'
 import { isEnterprise } from 'shared/modules/dbMeta/dbMetaDuck'
 import FrameAside from '../Frame/FrameAside'
 import { EnterpriseOnlyFrame } from 'browser-components/EditionView'
-import UserManagementOnAura from './UserManagementOnaura'
 import { inCloudEnv } from 'shared/modules/app/appDuck'
 
 type UserListState = any
@@ -212,7 +211,24 @@ export class UserList extends Component<any, UserListState> {
           subtitle="Frame not currently available on aura."
         />
       )
-      frameContents = <UserManagementOnAura />
+      frameContents = (
+        <div>
+          <p>
+            User management is currently only available through cypher commands
+            on Neo4j Aura Enterprise.
+          </p>
+          <p>
+            Read more on user and role management with cypher on{' '}
+            <a
+              href="https://neo4j.com/docs/cypher-manual/current/administration/security/users-and-roles"
+              target="_blank"
+              rel="noreferrer"
+            >
+              the Neo4j Cypher docs.
+            </a>
+          </p>
+        </div>
+      )
     } else if (!this.props.isEnterpriseEdition) {
       aside = (
         <FrameAside
