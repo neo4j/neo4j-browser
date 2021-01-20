@@ -423,9 +423,6 @@ Third-party licenses
 │     ├─ VendorName: Tab Atkins Jr.
 │     └─ VendorUrl: https://github.com/tabatkins/railroad-diagrams
 ├─ GPL-3.0
-│  ├─ cypher-codemirror@1.1.7
-│  │  ├─ URL: git://github.com/neo4j-contrib/cypher-editor.git
-│  │  └─ VendorName: Neo Technology Inc.
 │  └─ cypher-editor-support@1.1.7
 │     ├─ URL: git://github.com/neo4j-contrib/cypher-editor.git
 │     └─ VendorName: Neo Technology Inc.
@@ -863,10 +860,6 @@ Third-party licenses
 │  ├─ classnames@2.2.6
 │  │  ├─ URL: https://github.com/JedWatson/classnames.git
 │  │  └─ VendorName: Jed Watson
-│  ├─ codemirror@5.57.0
-│  │  ├─ URL: https://github.com/codemirror/CodeMirror.git
-│  │  ├─ VendorName: Marijn Haverbeke
-│  │  └─ VendorUrl: https://codemirror.net/
 │  ├─ collapse-white-space@1.0.6
 │  │  ├─ URL: https://github.com/wooorm/collapse-white-space.git
 │  │  ├─ VendorName: Titus Wormer

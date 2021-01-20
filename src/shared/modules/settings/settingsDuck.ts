@@ -78,8 +78,6 @@ const browserSyncConfig = (host = 'https://auth.neo4j.com') => ({
   }
 })
 export const getUseNewVisualization = (state: any) => state[NAME].useNewVis
-export const shouldEditorAutocomplete = (state: any) =>
-  state[NAME].editorAutocomplete !== false
 export const shouldUseCypherThread = (state: any) => state[NAME].useCypherThread
 export const getConnectionTimeout = (state: any) =>
   state[NAME].connectionTimeout || initialState.connectionTimeout
@@ -101,7 +99,6 @@ const initialState = {
   scrollToTop: true,
   maxFrames: 30,
   codeFontLigatures: true,
-  editorAutocomplete: true,
   useBoltRouting: false,
   editorLint: false,
   useCypherThread: true,

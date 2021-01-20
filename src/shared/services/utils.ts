@@ -123,17 +123,6 @@ export const moveInArray = (fromIndex: any, toIndex: any, arr: any) => {
   return newArr
 }
 
-export const debounce = (fn: any, time: any, context: any = null) => {
-  let pending: any
-  return (...args: any[]) => {
-    if (pending) clearTimeout(pending)
-    pending = setTimeout(
-      () => typeof fn === 'function' && fn.apply(context, args),
-      parseInt(time)
-    )
-  }
-}
-
 export const throttle = (fn: any, time: any, context = null) => {
   let blocking: any
   return (...args: any[]) => {

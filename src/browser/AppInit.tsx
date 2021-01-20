@@ -38,7 +38,6 @@ import { CaptureConsole } from '@sentry/integrations'
 
 import { createReduxMiddleware, getAll, applyKeys } from 'services/localstorage'
 import { APP_START } from 'shared/modules/app/appDuck'
-import { GlobalStyle } from './styles/global-styles'
 import { detectRuntimeEnv } from 'services/utils'
 import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
 import { version } from 'project-root/package.json'
@@ -200,12 +199,9 @@ const AppInit = () => {
   return (
     <Provider store={store}>
       <BusProvider bus={bus}>
-        <>
-          <GlobalStyle />
-          <ApolloProvider client={client}>
-            <App />
-          </ApolloProvider>
-        </>
+        <ApolloProvider client={client}>
+          <App />
+        </ApolloProvider>
       </BusProvider>
     </Provider>
   )

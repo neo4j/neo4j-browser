@@ -76,7 +76,7 @@ describe('Multi database', () => {
     }
     it(':use command works + shows current db in editor gutter', () => {
       cy.executeCommand(':clear')
-      const editor = () => cy.get('[data-testid="editor-wrapper"]')
+      const editor = () => cy.get('#monaco-main-editor')
 
       cy.executeCommand(':use system')
       editor().contains('system$')

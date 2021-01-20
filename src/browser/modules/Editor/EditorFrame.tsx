@@ -50,6 +50,7 @@ import { getProjectId } from 'shared/modules/app/appDuck'
 import {
   EDIT_CONTENT,
   EXPAND,
+  FOCUS,
   SET_CONTENT
 } from 'shared/modules/editor/editorDuck'
 import {
@@ -69,7 +70,6 @@ import update_file from 'icons/update_file.svg'
 import update_favorite from 'icons/update_favorite.svg'
 import file from 'icons/file.svg'
 import run_icon from 'icons/run_icon.svg'
-import Editor from './Editor'
 import {
   ADD_PROJECT_FILE,
   REMOVE_PROJECT_FILE
@@ -79,34 +79,45 @@ import {
   createFilePath
 } from 'browser/modules/Sidebar/project-files.utils'
 import { defaultFavoriteName } from 'browser/modules/Sidebar/favorites.utils'
+import Monaco, { MonacoHandles } from './Monaco'
+import {
+  codeFontLigatures,
+  shouldEnableMultiStatementMode
+} from 'shared/modules/settings/settingsDuck'
+import { getUseDb } from 'shared/modules/connections/connectionsDuck'
+import { getHistory, HistoryState } from 'shared/modules/history/historyDuck'
 
 type EditorFrameProps = {
   bus: Bus
-  theme: { linkHover: string }
+  codeFontLigatures: boolean
+  enableMultiStatementMode: boolean
   executeCommand: (cmd: string, source: string) => void
-  updateFavorite: (id: string, value: string) => void
+  history: HistoryState
   projectId: string
-}
-type CodeEditor = {
-  getValue: () => string | null
-  setValue: (newText: string) => void
+  theme: { linkHover: string }
+  updateFavorite: (id: string, value: string) => void
+  useDb: null | string
 }
 
 type SavedScript = {
-  id: string
   content: string
+  directory?: string
+  id: string
   isProjectFile: boolean
   isStatic: boolean
   name?: string
-  directory?: string
 }
 
 export function EditorFrame({
   bus,
-  theme,
+  codeFontLigatures,
+  enableMultiStatementMode,
   executeCommand,
+  history,
+  projectId,
+  theme,
   updateFavorite,
-  projectId
+  useDb
 }: EditorFrameProps): JSX.Element {
   const [addFile] = useMutation(ADD_PROJECT_FILE)
   const [unsaved, setUnsaved] = useState(false)
@@ -114,11 +125,16 @@ export function EditorFrame({
   const [currentlyEditing, setCurrentlyEditing] = useState<SavedScript | null>(
     null
   )
-  const editorRef = useRef<CodeEditor>(null)
+  const editorRef = useRef<MonacoHandles>(null)
 
-  const toggleFullscreen = useCallback(() => setFullscreen(!isFullscreen), [
-    isFullscreen
-  ])
+  const toggleFullscreen = useCallback(() => {
+    updateFullscreen(!isFullscreen)
+  }, [isFullscreen])
+
+  const updateFullscreen = (fullScreen: boolean) => {
+    setFullscreen(fullScreen)
+    editorRef.current?.resize(fullScreen)
+  }
 
   useEffect(() => bus && bus.take(EXPAND, toggleFullscreen), [
     bus,
@@ -168,6 +184,12 @@ export function EditorFrame({
     [bus]
   )
 
+  useEffect(() => {
+    bus.take(FOCUS, () => {
+      editorRef.current?.focus()
+    })
+  }, [bus])
+
   useEffect(
     () =>
       bus &&
@@ -182,7 +204,7 @@ export function EditorFrame({
   function discardEditor() {
     editorRef.current?.setValue('')
     setCurrentlyEditing(null)
-    setFullscreen(false)
+    updateFullscreen(false)
   }
 
   const buttons = [
@@ -202,7 +224,6 @@ export function EditorFrame({
     }
   ]
 
-  const TypedEditor: any = Editor // delete this when editor is ts
   const props = useSpring({
     opacity: currentlyEditing ? 1 : 0.5,
     height: currentlyEditing ? 'auto' : 0
@@ -213,6 +234,7 @@ export function EditorFrame({
       executeCommand(editorRef.current?.getValue() || '', source)
       editorRef.current?.setValue('')
       setCurrentlyEditing(null)
+      updateFullscreen(false)
     }
   }
 
@@ -250,13 +272,22 @@ export function EditorFrame({
       )}
       <FlexContainer>
         <Header>
-          <EditorContainer>
-            <TypedEditor
-              editorRef={editorRef}
+          <EditorContainer onClick={() => editorRef.current?.focus()}>
+            <Monaco
+              bus={bus}
+              enableMultiStatementMode={enableMultiStatementMode}
+              history={history}
+              id={'main-editor'}
+              fontLigatures={codeFontLigatures}
               onChange={() => {
                 setUnsaved(true)
               }}
-              runCommand={createRunCommandFunction(commandSources.editor)}
+              onDisplayHelpKeys={() =>
+                executeCommand(':help keys', commandSources.editor)
+              }
+              onExecute={createRunCommandFunction(commandSources.editor)}
+              ref={editorRef}
+              useDb={useDb}
             />
           </EditorContainer>
           {currentlyEditing && !currentlyEditing.isStatic && (
@@ -320,7 +351,13 @@ export function EditorFrame({
 }
 
 const mapStateToProps = (state: any) => {
-  return { projectId: getProjectId(state) }
+  return {
+    codeFontLigatures: codeFontLigatures(state),
+    enableMultiStatementMode: shouldEnableMultiStatementMode(state),
+    history: getHistory(state),
+    projectId: getProjectId(state),
+    useDb: getUseDb(state)
+  }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => {

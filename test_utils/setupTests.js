@@ -19,7 +19,7 @@
  */
 
 // polyfill for jsdom (for tests only)
-// tests with codemirror breaks without it
+// tests with cypher-editor-support breaks without it
 global.document.createRange = () => {
   return {
     setEnd: () => {},
@@ -28,5 +28,8 @@ global.document.createRange = () => {
     getClientRects: () => []
   }
 }
-// needed for jest to import monaco
+// needed for testing monaco
 document.queryCommandSupported = () => false
+window.ResizeObserver = class {
+  observe() {}
+}

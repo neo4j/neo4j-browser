@@ -40,6 +40,7 @@ export const SET_MAX_FRAMES = 'frames/SET_MAX_FRAMES'
 
 export interface GlobalState {
   [NAME]: FramesState
+  history: string[]
   [key: string]: Record<string, any>
 }
 
@@ -215,7 +216,7 @@ export interface Frame {
   cmd: string
   connectionData: ConnectionData
   error: FrameError
-  id: string | number
+  id: string
   initialSlide: number
   isRerun: boolean
   parentId: string

@@ -67,7 +67,7 @@ module.exports = {
               enforce: true
             },
             'cypher-editor': {
-              test: /[\\/]node_modules[\\/](antlr4|codemirror|cypher-codemirror|cypher-editor-support)[\\/]/,
+              test: /[\\/]node_modules[\\/](antlr4|cypher-editor-support|monaco-editor)[\\/]/,
               name: 'cypher-editor',
               chunks: 'all',
               enforce: true
@@ -75,12 +75,6 @@ module.exports = {
             mdx: {
               test: /[\\/]node_modules[\\/](@babel|@literal-jsx|@mdx-js|acorn|acorn-jsx|hast-util-raw|mdast-util-to-hast|remark-mdx|remark-parse)[\\/]/,
               name: 'mdx',
-              chunks: 'all',
-              enforce: true
-            },
-            monaco: {
-              test: /[\\/]node_modules[\\/](monaco-editor)[\\/]/,
-              name: 'monaco',
               chunks: 'all',
               enforce: true
             },

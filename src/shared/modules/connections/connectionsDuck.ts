@@ -33,6 +33,7 @@ import {
   getConnectionTimeout
 } from 'shared/modules/settings/settingsDuck'
 import { inWebEnv, USER_CLEAR, APP_START } from 'shared/modules/app/appDuck'
+import { GlobalState } from '../stream/streamDuck'
 
 export const NAME = 'connections'
 export const SET_ACTIVE = 'connections/SET_ACTIVE'
@@ -63,7 +64,22 @@ export const CONNECTED_STATE = 1
 export const PENDING_STATE = 2
 export const CONNECTING_STATE = 3
 
-const initialState = {
+type ConnectionState =
+  | typeof DISCONNECTED_STATE
+  | typeof CONNECTED_STATE
+  | typeof PENDING_STATE
+  | typeof CONNECTING_STATE
+
+interface ConnectionsState {
+  allConnectionIds: string[]
+  connectionsById: {}
+  activeConnection: null | string
+  connectionState: ConnectionState
+  lastUpdate: number
+  useDb: null | string
+}
+
+const initialState: ConnectionsState = {
   allConnectionIds: [],
   connectionsById: {},
   activeConnection: null,
@@ -83,8 +99,8 @@ export function getConnection(state: any, id: any) {
   )
 }
 
-export function getUseDb(state: any) {
-  return (state[NAME] || {}).useDb
+export function getUseDb(state: GlobalState) {
+  return ((state[NAME] as ConnectionsState) || {}).useDb
 }
 
 export function getConnections(state: any): any[] {

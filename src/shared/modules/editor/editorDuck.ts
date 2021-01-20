@@ -18,14 +18,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {
+  CypherEditorSupport,
+  EditorSupportCompletionItem
+} from 'cypher-editor-support'
+import { editor, languages } from 'monaco-editor'
+import { Action, Store } from 'redux'
+import { ActionsObservable, Epic } from 'redux-observable'
 import Rx from 'rxjs/Rx'
+
+import {
+  monacoDarkTheme,
+  monacoLightTheme
+} from 'browser/modules/Editor/CypherMonacoThemes'
+import { CypherTokensProvider } from 'browser/modules/Editor/CypherTokensProvider'
+import cypherFunctions from 'browser/modules/Editor/cypher/functions'
+import consoleCommands from 'browser/modules/Editor/language/consoleCommands'
 import { getUrlParamValue } from 'services/utils'
-import { DISABLE_IMPLICIT_INIT_COMMANDS } from 'shared/modules/settings/settingsDuck'
 import { APP_START, URL_ARGUMENTS_CHANGE } from 'shared/modules/app/appDuck'
 import {
   commandSources,
   executeCommand
 } from 'shared/modules/commands/commandsDuck'
+import {
+  DARK_THEME,
+  DISABLE_IMPLICIT_INIT_COMMANDS,
+  LIGHT_THEME,
+  OUTLINE_THEME
+} from 'shared/modules/settings/settingsDuck'
+import {
+  toFunction,
+  toLabel,
+  toProcedure,
+  toPropertyKey,
+  toRelationshipType
+} from 'browser/modules/Editor/editorSchemaConverter'
 
 const NAME = 'editor'
 export const SET_CONTENT = `${NAME}/SET_CONTENT`
@@ -111,3 +138,140 @@ export const populateEditorFromUrlEpic = (some$: any, _store: any) => {
       return Rx.Observable.of(setContent(fullCommand))
     })
 }
+
+const editorSupport = new CypherEditorSupport('')
+
+export const initializeCypherEditorEpic = (
+  actions$: ActionsObservable<{ type: typeof APP_START }>
+) => {
+  return actions$
+    .ofType(APP_START)
+    .take(1)
+    .do(() => {
+      languages.register({ id: 'cypher' })
+      languages.setTokensProvider('cypher', new CypherTokensProvider())
+      languages.setLanguageConfiguration('cypher', {
+        brackets: [
+          ['(', ')'],
+          ['{', '}'],
+          ['[', ']'],
+          ['"', '"']
+        ],
+        comments: {
+          blockComment: ['/*', '*/'],
+          lineComment: '//'
+        }
+      })
+
+      languages.registerCompletionItemProvider('cypher', {
+        triggerCharacters: ['.', ':', '[', '(', '{', '$'],
+        provideCompletionItems: (model, position) => {
+          const { startColumn, endColumn } = model.getWordUntilPosition(
+            position
+          )
+          const range = {
+            startLineNumber: position.lineNumber,
+            endLineNumber: position.lineNumber,
+            startColumn,
+            endColumn
+          }
+          editorSupport.update(model.getValue())
+          let items: EditorSupportCompletionItem[] = []
+          // Cypher editor support repo has internal type errors
+          try {
+            items = editorSupport.getCompletion(
+              position.lineNumber,
+              position.column - 1
+            ).items
+          } catch {}
+
+          const { CompletionItemKind } = languages
+          const completionTypes: Record<
+            string,
+            languages.CompletionItemKind
+          > = {
+            keyword: CompletionItemKind.Keyword,
+            label: CompletionItemKind.Field,
+            relationshipType: CompletionItemKind.Reference,
+            variable: CompletionItemKind.Variable,
+            procedure: CompletionItemKind.Function,
+            function: CompletionItemKind.Function,
+            parameter: CompletionItemKind.TypeParameter,
+            propertyKey: CompletionItemKind.Property,
+            consoleCommand: CompletionItemKind.Function,
+            consoleCommandSubcommand: CompletionItemKind.Function,
+            procedureOutput: CompletionItemKind.Operator
+          }
+
+          // word preceding trigger character, used to determine range (where to insert) procedure suggestions
+          const { word } = model.getWordUntilPosition({
+            lineNumber: position.lineNumber,
+            column: position.column - 1
+          })
+
+          return {
+            suggestions: items.map((item, index) => ({
+              label: item.view || item.content,
+              kind: completionTypes[item.type],
+              insertText: item.content,
+              range: ['consoleCommand', 'label', 'relationshipType'].includes(
+                item.type
+              )
+                ? { ...range, startColumn: range.startColumn - 1 }
+                : item.type === 'procedure'
+                ? {
+                    ...range,
+                    startColumn:
+                      range.startColumn -
+                      (item.view.lastIndexOf(word) + word.length + 1)
+                  }
+                : range,
+              detail: item.postfix || undefined,
+              sortText: encodeNumberAsSortableString(index)
+            }))
+          }
+        }
+      })
+
+      editor.defineTheme(DARK_THEME, monacoDarkTheme)
+      editor.defineTheme(LIGHT_THEME, monacoLightTheme)
+      editor.defineTheme(OUTLINE_THEME, monacoLightTheme)
+      // Browser's light theme is called 'normal', but OS's light theme is called 'light'
+      // 'light' is used when theme is set to light in OS and auto in browser
+      editor.defineTheme('light', monacoLightTheme)
+    })
+    .ignoreElements()
+}
+function encodeNumberAsSortableString(number: number): string {
+  // use letter prefix to encode numbers. breaks after numbers are have more than ~28 digits
+  // Monaco by default sorts its suggestion by label text. But our language support sorts
+  // after relevance first and then alphabetically.
+  const A_CHAR = 65
+  const prefix = String.fromCharCode(A_CHAR + number.toString().length)
+  return `${prefix}${number}`
+}
+
+export const updateEditorSupportSchemaEpic: Epic<Action, any> = (
+  actions$,
+  store
+) =>
+  actions$
+    .do(() => {
+      const state = store.getState()
+      const schema = {
+        consoleCommands,
+        parameters: Object.keys(state.params),
+        labels: state.meta.labels.map(toLabel) as string[],
+        relationshipTypes: state.meta.relationshipTypes.map(
+          toRelationshipType
+        ) as string[],
+        propertyKeys: state.meta.properties.map(toPropertyKey) as string[],
+        functions: [
+          ...cypherFunctions,
+          ...state.meta.functions.map(toFunction)
+        ] as string[],
+        procedures: state.meta.procedures.map(toProcedure) as string[]
+      }
+      editorSupport.setSchema(schema)
+    })
+    .ignoreElements()

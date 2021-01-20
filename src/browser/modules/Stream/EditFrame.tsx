@@ -20,27 +20,27 @@
 
 import React, { Dispatch, useState } from 'react'
 import { connect } from 'react-redux'
+import { withBus } from 'react-suber'
 import { Action } from 'redux'
 import styled from 'styled-components'
+import { Bus } from 'suber'
 
-import { BrowserTheme } from '../Editor/CypherMonacoThemes'
 import Monaco from '../Editor/Monaco'
 import FrameTemplate from '../Frame/FrameTemplate'
-import { StyledFrameBody } from '../Frame/styled'
-import useDerivedTheme from 'browser-hooks/useDerivedTheme'
+import { StyledFrameBody, StyledFrameContents } from '../Frame/styled'
 import {
   commandSources,
   executeCommand
 } from 'shared/modules/commands/commandsDuck'
 import {
-  getTheme,
-  LIGHT_THEME,
+  codeFontLigatures,
   shouldEnableMultiStatementMode
 } from 'shared/modules/settings/settingsDuck'
 import { Frame, GlobalState } from 'shared/modules/stream/streamDuck'
 
 interface EditFrameProps {
-  browserTheme: BrowserTheme
+  bus: Bus
+  codeFontLigatures: boolean
   enableMultiStatementMode: boolean
   frame: Frame
   runQuery: (query: string) => void
@@ -49,25 +49,26 @@ interface EditFrameProps {
 const ForceFullSizeFrameContent = styled.div`
   ${StyledFrameBody} {
     padding: 0;
+    overflow: unset;
+  }
+  ${StyledFrameContents} {
+    overflow: unset;
   }
 `
 
 const EditFrame = (props: EditFrameProps): JSX.Element => {
   const [text, setText] = useState(props.frame.query)
 
-  const [theme] = useDerivedTheme(props.browserTheme, LIGHT_THEME) as [
-    BrowserTheme
-  ]
-
   return (
     <ForceFullSizeFrameContent>
       <FrameTemplate
         contents={
           <Monaco
-            id={props.frame.id}
+            bus={props.bus}
             enableMultiStatementMode={props.enableMultiStatementMode}
+            fontLigatures={props.codeFontLigatures}
+            id={props.frame.id}
             onChange={setText}
-            theme={theme}
             value={text}
           />
         }
@@ -81,8 +82,8 @@ const EditFrame = (props: EditFrameProps): JSX.Element => {
 }
 
 const mapStateToProps = (state: GlobalState) => ({
-  browserTheme: getTheme(state),
-  enableMultiStatementMode: shouldEnableMultiStatementMode(state)
+  enableMultiStatementMode: shouldEnableMultiStatementMode(state),
+  codeFontLigatures: codeFontLigatures(state)
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
@@ -91,4 +92,4 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
   }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditFrame)
+export default withBus(connect(mapStateToProps, mapDispatchToProps)(EditFrame))

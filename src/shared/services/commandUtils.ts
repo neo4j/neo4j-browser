@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { includes, last, split, startsWith } from 'lodash-es'
-import { extractStatements } from 'cypher-codemirror'
+import { extractStatements } from 'cypher-editor-support'
 
 export function cleanCommand(cmd: any) {
   const noComments = stripCommandComments(cmd)

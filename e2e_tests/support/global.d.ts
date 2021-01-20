@@ -64,8 +64,6 @@ declare global {
       getNextInFrameStackBtn(): Cypress.Chainable<JQuery<HTMLElement>>
       enableMultiStatement(): Cypress.Chainable<void>
       disableMultiStatement(): Cypress.Chainable<void>
-      disableEditorAutocomplete(): Cypress.Chainable<void>
-      enableEditorAutocomplete(): Cypress.Chainable<void>
     }
     interface Cypress {
       config(

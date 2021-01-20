@@ -169,55 +169,6 @@ describe('utils', () => {
       expect(utils.moveInArray(t.from, t.to, t.test)).toEqual(t.expect)
     })
   })
-  test('debounces function calls', () => {
-    // Given
-    jest.useFakeTimers()
-    const fn = jest.fn()
-    const fn2 = jest.fn()
-    const dbFn = utils.debounce(fn, 500)
-    const dbFn2 = utils.debounce(fn2, 500)
-
-    // When
-    dbFn(4, 5, 6)
-    dbFn(1, 2, 3)
-    jest.runAllTimers()
-    dbFn2(1, 2, 3)
-    jest.runAllTimers()
-    dbFn2(4, 5, 6)
-    jest.runAllTimers()
-
-    // Then
-    expect(fn).toHaveBeenCalledTimes(1)
-    expect(fn).toHaveBeenCalledWith(1, 2, 3)
-    expect(fn2).toHaveBeenCalledTimes(2)
-    expect(fn2).toHaveBeenCalledWith(1, 2, 3)
-    expect(fn2).toHaveBeenCalledWith(4, 5, 6)
-  })
-  test('debounce keeps context', () => {
-    // Given
-    jest.useFakeTimers()
-    const callMe = jest.fn()
-    function TestFn() {
-      // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      this.val = 'hello'
-      // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      this.fn = function(extVal: any) {
-        callMe(this.val, extVal)
-      }
-      // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      this.dbFn = utils.debounce(this.fn, 500, this)
-    }
-    // @ts-expect-error ts-migrate(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
-    const testFn = new TestFn()
-
-    // When
-    testFn.dbFn('there')
-    jest.runAllTimers()
-
-    // Then
-    expect(callMe).toHaveBeenCalledTimes(1)
-    expect(callMe).toHaveBeenCalledWith('hello', 'there')
-  })
   test('throttle limits the number of fn calls', () => {
     // Given
     jest.useFakeTimers()
