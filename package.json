@@ -1,6 +1,6 @@
 {
   "name": "neo4j-browser",
-  "version": "4.2.1",
+  "version": "4.2.2",
   "description": "Neo4j Browser is the general purpose user interface for working with Neo4j. Query, visualize, administrate and monitor the database.",
   "neo4jDesktop": {
     "apiVersion": "^1.4.0"
@@ -180,7 +180,7 @@
     "jszip": "^3.2.2",
     "lodash-es": "^4.17.15",
     "monaco-editor": "^0.20.0",
-    "neo4j-driver": "^4.1.0",
+    "neo4j-driver": "^4.2.2",
     "prop-types": "^15.7.2",
     "react": "^16.9.0",
     "react-dnd": "9.3.2",

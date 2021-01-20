@@ -45,7 +45,7 @@ export const inWebEnv = (state: any) => getEnv(state) === WEB
 export const inCloudEnv = (state: any) => getEnv(state) === CLOUD
 export const inWebBrowser = (state: any) => [WEB, CLOUD].includes(getEnv(state))
 export const getAllowedAuthSchemes = (state: any) =>
-  inCloudEnv(state) ? [] : [NATIVE, NO_AUTH]
+  inCloudEnv(state) ? [NATIVE] : [NATIVE, NO_AUTH]
 
 export const getAllowedBoltSchemes = (state: any, encryptionFlag?: any) => {
   if (inCloudEnv(state) /* Aura only allows neo4j+s */) {

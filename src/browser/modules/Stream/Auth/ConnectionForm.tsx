@@ -44,8 +44,7 @@ import ConnectedView from './ConnectedView'
 import ChangePasswordForm from './ChangePasswordForm'
 import {
   getAllowedAuthSchemes,
-  getAllowedBoltSchemes,
-  inCloudEnv
+  getAllowedBoltSchemes
 } from 'shared/modules/app/appDuck'
 import { FOCUS } from 'shared/modules/editor/editorDuck'
 import {
