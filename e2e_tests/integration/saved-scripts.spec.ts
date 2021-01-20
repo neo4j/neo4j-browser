@@ -41,8 +41,10 @@ describe('Saved Scripts', () => {
     cy.get('[data-testid="scriptTitle-script name"]').click()
     cy.get('[data-testid="currentlyEditing"]').contains('script name')
     // Editing script updates name and content
+    const clearInput =
+      Cypress.platform == 'darwin' ? '{cmd}a{del}' : '{ctrl}a{del}'
     cy.get('[data-testid="activeEditor"] textarea')
-      .type('{meta}a{del}') // select all and delete
+      .type(clearInput)
       .type('// Guide{shift}{enter}:play movies', { force: true })
     cy.get('[title="Update favorite"]').click()
 
