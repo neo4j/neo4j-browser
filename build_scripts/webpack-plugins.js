@@ -86,7 +86,8 @@ module.exports = () => {
     }),
     new ForkTsCheckerWebpackPlugin({
       eslint: {
-        files: './src/**/*.{ts,tsx,js,jsx}'
+        files: './src/**/*.{ts,tsx,js,jsx}',
+        enabled: helpers.isProduction // reloading becomes really slow when we have 5k+ warnings
       }
     }),
     new ForkTsCheckerNotifierWebpackPlugin({

@@ -21,7 +21,6 @@
 import { getCommandAndParam } from 'services/commandUtils'
 import * as connections from 'shared/modules/connections/connectionsDuck'
 import { add as addFrameAction } from 'shared/modules/stream/streamDuck'
-import { CONNECTION_ID as DISCOVERY_CONNECTION_ID } from 'shared/modules/discovery/discoveryDuck'
 import { UnknownCommandError, getErrorMessage } from 'services/exceptions'
 import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
 
@@ -29,10 +28,10 @@ export function handleServerCommand(action: any, put: any, store: any) {
   const [serverCmd, props] = getCommandAndParam(action.cmd.substr(1))
 
   if (serverCmd === 'connect') {
-    return connectToConnection(action, props, put, store)
+    return connect(action, put, store)
   }
   if (serverCmd === 'disconnect') {
-    return handleDisconnectCommand(action, put, store)
+    return handleDisconnectCommand(action, put)
   }
   if (serverCmd === 'user') {
     return handleUserCommand(action, props)
@@ -53,10 +52,9 @@ export function handleServerCommand(action: any, put: any, store: any) {
   }
 }
 
-function handleDisconnectCommand(action: any, put: any, store: any) {
+function handleDisconnectCommand(action: any, put: any) {
   put(addFrameAction({ ...action, type: 'disconnect' }))
-  const activeConnection = connections.getActiveConnection(store.getState())
-  const disconnectAction = connections.disconnectAction(activeConnection)
+  const disconnectAction = connections.disconnectAction()
   put(disconnectAction)
   return null
 }
@@ -74,13 +72,8 @@ function handleChangePasswordCommand(action: any) {
   return { ...action, type: 'change-password' }
 }
 
-function connectToConnection(action: any, name: any, _put: any, store: any) {
-  const state = store.getState()
-  const connectionName = name || DISCOVERY_CONNECTION_ID
-  const foundConnections = connections
-    .getConnections(state)
-    .filter(c => c && c.name === connectionName)
-  const connectionData = (foundConnections && foundConnections[0]) || {}
+function connect(action: any, _put: any, store: any) {
+  const connectionData = connections.getActiveConnectionData(store.getState())
   return { ...action, type: 'connection', connectionData }
 }
 

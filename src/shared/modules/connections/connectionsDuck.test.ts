@@ -140,7 +140,8 @@ describe('connectionsDucks Epics', () => {
           }
         },
         allConnectionIds: [CONNECTION_ID]
-      }
+      },
+      settings: {}
     })
   })
   afterEach(() => {
@@ -156,7 +157,7 @@ describe('connectionsDucks Epics', () => {
     epicMiddleware.replaceEpic(connections.disconnectEpic)
     store.dispatch(connections.setActiveConnection(id)) // set an active connection
     store.clearActions()
-    bus.take(connections.SET_ACTIVE, _currentAction => {
+    bus.take(connections.SET_ACTIVE, () => {
       // Then
       expect(store.getActions()).toEqual([
         action,
@@ -175,7 +176,7 @@ describe('connectionsDucks Epics', () => {
     }
     ;(bolt.openConnection as jest.Mock).mockReturnValueOnce(Promise.resolve())
 
-    const p = new Promise((resolve, reject) => {
+    const p = new Promise<void>((resolve, reject) => {
       bus.take(connections.STARTUP_CONNECTION_FAILED, currentAction => {
         // Then
         try {
@@ -260,7 +261,7 @@ describe('startupConnectEpic', () => {
     }
     ;(bolt.openConnection as jest.Mock).mockReturnValue(Promise.reject())
 
-    const p = new Promise((resolve, reject) => {
+    const p = new Promise<void>((resolve, reject) => {
       bus.take(connections.STARTUP_CONNECTION_FAILED, currentAction => {
         // Then
         const actions = store.getActions()
@@ -269,7 +270,7 @@ describe('startupConnectEpic', () => {
             action,
             connections.useDb(null),
             connections.setActiveConnection(null),
-            updateDiscoveryConnection({ username: '', password: '' }),
+            updateDiscoveryConnection({ password: '' }),
             currentAction
           ])
           expect(bolt.openConnection).toHaveBeenCalledTimes(1)
@@ -379,7 +380,7 @@ describe('switchConnectionEpic', () => {
     const connectionInfo = { id: CONNECTION_ID, ...action }
     ;(bolt.openConnection as jest.Mock).mockReturnValue(Promise.resolve())
 
-    const p = new Promise((resolve, reject) => {
+    const p = new Promise<void>((resolve, reject) => {
       bus.take(connections.SWITCH_CONNECTION_SUCCESS, currentAction => {
         // Then
         const actions = store.getActions()
@@ -420,7 +421,7 @@ describe('switchConnectionEpic', () => {
     const connectionInfo = { id: CONNECTION_ID, ...action }
     ;(bolt.openConnection as jest.Mock).mockReturnValue(Promise.reject())
 
-    const p = new Promise((resolve, reject) => {
+    const p = new Promise<void>((resolve, reject) => {
       bus.take(connections.SWITCH_CONNECTION_FAILED, currentAction => {
         // Then
         const actions = store.getActions()

@@ -54,6 +54,7 @@ import {
   isNonSupportedRoutingSchemeError
 } from 'services/boltscheme.utils'
 import { StyledConnectionBody } from './styled'
+import { CONNECTION_ID } from 'shared/modules/discovery/discoveryDuck'
 
 type ConnectionFormState = any
 
@@ -243,7 +244,8 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
     this.state.successCallback()
     this.props.bus && this.props.bus.send(FOCUS)
     this.saveCredentials()
-    this.props.setActiveConnection(this.state.id)
+    this.props.setActiveConnection(CONNECTION_ID)
+
     if (this.props.playImplicitInitCommands) {
       this.props.executeInitCmd()
     }
@@ -251,7 +253,7 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
 
   saveCredentials() {
     this.props.updateConnection({
-      id: this.state.id,
+      id: CONNECTION_ID,
       host: this.state.host,
       username: this.state.username,
       password: this.state.password,

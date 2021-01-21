@@ -33,7 +33,6 @@ import {
   getConnectionTimeout
 } from 'shared/modules/settings/settingsDuck'
 import { inWebEnv, USER_CLEAR, APP_START } from 'shared/modules/app/appDuck'
-import { GlobalState } from '../stream/streamDuck'
 
 export const NAME = 'connections'
 export const SET_ACTIVE = 'connections/SET_ACTIVE'
@@ -50,41 +49,54 @@ export const CONNECTION_SUCCESS = 'connections/CONNECTION_SUCCESS'
 export const DISCONNECTION_SUCCESS = 'connections/DISCONNECTION_SUCCESS'
 export const LOST_CONNECTION = 'connections/LOST_CONNECTION'
 export const UPDATE_CONNECTION_STATE = 'connections/UPDATE_CONNECTION_STATE'
-export const UPDATE_RETAIN_CREDENTIALS = `${NAME}/UPDATE_RETAIN_CREDENTIALS`
-export const UPDATE_AUTH_ENABLED = `${NAME}/UPDATE_AUTH_ENABLED`
-export const SWITCH_CONNECTION = `${NAME}/SWITCH_CONNECTION`
-export const SWITCH_CONNECTION_SUCCESS = `${NAME}/SWITCH_CONNECTION_SUCCESS`
-export const SWITCH_CONNECTION_FAILED = `${NAME}/SWITCH_CONNECTION_FAILED`
-export const INITIAL_SWITCH_CONNECTION_FAILED = `${NAME}/INITIAL_SWITCH_CONNECTION_FAILED`
-export const VERIFY_CREDENTIALS = `${NAME}/VERIFY_CREDENTIALS`
-export const USE_DB = `${NAME}/USE_DB`
+export const UPDATE_RETAIN_CREDENTIALS = `connections/UPDATE_RETAIN_CREDENTIALS`
+export const UPDATE_AUTH_ENABLED = `connections/UPDATE_AUTH_ENABLED`
+export const SWITCH_CONNECTION = `connections/SWITCH_CONNECTION`
+export const SWITCH_CONNECTION_SUCCESS = `connections/SWITCH_CONNECTION_SUCCESS`
+export const SWITCH_CONNECTION_FAILED = `connections/SWITCH_CONNECTION_FAILED`
+export const INITIAL_SWITCH_CONNECTION_FAILED = `connections/INITIAL_SWITCH_CONNECTION_FAILED`
+export const VERIFY_CREDENTIALS = `connections/VERIFY_CREDENTIALS`
+export const USE_DB = `connections/USE_DB`
 
 export const DISCONNECTED_STATE = 0
 export const CONNECTED_STATE = 1
 export const PENDING_STATE = 2
 export const CONNECTING_STATE = 3
 
+type ConnectionReduxState = {
+  allConnectionIds: string[]
+  connectionsById: Record<string, Connection>
+  activeConnection: string | null
+  connectionState: ConnectionState
+  lastUpdate: number
+  useDb: string | null
+}
 type ConnectionState =
   | typeof DISCONNECTED_STATE
   | typeof CONNECTED_STATE
   | typeof PENDING_STATE
   | typeof CONNECTING_STATE
 
-interface ConnectionsState {
-  allConnectionIds: string[]
-  connectionsById: {}
-  activeConnection: null | string
-  connectionState: ConnectionState
-  lastUpdate: number
-  useDb: null | string
+export type AuthenticationMethod = typeof NATIVE | typeof NO_AUTH
+const onlyValidConnId = '$$discovery'
+// we only use one connection, but can't update the redux state
+// to match that fact until we've merged proper single sign on
+// and sandbox can use that instead of their fork
+export type Connection = {
+  username: string
+  password: string
+  id: typeof onlyValidConnId
+  db: string | null
+  host: string | null
+  authEnabled: boolean
+  authenticationMethod: AuthenticationMethod
+  requestedUseDb?: string
+  restApi?: string
 }
 
-/* 
-Architectural note. Browser was originally meant to keep multiple connections 
-at the same time. However that's not been put into practise. Therefore
-this duck is more complicated than it needs to be.
-*/
-const initialState: ConnectionsState = {
+type GlobalState = { [NAME]: ConnectionReduxState }
+
+const initialState: ConnectionReduxState = {
   allConnectionIds: [],
   connectionsById: {},
   activeConnection: null,
@@ -92,25 +104,13 @@ const initialState: ConnectionsState = {
   lastUpdate: 0,
   useDb: null
 }
-export interface Connection {
-  id: string
-  name: string
-  db: string
-  host: string
-  username: string
-  password: string
-  authenticationMethod: AuthenticationMethod
-  authEnabled: boolean
-  requestedUseDb?: string
-  restApi?: string
-}
-
-export type AuthenticationMethod = typeof NATIVE | typeof NO_AUTH
-
 /**
  * Selectors
  */
-export function getConnection(state: any, id: string): Connection | null {
+export function getConnection(
+  state: GlobalState,
+  id: string
+): Connection | null {
   return (
     getConnections(state).find(
       connection => connection && connection.id === id
@@ -118,98 +118,99 @@ export function getConnection(state: any, id: string): Connection | null {
   )
 }
 
-export function getUseDb(state: GlobalState) {
-  return ((state[NAME] as ConnectionsState) || {}).useDb
+export function getUseDb(state: GlobalState): string | null {
+  return (state[NAME] || {}).useDb
 }
 
-export function getConnections(state: any): any[] {
+export function getConnections(state: GlobalState): Connection[] {
   return Object.values(state[NAME].connectionsById)
 }
 
-export function getConnectionState(state: any) {
+export function getConnectionState(state: GlobalState): ConnectionState {
   return state[NAME].connectionState || initialState.connectionState
 }
 
-export function getLastConnectionUpdate(state: any) {
+export function getLastConnectionUpdate(state: GlobalState): number {
   return state[NAME].lastUpdate || initialState.lastUpdate
 }
 
-export function isConnected(state: any) {
+export function isConnected(state: GlobalState): boolean {
   return getConnectionState(state) === CONNECTED_STATE
 }
 
-export function getActiveConnection(state: any): string {
+export function getActiveConnection(state: GlobalState): string | null {
   return state[NAME].activeConnection || initialState.activeConnection
 }
 
-export function getActiveConnectionData(state: any): Connection | null {
+export function getActiveConnectionData(state: GlobalState): Connection | null {
   if (!state[NAME].activeConnection) return null
   return getConnectionData(state, state[NAME].activeConnection)
 }
 
-export function getAuthEnabled(state: any) {
-  if (!state[NAME].activeConnection) return null
+export function getAuthEnabled(state: GlobalState): boolean {
   const data = getConnectionData(state, state[NAME].activeConnection)
-  return data.authEnabled
+  return data?.authEnabled ?? false
 }
 
-export function getConnectionData(state: any, id: any) {
-  if (typeof state[NAME].connectionsById[id] === 'undefined') return null
+export function getConnectionData(
+  state: GlobalState,
+  id: string | null
+): Connection | null {
+  if (!id) return null
+
   const data = state[NAME].connectionsById[id]
+  if (typeof data === 'undefined') return null
+
   data.db = getUseDb(state)
-  if (data.username && data.password) return data
-  if (!(data.username && data.password) && memoryUsername && memoryPassword) {
+
+  if (data.username && data.password) {
+    return data
+  } else if (memoryUsername && memoryPassword) {
     // No retain state
     return { ...data, username: memoryUsername, password: memoryPassword }
   }
+
   return data
 }
 
-const addConnectionHelper = (state: any, obj: any) => {
-  const connectionsById = { ...state.connectionsById, [obj.id]: obj }
-  let allConnectionIds = state.allConnectionIds
-  if (state.allConnectionIds.indexOf(obj.id) < 0) {
-    allConnectionIds = state.allConnectionIds.concat([obj.id])
-  }
+const removeConnectionHelper = (
+  state: ConnectionReduxState
+): ConnectionReduxState => {
+  // Since we only have one connection
+  // deleting on is the same as deleting them all
+  //We can only have
+
   return {
     ...state,
-    allConnectionIds,
-    connectionsById
+    allConnectionIds: [],
+    connectionsById: {}
   }
 }
 
-const removeConnectionHelper = (state: any, connectionId: any) => {
-  const connectionsById = { ...state.connectionsById }
-  const allConnectionIds = state.allConnectionIds
-  const index = allConnectionIds.indexOf(connectionId)
-  if (index > 0) {
-    allConnectionIds.splice(index, 1)
-    delete connectionsById[connectionId]
-  }
-  return {
-    ...state,
-    allConnectionIds,
-    connectionsById
-  }
-}
-
-const mergeConnectionHelper = (state: any, connection: any) => {
-  const { connectionsById, allConnectionIds } = state
-  const { id } = connection
+const mergeConnectionHelper = (
+  state: ConnectionReduxState,
+  connection: Connection
+): ConnectionReduxState => {
+  const { connectionsById } = state
+  const currentConnection = connectionsById[onlyValidConnId]
+  // Only valid connection we keep now is $$discovery so all
+  // merges must result in this state
   return {
     ...state,
     connectionsById: {
-      ...connectionsById,
-      [id]: { ...connectionsById[id], ...connection }
+      $$discovery: { ...currentConnection, ...connection, id: onlyValidConnId }
     },
-    allConnectionIds: allConnectionIds.includes(id)
-      ? allConnectionIds
-      : [...allConnectionIds, id]
+    allConnectionIds: [onlyValidConnId]
   }
 }
 
-const updateAuthEnabledHelper = (state: any, authEnabled: any) => {
+const updateAuthEnabledHelper = (
+  state: ConnectionReduxState,
+  authEnabled: boolean
+): ConnectionReduxState => {
   const connectionId = state.activeConnection
+  if (!connectionId) return state // no connection to update
+
   const updatedConnection = {
     ...state.connectionsById[connectionId],
     authEnabled
@@ -257,11 +258,12 @@ export default function(state = initialState, action: any) {
     case CONNECT:
       return {
         ...state,
+        activeConnection: onlyValidConnId,
         connectionState: CONNECTING_STATE,
         lastUpdate: Date.now()
       }
     case REMOVE:
-      return removeConnectionHelper(state, action.connectionId)
+      return removeConnectionHelper(state)
     case MERGE:
       return mergeConnectionHelper(state, action.connection)
     case UPDATE_CONNECTION_STATE:
@@ -303,7 +305,7 @@ export const updateConnection = (connection: any) => {
   }
 }
 
-export const disconnectAction = (id = discovery.CONNECTION_ID) => {
+export const disconnectAction = (id: string = discovery.CONNECTION_ID) => {
   return {
     type: DISCONNECT,
     id
@@ -358,13 +360,13 @@ export const useDbEpic = (action$: any) => {
     })
 }
 
-export const connectEpic = (action$: any, store: any) => {
-  return action$.ofType(CONNECT).mergeMap(async (action: any) => {
+export const connectEpic = (action$: any, store: any) =>
+  action$.ofType(CONNECT).mergeMap(async (action: any) => {
     if (!action.$$responseChannel) return Rx.Observable.of(null)
     memoryUsername = ''
     memoryPassword = ''
     bolt.closeConnection()
-    await new Promise(resolve => setTimeout(() => resolve(), 2000))
+    await new Promise<void>(resolve => setTimeout(() => resolve(), 2000))
     return bolt
       .openConnection(action, {
         connectionTimeout: getConnectionTimeout(store.getState())
@@ -394,7 +396,6 @@ export const connectEpic = (action$: any, store: any) => {
         }
       })
   })
-}
 
 export const verifyConnectionCredentialsEpic = (action$: any) => {
   return action$.ofType(VERIFY_CREDENTIALS).mergeMap((action: any) => {
@@ -411,51 +412,95 @@ export const verifyConnectionCredentialsEpic = (action$: any) => {
   })
 }
 
+type DiscoverDataAction = {
+  type: typeof discovery.DONE
+  discovered?: {
+    username?: string
+    requestedUseDb?: string
+    restApi?: string
+    supportsMultiDb?: string
+    host?: string
+    encrypted?: string
+    hasForceUrl?: boolean
+  }
+}
+
+function shouldTryAutoconnecting(conn: Connection | null): boolean {
+  return Boolean(
+    conn &&
+      conn.authenticationMethod !== NO_AUTH &&
+      conn.host &&
+      conn.username &&
+      conn.password
+  )
+}
+
 export const startupConnectEpic = (action$: any, store: any) => {
   return action$
     .ofType(discovery.DONE)
-    .do(() => store.dispatch(useDb(null))) // reset db to use
-    .mergeMap(() => {
-      const connection = getConnection(
+    .do(() => store.dispatch(useDb(null)))
+    .mergeMap(async ({ discovered }: DiscoverDataAction) => {
+      const connectionTimeout = getConnectionTimeout(store.getState())
+      const savedConnection = getConnection(
         store.getState(),
         discovery.CONNECTION_ID
       )
 
-      // No creds stored, fail auto-connect
       if (
-        !connection ||
-        connection.authenticationMethod === NO_AUTH ||
-        !(connection.host && connection.username && connection.password)
+        !(discovered && discovered.hasForceUrl) && // If we have force url, don't try old connection data
+        shouldTryAutoconnecting(savedConnection)
       ) {
-        store.dispatch(setActiveConnection(null))
-        store.dispatch(discovery.updateDiscoveryConnection({ password: '' }))
-        return Promise.resolve({ type: STARTUP_CONNECTION_FAILED })
-      }
-      return new Promise(resolve => {
-        // Try to connect with stored creds
-        bolt
-          .openConnection(
-            connection,
-            {
-              connectionTimeout: getConnectionTimeout(store.getState())
-            },
+        try {
+          await bolt.openConnection(
+            savedConnection,
+            { connectionTimeout },
             onLostConnection(store.dispatch)
           )
-          .then(() => {
-            store.dispatch(setActiveConnection(discovery.CONNECTION_ID))
-            resolve({ type: STARTUP_CONNECTION_SUCCESS })
-          })
-          .catch(() => {
-            store.dispatch(setActiveConnection(null))
-            store.dispatch(
-              discovery.updateDiscoveryConnection({
-                username: '',
-                password: ''
+          store.dispatch(setActiveConnection(discovery.CONNECTION_ID))
+          return { type: STARTUP_CONNECTION_SUCCESS }
+        } catch {}
+      }
+
+      // merge with discovery data if we have any and try again
+      if (discovered) {
+        store.dispatch(discovery.updateDiscoveryConnection(discovered))
+        const connUpdatedWithDiscovery = getConnection(
+          store.getState(),
+          discovery.CONNECTION_ID
+        )
+
+        if (shouldTryAutoconnecting(connUpdatedWithDiscovery)) {
+          // Try connecting
+          return new Promise(resolve => {
+            // Try to connect with stored creds
+            bolt
+              .openConnection(
+                connUpdatedWithDiscovery,
+                { connectionTimeout },
+                onLostConnection(store.dispatch)
+              )
+              .then(() => {
+                store.dispatch(setActiveConnection(discovery.CONNECTION_ID))
+                resolve({ type: STARTUP_CONNECTION_SUCCESS })
               })
-            )
-            resolve({ type: STARTUP_CONNECTION_FAILED })
+              .catch(() => {
+                store.dispatch(setActiveConnection(null))
+                store.dispatch(
+                  discovery.updateDiscoveryConnection({
+                    username: '',
+                    password: ''
+                  })
+                )
+                resolve({ type: STARTUP_CONNECTION_FAILED })
+              })
           })
-      })
+        }
+      }
+
+      // Otherwise fail autoconnect
+      store.dispatch(setActiveConnection(null))
+      store.dispatch(discovery.updateDiscoveryConnection({ password: '' }))
+      return Promise.resolve({ type: STARTUP_CONNECTION_FAILED })
     })
 }
 
@@ -481,7 +526,7 @@ export const startupConnectionFailEpic = (action$: any, store: any) => {
     .mapTo({ type: 'NOOP' })
 }
 
-let lastActiveConnectionId: any = null
+let lastActiveConnectionId: string | null = null
 export const detectActiveConnectionChangeEpic = (action$: any) => {
   return action$.ofType(SET_ACTIVE).mergeMap((action: any) => {
     if (lastActiveConnectionId === action.connectionId) {
@@ -522,6 +567,7 @@ export const disconnectSuccessEpic = (action$: any) => {
     .ofType(DISCONNECTION_SUCCESS)
     .mapTo(executeSystemCommand(':server connect'))
 }
+
 export const connectionLostEpic = (action$: any, store: any) =>
   action$
     .ofType(LOST_CONNECTION)
@@ -673,6 +719,7 @@ export const retainCredentialsSettingsEpic = (action$: any, store: any) => {
 
       if (
         !action.shouldRetain &&
+        connection &&
         (connection.username || connection.password)
       ) {
         memoryUsername = connection.username
@@ -681,7 +728,12 @@ export const retainCredentialsSettingsEpic = (action$: any, store: any) => {
         connection.password = ''
         return store.dispatch(updateConnection(connection))
       }
-      if (action.shouldRetain && memoryUsername && memoryPassword) {
+      if (
+        action.shouldRetain &&
+        memoryUsername &&
+        memoryPassword &&
+        connection
+      ) {
         connection.username = memoryUsername
         connection.password = memoryPassword
         memoryUsername = ''
