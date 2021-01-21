@@ -223,7 +223,7 @@ Third-party licenses
 │  ├─ long@4.0.0
 │  │  ├─ URL: https://github.com/dcodeIO/long.js.git
 │  │  └─ VendorName: Daniel Wirtz
-│  ├─ neo4j-driver@4.1.2
+│  ├─ neo4j-driver@4.2.2
 │  │  ├─ URL: git://github.com/neo4j/neo4j-javascript-driver.git
 │  │  └─ VendorName: Neo4j
 │  ├─ oauth-sign@0.9.0
@@ -280,6 +280,10 @@ Third-party licenses
 │  │  ├─ VendorName: Mihai Bazon
 │  │  └─ VendorUrl: https://terser.org/
 │  ├─ uri-js@4.4.0
+│  │  ├─ URL: http://github.com/garycourt/uri-js
+│  │  ├─ VendorName: Gary Court
+│  │  └─ VendorUrl: https://github.com/garycourt/uri-js
+│  ├─ uri-js@4.4.1
 │  │  ├─ URL: http://github.com/garycourt/uri-js
 │  │  ├─ VendorName: Gary Court
 │  │  └─ VendorUrl: https://github.com/garycourt/uri-js
