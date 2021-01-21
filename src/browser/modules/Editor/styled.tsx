@@ -28,7 +28,6 @@ export const Header = styled.div`
   background-color: ${(props): string => props.theme.frameSidebarBackground};
   flex-grow: 1;
   min-width: 0; // Without the min width, the editor doesn't shrink on resize in safari
-
   display: flex;
 `
 

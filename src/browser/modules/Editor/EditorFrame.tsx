@@ -127,8 +127,7 @@ export function EditorFrame({
   const editorRef = useRef<MonacoHandles>(null)
 
   const toggleFullscreen = useCallback(() => {
-    setFullscreen(!isFullscreen)
-    editorRef.current?.resize(!isFullscreen)
+    updateFullscreen(!isFullscreen)
   }, [isFullscreen])
 
   const updateFullscreen = (fullScreen: boolean) => {

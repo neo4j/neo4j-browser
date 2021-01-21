@@ -183,12 +183,6 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
         '!suggestWidgetVisible'
       )
       editorRef.current.addCommand(KeyMod.Shift | KeyCode.Enter, newLine)
-      editorRef.current.addCommand(
-        KeyMod.CtrlCmd | KeyCode.US_DOT,
-        onDisplayHelpKeys
-      )
-      editorRef.current.addCommand(KeyMod.CtrlCmd | KeyCode.Enter, execute)
-      editorRef.current.addCommand(KeyMod.WinCtrl | KeyCode.Enter, execute)
       editorRef.current.addCommand(KeyMod.CtrlCmd | KeyCode.Enter, execute)
       editorRef.current.addCommand(KeyMod.WinCtrl | KeyCode.Enter, execute)
       editorRef.current.addCommand(
@@ -198,10 +192,6 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       editorRef.current.addCommand(
         KeyMod.CtrlCmd | KeyCode.DownArrow,
         viewHistoryNext
-      )
-      editorRef.current.addCommand(
-        KeyMod.CtrlCmd | KeyCode.US_SLASH,
-        onDisplayHelpKeys
       )
       editorRef.current.addCommand(
         KeyMod.CtrlCmd | KeyCode.US_DOT,
