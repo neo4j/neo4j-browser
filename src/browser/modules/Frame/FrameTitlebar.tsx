@@ -248,7 +248,6 @@ function FrameTitlebar(props: FrameTitleBarProps) {
               enableMultiStatementMode={true}
               id={`editor-${frame.id}`}
               bus={props.bus}
-              theme={'normal'}
               onChange={setEditorValue}
               onExecute={run}
               value={editorValue}

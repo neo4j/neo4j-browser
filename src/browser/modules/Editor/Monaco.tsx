@@ -39,7 +39,6 @@ import { Bus } from 'suber'
 
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import { HistoryState } from 'shared/modules/history/historyDuck'
 
 const shouldCheckForHints = (code: any) =>
   code.trim().length > 0 &&
@@ -74,12 +73,12 @@ interface MonacoProps {
   bus: Bus
   enableMultiStatementMode?: boolean
   fontLigatures?: boolean
-  history?: HistoryState
+  history?: string[]
   id: string
   value?: string
   onChange?: (value: string) => void
   onDisplayHelpKeys?: () => void
-  onExecute?: () => void
+  onExecute?: (value: string) => void
   useDb?: null | string
   toggleFullscreen?: () => void
 }
@@ -96,7 +95,8 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       onChange = () => undefined,
       onDisplayHelpKeys = () => undefined,
       onExecute = () => undefined,
-      useDb
+      useDb,
+      toggleFullscreen
     }: MonacoProps,
     ref
   ): JSX.Element => {
@@ -115,6 +115,9 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       },
       resize(fillContainer = false) {
         resize(fillContainer)
+      },
+      setPosition(pos: { lineNumber: number; column: number }) {
+        editorRef.current?.setPosition(pos)
       }
     }))
 
@@ -227,7 +230,6 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
 
       return () => {
         editorRef.current?.dispose()
-        langSupportDisposable.dispose()
         debouncedUpdateCode.cancel()
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps

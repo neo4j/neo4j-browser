@@ -84,14 +84,14 @@ import {
   shouldEnableMultiStatementMode
 } from 'shared/modules/settings/settingsDuck'
 import { getUseDb } from 'shared/modules/connections/connectionsDuck'
-import { getHistory, HistoryState } from 'shared/modules/history/historyDuck'
+import { getHistory } from 'shared/modules/history/historyDuck'
 
 type EditorFrameProps = {
   bus: Bus
   codeFontLigatures: boolean
   enableMultiStatementMode: boolean
   executeCommand: (cmd: string, source: string) => void
-  history: HistoryState
+  history: string[]
   projectId: string
   theme: { linkHover: string }
   updateFavorite: (id: string, value: string) => void
@@ -127,12 +127,8 @@ export function EditorFrame({
   const editorRef = useRef<MonacoHandles>(null)
 
   const toggleFullscreen = useCallback(() => {
-<<<<<<< HEAD
-    updateFullscreen(!isFullscreen)
-=======
     setFullscreen(!isFullscreen)
     editorRef.current?.resize(!isFullscreen)
->>>>>>> Self review
   }, [isFullscreen])
 
   const updateFullscreen = (fullScreen: boolean) => {
