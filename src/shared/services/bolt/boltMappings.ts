@@ -194,11 +194,14 @@ export function extractNodesAndRelationshipsFromRecordsForOldVis(
   })
   let relationships = rawRels
   if (filterRels) {
-    relationships = rawRels.filter(
-      item =>
-        nodes.filter(node => node.id === item.start.toString()).length > 0 &&
-        nodes.filter(node => node.id === item.end.toString()).length > 0
-    )
+    relationships = rawRels.filter(item => {
+      const start = item.start.toString()
+      const end = item.end.toString()
+      return (
+        nodes.filter(node => node.id === start).length > 0 &&
+        nodes.filter(node => node.id === end).length > 0
+      )
+    })
   }
   relationships = relationships.map(item => {
     return {
