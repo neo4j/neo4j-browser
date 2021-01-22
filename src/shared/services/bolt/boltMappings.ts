@@ -198,8 +198,8 @@ export function extractNodesAndRelationshipsFromRecordsForOldVis(
       const start = item.start.toString()
       const end = item.end.toString()
       return (
-        nodes.filter(node => node.id === start).length > 0 &&
-        nodes.filter(node => node.id === end).length > 0
+        nodes.some(node => node.id === start) &&
+        nodes.some(node => node.id === end)
       )
     })
   }
