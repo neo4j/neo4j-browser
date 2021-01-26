@@ -23,8 +23,8 @@ import { flatten, map, take } from 'lodash-es'
 import neo4j from 'neo4j-driver'
 import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 import {
-  safetlyRemoveObjectProp,
-  safetlyAddObjectProp,
+  safelyRemoveObjectProp,
+  safelyAddObjectProp,
   escapeReservedProps,
   unEscapeReservedProps
 } from '../utils'
@@ -346,7 +346,7 @@ export const applyGraphTypes = (rawItem: any, types = neo4j.types): any => {
   ) {
     const item = { ...rawItem }
     const className = item[reservedTypePropertyName]
-    const tmpItem = safetlyRemoveObjectProp(item, reservedTypePropertyName)
+    const tmpItem = safelyRemoveObjectProp(item, reservedTypePropertyName)
     switch (className) {
       case 'Node':
         return new types[className](
@@ -463,62 +463,62 @@ export const recursivelyTypeGraphItems = (
   }
   if (item instanceof types.Node) {
     const tmp = copyAndType(item, types)
-    safetlyAddObjectProp(tmp, reservedTypePropertyName, 'Node')
+    safelyAddObjectProp(tmp, reservedTypePropertyName, 'Node')
     return tmp
   }
   if (item instanceof types.PathSegment) {
     const tmp = copyAndType(item, types)
-    safetlyAddObjectProp(tmp, reservedTypePropertyName, 'PathSegment')
+    safelyAddObjectProp(tmp, reservedTypePropertyName, 'PathSegment')
     return tmp
   }
   if (item instanceof types.Path) {
     const tmp = copyAndType(item, types)
-    safetlyAddObjectProp(tmp, reservedTypePropertyName, 'Path')
+    safelyAddObjectProp(tmp, reservedTypePropertyName, 'Path')
     return tmp
   }
   if (item instanceof types.Relationship) {
     const tmp = copyAndType(item, types)
-    safetlyAddObjectProp(tmp, reservedTypePropertyName, 'Relationship')
+    safelyAddObjectProp(tmp, reservedTypePropertyName, 'Relationship')
     return tmp
   }
   if (item instanceof types.Point) {
     const tmp = copyAndType(item, types)
-    safetlyAddObjectProp(tmp, reservedTypePropertyName, 'Point')
+    safelyAddObjectProp(tmp, reservedTypePropertyName, 'Point')
     return tmp
   }
   if (item instanceof types.Date) {
     const tmp = copyAndType(item, types)
-    safetlyAddObjectProp(tmp, reservedTypePropertyName, 'Date')
+    safelyAddObjectProp(tmp, reservedTypePropertyName, 'Date')
     return tmp
   }
   if (item instanceof types.DateTime) {
     const tmp = copyAndType(item, types)
-    safetlyAddObjectProp(tmp, reservedTypePropertyName, 'DateTime')
+    safelyAddObjectProp(tmp, reservedTypePropertyName, 'DateTime')
     return tmp
   }
   if (item instanceof types.Duration) {
     const tmp = copyAndType(item, types)
-    safetlyAddObjectProp(tmp, reservedTypePropertyName, 'Duration')
+    safelyAddObjectProp(tmp, reservedTypePropertyName, 'Duration')
     return tmp
   }
   if (item instanceof types.LocalDateTime) {
     const tmp = copyAndType(item, types)
-    safetlyAddObjectProp(tmp, reservedTypePropertyName, 'LocalDateTime')
+    safelyAddObjectProp(tmp, reservedTypePropertyName, 'LocalDateTime')
     return tmp
   }
   if (item instanceof types.LocalTime) {
     const tmp = copyAndType(item, types)
-    safetlyAddObjectProp(tmp, reservedTypePropertyName, 'LocalTime')
+    safelyAddObjectProp(tmp, reservedTypePropertyName, 'LocalTime')
     return tmp
   }
   if (item instanceof types.Time) {
     const tmp = copyAndType(item, types)
-    safetlyAddObjectProp(tmp, reservedTypePropertyName, 'Time')
+    safelyAddObjectProp(tmp, reservedTypePropertyName, 'Time')
     return tmp
   }
   if (neo4j.isInt(item)) {
     const tmp = { ...item }
-    safetlyAddObjectProp(tmp, reservedTypePropertyName, 'Integer')
+    safelyAddObjectProp(tmp, reservedTypePropertyName, 'Integer')
     return tmp
   }
   if (typeof item === 'object') {

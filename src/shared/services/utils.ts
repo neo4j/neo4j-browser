@@ -396,13 +396,13 @@ export const stringifyMod = (
 export const unescapeDoubleQuotesForDisplay = (str: any) =>
   str.replace(/\\"/g, '"')
 
-export const safetlyAddObjectProp = (obj: any, prop: any, val: any): any => {
+export const safelyAddObjectProp = (obj: any, prop: any, val: any): any => {
   const localObj = escapeReservedProps(obj, prop)
   localObj[prop] = val
   return localObj
 }
 
-export const safetlyRemoveObjectProp = (obj: any, prop: any) => {
+export const safelyRemoveObjectProp = (obj: any, prop: any) => {
   if (!hasReservedProp(obj, prop)) {
     return obj
   }
@@ -414,7 +414,7 @@ export const escapeReservedProps = (obj: any, prop: any) => {
   if (!hasReservedProp(obj, prop)) {
     return obj
   }
-  const localObj = safetlyAddObjectProp(
+  const localObj = safelyAddObjectProp(
     obj,
     getEscapedObjectProp(prop),
     obj[prop]

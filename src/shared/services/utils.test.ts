@@ -559,34 +559,34 @@ describe('Object props manipulation', () => {
   const res1 = { x: 1, y: 2, z: { zz: 1 } }
   const res2 = { '\\x': 1, x: 2 }
   const res3 = { x: 4, '\\x': 1, '\\\\x': 2, '\\\\\\x': 3 }
-  test('safetlyAddObjectProp adds prop if no collision', () => {
+  test('safelyAddObjectProp adds prop if no collision', () => {
     const orig = { ...start1 }
-    const res = utils.safetlyAddObjectProp(orig, 'y', 2)
+    const res = utils.safelyAddObjectProp(orig, 'y', 2)
     expect(res).toEqual({ ...res1 })
   })
-  test('safetlyAddObjectProp escapes existing props if collision', () => {
+  test('safelyAddObjectProp escapes existing props if collision', () => {
     const orig = { ...start2 }
-    const res = utils.safetlyAddObjectProp(orig, 'x', 2)
+    const res = utils.safelyAddObjectProp(orig, 'x', 2)
     expect(res).toEqual({ ...res2 })
   })
-  test('safetlyAddObjectProp escapes existing props if collision chain', () => {
+  test('safelyAddObjectProp escapes existing props if collision chain', () => {
     const orig = { ...start3 }
-    const res = utils.safetlyAddObjectProp(orig, 'x', 4)
+    const res = utils.safelyAddObjectProp(orig, 'x', 4)
     expect(res).toEqual({ ...res3 })
   })
-  test('safetlyRemoveObjectProp removes when no escapes', () => {
+  test('safelyRemoveObjectProp removes when no escapes', () => {
     const orig = { ...res1 }
-    const res = utils.safetlyRemoveObjectProp(orig, 'y')
+    const res = utils.safelyRemoveObjectProp(orig, 'y')
     expect(res).toEqual({ ...start1 })
   })
-  test('safetlyRemoveObjectProp removes when one escape', () => {
+  test('safelyRemoveObjectProp removes when one escape', () => {
     const orig = { ...res2 }
-    const res = utils.safetlyRemoveObjectProp(orig, 'x')
+    const res = utils.safelyRemoveObjectProp(orig, 'x')
     expect(res).toEqual({ ...start2 })
   })
-  test('safetlyRemoveObjectProp removes when chained escapes', () => {
+  test('safelyRemoveObjectProp removes when chained escapes', () => {
     const orig = { ...res3 }
-    const res = utils.safetlyRemoveObjectProp(orig, 'x')
+    const res = utils.safelyRemoveObjectProp(orig, 'x')
     expect(res).toEqual({ ...start3 })
   })
   describe('escaping reserved props', () => {
