@@ -18,28 +18,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import neo4j from 'neo4j-driver'
+import neo4j, { Session } from 'neo4j-driver'
 import { v4 } from 'uuid'
 import { getGlobalDrivers } from './globalDrivers'
 import { buildTxFunctionByMode } from './boltHelpers'
 import { BoltConnectionError, createErrorObject } from '../exceptions'
 
-const runningQueryRegister: any = {}
+const runningQueryRegister: Record<string, (cb?: () => void) => void> = {}
 
 function _trackedTransaction(
-  input: any,
+  input: string,
   parameters = {},
-  session: any,
+  session?: Session,
   requestId = null,
   txMetadata = undefined,
   autoCommit = false
-) {
+): [string, Promise<unknown>] {
   const id = requestId || v4()
   if (!session) {
     return [id, Promise.reject(createErrorObject(BoltConnectionError))]
   }
-  const closeFn = (cb = () => {}) => {
-    session.close(cb)
+  const closeFn = (cb = (): void => undefined): void => {
+    ;(session.close as any)(cb)
     if (runningQueryRegister[id]) delete runningQueryRegister[id]
   }
   runningQueryRegister[id] = closeFn
@@ -55,19 +55,27 @@ function _trackedTransaction(
   if (!autoCommit) {
     const txFn = buildTxFunctionByMode(session)
     // Use same fn signature as session.run
-    runFn = (input: any, parameters: any, metadata: any) =>
-      txFn((tx: any) => tx.run(input, parameters), metadata)
+    runFn = (
+      input: string,
+      parameters: unknown,
+      metadata: unknown
+    ): Promise<unknown> =>
+      txFn!(
+        (tx: { run: (input: string, parameters: unknown) => unknown }) =>
+          tx.run(input, parameters),
+        metadata
+      )
   } else {
     // Auto-Commit transaction, only used for PERIODIC COMMIT etc.
     runFn = session.run.bind(session)
   }
 
   const queryPromise = runFn(input, parameters, metadata)
-    .then((result: any) => {
+    .then((result: unknown) => {
       closeFn()
       return result
     })
-    .catch((e: any) => {
+    .catch((e: Error) => {
       closeFn()
       throw e
     })
@@ -75,11 +83,11 @@ function _trackedTransaction(
 }
 
 function _transaction(
-  input: any,
-  parameters: any,
+  input: string,
+  parameters: unknown,
   session: any,
   txMetadata = undefined
-) {
+): Promise<unknown> {
   if (!session) return Promise.reject(createErrorObject(BoltConnectionError))
 
   const metadata = txMetadata ? { metadata: txMetadata } : undefined
@@ -96,13 +104,17 @@ function _transaction(
     })
 }
 
-export function cancelTransaction(id: any, cb: any) {
+export function cancelTransaction(id: string, cb: any): void {
   if (runningQueryRegister[id]) {
     runningQueryRegister[id](cb)
   }
 }
 
-export function directTransaction(input: any, parameters: any, opts: any = {}) {
+export function directTransaction(
+  input: string,
+  parameters: any,
+  opts: any = {}
+): Promise<any> | any[] {
   const {
     requestId = null,
     cancelable = false,
@@ -110,19 +122,17 @@ export function directTransaction(input: any, parameters: any, opts: any = {}) {
     useDb = undefined
   } = opts
   const session = getGlobalDrivers()
-    ? getGlobalDrivers()
-        .getDirectDriver()
-        .session({ defaultAccessMode: neo4j.session.WRITE, database: useDb })
-    : false
+    ?.getDirectDriver()
+    ?.session({ defaultAccessMode: neo4j.session.WRITE, database: useDb })
   if (!cancelable) return _transaction(input, parameters, session, txMetadata)
   return _trackedTransaction(input, parameters, session, requestId, txMetadata)
 }
 
 export function routedReadTransaction(
-  input: any,
+  input: string,
   parameters: any,
   opts: any = {}
-) {
+): Promise<any> | any[] {
   const {
     requestId = null,
     cancelable = false,
@@ -130,19 +140,17 @@ export function routedReadTransaction(
     useDb = undefined
   } = opts
   const session = getGlobalDrivers()
-    ? getGlobalDrivers()
-        .getRoutedDriver()
-        .session({ defaultAccessMode: neo4j.session.READ, database: useDb })
-    : false
+    ?.getRoutedDriver()
+    ?.session({ defaultAccessMode: neo4j.session.READ, database: useDb })
   if (!cancelable) return _transaction(input, parameters, session, txMetadata)
   return _trackedTransaction(input, parameters, session, requestId, txMetadata)
 }
 
 export function routedWriteTransaction(
-  input: any,
+  input: string,
   parameters: any,
   opts: any = {}
-) {
+): Promise<any> | any[] {
   const {
     requestId = null,
     cancelable = false,
@@ -151,10 +159,8 @@ export function routedWriteTransaction(
     autoCommit = false
   } = opts
   const session = getGlobalDrivers()
-    ? getGlobalDrivers()
-        .getRoutedDriver()
-        .session({ defaultAccessMode: neo4j.session.WRITE, database: useDb })
-    : false
+    ?.getRoutedDriver()
+    ?.session({ defaultAccessMode: neo4j.session.WRITE, database: useDb })
   if (!cancelable) return _transaction(input, parameters, session, txMetadata)
   return _trackedTransaction(
     input,

@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import neo4j from 'neo4j-driver'
+import neo4j, { Driver } from 'neo4j-driver'
 import { buildTxFunctionByMode } from 'services/bolt/boltHelpers'
 import { createDriverOrFailFn } from './driverFactory'
 import {
@@ -33,11 +33,12 @@ export const DIRECT_CONNECTION = 'DIRECT_CONNECTION'
 export const ROUTED_WRITE_CONNECTION = 'ROUTED_WRITE_CONNECTION'
 export const ROUTED_READ_CONNECTION = 'ROUTED_READ_CONNECTION'
 
-export const hasMultiDbSupport = async () => {
+export const hasMultiDbSupport = async (): Promise<boolean> => {
   if (!getGlobalDrivers()) {
     return false
   }
-  const tmpDriver = getGlobalDrivers().getRoutedDriver()
+  const drivers = getGlobalDrivers()
+  const tmpDriver = drivers && drivers.getRoutedDriver()
   if (!tmpDriver) {
     return false
   }
@@ -45,7 +46,11 @@ export const hasMultiDbSupport = async () => {
   return supportsMultiDb
 }
 
-export const validateConnection = (driver: any, res: any, rej: any) => {
+export const validateConnection = (
+  driver: Driver | null,
+  res: (driver: Driver) => void,
+  rej: (error?: any) => void
+): void => {
   if (driver === null) {
     rej()
     return
@@ -53,67 +58,70 @@ export const validateConnection = (driver: any, res: any, rej: any) => {
 
   driver
     .supportsMultiDb()
-    .then((multiDbSupport: any) => {
+    .then((multiDbSupport: boolean) => {
       if (!driver || !driver.session) return rej('No connection')
       const session = driver.session({
         defaultAccessMode: neo4j.session.READ,
         database: multiDbSupport ? 'system' : undefined
       })
       const txFn = buildTxFunctionByMode(session)
-      txFn((tx: any) => tx.run('CALL db.indexes()'))
-        .then(() => {
-          session.close()
-          res(driver)
-        })
-        .catch((e: any) => {
-          session.close()
-          // Only invalidate the connection if not available
-          // or not authed
-          // or credentials have expired
-          const invalidStates = [
-            'ServiceUnavailable',
-            'Neo.ClientError.Security.AuthenticationRateLimit',
-            'Neo.ClientError.Security.Unauthorized',
-            'Neo.ClientError.Security.CredentialsExpired'
-          ]
-          if (!e.code || invalidStates.includes(e.code)) {
-            rej(e)
-          } else {
+      txFn &&
+        txFn((tx: { run: (query: string) => void }) =>
+          tx.run('CALL db.indexes()')
+        )
+          .then(() => {
+            session.close()
             res(driver)
-          }
-        })
+          })
+          .catch((e: { code: string; message: string }) => {
+            session.close()
+            // Only invalidate the connection if not available
+            // or not authed
+            // or credentials have expired
+            const invalidStates = [
+              'ServiceUnavailable',
+              'Neo.ClientError.Security.AuthenticationRateLimit',
+              'Neo.ClientError.Security.Unauthorized',
+              'Neo.ClientError.Security.CredentialsExpired'
+            ]
+            if (!e.code || invalidStates.includes(e.code)) {
+              rej(e)
+            } else {
+              res(driver)
+            }
+          })
     })
     .catch(rej)
 }
 
 export function directConnect(
-  props: any,
+  props: { host: string; username: string; password: string },
   opts = {},
-  onLostConnection: (any: any) => any = () => {},
+  onLostConnection: (error: Error) => void = (): void => undefined,
   shouldValidateConnection = true
-) {
-  const p = new Promise<any>((resolve, reject) => {
+): Promise<Driver> {
+  const p = new Promise<Driver>((resolve, reject) => {
     const auth = buildAuthObj(props)
-    const driver = createDriverOrFailFn(props.host, auth, opts, (e: any) => {
+    const driver = createDriverOrFailFn(props.host, auth, opts, e => {
       onLostConnection(e)
       reject(e)
     })
     if (shouldValidateConnection) {
       validateConnection(driver, resolve, reject)
     } else {
-      resolve(driver)
+      resolve(driver!)
     }
   })
   return p
 }
 
 export function openConnection(
-  props: any,
+  props: { host: string; password: string; username: string },
   opts = {},
-  onLostConnection: any = () => {}
-) {
+  onLostConnection: (error: Error) => void = (): void => undefined
+): Promise<unknown> {
   const p = new Promise(async (resolve, reject) => {
-    const onConnectFail = (e: any) => {
+    const onConnectFail = (e: Error): void => {
       onLostConnection(e)
       unsetGlobalDrivers()
       reject(e)
@@ -124,11 +132,11 @@ export function openConnection(
       onConnectFail
     )
     const driver = driversObj.getDirectDriver()
-    const myResolve = (driver: any) => {
+    const myResolve = (driver: Driver): void => {
       setGlobalDrivers(driversObj)
       resolve(driver)
     }
-    const myReject = (err: any) => {
+    const myReject = (err: Error): void => {
       onLostConnection(err)
       unsetGlobalDrivers()
       driversObj.close()
@@ -139,25 +147,24 @@ export function openConnection(
   return p
 }
 
-export const closeConnection = () => {
-  if (getGlobalDrivers()) {
-    getGlobalDrivers().close()
+export const closeConnection = (): void => {
+  const globalDrivers = getGlobalDrivers()
+  if (globalDrivers) {
+    globalDrivers.close()
     unsetGlobalDrivers()
   }
 }
 
 export const ensureConnection = (
-  props: any,
-  opts: any,
-  onLostConnection: any
-) => {
+  props: { host: string; username: string; password: string },
+  opts: Record<string, unknown>,
+  onLostConnection: () => void
+): Promise<unknown> => {
   const session = getGlobalDrivers()
-    ? getGlobalDrivers()
-        .getDirectDriver()
-        .session({ defaultAccessMode: neo4j.session.READ })
-    : false
+    ?.getDirectDriver()
+    ?.session({ defaultAccessMode: neo4j.session.READ })
   if (session) {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       session.close()
       resolve()
     })

@@ -18,27 +18,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Session } from 'neo4j-driver'
 import { getUrlInfo } from 'services/utils'
 
 export const KERBEROS = 'KERBEROS'
 export const NATIVE = 'NATIVE'
 export const NO_AUTH = 'NO_AUTH'
 
-export const getDiscoveryEndpoint = (url?: any) => {
+export const getDiscoveryEndpoint = (url?: string): string => {
   const info = getUrlInfo(url || 'http://localhost:7474/')
   return `${info.protocol}//${info.host}/`
 }
 
-export const isConfigValTruthy = (val: any) =>
+export const isConfigValTruthy = (val: boolean | string | number): boolean =>
   [true, 'true', 'yes', 1, '1'].indexOf(val) > -1
-export const isConfigValFalsy = (val: any) =>
+export const isConfigValFalsy = (val: boolean | string | number): boolean =>
   [false, 'false', 'no', 0, '0'].indexOf(val) > -1
 
-export const buildTxFunctionByMode = (session: any) => {
+export const buildTxFunctionByMode = (session?: Session): any => {
   if (!session) {
     return null
   }
-  return session._mode !== 'READ'
+  return (session as any)._mode !== 'READ'
     ? session.writeTransaction.bind(session)
     : session.readTransaction.bind(session)
 }

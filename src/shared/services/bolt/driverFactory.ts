@@ -18,15 +18,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import neo4j from 'neo4j-driver'
+import neo4j, { AuthToken, Config, Driver } from 'neo4j-driver'
 import { version } from 'project-root/package.json'
 
 export const createDriverOrFailFn = (
-  url: any,
-  auth: any,
-  opts: any,
-  failFn: any = () => {}
-) => {
+  url: string,
+  auth: AuthToken,
+  opts: Config,
+  failFn: (error: Error) => void = () => {}
+): Driver | null => {
   // This is needed, I haven't figured out why. I don't find any mutations to
   // the object, so not sure what's going on.
   const spreadOpts = { ...opts, userAgent: `neo4j-browser/v${version}` }

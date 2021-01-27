@@ -21,18 +21,21 @@
 const BOLT_DIRECT_SCHEME = 'bolt'
 const BOLT_ROUTING_SCHEME = 'neo4j'
 
-export const isNonSupportedRoutingSchemeError = (e: any) =>
+export const isNonSupportedRoutingSchemeError = (e: {
+  code: string
+  message: string
+}) =>
   e.code === 'ServiceUnavailable' &&
   e.message.includes('Could not perform discovery')
 
 export const isNonRoutingScheme = (url = '') =>
   typeof url === 'string' && url.startsWith(`${BOLT_DIRECT_SCHEME}://`)
 
-export const toNonRoutingScheme = (url: any) =>
+export const toNonRoutingScheme = (url: string) =>
   typeof url === 'string' &&
   `${BOLT_DIRECT_SCHEME}${getSchemeFlag(url)}://${stripScheme(url)}`
 
-export const getScheme = (url: any) => {
+export const getScheme = (url: string) => {
   if (!url) {
     return ''
   }
@@ -43,7 +46,7 @@ export const getScheme = (url: any) => {
   return scheme
 }
 
-export const stripScheme = (url: any) => {
+export const stripScheme = (url: string) => {
   const [_scheme, ...rest] = (url || '').split('://')
   if (!rest || !rest.length) {
     return _scheme
@@ -51,7 +54,7 @@ export const stripScheme = (url: any) => {
   return rest.join('://')
 }
 
-export const isSecureBoltScheme = (url: any) => {
+export const isSecureBoltScheme = (url: string) => {
   if (url && !url.includes('://')) {
     return false
   }
@@ -72,7 +75,7 @@ export const getSchemeFlag = (url = '') => {
   }
   return `+${scheme.split('+').pop()}`
 }
-const stripSchemeFlag = (url: any) => {
+const stripSchemeFlag = (url: string) => {
   if (url && !url.includes('://')) {
     return ''
   }
@@ -83,7 +86,7 @@ const stripSchemeFlag = (url: any) => {
   return scheme.split('+')[0]
 }
 
-const toggleSchemeSecurity = (url: any) => {
+const toggleSchemeSecurity = (url: string) => {
   if (url && !url.includes('://')) {
     return url
   }
@@ -111,11 +114,11 @@ export const toggleSchemeRouting = (url = '') => {
 }
 
 export const generateBoltUrl = (
-  allowedSchemes: any,
-  url: any,
-  fallbackScheme?: any
+  allowedSchemes: string[],
+  url: string,
+  fallbackScheme?: string
 ) => {
-  const rewrites: any = {
+  const rewrites: Record<string, string> = {
     'bolt+routing://': `${BOLT_ROUTING_SCHEME}://`
   }
 

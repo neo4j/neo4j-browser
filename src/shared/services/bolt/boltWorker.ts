@@ -44,25 +44,47 @@ import {
 } from './boltWorkerMessages'
 import { applyGraphTypes } from 'services/bolt/boltMappings'
 
-const connectionTypeMap: any = {
+const connectionTypeMap = {
   [ROUTED_WRITE_CONNECTION]: {
     create: routedWriteTransaction,
-    getPromise: (res: any) => res[1]
+    getPromise: (res: Promise<unknown>[]): Promise<unknown> => res[1]
   },
   [ROUTED_READ_CONNECTION]: {
     create: routedReadTransaction,
-    getPromise: (res: any) => res
+    getPromise: (res: Promise<unknown>): Promise<unknown> => res
   },
   [DIRECT_CONNECTION]: {
     create: directTransaction,
-    getPromise: (res: any) => res
+    getPromise: (res: Promise<unknown>): Promise<unknown> => res
   }
 }
 
 let busy = false
-const workQue: any = []
+const workQue: { (): void }[] = []
 
-const onmessage = function(message: any) {
+const onmessage = function(message: {
+  data: {
+    cancelable: boolean
+    connectionProperties: {
+      txMetadata: unknown
+      useDb: string
+      autoCommit: boolean
+      opts: Record<string, unknown>
+      host: string
+      username: string
+      password: string
+    }
+    connectionType:
+      | typeof DIRECT_CONNECTION
+      | typeof ROUTED_READ_CONNECTION
+      | typeof ROUTED_WRITE_CONNECTION
+    id: string
+    input: string
+    parameters: unknown
+    requestId: string
+    type: string
+  }
+}): void {
   const messageType = message.data.type
 
   if (messageType === RUN_CYPHER_MESSAGE) {
@@ -77,45 +99,50 @@ const onmessage = function(message: any) {
     beforeWork()
     const { txMetadata, useDb, autoCommit } = connectionProperties
     ensureConnection(connectionProperties, connectionProperties.opts, () => {
-      ;(self as any).postMessage(
+      ;((self as unknown) as ServiceWorker).postMessage(
         boltConnectionErrorMessage(createErrorObject(BoltConnectionError))
       )
     })
       .then(() => {
-        const res = connectionTypeMap[connectionType].create(
+        const res: any = connectionTypeMap[connectionType].create(
           input,
           applyGraphTypes(parameters),
           { requestId, cancelable, txMetadata, useDb, autoCommit }
         )
         connectionTypeMap[connectionType]
           .getPromise(res)
-          .then((r: any) => {
+          .then(r => {
+            ;((self as unknown) as ServiceWorker).postMessage('testing testing')
             afterWork()
-            ;(self as any).postMessage(cypherResponseMessage(r))
+            ;((self as unknown) as ServiceWorker).postMessage(
+              cypherResponseMessage(r)
+            )
           })
-          .catch((e: any) => {
+          .catch((e: { code: number; message: string }) => {
             afterWork()
-            ;(self as any).postMessage(
+            ;((self as unknown) as ServiceWorker).postMessage(
               cypherErrorMessage({ code: e.code, message: e.message })
             )
           })
       })
       .catch(e => {
         afterWork()
-        ;(self as any).postMessage(
+        ;((self as unknown) as ServiceWorker).postMessage(
           cypherErrorMessage({ code: e.code, message: e.message })
         )
       })
   } else if (messageType === CANCEL_TRANSACTION_MESSAGE) {
     cancelTransaction(message.data.id, () => {
-      ;(self as any).postMessage(postCancelTransactionMessage())
+      ;((self as unknown) as ServiceWorker).postMessage(
+        postCancelTransactionMessage()
+      )
     })
   } else if (messageType === CLOSE_CONNECTION_MESSAGE) {
     queueWork(() => {
       closeConnection()
     })
   } else {
-    ;(self as any).postMessage(
+    ;((self as unknown) as ServiceWorker).postMessage(
       cypherErrorMessage({
         code: -1,
         message: `Unknown message to Bolt Worker: ${messageType}`
@@ -124,20 +151,20 @@ const onmessage = function(message: any) {
   }
 }
 
-const beforeWork = () => {
+const beforeWork = (): void => {
   busy = true
 }
 
-const afterWork = () => {
+const afterWork = (): void => {
   busy = false
   doWork()
 }
 
-const queueWork = (fn: any) => {
+const queueWork = (fn: () => void): void => {
   workQue.push(fn)
   doWork()
 }
-const doWork = () => {
+const doWork = (): void => {
   if (busy) {
     return
   }
@@ -145,7 +172,7 @@ const doWork = () => {
     return
   }
   const workFn = workQue.shift()
-  workFn()
+  workFn && workFn()
   doWork()
 }
 

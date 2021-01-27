@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import neo4j from 'neo4j-driver'
+import neo4j, { Driver } from 'neo4j-driver'
 import { createDriverOrFailFn } from './driverFactory'
 import { KERBEROS, NATIVE } from 'services/bolt/boltHelpers'
 import {
@@ -27,18 +27,25 @@ import {
   isNonSupportedRoutingSchemeError
 } from 'services/boltscheme.utils'
 
-let _drivers: any = null
+interface GlobalDriversObject {
+  getDirectDriver: () => Driver | null
+  getRoutedDriver: () => Driver | null
+  close: () => void
+}
+
+let _drivers: GlobalDriversObject | null = null
 
 export const getGlobalDrivers = () => _drivers
-export const setGlobalDrivers = (drivers: any) => (_drivers = drivers)
+export const setGlobalDrivers = (drivers: GlobalDriversObject) =>
+  (_drivers = drivers)
 export const unsetGlobalDrivers = () => (_drivers = null)
 
 export const buildGlobalDriversObject = async (
-  props: any,
+  props: { host: string; password: string; username: string },
   opts = {},
-  failFn: any = () => {}
-) => {
-  const driversObj: any = {}
+  failFn: (error: Error) => void = () => {}
+): Promise<GlobalDriversObject> => {
+  const driversObj: { direct?: Driver | null; routed?: Driver | null } = {}
   const auth = buildAuthObj(props)
   let routingSupported = !isNonRoutingScheme(props.host)
 
@@ -48,7 +55,7 @@ export const buildGlobalDriversObject = async (
   if (routingSupported) {
     try {
       const routed = createDriverOrFailFn(props.host, auth, opts, () => {})
-      await routed.verifyConnectivity()
+      routed && (await routed.verifyConnectivity())
       routingSupported = true
     } catch (e) {
       if (e && isNonSupportedRoutingSchemeError(e)) {
@@ -58,13 +65,13 @@ export const buildGlobalDriversObject = async (
     }
   }
 
-  const getDirectDriver = () => {
+  const getDirectDriver = (): Driver | null => {
     if (driversObj.direct) return driversObj.direct
-    const directUrl = toNonRoutingScheme(props.host)
+    const directUrl = toNonRoutingScheme(props.host) || ''
     driversObj.direct = createDriverOrFailFn(directUrl, auth, opts, failFn)
     return driversObj.direct
   }
-  const getRoutedDriver = () => {
+  const getRoutedDriver = (): Driver | null => {
     if (!routingSupported) return getDirectDriver()
     if (driversObj.routed) return driversObj.routed
     driversObj.routed = createDriverOrFailFn(props.host, auth, opts, failFn)
@@ -80,7 +87,11 @@ export const buildGlobalDriversObject = async (
   }
 }
 
-export const buildAuthObj = (props: any) => {
+export const buildAuthObj = (props: {
+  authenticationMethod?: string
+  password: string
+  username: string
+}) => {
   let auth
   if (props.authenticationMethod === KERBEROS) {
     auth = neo4j.auth.kerberos(props.password)

@@ -159,26 +159,28 @@ describe('boltMappings', () => {
 
   describe('extractNodesAndRelationshipsFromRecords', () => {
     test('should map bolt records with a path to nodes and relationships', () => {
-      const startNode = new neo4j.types.Node('1', ['Person'], {
+      const startNode = new (neo4j.types.Node as any)('1', ['Person'], {
         prop1: 'prop1'
       })
-      const endNode = new neo4j.types.Node('2', ['Movie'], {
+      const endNode = new (neo4j.types.Node as any)('2', ['Movie'], {
         prop2: 'prop2'
       })
-      const relationship = new neo4j.types.Relationship(
+      const relationship = new (neo4j.types.Relationship as any)(
         '3',
         startNode.identity,
         endNode.identity,
         'ACTED_IN',
         {}
       )
-      const pathSegment = new neo4j.types.PathSegment(
+      const pathSegment = new (neo4j.types.PathSegment as any)(
         startNode,
         relationship,
         endNode
       )
-      const path = new neo4j.types.Path(startNode, endNode, [pathSegment])
-      const boltRecord = {
+      const path = new (neo4j.types.Path as any)(startNode, endNode, [
+        pathSegment
+      ])
+      const boltRecord: any = {
         keys: ['p'],
         get: () => path
       }
@@ -205,13 +207,13 @@ describe('boltMappings', () => {
     })
 
     test('should truncate field items when told to do so', () => {
-      const startNode = new neo4j.types.Node('1', ['Person'], {
+      const startNode = new (neo4j.types.Node as any)('1', ['Person'], {
         prop1: 'prop1'
       })
-      const endNode = new neo4j.types.Node('2', ['Movie'], {
+      const endNode = new (neo4j.types.Node as any)('2', ['Movie'], {
         prop2: 'prop2'
       })
-      const boltRecord = {
+      const boltRecord: any = {
         keys: ['p'],
         get: () => [startNode, endNode]
       }
@@ -230,20 +232,20 @@ describe('boltMappings', () => {
     })
 
     test('should map bolt nodes and relationships to graph nodes and relationships', () => {
-      const startNode = new neo4j.types.Node('1', ['Person'], {
+      const startNode = new (neo4j.types.Node as any)('1', ['Person'], {
         prop1: 'prop1'
       })
-      const endNode = new neo4j.types.Node('2', ['Movie'], {
+      const endNode = new (neo4j.types.Node as any)('2', ['Movie'], {
         prop2: 'prop2'
       })
-      const relationship = new neo4j.types.Relationship(
+      const relationship = new (neo4j.types.Relationship as any)(
         '3',
         startNode.identity,
         endNode.identity,
         'ACTED_IN',
         {}
       )
-      const boltRecord = {
+      const boltRecord: any = {
         keys: ['r', 'n1', 'n2'],
         get: (key: any) => {
           if (key === 'r') {
@@ -379,13 +381,13 @@ describe('boltMappings', () => {
   describe('extractNodesAndRelationshipsFromRecordsForOldVis', () => {
     test('should recursively look for graph items', () => {
       // Given
-      const firstNode = new neo4j.types.Node('1', ['Person'], {
+      const firstNode = new (neo4j.types.Node as any)('1', ['Person'], {
         prop1: 'prop1'
       })
       const nodeCollection = [
-        new neo4j.types.Node('2', ['Person'], { prop1: 'prop1' }),
-        new neo4j.types.Node('3', ['Person'], { prop1: 'prop1' }),
-        new neo4j.types.Node('4', ['Person'], { prop1: 'prop1' })
+        new (neo4j.types.Node as any)('2', ['Person'], { prop1: 'prop1' }),
+        new (neo4j.types.Node as any)('3', ['Person'], { prop1: 'prop1' }),
+        new (neo4j.types.Node as any)('4', ['Person'], { prop1: 'prop1' })
       ]
       const boltRecord = {
         keys: ['n', 'c'],
@@ -398,7 +400,7 @@ describe('boltMappings', () => {
           }
         }
       }
-      const records = [boltRecord]
+      const records: any = [boltRecord]
 
       // When
       const out = extractNodesAndRelationshipsFromRecordsForOldVis(
@@ -421,23 +423,27 @@ describe('boltMappings', () => {
         intConverter: (a: any) => a,
         objectConverter: extractFromNeoObjects
       }
-      const start = new neo4j.types.Node(1, ['X'], { x: 1 })
-      const rel1 = new neo4j.types.Relationship(3, 1, 2, 'REL', { rel: 1 })
-      const end1 = new neo4j.types.Node(2, ['Y'], { y: 1 })
-      const rel2 = new neo4j.types.Relationship(6, 4, 5, 'REL2', { rel: 2 })
-      const end = new neo4j.types.Node(5, ['Y'], { y: 2 })
+      const start = new (neo4j.types.Node as any)(1, ['X'], { x: 1 })
+      const rel1 = new (neo4j.types.Relationship as any)(3, 1, 2, 'REL', {
+        rel: 1
+      })
+      const end1 = new (neo4j.types.Node as any)(2, ['Y'], { y: 1 })
+      const rel2 = new (neo4j.types.Relationship as any)(6, 4, 5, 'REL2', {
+        rel: 2
+      })
+      const end = new (neo4j.types.Node as any)(5, ['Y'], { y: 2 })
       const segments = [
-        new neo4j.types.PathSegment(start, rel1, end1),
-        new neo4j.types.PathSegment(end1, rel2, end)
+        new (neo4j.types.PathSegment as any)(start, rel1, end1),
+        new (neo4j.types.PathSegment as any)(end1, rel2, end)
       ]
-      const path = new neo4j.types.Path(start, end, segments)
+      const path = new (neo4j.types.Path as any)(start, end, segments)
       const boltRecord = {
         keys: ['p'],
         get: (key: any) => {
           if (key === 'p') return path
         }
       }
-      const records = [boltRecord]
+      const records: any = [boltRecord]
 
       // When
       const out = extractNodesAndRelationshipsFromRecordsForOldVis(
@@ -457,17 +463,17 @@ describe('boltMappings', () => {
         intConverter: (a: any) => a,
         objectConverter: extractFromNeoObjects
       }
-      const start = new neo4j.types.Node(1, ['X'], { x: 2 })
+      const start = new (neo4j.types.Node as any)(1, ['X'], { x: 2 })
       const end = start
       const segments: any = []
-      const path = new neo4j.types.Path(start, end, segments)
+      const path = new (neo4j.types.Path as any)(start, end, segments)
       const boltRecord = {
         keys: ['p'],
         get: (key: any) => {
           if (key === 'p') return path
         }
       }
-      const records = [boltRecord]
+      const records: any = [boltRecord]
 
       // When
       const out = extractNodesAndRelationshipsFromRecordsForOldVis(
@@ -490,10 +496,10 @@ describe('boltMappings', () => {
         intConverter: (a: any) => a,
         objectConverter: extractFromNeoObjects
       }
-      const start = new neo4j.types.Node(1, ['X'], { x: 1 })
+      const start = new (neo4j.types.Node as any)(1, ['X'], { x: 1 })
       const end = start
       const segments: any = []
-      const path = new neo4j.types.Path(start, end, segments)
+      const path = new (neo4j.types.Path as any)(start, end, segments)
 
       // When
       const result = extractFromNeoObjects(path, converters)
@@ -508,11 +514,13 @@ describe('boltMappings', () => {
         intConverter: (a: any) => a,
         objectConverter: extractFromNeoObjects
       }
-      const start = new neo4j.types.Node(1, ['X'], { x: 1 })
-      const end = new neo4j.types.Node(2, ['Y'], { y: 1 })
-      const rel = new neo4j.types.Relationship(3, 1, 2, 'REL', { rel: 1 })
-      const segments = [new neo4j.types.PathSegment(start, rel, end)]
-      const path = new neo4j.types.Path(start, end, segments)
+      const start = new (neo4j.types.Node as any)(1, ['X'], { x: 1 })
+      const end = new (neo4j.types.Node as any)(2, ['Y'], { y: 1 })
+      const rel = new (neo4j.types.Relationship as any)(3, 1, 2, 'REL', {
+        rel: 1
+      })
+      const segments = [new (neo4j.types.PathSegment as any)(start, rel, end)]
+      const path = new (neo4j.types.Path as any)(start, end, segments)
 
       // When
       const result = extractFromNeoObjects(path, converters)
@@ -530,16 +538,20 @@ describe('boltMappings', () => {
         intConverter: (a: any) => a,
         objectConverter: extractFromNeoObjects
       }
-      const start = new neo4j.types.Node(1, ['X'], { x: 1 })
-      const rel1 = new neo4j.types.Relationship(3, 1, 2, 'REL', { rel: 1 })
-      const end1 = new neo4j.types.Node(2, ['Y'], { y: 1 })
-      const rel2 = new neo4j.types.Relationship(6, 4, 5, 'REL2', { rel: 2 })
-      const end = new neo4j.types.Node(5, ['Y'], { y: 2 })
+      const start = new (neo4j.types.Node as any)(1, ['X'], { x: 1 })
+      const rel1 = new (neo4j.types.Relationship as any)(3, 1, 2, 'REL', {
+        rel: 1
+      })
+      const end1 = new (neo4j.types.Node as any)(2, ['Y'], { y: 1 })
+      const rel2 = new (neo4j.types.Relationship as any)(6, 4, 5, 'REL2', {
+        rel: 2
+      })
+      const end = new (neo4j.types.Node as any)(5, ['Y'], { y: 2 })
       const segments = [
-        new neo4j.types.PathSegment(start, rel1, end1),
-        new neo4j.types.PathSegment(end1, rel2, end)
+        new (neo4j.types.PathSegment as any)(start, rel1, end1),
+        new (neo4j.types.PathSegment as any)(end1, rel2, end)
       ]
-      const path = new neo4j.types.Path(start, end, segments)
+      const path = new (neo4j.types.Path as any)(start, end, segments)
 
       // When
       const result = extractFromNeoObjects(path, converters)
