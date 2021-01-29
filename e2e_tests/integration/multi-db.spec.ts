@@ -203,9 +203,7 @@ describe('Multi database', () => {
         )
 
         // Click re-run
-        cy.get('[data-testid="rerunFrameButton"]', { timeout: 10000 })
-          .first()
-          .click()
+        cy.get('[data-testid="rerunFrameButton"]', { timeout: 10000 }).click()
 
         // Make sure we have what we expect
         cy.get('[data-testid="frame"]', { timeout: 10000 })
