@@ -127,8 +127,6 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       const cursorPosition = editorRef?.current?.getPosition() as IPosition
       editorRef.current?.setValue(editorRef.current?.getValue() || '')
       editorRef.current?.setPosition(cursorPosition)
-
-      updateGutterCharWidth(useDb || '')
     }, [useDb])
 
     // Create monaco instance, listen to text changes and destroy
@@ -201,7 +199,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
 
       onContentUpdate()
 
-      editorRef.current?.onDidChangeModelContent(onContentUpdate)
+      editorRef.current?.onDidChangeModelContent(() => onContentUpdate(true))
 
       editorRef.current?.onDidContentSizeChange(() =>
         resize(isFullscreenRef.current)
@@ -246,7 +244,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
     useEffect(() => {
       onContentUpdate()
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [enableMultiStatementMode])
+    }, [enableMultiStatementMode, useDb])
 
     useEffect(() => {
       editorRef.current?.updateOptions({ fontLigatures })
@@ -361,19 +359,19 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
     const updateGutterCharWidth = (dbName: string) => {
       editorRef.current?.updateOptions({
         lineNumbersMinChars:
-          dbName.length && !isMultiLine() ? dbName.length * 1.2 : 2
+          dbName.length && !isMultiLine() ? dbName.length * 1.3 : 2
       })
     }
 
     // On each text change, clear warnings and reset countdown to adding warnings
-    const onContentUpdate = () => {
+    const onContentUpdate = (preferRef = false) => {
       editor.setModelMarkers(
         editorRef.current?.getModel() as editor.ITextModel,
         monacoId,
         []
       )
 
-      updateGutterCharWidth(useDbRef.current || '')
+      updateGutterCharWidth((preferRef ? useDbRef.current : useDb) || '')
       debouncedUpdateCode()
     }
 
