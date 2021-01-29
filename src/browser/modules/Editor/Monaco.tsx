@@ -80,7 +80,7 @@ interface MonacoProps {
   onDisplayHelpKeys?: () => void
   onExecute?: (value: string) => void
   useDb?: null | string
-  toggleFullscreen?: () => void
+  toggleFullscreen: () => void
 }
 
 const Monaco = forwardRef<MonacoHandles, MonacoProps>(
@@ -197,9 +197,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
         KeyMod.CtrlCmd | KeyCode.US_DOT,
         onDisplayHelpKeys
       )
-      if (toggleFullscreen) {
-        editorRef.current?.addCommand(KeyCode.Escape, toggleFullscreen)
-      }
+      editorRef.current.addCommand(KeyCode.Escape, toggleFullscreen)
 
       onContentUpdate()
 
@@ -455,7 +453,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       })
     }
 
-    return <MonacoStyleWrapper data-testid="monaco-editors" id={monacoId} />
+    return <MonacoStyleWrapper id={monacoId} />
   }
 )
 

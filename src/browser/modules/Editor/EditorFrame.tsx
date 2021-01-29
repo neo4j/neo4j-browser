@@ -126,19 +126,15 @@ export function EditorFrame({
   )
   const editorRef = useRef<MonacoHandles>(null)
 
-  const toggleFullscreen = useCallback(() => {
-    updateFullscreen(!isFullscreen)
-  }, [isFullscreen])
-
-  const updateFullscreen = (fullScreen: boolean) => {
-    setFullscreen(fullScreen)
-    editorRef.current?.resize(fullScreen)
+  const toggleFullscreen = () => {
+    setFullscreen(fs => !fs)
   }
 
-  useEffect(() => bus && bus.take(EXPAND, toggleFullscreen), [
-    bus,
-    toggleFullscreen
-  ])
+  useEffect(() => {
+    editorRef.current?.resize(isFullscreen)
+  }, [isFullscreen])
+
+  useEffect(() => bus && bus.take(EXPAND, toggleFullscreen), [bus])
   useEffect(
     () =>
       bus &&
@@ -203,7 +199,7 @@ export function EditorFrame({
   function discardEditor() {
     editorRef.current?.setValue('')
     setCurrentlyEditing(null)
-    updateFullscreen(false)
+    setFullscreen(false)
   }
 
   const buttons = [
@@ -228,7 +224,7 @@ export function EditorFrame({
       executeCommand(editorRef.current?.getValue() || '', source)
       editorRef.current?.setValue('')
       setCurrentlyEditing(null)
-      updateFullscreen(false)
+      setFullscreen(false)
     }
   }
 
@@ -270,6 +266,7 @@ export function EditorFrame({
               bus={bus}
               enableMultiStatementMode={enableMultiStatementMode}
               history={history}
+              toggleFullscreen={toggleFullscreen}
               id={'main-editor'}
               fontLigatures={codeFontLigatures}
               onChange={() => {

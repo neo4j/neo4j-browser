@@ -64,7 +64,7 @@ function runTests() {
   // it(':param x => {prop: 1} multi line', () => {
   // Set param
   cy.executeCommand(':clear')
-  setParamQ = `:param [x] => {{}{shift}{enter}RETURN {{}prop: 1} AS x{enter}`
+  setParamQ = `:param [x] => {{}{shift}{enter}RETURN {{}prop: 1} AS x`
   cy.executeCommand(setParamQ)
   cy.resultContains('"prop": 1')
   // return param

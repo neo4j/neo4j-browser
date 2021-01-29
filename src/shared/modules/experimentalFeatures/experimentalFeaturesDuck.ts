@@ -21,8 +21,8 @@ export const initialState = {
   [reusableFrame]: {
     name: reusableFrame,
     on: true,
-    displayName: 'Enable re-useable frame',
-    tooltip: 'Edit and re-run right in a frame'
+    displayName: 'Enable reuseable frame',
+    tooltip: 'Edit and rerun right in a frame'
   }
 }
 

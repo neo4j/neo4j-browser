@@ -98,8 +98,8 @@ describe('Neo4j Browser', () => {
       .click()
     cy.get(SubmitQueryButton).click()
     cy.waitForCommandResult()
+    throw new Error('todo fix')
     //cy.get('[data-testid="frameCommand"]', { timeout: 10000 }).contains( 'Tom Hanks')
-    // TODO fix
   })
   it('can display meta items from side drawer', () => {
     cy.executeCommand(':clear')

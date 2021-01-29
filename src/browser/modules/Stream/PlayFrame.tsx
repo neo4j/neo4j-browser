@@ -87,7 +87,7 @@ export function PlayFrame({ stack, bus }: any): JSX.Element {
     return () => {
       stillMounted = false
     }
-    // The full dependency array causes a re-run witch switches to slide 1
+    // The full dependency array causes a re-run which switches to slide 1
   }, [bus, currentFrame])
 
   const { guide, aside, hasCarousel, isRemote } = guideObj
