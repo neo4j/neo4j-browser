@@ -340,16 +340,12 @@ function FrameTitlebar(props: FrameTitleBarProps) {
         >
           <PinIcon />
         </FrameButton>
-        <Render
-          if={['cypher', 'play', 'play-remote', 'queries'].includes(frame.type)}
+        <FrameButton
+          title={props.fullscreen ? 'Close fullscreen' : 'Fullscreen'}
+          onClick={() => props.fullscreenToggle()}
         >
-          <FrameButton
-            title={props.fullscreen ? 'Close fullscreen' : 'Fullscreen'}
-            onClick={() => props.fullscreenToggle()}
-          >
-            {fullscreenIcon}
-          </FrameButton>
-        </Render>
+          {fullscreenIcon}
+        </FrameButton>
         <FrameButton
           title={props.collapse ? 'Expand' : 'Collapse'}
           onClick={() => props.collapseToggle()}
