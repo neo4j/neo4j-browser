@@ -26,7 +26,13 @@ import Monaco from './Monaco'
 describe('Monaco', () => {
   it('renders a component that functions as a textbox', () => {
     const { getByRole, queryByDisplayValue } = render(
-      <Monaco bus={{ self: () => {} } as any} id="id" />
+      <Monaco
+        toggleFullscreen={() => {
+          /*noop */
+        }}
+        bus={{ self: () => {} } as any}
+        id="id"
+      />
     )
 
     const value = 'hello world'
