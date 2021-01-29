@@ -451,7 +451,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       })
     }
 
-    return <MonacoStyleWrapper data-testid="monaco-editors" id={monacoId} />
+    return <MonacoStyleWrapper id={monacoId} />
   }
 )
 
