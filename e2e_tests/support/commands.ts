@@ -103,7 +103,11 @@ Cypress.Commands.add('disconnect', () => {
 Cypress.Commands.add('typeInFrame', (cmd: string, frameIndex = 0) => {
   cy.get('[data-testid=monaco-editors]')
     .eq(frameIndex + 1) // the first monaco editor is the main one
-    .type(Cypress.platform === 'darwin' ? '{cmd}a {del}' : '{ctrl}a {del}')
+    .type(
+      Cypress.platform === 'darwin'
+        ? '{cmd}a {backspace}'
+        : '{ctrl}a {backspace}'
+    )
     .type(cmd)
 })
 

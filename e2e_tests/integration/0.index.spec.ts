@@ -42,7 +42,7 @@ describe('Neo4j Browser', () => {
   it(':server disconnect frame is re-runnable', () => {
     cy.get('[data-testid="disconnectedBannerCode"]').click()
     cy.get('[data-testid="frameCommand"]').contains(':server connect')
-    cy.typeInFrame(':play movies{enter}', 1)
+    cy.typeInFrame(':play movies{enter}', 0)
     cy.get('[data-testid=frame]').contains('the Bacon Path')
   })
   it('can connect', () => {
@@ -98,8 +98,9 @@ describe('Neo4j Browser', () => {
       .click()
     cy.get(SubmitQueryButton).click()
     cy.waitForCommandResult()
-    throw new Error('todo fix')
-    //cy.get('[data-testid="frameCommand"]', { timeout: 10000 }).contains( 'Tom Hanks')
+    cy.get('[data-testid="frameCommand"]', { timeout: 10000 }).contains(
+      'Keanu Reeves'
+    )
   })
   it('can display meta items from side drawer', () => {
     cy.executeCommand(':clear')
