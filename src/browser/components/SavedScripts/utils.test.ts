@@ -14,12 +14,6 @@ describe('saved-scripts.utils', () => {
     const scriptNoNameWithCommentWhiteSpace = {
       content: '//   Comment\nBar baz'
     }
-    const scriptWithNameNoComment = {
-      content: 'Bar baz'
-    }
-    const scriptWithNameAndComment = {
-      content: '//donkey\nBar baz'
-    }
 
     test('Uses content as name when nothing else available', () => {
       expect(getScriptDisplayName(scriptNoNameNoCommentSingleLine)).toBe(
@@ -41,14 +35,6 @@ describe('saved-scripts.utils', () => {
       expect(getScriptDisplayName(scriptNoNameWithCommentWhiteSpace)).toBe(
         'Comment'
       )
-    })
-
-    test('Uses name as name when available', () => {
-      expect(getScriptDisplayName(scriptWithNameNoComment)).toBe('Apa')
-    })
-
-    test('Uses name as name even when comment is available', () => {
-      expect(getScriptDisplayName(scriptWithNameAndComment)).toBe('Apa')
     })
   })
 })
