@@ -18,9 +18,6 @@ import React from 'react'
 import { useEffect, useState, Dispatch } from 'react'
 import { Action } from 'redux'
 import { connect } from 'react-redux'
-import MyScripts, {
-  getScriptDisplayName
-} from 'browser/components/SavedScripts'
 import { useQuery, useMutation, ApolloError } from '@apollo/client'
 import { filter, size } from 'lodash-es'
 
@@ -45,8 +42,10 @@ import {
 import Render from 'browser-components/Render'
 import { Bus } from 'suber'
 import { StyledErrorListContainer } from './styled'
-import { Favorite } from 'shared/modules/favorites/favoritesDuck'
 import { withBus } from 'react-suber'
+import ProjectFileList, {
+  ProjectFileScript
+} from 'browser-components/SavedScripts/ProjectFilesList'
 
 interface ProjectFilesError {
   apolloErrors: (ApolloError | undefined)[]
@@ -102,12 +101,9 @@ export const ProjectFilesError = ({
 
 interface ProjectFilesScripts {
   bus: Bus
-  selectScript: (favorite: Favorite) => void
-  execScript: (favorite: Favorite) => void
+  selectScript: (script: ProjectFileScript) => void
+  execScript: (cmd: string) => void
   exportScripts: () => void
-  updateFolder: () => void
-  removeFolder: () => void
-  scriptsNamespace: string
   title: string
   projectId: string
   relateApiToken: string
@@ -125,7 +121,7 @@ function ProjectFilesScripts(props: ProjectFilesScripts): JSX.Element {
   const [removeFile, { error: removeProjectFileError }] = useMutation(
     DELETE_PROJECT_FILE
   )
-  const [projectFiles, setProjectFiles] = useState<Favorite[]>([])
+  const [projectFiles, setProjectFiles] = useState<ProjectFileScript[]>([])
 
   useEffect(() => {
     let isStillMounted = true
@@ -168,15 +164,11 @@ function ProjectFilesScripts(props: ProjectFilesScripts): JSX.Element {
   const myScriptsProps = {
     execScript: props.execScript,
     scripts: projectFiles,
-    folders: [], // no support for folders yet
     title: 'Cypher files',
-    removeScript: async (favorite: Favorite) => {
+    removeScript: async (script: ProjectFileScript) => {
       try {
         const { data } = await removeFile({
-          variables: ProjectFileMutationVars(
-            `./${getScriptDisplayName(favorite)}`,
-            props.projectId
-          ),
+          variables: ProjectFileMutationVars(script.filename, props.projectId),
           update: (cache, result) =>
             updateCacheRemoveProjectFile(cache, result, props.projectId)
         })
@@ -189,11 +181,11 @@ function ProjectFilesScripts(props: ProjectFilesScripts): JSX.Element {
         console.log(e)
       }
     },
-    selectScript: (favorite: Favorite) => {
+    selectScript: (script: ProjectFileScript) => {
       props.bus.send(
         editor.EDIT_CONTENT,
-        editor.editContent(favorite.id, favorite.content, {
-          name: saf(favorite)
+        editor.editContent(script.id, script.content, {
+          name: script.filename
         })
       )
     }
@@ -201,7 +193,7 @@ function ProjectFilesScripts(props: ProjectFilesScripts): JSX.Element {
 
   return (
     <>
-      <MyScripts {...myScriptsProps} />
+      <ProjectFileList {...myScriptsProps} />
       <ProjectFilesError
         apolloErrors={[getProjectFilesError, removeProjectFileError]}
       />
@@ -217,10 +209,8 @@ const mapStateToProps = (state: any) => ({
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
-  execScript: (favorite: Favorite) => {
-    dispatch(
-      executeCommand(favorite.content, { source: commandSources.projectFile })
-    )
+  execScript: (cmd: string) => {
+    dispatch(executeCommand(cmd, { source: commandSources.projectFile }))
   }
 })
 

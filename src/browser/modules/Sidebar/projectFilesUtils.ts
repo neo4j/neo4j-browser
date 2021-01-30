@@ -15,7 +15,8 @@
  *
  */
 import remote from 'services/remote'
-import { CYPHER_FILE_EXTENSION, DOT } from 'shared/services/export-favorites'
+import { CYPHER_FILE_EXTENSION } from 'shared/services/export-favorites'
+import { ProjectFileScript } from 'browser/components/SavedScripts/ProjectFilesList'
 import uuid from 'uuid'
 import { split, trim, head, startsWith } from 'lodash-es'
 import {
@@ -35,7 +36,6 @@ import {
   PROHIBITED_FILENAME_CHAR_TESTS,
   ProhibitedFilenameErrors
 } from './projectFilesConstants'
-import { Favorite } from 'shared/modules/favorites/favoritesDuck'
 
 export const ProjectFilesQueryVars = (
   projectId: string
@@ -58,8 +58,9 @@ export const mapProjectFileToFavorites = async ({
   apiToken,
   clientId,
   relateUrl
-}: ProjectFileMapping): Promise<Favorite> => ({
+}: ProjectFileMapping): Promise<ProjectFileScript> => ({
   id: uuid.v4(),
+  filename: name,
   content: await getProjectFileContents(
     downloadToken,
     name,

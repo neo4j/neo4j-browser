@@ -35,13 +35,17 @@ import { CYPHER_FILE_EXTENSION } from 'shared/services/export-favorites'
 import { ADD_PROJECT_FILE } from './projectFilesConstants'
 import { setDraftScript } from 'shared/modules/sidebar/sidebarDuck'
 
-interface ProjectFiles {
+interface ProjectFilesProps {
   projectId: string
   scriptDraft: string
   resetDraft: () => void
 }
 
-const ProjectFiles = ({ projectId, scriptDraft, resetDraft }: ProjectFiles) => {
+const ProjectFiles = ({
+  projectId,
+  scriptDraft,
+  resetDraft
+}: ProjectFilesProps) => {
   const [addFile, { error: apolloError }] = useMutation(ADD_PROJECT_FILE)
   const [error, setError] = useState('')
 
