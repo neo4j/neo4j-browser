@@ -23,12 +23,7 @@ import reducer, * as favorites from './favoritesDuck'
 
 describe('favorites reducer', () => {
   test('should allow id to be injected when adding a favorite', () => {
-    const action = {
-      type: favorites.ADD_FAVORITE,
-      id: 'foo',
-      cmd: 'bar'
-    }
-    const nextState = reducer([], action)
+    const nextState = reducer([], favorites.addFavorite('bar', 'foo'))
     expect(nextState.length).toBe(1)
 
     const actual = nextState[0]
@@ -36,95 +31,70 @@ describe('favorites reducer', () => {
     expect(actual.content).toEqual('bar')
   })
   test('should generate an id when adding a favorite and only passing cmd value', () => {
-    const action = {
-      type: favorites.ADD_FAVORITE,
-      cmd: 'bar'
-    }
-    const nextState = reducer([], action)
+    const nextState = reducer([], favorites.addFavorite('bar'))
     expect(nextState.length).toBe(1)
 
     const actual = nextState[0]
     expect(actual.id).not.toBeFalsy()
     expect(actual.content).toEqual('bar')
   })
+
   test('should update state for favorites when favorite is removed and only one item is in the list', () => {
-    const favoriteScript = {
-      name: 'Test1',
-      content: 'match (n) return n limit 1'
-    }
-    const initialState = [favoriteScript]
-    const action = {
-      type: favorites.REMOVE_FAVORITE,
-      favorites: [favoriteScript]
-    }
-    const nextState = reducer(initialState, action)
+    const nextState = reducer(
+      [{ id: 'a', content: 'foo' }],
+      favorites.removeFavorites(['a'])
+    )
     expect(nextState).toEqual([])
   })
 
   test('should update state for favorites when favorite is removed when there is more than one item in the list', () => {
     const favoriteScript1 = {
       id: uuid.v4(),
-      name: 'Test1',
       content: 'match (n) return n limit 1'
     }
     const favoriteScript2 = {
       id: uuid.v4(),
-      name: 'Test2',
       content: 'match (a) return a'
     }
     const favoriteScript3 = {
       id: uuid.v4(),
-      name: 'Test3',
       content: 'match (a) return a'
     }
     const initialState = [favoriteScript1, favoriteScript2, favoriteScript3]
-    const action = {
-      type: favorites.REMOVE_FAVORITE,
-      id: favoriteScript2.id
-    }
-    const nextState = reducer(initialState, action)
+    const nextState = reducer(
+      initialState,
+      favorites.removeFavorite(favoriteScript2.id)
+    )
     expect(nextState).toEqual([favoriteScript1, favoriteScript3])
   })
   test('should return favorite by id', () => {
-    const favoriteScript1 = {
+    const script = {
       id: uuid.v4(),
-      name: 'Test1',
       content: 'match (n) return n limit 1'
     }
-    const favoriteScript2 = {
-      id: uuid.v4(),
-      name: 'Test2',
-      content: 'match (a) return a'
-    }
-    const initialState = [favoriteScript1, favoriteScript2]
 
-    const nextState = reducer(initialState, {})
-    expect(favorites.getFavorite(nextState, favoriteScript1.id)).toEqual(
-      favoriteScript1
-    )
-    expect(favorites.getFavorite(nextState, favoriteScript2.id)).toEqual(
-      favoriteScript2
-    )
+    const nextState = reducer([script], favorites.addFavorite('foo', 'b'))
+    expect(favorites.getFavorite(nextState, script.id)).toEqual(script)
+    expect(favorites.getFavorite(nextState, 'b')).toEqual({
+      id: 'b',
+      content: 'foo'
+    })
   })
   test('should update favorite by id', () => {
     const favoriteScript1 = {
       id: uuid.v4(),
-      name: 'Test1',
       content: 'match (n) return n limit 1'
     }
     const favoriteScript2 = {
       id: uuid.v4(),
-      name: 'Test2',
       content: 'match (a) return a'
     }
     const initialState = [favoriteScript1, favoriteScript2]
     const newContent = '//Foobar'
-    const action = {
-      type: favorites.UPDATE_FAVORITE_CONTENT,
-      id: favoriteScript1.id,
-      cmd: newContent
-    }
-    const nextState = reducer(initialState, action)
+    const nextState = reducer(
+      initialState,
+      favorites.updateFavoriteContent(favoriteScript1.id, newContent)
+    )
     expect(favorites.getFavorite(nextState, favoriteScript1.id)).toEqual({
       ...favoriteScript1,
       content: newContent
@@ -137,7 +107,7 @@ describe('favorites reducer', () => {
 
 describe('favorites actions', () => {
   test('should handle loading favorites', () => {
-    const favs = 'favorites object'
+    const favs = [{ id: 'abc', content: 'abc' }]
     const expected = {
       type: favorites.LOAD_FAVORITES,
       favorites: favs
