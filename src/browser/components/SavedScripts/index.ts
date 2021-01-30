@@ -1,4 +1,4 @@
 import SavedScripts from './SavedScripts'
 
 export default SavedScripts
-export { getScriptDisplayName } from './utils'
+export { getScriptDisplayName, defaultNameFromDisplayContent } from './utils'
