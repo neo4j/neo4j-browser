@@ -46,7 +46,6 @@ import {
   setDraftScript
 } from 'shared/modules/sidebar/sidebarDuck'
 import { isRelateAvailable } from 'shared/modules/app/appDuck'
-import { defaultFavoriteName } from 'browser/modules/Sidebar/favorites.utils'
 
 import {
   DatabaseIcon,
@@ -57,6 +56,7 @@ import {
   AboutIcon,
   ProjectFilesIcon
 } from 'browser-components/icons/Icons'
+import { defaultNameFromDisplayContent } from 'browser-components/SavedScripts'
 
 interface SidebarProps {
   openDrawer: string
@@ -111,7 +111,7 @@ const Sidebar = ({
             {scriptDraft && (
               <NewSavedScript
                 onSubmit={input => {
-                  if (input === defaultFavoriteName(scriptDraft)) {
+                  if (input === defaultNameFromDisplayContent(scriptDraft)) {
                     addFavorite(scriptDraft)
                   } else {
                     const alreadyHasName = scriptDraft.startsWith('//')
@@ -128,7 +128,7 @@ const Sidebar = ({
                   }
                   resetDraft()
                 }}
-                defaultName={defaultFavoriteName(scriptDraft)}
+                defaultName={defaultNameFromDisplayContent(scriptDraft)}
                 headerText={'Save as'}
                 onCancel={resetDraft}
               />
