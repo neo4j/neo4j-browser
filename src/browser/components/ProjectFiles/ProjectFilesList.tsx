@@ -8,22 +8,21 @@ import {
 import ProjectFilesListItem from './ProjectFilesListItem'
 
 export type ProjectFileScript = {
-  id: string
   content: Promise<string>
   filename: string
 }
 
 interface ProjectFileListProps {
-  title?: string
   scripts: ProjectFileScript[]
   selectScript: (script: ProjectFileScript) => void
+  removeScript: (script: ProjectFileScript) => void
   execScript: (cmd: string) => void
 }
 
 export default function ProjectFileList({
-  title = 'Cypher files',
   scripts,
   selectScript,
+  removeScript,
   execScript
 }: ProjectFileListProps): JSX.Element {
   const sortedScripts = scripts.sort((f1, f2) =>
@@ -35,15 +34,16 @@ export default function ProjectFileList({
       <SavedScriptsBody className="saved-scripts__body">
         <SavedScriptsBodySection className="saved-scripts__body-section">
           <SavedScriptsHeader className="saved-scripts__header">
-            {title}
+            Cypher files
           </SavedScriptsHeader>
 
           {sortedScripts.map(script => (
             <ProjectFilesListItem
               selectScript={selectScript}
               execScript={execScript}
+              removeScript={removeScript}
               script={script}
-              key={script.id}
+              key={script.filename}
             />
           ))}
         </SavedScriptsBodySection>

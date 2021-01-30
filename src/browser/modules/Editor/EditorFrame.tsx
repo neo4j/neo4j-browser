@@ -73,10 +73,7 @@ import {
   ADD_PROJECT_FILE,
   REMOVE_PROJECT_FILE
 } from 'browser-components/ProjectFiles/projectFilesConstants'
-import {
-  setProjectFileDefaultFileName,
-  createFilePath
-} from 'browser-components/ProjectFiles/projectFilesUtils'
+import { setProjectFileDefaultFileName } from 'browser-components/ProjectFiles/projectFilesUtils'
 import { defaultFavoriteName } from 'browser/modules/Sidebar/favorites.utils'
 import Monaco, { MonacoHandles } from './Monaco'
 import {
@@ -84,7 +81,8 @@ import {
   shouldEnableMultiStatementMode
 } from 'shared/modules/settings/settingsDuck'
 import { getUseDb } from 'shared/modules/connections/connectionsDuck'
-import { getHistory } from 'shared/modules/history/historyDuck'
+import { getHistory, HistoryState } from 'shared/modules/history/historyDuck'
+import { CYPHER_FILE_EXTENSION } from 'services/export-favorites'
 
 type EditorFrameProps = {
   bus: Bus
@@ -287,13 +285,13 @@ export function EditorFrame({
                 setUnsaved(false)
                 const editorValue = editorRef.current?.getValue() || ''
 
-                const { isProjectFile, name, directory } = currentlyEditing
-                if (isProjectFile && name && directory) {
+                const { isProjectFile, name } = currentlyEditing
+                if (isProjectFile && name) {
                   addFile({
                     variables: {
                       projectId,
                       fileUpload: new File([editorValue], name),
-                      destination: createFilePath([directory, name]),
+                      destination: `./${name}`,
                       overwrite: true
                     }
                   })

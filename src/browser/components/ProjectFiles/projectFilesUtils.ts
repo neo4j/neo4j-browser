@@ -17,7 +17,6 @@
 import remote from 'services/remote'
 import { CYPHER_FILE_EXTENSION } from 'shared/services/export-favorites'
 import { ProjectFileScript } from 'browser-components/ProjectFiles/ProjectFilesList'
-import uuid from 'uuid'
 import { split, trim, head, startsWith } from 'lodash-es'
 import {
   ApolloCache,
@@ -59,7 +58,6 @@ export const mapProjectFileToFavorites = ({
   clientId,
   relateUrl
 }: ProjectFileMapping): ProjectFileScript => ({
-  id: uuid.v4(),
   filename: name,
   content: getProjectFileContents(
     downloadToken,

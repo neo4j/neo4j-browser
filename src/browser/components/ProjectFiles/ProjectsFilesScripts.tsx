@@ -151,10 +151,9 @@ function ProjectFilesScripts(props: ProjectFilesScripts): JSX.Element {
     }
   }, [data, refetch])
 
-  const myScriptsProps = {
+  const ProjectFileListProps = {
     execScript: props.execScript,
     scripts: projectFiles,
-    title: 'Cypher files',
     removeScript: async (script: ProjectFileScript) => {
       try {
         const { data } = await removeFile({
@@ -175,8 +174,9 @@ function ProjectFilesScripts(props: ProjectFilesScripts): JSX.Element {
       script.content.then(contents =>
         props.bus.send(
           editor.EDIT_CONTENT,
-          editor.editContent(script.id, contents, {
-            name: script.filename
+          editor.editContent(script.filename, contents, {
+            name: script.filename,
+            isProjectFile: true
           })
         )
       )
@@ -185,7 +185,7 @@ function ProjectFilesScripts(props: ProjectFilesScripts): JSX.Element {
 
   return (
     <>
-      <ProjectFileList {...myScriptsProps} />
+      <ProjectFileList {...ProjectFileListProps} />
       <ProjectFilesError
         apolloErrors={[getProjectFilesError, removeProjectFileError]}
       />
