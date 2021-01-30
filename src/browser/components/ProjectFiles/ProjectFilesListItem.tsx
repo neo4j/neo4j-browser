@@ -1,10 +1,10 @@
 import React from 'react'
-import { RunButton } from './SavedScriptsButton'
+import { RunButton } from '../SavedScripts/SavedScriptsButton'
 import {
   SavedScriptsButtonWrapper,
   SavedScriptsListItemDisplayName,
   SavedScriptsListItemMain
-} from './styled'
+} from '../SavedScripts/styled'
 import { ProjectFileScript } from './ProjectFilesList'
 
 interface ProjectFilesListItemProps {

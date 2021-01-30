@@ -72,11 +72,11 @@ import run_icon from 'icons/run_icon.svg'
 import {
   ADD_PROJECT_FILE,
   REMOVE_PROJECT_FILE
-} from 'browser/modules/Sidebar/projectFilesConstants'
+} from 'browser-components/ProjectFiles/projectFilesConstants'
 import {
   setProjectFileDefaultFileName,
   createFilePath
-} from 'browser/modules/Sidebar/projectFilesUtils'
+} from 'browser-components/ProjectFiles/projectFilesUtils'
 import { defaultFavoriteName } from 'browser/modules/Sidebar/favorites.utils'
 import Monaco, { MonacoHandles } from './Monaco'
 import {

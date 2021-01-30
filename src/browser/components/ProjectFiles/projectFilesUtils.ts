@@ -16,7 +16,7 @@
  */
 import remote from 'services/remote'
 import { CYPHER_FILE_EXTENSION } from 'shared/services/export-favorites'
-import { ProjectFileScript } from 'browser/components/SavedScripts/ProjectFilesList'
+import { ProjectFileScript } from 'browser-components/ProjectFiles/ProjectFilesList'
 import uuid from 'uuid'
 import { split, trim, head, startsWith } from 'lodash-es'
 import {

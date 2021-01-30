@@ -41,11 +41,11 @@ import {
 } from './projectFilesConstants'
 import Render from 'browser-components/Render'
 import { Bus } from 'suber'
-import { StyledErrorListContainer } from './styled'
+import { StyledErrorListContainer } from '../../modules/Sidebar/styled'
 import { withBus } from 'react-suber'
 import ProjectFileList, {
   ProjectFileScript
-} from 'browser-components/SavedScripts/ProjectFilesList'
+} from 'browser-components/ProjectFiles/ProjectFilesList'
 
 interface ProjectFilesError {
   apolloErrors: (ApolloError | undefined)[]
