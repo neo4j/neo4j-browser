@@ -17,9 +17,10 @@
 import React from 'react'
 import { useEffect, useState, Dispatch } from 'react'
 import { Action } from 'redux'
-import { withBus } from 'react-suber'
 import { connect } from 'react-redux'
-import MyScripts from 'browser/components/SavedScripts'
+import MyScripts, {
+  getScriptDisplayName
+} from 'browser/components/SavedScripts'
 import { useQuery, useMutation, ApolloError } from '@apollo/client'
 import { filter, size } from 'lodash-es'
 
@@ -28,27 +29,24 @@ import {
   commandSources,
   executeCommand
 } from 'shared/modules/commands/commandsDuck'
-import { DOT } from 'shared/services/export-favorites'
 import {
   ProjectFilesQueryVars,
   ProjectFileMutationVars,
   mapProjectFileToFavorites,
-  updateCacheRemoveProjectFile,
-  createFilePath
-} from './project-files.utils'
+  updateCacheRemoveProjectFile
+} from './projectFilesUtils'
 import {
-  Favorite,
   ProjectFilesResult,
   ProjectFilesVariables,
   GET_PROJECT_FILES,
   DELETE_PROJECT_FILE,
-  REMOVE_PROJECT_FILE,
-  EXECUTE_COMMAND_ORIGIN,
-  EXECUTE_COMMAND_ORIGINS
-} from './project-files.constants'
+  REMOVE_PROJECT_FILE
+} from './projectFilesConstants'
 import Render from 'browser-components/Render'
 import { Bus } from 'suber'
 import { StyledErrorListContainer } from './styled'
+import { Favorite } from 'shared/modules/favorites/favoritesDuck'
+import { withBus } from 'react-suber'
 
 interface ProjectFilesError {
   apolloErrors: (ApolloError | undefined)[]
@@ -170,14 +168,13 @@ function ProjectFilesScripts(props: ProjectFilesScripts): JSX.Element {
   const myScriptsProps = {
     execScript: props.execScript,
     scripts: projectFiles,
-    isProjectFiles: true,
-    scriptsNamespace: DOT,
+    folders: [], // no support for folders yet
     title: 'Cypher files',
     removeScript: async (favorite: Favorite) => {
       try {
         const { data } = await removeFile({
           variables: ProjectFileMutationVars(
-            createFilePath([favorite.directory, favorite.name]),
+            `./${getScriptDisplayName(favorite)}`,
             props.projectId
           ),
           update: (cache, result) =>
@@ -193,17 +190,10 @@ function ProjectFilesScripts(props: ProjectFilesScripts): JSX.Element {
       }
     },
     selectScript: (favorite: Favorite) => {
-      const directory =
-        favorite.path.length == 1 && favorite.path === DOT
-          ? DOT
-          : favorite.path.substring(1) // remove DOT from path
-
       props.bus.send(
         editor.EDIT_CONTENT,
-        editor.editContent(favorite.id, favorite.contents, {
-          directory,
-          name: favorite.name,
-          isProjectFile: true
+        editor.editContent(favorite.id, favorite.content, {
+          name: saf(favorite)
         })
       )
     }
@@ -211,7 +201,6 @@ function ProjectFilesScripts(props: ProjectFilesScripts): JSX.Element {
 
   return (
     <>
-      {/* @ts-ignore */}
       <MyScripts {...myScriptsProps} />
       <ProjectFilesError
         apolloErrors={[getProjectFilesError, removeProjectFileError]}
@@ -220,30 +209,21 @@ function ProjectFilesScripts(props: ProjectFilesScripts): JSX.Element {
   )
 }
 
-const mapFavoritesStateToProps = (state: any) => {
-  return {
-    projectId: state.app.relateProjectId,
-    relateApiToken: state.app.relateApiToken,
-    neo4jDesktopGraphAppId: state.app.neo4jDesktopGraphAppId,
-    relateUrl: state.app.relateUrl
-  }
-}
+const mapStateToProps = (state: any) => ({
+  projectId: state.app.relateProjectId,
+  relateApiToken: state.app.relateApiToken,
+  neo4jDesktopGraphAppId: state.app.neo4jDesktopGraphAppId,
+  relateUrl: state.app.relateUrl
+})
 
-const mapFavoritesDispatchToProps = (
-  dispatch: Dispatch<Action>,
-  ownProps: { bus: Bus }
-) => ({
+const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
   execScript: (favorite: Favorite) => {
-    ownProps.bus.send(EXECUTE_COMMAND_ORIGIN, EXECUTE_COMMAND_ORIGINS.SIDEBAR)
     dispatch(
-      executeCommand(favorite.contents, { source: commandSources.projectFile })
+      executeCommand(favorite.content, { source: commandSources.projectFile })
     )
   }
 })
 
 export default withBus(
-  connect(
-    mapFavoritesStateToProps,
-    mapFavoritesDispatchToProps
-  )(ProjectFilesScripts)
+  connect(mapStateToProps, mapDispatchToProps)(ProjectFilesScripts)
 )

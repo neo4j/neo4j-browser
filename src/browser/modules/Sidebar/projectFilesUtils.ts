@@ -27,7 +27,6 @@ import {
 
 import {
   ProjectFile,
-  Favorite,
   ProjectFilesResult,
   GET_PROJECT_FILES,
   AddProjectFile,
@@ -35,7 +34,8 @@ import {
   ProjectFileMapping,
   PROHIBITED_FILENAME_CHAR_TESTS,
   ProhibitedFilenameErrors
-} from './project-files.constants'
+} from './projectFilesConstants'
+import { Favorite } from 'shared/modules/favorites/favoritesDuck'
 
 export const ProjectFilesQueryVars = (
   projectId: string
@@ -55,16 +55,12 @@ export const ProjectFileMutationVars = (
 export const mapProjectFileToFavorites = async ({
   downloadToken,
   name,
-  directory,
   apiToken,
   clientId,
   relateUrl
 }: ProjectFileMapping): Promise<Favorite> => ({
   id: uuid.v4(),
-  name,
-  directory,
-  path: directory.startsWith(DOT) ? directory : `${DOT}${directory}`, // works with scriptsNamespace
-  contents: await getProjectFileContents(
+  content: await getProjectFileContents(
     downloadToken,
     name,
     apiToken,
@@ -79,14 +75,17 @@ const getProjectFileContents = (
   apiToken: string,
   clientId: string,
   relateUrl: string
-): Promise<any> =>
+): Promise<string> =>
   remote
     .request('GET', `${relateUrl}/files/${token}/${name}`, null, {
       'X-API-Token': apiToken,
       'X-Client-Id': clientId
     })
     .then(body => body.text()) // currently cypher/text file specific
-    .catch(e => console.log(`Unable to get file ${name}\n`, e))
+    .catch(e => {
+      console.log(`Unable to get file ${name}\n`, e)
+      return ''
+    })
 
 const NEW_LINE = '\n'
 const COMMENT_PREFIX = '//'
