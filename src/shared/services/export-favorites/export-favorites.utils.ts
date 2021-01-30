@@ -20,18 +20,15 @@ import { saveAs } from 'file-saver'
 import dateFormat from 'dateformat'
 import {
   compact,
-  filter,
   forEach,
   join,
   kebabCase,
   last,
-  map,
   slice,
   split
 } from 'lodash-es'
 import { getScriptDisplayName } from 'browser/components/SavedScripts'
 import { Favorite } from 'shared/modules/favorites/favoritesDuck'
-import { Folder } from 'shared/modules/favorites/foldersDuck'
 
 import { SLASH, CYPHER_FILE_EXTENSION } from './export-favorites.constants'
 
@@ -42,35 +39,9 @@ import { SLASH, CYPHER_FILE_EXTENSION } from './export-favorites.constants'
  * @param     {Function<boolean>}   isAllowed   checks if a favorite should be allowed
  * @return    {Object[]}                        new user favorites objects ("my scripts")
  */
-export function mapOldFavoritesAndFolders(
-  favorites: Favorite[],
-  folders: Folder[],
-  isAllowed: (fav: Favorite) => boolean = isNonStatic
-) {
-  const oldFoldersMap = new Map(
-    // @ts-ignore
-    map(filter(folders, isAllowed), folder => [folder.id, folder])
-  )
-  const oldFilteredFavorites = filter(
-    favorites,
-    favorite => isAllowed(favorite) && !!favorite.content
-  )
-
-  return map(oldFilteredFavorites, favorite => {
-    const folder = oldFoldersMap.get(favorite.folder)
-    const newFavorite = {
-      id: favorite.id,
-      contents: favorite.content,
-      path: '',
-      isSuggestion: favorite.not_executable
-    }
-
-    if (folder) {
-      return { ...newFavorite, folder }
-    }
-
-    return newFavorite
-  })
+export function mapOldFavoritesAndFolders() {
+  // Export not yet implemented
+  return []
 }
 
 /**

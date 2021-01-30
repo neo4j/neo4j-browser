@@ -30,9 +30,9 @@ import {
   setProjectFileDefaultFileName,
   updateCacheAddProjectFile,
   checkFileNameInput
-} from './project-files.utils'
+} from './projectFilesUtils'
 import { CYPHER_FILE_EXTENSION } from 'shared/services/export-favorites'
-import { ADD_PROJECT_FILE } from './project-files.constants'
+import { ADD_PROJECT_FILE } from './projectFilesConstants'
 import { setDraftScript } from 'shared/modules/sidebar/sidebarDuck'
 
 interface ProjectFiles {

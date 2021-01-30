@@ -17,21 +17,7 @@
 
 import { gql } from '@apollo/client'
 
-export const SELECT_PROJECT_FILE = 'SELECT_PROJECT_FILE'
-export const SAVE_PROJECT_FILE = 'SAVE_PROJECT_FILE'
-export const EDIT_PROJECT_FILE_START = 'EDIT_PROJECT_FILE_START'
-export const EDIT_PROJECT_FILE_END = 'EDIT_PROJECT_FILE_END'
 export const REMOVE_PROJECT_FILE = 'REMOVE_PROJECT_FILE'
-export const PROJECT_FILE_ERROR = 'PROJECT_FILE_ERROR'
-export const PROJECT_FILES_MOUNTED = 'PROJECT_FILES_MOUNTED'
-export const PROJECT_FILES_UNMOUNTED = 'PROJECT_FILES_UNMOUNTED'
-export const EXECUTE_COMMAND_ORIGIN = 'EXECUTE_COMMAND_ORIGIN'
-
-export enum EXECUTE_COMMAND_ORIGINS {
-  EDITOR = 'editor',
-  SIDEBAR = 'sidebar',
-  NONE = ''
-}
 
 export interface ProhibitedFilenameErrors {
   chars: string[]
@@ -85,15 +71,6 @@ export interface ProjectFileMapping {
   apiToken: string
   clientId: string
   relateUrl: string
-}
-
-// needed for MyScripts component
-export interface Favorite {
-  id: string
-  name: string
-  path: string
-  contents: string
-  directory: string
 }
 
 export interface ProjectFilesResult {
