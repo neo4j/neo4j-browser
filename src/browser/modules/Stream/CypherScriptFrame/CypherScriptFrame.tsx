@@ -105,6 +105,8 @@ function CypherScriptFrame({
 }
 
 const mapStateToProps = (state: any, ownProps: BaseFrameProps) => {
+  // frame.statements are added one by one as the frame renders and is undefined on first render
+  if (!ownProps.frame.statements) return { frames: {}, requests: {} }
   const frames = ownProps.frame.statements
     .map(id => getFrame(state, id).stack[0])
     .reduce(

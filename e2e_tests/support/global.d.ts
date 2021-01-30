@@ -29,6 +29,10 @@ declare global {
        */
       typeInFrame(cmd: string, frameIndex?: number): Cypress.Chainable<void>
       /**
+       * Custom command to clear textboxes where normal .clear doesn't work e.g. monaco editor
+       */
+      clearMonaco(): Cypress.Chainable<void>
+      /**
        * Custom command to type and submit query in cypher editor.
        * @example cy.executeCommand(':clear')
        */

@@ -50,7 +50,6 @@ import {
 import { getScrollToTop } from 'shared/modules/settings/settingsDuck'
 import DbsFrame from './Auth/DbsFrame'
 import EditFrame from './EditFrame'
-import { SnakeFrame } from './Extras/index'
 
 const getFrame = (type: string) => {
   const trans: Record<string, any> = {
@@ -125,10 +124,17 @@ function Stream(props: StreamProps): JSX.Element {
           stack: frameObject.stack
         }
 
-        const MyFrame =
-          frame.cmd.slice(1).toLowerCase() === 'snake'
-            ? SnakeFrame
-            : getFrame(frame.type)
+        let MyFrame = getFrame(frame.type)
+        if (frame.type === 'error') {
+          try {
+            const cmd = frame.cmd.replace(/^:/, '')
+            const Frame = cmd[0].toUpperCase() + cmd.slice(1) + 'Frame'
+            MyFrame = require('./Extras/index')[Frame]
+            if (!MyFrame) {
+              MyFrame = getFrame(frame.type)
+            }
+          } catch (e) {}
+        }
         return (
           <AnimationContainer key={frame.id}>
             <MyFrame {...frameProps} />
