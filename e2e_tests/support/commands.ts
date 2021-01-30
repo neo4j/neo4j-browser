@@ -1,7 +1,6 @@
 const SubmitQueryButton = '[data-testid="editor-Run"]'
 const EditorTextField = '[data-testid="activeEditor"] textarea'
 const VisibleEditor = '#monaco-main-editor'
-
 /* global Cypress, cy */
 
 Cypress.Commands.add('getEditor', () => cy.get(VisibleEditor))
@@ -103,14 +102,12 @@ Cypress.Commands.add('disconnect', () => {
 Cypress.Commands.add('typeInFrame', (cmd: string, frameIndex = 0) => {
   cy.get('[id^=monaco-]')
     .eq(frameIndex + 1) // the first monaco editor is the main one
-    .clearMonaco()
+    .type(
+      Cypress.platform === 'darwin'
+        ? '{cmd}a {backspace}'
+        : '{ctrl}a {backspace}'
+    )
     .type(cmd)
-})
-
-Cypress.Commands.add('clearMonaco', () => {
-  cy.type(
-    Cypress.platform === 'darwin' ? '{cmd}a {backspace}' : '{ctrl}a {backspace}'
-  )
 })
 
 Cypress.Commands.add('executeCommand', (query, options = {}) => {

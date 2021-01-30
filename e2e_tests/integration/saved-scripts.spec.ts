@@ -42,7 +42,11 @@ describe('Saved Scripts', () => {
     cy.get('[data-testid="currentlyEditing"]').contains('script name')
     // Editing script updates name and content
     cy.get('[data-testid="activeEditor"] textarea')
-      .clearMonaco()
+      .type(
+        Cypress.platform === 'darwin'
+          ? '{cmd}a {backspace}'
+          : '{ctrl}a {backspace}'
+      )
       .type('// Guide{shift}{enter}:play movies', { force: true })
     cy.get('[title="Update favorite"]').click()
 
