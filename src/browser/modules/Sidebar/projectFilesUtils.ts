@@ -52,16 +52,16 @@ export const ProjectFileMutationVars = (
   filePath
 })
 
-export const mapProjectFileToFavorites = async ({
+export const mapProjectFileToFavorites = ({
   downloadToken,
   name,
   apiToken,
   clientId,
   relateUrl
-}: ProjectFileMapping): Promise<ProjectFileScript> => ({
+}: ProjectFileMapping): ProjectFileScript => ({
   id: uuid.v4(),
   filename: name,
-  content: await getProjectFileContents(
+  content: getProjectFileContents(
     downloadToken,
     name,
     apiToken,

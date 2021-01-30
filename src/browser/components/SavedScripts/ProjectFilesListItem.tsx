@@ -28,7 +28,7 @@ function ProjectFilesListItem({
         {script.filename}
       </SavedScriptsListItemDisplayName>
       <SavedScriptsButtonWrapper className="saved-scripts__button-wrapper">
-        <RunButton onClick={() => execScript(script.content)} />
+        <RunButton onClick={() => script.content.then(execScript)} />
       </SavedScriptsButtonWrapper>
     </SavedScriptsListItemMain>
   )

@@ -9,7 +9,7 @@ import ProjectFilesListItem from './ProjectFilesListItem'
 
 export type ProjectFileScript = {
   id: string
-  content: string //| Promise<string>
+  content: Promise<string>
   filename: string
 }
 
