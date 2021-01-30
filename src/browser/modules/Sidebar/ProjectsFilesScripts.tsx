@@ -124,29 +124,19 @@ function ProjectFilesScripts(props: ProjectFilesScripts): JSX.Element {
   const [projectFiles, setProjectFiles] = useState<ProjectFileScript[]>([])
 
   useEffect(() => {
-    let isStillMounted = true
     if (data) {
-      const getProjectFiles = async () => {
-        const getProjectFilePromises = data.getProject.files.map(
-          ({ downloadToken, name, directory }) =>
-            mapProjectFileToFavorites({
-              downloadToken,
-              name,
-              directory,
-              apiToken: props.relateApiToken,
-              clientId: props.neo4jDesktopGraphAppId,
-              relateUrl: props.relateUrl
-            })
+      setProjectFiles(
+        data.getProject.files.map(({ downloadToken, name, directory }) =>
+          mapProjectFileToFavorites({
+            downloadToken,
+            name,
+            directory,
+            apiToken: props.relateApiToken,
+            clientId: props.neo4jDesktopGraphAppId,
+            relateUrl: props.relateUrl
+          })
         )
-        const projectFiles = await Promise.all(getProjectFilePromises)
-        if (isStillMounted) {
-          setProjectFiles(projectFiles)
-        }
-      }
-      getProjectFiles()
-    }
-    return () => {
-      isStillMounted = false
+      )
     }
   }, [
     data,
@@ -182,11 +172,13 @@ function ProjectFilesScripts(props: ProjectFilesScripts): JSX.Element {
       }
     },
     selectScript: (script: ProjectFileScript) => {
-      props.bus.send(
-        editor.EDIT_CONTENT,
-        editor.editContent(script.id, script.content, {
-          name: script.filename
-        })
+      script.content.then(contents =>
+        props.bus.send(
+          editor.EDIT_CONTENT,
+          editor.editContent(script.id, contents, {
+            name: script.filename
+          })
+        )
       )
     }
   }
