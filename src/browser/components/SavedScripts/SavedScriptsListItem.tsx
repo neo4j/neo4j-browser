@@ -9,6 +9,7 @@ import {
   SavedScriptsListItemMain
 } from './styled'
 import { Favorite } from 'shared/modules/favorites/favoritesDuck'
+import { getScriptDisplayName } from './utils'
 
 interface SavedScriptsListItemProps {
   script: Favorite
@@ -16,11 +17,6 @@ interface SavedScriptsListItemProps {
   execScript: (script: Favorite) => void
   renameScript?: (script: Favorite, name: string) => void
   removeScript?: (script: Favorite) => void
-}
-
-function getScriptDisplayName(script: Favorite): string {
-  const nameLine = script.content.split('\n')[0]
-  return nameLine.startsWith('//') ? nameLine.substr(2).trimLeft() : nameLine
 }
 
 function SavedScriptsListItem({

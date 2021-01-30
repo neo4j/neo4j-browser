@@ -1,5 +1,9 @@
-import React from 'react'
-import { RunButton } from '../SavedScripts/SavedScriptsButton'
+import React, { useState } from 'react'
+import {
+  RemoveButton,
+  RedRemoveButton,
+  RunButton
+} from '../SavedScripts/SavedScriptsButton'
 import {
   SavedScriptsButtonWrapper,
   SavedScriptsListItemDisplayName,
@@ -10,14 +14,17 @@ import { ProjectFileScript } from './ProjectFilesList'
 interface ProjectFilesListItemProps {
   script: ProjectFileScript
   selectScript: (script: ProjectFileScript) => void
+  removeScript: (script: ProjectFileScript) => void
   execScript: (cmd: string) => void
 }
 
 function ProjectFilesListItem({
   script,
   selectScript,
-  execScript
+  execScript,
+  removeScript
 }: ProjectFilesListItemProps): JSX.Element {
+  const [isEditing, setIsEditing] = useState(false)
   return (
     <SavedScriptsListItemMain className="saved-scripts-list-item">
       <SavedScriptsListItemDisplayName
@@ -28,6 +35,11 @@ function ProjectFilesListItem({
         {script.filename}
       </SavedScriptsListItemDisplayName>
       <SavedScriptsButtonWrapper className="saved-scripts__button-wrapper">
+        {isEditing ? (
+          <RedRemoveButton onClick={() => removeScript(script)} />
+        ) : (
+          <RemoveButton onClick={() => setIsEditing(true)} />
+        )}
         <RunButton onClick={() => script.content.then(execScript)} />
       </SavedScriptsButtonWrapper>
     </SavedScriptsListItemMain>

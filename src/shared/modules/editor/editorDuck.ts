@@ -23,7 +23,7 @@ import {
   EditorSupportCompletionItem
 } from 'cypher-editor-support'
 import { editor, languages } from 'monaco-editor'
-import { Action, Store } from 'redux'
+import { Action } from 'redux'
 import { ActionsObservable, Epic } from 'redux-observable'
 import Rx from 'rxjs/Rx'
 

@@ -1,17 +1,20 @@
 import React, { ReactEventHandler } from 'react'
 import { Icon, SemanticICONS } from 'semantic-ui-react'
+import { SemanticCOLORS } from 'semantic-ui-react/dist/commonjs/generic'
 import { StyledSavedScriptsButton } from './styled'
 
 type SavedScriptsButtonProps = {
   onClick: ReactEventHandler
   title: string
   iconName: SemanticICONS
+  color?: SemanticCOLORS
 }
 
 export default function SavedScriptsButton({
   onClick,
   title,
-  iconName
+  iconName,
+  color
 }: SavedScriptsButtonProps): JSX.Element {
   return (
     <StyledSavedScriptsButton
@@ -20,7 +23,7 @@ export default function SavedScriptsButton({
       data-testid={`savedScriptsButton-${title}`}
       onClick={onClick}
     >
-      <Icon name={iconName} />
+      <Icon color={color} name={iconName} />
     </StyledSavedScriptsButton>
   )
 }
@@ -49,11 +52,20 @@ const RemoveButton = ({ onClick }: OnClickProp): JSX.Element =>
     iconName: 'trash alternate outline'
   })
 
+const RedRemoveButton = ({ onClick }: OnClickProp): JSX.Element =>
+  SavedScriptsButton({
+    onClick,
+    title: 'Remove',
+    iconName: 'trash alternate outline',
+    color: 'red'
+  })
+
 export {
   SavedScriptsButton,
   ExportButton,
   EditButton,
   RunButton,
   NewFolderButton,
-  RemoveButton
+  RemoveButton,
+  RedRemoveButton
 }
