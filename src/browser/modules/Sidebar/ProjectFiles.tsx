@@ -24,15 +24,17 @@ import { useMutation } from '@apollo/client'
 import { getProjectId } from 'shared/modules/app/appDuck'
 
 import { Drawer, DrawerHeader } from 'browser-components/drawer'
-import ProjectFilesScripts, { ProjectFilesError } from './ProjectsFilesScripts'
+import ProjectFilesScripts, {
+  ProjectFilesError
+} from '../../components/ProjectFiles/ProjectsFilesScripts'
 import NewSavedScript from './NewSavedScript'
 import {
   setProjectFileDefaultFileName,
   updateCacheAddProjectFile,
   checkFileNameInput
-} from './projectFilesUtils'
+} from '../../components/ProjectFiles/projectFilesUtils'
 import { CYPHER_FILE_EXTENSION } from 'shared/services/export-favorites'
-import { ADD_PROJECT_FILE } from './projectFilesConstants'
+import { ADD_PROJECT_FILE } from '../../components/ProjectFiles/projectFilesConstants'
 import { setDraftScript } from 'shared/modules/sidebar/sidebarDuck'
 
 interface ProjectFilesProps {

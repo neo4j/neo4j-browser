@@ -4,7 +4,7 @@ import {
   SavedScriptsBody,
   SavedScriptsBodySection,
   SavedScriptsHeader
-} from './styled'
+} from '../SavedScripts/styled'
 import ProjectFilesListItem from './ProjectFilesListItem'
 
 export type ProjectFileScript = {
