@@ -81,7 +81,7 @@ import {
 } from 'shared/modules/settings/settingsDuck'
 import { getUseDb } from 'shared/modules/connections/connectionsDuck'
 import { getHistory, HistoryState } from 'shared/modules/history/historyDuck'
-import { CYPHER_FILE_EXTENSION } from 'services/export-favorites'
+import { CYPHER_FILE_EXTENSION } from 'services/exportFavorites'
 import { defaultNameFromDisplayContent } from 'browser-components/SavedScripts'
 
 type EditorFrameProps = {

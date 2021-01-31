@@ -1,5 +1,5 @@
 /*
- * Copyright (c) "Neo4j"
+ * Copyright (c) 2002-2021 "Neo4j,"
  * Neo4j Sweden AB [http://neo4j.com]
  * This file is part of Neo4j.
  * Neo4j is free software: you can redistribute it and/or modify
@@ -15,8 +15,6 @@
  *
  */
 
-export {
-  exportFavorites,
-  mapOldFavoritesAndFolders
-} from './export-favorites.utils'
-export { SLASH, CYPHER_FILE_EXTENSION, DOT } from './export-favorites.constants'
+export function exportFavorites() {
+  throw new Error('Not yet implemented')
+}
