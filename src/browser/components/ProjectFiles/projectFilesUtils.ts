@@ -15,7 +15,7 @@
  *
  */
 import remote from 'services/remote'
-import { CYPHER_FILE_EXTENSION } from 'shared/services/export-favorites'
+import { CYPHER_FILE_EXTENSION } from 'services/exportFavorites'
 import { ProjectFileScript } from 'browser-components/ProjectFiles/ProjectFilesList'
 import { split, trim, head, startsWith } from 'lodash-es'
 import {

@@ -33,7 +33,7 @@ import {
   updateCacheAddProjectFile,
   checkFileNameInput
 } from '../../components/ProjectFiles/projectFilesUtils'
-import { CYPHER_FILE_EXTENSION } from 'shared/services/export-favorites'
+import { CYPHER_FILE_EXTENSION } from 'services/exportFavorites'
 import { ADD_PROJECT_FILE } from '../../components/ProjectFiles/projectFilesConstants'
 import { setDraftScript } from 'shared/modules/sidebar/sidebarDuck'
 

@@ -34,7 +34,7 @@ import {
 import JSZip from 'jszip'
 import uuid from 'uuid'
 
-import { CYPHER_FILE_EXTENSION } from 'shared/services/export-favorites'
+import { CYPHER_FILE_EXTENSION } from 'services/exportFavorites'
 
 /**
  * Extracts folders from favorites
