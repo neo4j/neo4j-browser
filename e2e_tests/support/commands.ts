@@ -101,6 +101,7 @@ Cypress.Commands.add('disconnect', () => {
 
 Cypress.Commands.add('typeInFrame', (cmd: string, frameIndex = 0) => {
   cy.get('[id^=monaco-]')
+    .should('have.length.at.least', frameIndex + 1)
     .eq(frameIndex + 1) // the first monaco editor is the main one
     .type(
       Cypress.platform === 'darwin'
