@@ -107,7 +107,7 @@ describe('Connect form', () => {
         `Automatic retry using the "${schemeWithEncryptionFlag('bolt')}"`
       )
       cy.wait(7000) // auto retry is in 5 secs
-      getFirstFrameCommand().should('contain', ':play start')
+      getFirstFrameCommand().contains(':play start')
       cy.executeCommand(':server disconnect')
       cy.executeCommand(':clear')
     })

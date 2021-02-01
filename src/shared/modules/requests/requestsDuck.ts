@@ -23,10 +23,10 @@ import bolt from 'services/bolt/bolt'
 import { APP_START } from 'shared/modules/app/appDuck'
 
 export const NAME = 'requests'
-export const REQUEST_SENT = `${NAME}/SENT`
-export const CANCEL_REQUEST = `${NAME}/CANCEL`
-export const REQUEST_CANCELED = `${NAME}/CANCELED`
-export const REQUEST_UPDATED = `${NAME}/UPDATED`
+export const REQUEST_SENT = 'requests/SENT'
+export const CANCEL_REQUEST = 'requests/CANCEL'
+export const REQUEST_CANCELED = 'requests/CANCELED'
+export const REQUEST_UPDATED = 'requests/UPDATED'
 
 export const REQUEST_STATUS_PENDING = 'pending'
 export const REQUEST_STATUS_SUCCESS = 'success'
@@ -34,14 +34,38 @@ export const REQUEST_STATUS_ERROR = 'error'
 export const REQUEST_STATUS_CANCELING = 'canceling'
 export const REQUEST_STATUS_CANCELED = 'canceled'
 
-const initialState = {}
+type RequestStatus = 'pending' | 'success' | 'error' | 'canceling' | 'canceled'
 
-export const getRequest = (state: any, id: any) => state[NAME][id]
-export const getRequests = (state: any) => state[NAME]
-export const isCancelStatus = (status: any) =>
+export type RequestState = Record<string, Request>
+type GlobalState = { [NAME]: RequestState }
+const initialState: RequestState = {}
+
+export const getRequest = (state: GlobalState, id: string): Request =>
+  state[NAME][id]
+export const getRequests = (state: GlobalState): RequestState => state[NAME]
+export const isCancelStatus = (status: RequestStatus): boolean =>
   [REQUEST_STATUS_CANCELED, REQUEST_STATUS_CANCELING].includes(status)
 
-export default function reducer(state: any = initialState, action: any) {
+export type Status =
+  | 'ignored'
+  | 'skipped'
+  | 'pending'
+  | 'success'
+  | 'waiting'
+  | 'error'
+
+export type Request = {
+  result?: any
+  status: Status
+  type: any
+  id: string
+  updated?: number
+}
+
+export default function reducer(
+  state: RequestState = initialState,
+  action: any
+) {
   switch (action.type) {
     case APP_START:
       return { ...initialState, ...state }
@@ -73,46 +97,39 @@ export default function reducer(state: any = initialState, action: any) {
   }
 }
 
-export const send = (requestType: any, id: any) => {
-  return {
-    type: REQUEST_SENT,
-    requestType,
-    id
-  }
-}
+export const send = (requestType: any, id: string) => ({
+  type: REQUEST_SENT,
+  requestType,
+  id
+})
 
-export const update = (id: any, result: any, status: any) => {
-  return {
-    type: REQUEST_UPDATED,
-    id,
-    result,
-    status
-  }
-}
+export const update = (id: string, result: any, status: Status) => ({
+  type: REQUEST_UPDATED,
+  id,
+  result,
+  status
+})
 
-export const cancel = (id: any) => {
-  return {
-    type: CANCEL_REQUEST,
-    status: REQUEST_STATUS_CANCELING,
-    id
-  }
-}
+export const cancel = (id: string) => ({
+  type: CANCEL_REQUEST,
+  status: REQUEST_STATUS_CANCELING,
+  id
+})
 
-const canceled = (id: any) => {
-  return {
-    type: REQUEST_CANCELED,
-    status: REQUEST_STATUS_CANCELED,
-    result: null,
-    id
-  }
-}
+const canceled = (id: string) => ({
+  type: REQUEST_CANCELED,
+  status: REQUEST_STATUS_CANCELED,
+  result: null,
+  id
+})
 
 // Epics
 export const cancelRequestEpic = (action$: any) =>
-  action$.ofType(CANCEL_REQUEST).mergeMap((action: any) => {
-    return new Promise(resolve => {
-      bolt.cancelTransaction(action.id, () => {
-        resolve(canceled(action.id))
+  action$.ofType(CANCEL_REQUEST).mergeMap(
+    (action: { id: string }) =>
+      new Promise(resolve => {
+        bolt.cancelTransaction(action.id, () => {
+          resolve(canceled(action.id))
+        })
       })
-    })
-  })
+  )

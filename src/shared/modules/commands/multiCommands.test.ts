@@ -109,6 +109,7 @@ describe('handleCommandEpic', () => {
         addFrame({
           type: 'cypher-script',
           id: parentId,
+          isRerun: false,
           cmd: action.cmd
         } as any)
       )

@@ -91,7 +91,7 @@ module.exports = () => {
     }),
     new ForkTsCheckerNotifierWebpackPlugin({
       title: 'TypeScript',
-      excludeWarnings: false
+      excludeWarnings: true // remove as we move to ts
     }),
     new MonacoWebpackPlugin({
       features: [

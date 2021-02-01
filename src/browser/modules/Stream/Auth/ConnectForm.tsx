@@ -33,8 +33,8 @@ import {
 import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
 import { toKeyString } from 'services/utils'
 import { stripScheme, getScheme } from 'services/boltscheme.utils'
+import { AuthenticationMethod } from 'shared/modules/connections/connectionsDuck'
 
-type AuthenticationMethod = typeof NATIVE | typeof NO_AUTH
 const readableauthenticationMethods: Record<AuthenticationMethod, string> = {
   [NATIVE]: 'Username / Password',
   [NO_AUTH]: 'No authentication'

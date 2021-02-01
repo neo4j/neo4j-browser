@@ -18,47 +18,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import styled, { keyframes } from 'styled-components'
+import styled from 'styled-components'
 import { dim } from 'browser-styles/constants'
 
-const rollDownAnimation = keyframes`
-  from {
-    transform: translate(0, -${dim.frameBodyHeight}px);
-    max-height: 0;
-  }
-  to {
-    transform: translateY(0);
-    max-height: 500px; /* Greater than a frame can be */
-  }
-`
+type FullscreenProps = { fullscreen: boolean }
 
-// Frames
-export const StyledFrame: any = styled.article`
+export const StyledFrame = styled.article<FullscreenProps>`
   width: auto;
   background-color: ${props => props.theme.secondaryBackground};
-  animation: ${rollDownAnimation} 0.4s ease-in;
   border: ${props => props.theme.frameBorder};
-  margin: ${props =>
-    // @ts-expect-error ts-migrate(2339) FIXME: Property 'fullscreen' does not exist on type 'Them... Remove this comment to see the full error message
-    props.fullscreen ? '0' : '0 0 10px 0'};
+
   ${props =>
-    // @ts-expect-error ts-migrate(2339) FIXME: Property 'fullscreen' does not exist on type 'Them... Remove this comment to see the full error message
-    props.fullscreen ? 'position: fixed' : null};
-  ${props =>
-    // @ts-expect-error ts-migrate(2339) FIXME: Property 'fullscreen' does not exist on type 'Them... Remove this comment to see the full error message
-    props.fullscreen ? 'left: 0' : null};
-  ${props =>
-    // @ts-expect-error ts-migrate(2339) FIXME: Property 'fullscreen' does not exist on type 'Them... Remove this comment to see the full error message
-    props.fullscreen ? 'top: 0' : null};
-  ${props =>
-    // @ts-expect-error ts-migrate(2339) FIXME: Property 'fullscreen' does not exist on type 'Them... Remove this comment to see the full error message
-    props.fullscreen ? 'bottom: 0' : null};
-  ${props =>
-    // @ts-expect-error ts-migrate(2339) FIXME: Property 'fullscreen' does not exist on type 'Them... Remove this comment to see the full error message
-    props.fullscreen ? 'right: 0' : null};
-  ${props =>
-    // @ts-expect-error ts-migrate(2339) FIXME: Property 'fullscreen' does not exist on type 'Them... Remove this comment to see the full error message
-    props.fullscreen ? 'z-index: 1030' : null};
+    props.fullscreen
+      ? `margin: 0;
+position: fixed;
+left: 0;
+top: 0;
+bottom: 0;
+right: 0;
+z-index: 1300;`
+      : 'margin 0 0 10px 0;'}
 
   &:hover .carousel-intro-animation {
     opacity: 0;
@@ -68,23 +47,21 @@ export const StyledFrame: any = styled.article`
   border-radius: 2px;
 `
 
-export const StyledFrameBody: any = styled.div`
+export const StyledFrameBody = styled.div<
+  FullscreenProps & { collapsed: boolean }
+>`
   overflow: auto;
   min-height: ${dim.frameBodyHeight / 2}px;
   max-height: ${props => {
-    // @ts-expect-error ts-migrate(2339) FIXME: Property 'collapsed' does not exist on type 'Theme... Remove this comment to see the full error message
     if (props.collapsed) {
       return 0
     }
-    // @ts-expect-error ts-migrate(2339) FIXME: Property 'fullscreen' does not exist on type 'Them... Remove this comment to see the full error message
     if (props.fullscreen) {
       return '100%'
     }
     return dim.frameBodyHeight - dim.frameStatusbarHeight + 1 + 'px'
   }};
-  display: ${props =>
-    // @ts-expect-error ts-migrate(2339) FIXME: Property 'collapsed' does not exist on type 'Theme... Remove this comment to see the full error message
-    props.collapsed ? 'none' : 'flex'};
+  display: ${props => (props.collapsed ? 'none' : 'flex')};
   flex-direction: row;
   width: 100%;
   padding: 30px;
@@ -122,18 +99,15 @@ export const StyledFrameAside = styled.div`
   min-width: 120px;
 `
 
-export const StyledFrameContents: any = styled.div`
+export const StyledFrameContents = styled.div<FullscreenProps>`
   font-size: 14px;
   overflow: auto;
   min-height: ${dim.frameBodyHeight / 2}px;
   max-height: ${props =>
-    // @ts-expect-error ts-migrate(2339) FIXME: Property 'fullscreen' does not exist on type 'Them... Remove this comment to see the full error message
     props.fullscreen
       ? '100vh'
       : dim.frameBodyHeight - dim.frameStatusbarHeight * 2 + 'px'};
-  ${props =>
-    // @ts-expect-error ts-migrate(2339) FIXME: Property 'fullscreen' does not exist on type 'Them... Remove this comment to see the full error message
-    props.fullscreen ? 'height: 100vh' : null};
+  ${props => (props.fullscreen ? 'height: 100vh' : null)};
   flex: auto;
   display: flex;
   width: 100%;
@@ -147,12 +121,10 @@ export const StyledFrameContents: any = styled.div`
   }
 `
 
-export const StyledFrameStatusbar: any = styled.div`
+export const StyledFrameStatusbar = styled.div<FullscreenProps>`
   border-top: ${props => props.theme.inFrameBorder};
-  height: ${dim.frameStatusbarHeight + 1}px;
-  ${props =>
-    // @ts-expect-error ts-migrate(2339) FIXME: Property 'fullscreen' does not exist on type 'Them... Remove this comment to see the full error message
-    props.fullscreen ? 'margin-top: -78px;' : ''};
+  height: ${dim.frameStatusbarHeight - 1}px;
+  ${props => (props.fullscreen ? 'margin-top: -78px;' : '')};
   display: flex;
   flex-direction: row;
   flex: none;
@@ -187,19 +159,41 @@ export const StyledFrameTitlebarButtonSection = styled.ul`
 `
 
 export const StyledFrameTitleBar = styled.div`
-  height: ${dim.frameTitlebarHeight}px;
   border-bottom: transparent;
   line-height: ${dim.frameTitlebarHeight}px;
   color: ${props => props.theme.frameTitlebarText};
   display: flex;
-  flex-direction: row;
 `
 
 export const StyledFrameStatusbarText = styled.label`
   flex: 1 1 auto;
 `
 
-export const StyledFrameCommand: any = styled.label`
+export const CurrentDbText = styled.div`
+  color: ${props => props.theme.promptText};
+`
+
+export const FrameTitleEditorContainer = styled.div`
+  border-radius: 2px;
+  padding-left: 6px;
+  padding-top: 3px;
+  margin: 3px 5px 3px 3px;
+
+  width: 0; // Prevents the editor from growing past flex-grow: 1
+  flex-grow: 1;
+  display: flex;
+
+  font-family: ${props => props.theme.editorFont};
+  line-height: 2.2em;
+  font-size: 1.2em;
+  color: ${props => props.theme.secondaryButtonText};
+  background-color: ${props => props.theme.frameSidebarBackground};
+  .disable-font-ligatures & {
+    font-variant-ligatures: none !important;
+  }
+`
+
+export const StyledFrameCommand = styled.label<{ selectedDb: string }>`
   font-family: ${props => props.theme.editorFont};
   color: ${props => props.theme.secondaryButtonText};
   background-color: ${props => props.theme.frameSidebarBackground};
@@ -216,9 +210,7 @@ export const StyledFrameCommand: any = styled.label`
   display: block;
   &::before {
     color: ${props => props.theme.promptText};
-    content: "${props =>
-      // @ts-expect-error ts-migrate(2339) FIXME: Property 'selectedDb' does not exist on type 'Them... Remove this comment to see the full error message
-      (props.selectedDb || '') + '$ '}";
+    content: "${props => (props.selectedDb || '') + '$ '}";
   }
   .disable-font-ligatures & {
     font-variant-ligatures: none !important;

@@ -6,7 +6,7 @@ exports[`CodeViews CodeStatusbar displays no statusBarMessage 1`] = `
     class="sc-ckVGcZ fsAzIa"
   >
     <div
-      class="sc-hzDkRC ksLWOp"
+      class="sc-jhAzac cbymny"
     />
   </div>
 </div>
@@ -18,7 +18,7 @@ exports[`CodeViews CodeStatusbar displays statusBarMessage 1`] = `
     class="sc-ckVGcZ fsAzIa"
   >
     <div
-      class="sc-hzDkRC ksLWOp"
+      class="sc-jhAzac cbymny"
     >
       Started streaming 1 records after 5 ms and completed after 10  ms.
     </div>

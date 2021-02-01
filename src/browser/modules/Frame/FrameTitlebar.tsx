@@ -19,7 +19,7 @@
  */
 
 import { connect } from 'react-redux'
-import React, { Component } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { withBus } from 'react-suber'
 import { saveAs } from 'file-saver'
 import { map } from 'lodash-es'
@@ -27,20 +27,20 @@ import SVGInline from 'react-svg-inline'
 import controlsPlay from 'icons/controls-play.svg'
 
 import * as app from 'shared/modules/app/appDuck'
-import * as editor from 'shared/modules/editor/editorDuck'
 import * as commands from 'shared/modules/commands/commandsDuck'
 import * as sidebar from 'shared/modules/sidebar/sidebarDuck'
+import * as editor from 'shared/modules/editor/editorDuck'
 import {
   cancel as cancelRequest,
   getRequest,
+  Request,
   REQUEST_STATUS_PENDING
 } from 'shared/modules/requests/requestsDuck'
-import { remove, pin, unpin } from 'shared/modules/stream/streamDuck'
-import { removeComments, sleep } from 'shared/services/utils'
+import { remove, pin, unpin, Frame } from 'shared/modules/stream/streamDuck'
+import { sleep } from 'shared/services/utils'
 import { FrameButton } from 'browser-components/buttons'
 import Render from 'browser-components/Render'
 import { CSVSerializer } from 'services/serializer'
-
 import {
   CloseIcon,
   ContractIcon,
@@ -48,21 +48,22 @@ import {
   DownloadIcon,
   ExpandIcon,
   PinIcon,
-  RefreshIcon,
+  RunIcon,
   UpIcon,
   SaveFavorite,
   SaveFile
 } from 'browser-components/icons/Icons'
 import {
-  DottedLineHover,
   DropdownList,
   DropdownContent,
   DropdownButton,
-  DropdownItem
+  DropdownItem,
+  DottedLineHover
 } from '../Stream/styled'
 import {
   StyledFrameTitleBar,
   StyledFrameTitlebarButtonSection,
+  FrameTitleEditorContainer,
   StyledFrameCommand
 } from './styled'
 import {
@@ -77,13 +78,78 @@ import {
 import { csvFormat, stringModifier } from 'services/bolt/cypherTypesFormatting'
 import arrayHasItems from 'shared/utils/array-has-items'
 import { stringifyMod } from 'services/utils'
+import Monaco, { MonacoHandles } from '../Editor/Monaco'
+import { Bus } from 'suber'
+import FeatureToggle from '../FeatureToggle/FeatureToggle'
+import { reusableFrame } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
 
-class FrameTitlebar extends Component<any> {
-  hasData() {
-    return this.props.numRecords > 0
+type FrameTitleBarBaseProps = {
+  frame: any
+  fullscreen: boolean
+  fullscreenToggle: () => void
+  collapse: boolean
+  collapseToggle: () => void
+  pinned: boolean
+  togglePin: () => void
+  numRecords: number
+  getRecords: () => any
+  visElement: any
+  runQuery: () => any
+  bus: Bus
+}
+
+type FrameTitleBarProps = FrameTitleBarBaseProps & {
+  request: Request | null
+  isRelateAvailable: boolean
+  newFavorite: (cmd: string) => void
+  newProjectFile: (cmd: string) => void
+  onCloseClick: (
+    frameId: string,
+    requestId: string,
+    request: Request | null
+  ) => void
+  onRunClick: () => void
+  reRun: (obj: Frame, cmd: string) => void
+  togglePinning: (id: string, isPinned: boolean) => void
+  onTitlebarClick: (cmd: string) => void
+}
+
+function FrameTitlebar(props: FrameTitleBarProps) {
+  const [editorValue, setEditorValue] = useState(props.frame.cmd)
+  const editorRef = useRef<MonacoHandles>(null)
+
+  /* When the frametype is changed the titlebar is unmounted
+  and replaced with a new instance. This means focus cursor position are lost.
+  To regain editor focus we run an effect dependant on the isRerun prop.
+  However, when the frame prop changes in some way the effect is retriggered
+  although the "isRun" is still true. Use effect does not check for equality
+  but instead re-runs the effect to take focus again. To prevent this
+  we use the useCallback hook as well. As a best effort we set the cursor position
+  to be at the end of the query.
+
+  A better solution is to change the frame titlebar to reside outside of the 
+  frame contents.
+  */
+
+  const gainFocusCallback = useCallback(() => {
+    if (props.frame.isRerun) {
+      editorRef.current?.focus()
+
+      const lines = (editorRef.current?.getValue() || '').split('\n')
+      const linesLength = lines.length
+      editorRef.current?.setPosition({
+        lineNumber: linesLength,
+        column: lines[linesLength - 1].length + 1
+      })
+    }
+  }, [props.frame.isRerun])
+  useEffect(gainFocusCallback, [gainFocusCallback])
+
+  function hasData() {
+    return props.numRecords > 0
   }
 
-  exportCSV(records: any) {
+  function exportCSV(records: any) {
     const exportData = stringifyResultArray(
       csvFormat,
       transformResultRecordsToResultArray(records)
@@ -97,12 +163,12 @@ class FrameTitlebar extends Component<any> {
     saveAs(blob, 'export.csv')
   }
 
-  exportTXT = () => {
-    const { frame } = this.props
+  function exportTXT() {
+    const { frame } = props
 
     if (frame.type === 'history') {
       const asTxt = frame.result
-        .map((result: any) => {
+        .map((result: string) => {
           const safe = `${result}`.trim()
 
           if (safe.startsWith(':')) {
@@ -120,7 +186,7 @@ class FrameTitlebar extends Component<any> {
     }
   }
 
-  exportJSON(records: any) {
+  function exportJSON(records: any) {
     const exportData = map(records, recordToJSONMapper)
     const data = stringifyMod(exportData, stringModifier, true)
     const blob = new Blob([data], {
@@ -129,178 +195,182 @@ class FrameTitlebar extends Component<any> {
     saveAs(blob, 'records.json')
   }
 
-  exportPNG() {
-    const { svgElement, graphElement, type } = this.props.visElement
+  function exportPNG() {
+    const { svgElement, graphElement, type } = props.visElement
     downloadPNGFromSVG(svgElement, graphElement, type)
   }
 
-  exportSVG() {
-    const { svgElement, graphElement, type } = this.props.visElement
+  function exportSVG() {
+    const { svgElement, graphElement, type } = props.visElement
     downloadSVG(svgElement, graphElement, type)
   }
 
-  exportGrass(data: any) {
+  function exportGrass(data: any) {
     const blob = new Blob([data], {
       type: 'text/plain;charset=utf-8'
     })
     saveAs(blob, 'style.grass')
   }
 
-  canExport = () => {
-    const props = this.props
-    const { frame = {} } = props
+  function canExport() {
+    const { frame = {}, visElement } = props
 
     return (
-      this.canExportTXT() ||
-      (frame.type === 'cypher' && (this.hasData() || this.props.visElement)) ||
-      (frame.type === 'style' && this.hasData())
+      canExportTXT() ||
+      (frame.type === 'cypher' && (hasData() || visElement)) ||
+      (frame.type === 'style' && hasData())
     )
   }
 
-  canExportTXT() {
-    const { frame = {} } = this.props
+  function canExportTXT() {
+    const { frame = {} } = props
 
     return frame.type === 'history' && arrayHasItems(frame.result)
   }
 
-  render() {
-    const props = this.props
-    const { frame = {} } = props
-    const fullscreenIcon = props.fullscreen ? <ContractIcon /> : <ExpandIcon />
-    const expandCollapseIcon = props.collapse ? <DownIcon /> : <UpIcon />
-    const cmd = removeComments(frame.cmd)
-    return (
-      <StyledFrameTitleBar>
-        <StyledFrameCommand selectedDb={frame.useDb}>
-          <DottedLineHover
-            data-testid="frameCommand"
-            onClick={() => props.onTitlebarClick(frame.cmd)}
-          >
-            {cmd}
-          </DottedLineHover>
-        </StyledFrameCommand>
-        <StyledFrameTitlebarButtonSection>
-          <FrameButton
-            title="Save as Favorite"
-            data-testid="frame-Favorite"
-            onClick={() => {
-              props.newFavorite(frame.cmd)
-            }}
-          >
-            {/* @ts-expect-error ts-migrate(2322) FIXME: Property 'width' does not exist on type 'Intrinsic... Remove this comment to see the full error message */}
-            <SaveFavorite width={12} />
-          </FrameButton>
-          <Render if={props.isRelateAvailable}>
-            <FrameButton
-              title="Save as project file"
-              onClick={() => {
-                props.newProjectFile(frame.cmd)
-              }}
-            >
-              {/* @ts-expect-error ts-migrate(2322) FIXME: Property 'width' does not exist on type 'Intrinsic... Remove this comment to see the full error message */}
-              <SaveFile width={12} />
-            </FrameButton>
-          </Render>
-          <Render if={this.canExport()}>
-            <DropdownButton data-testid="frame-export-dropdown">
-              <DownloadIcon />
-              <DropdownList>
-                <DropdownContent>
-                  <Render if={this.hasData() && frame.type === 'cypher'}>
-                    <DropdownItem
-                      onClick={() => this.exportCSV(props.getRecords())}
-                    >
-                      Export CSV
-                    </DropdownItem>
-                    <DropdownItem
-                      onClick={() => this.exportJSON(props.getRecords())}
-                    >
-                      Export JSON
-                    </DropdownItem>
-                  </Render>
-                  <Render if={props.visElement}>
-                    <DropdownItem onClick={() => this.exportPNG()}>
-                      Export PNG
-                    </DropdownItem>
-                    <DropdownItem onClick={() => this.exportSVG()}>
-                      Export SVG
-                    </DropdownItem>
-                  </Render>
-                  <Render if={this.canExportTXT()}>
-                    <DropdownItem onClick={this.exportTXT}>
-                      Export TXT
-                    </DropdownItem>
-                  </Render>
-                  <Render if={this.hasData() && frame.type === 'style'}>
-                    <DropdownItem
-                      data-testid="exportGrassButton"
-                      onClick={() => this.exportGrass(props.getRecords())}
-                    >
-                      Export GraSS
-                    </DropdownItem>
-                  </Render>
-                </DropdownContent>
-              </DropdownList>
-            </DropdownButton>
-          </Render>
-          <FrameButton
-            title="Pin at top"
-            onClick={() => {
-              props.togglePin()
-              // using frame.isPinned causes issues when there are multiple frames in one
-              props.togglePinning(frame.id, props.pinned)
-            }}
-            pressed={props.pinned}
-          >
-            <PinIcon />
-          </FrameButton>
-          <Render
-            if={['cypher', 'play', 'play-remote', 'queries'].includes(
-              frame.type
-            )}
-          >
-            <FrameButton
-              title={props.fullscreen ? 'Close fullscreen' : 'Fullscreen'}
-              onClick={() => props.fullscreenToggle()}
-            >
-              {fullscreenIcon}
-            </FrameButton>
-          </Render>
-          <FrameButton
-            title={props.collapse ? 'Expand' : 'Collapse'}
-            onClick={() => props.collapseToggle()}
-          >
-            {expandCollapseIcon}
-          </FrameButton>
-          <Render if={frame.type === 'edit'}>
-            <FrameButton title="Run" onClick={() => props.onRunClick()}>
-              <SVGInline svg={controlsPlay} width="12px" />
-            </FrameButton>
-          </Render>
-          <Render if={frame.type !== 'edit'}>
-            <FrameButton
-              data-testid="rerunFrameButton"
-              title="Rerun"
-              onClick={() => props.onReRunClick(frame)}
-            >
-              <RefreshIcon />
-            </FrameButton>
-          </Render>
-          <FrameButton
-            title="Close"
-            onClick={() =>
-              props.onCloseClick(frame.id, frame.requestId, props.request)
-            }
-          >
-            <CloseIcon />
-          </FrameButton>
-        </StyledFrameTitlebarButtonSection>
-      </StyledFrameTitleBar>
-    )
+  function run(cmd: string) {
+    props.reRun(frame, cmd)
   }
+
+  const { frame = {} } = props
+  const fullscreenIcon = props.fullscreen ? <ContractIcon /> : <ExpandIcon />
+  const expandCollapseIcon = props.collapse ? <DownIcon /> : <UpIcon />
+
+  return (
+    <StyledFrameTitleBar>
+      <FeatureToggle
+        name={reusableFrame}
+        on={
+          <FrameTitleEditorContainer data-testid="frameCommand">
+            <Monaco
+              history={frame.history || []}
+              useDb={frame.useDb}
+              enableMultiStatementMode={true}
+              id={`editor-${frame.id}`}
+              bus={props.bus}
+              onChange={setEditorValue}
+              onExecute={run}
+              value={editorValue}
+              ref={editorRef}
+              toggleFullscreen={props.fullscreenToggle}
+            />
+          </FrameTitleEditorContainer>
+        }
+        off={
+          <StyledFrameCommand
+            selectedDb={frame.useDb}
+            onClick={() => props.onTitlebarClick(editorValue)}
+            data-testid="frameCommand"
+          >
+            <DottedLineHover>{editorValue}</DottedLineHover>
+          </StyledFrameCommand>
+        }
+      />
+      <FrameButton
+        data-testid="rerunFrameButton"
+        title="Rerun"
+        onClick={() => run(editorValue)}
+      >
+        <RunIcon />
+      </FrameButton>
+      <StyledFrameTitlebarButtonSection>
+        <FrameButton
+          title="Save as Favorite"
+          data-testid="frame-Favorite"
+          onClick={() => {
+            props.newFavorite(frame.cmd)
+          }}
+        >
+          <SaveFavorite />
+        </FrameButton>
+        <Render if={props.isRelateAvailable}>
+          <FrameButton
+            title="Save as project file"
+            onClick={() => {
+              props.newProjectFile(frame.cmd)
+            }}
+          >
+            <SaveFile />
+          </FrameButton>
+        </Render>
+        <Render if={canExport()}>
+          <DropdownButton data-testid="frame-export-dropdown">
+            <DownloadIcon />
+            <DropdownList>
+              <DropdownContent>
+                <Render if={hasData() && frame.type === 'cypher'}>
+                  <DropdownItem onClick={() => exportCSV(props.getRecords())}>
+                    Export CSV
+                  </DropdownItem>
+                  <DropdownItem onClick={() => exportJSON(props.getRecords())}>
+                    Export JSON
+                  </DropdownItem>
+                </Render>
+                <Render if={props.visElement}>
+                  <DropdownItem onClick={() => exportPNG()}>
+                    Export PNG
+                  </DropdownItem>
+                  <DropdownItem onClick={() => exportSVG()}>
+                    Export SVG
+                  </DropdownItem>
+                </Render>
+                <Render if={canExportTXT()}>
+                  <DropdownItem onClick={exportTXT}>Export TXT</DropdownItem>
+                </Render>
+                <Render if={hasData() && frame.type === 'style'}>
+                  <DropdownItem
+                    data-testid="exportGrassButton"
+                    onClick={() => exportGrass(props.getRecords())}
+                  >
+                    Export GraSS
+                  </DropdownItem>
+                </Render>
+              </DropdownContent>
+            </DropdownList>
+          </DropdownButton>
+        </Render>
+        <FrameButton
+          title="Pin at top"
+          onClick={() => {
+            props.togglePin()
+            // using frame.isPinned causes issues when there are multiple frames in one
+            props.togglePinning(frame.id, props.pinned)
+          }}
+          pressed={props.pinned}
+        >
+          <PinIcon />
+        </FrameButton>
+        <FrameButton
+          title={props.fullscreen ? 'Close fullscreen' : 'Fullscreen'}
+          onClick={() => props.fullscreenToggle()}
+        >
+          {fullscreenIcon}
+        </FrameButton>
+        <FrameButton
+          title={props.collapse ? 'Expand' : 'Collapse'}
+          onClick={() => props.collapseToggle()}
+        >
+          {expandCollapseIcon}
+        </FrameButton>
+        <Render if={frame.type === 'edit'}>
+          <FrameButton title="Run" onClick={() => props.onRunClick()}>
+            <SVGInline svg={controlsPlay} width="12px" />
+          </FrameButton>
+        </Render>
+        <FrameButton
+          title="Close"
+          onClick={() =>
+            props.onCloseClick(frame.id, frame.requestId, props.request)
+          }
+        >
+          <CloseIcon />
+        </FrameButton>
+      </StyledFrameTitlebarButtonSection>
+    </StyledFrameTitleBar>
+  )
 }
 
-const mapStateToProps = (state: any, ownProps: any) => {
+const mapStateToProps = (state: any, ownProps: FrameTitleBarBaseProps) => {
   const request = ownProps.frame.requestId
     ? getRequest(state, ownProps.frame.requestId)
     : null
@@ -311,18 +381,22 @@ const mapStateToProps = (state: any, ownProps: any) => {
   }
 }
 
-const mapDispatchToProps = (dispatch: any, ownProps: any) => {
+const mapDispatchToProps = (
+  dispatch: any,
+  ownProps: FrameTitleBarBaseProps
+) => {
   return {
-    newFavorite: (cmd: any) => {
+    newFavorite: (cmd: string) => {
       dispatch(sidebar.setDraftScript(cmd, 'favorites'))
     },
-    newProjectFile: (cmd: any) => {
+    newProjectFile: (cmd: string) => {
       dispatch(sidebar.setDraftScript(cmd, 'project files'))
     },
-    onTitlebarClick: (cmd: any) => {
-      ownProps.bus.send(editor.SET_CONTENT, editor.setContent(cmd))
-    },
-    onCloseClick: async (id: any, requestId: any, request: any) => {
+    onCloseClick: async (
+      id: string,
+      requestId: string,
+      request: Request | null
+    ) => {
       if (request && request.status === REQUEST_STATUS_PENDING) {
         dispatch(cancelRequest(requestId))
         await sleep(3000) // sleep for 3000 ms to let user read the cancel info
@@ -332,10 +406,11 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => {
     onRunClick: () => {
       ownProps.runQuery()
     },
-    onReRunClick: ({ cmd, useDb, id, requestId }: any) => {
+    reRun: ({ useDb, id, requestId }: Frame, cmd: string) => {
       if (requestId) {
         dispatch(cancelRequest(requestId))
       }
+
       dispatch(
         commands.executeCommand(cmd, {
           id,
@@ -345,8 +420,11 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => {
         })
       )
     },
-    togglePinning: (id: any, isPinned: any) => {
+    togglePinning: (id: string, isPinned: boolean) => {
       isPinned ? dispatch(unpin(id)) : dispatch(pin(id))
+    },
+    onTitlebarClick: (cmd: any) => {
+      ownProps.bus.send(editor.SET_CONTENT, editor.setContent(cmd))
     }
   }
 }

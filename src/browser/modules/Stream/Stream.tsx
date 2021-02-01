@@ -19,13 +19,12 @@
  */
 
 import { connect } from 'react-redux'
-import React, { PureComponent } from 'react'
-import { StyledStream, Padding } from './styled'
-
+import React, { memo, useRef, useEffect } from 'react'
+import { StyledStream, Padding, AnimationContainer } from './styled'
 import CypherFrame from './CypherFrame/index'
 import HistoryFrame from './HistoryFrame'
 import PlayFrame from './PlayFrame'
-import Frame from '../Frame/Frame'
+import DefaultFrame from '../Frame/DefaultFrame'
 import PreFrame from './PreFrame'
 import ParamsFrame from './ParamsFrame'
 import ErrorFrame from './ErrorFrame'
@@ -43,15 +42,17 @@ import ChangePasswordFrame from './Auth/ChangePasswordFrame'
 import QueriesFrame from './Queries/QueriesFrame'
 import UserList from '../User/UserList'
 import UserAdd from '../User/UserAdd'
-import { getFrames } from 'shared/modules/stream/streamDuck'
-import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
+import { FrameStack, Frame, getFrames } from 'shared/modules/stream/streamDuck'
+import {
+  getActiveConnectionData,
+  Connection
+} from 'shared/modules/connections/connectionsDuck'
 import { getScrollToTop } from 'shared/modules/settings/settingsDuck'
 import DbsFrame from './Auth/DbsFrame'
-import { getLatestFromFrameStack } from './stream.utils'
 import EditFrame from './EditFrame'
 
-const getFrame = (type: any) => {
-  const trans: any = {
+const getFrame = (type: string) => {
+  const trans: Record<string, any> = {
     error: ErrorFrame,
     cypher: CypherFrame,
     'cypher-script': CypherScriptFrame,
@@ -78,65 +79,77 @@ const getFrame = (type: any) => {
     dbs: DbsFrame,
     style: StyleFrame,
     edit: EditFrame,
-    default: Frame
+    default: DefaultFrame
   }
   return trans[type] || trans.default
 }
 
-class Stream extends PureComponent<any> {
-  base: any
-  componentDidMount() {
-    this.base = React.createRef()
-  }
+type StreamProps = {
+  frames: FrameStack[]
+  activeConnectionData: Connection | null
+  shouldScrollToTop: boolean
+}
 
-  componentDidUpdate(prevProps: any) {
+export interface BaseFrameProps {
+  frame: Frame & { isPinned: boolean }
+  activeConnectionData: Connection | null
+  stack: Frame[]
+}
+
+function Stream(props: StreamProps): JSX.Element {
+  const base = useRef<HTMLDivElement>(null)
+  const lastFrameCount = useRef(0)
+
+  useEffect(() => {
     // If we want to scroll to top when a new frame is added
     if (
-      prevProps.frames.length < this.props.frames.length &&
-      this.props.scrollToTop &&
-      this.base &&
-      this.base.current
+      lastFrameCount.current < props.frames.length &&
+      props.shouldScrollToTop &&
+      base.current
     ) {
-      this.base.current.scrollTop = 0
+      base.current.scrollTop = 0
     }
-  }
 
-  render() {
-    return (
-      <StyledStream ref={this.base} data-testid="stream">
-        {this.props.frames.map((frameObject: any) => {
-          const frame = getLatestFromFrameStack(frameObject)
-          const frameProps = {
-            frame: { ...frame, isPinned: frameObject.isPinned },
-            activeConnectionData: this.props.activeConnectionData,
-            stack: frameObject.stack
-          }
-          let MyFrame = getFrame(frame.type)
-          if (frame.type === 'error') {
-            try {
-              const cmd = frame.cmd.replace(/^:/, '')
-              const Frame = cmd[0].toUpperCase() + cmd.slice(1) + 'Frame'
-              MyFrame = require('./Extras/index')[Frame]
-              if (!MyFrame) {
-                MyFrame = getFrame(frame.type)
-              }
-            } catch (e) {}
-          }
-          return <MyFrame {...frameProps} key={frame.id} />
-        })}
-        <Padding />
-      </StyledStream>
-    )
-  }
+    lastFrameCount.current = props.frames.length
+  })
+
+  return (
+    <StyledStream ref={base} data-testid="stream">
+      {props.frames.map(frameObject => {
+        const frame = frameObject.stack[0]
+
+        const frameProps: BaseFrameProps = {
+          frame: { ...frame, isPinned: frameObject.isPinned },
+          activeConnectionData: props.activeConnectionData,
+          stack: frameObject.stack
+        }
+
+        let MyFrame = getFrame(frame.type)
+        if (frame.type === 'error') {
+          try {
+            const cmd = frame.cmd.replace(/^:/, '')
+            const Frame = cmd[0].toUpperCase() + cmd.slice(1) + 'Frame'
+            MyFrame = require('./Extras/index')[Frame]
+            if (!MyFrame) {
+              MyFrame = getFrame(frame.type)
+            }
+          } catch (e) {}
+        }
+        return (
+          <AnimationContainer key={frame.id}>
+            <MyFrame {...frameProps} />
+          </AnimationContainer>
+        )
+      })}
+      <Padding />
+    </StyledStream>
+  )
 }
 
-const mapStateToProps = (state: any) => {
-  const frames = getFrames(state)
-  return {
-    frames,
-    activeConnectionData: getActiveConnectionData(state),
-    scrollToTop: getScrollToTop(state)
-  }
-}
+const mapStateToProps = (state: any) => ({
+  frames: getFrames(state),
+  activeConnectionData: getActiveConnectionData(state),
+  shouldScrollToTop: getScrollToTop(state)
+})
 
-export default connect(mapStateToProps)(Stream)
+export default connect(mapStateToProps)(memo(Stream))

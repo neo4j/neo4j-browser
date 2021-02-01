@@ -108,9 +108,9 @@ describe('Multi database', () => {
 
         // Select to use db, make sure backticked
         databaseOptionList().select('name-with-dash')
-        cy.get('[data-testid="frameCommand"]', { timeout: 10000 })
-          .first()
-          .should('contain', ':use `name-with-dash`')
+        cy.get('[data-testid="frameCommand"]', { timeout: 10000 }).contains(
+          ':use `name-with-dash`'
+        )
         cy.resultContains(
           'Queries from this point and forward are using the database'
         )
@@ -203,9 +203,7 @@ describe('Multi database', () => {
         )
 
         // Click re-run
-        cy.get('[data-testid="rerunFrameButton"]', { timeout: 10000 })
-          .first()
-          .click()
+        cy.get('[data-testid="rerunFrameButton"]', { timeout: 10000 }).click()
 
         // Make sure we have what we expect
         cy.get('[data-testid="frame"]', { timeout: 10000 })

@@ -19,7 +19,7 @@
  */
 
 import { v4 } from 'uuid'
-import { APP_START, USER_CLEAR } from '../app/appDuck'
+import { USER_CLEAR } from '../app/appDuck'
 import {
   AUTHORIZED,
   CLEAR_SYNC,
@@ -45,9 +45,7 @@ import {
 } from 'shared/modules/favorites/favoritesDuck'
 import {
   shouldReportUdc,
-  getSettings,
-  REPLACE,
-  UPDATE
+  getSettings
 } from 'shared/modules/settings/settingsDuck'
 import { CONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
 import { shouldTriggerConnectEvent, getTodayDate } from './udcHelpers'

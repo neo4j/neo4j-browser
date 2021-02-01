@@ -25,6 +25,10 @@ declare global {
         force?: boolean
       ): Cypress.Chainable<void>
       /**
+       * Custom command to type a command in a frame
+       */
+      typeInFrame(cmd: string, frameIndex?: number): Cypress.Chainable<void>
+      /**
        * Custom command to type and submit query in cypher editor.
        * @example cy.executeCommand(':clear')
        */

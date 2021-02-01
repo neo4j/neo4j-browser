@@ -200,12 +200,13 @@ export const handleCommandEpic = (action$: any, store: any) =>
         // Single command
         return store.dispatch(executeSingleCommand(action.cmd, action))
       }
-      const parentId = action.parentId || v4()
+      const parentId = (action.isRerun ? action.id : action.parentId) || v4()
       store.dispatch(
         addFrame({
           type: 'cypher-script',
           id: parentId,
-          cmd: action.cmd
+          cmd: action.cmd,
+          isRerun: action.isRerun
         } as any)
       )
       const jobs = statements.map((cmd: any) => {
@@ -233,7 +234,9 @@ export const handleCommandEpic = (action$: any, store: any) =>
         store.dispatch(updateQueryResult(requestId, null, 'waiting'))
         return {
           workFn: () => interpreted.exec(action, store.dispatch, store),
-          onStart: () => {},
+          onStart: () => {
+            /* no op */
+          },
           onSkip: () =>
             store.dispatch(updateQueryResult(requestId, null, 'skipped'))
         }

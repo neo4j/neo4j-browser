@@ -85,10 +85,9 @@ export function useKeyboardShortcuts(bus: Bus): void {
     [trigger]
   )
 
-  const keyboardShortcuts = useMemo(
-    () => [focusEditorOnSlash, fullscreenEditor],
-    [focusEditorOnSlash, fullscreenEditor]
-  )
+  const keyboardShortcuts = useMemo(() => [focusEditorOnSlash], [
+    focusEditorOnSlash
+  ])
 
   useEffect(() => {
     keyboardShortcuts.forEach(shortcut =>

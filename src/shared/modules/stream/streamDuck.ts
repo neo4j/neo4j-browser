@@ -40,8 +40,8 @@ export const SET_MAX_FRAMES = 'frames/SET_MAX_FRAMES'
 
 export interface GlobalState {
   [NAME]: FramesState
-  history: string[]
   [key: string]: Record<string, any>
+  history: string[]
 }
 
 export function getFrame(state: GlobalState, id: string): FrameStack {
@@ -61,15 +61,19 @@ export function getRecentView(state: GlobalState): null | FrameView {
  */
 function addFrame(state: FramesState, newState: Frame) {
   if (newState.parentId && state.allIds.indexOf(newState.parentId) < 0) {
-    // No parent
+    // Can't find parent
     return state
   }
 
   const frameObject = state.byId[newState.id] || { stack: [], isPinned: false }
-  if (!newState.isRerun) {
-    frameObject.stack.unshift(newState)
+  const newFrame = {
+    ...newState,
+    history: [newState.cmd, ...(frameObject.stack[0]?.history || [])]
+  }
+  if (newState.isRerun) {
+    frameObject.stack = [newFrame]
   } else {
-    frameObject.stack = [newState]
+    frameObject.stack.unshift(newFrame)
   }
   let byId = {
     ...state.byId,
@@ -80,7 +84,7 @@ function addFrame(state: FramesState, newState: Frame) {
   if (newState.parentId) {
     const currentStatements = byId[newState.parentId].stack[0].statements || []
     // Need to add this id to parent's list of statements
-    if (!currentStatements.includes(newState.id as any)) {
+    if (!currentStatements.includes(newState.id)) {
       byId = {
         ...byId,
         [newState.parentId]: {
@@ -88,7 +92,7 @@ function addFrame(state: FramesState, newState: Frame) {
           stack: [
             {
               ...byId[newState.parentId].stack[0],
-              statements: currentStatements.concat(newState.id as any)
+              statements: currentStatements.concat(newState.id)
             }
           ]
         }
@@ -109,10 +113,10 @@ function insertIntoAllIds(
   allIds: string[],
   newState: Frame
 ) {
-  if (allIds.indexOf(newState.id as any) < 0) {
+  if (allIds.indexOf(newState.id) < 0) {
     // new frame
     const pos = findFirstFreePos(state)
-    allIds.splice(pos, 0, newState.id as any)
+    allIds.splice(pos, 0, newState.id)
   }
   return allIds
 }
@@ -227,9 +231,10 @@ export interface Frame {
   ts: number
   type: string
   useDb: string | null
+  history?: string[]
 }
 
-interface FrameStack {
+export interface FrameStack {
   stack: Frame[]
   isPinned: boolean
 }

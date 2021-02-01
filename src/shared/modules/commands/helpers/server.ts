@@ -38,7 +38,7 @@ export function handleServerCommand(action: any, put: any, store: any) {
     return handleUserCommand(action, props)
   }
   if (serverCmd === 'change-password') {
-    return handleChangePasswordCommand(action, props)
+    return handleChangePasswordCommand(action)
   }
   if (serverCmd === 'status') {
     return handleServerStatusCommand(action)
@@ -70,7 +70,7 @@ function handleUserCommand(action: any, props: any) {
   }
 }
 
-function handleChangePasswordCommand(action: any, _props: any) {
+function handleChangePasswordCommand(action: any) {
   return { ...action, type: 'change-password' }
 }
 

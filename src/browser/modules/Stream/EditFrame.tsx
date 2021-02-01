@@ -70,6 +70,9 @@ const EditFrame = (props: EditFrameProps): JSX.Element => {
             id={props.frame.id}
             onChange={setText}
             value={text}
+            toggleFullscreen={() => {
+              /* don't allow fullscreening */
+            }}
           />
         }
         header={props.frame}

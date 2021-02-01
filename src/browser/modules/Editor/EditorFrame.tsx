@@ -39,7 +39,6 @@ import {
   REMOVE_FAVORITE,
   updateFavorite
 } from 'shared/modules/favorites/favoritesDuck'
-import { useSpring, animated } from 'react-spring'
 import { Bus } from 'suber'
 import {
   isMac,
@@ -85,14 +84,14 @@ import {
   shouldEnableMultiStatementMode
 } from 'shared/modules/settings/settingsDuck'
 import { getUseDb } from 'shared/modules/connections/connectionsDuck'
-import { getHistory, HistoryState } from 'shared/modules/history/historyDuck'
+import { getHistory } from 'shared/modules/history/historyDuck'
 
 type EditorFrameProps = {
   bus: Bus
   codeFontLigatures: boolean
   enableMultiStatementMode: boolean
   executeCommand: (cmd: string, source: string) => void
-  history: HistoryState
+  history: string[]
   projectId: string
   theme: { linkHover: string }
   updateFavorite: (id: string, value: string) => void
@@ -127,19 +126,15 @@ export function EditorFrame({
   )
   const editorRef = useRef<MonacoHandles>(null)
 
-  const toggleFullscreen = useCallback(() => {
-    updateFullscreen(!isFullscreen)
-  }, [isFullscreen])
-
-  const updateFullscreen = (fullScreen: boolean) => {
-    setFullscreen(fullScreen)
-    editorRef.current?.resize(fullScreen)
+  const toggleFullscreen = () => {
+    setFullscreen(fs => !fs)
   }
 
-  useEffect(() => bus && bus.take(EXPAND, toggleFullscreen), [
-    bus,
-    toggleFullscreen
-  ])
+  useEffect(() => {
+    editorRef.current?.resize(isFullscreen)
+  }, [isFullscreen])
+
+  useEffect(() => bus && bus.take(EXPAND, toggleFullscreen), [bus])
   useEffect(
     () =>
       bus &&
@@ -204,7 +199,7 @@ export function EditorFrame({
   function discardEditor() {
     editorRef.current?.setValue('')
     setCurrentlyEditing(null)
-    updateFullscreen(false)
+    setFullscreen(false)
   }
 
   const buttons = [
@@ -224,17 +219,12 @@ export function EditorFrame({
     }
   ]
 
-  const props = useSpring({
-    opacity: currentlyEditing ? 1 : 0.5,
-    height: currentlyEditing ? 'auto' : 0
-  })
-
   function createRunCommandFunction(source: string) {
     return () => {
       executeCommand(editorRef.current?.getValue() || '', source)
       editorRef.current?.setValue('')
       setCurrentlyEditing(null)
-      updateFullscreen(false)
+      setFullscreen(false)
     }
   }
 
@@ -254,21 +244,20 @@ export function EditorFrame({
     currentlyEditing &&
     !currentlyEditing?.isStatic
   )
+
   return (
     <Frame fullscreen={isFullscreen} data-testid="activeEditor">
       {currentlyEditing && (
-        <animated.div style={props}>
-          <ScriptTitle data-testid="currentlyEditing" unsaved={showUnsaved}>
-            <SVGInline
-              svg={currentlyEditing.isProjectFile ? file : update_favorite}
-              width="12px"
-            />
-            {currentlyEditing.isProjectFile ? ' Project file: ' : ' Favorite: '}
-            {getName(currentlyEditing)}
-            {showUnsaved ? '*' : ''}
-            {currentlyEditing.isStatic ? ' (read-only)' : ''}
-          </ScriptTitle>
-        </animated.div>
+        <ScriptTitle data-testid="currentlyEditing" unsaved={showUnsaved}>
+          <SVGInline
+            svg={currentlyEditing.isProjectFile ? file : update_favorite}
+            width="12px"
+          />
+          {currentlyEditing.isProjectFile ? ' Project file: ' : ' Favorite: '}
+          {getName(currentlyEditing)}
+          {showUnsaved ? '*' : ''}
+          {currentlyEditing.isStatic ? ' (read-only)' : ''}
+        </ScriptTitle>
       )}
       <FlexContainer>
         <Header>
@@ -277,6 +266,7 @@ export function EditorFrame({
               bus={bus}
               enableMultiStatementMode={enableMultiStatementMode}
               history={history}
+              toggleFullscreen={toggleFullscreen}
               id={'main-editor'}
               fontLigatures={codeFontLigatures}
               onChange={() => {

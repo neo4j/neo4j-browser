@@ -71,7 +71,17 @@ import RelatableView, {
 } from 'browser/modules/Stream/CypherFrame/relatable-view'
 import { requestExceedsVisLimits } from 'browser/modules/Stream/CypherFrame/helpers'
 
-type CypherFrameState = any
+type CypherFrameState = {
+  openView?: string
+  fullscreen: boolean
+  collapse: boolean
+  frameHeight: number
+  hasVis: boolean
+  errors: any
+  _asciiMaxColWidth: any
+  _asciiSetColWidth: any
+  _planExpand: any
+}
 
 export class CypherFrame extends Component<any, CypherFrameState> {
   visElement: any = null
@@ -98,7 +108,7 @@ export class CypherFrame extends Component<any, CypherFrameState> {
     }
   }
 
-  shouldComponentUpdate(props: any, state: CypherFrameState) {
+  shouldComponentUpdate(props: any, state: CypherFrameState): boolean {
     return (
       this.props.request.updated !== props.request.updated ||
       this.state.openView !== state.openView ||
@@ -126,6 +136,15 @@ export class CypherFrame extends Component<any, CypherFrameState> {
       this.visElement = null
       this.setState({ hasVis: false })
     }
+
+    // When frame re-use leads to result without visuzaliation
+    if (!this.canShowViz() && this.state.openView === viewTypes.VISUALIZATION) {
+      const view = initialView(this.props, {
+        ...this.state,
+        openView: undefined //intial view was not meant to override another view
+      })
+      if (view) this.setState({ openView: view })
+    }
   }
 
   componentDidMount() {
@@ -140,95 +159,93 @@ export class CypherFrame extends Component<any, CypherFrameState> {
     return []
   }
 
-  sidebar = () => {
-    const canShowViz =
-      !requestExceedsVisLimits(this.props.request) &&
-      resultHasNodes(this.props.request) &&
-      !this.state.errors
+  canShowViz = () =>
+    !requestExceedsVisLimits(this.props.request) &&
+    resultHasNodes(this.props.request) &&
+    !this.state.errors
 
-    return (
-      <FrameSidebar>
-        <Render if={canShowViz}>
-          <CypherFrameButton
-            data-testid="cypherFrameSidebarVisualization"
-            selected={this.state.openView === viewTypes.VISUALIZATION}
-            onClick={() => {
-              this.changeView(viewTypes.VISUALIZATION)
-            }}
-          >
-            <VisualizationIcon />
-          </CypherFrameButton>
-        </Render>
-        <Render if={!resultIsError(this.props.request)}>
-          <CypherFrameButton
-            data-testid="cypherFrameSidebarTable"
-            selected={this.state.openView === viewTypes.TABLE}
-            onClick={() => {
-              this.changeView(viewTypes.TABLE)
-            }}
-          >
-            <TableIcon />
-          </CypherFrameButton>
-        </Render>
-        <Render
-          if={
-            resultHasRows(this.props.request) &&
-            !resultIsError(this.props.request)
-          }
+  sidebar = () => (
+    <FrameSidebar>
+      <Render if={this.canShowViz()}>
+        <CypherFrameButton
+          data-testid="cypherFrameSidebarVisualization"
+          selected={this.state.openView === viewTypes.VISUALIZATION}
+          onClick={() => {
+            this.changeView(viewTypes.VISUALIZATION)
+          }}
         >
-          <CypherFrameButton
-            data-testid="cypherFrameSidebarAscii"
-            selected={this.state.openView === viewTypes.TEXT}
-            onClick={() => {
-              this.changeView(viewTypes.TEXT)
-            }}
-          >
-            <AsciiIcon />
-          </CypherFrameButton>
-        </Render>
-        <Render if={resultHasPlan(this.props.request)}>
-          <CypherFrameButton
-            data-testid="cypherFrameSidebarPlan"
-            selected={this.state.openView === viewTypes.PLAN}
-            onClick={() => this.changeView(viewTypes.PLAN)}
-          >
-            <PlanIcon />
-          </CypherFrameButton>
-        </Render>
-        <Render if={resultHasWarnings(this.props.request)}>
-          <CypherFrameButton
-            selected={this.state.openView === viewTypes.WARNINGS}
-            onClick={() => {
-              this.changeView(viewTypes.WARNINGS)
-            }}
-          >
-            <AlertIcon />
-          </CypherFrameButton>
-        </Render>
-        <Render if={resultIsError(this.props.request)}>
-          <CypherFrameButton
-            selected={this.state.openView === viewTypes.ERRORS}
-            onClick={() => {
-              this.changeView(viewTypes.ERRORS)
-            }}
-          >
-            <ErrorIcon />
-          </CypherFrameButton>
-        </Render>
-        <Render if={!resultIsError(this.props.request)}>
-          <CypherFrameButton
-            data-testid="cypherFrameSidebarCode"
-            selected={this.state.openView === viewTypes.CODE}
-            onClick={() => {
-              this.changeView(viewTypes.CODE)
-            }}
-          >
-            <CodeIcon />
-          </CypherFrameButton>
-        </Render>
-      </FrameSidebar>
-    )
-  }
+          <VisualizationIcon />
+        </CypherFrameButton>
+      </Render>
+      <Render if={!resultIsError(this.props.request)}>
+        <CypherFrameButton
+          data-testid="cypherFrameSidebarTable"
+          selected={this.state.openView === viewTypes.TABLE}
+          onClick={() => {
+            this.changeView(viewTypes.TABLE)
+          }}
+        >
+          <TableIcon />
+        </CypherFrameButton>
+      </Render>
+      <Render
+        if={
+          resultHasRows(this.props.request) &&
+          !resultIsError(this.props.request)
+        }
+      >
+        <CypherFrameButton
+          data-testid="cypherFrameSidebarAscii"
+          selected={this.state.openView === viewTypes.TEXT}
+          onClick={() => {
+            this.changeView(viewTypes.TEXT)
+          }}
+        >
+          <AsciiIcon />
+        </CypherFrameButton>
+      </Render>
+      <Render if={resultHasPlan(this.props.request)}>
+        <CypherFrameButton
+          data-testid="cypherFrameSidebarPlan"
+          selected={this.state.openView === viewTypes.PLAN}
+          onClick={() => this.changeView(viewTypes.PLAN)}
+        >
+          <PlanIcon />
+        </CypherFrameButton>
+      </Render>
+      <Render if={resultHasWarnings(this.props.request)}>
+        <CypherFrameButton
+          selected={this.state.openView === viewTypes.WARNINGS}
+          onClick={() => {
+            this.changeView(viewTypes.WARNINGS)
+          }}
+        >
+          <AlertIcon />
+        </CypherFrameButton>
+      </Render>
+      <Render if={resultIsError(this.props.request)}>
+        <CypherFrameButton
+          selected={this.state.openView === viewTypes.ERRORS}
+          onClick={() => {
+            this.changeView(viewTypes.ERRORS)
+          }}
+        >
+          <ErrorIcon />
+        </CypherFrameButton>
+      </Render>
+      <Render if={!resultIsError(this.props.request)}>
+        <CypherFrameButton
+          data-testid="cypherFrameSidebarCode"
+          selected={this.state.openView === viewTypes.CODE}
+          onClick={() => {
+            this.changeView(viewTypes.CODE)
+          }}
+        >
+          <CodeIcon />
+        </CypherFrameButton>
+      </Render>
+    </FrameSidebar>
+  )
 
   getSpinner() {
     return (
@@ -392,7 +409,7 @@ export class CypherFrame extends Component<any, CypherFrameState> {
 
     return (
       <FrameTemplate
-        sidebar={requestStatus !== 'error' ? this.sidebar : null}
+        sidebar={requestStatus !== 'error' ? this.sidebar : undefined}
         className="no-padding"
         header={frame}
         contents={frameContents}

@@ -26,8 +26,13 @@ import {
   ExclamationTriangleIcon
 } from 'browser-components/icons/Icons'
 import { WarningSpan, ErrorSpan, SuccessSpan } from './styled'
+import { Status } from 'shared/modules/requests/requestsDuck'
 
-export const Icon = ({ status }: any) => {
+interface IconProps {
+  status: Status
+}
+
+export const Icon = ({ status }: IconProps): JSX.Element => {
   switch (status) {
     case 'pending':
       return <SmallSpinner />

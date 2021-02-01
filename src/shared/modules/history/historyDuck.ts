@@ -25,10 +25,10 @@ export const NAME = 'history'
 export const ADD = 'history/ADD'
 export const CLEAR = 'history/CLEAR'
 
-export const getHistory = (state: GlobalState): HistoryState => state[NAME]
+export const getHistory = (state: GlobalState): string[] => state[NAME]
 
 function addHistoryHelper(
-  state: HistoryState,
+  state: string[],
   newState: string,
   maxHistory: number
 ) {
@@ -41,9 +41,7 @@ function addHistoryHelper(
   return newHistory.slice(0, maxHistory)
 }
 
-export type HistoryState = string[]
-
-export default function(state: HistoryState = [], action: any) {
+export default function(state: string[] = [], action: any) {
   switch (action.type) {
     case ADD:
       return addHistoryHelper(state, action.state, action.maxHistory)

@@ -114,6 +114,9 @@ describe('streamDuck', () => {
         "test-id": Object {
           "stack": Array [
             Object {
+              "history": Array [
+                undefined,
+              ],
               "id": "test-id",
               "type": "after",
             },
