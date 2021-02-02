@@ -28,7 +28,8 @@ import {
   updateConnection,
   CONNECT,
   VERIFY_CREDENTIALS,
-  isConnected
+  isConnected,
+  getConnectionData
 } from 'shared/modules/connections/connectionsDuck'
 import {
   getInitCmd,
@@ -62,7 +63,7 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
   constructor(props: any) {
     super(props)
     const connection =
-      this.props.activeConnectionData || this.props.frame.connectionData || {}
+      this.props.discoveredData || this.props.frame.connectionData || {}
     const authenticationMethod =
       (connection && connection.authenticationMethod) || NATIVE
 
@@ -334,6 +335,7 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
 
 const mapStateToProps = (state: any) => {
   return {
+    discoveredData: getConnectionData(state, CONNECTION_ID),
     initCmd: getInitCmd(state),
     activeConnection: getActiveConnection(state),
     activeConnectionData: getActiveConnectionData(state),
@@ -364,6 +366,7 @@ const mergeProps = (stateProps: any, dispatchProps: any, ownProps: any) => {
     isConnected: stateProps.isConnected,
     allowedSchemes: stateProps.allowedSchemes,
     allowedAuthMethods: stateProps.allowedAuthMethods,
+    discoveredData: stateProps.discoveredData,
     ...ownProps,
     ...dispatchProps,
     executeInitCmd: () => {
