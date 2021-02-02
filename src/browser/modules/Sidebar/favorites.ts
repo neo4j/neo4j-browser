@@ -72,6 +72,13 @@ const mapFavoritesDispatchToProps = (dispatch: any, ownProps: any) => ({
   },
   moveScript(favoriteId: string, folderId: string) {
     dispatch(favoritesDuck.moveFavorite(favoriteId, folderId))
+  },
+  createNewScript() {
+    const id = uuid.v4()
+    const content = `// Untitled favorite
+`
+    dispatch(favoritesDuck.addFavorite(content, id))
+    ownProps.bus.send(editor.EDIT_CONTENT, editor.editContent(id, content))
   }
 })
 
