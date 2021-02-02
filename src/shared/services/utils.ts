@@ -263,13 +263,6 @@ export const getBrowserName = function() {
   return 'Unknown'
 }
 
-export const removeComments = (string = '') => {
-  return string
-    .split(/\r?\n/)
-    .filter(line => !line.startsWith('//'))
-    .join('\r\n')
-}
-
 export const canUseDOM = () =>
   !!(
     typeof window !== 'undefined' &&
@@ -452,9 +445,6 @@ const getUnescapedObjectProp = (prop: any) =>
 
 export const hasReservedProp = (obj: any, propName: any) =>
   Object.prototype.hasOwnProperty.call(obj, propName)
-
-// Epic helpers
-export const put = (dispatch: any) => (action: any) => dispatch(action)
 
 export const optionalToString = (v: any) =>
   ![null, undefined].includes(v) && typeof v.toString === 'function'
