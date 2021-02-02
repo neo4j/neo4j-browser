@@ -8,7 +8,8 @@ import {
   SavedScriptsBody,
   SavedScriptsBodySection,
   SavedScriptsHeader,
-  SavedScriptsButtonWrapper
+  SavedScriptsButtonWrapper,
+  SavedScriptsListItemDisplayName
 } from './styled'
 import { Favorite } from 'shared/modules/favorites/favoritesDuck'
 import { Folder } from 'shared/modules/favorites/foldersDuck'
@@ -29,6 +30,7 @@ interface SavedScriptsProps {
   renameFolder?: (folder: Folder, name: string) => void
   removeFolder?: (folder: Folder) => void
   createNewFolder?: () => void
+  createNewScript?: () => void
 }
 
 export default function SavedScripts({
@@ -36,6 +38,7 @@ export default function SavedScripts({
   scripts,
   folders,
   selectScript,
+  createNewScript,
   execScript,
   renameScript,
   removeScript,
@@ -81,6 +84,14 @@ export default function SavedScripts({
                 key={getUniqueScriptKey(script)}
               />
             ))}
+            {createNewScript && (
+              <SavedScriptsListItemDisplayName
+                className="saved-scripts-list-item__display-name"
+                onClick={createNewScript}
+              >
+                Create new favorite
+              </SavedScriptsListItemDisplayName>
+            )}
             {foldersWithScripts.map(({ folder, scripts }) => (
               <SavedScriptsFolder
                 folder={folder}
