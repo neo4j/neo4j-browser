@@ -57,7 +57,7 @@ function SavedScriptsListItem({
   return (
     <SavedScriptsListItemMain
       isSelected={isSelected}
-      stayVisible={showThing}
+      stayVisible={showThing || isSelected}
       ref={blurRef}
       className="saved-scripts-list-item"
       onClick={onClick}
@@ -107,10 +107,6 @@ function SavedScriptsListItem({
   )
 }
 
-const Dots = styled.button`
-  position: relative;
-  color: black;
-`
 const Overlay = styled.div`
   color: black;
   padding-top: 5px;
