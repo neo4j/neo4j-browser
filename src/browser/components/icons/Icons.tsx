@@ -45,6 +45,9 @@ import save_file from 'icons/save_file.svg'
 import save_favorite from 'icons/save_favorite.svg'
 import run_icon from 'icons/run_icon.svg'
 import help from 'icons/help.svg'
+import newFolder from 'icons/folder-add.svg'
+import folder from 'icons/folder-empty.svg'
+import navIcon from 'icons/navigation-menu-vertical.svg'
 
 const inactive = `
   color: #797979;
@@ -374,5 +377,12 @@ export const FireExtinguisherIcon = ({ title = 'Reset' }) => (
 )
 
 export const SavedScriptsExpandMenuRightIcon = () => <Icon name="caret right" />
-
 export const SavedScriptsCollapseMenuIcon = () => <Icon name="caret down" />
+export const FolderIcon = () => <Icon size="large" name="folder outline" />
+export const NewFolderIcon = () => <IconContainer icon={newFolder} width={12} />
+export const NavIcon = () => (
+  <IconContainer icon={navIcon} width={12} className="centeredSvgIcon" />
+)
+export const SavedScriptsPlay = () => (
+  <IconContainer icon={run_icon} width={12} className="centeredSvgIcon" />
+)

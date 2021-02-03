@@ -1,20 +1,24 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { DndProvider } from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
 import SavedScriptsFolder from './SavedScriptsFolder'
-import { ExportButton, NewFolderButton } from './SavedScriptsButton'
 import {
-  SavedScriptsMain,
+  ExportButton,
+  NewFolderButton,
+  RedRemoveButton
+} from './SavedScriptsButton'
+import {
   SavedScriptsBody,
-  SavedScriptsBodySection,
   SavedScriptsHeader,
   SavedScriptsButtonWrapper,
-  SavedScriptsListItemDisplayName
+  SavedScriptsNewFavorite
 } from './styled'
-import { Favorite } from 'shared/modules/favorites/favoritesDuck'
 import { Folder } from 'shared/modules/favorites/foldersDuck'
 import SavedScriptsListItem from './SavedScriptsListItem'
 import { getScriptDisplayName } from './utils'
+import { uniq } from 'lodash-es'
+import { Favorite } from 'shared/modules/favorites/favoritesDuck'
+import { useCustomBlur } from './hooks'
 
 interface SavedScriptsProps {
   title?: string
@@ -23,14 +27,25 @@ interface SavedScriptsProps {
   selectScript: (script: Favorite) => void
   execScript: (script: Favorite) => void
   // When optional callbacks aren't provided, respective UI elements are hidden
-  exportScripts?: () => void
+  exportScripts?: (scripts: Favorite[], folders: Folder[]) => void
   renameScript?: (script: Favorite, name: string) => void
   moveScript?: (scriptId: string, folderId: string) => void
-  removeScript?: (script: Favorite) => void
+  addScript?: (content: string) => void
+  removeScripts?: (scripts: string[]) => void
   renameFolder?: (folder: Folder, name: string) => void
   removeFolder?: (folder: Folder) => void
   createNewFolder?: () => void
   createNewScript?: () => void
+}
+
+function findScriptsFromIds(ids: string[], scripts: Favorite[]): Favorite[] {
+  function notEmpty<T>(value?: T): value is T {
+    return value !== undefined
+  }
+
+  return ids
+    .map(id => scripts.find(script => getUniqueScriptKey(script) === id))
+    .filter(notEmpty)
 }
 
 export default function SavedScripts({
@@ -41,7 +56,8 @@ export default function SavedScripts({
   createNewScript,
   execScript,
   renameScript,
-  removeScript,
+  removeScripts,
+  addScript,
   moveScript,
   renameFolder,
   removeFolder,
@@ -59,63 +75,152 @@ export default function SavedScripts({
       .sort(sortScriptsAlfabethically)
   }))
 
+  const [selectedIds, setSelectedIds] = useState<string[]>([])
+  const blurRef = useCustomBlur(() => setSelectedIds([]))
+
+  const onListItemClick = (clickedScriptId: string) => (
+    e: React.MouseEvent
+  ) => {
+    const toggleFn = (ids: string[]) =>
+      ids.includes(clickedScriptId)
+        ? ids.filter(existingId => existingId !== clickedScriptId)
+        : ids.concat(clickedScriptId)
+
+    const getIdRange = (id1: string, id2: string): string[] => {
+      const scriptIds: string[] = scripts
+        .concat([]) // to avoid mutating in place by sort
+        .sort(sortScriptsAlfabethically)
+        .map(getUniqueScriptKey)
+      const pos1 = scriptIds.indexOf(id1)
+      const pos2 = scriptIds.indexOf(id2)
+      if (pos1 === -1 || pos2 == -1) {
+        throw new Error("Can't get range between ids not in list")
+      }
+
+      const smallestFirst = pos1 < pos2 ? [pos1, pos2] : [pos2, pos1]
+      return scriptIds.slice(
+        smallestFirst[0],
+        smallestFirst[1] + 1 /* inclusive slice */
+      )
+    }
+
+    const allowMultiselect = e.metaKey || e.ctrlKey
+    const bulkSelect = e.shiftKey
+    if (allowMultiselect) {
+      if (bulkSelect) {
+        setSelectedIds(ids =>
+          ids.length === 0
+            ? [clickedScriptId]
+            : uniq([
+                ...ids,
+                ...getIdRange(ids[ids.length - 1], clickedScriptId)
+              ])
+        )
+      } else {
+        setSelectedIds(toggleFn)
+      }
+    } else {
+      setSelectedIds([clickedScriptId])
+    }
+  }
+
+  const selectedScripts = findScriptsFromIds(selectedIds, scripts)
+  const removeScript =
+    removeScripts && ((id: string) => () => removeScripts([id]))
+  const hasSelectedIds = !!selectedScripts.length
   return (
-    <SavedScriptsMain className="saved-scripts">
-      <DndProvider backend={HTML5Backend}>
-        <SavedScriptsBody className="saved-scripts__body">
-          <SavedScriptsBodySection className="saved-scripts__body-section">
-            <SavedScriptsHeader className="saved-scripts__header">
-              {title}
-              <SavedScriptsButtonWrapper className="saved-scripts__button-wrapper">
-                {exportScripts && <ExportButton onClick={exportScripts} />}
+    <DndProvider backend={HTML5Backend}>
+      <SavedScriptsBody ref={blurRef}>
+        <SavedScriptsHeader>
+          <span>{title}</span>
+          {hasSelectedIds && (
+            <>
+              <span>|</span>
+              <SavedScriptsButtonWrapper>
+                <span style={{ fontSize: 12 }}>
+                  {selectedIds.length} selected
+                  {exportScripts && (
+                    <ExportButton
+                      onClick={() => {
+                        exportScripts(selectedScripts, folders)
+                        setSelectedIds([])
+                      }}
+                    />
+                  )}
+                  {removeScripts && (
+                    <RedRemoveButton
+                      onClick={() => {
+                        removeScripts(selectedIds)
+                        setSelectedIds([])
+                      }}
+                    />
+                  )}
+                </span>
                 {createNewFolder && (
                   <NewFolderButton onClick={createNewFolder} />
                 )}
               </SavedScriptsButtonWrapper>
-            </SavedScriptsHeader>
+            </>
+          )}
+        </SavedScriptsHeader>
 
-            {scriptsOutsideFolder.map(script => (
-              <SavedScriptsListItem
-                selectScript={selectScript}
-                execScript={execScript}
-                removeScript={removeScript}
-                renameScript={renameScript}
-                script={script}
-                key={getUniqueScriptKey(script)}
-              />
-            ))}
-            {createNewScript && (
-              <SavedScriptsListItemDisplayName
-                className="saved-scripts-list-item__display-name"
-                onClick={createNewScript}
-              >
-                Create new favorite
-              </SavedScriptsListItemDisplayName>
-            )}
-            {foldersWithScripts.map(({ folder, scripts }) => (
-              <SavedScriptsFolder
-                folder={folder}
-                renameFolder={renameFolder}
-                removeFolder={removeFolder}
-                moveScript={moveScript}
-                key={folder.id}
-              >
-                {scripts.map(script => (
-                  <SavedScriptsListItem
-                    selectScript={selectScript}
-                    execScript={execScript}
-                    removeScript={removeScript}
-                    renameScript={renameScript}
-                    script={script}
-                    key={getUniqueScriptKey(script)}
-                  />
-                ))}
-              </SavedScriptsFolder>
-            ))}
-          </SavedScriptsBodySection>
-        </SavedScriptsBody>
-      </DndProvider>
-    </SavedScriptsMain>
+        {scriptsOutsideFolder.map(script => {
+          const key = getUniqueScriptKey(script)
+          return (
+            <SavedScriptsListItem
+              selectScript={() => selectScript(script)}
+              execScript={() => execScript(script)}
+              duplicateScript={() => addScript && addScript(script.content)}
+              removeScript={removeScript && removeScript(key)}
+              renameScript={(name: string) =>
+                renameScript && renameScript(script, name)
+              }
+              script={script}
+              key={key}
+              onClick={onListItemClick(key)}
+              isSelected={selectedIds.includes(key)}
+            />
+          )
+        })}
+        {createNewScript && (
+          <SavedScriptsNewFavorite onClick={createNewScript}>
+            Create new favorite
+          </SavedScriptsNewFavorite>
+        )}
+        {foldersWithScripts.map(({ folder, scripts }) => (
+          <SavedScriptsFolder
+            folder={folder}
+            renameFolder={renameFolder}
+            removeFolder={removeFolder}
+            moveScript={moveScript}
+            key={folder.id}
+            selectedScriptIds={selectedIds}
+          >
+            {scripts.map(script => {
+              const key = getUniqueScriptKey(script)
+              return (
+                <SavedScriptsListItem
+                  selectScript={() => selectScript(script)}
+                  execScript={() => execScript(script)}
+                  duplicateScript={
+                    addScript && (() => addScript(script.content))
+                  }
+                  removeScript={removeScript && removeScript(key)}
+                  renameScript={
+                    renameScript &&
+                    ((name: string) => renameScript(script, name))
+                  }
+                  script={script}
+                  key={key}
+                  onClick={onListItemClick(key)}
+                  isSelected={selectedIds.includes(key)}
+                />
+              )
+            })}
+          </SavedScriptsFolder>
+        ))}
+      </SavedScriptsBody>
+    </DndProvider>
   )
 }
 

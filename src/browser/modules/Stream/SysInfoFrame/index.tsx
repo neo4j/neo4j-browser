@@ -21,7 +21,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
-import dateFormat from 'dateformat'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { isACausalCluster } from 'shared/modules/features/featuresDuck'
 import { isEnterprise } from 'shared/modules/dbMeta/dbMetaDuck'
@@ -156,7 +155,7 @@ export class SysInfoFrame extends Component<any, SysInfoFrameState> {
             <Render if={this.state.success}>
               <StyledStatusBar>
                 {this.state.lastFetch &&
-                  `Updated: ${dateFormat(this.state.lastFetch)}`}
+                  `Updated: ${new Date(this.state.lastFetch).toISOString()}`}
                 {this.state.success}
                 <AutoRefreshSpan>
                   <AutoRefreshToggle

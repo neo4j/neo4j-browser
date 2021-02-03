@@ -34,7 +34,10 @@ import { DrawerHeader } from 'browser-components/drawer'
 import NewSavedScript from './NewSavedScript'
 import BrowserSync from '../Sync/BrowserSync'
 import { isUserSignedIn } from 'shared/modules/sync/syncDuck'
-import { addFavorite } from 'shared/modules/favorites/favoritesDuck'
+import {
+  addFavorite,
+  renameFavorite
+} from 'shared/modules/favorites/favoritesDuck'
 import { utilizeBrowserSync } from 'shared/modules/features/featuresDuck'
 import {
   PENDING_STATE,
@@ -43,6 +46,7 @@ import {
 } from 'shared/modules/connections/connectionsDuck'
 import {
   getCurrentDraft,
+  getScriptDraftId,
   setDraftScript
 } from 'shared/modules/sidebar/sidebarDuck'
 import { isRelateAvailable } from 'shared/modules/app/appDuck'
@@ -67,8 +71,10 @@ interface SidebarProps {
   loadSync: boolean
   isRelateAvailable: boolean
   addFavorite: (cmd: string) => void
+  renameFavorite: (id: string, content: string) => void
   resetDraft: () => void
   scriptDraft: string | null
+  scriptDraftId: string | null
 }
 
 const Sidebar = ({
@@ -80,8 +86,10 @@ const Sidebar = ({
   loadSync,
   isRelateAvailable,
   addFavorite,
+  renameFavorite,
   scriptDraft,
-  resetDraft
+  resetDraft,
+  scriptDraftId
 }: SidebarProps) => {
   const topNavItemsList = [
     {
@@ -114,22 +122,14 @@ const Sidebar = ({
                   if (input === defaultNameFromDisplayContent(scriptDraft)) {
                     addFavorite(scriptDraft)
                   } else {
-                    const alreadyHasName = scriptDraft.startsWith('//')
-                    const replaceName = [
-                      `// ${input}`,
-                      scriptDraft.split('\n').slice(1)
-                    ].join('\n')
-
-                    addFavorite(
-                      alreadyHasName
-                        ? replaceName
-                        : `//${input}\n${scriptDraft}`
-                    )
+                    scriptDraftId
+                      ? renameFavorite(scriptDraftId, input)
+                      : addFavorite(` //${input}\n${scriptDraft}`)
                   }
                   resetDraft()
                 }}
                 defaultName={defaultNameFromDisplayContent(scriptDraft)}
-                headerText={'Save as'}
+                headerText={'Rename saved favorite'}
                 onCancel={resetDraft}
               />
             )}
@@ -227,7 +227,8 @@ const mapStateToProps = (state: any) => {
     loadSync: utilizeBrowserSync(state),
     showStaticScripts: state.settings.showSampleScripts,
     isRelateAvailable: isRelateAvailable(state),
-    scriptDraft: getCurrentDraft(state)
+    scriptDraft: getCurrentDraft(state),
+    scriptDraftId: getScriptDraftId(state)
   }
 }
 
@@ -235,6 +236,9 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
   return {
     addFavorite: (cmd: string) => {
       dispatch(addFavorite(cmd, uuid.v4()))
+    },
+    renameFavorite: (id: string, content: string) => {
+      dispatch(renameFavorite(id, content))
     },
     resetDraft: () => {
       dispatch(setDraftScript(null, 'favorites'))

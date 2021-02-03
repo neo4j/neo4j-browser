@@ -19,36 +19,6 @@ import { gql } from '@apollo/client'
 
 export const REMOVE_PROJECT_FILE = 'REMOVE_PROJECT_FILE'
 
-export interface ProhibitedFilenameErrors {
-  chars: string[]
-  tests: RegExp[]
-}
-
-interface ProhibitedFilenamePlatform {
-  platform?: string
-}
-
-interface ProhibitedFilenameChar extends ProhibitedFilenamePlatform {
-  char: string
-  test?: never
-}
-
-interface ProhibitedFilenameTest extends ProhibitedFilenamePlatform {
-  test: RegExp
-  char?: never
-}
-
-export const PROHIBITED_FILENAME_CHAR_TESTS: (
-  | ProhibitedFilenameChar
-  | ProhibitedFilenameTest
-)[] = [
-  { char: '/' },
-  { char: '\\' },
-  { char: '..' },
-  { test: /^[.|?]/ },
-  { char: ':', platform: 'Win32' }
-]
-
 export interface AddProjectFile {
   addProjectFile: ProjectFile
 }

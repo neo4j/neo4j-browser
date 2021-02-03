@@ -27,6 +27,10 @@ import {
 } from 'shared/modules/commands/commandsDuck'
 import * as favoritesDuck from 'shared/modules/favorites/favoritesDuck'
 import * as foldersDuck from 'shared/modules/favorites/foldersDuck'
+import {
+  exportFavorites,
+  exportFavoritesAsBigCypherFile
+} from 'services/exporting/favoriteUtils'
 
 const mapFavoritesStateToProps = (state: any) => {
   const folders = foldersDuck
@@ -53,8 +57,8 @@ const mapFavoritesDispatchToProps = (dispatch: any, ownProps: any) => ({
     dispatch(
       executeCommand(favorite.content, { source: commandSources.favorite })
     ),
-  removeScript: (favorite: favoritesDuck.Favorite) =>
-    favorite.id && dispatch(favoritesDuck.removeFavorite(favorite.id)),
+  removeScripts: (ids: string[]) =>
+    dispatch(favoritesDuck.removeFavorites(ids)),
   renameScript: (favorite: favoritesDuck.Favorite, name: string) => {
     if (favorite.id) {
       dispatch(favoritesDuck.renameFavorite(favorite.id, name))
@@ -79,6 +83,15 @@ const mapFavoritesDispatchToProps = (dispatch: any, ownProps: any) => ({
 `
     dispatch(favoritesDuck.addFavorite(content, id))
     ownProps.bus.send(editor.EDIT_CONTENT, editor.editContent(id, content))
+  },
+  exportScripts(
+    favorites: favoritesDuck.Favorite[],
+    folders: foldersDuck.Folder[]
+  ) {
+    exportFavorites(favorites, folders)
+  },
+  addScript(content: string) {
+    dispatch(favoritesDuck.addFavorite(content))
   }
 })
 

@@ -19,7 +19,7 @@ import { useEffect, useState, Dispatch } from 'react'
 import { Action } from 'redux'
 import { connect } from 'react-redux'
 import { useQuery, useMutation, ApolloError } from '@apollo/client'
-import { filter, size } from 'lodash-es'
+import { flatMap } from 'lodash-es'
 
 import * as editor from 'shared/modules/editor/editorDuck'
 import {
@@ -39,7 +39,6 @@ import {
   DELETE_PROJECT_FILE,
   REMOVE_PROJECT_FILE
 } from './projectFilesConstants'
-import Render from 'browser-components/Render'
 import { Bus } from 'suber'
 import { StyledErrorListContainer } from '../../modules/Sidebar/styled'
 import { withBus } from 'react-suber'
@@ -49,53 +48,22 @@ import ProjectFileList, {
 
 interface ProjectFilesError {
   apolloErrors: (ApolloError | undefined)[]
-  errors?: string[]
 }
 
 export const ProjectFilesError = ({
-  apolloErrors,
-  errors
+  apolloErrors
 }: ProjectFilesError): JSX.Element => {
-  const definedApolloErrors = filter(
+  const hasNetworkError = !!apolloErrors.find(error => error?.networkError)
+  const graphQLErrors = flatMap(
     apolloErrors,
-    apolloError => apolloError !== undefined
-  )
-  const definedErrors = filter(errors, error => error !== '')
-  const ErrorsList = () => {
-    let errorsList: JSX.Element[] = []
-    if (size(definedErrors)) {
-      errorsList = [
-        ...errorsList,
-        ...definedErrors.map((definedError, i) => (
-          <span key={`${definedError}-${i}`}>{definedError}</span>
-        ))
-      ]
-    }
-    if (size(definedApolloErrors)) {
-      definedApolloErrors.map((definedApolloError, j) => {
-        if (definedApolloError?.graphQLErrors.length) {
-          errorsList = [
-            ...errorsList,
-            ...definedApolloError.graphQLErrors.map(({ message }, k) => (
-              <span key={`${message}-${j}-${k}`}>{message}</span>
-            ))
-          ]
-        }
-        if (definedApolloError?.networkError) {
-          errorsList = [
-            ...errorsList,
-            <span key={j}>A network error has occurred.</span>
-          ]
-        }
-      })
-    }
-    return errorsList
-  }
+    error => error?.graphQLErrors.map(e => e.message) || []
+  ).join('\n')
 
   return (
-    <Render if={size(definedApolloErrors) || size(definedErrors)}>
-      <StyledErrorListContainer>{ErrorsList()}</StyledErrorListContainer>
-    </Render>
+    <StyledErrorListContainer>
+      {graphQLErrors && <div>{graphQLErrors}</div>}
+      {hasNetworkError && <div>A network error has occurred</div>}
+    </StyledErrorListContainer>
   )
 }
 

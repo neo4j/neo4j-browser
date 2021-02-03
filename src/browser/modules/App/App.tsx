@@ -136,10 +136,8 @@ export function App(props: any) {
     databases
   } = props
 
-  const wrapperClassNames = []
-  if (!codeFontLigatures) {
-    wrapperClassNames.push('disable-font-ligatures')
-  }
+  const wrapperClassNames = codeFontLigatures ? '' : 'disable-font-ligatures'
+
   const setEventMetricsCallback = (fn: any) => {
     eventMetricsCallback.current = fn
   }
@@ -175,7 +173,6 @@ export function App(props: any) {
       <ThemeProvider theme={themeData}>
         <FeatureToggleProvider features={experimentalFeatures}>
           <FileDrop store={store}>
-            {/* @ts-expect-error ts-migrate(2769) FIXME: Type 'string[]' is not assignable to type 'string'... Remove this comment to see the full error message */}
             <StyledWrapper className={wrapperClassNames}>
               <DocTitle titleString={props.titleString} />
               <UserInteraction />

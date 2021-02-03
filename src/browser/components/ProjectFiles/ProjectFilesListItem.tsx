@@ -26,15 +26,14 @@ function ProjectFilesListItem({
 }: ProjectFilesListItemProps): JSX.Element {
   const [isEditing, setIsEditing] = useState(false)
   return (
-    <SavedScriptsListItemMain className="saved-scripts-list-item">
+    <SavedScriptsListItemMain>
       <SavedScriptsListItemDisplayName
-        className="saved-scripts-list-item__display-name"
         data-testid={`scriptTitle-${script.filename}`}
         onClick={() => selectScript(script)}
       >
         {script.filename}
       </SavedScriptsListItemDisplayName>
-      <SavedScriptsButtonWrapper className="saved-scripts__button-wrapper">
+      <SavedScriptsButtonWrapper>
         {isEditing ? (
           <RedRemoveButton onClick={() => removeScript(script)} />
         ) : (
