@@ -25,7 +25,7 @@ export const SavedScriptsHeader = styled.h5`
 
 export const SavedScriptsListItemMain = styled.div<{
   stayVisible?: boolean
-  isSelected: boolean
+  isSelected?: boolean
 }>`
   padding: 5px 3px;
   display: flex;

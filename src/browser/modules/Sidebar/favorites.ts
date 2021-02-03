@@ -57,8 +57,8 @@ const mapFavoritesDispatchToProps = (dispatch: any, ownProps: any) => ({
     dispatch(
       executeCommand(favorite.content, { source: commandSources.favorite })
     ),
-  removeScript: (favorite: favoritesDuck.Favorite) =>
-    favorite.id && dispatch(favoritesDuck.removeFavorite(favorite.id)),
+  removeScripts: (ids: string[]) =>
+    dispatch(favoritesDuck.removeFavorites(ids)),
   renameScript: (favorite: favoritesDuck.Favorite, name: string) => {
     if (favorite.id) {
       dispatch(favoritesDuck.renameFavorite(favorite.id, name))
@@ -89,6 +89,9 @@ const mapFavoritesDispatchToProps = (dispatch: any, ownProps: any) => ({
     folders: foldersDuck.Folder[]
   ) {
     exportFavorites(favorites, folders)
+  },
+  addScript(content: string) {
+    dispatch(favoritesDuck.addFavorite(content))
   }
 })
 

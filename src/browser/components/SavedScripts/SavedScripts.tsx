@@ -2,7 +2,11 @@ import React, { useState } from 'react'
 import { DndProvider } from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
 import SavedScriptsFolder from './SavedScriptsFolder'
-import { ExportButton, NewFolderButton } from './SavedScriptsButton'
+import {
+  ExportButton,
+  NewFolderButton,
+  RedRemoveButton
+} from './SavedScriptsButton'
 import {
   SavedScriptsMain,
   SavedScriptsBody,
@@ -28,11 +32,22 @@ interface SavedScriptsProps {
   exportScripts?: (scripts: Favorite[], folders: Folder[]) => void
   renameScript?: (script: Favorite, name: string) => void
   moveScript?: (scriptId: string, folderId: string) => void
-  removeScript?: (script: Favorite) => void
+  addScript?: (content: string) => void
+  removeScripts?: (scripts: string[]) => void
   renameFolder?: (folder: Folder, name: string) => void
   removeFolder?: (folder: Folder) => void
   createNewFolder?: () => void
   createNewScript?: () => void
+}
+
+function findScriptsFromIds(ids: string[], scripts: Favorite[]): Favorite[] {
+  function notEmpty<T>(value?: T): value is T {
+    return value !== undefined
+  }
+
+  return ids
+    .map(id => scripts.find(script => getUniqueScriptKey(script) === id))
+    .filter(notEmpty)
 }
 
 export default function SavedScripts({
@@ -43,7 +58,8 @@ export default function SavedScripts({
   createNewScript,
   execScript,
   renameScript,
-  removeScript,
+  removeScripts,
+  addScript,
   moveScript,
   renameFolder,
   removeFolder,
@@ -63,6 +79,7 @@ export default function SavedScripts({
 
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const blurRef = useCustomBlur(() => setSelectedIds([]))
+
   const onListItemClick = (clickedScriptId: string) => (
     e: React.MouseEvent
   ) => {
@@ -109,6 +126,9 @@ export default function SavedScripts({
     }
   }
 
+  const selectedScripts = findScriptsFromIds(selectedIds, scripts)
+  const removeScript = (id: string) => () =>
+    removeScripts && removeScripts([id])
   return (
     <SavedScriptsMain className="saved-scripts">
       <DndProvider backend={HTML5Backend}>
@@ -120,10 +140,26 @@ export default function SavedScripts({
             <SavedScriptsHeader className="saved-scripts__header">
               {title}
               <SavedScriptsButtonWrapper className="saved-scripts__button-wrapper">
-                {exportScripts && (
-                  <ExportButton
-                    onClick={() => exportScripts(scripts, folders)}
-                  />
+                {selectedIds.length > 0 && (
+                  <span style={{ fontSize: 12 }}>
+                    | {selectedIds.length} selected
+                    {exportScripts && (
+                      <ExportButton
+                        onClick={() => {
+                          exportScripts(selectedScripts, folders)
+                          setSelectedIds([])
+                        }}
+                      />
+                    )}
+                    {removeScripts && (
+                      <RedRemoveButton
+                        onClick={() => {
+                          removeScripts(selectedIds)
+                          setSelectedIds([])
+                        }}
+                      />
+                    )}
+                  </span>
                 )}
                 {createNewFolder && (
                   <NewFolderButton onClick={createNewFolder} />
@@ -135,10 +171,13 @@ export default function SavedScripts({
               const key = getUniqueScriptKey(script)
               return (
                 <SavedScriptsListItem
-                  selectScript={selectScript}
-                  execScript={execScript}
-                  removeScript={removeScript}
-                  renameScript={renameScript}
+                  selectScript={() => selectScript(script)}
+                  execScript={() => execScript(script)}
+                  duplicateScript={() => addScript && addScript(script.content)}
+                  removeScript={removeScript(key)}
+                  renameScript={(name: string) =>
+                    renameScript && renameScript(script, name)
+                  }
                   script={script}
                   key={key}
                   onClick={onListItemClick(key)}
@@ -166,10 +205,15 @@ export default function SavedScripts({
                   const key = getUniqueScriptKey(script)
                   return (
                     <SavedScriptsListItem
-                      selectScript={selectScript}
-                      execScript={execScript}
-                      removeScript={removeScript}
-                      renameScript={renameScript}
+                      selectScript={() => selectScript(script)}
+                      execScript={() => execScript(script)}
+                      duplicateScript={() =>
+                        addScript && addScript(script.content)
+                      }
+                      removeScript={removeScript(key)}
+                      renameScript={(name: string) =>
+                        renameScript && renameScript(script, name)
+                      }
                       script={script}
                       key={key}
                       onClick={onListItemClick(key)}

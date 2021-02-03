@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useDrag } from 'react-dnd'
 import { useCustomBlur, useNameUpdate } from './hooks'
-import { RemoveButton, RunButton, EditButton } from './SavedScriptsButton'
+import { RunButton } from './SavedScriptsButton'
 import {
   SavedScriptsButtonWrapper,
   SavedScriptsInput,
@@ -11,15 +11,17 @@ import {
 import { Favorite } from 'shared/modules/favorites/favoritesDuck'
 import { getScriptDisplayName } from './utils'
 import styled from 'styled-components'
+import { PinIcon } from 'browser-components/icons/Icons'
 
 interface SavedScriptsListItemProps {
   script: Favorite
-  selectScript: (script: Favorite) => void
-  execScript: (script: Favorite) => void
+  selectScript: () => void
+  execScript: () => void
   onClick?: (e: React.MouseEvent) => void
   isSelected?: boolean
-  renameScript?: (script: Favorite, name: string) => void
-  removeScript?: (script: Favorite) => void
+  renameScript?: (name: string) => void
+  removeScript?: () => void
+  duplicateScript?: () => void
 }
 
 function SavedScriptsListItem({
@@ -28,6 +30,7 @@ function SavedScriptsListItem({
   execScript,
   renameScript,
   removeScript,
+  duplicateScript,
   onClick,
   isSelected
 }: SavedScriptsListItemProps): JSX.Element {
@@ -40,23 +43,24 @@ function SavedScriptsListItem({
     setNameValue
   } = useNameUpdate(
     displayName,
-    () => renameScript && renameScript(script, currentNameValue)
+    () => renameScript && renameScript(currentNameValue)
   )
   const blurRef = useCustomBlur(doneEditing)
   const drag = useDrag({
     item: { id: script.id, type: 'script' }
   })[1]
   const [showThing, set] = useState(false) // testa :active ist för denna proppen
+  const blurRef2 = useCustomBlur(() => set(false))
 
   const canRunScript = !script.not_executable && !isEditing
 
   return (
     <SavedScriptsListItemMain
+      isSelected={isSelected}
       stayVisible={showThing}
       ref={blurRef}
       className="saved-scripts-list-item"
       onClick={onClick}
-      isSelected={isSelected}
     >
       {isEditing ? (
         <SavedScriptsInput
@@ -73,29 +77,31 @@ function SavedScriptsListItem({
         <SavedScriptsListItemDisplayName
           className="saved-scripts-list-item__display-name"
           data-testid={`scriptTitle-${displayName}`}
-          onClick={() => !isEditing && selectScript(script)}
+          onClick={() => !isEditing && selectScript()}
           ref={drag}
         >
           {displayName}
         </SavedScriptsListItemDisplayName>
       )}
       <SavedScriptsButtonWrapper className="saved-scripts__button-wrapper">
-        <Dots
+        <span
           className="saved-scripts-hidden-more-info"
           onClick={() => set(t => !t)}
+          style={{ position: 'relative' }}
         >
-          x
+          <PinIcon />
           {showThing && (
-            <Overlay>
-              {removeScript && (
-                <Item onClick={() => removeScript(script)}> remove</Item>
-              )}
+            <Overlay ref={blurRef2}>
+              {removeScript && <Item onClick={removeScript}> Delete </Item>}
               <Separator />
-              {renameScript && <Item onClick={beginEditing}> edit </Item>}
+              {renameScript && <Item onClick={beginEditing}> Rename </Item>}
+              {<Item onClick={selectScript}> Edit content</Item>}
+              {<Item onClick={execScript}> Run </Item>}
+              {<Item onClick={duplicateScript}> Duplicate </Item>}
             </Overlay>
           )}
-        </Dots>
-        {canRunScript && <RunButton onClick={() => execScript(script)} />}
+        </span>
+        {canRunScript && <RunButton onClick={execScript} />}
       </SavedScriptsButtonWrapper>
     </SavedScriptsListItemMain>
   )
