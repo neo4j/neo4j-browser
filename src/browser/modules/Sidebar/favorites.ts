@@ -27,7 +27,10 @@ import {
 } from 'shared/modules/commands/commandsDuck'
 import * as favoritesDuck from 'shared/modules/favorites/favoritesDuck'
 import * as foldersDuck from 'shared/modules/favorites/foldersDuck'
-import { exportFavorites } from 'services/exporting/favoriteUtils'
+import {
+  exportFavorites,
+  exportFavoritesAsBigCypherFile
+} from 'services/exporting/favoriteUtils'
 
 const mapFavoritesStateToProps = (state: any) => {
   const folders = foldersDuck
