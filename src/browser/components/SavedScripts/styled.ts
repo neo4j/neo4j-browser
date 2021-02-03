@@ -23,7 +23,7 @@ export const SavedScriptsHeader = styled.h5`
   text-shadow: rgba(0, 0, 0, 0.4) 0px 1px 0px;
 `
 
-export const SavedScriptsListItemMain = styled.div`
+export const SavedScriptsListItemMain = styled.div<{ stayVisible?: boolean }>`
   padding: 5px 3px;
   display: flex;
   justify-content: space-between;
@@ -32,7 +32,11 @@ export const SavedScriptsListItemMain = styled.div`
     color: inherit;
   }
 
-  &:hover .saved-scripts__edit-button {
+  & .saved-scripts-hidden-more-info {
+    visibility: ${props => (props.stayVisible ? 'visible' : 'hidden')};
+  }
+
+  &:hover .saved-scripts-hidden-more-info {
     visibility: visible;
   }
 `

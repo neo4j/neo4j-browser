@@ -27,6 +27,7 @@ import {
 } from 'shared/modules/commands/commandsDuck'
 import * as favoritesDuck from 'shared/modules/favorites/favoritesDuck'
 import * as foldersDuck from 'shared/modules/favorites/foldersDuck'
+import { exportFavorites } from 'services/exporting/favoriteUtils'
 
 const mapFavoritesStateToProps = (state: any) => {
   const folders = foldersDuck
@@ -79,6 +80,12 @@ const mapFavoritesDispatchToProps = (dispatch: any, ownProps: any) => ({
 `
     dispatch(favoritesDuck.addFavorite(content, id))
     ownProps.bus.send(editor.EDIT_CONTENT, editor.editContent(id, content))
+  },
+  exportScripts(
+    favorites: favoritesDuck.Favorite[],
+    folders: foldersDuck.Folder[]
+  ) {
+    exportFavorites(favorites, folders)
   }
 })
 

@@ -23,7 +23,7 @@ interface SavedScriptsProps {
   selectScript: (script: Favorite) => void
   execScript: (script: Favorite) => void
   // When optional callbacks aren't provided, respective UI elements are hidden
-  exportScripts?: () => void
+  exportScripts?: (scripts: Favorite[], folders: Folder[]) => void
   renameScript?: (script: Favorite, name: string) => void
   moveScript?: (scriptId: string, folderId: string) => void
   removeScript?: (script: Favorite) => void
@@ -67,7 +67,11 @@ export default function SavedScripts({
             <SavedScriptsHeader className="saved-scripts__header">
               {title}
               <SavedScriptsButtonWrapper className="saved-scripts__button-wrapper">
-                {exportScripts && <ExportButton onClick={exportScripts} />}
+                {exportScripts && (
+                  <ExportButton
+                    onClick={() => exportScripts(scripts, folders)}
+                  />
+                )}
                 {createNewFolder && (
                   <NewFolderButton onClick={createNewFolder} />
                 )}
