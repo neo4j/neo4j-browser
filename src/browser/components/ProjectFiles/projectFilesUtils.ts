@@ -15,7 +15,6 @@
  *
  */
 import remote from 'services/remote'
-import { CYPHER_FILE_EXTENSION } from 'services/exportFavorites'
 import { ProjectFileScript } from 'browser-components/ProjectFiles/ProjectFilesList'
 import { split, trim, head, startsWith } from 'lodash-es'
 import {
@@ -35,6 +34,7 @@ import {
   PROHIBITED_FILENAME_CHAR_TESTS,
   ProhibitedFilenameErrors
 } from './projectFilesConstants'
+import { CYPHER_FILE_EXTENSION } from 'services/exporting/favoriteUtils'
 
 export const ProjectFilesQueryVars = (
   projectId: string

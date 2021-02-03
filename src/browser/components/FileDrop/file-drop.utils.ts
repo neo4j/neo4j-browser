@@ -33,8 +33,7 @@ import {
 } from 'lodash-es'
 import JSZip from 'jszip'
 import uuid from 'uuid'
-
-import { CYPHER_FILE_EXTENSION } from 'services/exportFavorites'
+import { CYPHER_FILE_EXTENSION } from 'services/exporting/favoriteUtils'
 
 /**
  * Extracts folders from favorites
