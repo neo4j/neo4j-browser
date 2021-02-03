@@ -78,6 +78,7 @@ import {
 import { csvFormat, stringModifier } from 'services/bolt/cypherTypesFormatting'
 import arrayHasItems from 'shared/utils/array-has-items'
 import { stringifyMod } from 'services/utils'
+<<<<<<< HEAD
 import Monaco, { MonacoHandles } from '../Editor/Monaco'
 import { Bus } from 'suber'
 import FeatureToggle from '../FeatureToggle/FeatureToggle'
@@ -134,6 +135,10 @@ function FrameTitlebar(props: FrameTitleBarProps) {
   const gainFocusCallback = useCallback(() => {
     if (props.frame.isRerun) {
       editorRef.current?.focus()
+=======
+import uuid from 'uuid'
+import { addFavorite } from 'shared/modules/favorites/favoritesDuck'
+>>>>>>> Favorite saved automatically
 
       const lines = (editorRef.current?.getValue() || '').split('\n')
       const linesLength = lines.length
@@ -387,7 +392,9 @@ const mapDispatchToProps = (
 ) => {
   return {
     newFavorite: (cmd: string) => {
-      dispatch(sidebar.setDraftScript(cmd, 'favorites'))
+      const id = uuid.v4()
+      dispatch(addFavorite(cmd, id))
+      dispatch(sidebar.setDraftScript(cmd, 'favorites', id))
     },
     newProjectFile: (cmd: string) => {
       dispatch(sidebar.setDraftScript(cmd, 'project files'))
