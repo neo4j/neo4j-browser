@@ -16,6 +16,8 @@ interface SavedScriptsListItemProps {
   script: Favorite
   selectScript: (script: Favorite) => void
   execScript: (script: Favorite) => void
+  onClick?: (e: React.MouseEvent) => void
+  isSelected?: boolean
   renameScript?: (script: Favorite, name: string) => void
   removeScript?: (script: Favorite) => void
 }
@@ -25,7 +27,9 @@ function SavedScriptsListItem({
   selectScript,
   execScript,
   renameScript,
-  removeScript
+  removeScript,
+  onClick,
+  isSelected
 }: SavedScriptsListItemProps): JSX.Element {
   const displayName = getScriptDisplayName(script)
   const {
@@ -51,6 +55,8 @@ function SavedScriptsListItem({
       stayVisible={showThing}
       ref={blurRef}
       className="saved-scripts-list-item"
+      onClick={onClick}
+      isSelected={isSelected}
     >
       {isEditing ? (
         <SavedScriptsInput

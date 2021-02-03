@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { DndProvider } from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
 import SavedScriptsFolder from './SavedScriptsFolder'
@@ -11,10 +11,12 @@ import {
   SavedScriptsButtonWrapper,
   SavedScriptsListItemDisplayName
 } from './styled'
-import { Favorite } from 'shared/modules/favorites/favoritesDuck'
 import { Folder } from 'shared/modules/favorites/foldersDuck'
 import SavedScriptsListItem from './SavedScriptsListItem'
 import { getScriptDisplayName } from './utils'
+import { uniq } from 'lodash-es'
+import { Favorite } from 'shared/modules/favorites/favoritesDuck'
+import { useCustomBlur } from './hooks'
 
 interface SavedScriptsProps {
   title?: string
@@ -59,11 +61,62 @@ export default function SavedScripts({
       .sort(sortScriptsAlfabethically)
   }))
 
+  const [selectedIds, setSelectedIds] = useState<string[]>([])
+  const blurRef = useCustomBlur(() => setSelectedIds([]))
+  const onListItemClick = (clickedScriptId: string) => (
+    e: React.MouseEvent
+  ) => {
+    const toggleFn = (ids: string[]) =>
+      ids.includes(clickedScriptId)
+        ? ids.filter(existingId => existingId !== clickedScriptId)
+        : ids.concat(clickedScriptId)
+
+    const getIdRange = (id1: string, id2: string): string[] => {
+      const scriptIds: string[] = scripts
+        .concat([]) // to avoid mutating in place by sort
+        .sort(sortScriptsAlfabethically)
+        .map(getUniqueScriptKey)
+      const pos1 = scriptIds.indexOf(id1)
+      const pos2 = scriptIds.indexOf(id2)
+      if (pos1 === -1 || pos2 == -1) {
+        throw new Error("Can't get range between ids not in list")
+      }
+
+      const smallestFirst = pos1 < pos2 ? [pos1, pos2] : [pos2, pos1]
+      return scriptIds.slice(
+        smallestFirst[0],
+        smallestFirst[1] + 1 /* inclusive slice */
+      )
+    }
+
+    const allowMultiselect = e.metaKey || e.ctrlKey
+    const bulkSelect = e.shiftKey
+    if (allowMultiselect) {
+      if (bulkSelect) {
+        setSelectedIds(ids =>
+          ids.length === 0
+            ? [clickedScriptId]
+            : uniq([
+                ...ids,
+                ...getIdRange(ids[ids.length - 1], clickedScriptId)
+              ])
+        )
+      } else {
+        setSelectedIds(toggleFn)
+      }
+    } else {
+      setSelectedIds([clickedScriptId])
+    }
+  }
+
   return (
     <SavedScriptsMain className="saved-scripts">
       <DndProvider backend={HTML5Backend}>
         <SavedScriptsBody className="saved-scripts__body">
-          <SavedScriptsBodySection className="saved-scripts__body-section">
+          <SavedScriptsBodySection
+            ref={blurRef}
+            className="saved-scripts__body-section"
+          >
             <SavedScriptsHeader className="saved-scripts__header">
               {title}
               <SavedScriptsButtonWrapper className="saved-scripts__button-wrapper">
@@ -78,16 +131,21 @@ export default function SavedScripts({
               </SavedScriptsButtonWrapper>
             </SavedScriptsHeader>
 
-            {scriptsOutsideFolder.map(script => (
-              <SavedScriptsListItem
-                selectScript={selectScript}
-                execScript={execScript}
-                removeScript={removeScript}
-                renameScript={renameScript}
-                script={script}
-                key={getUniqueScriptKey(script)}
-              />
-            ))}
+            {scriptsOutsideFolder.map(script => {
+              const key = getUniqueScriptKey(script)
+              return (
+                <SavedScriptsListItem
+                  selectScript={selectScript}
+                  execScript={execScript}
+                  removeScript={removeScript}
+                  renameScript={renameScript}
+                  script={script}
+                  key={key}
+                  onClick={onListItemClick(key)}
+                  isSelected={selectedIds.includes(key)}
+                />
+              )
+            })}
             {createNewScript && (
               <SavedScriptsListItemDisplayName
                 className="saved-scripts-list-item__display-name"
@@ -104,16 +162,21 @@ export default function SavedScripts({
                 moveScript={moveScript}
                 key={folder.id}
               >
-                {scripts.map(script => (
-                  <SavedScriptsListItem
-                    selectScript={selectScript}
-                    execScript={execScript}
-                    removeScript={removeScript}
-                    renameScript={renameScript}
-                    script={script}
-                    key={getUniqueScriptKey(script)}
-                  />
-                ))}
+                {scripts.map(script => {
+                  const key = getUniqueScriptKey(script)
+                  return (
+                    <SavedScriptsListItem
+                      selectScript={selectScript}
+                      execScript={execScript}
+                      removeScript={removeScript}
+                      renameScript={renameScript}
+                      script={script}
+                      key={key}
+                      onClick={onListItemClick(key)}
+                      isSelected={selectedIds.includes(key)}
+                    />
+                  )
+                })}
               </SavedScriptsFolder>
             ))}
           </SavedScriptsBodySection>
