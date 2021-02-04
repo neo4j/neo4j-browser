@@ -200,6 +200,7 @@ export default function SavedScripts({
                 removeFolder={removeFolder}
                 moveScript={moveScript}
                 key={folder.id}
+                selectedScriptIds={selectedIds}
               >
                 {scripts.map(script => {
                   const key = getUniqueScriptKey(script)

@@ -23,6 +23,7 @@ interface SavedScriptsFolderProps {
   renameFolder?: (folder: Folder, name: string) => void
   removeFolder?: (folder: Folder) => void
   moveScript?: (scriptId: string, folderId: string) => void
+  selectedScriptIds: string[]
   children: JSX.Element[]
 }
 
@@ -31,6 +32,7 @@ function SavedScriptsFolder({
   moveScript,
   renameFolder,
   removeFolder,
+  selectedScriptIds,
   children
 }: SavedScriptsFolderProps): JSX.Element {
   const {
@@ -52,7 +54,12 @@ function SavedScriptsFolder({
   >({
     accept: 'script',
     drop: item => {
-      moveScript && moveScript(item.id, folder.id)
+      if (moveScript) {
+        // move dragged
+        moveScript(item.id, folder.id)
+        // Also move all selected
+        selectedScriptIds.forEach(id => moveScript(id, folder.id))
+      }
     }
   })[1]
 
