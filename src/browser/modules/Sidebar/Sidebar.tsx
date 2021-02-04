@@ -36,7 +36,7 @@ import BrowserSync from '../Sync/BrowserSync'
 import { isUserSignedIn } from 'shared/modules/sync/syncDuck'
 import {
   addFavorite,
-  updateFavoriteContent
+  renameFavorite
 } from 'shared/modules/favorites/favoritesDuck'
 import { utilizeBrowserSync } from 'shared/modules/features/featuresDuck'
 import {
@@ -71,7 +71,7 @@ interface SidebarProps {
   loadSync: boolean
   isRelateAvailable: boolean
   addFavorite: (cmd: string) => void
-  updateFavorite: (id: string, content: string) => void
+  renameFavorite: (id: string, content: string) => void
   resetDraft: () => void
   scriptDraft: string | null
   scriptDraftId: string | null
@@ -86,7 +86,7 @@ const Sidebar = ({
   loadSync,
   isRelateAvailable,
   addFavorite,
-  updateFavorite,
+  renameFavorite,
   scriptDraft,
   resetDraft,
   scriptDraftId
@@ -122,19 +122,9 @@ const Sidebar = ({
                   if (input === defaultNameFromDisplayContent(scriptDraft)) {
                     addFavorite(scriptDraft)
                   } else {
-                    const alreadyHasName = scriptDraft.startsWith('//')
-                    const replaceName = [
-                      `// ${input}`,
-                      scriptDraft.split('\n').slice(1)
-                    ].join('\n')
-
-                    const content = alreadyHasName
-                      ? replaceName
-                      : `//${input}\n${scriptDraft}`
-
                     scriptDraftId
-                      ? updateFavorite(scriptDraftId, content)
-                      : addFavorite(content)
+                      ? renameFavorite(scriptDraftId, input)
+                      : addFavorite(` //${input}\n${scriptDraft}`)
                   }
                   resetDraft()
                 }}
@@ -247,8 +237,8 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
     addFavorite: (cmd: string) => {
       dispatch(addFavorite(cmd, uuid.v4()))
     },
-    updateFavorite: (id: string, content: string) => {
-      dispatch(updateFavoriteContent(id, content))
+    renameFavorite: (id: string, content: string) => {
+      dispatch(renameFavorite(id, content))
     },
     resetDraft: () => {
       dispatch(setDraftScript(null, 'favorites'))
