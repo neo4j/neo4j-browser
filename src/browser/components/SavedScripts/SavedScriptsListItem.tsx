@@ -92,12 +92,18 @@ function SavedScriptsListItem({
           <PinIcon />
           {showThing && (
             <Overlay ref={blurRef2}>
-              {removeScript && <Item onClick={removeScript}> Delete </Item>}
-              <Separator />
+              {removeScript && (
+                <>
+                  <Item onClick={removeScript}> Delete </Item>
+                  <Separator />
+                </>
+              )}
               {renameScript && <Item onClick={beginEditing}> Rename </Item>}
               {<Item onClick={selectScript}> Edit content</Item>}
-              {<Item onClick={execScript}> Run </Item>}
-              {<Item onClick={duplicateScript}> Duplicate </Item>}
+              {canRunScript && <Item onClick={execScript}> Run </Item>}
+              {duplicateScript && (
+                <Item onClick={duplicateScript}> Duplicate </Item>
+              )}
             </Overlay>
           )}
         </span>

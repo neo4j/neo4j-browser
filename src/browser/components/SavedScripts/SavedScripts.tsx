@@ -127,8 +127,8 @@ export default function SavedScripts({
   }
 
   const selectedScripts = findScriptsFromIds(selectedIds, scripts)
-  const removeScript = (id: string) => () =>
-    removeScripts && removeScripts([id])
+  const removeScript =
+    removeScripts && ((id: string) => () => removeScripts([id]))
   return (
     <SavedScriptsMain className="saved-scripts">
       <DndProvider backend={HTML5Backend}>
@@ -174,7 +174,7 @@ export default function SavedScripts({
                   selectScript={() => selectScript(script)}
                   execScript={() => execScript(script)}
                   duplicateScript={() => addScript && addScript(script.content)}
-                  removeScript={removeScript(key)}
+                  removeScript={removeScript && removeScript(key)}
                   renameScript={(name: string) =>
                     renameScript && renameScript(script, name)
                   }
@@ -208,12 +208,13 @@ export default function SavedScripts({
                     <SavedScriptsListItem
                       selectScript={() => selectScript(script)}
                       execScript={() => execScript(script)}
-                      duplicateScript={() =>
-                        addScript && addScript(script.content)
+                      duplicateScript={
+                        addScript && (() => addScript(script.content))
                       }
-                      removeScript={removeScript(key)}
-                      renameScript={(name: string) =>
-                        renameScript && renameScript(script, name)
+                      removeScript={removeScript && removeScript(key)}
+                      renameScript={
+                        renameScript &&
+                        ((name: string) => renameScript(script, name))
                       }
                       script={script}
                       key={key}
