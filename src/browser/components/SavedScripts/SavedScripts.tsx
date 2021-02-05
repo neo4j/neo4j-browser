@@ -8,12 +8,9 @@ import {
   RedRemoveButton
 } from './SavedScriptsButton'
 import {
-  SavedScriptsMain,
   SavedScriptsBody,
-  SavedScriptsBodySection,
   SavedScriptsHeader,
   SavedScriptsButtonWrapper,
-  SavedScriptsListItemDisplayName,
   SavedScriptsNewFavorite
 } from './styled'
 import { Folder } from 'shared/modules/favorites/foldersDuck'
