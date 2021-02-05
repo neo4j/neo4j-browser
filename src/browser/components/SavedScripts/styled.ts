@@ -1,12 +1,7 @@
 import styled from 'styled-components'
 
-export const SavedScriptsMain = styled.div``
-
 export const SavedScriptsBody = styled.div`
-  padding: 0 24px;
-`
-
-export const SavedScriptsBodySection = styled.div`
+  padding: 0 18px;
   margin-bottom: 12px;
 `
 
@@ -30,10 +25,13 @@ export const SavedScriptsListItemMain = styled.div<{
   padding: 5px 3px;
   display: flex;
   justify-content: space-between;
-  ${props => (props.isSelected ? 'background-color: blue;' : '')}
+
+  background-color: ${props =>
+    props.isSelected ? props.theme.primaryBackground : 'inherit'};
 
   &:hover {
     color: inherit;
+    background-color: ${props => props.theme.primaryBackground};
   }
 
   & .saved-scripts-hidden-more-info {
@@ -42,6 +40,21 @@ export const SavedScriptsListItemMain = styled.div<{
 
   &:hover .saved-scripts-hidden-more-info {
     visibility: visible;
+  }
+`
+
+export const SavedScriptsNewFavorite = styled.div`
+  flex: 1;
+  user-select: none;
+  cursor: pointer;
+  color: #bcc0c9;
+  font-size: 13px;
+  padding-top: 10px;
+  margin-left: 3px;
+  transition: color ease-in-out 0.3s;
+
+  &:hover {
+    color: inherit;
   }
 `
 
@@ -56,11 +69,6 @@ export const SavedScriptsListItemDisplayName = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: color ease-in-out 0.3s;
-
-  &:hover {
-    color: inherit;
-  }
 `
 
 export const SavedScriptsFolderMain = styled.div`
@@ -71,10 +79,6 @@ export const SavedScriptsFolderHeader = styled.div`
   display: flex;
   justify-content: space-between;
   padding-bottom: 5px;
-
-  &:hover .saved-scripts__edit-button {
-    visibility: visible;
-  }
 `
 
 export const SavedScriptsFolderBody = styled.div`

@@ -45,26 +45,24 @@ function SavedScriptsListItem({
     displayName,
     () => renameScript && renameScript(currentNameValue)
   )
-  const blurRef = useCustomBlur(doneEditing)
+  const nameBlurRef = useCustomBlur(doneEditing)
+  const overlayBlurRef = useCustomBlur(() => setShowOverlay(false))
   const drag = useDrag({
     item: { id: script.id, type: 'script' }
   })[1]
-  const [showThing, set] = useState(false) // testa :active ist för denna proppen
-  const blurRef2 = useCustomBlur(() => set(false))
-
+  const [showOverlay, setShowOverlay] = useState(false)
+  const toggleOverlay = () => setShowOverlay(t => !t)
   const canRunScript = !script.not_executable && !isEditing
 
   return (
     <SavedScriptsListItemMain
       isSelected={isSelected}
-      stayVisible={showThing || isSelected}
-      ref={blurRef}
-      className="saved-scripts-list-item"
+      stayVisible={showOverlay || isSelected}
+      ref={nameBlurRef}
       onClick={onClick}
     >
       {isEditing ? (
         <SavedScriptsInput
-          className="saved-scripts-list-item__name-input"
           type="text"
           autoFocus
           onKeyPress={({ key }) => {
@@ -75,7 +73,6 @@ function SavedScriptsListItem({
         />
       ) : (
         <SavedScriptsListItemDisplayName
-          className="saved-scripts-list-item__display-name"
           data-testid={`scriptTitle-${displayName}`}
           onClick={() => !isEditing && selectScript()}
           ref={drag}
@@ -83,15 +80,14 @@ function SavedScriptsListItem({
           {displayName}
         </SavedScriptsListItemDisplayName>
       )}
-      <SavedScriptsButtonWrapper className="saved-scripts__button-wrapper">
-        <span
+      <SavedScriptsButtonWrapper>
+        <OverlayContainer
           className="saved-scripts-hidden-more-info"
-          onClick={() => set(t => !t)}
-          style={{ position: 'relative' }}
+          onClick={toggleOverlay}
         >
           <PinIcon />
-          {showThing && (
-            <Overlay ref={blurRef2}>
+          {showOverlay && (
+            <Overlay ref={overlayBlurRef}>
               {removeScript && (
                 <>
                   <Item onClick={removeScript}> Delete </Item>
@@ -106,12 +102,16 @@ function SavedScriptsListItem({
               )}
             </Overlay>
           )}
-        </span>
+        </OverlayContainer>
         {canRunScript && <RunButton onClick={execScript} />}
       </SavedScriptsButtonWrapper>
     </SavedScriptsListItemMain>
   )
 }
+
+const OverlayContainer = styled.span`
+  position: relative;
+`
 
 const Overlay = styled.div`
   color: black;
