@@ -52,6 +52,7 @@ export const base = {
   frameCommandBackground: '#F8F9FB',
   runnableBackground: '#f5f5f5',
   teaserCardBackground: '#fff',
+  hoverBackground: '#40444e',
 
   // Fonts
   primaryFontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',

@@ -63,13 +63,17 @@ interface NewSavedScriptProps {
   onCancel: () => void
   defaultName: string
   headerText: string
+  pattern?: string
+  patternMessage?: string
 }
 
 function NewSavedScript({
   onSubmit,
   defaultName,
   headerText,
-  onCancel
+  onCancel,
+  patternMessage = '',
+  pattern
 }: NewSavedScriptProps): JSX.Element {
   const [name, setName] = useState(defaultName)
 
@@ -89,6 +93,8 @@ function NewSavedScript({
         data-testid="scriptName"
         value={name}
         onChange={onChange}
+        pattern={pattern}
+        title={patternMessage}
         required
       />
       <StyledSubmitButton data-testid="saveScript" type="submit">

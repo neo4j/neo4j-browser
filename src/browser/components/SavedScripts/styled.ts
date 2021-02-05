@@ -27,11 +27,11 @@ export const SavedScriptsListItemMain = styled.div<{
   justify-content: space-between;
 
   background-color: ${props =>
-    props.isSelected ? props.theme.primaryBackground : 'inherit'};
+    props.isSelected ? props.theme.hoverBackground : 'inherit'};
 
   &:hover {
     color: inherit;
-    background-color: ${props => props.theme.primaryBackground};
+    background-color: ${props => props.theme.hoverBackground};
   }
 
   & .saved-scripts-hidden-more-info {

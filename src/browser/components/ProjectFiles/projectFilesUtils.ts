@@ -16,7 +16,6 @@
  */
 import remote from 'services/remote'
 import { ProjectFileScript } from 'browser-components/ProjectFiles/ProjectFilesList'
-import { split, trim, head, startsWith } from 'lodash-es'
 import {
   ApolloCache,
   FetchResult,
@@ -30,11 +29,10 @@ import {
   GET_PROJECT_FILES,
   AddProjectFile,
   RemoveProjectFile,
-  ProjectFileMapping,
-  PROHIBITED_FILENAME_CHAR_TESTS,
-  ProhibitedFilenameErrors
+  ProjectFileMapping
 } from './projectFilesConstants'
 import { CYPHER_FILE_EXTENSION } from 'services/exporting/favoriteUtils'
+import { defaultNameFromDisplayContent } from 'browser-components/SavedScripts'
 
 export const ProjectFilesQueryVars = (
   projectId: string
@@ -80,93 +78,20 @@ const getProjectFileContents = (
       'X-API-Token': apiToken,
       'X-Client-Id': clientId
     })
-    .then(body => body.text()) // currently cypher/text file specific
+    .then(body => body.text())
     .catch(e => {
       console.log(`Unable to get file ${name}\n`, e)
       return ''
     })
 
-const NEW_LINE = '\n'
-const COMMENT_PREFIX = '//'
+export const getProjectFileDefaultFileName = (contents: string): string => {
+  const defaultScriptName = defaultNameFromDisplayContent(contents)
 
-const isNonEmptyString = (toTest: string): boolean => {
-  return typeof toTest === 'string' && Boolean(toTest)
-}
-
-// adapted from @relate-by-ui/saved-scripts utils
-export const setProjectFileDefaultFileName = (contents: string): string => {
-  const lines = split(contents, NEW_LINE)
-  const firstLine = trim(head(lines) || '')
-
-  if (!isNonEmptyString(firstLine)) {
-    return ''
-  }
-
-  // remove comment lines (if they exist)
-  const firstLineStr = startsWith(firstLine, COMMENT_PREFIX)
-    ? trim(firstLine.slice(COMMENT_PREFIX.length))
-    : firstLine
-
-  // this should be ok but may need adjusting
-  // if scenarios come up that require it
-  return firstLineStr
+  return defaultScriptName
     .replace(/\/|\\/g, '') // replace any forward or back slashes
     .replace(/[^\w]/g, '-') // replace any non-word chars with dashes
     .replace(/-+/g, '-') // replace 1 or more dashes with single dash
     .replace(/-$/, '') // remove dash from end of line
-}
-
-export const createFilePath = (paths: string[]): string => {
-  return paths.join(/Win32/.test(navigator.platform) ? '\\' : '/')
-}
-
-export const checkFileNameInput = (fileName: string): string => {
-  if (!fileName.length) {
-    return 'File name cannot be empty'
-  }
-
-  const errors: ProhibitedFilenameErrors = { chars: [], tests: [] }
-
-  PROHIBITED_FILENAME_CHAR_TESTS.forEach(charObj => {
-    if (charObj.test) {
-      // if a Regex test exists
-      if (charObj.platform) {
-        if (
-          new RegExp(charObj.platform).test(navigator.platform) &&
-          charObj.test.test(fileName)
-        ) {
-          errors.tests.push(charObj.test)
-        }
-      } else {
-        if (charObj.test.test(fileName)) {
-          errors.tests.push(charObj.test)
-        }
-      }
-    }
-    if (charObj.char) {
-      // otherwise default to .includes check
-      if (charObj.platform) {
-        if (
-          new RegExp(charObj.platform).test(navigator.platform) &&
-          fileName.includes(charObj.char)
-        ) {
-          errors.chars.push(charObj.char)
-        }
-      } else {
-        if (fileName.includes(charObj.char)) {
-          errors.chars.push(charObj.char)
-        }
-      }
-    }
-  })
-
-  return errors.chars.length || errors.tests.length
-    ? `File name cannot contain ${
-        errors.chars.length ? `${errors.chars.join(', ')}` : ''
-      }${errors.chars.length && errors.tests.length ? ' or ' : ''}${
-        errors.tests.length ? `${errors.tests.join(', ')}` : ''
-      }`
-    : ''
 }
 
 const readCacheQuery = (
