@@ -55,57 +55,54 @@ function SavedScriptsListItem({
   const canRunScript = !script.not_executable && !isEditing
 
   return (
-    <SavedScriptsListItemMain
-      isSelected={isSelected}
-      stayVisible={showOverlay || isSelected}
-      ref={nameBlurRef}
-      onClick={onClick}
-    >
-      {isEditing ? (
-        <SavedScriptsInput
-          type="text"
-          autoFocus
-          onKeyPress={({ key }) => {
-            key === 'Enter' && doneEditing()
-          }}
-          value={currentNameValue}
-          onChange={e => setNameValue(e.target.value)}
-        />
-      ) : (
-        <SavedScriptsListItemDisplayName
-          data-testid={`scriptTitle-${displayName}`}
-          onClick={() => !isEditing && selectScript()}
-          ref={drag}
-        >
-          {displayName}
-        </SavedScriptsListItemDisplayName>
-      )}
-      <SavedScriptsButtonWrapper>
-        <OverlayContainer
-          className="saved-scripts-hidden-more-info"
-          onClick={toggleOverlay}
-        >
-          <PinIcon />
-          {showOverlay && (
-            <Overlay ref={overlayBlurRef}>
-              {removeScript && (
-                <>
-                  <Item onClick={removeScript}> Delete </Item>
-                  <Separator />
-                </>
-              )}
-              {renameScript && <Item onClick={beginEditing}> Rename </Item>}
-              {<Item onClick={selectScript}> Edit content</Item>}
-              {canRunScript && <Item onClick={execScript}> Run </Item>}
-              {duplicateScript && (
-                <Item onClick={duplicateScript}> Duplicate </Item>
-              )}
-            </Overlay>
-          )}
-        </OverlayContainer>
-        {canRunScript && <RunButton onClick={execScript} />}
-      </SavedScriptsButtonWrapper>
-    </SavedScriptsListItemMain>
+    <span ref={drag}>
+      <SavedScriptsListItemMain
+        isSelected={isSelected}
+        stayVisible={showOverlay || isSelected}
+        ref={nameBlurRef}
+        onClick={onClick}
+      >
+        {isEditing ? (
+          <SavedScriptsInput
+            type="text"
+            autoFocus
+            onKeyPress={({ key }) => {
+              key === 'Enter' && doneEditing()
+            }}
+            value={currentNameValue}
+            onChange={e => setNameValue(e.target.value)}
+          />
+        ) : (
+          <SavedScriptsListItemDisplayName
+            data-testid={`scriptTitle-${displayName}`}
+            onClick={() => !isEditing && selectScript()}
+          >
+            {displayName}
+          </SavedScriptsListItemDisplayName>
+        )}
+        <SavedScriptsButtonWrapper>
+          <OverlayContainer
+            className="saved-scripts-hidden-more-info"
+            onClick={toggleOverlay}
+          >
+            <PinIcon />
+            {showOverlay && (
+              <Overlay ref={overlayBlurRef}>
+                {removeScript && <Item onClick={removeScript}> Delete </Item>}
+                {removeScript && <Separator />}
+                {renameScript && <Item onClick={beginEditing}> Rename </Item>}
+                {<Item onClick={selectScript}> Edit content</Item>}
+                {canRunScript && <Item onClick={execScript}> Run </Item>}
+                {duplicateScript && (
+                  <Item onClick={duplicateScript}> Duplicate </Item>
+                )}
+              </Overlay>
+            )}
+          </OverlayContainer>
+          {canRunScript && <RunButton onClick={execScript} />}
+        </SavedScriptsButtonWrapper>
+      </SavedScriptsListItemMain>
+    </span>
   )
 }
 
