@@ -920,10 +920,6 @@ Third-party licenses
 │  │  ├─ URL: git://github.com/trentm/node-dashdash.git
 │  │  ├─ VendorName: Trent Mick
 │  │  └─ VendorUrl: http://trentm.com
-│  ├─ dateformat@3.0.3
-│  │  ├─ URL: https://github.com/felixge/node-dateformat.git
-│  │  ├─ VendorName: Steven Levithan
-│  │  └─ VendorUrl: https://github.com/felixge/node-dateformat
 │  ├─ debug@4.1.1
 │  │  ├─ URL: git://github.com/visionmedia/debug.git
 │  │  └─ VendorName: TJ Holowaychuk
