@@ -56,45 +56,40 @@ describe('connections reducer', () => {
 
   test('handles connections.REMOVE', () => {
     const initialState: any = {
-      allConnectionIds: [1, 2, 3],
+      allConnectionIds: [1],
       connectionsById: {
-        1: { id: 1, name: 'bm1' },
-        2: { id: 2, name: 'bm2' },
-        3: { id: 3, name: 'bm3' }
+        1: { id: 1, name: 'bm1' }
       }
     }
     const action = {
       type: connections.REMOVE,
-      connectionId: 2
+      connectionId: 1
     }
     const nextState = reducer(initialState, action)
-    expect(nextState.allConnectionIds).toEqual([1, 3])
-    expect(Object.keys(nextState.connectionsById)).toEqual(['1', '3'])
+    expect(nextState.allConnectionIds).toEqual([])
+    expect(Object.keys(nextState.connectionsById)).toEqual([])
   })
 
   test('handles connections.MERGE (update connection)', () => {
     const initialState: any = {
       allConnectionIds: [1, 2, 3],
       connectionsById: {
-        1: { id: 1, name: 'bm1' },
-        2: { id: 2, name: 'bm2' },
-        3: { id: 3, name: 'bm3' }
+        id: '$$discovery',
+        name: 'bm'
       }
     }
     const action = {
       type: connections.MERGE,
       connection: {
-        id: 1,
-        name: 'bm1',
+        id: '$$discovery',
         username: 'new user',
         password: 'different password'
       }
     }
     const nextState = reducer(initialState, action)
-    expect(nextState.allConnectionIds).toEqual([1, 2, 3])
-    expect(nextState.connectionsById['1']).toEqual({
-      id: 1,
-      name: 'bm1',
+    expect(nextState.allConnectionIds).toEqual(['$$discovery'])
+    expect(nextState.connectionsById['$$discovery']).toEqual({
+      id: '$$discovery',
       username: 'new user',
       password: 'different password'
     })
@@ -104,15 +99,15 @@ describe('connections reducer', () => {
     const action = {
       type: connections.MERGE,
       connection: {
-        id: 'x',
+        id: '$$discovery',
         name: 'bm'
       }
     }
     const nextState = reducer(undefined, action)
-    expect(nextState.allConnectionIds).toEqual(['x'])
+    expect(nextState.allConnectionIds).toEqual(['$$discovery'])
     expect(nextState.connectionsById).toEqual({
-      x: {
-        id: 'x',
+      $$discovery: {
+        id: '$$discovery',
         name: 'bm'
       }
     })
@@ -140,7 +135,8 @@ describe('connectionsDucks Epics', () => {
           }
         },
         allConnectionIds: [CONNECTION_ID]
-      }
+      },
+      settings: {}
     })
   })
   afterEach(() => {
@@ -156,7 +152,7 @@ describe('connectionsDucks Epics', () => {
     epicMiddleware.replaceEpic(connections.disconnectEpic)
     store.dispatch(connections.setActiveConnection(id)) // set an active connection
     store.clearActions()
-    bus.take(connections.SET_ACTIVE, _currentAction => {
+    bus.take(connections.SET_ACTIVE, () => {
       // Then
       expect(store.getActions()).toEqual([
         action,
@@ -175,7 +171,7 @@ describe('connectionsDucks Epics', () => {
     }
     ;(bolt.openConnection as jest.Mock).mockReturnValueOnce(Promise.resolve())
 
-    const p = new Promise((resolve, reject) => {
+    const p = new Promise<void>((resolve, reject) => {
       bus.take(connections.STARTUP_CONNECTION_FAILED, currentAction => {
         // Then
         try {
@@ -260,7 +256,7 @@ describe('startupConnectEpic', () => {
     }
     ;(bolt.openConnection as jest.Mock).mockReturnValue(Promise.reject())
 
-    const p = new Promise((resolve, reject) => {
+    const p = new Promise<void>((resolve, reject) => {
       bus.take(connections.STARTUP_CONNECTION_FAILED, currentAction => {
         // Then
         const actions = store.getActions()
@@ -269,7 +265,7 @@ describe('startupConnectEpic', () => {
             action,
             connections.useDb(null),
             connections.setActiveConnection(null),
-            updateDiscoveryConnection({ username: '', password: '' }),
+            updateDiscoveryConnection({ password: '' }),
             currentAction
           ])
           expect(bolt.openConnection).toHaveBeenCalledTimes(1)
@@ -379,7 +375,7 @@ describe('switchConnectionEpic', () => {
     const connectionInfo = { id: CONNECTION_ID, ...action }
     ;(bolt.openConnection as jest.Mock).mockReturnValue(Promise.resolve())
 
-    const p = new Promise((resolve, reject) => {
+    const p = new Promise<void>((resolve, reject) => {
       bus.take(connections.SWITCH_CONNECTION_SUCCESS, currentAction => {
         // Then
         const actions = store.getActions()
@@ -420,7 +416,7 @@ describe('switchConnectionEpic', () => {
     const connectionInfo = { id: CONNECTION_ID, ...action }
     ;(bolt.openConnection as jest.Mock).mockReturnValue(Promise.reject())
 
-    const p = new Promise((resolve, reject) => {
+    const p = new Promise<void>((resolve, reject) => {
       bus.take(connections.SWITCH_CONNECTION_FAILED, currentAction => {
         // Then
         const actions = store.getActions()

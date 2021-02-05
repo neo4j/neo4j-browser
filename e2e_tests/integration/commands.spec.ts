@@ -101,6 +101,8 @@ describe('Commands', () => {
   })
 
   it('can re-run all simple commands while connected without blowing up', () => {
+    const password = Cypress.config('password')
+    cy.connect('neo4j', password)
     cy.executeCommand('return 1')
     commands.forEach(cmd => {
       cy.typeInFrame(`${cmd}{enter}`)

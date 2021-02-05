@@ -146,7 +146,7 @@ describe('Connect form', () => {
         )
         cy.get('[data-testid="drawerDBMS"]').click()
 
-        // unkonwn db leads to default db
+        // unknown db leads to default db
         cy.executeCommand(':server disconnect')
         cy.visit('/?dbms=bolt://username@localhost:7687&db=unknowndb')
 

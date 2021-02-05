@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import configureMockStore from 'redux-mock-store'
+import configureMockStore, { MockStoreEnhanced } from 'redux-mock-store'
 import { createEpicMiddleware } from 'redux-observable'
 import { createBus, createReduxMiddleware } from 'suber'
 
@@ -54,7 +54,7 @@ const mockStore = configureMockStore([
 ])
 
 describe('commandsDuck', () => {
-  let store: any
+  let store: MockStoreEnhanced<unknown, unknown>
   const maxHistory = 20
   beforeEach(() => {
     bolt.routedWriteTransaction = originalRoutedWriteTransaction
@@ -94,7 +94,7 @@ describe('commandsDuck', () => {
         id,
         requestId
       })
-      bus.take('NOOP', _currentAction => {
+      bus.take('NOOP', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
@@ -121,7 +121,6 @@ describe('commandsDuck', () => {
     test('emtpy SYSTEM_COMMAND_QUEUED gets ignored', done => {
       // Given
       const cmd = ' '
-      const id = 2
       const action = commands.executeSystemCommand(cmd)
       bus.take('NOOP', () => {
         // Then
@@ -143,7 +142,7 @@ describe('commandsDuck', () => {
         id
       })
 
-      bus.take('NOOP', _currentAction => {
+      bus.take('NOOP', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
@@ -183,11 +182,11 @@ describe('commandsDuck', () => {
       })
       bolt.routedWriteTransaction = jest.fn(() =>
         Promise.resolve({
-          records: [{ get: () => 2 }]
+          records: [{ get: (): number => 2 }]
         })
       )
 
-      bus.take('frames/ADD', _currentAction => {
+      bus.take('frames/ADD', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
@@ -216,7 +215,7 @@ describe('commandsDuck', () => {
       const action = commands.executeSingleCommand(cmdString, {
         id
       })
-      bus.take('NOOP', _currentAction => {
+      bus.take('NOOP', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
@@ -253,7 +252,7 @@ describe('commandsDuck', () => {
       const action = commands.executeSingleCommand(cmdString, {
         id
       })
-      bus.take('NOOP', _currentAction => {
+      bus.take('NOOP', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
@@ -277,7 +276,7 @@ describe('commandsDuck', () => {
       const action = commands.executeSingleCommand(cmdString, {
         id
       })
-      bus.take('NOOP', _currentAction => {
+      bus.take('NOOP', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
@@ -306,7 +305,7 @@ describe('commandsDuck', () => {
       const action = commands.executeSingleCommand(cmdString, {
         id
       })
-      bus.take('NOOP', _currentAction => {
+      bus.take('NOOP', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
@@ -336,7 +335,7 @@ describe('commandsDuck', () => {
       const action = commands.executeSingleCommand(cmdString, {
         id
       })
-      bus.take('NOOP', _currentAction => {
+      bus.take('NOOP', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
@@ -365,7 +364,7 @@ describe('commandsDuck', () => {
       const action = commands.executeSingleCommand(cmdString, {
         id
       })
-      bus.take('NOOP', _currentAction => {
+      bus.take('NOOP', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
@@ -391,7 +390,7 @@ describe('commandsDuck', () => {
       const id = 1
       const action = commands.executeSingleCommand(cmd, { id })
 
-      bus.take('NOOP', _currentAction => {
+      bus.take('NOOP', () => {
         expect(store.getActions()).toEqual([
           action,
           frames.add({
@@ -417,7 +416,7 @@ describe('commandsDuck', () => {
         id,
         requestId
       })
-      bus.take('NOOP', _currentAction => {
+      bus.take('NOOP', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
@@ -444,7 +443,7 @@ describe('commandsDuck', () => {
       const id = 1
       const action = commands.executeSingleCommand(cmd, { id })
 
-      bus.take('NOOP', _currentAction => {
+      bus.take('NOOP', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
@@ -467,14 +466,13 @@ describe('commandsDuck', () => {
       // Given
       const serverCmd = 'disconnect'
       const cmd = `:server ${serverCmd}`
-      const id = 3
-      const action = commands.executeSingleCommand(cmd, { id })
-      bus.take('NOOP', _currentAction => {
+      const action = commands.executeSingleCommand(cmd, { id: '$$discovery' })
+      bus.take('NOOP', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
           frames.add({ ...action, type: 'disconnect' } as any),
-          disconnectAction(null as any),
+          disconnectAction('$$discovery'),
           { type: 'NOOP' }
         ])
         done()
