@@ -78,11 +78,12 @@ import {
 import { csvFormat, stringModifier } from 'services/bolt/cypherTypesFormatting'
 import arrayHasItems from 'shared/utils/array-has-items'
 import { stringifyMod } from 'services/utils'
-<<<<<<< HEAD
 import Monaco, { MonacoHandles } from '../Editor/Monaco'
 import { Bus } from 'suber'
 import FeatureToggle from '../FeatureToggle/FeatureToggle'
 import { reusableFrame } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
+import { addFavorite } from 'shared/modules/favorites/favoritesDuck'
+import uuid from 'uuid'
 
 type FrameTitleBarBaseProps = {
   frame: any
@@ -135,10 +136,6 @@ function FrameTitlebar(props: FrameTitleBarProps) {
   const gainFocusCallback = useCallback(() => {
     if (props.frame.isRerun) {
       editorRef.current?.focus()
-=======
-import uuid from 'uuid'
-import { addFavorite } from 'shared/modules/favorites/favoritesDuck'
->>>>>>> Favorite saved automatically
 
       const lines = (editorRef.current?.getValue() || '').split('\n')
       const linesLength = lines.length
