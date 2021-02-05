@@ -21,7 +21,10 @@
 import Rx from 'rxjs'
 import neo4j from 'neo4j-driver'
 import bolt from 'services/bolt/bolt'
-import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
+import {
+  Connection,
+  getActiveConnectionData
+} from 'shared/modules/connections/connectionsDuck'
 import { getCausalClusterAddresses } from './queriesProcedureHelper'
 import { buildTxFunctionByMode } from 'services/bolt/boltHelpers'
 import { flatten } from 'services/utils'
@@ -249,14 +252,7 @@ export const handleForcePasswordChangeEpic = (some$: any, store: any) =>
     .ofType(FORCE_CHANGE_PASSWORD)
     .mergeMap(
       (
-        action: Record<
-          | '$$responseChannel'
-          | 'username'
-          | 'host'
-          | 'password'
-          | 'newPassword',
-          string
-        >
+        action: Connection & { $$responseChannel: string; newPassword: string }
       ) => {
         if (!action.$$responseChannel) return Rx.Observable.of(null)
 
