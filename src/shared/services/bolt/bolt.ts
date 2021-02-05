@@ -39,18 +39,14 @@ import { setupBoltWorker, addTypesAsField } from './setup-bolt-worker'
 
 // @ts-expect-error ts-migrate(2307) FIXME: Cannot find module 'worker-loader?inline!./boltWor... Remove this comment to see the full error message
 import BoltWorkerModule from 'worker-loader?inline!./boltWorker'
+import { Connection } from 'shared/modules/connections/connectionsDuck'
 
 let connectionProperties: {} | null = null
 let _useDb: string | null = null
 const boltWorkPool = new WorkPool(() => new BoltWorkerModule(), 10)
 
 function openConnection(
-  props: {
-    host: string
-    username: string
-    password: string
-    authenticationMethod?: string
-  },
+  props: Connection,
   opts = {},
   onLostConnection?: (error: Error) => void
 ): Promise<void> {

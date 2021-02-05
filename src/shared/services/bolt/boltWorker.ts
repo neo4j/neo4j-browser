@@ -98,11 +98,15 @@ const onmessage = function(message: {
     } = message.data
     beforeWork()
     const { txMetadata, useDb, autoCommit } = connectionProperties
-    ensureConnection(connectionProperties, connectionProperties.opts, () => {
-      ;((self as unknown) as ServiceWorker).postMessage(
-        boltConnectionErrorMessage(createErrorObject(BoltConnectionError))
-      )
-    })
+    ensureConnection(
+      connectionProperties as any,
+      connectionProperties.opts,
+      () => {
+        ;((self as unknown) as ServiceWorker).postMessage(
+          boltConnectionErrorMessage(createErrorObject(BoltConnectionError))
+        )
+      }
+    )
       .then(() => {
         const res: any = connectionTypeMap[connectionType].create(
           input,

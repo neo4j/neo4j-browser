@@ -26,6 +26,7 @@ import {
   toNonRoutingScheme,
   isNonSupportedRoutingSchemeError
 } from 'services/boltscheme.utils'
+import { Connection } from 'shared/modules/connections/connectionsDuck'
 
 interface GlobalDriversObject {
   getDirectDriver: () => Driver | null
@@ -41,20 +42,25 @@ export const setGlobalDrivers = (drivers: GlobalDriversObject) =>
 export const unsetGlobalDrivers = () => (_drivers = null)
 
 export const buildGlobalDriversObject = async (
-  props: { host: string; password: string; username: string },
+  props: Connection,
   opts = {},
   failFn: (error: Error) => void = () => {}
 ): Promise<GlobalDriversObject> => {
   const driversObj: { direct?: Driver | null; routed?: Driver | null } = {}
   const auth = buildAuthObj(props)
-  let routingSupported = !isNonRoutingScheme(props.host)
+  let routingSupported = !isNonRoutingScheme(props.host || '')
 
   // Scheme says routing should be supported
   // but in the Neo4j 3.X case, it might not be true.
   // We need to verify this.
   if (routingSupported) {
     try {
-      const routed = createDriverOrFailFn(props.host, auth, opts, () => {})
+      const routed = createDriverOrFailFn(
+        props.host || '',
+        auth,
+        opts,
+        () => {}
+      )
       routed && (await routed.verifyConnectivity())
       routingSupported = true
     } catch (e) {
@@ -67,14 +73,19 @@ export const buildGlobalDriversObject = async (
 
   const getDirectDriver = (): Driver | null => {
     if (driversObj.direct) return driversObj.direct
-    const directUrl = toNonRoutingScheme(props.host) || ''
+    const directUrl = toNonRoutingScheme(props.host || '') || ''
     driversObj.direct = createDriverOrFailFn(directUrl, auth, opts, failFn)
     return driversObj.direct
   }
   const getRoutedDriver = (): Driver | null => {
     if (!routingSupported) return getDirectDriver()
     if (driversObj.routed) return driversObj.routed
-    driversObj.routed = createDriverOrFailFn(props.host, auth, opts, failFn)
+    driversObj.routed = createDriverOrFailFn(
+      props.host || '',
+      auth,
+      opts,
+      failFn
+    )
     return driversObj.routed
   }
   return {

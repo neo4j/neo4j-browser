@@ -20,6 +20,7 @@
 
 import neo4j, { Driver } from 'neo4j-driver'
 import { buildTxFunctionByMode } from 'services/bolt/boltHelpers'
+import { Connection } from 'shared/modules/connections/connectionsDuck'
 import { createDriverOrFailFn } from './driverFactory'
 import {
   setGlobalDrivers,
@@ -95,14 +96,14 @@ export const validateConnection = (
 }
 
 export function directConnect(
-  props: { host: string; username: string; password: string },
+  props: Connection,
   opts = {},
   onLostConnection: (error: Error) => void = (): void => undefined,
   shouldValidateConnection = true
 ): Promise<Driver> {
   const p = new Promise<Driver>((resolve, reject) => {
     const auth = buildAuthObj(props)
-    const driver = createDriverOrFailFn(props.host, auth, opts, e => {
+    const driver = createDriverOrFailFn(props.host || '', auth, opts, e => {
       onLostConnection(e)
       reject(e)
     })
@@ -116,7 +117,7 @@ export function directConnect(
 }
 
 export function openConnection(
-  props: { host: string; password: string; username: string },
+  props: Connection,
   opts = {},
   onLostConnection: (error: Error) => void = (): void => undefined
 ): Promise<unknown> {
@@ -156,7 +157,7 @@ export const closeConnection = (): void => {
 }
 
 export const ensureConnection = (
-  props: { host: string; username: string; password: string },
+  props: Connection,
   opts: Record<string, unknown>,
   onLostConnection: () => void
 ): Promise<unknown> => {
