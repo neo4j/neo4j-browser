@@ -74,7 +74,7 @@ const content = (
           {' '}
           Neo4j, Inc
         </a>
-        &nbsp;<span>2002–2020</span>
+        &nbsp;<span>2002–{new Date().getFullYear()}</span>
       </p>
     </footer>
   </>

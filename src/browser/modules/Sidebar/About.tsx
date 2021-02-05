@@ -61,7 +61,9 @@ const About = ({ serverVersion, serverEdition }: AboutProps) => (
         </DrawerSubHeader>
       </DrawerSection>
       <DrawerSection>
-        <DrawerSectionBody>Copyright &#169; 2002-2020</DrawerSectionBody>
+        <DrawerSectionBody>
+          Copyright &#169; 2002-{new Date().getFullYear()}
+        </DrawerSectionBody>
       </DrawerSection>
       <DrawerSection>
         <DrawerSubHeader>You are running</DrawerSubHeader>
