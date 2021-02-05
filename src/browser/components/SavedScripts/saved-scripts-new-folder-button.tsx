@@ -15,7 +15,7 @@ export default function SavedScriptsNewFolderButton({
   return (
     <SavedScriptsNewFolderButtonButton
       className="saved-scripts__button saved-scripts__new-folder-button"
-      disabled={Boolean(disabled)}
+      disabled={disabled}
       title="Add folder"
       data-testid="newFavoriteFolder"
       onClick={onAdd}

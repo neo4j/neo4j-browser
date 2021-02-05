@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2021 "Neo4j,"
+ * Copyright (c) "Neo4j"
  * Neo4j Sweden AB [http://neo4j.com]
  *
  * This file is part of Neo4j.
@@ -74,7 +74,7 @@ const content = (
           {' '}
           Neo4j, Inc
         </a>
-        &nbsp;<span>2002–2020</span>
+        &nbsp;<span>2002–{new Date().getFullYear()}</span>
       </p>
     </footer>
   </>

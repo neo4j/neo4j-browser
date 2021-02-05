@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2021 "Neo4j,"
+ * Copyright (c) "Neo4j"
  * Neo4j Sweden AB [http://neo4j.com]
  *
  * This file is part of Neo4j.
@@ -136,16 +136,24 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
       }
       if (action.forceURL) {
         const { username, protocol, host } = getUrlInfo(action.forceURL)
-        updateDiscoveryState(
-          {
-            ...action,
-            username,
-            supportsMultiDb: !!action.requestedUseDb,
-            forceURL: `${protocol ? `${protocol}//` : ''}${host}`
-          },
-          store
-        )
-        return Promise.resolve({ type: DONE })
+
+        const discovered = {
+          username,
+          requestedUseDb: action.requestedUseDb,
+          host: `${protocol ? `${protocol}//` : ''}${host}`,
+          supportsMultiDb: !!action.requestedUseDb,
+          encrypted: action.encrypted,
+          restApi: action.restApi,
+          hasForceURL: true
+        }
+        const onlyTruthy = Object.entries(discovered)
+          .filter(item => item[1] /* truthy check on value */)
+          .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
+
+        return Promise.resolve({
+          type: DONE,
+          discovered: onlyTruthy
+        })
       }
       return Rx.Observable.fromPromise(
         remote
@@ -172,8 +180,11 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
             const isAura = getEnv(store.getState()) === CLOUD
             const supportsMultiDb =
               !isAura && parseInt((result.neo4j_version || '0').charAt(0)) >= 4
-            store.dispatch(updateDiscoveryConnection({ host, supportsMultiDb })) // Update discovery host in redux
-            return { type: DONE }
+            const discovered = supportsMultiDb
+              ? { supportsMultiDb, host }
+              : { host }
+
+            return { type: DONE, discovered }
           })
           .catch(() => {
             throw new Error('No info from endpoint')

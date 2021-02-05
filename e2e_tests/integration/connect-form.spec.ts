@@ -68,49 +68,51 @@ describe('Connect form', () => {
     getBoltUrlField().should('have.value', host)
     getBoltSchemeSelect().should('have.value', output)
   })
-  it('aliases bolt+routing:// to neo4j://', () => {
-    getBoltSchemeSelect().select(schemeWithEncryptionFlag('bolt'))
-    const scheme = 'bolt+routing://'
-    const aliasScheme = schemeWithEncryptionFlag('neo4j')
-    const host = 'localhost:7687'
-    getBoltUrlField()
-      .clear()
-      .type(scheme + host)
+  if (!isAura()) {
+    it('aliases bolt+routing:// to neo4j://', () => {
+      getBoltSchemeSelect().select(schemeWithEncryptionFlag('bolt'))
+      const scheme = 'bolt+routing://'
+      const aliasScheme = schemeWithEncryptionFlag('neo4j')
+      const host = 'localhost:7687'
+      getBoltUrlField()
+        .clear()
+        .type(scheme + host)
 
-    getBoltUrlField().should('have.value', host)
-    getBoltSchemeSelect().should('have.value', aliasScheme)
-  })
-
-  it('can connect with bolt:// protocol', () => {
-    cy.executeCommand(':clear')
-    const boltUrl = 'bolt://' + stripScheme(Cypress.config('boltUrl'))
-    cy.connect('neo4j', Cypress.config('password'), boltUrl)
-    cy.executeCommand('RETURN "Hello World";')
-    cy.contains('Hello World')
-    cy.reload()
-    cy.executeCommand('RETURN "Hello again";')
-    cy.contains('Hello again')
-    cy.executeCommand(':server disconnect')
-  })
-  // Check auto switching protocols for non supporting neo4j://
-  if (Cypress.config('serverVersion') < 4.0) {
-    it('browser auto-connects with bolt:// protocol after neo4j:// failed with routing issues', () => {
-      cy.executeCommand(':clear')
-      const boltUrl = 'neo4j://' + stripScheme(Cypress.config('boltUrl'))
-      cy.connect('neo4j', Cypress.config('password'), boltUrl, false)
-      getFirstFrameStatusbar().should(
-        'contain',
-        `Automatic retry using the "${schemeWithEncryptionFlag('bolt')}"`
-      )
-      getFirstFrameStatusbar().should(
-        'not.contain',
-        `Automatic retry using the "${schemeWithEncryptionFlag('bolt')}"`
-      )
-      cy.wait(7000) // auto retry is in 5 secs
-      getFirstFrameCommand().contains(':play start')
-      cy.executeCommand(':server disconnect')
-      cy.executeCommand(':clear')
+      getBoltUrlField().should('have.value', host)
+      getBoltSchemeSelect().should('have.value', aliasScheme)
     })
+
+    it('can connect with bolt:// protocol', () => {
+      cy.executeCommand(':clear')
+      const boltUrl = 'bolt://' + stripScheme(Cypress.config('boltUrl'))
+      cy.connect('neo4j', Cypress.config('password'), boltUrl)
+      cy.executeCommand('RETURN "Hello World";')
+      cy.contains('Hello World')
+      cy.reload()
+      cy.executeCommand('RETURN "Hello again";')
+      cy.contains('Hello again')
+      cy.executeCommand(':server disconnect')
+    })
+    // Check auto switching protocols for non supporting neo4j://
+    if (Cypress.config('serverVersion') < 4.0) {
+      it('browser auto-connects with bolt:// protocol after neo4j:// failed with routing issues', () => {
+        cy.executeCommand(':clear')
+        const boltUrl = 'neo4j://' + stripScheme(Cypress.config('boltUrl'))
+        cy.connect('neo4j', Cypress.config('password'), boltUrl, false)
+        getFirstFrameStatusbar().should(
+          'contain',
+          `Automatic retry using the "${schemeWithEncryptionFlag('bolt')}"`
+        )
+        getFirstFrameStatusbar().should(
+          'not.contain',
+          `Automatic retry using the "${schemeWithEncryptionFlag('bolt')}"`
+        )
+        cy.wait(7000) // auto retry is in 5 secs
+        getFirstFrameCommand().contains(':play start')
+        cy.executeCommand(':server disconnect')
+        cy.executeCommand(':clear')
+      })
+    }
   }
   if (Cypress.config('serverVersion') >= 4.0) {
     it('can connect with the neo4j:// scheme', () => {
@@ -146,7 +148,7 @@ describe('Connect form', () => {
         )
         cy.get('[data-testid="drawerDBMS"]').click()
 
-        // unkonwn db leads to default db
+        // unknown db leads to default db
         cy.executeCommand(':server disconnect')
         cy.visit('/?dbms=bolt://username@localhost:7687&db=unknowndb')
 

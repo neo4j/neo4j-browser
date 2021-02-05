@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2021 "Neo4j,"
+ * Copyright (c) "Neo4j"
  * Neo4j Sweden AB [http://neo4j.com]
  *
  * This file is part of Neo4j.
@@ -61,7 +61,9 @@ const About = ({ serverVersion, serverEdition }: AboutProps) => (
         </DrawerSubHeader>
       </DrawerSection>
       <DrawerSection>
-        <DrawerSectionBody>Copyright &#169; 2002-2020</DrawerSectionBody>
+        <DrawerSectionBody>
+          Copyright &#169; 2002-{new Date().getFullYear()}
+        </DrawerSectionBody>
       </DrawerSection>
       <DrawerSection>
         <DrawerSubHeader>You are running</DrawerSubHeader>
