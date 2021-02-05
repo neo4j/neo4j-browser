@@ -75,7 +75,7 @@ function SavedScriptsListItem({
         ) : (
           <SavedScriptsListItemDisplayName
             data-testid={`scriptTitle-${displayName}`}
-            onClick={() => !isEditing && selectScript()}
+            onClick={() => script.isStatic && selectScript()}
           >
             {displayName}
           </SavedScriptsListItemDisplayName>

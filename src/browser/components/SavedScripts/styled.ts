@@ -14,8 +14,6 @@ export const SavedScriptsHeader = styled.h5`
   line-height: 39px;
   position: relative;
   font-weight: bold;
-  -webkit-font-smoothing: antialiased;
-  text-shadow: rgba(0, 0, 0, 0.4) 0px 1px 0px;
 `
 
 export const SavedScriptsListItemMain = styled.div<{
@@ -50,6 +48,7 @@ export const SavedScriptsNewFavorite = styled.div`
   color: #bcc0c9;
   font-size: 13px;
   padding-top: 10px;
+  padding-bottom: 10px;
   margin-left: 3px;
   transition: color ease-in-out 0.3s;
 

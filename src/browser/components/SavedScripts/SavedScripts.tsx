@@ -127,35 +127,41 @@ export default function SavedScripts({
   const selectedScripts = findScriptsFromIds(selectedIds, scripts)
   const removeScript =
     removeScripts && ((id: string) => () => removeScripts([id]))
+  const hasSelectedIds = !!selectedScripts.length
   return (
     <DndProvider backend={HTML5Backend}>
       <SavedScriptsBody ref={blurRef}>
         <SavedScriptsHeader>
-          {title}
-          <SavedScriptsButtonWrapper>
-            {selectedIds.length > 0 && (
-              <span style={{ fontSize: 12 }}>
-                | {selectedIds.length} selected
-                {exportScripts && (
-                  <ExportButton
-                    onClick={() => {
-                      exportScripts(selectedScripts, folders)
-                      setSelectedIds([])
-                    }}
-                  />
+          <span>{title}</span>
+          {hasSelectedIds && (
+            <>
+              <span>|</span>
+              <SavedScriptsButtonWrapper>
+                <span style={{ fontSize: 12 }}>
+                  {selectedIds.length} selected
+                  {exportScripts && (
+                    <ExportButton
+                      onClick={() => {
+                        exportScripts(selectedScripts, folders)
+                        setSelectedIds([])
+                      }}
+                    />
+                  )}
+                  {removeScripts && (
+                    <RedRemoveButton
+                      onClick={() => {
+                        removeScripts(selectedIds)
+                        setSelectedIds([])
+                      }}
+                    />
+                  )}
+                </span>
+                {createNewFolder && (
+                  <NewFolderButton onClick={createNewFolder} />
                 )}
-                {removeScripts && (
-                  <RedRemoveButton
-                    onClick={() => {
-                      removeScripts(selectedIds)
-                      setSelectedIds([])
-                    }}
-                  />
-                )}
-              </span>
-            )}
-            {createNewFolder && <NewFolderButton onClick={createNewFolder} />}
-          </SavedScriptsButtonWrapper>
+              </SavedScriptsButtonWrapper>
+            </>
+          )}
         </SavedScriptsHeader>
 
         {scriptsOutsideFolder.map(script => {
