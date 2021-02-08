@@ -21,7 +21,10 @@
 import Rx from 'rxjs'
 import neo4j from 'neo4j-driver'
 import bolt from 'services/bolt/bolt'
-import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
+import {
+  Connection,
+  getActiveConnectionData
+} from 'shared/modules/connections/connectionsDuck'
 import { getCausalClusterAddresses } from './queriesProcedureHelper'
 import { buildTxFunctionByMode } from 'services/bolt/boltHelpers'
 import { flatten } from 'services/utils'
@@ -60,27 +63,28 @@ const queryAndResolve = async (
       ...useDb
     })
     const txFn = buildTxFunctionByMode(session)
-    txFn((tx: any) => tx.run(action.query, action.parameters))
-      .then((r: any) => {
-        session.close()
-        resolve({
-          type: action.$$responseChannel,
-          success: true,
-          result: {
-            ...r,
-            meta: action.host
-          }
+    txFn &&
+      txFn((tx: any) => tx.run(action.query, action.parameters))
+        .then((r: any) => {
+          session.close()
+          resolve({
+            type: action.$$responseChannel,
+            success: true,
+            result: {
+              ...r,
+              meta: action.host
+            }
+          })
         })
-      })
-      .catch((e: any) => {
-        session.close()
-        resolve({
-          type: action.$$responseChannel,
-          success: false,
-          error: e,
-          host
+        .catch((e: any) => {
+          session.close()
+          resolve({
+            type: action.$$responseChannel,
+            success: false,
+            error: e,
+            host
+          })
         })
-      })
   })
 }
 const callClusterMember = async (connection: any, action: any, _store: any) => {
@@ -244,59 +248,71 @@ export const clusterCypherRequestEpic = (some$: any, store: any) =>
 // We need this because this is the only case where we still
 // want to execute cypher even though we get an connection error back
 export const handleForcePasswordChangeEpic = (some$: any, store: any) =>
-  some$.ofType(FORCE_CHANGE_PASSWORD).mergeMap((action: any) => {
-    if (!action.$$responseChannel) return Rx.Observable.of(null)
+  some$
+    .ofType(FORCE_CHANGE_PASSWORD)
+    .mergeMap(
+      (
+        action: Connection & { $$responseChannel: string; newPassword: string }
+      ) => {
+        if (!action.$$responseChannel) return Rx.Observable.of(null)
 
-    return new Promise((resolve, _reject) => {
-      bolt
-        .directConnect(
-          action,
-          {},
-          undefined,
-          false // Ignore validation errors
-        )
-        .then(async driver => {
-          // Let's establish what server version we're connected to if not in state
-          if (!getVersion(store.getState())) {
-            const versionRes: any = await queryAndResolve(
-              driver,
-              { ...action, query: serverInfoQuery, parameters: {} },
-              undefined
+        return new Promise((resolve, _reject) => {
+          bolt
+            .directConnect(
+              action,
+              {},
+              undefined,
+              false // Ignore validation errors
             )
-            // What does the driver say, does the server support multidb?
-            const supportsMultiDb = await driver.supportsMultiDb()
-            if (!versionRes.success) {
-              // This is just a placeholder version to figure out how to
-              // change password. This will be updated to the correct server version
-              // when we're connected and dbMetaEpic runs
-              const fakeVersion = supportsMultiDb
-                ? FIRST_MULTI_DB_SUPPORT
-                : FIRST_NO_MULTI_DB_SUPPORT
-              versionRes.result = {
-                records: [],
-                summary: { server: { version: `placeholder/${fakeVersion}` } }
+            .then(async driver => {
+              // Let's establish what server version we're connected to if not in state
+              if (!getVersion(store.getState())) {
+                const versionRes: any = await queryAndResolve(
+                  driver,
+                  { ...action, query: serverInfoQuery, parameters: {} },
+                  undefined
+                )
+                // What does the driver say, does the server support multidb?
+                const supportsMultiDb = await driver.supportsMultiDb()
+                if (!versionRes.success) {
+                  // This is just a placeholder version to figure out how to
+                  // change password. This will be updated to the correct server version
+                  // when we're connected and dbMetaEpic runs
+                  const fakeVersion = supportsMultiDb
+                    ? FIRST_MULTI_DB_SUPPORT
+                    : FIRST_NO_MULTI_DB_SUPPORT
+                  versionRes.result = {
+                    records: [],
+                    summary: {
+                      server: { version: `placeholder/${fakeVersion}` }
+                    }
+                  }
+                }
+                store.dispatch(updateServerInfo(versionRes.result))
               }
-            }
-            store.dispatch(updateServerInfo(versionRes.result))
-          }
-          // Figure out how to change the pw on that server version
-          const queryObj = changeUserPasswordQuery(
-            store.getState(),
-            action.password,
-            action.newPassword
-          )
-          // and then change the password
-          const res = await queryAndResolve(
-            driver,
-            { ...action, ...queryObj },
-            undefined,
-            driverDatabaseSelection(store.getState(), 'system') // target system db if it has multi-db support
-          )
-          driver.close()
-          resolve(res)
+              // Figure out how to change the pw on that server version
+              const queryObj = changeUserPasswordQuery(
+                store.getState(),
+                action.password,
+                action.newPassword
+              )
+              // and then change the password
+              const res = await queryAndResolve(
+                driver,
+                { ...action, ...queryObj },
+                undefined,
+                driverDatabaseSelection(store.getState(), 'system') // target system db if it has multi-db support
+              )
+              driver.close()
+              resolve(res)
+            })
+            .catch(e =>
+              resolve({
+                type: action.$$responseChannel,
+                success: false,
+                error: e
+              })
+            )
         })
-        .catch(e =>
-          resolve({ type: action.$$responseChannel, success: false, error: e })
-        )
-    })
-  })
+      }
+    )

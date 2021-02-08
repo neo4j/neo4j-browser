@@ -17,7 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { types } from 'neo4j-driver'
+import { QueryResult, types } from 'neo4j-driver'
+import WorkPool from 'services/WorkPool'
 import { applyGraphTypes } from './boltMappings'
 import {
   CYPHER_ERROR_MESSAGE,
@@ -27,16 +28,18 @@ import {
 } from './boltWorkerMessages'
 
 export const setupBoltWorker = (
-  boltWorkPool: any,
-  id: any,
+  boltWorkPool: WorkPool,
+  id: string,
   workFn: any,
-  onLostConnection: any = () => {}
-) => {
+  onLostConnection: (error: Error) => void = (): void => undefined
+): Promise<unknown> => {
   const workerPromise = new Promise((resolve, reject) => {
     const work = boltWorkPool.doWork({
       id,
       payload: workFn,
-      onmessage: (msg: any) => {
+      onmessage: (msg: {
+        data: { type: string; error: Error; result: QueryResult }
+      }) => {
         if (msg.data.type === BOLT_CONNECTION_ERROR_MESSAGE) {
           work.finish()
           onLostConnection(msg.data.error)
@@ -57,9 +60,9 @@ export const setupBoltWorker = (
   return workerPromise
 }
 
-export const addTypesAsField = (result: any) => {
+export const addTypesAsField = (result: QueryResult): QueryResult => {
   const records = result.records.map((record: any) => {
-    const typedRecord = new types.Record(
+    const typedRecord = new (types.Record as any)(
       record.keys,
       record._fields,
       record._fieldLookup

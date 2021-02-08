@@ -263,13 +263,6 @@ export const getBrowserName = function() {
   return 'Unknown'
 }
 
-export const removeComments = (string = '') => {
-  return string
-    .split(/\r?\n/)
-    .filter(line => !line.startsWith('//'))
-    .join('\r\n')
-}
-
 export const canUseDOM = () =>
   !!(
     typeof window !== 'undefined' &&
@@ -403,13 +396,13 @@ export const stringifyMod = (
 export const unescapeDoubleQuotesForDisplay = (str: any) =>
   str.replace(/\\"/g, '"')
 
-export const safetlyAddObjectProp = (obj: any, prop: any, val: any): any => {
+export const safelyAddObjectProp = (obj: any, prop: any, val: any): any => {
   const localObj = escapeReservedProps(obj, prop)
   localObj[prop] = val
   return localObj
 }
 
-export const safetlyRemoveObjectProp = (obj: any, prop: any) => {
+export const safelyRemoveObjectProp = (obj: any, prop: any) => {
   if (!hasReservedProp(obj, prop)) {
     return obj
   }
@@ -421,7 +414,7 @@ export const escapeReservedProps = (obj: any, prop: any) => {
   if (!hasReservedProp(obj, prop)) {
     return obj
   }
-  const localObj = safetlyAddObjectProp(
+  const localObj = safelyAddObjectProp(
     obj,
     getEscapedObjectProp(prop),
     obj[prop]
@@ -452,9 +445,6 @@ const getUnescapedObjectProp = (prop: any) =>
 
 export const hasReservedProp = (obj: any, propName: any) =>
   Object.prototype.hasOwnProperty.call(obj, propName)
-
-// Epic helpers
-export const put = (dispatch: any) => (action: any) => dispatch(action)
 
 export const optionalToString = (v: any) =>
   ![null, undefined].includes(v) && typeof v.toString === 'function'

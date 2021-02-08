@@ -39,13 +39,18 @@ import { setupBoltWorker, addTypesAsField } from './setup-bolt-worker'
 
 // @ts-expect-error ts-migrate(2307) FIXME: Cannot find module 'worker-loader?inline!./boltWor... Remove this comment to see the full error message
 import BoltWorkerModule from 'worker-loader?inline!./boltWorker'
+import { Connection } from 'shared/modules/connections/connectionsDuck'
 
-let connectionProperties: any = null
-let _useDb: any = null
+let connectionProperties: {} | null = null
+let _useDb: string | null = null
 const boltWorkPool = new WorkPool(() => new BoltWorkerModule(), 10)
 
-function openConnection(props: any, opts = {}, onLostConnection?: any) {
-  return new Promise((resolve, reject) => {
+function openConnection(
+  props: Connection,
+  opts = {},
+  onLostConnection?: (error: Error) => void
+): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
     boltConnection
       .openConnection(props, opts, onLostConnection)
       .then(() => {
@@ -65,7 +70,7 @@ function openConnection(props: any, opts = {}, onLostConnection?: any) {
   })
 }
 
-function cancelTransaction(id: any, cb: any) {
+function cancelTransaction(id: string, cb: any): void {
   const work = boltWorkPool.getWorkById(id)
   if (work) {
     work.onFinish(cb)
@@ -79,7 +84,7 @@ function routedWriteTransaction(
   input: any,
   parameters: any,
   requestMetaData: any = {}
-) {
+): any {
   const {
     useCypherThread = false,
     requestId = null,
@@ -126,7 +131,7 @@ function routedReadTransaction(
   input: any,
   parameters: any,
   requestMetaData: any = {}
-) {
+): any {
   const {
     useCypherThread = false,
     requestId = null,
@@ -170,7 +175,7 @@ function directTransaction(
   input: any,
   parameters: any,
   requestMetaData: any = {}
-) {
+): any {
   const {
     useCypherThread = false,
     requestId = null,
@@ -210,12 +215,12 @@ function directTransaction(
   }
 }
 
-const closeConnectionInWorkers = () => {
+const closeConnectionInWorkers = (): void => {
   boltWorkPool.messageAllWorkers(closeConnectionMessage())
 }
 
 export default {
-  hasMultiDbSupport: async () => {
+  hasMultiDbSupport: async (): Promise<boolean> => {
     const supportsMultiDb = await boltConnection.hasMultiDbSupport()
     return supportsMultiDb
   },
@@ -262,7 +267,7 @@ export default {
     maxFieldItems: any
   ) => {
     const intChecker = neo4j.isInt
-    const intConverter = (val: any) => val.toString()
+    const intConverter = (val: any): string => val.toString()
 
     return mappings.extractNodesAndRelationshipsFromRecordsForOldVis(
       records,
@@ -276,7 +281,7 @@ export default {
       maxFieldItems
     )
   },
-  extractPlan: (result: any, calculateTotalDbHits?: any) => {
+  extractPlan: (result: any, calculateTotalDbHits?: boolean) => {
     return mappings.extractPlan(result, calculateTotalDbHits)
   },
   retrieveFormattedUpdateStatistics: mappings.retrieveFormattedUpdateStatistics,
