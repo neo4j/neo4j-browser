@@ -282,7 +282,7 @@ export const DoubleUpIcon = () => <IconContainer className="sl-double-up" />
 export const DoubleDownIcon = () => <IconContainer className="sl-double-down" />
 export const PinIcon = () => <IconContainer icon={pin} width={12} />
 export const SaveFavorite = () => (
-  <IconContainer inactiveStyle={lightBlue} icon={save_favorite} width={12} />
+  <IconContainer icon={save_favorite} width={12} />
 )
 export const SaveFile = () => (
   <IconContainer inactiveStyle={lightGreen} icon={save_file} width={12} />
