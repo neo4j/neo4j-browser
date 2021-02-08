@@ -111,7 +111,7 @@ const OverlayContainer = styled.span`
 `
 
 const Overlay = styled.div`
-  color: black;
+  color: ${props => props.theme.primaryText};
   padding-top: 5px;
   padding-bottom: 5px;
   position: absolute;
@@ -128,7 +128,6 @@ const Overlay = styled.div`
   border-radius: 2px;
 `
 const Item = styled.div`
-  color: black;
   cursor: pointer;
   width: 100%;
   padding-left: 5px;
