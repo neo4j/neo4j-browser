@@ -57,6 +57,7 @@ describe('Saved Scripts', () => {
   })
 
   it('it can drag and drop a favorite in a  folder', () => {
+    cy.get('[data-testid=editor-discard]').click()
     cy.executeCommand(':clear')
     cy.executeCommand(':help cypher')
     cy.get('[data-testid=frame-Favorite]').click()
@@ -68,7 +69,7 @@ describe('Saved Scripts', () => {
 
     cy.get('[data-testid="savedScriptsButton-New folder"]').click()
     cy.get('[data-testid="savedScriptsButton-Edit"]')
-      .eq(1)
+      .eq(2)
       .click({ force: true })
     cy.get('[data-testid="editSavedScriptFolderName"]')
       .clear()
