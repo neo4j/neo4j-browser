@@ -266,22 +266,13 @@ function FrameTitlebar(props: FrameTitleBarProps) {
           </StyledFrameCommand>
         }
       />
-      <FrameButton
-        data-testid="rerunFrameButton"
-        title="Rerun"
-        onClick={() => run(editorValue)}
-      >
-        <RunIcon />
-      </FrameButton>
       <StyledFrameTitlebarButtonSection>
         <FrameButton
-          title="Save as Favorite"
-          data-testid="frame-Favorite"
-          onClick={() => {
-            props.newFavorite(frame.cmd)
-          }}
+          data-testid="rerunFrameButton"
+          title="Rerun"
+          onClick={() => run(editorValue)}
         >
-          <SaveFavorite />
+          <RunIcon />
         </FrameButton>
         <Render if={props.isRelateAvailable}>
           <FrameButton
@@ -293,6 +284,15 @@ function FrameTitlebar(props: FrameTitleBarProps) {
             <SaveFile />
           </FrameButton>
         </Render>
+        <FrameButton
+          title="Save as Favorite"
+          data-testid="frame-Favorite"
+          onClick={() => {
+            props.newFavorite(frame.cmd)
+          }}
+        >
+          <SaveFavorite />
+        </FrameButton>
         <Render if={canExport()}>
           <DropdownButton data-testid="frame-export-dropdown">
             <DownloadIcon />
