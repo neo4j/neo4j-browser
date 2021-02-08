@@ -56,7 +56,15 @@ export class IconContainer extends Component<any, IconContainerState> {
   }
 
   render() {
-    const { text, regulateSize, icon, width, title, ...rest } = this.props
+    const {
+      text,
+      regulateSize,
+      icon,
+      width,
+      title,
+      className,
+      ...rest
+    } = this.props
 
     const regulateSizeStyle = regulateSize
       ? { fontSize: regulateSize + 'em' }
@@ -69,6 +77,7 @@ export class IconContainer extends Component<any, IconContainerState> {
           svg={icon}
           accessibilityLabel={title}
           width={width + 'px'}
+          className={className}
         />
       </StyledIconWrapper>
     ) : (

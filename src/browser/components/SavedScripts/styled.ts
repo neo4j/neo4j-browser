@@ -27,6 +27,9 @@ export const SavedScriptsListItemMain = styled.div<{
   background-color: ${props =>
     props.isSelected ? props.theme.hoverBackground : 'inherit'};
 
+  border-left: 3px solid
+    ${props => (props.isSelected ? '#68BDF4' : 'transparent')};
+
   &:hover {
     color: inherit;
     background-color: ${props => props.theme.hoverBackground};
@@ -49,7 +52,7 @@ export const SavedScriptsNewFavorite = styled.div`
   font-size: 13px;
   padding-top: 10px;
   padding-bottom: 10px;
-  margin-left: 3px;
+  margin-left: 6px;
   transition: color ease-in-out 0.3s;
 
   &:hover {
@@ -73,6 +76,9 @@ export const SavedScriptsListItemDisplayName = styled.div`
 export const SavedScriptsFolderMain = styled.div`
   padding-bottom: 16px;
 `
+export const ChildrenContainer = styled.div`
+  padding-left: 10px;
+`
 
 export const SavedScriptsFolderHeader = styled.div`
   display: flex;
@@ -89,16 +95,17 @@ export const SavedScriptsFolderLabel = styled.div`
   margin-right: 10px;
   user-select: none;
   cursor: pointer;
-  font-weight: bold;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  display: flex;
 `
 
 export const SavedScriptsFolderCollapseIcon = styled.span`
-  margin-right: 10px;
+  margin-right: 3px;
   width: 8px;
   display: inline-block;
+  vertical-align: middle;
 `
 
 export const SavedScriptsButtonWrapper = styled.div`

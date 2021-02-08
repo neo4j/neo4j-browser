@@ -11,7 +11,7 @@ import {
 import { Favorite } from 'shared/modules/favorites/favoritesDuck'
 import { getScriptDisplayName } from './utils'
 import styled from 'styled-components'
-import { PinIcon } from 'browser-components/icons/Icons'
+import { NavIcon } from 'browser-components/icons/Icons'
 
 interface SavedScriptsListItemProps {
   script: Favorite
@@ -85,7 +85,7 @@ function SavedScriptsListItem({
             className="saved-scripts-hidden-more-info"
             onClick={toggleOverlay}
           >
-            <PinIcon />
+            <NavIcon />
             {showOverlay && (
               <Overlay ref={overlayBlurRef}>
                 {removeScript && <Item onClick={removeScript}> Delete </Item>}

@@ -4,6 +4,7 @@ import { useCustomBlur, useNameUpdate } from './hooks'
 
 import { EditButton, RemoveButton } from './SavedScriptsButton'
 import {
+  FolderIcon,
   SavedScriptsCollapseMenuIcon,
   SavedScriptsExpandMenuRightIcon
 } from 'browser-components/icons/Icons'
@@ -14,7 +15,8 @@ import {
   SavedScriptsFolderHeader,
   SavedScriptsFolderLabel,
   SavedScriptsFolderMain,
-  SavedScriptsInput
+  SavedScriptsInput,
+  ChildrenContainer
 } from './styled'
 import { Folder } from 'shared/modules/favorites/foldersDuck'
 
@@ -65,15 +67,10 @@ function SavedScriptsFolder({
 
   return (
     <div ref={drop} data-testid={`savedScriptsFolder-${folder.name}`}>
-      <SavedScriptsFolderMain className="saved-scripts-folder">
-        <SavedScriptsFolderHeader
-          title={folder.name}
-          ref={blurRef}
-          className="saved-scripts-folder__header"
-        >
+      <SavedScriptsFolderMain>
+        <SavedScriptsFolderHeader title={folder.name} ref={blurRef}>
           {isEditing ? (
             <SavedScriptsInput
-              className="saved-scripts-folder__label-input"
               type="text"
               autoFocus
               onKeyPress={({ key }) => {
@@ -85,21 +82,19 @@ function SavedScriptsFolder({
             />
           ) : (
             <SavedScriptsFolderLabel
-              className="saved-scripts-folder__label"
               data-testid={`expandFolder-${folder.name}`}
               onClick={() => setExpanded(!expanded)}
             >
-              <SavedScriptsFolderCollapseIcon className="saved-scripts-folder__collapse-icon">
-                {expanded ? (
-                  <SavedScriptsCollapseMenuIcon />
-                ) : (
-                  <SavedScriptsExpandMenuRightIcon />
-                )}
-              </SavedScriptsFolderCollapseIcon>
+              {expanded ? (
+                <SavedScriptsCollapseMenuIcon />
+              ) : (
+                <SavedScriptsExpandMenuRightIcon />
+              )}
+              <FolderIcon />
               {folder.name}
             </SavedScriptsFolderLabel>
           )}
-          <SavedScriptsButtonWrapper className="saved-scripts__button-wrapper">
+          <SavedScriptsButtonWrapper>
             {removeFolder && isEditing && (
               <RemoveButton onClick={() => removeFolder(folder)} />
             )}
@@ -108,7 +103,7 @@ function SavedScriptsFolder({
             )}
           </SavedScriptsButtonWrapper>
         </SavedScriptsFolderHeader>
-        {expanded && children}
+        <ChildrenContainer> {expanded && children}</ChildrenContainer>
       </SavedScriptsFolderMain>
     </div>
   )

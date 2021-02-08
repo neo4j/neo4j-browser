@@ -2,6 +2,10 @@ import React, { ReactEventHandler } from 'react'
 import { Icon, SemanticICONS } from 'semantic-ui-react'
 import { SemanticCOLORS } from 'semantic-ui-react/dist/commonjs/generic'
 import { StyledSavedScriptsButton } from './styled'
+import SVGInline from 'react-svg-inline'
+
+import newFolderIcon from 'icons/folder-add.svg'
+import hollow_run_icon from 'icons/hollow-run-icon.svg'
 
 type SavedScriptsButtonProps = {
   onClick: ReactEventHandler
@@ -18,7 +22,6 @@ export default function SavedScriptsButton({
 }: SavedScriptsButtonProps): JSX.Element {
   return (
     <StyledSavedScriptsButton
-      className="saved-scripts__button"
       title={title}
       data-testid={`savedScriptsButton-${title}`}
       onClick={onClick}
@@ -35,15 +38,36 @@ const ExportButton = ({ onClick }: OnClickProp): JSX.Element =>
 const EditButton = ({ onClick }: OnClickProp): JSX.Element =>
   SavedScriptsButton({ onClick, title: 'Edit', iconName: 'pencil' })
 
-const RunButton = ({ onClick }: OnClickProp): JSX.Element =>
-  SavedScriptsButton({ onClick, title: 'Run', iconName: 'play' })
-
-const NewFolderButton = ({ onClick }: OnClickProp): JSX.Element =>
-  SavedScriptsButton({
-    onClick,
-    title: 'New folder',
-    iconName: 'folder open outline'
-  })
+const RunButton = ({ onClick }: OnClickProp): JSX.Element => (
+  <StyledSavedScriptsButton
+    title="Run"
+    data-testid={'savedScriptsButton-Run'}
+    onClick={onClick}
+  >
+    <SVGInline
+      cleanup={['title']}
+      svg={hollow_run_icon}
+      accessibilityLabel={'Run'}
+      width="15px"
+      className="centeredSvgIcon"
+    />
+  </StyledSavedScriptsButton>
+)
+const NewFolderButton = ({ onClick }: OnClickProp): JSX.Element => (
+  <StyledSavedScriptsButton
+    title="New folder"
+    data-testid={'savedScriptsButton-New folder'}
+    onClick={onClick}
+  >
+    <SVGInline
+      cleanup={['title']}
+      svg={newFolderIcon}
+      accessibilityLabel={'New folder'}
+      width="15px"
+      className="centeredSvgIcon"
+    />
+  </StyledSavedScriptsButton>
+)
 
 const RemoveButton = ({ onClick }: OnClickProp): JSX.Element =>
   SavedScriptsButton({
