@@ -54,10 +54,6 @@ describe('Saved Scripts', () => {
     cy.get('[data-testid="currentlyEditing"]').contains('Guide')
     cy.get('[data-testid=savedScriptsButton-Run]').click()
     cy.getFrames().contains('Movie Graph')
-
-    // can delete
-    cy.get('[data-testid="savedScriptsButton-Edit"]').click()
-    cy.get('[data-testid="savedScriptsButton-Remove"]').click()
   })
 
   it('it can drag and drop a favorite in a  folder', () => {
@@ -92,12 +88,5 @@ describe('Saved Scripts', () => {
     cy.get('[data-testid="scriptTitle-:help cypher"]').should('not.exist')
     cy.get('[data-testid=expandFolder-fldr]').click()
     cy.get('[data-testid="scriptTitle-:help cypher"]').should('exist')
-
-    // cleanup and delete the folder as well
-    cy.get('[data-testid="savedScriptsButton-Edit"]')
-      .first()
-      .click({ force: true })
-    cy.get('[data-testid="savedScriptsButton-Remove"]').click()
-    cy.get('[data-testid=expandFolder-fldr]').should('not.exist')
   })
 })
