@@ -116,10 +116,9 @@ function SavedScriptsListItem({
                 )}
                 {removeScript && <Separator />}
                 {renameScript && (
-                  <Item
-                    data-testid="contextMenuRename"
-                    onClick={beginEditing}
-                  ></Item>
+                  <Item data-testid="contextMenuRename" onClick={beginEditing}>
+                    Rename
+                  </Item>
                 )}
                 {
                   <Item data-testid="contextMenuEdit" onClick={selectScript}>
