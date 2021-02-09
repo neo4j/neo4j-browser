@@ -51,7 +51,8 @@ import {
   RunIcon,
   UpIcon,
   SaveFavorite,
-  SaveFile
+  SaveFile,
+  StopIcon
 } from 'browser-components/icons/Icons'
 import {
   DropdownList,
@@ -103,6 +104,7 @@ type FrameTitleBarProps = FrameTitleBarBaseProps & {
   isRelateAvailable: boolean
   newFavorite: (cmd: string) => void
   newProjectFile: (cmd: string) => void
+  cancelQuery: (requestId: string) => void
   onCloseClick: (
     frameId: string,
     requestId: string,
@@ -270,9 +272,17 @@ function FrameTitlebar(props: FrameTitleBarProps) {
         <FrameButton
           data-testid="rerunFrameButton"
           title="Rerun"
-          onClick={() => run(editorValue)}
+          onClick={() =>
+            props.request?.status === REQUEST_STATUS_PENDING
+              ? props.cancelQuery(frame.requestId)
+              : run(editorValue)
+          }
         >
-          <RunIcon />
+          {props.request?.status === REQUEST_STATUS_PENDING ? (
+            <StopIcon />
+          ) : (
+            <RunIcon />
+          )}
         </FrameButton>
         <Render if={props.isRelateAvailable}>
           <FrameButton
@@ -391,6 +401,9 @@ const mapDispatchToProps = (
     },
     newProjectFile: (cmd: string) => {
       dispatch(sidebar.setDraftScript(cmd, 'project files'))
+    },
+    cancelQuery: (requestId: string) => {
+      dispatch(cancelRequest(requestId))
     },
     onCloseClick: async (
       id: string,

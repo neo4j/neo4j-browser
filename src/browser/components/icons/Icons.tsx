@@ -44,6 +44,7 @@ import file from 'icons/file.svg'
 import save_file from 'icons/save_file.svg'
 import save_favorite from 'icons/save_favorite.svg'
 import run_icon from 'icons/run_icon.svg'
+import stop_icon from 'icons/stop_icon.svg'
 import help from 'icons/help.svg'
 
 const inactive = `
@@ -274,6 +275,7 @@ export const RefreshIcon = () => (
   <IconContainer icon={buttonRefreshArrow} width={12} />
 )
 export const RunIcon = () => <IconContainer icon={run_icon} width={12} />
+export const StopIcon = () => <IconContainer icon={stop_icon} width={12} />
 
 export const CloseIcon = () => <IconContainer icon={close} width={12} />
 export const UpIcon = () => <IconContainer className="sl-chevron-up" />
