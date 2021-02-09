@@ -51,15 +51,15 @@ import {
   RunIcon,
   UpIcon,
   SaveFavorite,
-  SaveFile,
   StopIcon
 } from 'browser-components/icons/Icons'
 import {
-  DropdownList,
-  DropdownContent,
+  DottedLineHover,
   DropdownButton,
+  DropdownContent,
   DropdownItem,
-  DottedLineHover
+  DropDownItemDivider,
+  DropdownList
 } from '../Stream/styled'
 import {
   StyledFrameTitleBar,
@@ -284,16 +284,6 @@ function FrameTitlebar(props: FrameTitleBarProps) {
             <RunIcon />
           )}
         </FrameButton>
-        <Render if={props.isRelateAvailable}>
-          <FrameButton
-            title="Save as project file"
-            onClick={() => {
-              props.newProjectFile(frame.cmd)
-            }}
-          >
-            <SaveFile />
-          </FrameButton>
-        </Render>
         <FrameButton
           title="Save as Favorite"
           data-testid="frame-Favorite"
@@ -308,6 +298,12 @@ function FrameTitlebar(props: FrameTitleBarProps) {
             <DownloadIcon />
             <DropdownList>
               <DropdownContent>
+                <Render if={props.isRelateAvailable}>
+                  <DropdownItem onClick={() => props.newProjectFile(frame.cmd)}>
+                    Save as project file
+                  </DropdownItem>
+                  <DropDownItemDivider />
+                </Render>
                 <Render if={hasData() && frame.type === 'cypher'}>
                   <DropdownItem onClick={() => exportCSV(props.getRecords())}>
                     Export CSV
