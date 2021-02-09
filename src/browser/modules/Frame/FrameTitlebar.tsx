@@ -369,9 +369,16 @@ function FrameTitlebar(props: FrameTitleBarProps) {
         </Render>
         <FrameButton
           title="Close"
-          onClick={() =>
-            props.onCloseClick(frame.id, frame.requestId, props.request)
-          }
+          onClick={() => {
+            if (
+              frame.isRerun
+                ? window.confirm(
+                    'Close frame?\nClosing the frame cannot be undone.\nYou can access you query history by running :history command.\nDo you want to close the frame anyway?'
+                  )
+                : true
+            )
+              props.onCloseClick(frame.id, frame.requestId, props.request)
+          }}
         >
           <CloseIcon />
         </FrameButton>
