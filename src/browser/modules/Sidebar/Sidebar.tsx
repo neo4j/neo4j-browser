@@ -119,7 +119,10 @@ const Sidebar = ({
             {scriptDraft && (
               <NewSavedScript
                 onSubmit={input => {
-                  if (input === defaultNameFromDisplayContent(scriptDraft)) {
+                  if (
+                    input === defaultNameFromDisplayContent(scriptDraft) &&
+                    !scriptDraftId
+                  ) {
                     addFavorite(scriptDraft)
                   } else {
                     scriptDraftId

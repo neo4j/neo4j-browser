@@ -38,7 +38,9 @@ describe('Saved Scripts', () => {
     cy.get('[data-testid=saveScript]').click()
 
     // saved in the list and can populate editor
-    cy.get('[data-testid="scriptTitle-script name"]').click()
+    cy.get('[data-testid="navicon-script name"').click({ force: true })
+    cy.get('[data-testid="contextMenuEdit"').click()
+
     cy.get('[data-testid="currentlyEditing"]').contains('script name')
     // Editing script updates name and content
     cy.get('[data-testid="activeEditor"] textarea')
@@ -56,11 +58,11 @@ describe('Saved Scripts', () => {
     cy.getFrames().contains('Movie Graph')
 
     // can delete
-    cy.get('[data-testid="savedScriptsButton-Edit"]').click()
-    cy.get('[data-testid="savedScriptsButton-Remove"]').click()
+    cy.get('[data-testid="navicon-Guide"').click({ force: true })
+    cy.get('[data-testid="contextMenuDelete"').click()
   })
 
-  it('it can drag and drop a favorite in a  folder', () => {
+  it('it can drag and drop a favorite in a folder', () => {
     cy.get('[data-testid=editor-discard]').click()
     cy.executeCommand(':clear')
     cy.executeCommand(':help cypher')
@@ -72,9 +74,7 @@ describe('Saved Scripts', () => {
     cy.get('[data-testid=saveScript]').click()
 
     cy.get('[data-testid="savedScriptsButton-New folder"]').click()
-    cy.get('[data-testid="savedScriptsButton-Edit"]')
-      .eq(1)
-      .click({ force: true })
+    cy.get('[data-testid="savedScriptsButton-Edit"]').click({ force: true })
     cy.get('[data-testid="editSavedScriptFolderName"]')
       .clear()
       .type('fldr{enter}')
@@ -100,5 +100,24 @@ describe('Saved Scripts', () => {
       .click({ force: true })
     cy.get('[data-testid="savedScriptsButton-Remove"]').click()
     cy.get('[data-testid=expandFolder-fldr]').should('not.exist')
+  })
+
+  it('it can use bulk delte', () => {
+    cy.get('[data-testid=drawerFavorites]').click()
+    cy.get('[data-testid=createNewFavorite]')
+      .click()
+      .click()
+      .click()
+
+    const mod = Cypress.platform === 'darwin' ? '{cmd}' : '{ctrl}'
+    // workaround to get meta clicks
+    cy.get('body').type(mod, { force: true, release: false })
+
+    cy.get('[data-testid="scriptTitle-Untitled favorite"]')
+      .should('have.length', 3)
+      .click({ multiple: true })
+    cy.get('body').type(mod) // release mod
+    cy.get('[data-testid=savedScriptsButton-Remove]').click()
+    cy.get('[data-testid="scriptTitle-Untitled favorite"]').should('not.exist')
   })
 })

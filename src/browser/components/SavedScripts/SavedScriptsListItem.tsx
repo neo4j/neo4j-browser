@@ -104,17 +104,40 @@ function SavedScriptsListItem({
           <OverlayContainer
             className="saved-scripts-hidden-more-info"
             onClick={toggleOverlay}
+            data-testid={`navicon-${displayName}`}
           >
             <NavIcon />
             {showOverlay && (
               <Overlay ref={overlayBlurRef}>
-                {removeScript && <Item onClick={removeScript}> Delete </Item>}
+                {removeScript && (
+                  <Item data-testid="contextMenuDelete" onClick={removeScript}>
+                    Delete
+                  </Item>
+                )}
                 {removeScript && <Separator />}
-                {renameScript && <Item onClick={beginEditing}> Rename </Item>}
-                {<Item onClick={selectScript}> Edit content</Item>}
-                {canRunScript && <Item onClick={execScript}> Run </Item>}
+                {renameScript && (
+                  <Item
+                    data-testid="contextMenuRename"
+                    onClick={beginEditing}
+                  ></Item>
+                )}
+                {
+                  <Item data-testid="contextMenuEdit" onClick={selectScript}>
+                    Edit content
+                  </Item>
+                }
+                {canRunScript && (
+                  <Item data-testid="contextMenuRun" onClick={execScript}>
+                    Run
+                  </Item>
+                )}
                 {duplicateScript && (
-                  <Item onClick={duplicateScript}> Duplicate </Item>
+                  <Item
+                    data-testid="contextMenuDuplicate"
+                    onClick={duplicateScript}
+                  >
+                    Duplicate
+                  </Item>
                 )}
               </Overlay>
             )}

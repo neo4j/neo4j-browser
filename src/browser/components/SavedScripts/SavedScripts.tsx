@@ -147,12 +147,15 @@ export default function SavedScripts({
   const removeScript =
     removeScripts && ((id: string) => () => removeScripts([id]))
   const hasSelectedIds = !!selectedScripts.length
+  const newFolderButton = createNewFolder && (
+    <NewFolderButton onClick={createNewFolder} />
+  )
   return (
     <DndProvider backend={HTML5Backend}>
       <SavedScriptsBody ref={blurRef}>
         <SavedScriptsHeader>
           <span>{title}</span>
-          {hasSelectedIds && (
+          {hasSelectedIds ? (
             <>
               <span>|</span>
               <SavedScriptsButtonWrapper>
@@ -175,11 +178,11 @@ export default function SavedScripts({
                     />
                   )}
                 </span>
-                {createNewFolder && (
-                  <NewFolderButton onClick={createNewFolder} />
-                )}
+                {newFolderButton}
               </SavedScriptsButtonWrapper>
             </>
+          ) : (
+            newFolderButton
           )}
         </SavedScriptsHeader>
 
@@ -202,7 +205,10 @@ export default function SavedScripts({
           )
         })}
         {createNewScript && (
-          <SavedScriptsNewFavorite onClick={createNewScript}>
+          <SavedScriptsNewFavorite
+            data-testid="createNewFavorite"
+            onClick={createNewScript}
+          >
             Create new favorite
           </SavedScriptsNewFavorite>
         )}
