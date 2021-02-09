@@ -17,6 +17,7 @@
 
 import { withBus } from 'react-suber'
 import { connect } from 'react-redux'
+import uuid from 'uuid'
 import MyScripts from 'browser/components/SavedScripts'
 
 import * as editor from 'shared/modules/editor/editorDuck'
@@ -26,126 +27,88 @@ import {
 } from 'shared/modules/commands/commandsDuck'
 import * as favoritesDuck from 'shared/modules/favorites/favoritesDuck'
 import * as foldersDuck from 'shared/modules/favorites/foldersDuck'
-import {
-  exportFavorites,
-  SLASH,
-  mapOldFavoritesAndFolders
-} from 'shared/services/export-favorites'
-import {
-  generateFolderNameAndIdForPath,
-  mapNewFavoritesToOld,
-  folderHasRemainingFavorites,
-  getFirstFavorite,
-  getFavoriteIds,
-  getFolderFromPath,
-  updateFolder
-} from './favorites.utils'
+import { exportFavorites } from 'services/exporting/favoriteUtils'
 
 const mapFavoritesStateToProps = (state: any) => {
-  const folders = foldersDuck.getFolders(state)
-  const scripts = mapOldFavoritesAndFolders(
-    favoritesDuck.getFavorites(state),
-    folders
-  )
+  const folders = foldersDuck
+    .getFolders(state)
+    .filter(folder => !folder.isStatic)
+  const scripts = favoritesDuck
+    .getFavorites(state)
+    .filter(script => !script.isStatic)
 
   return {
-    scriptsNamespace: SLASH,
-    scripts,
     folders,
+    scripts,
     title: 'Local Scripts'
   }
 }
+
 const mapFavoritesDispatchToProps = (dispatch: any, ownProps: any) => ({
-  onSelectScript: (favorite: any) =>
+  selectScript: (favorite: favoritesDuck.Favorite) =>
     ownProps.bus.send(
       editor.EDIT_CONTENT,
-      editor.editContent(favorite.id, favorite.contents)
+      editor.editContent(favorite.id, favorite.content)
     ),
-  onExecScript: (favorite: any) =>
+  execScript: (favorite: favoritesDuck.Favorite) =>
     dispatch(
-      executeCommand(favorite.contents, { source: commandSources.favorite })
+      executeCommand(favorite.content, { source: commandSources.favorite })
     ),
-  onExportScripts: (scripts: any) => exportFavorites(scripts),
-  onRemoveScript: (favorite: any) =>
-    dispatch(favoritesDuck.removeFavorite(favorite.id)),
-  onUpdateFolder(
-    favorites: any,
-    payload: any,
-    allFavorites: any,
-    allFolders: any
-  ) {
-    // favorite name update
-    if (payload.name) {
-      dispatch(
-        favoritesDuck.updateFavorites(
-          mapNewFavoritesToOld(favorites, { name: payload.name })
-        )
-      )
-
-      return
-    }
-
-    // future proofing
-    if (!payload.path) return
-
-    const { folder: sourceFolder } = (getFirstFavorite(favorites) as any) || {}
-    const { id: folderId, name: folderName } = generateFolderNameAndIdForPath(
-      payload.path
-    )
-
-    if (sourceFolder && payload.isFolderName) {
-      dispatch(
-        foldersDuck.updateFolders(
-          updateFolder(sourceFolder, { name: folderName }, allFolders)
-        )
-      )
-
-      return
-    }
-
-    if (!sourceFolder || payload.isNewFolder) {
-      dispatch(foldersDuck.addFolder(folderId, folderName))
-    }
-
-    const targetFolder = getFolderFromPath(payload.path, allFolders)
-    const targetId = targetFolder ? targetFolder.id : folderId
-    const sourceHasRemaining = sourceFolder
-      ? folderHasRemainingFavorites(sourceFolder.id, favorites, allFavorites)
-      : true
-
-    dispatch(
-      favoritesDuck.updateFavorites(
-        mapNewFavoritesToOld(favorites, {
-          folder: targetId
-        })
-      )
-    )
-
-    if (sourceFolder && !sourceHasRemaining) {
-      dispatch(foldersDuck.removeFolder(sourceFolder.id))
+  removeScript: (favorite: favoritesDuck.Favorite) =>
+    favorite.id && dispatch(favoritesDuck.removeFavorite(favorite.id)),
+  renameScript: (favorite: favoritesDuck.Favorite, name: string) => {
+    if (favorite.id) {
+      dispatch(favoritesDuck.renameFavorite(favorite.id, name))
     }
   },
-  onRemoveFolder(favorites: any) {
-    const { folder } = (getFirstFavorite(favorites) as any) || {}
-
-    if (!folder) return
-
-    dispatch(foldersDuck.removeFolder(folder.id))
-    dispatch(favoritesDuck.removeFavorites(getFavoriteIds(favorites)))
+  updateFolders(folders: foldersDuck.Folder[]) {
+    dispatch(foldersDuck.updateFolders(folders))
+  },
+  createNewFolder() {
+    dispatch(foldersDuck.addFolder(uuid.v4(), 'New Folder'))
+  },
+  dispatchRemoveFolderAndItsScripts(folderId: string, favoriteIds: string[]) {
+    dispatch(foldersDuck.removeFolder(folderId))
+    dispatch(favoritesDuck.removeFavorites(favoriteIds))
+  },
+  moveScript(favoriteId: string, folderId: string) {
+    dispatch(favoritesDuck.moveFavorite(favoriteId, folderId))
+  },
+  createNewScript() {
+    const id = uuid.v4()
+    const content = `// Untitled favorite
+`
+    dispatch(favoritesDuck.addFavorite(content, id))
+    ownProps.bus.send(editor.EDIT_CONTENT, editor.editContent(id, content))
+  },
+  exportScripts(
+    favorites: favoritesDuck.Favorite[],
+    folders: foldersDuck.Folder[]
+  ) {
+    exportFavorites(favorites, folders)
   }
 })
+
 const mergeProps = (stateProps: any, dispatchProps: any) => {
   return {
     ...stateProps,
     ...dispatchProps,
-    onExportScripts: () => dispatchProps.onExportScripts(stateProps.scripts),
-    onUpdateFolder: (favorites: any, payload: any) =>
-      dispatchProps.onUpdateFolder(
-        favorites,
-        payload,
-        stateProps.scripts,
-        stateProps.folders
+    renameFolder: (folderToRename: foldersDuck.Folder, name: string) => {
+      dispatchProps.updateFolders(
+        stateProps.folders.map((folder: foldersDuck.Folder) =>
+          folderToRename.id === folder.id ? { ...folder, name } : folder
+        )
       )
+    },
+    removeFolder(folder: foldersDuck.Folder) {
+      const scriptsToRemove = stateProps.scripts
+        .filter((script: favoritesDuck.Favorite) => script.folder === folder.id)
+        .map((script: favoritesDuck.Favorite) => script.id)
+      dispatchProps.dispatchRemoveFolderAndItsScripts(
+        folder.id,
+        scriptsToRemove
+      )
+    }
   }
 }
 

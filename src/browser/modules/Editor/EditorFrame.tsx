@@ -37,7 +37,7 @@ import {
 } from 'shared/modules/commands/commandsDuck'
 import {
   REMOVE_FAVORITE,
-  updateFavorite
+  updateFavoriteContent
 } from 'shared/modules/favorites/favoritesDuck'
 import { Bus } from 'suber'
 import {
@@ -72,12 +72,8 @@ import run_icon from 'icons/run_icon.svg'
 import {
   ADD_PROJECT_FILE,
   REMOVE_PROJECT_FILE
-} from 'browser/modules/Sidebar/project-files.constants'
-import {
-  setProjectFileDefaultFileName,
-  createFilePath
-} from 'browser/modules/Sidebar/project-files.utils'
-import { defaultFavoriteName } from 'browser/modules/Sidebar/favorites.utils'
+} from 'browser-components/ProjectFiles/projectFilesConstants'
+import { setProjectFileDefaultFileName } from 'browser-components/ProjectFiles/projectFilesUtils'
 import Monaco, { MonacoHandles } from './Monaco'
 import {
   codeFontLigatures,
@@ -85,6 +81,7 @@ import {
 } from 'shared/modules/settings/settingsDuck'
 import { getUseDb } from 'shared/modules/connections/connectionsDuck'
 import { getHistory } from 'shared/modules/history/historyDuck'
+import { defaultNameFromDisplayContent } from 'browser-components/SavedScripts'
 
 type EditorFrameProps = {
   bus: Bus
@@ -236,7 +233,7 @@ export function EditorFrame({
       return setProjectFileDefaultFileName(content)
     }
 
-    return defaultFavoriteName(content)
+    return defaultNameFromDisplayContent(content)
   }
 
   const showUnsaved = !!(
@@ -287,13 +284,13 @@ export function EditorFrame({
                 setUnsaved(false)
                 const editorValue = editorRef.current?.getValue() || ''
 
-                const { isProjectFile, name, directory } = currentlyEditing
-                if (isProjectFile && name && directory) {
+                const { isProjectFile, name } = currentlyEditing
+                if (isProjectFile && name) {
                   addFile({
                     variables: {
                       projectId,
                       fileUpload: new File([editorValue], name),
-                      destination: createFilePath([directory, name]),
+                      destination: `./${name}`,
                       overwrite: true
                     }
                   })
@@ -353,7 +350,7 @@ const mapStateToProps = (state: any) => {
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
   return {
     updateFavorite: (id: string, cmd: string) => {
-      dispatch(updateFavorite(id, cmd))
+      dispatch(updateFavoriteContent(id, cmd))
     },
     executeCommand: (cmd: string, source: string) => {
       dispatch(executeCommand(cmd, { source }))

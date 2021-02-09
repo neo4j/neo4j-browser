@@ -30,25 +30,53 @@ export const REMOVE_FAVORITE = 'favorites/REMOVE_FAVORITE'
 export const REMOVE_FAVORITES = 'favorites/REMOVE_FAVORITES'
 export const LOAD_FAVORITES = 'favorites/LOAD_FAVORITES'
 export const SYNC_FAVORITES = 'favorites/SYNC_FAVORITES'
-export const UPDATE_FAVORITE = 'favorites/UPDATE_FAVORITE'
+export const UPDATE_FAVORITE_CONTENT = 'favorites/UPDATE_FAVORITE_CONTENT'
+export const MOVE_FAVORITE = 'favorites/MOVE_FAVORITES'
+export const RENAME_FAVORITE = 'favorites/RENAME_FAVORITES'
 export const UPDATE_FAVORITES = 'favorites/UPDATE_FAVORITES'
 
-export const getFavorites = (state: any) => state[NAME]
-export const getFavorite = (state: any, id: any) =>
-  state.filter((favorite: any) => favorite.id === id)[0]
-export const removeFavoriteById = (state: any, id: any) =>
-  state.filter((favorite: any) => favorite.id !== id)
-export const removeFavoritesById = (state: any, ids: any) =>
-  state.filter((favorite: any) => !ids.includes(favorite.id))
+type FavoriteAction =
+  | AddFavoriteAction
+  | RemoveFavoriteAction
+  | LoadFavoritesAction
+  | RemoveFavoriteAction
+  | RemoveFavoritesAction
+  | UpdateFavoriteContentAction
+  | SyncFavoriteAction
+  | MoveFavoriteAction
+  | RenameFavoriteAction
+  | UpdateFavoriteAction
+
+export const getFavorites = (state: any): Favorite[] => state[NAME]
+export const getFavorite = (state: any, id: string): Favorite | undefined =>
+  state.find((favorite: any) => favorite.id === id)
+
 const versionSize = 20
 
+export type Favorite = {
+  id?: string // Missing in static scripts
+  content: string
+  folder?: string // missing if in root
+  not_executable?: boolean
+  isStatic?: boolean
+  versionRange?: string
+}
+
 // reducer
-const initialState = staticScriptsList.map(script => ({
+const initialState: Favorite[] = staticScriptsList.map(script => ({
   ...script,
   isStatic: true
 }))
 
-export default function reducer(state: any = initialState, action: any) {
+const removeFavoriteById = (state: any, id: any) =>
+  state.filter((favorite: any) => favorite.id !== id)
+const removeFavoritesById = (state: any, ids: any) =>
+  state.filter((favorite: any) => !ids.includes(favorite.id))
+
+export default function reducer(
+  state: Favorite[] = initialState,
+  action: FavoriteAction
+): Favorite[] {
   switch (action.type) {
     case REMOVE_FAVORITE:
       return removeFavoriteById(state, action.id)
@@ -56,15 +84,30 @@ export default function reducer(state: any = initialState, action: any) {
       return removeFavoritesById(state, action.ids)
     case ADD_FAVORITE:
       return state.concat([{ id: action.id || uuid.v4(), content: action.cmd }])
-    case UPDATE_FAVORITE:
-      const mergedFavorite = {
-        ...getFavorite(state, action.id),
-        content: action.cmd
-      }
-      const updatedFavorites = state.map((_: any) =>
-        _.id === action.id ? mergedFavorite : _
-      )
+    case MOVE_FAVORITE:
+      const updatedFavorites = updateFavoriteFields(state, action.id, {
+        folder: action.folder
+      })
       return mergeFavorites(initialState, updatedFavorites)
+    case RENAME_FAVORITE:
+      const fav = getFavorite(state, action.id)
+      if (!fav) {
+        return state
+      }
+
+      const newContent = contentWithNewName(fav, action.name)
+      const updated = updateFavoriteFields(state, action.id, {
+        content: newContent
+      })
+
+      return mergeFavorites(initialState, updated)
+    case UPDATE_FAVORITE_CONTENT:
+      return mergeFavorites(
+        initialState,
+        updateFavoriteFields(state, action.id, {
+          content: action.cmd
+        })
+      )
     case LOAD_FAVORITES:
     case UPDATE_FAVORITES:
       return mergeFavorites(action.favorites, state)
@@ -77,45 +120,104 @@ export default function reducer(state: any = initialState, action: any) {
   }
 }
 
-export function removeFavorite(id: any) {
+type RemoveFavoriteAction = {
+  type: typeof REMOVE_FAVORITE
+  id: string
+}
+export function removeFavorite(id: string): RemoveFavoriteAction {
   return {
     type: REMOVE_FAVORITE,
     id
   }
 }
-export function removeFavorites(ids: any) {
+
+type RemoveFavoritesAction = {
+  type: typeof REMOVE_FAVORITES
+  ids: string[]
+}
+export function removeFavorites(ids: string[]): RemoveFavoritesAction {
   return {
     type: REMOVE_FAVORITES,
     ids
   }
 }
-export function addFavorite(cmd: any, id?: any) {
+type AddFavoriteAction = {
+  type: typeof ADD_FAVORITE
+  cmd: string
+  id?: string
+}
+export function addFavorite(cmd: string, id?: string): AddFavoriteAction {
   return {
     type: ADD_FAVORITE,
     cmd,
     id
   }
 }
-export function loadFavorites(favorites: any) {
+
+type LoadFavoritesAction = {
+  type: typeof LOAD_FAVORITES
+  favorites: Favorite[]
+}
+export function loadFavorites(favorites: Favorite[]): LoadFavoritesAction {
   return {
     type: LOAD_FAVORITES,
     favorites
   }
 }
-export function syncFavorites(favorites: any) {
+
+type SyncFavoriteAction = { type: typeof SYNC_FAVORITES; favorites: Favorite[] }
+export function syncFavorites(favorites: Favorite[]): SyncFavoriteAction {
   return {
     type: SYNC_FAVORITES,
     favorites
   }
 }
-export function updateFavorite(id: any, cmd: any) {
+type UpdateFavoriteContentAction = {
+  type: typeof UPDATE_FAVORITE_CONTENT
+  id: string
+  cmd: string
+}
+export function updateFavoriteContent(
+  id: string,
+  cmd: string
+): UpdateFavoriteContentAction {
   return {
-    type: UPDATE_FAVORITE,
+    type: UPDATE_FAVORITE_CONTENT,
     id,
     cmd
   }
 }
-export function updateFavorites(favorites: any) {
+type MoveFavoriteAction = {
+  type: typeof MOVE_FAVORITE
+  id: string
+  folder: string
+}
+export function moveFavorite(id: string, folder: string): MoveFavoriteAction {
+  return {
+    type: MOVE_FAVORITE,
+    id,
+    folder
+  }
+}
+
+type RenameFavoriteAction = {
+  type: typeof RENAME_FAVORITE
+  id: string
+  name: string
+}
+export function renameFavorite(id: string, name: string): RenameFavoriteAction {
+  return {
+    type: RENAME_FAVORITE,
+    id,
+    name
+  }
+}
+
+type UpdateFavoriteAction = {
+  type: typeof UPDATE_FAVORITES
+  favorites: Favorite[]
+}
+export function updateFavorites(favorites: Favorite[]): UpdateFavoriteAction {
   return {
     type: UPDATE_FAVORITES,
     favorites
@@ -139,7 +241,10 @@ export const composeDocumentsToSync = (store: any, syncValue: any) => {
   return newDocuments
 }
 
-export const mergeFavorites = (list1: any, list2: any) => {
+export const mergeFavorites = (
+  list1: Favorite[],
+  list2: Favorite[]
+): Favorite[] => {
   return list1.concat(
     list2.filter(
       (favInList2: any) =>
@@ -183,4 +288,32 @@ export const favoritesToLoad = (action: any, store: any) => {
   } else {
     return { favorites: null, syncFavorites: false, loadFavorites: false }
   }
+}
+
+function updateFavoriteFields(
+  state: Favorite[],
+  id: string,
+  updates: Partial<Favorite>
+): Favorite[] {
+  const fav = getFavorite(state, id)
+  if (!fav) {
+    return state
+  }
+
+  const mergedFavorite: Favorite = {
+    ...fav,
+    ...updates
+  }
+  return state.map(fav => (fav.id === id ? mergedFavorite : fav))
+}
+
+function contentWithNewName(script: Favorite, newName: string): string {
+  // Name of favorite is the comment on the first line by convention
+  const [nameLine, ...contents] = script.content.split('\n')
+  const alreadyHasName = nameLine.startsWith('//')
+  return alreadyHasName
+    ? `// ${newName}
+  ${contents.join('\n')}`
+    : `// ${newName}
+${script.content}`
 }

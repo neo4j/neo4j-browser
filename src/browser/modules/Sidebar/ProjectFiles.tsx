@@ -24,24 +24,30 @@ import { useMutation } from '@apollo/client'
 import { getProjectId } from 'shared/modules/app/appDuck'
 
 import { Drawer, DrawerHeader } from 'browser-components/drawer'
-import ProjectFilesScripts, { ProjectFilesError } from './ProjectsFilesScripts'
+import ProjectFilesScripts, {
+  ProjectFilesError
+} from '../../components/ProjectFiles/ProjectsFilesScripts'
 import NewSavedScript from './NewSavedScript'
 import {
   setProjectFileDefaultFileName,
   updateCacheAddProjectFile,
   checkFileNameInput
-} from './project-files.utils'
-import { CYPHER_FILE_EXTENSION } from 'shared/services/export-favorites'
-import { ADD_PROJECT_FILE } from './project-files.constants'
+} from '../../components/ProjectFiles/projectFilesUtils'
+import { ADD_PROJECT_FILE } from '../../components/ProjectFiles/projectFilesConstants'
 import { setDraftScript } from 'shared/modules/sidebar/sidebarDuck'
+import { CYPHER_FILE_EXTENSION } from 'services/exporting/favoriteUtils'
 
-interface ProjectFiles {
+interface ProjectFilesProps {
   projectId: string
   scriptDraft: string
   resetDraft: () => void
 }
 
-const ProjectFiles = ({ projectId, scriptDraft, resetDraft }: ProjectFiles) => {
+const ProjectFiles = ({
+  projectId,
+  scriptDraft,
+  resetDraft
+}: ProjectFilesProps) => {
   const [addFile, { error: apolloError }] = useMutation(ADD_PROJECT_FILE)
   const [error, setError] = useState('')
 

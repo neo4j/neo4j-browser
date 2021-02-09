@@ -26,45 +26,39 @@ import {
   executeCommand
 } from 'shared/modules/commands/commandsDuck'
 import * as favorites from '../../../shared/modules/favorites/favoritesDuck'
-import * as folders from '../../../shared/modules/favorites/foldersDuck'
+import { getFolders } from '../../../shared/modules/favorites/foldersDuck'
 import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
-
-import {
-  mapOldFavoritesAndFolders,
-  SLASH
-} from '../../../shared/services/export-favorites'
 
 const mapFavoritesStateToProps = (state: any) => {
   const version = semver.coerce(getVersion(state) || '0') ?? '0'
-  const scripts = mapOldFavoritesAndFolders(
-    favorites.getFavorites(state),
-    folders.getFolders(state),
-    ({ isStatic, versionRange }) =>
-      isStatic && semver.satisfies(version, versionRange)
-  )
+  const folders = getFolders(state).filter(folder => folder.isStatic)
+  const scripts = favorites
+    .getFavorites(state)
+    .filter(
+      fav =>
+        fav.isStatic &&
+        fav.versionRange &&
+        semver.satisfies(version, fav.versionRange)
+    )
 
   return {
     title: 'Sample Scripts',
-    scriptsNamespace: SLASH,
-    scripts,
-    isStatic: true
+    folders,
+    scripts
   }
 }
 const mapFavoritesDispatchToProps = (dispatch: any, ownProps: any) => ({
-  onSelectScript: (favorite: any) =>
+  selectScript: (favorite: favorites.Favorite) =>
     ownProps.bus.send(
       editor.EDIT_CONTENT,
-      editor.editContent(favorite.id, favorite.contents, { isStatic: true })
+      editor.editContent(favorite.id, favorite.content, { isStatic: true })
     ),
-  onExecScript: (favorite: any) =>
-    dispatch(executeCommand(favorite.contents), {
+  execScript: (favorite: any) =>
+    dispatch(executeCommand(favorite.content), {
       source: commandSources.sidebar
-    }),
-  onExportScripts: Function.prototype,
-  onRemoveScript: Function.prototype,
-  onUpdateFolder: Function.prototype,
-  onRemoveFolder: Function.prototype
+    })
 })
+
 const Favorites = withBus(
   connect(mapFavoritesStateToProps, mapFavoritesDispatchToProps)(MyScripts)
 )

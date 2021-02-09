@@ -52,16 +52,12 @@ describe('Saved Scripts', () => {
 
     cy.get('[data-testid="scriptTitle-Guide"]').should('exist')
     cy.get('[data-testid="currentlyEditing"]').contains('Guide')
-    cy.get('[data-testid=execScript]').click()
+    cy.get('[data-testid=savedScriptsButton-Run]').click()
     cy.getFrames().contains('Movie Graph')
-
-    // can delete
-    cy.get('[data-testid="savedScriptEditButton"]').click({ force: true })
-    cy.get('[data-testid="deleteScript"]').click()
-    cy.get('[data-testid="confirmDeleteScript"]').click()
   })
 
   it('it can drag and drop a favorite in a  folder', () => {
+    cy.get('[data-testid=editor-discard]').click()
     cy.executeCommand(':clear')
     cy.executeCommand(':help cypher')
     cy.get('[data-testid=frame-Favorite]').click()
@@ -71,38 +67,27 @@ describe('Saved Scripts', () => {
 
     cy.get('[data-testid=saveScript]').click()
 
-    cy.get('[data-testid="newFavoriteFolder"]').click()
-    cy.get('[data-testid="savedScriptEditButton"]')
-      .eq(1)
+    cy.get('[data-testid="savedScriptsButton-New folder"]').click()
+    cy.get('[data-testid="savedScriptsButton-Edit"]')
+      .eq(2)
       .click({ force: true })
     cy.get('[data-testid="editSavedScriptFolderName"]')
       .clear()
       .type('fldr{enter}')
 
-    cy.get('[data-testid="scriptTitle-:help cypher"]')
-      .children()
-      .first()
-      .trigger('dragstart')
+    cy.get('[data-testid="scriptTitle-:help cypher"]').trigger('dragstart')
 
-    cy.get('[data-testid="savedScriptsFolder-/fldr"]').trigger('drop', {
+    cy.get('[data-testid=expandFolder-fldr]').trigger('drop', {
       // this is to make react-dnd happy
       dataTransfer: { files: [] }
     })
 
     cy.wait(500)
-    cy.get('[data-testid="savedScriptsFolder-/fldr"]').trigger('dragend')
+    cy.get('[data-testid=expandFolder-fldr]').trigger('dragend')
 
     // moved script should be in the folder
     cy.get('[data-testid="scriptTitle-:help cypher"]').should('not.exist')
-    cy.get('[data-testid="expandFolder-/fldr"]').click()
+    cy.get('[data-testid=expandFolder-fldr]').click()
     cy.get('[data-testid="scriptTitle-:help cypher"]').should('exist')
-
-    // cleanup and delete the folder as well
-    cy.get('[data-testid="savedScriptEditButton"]')
-      .first()
-      .click({ force: true })
-    cy.get('[data-testid="deleteScript"]').click()
-    cy.get('[data-testid="confirmDeleteScript"]').click()
-    cy.get('[data-testid="savedScriptsFolder-/fldr"]').should('not.exist')
   })
 })

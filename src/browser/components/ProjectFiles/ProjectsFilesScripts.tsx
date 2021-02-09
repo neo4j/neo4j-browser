@@ -17,9 +17,7 @@
 import React from 'react'
 import { useEffect, useState, Dispatch } from 'react'
 import { Action } from 'redux'
-import { withBus } from 'react-suber'
 import { connect } from 'react-redux'
-import MyScripts from 'browser/components/SavedScripts'
 import { useQuery, useMutation, ApolloError } from '@apollo/client'
 import { filter, size } from 'lodash-es'
 
@@ -28,27 +26,26 @@ import {
   commandSources,
   executeCommand
 } from 'shared/modules/commands/commandsDuck'
-import { DOT } from 'shared/services/export-favorites'
 import {
   ProjectFilesQueryVars,
   ProjectFileMutationVars,
   mapProjectFileToFavorites,
-  updateCacheRemoveProjectFile,
-  createFilePath
-} from './project-files.utils'
+  updateCacheRemoveProjectFile
+} from './projectFilesUtils'
 import {
-  Favorite,
   ProjectFilesResult,
   ProjectFilesVariables,
   GET_PROJECT_FILES,
   DELETE_PROJECT_FILE,
-  REMOVE_PROJECT_FILE,
-  EXECUTE_COMMAND_ORIGIN,
-  EXECUTE_COMMAND_ORIGINS
-} from './project-files.constants'
+  REMOVE_PROJECT_FILE
+} from './projectFilesConstants'
 import Render from 'browser-components/Render'
 import { Bus } from 'suber'
-import { StyledErrorListContainer } from './styled'
+import { StyledErrorListContainer } from '../../modules/Sidebar/styled'
+import { withBus } from 'react-suber'
+import ProjectFileList, {
+  ProjectFileScript
+} from 'browser-components/ProjectFiles/ProjectFilesList'
 
 interface ProjectFilesError {
   apolloErrors: (ApolloError | undefined)[]
@@ -104,12 +101,9 @@ export const ProjectFilesError = ({
 
 interface ProjectFilesScripts {
   bus: Bus
-  onSelectScript: (favorite: Favorite) => void
-  onExecScript: (favorite: Favorite) => void
-  onExportScripts: () => void
-  onUpdateFolder: () => void
-  onRemoveFolder: () => void
-  scriptsNamespace: string
+  selectScript: (script: ProjectFileScript) => void
+  execScript: (cmd: string) => void
+  exportScripts: () => void
   title: string
   projectId: string
   relateApiToken: string
@@ -127,32 +121,22 @@ function ProjectFilesScripts(props: ProjectFilesScripts): JSX.Element {
   const [removeFile, { error: removeProjectFileError }] = useMutation(
     DELETE_PROJECT_FILE
   )
-  const [projectFiles, setProjectFiles] = useState<Favorite[]>([])
+  const [projectFiles, setProjectFiles] = useState<ProjectFileScript[]>([])
 
   useEffect(() => {
-    let isStillMounted = true
     if (data) {
-      const getProjectFiles = async () => {
-        const getProjectFilePromises = data.getProject.files.map(
-          ({ downloadToken, name, directory }) =>
-            mapProjectFileToFavorites({
-              downloadToken,
-              name,
-              directory,
-              apiToken: props.relateApiToken,
-              clientId: props.neo4jDesktopGraphAppId,
-              relateUrl: props.relateUrl
-            })
+      setProjectFiles(
+        data.getProject.files.map(({ downloadToken, name, directory }) =>
+          mapProjectFileToFavorites({
+            downloadToken,
+            name,
+            directory,
+            apiToken: props.relateApiToken,
+            clientId: props.neo4jDesktopGraphAppId,
+            relateUrl: props.relateUrl
+          })
         )
-        const projectFiles = await Promise.all(getProjectFilePromises)
-        if (isStillMounted) {
-          setProjectFiles(projectFiles)
-        }
-      }
-      getProjectFiles()
-    }
-    return () => {
-      isStillMounted = false
+      )
     }
   }, [
     data,
@@ -167,19 +151,13 @@ function ProjectFilesScripts(props: ProjectFilesScripts): JSX.Element {
     }
   }, [data, refetch])
 
-  const myScriptsProps = {
-    onExecScript: props.onExecScript,
+  const ProjectFileListProps = {
+    execScript: props.execScript,
     scripts: projectFiles,
-    isProjectFiles: true,
-    scriptsNamespace: DOT,
-    title: 'Cypher files',
-    onRemoveScript: async (favorite: Favorite) => {
+    removeScript: async (script: ProjectFileScript) => {
       try {
         const { data } = await removeFile({
-          variables: ProjectFileMutationVars(
-            createFilePath([favorite.directory, favorite.name]),
-            props.projectId
-          ),
+          variables: ProjectFileMutationVars(script.filename, props.projectId),
           update: (cache, result) =>
             updateCacheRemoveProjectFile(cache, result, props.projectId)
         })
@@ -192,29 +170,22 @@ function ProjectFilesScripts(props: ProjectFilesScripts): JSX.Element {
         console.log(e)
       }
     },
-    onSelectScript: (favorite: Favorite) => {
-      const directory =
-        favorite.path.length == 1 && favorite.path === DOT
-          ? DOT
-          : favorite.path.substring(1) // remove DOT from path
-
-      props.bus.send(
-        editor.EDIT_CONTENT,
-        editor.editContent(favorite.id, favorite.contents, {
-          directory,
-          name: favorite.name,
-          isProjectFile: true
-        })
+    selectScript: (script: ProjectFileScript) => {
+      script.content.then(contents =>
+        props.bus.send(
+          editor.EDIT_CONTENT,
+          editor.editContent(script.filename, contents, {
+            name: script.filename,
+            isProjectFile: true
+          })
+        )
       )
-    },
-    onExportScripts: Function.prototype,
-    onUpdateFolder: Function.prototype,
-    onRemoveFolder: Function.prototype
+    }
   }
 
   return (
     <>
-      <MyScripts {...myScriptsProps} />
+      <ProjectFileList {...ProjectFileListProps} />
       <ProjectFilesError
         apolloErrors={[getProjectFilesError, removeProjectFileError]}
       />
@@ -222,30 +193,19 @@ function ProjectFilesScripts(props: ProjectFilesScripts): JSX.Element {
   )
 }
 
-const mapFavoritesStateToProps = (state: any) => {
-  return {
-    projectId: state.app.relateProjectId,
-    relateApiToken: state.app.relateApiToken,
-    neo4jDesktopGraphAppId: state.app.neo4jDesktopGraphAppId,
-    relateUrl: state.app.relateUrl
-  }
-}
+const mapStateToProps = (state: any) => ({
+  projectId: state.app.relateProjectId,
+  relateApiToken: state.app.relateApiToken,
+  neo4jDesktopGraphAppId: state.app.neo4jDesktopGraphAppId,
+  relateUrl: state.app.relateUrl
+})
 
-const mapFavoritesDispatchToProps = (
-  dispatch: Dispatch<Action>,
-  ownProps: { bus: Bus }
-) => ({
-  onExecScript: (favorite: Favorite) => {
-    ownProps.bus.send(EXECUTE_COMMAND_ORIGIN, EXECUTE_COMMAND_ORIGINS.SIDEBAR)
-    dispatch(
-      executeCommand(favorite.contents, { source: commandSources.projectFile })
-    )
+const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
+  execScript: (cmd: string) => {
+    dispatch(executeCommand(cmd, { source: commandSources.projectFile }))
   }
 })
 
 export default withBus(
-  connect(
-    mapFavoritesStateToProps,
-    mapFavoritesDispatchToProps
-  )(ProjectFilesScripts)
+  connect(mapStateToProps, mapDispatchToProps)(ProjectFilesScripts)
 )

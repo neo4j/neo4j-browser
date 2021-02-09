@@ -313,11 +313,11 @@ export const loadFavoritesFromSyncEpic = (action$: any, store: any) =>
     .do((action: any) => {
       const favoritesStatus = favoritesToLoad(action, store)
 
-      if (favoritesStatus.loadFavorites) {
+      if (favoritesStatus.loadFavorites && favoritesStatus.favorites) {
         store.dispatch(loadFavorites(favoritesStatus.favorites))
       }
 
-      if (favoritesStatus.syncFavorites) {
+      if (favoritesStatus.syncFavorites && favoritesStatus.favorites) {
         store.dispatch(syncFavorites(favoritesStatus.favorites))
       }
     })
@@ -375,11 +375,11 @@ export const loadFoldersFromSyncEpic = (action$: any, store: any) =>
     .do((action: any) => {
       const folderStatus = foldersToLoad(action, store)
 
-      if (folderStatus.loadFolders) {
+      if (folderStatus.loadFolders && folderStatus.folders) {
         store.dispatch(loadFolders(folderStatus.folders))
       }
 
-      if (folderStatus.syncFolders) {
+      if (folderStatus.syncFolders && folderStatus.folders) {
         store.dispatch(syncFolders(folderStatus.folders))
       }
     })

@@ -15,8 +15,7 @@
  *
  */
 import remote from 'services/remote'
-import { CYPHER_FILE_EXTENSION, DOT } from 'shared/services/export-favorites'
-import uuid from 'uuid'
+import { ProjectFileScript } from 'browser-components/ProjectFiles/ProjectFilesList'
 import { split, trim, head, startsWith } from 'lodash-es'
 import {
   ApolloCache,
@@ -27,7 +26,6 @@ import {
 
 import {
   ProjectFile,
-  Favorite,
   ProjectFilesResult,
   GET_PROJECT_FILES,
   AddProjectFile,
@@ -35,7 +33,8 @@ import {
   ProjectFileMapping,
   PROHIBITED_FILENAME_CHAR_TESTS,
   ProhibitedFilenameErrors
-} from './project-files.constants'
+} from './projectFilesConstants'
+import { CYPHER_FILE_EXTENSION } from 'services/exporting/favoriteUtils'
 
 export const ProjectFilesQueryVars = (
   projectId: string
@@ -52,19 +51,15 @@ export const ProjectFileMutationVars = (
   filePath
 })
 
-export const mapProjectFileToFavorites = async ({
+export const mapProjectFileToFavorites = ({
   downloadToken,
   name,
-  directory,
   apiToken,
   clientId,
   relateUrl
-}: ProjectFileMapping): Promise<Favorite> => ({
-  id: uuid.v4(),
-  name,
-  directory,
-  path: directory.startsWith(DOT) ? directory : `${DOT}${directory}`, // works with scriptsNamespace
-  contents: await getProjectFileContents(
+}: ProjectFileMapping): ProjectFileScript => ({
+  filename: name,
+  content: getProjectFileContents(
     downloadToken,
     name,
     apiToken,
@@ -79,14 +74,17 @@ const getProjectFileContents = (
   apiToken: string,
   clientId: string,
   relateUrl: string
-): Promise<any> =>
+): Promise<string> =>
   remote
     .request('GET', `${relateUrl}/files/${token}/${name}`, null, {
       'X-API-Token': apiToken,
       'X-Client-Id': clientId
     })
     .then(body => body.text()) // currently cypher/text file specific
-    .catch(e => console.log(`Unable to get file ${name}\n`, e))
+    .catch(e => {
+      console.log(`Unable to get file ${name}\n`, e)
+      return ''
+    })
 
 const NEW_LINE = '\n'
 const COMMENT_PREFIX = '//'
