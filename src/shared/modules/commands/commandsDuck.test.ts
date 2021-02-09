@@ -22,10 +22,7 @@ import configureMockStore, { MockStoreEnhanced } from 'redux-mock-store'
 import { createEpicMiddleware } from 'redux-observable'
 import { createBus, createReduxMiddleware } from 'suber'
 
-import {
-  BoltConnectionError,
-  createErrorObject
-} from '../../services/exceptions'
+import { BoltConnectionError } from '../../services/exceptions'
 import * as commands from './commandsDuck'
 import helper from 'services/commandInterpreterHelper'
 import { update as updateQueryResult } from '../requests/requestsDuck'
@@ -100,11 +97,7 @@ describe('commandsDuck', () => {
           action,
           send('cypher', requestId),
           frames.add({ ...action, type: 'cypher' } as any),
-          updateQueryResult(
-            requestId,
-            createErrorObject(BoltConnectionError),
-            'error'
-          ),
+          updateQueryResult(requestId, BoltConnectionError(), 'error'),
           commands.unsuccessfulCypher(cmd),
           fetchMetaData(),
           { type: 'NOOP' }
@@ -422,11 +415,7 @@ describe('commandsDuck', () => {
           action,
           send('cypher', requestId),
           frames.add({ ...action, type: 'cypher' } as any),
-          updateQueryResult(
-            requestId,
-            createErrorObject(BoltConnectionError),
-            'error'
-          ),
+          updateQueryResult(requestId, BoltConnectionError(), 'error'),
           commands.unsuccessfulCypher(cmd),
           fetchMetaData(),
           { type: 'NOOP' }

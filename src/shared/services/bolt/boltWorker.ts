@@ -19,7 +19,7 @@
  */
 /* eslint-env serviceworker */
 import 'core-js/stable'
-import { BoltConnectionError, createErrorObject } from '../exceptions'
+import { BoltConnectionError } from '../exceptions'
 import {
   ensureConnection,
   closeConnection,
@@ -103,7 +103,7 @@ const onmessage = function(message: {
       connectionProperties.opts,
       () => {
         ;((self as unknown) as ServiceWorker).postMessage(
-          boltConnectionErrorMessage(createErrorObject(BoltConnectionError))
+          boltConnectionErrorMessage(BoltConnectionError())
         )
       }
     )
