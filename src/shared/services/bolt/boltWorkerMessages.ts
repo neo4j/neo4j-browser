@@ -17,6 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+import { Action, AnyAction } from 'redux'
+
 import { recursivelyTypeGraphItems } from './boltMappings'
 import { ROUTED_WRITE_CONNECTION } from './boltConnection'
 
@@ -29,13 +32,13 @@ export const BOLT_CONNECTION_ERROR_MESSAGE = 'BOLT_CONNECTION_ERROR_MESSAGE'
 export const CLOSE_CONNECTION_MESSAGE = 'CLOSE_CONNECTION_MESSAGE'
 
 export const runCypherMessage = (
-  input: any,
-  parameters: any,
+  input: string,
+  parameters: unknown,
   connectionType = ROUTED_WRITE_CONNECTION,
   requestId = null,
   cancelable = false,
-  connectionProperties: any
-) => {
+  connectionProperties: unknown
+): AnyAction => {
   return {
     type: RUN_CYPHER_MESSAGE,
     input,
@@ -47,40 +50,43 @@ export const runCypherMessage = (
   }
 }
 
-export const cancelTransactionMessage = (id: any) => {
+export const cancelTransactionMessage = (id: string): AnyAction => {
   return {
     type: CANCEL_TRANSACTION_MESSAGE,
     id
   }
 }
 
-export const cypherResponseMessage = (result: any) => {
+export const cypherResponseMessage = (result: unknown): AnyAction => {
   return {
     type: CYPHER_RESPONSE_MESSAGE,
     result: recursivelyTypeGraphItems(result)
   }
 }
 
-export const cypherErrorMessage = (error: any) => {
+export const cypherErrorMessage = (error: {
+  code: number
+  message: string
+}): AnyAction => {
   return {
     type: CYPHER_ERROR_MESSAGE,
     error
   }
 }
 
-export const postCancelTransactionMessage = () => {
+export const postCancelTransactionMessage = (): Action => {
   return {
     type: POST_CANCEL_TRANSACTION_MESSAGE
   }
 }
 
-export const boltConnectionErrorMessage = (error: any) => {
+export const boltConnectionErrorMessage = (error: Error): AnyAction => {
   return {
     type: BOLT_CONNECTION_ERROR_MESSAGE,
     error
   }
 }
 
-export const closeConnectionMessage = () => ({
+export const closeConnectionMessage = (): Action => ({
   type: CLOSE_CONNECTION_MESSAGE
 })

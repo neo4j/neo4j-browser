@@ -61,6 +61,7 @@ describe('Saved Scripts', () => {
   })
 
   it('it can drag and drop a favorite in a  folder', () => {
+    cy.get('[data-testid=editor-discard]').click()
     cy.executeCommand(':clear')
     cy.executeCommand(':help cypher')
     cy.get('[data-testid=frame-Favorite]').click()

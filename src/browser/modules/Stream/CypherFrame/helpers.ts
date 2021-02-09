@@ -148,7 +148,9 @@ export const resultHasNodes = (request: any, types = neo4j.types) => {
     const items = recursivelyExtractGraphItems(types, graphItems)
     const flat: any[] = flattenArrayDeep(items)
     const nodes = flat.filter(
-      item => item instanceof types.Node || item instanceof types.Path
+      item =>
+        item instanceof (types.Node as any) ||
+        item instanceof (types.Path as any)
     )
     if (nodes.length) return true
   }
@@ -325,10 +327,10 @@ export const flattenGraphItems = (
 
 export const isGraphItem = (types = neo4j.types, item: any) => {
   return (
-    item instanceof types.Node ||
-    item instanceof types.Relationship ||
-    item instanceof types.Path ||
-    item instanceof types.PathSegment ||
+    item instanceof (types.Node as any) ||
+    item instanceof (types.Relationship as any) ||
+    item instanceof (types.Path as any) ||
+    item instanceof (types.PathSegment as any) ||
     item instanceof neo4j.types.Date ||
     item instanceof neo4j.types.DateTime ||
     item instanceof neo4j.types.Duration ||
@@ -340,9 +342,12 @@ export const isGraphItem = (types = neo4j.types, item: any) => {
 }
 
 export function extractPropertiesFromGraphItems(types = neo4j.types, obj: any) {
-  if (obj instanceof types.Node || obj instanceof types.Relationship) {
+  if (
+    obj instanceof (types.Node as any) ||
+    obj instanceof (types.Relationship as any)
+  ) {
     return obj.properties
-  } else if (obj instanceof types.Path) {
+  } else if (obj instanceof (types.Path as any)) {
     return [].concat.apply([], arrayifyPath(types, obj))
   }
   return obj

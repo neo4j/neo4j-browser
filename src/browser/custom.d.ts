@@ -117,13 +117,8 @@ declare module 'cypher-editor-support' {
   export function extractStatements(
     input: string
   ): {
-    referencesListener: { statements: [{ raw: () => {}[] }] }
+    referencesListener: {
+      statements: [{ raw: () => Record<string, unknown>[] }]
+    }
   }
-}
-
-declare module 'neo4j-driver' {
-  const { auth, driver, int, isInt, session } = await import('neo4j-driver')
-  // overwrite types export to silence type warnings
-  const types: any
-  export { auth, driver, int, isInt, session, types }
 }

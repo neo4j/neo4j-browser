@@ -452,7 +452,7 @@ export const startupConnectEpic = (action$: any, store: any) => {
       ) {
         try {
           await bolt.openConnection(
-            savedConnection,
+            savedConnection!,
             { connectionTimeout },
             onLostConnection(store.dispatch)
           )
@@ -475,7 +475,7 @@ export const startupConnectEpic = (action$: any, store: any) => {
             // Try to connect with stored creds
             bolt
               .openConnection(
-                connUpdatedWithDiscovery,
+                connUpdatedWithDiscovery!,
                 { connectionTimeout },
                 onLostConnection(store.dispatch)
               )

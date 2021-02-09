@@ -180,7 +180,9 @@ describe('helpers', () => {
     })
     test('should return true if nodes are found, even nested', () => {
       // Given
-      const node = new neo4j.types.Node('2', ['Movie'], { prop2: 'prop2' })
+      const node = new (neo4j.types.Node as any)('2', ['Movie'], {
+        prop2: 'prop2'
+      })
       const mappedGet = (map: any) => (key: any) => map[key]
       const request = {
         result: {
@@ -299,7 +301,9 @@ describe('helpers', () => {
     })
     test('should return the viz view if nodes are existent', () => {
       // Given
-      const node = new neo4j.types.Node('2', ['Movie'], { prop2: 'prop2' })
+      const node = new (neo4j.types.Node as any)('2', ['Movie'], {
+        prop2: 'prop2'
+      })
       const mappedGet = (map: any) => (key: any) => map[key]
       const request = {
         result: {
@@ -385,7 +389,9 @@ describe('helpers', () => {
     })
     test('should return the ascii if thats the last view', () => {
       // Given
-      const node = new neo4j.types.Node('2', ['Movie'], { prop2: 'prop2' })
+      const node = new (neo4j.types.Node as any)('2', ['Movie'], {
+        prop2: 'prop2'
+      })
       const mappedGet = (map: any) => (key: any) => map[key]
       const request = {
         result: {
@@ -481,7 +487,9 @@ describe('helpers', () => {
     })
     test('should return viz if the last view was plan but no plan exists and viz elements exists', () => {
       // Given
-      const node = new neo4j.types.Node('2', ['Movie'], { prop2: 'prop2' })
+      const node = new (neo4j.types.Node as any)('2', ['Movie'], {
+        prop2: 'prop2'
+      })
       const mappedGet = (map: any) => (key: any) => map[key]
       const request = {
         result: {
@@ -549,11 +557,15 @@ describe('helpers', () => {
     })
     test('extractRecordsToResultArray handles regular records', () => {
       // Given
-      const start = new neo4j.types.Node(1, ['X'], { x: 1 })
-      const end = new neo4j.types.Node(2, ['Y'], { y: new neo4j.int(1) })
-      const rel = new neo4j.types.Relationship(3, 1, 2, 'REL', { rel: 1 })
-      const segments = [new neo4j.types.PathSegment(start, rel, end)]
-      const path = new neo4j.types.Path(start, end, segments)
+      const start = new (neo4j.types.Node as any)(1, ['X'], { x: 1 })
+      const end = new (neo4j.types.Node as any)(2, ['Y'], {
+        y: new (neo4j.int as any)(1)
+      })
+      const rel = new (neo4j.types.Relationship as any)(3, 1, 2, 'REL', {
+        rel: 1
+      })
+      const segments = [new (neo4j.types.PathSegment as any)(start, rel, end)]
+      const path = new (neo4j.types.Path as any)(start, end, segments)
 
       const records = [
         {
@@ -561,7 +573,7 @@ describe('helpers', () => {
           _fields: [
             'x',
             'y',
-            new neo4j.types.Node('1', ['Person'], { prop1: 'prop1' })
+            new (neo4j.types.Node as any)('1', ['Person'], { prop1: 'prop1' })
           ]
         },
         {
@@ -576,17 +588,23 @@ describe('helpers', () => {
       // Then
       expect(res).toEqual([
         ['"x"', '"y"', '"n"'],
-        ['x', 'y', new neo4j.types.Node('1', ['Person'], { prop1: 'prop1' })],
+        [
+          'x',
+          'y',
+          new (neo4j.types.Node as any)('1', ['Person'], { prop1: 'prop1' })
+        ],
         ['xx', 'yy', path]
       ])
     })
     test('flattenGraphItemsInResultArray extracts props from graph items', () => {
       // Given
-      const start = new neo4j.types.Node(1, ['X'], { x: 1 })
-      const end = new neo4j.types.Node(2, ['Y'], { y: 1 })
-      const rel = new neo4j.types.Relationship(3, 1, 2, 'REL', { rel: 1 })
-      const segments = [new neo4j.types.PathSegment(start, rel, end)]
-      const path = new neo4j.types.Path(start, end, segments)
+      const start = new (neo4j.types.Node as any)(1, ['X'], { x: 1 })
+      const end = new (neo4j.types.Node as any)(2, ['Y'], { y: 1 })
+      const rel = new (neo4j.types.Relationship as any)(3, 1, 2, 'REL', {
+        rel: 1
+      })
+      const segments = [new (neo4j.types.PathSegment as any)(start, rel, end)]
+      const path = new (neo4j.types.Path as any)(start, end, segments)
 
       const records = [
         {
@@ -594,7 +612,7 @@ describe('helpers', () => {
           _fields: [
             'x',
             'y',
-            new neo4j.types.Node('1', ['Person'], { prop1: 'prop1' })
+            new (neo4j.types.Node as any)('1', ['Person'], { prop1: 'prop1' })
           ]
         },
         {
@@ -623,11 +641,16 @@ describe('helpers', () => {
       const records = [
         {
           keys: ['"neoInt"', '"int"', '"any"', '"backslash"'],
-          _fields: [new neo4j.int('882573709873217509'), 100, 0.5, '"\\"']
+          _fields: [
+            new (neo4j.int as any)('882573709873217509'),
+            100,
+            0.5,
+            '"\\"'
+          ]
         },
         {
           keys: ['"neoInt"', '"int"', '"any"'],
-          _fields: [new neo4j.int(300), 100, 'string']
+          _fields: [new (neo4j.int as any)(300), 100, 'string']
         }
       ]
 
@@ -652,7 +675,7 @@ describe('helpers', () => {
         {
           keys: ['"neoInt"', '"int"', '"any"', '"backslash"', '"bool"'],
           _fields: [
-            new neo4j.int('882573709873217509'),
+            new (neo4j.int as any)('882573709873217509'),
             100,
             0.5,
             '"\\"',
@@ -661,7 +684,7 @@ describe('helpers', () => {
         },
         {
           keys: ['"neoInt"', '"int"', '"any"', '"string with comma"'],
-          _fields: [new neo4j.int(300), 100, 'string', 'my, string']
+          _fields: [new (neo4j.int as any)(300), 100, 'string', 'my, string']
         }
       ]
 
@@ -682,13 +705,17 @@ describe('helpers', () => {
     })
     test('stringifyResultArray handles neo4j integers nested within graph items', () => {
       // Given
-      const start = new neo4j.types.Node(1, ['X'], { x: new neo4j.int(1) })
-      const end = new neo4j.types.Node(2, ['Y'], { y: new neo4j.int(2) })
-      const rel = new neo4j.types.Relationship(3, 1, 2, 'REL', {
-        rel: new neo4j.int(1)
+      const start = new (neo4j.types.Node as any)(1, ['X'], {
+        x: new (neo4j.int as any)(1)
       })
-      const segments = [new neo4j.types.PathSegment(start, rel, end)]
-      const path = new neo4j.types.Path(start, end, segments)
+      const end = new (neo4j.types.Node as any)(2, ['Y'], {
+        y: new (neo4j.int as any)(2)
+      })
+      const rel = new (neo4j.types.Relationship as any)(3, 1, 2, 'REL', {
+        rel: new (neo4j.int as any)(1)
+      })
+      const segments = [new (neo4j.types.PathSegment as any)(start, rel, end)]
+      const path = new (neo4j.types.Path as any)(start, end, segments)
 
       const records = [
         {
@@ -696,7 +723,7 @@ describe('helpers', () => {
           _fields: [
             'x',
             'y',
-            new neo4j.types.Node('1', ['Person'], { prop1: 'prop1' })
+            new (neo4j.types.Node as any)('1', ['Person'], { prop1: 'prop1' })
           ]
         },
         {
@@ -729,21 +756,21 @@ describe('helpers', () => {
   describe('recordToJSONMapper', () => {
     describe('Nodes', () => {
       test('handles integer values', () => {
-        const node = new neo4j.types.Node(1, ['foo'], {
-          bar: new neo4j.int(3),
-          baz: new neo4j.int(1416268800000),
-          bax: new neo4j.int(9907199254740991) // Larger than Number.MAX_SAFE_INTEGER, but still in 64 bit int range
+        const node = new (neo4j.types.Node as any)(1, ['foo'], {
+          bar: new (neo4j.int as any)(3),
+          baz: new (neo4j.int as any)(1416268800000),
+          bax: new (neo4j.int as any)(9907199254740991) // Larger than Number.MAX_SAFE_INTEGER, but still in 64 bit int range
         })
-        const record = new neo4j.types.Record(['n'], [node])
+        const record = new (neo4j.types.Record as any)(['n'], [node])
         const expected = {
           n: {
             identity: 1,
             elementType: 'node',
             labels: ['foo'],
             properties: {
-              bar: new neo4j.int(3),
-              baz: new neo4j.int(1416268800000),
-              bax: new neo4j.int(9907199254740991)
+              bar: new (neo4j.int as any)(3),
+              baz: new (neo4j.int as any)(1416268800000),
+              bax: new (neo4j.int as any)(9907199254740991)
             }
           }
         }
@@ -752,8 +779,8 @@ describe('helpers', () => {
       })
 
       test('handles string values', () => {
-        const node = new neo4j.types.Node(1, ['foo'], { bar: 'baz' })
-        const record = new neo4j.types.Record(['n'], [node])
+        const node = new (neo4j.types.Node as any)(1, ['foo'], { bar: 'baz' })
+        const record = new (neo4j.types.Record as any)(['n'], [node])
         const expected = {
           n: {
             identity: 1,
@@ -769,10 +796,10 @@ describe('helpers', () => {
       })
 
       test('handles date values', () => {
-        const node = new neo4j.types.Node(1, ['foo'], {
+        const node = new (neo4j.types.Node as any)(1, ['foo'], {
           bar: new neo4j.types.Date(1970, 1, 1)
         })
-        const record = new neo4j.types.Record(['n'], [node])
+        const record = new (neo4j.types.Record as any)(['n'], [node])
         const expected = {
           n: {
             identity: 1,
@@ -788,10 +815,10 @@ describe('helpers', () => {
       })
 
       test('handles time values', () => {
-        const node = new neo4j.types.Node(1, ['foo'], {
+        const node = new (neo4j.types.Node as any)(1, ['foo'], {
           bar: new neo4j.types.Time(11, 1, 12, 0, 0)
         })
-        const record = new neo4j.types.Record(['n'], [node])
+        const record = new (neo4j.types.Record as any)(['n'], [node])
         const expected = {
           n: {
             identity: 1,
@@ -807,10 +834,10 @@ describe('helpers', () => {
       })
 
       test('handles local time values', () => {
-        const node = new neo4j.types.Node(1, ['foo'], {
+        const node = new (neo4j.types.Node as any)(1, ['foo'], {
           bar: new neo4j.types.LocalTime(11, 1, 12, 0)
         })
-        const record = new neo4j.types.Record(['n'], [node])
+        const record = new (neo4j.types.Record as any)(['n'], [node])
         const expected = {
           n: {
             identity: 1,
@@ -826,10 +853,10 @@ describe('helpers', () => {
       })
 
       test('handles datetime values', () => {
-        const node = new neo4j.types.Node(1, ['foo'], {
+        const node = new (neo4j.types.Node as any)(1, ['foo'], {
           bar: new neo4j.types.DateTime(1970, 1, 1, 11, 1, 12, 0, 0)
         })
-        const record = new neo4j.types.Record(['n'], [node])
+        const record = new (neo4j.types.Record as any)(['n'], [node])
         const expected = {
           n: {
             identity: 1,
@@ -845,10 +872,10 @@ describe('helpers', () => {
       })
 
       test('handles local datetime values', () => {
-        const node = new neo4j.types.Node(1, ['foo'], {
+        const node = new (neo4j.types.Node as any)(1, ['foo'], {
           bar: new neo4j.types.LocalDateTime(1970, 1, 1, 11, 1, 12, 0)
         })
-        const record = new neo4j.types.Record(['n'], [node])
+        const record = new (neo4j.types.Record as any)(['n'], [node])
         const expected = {
           n: {
             identity: 1,
@@ -864,10 +891,10 @@ describe('helpers', () => {
       })
 
       test('handles point values', () => {
-        const node = new neo4j.types.Node(1, ['foo'], {
+        const node = new (neo4j.types.Node as any)(1, ['foo'], {
           bar: new neo4j.types.Point(1, 10, 5, 15)
         })
-        const record = new neo4j.types.Record(['n'], [node])
+        const record = new (neo4j.types.Record as any)(['n'], [node])
         const expected = {
           n: {
             identity: 1,
@@ -883,10 +910,10 @@ describe('helpers', () => {
       })
 
       test('handles duration values', () => {
-        const node = new neo4j.types.Node(1, ['foo'], {
+        const node = new (neo4j.types.Node as any)(1, ['foo'], {
           bar: new neo4j.types.Duration(10, 5, 1, 0)
         })
-        const record = new neo4j.types.Record(['n'], [node])
+        const record = new (neo4j.types.Record as any)(['n'], [node])
         const expected = {
           n: {
             identity: 1,
@@ -904,10 +931,16 @@ describe('helpers', () => {
 
     describe('Relationships', () => {
       test('handles integer values', () => {
-        const relationship = new neo4j.types.Relationship(1, 2, 3, 'foo', {
-          bar: new neo4j.int(3)
-        })
-        const record = new neo4j.types.Record(['r'], [relationship])
+        const relationship = new (neo4j.types.Relationship as any)(
+          1,
+          2,
+          3,
+          'foo',
+          {
+            bar: new (neo4j.int as any)(3)
+          }
+        )
+        const record = new (neo4j.types.Record as any)(['r'], [relationship])
         const expected = {
           r: {
             identity: 1,
@@ -916,7 +949,7 @@ describe('helpers', () => {
             elementType: 'relationship',
             type: 'foo',
             properties: {
-              bar: new neo4j.int(3)
+              bar: new (neo4j.int as any)(3)
             }
           }
         }
@@ -925,10 +958,16 @@ describe('helpers', () => {
       })
 
       test('handles string values', () => {
-        const relationship = new neo4j.types.Relationship(1, 2, 3, 'foo', {
-          bar: 'baz'
-        })
-        const record = new neo4j.types.Record(['r'], [relationship])
+        const relationship = new (neo4j.types.Relationship as any)(
+          1,
+          2,
+          3,
+          'foo',
+          {
+            bar: 'baz'
+          }
+        )
+        const record = new (neo4j.types.Record as any)(['r'], [relationship])
         const expected = {
           r: {
             identity: 1,
@@ -946,10 +985,16 @@ describe('helpers', () => {
       })
 
       test('handles date values', () => {
-        const relationship = new neo4j.types.Relationship(1, 2, 3, 'foo', {
-          bar: new neo4j.types.Date(1970, 1, 1)
-        })
-        const record = new neo4j.types.Record(['r'], [relationship])
+        const relationship = new (neo4j.types.Relationship as any)(
+          1,
+          2,
+          3,
+          'foo',
+          {
+            bar: new neo4j.types.Date(1970, 1, 1)
+          }
+        )
+        const record = new (neo4j.types.Record as any)(['r'], [relationship])
         const expected = {
           r: {
             identity: 1,
@@ -967,10 +1012,16 @@ describe('helpers', () => {
       })
 
       test('handles time values', () => {
-        const relationship = new neo4j.types.Relationship(1, 2, 3, 'foo', {
-          bar: new neo4j.types.Time(11, 1, 12, 0, 0)
-        })
-        const record = new neo4j.types.Record(['r'], [relationship])
+        const relationship = new (neo4j.types.Relationship as any)(
+          1,
+          2,
+          3,
+          'foo',
+          {
+            bar: new neo4j.types.Time(11, 1, 12, 0, 0)
+          }
+        )
+        const record = new (neo4j.types.Record as any)(['r'], [relationship])
         const expected = {
           r: {
             identity: 1,
@@ -988,10 +1039,16 @@ describe('helpers', () => {
       })
 
       test('handles local time values', () => {
-        const relationship = new neo4j.types.Relationship(1, 2, 3, 'foo', {
-          bar: new neo4j.types.LocalTime(11, 1, 12, 0)
-        })
-        const record = new neo4j.types.Record(['r'], [relationship])
+        const relationship = new (neo4j.types.Relationship as any)(
+          1,
+          2,
+          3,
+          'foo',
+          {
+            bar: new neo4j.types.LocalTime(11, 1, 12, 0)
+          }
+        )
+        const record = new (neo4j.types.Record as any)(['r'], [relationship])
         const expected = {
           r: {
             identity: 1,
@@ -1009,10 +1066,16 @@ describe('helpers', () => {
       })
 
       test('handles datetime values', () => {
-        const relationship = new neo4j.types.Relationship(1, 2, 3, 'foo', {
-          bar: new neo4j.types.DateTime(1970, 1, 1, 11, 1, 12, 0, 0)
-        })
-        const record = new neo4j.types.Record(['r'], [relationship])
+        const relationship = new (neo4j.types.Relationship as any)(
+          1,
+          2,
+          3,
+          'foo',
+          {
+            bar: new neo4j.types.DateTime(1970, 1, 1, 11, 1, 12, 0, 0)
+          }
+        )
+        const record = new (neo4j.types.Record as any)(['r'], [relationship])
         const expected = {
           r: {
             identity: 1,
@@ -1030,10 +1093,16 @@ describe('helpers', () => {
       })
 
       test('handles local datetime values', () => {
-        const relationship = new neo4j.types.Relationship(1, 2, 3, 'foo', {
-          bar: new neo4j.types.LocalDateTime(1970, 1, 1, 11, 1, 12, 0)
-        })
-        const record = new neo4j.types.Record(['r'], [relationship])
+        const relationship = new (neo4j.types.Relationship as any)(
+          1,
+          2,
+          3,
+          'foo',
+          {
+            bar: new neo4j.types.LocalDateTime(1970, 1, 1, 11, 1, 12, 0)
+          }
+        )
+        const record = new (neo4j.types.Record as any)(['r'], [relationship])
         const expected = {
           r: {
             identity: 1,
@@ -1051,10 +1120,16 @@ describe('helpers', () => {
       })
 
       test('handles point values', () => {
-        const relationship = new neo4j.types.Relationship(1, 2, 3, 'foo', {
-          bar: new neo4j.types.Point(1, 10, 5, 15)
-        })
-        const record = new neo4j.types.Record(['r'], [relationship])
+        const relationship = new (neo4j.types.Relationship as any)(
+          1,
+          2,
+          3,
+          'foo',
+          {
+            bar: new neo4j.types.Point(1, 10, 5, 15)
+          }
+        )
+        const record = new (neo4j.types.Record as any)(['r'], [relationship])
         const expected = {
           r: {
             identity: 1,
@@ -1072,10 +1147,16 @@ describe('helpers', () => {
       })
 
       test('handles duration values', () => {
-        const relationship = new neo4j.types.Relationship(1, 2, 3, 'foo', {
-          bar: new neo4j.types.Duration(10, 5, 1, 0)
-        })
-        const record = new neo4j.types.Record(['r'], [relationship])
+        const relationship = new (neo4j.types.Relationship as any)(
+          1,
+          2,
+          3,
+          'foo',
+          {
+            bar: new neo4j.types.Duration(10, 5, 1, 0)
+          }
+        )
+        const record = new (neo4j.types.Record as any)(['r'], [relationship])
         const expected = {
           r: {
             identity: 1,
@@ -1095,16 +1176,22 @@ describe('helpers', () => {
 
     describe('Nodes and Relationships', () => {
       test('Node -> Relationship -> Node', () => {
-        const node1 = new neo4j.types.Node(1, ['foo'], {
-          bar: new neo4j.int(3)
+        const node1 = new (neo4j.types.Node as any)(1, ['foo'], {
+          bar: new (neo4j.int as any)(3)
         })
-        const relationship = new neo4j.types.Relationship(3, 1, 2, 'bom', {
-          bar: 'apa'
-        })
-        const node2 = new neo4j.types.Node(2, ['bam'], {
+        const relationship = new (neo4j.types.Relationship as any)(
+          3,
+          1,
+          2,
+          'bom',
+          {
+            bar: 'apa'
+          }
+        )
+        const node2 = new (neo4j.types.Node as any)(2, ['bam'], {
           bar: new neo4j.types.Date(1970, 1, 1)
         })
-        const record = new neo4j.types.Record(
+        const record = new (neo4j.types.Record as any)(
           ['n1', 'r1', 'n2'],
           [node1, relationship, node2]
         )
@@ -1114,7 +1201,7 @@ describe('helpers', () => {
             elementType: 'node',
             labels: ['foo'],
             properties: {
-              bar: new neo4j.int(3)
+              bar: new (neo4j.int as any)(3)
             }
           },
           r1: {
@@ -1143,19 +1230,25 @@ describe('helpers', () => {
 
     describe('Paths', () => {
       test('MATCH p = (:Person)-[r]-(:Movie) RETURN p', () => {
-        const node1 = new neo4j.types.Node(1, ['foo'], {
-          bar: new neo4j.int(3)
+        const node1 = new (neo4j.types.Node as any)(1, ['foo'], {
+          bar: new (neo4j.int as any)(3)
         })
-        const relationship = new neo4j.types.Relationship(3, 1, 2, 'bom', {
-          bar: 'apa'
-        })
-        const node2 = new neo4j.types.Node(2, ['bam'], {
+        const relationship = new (neo4j.types.Relationship as any)(
+          3,
+          1,
+          2,
+          'bom',
+          {
+            bar: 'apa'
+          }
+        )
+        const node2 = new (neo4j.types.Node as any)(2, ['bam'], {
           bar: new neo4j.types.Date(1970, 1, 1)
         })
-        const path = new neo4j.types.Path(node1, node2, [
-          new neo4j.types.PathSegment(node1, relationship, node2)
+        const path = new (neo4j.types.Path as any)(node1, node2, [
+          new (neo4j.types.PathSegment as any)(node1, relationship, node2)
         ])
-        const record = new neo4j.types.Record(['p'], [path])
+        const record = new (neo4j.types.Record as any)(['p'], [path])
         const expected = {
           p: {
             length: 1,
@@ -1164,7 +1257,7 @@ describe('helpers', () => {
               elementType: 'node',
               labels: ['foo'],
               properties: {
-                bar: new neo4j.int(3)
+                bar: new (neo4j.int as any)(3)
               }
             },
             end: {
@@ -1182,7 +1275,7 @@ describe('helpers', () => {
                   elementType: 'node',
                   labels: ['foo'],
                   properties: {
-                    bar: new neo4j.int(3)
+                    bar: new (neo4j.int as any)(3)
                   }
                 },
                 relationship: {
@@ -1214,12 +1307,12 @@ describe('helpers', () => {
 
     describe('Returns of raw data', () => {
       test('RETURN {...data} as foo', () => {
-        const record = new neo4j.types.Record(
+        const record = new (neo4j.types.Record as any)(
           ['foo'],
           [
             {
               data: [
-                new neo4j.int(1),
+                new (neo4j.int as any)(1),
                 'car',
                 new neo4j.types.Point(1, 10, 5, 15),
                 new neo4j.types.Date(1970, 1, 1)
@@ -1230,7 +1323,7 @@ describe('helpers', () => {
         const expected = {
           foo: {
             data: [
-              new neo4j.int(1),
+              new (neo4j.int as any)(1),
               'car',
               { srid: 1, x: 10, y: 5, z: 15 },
               '1970-01-01'

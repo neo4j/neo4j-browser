@@ -20,7 +20,13 @@
 
 import React from 'react'
 import { createEpicMiddleware } from 'redux-observable'
-import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
+import {
+  createStore,
+  combineReducers,
+  applyMiddleware,
+  compose,
+  AnyAction
+} from 'redux'
 import { Provider } from 'react-redux'
 import {
   createBus,
@@ -70,7 +76,37 @@ const enhancer = compose(
   applyMiddleware(suberMiddleware, epicMiddleware, localStorageMiddleware),
   process.env.NODE_ENV !== 'production' &&
     (window as any).__REDUX_DEVTOOLS_EXTENSION__
-    ? (window as any).__REDUX_DEVTOOLS_EXTENSION__()
+    ? (window as any).__REDUX_DEVTOOLS_EXTENSION__({
+        actionSanitizer: (action: AnyAction) =>
+          action.type === 'requests/UPDATED'
+            ? {
+                ...action,
+                result: {
+                  summary: action.result ? action.result.summary : undefined,
+                  records:
+                    'REQUEST RECORDS OMITTED FROM REDUX DEVTOOLS TO PREVENT OUT OF MEMORY ERROR'
+                }
+              }
+            : action,
+        stateSanitizer: (state: any) => ({
+          ...state,
+          requests: Object.assign(
+            {},
+            ...Object.entries(state.requests).map(
+              ([id, request]: [string, any]) => ({
+                [id]: {
+                  ...request,
+                  result: {
+                    ...request.result,
+                    records:
+                      'REQUEST RECORDS OMITTED FROM REDUX DEVTOOLS TO PREVENT OUT OF MEMORY ERROR'
+                  }
+                }
+              })
+            )
+          )
+        })
+      })
     : (f: any) => f
 )
 

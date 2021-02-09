@@ -128,7 +128,7 @@ describe('applyGraphTypes', () => {
   })
 
   test('should apply node type', () => {
-    const node = new neo4j.types.Node(neo4j.int(5), ['Test'], {})
+    const node = new (neo4j.types.Node as any)(neo4j.int(5), ['Test'], {})
     const rawNode = nativeTypesToCustom(node)
 
     const typedNode = applyGraphTypes(rawNode)
@@ -175,7 +175,11 @@ describe('applyGraphTypes', () => {
       prop11: { [reservedTypePropertyName]: 'Yolo' }
     }
 
-    const origNode = new neo4j.types.Node(neo4j.int(5), ['Test'], properties)
+    const origNode = new (neo4j.types.Node as any)(
+      neo4j.int(5),
+      ['Test'],
+      properties
+    )
     const rawNode = nativeTypesToCustom(origNode)
 
     const typedNode = applyGraphTypes(rawNode)
@@ -214,8 +218,8 @@ describe('applyGraphTypes', () => {
 
   test('should apply node type to array of data', () => {
     const nodes = [
-      new neo4j.types.Node(neo4j.int(5), ['Test'], {}),
-      new neo4j.types.Node(neo4j.int(15), ['Test2'], {})
+      new (neo4j.types.Node as any)(neo4j.int(5), ['Test'], {}),
+      new (neo4j.types.Node as any)(neo4j.int(15), ['Test2'], {})
     ]
 
     const rawNodes = nativeTypesToCustom(nodes)
@@ -229,7 +233,7 @@ describe('applyGraphTypes', () => {
   })
 
   test('should apply relationship type', () => {
-    const rel = new neo4j.types.Relationship(
+    const rel = new (neo4j.types.Relationship as any)(
       neo4j.int(5),
       neo4j.int(1),
       neo4j.int(2),
@@ -247,14 +251,14 @@ describe('applyGraphTypes', () => {
 
   test('should apply relationship type to array of data', () => {
     const rels = [
-      new neo4j.types.Relationship(
+      new (neo4j.types.Relationship as any)(
         neo4j.int(1),
         neo4j.int(5),
         neo4j.int(10),
         'TestType',
         {}
       ),
-      new neo4j.types.Relationship(
+      new (neo4j.types.Relationship as any)(
         neo4j.int(2),
         neo4j.int(15),
         neo4j.int(20),
@@ -279,7 +283,7 @@ describe('applyGraphTypes', () => {
 
   test('should apply to custom object properties', () => {
     const num = neo4j.int(5)
-    const node = new neo4j.types.Node(neo4j.int(5), ['Test'], {})
+    const node = new (neo4j.types.Node as any)(neo4j.int(5), ['Test'], {})
     const obj = { num, node }
 
     const rawData = nativeTypesToCustom(obj)
@@ -291,10 +295,14 @@ describe('applyGraphTypes', () => {
 
   test('should apply to array of custom object properties', () => {
     const rawNumber1 = neo4j.int(5)
-    const rawNode1 = new neo4j.types.Node(neo4j.int(5), ['Test-1'], {})
+    const rawNode1 = new (neo4j.types.Node as any)(neo4j.int(5), ['Test-1'], {})
 
     const rawNumber2 = neo4j.int(10)
-    const rawNode2 = new neo4j.types.Node(neo4j.int(10), ['Test-2'], {})
+    const rawNode2 = new (neo4j.types.Node as any)(
+      neo4j.int(10),
+      ['Test-2'],
+      {}
+    )
 
     const rawObj = nativeTypesToCustom([
       { num: rawNumber1, node: rawNode1 },
@@ -367,13 +375,13 @@ describe('applyGraphTypes', () => {
   })
 
   test('should apply to a complex object of graph types', () => {
-    const rawNode = new neo4j.types.Node(neo4j.int(5), ['Test'], {})
+    const rawNode = new (neo4j.types.Node as any)(neo4j.int(5), ['Test'], {})
     const rawNum = neo4j.int(100)
     const rawPath = getAPath([
       { start: 5, end: 10, relationship: 1 },
       { start: 10, end: 15, relationship: 2 }
     ])
-    const rawRelationship = new neo4j.types.Relationship(
+    const rawRelationship = new (neo4j.types.Relationship as any)(
       neo4j.int(1),
       neo4j.int(5),
       neo4j.int(10),
@@ -423,7 +431,7 @@ describe('applyGraphTypes', () => {
       12,
       44,
       0,
-      null,
+      null as any,
       'Europe/Stockholm'
     )
     const rawDateTime = nativeTypesToCustom(dateTime)
@@ -471,8 +479,8 @@ describe('applyGraphTypes', () => {
       )
     const boltResponse = {
       records: [
-        new neo4j.types.Record(['mydate'], [createDate(12)]),
-        new neo4j.types.Record(['mydate'], [createDate(2)])
+        new (neo4j.types.Record as any)(['mydate'], [createDate(12)]),
+        new (neo4j.types.Record as any)(['mydate'], [createDate(2)])
       ],
       summary: {}
     }
@@ -496,18 +504,20 @@ describe('applyGraphTypes', () => {
   })
   test('should identify time in nodes in paths with refs for start and end', () => {
     const date = new neo4j.types.Time(11, 1, 12, 3600, 0)
-    const start = new neo4j.types.Node(neo4j.int(1), ['From'], { date })
-    const end = new neo4j.types.Node(neo4j.int(3), ['To'], {})
-    const rel = new neo4j.types.Relationship(
+    const start = new (neo4j.types.Node as any)(neo4j.int(1), ['From'], {
+      date
+    })
+    const end = new (neo4j.types.Node as any)(neo4j.int(3), ['To'], {})
+    const rel = new (neo4j.types.Relationship as any)(
       neo4j.int(2),
       neo4j.int(1),
       neo4j.int(3),
       'TestType',
       {}
     )
-    const seg = new neo4j.types.PathSegment(start, rel, end)
+    const seg = new (neo4j.types.PathSegment as any)(start, rel, end)
     const segments = [seg]
-    const path = new neo4j.types.Path(
+    const path = new (neo4j.types.Path as any)(
       segments[0].start,
       segments[segments.length - 1].end,
       segments
@@ -525,20 +535,28 @@ describe('applyGraphTypes', () => {
   })
   test('should identify time in nodes in paths', () => {
     const date = new neo4j.types.Time(11, 1, 12, 3600, 0)
-    const start = new neo4j.types.Node(neo4j.int(1), ['From'], { date })
-    const segmentStart = new neo4j.types.Node(neo4j.int(1), ['From'], { date })
-    const end = new neo4j.types.Node(neo4j.int(3), ['To'], {})
-    const segmentEnd = new neo4j.types.Node(neo4j.int(3), ['To'], {})
-    const rel = new neo4j.types.Relationship(
+    const start = new (neo4j.types.Node as any)(neo4j.int(1), ['From'], {
+      date
+    })
+    const segmentStart = new (neo4j.types.Node as any)(neo4j.int(1), ['From'], {
+      date
+    })
+    const end = new (neo4j.types.Node as any)(neo4j.int(3), ['To'], {})
+    const segmentEnd = new (neo4j.types.Node as any)(neo4j.int(3), ['To'], {})
+    const rel = new (neo4j.types.Relationship as any)(
       neo4j.int(2),
       neo4j.int(1),
       neo4j.int(3),
       'TestType',
       {}
     )
-    const seg = new neo4j.types.PathSegment(segmentStart, rel, segmentEnd)
+    const seg = new (neo4j.types.PathSegment as any)(
+      segmentStart,
+      rel,
+      segmentEnd
+    )
     const segments = [seg]
-    const path = new neo4j.types.Path(start, end, segments)
+    const path = new (neo4j.types.Path as any)(start, end, segments)
 
     // When
     const res = nativeTypesToCustom(path)
@@ -567,23 +585,23 @@ const typeHintArray = (x: any) =>
     .map(JSON.parse)
 
 const getAPathSegment = (startId: any, relId: any, endId: any) => {
-  const start = new neo4j.types.Node(neo4j.int(startId), ['From'], {})
-  const end = new neo4j.types.Node(neo4j.int(endId), ['To'], {})
-  const rel = new neo4j.types.Relationship(
+  const start = new (neo4j.types.Node as any)(neo4j.int(startId), ['From'], {})
+  const end = new (neo4j.types.Node as any)(neo4j.int(endId), ['To'], {})
+  const rel = new (neo4j.types.Relationship as any)(
     neo4j.int(relId),
     neo4j.int(startId),
     neo4j.int(endId),
     'TestType',
     {}
   )
-  return new neo4j.types.PathSegment(start, rel, end)
+  return new (neo4j.types.PathSegment as any)(start, rel, end)
 }
 
 const getAPath = (segmentList: any) => {
   const segments = segmentList.map((segment: any) =>
     getAPathSegment(segment.start, segment.relationship, segment.end)
   )
-  return new neo4j.types.Path(
+  return new (neo4j.types.Path as any)(
     segments[0].start,
     segments[segments.length - 1].end,
     segments

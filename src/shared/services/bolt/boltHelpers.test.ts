@@ -26,7 +26,7 @@ const READ = 'READ'
 describe('buildTxFunctionByMode', () => {
   test('it returns WRITE tx when in WRITE mode', () => {
     // Given
-    const fakeSession = {
+    const fakeSession: any = {
       _mode: WRITE,
       readTransaction: jest.fn(),
       writeTransaction: jest.fn()
@@ -42,7 +42,7 @@ describe('buildTxFunctionByMode', () => {
   })
   test('it returns READ tx when in READ mode', () => {
     // Given
-    const fakeSession = {
+    const fakeSession: any = {
       _mode: READ,
       readTransaction: jest.fn(),
       writeTransaction: jest.fn()
@@ -58,7 +58,7 @@ describe('buildTxFunctionByMode', () => {
   })
   test('it by DEFAULT returns tx in WRITE mode', () => {
     // Given
-    const fakeSession = {
+    const fakeSession: any = {
       readTransaction: jest.fn(),
       writeTransaction: jest.fn()
     }
