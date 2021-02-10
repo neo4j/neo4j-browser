@@ -226,6 +226,14 @@ function FrameTitlebar(props: FrameTitleBarProps) {
     saveAs(blob, 'style.grass')
   }
 
+  /*
+   * Displaying the download icon even if there is no result or visualization
+   * prevents the run/stop icon from "jumping" as the download icon disappears
+   * and reappears when running fast queries.
+   */
+  const displayDownloadIcon = () =>
+    props?.frame?.type === 'cypher' || canExport()
+
   function canExport() {
     const { frame = {}, visElement } = props
 
@@ -305,46 +313,52 @@ function FrameTitlebar(props: FrameTitleBarProps) {
         >
           <SaveFavorite />
         </FrameButton>
-        <Render if={canExport()}>
+        <Render if={displayDownloadIcon()}>
           <DropdownButton data-testid="frame-export-dropdown">
             <DownloadIcon />
-            <DropdownList>
-              <DropdownContent>
-                <Render if={props.isRelateAvailable}>
-                  <DropdownItem onClick={() => props.newProjectFile(frame.cmd)}>
-                    Save as project file
-                  </DropdownItem>
-                  <DropDownItemDivider />
-                </Render>
-                <Render if={hasData() && frame.type === 'cypher'}>
-                  <DropdownItem onClick={() => exportCSV(props.getRecords())}>
-                    Export CSV
-                  </DropdownItem>
-                  <DropdownItem onClick={() => exportJSON(props.getRecords())}>
-                    Export JSON
-                  </DropdownItem>
-                </Render>
-                <Render if={props.visElement}>
-                  <DropdownItem onClick={() => exportPNG()}>
-                    Export PNG
-                  </DropdownItem>
-                  <DropdownItem onClick={() => exportSVG()}>
-                    Export SVG
-                  </DropdownItem>
-                </Render>
-                <Render if={canExportTXT()}>
-                  <DropdownItem onClick={exportTXT}>Export TXT</DropdownItem>
-                </Render>
-                <Render if={hasData() && frame.type === 'style'}>
-                  <DropdownItem
-                    data-testid="exportGrassButton"
-                    onClick={() => exportGrass(props.getRecords())}
-                  >
-                    Export GraSS
-                  </DropdownItem>
-                </Render>
-              </DropdownContent>
-            </DropdownList>
+            <Render if={canExport()}>
+              <DropdownList>
+                <DropdownContent>
+                  <Render if={props.isRelateAvailable}>
+                    <DropdownItem
+                      onClick={() => props.newProjectFile(frame.cmd)}
+                    >
+                      Save as project file
+                    </DropdownItem>
+                    <DropDownItemDivider />
+                  </Render>
+                  <Render if={hasData() && frame.type === 'cypher'}>
+                    <DropdownItem onClick={() => exportCSV(props.getRecords())}>
+                      Export CSV
+                    </DropdownItem>
+                    <DropdownItem
+                      onClick={() => exportJSON(props.getRecords())}
+                    >
+                      Export JSON
+                    </DropdownItem>
+                  </Render>
+                  <Render if={props.visElement}>
+                    <DropdownItem onClick={() => exportPNG()}>
+                      Export PNG
+                    </DropdownItem>
+                    <DropdownItem onClick={() => exportSVG()}>
+                      Export SVG
+                    </DropdownItem>
+                  </Render>
+                  <Render if={canExportTXT()}>
+                    <DropdownItem onClick={exportTXT}>Export TXT</DropdownItem>
+                  </Render>
+                  <Render if={hasData() && frame.type === 'style'}>
+                    <DropdownItem
+                      data-testid="exportGrassButton"
+                      onClick={() => exportGrass(props.getRecords())}
+                    >
+                      Export GraSS
+                    </DropdownItem>
+                  </Render>
+                </DropdownContent>
+              </DropdownList>
+            </Render>
           </DropdownButton>
         </Render>
         <FrameButton
