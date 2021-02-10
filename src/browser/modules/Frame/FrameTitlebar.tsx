@@ -36,7 +36,15 @@ import {
   Request,
   REQUEST_STATUS_PENDING
 } from 'shared/modules/requests/requestsDuck'
-import { remove, pin, unpin, Frame } from 'shared/modules/stream/streamDuck'
+import {
+  Frame,
+  pin,
+  remove,
+  TRACK_COLLAPSE_TOGGLE,
+  TRACK_FULLSCREEN_TOGGLE,
+  TRACK_SAVE_AS_PROJECT_FILE,
+  unpin
+} from 'shared/modules/stream/streamDuck'
 import { sleep } from 'shared/services/utils'
 import { FrameButton } from 'browser-components/buttons'
 import Render from 'browser-components/Render'
@@ -114,6 +122,8 @@ type FrameTitleBarProps = FrameTitleBarBaseProps & {
   reRun: (obj: Frame, cmd: string) => void
   togglePinning: (id: string, isPinned: boolean) => void
   onTitlebarClick: (cmd: string) => void
+  trackFullscreenToggle: () => void
+  trackCollapseToggle: () => void
 }
 
 function FrameTitlebar(props: FrameTitleBarProps) {
@@ -348,13 +358,19 @@ function FrameTitlebar(props: FrameTitleBarProps) {
         </FrameButton>
         <FrameButton
           title={props.fullscreen ? 'Close fullscreen' : 'Fullscreen'}
-          onClick={() => props.fullscreenToggle()}
+          onClick={() => {
+            props.fullscreenToggle()
+            props.trackFullscreenToggle()
+          }}
         >
           {fullscreenIcon}
         </FrameButton>
         <FrameButton
           title={props.collapse ? 'Expand' : 'Collapse'}
-          onClick={() => props.collapseToggle()}
+          onClick={() => {
+            props.collapseToggle()
+            props.trackCollapseToggle()
+          }}
         >
           {expandCollapseIcon}
         </FrameButton>
@@ -404,6 +420,13 @@ const mapDispatchToProps = (
     },
     newProjectFile: (cmd: string) => {
       dispatch(sidebar.setDraftScript(cmd, 'project files'))
+      dispatch({ type: TRACK_SAVE_AS_PROJECT_FILE })
+    },
+    trackFullscreenToggle: () => {
+      dispatch({ type: TRACK_FULLSCREEN_TOGGLE })
+    },
+    trackCollapseToggle: () => {
+      dispatch({ type: TRACK_COLLAPSE_TOGGLE })
     },
     cancelQuery: (requestId: string) => {
       dispatch(cancelRequest(requestId))
