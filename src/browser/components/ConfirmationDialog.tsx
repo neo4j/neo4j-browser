@@ -43,7 +43,7 @@ function ConfirmationDialog({
       onClose={() => onClose()}
       open={open}
       size="tiny"
-      style={{}}
+      style={{ fontSize: '16px', lineHeight: '1.5' }}
     >
       <Modal.Content>{children}</Modal.Content>
       <Modal.Actions style={{ background: 'white', border: 'none' }}>

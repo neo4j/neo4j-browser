@@ -406,7 +406,7 @@ function FrameTitlebar(props: FrameTitleBarProps) {
           }}
           open={confirmationDialogOpen}
         >
-          <h1>Close frame?</h1>
+          <h2 style={{ fontWeight: 'normal' }}>Close frame?</h2>
           <p>
             Closing the frame cannot be undone.
             <br />
