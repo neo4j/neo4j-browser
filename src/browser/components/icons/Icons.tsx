@@ -340,20 +340,7 @@ export const QuestionIcon = (props: any) => (
     className="fa fa-question-circle-o"
   />
 )
-export const PlusIcon = () => (
-  <IconContainer
-    activeStyle={white}
-    inactiveStyle={white}
-    className="fa fa-plus"
-  />
-)
-export const EditIcon = () => (
-  <IconContainer
-    activeStyle={white}
-    inactiveStyle={white}
-    className="sl-pencil"
-  />
-)
+
 export const Spinner = () => (
   <IconContainer
     data-testid="spinner"
