@@ -123,21 +123,16 @@ export default function SavedScripts({
       )
     }
 
-    const allowMultiselect = e.metaKey || e.ctrlKey
+    const manualMultiselect = e.metaKey || e.ctrlKey
     const bulkSelect = e.shiftKey
-    if (allowMultiselect) {
-      if (bulkSelect) {
-        setSelectedIds(ids =>
-          ids.length === 0
-            ? [clickedScriptId]
-            : uniq([
-                ...ids,
-                ...getIdRange(ids[ids.length - 1], clickedScriptId)
-              ])
-        )
-      } else {
-        setSelectedIds(toggleFn)
-      }
+    if (bulkSelect) {
+      setSelectedIds(ids =>
+        ids.length === 0
+          ? [clickedScriptId]
+          : uniq([...ids, ...getIdRange(ids[ids.length - 1], clickedScriptId)])
+      )
+    } else if (manualMultiselect) {
+      setSelectedIds(toggleFn)
     } else {
       setSelectedIds([clickedScriptId])
     }
