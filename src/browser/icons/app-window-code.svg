@@ -10,7 +10,6 @@
             }
         </style>
     </defs>
-    <title>app-window-code</title>
     <rect class="a" x="1.51" y="2.253" width="21" height="19.5" rx="1.5" ry="1.5" />
     <line class="a" x1="1.51" y1="6.753" x2="22.51" y2="6.753" />
     <line class="a" x1="12.01" y1="17.253" x2="16.51" y2="17.253" />

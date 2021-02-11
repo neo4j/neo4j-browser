@@ -47,6 +47,7 @@ import run_icon from 'icons/run_icon.svg'
 import help from 'icons/help.svg'
 import newFolder from 'icons/folder-add.svg'
 import folder from 'icons/folder-empty.svg'
+import addCircle from 'icons/add-circle.svg'
 import navIcon from 'icons/navigation-menu-vertical.svg'
 
 const inactive = `
@@ -365,11 +366,10 @@ export const FireExtinguisherIcon = ({ title = 'Reset' }) => (
 
 export const SavedScriptsExpandMenuRightIcon = () => <Icon name="caret right" />
 export const SavedScriptsCollapseMenuIcon = () => <Icon name="caret down" />
-export const FolderIcon = () => <Icon size="large" name="folder outline" />
 export const NewFolderIcon = () => <IconContainer icon={newFolder} width={12} />
-export const NavIcon = () => (
-  <IconContainer icon={navIcon} width={12} className="centeredSvgIcon" />
-)
+export const NavIcon = () => <IconContainer icon={navIcon} width={12} />
+export const AddIcon = () => <IconContainer icon={addCircle} width={12} />
+export const FolderIcon = () => <IconContainer icon={folder} width={12} />
 export const SavedScriptsPlay = () => (
-  <IconContainer icon={run_icon} width={12} className="centeredSvgIcon" />
+  <IconContainer icon={run_icon} width={12} />
 )

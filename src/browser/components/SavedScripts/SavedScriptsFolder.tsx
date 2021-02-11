@@ -30,12 +30,12 @@ import {
 
 import {
   SavedScriptsButtonWrapper,
-  SavedScriptsFolderCollapseIcon,
   SavedScriptsFolderHeader,
   SavedScriptsFolderLabel,
   SavedScriptsFolderMain,
   SavedScriptsInput,
-  ChildrenContainer
+  ChildrenContainer,
+  FolderNameWrapper
 } from './styled'
 import { Folder } from 'shared/modules/favorites/foldersDuck'
 
@@ -110,7 +110,7 @@ function SavedScriptsFolder({
                 <SavedScriptsExpandMenuRightIcon />
               )}
               <FolderIcon />
-              {folder.name}
+              <FolderNameWrapper> {folder.name} </FolderNameWrapper>
             </SavedScriptsFolderLabel>
           )}
           <SavedScriptsButtonWrapper>

@@ -15,6 +15,9 @@ export const SavedScriptsHeader = styled.h5`
   position: relative;
   font-weight: bold;
 `
+export const FolderNameWrapper = styled.span`
+  margin-left: 5px;
+`
 
 export const SavedScriptsListItemMain = styled.div<{
   stayVisible?: boolean
@@ -50,8 +53,6 @@ export const SavedScriptsNewFavorite = styled.div`
   cursor: pointer;
   color: #bcc0c9;
   font-size: 13px;
-  padding-top: 10px;
-  padding-bottom: 10px;
   margin-left: 6px;
   transition: color ease-in-out 0.3s;
 

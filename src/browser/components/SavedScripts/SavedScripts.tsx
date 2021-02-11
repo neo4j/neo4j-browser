@@ -38,6 +38,7 @@ import { getScriptDisplayName } from './utils'
 import { uniq } from 'lodash-es'
 import { Favorite } from 'shared/modules/favorites/favoritesDuck'
 import { useCustomBlur } from './hooks'
+import { AddIcon } from 'browser-components/icons/Icons'
 
 interface SavedScriptsProps {
   title?: string
@@ -199,14 +200,6 @@ export default function SavedScripts({
             />
           )
         })}
-        {createNewScript && (
-          <SavedScriptsNewFavorite
-            data-testid="createNewFavorite"
-            onClick={createNewScript}
-          >
-            Create new favorite
-          </SavedScriptsNewFavorite>
-        )}
         {foldersWithScripts.map(({ folder, scripts }) => (
           <SavedScriptsFolder
             folder={folder}
@@ -239,6 +232,14 @@ export default function SavedScripts({
             })}
           </SavedScriptsFolder>
         ))}
+        {createNewScript && (
+          <SavedScriptsNewFavorite
+            data-testid="createNewFavorite"
+            onClick={createNewScript}
+          >
+            <AddIcon /> Add empty favorite
+          </SavedScriptsNewFavorite>
+        )}
       </SavedScriptsBody>
     </DndProvider>
   )

@@ -24,6 +24,7 @@ import { StyledSavedScriptsButton } from './styled'
 import SVGInline from 'react-svg-inline'
 import newFolderIcon from 'icons/folder-add.svg'
 import hollow_run_icon from 'icons/hollow-run-icon.svg'
+import { DownloadIcon } from 'browser-components/icons/Icons'
 
 type SavedScriptsButtonProps = {
   onClick: ReactEventHandler
@@ -50,11 +51,19 @@ export default function SavedScriptsButton({
 }
 
 type OnClickProp = { onClick: ReactEventHandler }
-const ExportButton = ({ onClick }: OnClickProp): JSX.Element =>
-  SavedScriptsButton({ onClick, title: 'Export', iconName: 'download' })
 
 const EditButton = ({ onClick }: OnClickProp): JSX.Element =>
   SavedScriptsButton({ onClick, title: 'Edit', iconName: 'pencil' })
+
+const ExportButton = ({ onClick }: OnClickProp): JSX.Element => (
+  <StyledSavedScriptsButton
+    title="Export"
+    data-testid={'savedScriptsButton-Export'}
+    onClick={onClick}
+  >
+    <DownloadIcon />
+  </StyledSavedScriptsButton>
+)
 
 const RunButton = ({ onClick }: OnClickProp): JSX.Element => (
   <StyledSavedScriptsButton
@@ -66,7 +75,7 @@ const RunButton = ({ onClick }: OnClickProp): JSX.Element => (
       cleanup={['title']}
       svg={hollow_run_icon}
       accessibilityLabel={'Run'}
-      width="15px"
+      width="20px"
       className="centeredSvgIcon"
     />
   </StyledSavedScriptsButton>
