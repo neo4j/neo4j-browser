@@ -26,11 +26,15 @@ import {
   SavedScriptsButtonWrapper,
   SavedScriptsInput,
   SavedScriptsListItemDisplayName,
-  SavedScriptsListItemMain
+  SavedScriptsListItemMain,
+  ContextMenuHoverParent,
+  ContextMenu,
+  ContextMenuContainer,
+  ContextMenuItem,
+  Separator
 } from './styled'
 import { Favorite } from 'shared/modules/favorites/favoritesDuck'
 import { getScriptDisplayName } from './utils'
-import styled from 'styled-components'
 import { NavIcon } from 'browser-components/icons/Icons'
 
 interface SavedScriptsListItemProps {
@@ -67,7 +71,7 @@ function SavedScriptsListItem({
   )
   const nameBlurRef = useCustomBlur(doneEditing)
   const overlayBlurRef = useCustomBlur(() => setShowOverlay(false))
-  const drag = useDrag({
+  const dragAndDropRef = useDrag({
     item: { id: script.id, type: 'script' }
   })[1]
   const [showOverlay, setShowOverlay] = useState(false)
@@ -75,11 +79,13 @@ function SavedScriptsListItem({
   const canRunScript = !script.not_executable && !isEditing
 
   return (
-    <span ref={drag}>
+    <ContextMenuHoverParent
+      ref={dragAndDropRef}
+      stayVisible={showOverlay || isSelected}
+    >
       <SavedScriptsListItemMain
         data-testid="savedScriptListItem"
         isSelected={isSelected}
-        stayVisible={showOverlay || isSelected}
         ref={nameBlurRef}
         onClick={onClick}
       >
@@ -102,86 +108,62 @@ function SavedScriptsListItem({
           </SavedScriptsListItemDisplayName>
         )}
         <SavedScriptsButtonWrapper>
-          <OverlayContainer
-            className="saved-scripts-hidden-more-info"
+          <ContextMenuContainer
             onClick={toggleOverlay}
             data-testid={`navicon-${displayName}`}
           >
             <NavIcon />
             {showOverlay && (
-              <Overlay ref={overlayBlurRef}>
+              <ContextMenu ref={overlayBlurRef}>
                 {removeScript && (
-                  <Item data-testid="contextMenuDelete" onClick={removeScript}>
+                  <ContextMenuItem
+                    data-testid="contextMenuDelete"
+                    onClick={removeScript}
+                  >
                     Delete
-                  </Item>
+                  </ContextMenuItem>
                 )}
                 {removeScript && <Separator />}
                 {renameScript && (
-                  <Item data-testid="contextMenuRename" onClick={beginEditing}>
+                  <ContextMenuItem
+                    data-testid="contextMenuRename"
+                    onClick={beginEditing}
+                  >
                     Rename
-                  </Item>
+                  </ContextMenuItem>
                 )}
                 {
-                  <Item data-testid="contextMenuEdit" onClick={selectScript}>
+                  <ContextMenuItem
+                    data-testid="contextMenuEdit"
+                    onClick={selectScript}
+                  >
                     Edit content
-                  </Item>
+                  </ContextMenuItem>
                 }
                 {canRunScript && (
-                  <Item data-testid="contextMenuRun" onClick={execScript}>
+                  <ContextMenuItem
+                    data-testid="contextMenuRun"
+                    onClick={execScript}
+                  >
                     Run
-                  </Item>
+                  </ContextMenuItem>
                 )}
                 {duplicateScript && (
-                  <Item
+                  <ContextMenuItem
                     data-testid="contextMenuDuplicate"
                     onClick={duplicateScript}
                   >
                     Duplicate
-                  </Item>
+                  </ContextMenuItem>
                 )}
-              </Overlay>
+              </ContextMenu>
             )}
-          </OverlayContainer>
+          </ContextMenuContainer>
           {canRunScript && <RunButton onClick={execScript} />}
         </SavedScriptsButtonWrapper>
       </SavedScriptsListItemMain>
-    </span>
+    </ContextMenuHoverParent>
   )
 }
-
-const OverlayContainer = styled.span`
-  position: relative;
-`
-
-const Overlay = styled.div`
-  color: ${props => props.theme.primaryText};
-  padding-top: 5px;
-  padding-bottom: 5px;
-  position: absolute;
-  width: 156px;
-  left: -156px;
-  top: -3px;
-  z-index: 999;
-  border: 1px solid transparent;
-  background-color: ${props => props.theme.secondaryBackground};
-  border: ${props => props.theme.frameBorder};
-
-  box-shadow: 0px 0px 2px rgba(52, 58, 67, 0.1),
-    0px 1px 2px rgba(52, 58, 67, 0.08), 0px 1px 4px rgba(52, 58, 67, 0.08);
-  border-radius: 2px;
-`
-const Item = styled.div`
-  cursor: pointer;
-  width: 100%;
-  padding-left: 5px;
-
-  &:hover {
-    background-color: ${props => props.theme.primaryBackground};
-  }
-`
-
-const Separator = styled.div`
-  border-bottom: 1px solid rgb(77, 74, 87, 0.3);
-`
 
 export default SavedScriptsListItem

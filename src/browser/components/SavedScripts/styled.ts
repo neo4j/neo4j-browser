@@ -20,7 +20,6 @@ export const FolderNameWrapper = styled.span`
 `
 
 export const SavedScriptsListItemMain = styled.div<{
-  stayVisible?: boolean
   isSelected?: boolean
 }>`
   padding: 5px 3px;
@@ -36,14 +35,6 @@ export const SavedScriptsListItemMain = styled.div<{
   &:hover {
     color: inherit;
     background-color: ${props => props.theme.hoverBackground};
-  }
-
-  & .saved-scripts-hidden-more-info {
-    visibility: ${props => (props.stayVisible ? 'visible' : 'hidden')};
-  }
-
-  &:hover .saved-scripts-hidden-more-info {
-    visibility: visible;
   }
 `
 
@@ -138,4 +129,49 @@ export const SavedScriptsInput = styled.input`
   background: transparent;
   font-weight: normal;
   margin-right: 5px;
+`
+
+export const ContextMenuContainer = styled.span`
+  position: relative;
+`
+
+export const ContextMenuHoverParent = styled.span<{ stayVisible?: boolean }>`
+  ${ContextMenuContainer} {
+    visibility: ${props => (props.stayVisible ? 'visible' : 'hidden')};
+  }
+
+  &:hover ${ContextMenuContainer} {
+    visibility: visible;
+  }
+`
+
+export const ContextMenu = styled.div`
+  color: ${props => props.theme.primaryText};
+  padding-top: 5px;
+  padding-bottom: 5px;
+  position: absolute;
+  width: 156px;
+  left: -156px;
+  top: -3px;
+  z-index: 999;
+  border: 1px solid transparent;
+  background-color: ${props => props.theme.secondaryBackground};
+  border: ${props => props.theme.frameBorder};
+
+  box-shadow: 0px 0px 2px rgba(52, 58, 67, 0.1),
+    0px 1px 2px rgba(52, 58, 67, 0.08), 0px 1px 4px rgba(52, 58, 67, 0.08);
+  border-radius: 2px;
+`
+export const ContextMenuItem = styled.div`
+  cursor: pointer;
+  width: 100%;
+  padding-left: 5px;
+
+  &:hover {
+    background-color: ${props => props.theme.primaryBackground};
+  }
+`
+
+export const Separator = styled.div`
+  border-bottom: 1px solid rgb(77, 74, 87, 0.3);
 `

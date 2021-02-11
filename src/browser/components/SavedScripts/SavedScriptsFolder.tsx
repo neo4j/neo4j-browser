@@ -21,8 +21,8 @@ import React, { useState } from 'react'
 import { useDrop } from 'react-dnd'
 import { useCustomBlur, useNameUpdate } from './hooks'
 
-import { EditButton, RemoveButton } from './SavedScriptsButton'
 import {
+  NavIcon,
   FolderIcon,
   SavedScriptsCollapseMenuIcon,
   SavedScriptsExpandMenuRightIcon
@@ -35,7 +35,11 @@ import {
   SavedScriptsFolderMain,
   SavedScriptsInput,
   ChildrenContainer,
-  FolderNameWrapper
+  FolderNameWrapper,
+  ContextMenuHoverParent,
+  ContextMenu,
+  ContextMenuContainer,
+  ContextMenuItem
 } from './styled'
 import { Folder } from 'shared/modules/favorites/foldersDuck'
 
@@ -84,8 +88,30 @@ function SavedScriptsFolder({
     }
   })[1]
 
+  const [showOverlay, setShowOverlay] = useState(false)
+  const overlayBlurRef = useCustomBlur(() => setShowOverlay(false))
+  const toggleOverlay = () => setShowOverlay(t => !t)
+  const contextMenuContent = [
+    renameFolder && (
+      <ContextMenuItem data-testid="contextMenuRename" onClick={beginEditing}>
+        Rename folder
+      </ContextMenuItem>
+    ),
+    removeFolder && (
+      <ContextMenuItem
+        data-testid="contextMenuRemove"
+        onClick={() => removeFolder(folder)}
+      >
+        Delete folder
+      </ContextMenuItem>
+    )
+  ].filter(defined => defined)
+
   return (
-    <div ref={drop} data-testid={`savedScriptsFolder-${folder.name}`}>
+    <ContextMenuHoverParent
+      ref={drop}
+      data-testid={`savedScriptsFolder-${folder.name}`}
+    >
       <SavedScriptsFolderMain>
         <SavedScriptsFolderHeader title={folder.name} ref={blurRef}>
           {isEditing ? (
@@ -114,17 +140,24 @@ function SavedScriptsFolder({
             </SavedScriptsFolderLabel>
           )}
           <SavedScriptsButtonWrapper>
-            {removeFolder && isEditing && (
-              <RemoveButton onClick={() => removeFolder(folder)} />
-            )}
-            {renameFolder && !isEditing && (
-              <EditButton onClick={beginEditing} />
+            {contextMenuContent.length && (
+              <ContextMenuContainer
+                onClick={toggleOverlay}
+                data-testid={`navicon-${folder.name}`}
+              >
+                <NavIcon />
+                {showOverlay && (
+                  <ContextMenu ref={overlayBlurRef}>
+                    {contextMenuContent}
+                  </ContextMenu>
+                )}
+              </ContextMenuContainer>
             )}
           </SavedScriptsButtonWrapper>
         </SavedScriptsFolderHeader>
         <ChildrenContainer> {expanded && children}</ChildrenContainer>
       </SavedScriptsFolderMain>
-    </div>
+    </ContextMenuHoverParent>
   )
 }
 
