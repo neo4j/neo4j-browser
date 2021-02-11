@@ -77,6 +77,7 @@ function SavedScriptsListItem({
   return (
     <span ref={drag}>
       <SavedScriptsListItemMain
+        data-testid="savedScriptListItem"
         isSelected={isSelected}
         stayVisible={showOverlay || isSelected}
         ref={nameBlurRef}

@@ -28,12 +28,8 @@ export const CYPHER_FILE_EXTENSION = '.cypher'
 
 export function exportFavoritesAsBigCypherFile(favorites: Favorite[]): void {
   const fileContent = favorites
-    .reduce(
-      (acc, curr) => `${acc}
-
-${curr.content}`,
-      ''
-    )
+    .map(favorite => favorite.content)
+    .join('\n\n')
     .trim()
 
   saveAs(

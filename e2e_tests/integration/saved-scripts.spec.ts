@@ -100,9 +100,10 @@ describe('Saved Scripts', () => {
       .click({ force: true })
     cy.get('[data-testid="savedScriptsButton-Remove"]').click()
     cy.get('[data-testid=expandFolder-fldr]').should('not.exist')
+    cy.get('[data-testid=drawerFavorites]').click()
   })
 
-  it('it can use bulk delte', () => {
+  it('it can use bulk delete', () => {
     cy.get('[data-testid=drawerFavorites]').click()
     cy.get('[data-testid=createNewFavorite]')
       .click()
