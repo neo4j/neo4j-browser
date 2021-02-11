@@ -256,6 +256,7 @@ export const DropdownItem = styled.a`
 `
 
 export const DropDownItemDivider = styled.hr`
+  border-top: ${props => props.theme.inFrameBorder};
   margin: 0;
 `
 
