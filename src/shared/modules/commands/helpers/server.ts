@@ -21,7 +21,7 @@
 import { getCommandAndParam } from 'services/commandUtils'
 import * as connections from 'shared/modules/connections/connectionsDuck'
 import { add as addFrameAction } from 'shared/modules/stream/streamDuck'
-import { UnknownCommandError, getErrorMessage } from 'services/exceptions'
+import { UnknownCommandError } from 'services/exceptions'
 import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
 
 export function handleServerCommand(action: any, put: any, store: any) {
@@ -48,7 +48,7 @@ export function handleServerCommand(action: any, put: any, store: any) {
   return {
     ...action,
     type: 'error',
-    error: { message: getErrorMessage(UnknownCommandError(action.cmd)) }
+    error: { message: UnknownCommandError(action.cmd).message }
   }
 }
 

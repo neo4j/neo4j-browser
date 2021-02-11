@@ -80,7 +80,10 @@ export const postCancelTransactionMessage = (): Action => {
   }
 }
 
-export const boltConnectionErrorMessage = (error: Error): AnyAction => {
+export const boltConnectionErrorMessage = (error: {
+  code: string
+  message: string
+}): AnyAction => {
   return {
     type: BOLT_CONNECTION_ERROR_MESSAGE,
     error
