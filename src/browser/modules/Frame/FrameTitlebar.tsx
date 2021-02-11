@@ -389,9 +389,7 @@ const mapDispatchToProps = (
 ) => {
   return {
     newFavorite: (cmd: string) => {
-      const id = uuid.v4()
-      dispatch(addFavorite(cmd, id))
-      dispatch(sidebar.setDraftScript(cmd, 'favorites', id))
+      dispatch(addFavorite(cmd))
     },
     newProjectFile: (cmd: string) => {
       dispatch(sidebar.setDraftScript(cmd, 'project files'))

@@ -18,13 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, {
-  useState,
-  Dispatch,
-  useEffect,
-  useRef,
-  useCallback
-} from 'react'
+import React, { useState, Dispatch, useEffect, useRef } from 'react'
 import { Action } from 'redux'
 import SVGInline from 'react-svg-inline'
 import { connect } from 'react-redux'
