@@ -75,9 +75,9 @@ export const UNKNOWN = 'UNKNOWN'
 export const SIGNED_IN = 'SIGNED_IN'
 export const SIGNED_OUT = 'SIGNED_OUT'
 
-const initialState: any = null
-const initialConsentState = { consented: false, optedOut: false }
-const initialMetadataState = {
+export const initialState: any = null
+export const initialConsentState = { consented: false, optedOut: false }
+export const initialMetadataState = {
   serviceStatus: UNKNOWN,
   userAuthStatus: SIGNED_OUT,
   key: null,

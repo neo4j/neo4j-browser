@@ -95,7 +95,7 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          send('cypher', requestId),
+          send(requestId),
           frames.add({ ...action, type: 'cypher' } as any),
           updateQueryResult(requestId, BoltConnectionError(), 'error'),
           commands.unsuccessfulCypher(cmd),
@@ -149,7 +149,7 @@ describe('commandsDuck', () => {
           {
             ...updateQueryResult(
               'id',
-              { result: { x: 2 }, type: 'param' },
+              { result: { x: 2 }, type: 'param' } as any,
               'success'
             ),
             id: undefined
@@ -222,7 +222,7 @@ describe('commandsDuck', () => {
           {
             ...updateQueryResult(
               'id',
-              { result: { x: 2, y: 3 }, type: 'params' },
+              { result: { x: 2, y: 3 }, type: 'params' } as any,
               'success'
             ),
             id: undefined
@@ -413,7 +413,7 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          send('cypher', requestId),
+          send(requestId),
           frames.add({ ...action, type: 'cypher' } as any),
           updateQueryResult(requestId, BoltConnectionError(), 'error'),
           commands.unsuccessfulCypher(cmd),

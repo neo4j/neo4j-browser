@@ -36,6 +36,7 @@ import {
 import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
 import { connect } from 'react-redux'
 import { map, take } from 'lodash-es'
+import { GlobalState } from 'shared/globalState'
 
 type ExpandableContentState = any
 
@@ -122,7 +123,7 @@ export class CodeViewComponent extends Component<any> {
   }
 }
 
-export const CodeView = connect(state => ({
+export const CodeView = connect((state: GlobalState) => ({
   maxFieldItems: getMaxFieldItems(state)
 }))(CodeViewComponent)
 

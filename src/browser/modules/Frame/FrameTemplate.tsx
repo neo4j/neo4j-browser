@@ -35,7 +35,7 @@ type FrameTemplateProps = {
   contents: JSX.Element | null | string
   header?: Frame
   className?: string
-  onResize?: (fullscreen: boolean, collapsed: boolean, height?: number) => void
+  onResize?: (fullscreen: boolean, collapsed: boolean, height: number) => void
   numRecords?: number
   getRecords?: () => any
   visElement?: any

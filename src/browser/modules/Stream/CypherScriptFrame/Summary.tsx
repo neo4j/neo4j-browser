@@ -29,7 +29,8 @@ import {
 import { MessageArea, PaddedStatsBar } from './styled'
 import { allowlistedMultiCommands } from 'shared/modules/commands/commandsDuck'
 import { Status } from 'shared/modules/requests/requestsDuck'
-import { Request } from 'shared/modules/requests/requestsDuck'
+import { BrowserRequest } from 'shared/modules/requests/requestsDuck'
+import { BrowserError } from 'services/exceptions'
 
 const ucFirst = (str: string): string => str[0].toUpperCase() + str.slice(1)
 type GenericSummaryProps = { status: Status }
@@ -85,7 +86,7 @@ const GenericSummary = ({
 
 interface CypherSummaryProps {
   status: Status
-  request: Request
+  request: BrowserRequest
 }
 
 export const CypherSummary = ({
@@ -112,8 +113,8 @@ export const CypherSummary = ({
       )
     case 'error':
       const fullError = errorMessageFormater(
-        request.result.code,
-        request.result.message
+        (request?.result as BrowserError)?.code,
+        (request?.result as BrowserError)?.message
       )
       return (
         <PaddedStatsBar>
@@ -128,7 +129,7 @@ export const CypherSummary = ({
 
 interface SummaryProps {
   status: Status
-  request: Request
+  request: BrowserRequest
 }
 
 export const Summary = ({
@@ -156,7 +157,8 @@ export const Summary = ({
         <PaddedStatsBar>
           <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>
           <MessageArea>
-            {(request.result || {}).message || 'Unknown error'}
+            {((request.result || {}) as BrowserError).message ||
+              'Unknown error'}
           </MessageArea>
         </PaddedStatsBar>
       )

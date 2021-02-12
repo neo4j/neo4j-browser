@@ -33,6 +33,7 @@ import {
   getConnectionTimeout
 } from 'shared/modules/settings/settingsDuck'
 import { inWebEnv, USER_CLEAR, APP_START } from 'shared/modules/app/appDuck'
+import { GlobalState } from 'shared/globalState'
 
 export const NAME = 'connections'
 export const SET_ACTIVE = 'connections/SET_ACTIVE'
@@ -63,7 +64,7 @@ export const CONNECTED_STATE = 1
 export const PENDING_STATE = 2
 export const CONNECTING_STATE = 3
 
-type ConnectionReduxState = {
+export type ConnectionReduxState = {
   allConnectionIds: string[]
   connectionsById: Record<string, Connection>
   activeConnection: string | null
@@ -93,8 +94,6 @@ export type Connection = {
   requestedUseDb?: string
   restApi?: string
 }
-
-type GlobalState = { [NAME]: ConnectionReduxState }
 
 const initialState: ConnectionReduxState = {
   allConnectionIds: [],

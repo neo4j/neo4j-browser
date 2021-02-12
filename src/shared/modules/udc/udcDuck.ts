@@ -116,7 +116,7 @@ const getCompanies = (state: any) => {
 const getEvents = (state: any) => state[NAME].events || initialState.events
 export const getUuid = (state: any) => state[NAME].uuid || initialState.uuid
 
-const initialState = {
+export const initialState = {
   uuid: v4(),
   created_at: Math.round(Date.now() / 1000),
   client_starts: 0,

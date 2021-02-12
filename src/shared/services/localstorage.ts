@@ -19,12 +19,23 @@
  */
 
 import { Middleware } from 'redux'
+import { GlobalState } from 'shared/globalState'
 import { shouldRetainConnectionCredentials } from '../modules/dbMeta/dbMetaDuck'
-import { GlobalState } from '../modules/stream/streamDuck'
 
 export const keyPrefix = 'neo4j.'
 let storage = window.localStorage
-const keys: string[] = []
+
+type key =
+  | 'connections'
+  | 'settings'
+  | 'history'
+  | 'documents'
+  | 'folders'
+  | 'grass'
+  | 'syncConsent'
+  | 'udc'
+  | 'experimentalFeatures'
+const keys: key[] = []
 
 export function getItem(key: string): Record<string, unknown> | undefined {
   try {
@@ -92,7 +103,7 @@ export function createReduxMiddleware(): Middleware {
   }
 }
 
-export function applyKeys(...newKeys: string[]): void {
+export function applyKeys(...newKeys: key[]): void {
   keys.push(...newKeys)
 }
 export const setStorage = (s: Storage): void => {

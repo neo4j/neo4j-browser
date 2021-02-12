@@ -89,7 +89,7 @@ export class WarningsView extends Component<any> {
   }
 }
 
-export class WarningsStatusbar extends Component {
+export class WarningsStatusbar extends Component<any> {
   shouldComponentUpdate() {
     return false
   }

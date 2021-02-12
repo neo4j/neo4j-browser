@@ -28,6 +28,7 @@ import { Bus } from 'suber'
 import Monaco from '../Editor/Monaco'
 import FrameTemplate from '../Frame/FrameTemplate'
 import { StyledFrameBody, StyledFrameContents } from '../Frame/styled'
+import { GlobalState } from 'shared/globalState'
 import {
   commandSources,
   executeCommand
@@ -36,7 +37,7 @@ import {
   codeFontLigatures,
   shouldEnableMultiStatementMode
 } from 'shared/modules/settings/settingsDuck'
-import { Frame, GlobalState } from 'shared/modules/stream/streamDuck'
+import { Frame } from 'shared/modules/stream/streamDuck'
 
 interface EditFrameProps {
   bus: Bus
