@@ -51,7 +51,7 @@ interface BaseAsciiViewComponentProps {
 }
 interface AsciiViewComponentProps extends BaseAsciiViewComponentProps {
   maxFieldItems: number
-  updated: unknown
+  updated?: number
   maxRows: unknown
   _asciiSetColWidth?: number
   setParentState: { (state?: any): void }
@@ -149,9 +149,9 @@ export const AsciiView = connect((state: GlobalState) => ({
 interface AsciiStatusbarComponentProps {
   _asciiMaxColWidth?: number
   result: BrowserRequestResult
-  maxRows: unknown
-  maxFieldItems: unknown
-  updated: unknown
+  maxRows: number
+  maxFieldItems: number
+  updated?: number
   _asciiSetColWidth?: number
   setParentState: { (state: any): void }
 }

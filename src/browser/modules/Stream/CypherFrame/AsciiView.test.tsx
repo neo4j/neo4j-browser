@@ -32,7 +32,7 @@ describe('AsciiViews', () => {
     test('displays bodyMessage if no rows', () => {
       // Given
       const sps = jest.fn()
-      const result = {
+      const result: any = {
         records: [],
         summary: {
           resultAvailableAfter: neo4j.int(5),
@@ -42,7 +42,12 @@ describe('AsciiViews', () => {
 
       // When
       const { container } = render(
-        <AsciiView setParentState={sps} result={result} maxRows={5} />
+        <AsciiView
+          setParentState={sps}
+          result={result}
+          maxRows={5}
+          maxFieldItems={5}
+        />
       )
 
       // Then
@@ -51,7 +56,7 @@ describe('AsciiViews', () => {
     test('does not display bodyMessage if rows', () => {
       // Given
       const sps = jest.fn()
-      const result = {
+      const result: any = {
         records: [{ keys: ['x'], _fields: ['y'], get: () => 'y' }],
         summary: {
           resultAvailableAfter: neo4j.int(5),
@@ -61,7 +66,12 @@ describe('AsciiViews', () => {
 
       // When
       const { container } = render(
-        <AsciiView setParentState={sps} result={result} />
+        <AsciiView
+          setParentState={sps}
+          result={result}
+          maxRows={5}
+          maxFieldItems={5}
+        />
       )
 
       // Then
@@ -72,7 +82,7 @@ describe('AsciiViews', () => {
     test('displays statusBarMessage if no rows', () => {
       // Given
       const sps = jest.fn()
-      const result = {
+      const result: any = {
         records: [],
         summary: {
           resultAvailableAfter: neo4j.int(5),
@@ -82,7 +92,12 @@ describe('AsciiViews', () => {
 
       // When
       const { container } = render(
-        <AsciiStatusbar setParentState={sps} result={result} />
+        <AsciiStatusbar
+          setParentState={sps}
+          result={result}
+          maxRows={5}
+          maxFieldItems={5}
+        />
       )
 
       // Then
@@ -91,21 +106,21 @@ describe('AsciiViews', () => {
     test('displays statusBarMessage if no rows', () => {
       // Given
       const sps = jest.fn()
-      const result = {
+      const result: any = {
         records: [{ keys: ['x'], _fields: ['y'], get: () => 'y' }],
         summary: {
           resultAvailableAfter: neo4j.int(5),
           resultConsumedAfter: neo4j.int(5)
         }
       }
-      const serializedRows = [['x'], ['y']]
 
       // When
       const { container } = render(
         <AsciiStatusbar
           setParentState={sps}
           result={result}
-          _asciiSerializedRows={serializedRows}
+          maxRows={5}
+          maxFieldItems={5}
         />
       )
 

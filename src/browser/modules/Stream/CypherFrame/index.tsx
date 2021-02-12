@@ -81,7 +81,7 @@ import { requestExceedsVisLimits } from 'browser/modules/Stream/CypherFrame/help
 import { GlobalState } from 'shared/globalState'
 
 type CypherFrameBaseProps = {
-  frame: Frame & { isPinned: boolean }
+  frame: Frame
 }
 
 type CypherFrameProps = CypherFrameBaseProps & {

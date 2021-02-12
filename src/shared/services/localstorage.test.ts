@@ -61,7 +61,7 @@ describe('localstorage', () => {
 
   test('should fetch items from storage based on key input', () => {
     // Given
-    const keys = ['key1', 'key2', 'key3']
+    const keys: any[] = ['key1', 'key2', 'key3']
     const vals = {
       key1: 'hello',
       key2: [1, 2, 3]
