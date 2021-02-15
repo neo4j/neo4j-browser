@@ -22,6 +22,7 @@ import { Action } from 'redux'
 import { Epic } from 'redux-observable'
 import { v4 } from 'uuid'
 import { USER_CLEAR } from '../app/appDuck'
+import { GlobalState } from 'shared/globalState'
 import {
   AUTHORIZED,
   CLEAR_SYNC,
@@ -374,10 +375,7 @@ const actionsOfInterest = [
   UNPIN,
   UPDATE_FAVORITE_CONTENT
 ]
-export const trackReduxActionsEpic: Epic<
-  Action,
-  Record<string, unknown>
-> = action$ =>
+export const trackReduxActionsEpic: Epic<Action, GlobalState> = action$ =>
   action$
     .filter(action => actionsOfInterest.includes(action.type))
     .map(action => {
