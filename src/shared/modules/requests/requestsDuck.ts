@@ -34,7 +34,12 @@ export const REQUEST_STATUS_ERROR = 'error'
 export const REQUEST_STATUS_CANCELING = 'canceling'
 export const REQUEST_STATUS_CANCELED = 'canceled'
 
-type RequestStatus = 'pending' | 'success' | 'error' | 'canceling' | 'canceled'
+export type RequestStatus =
+  | 'pending'
+  | 'success'
+  | 'error'
+  | 'canceling'
+  | 'canceled'
 
 export type RequestState = Record<string, Request>
 type GlobalState = { [NAME]: RequestState }

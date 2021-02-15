@@ -22,19 +22,26 @@ import React from 'react'
 import Centered from 'browser-components/Centered'
 import { SpinnerContainer, StyledBodyMessage } from '../styled'
 import { Spinner } from 'browser-components/icons/Icons'
-import useTimer from 'browser/hooks/useTimer'
+import {
+  RequestStatus,
+  REQUEST_STATUS_CANCELED,
+  REQUEST_STATUS_CANCELING
+} from 'shared/modules/requests/requestsDuck'
 
-export function CancelView() {
-  const showClosingMessage = useTimer(1500)
-  return (
-    <Centered>
-      <SpinnerContainer>
-        <Spinner />
-      </SpinnerContainer>
-      <StyledBodyMessage>
-        <div>Terminating active query...</div>
-        {showClosingMessage && <div>and closing frame</div>}
-      </StyledBodyMessage>
-    </Centered>
-  )
+interface CancelViewProps {
+  requestStatus: RequestStatus
 }
+
+export const CancelView = ({ requestStatus }: CancelViewProps): JSX.Element => (
+  <Centered>
+    <SpinnerContainer>
+      {requestStatus === REQUEST_STATUS_CANCELING && <Spinner />}
+    </SpinnerContainer>
+    <StyledBodyMessage>
+      {requestStatus === REQUEST_STATUS_CANCELING && (
+        <div>Terminating active query...</div>
+      )}
+      {requestStatus === REQUEST_STATUS_CANCELED && <div>Query terminated</div>}
+    </StyledBodyMessage>
+  </Centered>
+)

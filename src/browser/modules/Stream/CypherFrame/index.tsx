@@ -397,7 +397,7 @@ export class CypherFrame extends Component<any, CypherFrameState> {
       requestStatus === REQUEST_STATUS_PENDING ? (
         this.getSpinner()
       ) : isCancelStatus(requestStatus) ? (
-        <CancelView />
+        <CancelView requestStatus={requestStatus} />
       ) : (
         this.getFrameContents(request, result, query)
       )

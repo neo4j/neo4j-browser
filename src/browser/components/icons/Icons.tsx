@@ -41,9 +41,9 @@ import arrowLeft1 from 'icons/arrow-left-1.svg'
 import arrowRight1 from 'icons/arrow-right-1.svg'
 import skipPrev from 'icons/skip-prev.svg'
 import file from 'icons/file.svg'
-import save_file from 'icons/save_file.svg'
 import save_favorite from 'icons/save_favorite.svg'
 import run_icon from 'icons/run_icon.svg'
+import stop_icon from 'icons/stop_icon.svg'
 import help from 'icons/help.svg'
 
 const inactive = `
@@ -52,9 +52,6 @@ const inactive = `
 `
 const green = `
   color: #4cd950;
-`
-const lightGreen = `
-  color: #61B88C
 `
 
 const successGreen = `
@@ -274,6 +271,7 @@ export const RefreshIcon = () => (
   <IconContainer icon={buttonRefreshArrow} width={12} />
 )
 export const RunIcon = () => <IconContainer icon={run_icon} width={12} />
+export const StopIcon = () => <IconContainer icon={stop_icon} width={12} />
 
 export const CloseIcon = () => <IconContainer icon={close} width={12} />
 export const UpIcon = () => <IconContainer className="sl-chevron-up" />
@@ -282,10 +280,7 @@ export const DoubleUpIcon = () => <IconContainer className="sl-double-up" />
 export const DoubleDownIcon = () => <IconContainer className="sl-double-down" />
 export const PinIcon = () => <IconContainer icon={pin} width={12} />
 export const SaveFavorite = () => (
-  <IconContainer inactiveStyle={lightBlue} icon={save_favorite} width={12} />
-)
-export const SaveFile = () => (
-  <IconContainer inactiveStyle={lightGreen} icon={save_file} width={12} />
+  <IconContainer icon={save_favorite} width={12} />
 )
 
 export const MinusIcon = () => (
