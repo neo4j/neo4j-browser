@@ -48,13 +48,13 @@ import { BrowserRequestResult } from 'shared/modules/requests/requestsDuck'
 
 interface BaseAsciiViewComponentProps {
   result: BrowserRequestResult
+  updated?: number
+  maxRows: unknown
+  _asciiSetColWidth?: string
+  setAsciiMaxColWidth: { (asciiMaxColWidth: number): void }
 }
 interface AsciiViewComponentProps extends BaseAsciiViewComponentProps {
   maxFieldItems: number
-  updated?: number
-  maxRows: unknown
-  _asciiSetColWidth?: number
-  setParentState: { (state?: any): void }
 }
 interface AsciiViewComponentState {
   serializedRows: string[]
@@ -119,8 +119,7 @@ export class AsciiViewComponent extends Component<
     this.setState({ serializedRows })
     const maxColWidth = asciitable.maxColumnWidth(serializedRows)
 
-    this.props.setParentState &&
-      this.props.setParentState({ _asciiMaxColWidth: maxColWidth })
+    this.props.setAsciiMaxColWidth(maxColWidth)
   }
 
   render(): JSX.Element {
@@ -146,14 +145,18 @@ export const AsciiView = connect((state: GlobalState) => ({
   maxFieldItems: getMaxFieldItems(state)
 }))(AsciiViewComponent)
 
-interface AsciiStatusbarComponentProps {
+interface BaseAsciiStatusbarComponentProps {
   _asciiMaxColWidth?: number
-  result: BrowserRequestResult
+  _asciiSetColWidth?: string
   maxRows: number
-  maxFieldItems: number
+  result: BrowserRequestResult
+  setAsciiSetColWidth: { (asciiSetColWidth: string): void }
   updated?: number
-  _asciiSetColWidth?: number
-  setParentState: { (state: any): void }
+}
+
+interface AsciiStatusbarComponentProps
+  extends BaseAsciiStatusbarComponentProps {
+  maxFieldItems: number
 }
 interface AsciiStatusbarComponentState {
   maxSliderWidth: number
@@ -210,7 +213,7 @@ export class AsciiStatusbarComponent extends Component<
   setColWidthChanged = (w: React.ChangeEvent<HTMLInputElement>): void => {
     const value = w.target.value
     this.setState({ maxColWidth: value })
-    this.props.setParentState({ _asciiSetColWidth: value })
+    this.props.setAsciiSetColWidth(value)
   }
 
   setMaxSliderWidth(w?: number): void {

@@ -101,7 +101,7 @@ export type CypherFrameState = {
   hasVis: boolean
   errors?: unknown
   _asciiMaxColWidth?: number
-  _asciiSetColWidth?: number
+  _asciiSetColWidth?: string
   _planExpand?: 'EXPAND' | 'COLLAPSE'
 }
 
@@ -303,11 +303,13 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
       >
         <Display if={this.state.openView === viewTypes.TEXT} lazy>
           <AsciiView
-            {...this.state}
+            _asciiSetColWidth={this.state._asciiSetColWidth}
             maxRows={this.props.maxRows}
             result={result}
             updated={this.props.request.updated}
-            setParentState={this.setState.bind(this)}
+            setAsciiMaxColWidth={_asciiMaxColWidth =>
+              this.setState({ _asciiMaxColWidth })
+            }
           />
         </Display>
         <Display if={this.state.openView === viewTypes.TABLE} lazy>
@@ -376,11 +378,14 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
       <StyledStatsBarContainer>
         <Display if={this.state.openView === viewTypes.TEXT} lazy>
           <AsciiStatusbar
-            {...this.state}
+            _asciiMaxColWidth={this.state._asciiMaxColWidth}
+            _asciiSetColWidth={this.state._asciiSetColWidth}
             maxRows={this.props.maxRows}
             result={result}
             updated={this.props.request.updated}
-            setParentState={this.setState.bind(this)}
+            setAsciiSetColWidth={_asciiSetColWidth =>
+              this.setState({ _asciiSetColWidth })
+            }
           />
         </Display>
         <Display if={this.state.openView === viewTypes.TABLE} lazy>

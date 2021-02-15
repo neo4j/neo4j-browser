@@ -157,8 +157,7 @@ export const Summary = ({
         <PaddedStatsBar>
           <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>
           <MessageArea>
-            {((request.result || {}) as BrowserError).message ||
-              'Unknown error'}
+            {(request.result as BrowserError)?.message || 'Unknown error'}
           </MessageArea>
         </PaddedStatsBar>
       )

@@ -43,7 +43,7 @@ describe('AsciiViews', () => {
       // When
       const { container } = render(
         <AsciiView
-          setParentState={sps}
+          setAsciiMaxColWidth={sps}
           result={result}
           maxRows={5}
           maxFieldItems={5}
@@ -67,7 +67,7 @@ describe('AsciiViews', () => {
       // When
       const { container } = render(
         <AsciiView
-          setParentState={sps}
+          setAsciiMaxColWidth={sps}
           result={result}
           maxRows={5}
           maxFieldItems={5}
@@ -93,7 +93,7 @@ describe('AsciiViews', () => {
       // When
       const { container } = render(
         <AsciiStatusbar
-          setParentState={sps}
+          setAsciiSetColWidth={sps}
           result={result}
           maxRows={5}
           maxFieldItems={5}
@@ -117,7 +117,7 @@ describe('AsciiViews', () => {
       // When
       const { container } = render(
         <AsciiStatusbar
-          setParentState={sps}
+          setAsciiSetColWidth={sps}
           result={result}
           maxRows={5}
           maxFieldItems={5}
