@@ -39,6 +39,7 @@ import { uniq } from 'lodash-es'
 import { Favorite } from 'shared/modules/favorites/favoritesDuck'
 import { useCustomBlur } from './hooks'
 import { AddIcon } from 'browser-components/icons/Icons'
+import uuid from 'uuid'
 
 interface SavedScriptsProps {
   title?: string
@@ -52,9 +53,9 @@ interface SavedScriptsProps {
   moveScript?: (scriptId: string, folderId: string) => void
   addScript?: (content: string) => void
   removeScripts?: (scripts: string[]) => void
-  renameFolder?: (folder: Folder, name: string) => void
-  removeFolder?: (folder: Folder) => void
-  createNewFolder?: () => void
+  renameFolder?: (folderId: string, name: string) => void
+  removeFolder?: (folderId: string) => void
+  createNewFolder?: (id?: string) => void
   createNewScript?: () => void
 }
 
@@ -95,6 +96,7 @@ export default function SavedScripts({
       .sort(sortScriptsAlfabethically)
   }))
 
+  const [unNamedFolder, setUnNamedFolder] = useState<string | null>(null)
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const blurRef = useCustomBlur(() => setSelectedIds([]))
 
@@ -144,7 +146,13 @@ export default function SavedScripts({
     removeScripts && ((id: string) => () => removeScripts([id]))
   const hasSelectedIds = !!selectedScripts.length
   const newFolderButton = createNewFolder && (
-    <NewFolderButton onClick={createNewFolder} />
+    <NewFolderButton
+      onClick={() => {
+        const id = uuid.v4()
+        setUnNamedFolder(id)
+        createNewFolder(id)
+      }}
+    />
   )
   return (
     <DndProvider backend={HTML5Backend}>
@@ -208,6 +216,8 @@ export default function SavedScripts({
             moveScript={moveScript}
             key={folder.id}
             selectedScriptIds={selectedIds}
+            forceEdit={folder.id === unNamedFolder}
+            onDoneEditing={() => setUnNamedFolder(null)}
           >
             {scripts.map(script => {
               const key = getUniqueScriptKey(script)

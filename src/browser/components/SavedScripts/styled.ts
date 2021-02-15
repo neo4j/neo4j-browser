@@ -129,6 +129,11 @@ export const SavedScriptsInput = styled.input`
   background: transparent;
   font-weight: normal;
   margin-right: 5px;
+
+  ::selection {
+    color: white;
+    background-color: ${props => props.theme.linkHover};
+  }
 `
 
 export const ContextMenuContainer = styled.span`

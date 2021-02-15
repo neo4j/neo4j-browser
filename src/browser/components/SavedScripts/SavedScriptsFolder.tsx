@@ -45,9 +45,11 @@ import { Folder } from 'shared/modules/favorites/foldersDuck'
 
 interface SavedScriptsFolderProps {
   folder: Folder
-  renameFolder?: (folder: Folder, name: string) => void
-  removeFolder?: (folder: Folder) => void
+  renameFolder?: (folderId: string, name: string) => void
+  removeFolder?: (folderId: string) => void
   moveScript?: (scriptId: string, folderId: string) => void
+  forceEdit: boolean
+  onDoneEditing: () => void
   selectedScriptIds: string[]
   children: JSX.Element[]
 }
@@ -58,6 +60,8 @@ function SavedScriptsFolder({
   renameFolder,
   removeFolder,
   selectedScriptIds,
+  forceEdit,
+  onDoneEditing,
   children
 }: SavedScriptsFolderProps): JSX.Element {
   const {
@@ -66,11 +70,14 @@ function SavedScriptsFolder({
     beginEditing,
     doneEditing,
     setNameValue
-  } = useNameUpdate(
-    folder.name,
-    () => renameFolder && renameFolder(folder, currentNameValue)
-  )
-  const blurRef = useCustomBlur(doneEditing)
+  } = useNameUpdate(folder.name, () => {
+    renameFolder && renameFolder(folder.id, currentNameValue)
+    onDoneEditing()
+  })
+  const blurRef = useCustomBlur(() => {
+    doneEditing()
+    onDoneEditing()
+  })
   const [expanded, setExpanded] = useState(false)
   const drop = useDrop<
     { id: string; type: string },
@@ -100,7 +107,7 @@ function SavedScriptsFolder({
     removeFolder && (
       <ContextMenuItem
         data-testid="contextMenuRemove"
-        onClick={() => removeFolder(folder)}
+        onClick={() => removeFolder(folder.id)}
       >
         Delete folder
       </ContextMenuItem>
@@ -114,13 +121,14 @@ function SavedScriptsFolder({
     >
       <SavedScriptsFolderMain>
         <SavedScriptsFolderHeader title={folder.name} ref={blurRef}>
-          {isEditing ? (
+          {isEditing || forceEdit ? (
             <SavedScriptsInput
               type="text"
               autoFocus
               onKeyPress={({ key }) => {
                 key === 'Enter' && doneEditing()
               }}
+              onFocus={event => event.target.select()}
               value={currentNameValue}
               onChange={e => setNameValue(e.target.value)}
               data-testid="editSavedScriptFolderName"
