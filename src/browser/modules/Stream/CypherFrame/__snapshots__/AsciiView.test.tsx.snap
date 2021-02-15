@@ -20,14 +20,14 @@ exports[`AsciiViews AsciiStatusbar displays statusBarMessage if no rows 2`] = `
     class="sc-jKJlTe ldyqSs"
   >
     <div
-      class="sc-brqgnP dGPVIQ"
+      class="sc-cMljjf nQSnd"
     >
       <div
-        class="sc-jAaTju kAgzui"
+        class="sc-jDwBTQ bVuagl"
       >
         Max column width:
         <input
-          class="sc-jDwBTQ bSiQjL"
+          class="sc-gPEVay lfFLvD"
           max="3"
           min="3"
           type="range"

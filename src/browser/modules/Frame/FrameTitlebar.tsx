@@ -36,9 +36,18 @@ import {
   BrowserRequest,
   REQUEST_STATUS_PENDING
 } from 'shared/modules/requests/requestsDuck'
-import { remove, pin, unpin, Frame } from 'shared/modules/stream/streamDuck'
+import {
+  Frame,
+  pin,
+  remove,
+  TRACK_COLLAPSE_TOGGLE,
+  TRACK_FULLSCREEN_TOGGLE,
+  TRACK_SAVE_AS_PROJECT_FILE,
+  unpin
+} from 'shared/modules/stream/streamDuck'
 import { sleep } from 'shared/services/utils'
 import { FrameButton } from 'browser-components/buttons'
+import ConfirmationDialog from 'browser-components/ConfirmationDialog'
 import Render from 'browser-components/Render'
 import { CSVSerializer } from 'services/serializer'
 import {
@@ -51,14 +60,15 @@ import {
   RunIcon,
   UpIcon,
   SaveFavorite,
-  SaveFile
+  StopIcon
 } from 'browser-components/icons/Icons'
 import {
-  DropdownList,
-  DropdownContent,
+  DottedLineHover,
   DropdownButton,
+  DropdownContent,
   DropdownItem,
-  DottedLineHover
+  DropDownItemDivider,
+  DropdownList
 } from '../Stream/styled'
 import {
   StyledFrameTitleBar,
@@ -103,6 +113,7 @@ type FrameTitleBarProps = FrameTitleBarBaseProps & {
   isRelateAvailable: boolean
   newFavorite: (cmd: string) => void
   newProjectFile: (cmd: string) => void
+  cancelQuery: (requestId: string) => void
   onCloseClick: (
     frameId: string,
     requestId: string,
@@ -112,10 +123,13 @@ type FrameTitleBarProps = FrameTitleBarBaseProps & {
   reRun: (obj: Frame, cmd: string) => void
   togglePinning: (id: string, isPinned: boolean) => void
   onTitlebarClick: (cmd: string) => void
+  trackFullscreenToggle: () => void
+  trackCollapseToggle: () => void
 }
 
 function FrameTitlebar(props: FrameTitleBarProps) {
   const [editorValue, setEditorValue] = useState(props.frame.cmd)
+  const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const editorRef = useRef<MonacoHandles>(null)
 
   /* When the frametype is changed the titlebar is unmounted
@@ -212,6 +226,14 @@ function FrameTitlebar(props: FrameTitleBarProps) {
     saveAs(blob, 'style.grass')
   }
 
+  /*
+   * Displaying the download icon even if there is no result or visualization
+   * prevents the run/stop icon from "jumping" as the download icon disappears
+   * and reappears when running fast queries.
+   */
+  const displayDownloadIcon = () =>
+    props?.frame?.type === 'cypher' || canExport()
+
   function canExport() {
     const { frame = {}, visElement } = props
 
@@ -266,14 +288,22 @@ function FrameTitlebar(props: FrameTitleBarProps) {
           </StyledFrameCommand>
         }
       />
-      <FrameButton
-        data-testid="rerunFrameButton"
-        title="Rerun"
-        onClick={() => run(editorValue)}
-      >
-        <RunIcon />
-      </FrameButton>
       <StyledFrameTitlebarButtonSection>
+        <FrameButton
+          data-testid="rerunFrameButton"
+          title="Rerun"
+          onClick={() =>
+            props.request?.status === REQUEST_STATUS_PENDING
+              ? props.cancelQuery(frame.requestId)
+              : run(editorValue)
+          }
+        >
+          {props.request?.status === REQUEST_STATUS_PENDING ? (
+            <StopIcon />
+          ) : (
+            <RunIcon />
+          )}
+        </FrameButton>
         <FrameButton
           title="Save as Favorite"
           data-testid="frame-Favorite"
@@ -283,50 +313,52 @@ function FrameTitlebar(props: FrameTitleBarProps) {
         >
           <SaveFavorite />
         </FrameButton>
-        <Render if={props.isRelateAvailable}>
-          <FrameButton
-            title="Save as project file"
-            onClick={() => {
-              props.newProjectFile(frame.cmd)
-            }}
-          >
-            <SaveFile />
-          </FrameButton>
-        </Render>
-        <Render if={canExport()}>
+        <Render if={displayDownloadIcon()}>
           <DropdownButton data-testid="frame-export-dropdown">
             <DownloadIcon />
-            <DropdownList>
-              <DropdownContent>
-                <Render if={hasData() && frame.type === 'cypher'}>
-                  <DropdownItem onClick={() => exportCSV(props.getRecords())}>
-                    Export CSV
-                  </DropdownItem>
-                  <DropdownItem onClick={() => exportJSON(props.getRecords())}>
-                    Export JSON
-                  </DropdownItem>
-                </Render>
-                <Render if={props.visElement}>
-                  <DropdownItem onClick={() => exportPNG()}>
-                    Export PNG
-                  </DropdownItem>
-                  <DropdownItem onClick={() => exportSVG()}>
-                    Export SVG
-                  </DropdownItem>
-                </Render>
-                <Render if={canExportTXT()}>
-                  <DropdownItem onClick={exportTXT}>Export TXT</DropdownItem>
-                </Render>
-                <Render if={hasData() && frame.type === 'style'}>
-                  <DropdownItem
-                    data-testid="exportGrassButton"
-                    onClick={() => exportGrass(props.getRecords())}
-                  >
-                    Export GraSS
-                  </DropdownItem>
-                </Render>
-              </DropdownContent>
-            </DropdownList>
+            <Render if={canExport()}>
+              <DropdownList>
+                <DropdownContent>
+                  <Render if={props.isRelateAvailable}>
+                    <DropdownItem
+                      onClick={() => props.newProjectFile(frame.cmd)}
+                    >
+                      Save as project file
+                    </DropdownItem>
+                    <DropDownItemDivider />
+                  </Render>
+                  <Render if={hasData() && frame.type === 'cypher'}>
+                    <DropdownItem onClick={() => exportCSV(props.getRecords())}>
+                      Export CSV
+                    </DropdownItem>
+                    <DropdownItem
+                      onClick={() => exportJSON(props.getRecords())}
+                    >
+                      Export JSON
+                    </DropdownItem>
+                  </Render>
+                  <Render if={props.visElement}>
+                    <DropdownItem onClick={() => exportPNG()}>
+                      Export PNG
+                    </DropdownItem>
+                    <DropdownItem onClick={() => exportSVG()}>
+                      Export SVG
+                    </DropdownItem>
+                  </Render>
+                  <Render if={canExportTXT()}>
+                    <DropdownItem onClick={exportTXT}>Export TXT</DropdownItem>
+                  </Render>
+                  <Render if={hasData() && frame.type === 'style'}>
+                    <DropdownItem
+                      data-testid="exportGrassButton"
+                      onClick={() => exportGrass(props.getRecords())}
+                    >
+                      Export GraSS
+                    </DropdownItem>
+                  </Render>
+                </DropdownContent>
+              </DropdownList>
+            </Render>
           </DropdownButton>
         </Render>
         <FrameButton
@@ -342,13 +374,19 @@ function FrameTitlebar(props: FrameTitleBarProps) {
         </FrameButton>
         <FrameButton
           title={props.fullscreen ? 'Close fullscreen' : 'Fullscreen'}
-          onClick={() => props.fullscreenToggle()}
+          onClick={() => {
+            props.fullscreenToggle()
+            props.trackFullscreenToggle()
+          }}
         >
           {fullscreenIcon}
         </FrameButton>
         <FrameButton
           title={props.collapse ? 'Expand' : 'Collapse'}
-          onClick={() => props.collapseToggle()}
+          onClick={() => {
+            props.collapseToggle()
+            props.trackCollapseToggle()
+          }}
         >
           {expandCollapseIcon}
         </FrameButton>
@@ -357,11 +395,35 @@ function FrameTitlebar(props: FrameTitleBarProps) {
             <SVGInline svg={controlsPlay} width="12px" />
           </FrameButton>
         </Render>
+        <ConfirmationDialog
+          confirmLabel="Yes, close frame"
+          onClose={() => {
+            setConfirmationDialogOpen(false)
+          }}
+          onConfirm={() => {
+            setConfirmationDialogOpen(false)
+            props.onCloseClick(frame.id, frame.requestId, props.request)
+          }}
+          open={confirmationDialogOpen}
+        >
+          <h2 style={{ fontWeight: 'normal' }}>Close frame?</h2>
+          <p>
+            Closing the frame cannot be undone.
+            <br />
+            You can access you query history by running <code>
+              :history
+            </code>{' '}
+            command.
+          </p>
+          <p>Do you want to close the frame anyway?</p>
+        </ConfirmationDialog>
         <FrameButton
           title="Close"
-          onClick={() =>
-            props.onCloseClick(frame.id, frame.requestId, props.request)
-          }
+          onClick={() => {
+            frame.isRerun
+              ? setConfirmationDialogOpen(true)
+              : props.onCloseClick(frame.id, frame.requestId, props.request)
+          }}
         >
           <CloseIcon />
         </FrameButton>
@@ -391,6 +453,16 @@ const mapDispatchToProps = (
     },
     newProjectFile: (cmd: string) => {
       dispatch(sidebar.setDraftScript(cmd, 'project files'))
+      dispatch({ type: TRACK_SAVE_AS_PROJECT_FILE })
+    },
+    trackFullscreenToggle: () => {
+      dispatch({ type: TRACK_FULLSCREEN_TOGGLE })
+    },
+    trackCollapseToggle: () => {
+      dispatch({ type: TRACK_COLLAPSE_TOGGLE })
+    },
+    cancelQuery: (requestId: string) => {
+      dispatch(cancelRequest(requestId))
     },
     onCloseClick: async (
       id: string,

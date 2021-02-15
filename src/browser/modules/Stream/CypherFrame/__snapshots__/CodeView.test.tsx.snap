@@ -6,7 +6,7 @@ exports[`CodeViews CodeStatusbar displays no statusBarMessage 1`] = `
     class="sc-ckVGcZ fsAzIa"
   >
     <div
-      class="sc-jhAzac cbymny"
+      class="sc-fBuWsC kYaBfc"
     />
   </div>
 </div>
@@ -18,7 +18,7 @@ exports[`CodeViews CodeStatusbar displays statusBarMessage 1`] = `
     class="sc-ckVGcZ fsAzIa"
   >
     <div
-      class="sc-jhAzac cbymny"
+      class="sc-fBuWsC kYaBfc"
     >
       Started streaming 1 records after 5 ms and completed after 10  ms.
     </div>
@@ -34,85 +34,85 @@ exports[`CodeViews CodeView displays request and response info if successful que
     class="sc-htpNat fsSTsy"
   >
     <table
-      class="sc-jDwBTQ iYfCXq"
+      class="sc-gPEVay jOwyJh"
     >
       <tbody
-        class="sc-gPEVay jLduWs"
+        class="sc-iRbamj tSApQ"
       >
         <tr
-          class="sc-jlyJG iSVHbw"
+          class="sc-gipzik eiuiza"
         >
           <td
-            class="sc-gipzik ctJpCp"
+            class="sc-csuQGl kaqKNb"
           >
             Server version
           </td>
           <td
-            class="sc-csuQGl CQhxV"
+            class="sc-Rmtcm gwGgYM"
           >
             xx1
           </td>
         </tr>
         <tr
-          class="sc-jlyJG iSVHbw"
+          class="sc-gipzik eiuiza"
         >
           <td
-            class="sc-gipzik ctJpCp"
+            class="sc-csuQGl kaqKNb"
           >
             Server address
           </td>
           <td
-            class="sc-csuQGl CQhxV"
+            class="sc-Rmtcm gwGgYM"
           >
             xx2
           </td>
         </tr>
         <tr
-          class="sc-jlyJG iSVHbw"
+          class="sc-gipzik eiuiza"
         >
           <td
-            class="sc-gipzik ctJpCp"
+            class="sc-csuQGl kaqKNb"
           >
             Query
           </td>
           <td
-            class="sc-csuQGl CQhxV"
+            class="sc-Rmtcm gwGgYM"
           >
             MATCH xx0
           </td>
         </tr>
         <tr
-          class="sc-jlyJG iSVHbw"
+          class="sc-gipzik eiuiza"
         >
           <td
-            class="sc-gipzik ctJpCp"
+            class="sc-csuQGl kaqKNb"
           >
             Summary
             <div
-              class="sc-iRbamj gVOsNP fa fa-caret-right"
+              class="sc-jlyJG xZgSE fa fa-caret-right"
               title="Expand section"
             />
           </td>
           <td
-            class="sc-csuQGl CQhxV"
+            class="sc-Rmtcm gwGgYM"
           >
             {,  "server": {,    "version": "xx1", ...
           </td>
         </tr>
         <tr
-          class="sc-jlyJG iSVHbw"
+          class="sc-gipzik eiuiza"
         >
           <td
-            class="sc-gipzik ctJpCp"
+            class="sc-csuQGl kaqKNb"
           >
             Response
             <div
-              class="sc-iRbamj gVOsNP fa fa-caret-right"
+              class="sc-jlyJG xZgSE fa fa-caret-right"
               title="Expand section"
             />
           </td>
           <td
-            class="sc-csuQGl CQhxV"
+            class="sc-Rmtcm gwGgYM"
           >
             [,  {,    "res": "xx3" ...
           </td>
