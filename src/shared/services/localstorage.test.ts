@@ -23,7 +23,7 @@ import * as ls from './localstorage'
 describe('localstorage', () => {
   test('getItem return items', () => {
     // Given
-    const givenKey = 'myKey'
+    const givenKey = 'myKey' as ls.key
     const givenVal = 'myVal'
     const storage = {
       getItem: (key: string) => {
@@ -61,7 +61,7 @@ describe('localstorage', () => {
 
   test('should fetch items from storage based on key input', () => {
     // Given
-    const keys: any[] = ['key1', 'key2', 'key3']
+    const keys = (['key1', 'key2', 'key3'] as unknown) as ls.key[]
     const vals = {
       key1: 'hello',
       key2: [1, 2, 3]
