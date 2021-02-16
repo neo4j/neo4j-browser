@@ -23,13 +23,13 @@ import Centered from 'browser-components/Centered'
 import { SpinnerContainer, StyledBodyMessage } from '../styled'
 import { Spinner } from 'browser-components/icons/Icons'
 import {
-  RequestStatus,
+  Status,
   REQUEST_STATUS_CANCELED,
   REQUEST_STATUS_CANCELING
 } from 'shared/modules/requests/requestsDuck'
 
 interface CancelViewProps {
-  requestStatus: RequestStatus
+  requestStatus: Status
 }
 
 export const CancelView = ({ requestStatus }: CancelViewProps): JSX.Element => (

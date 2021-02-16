@@ -197,7 +197,7 @@ function updateMetaForContext(state: any, meta: any, context: any) {
 }
 
 // Initial state
-const initialState = {
+export const initialState = {
   nodes: 0,
   relationships: 0,
   labels: [],

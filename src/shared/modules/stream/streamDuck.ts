@@ -27,6 +27,7 @@ import { UPDATE as SETTINGS_UPDATE } from '../settings/settingsDuck'
 import { Epic } from 'redux-observable'
 import { Action } from 'redux'
 import { FrameView } from 'shared/modules/stream/frameViewTypes'
+import { GlobalState } from 'shared/globalState'
 
 export const NAME = 'frames'
 export const ADD = 'frames/ADD'
@@ -40,12 +41,6 @@ export const SET_MAX_FRAMES = 'frames/SET_MAX_FRAMES'
 export const TRACK_SAVE_AS_PROJECT_FILE = 'frames/TRACK_SAVE_AS_PROJECT_FILE'
 export const TRACK_FULLSCREEN_TOGGLE = 'frames/TRACK_FULLSCREEN_TOGGLE'
 export const TRACK_COLLAPSE_TOGGLE = 'frames/TRACK_COLLAPSE_TOGGLE'
-
-export interface GlobalState {
-  [NAME]: FramesState
-  [key: string]: Record<string, any>
-  history: string[]
-}
 
 export function getFrame(state: GlobalState, id: string): FrameStack {
   return state[NAME].byId[id]
@@ -242,7 +237,7 @@ export interface FrameStack {
   isPinned: boolean
 }
 
-interface FramesState {
+export interface FramesState {
   allIds: string[]
   byId: { [key: string]: FrameStack }
   recentView: null | FrameView
@@ -347,7 +342,7 @@ export function unpin(id: string): UnpinFrameAction {
   }
 }
 
-interface SetRecentViewAction {
+export interface SetRecentViewAction {
   type: typeof SET_RECENT_VIEW
   view: FrameView
 }

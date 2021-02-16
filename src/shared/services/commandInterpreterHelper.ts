@@ -160,7 +160,7 @@ const availableCommands = [
               params
             })
           )
-          put(updateQueryResult(action.requestId, res, 'success'))
+          put(updateQueryResult(action.requestId, res as any, 'success'))
           return true
         })
         .catch(error => {

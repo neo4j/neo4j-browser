@@ -33,7 +33,7 @@ import * as editor from 'shared/modules/editor/editorDuck'
 import {
   cancel as cancelRequest,
   getRequest,
-  Request,
+  BrowserRequest,
   REQUEST_STATUS_PENDING
 } from 'shared/modules/requests/requestsDuck'
 import {
@@ -109,7 +109,7 @@ type FrameTitleBarBaseProps = {
 }
 
 type FrameTitleBarProps = FrameTitleBarBaseProps & {
-  request: Request | null
+  request: BrowserRequest | null
   isRelateAvailable: boolean
   newFavorite: (cmd: string) => void
   newProjectFile: (cmd: string) => void
@@ -117,7 +117,7 @@ type FrameTitleBarProps = FrameTitleBarBaseProps & {
   onCloseClick: (
     frameId: string,
     requestId: string,
-    request: Request | null
+    request: BrowserRequest | null
   ) => void
   onRunClick: () => void
   reRun: (obj: Frame, cmd: string) => void
@@ -467,7 +467,7 @@ const mapDispatchToProps = (
     onCloseClick: async (
       id: string,
       requestId: string,
-      request: Request | null
+      request: BrowserRequest | null
     ) => {
       if (request && request.status === REQUEST_STATUS_PENDING) {
         dispatch(cancelRequest(requestId))

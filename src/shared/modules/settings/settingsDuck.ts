@@ -19,6 +19,7 @@
  */
 import { get } from 'lodash-es'
 
+import { GlobalState } from 'shared/globalState'
 import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
 
 export const NAME = 'settings'
@@ -47,13 +48,13 @@ export const getBrowserSyncConfig = (
   state: any,
   host = getSettings(state).browserSyncDebugServer
 ) => browserSyncConfig(host || undefined)
-export const getMaxNeighbours = (state: any) =>
+export const getMaxNeighbours = (state: GlobalState): number =>
   state[NAME].maxNeighbours || initialState.maxNeighbours
-export const getMaxRows = (state: any) =>
+export const getMaxRows = (state: GlobalState): number =>
   state[NAME].maxRows || initialState.maxRows
-export const getMaxFieldItems = (state: any) =>
+export const getMaxFieldItems = (state: GlobalState): number =>
   get(state, [NAME, 'maxFieldItems'], initialState.maxFieldItems)
-export const getInitialNodeDisplay = (state: any) =>
+export const getInitialNodeDisplay = (state: GlobalState): number =>
   state[NAME].initialNodeDisplay || initialState.initialNodeDisplay
 export const getScrollToTop = (state: any) => state[NAME].scrollToTop
 export const shouldReportUdc = (state: any) =>
@@ -83,7 +84,7 @@ export const getConnectionTimeout = (state: any) =>
   state[NAME].connectionTimeout || initialState.connectionTimeout
 export const codeFontLigatures = (state: any) => state[NAME].codeFontLigatures
 
-const initialState = {
+export const initialState = {
   maxHistory: 30,
   theme: AUTO_THEME,
   initCmd: ':play start',

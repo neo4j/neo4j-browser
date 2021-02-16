@@ -18,15 +18,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Record as Neo4jRecord } from 'neo4j-driver'
 import { connect } from 'react-redux'
-import React, { Component } from 'react'
+import React, { Component, Dispatch } from 'react'
 import FrameTemplate from '../../Frame/FrameTemplate'
 import { CypherFrameButton } from 'browser-components/buttons'
 import Centered from 'browser-components/Centered'
 import {
   getRequest,
   REQUEST_STATUS_PENDING,
-  isCancelStatus
+  isCancelStatus,
+  BrowserRequest,
+  BrowserRequestResult
 } from 'shared/modules/requests/requestsDuck'
 import FrameSidebar from '../../Frame/FrameSidebar'
 import {
@@ -64,28 +67,51 @@ import {
   getMaxNeighbours,
   shouldAutoComplete
 } from 'shared/modules/settings/settingsDuck'
-import { setRecentView, getRecentView } from 'shared/modules/stream/streamDuck'
+import {
+  setRecentView,
+  getRecentView,
+  Frame,
+  SetRecentViewAction
+} from 'shared/modules/stream/streamDuck'
 import { CancelView } from './CancelView'
 import RelatableView, {
   RelatableStatusbar
 } from 'browser/modules/Stream/CypherFrame/relatable-view'
 import { requestExceedsVisLimits } from 'browser/modules/Stream/CypherFrame/helpers'
+import { GlobalState } from 'shared/globalState'
 
-type CypherFrameState = {
-  openView?: string
+type CypherFrameBaseProps = {
+  frame: Frame
+}
+
+type CypherFrameProps = CypherFrameBaseProps & {
+  autoComplete: boolean
+  initialNodeDisplay: number
+  maxNeighbours: number
+  maxRows: number
+  request: BrowserRequest
+  onRecentViewChanged: (view: viewTypes.FrameView) => void
+}
+
+export type CypherFrameState = {
+  openView?: viewTypes.FrameView
   fullscreen: boolean
   collapse: boolean
   frameHeight: number
   hasVis: boolean
-  errors: any
-  _asciiMaxColWidth: any
-  _asciiSetColWidth: any
-  _planExpand: any
+  errors?: unknown
+  _asciiMaxColWidth?: number
+  _asciiSetColWidth?: string
+  _planExpand?: 'EXPAND' | 'COLLAPSE'
 }
 
-export class CypherFrame extends Component<any, CypherFrameState> {
-  visElement: any = null
-  state: any = {
+export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
+  visElement: null | {
+    svgElement: unknown
+    graphElement: unknown
+    type: 'plan' | 'graph'
+  } = null
+  state: CypherFrameState = {
     openView: undefined,
     fullscreen: false,
     collapse: false,
@@ -93,14 +119,18 @@ export class CypherFrame extends Component<any, CypherFrameState> {
     hasVis: false
   }
 
-  changeView(view: any) {
+  changeView(view: viewTypes.FrameView): void {
     this.setState({ openView: view })
     if (this.props.onRecentViewChanged) {
       this.props.onRecentViewChanged(view)
     }
   }
 
-  onResize = (fullscreen: any, collapse: any, frameHeight: any) => {
+  onResize = (
+    fullscreen: boolean,
+    collapse: boolean,
+    frameHeight: number
+  ): void => {
     if (frameHeight) {
       this.setState({ fullscreen, collapse, frameHeight })
     } else {
@@ -108,7 +138,10 @@ export class CypherFrame extends Component<any, CypherFrameState> {
     }
   }
 
-  shouldComponentUpdate(props: any, state: CypherFrameState): boolean {
+  shouldComponentUpdate(
+    props: CypherFrameProps,
+    state: CypherFrameState
+  ): boolean {
     return (
       this.props.request.updated !== props.request.updated ||
       this.state.openView !== state.openView ||
@@ -122,7 +155,7 @@ export class CypherFrame extends Component<any, CypherFrameState> {
     )
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(): void {
     // When going from REQUEST_STATUS_PENDING to some other status
     // we want to show an initial view.
     // This happens on first render of a response and on re-runs
@@ -137,34 +170,34 @@ export class CypherFrame extends Component<any, CypherFrameState> {
       this.setState({ hasVis: false })
     }
 
-    // When frame re-use leads to result without visuzaliation
+    // When frame re-use leads to result without visualization
     if (!this.canShowViz() && this.state.openView === viewTypes.VISUALIZATION) {
       const view = initialView(this.props, {
         ...this.state,
-        openView: undefined //intial view was not meant to override another view
+        openView: undefined // initial view was not meant to override another view
       })
       if (view) this.setState({ openView: view })
     }
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     const view = initialView(this.props, this.state)
     if (view) this.setState({ openView: view })
   }
 
-  getRecords = () => {
-    if (this.props.request.result && this.props.request.result.records) {
+  getRecords = (): Neo4jRecord[] => {
+    if (this.props.request.result && 'records' in this.props.request.result) {
       return this.props.request.result.records
     }
     return []
   }
 
-  canShowViz = () =>
+  canShowViz = (): boolean =>
     !requestExceedsVisLimits(this.props.request) &&
     resultHasNodes(this.props.request) &&
     !this.state.errors
 
-  sidebar = () => (
+  sidebar = (): JSX.Element => (
     <FrameSidebar>
       <Render if={this.canShowViz()}>
         <CypherFrameButton
@@ -247,7 +280,7 @@ export class CypherFrame extends Component<any, CypherFrameState> {
     </FrameSidebar>
   )
 
-  getSpinner() {
+  getSpinner(): JSX.Element {
     return (
       <Centered>
         <SpinnerContainer>
@@ -257,7 +290,11 @@ export class CypherFrame extends Component<any, CypherFrameState> {
     )
   }
 
-  getFrameContents(request: any, result: any, query: any) {
+  getFrameContents(
+    request: BrowserRequest,
+    result: BrowserRequestResult,
+    query: string
+  ): JSX.Element {
     return (
       <StyledFrameBody
         data-testid="frame-loaded-contents"
@@ -266,11 +303,13 @@ export class CypherFrame extends Component<any, CypherFrameState> {
       >
         <Display if={this.state.openView === viewTypes.TEXT} lazy>
           <AsciiView
-            {...this.state}
+            _asciiSetColWidth={this.state._asciiSetColWidth}
             maxRows={this.props.maxRows}
             result={result}
             updated={this.props.request.updated}
-            setParentState={this.setState.bind(this)}
+            setAsciiMaxColWidth={_asciiMaxColWidth =>
+              this.setState({ _asciiMaxColWidth })
+            }
           />
         </Display>
         <Display if={this.state.openView === viewTypes.TABLE} lazy>
@@ -334,16 +373,19 @@ export class CypherFrame extends Component<any, CypherFrameState> {
     )
   }
 
-  getStatusbar(result: any) {
+  getStatusbar(result: BrowserRequestResult): JSX.Element {
     return (
       <StyledStatsBarContainer>
         <Display if={this.state.openView === viewTypes.TEXT} lazy>
           <AsciiStatusbar
-            {...this.state}
+            _asciiMaxColWidth={this.state._asciiMaxColWidth}
+            _asciiSetColWidth={this.state._asciiSetColWidth}
             maxRows={this.props.maxRows}
             result={result}
             updated={this.props.request.updated}
-            setParentState={this.setState.bind(this)}
+            setAsciiSetColWidth={_asciiSetColWidth =>
+              this.setState({ _asciiSetColWidth })
+            }
           />
         </Display>
         <Display if={this.state.openView === viewTypes.TABLE} lazy>
@@ -388,10 +430,13 @@ export class CypherFrame extends Component<any, CypherFrameState> {
     )
   }
 
-  render() {
-    const { frame = {}, request = {} } = this.props
+  render(): JSX.Element {
+    const { frame = {} as Frame, request = {} as BrowserRequest } = this.props
     const { cmd: query = '' } = frame
-    const { result = {}, status: requestStatus } = request
+    const {
+      result = {} as BrowserRequestResult,
+      status: requestStatus
+    } = request
 
     const frameContents =
       requestStatus === REQUEST_STATUS_PENDING ? (
@@ -414,7 +459,7 @@ export class CypherFrame extends Component<any, CypherFrameState> {
         header={frame}
         contents={frameContents}
         statusbar={statusBar}
-        numRecords={result && result.records ? result.records.length : 0}
+        numRecords={result && 'records' in result ? result.records.length : 0}
         getRecords={this.getRecords}
         onResize={this.onResize}
         visElement={
@@ -429,23 +474,22 @@ export class CypherFrame extends Component<any, CypherFrameState> {
   }
 }
 
-const mapStateToProps = (state: any, ownProps: any) => {
-  return {
-    maxRows: getMaxRows(state),
-    initialNodeDisplay: getInitialNodeDisplay(state),
-    maxNeighbours: getMaxNeighbours(state),
-    autoComplete: shouldAutoComplete(state),
-    recentView: getRecentView(state),
-    request: getRequest(state, ownProps.frame.requestId)
-  }
-}
+const mapStateToProps = (
+  state: GlobalState,
+  ownProps: CypherFrameBaseProps
+) => ({
+  maxRows: getMaxRows(state),
+  initialNodeDisplay: getInitialNodeDisplay(state),
+  maxNeighbours: getMaxNeighbours(state),
+  autoComplete: shouldAutoComplete(state),
+  recentView: getRecentView(state),
+  request: getRequest(state, ownProps.frame.requestId)
+})
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    onRecentViewChanged: (view: any) => {
-      dispatch(setRecentView(view))
-    }
+const mapDispatchToProps = (dispatch: Dispatch<SetRecentViewAction>) => ({
+  onRecentViewChanged: (view: viewTypes.FrameView) => {
+    dispatch(setRecentView(view))
   }
-}
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(CypherFrame)
