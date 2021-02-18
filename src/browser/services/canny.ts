@@ -24,9 +24,9 @@ export const CANNY_FEATURE_REQUEST_URL =
 
 declare global {
   interface Window {
-    Canny?: { (): void }
+    Canny?: { (command: string, options?: unknown): void }
     CannyIsLoaded?: boolean
-    attachEvent?: { (eventType: string, listener: () => void): void }
+    attachEvent?: typeof window.addEventListener
   }
 }
 

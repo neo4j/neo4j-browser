@@ -17,16 +17,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import semver from 'semver'
+
+import { CANNY_APP_ID, CANNY_FEATURE_REQUEST_URL } from 'browser-services/canny'
+import { GlobalState } from 'shared/globalState'
 import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 import DocumentItems from './DocumentItems'
-import { Drawer, DrawerBody, DrawerHeader } from 'browser-components/drawer'
-import styled from 'styled-components'
-const FullSizeDrawerBody = styled(DrawerBody)`
-  padding: 0;
-`
+import { Drawer, DrawerHeader } from 'browser-components/drawer'
+import {
+  CannyFeedbackIcon,
+  CannyNotificationsIcon
+} from 'browser-components/icons/Icons'
+import {
+  StyledFeedbackButton,
+  StyledFullSizeDrawerBody,
+  StyledHeaderContainer
+} from './styled'
 
 export const formatDocVersion = (v = ''): string => {
   if (!semver.valid(v)) {
@@ -103,44 +111,72 @@ const getReferences = (version: string, v: string) => {
   ]
   return { docs, other }
 }
+const useful = [
+  { name: 'Help by topic', command: ':help' },
+  { name: 'Cypher help', command: ':help cypher' },
+  { name: 'Available commands', command: ':help commands' },
+  { name: 'Keybindings', command: ':help keys' },
+  { name: 'Command history', command: ':history' },
+  { name: 'Show schema', command: 'CALL db.schema.visualization()' },
+  { name: 'System info', command: ':sysinfo' }
+]
+
+const guides = [
+  { name: 'Intro to Neo4j Browser', command: ':play intro' },
+  { name: 'Cypher basics', command: ':play cypher' },
+  { name: 'Queries with Cypher - Movies use case', command: ':play movies' },
+  {
+    name: 'More guides',
+    url: 'https://neo4j.com/graphgists/'
+  }
+]
 
 type DocumentsProps = { version: string; urlVersion: string }
-const Documents = ({ version, urlVersion }: DocumentsProps) => {
-  const useful = [
-    { name: 'Help by topic', command: ':help' },
-    { name: 'Cypher help', command: ':help cypher' },
-    { name: 'Available commands', command: ':help commands' },
-    { name: 'Keybindings', command: ':help keys' },
-    { name: 'Command history', command: ':history' },
-    { name: 'Show schema', command: 'CALL db.schema.visualization()' },
-    { name: 'System info', command: ':sysinfo' }
-  ]
 
-  const guides = [
-    { name: 'Intro to Neo4j Browser', command: ':play intro' },
-    { name: 'Cypher basics', command: ':play cypher' },
-    { name: 'Queries with Cypher - Movies use case', command: ':play movies' },
-    {
-      name: 'More guides',
-      url: 'https://neo4j.com/graphgists/'
+const Documents = ({ version, urlVersion }: DocumentsProps) => {
+  useEffect(() => {
+    window.Canny &&
+      window.Canny('initChangelog', {
+        appID: CANNY_APP_ID,
+        position: 'right',
+        align: 'top'
+      })
+
+    return () => {
+      window.Canny && window.Canny('closeChangelog')
     }
-  ]
+  }, [])
 
   const { docs, other } = getReferences(version, urlVersion)
   return (
     <Drawer id="db-documents">
-      <DrawerHeader>Help &amp; Learn</DrawerHeader>
-      <FullSizeDrawerBody>
+      <StyledHeaderContainer>
+        <DrawerHeader>Help &amp; Learn</DrawerHeader>
+        <a data-canny-changelog>
+          <CannyNotificationsIcon />
+        </a>
+      </StyledHeaderContainer>
+      <StyledFeedbackButton
+        color="twitter"
+        content={
+          <>
+            <CannyFeedbackIcon />
+            &nbsp; Send Feedback
+          </>
+        }
+        onClick={() => window.open(CANNY_FEATURE_REQUEST_URL, '_blank')}
+      ></StyledFeedbackButton>
+      <StyledFullSizeDrawerBody>
         <DocumentItems header="Useful commands" items={useful} />
         <DocumentItems header="Built-in guides" items={guides} />
         <DocumentItems header="Documentation links" items={docs} />
-        <DocumentItems header="Other Resources" items={other} />
-      </FullSizeDrawerBody>
+        <DocumentItems expandable header="Other Resources" items={other} />
+      </StyledFullSizeDrawerBody>
     </Drawer>
   )
 }
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: GlobalState) => {
   const version = getVersion(state)
   return {
     version,

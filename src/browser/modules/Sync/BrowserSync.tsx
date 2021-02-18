@@ -202,7 +202,7 @@ export class BrowserSync extends Component<any, BrowserSyncState> {
                     : 'Clear local data'
                 }
                 onClick={() => this.signOutAndClearLocalStorage()}
-                icon={<BinIcon suppressIconStyles="true" />}
+                icon={<BinIcon />}
                 buttonType="drawer"
               />
               <p>&nbsp;</p>
@@ -254,7 +254,7 @@ export class BrowserSync extends Component<any, BrowserSyncState> {
                 data-testid="clearLocalData"
                 label="Clear local data"
                 onClick={this.signOutAndClearLocalStorage.bind(this)}
-                icon={<BinIcon suppressIconStyles="true" />}
+                icon={<BinIcon />}
                 buttonType="drawer"
               />
             </DrawerSectionBody>

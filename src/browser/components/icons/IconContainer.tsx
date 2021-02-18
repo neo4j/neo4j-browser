@@ -18,8 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from 'react'
-import styled from 'styled-components'
+import React, { ReactNode } from 'react'
+import styled, {
+  CSSProperties,
+  FlattenSimpleInterpolation
+} from 'styled-components'
 import SVGInline from 'react-svg-inline'
 
 const StyledIconWrapper = ({
@@ -28,7 +31,10 @@ const StyledIconWrapper = ({
   isOpen,
   children,
   ...rest
-}: any) => {
+}: Exclude<
+  IconContainerProps,
+  'text' | 'regulateSize' | 'icon' | 'width' | 'title'
+>) => {
   const I = styled.i`
     ${isOpen ? activeStyle : inactiveStyle};
     &:hover {
@@ -45,43 +51,47 @@ const StyledText = styled.div`
   padding: 0;
 `
 
-type IconContainerState = any
+type IconContainerProps = {
+  activeStyle?: string | FlattenSimpleInterpolation
+  icon?: string
+  inactiveStyle?: string
+  isOpen?: boolean
+  regulateSize?: 1 | 2
+  text?: string
+  title?: string
+  width?: number
+  suppressIconStyles?: true | string
+  className?: string
+  style?: CSSProperties
+  children?: ReactNode
+}
 
-export class IconContainer extends Component<any, IconContainerState> {
-  constructor(props: {}) {
-    super(props)
-    this.state = {
-      mouseover: false
-    }
-  }
+export const IconContainer = (props: IconContainerProps): JSX.Element => {
+  const { text, regulateSize, icon, width, title, ...rest } = props
 
-  render() {
-    const { text, regulateSize, icon, width, title, ...rest } = this.props
+  const regulateSizeStyle = regulateSize
+    ? { fontSize: regulateSize + 'em' }
+    : undefined
 
-    const regulateSizeStyle = regulateSize
-      ? { fontSize: regulateSize + 'em' }
-      : null
+  const currentIcon = icon ? (
+    <StyledIconWrapper {...rest}>
+      <SVGInline
+        cleanup={['title']}
+        svg={icon}
+        accessibilityLabel={title}
+        width={width + 'px'}
+      />
+    </StyledIconWrapper>
+  ) : (
+    <StyledIconWrapper {...rest} style={regulateSizeStyle} />
+  )
 
-    const currentIcon = icon ? (
-      <StyledIconWrapper {...rest}>
-        <SVGInline
-          cleanup={['title']}
-          svg={icon}
-          accessibilityLabel={title}
-          width={width + 'px'}
-        />
-      </StyledIconWrapper>
-    ) : (
-      <StyledIconWrapper {...rest} style={regulateSizeStyle} />
-    )
-
-    return text ? (
-      <span>
-        {currentIcon}
-        <StyledText>{text}</StyledText>
-      </span>
-    ) : (
-      currentIcon
-    )
-  }
+  return text ? (
+    <span>
+      {currentIcon}
+      <StyledText>{text}</StyledText>
+    </span>
+  ) : (
+    currentIcon
+  )
 }
