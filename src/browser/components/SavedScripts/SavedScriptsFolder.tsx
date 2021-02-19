@@ -126,7 +126,10 @@ function SavedScriptsFolder({
               type="text"
               autoFocus
               onKeyPress={({ key }) => {
-                key === 'Enter' && doneEditing()
+                if (key === 'Enter') {
+                  doneEditing()
+                  onDoneEditing()
+                }
               }}
               onFocus={event => event.target.select()}
               value={currentNameValue}
