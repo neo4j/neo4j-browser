@@ -40,7 +40,7 @@ const mapFavoritesStateToProps = (state: any) => {
   return {
     folders,
     scripts,
-    title: 'Quick Scripts'
+    title: 'Favorites'
   }
 }
 

@@ -18,9 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { ReactFragment, ReactElement, Dispatch } from 'react'
-import { Action } from 'redux'
-import uuid from 'uuid'
+import React, { ReactFragment, ReactElement } from 'react'
 import { connect } from 'react-redux'
 import DatabaseDrawer from '../DBMSInfo/DBMSInfo'
 import DocumentsDrawer from './Documents'
@@ -30,25 +28,14 @@ import Favorites from './favorites'
 import StaticScripts from './static-scripts'
 import ProjectFilesDrawer from './ProjectFiles'
 import TabNavigation from 'browser-components/TabNavigation/Navigation'
-import { DrawerHeader } from 'browser-components/drawer'
-import NewSavedScript from './NewSavedScript'
 import BrowserSync from '../Sync/BrowserSync'
 import { isUserSignedIn } from 'shared/modules/sync/syncDuck'
-import {
-  addFavorite,
-  renameFavorite
-} from 'shared/modules/favorites/favoritesDuck'
 import { utilizeBrowserSync } from 'shared/modules/features/featuresDuck'
 import {
   PENDING_STATE,
   CONNECTED_STATE,
   DISCONNECTED_STATE
 } from 'shared/modules/connections/connectionsDuck'
-import {
-  getCurrentDraft,
-  getScriptDraftId,
-  setDraftScript
-} from 'shared/modules/sidebar/sidebarDuck'
 import { isRelateAvailable } from 'shared/modules/app/appDuck'
 
 import {
@@ -60,7 +47,8 @@ import {
   AboutIcon,
   ProjectFilesIcon
 } from 'browser-components/icons/Icons'
-import { defaultNameFromDisplayContent } from 'browser-components/SavedScripts'
+import { getCurrentDraft } from 'shared/modules/sidebar/sidebarDuck'
+import { DrawerHeader } from 'browser-components/drawer'
 
 interface SidebarProps {
   openDrawer: string
@@ -70,11 +58,7 @@ interface SidebarProps {
   syncConnected: boolean
   loadSync: boolean
   isRelateAvailable: boolean
-  addFavorite: (cmd: string) => void
-  renameFavorite: (id: string, content: string) => void
-  resetDraft: () => void
   scriptDraft: string | null
-  scriptDraftId: string | null
 }
 
 const Sidebar = ({
@@ -85,11 +69,7 @@ const Sidebar = ({
   syncConnected,
   loadSync,
   isRelateAvailable,
-  addFavorite,
-  renameFavorite,
-  scriptDraft,
-  resetDraft,
-  scriptDraftId
+  scriptDraft
 }: SidebarProps) => {
   const topNavItemsList = [
     {
@@ -115,27 +95,7 @@ const Sidebar = ({
       content: function FavoritesDrawer(): ReactFragment {
         return (
           <>
-            <DrawerHeader>Favorites</DrawerHeader>
-            {scriptDraft && (
-              <NewSavedScript
-                onSubmit={input => {
-                  if (
-                    input === defaultNameFromDisplayContent(scriptDraft) &&
-                    !scriptDraftId
-                  ) {
-                    addFavorite(scriptDraft)
-                  } else {
-                    scriptDraftId
-                      ? renameFavorite(scriptDraftId, input)
-                      : addFavorite(` //${input}\n${scriptDraft}`)
-                  }
-                  resetDraft()
-                }}
-                defaultName={defaultNameFromDisplayContent(scriptDraft)}
-                headerText={'Rename saved favorite'}
-                onCancel={resetDraft}
-              />
-            )}
+            <DrawerHeader> Local scripts </DrawerHeader>
             <Favorites />
             {showStaticScripts && <StaticScripts />}
           </>
@@ -230,23 +190,8 @@ const mapStateToProps = (state: any) => {
     loadSync: utilizeBrowserSync(state),
     showStaticScripts: state.settings.showSampleScripts,
     isRelateAvailable: isRelateAvailable(state),
-    scriptDraft: getCurrentDraft(state),
-    scriptDraftId: getScriptDraftId(state)
+    scriptDraft: getCurrentDraft(state)
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
-  return {
-    addFavorite: (cmd: string) => {
-      dispatch(addFavorite(cmd, uuid.v4()))
-    },
-    renameFavorite: (id: string, content: string) => {
-      dispatch(renameFavorite(id, content))
-    },
-    resetDraft: () => {
-      dispatch(setDraftScript(null, 'favorites'))
-    }
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Sidebar)
+export default connect(mapStateToProps)(Sidebar)

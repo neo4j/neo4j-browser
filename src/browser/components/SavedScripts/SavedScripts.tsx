@@ -164,7 +164,9 @@ export default function SavedScripts({
               <span>|</span>
               <SavedScriptsButtonWrapper>
                 <span style={{ fontSize: 12 }}>
-                  {selectedIds.length} selected
+                  <span style={{ marginRight: '5px' }}>
+                    {selectedIds.length} selected{' '}
+                  </span>
                   {exportScripts && (
                     <ExportButton
                       onClick={() => {

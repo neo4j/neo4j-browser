@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 export const SavedScriptsBody = styled.div`
   padding: 0 18px;
-  margin-bottom: 12px;
+  margin-bottom: 25px;
 `
 
 export const SavedScriptsHeader = styled.h5`
@@ -22,15 +22,18 @@ export const FolderNameWrapper = styled.span`
 export const SavedScriptsListItemMain = styled.div<{
   isSelected?: boolean
 }>`
-  padding: 5px 3px;
+  padding: 5px;
   display: flex;
   justify-content: space-between;
 
   background-color: ${props =>
     props.isSelected ? props.theme.hoverBackground : 'inherit'};
 
-  border-left: 3px solid
-    ${props => (props.isSelected ? '#68BDF4' : 'transparent')};
+  ${props =>
+    props.isSelected
+      ? `margin-left: -3px;
+border-left: 3px solid #68BDF4;`
+      : ''};
 
   &:hover {
     color: inherit;
@@ -45,6 +48,7 @@ export const SavedScriptsNewFavorite = styled.div`
   color: #bcc0c9;
   font-size: 13px;
   margin-left: 6px;
+  margin-top: 10px;
   transition: color ease-in-out 0.3s;
 
   &:hover {
@@ -66,7 +70,7 @@ export const SavedScriptsListItemDisplayName = styled.div`
 `
 
 export const SavedScriptsFolderMain = styled.div`
-  padding-bottom: 16px;
+  padding: 5px;
 `
 export const ChildrenContainer = styled.div`
   padding-left: 10px;

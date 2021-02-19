@@ -148,7 +148,7 @@ function SavedScriptsFolder({
             </SavedScriptsFolderLabel>
           )}
           <SavedScriptsButtonWrapper>
-            {contextMenuContent.length && (
+            {contextMenuContent.length > 0 && (
               <ContextMenuContainer
                 onClick={toggleOverlay}
                 data-testid={`navicon-${folder.name}`}
