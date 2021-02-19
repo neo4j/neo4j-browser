@@ -233,7 +233,7 @@ export const DropdownContent = styled.li`
   position: relative;
   background-color: ${props => props.theme.secondaryBackground};
   color: ${props => props.theme.secondaryButtonText};
-  width: 100px;
+  width: 135px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   border-radius: 6px;
   z-index: 1;
@@ -253,6 +253,11 @@ export const DropdownItem = styled.a`
     text-decoration: none;
     background-color: ${props => props.theme.secondaryButtonBackgroundHover};
   }
+`
+
+export const DropDownItemDivider = styled.hr`
+  border-top: ${props => props.theme.inFrameBorder};
+  margin: 0;
 `
 
 export const StyledRightPartial = styled.div`

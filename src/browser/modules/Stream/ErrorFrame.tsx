@@ -19,7 +19,6 @@
  */
 import React from 'react'
 import FrameTemplate from '../Frame/FrameTemplate'
-import * as e from 'services/exceptionMessages'
 import { createErrorObject, UnknownCommandError } from 'services/exceptions'
 import { errorMessageFormater } from './errorMessageFormater'
 import {
@@ -41,9 +40,9 @@ export const ErrorView = ({ frame }: any) => {
   if (
     !error.message &&
     errorCode &&
-    typeof (e as any)[errorCode] !== 'undefined'
+    typeof createErrorObject(errorCode as any, error) !== 'undefined'
   ) {
-    const eObj = createErrorObject(errorCode, error)
+    const eObj = createErrorObject(errorCode as any, error)
     errorContents = eObj.message
   }
   const fullError = errorMessageFormater(null, errorContents)

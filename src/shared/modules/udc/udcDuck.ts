@@ -18,8 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Action } from 'redux'
+import { Epic } from 'redux-observable'
 import { v4 } from 'uuid'
 import { USER_CLEAR } from '../app/appDuck'
+import { GlobalState } from 'shared/globalState'
 import {
   AUTHORIZED,
   CLEAR_SYNC,
@@ -30,7 +33,15 @@ import {
   getStoreId,
   isBeta
 } from 'shared/modules/dbMeta/dbMetaDuck'
-import { ADD, PIN, UNPIN, REMOVE } from 'shared/modules/stream/streamDuck'
+import {
+  ADD,
+  PIN,
+  REMOVE,
+  TRACK_COLLAPSE_TOGGLE,
+  TRACK_FULLSCREEN_TOGGLE,
+  TRACK_SAVE_AS_PROJECT_FILE,
+  UNPIN
+} from 'shared/modules/stream/streamDuck'
 import {
   CYPHER_SUCCEEDED,
   CYPHER_FAILED,
@@ -116,7 +127,7 @@ const getCompanies = (state: any) => {
 const getEvents = (state: any) => state[NAME].events || initialState.events
 export const getUuid = (state: any) => state[NAME].uuid || initialState.uuid
 
-const initialState = {
+export const initialState = {
   uuid: v4(),
   created_at: Math.round(Date.now() / 1000),
   client_starts: 0,
@@ -352,19 +363,22 @@ export const bootEpic = (action$: any, store: any) => {
 }
 
 const actionsOfInterest = [
-  PIN,
-  UNPIN,
-  REMOVE,
   ADD_FAVORITE,
+  LAST_GUIDE_SLIDE,
   LOAD_FAVORITES,
-  UPDATE_FAVORITE_CONTENT,
+  PIN,
   REMOVE_FAVORITE,
-  LAST_GUIDE_SLIDE
+  REMOVE,
+  TRACK_COLLAPSE_TOGGLE,
+  TRACK_FULLSCREEN_TOGGLE,
+  TRACK_SAVE_AS_PROJECT_FILE,
+  UNPIN,
+  UPDATE_FAVORITE_CONTENT
 ]
-export const trackReduxActionsEpic = (action$: any) =>
+export const trackReduxActionsEpic: Epic<Action, GlobalState> = action$ =>
   action$
-    .filter((action: any) => actionsOfInterest.includes(action.type))
-    .map((action: any) => {
+    .filter(action => actionsOfInterest.includes(action.type))
+    .map(action => {
       const [category, label] = action.type.split('/')
       return metricsEvent({ category, label })
     })

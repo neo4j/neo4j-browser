@@ -22,7 +22,7 @@ import neo4j, { Session } from 'neo4j-driver'
 import { v4 } from 'uuid'
 import { getGlobalDrivers } from './globalDrivers'
 import { buildTxFunctionByMode } from './boltHelpers'
-import { BoltConnectionError, createErrorObject } from '../exceptions'
+import { BoltConnectionError } from '../exceptions'
 
 const runningQueryRegister: Record<string, (cb?: () => void) => void> = {}
 
@@ -36,7 +36,7 @@ function _trackedTransaction(
 ): [string, Promise<unknown>] {
   const id = requestId || v4()
   if (!session) {
-    return [id, Promise.reject(createErrorObject(BoltConnectionError))]
+    return [id, Promise.reject(BoltConnectionError())]
   }
   const closeFn = (cb = (): void => undefined): void => {
     ;(session.close as any)(cb)
@@ -88,7 +88,7 @@ function _transaction(
   session: any,
   txMetadata = undefined
 ): Promise<unknown> {
-  if (!session) return Promise.reject(createErrorObject(BoltConnectionError))
+  if (!session) return Promise.reject(BoltConnectionError())
 
   const metadata = txMetadata ? { metadata: txMetadata } : undefined
   const txFn = buildTxFunctionByMode(session)

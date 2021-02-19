@@ -71,12 +71,13 @@ import {
   handleUpdateConfigCommand
 } from 'shared/modules/commands/helpers/config'
 import {
-  createErrorObject,
   UnknownCommandError,
   CouldNotFetchRemoteGuideError,
   FetchURLError,
   InvalidGrassError,
-  UnsupportedError
+  UnsupportedError,
+  DatabaseUnavailableError,
+  DatabaseNotFoundError
 } from 'services/exceptions'
 import {
   parseHttpVerbCommand,
@@ -159,7 +160,7 @@ const availableCommands = [
               params
             })
           )
-          put(updateQueryResult(action.requestId, res, 'success'))
+          put(updateQueryResult(action.requestId, res as any, 'success'))
           return true
         })
         .catch(error => {
@@ -205,10 +206,7 @@ const availableCommands = [
       try {
         const supportsMultiDb = await bolt.hasMultiDbSupport()
         if (!supportsMultiDb) {
-          throw createErrorObject(
-            UnsupportedError,
-            'No multi db support detected.'
-          )
+          throw UnsupportedError('No multi db support detected.')
         }
 
         const normalizedName = dbName.toLowerCase()
@@ -218,32 +216,12 @@ const availableCommands = [
           (db: any) => db.name.toLowerCase() === cleanDbName
         )
 
-        class UseDbError extends Error {
-          code: string
-          message: string
-
-          constructor(
-            { code, message }: { code: string; message: string },
-            ...params: any[]
-          ) {
-            super(...params)
-            this.code = code
-            this.message = message
-          }
-        }
-
         // Do we have a db with that name?
         if (!dbMeta) {
-          throw new UseDbError({
-            code: 'NotFound',
-            message: `A database with the "${dbName}" name could not be found.`
-          })
+          throw DatabaseNotFoundError({ dbName })
         }
         if (dbMeta.status !== 'online') {
-          throw new UseDbError({
-            code: 'DatabaseUnavailable',
-            message: `Database "${dbName}" is unavailable, its status is "${dbMeta.status}."`
-          })
+          throw DatabaseUnavailableError({ dbName, dbMeta })
         }
         put(useDb(cleanDbName))
         put(
@@ -295,10 +273,7 @@ const availableCommands = [
             useDb: getUseDb(store.getState()),
             ...action,
             type: 'error',
-            error: createErrorObject(
-              UnsupportedError,
-              'No multi db support detected.'
-            )
+            error: UnsupportedError('No multi db support detected.')
           })
         )
       }
@@ -324,10 +299,7 @@ const availableCommands = [
             useDb: getUseDb(store.getState()),
             ...action,
             type: 'error',
-            error: createErrorObject(
-              UnsupportedError,
-              'No multi db support detected.'
-            )
+            error: UnsupportedError('No multi db support detected.')
           })
         )
       }
@@ -599,7 +571,7 @@ const availableCommands = [
           frames.add({
             useDb: getUseDb(store.getState()),
             ...action,
-            error: createErrorObject(UnknownCommandError, action),
+            error: UnknownCommandError(action),
             type: 'error'
           })
         )
@@ -716,8 +688,7 @@ const availableCommands = [
               )
             })
             .catch(e => {
-              // @ts-expect-error ts-migrate(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
-              const error = new FetchURLError({ error: e.message })
+              const error = FetchURLError({ error: e.message })
               put(
                 frames.add({
                   useDb: getUseDb(store.getState()),
@@ -771,7 +742,7 @@ const availableCommands = [
           frames.add({
             useDb: getUseDb(store.getState()),
             ...action,
-            error: createErrorObject(InvalidGrassError, message),
+            error: InvalidGrassError(message),
             type: 'error'
           })
         )
@@ -843,7 +814,7 @@ ${param}`)
         frames.add({
           useDb: getUseDb(store.getState()),
           ...action,
-          error: createErrorObject(UnknownCommandError, action),
+          error: UnknownCommandError(action),
           type: 'error'
         })
       )

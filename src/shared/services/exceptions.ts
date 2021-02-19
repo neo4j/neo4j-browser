@@ -18,109 +18,148 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as messages from './exceptionMessages'
+type ErrorType =
+  | 'BoltConnectionError'
+  | 'BoltError'
+  | 'Neo4jError'
+  | 'UnknownCommandError'
+  | 'UndefinedError'
+  | 'CouldNotFetchRemoteGuideError'
+  | 'FetchURLError'
+  | 'UnsupportedError'
+  | 'NotFoundError'
+  | 'InvalidGrassError'
+  | 'DatabaseNotFoundError'
+  | 'DatabaseUnavailableError'
 
-export function getErrorMessage(errorObject: any) {
-  // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-  let str = messages[errorObject.type]
-  if (!str) return
-  const keys = Object.keys(errorObject)
-  keys.forEach(prop => {
-    const re = new RegExp(`(#${prop}#)`, 'g')
-    str = str.replace(re, errorObject[prop])
-  })
-  return str
-}
+export type BrowserError = { type: ErrorType; message: string; code: string }
 
-export function createErrorObject(ErrorType: any, ...rest: any[]) {
-  let Co = ErrorType
-  if (typeof ErrorType === 'string' && errorFunctions[ErrorType]) {
-    Co = errorFunctions[ErrorType]
-  }
-  const obj = new Co(...rest)
-  if (!obj.code) obj.code = obj.type
-  obj.message = getErrorMessage(obj)
-  return obj
-}
-
-const errorFunctions: any = {}
-
-export function BoltConnectionError() {
+// All errors except bolt errors have their type as their error code
+export function BoltConnectionError(): BrowserError {
+  const type = 'BoltConnectionError'
   return {
-    type: 'BoltConnectionError'
+    type,
+    code: type,
+    message: 'No connection found, did you connect to Neo4j?'
   }
 }
-errorFunctions.BoltConnectionError = BoltConnectionError
 
-export function BoltError(obj: any) {
+export function BoltError(obj: {
+  fields: [{ code: string; message: string }]
+}): BrowserError {
   return {
     type: 'BoltError',
     code: obj.fields[0].code,
-    message: obj.fields[0].message
+    message: `${obj.fields[0].code} - ${obj.fields[0].message}`
   }
 }
-errorFunctions.BoltError = BoltError
 
-export function Neo4jError(obj: any) {
+export function Neo4jError(obj: { message: string }): BrowserError {
+  const type = 'Neo4jError'
   return {
-    type: 'Neo4jError',
+    type,
+    code: type,
     message: obj.message
   }
 }
-errorFunctions.Neo4jError = Neo4jError
 
-export function UnknownCommandError(error: any) {
+export function UnknownCommandError(error: { cmd: string }): BrowserError {
+  const type = 'UnknownCommandError'
   return {
-    type: 'UnknownCommandError',
-    cmd: error.cmd
+    type,
+    code: type,
+    message: `Unknown command ${error.cmd}`
   }
 }
-errorFunctions.UnknownCommandError = UnknownCommandError
 
-export function UndefinedError(error: any) {
+export function UndefinedError(error: { cmd: string }): BrowserError {
+  const type = 'UndefinedError'
   return {
-    type: 'UndefinedError',
-    cmd: error.cmd
+    type,
+    code: type,
+    message: `Undefined error. cmd: ${error.cmd}`
   }
 }
-errorFunctions.UndefinedError = UndefinedError
 
-export function CouldNotFetchRemoteGuideError(error: any) {
+export function CouldNotFetchRemoteGuideError(error: {
+  error: string
+}): BrowserError {
+  const type = 'CouldNotFetchRemoteGuideError'
   return {
-    type: 'CouldNotFetchRemoteGuideError',
-    error: error.error
+    type,
+    code: type,
+    message: `Could not fetch remote guide: ${error.error}`
   }
 }
-errorFunctions.CouldNotFetchRemoteGuideError = CouldNotFetchRemoteGuideError
 
-export function FetchURLError(error: any) {
+export function FetchURLError(error: { error: string }): BrowserError {
+  const type = 'FetchURLError'
   return {
-    type: 'FetchURLError',
-    error: error.error
+    type,
+    code: type,
+    message: `Could not fetch URL: "${error.error}". This could be due to the remote server policy. See your web browsers error console for more information.`
   }
 }
-errorFunctions.FetchURLError = FetchURLError
 
-export function UnsupportedError(message: any) {
+export function UnsupportedError(message: string): BrowserError {
+  const type = 'UnsupportedError'
+  return { type, code: type, message }
+}
+
+export function NotFoundError(message: string): BrowserError {
+  const type = 'NotFoundError'
+  return { type, code: type, message }
+}
+
+export function InvalidGrassError(message: string): BrowserError {
+  const type = 'InvalidGrassError'
+  return { type, code: type, message }
+}
+
+export function DatabaseNotFoundError({
+  dbName
+}: {
+  dbName: string
+}): BrowserError {
+  const type = 'DatabaseNotFoundError'
   return {
-    type: 'UnsupportedError',
-    message
+    type,
+    code: type,
+    message: `A database with the "${dbName}" name could not be found.`
   }
 }
-errorFunctions.UnsupportedError = UnsupportedError
 
-export function NotFoundError(message: any) {
+export function DatabaseUnavailableError({
+  dbName,
+  dbMeta
+}: {
+  dbName: string
+  dbMeta: { status: string }
+}): BrowserError {
+  const type = 'DatabaseNotFoundError'
   return {
-    type: 'NotFoundError',
-    message
+    type,
+    code: type,
+    message: `Database "${dbName}" is unavailable, its status is "${dbMeta.status}."`
   }
 }
-errorFunctions.NotFoundError = NotFoundError
 
-export function InvalidGrassError(message: any) {
-  return {
-    type: 'InvalidGrassError',
-    message
+// this utilfunction should not be needed, but the use in Errorframe is not tested to work without it
+export function createErrorObject(type: ErrorType, args: any): BrowserError {
+  const errorFunctions: Record<ErrorType, (arg: any) => BrowserError> = {
+    BoltConnectionError,
+    BoltError,
+    Neo4jError,
+    UnknownCommandError,
+    UndefinedError,
+    CouldNotFetchRemoteGuideError,
+    FetchURLError,
+    UnsupportedError,
+    NotFoundError,
+    InvalidGrassError,
+    DatabaseNotFoundError,
+    DatabaseUnavailableError
   }
+
+  return errorFunctions[type](args)
 }
-errorFunctions.InvalidGrassError = InvalidGrassError

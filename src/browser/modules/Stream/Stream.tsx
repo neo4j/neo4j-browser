@@ -42,6 +42,7 @@ import ChangePasswordFrame from './Auth/ChangePasswordFrame'
 import QueriesFrame from './Queries/QueriesFrame'
 import UserList from '../User/UserList'
 import UserAdd from '../User/UserAdd'
+import { GlobalState } from 'shared/globalState'
 import { FrameStack, Frame, getFrames } from 'shared/modules/stream/streamDuck'
 import {
   getActiveConnectionData,
@@ -51,36 +52,39 @@ import { getScrollToTop } from 'shared/modules/settings/settingsDuck'
 import DbsFrame from './Auth/DbsFrame'
 import EditFrame from './EditFrame'
 
-const getFrame = (type: string) => {
-  const trans: Record<string, any> = {
-    error: ErrorFrame,
-    cypher: CypherFrame,
-    'cypher-script': CypherScriptFrame,
-    'user-list': UserList,
-    'user-add': UserAdd,
-    'change-password': ChangePasswordFrame,
-    pre: PreFrame,
-    play: PlayFrame,
-    'play-remote': PlayFrame,
-    history: HistoryFrame,
-    param: ParamsFrame,
-    params: ParamsFrame,
-    connection: ConnectionFrame,
-    disconnect: DisconnectFrame,
-    schema: SchemaFrame,
-    help: HelpFrame,
-    queries: QueriesFrame,
-    sysinfo: SysInfoFrame,
-    status: ServerStatusFrame,
-    'switch-success': ServerSwitchFrame,
-    'switch-fail': ServerSwitchFrame,
-    'use-db': UseDbFrame,
-    'reset-db': UseDbFrame,
-    dbs: DbsFrame,
-    style: StyleFrame,
-    edit: EditFrame,
-    default: DefaultFrame
-  }
+const trans = {
+  error: ErrorFrame,
+  cypher: CypherFrame,
+  'cypher-script': CypherScriptFrame,
+  'user-list': UserList,
+  'user-add': UserAdd,
+  'change-password': ChangePasswordFrame,
+  pre: PreFrame,
+  play: PlayFrame,
+  'play-remote': PlayFrame,
+  history: HistoryFrame,
+  param: ParamsFrame,
+  params: ParamsFrame,
+  connection: ConnectionFrame,
+  disconnect: DisconnectFrame,
+  schema: SchemaFrame,
+  help: HelpFrame,
+  queries: QueriesFrame,
+  sysinfo: SysInfoFrame,
+  status: ServerStatusFrame,
+  'switch-success': ServerSwitchFrame,
+  'switch-fail': ServerSwitchFrame,
+  'use-db': UseDbFrame,
+  'reset-db': UseDbFrame,
+  dbs: DbsFrame,
+  style: StyleFrame,
+  edit: EditFrame,
+  default: DefaultFrame
+}
+
+type FrameType = keyof typeof trans
+
+const getFrame = (type: FrameType) => {
   return trans[type] || trans.default
 }
 
@@ -124,7 +128,7 @@ function Stream(props: StreamProps): JSX.Element {
           stack: frameObject.stack
         }
 
-        let MyFrame = getFrame(frame.type)
+        let MyFrame = getFrame(frame.type as FrameType)
         if (frame.type === 'error') {
           try {
             const cmd = frame.cmd.replace(/^:/, '')
@@ -146,7 +150,7 @@ function Stream(props: StreamProps): JSX.Element {
   )
 }
 
-const mapStateToProps = (state: any) => ({
+const mapStateToProps = (state: GlobalState) => ({
   frames: getFrames(state),
   activeConnectionData: getActiveConnectionData(state),
   shouldScrollToTop: getScrollToTop(state)

@@ -21,7 +21,10 @@
 import { connect } from 'react-redux'
 import React from 'react'
 import FrameTemplate from '../../Frame/FrameTemplate'
-import { getRequest, Request } from 'shared/modules/requests/requestsDuck'
+import {
+  getRequest,
+  BrowserRequest
+} from 'shared/modules/requests/requestsDuck'
 import { Frame, getFrame } from 'shared/modules/stream/streamDuck'
 import { StyledStatusSection } from 'browser-components/buttons'
 
@@ -36,7 +39,7 @@ const isCypher = (str: string) => !str.startsWith(':')
 
 interface CypherScriptFrameProps extends BaseFrameProps {
   frames: Record<string, Frame>
-  requests: Record<string, Request>
+  requests: Record<string, BrowserRequest>
 }
 
 function CypherScriptFrame({
@@ -125,14 +128,17 @@ const mapStateToProps = (state: any, ownProps: BaseFrameProps) => {
       request.id = requestId
       return request
     })
-    .reduce((all: Record<string, Request>, curr: Request | false) => {
-      if (!curr) {
-        return all
-      }
+    .reduce(
+      (all: Record<string, BrowserRequest>, curr: BrowserRequest | false) => {
+        if (!curr) {
+          return all
+        }
 
-      all[curr.id] = curr
-      return all
-    }, {})
+        all[curr.id!] = curr
+        return all
+      },
+      {}
+    )
 
   return {
     frames,

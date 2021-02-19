@@ -43,29 +43,44 @@ import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
 import { connect } from 'react-redux'
 import { Icon } from 'semantic-ui-react'
+import { GlobalState } from 'shared/globalState'
+import { BrowserRequestResult } from 'shared/modules/requests/requestsDuck'
 
-type AsciiViewComponentState = any
+interface BaseAsciiViewComponentProps {
+  result: BrowserRequestResult
+  updated?: number
+  maxRows: unknown
+  _asciiSetColWidth?: string
+  setAsciiMaxColWidth: { (asciiMaxColWidth: number): void }
+}
+interface AsciiViewComponentProps extends BaseAsciiViewComponentProps {
+  maxFieldItems: number
+}
+interface AsciiViewComponentState {
+  serializedRows: string[]
+  bodyMessage: string | null
+}
 
 export class AsciiViewComponent extends Component<
-  any,
+  AsciiViewComponentProps,
   AsciiViewComponentState
 > {
-  state = {
-    serializedRows: [] as any[],
+  state: AsciiViewComponentState = {
+    serializedRows: [],
     bodyMessage: ''
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     this.makeState(this.props)
   }
 
-  componentDidUpdate(prevProps: {}) {
+  componentDidUpdate(prevProps: AsciiViewComponentProps): void {
     if (!this.equalProps(prevProps)) {
       this.makeState(this.props)
     }
   }
 
-  equalProps(props: any) {
+  equalProps(props: AsciiViewComponentProps): boolean {
     if (
       this.props !== undefined &&
       this.props.result !== undefined &&
@@ -78,16 +93,22 @@ export class AsciiViewComponent extends Component<
     return false
   }
 
-  shouldComponentUpdate(props: {}, state: AsciiViewComponentState) {
+  shouldComponentUpdate(
+    props: AsciiViewComponentProps,
+    state: AsciiViewComponentState
+  ): boolean {
     return !this.equalProps(props) || !shallowEquals(state, this.state)
   }
 
-  makeState(props: any) {
+  makeState(props: AsciiViewComponentProps): void {
     const { result, maxRows, maxFieldItems } = props
     const { bodyMessage = null } =
       getBodyAndStatusBarMessages(result, maxRows) || {}
     this.setState({ bodyMessage })
-    if (!result || !result.records || !result.records.length) return
+
+    const hasRecords = result && 'records' in result && result.records.length
+    if (!hasRecords) return
+
     const records = getRecordsToDisplayInTable(props.result, props.maxRows)
     const serializedRows =
       stringifyResultArray(
@@ -98,11 +119,10 @@ export class AsciiViewComponent extends Component<
     this.setState({ serializedRows })
     const maxColWidth = asciitable.maxColumnWidth(serializedRows)
 
-    this.props.setParentState &&
-      this.props.setParentState({ _asciiMaxColWidth: maxColWidth })
+    this.props.setAsciiMaxColWidth(maxColWidth)
   }
 
-  render() {
+  render(): JSX.Element {
     const { _asciiSetColWidth: maxColWidth = 70 } = this.props
     const { serializedRows, bodyMessage } = this.state
     let contents = <StyledBodyMessage>{bodyMessage}</StyledBodyMessage>
@@ -121,17 +141,36 @@ export class AsciiViewComponent extends Component<
   }
 }
 
-export const AsciiView = connect(state => ({
+export const AsciiView = connect((state: GlobalState) => ({
   maxFieldItems: getMaxFieldItems(state)
 }))(AsciiViewComponent)
 
-type AsciiStatusbarComponentState = any
+interface BaseAsciiStatusbarComponentProps {
+  _asciiMaxColWidth?: number
+  _asciiSetColWidth?: string
+  maxRows: number
+  result: BrowserRequestResult
+  setAsciiSetColWidth: { (asciiSetColWidth: string): void }
+  updated?: number
+}
+
+interface AsciiStatusbarComponentProps
+  extends BaseAsciiStatusbarComponentProps {
+  maxFieldItems: number
+}
+interface AsciiStatusbarComponentState {
+  maxSliderWidth: number
+  minSliderWidth: number
+  maxColWidth: number | string
+  statusBarMessage: string | null
+  hasTruncatedFields: boolean
+}
 
 export class AsciiStatusbarComponent extends Component<
-  any,
+  AsciiStatusbarComponentProps,
   AsciiStatusbarComponentState
 > {
-  state = {
+  state: AsciiStatusbarComponentState = {
     maxSliderWidth: 140,
     minSliderWidth: 3,
     maxColWidth: 70,
@@ -139,11 +178,11 @@ export class AsciiStatusbarComponent extends Component<
     hasTruncatedFields: false
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(): void {
     this.makeState(this.props)
   }
 
-  makeState(props: any) {
+  makeState(props: AsciiStatusbarComponentProps): void {
     this.setMaxSliderWidth(props._asciiMaxColWidth)
     const { statusBarMessage = null } =
       getBodyAndStatusBarMessages(props.result, props.maxRows) || {}
@@ -154,7 +193,10 @@ export class AsciiStatusbarComponent extends Component<
     this.setState({ statusBarMessage, hasTruncatedFields })
   }
 
-  shouldComponentUpdate(props: any, state: AsciiStatusbarComponentState) {
+  shouldComponentUpdate(
+    props: AsciiStatusbarComponentProps,
+    state: AsciiStatusbarComponentState
+  ): boolean {
     return (
       state.maxColWidth !== this.state.maxColWidth ||
       state.maxSliderWidth !== this.state.maxSliderWidth ||
@@ -164,23 +206,23 @@ export class AsciiStatusbarComponent extends Component<
     )
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     this.makeState(this.props)
   }
 
-  setColWidthChanged = (w: any) => {
+  setColWidthChanged = (w: React.ChangeEvent<HTMLInputElement>): void => {
     const value = w.target.value
     this.setState({ maxColWidth: value })
-    this.props.setParentState({ _asciiSetColWidth: value })
+    this.props.setAsciiSetColWidth(value)
   }
 
-  setMaxSliderWidth(w: any) {
+  setMaxSliderWidth(w?: number): void {
     this.setState({ maxSliderWidth: w || this.state.minSliderWidth })
   }
 
-  render() {
-    const hasRecords =
-      this.props.result.records && this.props.result.records.length
+  render(): JSX.Element {
+    const { result } = this.props
+    const hasRecords = result && 'records' in result && result.records.length
     const { maxColWidth, maxSliderWidth, hasTruncatedFields } = this.state
     return (
       <StyledStatsBar>
@@ -212,6 +254,6 @@ export class AsciiStatusbarComponent extends Component<
   }
 }
 
-export const AsciiStatusbar = connect(state => ({
+export const AsciiStatusbar = connect((state: GlobalState) => ({
   maxFieldItems: getMaxFieldItems(state)
 }))(AsciiStatusbarComponent)

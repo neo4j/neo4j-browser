@@ -46,6 +46,6 @@ export const handleCypherCommand = (
       useDb: action.useDb
     }
   )
-  put(send('cypher', id))
+  put(send(id))
   return [id, request]
 }

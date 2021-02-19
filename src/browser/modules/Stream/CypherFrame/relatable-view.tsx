@@ -37,8 +37,9 @@ import { StyledStatsBar, StyledTruncatedMessage } from '../styled'
 import Ellipsis from '../../../components/Ellipsis'
 import { RelatableStyleWrapper, StyledJsonPre } from './relatable-view.styled'
 import { stringifyMod, unescapeDoubleQuotesForDisplay } from 'services/utils'
+import { GlobalState } from 'shared/globalState'
 
-const RelatableView = connect(state => ({
+const RelatableView = connect((state: GlobalState) => ({
   maxRows: getMaxRows(state),
   maxFieldItems: getMaxFieldItems(state)
 }))(RelatableViewComponent)
@@ -133,7 +134,7 @@ export function RelatableBodyMessage({ maxRows, result }: any) {
   )
 }
 
-export const RelatableStatusbar = connect(state => ({
+export const RelatableStatusbar = connect((state: GlobalState) => ({
   maxRows: getMaxRows(state),
   maxFieldItems: getMaxFieldItems(state)
 }))(RelatableStatusbarComponent)

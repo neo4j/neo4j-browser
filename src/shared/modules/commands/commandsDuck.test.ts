@@ -22,10 +22,7 @@ import configureMockStore, { MockStoreEnhanced } from 'redux-mock-store'
 import { createEpicMiddleware } from 'redux-observable'
 import { createBus, createReduxMiddleware } from 'suber'
 
-import {
-  BoltConnectionError,
-  createErrorObject
-} from '../../services/exceptions'
+import { BoltConnectionError } from '../../services/exceptions'
 import * as commands from './commandsDuck'
 import helper from 'services/commandInterpreterHelper'
 import { update as updateQueryResult } from '../requests/requestsDuck'
@@ -98,13 +95,9 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          send('cypher', requestId),
+          send(requestId),
           frames.add({ ...action, type: 'cypher' } as any),
-          updateQueryResult(
-            requestId,
-            createErrorObject(BoltConnectionError),
-            'error'
-          ),
+          updateQueryResult(requestId, BoltConnectionError(), 'error'),
           commands.unsuccessfulCypher(cmd),
           fetchMetaData(),
           { type: 'NOOP' }
@@ -156,7 +149,7 @@ describe('commandsDuck', () => {
           {
             ...updateQueryResult(
               'id',
-              { result: { x: 2 }, type: 'param' },
+              { result: { x: 2 }, type: 'param' } as any,
               'success'
             ),
             id: undefined
@@ -229,7 +222,7 @@ describe('commandsDuck', () => {
           {
             ...updateQueryResult(
               'id',
-              { result: { x: 2, y: 3 }, type: 'params' },
+              { result: { x: 2, y: 3 }, type: 'params' } as any,
               'success'
             ),
             id: undefined
@@ -420,13 +413,9 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          send('cypher', requestId),
+          send(requestId),
           frames.add({ ...action, type: 'cypher' } as any),
-          updateQueryResult(
-            requestId,
-            createErrorObject(BoltConnectionError),
-            'error'
-          ),
+          updateQueryResult(requestId, BoltConnectionError(), 'error'),
           commands.unsuccessfulCypher(cmd),
           fetchMetaData(),
           { type: 'NOOP' }

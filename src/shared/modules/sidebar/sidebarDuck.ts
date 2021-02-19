@@ -18,13 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { GlobalState } from 'shared/globalState'
+
 export const NAME = 'sidebar'
 
 export const TOGGLE = 'sidebar/TOGGLE'
 export const SET_DRAFT_SCRIPT = 'sidebar/SET_DRAFT_SCRIPT'
-interface GlobalState {
-  [NAME]: SidebarState
-}
 
 export function getOpenDrawer(state: GlobalState): string | null {
   return state[NAME].drawer

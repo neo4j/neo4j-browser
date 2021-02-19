@@ -18,8 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { GlobalState } from 'shared/globalState'
 import { USER_CLEAR } from '../app/appDuck'
-import { GlobalState } from '../stream/streamDuck'
 
 export const NAME = 'history'
 export const ADD = 'history/ADD'

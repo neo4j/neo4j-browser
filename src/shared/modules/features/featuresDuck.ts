@@ -54,7 +54,7 @@ export const USER_CAPABILITIES = {
   proceduresReadable: 'proceduresReadable'
 }
 
-const initialState = {
+export const initialState = {
   availableProcedures: [] as any[],
   browserSync: true,
   clientConfig: null,

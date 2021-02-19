@@ -23,15 +23,25 @@ import { render } from '@testing-library/react'
 import { Provider } from 'react-redux'
 
 import { CypherFrame } from './index'
+import { Frame } from 'shared/modules/stream/streamDuck'
+import {
+  BrowserRequest,
+  BrowserRequestResult
+} from 'shared/modules/requests/requestsDuck'
 
-const createProps = (status: any, result: any) => ({
-  recentView: undefined,
-  frame: {},
+const createProps = (status: string, result: BrowserRequestResult) => ({
+  autoComplete: true,
+  initialNodeDisplay: 10,
+  onRecentViewChanged: () => undefined,
+  maxRows: 10,
+  maxNeighbours: 10,
+  recentView: null,
+  frame: {} as Frame,
   request: {
     status,
     updated: Math.random(),
     result
-  }
+  } as BrowserRequest
 })
 const withProvider = (store: any, children: any) => {
   return <Provider store={store}>{children}</Provider>
@@ -54,8 +64,8 @@ describe('CypherFrame', () => {
     const pendingProps = createProps('pending', undefined)
     const successProps = createProps('success', {
       records: [{ keys: ['name'], _fields: ['Molly'], get: () => 'Molly' }]
-    })
-    const errorProps = createProps('error', { code: 'Test.Error' })
+    } as any)
+    const errorProps = createProps('error', { code: 'Test.Error' } as any)
 
     // When
     const {
