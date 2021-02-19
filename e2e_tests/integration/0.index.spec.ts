@@ -152,8 +152,6 @@ describe('Neo4j Browser', () => {
       cy.get(Editor).type(`RETURN 1{enter}`, { force: true })
 
       cy.get('[data-testid="frame-Favorite"]').click()
-      cy.get('[data-testid="saveScript"]').click()
-
       cy.get('[data-testid="savedScriptListItem"]')
         .first()
         .contains('RETURN 1')

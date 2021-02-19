@@ -452,6 +452,7 @@ const mapDispatchToProps = (
   return {
     newFavorite: (cmd: string) => {
       dispatch(addFavorite(cmd))
+      dispatch(sidebar.open('favorites'))
     },
     newProjectFile: (cmd: string) => {
       dispatch(sidebar.setDraftScript(cmd, 'project files'))

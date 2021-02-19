@@ -25,23 +25,19 @@ describe('Saved Scripts', () => {
     cy.visit(Cypress.config('url'))
       .title()
       .should('include', 'Neo4j Browser')
-    //cy.wait(3000)
+    cy.wait(3000)
     cy.connect('neo4j', Cypress.config('password'))
   })
 
   it('can save a result as favorite', () => {
     cy.executeCommand('RETURN 1')
     cy.get('[data-testid=frame-Favorite]').click()
-    cy.get('[data-testid=scriptName]')
-      .clear()
-      .type('script name')
-    cy.get('[data-testid=saveScript]').click()
 
     // saved in the list and can populate editor
-    cy.get('[data-testid="navicon-script name"').click({ force: true })
+    cy.get('[data-testid="navicon-RETURN 1"').click({ force: true })
     cy.get('[data-testid="contextMenuEdit"').click()
 
-    cy.get('[data-testid="currentlyEditing"]').contains('script name')
+    cy.get('[data-testid="currentlyEditing"]').contains('RETURN 1')
     // Editing script updates name and content
     cy.get('[data-testid="activeEditor"] textarea')
       .type(
@@ -67,17 +63,9 @@ describe('Saved Scripts', () => {
     cy.executeCommand(':clear')
     cy.executeCommand(':help cypher')
     cy.get('[data-testid=frame-Favorite]').click()
-    cy.get('[data-testid=scriptName]')
-      .invoke('val')
-      .should('equal', ':help cypher')
-
-    cy.get('[data-testid=saveScript]').click()
 
     cy.get('[data-testid="savedScriptsButton-New folder"]').click()
-    cy.get('[data-testid="savedScriptsButton-Edit"]').click({ force: true })
-    cy.get('[data-testid="editSavedScriptFolderName"]')
-      .clear()
-      .type('fldr{enter}')
+    cy.get('[data-testid=editSavedScriptFolderName]').type('fldr{enter}')
 
     cy.get('[data-testid="scriptTitle-:help cypher"]').trigger('dragstart')
 
@@ -95,10 +83,8 @@ describe('Saved Scripts', () => {
     cy.get('[data-testid="scriptTitle-:help cypher"]').should('exist')
 
     // cleanup and delete the folder as well
-    cy.get('[data-testid="savedScriptsButton-Edit"]')
-      .first()
-      .click({ force: true })
-    cy.get('[data-testid="savedScriptsButton-Remove"]').click()
+    cy.get('[data-testid=navicon-fldr]').click({ force: true })
+    cy.get('[data-testid=contextMenuRename]').click()
     cy.get('[data-testid=expandFolder-fldr]').should('not.exist')
     cy.get('[data-testid=drawerFavorites]').click()
   })

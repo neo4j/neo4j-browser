@@ -118,6 +118,7 @@ function SavedScriptsFolder({
     <ContextMenuHoverParent
       ref={drop}
       data-testid={`savedScriptsFolder-${folder.name}`}
+      stayVisible={showOverlay}
     >
       <SavedScriptsFolderMain>
         <SavedScriptsFolderHeader title={folder.name} ref={blurRef}>

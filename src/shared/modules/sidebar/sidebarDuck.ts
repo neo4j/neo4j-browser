@@ -23,6 +23,7 @@ import { GlobalState } from 'shared/globalState'
 export const NAME = 'sidebar'
 
 export const TOGGLE = 'sidebar/TOGGLE'
+export const OPEN = 'sidebar/OPEN'
 export const SET_DRAFT_SCRIPT = 'sidebar/SET_DRAFT_SCRIPT'
 
 export function getOpenDrawer(state: GlobalState): string | null {
@@ -67,10 +68,15 @@ function toggleDrawer(state: SidebarState, drawer: DrawerId): SidebarState {
   return { draftScript: null, drawer, scriptId: null }
 }
 
-type SidebarAction = ToggleAction | SetDraftScriptAction
+type SidebarAction = ToggleAction | SetDraftScriptAction | OpenAction
 
 interface ToggleAction {
   type: typeof TOGGLE
+  drawerId: DrawerId
+}
+
+interface OpenAction {
+  type: typeof OPEN
   drawerId: DrawerId
 }
 
@@ -88,6 +94,8 @@ export default function reducer(
   switch (action.type) {
     case TOGGLE:
       return toggleDrawer(state, action.drawerId)
+    case OPEN:
+      return { ...state, drawer: action.drawerId }
     case SET_DRAFT_SCRIPT:
       return {
         drawer: action.drawerId,
@@ -100,6 +108,10 @@ export default function reducer(
 
 export function toggle(drawerId: DrawerId): ToggleAction {
   return { type: TOGGLE, drawerId }
+}
+
+export function open(drawerId: DrawerId): OpenAction {
+  return { type: OPEN, drawerId }
 }
 
 export function setDraftScript(
