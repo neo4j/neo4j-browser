@@ -642,6 +642,15 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/mdx-js/mdx.git
 │  │  ├─ VendorName: John Otander
 │  │  └─ VendorUrl: https://mdxjs.com/
+│  ├─ @react-dnd/asap@4.0.0
+│  │  └─ URL: https://github.com/kriskowal/asap.git
+│  ├─ @react-dnd/invariant@2.0.0
+│  │  ├─ URL: https://github.com/react-dnd/invariant
+│  │  └─ VendorName: Andres Suarez
+│  ├─ @react-dnd/shallowequal@2.0.0
+│  │  ├─ URL: https://github.com/react-dnd/shallowequal.git
+│  │  ├─ VendorName: Alberto Leal
+│  │  └─ VendorUrl: github.com/dashed
 │  ├─ @scarf/scarf@0.1.7
 │  │  ├─ URL: git+https://github.com/scarf-sh/scarf-js.git
 │  │  ├─ VendorName: Scarf Systems
@@ -661,15 +670,11 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/stardust-ui/react.git
 │  │  ├─ VendorName: Oleksandr Fediashov
 │  │  └─ VendorUrl: https://github.com/stardust-ui/react/tree/master/packages/react-component-ref
-│  ├─ @types/asap@2.0.0
-│  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
 │  ├─ @types/color-name@1.1.1
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
 │  ├─ @types/hast@2.3.1
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
 │  ├─ @types/hoist-non-react-statics@3.3.1
-│  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
-│  ├─ @types/invariant@2.2.34
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
 │  ├─ @types/long@4.0.1
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
@@ -685,9 +690,7 @@ Third-party licenses
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
 │  ├─ @types/prop-types@15.7.3
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
-│  ├─ @types/react@16.9.49
-│  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
-│  ├─ @types/shallowequal@1.1.1
+│  ├─ @types/react@17.0.2
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
 │  ├─ @types/unist@2.0.3
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
@@ -753,8 +756,6 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/sindresorhus/arrify.git
 │  │  ├─ VendorName: Sindre Sorhus
 │  │  └─ VendorUrl: sindresorhus.com
-│  ├─ asap@2.0.6
-│  │  └─ URL: https://github.com/kriskowal/asap.git
 │  ├─ ascii-data-table@2.1.1
 │  │  ├─ URL: https://github.com/oskarhane/ascii-data-table.git
 │  │  ├─ VendorName: Oskar Hane
@@ -913,7 +914,7 @@ Third-party licenses
 │  ├─ csstype@2.6.13
 │  │  ├─ URL: https://github.com/frenic/csstype
 │  │  └─ VendorName: Fredrik Nicol
-│  ├─ csstype@3.0.3
+│  ├─ csstype@3.0.6
 │  │  ├─ URL: https://github.com/frenic/csstype
 │  │  └─ VendorName: Fredrik Nicol
 │  ├─ dashdash@1.14.1
@@ -957,7 +958,7 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/dtudury/discontinuous-range.git
 │  │  ├─ VendorName: David Tudury
 │  │  └─ VendorUrl: https://github.com/dtudury/discontinuous-range
-│  ├─ dnd-core@9.5.1
+│  ├─ dnd-core@11.1.3
 │  │  └─ URL: https://github.com/react-dnd/react-dnd.git
 │  ├─ ecc-jsbn@0.1.2
 │  │  ├─ URL: https://github.com/quartzjer/ecc-jsbn.git
@@ -1492,9 +1493,9 @@ Third-party licenses
 │  │  ├─ URL: git://github.com/fent/randexp.js.git
 │  │  ├─ VendorName: Roly Fentanes
 │  │  └─ VendorUrl: http://fent.github.io/randexp.js/
-│  ├─ react-dnd-html5-backend@9.3.2
+│  ├─ react-dnd-html5-backend@11.1.3
 │  │  └─ URL: https://github.com/react-dnd/react-dnd.git
-│  ├─ react-dnd@9.3.2
+│  ├─ react-dnd@11.1.3
 │  │  └─ URL: https://github.com/react-dnd/react-dnd.git
 │  ├─ react-dom@16.13.1
 │  │  ├─ URL: https://github.com/facebook/react.git

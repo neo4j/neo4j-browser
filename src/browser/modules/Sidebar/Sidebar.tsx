@@ -95,7 +95,7 @@ const Sidebar = ({
       content: function FavoritesDrawer(): ReactFragment {
         return (
           <>
-            <DrawerHeader> Local scripts </DrawerHeader>
+            <DrawerHeader> Favorites </DrawerHeader>
             <Favorites />
             {showStaticScripts && <StaticScripts />}
           </>

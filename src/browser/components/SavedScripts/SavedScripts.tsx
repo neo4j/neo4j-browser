@@ -19,7 +19,7 @@
  */
 import React, { useState } from 'react'
 import { DndProvider } from 'react-dnd'
-import HTML5Backend from 'react-dnd-html5-backend'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 import SavedScriptsFolder from './SavedScriptsFolder'
 import {
   ExportButton,
@@ -70,7 +70,7 @@ function findScriptsFromIds(ids: string[], scripts: Favorite[]): Favorite[] {
 }
 
 export default function SavedScripts({
-  title = 'Saved Scripts',
+  title = 'Local Scripts',
   scripts,
   folders,
   selectScript,
