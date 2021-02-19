@@ -18,7 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const CANNY_APP_ID = '601d00fb7a41e3035f75e1e8'
+export const cannyOptions = {
+  appID: '601d00fb7a41e3035f75e1e8',
+  position: 'right',
+  align: 'top'
+}
 export const CANNY_FEATURE_REQUEST_URL =
   'https://neo4j-browser.canny.io/feature-requests'
 

@@ -165,7 +165,8 @@ const Sidebar = ({
       icon: function docsIcon(isOpen: boolean): ReactElement {
         return <DocumentsIcon isOpen={isOpen} title="Help &amp; Resources" />
       },
-      content: DocumentsDrawer
+      content: DocumentsDrawer,
+      enableCannyBadge: true
     },
     {
       name: 'Sync',

@@ -21,7 +21,7 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import semver from 'semver'
 
-import { CANNY_APP_ID, CANNY_FEATURE_REQUEST_URL } from 'browser-services/canny'
+import { cannyOptions, CANNY_FEATURE_REQUEST_URL } from 'browser-services/canny'
 import { GlobalState } from 'shared/globalState'
 import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 import DocumentItems from './DocumentItems'
@@ -135,12 +135,7 @@ type DocumentsProps = { version: string; urlVersion: string }
 
 const Documents = ({ version, urlVersion }: DocumentsProps) => {
   useEffect(() => {
-    window.Canny &&
-      window.Canny('initChangelog', {
-        appID: CANNY_APP_ID,
-        position: 'right',
-        align: 'top'
-      })
+    window.Canny && window.Canny('initChangelog', cannyOptions)
 
     return () => {
       window.Canny && window.Canny('closeChangelog')

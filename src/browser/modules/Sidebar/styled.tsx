@@ -127,6 +127,16 @@ export const StyledHeaderContainer = styled.div`
   a {
     cursor: pointer;
     margin-right: 10px;
+
+    .Canny_BadgeContainer .Canny_Badge {
+      position: absolute;
+      top: -1px;
+      right: -1px;
+      border-radius: 10px;
+      background-color: red;
+      padding: 4px;
+      border: 1px solid red;
+    }
   }
 `
 

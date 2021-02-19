@@ -21,8 +21,10 @@
 import React, { Component } from 'react'
 import {
   StyledNavigationButton,
-  NavigationButtonContainer
+  NavigationButtonContainer,
+  StyledCannyBadgeAnchor
 } from 'browser-components/buttons'
+import { cannyOptions } from 'browser-services/canny'
 import {
   StyledSidebar,
   StyledDrawer,
@@ -41,6 +43,7 @@ export interface NavItem {
   title: string
   icon: (isOpen: boolean) => JSX.Element
   content: any
+  enableCannyBadge?: boolean
 }
 
 interface NavigationProps {
@@ -74,6 +77,14 @@ class Navigation extends Component<NavigationProps, NavigationState> {
     this.setState({
       transitionState: Closed
     })
+
+    window.Canny && window.Canny('initChangelog', cannyOptions)
+  }
+
+  componentWillUnmount(): void {
+    if (window.Canny) {
+      window.Canny('closeChangelog')
+    }
   }
 
   componentDidUpdate(
@@ -124,17 +135,22 @@ class Navigation extends Component<NavigationProps, NavigationState> {
       list.map(item => {
         const isOpen = item.name.toLowerCase() === selected
         return (
-          <NavigationButtonContainer
-            title={item.title}
-            data-testid={'drawer' + item.name}
-            key={item.name}
-            onClick={() => onNavClick(item.name.toLowerCase())}
-            isOpen={isOpen}
-          >
-            <StyledNavigationButton name={item.name}>
-              {item.icon(isOpen)}
-            </StyledNavigationButton>
-          </NavigationButtonContainer>
+          <>
+            {item.enableCannyBadge ? (
+              <StyledCannyBadgeAnchor data-canny-changelog />
+            ) : null}
+            <NavigationButtonContainer
+              title={item.title}
+              data-testid={'drawer' + item.name}
+              key={item.name}
+              onClick={() => onNavClick(item.name.toLowerCase())}
+              isOpen={isOpen}
+            >
+              <StyledNavigationButton name={item.name}>
+                {item.icon(isOpen)}
+              </StyledNavigationButton>
+            </NavigationButtonContainer>
+          </>
         )
       })
 
