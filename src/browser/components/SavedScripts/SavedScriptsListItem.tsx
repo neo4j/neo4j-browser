@@ -69,7 +69,6 @@ function SavedScriptsListItem({
     displayName,
     () => renameScript && renameScript(currentNameValue)
   )
-  const nameBlurRef = useCustomBlur(doneEditing)
   const overlayBlurRef = useCustomBlur(() => setShowOverlay(false))
   const dragAndDropRef = useDrag({
     item: { id: script.id, type: 'script' }
@@ -79,14 +78,11 @@ function SavedScriptsListItem({
   const canRunScript = !script.not_executable && !isEditing
 
   return (
-    <ContextMenuHoverParent
-      ref={dragAndDropRef}
-      stayVisible={showOverlay || isSelected}
-    >
+    <ContextMenuHoverParent stayVisible={showOverlay || isSelected}>
       <SavedScriptsListItemMain
         data-testid="savedScriptListItem"
         isSelected={isSelected}
-        ref={nameBlurRef}
+        ref={dragAndDropRef}
         onClick={onClick}
       >
         {isEditing ? (
@@ -96,6 +92,7 @@ function SavedScriptsListItem({
             onKeyPress={({ key }) => {
               key === 'Enter' && doneEditing()
             }}
+            onBlur={doneEditing}
             value={currentNameValue}
             onChange={e => setNameValue(e.target.value)}
           />
