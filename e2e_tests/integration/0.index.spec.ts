@@ -146,7 +146,7 @@ describe('Neo4j Browser', () => {
 
   // Browser sync is disabled on Aura
   if (!isAura()) {
-    it.only('will clear local storage when clicking "Clear local data"', () => {
+    it('will clear local storage when clicking "Clear local data"', () => {
       cy.connect('neo4j', Cypress.config('password'))
 
       cy.get(Editor).type(`RETURN 1{enter}`, { force: true })
