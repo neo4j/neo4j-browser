@@ -191,6 +191,19 @@ export const FrameTitleEditorContainer = styled.div`
   .disable-font-ligatures & {
     font-variant-ligatures: none !important;
   }
+
+  overflow: hidden;
+  max-height: 30px;
+
+  &:not(:focus-within):hover .view-line span {
+    color: ${props => props.theme.linkHover};
+    text-decoration: underline;
+  }
+
+  &:focus-within {
+    overflow: unset;
+    max-height: unset;
+  }
 `
 
 export const StyledFrameCommand = styled.label<{ selectedDb: string }>`
