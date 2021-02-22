@@ -187,7 +187,7 @@ export const Settings = ({
                     onSettingsSave(settings)
                   }}
                   defaultValue={settings[setting]}
-                  title={[tooltip]}
+                  title={tooltip}
                   className={setting}
                 />
               </StyledSettingLabel>

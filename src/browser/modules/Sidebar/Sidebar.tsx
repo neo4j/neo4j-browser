@@ -29,10 +29,13 @@ import SettingsDrawer from './Settings'
 import Favorites from './favorites'
 import StaticScripts from './static-scripts'
 import ProjectFilesDrawer from './ProjectFiles'
-import TabNavigation from 'browser-components/TabNavigation/Navigation'
+import TabNavigation, {
+  NavItem
+} from 'browser-components/TabNavigation/Navigation'
 import { DrawerHeader } from 'browser-components/drawer'
 import NewSavedScript from './NewSavedScript'
 import BrowserSync from '../Sync/BrowserSync'
+import { GlobalState } from 'shared/globalState'
 import { isUserSignedIn } from 'shared/modules/sync/syncDuck'
 import { addFavorite } from 'shared/modules/favorites/favoritesDuck'
 import { utilizeBrowserSync } from 'shared/modules/features/featuresDuck'
@@ -83,7 +86,7 @@ const Sidebar = ({
   scriptDraft,
   resetDraft
 }: SidebarProps) => {
-  const topNavItemsList = [
+  const topNavItemsList: NavItem[] = [
     {
       name: 'DBMS',
       title: 'Database Information',
@@ -152,18 +155,19 @@ const Sidebar = ({
             }
           }
         ]
-      : []),
+      : [])
+  ]
+
+  const bottomNavItemsList: NavItem[] = [
     {
       name: 'Documents',
       title: 'Help &amp; Resources',
       icon: function docsIcon(isOpen: boolean): ReactElement {
         return <DocumentsIcon isOpen={isOpen} title="Help &amp; Resources" />
       },
-      content: DocumentsDrawer
-    }
-  ]
-
-  const bottomNavItemsList = [
+      content: DocumentsDrawer,
+      enableCannyBadge: true
+    },
     {
       name: 'Sync',
       title: 'Browser Sync',
@@ -206,7 +210,7 @@ const Sidebar = ({
   )
 }
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: GlobalState) => {
   let connectionState = 'disconnected'
   if (state.connections) {
     switch (state.connections.connectionState) {

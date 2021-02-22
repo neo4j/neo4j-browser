@@ -17,8 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React from 'react'
+import React, { Dispatch, useState } from 'react'
 import { connect } from 'react-redux'
+import { Action } from 'redux'
 import {
   DrawerSubHeader,
   DrawerSection,
@@ -37,11 +38,17 @@ import {
   executeCommand
 } from 'shared/modules/commands/commandsDuck'
 import styled from 'styled-components'
+import {
+  SavedScriptsCollapseMenuIcon,
+  SavedScriptsExpandMenuRightIcon
+} from 'browser-components/icons/Icons'
+import { SavedScriptsFolderCollapseIcon } from 'browser-components/SavedScripts/styled'
 const DrawerSubHeaderWithMargin = styled(DrawerSubHeader)`
   margin: 0 24px 0 24px;
 `
 
 type DocumentItemsOwnProps = {
+  expandable?: true
   header: string
   items: (Link | Command)[]
 }
@@ -61,10 +68,13 @@ type Command = {
 }
 
 export const DocumentItems = ({
+  expandable,
   header,
   items,
   executeCommand
 }: DocumentItemsProps): JSX.Element => {
+  const [expanded, setExpanded] = useState(false)
+
   const listOfItems = items.map(item =>
     'url' in item ? (
       <StyledHelpItem key={item.url}>
@@ -84,10 +94,26 @@ export const DocumentItems = ({
 
   return (
     <DrawerSection>
-      <DrawerSubHeaderWithMargin>{header}</DrawerSubHeaderWithMargin>
-      <DrawerSectionBody>
-        <ul>{listOfItems}</ul>
-      </DrawerSectionBody>
+      <DrawerSubHeaderWithMargin
+        onClick={() => expandable && setExpanded(!expanded)}
+        style={{ cursor: expandable ? 'pointer' : 'auto' }}
+      >
+        {expandable && (
+          <SavedScriptsFolderCollapseIcon>
+            {expanded ? (
+              <SavedScriptsCollapseMenuIcon />
+            ) : (
+              <SavedScriptsExpandMenuRightIcon />
+            )}
+          </SavedScriptsFolderCollapseIcon>
+        )}
+        {header}
+      </DrawerSubHeaderWithMargin>
+      {(!expandable || expanded) && (
+        <DrawerSectionBody>
+          <ul>{listOfItems}</ul>
+        </DrawerSectionBody>
+      )}
     </DrawerSection>
   )
 }
@@ -102,7 +128,7 @@ const CommandItem = ({ name, command, executeCommand }: CommandItemProps) => (
   </StyledCommandListItem>
 )
 
-const mapDispatchToProps = (dispatch: any) => ({
+const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
   executeCommand: (cmd: string) => {
     dispatch(
       executeCommand(cmd, {

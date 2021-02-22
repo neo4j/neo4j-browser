@@ -21,8 +21,10 @@
 import React, { Component } from 'react'
 import {
   StyledNavigationButton,
-  NavigationButtonContainer
+  NavigationButtonContainer,
+  StyledCannyBadgeAnchor
 } from 'browser-components/buttons'
+import { cannyOptions } from 'browser-services/canny'
 import {
   StyledSidebar,
   StyledDrawer,
@@ -36,26 +38,61 @@ const Closed = 'CLOSED'
 const Open = 'OPEN'
 const Opening = 'OPENING'
 
-type State = any
+export interface NavItem {
+  name: string
+  title: string
+  icon: (isOpen: boolean) => JSX.Element
+  content: any
+  enableCannyBadge?: boolean
+}
 
-class Navigation extends Component<any, State> {
-  _onTransitionEnd: any
-  transitionState: any
-  state: any = {}
-  constructor(props: {}) {
+interface NavigationProps {
+  openDrawer: string
+  onNavClick: (name: string) => void
+  topNavItems: NavItem[]
+  bottomNavItems?: NavItem[]
+}
+
+type TransitionState =
+  | typeof Closing
+  | typeof Closed
+  | typeof Open
+  | typeof Opening
+
+interface NavigationState {
+  transitionState?: TransitionState
+  drawerContent?: null | string
+}
+
+class Navigation extends Component<NavigationProps, NavigationState> {
+  _onTransitionEnd: () => void
+  transitionState?: TransitionState
+  state: NavigationState = {}
+  constructor(props: NavigationProps) {
     super(props)
     this._onTransitionEnd = this.onTransitionEnd.bind(this)
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     this.setState({
       transitionState: Closed
     })
+
+    window.Canny && window.Canny('initChangelog', cannyOptions)
   }
 
-  componentDidUpdate(prevProps: any, prevState: State) {
+  componentWillUnmount(): void {
+    if (window.Canny) {
+      window.Canny('closeChangelog')
+    }
+  }
+
+  componentDidUpdate(
+    prevProps: NavigationProps,
+    prevState: NavigationState
+  ): void {
     if (prevProps.openDrawer !== this.props.openDrawer) {
-      const newState: any = {}
+      const newState: NavigationState = {}
       if (this.props.openDrawer) {
         newState.drawerContent = this.props.openDrawer
         if (
@@ -77,7 +114,7 @@ class Navigation extends Component<any, State> {
     }
   }
 
-  onTransitionEnd() {
+  onTransitionEnd(): void {
     if (this.transitionState === Closing) {
       this.setState({
         transitionState: Closed,
@@ -91,32 +128,37 @@ class Navigation extends Component<any, State> {
     }
   }
 
-  render() {
+  render(): JSX.Element {
     const { onNavClick, topNavItems, bottomNavItems = [] } = this.props
 
-    const buildNavList = (list: any, selected: any) =>
-      list.map((item: any) => {
+    const buildNavList = (list: NavItem[], selected?: null | string) =>
+      list.map(item => {
         const isOpen = item.name.toLowerCase() === selected
         return (
-          <NavigationButtonContainer
-            title={item.title}
-            data-testid={'drawer' + item.name}
-            key={item.name}
-            onClick={() => onNavClick(item.name.toLowerCase())}
-            isOpen={isOpen}
-          >
-            <StyledNavigationButton name={item.name}>
-              {item.icon(isOpen)}
-            </StyledNavigationButton>
-          </NavigationButtonContainer>
+          <>
+            {item.enableCannyBadge ? (
+              <StyledCannyBadgeAnchor data-canny-changelog />
+            ) : null}
+            <NavigationButtonContainer
+              title={item.title}
+              data-testid={'drawer' + item.name}
+              key={item.name}
+              onClick={() => onNavClick(item.name.toLowerCase())}
+              isOpen={isOpen}
+            >
+              <StyledNavigationButton name={item.name}>
+                {item.icon(isOpen)}
+              </StyledNavigationButton>
+            </NavigationButtonContainer>
+          </>
         )
       })
 
-    const getContentToShow = (openDrawer: any) => {
+    const getContentToShow = (openDrawer?: null | string) => {
       if (openDrawer) {
         const filteredList = topNavItems
           .concat(bottomNavItems)
-          .filter((item: any) => item.name.toLowerCase() === openDrawer)
+          .filter(item => item.name.toLowerCase() === openDrawer)
         const TabContent = filteredList[0].content
         return <TabContent />
       }
