@@ -17,7 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { Button } from 'semantic-ui-react'
 import styled from 'styled-components'
+import { DrawerBody } from 'browser-components/drawer'
 
 export const StyledSetting = styled.div`
   padding-bottom: 15px;
@@ -32,7 +34,7 @@ export const StyledErrorListContainer = styled.div`
   color: #ffaf00;
 `
 
-export const StyledSettingTextInput: any = styled.input`
+export const StyledSettingTextInput = styled.input`
   height: 34px;
   color: #555;
   font-size: 14px;
@@ -69,6 +71,7 @@ export const StyledHelpItem = styled.li`
 export const StyledCommandListItem = styled.li`
   list-style-type: none;
   cursor: pointer;
+  text-decoration: none;
   -webkit-text-decoration: none;
   position: relative;
 
@@ -106,8 +109,43 @@ export const StyledCommand = styled.div`
   font-family: Fira Code;
 
   overflow: hidden;
-  white-space: nowrap
+  white-space: nowrap;
   text-overflow: ellipsis;
 
   max-width: 45%;
+`
+
+export const StyledFullSizeDrawerBody = styled(DrawerBody)`
+  padding: 0;
+`
+
+export const StyledHeaderContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+
+  a {
+    cursor: pointer;
+    margin-right: 10px;
+
+    .Canny_BadgeContainer .Canny_Badge {
+      position: absolute;
+      top: -1px;
+      right: -1px;
+      border-radius: 10px;
+      background-color: red;
+      padding: 4px;
+      border: 1px solid red;
+    }
+  }
+`
+
+// important to override semantic UI styles
+export const StyledFeedbackButton = styled(Button)`
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  max-width: fit-content !important;
+  margin: 0 0 25px 25px !important;
+  min-height: fit-content !important;
 `

@@ -28,11 +28,11 @@ import { hexToRgba } from '../../styles/utils'
 
 import styles from './style.css'
 
-export const CloseButton = (props: any) => {
+export const CloseButton = (props: any): JSX.Element => {
   return <button {...props}>×</button>
 }
 
-export const EditorButton = (props: any) => {
+export const EditorButton = (props: any): JSX.Element => {
   const { icon, title, color, width, onClick, ...rest } = props
   const overrideColor = { ...(color ? { color } : {}) }
   return (
@@ -74,6 +74,24 @@ const BaseButton: any = styled.span`
   display: inline-block;
   &:hover {
     opacity: 0.55;
+  }
+`
+
+export const StyledCannyBadgeAnchor = styled.div`
+  pointer-events: none;
+
+  .Canny_BadgeContainer {
+    pointer-events: none;
+
+    .Canny_Badge {
+      pointer-events: none;
+      top: 10px;
+      right: 10px;
+      border-radius: 10px;
+      background-color: red;
+      padding: 4px;
+      border: 1px solid red;
+    }
   }
 `
 
@@ -229,7 +247,7 @@ interface ButtonTypeProps {
   className?: any
 }
 
-export const FormButton = (props: ButtonTypeProps) => {
+export const FormButton = (props: ButtonTypeProps): JSX.Element => {
   const { icon, label, children, ...rest } = props
   const ButtonType =
     buttonTypes[props.buttonType as string] || buttonTypes.primary
@@ -262,7 +280,7 @@ export const FormButton = (props: ButtonTypeProps) => {
   )
 }
 
-export const CypherFrameButton = (props: any) => {
+export const CypherFrameButton = (props: any): JSX.Element => {
   const { selected, ...rest } = props
   return selected ? (
     <StyledSelectedCypherFrameButton {...rest} />
@@ -296,7 +314,7 @@ const StyledSelectedCypherFrameButton = styled(StyledCypherFrameButton)`
   color: ${props => props.theme.secondaryButtonTextHover};
   fill: ${props => props.theme.secondaryButtonTextHover};
 `
-export const FrameButton = (props: any) => {
+export const FrameButton = (props: any): JSX.Element => {
   const { pressed, children, ...rest } = props
   return pressed ? (
     <StyledFrameButtonPressed {...rest}>{children}</StyledFrameButtonPressed>
@@ -361,7 +379,7 @@ export const FrameButtonAChild = styled(DefaultA)`
   }
 `
 
-export const ActionButton = (props: any) => {
+export const ActionButton = (props: any): JSX.Element => {
   const { className, ...rest } = props
   return <button className={className + ' ' + styles.action} {...rest} />
 }
@@ -446,7 +464,7 @@ const BaseCarouselButton = styled.button`
   }
 `
 
-export const CarouselButton = (props: any) => {
+export const CarouselButton = (props: any): JSX.Element => {
   const { children, ...rest } = props
   return <BaseCarouselButton {...rest}>{children}</BaseCarouselButton>
 }

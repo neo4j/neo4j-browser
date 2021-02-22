@@ -49,6 +49,8 @@ import newFolder from 'icons/folder-add.svg'
 import folder from 'icons/folder-empty.svg'
 import addCircle from 'icons/add-circle.svg'
 import navIcon from 'icons/navigation-menu-vertical.svg'
+import cannyFeedback from 'icons/canny-feedback.svg'
+import cannyNotifications from 'icons/canny-changelog.svg'
 
 const inactive = `
   color: #797979;
@@ -112,7 +114,11 @@ const databaseConnectionStateStyles: {
   }
 }
 
-export const DatabaseIcon = (props: any) => {
+export const DatabaseIcon = (props: {
+  isOpen: boolean
+  connectionState: string
+  title: string
+}): JSX.Element => {
   const { connectionState, ...rest } = props
   return (
     <IconContainer
@@ -126,198 +132,234 @@ export const DatabaseIcon = (props: any) => {
   )
 }
 
-export const FavoritesIcon = (props: any) => (
+interface SidebarIconProps {
+  isOpen: boolean
+  title: string
+}
+
+export const FavoritesIcon = ({
+  isOpen,
+  title
+}: SidebarIconProps): JSX.Element => (
   <IconContainer
     activeStyle={white}
     inactiveStyle={inactive}
     icon={ratingStar}
     width={28}
-    {...props}
+    isOpen={isOpen}
+    title={title}
   />
 )
-export const ProjectFilesIcon = (props: any) => (
+export const ProjectFilesIcon = ({
+  isOpen,
+  title
+}: SidebarIconProps): JSX.Element => (
   <IconContainer
     activeStyle={white}
     inactiveStyle={inactive}
     icon={file}
     width={28}
-    {...props}
+    isOpen={isOpen}
+    title={title}
   />
 )
 
-export const DocumentsIcon = (props: any) => (
+export const DocumentsIcon = ({
+  isOpen,
+  title
+}: SidebarIconProps): JSX.Element => (
   <IconContainer
     activeStyle={white}
     inactiveStyle={inactive}
     icon={help}
     width={28}
-    {...props}
+    isOpen={isOpen}
+    title={title}
   />
 )
 
-export const CloudIcon = (props: any) => (
-  <IconContainer
-    activeStyle={successGreen}
-    inactiveStyle={inactive}
-    icon={cloudCheck}
-    width={28}
-    {...props}
-  />
-)
-export const CloudDisconnectedIcon = (props: any) => (
-  <IconContainer
-    activeStyle={warningRed}
-    inactiveStyle={warningRed}
-    icon={cloudRemove}
-    width={28}
-    {...props}
-  />
-)
-export const CloudSyncIcon = (props: any) => {
-  const { connected, ...rest } = props
+export const CloudSyncIcon = ({
+  isOpen,
+  title,
+  connected
+}: SidebarIconProps & { connected: boolean }): JSX.Element => {
   return (
     <IconContainer
       activeStyle={connected ? successGreen : warningRed}
       inactiveStyle={connected ? inactive : warningRed}
       icon={connected ? cloudCheck : cloudRemove}
       width={28}
-      {...rest}
+      isOpen={isOpen}
+      title={title}
     />
   )
 }
 
-export const SettingsIcon = (props: any) => (
+export const SettingsIcon = ({
+  isOpen,
+  title
+}: SidebarIconProps): JSX.Element => (
   <IconContainer
     activeStyle={white}
     inactiveStyle={inactive}
     icon={cog}
     width={28}
-    {...props}
+    isOpen={isOpen}
+    title={title}
   />
 )
-export const AboutIcon = (props: any) => (
+export const AboutIcon = ({ isOpen, title }: SidebarIconProps): JSX.Element => (
   <IconContainer
     activeStyle={credits}
     inactiveStyle={inactive}
     icon={neo4j}
     width={32}
-    {...props}
+    isOpen={isOpen}
+    title={title}
   />
 )
 
-export const SlidePreviousIcon = () => (
+export const SlidePreviousIcon = (): JSX.Element => (
   <IconContainer icon={arrowLeft1} width={20} />
 )
-export const SlideNextIcon = () => (
+export const SlideNextIcon = (): JSX.Element => (
   <IconContainer icon={arrowRight1} width={20} />
 )
-export const StackPreviousIcon = () => (
+export const StackPreviousIcon = (): JSX.Element => (
   <IconContainer icon={skipPrev} width={12} />
 )
-export const StackNextIcon = () => (
+export const StackNextIcon = (): JSX.Element => (
   <IconContainer
     icon={skipPrev}
     style={{ transform: 'rotate(180deg)' }}
     width={12}
   />
 )
-export const TableIcon = () => (
+export const TableIcon = (): JSX.Element => (
   <IconContainer icon={table01} text="Table" width={20} />
 )
-export const VisualizationIcon = () => (
+export const VisualizationIcon = (): JSX.Element => (
   <IconContainer icon={neo4j} text="Graph" width={20} />
 )
-export const AsciiIcon = () => (
+export const AsciiIcon = (): JSX.Element => (
   <IconContainer icon={Text201} text="Text" width={18} />
 )
-export const CodeIcon = () => (
+export const CodeIcon = (): JSX.Element => (
   <IconContainer icon={appWindowCode} text="Code" width={20} />
 )
-export const PlanIcon = () => (
+export const PlanIcon = (): JSX.Element => (
   <IconContainer className="sl-hierarchy" text="Plan" />
 )
-export const AlertIcon = () => (
+export const AlertIcon = (): JSX.Element => (
   <IconContainer className="sl-alert" text="Warn" />
 )
-export const ErrorIcon = () => (
+export const ErrorIcon = (): JSX.Element => (
   <IconContainer className="fa fa-file-text-o" text="Error" />
 )
 
-export const ZoomInIcon = (props: any) => (
+export const ZoomInIcon = ({
+  regulateSize
+}: {
+  regulateSize: 1 | 2
+}): JSX.Element => (
   <IconContainer
     activeStyle={inactive}
     inactiveStyle={inactive}
-    {...props}
+    regulateSize={regulateSize}
     className="sl-zoom-in"
   />
 )
-export const ZoomOutIcon = (props: any) => (
+export const ZoomOutIcon = ({
+  regulateSize
+}: {
+  regulateSize: 1 | 2
+}): JSX.Element => (
   <IconContainer
     activeStyle={inactive}
     inactiveStyle={inactive}
-    {...props}
+    regulateSize={regulateSize}
     className="sl-zoom-out"
   />
 )
 
-export const BinIcon = (props: any) => (
+export const BinIcon = (): JSX.Element => (
   <IconContainer
-    activeStyle={props.deleteAction ? warningRed : white}
-    inactiveStyle={props.deleteAction ? warningRed : white}
-    {...props}
+    activeStyle="white"
+    inactiveStyle="white"
+    suppressIconStyles="true"
     className="sl-bin"
   />
 )
 
-export const ExpandIcon = () => <IconContainer icon={expand01} width={12} />
-export const ContractIcon = () => <IconContainer icon={shrink} width={12} />
-export const RefreshIcon = () => (
+export const ExpandIcon = (): JSX.Element => (
+  <IconContainer icon={expand01} width={12} />
+)
+export const ContractIcon = (): JSX.Element => (
+  <IconContainer icon={shrink} width={12} />
+)
+export const RefreshIcon = (): JSX.Element => (
   <IconContainer icon={buttonRefreshArrow} width={12} />
 )
-export const RunIcon = () => <IconContainer icon={run_icon} width={12} />
-export const StopIcon = () => <IconContainer icon={stop_icon} width={12} />
+export const RunIcon = (): JSX.Element => (
+  <IconContainer icon={run_icon} width={12} />
+)
+export const StopIcon = (): JSX.Element => (
+  <IconContainer icon={stop_icon} width={12} />
+)
 
-export const CloseIcon = () => <IconContainer icon={close} width={12} />
-export const UpIcon = () => <IconContainer className="sl-chevron-up" />
-export const DownIcon = () => <IconContainer className="sl-chevron-down" />
-export const DoubleUpIcon = () => <IconContainer className="sl-double-up" />
-export const DoubleDownIcon = () => <IconContainer className="sl-double-down" />
-export const PinIcon = () => <IconContainer icon={pin} width={12} />
-export const SaveFavorite = () => (
+export const CloseIcon = (): JSX.Element => (
+  <IconContainer icon={close} width={12} />
+)
+export const UpIcon = (): JSX.Element => (
+  <IconContainer className="sl-chevron-up" />
+)
+export const DownIcon = (): JSX.Element => (
+  <IconContainer className="sl-chevron-down" />
+)
+export const DoubleUpIcon = (): JSX.Element => (
+  <IconContainer className="sl-double-up" />
+)
+export const DoubleDownIcon = (): JSX.Element => (
+  <IconContainer className="sl-double-down" />
+)
+export const PinIcon = (): JSX.Element => (
+  <IconContainer icon={pin} width={12} />
+)
+export const SaveFavorite = (): JSX.Element => (
   <IconContainer icon={save_favorite} width={12} />
 )
 
-export const MinusIcon = () => (
+export const MinusIcon = (): JSX.Element => (
   <IconContainer
     activeStyle={blue}
     inactiveStyle={inactive}
     className="sl-minus-circle"
   />
 )
-export const RightArrowIcon = () => (
+export const RightArrowIcon = (): JSX.Element => (
   <IconContainer
     activeStyle={blue}
     inactiveStyle={inactive}
     className="sl-arrow-circle-right"
   />
 )
-export const CancelIcon = () => (
+export const CancelIcon = (): JSX.Element => (
   <IconContainer
     activeStyle={blue}
     inactiveStyle={inactive}
     className="sl-delete-circle"
   />
 )
-export const DownloadIcon = () => (
+export const DownloadIcon = (): JSX.Element => (
   <IconContainer icon={downloadBottom} width={12} />
 )
-export const ExpandMenuIcon = () => (
+export const ExpandMenuIcon = (): JSX.Element => (
   <IconContainer activeStyle={blue} className="fa fa-caret-left" />
 )
-export const CollapseMenuIcon = () => (
+export const CollapseMenuIcon = (): JSX.Element => (
   <IconContainer activeStyle={blue} className="fa fa-caret-down" />
 )
-export const PlayIcon = () => (
+export const PlayIcon = (): JSX.Element => (
   <IconContainer
     activeStyle={lightBlue}
     inactiveStyle={blue}
@@ -325,46 +367,80 @@ export const PlayIcon = () => (
   />
 )
 
-export const PlainPlayIcon = () => (
+export const PlainPlayIcon = (): JSX.Element => (
   <IconContainer className="fa fa-play-circle" />
 )
-export const QuestionIcon = (props: any) => (
+export const QuestionIcon = ({ title }: { title: string }): JSX.Element => (
   <IconContainer
     activeStyle={lightBlue}
     inactiveStyle={blue}
-    {...props}
+    title={title}
     className="fa fa-question-circle-o"
   />
 )
 
-export const Spinner = () => (
+export const PlusIcon = (): JSX.Element => (
+  <IconContainer
+    activeStyle={white}
+    inactiveStyle={white}
+    className="fa fa-plus"
+  />
+)
+export const EditIcon = (): JSX.Element => (
+  <IconContainer
+    activeStyle={white}
+    inactiveStyle={white}
+    className="sl-pencil"
+  />
+)
+export const Spinner = (): JSX.Element => (
   <IconContainer
     data-testid="spinner"
     className="fa fa-spinner fa-spin fa-2x"
   />
 )
-export const SmallSpinner = () => (
+export const SmallSpinner = (): JSX.Element => (
   <IconContainer className="fa fa-spinner fa-spin " />
 )
-export const SquareIcon = () => <IconContainer className="fa fa-square-o" />
-export const CheckedSquareIcon = () => (
+export const SquareIcon = (): JSX.Element => (
+  <IconContainer className="fa fa-square-o" />
+)
+export const CheckedSquareIcon = (): JSX.Element => (
   <IconContainer className="fa fa-check-square-o" />
 )
 
-export const ExclamationTriangleIcon = () => (
+export const ExclamationTriangleIcon = (): JSX.Element => (
   <IconContainer suppressIconStyles className="fa fa-exclamation-triangle" />
 )
 
-export const FireExtinguisherIcon = ({ title = 'Reset' }) => (
+export const FireExtinguisherIcon = ({
+  title = 'Reset'
+}: {
+  title: string
+}): JSX.Element => (
   <IconContainer className="fa fa-fire-extinguisher" title={title} />
 )
 
-export const SavedScriptsExpandMenuRightIcon = () => <Icon name="caret right" />
-export const SavedScriptsCollapseMenuIcon = () => <Icon name="caret down" />
 export const NewFolderIcon = () => <IconContainer icon={newFolder} width={12} />
 export const NavIcon = () => <IconContainer icon={navIcon} width={12} />
 export const AddIcon = () => <IconContainer icon={addCircle} width={12} />
 export const FolderIcon = () => <IconContainer icon={folder} width={12} />
 export const SavedScriptsPlay = () => (
   <IconContainer icon={run_icon} width={12} />
+)
+
+export const SavedScriptsExpandMenuRightIcon = (): JSX.Element => (
+  <Icon name="caret right" />
+)
+
+export const SavedScriptsCollapseMenuIcon = (): JSX.Element => (
+  <Icon name="caret down" />
+)
+
+export const CannyFeedbackIcon = (): JSX.Element => (
+  <IconContainer icon={cannyFeedback} />
+)
+
+export const CannyNotificationsIcon = (): JSX.Element => (
+  <IconContainer icon={cannyNotifications} />
 )

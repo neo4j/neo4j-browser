@@ -25,7 +25,8 @@ import {
   combineReducers,
   applyMiddleware,
   compose,
-  AnyAction
+  AnyAction,
+  StoreEnhancer
 } from 'redux'
 import { Provider } from 'react-redux'
 import {
@@ -42,7 +43,9 @@ import * as Sentry from '@sentry/react'
 import { Integrations } from '@sentry/tracing'
 import { CaptureConsole } from '@sentry/integrations'
 
+import { CannySDK } from 'browser-services/canny'
 import { createReduxMiddleware, getAll, applyKeys } from 'services/localstorage'
+import { GlobalState } from 'shared/globalState'
 import { APP_START } from 'shared/modules/app/appDuck'
 import { detectRuntimeEnv } from 'services/utils'
 import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
@@ -70,13 +73,20 @@ const suberMiddleware = createSuberReduxMiddleware(bus)
 const epicMiddleware = createEpicMiddleware(epics)
 const localStorageMiddleware = createReduxMiddleware()
 
-const reducer = combineReducers({ ...(reducers as any) })
+const reducer = combineReducers<GlobalState>({ ...(reducers as any) })
 
-const enhancer = compose(
+declare global {
+  interface Window {
+    __REDUX_DEVTOOLS_EXTENSION__?: (
+      ...args: unknown[]
+    ) => StoreEnhancer<unknown>
+  }
+}
+
+const enhancer: StoreEnhancer<GlobalState> = compose(
   applyMiddleware(suberMiddleware, epicMiddleware, localStorageMiddleware),
-  process.env.NODE_ENV !== 'production' &&
-    (window as any).__REDUX_DEVTOOLS_EXTENSION__
-    ? (window as any).__REDUX_DEVTOOLS_EXTENSION__({
+  process.env.NODE_ENV !== 'production' && window.__REDUX_DEVTOOLS_EXTENSION__
+    ? window.__REDUX_DEVTOOLS_EXTENSION__({
         actionSanitizer: (action: AnyAction) =>
           action.type === 'requests/UPDATED'
             ? {
@@ -88,37 +98,35 @@ const enhancer = compose(
                 }
               }
             : action,
-        stateSanitizer: (state: any) => ({
+        stateSanitizer: (state: GlobalState) => ({
           ...state,
           requests: Object.assign(
             {},
-            ...Object.entries(state.requests).map(
-              ([id, request]: [string, any]) => ({
-                [id]: {
-                  ...request,
-                  result: {
-                    ...request.result,
-                    records:
-                      'REQUEST RECORDS OMITTED FROM REDUX DEVTOOLS TO PREVENT OUT OF MEMORY ERROR'
-                  }
+            ...Object.entries(state.requests).map(([id, request]) => ({
+              [id]: {
+                ...request,
+                result: {
+                  ...request.result,
+                  records:
+                    'REQUEST RECORDS OMITTED FROM REDUX DEVTOOLS TO PREVENT OUT OF MEMORY ERROR'
                 }
-              })
-            )
+              }
+            }))
           )
         })
       })
-    : (f: any) => f
+    : (f: unknown) => f
 )
 
-const store: any = createStore(
+const store = createStore<GlobalState>(
   reducer,
-  getAll(), // rehydrate from local storage on app start
+  getAll() as GlobalState, // rehydrate from local storage on app start
   enhancer
 )
 
 // Send everything from suber into Redux
 bus.applyMiddleware(
-  (_, origin) => (channel: any, message: any, source: any) => {
+  (_, origin) => (channel: string, message: AnyAction, source: string) => {
     // No loop-backs
     if (source === 'redux') return
     // Send to Redux with the channel as the action type
@@ -126,14 +134,14 @@ bus.applyMiddleware(
   }
 )
 
-function scrubQueryparams(event: Sentry.Event): Sentry.Event {
+function scrubQueryParams(event: Sentry.Event): Sentry.Event {
   if (event.request?.query_string) {
     event.request.query_string = ''
   }
   return event
 }
 
-export function setupSentry() {
+export function setupSentry(): void {
   if (process.env.NODE_ENV === 'production') {
     Sentry.init({
       dsn:
@@ -146,7 +154,7 @@ export function setupSentry() {
       tracesSampleRate: 0.2,
       beforeSend: event =>
         allowOutgoingConnections(store.getState())
-          ? scrubQueryparams(event)
+          ? scrubQueryParams(event)
           : null,
       environment: 'unset'
     })
@@ -166,7 +174,7 @@ export function setupSentry() {
           }))
         )
       })
-      .catch(() => {})
+      .catch(() => undefined)
   }
 }
 
@@ -231,9 +239,17 @@ const client = new ApolloClient({
   link: uploadLink
 })
 
-const AppInit = () => {
+CannySDK.init()
+  .then(() => {
+    window.CannyIsLoaded = true
+  })
+  .catch(() => {
+    window.CannyIsLoaded = false
+  })
+
+const AppInit = (): JSX.Element => {
   return (
-    <Provider store={store}>
+    <Provider store={store as any}>
       <BusProvider bus={bus}>
         <ApolloProvider client={client}>
           <App />

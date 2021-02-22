@@ -21,11 +21,12 @@
 import { Middleware } from 'redux'
 import { GlobalState } from 'shared/globalState'
 import { shouldRetainConnectionCredentials } from '../modules/dbMeta/dbMetaDuck'
+import { initialState as settingsInitialState } from '../modules/settings/settingsDuck'
 
 export const keyPrefix = 'neo4j.'
 let storage = window.localStorage
 
-type key =
+export type key =
   | 'connections'
   | 'settings'
   | 'history'
@@ -37,7 +38,7 @@ type key =
   | 'experimentalFeatures'
 const keys: key[] = []
 
-export function getItem(key: string): Record<string, unknown> | undefined {
+export function getItem(key: key): GlobalState[key] | undefined {
   try {
     const serializedVal = storage.getItem(keyPrefix + key)
     if (serializedVal === null) return undefined
@@ -58,15 +59,18 @@ export function setItem(key: string, val: unknown): boolean {
   }
 }
 
-export function getAll(): Record<string, unknown> {
-  const out: Record<string, unknown> = {}
+export function getAll(): Partial<GlobalState> {
+  const out: Partial<GlobalState> = {}
   keys.forEach(key => {
     const current = getItem(key)
     if (current !== undefined) {
       if (key === 'settings') {
-        out[key] = { ...current, playImplicitInitCommands: true }
+        out[key] = {
+          ...(current as typeof settingsInitialState),
+          playImplicitInitCommands: true
+        }
       } else {
-        out[key] = current
+        out[key] = current as any
       }
     }
   })
