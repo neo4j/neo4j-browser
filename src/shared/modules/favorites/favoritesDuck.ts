@@ -309,11 +309,11 @@ function updateFavoriteFields(
 
 function contentWithNewName(script: Favorite, newName: string): string {
   // Name of favorite is the comment on the first line by convention
-  const [nameLine, ...contents] = script.content.split('\n')
+  const [nameLine, ...NonNamecontents] = script.content.split('\n')
   const alreadyHasName = nameLine.startsWith('//')
   return alreadyHasName
-    ? `// ${newName}
-  ${contents.join('\n')}`
-    : `// ${newName}
+    ? `//${newName}
+${NonNamecontents.join('\n')}`
+    : `//${newName}
 ${script.content}`
 }

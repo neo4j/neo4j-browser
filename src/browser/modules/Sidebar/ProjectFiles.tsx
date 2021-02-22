@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React, { useState, Dispatch } from 'react'
+import React, { Dispatch } from 'react'
 import { Action } from 'redux'
 import { connect } from 'react-redux'
 import { useMutation } from '@apollo/client'
@@ -29,9 +29,8 @@ import ProjectFilesScripts, {
 } from '../../components/ProjectFiles/ProjectsFilesScripts'
 import NewSavedScript from './NewSavedScript'
 import {
-  setProjectFileDefaultFileName,
-  updateCacheAddProjectFile,
-  checkFileNameInput
+  getProjectFileDefaultFileName,
+  updateCacheAddProjectFile
 } from '../../components/ProjectFiles/projectFilesUtils'
 import { ADD_PROJECT_FILE } from '../../components/ProjectFiles/projectFilesConstants'
 import { setDraftScript } from 'shared/modules/sidebar/sidebarDuck'
@@ -49,17 +48,10 @@ const ProjectFiles = ({
   resetDraft
 }: ProjectFilesProps) => {
   const [addFile, { error: apolloError }] = useMutation(ADD_PROJECT_FILE)
-  const [error, setError] = useState('')
 
   function save(inputedFileName: string) {
     const cypherFileExt = new RegExp(`${CYPHER_FILE_EXTENSION}$`)
     const fileName = inputedFileName.replace(cypherFileExt, '')
-    setError('')
-
-    if (checkFileNameInput(fileName)) {
-      setError(checkFileNameInput(fileName))
-      return
-    }
 
     addFile({
       variables: {
@@ -81,30 +73,28 @@ const ProjectFiles = ({
       <DrawerHeader>Project Files</DrawerHeader>
       {scriptDraft && (
         <NewSavedScript
-          defaultName={setProjectFileDefaultFileName(scriptDraft)}
+          defaultName={getProjectFileDefaultFileName(scriptDraft)}
           headerText="Save as"
           onSubmit={save}
           onCancel={resetDraft}
+          pattern="^[\w\-.$+]+$"
+          patternMessage="Include only letters, numbers or . - _ $ +"
         />
       )}
-      <ProjectFilesError apolloErrors={[apolloError]} errors={[error]} />
+      <ProjectFilesError apolloErrors={[apolloError]} />
       <ProjectFilesScripts />
     </Drawer>
   )
 }
 
-const mapStateToProps = (state: any) => {
-  return {
-    projectId: getProjectId(state)
-  }
-}
+const mapStateToProps = (state: any) => ({
+  projectId: getProjectId(state)
+})
 
-const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
-  return {
-    resetDraft: () => {
-      dispatch(setDraftScript(null, 'project files'))
-    }
+const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
+  resetDraft: () => {
+    dispatch(setDraftScript(null, 'project files'))
   }
-}
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProjectFiles)

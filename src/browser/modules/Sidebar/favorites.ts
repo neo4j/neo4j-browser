@@ -40,7 +40,7 @@ const mapFavoritesStateToProps = (state: any) => {
   return {
     folders,
     scripts,
-    title: 'Local Scripts'
+    title: 'Local scripts'
   }
 }
 
@@ -54,8 +54,8 @@ const mapFavoritesDispatchToProps = (dispatch: any, ownProps: any) => ({
     dispatch(
       executeCommand(favorite.content, { source: commandSources.favorite })
     ),
-  removeScript: (favorite: favoritesDuck.Favorite) =>
-    favorite.id && dispatch(favoritesDuck.removeFavorite(favorite.id)),
+  removeScripts: (ids: string[]) =>
+    dispatch(favoritesDuck.removeFavorites(ids)),
   renameScript: (favorite: favoritesDuck.Favorite, name: string) => {
     if (favorite.id) {
       dispatch(favoritesDuck.renameFavorite(favorite.id, name))
@@ -64,8 +64,8 @@ const mapFavoritesDispatchToProps = (dispatch: any, ownProps: any) => ({
   updateFolders(folders: foldersDuck.Folder[]) {
     dispatch(foldersDuck.updateFolders(folders))
   },
-  createNewFolder() {
-    dispatch(foldersDuck.addFolder(uuid.v4(), 'New Folder'))
+  createNewFolder(id?: string) {
+    dispatch(foldersDuck.addFolder(id || uuid.v4(), 'New Folder'))
   },
   dispatchRemoveFolderAndItsScripts(folderId: string, favoriteIds: string[]) {
     dispatch(foldersDuck.removeFolder(folderId))
@@ -86,6 +86,9 @@ const mapFavoritesDispatchToProps = (dispatch: any, ownProps: any) => ({
     folders: foldersDuck.Folder[]
   ) {
     exportFavorites(favorites, folders)
+  },
+  addScript(content: string) {
+    dispatch(favoritesDuck.addFavorite(content))
   }
 })
 
@@ -93,21 +96,18 @@ const mergeProps = (stateProps: any, dispatchProps: any) => {
   return {
     ...stateProps,
     ...dispatchProps,
-    renameFolder: (folderToRename: foldersDuck.Folder, name: string) => {
+    renameFolder: (folderId: string, name: string) => {
       dispatchProps.updateFolders(
         stateProps.folders.map((folder: foldersDuck.Folder) =>
-          folderToRename.id === folder.id ? { ...folder, name } : folder
+          folderId === folder.id ? { ...folder, name } : folder
         )
       )
     },
-    removeFolder(folder: foldersDuck.Folder) {
+    removeFolder(folderId: string) {
       const scriptsToRemove = stateProps.scripts
-        .filter((script: favoritesDuck.Favorite) => script.folder === folder.id)
+        .filter((script: favoritesDuck.Favorite) => script.folder === folderId)
         .map((script: favoritesDuck.Favorite) => script.id)
-      dispatchProps.dispatchRemoveFolderAndItsScripts(
-        folder.id,
-        scriptsToRemove
-      )
+      dispatchProps.dispatchRemoveFolderAndItsScripts(folderId, scriptsToRemove)
     }
   }
 }

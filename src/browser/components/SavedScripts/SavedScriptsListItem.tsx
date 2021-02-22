@@ -17,25 +17,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React from 'react'
+
+import React, { useState } from 'react'
 import { useDrag } from 'react-dnd'
 import { useCustomBlur, useNameUpdate } from './hooks'
-import { RemoveButton, RunButton, EditButton } from './SavedScriptsButton'
+import { RunButton } from './SavedScriptsButton'
 import {
   SavedScriptsButtonWrapper,
   SavedScriptsInput,
   SavedScriptsListItemDisplayName,
-  SavedScriptsListItemMain
+  SavedScriptsListItemMain,
+  ContextMenuHoverParent,
+  ContextMenu,
+  ContextMenuContainer,
+  ContextMenuItem,
+  Separator
 } from './styled'
 import { Favorite } from 'shared/modules/favorites/favoritesDuck'
 import { getScriptDisplayName } from './utils'
+import { NavIcon } from 'browser-components/icons/Icons'
 
 interface SavedScriptsListItemProps {
   script: Favorite
-  selectScript: (script: Favorite) => void
-  execScript: (script: Favorite) => void
-  renameScript?: (script: Favorite, name: string) => void
-  removeScript?: (script: Favorite) => void
+  selectScript: () => void
+  execScript: () => void
+  onClick?: (e: React.MouseEvent) => void
+  isSelected?: boolean
+  renameScript?: (name: string) => void
+  removeScript?: () => void
+  duplicateScript?: () => void
 }
 
 function SavedScriptsListItem({
@@ -43,7 +53,10 @@ function SavedScriptsListItem({
   selectScript,
   execScript,
   renameScript,
-  removeScript
+  removeScript,
+  duplicateScript,
+  onClick,
+  isSelected
 }: SavedScriptsListItemProps): JSX.Element {
   const displayName = getScriptDisplayName(script)
   const {
@@ -54,46 +67,99 @@ function SavedScriptsListItem({
     setNameValue
   } = useNameUpdate(
     displayName,
-    () => renameScript && renameScript(script, currentNameValue)
+    () => renameScript && renameScript(currentNameValue)
   )
-  const blurRef = useCustomBlur(doneEditing)
-  const drag = useDrag({
+  const overlayBlurRef = useCustomBlur(() => setShowOverlay(false))
+  const dragAndDropRef = useDrag({
     item: { id: script.id, type: 'script' }
   })[1]
-
+  const [showOverlay, setShowOverlay] = useState(false)
+  const toggleOverlay = () => setShowOverlay(t => !t)
   const canRunScript = !script.not_executable && !isEditing
 
   return (
-    <SavedScriptsListItemMain ref={blurRef} className="saved-scripts-list-item">
-      {isEditing ? (
-        <SavedScriptsInput
-          className="saved-scripts-list-item__name-input"
-          type="text"
-          autoFocus
-          onKeyPress={({ key }) => {
-            key === 'Enter' && doneEditing()
-          }}
-          value={currentNameValue}
-          onChange={e => setNameValue(e.target.value)}
-        />
-      ) : (
-        <SavedScriptsListItemDisplayName
-          className="saved-scripts-list-item__display-name"
-          data-testid={`scriptTitle-${displayName}`}
-          onClick={() => !isEditing && selectScript(script)}
-          ref={drag}
-        >
-          {displayName}
-        </SavedScriptsListItemDisplayName>
-      )}
-      <SavedScriptsButtonWrapper className="saved-scripts__button-wrapper">
-        {removeScript && isEditing && (
-          <RemoveButton onClick={() => removeScript(script)} />
+    <ContextMenuHoverParent stayVisible={showOverlay || isSelected}>
+      <SavedScriptsListItemMain
+        data-testid="savedScriptListItem"
+        isSelected={isSelected}
+        ref={dragAndDropRef}
+        onClick={onClick}
+      >
+        {isEditing ? (
+          <SavedScriptsInput
+            type="text"
+            autoFocus
+            onKeyPress={({ key }) => {
+              key === 'Enter' && doneEditing()
+            }}
+            onBlur={doneEditing}
+            value={currentNameValue}
+            onChange={e => setNameValue(e.target.value)}
+          />
+        ) : (
+          <SavedScriptsListItemDisplayName
+            data-testid={`scriptTitle-${displayName}`}
+            onClick={() => script.isStatic && selectScript()}
+          >
+            {displayName}
+          </SavedScriptsListItemDisplayName>
         )}
-        {renameScript && !isEditing && <EditButton onClick={beginEditing} />}
-        {canRunScript && <RunButton onClick={() => execScript(script)} />}
-      </SavedScriptsButtonWrapper>
-    </SavedScriptsListItemMain>
+        <SavedScriptsButtonWrapper>
+          <ContextMenuContainer
+            onClick={toggleOverlay}
+            data-testid={`navicon-${displayName}`}
+          >
+            <NavIcon />
+            {showOverlay && (
+              <ContextMenu ref={overlayBlurRef}>
+                {removeScript && (
+                  <ContextMenuItem
+                    data-testid="contextMenuDelete"
+                    onClick={removeScript}
+                  >
+                    Delete
+                  </ContextMenuItem>
+                )}
+                {removeScript && <Separator />}
+                {renameScript && (
+                  <ContextMenuItem
+                    data-testid="contextMenuRename"
+                    onClick={beginEditing}
+                  >
+                    Rename
+                  </ContextMenuItem>
+                )}
+                {
+                  <ContextMenuItem
+                    data-testid="contextMenuEdit"
+                    onClick={selectScript}
+                  >
+                    Edit content
+                  </ContextMenuItem>
+                }
+                {canRunScript && (
+                  <ContextMenuItem
+                    data-testid="contextMenuRun"
+                    onClick={execScript}
+                  >
+                    Run
+                  </ContextMenuItem>
+                )}
+                {duplicateScript && (
+                  <ContextMenuItem
+                    data-testid="contextMenuDuplicate"
+                    onClick={duplicateScript}
+                  >
+                    Duplicate
+                  </ContextMenuItem>
+                )}
+              </ContextMenu>
+            )}
+          </ContextMenuContainer>
+          {canRunScript && <RunButton onClick={execScript} />}
+        </SavedScriptsButtonWrapper>
+      </SavedScriptsListItemMain>
+    </ContextMenuHoverParent>
   )
 }
 

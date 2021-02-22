@@ -25,13 +25,18 @@ describe('sidebarDuck', () => {
     const action = toggle('db')
 
     const nextState = reducer(undefined, action)
-    expect(nextState).toEqual({ drawer: 'db', draftScript: null })
+    expect(nextState).toEqual({
+      drawer: 'db',
+      draftScript: null,
+      scriptId: null
+    })
   })
 
   test('should switch drawer when a different one already is open', () => {
     const initialState: SidebarState = {
       drawer: 'favorites',
-      draftScript: null
+      draftScript: null,
+      scriptId: null
     }
     const action = toggle('db')
     const nextState = reducer(initialState, action)
@@ -41,7 +46,8 @@ describe('sidebarDuck', () => {
   test('should close drawer when the opened one is toggled', () => {
     const initialState: SidebarState = {
       drawer: 'db',
-      draftScript: null
+      draftScript: null,
+      scriptId: null
     }
     const action = toggle('db')
     const nextState = reducer(initialState, action)

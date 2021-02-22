@@ -21,27 +21,36 @@ import React, { useState } from 'react'
 import { useDrop } from 'react-dnd'
 import { useCustomBlur, useNameUpdate } from './hooks'
 
-import { EditButton, RemoveButton } from './SavedScriptsButton'
 import {
+  NavIcon,
+  FolderIcon,
   SavedScriptsCollapseMenuIcon,
   SavedScriptsExpandMenuRightIcon
 } from 'browser-components/icons/Icons'
 
 import {
   SavedScriptsButtonWrapper,
-  SavedScriptsFolderCollapseIcon,
   SavedScriptsFolderHeader,
   SavedScriptsFolderLabel,
   SavedScriptsFolderMain,
-  SavedScriptsInput
+  SavedScriptsInput,
+  ChildrenContainer,
+  FolderNameWrapper,
+  ContextMenuHoverParent,
+  ContextMenu,
+  ContextMenuContainer,
+  ContextMenuItem
 } from './styled'
 import { Folder } from 'shared/modules/favorites/foldersDuck'
 
 interface SavedScriptsFolderProps {
   folder: Folder
-  renameFolder?: (folder: Folder, name: string) => void
-  removeFolder?: (folder: Folder) => void
+  renameFolder?: (folderId: string, name: string) => void
+  removeFolder?: (folderId: string) => void
   moveScript?: (scriptId: string, folderId: string) => void
+  forceEdit: boolean
+  onDoneEditing: () => void
+  selectedScriptIds: string[]
   children: JSX.Element[]
 }
 
@@ -50,6 +59,9 @@ function SavedScriptsFolder({
   moveScript,
   renameFolder,
   removeFolder,
+  selectedScriptIds,
+  forceEdit,
+  onDoneEditing,
   children
 }: SavedScriptsFolderProps): JSX.Element {
   const {
@@ -58,11 +70,14 @@ function SavedScriptsFolder({
     beginEditing,
     doneEditing,
     setNameValue
-  } = useNameUpdate(
-    folder.name,
-    () => renameFolder && renameFolder(folder, currentNameValue)
-  )
-  const blurRef = useCustomBlur(doneEditing)
+  } = useNameUpdate(folder.name, () => {
+    renameFolder && renameFolder(folder.id, currentNameValue)
+    onDoneEditing()
+  })
+  const blurRef = useCustomBlur(() => {
+    doneEditing()
+    onDoneEditing()
+  })
   const [expanded, setExpanded] = useState(false)
   const drop = useDrop<
     { id: string; type: string },
@@ -71,58 +86,90 @@ function SavedScriptsFolder({
   >({
     accept: 'script',
     drop: item => {
-      moveScript && moveScript(item.id, folder.id)
+      if (moveScript) {
+        // move dragged
+        moveScript(item.id, folder.id)
+        // Also move all selected
+        selectedScriptIds.forEach(id => moveScript(id, folder.id))
+      }
     }
   })[1]
 
+  const [showOverlay, setShowOverlay] = useState(false)
+  const overlayBlurRef = useCustomBlur(() => setShowOverlay(false))
+  const toggleOverlay = () => setShowOverlay(t => !t)
+  const contextMenuContent = [
+    renameFolder && (
+      <ContextMenuItem data-testid="contextMenuRename" onClick={beginEditing}>
+        Rename folder
+      </ContextMenuItem>
+    ),
+    removeFolder && (
+      <ContextMenuItem
+        data-testid="contextMenuRemove"
+        onClick={() => removeFolder(folder.id)}
+      >
+        Delete folder
+      </ContextMenuItem>
+    )
+  ].filter(defined => defined)
+
   return (
-    <div ref={drop} data-testid={`savedScriptsFolder-${folder.name}`}>
-      <SavedScriptsFolderMain className="saved-scripts-folder">
-        <SavedScriptsFolderHeader
-          title={folder.name}
-          ref={blurRef}
-          className="saved-scripts-folder__header"
-        >
-          {isEditing ? (
+    <ContextMenuHoverParent
+      ref={drop}
+      data-testid={`savedScriptsFolder-${folder.name}`}
+      stayVisible={showOverlay}
+    >
+      <SavedScriptsFolderMain>
+        <SavedScriptsFolderHeader title={folder.name} ref={blurRef}>
+          {isEditing || forceEdit ? (
             <SavedScriptsInput
-              className="saved-scripts-folder__label-input"
               type="text"
               autoFocus
               onKeyPress={({ key }) => {
-                key === 'Enter' && doneEditing()
+                if (key === 'Enter') {
+                  doneEditing()
+                  onDoneEditing()
+                }
               }}
+              onFocus={event => event.target.select()}
               value={currentNameValue}
               onChange={e => setNameValue(e.target.value)}
               data-testid="editSavedScriptFolderName"
             />
           ) : (
             <SavedScriptsFolderLabel
-              className="saved-scripts-folder__label"
               data-testid={`expandFolder-${folder.name}`}
               onClick={() => setExpanded(!expanded)}
             >
-              <SavedScriptsFolderCollapseIcon className="saved-scripts-folder__collapse-icon">
-                {expanded ? (
-                  <SavedScriptsCollapseMenuIcon />
-                ) : (
-                  <SavedScriptsExpandMenuRightIcon />
-                )}
-              </SavedScriptsFolderCollapseIcon>
-              {folder.name}
+              {expanded ? (
+                <SavedScriptsCollapseMenuIcon />
+              ) : (
+                <SavedScriptsExpandMenuRightIcon />
+              )}
+              <FolderIcon />
+              <FolderNameWrapper> {folder.name} </FolderNameWrapper>
             </SavedScriptsFolderLabel>
           )}
-          <SavedScriptsButtonWrapper className="saved-scripts__button-wrapper">
-            {removeFolder && isEditing && (
-              <RemoveButton onClick={() => removeFolder(folder)} />
-            )}
-            {renameFolder && !isEditing && (
-              <EditButton onClick={beginEditing} />
+          <SavedScriptsButtonWrapper>
+            {contextMenuContent.length > 0 && (
+              <ContextMenuContainer
+                onClick={toggleOverlay}
+                data-testid={`navicon-${folder.name}`}
+              >
+                <NavIcon />
+                {showOverlay && (
+                  <ContextMenu ref={overlayBlurRef}>
+                    {contextMenuContent}
+                  </ContextMenu>
+                )}
+              </ContextMenuContainer>
             )}
           </SavedScriptsButtonWrapper>
         </SavedScriptsFolderHeader>
-        {expanded && children}
+        <ChildrenContainer> {expanded && children}</ChildrenContainer>
       </SavedScriptsFolderMain>
-    </div>
+    </ContextMenuHoverParent>
   )
 }
 

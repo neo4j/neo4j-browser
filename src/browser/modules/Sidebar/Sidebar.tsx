@@ -18,9 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { ReactFragment, ReactElement, Dispatch } from 'react'
-import { Action } from 'redux'
-import uuid from 'uuid'
+import React, { ReactFragment, ReactElement } from 'react'
 import { connect } from 'react-redux'
 import DatabaseDrawer from '../DBMSInfo/DBMSInfo'
 import DocumentsDrawer from './Documents'
@@ -32,22 +30,15 @@ import ProjectFilesDrawer from './ProjectFiles'
 import TabNavigation, {
   NavItem
 } from 'browser-components/TabNavigation/Navigation'
-import { DrawerHeader } from 'browser-components/drawer'
-import NewSavedScript from './NewSavedScript'
 import BrowserSync from '../Sync/BrowserSync'
 import { GlobalState } from 'shared/globalState'
 import { isUserSignedIn } from 'shared/modules/sync/syncDuck'
-import { addFavorite } from 'shared/modules/favorites/favoritesDuck'
 import { utilizeBrowserSync } from 'shared/modules/features/featuresDuck'
 import {
   PENDING_STATE,
   CONNECTED_STATE,
   DISCONNECTED_STATE
 } from 'shared/modules/connections/connectionsDuck'
-import {
-  getCurrentDraft,
-  setDraftScript
-} from 'shared/modules/sidebar/sidebarDuck'
 import { isRelateAvailable } from 'shared/modules/app/appDuck'
 
 import {
@@ -59,7 +50,8 @@ import {
   AboutIcon,
   ProjectFilesIcon
 } from 'browser-components/icons/Icons'
-import { defaultNameFromDisplayContent } from 'browser-components/SavedScripts'
+import { getCurrentDraft } from 'shared/modules/sidebar/sidebarDuck'
+import { DrawerHeader } from 'browser-components/drawer'
 
 interface SidebarProps {
   openDrawer: string
@@ -69,8 +61,6 @@ interface SidebarProps {
   syncConnected: boolean
   loadSync: boolean
   isRelateAvailable: boolean
-  addFavorite: (cmd: string) => void
-  resetDraft: () => void
   scriptDraft: string | null
 }
 
@@ -82,9 +72,7 @@ const Sidebar = ({
   syncConnected,
   loadSync,
   isRelateAvailable,
-  addFavorite,
-  scriptDraft,
-  resetDraft
+  scriptDraft
 }: SidebarProps) => {
   const topNavItemsList: NavItem[] = [
     {
@@ -110,32 +98,7 @@ const Sidebar = ({
       content: function FavoritesDrawer(): ReactFragment {
         return (
           <>
-            <DrawerHeader>Favorites</DrawerHeader>
-            {scriptDraft && (
-              <NewSavedScript
-                onSubmit={input => {
-                  if (input === defaultNameFromDisplayContent(scriptDraft)) {
-                    addFavorite(scriptDraft)
-                  } else {
-                    const alreadyHasName = scriptDraft.startsWith('//')
-                    const replaceName = [
-                      `// ${input}`,
-                      scriptDraft.split('\n').slice(1)
-                    ].join('\n')
-
-                    addFavorite(
-                      alreadyHasName
-                        ? replaceName
-                        : `//${input}\n${scriptDraft}`
-                    )
-                  }
-                  resetDraft()
-                }}
-                defaultName={defaultNameFromDisplayContent(scriptDraft)}
-                headerText={'Save as'}
-                onCancel={resetDraft}
-              />
-            )}
+            <DrawerHeader> Favorites </DrawerHeader>
             <Favorites />
             {showStaticScripts && <StaticScripts />}
           </>
@@ -235,15 +198,4 @@ const mapStateToProps = (state: GlobalState) => {
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
-  return {
-    addFavorite: (cmd: string) => {
-      dispatch(addFavorite(cmd, uuid.v4()))
-    },
-    resetDraft: () => {
-      dispatch(setDraftScript(null, 'favorites'))
-    }
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Sidebar)
+export default connect(mapStateToProps)(Sidebar)

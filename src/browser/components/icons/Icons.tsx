@@ -45,6 +45,10 @@ import save_favorite from 'icons/save_favorite.svg'
 import run_icon from 'icons/run_icon.svg'
 import stop_icon from 'icons/stop_icon.svg'
 import help from 'icons/help.svg'
+import newFolder from 'icons/folder-add.svg'
+import folder from 'icons/folder-empty.svg'
+import addCircle from 'icons/add-circle.svg'
+import navIcon from 'icons/navigation-menu-vertical.svg'
 import cannyFeedback from 'icons/canny-feedback.svg'
 import cannyNotifications from 'icons/canny-changelog.svg'
 
@@ -374,6 +378,7 @@ export const QuestionIcon = ({ title }: { title: string }): JSX.Element => (
     className="fa fa-question-circle-o"
   />
 )
+
 export const PlusIcon = (): JSX.Element => (
   <IconContainer
     activeStyle={white}
@@ -414,6 +419,14 @@ export const FireExtinguisherIcon = ({
   title: string
 }): JSX.Element => (
   <IconContainer className="fa fa-fire-extinguisher" title={title} />
+)
+
+export const NewFolderIcon = () => <IconContainer icon={newFolder} width={12} />
+export const NavIcon = () => <IconContainer icon={navIcon} width={12} />
+export const AddIcon = () => <IconContainer icon={addCircle} width={12} />
+export const FolderIcon = () => <IconContainer icon={folder} width={12} />
+export const SavedScriptsPlay = () => (
+  <IconContainer icon={run_icon} width={12} />
 )
 
 export const SavedScriptsExpandMenuRightIcon = (): JSX.Element => (

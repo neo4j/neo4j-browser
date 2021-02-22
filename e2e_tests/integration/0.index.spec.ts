@@ -147,19 +147,14 @@ describe('Neo4j Browser', () => {
   // Browser sync is disabled on Aura
   if (!isAura()) {
     it('will clear local storage when clicking "Clear local data"', () => {
-      const scriptName = 'foo'
-      cy.get(Editor).type(
-        `//${scriptName}
-      RETURN 1{enter}`,
-        { force: true }
-      )
+      cy.connect('neo4j', Cypress.config('password'))
+
+      cy.get(Editor).type(`RETURN 1{enter}`, { force: true })
 
       cy.get('[data-testid="frame-Favorite"]').click()
-      cy.get('[data-testid="saveScript"]').click()
-
-      cy.get('.saved-scripts-list-item')
+      cy.get('[data-testid="savedScriptListItem"]')
         .first()
-        .should('be', scriptName)
+        .contains('RETURN 1')
 
       cy.get('[data-testid="drawerSync"]').click()
       cy.get('[data-testid="clearLocalData"]').click()
@@ -169,7 +164,8 @@ describe('Neo4j Browser', () => {
       cy.get('[data-testid="clearLocalData"]').click()
 
       cy.get('[data-testid="drawerFavorites"]').click()
-      cy.get('.saved-scripts-list-item').should('have.length', 0)
+
+      cy.get('[data-testid="savedScriptListItem"]').should('have.length', 0)
       cy.get('[data-testid="drawerFavorites"]').click()
 
       // once data is cleared the user is logged out and the connect form is displayed

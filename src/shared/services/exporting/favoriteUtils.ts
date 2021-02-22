@@ -26,6 +26,18 @@ import { Folder } from 'shared/modules/favorites/foldersDuck'
 
 export const CYPHER_FILE_EXTENSION = '.cypher'
 
+export function exportFavoritesAsBigCypherFile(favorites: Favorite[]): void {
+  const fileContent = favorites
+    .map(favorite => favorite.content)
+    .join('\n\n')
+    .trim()
+
+  saveAs(
+    new Blob([fileContent], { type: 'text/csv' }),
+    `saved-scripts-${new Date().toISOString().split('T')[0]}.cypher`
+  )
+}
+
 type WriteableFavorite = {
   content: string
   fullFilename: string

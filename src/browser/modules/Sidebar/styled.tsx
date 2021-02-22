@@ -76,7 +76,7 @@ export const StyledCommandListItem = styled.li`
   position: relative;
 
   &:hover {
-    background-color: #40444e;
+    background-color: ${props => props.theme.hoverBackground};
 
     &:after {
       content: ' ';

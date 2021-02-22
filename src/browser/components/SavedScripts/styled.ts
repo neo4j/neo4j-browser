@@ -1,13 +1,8 @@
 import styled from 'styled-components'
 
-export const SavedScriptsMain = styled.div``
-
 export const SavedScriptsBody = styled.div`
-  padding: 0 24px;
-`
-
-export const SavedScriptsBodySection = styled.div`
-  margin-bottom: 12px;
+  padding: 0 18px;
+  margin-bottom: 25px;
 `
 
 export const SavedScriptsHeader = styled.h5`
@@ -19,21 +14,45 @@ export const SavedScriptsHeader = styled.h5`
   line-height: 39px;
   position: relative;
   font-weight: bold;
-  -webkit-font-smoothing: antialiased;
-  text-shadow: rgba(0, 0, 0, 0.4) 0px 1px 0px;
+`
+export const FolderNameWrapper = styled.span`
+  margin-left: 5px;
 `
 
-export const SavedScriptsListItemMain = styled.div`
-  padding: 5px 3px;
+export const SavedScriptsListItemMain = styled.div<{
+  isSelected?: boolean
+}>`
+  padding: 5px;
   display: flex;
   justify-content: space-between;
 
+  background-color: ${props =>
+    props.isSelected ? props.theme.hoverBackground : 'inherit'};
+
+  ${props =>
+    props.isSelected
+      ? `margin-left: -3px;
+border-left: 3px solid #68BDF4;`
+      : ''};
+
   &:hover {
     color: inherit;
+    background-color: ${props => props.theme.hoverBackground};
   }
+`
 
-  &:hover .saved-scripts__edit-button {
-    visibility: visible;
+export const SavedScriptsNewFavorite = styled.div`
+  flex: 1;
+  user-select: none;
+  cursor: pointer;
+  color: #bcc0c9;
+  font-size: 13px;
+  margin-left: 6px;
+  margin-top: 10px;
+  transition: color ease-in-out 0.3s;
+
+  &:hover {
+    color: inherit;
   }
 `
 
@@ -48,25 +67,19 @@ export const SavedScriptsListItemDisplayName = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: color ease-in-out 0.3s;
-
-  &:hover {
-    color: inherit;
-  }
 `
 
 export const SavedScriptsFolderMain = styled.div`
-  padding-bottom: 16px;
+  padding: 5px;
+`
+export const ChildrenContainer = styled.div`
+  padding-left: 10px;
 `
 
 export const SavedScriptsFolderHeader = styled.div`
   display: flex;
   justify-content: space-between;
   padding-bottom: 5px;
-
-  &:hover .saved-scripts__edit-button {
-    visibility: visible;
-  }
 `
 
 export const SavedScriptsFolderBody = styled.div`
@@ -78,16 +91,17 @@ export const SavedScriptsFolderLabel = styled.div`
   margin-right: 10px;
   user-select: none;
   cursor: pointer;
-  font-weight: bold;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  display: flex;
 `
 
 export const SavedScriptsFolderCollapseIcon = styled.span`
-  margin-right: 10px;
+  margin-right: 3px;
   width: 8px;
   display: inline-block;
+  vertical-align: middle;
 `
 
 export const SavedScriptsButtonWrapper = styled.div`
@@ -119,4 +133,54 @@ export const SavedScriptsInput = styled.input`
   background: transparent;
   font-weight: normal;
   margin-right: 5px;
+
+  ::selection {
+    color: white;
+    background-color: ${props => props.theme.linkHover};
+  }
+`
+
+export const ContextMenuContainer = styled.span`
+  position: relative;
+`
+
+export const ContextMenuHoverParent = styled.span<{ stayVisible?: boolean }>`
+  ${ContextMenuContainer} {
+    visibility: ${props => (props.stayVisible ? 'visible' : 'hidden')};
+  }
+
+  &:hover ${ContextMenuContainer} {
+    visibility: visible;
+  }
+`
+
+export const ContextMenu = styled.div`
+  color: ${props => props.theme.primaryText};
+  padding-top: 5px;
+  padding-bottom: 5px;
+  position: absolute;
+  width: 156px;
+  left: -156px;
+  top: -3px;
+  z-index: 999;
+  border: 1px solid transparent;
+  background-color: ${props => props.theme.secondaryBackground};
+  border: ${props => props.theme.frameBorder};
+
+  box-shadow: 0px 0px 2px rgba(52, 58, 67, 0.1),
+    0px 1px 2px rgba(52, 58, 67, 0.08), 0px 1px 4px rgba(52, 58, 67, 0.08);
+  border-radius: 2px;
+`
+export const ContextMenuItem = styled.div`
+  cursor: pointer;
+  width: 100%;
+  padding-left: 5px;
+
+  &:hover {
+    background-color: ${props => props.theme.primaryBackground};
+  }
+`
+
+export const Separator = styled.div`
+  border-bottom: 1px solid rgb(77, 74, 87, 0.3);
 `

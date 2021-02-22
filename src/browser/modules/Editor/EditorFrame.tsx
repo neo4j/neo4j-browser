@@ -18,13 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, {
-  useState,
-  Dispatch,
-  useEffect,
-  useRef,
-  useCallback
-} from 'react'
+import React, { useState, Dispatch, useEffect, useRef } from 'react'
 import { Action } from 'redux'
 import SVGInline from 'react-svg-inline'
 import { connect } from 'react-redux'
@@ -73,7 +67,7 @@ import {
   ADD_PROJECT_FILE,
   REMOVE_PROJECT_FILE
 } from 'browser-components/ProjectFiles/projectFilesConstants'
-import { setProjectFileDefaultFileName } from 'browser-components/ProjectFiles/projectFilesUtils'
+import { getProjectFileDefaultFileName } from 'browser-components/ProjectFiles/projectFilesUtils'
 import Monaco, { MonacoHandles } from './Monaco'
 import {
   codeFontLigatures,
@@ -230,7 +224,7 @@ export function EditorFrame({
       return name
     }
     if (isProjectFile) {
-      return setProjectFileDefaultFileName(content)
+      return getProjectFileDefaultFileName(content)
     }
 
     return defaultNameFromDisplayContent(content)
@@ -290,7 +284,6 @@ export function EditorFrame({
                     variables: {
                       projectId,
                       fileUpload: new File([editorValue], name),
-                      destination: `./${name}`,
                       overwrite: true
                     }
                   })

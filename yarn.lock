@@ -1810,6 +1810,21 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=
 
+"@react-dnd/asap@^4.0.0":
+  version "4.0.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@react-dnd/asap/-/asap-4.0.0.tgz#b300eeed83e9801f51bd66b0337c9a6f04548651"
+  integrity sha1-swDu7YPpgB9RvWawM3yabwRUhlE=
+
+"@react-dnd/invariant@^2.0.0":
+  version "2.0.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@react-dnd/invariant/-/invariant-2.0.0.tgz#09d2e81cd39e0e767d7da62df9325860f24e517e"
+  integrity sha1-CdLoHNOeDnZ9faYt+TJYYPJOUX4=
+
+"@react-dnd/shallowequal@^2.0.0":
+  version "2.0.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@react-dnd/shallowequal/-/shallowequal-2.0.0.tgz#a3031eb54129f2c66b2753f8404266ec7bf67f0a"
+  integrity sha1-owMetUEp8sZrJ1P4QEJm7Hv2fwo=
+
 "@relate-by-ui/css@1.0.5":
   version "1.0.5"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@relate-by-ui/css/-/css-1.0.5.tgz#2c14bc91ebe3c199984d394f9add2f908f9fb695"
@@ -2059,11 +2074,6 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/aria-query/-/aria-query-4.2.0.tgz#14264692a9d6e2fa4db3df5e56e94b5e25647ac0"
   integrity sha1-FCZGkqnW4vpNs99eVulLXiVkesA=
 
-"@types/asap@^2.0.0":
-  version "2.0.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/asap/-/asap-2.0.0.tgz#d529e9608c83499a62ae08c871c5e62271aa2963"
-  integrity sha1-1SnpYIyDSZpirgjIccXmInGqKWM=
-
 "@types/babel__core@^7.1.7":
   version "7.1.9"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/babel__core/-/babel__core-7.1.9.tgz#77e59d438522a6fb898fa43dc3455c6e72f3963d"
@@ -2156,11 +2166,6 @@
   dependencies:
     "@types/react" "*"
     hoist-non-react-statics "^3.3.0"
-
-"@types/invariant@^2.2.30":
-  version "2.2.34"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/invariant/-/invariant-2.2.34.tgz#05e4f79f465c2007884374d4795452f995720bbe"
-  integrity sha1-BeT3n0ZcIAeIQ3TUeVRS+ZVyC74=
 
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0", "@types/istanbul-lib-coverage@^2.0.1":
   version "2.0.3"
@@ -2326,7 +2331,15 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^16.9.23":
+"@types/react@*":
+  version "17.0.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/react/-/react-17.0.2.tgz#3de24c4efef902dd9795a49c75f760cbe4f7a5a8"
+  integrity sha1-PeJMTv75At2XlaScdfdgy+T3pag=
+  dependencies:
+    "@types/prop-types" "*"
+    csstype "^3.0.2"
+
+"@types/react@^16.9.23":
   version "16.9.49"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/react/-/react-16.9.49.tgz#09db021cf8089aba0cdb12a49f8021a69cce4872"
   integrity sha1-CdsCHPgImroM2xKkn4AhppzOSHI=
@@ -2345,11 +2358,6 @@
   version "7.3.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/semver/-/semver-7.3.4.tgz#43d7168fec6fa0988bb1a513a697b29296721afb"
   integrity sha1-Q9cWj+xvoJiLsaUTppeykpZyGvs=
-
-"@types/shallowequal@^1.1.1":
-  version "1.1.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/shallowequal/-/shallowequal-1.1.1.tgz#aad262bb3f2b1257d94c71d545268d592575c9b1"
-  integrity sha1-qtJiuz8rElfZTHHVRSaNWSV1ybE=
 
 "@types/sinonjs__fake-timers@^6.0.1":
   version "6.0.1"
@@ -3080,11 +3088,6 @@ arrify@^2.0.0, arrify@^2.0.1:
   version "2.0.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/arrify/-/arrify-2.0.1.tgz#c9655e9331e0abcd588d2a7cad7e9956f66701fa"
   integrity sha1-yWVekzHgq81YjSp8rX6ZVvZnAfo=
-
-asap@^2.0.6:
-  version "2.0.6"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/asap/-/asap-2.0.6.tgz#e50347611d7e690943208bbdafebcbc2fb866d46"
-  integrity sha1-5QNHYR1+aQlDIIu9r+vLwvuGbUY=
 
 ascii-data-table@^2.1.1:
   version "2.1.1"
@@ -4681,9 +4684,9 @@ csstype@^2.5.7:
   integrity sha1-pokwFbkOhN1uhdDjtEKh6E8tvg8=
 
 csstype@^3.0.2:
-  version "3.0.3"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/csstype/-/csstype-3.0.3.tgz#2b410bbeba38ba9633353aff34b05d9755d065f8"
-  integrity sha1-K0ELvro4upYzNTr/NLBdl1XQZfg=
+  version "3.0.6"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/csstype/-/csstype-3.0.6.tgz#865d0b5833d7d8d40f4e5b8a6d76aea3de4725ef"
+  integrity sha1-hl0LWDPX2NQPTluKbXauo95HJe8=
 
 cyclist@^1.0.1:
   version "1.0.1"
@@ -4767,11 +4770,6 @@ date-fns@^1.27.2:
   version "1.30.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/date-fns/-/date-fns-1.30.1.tgz#2e71bf0b119153dbb4cc4e88d9ea5acfb50dc05c"
   integrity sha1-LnG/CxGRU9u0zE6I2epaz7UNwFw=
-
-dateformat@^3.0.3:
-  version "3.0.3"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/dateformat/-/dateformat-3.0.3.tgz#a6e37499a4d9a9cf85ef5872044d62901c9889ae"
-  integrity sha1-puN0maTZqc+F71hyBE1ikByYia4=
 
 debug@2.6.9, debug@^2.2.0, debug@^2.3.3, debug@^2.6.9:
   version "2.6.9"
@@ -4975,15 +4973,13 @@ dlv@^1.1.0:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/dlv/-/dlv-1.1.3.tgz#5c198a8a11453596e751494d49874bc7732f2e79"
   integrity sha1-XBmKihFFNZbnUUlNSYdLx3MvLnk=
 
-dnd-core@^9.3.2:
-  version "9.5.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/dnd-core/-/dnd-core-9.5.1.tgz#e9ec02d33529b68fa528865704d40ac4b14f2baf"
-  integrity sha1-6ewC0zUpto+lKIZXBNQKxLFPK68=
+dnd-core@^11.1.3:
+  version "11.1.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/dnd-core/-/dnd-core-11.1.3.tgz#f92099ba7245e49729d2433157031a6267afcc98"
+  integrity sha1-+SCZunJF5Jcp0kMxVwMaYmevzJg=
   dependencies:
-    "@types/asap" "^2.0.0"
-    "@types/invariant" "^2.2.30"
-    asap "^2.0.6"
-    invariant "^2.2.4"
+    "@react-dnd/asap" "^4.0.0"
+    "@react-dnd/invariant" "^2.0.0"
     redux "^4.0.4"
 
 dns-equal@^1.0.0:
@@ -10875,23 +10871,22 @@ raw-loader@^0.5.1:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/raw-loader/-/raw-loader-0.5.1.tgz#0c3d0beaed8a01c966d9787bf778281252a979aa"
   integrity sha1-DD0L6u2KAclm2Xh793goElKpeao=
 
-react-dnd-html5-backend@9.3.2:
-  version "9.3.2"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-dnd-html5-backend/-/react-dnd-html5-backend-9.3.2.tgz#4833043aec91e69dd968ac136deebf7535f5eb9d"
-  integrity sha1-SDMEOuyR5p3ZaKwTbe6/dTX1650=
+react-dnd-html5-backend@^11.1.3:
+  version "11.1.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-dnd-html5-backend/-/react-dnd-html5-backend-11.1.3.tgz#2749f04f416ec230ea193f5c1fbea2de7dffb8f7"
+  integrity sha1-J0nwT0FuwjDqGT9cH76i3n3/uPc=
   dependencies:
-    dnd-core "^9.3.2"
+    dnd-core "^11.1.3"
 
-react-dnd@9.3.2:
-  version "9.3.2"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-dnd/-/react-dnd-9.3.2.tgz#e06c0f566201fbd4617db6d023fcb45629874bbc"
-  integrity sha1-4GwPVmIB+9RhfbbQI/y0VimHS7w=
+react-dnd@^11.1.3:
+  version "11.1.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-dnd/-/react-dnd-11.1.3.tgz#f9844f5699ccc55dfc81462c2c19f726e670c1af"
+  integrity sha1-+YRPVpnMxV38gUYsLBn3JuZwwa8=
   dependencies:
+    "@react-dnd/shallowequal" "^2.0.0"
     "@types/hoist-non-react-statics" "^3.3.1"
-    "@types/shallowequal" "^1.1.1"
-    dnd-core "^9.3.2"
+    dnd-core "^11.1.3"
     hoist-non-react-statics "^3.3.0"
-    shallowequal "^1.1.0"
 
 react-dom@^16.8.6, react-dom@^16.9.0:
   version "16.13.1"

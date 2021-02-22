@@ -92,6 +92,8 @@ import Monaco, { MonacoHandles } from '../Editor/Monaco'
 import { Bus } from 'suber'
 import FeatureToggle from '../FeatureToggle/FeatureToggle'
 import { reusableFrame } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
+import { addFavorite } from 'shared/modules/favorites/favoritesDuck'
+import uuid from 'uuid'
 
 type FrameTitleBarBaseProps = {
   frame: any
@@ -449,7 +451,8 @@ const mapDispatchToProps = (
 ) => {
   return {
     newFavorite: (cmd: string) => {
-      dispatch(sidebar.setDraftScript(cmd, 'favorites'))
+      dispatch(addFavorite(cmd))
+      dispatch(sidebar.open('favorites'))
     },
     newProjectFile: (cmd: string) => {
       dispatch(sidebar.setDraftScript(cmd, 'project files'))

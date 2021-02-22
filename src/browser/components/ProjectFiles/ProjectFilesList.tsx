@@ -18,12 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React from 'react'
-import {
-  SavedScriptsMain,
-  SavedScriptsBody,
-  SavedScriptsBodySection,
-  SavedScriptsHeader
-} from '../SavedScripts/styled'
+import { SavedScriptsBody, SavedScriptsHeader } from '../SavedScripts/styled'
 import ProjectFilesListItem from './ProjectFilesListItem'
 
 export type ProjectFileScript = {
@@ -49,24 +44,17 @@ export default function ProjectFileList({
   )
 
   return (
-    <SavedScriptsMain className="saved-scripts">
-      <SavedScriptsBody className="saved-scripts__body">
-        <SavedScriptsBodySection className="saved-scripts__body-section">
-          <SavedScriptsHeader className="saved-scripts__header">
-            Cypher files
-          </SavedScriptsHeader>
-
-          {sortedScripts.map(script => (
-            <ProjectFilesListItem
-              selectScript={selectScript}
-              execScript={execScript}
-              removeScript={removeScript}
-              script={script}
-              key={script.filename}
-            />
-          ))}
-        </SavedScriptsBodySection>
-      </SavedScriptsBody>
-    </SavedScriptsMain>
+    <SavedScriptsBody>
+      <SavedScriptsHeader>Cypher files</SavedScriptsHeader>
+      {sortedScripts.map(script => (
+        <ProjectFilesListItem
+          selectScript={selectScript}
+          execScript={execScript}
+          removeScript={removeScript}
+          script={script}
+          key={script.filename}
+        />
+      ))}
+    </SavedScriptsBody>
   )
 }
