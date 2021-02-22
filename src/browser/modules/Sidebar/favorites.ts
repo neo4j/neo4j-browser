@@ -71,7 +71,7 @@ const mapFavoritesDispatchToProps = (dispatch: any, ownProps: any) => ({
     dispatch(foldersDuck.removeFolder(folderId))
     dispatch(favoritesDuck.removeFavorites(favoriteIds))
   },
-  moveScript(favoriteId: string, folderId: string) {
+  moveScript(favoriteId: string, folderId?: string) {
     dispatch(favoritesDuck.moveFavorite(favoriteId, folderId))
   },
   createNewScript() {
