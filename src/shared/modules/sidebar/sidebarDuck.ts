@@ -25,6 +25,9 @@ export const NAME = 'sidebar'
 export const TOGGLE = 'sidebar/TOGGLE'
 export const OPEN = 'sidebar/OPEN'
 export const SET_DRAFT_SCRIPT = 'sidebar/SET_DRAFT_SCRIPT'
+export const TRACK_CANNY_CHANGELOG = 'sidebar/CANNY_CHANGELOG_OPENED'
+export const TRACK_CANNY_FEATURE_REQUEST =
+  'sidebar/CANNY_FEATURE_REQUEST_OPENED'
 
 export function getOpenDrawer(state: GlobalState): string | null {
   return state[NAME].drawer

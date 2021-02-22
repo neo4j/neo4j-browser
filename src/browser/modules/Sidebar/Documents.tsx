@@ -17,13 +17,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React, { useEffect } from 'react'
+import React, { Dispatch, useEffect } from 'react'
 import { connect } from 'react-redux'
+import { Action } from 'redux'
 import semver from 'semver'
 
 import { cannyOptions, CANNY_FEATURE_REQUEST_URL } from 'browser-services/canny'
 import { GlobalState } from 'shared/globalState'
 import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
+import {
+  TRACK_CANNY_CHANGELOG,
+  TRACK_CANNY_FEATURE_REQUEST
+} from 'shared/modules/sidebar/sidebarDuck'
 import DocumentItems from './DocumentItems'
 import { Drawer, DrawerHeader } from 'browser-components/drawer'
 import {
@@ -131,9 +136,14 @@ const guides = [
   }
 ]
 
-type DocumentsProps = { version: string; urlVersion: string }
+type DocumentsProps = {
+  version: string
+  urlVersion: string
+  trackCannyChangelog: () => void
+  trackCannyFeatureRequest: () => void
+}
 
-const Documents = ({ version, urlVersion }: DocumentsProps) => {
+const Documents = (props: DocumentsProps) => {
   useEffect(() => {
     window.Canny && window.Canny('initChangelog', cannyOptions)
 
@@ -142,12 +152,12 @@ const Documents = ({ version, urlVersion }: DocumentsProps) => {
     }
   }, [])
 
-  const { docs, other } = getReferences(version, urlVersion)
+  const { docs, other } = getReferences(props.version, props.urlVersion)
   return (
     <Drawer id="db-documents">
       <StyledHeaderContainer>
         <DrawerHeader>Help &amp; Learn</DrawerHeader>
-        <a data-canny-changelog>
+        <a data-canny-changelog onClick={props.trackCannyChangelog}>
           <CannyNotificationsIcon />
         </a>
       </StyledHeaderContainer>
@@ -159,7 +169,10 @@ const Documents = ({ version, urlVersion }: DocumentsProps) => {
             &nbsp; Send Feedback
           </>
         }
-        onClick={() => window.open(CANNY_FEATURE_REQUEST_URL, '_blank')}
+        onClick={() => {
+          props.trackCannyFeatureRequest()
+          window.open(CANNY_FEATURE_REQUEST_URL, '_blank')
+        }}
       ></StyledFeedbackButton>
       <StyledFullSizeDrawerBody>
         <DocumentItems header="Useful commands" items={useful} />
@@ -179,4 +192,13 @@ const mapStateToProps = (state: GlobalState) => {
   }
 }
 
-export default connect(mapStateToProps)(Documents)
+const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
+  trackCannyChangelog: () => {
+    dispatch({ type: TRACK_CANNY_CHANGELOG })
+  },
+  trackCannyFeatureRequest: () => {
+    dispatch({ type: TRACK_CANNY_FEATURE_REQUEST })
+  }
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Documents)
