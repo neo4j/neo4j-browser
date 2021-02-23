@@ -489,7 +489,7 @@ function queryPlan(this: any, element: any) {
         ].join(' ')
       )
 
-    var join = (parent: any, children: any) =>
+    const join = (parent: any, children: any) =>
       ((): any[] => {
         const result = []
         for (const child of Array.from(d3.entries<any>(children))) {
@@ -607,6 +607,7 @@ function queryPlan(this: any, element: any) {
                     .append('text')
                     .attr('font-size', detailFontSize)
                     .attr('font-family', standardFont)
+                    .attr('fill', 'rgb(107, 174, 214)')
 
                   return update
                     .transition()
