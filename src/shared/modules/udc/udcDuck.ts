@@ -18,8 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Action } from 'redux'
-import { Epic } from 'redux-observable'
+import { Action, MiddlewareAPI } from 'redux'
+import { ActionsObservable, Epic } from 'redux-observable'
 import { v4 } from 'uuid'
 import { USER_CLEAR } from '../app/appDuck'
 import { GlobalState } from 'shared/globalState'
@@ -33,6 +33,10 @@ import {
   getStoreId,
   isBeta
 } from 'shared/modules/dbMeta/dbMetaDuck'
+import {
+  TRACK_CANNY_FEATURE_REQUEST,
+  TRACK_CANNY_CHANGELOG
+} from 'shared/modules/sidebar/sidebarDuck'
 import {
   ADD,
   PIN,
@@ -66,17 +70,15 @@ import { extractStatementsFromString } from 'services/commandUtils'
 
 // Action types
 export const NAME = 'udc'
-export const INCREMENT = `${NAME}/INCREMENT`
-export const CONNECT = `${NAME}/CONNECT`
-export const EVENT_QUEUE = `${NAME}/EVENT_QUEUE`
-export const EVENT_FIRED = `${NAME}/EVENT_FIRED`
-export const CLEAR_EVENTS = `${NAME}/CLEAR_EVENTS`
-export const UPDATE_SETTINGS = `${NAME}/UPDATE_SETTINGS`
-export const UPDATE_DATA = `${NAME}/UPDATE_DATA`
-export const BOOTED = `${NAME}/BOOTED`
-export const METRICS_EVENT = `${NAME}/METRICS_EVENT`
-export const UDC_STARTUP = `${NAME}/STARTUP`
-export const LAST_GUIDE_SLIDE = `${NAME}/LAST_GUIDE_SLIDE`
+const INCREMENT = 'udc/INCREMENT'
+const EVENT_QUEUE = 'udc/EVENT_QUEUE'
+const EVENT_FIRED = 'udc/EVENT_FIRED'
+const CLEAR_EVENTS = 'udc/CLEAR_EVENTS'
+const UPDATE_DATA = 'udc/UPDATE_DATA'
+const BOOTED = 'udc/BOOTED'
+export const METRICS_EVENT = 'udc/METRICS_EVENT'
+export const UDC_STARTUP = 'udc/STARTUP'
+export const LAST_GUIDE_SLIDE = 'udc/LAST_GUIDE_SLIDE'
 
 let booted = false
 
@@ -86,7 +88,12 @@ export const EVENT_BROWSER_SYNC_LOGOUT = 'EVENT_BROWSER_SYNC_LOGOUT'
 export const EVENT_BROWSER_SYNC_LOGIN = 'EVENT_BROWSER_SYNC_LOGIN'
 export const EVENT_DRIVER_CONNECTED = 'EVENT_DRIVER_CONNECTED'
 
-const typeToEventName = {
+type TrackedEventOccurrenceTypes =
+  | 'cypher_wins'
+  | 'cypher_fails'
+  | 'client_starts'
+
+const typeToEventName: { [key: string]: TrackedEventOccurrenceTypes } = {
   [CYPHER_SUCCEEDED]: 'cypher_wins',
   [CYPHER_FAILED]: 'cypher_fails',
   [EVENT_APP_STARTED]: 'client_starts'
@@ -105,14 +112,14 @@ export const typeToMetricsObject = {
 }
 
 // Selectors
-const getData = (state: any) => {
+const getData = (state: GlobalState) => {
   const { events, ...rest } = state[NAME] || initialState
   return rest
 }
-const getLastSnapshotTime = (state: any) =>
+const getLastSnapshotTime = (state: GlobalState) =>
   (state[NAME] && state[NAME].lastSnapshot) || initialState.lastSnapshot
-const getName = (state: any) => state[NAME].name || 'Graph Friend'
-const getCompanies = (state: any) => {
+const getName = (state: GlobalState) => state[NAME].name || 'Graph Friend'
+const getCompanies = (state: GlobalState) => {
   if (getVersion(state) && getStoreId(state)) {
     return [
       {
@@ -124,10 +131,29 @@ const getCompanies = (state: any) => {
   }
   return null
 }
-const getEvents = (state: any) => state[NAME].events || initialState.events
-export const getUuid = (state: any) => state[NAME].uuid || initialState.uuid
+const getEvents = (state: GlobalState) =>
+  state[NAME].events || initialState.events
+export const getUuid = (state: GlobalState): string =>
+  state[NAME].uuid || initialState.uuid
 
-export const initialState = {
+interface udcEvent {
+  name: string
+  data: unknown
+}
+
+export interface udcState {
+  events: udcEvent[]
+  lastSnapshot: number
+  name?: string
+  uuid: string
+  created_at: number
+  client_starts: number
+  cypher_wins: number
+  cypher_fails: number
+  pingTime: number
+}
+
+const initialState: udcState = {
   uuid: v4(),
   created_at: Math.round(Date.now() / 1000),
   client_starts: 0,
@@ -138,8 +164,21 @@ export const initialState = {
   events: []
 }
 
+type CleatEventsAction = { type: typeof CLEAR_EVENTS }
+type BootedAction = { type: typeof BOOTED }
+
+type udcActionsUnion =
+  | IncrementAction
+  | AddToEventQueueAction
+  | CleatEventsAction
+  | UpdateDataAction
+  | BootedAction
+
 // Reducer
-export default function reducer(state: any = initialState, action: any) {
+export default function reducer(
+  state = initialState,
+  action: udcActionsUnion
+): udcState {
   switch (action.type) {
     case INCREMENT:
       return { ...state, [action.what]: (state[action.what] || 0) + 1 }
@@ -160,19 +199,38 @@ export default function reducer(state: any = initialState, action: any) {
   }
 }
 
+interface IncrementAction {
+  type: typeof INCREMENT
+  what: TrackedEventOccurrenceTypes
+}
+
 // Action creators
-const increment = (what: any) => {
+const increment = (what: TrackedEventOccurrenceTypes): IncrementAction => {
   return {
     type: INCREMENT,
     what
   }
 }
-export const udcInit = () => {
+
+interface UdcInitAction {
+  type: typeof UDC_STARTUP
+}
+
+export const udcInit = (): UdcInitAction => {
   return {
     type: UDC_STARTUP
   }
 }
-export const addToEventQueue = (name: any, data: any) => {
+
+interface AddToEventQueueAction {
+  type: typeof EVENT_QUEUE
+  event: udcEvent
+}
+
+export const addToEventQueue = (
+  name: string,
+  data: unknown
+): AddToEventQueueAction => {
   return {
     type: EVENT_QUEUE,
     event: {
@@ -181,7 +239,14 @@ export const addToEventQueue = (name: any, data: any) => {
     }
   }
 }
-const eventFired = (name: any, data = null) => {
+
+interface EventFiredAction {
+  type: typeof EVENT_FIRED
+  name: string
+  data: unknown
+}
+
+const eventFired = (name: string, data: unknown = null): EventFiredAction => {
   return {
     type: EVENT_FIRED,
     name,
@@ -189,21 +254,35 @@ const eventFired = (name: any, data = null) => {
   }
 }
 
-const metricsEvent = (payload: any) => {
+interface MetricsEvent {
+  category: string
+  label: string
+  data?: unknown
+}
+
+interface MetricsEventAction extends MetricsEvent {
+  type: typeof METRICS_EVENT
+}
+
+const metricsEvent = (payload: MetricsEvent): MetricsEventAction => {
   return {
     type: METRICS_EVENT,
     ...payload
   }
 }
 
-export const updateData = (obj: any) => {
+interface UpdateDataAction extends Partial<udcState> {
+  type: typeof UPDATE_DATA
+}
+
+export const updateData = (obj: Partial<udcState>): UpdateDataAction => {
   return {
     type: UPDATE_DATA,
     ...obj
   }
 }
 
-function aWeekSinceLastSnapshot(store: any) {
+function aWeekSinceLastSnapshot(store: MiddlewareAPI<GlobalState>) {
   const now = Math.round(Date.now() / 1000)
   const lastSnapshot = getLastSnapshotTime(store.getState())
   const aWeekInSeconds = 60 * 60 * 24 * 7
@@ -211,7 +290,7 @@ function aWeekSinceLastSnapshot(store: any) {
 }
 
 // Epics
-export const udcStartupEpic = (action$: any, store: any) =>
+export const udcStartupEpic: Epic<Action, GlobalState> = (action$, store) =>
   action$
     .ofType(UDC_STARTUP)
     .do(() =>
@@ -254,7 +333,7 @@ export const udcStartupEpic = (action$: any, store: any) =>
       const favorites = getFavorites(store.getState())
 
       if (favorites) {
-        const count = favorites.filter((script: any) => !script.isStatic).length
+        const count = favorites.filter(script => !script.isStatic).length
         store.dispatch(
           metricsEvent({
             category: 'favorites',
@@ -269,29 +348,29 @@ export const udcStartupEpic = (action$: any, store: any) =>
     })
     .mapTo(increment(typeToEventName[EVENT_APP_STARTED]))
 
-export const incrementEventEpic = (action$: any, store: any) =>
+export const incrementEventEpic: Epic<Action, GlobalState> = (action$, store) =>
   action$
     .ofType(CYPHER_FAILED)
     .merge(action$.ofType(CYPHER_SUCCEEDED))
-    .do((action: any) =>
+    .do(action =>
       store.dispatch(metricsEvent(typeToMetricsObject[action.type]))
     )
-    .map((action: any) => increment(typeToEventName[action.type]))
+    .map(action => increment(typeToEventName[action.type]))
 
-export const trackCommandUsageEpic = (action$: any) =>
+export const trackCommandUsageEpic: Epic<Action, GlobalState> = action$ =>
   action$.ofType(COMMAND_QUEUED).map((action: any) => {
     const isCypher = !action.cmd.startsWith(':')
     if (isCypher) {
-      const numberOfStatments =
+      const numberOfStatements =
         extractStatementsFromString(action.cmd)?.length || 1
       return metricsEvent({
         category: 'command',
         label: 'cypher',
         data: {
           source: action.source || 'unknown',
-          averageWordCount: action.cmd.split(' ').length / numberOfStatments,
-          averageLineCount: action.cmd.split('\n').length / numberOfStatments,
-          numberOfStatments
+          averageWordCount: action.cmd.split(' ').length / numberOfStatements,
+          averageLineCount: action.cmd.split('\n').length / numberOfStatements,
+          numberOfStatements
         }
       })
     }
@@ -305,7 +384,10 @@ export const trackCommandUsageEpic = (action$: any) =>
     })
   })
 
-export const trackSyncLogoutEpic = (action$: any, store: any) =>
+export const trackSyncLogoutEpic: Epic<Action, GlobalState> = (
+  action$,
+  store
+) =>
   action$
     .ofType(CLEAR_SYNC)
     .merge(action$.ofType(CLEAR_SYNC_AND_LOCAL))
@@ -316,7 +398,7 @@ export const trackSyncLogoutEpic = (action$: any, store: any) =>
     )
     .map(() => eventFired('syncLogout'))
 
-export const bootEpic = (action$: any, store: any) => {
+export const bootEpic: Epic<Action, GlobalState> = (action$, store) => {
   return action$
     .ofType(AUTHORIZED) // Browser sync auth
     .do(() =>
@@ -350,14 +432,14 @@ export const bootEpic = (action$: any, store: any) => {
         })
         const waitingEvents = getEvents(store.getState())
         waitingEvents.forEach(
-          (event: any) => event && api('trackEvent', event.name, event.data)
+          event => event && api('trackEvent', event.name, event.data)
         )
         store.dispatch({ type: CLEAR_EVENTS })
       }
       booted = true
       return true
     })
-    .map((didBoot: any) => {
+    .map(didBoot => {
       return didBoot ? { type: BOOTED } : { type: 'NOOP' }
     })
 }
@@ -373,7 +455,9 @@ const actionsOfInterest = [
   TRACK_FULLSCREEN_TOGGLE,
   TRACK_SAVE_AS_PROJECT_FILE,
   UNPIN,
-  UPDATE_FAVORITE_CONTENT
+  UPDATE_FAVORITE_CONTENT,
+  TRACK_CANNY_FEATURE_REQUEST,
+  TRACK_CANNY_CHANGELOG
 ]
 export const trackReduxActionsEpic: Epic<Action, GlobalState> = action$ =>
   action$
@@ -383,10 +467,7 @@ export const trackReduxActionsEpic: Epic<Action, GlobalState> = action$ =>
       return metricsEvent({ category, label })
     })
 
-export const trackConnectsEpic = (
-  action$: any,
-  store: any // Decide what to do with events
-) =>
+export const trackConnectsEpic: Epic<Action, GlobalState> = (action$, store) =>
   action$
     .ofType(CONNECTION_SUCCESS)
     .merge(action$.ofType(BOOTED))
@@ -395,7 +476,7 @@ export const trackConnectsEpic = (
     )
     .map(() => {
       const state = store.getState()
-      const data: any = {
+      const data = {
         store_id: getStoreId(state),
         neo4j_version: getVersion(state),
         client_starts: state[NAME] ? state[NAME].client_starts : 0,
@@ -405,7 +486,7 @@ export const trackConnectsEpic = (
       return eventFired('connect', data)
     })
 
-export const trackErrorFramesEpic = (action$: any) =>
+export const trackErrorFramesEpic: Epic<Action, GlobalState> = action$ =>
   action$.ofType(ADD).map((action: any) => {
     const error = action.state.error
     if (error) {
@@ -420,11 +501,11 @@ export const trackErrorFramesEpic = (action$: any) =>
     }
   })
 
-export const eventFiredEpic = (
-  action$: any,
-  store: any // Decide what to do with events
+export const eventFiredEpic: Epic<any, GlobalState> = (
+  action$: ActionsObservable<EventFiredAction>,
+  store // Decide what to do with events
 ) =>
-  action$.ofType(EVENT_FIRED).map((action: any) => {
+  action$.ofType(EVENT_FIRED).map((action: EventFiredAction) => {
     if (
       action.name === 'connect' &&
       !shouldTriggerConnectEvent(store.getState()[NAME])

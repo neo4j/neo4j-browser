@@ -135,14 +135,13 @@ class Navigation extends Component<NavigationProps, NavigationState> {
       list.map(item => {
         const isOpen = item.name.toLowerCase() === selected
         return (
-          <>
+          <div key={item.name}>
             {item.enableCannyBadge ? (
               <StyledCannyBadgeAnchor data-canny-changelog />
             ) : null}
             <NavigationButtonContainer
               title={item.title}
               data-testid={'drawer' + item.name}
-              key={item.name}
               onClick={() => onNavClick(item.name.toLowerCase())}
               isOpen={isOpen}
             >
@@ -150,7 +149,7 @@ class Navigation extends Component<NavigationProps, NavigationState> {
                 {item.icon(isOpen)}
               </StyledNavigationButton>
             </NavigationButtonContainer>
-          </>
+          </div>
         )
       })
 
