@@ -259,7 +259,9 @@ function FrameTitlebar(props: FrameTitleBarProps) {
   const { frame = {} } = props
   const fullscreenIcon = props.fullscreen ? <ContractIcon /> : <ExpandIcon />
   const expandCollapseIcon = props.collapse ? <DownIcon /> : <UpIcon />
-
+  // the last run command (history index 1) is already in the editor
+  // don't show it as history as well
+  const history = (frame.history || []).slice(1)
   return (
     <StyledFrameTitleBar>
       <FeatureToggle
@@ -267,7 +269,7 @@ function FrameTitlebar(props: FrameTitleBarProps) {
         on={
           <FrameTitleEditorContainer data-testid="frameCommand">
             <Monaco
-              history={frame.history || []}
+              history={history}
               useDb={frame.useDb}
               enableMultiStatementMode={true}
               id={`editor-${frame.id}`}
