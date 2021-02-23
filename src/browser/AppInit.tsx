@@ -52,6 +52,8 @@ import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
 import { version } from 'project-root/package.json'
 import { allowOutgoingConnections } from 'shared/modules/dbMeta/dbMetaDuck'
 import { getUuid } from 'shared/modules/udc/udcDuck'
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 
 // Configure localstorage sync
 applyKeys(
@@ -252,7 +254,9 @@ const AppInit = (): JSX.Element => {
     <Provider store={store as any}>
       <BusProvider bus={bus}>
         <ApolloProvider client={client}>
-          <App />
+          <DndProvider backend={HTML5Backend}>
+            <App />
+          </DndProvider>
         </ApolloProvider>
       </BusProvider>
     </Provider>

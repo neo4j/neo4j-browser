@@ -190,9 +190,9 @@ export function updateFavoriteContent(
 type MoveFavoriteAction = {
   type: typeof MOVE_FAVORITE
   id: string
-  folder: string
+  folder?: string
 }
-export function moveFavorite(id: string, folder: string): MoveFavoriteAction {
+export function moveFavorite(id: string, folder?: string): MoveFavoriteAction {
   return {
     type: MOVE_FAVORITE,
     id,
