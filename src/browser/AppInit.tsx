@@ -134,9 +134,12 @@ bus.applyMiddleware(
   }
 )
 
-function scrubQueryParams(event: Sentry.Event): Sentry.Event {
+function scrubQueryParamsAndUrl(event: Sentry.Event): Sentry.Event {
   if (event.request?.query_string) {
     event.request.query_string = ''
+  }
+  if (event.server_name) {
+    event.server_name = '/'
   }
   return event
 }
@@ -154,7 +157,7 @@ export function setupSentry(): void {
       tracesSampleRate: 0.2,
       beforeSend: event =>
         allowOutgoingConnections(store.getState())
-          ? scrubQueryParams(event)
+          ? scrubQueryParamsAndUrl(event)
           : null,
       environment: 'unset'
     })
@@ -166,7 +169,6 @@ export function setupSentry(): void {
         const isCanary = Boolean(
           json && json.name.toLowerCase().includes('canary')
         )
-
         Sentry.configureScope(scope =>
           scope.addEventProcessor(event => ({
             ...event,
