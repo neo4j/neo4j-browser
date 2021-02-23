@@ -288,6 +288,7 @@ export const trackCommandUsageEpic = (action$: any) =>
         category: 'command',
         label: 'cypher',
         data: {
+          type: 'cypher',
           source: action.source || 'unknown',
           averageWordCount: action.cmd.split(' ').length / numberOfStatments,
           averageLineCount: action.cmd.split('\n').length / numberOfStatments,
@@ -296,12 +297,12 @@ export const trackCommandUsageEpic = (action$: any) =>
       })
     }
 
-    const label = cmdHelper.interpret(action.cmd.slice(1))?.name
+    const type = cmdHelper.interpret(action.cmd.slice(1))?.name
 
     return metricsEvent({
       category: 'command',
-      label,
-      data: { source: action.source || 'unknown' }
+      label: 'non-cypher',
+      data: { source: action.source || 'unknown', type }
     })
   })
 
