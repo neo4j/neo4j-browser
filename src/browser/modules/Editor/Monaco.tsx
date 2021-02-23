@@ -39,6 +39,7 @@ import { Bus } from 'suber'
 
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import { debug } from 'webpack'
 
 const shouldCheckForHints = (code: any) =>
   code.trim().length > 0 &&
