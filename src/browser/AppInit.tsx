@@ -136,9 +136,12 @@ bus.applyMiddleware(
   }
 )
 
-function scrubQueryParams(event: Sentry.Event): Sentry.Event {
+function scrubQueryParamsAndUrl(event: Sentry.Event): Sentry.Event {
   if (event.request?.query_string) {
     event.request.query_string = ''
+  }
+  if (event.server_name) {
+    event.server_name = '/'
   }
   return event
 }
@@ -153,10 +156,20 @@ export function setupSentry(): void {
         new Integrations.BrowserTracing(),
         new CaptureConsole({ levels: ['error'] })
       ],
-      tracesSampleRate: 0.2,
+      tracesSampler: context => {
+        const isPerformanceTransaction = context.transactionContext.name.startsWith(
+          'performance'
+        )
+        if (isPerformanceTransaction) {
+          // 1% of performance reports is enough to build stats, raise if needed
+          return 0.01
+        } else {
+          return 0.2
+        }
+      },
       beforeSend: event =>
         allowOutgoingConnections(store.getState())
-          ? scrubQueryParams(event)
+          ? scrubQueryParamsAndUrl(event)
           : null,
       environment: 'unset'
     })
@@ -168,7 +181,6 @@ export function setupSentry(): void {
         const isCanary = Boolean(
           json && json.name.toLowerCase().includes('canary')
         )
-
         Sentry.configureScope(scope =>
           scope.addEventProcessor(event => ({
             ...event,

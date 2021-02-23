@@ -367,6 +367,7 @@ export const trackCommandUsageEpic: Epic<Action, GlobalState> = action$ =>
         category: 'command',
         label: 'cypher',
         data: {
+          type: 'cypher',
           source: action.source || 'unknown',
           averageWordCount: action.cmd.split(' ').length / numberOfStatements,
           averageLineCount: action.cmd.split('\n').length / numberOfStatements,
@@ -375,12 +376,12 @@ export const trackCommandUsageEpic: Epic<Action, GlobalState> = action$ =>
       })
     }
 
-    const label = cmdHelper.interpret(action.cmd.slice(1))?.name
+    const type = cmdHelper.interpret(action.cmd.slice(1))?.name
 
     return metricsEvent({
       category: 'command',
-      label,
-      data: { source: action.source || 'unknown' }
+      label: 'non-cypher',
+      data: { source: action.source || 'unknown', type }
     })
   })
 
