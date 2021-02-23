@@ -21,6 +21,12 @@
 import React from 'react'
 import Carousel from '../../modules/Carousel/Carousel'
 import Slide from '../../modules/Carousel/Slide'
+import {
+  FULLSCREEN_SHORTCUT,
+  FOCUS_SHORTCUT,
+  printShortcut,
+  isMac
+} from 'browser/modules/App/keyboardShortcuts'
 
 const title = 'Intro'
 const slides = [
@@ -59,27 +65,32 @@ const slides = [
         commands. Browser commands begin with <code>:</code>, for example{' '}
         <code>:help</code>
       </p>
-      <table>
+      <tbody>
         <tr>
-          <td className="padding5">Execute current command</td>
-          <td>
-            {' '}
-            <b>Cmd-Return</b>
+          <td>Execute current command</td>
+          <td className="padding5">
+            <div className="key code">
+              {isMac ? '<Cmd-Return>' : '<Ctrl-Return>'}
+            </div>
           </td>
         </tr>
         <tr>
-          <td className="padding5">Previous command in history</td>
-          <td>
-            <b>Cmd-Up-Arrow</b>
+          <td>Previous command in history</td>
+          <td className="padding5">
+            <div className="key code">
+              {isMac ? '<Cmd-Up-Arrow>' : '<Ctrl-Up-Arrow>'}
+            </div>
           </td>
         </tr>
         <tr>
-          <td className="padding5">Next command in history</td>
-          <td>
-            <b>Cmd-Down-Arrow</b>
+          <td>Next command in history</td>
+          <td className="padding5">
+            <div className="key code">
+              {isMac ? '<Cmd-Down-Arrow>' : '<Ctrl-Down-Arrow>'}
+            </div>
           </td>
         </tr>
-      </table>
+      </tbody>
       <p></p>
       <p>
         You can view the complete list of keybinding anytime by running{' '}
@@ -87,7 +98,7 @@ const slides = [
       </p>
     </div>
     <div className="col-sm-4">
-      <img src="./assets/images/Keystrokes.gif" className="img-responsive" />
+      <img src="./assets/images/Keystrokes2.gif" className="img-responsive" />
     </div>
   </Slide>,
   <Slide key="s3">
@@ -115,9 +126,6 @@ const slides = [
           You can bring up the history of the executed commands and queries by
           running <code className="nobreak">:history</code> command.
         </li>
-        <li>
-          Clear the stream with the <code>:clear</code> command.
-        </li>
       </ul>
     </div>
     <div className="col-sm-4">
@@ -137,13 +145,16 @@ const slides = [
       <p>Adjust your preferences in the Settings sidebar tab.</p>
     </div>
     <div className="col-sm-4">
-      <img src="./assets/images/ReusableFrame.gif" className="img-responsive" />
+      <img
+        src="./assets/images/ReusableFrame2.gif"
+        className="img-responsive"
+      />
     </div>
   </Slide>,
   <Slide key="s5">
     <div className="col-sm-3">
       <h3>Sidebar: Database information</h3>
-      <p className="lead">Databasse metadata</p>
+      <p className="lead">Database metadata</p>
     </div>
     <div className="col-sm-5">
       When Neo4j is installed, it is initiated with two databases - a{' '}
@@ -177,7 +188,7 @@ const slides = [
       </p>
     </div>
     <div className="col-sm-4">
-      <img src="./assets/images/Favorites.gif" className="img-responsive" />
+      <img src="./assets/images/Favorites2.gif" className="img-responsive" />
     </div>
   </Slide>,
 
@@ -191,7 +202,7 @@ const slides = [
       folder can be reached through Neo4j Desktop and your hard disk.
     </div>
     <div className="col-sm-4">
-      <img src="./assets/images/ProjectFiles.gif" className="img-responsive" />
+      <img src="./assets/images/ProjectFiles2.gif" className="img-responsive" />
     </div>
   </Slide>,
 
