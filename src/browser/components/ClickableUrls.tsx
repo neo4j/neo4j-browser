@@ -21,18 +21,19 @@ import React from 'react'
 const URL_REGEX = /(?:https?|s?ftp|bolt):\/\/(?:(?:[^\s()<>]+|\((?:[^\s()<>]+|(?:\([^\s()<>]+\)))?\))+(?:\((?:[^\s()<>]+|(?:\(?:[^\s()<>]+\)))?\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))?/gi
 
 interface ClickableUrlsProps {
-  text: string
+  text?: string | null
   WrappingTag?: keyof JSX.IntrinsicElements
 }
 
 export default function ClickableUrls({
-  text = '',
+  text,
   WrappingTag = 'span'
 }: ClickableUrlsProps): JSX.Element {
-  const urls = text.match(URL_REGEX) || []
+  const definedText = text || ''
+  const urls = definedText.match(URL_REGEX) || []
   return (
     <WrappingTag>
-      {text.split(URL_REGEX).map((text, index) => {
+      {definedText.split(URL_REGEX).map((text, index) => {
         /* since we never move these components this key should be fine */
         return (
           <React.Fragment key={index}>
