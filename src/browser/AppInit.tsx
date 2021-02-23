@@ -154,7 +154,17 @@ export function setupSentry(): void {
         new Integrations.BrowserTracing(),
         new CaptureConsole({ levels: ['error'] })
       ],
-      tracesSampleRate: 0.2,
+      tracesSampler: context => {
+        const isPerformanceTransaction = context.transactionContext.name.startsWith(
+          'performance'
+        )
+        if (isPerformanceTransaction) {
+          // 1% of performance reports is enough to build stats, raise if needed
+          return 0.01
+        } else {
+          return 0.2
+        }
+      },
       beforeSend: event =>
         allowOutgoingConnections(store.getState())
           ? scrubQueryParamsAndUrl(event)

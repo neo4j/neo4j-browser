@@ -358,7 +358,9 @@ const availableCommands = [
       new RegExp(`^${autoCommitTxCommand}`, 'i').test(cmd),
     exec: (action: any, put: any, store: any) => {
       // Sentry crashes tests without the ?. when it's not been initiated
-      const transaction = Sentry.startTransaction({ name: 'Cypher query' })
+      const transaction = Sentry.startTransaction({
+        name: 'performance/cypher-query'
+      })
       const startingRequest = transaction?.startChild({
         op: 'Starting request and dispatching'
       })
