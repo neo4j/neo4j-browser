@@ -107,9 +107,9 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
   )
   const hoverText = `Pick neo4j${
     hasSecureSchemes ? '+s' : ''
-  }:// for a routed connection, bolt${
+  }:// for a routed connection (Aura, Cluster), bolt${
     hasSecureSchemes ? '+s' : ''
-  }:// for a direct connection to a DBMS instance.`
+  }:// for a direct connection to a single instance.`
 
   const schemeRestriction = props.allowedSchemes.length > 0
 
