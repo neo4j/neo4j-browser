@@ -9,7 +9,6 @@ export const showFeature = (state: any, name: any) =>
   !!(state[NAME][name] || {}).on
 
 export const experimentalFeatureSelfName = 'showSelf'
-export const reusableFrame = 'reusableFrame'
 
 export const initialState = {
   [experimentalFeatureSelfName]: {
@@ -17,12 +16,6 @@ export const initialState = {
     on: true,
     displayName: 'Show experimental features',
     tooltip: 'Show feature section in settings drawer'
-  },
-  [reusableFrame]: {
-    name: reusableFrame,
-    on: true,
-    displayName: 'Enable reuseable frame',
-    tooltip: 'Edit and rerun right in a frame'
   }
 }
 

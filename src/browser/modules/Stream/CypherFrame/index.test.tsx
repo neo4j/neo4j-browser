@@ -36,7 +36,7 @@ const createProps = (status: string, result: BrowserRequestResult) => ({
   maxRows: 10,
   maxNeighbours: 10,
   recentView: null,
-  frame: {} as Frame,
+  frame: { cmd: 'return 1' } as Frame,
   request: {
     status,
     updated: Math.random(),
