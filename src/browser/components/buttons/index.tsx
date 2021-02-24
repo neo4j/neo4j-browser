@@ -88,9 +88,9 @@ export const StyledCannyBadgeAnchor = styled.div`
       top: 10px;
       right: 10px;
       border-radius: 10px;
-      background-color: red;
+      background-color: #df4d3b;
       padding: 4px;
-      border: 1px solid red;
+      border: 1px solid #df4d3b;
     }
   }
 `
