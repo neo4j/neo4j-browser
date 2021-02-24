@@ -40,7 +40,7 @@ import { Bus } from 'suber'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 
-const shouldCheckForHints = (code: any) =>
+const shouldCheckForHints = (code: string) =>
   code.trim().length > 0 &&
   !code.trimLeft().startsWith(':') &&
   !code
@@ -278,6 +278,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
         const { column = 1, lineNumber = 1 } =
           editorRef.current?.getPosition() || {}
         editorRef.current?.setPosition({ column, lineNumber: lineNumber - 1 })
+        editorRef.current?.revealLine(lineNumber - 1)
       } else {
         viewHistoryPrevious()
       }
@@ -288,6 +289,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
         const { column = 1, lineNumber = 1 } =
           editorRef.current?.getPosition() || {}
         editorRef.current?.setPosition({ column, lineNumber: lineNumber + 1 })
+        editorRef.current?.revealLine(lineNumber + 1)
       } else {
         viewHistoryNext()
       }
