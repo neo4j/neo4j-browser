@@ -91,7 +91,6 @@ import { stringifyMod } from 'services/utils'
 import Monaco, { MonacoHandles } from '../Editor/Monaco'
 import { Bus } from 'suber'
 import { addFavorite } from 'shared/modules/favorites/favoritesDuck'
-import { useCustomBlur } from 'browser-components/SavedScripts/hooks'
 
 type FrameTitleBarBaseProps = {
   frame: any
@@ -385,6 +384,9 @@ function FrameTitlebar(props: FrameTitleBarProps) {
           onClick={() => {
             props.collapseToggle()
             props.trackCollapseToggle()
+            if (!props.collapse) {
+              setRenderEditor(false)
+            }
           }}
         >
           {expandCollapseIcon}
