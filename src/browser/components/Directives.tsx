@@ -126,7 +126,7 @@ export const Directives = (props: any) => {
 
 const mapDispatchToProps = (_dispatch: any, ownProps: any) => {
   return {
-    onItemClick: (cmd: any, autoExec: any, id: any) => {
+    onItemClick: (cmd: string, autoExec: boolean, id: string) => {
       if (!cmd.endsWith(' null') && !cmd.endsWith(':null')) {
         if (autoExec) {
           const action = executeCommand(cmd, {
