@@ -24,7 +24,7 @@ import {
 } from 'cypher-editor-support'
 import { editor, languages } from 'monaco-editor'
 import { Action } from 'redux'
-import { ActionsObservable, Epic } from 'redux-observable'
+import { Epic } from 'redux-observable'
 import Rx from 'rxjs/Rx'
 
 import {
@@ -35,6 +35,7 @@ import { CypherTokensProvider } from 'browser/modules/Editor/CypherTokensProvide
 import cypherFunctions from 'browser/modules/Editor/cypher/functions'
 import consoleCommands from 'browser/modules/Editor/language/consoleCommands'
 import { getUrlParamValue } from 'services/utils'
+import { GlobalState } from 'shared/globalState'
 import { APP_START, URL_ARGUMENTS_CHANGE } from 'shared/modules/app/appDuck'
 import {
   commandSources,
@@ -54,50 +55,71 @@ import {
   toRelationshipType
 } from 'browser/modules/Editor/editorSchemaConverter'
 
-const NAME = 'editor'
-export const SET_CONTENT = `${NAME}/SET_CONTENT`
-export const EDIT_CONTENT = `${NAME}/EDIT_CONTENT`
-export const FOCUS = `${NAME}/FOCUS`
-export const EXPAND = `${NAME}/EXPAND`
-export const NOT_SUPPORTED_URL_PARAM_COMMAND = `${NAME}/NOT_SUPPORTED_URL_PARAM_COMMAND`
+export const SET_CONTENT = 'editor/SET_CONTENT'
+export const EDIT_CONTENT = 'editor/EDIT_CONTENT'
+export const FOCUS = 'editor/FOCUS'
+export const EXPAND = 'editor/EXPAND'
+export const NOT_SUPPORTED_URL_PARAM_COMMAND =
+  'editor/NOT_SUPPORTED_URL_PARAM_COMMAND'
 
 // Supported commands
-const validCommandTypes: any = {
-  play: (args: any) => `:play ${args.join(' ')}`,
-  edit: (args: any) => args.join('\n'),
-  param: (args: any) => `:param ${args.join(' ')}`,
-  params: (args: any) => `:params ${args.join(' ')}`
+const validCommandTypes: { [key: string]: (args: string[]) => string } = {
+  play: args => `:play ${args.join(' ')}`,
+  edit: args => args.join('\n'),
+  param: args => `:param ${args.join(' ')}`,
+  params: args => `:params ${args.join(' ')}`
 }
 
-export const setContent = (newContent: any) => ({
+interface SetContentAction {
+  type: typeof SET_CONTENT
+  message: string
+}
+
+export const setContent = (message: string): SetContentAction => ({
   type: SET_CONTENT,
-  message: newContent
+  message
 })
+
+interface EditContentAction {
+  type: typeof EDIT_CONTENT
+  message: string
+  id: string
+  isProjectFile: boolean
+  isStatic: boolean
+  name: null | string
+  directory: null
+}
+
+interface EditContentOptions {
+  name?: string | null
+  isStatic?: boolean
+  isProjectFile?: boolean
+}
+
 export const editContent = (
-  id: any,
-  message: any,
+  id = '',
+  message: string,
   {
-    directory = null,
     name = null,
     isStatic = false,
     isProjectFile = false
-  }: any = {}
-) => ({
+  }: EditContentOptions = {}
+): EditContentAction => ({
   type: EDIT_CONTENT,
   message,
   id,
   isProjectFile,
   isStatic,
   name,
-  directory
+  directory: null
 })
 
-export const populateEditorFromUrlEpic = (some$: any, _store: any) => {
+export const populateEditorFromUrlEpic: Epic<any, GlobalState> = some$ => {
   return some$
     .ofType(APP_START)
     .merge(some$.ofType(URL_ARGUMENTS_CHANGE))
     .delay(1) // Timing issue. Needs to be detached like this
-    .mergeMap((action: any) => {
+    .mergeMap(action => {
       if (!action.url) {
         return Rx.Observable.never()
       }
@@ -139,11 +161,24 @@ export const populateEditorFromUrlEpic = (some$: any, _store: any) => {
     })
 }
 
+// CypherEditorSupport returns the content attributes of procedures with dots wrapped in backticks, e.g. "`apoc.coll.avg`"
+// This function strips any surrounding backticks before we use the .content value in the completion item provider
+const stripSurroundingBackticks = (str: string) =>
+  str.charAt(0) === '`' && str.charAt(str.length - 1) === '`'
+    ? str.substr(1, str.length - 2)
+    : str
+
+export const getText = (item: EditorSupportCompletionItem): string =>
+  ['function', 'procedure'].includes(item.type)
+    ? stripSurroundingBackticks(item.content)
+    : item.content
+
 const editorSupport = new CypherEditorSupport('')
 
-export const initializeCypherEditorEpic = (
-  actions$: ActionsObservable<{ type: typeof APP_START }>
-) => {
+export const initializeCypherEditorEpic: Epic<
+  { type: typeof APP_START },
+  GlobalState
+> = actions$ => {
   return actions$
     .ofType(APP_START)
     .take(1)
@@ -209,26 +244,30 @@ export const initializeCypherEditorEpic = (
             column: position.column - 1
           })
 
+          const getRange = (type: string, text: string) =>
+            ['consoleCommand', 'label', 'relationshipType'].includes(type)
+              ? { ...range, startColumn: range.startColumn - 1 }
+              : ['function', 'procedure'].includes(type)
+              ? {
+                  ...range,
+                  startColumn:
+                    range.startColumn -
+                    (text.lastIndexOf(word) + word.length + 1)
+                }
+              : range
+
           return {
-            suggestions: items.map((item, index) => ({
-              label: item.view || item.content,
-              kind: completionTypes[item.type],
-              insertText: item.content,
-              range: ['consoleCommand', 'label', 'relationshipType'].includes(
-                item.type
-              )
-                ? { ...range, startColumn: range.startColumn - 1 }
-                : item.type === 'procedure'
-                ? {
-                    ...range,
-                    startColumn:
-                      range.startColumn -
-                      (item.view.lastIndexOf(word) + word.length + 1)
-                  }
-                : range,
-              detail: item.postfix || undefined,
-              sortText: encodeNumberAsSortableString(index)
-            }))
+            suggestions: items.map((item, index) => {
+              const label = getText(item)
+              return {
+                label,
+                kind: completionTypes[item.type],
+                insertText: label,
+                range: getRange(item.type, label),
+                detail: item.postfix || undefined,
+                sortText: encodeNumberAsSortableString(index)
+              }
+            })
           }
         }
       })
@@ -251,7 +290,7 @@ function encodeNumberAsSortableString(number: number): string {
   return `${prefix}${number}`
 }
 
-export const updateEditorSupportSchemaEpic: Epic<Action, any> = (
+export const updateEditorSupportSchemaEpic: Epic<Action, GlobalState> = (
   actions$,
   store
 ) =>
@@ -261,16 +300,14 @@ export const updateEditorSupportSchemaEpic: Epic<Action, any> = (
       const schema = {
         consoleCommands,
         parameters: Object.keys(state.params),
-        labels: state.meta.labels.map(toLabel) as string[],
-        relationshipTypes: state.meta.relationshipTypes.map(
-          toRelationshipType
-        ) as string[],
-        propertyKeys: state.meta.properties.map(toPropertyKey) as string[],
+        labels: state.meta.labels.map(toLabel),
+        relationshipTypes: state.meta.relationshipTypes.map(toRelationshipType),
+        propertyKeys: state.meta.properties.map(toPropertyKey),
         functions: [
           ...cypherFunctions,
           ...state.meta.functions.map(toFunction)
-        ] as string[],
-        procedures: state.meta.procedures.map(toProcedure) as string[]
+        ],
+        procedures: state.meta.procedures.map(toProcedure)
       }
       editorSupport.setSchema(schema)
     })
