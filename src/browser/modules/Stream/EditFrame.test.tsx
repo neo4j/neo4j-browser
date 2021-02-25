@@ -29,7 +29,8 @@ import { Frame } from 'shared/modules/stream/streamDuck'
 describe('EditFrame', () => {
   it('creates a monaco instance with a unique id based on frame id', () => {
     const id = 'some-frame-id'
-    const frame = { id } as Frame
+    const cmd = ':edit'
+    const frame = { id, cmd } as Frame
     const { container } = render(
       <Provider
         store={configureStore()({ settings: {}, app: {}, sidebar: {} })}

@@ -90,10 +90,7 @@ import arrayHasItems from 'shared/utils/array-has-items'
 import { stringifyMod } from 'services/utils'
 import Monaco, { MonacoHandles } from '../Editor/Monaco'
 import { Bus } from 'suber'
-import FeatureToggle from '../FeatureToggle/FeatureToggle'
-import { reusableFrame } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
 import { addFavorite } from 'shared/modules/favorites/favoritesDuck'
-import uuid from 'uuid'
 
 type FrameTitleBarBaseProps = {
   frame: any
@@ -131,6 +128,7 @@ type FrameTitleBarProps = FrameTitleBarBaseProps & {
 
 function FrameTitlebar(props: FrameTitleBarProps) {
   const [editorValue, setEditorValue] = useState(props.frame.cmd)
+  const [renderEditor, setRenderEditor] = useState(props.frame.isRerun)
   const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const editorRef = useRef<MonacoHandles>(null)
 
@@ -264,34 +262,30 @@ function FrameTitlebar(props: FrameTitleBarProps) {
   const history = (frame.history || []).slice(1)
   return (
     <StyledFrameTitleBar>
-      <FeatureToggle
-        name={reusableFrame}
-        on={
-          <FrameTitleEditorContainer data-testid="frameCommand">
-            <Monaco
-              history={history}
-              useDb={frame.useDb}
-              enableMultiStatementMode={true}
-              id={`editor-${frame.id}`}
-              bus={props.bus}
-              onChange={setEditorValue}
-              onExecute={run}
-              value={editorValue}
-              ref={editorRef}
-              toggleFullscreen={props.fullscreenToggle}
-            />
-          </FrameTitleEditorContainer>
-        }
-        off={
-          <StyledFrameCommand
-            selectedDb={frame.useDb}
-            onClick={() => props.onTitlebarClick(editorValue)}
-            data-testid="frameCommand"
-          >
-            <DottedLineHover>{editorValue}</DottedLineHover>
-          </StyledFrameCommand>
-        }
-      />
+      {renderEditor ? (
+        <FrameTitleEditorContainer data-testid="frameCommand">
+          <Monaco
+            history={history}
+            useDb={frame.useDb}
+            enableMultiStatementMode={true}
+            id={`editor-${frame.id}`}
+            bus={props.bus}
+            onChange={setEditorValue}
+            onExecute={run}
+            value={editorValue}
+            ref={editorRef}
+            toggleFullscreen={props.fullscreenToggle}
+          />
+        </FrameTitleEditorContainer>
+      ) : (
+        <StyledFrameCommand
+          selectedDb={frame.useDb}
+          onClick={() => setRenderEditor(true)}
+          data-testid="frameCommand"
+        >
+          <DottedLineHover>{editorValue.split('\n').join(' ')}</DottedLineHover>
+        </StyledFrameCommand>
+      )}
       <StyledFrameTitlebarButtonSection>
         <FrameButton
           data-testid="rerunFrameButton"
@@ -390,6 +384,9 @@ function FrameTitlebar(props: FrameTitleBarProps) {
           onClick={() => {
             props.collapseToggle()
             props.trackCollapseToggle()
+            if (!props.collapse) {
+              setRenderEditor(false)
+            }
           }}
         >
           {expandCollapseIcon}

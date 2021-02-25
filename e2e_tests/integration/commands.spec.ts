@@ -104,6 +104,9 @@ describe('Commands', () => {
     const password = Cypress.config('password')
     cy.connect('neo4j', password)
     cy.executeCommand('return 1')
+    cy.get('[data-testid="frameCommand"]')
+      .contains('return 1')
+      .click()
     commands.forEach(cmd => {
       cy.typeInFrame(`${cmd}{enter}`)
       cy.wait(300)

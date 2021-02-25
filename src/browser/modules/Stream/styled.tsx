@@ -49,6 +49,7 @@ export const DottedLineHover = styled.span`
     border-bottom: 1px dotted #b6adad;
     padding-bottom: 2px;
   }
+  text-overflow: ellipsis;
 `
 
 export const StyledHelpFrame = styled.div`
