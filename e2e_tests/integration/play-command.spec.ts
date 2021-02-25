@@ -61,7 +61,9 @@ describe('Play command', () => {
     // Go to next again
     cy.getNextInFrameStackBtn().click()
 
-    // Click forward 7 times (to last slide)
+    // Click forward to the last slide
+    nextSlideBtn().click()
+    nextSlideBtn().click()
     nextSlideBtn().click()
     nextSlideBtn().click()
     nextSlideBtn().click()

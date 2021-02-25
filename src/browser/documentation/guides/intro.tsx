@@ -65,36 +65,39 @@ const slides = [
         commands. Browser commands begin with <code>:</code>, for example{' '}
         <code>:help</code>
       </p>
-      <tbody>
-        <tr>
-          <td>Execute current command</td>
-          <td className="padding5">
-            <div className="key code">
-              {isMac ? '<Cmd-Return>' : '<Ctrl-Return>'}
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>Previous command in history</td>
-          <td className="padding5">
-            <div className="key code">
-              {isMac ? '<Cmd-Up-Arrow>' : '<Ctrl-Up-Arrow>'}
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>Next command in history</td>
-          <td className="padding5">
-            <div className="key code">
-              {isMac ? '<Cmd-Down-Arrow>' : '<Ctrl-Down-Arrow>'}
-            </div>
-          </td>
-        </tr>
-      </tbody>
+      <table>
+        <tbody>
+          <tr>
+            <td>Execute current command</td>
+            <td className="padding5">
+              <div className="key code">
+                {isMac ? '<Cmd-Return>' : '<Ctrl-Return>'}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Previous command in history</td>
+            <td className="padding5">
+              <div className="key code">
+                {isMac ? '<Cmd-Up-Arrow>' : '<Ctrl-Up-Arrow>'}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Next command in history</td>
+            <td className="padding5">
+              <div className="key code">
+                {isMac ? '<Cmd-Down-Arrow>' : '<Ctrl-Down-Arrow>'}
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
       <p></p>
       <p>
-        You can view the complete list of keybinding anytime by running{' '}
-        <code>:help keys</code>
+        You can view the list of keybinding anytime by running{' '}
+        <code>:help keys</code> or by pressing <b>F1 </b>in the editor to see
+        all editor-specific keybindings.
       </p>
     </div>
     <div className="col-sm-4">

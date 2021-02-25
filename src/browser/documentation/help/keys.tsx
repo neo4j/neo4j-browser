@@ -55,6 +55,12 @@ const content = (
       </tbody>
     </table>
 
+    <p className="padding30">
+      You can access the list of all available editor keybindings by pressing{' '}
+      <b>F1 </b>in the editor.
+    </p>
+    <p> Some of them are listed here:</p>
+
     <table className="table-condensed table-help table-help--keys">
       <thead>
         <tr>
@@ -122,16 +128,6 @@ const content = (
           <td>Redo</td>
           <td>Ctrl + Y</td>
           <td>Shift + Command + Z or Command + Y</td>
-        </tr>
-        <tr>
-          <td>Increase font size</td>
-          <td>Ctrl + .</td>
-          <td>Command + .</td>
-        </tr>
-        <tr>
-          <td>Decrease font size</td>
-          <td>Ctrl + ,</td>
-          <td>Command + ,</td>
         </tr>
         <tr>
           <td>Decrease Indent</td>
