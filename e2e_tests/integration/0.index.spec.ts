@@ -39,9 +39,11 @@ describe('Neo4j Browser', () => {
     cy.disconnect()
   })
 
-  it(':server disconnect frame is re-runnable', () => {
+  it(':server disconnect frame is rerunnable', () => {
     cy.get('[data-testid="disconnectedBannerCode"]').click()
-    cy.get('[data-testid="frameCommand"]').contains(':server connect')
+    cy.get('[data-testid="frameCommand"]')
+      .contains(':server connect')
+      .click()
     cy.typeInFrame(':play movies{enter}', 0)
     cy.get('[data-testid=frame]').contains('the Bacon Path')
   })

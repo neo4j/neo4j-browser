@@ -128,7 +128,7 @@ type FrameTitleBarProps = FrameTitleBarBaseProps & {
 
 function FrameTitlebar(props: FrameTitleBarProps) {
   const [editorValue, setEditorValue] = useState(props.frame.cmd)
-  const [renderEditor, setRenderEditor] = useState(false)
+  const [renderEditor, setRenderEditor] = useState(props.frame.isRerun)
   const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const editorRef = useRef<MonacoHandles>(null)
 
