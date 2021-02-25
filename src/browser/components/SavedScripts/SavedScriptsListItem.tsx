@@ -42,10 +42,11 @@ interface SavedScriptsListItemProps {
   selectScript: () => void
   execScript: () => void
   onClick?: (e: React.MouseEvent) => void
-  isSelected?: boolean
+  isSelected: boolean
   renameScript?: (name: string) => void
   removeScript?: () => void
   duplicateScript?: () => void
+  clearOtherSelections: () => void
 }
 
 function SavedScriptsListItem({
@@ -56,7 +57,8 @@ function SavedScriptsListItem({
   removeScript,
   duplicateScript,
   onClick,
-  isSelected
+  isSelected,
+  clearOtherSelections
 }: SavedScriptsListItemProps): JSX.Element {
   const displayName = getScriptDisplayName(script)
   const {
@@ -71,7 +73,12 @@ function SavedScriptsListItem({
   )
   const overlayBlurRef = useCustomBlur(() => setShowOverlay(false))
   const dragAndDropRef = useDrag({
-    item: { id: script.id, type: 'script' }
+    item: { id: script.id, type: 'script' },
+    begin: () => {
+      if (!isSelected) {
+        clearOtherSelections()
+      }
+    }
   })[1]
   const [showOverlay, setShowOverlay] = useState(false)
   const toggleOverlay = () => setShowOverlay(t => !t)

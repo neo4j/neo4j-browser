@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React, { useState } from 'react'
-import { DndProvider, useDrop } from 'react-dnd'
+import { useDrop } from 'react-dnd'
 import SavedScriptsFolder from './SavedScriptsFolder'
 import {
   ExportButton,
@@ -220,6 +220,7 @@ export default function SavedScripts({
               key={key}
               onClick={onListItemClick(key)}
               isSelected={selectedIds.includes(key)}
+              clearOtherSelections={() => setSelectedIds([])}
             />
           )
         })}
@@ -250,6 +251,7 @@ export default function SavedScripts({
                 key={key}
                 onClick={onListItemClick(key)}
                 isSelected={selectedIds.includes(key)}
+                clearOtherSelections={() => setSelectedIds([])}
               />
             )
           })}
