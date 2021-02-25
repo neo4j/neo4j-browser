@@ -88,9 +88,11 @@ describe('Play command', () => {
     nextSlideBtn().click()
     nextSlideBtn().click()
     nextSlideBtn().click()
+    nextSlideBtn().click()
+    nextSlideBtn().click()
 
     frame = cy.getFrames()
-    frame.should('have.length', 1).should('contain', 'Keep getting started')
+    frame.should('have.length', 1).should('contain', 'Next steps')
 
     // Click next in stack
     cy.getNextInFrameStackBtn().click()
