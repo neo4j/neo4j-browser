@@ -20,13 +20,19 @@
 
 import React from 'react'
 import Slide from '../../modules/Carousel/Slide'
+import {
+  FULLSCREEN_SHORTCUT,
+  FOCUS_SHORTCUT,
+  printShortcut,
+  isMac
+} from 'browser/modules/App/keyboardShortcuts'
 
 const title = 'Intro'
 const slides = [
   <Slide key="s1">
     <div className="col-sm-3">
       <h3>Introduction</h3>
-      <p className="lead">Getting started with Neo4j Browser</p>
+      <p className="lead">Neo4j Browser User Interface </p>
     </div>
     <div className="col-sm-6">
       <p>
@@ -54,26 +60,53 @@ const slides = [
     </div>
     <div className="col-sm-5">
       <p>
-        The editor is the primary interface for entering and running commands.
-        Enter Cypher queries to work with graph data. Use client-side commands
-        like
-        <code>:help</code> for other operations.
+        Editor pane is used to edit and run for Cypher statements and Browser
+        commands. Browser commands begin with <code>:</code>, for example{' '}
+        <code>:help</code>
       </p>
-      <ul>
-        <li>Single line editing for brief queries or commands</li>
-        <li>Switch to multi-line editing with {'<shift-enter>'}</li>
-        <li>Run a query with {'<ctrl-enter>'}</li>
-        <li>History is kept for easily retrieving previous commands</li>
-      </ul>
+      <table>
+        <tbody>
+          <tr>
+            <td>Execute current command</td>
+            <td className="padding5">
+              <div className="key code">
+                {isMac ? '<Cmd-Return>' : '<Ctrl-Return>'}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Previous command in history</td>
+            <td className="padding5">
+              <div className="key code">
+                {isMac ? '<Cmd-Up-Arrow>' : '<Ctrl-Up-Arrow>'}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Next command in history</td>
+            <td className="padding5">
+              <div className="key code">
+                {isMac ? '<Cmd-Down-Arrow>' : '<Ctrl-Down-Arrow>'}
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p></p>
+      <p>
+        You can view the list of keybinding anytime by running{' '}
+        <code>:help keys</code> or by pressing <b>F1 </b>in the editor to see
+        all editor-specific keybindings.
+      </p>
     </div>
     <div className="col-sm-4">
-      <img src="./assets/images/screen_editor.png" className="img-responsive" />
+      <img src="./assets/images/Keystrokes2.gif" className="img-responsive" />
     </div>
   </Slide>,
   <Slide key="s3">
     <div className="col-sm-3">
-      <h3>Stream</h3>
-      <p className="lead">Scrolling series of result frames</p>
+      <h3>Result frame</h3>
+      <p className="lead">Most recently executed command or Cypher query.</p>
     </div>
     <div className="col-sm-5">
       <p>
@@ -82,76 +115,110 @@ const slides = [
         order.
       </p>
       <ul>
-        <li>Special frames like data visualization</li>
-        <li>Expand a frame to full screen</li>
-        <li>Remove a specific frame from the stream</li>
+        <li>If a frame is pinned it will always stay in the same position. </li>
         <li>
-          Clear the stream with the <code>:clear</code> command
+          You can clear the stream of result frames running <code>:clear</code>{' '}
+          command.
+        </li>
+        <li>
+          There are maximum 30 result frames displayed in the stream. You can
+          change this number in the Settings sidebar.{' '}
+        </li>
+        <li>
+          You can bring up the history of the executed commands and queries by
+          running <code className="nobreak">:history</code> command.
         </li>
       </ul>
     </div>
     <div className="col-sm-4">
-      <img src="./assets/images/screen_stream.png" className="img-responsive" />
+      <img src="./assets/images/Stream.png" className="img-responsive" />
     </div>
   </Slide>,
   <Slide key="s4">
     <div className="col-sm-3">
-      <h3>Frame code view</h3>
-      <p className="lead">Viewing requests and responses</p>
+      <h3>Reusable frame</h3>
+      <p className="lead">Instead of the stream</p>
     </div>
     <div className="col-sm-5">
       <p>
-        The code tab displays everything sent to and received from the Neo4j
-        server, including:
+        You can also iterate in the same frame instead of generating a
+        scrollable stream of frames.
       </p>
-      <ul>
-        <li>Request URI, HTTP method and headers</li>
-        <li>Response HTTP response code and headers</li>
-        <li>Raw request and response content in JSON format</li>
-      </ul>
+      <p>Adjust your preferences in the Settings sidebar tab.</p>
     </div>
     <div className="col-sm-4">
       <img
-        src="./assets/images/screen_code_frame.png"
+        src="./assets/images/ReusableFrame2.gif"
         className="img-responsive"
       />
     </div>
   </Slide>,
   <Slide key="s5">
     <div className="col-sm-3">
-      <h3>Sidebar</h3>
-      <p className="lead">Convenient clickable access</p>
+      <h3>Sidebar: Database information</h3>
+      <p className="lead">Database metadata</p>
     </div>
     <div className="col-sm-5">
-      <p>
-        The sidebar expands to reveal different functional panels for common
-        queries and information.
-      </p>
-      <ul>
-        <li>Database metadata and basic information</li>
-        <li>Saved scripts organized into folders</li>
-        <li>Information links for docs and reference</li>
-        <li>Credits and licensing information</li>
-      </ul>
+      When Neo4j is installed, it is initiated with two databases - a{' '}
+      <code>system</code> database and a default <code>neo4j</code> database.
+      Launching Neo4j Browser will automatically point us to the{' '}
+      <code className="nobreak">neo4j default</code> database, shown by the
+      neo4j$ prompt in the editor.
     </div>
     <div className="col-sm-4">
       <img
-        src="./assets/images/screen_sidebar.png"
+        src="./assets/images/SidebarDB_Iinfo.png"
         className="img-responsive"
       />
     </div>
   </Slide>,
+
   <Slide key="s6">
-    <div className="col-sm-4">
-      <h3>Next steps</h3>
-      <p className="lead">
-        Neo4j is like a mashup of a REPL + lightweight IDE + graph
-        visualization.
+    <div className="col-sm-3">
+      <h3>Sidebar: Favorites</h3>
+      <p className="lead">Quick way to save your queries</p>
+    </div>
+    <div className="col-sm-5">
+      <p>
+        Favorite queries or commands can be saved in the local storage and
+        displayed in the sidebar.{' '}
       </p>
-      <a play-topic="start">Play start</a> - Back to getting started
+      <p>
+        Favorites are global and independent of project or database which means
+        that you can access your Favorites from Neo4j Browser with different
+        databases, hosting platforms, and data sets.
+      </p>
     </div>
     <div className="col-sm-4">
-      <h3>Keep getting started</h3>
+      <img src="./assets/images/Favorites2.gif" className="img-responsive" />
+    </div>
+  </Slide>,
+
+  <Slide key="s7">
+    <div className="col-sm-3">
+      <h3>Sidebar: Project files</h3>
+      <p className="lead">Save cypher files to share with your colleagues</p>
+    </div>
+    <div className="col-sm-5">
+      Queries and commands can also be saved as <b>Project files</b>. Project
+      folder can be reached through Neo4j Desktop and your hard disk.
+    </div>
+    <div className="col-sm-4">
+      <img src="./assets/images/ProjectFiles2.gif" className="img-responsive" />
+    </div>
+  </Slide>,
+
+  <Slide key="s8">
+    <div className="col-sm-4">
+      <div>
+        {' '}
+        &#127968;
+        <a play-topic="start">Play start</a> - Back to getting started
+      </div>
+    </div>
+
+    <div className="col-sm-4">
+      <h3>Next steps</h3>
       <ul className="undecorated">
         <li>
           <a help-topic="commands">Help commands</a> - Useful Neo4j Browser

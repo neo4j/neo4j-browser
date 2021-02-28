@@ -61,7 +61,9 @@ describe('Play command', () => {
     // Go to next again
     cy.getNextInFrameStackBtn().click()
 
-    // Click forward 7 times (to last slide)
+    // Click forward to the last slide
+    nextSlideBtn().click()
+    nextSlideBtn().click()
     nextSlideBtn().click()
     nextSlideBtn().click()
     nextSlideBtn().click()
@@ -70,7 +72,7 @@ describe('Play command', () => {
 
     frame = cy.getFrames()
 
-    frame.should('have.length', 1).should('contain', 'Keep getting started')
+    frame.should('have.length', 1).should('contain', 'Next steps')
 
     // Click new guide
     frame.contains('Play Cypher').click()
@@ -86,9 +88,11 @@ describe('Play command', () => {
     nextSlideBtn().click()
     nextSlideBtn().click()
     nextSlideBtn().click()
+    nextSlideBtn().click()
+    nextSlideBtn().click()
 
     frame = cy.getFrames()
-    frame.should('have.length', 1).should('contain', 'Keep getting started')
+    frame.should('have.length', 1).should('contain', 'Next steps')
 
     // Click next in stack
     cy.getNextInFrameStackBtn().click()
