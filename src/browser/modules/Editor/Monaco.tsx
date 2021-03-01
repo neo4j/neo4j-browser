@@ -67,6 +67,11 @@ const MonacoStyleWrapper = styled.div`
   .margin .margin-view-overlays {
     margin-left: 10px;
   }
+
+  // hides the "Peek Problem" status bar on the warnings hover widgets
+  .hover-row.status-bar {
+    display: none !important;
+  }
 `
 
 interface MonacoProps {
@@ -195,7 +200,11 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
         KeyMod.CtrlCmd | KeyCode.US_DOT,
         onDisplayHelpKeys
       )
-      editorRef.current.addCommand(KeyCode.Escape, toggleFullscreen)
+      editorRef.current.addCommand(
+        KeyCode.Escape,
+        toggleFullscreen,
+        '!suggestWidgetVisible'
+      )
 
       onContentUpdate()
 
