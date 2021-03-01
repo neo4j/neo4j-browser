@@ -200,7 +200,11 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
         KeyMod.CtrlCmd | KeyCode.US_DOT,
         onDisplayHelpKeys
       )
-      editorRef.current.addCommand(KeyCode.Escape, toggleFullscreen)
+      editorRef.current.addCommand(
+        KeyCode.Escape,
+        toggleFullscreen,
+        '!suggestWidgetVisible'
+      )
 
       onContentUpdate()
 
