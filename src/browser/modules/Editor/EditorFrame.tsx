@@ -69,6 +69,7 @@ import {
 } from 'browser-components/ProjectFiles/projectFilesConstants'
 import { getProjectFileDefaultFileName } from 'browser-components/ProjectFiles/projectFilesUtils'
 import Monaco, { MonacoHandles } from './Monaco'
+import { GlobalState } from 'shared/globalState'
 import {
   codeFontLigatures,
   shouldEnableMultiStatementMode
@@ -252,7 +253,7 @@ export function EditorFrame({
       )}
       <FlexContainer>
         <Header>
-          <EditorContainer onClick={() => editorRef.current?.focus()}>
+          <EditorContainer>
             <Monaco
               bus={bus}
               enableMultiStatementMode={enableMultiStatementMode}
@@ -330,7 +331,7 @@ export function EditorFrame({
   )
 }
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: GlobalState) => {
   return {
     codeFontLigatures: codeFontLigatures(state),
     enableMultiStatementMode: shouldEnableMultiStatementMode(state),
