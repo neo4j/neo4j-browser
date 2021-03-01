@@ -133,7 +133,7 @@ const Overlay = styled.div`
   position: absolute;
   bottom: 10px;
   right: 10px;
-  z-index: 99999999999;
+  z-index: 9999999999;
   padding: 10px;
 `
 

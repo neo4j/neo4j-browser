@@ -114,7 +114,7 @@ const CarouselIndicator = styled.li`
     padding: 5px;
     line-height: 1;
     text-align: center;
-    z-index: 1000;
+    z-index: 100;
     visibility: hidden;
   }
 
@@ -128,7 +128,7 @@ const CarouselIndicator = styled.li`
     pointer-events: none;
     position: absolute;
     transform: translateX(-50%);
-    z-index: 1000;
+    z-index: 100;
     visibility: hidden;
   }
 
