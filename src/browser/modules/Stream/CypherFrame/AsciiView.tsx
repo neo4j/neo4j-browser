@@ -30,8 +30,7 @@ import {
   StyledRightPartial,
   StyledWidthSliderContainer,
   StyledWidthSlider,
-  StyledTruncatedMessage,
-  StyledAsciiPre
+  StyledTruncatedMessage
 } from '../styled'
 import {
   getBodyAndStatusBarMessages,
@@ -57,9 +56,8 @@ interface BaseAsciiViewComponentProps {
 interface AsciiViewComponentProps extends BaseAsciiViewComponentProps {
   maxFieldItems: number
 }
-
 interface AsciiViewComponentState {
-  serializedRows: string[][]
+  serializedRows: string[]
   bodyMessage: string | null
 }
 
@@ -124,15 +122,6 @@ export class AsciiViewComponent extends Component<
     this.props.setAsciiMaxColWidth(maxColWidth)
   }
 
-  /**
-   * Replaces newline characters, with a double \\ to escape newline in render
-   */
-  removeNewlines(serializedRows: string[][]): string[][] {
-    return serializedRows.map(row => {
-      return row.map(value => value.replace('\n', '\\n'))
-    })
-  }
-
   render(): JSX.Element {
     const { _asciiSetColWidth: maxColWidth = 70 } = this.props
     const { serializedRows, bodyMessage } = this.state
@@ -142,11 +131,10 @@ export class AsciiViewComponent extends Component<
       serializedRows.length &&
       serializedRows[0].length
     ) {
-      const stripedRows = this.removeNewlines(serializedRows)
       contents = (
-        <StyledAsciiPre>
-          {asciitable.tableFromSerializedData(stripedRows, maxColWidth)}
-        </StyledAsciiPre>
+        <pre>
+          {asciitable.tableFromSerializedData(serializedRows, maxColWidth)}
+        </pre>
       )
     }
     return <PaddedDiv>{contents}</PaddedDiv>
