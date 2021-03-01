@@ -9109,17 +9109,17 @@ moment@^2.27.0:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/moment/-/moment-2.28.0.tgz#cdfe73ce01327cee6537b0fafac2e0f21a237d75"
   integrity sha1-zf5zzgEyfO5lN7D6+sLg8hojfXU=
 
-monaco-editor-webpack-plugin@^1.9.0:
-  version "1.9.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/monaco-editor-webpack-plugin/-/monaco-editor-webpack-plugin-1.9.0.tgz#5b547281b9f404057dc5d8c5722390df9ac90be6"
-  integrity sha1-W1Rygbn0BAV9xdjFciOQ35rJC+Y=
+monaco-editor-webpack-plugin@^3.0.0:
+  version "3.0.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/monaco-editor-webpack-plugin/-/monaco-editor-webpack-plugin-3.0.0.tgz#47a1c16e990d743572f47b0a1abb6de36bbc4afb"
+  integrity sha1-R6HBbpkNdDVy9HsKGrtt42u8Svs=
   dependencies:
-    loader-utils "^1.2.3"
+    loader-utils "^2.0.0"
 
-monaco-editor@^0.20.0:
-  version "0.20.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/monaco-editor/-/monaco-editor-0.20.0.tgz#5d5009343a550124426cb4d965a4d27a348b4dea"
-  integrity sha1-XVAJNDpVASRCbLTZZaTSejSLTeo=
+monaco-editor@^0.22.3:
+  version "0.22.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/monaco-editor/-/monaco-editor-0.22.3.tgz#69b42451d3116c6c08d9b8e052007ff891fd85d7"
+  integrity sha1-abQkUdMRbGwI2bjgUgB/+JH9hdc=
 
 moo@^0.4.3:
   version "0.4.3"

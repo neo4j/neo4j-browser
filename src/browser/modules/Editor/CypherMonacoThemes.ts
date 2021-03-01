@@ -353,6 +353,7 @@ export const monacoDarkTheme: editor.IStandaloneThemeData = {
     'editor.background': dark.frameCommandBackground,
     'editorCursor.foreground': '#585a61',
     'editorLineNumber.foreground': CypherColor.white,
+    'editorLineNumber.activeForeground': CypherColor.white,
     foreground: CypherColor.white
   }
 }
@@ -364,6 +365,7 @@ export const monacoLightTheme: editor.IStandaloneThemeData = {
     'editor.background': base.frameCommandBackground,
     'editorCursor.foreground': '#d6d7db',
     'editorLineNumber.foreground': CypherColor.light_grey,
+    'editorLineNumber.activeForeground': CypherColor.light_grey,
     foreground: CypherColor.black
   }
 }
