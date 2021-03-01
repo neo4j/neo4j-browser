@@ -53,7 +53,7 @@ export const Frame = styled.div<FullscreenProps>`
   right: 0;
   height: 100vh;
   border-radius: 0;
-  z-index: 1030;
+  z-index: 103;
   margin: 0;
 
   [id^=monaco-] .monaco-editor {

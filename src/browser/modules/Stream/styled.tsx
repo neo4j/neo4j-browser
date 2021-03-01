@@ -218,7 +218,7 @@ export const DropdownButton = styled.li`
     fill: ${props => props.theme.secondaryButtonTextHover};
     text-decoration: none;
     position: relative;
-    z-index: 99999;
+    z-index: 9999;
   }
   &:hover {
     > ul li {

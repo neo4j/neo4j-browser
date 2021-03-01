@@ -162,7 +162,7 @@ export const ContextMenu = styled.div`
   width: 156px;
   left: -156px;
   top: -3px;
-  z-index: 999;
+  z-index: 99;
   border: 1px solid transparent;
   background-color: ${props => props.theme.secondaryBackground};
   border: ${props => props.theme.frameBorder};

@@ -43,7 +43,7 @@ export const StyledFileDropInner = styled.div`
     background-color: rgba(0, 0, 0, 0.6);
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
-    z-index: 1000;
+    z-index: 100;
   }
 
   .has-user-select & {
