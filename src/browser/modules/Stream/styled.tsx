@@ -179,6 +179,11 @@ export const StyledStatsBar = styled.div`
   padding-left: 24px;
   width: 100%;
 `
+
+export const StyledAsciiPre = styled.pre`
+  font-family: 'Courier New', monospace;
+`
+
 export const StyledTruncatedMessage = styled.span`
   color: orange;
 `
