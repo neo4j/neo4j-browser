@@ -66,7 +66,6 @@ export const Frame = styled.div<FullscreenProps>`
 `
 
 export const EditorContainer = styled.div`
-  cursor: text;
   display: flex;
   align-items: center;
   flex-grow: 1;
