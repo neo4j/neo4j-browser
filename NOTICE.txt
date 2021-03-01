@@ -1353,7 +1353,7 @@ Third-party licenses
 │  │  ├─ URL: git://github.com/substack/minimist.git
 │  │  ├─ VendorName: James Halliday
 │  │  └─ VendorUrl: https://github.com/substack/minimist
-│  ├─ monaco-editor@0.20.0
+│  ├─ monaco-editor@0.22.3
 │  │  ├─ URL: https://github.com/Microsoft/monaco-editor
 │  │  └─ VendorName: Microsoft Corporation
 │  ├─ ms@2.1.2
