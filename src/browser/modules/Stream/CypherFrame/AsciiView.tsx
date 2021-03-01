@@ -58,10 +58,8 @@ interface AsciiViewComponentProps extends BaseAsciiViewComponentProps {
   maxFieldItems: number
 }
 
-type SerializedRows = string[][]
-
 interface AsciiViewComponentState {
-  serializedRows: SerializedRows
+  serializedRows: string[][]
   bodyMessage: string | null
 }
 
@@ -129,11 +127,10 @@ export class AsciiViewComponent extends Component<
   /**
    * Replaces newline characters, with a double \\ to escape newline in render
    */
-  removeNewlines(serializedRows: SerializedRows): SerializedRows {
-    const newSerializedRows: SerializedRows = serializedRows.map(row => {
+  removeNewlines(serializedRows: string[][]): string[][] {
+    return serializedRows.map(row => {
       return row.map(value => value.replace('\n', '\\n'))
     })
-    return newSerializedRows
   }
 
   render(): JSX.Element {
