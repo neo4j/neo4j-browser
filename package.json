@@ -42,6 +42,8 @@
     "start-prod": "cross-env NODE_ENV=production webpack-dev-server --colors --config ./build_scripts/webpack.config.js",
     "starts-prod": "cross-env NODE_ENV=production webpack-dev-server --https --colors --config ./build_scripts/webpack.config.js",
     "test": "npm run lint && npm run jest",
+    "test-unit": "test",
+    "test-e2e": "npm run lint && npm run jest",
     "update-licenses": "sh ./scripts/generate_licenses.sh",
     "version-pom": "node ./scripts/set-pom-version.js -f ./pom.xml -v $npm_package_version",
     "version": "npm run version-pom && git add ./pom.xml",
