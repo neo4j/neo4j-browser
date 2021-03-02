@@ -24,10 +24,12 @@ import { createBus, createReduxMiddleware } from 'suber'
 import {
   populateEditorFromUrlEpic,
   SET_CONTENT,
-  NOT_SUPPORTED_URL_PARAM_COMMAND
+  NOT_SUPPORTED_URL_PARAM_COMMAND,
+  getText
 } from './editorDuck'
 import { APP_START, URL_ARGUMENTS_CHANGE } from '../app/appDuck'
 import { COMMAND_QUEUED, executeCommand } from '../commands/commandsDuck'
+import { EditorSupportCompletionItem } from 'cypher-editor-support'
 
 describe('editorDuck Epics', () => {
   let store: any
@@ -188,5 +190,29 @@ describe('editorDuck Epics', () => {
 
     // When
     store.dispatch(action)
+  })
+})
+
+describe('getting expected text from cypher-editor-support', () => {
+  test('item with procedure type strips surrounding backticks', () => {
+    const item: EditorSupportCompletionItem = {
+      type: 'procedure',
+      view: '',
+      content: '`apoc.coll.avg`',
+      postfix: null
+    }
+
+    expect(getText(item)).toEqual('apoc.coll.avg')
+  })
+
+  test('item with non procedure or function type retains backticks', () => {
+    const item: EditorSupportCompletionItem = {
+      type: 'label',
+      view: '',
+      content: '`a label name wrapped in backticks`',
+      postfix: null
+    }
+
+    expect(getText(item)).toEqual(item.content)
   })
 })

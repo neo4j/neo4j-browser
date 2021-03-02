@@ -83,12 +83,23 @@ declare module 'cypher-editor-support' {
     commands?: ConsoleCommand[]
   }
 
+  interface FunctionSchema {
+    name: string
+    signature: string
+  }
+
+  interface ProcedureSchema {
+    name: string
+    signature: string
+    returnItems: FunctionSchema[]
+  }
+
   export interface EditorSupportSchema {
     labels?: string[]
     relationshipTypes?: string[]
     propertyKeys?: string[]
-    functions?: string[]
-    procedures?: string[]
+    functions?: FunctionSchema[]
+    procedures?: ProcedureSchema[]
     consoleCommands?: ConsoleCommand[]
     parameters?: string[]
   }
