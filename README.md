@@ -32,7 +32,7 @@ The development server will then be reachable at `http://localhost:8080`.
 Neo4j Browser has both unit and end to end tests running automatically on every pull request. To run the tests locally:
 
 `yarn test-unit` runs a linter and then our unit tests.
-`yarn test-e2e` runs our Cypress end to end tests in the easiest and slowest way. Running them with this command requires docker.
+`yarn test-e2e` runs our Cypress end to end tests in the easiest and slowest way. Running them with this command requires docker installed and that nothing else runs on ports 7687 and 8080.
 
 #### Cypress e2e test suite in depth
 
@@ -63,4 +63,4 @@ CYPRESS_E2E_TEST_ENV=local|null (if the initial set of pw should run or not) (de
 CYPRESS_BASE_URL=<url to reach the browser to test> (default http://localhost:8080)
 ```
 
-Example: `CYPRESS_E2E_TEST_ENV="local" CYPRESS_BASE_URL=http://localhost:8081 cypress open --env server=3.5`
+Example: `CYPRESS_E2E_TEST_ENV="local" CYPRESS_BASE_URL=http://localhost:30000 cypress open --env server=3.5`
