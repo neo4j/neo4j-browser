@@ -12,27 +12,26 @@ Keep in mind that you will need to connect to an instance of Neo4j (the database
 
 ## Feedback & Contributing
 
-Found a bug or some other problem with Neo4j Browser? Please [**open an issue**](https://github.com/neo4j/neo4j-browser/issues)
+Found a bug or some other problem with Neo4j Browser? Please [**open an issue**](https://github.com/neo4j/neo4j-browser/issues).
 
-Have an idea for a new feature? You're welcome to leave suggestions and ideas [here](https://neo4j-browser.canny.io/feature-requests)
+Have an idea for a new feature? You're welcome to leave suggestions and ideas [here](https://neo4j-browser.canny.io/feature-requests).
 
 Contributions welcome! More information in our [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Development 
-Running Neo4j Browser locally requires Node.js (^12.4.0) and yarn (`npm install -g yarn`).
+Running Neo4j Browser locally requires Node.js (^12.4.0) and yarn (`npm install -g yarn`). 
+To install dependencies and then start the development server at `http://localhost:8080`:
 
 ```shell
 yarn
 yarn start
 ```
 
-The development server will then be reachable at `http://localhost:8080`. 
-
 ### Testing overview
 Neo4j Browser has both unit and end to end tests running automatically on every pull request. To run the tests locally:
 
 `yarn test-unit` runs a linter and then our unit tests.
-`yarn test-e2e` runs our Cypress end to end tests in the easiest and slowest way. Running them with this command requires docker installed and that nothing else runs on ports 7687 and 8080.
+`yarn test-e2e` runs our Cypress end to end tests in the easiest, slowest way. Running them with this command requires docker installed and that nothing else runs on ports 7687 and 8080.
 
 #### Cypress e2e test suite in depth
 
