@@ -27,6 +27,7 @@ import Centered from 'browser-components/Centered'
 import {
   getRequest,
   REQUEST_STATUS_PENDING,
+  REQUEST_STATUS_SUCCESS,
   isCancelStatus,
   BrowserRequest,
   BrowserRequestResult
@@ -171,7 +172,9 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
     }
 
     // When frame re-use leads to result without visualization
-    if (!this.canShowViz() && this.state.openView === viewTypes.VISUALIZATION) {
+    const doneLoading = this.props.request.status === REQUEST_STATUS_SUCCESS
+    const currentlyShowingViz = this.state.openView === viewTypes.VISUALIZATION
+    if (doneLoading && currentlyShowingViz && !this.canShowViz()) {
       const view = initialView(this.props, {
         ...this.state,
         openView: undefined // initial view was not meant to override another view
