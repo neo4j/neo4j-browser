@@ -190,6 +190,7 @@ export const initializeCypherEditorEpic: Epic<
           ['(', ')'],
           ['{', '}'],
           ['[', ']'],
+          ["'", "'"],
           ['"', '"']
         ],
         comments: {
