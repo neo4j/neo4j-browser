@@ -88,12 +88,24 @@ export default function SavedScripts({
     .filter(script => !script.folder)
     .sort(sortScriptsAlfabethically)
 
-  const foldersWithScripts = folders.map(folder => ({
-    folder,
-    scripts: scripts
-      .filter(script => script.folder === folder.id)
-      .sort(sortScriptsAlfabethically)
-  }))
+  const countFoldersWithName = (name: string) =>
+    folders.filter(folder => folder.name === name).length
+
+  const foldersWithScripts = folders
+    .map(folder => ({
+      folder,
+      scripts: scripts
+        .filter(script => script.folder === folder.id)
+        .sort(sortScriptsAlfabethically)
+    }))
+    .filter(({ folder, scripts }) => {
+      const folderIsEmpty = scripts.length === 0
+      const folderIsDuplicated = countFoldersWithName(folder.name) > 1
+      const isNewFolder = folder.name === 'New Folder'
+      const shouldBeRemoved =
+        folderIsDuplicated && folderIsEmpty && !isNewFolder
+      return !shouldBeRemoved
+    })
 
   const [unNamedFolder, setUnNamedFolder] = useState<string | null>(null)
   const [selectedIds, setSelectedIds] = useState<string[]>([])
