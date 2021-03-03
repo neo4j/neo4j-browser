@@ -40,6 +40,7 @@ import { Bus } from 'suber'
 
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import { NotificationPosition, QueryResult } from 'neo4j-driver'
 
 const shouldCheckForHints = (code: string) =>
   code.trim().length > 0 &&
@@ -449,7 +450,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
             query: 'EXPLAIN ' + text,
             queryType: NEO4J_BROWSER_USER_ACTION_QUERY
           },
-          response => {
+          (response: { result: QueryResult; success?: boolean }) => {
             if (
               response.success === true &&
               response.result.summary.notifications.length > 0
@@ -457,22 +458,18 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
               editor.setModelMarkers(model, monacoId, [
                 ...editor.getModelMarkers({ owner: monacoId }),
                 ...response.result.summary.notifications.map(
-                  ({
-                    description,
-                    position: { line },
-                    title
-                  }: {
-                    description: string
-                    position: { line: number }
-                    title: string
-                  }) => ({
-                    startLineNumber: statementLineNumber + line,
-                    startColumn: 1,
-                    endLineNumber: statementLineNumber + line,
-                    endColumn: 1000,
-                    message: title + '\n\n' + description,
-                    severity: MarkerSeverity.Warning
-                  })
+                  ({ description, position, title }) => {
+                    const { line, column } = position as NotificationPosition
+                    return {
+                      startLineNumber: statementLineNumber + line,
+                      // The 8 subtracted from the column on the first line is the length of 'EXPLAIN '
+                      startColumn: line === 1 ? column - 8 : column,
+                      endLineNumber: statementLineNumber + line,
+                      endColumn: 1000,
+                      message: title + '\n\n' + description,
+                      severity: MarkerSeverity.Warning
+                    }
+                  }
                 )
               ])
             }
