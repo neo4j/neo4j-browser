@@ -84,8 +84,11 @@ export default function SavedScripts({
   exportScripts,
   createNewFolder
 }: SavedScriptsProps): JSX.Element {
+  const folderExists = (folderId: string) =>
+    folders.find(folder => folder.id === folderId)
+
   const scriptsOutsideFolder = scripts
-    .filter(script => !script.folder)
+    .filter(script => !script.folder || !folderExists(script.folder))
     .sort(sortScriptsAlfabethically)
 
   const countFoldersWithName = (name: string) =>
