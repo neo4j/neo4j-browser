@@ -31,6 +31,7 @@ yarn start
 Neo4j Browser has both unit and end to end tests running automatically on every pull request. To run the tests locally:
 
 `yarn test-unit` runs a linter and then our unit tests.
+
 `yarn test-e2e` runs our Cypress end to end tests in the easiest, slowest way. Running them with this command requires docker installed and that nothing else runs on ports 7687 and 8080.
 
 #### Cypress e2e test suite in depth
