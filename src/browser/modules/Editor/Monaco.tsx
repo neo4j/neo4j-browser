@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { QuickInputList } from 'monaco-editor/esm/vs/base/parts/quickinput/browser/quickInputList'
 import { parse } from 'cypher-editor-support'
 import { debounce } from 'lodash-es'
 import {
@@ -235,8 +236,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       ;(editorRef.current as any)._modelData.view._contentWidgets.overflowingContentWidgetsDomNode.domNode.appendChild(
         quickInputDOMNode.parentNode?.removeChild(quickInputDOMNode)
       )
-      const module = require('monaco-editor/esm/vs/base/parts/quickinput/browser/quickInputList')
-      module.QuickInputList.prototype.layout = function(maxHeight: number) {
+      QuickInputList.prototype.layout = function(maxHeight: number) {
         this.list.getHTMLElement().style.maxHeight =
           maxHeight < 200 ? '200px' : Math.floor(maxHeight) + 'px'
         this.list.layout()
