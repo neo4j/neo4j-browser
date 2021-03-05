@@ -477,6 +477,19 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
                   }
                 )
               ])
+            } else if (response.success === false && response.error) {
+              editor.setModelMarkers(model, monacoId, [
+                ...editor.getModelMarkers({ owner: monacoId }),
+                {
+                  startLineNumber: statement.start.line,
+                  startColumn: statement.start.column + 1,
+                  endLineNumber: statement.stop.line,
+                  endColumn: statement.stop.column + 2,
+                  message:
+                    response.error.code + '\n\n' + response.error.message,
+                  severity: MarkerSeverity.Error
+                }
+              ])
             }
           }
         )
