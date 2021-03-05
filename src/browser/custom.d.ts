@@ -118,11 +118,20 @@ declare module 'cypher-editor-support' {
     setSchema(schema: EditorSupportSchema): void
     update(input: string): void
   }
+  interface CypherPosition {
+    column: number
+    line: number
+  }
+  export interface QueryOrCommand {
+    getText: () => string
+    start: CypherPosition
+    stop: CypherPosition
+  }
   export function parse(
     input: string
   ): {
     referencesListener: {
-      queriesAndCommands: { getText: () => string; start: { line: number } }[]
+      queriesAndCommands: QueryOrCommand[]
     }
   }
   export function extractStatements(

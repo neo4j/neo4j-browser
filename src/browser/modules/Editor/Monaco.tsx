@@ -19,7 +19,7 @@
  */
 
 import { QuickInputList } from 'monaco-editor/esm/vs/base/parts/quickinput/browser/quickInputList'
-import { parse } from 'cypher-editor-support'
+import { parse, QueryOrCommand } from 'cypher-editor-support'
 import { debounce } from 'lodash-es'
 import {
   editor,
@@ -406,9 +406,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       debouncedUpdateCode()
     }
 
-    const addWarnings = (
-      statements: { start: { line: number }; getText: () => string }[]
-    ) => {
+    const addWarnings = (statements: QueryOrCommand[]) => {
       if (!statements.length) return
 
       const model = editorRef.current?.getModel() as editor.ITextModel
@@ -463,9 +461,11 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
                     return {
                       startLineNumber: statementLineNumber + line,
                       // The 8 subtracted from the column on the first line is the length of 'EXPLAIN '
-                      startColumn: line === 1 ? column - 8 : column,
-                      endLineNumber: statementLineNumber + line,
-                      endColumn: 1000,
+                      startColumn:
+                        statement.start.column +
+                        (line === 1 ? column - 8 : column),
+                      endLineNumber: statement.stop.line,
+                      endColumn: statement.stop.column + 2,
                       message: title + '\n\n' + description,
                       severity: MarkerSeverity.Warning
                     }
