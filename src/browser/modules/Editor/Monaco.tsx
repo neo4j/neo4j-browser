@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { QuickInputList } from 'monaco-editor/esm/vs/base/parts/quickinput/browser/quickInputList'
 import { parse } from 'cypher-editor-support'
 import { debounce } from 'lodash-es'
 import {
@@ -222,6 +223,24 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
         })
       })
       resizeObserver.observe(container)
+
+      /*
+       * This moves the the command palette widget out of of the overflow-guard div where overlay widgets
+       * are located, into the overflowing content widgets div.
+       * This solves the command palette being squashed when the cypher editor is only a few lines high.
+       * The workaround is based on a suggestion found in the github issue: https://github.com/microsoft/monaco-editor/issues/70
+       */
+      const quickInputDOMNode = editorRef.current.getContribution<
+        { widget: { domNode: HTMLElement } } & editor.IEditorContribution
+      >('editor.controller.quickInput').widget.domNode
+      ;(editorRef.current as any)._modelData.view._contentWidgets.overflowingContentWidgetsDomNode.domNode.appendChild(
+        quickInputDOMNode.parentNode?.removeChild(quickInputDOMNode)
+      )
+      QuickInputList.prototype.layout = function(maxHeight: number) {
+        this.list.getHTMLElement().style.maxHeight =
+          maxHeight < 200 ? '200px' : Math.floor(maxHeight) + 'px'
+        this.list.layout()
+      }
 
       return () => {
         editorRef.current?.dispose()
