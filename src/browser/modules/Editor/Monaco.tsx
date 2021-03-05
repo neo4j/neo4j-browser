@@ -90,6 +90,8 @@ interface MonacoProps {
   toggleFullscreen: () => void
 }
 
+const EXPLAIN_QUERY_PREFIX = 'EXPLAIN '
+const EXPLAIN_QUERY_PREFIX_LENGTH = EXPLAIN_QUERY_PREFIX.length
 const Monaco = forwardRef<MonacoHandles, MonacoProps>(
   (
     {
@@ -445,7 +447,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
         bus.self(
           CYPHER_REQUEST,
           {
-            query: 'EXPLAIN ' + text,
+            query: EXPLAIN_QUERY_PREFIX + text,
             queryType: NEO4J_BROWSER_USER_ACTION_QUERY
           },
           (response: { result: QueryResult; success?: boolean }) => {
@@ -460,10 +462,11 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
                     const { line, column } = position as NotificationPosition
                     return {
                       startLineNumber: statementLineNumber + line,
-                      // The 8 subtracted from the column on the first line is the length of 'EXPLAIN '
                       startColumn:
                         statement.start.column +
-                        (line === 1 ? column - 8 : column),
+                        (line === 1
+                          ? column - EXPLAIN_QUERY_PREFIX_LENGTH
+                          : column),
                       endLineNumber: statement.stop.line,
                       endColumn: statement.stop.column + 2,
                       message: title + '\n\n' + description,
