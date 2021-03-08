@@ -143,7 +143,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
           autoClosingOvertype: 'always',
           contextmenu: false,
           cursorStyle: 'block',
-          fontFamily: 'Fira Code',
+          fontFamily: '"Fira Code", Monaco, "Courier New", Terminal, monospace',
           fontLigatures,
           fontSize: 17,
           fontWeight: '400',
