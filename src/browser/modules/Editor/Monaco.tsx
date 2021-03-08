@@ -146,7 +146,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
           fontFamily: 'Fira Code',
           fontLigatures,
           fontSize: 17,
-          fontWeight: '500',
+          fontWeight: '400',
           hideCursorInOverviewRuler: true,
           language: 'cypher',
           lightbulb: { enabled: false },
