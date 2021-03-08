@@ -42,6 +42,7 @@ describe('Connect form', () => {
       .title()
       .should('include', 'Neo4j Browser')
     cy.wait(3000)
+    cy.disconnect()
   })
 
   if (!isAura()) {
