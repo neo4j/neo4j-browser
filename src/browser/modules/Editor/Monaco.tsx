@@ -118,6 +118,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       },
       setValue(value: string) {
         setValue(value)
+        historyIndexRef.current = -1
       },
       resize(fillContainer = false) {
         resize(fillContainer)
