@@ -459,7 +459,8 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
                 ...editor.getModelMarkers({ owner: monacoId }),
                 ...response.result.summary.notifications.map(
                   ({ description, position, title }) => {
-                    const { line, column } = position as NotificationPosition
+                    const line = 'line' in position ? position.line : 0
+                    const column = 'column' in position ? position.column : 0
                     return {
                       startLineNumber: statementLineNumber + line,
                       startColumn:
