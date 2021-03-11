@@ -22,20 +22,22 @@ import * as convert from './editorSchemaConverter'
 
 describe('editor meta to schema conversion', () => {
   test('convert meta label', () => {
-    expect(convert.toLabel({ val: 'label' })).toEqual(':label')
+    expect(convert.toValueWithColonPrefix({ val: 'label' })).toEqual(':label')
   })
 
   test('convert meta relationship', () => {
-    expect(convert.toRelationshipType({ val: 'relType' })).toEqual(':relType')
+    expect(convert.toValueWithColonPrefix({ val: 'relType' })).toEqual(
+      ':relType'
+    )
   })
 
   test('convert meta propertyKey', () => {
-    expect(convert.toPropertyKey({ val: 'propertyKey' })).toEqual('propertyKey')
+    expect(convert.toValue({ val: 'propertyKey' })).toEqual('propertyKey')
   })
 
   test('convert meta function', () => {
     expect(
-      convert.toFunction({
+      convert.toFunctionSchema({
         val: 'ns.functionName',
         signature: 'ns.functionName() :: (STRING?)'
       })
@@ -47,7 +49,7 @@ describe('editor meta to schema conversion', () => {
 
   test('convert meta procedure with void return items', () => {
     expect(
-      convert.toProcedure({
+      convert.toProcedureSchema({
         val: 'db.createLabel',
         signature: 'db.createLabel(newLabel :: STRING?) :: VOID'
       })
@@ -60,7 +62,7 @@ describe('editor meta to schema conversion', () => {
 
   test('convert meta procedure with single return item', () => {
     expect(
-      convert.toProcedure({
+      convert.toProcedureSchema({
         val: 'db.constraints',
         signature: 'db.constraints() :: (description :: STRING?)'
       })
@@ -73,7 +75,7 @@ describe('editor meta to schema conversion', () => {
 
   test('convert meta procedure with multiple return items', () => {
     expect(
-      convert.toProcedure({
+      convert.toProcedureSchema({
         val: 'db.indexes',
         signature:
           'db.indexes() :: (description :: STRING?, state :: STRING?, type :: STRING?)'

@@ -48,11 +48,10 @@ import {
   OUTLINE_THEME
 } from 'shared/modules/settings/settingsDuck'
 import {
-  toFunction,
-  toLabel,
-  toProcedure,
-  toPropertyKey,
-  toRelationshipType
+  toFunctionSchema,
+  toProcedureSchema,
+  toValue,
+  toValueWithColonPrefix
 } from 'browser/modules/Editor/editorSchemaConverter'
 
 export const SET_CONTENT = 'editor/SET_CONTENT'
@@ -301,14 +300,16 @@ export const updateEditorSupportSchemaEpic: Epic<Action, GlobalState> = (
       const schema = {
         consoleCommands,
         parameters: Object.keys(state.params),
-        labels: state.meta.labels.map(toLabel),
-        relationshipTypes: state.meta.relationshipTypes.map(toRelationshipType),
-        propertyKeys: state.meta.properties.map(toPropertyKey),
+        labels: state.meta.labels.map(toValueWithColonPrefix),
+        relationshipTypes: state.meta.relationshipTypes.map(
+          toValueWithColonPrefix
+        ),
+        propertyKeys: state.meta.properties.map(toValue),
         functions: [
           ...cypherFunctions,
-          ...state.meta.functions.map(toFunction)
+          ...state.meta.functions.map(toFunctionSchema)
         ],
-        procedures: state.meta.procedures.map(toProcedure)
+        procedures: state.meta.procedures.map(toProcedureSchema)
       }
       editorSupport.setSchema(schema)
     })

@@ -18,43 +18,45 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function toLabel(label: any) {
-  return `:${label.val}`
+import { FunctionSchema, ProcedureSchema } from 'cypher-editor-support'
+
+interface SimpleToken {
+  val: string
 }
 
-export function toRelationshipType(relationshipType: any) {
-  return `:${relationshipType.val}`
+interface FunctionToken extends SimpleToken {
+  signature: string
 }
 
-export function toPropertyKey(propertyKey: any) {
-  return propertyKey.val
-}
+export const toValueWithColonPrefix = ({ val }: SimpleToken): string =>
+  `:${val}`
 
-export function toFunction(func: any) {
-  return {
-    name: func.val,
-    signature: func.signature.replace(func.val, '')
-  }
-}
+export const toValue = ({ val }: SimpleToken): string => val
 
-export function toProcedure(procedure: any) {
-  const name = procedure.val
+export const toFunctionSchema = ({
+  val,
+  signature
+}: FunctionToken): FunctionSchema => ({
+  name: val,
+  signature: signature.replace(val, '')
+})
+
+export const toProcedureSchema = (
+  procedure: FunctionToken
+): ProcedureSchema => {
   const signature = procedure.signature.replace(procedure.val, '')
-
-  let returnItems = []
   const matches = signature.match(/\([^)]*\) :: \((.*)\)/i)
-  if (matches) {
-    returnItems = matches[1].split(', ').map((returnItem: any) => {
-      const returnItemMatches = returnItem.match(/(.*) :: (.*)/)
-      return {
-        name: returnItemMatches[1],
-        signature: returnItemMatches[2]
-      }
-    })
-  }
+
+  const returnItems = matches
+    ? matches[1]
+        .split(', ')
+        .map((items: string) => items.match(/(.*) :: (.*)/))
+        .filter((match): match is RegExpMatchArray => match !== null)
+        .map(([, name, signature]) => ({ name, signature }))
+    : []
 
   return {
-    name,
+    name: procedure.val,
     signature,
     returnItems
   }
