@@ -38,6 +38,68 @@ import {
 } from 'browser-components/icons/Icons'
 import { splitMdxSlides } from '../Docs/MDX/splitMdx'
 import { LAST_GUIDE_SLIDE } from 'shared/modules/udc/udcDuck'
+import { connect } from 'react-redux'
+import { GlobalState } from 'shared/globalState'
+import { inCloudEnv } from 'shared/modules/app/appDuck'
+import { isEnterprise } from 'shared/modules/dbMeta/dbMetaDuck'
+import styled from 'styled-components'
+
+const PromotionContainer = styled.div`
+  margin-bottom: 5px;
+  margin-right: 25px;
+  margin-left: 25px;
+  border: solid 1px #008cc1;
+  border-radius: 4px;
+  box-shadow: 0px 0px 2px rgb(52 58 67 / 10%), 0px 1px 2px rgb(52 58 67 / 8%),
+    0px 1px 4px rgb(52 58 67 / 8%);
+  font-size: 14px;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
+const PromotionButton = styled.button`
+  outline: none;
+  background-color: #428bca;
+  border-radius: 4px;
+  border: none;
+  padding: 7px;
+`
+const ResetStyleLink = styled.a`
+  color: #fff !important;
+  font-weight: 600;
+`
+const AboutLink = styled.a`
+  &:before {
+    display: inline-block;
+    content: ' ';
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'> <path d='M14.3524 4.42834L2.53033 16.2504C2.23744 16.5433 1.76256 16.5433 1.46967 16.2504C1.17678 15.9575 1.17678 15.4826 1.46967 15.1897L13.2917 3.36768H2.74941C2.3352 3.36768 1.99941 3.03189 1.99941 2.61768C1.99941 2.20346 2.3352 1.86768 2.74941 1.86768H15.1022H15.1024C15.204 1.86768 15.301 1.88792 15.3894 1.92458C15.4759 1.96035 15.557 2.01298 15.6278 2.08247C15.6311 2.08571 15.6343 2.08897 15.6376 2.09226C15.707 2.16302 15.7597 2.24414 15.7954 2.33059C15.8321 2.41902 15.8524 2.51598 15.8524 2.61768V14.9706C15.8524 15.3848 15.5166 15.7206 15.1024 15.7206C14.6881 15.7206 14.3524 15.3848 14.3524 14.9706V4.42834Z' fill='%2368BDF4'/></svg>");
+    height: 12px;
+    width: 12px;
+    margin-right: 7px;
+  }
+`
+const auraPromotion = (
+  <PromotionContainer>
+    Try Neo4j Browser in our cloud service!
+    <PromotionButton>
+      <ResetStyleLink
+        href="https://neo4j.com/cloud/aura/free/?utm_medium=referral&utm_source=browser"
+        rel="noreferrer"
+        target="_blank"
+      >
+        Get started with Aura Free tier
+      </ResetStyleLink>
+    </PromotionButton>
+    <AboutLink
+      href="https://neo4j.com/cloud/aura/?utm_medium=referral&utm_source=browser"
+      rel="noreferrer"
+      target="_blank"
+    >
+      About Neo4j Aura
+    </AboutLink>
+  </PromotionContainer>
+)
 
 const {
   play: { chapters }
@@ -50,7 +112,7 @@ const checkHtmlForSlides = (html: any) => {
   return !!slides.length
 }
 
-export function PlayFrame({ stack, bus }: any): JSX.Element {
+export function PlayFrame({ stack, bus, showPromotion }: any): JSX.Element {
   const [stackIndex, setStackIndex] = useState(0)
   const [atSlideStart, setAtSlideStart] = useState<boolean | null>(null)
   const [atSlideEnd, setAtSlideEnd] = useState<boolean | null>(null)
@@ -75,7 +137,8 @@ export function PlayFrame({ stack, bus }: any): JSX.Element {
         currentFrame,
         bus,
         onSlide,
-        shouldUseSlidePointer
+        shouldUseSlidePointer,
+        showPromotion
       )
       if (stillMounted) {
         setInitialPlay(false)
@@ -88,7 +151,7 @@ export function PlayFrame({ stack, bus }: any): JSX.Element {
       stillMounted = false
     }
     // The full dependency array causes a re-run which switches to slide 1
-  }, [bus, currentFrame])
+  }, [bus, currentFrame, showPromotion])
 
   const { guide, aside, hasCarousel, isRemote } = guideObj
 
@@ -158,7 +221,8 @@ function generateContent(
   stackFrame: any,
   bus: any,
   onSlide: any,
-  shouldUseSlidePointer: any
+  shouldUseSlidePointer: any,
+  showPromotion = false
 ): any {
   // Not found
   if (stackFrame.response && stackFrame.response.status === 404) {
@@ -243,13 +307,24 @@ function generateContent(
   // Check if content exists locally
   if (Object.keys(guide).length) {
     const { content, title, subtitle, slides = null } = guide
+
+    const isPlayStart = stackFrame.cmd.trim() === ':play start'
+    const updatedContent =
+      isPlayStart && showPromotion ? (
+        <>
+          {auraPromotion} {content}
+        </>
+      ) : (
+        content
+      )
+
     return {
       guide: (
         <Docs
           lastUpdate={stackFrame.ts}
           originFrameId={stackFrame.id}
           withDirectives
-          content={slides ? null : content}
+          content={slides ? null : updatedContent}
           slides={slides ? slides : null}
           initialSlide={initialSlide}
           onSlide={onSlide}
@@ -316,4 +391,8 @@ const unfound = (
   }
 }
 
-export default withBus(PlayFrame)
+const mapStateToProps = (state: GlobalState) => ({
+  showPromotion: !isEnterprise(state) && !inCloudEnv(state)
+})
+
+export default connect(mapStateToProps)(withBus(PlayFrame))

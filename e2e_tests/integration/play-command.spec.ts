@@ -42,7 +42,10 @@ describe('Play command', () => {
       .should('contain', 'Getting started with Neo4j Browser')
 
     // Click a guide button
-    frame.contains('Get started').click()
+    frame
+      .get('.teasers')
+      .contains('Get started')
+      .click()
 
     frame = cy.getFrames()
 
