@@ -22,35 +22,35 @@ import React from 'react'
 import { Icon } from 'semantic-ui-react'
 import { keyframes, css } from 'styled-components'
 import { IconContainer } from './IconContainer'
-import ratingStar from 'icons/rating-star.svg'
-import databaseCheck from 'icons/database-check.svg'
-import cog from 'icons/cog.svg'
+import addCircle from 'icons/add-circle.svg'
+import appWindowCode from 'icons/app-window-code.svg'
+import arrowLeft from 'icons/arrow-left.svg'
+import arrowRight from 'icons/arrow-right.svg'
+import buttonRefreshArrow from 'icons/button-refresh-arrow.svg'
+import cannyFeedback from 'icons/canny-feedback.svg'
+import cannyNotifications from 'icons/canny-notifications.svg'
+import close from 'icons/close.svg'
 import cloudCheck from 'icons/cloud-check.svg'
 import cloudRemove from 'icons/cloud-remove.svg'
-import neo4j from 'icons/neo-world.svg'
-import pin from 'icons/pin.svg'
-import close from 'icons/close.svg'
-import expand01 from 'icons/expand-01.svg'
-import shrink from 'icons/shrink.svg'
-import buttonRefreshArrow from 'icons/button-refresh-arrow.svg'
+import cog from 'icons/cog.svg'
+import databaseCheck from 'icons/database-check.svg'
 import downloadBottom from 'icons/download-bottom.svg'
-import table01 from 'icons/table-01.svg'
-import Text201 from 'icons/Text2-01.svg'
-import appWindowCode from 'icons/app-window-code.svg'
-import arrowLeft1 from 'icons/arrow-left-1.svg'
-import arrowRight1 from 'icons/arrow-right-1.svg'
-import skipPrev from 'icons/skip-prev.svg'
+import expand from 'icons/expand.svg'
 import file from 'icons/file.svg'
-import save_favorite from 'icons/save_favorite.svg'
-import run_icon from 'icons/run_icon.svg'
-import stop_icon from 'icons/stop_icon.svg'
+import folderEmpty from 'icons/folder-empty.svg'
 import help from 'icons/help.svg'
+import navigationMenuVertical from 'icons/navigation-menu-vertical.svg'
+import neo4j from 'icons/neo-world.svg'
 import newFolder from 'icons/folder-add.svg'
-import folder from 'icons/folder-empty.svg'
-import addCircle from 'icons/add-circle.svg'
-import navIcon from 'icons/navigation-menu-vertical.svg'
-import cannyFeedback from 'icons/canny-feedback.svg'
-import cannyNotifications from 'icons/canny-changelog.svg'
+import pin from 'icons/pin.svg'
+import ratingStar from 'icons/rating-star.svg'
+import runIcon from 'icons/run-icon.svg'
+import saveFavorite from 'icons/save-favorite.svg'
+import shrink from 'icons/shrink.svg'
+import skipPrev from 'icons/skip-prev.svg'
+import stopIcon from 'icons/stop-icon.svg'
+import table from 'icons/table.svg'
+import text from 'icons/text.svg'
 
 const inactive = `
   color: #797979;
@@ -220,10 +220,10 @@ export const AboutIcon = ({ isOpen, title }: SidebarIconProps): JSX.Element => (
 )
 
 export const SlidePreviousIcon = (): JSX.Element => (
-  <IconContainer icon={arrowLeft1} width={20} />
+  <IconContainer icon={arrowLeft} width={20} />
 )
 export const SlideNextIcon = (): JSX.Element => (
-  <IconContainer icon={arrowRight1} width={20} />
+  <IconContainer icon={arrowRight} width={20} />
 )
 export const StackPreviousIcon = (): JSX.Element => (
   <IconContainer icon={skipPrev} width={12} />
@@ -236,13 +236,13 @@ export const StackNextIcon = (): JSX.Element => (
   />
 )
 export const TableIcon = (): JSX.Element => (
-  <IconContainer icon={table01} text="Table" width={20} />
+  <IconContainer icon={table} text="Table" width={20} />
 )
 export const VisualizationIcon = (): JSX.Element => (
   <IconContainer icon={neo4j} text="Graph" width={20} />
 )
 export const AsciiIcon = (): JSX.Element => (
-  <IconContainer icon={Text201} text="Text" width={18} />
+  <IconContainer icon={text} text="Text" width={18} />
 )
 export const CodeIcon = (): JSX.Element => (
   <IconContainer icon={appWindowCode} text="Code" width={20} />
@@ -292,7 +292,7 @@ export const BinIcon = (): JSX.Element => (
 )
 
 export const ExpandIcon = (): JSX.Element => (
-  <IconContainer icon={expand01} width={12} />
+  <IconContainer icon={expand} width={12} />
 )
 export const ContractIcon = (): JSX.Element => (
   <IconContainer icon={shrink} width={12} />
@@ -301,10 +301,10 @@ export const RefreshIcon = (): JSX.Element => (
   <IconContainer icon={buttonRefreshArrow} width={12} />
 )
 export const RunIcon = (): JSX.Element => (
-  <IconContainer icon={run_icon} width={12} />
+  <IconContainer icon={runIcon} width={12} />
 )
 export const StopIcon = (): JSX.Element => (
-  <IconContainer icon={stop_icon} width={12} />
+  <IconContainer icon={stopIcon} width={12} />
 )
 
 export const CloseIcon = (): JSX.Element => (
@@ -326,7 +326,7 @@ export const PinIcon = (): JSX.Element => (
   <IconContainer icon={pin} width={12} />
 )
 export const SaveFavorite = (): JSX.Element => (
-  <IconContainer icon={save_favorite} width={12} />
+  <IconContainer icon={saveFavorite} width={12} />
 )
 
 export const MinusIcon = (): JSX.Element => (
@@ -421,12 +421,20 @@ export const FireExtinguisherIcon = ({
   <IconContainer className="fa fa-fire-extinguisher" title={title} />
 )
 
-export const NewFolderIcon = () => <IconContainer icon={newFolder} width={12} />
-export const NavIcon = () => <IconContainer icon={navIcon} width={12} />
-export const AddIcon = () => <IconContainer icon={addCircle} width={12} />
-export const FolderIcon = () => <IconContainer icon={folder} width={12} />
-export const SavedScriptsPlay = () => (
-  <IconContainer icon={run_icon} width={12} />
+export const NewFolderIcon = (): JSX.Element => (
+  <IconContainer icon={newFolder} width={12} />
+)
+export const NavIcon = (): JSX.Element => (
+  <IconContainer icon={navigationMenuVertical} width={12} />
+)
+export const AddIcon = (): JSX.Element => (
+  <IconContainer icon={addCircle} width={12} />
+)
+export const FolderIcon = (): JSX.Element => (
+  <IconContainer icon={folderEmpty} width={12} />
+)
+export const SavedScriptsPlay = (): JSX.Element => (
+  <IconContainer icon={runIcon} width={12} />
 )
 
 export const SavedScriptsExpandMenuRightIcon = (): JSX.Element => (
