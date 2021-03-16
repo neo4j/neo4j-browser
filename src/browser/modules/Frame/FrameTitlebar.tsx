@@ -59,7 +59,7 @@ import {
   PinIcon,
   RunIcon,
   UpIcon,
-  SaveFavorite,
+  SaveFavoriteIcon,
   StopIcon
 } from 'browser-components/icons/Icons'
 import {
@@ -313,7 +313,7 @@ function FrameTitlebar(props: FrameTitleBarProps) {
             props.newFavorite(frame.cmd)
           }}
         >
-          <SaveFavorite />
+          <SaveFavoriteIcon />
         </FrameButton>
         <Render if={displayDownloadIcon()}>
           <DropdownButton data-testid="frame-export-dropdown">

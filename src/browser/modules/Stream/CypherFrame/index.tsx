@@ -41,7 +41,7 @@ import {
   PlanIcon,
   AlertIcon,
   ErrorIcon,
-  Spinner
+  SpinnerIcon
 } from 'browser-components/icons/Icons'
 import { AsciiView, AsciiStatusbar } from './AsciiView'
 import { CodeView, CodeStatusbar } from './CodeView'
@@ -287,7 +287,7 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
     return (
       <Centered>
         <SpinnerContainer>
-          <Spinner />
+          <SpinnerIcon />
         </SpinnerContainer>
       </Centered>
     )

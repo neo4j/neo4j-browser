@@ -59,10 +59,10 @@ import {
   ContractIcon,
   CloseIcon
 } from 'browser-components/icons/Icons'
-import update_file from 'icons/update_file.svg'
-import update_favorite from 'icons/update_favorite.svg'
-import file from 'icons/file.svg'
-import run_icon from 'icons/run_icon.svg'
+import updateFileIcon from 'icons/update-file.svg'
+import updateFavoriteIcon from 'icons/update-favorite.svg'
+import fileIcon from 'icons/file.svg'
+import runIcon from 'icons/run-icon.svg'
 import {
   ADD_PROJECT_FILE,
   REMOVE_PROJECT_FILE
@@ -242,7 +242,7 @@ export function EditorFrame({
       {currentlyEditing && (
         <ScriptTitle data-testid="currentlyEditing" unsaved={showUnsaved}>
           <SVGInline
-            svg={currentlyEditing.isProjectFile ? file : update_favorite}
+            svg={currentlyEditing.isProjectFile ? fileIcon : updateFavoriteIcon}
             width="12px"
           />
           {currentlyEditing.isProjectFile ? ' Project file: ' : ' Favorite: '}
@@ -301,7 +301,9 @@ export function EditorFrame({
                 currentlyEditing.isProjectFile ? 'project file' : 'favorite'
               }`}
               icon={
-                currentlyEditing.isProjectFile ? update_file : update_favorite
+                currentlyEditing.isProjectFile
+                  ? updateFileIcon
+                  : updateFavoriteIcon
               }
               width={16}
             />
@@ -310,7 +312,7 @@ export function EditorFrame({
             data-testid="editor-Run"
             onClick={createRunCommandFunction(commandSources.playButton)}
             title={isMac ? 'Run (⌘↩)' : 'Run (ctrl+enter)'}
-            icon={run_icon}
+            icon={runIcon}
             color={theme.linkHover}
             key="editor-Run"
             width={16}

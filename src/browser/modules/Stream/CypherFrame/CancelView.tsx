@@ -21,7 +21,7 @@
 import React from 'react'
 import Centered from 'browser-components/Centered'
 import { SpinnerContainer, StyledBodyMessage } from '../styled'
-import { Spinner } from 'browser-components/icons/Icons'
+import { SpinnerIcon } from 'browser-components/icons/Icons'
 import {
   Status,
   REQUEST_STATUS_CANCELED,
@@ -35,7 +35,7 @@ interface CancelViewProps {
 export const CancelView = ({ requestStatus }: CancelViewProps): JSX.Element => (
   <Centered>
     <SpinnerContainer>
-      {requestStatus === REQUEST_STATUS_CANCELING && <Spinner />}
+      {requestStatus === REQUEST_STATUS_CANCELING && <SpinnerIcon />}
     </SpinnerContainer>
     <StyledBodyMessage>
       {requestStatus === REQUEST_STATUS_CANCELING && (
