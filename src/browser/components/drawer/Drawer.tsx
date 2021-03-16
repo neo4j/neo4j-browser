@@ -19,6 +19,7 @@
  */
 
 import styled from 'styled-components'
+import linkIcon from 'icons/external-link.svg'
 
 export const Drawer = styled.div`
   width: 290px;
@@ -75,4 +76,36 @@ export const DrawerBody = styled.div`
 export const DrawerFooter = styled.div`
   margin-bottom: 20px;
   text-align: center;
+`
+
+export const DrawerExternalLink = styled.a`
+  cursor: pointer;
+  text-decoration: none;
+  color: #68bdf4;
+
+  &:active {
+    text-decoration: none;
+  }
+
+  &:before {
+    display: inline-block;
+    content: ' ';
+    background-image: url("data:image/svg+xml;utf8,${linkIcon}");
+    height: 12px;
+    width: 12px;
+    margin-right: 7px;
+  }
+`
+
+export const DrawerBrowserCommand = styled.span`
+  background-color: #2a2c33;
+  border-radius: 2px;
+  padding: 3px;
+
+  color: #e36962;
+  font-family: Fira Code;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `

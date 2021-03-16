@@ -23,10 +23,10 @@ import { Action } from 'redux'
 import {
   DrawerSubHeader,
   DrawerSection,
-  DrawerSectionBody
+  DrawerSectionBody,
+  DrawerExternalLink
 } from 'browser-components/drawer'
 import {
-  StyledHelpLink,
   StyledHelpItem,
   StyledCommandListItem,
   StyledCommandNamePair,
@@ -78,9 +78,9 @@ export const DocumentItems = ({
   const listOfItems = items.map(item =>
     'url' in item ? (
       <StyledHelpItem key={item.url}>
-        <StyledHelpLink href={item.url} target="_blank" rel="noreferrer">
+        <DrawerExternalLink href={item.url} target="_blank" rel="noreferrer">
           {item.name}
-        </StyledHelpLink>
+        </DrawerExternalLink>
       </StyledHelpItem>
     ) : (
       <CommandItem
