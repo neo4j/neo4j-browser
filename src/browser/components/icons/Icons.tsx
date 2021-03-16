@@ -88,6 +88,9 @@ const neo4jPulse = keyframes`
     fill: #00a3ff;
   }
 `
+const SMALL_SIZE = 12
+const LARGE_SIZE = 20
+const SIDEBAR_SIZE = 28
 
 const credits = css`
   animation: ${neo4jPulse} 2s infinite;
@@ -126,7 +129,7 @@ export const DatabaseIcon = (props: {
       inactiveStyle={databaseConnectionStateStyles[connectionState].inactive}
       className={databaseConnectionStateStyles[connectionState].classModifier}
       icon={databaseCheck}
-      width={28}
+      width={SIDEBAR_SIZE}
       {...rest}
     />
   )
@@ -145,7 +148,7 @@ export const FavoritesIcon = ({
     activeStyle={white}
     inactiveStyle={inactive}
     icon={ratingStar}
-    width={28}
+    width={SIDEBAR_SIZE}
     isOpen={isOpen}
     title={title}
   />
@@ -158,7 +161,7 @@ export const ProjectFilesIcon = ({
     activeStyle={white}
     inactiveStyle={inactive}
     icon={file}
-    width={28}
+    width={SIDEBAR_SIZE}
     isOpen={isOpen}
     title={title}
   />
@@ -172,7 +175,7 @@ export const DocumentsIcon = ({
     activeStyle={white}
     inactiveStyle={inactive}
     icon={help}
-    width={28}
+    width={SIDEBAR_SIZE}
     isOpen={isOpen}
     title={title}
   />
@@ -188,7 +191,7 @@ export const CloudSyncIcon = ({
       activeStyle={connected ? successGreen : warningRed}
       inactiveStyle={connected ? inactive : warningRed}
       icon={connected ? cloudCheck : cloudRemove}
-      width={28}
+      width={SIDEBAR_SIZE}
       isOpen={isOpen}
       title={title}
     />
@@ -203,7 +206,7 @@ export const SettingsIcon = ({
     activeStyle={white}
     inactiveStyle={inactive}
     icon={cog}
-    width={28}
+    width={SIDEBAR_SIZE}
     isOpen={isOpen}
     title={title}
   />
@@ -220,32 +223,32 @@ export const AboutIcon = ({ isOpen, title }: SidebarIconProps): JSX.Element => (
 )
 
 export const SlidePreviousIcon = (): JSX.Element => (
-  <IconContainer icon={arrowLeft} width={20} />
+  <IconContainer icon={arrowLeft} width={LARGE_SIZE} />
 )
 export const SlideNextIcon = (): JSX.Element => (
-  <IconContainer icon={arrowRight} width={20} />
+  <IconContainer icon={arrowRight} width={LARGE_SIZE} />
 )
 export const StackPreviousIcon = (): JSX.Element => (
-  <IconContainer icon={skipPrev} width={12} />
+  <IconContainer icon={skipPrev} width={SMALL_SIZE} />
 )
 export const StackNextIcon = (): JSX.Element => (
   <IconContainer
     icon={skipPrev}
     style={{ transform: 'rotate(180deg)' }}
-    width={12}
+    width={SMALL_SIZE}
   />
 )
 export const TableIcon = (): JSX.Element => (
-  <IconContainer icon={table} text="Table" width={20} />
+  <IconContainer icon={table} text="Table" width={LARGE_SIZE} />
 )
 export const VisualizationIcon = (): JSX.Element => (
-  <IconContainer icon={neo4j} text="Graph" width={20} />
+  <IconContainer icon={neo4j} text="Graph" width={LARGE_SIZE} />
 )
 export const AsciiIcon = (): JSX.Element => (
   <IconContainer icon={text} text="Text" width={18} />
 )
 export const CodeIcon = (): JSX.Element => (
-  <IconContainer icon={appWindowCode} text="Code" width={20} />
+  <IconContainer icon={appWindowCode} text="Code" width={LARGE_SIZE} />
 )
 export const PlanIcon = (): JSX.Element => (
   <IconContainer className="sl-hierarchy" text="Plan" />
@@ -292,23 +295,23 @@ export const BinIcon = (): JSX.Element => (
 )
 
 export const ExpandIcon = (): JSX.Element => (
-  <IconContainer icon={expand} width={12} />
+  <IconContainer icon={expand} width={SMALL_SIZE} />
 )
 export const ContractIcon = (): JSX.Element => (
-  <IconContainer icon={shrink} width={12} />
+  <IconContainer icon={shrink} width={SMALL_SIZE} />
 )
 export const RefreshIcon = (): JSX.Element => (
-  <IconContainer icon={buttonRefreshArrow} width={12} />
+  <IconContainer icon={buttonRefreshArrow} width={SMALL_SIZE} />
 )
 export const RunIcon = (): JSX.Element => (
-  <IconContainer icon={runIcon} width={12} />
+  <IconContainer icon={runIcon} width={SMALL_SIZE} />
 )
 export const StopIcon = (): JSX.Element => (
-  <IconContainer icon={stopIcon} width={12} />
+  <IconContainer icon={stopIcon} width={SMALL_SIZE} />
 )
 
 export const CloseIcon = (): JSX.Element => (
-  <IconContainer icon={close} width={12} />
+  <IconContainer icon={close} width={SMALL_SIZE} />
 )
 export const UpIcon = (): JSX.Element => (
   <IconContainer className="sl-chevron-up" />
@@ -323,10 +326,10 @@ export const DoubleDownIcon = (): JSX.Element => (
   <IconContainer className="sl-double-down" />
 )
 export const PinIcon = (): JSX.Element => (
-  <IconContainer icon={pin} width={12} />
+  <IconContainer icon={pin} width={SMALL_SIZE} />
 )
-export const SaveFavorite = (): JSX.Element => (
-  <IconContainer icon={saveFavorite} width={12} />
+export const SaveFavoriteIcon = (): JSX.Element => (
+  <IconContainer icon={saveFavorite} width={SMALL_SIZE} />
 )
 
 export const MinusIcon = (): JSX.Element => (
@@ -351,7 +354,7 @@ export const CancelIcon = (): JSX.Element => (
   />
 )
 export const DownloadIcon = (): JSX.Element => (
-  <IconContainer icon={downloadBottom} width={12} />
+  <IconContainer icon={downloadBottom} width={SMALL_SIZE} />
 )
 export const ExpandMenuIcon = (): JSX.Element => (
   <IconContainer activeStyle={blue} className="fa fa-caret-left" />
@@ -393,13 +396,13 @@ export const EditIcon = (): JSX.Element => (
     className="sl-pencil"
   />
 )
-export const Spinner = (): JSX.Element => (
+export const SpinnerIcon = (): JSX.Element => (
   <IconContainer
     data-testid="spinner"
     className="fa fa-spinner fa-spin fa-2x"
   />
 )
-export const SmallSpinner = (): JSX.Element => (
+export const SmallSpinnerIcon = (): JSX.Element => (
   <IconContainer className="fa fa-spinner fa-spin " />
 )
 export const SquareIcon = (): JSX.Element => (
@@ -422,19 +425,19 @@ export const FireExtinguisherIcon = ({
 )
 
 export const NewFolderIcon = (): JSX.Element => (
-  <IconContainer icon={newFolder} width={12} />
+  <IconContainer icon={newFolder} width={SMALL_SIZE} />
 )
 export const NavIcon = (): JSX.Element => (
-  <IconContainer icon={navigationMenuVertical} width={12} />
+  <IconContainer icon={navigationMenuVertical} width={SMALL_SIZE} />
 )
 export const AddIcon = (): JSX.Element => (
-  <IconContainer icon={addCircle} width={12} />
+  <IconContainer icon={addCircle} width={SMALL_SIZE} />
 )
 export const FolderIcon = (): JSX.Element => (
-  <IconContainer icon={folderEmpty} width={12} />
+  <IconContainer icon={folderEmpty} width={SMALL_SIZE} />
 )
-export const SavedScriptsPlay = (): JSX.Element => (
-  <IconContainer icon={runIcon} width={12} />
+export const SavedScriptsPlayIcon = (): JSX.Element => (
+  <IconContainer icon={runIcon} width={SMALL_SIZE} />
 )
 
 export const SavedScriptsExpandMenuRightIcon = (): JSX.Element => (
