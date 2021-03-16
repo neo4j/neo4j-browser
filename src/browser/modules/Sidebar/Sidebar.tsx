@@ -24,6 +24,7 @@ import DatabaseDrawer from '../DBMSInfo/DBMSInfo'
 import DocumentsDrawer from './Documents'
 import AboutDrawer from './About'
 import SettingsDrawer from './Settings'
+import GuideDrawer from './GuideDrawer'
 import Favorites from './favorites'
 import StaticScripts from './static-scripts'
 import ProjectFilesDrawer from './ProjectFiles'
@@ -48,7 +49,8 @@ import {
   CloudSyncIcon,
   SettingsIcon,
   AboutIcon,
-  ProjectFilesIcon
+  ProjectFilesIcon,
+  GuideDrawerIcon
 } from 'browser-components/icons/Icons'
 import { getCurrentDraft } from 'shared/modules/sidebar/sidebarDuck'
 import { DrawerHeader } from 'browser-components/drawer'
@@ -118,7 +120,15 @@ const Sidebar = ({
             }
           }
         ]
-      : [])
+      : []),
+    {
+      name: 'Guides',
+      title: 'Guides',
+      icon: function guideDrawerIcon(isOpen: boolean): JSX.Element {
+        return <GuideDrawerIcon isOpen={isOpen} />
+      },
+      content: GuideDrawer
+    }
   ]
 
   const bottomNavItemsList: NavItem[] = [

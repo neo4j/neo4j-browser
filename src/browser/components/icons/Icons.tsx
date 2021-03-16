@@ -39,6 +39,7 @@ import expand from 'icons/expand.svg'
 import file from 'icons/file.svg'
 import folderEmpty from 'icons/folder-empty.svg'
 import help from 'icons/help.svg'
+import monitorPlay from 'icons/monitor-play.svg'
 import navigationMenuVertical from 'icons/navigation-menu-vertical.svg'
 import neo4j from 'icons/neo-world.svg'
 import newFolder from 'icons/folder-add.svg'
@@ -134,6 +135,17 @@ export const DatabaseIcon = (props: {
     />
   )
 }
+
+export const GuideDrawerIcon = (props: { isOpen: boolean }): JSX.Element => (
+  <IconContainer
+    activeStyle={white}
+    inactiveStyle={inactive}
+    width={28}
+    isOpen={props.isOpen}
+    icon={monitorPlay}
+    title="Guides"
+  />
+)
 
 interface SidebarIconProps {
   isOpen: boolean
