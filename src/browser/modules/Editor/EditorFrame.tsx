@@ -301,7 +301,9 @@ export function EditorFrame({
                 currentlyEditing.isProjectFile ? 'project file' : 'favorite'
               }`}
               icon={
-                currentlyEditing.isProjectFile ? updateFileIcon : updateFavorite
+                currentlyEditing.isProjectFile
+                  ? updateFileIcon
+                  : updateFavoriteIcon
               }
               width={16}
             />
