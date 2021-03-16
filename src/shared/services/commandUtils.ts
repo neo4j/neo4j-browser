@@ -103,7 +103,7 @@ const camelToSnake = (name: any, separator: any) => {
     .toLowerCase()
 }
 
-export const transformCommandToHelpTopic = (inputStr: any) =>
+export const transformCommandToHelpTopic = (inputStr?: string): string =>
   [inputStr || '']
     .map(stripPound)
     .map(getHelpTopic)

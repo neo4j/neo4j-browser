@@ -23,7 +23,7 @@ import { withBus } from 'react-suber'
 import { fetchGuideFromAllowlistAction } from 'shared/modules/commands/commandsDuck'
 
 import Docs from '../Docs/Docs'
-import docs from '../../documentation'
+import docs, { isGuideChapter } from '../../documentation'
 import FrameTemplate from '../Frame/FrameTemplate'
 import FrameAside from '../Frame/FrameAside'
 import {
@@ -239,10 +239,9 @@ function generateContent(
     stackFrame.cmd.trim() === ':play' ? ':play start' : stackFrame.cmd
   )
 
-  const guide = chapters[guideName] || {}
   // Check if content exists locally
-  if (Object.keys(guide).length) {
-    const { content, title, subtitle, slides = null } = guide
+  if (isGuideChapter(guideName)) {
+    const { content, title, subtitle, slides = null } = chapters[guideName]
     return {
       guide: (
         <Docs

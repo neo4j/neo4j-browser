@@ -103,27 +103,135 @@ import guideTypography from './guides/typography'
 import guideUnfound from './guides/unfound'
 import guideWritecode from './guides/write-code'
 
-export default {
+type AllDocumentation = {
+  help: HelpDocs
+  cypher: CypherDocs
+  bolt: BoltDocs
+  play: GuideDocs
+}
+type GuideDocs = {
+  title: 'Guides & Examples'
+  chapters: Record<GuideChapter, DocItem>
+}
+
+export type GuideChapter =
+  | 'concepts'
+  | 'cypher'
+  | 'iconography'
+  | 'intro'
+  | 'learn'
+  | 'movieGraph'
+  | 'movies'
+  | 'northwind'
+  | 'northwindGraph'
+  | 'start'
+  | 'typography'
+  | 'unfound'
+  | 'writeCode'
+
+type DocItem = {
+  title: string
+  subtitle?: string
+  category?: string
+  content?: JSX.Element | null
+  footer?: JSX.Element
+  slides?: JSX.Element[]
+}
+
+type BoltDocs = { title: 'Bolt'; chapters: Record<BoltChapter, DocItem> }
+type BoltChapter = 'boltEncryption' | 'boltRouting'
+type CypherDocs = { title: 'Cypher'; chapters: Record<CypherChapter, DocItem> }
+type CypherChapter =
+  | 'alterUser'
+  | 'contains'
+  | 'create'
+  | 'createConstraintOn'
+  | 'createDatabase'
+  | 'createIndexOn'
+  | 'createRole'
+  | 'createUser'
+  | 'delete'
+  | 'deny'
+  | 'detachDelete'
+  | 'dropConstraintOn'
+  | 'dropDatabase'
+  | 'dropIndexOn'
+  | 'dropRole'
+  | 'dropUser'
+  | 'endsWith'
+  | 'explain'
+  | 'foreach'
+  | 'grant'
+  | 'grantRole'
+  | 'loadCsv'
+  | 'match'
+  | 'merge'
+  | 'param'
+  | 'params'
+  | 'profile'
+  | 'queryPlan'
+  | 'remove'
+  | 'rest'
+  | 'restDelete'
+  | 'restGet'
+  | 'restPost'
+  | 'restPut'
+  | 'return'
+  | 'revoke'
+  | 'revokeRole'
+  | 'schema'
+  | 'set'
+  | 'showDatabases'
+  | 'showPrivileges'
+  | 'showRoles'
+  | 'showUsers'
+  | 'startsWith'
+  | 'template'
+  | 'unwind'
+  | 'where'
+  | 'with'
+
+type HelpDocs = { title: 'Commands'; chapters: Record<HelpChapter, DocItem> }
+type HelpChapter =
+  | 'auto'
+  | 'bolt'
+  | 'clear'
+  | 'commands'
+  | 'cypher'
+  | 'guides'
+  | 'help'
+  | 'history'
+  | 'historyClear'
+  | 'keys'
+  | 'play'
+  | 'queries'
+  | 'server'
+  | 'serverUser'
+  | 'style'
+  | 'unfound'
+  | 'unknown'
+
+const docs: AllDocumentation = {
   help: {
     title: 'Commands',
     chapters: {
       auto: helpAuto,
-      clear: helpClear,
-      cypher: helpCypher,
       bolt: helpBolt,
+      clear: helpClear,
       commands: helpCommands,
+      cypher: helpCypher,
       guides: helpPlay,
       help: helpHelp,
       history: helpHistory,
       historyClear: helpHistoryClear,
       keys: helpKeys,
       play: helpPlay,
+      queries: helpQueries,
       server: helpServer,
       serverUser: helpServerUser,
       style: helpStyle,
       unfound: helpUnfound,
-      unknown: helpUnknown,
-      queries: helpQueries
+      unknown: helpUnknown
     }
   },
   cypher: {
@@ -131,12 +239,12 @@ export default {
     chapters: {
       alterUser: helpAlterUser,
       contains: helpContains,
+      create: helpCreate,
       createConstraintOn: helpCreateConstraintOn,
       createDatabase: helpCreateDatabase,
       createIndexOn: helpCreateIndexOn,
       createRole: helpCreateRole,
       createUser: helpCreateUser,
-      create: helpCreate,
       delete: helpDelete,
       deny: helpDeny,
       detachDelete: helpDetachDelete,
@@ -191,22 +299,24 @@ export default {
     chapters: {
       concepts: guideConcepts,
       cypher: guideCypher,
+      iconography: guideIconography,
       intro: guideIntro,
       learn: guideLearn,
       movieGraph: guideMovieGraph,
       movies: guideMovieGraph,
-      northwindGraph: guideNorthwindGraph,
       northwind: guideNorthwindGraph,
-      iconography: guideIconography,
+      northwindGraph: guideNorthwindGraph,
       start: guideStart,
       typography: guideTypography,
       unfound: guideUnfound,
-      writeCode: guideWritecode,
-      // Commands only
-      'query-template': {
-        title: 'Query Templates',
-        category: 'guides'
-      }
-    } as any
+      writeCode: guideWritecode
+    }
   }
 }
+
+// TypeGuard function to ts to understand that a string is a valid key
+export function isGuideChapter(name: string): name is GuideChapter {
+  return name in docs.play.chapters
+}
+
+export default docs
