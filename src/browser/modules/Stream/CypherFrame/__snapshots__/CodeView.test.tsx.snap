@@ -3,10 +3,10 @@
 exports[`CodeViews CodeStatusbar displays no statusBarMessage 1`] = `
 <div>
   <div
-    class="sc-ckVGcZ fsAzIa"
+    class="sc-jWBwVP bkWzVl"
   >
     <div
-      class="sc-fMiknA kzCZTC"
+      class="sc-hmzhuo iOsHzv"
     />
   </div>
 </div>
@@ -15,10 +15,10 @@ exports[`CodeViews CodeStatusbar displays no statusBarMessage 1`] = `
 exports[`CodeViews CodeStatusbar displays statusBarMessage 1`] = `
 <div>
   <div
-    class="sc-ckVGcZ fsAzIa"
+    class="sc-jWBwVP bkWzVl"
   >
     <div
-      class="sc-fMiknA kzCZTC"
+      class="sc-hmzhuo iOsHzv"
     >
       Started streaming 1 records after 5 ms and completed after 10  ms.
     </div>
@@ -31,88 +31,88 @@ exports[`CodeViews CodeView displays nothing if not successful query 1`] = `<div
 exports[`CodeViews CodeView displays request and response info if successful query 1`] = `
 <div>
   <div
-    class="sc-htpNat fsSTsy"
+    class="sc-gqjmRU gAZTeo"
   >
     <table
-      class="sc-iRbamj jIoYtl"
+      class="sc-dVhcbM shCeT"
     >
       <tbody
-        class="sc-jlyJG djPKQN"
+        class="sc-eqIVtm bEfEsF"
       >
         <tr
-          class="sc-csuQGl fsfdVy"
+          class="sc-caSCKo iKBXer"
         >
           <td
-            class="sc-Rmtcm leCicx"
+            class="sc-gisBJw fZnzOc"
           >
             Server version
           </td>
           <td
-            class="sc-bRBYWo ccSRck"
+            class="sc-kjoXOD hpTAeq"
           >
             xx1
           </td>
         </tr>
         <tr
-          class="sc-csuQGl fsfdVy"
+          class="sc-caSCKo iKBXer"
         >
           <td
-            class="sc-Rmtcm leCicx"
+            class="sc-gisBJw fZnzOc"
           >
             Server address
           </td>
           <td
-            class="sc-bRBYWo ccSRck"
+            class="sc-kjoXOD hpTAeq"
           >
             xx2
           </td>
         </tr>
         <tr
-          class="sc-csuQGl fsfdVy"
+          class="sc-caSCKo iKBXer"
         >
           <td
-            class="sc-Rmtcm leCicx"
+            class="sc-gisBJw fZnzOc"
           >
             Query
           </td>
           <td
-            class="sc-bRBYWo ccSRck"
+            class="sc-kjoXOD hpTAeq"
           >
             MATCH xx0
           </td>
         </tr>
         <tr
-          class="sc-csuQGl fsfdVy"
+          class="sc-caSCKo iKBXer"
         >
           <td
-            class="sc-Rmtcm leCicx"
+            class="sc-gisBJw fZnzOc"
           >
             Summary
             <div
-              class="sc-gipzik dDUeEx fa fa-caret-right"
+              class="sc-fAjcbJ gGrROY fa fa-caret-right"
               title="Expand section"
             />
           </td>
           <td
-            class="sc-bRBYWo ccSRck"
+            class="sc-kjoXOD hpTAeq"
           >
             {,  "server": {,    "version": "xx1", ...
           </td>
         </tr>
         <tr
-          class="sc-csuQGl fsfdVy"
+          class="sc-caSCKo iKBXer"
         >
           <td
-            class="sc-Rmtcm leCicx"
+            class="sc-gisBJw fZnzOc"
           >
             Response
             <div
-              class="sc-gipzik dDUeEx fa fa-caret-right"
+              class="sc-fAjcbJ gGrROY fa fa-caret-right"
               title="Expand section"
             />
           </td>
           <td
-            class="sc-bRBYWo ccSRck"
+            class="sc-kjoXOD hpTAeq"
           >
             [,  {,    "res": "xx3" ...
           </td>

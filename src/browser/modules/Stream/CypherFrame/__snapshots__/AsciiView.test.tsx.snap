@@ -3,7 +3,7 @@
 exports[`AsciiViews AsciiStatusbar displays statusBarMessage if no rows 1`] = `
 <div>
   <div
-    class="sc-jKJlTe ldyqSs"
+    class="sc-brqgnP dzoIro"
   >
     <div
       class="sc-bdVaJa kwzqrW"
@@ -17,17 +17,17 @@ exports[`AsciiViews AsciiStatusbar displays statusBarMessage if no rows 1`] = `
 exports[`AsciiViews AsciiStatusbar displays statusBarMessage if no rows 2`] = `
 <div>
   <div
-    class="sc-jKJlTe ldyqSs"
+    class="sc-brqgnP dzoIro"
   >
     <div
-      class="sc-jAaTju HNQcN"
+      class="sc-jhAzac lbnAwQ"
     >
       <div
-        class="sc-gPEVay cCneIg"
+        class="sc-fMiknA dHODfP"
       >
         Max column width:
         <input
-          class="sc-iRbamj CdawG"
+          class="sc-dVhcbM jSEKgL"
           max="3"
           min="3"
           type="range"
@@ -42,10 +42,10 @@ exports[`AsciiViews AsciiStatusbar displays statusBarMessage if no rows 2`] = `
 exports[`AsciiViews AsciiView displays bodyMessage if no rows 1`] = `
 <div>
   <div
-    class="sc-bxivhb hvMtW"
+    class="sc-VigVT cFrzpB"
   >
     <div
-      class="sc-iAyFgw dSavTh"
+      class="sc-iRbamj fUfKqK"
     >
       (no changes, no records)
     </div>
@@ -56,10 +56,10 @@ exports[`AsciiViews AsciiView displays bodyMessage if no rows 1`] = `
 exports[`AsciiViews AsciiView does not display bodyMessage if rows 1`] = `
 <div>
   <div
-    class="sc-bxivhb hvMtW"
+    class="sc-VigVT cFrzpB"
   >
     <pre
-      class="sc-eNQAEJ gACFMe"
+      class="sc-cMljjf eZjnjT"
     >
       ╒═══╕
 │"x"│
