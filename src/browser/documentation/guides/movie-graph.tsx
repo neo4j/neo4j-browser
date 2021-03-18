@@ -21,7 +21,6 @@
 import React from 'react'
 import ManualLink from 'browser-components/ManualLink'
 import Slide from '../../modules/Carousel/Slide'
-import TextCommand from 'browser/modules/DecoratedText/TextCommand'
 
 const title = 'Movie Graph'
 const category = 'graphExamples'

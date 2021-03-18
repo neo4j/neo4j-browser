@@ -45,8 +45,9 @@ export default function Carousel({
   withDirectives,
   originFrameId,
   initialSlide = 1,
-  slides = []
-}: any) {
+  slides = [],
+  showSideButtons
+}: any): JSX.Element {
   const [visibleSlide, setVisibleSlide] = useState(() => {
     if (initialSlide <= slides.length) {
       return initialSlide - 1
@@ -110,7 +111,7 @@ export default function Carousel({
       onKeyUp={(e: any) => onKeyDown(e)}
       tabIndex="0"
     >
-      {visibleSlide > 0 && (
+      {showSideButtons && visibleSlide > 0 && (
         <CarouselButton
           className="previous-slide  rounded"
           data-testid="previousSlide"
@@ -163,7 +164,7 @@ export default function Carousel({
           getSlide(visibleSlide)
         )}
       </SlideContainer>
-      {visibleSlide < slides.length - 1 && (
+      {showSideButtons && visibleSlide < slides.length - 1 && (
         <CarouselButton
           className="next-slide rounded"
           data-testid="nextSlide"

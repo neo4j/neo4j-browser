@@ -89,6 +89,7 @@ import helpHelp from './dynamic/help'
 import helpPlay from './dynamic/play'
 
 // Carousels
+import allGuides from './guides/allGuides'
 import guideConcepts from './guides/concepts'
 import guideCypher from './guides/cypher'
 import guideIntro from './guides/intro'
@@ -128,6 +129,7 @@ export type GuideChapter =
   | 'typography'
   | 'unfound'
   | 'writeCode'
+  | 'allGuides'
 
 type DocItem = {
   title: string
@@ -297,6 +299,7 @@ const docs: AllDocumentation = {
   play: {
     title: 'Guides & Examples',
     chapters: {
+      allGuides: allGuides,
       concepts: guideConcepts,
       cypher: guideCypher,
       iconography: guideIconography,

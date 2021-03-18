@@ -189,12 +189,12 @@ function generateContent(
     return {
       guide: (
         <Docs
+          html={stackFrame.result}
+          initialSlide={initialSlide}
           lastUpdate={stackFrame.ts}
+          onSlide={onSlide}
           originFrameId={stackFrame.id}
           withDirectives
-          initialSlide={initialSlide}
-          html={stackFrame.result}
-          onSlide={onSlide}
         />
       ),
       hasCarousel: checkHtmlForSlides(stackFrame.result),
