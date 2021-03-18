@@ -20,6 +20,7 @@
 
 import styled, { keyframes } from 'styled-components'
 import { dim } from 'browser-styles/constants'
+import { DrawerExternalLink } from 'browser-components/drawer'
 
 export const StyledStream = styled.div`
   padding: 0;
@@ -394,4 +395,19 @@ const rollDownAnimation = keyframes`
 `
 export const AnimationContainer = styled.div`
   animation: ${rollDownAnimation} 0.4s ease-in;
+`
+
+export const PromotionContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`
+
+export const AuraPromoLink = styled(DrawerExternalLink)`
+  border: solid 1px #008cc1;
+  border-radius: 4px;
+  box-shadow: 0px 0px 2px rgb(52 58 67 / 10%), 0px 1px 2px rgb(52 58 67 / 8%),
+    0px 1px 4px rgb(52 58 67 / 8%);
+  font-size: 14px;
+  padding: 10px;
+  flex-grow: 0;
 `
