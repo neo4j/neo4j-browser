@@ -18,11 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Drawer, DrawerBody, DrawerHeader } from 'browser-components/drawer'
 import styled from 'styled-components'
 import { GuideChapter, isGuideChapter } from 'browser/documentation'
 import docs from '../../documentation'
+import Docs from '../Docs/Docs'
 
 const StyledCarousel = styled.div`
   padding-bottom: 20px;
@@ -161,7 +162,7 @@ const StyledUl = styled.ul`
 const WideDrawer = styled(Drawer)`
   width: 500px;
   position: relative;
-  background-color: white;
+  background-color: ${props => props.theme.primaryBackground};
 `
 
 const sidebarGuides: GuideChapter[] = [
@@ -256,6 +257,11 @@ function Carousel({
       nextSlide()
     }
   }
+
+  useEffect(() => {
+    // As slides change, switch to initial Slide
+    gotoSlide(initialSlide)
+  }, [initialSlide, slides])
 
   return (
     <StyledCarousel onKeyUp={onKeyUp}>
