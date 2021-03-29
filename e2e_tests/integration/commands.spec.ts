@@ -45,6 +45,12 @@ const commands = [
   'ASDF'
 ]
 
+const commandDelays: Record<string, number> = {
+  ':param x => 1': 600
+}
+
+const getCommandDelay = (command: string) => commandDelays[command] || 300
+
 describe('Commands', () => {
   before(function() {
     cy.visit(Cypress.config('url'))
@@ -84,7 +90,7 @@ describe('Commands', () => {
   it('can run all simple commands not connected without blowing up', () => {
     commands.forEach(cmd => {
       cy.executeCommand(cmd)
-      cy.wait(300)
+      cy.wait(getCommandDelay(cmd))
       cy.executeCommand(':clear')
     })
   })
@@ -95,7 +101,7 @@ describe('Commands', () => {
   it('can run all simple commands while connected without blowing up', () => {
     commands.forEach(cmd => {
       cy.executeCommand(cmd)
-      cy.wait(300)
+      cy.wait(getCommandDelay(cmd))
       cy.executeCommand(':clear')
     })
   })
@@ -109,7 +115,7 @@ describe('Commands', () => {
       .click()
     commands.forEach(cmd => {
       cy.typeInFrame(`${cmd}{enter}`)
-      cy.wait(300)
+      cy.wait(getCommandDelay(cmd))
     })
   })
 })
