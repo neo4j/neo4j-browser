@@ -299,11 +299,7 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
     query: string
   ): JSX.Element {
     return (
-      <StyledFrameBody
-        data-testid="frame-loaded-contents"
-        fullscreen={this.state.fullscreen}
-        collapsed={this.state.collapse}
-      >
+      <StyledFrameBody data-testid="frame-loaded-contents">
         <Display if={this.state.openView === viewTypes.TEXT} lazy>
           <AsciiView
             _asciiSetColWidth={this.state._asciiSetColWidth}

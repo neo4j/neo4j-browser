@@ -47,21 +47,10 @@ z-index: 130;`
   border-radius: 2px;
 `
 
-export const StyledFrameBody = styled.div<
-  FullscreenProps & { collapsed: boolean }
->`
+export const StyledFrameBody = styled.div`
   overflow: auto;
   min-height: ${dim.frameBodyHeight / 2}px;
-  max-height: ${props => {
-    if (props.collapsed) {
-      return 0
-    }
-    if (props.fullscreen) {
-      return '100%'
-    }
-    return dim.frameBodyHeight - dim.frameStatusbarHeight + 1 + 'px'
-  }};
-  display: ${props => (props.collapsed ? 'none' : 'flex')};
+  max-height: 100%;
   flex-direction: row;
   width: 100%;
   padding: 30px;
@@ -99,15 +88,11 @@ export const StyledFrameAside = styled.div`
   min-width: 120px;
 `
 
-export const StyledFrameContents = styled.div<FullscreenProps>`
+export const StyledFrameContents = styled.div`
   font-size: 14px;
   overflow: auto;
   min-height: ${dim.frameBodyHeight / 2}px;
-  max-height: ${props =>
-    props.fullscreen
-      ? '100vh'
-      : dim.frameBodyHeight - dim.frameStatusbarHeight * 2 + 'px'};
-  ${props => (props.fullscreen ? 'height: 100vh' : null)};
+  max-height: 100%;
   flex: auto;
   display: flex;
   width: 100%;
@@ -121,10 +106,9 @@ export const StyledFrameContents = styled.div<FullscreenProps>`
   }
 `
 
-export const StyledFrameStatusbar = styled.div<FullscreenProps>`
+export const StyledFrameStatusbar = styled.div`
   border-top: ${props => props.theme.inFrameBorder};
   height: ${dim.frameStatusbarHeight - 1}px;
-  ${props => (props.fullscreen ? 'margin-top: -78px;' : '')};
   display: flex;
   flex-direction: row;
   flex: none;

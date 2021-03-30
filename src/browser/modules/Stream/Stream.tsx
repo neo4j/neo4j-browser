@@ -50,9 +50,10 @@ import {
 } from 'shared/modules/connections/connectionsDuck'
 import { getScrollToTop } from 'shared/modules/settings/settingsDuck'
 import DbsFrame from './Auth/DbsFrame'
-import EditFrame from './EditFrame'
 import { StyledFrame } from '../Frame/styled'
 import FrameTitlebar from '../Frame/FrameTitlebar'
+import { dim } from 'browser-styles/constants'
+import styled from 'styled-components'
 
 const trans: Record<string, React.ComponentType<any>> = {
   error: ErrorFrame,
@@ -80,7 +81,6 @@ const trans: Record<string, React.ComponentType<any>> = {
   'reset-db': UseDbFrame,
   dbs: DbsFrame,
   style: StyleFrame,
-  edit: EditFrame,
   default: DefaultFrame
 }
 
@@ -151,7 +151,14 @@ type FrameContainerProps = {
 }
 
 function FrameContainer(props: FrameContainerProps) {
-  const { isFullscreen, toggleFullscreen } = useSizeToggles()
+  const {
+    isFullscreen,
+    toggleFullscreen,
+    isCollapsed,
+    toggleCollapse,
+    isPinned,
+    togglePin
+  } = useSizeToggles()
   const frame = props.frameData.stack[0]
   const frameProps: BaseFrameProps = {
     frame: { ...frame, isPinned: props.frameData.isPinned },
@@ -162,6 +169,7 @@ function FrameContainer(props: FrameContainerProps) {
 
   // refactor away classnames
   // is there any comp that doesn't have a title bar??
+  // TODO refactor away need for content to know if it's fullscreen or not
 
   return (
     <StyledFrame
@@ -173,19 +181,37 @@ function FrameContainer(props: FrameContainerProps) {
         frame={frame}
         fullscreen={isFullscreen}
         fullscreenToggle={toggleFullscreen}
-        collapse={false}
-        collapseToggle={() => undefined}
-        pinned={false}
-        togglePin={() => undefined}
+        collapse={isCollapsed}
+        collapseToggle={toggleCollapse}
+        pinned={isPinned}
+        togglePin={togglePin}
         numRecords={0}
         getRecords={() => undefined}
         visElement={null}
         runQuery={() => undefined}
       />
-      <FrameComponent {...frameProps} />
+      <ContentContainer isCollapsed={isCollapsed} isFullscreen={isFullscreen}>
+        <FrameComponent {...frameProps} />
+      </ContentContainer>
     </StyledFrame>
   )
 }
+
+const ContentContainer = styled.div<{
+  isCollapsed: boolean
+  isFullscreen: boolean
+}>`
+  overflow: auto;
+  max-height: ${props => {
+    if (props.isCollapsed) {
+      return 0
+    }
+    if (props.isFullscreen) {
+      return '100%'
+    }
+    return dim.frameBodyHeight - dim.frameStatusbarHeight + 1 + 'px'
+  }};
+`
 
 function useSizeToggles() {
   const [isFullscreen, setFullscreen] = useState(false)

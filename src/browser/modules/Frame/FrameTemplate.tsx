@@ -50,18 +50,18 @@ function FrameTemplate({
   const [lastHeight, setLastHeight] = useState(10)
   const frameContentElementRef = useRef<any>(null)
 
-  const { isFullscreen, isCollapsed, isPinned } = useSizeToggles()
-
   useEffect(() => {
     if (!frameContentElementRef.current?.clientHeight) return
     const currHeight = frameContentElementRef.current.clientHeight
     if (currHeight < 300) return // No need to report a transition
 
     if (lastHeight !== currHeight) {
-      onResize(isFullscreen, isCollapsed, currHeight)
+      //TODO LOOK INTO RESIZE HANDLER
+      // TODO FULLSCREEN SHOULD LOOK OF FOR SOME FRAMES
+      onResize(false, false, currHeight)
       setLastHeight(currHeight)
     }
-  }, [lastHeight, isPinned, isFullscreen, isCollapsed, onResize])
+  }, [lastHeight, onResize])
 
   const classNames = []
   if (className) {
@@ -70,12 +70,11 @@ function FrameTemplate({
 
   return (
     <>
-      <StyledFrameBody fullscreen={isFullscreen} collapsed={isCollapsed}>
+      <StyledFrameBody>
         {sidebar && sidebar()}
         {aside && <StyledFrameAside>{aside}</StyledFrameAside>}
         <StyledFrameMainSection>
           <StyledFrameContents
-            fullscreen={isFullscreen}
             ref={frameContentElementRef}
             data-testid="frameContents"
           >
@@ -85,39 +84,12 @@ function FrameTemplate({
       </StyledFrameBody>
 
       {statusbar && (
-        <StyledFrameStatusbar
-          fullscreen={isFullscreen}
-          data-testid="frameStatusbar"
-        >
+        <StyledFrameStatusbar data-testid="frameStatusbar">
           {statusbar}
         </StyledFrameStatusbar>
       )}
     </>
   )
-}
-
-function useSizeToggles() {
-  const [isFullscreen, setFullscreen] = useState(false)
-  const [isCollapsed, setCollapsed] = useState(false)
-  const [isPinned, setPinned] = useState(false)
-
-  function toggleFullscreen() {
-    setFullscreen(full => !full)
-  }
-  function toggleCollapse() {
-    setCollapsed(coll => !coll)
-  }
-  function togglePin() {
-    setPinned(pin => !pin)
-  }
-  return {
-    isFullscreen,
-    isCollapsed,
-    isPinned,
-    toggleFullscreen,
-    toggleCollapse,
-    togglePin
-  }
 }
 
 export default FrameTemplate
