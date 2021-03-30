@@ -168,8 +168,7 @@ function FrameContainer(props: FrameContainerProps) {
   const FrameComponent = getFrameComponent(props.frameData)
 
   // refactor away classnames
-  // is there any comp that doesn't have a title bar??
-  // TODO refactor away need for content to know if it's fullscreen or not
+  // TODO refactor away need for content to know if it's fullscreen or not. right now they look ugly
 
   return (
     <StyledFrame
@@ -188,7 +187,6 @@ function FrameContainer(props: FrameContainerProps) {
         numRecords={0}
         getRecords={() => undefined}
         visElement={null}
-        runQuery={() => undefined}
       />
       <ContentContainer isCollapsed={isCollapsed} isFullscreen={isFullscreen}>
         <FrameComponent {...frameProps} />

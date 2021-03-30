@@ -103,7 +103,6 @@ type FrameTitleBarBaseProps = {
   numRecords: number
   getRecords: () => any
   visElement: any
-  runQuery: () => any
   bus: Bus
 }
 
@@ -118,7 +117,6 @@ type FrameTitleBarProps = FrameTitleBarBaseProps & {
     requestId: string,
     request: BrowserRequest | null
   ) => void
-  onRunClick: () => void
   reRun: (obj: Frame, cmd: string) => void
   togglePinning: (id: string, isPinned: boolean) => void
   onTitlebarClick: (cmd: string) => void
@@ -135,34 +133,6 @@ function FrameTitlebar(props: FrameTitleBarProps) {
   }, [props.frame.cmd])
   const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const editorRef = useRef<MonacoHandles>(null)
-
-  /* 
-  When the frametype is changed the titlebar is unmounted and replaced with a
-  new instance. This means focus cursor position are lost. To regain editor
-  focus we run an effect dependant on the isRerun prop. However, when the
-  frame prop changes in some way the effect is retriggered although the
-  "isRun" is still true. Use effect does not check for equality but instead
-  re-runs the effect to take focus again. To prevent this we use the
-  useCallback hook as well. As a best effort we set the cursor position to be
-  at the end of the query.
-
-  A better solution is to change the frame titlebar to reside outside of the 
-  frame contents.
-  */
-
-  const gainFocusCallback = useCallback(() => {
-    if (props.frame.isRerun) {
-      editorRef.current?.focus()
-
-      const lines = (editorRef.current?.getValue() || '').split('\n')
-      const linesLength = lines.length
-      editorRef.current?.setPosition({
-        lineNumber: linesLength,
-        column: lines[linesLength - 1].length + 1
-      })
-    }
-  }, [props.frame.isRerun])
-  useEffect(gainFocusCallback, [gainFocusCallback])
 
   function hasData() {
     return props.numRecords > 0
@@ -264,6 +234,7 @@ function FrameTitlebar(props: FrameTitleBarProps) {
   const expandCollapseIcon = props.collapse ? <DownIcon /> : <UpIcon />
   // the last run command (history index 1) is already in the editor
   // don't show it as history as well
+  // TODO check performance implications
   const history = (frame.history || []).slice(1)
   return (
     <StyledFrameTitleBar>
@@ -396,11 +367,6 @@ function FrameTitlebar(props: FrameTitleBarProps) {
         >
           {expandCollapseIcon}
         </FrameButton>
-        <Render if={frame.type === 'edit'}>
-          <FrameButton title="Run" onClick={() => props.onRunClick()}>
-            <SVGInline svg={controlsPlay} width="12px" />
-          </FrameButton>
-        </Render>
         <ConfirmationDialog
           confirmLabel="Yes, close frame"
           onClose={() => {
@@ -481,9 +447,6 @@ const mapDispatchToProps = (
         await sleep(3000) // sleep for 3000 ms to let user read the cancel info
       }
       dispatch(remove(id))
-    },
-    onRunClick: () => {
-      ownProps.runQuery()
     },
     reRun: ({ useDb, id, requestId }: Frame, cmd: string) => {
       if (requestId) {
