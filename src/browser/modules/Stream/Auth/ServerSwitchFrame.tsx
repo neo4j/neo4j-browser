@@ -123,12 +123,7 @@ export const ServerSwitchFrame = (props: any) => {
 }
 
 const Frame = (props: any) => {
-  return (
-    <FrameTemplate
-      header={props.frame}
-      contents={<ServerSwitchFrame {...props} />}
-    />
-  )
+  return <FrameTemplate contents={<ServerSwitchFrame {...props} />} />
 }
 
 export default Frame

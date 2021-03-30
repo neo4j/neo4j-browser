@@ -24,10 +24,9 @@ import { H3 } from 'browser-components/headers'
 import { Lead } from 'browser-components/Text'
 import Render from 'browser-components/Render'
 
-const Disconnect = ({ frame, activeConnectionData }: any) => {
+const Disconnect = ({ activeConnectionData }: any) => {
   return (
     <FrameTemplate
-      header={frame}
       contents={
         <>
           <StyledConnectionAside>

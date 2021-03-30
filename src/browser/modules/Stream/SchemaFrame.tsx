@@ -230,9 +230,7 @@ export class SchemaFrame extends Component<any, SchemaFrameState> {
 }
 
 const Frame = (props: any) => {
-  return (
-    <FrameTemplate header={props.frame} contents={<SchemaFrame {...props} />} />
-  )
+  return <FrameTemplate contents={<SchemaFrame {...props} />} />
 }
 
 const mapStateToProps = (state: any) => ({

@@ -454,14 +454,8 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
       requestStatus !== 'error'
         ? this.getStatusbar(result)
         : null
-
-    return (
-      <FrameTemplate
-        sidebar={requestStatus !== 'error' ? this.sidebar : undefined}
-        className="no-padding"
-        header={frame}
-        contents={frameContents}
-        statusbar={statusBar}
+    /* 
+    TODOD this might be only place numRecods was used
         numRecords={result && 'records' in result ? result.records.length : 0}
         getRecords={this.getRecords}
         onResize={this.onResize}
@@ -472,6 +466,13 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
             ? this.visElement
             : null
         }
+        */
+    return (
+      <FrameTemplate
+        sidebar={requestStatus !== 'error' ? this.sidebar : undefined}
+        className="no-padding"
+        contents={frameContents}
+        statusbar={statusBar}
       />
     )
   }

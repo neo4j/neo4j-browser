@@ -88,12 +88,7 @@ export const ServerStatusFrame = (props: any) => {
 }
 
 const Frame = (props: any) => {
-  return (
-    <FrameTemplate
-      header={props.frame}
-      contents={<ServerStatusFrame {...props} />}
-    />
-  )
+  return <FrameTemplate contents={<ServerStatusFrame {...props} />} />
 }
 
 const mapStateToProps = (state: any) => {

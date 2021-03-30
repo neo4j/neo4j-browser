@@ -19,11 +19,8 @@
  */
 
 import React, { useRef, useState, useEffect } from 'react'
-import { Frame } from 'shared/modules/stream/streamDuck'
-import FrameTitlebar from './FrameTitlebar'
 
 import {
-  StyledFrame,
   StyledFrameBody,
   StyledFrameContents,
   StyledFrameStatusbar,
@@ -33,29 +30,19 @@ import {
 
 type FrameTemplateProps = {
   contents: JSX.Element | null | string
-  header?: Frame
   className?: string
   onResize?: (fullscreen: boolean, collapsed: boolean, height: number) => void
-  numRecords?: number
-  getRecords?: () => any
-  visElement?: any
-  runQuery?: () => any
   sidebar?: () => JSX.Element | null
   aside?: JSX.Element | null
   statusbar?: JSX.Element | null
 }
 
 function FrameTemplate({
-  header,
   contents,
   onResize = () => {
     /*noop*/
   },
   className,
-  numRecords = 0,
-  getRecords,
-  visElement,
-  runQuery,
   sidebar,
   aside,
   statusbar
@@ -63,14 +50,7 @@ function FrameTemplate({
   const [lastHeight, setLastHeight] = useState(10)
   const frameContentElementRef = useRef<any>(null)
 
-  const {
-    isFullscreen,
-    isCollapsed,
-    isPinned,
-    toggleFullScreen,
-    toggleCollapse,
-    togglePin
-  } = useSizeToggles()
+  const { isFullscreen, isCollapsed, isPinned } = useSizeToggles()
 
   useEffect(() => {
     if (!frameContentElementRef.current?.clientHeight) return
@@ -87,32 +67,9 @@ function FrameTemplate({
   if (className) {
     classNames.push(className)
   }
-  if (isFullscreen) {
-    classNames.push('is-fullscreen')
-  }
 
   return (
-    <StyledFrame
-      className={classNames.join(' ')}
-      data-testid="frame"
-      fullscreen={isFullscreen}
-    >
-      {header && (
-        <FrameTitlebar
-          frame={header}
-          fullscreen={isFullscreen}
-          fullscreenToggle={toggleFullScreen}
-          collapse={isCollapsed}
-          collapseToggle={toggleCollapse}
-          pinned={isPinned}
-          togglePin={togglePin}
-          numRecords={numRecords}
-          getRecords={getRecords}
-          visElement={visElement}
-          runQuery={runQuery}
-        />
-      )}
-
+    <>
       <StyledFrameBody fullscreen={isFullscreen} collapsed={isCollapsed}>
         {sidebar && sidebar()}
         {aside && <StyledFrameAside>{aside}</StyledFrameAside>}
@@ -135,7 +92,7 @@ function FrameTemplate({
           {statusbar}
         </StyledFrameStatusbar>
       )}
-    </StyledFrame>
+    </>
   )
 }
 
@@ -144,7 +101,7 @@ function useSizeToggles() {
   const [isCollapsed, setCollapsed] = useState(false)
   const [isPinned, setPinned] = useState(false)
 
-  function toggleFullScreen() {
+  function toggleFullscreen() {
     setFullscreen(full => !full)
   }
   function toggleCollapse() {
@@ -157,7 +114,7 @@ function useSizeToggles() {
     isFullscreen,
     isCollapsed,
     isPinned,
-    toggleFullScreen,
+    toggleFullscreen,
     toggleCollapse,
     togglePin
   }

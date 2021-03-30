@@ -24,7 +24,6 @@ import { PaddedDiv } from './styled'
 const PreFrame = ({ frame }: any) => {
   return (
     <FrameTemplate
-      header={frame}
       contents={
         <PaddedDiv>
           <pre>{frame.result || frame.contents}</pre>

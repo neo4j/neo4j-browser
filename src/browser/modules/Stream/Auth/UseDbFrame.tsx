@@ -64,9 +64,7 @@ export const UseDbFrame = (props: any) => {
 }
 
 const Frame = (props: any) => {
-  return (
-    <FrameTemplate header={props.frame} contents={<UseDbFrame {...props} />} />
-  )
+  return <FrameTemplate contents={<UseDbFrame {...props} />} />
 }
 
 export default Frame

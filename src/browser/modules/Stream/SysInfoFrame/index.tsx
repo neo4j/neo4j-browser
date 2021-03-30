@@ -145,7 +145,6 @@ export class SysInfoFrame extends Component<any, SysInfoFrameState> {
 
     return (
       <FrameTemplate
-        header={this.props.frame}
         contents={content}
         statusbar={
           <StatusbarWrapper>

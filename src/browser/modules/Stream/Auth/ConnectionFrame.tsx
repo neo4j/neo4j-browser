@@ -49,7 +49,6 @@ export class ConnectionFrame extends Component<any, State> {
   render() {
     return (
       <FrameTemplate
-        header={this.props.frame}
         statusbar={
           <FrameError
             code={this.state.error.code}

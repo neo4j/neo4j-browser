@@ -144,10 +144,10 @@ export function PlayFrame({ stack, bus }: any): JSX.Element {
       </React.Fragment>
     )
   }
+  //TODO slide in carousel needs to be pulled up one level in state.
   return (
     <FrameTemplate
       className={classNames.join(' ')}
-      header={stack[stackIndex]}
       aside={aside}
       contents={guideAndNav}
     />

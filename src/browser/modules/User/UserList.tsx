@@ -243,13 +243,7 @@ export class UserList extends Component<any, UserListState> {
         : 'No users'
       frameContents = <>{renderedListOfUsers}</>
     }
-    return (
-      <FrameTemplate
-        header={this.props.frame}
-        contents={frameContents}
-        aside={aside}
-      />
-    )
+    return <FrameTemplate contents={frameContents} aside={aside} />
   }
 }
 const mapStateToProps = (state: any) => {

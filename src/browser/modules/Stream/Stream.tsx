@@ -21,7 +21,7 @@
 import { connect } from 'react-redux'
 import React, { memo, useRef, useEffect, useState } from 'react'
 import { StyledStream, Padding, AnimationContainer } from './styled'
-import CypherFrame from './CypherFrame/index'
+import CypherFrame from './CypherFrame/CypherFrame'
 import HistoryFrame from './HistoryFrame'
 import PlayFrame from './PlayFrame'
 import DefaultFrame from '../Frame/DefaultFrame'
@@ -51,6 +51,8 @@ import {
 import { getScrollToTop } from 'shared/modules/settings/settingsDuck'
 import DbsFrame from './Auth/DbsFrame'
 import EditFrame from './EditFrame'
+import { StyledFrame } from '../Frame/styled'
+import FrameTitlebar from '../Frame/FrameTitlebar'
 
 const trans: Record<string, React.ComponentType<any>> = {
   error: ErrorFrame,
@@ -84,8 +86,18 @@ const trans: Record<string, React.ComponentType<any>> = {
 
 type FrameType = keyof typeof trans
 
-const getFrame = (type: FrameType) => {
-  return trans[type] || trans.default
+const getFrameComponent = (frameData: FrameStack): React.ComponentType<any> => {
+  const { cmd, type } = frameData.stack[0]
+  let MyFrame = trans[type] || trans.default
+
+  if (type === 'error') {
+    try {
+      const command = cmd.replace(/^:/, '')
+      const Frame = command[0].toUpperCase() + command.slice(1) + 'Frame'
+      MyFrame = require('./Extras/index')[Frame] || trans['error']
+    } catch (e) {}
+  }
+  return MyFrame
 }
 
 type StreamProps = {
@@ -119,27 +131,14 @@ function Stream(props: StreamProps): JSX.Element {
 
   return (
     <StyledStream ref={base} data-testid="stream">
-      {props.frames.map(frameObject => {
-        const frame = frameObject.stack[0]
-
-        let MyFrame = getFrame(frame.type as FrameType)
-        if (frame.type === 'error') {
-          try {
-            const cmd = frame.cmd.replace(/^:/, '')
-            const Frame = cmd[0].toUpperCase() + cmd.slice(1) + 'Frame'
-            MyFrame = require('./Extras/index')[Frame] || getFrame('error')
-          } catch (e) {}
-        }
-        return (
-          <AnimationContainer key={frame.id}>
-            <FrameContainer
-              FrameComponent={MyFrame}
-              frameData={frameObject}
-              activeConnectionData={props.activeConnectionData}
-            />
-          </AnimationContainer>
-        )
-      })}
+      {props.frames.map(frameObject => (
+        <AnimationContainer key={frameObject.stack[0].id}>
+          <FrameContainer
+            frameData={frameObject}
+            activeConnectionData={props.activeConnectionData}
+          />
+        </AnimationContainer>
+      ))}
       <Padding />
     </StyledStream>
   )
@@ -147,27 +146,45 @@ function Stream(props: StreamProps): JSX.Element {
 
 // TODO Hämta active connection själv
 type FrameContainerProps = {
-  FrameComponent: React.ComponentType<any>
   frameData: FrameStack
   activeConnectionData: Connection | null
 }
 
 function FrameContainer(props: FrameContainerProps) {
-  /*const {
-    isFullscreen,
-    isCollapsed,
-    isPinned,
-    toggleFullScreen,
-    toggleCollapse,
-    togglePin
-  } = */ useSizeToggles()
+  const { isFullscreen, toggleFullscreen } = useSizeToggles()
   const frame = props.frameData.stack[0]
   const frameProps: BaseFrameProps = {
     frame: { ...frame, isPinned: props.frameData.isPinned },
     activeConnectionData: props.activeConnectionData,
     stack: props.frameData.stack
   }
-  return <props.FrameComponent {...frameProps} />
+  const FrameComponent = getFrameComponent(props.frameData)
+
+  // refactor away classnames
+  // is there any comp that doesn't have a title bar??
+
+  return (
+    <StyledFrame
+      className={isFullscreen ? 'is-fullscreen' : ''}
+      data-testid="frame"
+      fullscreen={isFullscreen}
+    >
+      <FrameTitlebar
+        frame={frame}
+        fullscreen={isFullscreen}
+        fullscreenToggle={toggleFullscreen}
+        collapse={false}
+        collapseToggle={() => undefined}
+        pinned={false}
+        togglePin={() => undefined}
+        numRecords={0}
+        getRecords={() => undefined}
+        visElement={null}
+        runQuery={() => undefined}
+      />
+      <FrameComponent {...frameProps} />
+    </StyledFrame>
+  )
 }
 
 function useSizeToggles() {
@@ -175,7 +192,7 @@ function useSizeToggles() {
   const [isCollapsed, setCollapsed] = useState(false)
   const [isPinned, setPinned] = useState(false)
 
-  function toggleFullScreen() {
+  function toggleFullscreen() {
     setFullscreen(full => !full)
   }
   function toggleCollapse() {
@@ -188,7 +205,7 @@ function useSizeToggles() {
     isFullscreen,
     isCollapsed,
     isPinned,
-    toggleFullScreen,
+    toggleFullscreen,
     toggleCollapse,
     togglePin
   }

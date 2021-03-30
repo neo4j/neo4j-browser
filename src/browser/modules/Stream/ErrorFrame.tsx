@@ -73,6 +73,6 @@ export const ErrorView = ({ frame }: any) => {
 }
 
 const ErrorFrame = ({ frame }: any) => {
-  return <FrameTemplate header={frame} contents={<ErrorView frame={frame} />} />
+  return <FrameTemplate contents={<ErrorView frame={frame} />} />
 }
 export default ErrorFrame

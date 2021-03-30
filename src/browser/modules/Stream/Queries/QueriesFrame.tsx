@@ -356,7 +356,6 @@ export class QueriesFrame extends Component<any, QueriesFrameState> {
     }
     return (
       <FrameTemplate
-        header={this.props.frame}
         aside={aside}
         contents={frameContents}
         statusbar={statusbar}

@@ -73,10 +73,10 @@ const HelpFrame = ({ stack = [] }: any) => {
     ) : (
       main
     )
+  // TODO needs parent keeping track of current frame
   return (
     <FrameTemplate
       className="helpFrame has-stack"
-      header={currentFrame}
       aside={aside}
       contents={contents}
     />

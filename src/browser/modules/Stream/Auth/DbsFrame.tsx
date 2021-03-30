@@ -90,9 +90,7 @@ export const DbsFrame = (props: any) => {
 }
 
 const Frame = (props: any) => {
-  return (
-    <FrameTemplate header={props.frame} contents={<DbsFrame {...props} />} />
-  )
+  return <FrameTemplate contents={<DbsFrame {...props} />} />
 }
 
 export default Frame

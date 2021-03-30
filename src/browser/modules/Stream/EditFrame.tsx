@@ -76,10 +76,6 @@ const EditFrame = (props: EditFrameProps): JSX.Element => {
             }}
           />
         }
-        header={props.frame}
-        runQuery={() => {
-          props.runQuery(text)
-        }}
       />
     </ForceFullSizeFrameContent>
   )

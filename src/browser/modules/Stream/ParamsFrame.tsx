@@ -58,8 +58,6 @@ const ParamsFrame = ({ frame }: any) => {
         </Ellipsis>
       </StyledStatsBar>
     )
-  return (
-    <FrameTemplate header={frame} contents={contents} statusbar={statusbar} />
-  )
+  return <FrameTemplate contents={contents} statusbar={statusbar} />
 }
 export default ParamsFrame

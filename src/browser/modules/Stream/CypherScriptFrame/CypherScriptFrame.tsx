@@ -102,9 +102,7 @@ function CypherScriptFrame({
       </ContentSizer>
     </WrapperCenter>
   )
-  return (
-    <FrameTemplate className="no-padding" header={frame} contents={contents} />
-  )
+  return <FrameTemplate className="no-padding" contents={contents} />
 }
 
 const mapStateToProps = (state: any, ownProps: BaseFrameProps) => {

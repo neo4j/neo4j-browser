@@ -52,11 +52,11 @@ const StyleFrame = ({ frame }: any) => {
       </PaddedDiv>
     )
   }
+  // TODO ALSO USED numRecords. needs has export, and doo export
+  // numRecords={1}
+  // getRecords={() => grass}
   return (
     <FrameTemplate
-      header={frame}
-      numRecords={1}
-      getRecords={() => grass}
       contents={contents}
       statusbar={<Statusbar frame={frame} />}
     />
