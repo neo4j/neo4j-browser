@@ -136,14 +136,15 @@ function FrameTitlebar(props: FrameTitleBarProps) {
   const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const editorRef = useRef<MonacoHandles>(null)
 
-  /* When the frametype is changed the titlebar is unmounted
-  and replaced with a new instance. This means focus cursor position are lost.
-  To regain editor focus we run an effect dependant on the isRerun prop.
-  However, when the frame prop changes in some way the effect is retriggered
-  although the "isRun" is still true. Use effect does not check for equality
-  but instead re-runs the effect to take focus again. To prevent this
-  we use the useCallback hook as well. As a best effort we set the cursor position
-  to be at the end of the query.
+  /* 
+  When the frametype is changed the titlebar is unmounted and replaced with a
+  new instance. This means focus cursor position are lost. To regain editor
+  focus we run an effect dependant on the isRerun prop. However, when the
+  frame prop changes in some way the effect is retriggered although the
+  "isRun" is still true. Use effect does not check for equality but instead
+  re-runs the effect to take focus again. To prevent this we use the
+  useCallback hook as well. As a best effort we set the cursor position to be
+  at the end of the query.
 
   A better solution is to change the frame titlebar to reside outside of the 
   frame contents.

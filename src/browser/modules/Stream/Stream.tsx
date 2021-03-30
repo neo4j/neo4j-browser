@@ -19,7 +19,7 @@
  */
 
 import { connect } from 'react-redux'
-import React, { memo, useRef, useEffect } from 'react'
+import React, { memo, useRef, useEffect, useState } from 'react'
 import { StyledStream, Padding, AnimationContainer } from './styled'
 import CypherFrame from './CypherFrame/index'
 import HistoryFrame from './HistoryFrame'
@@ -52,7 +52,7 @@ import { getScrollToTop } from 'shared/modules/settings/settingsDuck'
 import DbsFrame from './Auth/DbsFrame'
 import EditFrame from './EditFrame'
 
-const trans = {
+const trans: Record<string, React.ComponentType<any>> = {
   error: ErrorFrame,
   cypher: CypherFrame,
   'cypher-script': CypherScriptFrame,
@@ -122,32 +122,76 @@ function Stream(props: StreamProps): JSX.Element {
       {props.frames.map(frameObject => {
         const frame = frameObject.stack[0]
 
-        const frameProps: BaseFrameProps = {
-          frame: { ...frame, isPinned: frameObject.isPinned },
-          activeConnectionData: props.activeConnectionData,
-          stack: frameObject.stack
-        }
-
         let MyFrame = getFrame(frame.type as FrameType)
         if (frame.type === 'error') {
           try {
             const cmd = frame.cmd.replace(/^:/, '')
             const Frame = cmd[0].toUpperCase() + cmd.slice(1) + 'Frame'
-            MyFrame = require('./Extras/index')[Frame]
-            if (!MyFrame) {
-              MyFrame = getFrame(frame.type)
-            }
+            MyFrame = require('./Extras/index')[Frame] || getFrame('error')
           } catch (e) {}
         }
         return (
           <AnimationContainer key={frame.id}>
-            <MyFrame {...frameProps} />
+            <FrameContainer
+              FrameComponent={MyFrame}
+              frameData={frameObject}
+              activeConnectionData={props.activeConnectionData}
+            />
           </AnimationContainer>
         )
       })}
       <Padding />
     </StyledStream>
   )
+}
+
+// TODO Hämta active connection själv
+type FrameContainerProps = {
+  FrameComponent: React.ComponentType<any>
+  frameData: FrameStack
+  activeConnectionData: Connection | null
+}
+
+function FrameContainer(props: FrameContainerProps) {
+  /*const {
+    isFullscreen,
+    isCollapsed,
+    isPinned,
+    toggleFullScreen,
+    toggleCollapse,
+    togglePin
+  } = */ useSizeToggles()
+  const frame = props.frameData.stack[0]
+  const frameProps: BaseFrameProps = {
+    frame: { ...frame, isPinned: props.frameData.isPinned },
+    activeConnectionData: props.activeConnectionData,
+    stack: props.frameData.stack
+  }
+  return <props.FrameComponent {...frameProps} />
+}
+
+function useSizeToggles() {
+  const [isFullscreen, setFullscreen] = useState(false)
+  const [isCollapsed, setCollapsed] = useState(false)
+  const [isPinned, setPinned] = useState(false)
+
+  function toggleFullScreen() {
+    setFullscreen(full => !full)
+  }
+  function toggleCollapse() {
+    setCollapsed(coll => !coll)
+  }
+  function togglePin() {
+    setPinned(pin => !pin)
+  }
+  return {
+    isFullscreen,
+    isCollapsed,
+    isPinned,
+    toggleFullScreen,
+    toggleCollapse,
+    togglePin
+  }
 }
 
 const mapStateToProps = (state: GlobalState) => ({
