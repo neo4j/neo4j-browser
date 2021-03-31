@@ -20,7 +20,15 @@
 
 import { connect } from 'react-redux'
 import React, { memo, useRef, useEffect, useState } from 'react'
-import { StyledStream, Padding, AnimationContainer } from './styled'
+import {
+  StyledStream,
+  Padding,
+  AnimationContainer,
+  DropdownButton,
+  DropdownList,
+  DropdownContent,
+  DropDownItemDivider
+} from './styled'
 import CypherFrame from './CypherFrame/CypherFrame'
 import HistoryFrame from './HistoryFrame'
 import PlayFrame from './PlayFrame'
@@ -54,6 +62,18 @@ import { StyledFrame } from '../Frame/styled'
 import FrameTitlebar from '../Frame/FrameTitlebar'
 import { dim } from 'browser-styles/constants'
 import styled from 'styled-components'
+import {
+  recordToJSONMapper,
+  stringifyResultArray,
+  transformResultRecordsToResultArray
+} from './CypherFrame/helpers'
+import { csvFormat, stringModifier } from 'services/bolt/cypherTypesFormatting'
+import { CSVSerializer } from 'services/serializer'
+import { stringifyMod } from 'services/utils'
+import { map } from 'lodash'
+import { downloadPNGFromSVG, downloadSVG } from 'services/exporting/imageUtils'
+import { DownloadIcon } from 'browser-components/icons/Icons'
+import { DropdownItem } from 'semantic-ui-react'
 
 const trans: Record<string, React.ComponentType<any>> = {
   error: ErrorFrame,
@@ -84,8 +104,6 @@ const trans: Record<string, React.ComponentType<any>> = {
   default: DefaultFrame
 }
 
-type FrameType = keyof typeof trans
-
 const getFrameComponent = (frameData: FrameStack): React.ComponentType<any> => {
   const { cmd, type } = frameData.stack[0]
   let MyFrame = trans[type] || trans.default
@@ -107,7 +125,7 @@ type StreamProps = {
 }
 
 export interface BaseFrameProps {
-  frame: Frame & { isPinned: boolean }
+  frame: Frame
   activeConnectionData: Connection | null
   stack: Frame[]
 }
@@ -155,20 +173,20 @@ function FrameContainer(props: FrameContainerProps) {
     isFullscreen,
     toggleFullscreen,
     isCollapsed,
-    toggleCollapse,
-    isPinned,
-    togglePin
+    toggleCollapse
   } = useSizeToggles()
   const frame = props.frameData.stack[0]
   const frameProps: BaseFrameProps = {
-    frame: { ...frame, isPinned: props.frameData.isPinned },
+    frame,
     activeConnectionData: props.activeConnectionData,
     stack: props.frameData.stack
   }
   const FrameComponent = getFrameComponent(props.frameData)
 
-  // refactor away classnames
+  // refactor away classnames like is-fullscreen and so on
   // TODO refactor away need for content to know if it's fullscreen or not. right now they look ugly
+  // TODO exporting.
+  // TODO BaseFrameProps är fuckt också varför behöver de veta om pinned.
 
   return (
     <StyledFrame
@@ -178,15 +196,12 @@ function FrameContainer(props: FrameContainerProps) {
     >
       <FrameTitlebar
         frame={frame}
+        isPinned={props.frameData.isPinned}
         fullscreen={isFullscreen}
         fullscreenToggle={toggleFullscreen}
         collapse={isCollapsed}
         collapseToggle={toggleCollapse}
-        pinned={isPinned}
-        togglePin={togglePin}
-        numRecords={0}
-        getRecords={() => undefined}
-        visElement={null}
+        //extraButtons={<ExtraTitleBarButtons />}
       />
       <ContentContainer isCollapsed={isCollapsed} isFullscreen={isFullscreen}>
         <FrameComponent {...frameProps} />
@@ -194,6 +209,142 @@ function FrameContainer(props: FrameContainerProps) {
     </StyledFrame>
   )
 }
+
+function exportCSV(records: any) {
+  // TODO check for issues in the exported csv, doesn't have headers?
+  const exportData = stringifyResultArray(
+    csvFormat,
+    transformResultRecordsToResultArray(records)
+  )
+  const data = exportData.slice()
+  const csv = CSVSerializer(data.shift())
+  csv.appendRows(data)
+  const blob = new Blob([csv.output()], {
+    type: 'text/plain;charset=utf-8'
+  })
+  saveAs(blob, 'export.csv')
+}
+
+function exportHistory(frame: Frame) {
+  // TODO move to util functions
+  // Typing of result is wrong for history frame.
+  const asTxt = ((frame.result as unknown) as string[])
+    .map((result: string) => {
+      const safe = `${result}`.trim()
+
+      if (safe.startsWith(':')) {
+        return safe
+      }
+
+      return safe.endsWith(';') ? safe : `${safe};`
+    })
+    .join('\n\n')
+  const blob = new Blob([asTxt], {
+    type: 'text/plain;charset=utf-8'
+  })
+
+  saveAs(blob, 'history.txt')
+}
+
+function exportJSON(records: any) {
+  const exportData = map(records, recordToJSONMapper)
+  const data = stringifyMod(exportData, stringModifier, true)
+  const blob = new Blob([data], {
+    type: 'text/plain;charset=utf-8'
+  })
+  saveAs(blob, 'records.json')
+}
+
+function exportPNG(visElement: any) {
+  const { svgElement, graphElement, type } = visElement
+  downloadPNGFromSVG(svgElement, graphElement, type)
+}
+
+function exportSVG(visElement: any) {
+  const { svgElement, graphElement, type } = visElement
+  downloadSVG(svgElement, graphElement, type)
+}
+
+function exportGrass(data: string) {
+  const blob = new Blob([data], {
+    type: 'text/plain;charset=utf-8'
+  })
+  saveAs(blob, 'style.grass')
+}
+
+//TODO frame arg from all meethods
+export const VIZ_EL_CLASS = 'visElem'
+
+/*
+function ExtraTitleBarButtons({
+  frame,
+  exportCSV,
+  visElement,
+  isRelateAvailable,
+  getRecords,
+  newProjectFile
+}: any) {
+  const exportableFrameTypes = ['cypher', 'history', 'style']
+  const canExport: boolean =
+    !!visElement ||
+    isRelateAvailable ||
+    exportableFrameTypes.includes(frame.type)
+
+  return (
+    canExport && (
+      <DropdownButton data-testid="frame-export-dropdown">
+        <DownloadIcon />
+        <DropdownList>
+          <DropdownContent>
+            {isRelateAvailable && (
+              <DropdownItem onClick={() => newProjectFile(frame.cmd)}>
+                Save as project file
+              </DropdownItem>
+            )}
+
+            <DropDownItemDivider />
+
+            {frame.type === 'cypher' && (
+              <>
+                <DropdownItem onClick={() => exportCSV(getRecords())}>
+                  Export CSV
+                </DropdownItem>
+                <DropdownItem onClick={() => exportJSON(getRecords())}>
+                  Export JSON
+                </DropdownItem>
+              </>
+            )}
+
+            {visElement && (
+              <>
+                <DropdownItem onClick={() => exportPNG()}>
+                  Export PNG
+                </DropdownItem>
+                <DropdownItem onClick={() => exportSVG()}>
+                  Export SVG
+                </DropdownItem>
+              </>
+            )}
+
+            {frame.type === 'history' && (
+              <DropdownItem onClick={exportHistory}>Export TXT</DropdownItem>
+            )}
+
+            {frame.type === 'style' && (
+              <DropdownItem
+                data-testid="exportGrassButton"
+                onClick={() => exportGrass(getRecords())}
+              >
+                Export GraSS
+              </DropdownItem>
+            )}
+          </DropdownContent>
+        </DropdownList>
+      </DropdownButton>
+    )
+  )
+}
+*/
 
 const ContentContainer = styled.div<{
   isCollapsed: boolean
@@ -212,26 +363,24 @@ const ContentContainer = styled.div<{
 `
 
 function useSizeToggles() {
-  const [isFullscreen, setFullscreen] = useState(false)
   const [isCollapsed, setCollapsed] = useState(false)
-  const [isPinned, setPinned] = useState(false)
+  const [isFullscreen, setFullscreen] = useState(false)
+
+  function toggleCollapse() {
+    setCollapsed(coll => !coll)
+    setFullscreen(false)
+  }
 
   function toggleFullscreen() {
     setFullscreen(full => !full)
+    setCollapsed(false)
   }
-  function toggleCollapse() {
-    setCollapsed(coll => !coll)
-  }
-  function togglePin() {
-    setPinned(pin => !pin)
-  }
+
   return {
-    isFullscreen,
     isCollapsed,
-    isPinned,
-    toggleFullscreen,
+    isFullscreen,
     toggleCollapse,
-    togglePin
+    toggleFullscreen
   }
 }
 

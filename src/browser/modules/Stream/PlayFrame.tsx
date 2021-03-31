@@ -126,14 +126,6 @@ export function PlayFrame({ stack, bus }: any): JSX.Element {
       </CarouselButton>
     )
 
-  const classNames = ['playFrame']
-  if (hasCarousel || stack.length > 1) {
-    classNames.push('has-carousel')
-  }
-  if (isRemote) {
-    classNames.push('is-remote')
-  }
-
   let guideAndNav = guide
   if (stack.length > 1) {
     guideAndNav = (
@@ -145,13 +137,17 @@ export function PlayFrame({ stack, bus }: any): JSX.Element {
     )
   }
   //TODO slide in carousel needs to be pulled up one level in state.
-  return (
-    <FrameTemplate
-      className={classNames.join(' ')}
-      aside={aside}
-      contents={guideAndNav}
-    />
-  )
+  /*  TOOD other way to pass information abot classname
+  const classNames = []
+  if (hasCarousel || stack.length > 1) {
+    classNames.push('has-carousel')
+  }
+  if (isRemote) {
+    classNames.push('is-remote')
+  }
+  */
+
+  return <FrameTemplate aside={aside} contents={guideAndNav} />
 }
 
 function generateContent(

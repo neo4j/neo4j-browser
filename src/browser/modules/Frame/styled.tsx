@@ -177,7 +177,7 @@ export const FrameTitleEditorContainer = styled.div`
   }
 `
 
-export const StyledFrameCommand = styled.label<{ selectedDb: string }>`
+export const StyledFrameCommand = styled.label<{ selectedDb: string | null }>`
   font-family: ${props => props.theme.editorFont};
   color: ${props => props.theme.secondaryButtonText};
   background-color: ${props => props.theme.frameSidebarBackground};

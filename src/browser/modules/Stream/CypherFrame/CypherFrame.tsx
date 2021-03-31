@@ -127,6 +127,20 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
     }
   }
 
+  /*  TODO investigate the need for this onResize handler and implemented in this class only
+  useEffect(() => {
+    if (!frameContentElementRef.current?.clientHeight) return
+    const currHeight = frameContentElementRef.current.clientHeight
+    if (currHeight < 300) return // No need to report a transition
+
+    if (lastHeight !== currHeight) {
+      //TODO LOOK INTO RESIZE HANDLER
+      // TODO FULLSCREEN SHOULD LOOK OF FOR SOME FRAMES
+      onResize(false, false, currHeight)
+      setLastHeight(currHeight)
+    }
+  }, [lastHeight, onResize]
+  */
   onResize = (
     fullscreen: boolean,
     collapse: boolean,
@@ -343,9 +357,9 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
         <Display if={this.state.openView === viewTypes.PLAN} lazy>
           <PlanView
             {...this.state}
+            setParentState={this.setState.bind(this)}
             result={result}
             updated={this.props.request.updated}
-            setParentState={this.setState.bind(this)}
             assignVisElement={(svgElement: any, graphElement: any) => {
               this.visElement = { svgElement, graphElement, type: 'plan' }
               this.setState({ hasVis: true })
@@ -463,10 +477,10 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
             : null
         }
         */
+    // TODO This also passes no padding to template. Solve som other way. className="no-padding"
     return (
       <FrameTemplate
         sidebar={requestStatus !== 'error' ? this.sidebar : undefined}
-        className="no-padding"
         contents={frameContents}
         statusbar={statusBar}
       />

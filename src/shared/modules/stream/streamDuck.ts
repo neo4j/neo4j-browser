@@ -230,6 +230,7 @@ export interface Frame {
   type: string
   useDb: string | null
   history?: string[]
+  vizElementCssClass?: string
 }
 
 export interface FrameStack {

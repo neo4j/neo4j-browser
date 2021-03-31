@@ -102,7 +102,8 @@ function CypherScriptFrame({
       </ContentSizer>
     </WrapperCenter>
   )
-  return <FrameTemplate className="no-padding" contents={contents} />
+  // This wanted to disable padding on the template. will have to do it in other way than classname.
+  return <FrameTemplate contents={contents} />
 }
 
 const mapStateToProps = (state: any, ownProps: BaseFrameProps) => {
