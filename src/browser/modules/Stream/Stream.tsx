@@ -273,22 +273,20 @@ function exportGrass(data: string) {
 }
 
 //TODO frame arg from all meethods
-export const VIZ_EL_CLASS = 'visElem'
 
-/*
-function ExtraTitleBarButtons({
+type ExportButtonsProps = {
+  frame: Frame
+  isRelateAvailable: boolean
+  newProjectFile: (name: string) => void
+}
+
+function ExportButtons({
   frame,
-  exportCSV,
-  visElement,
   isRelateAvailable,
-  getRecords,
   newProjectFile
-}: any) {
-  const exportableFrameTypes = ['cypher', 'history', 'style']
-  const canExport: boolean =
-    !!visElement ||
-    isRelateAvailable ||
-    exportableFrameTypes.includes(frame.type)
+}: ExportButtonsProps) {
+  const exportable = frame.exportable || []
+  const canExport: boolean = exportable.length > 0 || isRelateAvailable
 
   return (
     canExport && (
@@ -303,6 +301,15 @@ function ExtraTitleBarButtons({
             )}
 
             <DropDownItemDivider />
+            {exportable.map(({ name, exportData }) => (
+              <DropdownItem
+                data-testid={`export${name}Button`}
+                onClick={exportData}
+                key={name}
+              >
+                Export {name}
+              </DropdownItem>
+            ))}
 
             {frame.type === 'cypher' && (
               <>
@@ -344,7 +351,6 @@ function ExtraTitleBarButtons({
     )
   )
 }
-*/
 
 const ContentContainer = styled.div<{
   isCollapsed: boolean

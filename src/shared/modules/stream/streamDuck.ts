@@ -37,6 +37,7 @@ export const FRAME_TYPE_FILTER_UPDATED = 'frames/FRAME_TYPE_FILTER_UPDATED'
 export const PIN = 'frames/PIN'
 export const UNPIN = 'frames/UNPIN'
 export const SET_RECENT_VIEW = 'frames/SET_RECENT_VIEW'
+export const UPDATE_FRAME = 'frames/UPDATE_FRAME'
 export const SET_MAX_FRAMES = 'frames/SET_MAX_FRAMES'
 export const TRACK_SAVE_AS_PROJECT_FILE = 'frames/TRACK_SAVE_AS_PROJECT_FILE'
 export const TRACK_FULLSCREEN_TOGGLE = 'frames/TRACK_FULLSCREEN_TOGGLE'
@@ -161,6 +162,75 @@ function unpinFrame(state: FramesState, id: string): FramesState {
   }
 }
 
+function updateFrame(state: FramesState, frame: Frame, key: keyof Frame, value: Frame[keyof Frame]): FramesState {
+  if (frame.parentId && state.allIds.indexOf(frame.parentId) < 0) {
+    // Can't find parent
+    return state
+  }
+  const frameStack = state.byId[frame.id] 
+  if(!frameStack){
+    // Can't find frameStack that frame is pr
+    return state
+  }
+
+  const newFrame = {
+    ...frame,
+    key: value
+  }
+
+  let byId = {
+    ...state.byId,
+    [frame.id]: frameStack
+  }
+  let allIds = [...state.allIds]
+
+  if (newState.parentId) {
+    const currentStatements = byId[newState.parentId].stack[0].statements || []
+    // Need to add this id to parent's list of statements
+    if (!currentStatements.includes(newState.id)) {
+      byId = {
+        ...byId,
+        [newState.parentId]: {
+          ...byId[newState.parentId],
+          stack: [
+            {
+              ...byId[newState.parentId].stack[0],
+              statements: currentStatements.concat(newState.id)
+            }
+          ]
+        }
+      }
+    }
+  } else {
+    allIds = insertIntoAllIds(state, allIds, newState)
+  }
+
+  return {
+    ...state,
+    allIds,
+    byId
+  }
+}
+  const frame = state.byId[id]
+  if (!frame) {return state}
+
+  const updatedFrame = {...frame, exportab}
+  allIds: [],
+  byId: {},
+  recentView: null,
+  maxFrames: 30
+  const pos = findFirstFreePos(state)
+  const allIds = moveInArray(currentPos, pos - 1, state.allIds)
+  const byId = {
+    ...state.byId
+  }
+  byId[id].isPinned = false
+  return {
+    ...state,
+    allIds,
+    byId
+  }
+}
 function findFirstFreePos({ byId, allIds }: FramesState) {
   let freePos = -1
   allIds.forEach((id, index) => {
@@ -212,6 +282,11 @@ interface FrameError {
   type: string
 }
 
+interface Exportable {
+  name: string
+  exportData: () => void
+}
+
 // When more code is typed, frame should be a union type of different frames
 export interface Frame {
   autoCommit: boolean
@@ -230,7 +305,7 @@ export interface Frame {
   type: string
   useDb: string | null
   history?: string[]
-  vizElementCssClass?: string
+  exportable?: Exportable[]
 }
 
 export interface FrameStack {
@@ -269,6 +344,8 @@ export default function reducer(
       return pinFrame(state, action.id)
     case UNPIN:
       return unpinFrame(state, action.id)
+    case setExportable:
+      return setEx(state, action.id)
     case SET_RECENT_VIEW:
       return setRecentViewHelper(state, action.view)
     case SET_MAX_FRAMES:
