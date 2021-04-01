@@ -80,6 +80,7 @@ import RelatableView, {
 } from 'browser/modules/Stream/CypherFrame/relatable-view'
 import { requestExceedsVisLimits } from 'browser/modules/Stream/CypherFrame/helpers'
 import { GlobalState } from 'shared/globalState'
+import { ExportItem } from '../Stream'
 
 type CypherFrameBaseProps = {
   frame: Frame
@@ -92,6 +93,7 @@ type CypherFrameProps = CypherFrameBaseProps & {
   maxRows: number
   request: BrowserRequest
   onRecentViewChanged: (view: viewTypes.FrameView) => void
+  setExportItems: (exportItems: ExportItem[]) => void
 }
 
 export type CypherFrameState = {
@@ -478,6 +480,63 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
         }
         */
     // TODO This also passes no padding to template. Solve som other way. className="no-padding"
+    /*
+          {frame.type === 'cypher' && (
+            <>
+              <DropdownItem onClick={() => exportCSV(getRecords())}>
+                Export CSV
+              </DropdownItem>
+              <DropdownItem onClick={() => exportJSON(getRecords())}>
+                Export JSON
+              </DropdownItem>
+            </>
+          )}
+
+          {visElement && (
+            <>
+              <DropdownItem onClick={() => exportPNG()}>
+                Export PNG
+              </DropdownItem>
+              <DropdownItem onClick={() => exportSVG()}>
+                Export SVG
+              </DropdownItem>
+            </>
+          )}
+*/
+    setExportItems
+    function exportCSV(records: any) {
+      // TODO check for issues in the exported csv, doesn't have headers?
+      const exportData = stringifyResultArray(
+        csvFormat,
+        transformResultRecordsToResultArray(records)
+      )
+      const data = exportData.slice()
+      const csv = CSVSerializer(data.shift())
+      csv.appendRows(data)
+      const blob = new Blob([csv.output()], {
+        type: 'text/plain;charset=utf-8'
+      })
+      saveAs(blob, 'export.csv')
+    }
+
+    function exportJSON(records: any) {
+      const exportData = map(records, recordToJSONMapper)
+      const data = stringifyMod(exportData, stringModifier, true)
+      const blob = new Blob([data], {
+        type: 'text/plain;charset=utf-8'
+      })
+      saveAs(blob, 'records.json')
+    }
+
+    function exportPNG(visElement: any) {
+      const { svgElement, graphElement, type } = visElement
+      downloadPNGFromSVG(svgElement, graphElement, type)
+    }
+
+    function exportSVG(visElement: any) {
+      const { svgElement, graphElement, type } = visElement
+      downloadSVG(svgElement, graphElement, type)
+    }
     return (
       <FrameTemplate
         sidebar={requestStatus !== 'error' ? this.sidebar : undefined}

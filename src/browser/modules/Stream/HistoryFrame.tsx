@@ -17,18 +17,45 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React from 'react'
+import React, { useEffect } from 'react'
 import { withBus } from 'react-suber'
 import * as editor from 'shared/modules/editor/editorDuck'
 import FrameTemplate from '../Frame/FrameTemplate'
 import { UnstyledList, PaddedDiv } from './styled'
 import HistoryRow from './HistoryRow'
+import { saveAs } from 'file-saver'
 
 export const HistoryFrame = (props: any) => {
-  const { frame, bus } = props
+  const { frame, bus, setExportItems } = props
   const onHistoryClick = (cmd: any) => {
     bus.send(editor.SET_CONTENT, editor.setContent(cmd))
   }
+  useEffect(() => {
+    setExportItems([
+      {
+        name: 'history',
+        download: () => {
+          const txt = frame.result
+            .map((line: string) => {
+              const trimmedLine = `${line}`.trim()
+
+              if (trimmedLine.startsWith(':')) {
+                return trimmedLine
+              }
+
+              return trimmedLine.endsWith(';') ? trimmedLine : `${trimmedLine};`
+            })
+            .join('\n\n')
+          const blob = new Blob([txt], {
+            type: 'text/plain;charset=utf-8'
+          })
+
+          saveAs(blob, 'history.txt')
+        }
+      }
+    ])
+  }, [setExportItems, frame.result])
+
   const historyRows =
     frame.result.length > 0 ? (
       frame.result.map((entry: any, index: any) => {

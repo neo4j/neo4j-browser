@@ -74,6 +74,7 @@ type FrameTitleBarBaseProps = {
   collapseToggle: () => void
   isPinned: boolean
   bus: Bus
+  ExportButton: JSX.Element
 }
 
 type FrameTitleBarProps = FrameTitleBarBaseProps & {
@@ -165,6 +166,7 @@ function FrameTitlebar(props: FrameTitleBarProps) {
         >
           <SaveFavoriteIcon />
         </FrameButton>
+        {props.ExportButton}
         <FrameButton
           title="Pin at top"
           onClick={() => {
