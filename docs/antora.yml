@@ -1,0 +1,12 @@
+name: browser-manual
+title: Neo4j Browser
+version: '1.0'
+start_page: ROOT:index.adoc
+nav:
+- modules/ROOT/content-nav.adoc
+# asciidoc:
+#   attributes:
+#     neo4j-version: '4.2'
+#     neo4j-version-exact: '4.2.2'
+#     neo4j-buildnumber: '4.2'
+#     docs-version: '1.0'

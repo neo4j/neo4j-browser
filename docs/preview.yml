@@ -1,0 +1,40 @@
+site:
+  title: Neo4j Docs
+  url: https://neo4j.com/docs
+  start_page: browser-manual:ROOT:index.adoc
+
+content:
+  sources:
+  - url: ../
+    start_path: docs
+    branches: HEAD
+    include: docs/
+ui:
+  bundle:
+    url: https://s3-eu-west-1.amazonaws.com/static-content.neo4j.com/build/ui-bundle-v0.9.10.zip
+    snapshot: true
+  output_dir: /assets
+
+urls:
+  html_extension_style: indexify
+
+asciidoc:
+  attributes:
+    page-theme: docs
+    page-type: Docs
+    page-search-type: Docs
+    page-search-site: Reference Docs
+    page-canonical-root: /docs
+    page-disabletracking: true
+    page-pagination: true
+    page-no-canonical: true
+    page-origin-private: true
+    page-hide-toc: false
+    includePDF: false
+    nonhtmloutput: ""
+    sectnums: true,
+    sectnumlevel: 3,
+    experimental: ''
+    # page-cdn: /static/assets
+    copyright: 2021
+    common-license-page-uri: https://neo4j.com/docs/license/
