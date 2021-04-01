@@ -1,0 +1,24 @@
+[[browser]]
+= Neo4j Browser
+:experimental:
+:sectnums:
+:chapter-label:
+:toc-title: Contents
+//:front-cover-image: image::title-page.png[]
+:header-title: NEO4J BROWSER
+:title-page-background-image: image::title-page.png[]
+
+ifndef::backend-pdf[]
+License: link:{common-license-page-uri}[Creative Commons 4.0]
+endif::[]
+
+ifdef::backend-pdf[]
+(C) {copyright}
+
+License: <<license, Creative Commons 4.0>>
+endif::[]
+
+{nbsp} +
+
+[.lead]
+*Neo4j Browser*
