@@ -153,13 +153,13 @@ export function getAuthEnabled(state: GlobalState): boolean {
   return data?.authEnabled ?? false
 }
 
-export function getHost(state: GlobalState): string | null {
+export function getConnectedHost(state: GlobalState): string | null {
   const data = getConnectionData(state, state[NAME].activeConnection)
   return data?.host ?? null
 }
 
-export function isAuraHost(state: GlobalState): boolean {
-  const host = getHost(state)
+export function isConnectedAuraHost(state: GlobalState): boolean {
+  const host = getConnectedHost(state)
   return host ? isCloudHost(host, NEO4J_CLOUD_DOMAINS) : false
 }
 

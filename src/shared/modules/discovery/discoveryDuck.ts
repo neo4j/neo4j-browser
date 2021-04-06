@@ -33,7 +33,7 @@ import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
 import { getUrlParamValue } from 'services/utils'
 import { generateBoltUrl } from 'services/boltscheme.utils'
 import { getUrlInfo } from 'shared/services/utils'
-import { isAuraHost } from 'shared/modules/connections/connectionsDuck'
+import { isConnectedAuraHost } from 'shared/modules/connections/connectionsDuck'
 import { isCloudHost } from 'shared/services/utils'
 import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
 
@@ -193,7 +193,7 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
               host
             )
 
-            const isAura = isAuraHost(store.getState())
+            const isAura = isConnectedAuraHost(store.getState())
             const supportsMultiDb =
               !isAura && parseInt((result.neo4j_version || '0').charAt(0)) >= 4
             const discovered = supportsMultiDb
