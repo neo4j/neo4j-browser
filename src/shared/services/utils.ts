@@ -465,7 +465,10 @@ export function isCloudHost(host: string, cloudDomains: string[]): boolean {
   return isCloudParsedUrl(parseUrl(host), cloudDomains)
 }
 
-function isCloudParsedUrl(parsedUrl: any, cloudDomains: string[]): boolean {
+function isCloudParsedUrl(
+  parsedUrl: parseUrl,
+  cloudDomains: string[]
+): boolean {
   const { hostname } = parsedUrl
   return cloudDomains.some(cloudDomain => hostname.endsWith(cloudDomain))
 }
