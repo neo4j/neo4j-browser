@@ -668,7 +668,7 @@ describe('toKeyString', () => {
       expect(utils.isCloudHost('neo4j+s://localhost', ['neo4j.io'])).toBe(false)
     })
 
-    it('does not detect cloud hosts for localhost', () => {
+    it('does not detect cloud hosts for hosts that start but not end with the cloud domain', () => {
       expect(utils.isCloudHost('neo4j+s://neo4j.io.foo', ['neo4j.io'])).toBe(
         false
       )
