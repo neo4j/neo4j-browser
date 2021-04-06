@@ -26,11 +26,7 @@ import FrameError from '../../Frame/FrameError'
 import { H3 } from 'browser-components/headers'
 import { Lead } from 'browser-components/Text'
 
-import Render from 'browser-components/Render'
 import { StyledConnectionAside, StyledConnectionBodyContainer } from './styled'
-import { connect } from 'react-redux'
-import { getAllowedAuthSchemes } from 'shared/modules/app/appDuck'
-import { NO_AUTH } from 'services/bolt/boltHelpers'
 
 type State = any
 
@@ -95,10 +91,4 @@ export class ConnectionFrame extends Component<any, State> {
   }
 }
 
-const mapStateToProps = (state: any) => {
-  return {
-    mightRequireAuth: getAllowedAuthSchemes(state).includes(NO_AUTH)
-  }
-}
-
-export default connect(mapStateToProps)(ConnectionFrame)
+export default ConnectionFrame

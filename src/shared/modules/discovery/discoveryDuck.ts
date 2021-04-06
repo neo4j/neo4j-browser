@@ -26,13 +26,16 @@ import {
   USER_CLEAR,
   hasDiscoveryEndpoint,
   getHostedUrl,
-  getAllowedBoltSchemes
+  getAllowedBoltSchemes,
+  CLOUD_SCHEMES
 } from 'shared/modules/app/appDuck'
 import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
 import { getUrlParamValue } from 'services/utils'
 import { generateBoltUrl } from 'services/boltscheme.utils'
 import { getUrlInfo } from 'shared/services/utils'
-import { CLOUD, getEnv } from 'shared/modules/app/appDuck'
+import { isAuraHost } from 'shared/modules/connections/connectionsDuck'
+import { isCloudHost } from 'shared/services/utils'
+import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
 
 export const NAME = 'discover-bolt-host'
 export const CONNECTION_ID = '$$discovery'
@@ -79,6 +82,15 @@ export const getBoltHost = (state: any) => {
   return state.discovery.boltHost
 }
 
+const getAllowedBoltSchemesForHost = (
+  state: any,
+  host: string,
+  encryptionFlag?: any
+) =>
+  isCloudHost(host, NEO4J_CLOUD_DOMAINS)
+    ? CLOUD_SCHEMES
+    : getAllowedBoltSchemes(state, encryptionFlag)
+
 const updateDiscoveryState = (action: any, store: any) => {
   const keysToCopy = [
     'username',
@@ -105,7 +117,11 @@ export const injectDiscoveryEpic = (action$: any, store: any) =>
     .ofType(INJECTED_DISCOVERY)
     .map((action: any) => {
       const connectUrl = generateBoltUrl(
-        getAllowedBoltSchemes(store.getState(), action.encrypted),
+        getAllowedBoltSchemesForHost(
+          store.getState(),
+          action.host,
+          action.encrypted
+        ),
         action.host
       )
       return updateDiscoveryState({ ...action, forceURL: connectUrl }, store)
@@ -173,11 +189,11 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
               throw new Error('No bolt address found')
             }
             host = generateBoltUrl(
-              getAllowedBoltSchemes(store.getState()),
+              getAllowedBoltSchemesForHost(store.getState(), host),
               host
             )
 
-            const isAura = getEnv(store.getState()) === CLOUD
+            const isAura = isAuraHost(store.getState())
             const supportsMultiDb =
               !isAura && parseInt((result.neo4j_version || '0').charAt(0)) >= 4
             const discovered = supportsMultiDb
