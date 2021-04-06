@@ -1,0 +1,21 @@
+[[about-browser]]
+= About Neo4j Browser
+
+[abstract]
+--
+This section describes the purpose of Neo4j Browser and what it is used for.
+--
+
+[[browser-purpose]]
+== Purpose of Neo4j Browser
+
+
+
+[[browser-capabilities]]
+== High-level capabilities of Neo4j Browser
+
+Neo4j Browser is the general purpose user interface for working with Neo4j.
+It allows you to query, visualize, administer, and monitor your databases.
+
+Neo4j Browser supports all CRUD operations for interacting with your Neo4j databases using Cypher language.
+You can view results in several formats, including graph visualization mode (for results containing nodes and relationships), tabular, as a text or a table, and JSON.

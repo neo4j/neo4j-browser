@@ -1,0 +1,24 @@
+[[overview]]
+= Visual tour
+
+
+
+
+[[editor]]
+== Cypher editor
+
+
+[[frames]]
+== Result frames
+
+
+[[guides]]
+== Browser guides
+
+
+[[favorites]]
+== Favorites and saved files
+
+
+[[settings]]
+== Settings

@@ -1,0 +1,56 @@
+[[deployment-modes]]
+= Deployment modes
+
+[abstract]
+--
+This section describes the different deployment modes of Neo4j Browser.
+--
+
+There are several different scenarios of how to run Neo4j Browser:
+
+[[bundled-neo4j]]
+== Neo4j Browser bundled with Neo4j
+
+Neo4j Browser is bundled with Neo4j. With the default configuration if neo4j is started with the command:
+
+`bin/neo4j start`
+
+it will also host a web server with Neo4j Browser at _http://localhost:7474/browser_.
+
+[[bundled-desktop]]
+== Neo4j Browser bundled with Neo4j Desktop
+
+Neo4j Browser can also be run via Neo4j Desktop as an application.
+
+Refer to Desktop graph app doc
+
+
+[[web-application]]
+== Neo4j Browser - Web application
+
+Neo4j Browser is available as a web application at https://browser.graphapp.io/.
+
+
+[[sandbox]]
+== Neo4j Browser - Sandbox
+
+If you have a Neo4j sandbox (https://neo4j.com/sandbox/), Neo4j Browser can be accessed as a web application within the user interface. The Neo4j Browser web application will connect to your Neo4j sandbox without having to enter any connection URI.
+
+[[aura]]
+== Neo4j Browser - Aura
+
+If you have a Neo4j Aura console (https://console.neo4j.io), Neo4j Browser can be accessed as a web application within the user interface. The Neo4j Browser web application will connect to your Neo4j instance without having to enter any connection URL.
+
+Open with (blue button at the right of the instance) and choose Neo4j Browser.
+
+
+https://dist.neo4j.com/wp-content/uploads/1desktopConnect_cloud_confirm_running.jpg
+
+[[web-server]]
+== Neo4j Browser - Dedicated web server
+
+
+It is possible to host a dedicated web server to serve Neo4j Browser as a web application. See the github page for source code, https://github.com/neo4j/neo4j-browser.
+(Is it available as an npm install package?)
+
+https://neo4j.com/docs/bloom-user-guide/current/bloom-installation/#_bloom_web_app_hosted_in_a_separate_web_server
