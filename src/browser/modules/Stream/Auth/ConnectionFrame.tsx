@@ -68,11 +68,7 @@ export class ConnectionFrame extends Component<any, State> {
                 <>
                   <H3>Connect to Neo4j</H3>
                   <Lead>
-                    Database access
-                    {this.props.mightRequireAuth
-                      ? ' might require '
-                      : ' requires '}
-                    an authenticated connection
+                    Database access might require an authenticated connection
                   </Lead>
                 </>
               )}
