@@ -111,7 +111,7 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
     hasSecureSchemes ? '+s' : ''
   }:// for a direct connection to a single instance.`
 
-  const schemeRestriction = props.allowedSchemes.length > 0
+  const schemeRestriction = props.allowedSchemes.length > 1
 
   return (
     <StyledConnectionForm onSubmit={onConnectClick}>
