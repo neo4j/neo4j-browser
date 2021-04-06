@@ -22,3 +22,34 @@ endif::[]
 
 [.lead]
 *Neo4j Browser*
+
+Neo4j Browser is a developer-focused tool that allows you to execute Cypher queries and visualize the results.
+It is the default developer interface for both Enterprise and Community editions of Neo4j.
+It comes out-of-the-box with all of Neo4j’s graph database offerings, including Neo4j Server (Community and Enterprise editions) and Neo4j Desktop (all OS versions).
+
+Neo4j Browser is perfect for running ad-hoc graph queries, with just enough ability to prototype a Neo4j-based application.
+It is:
+
+* Developer focused, for writing and running graph queries with Cypher.
+* Exportable, tabular results of any query result.
+* Used for graph visualization of query results containing nodes and relationships.
+
+[.lead]
+*Contents of this manual*
+
+The following areas of Neo4j Browser are covered in this manual:
+
+* About Neo4j Browser - An overview of Neo4j Browser, its purpose, and high-level capabilities.
+* Deployment  modes - The different deployment modes for running Neo4j Browser.
+*
+
+[.lead]
+*Who should read this*
+
+This manual is written for developers, database administrators, quality engineers, data scientists, and data architects, who may or may not be familiar with Neo4j.
+
+* Developers who want to try Neo4j.
+* Developers who are familiar with Neo4j and want to use Neo4j Browser for running ad-hoc queries, visualize their data, and maybe prototype a Neo4j-based application.
+* Database administrators and quality engineers ….
+* Data scientists who want to take advantage of Neo4j GDS application.
+* Data architects ….
