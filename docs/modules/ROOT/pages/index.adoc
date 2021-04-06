@@ -53,3 +53,22 @@ This manual is written for developers, database administrators, quality engineer
 * Database administrators and quality engineers ….
 * Data scientists who want to take advantage of Neo4j GDS application.
 * Data architects ….
+
+// Useful links:
+//===============
+// GitHub repo: https://github.com/neo4j/neo4j-browser
+//
+// Neo4j Browser changelog: https://github.com/neo4j/neo4j-browser/wiki/changelog and https://neo4j-browser.canny.io/changelog
+//
+// Neo4j Browser documentation: https://github.com/neo4j/neo4j-browser/tree/master/src/browser/documentation
+//
+// Neo4j Browser help:
+// https://github.com/neo4j/neo4j-browser/blob/master/src/browser/documentation/index.ts
+//
+// This article demonstrates how to use the Neo4j Browser for querying, visualization, and data interaction: https://neo4j.com/developer/neo4j-browser/
+//
+// GraphGists, allow developers to explore with Neo4j Browser how data would be modeled as a graph and see some example queries of that graph data: https://portal.graphgist.org/
+//
+// Style for explaining tasks: https://www.xero.com/uk/accounting-software/pay-bills/
+//
+// YouTube videos: https://www.youtube.com/c/neo4j/search?query=browser
