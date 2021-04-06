@@ -58,7 +58,7 @@ This manual is written for developers, database administrators, quality engineer
 //===============
 // GitHub repo: https://github.com/neo4j/neo4j-browser
 //
-// Neo4j Browser changelog: https://github.com/neo4j/neo4j-browser/wiki/changelog
+// Neo4j Browser changelog: https://github.com/neo4j/neo4j-browser/wiki/changelog and https://neo4j-browser.canny.io/changelog
 //
 // Neo4j Browser documentation: https://github.com/neo4j/neo4j-browser/tree/master/src/browser/documentation
 //
