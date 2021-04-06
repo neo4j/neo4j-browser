@@ -329,7 +329,7 @@ describe('discoveryOnStartupEpic cloud env', () => {
 
   test('listens on APP_START and finds a bolt host and passes on the found host in cloud env', done => {
     // Given
-    const expectedHost = 'neo4j+s://myhost:7777'
+    const expectedHost = 'neo4j+s://myhost.neo4j.io:7777'
     const action = { type: APP_START, env: CLOUD }
     nock(getDiscoveryEndpoint())
       .get('/')
