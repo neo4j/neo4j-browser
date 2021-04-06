@@ -31,8 +31,10 @@ import {
 } from 'shared/modules/commands/commandsDuck'
 import { FireExtinguisherIcon } from 'browser-components/icons/Icons'
 import { InfoView } from './InfoView'
+import { saveAs } from 'file-saver'
+import { BaseFrameProps } from './Stream'
 
-const StyleFrame = ({ frame, setExportItems }: any) => {
+const StyleFrame = ({ frame, setExportItems }: BaseFrameProps): JSX.Element => {
   let grass = ''
   let contents = (
     <InfoView
@@ -54,15 +56,17 @@ const StyleFrame = ({ frame, setExportItems }: any) => {
   }
 
   useEffect(() => {
-    setExportItems({
-      name: 'GraSS',
-      download: () => {
-        const blob = new Blob([grass], {
-          type: 'text/plain;charset=utf-8'
-        })
-        saveAs(blob, 'style.grass')
+    setExportItems([
+      {
+        name: 'GraSS',
+        download: () => {
+          const blob = new Blob([grass], {
+            type: 'text/plain;charset=utf-8'
+          })
+          saveAs(blob, 'style.grass')
+        }
       }
-    })
+    ])
   }, [setExportItems, grass])
 
   return (

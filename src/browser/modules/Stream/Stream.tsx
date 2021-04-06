@@ -172,7 +172,10 @@ function FrameContainer(props: FrameContainerProps) {
     frame,
     activeConnectionData: props.activeConnectionData,
     stack: props.frameData.stack,
-    setExportItems: setExportItems
+    setExportItems: a => {
+      console.log(a)
+      setExportItems(a)
+    }
   }
   const FrameComponent = getFrameComponent(props.frameData)
 

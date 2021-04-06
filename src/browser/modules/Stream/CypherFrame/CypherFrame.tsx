@@ -58,7 +58,10 @@ import {
   resultHasPlan,
   resultIsError,
   resultHasNodes,
-  initialView
+  initialView,
+  stringifyResultArray,
+  transformResultRecordsToResultArray,
+  recordToJSONMapper
 } from './helpers'
 import { SpinnerContainer, StyledStatsBarContainer } from '../styled'
 import { StyledFrameBody } from 'browser/modules/Frame/styled'
@@ -81,6 +84,12 @@ import RelatableView, {
 import { requestExceedsVisLimits } from 'browser/modules/Stream/CypherFrame/helpers'
 import { GlobalState } from 'shared/globalState'
 import { ExportItem } from '../Stream'
+import { csvFormat, stringModifier } from 'services/bolt/cypherTypesFormatting'
+import { CSVSerializer } from 'services/serializer'
+import { map } from 'lodash'
+import { stringifyMod } from 'services/utils'
+import { downloadPNGFromSVG, downloadSVG } from 'services/exporting/imageUtils'
+import { saveAs } from 'file-saver'
 
 type CypherFrameBaseProps = {
   frame: Frame
@@ -197,10 +206,24 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
       })
       if (view) this.setState({ openView: view })
     }
+
+    const downloadGraphics = [
+      { name: 'PNG', download: this.exportPNG },
+      { name: 'SVG', download: this.exportSVG }
+    ]
+    this.props.setExportItems([
+      { name: 'CSV', download: this.exportCSV },
+      { name: 'JSON', download: this.exportJSON },
+      ...(this.visElement ? downloadGraphics : [])
+    ])
   }
 
   componentDidMount(): void {
     const view = initialView(this.props, this.state)
+    this.props.setExportItems([
+      { name: 'CSV', download: this.exportCSV },
+      { name: 'JSON', download: this.exportJSON }
+    ])
     if (view) this.setState({ openView: view })
   }
 
@@ -298,6 +321,45 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
       </Render>
     </FrameSidebar>
   )
+
+  exportCSV = (): void => {
+    const records = this.getRecords()
+    const exportData = stringifyResultArray(
+      csvFormat,
+      transformResultRecordsToResultArray(records)
+    )
+    const data = exportData.slice()
+    const csv = CSVSerializer(data.shift())
+    csv.appendRows(data)
+    const blob = new Blob([csv.output()], {
+      type: 'text/plain;charset=utf-8'
+    })
+    saveAs(blob, 'export.csv')
+  }
+
+  exportJSON = (): void => {
+    const records = this.getRecords()
+    const exportData = map(records, recordToJSONMapper)
+    const data = stringifyMod(exportData, stringModifier, true)
+    const blob = new Blob([data], {
+      type: 'text/plain;charset=utf-8'
+    })
+    saveAs(blob, 'records.json')
+  }
+
+  exportPNG = (): void => {
+    if (this.visElement) {
+      const { svgElement, graphElement, type } = this.visElement
+      downloadPNGFromSVG(svgElement, graphElement, type)
+    }
+  }
+
+  exportSVG = (): void => {
+    if (this.visElement) {
+      const { svgElement, graphElement, type } = this.visElement
+      downloadSVG(svgElement, graphElement, type)
+    }
+  }
 
   getSpinner(): JSX.Element {
     return (
@@ -466,77 +528,8 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
       requestStatus !== 'error'
         ? this.getStatusbar(result)
         : null
-    /* 
-    TODOD this might be only place numRecods was used
-        numRecords={result && 'records' in result ? result.records.length : 0}
-        getRecords={this.getRecords}
-        onResize={this.onResize}
-        visElement={
-          this.state.hasVis &&
-          (this.state.openView === viewTypes.VISUALIZATION ||
-            this.state.openView === viewTypes.PLAN)
-            ? this.visElement
-            : null
-        }
-        */
+
     // TODO This also passes no padding to template. Solve som other way. className="no-padding"
-    /*
-          {frame.type === 'cypher' && (
-            <>
-              <DropdownItem onClick={() => exportCSV(getRecords())}>
-                Export CSV
-              </DropdownItem>
-              <DropdownItem onClick={() => exportJSON(getRecords())}>
-                Export JSON
-              </DropdownItem>
-            </>
-          )}
-
-          {visElement && (
-            <>
-              <DropdownItem onClick={() => exportPNG()}>
-                Export PNG
-              </DropdownItem>
-              <DropdownItem onClick={() => exportSVG()}>
-                Export SVG
-              </DropdownItem>
-            </>
-          )}
-*/
-    setExportItems
-    function exportCSV(records: any) {
-      // TODO check for issues in the exported csv, doesn't have headers?
-      const exportData = stringifyResultArray(
-        csvFormat,
-        transformResultRecordsToResultArray(records)
-      )
-      const data = exportData.slice()
-      const csv = CSVSerializer(data.shift())
-      csv.appendRows(data)
-      const blob = new Blob([csv.output()], {
-        type: 'text/plain;charset=utf-8'
-      })
-      saveAs(blob, 'export.csv')
-    }
-
-    function exportJSON(records: any) {
-      const exportData = map(records, recordToJSONMapper)
-      const data = stringifyMod(exportData, stringModifier, true)
-      const blob = new Blob([data], {
-        type: 'text/plain;charset=utf-8'
-      })
-      saveAs(blob, 'records.json')
-    }
-
-    function exportPNG(visElement: any) {
-      const { svgElement, graphElement, type } = visElement
-      downloadPNGFromSVG(svgElement, graphElement, type)
-    }
-
-    function exportSVG(visElement: any) {
-      const { svgElement, graphElement, type } = visElement
-      downloadSVG(svgElement, graphElement, type)
-    }
     return (
       <FrameTemplate
         sidebar={requestStatus !== 'error' ? this.sidebar : undefined}
