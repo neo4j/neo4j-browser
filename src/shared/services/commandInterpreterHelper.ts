@@ -99,7 +99,6 @@ import {
 } from './commandUtils'
 import { unescapeCypherIdentifier } from './utils'
 import { getLatestFromFrameStack } from 'browser/modules/Stream/stream.utils'
-import { useRef } from 'react'
 
 const PLAY_FRAME_TYPES = ['play', 'play-remote']
 
