@@ -73,9 +73,7 @@ const HelpFrame = ({ stack = [] }: any) => {
     ) : (
       main
     )
-  // TODO needs parent keeping track of current frame
-  // TODO Pass information about has stack class in other way className="has-stack"
-  return <FrameTemplate aside={aside} contents={contents} />
+  return <FrameTemplate aside={aside} contents={contents} hasSlides />
 }
 
 function generateContent(frame: any) {

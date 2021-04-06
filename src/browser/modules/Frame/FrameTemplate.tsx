@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import {
   StyledFrameBody,
@@ -33,21 +33,46 @@ type FrameTemplateProps = {
   sidebar?: () => JSX.Element | null
   aside?: JSX.Element | null
   statusbar?: JSX.Element | null
+  removePadding?: boolean
+  hasSlides?: boolean
+  onResize?: (fullscreen: boolean, collapsed: boolean, height: number) => void
 }
 
 function FrameTemplate({
   contents,
   sidebar,
   aside,
-  statusbar
+  statusbar,
+  onResize = () => {
+    /*no op*/
+  },
+  removePadding = false,
+  hasSlides = false
 }: FrameTemplateProps): JSX.Element {
+  const frameContentElementRef = useRef<HTMLDivElement>(null)
+  const [lastHeight, setLastHeight] = useState(10)
+
+  useEffect(() => {
+    if (!frameContentElementRef.current?.clientHeight) return
+    const currHeight = frameContentElementRef.current.clientHeight
+    if (currHeight < 300) return // No need to report a transition
+
+    if (lastHeight !== currHeight) {
+      onResize(false, false, currHeight)
+      setLastHeight(currHeight)
+    }
+  }, [lastHeight, onResize])
+
   return (
     <>
-      <StyledFrameBody>
+      <StyledFrameBody removePadding={removePadding} hasSlides={hasSlides}>
         {sidebar && sidebar()}
         {aside && <StyledFrameAside>{aside}</StyledFrameAside>}
         <StyledFrameMainSection>
-          <StyledFrameContents data-testid="frameContents">
+          <StyledFrameContents
+            ref={frameContentElementRef}
+            data-testid="frameContents"
+          >
             {contents}
           </StyledFrameContents>
         </StyledFrameMainSection>

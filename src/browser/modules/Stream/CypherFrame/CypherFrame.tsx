@@ -138,20 +138,6 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
     }
   }
 
-  /*  TODO investigate the need for this onResize handler and implemented in this class only
-  useEffect(() => {
-    if (!frameContentElementRef.current?.clientHeight) return
-    const currHeight = frameContentElementRef.current.clientHeight
-    if (currHeight < 300) return // No need to report a transition
-
-    if (lastHeight !== currHeight) {
-      //TODO LOOK INTO RESIZE HANDLER
-      // TODO FULLSCREEN SHOULD LOOK OF FOR SOME FRAMES
-      onResize(false, false, currHeight)
-      setLastHeight(currHeight)
-    }
-  }, [lastHeight, onResize]
-  */
   onResize = (
     fullscreen: boolean,
     collapse: boolean,
@@ -377,7 +363,7 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
     query: string
   ): JSX.Element {
     return (
-      <StyledFrameBody data-testid="frame-loaded-contents">
+      <StyledFrameBody removePadding data-testid="frame-loaded-contents">
         <Display if={this.state.openView === viewTypes.TEXT} lazy>
           <AsciiView
             _asciiSetColWidth={this.state._asciiSetColWidth}
@@ -529,12 +515,13 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
         ? this.getStatusbar(result)
         : null
 
-    // TODO This also passes no padding to template. Solve som other way. className="no-padding"
     return (
       <FrameTemplate
         sidebar={requestStatus !== 'error' ? this.sidebar : undefined}
         contents={frameContents}
         statusbar={statusBar}
+        onResize={this.onResize}
+        removePadding
       />
     )
   }

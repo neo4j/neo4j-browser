@@ -47,25 +47,28 @@ z-index: 130;`
   border-radius: 2px;
 `
 
-export const StyledFrameBody = styled.div`
+export const StyledFrameBody = styled.div<{
+  removePadding?: boolean
+  hasSlides?: boolean
+}>`
   overflow: auto;
   min-height: ${dim.frameBodyHeight / 2}px;
   max-height: 100%;
   flex-direction: row;
   width: 100%;
   padding: 30px;
+  display: flex;
 
-  .has-carousel &,
-  .has-stack & {
+  ${props =>
+    props.hasSlides
+      ? `
     position: relative;
     padding-bottom: 40px;
     padding-left: 40px;
-    padding-right: 40px;
-  }
+    padding-right: 40px;`
+      : ''}
 
-  .no-padding & {
-    padding: 0;
-  }
+  ${props => (props.removePadding ? 'padding: 0;' : '')}
 `
 
 export const StyledFrameMainSection = styled.div`

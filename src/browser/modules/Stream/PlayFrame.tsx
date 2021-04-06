@@ -136,18 +136,7 @@ export function PlayFrame({ stack, bus }: any): JSX.Element {
       </React.Fragment>
     )
   }
-  //TODO slide in carousel needs to be pulled up one level in state.
-  /*  TOOD other way to pass information abot classname
-  const classNames = []
-  if (hasCarousel || stack.length > 1) {
-    classNames.push('has-carousel')
-  }
-  if (isRemote) {
-    classNames.push('is-remote')
-  }
-  */
-
-  return <FrameTemplate aside={aside} contents={guideAndNav} />
+  return <FrameTemplate aside={aside} contents={guideAndNav} hasSlides />
 }
 
 function generateContent(

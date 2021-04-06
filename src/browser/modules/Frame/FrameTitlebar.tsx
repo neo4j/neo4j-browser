@@ -113,7 +113,6 @@ function FrameTitlebar(props: FrameTitleBarProps) {
   const expandCollapseIcon = props.collapse ? <DownIcon /> : <UpIcon />
   // the last run command (history index 1) is already in the editor
   // don't show it as history as well
-  // TODO check performance implications
   const history = (frame.history || []).slice(1)
   return (
     <StyledFrameTitleBar>

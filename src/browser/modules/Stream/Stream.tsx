@@ -153,7 +153,6 @@ function Stream(props: StreamProps): JSX.Element {
   )
 }
 
-// TODO Hämta active connection själv
 type FrameContainerProps = {
   frameData: FrameStack
   activeConnectionData: Connection | null
@@ -178,9 +177,6 @@ function FrameContainer(props: FrameContainerProps) {
     }
   }
   const FrameComponent = getFrameComponent(props.frameData)
-
-  // refactor away classnames like is-fullscreen and so on
-  // TODO refactor away need for content to know if it's fullscreen or not. right now they look ugly
 
   return (
     <StyledFrame
