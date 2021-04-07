@@ -53,6 +53,10 @@
       ]
     }
   },
+  "engines": {
+    "yarn": ">=1.10",
+    "node": ">=10.13.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.1.2",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
@@ -97,7 +101,7 @@
     "copy-webpack-plugin": "^6.0.3",
     "cross-env": "^6.0.3",
     "css-loader": "^1.0.0",
-    "cypress": "^7.0.0",
+    "cypress": "4.12.1",
     "eslint": "^7.7.0",
     "eslint-config-prettier": "^6.7.0",
     "eslint-plugin-import": "^2.18.2",
