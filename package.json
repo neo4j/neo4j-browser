@@ -54,8 +54,8 @@
     }
   },
   "engines": {
-    "yarn": "^1.10",
-    "node": "12"
+    "yarn": ">=1.10",
+    "node": ">=10.13.0"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
