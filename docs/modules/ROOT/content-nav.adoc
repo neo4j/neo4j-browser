@@ -12,6 +12,7 @@
 ** xref:deployment-modes.adoc#web-server[Neo4j Browser - Dedicated web server]
 
 * xref:overview.adoc[Visual tour]
+** xref:overview.adoc#overview[Overview]
 ** xref:overview.adoc#editor[Cypher editor]
 ** xref:overview.adoc#frames[Result frames]
 ** xref:overview.adoc#guides[Browser guides]
