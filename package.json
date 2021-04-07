@@ -55,7 +55,7 @@
   },
   "engines": {
     "yarn": "^1.10",
-    "node": "^12"
+    "node": "^14"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
