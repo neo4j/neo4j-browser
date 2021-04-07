@@ -18,7 +18,7 @@
 ** xref:overview.adoc#favorites[Favorites and saved files]
 ** xref:overview.adoc#settings[Settings]
 
-* xref:operations.adoc[Basic operations]
+* xref:operations.adoc[Browser operations]
 ** xref:operations.adoc#create-dbms-connection[Create a DBMS connection]
 ** xref:operations.adoc#start-browser[Start with Browser]
 ** xref:operations.adoc#results[Visualizing results]
