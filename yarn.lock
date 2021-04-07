@@ -2268,6 +2268,11 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/node/-/node-13.13.21.tgz#e48d3c2e266253405cf404c8654d1bcf0d333e5c"
   integrity sha1-5I08LiZiU0Bc9ATIZU0bzw0zPlw=
 
+"@types/node@^14.14.31":
+  version "14.14.37"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/node/-/node-14.14.37.tgz#a3dd8da4eb84a996c36e331df98d82abd76b516e"
+  integrity sha1-o92NpOuEqZbDbjMd+Y2Cq9drUW4=
+
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/normalize-package-data/-/normalize-package-data-2.4.0.tgz#e486d0d97396d79beedd0a6e33f4534ff6b4973e"
@@ -2359,10 +2364,10 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/semver/-/semver-7.3.4.tgz#43d7168fec6fa0988bb1a513a697b29296721afb"
   integrity sha1-Q9cWj+xvoJiLsaUTppeykpZyGvs=
 
-"@types/sinonjs__fake-timers@^6.0.1":
-  version "6.0.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/sinonjs__fake-timers/-/sinonjs__fake-timers-6.0.1.tgz#681df970358c82836b42f989188d133e218c458e"
-  integrity sha1-aB35cDWMgoNrQvmJGI0TPiGMRY4=
+"@types/sinonjs__fake-timers@^6.0.2":
+  version "6.0.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/sinonjs__fake-timers/-/sinonjs__fake-timers-6.0.2.tgz#3a84cf5ec3249439015e14049bd3161419bf9eae"
+  integrity sha1-OoTPXsMklDkBXhQEm9MWFBm/nq4=
 
 "@types/sizzle@^2.3.2":
   version "2.3.2"
@@ -2981,10 +2986,10 @@ aproba@^1.1.1:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/aproba/-/aproba-1.2.0.tgz#6802e6264efd18c790a1b0d517f0f2627bf2c94a"
   integrity sha1-aALmJk79GMeQobDVF/DyYnvyyUo=
 
-arch@^2.1.2:
-  version "2.1.2"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/arch/-/arch-2.1.2.tgz#0c52bbe7344bb4fa260c443d2cbad9c00ff2f0bf"
-  integrity sha1-DFK75zRLtPomDEQ9LLrZwA/y8L8=
+arch@^2.2.0:
+  version "2.2.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/arch/-/arch-2.2.0.tgz#1bc47818f305764f23ab3306b0bfc086c5a29d11"
+  integrity sha1-G8R4GPMFdk8jqzMGsL/AhsWinRE=
 
 argparse@^1.0.7:
   version "1.0.10"
@@ -3489,6 +3494,11 @@ bindings@^1.5.0:
   integrity sha1-EDU8npRTNLwFEabZCzj7x8nFBN8=
   dependencies:
     file-uri-to-path "1.0.0"
+
+blob-util@^2.0.2:
+  version "2.0.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/blob-util/-/blob-util-2.0.2.tgz#3b4e3c281111bb7f11128518006cdc60b403a1eb"
+  integrity sha1-O048KBERu38REoUYAGzcYLQDoes=
 
 bluebird@^3.5.5, bluebird@^3.7.2:
   version "3.7.2"
@@ -4040,6 +4050,11 @@ ci-info@^2.0.0:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/ci-info/-/ci-info-2.0.0.tgz#67a9e964be31a51e15e5010d58e6f12834002f46"
   integrity sha1-Z6npZL4xpR4V5QENWObxKDQAL0Y=
 
+ci-info@^3.1.1:
+  version "3.1.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/ci-info/-/ci-info-3.1.1.tgz#9a32fcefdf7bcdb6f0a7e1c0f8098ec57897b80a"
+  integrity sha1-mjL87997zbbwp+HA+AmOxXiXuAo=
+
 cipher-base@^1.0.0, cipher-base@^1.0.1, cipher-base@^1.0.3:
   version "1.0.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/cipher-base/-/cipher-base-1.0.4.tgz#8760e4ecc272f4c363532f926d874aae2c1397de"
@@ -4102,13 +4117,13 @@ cli-spinners@^0.1.2:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/cli-spinners/-/cli-spinners-0.1.2.tgz#bb764d88e185fb9e1e6a2a1f19772318f605e31c"
   integrity sha1-u3ZNiOGF+54eaiofGXcjGPYF4xw=
 
-cli-table3@~0.5.1:
-  version "0.5.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/cli-table3/-/cli-table3-0.5.1.tgz#0252372d94dfc40dbd8df06005f48f31f656f202"
-  integrity sha1-AlI3LZTfxA29jfBgBfSPMfZW8gI=
+cli-table3@~0.6.0:
+  version "0.6.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/cli-table3/-/cli-table3-0.6.0.tgz#b7b1bc65ca8e7b5cef9124e13dc2b21e2ce4faee"
+  integrity sha1-t7G8ZcqOe1zvkSThPcKyHizk+u4=
   dependencies:
     object-assign "^4.1.0"
-    string-width "^2.1.1"
+    string-width "^4.2.0"
   optionalDependencies:
     colors "^1.1.2"
 
@@ -4267,10 +4282,10 @@ commander@^2.11.0, commander@^2.18.0, commander@^2.19.0, commander@^2.20.0, comm
   resolved "https://neo.jfrog.io/neo/api/npm/npm/commander/-/commander-2.20.3.tgz#fd485e84c03eb4881c20722ba48035e8531aeb33"
   integrity sha1-/UhehMA+tIgcIHIrpIA16FMa6zM=
 
-commander@^4.1.1:
-  version "4.1.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/commander/-/commander-4.1.1.tgz#9fd602bd936294e9e9ef46a3f4d6964044b18068"
-  integrity sha1-n9YCvZNilOnp70aj9NaWQESxgGg=
+commander@^5.1.0:
+  version "5.1.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/commander/-/commander-5.1.0.tgz#46abbd1652f8e059bddaef99bbdcb2ad9cf179ae"
+  integrity sha1-Rqu9FlL44Fm92u+Zu9yyrZzxea4=
 
 commander@~2.19.0:
   version "2.19.0"
@@ -4702,45 +4717,47 @@ cypher-editor-support@^1.1.7:
     fuzzaldrin "2.1.0"
     lodash "4.17.15"
 
-cypress@4.12.1:
-  version "4.12.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypress/-/cypress-4.12.1.tgz#0ead1b9f4c0917d69d8b57f996b6e01fe693b6ec"
-  integrity sha1-Dq0bn0wJF9adi1f5lrbgH+aTtuw=
+cypress@^7.0.0:
+  version "7.0.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypress/-/cypress-7.0.0.tgz#78b67a87bace1b530c123ba8d779899e676ed676"
+  integrity sha1-eLZ6h7rOG1MMEjuo13mJnmdu1nY=
   dependencies:
     "@cypress/listr-verbose-renderer" "^0.4.1"
     "@cypress/request" "^2.88.5"
     "@cypress/xvfb" "^1.2.4"
-    "@types/sinonjs__fake-timers" "^6.0.1"
+    "@types/node" "^14.14.31"
+    "@types/sinonjs__fake-timers" "^6.0.2"
     "@types/sizzle" "^2.3.2"
-    arch "^2.1.2"
+    arch "^2.2.0"
+    blob-util "^2.0.2"
     bluebird "^3.7.2"
     cachedir "^2.3.0"
-    chalk "^2.4.2"
+    chalk "^4.1.0"
     check-more-types "^2.24.0"
-    cli-table3 "~0.5.1"
-    commander "^4.1.1"
+    cli-table3 "~0.6.0"
+    commander "^5.1.0"
     common-tags "^1.8.0"
-    debug "^4.1.1"
-    eventemitter2 "^6.4.2"
-    execa "^1.0.0"
+    dayjs "^1.10.4"
+    debug "4.3.2"
+    eventemitter2 "^6.4.3"
+    execa "4.1.0"
     executable "^4.1.1"
     extract-zip "^1.7.0"
-    fs-extra "^8.1.0"
+    fs-extra "^9.1.0"
     getos "^3.2.1"
-    is-ci "^2.0.0"
-    is-installed-globally "^0.3.2"
+    is-ci "^3.0.0"
+    is-installed-globally "~0.4.0"
     lazy-ass "^1.6.0"
     listr "^0.14.3"
-    lodash "^4.17.19"
-    log-symbols "^3.0.0"
+    lodash "^4.17.21"
+    log-symbols "^4.0.0"
     minimist "^1.2.5"
-    moment "^2.27.0"
     ospath "^1.2.2"
-    pretty-bytes "^5.3.0"
-    ramda "~0.26.1"
+    pretty-bytes "^5.6.0"
+    ramda "~0.27.1"
     request-progress "^3.0.0"
-    supports-color "^7.1.0"
-    tmp "~0.1.0"
+    supports-color "^8.1.1"
+    tmp "~0.2.1"
     untildify "^4.0.0"
     url "^0.11.0"
     yauzl "^2.10.0"
@@ -4771,6 +4788,11 @@ date-fns@^1.27.2:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/date-fns/-/date-fns-1.30.1.tgz#2e71bf0b119153dbb4cc4e88d9ea5acfb50dc05c"
   integrity sha1-LnG/CxGRU9u0zE6I2epaz7UNwFw=
 
+dayjs@^1.10.4:
+  version "1.10.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/dayjs/-/dayjs-1.10.4.tgz#8e544a9b8683f61783f570980a8a80eaf54ab1e2"
+  integrity sha1-jlRKm4aD9heD9XCYCoqA6vVKseI=
+
 debug@2.6.9, debug@^2.2.0, debug@^2.3.3, debug@^2.6.9:
   version "2.6.9"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
@@ -4784,6 +4806,13 @@ debug@4, debug@^4.0.1, debug@^4.1.0, debug@^4.1.1:
   integrity sha1-O3ImAlUQnGtYnO4FDx1RYTlmR5E=
   dependencies:
     ms "^2.1.1"
+
+debug@4.3.2:
+  version "4.3.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/debug/-/debug-4.3.2.tgz#f0a49c18ac8779e31d4a0c6029dfb76873c7428b"
+  integrity sha1-8KScGKyHeeMdSgxgKd+3aHPHQos=
+  dependencies:
+    ms "2.1.2"
 
 debug@^3.1.0, debug@^3.1.1, debug@^3.2.5:
   version "3.2.6"
@@ -5633,10 +5662,10 @@ event-target-shim@^5.0.0:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/event-target-shim/-/event-target-shim-5.0.1.tgz#5d4d3ebdf9583d63a5333ce2deb7480ab2b05789"
   integrity sha1-XU0+vflYPWOlMzzi3rdICrKwV4k=
 
-eventemitter2@^6.4.2:
-  version "6.4.3"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/eventemitter2/-/eventemitter2-6.4.3.tgz#35c563619b13f3681e7eb05cbdaf50f56ba58820"
-  integrity sha1-NcVjYZsT82gefrBcva9Q9WuliCA=
+eventemitter2@^6.4.3:
+  version "6.4.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/eventemitter2/-/eventemitter2-6.4.4.tgz#aa96e8275c4dbeb017a5d0e03780c65612a1202b"
+  integrity sha1-qpboJ1xNvrAXpdDgN4DGVhKhICs=
 
 eventemitter3@^4.0.0:
   version "4.0.7"
@@ -5667,6 +5696,21 @@ exec-sh@^0.3.2:
   version "0.3.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/exec-sh/-/exec-sh-0.3.4.tgz#3a018ceb526cc6f6df2bb504b2bfe8e3a4934ec5"
   integrity sha1-OgGM61JsxvbfK7UEsr/o46STTsU=
+
+execa@4.1.0:
+  version "4.1.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/execa/-/execa-4.1.0.tgz#4e5491ad1572f2f17a77d388c6c857135b22847a"
+  integrity sha1-TlSRrRVy8vF6d9OIxshXE1sihHo=
+  dependencies:
+    cross-spawn "^7.0.0"
+    get-stream "^5.0.0"
+    human-signals "^1.1.1"
+    is-stream "^2.0.0"
+    merge-stream "^2.0.0"
+    npm-run-path "^4.0.0"
+    onetime "^5.1.0"
+    signal-exit "^3.0.2"
+    strip-final-newline "^2.0.0"
 
 execa@^0.8.0:
   version "0.8.0"
@@ -6220,15 +6264,6 @@ from2@^2.1.0:
     inherits "^2.0.1"
     readable-stream "^2.0.0"
 
-fs-extra@^8.1.0:
-  version "8.1.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/fs-extra/-/fs-extra-8.1.0.tgz#49d43c45a88cd9677668cb7be1b46efdb8d2e1c0"
-  integrity sha1-SdQ8RaiM2Wd2aMt74bRu/bjS4cA=
-  dependencies:
-    graceful-fs "^4.2.0"
-    jsonfile "^4.0.0"
-    universalify "^0.1.0"
-
 fs-extra@^9.0.0:
   version "9.0.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/fs-extra/-/fs-extra-9.0.1.tgz#910da0062437ba4c39fedd863f1675ccfefcb9fc"
@@ -6238,6 +6273,16 @@ fs-extra@^9.0.0:
     graceful-fs "^4.2.0"
     jsonfile "^6.0.1"
     universalify "^1.0.0"
+
+fs-extra@^9.1.0:
+  version "9.1.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/fs-extra/-/fs-extra-9.1.0.tgz#5954460c764a8da2094ba3554bf839e6b9a7c86d"
+  integrity sha1-WVRGDHZKjaIJS6NVS/g55rmnyG0=
+  dependencies:
+    at-least-node "^1.0.0"
+    graceful-fs "^4.2.0"
+    jsonfile "^6.0.1"
+    universalify "^2.0.0"
 
 fs-minipass@^2.0.0:
   version "2.1.0"
@@ -6413,12 +6458,12 @@ glob@^7.0.3, glob@^7.1.1, glob@^7.1.2, glob@^7.1.3, glob@^7.1.4, glob@^7.1.6:
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
-global-dirs@^2.0.1:
-  version "2.0.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/global-dirs/-/global-dirs-2.0.1.tgz#acdf3bb6685bcd55cb35e8a052266569e9469201"
-  integrity sha1-rN87tmhbzVXLNeigUiZlaelGkgE=
+global-dirs@^3.0.0:
+  version "3.0.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/global-dirs/-/global-dirs-3.0.0.tgz#70a76fe84ea315ab37b1f5576cbde7d48ef72686"
+  integrity sha1-cKdv6E6jFas3sfVXbL3n1I73JoY=
   dependencies:
-    ini "^1.3.5"
+    ini "2.0.0"
 
 global-modules@^1.0.0:
   version "1.0.0"
@@ -7132,6 +7177,11 @@ inherits@2.0.3:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/inherits/-/inherits-2.0.3.tgz#633c2c83e3da42a502f52466022480f4208261de"
   integrity sha1-Yzwsg+PaQqUC9SRmAiSA9CCCYd4=
 
+ini@2.0.0:
+  version "2.0.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/ini/-/ini-2.0.0.tgz#e5fd556ecdd5726be978fa1001862eacb0a94bc5"
+  integrity sha1-5f1Vbs3VcmvpePoQAYYurLCpS8U=
+
 ini@^1.3.4, ini@^1.3.5:
   version "1.3.5"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/ini/-/ini-1.3.5.tgz#eee25f56db1c9ec6085e0c22778083f596abf927"
@@ -7295,6 +7345,13 @@ is-ci@^2.0.0:
   dependencies:
     ci-info "^2.0.0"
 
+is-ci@^3.0.0:
+  version "3.0.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/is-ci/-/is-ci-3.0.0.tgz#c7e7be3c9d8eef7d0fa144390bd1e4b88dc4c994"
+  integrity sha1-x+e+PJ2O730PoUQ5C9HkuI3EyZQ=
+  dependencies:
+    ci-info "^3.1.1"
+
 is-data-descriptor@^0.1.4:
   version "0.1.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/is-data-descriptor/-/is-data-descriptor-0.1.4.tgz#0b5ee648388e2c860282e793f1856fec3f301b56"
@@ -7410,13 +7467,13 @@ is-hexadecimal@^1.0.0:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/is-hexadecimal/-/is-hexadecimal-1.0.4.tgz#cc35c97588da4bd49a8eedd6bc4082d44dcb23a7"
   integrity sha1-zDXJdYjaS9Saju3WvECC1E3LI6c=
 
-is-installed-globally@^0.3.2:
-  version "0.3.2"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/is-installed-globally/-/is-installed-globally-0.3.2.tgz#fd3efa79ee670d1187233182d5b0a1dd00313141"
-  integrity sha1-/T76ee5nDRGHIzGC1bCh3QAxMUE=
+is-installed-globally@~0.4.0:
+  version "0.4.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/is-installed-globally/-/is-installed-globally-0.4.0.tgz#9a0fd407949c30f86eb6959ef1b7994ed0b7b520"
+  integrity sha1-mg/UB5ScMPhutpWe8beZTtC3tSA=
   dependencies:
-    global-dirs "^2.0.1"
-    is-path-inside "^3.0.1"
+    global-dirs "^3.0.0"
+    is-path-inside "^3.0.2"
 
 is-negative-zero@^2.0.0:
   version "2.0.0"
@@ -7466,10 +7523,10 @@ is-path-inside@^2.1.0:
   dependencies:
     path-is-inside "^1.0.2"
 
-is-path-inside@^3.0.1:
-  version "3.0.2"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/is-path-inside/-/is-path-inside-3.0.2.tgz#f5220fc82a3e233757291dddc9c5877f2a1f3017"
-  integrity sha1-9SIPyCo+IzdXKR3dycWHfyofMBc=
+is-path-inside@^3.0.2:
+  version "3.0.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/is-path-inside/-/is-path-inside-3.0.3.tgz#d231362e53a07ff2b0e0ea7fed049161ffd16283"
+  integrity sha1-0jE2LlOgf/Kw4Op/7QSRYf/RYoM=
 
 is-plain-obj@^2.0.0:
   version "2.1.0"
@@ -7526,6 +7583,11 @@ is-typedarray@^1.0.0, is-typedarray@~1.0.0:
   version "1.0.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/is-typedarray/-/is-typedarray-1.0.0.tgz#e479c80858df0c1b11ddda6940f96011fcda4a9a"
   integrity sha1-5HnICFjfDBsR3dppQPlgEfzaSpo=
+
+is-unicode-supported@^0.1.0:
+  version "0.1.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/is-unicode-supported/-/is-unicode-supported-0.1.0.tgz#3f26c76a809593b52bfa2ecb5710ed2779b522a7"
+  integrity sha1-PybHaoCVk7Ur+i7LVxDtJ3m1Iqc=
 
 is-what@^3.3.1:
   version "3.11.2"
@@ -8205,13 +8267,6 @@ json5@^1.0.1:
   dependencies:
     minimist "^1.2.0"
 
-jsonfile@^4.0.0:
-  version "4.0.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/jsonfile/-/jsonfile-4.0.0.tgz#8771aae0799b64076b76640fca058f9c10e33ecb"
-  integrity sha1-h3Gq4HmbZAdrdmQPygWPnBDjPss=
-  optionalDependencies:
-    graceful-fs "^4.1.6"
-
 jsonfile@^6.0.1:
   version "6.0.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/jsonfile/-/jsonfile-6.0.1.tgz#98966cba214378c8c84b82e085907b40bf614179"
@@ -8626,6 +8681,11 @@ lodash@^4.17.11, lodash@^4.17.12, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17
   resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash/-/lodash-4.17.20.tgz#b44a9b6297bcb698f1c51a3545a2b3b368d59c52"
   integrity sha1-tEqbYpe8tpjxxRo1RaKzs2jVnFI=
 
+lodash@^4.17.21:
+  version "4.17.21"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
+  integrity sha1-Z5WRxWTDv/quhFTPCz3zcMPWkRw=
+
 log-symbols@^1.0.2:
   version "1.0.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/log-symbols/-/log-symbols-1.0.2.tgz#376ff7b58ea3086a0f09facc74617eca501e1a18"
@@ -8640,12 +8700,13 @@ log-symbols@^2.0.0:
   dependencies:
     chalk "^2.0.1"
 
-log-symbols@^3.0.0:
-  version "3.0.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/log-symbols/-/log-symbols-3.0.0.tgz#f3a08516a5dea893336a7dee14d18a1cfdab77c4"
-  integrity sha1-86CFFqXeqJMzan3uFNGKHP2rd8Q=
+log-symbols@^4.0.0:
+  version "4.1.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/log-symbols/-/log-symbols-4.1.0.tgz#3fbdbb95b4683ac9fc785111e792e558d4abd503"
+  integrity sha1-P727lbRoOsn8eFER55LlWNSr1QM=
   dependencies:
-    chalk "^2.4.2"
+    chalk "^4.1.0"
+    is-unicode-supported "^0.1.0"
 
 log-update@^1.0.2:
   version "1.0.2"
@@ -9104,11 +9165,6 @@ mockdate@^2.0.5:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/mockdate/-/mockdate-2.0.5.tgz#70c6abf9ed4b2dae65c81dfc170dd1a5cec53620"
   integrity sha1-cMar+e1LLa5lyB38Fw3Rpc7FNiA=
 
-moment@^2.27.0:
-  version "2.28.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/moment/-/moment-2.28.0.tgz#cdfe73ce01327cee6537b0fafac2e0f21a237d75"
-  integrity sha1-zf5zzgEyfO5lN7D6+sLg8hojfXU=
-
 monaco-editor-webpack-plugin@^3.0.0:
   version "3.0.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/monaco-editor-webpack-plugin/-/monaco-editor-webpack-plugin-3.0.0.tgz#47a1c16e990d743572f47b0a1abb6de36bbc4afb"
@@ -9153,7 +9209,7 @@ ms@2.1.1:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/ms/-/ms-2.1.1.tgz#30a5864eb3ebb0a66f2ebe6d727af06a09d86e0a"
   integrity sha1-MKWGTrPrsKZvLr5tcnrwagnYbgo=
 
-ms@^2.1.1:
+ms@2.1.2, ms@^2.1.1:
   version "2.1.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha1-0J0fNXtEP0kzgqjrPM0YOHKuYAk=
@@ -10569,10 +10625,10 @@ prettier@^1.7.0:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/prettier/-/prettier-1.19.1.tgz#f7d7f5ff8a9cd872a7be4ca142095956a60797cb"
   integrity sha1-99f1/4qc2HKnvkyhQglZVqYHl8s=
 
-pretty-bytes@^5.3.0:
-  version "5.4.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/pretty-bytes/-/pretty-bytes-5.4.1.tgz#cd89f79bbcef21e3d21eb0da68ffe93f803e884b"
-  integrity sha1-zYn3m7zvIePSHrDaaP/pP4A+iEs=
+pretty-bytes@^5.6.0:
+  version "5.6.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/pretty-bytes/-/pretty-bytes-5.6.0.tgz#356256f643804773c82f64723fe78c92c62beaeb"
+  integrity sha1-NWJW9kOAR3PIL2RyP+eMksYr6us=
 
 pretty-error@^2.0.2:
   version "2.1.1"
@@ -10823,10 +10879,10 @@ railroad-diagrams@^1.0.0:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/railroad-diagrams/-/railroad-diagrams-1.0.0.tgz#eb7e6267548ddedfb899c1b90e57374559cddb7e"
   integrity sha1-635iZ1SN3t+4mcG5Dlc3RVnN234=
 
-ramda@~0.26.1:
-  version "0.26.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/ramda/-/ramda-0.26.1.tgz#8d41351eb8111c55353617fc3bbffad8e4d35d06"
-  integrity sha1-jUE1HrgRHFU1Nhf8O7/62OTTXQY=
+ramda@~0.27.1:
+  version "0.27.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/ramda/-/ramda-0.27.1.tgz#66fc2df3ef873874ffc2da6aa8984658abacf5c9"
+  integrity sha1-Zvwt8++HOHT/wtpqqJhGWKus9ck=
 
 randexp@0.4.6:
   version "0.4.6"
@@ -11576,7 +11632,14 @@ rxjs@^5.0.0-beta.11, rxjs@^5.4.2:
   dependencies:
     symbol-observable "1.0.1"
 
-rxjs@^6.3.3, rxjs@^6.4.0, rxjs@^6.5.2, rxjs@^6.6.3:
+rxjs@^6.3.3:
+  version "6.6.7"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/rxjs/-/rxjs-6.6.7.tgz#90ac018acabf491bf65044235d5863c4dab804c9"
+  integrity sha1-kKwBisq/SRv2UEQjXVhjxNq4BMk=
+  dependencies:
+    tslib "^1.9.0"
+
+rxjs@^6.4.0, rxjs@^6.5.2, rxjs@^6.6.3:
   version "6.6.3"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/rxjs/-/rxjs-6.6.3.tgz#8ca84635c4daa900c0d3967a6ee7ac60271ee552"
   integrity sha1-jKhGNcTaqQDA05Z6buesYCce5VI=
@@ -12440,6 +12503,13 @@ supports-color@^7.0.0, supports-color@^7.1.0:
   dependencies:
     has-flag "^4.0.0"
 
+supports-color@^8.1.1:
+  version "8.1.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/supports-color/-/supports-color-8.1.1.tgz#cd6fc17e28500cff56c1b86c0a7fd4a54a73005c"
+  integrity sha1-zW/BfihQDP9WwbhsCn/UpUpzAFw=
+  dependencies:
+    has-flag "^4.0.0"
+
 supports-hyperlinks@^2.0.0:
   version "2.1.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/supports-hyperlinks/-/supports-hyperlinks-2.1.0.tgz#f663df252af5f37c5d49bbd7eeefa9e0b9e59e47"
@@ -12607,12 +12677,12 @@ tmp@^0.0.33:
   dependencies:
     os-tmpdir "~1.0.2"
 
-tmp@~0.1.0:
-  version "0.1.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/tmp/-/tmp-0.1.0.tgz#ee434a4e22543082e294ba6201dcc6eafefa2877"
-  integrity sha1-7kNKTiJUMILilLpiAdzG6v76KHc=
+tmp@~0.2.1:
+  version "0.2.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/tmp/-/tmp-0.2.1.tgz#8457fc3037dcf4719c251367a1af6500ee1ccf14"
+  integrity sha1-hFf8MDfc9HGcJRNnoa9lAO4czxQ=
   dependencies:
-    rimraf "^2.6.3"
+    rimraf "^3.0.0"
 
 tmpl@1.0.x:
   version "1.0.4"
@@ -13013,15 +13083,15 @@ units-css@^0.4.0:
     isnumeric "^0.2.0"
     viewport-dimensions "^0.2.0"
 
-universalify@^0.1.0:
-  version "0.1.2"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/universalify/-/universalify-0.1.2.tgz#b646f69be3942dabcecc9d6639c80dc105efaa66"
-  integrity sha1-tkb2m+OULavOzJ1mOcgNwQXvqmY=
-
 universalify@^1.0.0:
   version "1.0.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/universalify/-/universalify-1.0.0.tgz#b61a1da173e8435b2fe3c67d29b9adf8594bd16d"
   integrity sha1-thodoXPoQ1sv48Z9Kbmt+FlL0W0=
+
+universalify@^2.0.0:
+  version "2.0.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/universalify/-/universalify-2.0.0.tgz#75a4984efedc4b08975c5aeb73f530d02df25717"
+  integrity sha1-daSYTv7cSwiXXFrrc/Uw0C3yVxc=
 
 unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"

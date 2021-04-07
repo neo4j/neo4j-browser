@@ -20,8 +20,6 @@
 
 import { isEnterpriseEdition } from '../support/utils'
 
-/* global Cypress, cy, before */
-
 describe('Bolt connections', () => {
   before(function() {
     cy.visit(Cypress.config('url'))
@@ -48,7 +46,7 @@ describe('Bolt connections', () => {
   it('does not show the "Reconnect" banner when trying to connect', () => {
     cy.connect('neo4j', 'x', 'bolt://localhost:7685', false) // Non open port
     cy.wait(10000)
-    cy.get('[data-testid="reconnectBanner"]').should('not.be.visible')
+    cy.get('[data-testid="reconnectBanner"]').should('not.exist')
     cy.get('[data-testid="disconnectedBanner"]').should('be.visible')
     cy.get('[data-testid="main"]', { timeout: 1000 })
       .and('contain', 'Database access not available')
