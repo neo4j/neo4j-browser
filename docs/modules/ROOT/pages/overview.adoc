@@ -225,6 +225,60 @@ RETURN n AS node
 == Settings
 
 // https://neo4j.com/developer/neo4j-browser/#browser-config
-// https://neo4j.com/developer/kb/how-do-i-override-browser-configuration-settings/
+The defaults for all the settings can be adjusted at any time by going to the configuration option on the left-side menu.
+Some possible config changes and views are the following:
 
-Uncheck the `Connect result nodes` in settings, to remove automatically query and show relationships.
+* You can retrieve the current configuration with `:config`.
+* Individual settings are configured with the following defaults:
+** `:config maxNeighbours:100`- maximum number of neighbours for a node
+** `:config maxRows:100` - maximum number of rows for the tabular result
+
+You can also see the current status on your database, such as store sizes, ID allocation, page cache, and transaction info by using the command `:sysinfo` in the editor.
+//https://dist.neo4j.com/wp-content/uploads/sysinfo_stats.png
+
+To override the configuration settings -> https://neo4j.com/developer/kb/how-do-i-override-browser-configuration-settings/
+
+To remove the automatic completion of missing relationships, uncheck the `Connect result nodes` in *Settings* .
+
+Configuration settings can be set in _neo4j.conf_ or if using Neo4j Desktop, navigate to the DBMS which settings you want to update, click the ellipsis dropdown menu, and select *Settings*.
+
+Neo4j Browser settings::
+
+.`browser.allow_outgoing_connections`
+[options, cols="<30,<70"]
+|===
+| Description   | Configure the policy for outgoing Neo4j Browser connections.
+| Valid values  | browser.allow_outgoing_connections, a boolean
+| Default value | `true`
+|===
+
+.`browser.credential_timeout`
+[options, cols="<30,<70"]
+|===
+| Description   | Configure the Neo4j Browser to time out logged in users after this idle period. Setting this to 0 indicates no limit.
+| Valid values  | `browser.credential_timeout`, a duration (Valid units are: `ns`, `μs`, `ms`, `s`, `m`, `h`, and `d`; default unit is `s`).
+| Default value | `0s`
+|===
+
+.`browser.post_connect_cmd`
+[options, cols="<30,<70"]
+|===
+| Description   | Commands to be run when Neo4j Browser successfully connects to this server. Separate multiple commands with semi-colon.
+| Valid values  | `browser.post_connect_cmd`, a string
+| Default value | `0s`
+|===
+
+.`browser.remote_content_hostname_whitelist`
+[options, cols="<30,<70"]
+|===
+| Description   | Whitelist of hosts for the Neo4j Browser to be allowed to fetch content from.
+| Valid values  | `browser.remote_content_hostname_whitelist`, a string
+| Default value | `guides.neo4j.com,localhost`
+|===
+
+.`browser.retain_connection_credentials`
+[options, cols="<30,<70"]
+|===
+| Description   | Configure the Neo4j Browser to store or not store user credentials.
+| Valid values  | `browser.retain_connection_credentials`, a boolean
+| Default value | `true`

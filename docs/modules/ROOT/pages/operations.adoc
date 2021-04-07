@@ -80,7 +80,7 @@ To connect directly to a single instance without any routing by the driver. Use 
 | bolt+s://
 |===
 
-If you are developing on your local machine the connection URL will probably be _neo4j://localhost:7474_ in most cases.
+If you are developing on your local machine, the default connection URL is _neo4j://localhost:7474_.
 
 .Neo4j Browser - Neo4j Desktop application
 [options="header", cols="<,<,<"]
@@ -114,7 +114,7 @@ If you are developing on your local machine the connection URL will probably be 
 | bolt+s://
 |===
 
-If you are developing on your local machine the connection URL will probably be neo4j://localhost:7474 in most cases.
+If you are developing on your local machine, the default connection URL is _neo4j://localhost:7474_.
 
 .Neo4j Browser - Web application
 [options="header", cols="<,<,<"]
@@ -136,11 +136,12 @@ If you are developing on your local machine the connection URL will probably be 
 | bolt+s://
 |===
 
-Neo4j Browser is available as a web application at https://browser.graphapp.io/.
+Neo4j Browser is available as a web application at _https://browser.graphapp.io/_.
 
 .Neo4j Browser - Sandbox
 
-If you have a Neo4j sandbox at https://neo4j.com/sandbox/ you can launch a Neo4j Browser web application by pressing the open with Browser and it will automatically connect with a connection URL similar to:
+If you have a Neo4j sandbox at _https://neo4j.com/sandbox/_, you can launch a Neo4j Browser web application by clicking *Open with Browser*.
+It automatically connects with a connection URL similar to:
 
 `bolt+s://ba99a8c2d1c755f0c0cc2a95d0a627ea.neo4jsandbox.com:7687`
 
@@ -148,7 +149,7 @@ If you have a Neo4j sandbox at https://neo4j.com/sandbox/ you can launch a Neo4j
 .Neo4j Browser - Neo4j Aura
 
 If you have a Neo4j Aura console (https://console.neo4j.io), Neo4j Browser can be accessed as a web application within the user interface.
-The Neo4j Browser web application will connect to your Neo4j instance without having to enter any connection URL.
+The Neo4j Browser web application connects to your Neo4j instance without having to enter any connection URL.
 
 Open with (blue button at the right of the instance) and choose Neo4j Browser.
 //https://dist.neo4j.com/wp-content/uploads/1desktopConnect_cloud_confirm_running.jpg
@@ -165,12 +166,273 @@ The URL _\https://<dbid>.databases.neo4j.io/browser/_ can also be used to access
 [[start-browser]]
 == Start with Browser
 
+
+// play start, learn Cypher basics (link to Cypher refcard and Cypher manual), Monaco editor features
+//
+// Link to Emil A's video - https://www.youtube.com/watch?v=oHo-lQ79zf0&t=16s
+
+
+
 [[results]]
 == Visualizing results
+
+// Graph, Table and Text views.
+// https://neo4j.com/developer/graph-visualization/#_neo4j_browser
+
+There are a variety of ways to view data in Neo4j Browser.
+Any queries you run in Neo4j Browser populate your results below the command line.
+Query results are rendered either as a visual graph, a table format, an ascii-table result, and in JSON.
+You can switch between those with the icons on the left side of the result frame.
+
+=== Graph
+
+The graph visualization functionality is designed to display a node-graph representation of the underlying data stored in the database in response to a given Cypher query, showing circles for nodes and lines for relationships.
+It provides additional value for data analysts and business users, as well as developers.
+Anyone reviewing the graph can see the connections, determine areas of interest, or quickly assess the current state and organization of the data.
+
+// TODO: take a screenshot of a graph result
+
+=== Table
+// TODO: take a screenshot of a tabular result
+
+Even if you feel that the relationship is not hard to find in the tabular format, imagine if we were looking at a graph that contained these individuals' entire filmography careers, as well as hundreds of other actors, directors, and film crew members.
+The connections could easily be lost in a non-visual presentation.
+
+=== Text
+// TODO: take a screenshot of a text result
+
+
+=== Code
+// TODO: take a screenshot of a code result
+
+[[styling]]
+== Styling Neo4j Browser Visualization
+
+// Graph visualization, styling and limited interactivity. Reference to Bloom for more.
+//
+// https://neo4j.com/developer/neo4j-browser/#browser-styling
+
+Neo4j Browser also provides some functionality for styling with color and size based on node labels and relationship types.
+Alternatively, you can customize your own styles by importing a GRASS (graph-stylesheet) file for Neo4j Browser to reference.
+If you cannot see the whole graph or the results display too close together, you can adjust by moving the visual view and dragging nodes to rearrange them.
+To move the view to see more parts of the graph, just click an empty spot within the graph pane and drag it.
+To rearrange nodes, click and drag them around.
+The nodes already have sensible captions assigned by the browser, which auto-selects a property from the property list to use as a caption.
+You can see all the properties of that element if you click any node or relationship.
+Properties appear below the visualization.
+Larger property sets might be collapsed into a subset, but there is a little triangle on the right to unfold them.
+For example, if you click one of the Movie nodes in the MovieGraph (`:play movie graph`), you can see its properties below the graph visual.
+The same applies for `Actor` nodes or the `ACTED_IN` relationships.
+If you click any label or relationship above the graph visualization, you can choose its styling in the area below the graph.
+Colors, sizes, and captions are selectable from there.
+To see this for yourself, you can click the `Person` label above the graph and change the color, size, and captions of all nodes labeled with `Person`.
+The first image below shows changes to nodes labeled Person.
+The second image shows changes to relationships labeled `ACTED_IN`.
+// https://dist.neo4j.com/wp-content/uploads/style_person_node.png
+// https://dist.neo4j.com/wp-content/uploads/style_actedin_relationship.png
 
 [[query-parameters]]
 == Neo4j query parameters
 
+//https://dzone.com/articles/neo4jcypher-getting-hang-query - a blog post by Mark Needham
+
+Neo4j Browser supports querying based on parameters.
+It allows the Cypher query planner to re-use your queries instead of having to parse and build new execution plans.
+
+Parameters can be used for:
+
+* literals and expressions
+* node and relationship ids
+
+Parameters cannot be used for the following constructs, as these form part of the query structure that is compiled into a query plan:
+
+* property keys
+* relationship types
+* labels
+
+Parameters may consist of letters and numbers, and any combination of these, but cannot start with a number or a currency symbol.
+
+[TIP]
+====
+For more details on the Cypher parameters, see link:https://neo4j.com/docs/cypher-manual/4.2/syntax/parameters/[Cypher Manual v.4.2 - Parameters].
+====
+
+[[set-params]]
+=== Set query parameters
+
+You can set a parameter to be sent with your queries by using the `:param` command.
+Using parameters, rather than hard coding values, allows for reuse of the query plan cache.
+
+The `:param name => 'Example'` command defines a parameter named `name`, which will be sent along with your queries. +
+The right hand side of `=>` is sent to the server and evaluated as Cypher with an implicit `RETURN` in front.
+This gives better type safety since some types (especially numbers) in JavaScript are hard to match with Neo4j:s type system.
+To see the list of all currently set query parameters and their values, use the `:params` command.
+
+//To see the relevant browser commands `:help param` and `:help params`.
+
+[NOTE]
+====
+If you are using a multi-database DBMS, parameters cannot be declared when using the `system` database.
+Switch to a different database and declare, then switch back to `system` database and use them.
+====
+
+.Set a parameter as an integer
+====
+`:param x => 1`
+====
+
+.Set a parameter as a float
+====
+`:param x => 1.0`
+====
+
+.Set a parameter as a string
+====
+`:param x => "Example"`
+====
+
+.Set a parameter as an object
+====
+[source, cypher]
+----
+:param obj => ({props: {name: "Andy", position: "Developer"}})
+
+$obj = {"props": {"name": "Andy", "position": "Developer"}}
+----
+
+[source, cypher]
+----
+:param obj2 => [1, 2, 3, 4]
+
+$obj2 = [1, 2, 3, 4]
+----
+
+[NOTE]
+For a map like {x: 1, y: 2} it needs to be wrapped in parentheses ({x: 1, y: 2}).
+
+====
+
+.Cypher query example with a parameter
+====
+[source, cypher]
+----
+:param name => 'Example'
+
+MATCH (n:Person)
+WHERE n.name = $name
+RETURN n
+----
+
+[NOTE]
+To be able to run this example, in the Settings sidebar, enable the editor to work in "multi-statement" mode.
+Alternatively, you can run the `:param` command separately from the `MATCH` query.
+Note that when you run multiple statements you do not see the output as you are used to.
+In Neo4j Browser, the current state of multi-statement is to set up your environment with multiple statements, so that you can after that execute queries and examine the results, one by one.
+
+====
+
+.Save the result from a cypher query to a parameter
+====
+[source, cypher]
+----
+:param x => { CYPHER STATEMENT }
+----
+
+[source, cypher]
+----
+:param x => { RETURN 1 AS foo }
+
+$x = [{foo: 1}]
+----
+
+[source, cypher]
+----
+:param x => { UNWIND [1, 2, 3] AS nbr RETURN nbr }
+
+$x = [{"nbr": 1}, {"nbr": 2}, {"nbr": 3}]}
+----
+
+[source, cypher]
+----
+:param x => { MATCH (n) WHERE n.name = "Example" RETURN n }
+
+$x = [{"n": {"identity": 4, "labels": [], "properties": {"name": "Example"}}}]
+----
+====
+
+.Pick out individual values from your result using destructuring
+====
+[source, cypher]
+----
+:param [{foo}] => { RETURN 1 as foo }
+
+$foo = 1
+----
+====
+
+.Rename destructured parameters
+====
+[source, cypher]
+----
+:param [{foo: bar}] => { RETURN 1 as foo }
+
+$bar = 1
+----
+
+[source, cypher]
+----
+:param [{nbr: x}] => { UNWIND [2, 3, 1] AS nbr RETURN nbr ORDER BY nbr ASCENDING }
+
+$x = 1
+----
+
+[source, cypher]
+----
+:param [nbr, nbr, nbr] => { UNWIND [2, 3, 1] AS nbr RETURN nbr ORDER BY nbr ASC }
+
+$x = 3
+----
+
+[source, cypher]
+----
+:param [{nbr: x}, nbr, nbr] => { UNWIND [2, 3, 1] AS nbr RETURN nbr ORDER BY nbr ASC }
+
+$x = 1
+$nbr = 3
+----
+
+[source, cypher]
+----
+:param [{nbr: x}, {nbr: y}, {nbr: z}] => { UNWIND [2, 3, 1] AS nbr RETURN nbr ORDER BY nbr ASC }
+
+$x = 1
+$y = 2
+$z = 3
+----
+
+[source, cypher]
+----
+:param [{n: example}] => { MATCH (n) WHERE n.name = "Example" RETURN n LIMIT 1}
+
+$example = {"identity": 4, "labels": [], "properties": {"name": "Example"}}}
+----
+====
+
+[[clear-params]]
+=== Clear parameters
+
+You can clear all currently set parameters from Neo4j Browser by running:
+
+[source, cypher]
+----
+:params {}
+----
+
+=== Duration for the query parameters
+
 
 [[url-parameters]]
 == Browser URL parameters
+
+// Specific query parameters.
+// Accepted parameters (e.g. connectURL)
