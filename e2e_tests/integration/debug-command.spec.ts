@@ -20,6 +20,8 @@
 
 /* global Cypress, cy, before */
 
+import { isAura } from '../support/utils'
+
 describe(':debug command', () => {
   before(function() {
     cy.visit(Cypress.config('url'))
@@ -47,18 +49,21 @@ describe(':debug command', () => {
     cy.connect('neo4j', password)
   })
 
-  it('can `:debug` command when connected', () => {
-    cy.executeCommand(':clear')
-    const query = ':debug'
-    cy.executeCommand(query)
+  // disable these tests for Aura since with the remote connection :debug sometimes doesn't get the real results right away
+  if (!isAura()) {
+    it('can `:debug` command when connected', () => {
+      cy.executeCommand(':clear')
+      const query = ':debug'
+      cy.executeCommand(query)
 
-    const frame = cy.getFrames()
+      const frame = cy.getFrames()
 
-    frame
-      .should('have.length', 1)
-      .should('contain', 'serverConfig')
-      .should('contain', '"proceduresReadable": true')
-      .should('contain', '"serverConfigReadable": true')
-      .should('contain', '"dbms.security.auth_enabled": true')
-  })
+      frame
+        .should('have.length', 1)
+        .should('contain', 'serverConfig')
+        .should('contain', '"proceduresReadable": true')
+        .should('contain', '"serverConfigReadable": true')
+        .should('contain', '"dbms.security.auth_enabled": true')
+    })
+  }
 })

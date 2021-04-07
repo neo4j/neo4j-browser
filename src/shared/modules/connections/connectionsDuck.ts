@@ -34,6 +34,8 @@ import {
 } from 'shared/modules/settings/settingsDuck'
 import { inWebEnv, USER_CLEAR, APP_START } from 'shared/modules/app/appDuck'
 import { GlobalState } from 'shared/globalState'
+import { isCloudHost } from 'shared/services/utils'
+import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
 
 export const NAME = 'connections'
 export const SET_ACTIVE = 'connections/SET_ACTIVE'
@@ -149,6 +151,16 @@ export function getActiveConnectionData(state: GlobalState): Connection | null {
 export function getAuthEnabled(state: GlobalState): boolean {
   const data = getConnectionData(state, state[NAME].activeConnection)
   return data?.authEnabled ?? false
+}
+
+export function getConnectedHost(state: GlobalState): string | null {
+  const data = getConnectionData(state, state[NAME].activeConnection)
+  return data?.host ?? null
+}
+
+export function isConnectedAuraHost(state: GlobalState): boolean {
+  const host = getConnectedHost(state)
+  return host ? isCloudHost(host, NEO4J_CLOUD_DOMAINS) : false
 }
 
 export function getConnectionData(

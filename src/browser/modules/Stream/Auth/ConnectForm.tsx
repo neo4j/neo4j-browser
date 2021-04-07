@@ -105,21 +105,21 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
   const hasSecureSchemes = ['neo4j+s', 'bolt+s'].every(scheme =>
     props.allowedSchemes.includes(scheme)
   )
-  const hoverText = `Pick neo4j${
-    hasSecureSchemes ? '+s' : ''
-  }:// for a routed connection (Aura, Cluster), bolt${
-    hasSecureSchemes ? '+s' : ''
-  }:// for a direct connection to a single instance.`
-
   const schemeRestriction = props.allowedSchemes.length > 0
+  const schemeMultiple = props.allowedSchemes.length > 1
+
+  const hoverText = schemeMultiple
+    ? `Pick neo4j${
+        hasSecureSchemes ? '+s' : ''
+      }:// for a routed connection (Aura, Cluster), bolt${
+        hasSecureSchemes ? '+s' : ''
+      }:// for a direct connection to a single instance.`
+    : ''
 
   return (
     <StyledConnectionForm onSubmit={onConnectClick}>
       <StyledConnectionFormEntry>
-        <StyledConnectionLabel
-          htmlFor="url-input"
-          title={schemeRestriction ? hoverText : ''}
-        >
+        <StyledConnectionLabel htmlFor="url-input" title={hoverText}>
           Connect URL
         </StyledConnectionLabel>
         {schemeRestriction ? (

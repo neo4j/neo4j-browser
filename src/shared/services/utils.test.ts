@@ -644,6 +644,37 @@ describe('toKeyString', () => {
       expect(utils.toKeyString(str.str)).toEqual(str.expect)
     })
   })
+
+  describe('isCloudHost', () => {
+    it('detects cloud hosts properly', () => {
+      expect(utils.isCloudHost('neo4j+s://foo.neo4j.io', ['neo4j.io'])).toBe(
+        true
+      )
+    })
+
+    it('detects cloud hosts properly when they specify a port', () => {
+      expect(
+        utils.isCloudHost('neo4j+s://foo.neo4j.io:7687', ['neo4j.io'])
+      ).toBe(true)
+    })
+
+    it('detects cloud hosts properly even with query arguments', () => {
+      expect(
+        utils.isCloudHost('neo4j+s://foo.neo4j.io?foo=true', ['neo4j.io'])
+      ).toBe(true)
+    })
+
+    it('does not detect cloud hosts for localhost', () => {
+      expect(utils.isCloudHost('neo4j+s://localhost', ['neo4j.io'])).toBe(false)
+    })
+
+    it('does not detect cloud hosts for hosts that start but not end with the cloud domain', () => {
+      expect(utils.isCloudHost('neo4j+s://neo4j.io.foo', ['neo4j.io'])).toBe(
+        false
+      )
+    })
+  })
+
   describe('detectRuntimeEnv', () => {
     const tests: [any, any, any][] = [
       [
