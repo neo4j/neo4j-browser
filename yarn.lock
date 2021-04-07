@@ -3331,7 +3331,7 @@ babel-plugin-module-resolver@^2.4.0:
     glob "^7.1.1"
     resolve "^1.2.0"
 
-"babel-plugin-styled-components@>= 1", babel-plugin-styled-components@^1.8.0:
+"babel-plugin-styled-components@>= 1":
   version "1.11.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-plugin-styled-components/-/babel-plugin-styled-components-1.11.1.tgz#5296a9e557d736c3186be079fff27c6665d63d76"
   integrity sha1-Upap5VfXNsMYa+B5//J8ZmXWPXY=
@@ -12856,6 +12856,11 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
+
+typescript-plugin-styled-components@^1.5.0:
+  version "1.5.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/typescript-plugin-styled-components/-/typescript-plugin-styled-components-1.5.0.tgz#39d345102a236e304a4e9a37c7b1c8a752a46072"
+  integrity sha1-OdNFECojbjBKTpo3x7HIp1KkYHI=
 
 typescript@^3.2.1, typescript@^3.9.5:
   version "3.9.7"
