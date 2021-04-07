@@ -11,18 +11,55 @@ There are several different scenarios of how to run Neo4j Browser:
 [[bundled-neo4j]]
 == Neo4j Browser bundled with Neo4j
 
-Neo4j Browser is bundled with Neo4j. With the default configuration if neo4j is started with the command:
+Neo4j Browser is bundled with Neo4j database, including both Neo4j Server and Neo4j Desktop (see Neo4j Desktop for more information).
 
+The following web browsers are supported:
+
+* Chrome (Latest version)
+
+* Firefox (Latest version)
+
+* Edge (Latest version)
+
+[NOTE]
+====
+Internet Explorer web browser is not supported.
+====
+
+To access Neo4j Browser with the default configuration, start Neo4j by running the following command from your _<neo4j-home>_ directory:
+
+[source, shell]
+----
 `bin/neo4j start`
+----
 
-it will also host a web server with Neo4j Browser at _http://localhost:7474/browser_.
+Neo4j starts a web server with Neo4j Browser at _http://localhost:7474/browser_.
+
+// TODO:
+// Change the section into a step by step deployment.
 
 [[bundled-desktop]]
 == Neo4j Browser bundled with Neo4j Desktop
 
 Neo4j Browser can also be run via Neo4j Desktop as an application.
 
-Refer to Desktop graph app doc
+// Refer to Desktop graph app doc - https://install.graphapp.io/, https://neo4j.com/developer/neo4j-desktop/
+// Change the section into a step by step deployment.
+
+Download Neo4j desktop application.
+Using the provided instructions (shown when downloading), follow Step 1 to install and start the Neo4j Desktop application.
+Alternatively, after downloading the zipped server-only package, instructions can also be found in the readme (bin/neo4j start) after unzipping the downloaded file.
+Step 2 on the download page instructions shows you how to set up your first project and database and how to open the Neo4j Browser.
+Please remember the password.
+If you forget it, you have to remove the credentials file in data/dbms/authorization.
+
+Just to review, so far, we have shown two ways to interact with Neo4j.
+
+. From Neo4j Desktop, you can open Neo4j Browser.
+This is done by clicking <your project name> in the Desktop screen, then click Manage on your database.
+. You can also access this from a regular browser window by typing http://localhost:7474 and signing in with Username: `neo4j`, Password: `<your database password (set up in Desktop)>`. +
+Now that we can access the graph database, we can start working with data using our query language, Cypher.
+For an introduction to Browser’s features and navigation as Neo4j’s user interface, you can type `:play intro` into the command-line and press Enter or click the play button ().
 
 
 [[web-application]]
@@ -34,23 +71,26 @@ Neo4j Browser is available as a web application at https://browser.graphapp.io/.
 [[sandbox]]
 == Neo4j Browser - Sandbox
 
-If you have a Neo4j sandbox (https://neo4j.com/sandbox/), Neo4j Browser can be accessed as a web application within the user interface. The Neo4j Browser web application will connect to your Neo4j sandbox without having to enter any connection URI.
+If you have a Neo4j sandbox (https://neo4j.com/sandbox/), Neo4j Browser can be accessed as a web application within the user interface.
+The Neo4j Browser web application will connect to your Neo4j sandbox without having to enter any connection URI.
 
 [[aura]]
 == Neo4j Browser - Aura
 
-If you have a Neo4j Aura console (https://console.neo4j.io), Neo4j Browser can be accessed as a web application within the user interface. The Neo4j Browser web application will connect to your Neo4j instance without having to enter any connection URL.
+If you have a Neo4j Aura console (https://console.neo4j.io), Neo4j Browser can be accessed as a web application within the user interface.
+The Neo4j Browser web application will connect to your Neo4j instance without having to enter any connection URL.
 
 Open with (blue button at the right of the instance) and choose Neo4j Browser.
 
 
-https://dist.neo4j.com/wp-content/uploads/1desktopConnect_cloud_confirm_running.jpg
+// https://dist.neo4j.com/wp-content/uploads/1desktopConnect_cloud_confirm_running.jpg
 
 [[web-server]]
 == Neo4j Browser - Dedicated web server
 
 
-It is possible to host a dedicated web server to serve Neo4j Browser as a web application. See the github page for source code, https://github.com/neo4j/neo4j-browser.
-(Is it available as an npm install package?)
+It is possible to host a dedicated web server to serve Neo4j Browser as a web application.
+See the github page for source code, https://github.com/neo4j/neo4j-browser.
+//(Is it available as an npm install package?)
 
-https://neo4j.com/docs/bloom-user-guide/current/bloom-installation/#_bloom_web_app_hosted_in_a_separate_web_server
+//https://neo4j.com/docs/bloom-user-guide/current/bloom-installation/#_bloom_web_app_hosted_in_a_separate_web_server
