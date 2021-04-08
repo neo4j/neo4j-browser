@@ -46,7 +46,7 @@ import {
 import { AsciiView, AsciiStatusbar } from './AsciiView'
 import { CodeView, CodeStatusbar } from './CodeView'
 import { ErrorsViewBus as ErrorsView, ErrorsStatusbar } from './ErrorsView'
-import { WarningsView, WarningsStatusbar } from './WarningsView'
+import { WarningsView } from './WarningsView'
 import { PlanView, PlanStatusbar } from './PlanView'
 import { VisualizationConnectedBus } from './VisualizationView'
 import Render from 'browser-components/Render'
@@ -114,8 +114,9 @@ export type CypherFrameState = {
   errors?: unknown
   _asciiMaxColWidth?: number
   _asciiSetColWidth?: string
-  _planExpand?: 'EXPAND' | 'COLLAPSE'
+  _planExpand: PlanExpand
 }
+export type PlanExpand = 'EXPAND' | 'COLLAPSE'
 
 export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
   visElement: null | {
@@ -128,7 +129,8 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
     fullscreen: false,
     collapse: false,
     frameHeight: 472,
-    hasVis: false
+    hasVis: false,
+    _planExpand: 'EXPAND'
   }
 
   changeView(view: viewTypes.FrameView): void {
@@ -379,57 +381,41 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
           <RelatableView updated={this.props.request.updated} result={result} />
         </Display>
         <Display if={this.state.openView === viewTypes.CODE} lazy>
-          <CodeView
-            {...this.state}
-            result={result}
-            request={request}
-            query={query}
-            updated={this.props.request.updated}
-            setParentState={this.setState.bind(this)}
-          />
+          <CodeView result={result} request={request} query={query} />
         </Display>
         <Display if={this.state.openView === viewTypes.ERRORS} lazy>
-          <ErrorsView
-            {...this.state}
-            result={result}
-            updated={this.props.request.updated}
-            setParentState={this.setState.bind(this)}
-          />
+          <ErrorsView result={result} updated={this.props.request.updated} />
         </Display>
         <Display if={this.state.openView === viewTypes.WARNINGS} lazy>
-          <WarningsView
-            {...this.state}
-            result={result}
-            updated={this.props.request.updated}
-            setParentState={this.setState.bind(this)}
-          />
+          <WarningsView result={result} updated={this.props.request.updated} />
         </Display>
         <Display if={this.state.openView === viewTypes.PLAN} lazy>
           <PlanView
-            {...this.state}
-            setParentState={this.setState.bind(this)}
+            _planExpand={this.state._planExpand}
             result={result}
             updated={this.props.request.updated}
             assignVisElement={(svgElement: any, graphElement: any) => {
               this.visElement = { svgElement, graphElement, type: 'plan' }
               this.setState({ hasVis: true })
             }}
+            setPlanExpand={(_planExpand: PlanExpand) =>
+              this.setState({ _planExpand })
+            }
           />
         </Display>
         <Display if={this.state.openView === viewTypes.VISUALIZATION} lazy>
           <VisualizationConnectedBus
-            {...this.state}
-            result={result}
-            updated={this.props.request.updated}
-            setParentState={this.setState.bind(this)}
             frameHeight={this.state.frameHeight}
+            fullscreen={this.state.fullscreen}
             assignVisElement={(svgElement: any, graphElement: any) => {
               this.visElement = { svgElement, graphElement, type: 'graph' }
               this.setState({ hasVis: true })
             }}
-            initialNodeDisplay={this.props.initialNodeDisplay}
             autoComplete={this.props.autoComplete}
+            initialNodeDisplay={this.props.initialNodeDisplay}
             maxNeighbours={this.props.maxNeighbours}
+            result={result}
+            updated={this.props.request.updated}
           />
         </Display>
       </StyledFrameBody>
@@ -458,35 +444,17 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
           />
         </Display>
         <Display if={this.state.openView === viewTypes.CODE} lazy>
-          <CodeStatusbar
-            {...this.state}
-            result={result}
-            updated={this.props.request.updated}
-            setParentState={this.setState.bind(this)}
-          />
+          <CodeStatusbar result={result} />
         </Display>
         <Display if={this.state.openView === viewTypes.ERRORS} lazy>
-          <ErrorsStatusbar
-            {...this.state}
-            result={result}
-            updated={this.props.request.updated}
-            setParentState={this.setState.bind(this)}
-          />
-        </Display>
-        <Display if={this.state.openView === viewTypes.WARNINGS} lazy>
-          <WarningsStatusbar
-            {...this.state}
-            result={result}
-            updated={this.props.request.updated}
-            setParentState={this.setState.bind(this)}
-          />
+          <ErrorsStatusbar result={result} />
         </Display>
         <Display if={this.state.openView === viewTypes.PLAN} lazy>
           <PlanStatusbar
-            {...this.state}
             result={result}
-            updated={this.props.request.updated}
-            setParentState={this.setState.bind(this)}
+            setPlanExpand={(_planExpand: PlanExpand) =>
+              this.setState({ _planExpand })
+            }
           />
         </Display>
       </StyledStatsBarContainer>

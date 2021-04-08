@@ -20,7 +20,6 @@
 
 import React, { Component } from 'react'
 import { PlanSVG } from './PlanView.styled'
-import { dim } from 'browser-styles/constants'
 import { deepEquals, shallowEquals } from 'services/utils'
 import bolt from 'services/bolt/bolt'
 import { FrameButton } from 'browser-components/buttons'
@@ -33,10 +32,18 @@ import {
 import { StyledFrameTitlebarButtonSection } from 'browser/modules/Frame/styled'
 import Ellipsis from 'browser-components/Ellipsis'
 import queryPlan from '../../D3Visualization/lib/visualization/components/queryPlan'
+import { PlanExpand } from './CypherFrame'
 
-type PlanViewState = any
+type PlanViewState = { extractedPlan: any }
+type PlanViewProps = {
+  _planExpand: PlanExpand
+  setPlanExpand: (p: PlanExpand) => void
+  result: any
+  updated: any
+  assignVisElement: (a: any, b: any) => void
+}
 
-export class PlanView extends Component<any, PlanViewState> {
+export class PlanView extends Component<PlanViewProps, PlanViewState> {
   el: any
   plan: any
   constructor(props: any) {
@@ -48,7 +55,7 @@ export class PlanView extends Component<any, PlanViewState> {
 
   componentDidMount() {
     this.extractPlan(this.props.result)
-      .then(() => this.props.setParentState({ _planExpand: 'EXPAND' }))
+      .then(() => this.props.setPlanExpand('EXPAND'))
       .catch(() => {})
   }
 
@@ -70,7 +77,6 @@ export class PlanView extends Component<any, PlanViewState> {
   shouldComponentUpdate(props: any, state: PlanViewState) {
     if (this.props.result === undefined) return true
     return (
-      props.fullscreen !== this.props.fullscreen ||
       !deepEquals(props.result.summary, this.props.result.summary) ||
       !shallowEquals(state, this.state) ||
       props._planExpand !== this.props._planExpand
@@ -79,10 +85,9 @@ export class PlanView extends Component<any, PlanViewState> {
 
   extractPlan(result: any) {
     if (result === undefined) return Promise.reject(new Error('No result'))
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       const extractedPlan = bolt.extractPlan(result)
-      if (extractedPlan)
-        return this.setState({ extractedPlan }, resolve() as any)
+      if (extractedPlan) return this.setState({ extractedPlan }, resolve)
       resolve()
     })
   }
@@ -136,25 +141,21 @@ export class PlanView extends Component<any, PlanViewState> {
 
   render() {
     if (!this.state.extractedPlan) return null
-    return (
-      <PlanSVG
-        data-testid="planSvg"
-        style={
-          this.props.fullscreen
-            ? // @ts-expect-error ts-migrate(2769) FIXME: Object literal may only specify known properties, ... Remove this comment to see the full error message
-              { 'padding-bottom': dim.frameStatusbarHeight + 'px' }
-            : {}
-        }
-        ref={this.planInit.bind(this)}
-      />
-    )
+    return <PlanSVG data-testid="planSvg" ref={this.planInit.bind(this)} />
   }
 }
 
-type PlanStatusbarState = any
+type PlanStatusbarState = { extractedPlan: any }
+type PlanStatusbarProps = {
+  result: any
+  setPlanExpand: (p: PlanExpand) => void
+}
 
-export class PlanStatusbar extends Component<any, PlanStatusbarState> {
-  state = {
+export class PlanStatusbar extends Component<
+  PlanStatusbarProps,
+  PlanStatusbarState
+> {
+  state: PlanStatusbarState = {
     extractedPlan: null
   }
 
@@ -181,7 +182,7 @@ export class PlanStatusbar extends Component<any, PlanStatusbarState> {
   }
 
   render() {
-    const plan: any = this.state.extractedPlan
+    const plan = this.state.extractedPlan
     if (!plan) return null
     const { result = {} } = this.props
     return (
@@ -203,17 +204,13 @@ export class PlanStatusbar extends Component<any, PlanStatusbarState> {
           <StyledFrameTitlebarButtonSection>
             <FrameButton
               data-testid="planCollapseButton"
-              onClick={() =>
-                this.props.setParentState({ _planExpand: 'COLLAPSE' })
-              }
+              onClick={() => this.props.setPlanExpand('COLLAPSE')}
             >
               <DoubleUpIcon />
             </FrameButton>
             <FrameButton
               data-testid="planExpandButton"
-              onClick={() =>
-                this.props.setParentState({ _planExpand: 'EXPAND' })
-              }
+              onClick={() => this.props.setPlanExpand('EXPAND')}
             >
               <DoubleDownIcon />
             </FrameButton>

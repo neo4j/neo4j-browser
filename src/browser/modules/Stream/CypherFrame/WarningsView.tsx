@@ -88,13 +88,3 @@ export class WarningsView extends Component<any> {
     return <StyledHelpFrame>{notificationsList}</StyledHelpFrame>
   }
 }
-
-export class WarningsStatusbar extends Component<any> {
-  shouldComponentUpdate() {
-    return false
-  }
-
-  render() {
-    return null
-  }
-}

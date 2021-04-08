@@ -32,15 +32,42 @@ import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
 import { resultHasTruncatedFields } from 'browser/modules/Stream/CypherFrame/helpers'
+import { Bus } from 'suber'
 
-type VisualizationState = any
+type VisualizationState = {
+  updated: number
+  nodes: any[]
+  relationships: any[]
+  hasTruncatedFields: boolean
+}
 
-export class Visualization extends Component<any, VisualizationState> {
+type VisualizationProps = {
+  result: any
+  graphStyleData: any
+  frameHeight: any
+  updated: number
+  autoComplete: boolean
+  maxNeighbours: number
+  bus: Bus
+  fullscreen: boolean
+  maxFieldItems: number
+  initialNodeDisplay: number
+  updateStyle: (style: any) => void
+  assignVisElement: (v: any) => void
+}
+
+export class Visualization extends Component<
+  VisualizationProps,
+  VisualizationState
+> {
   autoCompleteCallback: any
   graph: any
-  state: any = {
+
+  state: VisualizationState = {
     nodes: [],
-    relationships: []
+    relationships: [],
+    updated: 0,
+    hasTruncatedFields: false
   }
 
   componentDidMount() {

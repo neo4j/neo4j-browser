@@ -37,11 +37,20 @@ import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
 import { connect } from 'react-redux'
 import { map, take } from 'lodash-es'
 import { GlobalState } from 'shared/globalState'
+import { BrowserRequestResult } from 'shared/modules/requests/requestsDuck'
 
-type ExpandableContentState = any
+type ExpandableContentState = { expanded: boolean }
+type ExpandableContentProps = {
+  title: string
+  content: JSX.Element
+  summary: string
+}
+class ExpandableContent extends Component<
+  ExpandableContentProps,
+  ExpandableContentState
+> {
+  state: ExpandableContentState = { expanded: false }
 
-class ExpandableContent extends Component<any, ExpandableContentState> {
-  state: any = {}
   render() {
     return (
       <StyledAlteringTr>
@@ -73,11 +82,20 @@ const fieldLimiterFactory = (maxFieldItems: any) => (key: any, val: any) => {
   })
 }
 
-export class CodeViewComponent extends Component<any> {
-  shouldComponentUpdate(props: any) {
+type CodeViewOwnProps = {
+  result: BrowserRequestResult
+  request: any //we know it's BrowserRequest needs refactor
+  query: string
+}
+type CodeViewProps = CodeViewOwnProps & {
+  maxFieldItems: number
+}
+export class CodeViewComponent extends Component<CodeViewProps> {
+  shouldComponentUpdate(props: CodeViewProps): boolean {
     return !this.props.result || !deepEquals(props.result, this.props.result)
   }
-  render() {
+
+  render(): JSX.Element | null {
     const { request = {}, query, maxFieldItems } = this.props
     if (request.status !== 'success') return null
     const resultJson = JSON.stringify(
@@ -123,9 +141,11 @@ export class CodeViewComponent extends Component<any> {
   }
 }
 
-export const CodeView = connect((state: GlobalState) => ({
-  maxFieldItems: getMaxFieldItems(state)
-}))(CodeViewComponent)
+export const CodeView: React.ComponentType<CodeViewOwnProps> = connect(
+  (state: GlobalState) => ({
+    maxFieldItems: getMaxFieldItems(state)
+  })
+)(CodeViewComponent)
 
 export const CodeStatusbarComponent = RelatableStatusbarComponent
 export const CodeStatusbar = RelatableStatusbar

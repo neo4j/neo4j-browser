@@ -47,7 +47,10 @@ import { stringModifier } from 'services/bolt/cypherTypesFormatting'
  * @param     {Number}    maxFieldItems
  * @return    {boolean}
  */
-export const resultHasTruncatedFields = (result: any, maxFieldItems: any) => {
+export const resultHasTruncatedFields = (
+  result: any,
+  maxFieldItems: any
+): boolean => {
   if (!maxFieldItems || !result) {
     return false
   }
