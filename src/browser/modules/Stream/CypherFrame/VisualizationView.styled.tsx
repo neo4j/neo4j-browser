@@ -19,16 +19,13 @@
  */
 
 import styled from 'styled-components'
-import { dim } from 'browser-styles/constants'
+// TODO BOTTEN SYNS EJ I FUllskärm
 
-export const StyledVisContainer = styled.div<{ fullscreen: boolean }>`
+//${props => (props.fullscreen ? '100vh' : '100%')};
+export const StyledVisContainer = styled.div<{ height: number }>`
   width: 100%;
   overflow: hidden;
-  ${props => (props.fullscreen ? 'padding-bottom: 39px' : null)};
-  height: ${props =>
-    props.fullscreen
-      ? '100vh'
-      : dim.frameBodyHeight - dim.frameTitlebarHeight * 2 + 'px'};
+  height: ${props => props.height}px;
   > svg {
     width: 100%;
   }

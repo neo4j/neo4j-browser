@@ -44,7 +44,7 @@ type VisualizationState = {
 type VisualizationProps = {
   result: any
   graphStyleData: any
-  frameHeight: any
+  frameHeight: number
   updated: number
   autoComplete: boolean
   maxNeighbours: number
@@ -78,6 +78,7 @@ export class Visualization extends Component<
   }
 
   shouldComponentUpdate(props: any, state: VisualizationState) {
+    console.log('should?', this.props.frameHeight)
     return (
       this.props.updated !== props.updated ||
       !deepEquals(props.graphStyleData, this.props.graphStyleData) ||
@@ -212,8 +213,9 @@ export class Visualization extends Component<
   render() {
     if (!this.state.nodes.length) return null
 
+    console.log(this.props.frameHeight)
     return (
-      <StyledVisContainer fullscreen={this.props.fullscreen}>
+      <StyledVisContainer height={this.props.frameHeight}>
         <ExplorerComponent
           maxNeighbours={this.props.maxNeighbours}
           hasTruncatedFields={this.state.hasTruncatedFields}

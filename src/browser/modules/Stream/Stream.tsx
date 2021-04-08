@@ -176,13 +176,28 @@ function FrameContainer(props: FrameContainerProps) {
       setExportItems(a)
     }
   }
+  const CYPHERFRAMEBOTTOMPADDING = 40
   const FrameComponent = getFrameComponent(props.frameData)
+  const frameContentElementRef = useRef<HTMLDivElement>(null)
+  const [lastHeight, setLastHeight] = useState(470)
+
+  useEffect(() => {
+    if (!frameContentElementRef.current?.clientHeight) return
+    const currHeight = frameContentElementRef.current.clientHeight
+    if (currHeight < 300) return // No need to report a transition
+
+    console.log('HERE', lastHeight, currHeight)
+    if (lastHeight !== currHeight) {
+      setLastHeight(currHeight)
+    }
+  }, [lastHeight, isFullscreen])
 
   return (
     <StyledFrame
       className={isFullscreen ? 'is-fullscreen' : ''}
       data-testid="frame"
       fullscreen={isFullscreen}
+      ref={frameContentElementRef}
     >
       <FrameTitlebar
         frame={frame}
@@ -201,7 +216,10 @@ function FrameContainer(props: FrameContainerProps) {
         }
       />
       <ContentContainer isCollapsed={isCollapsed} isFullscreen={isFullscreen}>
-        <FrameComponent {...frameProps} />
+        <FrameComponent
+          {...frameProps}
+          frameHeight={lastHeight - CYPHERFRAMEBOTTOMPADDING}
+        />
       </ContentContainer>
     </StyledFrame>
   )
@@ -252,12 +270,14 @@ function ExportButton({
     </DropdownButton>
   ) : null
 }
-
 const ContentContainer = styled.div<{
   isCollapsed: boolean
   isFullscreen: boolean
 }>`
   overflow: auto;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
   max-height: ${props => {
     if (props.isCollapsed) {
       return 0

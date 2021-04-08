@@ -103,12 +103,12 @@ type CypherFrameProps = CypherFrameBaseProps & {
   request: BrowserRequest
   onRecentViewChanged: (view: viewTypes.FrameView) => void
   setExportItems: (exportItems: ExportItem[]) => void
+  frameHeight: number
 }
 
 export type CypherFrameState = {
   openView?: viewTypes.FrameView
   fullscreen: boolean
-  frameHeight: number
   hasVis: boolean
   errors?: unknown
   _asciiMaxColWidth?: number
@@ -126,7 +126,6 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
   state: CypherFrameState = {
     openView: undefined,
     fullscreen: false,
-    frameHeight: 472,
     hasVis: false,
     _planExpand: 'EXPAND'
   }
@@ -138,23 +137,15 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
     }
   }
 
-  onResize = (fullscreen: boolean, frameHeight: number): void => {
-    if (frameHeight) {
-      this.setState({ fullscreen, frameHeight })
-    } else {
-      this.setState({ fullscreen })
-    }
-  }
-
   shouldComponentUpdate(
     props: CypherFrameProps,
     state: CypherFrameState
   ): boolean {
     return (
       this.props.request.updated !== props.request.updated ||
+      this.props.frameHeight !== props.frameHeight ||
       this.state.openView !== state.openView ||
       this.state.fullscreen !== state.fullscreen ||
-      this.state.frameHeight !== state.frameHeight ||
       this.state._asciiMaxColWidth !== state._asciiMaxColWidth ||
       this.state._asciiSetColWidth !== state._asciiSetColWidth ||
       this.state._planExpand !== state._planExpand ||
@@ -398,7 +389,7 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
         </Display>
         <Display if={this.state.openView === viewTypes.VISUALIZATION} lazy>
           <VisualizationConnectedBus
-            frameHeight={this.state.frameHeight}
+            frameHeight={this.props.frameHeight}
             fullscreen={this.state.fullscreen}
             assignVisElement={(svgElement: any, graphElement: any) => {
               this.visElement = { svgElement, graphElement, type: 'graph' }
@@ -481,7 +472,6 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
         sidebar={requestStatus !== 'error' ? this.sidebar : undefined}
         contents={frameContents}
         statusbar={statusBar}
-        onResize={this.onResize}
         removePadding
       />
     )

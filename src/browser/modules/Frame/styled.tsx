@@ -54,10 +54,10 @@ export const StyledFrameBody = styled.div<{
   overflow: auto;
   min-height: ${dim.frameBodyHeight / 2}px;
   max-height: 100%;
+  display: flex;
   flex-direction: row;
   width: 100%;
   padding: 30px;
-  display: flex;
 
   ${props =>
     props.hasSlides
@@ -93,15 +93,13 @@ export const StyledFrameAside = styled.div`
 
 export const StyledFrameContents = styled.div`
   font-size: 14px;
-  display: flex;
-  flex-direction: row;
   overflow: auto;
-  width: 100%;
   min-height: ${dim.frameBodyHeight / 2}px;
   max-height: 100%;
-  flex: auto;
+  flex: 1 1 auto;
   display: flex;
   width: 100%;
+  height: 100%;
 
   .has-carousel & {
     overflow: visible;

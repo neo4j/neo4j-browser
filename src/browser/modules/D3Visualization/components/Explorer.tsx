@@ -231,7 +231,6 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
         />
         <InspectorComponent
           hasTruncatedFields={this.props.hasTruncatedFields}
-          fullscreen={this.props.fullscreen}
           hoveredItem={this.state.hoveredItem}
           selectedItem={this.state.selectedItem}
           graphStyle={this.state.graphStyle}
