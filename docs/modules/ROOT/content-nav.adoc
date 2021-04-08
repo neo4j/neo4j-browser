@@ -23,5 +23,6 @@
 ** xref:operations.adoc#create-dbms-connection[Create a DBMS connection]
 ** xref:operations.adoc#start-browser[Start with Browser]
 ** xref:operations.adoc#results[Visualizing results]
+** xref:operations.adoc#styling[Styling Neo4j Browser Visualization]
 ** xref:operations.adoc#query-parameters[Neo4j query parameters]
 ** xref:operations.adoc#url-parameters[Browser URL parameters]
