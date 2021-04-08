@@ -34,11 +34,9 @@ Neo4j starts a web server with Neo4j Browser at _http://localhost:7474/browser_.
 
 [[bundled-desktop]]
 == Neo4j Browser bundled with Neo4j Desktop
-
-You run Neo4j Browser can also be run via Neo4j Desktop as an application.
+// Refer to Desktop graph app doc
+You can run Neo4j Browser via Neo4j Desktop as an application.
 If you are using Neo4j Desktop, you can start the Neo4j Browser application from a project, provided that the Neo4j DBMS for that project is started.
-// Refer to Desktop graph app doc - https://install.graphapp.io/, https://neo4j.com/developer/neo4j-desktop/
-// Change the section into a step by step deployment.
 
 . Download Neo4j desktop application.
 . Install and start the Neo4j Desktop application using the provided instructions (shown when downloading).
@@ -52,7 +50,7 @@ If you forget it, you have to remove the credentials file in _data/dbms/authoriz
 ====
 . Open the Neo4j Browser.
 +
-image:browser-from-desktop.png[]
+image:browser-with-desktop.png[]
 +
 Alternatively, you can access this from a regular browser window by typing _http://localhost:7474_ and signing in with *Username:* `neo4j` and *Password:* `<your database password (set up in Desktop)>`. +
 
