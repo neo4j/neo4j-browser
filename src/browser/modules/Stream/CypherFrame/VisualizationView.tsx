@@ -213,7 +213,7 @@ export class Visualization extends Component<
     if (!this.state.nodes.length) return null
 
     return (
-      <StyledVisContainer fullscreen={this.props.fullscreen}>
+      <StyledVisContainer>
         <ExplorerComponent
           maxNeighbours={this.props.maxNeighbours}
           hasTruncatedFields={this.state.hasTruncatedFields}

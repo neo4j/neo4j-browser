@@ -108,7 +108,6 @@ type CypherFrameProps = CypherFrameBaseProps & {
 export type CypherFrameState = {
   openView?: viewTypes.FrameView
   fullscreen: boolean
-  collapse: boolean
   frameHeight: number
   hasVis: boolean
   errors?: unknown
@@ -127,7 +126,6 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
   state: CypherFrameState = {
     openView: undefined,
     fullscreen: false,
-    collapse: false,
     frameHeight: 472,
     hasVis: false,
     _planExpand: 'EXPAND'
@@ -140,15 +138,11 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
     }
   }
 
-  onResize = (
-    fullscreen: boolean,
-    collapse: boolean,
-    frameHeight: number
-  ): void => {
+  onResize = (fullscreen: boolean, frameHeight: number): void => {
     if (frameHeight) {
-      this.setState({ fullscreen, collapse, frameHeight })
+      this.setState({ fullscreen, frameHeight })
     } else {
-      this.setState({ fullscreen, collapse })
+      this.setState({ fullscreen })
     }
   }
 
@@ -161,7 +155,6 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
       this.state.openView !== state.openView ||
       this.state.fullscreen !== state.fullscreen ||
       this.state.frameHeight !== state.frameHeight ||
-      this.state.collapse !== state.collapse ||
       this.state._asciiMaxColWidth !== state._asciiMaxColWidth ||
       this.state._asciiSetColWidth !== state._asciiSetColWidth ||
       this.state._planExpand !== state._planExpand ||

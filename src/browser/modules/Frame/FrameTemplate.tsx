@@ -35,7 +35,7 @@ type FrameTemplateProps = {
   statusbar?: JSX.Element | null
   removePadding?: boolean
   hasSlides?: boolean
-  onResize?: (fullscreen: boolean, collapsed: boolean, height: number) => void
+  onResize?: (fullscreen: boolean, height: number) => void
 }
 
 function FrameTemplate({
@@ -58,7 +58,7 @@ function FrameTemplate({
     if (currHeight < 300) return // No need to report a transition
 
     if (lastHeight !== currHeight) {
-      onResize(false, false, currHeight)
+      onResize(false, currHeight)
       setLastHeight(currHeight)
     }
   }, [lastHeight, onResize])

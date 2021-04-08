@@ -93,7 +93,10 @@ export const StyledFrameAside = styled.div`
 
 export const StyledFrameContents = styled.div`
   font-size: 14px;
+  display: flex;
+  flex-direction: row;
   overflow: auto;
+  width: 100%;
   min-height: ${dim.frameBodyHeight / 2}px;
   max-height: 100%;
   flex: auto;
