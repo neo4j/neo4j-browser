@@ -65,25 +65,24 @@ For an introduction to Browser’s features and navigation as Neo4j’s user int
 [[web-application]]
 == Neo4j Browser - Web application
 
-Neo4j Browser is available as a web application at https://browser.graphapp.io/.
+Neo4j Browser is available as a web application at _https://browser.graphapp.io/_.
 
 
 [[sandbox]]
 == Neo4j Browser - Sandbox
 
-If you have a Neo4j sandbox (https://neo4j.com/sandbox/), Neo4j Browser can be accessed as a web application within the user interface.
-The Neo4j Browser web application will connect to your Neo4j sandbox without having to enter any connection URI.
+Neo4j Browser can be accessed as a web application within the user interface of link:https://neo4j.com/sandbox/[Neo4j sandbox].
+The Neo4j Browser web application connects to your Neo4j instance without having to enter any connection URI.
+
+image:browser-with-sandbox.png[]
 
 [[aura]]
 == Neo4j Browser - Aura
 
-If you have a Neo4j Aura console (https://console.neo4j.io), Neo4j Browser can be accessed as a web application within the user interface.
-The Neo4j Browser web application will connect to your Neo4j instance without having to enter any connection URL.
+Neo4j Browser can be accessed as a web application within the user interface of link:https://console.neo4j.io[Neo4j Aura].
+The Neo4j Browser web application connects to your Neo4j instance without having to enter any connection URI.
 
-Open with (blue button at the right of the instance) and choose Neo4j Browser.
-
-
-// https://dist.neo4j.com/wp-content/uploads/1desktopConnect_cloud_confirm_running.jpg
+image:browser-with-aura.png[]
 
 [[web-server]]
 == Neo4j Browser - Dedicated web server
