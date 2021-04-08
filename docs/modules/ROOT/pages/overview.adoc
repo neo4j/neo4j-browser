@@ -14,7 +14,7 @@ This chapter presents a visual overview of the UI of Neo4j Browser.
 [[overview]]
 == Overview
 
-//Add a screenshot similar to https://neo4j.com/docs/bloom-user-guide/current/_images/visual-tour.png
+image:overview.png[scale=200%]
 
 === The sidebar
 
@@ -43,6 +43,19 @@ Clicking on any one of those options runs a quick query to show you a sample of 
 == Cypher editor
 
 The Cypher editor is the primary interface for entering and running commands.
+From Neo4j Browser 4.2.4, the Cypher editor is based on Monaco link:https://microsoft.github.io/monaco-editor/[https://microsoft.github.io/monaco-editor/], the editor that powers VS Code link:https://github.com/Microsoft/vscode[https://github.com/Microsoft/vscode].
+
+Some of its features include:
+
+* Syntax highlighting
+** A smart highlight of matching pairs around the current position of the cursor, for example, matching brackets, braces, and parenthesis.
+** A smart highlight of identical words on a word click.
+You can select them by pressing *Command + D* (one occurrence at a time) or by command+shift L (all occurrences).
+* Command palette (F1)
+* Quick comment/uncomment
+* Moving query parts around
+* Folding and indentation
+
 
 * Cypher queries to work with graph data.
 * Client-side commands like `:help` for other operations.
@@ -57,13 +70,19 @@ The Cypher editor is the primary interface for entering and running commands.
 
 Use the command `:help keys` for information about keyboard shortcuts.
 
-The Cypher editor in Neo4j Browser 4.2.4 is based on Monaco link:https://microsoft.github.io/monaco-editor/[https://microsoft.github.io/monaco-editor/], the editor that powers VS Code link:https://github.com/Microsoft/vscode[https://github.com/Microsoft/vscode].
 
 // https://neo4j.com/developer-blog/neo4j-browser-embraces-the-monaco-editor/
 // https://browser.graphapp.io/assets/images/screen_editor.png
 
 [[frames]]
 == Result frames
+
+=== Result frame views
+
+* Graph - Display the result as nodes and relationships. Styling can be configured.
+* Table - Display the result as JSON formatted rows.
+* Text - Display the result as a plain text table.
+* Code https://browser.graphapp.io/assets/images/screen_code_frame.png - View the requests and responses.
 
 === Stream
 
@@ -77,22 +96,13 @@ Remove all the frames from the stream with the :clear command.
 
 === Reusable result frames
 
-// https://miro.medium.com/max/1280/0*DmPXwO3Q_hyunN3I.gif
-
 Cells with results that you can reiterate on.
 
 Now, when you need to edit the query of an existing result frame to fix a mistake, you can do that directly in the result frame and update the results in situ.
 
 The reusable frame maintains its own local history of commands as well as updating the main Cypher editor, should you need to instantiate a new result frame from there.
 
-//https://miro.medium.com/max/640/0*DmPXwO3Q_hyunN3I.gif[(Fullscreen) inline result frame editor]
-
-Result frame views:
-
-* Graph - Display the result as nodes and relationships. Styling can be configured.
-* Table - Display the result as JSON formatted rows.
-* Text - Display the result as a plain text table.
-* Code https://browser.graphapp.io/assets/images/screen_code_frame.png - View the requests and responses.
+image:inline-result-editor.gif[]
 
 [[guides]]
 == Browser guides
