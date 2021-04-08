@@ -20,7 +20,7 @@
 
 import styled from 'styled-components'
 
-export const StyledVisContainer = styled.div<{ height: number }>`
+export const StyledVisContainer = styled.div<{ height: string }>`
   width: 100%;
   overflow: hidden;
   height: ${props => props.height};

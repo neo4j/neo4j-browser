@@ -215,7 +215,6 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
       >
         {legend}
         <GraphComponent
-          fullscreen={this.props.fullscreen}
           frameHeight={this.props.frameHeight}
           relationships={this.state.relationships}
           nodes={this.state.nodes}

@@ -44,12 +44,11 @@ type VisualizationState = {
 type VisualizationProps = {
   result: any
   graphStyleData: any
-  frameHeight: number
+  frameHeight: string
   updated: number
   autoComplete: boolean
   maxNeighbours: number
   bus: Bus
-  fullscreen: boolean
   maxFieldItems: number
   initialNodeDisplay: number
   updateStyle: (style: any) => void
@@ -213,7 +212,6 @@ export class Visualization extends Component<
   render() {
     if (!this.state.nodes.length) return null
 
-    console.log(this.props.frameHeight)
     return (
       <StyledVisContainer height={this.props.frameHeight}>
         <ExplorerComponent
@@ -225,7 +223,6 @@ export class Visualization extends Component<
           getNeighbours={this.getNeighbours.bind(this)}
           nodes={this.state.nodes}
           relationships={this.state.relationships}
-          fullscreen={this.props.fullscreen}
           frameHeight={this.props.frameHeight}
           assignVisElement={this.props.assignVisElement}
           getAutoCompleteCallback={(callback: any) => {

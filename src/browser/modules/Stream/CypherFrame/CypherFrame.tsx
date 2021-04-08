@@ -103,12 +103,11 @@ type CypherFrameProps = CypherFrameBaseProps & {
   request: BrowserRequest
   onRecentViewChanged: (view: viewTypes.FrameView) => void
   setExportItems: (exportItems: ExportItem[]) => void
-  frameHeight: number
+  frameHeight: string
 }
 
 export type CypherFrameState = {
   openView?: viewTypes.FrameView
-  fullscreen: boolean
   hasVis: boolean
   errors?: unknown
   _asciiMaxColWidth?: number
@@ -125,7 +124,6 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
   } = null
   state: CypherFrameState = {
     openView: undefined,
-    fullscreen: false,
     hasVis: false,
     _planExpand: 'EXPAND'
   }
@@ -145,7 +143,6 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
       this.props.request.updated !== props.request.updated ||
       this.props.frameHeight !== props.frameHeight ||
       this.state.openView !== state.openView ||
-      this.state.fullscreen !== state.fullscreen ||
       this.state._asciiMaxColWidth !== state._asciiMaxColWidth ||
       this.state._asciiSetColWidth !== state._asciiSetColWidth ||
       this.state._planExpand !== state._planExpand ||
@@ -390,7 +387,6 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
         <Display if={this.state.openView === viewTypes.VISUALIZATION} lazy>
           <VisualizationConnectedBus
             frameHeight={this.props.frameHeight}
-            fullscreen={this.state.fullscreen}
             assignVisElement={(svgElement: any, graphElement: any) => {
               this.visElement = { svgElement, graphElement, type: 'graph' }
               this.setState({ hasVis: true })
