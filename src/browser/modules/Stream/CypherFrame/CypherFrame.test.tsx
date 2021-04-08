@@ -41,7 +41,10 @@ const createProps = (status: string, result: BrowserRequestResult) => ({
     status,
     updated: Math.random(),
     result
-  } as BrowserRequest
+  } as BrowserRequest,
+  autocomplete: false,
+  setExportItems: () => undefined,
+  frameHeight: '400px'
 })
 const withProvider = (store: any, children: any) => {
   return <Provider store={store}>{children}</Provider>

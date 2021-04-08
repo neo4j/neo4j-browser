@@ -25,11 +25,11 @@ export default class graphView {
   graph: any
   style: any
   viz: any
-  constructor(element: any, measureSize: any, graph: any, style: any) {
+  constructor(element: any, graph: any, style: any) {
     this.graph = graph
     this.style = style
     const forceLayout = layout.force()
-    this.viz = viz(element, measureSize, this.graph, forceLayout, this.style)
+    this.viz = viz(element, this.graph, forceLayout, this.style)
     this.callbacks = {}
     const { callbacks } = this
     this.viz.trigger = (() => (event: any, ...args: any[]) =>
@@ -64,11 +64,6 @@ export default class graphView {
 
   update() {
     this.viz.update()
-    return this
-  }
-
-  resize() {
-    this.viz.resize()
     return this
   }
 

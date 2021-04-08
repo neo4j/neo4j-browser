@@ -22,6 +22,7 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import neo4j from 'neo4j-driver'
 import { Visualization } from './VisualizationView'
+import { createBus } from 'suber'
 
 const mockEmptyResult = {
   records: []
@@ -30,16 +31,29 @@ const node = new (neo4j.types.Node as any)('1', ['Person'], {
   prop1: '<b>String</b> with HTML <strong>in</strong> it'
 })
 const mockResult = {
-  records: [{ keys: ['0'], __fields: [node], get: (_key: any) => node }]
+  records: [{ keys: ['0'], __fields: [node], get: () => node }]
 }
 
+const props = {
+  assignVisElement: () => undefined,
+  autoComplete: false,
+  bus: createBus(),
+  frameHeight: '300px',
+  graphStyleData: null,
+  initialNodeDisplay: 10,
+  maxFieldItems: 100,
+  maxNeighbours: 100,
+  updateStyle: () => undefined,
+  updated: 0
+}
 test('Visualization renders', () => {
-  const { container } = render(<Visualization result={mockEmptyResult} />)
+  const { container } = render(
+    <Visualization {...props} result={mockEmptyResult} />
+  )
   expect(container).toMatchSnapshot()
 })
+
 test('Visualization renders with result and escapes any HTML', () => {
-  const { container } = render(
-    <Visualization updateStyle={() => {}} autoComplete result={mockResult} />
-  )
+  const { container } = render(<Visualization {...props} result={mockResult} />)
   expect(container).toMatchSnapshot()
 })

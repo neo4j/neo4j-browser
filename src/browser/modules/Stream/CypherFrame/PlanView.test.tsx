@@ -39,11 +39,14 @@ describe('PlanViews', () => {
               identifiers: ['n']
             }
           }
-        }
+        },
+        updated: 0,
+        setPlanExpand: () => undefined,
+        assignVisElement: () => undefined
       }
 
       // When
-      const { getByText } = render(<PlanView {...props} />)
+      const { getByText } = render(<PlanView _planExpand="EXPAND" {...props} />)
 
       // Then
       expect(getByText('ProduceResults'))
@@ -69,7 +72,8 @@ describe('PlanViews', () => {
               dbHits: 'xx3'
             }
           }
-        }
+        },
+        setPlanExpand: () => undefined
       }
 
       // When

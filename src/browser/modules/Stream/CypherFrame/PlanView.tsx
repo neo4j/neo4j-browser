@@ -148,6 +148,7 @@ export class PlanView extends Component<PlanViewProps, PlanViewState> {
 type PlanStatusbarState = { extractedPlan: any }
 type PlanStatusbarProps = {
   result: any
+
   setPlanExpand: (p: PlanExpand) => void
 }
 

@@ -24,13 +24,7 @@ import * as vizRenderers from '../renders/init'
 import { menu as menuRenderer } from '../renders/menu'
 import vizClickHandler from '../utils/clickHandler'
 
-const vizFn = function(
-  el: any,
-  measureSize: any,
-  graph: any,
-  layout: any,
-  style: any
-) {
+const vizFn = function(el: any, graph: any, layout: any, style: any) {
   const viz: any = { style }
 
   const root = d3.select(el)
@@ -338,24 +332,10 @@ const vizFn = function(
     if (updateViz) {
       force.update(graph, [layoutDimension, layoutDimension])
 
-      viz.resize()
       viz.trigger('updated')
     }
 
     return (updateViz = true)
-  }
-
-  viz.resize = function() {
-    const size = measureSize()
-    return root.attr(
-      'viewBox',
-      [
-        0,
-        (layoutDimension - size.height) / 2,
-        layoutDimension,
-        size.height
-      ].join(' ')
-    )
   }
 
   // @ts-expect-error ts-migrate(2339) FIXME: Property 'boundingBox' does not exist on type '{ s... Remove this comment to see the full error message

@@ -31,7 +31,12 @@ describe('CodeViews', () => {
   describe('CodeView', () => {
     test('displays nothing if not successful query', () => {
       // Given
-      const props = { request: { status: 'error' } }
+      const props = {
+        maxFieldItems: 100,
+        query: '',
+        request: { status: 'error' },
+        result: null
+      }
 
       // When
       const { container } = render(<CodeView {...props} />)
@@ -42,6 +47,7 @@ describe('CodeViews', () => {
     test('displays request and response info if successful query', () => {
       // Given
       const props = {
+        maxFieldItems: 100,
         query: 'MATCH xx0',
         request: {
           status: 'success',
@@ -54,7 +60,8 @@ describe('CodeViews', () => {
             },
             records: [{ res: 'xx3' }]
           }
-        }
+        },
+        result: null
       }
 
       // When

@@ -72,16 +72,9 @@ export class GraphComponent extends Component<any, State> {
   initGraphView() {
     if (!this.graphView) {
       const NeoConstructor = graphView
-      const measureSize = () => {
-        return {
-          width: this.svgElement.offsetWidth,
-          height: this.svgElement.offsetHeight
-        }
-      }
       this.graph = createGraph(this.props.nodes, this.props.relationships)
       this.graphView = new NeoConstructor(
         this.svgElement,
-        measureSize,
         this.graph,
         this.props.graphStyle
       )
@@ -95,7 +88,6 @@ export class GraphComponent extends Component<any, State> {
       )
       this.graphEH.bindEventHandlers()
       this.props.onGraphModelChange(getGraphStats(this.graph))
-      this.graphView.resize()
       this.graphView.update()
     }
   }
@@ -114,9 +106,6 @@ export class GraphComponent extends Component<any, State> {
   componentDidUpdate(prevProps: any) {
     if (prevProps.styleVersion !== this.props.styleVersion) {
       this.graphView.update()
-    }
-    if (this.props.frameHeight !== prevProps.frameHeight) {
-      this.graphView.resize()
     }
   }
 

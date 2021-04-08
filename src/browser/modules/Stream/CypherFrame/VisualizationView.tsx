@@ -77,7 +77,6 @@ export class Visualization extends Component<
   }
 
   shouldComponentUpdate(props: any, state: VisualizationState) {
-    console.log('should?', this.props.frameHeight)
     return (
       this.props.updated !== props.updated ||
       !deepEquals(props.graphStyleData, this.props.graphStyleData) ||
