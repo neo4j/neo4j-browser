@@ -5,7 +5,8 @@ exports[`Visualization renders 1`] = `<div />`;
 exports[`Visualization renders with result and escapes any HTML 1`] = `
 <div>
   <div
-    class="sc-bYSBpT fHjFHH"
+    class="sc-bYSBpT doKapg"
+    height="300px"
   >
     <div
       class="sc-iAyFgw ikvPvE one-legend-row"
@@ -68,7 +69,6 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
       >
         <svg
           class="neod3viz"
-          viewBox="0 100 200 0"
         >
           <g
             transform="translate(0,0)"
