@@ -83,13 +83,13 @@ import RelatableView, {
 } from 'browser/modules/Stream/CypherFrame/relatable-view'
 import { requestExceedsVisLimits } from 'browser/modules/Stream/CypherFrame/helpers'
 import { GlobalState } from 'shared/globalState'
-import { ExportItem } from '../Stream'
 import { csvFormat, stringModifier } from 'services/bolt/cypherTypesFormatting'
 import { CSVSerializer } from 'services/serializer'
 import { map } from 'lodash'
 import { stringifyMod } from 'services/utils'
 import { downloadPNGFromSVG, downloadSVG } from 'services/exporting/imageUtils'
 import { saveAs } from 'file-saver'
+import { ExportItem } from '../ExportButtons'
 
 type CypherFrameBaseProps = {
   frame: Frame

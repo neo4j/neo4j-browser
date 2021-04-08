@@ -20,15 +20,7 @@
 
 import { connect } from 'react-redux'
 import React, { memo, useRef, useEffect, useState } from 'react'
-import {
-  StyledStream,
-  Padding,
-  AnimationContainer,
-  DropdownButton,
-  DropdownList,
-  DropdownContent,
-  DropDownItemDivider
-} from './styled'
+import { StyledStream, Padding, AnimationContainer } from './styled'
 import CypherFrame from './CypherFrame/CypherFrame'
 import HistoryFrame from './HistoryFrame'
 import PlayFrame from './PlayFrame'
@@ -62,10 +54,9 @@ import { StyledFrame } from '../Frame/styled'
 import FrameTitlebar from '../Frame/FrameTitlebar'
 import { dim } from 'browser-styles/constants'
 import styled from 'styled-components'
-import { DownloadIcon } from 'browser-components/icons/Icons'
-import { DropdownItem } from 'semantic-ui-react'
+import ExportButton, { ExportItem } from './ExportButtons'
 
-const trans: Record<string, React.ComponentType<any>> = {
+const nameToFrame: Record<string, React.ComponentType<any>> = {
   error: ErrorFrame,
   cypher: CypherFrame,
   'cypher-script': CypherScriptFrame,
@@ -96,13 +87,13 @@ const trans: Record<string, React.ComponentType<any>> = {
 
 const getFrameComponent = (frameData: FrameStack): React.ComponentType<any> => {
   const { cmd, type } = frameData.stack[0]
-  let MyFrame = trans[type] || trans.default
+  let MyFrame = nameToFrame[type] || nameToFrame.default
 
   if (type === 'error') {
     try {
       const command = cmd.replace(/^:/, '')
       const Frame = command[0].toUpperCase() + command.slice(1) + 'Frame'
-      MyFrame = require('./Extras/index')[Frame] || trans['error']
+      MyFrame = require('./Extras/index')[Frame] || nameToFrame['error']
     } catch (e) {}
   }
   return MyFrame
@@ -205,56 +196,13 @@ function FrameContainer(props: FrameContainerProps) {
           {...frameProps}
           frameHeight={isFullscreen ? 'calc(100vh - 40px)' : '478px'}
         />
+        {/* side effect of controlling cypher fram height like this. we can 
+          do implement dragable sizing of frames */}
       </ContentContainer>
     </StyledFrame>
   )
 }
 
-type ExportButtonProps = {
-  frame: Frame
-  isRelateAvailable: boolean
-  newProjectFile: (name: string) => void
-  exportItems?: ExportItem[]
-}
-
-export type ExportItem = { name: string; download: () => void }
-
-function ExportButton({
-  frame,
-  isRelateAvailable,
-  newProjectFile,
-  exportItems = []
-}: ExportButtonProps): JSX.Element | null {
-  const canExport: boolean = exportItems.length > 0 || isRelateAvailable
-
-  return canExport ? (
-    <DropdownButton data-testid="frame-export-dropdown">
-      <DownloadIcon />
-      <DropdownList>
-        <DropdownContent>
-          {isRelateAvailable && (
-            <>
-              <DropdownItem onClick={() => newProjectFile(frame.cmd)}>
-                Save as project file
-              </DropdownItem>
-              <DropDownItemDivider />
-            </>
-          )}
-
-          {exportItems.map(({ name, download }) => (
-            <DropdownItem
-              data-testid={`export${name}Button`}
-              onClick={download}
-              key={name}
-            >
-              Export {name}
-            </DropdownItem>
-          ))}
-        </DropdownContent>
-      </DropdownList>
-    </DropdownButton>
-  ) : null
-}
 const ContentContainer = styled.div<{
   isCollapsed: boolean
   isFullscreen: boolean
