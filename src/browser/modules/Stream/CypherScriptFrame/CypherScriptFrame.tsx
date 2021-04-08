@@ -102,7 +102,6 @@ function CypherScriptFrame({
       </ContentSizer>
     </WrapperCenter>
   )
-  // This wanted to disable padding on the template. will have to do it in other way than classname.
   return <FrameTemplate contents={contents} />
 }
 

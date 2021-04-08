@@ -96,7 +96,7 @@ type FrameTitleBarProps = FrameTitleBarBaseProps & {
 }
 
 function FrameTitlebar(props: FrameTitleBarProps) {
-  const frame = props.frame
+  const { frame } = props
   const [editorValue, setEditorValue] = useState(frame.cmd)
   const [renderEditor, setRenderEditor] = useState(frame.isRerun)
   useEffect(() => {
