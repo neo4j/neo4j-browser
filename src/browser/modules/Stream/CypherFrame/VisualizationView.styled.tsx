@@ -19,13 +19,11 @@
  */
 
 import styled from 'styled-components'
-// TODO BOTTEN SYNS EJ I FUllskärm
 
-//${props => (props.fullscreen ? '100vh' : '100%')};
 export const StyledVisContainer = styled.div<{ height: number }>`
   width: 100%;
   overflow: hidden;
-  height: ${props => props.height}px;
+  height: ${props => props.height};
   > svg {
     width: 100%;
   }
