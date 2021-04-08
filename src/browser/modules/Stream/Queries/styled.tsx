@@ -39,14 +39,14 @@ export const StyledTable = styled.table`
   width: 100%;
   table-layout: fixed;
 `
-export const StyledTh: any = styled.th`
+export const StyledTh = styled.th<{ width?: string | number }>`
   text-align: left;
   height: 30px;
   vertical-align: top;
   padding: 5px;
-  width: ${props => (props as any).width || 'auto'};
+  width: ${props => props.width || 'auto'};
 `
-export const StyledTd: any = styled.td`
+export const StyledTd = styled.td<{ width?: string | number }>`
   padding: 5px;
   width: ${props => props.width || 'auto'};
   text-overflow: ellipsis;

@@ -277,7 +277,7 @@ export class QueriesFrame extends Component<any, QueriesFrameState> {
 
     const errorRows = errors.map((error: any, i: any) => (
       <tr key={`error${i}`}>
-        <StyledTd colSpan="7" title={error.message}>
+        <StyledTd colSpan={7} title={error.message}>
           <Code>Error connecting to: {error.host}</Code>
         </StyledTd>
       </tr>

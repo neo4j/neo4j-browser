@@ -19,12 +19,16 @@
  */
 
 import styled from 'styled-components'
+import { dim } from 'browser-styles/constants'
 
-export const StyledVisContainer: any = styled.div`
+export const StyledVisContainer = styled.div<{ fullscreen: boolean }>`
   width: 100%;
   overflow: hidden;
-  // TODO is this ok to remove
-  height: 100%;
+  ${props => (props.fullscreen ? 'padding-bottom: 39px' : null)};
+  height: ${props =>
+    props.fullscreen
+      ? '100vh'
+      : dim.frameBodyHeight - dim.frameTitlebarHeight * 2 + 'px'};
   > svg {
     width: 100%;
   }

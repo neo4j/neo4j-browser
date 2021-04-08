@@ -36,12 +36,7 @@ export const EditorButton = (props: any): JSX.Element => {
   const { icon, title, color, width, onClick, ...rest } = props
   const overrideColor = { ...(color ? { color } : {}) }
   return (
-    <BaseButton
-      onClick={onClick}
-      title={title}
-      style={overrideColor}
-      width={width}
-    >
+    <BaseButton onClick={onClick} title={title} style={overrideColor}>
       <SVGInline
         svg={icon}
         accessibilityLabel={title}
@@ -52,7 +47,7 @@ export const EditorButton = (props: any): JSX.Element => {
   )
 }
 
-const BaseButton: any = styled.span`
+const BaseButton = styled.span`
   font-family: ${props => props.theme.streamlineFontFamily};
   font-style: normal !important;
   font-weight: 400 !important;
@@ -107,10 +102,10 @@ export const StyledNavigationButton = styled.button`
   }
 `
 
-export const NavigationButtonContainer: any = styled.li`
+export const NavigationButtonContainer = styled.li<{ isOpen: boolean }>`
   min-height: 70px;
   height: 70px;
-  background-color: ${(props: any) =>
+  background-color: ${props =>
     !props.isOpen ? 'transparent' : props.theme.drawerBackground};
   &:focus {
     outline: none;
