@@ -46,7 +46,7 @@ const commands = [
 ]
 
 const commandDelays: Record<string, number> = {
-  ':param x => 1': 600
+  ':param x => 1': 3000
 }
 
 const getCommandDelay = (command: string) => commandDelays[command] || 300
