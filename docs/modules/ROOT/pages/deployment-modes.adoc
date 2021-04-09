@@ -1,24 +1,18 @@
 [[deployment-modes]]
 = Deployment modes
-
-[abstract]
---
-This section describes the different deployment modes of Neo4j Browser.
---
+:description: This section describes the different deployment modes of Neo4j Browser.
 
 There are several different scenarios of how to run Neo4j Browser:
 
 [[bundled-neo4j]]
 == Neo4j Browser bundled with Neo4j
 
-Neo4j Browser is bundled with Neo4j database, including both Neo4j Server and Neo4j Desktop (see Neo4j Desktop for more information).
+Neo4j Browser is bundled with Neo4j, including both Neo4j Server and link:[Neo4j Desktop].
 
 The following web browsers are supported:
 
 * Chrome (Latest version)
-
 * Firefox (Latest version)
-
 * Edge (Latest version)
 
 [NOTE]
@@ -40,27 +34,25 @@ Neo4j starts a web server with Neo4j Browser at _http://localhost:7474/browser_.
 
 [[bundled-desktop]]
 == Neo4j Browser bundled with Neo4j Desktop
+// Refer to Desktop graph app doc
+You can run Neo4j Browser via Neo4j Desktop as an application.
+If you are using Neo4j Desktop, you can start the Neo4j Browser application from a project, provided that the Neo4j DBMS for that project is started.
 
-Neo4j Browser can also be run via Neo4j Desktop as an application.
-
-// Refer to Desktop graph app doc - https://install.graphapp.io/, https://neo4j.com/developer/neo4j-desktop/
-// Change the section into a step by step deployment.
-
-Download Neo4j desktop application.
-Using the provided instructions (shown when downloading), follow Step 1 to install and start the Neo4j Desktop application.
-Alternatively, after downloading the zipped server-only package, instructions can also be found in the readme (bin/neo4j start) after unzipping the downloaded file.
-Step 2 on the download page instructions shows you how to set up your first project and database and how to open the Neo4j Browser.
-Please remember the password.
-If you forget it, you have to remove the credentials file in data/dbms/authorization.
-
-Just to review, so far, we have shown two ways to interact with Neo4j.
-
-. From Neo4j Desktop, you can open Neo4j Browser.
-This is done by clicking <your project name> in the Desktop screen, then click Manage on your database.
-. You can also access this from a regular browser window by typing http://localhost:7474 and signing in with Username: `neo4j`, Password: `<your database password (set up in Desktop)>`. +
-Now that we can access the graph database, we can start working with data using our query language, Cypher.
-For an introduction to Browser’s features and navigation as Neo4j’s user interface, you can type `:play intro` into the command-line and press Enter or click the play button ().
-
+. Download Neo4j desktop application.
+. Install and start the Neo4j Desktop application using the provided instructions (shown when downloading).
+Alternatively, after downloading the zipped server-only package, instructions can also be found in the readme (`bin/neo4j start`) after unzipping the downloaded file.
+. Set up your first project and database following step 2 of the provided Neo4j Desktop instructions.
++
+[NOTE]
+====
+Remember your password.
+If you forget it, you have to remove the credentials file in _data/dbms/authorization_.
+====
+. Open the Neo4j Browser.
++
+image:browser-with-desktop.png[]
++
+Alternatively, you can access this from a regular browser window by typing _http://localhost:7474_ and signing in with *Username:* `neo4j` and *Password:* `<your database password (set up in Desktop)>`. +
 
 [[web-application]]
 == Neo4j Browser - Web application
