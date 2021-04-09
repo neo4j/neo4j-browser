@@ -7,17 +7,25 @@
 // https://medium.com/neo4j/neo4j-browser-embraces-the-monaco-editor-bc8415cac22e
 // https://medium.com/neo4j/wheres-my-neo4j-cypher-query-results-%EF%B8%8F-%EF%B8%8F-9c3b150e6e19
 
+This section walks you through the UI of Neo4j Browser.
+
 [[overview]]
 == Overview
 
 image:overview1.png[]
 
-=== The sidebar
+[[sidebar]]
+== Sidebar
 
 The sidebar contains a set of drawers where you can set up the environment for graph management and exploration.
 
-* Browser Settings - provides Browser settings.
-* About Neo4j - shows the Neo4j Browser version, license information, and provides a link to a link to Neo4j Browser Changelog.
+* Database Information - contains information about the currently used node labels, relationship types, and property keys. +
+Clicking on any one of those options runs a quick query to show you a sample of the graph with those elements.
+* Favorites - allows you to bookmark your queries as favorites.
+//https://miro.medium.com/max/1400/0*WxSIQfG5d3alMsd6.png
+//   Local scripts
+//   Sample scripts
+* Project Files -
 * Browser Sync - allows you to synchronize your favorites, styling, and settings to cloud storage, so you can share it across machines and browsers.
 * Help and Learn - contains useful commands, built-in guides, links to documentation, notifications, and a send feedback button.
 // https://miro.medium.com/max/680/1*qMw6LTOZNErrdvUO7XUSpQ.png
@@ -26,89 +34,70 @@ The sidebar contains a set of drawers where you can set up the environment for g
 //   Links to documentation
 //   Canny: Send feedback
 //   Notification Bell, Canny: Latest Updates
-* Favorites - allows you to bookmark your queries as favorites.
-//https://miro.medium.com/max/1400/0*WxSIQfG5d3alMsd6.png
-//   Local scripts
-//   Sample scripts
-* Database Information - contains information about the currently used node labels, relationship types, and property keys. +
-Clicking on any one of those options runs a quick query to show you a sample of the graph with those elements.
+* Browser Settings - provides Browser settings.
+* About Neo4j - shows the Neo4j Browser version, license information, and provides a link to a link to Neo4j Browser Changelog.
+
+[[database-info]]
+=== Database Information
+
+The Database Information drawer provide information about the data of the currently used database, the logged-in user's roles, the Neo4j DBMS version, as well as, some basic Cypher queries and administrative commands.
+A typical scenario of using that drawer is
 
 //TODO: To write a short paragraph about each of the drawers using https://neo4j.com/developer/neo4j-browser/.
 
-[[editor]]
-== Cypher editor
+[[favorites]]
+=== Favorites
 
-The Cypher editor is the primary interface for entering and running commands.
-From Neo4j Browser 4.2.4, the Cypher editor is based on Monaco link:https://microsoft.github.io/monaco-editor/[https://microsoft.github.io/monaco-editor/], the editor that powers VS Code link:https://github.com/Microsoft/vscode[https://github.com/Microsoft/vscode].
+// https://miro.medium.com/max/1400/0*WxSIQfG5d3alMsd6.png
 
-Some of its features include:
+Favorites are used to save scripts (Cypher queries and commands) to be easily reused.
+Favorites can be organized into folders.
 
-* Syntax highlighting
-** A smart highlight of matching pairs around the current position of the cursor, for example, matching brackets, braces, and parenthesis.
-** A smart highlight of identical words on a word click.
-You can select them by pressing *Command + D* (one occurrence at a time) or by command+shift L (all occurrences).
-* Command palette (F1)
-* Quick comment/uncomment
-* Moving query parts around
-* Folding and indentation
+. Create or update your favorites.
+. Create a new empty favorite.
+. Individual favorite changes.
+. Bulk favorite changes.
 
+There are local scripts and sample scripts.
 
-* Cypher queries to work with graph data.
-* Client-side commands like `:help` for other operations.
-* REST request commands (`:GET`, `:POST`, `:PUT`, and `:DELETE`).
-* Single line editing for brief queries or commands.
-* Switch to multi-line editing with *<Shift-Enter>*.
-* Run a query with *<Ctrl-Enter>* or *<Cmd-Enter>*.
-* History is kept for easily retrieving previous commands.
-* Autocomplete for browser commands.
-* Move focus to the editor with /.
-* Toggle the editor to full screen with ESC.
+The name of the script is the first line of the script.
+To control the name use a comment as the first line.
 
-Use the command `:help keys` for information about keyboard shortcuts.
+The example shows a script that will have the name likes candy in favorites.
 
+.Favorite: Likes candy
+====
+[source, cypher]
+----
+//likes candy
+MATCH (n)-[:LIKES]->(:Candy)
+RETURN n AS node
+----
+====
 
-// https://neo4j.com/developer-blog/neo4j-browser-embraces-the-monaco-editor/
-// https://browser.graphapp.io/assets/images/screen_editor.png
+//
+// https://neo4j.com/developer/neo4j-browser/#browser-favorites
+// https://neo4j.com/developer/neo4j-browser/#browser-styling-adv
+// https://neo4j.com/developer/kb/how-do-i-export-cypher-favorites-recorded-in-the-browser/
 
-[[frames]]
-== Result frames
+[[saved-files]]
+=== Project Files
 
-=== Result frame views
+// TODO: difference between favorites and saved files
 
-* Graph - Display the result as nodes and relationships. Styling can be configured.
-* Table - Display the result as JSON formatted rows.
-* Text - Display the result as a plain text table.
-* Code https://browser.graphapp.io/assets/images/screen_code_frame.png - View the requests and responses.
+[[help-learn]]
+=== Help & Learn
 
-=== Stream
-
-// https://browser.graphapp.io/assets/images/screen_stream.png
-
-Scrolling series of frames (mostly reusable result frames).
-
-A reusable result frame is created for each command execution, added to the top of the stream to create a scrollable collection in reverse chronological order.
-
-Remove all the frames from the stream with the :clear command.
-
-=== Reusable result frames
-
-Cells with results that you can reiterate on.
-
-Now, when you need to edit the query of an existing result frame to fix a mistake, you can do that directly in the result frame and update the results in situ.
-
-The reusable frame maintains its own local history of commands as well as updating the main Cypher editor, should you need to instantiate a new result frame from there.
-
-image:inline-result-editor.gif[]
+[[commands]]
+==== Useful commands
 
 [[guides]]
-== Browser guides
+==== Built-in guides
 
 Neo4j Browser provides many interactive guides for learning concepts and tools with Neo4j.
 From data import to graph algorithms to working with RDF data, there is likely an interactive browser guide out there to walk through it.
 If there is not one that fits your needs, you can create one and publish it to the community or internally at your company.
 For more information on how to do that, see link:https://neo4j.com/developer/guide-create-neo4j-browser-guide/[creating a custom Browser guide].
-
-=== Built-in guides
 
 Some guides ship with Neo4j Browser out-of-the-box, no matter what system or installation you are working on.
 The Browser built-in guides are quick guides that introduce different Neo4j concepts.
@@ -160,17 +149,12 @@ To execute any of the queries provided within a Browser guide, simply click on t
 Then, just press *Enter* or the *Play* button to execute the statement.
 Results of the query populate in a panel right below the command line.
 
-=== Public Guides
-
-Other guides are created by Neo4j staff and community members to help others learn Neo4j or how to use the tools in its ecosystem.
-
-You can check out the currently published list on the link:https://portal.graphgist.org/graph_guides[GraphGist Portal (Graph Guides section)].
-
-=== Create a custom guide
-
-You can create a custom Browser guide and publish it to the community or internally at your company.
-For more information on how to do that, see link:https://neo4j.com/developer/guide-create-neo4j-browser-guide/[creating a custom Browser guide].
-
+[TIP]
+====
+There are also other guides, which are created by Neo4j staff and community members to help others learn Neo4j or how to use the tools in its ecosystem. +
+You can check out the currently published list on the link:https://portal.graphgist.org/graph_guides[GraphGist Portal (Graph Guides section)]. +
+For more information on how to create a custom Browser guide, see link:https://neo4j.com/developer/guide-create-neo4j-browser-guide/[creating a custom Browser guide].
+====
 
 // Links to the guides' source:
 //======
@@ -190,45 +174,12 @@ For more information on how to do that, see link:https://neo4j.com/developer/gui
 // Northwind Graph - https://github.com/neo4j/neo4j-browser/blob/master/src/browser/documentation/guides/northwind-graph.tsx
 //
 
-[[favorites]]
-== Favorites and saved files
-
-// https://miro.medium.com/max/1400/0*WxSIQfG5d3alMsd6.png
-
-Favorites are used to save scripts (Cypher queries and commands) to be easily reused.
-Favorites can be organized into folders.
-
-. Create or update your favorites.
-. Create a new empty favorite.
-. Individual favorite changes.
-. Bulk favorite changes.
-
-There are local scripts and sample scripts.
-
-The name of the script is the first line of the script.
-To control the name use a comment as the first line.
-
-The example shows a script that will have the name likes candy in favorites.
-
-.Favorite: Likes candy
-====
-[source, cypher]
-----
-//likes candy
-MATCH (n)-[:LIKES]->(:Candy)
-RETURN n AS node
-----
-====
-
-// TODO: difference between favorites and saved files
-//
-// https://neo4j.com/developer/neo4j-browser/#browser-favorites
-// https://neo4j.com/developer/neo4j-browser/#browser-styling-adv
-// https://neo4j.com/developer/kb/how-do-i-export-cypher-favorites-recorded-in-the-browser/
+[[other-resources]]
+==== Documentation links and Other Resources
 
 
 [[settings]]
-== Settings
+=== Browser Settings
 
 // https://neo4j.com/developer/neo4j-browser/#browser-config
 The defaults for all the settings can be adjusted at any time by going to the configuration option on the left-side menu.
@@ -289,3 +240,75 @@ Configuration settings can be set in _neo4j.conf_ or if using Neo4j Desktop, nav
 | Valid values  | `browser.retain_connection_credentials`, a boolean
 | Default value | `true`
 |===
+
+[[about-neo4j]]
+=== About Neo4j
+
+
+[[editor]]
+== Cypher editor
+
+The Cypher editor is the primary interface for entering and running commands.
+From Neo4j Browser 4.2.4, the Cypher editor is based on Monaco link:https://microsoft.github.io/monaco-editor/[https://microsoft.github.io/monaco-editor/], the editor that powers VS Code link:https://github.com/Microsoft/vscode[https://github.com/Microsoft/vscode].
+
+Some of its features include:
+
+* Syntax highlighting
+** A smart highlight of matching pairs around the current position of the cursor, for example, matching brackets, braces, and parenthesis.
+** A smart highlight of identical words on a word click.
+You can select them by pressing *Command + D* (one occurrence at a time) or by command+shift L (all occurrences).
+* Command palette (F1)
+* Quick comment/uncomment
+* Moving query parts around
+* Folding and indentation
+
+
+* Cypher queries to work with graph data.
+* Client-side commands like `:help` for other operations.
+* REST request commands (`:GET`, `:POST`, `:PUT`, and `:DELETE`).
+* Single line editing for brief queries or commands.
+* Switch to multi-line editing with *<Shift-Enter>*.
+* Run a query with *<Ctrl-Enter>* or *<Cmd-Enter>*.
+* History is kept for easily retrieving previous commands.
+* Autocomplete for browser commands.
+* Move focus to the editor with /.
+* Toggle the editor to full screen with ESC.
+
+Use the command `:help keys` for information about keyboard shortcuts.
+
+
+// https://neo4j.com/developer-blog/neo4j-browser-embraces-the-monaco-editor/
+// https://browser.graphapp.io/assets/images/screen_editor.png
+
+[[frames]]
+== Result frames
+
+[[frame-views]]
+=== Result frame views
+
+* Graph - Display the result as nodes and relationships. Styling can be configured.
+* Table - Display the result as JSON formatted rows.
+* Text - Display the result as a plain text table.
+* Code https://browser.graphapp.io/assets/images/screen_code_frame.png - View the requests and responses.
+
+[stream]
+=== Stream
+
+// https://browser.graphapp.io/assets/images/screen_stream.png
+
+Scrolling series of frames (mostly reusable result frames).
+
+A reusable result frame is created for each command execution, added to the top of the stream to create a scrollable collection in reverse chronological order.
+
+Remove all the frames from the stream with the :clear command.
+
+[[reusable-frames]]
+=== Reusable result frames
+
+Cells with results that you can reiterate on.
+
+Now, when you need to edit the query of an existing result frame to fix a mistake, you can do that directly in the result frame and update the results in situ.
+
+The reusable frame maintains its own local history of commands as well as updating the main Cypher editor, should you need to instantiate a new result frame from there.
+
+image:inline-result-editor.gif[]
