@@ -46,7 +46,7 @@ Alternatively, after downloading the zipped server-only package, instructions ca
 [NOTE]
 ====
 Remember your password.
-If you forget it, you have to remove the credentials file in _data/dbms/authorization.
+If you forget it, you have to remove the credentials file in _data/dbms/authorization_.
 ====
 . Open the Neo4j Browser.
 +
