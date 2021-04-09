@@ -14,7 +14,7 @@ This chapter presents a visual overview of the UI of Neo4j Browser.
 [[overview]]
 == Overview
 
-image:overview.png[scale=200%]
+image:overview1.png[]
 
 === The sidebar
 
