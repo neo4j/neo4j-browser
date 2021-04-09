@@ -2,8 +2,6 @@
 = Visual tour
 :description: This chapter presents a visual overview of the UI of Neo4j Browser.
 
-
-// https://neo4j.com/docs/bloom-user-guide/current/bloom-visual-tour/#visual-tour
 // https://medium.com/neo4j/neo4j-browser-embraces-the-monaco-editor-bc8415cac22e
 // https://medium.com/neo4j/wheres-my-neo4j-cypher-query-results-%EF%B8%8F-%EF%B8%8F-9c3b150e6e19
 
@@ -12,71 +10,67 @@ This section walks you through the UI of Neo4j Browser.
 [[overview]]
 == Overview
 
-image:overview1.png[]
+image:overview.png[]
 
 [[sidebar]]
 == Sidebar
 
 The sidebar contains a set of drawers where you can set up the environment for graph management and exploration.
 
-* Database Information - contains information about the currently used node labels, relationship types, and property keys. +
-Clicking on any one of those options runs a quick query to show you a sample of the graph with those elements.
-* Favorites - allows you to bookmark your queries as favorites.
-//https://miro.medium.com/max/1400/0*WxSIQfG5d3alMsd6.png
-//   Local scripts
-//   Sample scripts
-* Project Files -
-* Browser Sync - allows you to synchronize your favorites, styling, and settings to cloud storage, so you can share it across machines and browsers.
-* Help and Learn - contains useful commands, built-in guides, links to documentation, notifications, and a send feedback button.
-// https://miro.medium.com/max/680/1*qMw6LTOZNErrdvUO7XUSpQ.png
-//   Commands
-//   Guides
-//   Links to documentation
-//   Canny: Send feedback
-//   Notification Bell, Canny: Latest Updates
-* Browser Settings - provides Browser settings.
-* About Neo4j - shows the Neo4j Browser version, license information, and provides a link to a link to Neo4j Browser Changelog.
-
 [[database-info]]
 === Database Information
 
-The Database Information drawer provide information about the data of the currently used database, the logged-in user's roles, the Neo4j DBMS version, as well as, some basic Cypher queries and administrative commands.
-A typical scenario of using that drawer is
+The *Database Information* drawer provides information about the data of the currently used database, the roles of the current user, the Neo4j DBMS version, as well as some useful DBMS administrative commands.
 
-//TODO: To write a short paragraph about each of the drawers using https://neo4j.com/developer/neo4j-browser/.
+image:database-information.png[height=40%]
+
+* *Use database* - a dropdown menu, where you can select the database you want to work with.
+* *Node Labels*, *Relationship Types*, and *Property keys* - clicking any one of those options runs a quick query to show you a sample of the graph with those elements.
+* *Connected as* - shows the current user and their roles, as well as the cypher command to disconnect from the server.
+If the current user has an administrative role, then two more options are available: `:server user add` and `:server user list`.
+For more information about user's built-in roles and the default privileges, see link:https://neo4j.com/docs/operations-manual/current/authentication-authorization/built-in-roles/[Operations Manual -> Built-in roles].
+* *DBMS* - provides information about the Neo4j version and edition, as well as some useful DBMS administrative commands:
+** `:dbs` - list all databases available for the current user.
+** `sysinfo` - display data about the Neo4j system, such as, store size, ID allocation, page cache, transactions, and databases (name, address, role, status, default database, and errors).
+** `:queries` - list all currently running queries on the server.
 
 [[favorites]]
 === Favorites
 
-// https://miro.medium.com/max/1400/0*WxSIQfG5d3alMsd6.png
+The *Favorites* drawer is where you keep your bookmarked queries and commands. +
+If you currently have an empty frame, you can display some nodes and relationships by using the saved scripts under *Favorites* in the left-side menu.
+Neo4j stores a few default favorites to get you started.
+Expand the *Basic Queries*, then choose *Get Some Data*, and run the query.
+This executes the statement `MATCH (n) RETURN n limit 100`, which fetches some nodes.
 
-Favorites are used to save scripts (Cypher queries and commands) to be easily reused.
-Favorites can be organized into folders.
+You can save your own queries as favorites by "starring" them.
+Populate the Cypher editor with the query you want to favorite, then click the *Save as Favorites* icon to the right of the editor.
+This adds the query to your *Favorites* list in the left-side menu.
+To run one of your favorites, click the left-side menu *Favorites*, choose the query, and run it.
 
-. Create or update your favorites.
-. Create a new empty favorite.
-. Individual favorite changes.
-. Bulk favorite changes.
+image:favorites.png[width=150%]
 
-There are local scripts and sample scripts.
+To provide a title or helpful info, you can use a comment `//comment` above your query.
+The *Favorites* menu uses this comment to name the saved query.
 
-The name of the script is the first line of the script.
-To control the name use a comment as the first line.
-
-The example shows a script that will have the name likes candy in favorites.
-
-.Favorite: Likes candy
+.Favorite: Hello Cypher
 ====
 [source, cypher]
 ----
-MATCH (n)-[:LIKES]->(:Candy)
-RETURN n AS node
+//Hello Cypher
+MATCH (n)
+RETURN n
+LIMIT 100
 ----
 ====
 
-//
-// https://neo4j.com/developer/neo4j-browser/#browser-favorites
-// https://neo4j.com/developer/neo4j-browser/#browser-styling-adv
+Creating folders can help organize your favorites, and you can rearrange them by dragging, or delete them if they are no longer useful.
+
+[NOTE]
+====
+Your favorites, settings, and styles can be saved to the cloud with Neo4j Browser Sync. If you clear your Browser cache, your local favorites will be removed.
+====
+
 // https://neo4j.com/developer/kb/how-do-i-export-cypher-favorites-recorded-in-the-browser/
 
 [[saved-files]]
@@ -87,8 +81,50 @@ RETURN n AS node
 [[help-learn]]
 === Help & Learn
 
-[[commands]]
+The *Help & Learn* drawer contains useful commands, built-in guides, links to documentation, notifications, and a send feedback button.
+
+image:help.png[]
+
+[[useful-commands]]
 ==== Useful commands
+
+
+.Other useful commands and shortcuts
+[cols="1,3",options="header"]
+|===
+| Shortcut
+| Purpose
+
+| `:help`
+| Help System
+
+| `:help commands`
+| Useful Commands
+
+| `:clear`
+| Clear Frames
+
+| `:style [reset]`
+|Styling Popup & Reset
+
+| `:help keys`
+| Keyboard Help
+
+| `Ctrl+Enter` or `Cmd+Enter`
+| Execute Statement
+
+| `Ctrl+Up` or `Cmd+Up`
+| Previous Statement
+
+| `Shift+Enter`
+| Enter Multiline Mode
+
+| `/`
+| Move Focus to Editor
+
+| `ESC`
+| Toggle Editor to Full Screen
+|===
 
 [[guides]]
 ==== Built-in guides
@@ -101,7 +137,7 @@ For more information on how to do that, see link:https://neo4j.com/developer/gui
 Some guides ship with Neo4j Browser out-of-the-box, no matter what system or installation you are working on.
 The Browser built-in guides are quick guides that introduce different Neo4j concepts.
 You can find more helpful links in the left sidebar of Neo4j in the "Documents" tab ().
-To pin a particular pane to the top of the window (under command line) so that it stays at the top when you run queries after it, just click the pushpin button ().
+To pin a particular pane to the top of the window (under the editor) so that it stays at the top when you run queries after it, just click the pushpin button ().
 This is especially helpful for pinning guides to the top so they do not get pushed down to the bottom of the window as you run queries.
 
 .Built-in guides and commands
@@ -142,11 +178,8 @@ This is especially helpful for pinning guides to the top so they do not get push
 For more information on how to create a custom Browser guide, see link:https://neo4j.com/developer/guide-create-neo4j-browser-guide/[https://neo4j.com/developer/guide-create-neo4j-browser-guide/]
 |===
 
-All you have to do is enter any of the above commands in the Browser command line (at the top of the pane) and follow the accompanying guides to walk through the training or scenarios.
-Guides are presented as slideshows that can be navigated by clicking the forward and back arrows in the pane to progress to the next or previous slide.
-To execute any of the queries provided within a Browser guide, simply click on the query, and it will populate in the command line.
 Then, just press *Enter* or the *Play* button to execute the statement.
-Results of the query populate in a panel right below the command line.
+Results of the query populate in a panel right below the Cypher editor.
 
 [TIP]
 ====
@@ -243,6 +276,7 @@ Configuration settings can be set in _neo4j.conf_ or if using Neo4j Desktop, nav
 [[about-neo4j]]
 === About Neo4j
 
+The *About Neo4j* drawer provides information about
 
 [[editor]]
 == Cypher editor
