@@ -475,6 +475,12 @@ const availableCommands = [
     match: (cmd: any) => /^guide(\s|$)/.test(cmd),
     exec(action: any, put: any, store: any) {
       const guideName = action.cmd.substr(':guide'.length).trim()
+      if (!guideName) {
+        // open the drawer and show default
+        put(open('guides'))
+        return
+      }
+
       const initialSlide = tryGetRemoteInitialSlideFromUrl(action.cmd)
       resolveGuide(guideName, store).then(({ slides }) => {
         put(

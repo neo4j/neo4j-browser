@@ -18,12 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import docs from 'browser/documentation'
 import { GlobalState } from 'shared/globalState'
 
 export const NAME = 'guides'
 export const START_GUIDE = 'sidebar/START_GUIDE'
 
-export const getGuide = (state: GlobalState): Guide | null => state[NAME].guide
+export const getGuide = (state: GlobalState): Guide => state[NAME].guide
 // Todo the refactor I want is for this to include
 // everything needed to show the guide not this
 // half measure
@@ -33,11 +34,16 @@ export type Guide = {
   slides: JSX.Element[]
 }
 
+const defaultGuide: Guide = {
+  guideName: 'allGuides',
+  initialSlide: 0,
+  slides: docs.play.chapters.allGuides.slides || []
+}
 export interface GuideState {
-  guide: Guide | null
+  guide: Guide
 }
 const initialState: GuideState = {
-  guide: null
+  guide: defaultGuide
 }
 
 type GuideAction = StartAction
@@ -59,6 +65,6 @@ export default function reducer(
   }
 }
 
-export function startGuide(guide: Guide): StartAction {
+export function startGuide(guide: Guide = defaultGuide): StartAction {
   return { type: START_GUIDE, guide }
 }

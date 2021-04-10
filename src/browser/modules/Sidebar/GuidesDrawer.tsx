@@ -29,9 +29,10 @@ import {
 } from 'browser-components/icons/Icons'
 import { useRef } from 'react'
 import { connect } from 'react-redux'
-import { getGuide } from 'shared/modules/guides/guidesDuck'
+import { getGuide, startGuide } from 'shared/modules/guides/guidesDuck'
 import { GlobalState } from 'shared/globalState'
 import { Guide } from '../../../shared/modules/guides/guidesDuck'
+import docs from 'browser/documentation'
 
 const StyledCarousel = styled.div`
   padding-bottom: 20px;
@@ -176,28 +177,49 @@ const WideDrawer = styled(Drawer)`
 const GuideContent = styled.div`
   padding-bottom: 40px;
 `
-const defaultGuide: Guide = { guideName: 'intro', initialSlide: 0, slides: [] }
+// TODO fixa fina namn och bakåtknapp
 
-type GuideDrawerProps = { guide: Guide | null }
-// default är switchern
-function GuideDrawer({ guide }: GuideDrawerProps): JSX.Element {
-  const guideOrDefault = guide ?? defaultGuide
+type GuideDrawerProps = { guide: Guide; backToAllGuides: () => void }
+function GuideDrawer({
+  guide,
+  backToAllGuides
+}: GuideDrawerProps): JSX.Element {
   return (
     <WideDrawer id="guide-drawer">
-      <DrawerHeader>Neo4j Browser Guides</DrawerHeader>
+      <DrawerHeader>
+        {guide.guideName !== 'allGuides' && (
+          <div onClick={backToAllGuides}> back to all guides</div>
+        )}
+        {guide.guideName} Guides{' '}
+      </DrawerHeader>
       <DrawerBody>
         <GuideContent>
-          <Carousel slides={guideOrDefault.slides} />
+          <Carousel slides={guide.slides} />
         </GuideContent>
       </DrawerBody>
     </WideDrawer>
   )
 }
 const mapStateToProps = (state: GlobalState) => ({ guide: getGuide(state) })
-export default connect(mapStateToProps)(GuideDrawer)
+const mapDispatchToProps = (dispatch: any) => ({
+  backToAllGuides: () => dispatch(startGuide())
+})
+const ConnectedGuidesDrawer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(GuideDrawer)
+export default ConnectedGuidesDrawer
 
 type CarouselProps = { slides?: JSX.Element[]; initialSlide?: number }
+// TODO move carousel to own file
+// TODO fix styling issue when guide is longer than 100vh
+// TODO there's no autocompletion for :guide
+// TODO names are gargabe
+// TODO it all looks ugly
+// TODO test and check for all things that can go wrong
+// TODO format guides to fit better
 // TODO handle there only being one slide
+// known bugs, drops out of fullscreen and runs things in the background
 function Carousel({
   slides = [],
   initialSlide = 0
