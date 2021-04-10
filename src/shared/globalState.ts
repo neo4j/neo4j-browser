@@ -57,6 +57,7 @@ import { NAME as folders, Folder } from './modules/favorites/foldersDuck'
 import { NAME as commands } from './modules/commands/commandsDuck'
 import { NAME as udc, udcState } from './modules/udc/udcDuck'
 import { NAME as app } from './modules/app/appDuck'
+import { NAME as guides, GuideState } from './modules/guides/guidesDuck'
 import {
   NAME as experimentalFeatures,
   initialState as experimentalFeaturesInitialState
@@ -83,4 +84,5 @@ export interface GlobalState {
   [udc]: udcState
   [app]: Record<string, unknown>
   [experimentalFeatures]: typeof experimentalFeaturesInitialState
+  [guides]: GuideState
 }

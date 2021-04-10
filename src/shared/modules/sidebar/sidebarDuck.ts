@@ -48,6 +48,7 @@ type DrawerId =
   | 'documents'
   | 'sync'
   | 'favorites'
+  | 'guides'
   | 'about'
   | 'project files'
   | 'settings'

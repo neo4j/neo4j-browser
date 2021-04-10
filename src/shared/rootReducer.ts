@@ -62,6 +62,7 @@ import commandsReducer, {
 } from 'shared/modules/commands/commandsDuck'
 import udcReducer, { NAME as udc } from 'shared/modules/udc/udcDuck'
 import appReducer, { NAME as app } from 'shared/modules/app/appDuck'
+import guideReducer, { NAME as guides } from 'shared/modules/guides/guidesDuck'
 import experimentalFeaturesReducer, {
   NAME as experimentalFeatures
 } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
@@ -86,5 +87,6 @@ export default {
   [commands]: commandsReducer,
   [udc]: udcReducer,
   [app]: appReducer,
+  [guides]: guideReducer,
   [experimentalFeatures]: experimentalFeaturesReducer
 }

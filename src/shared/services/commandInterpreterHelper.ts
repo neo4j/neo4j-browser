@@ -35,6 +35,8 @@ import {
   useDb,
   getUseDb
 } from 'shared/modules/connections/connectionsDuck'
+import { open } from 'shared/modules/sidebar/sidebarDuck'
+import { startGuide } from 'shared/modules/guides/guidesDuck'
 import { getParams } from 'shared/modules/params/paramsDuck'
 import { getUserCapabilities } from 'shared/modules/features/featuresDuck'
 import {
@@ -99,6 +101,7 @@ import {
 } from './commandUtils'
 import { unescapeCypherIdentifier } from './utils'
 import { getLatestFromFrameStack } from 'browser/modules/Stream/stream.utils'
+import { resolveGuide } from './guideResolverHelper'
 
 const PLAY_FRAME_TYPES = ['play', 'play-remote']
 
@@ -465,6 +468,25 @@ const availableCommands = [
           )
         return response
       }
+    }
+  },
+  {
+    name: 'guide',
+    match: (cmd: any) => /^guide(\s|$)/.test(cmd),
+    exec(action: any, put: any, store: any) {
+      const guideName = action.cmd.substr(':guide'.length).trim()
+      const initialSlide = tryGetRemoteInitialSlideFromUrl(action.cmd)
+      resolveGuide(guideName, store).then(({ slides }) => {
+        put(
+          startGuide({
+            initialSlide,
+            guideName,
+            slides
+          })
+        )
+
+        put(open('guides'))
+      })
     }
   },
   {

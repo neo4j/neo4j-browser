@@ -21,9 +21,17 @@
 import React, { useEffect, useState } from 'react'
 import { Drawer, DrawerBody, DrawerHeader } from 'browser-components/drawer'
 import styled from 'styled-components'
-import { GuideChapter, isGuideChapter } from 'browser/documentation'
-import docs from '../../documentation'
-import Docs from '../Docs/Docs'
+import Directives from 'browser-components/Directives'
+import { CarouselButton } from 'browser-components/buttons'
+import {
+  SlidePreviousIcon,
+  SlideNextIcon
+} from 'browser-components/icons/Icons'
+import { useRef } from 'react'
+import { connect } from 'react-redux'
+import { getGuide } from 'shared/modules/guides/guidesDuck'
+import { GlobalState } from 'shared/globalState'
+import { Guide } from '../../../shared/modules/guides/guidesDuck'
 
 const StyledCarousel = styled.div`
   padding-bottom: 20px;
@@ -162,65 +170,34 @@ const StyledUl = styled.ul`
 const WideDrawer = styled(Drawer)`
   width: 500px;
   position: relative;
-  background-color: ${props => props.theme.primaryBackground};
+  background-color: ${props => props.theme.secondaryBackground};
 `
-
-const sidebarGuides: GuideChapter[] = [
-  'allGuides',
-  'intro',
-  'concepts',
-  'cypher',
-  'movies',
-  'northwind'
-]
 
 const GuideContent = styled.div`
   padding-bottom: 40px;
 `
+const defaultGuide: Guide = { guideName: 'intro', initialSlide: 0, slides: [] }
 
-function GuideDrawer(): JSX.Element {
-  const [selectedGuide, setSelectedGuide] = useState<GuideChapter>('allGuides')
-  function onSelectChange(e: React.FormEvent<HTMLSelectElement>) {
-    e.preventDefault()
-    if (!isGuideChapter(e.currentTarget.value)) {
-      throw Error('invalid select target')
-    }
-    setSelectedGuide(e.currentTarget.value)
-  }
-
+type GuideDrawerProps = { guide: Guide | null }
+// default är switchern
+function GuideDrawer({ guide }: GuideDrawerProps): JSX.Element {
+  const guideOrDefault = guide ?? defaultGuide
   return (
     <WideDrawer id="guide-drawer">
       <DrawerHeader>Neo4j Browser Guides</DrawerHeader>
       <DrawerBody>
-        <select
-          style={{ color: 'black' }}
-          value={selectedGuide}
-          onChange={onSelectChange}
-        >
-          {sidebarGuides.map(guideName => (
-            <option key={guideName} value={guideName}>
-              {guideName}
-            </option>
-          ))}
-        </select>
         <GuideContent>
-          <Carousel slides={docs.play.chapters[selectedGuide].slides} />
+          <Carousel slides={guideOrDefault.slides} />
         </GuideContent>
       </DrawerBody>
     </WideDrawer>
   )
 }
-export default GuideDrawer
-
-import Directives from 'browser-components/Directives'
-import { CarouselButton } from 'browser-components/buttons'
-import {
-  SlidePreviousIcon,
-  SlideNextIcon
-} from 'browser-components/icons/Icons'
-import { useRef } from 'react'
+const mapStateToProps = (state: GlobalState) => ({ guide: getGuide(state) })
+export default connect(mapStateToProps)(GuideDrawer)
 
 type CarouselProps = { slides?: JSX.Element[]; initialSlide?: number }
+// TODO handle there only being one slide
 function Carousel({
   slides = [],
   initialSlide = 0
