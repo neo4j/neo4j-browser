@@ -59,54 +59,57 @@ function GuideCarousel({
     // As slides change, switch to initial Slide
     gotoSlide(initialSlide)
   }, [initialSlide, slides])
+  const moreThanOneSlide = slides.length > 1
 
   return (
     <StyledCarousel onKeyUp={onKeyUp}>
       <SlideContainer ref={scrollRef}>
         <Directives content={currentSlide} />
       </SlideContainer>
-      <StyledCarouselButtonContainer>
-        <StyledCarouselButtonContainerInner>
-          <StyledCarouselCount>
-            {`${currentSlideIndex + 1} / ${slides.length}`}
-          </StyledCarouselCount>
-          <CarouselButton
-            className="previous-slide"
-            disabled={onFirstSlide}
-            onClick={prevSlide}
-          >
-            <SlidePreviousIcon />
-          </CarouselButton>
-          <StyledUl>
-            {slides.map((_, i) =>
-              i !== currentSlideIndex ? (
-                <CarouselIndicatorInactive
-                  key={i}
-                  aria-label={`${i + 1}`}
-                  onClick={() => gotoSlide(i)}
-                >
-                  <span />
-                </CarouselIndicatorInactive>
-              ) : (
-                <CarouselIndicatorActive
-                  key={i}
-                  aria-label={`${i + 1}`}
-                  onClick={() => gotoSlide(i)}
-                >
-                  <span />
-                </CarouselIndicatorActive>
-              )
-            )}
-          </StyledUl>
-          <CarouselButton
-            className="next-slide"
-            disabled={onLastSlide}
-            onClick={nextSlide}
-          >
-            <SlideNextIcon />
-          </CarouselButton>
-        </StyledCarouselButtonContainerInner>
-      </StyledCarouselButtonContainer>
+      {moreThanOneSlide && (
+        <StyledCarouselButtonContainer>
+          <StyledCarouselButtonContainerInner>
+            <StyledCarouselCount>
+              {`${currentSlideIndex + 1} / ${slides.length}`}
+            </StyledCarouselCount>
+            <CarouselButton
+              className="previous-slide"
+              disabled={onFirstSlide}
+              onClick={prevSlide}
+            >
+              <SlidePreviousIcon />
+            </CarouselButton>
+            <StyledUl>
+              {slides.map((_, i) =>
+                i !== currentSlideIndex ? (
+                  <CarouselIndicatorInactive
+                    key={i}
+                    aria-label={`${i + 1}`}
+                    onClick={() => gotoSlide(i)}
+                  >
+                    <span />
+                  </CarouselIndicatorInactive>
+                ) : (
+                  <CarouselIndicatorActive
+                    key={i}
+                    aria-label={`${i + 1}`}
+                    onClick={() => gotoSlide(i)}
+                  >
+                    <span />
+                  </CarouselIndicatorActive>
+                )
+              )}
+            </StyledUl>
+            <CarouselButton
+              className="next-slide"
+              disabled={onLastSlide}
+              onClick={nextSlide}
+            >
+              <SlideNextIcon />
+            </CarouselButton>
+          </StyledCarouselButtonContainerInner>
+        </StyledCarouselButtonContainer>
+      )}
     </StyledCarousel>
   )
 }
