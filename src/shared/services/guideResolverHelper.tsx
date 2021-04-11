@@ -17,12 +17,12 @@ import {
 import { splitMdxSlides } from 'browser/modules/Docs/MDX/splitMdx'
 
 const { chapters } = docs.play
-const unfound = [guideUnfound.content]
+const unfound = { slides: [guideUnfound.content], title: guideUnfound.title }
 
 export async function resolveGuide(
   guideName: string,
   store: any
-): Promise<{ slides: JSX.Element[] }> {
+): Promise<{ slides: JSX.Element[]; title: string }> {
   const isUrl = guideName.startsWith('http')
   if (isUrl) {
     return await resolveRemoteGuideFromURL(guideName, store)
@@ -31,21 +31,21 @@ export async function resolveGuide(
   if (isGuideChapter(guideName)) {
     // TODO Fix so all guides have slides, to avoid this dance
     const guide = chapters[guideName]
+    const title = guide.title
     if (guide.slides) {
-      return { slides: guide.slides }
+      return { slides: guide.slides, title }
     }
     if (guide.content) {
-      return { slides: [guide.content] }
+      return { slides: [guide.content], title }
     }
-    return { slides: [] }
+    return { slides: [], title }
   }
 
   try {
-    const text = await resolveRemoteGuideFromName(guideName, store)
-    return { slides: htmlTextToSlides(text) }
+    return await resolveRemoteGuideFromName(guideName, store)
   } catch (e) {}
 
-  return { slides: unfound }
+  return unfound
 }
 
 function mdxTextToSlides(mdx: string): JSX.Element[] {
@@ -70,32 +70,36 @@ function htmlTextToSlides(html: string): JSX.Element[] {
 async function resolveRemoteGuideFromURL(
   guideName: string,
   store: any
-): Promise<{ slides: JSX.Element[] }> {
+): Promise<{ slides: JSX.Element[]; title: string }> {
   const url = guideName
   const urlObject = new URL(url)
   urlObject.href = url
   const filenameExtension =
     (urlObject.pathname.includes('.') && urlObject.pathname.split('.').pop()) ||
     'html'
-
   const allowlist = getRemoteContentHostnameAllowlist(store.getState())
 
   try {
     const remoteGuide = await fetchRemoteGuide(url, allowlist)
+    const titleRegexMatch = remoteGuide.match('<title>(.*?)</title>')
+    const title = (titleRegexMatch && titleRegexMatch[1])?.trim() || guideName
     if (['md', 'mdx'].includes(filenameExtension)) {
       return {
-        slides: mdxTextToSlides(remoteGuide)
+        slides: mdxTextToSlides(remoteGuide),
+        title
       }
     } else {
       return {
-        slides: htmlTextToSlides(remoteGuide)
+        slides: htmlTextToSlides(remoteGuide),
+        title
       }
     }
   } catch (e) {
     if (e.response && e.response.status === 404) {
-      return { slides: unfound }
+      return unfound
     }
     return {
+      title: 'Error',
       slides: [
         <ErrorView
           key="only"
@@ -113,7 +117,7 @@ ${e.name}: ${e.message}`,
 async function resolveRemoteGuideFromName(
   guideName: string,
   store: any
-): Promise<string> {
+): Promise<{ slides: JSX.Element[]; title: string }> {
   const allowlistStr = getRemoteContentHostnameAllowlist(store.getState())
   const allowlist = extractAllowlistFromConfigString(allowlistStr)
   const defaultAllowlist = extractAllowlistFromConfigString(
@@ -128,11 +132,16 @@ async function resolveRemoteGuideFromName(
     (url: string) => `${url}/${guideName}`
   )
 
-  return possibleGuidesUrls.reduce(
-    (promiseChain: Promise<any>, currentUrl: string) =>
-      promiseChain
-        .catch(() => fetchRemoteGuide(currentUrl, allowlistStr))
-        .then(r => Promise.resolve(r)),
-    Promise.reject(new Error())
-  )
+  return possibleGuidesUrls
+    .reduce(
+      (promiseChain: Promise<any>, currentUrl: string) =>
+        promiseChain
+          .catch(() => fetchRemoteGuide(currentUrl, allowlistStr))
+          .then(r => Promise.resolve(r)),
+      Promise.reject(new Error())
+    )
+    .then(text => ({
+      slides: htmlTextToSlides(text),
+      title: guideName
+    }))
 }

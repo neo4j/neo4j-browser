@@ -25,17 +25,14 @@ export const NAME = 'guides'
 export const START_GUIDE = 'sidebar/START_GUIDE'
 
 export const getGuide = (state: GlobalState): Guide => state[NAME].guide
-// Todo the refactor I want is for this to include
-// everything needed to show the guide not this
-// half measure
 export type Guide = {
   initialSlide: number
-  guideName: string
+  title: string
   slides: JSX.Element[]
 }
 
 const defaultGuide: Guide = {
-  guideName: 'allGuides',
+  title: 'allGuides',
   initialSlide: 0,
   slides: docs.play.chapters.allGuides.slides || []
 }

@@ -19,7 +19,11 @@
  */
 import { Button } from 'semantic-ui-react'
 import styled from 'styled-components'
-import { DrawerBody, DrawerBrowserCommand } from 'browser-components/drawer'
+import {
+  Drawer,
+  DrawerBody,
+  DrawerBrowserCommand
+} from 'browser-components/drawer'
 
 export const StyledSetting = styled.div`
   padding-bottom: 15px;
@@ -119,4 +123,148 @@ export const StyledFeedbackButton = styled(Button)`
 
 export const StyledCommand = styled(DrawerBrowserCommand)`
   max-width: 45%;
+`
+
+export const StyledCarousel = styled.div`
+  padding-bottom: 20px;
+  min-height: 100%;
+  width: 100%;
+  outline: none;
+
+  .row {
+    margin-left: 0;
+    margin-right: 0;
+  }
+`
+
+export const SlideContainer = styled.div`
+  padding: 0;
+  width: 100%;
+  display: inline-block;
+`
+
+export const StyledCarouselButtonContainer = styled.div`
+  color: ${props => props.theme.secondaryButtonText};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  bottom: 0;
+  z-index: 10;
+  border-top: ${props => props.theme.inFrameBorder};
+  margin-left: -40px;
+  height: 39px;
+  width: 100%;
+
+  .is-fullscreen & {
+    bottom: 39px;
+  }
+`
+export const StyledCarouselButtonContainerInner = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  position: relative;
+`
+
+export const StyledCarouselCount = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: bold;
+  justify-content: flex-end;
+  border-radius: 3px;
+  min-width: 44px;
+  position: absolute;
+  right: 100%;
+  padding: 0;
+  margin-right: 10px;
+`
+
+export const CarouselIndicator = styled.li`
+  margin: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  position: relative;
+  z-index: 1;
+
+  > span {
+    background-color: ${props => props.theme.secondaryButtonText};
+    display: block;
+    border-radius: 3px;
+    width: 6px;
+    height: 6px;
+    opacity: 0.4;
+    transition: opacity 0.1s ease-in-out;
+  }
+
+  &::before {
+    border-radius: 2px;
+    content: attr(aria-label);
+    color: ${props => props.theme.primaryBackground};
+    background-color: ${props => props.theme.primaryText};
+    position: absolute;
+    font-size: 12px;
+    font-weight: bold;
+    left: 50%;
+    min-width: 24px;
+    bottom: calc(100% + 5px);
+    pointer-events: none;
+    transform: translateX(-50%);
+    padding: 5px;
+    line-height: 1;
+    text-align: center;
+    z-index: 100;
+    visibility: hidden;
+  }
+
+  &::after {
+    border: solid;
+    border-color: ${props => props.theme.primaryText} transparent;
+    border-width: 6px 6px 0 6px;
+    bottom: 5px;
+    content: '';
+    left: 50%;
+    pointer-events: none;
+    position: absolute;
+    transform: translateX(-50%);
+    z-index: 100;
+    visibility: hidden;
+  }
+
+  &:hover::before,
+  &:hover::after {
+    visibility: visible;
+  }
+`
+export const CarouselIndicatorInactive = styled(CarouselIndicator)`
+  &:hover > span {
+    opacity: 1;
+  }
+`
+export const CarouselIndicatorActive = styled(CarouselIndicator)`
+  > span {
+    opacity: 1;
+  }
+`
+
+export const StyledUl = styled.ul`
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 !important;
+  padding-left: 0 !important;
+`
+
+export const WideDrawer = styled(Drawer)`
+  width: 500px;
+  position: relative;
+  background-color: ${props => props.theme.secondaryBackground};
+`
+
+export const GuideContent = styled.div`
+  padding-bottom: 40px;
 `

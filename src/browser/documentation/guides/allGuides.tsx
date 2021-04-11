@@ -20,8 +20,8 @@ const slides = [
         <a exec-topic="guide https://guides.neo4j.com/sandbox/movies/index.html">
           :guide https://guides.neo4j.com/sandbox/movies/index.html
         </a>
-        tip: unsure what domains are whitelisted? run{' '}
-        <a exec-topic="CALL dbms.clientConfig">CALL dbms.clientConfig</a>
+        tip: unsure what domains are whitelisted?
+        <pre className="runnable">CALL dbms.clientConfig</pre>
       </li>
     </ul>
   </Slide>

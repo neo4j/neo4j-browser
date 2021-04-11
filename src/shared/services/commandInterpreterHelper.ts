@@ -482,11 +482,11 @@ const availableCommands = [
       }
 
       const initialSlide = tryGetRemoteInitialSlideFromUrl(action.cmd)
-      resolveGuide(guideName, store).then(({ slides }) => {
+      resolveGuide(guideName, store).then(({ slides, title }) => {
         put(
           startGuide({
             initialSlide,
-            guideName,
+            title,
             slides
           })
         )
