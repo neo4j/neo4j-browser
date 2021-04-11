@@ -53,4 +53,5 @@ export const HistoryFrame = (props: any) => {
   )
 }
 
-export default withBus(HistoryFrame)
+const HistoryFrameWithBus = withBus(HistoryFrame)
+export default HistoryFrameWithBus

@@ -57,4 +57,5 @@ const mapDispatchToProps = (dispatch: any) => {
   }
 }
 
-export default connect(null, mapDispatchToProps)(TextCommand)
+const ConnectedTextCommand = connect(null, mapDispatchToProps)(TextCommand)
+export default ConnectedTextCommand

@@ -36,10 +36,7 @@ const cherrypickAndMergeStates = (base: any, stored: any) => {
 }
 
 // Reducer
-export default function experimentalFeatures(
-  state: any = initialState,
-  action: any
-) {
+export default function reducer(state: any = initialState, action: any) {
   switch (action.type) {
     case APP_START:
       return cherrypickAndMergeStates(initialState, state)

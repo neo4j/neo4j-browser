@@ -146,4 +146,5 @@ const mapStateToProps = (state: any, ownProps: BaseFrameProps) => {
   }
 }
 
-export default connect(mapStateToProps)(CypherScriptFrame)
+const ConnectedCypherScriptFrame = connect(mapStateToProps)(CypherScriptFrame)
+export default ConnectedCypherScriptFrame

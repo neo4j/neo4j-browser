@@ -313,4 +313,5 @@ const mapDispatchToProps = (dispatch: any) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Settings)
+const ConnectedSettings = connect(mapStateToProps, mapDispatchToProps)(Settings)
+export default ConnectedSettings

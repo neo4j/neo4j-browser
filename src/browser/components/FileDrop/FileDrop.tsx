@@ -244,6 +244,7 @@ const mergeProps = (stateProps: any, dispatchProps: any, ownProps: any) => ({
   ...ownProps
 })
 
-export default withBus(
+const ConnectedFileDrop = withBus(
   connect(mapStateToProps, mapDispatchToProps, mergeProps)(FileDrop)
 )
+export default ConnectedFileDrop

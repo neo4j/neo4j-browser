@@ -64,7 +64,7 @@ export const initialState = {
   }
 }
 
-export default function(state = initialState, action: any) {
+export default function reducer(state = initialState, action: any) {
   switch (action.type) {
     case APP_START:
       return {

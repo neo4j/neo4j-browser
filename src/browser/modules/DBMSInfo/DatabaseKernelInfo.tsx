@@ -142,6 +142,7 @@ const mapDispatchToProps = (_dispatch: any, ownProps: any) => {
   }
 }
 
-export default withBus(
+const ConnectedDatabaseKernelInfo = withBus(
   connect(mapStateToProps, mapDispatchToProps)(DatabaseKernelInfo)
 )
+export default ConnectedDatabaseKernelInfo

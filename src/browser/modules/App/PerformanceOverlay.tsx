@@ -141,4 +141,5 @@ const mapStateToProps = (state: any) => ({
   shouldShow: shouldshowPerformanceOverlay(state)
 })
 
-export default connect(mapStateToProps)(PerformanceOverlay)
+const ConnectedPerformanceOverlay = connect(mapStateToProps)(PerformanceOverlay)
+export default ConnectedPerformanceOverlay

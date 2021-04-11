@@ -138,4 +138,5 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
   }
 })
 
-export default connect(null, mapDispatchToProps)(DocumentItems)
+const ConnectedDocumentItems = connect(null, mapDispatchToProps)(DocumentItems)
+export default ConnectedDocumentItems

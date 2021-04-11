@@ -354,6 +354,7 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
   }
 }
 
-export default withBus(
+const ConnectedEditorFrame = withBus(
   connect(mapStateToProps, mapDispatchToProps)(withTheme(EditorFrame))
 )
+export default ConnectedEditorFrame

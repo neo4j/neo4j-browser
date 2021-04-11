@@ -54,4 +54,5 @@ export function AutoExecButtonComponent({ bus, cmd, ...rest }: any) {
   )
 }
 
-export default withBus(AutoExecButtonComponent)
+const AutoExecButtonComponentWithBus = withBus(AutoExecButtonComponent)
+export default AutoExecButtonComponentWithBus

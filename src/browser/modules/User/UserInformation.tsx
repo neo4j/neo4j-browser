@@ -245,5 +245,7 @@ const mapStateToProps = (state: any) => {
     useSystemDb: database
   }
 }
-
-export default withBus(connect(mapStateToProps, null)(UserInformation))
+const ConnectedUserInformation = withBus(
+  connect(mapStateToProps)(UserInformation)
+)
+export default ConnectedUserInformation

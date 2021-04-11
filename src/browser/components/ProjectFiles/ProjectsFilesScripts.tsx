@@ -174,6 +174,7 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
   }
 })
 
-export default withBus(
+const ConnectedProjectFilesScripts = withBus(
   connect(mapStateToProps, mapDispatchToProps)(ProjectFilesScripts)
 )
+export default ConnectedProjectFilesScripts

@@ -54,4 +54,5 @@ export class UserInteraction extends Component<{ bus: Bus }> {
   }
 }
 
-export default withBus(UserInteraction)
+const UserInteractionWithBus = withBus(UserInteraction)
+export default UserInteractionWithBus

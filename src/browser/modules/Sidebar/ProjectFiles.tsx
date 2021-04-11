@@ -97,4 +97,8 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
   }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProjectFiles)
+const ConnectedProjectFiles = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ProjectFiles)
+export default ConnectedProjectFiles

@@ -495,4 +495,8 @@ const mapDispatchToProps = (dispatch: Dispatch<SetRecentViewAction>) => ({
   }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(CypherFrame)
+const ConnectedCypherFrame = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CypherFrame)
+export default ConnectedCypherFrame

@@ -264,4 +264,5 @@ const mapStateToProps = (state: any) => {
   }
 }
 
-export default withBus(connect(mapStateToProps, null)(UserList))
+const ConnectedUserList = withBus(connect(mapStateToProps)(UserList))
+export default ConnectedUserList

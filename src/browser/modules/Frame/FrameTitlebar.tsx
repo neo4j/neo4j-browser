@@ -507,6 +507,7 @@ const mapDispatchToProps = (
   }
 }
 
-export default withBus(
+const ConnectedFrameTitlebar = withBus(
   connect(mapStateToProps, mapDispatchToProps)(FrameTitlebar)
 )
+export default ConnectedFrameTitlebar

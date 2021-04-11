@@ -194,4 +194,5 @@ const mapStateToProps = (state: any) => {
   }
 }
 
-export default connect(mapStateToProps)(About)
+const ConnectedAbout = connect(mapStateToProps)(About)
+export default ConnectedAbout

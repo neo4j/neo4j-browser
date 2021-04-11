@@ -402,6 +402,7 @@ const mergeProps = (stateProps: any, dispatchProps: any, ownProps: any) => {
   }
 }
 
-export default withBus(
+const ConnectedConnectionForm = withBus(
   connect(mapStateToProps, mapDispatchToProps, mergeProps)(ConnectionForm)
 )
+export default ConnectedConnectionForm

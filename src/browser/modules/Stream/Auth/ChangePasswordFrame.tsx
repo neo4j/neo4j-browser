@@ -108,4 +108,7 @@ const mapStateToProps = (state: any) => {
   }
 }
 
-export default connect(mapStateToProps, () => ({}))(ChangePasswordFrame)
+const ConnectedChangePasswordFrame = connect(mapStateToProps)(
+  ChangePasswordFrame
+)
+export default ConnectedChangePasswordFrame

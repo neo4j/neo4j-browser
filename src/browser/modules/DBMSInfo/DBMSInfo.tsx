@@ -131,4 +131,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => {
   }
 }
 
-export default withBus(connect(mapStateToProps, mapDispatchToProps)(DBMSInfo))
+const ConnectedDBMSInfo = withBus(
+  connect(mapStateToProps, mapDispatchToProps)(DBMSInfo)
+)
+export default ConnectedDBMSInfo

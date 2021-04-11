@@ -156,4 +156,9 @@ const mapDispatchToProps = (dispatch: any) => {
     }
   }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(BrowserSyncInit)
+
+const ConnectedBrowserSyncInit = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(BrowserSyncInit)
+export default ConnectedBrowserSyncInit

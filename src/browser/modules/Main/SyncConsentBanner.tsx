@@ -91,4 +91,8 @@ const mapDispatchToProps = (dispatch: any) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SyncReminderBanner)
+const ConnectedSyncReminderBanner = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SyncReminderBanner)
+export default ConnectedSyncReminderBanner

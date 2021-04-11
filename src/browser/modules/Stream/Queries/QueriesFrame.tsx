@@ -373,4 +373,7 @@ const mapStateToProps = (state: any) => {
   }
 }
 
-export default withBus(connect(mapStateToProps, null)(QueriesFrame))
+const ConnectedQueriesFrame = withBus(
+  connect(mapStateToProps, null)(QueriesFrame)
+)
+export default ConnectedQueriesFrame

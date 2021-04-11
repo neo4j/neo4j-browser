@@ -198,4 +198,5 @@ const mapStateToProps = (state: GlobalState) => {
   }
 }
 
-export default connect(mapStateToProps)(Sidebar)
+const ConnectedSidebar = connect(mapStateToProps)(Sidebar)
+export default ConnectedSidebar

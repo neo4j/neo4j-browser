@@ -81,4 +81,5 @@ const mapStateToProps = (state: any) => ({
   neo4jVersion: getVersion(state)
 })
 
-export default connect<any, any, any, any>(mapStateToProps, null)(ManualLink)
+const ConnectedManualLink = connect(mapStateToProps)(ManualLink)
+export default ConnectedManualLink

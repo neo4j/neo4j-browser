@@ -112,10 +112,11 @@ const mergeProps = (stateProps: any, dispatchProps: any) => {
   }
 }
 
-export default withBus(
+const ConnectedMyScripts = withBus(
   connect(
     mapFavoritesStateToProps,
     mapFavoritesDispatchToProps,
     mergeProps
   )(MyScripts)
 )
+export default ConnectedMyScripts

@@ -156,4 +156,5 @@ const mapStateToProps = (state: GlobalState) => ({
   shouldScrollToTop: getScrollToTop(state)
 })
 
-export default connect(mapStateToProps)(memo(Stream))
+const ConnectedStream = connect(mapStateToProps)(memo(Stream))
+export default ConnectedStream

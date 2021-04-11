@@ -316,4 +316,5 @@ const unfound = (
   }
 }
 
-export default withBus(PlayFrame)
+const PlayFrameWithBus = withBus(PlayFrame)
+export default PlayFrameWithBus

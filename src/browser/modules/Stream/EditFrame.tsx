@@ -96,4 +96,7 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
   }
 })
 
-export default withBus(connect(mapStateToProps, mapDispatchToProps)(EditFrame))
+const ConnectedEditFrame = withBus(
+  connect(mapStateToProps, mapDispatchToProps)(EditFrame)
+)
+export default ConnectedEditFrame

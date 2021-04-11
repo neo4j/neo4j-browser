@@ -183,4 +183,5 @@ const mapStateToProps = (state: any) => {
   }
 }
 
-export default withBus(connect(mapStateToProps)(SysInfoFrame))
+const ConnectedSysInfoFrame = withBus(connect(mapStateToProps)(SysInfoFrame))
+export default ConnectedSysInfoFrame

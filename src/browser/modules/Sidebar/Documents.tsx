@@ -201,4 +201,8 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
   }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Documents)
+const ConnectedDocuments = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Documents)
+export default ConnectedDocuments

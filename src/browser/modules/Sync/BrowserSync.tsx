@@ -321,8 +321,10 @@ const mergeProps = (stateProps: any, dispatchProps: any, ownProps: any) => {
     }
   }
 }
-export default connect(
+
+const ConnectedBrowserSync = connect(
   mapStateToProps,
   mapDispatchToProps,
   mergeProps
 )(BrowserSync)
+export default ConnectedBrowserSync

@@ -56,4 +56,5 @@ export const ClickToCode = ({
   )
 }
 
-export default withBus(ClickToCode)
+const ClickToCodeWithBus = withBus(ClickToCode)
+export default ClickToCodeWithBus

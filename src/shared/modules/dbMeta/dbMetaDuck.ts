@@ -222,7 +222,7 @@ export const initialState = {
 /**
  * Reducer
  */
-export default function meta(state = initialState, unalteredAction: any) {
+export default function reducer(state = initialState, unalteredAction: any) {
   let action = unalteredAction
   if (unalteredAction && unalteredAction.settings) {
     const allowlist =

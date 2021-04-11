@@ -105,4 +105,5 @@ const mapStateToProps = (state: any) => {
   }
 }
 
-export default connect(mapStateToProps, null)(Frame)
+const ConnectedFrame = connect(mapStateToProps)(Frame)
+export default ConnectedFrame
