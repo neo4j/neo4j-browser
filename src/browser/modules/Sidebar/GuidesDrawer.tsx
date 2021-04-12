@@ -36,11 +36,11 @@ import { GuideContent, WideDrawer } from './styled'
 // TODO handle there only being one slide
 // known bugs, drops out of fullscreen and runs things in the background
 
-type GuideDrawerProps = { guide: Guide; backToAllGuides: () => void }
-function GuideDrawer({
+type GuidesDrawerProps = { guide: Guide; backToAllGuides: () => void }
+function GuidesDrawer({
   guide,
   backToAllGuides
-}: GuideDrawerProps): JSX.Element {
+}: GuidesDrawerProps): JSX.Element {
   return (
     <WideDrawer id="guide-drawer">
       <DrawerHeader>
@@ -64,5 +64,5 @@ const mapDispatchToProps = (dispatch: any) => ({
 const ConnectedGuidesDrawer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(GuideDrawer)
+)(GuidesDrawer)
 export default ConnectedGuidesDrawer

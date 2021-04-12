@@ -136,7 +136,7 @@ export const DatabaseIcon = (props: {
   )
 }
 
-export const GuideDrawerIcon = (props: { isOpen: boolean }): JSX.Element => (
+export const GuidesDrawerIcon = (props: { isOpen: boolean }): JSX.Element => (
   <IconContainer
     activeStyle={white}
     inactiveStyle={inactive}

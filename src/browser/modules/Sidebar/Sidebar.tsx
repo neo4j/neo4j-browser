@@ -24,7 +24,7 @@ import DatabaseDrawer from '../DBMSInfo/DBMSInfo'
 import DocumentsDrawer from './Documents'
 import AboutDrawer from './About'
 import SettingsDrawer from './Settings'
-import GuideDrawer from './GuidesDrawer'
+import GuidesDrawer from './GuidesDrawer'
 import Favorites from './favorites'
 import StaticScripts from './static-scripts'
 import ProjectFilesDrawer from './ProjectFiles'
@@ -50,7 +50,7 @@ import {
   SettingsIcon,
   AboutIcon,
   ProjectFilesIcon,
-  GuideDrawerIcon
+  GuidesDrawerIcon
 } from 'browser-components/icons/Icons'
 import { getCurrentDraft } from 'shared/modules/sidebar/sidebarDuck'
 import { DrawerHeader } from 'browser-components/drawer'
@@ -124,10 +124,10 @@ const Sidebar = ({
     {
       name: 'Guides',
       title: 'Guides',
-      icon: function guideDrawerIcon(isOpen: boolean): JSX.Element {
-        return <GuideDrawerIcon isOpen={isOpen} />
+      icon: function guidesDrawerIcon(isOpen: boolean): JSX.Element {
+        return <GuidesDrawerIcon isOpen={isOpen} />
       },
-      content: GuideDrawer
+      content: GuidesDrawer
     }
   ]
 
