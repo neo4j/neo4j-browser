@@ -25,6 +25,14 @@ import { getScriptDisplayName } from 'browser/components/SavedScripts'
 import { Folder } from 'shared/modules/favorites/foldersDuck'
 
 export const CYPHER_FILE_EXTENSION = '.cypher'
+export type ExportFormat = 'CYPHERFILE' | 'ZIPFILE'
+export const exporters: Record<
+  ExportFormat,
+  (favorites: Favorite[], folders: Folder[]) => void
+> = {
+  ZIPFILE: exportFavoritesAsZip,
+  CYPHERFILE: exportFavoritesAsBigCypherFile
+}
 
 export function exportFavoritesAsBigCypherFile(favorites: Favorite[]): void {
   const fileContent = favorites
@@ -42,7 +50,7 @@ type WriteableFavorite = {
   content: string
   fullFilename: string
 }
-export function exportFavorites(
+export function exportFavoritesAsZip(
   favorites: Favorite[],
   folders: Folder[]
 ): void {

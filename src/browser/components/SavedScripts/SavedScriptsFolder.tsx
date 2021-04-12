@@ -42,11 +42,13 @@ import {
   ContextMenuItem
 } from './styled'
 import { Folder } from 'shared/modules/favorites/foldersDuck'
+import { ExportFormat } from 'services/exporting/favoriteUtils'
 
 interface SavedScriptsFolderProps {
   folder: Folder
   renameFolder?: (folderId: string, name: string) => void
   removeFolder?: (folderId: string) => void
+  exportScripts?: (format: ExportFormat) => void
   moveScript?: (scriptId: string, folderId: string) => void
   forceEdit: boolean
   onDoneEditing: () => void
@@ -59,6 +61,7 @@ function SavedScriptsFolder({
   moveScript,
   renameFolder,
   removeFolder,
+  exportScripts,
   selectedScriptIds,
   forceEdit,
   onDoneEditing,
@@ -115,6 +118,24 @@ function SavedScriptsFolder({
         key="remove"
       >
         Delete folder
+      </ContextMenuItem>
+    ),
+    exportScripts && (
+      <ContextMenuItem
+        data-testid="contextMenuExport"
+        onClick={() => exportScripts('ZIPFILE')}
+        key="exportZip"
+      >
+        Export scripts as .zip file
+      </ContextMenuItem>
+    ),
+    exportScripts && (
+      <ContextMenuItem
+        data-testid="contextMenuRemove"
+        onClick={() => exportScripts('CYPHERFILE')}
+        key="exportAsCypher"
+      >
+        Export scripts as .cypher file
       </ContextMenuItem>
     )
   ].filter(defined => defined)
