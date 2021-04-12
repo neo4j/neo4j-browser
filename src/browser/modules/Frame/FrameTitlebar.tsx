@@ -161,17 +161,6 @@ function FrameTitlebar(props: FrameTitleBarProps) {
   }, [props.frame.isRerun])
   useEffect(gainFocusCallback, [gainFocusCallback])
 
-  useEffect(() => {
-    if (props.bus && props.fullscreen) {
-      return props.bus.take(editor.SET_CONTENT, ({ message }) => {
-        setRenderEditor(true)
-        // timeout needed for editor to mount if not yet mounted.
-        setTimeout(() => editorRef.current?.setValue(message), 0)
-      })
-    }
-    return undefined
-  }, [props.bus, props.fullscreen])
-
   function hasData() {
     return props.numRecords > 0
   }
