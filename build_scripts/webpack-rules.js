@@ -79,8 +79,25 @@ module.exports = [
       'file-loader?limit=65000&mimetype=application/vnd.ms-fontobject&name=assets/fonts/[name].[ext]'
   },
   {
-    test: /\.less$/, // Carousel
+    test: /carousel\.less$/, // Carousel
     include: path.resolve(helpers.browserPath, 'modules/Carousel'),
+    use: [
+      'style-loader',
+      {
+        loader: 'css-loader',
+        options: {
+          modules: true,
+          importLoaders: 1,
+          camelCase: true,
+          localIdentName: '[local]'
+        }
+      },
+      'postcss-loader'
+    ]
+  },
+  {
+    test: /guide\.less$/,
+    include: path.resolve(helpers.browserPath, 'modules/GuideCarousel'),
     use: [
       'style-loader',
       {

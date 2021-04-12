@@ -1,5 +1,5 @@
 import React from 'react'
-import Slide from 'browser/modules/Carousel/Slide'
+import Slide from 'browser/modules/GuideCarousel/GuideSlide'
 
 const title = 'all guides'
 const slides = [
@@ -8,20 +8,17 @@ const slides = [
     <ul className="undecorated">
       <li>
         a guide about getting started
-        <a exec-topic="guide intro">:guide intro</a>
+        <a exec-command=":guide intro">:guide intro</a>
       </li>
       <li>
         a guide about movies
-        <a exec-topic="guide movies">:guide movies</a>
+        <a exec-command=":guide movies">:guide movies</a>
       </li>
 
       <li>
-        you can also enter a custom URL on a whitelisted domain
-        <a exec-topic="guide https://guides.neo4j.com/sandbox/movies/index.html">
+        <a exec-command=":guide https://guides.neo4j.com/sandbox/movies/index.html">
           :guide https://guides.neo4j.com/sandbox/movies/index.html
         </a>
-        tip: unsure what domains are whitelisted?
-        <pre className="runnable">CALL dbms.clientConfig</pre>
       </li>
     </ul>
   </Slide>

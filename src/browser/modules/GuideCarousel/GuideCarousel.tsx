@@ -15,10 +15,10 @@ import {
   StyledCarouselButtonContainerInner,
   StyledCarouselCount,
   StyledUl
-} from './styled'
+} from '../Sidebar/styled'
 
 type GuideCarouselProps = { slides?: JSX.Element[]; initialSlide?: number }
-function GuideCarousel({
+function GuidesCarousel({
   slides = [],
   initialSlide = 0
 }: GuideCarouselProps): JSX.Element {
@@ -113,4 +113,4 @@ function GuideCarousel({
     </StyledCarousel>
   )
 }
-export default GuideCarousel
+export default GuidesCarousel

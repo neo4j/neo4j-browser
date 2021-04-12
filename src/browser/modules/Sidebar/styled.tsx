@@ -262,7 +262,6 @@ export const StyledUl = styled.ul`
 export const WideDrawer = styled(Drawer)`
   width: 500px;
   position: relative;
-  background-color: ${props => props.theme.secondaryBackground};
 `
 
 export const GuideContent = styled.div`

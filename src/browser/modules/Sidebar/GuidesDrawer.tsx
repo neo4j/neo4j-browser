@@ -19,22 +19,13 @@
  */
 
 import React from 'react'
-import { DrawerBody, DrawerHeader } from 'browser-components/drawer'
 import { connect } from 'react-redux'
-import { getGuide, startGuide } from 'shared/modules/guides/guidesDuck'
-import { GlobalState } from 'shared/globalState'
-import { Guide } from '../../../shared/modules/guides/guidesDuck'
-import GuideCarousel from './GuideCarousel'
-import { GuideContent, WideDrawer } from './styled'
 
-// TODO fix styling issue when guide is longer than 100vh
-// TODO there's no autocompletion for :guide
-// TODO drawer width
-// TODO it all looks ugly
-// TODO test and check for all things that can go wrong
-// TODO format guides to fit better
-// TODO handle there only being one slide
-// known bugs, drops out of fullscreen and runs things in the background
+import { DrawerBody, DrawerHeader } from 'browser-components/drawer'
+import { getGuide, startGuide, Guide } from 'shared/modules/guides/guidesDuck'
+import { GlobalState } from 'shared/globalState'
+import { GuideContent, WideDrawer } from './styled'
+import GuidesCarousel from '../GuideCarousel/GuideCarousel'
 
 type GuidesDrawerProps = { guide: Guide; backToAllGuides: () => void }
 function GuidesDrawer({
@@ -51,7 +42,7 @@ function GuidesDrawer({
       </DrawerHeader>
       <DrawerBody>
         <GuideContent>
-          <GuideCarousel slides={guide.slides} />
+          <GuidesCarousel slides={guide.slides} />
         </GuideContent>
       </DrawerBody>
     </WideDrawer>
