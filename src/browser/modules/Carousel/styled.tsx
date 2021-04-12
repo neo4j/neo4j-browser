@@ -304,7 +304,9 @@ export const StyledSlide = styled.div`
   }
 `
 
-export const SidebarSlide = styled.div`
+export const StyledSidebarSlide = styled.div.attrs({
+  className: 'slide' /* added to get styling from less.css */
+})`
   color: ${dark.primaryText};
   & p.lead,
   .title,

@@ -108,4 +108,5 @@ export const DrawerBrowserCommand = styled.span`
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  cursor: pointer;
 `

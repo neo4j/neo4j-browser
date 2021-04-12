@@ -16,7 +16,7 @@ import {
 } from 'shared/modules/dbMeta/dbMetaDuck'
 import { splitMdxSlides } from 'browser/modules/Docs/MDX/splitMdx'
 
-const { chapters } = docs.play
+const { chapters } = docs.guide
 const unfound = { slides: [guideUnfound.content], title: guideUnfound.title }
 
 export async function resolveGuide(
@@ -29,16 +29,7 @@ export async function resolveGuide(
   }
 
   if (isGuideChapter(guideName)) {
-    // TODO Fix so all guides have slides, to avoid this dance
-    const guide = chapters[guideName]
-    const title = guide.title
-    if (guide.slides) {
-      return { slides: guide.slides, title }
-    }
-    if (guide.content) {
-      return { slides: [guide.content], title }
-    }
-    return { slides: [], title }
+    return chapters[guideName]
   }
 
   try {

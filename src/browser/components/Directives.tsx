@@ -29,6 +29,20 @@ import { addClass, prependIcon } from 'shared/services/dom-helpers'
 
 const directives = [
   {
+    selector: '[data-exec]',
+    valueExtractor: (elem: any) => {
+      return `${elem.getAttribute('data-exec')}`
+    },
+    autoExec: true
+  },
+  {
+    selector: '[data-populate]',
+    valueExtractor: (elem: any) => {
+      return `${elem.getAttribute('data-populate')}`
+    },
+    autoExec: false
+  },
+  {
     selector: '[exec-topic]',
     valueExtractor: (elem: any) => {
       return `:${elem.getAttribute('exec-topic')}`
@@ -104,7 +118,10 @@ export const Directives = (props: any) => {
       directives.forEach(directive => {
         const elems = elem.querySelectorAll(directive.selector)
         Array.from(elems).forEach((e: any) => {
-          if (e.firstChild.nodeName !== 'I') {
+          if (
+            e.firstChild.nodeName !== 'I' &&
+            !directive.selector.startsWith('[data-')
+          ) {
             prependPlayIcon(e)
           }
 

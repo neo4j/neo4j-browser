@@ -132,6 +132,10 @@ type GuideDocs = {
   chapters: Record<GuideChapter, GuideItem>
 }
 type GuideChapter = 'index' | 'movieGraph' | 'movies' | 'unfound'
+// TypeGuard function to ts to understand that a string is a valid key
+export function isGuideChapter(name: string): name is GuideChapter {
+  return name in docs.guide.chapters
+}
 
 type PlayDocs = {
   title: 'Guides & Examples'
@@ -153,8 +157,7 @@ export type PlayChapter =
   | 'unfound'
   | 'writeCode'
 
-// TypeGuard function to ts to understand that a string is a valid key
-export function isGuideChapter(name: string): name is PlayChapter {
+export function isPlayChapter(name: string): name is PlayChapter {
   return name in docs.play.chapters
 }
 
