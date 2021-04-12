@@ -2,7 +2,7 @@ import React from 'react'
 import MdxSlide from 'browser/modules/Docs/MDX/MdxSlide'
 import Slide from 'browser/modules/Carousel/Slide'
 import docs, { isGuideChapter } from 'browser/documentation'
-import guideUnfound from 'browser/documentation/guides/unfound'
+import guideUnfound from 'browser/documentation/play-guides/unfound'
 import { ErrorView } from 'browser/modules/Stream/ErrorFrame'
 import {
   addProtocolsToUrlList,

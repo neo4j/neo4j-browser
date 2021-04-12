@@ -20,6 +20,7 @@
 
 import styled from 'styled-components'
 import { bounceRight } from 'browser-styles/animations'
+import { dark } from 'browser-styles/themes'
 
 export const StyledCarousel: any = styled.div`
   padding-bottom: 20px;
@@ -300,5 +301,119 @@ export const StyledSlide = styled.div`
   }
   &.slide .teaser {
     background-color: ${props => props.theme.teaserCardBackground} !important;
+  }
+`
+
+export const SidebarSlide = styled.div`
+  color: ${dark.primaryText};
+  & p.lead,
+  .title,
+  .subtitle,
+  .content > p,
+  .table-help {
+    color: ${dark.primaryText} !important;
+    line-height: 1.3;
+
+    th {
+      padding-right: 20px;
+      text-align: left;
+    }
+
+    &--header {
+      th {
+        border-bottom: ${dark.topicBorder};
+        font-size: 2rem;
+        padding: 15px 0 0 0;
+      }
+
+      &:first-child {
+        th {
+          padding-top: 0;
+        }
+      }
+    }
+
+    &--subheader {
+      th {
+        border-bottom: ${dark.topicBorder};
+        font-size: 1.5rem;
+        padding: 10px 0 0 0;
+      }
+
+      &:first-child {
+        th {
+          padding-top: 0;
+        }
+      }
+    }
+
+    &--commands {
+      margin-top: 2rem;
+
+      td {
+        padding: 3px 10px 3px 0;
+      }
+    }
+
+    &--keys {
+      th {
+        border-bottom: ${dark.topicBorder};
+      }
+      td {
+        padding: 3px 10px 3px 0;
+      }
+    }
+  }
+  & a {
+    color: ${dark.link};
+    text-decoration: ${props =>
+      props.theme.name === 'dark' ? 'underline' : 'none'};
+  }
+  & kbd {
+    color: ${dark.primaryBackground} !important; /* inverted */
+    background-color: ${dark.primaryText} !important;
+  }
+  & .content > pre {
+    background-color: ${dark.secondaryBackground};
+    color: ${dark.preText};
+  }
+  & pre.runnable {
+    background-color: ${dark.preBackground};
+    color: ${dark.preText};
+  }
+  & pre.content {
+    background-color: ${dark.secondaryBackground};
+    color: ${dark.preText};
+  }
+  & a[help-topic],
+  a[play-topic],
+  a[server-topic],
+  a[exec-topic] {
+    background-color: ${dark.topicBackground} !important;
+    color: #5ca6d9;
+  }
+  & button [help-topic],
+  button [play-topic],
+  button [server-topic],
+  button [exec-topic] {
+    background-color: ${dark.primaryButtonBackground};
+    color: ${dark.primaryButtonText};
+  }
+  &.slide .code {
+    background-color: transparent;
+  }
+  &.slide .key {
+    background-color: ${dark.preBackground};
+    border-radius: 3px;
+    font-size: 12px;
+    display: inline-block;
+    padding: 0 6px;
+  }
+
+  .has-carousel & {
+    overflow: visible;
+  }
+  &.slide .teaser {
+    background-color: ${dark.teaserCardBackground} !important;
   }
 `

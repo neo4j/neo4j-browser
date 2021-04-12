@@ -18,38 +18,47 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React from 'react'
-import styles from './carousel.less'
+// The reason we have this file is to add css to
+// externally defined guides
+import styles from './style.less'
 import { StyledSlide } from './styled'
 
-const Slide = React.forwardRef<any, any>(({ children, content, html }, ref) => {
-  if (children) {
-    return (
-      <StyledSlide ref={ref} className={styles.slide}>
-        {children}
-      </StyledSlide>
-    )
-  }
+type SlideProps = {
+  children?: JSX.Element[]
+  content?: JSX.Element
+  html?: string
+}
+const Slide = React.forwardRef(
+  ({ children, content, html }: SlideProps, ref: React.Ref<HTMLDivElement>) => {
+    if (children) {
+      return (
+        <StyledSlide ref={ref} className={styles.slide}>
+          {children}
+        </StyledSlide>
+      )
+    }
 
-  if (content) {
-    return (
-      <StyledSlide ref={ref} className={styles.slide}>
-        {content}
-      </StyledSlide>
-    )
-  }
+    if (content) {
+      return (
+        <StyledSlide ref={ref} className={styles.slide}>
+          {content}
+        </StyledSlide>
+      )
+    }
 
-  if (html) {
-    return (
-      <StyledSlide
-        ref={ref}
-        className={styles.slide}
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
-    )
-  }
+    if (html) {
+      return (
+        <StyledSlide
+          ref={ref}
+          className={styles.slide}
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
+      )
+    }
 
-  return null
-})
+    return null
+  }
+)
 
 Slide.displayName = 'Slide'
 

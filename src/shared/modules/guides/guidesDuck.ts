@@ -32,9 +32,8 @@ export type Guide = {
 }
 
 const defaultGuide: Guide = {
-  title: 'allGuides',
-  initialSlide: 0,
-  slides: docs.play.chapters.allGuides.slides || []
+  ...docs.guide.chapters.index,
+  initialSlide: 0
 }
 export interface GuideState {
   guide: Guide

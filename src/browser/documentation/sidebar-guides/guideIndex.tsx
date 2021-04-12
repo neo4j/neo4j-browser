@@ -1,11 +1,13 @@
 import React from 'react'
-import Slide from 'browser/modules/GuideCarousel/GuideSlide'
+import { DrawerBrowserCommand } from 'browser-components/drawer'
+import { SidebarSlide } from 'browser/modules/Carousel/styled'
 
 const title = 'all guides'
 const slides = [
-  <Slide key="first">
+  <SidebarSlide key="first">
     <h3>Guides in Neo4j Browser</h3>
     <ul className="undecorated">
+      <DrawerBrowserCommand> hej </DrawerBrowserCommand>
       <li>
         a guide about getting started
         <a exec-command=":guide intro">:guide intro</a>
@@ -21,7 +23,7 @@ const slides = [
         </a>
       </li>
     </ul>
-  </Slide>
+  </SidebarSlide>
 ]
 
 export default { title, slides }

@@ -88,34 +88,57 @@ import helpCypher from './dynamic/cypher'
 import helpHelp from './dynamic/help'
 import helpPlay from './dynamic/play'
 
-// Carousels
-import allGuides from './guides/allGuides'
-import guideConcepts from './guides/concepts'
-import guideCypher from './guides/cypher'
-import guideIntro from './guides/intro'
-import guideLearn from './guides/learn'
-import guideMovieGraph from './guides/movie-graph'
-import guideNorthwindGraph from './guides/northwind-graph'
+// Play guides
+import playConcepts from './play-guides/concepts'
+import playCypher from './play-guides/cypher'
+import playIntro from './play-guides/intro'
+import playLearn from './play-guides/learn'
+import playMovieGraph from './play-guides/movie-graph'
+import playNorthwindGraph from './play-guides/northwind-graph'
+import playIconography from './play-guides/iconography'
+import playStart from './play-guides/start'
+import playTypography from './play-guides/typography'
+import playUnfound from './play-guides/unfound'
+import playWritecode from './play-guides/write-code'
 
-// Pages
-import guideIconography from './guides/iconography'
-import guideStart from './guides/start'
-import guideTypography from './guides/typography'
-import guideUnfound from './guides/unfound'
-import guideWritecode from './guides/write-code'
+// Migrated sidebar guides
+import guideMovieGraph from './sidebar-guides/movie-graph'
+import guideIndex from './sidebar-guides/guideIndex'
+import guideUnfound from './sidebar-guides/unfound'
 
 type AllDocumentation = {
   help: HelpDocs
   cypher: CypherDocs
   bolt: BoltDocs
-  play: GuideDocs
+  play: PlayDocs
+  guide: GuideDocs
 }
-type GuideDocs = {
-  title: 'Guides & Examples'
-  chapters: Record<GuideChapter, DocItem>
+type DocItem = {
+  title: string
+  subtitle?: string
+  category?: string
+  content?: JSX.Element | null
+  footer?: JSX.Element
+  slides?: JSX.Element[]
 }
 
-export type GuideChapter =
+type GuideItem = {
+  title: string
+  slides: JSX.Element[]
+}
+
+type GuideDocs = {
+  title: 'Built-in Browser guides'
+  chapters: Record<GuideChapter, GuideItem>
+}
+type GuideChapter = 'index' | 'movieGraph' | 'movies' | 'unfound'
+
+type PlayDocs = {
+  title: 'Guides & Examples'
+  chapters: Record<PlayChapter, DocItem>
+}
+
+export type PlayChapter =
   | 'concepts'
   | 'cypher'
   | 'iconography'
@@ -129,15 +152,10 @@ export type GuideChapter =
   | 'typography'
   | 'unfound'
   | 'writeCode'
-  | 'allGuides'
 
-type DocItem = {
-  title: string
-  subtitle?: string
-  category?: string
-  content?: JSX.Element | null
-  footer?: JSX.Element
-  slides?: JSX.Element[]
+// TypeGuard function to ts to understand that a string is a valid key
+export function isGuideChapter(name: string): name is PlayChapter {
+  return name in docs.play.chapters
 }
 
 type BoltDocs = { title: 'Bolt'; chapters: Record<BoltChapter, DocItem> }
@@ -299,27 +317,31 @@ const docs: AllDocumentation = {
   play: {
     title: 'Guides & Examples',
     chapters: {
-      allGuides: allGuides,
-      concepts: guideConcepts,
-      cypher: guideCypher,
-      iconography: guideIconography,
-      intro: guideIntro,
-      learn: guideLearn,
-      movieGraph: guideMovieGraph,
+      concepts: playConcepts,
+      cypher: playCypher,
+      iconography: playIconography,
+      intro: playIntro,
+      learn: playLearn,
+      movieGraph: playMovieGraph,
+      movies: playMovieGraph,
+      northwind: playNorthwindGraph,
+      northwindGraph: playNorthwindGraph,
+      start: playStart,
+      typography: playTypography,
+      unfound: playUnfound,
+      writeCode: playWritecode
+    }
+  },
+  // Guides are play-guides but migrated to be viewable in the sidebar
+  guide: {
+    title: 'Built-in Browser guides',
+    chapters: {
+      index: guideIndex,
       movies: guideMovieGraph,
-      northwind: guideNorthwindGraph,
-      northwindGraph: guideNorthwindGraph,
-      start: guideStart,
-      typography: guideTypography,
-      unfound: guideUnfound,
-      writeCode: guideWritecode
+      movieGraph: guideMovieGraph,
+      unfound: guideUnfound
     }
   }
-}
-
-// TypeGuard function to ts to understand that a string is a valid key
-export function isGuideChapter(name: string): name is GuideChapter {
-  return name in docs.play.chapters
 }
 
 export default docs

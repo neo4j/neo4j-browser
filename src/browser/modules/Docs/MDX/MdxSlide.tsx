@@ -56,13 +56,15 @@ const MdxRow = ({ row = '' }) => (
 )
 
 const MdxSlide = ({ mdx = '' }) => (
-  <Slide>
-    <StyledSlide>
-      {splitMdxRows(mdx).map((row, index) => (
-        <MdxRow key={index} row={row} />
-      ))}
-    </StyledSlide>
-  </Slide>
+  <Slide
+    content={
+      <StyledSlide>
+        {splitMdxRows(mdx).map((row, index) => (
+          <MdxRow key={index} row={row} />
+        ))}
+      </StyledSlide>
+    }
+  />
 )
 
 export default MdxSlide
