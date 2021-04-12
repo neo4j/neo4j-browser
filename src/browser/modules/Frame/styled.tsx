@@ -31,13 +31,12 @@ export const StyledFrame = styled.article<FullscreenProps>`
   ${props =>
     props.fullscreen
       ? `margin: 0;
-position: absolute;
-left: -9px;
+position: fixed;
+left: 0;
 top: 0;
-bottom: 0px;
-right: -10px;
-z-index: 130;
-`
+bottom: 0;
+right: 0;
+z-index: 130;`
       : 'margin 0 0 10px 0;'}
 
   &:hover .carousel-intro-animation {
@@ -106,9 +105,9 @@ export const StyledFrameContents = styled.div<FullscreenProps>`
   min-height: ${dim.frameBodyHeight / 2}px;
   max-height: ${props =>
     props.fullscreen
-      ? 'auto'
+      ? '100vh'
       : dim.frameBodyHeight - dim.frameStatusbarHeight * 2 + 'px'};
-  ${props => (props.fullscreen ? 'height: calc(100vh - 40px)' : null)};
+  ${props => (props.fullscreen ? 'height: 100vh' : null)};
   flex: auto;
   display: flex;
   width: 100%;

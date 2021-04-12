@@ -21,12 +21,13 @@
 import styled from 'styled-components'
 import { dim } from 'browser-styles/constants'
 
-export const StyledVisContainer = styled.div<{ fullscreen: boolean }>`
+export const StyledVisContainer: any = styled.div`
   width: 100%;
   overflow: hidden;
-  height: ${props =>
+  ${(props: any) => (props.fullscreen ? 'padding-bottom: 39px' : null)};
+  height: ${(props: any) =>
     props.fullscreen
-      ? 'calc(100vh - 40px)'
+      ? '100vh'
       : dim.frameBodyHeight - dim.frameTitlebarHeight * 2 + 'px'};
   > svg {
     width: 100%;
