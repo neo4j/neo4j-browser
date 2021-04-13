@@ -36,7 +36,7 @@ import { DatabaseSelector } from './DatabaseSelector'
 import { getUseDb } from 'shared/modules/connections/connectionsDuck'
 import { getDatabases } from 'shared/modules/dbMeta/dbMetaDuck'
 
-export function DBMSInfo(props: any) {
+export function DBMSInfo(props: any): JSX.Element {
   const moreStep = 50
   const [labelsMax, setLabelsMax] = useState(moreStep)
   const [relationshipsMax, setRelationshipsMax] = useState(moreStep)

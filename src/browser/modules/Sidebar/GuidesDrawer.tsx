@@ -24,8 +24,9 @@ import { connect } from 'react-redux'
 import { DrawerBody, DrawerHeader } from 'browser-components/drawer'
 import { getGuide, startGuide, Guide } from 'shared/modules/guides/guidesDuck'
 import { GlobalState } from 'shared/globalState'
-import { GuideContent, WideDrawer } from './styled'
+import { GuideContent, StyledHeaderContainer, WideDrawer } from './styled'
 import GuidesCarousel from '../GuideCarousel/GuideCarousel'
+import { SlidePreviousIcon } from '../../components/icons/Icons'
 
 type GuidesDrawerProps = { guide: Guide; backToAllGuides: () => void }
 function GuidesDrawer({
@@ -34,12 +35,16 @@ function GuidesDrawer({
 }: GuidesDrawerProps): JSX.Element {
   return (
     <WideDrawer id="guide-drawer">
-      <DrawerHeader>
-        {guide.title !== 'allGuides' && (
-          <div onClick={backToAllGuides}> back to all guides</div>
-        )}
-        {guide.title} Guides{' '}
-      </DrawerHeader>
+      <StyledHeaderContainer>
+        <DrawerHeader>
+          {guide.title !== 'allGuides' && (
+            <span onClick={backToAllGuides}>
+              <SlidePreviousIcon />
+            </span>
+          )}
+          {guide.title} Guides{' '}
+        </DrawerHeader>
+      </StyledHeaderContainer>
       <DrawerBody>
         <GuideContent>
           <GuidesCarousel slides={guide.slides} />

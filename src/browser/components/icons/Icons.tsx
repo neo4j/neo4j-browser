@@ -351,6 +351,13 @@ export const MinusIcon = (): JSX.Element => (
     className="sl-minus-circle"
   />
 )
+export const LeftArrowIcon = (): JSX.Element => (
+  <IconContainer
+    activeStyle={blue}
+    inactiveStyle={inactive}
+    className="sl-arrow-circle-left"
+  />
+)
 export const RightArrowIcon = (): JSX.Element => (
   <IconContainer
     activeStyle={blue}
