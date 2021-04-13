@@ -41,6 +41,8 @@ export function getScriptDraftId(state: GlobalState): string | null {
   return state[NAME].scriptId || null
 }
 
+export const GUIDE_DRAWER_ID = 'guides'
+
 // SIDEBAR
 type DrawerId =
   | 'dbms'
@@ -48,10 +50,10 @@ type DrawerId =
   | 'documents'
   | 'sync'
   | 'favorites'
-  | 'guides'
   | 'about'
   | 'project files'
   | 'settings'
+  | typeof GUIDE_DRAWER_ID
   | null
 export interface SidebarState {
   drawer: DrawerId | null

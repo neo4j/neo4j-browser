@@ -32,6 +32,7 @@ import {
   StyledTopNav,
   StyledBottomNav
 } from './styled'
+import { GUIDE_DRAWER_ID } from 'shared/modules/sidebar/sidebarDuck'
 
 const Closing = 'CLOSING'
 const Closed = 'CLOSED'
@@ -169,6 +170,11 @@ class Navigation extends Component<NavigationProps, NavigationState> {
       this.state.drawerContent
     )
 
+    const drawerWidth = this.props.openDrawer === GUIDE_DRAWER_ID ? 500 : 300
+    const useFullWidth =
+      this.state.transitionState === Open ||
+      this.state.transitionState === Opening
+    const width = useFullWidth ? drawerWidth : 0
     return (
       <StyledSidebar>
         <StyledTabsWrapper>
@@ -176,10 +182,7 @@ class Navigation extends Component<NavigationProps, NavigationState> {
           <StyledBottomNav>{bottomNavItemsList}</StyledBottomNav>
         </StyledTabsWrapper>
         <StyledDrawer
-          open={
-            this.state.transitionState === Open ||
-            this.state.transitionState === Opening
-          }
+          width={width}
           ref={(ref: any) => {
             if (ref) {
               // Remove old listeners so we don't get multiple callbacks.

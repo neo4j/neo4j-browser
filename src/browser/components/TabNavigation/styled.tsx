@@ -28,12 +28,12 @@ export const StyledSidebar = styled.div`
   color: #fff;
 `
 
-export const StyledDrawer = styled.div<{ open: boolean }>`
+export const StyledDrawer = styled.div<{ width: number }>`
   flex: 0 0 auto;
   background-color: #31333b;
   overflow-x: hidden;
   overflow-y: auto;
-  width: ${props => (props.open ? 'auto' : '0px')};
+  width: ${props => props.width}px;
   transition: 0.2s ease-out;
   z-index: 1;
 `
