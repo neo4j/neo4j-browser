@@ -21,34 +21,41 @@ import React from 'react'
 // The reason we have this file is to define classnames
 // used in our templates and externally defined guides
 import styles from './style.less'
-import { StyledSlide } from './styled'
+import { StyledSidebarSlide, StyledSlide } from './styled'
 
 type SlideProps = {
-  children?: JSX.Element[]
+  children?: React.ReactNode
   content?: JSX.Element
   html?: string
+  forceDarkMode?: boolean
 }
+
 const Slide = React.forwardRef(
-  ({ children, content, html }: SlideProps, ref: React.Ref<HTMLDivElement>) => {
+  (
+    { children, content, html, forceDarkMode }: SlideProps,
+    ref: React.Ref<HTMLDivElement>
+  ) => {
+    const SlideComponent = forceDarkMode ? StyledSidebarSlide : StyledSlide
+
     if (children) {
       return (
-        <StyledSlide ref={ref} className={styles.slide}>
+        <SlideComponent ref={ref} className={styles.slide}>
           {children}
-        </StyledSlide>
+        </SlideComponent>
       )
     }
 
     if (content) {
       return (
-        <StyledSlide ref={ref} className={styles.slide}>
+        <SlideComponent ref={ref} className={styles.slide}>
           {content}
-        </StyledSlide>
+        </SlideComponent>
       )
     }
 
     if (html) {
       return (
-        <StyledSlide
+        <SlideComponent
           ref={ref}
           className={styles.slide}
           dangerouslySetInnerHTML={{ __html: html }}

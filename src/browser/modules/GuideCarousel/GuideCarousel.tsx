@@ -5,7 +5,6 @@ import {
   SlidePreviousIcon,
   SlideNextIcon
 } from 'browser-components/icons/Icons'
-import { useRef } from 'react'
 import {
   CarouselIndicatorActive,
   CarouselIndicatorInactive,
@@ -17,32 +16,29 @@ import {
   StyledUl
 } from '../Sidebar/styled'
 
-type GuideCarouselProps = { slides?: JSX.Element[]; initialSlide?: number }
+type GuideCarouselProps = {
+  slides?: JSX.Element[]
+  initialSlide?: number
+  scrollToTop?: () => void
+}
 function GuidesCarousel({
   slides = [],
-  initialSlide = 0
+  initialSlide = 0,
+  scrollToTop = () => undefined
 }: GuideCarouselProps): JSX.Element {
   const [currentSlideIndex, gotoSlide] = useState(initialSlide)
   const currentSlide = slides[currentSlideIndex]
   const onFirstSlide = currentSlideIndex === 0
   const onLastSlide = currentSlideIndex === slides.length - 1
-  const scrollRef = useRef<HTMLDivElement | null>(null)
-
-  function scrollToTop() {
-    if (scrollRef.current) scrollRef.current.scrollTop = 0
-  }
-
   function nextSlide() {
     if (!onLastSlide) {
       gotoSlide(index => index + 1)
-      scrollToTop()
     }
   }
 
   function prevSlide() {
     if (!onFirstSlide) {
       gotoSlide(index => index - 1)
-      scrollToTop()
     }
   }
 
@@ -56,14 +52,20 @@ function GuidesCarousel({
   }
 
   useEffect(() => {
-    // As slides change, switch to initial Slide
+    // If we switch the guide, jump to initial Slide
     gotoSlide(initialSlide)
   }, [initialSlide, slides])
+
+  useEffect(() => {
+    // As we progress in the slides, scroll to top
+    scrollToTop()
+  }, [scrollToTop, currentSlideIndex])
+
   const moreThanOneSlide = slides.length > 1
 
   return (
     <StyledCarousel onKeyUp={onKeyUp}>
-      <SlideContainer ref={scrollRef}>
+      <SlideContainer>
         <Directives content={currentSlide} />
       </SlideContainer>
       {moreThanOneSlide && (

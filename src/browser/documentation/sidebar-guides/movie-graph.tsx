@@ -25,7 +25,7 @@ import Slide from '../../modules/Carousel/Slide'
 const title = 'Movie Graph'
 const category = 'graphExamples'
 const slides = [
-  <Slide key="s1">
+  <Slide key="s1" forceDarkMode>
     <div className="col-sm-3">
       <h3>Movie Graph</h3>
       <p className="lead">Pop-cultural connections between actors and movies</p>

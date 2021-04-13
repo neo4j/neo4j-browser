@@ -42,7 +42,7 @@ export async function resolveGuide(
 function mdxTextToSlides(mdx: string): JSX.Element[] {
   return splitMdxSlides(mdx).map((slide, index) => (
     // index is fine since we'll never move or delete slides
-    <MdxSlide key={index} mdx={slide} />
+    <MdxSlide key={index} mdx={slide} forceDarkMode />
   ))
 }
 
@@ -52,10 +52,10 @@ function htmlTextToSlides(html: string): JSX.Element[] {
   const htmlSlides = tmpDiv.getElementsByTagName('slide')
   if (htmlSlides && htmlSlides.length) {
     return Array.from(htmlSlides).map((slide, index) => (
-      <Slide key={index} html={slide.innerHTML} />
+      <Slide key={index} html={slide.innerHTML} forceDarkMode />
     ))
   }
-  return [<Slide key="first" html={html} />]
+  return [<Slide key="first" html={html} forceDarkMode />]
 }
 
 async function resolveRemoteGuideFromURL(

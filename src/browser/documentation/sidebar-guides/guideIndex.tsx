@@ -4,11 +4,11 @@ import {
   DrawerExternalLink,
   DrawerSubHeader
 } from 'browser-components/drawer'
-import { StyledSidebarSlide } from 'browser/modules/Carousel/styled'
+import Slide from 'browser/modules/Carousel/Slide'
 
 const title = 'all guides'
 const slides = [
-  <StyledSidebarSlide key="first">
+  <Slide key="first" forceDarkMode>
     You can also access Browser guides by running
     <DrawerBrowserCommand data-populate=":guide [guide name]">
       :guide [guide name]
@@ -58,7 +58,7 @@ const slides = [
     <DrawerExternalLink href="https://neo4j.com/graphgists/">
       More guides
     </DrawerExternalLink>
-  </StyledSidebarSlide>
+  </Slide>
 ]
 
 export default { title, slides }

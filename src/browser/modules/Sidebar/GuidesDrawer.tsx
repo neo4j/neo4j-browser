@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react'
+import React, { useRef } from 'react'
 import { connect } from 'react-redux'
 
 import { DrawerBody, DrawerHeader } from 'browser-components/drawer'
@@ -38,8 +38,9 @@ function GuidesDrawer({
   guide,
   backToAllGuides
 }: GuidesDrawerProps): JSX.Element {
+  const scrollRef = useRef<HTMLDivElement>(null)
   return (
-    <WideDrawer id="guide-drawer">
+    <WideDrawer id="guide-drawer" ref={scrollRef}>
       <DrawerHeader>
         {guide.title !== defaultGuide.title && (
           <span onClick={backToAllGuides}>
@@ -50,7 +51,12 @@ function GuidesDrawer({
       </DrawerHeader>
       <DrawerBody>
         <GuideContent>
-          <GuidesCarousel slides={guide.slides} />
+          <GuidesCarousel
+            slides={guide.slides}
+            scrollToTop={() =>
+              scrollRef.current?.scrollIntoView({ block: 'start' })
+            }
+          />
         </GuideContent>
       </DrawerBody>
     </WideDrawer>
