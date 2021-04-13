@@ -30,7 +30,11 @@ module.exports = [
       loader: 'ts-loader',
       options: {
         transpileOnly: true,
-        getCustomTransformers: () => ({ before: [styledComponentsTransformer] })
+        getCustomTransformers: () => ({
+          before: [
+            ...(helpers.isProduction ? [] : [styledComponentsTransformer])
+          ]
+        })
       }
     },
     include: [path.resolve('src')],
