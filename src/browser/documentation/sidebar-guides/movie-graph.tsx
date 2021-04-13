@@ -24,61 +24,45 @@ import Slide from '../../modules/Carousel/Slide'
 
 const title = 'Movie Graph'
 const category = 'graphExamples'
+// TODO not happy with the force dark mode
 const slides = [
   <Slide key="s1" forceDarkMode>
-    <div className="col-sm-3">
-      <h3>Movie Graph</h3>
-      <p className="lead">Pop-cultural connections between actors and movies</p>
-    </div>
-    <div className="col-sm-9">
-      <p>
-        <em>The Movie Graph</em> is a mini graph application containing actors
-        and directors that are related through the movies they've collaborated
-        on.
-      </p>
-      <p>This guide will show you how to:</p>
-      <ol className="big">
-        <li>Create: insert movie data into the graph</li>
-        <li>Find: retrieve individual movies and actors</li>
-        <li>Query: discover related actors and directors</li>
-        <li>Solve: the Bacon Path</li>
-      </ol>
-      <p></p>
-      <p>
-        <b>WARNING:</b> This guide will modify the data in the currently active
-        database.{' '}
-      </p>
-    </div>
+    <p>
+      <em>The Movie Graph</em> is a mini graph application containing actors and
+      directors that are related through the movies they've collaborated on.
+    </p>
+    <p>This guide will show you how to:</p>
+    <ol className="big">
+      <li>Create: insert movie data into the graph</li>
+      <li>Find: retrieve individual movies and actors</li>
+      <li>Query: discover related actors and directors</li>
+      <li>Solve: the Bacon Path</li>
+    </ol>
+    <p></p>
+    <p>
+      <b>WARNING:</b> This guide will modify the data in the currently active
+      database.{' '}
+    </p>
   </Slide>,
-  <Slide key="s2">
-    <div className="col-sm-3">
-      <h5>The Movie Graph</h5>
-      <br />
-      <h3>Create</h3>
-      <p>
-        To the right is a giant code block containing a single Cypher query
-        statement composed of multiple CREATE clauses. This will create the
-        movie graph.
-      </p>
-      <ol>
-        <li>Click on the code block</li>
-        <li>Notice it gets copied to the editor above ↑</li>
-        <li>Click the editor's play button to execute</li>
-        <li>Wait for the query to finish</li>
-      </ol>
-      <p className="text-center text-warning bg-warning">
-        WARNING: This adds data to the current database, each time it is run!
-      </p>
-      <hr />
-      <p>
-        <small>:help</small> <a help-topic="cypher">cypher</a>{' '}
-        <a help-topic="create">CREATE</a>
-      </p>
-    </div>
-    <div className="col-sm-9">
-      <figure>
-        <pre className="pre-scrollable code runnable">
-          {`CREATE (TheMatrix:Movie {title:'The Matrix', released:1999, tagline:'Welcome to the Real World'})
+  <Slide key="s2" forceDarkMode>
+    <h3>Create</h3>
+    <p>
+      To the right is a giant code block containing a single Cypher query
+      statement composed of multiple CREATE clauses. This will create the movie
+      graph.
+    </p>
+    <ol>
+      <li>Click on the code block</li>
+      <li>Notice it gets copied to the editor above ↑</li>
+      <li>Click the editor's play button to execute</li>
+      <li>Wait for the query to finish</li>
+    </ol>
+    <p className="text-center text-warning bg-warning">
+      WARNING: This adds data to the current database, each time it is run!
+    </p>
+    <figure>
+      <pre className="pre-scrollable code runnable">
+        {`CREATE (TheMatrix:Movie {title:'The Matrix', released:1999, tagline:'Welcome to the Real World'})
 CREATE (Keanu:Person {name:'Keanu Reeves', born:1964})
 CREATE (Carrie:Person {name:'Carrie-Anne Moss', born:1967})
 CREATE (Laurence:Person {name:'Laurence Fishburne', born:1961})
@@ -586,271 +570,236 @@ CREATE
 
 WITH TomH as a
 MATCH (a)-[:ACTED_IN]->(m)<-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10;`}
-        </pre>
-      </figure>
-    </div>
+      </pre>
+    </figure>
+    <p>
+      <small>:help</small> <a help-topic="cypher">cypher</a>{' '}
+      <a help-topic="create">CREATE</a>
+    </p>
   </Slide>,
-  <Slide key="s3">
-    <div className="col-sm-3">
-      <h5>The Movie Graph</h5>
-      <br />
-      <h3>Find</h3>
-      <p>Example queries for finding individual nodes.</p>
-      <ol>
-        <li>Click on any query example</li>
-        <li>Run the query from the editor</li>
-        <li>Notice the syntax pattern</li>
-        <li>Try looking for other movies or actors</li>
-      </ol>
-      <hr />
-      <p>
-        <small>:help</small> <a help-topic="match">MATCH</a>{' '}
-        <a help-topic="where">WHERE</a> <a help-topic="return">RETURN</a>
-      </p>
-    </div>
-    <div className="col-sm-9">
-      <p className="lead">Find the actor named "Tom Hanks"...</p>
-      <figure>
-        <pre className="pre-scrollable code runnable">
-          {'MATCH (tom {name: "Tom Hanks"}) RETURN tom'}
-        </pre>
-      </figure>
-      <p className="lead">Find the movie with title "Cloud Atlas"...</p>
-      <figure>
-        <pre className="pre-scrollable code runnable">
-          {'MATCH (cloudAtlas {title: "Cloud Atlas"}) RETURN cloudAtlas'}
-        </pre>
-      </figure>
-      <p className="lead">Find 10 people...</p>
-      <figure>
-        <pre className="pre-scrollable code runnable">
-          MATCH (people:Person) RETURN people.name LIMIT 10
-        </pre>
-      </figure>
-      <p className="lead">Find movies released in the 1990s...</p>
-      <figure>
-        <pre className="pre-scrollable code runnable">
-          {
-            'MATCH (nineties:Movie) WHERE nineties.released >= 1990 AND nineties.released < 2000 RETURN nineties.title'
-          }
-        </pre>
-      </figure>
-    </div>
+  <Slide key="s3" forceDarkMode>
+    <h3>Find</h3>
+    <p>Example queries for finding individual nodes.</p>
+    <ol>
+      <li>Click on any query example</li>
+      <li>Run the query from the editor</li>
+      <li>Notice the syntax pattern</li>
+      <li>Try looking for other movies or actors</li>
+    </ol>
+    <hr />
+    <p>
+      <small>:help</small> <a help-topic="match">MATCH</a>{' '}
+      <a help-topic="where">WHERE</a> <a help-topic="return">RETURN</a>
+    </p>
+    <p className="lead">Find the actor named "Tom Hanks"...</p>
+    <figure>
+      <pre className="pre-scrollable code runnable">
+        {'MATCH (tom {name: "Tom Hanks"}) RETURN tom'}
+      </pre>
+    </figure>
+    <p className="lead">Find the movie with title "Cloud Atlas"...</p>
+    <figure>
+      <pre className="pre-scrollable code runnable">
+        {'MATCH (cloudAtlas {title: "Cloud Atlas"}) RETURN cloudAtlas'}
+      </pre>
+    </figure>
+    <p className="lead">Find 10 people...</p>
+    <figure>
+      <pre className="pre-scrollable code runnable">
+        MATCH (people:Person) RETURN people.name LIMIT 10
+      </pre>
+    </figure>
+    <p className="lead">Find movies released in the 1990s...</p>
+    <figure>
+      <pre className="pre-scrollable code runnable">
+        {
+          'MATCH (nineties:Movie) WHERE nineties.released >= 1990 AND nineties.released < 2000 RETURN nineties.title'
+        }
+      </pre>
+    </figure>
   </Slide>,
-  <Slide key="s4">
-    <div className="col-sm-3">
-      <h5>The Movie Graph</h5>
-      <br />
-      <h3>Query</h3>
-      <p>Finding patterns within the graph.</p>
-      <ol>
-        <li>Actors are people who acted in movies</li>
-        <li>Directors are people who directed a movie</li>
-        <li>What other relationships exist?</li>
-      </ol>
-      <hr />
-      <p>
-        <small>:help</small> <a help-topic="match">MATCH</a>
-      </p>
-    </div>
-    <div className="col-sm-9">
-      <p className="lead">List all Tom Hanks movies...</p>
-      <figure>
-        <pre className="pre-scrollable code runnable">
-          {
-            'MATCH (tom:Person {name: "Tom Hanks"})-[:ACTED_IN]->(tomHanksMovies) RETURN tom,tomHanksMovies'
-          }
-        </pre>
-      </figure>
-      <p className="lead">Who directed "Cloud Atlas"?</p>
-      <figure>
-        <pre className="pre-scrollable code runnable">
-          {
-            'MATCH (cloudAtlas {title: "Cloud Atlas"})<-[:DIRECTED]-(directors) RETURN directors.name'
-          }
-        </pre>
-      </figure>
-      <p className="lead">Tom Hanks' co-actors...</p>
-      <figure>
-        <pre className="pre-scrollable code runnable">
-          {
-            'MATCH (tom:Person {name:"Tom Hanks"})-[:ACTED_IN]->(m)<-[:ACTED_IN]-(coActors) RETURN coActors.name'
-          }
-        </pre>
-      </figure>
-      <p className="lead">How people are related to "Cloud Atlas"...</p>
-      <figure>
-        <pre className="pre-scrollable code runnable">
-          {
-            'MATCH (people:Person)-[relatedTo]-(:Movie {title: "Cloud Atlas"}) RETURN people.name, Type(relatedTo), relatedTo'
-          }
-        </pre>
-      </figure>
-    </div>
+  <Slide key="s4" forceDarkMode>
+    <h3>Query</h3>
+    <p>Finding patterns within the graph.</p>
+    <ol>
+      <li>Actors are people who acted in movies</li>
+      <li>Directors are people who directed a movie</li>
+      <li>What other relationships exist?</li>
+    </ol>
+    <hr />
+    <p className="lead">List all Tom Hanks movies...</p>
+    <figure>
+      <pre className="pre-scrollable code runnable">
+        {
+          'MATCH (tom:Person {name: "Tom Hanks"})-[:ACTED_IN]->(tomHanksMovies) RETURN tom,tomHanksMovies'
+        }
+      </pre>
+    </figure>
+    <p className="lead">Who directed "Cloud Atlas"?</p>
+    <figure>
+      <pre className="pre-scrollable code runnable">
+        {
+          'MATCH (cloudAtlas {title: "Cloud Atlas"})<-[:DIRECTED]-(directors) RETURN directors.name'
+        }
+      </pre>
+    </figure>
+    <p className="lead">Tom Hanks' co-actors...</p>
+    <figure>
+      <pre className="pre-scrollable code runnable">
+        {
+          'MATCH (tom:Person {name:"Tom Hanks"})-[:ACTED_IN]->(m)<-[:ACTED_IN]-(coActors) RETURN coActors.name'
+        }
+      </pre>
+    </figure>
+    <p className="lead">How people are related to "Cloud Atlas"...</p>
+    <figure>
+      <pre className="pre-scrollable code runnable">
+        {
+          'MATCH (people:Person)-[relatedTo]-(:Movie {title: "Cloud Atlas"}) RETURN people.name, Type(relatedTo), relatedTo'
+        }
+      </pre>
+    </figure>
+    <p>
+      <small>:help</small> <a help-topic="match">MATCH</a>
+    </p>
   </Slide>,
-  <Slide key="s5">
-    <div className="col-sm-3">
-      <h5>The Movie Graph</h5>
-      <br />
-      <h3>Solve</h3>
-      <p>
-        You've heard of the classic "Six Degrees of Kevin Bacon"? That is simply
-        a shortest path query called the "Bacon Path".
-      </p>
-      <ol>
-        <li>Variable length patterns</li>
-        <li>Built-in shortestPath() algorithm</li>
-      </ol>
-    </div>
-    <div className="col-sm-9">
-      <p className="lead">
-        Movies and actors up to 4 "hops" away from Kevin Bacon
-      </p>
-      <figure>
-        <pre className="pre-scrollable code runnable">
-          {`MATCH (bacon:Person {name:"Kevin Bacon"})-[*1..4]-(hollywood)
+  <Slide key="s5" forceDarkMode>
+    <h3>Solve</h3>
+    <p>
+      You've heard of the classic "Six Degrees of Kevin Bacon"? That is simply a
+      shortest path query called the "Bacon Path".
+    </p>
+    <ol>
+      <li>Variable length patterns</li>
+      <li>Built-in shortestPath() algorithm</li>
+    </ol>
+    <p className="lead">
+      Movies and actors up to 4 "hops" away from Kevin Bacon
+    </p>
+    <figure>
+      <pre className="pre-scrollable code runnable">
+        {`MATCH (bacon:Person {name:"Kevin Bacon"})-[*1..4]-(hollywood)
 RETURN DISTINCT hollywood`}
-        </pre>
-      </figure>
-      <p className="lead">
-        Bacon path, the shortest path of any relationships to Meg Ryan
-      </p>
-      <figure>
-        <pre className="pre-scrollable code runnable">
-          {`MATCH p=shortestPath(
+      </pre>
+    </figure>
+    <p className="lead">
+      Bacon path, the shortest path of any relationships to Meg Ryan
+    </p>
+    <figure>
+      <pre className="pre-scrollable code runnable">
+        {`MATCH p=shortestPath(
 (bacon:Person {name:"Kevin Bacon"})-[*]-(meg:Person {name:"Meg Ryan"})
 )
 RETURN p`}
-        </pre>
-        <aside className="warn">
-          Note you only need to compare property values like this when first
-          creating relationships
-        </aside>
-      </figure>
-    </div>
+      </pre>
+      <aside className="warn">
+        Note you only need to compare property values like this when first
+        creating relationships
+      </aside>
+    </figure>
   </Slide>,
-  <Slide key="s6">
-    <div className="col-sm-3">
-      <h5>The Movie Graph</h5>
-      <br />
-      <h3>Recommend</h3>
-      <p>
-        Let's recommend new co-actors for Tom Hanks. A basic recommendation
-        approach is to find connections past an immediate neighborhood which are
-        themselves well connected.
-      </p>
-      <p>For Tom Hanks, that means:</p>
-      <ol>
-        <li>
-          Find actors that Tom Hanks hasn't yet worked with, but his co-actors
-          have.
-        </li>
-        <li>Find someone who can introduce Tom to his potential co-actor.</li>
-      </ol>
-    </div>
-    <div className="col-sm-9">
-      <p className="lead">
-        Extend Tom Hanks co-actors, to find co-co-actors who haven't worked with
-        Tom Hanks...
-      </p>
-      <figure>
-        <pre className="pre-scrollable code runnable">
-          {`MATCH (tom:Person {name:"Tom Hanks"})-[:ACTED_IN]->(m)<-[:ACTED_IN]-(coActors),
+  <Slide key="s6" forceDarkMode>
+    <h3>Recommend</h3>
+    <p>
+      Let's recommend new co-actors for Tom Hanks. A basic recommendation
+      approach is to find connections past an immediate neighborhood which are
+      themselves well connected.
+    </p>
+    <p>For Tom Hanks, that means:</p>
+    <ol>
+      <li>
+        Find actors that Tom Hanks hasn't yet worked with, but his co-actors
+        have.
+      </li>
+      <li>Find someone who can introduce Tom to his potential co-actor.</li>
+    </ol>
+    <p className="lead">
+      Extend Tom Hanks co-actors, to find co-co-actors who haven't worked with
+      Tom Hanks...
+    </p>
+    <figure>
+      <pre className="pre-scrollable code runnable">
+        {`MATCH (tom:Person {name:"Tom Hanks"})-[:ACTED_IN]->(m)<-[:ACTED_IN]-(coActors),
   (coActors)-[:ACTED_IN]->(m2)<-[:ACTED_IN]-(cocoActors)
 WHERE NOT (tom)-[:ACTED_IN]->()<-[:ACTED_IN]-(cocoActors) AND tom <> cocoActors
 RETURN cocoActors.name AS Recommended, count(*) AS Strength ORDER BY Strength DESC`}
-        </pre>
-      </figure>
-      <p className="lead">Find someone to introduce Tom Hanks to Tom Cruise</p>
-      <figure>
-        <pre className="pre-scrollable code runnable">
-          {`MATCH (tom:Person {name:"Tom Hanks"})-[:ACTED_IN]->(m)<-[:ACTED_IN]-(coActors),
+      </pre>
+    </figure>
+    <p className="lead">Find someone to introduce Tom Hanks to Tom Cruise</p>
+    <figure>
+      <pre className="pre-scrollable code runnable">
+        {`MATCH (tom:Person {name:"Tom Hanks"})-[:ACTED_IN]->(m)<-[:ACTED_IN]-(coActors),
   (coActors)-[:ACTED_IN]->(m2)<-[:ACTED_IN]-(cruise:Person {name:"Tom Cruise"})
 RETURN tom, m, coActors, m2, cruise`}
-        </pre>
-      </figure>
-    </div>
+      </pre>
+    </figure>
   </Slide>,
-  <Slide key="s7">
-    <div className="col-sm-3">
-      <h5>The Movie Graph</h5>
-      <br />
-      <h3>Clean up</h3>
-      <p>When you're done experimenting, you can remove the movie data set.</p>
-      <p>Note:</p>
-      <ol>
-        <li>Nodes can't be deleted if relationships exist</li>
-        <li>Delete both nodes and relationships together</li>
-      </ol>
-      <p className="text-center text-warning bg-warning">
-        WARNING: This will remove all Person and Movie nodes!
-      </p>
-      <hr />
-      <p>
-        <small>:help</small> <a help-topic="delete">DELETE</a>
-      </p>
-    </div>
-    <div className="col-sm-9">
-      <p className="lead">
-        Delete all Movie and Person nodes, and their relationships
-      </p>
-      <figure>
-        <pre className="pre-scrollable code runnable">
-          MATCH (n) DETACH DELETE n
-        </pre>
-        <aside className="warn">
-          Note you only need to compare property values like this when first
-          creating relationships
-        </aside>
-      </figure>
-      <p className="lead">Prove that the Movie Graph is gone</p>
-      <figure>
-        <pre className="pre-scrollable code runnable">MATCH (n) RETURN n</pre>
-      </figure>
-    </div>
+  <Slide key="s7" forceDarkMode>
+    <h3>Clean up</h3>
+    <p>When you're done experimenting, you can remove the movie data set.</p>
+    <p>Note:</p>
+    <ol>
+      <li>Nodes can't be deleted if relationships exist</li>
+      <li>Delete both nodes and relationships together</li>
+    </ol>
+    <p className="text-center text-warning bg-warning">
+      WARNING: This will remove all Person and Movie nodes!
+    </p>
+    <hr />
+    <p className="lead">
+      Delete all Movie and Person nodes, and their relationships
+    </p>
+    <figure>
+      <pre className="pre-scrollable code runnable">
+        MATCH (n) DETACH DELETE n
+      </pre>
+      <aside className="warn">
+        Note you only need to compare property values like this when first
+        creating relationships
+      </aside>
+    </figure>
+    <p className="lead">Prove that the Movie Graph is gone</p>
+    <figure>
+      <pre className="pre-scrollable code runnable">MATCH (n) RETURN n</pre>
+    </figure>
+    <p>
+      <small>:help</small> <a help-topic="delete">DELETE</a>
+    </p>
   </Slide>,
-  <Slide key="s8">
-    <div className="col-sm-4">
-      <h3>Next steps</h3>
+  <Slide key="s8" forceDarkMode>
+    <h3>Next steps</h3>
 
-      <ul className="undecorated">
-        <li>
-          <a play-topic="northwind-graph">Northwind Graph</a> - from RDBMS to
-          graph
-        </li>
-        <li>
-          <a help-topic="cypher">Cypher</a> - Learn Cypher syntax
-        </li>
-        <li>
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href="https://portal.graphgist.org/"
-          >
-            Explore more guides: Graph Gists Portal
-          </a>
-        </li>
-      </ul>
-    </div>
-    <div className="col-sm-4">
-      <h3>Documentation</h3>
-      <ul className="undecorated">
-        <li>
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href="https://neo4j.com/developer/"
-          >
-            Developer resources
-          </a>
-        </li>
-        <li>
-          <ManualLink chapter="cypher-manual" page="/">
-            Neo4j Cypher Manual
-          </ManualLink>
-        </li>
-      </ul>
-    </div>
+    <ul className="undecorated">
+      <li>
+        <a play-topic="northwind-graph">Northwind Graph</a> - from RDBMS to
+        graph
+      </li>
+      <li>
+        <a help-topic="cypher">Cypher</a> - Learn Cypher syntax
+      </li>
+      <li>
+        <a
+          target="_blank"
+          rel="noreferrer"
+          href="https://portal.graphgist.org/"
+        >
+          Explore more guides: Graph Gists Portal
+        </a>
+      </li>
+    </ul>
+    <h3>Documentation</h3>
+    <ul className="undecorated">
+      <li>
+        <a target="_blank" rel="noreferrer" href="https://neo4j.com/developer/">
+          Developer resources
+        </a>
+      </li>
+      <li>
+        <ManualLink chapter="cypher-manual" page="/">
+          Neo4j Cypher Manual
+        </ManualLink>
+      </li>
+    </ul>
   </Slide>
 ]
 

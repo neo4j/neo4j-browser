@@ -61,6 +61,7 @@ function GuidesDrawer({
       >
         {guide.title}
       </h2>
+      <hr />
       <GuidesCarousel
         slides={guide.slides}
         scrollToTop={() =>
