@@ -15,6 +15,15 @@ import {
   getRemoteContentHostnameAllowlist
 } from 'shared/modules/dbMeta/dbMetaDuck'
 import { splitMdxSlides } from 'browser/modules/Docs/MDX/splitMdx'
+import {
+  StyledCypherErrorMessage,
+  StyledDiv,
+  StyledErrorH4,
+  StyledHelpContent,
+  StyledHelpDescription,
+  StyledHelpFrame,
+  StyledPreformattedArea
+} from 'browser/modules/Stream/styled'
 
 const { chapters } = docs.guide
 const unfound = { slides: [guideUnfound.content], title: guideUnfound.title }
@@ -92,14 +101,21 @@ async function resolveRemoteGuideFromURL(
     return {
       title: 'Error',
       slides: [
-        <ErrorView
-          key="only"
-          result={{
-            message: `Error: The remote server responded with the following error: 
-${e.name}: ${e.message}`,
-            code: 'Remote guide error'
-          }}
-        />
+        <Slide key="first" forceDarkMode>
+          <StyledHelpFrame>
+            <StyledHelpContent>
+              <StyledHelpDescription>
+                <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>
+                <StyledErrorH4>Remote guide error</StyledErrorH4>
+              </StyledHelpDescription>
+              <StyledDiv>
+                <StyledPreformattedArea>
+                  {e.name}: {e.message}
+                </StyledPreformattedArea>
+              </StyledDiv>
+            </StyledHelpContent>
+          </StyledHelpFrame>
+        </Slide>
       ]
     }
   }

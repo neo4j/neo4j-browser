@@ -131,7 +131,12 @@ type GuideDocs = {
   title: 'Built-in Browser guides'
   chapters: Record<GuideChapter, GuideItem>
 }
-type GuideChapter = 'index' | 'movieGraph' | 'movies' | 'unfound'
+type GuideChapter =
+  | 'index'
+  | 'movieGraph'
+  | 'movie-graph'
+  | 'movies'
+  | 'unfound'
 // TypeGuard function to ts to understand that a string is a valid key
 export function isGuideChapter(name: string): name is GuideChapter {
   return name in docs.guide.chapters
@@ -148,9 +153,11 @@ export type PlayChapter =
   | 'iconography'
   | 'intro'
   | 'learn'
+  | 'movie-graph'
   | 'movieGraph'
   | 'movies'
   | 'northwind'
+  | 'northwind-graph'
   | 'northwindGraph'
   | 'start'
   | 'typography'
@@ -326,8 +333,10 @@ const docs: AllDocumentation = {
       intro: playIntro,
       learn: playLearn,
       movieGraph: playMovieGraph,
+      'movie-graph': playMovieGraph,
       movies: playMovieGraph,
       northwind: playNorthwindGraph,
+      'northwind-graph': playNorthwindGraph,
       northwindGraph: playNorthwindGraph,
       start: playStart,
       typography: playTypography,
@@ -342,6 +351,7 @@ const docs: AllDocumentation = {
       index: guideIndex,
       movies: guideMovieGraph,
       movieGraph: guideMovieGraph,
+      'movie-graph': guideMovieGraph,
       unfound: guideUnfound
     }
   }
