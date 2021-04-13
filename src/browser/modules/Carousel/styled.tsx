@@ -49,9 +49,9 @@ export const StyledCarouselButtonContainer = styled.div`
   justify-content: center;
   position: absolute;
   bottom: 0;
+  left: 0;
   z-index: 10;
   border-top: ${props => props.theme.inFrameBorder};
-  margin-left: -40px;
   height: 39px;
   width: 100%;
 

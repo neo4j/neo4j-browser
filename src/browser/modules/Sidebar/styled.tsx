@@ -19,11 +19,7 @@
  */
 import { Button } from 'semantic-ui-react'
 import styled from 'styled-components'
-import {
-  Drawer,
-  DrawerBody,
-  DrawerBrowserCommand
-} from 'browser-components/drawer'
+import { DrawerBody, DrawerBrowserCommand } from 'browser-components/drawer'
 
 export const StyledSetting = styled.div`
   padding-bottom: 15px;
@@ -126,6 +122,7 @@ export const StyledCommand = styled(DrawerBrowserCommand)`
 `
 
 export const StyledCarousel = styled.div`
+  height: 100%;
   padding-bottom: 20px;
   min-height: 100%;
   width: 100%;
@@ -150,9 +147,9 @@ export const StyledCarouselButtonContainer = styled.div`
   justify-content: center;
   position: absolute;
   bottom: 0;
+  left: 0;
   z-index: 10;
   border-top: ${props => props.theme.inFrameBorder};
-  margin-left: -40px;
   height: 39px;
   width: 100%;
 
@@ -257,13 +254,4 @@ export const StyledUl = styled.ul`
   justify-content: center;
   margin: 0 !important;
   padding-left: 0 !important;
-`
-
-export const WideDrawer = styled(Drawer)`
-  width: 500px;
-  position: relative;
-`
-
-export const GuideContent = styled.div`
-  padding-bottom: 40px;
 `

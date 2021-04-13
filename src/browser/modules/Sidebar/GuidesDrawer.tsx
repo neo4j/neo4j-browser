@@ -21,7 +21,7 @@
 import React, { useRef } from 'react'
 import { connect } from 'react-redux'
 
-import { DrawerBody, DrawerHeader } from 'browser-components/drawer'
+import { DrawerHeader } from 'browser-components/drawer'
 import {
   getGuide,
   startGuide,
@@ -29,7 +29,6 @@ import {
   defaultGuide
 } from 'shared/modules/guides/guidesDuck'
 import { GlobalState } from 'shared/globalState'
-import { GuideContent, StyledHeaderContainer, WideDrawer } from './styled'
 import GuidesCarousel from '../GuideCarousel/GuideCarousel'
 import { BackIcon } from '../../components/icons/Icons'
 
@@ -40,7 +39,11 @@ function GuidesDrawer({
 }: GuidesDrawerProps): JSX.Element {
   const scrollRef = useRef<HTMLDivElement>(null)
   return (
-    <WideDrawer id="guide-drawer" ref={scrollRef}>
+    <div
+      style={{ width: '500px', minHeight: '100vh', position: 'relative' }}
+      id="guide-drawer"
+      ref={scrollRef}
+    >
       <DrawerHeader>
         {guide.title !== defaultGuide.title && (
           <span onClick={backToAllGuides}>
@@ -49,19 +52,16 @@ function GuidesDrawer({
         )}
         Neo4j Browser Guides
       </DrawerHeader>
-      <DrawerBody>
-        <GuideContent>
-          <GuidesCarousel
-            slides={guide.slides}
-            scrollToTop={() =>
-              scrollRef.current?.scrollIntoView({ block: 'start' })
-            }
-          />
-        </GuideContent>
-      </DrawerBody>
-    </WideDrawer>
+      <GuidesCarousel
+        slides={guide.slides}
+        scrollToTop={() =>
+          scrollRef.current?.scrollIntoView({ block: 'start' })
+        }
+      />
+    </div>
   )
 }
+
 const mapStateToProps = (state: GlobalState) => ({ guide: getGuide(state) })
 const mapDispatchToProps = (dispatch: any) => ({
   backToAllGuides: () => dispatch(startGuide())
