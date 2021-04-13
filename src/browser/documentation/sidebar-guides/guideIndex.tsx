@@ -1,26 +1,52 @@
 import React from 'react'
-import { DrawerBrowserCommand } from 'browser-components/drawer'
+import {
+  DrawerBrowserCommand,
+  DrawerExternalLink,
+  DrawerSubHeader
+} from 'browser-components/drawer'
 import { StyledSidebarSlide } from 'browser/modules/Carousel/styled'
 
 const title = 'all guides'
 const slides = [
   <StyledSidebarSlide key="first">
-    <h3>Guides in Neo4j Browser</h3>
-    You can start guides by running:
+    You can also access Browser guides by running
     <DrawerBrowserCommand data-populate=":guide [guide name]">
       :guide [guide name]
     </DrawerBrowserCommand>
+    in the code editor.
+    <DrawerSubHeader>Built-in guides</DrawerSubHeader>
     <ul className="undecorated">
-      <DrawerBrowserCommand data-exec=":guide movies">
-        :guide movies
-      </DrawerBrowserCommand>
       <li>
-        a guide about getting started
-        <a exec-topic="guide intro">:guide intro</a>
+        <DrawerBrowserCommand data-exec=":guide intro">
+          :guide intro
+        </DrawerBrowserCommand>
+        Navigating Neo4j Browser
       </li>
       <li>
-        a guide about movies
-        <a exec-topic="guide movies">:guide movies</a>
+        <DrawerBrowserCommand data-exec=":guide concepts">
+          :guide concepts
+        </DrawerBrowserCommand>
+        Property graph model concepts
+      </li>
+      <li>
+        <DrawerBrowserCommand data-exec=":guide cypher">
+          :guide cypher
+        </DrawerBrowserCommand>
+        Cypher basics - create, match, delete
+      </li>
+
+      <li>
+        <DrawerBrowserCommand data-exec=":guide movieGraph">
+          :guide movieGraph
+        </DrawerBrowserCommand>
+        Queries and recommendations with Cypher - movie use case
+      </li>
+
+      <li>
+        <DrawerBrowserCommand data-exec=":guide northwindGraph">
+          :guide northwindGraph
+        </DrawerBrowserCommand>
+        Translate and import relation data into graph
       </li>
 
       <li>
@@ -29,6 +55,9 @@ const slides = [
         </a>
       </li>
     </ul>
+    <DrawerExternalLink href="https://neo4j.com/graphgists/">
+      More guides
+    </DrawerExternalLink>
   </StyledSidebarSlide>
 ]
 

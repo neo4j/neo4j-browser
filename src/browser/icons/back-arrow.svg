@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="100%" height="100%" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/"
+    style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(-0.630665,-0.614711,0.590359,-0.605681,8.97079,19.8049)">
+        <path
+            d="M14.352,4.428L2.53,16.25C2.237,16.543 1.763,16.543 1.47,16.25C1.177,15.958 1.177,15.483 1.47,15.19L13.292,3.368L2.749,3.368C2.335,3.368 1.999,3.032 1.999,2.618C1.999,2.203 2.335,1.868 2.749,1.868L15.102,1.868C15.204,1.868 15.301,1.888 15.389,1.925C15.476,1.96 15.557,2.013 15.628,2.082C15.631,2.086 15.634,2.089 15.638,2.092C15.707,2.163 15.76,2.244 15.795,2.331C15.832,2.419 15.852,2.516 15.852,2.618L15.852,14.971C15.852,15.385 15.517,15.721 15.102,15.721C14.688,15.721 14.352,15.385 14.352,14.971L14.352,4.428Z"
+            style="fill:currentColor;fill-rule:nonzero;" />
+    </g>
+</svg>

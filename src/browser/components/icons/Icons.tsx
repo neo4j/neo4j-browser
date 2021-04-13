@@ -26,6 +26,7 @@ import addCircle from 'icons/add-circle.svg'
 import appWindowCode from 'icons/app-window-code.svg'
 import arrowLeft from 'icons/arrow-left.svg'
 import arrowRight from 'icons/arrow-right.svg'
+import backArrow from 'icons/back-arrow.svg'
 import buttonRefreshArrow from 'icons/button-refresh-arrow.svg'
 import cannyFeedback from 'icons/canny-feedback.svg'
 import cannyNotifications from 'icons/canny-notifications.svg'
@@ -473,4 +474,8 @@ export const CannyFeedbackIcon = (): JSX.Element => (
 
 export const CannyNotificationsIcon = (): JSX.Element => (
   <IconContainer icon={cannyNotifications} />
+)
+
+export const BackIcon = ({ width }: { width: number }): JSX.Element => (
+  <IconContainer width={width} icon={backArrow} />
 )

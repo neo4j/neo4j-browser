@@ -31,7 +31,7 @@ export type Guide = {
   slides: JSX.Element[]
 }
 
-const defaultGuide: Guide = {
+export const defaultGuide: Guide = {
   ...docs.guide.chapters.index,
   initialSlide: 0
 }

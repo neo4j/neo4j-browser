@@ -22,11 +22,16 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import { DrawerBody, DrawerHeader } from 'browser-components/drawer'
-import { getGuide, startGuide, Guide } from 'shared/modules/guides/guidesDuck'
+import {
+  getGuide,
+  startGuide,
+  Guide,
+  defaultGuide
+} from 'shared/modules/guides/guidesDuck'
 import { GlobalState } from 'shared/globalState'
 import { GuideContent, StyledHeaderContainer, WideDrawer } from './styled'
 import GuidesCarousel from '../GuideCarousel/GuideCarousel'
-import { SlidePreviousIcon } from '../../components/icons/Icons'
+import { BackIcon } from '../../components/icons/Icons'
 
 type GuidesDrawerProps = { guide: Guide; backToAllGuides: () => void }
 function GuidesDrawer({
@@ -35,16 +40,14 @@ function GuidesDrawer({
 }: GuidesDrawerProps): JSX.Element {
   return (
     <WideDrawer id="guide-drawer">
-      <StyledHeaderContainer>
-        <DrawerHeader>
-          {guide.title !== 'allGuides' && (
-            <span onClick={backToAllGuides}>
-              <SlidePreviousIcon />
-            </span>
-          )}
-          {guide.title} Guides{' '}
-        </DrawerHeader>
-      </StyledHeaderContainer>
+      <DrawerHeader>
+        {guide.title !== defaultGuide.title && (
+          <span onClick={backToAllGuides}>
+            <BackIcon width={16} />
+          </span>
+        )}
+        Neo4j Browser Guides
+      </DrawerHeader>
       <DrawerBody>
         <GuideContent>
           <GuidesCarousel slides={guide.slides} />

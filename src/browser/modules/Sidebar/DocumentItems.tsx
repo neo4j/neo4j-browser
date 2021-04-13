@@ -78,9 +78,7 @@ export const DocumentItems = ({
   const listOfItems = items.map(item =>
     'url' in item ? (
       <StyledHelpItem key={item.url}>
-        <DrawerExternalLink href={item.url} target="_blank" rel="noreferrer">
-          {item.name}
-        </DrawerExternalLink>
+        <DrawerExternalLink href={item.url}>{item.name}</DrawerExternalLink>
       </StyledHelpItem>
     ) : (
       <CommandItem
