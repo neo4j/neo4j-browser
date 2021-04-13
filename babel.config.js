@@ -3,7 +3,6 @@ const isTest = String(process.env.NODE_ENV) === 'test' // Jest sets this
 const toExport = {
   plugins: [
     'react-hot-loader/babel',
-    'styled-components',
     '@babel/plugin-proposal-class-properties',
     'babel-plugin-dynamic-import-node'
   ],
