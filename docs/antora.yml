@@ -7,6 +7,7 @@ nav:
 asciidoc:
   attributes:
     neo4j-version: '4.2'
-    neo4j-version-exact: '4.2.2'
+    neo4j-version-exact: '4.2.5'
     neo4j-buildnumber: '4.2'
+    neo4j-browser-version: '4.2.5'
     docs-version: '1.0'
