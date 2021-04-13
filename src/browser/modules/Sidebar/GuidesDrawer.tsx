@@ -40,7 +40,7 @@ function GuidesDrawer({
   const scrollRef = useRef<HTMLDivElement>(null)
   return (
     <div
-      style={{ width: '500px', minHeight: '100vh', position: 'relative' }}
+      style={{ minHeight: '100vh', position: 'relative' }}
       id="guide-drawer"
       ref={scrollRef}
     >
@@ -52,6 +52,15 @@ function GuidesDrawer({
         )}
         Neo4j Browser Guides
       </DrawerHeader>
+      <h2
+        style={{
+          margin: '10px 15px',
+          textOverflow: 'ellipsis',
+          overflow: 'hidden'
+        }}
+      >
+        {guide.title}
+      </h2>
       <GuidesCarousel
         slides={guide.slides}
         scrollToTop={() =>
