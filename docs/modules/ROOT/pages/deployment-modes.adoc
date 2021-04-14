@@ -4,17 +4,17 @@
 
 There are several different scenarios of how to run Neo4j Browser:
 
-* Bundled with Neo4j - Neo4j Browser is bundled with Neo4j database.
-* Bundled with Neo4j Desktop - Neo4j Browser is bundled with Neo4j Desktop.
-* Web application - link:https://browser.graphapp.io/[https://browser.graphapp.io/].
+* Neo4j - Neo4j includes an HTTP server that can host the `BROWSER` module (Neo4j Browser).
+* Neo4j Desktop - Neo4j Browser comes out-of-the-box when you install Neo4j Desktop on your system.
+* link:https://browser.graphapp.io/[Web application] - Try out Neo4j by using the Neo4j Browser web application.
 * link:https://neo4j.com/sandbox/[Neo4j sandbox] - Try out Neo4j and Neo4j Browser.
 * link:https://console.neo4j.io[Neo4j Aura] - Neo4j Browser is available from the Neo4j Aura console.
-* Dedicated web server - Host Neo4j Browser as a stand alone web application.
+* Dedicated web server - Host Neo4j Browser as a standalone HTTP web application.
 
 
-Neo4j Browser is open source (GNU General Public License v3.0) and the source code can be found at link:https://github.com/neo4j/neo4j-browser[https://github.com/neo4j/neo4j-browser].
+Neo4j Browser is open source (GNU General Public License v3.0) and the source code can be found at link:https://github.com/neo4j/neo4j-browser[_https://github.com/neo4j/neo4j-browser_].
 
-The following web browsers are supported:
+**The following web browsers are supported:**
 
 * Chrome (Latest version)
 * Firefox (Latest version)
@@ -26,30 +26,42 @@ Internet Explorer is not supported.
 ====
 
 [[bundled-neo4j]]
-== Bundled with Neo4j
+== Neo4j
 
-If you have installed the Neo4j database on you system, Neo4j Browser is bundled with Neo4j.
-The default configuration is configured to start Neo4j Browser at port `7474` when you start Neo4j database.
+Neo4j includes a web server that can host different HTTP modules.
+If you are using the default configuration the web server will be started and host the `BROWSER` module (Neo4j Browser) at port `7474` when you start Neo4j.
 
-The configuration https://neo4j.com/docs/operations-manual/current/reference/configuration-settings/#config_dbms.http_enabled_modules[dbms.http_enabled_modules] can be configured to not start Neo4j Browser by omitting `BROWSER` in the comma seperated list.
+[NOTE]
+====
+If you do not want to host Neo4j Browser when you start Neo4j, remove `BROWSER` from the comma-separated list of the configuration setting https://neo4j.com/docs/operations-manual/current/reference/configuration-settings/#config_dbms.http_enabled_modules[dbms.http_enabled_modules].
+====
 
-To access Neo4j Browser with the default configuration, start Neo4j by running the following command from your _<neo4j-home>_ directory:
+.Start Neo4j
+====
+Prerequisites for this example:
+
+* Install the Neo4j linux tarball.
+* Current work directory is _<neo4j-home>_.
+* Using the default configuration.
+
+Start Neo4j with the command:
 
 [source, shell]
 ----
 bin/neo4j start
 ----
 
-Neo4j starts a web server with Neo4j Browser at `http://localhost:7474/browser`.
+Neo4j starts a web server with the `BROWSER` module (Neo4j Browser) on port `7474`. +
+Point your web browser to link:http://localhost:7474/browser[_http://localhost:7474/browser_].
+====
 
 
 [[bundled-desktop]]
-== Bundled with Neo4j Desktop
+== Neo4j Desktop
 
-If you have installed Neo4j Desktop on your system, Neo4j Browser is bundled with Neo4j Desktop as a Neo4j Desktop application.
-
-You can run Neo4j Browser via Neo4j Desktop as an application.
-If you are using Neo4j Desktop, you can start the Neo4j Browser application from a project, provided that the Neo4j DBMS for that project is started.
+Neo4j Browser comes out-of-the-box when you install Neo4j Desktop on your system.
+By default, Neo4j Browser is configured to start as a Neo4j Desktop application at port `7474`.
+You start the Neo4j Browser application from a project in Neo4j Desktop, provided that the Neo4j DBMS for that project is started.
 
 . Download Neo4j desktop application.
 . Install and start the Neo4j Desktop application using the provided instructions (shown when downloading).
@@ -65,13 +77,13 @@ If you forget it, you have to remove the credentials file in _data/dbms/authoriz
 +
 image:browser-with-desktop.png[]
 +
-Alternatively, you can access this from a regular browser window by typing `http://localhost:7474` and signing in with *Username:* `neo4j` and *Password:* `<your database password (set up in Desktop)>`. +
+Alternatively, you can access this from a regular browser window by typing _http://localhost:7474_ and signing in with *Username:* `neo4j` and *Password:* `<your database password (set up in Desktop)>`. +
 
 
 [[web-application]]
 == Web application
 
-Neo4j Browser is available as a web application at link:https://browser.graphapp.io/[https://browser.graphapp.io/].
+Neo4j Browser is available as a web application at link:https://browser.graphapp.io/[_https://browser.graphapp.io/_].
 
 
 [[sandbox]]
@@ -82,6 +94,7 @@ The Neo4j Browser web application connects to your Neo4j instance without having
 
 image:browser-with-sandbox.png[]
 
+
 [[aura]]
 == Neo4j Aura
 
@@ -90,42 +103,46 @@ The Neo4j Browser web application connects to your Neo4j instance without having
 
 image:browser-with-aura.png[]
 
+
 [[web-server]]
 == Dedicated web server
 
 It is possible to host a dedicated web server to serve Neo4j Browser as a web application.
-The Neo4j Browser is a client side single page application (SPA), you can serve the static content with a HTTP server.
+The Neo4j Browser is a client-side single-page application (SPA), which uses an HTTP server for its static content.
+Download Neo4j Browser from link:https://search.maven.org/artifact/org.neo4j.client/neo4j-browser[Maven].
 
-[NOTE]
+[TIP]
 ====
-If you have installed Neo4j on your system then disable the browser module (`BROWSER`) from running. +
-See link:https://neo4j.com/docs/operations-manual/current/reference/configuration-settings/#config_dbms.http_enabled_modules[dbms.http_enabled_modules] configuration.
+If you have installed Neo4j on your system, then disable the browser module (`BROWSER`) from running. +
+For more information, see link:https://neo4j.com/docs/operations-manual/current/reference/configuration-settings/#config_dbms.http_enabled_modules[dbms.http_enabled_modules] configuration setting.
 ====
 
+
+[[http-web-servers]]
 === HTTP web servers
 
-Here is a list of suggestions for simple HTTP web servers that can be used to host the static content:
+Here is a list of suggestions for simple HTTP web servers that can be used to host Neo4j Browser.
 
 Python3 `http.server`::
-Is a simple http server that is bundled with Python 3. Do not use in production environment. +
-https://docs.python.org/3/library/http.server.html
-[source, shell]
+A simple HTTP server that is bundled with Python 3. Do not use in production environment. +
+For more information, see link:https://docs.python.org/3/library/http.server.html[_https://docs.python.org/3/library/http.server.html_]. +
+[source, shell, role=noheader]
 ----
 python -m http.server --directory neo4j-browser/ 8080
 ----
 
 Node.js `http-server`::
-Is a simple, zero-configuration command-line http server. +
-https://www.npmjs.com/package/http-server
-[source, shell]
+A simple, zero-configuration command-line HTTP server. +
+For more information, see link:https://www.npmjs.com/package/http-server[_https://www.npmjs.com/package/http-server_]. +
+[source, shell, role=noheader]
 ----
 npx http-server -p 8080 neo4j-browser/
 ----
 
 Node.js `serve`::
-Is a simple http server that is ideal for serving a static site, single page application or just a static file. +
-https://www.npmjs.com/package/serve
-[source, shell]
+A simple HTTP server that is ideal for serving a static site, single page application or just a static file. +
+For more information, see link:https://www.npmjs.com/package/serve[_https://www.npmjs.com/package/serve_]. +
+[source, shell, role=noheader]
 ----
 npx serve -l 8080 neo4j-browser/
 ----
@@ -134,62 +151,65 @@ npx serve -l 8080 neo4j-browser/
 ====
 HTTP servers suitable for production use:
 
-* Nginx -- is a web server that can also be used as a reverse proxy and a load balancer.
-* Apache HTTP Server.
-* Internet Information Services (IIS).
+Nginx::
+A web server that can also be used as a reverse proxy and a load balancer. +
+For more information, see link:https://www.nginx.com/[_https://www.nginx.com/_].
+
+Apache HTTP Server::
+For more information, see link:https://httpd.apache.org/[_https://httpd.apache.org/_].
+
+Internet Information Services (IIS)::
+For more information, see link:https://www.iis.net/[_https://www.iis.net/_].
 ====
 
 
-=== Get pre build and run web server
+[[pre-build-neo4j-browser]]
+=== Pre-build Neo4j Browser
 
-You can download Neo4j Browser from Maven (link:https://search.maven.org/artifact/org.neo4j.client/neo4j-browser[`https://search.maven.org/artifact/org.neo4j.client/neo4j-browser`]) and serve the web application with a HTTP server.
+You can download Neo4j Browser from Maven (link:https://search.maven.org/artifact/org.neo4j.client/neo4j-browser[_https://search.maven.org/artifact/org.neo4j.client/neo4j-browser_]) and serve the web application with an HTTP server.
 
 
-.Get pre build and run web server
+.Get pre-build Neo4j Browser and run an HTTP web server
 ====
 
-**1. Download Neo4j Browser.**
-
-Download Neo4j Browser from Maven:
+**1. Download Neo4j Browser from Maven.**
 
 [source, shell, subs="attributes+"]
 ----
 wget https://repo1.maven.org/maven2/org/neo4j/client/neo4j-browser/{neo4j-browser-version}/neo4j-browser-{neo4j-browser-version}.jar
 ----
 
-Or manually go to link:https://search.maven.org/artifact/org.neo4j.client/neo4j-browser[`https://search.maven.org/artifact/org.neo4j.client/neo4j-browser`] and download Neo4j Browser.
+Alternatively, manually go to link:https://search.maven.org/artifact/org.neo4j.client/neo4j-browser[_https://search.maven.org/artifact/org.neo4j.client/neo4j-browser_] and download Neo4j Browser.
 
 **2. Unzip the .jar file.**
-
-Unzip the `.jar` file:
 
 [source, shell, subs="attributes+"]
 ----
 unzip neo4j-browser-{neo4j-browser-version}.jar
 ----
 
-**3. Host web application with a HTTP server.**
+**3. Host Neo4j Browser with an HTTP server.**
 
-Start a web server (in this example you will start a web server with Python 3) to serve the content:
+Start a web server to serve the content.
+In this example you start a web server with Python 3.
 
 [source, shell]
 ----
 python -m http.server --directory browser/ 8080
 ----
 
-Point your web browser to `http://localhost:8080`.
+Point your web browser to link:http://localhost:8080[_http://localhost:8080_].
 
-**4. Test connecting to a Neo4j database instance.**
+**4. Test the connection to a Neo4j database instance.**
 
-Start a Neo4j database instance to test for connection.
-If you have the Neo4j tarball you can start the database instance with the command (assuming that the CWD is _<neo4j-home>_):
+If you have the Neo4j tarball you can start the database instance with the command (assuming that the current working directory is _<neo4j-home>_):
 
 [source, shell]
 ----
 bin/neo4j start
 ----
 
-In Neo4j Browser connect to the Neo4j database instance with the URI:
+In Neo4j Browser, connect to the Neo4j database instance with the URI:
 
 [source, role=noheader]
 ----
@@ -197,36 +217,40 @@ neo4j://localhost:7687
 ----
 ====
 
-See xref:operations#create-dbms-connection[Create a DBMS connection] for more details how to setup a connection to Neo4j in Neo4j Browser.
+[TIP]
+====
+For details on how to set up a connection to Neo4j in Neo4j Browser, see xref:operations#create-dbms-connection[Create a DBMS connection].
+====
 
 
-=== Build and run web server
+[[build-neo4j-browser]]
+=== Build Neo4j Browser
 
-You can build the source code and run Neo4j Browser.
+You can build the source code and host Neo4j Browser.
 
 The source code can be found at link:https://github.com/neo4j/neo4j-browser[https://github.com/neo4j/neo4j-browser].
 
-.Build and run web server
+.Build Neo4j Browser and run an HTTP web server
 ====
 
-**1. Get the source code.**
+**1. Get the source code from Github**
 
-Clone the Neo4j Browser git repository.
-The command will only get the `master` branch to save bandwidth and file space.
+Clone the Neo4j Browser Git repository.
+The command gets only the `master` branch to save bandwidth and file space.
 
 [source, shell]
 ----
 git clone --single-branch --branch=master https://github.com/neo4j/neo4j-browser/
 ----
 
-Change the current working directory to the root of the git repository.
+Change the current working directory to the root of the Git repository.
 
 [source, shell]
 ----
 cd neo4j-browser
 ----
 
-**2. Build with Node.js**
+**2. Build with Node.js.**
 
 Install Node.js dependencies:
 
@@ -235,24 +259,29 @@ Install Node.js dependencies:
 npm install
 ----
 
-Build the project:
+**3. Build the project.**
 
 [source, shell]
 ----
 npm build
 ----
 
-**3. Host web application with a HTTP server.**
+**4. Host web application with an HTTP server.**
 
-Start a web server (in this example you will start a web server with Python 3) to serve the content:
+Start a web server to serve the content.
+In this example you start a web server with Python 3.
 
 [source, shell]
 ----
 python -m http.server --directory dist/ 8080
 ----
 
-Point your web browser to `http://localhost:8080`.
+Point your web browser to link:http://localhost:8080[_http://localhost:8080_].
+====
 
-See xref:operations#create-dbms-connection[Create a DBMS connection] for details how to setup a connection to Neo4j in Neo4j Browser.
+[TIP]
+====
+For details on how to set up a connection to Neo4j in Neo4j Browser, see xref:operations#create-dbms-connection[Create a DBMS connection].
+====
 
 //https://neo4j.com/docs/bloom-user-guide/current/bloom-installation/#_bloom_web_app_hosted_in_a_separate_web_server
