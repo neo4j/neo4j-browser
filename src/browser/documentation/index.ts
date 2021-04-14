@@ -137,6 +137,7 @@ type GuideChapter =
   | 'movie-graph'
   | 'movies'
   | 'unfound'
+
 // TypeGuard function to ts to understand that a string is a valid key
 export function isGuideChapter(name: string): name is GuideChapter {
   return name in docs.guide.chapters

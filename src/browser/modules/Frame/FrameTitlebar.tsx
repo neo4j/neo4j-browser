@@ -47,7 +47,6 @@ import {
 } from 'shared/modules/stream/streamDuck'
 import { sleep } from 'shared/services/utils'
 import { FrameButton } from 'browser-components/buttons'
-import ConfirmationDialog from 'browser-components/ConfirmationDialog'
 import Render from 'browser-components/Render'
 import { CSVSerializer } from 'services/serializer'
 import {
@@ -133,7 +132,6 @@ function FrameTitlebar(props: FrameTitleBarProps) {
     // makes sure the frame is updated as links in frame is followed
     editorRef.current?.setValue(props.frame.cmd)
   }, [props.frame.cmd])
-  const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const editorRef = useRef<MonacoHandles>(null)
 
   /* When the frametype is changed the titlebar is unmounted
@@ -400,34 +398,10 @@ function FrameTitlebar(props: FrameTitleBarProps) {
             <SVGInline svg={controlsPlay} width="12px" />
           </FrameButton>
         </Render>
-        <ConfirmationDialog
-          confirmLabel="Yes, close frame"
-          onClose={() => {
-            setConfirmationDialogOpen(false)
-          }}
-          onConfirm={() => {
-            setConfirmationDialogOpen(false)
-            props.onCloseClick(frame.id, frame.requestId, props.request)
-          }}
-          open={confirmationDialogOpen}
-        >
-          <h2 style={{ fontWeight: 'normal' }}>Close frame?</h2>
-          <p>
-            Closing the frame cannot be undone.
-            <br />
-            You can access you query history by running <code>
-              :history
-            </code>{' '}
-            command.
-          </p>
-          <p>Do you want to close the frame anyway?</p>
-        </ConfirmationDialog>
         <FrameButton
           title="Close"
           onClick={() => {
-            frame.isRerun
-              ? setConfirmationDialogOpen(true)
-              : props.onCloseClick(frame.id, frame.requestId, props.request)
+            props.onCloseClick(frame.id, frame.requestId, props.request)
           }}
         >
           <CloseIcon />

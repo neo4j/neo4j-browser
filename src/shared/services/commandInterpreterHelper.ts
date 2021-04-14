@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 import * as Sentry from '@sentry/react'
 import bolt from 'services/bolt/bolt'
 import * as frames from 'shared/modules/stream/streamDuck'
@@ -36,7 +37,7 @@ import {
   getUseDb
 } from 'shared/modules/connections/connectionsDuck'
 import { open } from 'shared/modules/sidebar/sidebarDuck'
-import { startGuide } from 'shared/modules/guides/guidesDuck'
+import { defaultGuide, startGuide } from 'shared/modules/guides/guidesDuck'
 import { getParams } from 'shared/modules/params/paramsDuck'
 import { getUserCapabilities } from 'shared/modules/features/featuresDuck'
 import {
@@ -476,7 +477,7 @@ const availableCommands = [
     exec(action: any, put: any, store: any) {
       const guideName = action.cmd.substr(':guide'.length).trim()
       if (!guideName) {
-        // open the drawer and show default
+        put(startGuide(defaultGuide))
         put(open('guides'))
         return
       }

@@ -36,7 +36,6 @@ type DocsProps = {
   lastUpdate?: number
   originFrameId?: string
   withDirectives?: true
-  showSideButtons?: boolean
 }
 
 export default function Docs({
@@ -48,8 +47,7 @@ export default function Docs({
   onSlide,
   originFrameId,
   withDirectives = true,
-  lastUpdate,
-  showSideButtons = true
+  lastUpdate
 }: DocsProps): JSX.Element | null {
   const [stateSlides, setStateSlides] = useState<JSX.Element[]>([])
 
@@ -98,7 +96,6 @@ export default function Docs({
         initialSlide={initialSlide}
         withDirectives={withDirectives}
         originFrameId={originFrameId}
-        showSideButtons={showSideButtons}
       />
     )
   } else if (stateSlides.length) {
