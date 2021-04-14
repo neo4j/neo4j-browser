@@ -94,7 +94,10 @@ export class Segment extends Component<any> {
             analytics._writeKey = segmentKey
             analytics.SNIPPET_VERSION = '4.13.2'
             analytics.load(segmentKey)
-            setTrackCallback(analytics.track)
+            const doTrack = (...args: any) => {
+              window.analytics.track(...args)
+            }
+            setTrackCallback(doTrack)
           }
         }
       })(window, document, segmentKey)
