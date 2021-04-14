@@ -184,6 +184,8 @@ Any queries you run in Neo4j Browser populate your results below the command lin
 Query results are rendered either as a visual graph, a table format, an ascii-table result, and in JSON.
 You can switch between those with the icons on the left side of the result frame.
 
+// GK Review comment - some overlap wih browser tour in content below - think this content might be better covered there han here?
+
 === Graph
 
 The graph visualization functionality is designed to display a node-graph representation of the underlying data stored in the database in response to a given Cypher query, showing circles for nodes and lines for relationships.

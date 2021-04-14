@@ -25,6 +25,7 @@ Clicking on any one of those options runs a quick query to show you a sample of 
 //https://miro.medium.com/max/1400/0*WxSIQfG5d3alMsd6.png
 //   Local scripts
 //   Sample scripts
+// GK review comment - Note Project files is similar to favorites, but made available via Desktop and only available when Browser is run from Desktop
 * Project Files -
 * Browser Sync - allows you to synchronize your favorites, styling, and settings to cloud storage, so you can share it across machines and browsers.
 * Help and Learn - contains useful commands, built-in guides, links to documentation, notifications, and a send feedback button.
@@ -194,7 +195,8 @@ You can also see the current status on your database, such as store sizes, ID al
 
 To override the configuration settings -> https://neo4j.com/developer/kb/how-do-i-override-browser-configuration-settings/
 
-To remove the automatic completion of missing relationships, uncheck the `Connect result nodes` in *Settings* .
+// GK review - proposing fuller explanation
+When you execute a query, any relationships not explicitly returned by the query, but that exist between the nodes it reurns will be shown in the graph.  This behaviour is conrolled by the `Connect result nodes` in *Settings*.  You can disable for queries where it is important to only see the relationships the query returns.
 
 Configuration settings can be set in _neo4j.conf_ or if using Neo4j Desktop, navigate to the DBMS which settings you want to update, click the ellipsis dropdown menu, and select *Settings*.
 

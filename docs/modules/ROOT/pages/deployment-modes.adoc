@@ -42,6 +42,7 @@ If you are using Neo4j Desktop, you can start the Neo4j Browser application from
 . Install and start the Neo4j Desktop application using the provided instructions (shown when downloading).
 Alternatively, after downloading the zipped server-only package, instructions can also be found in the readme (`bin/neo4j start`) after unzipping the downloaded file.
 . Set up your first project and database following step 2 of the provided Neo4j Desktop instructions.
+// GK review comment - what is the server-only package referred to above, I don't understand this in the conext of Desktop?
 +
 [NOTE]
 ====
@@ -56,6 +57,8 @@ Alternatively, you can access this from a regular browser window by typing _http
 
 [[web-application]]
 == Neo4j Browser - Web application
+
+// GK review comment - Maybe add some info about how can connect to any Neo4j DB from it, and how you just need the connection URL, username and password?
 
 Neo4j Browser is available as a web application at _https://browser.graphapp.io/_.
 
