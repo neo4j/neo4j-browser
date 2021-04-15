@@ -39,20 +39,15 @@ It is:
 
 The following areas of Neo4j Browser are covered in this manual:
 
-* About Neo4j Browser - An overview of Neo4j Browser, its purpose, and high-level capabilities.
-* Deployment  modes - The different deployment modes for running Neo4j Browser.
-*
+* xref:about-browser.adoc[About Neo4j Browser] - the purpose of Neo4j Browser and its high-level capabilities.
+* xref:deployment-modes.adoc[Deployment modes] - the different deployment modes for running Neo4j Browser.
+* xref:visual-tour.adoc[Visual tour] - a visual overview of the UI of Neo4j Browser.
+* xref:operations.adoc[Browser operations] - how to administer and use Neo4j Browser.
 
 [.lead]
 *Who should read this*
 
 This manual is written for developers, database administrators, quality engineers, data scientists, and data architects, who may or may not be familiar with Neo4j.
-
-* Developers who want to try Neo4j.
-* Developers who are familiar with Neo4j and want to use Neo4j Browser for running ad-hoc queries, visualize their data, and maybe prototype a Neo4j-based application.
-* Database administrators and quality engineers ….
-* Data scientists who want to take advantage of Neo4j GDS application.
-* Data architects ….
 
 // Useful links:
 //===============
