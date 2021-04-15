@@ -19,6 +19,9 @@ const LinkContainer = styled.div`
   justify-content: flex-end;
   width: 100%;
 `
+const StyledUl = styled.div`
+  list-style-type: none;
+`
 
 const title = ''
 const slides = [
@@ -33,7 +36,7 @@ const slides = [
         Built-in guides
       </DrawerSubHeader>
     </MarginTop>
-    <ul className="undecorated">
+    <StyledUl>
       <li>
         <DrawerBrowserCommand data-exec=":guide intro">
           :guide intro
@@ -68,7 +71,7 @@ const slides = [
         </DrawerBrowserCommand>
         <MarginTop>Translate and import relation data into graph</MarginTop>
       </MarginTopLi>
-    </ul>
+    </StyledUl>
     <LinkContainer>
       <DrawerExternalLink href="https://neo4j.com/graphgists/">
         More guides

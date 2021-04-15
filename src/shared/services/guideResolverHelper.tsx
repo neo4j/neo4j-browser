@@ -100,7 +100,7 @@ async function resolveRemoteGuideFromURL(
 
   try {
     const remoteGuide = await fetchRemoteGuide(url, allowlist)
-    const titleRegexMatch = remoteGuide.match('<title>(.*?)</title>')
+    const titleRegexMatch = remoteGuide.match(/<title>(.*?)<\/title>/)
     const title = (titleRegexMatch && titleRegexMatch[1])?.trim() || guideName
     if (['md', 'mdx'].includes(filenameExtension)) {
       return {
