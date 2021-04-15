@@ -69,11 +69,11 @@ export class Intercom extends Component<any> {
     return false
   }
 
-  // @ts-expect-error ts-migrate(7030) FIXME: Not all code paths return a value.
   componentWillUnmount() {
-    if (!canUseDOM()) return false
-    ;(window as any).Intercom('shutdown')
-    delete (window as any).Intercom
+    if (canUseDOM()) {
+      ;(window as any).Intercom('shutdown')
+      delete (window as any).Intercom
+    }
   }
 
   render() {

@@ -136,12 +136,12 @@ export class Segment extends Component<any> {
     return false
   }
 
-  // @ts-expect-error ts-migrate(7030) FIXME: Not all code paths return a value.
   componentWillUnmount() {
     const { setTrackCallback } = this.props
     setTrackCallback(null)
-    if (!canUseDOM()) return false
-    delete (window as any).analytics
+    if (canUseDOM()) {
+      delete (window as any).analytics
+    }
   }
 
   render() {
