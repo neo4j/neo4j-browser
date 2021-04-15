@@ -4,10 +4,10 @@
 ** xref:about-browser.adoc#browser-capabilities[High-level capabilities of Neo4j Browser]
 
 * xref:deployment-modes.adoc[Deployment modes]
-** xref:deployment-modes.adoc#bundled-neo4j[Neo4j]
+** xref:deployment-modes.adoc#bundled-neo4j[Neo4j Server]
 ** xref:deployment-modes.adoc#bundled-neo4j[Neo4j Desktop]
 ** xref:deployment-modes.adoc#web-application[Web application]
-** xref:deployment-modes.adoc#sandbox[Neo4j sandbox]
+** xref:deployment-modes.adoc#sandbox[Neo4j Sandbox]
 ** xref:deployment-modes.adoc#aura[Neo4j Aura]
 ** xref:deployment-modes.adoc#web-server[Dedicated web server]
 

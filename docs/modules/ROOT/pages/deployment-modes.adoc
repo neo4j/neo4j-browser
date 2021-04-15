@@ -4,10 +4,10 @@
 
 There are several different scenarios of how to run Neo4j Browser:
 
-* Neo4j - Neo4j includes an HTTP server that can host the `BROWSER` module (Neo4j Browser).
+* Neo4j Server - Neo4j includes an HTTP server that can host the `BROWSER` module (Neo4j Browser).
 * Neo4j Desktop - Neo4j Browser comes out-of-the-box when you install Neo4j Desktop on your system.
 * link:https://browser.graphapp.io/[Web application] - Neo4j Browser is available as a web application.
-* link:https://neo4j.com/sandbox/[Neo4j sandbox] - Try out Neo4j and Neo4j Browser.
+* link:https://neo4j.com/sandbox/[Neo4j Sandbox] - Try out Neo4j and Neo4j Browser.
 * link:https://console.neo4j.io[Neo4j Aura] - Neo4j Browser is available from the Neo4j Aura console.
 * Dedicated web server - Host Neo4j Browser as a standalone HTTP web application.
 
@@ -32,7 +32,7 @@ For details on how to set up a connection to Neo4j in Neo4j Browser, see xref:op
 
 
 [[bundled-neo4j]]
-== Neo4j
+== Neo4j Server
 
 Neo4j is the world’s leading graph database.
 The architecture is designed for optimal management, storage, and traversal of nodes and relationships.
@@ -99,13 +99,18 @@ Alternatively, you can access this from a regular browser window by typing _http
 == Web application
 
 Neo4j Browser is available as a web application at link:https://browser.graphapp.io/[_https://browser.graphapp.io/_].
+To setup up a connection to Neo4j with this web application (Neo4j Browser), you need a remote Neo4j instance that is configured with TLS.
 
 
 [[sandbox]]
-== Neo4j sandbox
+== Neo4j Sandbox
 
-Neo4j Browser can be accessed as a web application within the user interface of link:https://neo4j.com/sandbox/[Neo4j sandbox].
-The Neo4j Browser web application connects to your Neo4j instance without having to enter any connection URI.
+Experience Neo4j in a click with link:https://neo4j.com/sandbox/[Neo4j Sandbox].
+Pick a project and get started in less than 60 seconds.
+No download required.
+
+Neo4j Browser can be accessed as a web application within the user interface of link:https://neo4j.com/sandbox/[Neo4j Sandbox].
+The Neo4j Browser web application connects to your Neo4j instance that the sandbox created for you, without having to enter any connection URI.
 
 image:browser-with-sandbox.png[]
 
@@ -113,7 +118,10 @@ image:browser-with-sandbox.png[]
 [[aura]]
 == Neo4j Aura
 
-Neo4j Browser can be accessed as a web application within the user interface of link:https://console.neo4j.io[Neo4j Aura].
+link:https://neo4j.com/cloud/aura/[Neo4j Aura] is Neo4j’s fully managed cloud service.
+Neo4j Aura is a fast, reliable, scalable and completely automated graph database as a cloud service.
+
+Neo4j Browser can be accessed as a web application within the user interface of link:https://console.neo4j.io/[Neo4j Aura console].
 The Neo4j Browser web application connects to your Neo4j instance without having to enter any connection URI.
 
 image:browser-with-aura.png[]
@@ -122,9 +130,26 @@ image:browser-with-aura.png[]
 [[web-server]]
 == Dedicated web server
 
-It is possible to host a dedicated web server to serve Neo4j Browser as a web application.
 The Neo4j Browser is a client-side single-page application (SPA), which uses an HTTP server for its static content.
+It is possible to host a dedicated web server to serve Neo4j Browser as a web application.
 Download Neo4j Browser from link:https://search.maven.org/artifact/org.neo4j.client/neo4j-browser[Maven].
+
+Here are some use cases why this deployment mode could be usefull.
+
+Neo4j Browser local hosted::
+This case is valid if you have access to a Neo4j instance and dont want to install Neo4j Desktop or dont want to use a hosted Neo4j Browser web application.
+It is a simple sollution, start a local hosted Neo4j Browser web application on your machine with a simple one-line command.
+Also it is easy to run a specific version of Neo4j Browser, download the preffered version from link:https://search.maven.org/artifact/org.neo4j.client/neo4j-browser[Maven].
+
+Neo4j Browser deployed web application::
+If you want to have specific network configurations within you network and host Neo4j Browser for quick access within your organization, you can host Neo4j Browser with a HTTP web server.
+This allows for full control of configuring the HTTP web server as needed, for example you way want to add a layer of access control to access the Neo4j Browser web application and configure the HTTP web server connection to use TLS.
+
+Extend or improve the source code::
+Neo4j Browser is open source (GNU General Public License v3.0) and the source code can be found at link:https://github.com/neo4j/neo4j-browser[_https://github.com/neo4j/neo4j-browser_].
+If you want to extend or contribute to the project you can alter the code.
+This allows you to run an altered version of Neo4j Browser.
+
 
 [TIP]
 ====
