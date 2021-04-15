@@ -2,9 +2,6 @@
 = Visual tour
 :description: This chapter presents a visual overview of the UI of Neo4j Browser.
 
-// https://medium.com/neo4j/neo4j-browser-embraces-the-monaco-editor-bc8415cac22e
-// https://medium.com/neo4j/wheres-my-neo4j-cypher-query-results-%EF%B8%8F-%EF%B8%8F-9c3b150e6e19
-
 This section walks you through the UI of Neo4j Browser.
 
 [[overview]]
@@ -31,26 +28,36 @@ If the current user has an administrative role, then two more options are availa
 For more information about user's built-in roles and the default privileges, see link:https://neo4j.com/docs/operations-manual/current/authentication-authorization/built-in-roles/[Operations Manual -> Built-in roles].
 * *DBMS* - provides information about the Neo4j version and edition, as well as some useful DBMS administrative commands:
 ** `:dbs` - list all databases available for the current user.
-** `sysinfo` - display data about the Neo4j system, such as, store size, ID allocation, page cache, transactions, and databases (name, address, role, status, default database, and errors).
+** `:sysinfo` - display data about the Neo4j system, such as, store size, ID allocation, page cache, transactions, and databases (name, address, role, status, default database, and errors).
 ** `:queries` - list all currently running queries on the server.
 
 [[favorites]]
 === Favorites
 
-The *Favorites* drawer is where you keep your bookmarked queries and commands. +
-If you currently have an empty frame, you can display some nodes and relationships by using the saved scripts under *Favorites* in the left-side menu.
-Neo4j stores a few default favorites to get you started.
-Expand the *Basic Queries*, then choose *Get Some Data*, and run the query.
-This executes the statement `MATCH (n) RETURN n limit 100`, which fetches some nodes.
+The *Favorites* drawer is where you keep your bookmarked queries and commands.
+
+image:favorites.png[]
+
+==== Save a query as a favorite
 
 You can save your own queries as favorites by "starring" them.
-Populate the Cypher editor with the query you want to favorite, then click the *Save as Favorites* icon to the right of the editor.
-This adds the query to your *Favorites* list in the left-side menu.
+Use the *Add empty favorite* option to open an empty script in the Cypher editor, then write the query that you want to bookmark.
+Clicking the *Save as Favorite* icon to the right of the editor adds the query to your *Favorites* list in the left-side menu.
+All favorites are stored in your local browser storage and as such are centric to the user/browser who has recorded those favorites.
+Clearing your Browser cache removes all your local favorites.
+
+[NOTE]
+====
+Your favorites, settings, and styles can be saved to the cloud with Neo4j Browser Sync.
+====
+
+==== Run a favorite
+
 To run one of your favorites, click the left-side menu *Favorites*, choose the query, and run it.
 
-image:favorites.png[width=150%]
+==== Add a title to a favorite
 
-To provide a title or helpful info, you can use a comment `//comment` above your query.
+To provide a title or helpful info to your favorite, you can use a comment `//comment` above your query.
 The *Favorites* menu uses this comment to name the saved query.
 
 .Favorite: Hello Cypher
@@ -64,19 +71,31 @@ LIMIT 100
 ----
 ====
 
-Creating folders can help organize your favorites, and you can rearrange them by dragging, or delete them if they are no longer useful.
+==== Organize your favorites
 
-[NOTE]
-====
-Your favorites, settings, and styles can be saved to the cloud with Neo4j Browser Sync. If you clear your Browser cache, your local favorites will be removed.
-====
+Creating folders can help organize your favorites.
+You can rearrange them by dragging, and delete them if they are no longer useful.
 
-// https://neo4j.com/developer/kb/how-do-i-export-cypher-favorites-recorded-in-the-browser/
+==== Sample Scripts
+
+There are several built-in favorites, which can help you manage and explore your data.
+
+* *Basic Queries* contains simple queries to get you started with Neo4j.
+For example, clicking and running the *Get Some Data* query, executes the statement `MATCH (n) RETURN n limit 100`, which fetches some nodes.
+* *Example Graphs* contains queries that run the built-in guides The Movie Graph and The Northwind Database.
+For more information on the Neo4j Browser built-in guides, see <<guides>>.
+* *Data Profiling* contains queries that you can use to collect statistics and produce informative summaries about the underlying data.
+For example, clicking and running the *What is related, and how* query, executes the procedure `CALL db.schema.visualization()`, which shows the graph data model (graph schema).
+* *Common Procedures* contains a few built-in procedures, two of which list all available functions and procedures.
 
 [[saved-files]]
 === Project Files
 
-// TODO: difference between favorites and saved files
+The *Project files* tab is Neo4j Desktop specific.
+Project files allows you to save queries, guides, and other scripts, as cypher files.
+Unlike favorites, which are saved in your local browser storage, project files are project specific, and are actual files stored in the project directory on your hard drive.
+All save files are listed under the project they refer to.
+For more information, see link:[Neo4j Desktop Manual -> ???].
 
 [[help-learn]]
 === Help & Learn
@@ -88,57 +107,49 @@ image:help.png[]
 [[useful-commands]]
 ==== Useful commands
 
+Most of the commands in the *Useful commands* tab work as an entry point to a help page, where you can find a lot of handy commands and keyboard shortcuts you can use in Neo4j Browser.
 
-.Other useful commands and shortcuts
+.Useful commands
 [cols="1,3",options="header"]
 |===
-| Shortcut
-| Purpose
+| Command
+| Description
 
 | `:help`
 | Help System
 
+| `:help cypher`
+| Provide a list of the most useful Cypher commands, with an overview and a quick way to find help.
+
 | `:help commands`
-| Useful Commands
-
-| `:clear`
-| Clear Frames
-
-| `:style [reset]`
-|Styling Popup & Reset
+| List all available `:help` commands.
 
 | `:help keys`
-| Keyboard Help
+| List some of the Cypher editor keyboard shortcuts. +
+To access the list of all available editor keybindings, press F1 in the Cypher editor.
 
-| `Ctrl+Enter` or `Cmd+Enter`
-| Execute Statement
+| `:history`
+| Display the most recent executed commands.
+The command history is persisted across Browser restarts.
 
-| `Ctrl+Up` or `Cmd+Up`
-| Previous Statement
+| `CALL db.schema.visualization()`
+| Show database schema.
 
-| `Shift+Enter`
-| Enter Multiline Mode
-
-| `/`
-| Move Focus to Editor
-
-| `ESC`
-| Toggle Editor to Full Screen
+| `:sysinfo`
+| Display data about the Neo4j system, such as, store size, ID allocation, page cache, transactions, and databases (name, address, role, status, default database, and errors).
 |===
+
 
 [[guides]]
 ==== Built-in guides
 
 Neo4j Browser provides many interactive guides for learning concepts and tools with Neo4j.
-From data import to graph algorithms to working with RDF data, there is likely an interactive browser guide out there to walk through it.
-If there is not one that fits your needs, you can create one and publish it to the community or internally at your company.
-For more information on how to do that, see link:https://neo4j.com/developer/guide-create-neo4j-browser-guide/[creating a custom Browser guide].
+Some of them come with Neo4j Browser out-of-the-box, no matter what system or installation you are using.
 
-Some guides ship with Neo4j Browser out-of-the-box, no matter what system or installation you are working on.
-The Browser built-in guides are quick guides that introduce different Neo4j concepts.
-You can find more helpful links in the left sidebar of Neo4j in the "Documents" tab ().
-To pin a particular pane to the top of the window (under the editor) so that it stays at the top when you run queries after it, just click the pushpin button ().
-This is especially helpful for pinning guides to the top so they do not get pushed down to the bottom of the window as you run queries.
+[TIP]
+====
+You can pin a guide, so it does not get pushed down to the bottom of the window as you run queries, by clicking the pushpin button.
+====
 
 .Built-in guides and commands
 [cols="1,3",options="header"]
@@ -147,43 +158,39 @@ This is especially helpful for pinning guides to the top so they do not get push
 | Description
 
 | `:play intro`
-| Neo4j Browser User Interface
+| Neo4j Browser User Interface.
 
 | `:play concepts`
-| Basic property-graph concepts to get you going
+| Basic property-graph concepts to get you going.
 
 | `:play learn`
-| Learn (Graph database fundamentals)
+| Learn (Graph database fundamentals).
 
 | `:play cypher`
-| Cypher basics - create, match, patterns
+| Cypher basics - create, match, patterns.
 
 | `:play movie graph`
-| The Movie Graph, a mini graph model of connections between actors and movies
+| The Movie Graph, a mini graph model of connections between actors and movies.
 
 | `:play northwind graph`
-| The Northwind Database, a classic use case of RDBMS to graph with import instructions and queries
+| The Northwind Database, a classic use case of RDBMS to graph with import instructions and queries.
 
 |`:play start`
-| Getting started with Neo4j Browser - concepts, write-code, system info
+| Getting started with Neo4j Browser - concepts, write-code, system info.
 
 | `:play write-code`
-| Jump right into coding with example data graphs (Shows both guides for movie graph and northwind graph)
+| Jump right into coding with example data graphs (Shows both guides for The Movie graph and The Northwind graph).
 
 | `:play fabric`
 | The basics of setting up and using Neo4j Fabric.
 
 | `:play`
 | Use `:play <url>` to play a custom guide.
-For more information on how to create a custom Browser guide, see link:https://neo4j.com/developer/guide-create-neo4j-browser-guide/[https://neo4j.com/developer/guide-create-neo4j-browser-guide/]
 |===
 
-Then, just press *Enter* or the *Play* button to execute the statement.
-Results of the query populate in a panel right below the Cypher editor.
-
-[TIP]
+[NOTE]
 ====
-There are also other guides, which are created by Neo4j staff and community members to help others learn Neo4j or how to use the tools in its ecosystem. +
+There are also other guides created by Neo4j staff and community members to help others learn Neo4j or how to use the tools in its ecosystem.
 You can check out the currently published list on the link:https://portal.graphgist.org/graph_guides[GraphGist Portal (Graph Guides section)]. +
 For more information on how to create a custom Browser guide, see link:https://neo4j.com/developer/guide-create-neo4j-browser-guide/[creating a custom Browser guide].
 ====
@@ -206,142 +213,330 @@ For more information on how to create a custom Browser guide, see link:https://n
 // Northwind Graph - https://github.com/neo4j/neo4j-browser/blob/master/src/browser/documentation/guides/northwind-graph.tsx
 //
 
-[[other-resources]]
-==== Documentation links and Other Resources
-
-
 [[settings]]
 === Browser Settings
 
-// https://neo4j.com/developer/neo4j-browser/#browser-config
-The defaults for all the settings can be adjusted at any time by going to the configuration option on the left-side menu.
-Some possible config changes and views are the following:
+The *Browser Settings* drawer contains configurations related to the UI, result frames, and graph visualization.
+The defaults for all settings can be adjusted at any time in Neo4j Browser and globally.
 
-* You can retrieve the current configuration with `:config`.
-* Individual settings are configured with the following defaults:
-** `:config maxNeighbours:100`- maximum number of neighbours for a node
-** `:config maxRows:100` - maximum number of rows for the tabular result
+To view all currently configured settings, run `:config`.
 
-You can also see the current status on your database, such as store sizes, ID allocation, page cache, and transaction info by using the command `:sysinfo` in the editor.
-//https://dist.neo4j.com/wp-content/uploads/sysinfo_stats.png
-
-To override the configuration settings -> https://neo4j.com/developer/kb/how-do-i-override-browser-configuration-settings/
-
-To remove the automatic completion of missing relationships, uncheck the `Connect result nodes` in *Settings* .
-
-Configuration settings can be set in _neo4j.conf_ or if using Neo4j Desktop, navigate to the DBMS which settings you want to update, click the ellipsis dropdown menu, and select *Settings*.
-
-*Neo4j Browser settings*
-
-.`browser.allow_outgoing_connections`
-[cols="h,5"]
+.Available Browser settings
+[options="header" cols=",,,"]
 |===
-| Description   | Configure the policy for outgoing Neo4j Browser connections.
-| Valid values  | browser.allow_outgoing_connections, a boolean
-| Default value | `true`
+| Browser Setting
+| Default value
+| Description
+| Configurable in the *Browser Settings* drawer
+
+| `maxHistory`
+| `30`
+| The maximum number of recent executed queries kept in Browser.
+When reached, old entries gets retired.
+The command history is persisted across Browser restarts.
+| yes
+
+| `theme`
+| `auto`
+| Neo4j Browser UI theme.
+Possible values: `auto`, `normal`, `outline`, and `dark`.
+| yes
+
+| `initCmd`
+| `:play start`
+| The initial command that will be executed when connected to the graph.
+| yes
+
+| `playImplicitInitCommands`
+| `true`
+| TODO: Commands that will be executed when connected to the graph.
+| no
+
+| `initialNodeDisplay`
+| `300`
+| Limit number of nodes displayed on first load of the graph visualization.
+| yes
+
+| `maxNeighbours`
+| `100`
+| The maximum number of neighbours for a node.
+| yes
+
+| `showSampleScripts`
+| `true`
+| Whether to display the *Sample Scripts* tab in *Favorites*.
+| yes
+
+| `browserSyncDebugServer`
+| `null`
+| TODO
+| yes
+
+| `maxRows`
+| `1000`
+| TODO: The maximum rows to render in the "Row" result view.
+| yes
+
+| `maxFieldItems`
+| `500`
+| Maximum number of items per field.
+| no
+
+| `shouldReportUdc`
+| `true`
+| TODO
+| no
+
+| `autoComplete`
+| `true`
+| Automatic completion of missing relationships.
+| yes, from the `Connect result nodes` check-box.
+
+| `scrollToTop`
+| `true`
+| Automatically scroll stream to top on new frames.
+| yes
+
+| `maxFrames`
+| `30`
+| Max number of result frames. When reached, old frames gets retired.
+| yes
+
+| `codeFontLigatures`
+| `true`
+| Allows font ligatures for the Cypher editor bar and Cypher snippets.
+| yes
+
+| `useBoltRouting`
+| `false`
+| Whether to use Bolt routing.
+The Bolt+routing is the feature on Neo4j drivers to discover the member of a cluster (drivers have a load-balancing feature).
+Therefore, this feature is only useful if you have a causal cluster.
+| no
+
+| `editorLint`
+| `false`
+| TODO
+| no
+
+| `useCypherThread`
+| `true`
+| TODO
+| no
+
+| `enableMultiStatementMode`
+| `true`
+| Allows you to write and edit multi-line queries (use semicolon to separate statements).
+| yes
+
+| `connectionTimeout`
+| `30000`
+| The timeout in ms when establishing a connection to Neo4j.
+| yes
+
+| `showPerformanceOverlay`
+| `false`
+| TODO
+| no
+
+| `editorAutocomplete`
+| `true`
+| Trigger autocomplete when typing.
+| no
 |===
 
-.`browser.credential_timeout`
-[cols="h,5"]
-|===
-| Description   | Configure the Neo4j Browser to time out logged in users after this idle period. Setting this to 0 indicates no limit.
-| Valid values  | `browser.credential_timeout`, a duration (Valid units are: `ns`, `μs`, `ms`, `s`, `m`, `h`, and `d`; default unit is `s`).
-| Default value | `0s`
-|===
+==== Adjust settings in Browser
 
-.`browser.post_connect_cmd`
-[cols="h,5"]
-|===
-| Description   | Commands to be run when Neo4j Browser successfully connects to this server. Separate multiple commands with semi-colon.
-| Valid values  | `browser.post_connect_cmd`, a string
-| Default value | `0s`
-|===
+To change the configuration settings locally in Neo4j Browser, you can either use the tabs in the *Browser Settings* drawer, or in the Cypher editor, type the command `:config` together with the setting and the new value.
 
-.`browser.remote_content_hostname_whitelist`
-[cols="h,5"]
-|===
-| Description   | Whitelist of hosts for the Neo4j Browser to be allowed to fetch content from.
-| Valid values  | `browser.remote_content_hostname_whitelist`, a string
-| Default value | `guides.neo4j.com,localhost`
-|===
+.Adjust an individual setting
+====
+The example shows how to change the maximum number of neighbours for a node.
+[source, cypher]
+----
+:config maxNeighbours:100
+----
+====
 
-.`browser.retain_connection_credentials`
-[cols="h,5"]
-|===
-| Description   | Configure the Neo4j Browser to store or not store user credentials.
-| Valid values  | `browser.retain_connection_credentials`, a boolean
-| Default value | `true`
-|===
+.Adjust several settings
+====
+The example shows how to change the `maxFrames` from its default of `50` to `10` and the theme to `outline`.
+[source, cypher]
+----
+:config {maxFrames:10, theme: "outline"}
+----
+Once making the change, rerunning `:config` should report that `maxFrames` has been set to `10` and `theme` is defined to `outline`.
+The Browser Settings Icon should also reflect this change.
+====
 
-[[about-neo4j]]
-=== About Neo4j
+==== Adjust settings globally
 
-The *About Neo4j* drawer provides information about
+To change the configuration settings for all users of Neo4j Browser, modify the _neo4j.conf_ file, or if using link:[Neo4j Desktop], navigate to the DBMS which settings you want to update, click the ellipsis dropdown menu, and select *Settings*.
+
+For example, to change the `maxFrames` from its default of `50` to `10` and the theme to `outline`, add the following line to _neo4j.conf_:
+
+[source, properties]
+----
+browser.post_connect_cmd=config {maxFrames:10, theme: "outline"}
+----
+
+This changes the `maxFrames` from its default of `50` to `10` and then restarts Neo4j.
+
+.Global Browser settings
+[options="header" cols=",,"]
+|===
+| Browser Setting
+| Default value
+| Description
+
+| `browser.allow_outgoing_connections`
+| `true`
+| Configure the policy for outgoing Neo4j Browser connections.
+
+| `browser.credential_timeout`
+| `0s`
+| Configure the Neo4j Browser to time out logged in users after this idle period. Setting this to 0 indicates no limit.
+Valid units are: `ns`, `μs`, `ms`, `s`, `m`, `h`, and `d`; default unit is `s`).
+
+| `browser.post_connect_cmd`
+| `0s`
+| Commands to be run when Neo4j Browser successfully connects to the server.
+Separate multiple commands with semi-colon.
+
+| `browser.remote_content_hostname_whitelist`
+| `guides.neo4j.com,localhost`
+| Whitelist of hosts for the Neo4j Browser to be allowed to fetch content from.
+
+| `browser.retain_connection_credentials`
+| `true`
+| Configure the Neo4j Browser to store or not store user credentials.
+|===
 
 [[editor]]
 == Cypher editor
 
-The Cypher editor is the primary interface for entering and running commands.
-From Neo4j Browser 4.2.4, the Cypher editor is based on Monaco link:https://microsoft.github.io/monaco-editor/[https://microsoft.github.io/monaco-editor/], the editor that powers VS Code link:https://github.com/Microsoft/vscode[https://github.com/Microsoft/vscode].
+The Cypher editor is the primary interface for entering and running Cypher queries and commands.
 
-Some of its features include:
+image:screen_editor.png[]
 
-* Syntax highlighting
-** A smart highlight of matching pairs around the current position of the cursor, for example, matching brackets, braces, and parenthesis.
-** A smart highlight of identical words on a word click.
-You can select them by pressing *Command + D* (one occurrence at a time) or by command+shift L (all occurrences).
-* Command palette (F1)
-* Quick comment/uncomment
-* Moving query parts around
-* Folding and indentation
+[NOTE]
+====
+From Neo4j Browser 4.2.4, the Cypher editor is based on link:https://microsoft.github.io/monaco-editor/[Monaco Editor], the code editor that powers link:https://github.com/Microsoft/vscode[Visual Studio Code (VS Code)].
+Even though it is the same text editor as VS Code, it is not the entire VS Code package.
+For example, plugins are not included and are not possible to implement.
+====
 
+Some of the Cypher editor features include:
 
 * Cypher queries to work with graph data.
-* Client-side commands like `:help` for other operations.
+* The editor can be instantiated several times, which allows you to edit the query inside the result frame, and re-run it.
+* Single-line editing for brief queries or commands.
+* Multi-line editing for long queries or commands.
 * REST request commands (`:GET`, `:POST`, `:PUT`, and `:DELETE`).
-* Single line editing for brief queries or commands.
-* Switch to multi-line editing with *<Shift-Enter>*.
-* Run a query with *<Ctrl-Enter>* or *<Cmd-Enter>*.
-* History is kept for easily retrieving previous commands.
-* Autocomplete for browser commands.
-* Move focus to the editor with /.
-* Toggle the editor to full screen with ESC.
+* Syntax highlighting:
+** A smart highlight of matching pairs around the current position of the cursor, for example, matching brackets, braces, and parenthesis.
+** Matching pairs are auto-closed.
+** A smart highlight of identical words on a word click.
+** Words, such as, attributes, anon name, and values, are highlighted in different colors.
+** Any punctuation, such as, parenthesis and comma, has a slightly different color than text.
+* Quick comment/uncomment.
+* Indentation and folding. +
+You can fold an indented code snippet.
+This way, you can hide lots of code.
+* Search and replace. +
+For example, you can search for a particular label (e.g., `: Actor`) and replace all its occurrences (with `: Person`).
+* Autocomplete for browser commands can autocomplete several words.
+* Warnings are displayed with a squiggly line that you hover and you get a pop-up.
+* Client-side commands like `:help` for other operations.
+* Command palette (F1) with all of the available commands with their shortcuts.
+The currently available commands can be turned on and off.
 
-Use the command `:help keys` for information about keyboard shortcuts.
+image:command-palette.png[]
 
+.Useful shortcuts
+[cols="3,2,2",options="header"]
+|===
+| Description
+| Keyboard shortcut (Mac OS)
+| Keyboard shortcut (Windows and Linux)
 
-// https://neo4j.com/developer-blog/neo4j-browser-embraces-the-monaco-editor/
-// https://browser.graphapp.io/assets/images/screen_editor.png
+| Select highlighted identical words one by one.
+| *command + D*
+| *Ctrl + D*
 
-[[frames]]
-== Result frames
+| Select all highlighted identical words.
+| *command + shift + L*
+| *Ctrl + shift + L*
+
+| Move a query line up and down.
+| *ALT + arrow*
+| *ALT + arrow*
+
+| Delete a query line
+| *command + shift + K*
+| *Ctrl + shift + K*
+
+| Add multiple cursors, if you want to add several lines at the same time.
+| *command + ALT + arrow*
+| *Ctrl + ALT + arrow*
+
+| Toggle comment on the currently selected row(s).
+| *command + /*
+| *Ctrl + /*
+
+| Search and replace.
+| *command + F*
+| *Ctrl + F*
+
+| Run a query.
+| *command + enter*
+| *Ctrl + Enter*
+
+| Switch to multi-line editing.
+| *Shift + enter*
+| *Shift + Enter*
+
+| Move focus to the Cypher editor.
+| */*
+| */*
+
+| Toggle the Cypher editor to full screen.
+| *ESC*
+| *ESC*
+|===
+
+[TIP]
+====
+For more information about keyboard shortcuts, use the command `:help keys`.
+====
+
+[[reusable-frames]]
+== Reusable result frames
+
+Neo4j Browser reusable result frames allow you to edit the query of an existing result directly in the result frame and re-run to update the result in situ. +
+Each reusable frame maintains their own local history of commands and updates the main one in the Cypher editor, should you need to instantiate a new result frame from there.
+
+image:inline-result-editor.gif[]
 
 [[frame-views]]
 === Result frame views
 
-* Graph - Display the result as nodes and relationships. Styling can be configured.
-* Table - Display the result as JSON formatted rows.
-* Text - Display the result as a plain text table.
-* Code https://browser.graphapp.io/assets/images/screen_code_frame.png - View the requests and responses.
+Neo4j Browser supports different result frame views to suit your needs:
 
-[stream]
+* Graph - display the result as nodes and relationships, and allows xref:operations.adoc#styling[styling] to be configured.
+* Table - display the result as JSON formatted rows.
+* Text - display the result as a plain text table.
+* Code - display the submitted request, the Neo4j Server version and address, and the response.
+
+For more details on the different ways to view data in Neo4j Browser, see xref:operations.adoc#results[Visualizing results].
+
+[[stream]]
 === Stream
 
-// https://browser.graphapp.io/assets/images/screen_stream.png
+A stream is a scrolling series of result frames.
 
-Scrolling series of frames (mostly reusable result frames).
+image:screen_stream.png[]
 
 A reusable result frame is created for each command execution, added to the top of the stream to create a scrollable collection in reverse chronological order.
 
-Remove all the frames from the stream with the :clear command.
-
-[[reusable-frames]]
-=== Reusable result frames
-
-Cells with results that you can reiterate on.
-
-Now, when you need to edit the query of an existing result frame to fix a mistake, you can do that directly in the result frame and update the results in situ.
-
-The reusable frame maintains its own local history of commands as well as updating the main Cypher editor, should you need to instantiate a new result frame from there.
-
-image:inline-result-editor.gif[]
+Remove all the frames from the stream with the `:clear` command.
