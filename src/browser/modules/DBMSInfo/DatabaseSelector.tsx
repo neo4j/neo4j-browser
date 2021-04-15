@@ -24,7 +24,7 @@ import {
   DrawerSection,
   DrawerSubHeader,
   DrawerSectionBody
-} from 'browser-components/drawer/index'
+} from 'browser-components/drawer/drawer'
 import { uniqBy } from 'lodash-es'
 import { escapeCypherIdentifier } from 'services/utils'
 

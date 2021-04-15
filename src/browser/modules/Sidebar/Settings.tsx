@@ -27,7 +27,7 @@ import {
   DrawerSection,
   DrawerSectionBody,
   DrawerSubHeader
-} from 'browser-components/drawer'
+} from 'browser-components/drawer/drawer'
 import { RadioSelector, CheckboxSelector } from 'browser-components/Form'
 import {
   StyledSetting,

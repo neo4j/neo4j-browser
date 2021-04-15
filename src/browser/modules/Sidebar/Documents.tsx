@@ -30,7 +30,7 @@ import {
   TRACK_CANNY_FEATURE_REQUEST
 } from 'shared/modules/sidebar/sidebarDuck'
 import DocumentItems from './DocumentItems'
-import { Drawer, DrawerHeader } from 'browser-components/drawer'
+import { Drawer, DrawerHeader } from 'browser-components/drawer/drawer'
 import {
   CannyFeedbackIcon,
   CannyNotificationsIcon

@@ -3,10 +3,24 @@ import {
   DrawerBrowserCommand,
   DrawerExternalLink,
   DrawerSubHeader
-} from 'browser-components/drawer'
+} from 'browser-components/drawer/drawer'
 import Slide from 'browser/modules/Carousel/Slide'
+import styled from 'styled-components'
 
-const title = 'all guides'
+const MarginTopLi = styled.li`
+  margin-top: 15px;
+`
+const MarginTop = styled.div`
+  margin-top: 5px;
+`
+const LinkContainer = styled.div`
+  margin-top: 15px;
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+`
+
+const title = ''
 const slides = [
   <Slide key="first" forceDarkMode>
     You can also access Browser guides by running
@@ -14,50 +28,52 @@ const slides = [
       :guide [guide name]
     </DrawerBrowserCommand>
     in the code editor.
-    <DrawerSubHeader>Built-in guides</DrawerSubHeader>
+    <MarginTop>
+      <DrawerSubHeader as="div" /* prevents guide styling of h5*/>
+        Built-in guides
+      </DrawerSubHeader>
+    </MarginTop>
     <ul className="undecorated">
       <li>
         <DrawerBrowserCommand data-exec=":guide intro">
           :guide intro
         </DrawerBrowserCommand>
-        Navigating Neo4j Browser
+        <MarginTop> Navigating Neo4j Browser </MarginTop>
       </li>
-      <li>
+      <MarginTopLi>
         <DrawerBrowserCommand data-exec=":guide concepts">
           :guide concepts
         </DrawerBrowserCommand>
-        Property graph model concepts
-      </li>
-      <li>
+        <MarginTop> Property graph model concepts </MarginTop>
+      </MarginTopLi>
+      <MarginTopLi>
         <DrawerBrowserCommand data-exec=":guide cypher">
           :guide cypher
         </DrawerBrowserCommand>
-        Cypher basics - create, match, delete
-      </li>
+        <MarginTop>Cypher basics - create, match, delete</MarginTop>
+      </MarginTopLi>
 
-      <li>
-        <DrawerBrowserCommand data-exec=":guide movieGraph">
-          :guide movieGraph
+      <MarginTopLi>
+        <DrawerBrowserCommand data-exec=":guide movie-graph">
+          :guide movie-graph
         </DrawerBrowserCommand>
-        Queries and recommendations with Cypher - movie use case
-      </li>
+        <MarginTop>
+          Queries and recommendations with Cypher - movie use case
+        </MarginTop>
+      </MarginTopLi>
 
-      <li>
-        <DrawerBrowserCommand data-exec=":guide northwindGraph">
-          :guide northwindGraph
+      <MarginTopLi>
+        <DrawerBrowserCommand data-exec=":guide northwind-graph">
+          :guide northwind-graph
         </DrawerBrowserCommand>
-        Translate and import relation data into graph
-      </li>
-
-      <li>
-        <a exec-topic="guide https://guides.neo4j.com/sandbox/movies/index.html">
-          :guide https://guides.neo4j.com/sandbox/movies/index.html
-        </a>
-      </li>
+        <MarginTop>Translate and import relation data into graph</MarginTop>
+      </MarginTopLi>
     </ul>
-    <DrawerExternalLink href="https://neo4j.com/graphgists/">
-      More guides
-    </DrawerExternalLink>
+    <LinkContainer>
+      <DrawerExternalLink href="https://neo4j.com/graphgists/">
+        More guides
+      </DrawerExternalLink>
+    </LinkContainer>
   </Slide>
 ]
 

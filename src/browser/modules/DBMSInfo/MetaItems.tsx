@@ -24,7 +24,7 @@ import {
   DrawerSubHeader,
   DrawerSection,
   DrawerSectionBody
-} from 'browser-components/drawer'
+} from 'browser-components/drawer/drawer'
 import {
   StyledLabel,
   StyledRelationship,

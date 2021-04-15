@@ -31,7 +31,11 @@ import { getGraphStyleData } from 'shared/modules/grass/grassDuck'
 import { LabelItems, RelationshipItems, PropertyItems } from './MetaItems'
 import { UserDetails } from './UserDetails'
 import DatabaseKernelInfo from './DatabaseKernelInfo'
-import { Drawer, DrawerBody, DrawerHeader } from 'browser-components/drawer'
+import {
+  Drawer,
+  DrawerBody,
+  DrawerHeader
+} from 'browser-components/drawer/drawer'
 import { DatabaseSelector } from './DatabaseSelector'
 import { getUseDb } from 'shared/modules/connections/connectionsDuck'
 import { getDatabases } from 'shared/modules/dbMeta/dbMetaDuck'

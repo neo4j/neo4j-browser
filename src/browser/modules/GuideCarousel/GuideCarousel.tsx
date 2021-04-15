@@ -84,7 +84,7 @@ function GuidesCarousel({
   const moreThanOneSlide = slides.length > 1
 
   return (
-    <div>
+    <>
       <StyledCarousel onKeyUp={onKeyUp}>
         <SlideContainer>
           <Directives content={currentSlide} />
@@ -134,7 +134,7 @@ function GuidesCarousel({
           </StyledCarouselButtonContainerInner>
         </StyledCarouselButtonContainer>
       )}
-    </div>
+    </>
   )
 }
 export default GuidesCarousel

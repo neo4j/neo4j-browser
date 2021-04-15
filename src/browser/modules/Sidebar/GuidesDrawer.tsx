@@ -21,7 +21,7 @@
 import React, { useRef } from 'react'
 import { connect } from 'react-redux'
 
-import { DrawerHeader } from 'browser-components/drawer'
+import { DrawerHeader } from 'browser-components/drawer/drawer'
 import {
   getGuide,
   startGuide,
@@ -29,46 +29,40 @@ import {
   defaultGuide
 } from 'shared/modules/guides/guidesDuck'
 import { GlobalState } from 'shared/globalState'
-import GuidesCarousel from '../GuideCarousel/GuideCarousel'
+import GuideCarousel from '../GuideCarousel/GuideCarousel'
 import { BackIcon } from '../../components/icons/Icons'
+import { StyledGuidesDrawer, GuideTitle } from './styled'
 
 type GuidesDrawerProps = { guide: Guide; backToAllGuides: () => void }
+
 function GuidesDrawer({
   guide,
   backToAllGuides
 }: GuidesDrawerProps): JSX.Element {
   const scrollRef = useRef<HTMLDivElement>(null)
   return (
-    <div
-      style={{ minHeight: '100vh', position: 'relative' }}
-      id="guide-drawer"
-      ref={scrollRef}
-    >
+    <StyledGuidesDrawer id="guide-drawer" ref={scrollRef}>
       <DrawerHeader>
         {guide.title !== defaultGuide.title && (
-          <span onClick={backToAllGuides}>
+          <span
+            style={{ cursor: 'pointer', marginRight: '5px' }}
+            onClick={backToAllGuides}
+          >
             <BackIcon width={16} />
           </span>
         )}
         Neo4j Browser Guides
       </DrawerHeader>
-      <h2
-        style={{
-          margin: '10px 15px',
-          textOverflow: 'ellipsis',
-          overflow: 'hidden'
-        }}
-      >
-        {guide.title}
-      </h2>
-      <hr />
-      <GuidesCarousel
-        slides={guide.slides}
-        scrollToTop={() =>
-          scrollRef.current?.scrollIntoView({ block: 'start' })
-        }
-      />
-    </div>
+      <GuideTitle>{guide.title}</GuideTitle>
+      <div style={{ padding: '0 18px' }}>
+        <GuideCarousel
+          slides={guide.slides}
+          scrollToTop={() =>
+            scrollRef.current?.scrollIntoView({ block: 'start' })
+          }
+        />
+      </div>
+    </StyledGuidesDrawer>
   )
 }
 
@@ -80,4 +74,5 @@ const ConnectedGuidesDrawer = connect(
   mapStateToProps,
   mapDispatchToProps
 )(GuidesDrawer)
+
 export default ConnectedGuidesDrawer

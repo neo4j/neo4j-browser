@@ -19,7 +19,10 @@
  */
 import { Button } from 'semantic-ui-react'
 import styled from 'styled-components'
-import { DrawerBody, DrawerBrowserCommand } from 'browser-components/drawer'
+import {
+  DrawerBody,
+  DrawerBrowserCommand
+} from 'browser-components/drawer/drawer'
 
 export const StyledSetting = styled.div`
   padding-bottom: 15px;
@@ -254,4 +257,15 @@ export const StyledUl = styled.ul`
   justify-content: center;
   margin: 0 !important;
   padding-left: 0 !important;
+`
+
+export const StyledGuidesDrawer = styled.div`
+  min-height: 100vh;
+  position: relative;
+`
+
+export const GuideTitle = styled.h2`
+  margin: 10px 15px;
+  textoverflow: ellipsis;
+  overflow: hidden;
 `

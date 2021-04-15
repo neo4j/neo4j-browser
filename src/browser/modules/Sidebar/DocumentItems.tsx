@@ -26,7 +26,7 @@ import {
   DrawerSection,
   DrawerSectionBody,
   DrawerExternalLink
-} from 'browser-components/drawer'
+} from 'browser-components/drawer/drawer'
 import {
   StyledHelpItem,
   StyledCommandListItem,
@@ -44,6 +44,7 @@ import {
   SavedScriptsExpandMenuRightIcon
 } from 'browser-components/icons/Icons'
 import { SavedScriptsFolderCollapseIcon } from 'browser-components/SavedScripts/styled'
+
 const DrawerSubHeaderWithMargin = styled(DrawerSubHeader)`
   margin: 0 24px 0 24px;
 `
