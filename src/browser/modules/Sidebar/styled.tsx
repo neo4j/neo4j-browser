@@ -269,3 +269,11 @@ export const GuideTitle = styled.h2`
   textoverflow: ellipsis;
   overflow: hidden;
 `
+
+export const BackIconContainer = styled.span`
+  cursor: pointer;
+  margin-right: 5px;
+`
+export const CarouselWrapper = styled.div`
+  padding: 0 18px;
+`

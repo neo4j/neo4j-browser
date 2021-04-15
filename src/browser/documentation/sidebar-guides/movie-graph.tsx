@@ -47,14 +47,13 @@ const slides = [
   <Slide key="s2" forceDarkMode>
     <h3>Create</h3>
     <p>
-      To the right is a giant code block containing a single Cypher query
-      statement composed of multiple CREATE clauses. This will create the movie
-      graph.
+      Bellow is a giant code block containing a single Cypher query statement
+      composed of multiple CREATE clauses. This will create the movie graph.
     </p>
     <ol>
       <li>Click on the code block</li>
-      <li>Notice it gets copied to the editor above ↑</li>
-      <li>Click the editor's play button to execute</li>
+      <li>Notice it gets copied to the editor to the right </li>
+      <li>Click the editor&apos;s play button to execute</li>
       <li>Wait for the query to finish</li>
     </ol>
     <p className="text-center text-warning bg-warning">
@@ -771,8 +770,10 @@ RETURN tom, m, coActors, m2, cruise`}
 
     <ul className="undecorated">
       <li>
-        <a play-topic="northwind-graph">Northwind Graph</a> - from RDBMS to
-        graph
+        <a href="#" data-exec=":guide northwind-graph">
+          Northwind Graph
+        </a>
+        - from RDBMS to graph
       </li>
       <li>
         <a help-topic="cypher">Cypher</a> - Learn Cypher syntax

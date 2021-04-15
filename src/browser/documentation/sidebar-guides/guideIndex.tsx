@@ -5,23 +5,7 @@ import {
   DrawerSubHeader
 } from 'browser-components/drawer/drawer'
 import Slide from 'browser/modules/Carousel/Slide'
-import styled from 'styled-components'
-
-const MarginTopLi = styled.li`
-  margin-top: 15px;
-`
-const MarginTop = styled.div`
-  margin-top: 5px;
-`
-const LinkContainer = styled.div`
-  margin-top: 15px;
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-`
-const StyledUl = styled.div`
-  list-style-type: none;
-`
+import { LinkContainer, MarginTop, MarginTopLi, NoBulletsUl } from './styled'
 
 const title = ''
 const slides = [
@@ -36,7 +20,7 @@ const slides = [
         Built-in guides
       </DrawerSubHeader>
     </MarginTop>
-    <StyledUl>
+    <NoBulletsUl>
       <li>
         <DrawerBrowserCommand data-exec=":guide intro">
           :guide intro
@@ -71,7 +55,7 @@ const slides = [
         </DrawerBrowserCommand>
         <MarginTop>Translate and import relation data into graph</MarginTop>
       </MarginTopLi>
-    </StyledUl>
+    </NoBulletsUl>
     <LinkContainer>
       <DrawerExternalLink href="https://neo4j.com/graphgists/">
         More guides

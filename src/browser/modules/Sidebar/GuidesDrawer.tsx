@@ -31,7 +31,12 @@ import {
 import { GlobalState } from 'shared/globalState'
 import GuideCarousel from '../GuideCarousel/GuideCarousel'
 import { BackIcon } from '../../components/icons/Icons'
-import { StyledGuidesDrawer, GuideTitle } from './styled'
+import {
+  StyledGuidesDrawer,
+  GuideTitle,
+  BackIconContainer,
+  CarouselWrapper
+} from './styled'
 
 type GuidesDrawerProps = { guide: Guide; backToAllGuides: () => void }
 
@@ -44,24 +49,21 @@ function GuidesDrawer({
     <StyledGuidesDrawer id="guide-drawer" ref={scrollRef}>
       <DrawerHeader>
         {guide.title !== defaultGuide.title && (
-          <span
-            style={{ cursor: 'pointer', marginRight: '5px' }}
-            onClick={backToAllGuides}
-          >
+          <BackIconContainer onClick={backToAllGuides}>
             <BackIcon width={16} />
-          </span>
+          </BackIconContainer>
         )}
         Neo4j Browser Guides
       </DrawerHeader>
       <GuideTitle>{guide.title}</GuideTitle>
-      <div style={{ padding: '0 18px' }}>
+      <CarouselWrapper>
         <GuideCarousel
           slides={guide.slides}
           scrollToTop={() =>
             scrollRef.current?.scrollIntoView({ block: 'start' })
           }
         />
-      </div>
+      </CarouselWrapper>
     </StyledGuidesDrawer>
   )
 }
