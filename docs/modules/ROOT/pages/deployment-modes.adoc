@@ -6,7 +6,7 @@ There are several different scenarios of how to run Neo4j Browser:
 
 * Neo4j - Neo4j includes an HTTP server that can host the `BROWSER` module (Neo4j Browser).
 * Neo4j Desktop - Neo4j Browser comes out-of-the-box when you install Neo4j Desktop on your system.
-* link:https://browser.graphapp.io/[Web application] - Try out Neo4j by using the Neo4j Browser web application.
+* link:https://browser.graphapp.io/[Web application] - Neo4j Browser is available as a web application.
 * link:https://neo4j.com/sandbox/[Neo4j sandbox] - Try out Neo4j and Neo4j Browser.
 * link:https://console.neo4j.io[Neo4j Aura] - Neo4j Browser is available from the Neo4j Aura console.
 * Dedicated web server - Host Neo4j Browser as a standalone HTTP web application.
@@ -25,11 +25,23 @@ Neo4j Browser is open source (GNU General Public License v3.0) and the source co
 Internet Explorer is not supported.
 ====
 
+[TIP]
+====
+For details on how to set up a connection to Neo4j in Neo4j Browser, see xref:operations#create-dbms-connection[Create a DBMS connection].
+====
+
+
 [[bundled-neo4j]]
 == Neo4j
 
+Neo4j is the world’s leading graph database.
+The architecture is designed for optimal management, storage, and traversal of nodes and relationships.
+There are two editions of Neo4j to choose from, the Community Edition and the Enterprise Edition.
+The Enterprise Edition includes all that Community Edition has to offer, plus extra enterprise requirements such as backups, clustering, and failover capabilities.
+
 Neo4j includes a web server that can host different HTTP modules.
 If you are using the default configuration the web server will be started and host the `BROWSER` module (Neo4j Browser) at port `7474` when you start Neo4j.
+The `BROWSER` module is avaialable in Community Edition and Enterprise Edition.
 
 [NOTE]
 ====
@@ -58,6 +70,9 @@ Point your web browser to link:http://localhost:7474/browser[_http://localhost:7
 
 [[bundled-desktop]]
 == Neo4j Desktop
+
+Neo4j Desktop is a local development environment for working with Neo4j, whether using local database instances or databases located on remote servers.
+It is designed to help you as a new user to learn and experiment with Neo4j locally by including everything you need to get started.
 
 Neo4j Browser comes out-of-the-box when you install Neo4j Desktop on your system.
 By default, Neo4j Browser is configured to start as a Neo4j Desktop application at port `7474`.
