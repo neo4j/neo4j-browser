@@ -67,7 +67,7 @@ import UserInteraction from '../UserInteraction'
 import DocTitle from '../DocTitle'
 import asTitleString from '../DocTitle/titleStringBuilder'
 import Intercom from '../Intercom'
-import Segment from '../Segment'
+import Segment, { MetricsData } from '../Segment'
 import Render from 'browser-components/Render'
 import BrowserSyncInit from '../Sync/BrowserSyncInit'
 import { getMetadata, getUserAuthStatus } from 'shared/modules/sync/syncDuck'
@@ -103,24 +103,23 @@ export function App(props: any) {
 
   useKeyboardShortcuts(props.bus)
 
-  const eventMetricsCallback = useRef((_: any) => {})
-  const segmentTrackCallback = useRef((_a: any, _b: any) => {})
+  const eventMetricsCallback = useRef((_: MetricsData) => {})
+  const segmentTrackCallback = useRef((_: MetricsData) => {})
 
   useEffect(() => {
     const unsub =
       props.bus &&
-      props.bus.take(METRICS_EVENT, ({ category, label, data }: any) => {
-        eventMetricsCallback &&
-          eventMetricsCallback.current &&
-          eventMetricsCallback.current({ category, label, data })
-        segmentTrackCallback &&
-          segmentTrackCallback.current &&
-          segmentTrackCallback.current(category + '-' + label, {
-            category,
-            label,
-            data
-          })
-      })
+      props.bus.take(
+        METRICS_EVENT,
+        ({ category, label, data }: MetricsData) => {
+          eventMetricsCallback &&
+            eventMetricsCallback.current &&
+            eventMetricsCallback.current({ category, label, data })
+          segmentTrackCallback &&
+            segmentTrackCallback.current &&
+            segmentTrackCallback.current({ category, label, data })
+        }
+      )
     const initAction = udcInit()
     props.bus && props.bus.send(initAction.type, initAction)
     return () => unsub && unsub()

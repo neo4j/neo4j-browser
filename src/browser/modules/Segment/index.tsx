@@ -21,13 +21,25 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
 import { canUseDOM } from 'services/utils'
+import { inDesktop } from 'shared/modules/app/appDuck'
 import { updateData } from 'shared/modules/udc/udcDuck'
+
+export interface MetricsProperties {
+  [key: string]: string | number | Date | boolean
+}
+
+export interface MetricsData {
+  category: string
+  label: string
+  data: MetricsProperties
+}
 
 export class Segment extends Component<any> {
   componentDidMount() {
     const {
       segmentKey,
       setTrackCallback,
+      inDesktop,
       updateData,
       children, // eslint-disable-line
       ...otherProps
@@ -94,8 +106,12 @@ export class Segment extends Component<any> {
             analytics._writeKey = segmentKey
             analytics.SNIPPET_VERSION = '4.13.2'
             analytics.load(segmentKey)
-            const doTrack = (...args: any) => {
-              window.analytics.track(...args)
+            const doTrack = (metricsData: MetricsData) => {
+              const { category, label, data } = metricsData
+              window.analytics.track(category + '-' + label, {
+                ...data,
+                desktop: inDesktop
+              })
             }
             setTrackCallback(doTrack)
           }
@@ -133,9 +149,16 @@ export class Segment extends Component<any> {
   }
 }
 
+const mapStateToProps = (state: any) => ({
+  inDesktop: inDesktop(state)
+})
+
 const mapDispatchToProps = (dispatch: any) => {
   return {
     updateData: (data: any) => dispatch(updateData(data))
   }
 }
-export default connect<any, any, any, any>(null, mapDispatchToProps)(Segment)
+export default connect<any, any, any, any>(
+  mapStateToProps,
+  mapDispatchToProps
+)(Segment)
