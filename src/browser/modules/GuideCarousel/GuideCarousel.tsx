@@ -91,10 +91,10 @@ function GuidesCarousel({
         <>
           <GuideButtonContainers>
             <GuideNavButton onClick={prevSlide} disabled={onFirstSlide}>
-              previous
+              Previous
             </GuideNavButton>
             <GuideNavButton onClick={nextSlide} disabled={onLastSlide}>
-              next
+              Next
             </GuideNavButton>
           </GuideButtonContainers>
           <StyledCarouselButtonContainer>

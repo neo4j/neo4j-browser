@@ -266,9 +266,25 @@ export const StyledGuidesDrawer = styled.div`
   /* width is set to avoid squashing during opening animation */
 `
 
-export const GuideTitle = styled.span`
-  text-overflow: ellipsis;
+export const StyledGuidesDrawerHeader = styled.h4`
+  color: ${props => props.theme.primaryHeaderText};
+  background-color: ${props => props.theme.drawerBackground};
+  font-size: 18px;
+  padding: 25px 0 0 25px;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+  text-shadow: rgba(0, 0, 0, 0.4) 0px 1px 0px;
+  font-family: ${props => props.theme.drawerHeaderFontFamily};
+  cursor: pointer;
+`
+
+export const GuideTitle = styled.div`
   overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 2em;
+  line-height: normal;
+  padding: 0 18px;
+  margin-bottom: 10px;
 `
 
 export const BackIconContainer = styled.span`
@@ -284,6 +300,7 @@ export const GuideButtonContainers = styled.div`
   display: flex;
   justify-content: space-between;
   padding-right: 18px;
+  margin-bottom: 40px;
 `
 
 export const GuideNavButton = styled.button`

@@ -35,7 +35,8 @@ import {
   StyledGuidesDrawer,
   GuideTitle,
   BackIconContainer,
-  CarouselWrapper
+  CarouselWrapper,
+  StyledGuidesDrawerHeader
 } from './styled'
 
 type GuidesDrawerProps = { guide: Guide; backToAllGuides: () => void }
@@ -45,20 +46,21 @@ function GuidesDrawer({
   backToAllGuides
 }: GuidesDrawerProps): JSX.Element {
   const scrollRef = useRef<HTMLDivElement>(null)
-  const capitalizedTitle =
-    guide.title.charAt(0).toUpperCase() + guide.title.slice(1)
+  const title = guide.title.startsWith('http')
+    ? guide.title
+    : guide.title.charAt(0).toUpperCase() + guide.title.slice(1)
 
   return (
     <StyledGuidesDrawer id="guide-drawer" ref={scrollRef}>
-      <DrawerHeader>
+      <StyledGuidesDrawerHeader onClick={backToAllGuides}>
         {guide.title !== defaultGuide.title && (
-          <BackIconContainer onClick={backToAllGuides}>
+          <BackIconContainer>
             <BackIcon width={16} />
           </BackIconContainer>
         )}
         Neo4j Browser Guides{' '}
-        {capitalizedTitle && <GuideTitle>| {capitalizedTitle}</GuideTitle>}
-      </DrawerHeader>
+      </StyledGuidesDrawerHeader>
+      <GuideTitle title={title}>{title}</GuideTitle>
       <CarouselWrapper>
         <GuideCarousel
           slides={guide.slides}

@@ -27,7 +27,6 @@ const title = 'Northwind Graph'
 const category = 'graphExamples'
 const slides = [
   <SidebarSlide key="s1">
-    <h3>Northwind Graph</h3>
     <p className="lead">From RDBMS to Graph, using a classic dataset</p>
     <p>
       The <em>Northwind Graph</em> demonstrates how to migrate from a relational
