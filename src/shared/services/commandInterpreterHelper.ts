@@ -486,7 +486,7 @@ const availableCommands = [
       resolveGuide(guideName, store).then(({ slides, title }) => {
         put(
           startGuide({
-            initialSlide,
+            currentSlide: initialSlide,
             title,
             slides
           })

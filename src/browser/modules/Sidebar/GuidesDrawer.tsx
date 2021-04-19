@@ -21,12 +21,12 @@
 import React, { useRef } from 'react'
 import { connect } from 'react-redux'
 
-import { DrawerHeader } from 'browser-components/drawer/drawer'
 import {
   getGuide,
   startGuide,
   Guide,
-  defaultGuide
+  defaultGuide,
+  gotoSlide
 } from 'shared/modules/guides/guidesDuck'
 import { GlobalState } from 'shared/globalState'
 import GuideCarousel from '../GuideCarousel/GuideCarousel'
@@ -39,11 +39,16 @@ import {
   StyledGuidesDrawerHeader
 } from './styled'
 
-type GuidesDrawerProps = { guide: Guide; backToAllGuides: () => void }
+type GuidesDrawerProps = {
+  guide: Guide
+  backToAllGuides: () => void
+  gotoSlide: (slideIndex: number) => void
+}
 
 function GuidesDrawer({
   guide,
-  backToAllGuides
+  backToAllGuides,
+  gotoSlide
 }: GuidesDrawerProps): JSX.Element {
   const scrollRef = useRef<HTMLDivElement>(null)
   const title = guide.title.startsWith('http')
@@ -64,6 +69,8 @@ function GuidesDrawer({
       <CarouselWrapper>
         <GuideCarousel
           slides={guide.slides}
+          currentSlideIndex={guide.currentSlide}
+          gotoSlide={gotoSlide}
           scrollToTop={() =>
             scrollRef.current?.scrollIntoView({ block: 'start' })
           }
@@ -75,7 +82,8 @@ function GuidesDrawer({
 
 const mapStateToProps = (state: GlobalState) => ({ guide: getGuide(state) })
 const mapDispatchToProps = (dispatch: any) => ({
-  backToAllGuides: () => dispatch(startGuide())
+  backToAllGuides: () => dispatch(startGuide()),
+  gotoSlide: (slideIndex: number) => dispatch(gotoSlide(slideIndex))
 })
 const ConnectedGuidesDrawer = connect(
   mapStateToProps,

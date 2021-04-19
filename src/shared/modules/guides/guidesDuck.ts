@@ -23,17 +23,18 @@ import { GlobalState } from 'shared/globalState'
 
 export const NAME = 'guides'
 export const START_GUIDE = 'sidebar/START_GUIDE'
+export const GOTO_SLIDE = 'sidebar/GOTO_SLIDE'
 
 export const getGuide = (state: GlobalState): Guide => state[NAME].guide
 export type Guide = {
-  initialSlide: number
+  currentSlide: number
   title: string
   slides: JSX.Element[]
 }
 
 export const defaultGuide: Guide = {
   ...docs.guide.chapters.index,
-  initialSlide: 0
+  currentSlide: 0
 }
 export interface GuideState {
   guide: Guide
@@ -42,11 +43,16 @@ const initialState: GuideState = {
   guide: defaultGuide
 }
 
-type GuideAction = StartAction
+type GuideAction = StartAction | GotoSlideAction
 
 interface StartAction {
   type: typeof START_GUIDE
   guide: Guide
+}
+
+interface GotoSlideAction {
+  type: typeof GOTO_SLIDE
+  slideIndex: number
 }
 
 export default function reducer(
@@ -56,6 +62,11 @@ export default function reducer(
   switch (action.type) {
     case START_GUIDE:
       return { ...state, guide: action.guide }
+    case GOTO_SLIDE:
+      return {
+        ...state,
+        guide: { ...state.guide, currentSlide: action.slideIndex }
+      }
     default:
       return state
   }
@@ -63,4 +74,8 @@ export default function reducer(
 
 export function startGuide(guide: Guide = defaultGuide): StartAction {
   return { type: START_GUIDE, guide }
+}
+
+export function gotoSlide(slideIndex: number): GotoSlideAction {
+  return { type: GOTO_SLIDE, slideIndex }
 }

@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import Directives from 'browser-components/Directives'
 import { CarouselButton } from 'browser-components/buttons'
 import {
@@ -38,28 +38,30 @@ import {
 } from '../Sidebar/styled'
 
 type GuideCarouselProps = {
-  slides?: JSX.Element[]
-  initialSlide?: number
+  slides: JSX.Element[]
+  currentSlideIndex: number
   scrollToTop?: () => void
+  gotoSlide: (slideIndex: number) => void
 }
+
 function GuidesCarousel({
-  slides = [],
-  initialSlide = 0,
+  slides,
+  currentSlideIndex,
+  gotoSlide,
   scrollToTop = () => undefined
 }: GuideCarouselProps): JSX.Element {
-  const [currentSlideIndex, gotoSlide] = useState(initialSlide)
   const currentSlide = slides[currentSlideIndex]
   const onFirstSlide = currentSlideIndex === 0
   const onLastSlide = currentSlideIndex === slides.length - 1
   function nextSlide() {
     if (!onLastSlide) {
-      gotoSlide(index => index + 1)
+      gotoSlide(currentSlideIndex + 1)
     }
   }
 
   function prevSlide() {
     if (!onFirstSlide) {
-      gotoSlide(index => index - 1)
+      gotoSlide(currentSlideIndex - 1)
     }
   }
 
@@ -71,11 +73,6 @@ function GuidesCarousel({
       nextSlide()
     }
   }
-
-  useEffect(() => {
-    // If we switch the guide, jump to initial Slide
-    gotoSlide(initialSlide)
-  }, [initialSlide, slides])
 
   useEffect(() => {
     // As we progress in the slides, scroll to top
@@ -144,4 +141,5 @@ function GuidesCarousel({
     </StyledCarousel>
   )
 }
+
 export default GuidesCarousel
