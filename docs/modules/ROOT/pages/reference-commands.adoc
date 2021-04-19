@@ -1,0 +1,136 @@
+[appendix]
+[[reference-commands]]
+= Commands
+
+The editor in Neo4j Browser understands a few client-side commands, which begin with a `:` (colon).
+
+== List of editor commands
+
+* `:auto` -- Send the Cypher query following it, in an auto committing transaction. +
+In general this is not recommended because of the lack of support for auto retrying on leader switch errors in clusters.
+* `:clear` -- Remove all frames from the stream.
+* `:config` -- Show the configuration settings. 
+* `:config <key-value>` -- Set one configuration setting. +
+The key-value can be specified as `"x": 1`, `'x': 1`, or `x: 1`.
+* `:config {}` -- Reset the configuration settings to the default configuration.
+* `:config {<key-value pairs>}` -- Reset the configuration settings to default and then set the key-value pairs. +
+The key-value pairs can be specified as `{"x": 1, "y": 2}`, `{'x': 1, 'y': 2}`, or `{x: 1, y: 2}`.
+* `:delete` -- REST command, send a HTTP DELETE request.
+* `:get` -- REST command, send a HTTP GET request.
+* `:help` -- Display help about topics and commands.
+* `:head` -- REST command, send a HTTP request with specified header.
+* `:history` -- Display Neo4j Browser history of your executed commands.
+* `:history clear` -- Remove all commands from Neo4j Browser history.
+* `:put` -- REST command, send a HTTP PUT request.
+* `:play` -- Play tutorials and guides.
+* `:post` -- REST command, send a HTTP POST request.
+* `:param <key-value>` -- Set one parameter. +
+The key-value can be specified as `"x" => 1` or `x => 1`.
+* `:params` -- Show all parameters.
+* `:params {}` -- Remove all parameters.
+* `:params {<key-value pairs>}` -- Remove all parameters and then set the parameters to the specified key/value pairs. +
+The key-value pairs can be specified as `{"x": 1, "y": 2}`, `{'x': 1, 'y': 2}`, or `{x: 1, y: 2}`.
++
+[NOTE]
+====
+Integers will be set as floats in this form.
+====
+* `:queries` -- List your servers and clusters that are running queries.
+* `:style` -- Show the current style configuration.
+* `:style <CSS>` -- Modify the visual aspects of your graph. CSS classes will be overwritten with the new styling.
+* `:style reset` -- Reset the style to the default styling.
+* `:server change-password` -- Change password.
+* `:server connect` -- Manage a connection to Neo4j.
+* `:server disconnect` -- Disconnect the current open connection to Neo4j.
+* `:server status` -- Show metadata for the current open connection.
+* `:schema` -- Show information about database schema indexes and constraints.
+* `:sysinfo` -- Show information about _Store Size_, _Id Allocation_, _Page Cache_, _Transactions_, and _Databases_.
+//* `:snake` -- Play snake.
+
+
+== Neo4j Browser configurations
+
+To set a new value for a Neo4j Browser configuration use the syntax:
+[shell]
+----
+:config "<configurationName>": <configurationValue>`
+----
+
+.Set the `maxHistory` to `20`.
+====
+[shell]
+----
+:config "maxHistory": 20
+----
+
+[shell]
+----
+{
+  "maxHistory": 20,
+  "theme": "auto",
+  "initCmd": ":play start",
+  "playImplicitInitCommands": true,
+  "initialNodeDisplay": 300,
+  "maxNeighbours": 100,
+  "showSampleScripts": true,
+  "browserSyncDebugServer": null,
+  "maxRows": 1000,
+  "maxFieldItems": 500,
+  "shouldReportUdc": true,
+  "autoComplete": true,
+  "scrollToTop": true,
+  "maxFrames": 30,
+  "codeFontLigatures": true,
+  "useBoltRouting": false,
+  "editorLint": false,
+  "useCypherThread": true,
+  "enableMultiStatementMode": true,
+  "connectionTimeout": 30000,
+  "showPerformanceOverlay": false
+}
+----
+====
+
+== Neo4j Browser help commands
+
+`:help commands`
+`:help play`
+`:help server`
+`:help cypher`
+`:help param`
+`:help params`
+`:help queries`
+`:help keys`
+`:help clear`
+`:help bolt`
+`:help bolt-encryption`
+`:help bolt-routing`
+`:help server-user`
+`:help history`
+`:help history clear`
+`:help explain`
+`:help profile`
+`:help match`
+`:help where`
+`:help return`
+`:help create`
+`:help merge`
+`:help delete`
+`:help detach-delete`
+`:help set`
+`:help foreach`
+`:help with`
+`:help load csv`
+`:help unwind`
+`:help start`
+`:help create-unique`
+`:help create-index-on`
+`:help starts-with`
+`:help ends-with`
+`:help contains`
+`:help rest`
+`:help rest-get`
+`:help rest-put'`
+`:help rest-delete'`
+`:help rest-post`
+

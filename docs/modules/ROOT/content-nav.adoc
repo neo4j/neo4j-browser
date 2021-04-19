@@ -30,3 +30,5 @@
 ** xref:operations.adoc#styling[Styling Neo4j Browser Visualization]
 ** xref:operations.adoc#query-parameters[Neo4j query parameters]
 ** xref:operations.adoc#url-parameters[Browser URL parameters]
+
+* xref:reference-commands.adoc[Commands]
