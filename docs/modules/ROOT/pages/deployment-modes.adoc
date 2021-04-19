@@ -53,7 +53,7 @@ If you do not want to host Neo4j Browser when you start Neo4j, remove `BROWSER` 
 Prerequisites for this example:
 
 * Install the Neo4j linux tarball.
-* Current work directory is _<neo4j-home>_.
+* Current working directory is _<neo4j-home>_.
 * Using the default configuration.
 
 Start Neo4j with the command:
@@ -163,29 +163,35 @@ For more information, see link:https://neo4j.com/docs/operations-manual/current/
 
 Here is a list of suggestions for simple HTTP web servers that can be used to host Neo4j Browser.
 
-Python3 `http.server`::
-A simple HTTP server that is bundled with Python 3. Do not use in production environment. +
-For more information, see link:https://docs.python.org/3/library/http.server.html[_https://docs.python.org/3/library/http.server.html_]. +
-[source, shell, role=noheader]
+Python3 -- `http.server`::
+A simple HTTP server that is bundled with Python 3. Do not use in production environment.
++
+[source, shell]
 ----
 python -m http.server --directory neo4j-browser/ 8080
 ----
++
+For more information, see link:https://docs.python.org/3/library/http.server.html[_https://docs.python.org/3/library/http.server.html_].
 
-Node.js `http-server`::
-A simple, zero-configuration command-line HTTP server. +
-For more information, see link:https://www.npmjs.com/package/http-server[_https://www.npmjs.com/package/http-server_]. +
-[source, shell, role=noheader]
+Node.js -- `http-server`::
+A simple, zero-configuration command-line HTTP server.
++
+[source, shell]
 ----
 npx http-server -p 8080 neo4j-browser/
 ----
++
+For more information, see link:https://www.npmjs.com/package/http-server[_https://www.npmjs.com/package/http-server_].
 
-Node.js `serve`::
-A simple HTTP server that is ideal for serving a static site, single page application or just a static file. +
-For more information, see link:https://www.npmjs.com/package/serve[_https://www.npmjs.com/package/serve_]. +
-[source, shell, role=noheader]
+Node.js -- `serve`::
+A simple HTTP server that is ideal for serving a static site, single page application or just a static file.
++
+[source, shell]
 ----
 npx serve -l 8080 neo4j-browser/
 ----
++
+For more information, see link:https://www.npmjs.com/package/serve[_https://www.npmjs.com/package/serve_].
 
 [TIP]
 ====
@@ -212,45 +218,45 @@ You can download Neo4j Browser from Maven (link:https://search.maven.org/artifac
 .Get pre-build Neo4j Browser and run an HTTP web server
 ====
 
-**1. Download Neo4j Browser from Maven.**
-
+. **Download Neo4j Browser from Maven.**
++
 [source, shell, subs="attributes+"]
 ----
 wget https://repo1.maven.org/maven2/org/neo4j/client/neo4j-browser/{neo4j-browser-version}/neo4j-browser-{neo4j-browser-version}.jar
 ----
-
++
 Alternatively, manually go to link:https://search.maven.org/artifact/org.neo4j.client/neo4j-browser[_https://search.maven.org/artifact/org.neo4j.client/neo4j-browser_] and download Neo4j Browser.
-
-**2. Unzip the .jar file.**
-
++
+. **Unzip the .jar file.**
++
 [source, shell, subs="attributes+"]
 ----
 unzip neo4j-browser-{neo4j-browser-version}.jar
 ----
-
-**3. Host Neo4j Browser with an HTTP server.**
-
++
+. **Host Neo4j Browser with an HTTP server.**
++
 Start a web server to serve the content.
 In this example you start a web server with Python 3.
-
++
 [source, shell]
 ----
 python -m http.server --directory browser/ 8080
 ----
-
++
 Point your web browser to link:http://localhost:8080[_http://localhost:8080_].
-
-**4. Test the connection to a Neo4j database instance.**
-
++
+. **Test the connection to a Neo4j database instance.**
++
 If you have the Neo4j tarball you can start the database instance with the command (assuming that the current working directory is _<neo4j-home>_):
-
++
 [source, shell]
 ----
 bin/neo4j start
 ----
-
++
 In Neo4j Browser, connect to the Neo4j database instance with the URI:
-
++
 [source, role=noheader]
 ----
 neo4j://localhost:7687
@@ -273,49 +279,49 @@ The source code can be found at link:https://github.com/neo4j/neo4j-browser[http
 .Build Neo4j Browser and run an HTTP web server
 ====
 
-**1. Get the source code from Github**
-
+. **Get the source code from Github**
++
 Clone the Neo4j Browser Git repository.
 The command gets only the `master` branch to save bandwidth and file space.
-
++
 [source, shell]
 ----
 git clone --single-branch --branch=master https://github.com/neo4j/neo4j-browser/
 ----
-
++
 Change the current working directory to the root of the Git repository.
-
++
 [source, shell]
 ----
 cd neo4j-browser
 ----
-
-**2. Build with Node.js.**
-
-Install Node.js dependencies:
-
++
+. **Build with Node.js.**
++
+.. **Install Node.js dependencies.**
++
 [source, shell]
 ----
 npm install
 ----
-
-**3. Build the project.**
-
++
+.. **Build the project.**
++
 [source, shell]
 ----
 npm build
 ----
-
-**4. Host web application with an HTTP server.**
-
++
+. **Host web application with an HTTP server.**
++
 Start a web server to serve the content.
 In this example you start a web server with Python 3.
-
++
 [source, shell]
 ----
 python -m http.server --directory dist/ 8080
 ----
-
++
 Point your web browser to link:http://localhost:8080[_http://localhost:8080_].
 ====
 
