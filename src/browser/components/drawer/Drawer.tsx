@@ -103,7 +103,9 @@ export const DrawerExternalLink = styled.a.attrs({
   }
 `
 
-export const DrawerBrowserCommand = styled.span`
+export const DrawerBrowserCommand = styled.span.attrs({
+  className: 'remove-play-icon'
+})`
   background-color: #2a2c33;
   border-radius: 2px;
   padding: 3px;

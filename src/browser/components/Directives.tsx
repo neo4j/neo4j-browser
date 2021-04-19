@@ -113,26 +113,26 @@ const bindDynamicInputToDom = (element: any) => {
 }
 
 export const Directives = (props: any) => {
-  const callback = (elem: any) => {
+  const callback = (elem: HTMLDivElement | null) => {
     if (elem) {
       directives.forEach(directive => {
         const elems = elem.querySelectorAll(directive.selector)
-        Array.from(elems).forEach((e: any) => {
+        Array.from(elems).forEach(e => {
           if (
-            e.firstChild.nodeName !== 'I' &&
-            !directive.selector.startsWith('[data-')
+            e.firstChild?.nodeName !== 'I' &&
+            !e.classList.contains('remove-play-icon')
           ) {
             prependPlayIcon(e)
           }
 
-          e.onclick = () => {
+          e.addEventListener('click', () => {
             addClass(e, 'clicked')
             return props.onItemClick(
               directive.valueExtractor(e),
               directive.autoExec,
               props.originFrameId
             )
-          }
+          })
         })
       })
       bindDynamicInputToDom(elem)
