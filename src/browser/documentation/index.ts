@@ -131,6 +131,7 @@ type GuideDocs = {
   title: 'Built-in Browser guides'
   chapters: Record<GuideChapter, GuideItem>
 }
+
 type GuideChapter =
   | 'index'
   | 'movieGraph'

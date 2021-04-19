@@ -3,6 +3,9 @@ import styled from 'styled-components'
 export const NoBulletsUl = styled.div`
   list-style-type: none;
 `
+export const BulletsInsideLi = styled.li`
+  list-style-position: inside;
+`
 
 export const MarginTopLi = styled.li`
   margin-top: 15px;

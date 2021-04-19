@@ -26,14 +26,15 @@ import {
   SlideNextIcon
 } from 'browser-components/icons/Icons'
 import {
+  GuideButtonContainers,
   CarouselIndicatorActive,
   CarouselIndicatorInactive,
-  SlideContainer,
   StyledCarousel,
   StyledCarouselButtonContainer,
   StyledCarouselButtonContainerInner,
   StyledCarouselCount,
-  StyledUl
+  StyledUl,
+  GuideNavButton
 } from '../Sidebar/styled'
 
 type GuideCarouselProps = {
@@ -84,57 +85,63 @@ function GuidesCarousel({
   const moreThanOneSlide = slides.length > 1
 
   return (
-    <>
-      <StyledCarousel onKeyUp={onKeyUp}>
-        <SlideContainer>
-          <Directives content={currentSlide} />
-        </SlideContainer>
-      </StyledCarousel>
+    <StyledCarousel onKeyUp={onKeyUp}>
+      <Directives content={currentSlide} />
       {moreThanOneSlide && (
-        <StyledCarouselButtonContainer>
-          <StyledCarouselButtonContainerInner>
-            <StyledCarouselCount>
-              {`${currentSlideIndex + 1} / ${slides.length}`}
-            </StyledCarouselCount>
-            <CarouselButton
-              className="previous-slide"
-              disabled={onFirstSlide}
-              onClick={prevSlide}
-            >
-              <SlidePreviousIcon />
-            </CarouselButton>
-            <StyledUl>
-              {slides.map((_, i) =>
-                i !== currentSlideIndex ? (
-                  <CarouselIndicatorInactive
-                    key={i}
-                    aria-label={`${i + 1}`}
-                    onClick={() => gotoSlide(i)}
-                  >
-                    <span />
-                  </CarouselIndicatorInactive>
-                ) : (
-                  <CarouselIndicatorActive
-                    key={i}
-                    aria-label={`${i + 1}`}
-                    onClick={() => gotoSlide(i)}
-                  >
-                    <span />
-                  </CarouselIndicatorActive>
-                )
-              )}
-            </StyledUl>
-            <CarouselButton
-              className="next-slide"
-              disabled={onLastSlide}
-              onClick={nextSlide}
-            >
-              <SlideNextIcon />
-            </CarouselButton>
-          </StyledCarouselButtonContainerInner>
-        </StyledCarouselButtonContainer>
+        <>
+          <GuideButtonContainers>
+            <GuideNavButton onClick={prevSlide} disabled={onFirstSlide}>
+              previous
+            </GuideNavButton>
+            <GuideNavButton onClick={nextSlide} disabled={onLastSlide}>
+              next
+            </GuideNavButton>
+          </GuideButtonContainers>
+          <StyledCarouselButtonContainer>
+            <StyledCarouselButtonContainerInner>
+              <StyledCarouselCount>
+                {`${currentSlideIndex + 1} / ${slides.length}`}
+              </StyledCarouselCount>
+              <CarouselButton
+                className="previous-slide"
+                disabled={onFirstSlide}
+                onClick={prevSlide}
+              >
+                <SlidePreviousIcon />
+              </CarouselButton>
+              <StyledUl>
+                {slides.map((_, i) =>
+                  i !== currentSlideIndex ? (
+                    <CarouselIndicatorInactive
+                      key={i}
+                      aria-label={`${i + 1}`}
+                      onClick={() => gotoSlide(i)}
+                    >
+                      <span />
+                    </CarouselIndicatorInactive>
+                  ) : (
+                    <CarouselIndicatorActive
+                      key={i}
+                      aria-label={`${i + 1}`}
+                      onClick={() => gotoSlide(i)}
+                    >
+                      <span />
+                    </CarouselIndicatorActive>
+                  )
+                )}
+              </StyledUl>
+              <CarouselButton
+                className="next-slide"
+                disabled={onLastSlide}
+                onClick={nextSlide}
+              >
+                <SlideNextIcon />
+              </CarouselButton>
+            </StyledCarouselButtonContainerInner>
+          </StyledCarouselButtonContainer>
+        </>
       )}
-    </>
+    </StyledCarousel>
   )
 }
 export default GuidesCarousel

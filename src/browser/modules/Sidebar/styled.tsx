@@ -23,6 +23,7 @@ import {
   DrawerBody,
   DrawerBrowserCommand
 } from 'browser-components/drawer/drawer'
+import { dark } from 'browser-styles/themes'
 
 export const StyledSetting = styled.div`
   padding-bottom: 15px;
@@ -127,7 +128,6 @@ export const StyledCommand = styled(DrawerBrowserCommand)`
 export const StyledCarousel = styled.div`
   height: 100%;
   padding-bottom: 20px;
-  min-height: 100%;
   width: 100%;
   outline: none;
 
@@ -145,21 +145,20 @@ export const SlideContainer = styled.div`
 
 export const StyledCarouselButtonContainer = styled.div`
   color: ${props => props.theme.secondaryButtonText};
+  background-color: ${dark.secondaryBackground};
   display: flex;
   align-items: center;
   justify-content: center;
-  position: absolute;
-  bottom: 0;
-  left: 0;
+  position: fixed;
+  bottom: 1px;
+  left: 60px;
+  width: 500px;
+
   z-index: 10;
   border-top: ${props => props.theme.inFrameBorder};
-  height: 39px;
-  width: 100%;
-
-  .is-fullscreen & {
-    bottom: 39px;
-  }
+  height: 40px;
 `
+
 export const StyledCarouselButtonContainerInner = styled.div`
   display: flex;
   align-items: center;
@@ -266,7 +265,7 @@ export const StyledGuidesDrawer = styled.div`
 
 export const GuideTitle = styled.h2`
   margin: 10px 15px;
-  textoverflow: ellipsis;
+  text-overflow: ellipsis;
   overflow: hidden;
 `
 
@@ -276,4 +275,24 @@ export const BackIconContainer = styled.span`
 `
 export const CarouselWrapper = styled.div`
   padding: 0 18px;
+`
+
+export const GuideButtonContainers = styled.div`
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  padding-right: 18px;
+`
+
+export const GuideNavButton = styled.button`
+  border: none;
+  background-color: inherit;
+  font-size: 1.5em;
+  color: ${props => props.theme.link};
+  outline: none;
+
+  :disabled {
+    color: inherit;
+    opacity: 0.5;
+  }
 `

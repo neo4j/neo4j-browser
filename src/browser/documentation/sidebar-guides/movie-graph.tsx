@@ -21,6 +21,7 @@
 import React from 'react'
 import ManualLink from 'browser-components/ManualLink'
 import Slide from '../../modules/Carousel/Slide'
+import { BulletsInsideLi } from './styled'
 
 const title = 'Movie Graph'
 const category = 'graphExamples'
@@ -765,20 +766,20 @@ RETURN tom, m, coActors, m2, cruise`}
       <small>:help</small> <a help-topic="delete">DELETE</a>
     </p>
   </Slide>,
+  // Todo this is better without #
   <Slide key="s8" forceDarkMode>
     <h3>Next steps</h3>
-
-    <ul className="undecorated">
-      <li>
+    <ul>
+      <BulletsInsideLi>
         <a href="#" data-exec=":guide northwind-graph">
           Northwind Graph
         </a>
         - from RDBMS to graph
-      </li>
-      <li>
+      </BulletsInsideLi>
+      <BulletsInsideLi>
         <a help-topic="cypher">Cypher</a> - Learn Cypher syntax
-      </li>
-      <li>
+      </BulletsInsideLi>
+      <BulletsInsideLi>
         <a
           target="_blank"
           rel="noreferrer"
@@ -786,20 +787,20 @@ RETURN tom, m, coActors, m2, cruise`}
         >
           Explore more guides: Graph Gists Portal
         </a>
-      </li>
+      </BulletsInsideLi>
     </ul>
     <h3>Documentation</h3>
-    <ul className="undecorated">
-      <li>
+    <ul>
+      <BulletsInsideLi>
         <a target="_blank" rel="noreferrer" href="https://neo4j.com/developer/">
           Developer resources
         </a>
-      </li>
-      <li>
+      </BulletsInsideLi>
+      <BulletsInsideLi>
         <ManualLink chapter="cypher-manual" page="/">
           Neo4j Cypher Manual
         </ManualLink>
-      </li>
+      </BulletsInsideLi>
     </ul>
   </Slide>
 ]
