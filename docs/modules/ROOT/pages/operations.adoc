@@ -1,5 +1,6 @@
 [[operations]]
 = Browser operations
+:description: This section describes how to administer and use Neo4j Browser.
 
 [[create-dbms-connection]]
 == Create a DBMS connection
@@ -174,62 +175,199 @@ The URL _\https://<dbid>.databases.neo4j.io/browser/_ can also be used to access
 
 
 [[results]]
-== Visualizing results
-
-// Graph, Table and Text views.
-// https://neo4j.com/developer/graph-visualization/#_neo4j_browser
+== Visualize results
 
 There are a variety of ways to view data in Neo4j Browser.
-Any queries you run in Neo4j Browser populate your results below the command line.
-Query results are rendered either as a visual graph, a table format, an ascii-table result, and in JSON.
+Any queries you run in Neo4j Browser populate the result frame below the Cypher editor.
+Query results are rendered either as a visual graph, a table, a plain text table, and code.
 You can switch between those with the icons on the left side of the result frame.
 
+[NOTE]
+====
+If you cannot see the result, you might be in Graph mode but had your query return tabular/scalar data.
+To see the results, switch the mode to the *Table* view.
+====
+
+[[graph-view]]
 === Graph
 
-The graph visualization functionality is designed to display a node-graph representation of the underlying data stored in the database in response to a given Cypher query, showing circles for nodes and lines for relationships.
-It provides additional value for data analysts and business users, as well as developers.
-Anyone reviewing the graph can see the connections, determine areas of interest, or quickly assess the current state and organization of the data.
+The graph visualization functionality is designed to display a node-graph representation of the underlying data stored in the database in response to a given Cypher query.
+It shows circles for nodes and lines for relationships, and is especially useful for determining areas of interest or quickly assessing the current state and organization of the data.
 
-// TODO: take a screenshot of a graph result
+image:graph.png[]
 
-=== Table
-// TODO: take a screenshot of a tabular result
-
-Even if you feel that the relationship is not hard to find in the tabular format, imagine if we were looking at a graph that contained these individuals' entire filmography careers, as well as hundreds of other actors, directors, and film crew members.
-The connections could easily be lost in a non-visual presentation.
-
-=== Text
-// TODO: take a screenshot of a text result
-
-
-=== Code
-// TODO: take a screenshot of a code result
-
-[[styling]]
-== Styling Neo4j Browser Visualization
-
-// Graph visualization, styling and limited interactivity. Reference to Bloom for more.
-//
-// https://neo4j.com/developer/neo4j-browser/#browser-styling
-
-Neo4j Browser also provides some functionality for styling with color and size based on node labels and relationship types.
-Alternatively, you can customize your own styles by importing a GRASS (graph-stylesheet) file for Neo4j Browser to reference.
-If you cannot see the whole graph or the results display too close together, you can adjust by moving the visual view and dragging nodes to rearrange them.
-To move the view to see more parts of the graph, just click an empty spot within the graph pane and drag it.
-To rearrange nodes, click and drag them around.
-The nodes already have sensible captions assigned by the browser, which auto-selects a property from the property list to use as a caption.
+.Handy tips
+[TIP]
+====
+* Enable zoom in and out of your graph by entering into fullscreen mode.
+* Expand and remove nodes from the visualization by clicking a node.
+It gets a halo, where you can dismiss a node, expand/collapse child relationships, or unlock the node to re-layout the graph.
+Double-clicking a node expands its child relationships.
+* If you cannot see the whole graph or the results display too close together, you can adjust by moving the visual view and dragging nodes to rearrange them.
+* To move the view to see more parts of the graph, click an empty spot within the graph pane and drag it.
+* To rearrange nodes, click and drag them around.
+* The nodes already have sensible captions assigned by the browser, which auto-selects a property from the property list to use as a caption.
 You can see all the properties of that element if you click any node or relationship.
 Properties appear below the visualization.
-Larger property sets might be collapsed into a subset, but there is a little triangle on the right to unfold them.
-For example, if you click one of the Movie nodes in the MovieGraph (`:play movie graph`), you can see its properties below the graph visual.
-The same applies for `Actor` nodes or the `ACTED_IN` relationships.
+* Larger property sets might be collapsed into a subset, and there is a little triangle on the right to unfold them.
+For example, if you click one of the `Movie` nodes in the MovieGraph (`:play movie graph`), you can see its properties below the graph visualization.
+The same applies to `Actor` nodes and the `ACTED_IN` relationships.
+====
+
+[[table-view]]
+=== Table
+
+The *Table* result view displays the result in a table format.
+It also reports the query time, including the actual query execution time, latency, and deserialization costs.
+
+image:table.png[]
+
+Even if you feel that the relationship is not hard to find in the tabular format, imagine if you have a graph containing the entire filmography careers of these persons and hundreds of other actors, directors, and film crew members.
+The connections could easily be lost in a non-visual presentation.
+
+[[text-view]]
+=== Text
+
+The *Text* result view displays the result as a plain text table.
+It also reports the query time, including the actual query execution time, latency, and deserialization costs.
+
+image:text.png[]
+
+[[code-view]]
+=== Code
+
+The *Code* result view displays the submitted request, the Neo4j Server version and address, and the response.
+It also reports the query time, including the actual query execution time, latency, and deserialization costs.
+
+image:code.png[]
+
+[[export-results]]
+== Export results
+
+You can download your query results using the down-pointed arrow on the right side of the result frame.
+The following download options available:
+
+.Download the result from the *Graph* view
+[#download_graph]
+[caption="Export as an image"]
+image:download-graph.png[Export graph, width=50%]
+
+.Download the result from the *Table*, *Text*, and *Code* views
+[#download_csv]
+[caption="Export as a CSV file"]
+image:download-csv-json.png[Export table, width=50%]
+
+[NOTE]
+====
+The *Save as project file* is available only in Neo4j Desktop.
+For more information, see xref:visual-tour.adoc#saved-files[Project files].
+====
+
+[[styling]]
+== Style Neo4j Browser Visualization
+
+You can customize your graph query result either in place or by using Graph Stylesheet (GraSS).
+
+[[graph-style]]
+=== Style your graph visualization in place
+
+Neo4j Browser also provides functionality for styling with color and size, based on node labels and relationship types.
+
 If you click any label or relationship above the graph visualization, you can choose its styling in the area below the graph.
 Colors, sizes, and captions are selectable from there.
 To see this for yourself, you can click the `Person` label above the graph and change the color, size, and captions of all nodes labeled with `Person`.
-The first image below shows changes to nodes labeled Person.
-The second image shows changes to relationships labeled `ACTED_IN`.
-// https://dist.neo4j.com/wp-content/uploads/style_person_node.png
-// https://dist.neo4j.com/wp-content/uploads/style_actedin_relationship.png
+The same applies to the relationship `ACTED_IN`.
+
+.Changes to nodes labeled `Person`
+[#style_person_node]
+[caption="Changes to nodes labeled `Person`"]
+image:style_person_node.png[]
+
+.Changes to relationships labeled `ACTED_IN`
+[#style_actedin_relationship]
+[caption="Changes to relationships labeled `ACTED_IN`"]
+image:style_actedin_relationship.png[]
+
+[[grass]]
+=== Style your graph visualization using a GraSS file
+
+Alternatively, follow the steps to customize your styles by importing a graph stylesheet (GraSS) file for Neo4j Browser to reference.
+
+. Run the command `:style` and download your current graph style by using the *Export GraSS* option.
++
+[NOTE]
+====
+Neo4j supports both CSS and JSON format as a _.grass_ file contents.
+====
++
+.Sample of a _.grass_ file contents
+====
+[source,css]
+----
+node {
+  diameter: 50px; #<1>
+  color: #A5ABB6; #<2>
+  border-color: #9AA1AC;  #<3>
+  border-width: 2px; #<4>
+  text-color-internal: #FFFFFF; #<5>
+  font-size: 10px;
+}
+relationship {
+  color: #A5ABB6;
+  shaft-width: 1px; #<6>
+  font-size: 8px;
+  padding: 3px;
+  text-color-external: #000000;
+  text-color-internal: #FFFFFF;
+  caption: "<type>"; #<7>
+}
+node.* {
+  color: #C990C0;
+  border-color: #b261a5;
+  text-color-internal: #FFFFFF;
+  defaultCaption: "<id>";
+}
+node.Status {
+  color: #F79767;
+  border-color: #f36924;
+  text-color-internal: #FFFFFF;
+  defaultCaption: "<id>"; #<8>
+  caption: "{name}";
+}
+node.Person {
+  color: #DA7194;
+  border-color: #cc3c6c;
+  text-color-internal: #FFFFFF;
+  defaultCaption: "<id>";
+  caption: "{name}";
+}
+node.Movie {
+  caption: "{title}";
+}
+----
+<1> Diameter of a node circle.
+<2> The color of the circle.
+<3> The color of the circle border.
+<4> The width of the circle border.
+<5> The color of the text that is displayed.
+<6> Diameter of a relationship circle.
+<7> The text that is displayed.
+<8> The default caption if no specific caption is set.
+====
++
+[NOTE]
+====
+If a node has 2 styled labels, only the first (closest to top) style is applied.
+If a node does not have a label that is in the GraSS, `node` is used as the default.
+Same applies to relationships.
+====
++
+. Edit the downloaded file locally using your favourite editor and use drag & drop it to the designated drop area.
+
+[TIP]
+====
+The GraSS parser is open source and can be found at https://github.com/neo4j/neo4j-browser/blob/14728fa5b81258fbe9bfcdfe8916e76f73fe5ad5/src/shared/services/grassUtils.js
+====
 
 [[query-parameters]]
 == Neo4j query parameters
@@ -436,3 +574,24 @@ You can clear all currently set parameters from Neo4j Browser by running:
 
 // Specific query parameters.
 // Accepted parameters (e.g. connectURL)
+
+
+
+
+// == Executing REST requests
+// You can also execute REST requests with Neo4j Browser.
+// The command syntax is :COMMAND /a/path {"some":"data"}. The available commands are :GET, :POST, :PUT and :DELETE.
+//
+// A simple query like :GET /db/data/ inspects the available endpoints of the database, with the returned results formatted in JSON.
+// Then, you can retrieve all labels in the database with :GET /db/data/labels.
+//
+// To execute a Cypher statement, you post to the transaction Cypher endpoint like this:
+//
+// JavaScript
+// Copy to Clipboard
+// :POST /db/data/transaction/commit {"statements":[
+//      {"statement":"MATCH (m:Movie)  WHERE m.title={title} RETURN m.title, m.released, labels(m)",
+//       "parameters":{"title":"Cloud Atlas"}}]}
+// There are endless possibilities to send and retrieve data using REST.
+// In a later guide, you can create an application to interact with Neo4j and use REST endpoints for interaction between you and the database.
+// See the Language Guides section for more information.
