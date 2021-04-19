@@ -6,7 +6,7 @@ To build the Browser Manual locally:
 4. Rename `origin` to `upstream` using `git remote rename origin upstream`.
 5. Checkout the `master` branch using `git checkout master`.
 6. Run `git pull`.
-7. Create your own branch using `git checkout -b <branch-name>`.
+7. (Optional) Create your own branch using `git checkout -b <branch-name>`if ypu want to create a Pull Request.
 6. `cd` into the _docs_ directory.
 7. Run `npm install`.
 8. Run `npm start`.
