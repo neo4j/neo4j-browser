@@ -198,17 +198,10 @@ RETURN DISTINCT surfer`}
   <SidebarSlide key="nineth">
     <h3>Next steps</h3>
     <p>
-      Start your application using Cypher to create and query graph data. Use
-      the REST API to monitor the database. In special cases, consider a plugin.
+      Start your application using Cypher to create and query graph data. See{' '}
+      <a help-topic="cypher">Help Cypher</a> for more built-in cypher
+      documentation.
     </p>
-    <ul>
-      <li>
-        <a help-topic="cypher">Help Cypher</a> - Try more Cypher syntax
-      </li>
-      <li>
-        <a play-topic="start">Play start</a> - Back to getting started
-      </li>
-    </ul>
     <h3>Documentation</h3>
     <ul className="undecorated">
       <li>

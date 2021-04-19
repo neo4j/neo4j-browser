@@ -22,6 +22,7 @@ import React from 'react'
 import ManualLink from 'browser-components/ManualLink'
 import { SidebarSlide } from '../../modules/Carousel/Slide'
 import { BulletsInsideLi } from './styled'
+import { DrawerExternalLink } from 'browser-components/drawer/drawer'
 
 const title = 'Movie Graph'
 const category = 'graphExamples'
@@ -779,22 +780,18 @@ RETURN tom, m, coActors, m2, cruise`}
         <a data-exec=":help northwind-graph">Cypher</a>- Learn Cypher syntax
       </BulletsInsideLi>
       <BulletsInsideLi>
-        <a
-          target="_blank"
-          rel="noreferrer"
-          href="https://portal.graphgist.org/"
-        >
+        <DrawerExternalLink href="https://portal.graphgist.org/">
           Explore more guides: Graph Gists Portal
-        </a>
+        </DrawerExternalLink>
       </BulletsInsideLi>
     </ul>
     <br />
     <h3>Documentation</h3>
     <ul>
       <BulletsInsideLi>
-        <a target="_blank" rel="noreferrer" href="https://neo4j.com/developer/">
+        <DrawerExternalLink href="https://neo4j.com/developer/">
           Developer resources
-        </a>
+        </DrawerExternalLink>
       </BulletsInsideLi>
       <BulletsInsideLi>
         <ManualLink chapter="cypher-manual" page="/">
