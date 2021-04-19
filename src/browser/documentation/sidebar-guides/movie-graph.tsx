@@ -25,7 +25,6 @@ import { BulletsInsideLi } from './styled'
 
 const title = 'Movie Graph'
 const category = 'graphExamples'
-// TODO not happy with the force dark mode
 const slides = [
   <Slide key="s1" forceDarkMode>
     <p>
@@ -34,10 +33,18 @@ const slides = [
     </p>
     <p>This guide will show you how to:</p>
     <ol className="big">
-      <li>Create: insert movie data into the graph</li>
-      <li>Find: retrieve individual movies and actors</li>
-      <li>Query: discover related actors and directors</li>
-      <li>Solve: the Bacon Path</li>
+      <li>
+        <b>Create:</b> insert movie data into the graph
+      </li>
+      <li>
+        <b>Find:</b> retrieve individual movies and actors
+      </li>
+      <li>
+        <b>Query:</b> discover related actors and directors
+      </li>
+      <li>
+        <b>Solve:</b> the Bacon Path
+      </li>
     </ol>
     <p></p>
     <p>
@@ -48,8 +55,9 @@ const slides = [
   <Slide key="s2" forceDarkMode>
     <h3>Create</h3>
     <p>
-      Bellow is a giant code block containing a single Cypher query statement
-      composed of multiple CREATE clauses. This will create the movie graph.
+      Below is a code block containing a single Cypher query statement composed
+      of multiple CREATE clauses. This will create the movie graph. Keep in mind
+      this will add data to the database each time it is run.
     </p>
     <ol>
       <li>Click on the code block</li>
@@ -57,9 +65,6 @@ const slides = [
       <li>Click the editor&apos;s play button to execute</li>
       <li>Wait for the query to finish</li>
     </ol>
-    <p className="text-center text-warning bg-warning">
-      WARNING: This adds data to the current database, each time it is run!
-    </p>
     <figure>
       <pre className="pre-scrollable code runnable">
         {`CREATE (TheMatrix:Movie {title:'The Matrix', released:1999, tagline:'Welcome to the Real World'})
@@ -572,6 +577,7 @@ WITH TomH as a
 MATCH (a)-[:ACTED_IN]->(m)<-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10;`}
       </pre>
     </figure>
+    <hr />
     <p>
       <small>:help</small> <a help-topic="cypher">cypher</a>{' '}
       <a help-topic="create">CREATE</a>
@@ -587,10 +593,6 @@ MATCH (a)-[:ACTED_IN]->(m)<-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10;`}
       <li>Try looking for other movies or actors</li>
     </ol>
     <hr />
-    <p>
-      <small>:help</small> <a help-topic="match">MATCH</a>{' '}
-      <a help-topic="where">WHERE</a> <a help-topic="return">RETURN</a>
-    </p>
     <p className="lead">Find the actor named "Tom Hanks"...</p>
     <figure>
       <pre className="pre-scrollable code runnable">
@@ -617,6 +619,11 @@ MATCH (a)-[:ACTED_IN]->(m)<-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10;`}
         }
       </pre>
     </figure>
+    <hr />
+    <p>
+      <small>:help</small> <a help-topic="match">MATCH</a>{' '}
+      <a help-topic="where">WHERE</a> <a help-topic="return">RETURN</a>
+    </p>
   </Slide>,
   <Slide key="s4" forceDarkMode>
     <h3>Query</h3>
@@ -659,6 +666,7 @@ MATCH (a)-[:ACTED_IN]->(m)<-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10;`}
         }
       </pre>
     </figure>
+    <hr />
     <p>
       <small>:help</small> <a help-topic="match">MATCH</a>
     </p>
@@ -673,6 +681,7 @@ MATCH (a)-[:ACTED_IN]->(m)<-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10;`}
       <li>Variable length patterns</li>
       <li>Built-in shortestPath() algorithm</li>
     </ol>
+    <hr />
     <p className="lead">
       Movies and actors up to 4 "hops" away from Kevin Bacon
     </p>
@@ -737,13 +746,9 @@ RETURN tom, m, coActors, m2, cruise`}
   <Slide key="s7" forceDarkMode>
     <h3>Clean up</h3>
     <p>When you're done experimenting, you can remove the movie data set.</p>
-    <p>Note:</p>
-    <ol>
-      <li>Nodes can't be deleted if relationships exist</li>
-      <li>Delete both nodes and relationships together</li>
-    </ol>
-    <p className="text-center text-warning bg-warning">
-      WARNING: This will remove all Person and Movie nodes!
+    <p>
+      Note: Nodes can't be deleted if they have relationships, so we need to
+      detach the nodes to delete the nodes.
     </p>
     <hr />
     <p className="lead">
@@ -762,22 +767,25 @@ RETURN tom, m, coActors, m2, cruise`}
     <figure>
       <pre className="pre-scrollable code runnable">MATCH (n) RETURN n</pre>
     </figure>
+    <hr />
     <p>
       <small>:help</small> <a help-topic="delete">DELETE</a>
     </p>
   </Slide>,
-  // Todo this is better without #
   <Slide key="s8" forceDarkMode>
     <h3>Next steps</h3>
     <ul>
       <BulletsInsideLi>
-        <a href="#" data-exec=":guide northwind-graph">
+        <a style={{ cursor: 'pointer' }} data-exec=":guide northwind-graph">
           Northwind Graph
         </a>
         - from RDBMS to graph
       </BulletsInsideLi>
       <BulletsInsideLi>
-        <a help-topic="cypher">Cypher</a> - Learn Cypher syntax
+        <a style={{ cursor: 'pointer' }} data-exec=":help northwind-graph">
+          Cypher
+        </a>
+        - Learn Cypher syntax
       </BulletsInsideLi>
       <BulletsInsideLi>
         <a
@@ -789,6 +797,7 @@ RETURN tom, m, coActors, m2, cruise`}
         </a>
       </BulletsInsideLi>
     </ul>
+    <br />
     <h3>Documentation</h3>
     <ul>
       <BulletsInsideLi>

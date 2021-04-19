@@ -56,7 +56,8 @@ function GuidesDrawer({
             <BackIcon width={16} />
           </BackIconContainer>
         )}
-        Neo4j Browser Guides | <GuideTitle>{capitalizedTitle}</GuideTitle>
+        Neo4j Browser Guides{' '}
+        {capitalizedTitle && <GuideTitle>| {capitalizedTitle}</GuideTitle>}
       </DrawerHeader>
       <CarouselWrapper>
         <GuideCarousel

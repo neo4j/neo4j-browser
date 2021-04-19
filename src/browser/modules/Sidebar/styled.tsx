@@ -289,6 +289,7 @@ export const GuideNavButton = styled.button`
   font-size: 1.5em;
   color: ${props => props.theme.link};
   outline: none;
+  padding: 5px 0;
 
   :disabled {
     color: inherit;
