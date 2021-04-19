@@ -60,11 +60,6 @@ const slides = [
         className="img-responsive"
       />
     </p>
-    <hr />
-    <p>
-      <small>:help</small> <a help-topic="cypher">cypher</a>{' '}
-      <a help-topic="load-csv">LOAD CSV</a>
-    </p>
     <h4>Load records</h4>
     <figure>
       <pre className="pre-scrollable code runnable">
@@ -106,6 +101,11 @@ SET n = row`}
         CREATE INDEX ON :Supplier(supplierID)
       </pre>
     </figure>
+    <hr />
+    <p>
+      <small>:help</small> <a help-topic="cypher">cypher</a>{' '}
+      <a help-topic="load-csv">LOAD CSV</a>
+    </p>
   </SidebarSlide>,
   <SidebarSlide key="s3">
     <h3>Product Catalog Graph</h3>
@@ -119,11 +119,6 @@ SET n = row`}
         src="./assets/images/northwind/product-graph.png"
         className="img-responsive"
       />
-    </p>
-    <hr />
-    <p>
-      <small>:help</small> <a help-topic="cypher">cypher</a>{' '}
-      <a help-topic="match">MATCH</a>
     </p>
     <h4>Create data relationships</h4>
     <figure>
@@ -160,6 +155,11 @@ CREATE (s)-[:SUPPLIES]->(p)`}
         creating relationships
       </aside>
     </figure>
+    <hr />
+    <p>
+      <small>:help</small> <a help-topic="cypher">cypher</a>{' '}
+      <a help-topic="match">MATCH</a>
+    </p>
   </SidebarSlide>,
   <SidebarSlide key="s4">
     <h3>Querying Product Catalog Graph</h3>
@@ -169,11 +169,6 @@ CREATE (s)-[:SUPPLIES]->(p)`}
         src="./assets/images/northwind/product-graph.png"
         className="img-responsive"
       />
-    </p>
-    <hr />
-    <p>
-      <small>:help</small> <a help-topic="cypher">cypher</a>{' '}
-      <a help-topic="match">MATCH</a>
     </p>
     <h4>Query using patterns</h4>
     <figure>
@@ -192,6 +187,11 @@ RETURN DISTINCT s.companyName as ProduceSuppliers`}
       </pre>
       <figcaption>Find the produce suppliers.</figcaption>
     </figure>
+    <hr />
+    <p>
+      <small>:help</small> <a help-topic="cypher">cypher</a>{' '}
+      <a help-topic="match">MATCH</a>
+    </p>
   </SidebarSlide>,
   <SidebarSlide key="s5">
     <h3>Customer Orders</h3>
@@ -201,11 +201,6 @@ RETURN DISTINCT s.companyName as ProduceSuppliers`}
         src="./assets/images/northwind/customer-orders.png"
         className="img-responsive"
       />
-    </p>
-    <hr />
-    <p>
-      <small>:help</small> <a help-topic="cypher">cypher</a>{' '}
-      <a help-topic="load-csv">LOAD CSV</a>
     </p>
     <h4>Load and index records</h4>
     <figure>
@@ -244,6 +239,11 @@ CREATE (c)-[:PURCHASED]->(o)`}
         creating relationships
       </aside>
     </figure>
+    <hr />
+    <p>
+      <small>:help</small> <a help-topic="cypher">cypher</a>{' '}
+      <a help-topic="load-csv">LOAD CSV</a>
+    </p>
   </SidebarSlide>,
   <SidebarSlide key="s6">
     <h3>Customer Order Graph</h3>
@@ -260,11 +260,6 @@ CREATE (c)-[:PURCHASED]->(o)`}
         src="./assets/images/northwind/order-graph.png"
         className="img-responsive"
       />
-    </p>
-    <hr />
-    <p>
-      <small>:help</small> <a help-topic="cypher">cypher</a>{' '}
-      <a help-topic="load-csv">LOAD CSV</a>
     </p>
     <h4>Load and index records</h4>
     <figure>
@@ -289,10 +284,14 @@ details.quantity = toInteger(row.quantity)`}
 RETURN DISTINCT cust.contactName as CustomerName, SUM(o.quantity) AS TotalProductsPurchased`}
       </pre>
     </figure>
+    <hr />
+    <p>
+      <small>:help</small> <a help-topic="cypher">cypher</a>{' '}
+      <a help-topic="load-csv">LOAD CSV</a>
+    </p>
   </SidebarSlide>,
   <SidebarSlide key="s7">
     <h3>Next steps</h3>
-    <h3>More code</h3>
     <ul className="undecorated">
       <li>
         <a play-topic="movie-graph">Movie Graph</a> - actors & movies
