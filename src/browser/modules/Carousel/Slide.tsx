@@ -23,10 +23,13 @@ import React from 'react'
 import styles from './style.less'
 import { StyledSidebarSlide, StyledSlide } from './styled'
 
-type SlideProps = {
+type SlideBaseProps = {
   children?: React.ReactNode
   content?: JSX.Element
   html?: string
+}
+
+type SlideProps = SlideBaseProps & {
   isSidebarSlide?: boolean
 }
 
@@ -70,3 +73,13 @@ const Slide = React.forwardRef(
 Slide.displayName = 'Slide'
 
 export default Slide
+
+const SidebarSlide = React.forwardRef(
+  (props: SlideBaseProps, ref: React.Ref<HTMLDivElement>) => (
+    <Slide ref={ref} isSidebarSlide {...props} />
+  )
+)
+
+SidebarSlide.displayName = 'SidebarSlide'
+
+export { SidebarSlide }

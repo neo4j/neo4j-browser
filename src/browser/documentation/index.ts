@@ -102,11 +102,13 @@ import playUnfound from './play-guides/unfound'
 import playWritecode from './play-guides/write-code'
 
 // Migrated sidebar guides
-import guideMovieGraph from './sidebar-guides/movie-graph'
+import guideConcepts from './sidebar-guides/concepts'
+import guideCypher from './sidebar-guides/cypher'
 import guideIndex from './sidebar-guides/guideIndex'
 import guideIntro from './sidebar-guides/intro'
+import guideMovieGraph from './sidebar-guides/movie-graph'
+import guideNorthwindGraph from './sidebar-guides/northwind-graph'
 import guideUnfound from './sidebar-guides/unfound'
-import guideConcepts from './sidebar-guides/concepts'
 
 type AllDocumentation = {
   help: HelpDocs
@@ -136,11 +138,15 @@ type GuideDocs = {
 
 type GuideChapter =
   | 'concepts'
+  | 'cypher'
   | 'index'
   | 'intro'
-  | 'movieGraph'
   | 'movie-graph'
+  | 'movieGraph'
   | 'movies'
+  | 'northwind'
+  | 'northwind-graph'
+  | 'northwindGraph'
   | 'unfound'
 
 // TypeGuard function to ts to understand that a string is a valid key
@@ -355,11 +361,15 @@ const docs: AllDocumentation = {
     title: 'Built-in Browser guides',
     chapters: {
       concepts: guideConcepts,
+      cypher: guideCypher,
       index: guideIndex,
       intro: guideIntro,
       movies: guideMovieGraph,
       movieGraph: guideMovieGraph,
       'movie-graph': guideMovieGraph,
+      northwind: guideNorthwindGraph,
+      northwindGraph: guideNorthwindGraph,
+      'northwind-graph': guideNorthwindGraph,
       unfound: guideUnfound
     }
   }
