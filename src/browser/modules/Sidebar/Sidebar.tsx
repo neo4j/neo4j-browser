@@ -29,7 +29,8 @@ import Favorites from './favorites'
 import StaticScripts from './static-scripts'
 import ProjectFilesDrawer from './ProjectFiles'
 import TabNavigation, {
-  NavItem
+  NavItem,
+  STANDARD_DRAWER_WIDTH
 } from 'browser-components/TabNavigation/Navigation'
 import BrowserSync from '../Sync/BrowserSync'
 import { GlobalState } from 'shared/globalState'
@@ -99,11 +100,11 @@ const Sidebar = ({
       },
       content: function FavoritesDrawer(): ReactFragment {
         return (
-          <>
+          <div style={{ width: STANDARD_DRAWER_WIDTH }}>
             <DrawerHeader> Favorites </DrawerHeader>
             <Favorites />
             {showStaticScripts && <StaticScripts />}
-          </>
+          </div>
         )
       }
     },

@@ -24,6 +24,7 @@ import {
   DrawerBrowserCommand
 } from 'browser-components/drawer/drawer'
 import { dark } from 'browser-styles/themes'
+import { LARGE_DRAWER_WIDTH } from 'browser-components/TabNavigation/Navigation'
 
 export const StyledSetting = styled.div`
   padding-bottom: 15px;
@@ -261,6 +262,8 @@ export const StyledUl = styled.ul`
 export const StyledGuidesDrawer = styled.div`
   min-height: 100vh;
   position: relative;
+  width: ${LARGE_DRAWER_WIDTH}px;
+  /* width is set to avoid squashing during opening animation */
 `
 
 export const GuideTitle = styled.span`
