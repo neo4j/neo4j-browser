@@ -9,7 +9,7 @@ import { LinkContainer, MarginTop, MarginTopLi, NoBulletsUl } from './styled'
 
 const title = ''
 const slides = [
-  <Slide key="first" forceDarkMode>
+  <Slide key="first" isSidebarSlide>
     You can also access Browser guides by running
     <DrawerBrowserCommand data-populate=":guide [guide name]">
       :guide [guide name]

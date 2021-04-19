@@ -55,8 +55,8 @@ const MdxRow = ({ row = '' }) => (
   </StyledRow>
 )
 
-const MdxSlide = ({ mdx = '', forceDarkMode = false }) => (
-  <Slide forceDarkMode={forceDarkMode}>
+const MdxSlide = ({ mdx = '', isSidebarSlide = false }) => (
+  <Slide isSidebarSlide={isSidebarSlide}>
     <StyledSlide>
       {splitMdxRows(mdx).map((row, index) => (
         <MdxRow key={index} row={row} />

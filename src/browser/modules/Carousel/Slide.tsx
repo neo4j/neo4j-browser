@@ -27,15 +27,15 @@ type SlideProps = {
   children?: React.ReactNode
   content?: JSX.Element
   html?: string
-  forceDarkMode?: boolean
+  isSidebarSlide?: boolean
 }
 
 const Slide = React.forwardRef(
   (
-    { children, content, html, forceDarkMode }: SlideProps,
+    { children, content, html, isSidebarSlide }: SlideProps,
     ref: React.Ref<HTMLDivElement>
   ) => {
-    const SlideComponent = forceDarkMode ? StyledSidebarSlide : StyledSlide
+    const SlideComponent = isSidebarSlide ? StyledSidebarSlide : StyledSlide
 
     if (children) {
       return (
