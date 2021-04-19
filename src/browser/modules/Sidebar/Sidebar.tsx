@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { ReactFragment, ReactElement } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import DatabaseDrawer from '../DBMSInfo/DBMSInfo'
 import DocumentsDrawer from './Documents'
@@ -81,7 +81,7 @@ const Sidebar = ({
     {
       name: 'DBMS',
       title: 'Database Information',
-      icon: function dbIcon(isOpen: boolean): ReactElement {
+      icon: function dbIcon(isOpen: boolean): JSX.Element {
         return (
           <DatabaseIcon
             isOpen={isOpen}
@@ -95,10 +95,10 @@ const Sidebar = ({
     {
       name: 'Favorites',
       title: 'Favorites',
-      icon: function favIcon(isOpen: boolean): ReactElement {
+      icon: function favIcon(isOpen: boolean): JSX.Element {
         return <FavoritesIcon isOpen={isOpen} title="Favorites" />
       },
-      content: function FavoritesDrawer(): ReactFragment {
+      content: function FavoritesDrawer(): JSX.Element {
         return (
           <div style={{ width: STANDARD_DRAWER_WIDTH }}>
             <DrawerHeader> Favorites </DrawerHeader>
@@ -113,7 +113,7 @@ const Sidebar = ({
           {
             name: 'Project Files',
             title: 'Project Files',
-            icon: function projectFilesIcon(isOpen: boolean): ReactElement {
+            icon: function projectFilesIcon(isOpen: boolean): JSX.Element {
               return <ProjectFilesIcon isOpen={isOpen} title="Project Files" />
             },
             content: function ProjectDrawer(): JSX.Element {
@@ -136,7 +136,7 @@ const Sidebar = ({
     {
       name: 'Documents',
       title: 'Help &amp; Resources',
-      icon: function docsIcon(isOpen: boolean): ReactElement {
+      icon: function docsIcon(isOpen: boolean): JSX.Element {
         return <DocumentsIcon isOpen={isOpen} title="Help &amp; Resources" />
       },
       content: DocumentsDrawer,
@@ -145,7 +145,7 @@ const Sidebar = ({
     {
       name: 'Sync',
       title: 'Browser Sync',
-      icon: function syncIcon(isOpen: boolean): ReactElement {
+      icon: function syncIcon(isOpen: boolean): JSX.Element {
         return (
           <CloudSyncIcon
             isOpen={isOpen}
@@ -159,7 +159,7 @@ const Sidebar = ({
     {
       name: 'Settings',
       title: 'Settings',
-      icon: function settingIcon(isOpen: boolean): ReactElement {
+      icon: function settingIcon(isOpen: boolean): JSX.Element {
         return <SettingsIcon isOpen={isOpen} title="Browser Settings" />
       },
       content: SettingsDrawer
@@ -167,7 +167,7 @@ const Sidebar = ({
     {
       name: 'About',
       title: 'About Neo4j',
-      icon: function aboutIcon(isOpen: boolean): ReactElement {
+      icon: function aboutIcon(isOpen: boolean): JSX.Element {
         return <AboutIcon isOpen={isOpen} title="About Neo4j" />
       },
       content: AboutDrawer
