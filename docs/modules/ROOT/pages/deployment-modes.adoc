@@ -4,12 +4,12 @@
 
 There are several different scenarios of how to run Neo4j Browser:
 
-* Neo4j Server - Neo4j includes an HTTP server that can host the `BROWSER` module (Neo4j Browser).
-* Neo4j Desktop - Neo4j Browser comes out-of-the-box when you install Neo4j Desktop on your system.
-* link:https://browser.graphapp.io/[Web application] - Neo4j Browser is available as a web application.
-* link:https://neo4j.com/sandbox/[Neo4j Sandbox] - Try out Neo4j and Neo4j Browser.
-* link:https://console.neo4j.io[Neo4j Aura] - Neo4j Browser is available from the Neo4j Aura console.
-* Dedicated web server - Host Neo4j Browser as a standalone HTTP web application.
+* Neo4j Server -- Neo4j includes an HTTP server that can host the `BROWSER` module (Neo4j Browser).
+* Neo4j Desktop -- Neo4j Browser comes out-of-the-box when you install Neo4j Desktop on your system.
+* link:https://browser.graphapp.io/[Web application] -- Neo4j Browser is available as a web application.
+* link:https://neo4j.com/sandbox/[Neo4j Sandbox] -- Try out Neo4j and Neo4j Browser.
+* link:https://console.neo4j.io[Neo4j Aura] -- Neo4j Browser is available from the Neo4j Aura console.
+* Dedicated web server -- Host Neo4j Browser as a standalone HTTP web application.
 
 
 Neo4j Browser is open source (GNU General Public License v3.0) and the source code can be found at link:https://github.com/neo4j/neo4j-browser[_https://github.com/neo4j/neo4j-browser_].
