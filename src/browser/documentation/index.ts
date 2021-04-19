@@ -106,6 +106,7 @@ import guideMovieGraph from './sidebar-guides/movie-graph'
 import guideIndex from './sidebar-guides/guideIndex'
 import guideIntro from './sidebar-guides/intro'
 import guideUnfound from './sidebar-guides/unfound'
+import guideConcepts from './sidebar-guides/concepts'
 
 type AllDocumentation = {
   help: HelpDocs
@@ -134,6 +135,7 @@ type GuideDocs = {
 }
 
 type GuideChapter =
+  | 'concepts'
   | 'index'
   | 'intro'
   | 'movieGraph'
@@ -352,6 +354,7 @@ const docs: AllDocumentation = {
   guide: {
     title: 'Built-in Browser guides',
     chapters: {
+      concepts: guideConcepts,
       index: guideIndex,
       intro: guideIntro,
       movies: guideMovieGraph,

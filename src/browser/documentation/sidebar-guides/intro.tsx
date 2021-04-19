@@ -170,7 +170,8 @@ const slides = [
     <h3>Jump into code</h3>
     <ul className="undecorated">
       <li>
-        <a play-topic="cypher">Play Cypher</a> - Learn Cypher basics
+        <a data-exec=":guide northwind-graph">Cypher Guide</a> - Learn Cypher
+        basics
       </li>
     </ul>
   </Slide>

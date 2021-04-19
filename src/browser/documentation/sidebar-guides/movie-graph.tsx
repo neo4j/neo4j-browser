@@ -772,16 +772,11 @@ RETURN tom, m, coActors, m2, cruise`}
     <h3>Next steps</h3>
     <ul>
       <BulletsInsideLi>
-        <a style={{ cursor: 'pointer' }} data-exec=":guide northwind-graph">
-          Northwind Graph
-        </a>
-        - from RDBMS to graph
+        <a data-exec=":guide northwind-graph">Northwind Graph</a>- from RDBMS to
+        graph
       </BulletsInsideLi>
       <BulletsInsideLi>
-        <a style={{ cursor: 'pointer' }} data-exec=":help northwind-graph">
-          Cypher
-        </a>
-        - Learn Cypher syntax
+        <a data-exec=":help northwind-graph">Cypher</a>- Learn Cypher syntax
       </BulletsInsideLi>
       <BulletsInsideLi>
         <a

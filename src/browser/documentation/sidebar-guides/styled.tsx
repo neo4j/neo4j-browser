@@ -6,7 +6,6 @@ export const NoBulletsUl = styled.div`
 export const BulletsInsideLi = styled.li`
   list-style-position: inside;
 `
-
 export const MarginTopLi = styled.li`
   margin-top: 15px;
 `
