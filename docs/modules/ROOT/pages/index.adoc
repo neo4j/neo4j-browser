@@ -39,10 +39,10 @@ It is:
 
 The following areas of Neo4j Browser are covered in this manual:
 
-* xref:about-browser.adoc[About Neo4j Browser] - the purpose of Neo4j Browser and its high-level capabilities.
-* xref:deployment-modes.adoc[Deployment modes] - the different deployment modes for running Neo4j Browser.
-* xref:visual-tour.adoc[Visual tour] - a visual overview of the UI of Neo4j Browser.
-* xref:operations.adoc[Browser operations] - how to administer and use Neo4j Browser.
+* xref:about-browser.adoc[About Neo4j Browser] -- The purpose of Neo4j Browser and its high-level capabilities.
+* xref:deployment-modes.adoc[Deployment modes] -- The different deployment modes for running Neo4j Browser.
+* xref:visual-tour.adoc[Visual tour] -- A visual overview of the UI of Neo4j Browser.
+* xref:operations.adoc[Browser operations] -- How to administer and use Neo4j Browser.
 
 [.lead]
 *Who should read this*

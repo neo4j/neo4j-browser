@@ -5,7 +5,7 @@
 [[browser-purpose]]
 == Purpose of Neo4j Browser
 
-Neo4j Browser is a rich interface for querying and visualising data in Neo4j.
+Neo4j Browser is a rich interface for querying Neo4j and visualizing data results.
 It provides an interactive experience for writing, editing, and evaluating the results of link:https://neo4j.com/docs/cypher-manual/current/introduction/[Cypher] queries to explore your graph data.
 
 Neo4j Browser offers a Cypher Editor with syntax highlighting, code completion, and warnings to help you write Cypher queries.
