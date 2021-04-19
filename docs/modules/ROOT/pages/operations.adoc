@@ -178,7 +178,7 @@ The URL _\https://<dbid>.databases.neo4j.io/browser/_ can also be used to access
 == Visualize results
 
 There are a variety of ways to view data in Neo4j Browser.
-Any queries you run in Neo4j Browser populate the result frame below the Cypher editor.
+All queries that you run in the Cypher editor populate a reusable result frame.
 Query results are rendered either as a visual graph, a table, a plain text table, and code.
 You can switch between those with the icons on the left side of the result frame.
 
