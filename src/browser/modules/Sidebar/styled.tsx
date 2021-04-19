@@ -263,8 +263,7 @@ export const StyledGuidesDrawer = styled.div`
   position: relative;
 `
 
-export const GuideTitle = styled.h2`
-  margin: 10px 15px;
+export const GuideTitle = styled.span`
   text-overflow: ellipsis;
   overflow: hidden;
 `

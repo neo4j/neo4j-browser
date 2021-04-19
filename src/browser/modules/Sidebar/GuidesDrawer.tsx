@@ -45,6 +45,9 @@ function GuidesDrawer({
   backToAllGuides
 }: GuidesDrawerProps): JSX.Element {
   const scrollRef = useRef<HTMLDivElement>(null)
+  const capitalizedTitle =
+    guide.title.charAt(0).toUpperCase() + guide.title.slice(1)
+
   return (
     <StyledGuidesDrawer id="guide-drawer" ref={scrollRef}>
       <DrawerHeader>
@@ -53,9 +56,8 @@ function GuidesDrawer({
             <BackIcon width={16} />
           </BackIconContainer>
         )}
-        Neo4j Browser Guides
+        Neo4j Browser Guides | <GuideTitle>{capitalizedTitle}</GuideTitle>
       </DrawerHeader>
-      <GuideTitle>{guide.title}</GuideTitle>
       <CarouselWrapper>
         <GuideCarousel
           slides={guide.slides}
