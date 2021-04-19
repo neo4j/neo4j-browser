@@ -150,7 +150,7 @@ export const StyledCarouselButtonContainer = styled.div`
   align-items: center;
   justify-content: center;
   position: fixed;
-  bottom: 1px;
+  bottom: 0;
   left: 60px;
   width: 500px;
 
