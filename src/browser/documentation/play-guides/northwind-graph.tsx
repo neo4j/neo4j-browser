@@ -20,7 +20,7 @@
 
 import React from 'react'
 import ManualLink from 'browser-components/ManualLink'
-import { SiebarSlide } from '../../modules/Carousel/Slide'
+import Slide from '../../modules/Carousel/Slide'
 import { DrawerExternalLink } from 'browser-components/drawer/drawer'
 
 const title = 'Northwind Graph'

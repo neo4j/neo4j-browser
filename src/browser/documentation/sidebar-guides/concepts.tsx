@@ -20,12 +20,12 @@
 
 import React from 'react'
 import ManualLink from 'browser-components/ManualLink'
-import Slide from '../../modules/Carousel/Slide'
+import { SidebarSlide } from '../../modules/Carousel/Slide'
 
 const title = 'Concepts'
 const category = 'guides'
 const slides = [
-  <Slide key="first" isSidebarSlide>
+  <SidebarSlide key="first">
     <h3>Graph Fundamentals</h3>
     <p className="lead">Basic concepts to get you going.</p>
     <p>
@@ -36,8 +36,8 @@ const slides = [
       <li>Relationships - connect nodes</li>
       <li>Properties - named data values</li>
     </ol>
-  </Slide>,
-  <Slide key="second" isSidebarSlide>
+  </SidebarSlide>,
+  <SidebarSlide key="second">
     <h3>
       A&nbsp;
       <em>Graph</em> Database
@@ -60,8 +60,8 @@ const slides = [
       <li>Properties are simple name/value pairs</li>
     </ul>
     <img src="./assets/images/one_node.png" className="img-responsive" />
-  </Slide>,
-  <Slide key="third" isSidebarSlide>
+  </SidebarSlide>,
+  <SidebarSlide key="third">
     <h3>Labels</h3>
     <p className="lead">Associate a set of nodes.</p>
     <p>
@@ -77,8 +77,8 @@ const slides = [
       <li>Labels do not have any properties</li>
     </ul>
     <img src="./assets/images/labeled_node.png" className="img-responsive" />
-  </Slide>,
-  <Slide key="forth" isSidebarSlide>
+  </SidebarSlide>,
+  <SidebarSlide key="forth">
     <h3>More Nodes</h3>
     <p className="lead">
       Schema-free, nodes can have a mix of common and unique properties.
@@ -100,8 +100,8 @@ const slides = [
       <li>Neo4j can store billions of nodes</li>
     </ul>
     <img src="./assets/images/more_nodes.png" className="img-responsive" />
-  </Slide>,
-  <Slide key="fifth" isSidebarSlide>
+  </SidebarSlide>,
+  <SidebarSlide key="fifth">
     <h3>Consider Relationships</h3>
     <p className="lead">Connect nodes in the graph</p>
     <p className="summary">
@@ -120,8 +120,8 @@ const slides = [
       <li>Relationships form patterns of data</li>
     </ul>
     <img src="./assets/images/relationships.png" className="img-responsive" />
-  </Slide>,
-  <Slide key="sixth" isSidebarSlide>
+  </SidebarSlide>,
+  <SidebarSlide key="sixth">
     <h3>Relationship properties</h3>
     <p className="lead">Store information shared by two nodes.</p>
     <p className="summary">
@@ -134,8 +134,8 @@ const slides = [
       <li>Everyone else can have similar relationship properties</li>
     </ul>
     <img src="./assets/images/rel-props.png" className="img-responsive" />
-  </Slide>,
-  <Slide key="seventh" isSidebarSlide>
+  </SidebarSlide>,
+  <SidebarSlide key="seventh">
     <h3>Next steps</h3>
     <p>
       A property graph contains nodes and relationships, with properties on
@@ -162,7 +162,7 @@ const slides = [
         <a data-exec=":guide movie-graph">The Movie Graph</a>
       </li>
     </ul>
-  </Slide>
+  </SidebarSlide>
 ]
 
 export default { title, category, slides }

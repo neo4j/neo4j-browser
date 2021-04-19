@@ -20,13 +20,13 @@
 
 import React from 'react'
 import ManualLink from 'browser-components/ManualLink'
-import Slide from '../../modules/Carousel/Slide'
+import { SidebarSlide } from '../../modules/Carousel/Slide'
 import { BulletsInsideLi } from './styled'
 
 const title = 'Movie Graph'
 const category = 'graphExamples'
 const slides = [
-  <Slide key="s1" isSidebarSlide>
+  <SidebarSlide key="s1">
     <p>
       <em>The Movie Graph</em> is a mini graph application containing actors and
       directors that are related through the movies they've collaborated on.
@@ -51,8 +51,8 @@ const slides = [
       <b>WARNING:</b> This guide will modify the data in the currently active
       database.{' '}
     </p>
-  </Slide>,
-  <Slide key="s2" isSidebarSlide>
+  </SidebarSlide>,
+  <SidebarSlide key="s2">
     <h3>Create</h3>
     <p>
       Below is a code block containing a single Cypher query statement composed
@@ -582,8 +582,8 @@ MATCH (a)-[:ACTED_IN]->(m)<-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10;`}
       <small>:help</small> <a help-topic="cypher">cypher</a>{' '}
       <a help-topic="create">CREATE</a>
     </p>
-  </Slide>,
-  <Slide key="s3" isSidebarSlide>
+  </SidebarSlide>,
+  <SidebarSlide key="s3">
     <h3>Find</h3>
     <p>Example queries for finding individual nodes.</p>
     <ol>
@@ -624,8 +624,8 @@ MATCH (a)-[:ACTED_IN]->(m)<-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10;`}
       <small>:help</small> <a help-topic="match">MATCH</a>{' '}
       <a help-topic="where">WHERE</a> <a help-topic="return">RETURN</a>
     </p>
-  </Slide>,
-  <Slide key="s4" isSidebarSlide>
+  </SidebarSlide>,
+  <SidebarSlide key="s4">
     <h3>Query</h3>
     <p>Finding patterns within the graph.</p>
     <ol>
@@ -670,8 +670,8 @@ MATCH (a)-[:ACTED_IN]->(m)<-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10;`}
     <p>
       <small>:help</small> <a help-topic="match">MATCH</a>
     </p>
-  </Slide>,
-  <Slide key="s5" isSidebarSlide>
+  </SidebarSlide>,
+  <SidebarSlide key="s5">
     <h3>Solve</h3>
     <p>
       You've heard of the classic "Six Degrees of Kevin Bacon"? That is simply a
@@ -706,8 +706,8 @@ RETURN p`}
         creating relationships
       </aside>
     </figure>
-  </Slide>,
-  <Slide key="s6" isSidebarSlide>
+  </SidebarSlide>,
+  <SidebarSlide key="s6">
     <h3>Recommend</h3>
     <p>
       Let's recommend new co-actors for Tom Hanks. A basic recommendation
@@ -742,8 +742,8 @@ RETURN cocoActors.name AS Recommended, count(*) AS Strength ORDER BY Strength DE
 RETURN tom, m, coActors, m2, cruise`}
       </pre>
     </figure>
-  </Slide>,
-  <Slide key="s7" isSidebarSlide>
+  </SidebarSlide>,
+  <SidebarSlide key="s7">
     <h3>Clean up</h3>
     <p>When you're done experimenting, you can remove the movie data set.</p>
     <p>
@@ -767,8 +767,8 @@ RETURN tom, m, coActors, m2, cruise`}
     <p>
       <small>:help</small> <a help-topic="delete">DELETE</a>
     </p>
-  </Slide>,
-  <Slide key="s8" isSidebarSlide>
+  </SidebarSlide>,
+  <SidebarSlide key="s8">
     <h3>Next steps</h3>
     <ul>
       <BulletsInsideLi>
@@ -802,7 +802,7 @@ RETURN tom, m, coActors, m2, cruise`}
         </ManualLink>
       </BulletsInsideLi>
     </ul>
-  </Slide>
+  </SidebarSlide>
 ]
 
 export default { title, category, slides }

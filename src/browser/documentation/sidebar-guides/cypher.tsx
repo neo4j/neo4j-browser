@@ -20,12 +20,12 @@
 
 import React from 'react'
 import ManualLink from 'browser-components/ManualLink'
-import Slide from '../../modules/Carousel/Slide'
+import { SidebarSlide } from '../../modules/Carousel/Slide'
 
 const title = 'Cypher'
 const category = 'guides'
 const slides = [
-  <Slide key="first">
+  <SidebarSlide key="first">
     <div className="col-sm-3">
       <h3>Cypher</h3>
       <p className="lead">Neo4j's graph query language</p>
@@ -40,8 +40,8 @@ const slides = [
         <li>declarative, describing what to find, not how to find it</li>
       </ul>
     </div>
-  </Slide>,
-  <Slide key="second">
+  </SidebarSlide>,
+  <SidebarSlide key="second">
     <div className="col-sm-3">
       <h3>CREATE</h3>
       <p className="lead">Create a node</p>
@@ -70,8 +70,8 @@ const slides = [
         </li>
       </ul>
     </div>
-  </Slide>,
-  <Slide key="third">
+  </SidebarSlide>,
+  <SidebarSlide key="third">
     <div className="col-sm-3">
       <h3>MATCH</h3>
       <p className="lead">Finding nodes</p>
@@ -105,8 +105,8 @@ const slides = [
         </li>
       </ul>
     </div>
-  </Slide>,
-  <Slide key="forth">
+  </SidebarSlide>,
+  <SidebarSlide key="forth">
     <div className="col-sm-3">
       <h3>CREATE more</h3>
       <p className="lead">Nodes and relationships</p>
@@ -131,8 +131,8 @@ CREATE (js:Person { name: "Johan", from: "Sweden", learn: "surfing" }),
         </pre>
       </figure>
     </div>
-  </Slide>,
-  <Slide key="fifth">
+  </SidebarSlide>,
+  <SidebarSlide key="fifth">
     <div className="col-sm-3">
       <h3>Pattern matching</h3>
       <p className="lead">Describe what to find in the graph</p>
@@ -167,8 +167,8 @@ WHERE ee.name = "Emil" RETURN ee, friends`}
         </li>
       </ul>
     </div>
-  </Slide>,
-  <Slide key="sixth">
+  </SidebarSlide>,
+  <SidebarSlide key="sixth">
     <div className="col-sm-3">
       <h3>Recommend</h3>
       <p className="lead">Using patterns</p>
@@ -201,8 +201,8 @@ RETURN DISTINCT surfer`}
         </li>
       </ul>
     </div>
-  </Slide>,
-  <Slide key="seventh">
+  </SidebarSlide>,
+  <SidebarSlide key="seventh">
     <div className="col-sm-3">
       <h3>Analyze</h3>
       <p className="lead">Using the visual query plan</p>
@@ -221,8 +221,8 @@ RETURN DISTINCT surfer`}
         </pre>
       </figure>
     </div>
-  </Slide>,
-  <Slide key="eighth">
+  </SidebarSlide>,
+  <SidebarSlide key="eighth">
     <div className="col-sm-3">
       <h3>Live Cypher warnings</h3>
       <p className="lead">Identify query problems in real time</p>
@@ -239,8 +239,8 @@ RETURN DISTINCT surfer`}
         className="img-responsive"
       />
     </div>
-  </Slide>,
-  <Slide key="nineth">
+  </SidebarSlide>,
+  <SidebarSlide key="nineth">
     <div className="col-sm-4">
       <h3>Next steps</h3>
       <p>
@@ -275,7 +275,7 @@ RETURN DISTINCT surfer`}
         </li>
       </ul>
     </div>
-  </Slide>
+  </SidebarSlide>
 ]
 
 export default { title, category, slides }
