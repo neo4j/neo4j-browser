@@ -798,10 +798,6 @@ RETURN tom, m, coActors, m2, cruise`}
         <pre className="pre-scrollable code runnable">
           MATCH (n) DETACH DELETE n
         </pre>
-        <aside className="warn">
-          Note you only need to compare property values like this when first
-          creating relationships
-        </aside>
       </figure>
       <p className="lead">Prove that the Movie Graph is gone</p>
       <figure>

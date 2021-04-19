@@ -290,6 +290,7 @@ export const StyledSlide = styled.div`
   }
   &.slide .key {
     background-color: ${props => props.theme.preBackground};
+    color: ${props => props.theme.preText};
     border-radius: 3px;
     font-size: 12px;
     display: inline-block;
@@ -406,6 +407,7 @@ export const StyledSidebarSlide = styled.div.attrs({
   }
   &.slide .key {
     background-color: ${dark.preBackground};
+    color: ${dark.preText};
     border-radius: 3px;
     font-size: 12px;
     display: inline-block;

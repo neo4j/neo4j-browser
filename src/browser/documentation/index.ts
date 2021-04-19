@@ -104,6 +104,7 @@ import playWritecode from './play-guides/write-code'
 // Migrated sidebar guides
 import guideMovieGraph from './sidebar-guides/movie-graph'
 import guideIndex from './sidebar-guides/guideIndex'
+import guideIntro from './sidebar-guides/intro'
 import guideUnfound from './sidebar-guides/unfound'
 
 type AllDocumentation = {
@@ -134,6 +135,7 @@ type GuideDocs = {
 
 type GuideChapter =
   | 'index'
+  | 'intro'
   | 'movieGraph'
   | 'movie-graph'
   | 'movies'
@@ -351,6 +353,7 @@ const docs: AllDocumentation = {
     title: 'Built-in Browser guides',
     chapters: {
       index: guideIndex,
+      intro: guideIntro,
       movies: guideMovieGraph,
       movieGraph: guideMovieGraph,
       'movie-graph': guideMovieGraph,
