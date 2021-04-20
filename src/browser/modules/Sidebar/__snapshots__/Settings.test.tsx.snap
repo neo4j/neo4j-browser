@@ -26,15 +26,15 @@ exports[`Settings renders with strange characters in display name 1`] = `
             Test åäö settings
           </h5>
           <div
-            class="sc-kGXeez iCyRbv"
+            class="sc-jhAzac bSyIMB"
           >
             <label
-              class="sc-kpOJdX kZcPaA"
+              class="sc-fBuWsC bPajwT"
               title=""
             >
               åäö üüü
               <input
-                class="sc-ckVGcZ iZluED testSetting"
+                class="sc-dVhcbM jTOfUS testSetting"
                 title=""
                 value="true"
               />

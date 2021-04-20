@@ -53,7 +53,7 @@ export function ManualLink({
   children,
   neo4jVersion,
   minVersion
-}: any) {
+}: any): JSX.Element {
   let cleanPage = page.replace(/^\//, '')
   let content = children
   if (isPageMoved(chapter, page, neo4jVersion)) {
