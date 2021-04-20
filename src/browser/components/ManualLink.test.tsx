@@ -20,8 +20,7 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-
-import { ManualLink } from './ManualLink'
+import { ManualLink } from 'browser-components/ManualLink'
 
 const tests: [Record<string, string | null>, string][] = [
   [

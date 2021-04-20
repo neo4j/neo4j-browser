@@ -51,7 +51,7 @@ interface SavedScriptsFolderProps {
   forceEdit: boolean
   onDoneEditing: () => void
   selectedScriptIds: string[]
-  children: JSX.Element[]
+  children: React.ReactNode
 }
 
 function SavedScriptsFolder({

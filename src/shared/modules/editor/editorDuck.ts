@@ -65,6 +65,7 @@ export const NOT_SUPPORTED_URL_PARAM_COMMAND =
 // Supported commands
 const validCommandTypes: { [key: string]: (args: string[]) => string } = {
   play: args => `:play ${args.join(' ')}`,
+  guide: args => `:guide ${args.join(' ')}`,
   edit: args => args.join('\n'),
   param: args => `:param ${args.join(' ')}`,
   params: args => `:params ${args.join(' ')}`
@@ -150,7 +151,8 @@ export const populateEditorFromUrlEpic: Epic<any, GlobalState> = some$ => {
 
       // Play command is considered safe and can run automatically
       // When running the explicit command, also set flag to skip any implicit init commands
-      if (commandType === 'play') {
+
+      if (['play', 'guide'].includes(commandType)) {
         return [
           executeCommand(fullCommand, { source: commandSources.url }),
           { type: DISABLE_IMPLICIT_INIT_COMMANDS }

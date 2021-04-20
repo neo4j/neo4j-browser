@@ -26,6 +26,7 @@ import addCircle from 'icons/add-circle.svg'
 import appWindowCode from 'icons/app-window-code.svg'
 import arrowLeft from 'icons/arrow-left.svg'
 import arrowRight from 'icons/arrow-right.svg'
+import backArrow from 'icons/back-arrow.svg'
 import buttonRefreshArrow from 'icons/button-refresh-arrow.svg'
 import cannyFeedback from 'icons/canny-feedback.svg'
 import cannyNotifications from 'icons/canny-notifications.svg'
@@ -39,6 +40,7 @@ import expand from 'icons/expand.svg'
 import file from 'icons/file.svg'
 import folderEmpty from 'icons/folder-empty.svg'
 import help from 'icons/help.svg'
+import monitorPlay from 'icons/monitor-play.svg'
 import navigationMenuVertical from 'icons/navigation-menu-vertical.svg'
 import neo4j from 'icons/neo-world.svg'
 import newFolder from 'icons/folder-add.svg'
@@ -134,6 +136,17 @@ export const DatabaseIcon = (props: {
     />
   )
 }
+
+export const GuidesDrawerIcon = (props: { isOpen: boolean }): JSX.Element => (
+  <IconContainer
+    activeStyle={white}
+    inactiveStyle={inactive}
+    width={28}
+    isOpen={props.isOpen}
+    icon={monitorPlay}
+    title="Guides"
+  />
+)
 
 interface SidebarIconProps {
   isOpen: boolean
@@ -339,6 +352,7 @@ export const MinusIcon = (): JSX.Element => (
     className="sl-minus-circle"
   />
 )
+
 export const RightArrowIcon = (): JSX.Element => (
   <IconContainer
     activeStyle={blue}
@@ -454,4 +468,8 @@ export const CannyFeedbackIcon = (): JSX.Element => (
 
 export const CannyNotificationsIcon = (): JSX.Element => (
   <IconContainer icon={cannyNotifications} />
+)
+
+export const BackIcon = ({ width }: { width: number }): JSX.Element => (
+  <IconContainer width={width} icon={backArrow} />
 )

@@ -23,7 +23,7 @@ import { cleanHtml } from 'services/remoteUtils'
 import remote from 'services/remote'
 
 export const fetchRemoteGuide = (url: any, allowlist = null) => {
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     if (!hostIsAllowed(url, allowlist)) {
       return reject(
         new Error('Hostname is not allowed according to server allowlist')

@@ -29,7 +29,7 @@ import {
   DrawerSection,
   DrawerSectionBody,
   DrawerFooter
-} from 'browser-components/drawer'
+} from 'browser-components/drawer/drawer-styled'
 import { getVersion, getEdition } from 'shared/modules/dbMeta/dbMetaDuck'
 
 function asChangeLogUrl(serverVersion: string): string | undefined {

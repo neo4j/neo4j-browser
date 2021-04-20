@@ -90,6 +90,7 @@ export const base = {
   frameBorder: 'none',
   inFrameBorder: '1px solid #e6e9ef',
   topicBorder: '1px solid #dadada',
+  drawerSeparator: '1px solid #424650',
 
   // Frame
   frameSidebarBackground: '#F8F9FB',

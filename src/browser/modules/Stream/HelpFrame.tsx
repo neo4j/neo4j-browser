@@ -46,7 +46,7 @@ const HelpFrame = ({ stack = [] }: any) => {
       <CarouselButton
         className="previous-slide rounded"
         data-testid="prev-in-stack-button"
-        onClick={() => setCurrentFrameIndex(currentFrameIndex + 1)}
+        onClick={() => setCurrentFrameIndex(index => index + 1)}
       >
         <StackPreviousIcon />
       </CarouselButton>
@@ -57,7 +57,7 @@ const HelpFrame = ({ stack = [] }: any) => {
       <CarouselButton
         className="next-slide rounded"
         data-testid="next-in-stack-button"
-        onClick={() => setCurrentFrameIndex(currentFrameIndex - 1)}
+        onClick={() => setCurrentFrameIndex(index => index - 1)}
       >
         <StackNextIcon />
       </CarouselButton>

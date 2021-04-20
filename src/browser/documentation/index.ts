@@ -88,42 +88,192 @@ import helpCypher from './dynamic/cypher'
 import helpHelp from './dynamic/help'
 import helpPlay from './dynamic/play'
 
-// Carousels
-import guideConcepts from './guides/concepts'
-import guideCypher from './guides/cypher'
-import guideIntro from './guides/intro'
-import guideLearn from './guides/learn'
-import guideMovieGraph from './guides/movie-graph'
-import guideNorthwindGraph from './guides/northwind-graph'
+// Play guides
+import playConcepts from './play-guides/concepts'
+import playCypher from './play-guides/cypher'
+import playIntro from './play-guides/intro'
+import playLearn from './play-guides/learn'
+import playMovieGraph from './play-guides/movie-graph'
+import playNorthwindGraph from './play-guides/northwind-graph'
+import playIconography from './play-guides/iconography'
+import playStart from './play-guides/start'
+import playTypography from './play-guides/typography'
+import playUnfound from './play-guides/unfound'
+import playWritecode from './play-guides/write-code'
 
-// Pages
-import guideIconography from './guides/iconography'
-import guideStart from './guides/start'
-import guideTypography from './guides/typography'
-import guideUnfound from './guides/unfound'
-import guideWritecode from './guides/write-code'
+// Migrated sidebar guides
+import guideConcepts from './sidebar-guides/concepts'
+import guideCypher from './sidebar-guides/cypher'
+import guideIndex from './sidebar-guides/guideIndex'
+import guideIntro from './sidebar-guides/intro'
+import guideMovieGraph from './sidebar-guides/movie-graph'
+import guideNorthwindGraph from './sidebar-guides/northwind-graph'
+import guideUnfound from './sidebar-guides/unfound'
 
-export default {
+type AllDocumentation = {
+  help: HelpDocs
+  cypher: CypherDocs
+  bolt: BoltDocs
+  play: PlayDocs
+  guide: GuideDocs
+}
+type DocItem = {
+  title: string
+  subtitle?: string
+  category?: string
+  content?: JSX.Element | null
+  footer?: JSX.Element
+  slides?: JSX.Element[]
+}
+
+type GuideItem = {
+  title: string
+  slides: JSX.Element[]
+}
+
+type GuideDocs = {
+  title: 'Built-in Browser guides'
+  chapters: Record<GuideChapter, GuideItem>
+}
+
+type GuideChapter =
+  | 'concepts'
+  | 'cypher'
+  | 'index'
+  | 'intro'
+  | 'movie-graph'
+  | 'movieGraph'
+  | 'movies'
+  | 'northwind'
+  | 'northwind-graph'
+  | 'northwindGraph'
+  | 'unfound'
+
+// TypeGuard function to ts to understand that a string is a valid key
+export function isGuideChapter(name: string): name is GuideChapter {
+  return name in docs.guide.chapters
+}
+
+type PlayDocs = {
+  title: 'Guides & Examples'
+  chapters: Record<PlayChapter, DocItem>
+}
+
+export type PlayChapter =
+  | 'concepts'
+  | 'cypher'
+  | 'iconography'
+  | 'intro'
+  | 'learn'
+  | 'movie-graph'
+  | 'movieGraph'
+  | 'movies'
+  | 'northwind'
+  | 'northwind-graph'
+  | 'northwindGraph'
+  | 'start'
+  | 'typography'
+  | 'unfound'
+  | 'writeCode'
+
+export function isPlayChapter(name: string): name is PlayChapter {
+  return name in docs.play.chapters
+}
+
+type BoltDocs = { title: 'Bolt'; chapters: Record<BoltChapter, DocItem> }
+type BoltChapter = 'boltEncryption' | 'boltRouting'
+type CypherDocs = { title: 'Cypher'; chapters: Record<CypherChapter, DocItem> }
+type CypherChapter =
+  | 'alterUser'
+  | 'contains'
+  | 'create'
+  | 'createConstraintOn'
+  | 'createDatabase'
+  | 'createIndexOn'
+  | 'createRole'
+  | 'createUser'
+  | 'delete'
+  | 'deny'
+  | 'detachDelete'
+  | 'dropConstraintOn'
+  | 'dropDatabase'
+  | 'dropIndexOn'
+  | 'dropRole'
+  | 'dropUser'
+  | 'endsWith'
+  | 'explain'
+  | 'foreach'
+  | 'grant'
+  | 'grantRole'
+  | 'loadCsv'
+  | 'match'
+  | 'merge'
+  | 'param'
+  | 'params'
+  | 'profile'
+  | 'queryPlan'
+  | 'remove'
+  | 'rest'
+  | 'restDelete'
+  | 'restGet'
+  | 'restPost'
+  | 'restPut'
+  | 'return'
+  | 'revoke'
+  | 'revokeRole'
+  | 'schema'
+  | 'set'
+  | 'showDatabases'
+  | 'showPrivileges'
+  | 'showRoles'
+  | 'showUsers'
+  | 'startsWith'
+  | 'template'
+  | 'unwind'
+  | 'where'
+  | 'with'
+
+type HelpDocs = { title: 'Commands'; chapters: Record<HelpChapter, DocItem> }
+type HelpChapter =
+  | 'auto'
+  | 'bolt'
+  | 'clear'
+  | 'commands'
+  | 'cypher'
+  | 'guides'
+  | 'help'
+  | 'history'
+  | 'historyClear'
+  | 'keys'
+  | 'play'
+  | 'queries'
+  | 'server'
+  | 'serverUser'
+  | 'style'
+  | 'unfound'
+  | 'unknown'
+
+const docs: AllDocumentation = {
   help: {
     title: 'Commands',
     chapters: {
       auto: helpAuto,
-      clear: helpClear,
-      cypher: helpCypher,
       bolt: helpBolt,
+      clear: helpClear,
       commands: helpCommands,
+      cypher: helpCypher,
       guides: helpPlay,
       help: helpHelp,
       history: helpHistory,
       historyClear: helpHistoryClear,
       keys: helpKeys,
       play: helpPlay,
+      queries: helpQueries,
       server: helpServer,
       serverUser: helpServerUser,
       style: helpStyle,
       unfound: helpUnfound,
-      unknown: helpUnknown,
-      queries: helpQueries
+      unknown: helpUnknown
     }
   },
   cypher: {
@@ -131,12 +281,12 @@ export default {
     chapters: {
       alterUser: helpAlterUser,
       contains: helpContains,
+      create: helpCreate,
       createConstraintOn: helpCreateConstraintOn,
       createDatabase: helpCreateDatabase,
       createIndexOn: helpCreateIndexOn,
       createRole: helpCreateRole,
       createUser: helpCreateUser,
-      create: helpCreate,
       delete: helpDelete,
       deny: helpDeny,
       detachDelete: helpDetachDelete,
@@ -189,24 +339,40 @@ export default {
   play: {
     title: 'Guides & Examples',
     chapters: {
+      concepts: playConcepts,
+      cypher: playCypher,
+      iconography: playIconography,
+      intro: playIntro,
+      learn: playLearn,
+      movieGraph: playMovieGraph,
+      'movie-graph': playMovieGraph,
+      movies: playMovieGraph,
+      northwind: playNorthwindGraph,
+      'northwind-graph': playNorthwindGraph,
+      northwindGraph: playNorthwindGraph,
+      start: playStart,
+      typography: playTypography,
+      unfound: playUnfound,
+      writeCode: playWritecode
+    }
+  },
+  // Guides are play-guides but migrated to be viewable in the sidebar
+  guide: {
+    title: 'Built-in Browser guides',
+    chapters: {
       concepts: guideConcepts,
       cypher: guideCypher,
+      index: guideIndex,
       intro: guideIntro,
-      learn: guideLearn,
-      movieGraph: guideMovieGraph,
       movies: guideMovieGraph,
-      northwindGraph: guideNorthwindGraph,
+      movieGraph: guideMovieGraph,
+      'movie-graph': guideMovieGraph,
       northwind: guideNorthwindGraph,
-      iconography: guideIconography,
-      start: guideStart,
-      typography: guideTypography,
-      unfound: guideUnfound,
-      writeCode: guideWritecode,
-      // Commands only
-      'query-template': {
-        title: 'Query Templates',
-        category: 'guides'
-      }
-    } as any
+      northwindGraph: guideNorthwindGraph,
+      'northwind-graph': guideNorthwindGraph,
+      unfound: guideUnfound
+    }
   }
 }
+
+export default docs

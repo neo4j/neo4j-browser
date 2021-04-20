@@ -140,7 +140,7 @@ export function DatabaseUnavailableError({
   return {
     type,
     code: type,
-    message: `Database "${dbName}" is unavailable, its status is "${dbMeta.status}."`
+    message: `Database "${dbName}" is unavailable, its status is "${dbMeta.status}".`
   }
 }
 

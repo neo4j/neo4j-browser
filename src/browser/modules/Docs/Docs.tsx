@@ -26,17 +26,29 @@ import Slide from '../Carousel/Slide'
 import MdxSlide from './MDX/MdxSlide'
 import { splitMdxSlides } from './MDX/splitMdx'
 
+type DocsProps = {
+  slides?: JSX.Element[] | null
+  content?: JSX.Element | null
+  html?: string
+  mdx?: string
+  initialSlide?: number
+  onSlide?: Function
+  lastUpdate?: number
+  originFrameId?: string
+  withDirectives?: true
+}
+
 export default function Docs({
   slides,
   content,
   html,
   mdx,
-  withDirectives,
   initialSlide,
   onSlide,
   originFrameId,
+  withDirectives = true,
   lastUpdate
-}: any) {
+}: DocsProps): JSX.Element | null {
   const [stateSlides, setStateSlides] = useState<JSX.Element[]>([])
 
   useEffect(() => {
@@ -68,15 +80,13 @@ export default function Docs({
       return
     }
 
-    if (withDirectives) {
-      slide = <Directives originFrameId={originFrameId} content={slide} />
-    }
+    slide = <Directives originFrameId={originFrameId} content={slide} />
     setStateSlides([slide])
 
     if (onSlide) {
       onSlide({ hasPrev: false, hasNext: false, slideIndex: 0 })
     }
-  }, [slides, content, html, withDirectives, lastUpdate])
+  }, [slides, content, html, lastUpdate])
 
   if (stateSlides.length > 1) {
     return (

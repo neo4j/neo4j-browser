@@ -25,7 +25,7 @@ import {
   DrawerSubHeader,
   DrawerSection,
   DrawerSectionBody
-} from 'browser-components/drawer'
+} from 'browser-components/drawer/drawer-styled'
 import { StyledTable, StyledKey, StyledValue, Link } from './styled'
 
 export class UserDetails extends Component<any> {

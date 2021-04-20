@@ -19,7 +19,12 @@
  */
 import { Button } from 'semantic-ui-react'
 import styled from 'styled-components'
-import { DrawerBody } from 'browser-components/drawer'
+import {
+  DrawerBody,
+  DrawerBrowserCommand
+} from 'browser-components/drawer/drawer-styled'
+import { dark } from 'browser-styles/themes'
+import { LARGE_DRAWER_WIDTH } from 'browser-components/TabNavigation/Navigation'
 
 export const StyledSetting = styled.div`
   padding-bottom: 15px;
@@ -45,24 +50,6 @@ export const StyledSettingTextInput = styled.input`
   width: 192px;
 `
 
-export const StyledHelpLink = styled.a`
-  cursor: pointer;
-  text-decoration: none;
-  color: #68bdf4;
-
-  &:active {
-    text-decoration: none;
-  }
-
-  &:before {
-    display: inline-block;
-    content: ' ';
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'> <path d='M14.3524 4.42834L2.53033 16.2504C2.23744 16.5433 1.76256 16.5433 1.46967 16.2504C1.17678 15.9575 1.17678 15.4826 1.46967 15.1897L13.2917 3.36768H2.74941C2.3352 3.36768 1.99941 3.03189 1.99941 2.61768C1.99941 2.20346 2.3352 1.86768 2.74941 1.86768H15.1022H15.1024C15.204 1.86768 15.301 1.88792 15.3894 1.92458C15.4759 1.96035 15.557 2.01298 15.6278 2.08247C15.6311 2.08571 15.6343 2.08897 15.6376 2.09226C15.707 2.16302 15.7597 2.24414 15.7954 2.33059C15.8321 2.41902 15.8524 2.51598 15.8524 2.61768V14.9706C15.8524 15.3848 15.5166 15.7206 15.1024 15.7206C14.6881 15.7206 14.3524 15.3848 14.3524 14.9706V4.42834Z' fill='%2368BDF4'/></svg>");
-    height: 12px;
-    width: 12px;
-    margin-right: 7px;
-  }
-`
 export const StyledHelpItem = styled.li`
   list-style-type: none;
   margin: 8px 24px 0 24px;
@@ -100,21 +87,6 @@ export const StyledName = styled.div`
   margin-right: 5%;
 `
 
-export const StyledCommand = styled.div`
-  background-color: #2a2c33;
-  border-radius: 2px;
-  padding: 3px;
-
-  color: #e36962;
-  font-family: Fira Code;
-
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-
-  max-width: 45%;
-`
-
 export const StyledFullSizeDrawerBody = styled(DrawerBody)`
   padding: 0;
 `
@@ -148,4 +120,203 @@ export const StyledFeedbackButton = styled(Button)`
   max-width: fit-content !important;
   margin: 0 0 25px 25px !important;
   min-height: fit-content !important;
+`
+
+export const StyledCommand = styled(DrawerBrowserCommand)`
+  max-width: 45%;
+`
+
+export const StyledCarousel = styled.div`
+  height: 100%;
+  padding-bottom: 20px;
+  width: 100%;
+  outline: none;
+
+  .row {
+    margin-left: 0;
+    margin-right: 0;
+  }
+`
+
+export const SlideContainer = styled.div`
+  padding: 0;
+  width: 100%;
+  display: inline-block;
+`
+
+export const StyledCarouselButtonContainer = styled.div`
+  color: ${props => props.theme.secondaryButtonText};
+  background-color: ${dark.secondaryBackground};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  bottom: 0;
+  left: 60px;
+  width: 500px;
+
+  z-index: 10;
+  border-top: ${props => props.theme.drawerSeparator};
+  height: 40px;
+`
+
+export const StyledCarouselButtonContainerInner = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  position: relative;
+`
+
+export const StyledCarouselCount = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: bold;
+  justify-content: flex-end;
+  border-radius: 3px;
+  min-width: 44px;
+  position: absolute;
+  right: 100%;
+  padding: 0;
+  margin-right: 10px;
+`
+
+export const CarouselIndicator = styled.li`
+  margin: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  position: relative;
+  z-index: 1;
+
+  > span {
+    background-color: ${props => props.theme.secondaryButtonText};
+    display: block;
+    border-radius: 3px;
+    width: 6px;
+    height: 6px;
+    opacity: 0.4;
+    transition: opacity 0.1s ease-in-out;
+  }
+
+  &::before {
+    border-radius: 2px;
+    content: attr(aria-label);
+    color: ${props => props.theme.primaryBackground};
+    background-color: ${props => props.theme.primaryText};
+    position: absolute;
+    font-size: 12px;
+    font-weight: bold;
+    left: 50%;
+    min-width: 24px;
+    bottom: calc(100% + 5px);
+    pointer-events: none;
+    transform: translateX(-50%);
+    padding: 5px;
+    line-height: 1;
+    text-align: center;
+    z-index: 100;
+    visibility: hidden;
+  }
+
+  &::after {
+    border: solid;
+    border-color: ${props => props.theme.primaryText} transparent;
+    border-width: 6px 6px 0 6px;
+    bottom: 5px;
+    content: '';
+    left: 50%;
+    pointer-events: none;
+    position: absolute;
+    transform: translateX(-50%);
+    z-index: 100;
+    visibility: hidden;
+  }
+
+  &:hover::before,
+  &:hover::after {
+    visibility: visible;
+  }
+`
+export const CarouselIndicatorInactive = styled(CarouselIndicator)`
+  &:hover > span {
+    opacity: 1;
+  }
+`
+export const CarouselIndicatorActive = styled(CarouselIndicator)`
+  > span {
+    opacity: 1;
+  }
+`
+
+export const StyledUl = styled.ul`
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 !important;
+  padding-left: 0 !important;
+`
+
+export const StyledGuidesDrawer = styled.div`
+  min-height: 100vh;
+  position: relative;
+  width: ${LARGE_DRAWER_WIDTH}px;
+  /* width is set to avoid squashing during opening animation */
+`
+
+export const StyledGuidesDrawerHeader = styled.h4`
+  color: ${props => props.theme.primaryHeaderText};
+  background-color: ${props => props.theme.drawerBackground};
+  font-size: 18px;
+  padding: 25px 0 0 25px;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+  text-shadow: rgba(0, 0, 0, 0.4) 0px 1px 0px;
+  font-family: ${props => props.theme.drawerHeaderFontFamily};
+  cursor: pointer;
+`
+
+export const GuideTitle = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 2em;
+  line-height: normal;
+  padding: 0 18px;
+  margin-bottom: 10px;
+`
+
+export const BackIconContainer = styled.span`
+  cursor: pointer;
+  margin-right: 5px;
+`
+export const CarouselWrapper = styled.div`
+  padding: 0 18px;
+`
+
+export const GuideButtonContainers = styled.div`
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  padding-right: 18px;
+  margin-bottom: 40px;
+`
+
+export const GuideNavButton = styled.button`
+  border: none;
+  background-color: inherit;
+  font-size: 1.2em;
+  color: ${props => props.theme.link};
+  outline: none;
+  padding: 5px 0;
+
+  :disabled {
+    opacity: 0;
+  }
+`
+
+export const StyledDrawerSeparator = styled.div`
+  margin: 0 18px 18px 18px;
+  border-bottom: 1px solid #424650;
 `

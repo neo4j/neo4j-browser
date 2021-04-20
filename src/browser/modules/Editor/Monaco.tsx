@@ -40,7 +40,7 @@ import { Bus } from 'suber'
 
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import { NotificationPosition, QueryResult } from 'neo4j-driver'
+import { QueryResult } from 'neo4j-driver'
 
 const shouldCheckForHints = (code: string) =>
   code.trim().length > 0 &&

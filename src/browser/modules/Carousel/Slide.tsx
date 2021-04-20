@@ -18,39 +18,68 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React from 'react'
+// The reason we have this file is to define classnames
+// used in our templates and externally defined guides
 import styles from './style.less'
-import { StyledSlide } from './styled'
+import { StyledSidebarSlide, StyledSlide } from './styled'
 
-const Slide = React.forwardRef<any, any>(({ children, content, html }, ref) => {
-  if (children) {
-    return (
-      <StyledSlide ref={ref} className={styles.slide}>
-        {children}
-      </StyledSlide>
-    )
+type SlideBaseProps = {
+  children?: React.ReactNode
+  content?: JSX.Element
+  html?: string
+}
+
+type SlideProps = SlideBaseProps & {
+  isSidebarSlide?: boolean
+}
+
+const Slide = React.forwardRef(
+  (
+    { children, content, html, isSidebarSlide }: SlideProps,
+    ref: React.Ref<HTMLDivElement>
+  ) => {
+    const SlideComponent = isSidebarSlide ? StyledSidebarSlide : StyledSlide
+
+    if (children) {
+      return (
+        <SlideComponent ref={ref} className={styles.slide}>
+          {children}
+        </SlideComponent>
+      )
+    }
+
+    if (content) {
+      return (
+        <SlideComponent ref={ref} className={styles.slide}>
+          {content}
+        </SlideComponent>
+      )
+    }
+
+    if (html) {
+      return (
+        <SlideComponent
+          ref={ref}
+          className={styles.slide}
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
+      )
+    }
+
+    return null
   }
-
-  if (content) {
-    return (
-      <StyledSlide ref={ref} className={styles.slide}>
-        {content}
-      </StyledSlide>
-    )
-  }
-
-  if (html) {
-    return (
-      <StyledSlide
-        ref={ref}
-        className={styles.slide}
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
-    )
-  }
-
-  return null
-})
+)
 
 Slide.displayName = 'Slide'
 
 export default Slide
+
+const SidebarSlide = React.forwardRef(
+  (props: SlideBaseProps, ref: React.Ref<HTMLDivElement>) => (
+    <Slide ref={ref} isSidebarSlide {...props} />
+  )
+)
+
+SidebarSlide.displayName = 'SidebarSlide'
+
+export { SidebarSlide }

@@ -29,6 +29,20 @@ import { addClass, prependIcon } from 'shared/services/dom-helpers'
 
 const directives = [
   {
+    selector: '[data-exec]',
+    valueExtractor: (elem: any) => {
+      return `${elem.getAttribute('data-exec')}`
+    },
+    autoExec: true
+  },
+  {
+    selector: '[data-populate]',
+    valueExtractor: (elem: any) => {
+      return `${elem.getAttribute('data-populate')}`
+    },
+    autoExec: false
+  },
+  {
     selector: '[exec-topic]',
     valueExtractor: (elem: any) => {
       return `:${elem.getAttribute('exec-topic')}`
@@ -99,15 +113,20 @@ const bindDynamicInputToDom = (element: any) => {
 }
 
 export const Directives = (props: any) => {
-  const callback = (elem: any) => {
+  const callback = (elem: HTMLDivElement | null) => {
     if (elem) {
       directives.forEach(directive => {
         const elems = elem.querySelectorAll(directive.selector)
-        Array.from(elems).forEach((e: any) => {
-          if (e.firstChild.nodeName !== 'I') {
+        Array.from(elems).forEach(e => {
+          if (
+            e.firstChild?.nodeName !== 'I' &&
+            !e.classList.contains('remove-play-icon')
+          ) {
             prependPlayIcon(e)
           }
 
+          // If we use add event listener we need to remove it afterwards
+          // @ts-expect-error
           e.onclick = () => {
             addClass(e, 'clicked')
             return props.onItemClick(
