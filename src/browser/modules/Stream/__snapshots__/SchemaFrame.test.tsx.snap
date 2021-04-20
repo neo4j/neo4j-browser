@@ -7,7 +7,7 @@ exports[`SchemaFrame renders empty 1`] = `
   >
     <div>
       <div
-        class="sc-ibxdXY fSdUjh"
+        class="sc-ibxdXY lnvWNA"
       >
         <table
           class="sc-ipZHIp cMRRUj"
@@ -89,7 +89,7 @@ exports[`SchemaFrame renders empty for Neo4j >= 4.0 1`] = `
   >
     <div>
       <div
-        class="sc-ibxdXY fSdUjh"
+        class="sc-ibxdXY lnvWNA"
       >
         <table
           class="sc-ipZHIp cMRRUj"
@@ -219,7 +219,7 @@ exports[`SchemaFrame renders results for Neo4j < 4.0 1`] = `
   >
     <div>
       <div
-        class="sc-ibxdXY fSdUjh"
+        class="sc-ibxdXY lnvWNA"
       >
         <table
           class="sc-ipZHIp cMRRUj"
