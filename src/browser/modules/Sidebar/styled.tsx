@@ -318,5 +318,5 @@ export const GuideNavButton = styled.button`
 
 export const StyledDrawerSeparator = styled.div`
   margin: 0 18px 18px 18px;
-  borderbottom: 1px solid #424650;
+  border-bottom: 1px solid #424650;
 `

@@ -20,8 +20,7 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-
-import { ManualLink } from './ManualLink'
+import { ManualLinkComponent } from 'browser-components/ManualLink'
 
 const tests: [Record<string, string | null>, string][] = [
   [
@@ -66,7 +65,7 @@ const tests: [Record<string, string | null>, string][] = [
 
 test.each(tests)('Render correct url for props %o', (props, expected) => {
   const { getByText } = render(
-    <ManualLink {...props}>link to manual</ManualLink>
+    <ManualLinkComponent {...props}>link to manual</ManualLinkComponent>
   )
 
   const url = getByText('link to manual').getAttribute('href')
@@ -101,9 +100,9 @@ test.each(movedPages)(
   'Render correct url for moved page %o',
   (props, expected) => {
     const { getByText } = render(
-      <ManualLink chapter="cypher-manual" {...props}>
+      <ManualLinkComponent chapter="cypher-manual" {...props}>
         link to manual
-      </ManualLink>
+      </ManualLinkComponent>
     )
     const url = getByText(expected.text).getAttribute('href')
     expect(url).toEqual(expected.url)
