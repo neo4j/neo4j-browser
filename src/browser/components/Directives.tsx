@@ -125,14 +125,16 @@ export const Directives = (props: any) => {
             prependPlayIcon(e)
           }
 
-          e.addEventListener('click', () => {
+          // If we use add event listener we need to remove it afterwards
+          // @ts-expect-error
+          e.onclick = () => {
             addClass(e, 'clicked')
             return props.onItemClick(
               directive.valueExtractor(e),
               directive.autoExec,
               props.originFrameId
             )
-          })
+          }
         })
       })
       bindDynamicInputToDom(elem)
