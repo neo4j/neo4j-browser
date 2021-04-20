@@ -303,6 +303,10 @@ export const StyledSlide = styled.div`
   &.slide .teaser {
     background-color: ${props => props.theme.teaserCardBackground} !important;
   }
+
+  &.slide input {
+    color: ${props => props.theme.inputText};
+  }
 `
 
 export const StyledSidebarSlide = styled.div.attrs({
@@ -429,5 +433,9 @@ export const StyledSidebarSlide = styled.div.attrs({
     list-style-position: outside;
     padding-left: 1.2em;
     margin-top: 0.5em;
+  }
+
+  &.slide input {
+    color: ${props => props.theme.inputText};
   }
 `
