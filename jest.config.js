@@ -39,5 +39,8 @@ module.exports = {
       functions: 35,
       lines: 45
     }
+  },
+  globals: {
+    SEGMENT_KEY: 'a-segment-key'
   }
 }

@@ -43,6 +43,7 @@ export const hasDiscoveryEndpoint = (state: any) =>
 export const inWebEnv = (state: any) => getEnv(state) === WEB
 export const inCloudEnv = (state: any) => getEnv(state) === CLOUD
 export const inWebBrowser = (state: any) => [WEB, CLOUD].includes(getEnv(state))
+export const inDesktop = (state: any) => getEnv(state) === DESKTOP
 
 export const getAllowedBoltSchemes = (state: any, encryptionFlag?: any) => {
   const isHosted = inWebBrowser(state)

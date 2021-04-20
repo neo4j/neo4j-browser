@@ -67,6 +67,7 @@ import UserInteraction from '../UserInteraction'
 import DocTitle from '../DocTitle'
 import asTitleString from '../DocTitle/titleStringBuilder'
 import Intercom from '../Intercom'
+import Segment, { MetricsData } from '../Segment'
 import Render from 'browser-components/Render'
 import BrowserSyncInit from '../Sync/BrowserSyncInit'
 import { getMetadata, getUserAuthStatus } from 'shared/modules/sync/syncDuck'
@@ -85,6 +86,8 @@ import { METRICS_EVENT, udcInit } from 'shared/modules/udc/udcDuck'
 import { useKeyboardShortcuts } from './keyboardShortcuts'
 import PerformanceOverlay from './PerformanceOverlay'
 
+declare let SEGMENT_KEY: string
+
 export function App(props: any) {
   const [derivedTheme, setEnvironmentTheme] = useDerivedTheme(
     props.theme,
@@ -100,16 +103,23 @@ export function App(props: any) {
 
   useKeyboardShortcuts(props.bus)
 
-  const eventMetricsCallback = useRef((_: any) => {})
+  const eventMetricsCallback = useRef((_: MetricsData) => {})
+  const segmentTrackCallback = useRef((_: MetricsData) => {})
 
   useEffect(() => {
     const unsub =
       props.bus &&
-      props.bus.take(METRICS_EVENT, ({ category, label, data }: any) => {
-        eventMetricsCallback &&
-          eventMetricsCallback.current &&
-          eventMetricsCallback.current({ category, label, data })
-      })
+      props.bus.take(
+        METRICS_EVENT,
+        ({ category, label, data }: MetricsData) => {
+          eventMetricsCallback &&
+            eventMetricsCallback.current &&
+            eventMetricsCallback.current({ category, label, data })
+          segmentTrackCallback &&
+            segmentTrackCallback.current &&
+            segmentTrackCallback.current({ category, label, data })
+        }
+      )
     const initAction = udcInit()
     props.bus && props.bus.send(initAction.type, initAction)
     return () => unsub && unsub()
@@ -140,6 +150,10 @@ export function App(props: any) {
 
   const setEventMetricsCallback = (fn: any) => {
     eventMetricsCallback.current = fn
+  }
+
+  const setTrackSegmentCallback = (fn: any) => {
+    segmentTrackCallback.current = fn
   }
 
   return (
@@ -178,6 +192,10 @@ export function App(props: any) {
               <UserInteraction />
               <Render if={loadExternalScripts}>
                 <Intercom appID="lq70afwx" />
+                <Segment
+                  segmentKey={SEGMENT_KEY}
+                  setTrackCallback={setTrackSegmentCallback}
+                />
               </Render>
               <Render if={syncConsent && loadExternalScripts && loadSync}>
                 <BrowserSyncInit
