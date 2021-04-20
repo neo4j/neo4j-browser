@@ -184,7 +184,7 @@ Query results are rendered as:
 * Visual graph
 * Table
 * Plain text table
-* JSON.
+* JSON
 
 You can switch between those with the icons on the left side of the result frame.
 

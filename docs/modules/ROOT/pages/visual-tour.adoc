@@ -366,7 +366,7 @@ The Bolt+routing feature on Neo4j drivers discovers a cluster member (drivers ha
 
 | `enableMultiStatementMode`
 | `true`
-| Allows you to write and edit multi-line queries (use a semicolon to separate statements).
+| Allows you to write and edit multi-line queries (use a semicolon (`;`) to separate statements).
 | yes
 
 | `connectionTimeout`
@@ -404,10 +404,15 @@ The example shows how to change the maximum number of neighbors for a node.
 The example shows how to change the `maxFrames` from its default of `50` to `10` and the theme to `outline`.
 [source, cypher]
 ----
-:config {maxFrames:10, theme: "outline"}
+:config {maxFrames: 10, theme: "outline"}
 ----
-Once making the change, rerunning `:config` should report that `maxFrames` has been set to 10, and the theme is defined to outline.
+After making the change, re-running `:config` reports that `maxFrames` has been set to `10`, and the theme is defined to `outline`.
 The *Browser Settings* drawer also reflects this change.
+====
+
+[WARNING]
+====
+Adjusting the settings first resets the configuration to the default configuration and then sets the given configurations.
 ====
 
 [[adjust-globally]]
@@ -437,13 +442,14 @@ This changes the `maxFrames` from its default of `50` to `10` and then restarts 
 
 | `browser.credential_timeout`
 | `0s`
-| Configure the Neo4j Browser to time out logged-in users after this idle period. Setting this to 0 indicates no limit.
+| Configure the Neo4j Browser to time out logged-in users after this idle period.
+Setting this to `0` indicates no limit.
 Valid units are `ns`, `μs`, `ms`, `s`, `m`, `h`, and `d`; default unit is `s`).
 
 | `browser.post_connect_cmd`
 | `0s`
 | Commands to be run when Neo4j Browser successfully connects to the server.
-Separate multiple commands with a semicolon.
+Separate multiple commands with a semicolon (`;`).
 
 | `browser.remote_content_hostname_whitelist`
 | `guides.neo4j.com,localhost`
