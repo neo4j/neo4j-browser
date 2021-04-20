@@ -226,6 +226,41 @@ The defaults for all settings can be adjusted at any time in Neo4j Browser and g
 
 To view all currently configured settings, run `:config`.
 
+.Show the configuration settings
+====
+[source, shell, role=noplay]
+----
+:config
+----
+.Example output
+[source, shell, role=noheader]
+----
+{
+  "maxHistory": 20,
+  "theme": "auto",
+  "initCmd": ":play start",
+  "playImplicitInitCommands": true,
+  "initialNodeDisplay": 300,
+  "maxNeighbours": 100,
+  "showSampleScripts": true,
+  "browserSyncDebugServer": null,
+  "maxRows": 1000,
+  "maxFieldItems": 500,
+  "shouldReportUdc": true,
+  "autoComplete": true,
+  "scrollToTop": true,
+  "maxFrames": 30,
+  "codeFontLigatures": true,
+  "useBoltRouting": false,
+  "editorLint": false,
+  "useCypherThread": true,
+  "enableMultiStatementMode": true,
+  "connectionTimeout": 30000,
+  "showPerformanceOverlay": false
+}
+----
+====
+
 .Available Browser settings
 [options="header" cols=",,,"]
 |===
@@ -350,6 +385,7 @@ The Bolt+routing feature on Neo4j drivers discovers a cluster member (drivers ha
 | no
 |===
 
+[[adjust-in-browser]]
 ==== Adjust settings in Browser
 
 To change the configuration settings locally in Neo4j Browser, you can either use the tabs in the Browser Settings drawer or, in the Cypher editor, type the command `:config` together with the setting and the new value.
@@ -374,6 +410,7 @@ Once making the change, rerunning `:config` should report that `maxFrames` has b
 The *Browser Settings* drawer also reflects this change.
 ====
 
+[[adjust-globally]]
 ==== Adjust settings globally
 
 To change the configuration settings for all users of Neo4j Browser, modify the _neo4j.conf_ file, or if using link:[Neo4j Desktop], navigate to the DBMS which settings you want to update, click the ellipsis dropdown menu, and select *Settings*.
