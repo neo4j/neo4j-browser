@@ -6,6 +6,44 @@ The editor in Neo4j Browser understands a few client-side commands, which begin 
 
 == List of editor commands
 
+//neo4j-browser/src/browser/modules/Stream/Stream.tsx
+
+//Frames:
+
+//ErrorFrame
+//CypherFrame
+//CypherScriptFrame
+//UserList
+//UserAdd
+//ChangePasswordFrame - :server change-password
+//PreFrame
+//PlayFrame - :play
+//HistoryFrame - :history
+//ParamsFrame - :params
+//ConnectionFrame - :server connect
+//DisconnectFrame - :server disconnect
+//SchemaFrame - :schema
+//HelpFrame - :help
+//QueriesFrame - :queries
+//SysInfoFrame - :sysinfo
+//ServerStatusFrame - :server status
+//ServerSwitchFrame - :server switch ???
+//UseDbFrame - :use <databaseName>
+//DbsFrame - :dbs
+//StyleFrame - :style
+//EditFrame - :edit
+//DefaultFrame
+//SnakeFrame - Easter egg
+
+//const trans = {
+//  'cypher-script': CypherScriptFrame,
+//  'user-list': UserList,
+//  'user-add': UserAdd,
+//  'switch-success': ServerSwitchFrame,
+//  'switch-fail': ServerSwitchFrame,
+//}
+
+
 * `:auto` -- Send the Cypher query following it, in an auto committing transaction. +
 In general this is not recommended because of the lack of support for auto retrying on leader switch errors in clusters.
 * `:clear` -- Remove all frames from the stream.
@@ -15,7 +53,9 @@ The key-value can be specified as `"x": 1`, `'x': 1`, or `x: 1`.
 * `:config {}` -- Reset the configuration settings to the default configuration.
 * `:config {<key-value pairs>}` -- Reset the configuration settings to default and then set the key-value pairs. +
 The key-value pairs can be specified as `{"x": 1, "y": 2}`, `{'x': 1, 'y': 2}`, or `{x: 1, y: 2}`.
+* `:dbs` -- Show databases available for the current user.
 * `:delete` -- REST command, send a HTTP DELETE request.
+* `:edit` -- Create an edit frame.
 * `:get` -- REST command, send a HTTP GET request.
 * `:help` -- Display help about topics and commands.
 * `:head` -- REST command, send a HTTP request with specified header.
@@ -45,7 +85,13 @@ Integers will be set as floats in this form.
 * `:server status` -- Show metadata for the current open connection.
 * `:schema` -- Show information about database schema indexes and constraints.
 * `:sysinfo` -- Show information about _Store Size_, _Id Allocation_, _Page Cache_, _Transactions_, and _Databases_.
-//* `:snake` -- Play snake.
+* `:use <database>` -- Set the database to query to by default (the default database is set to `neo4j`).
++
+[NOTE]
+====
+You can also use Cypher, `USE <database> ...`, to specify a specific database.
+====
+//* `:snake` -- Play snake. Easter egg.
 
 
 == Neo4j Browser configurations
