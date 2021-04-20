@@ -1,37 +1,26 @@
 [[about-browser]]
 = About Neo4j Browser
-
-[abstract]
---
-This section describes the purpose of Neo4j Browser and what it is used for.
---
+:description: This section describes the purpose of Neo4j Browser and its high-level capabilities.
 
 [[browser-purpose]]
 == Purpose of Neo4j Browser
 
-Neo4j Browser is a rich interface for querying and visualising a Neo4j Database.
-It provides an interactive experience for writing, editing and evaluating the results of link:https://neo4j.com/docs/cypher-manual/current/introduction/[Cypher] queries to explore your graph data.
+Neo4j Browser is a rich interface for querying Neo4j and visualizing data results.
+It provides an interactive experience for writing, editing, and evaluating the results of link:https://neo4j.com/docs/cypher-manual/current/introduction/[Cypher] queries to explore your graph data.
 
-It offers a Cypher Editor with syntax highlighting, code completion and warnings to help you write Cypher queries.
-Executed query results are displayed in a Result Frames offering the flexibility to view them in the format most appropriate to your query, be it a graph visualisation, a table or a data structure of your results.
+Neo4j Browser offers a Cypher Editor with syntax highlighting, code completion, and warnings to help you write Cypher queries.
+Executed query results are displayed in Result Frames, which offer the flexibility to view them in the format most appropriate to your query, be it a graph visualisation, a table, or a data structure of your results.
 
 Neo4j Browser is best suited to users looking to learn the Cypher query language as a way to interrogate the graph.
 Users less familiar with Cypher or seeking a richer visual experience may want to check out link:https://neo4j.com/product/bloom/[Neo4j Bloom].
 
-
 [[browser-capabilities]]
 == High-level capabilities of Neo4j Browser
 
-Neo4j Browser is the general purpose user interface for working with Neo4j.
-It allows you to query, visualize, administer, and monitor your databases.
-
 Neo4j Browser supports all CRUD operations for interacting with your Neo4j databases using Cypher language.
-You can view results in several formats, including graph visualization mode (for results containing nodes and relationships), tabular, as a text or a table, and JSON.
+Its main capabilities include:
 
-
-// What are the main capabilities:
-//
-// * run Cypher
-// * write transactions
-// * read results
-// * some admin and management capabilities
+* run Cypher
+* write transactions
+* read results
+* some admin and management capabilities
