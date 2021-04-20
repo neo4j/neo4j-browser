@@ -178,7 +178,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       editorRef.current.addCommand(
         KeyCode.Enter,
         () => (isMultiLine() ? newLine() : execute()),
-        '!suggestWidgetVisible'
+        '!suggestWidgetVisible && !findWidgetVisible'
       )
       editorRef.current.addCommand(
         KeyCode.UpArrow,
@@ -208,7 +208,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       editorRef.current.addCommand(
         KeyCode.Escape,
         toggleFullscreen,
-        '!suggestWidgetVisible'
+        '!suggestWidgetVisible && !findWidgetVisible'
       )
 
       onContentUpdate()
