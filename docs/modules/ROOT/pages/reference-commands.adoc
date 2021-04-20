@@ -1,10 +1,12 @@
 [appendix]
 [[reference-commands]]
-= Commands
+= Command reference
 
 The editor in Neo4j Browser understands a few client-side commands, which begin with a `:` (colon).
 
-== List of editor commands
+
+[[command-list]]
+== Commands
 
 //neo4j-browser/src/browser/modules/Stream/Stream.tsx
 
@@ -94,22 +96,23 @@ You can also use Cypher, `USE <database> ...`, to specify a specific database.
 //* `:snake` -- Play snake. Easter egg.
 
 
-== Neo4j Browser configurations
+[[configuration-commands]]
+== Configuration commands
 
 To set a new value for a Neo4j Browser configuration use the syntax:
-[shell]
+[source, shell, role=noheader]
 ----
 :config "<configurationName>": <configurationValue>`
 ----
 
 .Set the `maxHistory` to `20`.
 ====
-[shell]
+[source, shell, role=noplay]
 ----
 :config "maxHistory": 20
 ----
 
-[shell]
+[source, shell, role=noheader]
 ----
 {
   "maxHistory": 20,
@@ -137,7 +140,9 @@ To set a new value for a Neo4j Browser configuration use the syntax:
 ----
 ====
 
-== Neo4j Browser help commands
+
+[[help-commands]]
+== Help commands
 
 `:help commands`
 `:help play`
