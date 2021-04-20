@@ -26,7 +26,7 @@ import {
   DrawerSection,
   DrawerSectionBody,
   DrawerExternalLink
-} from 'browser-components/drawer/drawer'
+} from 'browser-components/drawer/drawer-styled'
 import {
   StyledHelpItem,
   StyledCommandListItem,

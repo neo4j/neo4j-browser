@@ -21,7 +21,7 @@
 import React from 'react'
 import ManualLink from 'browser-components/ManualLink'
 import { SidebarSlide } from '../../modules/Carousel/Slide'
-import { DrawerExternalLink } from 'browser-components/drawer/drawer'
+import { DrawerExternalLink } from 'browser-components/drawer/drawer-styled'
 
 const title = 'Northwind Graph'
 const category = 'graphExamples'

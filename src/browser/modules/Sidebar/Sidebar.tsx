@@ -54,7 +54,7 @@ import {
   GuidesDrawerIcon
 } from 'browser-components/icons/Icons'
 import { getCurrentDraft } from 'shared/modules/sidebar/sidebarDuck'
-import { DrawerHeader } from 'browser-components/drawer/drawer'
+import { DrawerHeader } from 'browser-components/drawer/drawer-styled'
 
 interface SidebarProps {
   openDrawer: string

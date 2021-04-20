@@ -52,7 +52,7 @@ import {
   DrawerSubHeader,
   DrawerSectionBody,
   DrawerToppedHeader
-} from 'browser-components/drawer/drawer'
+} from 'browser-components/drawer/drawer-styled'
 import { FormButton, SyncSignInButton } from 'browser-components/buttons'
 import { BinIcon } from 'browser-components/icons/Icons'
 import {

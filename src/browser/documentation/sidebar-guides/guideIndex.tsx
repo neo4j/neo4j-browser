@@ -3,7 +3,7 @@ import {
   DrawerBrowserCommand,
   DrawerExternalLink,
   DrawerSubHeader
-} from 'browser-components/drawer/drawer'
+} from 'browser-components/drawer/drawer-styled'
 import { SidebarSlide } from 'browser/modules/Carousel/Slide'
 import { LinkContainer, MarginTop, MarginTopLi, NoBulletsUl } from './styled'
 

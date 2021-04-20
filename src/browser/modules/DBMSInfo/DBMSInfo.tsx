@@ -35,7 +35,7 @@ import {
   Drawer,
   DrawerBody,
   DrawerHeader
-} from 'browser-components/drawer/drawer'
+} from 'browser-components/drawer/drawer-styled'
 import { DatabaseSelector } from './DatabaseSelector'
 import { getUseDb } from 'shared/modules/connections/connectionsDuck'
 import { getDatabases } from 'shared/modules/dbMeta/dbMetaDuck'

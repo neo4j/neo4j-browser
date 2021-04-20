@@ -39,7 +39,7 @@ import {
   DrawerSection,
   DrawerSectionBody,
   DrawerSubHeader
-} from 'browser-components/drawer/drawer'
+} from 'browser-components/drawer/drawer-styled'
 import {
   StyledTable,
   StyledKey,

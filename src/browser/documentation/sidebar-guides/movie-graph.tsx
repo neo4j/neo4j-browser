@@ -22,7 +22,7 @@ import React from 'react'
 import ManualLink from 'browser-components/ManualLink'
 import { SidebarSlide } from '../../modules/Carousel/Slide'
 import { BulletsInsideLi } from './styled'
-import { DrawerExternalLink } from 'browser-components/drawer/drawer'
+import { DrawerExternalLink } from 'browser-components/drawer/drawer-styled'
 
 const title = 'Movie Graph'
 const category = 'graphExamples'

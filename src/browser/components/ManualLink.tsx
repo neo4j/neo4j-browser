@@ -24,7 +24,7 @@ import semver from 'semver'
 
 import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 import { formatDocVersion } from 'browser/modules/Sidebar/Documents'
-import { DrawerExternalLink } from './drawer/drawer'
+import { DrawerExternalLink } from './drawer/drawer-styled'
 
 const movedPages: { [key: string]: { oldPage: string; oldContent: string } } = {
   '/administration/indexes-for-search-performance/': {

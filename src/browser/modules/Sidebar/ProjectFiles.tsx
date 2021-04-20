@@ -23,7 +23,7 @@ import { connect } from 'react-redux'
 import { useMutation } from '@apollo/client'
 import { getProjectId } from 'shared/modules/app/appDuck'
 
-import { Drawer, DrawerHeader } from 'browser-components/drawer/drawer'
+import { Drawer, DrawerHeader } from 'browser-components/drawer/drawer-styled'
 import ProjectFilesScripts, {
   ProjectFilesError
 } from '../../components/ProjectFiles/ProjectsFilesScripts'

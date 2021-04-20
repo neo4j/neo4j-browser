@@ -22,7 +22,7 @@ import styled from 'styled-components'
 import {
   DrawerBody,
   DrawerBrowserCommand
-} from 'browser-components/drawer/drawer'
+} from 'browser-components/drawer/drawer-styled'
 import { dark } from 'browser-styles/themes'
 import { LARGE_DRAWER_WIDTH } from 'browser-components/TabNavigation/Navigation'
 
