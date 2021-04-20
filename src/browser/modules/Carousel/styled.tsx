@@ -425,7 +425,7 @@ export const StyledSidebarSlide = styled.div.attrs({
     background-color: ${dark.teaserCardBackground} !important;
   }
   &.slide hr {
-    border-top: ${props => props.theme.drawerSeparator};
+    border-top: ${dark.drawerSeparator};
   }
 
   &.slide ul,
@@ -436,6 +436,6 @@ export const StyledSidebarSlide = styled.div.attrs({
   }
 
   &.slide input {
-    color: ${props => props.theme.inputText};
+    color: ${dark.inputText};
   }
 `
