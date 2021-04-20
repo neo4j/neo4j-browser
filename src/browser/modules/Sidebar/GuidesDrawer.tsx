@@ -36,7 +36,8 @@ import {
   GuideTitle,
   BackIconContainer,
   CarouselWrapper,
-  StyledGuidesDrawerHeader
+  StyledGuidesDrawerHeader,
+  StyledDrawerSeparator
 } from './styled'
 
 type GuidesDrawerProps = {
@@ -62,12 +63,7 @@ function GuidesDrawer({
         )}
         Neo4j Browser Guides{' '}
       </StyledGuidesDrawerHeader>
-      <div
-        style={{
-          margin: '0 18px 18px 18px',
-          borderBottom: '1px solid #424650'
-        }}
-      />
+      <StyledDrawerSeparator />
       {!isDefaultGuide(guide) && (
         <GuideTitle title={guide.title}>{guide.title}</GuideTitle>
       )}

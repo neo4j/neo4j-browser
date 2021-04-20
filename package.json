@@ -180,7 +180,7 @@
     "jsonic": "^0.3.0",
     "jszip": "^3.2.2",
     "lodash-es": "^4.17.15",
-    "monaco-editor": "^0.23.0",
+    "monaco-editor": "^0.22.3",
     "neo4j-driver": "^4.2.2",
     "prop-types": "^15.7.2",
     "react": "^16.9.0",

@@ -22,7 +22,7 @@ import React from 'react'
 import MdxSlide from 'browser/modules/Docs/MDX/MdxSlide'
 import Slide from 'browser/modules/Carousel/Slide'
 import docs, { isGuideChapter } from 'browser/documentation'
-import guideUnfound from 'browser/documentation/play-guides/unfound'
+import guideUnfound from 'browser/documentation/sidebar-guides/unfound'
 import {
   addProtocolsToUrlList,
   extractAllowlistFromConfigString,
@@ -45,7 +45,6 @@ import {
 } from 'browser/modules/Stream/styled'
 
 const { chapters } = docs.guide
-const unfound = { slides: [guideUnfound.content], title: guideUnfound.title }
 
 export async function resolveGuide(
   guideName: string,
@@ -64,7 +63,7 @@ export async function resolveGuide(
     return await resolveRemoteGuideFromName(guideName, state)
   } catch (e) {}
 
-  return unfound
+  return guideUnfound
 }
 
 function mdxTextToSlides(mdx: string): JSX.Element[] {
@@ -115,7 +114,7 @@ async function resolveRemoteGuideFromURL(
     }
   } catch (e) {
     if (e.response && e.response.status === 404) {
-      return unfound
+      return guideUnfound
     }
     return {
       title: 'Error',

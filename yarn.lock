@@ -9116,10 +9116,10 @@ monaco-editor-webpack-plugin@^3.0.0:
   dependencies:
     loader-utils "^2.0.0"
 
-monaco-editor@^0.23.0:
-  version "0.23.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/monaco-editor/-/monaco-editor-0.23.0.tgz#24844ba5640c7adb3a2a3ff3b520cf2d7170a6f0"
-  integrity sha1-JIRLpWQMets6Kj/ztSDPLXFwpvA=
+monaco-editor@^0.22.3:
+  version "0.22.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/monaco-editor/-/monaco-editor-0.22.3.tgz#69b42451d3116c6c08d9b8e052007ff891fd85d7"
+  integrity sha1-abQkUdMRbGwI2bjgUgB/+JH9hdc=
 
 moo@^0.4.3:
   version "0.4.3"
