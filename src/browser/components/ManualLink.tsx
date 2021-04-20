@@ -47,7 +47,7 @@ const isPageMoved = (chapter: string, page: string, neo4jVersion: string) =>
   neo4jVersion &&
   semver.satisfies(neo4jVersion, '<4.0.0-alpha.1')
 
-export function ManualLinkComponent({
+export function ManualLink({
   chapter,
   page,
   children,
@@ -78,4 +78,4 @@ const mapStateToProps = (state: any) => ({
   neo4jVersion: getVersion(state)
 })
 
-export default connect(mapStateToProps)(ManualLinkComponent)
+export default connect(mapStateToProps)(ManualLink)
