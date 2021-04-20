@@ -49,11 +49,11 @@ const unfound = { slides: [guideUnfound.content], title: guideUnfound.title }
 
 export async function resolveGuide(
   guideName: string,
-  store: any
+  state: any
 ): Promise<{ slides: JSX.Element[]; title: string }> {
   const isUrl = guideName.startsWith('http')
   if (isUrl) {
-    return await resolveRemoteGuideFromURL(guideName, store)
+    return await resolveRemoteGuideFromURL(guideName, state)
   }
 
   if (isGuideChapter(guideName)) {
@@ -61,7 +61,7 @@ export async function resolveGuide(
   }
 
   try {
-    return await resolveRemoteGuideFromName(guideName, store)
+    return await resolveRemoteGuideFromName(guideName, state)
   } catch (e) {}
 
   return unfound
@@ -88,7 +88,7 @@ function htmlTextToSlides(html: string): JSX.Element[] {
 
 async function resolveRemoteGuideFromURL(
   guideName: string,
-  store: any
+  state: any
 ): Promise<{ slides: JSX.Element[]; title: string }> {
   const url = guideName
   const urlObject = new URL(url)
@@ -96,7 +96,7 @@ async function resolveRemoteGuideFromURL(
   const filenameExtension =
     (urlObject.pathname.includes('.') && urlObject.pathname.split('.').pop()) ||
     'html'
-  const allowlist = getRemoteContentHostnameAllowlist(store.getState())
+  const allowlist = getRemoteContentHostnameAllowlist(state)
 
   try {
     const remoteGuide = await fetchRemoteGuide(url, allowlist)
@@ -142,12 +142,12 @@ async function resolveRemoteGuideFromURL(
 
 async function resolveRemoteGuideFromName(
   guideName: string,
-  store: any
+  state: any
 ): Promise<{ slides: JSX.Element[]; title: string }> {
-  const allowlistStr = getRemoteContentHostnameAllowlist(store.getState())
+  const allowlistStr = getRemoteContentHostnameAllowlist(state)
   const allowlist = extractAllowlistFromConfigString(allowlistStr)
   const defaultAllowlist = extractAllowlistFromConfigString(
-    getDefaultRemoteContentHostnameAllowlist(store.getState())
+    getDefaultRemoteContentHostnameAllowlist(state)
   )
   const resolvedWildcardAllowlist = resolveAllowlistWildcard(
     allowlist,

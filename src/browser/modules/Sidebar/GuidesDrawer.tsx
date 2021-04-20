@@ -25,7 +25,7 @@ import {
   getGuide,
   startGuide,
   Guide,
-  defaultGuide,
+  isDefaultGuide,
   gotoSlide
 } from 'shared/modules/guides/guidesDuck'
 import { GlobalState } from 'shared/globalState'
@@ -51,21 +51,26 @@ function GuidesDrawer({
   gotoSlide
 }: GuidesDrawerProps): JSX.Element {
   const scrollRef = useRef<HTMLDivElement>(null)
-  const title = guide.title.startsWith('http')
-    ? guide.title
-    : guide.title.charAt(0).toUpperCase() + guide.title.slice(1)
 
   return (
     <StyledGuidesDrawer id="guide-drawer" ref={scrollRef}>
       <StyledGuidesDrawerHeader onClick={backToAllGuides}>
-        {guide.title !== defaultGuide.title && (
+        {!isDefaultGuide(guide) && (
           <BackIconContainer>
             <BackIcon width={16} />
           </BackIconContainer>
         )}
         Neo4j Browser Guides{' '}
       </StyledGuidesDrawerHeader>
-      <GuideTitle title={title}>{title}</GuideTitle>
+      <div
+        style={{
+          margin: '0 18px 18px 18px',
+          borderBottom: '1px solid #424650'
+        }}
+      />
+      {!isDefaultGuide(guide) && (
+        <GuideTitle title={guide.title}>{guide.title}</GuideTitle>
+      )}
       <CarouselWrapper>
         <GuideCarousel
           slides={guide.slides}

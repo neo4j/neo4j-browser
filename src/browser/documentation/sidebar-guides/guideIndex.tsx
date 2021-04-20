@@ -7,7 +7,7 @@ import {
 import { SidebarSlide } from 'browser/modules/Carousel/Slide'
 import { LinkContainer, MarginTop, MarginTopLi, NoBulletsUl } from './styled'
 
-const title = ''
+const title = '--DEFAULT_INDEX_GUIDE--'
 const slides = [
   <SidebarSlide key="first">
     You can also access Browser guides by running

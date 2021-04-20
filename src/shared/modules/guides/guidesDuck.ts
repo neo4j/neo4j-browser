@@ -25,6 +25,9 @@ export const NAME = 'guides'
 export const START_GUIDE = 'sidebar/START_GUIDE'
 export const GOTO_SLIDE = 'sidebar/GOTO_SLIDE'
 
+export const isDefaultGuide = (guide: Guide): boolean =>
+  guide.title === defaultGuide.title
+
 export const getGuide = (state: GlobalState): Guide => state[NAME].guide
 export type Guide = {
   currentSlide: number
@@ -32,7 +35,7 @@ export type Guide = {
   slides: JSX.Element[]
 }
 
-export const defaultGuide: Guide = {
+const defaultGuide: Guide = {
   ...docs.guide.chapters.index,
   currentSlide: 0
 }

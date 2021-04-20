@@ -420,4 +420,14 @@ export const StyledSidebarSlide = styled.div.attrs({
   &.slide .teaser {
     background-color: ${dark.teaserCardBackground} !important;
   }
+  &.slide hr {
+    border-top: ${props => props.theme.drawerSeparator};
+  }
+
+  &.slide ul,
+  &.slide ol {
+    list-style-position: outside;
+    padding-left: 1.2em;
+    margin-top: 0.5em;
+  }
 `

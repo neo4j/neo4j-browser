@@ -83,7 +83,10 @@ const slides = [
       editor-specific keybindings.
     </p>
     <br />
-    <img src="./assets/images/Keystrokes2.gif" className="img-responsive" />
+    <img
+      src="./assets/images/Keystrokes2.gif"
+      className="img-responsive  padding5"
+    />
   </SidebarSlide>,
   <SidebarSlide key="s3">
     <h3>Result frame</h3>
@@ -109,7 +112,7 @@ const slides = [
       </li>
     </ul>
     <br />
-    <img src="./assets/images/Stream.png" className="img-responsive" />
+    <img src="./assets/images/Stream.png" className="img-responsive padding5" />
   </SidebarSlide>,
   <SidebarSlide key="s4">
     <h3>Reusable frame</h3>
@@ -120,7 +123,10 @@ const slides = [
     </p>
     <p>Adjust your preferences in the Settings sidebar tab.</p>
     <br />
-    <img src="./assets/images/ReusableFrame2.gif" className="img-responsive" />
+    <img
+      src="./assets/images/ReusableFrame2.gif"
+      className="img-responsive padding5"
+    />
   </SidebarSlide>,
   <SidebarSlide key="s5">
     <h3>Sidebar: Database information</h3>
@@ -130,7 +136,10 @@ const slides = [
     <code className="nobreak">neo4j default</code> database, shown by the neo4j$
     prompt in the editor.
     <br />
-    <img src="./assets/images/SidebarDB_Iinfo.png" className="img-responsive" />
+    <img
+      src="./assets/images/SidebarDB_Iinfo.png"
+      className="img-responsive padding5"
+    />
   </SidebarSlide>,
   <SidebarSlide key="s6">
     <h3>Sidebar: Favorites</h3>
@@ -144,7 +153,10 @@ const slides = [
       databases, hosting platforms, and data sets.
     </p>
     <br />
-    <img src="./assets/images/Favorites2.gif" className="img-responsive" />
+    <img
+      src="./assets/images/Favorites2.gif"
+      className="img-responsive padding5"
+    />
   </SidebarSlide>,
   <SidebarSlide key="s7">
     <h3>Sidebar: Project files</h3>
@@ -153,7 +165,10 @@ const slides = [
     folder can be reached through Neo4j Desktop and your hard disk. Note this
     feature is only available when Neo4j Browser is run in Desktop.
     <br />
-    <img src="./assets/images/ProjectFiles2.gif" className="img-responsive" />
+    <img
+      src="./assets/images/ProjectFiles2.gif"
+      className="img-responsive padding5"
+    />
   </SidebarSlide>,
   <SidebarSlide key="s8">
     <h3>Next steps</h3>

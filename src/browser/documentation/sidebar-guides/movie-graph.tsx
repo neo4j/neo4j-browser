@@ -33,7 +33,7 @@ const slides = [
       directors that are related through the movies they've collaborated on.
     </p>
     <p>This guide will show you how to:</p>
-    <ol className="big">
+    <ol className="big ">
       <li>
         <b>Create:</b> insert movie data into the graph
       </li>
@@ -771,33 +771,33 @@ RETURN tom, m, coActors, m2, cruise`}
   </SidebarSlide>,
   <SidebarSlide key="s8">
     <h3>Next steps</h3>
-    <ul>
-      <BulletsInsideLi>
+    <ul className="undecorated">
+      <li>
         <a data-exec=":guide northwind-graph">Northwind Graph</a>- from RDBMS to
         graph
-      </BulletsInsideLi>
-      <BulletsInsideLi>
+      </li>
+      <li>
         <a data-exec=":help northwind-graph">Cypher</a>- Learn Cypher syntax
-      </BulletsInsideLi>
-      <BulletsInsideLi>
+      </li>
+      <li>
         <DrawerExternalLink href="https://portal.graphgist.org/">
           Explore more guides: Graph Gists Portal
         </DrawerExternalLink>
-      </BulletsInsideLi>
+      </li>
     </ul>
     <br />
     <h3>Documentation</h3>
-    <ul>
-      <BulletsInsideLi>
+    <ul className="undecorated">
+      <li>
         <DrawerExternalLink href="https://neo4j.com/developer/">
           Developer resources
         </DrawerExternalLink>
-      </BulletsInsideLi>
-      <BulletsInsideLi>
+      </li>
+      <li>
         <ManualLink chapter="cypher-manual" page="/">
           Neo4j Cypher Manual
         </ManualLink>
-      </BulletsInsideLi>
+      </li>
     </ul>
   </SidebarSlide>
 ]

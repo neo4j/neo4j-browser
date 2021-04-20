@@ -156,7 +156,7 @@ export const StyledCarouselButtonContainer = styled.div`
   width: 500px;
 
   z-index: 10;
-  border-top: ${props => props.theme.inFrameBorder};
+  border-top: ${props => props.theme.drawerSeparator};
   height: 40px;
 `
 
@@ -312,7 +312,6 @@ export const GuideNavButton = styled.button`
   padding: 5px 0;
 
   :disabled {
-    color: inherit;
-    opacity: 0.5;
+    opacity: 0;
   }
 `
