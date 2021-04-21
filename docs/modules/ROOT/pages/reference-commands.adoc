@@ -2,11 +2,11 @@
 [[reference-commands]]
 = Command reference
 
-The editor in Neo4j Browser understands a few client-side commands, which begin with a `:` (colon).
+The editor in Neo4j Browser understands a few client-side commands, which begin with a colon (`:`).
 
 
-[[command-list]]
-== Commands
+[[browser-commands]]
+== Browser commands
 
 //neo4j-browser/src/browser/modules/Stream/Stream.tsx
 
@@ -52,8 +52,8 @@ The editor in Neo4j Browser understands a few client-side commands, which begin 
 
 m| +:auto <Cypher query>+
 a|
-Send the Cypher query, in an auto commit transaction. +
-In general this is not recommended, because of the lack of support for retrying the Cypher query on errors.
+Send the Cypher query in an auto-commit transaction. +
+In general, this is not recommended because of the lack of support for retrying the Cypher query on errors.
 
 m| :clear
 a| Remove all frames from the stream.
@@ -78,19 +78,19 @@ m| :dbs
 a| Show databases available for the current user.
 
 m| +:delete <request>+
-a| REST command, send a HTTP DELETE request.
+a| REST command, send an HTTP DELETE request.
 
 m| :edit
 a| Create an edit frame.
 
 m| +:get <request>+
-a| REST command, send a HTTP GET request.
+a| REST command, send an HTTP GET request.
 
 m| :help
 a| Display help about topics and commands.
 
 m| +:head <request>+
-a| REST command, send a HTTP request with specified header.
+a| REST command, send an HTTP request with the specified header.
 
 m| :history
 a| Display Neo4j Browser history of your executed commands.
@@ -99,13 +99,13 @@ m| :history clear
 a| Remove all commands from Neo4j Browser history.
 
 m| +:put <request>+
-a| REST command, send a HTTP PUT request.
+a| REST command, send an HTTP PUT request.
 
 m| :play
 a| Play tutorials and guides.
 
 m| +:post <request>+
-a| REST command, send a HTTP POST request.
+a| REST command, send an HTTP POST request.
 
 m| +:param <key-value>+
 a|
@@ -137,7 +137,7 @@ a| Show the current style configuration.
 m| +:style <CSS>+
 a|
 Modify the visual aspects of your graph. +
-CSS classes will be overwritten with the new styling.
+CSS classes are overwritten with the new styling.
 
 m| :style reset
 a| Reset the style to the default styling.
@@ -149,10 +149,10 @@ m| :server connect
 a| Manage a connection to Neo4j.
 
 m| :server disconnect
-a| Disconnect the current open connection to Neo4j.
+a| Disconnect the currently open connection to Neo4j.
 
 m| :server status
-a| Show metadata for the current open connection.
+a| Show metadata for the currently open connection.
 
 m| :schema
 a| Show information about database schema indexes and constraints.
@@ -162,7 +162,7 @@ a| Show information about _Store Size_, _Id Allocation_, _Page Cache_, _Transact
 
 m| +:use <database>+
 a|
-Set the database, to query to by default (the default database is set to `neo4j`).
+Set the database to query by default (the default database is set to `neo4j`).
 
 [NOTE]
 ====
@@ -173,64 +173,6 @@ You can also use Cypher, `+USE <database> ...+`, to specify a database.
 //a| Play snake. Easter egg.
 
 |===
-
-
-
-
-[[configuration-commands]]
-== Configuration commands
-
-To set a new value for a Neo4j Browser configuration use the syntax:
-[source, shell, role=noheader]
-----
-:config "<configurationName>": <configurationValue>`
-----
-
-
-.Set the `maxHistory` to `20`.
-====
-[source, shell, role=noplay]
-----
-:config "maxHistory": 20
-----
-====
-
-
-.Show the configuration settings.
-====
-[source, shell, role=noplay]
-----
-:config
-----
-
-.Example output
-[source, shell, role=noheader]
-----
-{
-  "maxHistory": 20,
-  "theme": "auto",
-  "initCmd": ":play start",
-  "playImplicitInitCommands": true,
-  "initialNodeDisplay": 300,
-  "maxNeighbours": 100,
-  "showSampleScripts": true,
-  "browserSyncDebugServer": null,
-  "maxRows": 1000,
-  "maxFieldItems": 500,
-  "shouldReportUdc": true,
-  "autoComplete": true,
-  "scrollToTop": true,
-  "maxFrames": 30,
-  "codeFontLigatures": true,
-  "useBoltRouting": false,
-  "editorLint": false,
-  "useCypherThread": true,
-  "enableMultiStatementMode": true,
-  "connectionTimeout": 30000,
-  "showPerformanceOverlay": false
-}
-----
-====
 
 
 [[help-commands]]
@@ -265,10 +207,10 @@ List of help commands available.
 * `:help profile`
 * `:help queries`
 * `:help rest`
-* `:help rest-delete'`
+* `:help rest-delete`
 * `:help rest-get`
 * `:help rest-post`
-* `:help rest-put'`
+* `:help rest-put`
 * `:help return`
 * `:help server`
 * `:help server-user`

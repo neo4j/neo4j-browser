@@ -33,6 +33,5 @@
 
 * Appendix
 ** xref:reference-commands.adoc[Command reference]
-** xref:reference-commands.adoc#command-list[Commands]
-** xref:reference-commands.adoc#configuration-commands[Configuration commands]
+** xref:reference-commands.adoc#browser-commands[Browser commands]
 ** xref:reference-commands.adoc#help-commands[Help commands]
