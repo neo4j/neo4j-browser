@@ -73,6 +73,7 @@ export type ConnectionReduxState = {
   connectionState: ConnectionState
   lastUpdate: number
   useDb: string | null
+  lastUseDb: string | null
 }
 type ConnectionState =
   | typeof DISCONNECTED_STATE
@@ -103,7 +104,8 @@ const initialState: ConnectionReduxState = {
   activeConnection: null,
   connectionState: DISCONNECTED_STATE,
   lastUpdate: 0,
-  useDb: null
+  useDb: null,
+  lastUseDb: null
 }
 /**
  * Selectors
@@ -286,7 +288,12 @@ export default function(state = initialState, action: any) {
     case UPDATE_AUTH_ENABLED:
       return updateAuthEnabledHelper(state, action.authEnabled)
     case USE_DB:
-      return { ...state, useDb: action.useDb }
+      const useDb = getActionUseDb(action, state)
+      let lastUseDb = useDb
+      if (useDb === null) {
+        lastUseDb = state.useDb || state.lastUseDb
+      }
+      return { ...state, lastUseDb, useDb }
     case USER_CLEAR:
       return initialState
     default:
@@ -356,12 +363,32 @@ export const setAuthEnabled = (authEnabled: any) => {
 
 export const useDb = (db: any = null) => ({ type: USE_DB, useDb: db })
 
+export const resetUseDb = () => ({ type: USE_DB, useDb: null })
+
+export const useDefaultDb = (db: any, databases: any) => ({
+  type: USE_DB,
+  useDb: db,
+  databases
+})
+
+const getActionUseDb = (action: any, state: any) => {
+  const { databases } = action
+  let { useDb } = action
+  if (useDb && databases) {
+    const { lastUseDb } = state
+    if (lastUseDb && databases.some((db: any) => db.name === lastUseDb)) {
+      useDb = lastUseDb
+    }
+  }
+  return useDb
+}
+
 // Epics
-export const useDbEpic = (action$: any) => {
+export const useDbEpic = (action$: any, store: any) => {
   return action$
     .ofType(USE_DB)
     .do((action: any) => {
-      bolt.useDb(action.useDb)
+      bolt.useDb(getActionUseDb(action, store.getState()[NAME]))
     })
     .map((action: any) => {
       if (!action.useDb) {
@@ -449,7 +476,7 @@ function shouldTryAutoconnecting(conn: Connection | null): boolean {
 export const startupConnectEpic = (action$: any, store: any) => {
   return action$
     .ofType(discovery.DONE)
-    .do(() => store.dispatch(useDb(null)))
+    .do(() => store.dispatch(resetUseDb()))
     .mergeMap(async ({ discovered }: DiscoverDataAction) => {
       const connectionTimeout = getConnectionTimeout(store.getState())
       const savedConnection = getConnection(
@@ -559,7 +586,7 @@ export const disconnectEpic = (action$: any, store: any) => {
     .ofType(DISCONNECT)
     .merge(action$.ofType(USER_CLEAR))
     .do(() => bolt.closeConnection())
-    .do(() => store.dispatch(useDb(null)))
+    .do(() => store.dispatch(resetUseDb()))
     .do((action: any) =>
       store.dispatch(updateConnection({ id: action.id, password: '' }))
     )
@@ -569,7 +596,7 @@ export const silentDisconnectEpic = (action$: any, store: any) => {
   return action$
     .ofType(SILENT_DISCONNECT)
     .do(() => bolt.closeConnection())
-    .do(() => store.dispatch(useDb(null)))
+    .do(() => store.dispatch(resetUseDb()))
     .do(() => store.dispatch({ type: CLEAR_META }))
     .mapTo(setActiveConnection(null, true))
 }
