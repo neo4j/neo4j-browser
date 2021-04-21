@@ -31,7 +31,6 @@
 ** xref:operations.adoc#query-parameters[Neo4j query parameters]
 ** xref:operations.adoc#url-parameters[Browser URL parameters]
 
-* Appendix
-** xref:reference-commands.adoc[Command reference]
+* xref:reference-commands.adoc[Command reference]
 ** xref:reference-commands.adoc#browser-commands[Browser commands]
 ** xref:reference-commands.adoc#help-commands[Help commands]

@@ -1,6 +1,7 @@
 [appendix]
 [[reference-commands]]
 = Command reference
+:description: This section list all the Browser commands.
 
 The editor in Neo4j Browser understands a few client-side commands, which begin with a colon (`:`).
 
