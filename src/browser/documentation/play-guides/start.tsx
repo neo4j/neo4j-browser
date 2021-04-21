@@ -30,7 +30,7 @@ const content = (
         <div className="icon-holder">
           <div className="clearfix" />
         </div>
-        <button play-topic="intro" className="btn btn-cta">
+        <button exec-topic="guide intro" className="btn btn-cta">
           Get started
         </button>
       </div>
@@ -44,8 +44,8 @@ const content = (
           <p>Actors & movies in cross-referenced pop culture.</p>
           <div className="clearfix" />
         </div>
-        <button play-topic="movie-graph" className="btn btn-cta">
-          Play guide
+        <button exec-topic="guide movie-graph" className="btn btn-cta">
+          Open guide
         </button>
       </div>
       <div className="teaser teaser-3">
@@ -57,7 +57,7 @@ const content = (
           <li>How can I query a graph?</li>
         </ul>
         <div className="clearfix" />
-        <button play-topic="cypher" className="btn btn-cta">
+        <button exec-topic="guide cypher" className="btn btn-cta">
           Start querying
         </button>
       </div>
