@@ -259,6 +259,16 @@ export const StyledUl = styled.ul`
   padding-left: 0 !important;
 `
 
+export const GuideUl = styled.ul`
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 !important;
+  padding-left: 0 !important;
+  overflow-x: hidden;
+`
+
 export const StyledGuidesDrawer = styled.div`
   min-height: 100vh;
   position: relative;
@@ -285,6 +295,7 @@ export const GuideTitle = styled.div`
   line-height: normal;
   padding: 0 18px;
   margin-bottom: 10px;
+  font-family: ${props => props.theme.drawerHeaderFontFamily};
 `
 
 export const BackIconContainer = styled.span`
@@ -295,12 +306,25 @@ export const CarouselWrapper = styled.div`
   padding: 0 18px;
 `
 
-export const GuideButtonContainers = styled.div`
-  margin-top: 10px;
+export const GuideButtonContainer = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 60px;
+
+  color: ${props => props.theme.secondaryButtonText};
+  background-color: ${dark.secondaryBackground};
+
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  padding-right: 18px;
-  margin-bottom: 40px;
+
+  height: 40px;
+  width: 500px;
+  max-width: 500px;
+  padding: 0 18px;
+
+  z-index: 10;
+  border-top: ${props => props.theme.drawerSeparator};
 `
 
 export const GuideNavButton = styled.button`

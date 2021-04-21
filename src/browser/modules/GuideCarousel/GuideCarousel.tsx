@@ -20,21 +20,13 @@
 
 import React, { useEffect } from 'react'
 import Directives from 'browser-components/Directives'
-import { CarouselButton } from 'browser-components/buttons'
 import {
-  SlidePreviousIcon,
-  SlideNextIcon
-} from 'browser-components/icons/Icons'
-import {
-  GuideButtonContainers,
   CarouselIndicatorActive,
   CarouselIndicatorInactive,
-  StyledCarousel,
-  StyledCarouselButtonContainer,
-  StyledCarouselButtonContainerInner,
-  StyledCarouselCount,
-  StyledUl,
-  GuideNavButton
+  GuideButtonContainer,
+  GuideNavButton,
+  GuideUl,
+  StyledCarousel
 } from '../Sidebar/styled'
 
 type GuideCarouselProps = {
@@ -85,58 +77,35 @@ function GuidesCarousel({
     <StyledCarousel onKeyUp={onKeyUp}>
       <Directives content={currentSlide} />
       {moreThanOneSlide && (
-        <>
-          <GuideButtonContainers>
-            <GuideNavButton onClick={prevSlide} disabled={onFirstSlide}>
-              Previous
-            </GuideNavButton>
-            <GuideNavButton onClick={nextSlide} disabled={onLastSlide}>
-              Next
-            </GuideNavButton>
-          </GuideButtonContainers>
-          <StyledCarouselButtonContainer>
-            <StyledCarouselButtonContainerInner>
-              <StyledCarouselCount>
-                {`${currentSlideIndex + 1} / ${slides.length}`}
-              </StyledCarouselCount>
-              <CarouselButton
-                className="previous-slide"
-                disabled={onFirstSlide}
-                onClick={prevSlide}
-              >
-                <SlidePreviousIcon />
-              </CarouselButton>
-              <StyledUl>
-                {slides.map((_, i) =>
-                  i !== currentSlideIndex ? (
-                    <CarouselIndicatorInactive
-                      key={i}
-                      aria-label={`${i + 1}`}
-                      onClick={() => gotoSlide(i)}
-                    >
-                      <span />
-                    </CarouselIndicatorInactive>
-                  ) : (
-                    <CarouselIndicatorActive
-                      key={i}
-                      aria-label={`${i + 1}`}
-                      onClick={() => gotoSlide(i)}
-                    >
-                      <span />
-                    </CarouselIndicatorActive>
-                  )
-                )}
-              </StyledUl>
-              <CarouselButton
-                className="next-slide"
-                disabled={onLastSlide}
-                onClick={nextSlide}
-              >
-                <SlideNextIcon />
-              </CarouselButton>
-            </StyledCarouselButtonContainerInner>
-          </StyledCarouselButtonContainer>
-        </>
+        <GuideButtonContainer>
+          <GuideNavButton onClick={prevSlide} disabled={onFirstSlide}>
+            Previous
+          </GuideNavButton>
+          <GuideUl>
+            {slides.map((_, i) =>
+              i !== currentSlideIndex ? (
+                <CarouselIndicatorInactive
+                  key={i}
+                  aria-label={`${i + 1}`}
+                  onClick={() => gotoSlide(i)}
+                >
+                  <span />
+                </CarouselIndicatorInactive>
+              ) : (
+                <CarouselIndicatorActive
+                  key={i}
+                  aria-label={`${i + 1}`}
+                  onClick={() => gotoSlide(i)}
+                >
+                  <span />
+                </CarouselIndicatorActive>
+              )
+            )}
+          </GuideUl>
+          <GuideNavButton onClick={nextSlide} disabled={onLastSlide}>
+            Next
+          </GuideNavButton>
+        </GuideButtonContainer>
       )}
     </StyledCarousel>
   )
