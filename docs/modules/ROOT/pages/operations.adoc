@@ -2,6 +2,8 @@
 = Browser operations
 :description: This section describes how to administer and use Neo4j Browser.
 
+//test
+
 [[create-dbms-connection]]
 == Create a DBMS connection
 
