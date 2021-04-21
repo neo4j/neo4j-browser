@@ -23,10 +23,12 @@ import Directives from 'browser-components/Directives'
 import {
   CarouselIndicatorActive,
   CarouselIndicatorInactive,
-  GuideButtonContainer,
+  GuideNavContainer,
   GuideNavButton,
   GuideUl,
-  StyledCarousel
+  StyledCarousel,
+  GuideProgressContainer,
+  StyledProgressCount
 } from '../Sidebar/styled'
 
 type GuideCarouselProps = {
@@ -68,35 +70,40 @@ function GuidesCarousel({
     <StyledCarousel>
       <Directives content={currentSlide} />
       {moreThanOneSlide && (
-        <GuideButtonContainer>
+        <GuideNavContainer>
           <GuideNavButton onClick={prevSlide} disabled={onFirstSlide}>
             Previous
           </GuideNavButton>
           <GuideUl>
-            {slides.map((_, i) =>
-              i !== currentSlideIndex ? (
-                <CarouselIndicatorInactive
-                  key={i}
-                  aria-label={`${i + 1}`}
-                  onClick={() => gotoSlide(i)}
-                >
-                  <span />
-                </CarouselIndicatorInactive>
-              ) : (
-                <CarouselIndicatorActive
-                  key={i}
-                  aria-label={`${i + 1}`}
-                  onClick={() => gotoSlide(i)}
-                >
-                  <span />
-                </CarouselIndicatorActive>
-              )
-            )}
+            <GuideProgressContainer>
+              <StyledProgressCount>
+                {`${currentSlideIndex + 1} / ${slides.length}`}
+              </StyledProgressCount>
+              {slides.map((_, i) =>
+                i !== currentSlideIndex ? (
+                  <CarouselIndicatorInactive
+                    key={i}
+                    aria-label={`${i + 1}`}
+                    onClick={() => gotoSlide(i)}
+                  >
+                    <span />
+                  </CarouselIndicatorInactive>
+                ) : (
+                  <CarouselIndicatorActive
+                    key={i}
+                    aria-label={`${i + 1}`}
+                    onClick={() => gotoSlide(i)}
+                  >
+                    <span />
+                  </CarouselIndicatorActive>
+                )
+              )}
+            </GuideProgressContainer>
           </GuideUl>
           <GuideNavButton onClick={nextSlide} disabled={onLastSlide}>
             Next
           </GuideNavButton>
-        </GuideButtonContainer>
+        </GuideNavContainer>
       )}
     </StyledCarousel>
   )

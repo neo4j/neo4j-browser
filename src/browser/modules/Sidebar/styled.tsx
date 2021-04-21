@@ -168,16 +168,12 @@ export const StyledCarouselButtonContainerInner = styled.div`
   position: relative;
 `
 
-export const StyledCarouselCount = styled.div`
+export const StyledProgressCount = styled.div`
   display: flex;
   align-items: center;
   font-size: 10px;
   font-weight: bold;
-  justify-content: flex-end;
   border-radius: 3px;
-  min-width: 44px;
-  position: absolute;
-  right: 100%;
   padding: 0;
   margin-right: 10px;
 `
@@ -306,7 +302,7 @@ export const CarouselWrapper = styled.div`
   padding: 0 18px;
 `
 
-export const GuideButtonContainer = styled.div`
+export const GuideNavContainer = styled.div`
   position: fixed;
   bottom: 0;
   left: 60px;
@@ -338,6 +334,12 @@ export const GuideNavButton = styled.button`
   :disabled {
     opacity: 0;
   }
+`
+
+export const GuideProgressContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 
 export const StyledDrawerSeparator = styled.div`
