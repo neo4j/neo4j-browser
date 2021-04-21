@@ -430,8 +430,8 @@ export const StyledSidebarSlide = styled.div.attrs({
 
   &.slide ul,
   &.slide ol {
-    list-style-position: outside;
-    padding-left: 1.2em;
+    list-style-position: inside;
+    padding-left: 0;
     margin-top: 0.5em;
   }
 
