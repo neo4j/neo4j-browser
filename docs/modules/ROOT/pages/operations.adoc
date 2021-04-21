@@ -421,7 +421,7 @@ Parameters may consist of letters and numbers and any combination of these but c
 
 [TIP]
 ====
-For more details on the Cypher parameters, see link:https://neo4j.com/docs/cypher-manual/4.2/syntax/parameters/[Cypher Manual v.4.2 - Parameters].
+For more details on the Cypher parameters, see link:https://neo4j.com/docs/cypher-manual/{neo4j-version}/syntax/parameters/[Cypher Manual v.{neo4j-version} - Parameters].
 ====
 
 [[set-params]]
@@ -430,7 +430,7 @@ For more details on the Cypher parameters, see link:https://neo4j.com/docs/cyphe
 You can set a parameter to be sent with your queries by using the `:param` command.
 Using parameters rather than hard-coded values allows for the reuse of the query plan cache.
 
-The `:param name => 'Example'` command defines a parameter named `name`, which will be sent along with your queries. +
+The `+:param name => 'Example'+` command defines a parameter named `name`, which will be sent along with your queries. +
 The right hand side of `=>` is sent to the server and evaluated as Cypher with an implicit `RETURN` in front.
 This gives better type safety since some types (especially numbers) in JavaScript are hard to match with Neo4j:s type system.
 To see the list of all currently set query parameters and their values, use the `:params` command.
@@ -444,164 +444,310 @@ Switch to a different database and declare, then switch back to the `system` dat
 
 .Set a parameter as an integer
 ====
-`:param x => 1`
+[source, browser command, role=noheader]
+----
+:param x => 1
+----
 ====
 
 .Set a parameter as a float
 ====
-`:param x => 1.0`
+[source, browser command, role=noheader]
+----
+:param x => 1.0
+----
 ====
 
 .Set a parameter as a string
 ====
-`:param x => "Example"`
+[source, browser command, role=noheader]
+----
+:param x => "Example"
+----
 ====
 
 .Set a parameter as an object
-====
-[source, cypher]
+=====
+
+. Map
++
+[source, browser command, role=noheader]
 ----
 :param obj1 => ({props: {name: "Tom Hanks", born:1956}})
-
-$obj = {"props": {"name": "Tom Hanks", "born": 1956}}
 ----
-
-[source, cypher]
++
+[source, parameter, role=noheader]
+.The obj1 parameter
+----
+$obj1 = {"props": {"name": "Tom Hanks", "born": 1956}}
+----
++
+[NOTE]
+====
+Maps like `{x: 1, y: 2}` must be wrapped in parentheses `({x: 1, y: 2})`.
+====
++
+. List
++
+[source, browser command, role=noheader]
 ----
 :param obj2 => [1, 2, 3, 4]
-
+----
++
+[source, parameter, role=noheader]
+.The obj2 parameter
+----
 $obj2 = [1, 2, 3, 4]
 ----
 
-[NOTE]
-Maps like `{x: 1, y: 2}` must be wrapped in parentheses `({x: 1, y: 2})`.
+=====
 
-====
 
 .Cypher query example with a parameter
-====
-[source, cypher]
+=====
+
+[source, browser command, role=noheader]
 ----
 :param name => 'Tom Hanks';
+----
 
+[source, cypher, role=noplay]
+----
 MATCH (n:Person)
 WHERE n.name = $name
 RETURN n
 ----
 
 [NOTE]
+====
 To run this example, in the *Browser Settings* drawer, check *Enable multi statement query editor*.
 Note that you do not see the output as you are used to when you run multiple statements.
 In Neo4j Browser, the current state of multi-statement is to set up your environment with multiple statements so that you can execute queries and examine the results, one by one.
 Alternatively, you can run the `:param` command separately from the `MATCH` query.
 ====
 
-.Save the result from a cypher query to a parameter
+=====
+
+
+=== Cypher result
+
+It is possible to save the result from a Cypher query to a parameter. +
+
+The syntax is:
+
+[source, browser command, role=noheader]
+----
+:param <parameter_name> => { CYPHER STATEMENT }
+----
+
+.One row returned
 ====
-[source, cypher]
+This example shows a result of one record returned.
+
+[source, browser command, role=noheader]
 ----
-:param x => { CYPHER STATEMENT }
+:param result1 => { RETURN 1 AS foo }
 ----
 
-[source, cypher]
+[source, parameter, role=noheader]
+.The result1 parameter
 ----
-:param x => { RETURN 1 AS foo }
-x => { RETURN 1 as foo } yields $x = [{foo: 1}]
-$x = [{foo: 1}]
-----
-
-[source, cypher]
-----
-:param x => { UNWIND [1, 2, 3] AS nbr RETURN nbr }
-
-$x = [{"nbr": 1}, {"nbr": 2}, {"nbr": 3}]}
-----
-
-[source, cypher]
-----
-:param x => { MATCH (n) WHERE n.name = "Example" RETURN n }
-
-$x = [{"n": {"identity": 4, "labels": [], "properties": {"name": "Example"}}}]
+$result1 = [{foo: 1}]
 ----
 ====
 
-.Pick out individual values from your result using destructuring
-====
-[source, cypher]
-----
-:param [{foo}] => { RETURN 1 as foo }
 
+.Several rows returned
+====
+This example shows a result of three records returned.
+
+[source, browser command, role=noheader]
+----
+:param result2 => { UNWIND [1, 2, 3] AS nbr RETURN nbr }
+----
+
+[source, parameter, role=noheader]
+.The result2 parameter
+----
+$result2 = [{"nbr": 1}, {"nbr": 2}, {"nbr": 3}]}
+----
+====
+
+.One row with a node returned
+====
+[source, browser command, role=noheader]
+----
+:param result3 => { MATCH (n) WHERE n.name = "Example" RETURN n }
+----
+
+[source, parameter, role=noheader]
+.The result3 parameter
+----
+$result3 = [{"n": {"identity": 4, "labels": [], "properties": {"name": "Example"}}}]
+----
+====
+
+
+=== Destructuring
+
+It is possible to pick individual values from your result using destructuring and set a specific parameter to a specific value. +
+
+The syntax is:
+
+[source, browser command, role=noheader]
+----
+:param [{<returned_parameter>: <parameter_name>, ...}, ...] => { CYPHER STATEMENT }
+----
+
+
+.One row returned
+====
+[source, browser command, role=noheader]
+----
+:param [{foo}] => { RETURN 1 AS foo }
+----
+
+[source, parameter, role=noheader]
+----
 $foo = 1
 ----
 ====
 
-.Rename destructured parameters
-====
-[source, cypher]
-----
-:param [{foo: bar}] => { RETURN 1 as foo }
 
+.Rename destructured parameter
+====
+[source, browser command, role=noheader]
+----
+:param [{foo: bar}] => { RETURN 1 AS foo }
+----
+
+[source, parameter, role=noheader]
+----
 $bar = 1
 ----
+====
 
-[source, cypher]
+.Syntax
+====
+[source, browser command, role=noheader]
+----
+:param [{foo1: bar1, foo2: bar2}] => { RETURN 1 AS foo1, 2 AS foo2 }
+----
+
+[source, parameter, role=noheader]
+----
+$bar1 = 1
+$bar2 = 2
+----
+====
+
+.Several rows returned
+====
+[source, browser command, role=noheader]
 ----
 :param [{nbr: x}] => { UNWIND [2, 3, 1] AS nbr RETURN nbr ORDER BY nbr ASCENDING }
+----
 
+[source, parameter, role=noheader]
+----
 $x = 1
 ----
 
-[source, cypher]
+[source, browser command, role=noheader]
 ----
 :param [nbr, nbr, nbr] => { UNWIND [2, 3, 1] AS nbr RETURN nbr ORDER BY nbr ASC }
-
-$x = 3
 ----
 
-[source, cypher]
+[source, parameter, role=noheader]
+----
+$nbr = 3
+----
+
+[source, browser command, role=noheader]
 ----
 :param [{nbr: x}, nbr, nbr] => { UNWIND [2, 3, 1] AS nbr RETURN nbr ORDER BY nbr ASC }
+----
 
+[source, parameter, role=noheader]
+----
 $x = 1
 $nbr = 3
 ----
 
-[source, cypher]
+[source, browser command, role=noheader]
 ----
 :param [{nbr: x}, {nbr: y}, {nbr: z}] => { UNWIND [2, 3, 1] AS nbr RETURN nbr ORDER BY nbr ASC }
+----
 
+[source, parameter, role=noheader]
+----
 $x = 1
 $y = 2
 $z = 3
 ----
 
-[source, cypher]
+[source, browser command, role=noheader]
 ----
 :param [{n: example}] => { MATCH (n) WHERE n.name = "Example" RETURN n LIMIT 1}
+----
 
+[source, parameter, role=noheader]
+----
 $example = {"identity": 4, "labels": [], "properties": {"name": "Example"}}}
 ----
 ====
+
 
 [[clear-params]]
 === Clear parameters
 
 You can clear all currently set parameters from Neo4j Browser by running:
 
-[source, cypher]
+[source, browser command, role=noheader]
 ----
 :params {}
 ----
 
+
+=== Set several paramters
+
+You can set several parameters with the `:params` command, this will also clear all currently set parameters.
+
+[NOTE]
+====
+Integers will be set to float with this style.
+====
+
+.Set several parameters
+====
+[source, browser command, role=noheader]
+----
+:params {x: 1, y: 2.0, z: 'abc', d: null, e: true, f: false}
+----
+
+[source, parameter, role=noheader]
+----
+$x = 1.0
+$y = 2.0
+$z = "abc"
+$d = null
+$e = true
+$f = false
+----
+====
+
+
 === Duration for the query parameters
 
+The parameters will not be saved when you close the browser.
+You can save a `:params` command as a favorite to be able to quickly populate parameters again if you got access to Browser Sync or if you are using Neo4j Desktop.
 
-[[url-parameters]]
-== Browser URL parameters
+
+//[[url-parameters]]
+//== Browser URL parameters
 
 // Specific query parameters.
 // Accepted parameters (e.g. connectURL)
-
 
 
 
