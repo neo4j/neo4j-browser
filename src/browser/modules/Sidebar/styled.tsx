@@ -178,7 +178,7 @@ export const StyledProgressCount = styled.div`
   margin-right: 10px;
 `
 
-export const CarouselIndicator = styled.li`
+export const CarouselIndicator = styled.li<{ active: boolean }>`
   margin: 0;
   cursor: pointer;
   border-radius: 50%;
@@ -192,8 +192,12 @@ export const CarouselIndicator = styled.li`
     border-radius: 3px;
     width: 6px;
     height: 6px;
-    opacity: 0.4;
     transition: opacity 0.1s ease-in-out;
+    opacity: ${props => (props.active ? 1 : 0.4)};
+  }
+
+  &:hover > span {
+    opacity: 1;
   }
 
   &::before {
@@ -235,16 +239,6 @@ export const CarouselIndicator = styled.li`
     visibility: visible;
   }
 `
-export const CarouselIndicatorInactive = styled(CarouselIndicator)`
-  &:hover > span {
-    opacity: 1;
-  }
-`
-export const CarouselIndicatorActive = styled(CarouselIndicator)`
-  > span {
-    opacity: 1;
-  }
-`
 
 export const StyledUl = styled.ul`
   list-style: none;
@@ -262,7 +256,7 @@ export const GuideUl = styled.ul`
   justify-content: center;
   margin: 0 !important;
   padding-left: 0 !important;
-  overflow-x: hidden;
+  overflow: hidden;
 `
 
 export const StyledGuidesDrawer = styled.div`

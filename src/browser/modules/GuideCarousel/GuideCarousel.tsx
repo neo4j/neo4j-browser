@@ -21,14 +21,13 @@
 import React, { useEffect } from 'react'
 import Directives from 'browser-components/Directives'
 import {
-  CarouselIndicatorActive,
-  CarouselIndicatorInactive,
   GuideNavContainer,
   GuideNavButton,
   GuideUl,
   StyledCarousel,
   GuideProgressContainer,
-  StyledProgressCount
+  StyledProgressCount,
+  CarouselIndicator
 } from '../Sidebar/styled'
 
 type GuideCarouselProps = {
@@ -79,25 +78,16 @@ function GuidesCarousel({
               <StyledProgressCount>
                 {`${currentSlideIndex + 1} / ${slides.length}`}
               </StyledProgressCount>
-              {slides.map((_, i) =>
-                i !== currentSlideIndex ? (
-                  <CarouselIndicatorInactive
-                    key={i}
-                    aria-label={`${i + 1}`}
-                    onClick={() => gotoSlide(i)}
-                  >
-                    <span />
-                  </CarouselIndicatorInactive>
-                ) : (
-                  <CarouselIndicatorActive
-                    key={i}
-                    aria-label={`${i + 1}`}
-                    onClick={() => gotoSlide(i)}
-                  >
-                    <span />
-                  </CarouselIndicatorActive>
-                )
-              )}
+              {slides.map((_, i) => (
+                <CarouselIndicator
+                  key={i}
+                  aria-label={`${i + 1}`}
+                  onClick={() => gotoSlide(i)}
+                  active={i === currentSlideIndex}
+                >
+                  <span />
+                </CarouselIndicator>
+              ))}
             </GuideProgressContainer>
           </GuideUl>
           <GuideNavButton onClick={nextSlide} disabled={onLastSlide}>
