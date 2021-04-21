@@ -2,7 +2,6 @@
 = Browser operations
 :description: This section describes how to administer and use Neo4j Browser.
 
-//test
 
 [[create-dbms-connection]]
 == Create a DBMS connection
@@ -38,15 +37,19 @@ User::
 
 By default, Neo4j Browser communicates with the database via the Bolt protocol [https://github.com/neo4j-drivers/neo4j-drivers.github.io] using the Neo4j JavaScript Driver [https://github.com/neo4j/neo4j-javascript-driver] to execute Cypher queries.
 However, it is possible to turn off Bolt and use HTTP(S) instead as in older versions of Neo4j Browser.
-The HTTP API can be used with the REST request commands (`:GET`, `:POST`, `:PUT`, and `:DELETE`).
+The HTTP API can be used with the REST request commands (`:head`, `:get`, `:post`, `:put`, and `:delete`).
 
 === Connection URL
 
 _neo4j+s://_::
-When connection to a cluster or a single instance and routing are handled by the driver. (Use        this for Neo4j Aura, Cluster). There are two versions of this URI; connection encrypted with TLS neo4j+s:// and no TLS neo4j://.
+When connection to a cluster or a single instance and routing are handled by the driver.
+Use this for connection to Neo4j Aura or if you connect to a cluster.
+There are two versions of this URI; connection encrypted with TLS `neo4j+s://` and no TLS `neo4j://`.
 
 _bolt+s://_::
-To connect directly to a single instance without any routing by the driver. Use this for connecting directly to a specific cluster member. There are two versions of this URI; connection encrypted with TLS bolt+s:// and no TLS bolt://.
+To connect directly to a single instance without any routing by the driver.
+Use this for connecting directly to a specific cluster member.
+There are two versions of this URI; connection encrypted with TLS `bolt+s://` and no `TLS bolt://`.
 
 === Different connection scenarios
 
@@ -60,27 +63,27 @@ To connect directly to a single instance without any routing by the driver. Use 
 
 | no
 | no
-| bolt:// or neo4j://
+| `bolt://` or `neo4j://`
 
 | no
 | yes
-| bolt+s:// or neo4j+s://
+| `bolt+s://` or `neo4j+s://`
 
 | yes
 | no
-| neo4j://
+| `neo4j://`
 
 | yes
 | yes
-| neo4j+s://
+| `neo4j+s://`
 
 | yes (connect to one specific cluster member only)
 | no
-| bolt://
+| `bolt://`
 
 | yes (connect to one specific cluster member only)
 | yes
-| bolt+s://
+| `bolt+s://`
 |===
 
 If you are developing on your local machine, the default connection URL is _neo4j://localhost:7474_.
@@ -94,27 +97,27 @@ If you are developing on your local machine, the default connection URL is _neo4
 
 | no
 | no
-| bolt:// or neo4j://
+| `bolt://` or `neo4j://`
 
 | no
 | yes
-| bolt+s:// or neo4j+s://
+| `bolt+s://` or `neo4j+s://`
 
 | yes
 | no
-| neo4j://
+| `neo4j://`
 
 | yes
 | yes
-| neo4j+s://
+| `neo4j+s://`
 
 | yes (connect to one specific cluster member only)
 | no
-| bolt://
+| `bolt://`
 
 | yes (connect to one specific cluster member only)
 | yes
-| bolt+s://
+| `bolt+s://`
 |===
 
 If you are developing on your local machine, the default connection URL is _neo4j://localhost:7474_.
@@ -128,15 +131,15 @@ If you are developing on your local machine, the default connection URL is _neo4
 
 | no
 | yes
-| bolt+s:// or neo4j+s://
+| `bolt+s://` or `neo4j+s://`
 
 | yes
 | yes
-| neo4j+s://
+| `neo4j+s://`
 
 | yes (connect to one specific cluster member only)
 | yes
-| bolt+s://
+| `bolt+s://`
 |===
 
 Neo4j Browser is available as a web application at _https://browser.graphapp.io/_.
