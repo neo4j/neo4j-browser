@@ -57,15 +57,6 @@ function GuidesCarousel({
     }
   }
 
-  function onKeyUp(e: React.KeyboardEvent) {
-    if (e.key === 'ArrowLeft') {
-      prevSlide()
-    }
-    if (e.key === 'ArrowRight') {
-      nextSlide()
-    }
-  }
-
   useEffect(() => {
     // As we progress in the slides, scroll to top
     scrollToTop()
@@ -74,7 +65,7 @@ function GuidesCarousel({
   const moreThanOneSlide = slides.length > 1
 
   return (
-    <StyledCarousel onKeyUp={onKeyUp}>
+    <StyledCarousel>
       <Directives content={currentSlide} />
       {moreThanOneSlide && (
         <GuideButtonContainer>
