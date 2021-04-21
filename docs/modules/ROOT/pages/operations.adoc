@@ -3,56 +3,66 @@
 :description: This section describes how to administer and use Neo4j Browser.
 
 
-[[create-dbms-connection]]
-== Create a DBMS connection
-
-// Mention the Bolt Protocol.
+[[dbms-connection]]
+== Connect to a Neo4j DBMS
 // Desktop application vs. web application connection URI.
 // Connection issues.
 // How Does Neo4j Browser interact with Neo4j Server? - https://neo4j.com/developer/kb/how-neo4j-browser-interacts-with-neo4j-server/
 // Troubleshooting Connection Issues in Neo4j Browser and Cypher Shell - https://neo4j.com/developer/kb/troubleshooting-connection-issues/
-// Bolt:// vs Neo4j://
-// https://community.neo4j.com/t/different-between-neo4j-and-bolt/18498
 // Neo4j Aura http URL https://neo4j.slack.com/archives/C3BQ5C8BZ/p1616660613097600?thread_ts=1616626201.093300&cid=C3BQ5C8BZ
 
+By default, Neo4j Browser communicates with a Neo4j DBMS via the link:https://7687.org/[Bolt Protocol] using the link:https://neo4j.com/docs/javascript-manual/current/[Neo4j JavaScript Driver] to execute Cypher queries.
+However, it is possible to turn off Bolt and use HTTP(S), instead as in older versions of Neo4j Browser.
+//The HTTP API can be used with the REST request commands (`:head`, `:get`, `:post`, `:put`, and `:delete`).
+
+[[uri-schema]]
+=== Connection URI schemas
+
+Neo4j Browser supports the following connection URI schemas:
+
+* `neo4j://`(unencrypted) and `neo4j+s://` (encrypted with TLS) -- work on either a single instance or a cluster.
+Routing is handled by the driver.
+If used on a cluster, it routes to a cluster member, not necessarily the system at the IP that you specified.
+Queries executed over that protocol route according to the transaction functions --_write_ transactions go to the leader and _read_ transactions route between followers and read replicas.
+
+* `bolt://`(unencrypted) and `bolt+s://` (encrypted with TLS) -- connect only to the server with the IP you specify.
+It does not route anywhere else.
+All queries over this protocol go only to this machine, whether they are _read_ or _write_ queries.
+_Write_ queries error out if not being sent to the Cluster leader.
+
+If used on a single server (not a cluster), then queries over them will behave identically.
+A difference in the behavior in `neo4j://` and `bolt://` is seen only if addressing a cluster member.
+
+[TIP]
+====
+For more information on the different connection scenarios, see <<connection-scenarios>>.
+For more information on how to configure connectors (Bolt, HTTP, and HTTPS) for Neo4j and the default ports, see link:https://neo4j.com/docs/operations-manual/{neo4j-version}/configuration/connectors/#connectors[Operations Manual -> Configure connectors] and link:https://neo4j.com/docs/operations-manual/current/configuration/ports/[Operations Manual -> Ports].
+====
+
+[[manage-connection]]
+=== Manage connection commands
 
 The `:server` command lets you manage the connection to Neo4j, such as connecting, disconnecting, and viewing metadata for the current connection.
 
 Usage::	`:server <action>`
 
 Actions::
-* `:server status` - Connection status. This is your current connection information.
+* `:server status` - Connection status.
+This is your current connection information.
 * `:server change-password` - opens the frame *Password change*, where you can change your current password.
 
 Auth::
 * `:server connect` - opens the frame *Connect to Neo4j*.
 If connected to the server, the frame shows the current user and the connection URL.
-Otherwise, enter the name of the database that you want to connect, the DBMS URL, and the user credentials.
+Otherwise, enter the name of the database you want to connect, the DBMS URL, and the user credentials.
 * `:server disconnect` - opens the frame *Disconnected*, which shows that the current user is disconnected from the server.
 Then, it runs the `:server connect` automatically.
 
 User::
-`:help server user` - opens the frame *User admin*,
+`:help server user` - opens the frame *User admin*.
 
-
-By default, Neo4j Browser communicates with the database via the Bolt protocol [https://github.com/neo4j-drivers/neo4j-drivers.github.io] using the Neo4j JavaScript Driver [https://github.com/neo4j/neo4j-javascript-driver] to execute Cypher queries.
-However, it is possible to turn off Bolt and use HTTP(S) instead as in older versions of Neo4j Browser.
-The HTTP API can be used with the REST request commands (`:head`, `:get`, `:post`, `:put`, and `:delete`).
-
-=== Connection URL
-
-_neo4j+s://_::
-When connection to a cluster or a single instance and routing are handled by the driver.
-Use this for connection to Neo4j Aura or if you connect to a cluster.
-There are two versions of this URI; connection encrypted with TLS `neo4j+s://` and no TLS `neo4j://`.
-
-_bolt+s://_::
-To connect directly to a single instance without any routing by the driver.
-Use this for connecting directly to a specific cluster member.
-There are two versions of this URI; connection encrypted with TLS `bolt+s://` and no `TLS bolt://`.
-
-=== Different connection scenarios
-
+[[connection-scenarios]]
+=== Connection scenarios
 
 .Neo4j Browser - Bundled with Neo4j
 [options="header", cols="<,<,<"]
@@ -146,19 +156,15 @@ Neo4j Browser is available as a web application at _https://browser.graphapp.io/
 
 .Neo4j Browser - Sandbox
 
-If you have a Neo4j sandbox at _https://neo4j.com/sandbox/_, you can launch a Neo4j Browser web application by clicking *Open with Browser*.
+In link:https://neo4j.com/sandbox/[Neo4j sandbox], you can launch a Neo4j Browser web application by clicking *Open with Browser*.
 It automatically connects with a connection URL similar to:
 
 `bolt+s://ba99a8c2d1c755f0c0cc2a95d0a627ea.neo4jsandbox.com:7687`
 
-
 .Neo4j Browser - Neo4j Aura
 
-If you have a Neo4j Aura console (https://console.neo4j.io), Neo4j Browser can be accessed as a web application within the user interface.
+In the https://console.neo4j.io[Neo4j Aura console], Neo4j Browser can be accessed as a web application within the user interface.
 The Neo4j Browser web application connects to your Neo4j instance without having to enter any connection URL.
-
-Open with (blue button at the right of the instance) and choose Neo4j Browser.
-//https://dist.neo4j.com/wp-content/uploads/1desktopConnect_cloud_confirm_running.jpg
 
 The connection URL is similar to:
 
@@ -171,7 +177,7 @@ The URL _\https://<dbid>.databases.neo4j.io/browser/_ can also be used to access
 [[security-browser]]
 == Browser credentials handling
 
-Neo4j Browser has two mechanisms for avoiding users having to repeatedly enter their Neo4j credentials.
+Neo4j Browser has two mechanisms for avoiding users having to enter their Neo4j credentials repeatedly.
 
 First, while the Browser is open in a web browser tab, it ensures that the existing database session is kept alive.
 This is subject to a timeout.
@@ -185,17 +191,258 @@ This local storage is also subject to the timeout configured in the setting `bro
 In addition, caching credentials in browser local storage can be disabled altogether.
 To disable credentials caching, set link:https://neo4j.com/docs/operations-manual/current/reference/configuration-settings/#config_browser.retain_connection_credentials[`browser.retain_connection_credentials=false`] in the server configuration.
 
-If the user issues a `:server disconnect` command, any existing session is terminated and the credentials are cleared from the local storage.
+If the user issues a `:server disconnect` command, any existing session is terminated, and the credentials are cleared from the local storage.
+
+[[adjust-settings]]
+== Adjust Browser settings
+
+The Neo4j Browser defaults for all settings can be adjusted at any time in Neo4j Browser and globally.
+
+To view all currently configured settings, run `:config`.
+
+.Show the configuration settings
+====
+[source, shell, role=noplay]
+----
+:config
+----
+.Example output
+[source, shell, role=noheader]
+----
+{
+  "maxHistory": 20,
+  "theme": "auto",
+  "initCmd": ":play start",
+  "playImplicitInitCommands": true,
+  "initialNodeDisplay": 300,
+  "maxNeighbours": 100,
+  "showSampleScripts": true,
+  "browserSyncDebugServer": null,
+  "maxRows": 1000,
+  "maxFieldItems": 500,
+  "shouldReportUdc": true,
+  "autoComplete": true,
+  "scrollToTop": true,
+  "maxFrames": 30,
+  "codeFontLigatures": true,
+  "useBoltRouting": false,
+  "editorLint": false,
+  "useCypherThread": true,
+  "enableMultiStatementMode": true,
+  "connectionTimeout": 30000,
+  "showPerformanceOverlay": false
+}
+----
+====
+
+.Available Browser settings
+[options="header" cols=",,,"]
+|===
+| Browser Setting
+| Default value
+| Description
+| Configurable in the *Browser Settings* drawer
+
+| `maxHistory`
+| `30`
+| The maximum number of recently executed queries kept in Browser.
+When reached, old entries get retired.
+The command history is persisted across Browser restarts.
+| yes
+
+| `theme`
+| `auto`
+| Neo4j Browser UI theme.
+Possible values: `auto`, `normal`, `outline`, and `dark`.
+| yes
+
+| `initCmd`
+| `:play start`
+| The initial command that is run when connected to the graph.
+| yes
+
+| `playImplicitInitCommands`
+| `true`
+| TODO: Commands that are run when connected to the graph.
+| no
+
+| `initialNodeDisplay`
+| `300`
+| Limit the number of nodes displayed on the first load of the graph visualization.
+| yes
+
+| `maxNeighbours`
+| `100`
+| The maximum number of neighbours for a node.
+| yes
+
+| `showSampleScripts`
+| `true`
+| Whether to display the *Sample Scripts* tab in *Favorites*.
+| yes
+
+| `browserSyncDebugServer`
+| `null`
+| TODO
+| yes
+
+| `maxRows`
+| `1000`
+| TODO: The maximum rows to render in the "Row" result view.
+| yes
+
+| `maxFieldItems`
+| `500`
+| The maximum number of items per field.
+| no
+
+| `shouldReportUdc`
+| `true`
+| TODO
+| no
+
+| `autoComplete`
+| `true`
+| Automatic completion of missing relationships.
+| yes, from the `Connect result nodes` check-box.
+
+| `scrollToTop`
+| `true`
+| Automatically scroll stream to top on new frames.
+| yes
+
+| `maxFrames`
+| `30`
+| The maximum number of result frames.
+When reached, old frames get retired.
+| yes
+
+| `codeFontLigatures`
+| `true`
+| Allow font ligatures for the Cypher editor bar and Cypher snippets.
+| yes
+
+| `useBoltRouting`
+| `false`
+| Whether to use Bolt routing.
+The Bolt+routing feature on Neo4j drivers discovers a cluster member (drivers have a load-balancing feature).
+| no
+
+| `editorLint`
+| `false`
+| TODO
+| no
+
+| `useCypherThread`
+| `true`
+| TODO
+| no
+
+| `enableMultiStatementMode`
+| `true`
+| Allows you to write and edit multi-line queries (use a semicolon (`;`) to separate statements).
+| yes
+
+| `connectionTimeout`
+| `30000`
+| The timeout in ms when establishing a connection to Neo4j.
+| yes
+
+| `showPerformanceOverlay`
+| `false`
+| TODO
+| no
+
+| `editorAutocomplete`
+| `true`
+| Trigger autocomplete when typing.
+| no
+|===
+
+[[adjust-in-browser]]
+==== Adjust settings in Browser
+
+To change the configuration settings locally in Neo4j Browser, you can either use the tabs in the Browser Settings drawer or, in the Cypher editor, type the command `:config` together with the setting and the new value.
+
+.Adjust an individual setting
+====
+The example shows how to change the maximum number of neighbors for a node.
+[source, cypher]
+----
+:config maxNeighbours:100
+----
+====
+
+.Adjust several settings
+====
+The example shows how to change the `maxFrames` from its default of `50` to `10` and the theme to `outline`.
+[source, cypher]
+----
+:config {maxFrames: 10, theme: "outline"}
+----
+After making the change, re-running `:config` reports that `maxFrames` has been set to `10`, and the theme is defined to `outline`.
+The *Browser Settings* drawer also reflects this change.
+====
+
+[WARNING]
+====
+Adjusting the settings first resets the configuration to the default configuration and then sets the given configurations.
+====
+
+[[adjust-globally]]
+==== Adjust settings globally
+
+To change the configuration settings for all users of Neo4j Browser, modify the _neo4j.conf_ file, or if using link:[Neo4j Desktop], navigate to the DBMS which settings you want to update, click the ellipsis dropdown menu, and select *Settings*.
+
+For example, to change the `maxFrames` from its default of `50` to `10` and the theme to `outline`, add the following line to _neo4j.conf_:
+
+[source, properties]
+----
+browser.post_connect_cmd=config {maxFrames:10, theme: "outline"}
+----
+
+This changes the `maxFrames` from its default of `50` to `10` and then restarts Neo4j.
+
+.Global Browser settings
+[options="header" cols=",,"]
+|===
+| Browser Setting
+| Default value
+| Description
+
+| `browser.allow_outgoing_connections`
+| `true`
+| Configure the policy for outgoing Neo4j Browser connections.
+
+| `browser.credential_timeout`
+| `0s`
+| Configure the Neo4j Browser to time out logged-in users after this idle period.
+Setting this to `0` indicates no limit.
+Valid units are `ns`, `μs`, `ms`, `s`, `m`, `h`, and `d`; default unit is `s`).
+
+| `browser.post_connect_cmd`
+| `0s`
+| Commands to be run when Neo4j Browser successfully connects to the server.
+Separate multiple commands with a semicolon (`;`).
+
+| `browser.remote_content_hostname_whitelist`
+| `guides.neo4j.com,localhost`
+| Whitelist of hosts for the Neo4j Browser to be allowed to fetch content from.
+
+| `browser.retain_connection_credentials`
+| `true`
+| Configure the Neo4j Browser to store or not store user credentials.
+|===
 
 [[start-browser]]
 == Start with Browser
 
+[WARNING]
+TODO: No seed content
 
 // play start, learn Cypher basics (link to Cypher refcard and Cypher manual), Monaco editor features
 //
 // Link to Emil A's video - https://www.youtube.com/watch?v=oHo-lQ79zf0&t=16s
-
-
 
 [[results]]
 == Visualize results
@@ -528,7 +775,6 @@ Alternatively, you can run the `:param` command separately from the `MATCH` quer
 
 =====
 
-
 === Cypher result
 
 It is possible to save the result from a Cypher query to a parameter. +
@@ -697,7 +943,6 @@ $example = {"identity": 4, "labels": [], "properties": {"name": "Example"}}}
 ----
 ====
 
-
 [[clear-params]]
 === Clear parameters
 
@@ -711,11 +956,11 @@ You can clear all currently set parameters from Neo4j Browser by running:
 
 === Set several paramters
 
-You can set several parameters with the `:params` command, this will also clear all currently set parameters.
+You can set several parameters with the `:params` command, this also clears all currently set parameters.
 
 [NOTE]
 ====
-Integers will be set to float with this style.
+Integers are set to float with this style.
 ====
 
 .Set several parameters
@@ -739,12 +984,15 @@ $f = false
 
 === Duration for the query parameters
 
-The parameters will not be saved when you close the browser.
-You can save a `:params` command as a favorite to be able to quickly populate parameters again if you got access to Browser Sync or if you are using Neo4j Desktop.
+Parameters are not saved when you close the browser.
+You can save a `:params` command as a favorite to quickly populate parameters again if you have access to Browser Sync or using Neo4j Desktop.
 
 
-//[[url-parameters]]
-//== Browser URL parameters
+[[url-parameters]]
+== Browser URL parameters
+
+[WARNING]
+TODO: No seed content
 
 // Specific query parameters.
 // Accepted parameters (e.g. connectURL)
