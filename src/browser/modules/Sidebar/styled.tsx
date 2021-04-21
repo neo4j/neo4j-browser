@@ -270,7 +270,7 @@ export const StyledGuidesDrawerHeader = styled.h4`
   color: ${props => props.theme.primaryHeaderText};
   background-color: ${props => props.theme.drawerBackground};
   font-size: 18px;
-  padding: 25px 0 0 25px;
+  padding: 25px 0 0 18px;
   font-weight: bold;
   -webkit-font-smoothing: antialiased;
   text-shadow: rgba(0, 0, 0, 0.4) 0px 1px 0px;
