@@ -438,7 +438,7 @@ Setting this to `0` indicates no limit.
 Valid units are `ns`, `μs`, `ms`, `s`, `m`, `h`, and `d`; default unit is `s`).
 
 | `browser.post_connect_cmd`
-| `0s`
+|
 | Commands to be run when Neo4j Browser successfully connects to the server.
 Separate multiple commands with a semicolon (`;`).
 
