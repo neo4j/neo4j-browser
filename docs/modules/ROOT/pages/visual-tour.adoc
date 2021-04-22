@@ -225,6 +225,11 @@ For more information on how to create a custom Browser guide, see link:https://n
 
 The *Browser Settings* drawer contains configurations related to the UI, result frames, and graph visualization.
 
+[TIP]
+====
+For more information on the Neo4j Browser settings and how to adjust them in the Browser and globally, see xref:operations.adoc#adjust-settings[Adjust Browser settings].
+====
+
 [[editor]]
 == Cypher editor
 
