@@ -1042,18 +1042,116 @@ $f = false
 === Duration for the query parameters
 
 Parameters are not saved when you close the browser.
-You can save a `:params` command as a favorite to quickly populate parameters again if you have access to Browser Sync or using Neo4j Desktop.
+You can save a `:params` command as a favorite to quickly populate parameters again.
+
+//Depending on how the favorite have been saved you can.
+//Save the favorites to persist in the cloud with Browser Sync.
+//Save the favorites to persist on the disk if you are using Neo4j Desktop.
+//Save the favorites to persist in the browsers local storage.
+//The localStorage and sessionStorage properties allow to save key/value pairs in a web browser.
 
 
 [[url-parameters]]
 == Browser URL parameters
 
-[WARNING]
-TODO: No seed content
+Neo4j Browser supports some URL parameters defined in the query component.
+The query component is preceded by a question mark (`?`) and contains a query string that is a sequence of key–value pairs separated by an ampersand (`&`).
 
-// Specific query parameters.
-// Accepted parameters (e.g. connectURL)
+//[role=deprecated]
+=== Connection frame
 
+Pre populate the connection frame with connection URL and set the database.
+
+The syntax is:
+
+[source, browser URL, role=noheader]
+----
+http://localhost:8080?dbms=[connectionURL]&db=[databaseName]
+----
+
+//icon:deprecated[]
+//[source, browser URL, role=noheader,deprecated]
+//----
+//http://localhost:8080?connectURL=[connectionURL]&db=[databaseName]
+//----
+
+.Connection URL and database
+====
+This will pre-populate the connection frame with:
+
+* Connect URL: `neo4j://localhost:7687`
+* Database: `neo4j123`
+* Username: `Example`
+
+[source, browser URL, role=noheader]
+----
+http://localhost:8080/?dbms=neo4j://Example@localhost:7687&db=neo4j123
+----
+====
+
+
+=== Pre-populate the editor
+
+Pre-populate the editor with a command, if it is the `play` command it will be run automatically. +
+
+The syntax is:
+
+[source, browser URL, role=noheader]
+----
+http://localhost:8080?cmd=[command]&arg=[argument]
+----
+
+Supported browser commands are:
+
+* `play`
+* `param`
+* `params`
+
+
+.Play movies
+====
+This will run the command when Neo4j Browser starts.
+
+[source, browser command, role=noheader]
+----
+:play movies
+----
+
+[source, browser URL, role=noheader]
+----
+http://localhost:8080/?cmd=play&arg=movies
+----
+====
+
+.Param
+====
+This will pre-populate the editor with the command when Neo4j Browser starts.
+
+[source, browser command, role=noheader]
+----
+:param example=>1
+----
+
+[source, browser URL, role=noheader]
+----
+http://localhost:8080/?cmd=param&arg=example=>1
+----
+====
+
+.Params
+====
+This will pre-populate the editor with the command when Neo4j Browser starts.
+
+[source, browser command, role=noheader]
+----
+:params {example:1,foo:"bar"}
+----
+
+[source, browser URL, role=noheader]
+----
+http://localhost:8080/?cmd=params&arg={example:1,foo:"bar"}
+----
+====
 
 
 // == Executing REST requests
