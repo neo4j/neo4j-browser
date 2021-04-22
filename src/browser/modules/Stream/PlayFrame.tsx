@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { withBus } from 'react-suber'
 import { fetchGuideFromAllowlistAction } from 'shared/modules/commands/commandsDuck'
 
@@ -43,18 +43,32 @@ import { GlobalState } from 'shared/globalState'
 import { inCloudEnv } from 'shared/modules/app/appDuck'
 import { getEdition, isEnterprise } from 'shared/modules/dbMeta/dbMetaDuck'
 import { PromotionContainer, AuraPromoLink } from './styled'
+import { ThemeContext } from 'styled-components'
+import { DARK_THEME } from 'shared/modules/settings/settingsDuck'
 
-const auraPromotion = (
-  <PromotionContainer>
-    <AuraPromoLink
-      href="https://neo4j.com/cloud/aura/pricing/?utm_medium=browser&utm_source=ce&utm_campaign=wl_v1"
-      rel="noreferrer"
-      target="_blank"
-    >
-      Sign up for a free Neo4j cloud instance.
-    </AuraPromoLink>
-  </PromotionContainer>
-)
+const AuraPromotion = () => {
+  const theme = useContext(ThemeContext)
+  const isDarkTheme = theme.name === DARK_THEME
+
+  return (
+    <PromotionContainer>
+      <AuraPromoLink
+        href="https://neo4j.com/cloud/aura/pricing/?utm_medium=browser&utm_source=ce&utm_campaign=wl_v1"
+        rel="noreferrer"
+        target="_blank"
+      >
+        Sign up
+      </AuraPromoLink>
+      for a free Neo4j cloud instance with
+      <img
+        src={`./assets/images/neo4j-world${isDarkTheme ? '-inverted' : ''}.png`}
+        alt="Neo4j"
+        className="frame-title-logo"
+        style={{ marginLeft: '5px' }}
+      />
+    </PromotionContainer>
+  )
+}
 
 const {
   play: { chapters }
@@ -267,7 +281,8 @@ function generateContent(
     const updatedContent =
       isPlayStart && showPromotion ? (
         <>
-          {auraPromotion} {content}
+          {content}
+          <AuraPromotion />
         </>
       ) : (
         content

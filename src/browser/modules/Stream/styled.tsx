@@ -399,15 +399,14 @@ export const AnimationContainer = styled.div`
 
 export const PromotionContainer = styled.div`
   display: flex;
-  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  margin: 10px;
 `
 
-export const AuraPromoLink = styled(DrawerExternalLink)`
-  border: solid 1px #008cc1;
-  border-radius: 4px;
-  box-shadow: 0px 0px 2px rgb(52 58 67 / 10%), 0px 1px 2px rgb(52 58 67 / 8%),
-    0px 1px 4px rgb(52 58 67 / 8%);
-  font-size: 14px;
-  padding: 10px;
-  flex-grow: 0;
+export const AuraPromoLink = styled.a`
+  cursor: pointer;
+  text-decoration: none;
+  margin-right: 5px;
+  justify-content: center;
 `
