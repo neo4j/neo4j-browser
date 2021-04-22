@@ -22,7 +22,8 @@ The Database Information drawer provides information about the currently used da
 image:database-information.png[height=40%]
 
 * *Use database* -- A dropdown menu, where you can select the database you want to work with.
-* *Node Labels*, *Relationship Types*, and *Property keys* -- Clicking any one of those options runs a quick query to show you a sample of the graph with those elements.
+* *Node Labels*, *Relationship Types*, and *Property keys* --  List the Node Labels, Relationship Types, and Property keys contained in that database, presented in an alphabetized order and displayed in groupings of 50.
+Clicking any one of those options runs a quick query to show you a sample of the graph with those elements.
 * *Connected as* -- Shows the current user and their roles and the Cypher command to disconnect from the server.
 If the current user has an administrative role, two more options are available: `:server user add` and `:server user list`.
 For more information about user's built-in roles and the default privileges, see link:https://neo4j.com/docs/operations-manual/current/authentication-authorization/built-in-roles/[Operations Manual -> Built-in roles].
@@ -144,6 +145,7 @@ The command history is persisted across Browser restarts.
 | Display data about the Neo4j system, such as store size, ID allocation, page cache, transactions, and databases (name, address, role, status, default database, and errors).
 |===
 
+For the complete list of all Neo4j Browser commands, see xref:reference-commands.adoc[Command reference].
 
 [[guides]]
 ==== Built-in guides
