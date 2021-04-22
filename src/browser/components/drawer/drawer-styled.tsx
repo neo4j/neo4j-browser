@@ -33,7 +33,7 @@ export const DrawerHeader = styled.h4`
   background-color: ${props => props.theme.drawerBackground};
   font-size: 18px;
   height: 73px;
-  padding: 25px 0 0 25px;
+  padding: 25px 0 0 18px;
   position: relative;
   font-weight: bold;
   -webkit-font-smoothing: antialiased;

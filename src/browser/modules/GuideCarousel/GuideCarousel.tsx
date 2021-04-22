@@ -20,21 +20,14 @@
 
 import React, { useEffect } from 'react'
 import Directives from 'browser-components/Directives'
-import { CarouselButton } from 'browser-components/buttons'
 import {
-  SlidePreviousIcon,
-  SlideNextIcon
-} from 'browser-components/icons/Icons'
-import {
-  GuideButtonContainers,
-  CarouselIndicatorActive,
-  CarouselIndicatorInactive,
+  GuideNavContainer,
+  GuideNavButton,
+  GuideUl,
   StyledCarousel,
-  StyledCarouselButtonContainer,
-  StyledCarouselButtonContainerInner,
-  StyledCarouselCount,
-  StyledUl,
-  GuideNavButton
+  GuideProgressContainer,
+  StyledProgressCount,
+  CarouselIndicator
 } from '../Sidebar/styled'
 
 type GuideCarouselProps = {
@@ -65,15 +58,6 @@ function GuidesCarousel({
     }
   }
 
-  function onKeyUp(e: React.KeyboardEvent) {
-    if (e.key === 'ArrowLeft') {
-      prevSlide()
-    }
-    if (e.key === 'ArrowRight') {
-      nextSlide()
-    }
-  }
-
   useEffect(() => {
     // As we progress in the slides, scroll to top
     scrollToTop()
@@ -82,61 +66,35 @@ function GuidesCarousel({
   const moreThanOneSlide = slides.length > 1
 
   return (
-    <StyledCarousel onKeyUp={onKeyUp}>
+    <StyledCarousel>
       <Directives content={currentSlide} />
       {moreThanOneSlide && (
-        <>
-          <GuideButtonContainers>
-            <GuideNavButton onClick={prevSlide} disabled={onFirstSlide}>
-              Previous
-            </GuideNavButton>
-            <GuideNavButton onClick={nextSlide} disabled={onLastSlide}>
-              Next
-            </GuideNavButton>
-          </GuideButtonContainers>
-          <StyledCarouselButtonContainer>
-            <StyledCarouselButtonContainerInner>
-              <StyledCarouselCount>
+        <GuideNavContainer>
+          <GuideNavButton onClick={prevSlide} disabled={onFirstSlide}>
+            Previous
+          </GuideNavButton>
+          <GuideUl>
+            <GuideProgressContainer>
+              <StyledProgressCount>
                 {`${currentSlideIndex + 1} / ${slides.length}`}
-              </StyledCarouselCount>
-              <CarouselButton
-                className="previous-slide"
-                disabled={onFirstSlide}
-                onClick={prevSlide}
-              >
-                <SlidePreviousIcon />
-              </CarouselButton>
-              <StyledUl>
-                {slides.map((_, i) =>
-                  i !== currentSlideIndex ? (
-                    <CarouselIndicatorInactive
-                      key={i}
-                      aria-label={`${i + 1}`}
-                      onClick={() => gotoSlide(i)}
-                    >
-                      <span />
-                    </CarouselIndicatorInactive>
-                  ) : (
-                    <CarouselIndicatorActive
-                      key={i}
-                      aria-label={`${i + 1}`}
-                      onClick={() => gotoSlide(i)}
-                    >
-                      <span />
-                    </CarouselIndicatorActive>
-                  )
-                )}
-              </StyledUl>
-              <CarouselButton
-                className="next-slide"
-                disabled={onLastSlide}
-                onClick={nextSlide}
-              >
-                <SlideNextIcon />
-              </CarouselButton>
-            </StyledCarouselButtonContainerInner>
-          </StyledCarouselButtonContainer>
-        </>
+              </StyledProgressCount>
+              {slides.slice(0, 25).map((_, i) => (
+                <CarouselIndicator
+                  key={i}
+                  aria-label={`${i + 1}`}
+                  onClick={() => gotoSlide(i)}
+                  active={i === currentSlideIndex}
+                >
+                  <span />
+                </CarouselIndicator>
+              ))}
+              {slides.length >= 25 && '...'}
+            </GuideProgressContainer>
+          </GuideUl>
+          <GuideNavButton onClick={nextSlide} disabled={onLastSlide}>
+            Next
+          </GuideNavButton>
+        </GuideNavContainer>
       )}
     </StyledCarousel>
   )

@@ -61,46 +61,34 @@ const slides = [
       />
     </p>
     <h4>Load records</h4>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        {`LOAD CSV WITH HEADERS FROM "http://data.neo4j.com/northwind/products.csv" AS row
+    <pre className="pre-scrollable code runnable">
+      {`LOAD CSV WITH HEADERS FROM "http://data.neo4j.com/northwind/products.csv" AS row
 CREATE (n:Product)
 SET n = row,
 n.unitPrice = toFloat(row.unitPrice),
 n.unitsInStock = toInteger(row.unitsInStock), n.unitsOnOrder = toInteger(row.unitsOnOrder),
 n.reorderLevel = toInteger(row.reorderLevel), n.discontinued = (row.discontinued <> "0")`}
-      </pre>
-    </figure>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        {`LOAD CSV WITH HEADERS FROM "http://data.neo4j.com/northwind/categories.csv" AS row
+    </pre>
+    <pre className="pre-scrollable code runnable">
+      {`LOAD CSV WITH HEADERS FROM "http://data.neo4j.com/northwind/categories.csv" AS row
 CREATE (n:Category)
 SET n = row`}
-      </pre>
-    </figure>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        {`LOAD CSV WITH HEADERS FROM "http://data.neo4j.com/northwind/suppliers.csv" AS row
+    </pre>
+    <pre className="pre-scrollable code runnable">
+      {`LOAD CSV WITH HEADERS FROM "http://data.neo4j.com/northwind/suppliers.csv" AS row
 CREATE (n:Supplier)
 SET n = row`}
-      </pre>
-    </figure>
+    </pre>
     <h4>Create indexes</h4>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        CREATE INDEX ON :Product(productID)
-      </pre>
-    </figure>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        CREATE INDEX ON :Category(categoryID)
-      </pre>
-    </figure>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        CREATE INDEX ON :Supplier(supplierID)
-      </pre>
-    </figure>
+    <pre className="pre-scrollable code runnable">
+      CREATE INDEX ON :Product(productID)
+    </pre>
+    <pre className="pre-scrollable code runnable">
+      CREATE INDEX ON :Category(categoryID)
+    </pre>
+    <pre className="pre-scrollable code runnable">
+      CREATE INDEX ON :Supplier(supplierID)
+    </pre>
     <hr />
     <p>
       <small>:help</small> <a help-topic="cypher">cypher</a>{' '}
@@ -121,40 +109,36 @@ SET n = row`}
       />
     </p>
     <h4>Create data relationships</h4>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        {`MATCH (p:Product),(c:Category)
+    <pre className="pre-scrollable code runnable">
+      {`MATCH (p:Product),(c:Category)
 WHERE p.categoryID = c.categoryID
 CREATE (p)-[:PART_OF]->(c)`}
-      </pre>
-      <aside className="warn">
-        Note you only need to compare property values like this when first
-        creating relationships
-      </aside>
-      <figcaption>
-        Calculate join, materialize relationship. (See{' '}
-        <a
-          target="_blank"
-          rel="noreferrer"
-          href="http://neo4j.com/developer/guide-importing-data-and-etl"
-        >
-          {' '}
-          importing guide
-        </a>{' '}
-        for more details)
-      </figcaption>
-    </figure>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        {`MATCH (p:Product),(s:Supplier)
+    </pre>
+    <aside className="warn">
+      Note you only need to compare property values like this when first
+      creating relationships
+    </aside>
+    <figcaption>
+      Calculate join, materialize relationship. (See{' '}
+      <a
+        target="_blank"
+        rel="noreferrer"
+        href="http://neo4j.com/developer/guide-importing-data-and-etl"
+      >
+        {' '}
+        importing guide
+      </a>{' '}
+      for more details)
+    </figcaption>
+    <pre className="pre-scrollable code runnable">
+      {`MATCH (p:Product),(s:Supplier)
 WHERE p.supplierID = s.supplierID
 CREATE (s)-[:SUPPLIES]->(p)`}
-      </pre>
-      <aside className="warn">
-        Note you only need to compare property values like this when first
-        creating relationships
-      </aside>
-    </figure>
+    </pre>
+    <aside className="warn">
+      Note you only need to compare property values like this when first
+      creating relationships
+    </aside>
     <hr />
     <p>
       <small>:help</small> <a help-topic="cypher">cypher</a>{' '}
@@ -171,22 +155,18 @@ CREATE (s)-[:SUPPLIES]->(p)`}
       />
     </p>
     <h4>Query using patterns</h4>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        {`MATCH (s:Supplier)-->(:Product)-->(c:Category)
+    <pre className="pre-scrollable code runnable">
+      {`MATCH (s:Supplier)-->(:Product)-->(c:Category)
 RETURN s.companyName as Company, collect(distinct c.categoryName) as Categories`}
-      </pre>
-      <figcaption>
-        List the product categories provided by each supplier.
-      </figcaption>
-    </figure>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        {`MATCH (c:Category {categoryName:"Produce"})<--(:Product)<--(s:Supplier)
+    </pre>
+    <figcaption>
+      List the product categories provided by each supplier.
+    </figcaption>
+    <pre className="pre-scrollable code runnable">
+      {`MATCH (c:Category {categoryName:"Produce"})<--(:Product)<--(s:Supplier)
 RETURN DISTINCT s.companyName as ProduceSuppliers`}
-      </pre>
-      <figcaption>Find the produce suppliers.</figcaption>
-    </figure>
+    </pre>
+    <figcaption>Find the produce suppliers.</figcaption>
     <hr />
     <p>
       <small>:help</small> <a help-topic="cypher">cypher</a>{' '}
@@ -203,42 +183,32 @@ RETURN DISTINCT s.companyName as ProduceSuppliers`}
       />
     </p>
     <h4>Load and index records</h4>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        {`LOAD CSV WITH HEADERS FROM "http://data.neo4j.com/northwind/customers.csv" AS row
+    <pre className="pre-scrollable code runnable">
+      {`LOAD CSV WITH HEADERS FROM "http://data.neo4j.com/northwind/customers.csv" AS row
 CREATE (n:Customer)
 SET n = row`}
-      </pre>
-    </figure>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        {`LOAD CSV WITH HEADERS FROM "http://data.neo4j.com/northwind/orders.csv" AS row
+    </pre>
+    <pre className="pre-scrollable code runnable">
+      {`LOAD CSV WITH HEADERS FROM "http://data.neo4j.com/northwind/orders.csv" AS row
 CREATE (n:Order)
 SET n = row`}
-      </pre>
-    </figure>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        CREATE INDEX ON :Customer(customerID)
-      </pre>
-    </figure>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        CREATE INDEX ON :Order(orderID)
-      </pre>
-    </figure>
+    </pre>
+    <pre className="pre-scrollable code runnable">
+      CREATE INDEX ON :Customer(customerID)
+    </pre>
+    <pre className="pre-scrollable code runnable">
+      CREATE INDEX ON :Order(orderID)
+    </pre>
     <h4>Create data relationships</h4>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        {`MATCH (c:Customer),(o:Order)
+    <pre className="pre-scrollable code runnable">
+      {`MATCH (c:Customer),(o:Order)
 WHERE c.customerID = o.customerID
 CREATE (c)-[:PURCHASED]->(o)`}
-      </pre>
-      <aside className="warn">
-        Note you only need to compare property values like this when first
-        creating relationships
-      </aside>
-    </figure>
+    </pre>
+    <aside className="warn">
+      Note you only need to compare property values like this when first
+      creating relationships
+    </aside>
     <hr />
     <p>
       <small>:help</small> <a help-topic="cypher">cypher</a>{' '}
@@ -262,28 +232,24 @@ CREATE (c)-[:PURCHASED]->(o)`}
       />
     </p>
     <h4>Load and index records</h4>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        {`LOAD CSV WITH HEADERS FROM "http://data.neo4j.com/northwind/order-details.csv" AS row
+    <pre className="pre-scrollable code runnable">
+      {`LOAD CSV WITH HEADERS FROM "http://data.neo4j.com/northwind/order-details.csv" AS row
 MATCH (p:Product), (o:Order)
 WHERE p.productID = row.productID AND o.orderID = row.orderID
 CREATE (o)-[details:ORDERS]->(p)
 SET details = row,
 details.quantity = toInteger(row.quantity)`}
-      </pre>
-      <aside className="warn">
-        Note you only need to compare property values like this when first
-        creating relationships
-      </aside>
-    </figure>
+    </pre>
+    <aside className="warn">
+      Note you only need to compare property values like this when first
+      creating relationships
+    </aside>
     <h4>Query using patterns</h4>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        {`MATCH (cust:Customer)-[:PURCHASED]->(:Order)-[o:ORDERS]->(p:Product),
+    <pre className="pre-scrollable code runnable">
+      {`MATCH (cust:Customer)-[:PURCHASED]->(:Order)-[o:ORDERS]->(p:Product),
   (p)-[:PART_OF]->(c:Category {categoryName:"Produce"})
 RETURN DISTINCT cust.contactName as CustomerName, SUM(o.quantity) AS TotalProductsPurchased`}
-      </pre>
-    </figure>
+    </pre>
     <hr />
     <p>
       <small>:help</small> <a help-topic="cypher">cypher</a>{' '}

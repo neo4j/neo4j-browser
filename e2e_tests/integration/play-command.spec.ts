@@ -31,35 +31,13 @@ describe('Play command', () => {
   })
   it('can stack `:play` commands', () => {
     cy.executeCommand(':clear')
-    const query = ':play start'
+    const query = ':play intro'
     cy.executeCommand(query)
 
     let frame = cy.getFrames()
 
     // Make sure first loads
-    frame
-      .should('have.length', 1)
-      .should('contain', 'Getting started with Neo4j Browser')
-
-    // Click a guide button
-    frame.contains('Get started').click()
-
-    frame = cy.getFrames()
-
-    // Make sure it loads in same frame
-    frame.should('have.length', 1).should('contain', 'Introduction')
-
-    // Click back in stack
-    cy.getPrevInFrameStackBtn().click()
-    frame = cy.getFrames()
-
-    // Make sure we're back
-    frame
-      .should('have.length', 1)
-      .should('contain', 'Getting started with Neo4j Browser')
-
-    // Go to next again
-    cy.getNextInFrameStackBtn().click()
+    frame.should('have.length', 1).should('contain', 'command driven client')
 
     // Click forward to the last slide
     nextSlideBtn().click()

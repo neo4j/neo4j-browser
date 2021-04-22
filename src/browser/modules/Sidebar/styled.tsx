@@ -168,21 +168,17 @@ export const StyledCarouselButtonContainerInner = styled.div`
   position: relative;
 `
 
-export const StyledCarouselCount = styled.div`
+export const StyledProgressCount = styled.div`
   display: flex;
   align-items: center;
   font-size: 10px;
   font-weight: bold;
-  justify-content: flex-end;
   border-radius: 3px;
-  min-width: 44px;
-  position: absolute;
-  right: 100%;
   padding: 0;
   margin-right: 10px;
 `
 
-export const CarouselIndicator = styled.li`
+export const CarouselIndicator = styled.li<{ active: boolean }>`
   margin: 0;
   cursor: pointer;
   border-radius: 50%;
@@ -196,8 +192,12 @@ export const CarouselIndicator = styled.li`
     border-radius: 3px;
     width: 6px;
     height: 6px;
-    opacity: 0.4;
     transition: opacity 0.1s ease-in-out;
+    opacity: ${props => (props.active ? 1 : 0.4)};
+  }
+
+  &:hover > span {
+    opacity: 1;
   }
 
   &::before {
@@ -239,18 +239,17 @@ export const CarouselIndicator = styled.li`
     visibility: visible;
   }
 `
-export const CarouselIndicatorInactive = styled(CarouselIndicator)`
-  &:hover > span {
-    opacity: 1;
-  }
-`
-export const CarouselIndicatorActive = styled(CarouselIndicator)`
-  > span {
-    opacity: 1;
-  }
-`
 
 export const StyledUl = styled.ul`
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 !important;
+  padding-left: 0 !important;
+`
+
+export const GuideUl = styled.ul`
   list-style: none;
   display: flex;
   align-items: center;
@@ -270,7 +269,7 @@ export const StyledGuidesDrawerHeader = styled.h4`
   color: ${props => props.theme.primaryHeaderText};
   background-color: ${props => props.theme.drawerBackground};
   font-size: 18px;
-  padding: 25px 0 0 25px;
+  padding: 25px 0 0 18px;
   font-weight: bold;
   -webkit-font-smoothing: antialiased;
   text-shadow: rgba(0, 0, 0, 0.4) 0px 1px 0px;
@@ -285,6 +284,7 @@ export const GuideTitle = styled.div`
   line-height: normal;
   padding: 0 18px;
   margin-bottom: 10px;
+  font-family: ${props => props.theme.drawerHeaderFontFamily};
 `
 
 export const BackIconContainer = styled.span`
@@ -295,12 +295,25 @@ export const CarouselWrapper = styled.div`
   padding: 0 18px;
 `
 
-export const GuideButtonContainers = styled.div`
-  margin-top: 10px;
+export const GuideNavContainer = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 60px;
+
+  color: ${props => props.theme.secondaryButtonText};
+  background-color: ${dark.secondaryBackground};
+
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  padding-right: 18px;
-  margin-bottom: 40px;
+
+  height: 40px;
+  width: 500px;
+  max-width: 500px;
+  padding: 0 18px;
+
+  z-index: 10;
+  border-top: ${props => props.theme.drawerSeparator};
 `
 
 export const GuideNavButton = styled.button`
@@ -314,6 +327,12 @@ export const GuideNavButton = styled.button`
   :disabled {
     opacity: 0;
   }
+`
+
+export const GuideProgressContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 
 export const StyledDrawerSeparator = styled.div`
