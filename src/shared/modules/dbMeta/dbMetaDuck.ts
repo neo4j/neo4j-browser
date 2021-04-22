@@ -34,8 +34,8 @@ import {
   setAuthEnabled,
   onLostConnection,
   getUseDb,
+  getLastUseDb,
   useDb,
-  useDefaultDb,
   getActiveConnectionData,
   updateConnection
 } from 'shared/modules/connections/connectionsDuck'
@@ -50,7 +50,7 @@ import {
   getDbClusterRole
 } from '../features/versionedFeatures'
 import { extractServerInfo } from './dbMeta.utils'
-import { assign, reduce } from 'lodash-es'
+import { assign, last, reduce } from 'lodash-es'
 import {
   hasClientConfig,
   updateUserCapability,
@@ -453,10 +453,15 @@ const switchToRequestedDb = (store: any) => {
   const activeConnection = getActiveConnectionData(store.getState())
   const requestedUseDb = activeConnection?.requestedUseDb
 
-  const switchToDefaultDb = () => {
-    const defaultDb = databases.find((db: any) => db.default)
-    if (defaultDb) {
-      store.dispatch(useDefaultDb(defaultDb.name, databases))
+  const switchToLastUsedOrDefaultDb = () => {
+    const lastUsedDb = getLastUseDb(store.getState())
+    if (lastUsedDb && databases.some((db: any) => db.name === lastUsedDb)) {
+      store.dispatch(useDb(lastUsedDb))
+    } else {
+      const defaultDb = databases.find((db: any) => db.default)
+      if (defaultDb) {
+        store.dispatch(useDb(defaultDb.name))
+      }
     }
   }
 
@@ -479,10 +484,10 @@ const switchToRequestedDb = (store: any) => {
       store.dispatch(executeCommand(`:use ${requestedUseDb}`), {
         source: commandSources.auto
       })
-      switchToDefaultDb()
+      switchToLastUsedOrDefaultDb()
     }
   } else {
-    switchToDefaultDb()
+    switchToLastUsedOrDefaultDb()
   }
   return Rx.Observable.of(null)
 }
