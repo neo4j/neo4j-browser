@@ -23,8 +23,9 @@
 ** xref:visual-tour.adoc#frames[Reusable result frames]
 
 * xref:operations.adoc[Browser operations]
-** xref:operations.adoc#create-dbms-connection[Create a DBMS connection]
+** xref:operations.adoc#dbms-connection[Connect to a Neo4j DBMS]
 ** xref:operations.adoc#security-browser[Browser credentials handling]
+** xref:operations.adoc#adjust-settings[Adjust Browser settings]
 ** xref:operations.adoc#start-browser[Start with Browser]
 ** xref:operations.adoc#results[Visualize results]
 ** xref:operations.adoc#export-results[Export results]
