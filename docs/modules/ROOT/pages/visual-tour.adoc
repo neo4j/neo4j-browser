@@ -135,7 +135,8 @@ Most of the commands in the *Useful commands* tab work as an entry point to a he
 To access the list of all available editor keybindings, press F1 in the Cypher editor.
 
 | `:history`
-| Display the most recently executed commands.
+| Display the most recently executed statements and commands.
+You can click a block shown in the history result to bring it into the editor.
 The command history is persisted across Browser restarts.
 
 | `CALL db.schema.visualization()`
@@ -356,5 +357,9 @@ A stream is a scrolling series of result frames.
 image:screen_stream.png[]
 
 A reusable result frame is created for each command execution, added to the top of the stream to create a scrollable collection in reverse chronological order.
+You can expand and collapse the result frames using the *Collapse* icon. +
+To remove all the frames from the stream, use the `:clear` command.
 
-Remove all the frames from the stream with the `:clear` command.
+Browser settings that maybe useful for you are the maximum number of result frames to display (`maxFrames`) and the size of the command and statement history (`maxHistory`).
+When reached, old frames and history entries get retired.
+For more information on how to adjust Browser Settings, see xref:operations.adoc#adjust-settings[Adjust Browser settings].

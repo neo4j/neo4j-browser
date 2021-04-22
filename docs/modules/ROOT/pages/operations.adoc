@@ -455,9 +455,7 @@ Separate multiple commands with a semicolon (`;`).
 [[start-browser]]
 == Start with Browser
 
-
-[WARNING]
-TODO: No seed content
+When you first open Neo4j Browser, it automatically executes the command `:play start`.
 
 // play start, learn Cypher basics (link to Cypher refcard and Cypher manual), Monaco editor features
 //
