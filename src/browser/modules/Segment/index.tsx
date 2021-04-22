@@ -22,7 +22,7 @@ import { Component } from 'react'
 import { connect } from 'react-redux'
 import { canUseDOM } from 'services/utils'
 import { inDesktop } from 'shared/modules/app/appDuck'
-import { updateData } from 'shared/modules/udc/udcDuck'
+import { getUuid, updateData } from 'shared/modules/udc/udcDuck'
 
 export interface MetricsProperties {
   [key: string]: string | number | Date | boolean
@@ -41,6 +41,7 @@ export class Segment extends Component<any> {
       setTrackCallback,
       inDesktop,
       updateData,
+      uuid,
       children, // eslint-disable-line
       ...otherProps
     } = this.props
@@ -113,6 +114,7 @@ export class Segment extends Component<any> {
                 desktop: inDesktop
               })
             }
+            window.analytics.identify(uuid)
             setTrackCallback(doTrack)
           }
         }
@@ -150,7 +152,8 @@ export class Segment extends Component<any> {
 }
 
 const mapStateToProps = (state: any) => ({
-  inDesktop: inDesktop(state)
+  inDesktop: inDesktop(state),
+  uuid: getUuid(state)
 })
 
 const mapDispatchToProps = (dispatch: any) => {
