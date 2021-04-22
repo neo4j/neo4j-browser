@@ -292,7 +292,7 @@ Possible values: `auto`, `normal`, `outline`, and `dark`.
 
 | `browserSyncDebugServer`
 | `null`
-| Internal setting for debugging browser sync.
+| Internal setting, used for debugging Browser Sync.
 | yes
 
 | `maxRows`
@@ -308,7 +308,7 @@ For example, if a node has 1000 labels, the list will be cut off to the value se
 
 | `shouldReportUdc`
 | `true`
-| Report less user metrics.
+| Report less user metrics (user data collection).
 | no
 
 | `autoComplete`
@@ -345,7 +345,7 @@ The Bolt+routing feature on Neo4j drivers discovers a cluster member (drivers ha
 
 | `useCypherThread`
 | `true`
-| Run cypher queries through a webworker to increase performance.
+| Run Cypher queries through a web worker (background thread) to increase performance.
 | no
 
 | `enableMultiStatementMode`
@@ -360,7 +360,7 @@ The Bolt+routing feature on Neo4j drivers discovers a cluster member (drivers ha
 
 | `showPerformanceOverlay`
 | `false`
-| Internal setting to see FPS/performance.
+| Internal setting, used for showing a performance overlay (FPS and memory usage).
 | no
 
 | `editorAutocomplete`
