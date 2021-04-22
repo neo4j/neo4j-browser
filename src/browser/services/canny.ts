@@ -97,10 +97,6 @@ export class CannyLoader extends Component {
     if (canUseDOM()) {
       delete (window as any).CannyIsLoaded
       delete (window as any).Canny
-      const cannyTag = document.getElementById('canny-jssdk')
-      if (cannyTag?.outerHTML) {
-        cannyTag.outerHTML = ''
-      }
     }
   }
 
