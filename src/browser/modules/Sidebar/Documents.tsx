@@ -147,9 +147,11 @@ const Documents = (props: DocumentsProps) => {
     <Drawer id="db-documents">
       <StyledHeaderContainer>
         <DrawerHeader>Help &amp; Learn</DrawerHeader>
-        <a data-canny-changelog onClick={props.trackCannyChangelog}>
-          <CannyNotificationsIcon />
-        </a>
+        {window.Canny && (
+          <a data-canny-changelog onClick={props.trackCannyChangelog}>
+            <CannyNotificationsIcon />
+          </a>
+        )}
       </StyledHeaderContainer>
       <StyledFeedbackButton
         color="twitter"

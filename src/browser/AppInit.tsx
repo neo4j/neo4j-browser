@@ -43,7 +43,6 @@ import * as Sentry from '@sentry/react'
 import { Integrations } from '@sentry/tracing'
 import { CaptureConsole } from '@sentry/integrations'
 
-import { CannySDK } from 'browser-services/canny'
 import { createReduxMiddleware, getAll, applyKeys } from 'services/localstorage'
 import { GlobalState } from 'shared/globalState'
 import { APP_START } from 'shared/modules/app/appDuck'
@@ -252,14 +251,6 @@ const client = new ApolloClient({
   cache: apolloCache,
   link: uploadLink
 })
-
-CannySDK.init()
-  .then(() => {
-    window.CannyIsLoaded = true
-  })
-  .catch(() => {
-    window.CannyIsLoaded = false
-  })
 
 const AppInit = (): JSX.Element => {
   return (
