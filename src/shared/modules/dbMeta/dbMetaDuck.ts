@@ -34,6 +34,7 @@ import {
   setAuthEnabled,
   onLostConnection,
   getUseDb,
+  getLastUseDb,
   useDb,
   getActiveConnectionData,
   updateConnection
@@ -452,10 +453,15 @@ const switchToRequestedDb = (store: any) => {
   const activeConnection = getActiveConnectionData(store.getState())
   const requestedUseDb = activeConnection?.requestedUseDb
 
-  const switchToDefaultDb = () => {
-    const defaultDb = databases.find((db: any) => db.default)
-    if (defaultDb) {
-      store.dispatch(useDb(defaultDb.name))
+  const switchToLastUsedOrDefaultDb = () => {
+    const lastUsedDb = getLastUseDb(store.getState())
+    if (lastUsedDb && databases.some((db: any) => db.name === lastUsedDb)) {
+      store.dispatch(useDb(lastUsedDb))
+    } else {
+      const defaultDb = databases.find((db: any) => db.default)
+      if (defaultDb) {
+        store.dispatch(useDb(defaultDb.name))
+      }
     }
   }
 
@@ -478,10 +484,10 @@ const switchToRequestedDb = (store: any) => {
       store.dispatch(executeCommand(`:use ${requestedUseDb}`), {
         source: commandSources.auto
       })
-      switchToDefaultDb()
+      switchToLastUsedOrDefaultDb()
     }
   } else {
-    switchToDefaultDb()
+    switchToLastUsedOrDefaultDb()
   }
   return Rx.Observable.of(null)
 }
