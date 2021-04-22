@@ -37,11 +37,9 @@ const slides = [
     <h3>CREATE</h3>
     <p className="lead">Create a node</p>
     <p>Let's use Cypher to generate a small social graph.</p>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        {'CREATE (ee:Person { name: "Emil", from: "Sweden", klout: 99 })'}
-      </pre>
-    </figure>
+    <pre className="pre-scrollable code runnable">
+      {'CREATE (ee:Person { name: "Emil", from: "Sweden", klout: 99 })'}
+    </pre>
     <ul>
       <li>
         <code>CREATE</code> clause to create data
@@ -62,11 +60,9 @@ const slides = [
     <h3>MATCH</h3>
     <p className="lead">Finding nodes</p>
     <p>Now find the node representing Emil:</p>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        MATCH (ee:Person) WHERE ee.name = "Emil" RETURN ee;
-      </pre>
-    </figure>
+    <pre className="pre-scrollable code runnable">
+      MATCH (ee:Person) WHERE ee.name = "Emil" RETURN ee;
+    </pre>
     <ul>
       <li>
         <code>MATCH</code> clause to specify a pattern of nodes and
@@ -94,9 +90,8 @@ const slides = [
       <code>CREATE</code>
       clauses can create many nodes and relationships at once.
     </p>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        {`MATCH (ee:Person) WHERE ee.name = "Emil"
+    <pre className="pre-scrollable code runnable">
+      {`MATCH (ee:Person) WHERE ee.name = "Emil"
 CREATE (js:Person { name: "Johan", from: "Sweden", learn: "surfing" }),
 (ir:Person { name: "Ian", from: "England", title: "author" }),
 (rvb:Person { name: "Rik", from: "Belgium", pet: "Orval" }),
@@ -105,8 +100,7 @@ CREATE (js:Person { name: "Johan", from: "Sweden", learn: "surfing" }),
 (js)-[:KNOWS]->(ir),(js)-[:KNOWS]->(rvb),
 (ir)-[:KNOWS]->(js),(ir)-[:KNOWS]->(ally),
 (rvb)-[:KNOWS]->(ally)`}
-      </pre>
-    </figure>
+    </pre>
   </SidebarSlide>,
   <SidebarSlide key="fifth">
     <h3>Pattern matching</h3>
@@ -114,12 +108,10 @@ CREATE (js:Person { name: "Johan", from: "Sweden", learn: "surfing" }),
     <p className="summary">
       For instance, a pattern can be used to find Emil's friends:
     </p>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        {`MATCH (ee:Person)-[:KNOWS]-(friends)
+    <pre className="pre-scrollable code runnable">
+      {`MATCH (ee:Person)-[:KNOWS]-(friends)
 WHERE ee.name = "Emil" RETURN ee, friends`}
-      </pre>
-    </figure>
+    </pre>
     <ul>
       <li>
         <code>MATCH</code>
@@ -146,13 +138,11 @@ WHERE ee.name = "Emil" RETURN ee, friends`}
       Pattern matching can be used to make recommendations. Johan is learning to
       surf, so he may want to find a new friend who already does:
     </p>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        {`MATCH (js:Person)-[:KNOWS]-()-[:KNOWS]-(surfer)
+    <pre className="pre-scrollable code runnable">
+      {`MATCH (js:Person)-[:KNOWS]-()-[:KNOWS]-(surfer)
 WHERE js.name = "Johan" AND surfer.hobby = "surfing"
 RETURN DISTINCT surfer`}
-      </pre>
-    </figure>
+    </pre>
     <ul>
       <li>
         <code>()</code>
@@ -175,13 +165,11 @@ RETURN DISTINCT surfer`}
       Understand how your query works by prepending <code>EXPLAIN</code> or{' '}
       <code>PROFILE</code>:
     </p>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        {`PROFILE MATCH (js:Person)-[:KNOWS]-()-[:KNOWS]-(surfer)
+    <pre className="pre-scrollable code runnable">
+      {`PROFILE MATCH (js:Person)-[:KNOWS]-()-[:KNOWS]-(surfer)
 WHERE js.name = "Johan" AND surfer.hobby = "surfing"
 RETURN DISTINCT surfer`}
-      </pre>
-    </figure>
+    </pre>
   </SidebarSlide>,
   <SidebarSlide key="eighth">
     <h3>Live Cypher warnings</h3>

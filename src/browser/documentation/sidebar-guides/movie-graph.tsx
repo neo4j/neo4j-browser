@@ -66,9 +66,8 @@ const slides = [
       <li>Click the editor&apos;s play button to execute</li>
       <li>Wait for the query to finish</li>
     </ol>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        {`CREATE (TheMatrix:Movie {title:'The Matrix', released:1999, tagline:'Welcome to the Real World'})
+    <pre className="pre-scrollable code runnable">
+      {`CREATE (TheMatrix:Movie {title:'The Matrix', released:1999, tagline:'Welcome to the Real World'})
 CREATE (Keanu:Person {name:'Keanu Reeves', born:1964})
 CREATE (Carrie:Person {name:'Carrie-Anne Moss', born:1967})
 CREATE (Laurence:Person {name:'Laurence Fishburne', born:1961})
@@ -576,8 +575,7 @@ CREATE
 
 WITH TomH as a
 MATCH (a)-[:ACTED_IN]->(m)<-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10;`}
-      </pre>
-    </figure>
+    </pre>
     <hr />
     <p>
       <small>:help</small> <a help-topic="cypher">cypher</a>{' '}
@@ -595,31 +593,23 @@ MATCH (a)-[:ACTED_IN]->(m)<-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10;`}
     </ol>
     <hr />
     <p className="lead">Find the actor named "Tom Hanks"...</p>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        {'MATCH (tom {name: "Tom Hanks"}) RETURN tom'}
-      </pre>
-    </figure>
+    <pre className="pre-scrollable code runnable">
+      {'MATCH (tom {name: "Tom Hanks"}) RETURN tom'}
+    </pre>
     <p className="lead">Find the movie with title "Cloud Atlas"...</p>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        {'MATCH (cloudAtlas {title: "Cloud Atlas"}) RETURN cloudAtlas'}
-      </pre>
-    </figure>
+    <pre className="pre-scrollable code runnable">
+      {'MATCH (cloudAtlas {title: "Cloud Atlas"}) RETURN cloudAtlas'}
+    </pre>
     <p className="lead">Find 10 people...</p>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        MATCH (people:Person) RETURN people.name LIMIT 10
-      </pre>
-    </figure>
+    <pre className="pre-scrollable code runnable">
+      MATCH (people:Person) RETURN people.name LIMIT 10
+    </pre>
     <p className="lead">Find movies released in the 1990s...</p>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        {
-          'MATCH (nineties:Movie) WHERE nineties.released >= 1990 AND nineties.released < 2000 RETURN nineties.title'
-        }
-      </pre>
-    </figure>
+    <pre className="pre-scrollable code runnable">
+      {
+        'MATCH (nineties:Movie) WHERE nineties.released >= 1990 AND nineties.released < 2000 RETURN nineties.title'
+      }
+    </pre>
     <hr />
     <p>
       <small>:help</small> <a help-topic="match">MATCH</a>{' '}
@@ -636,37 +626,29 @@ MATCH (a)-[:ACTED_IN]->(m)<-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10;`}
     </ol>
     <hr />
     <p className="lead">List all Tom Hanks movies...</p>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        {
-          'MATCH (tom:Person {name: "Tom Hanks"})-[:ACTED_IN]->(tomHanksMovies) RETURN tom,tomHanksMovies'
-        }
-      </pre>
-    </figure>
+    <pre className="pre-scrollable code runnable">
+      {
+        'MATCH (tom:Person {name: "Tom Hanks"})-[:ACTED_IN]->(tomHanksMovies) RETURN tom,tomHanksMovies'
+      }
+    </pre>
     <p className="lead">Who directed "Cloud Atlas"?</p>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        {
-          'MATCH (cloudAtlas {title: "Cloud Atlas"})<-[:DIRECTED]-(directors) RETURN directors.name'
-        }
-      </pre>
-    </figure>
+    <pre className="pre-scrollable code runnable">
+      {
+        'MATCH (cloudAtlas {title: "Cloud Atlas"})<-[:DIRECTED]-(directors) RETURN directors.name'
+      }
+    </pre>
     <p className="lead">Tom Hanks' co-actors...</p>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        {
-          'MATCH (tom:Person {name:"Tom Hanks"})-[:ACTED_IN]->(m)<-[:ACTED_IN]-(coActors) RETURN coActors.name'
-        }
-      </pre>
-    </figure>
+    <pre className="pre-scrollable code runnable">
+      {
+        'MATCH (tom:Person {name:"Tom Hanks"})-[:ACTED_IN]->(m)<-[:ACTED_IN]-(coActors) RETURN coActors.name'
+      }
+    </pre>
     <p className="lead">How people are related to "Cloud Atlas"...</p>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        {
-          'MATCH (people:Person)-[relatedTo]-(:Movie {title: "Cloud Atlas"}) RETURN people.name, Type(relatedTo), relatedTo'
-        }
-      </pre>
-    </figure>
+    <pre className="pre-scrollable code runnable">
+      {
+        'MATCH (people:Person)-[relatedTo]-(:Movie {title: "Cloud Atlas"}) RETURN people.name, Type(relatedTo), relatedTo'
+      }
+    </pre>
     <hr />
     <p>
       <small>:help</small> <a help-topic="match">MATCH</a>
@@ -686,27 +668,23 @@ MATCH (a)-[:ACTED_IN]->(m)<-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10;`}
     <p className="lead">
       Movies and actors up to 4 "hops" away from Kevin Bacon
     </p>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        {`MATCH (bacon:Person {name:"Kevin Bacon"})-[*1..4]-(hollywood)
+    <pre className="pre-scrollable code runnable">
+      {`MATCH (bacon:Person {name:"Kevin Bacon"})-[*1..4]-(hollywood)
 RETURN DISTINCT hollywood`}
-      </pre>
-    </figure>
+    </pre>
     <p className="lead">
       Bacon path, the shortest path of any relationships to Meg Ryan
     </p>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        {`MATCH p=shortestPath(
+    <pre className="pre-scrollable code runnable">
+      {`MATCH p=shortestPath(
 (bacon:Person {name:"Kevin Bacon"})-[*]-(meg:Person {name:"Meg Ryan"})
 )
 RETURN p`}
-      </pre>
-      <aside className="warn">
-        Note you only need to compare property values like this when first
-        creating relationships
-      </aside>
-    </figure>
+    </pre>
+    <aside className="warn">
+      Note you only need to compare property values like this when first
+      creating relationships
+    </aside>
   </SidebarSlide>,
   <SidebarSlide key="s6">
     <h3>Recommend</h3>
@@ -727,22 +705,18 @@ RETURN p`}
       Extend Tom Hanks co-actors, to find co-co-actors who haven't worked with
       Tom Hanks...
     </p>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        {`MATCH (tom:Person {name:"Tom Hanks"})-[:ACTED_IN]->(m)<-[:ACTED_IN]-(coActors),
+    <pre className="pre-scrollable code runnable">
+      {`MATCH (tom:Person {name:"Tom Hanks"})-[:ACTED_IN]->(m)<-[:ACTED_IN]-(coActors),
   (coActors)-[:ACTED_IN]->(m2)<-[:ACTED_IN]-(cocoActors)
 WHERE NOT (tom)-[:ACTED_IN]->()<-[:ACTED_IN]-(cocoActors) AND tom <> cocoActors
 RETURN cocoActors.name AS Recommended, count(*) AS Strength ORDER BY Strength DESC`}
-      </pre>
-    </figure>
+    </pre>
     <p className="lead">Find someone to introduce Tom Hanks to Tom Cruise</p>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        {`MATCH (tom:Person {name:"Tom Hanks"})-[:ACTED_IN]->(m)<-[:ACTED_IN]-(coActors),
+    <pre className="pre-scrollable code runnable">
+      {`MATCH (tom:Person {name:"Tom Hanks"})-[:ACTED_IN]->(m)<-[:ACTED_IN]-(coActors),
   (coActors)-[:ACTED_IN]->(m2)<-[:ACTED_IN]-(cruise:Person {name:"Tom Cruise"})
 RETURN tom, m, coActors, m2, cruise`}
-      </pre>
-    </figure>
+    </pre>
   </SidebarSlide>,
   <SidebarSlide key="s7">
     <h3>Clean up</h3>
@@ -755,15 +729,11 @@ RETURN tom, m, coActors, m2, cruise`}
     <p className="lead">
       Delete all Movie and Person nodes, and their relationships
     </p>
-    <figure>
-      <pre className="pre-scrollable code runnable">
-        MATCH (n) DETACH DELETE n
-      </pre>
-    </figure>
+    <pre className="pre-scrollable code runnable">
+      MATCH (n) DETACH DELETE n
+    </pre>
     <p className="lead">Prove that the Movie Graph is gone</p>
-    <figure>
-      <pre className="pre-scrollable code runnable">MATCH (n) RETURN n</pre>
-    </figure>
+    <pre className="pre-scrollable code runnable">MATCH (n) RETURN n</pre>
     <hr />
     <p>
       <small>:help</small> <a help-topic="delete">DELETE</a>
