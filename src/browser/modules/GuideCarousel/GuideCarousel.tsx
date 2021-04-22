@@ -78,7 +78,7 @@ function GuidesCarousel({
               <StyledProgressCount>
                 {`${currentSlideIndex + 1} / ${slides.length}`}
               </StyledProgressCount>
-              {slides.map((_, i) => (
+              {slides.slice(0, 25).map((_, i) => (
                 <CarouselIndicator
                   key={i}
                   aria-label={`${i + 1}`}
@@ -88,6 +88,7 @@ function GuidesCarousel({
                   <span />
                 </CarouselIndicator>
               ))}
+              {slides.length >= 25 && '...'}
             </GuideProgressContainer>
           </GuideUl>
           <GuideNavButton onClick={nextSlide} disabled={onLastSlide}>

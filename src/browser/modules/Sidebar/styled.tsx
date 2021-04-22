@@ -256,7 +256,6 @@ export const GuideUl = styled.ul`
   justify-content: center;
   margin: 0 !important;
   padding-left: 0 !important;
-  overflow: hidden;
 `
 
 export const StyledGuidesDrawer = styled.div`
