@@ -68,6 +68,7 @@ import DocTitle from '../DocTitle'
 import asTitleString from '../DocTitle/titleStringBuilder'
 import Intercom from '../Intercom'
 import Segment, { MetricsData } from '../Segment'
+import { CannyLoader } from 'browser-services/canny'
 import Render from 'browser-components/Render'
 import BrowserSyncInit from '../Sync/BrowserSyncInit'
 import { getMetadata, getUserAuthStatus } from 'shared/modules/sync/syncDuck'
@@ -196,6 +197,7 @@ export function App(props: any) {
                   segmentKey={SEGMENT_KEY}
                   setTrackCallback={setTrackSegmentCallback}
                 />
+                <CannyLoader />
               </Render>
               <Render if={syncConsent && loadExternalScripts && loadSync}>
                 <BrowserSyncInit
