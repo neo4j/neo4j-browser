@@ -272,7 +272,7 @@ Possible values: `auto`, `normal`, `outline`, and `dark`.
 
 | `playImplicitInitCommands`
 | `true`
-| Allow you to run some commands automatically on startup, for example, `:play start` and `:server connect`.
+| If `true`, Browser automatically runs the command set in `initCmd` on startup, for example `:play start`.
 | no
 
 | `initialNodeDisplay`
