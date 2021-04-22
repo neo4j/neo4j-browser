@@ -50,7 +50,7 @@ import {
   getDbClusterRole
 } from '../features/versionedFeatures'
 import { extractServerInfo } from './dbMeta.utils'
-import { assign, last, reduce } from 'lodash-es'
+import { assign, reduce } from 'lodash-es'
 import {
   hasClientConfig,
   updateUserCapability,
