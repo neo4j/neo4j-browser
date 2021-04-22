@@ -272,7 +272,7 @@ Possible values: `auto`, `normal`, `outline`, and `dark`.
 
 | `playImplicitInitCommands`
 | `true`
-| TODO: Commands that are run when connected to the graph.
+| Allow you want to run some commands automatically on startup, for example, `:play start` and `:server connect`.
 | no
 
 | `initialNodeDisplay`
@@ -292,22 +292,23 @@ Possible values: `auto`, `normal`, `outline`, and `dark`.
 
 | `browserSyncDebugServer`
 | `null`
-| TODO
+| Internal setting for debugging browser sync.
 | yes
 
 | `maxRows`
 | `1000`
-| TODO: The maximum rows to render in the "Row" result view.
+| The maximum rows to render in the *Table* and *Text* result views.
 | yes
 
 | `maxFieldItems`
 | `500`
-| The maximum number of items per field.
+| Limit the length of the returned lists.
+For example, if a node has 1000 labels, the list will be cut off to the value set in `maxFieldItems`.
 | no
 
 | `shouldReportUdc`
 | `true`
-| TODO
+| Report less user metrics.
 | no
 
 | `autoComplete`
@@ -339,12 +340,12 @@ The Bolt+routing feature on Neo4j drivers discovers a cluster member (drivers ha
 
 | `editorLint`
 | `false`
-| TODO
+| Enable/disable squiggly lines under text.
 | no
 
 | `useCypherThread`
 | `true`
-| TODO
+| Run cypher queries through a webworker to increase performance.
 | no
 
 | `enableMultiStatementMode`
@@ -359,7 +360,7 @@ The Bolt+routing feature on Neo4j drivers discovers a cluster member (drivers ha
 
 | `showPerformanceOverlay`
 | `false`
-| TODO
+| Internal setting to see FPS/performance.
 | no
 
 | `editorAutocomplete`
