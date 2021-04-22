@@ -15,6 +15,7 @@ By default, Neo4j Browser communicates with a Neo4j DBMS via the link:https://76
 However, it is possible to turn off Bolt and use HTTP(S), instead as in older versions of Neo4j Browser.
 //The HTTP API can be used with the REST request commands (`:head`, `:get`, `:post`, `:put`, and `:delete`).
 
+
 [[uri-schema]]
 === Connection URI schemas
 
@@ -39,6 +40,7 @@ For more information on the different connection scenarios, see <<connection-sce
 For more information on how to configure connectors (Bolt, HTTP, and HTTPS) for Neo4j and the default ports, see link:https://neo4j.com/docs/operations-manual/{neo4j-version}/configuration/connectors/#connectors[Operations Manual -> Configure connectors] and link:https://neo4j.com/docs/operations-manual/current/configuration/ports/[Operations Manual -> Ports].
 ====
 
+
 [[manage-connection]]
 === Manage connection commands
 
@@ -47,19 +49,20 @@ The `:server` command lets you manage the connection to Neo4j, such as connectin
 Usage::	`:server <action>`
 
 Actions::
-* `:server status` - Connection status.
+* `:server status` -- Connection status.
 This is your current connection information.
-* `:server change-password` - opens the frame *Password change*, where you can change your current password.
+* `:server change-password` -- Opens the frame *Password change*, where you can change your current password.
 
 Auth::
-* `:server connect` - opens the frame *Connect to Neo4j*.
+* `:server connect` -- Opens the frame *Connect to Neo4j*.
 If connected to the server, the frame shows the current user and the connection URL.
 Otherwise, enter the name of the database you want to connect, the DBMS URL, and the user credentials.
-* `:server disconnect` - opens the frame *Disconnected*, which shows that the current user is disconnected from the server.
+* `:server disconnect` -- Opens the frame *Disconnected*, which shows that the current user is disconnected from the server.
 Then, it runs the `:server connect` automatically.
 
 User::
 `:help server user` - opens the frame *User admin*.
+
 
 [[connection-scenarios]]
 === Connection scenarios
@@ -96,7 +99,11 @@ User::
 | `bolt+s://`
 |===
 
-If you are developing on your local machine, the default connection URL is _neo4j://localhost:7474_.
+If you are developing on your local machine with a single instance:
+
+* Default URL to Neo4j Browser is _http://localhost:7474_ (use your web browser).
+* Default connection URL to Neo4j is _bolt://localhost:7687_.
+
 
 .Neo4j Browser - Neo4j Desktop application
 [options="header", cols="<,<,<"]
@@ -130,7 +137,6 @@ If you are developing on your local machine, the default connection URL is _neo4
 | `bolt+s://`
 |===
 
-If you are developing on your local machine, the default connection URL is _neo4j://localhost:7474_.
 
 .Neo4j Browser - Web application
 [options="header", cols="<,<,<"]
@@ -193,12 +199,14 @@ To disable credentials caching, set link:https://neo4j.com/docs/operations-manua
 
 If the user issues a `:server disconnect` command, any existing session is terminated, and the credentials are cleared from the local storage.
 
+
 [[adjust-settings]]
 == Adjust Browser settings
 
 The Neo4j Browser defaults for all settings can be adjusted at any time in Neo4j Browser and globally.
 
 To view all currently configured settings, run `:config`.
+
 
 .Show the configuration settings
 ====
@@ -234,6 +242,7 @@ To view all currently configured settings, run `:config`.
 }
 ----
 ====
+
 
 .Available Browser settings
 [options="header" cols=",,,"]
@@ -359,10 +368,12 @@ The Bolt+routing feature on Neo4j drivers discovers a cluster member (drivers ha
 | no
 |===
 
+
 [[adjust-in-browser]]
-==== Adjust settings in Browser
+=== Adjust settings in Browser
 
 To change the configuration settings locally in Neo4j Browser, you can either use the tabs in the Browser Settings drawer or, in the Cypher editor, type the command `:config` together with the setting and the new value.
+
 
 .Adjust an individual setting
 ====
@@ -372,6 +383,7 @@ The example shows how to change the maximum number of neighbors for a node.
 :config maxNeighbours:100
 ----
 ====
+
 
 .Adjust several settings
 ====
@@ -384,17 +396,20 @@ After making the change, re-running `:config` reports that `maxFrames` has been 
 The *Browser Settings* drawer also reflects this change.
 ====
 
+
 [WARNING]
 ====
 Adjusting the settings first resets the configuration to the default configuration and then sets the given configurations.
 ====
 
+
 [[adjust-globally]]
-==== Adjust settings globally
+=== Adjust settings globally
 
 To change the configuration settings for all users of Neo4j Browser, modify the _neo4j.conf_ file, or if using link:[Neo4j Desktop], navigate to the DBMS which settings you want to update, click the ellipsis dropdown menu, and select *Settings*.
 
 For example, to change the `maxFrames` from its default of `50` to `10` and the theme to `outline`, add the following line to _neo4j.conf_:
+
 
 [source, properties]
 ----
@@ -402,6 +417,7 @@ browser.post_connect_cmd=config {maxFrames:10, theme: "outline"}
 ----
 
 This changes the `maxFrames` from its default of `50` to `10` and then restarts Neo4j.
+
 
 .Global Browser settings
 [options="header" cols=",,"]
@@ -434,8 +450,10 @@ Separate multiple commands with a semicolon (`;`).
 | Configure the Neo4j Browser to store or not store user credentials.
 |===
 
+
 [[start-browser]]
 == Start with Browser
+
 
 [WARNING]
 TODO: No seed content
@@ -443,6 +461,7 @@ TODO: No seed content
 // play start, learn Cypher basics (link to Cypher refcard and Cypher manual), Monaco editor features
 //
 // Link to Emil A's video - https://www.youtube.com/watch?v=oHo-lQ79zf0&t=16s
+
 
 [[results]]
 == Visualize results
@@ -458,11 +477,13 @@ Query results are rendered as:
 
 You can switch between those with the icons on the left side of the result frame.
 
+
 [TIP]
 ====
 If you cannot see the result, you might be in Graph mode but had your query return tabular/scalar data.
 To see the results, switch the mode to the *Table* view.
 ====
+
 
 [[graph-view]]
 === Graph
@@ -471,6 +492,7 @@ The graph visualization functionality is designed to display a node-graph repres
 It shows circles for nodes and lines for relationships, and is especially useful for determining areas of interest or quickly assessing the current state and organization of the data.
 
 image:graph.png[]
+
 
 .Handy tips
 [TIP]
@@ -489,6 +511,7 @@ Properties appear below the visualization.
 For example, if you click one of the `Movie` nodes in the MovieGraph (`:play movie graph`), you can see its properties below the graph visualization.
 The same applies to `Actor` nodes and the `ACTED_IN` relationships.
 ====
+
 
 [[table-view]]
 === Table
@@ -509,6 +532,7 @@ It also reports the query time, including the actual query execution time, laten
 
 image:text.png[]
 
+
 [[code-view]]
 === Code
 
@@ -517,21 +541,25 @@ It also reports the query time, including the actual query execution time, laten
 
 image:code.png[]
 
+
 [[export-results]]
 == Export results
 
 You can download your query results using the down-pointed arrow on the right side of the result frame.
 The following download options available:
 
+
 .Download the result from the *Graph* view
 [#download_graph]
 [caption="Export as an image"]
 image:download-graph.png[Export graph, width=50%]
 
+
 .Download the result from the *Table*, *Text*, and *Code* views
 [#download_csv]
 [caption="Export as a CSV file"]
 image:download-csv-json.png[Export table, width=50%]
+
 
 [NOTE]
 ====
@@ -539,10 +567,12 @@ The *Save as project file* is available only in Neo4j Desktop.
 For more information, see xref:visual-tour.adoc#saved-files[Project files].
 ====
 
+
 [[styling]]
 == Style Neo4j Browser Visualization
 
 You can customize your graph query result either in place or by using Graph Stylesheet (GraSS).
+
 
 [[graph-style]]
 === Style your graph visualization in place
@@ -554,15 +584,18 @@ Colors, sizes, and captions are selectable from there.
 To see this for yourself, you can click the `Person` label above the graph and change the color, size, and captions of all nodes labeled with `Person`.
 The same applies to the relationship `ACTED_IN`.
 
+
 .Changes to nodes labeled `Person`
 [#style_person_node]
 [caption="Changes to nodes labeled `Person`"]
 image:style_person_node.png[]
 
+
 .Changes to relationships labeled `ACTED_IN`
 [#style_actedin_relationship]
 [caption="Changes to relationships labeled `ACTED_IN`"]
 image:style_actedin_relationship.png[]
+
 
 [[grass]]
 === Style your graph visualization using a GraSS file
@@ -640,10 +673,12 @@ Same applies to relationships.
 +
 . Edit the downloaded file locally using your favourite editor and use drag & drop it to the designated drop area.
 
+
 [TIP]
 ====
-The GraSS parser is open source and can be found at https://github.com/neo4j/neo4j-browser/blob/14728fa5b81258fbe9bfcdfe8916e76f73fe5ad5/src/shared/services/grassUtils.js
+The link:https://github.com/neo4j/neo4j-browser/blob/master/src/shared/services/grassUtils.js[GraSS parser] is open source.
 ====
+
 
 [[query-parameters]]
 == Neo4j query parameters
@@ -666,10 +701,12 @@ Parameters cannot be used for the following constructs, as these form part of th
 
 Parameters may consist of letters and numbers and any combination of these but cannot start with a number or a currency symbol.
 
+
 [TIP]
 ====
 For more details on the Cypher parameters, see link:https://neo4j.com/docs/cypher-manual/{neo4j-version}/syntax/parameters/[Cypher Manual v.{neo4j-version} - Parameters].
 ====
+
 
 [[set-params]]
 === Set query parameters
@@ -683,11 +720,13 @@ This gives better type safety since some types (especially numbers) in JavaScrip
 To see the list of all currently set query parameters and their values, use the `:params` command.
 For more information on how to use the commands, see `:help param` and `:help params`.
 
+
 [NOTE]
 ====
 If you are using a multi-database DBMS, parameters cannot be declared when using the `system` database.
 Switch to a different database and declare, then switch back to the `system` database and use them.
 ====
+
 
 .Set a parameter as an integer
 ====
@@ -697,6 +736,7 @@ Switch to a different database and declare, then switch back to the `system` dat
 ----
 ====
 
+
 .Set a parameter as a float
 ====
 [source, browser command, role=noheader]
@@ -705,6 +745,7 @@ Switch to a different database and declare, then switch back to the `system` dat
 ----
 ====
 
+
 .Set a parameter as a string
 ====
 [source, browser command, role=noheader]
@@ -712,6 +753,7 @@ Switch to a different database and declare, then switch back to the `system` dat
 :param x => "Example"
 ----
 ====
+
 
 .Set a parameter as an object
 =====
@@ -775,16 +817,19 @@ Alternatively, you can run the `:param` command separately from the `MATCH` quer
 
 =====
 
+
 === Cypher result
 
 It is possible to save the result from a Cypher query to a parameter. +
 
 The syntax is:
 
+
 [source, browser command, role=noheader]
 ----
 :param <parameter_name> => { CYPHER STATEMENT }
 ----
+
 
 .One row returned
 ====
@@ -819,6 +864,7 @@ $result2 = [{"nbr": 1}, {"nbr": 2}, {"nbr": 3}]}
 ----
 ====
 
+
 .One row with a node returned
 ====
 [source, browser command, role=noheader]
@@ -839,6 +885,7 @@ $result3 = [{"n": {"identity": 4, "labels": [], "properties": {"name": "Example"
 It is possible to pick individual values from your result using destructuring and set a specific parameter to a specific value. +
 
 The syntax is:
+
 
 [source, browser command, role=noheader]
 ----
@@ -873,6 +920,7 @@ $bar = 1
 ----
 ====
 
+
 .Syntax
 ====
 [source, browser command, role=noheader]
@@ -886,6 +934,7 @@ $bar1 = 1
 $bar2 = 2
 ----
 ====
+
 
 .Several rows returned
 ====
@@ -943,10 +992,12 @@ $example = {"identity": 4, "labels": [], "properties": {"name": "Example"}}}
 ----
 ====
 
+
 [[clear-params]]
 === Clear parameters
 
 You can clear all currently set parameters from Neo4j Browser by running:
+
 
 [source, browser command, role=noheader]
 ----
@@ -958,10 +1009,12 @@ You can clear all currently set parameters from Neo4j Browser by running:
 
 You can set several parameters with the `:params` command, this also clears all currently set parameters.
 
+
 [NOTE]
 ====
 Integers are set to float with this style.
 ====
+
 
 .Set several parameters
 ====
