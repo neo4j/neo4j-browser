@@ -272,7 +272,7 @@ Possible values: `auto`, `normal`, `outline`, and `dark`.
 
 | `playImplicitInitCommands`
 | `true`
-| Allow you want to run some commands automatically on startup, for example, `:play start` and `:server connect`.
+| Allow you to run some commands automatically on startup, for example, `:play start` and `:server connect`.
 | no
 
 | `initialNodeDisplay`
