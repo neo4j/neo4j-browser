@@ -5,15 +5,9 @@
 
 [[dbms-connection]]
 == Connect to a Neo4j DBMS
-// Desktop application vs. web application connection URI.
-// Connection issues.
-// How Does Neo4j Browser interact with Neo4j Server? - https://neo4j.com/developer/kb/how-neo4j-browser-interacts-with-neo4j-server/
-// Troubleshooting Connection Issues in Neo4j Browser and Cypher Shell - https://neo4j.com/developer/kb/troubleshooting-connection-issues/
-// Neo4j Aura http URL https://neo4j.slack.com/archives/C3BQ5C8BZ/p1616660613097600?thread_ts=1616626201.093300&cid=C3BQ5C8BZ
 
 By default, Neo4j Browser communicates with a Neo4j DBMS via the link:https://7687.org/[Bolt Protocol] using the link:https://neo4j.com/docs/javascript-manual/current/[Neo4j JavaScript Driver] to execute Cypher queries.
-However, it is possible to turn off Bolt and use HTTP(S), instead as in older versions of Neo4j Browser.
-//The HTTP API can be used with the REST request commands (`:head`, `:get`, `:post`, `:put`, and `:delete`).
+However, it is possible to turn off Bolt and use xref:#http-rest-requests[HTTP(S)] instead, as in older versions of Neo4j Browser.
 
 
 [[uri-schema]]
@@ -1151,20 +1145,86 @@ http://localhost:8080/?cmd=params&arg={example:1,foo:"bar"}
 ====
 
 
-// == Executing REST requests
-// You can also execute REST requests with Neo4j Browser.
-// The command syntax is :COMMAND /a/path {"some":"data"}. The available commands are :GET, :POST, :PUT and :DELETE.
-//
-// A simple query like :GET /db/data/ inspects the available endpoints of the database, with the returned results formatted in JSON.
-// Then, you can retrieve all labels in the database with :GET /db/data/labels.
-//
-// To execute a Cypher statement, you post to the transaction Cypher endpoint like this:
-//
-// JavaScript
-// Copy to Clipboard
-// :POST /db/data/transaction/commit {"statements":[
-//      {"statement":"MATCH (m:Movie)  WHERE m.title={title} RETURN m.title, m.released, labels(m)",
-//       "parameters":{"title":"Cloud Atlas"}}]}
-// There are endless possibilities to send and retrieve data using REST.
-// In a later guide, you can create an application to interact with Neo4j and use REST endpoints for interaction between you and the database.
-// See the Language Guides section for more information.
+[[http-rest-requests]]
+== HTTP REST requests
+
+Neo4j Browser supports the following HTTP REST commands:
+
+* `:delet` -- HTTP DELETE.
+* `:get`  -- HTTP GET.
+* `:head` -- HTTP HEAD.
+* `:post` -- HTTP POST.
+* `:put` -- HTTP PUT.
+
+It is possible to use these commands to query the link:https://neo4j.com/docs/http-api/{neo4j-version}/[Neo4j HTTP API].
+
+[NOTE]
+====
+The link:https://neo4j.com/docs/rest-docs/3.5/[Neo4j REST API] was deprecated in Neo4j 3.5 and was removed from Neo4j 4.X versions.
+====
+
+//The HTTP API can return JSON or JOLT.
+//ACCEPT: application/json
+//ACCEPT: application/vnd.neo4j.jolt
+//ACCEPT: application/vnd.neo4j.jolt+json+seq
+
+
+.HTTP API
+====
+[source, browser command, role=noheader]
+----
+:get /
+----
+
+[source, JSON response, role=noheader, subs="attributes+,macros"]
+----
+{
+  "bolt_routing" : "neo4j://localhost:7687",
+  "transaction" : +"http://localhost:7474/db/{databaseName}/tx",+
+  "bolt_direct" : "bolt://localhost:7687",
+  "neo4j_version" : "{neo4j-version-exact}",
+  "neo4j_edition" : "enterprise"
+}
+----
+====
+
+
+.HTTP API -- transaction
+====
+[source, browser command, role=noheader]
+----
+:post /db/neo4j/tx
+----
+
+[source, JSON response, role=noheader]
+----
+{"results":[],"errors":[],"commit":"http://localhost:7474/db/neo4j/tx/2/commit","transaction":{"expires":"Fri, 20 Jan 2222 10:11:12 GMT"}}
+----
+====
+
+
+.HTTP API -- transaction and commit
+====
+[source, browser command, role=noheader]
+----
+:post /db/neo4j/tx/commit {
+"statements": [
+{
+  "statement": "CREATE (n $props) RETURN n",
+  "parameters": {
+    "props": {
+      "name": "My Node"
+    }
+  }
+},
+{
+  "statement": "CREATE (n $props) RETURN n",
+  "parameters": {
+    "props": {
+      "name": "Another Node"
+    }
+  }
+}]
+}
+----
+====
