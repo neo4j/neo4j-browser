@@ -6,7 +6,7 @@
   "background_color": "#fff",
   "icons": [
     {
-      "src": "./assets/images/device-icons/neo4j-desktop.svg",
+      "src": "./assets/images/device-icons/neo4j-browser.svg",
       "type": "svg"
     }
   ]
