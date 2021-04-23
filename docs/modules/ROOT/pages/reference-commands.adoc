@@ -91,7 +91,7 @@ m| :help
 a| Display help about topics and commands.
 
 m| +:head <request>+
-a| REST command, send an HTTP request with the specified header.
+a| REST command, send an HTTP HEAD request.
 
 m| :history
 a| Display Neo4j Browser history of your executed commands.
