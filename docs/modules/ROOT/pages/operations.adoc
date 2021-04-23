@@ -5,15 +5,9 @@
 
 [[dbms-connection]]
 == Connect to a Neo4j DBMS
-// Desktop application vs. web application connection URI.
-// Connection issues.
-// How Does Neo4j Browser interact with Neo4j Server? - https://neo4j.com/developer/kb/how-neo4j-browser-interacts-with-neo4j-server/
-// Troubleshooting Connection Issues in Neo4j Browser and Cypher Shell - https://neo4j.com/developer/kb/troubleshooting-connection-issues/
-// Neo4j Aura http URL https://neo4j.slack.com/archives/C3BQ5C8BZ/p1616660613097600?thread_ts=1616626201.093300&cid=C3BQ5C8BZ
 
 By default, Neo4j Browser communicates with a Neo4j DBMS via the link:https://7687.org/[Bolt Protocol] using the link:https://neo4j.com/docs/javascript-manual/current/[Neo4j JavaScript Driver] to execute Cypher queries.
-However, it is possible to turn off Bolt and use HTTP(S), instead as in older versions of Neo4j Browser.
-//The HTTP API can be used with the REST request commands (`:head`, `:get`, `:post`, `:put`, and `:delete`).
+However, it is possible to turn off Bolt and use xref:#http-rest-requests[HTTP(S)] instead, as in older versions of Neo4j Browser.
 
 
 [[uri-schema]]
