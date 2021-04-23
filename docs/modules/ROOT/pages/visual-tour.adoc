@@ -19,7 +19,7 @@ The sidebar contains a set of drawers to set up the environment for graph manage
 
 The Database Information drawer provides information about the currently used database, the current user's roles, the Neo4j DBMS version, and some helpful DBMS administrative commands.
 
-image:database-information.png[height=40%]
+image:database-information.png[width=40%]
 
 * *Use database* -- A dropdown menu, where you can select the database you want to work with.
 * *Node Labels*, *Relationship Types*, and *Property keys* --  List the Node Labels, Relationship Types, and Property keys contained in that database, presented in an alphabetized order and displayed in groupings of 50.
@@ -82,6 +82,8 @@ You can rearrange them by dragging and delete them if they are no longer useful.
 
 There are several built-in favorites, which can help you manage and explore your data.
 
+image:sample-scripts.png[width=40%]
+
 * *Basic Queries* contains simple queries to get you started with Neo4j.
 For example, clicking and running the *Get Some Data* query executes the statement `MATCH (n) RETURN n LIMIT 100`, which fetches some nodes.
 * *Example Graphs* contains queries that run the built-in guides The Movie Graph and The Northwind Database.
@@ -101,58 +103,15 @@ The *Project files* tab is **Neo4j Desktop** specific.
 Project files allow you to save queries, guides, and other scripts, as Cypher files.
 Unlike favorites, which are saved in your local browser storage, project files are project-specific and are actual files stored in the project directory on your hard drive.
 All save files are listed under the project they refer to.
-For more information, see link:[Neo4j Desktop Manual -> ???].
-
-[[help-learn]]
-=== Help & Learn
-
-The *Help & Learn* drawer contains useful commands, built-in guides, links to documentation, notifications, and a send feedback button.
-
-image:help.png[]
-
-[[useful-commands]]
-==== Useful commands
-
-Most of the commands in the *Useful commands* tab work as an entry point to a help page, where you can find a lot of handy commands and keyboard shortcuts you can use in Neo4j Browser.
-
-.Useful commands
-[cols="1,3",options="header"]
-|===
-| Command
-| Description
-
-| `:help`
-| Help System
-
-| `:help cypher`
-| Provide a list of the most useful Cypher commands, with an overview and a quick way to find help.
-
-| `:help commands`
-| List all available `:help` commands.
-
-| `:help keys`
-| List some of the Cypher editor keyboard shortcuts. +
-To access the list of all available editor keybindings, press F1 in the Cypher editor.
-
-| `:history`
-| Display the most recently executed statements and commands.
-You can click a block shown in the history result to bring it into the editor.
-The command history is persisted across Browser restarts.
-
-| `CALL db.schema.visualization()`
-| Show database schema.
-
-| `:sysinfo`
-| Display data about the Neo4j system, such as store size, ID allocation, page cache, transactions, and databases (name, address, role, status, default database, and errors).
-|===
-
-For the complete list of all Neo4j Browser commands, see xref:reference-commands.adoc[Command reference].
+For more information, see link:https://neo4j.com/docs/desktop-manual/1.0/visual-tour/#files[Neo4j Desktop Manual -> Files].
 
 [[guides]]
-==== Built-in guides
+=== Guides
 
 Neo4j Browser provides many interactive guides for learning concepts and tools with Neo4j.
 Some of them come with Neo4j Browser out-of-the-box, no matter what system or installation you are using.
+
+image:guides.png[width=60%]
 
 [TIP]
 ====
@@ -221,11 +180,57 @@ For more information on how to create a custom Browser guide, see link:https://n
 // Northwind Graph - https://github.com/neo4j/neo4j-browser/blob/master/src/browser/documentation/guides/northwind-graph.tsx
 //
 
+[[help-learn]]
+=== Help & Learn
+
+The *Help & Learn* drawer contains useful commands, built-in guides, links to documentation, notifications, and a send feedback button.
+
+image:help.png[width=40%]
+
+[[useful-commands]]
+==== Useful commands
+
+Most of the commands in the *Useful commands* tab work as an entry point to a help page, where you can find a lot of handy commands and keyboard shortcuts you can use in Neo4j Browser.
+
+.Useful commands
+[cols="1,3",options="header"]
+|===
+| Command
+| Description
+
+| `:help`
+| Help System
+
+| `:help cypher`
+| Provide a list of the most useful Cypher commands, with an overview and a quick way to find help.
+
+| `:help commands`
+| List all available `:help` commands.
+
+| `:help keys`
+| List some of the Cypher editor keyboard shortcuts. +
+To access the list of all available editor keybindings, press F1 in the Cypher editor.
+
+| `:history`
+| Display the most recently executed statements and commands.
+You can click a block shown in the history result to bring it into the editor.
+The command history is persisted across Browser restarts.
+
+| `CALL db.schema.visualization()`
+| Show database schema.
+
+| `:sysinfo`
+| Display data about the Neo4j system, such as store size, ID allocation, page cache, transactions, and databases (name, address, role, status, default database, and errors).
+|===
+
+For the complete list of all Neo4j Browser commands, see xref:reference-commands.adoc[Command reference].
+
 [[settings]]
 === Browser Settings
 
 The *Browser Settings* drawer contains configurations related to the UI, result frames, and graph visualization.
 
+image:settings.png[width=40%]
 [TIP]
 ====
 For more information on the Neo4j Browser settings and how to adjust them in the Browser and globally, see xref:operations.adoc#adjust-settings[Adjust Browser settings].

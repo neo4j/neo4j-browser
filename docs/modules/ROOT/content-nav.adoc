@@ -17,6 +17,7 @@
 *** xref:visual-tour.adoc#database-info[Database Information]
 *** xref:visual-tour.adoc#favorites[Favorites]
 *** xref:visual-tour.adoc#saved-files[Project Files]
+*** xref:visual-tour.adoc#guides[Guides]
 *** xref:visual-tour.adoc#help-learn[Help & Learn]
 *** xref:visual-tour.adoc#settings[Browser Settings]
 ** xref:visual-tour.adoc#editor[Cypher editor]
