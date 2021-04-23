@@ -400,7 +400,7 @@ export const PromotionContainer = styled.div`
   display: flex;
   align-items: center;
   font-size: 14px;
-  margin: 10px;
+  margin-top: 20px;
   justify-content: center;
 `
 
