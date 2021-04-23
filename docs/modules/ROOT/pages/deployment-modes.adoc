@@ -80,7 +80,6 @@ You start the Neo4j Browser application from a project in Neo4j Desktop, provide
 
 . Download Neo4j desktop application.
 . Install and start the Neo4j Desktop application using the provided instructions (shown when downloading).
-Alternatively, after downloading the zipped server-only package, instructions can also be found in the readme (`bin/neo4j start`) after unzipping the downloaded file.
 . Set up your first project and database following step 2 of the provided Neo4j Desktop instructions.
 +
 [NOTE]
