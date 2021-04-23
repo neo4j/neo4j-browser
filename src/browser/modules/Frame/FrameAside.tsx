@@ -31,23 +31,14 @@ function FrameAside(props: any) {
 
   // Use logo as title if title is only Neo4j
   if (title === 'Neo4j') {
-    if (theme.name === DARK_THEME) {
-      title = (
-        <img
-          src="./assets/images/neo4j-world-inverted.png"
-          alt="Neo4j"
-          className="frame-title-logo"
-        />
-      )
-    } else {
-      title = (
-        <img
-          src="./assets/images/neo4j-world.png"
-          alt="Neo4j"
-          className="frame-title-logo"
-        />
-      )
-    }
+    const isDarkTheme = theme.name === DARK_THEME
+    title = (
+      <img
+        src={`./assets/images/neo4j-logo${isDarkTheme ? '-inverted' : ''}.svg`}
+        alt="Neo4j"
+        className="frame-title-logo"
+      />
+    )
   }
 
   return title ? (
