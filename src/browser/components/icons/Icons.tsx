@@ -42,7 +42,7 @@ import folderEmpty from 'icons/folder-empty.svg'
 import help from 'icons/help.svg'
 import monitorPlay from 'icons/monitor-play.svg'
 import navigationMenuVertical from 'icons/navigation-menu-vertical.svg'
-import neo4j from 'icons/neo-world.svg'
+import neo4j from 'icons/neo4j-icon.svg'
 import newFolder from 'icons/folder-add.svg'
 import pin from 'icons/pin.svg'
 import ratingStar from 'icons/rating-star.svg'
@@ -84,10 +84,10 @@ const lightBlue = `
 const neo4jPulse = keyframes`
   0%,
   100% {
-    fill: #1bf621;
+    fill: #FFF;
   }
   50% {
-    fill: #00a3ff;
+    fill: #018bff;
   }
 `
 const SMALL_SIZE = 12
@@ -229,7 +229,7 @@ export const AboutIcon = ({ isOpen, title }: SidebarIconProps): JSX.Element => (
     activeStyle={credits}
     inactiveStyle={inactive}
     icon={neo4j}
-    width={32}
+    width={SIDEBAR_SIZE}
     isOpen={isOpen}
     title={title}
   />
