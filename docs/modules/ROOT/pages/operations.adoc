@@ -1148,7 +1148,7 @@ http://localhost:8080/?cmd=params&arg={example:1,foo:"bar"}
 [[http-rest-requests]]
 == HTTP REST requests
 
-Neo4j Browser support some HTTP REST commands, these are:
+Neo4j Browser supports the following HTTP REST commands:
 
 * `:delet` -- HTTP DELETE.
 * `:get`  -- HTTP GET.
