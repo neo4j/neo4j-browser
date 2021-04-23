@@ -395,3 +395,17 @@ const rollDownAnimation = keyframes`
 export const AnimationContainer = styled.div`
   animation: ${rollDownAnimation} 0.4s ease-in;
 `
+
+export const PromotionContainer = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  margin-top: 20px;
+  justify-content: center;
+`
+
+export const AuraPromoLink = styled.a`
+  cursor: pointer;
+  text-decoration: none;
+  margin-right: 5px;
+`
