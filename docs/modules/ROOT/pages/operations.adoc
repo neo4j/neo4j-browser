@@ -1057,10 +1057,10 @@ You can save a `:params` command as a favorite to quickly populate parameters ag
 Neo4j Browser supports some URL parameters defined in the query component.
 The query component is preceded by a question mark (`?`) and contains a query string that is a sequence of key–value pairs separated by an ampersand (`&`).
 
-//[role=deprecated]
+
 === Connection frame
 
-Pre populate the connection frame with connection URL and set the database.
+Pre-populate the connection frame with the connection URL and set the database. +
 
 The syntax is:
 
@@ -1069,15 +1069,15 @@ The syntax is:
 http://localhost:8080?dbms=[connectionURL]&db=[databaseName]
 ----
 
-//icon:deprecated[]
-//[source, browser URL, role=noheader,deprecated]
-//----
-//http://localhost:8080?connectURL=[connectionURL]&db=[databaseName]
-//----
+[source, browser URL, role=noheader, subs="macros"]
+----
++http://localhost:8080?connectURL=[connectionURL]&db=[databaseName]+ label:deprecated[]
+----
+
 
 .Connection URL and database
 ====
-This will pre-populate the connection frame with:
+This pre-populates the connection frame with:
 
 * Connect URL: `neo4j://localhost:7687`
 * Database: `neo4j123`
@@ -1092,7 +1092,14 @@ http://localhost:8080/?dbms=neo4j://Example@localhost:7687&db=neo4j123
 
 === Pre-populate the editor
 
-Pre-populate the editor with a command, if it is the `play` command it will be run automatically. +
+Pre-populate the editor with a command when Neo4j Browser starts.
+Supported browser commands are:
+
+* `param`
+* `params`
+* `play`
+
+The `:play` command runs automatically. +
 
 The syntax is:
 
@@ -1101,17 +1108,9 @@ The syntax is:
 http://localhost:8080?cmd=[command]&arg=[argument]
 ----
 
-Supported browser commands are:
-
-* `play`
-* `param`
-* `params`
-
 
 .Play movies
 ====
-This will run the command when Neo4j Browser starts.
-
 [source, browser command, role=noheader]
 ----
 :play movies
@@ -1123,10 +1122,9 @@ http://localhost:8080/?cmd=play&arg=movies
 ----
 ====
 
+
 .Param
 ====
-This will pre-populate the editor with the command when Neo4j Browser starts.
-
 [source, browser command, role=noheader]
 ----
 :param example=>1
@@ -1138,10 +1136,9 @@ http://localhost:8080/?cmd=param&arg=example=>1
 ----
 ====
 
+
 .Params
 ====
-This will pre-populate the editor with the command when Neo4j Browser starts.
-
 [source, browser command, role=noheader]
 ----
 :params {example:1,foo:"bar"}
