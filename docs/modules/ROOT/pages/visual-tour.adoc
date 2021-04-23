@@ -183,7 +183,7 @@ For more information on how to create a custom Browser guide, see link:https://n
 [[help-learn]]
 === Help & Learn
 
-The *Help & Learn* drawer contains useful commands, built-in guides, links to documentation, notifications, and a send feedback button.
+The *Help & Learn* drawer contains useful commands, links to documentation, notifications, and a send feedback button.
 
 image:help.png[width=40%]
 
