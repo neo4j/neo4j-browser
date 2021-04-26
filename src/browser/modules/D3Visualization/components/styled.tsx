@@ -194,7 +194,7 @@ export const StyledStatusBarWrapper = styled.div`
   height: 68px;
   display: none;
 `
-export const StyledStatusBar: any = styled.div`
+export const StyledStatusBar = styled.div`
   min-height: 39px;
   line-height: 39px;
   color: ${props => props.theme.secondaryText};
@@ -340,7 +340,7 @@ export const StyledCaptionSelector = styled.a`
   }
 `
 
-export const StyledFullSizeContainer: any = styled.div`
+export const StyledFullSizeContainer = styled.div`
   position: relative;
   height: 100%;
 `

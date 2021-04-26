@@ -475,7 +475,7 @@ const mapDispatchToProps = (
     togglePinning: (id: string, isPinned: boolean) => {
       isPinned ? dispatch(unpin(id)) : dispatch(pin(id))
     },
-    onTitlebarClick: (cmd: any) => {
+    onTitlebarClick: (cmd: string) => {
       ownProps.bus.send(editor.SET_CONTENT, editor.setContent(cmd))
     }
   }

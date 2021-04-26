@@ -111,7 +111,7 @@ export const Sysinfo = ({
 
   return isEnterpriseEdition ? (
     <SysInfoTableContainer>
-      <SysInfoTable key="StoreSize" header="Store Size" colspan="2">
+      <SysInfoTable key="StoreSize" header="Store Size" colspan={2}>
         {buildTableData(storeSizes)}
       </SysInfoTable>
       <SysInfoTable key="IDAllocation" header="Id Allocation">

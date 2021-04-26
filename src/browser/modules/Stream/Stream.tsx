@@ -21,7 +21,7 @@
 import { connect } from 'react-redux'
 import React, { memo, useRef, useEffect } from 'react'
 import { StyledStream, Padding, AnimationContainer } from './styled'
-import CypherFrame from './CypherFrame/index'
+import CypherFrame from './CypherFrame/CypherFrame'
 import HistoryFrame from './HistoryFrame'
 import PlayFrame from './PlayFrame'
 import DefaultFrame from '../Frame/DefaultFrame'
@@ -52,7 +52,7 @@ import { getScrollToTop } from 'shared/modules/settings/settingsDuck'
 import DbsFrame from './Auth/DbsFrame'
 import EditFrame from './EditFrame'
 
-const trans = {
+const nameToFrame: Record<string, React.ComponentType<any>> = {
   error: ErrorFrame,
   cypher: CypherFrame,
   'cypher-script': CypherScriptFrame,
@@ -82,10 +82,10 @@ const trans = {
   default: DefaultFrame
 }
 
-type FrameType = keyof typeof trans
+type FrameType = keyof typeof nameToFrame
 
 const getFrame = (type: FrameType) => {
-  return trans[type] || trans.default
+  return nameToFrame[type] || nameToFrame.default
 }
 
 type StreamProps = {

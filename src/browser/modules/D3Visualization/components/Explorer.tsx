@@ -205,19 +205,12 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
         />
       )
     }
-    const inspectingItemType =
-      !this.state.inspectorContracted &&
-      ((this.state.hoveredItem && this.state.hoveredItem.type !== 'canvas') ||
-        (this.state.selectedItem && this.state.selectedItem.type !== 'canvas'))
 
     return (
       <StyledFullSizeContainer
         id="svg-vis"
         className={
           Object.keys(this.state.stats.relTypes).length ? '' : 'one-legend-row'
-        }
-        forcePaddingBottom={
-          inspectingItemType ? this.state.forcePaddingBottom : null
         }
       >
         {legend}

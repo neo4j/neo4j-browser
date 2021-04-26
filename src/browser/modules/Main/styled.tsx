@@ -82,7 +82,7 @@ export const StyledCodeBlockFrame = styled(StyledCodeBlock)`
   cursor: pointer;
 `
 
-export const SyncDisconnectedBanner: any = styled(Banner)`
+export const SyncDisconnectedBanner = styled(Banner)`
   background-color: ${props => props.theme.auth};
   display: flex;
   justify-content: space-between;
