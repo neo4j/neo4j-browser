@@ -24,7 +24,8 @@ import TimeAgo from 'react-timeago'
 import { allowOutgoingConnections } from 'shared/modules/dbMeta/dbMetaDuck'
 import {
   getConnectionState,
-  DISCONNECTED_STATE
+  DISCONNECTED_STATE,
+  isConnectedAuraHost
 } from 'shared/modules/connections/connectionsDuck'
 import {
   setSyncData,
@@ -122,6 +123,12 @@ export class BrowserSync extends Component<any, BrowserSyncState> {
           <DrawerBody>
             You must first connect to a database to use Browser Sync.
           </DrawerBody>
+        </Drawer>
+      )
+    } else if (this.props.isConnectedAuraHost) {
+      return (
+        <Drawer id="sync-drawer">
+          <DrawerHeader>Browser sync is disabled on aura</DrawerHeader>
         </Drawer>
       )
     } else if (!this.props.isAllowed) {
@@ -275,14 +282,15 @@ export class BrowserSync extends Component<any, BrowserSyncState> {
 
 const mapStateToProps = (state: any) => {
   return {
-    lastSyncedAt: getLastSyncedAt(state),
-    userData: getUserData(state),
     authStatus: getUserAuthStatus(state),
-    serviceStatus: getServiceStatus(state),
     browserSyncConfig: getBrowserSyncConfig(state),
-    syncConsent: state.syncConsent.consented,
     connectionState: getConnectionState(state),
-    isAllowed: allowOutgoingConnections(state) !== false
+    isAllowed: allowOutgoingConnections(state) !== false,
+    isConnectedAuraHost: isConnectedAuraHost(state),
+    lastSyncedAt: getLastSyncedAt(state),
+    serviceStatus: getServiceStatus(state),
+    syncConsent: state.syncConsent.consented,
+    userData: getUserData(state)
   }
 }
 

@@ -39,7 +39,9 @@ import { utilizeBrowserSync } from 'shared/modules/features/featuresDuck'
 import {
   PENDING_STATE,
   CONNECTED_STATE,
-  DISCONNECTED_STATE
+  DISCONNECTED_STATE,
+  isConnected,
+  isConnectedAuraHost
 } from 'shared/modules/connections/connectionsDuck'
 import { isRelateAvailable } from 'shared/modules/app/appDuck'
 
@@ -199,10 +201,11 @@ const mapStateToProps = (state: GlobalState) => {
         break
     }
   }
+  const connectedButNotAura = isConnected(state) && !isConnectedAuraHost(state)
   return {
     syncConnected: isUserSignedIn(state) || false,
     neo4jConnectionState: connectionState,
-    loadSync: utilizeBrowserSync(state),
+    loadSync: utilizeBrowserSync(state) && connectedButNotAura,
     showStaticScripts: state.settings.showSampleScripts,
     isRelateAvailable: isRelateAvailable(state),
     scriptDraft: getCurrentDraft(state)
