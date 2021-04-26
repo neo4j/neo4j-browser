@@ -61,7 +61,7 @@ describe('Bolt connections', () => {
       cy.connect('neo4j', password)
 
       cy.executeCommand(':queries')
-      cy.resultContains('"type": "user-action"')
+      cy.resultContains('dbms.listQueries')
     })
   }
 
