@@ -409,6 +409,10 @@ export const StyledSidebarSlide = styled.div.attrs({
   &.slide .code {
     background-color: transparent;
   }
+  &.slide .code .runnable {
+    // overrides slightly darker background in style.less
+    background-color: ${dark.preBackground};
+  }
   &.slide .key {
     background-color: ${dark.preBackground};
     color: ${dark.preText};
