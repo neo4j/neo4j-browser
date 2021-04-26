@@ -747,7 +747,7 @@ RETURN tom, m, coActors, m2, cruise`}
         graph
       </li>
       <li>
-        <a data-exec=":help northwind-graph">Cypher</a>- Learn Cypher syntax
+        <a data-exec=":guide cypher">Cypher</a>- Learn Cypher syntax
       </li>
       <li>
         <DrawerExternalLink href="https://portal.graphgist.org/">
