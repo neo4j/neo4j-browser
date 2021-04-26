@@ -307,8 +307,11 @@ For example, if a node has 1000 labels, the list will be cut off to the value se
 
 | `autoComplete`
 | `true`
-| Automatic completion of missing relationships.
-| yes, from the `Connect result nodes` check-box.
+| Automatic completion of missing relationships. +
+When you execute a query, any relationships not explicitly returned by the query, but that exist between the nodes will be shown in the graph. 
+You can disable for queries where it is important to see only the relationships the query returns.
+This behavior is controlled by the `Connect result nodes` in *Browser Settings*. 
+| yes
 
 | `scrollToTop`
 | `true`
