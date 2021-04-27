@@ -17,7 +17,7 @@
 
 import React, { useMemo } from 'react'
 import { isInt } from 'neo4j-driver'
-import Relatable from '@relate-by-ui/relatable'
+import Table from 'browser-components/Table'
 import { get, head, map, slice } from 'lodash-es'
 import { Icon } from 'semantic-ui-react'
 import { connect } from 'react-redux'
@@ -64,7 +64,7 @@ export function RelatableViewComponent({
 
   return (
     <RelatableStyleWrapper>
-      <Relatable basic columns={columns} data={data} />
+      <Table basic columns={columns} data={data} />
     </RelatableStyleWrapper>
   )
 }

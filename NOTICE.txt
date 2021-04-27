@@ -179,8 +179,6 @@ Third-party licenses
 │  │  └─ URL: https://github.com/neo4j-apps/lambda-parser
 │  ├─ @relate-by-ui/css@1.0.5
 │  │  └─ URL: https://github.com/neo4j-apps/relate-by-ui
-│  ├─ @relate-by-ui/relatable@1.0.1
-│  │  └─ URL: https://github.com/neo4j-apps/relatable
 │  ├─ aws-sign2@0.7.0
 │  │  ├─ URL: https://github.com/mikeal/aws-sign
 │  │  ├─ VendorName: Mikeal Rogers
@@ -493,10 +491,6 @@ Third-party licenses
 │  │  ├─ URL: git+https://github.com/isaacs/yallist.git
 │  │  ├─ VendorName: Isaac Z. Schlueter
 │  │  └─ VendorUrl: http://blog.izs.me/
-│  ├─ yaml@1.10.0
-│  │  ├─ URL: https://github.com/eemeli/yaml.git
-│  │  ├─ VendorName: Eemeli Aro
-│  │  └─ VendorUrl: https://eemeli.org/yaml/
 │  └─ yargs-parser@18.1.3
 │     ├─ URL: https://github.com/yargs/yargs-parser.git
 │     └─ VendorName: Ben Coe
@@ -586,39 +580,12 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/babel/babel.git
 │  │  ├─ VendorName: Sebastian McKenzie
 │  │  └─ VendorUrl: https://babeljs.io/
-│  ├─ @emotion/cache@10.0.29
-│  │  └─ URL: https://github.com/emotion-js/emotion/tree/master/packages/cache
-│  ├─ @emotion/core@10.0.10
-│  │  ├─ URL: https://github.com/emotion-js/emotion/tree/master/packages/core
-│  │  └─ VendorName: mitchellhamilton
-│  ├─ @emotion/css@10.0.27
-│  │  └─ URL: https://github.com/emotion-js/emotion/tree/master/packages/css
-│  ├─ @emotion/hash@0.8.0
-│  │  └─ URL: https://github.com/emotion-js/emotion/tree/master/packages/hash
 │  ├─ @emotion/is-prop-valid@0.8.8
 │  │  └─ URL: https://github.com/emotion-js/emotion/tree/master/packages/is-prop-valid
 │  ├─ @emotion/memoize@0.7.4
 │  │  └─ URL: https://github.com/emotion-js/emotion/tree/master/packages/memoize
-│  ├─ @emotion/serialize@0.11.16
-│  │  └─ URL: https://github.com/emotion-js/emotion/tree/master/packages/serialize
-│  ├─ @emotion/sheet@0.9.2
-│  │  └─ URL: https://github.com/emotion-js/emotion/tree/master/packages/sheet
-│  ├─ @emotion/sheet@0.9.4
-│  │  └─ URL: https://github.com/emotion-js/emotion/tree/master/packages/sheet
-│  ├─ @emotion/styled-base@10.0.31
-│  │  └─ URL: https://github.com/emotion-js/emotion/tree/master/packages/styled-base
-│  ├─ @emotion/styled@10.0.10
-│  │  └─ URL: https://github.com/emotion-js/emotion/tree/master/packages/styled
-│  ├─ @emotion/stylis@0.8.5
-│  │  └─ URL: https://github.com/emotion-js/emotion/tree/master/packages/stylis
 │  ├─ @emotion/unitless@0.7.5
 │  │  └─ URL: https://github.com/emotion-js/emotion/tree/master/packages/unitless
-│  ├─ @emotion/utils@0.11.1
-│  │  └─ URL: https://github.com/emotion-js/emotion/tree/master/packages/serialize
-│  ├─ @emotion/utils@0.11.3
-│  │  └─ URL: https://github.com/emotion-js/emotion/tree/master/packages/serialize
-│  ├─ @emotion/weak-memoize@0.2.5
-│  │  └─ URL: https://github.com/emotion-js/emotion/tree/master/packages/weak-memoize
 │  ├─ @graphql-typed-document-node/core@3.1.0
 │  │  ├─ URL: git@github.com:dotansimha/graphql-typed-document-node.git
 │  │  └─ VendorName: Dotan Simha
@@ -651,10 +618,6 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/react-dnd/shallowequal.git
 │  │  ├─ VendorName: Alberto Leal
 │  │  └─ VendorUrl: github.com/dashed
-│  ├─ @scarf/scarf@0.1.7
-│  │  ├─ URL: git+https://github.com/scarf-sh/scarf-js.git
-│  │  ├─ VendorName: Scarf Systems
-│  │  └─ VendorUrl: https://github.com/scarf-sh/scarf-js
 │  ├─ @semantic-ui-react/event-stack@3.1.1
 │  │  ├─ URL: https://github.com/layershifter/event-stack
 │  │  └─ VendorName: layershifter
@@ -684,8 +647,6 @@ Third-party licenses
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
 │  ├─ @types/node@13.13.21
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
-│  ├─ @types/parse-json@4.0.0
-│  │  └─ URL: https://www.github.com/DefinitelyTyped/DefinitelyTyped.git
 │  ├─ @types/parse5@5.0.3
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
 │  ├─ @types/prop-types@15.7.3
@@ -779,18 +740,10 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/mdx-js/mdx.git
 │  │  ├─ VendorName: John Otander
 │  │  └─ VendorUrl: https://mdxjs.com/
-│  ├─ babel-plugin-emotion@10.0.33
-│  │  ├─ URL: https://github.com/emotion-js/emotion/tree/master/packages/babel-plugin-emotion
-│  │  ├─ VendorName: Kye Hohenberger
-│  │  └─ VendorUrl: https://emotion.sh/
 │  ├─ babel-plugin-extract-import-names@1.6.18
 │  │  ├─ URL: https://github.com/mdx-js/mdx.git
 │  │  ├─ VendorName: John Otander
 │  │  └─ VendorUrl: https://mdxjs.com/
-│  ├─ babel-plugin-macros@2.8.0
-│  │  ├─ URL: https://github.com/kentcdodds/babel-plugin-macros.git
-│  │  ├─ VendorName: Kent C. Dodds
-│  │  └─ VendorUrl: https://github.com/kentcdodds/babel-plugin-macros#readme
 │  ├─ babel-plugin-styled-components@1.11.1
 │  │  └─ URL: https://github.com/styled-components/babel-plugin-styled-components.git
 │  ├─ babel-plugin-syntax-jsx@6.18.0
@@ -812,10 +765,6 @@ Third-party licenses
 │  │  └─ VendorUrl: https://github.com/bublejs/buble#README
 │  ├─ buffer-from@1.1.1
 │  │  └─ URL: https://github.com/LinusU/buffer-from.git
-│  ├─ callsites@3.1.0
-│  │  ├─ URL: https://github.com/sindresorhus/callsites.git
-│  │  ├─ VendorName: Sindre Sorhus
-│  │  └─ VendorUrl: sindresorhus.com
 │  ├─ camelcase-css@2.0.1
 │  │  ├─ URL: https://github.com/stevenvachon/camelcase-css.git
 │  │  ├─ VendorName: Steven Vachon
@@ -894,10 +843,6 @@ Third-party licenses
 │  │  ├─ URL: git://github.com/isaacs/core-util-is
 │  │  ├─ VendorName: Isaac Z. Schlueter
 │  │  └─ VendorUrl: http://blog.izs.me/
-│  ├─ cosmiconfig@6.0.0
-│  │  ├─ URL: git+https://github.com/davidtheclark/cosmiconfig.git
-│  │  ├─ VendorName: David Clark
-│  │  └─ VendorUrl: https://github.com/davidtheclark/cosmiconfig#readme
 │  ├─ create-react-context@0.3.0
 │  │  ├─ URL: https://github.com/thejameskyle/create-react-context
 │  │  └─ VendorName: James Kyle
@@ -911,9 +856,6 @@ Third-party licenses
 │  ├─ cssstyle@0.2.37
 │  │  ├─ URL: https://github.com/chad3814/CSSStyleDeclaration.git
 │  │  └─ VendorUrl: https://github.com/chad3814/CSSStyleDeclaration
-│  ├─ csstype@2.6.13
-│  │  ├─ URL: https://github.com/frenic/csstype
-│  │  └─ VendorName: Fredrik Nicol
 │  ├─ csstype@3.0.6
 │  │  ├─ URL: https://github.com/frenic/csstype
 │  │  └─ VendorName: Fredrik Nicol
@@ -971,8 +913,6 @@ Third-party licenses
 │  ├─ encoding@0.1.13
 │  │  ├─ URL: https://github.com/andris9/encoding.git
 │  │  └─ VendorName: Andris Reinman
-│  ├─ error-ex@1.3.2
-│  │  └─ URL: https://github.com/qix-/node-error-ex.git
 │  ├─ es-abstract@1.17.6
 │  │  ├─ URL: git://github.com/ljharb/es-abstract.git
 │  │  ├─ VendorName: Jordan Harband
@@ -1022,9 +962,6 @@ Third-party licenses
 │  │  ├─ URL: git+https://github.com/eligrey/FileSaver.js.git
 │  │  ├─ VendorName: Eli Grey
 │  │  └─ VendorUrl: https://github.com/eligrey/FileSaver.js#readme
-│  ├─ find-root@1.1.0
-│  │  ├─ URL: git@github.com:js-n/find-root.git
-│  │  └─ VendorName: jsdnxx
 │  ├─ find-up@4.1.0
 │  │  ├─ URL: https://github.com/sindresorhus/find-up.git
 │  │  ├─ VendorName: Sindre Sorhus
@@ -1130,10 +1067,6 @@ Third-party licenses
 │  │  └─ VendorUrl: https://github.com/ashtuchkin/iconv-lite
 │  ├─ immediate@3.0.6
 │  │  └─ URL: git://github.com/calvinmetcalf/immediate.git
-│  ├─ import-fresh@3.2.1
-│  │  ├─ URL: https://github.com/sindresorhus/import-fresh.git
-│  │  ├─ VendorName: Sindre Sorhus
-│  │  └─ VendorUrl: sindresorhus.com
 │  ├─ inline-style-parser@0.1.1
 │  │  └─ URL: https://github.com/remarkablemark/inline-style-parser
 │  ├─ invariant@2.2.4
@@ -1151,10 +1084,6 @@ Third-party licenses
 │  │  ├─ URL: git://github.com/ljharb/is-arguments.git
 │  │  ├─ VendorName: Jordan Harband
 │  │  └─ VendorUrl: https://github.com/ljharb/is-arguments
-│  ├─ is-arrayish@0.2.1
-│  │  ├─ URL: https://github.com/qix-/node-is-arrayish.git
-│  │  ├─ VendorName: Qix
-│  │  └─ VendorUrl: http://github.com/qix-
 │  ├─ is-buffer@2.0.4
 │  │  ├─ URL: git://github.com/feross/is-buffer.git
 │  │  ├─ VendorName: Feross Aboukhadijeh
@@ -1248,9 +1177,6 @@ Third-party licenses
 │  ├─ json-bigint@1.0.0
 │  │  ├─ URL: git@github.com:sidorares/json-bigint.git
 │  │  └─ VendorName: Andrey Sidorov
-│  ├─ json-parse-even-better-errors@2.3.1
-│  │  ├─ URL: https://github.com/npm/json-parse-even-better-errors
-│  │  └─ VendorName: Kat Marchán
 │  ├─ json-schema-traverse@0.4.1
 │  │  ├─ URL: git+https://github.com/epoberezkin/json-schema-traverse.git
 │  │  ├─ VendorName: Evgeny Poberezkin
@@ -1282,10 +1208,6 @@ Third-party licenses
 │  │  └─ URL: https://github.com/calvinmetcalf/lie.git
 │  ├─ lie@3.3.0
 │  │  └─ URL: https://github.com/calvinmetcalf/lie.git
-│  ├─ lines-and-columns@1.1.6
-│  │  ├─ URL: https://github.com/eventualbuddha/lines-and-columns.git
-│  │  ├─ VendorName: Brian Donovan
-│  │  └─ VendorUrl: https://github.com/eventualbuddha/lines-and-columns#readme
 │  ├─ locate-path@5.0.0
 │  │  ├─ URL: https://github.com/sindresorhus/locate-path.git
 │  │  ├─ VendorName: Sindre Sorhus
@@ -1415,18 +1337,10 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/sindresorhus/p-try.git
 │  │  ├─ VendorName: Sindre Sorhus
 │  │  └─ VendorUrl: sindresorhus.com
-│  ├─ parent-module@1.0.1
-│  │  ├─ URL: https://github.com/sindresorhus/parent-module.git
-│  │  ├─ VendorName: Sindre Sorhus
-│  │  └─ VendorUrl: sindresorhus.com
 │  ├─ parse-entities@2.0.0
 │  │  ├─ URL: https://github.com/wooorm/parse-entities.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
-│  ├─ parse-json@5.1.0
-│  │  ├─ URL: https://github.com/sindresorhus/parse-json.git
-│  │  ├─ VendorName: Sindre Sorhus
-│  │  └─ VendorUrl: https://sindresorhus.com
 │  ├─ parse5@1.5.1
 │  │  ├─ URL: git://github.com/inikulin/parse5.git
 │  │  ├─ VendorName: Ivan Nikulin
@@ -1443,10 +1357,6 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/jbgutierrez/path-parse.git
 │  │  ├─ VendorName: Javier Blanco
 │  │  └─ VendorUrl: https://github.com/jbgutierrez/path-parse#readme
-│  ├─ path-type@4.0.0
-│  │  ├─ URL: https://github.com/sindresorhus/path-type.git
-│  │  ├─ VendorName: Sindre Sorhus
-│  │  └─ VendorUrl: sindresorhus.com
 │  ├─ performance-now@2.1.0
 │  │  ├─ URL: git://github.com/braveg1rl/performance-now.git
 │  │  ├─ VendorName: Braveg1rl
@@ -1520,9 +1430,9 @@ Third-party licenses
 │  ├─ react-svg-inline@2.1.1
 │  │  ├─ URL: https://github.com/MoOx/react-svg-inline.git
 │  │  └─ VendorName: Maxime Thirouin
-│  ├─ react-table@7.0.4
-│  │  ├─ URL: git+https://github.com/tannerlinsley/react-table.git
-│  │  └─ VendorUrl: https://github.com/tannerlinsley/react-table#readme
+│  ├─ react-table@7.7.0
+│  │  ├─ URL: https://github.com/tannerlinsley/react-table
+│  │  └─ VendorUrl: https://react-table.tanstack.com/
 │  ├─ react-timeago@4.4.0
 │  │  ├─ URL: https://github.com/naman34/react-timeago.git
 │  │  ├─ VendorName: Naman Goel
@@ -1594,10 +1504,6 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/unshiftio/requires-port
 │  │  ├─ VendorName: Arnout Kazemier
 │  │  └─ VendorUrl: https://github.com/unshiftio/requires-port
-│  ├─ resolve-from@4.0.0
-│  │  ├─ URL: https://github.com/sindresorhus/resolve-from.git
-│  │  ├─ VendorName: Sindre Sorhus
-│  │  └─ VendorUrl: sindresorhus.com
 │  ├─ resolve@1.17.0
 │  │  ├─ URL: git://github.com/browserify/resolve.git
 │  │  ├─ VendorName: James Halliday
