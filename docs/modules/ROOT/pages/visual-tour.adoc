@@ -103,7 +103,7 @@ The *Project files* tab is **Neo4j Desktop** specific.
 Project files allow you to save queries, guides, and other scripts, as Cypher files.
 Unlike favorites, which are saved in your local browser storage, project files are project-specific and are actual files stored in the project directory on your hard drive.
 All save files are listed under the project they refer to.
-For more information, see link:https://neo4j.com/docs/desktop-manual/1.0/visual-tour/#files[Neo4j Desktop Manual -> Files].
+For more information, see link:https://neo4j.com/docs/desktop-manual/current/visual-tour/#files[Neo4j Desktop Manual -> Files].
 
 [[guides]]
 === Guides
