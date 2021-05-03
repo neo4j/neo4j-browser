@@ -23,7 +23,6 @@ import {
   OUTLINE_THEME,
   DARK_THEME
 } from 'shared/modules/settings/settingsDuck'
-import { rgb } from 'd3'
 
 export const base = {
   name: 'base',
@@ -124,9 +123,7 @@ export const dark = {
   link: '#5CA6D9',
   topicText: '#fff',
   preText: '#fff',
-  // @ts-expect-error
-  asideText: rgb(255, 255, 255, 0.87),
-
+  asideText: 'rgb(255, 255, 255, 0.87)',
   // Backgrounds
   primaryBackground: '#525865',
   secondaryBackground: '#292C33',
