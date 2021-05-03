@@ -26,7 +26,6 @@ import './styles/font-awesome.min.css'
 import './styles/fira-code.css'
 import './styles/open-sans.css'
 import './styles/util-classes.css'
-import './styles/workaround-monaco-scroll-bug.css'
 import '@relate-by-ui/css/semantic/dist/relate-by.min.css'
 
 // non web env (just for tests)
