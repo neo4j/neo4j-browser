@@ -279,6 +279,11 @@ function FrameTitlebar(props: FrameTitleBarProps) {
         event.target instanceof Element &&
         !frameElement?.contains(event.target)
       ) {
+        // a really quick click will lose some of the last edits
+        const editorRefVal = editorRef.current?.getValue()
+        if (editorRefVal && editorRefVal !== editorValue) {
+          setEditorValue(editorRefVal)
+        }
         setRenderEditor(false)
       }
     }
