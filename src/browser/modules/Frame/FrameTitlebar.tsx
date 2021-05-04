@@ -90,6 +90,7 @@ import { stringifyMod } from 'services/utils'
 import Monaco, { MonacoHandles } from '../Editor/Monaco'
 import { Bus } from 'suber'
 import { addFavorite } from 'shared/modules/favorites/favoritesDuck'
+import { isMac } from '../App/keyboardShortcuts'
 
 type FrameTitleBarBaseProps = {
   frame: any
@@ -120,7 +121,7 @@ type FrameTitleBarProps = FrameTitleBarBaseProps & {
   onRunClick: () => void
   reRun: (obj: Frame, cmd: string) => void
   togglePinning: (id: string, isPinned: boolean) => void
-  onTitlebarClick: (cmd: string) => void
+  onTitlebarCmdClick: (cmd: string) => void
   trackFullscreenToggle: () => void
   trackCollapseToggle: () => void
 }
@@ -256,6 +257,38 @@ function FrameTitlebar(props: FrameTitleBarProps) {
     props.reRun(frame, cmd)
   }
 
+  function onPreviewClick(e: React.MouseEvent) {
+    if (e.ctrlKey || e.metaKey) {
+      props.onTitlebarCmdClick(editorValue)
+    } else {
+      setRenderEditor(true)
+    }
+  }
+
+  const titleBarRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    // We want clicks outside the frame itself, not just the titlebar.
+    // Because of how the component tree is built (we don't have a
+    // reference to the full frame body) we'd need to pass
+    // a ref from each parent to avoid this dom traversal
+    function handleClickOutside(event: MouseEvent) {
+      const frameElement =
+        titleBarRef.current && titleBarRef.current.closest('article')
+
+      if (
+        event.target instanceof Element &&
+        !frameElement?.contains(event.target)
+      ) {
+        setRenderEditor(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  })
+
   const { frame = {} } = props
   const fullscreenIcon = props.fullscreen ? <ContractIcon /> : <ExpandIcon />
   const expandCollapseIcon = props.collapse ? <DownIcon /> : <UpIcon />
@@ -263,7 +296,7 @@ function FrameTitlebar(props: FrameTitleBarProps) {
   // don't show it as history as well
   const history = (frame.history || []).slice(1)
   return (
-    <StyledFrameTitleBar>
+    <StyledFrameTitleBar ref={titleBarRef}>
       {renderEditor ? (
         <FrameTitleEditorContainer data-testid="frameCommand">
           <Monaco
@@ -282,8 +315,9 @@ function FrameTitlebar(props: FrameTitleBarProps) {
       ) : (
         <StyledFrameCommand
           selectedDb={frame.useDb}
-          onClick={() => setRenderEditor(true)}
+          onClick={onPreviewClick}
           data-testid="frameCommand"
+          title={`${isMac ? 'Cmd' : 'Ctrl'}+click to copy to editor`}
         >
           <DottedLineHover>{editorValue.split('\n').join(' ')}</DottedLineHover>
         </StyledFrameCommand>
@@ -475,7 +509,7 @@ const mapDispatchToProps = (
     togglePinning: (id: string, isPinned: boolean) => {
       isPinned ? dispatch(unpin(id)) : dispatch(pin(id))
     },
-    onTitlebarClick: (cmd: any) => {
+    onTitlebarCmdClick: (cmd: any) => {
       ownProps.bus.send(editor.SET_CONTENT, editor.setContent(cmd))
     }
   }
