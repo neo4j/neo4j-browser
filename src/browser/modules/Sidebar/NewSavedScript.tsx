@@ -19,7 +19,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 
 const StyledHeaderText = styled.div`
-  font-family: 'Open Sans';
+  font-family: ${props => props.theme.drawerHeaderFontFamily};
   color: white;
 `
 
