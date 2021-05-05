@@ -742,11 +742,11 @@ RETURN tom, m, coActors, m2, cruise`}
     <h3>Next steps</h3>
     <ul className="undecorated">
       <li>
-        <a data-exec=":guide northwind-graph">Northwind Graph</a>- from RDBMS to
+        <a data-exec="guide northwind-graph">Northwind Graph</a>- from RDBMS to
         graph
       </li>
       <li>
-        <a data-exec=":guide cypher">Cypher</a>- Learn Cypher syntax
+        <a data-exec="guide cypher">Cypher</a>- Learn Cypher syntax
       </li>
       <li>
         <DrawerExternalLink href="https://portal.graphgist.org/">

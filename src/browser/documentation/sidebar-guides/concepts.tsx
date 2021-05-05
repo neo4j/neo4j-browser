@@ -144,10 +144,10 @@ const slides = [
     <h3>Keep getting started</h3>
     <ul className="undecorated">
       <li>
-        <a data-exec=":guide intro">Intro</a> - a guided tour
+        <a data-exec="guide intro">Intro</a> - a guided tour
       </li>
       <li>
-        <a data-exec=":guide cypher">Cypher</a> - query language
+        <a data-exec="guide cypher">Cypher</a> - query language
       </li>
       <li>
         <ManualLink chapter="cypher-manual" page="/">
@@ -159,7 +159,7 @@ const slides = [
     <h3>Jump into code</h3>
     <ul className="undecorated">
       <li>
-        <a data-exec=":guide movie-graph">The Movie Graph</a>
+        <a data-exec="guide movie-graph">The Movie Graph</a>
       </li>
     </ul>
   </SidebarSlide>

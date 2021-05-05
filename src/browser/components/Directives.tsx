@@ -31,7 +31,8 @@ const directives = [
   {
     selector: '[data-exec]',
     valueExtractor: (elem: any) => {
-      return `${elem.getAttribute('data-exec')}`
+      // we prepend the : to only autoexec browser commands and not cypher
+      return `:${elem.getAttribute('data-exec')}`
     },
     autoExec: true
   },
@@ -147,7 +148,8 @@ const mapDispatchToProps = (_dispatch: any, ownProps: any) => {
   return {
     onItemClick: (cmd: string, autoExec: boolean, id: string) => {
       if (!cmd.endsWith(' null') && !cmd.endsWith(':null')) {
-        if (autoExec) {
+        // prevent autorunning cypher by prefixing w :auto hack
+        if (autoExec && !cmd.startsWith(':auto')) {
           const action = executeCommand(cmd, {
             id,
             source: commandSources.button
