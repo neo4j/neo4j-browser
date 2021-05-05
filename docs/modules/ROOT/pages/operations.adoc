@@ -1153,7 +1153,7 @@ http://localhost:8080/?cmd=params&arg={example:1,foo:"bar"}
 
 Neo4j Browser supports the following HTTP REST commands:
 
-* `:delet` -- HTTP DELETE.
+* `:delete` -- HTTP DELETE.
 * `:get`  -- HTTP GET.
 * `:head` -- HTTP HEAD.
 * `:post` -- HTTP POST.
