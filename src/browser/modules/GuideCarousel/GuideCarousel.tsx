@@ -66,7 +66,7 @@ function GuidesCarousel({
   const moreThanOneSlide = slides.length > 1
 
   return (
-    <StyledCarousel>
+    <StyledCarousel className="disable-font-ligatures">
       <Directives content={currentSlide} />
       {moreThanOneSlide && (
         <GuideNavContainer>
