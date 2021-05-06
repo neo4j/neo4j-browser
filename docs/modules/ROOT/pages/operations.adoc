@@ -95,7 +95,7 @@ User::
 
 If you are developing on your local machine with a single instance:
 
-* Default URL to Neo4j Browser is _http://localhost:7474_ (use your web browser).
+* Default URL to Neo4j Browser is _http://localhost:7474/browser_ (use your web browser).
 * Default connection URL to Neo4j is _bolt://localhost:7687_.
 
 
@@ -1063,12 +1063,12 @@ The syntax is:
 
 [source, browser URL, role=noheader]
 ----
-http://localhost:8080?dbms=[connectionURL]&db=[databaseName]
+http://localhost:7474/browser?dbms=[connectionURL]&db=[databaseName]
 ----
 
 [source, browser URL, role=noheader, subs="macros"]
 ----
-+http://localhost:8080?connectURL=[connectionURL]&db=[databaseName]+ label:deprecated[]
++http://localhost:7474/browser?connectURL=[connectionURL]&db=[databaseName]+ label:deprecated[]
 ----
 
 
@@ -1078,11 +1078,11 @@ This pre-populates the connection frame with:
 
 * Connect URL: `neo4j://localhost:7687`
 * Database: `neo4j123`
-* Username: `Example`
+* Username: `alice`
 
 [source, browser URL, role=noheader]
 ----
-http://localhost:8080/?dbms=neo4j://Example@localhost:7687&db=neo4j123
+http://localhost:7474/browser?dbms=neo4j://alice@localhost:7687&db=neo4j123
 ----
 ====
 
@@ -1102,7 +1102,7 @@ The syntax is:
 
 [source, browser URL, role=noheader]
 ----
-http://localhost:8080?cmd=[command]&arg=[argument]
+http://localhost:7474/browser?cmd=[command]&arg=[argument]
 ----
 
 
@@ -1115,7 +1115,7 @@ http://localhost:8080?cmd=[command]&arg=[argument]
 
 [source, browser URL, role=noheader]
 ----
-http://localhost:8080/?cmd=play&arg=movies
+http://localhost:7474/browser?cmd=play&arg=movies
 ----
 ====
 
@@ -1129,7 +1129,7 @@ http://localhost:8080/?cmd=play&arg=movies
 
 [source, browser URL, role=noheader]
 ----
-http://localhost:8080/?cmd=param&arg=example=>1
+http://localhost:7474/browser?cmd=param&arg=example=>1
 ----
 ====
 
@@ -1143,7 +1143,7 @@ http://localhost:8080/?cmd=param&arg=example=>1
 
 [source, browser URL, role=noheader]
 ----
-http://localhost:8080/?cmd=params&arg={example:1,foo:"bar"}
+http://localhost:7474/browser?cmd=params&arg={example:1,foo:"bar"}
 ----
 ====
 
@@ -1153,7 +1153,7 @@ http://localhost:8080/?cmd=params&arg={example:1,foo:"bar"}
 
 Neo4j Browser supports the following HTTP REST commands:
 
-* `:delet` -- HTTP DELETE.
+* `:delete` -- HTTP DELETE.
 * `:get`  -- HTTP GET.
 * `:head` -- HTTP HEAD.
 * `:post` -- HTTP POST.
