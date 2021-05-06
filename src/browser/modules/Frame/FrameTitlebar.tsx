@@ -265,35 +265,6 @@ function FrameTitlebar(props: FrameTitleBarProps) {
     }
   }
 
-  const titleBarRef = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    // We want clicks outside the frame itself, not just the titlebar.
-    // Because of how the component tree is built (we don't have a
-    // reference to the full frame body) we'd need to pass
-    // a ref from each parent to avoid this dom traversal
-    function handleClickOutside(event: MouseEvent) {
-      const frameElement =
-        titleBarRef.current && titleBarRef.current.closest('article')
-
-      if (
-        event.target instanceof Element &&
-        !frameElement?.contains(event.target)
-      ) {
-        // a really quick click will lose some of the last edits
-        const editorRefVal = editorRef.current?.getValue()
-        if (editorRefVal && editorRefVal !== editorValue) {
-          setEditorValue(editorRefVal)
-        }
-        setRenderEditor(false)
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  })
-
   const { frame = {} } = props
   const fullscreenIcon = props.fullscreen ? <ContractIcon /> : <ExpandIcon />
   const expandCollapseIcon = props.collapse ? <DownIcon /> : <UpIcon />
@@ -301,9 +272,12 @@ function FrameTitlebar(props: FrameTitleBarProps) {
   // don't show it as history as well
   const history = (frame.history || []).slice(1)
   return (
-    <StyledFrameTitleBar ref={titleBarRef}>
+    <StyledFrameTitleBar>
       {renderEditor ? (
-        <FrameTitleEditorContainer data-testid="frameCommand">
+        <FrameTitleEditorContainer
+          onClick={onPreviewClick}
+          data-testid="frameCommand"
+        >
           <Monaco
             history={history}
             useDb={frame.useDb}
