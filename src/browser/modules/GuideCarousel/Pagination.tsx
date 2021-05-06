@@ -33,16 +33,17 @@ export function paginationHelper(
   itemCount: number,
   selectedIndex: number
 ): (number | DotDotDot)[] {
-  /* Pagination example (C denotes current and blank steps replaced with ...)
-     C 2 3 4 5       9 
-     1 C 3 4 5       9 
-     1 2 C 4 5       9 
-     1 2 3 C 5       9 
-     1     4 C 6     9 
-     1       5 C 7 8 9 
-     1       5 6 C 8 9
-     1       5 6 7 C 9
-     1       5 6 7 8 C
+  /* We aim to always show 7 symbols
+     Pagination example (C denotes current index and D denotes dots)
+     C 2 3 4 5 D 9 
+     1 C 3 4 5 D 9
+     1 2 C 4 5 D 9
+     1 2 3 C 5 D 9
+     1 D 4 C 6 D 9
+     1 D 5 C 7 8 9 
+     1 D 5 6 C 8 9
+     1 D 5 6 7 C 9
+     1 D 5 6 7 8 C
 */
   const lastIndex = itemCount - 1
   const outOfBounds = selectedIndex < 0 || selectedIndex > lastIndex
