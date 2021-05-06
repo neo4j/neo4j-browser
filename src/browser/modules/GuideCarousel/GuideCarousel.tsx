@@ -26,9 +26,9 @@ import {
   GuideUl,
   StyledCarousel,
   GuideProgressContainer,
-  StyledProgressCount,
-  CarouselIndicator
+  StyledProgressCount
 } from '../Sidebar/styled'
+import Pagination from './Pagination'
 
 type GuideCarouselProps = {
   slides: JSX.Element[]
@@ -75,20 +75,11 @@ function GuidesCarousel({
           </GuideNavButton>
           <GuideUl>
             <GuideProgressContainer>
-              <StyledProgressCount>
-                {`${currentSlideIndex + 1} / ${slides.length}`}
-              </StyledProgressCount>
-              {slides.slice(0, 25).map((_, i) => (
-                <CarouselIndicator
-                  key={i}
-                  aria-label={`${i + 1}`}
-                  onClick={() => gotoSlide(i)}
-                  active={i === currentSlideIndex}
-                >
-                  <span />
-                </CarouselIndicator>
-              ))}
-              {slides.length >= 25 && '...'}
+              <Pagination
+                gotoIndex={gotoSlide}
+                itemCount={slides.length}
+                selectedIndex={currentSlideIndex}
+              />
             </GuideProgressContainer>
           </GuideUl>
           <GuideNavButton onClick={nextSlide} disabled={onLastSlide}>
