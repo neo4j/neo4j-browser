@@ -200,7 +200,7 @@
     "styled-components": "^4.0.0",
     "suber": "^5.0.1",
     "unist-util-visit": "^2.0.2",
-    "url-parse": "^1.1.9",
+    "url-parse": "^1.5.0",
     "uuid": "^3.0.1"
   }
 }
