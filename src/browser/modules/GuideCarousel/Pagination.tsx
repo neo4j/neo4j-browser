@@ -19,7 +19,7 @@
  */
 
 import React from 'react'
-import { PaginationItem } from 'semantic-ui-react'
+import { PaginationItem } from './styled'
 type PaginationProps = {
   gotoIndex: (index: number) => void
   itemCount: number
