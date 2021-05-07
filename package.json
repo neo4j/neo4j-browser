@@ -29,6 +29,7 @@
     "e2e-local": "CYPRESS_E2E_TEST_ENV=\"local\" cypress run",
     "e2e-local-open": "CYPRESS_E2E_TEST_ENV=\"local\" cypress open",
     "format": "prettier-eslint --write 'src/**/!(*.min).{js,jsx,ts,tsx,css,json}' 'e2e_tests/**/*.{js,jsx,ts,tsx,css,json}' 'scripts/**/*.{js,jsx,ts,tsx,css,json}' 'build_scripts/**/*.{js,jsx,ts,tsx,css,json}'",
+    "jest": "jest --coverage",
     "lint": "eslint --fix --ext .ts --ext .tsx ./",
     "precommit": "lint-staged",
     "prepare-jar": "node ./scripts/prepare-mvn-package.js",
