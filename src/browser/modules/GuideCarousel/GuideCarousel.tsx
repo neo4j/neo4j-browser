@@ -69,7 +69,11 @@ function GuidesCarousel({
       <Directives content={currentSlide} />
       {moreThanOneSlide && (
         <GuideNavContainer>
-          <GuideNavButton onClick={prevSlide} disabled={onFirstSlide}>
+          <GuideNavButton
+            onClick={prevSlide}
+            disabled={onFirstSlide}
+            data-testid="guidePreviousSlide"
+          >
             Previous
           </GuideNavButton>
           <GuideUl>
@@ -81,7 +85,11 @@ function GuidesCarousel({
               />
             </GuideProgressContainer>
           </GuideUl>
-          <GuideNavButton onClick={nextSlide} disabled={onLastSlide}>
+          <GuideNavButton
+            onClick={nextSlide}
+            disabled={onLastSlide}
+            data-testid="guideNextSlide"
+          >
             Next
           </GuideNavButton>
         </GuideNavContainer>

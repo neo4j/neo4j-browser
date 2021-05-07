@@ -84,21 +84,25 @@ function Pagination({
 }: PaginationProps): JSX.Element {
   return (
     <>
-      {paginationHelper(itemCount, selectedIndex).map((symbol, index) => {
-        if (symbol === '...') {
-          return <span key={index}>…</span>
-        } else {
-          return (
-            <PaginationItem
-              active={selectedIndex === symbol}
-              key={index}
-              onClick={() => gotoIndex(symbol)}
-            >
-              {symbol + 1}
-            </PaginationItem>
-          )
+      {paginationHelper(itemCount, selectedIndex).map(
+        (slideIndexOrDots, index) => {
+          if (slideIndexOrDots === '...') {
+            return <span key={index}>…</span>
+          } else {
+            const displayNumber = slideIndexOrDots + 1
+            return (
+              <PaginationItem
+                active={selectedIndex === slideIndexOrDots}
+                key={index}
+                onClick={() => gotoIndex(slideIndexOrDots)}
+                data-testid={`pagination-${displayNumber}`}
+              >
+                {displayNumber}
+              </PaginationItem>
+            )
+          }
         }
-      })}
+      )}
     </>
   )
 }
