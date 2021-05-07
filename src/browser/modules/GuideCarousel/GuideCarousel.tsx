@@ -25,8 +25,7 @@ import {
   GuideNavButton,
   GuideUl,
   StyledCarousel,
-  GuideProgressContainer,
-  StyledProgressCount
+  GuideProgressContainer
 } from '../Sidebar/styled'
 import Pagination from './Pagination'
 

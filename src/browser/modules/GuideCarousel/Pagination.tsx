@@ -19,6 +19,7 @@
  */
 
 import React from 'react'
+import { PaginationItem } from 'semantic-ui-react'
 type PaginationProps = {
   gotoIndex: (index: number) => void
   itemCount: number
@@ -88,9 +89,13 @@ function Pagination({
           return <span key={index}>…</span>
         } else {
           return (
-            <span key={index} onClick={() => gotoIndex(symbol)}>
+            <PaginationItem
+              active={selectedIndex === symbol}
+              key={index}
+              onClick={() => gotoIndex(symbol)}
+            >
               {symbol + 1}
-            </span>
+            </PaginationItem>
           )
         }
       })}
