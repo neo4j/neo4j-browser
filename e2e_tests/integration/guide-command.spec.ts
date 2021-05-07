@@ -20,7 +20,7 @@
 
 /* global Cypress, cy, before */
 
-describe('Play command', () => {
+describe('Guide command', () => {
   before(function() {
     cy.visit(Cypress.config('url'))
       .title()

@@ -25,7 +25,8 @@ type PaginationProps = {
   itemCount: number
   selectedIndex: number
 }
-type DotDotDot = '...'
+const DOTS = '...'
+type DotDotDot = typeof DOTS
 
 const range = (from: number, to: number) =>
   Array.from({ length: from ? to - from + 1 : to }, (_, i) => i + from)
@@ -56,23 +57,23 @@ export function paginationHelper(
 
   // early splits
   if (selectedIndex < 4) {
-    return [...range(0, 5), '...', lastIndex]
+    return [...range(0, 5), DOTS, lastIndex]
   }
 
   // late splits
   const isInlastFiveItems = itemCount - selectedIndex < 5
   if (isInlastFiveItems) {
-    return [0, '...', ...range(itemCount - 5, lastIndex)]
+    return [0, DOTS, ...range(itemCount - 5, lastIndex)]
   }
 
   // two splits
   return [
     0,
-    '...',
+    DOTS,
     selectedIndex - 1,
     selectedIndex,
     selectedIndex + 1,
-    '...',
+    DOTS,
     lastIndex
   ]
 }
@@ -86,7 +87,7 @@ function Pagination({
     <>
       {paginationHelper(itemCount, selectedIndex).map(
         (slideIndexOrDots, index) => {
-          if (slideIndexOrDots === '...') {
+          if (slideIndexOrDots === DOTS) {
             return <span key={index}>…</span>
           } else {
             const displayNumber = slideIndexOrDots + 1
