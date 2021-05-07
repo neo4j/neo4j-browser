@@ -87,8 +87,8 @@ const directives = [
   }
 ]
 
-const prependPlayIcon = (element: any) => {
-  prependIcon(element, 'fa fa-play-circle-o')
+const prependPlayIcon = (element: any, onClick: () => void) => {
+  prependIcon(element, 'fa fa-play-circle-o', onClick)
 }
 
 const bindDynamicInputToDom = (element: any) => {
@@ -123,7 +123,14 @@ export const Directives = (props: any) => {
             e.firstChild?.nodeName !== 'I' &&
             !e.classList.contains('remove-play-icon')
           ) {
-            prependPlayIcon(e)
+            prependPlayIcon(e, () => {
+              addClass(e, 'clicked')
+              props.onItemClick(
+                directive.valueExtractor(e),
+                true,
+                props.originFrameId
+              )
+            })
           }
 
           // If we use add event listener we need to remove it afterwards

@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global HTMLElement */
 const addClass = (node: any, className: any) => {
   if (!(node instanceof HTMLElement && typeof className === 'string')) {
     return
@@ -31,11 +30,17 @@ const addClass = (node: any, className: any) => {
   }
 }
 
-const prependIcon = (element: any, classname: any) => {
+const prependIcon = (element: any, classname: string, onClick: () => void) => {
   const icon = document.createElement('i')
   addClass(icon, classname)
   icon.setAttribute('style', 'padding-right:4px')
   element.insertBefore(icon, element.firstChild)
+  onClick &&
+    icon.addEventListener('click', e => {
+      // prevent populating the editor as well
+      e.stopPropagation()
+      onClick()
+    })
 }
 
 export { addClass, prependIcon }
