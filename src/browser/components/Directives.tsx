@@ -117,7 +117,7 @@ export const Directives = (props: any) => {
   const callback = (elem: HTMLDivElement | null) => {
     if (elem) {
       directives.forEach(directive => {
-        const elems = elem.querySelectorAll(directive.selector)
+        const elems = elem.querySelectorAll<HTMLElement>(directive.selector)
         Array.from(elems).forEach(e => {
           if (
             e.firstChild?.nodeName !== 'I' &&
@@ -133,8 +133,6 @@ export const Directives = (props: any) => {
             })
           }
 
-          // If we use add event listener we need to remove it afterwards
-          // @ts-expect-error
           e.onclick = () => {
             addClass(e, 'clicked')
             return props.onItemClick(

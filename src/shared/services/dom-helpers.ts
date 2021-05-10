@@ -35,12 +35,14 @@ const prependIcon = (element: any, classname: string, onClick: () => void) => {
   addClass(icon, classname)
   icon.setAttribute('style', 'padding-right:4px')
   element.insertBefore(icon, element.firstChild)
-  onClick &&
-    icon.addEventListener('click', e => {
+
+  if (onClick) {
+    icon.onclick = e => {
       // prevent populating the editor as well
       e.stopPropagation()
       onClick()
-    })
+    }
+  }
 }
 
 export { addClass, prependIcon }
