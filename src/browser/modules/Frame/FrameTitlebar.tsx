@@ -59,7 +59,8 @@ import {
   RunIcon,
   UpIcon,
   SaveFavoriteIcon,
-  StopIcon
+  StopIcon,
+  NavIcon
 } from 'browser-components/icons/Icons'
 import {
   DottedLineHover,
@@ -111,6 +112,8 @@ type FrameTitleBarProps = FrameTitleBarBaseProps & {
   request: BrowserRequest | null
   isRelateAvailable: boolean
   showAllButtons: boolean
+  toggleButtons: () => void
+  showToggleButtons: boolean
   isTouchScreen: boolean
   newFavorite: (cmd: string) => void
   newProjectFile: (cmd: string) => void
@@ -259,7 +262,7 @@ function FrameTitlebar(props: FrameTitleBarProps) {
     props.reRun(frame, cmd)
   }
 
-  const { frame = {}, showAllButtons } = props
+  const { frame = {}, showAllButtons, toggleButtons, showToggleButtons } = props
   const fullscreenIcon = props.fullscreen ? <ContractIcon /> : <ExpandIcon />
   const expandCollapseIcon = props.collapse ? <DownIcon /> : <UpIcon />
   // the last run command (history index 1) is already in the editor
@@ -402,6 +405,11 @@ function FrameTitlebar(props: FrameTitleBarProps) {
             {expandCollapseIcon}
           </FrameButton>
         </StyledFrameTitleButtonGroup>
+        <Render if={showToggleButtons}>
+          <FrameButton title="More..." onClick={() => toggleButtons()}>
+            <NavIcon />
+          </FrameButton>
+        </Render>
         <Render if={frame.type === 'edit'}>
           <FrameButton title="Run" onClick={() => props.onRunClick()}>
             <SVGInline svg={controlsPlay} width="12px" />
