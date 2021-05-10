@@ -216,3 +216,10 @@ export const StyledFrameCommand = styled.label<{ selectedDb: string }>`
     font-variant-ligatures: none !important;
   } 
 `
+
+export const StyledFrameTitleButtonGroup = styled.div<{
+  showAllButtons: boolean
+}>`
+  display: ${props => (props.showAllButtons ? 'block' : 'none')};
+  height: 39px;
+`

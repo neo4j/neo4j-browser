@@ -73,7 +73,8 @@ import {
   StyledFrameTitleBar,
   StyledFrameTitlebarButtonSection,
   FrameTitleEditorContainer,
-  StyledFrameCommand
+  StyledFrameCommand,
+  StyledFrameTitleButtonGroup
 } from './styled'
 import {
   downloadPNGFromSVG,
@@ -109,6 +110,8 @@ type FrameTitleBarBaseProps = {
 type FrameTitleBarProps = FrameTitleBarBaseProps & {
   request: BrowserRequest | null
   isRelateAvailable: boolean
+  showAllButtons: boolean
+  isTouchScreen: boolean
   newFavorite: (cmd: string) => void
   newProjectFile: (cmd: string) => void
   cancelQuery: (requestId: string) => void
@@ -256,7 +259,7 @@ function FrameTitlebar(props: FrameTitleBarProps) {
     props.reRun(frame, cmd)
   }
 
-  const { frame = {} } = props
+  const { frame = {}, showAllButtons } = props
   const fullscreenIcon = props.fullscreen ? <ContractIcon /> : <ExpandIcon />
   const expandCollapseIcon = props.collapse ? <DownIcon /> : <UpIcon />
   // the last run command (history index 1) is already in the editor
@@ -304,95 +307,101 @@ function FrameTitlebar(props: FrameTitleBarProps) {
             <RunIcon />
           )}
         </FrameButton>
-        <FrameButton
-          title="Save as Favorite"
-          data-testid="frame-Favorite"
-          onClick={() => {
-            props.newFavorite(frame.cmd)
-          }}
-        >
-          <SaveFavoriteIcon />
-        </FrameButton>
-        <Render if={displayDownloadIcon()}>
-          <DropdownButton data-testid="frame-export-dropdown">
-            <DownloadIcon />
-            <Render if={canExport()}>
-              <DropdownList>
-                <DropdownContent>
-                  <Render if={props.isRelateAvailable}>
-                    <DropdownItem
-                      onClick={() => props.newProjectFile(frame.cmd)}
-                    >
-                      Save as project file
-                    </DropdownItem>
-                    <DropDownItemDivider />
-                  </Render>
-                  <Render if={hasData() && frame.type === 'cypher'}>
-                    <DropdownItem onClick={() => exportCSV(props.getRecords())}>
-                      Export CSV
-                    </DropdownItem>
-                    <DropdownItem
-                      onClick={() => exportJSON(props.getRecords())}
-                    >
-                      Export JSON
-                    </DropdownItem>
-                  </Render>
-                  <Render if={props.visElement}>
-                    <DropdownItem onClick={() => exportPNG()}>
-                      Export PNG
-                    </DropdownItem>
-                    <DropdownItem onClick={() => exportSVG()}>
-                      Export SVG
-                    </DropdownItem>
-                  </Render>
-                  <Render if={canExportTXT()}>
-                    <DropdownItem onClick={exportTXT}>Export TXT</DropdownItem>
-                  </Render>
-                  <Render if={hasData() && frame.type === 'style'}>
-                    <DropdownItem
-                      data-testid="exportGrassButton"
-                      onClick={() => exportGrass(props.getRecords())}
-                    >
-                      Export GraSS
-                    </DropdownItem>
-                  </Render>
-                </DropdownContent>
-              </DropdownList>
-            </Render>
-          </DropdownButton>
-        </Render>
-        <FrameButton
-          title="Pin at top"
-          onClick={() => {
-            props.togglePin()
-            // using frame.isPinned causes issues when there are multiple frames in one
-            props.togglePinning(frame.id, props.pinned)
-          }}
-          pressed={props.pinned}
-        >
-          <PinIcon />
-        </FrameButton>
-        <FrameButton
-          title={props.fullscreen ? 'Close fullscreen' : 'Fullscreen'}
-          onClick={() => {
-            props.fullscreenToggle()
-            props.trackFullscreenToggle()
-          }}
-        >
-          {fullscreenIcon}
-        </FrameButton>
-        <FrameButton
-          title={props.collapse ? 'Expand' : 'Collapse'}
-          onClick={() => {
-            props.collapseToggle()
-            props.trackCollapseToggle()
-            if (!props.collapse) {
-              setRenderEditor(false)
-            }
-          }}
-        >
-          {expandCollapseIcon}
-        </FrameButton>
+        <StyledFrameTitleButtonGroup showAllButtons={showAllButtons}>
+          <FrameButton
+            title="Save as Favorite"
+            data-testid="frame-Favorite"
+            onClick={() => {
+              props.newFavorite(frame.cmd)
+            }}
+          >
+            <SaveFavoriteIcon />
+          </FrameButton>
+          <Render if={displayDownloadIcon()}>
+            <DropdownButton data-testid="frame-export-dropdown">
+              <DownloadIcon />
+              <Render if={canExport()}>
+                <DropdownList>
+                  <DropdownContent>
+                    <Render if={props.isRelateAvailable}>
+                      <DropdownItem
+                        onClick={() => props.newProjectFile(frame.cmd)}
+                      >
+                        Save as project file
+                      </DropdownItem>
+                      <DropDownItemDivider />
+                    </Render>
+                    <Render if={hasData() && frame.type === 'cypher'}>
+                      <DropdownItem
+                        onClick={() => exportCSV(props.getRecords())}
+                      >
+                        Export CSV
+                      </DropdownItem>
+                      <DropdownItem
+                        onClick={() => exportJSON(props.getRecords())}
+                      >
+                        Export JSON
+                      </DropdownItem>
+                    </Render>
+                    <Render if={props.visElement}>
+                      <DropdownItem onClick={() => exportPNG()}>
+                        Export PNG
+                      </DropdownItem>
+                      <DropdownItem onClick={() => exportSVG()}>
+                        Export SVG
+                      </DropdownItem>
+                    </Render>
+                    <Render if={canExportTXT()}>
+                      <DropdownItem onClick={exportTXT}>
+                        Export TXT
+                      </DropdownItem>
+                    </Render>
+                    <Render if={hasData() && frame.type === 'style'}>
+                      <DropdownItem
+                        data-testid="exportGrassButton"
+                        onClick={() => exportGrass(props.getRecords())}
+                      >
+                        Export GraSS
+                      </DropdownItem>
+                    </Render>
+                  </DropdownContent>
+                </DropdownList>
+              </Render>
+            </DropdownButton>
+          </Render>
+          <FrameButton
+            title="Pin at top"
+            onClick={() => {
+              props.togglePin()
+              // using frame.isPinned causes issues when there are multiple frames in one
+              props.togglePinning(frame.id, props.pinned)
+            }}
+            pressed={props.pinned}
+          >
+            <PinIcon />
+          </FrameButton>
+          <FrameButton
+            title={props.fullscreen ? 'Close fullscreen' : 'Fullscreen'}
+            onClick={() => {
+              props.fullscreenToggle()
+              props.trackFullscreenToggle()
+            }}
+          >
+            {fullscreenIcon}
+          </FrameButton>
+          <FrameButton
+            title={props.collapse ? 'Expand' : 'Collapse'}
+            onClick={() => {
+              props.collapseToggle()
+              props.trackCollapseToggle()
+              if (!props.collapse) {
+                setRenderEditor(false)
+              }
+            }}
+          >
+            {expandCollapseIcon}
+          </FrameButton>
+        </StyledFrameTitleButtonGroup>
         <Render if={frame.type === 'edit'}>
           <FrameButton title="Run" onClick={() => props.onRunClick()}>
             <SVGInline svg={controlsPlay} width="12px" />

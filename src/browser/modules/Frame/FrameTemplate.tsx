@@ -19,7 +19,10 @@
  */
 
 import React, { useRef, useState, useEffect } from 'react'
+import { connect } from 'react-redux'
 import { Frame } from 'shared/modules/stream/streamDuck'
+import { isTouchScreen } from 'shared/modules/app/appDuck'
+import { GlobalState } from 'shared/globalState'
 import FrameTitlebar from './FrameTitlebar'
 
 import {
@@ -45,7 +48,13 @@ type FrameTemplateProps = {
   statusbar?: JSX.Element | null
 }
 
-function FrameTemplate({
+type FrameTemplateConnectedProps = FrameTemplateProps & {
+  isTouchScreen: boolean
+}
+
+const noOp = () => {}
+
+function _FrameTemplate({
   header,
   contents,
   onResize = () => {
@@ -58,9 +67,12 @@ function FrameTemplate({
   runQuery,
   sidebar,
   aside,
-  statusbar
-}: FrameTemplateProps): JSX.Element {
+  statusbar,
+  isTouchScreen
+}: FrameTemplateConnectedProps): JSX.Element {
   const [lastHeight, setLastHeight] = useState(10)
+  const [isMouseOver, setIsMouseOver] = useState(false)
+  const [touchShowButtons, setTouchShowButtons] = useState(false)
   const frameContentElementRef = useRef<any>(null)
 
   const {
@@ -71,6 +83,21 @@ function FrameTemplate({
     toggleCollapse,
     togglePin
   } = useSizeToggles()
+
+  const showAllButtons: boolean = isTouchScreen ? touchShowButtons : isMouseOver
+  const toggleButtons = isTouchScreen
+    ? () => setTouchShowButtons(mo => !mo)
+    : noOp
+  const onContainerMouseEnter = isTouchScreen
+    ? noOp
+    : () => {
+        setIsMouseOver(true)
+      }
+  const onContainerMouseLeave = isTouchScreen
+    ? noOp
+    : () => {
+        setIsMouseOver(false)
+      }
 
   useEffect(() => {
     if (!frameContentElementRef.current?.clientHeight) return
@@ -96,9 +123,14 @@ function FrameTemplate({
       className={classNames.join(' ')}
       data-testid="frame"
       fullscreen={isFullscreen}
+      onMouseEnter={onContainerMouseEnter}
+      onMouseLeave={onContainerMouseLeave}
     >
       {header && (
         <FrameTitlebar
+          showAllButtons={showAllButtons}
+          toggleButtons={toggleButtons}
+          showToggleButtons={isTouchScreen}
           frame={header}
           fullscreen={isFullscreen}
           fullscreenToggle={toggleFullScreen}
@@ -162,5 +194,11 @@ function useSizeToggles() {
     togglePin
   }
 }
+
+const mapStateToProps = (state: GlobalState) => ({
+  isTouchScreen: isTouchScreen(state)
+})
+
+const FrameTemplate = connect(mapStateToProps)(_FrameTemplate)
 
 export default FrameTemplate

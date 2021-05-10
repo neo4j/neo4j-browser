@@ -216,6 +216,7 @@ export const DropdownButton = styled.li`
   text-align: center;
   line-height: 40px;
   display: inline-block;
+  vertical-align: top;
   /* float: left; */
   &:hover {
     background-color: ${props => props.theme.secondaryButtonBackgroundHover};

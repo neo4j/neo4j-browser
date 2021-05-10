@@ -44,6 +44,8 @@ export const inWebEnv = (state: any) => getEnv(state) === WEB
 export const inCloudEnv = (state: any) => getEnv(state) === CLOUD
 export const inWebBrowser = (state: any) => [WEB, CLOUD].includes(getEnv(state))
 export const inDesktop = (state: any) => getEnv(state) === DESKTOP
+export const isTouchScreen = (state: any) =>
+  (state[NAME] || {}).isTouchScreen || false
 
 export const getAllowedBoltSchemes = (state: any, encryptionFlag?: any) => {
   const isHosted = inWebBrowser(state)
@@ -74,7 +76,8 @@ export default function reducer(state = { hostedUrl: null }, action: any) {
         relateUrl: action.relateUrl,
         relateApiToken: action.relateApiToken,
         relateProjectId: action.relateProjectId,
-        neo4jDesktopGraphAppId: action.neo4jDesktopGraphAppId
+        neo4jDesktopGraphAppId: action.neo4jDesktopGraphAppId,
+        isTouchScreen: action.isTouchScreen
       }
     default:
       return state
