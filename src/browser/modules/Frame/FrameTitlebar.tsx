@@ -91,6 +91,7 @@ import Monaco, { MonacoHandles } from '../Editor/Monaco'
 import { Bus } from 'suber'
 import { addFavorite } from 'shared/modules/favorites/favoritesDuck'
 import { isMac } from '../App/keyboardShortcuts'
+import { MAIN_WRAPPER_DOM_ID } from '../App/App'
 
 type FrameTitleBarBaseProps = {
   frame: any
@@ -265,6 +266,40 @@ function FrameTitlebar(props: FrameTitleBarProps) {
     }
   }
 
+  const titleBarRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    // We want clicks outside the frame itself, not just the titlebar.
+    // Because of how the component tree is built (we don't have a
+    // reference to the full frame body) we'd need to pass
+    // a ref from each parent to avoid this dom traversal
+    function handleClickOutside(event: MouseEvent) {
+      if (!(event.target instanceof Element)) {
+        return
+      }
+      const insideFrame = titleBarRef.current
+        ?.closest('article')
+        ?.contains(event.target)
+
+      const insideMainWrapper = document
+        .getElementById(MAIN_WRAPPER_DOM_ID)
+        ?.contains(event.target)
+
+      if (!insideFrame && insideMainWrapper) {
+        // a really quick click will lose some of the last edits
+        const editorRefVal = editorRef.current?.getValue()
+        if (editorRefVal && editorRefVal !== editorValue) {
+          setEditorValue(editorRefVal)
+        }
+        setRenderEditor(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  })
+
   const { frame = {} } = props
   const fullscreenIcon = props.fullscreen ? <ContractIcon /> : <ExpandIcon />
   const expandCollapseIcon = props.collapse ? <DownIcon /> : <UpIcon />
@@ -272,7 +307,7 @@ function FrameTitlebar(props: FrameTitleBarProps) {
   // don't show it as history as well
   const history = (frame.history || []).slice(1)
   return (
-    <StyledFrameTitleBar>
+    <StyledFrameTitleBar ref={titleBarRef}>
       {renderEditor ? (
         <FrameTitleEditorContainer
           onClick={onPreviewClick}

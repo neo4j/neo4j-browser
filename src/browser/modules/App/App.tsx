@@ -86,6 +86,7 @@ import {
 import { METRICS_EVENT, udcInit } from 'shared/modules/udc/udcDuck'
 import { useKeyboardShortcuts } from './keyboardShortcuts'
 import PerformanceOverlay from './PerformanceOverlay'
+export const MAIN_WRAPPER_DOM_ID = 'MAIN_WRAPPER_DOM_ID'
 
 declare let SEGMENT_KEY: string
 
@@ -211,7 +212,7 @@ export function App(props: any) {
                   <ErrorBoundary>
                     <Sidebar openDrawer={drawer} onNavClick={handleNavClick} />
                   </ErrorBoundary>
-                  <StyledMainWrapper>
+                  <StyledMainWrapper id={MAIN_WRAPPER_DOM_ID}>
                     <Main
                       activeConnection={activeConnection}
                       connectionState={connectionState}
