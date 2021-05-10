@@ -49,11 +49,16 @@ export function paginationHelper(
 */
   const lastIndex = itemCount - 1
   const outOfBounds = selectedIndex < 0 || selectedIndex > lastIndex
-  if (outOfBounds) return []
+  if (outOfBounds) {
+    return []
+  }
 
   const baseNumbers = range(0, itemCount)
+
   // no split
-  if (itemCount <= 7) return baseNumbers
+  if (itemCount <= 7) {
+    return baseNumbers
+  }
 
   // early splits
   if (selectedIndex < 4) {
