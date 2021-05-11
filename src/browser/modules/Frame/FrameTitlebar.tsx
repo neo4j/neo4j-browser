@@ -295,21 +295,6 @@ function FrameTitlebar(props: FrameTitleBarProps) {
         </StyledFrameCommand>
       )}
       <StyledFrameTitlebarButtonSection>
-        <FrameButton
-          data-testid="rerunFrameButton"
-          title="Rerun"
-          onClick={() =>
-            props.request?.status === REQUEST_STATUS_PENDING
-              ? props.cancelQuery(frame.requestId)
-              : run(editorValue)
-          }
-        >
-          {props.request?.status === REQUEST_STATUS_PENDING ? (
-            <StopIcon />
-          ) : (
-            <RunIcon />
-          )}
-        </FrameButton>
         <StyledFrameTitleButtonGroup showAllButtons={showAllButtons}>
           <FrameButton
             title="Save as Favorite"
@@ -410,6 +395,21 @@ function FrameTitlebar(props: FrameTitleBarProps) {
             <NavIcon />
           </FrameButton>
         </Render>
+        <FrameButton
+          data-testid="rerunFrameButton"
+          title="Rerun"
+          onClick={() =>
+            props.request?.status === REQUEST_STATUS_PENDING
+              ? props.cancelQuery(frame.requestId)
+              : run(editorValue)
+          }
+        >
+          {props.request?.status === REQUEST_STATUS_PENDING ? (
+            <StopIcon />
+          ) : (
+            <RunIcon />
+          )}
+        </FrameButton>
         <Render if={frame.type === 'edit'}>
           <FrameButton title="Run" onClick={() => props.onRunClick()}>
             <SVGInline svg={controlsPlay} width="12px" />
