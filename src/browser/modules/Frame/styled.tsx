@@ -220,9 +220,11 @@ export const StyledFrameCommand = styled.label<{ selectedDb: string }>`
 export const StyledFrameTitleButtonGroup = styled.div<{
   buttonCount: number
   showAllButtons: boolean
-  buttonsShown: boolean
+  buttonsAnimating: boolean
 }>`
-  overflow: ${props => (props.buttonsShown ? 'unset' : 'hidden')}
+  position: relative;
+  overflow: ${props =>
+    props.buttonsAnimating || !props.showAllButtons ? 'hidden' : 'unset'}
   width: ${props =>
     props.showAllButtons
       ? dim.frameButtonWidth * props.buttonCount + 'px'

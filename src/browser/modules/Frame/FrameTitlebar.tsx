@@ -134,7 +134,7 @@ type FrameTitleBarProps = FrameTitleBarBaseProps & {
 function FrameTitlebar(props: FrameTitleBarProps) {
   const [editorValue, setEditorValue] = useState(props.frame.cmd)
   const [renderEditor, setRenderEditor] = useState(props.frame.isRerun)
-  const [buttonsShown, setButtonsShown] = useState(false)
+  const [buttonsAnimating, setButtonsAnimating] = useState(false)
   useEffect(() => {
     // makes sure the frame is updated as links in frame is followed
     editorRef.current?.setValue(props.frame.cmd)
@@ -157,14 +157,10 @@ function FrameTitlebar(props: FrameTitleBarProps) {
 
   useEffect(() => {
     const transitionStartCallback = () => {
-      if (!props.showAllButtons) {
-        setButtonsShown(false)
-      }
+      setButtonsAnimating(true)
     }
     const transitionEndCallback = () => {
-      if (props.showAllButtons) {
-        setButtonsShown(true)
-      }
+      setButtonsAnimating(false)
     }
     if (buttonGroupRef && buttonGroupRef.current) {
       buttonGroupRef.current.addEventListener(
@@ -188,7 +184,7 @@ function FrameTitlebar(props: FrameTitleBarProps) {
         )
       }
     }
-  }, [props.showAllButtons])
+  }, [])
 
   const gainFocusCallback = useCallback(() => {
     if (props.frame.isRerun) {
@@ -333,13 +329,13 @@ function FrameTitlebar(props: FrameTitleBarProps) {
           <DottedLineHover>{editorValue.split('\n').join(' ')}</DottedLineHover>
         </StyledFrameCommand>
       )}
-      <StyledFrameTitlebarButtonSection>
-        <StyledFrameTitleButtonGroup
-          ref={buttonGroupRef}
-          buttonCount={buttonGroupCount}
-          showAllButtons={showAllButtons}
-          buttonsShown={buttonsShown}
-        >
+      <StyledFrameTitleButtonGroup
+        ref={buttonGroupRef}
+        buttonCount={buttonGroupCount}
+        showAllButtons={showAllButtons}
+        buttonsAnimating={buttonsAnimating}
+      >
+        <StyledFrameTitlebarButtonSection>
           <FrameButton
             title="Save as Favorite"
             data-testid="frame-Favorite"
@@ -433,7 +429,9 @@ function FrameTitlebar(props: FrameTitleBarProps) {
           >
             {expandCollapseIcon}
           </FrameButton>
-        </StyledFrameTitleButtonGroup>
+        </StyledFrameTitlebarButtonSection>
+      </StyledFrameTitleButtonGroup>
+      <StyledFrameTitlebarButtonSection>
         <Render if={showToggleButtons}>
           <FrameButton title="More..." onClick={() => toggleButtons()}>
             <NavIcon />
