@@ -218,8 +218,15 @@ export const StyledFrameCommand = styled.label<{ selectedDb: string }>`
 `
 
 export const StyledFrameTitleButtonGroup = styled.div<{
+  buttonCount: number
   showAllButtons: boolean
+  buttonsShown: boolean
 }>`
-  display: ${props => (props.showAllButtons ? 'block' : 'none')};
+  overflow: ${props => (props.buttonsShown ? 'unset' : 'hidden')}
+  width: ${props =>
+    props.showAllButtons
+      ? dim.frameButtonWidth * props.buttonCount + 'px'
+      : '0px'};
+  transition: 0.2s ease-out;
   height: 39px;
 `

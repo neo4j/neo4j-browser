@@ -27,5 +27,6 @@ export const dim = {
   frameBodyHeight: 550,
   frameTitlebarHeight: 39,
   frameStatusbarHeight: 39,
-  frameBodyPadding: 20
+  frameBodyPadding: 20,
+  frameButtonWidth: 41
 }

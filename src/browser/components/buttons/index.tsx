@@ -63,7 +63,7 @@ const BaseButton: any = styled.span`
   color: ${props => props.theme.secondaryButtonText};
   background-color: ${props => props.theme.secondaryButtonBackground};
   border-radius: 50%;
-  width: 41px;
+  width: ${dim.frameButtonWidth}px;
   height: 39px;
   font-size: 28px;
   line-height: 28px;
@@ -328,7 +328,7 @@ const StyledFrameButton = styled.li`
   background-color: transparent;
   border-left: transparent;
   height: ${dim.frameTitlebarHeight}px;
-  width: 41px;
+  width: ${dim.frameButtonWidth}px;
   cursor: pointer;
   overflow: hidden;
   text-align: center;
@@ -346,7 +346,7 @@ export const StyledStatusSection = styled.li`
   color: ${props => props.theme.secondaryButtonText};
   background-color: transparent;
   height: ${dim.frameTitlebarHeight}px;
-  width: 41px;
+  width: ${dim.frameButtonWidth}px;
   cursor: pointer;
   overflow: hidden;
   text-align: center;

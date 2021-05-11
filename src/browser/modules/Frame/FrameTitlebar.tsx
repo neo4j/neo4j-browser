@@ -134,11 +134,13 @@ type FrameTitleBarProps = FrameTitleBarBaseProps & {
 function FrameTitlebar(props: FrameTitleBarProps) {
   const [editorValue, setEditorValue] = useState(props.frame.cmd)
   const [renderEditor, setRenderEditor] = useState(props.frame.isRerun)
+  const [buttonsShown, setButtonsShown] = useState(false)
   useEffect(() => {
     // makes sure the frame is updated as links in frame is followed
     editorRef.current?.setValue(props.frame.cmd)
   }, [props.frame.cmd])
   const editorRef = useRef<MonacoHandles>(null)
+  const buttonGroupRef = useRef<HTMLDivElement>(null)
 
   /* When the frametype is changed the titlebar is unmounted
   and replaced with a new instance. This means focus cursor position are lost.
@@ -152,6 +154,41 @@ function FrameTitlebar(props: FrameTitleBarProps) {
   A better solution is to change the frame titlebar to reside outside of the 
   frame contents.
   */
+
+  useEffect(() => {
+    const transitionStartCallback = () => {
+      if (!props.showAllButtons) {
+        setButtonsShown(false)
+      }
+    }
+    const transitionEndCallback = () => {
+      if (props.showAllButtons) {
+        setButtonsShown(true)
+      }
+    }
+    if (buttonGroupRef && buttonGroupRef.current) {
+      buttonGroupRef.current.addEventListener(
+        'transitionstart',
+        transitionStartCallback
+      )
+      buttonGroupRef.current.addEventListener(
+        'transitionend',
+        transitionEndCallback
+      )
+    }
+    return () => {
+      if (buttonGroupRef && buttonGroupRef.current) {
+        buttonGroupRef.current.removeEventListener(
+          'transitionstart',
+          transitionStartCallback
+        )
+        buttonGroupRef.current.removeEventListener(
+          'transitionend',
+          transitionEndCallback
+        )
+      }
+    }
+  }, [props.showAllButtons])
 
   const gainFocusCallback = useCallback(() => {
     if (props.frame.isRerun) {
@@ -265,6 +302,8 @@ function FrameTitlebar(props: FrameTitleBarProps) {
   const { frame = {}, showAllButtons, toggleButtons, showToggleButtons } = props
   const fullscreenIcon = props.fullscreen ? <ContractIcon /> : <ExpandIcon />
   const expandCollapseIcon = props.collapse ? <DownIcon /> : <UpIcon />
+  const hasDownloadButton = displayDownloadIcon()
+  const buttonGroupCount = 4 + (hasDownloadButton ? 1 : 0)
   // the last run command (history index 1) is already in the editor
   // don't show it as history as well
   const history = (frame.history || []).slice(1)
@@ -295,7 +334,12 @@ function FrameTitlebar(props: FrameTitleBarProps) {
         </StyledFrameCommand>
       )}
       <StyledFrameTitlebarButtonSection>
-        <StyledFrameTitleButtonGroup showAllButtons={showAllButtons}>
+        <StyledFrameTitleButtonGroup
+          ref={buttonGroupRef}
+          buttonCount={buttonGroupCount}
+          showAllButtons={showAllButtons}
+          buttonsShown={buttonsShown}
+        >
           <FrameButton
             title="Save as Favorite"
             data-testid="frame-Favorite"
@@ -305,7 +349,7 @@ function FrameTitlebar(props: FrameTitleBarProps) {
           >
             <SaveFavoriteIcon />
           </FrameButton>
-          <Render if={displayDownloadIcon()}>
+          <Render if={hasDownloadButton}>
             <DropdownButton data-testid="frame-export-dropdown">
               <DownloadIcon />
               <Render if={canExport()}>
