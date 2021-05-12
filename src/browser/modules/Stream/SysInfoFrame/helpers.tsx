@@ -102,6 +102,7 @@ export const Sysinfo = ({
           db.address,
           db.role,
           db.status,
+          db.home ? 'true' : '-',
           db.default ? 'true' : '-',
           db.error
         ]

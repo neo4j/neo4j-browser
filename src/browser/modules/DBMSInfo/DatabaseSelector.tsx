@@ -70,12 +70,16 @@ export const DatabaseSelector = ({
           onChange={selectionChange}
         >
           {uniqDatabases.map(db => {
-            const defaultStr = db.default ? ' - default' : ''
+            const defaultOrHomeStr = db.home
+              ? ' - home'
+              : db.default
+              ? ' - default'
+              : ''
 
             return (
               <option key={db.name} value={db.name}>
                 {db.name}
-                {defaultStr}
+                {defaultOrHomeStr}
               </option>
             )
           })}
