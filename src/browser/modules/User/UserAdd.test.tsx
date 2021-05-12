@@ -26,8 +26,9 @@ import { UserAdd } from './UserAdd'
 import { ROUTED_CYPHER_WRITE_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { listRolesQuery } from 'shared/modules/cypher/boltUserHelper'
 
-// Stubbing out title bar as it depends on store
+// Stubbing out title bar & template as they depend on store
 jest.mock('browser/modules/Frame/FrameTitlebar', () => () => null)
+jest.mock('browser/modules/Frame/FrameTemplate', () => () => null)
 
 describe('<UserAdd />', () => {
   it('should send a Cypher request to list user roles when mounted', () => {
