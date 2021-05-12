@@ -217,12 +217,16 @@ export const StyledFrameCommand = styled.label<{ selectedDb: string }>`
   } 
 `
 
+export const StyledFrameTitleButtonGroupContainer = styled.div`
+  position: relative;
+`
+
 export const StyledFrameTitleButtonGroup = styled.div<{
   buttonCount: number
   showAllButtons: boolean
   buttonsAnimating: boolean
 }>`
-  position: relative;
+  background: ${props => props.theme.secondaryBackground};
   overflow: ${props =>
     props.buttonsAnimating || !props.showAllButtons ? 'hidden' : 'unset'}
   width: ${props =>
