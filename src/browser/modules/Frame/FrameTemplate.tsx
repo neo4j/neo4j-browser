@@ -70,8 +70,10 @@ function _FrameTemplate({
   statusbar,
   isTouchScreen
 }: FrameTemplateConnectedProps): JSX.Element {
+  const [renderEditor, setRenderEditor] = useState(header?.isRerun)
   const [lastHeight, setLastHeight] = useState(10)
   const [isMouseOver, setIsMouseOver] = useState(false)
+  const [isMouseOverBody, setIsMouseOverBody] = useState(false)
   const [touchShowButtons, setTouchShowButtons] = useState(false)
   const frameContentElementRef = useRef<any>(null)
 
@@ -84,20 +86,23 @@ function _FrameTemplate({
     togglePin
   } = useSizeToggles()
 
-  const showAllButtons: boolean = isTouchScreen ? touchShowButtons : isMouseOver
+  const showAllButtons: boolean = isTouchScreen
+    ? touchShowButtons
+    : isMouseOver && (!renderEditor || !isMouseOverBody)
   const toggleButtons = isTouchScreen
     ? () => setTouchShowButtons(mo => !mo)
     : noOp
   const onContainerMouseEnter = isTouchScreen
     ? noOp
-    : () => {
-        setIsMouseOver(true)
-      }
+    : () => setIsMouseOver(true)
   const onContainerMouseLeave = isTouchScreen
     ? noOp
-    : () => {
-        setIsMouseOver(false)
-      }
+    : () => setIsMouseOver(false)
+
+  const onBodyMouseEnter = isTouchScreen ? noOp : () => setIsMouseOverBody(true)
+  const onBodyMouseLeave = isTouchScreen
+    ? noOp
+    : () => setIsMouseOverBody(false)
 
   useEffect(() => {
     if (!frameContentElementRef.current?.clientHeight) return
@@ -132,6 +137,8 @@ function _FrameTemplate({
           toggleButtons={toggleButtons}
           showToggleButtons={isTouchScreen}
           frame={header}
+          renderEditor={renderEditor}
+          setRenderEditor={setRenderEditor}
           fullscreen={isFullscreen}
           fullscreenToggle={toggleFullScreen}
           collapse={isCollapsed}
@@ -145,7 +152,12 @@ function _FrameTemplate({
         />
       )}
 
-      <StyledFrameBody fullscreen={isFullscreen} collapsed={isCollapsed}>
+      <StyledFrameBody
+        fullscreen={isFullscreen}
+        collapsed={isCollapsed}
+        onMouseEnter={onBodyMouseEnter}
+        onMouseLeave={onBodyMouseLeave}
+      >
         {sidebar && sidebar()}
         {aside && <StyledFrameAside>{aside}</StyledFrameAside>}
         <StyledFrameMainSection>
