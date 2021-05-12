@@ -29,8 +29,9 @@ import {
   listUsersQuery
 } from 'shared/modules/cypher/boltUserHelper'
 
-// Stubbing out title bar as it depends on store
+// Stubbing out title bar & template as they depend on store
 jest.mock('browser/modules/Frame/FrameTitlebar', () => () => null)
+jest.mock('browser/modules/Frame/FrameTemplate', () => () => null)
 
 describe('<UserList />', () => {
   it('should list users and user roles when enterprise edition is mounted', () => {
