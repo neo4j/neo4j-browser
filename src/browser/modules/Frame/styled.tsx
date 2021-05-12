@@ -226,12 +226,17 @@ export const StyledFrameTitleButtonGroup = styled.div<{
   showAllButtons: boolean
   buttonsAnimating: boolean
 }>`
+  position: absolute;
   background: ${props => props.theme.secondaryBackground};
   overflow: ${props =>
     props.buttonsAnimating || !props.showAllButtons ? 'hidden' : 'unset'}
   width: ${props =>
     props.showAllButtons
       ? dim.frameButtonWidth * props.buttonCount + 'px'
+      : '0px'};
+  margin-left: ${props =>
+    props.showAllButtons
+      ? -1 * dim.frameButtonWidth * props.buttonCount + 'px'
       : '0px'};
   transition: 0.2s ease-out;
   height: 39px;
