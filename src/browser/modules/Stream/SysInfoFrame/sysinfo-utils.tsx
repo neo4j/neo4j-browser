@@ -134,10 +134,18 @@ export function buildTableData(data: any) {
 
 export function buildDatabaseTable(mappedDatabases: any) {
   return (
-    <SysInfoTable key="database-table" header="Databases" colspan="6">
+    <SysInfoTable key="database-table" header="Databases" colspan="7">
       <SysInfoTableEntry
         key="database-entry"
-        headers={['Name', 'Address', 'Role', 'Status', 'Default', 'Error']}
+        headers={[
+          'Name',
+          'Address',
+          'Role',
+          'Status',
+          'Home',
+          'Default',
+          'Error'
+        ]}
       />
       {buildTableData(mappedDatabases)}
     </SysInfoTable>
