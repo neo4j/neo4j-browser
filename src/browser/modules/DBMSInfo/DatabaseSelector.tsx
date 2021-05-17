@@ -37,6 +37,7 @@ const Select = styled.select`
 const EMPTY_OPTION = 'Select db to use'
 
 const HOUSE_EMOJI = '\u{1F3E0}'
+const NBSP_CHAR = '\u{00A0}'
 
 export const DatabaseSelector = ({
   databases = [],
@@ -77,8 +78,8 @@ export const DatabaseSelector = ({
           {uniqDatabases.map(db => {
             return (
               <option key={db.name} value={db.name}>
-                {db === homeDb ? HOUSE_EMOJI + ' ' : ''}
                 {db.name}
+                {db === homeDb ? NBSP_CHAR + HOUSE_EMOJI : ''}
               </option>
             )
           })}
