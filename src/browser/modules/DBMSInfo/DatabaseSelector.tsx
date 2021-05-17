@@ -36,6 +36,8 @@ const Select = styled.select`
 
 const EMPTY_OPTION = 'Select db to use'
 
+const HOUSE_EMOJI = '\u{1F3E0}'
+
 export const DatabaseSelector = ({
   databases = [],
   selectedDb = '',
@@ -59,6 +61,9 @@ export const DatabaseSelector = ({
     )
   }
   const uniqDatabases = uniqBy(databasesList, 'name')
+  const homeDb =
+    uniqDatabases.find((db: any) => db.home) ||
+    uniqDatabases.find((db: any) => db.default)
 
   return (
     <DrawerSection>
@@ -70,16 +75,10 @@ export const DatabaseSelector = ({
           onChange={selectionChange}
         >
           {uniqDatabases.map(db => {
-            const defaultOrHomeStr = db.home
-              ? ' - home'
-              : db.default
-              ? ' - default'
-              : ''
-
             return (
               <option key={db.name} value={db.name}>
+                {db === homeDb ? HOUSE_EMOJI + ' ' : ''}
                 {db.name}
-                {defaultOrHomeStr}
               </option>
             )
           })}
