@@ -4693,10 +4693,10 @@ cyclist@^1.0.1:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/cyclist/-/cyclist-1.0.1.tgz#596e9698fd0c80e12038c2b82d6eb1b35b6224d9"
   integrity sha1-WW6WmP0MgOEgOMK4LW6xs1tiJNk=
 
-cypher-editor-support@^1.1.7:
-  version "1.1.7"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypher-editor-support/-/cypher-editor-support-1.1.7.tgz#14daa7dde9ad8128c06bfc51e31d513ba9cd0fa0"
-  integrity sha1-FNqn3emtgSjAa/xR4x1RO6nND6A=
+cypher-editor-support@^1.1.8:
+  version "1.1.8"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypher-editor-support/-/cypher-editor-support-1.1.8.tgz#6b173de2a67fe91e8493fbbc6ee41cf4c90ee84e"
+  integrity sha1-axc94qZ/6R6Ek/u8buQc9MkO6E4=
   dependencies:
     antlr4 "4.7.0"
     fuzzaldrin "2.1.0"
