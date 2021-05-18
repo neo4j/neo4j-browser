@@ -4717,10 +4717,10 @@ cypher-editor-support@^1.1.7:
     fuzzaldrin "2.1.0"
     lodash "4.17.15"
 
-cypress@^7.0.0:
-  version "7.0.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypress/-/cypress-7.0.0.tgz#78b67a87bace1b530c123ba8d779899e676ed676"
-  integrity sha1-eLZ6h7rOG1MMEjuo13mJnmdu1nY=
+cypress@^7.0.1:
+  version "7.3.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypress/-/cypress-7.3.0.tgz#17345b8d18681c120f033e7d8fd0f0271e9d0d51"
+  integrity sha1-FzRbjRhoHBIPAz59j9DwJx6dDVE=
   dependencies:
     "@cypress/listr-verbose-renderer" "^0.4.1"
     "@cypress/request" "^2.88.5"
