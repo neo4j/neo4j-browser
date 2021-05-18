@@ -458,9 +458,14 @@ const switchToRequestedDb = (store: any) => {
     if (lastUsedDb && databases.some((db: any) => db.name === lastUsedDb)) {
       store.dispatch(useDb(lastUsedDb))
     } else {
-      const defaultDb = databases.find((db: any) => db.default)
-      if (defaultDb) {
-        store.dispatch(useDb(defaultDb.name))
+      const homeDb = databases.find((db: any) => db.home)
+      if (homeDb) {
+        store.dispatch(useDb(homeDb.name))
+      } else {
+        const defaultDb = databases.find((db: any) => db.default)
+        if (defaultDb) {
+          store.dispatch(useDb(defaultDb.name))
+        }
       }
     }
   }
