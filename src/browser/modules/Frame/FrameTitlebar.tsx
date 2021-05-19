@@ -285,7 +285,9 @@ function FrameTitlebar(props: FrameTitleBarProps) {
         ?.contains(event.target)
 
       if (!insideFrame && insideMainWrapper) {
-        // a really quick click will lose some of the last edits
+        // Monaco has a 300ms debounce on calling it's onChange
+        // using this ref prevents us from losing the edits made in the
+        // last 300ms before clicking
         const editorRefVal = editorRef.current?.getValue()
         if (editorRefVal && editorRefVal !== editorValue) {
           setEditorValue(editorRefVal)
