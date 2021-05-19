@@ -44,7 +44,7 @@ export const hasMultiDbSupport = async (): Promise<boolean> => {
     return false
   }
   const supportsMultiDb = await tmpDriver.supportsMultiDb()
-  return supportsMultiDb
+  return supportsMultiDb.valueOf()
 }
 
 export const validateConnection = (
