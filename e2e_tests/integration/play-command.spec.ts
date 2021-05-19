@@ -116,25 +116,6 @@ describe('Play command', () => {
       .should('have.length', 1)
       .should('contain', 'No guide')
   })
-  // Temporary skip of flaky test
-  it.skip('populates editor on code click', () => {
-    cy.executeCommand(':clear')
-    cy.executeCommand(':play movies')
-
-    // Goto slide 2
-    nextSlideBtn().click()
-
-    // Click code
-    cy.getFrames()
-      .get('.runnable')
-      .click()
-
-    // Assert
-    cy.getEditor().should('contain', 'CREATE')
-    cy.get(
-      '[data-testid="activeEditor"] [data-testid="editor-discard"]'
-    ).click()
-  })
   it('can link to a specific slide', () => {
     cy.executeCommand(':clear')
     cy.executeCommand(':play concepts#slide-3')
