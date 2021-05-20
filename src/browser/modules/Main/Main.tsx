@@ -75,11 +75,7 @@ const Main = React.memo(function Main(props: any) {
           Connection to server lost. Reconnecting...
         </WarningBanner>
       </Render>
-      <Render
-        if={
-          props.connectionState === CONNECTING_STATE && past5Sec && !past10Sec
-        }
-      >
+      <Render if={past5Sec && !past10Sec}>
         <NotAuthedBanner>Still connecting...</NotAuthedBanner>
       </Render>
       <Render if={past10Sec}>
