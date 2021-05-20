@@ -52,7 +52,7 @@ Cypress.Commands.add(
     cy.get('input[data-testid="newPasswordConfirmation"]').type(newPassword)
     cy.get('button[data-testid="changePassword"]').click()
 
-    cy.get('input[data-testid="changePassword"]').should('not.be.visible')
+    cy.get('input[data-testid="changePassword"]').should('not.exist')
     cy.get('[data-testid="frame"]', { timeout: 25000 }).should('have.length', 2)
     cy.get('[data-testid="frameCommand"]', { timeout: 30000 }).contains(
       ':play start'

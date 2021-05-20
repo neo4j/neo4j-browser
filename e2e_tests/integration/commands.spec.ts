@@ -118,4 +118,23 @@ describe('Commands', () => {
       cy.wait(getCommandDelay(cmd))
     })
   })
+
+  it('can ctrl+click to re-populate the main editor', () => {
+    cy.executeCommand(':clear')
+    cy.executeCommand('return 1')
+    cy.get('[data-testid="frameCommand"]')
+      .contains('return 1')
+      .click()
+
+    cy.typeInFrame('Vermilion')
+
+    // click outside frame
+    cy.get('#monaco-main-editor').click()
+
+    cy.get('body').type('{ctrl}', { force: true, release: false })
+    cy.get('[data-testid="frameCommand"]').click()
+    cy.get('body').type('{ctrl}') // release mod
+
+    cy.get('#monaco-main-editor').contains('Vermilion')
+  })
 })
