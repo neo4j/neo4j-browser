@@ -346,8 +346,6 @@ function FrameTitlebar(props: FrameTitleBarProps) {
     }
   })
 
-  const { frame = {}, showAllButtons, toggleButtons, showToggleButtons } = props
-
   const fullscreenIcon = props.fullscreen ? <ContractIcon /> : <ExpandIcon />
   const expandCollapseIcon = props.collapse ? <DownIcon /> : <UpIcon />
   const hasDownloadButton = displayDownloadIcon()
