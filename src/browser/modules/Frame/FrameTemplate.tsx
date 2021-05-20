@@ -67,15 +67,17 @@ function _FrameTemplate({
   runQuery,
   sidebar,
   aside,
-  statusbar,
-  isTouchScreen
+  statusbar
 }: FrameTemplateConnectedProps): JSX.Element {
+  const [lastRenderEditor, setLastRenderEditor] = useState(header?.isRerun)
   const [renderEditor, setRenderEditor] = useState(header?.isRerun)
   const [lastHeight, setLastHeight] = useState(10)
-  const [isMouseOver, setIsMouseOver] = useState(false)
-  const [isMouseOverBody, setIsMouseOverBody] = useState(false)
+  // const [isMouseOver, setIsMouseOver] = useState(false)
+  // const [isMouseOverBody, setIsMouseOverBody] = useState(false)
   const [touchShowButtons, setTouchShowButtons] = useState(false)
   const frameContentElementRef = useRef<any>(null)
+
+  const isTouchScreen = 'A' === 'A'
 
   const {
     isFullscreen,
@@ -86,23 +88,28 @@ function _FrameTemplate({
     togglePin
   } = useSizeToggles()
 
-  const showAllButtons: boolean = isTouchScreen
-    ? touchShowButtons
-    : isMouseOver && (!renderEditor || !isMouseOverBody)
+  const showAllButtons: boolean = renderEditor ? touchShowButtons : true
   const toggleButtons = isTouchScreen
     ? () => setTouchShowButtons(mo => !mo)
     : noOp
-  const onContainerMouseEnter = isTouchScreen
-    ? noOp
-    : () => setIsMouseOver(true)
-  const onContainerMouseLeave = isTouchScreen
-    ? noOp
-    : () => setIsMouseOver(false)
+  // const onContainerMouseEnter = isTouchScreen
+  //   ? noOp
+  //   : () => setIsMouseOver(true)
+  // const onContainerMouseLeave = isTouchScreen
+  //   ? noOp
+  //   : () => setIsMouseOver(false)
 
-  const onBodyMouseEnter = isTouchScreen ? noOp : () => setIsMouseOverBody(true)
-  const onBodyMouseLeave = isTouchScreen
-    ? noOp
-    : () => setIsMouseOverBody(false)
+  // const onBodyMouseEnter = isTouchScreen ? noOp : () => setIsMouseOverBody(true)
+  // const onBodyMouseLeave = isTouchScreen
+  //   ? noOp
+  //   : () => setIsMouseOverBody(false)
+
+  useEffect(() => {
+    if (lastRenderEditor !== renderEditor) {
+      setTouchShowButtons(!renderEditor)
+    }
+    setLastRenderEditor(renderEditor)
+  }, [renderEditor])
 
   useEffect(() => {
     if (!frameContentElementRef.current?.clientHeight) return
@@ -128,14 +135,15 @@ function _FrameTemplate({
       className={classNames.join(' ')}
       data-testid="frame"
       fullscreen={isFullscreen}
-      onMouseEnter={onContainerMouseEnter}
-      onMouseLeave={onContainerMouseLeave}
+      // onMouseEnter={onContainerMouseEnter}
+      // onMouseLeave={onContainerMouseLeave}
     >
       {header && (
         <FrameTitlebar
           showAllButtons={showAllButtons}
+          overlayAllButtons={renderEditor}
           toggleButtons={toggleButtons}
-          showToggleButtons={isTouchScreen}
+          showToggleButtons={renderEditor}
           frame={header}
           renderEditor={renderEditor}
           setRenderEditor={setRenderEditor}
@@ -155,8 +163,8 @@ function _FrameTemplate({
       <StyledFrameBody
         fullscreen={isFullscreen}
         collapsed={isCollapsed}
-        onMouseEnter={onBodyMouseEnter}
-        onMouseLeave={onBodyMouseLeave}
+        // onMouseEnter={onBodyMouseEnter}
+        // onMouseLeave={onBodyMouseLeave}
       >
         {sidebar && sidebar()}
         {aside && <StyledFrameAside>{aside}</StyledFrameAside>}

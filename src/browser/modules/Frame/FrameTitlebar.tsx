@@ -117,6 +117,7 @@ type FrameTitleBarProps = FrameTitleBarBaseProps & {
   request: BrowserRequest | null
   isRelateAvailable: boolean
   showAllButtons: boolean
+  overlayAllButtons: boolean
   toggleButtons: () => void
   showToggleButtons: boolean
   isTouchScreen: boolean
@@ -300,7 +301,13 @@ function FrameTitlebar(props: FrameTitleBarProps) {
     props.reRun(frame, cmd)
   }
 
-  const { frame = {}, showAllButtons, toggleButtons, showToggleButtons } = props
+  const {
+    frame = {},
+    showAllButtons,
+    overlayAllButtons,
+    toggleButtons,
+    showToggleButtons
+  } = props
 
   function onPreviewClick(e: React.MouseEvent) {
     if (e.ctrlKey || e.metaKey) {
@@ -388,6 +395,7 @@ function FrameTitlebar(props: FrameTitleBarProps) {
           ref={buttonGroupRef}
           buttonCount={buttonGroupCount}
           showAllButtons={showAllButtons}
+          overlayAllButtons={overlayAllButtons}
           buttonsAnimating={buttonsAnimating}
         >
           <StyledFrameTitlebarButtonSection>

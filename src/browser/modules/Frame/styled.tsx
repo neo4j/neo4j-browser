@@ -224,9 +224,10 @@ export const StyledFrameTitleButtonGroupContainer = styled.div`
 export const StyledFrameTitleButtonGroup = styled.div<{
   buttonCount: number
   showAllButtons: boolean
+  overlayAllButtons: boolean
   buttonsAnimating: boolean
 }>`
-  position: absolute;
+  position: ${props => (props.overlayAllButtons ? 'absolute' : 'relative')};
   background: ${props => props.theme.secondaryBackground};
   overflow: ${props =>
     props.buttonsAnimating || !props.showAllButtons ? 'hidden' : 'unset'}
@@ -235,9 +236,12 @@ export const StyledFrameTitleButtonGroup = styled.div<{
       ? dim.frameButtonWidth * props.buttonCount + 'px'
       : '0px'};
   margin-left: ${props =>
-    props.showAllButtons
+    props.showAllButtons && props.overlayAllButtons
       ? -1 * dim.frameButtonWidth * props.buttonCount + 'px'
       : '0px'};
-  transition: 0.2s ease-out;
+  /* transition: 0.2s ease-out; */
+  transition-property: width, margin-left;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-out;
   height: 39px;
 `
