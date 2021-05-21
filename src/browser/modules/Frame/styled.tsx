@@ -230,7 +230,7 @@ export const StyledFrameTitleButtonGroup = styled.div<{
   position: ${props => (props.overlayAllButtons ? 'absolute' : 'relative')};
   background: ${props => props.theme.secondaryBackground};
   overflow: ${props =>
-    props.buttonsAnimating || !props.showAllButtons ? 'hidden' : 'unset'}
+    props.buttonsAnimating || !props.showAllButtons ? 'hidden' : 'unset'};
   width: ${props =>
     props.showAllButtons
       ? dim.frameButtonWidth * props.buttonCount + 'px'
