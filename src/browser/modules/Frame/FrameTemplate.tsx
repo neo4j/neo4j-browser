@@ -19,10 +19,7 @@
  */
 
 import React, { useRef, useState, useEffect } from 'react'
-import { connect } from 'react-redux'
 import { Frame } from 'shared/modules/stream/streamDuck'
-import { isTouchScreen } from 'shared/modules/app/appDuck'
-import { GlobalState } from 'shared/globalState'
 import FrameTitlebar from './FrameTitlebar'
 
 import {
@@ -48,13 +45,7 @@ type FrameTemplateProps = {
   statusbar?: JSX.Element | null
 }
 
-type FrameTemplateConnectedProps = FrameTemplateProps & {
-  isTouchScreen: boolean
-}
-
-const noOp = () => {}
-
-function _FrameTemplate({
+function FrameTemplate({
   header,
   contents,
   onResize = () => {
@@ -68,16 +59,9 @@ function _FrameTemplate({
   sidebar,
   aside,
   statusbar
-}: FrameTemplateConnectedProps): JSX.Element {
-  const [lastRenderEditor, setLastRenderEditor] = useState(header?.isRerun)
-  const [renderEditor, setRenderEditor] = useState(header?.isRerun)
+}: FrameTemplateProps): JSX.Element {
   const [lastHeight, setLastHeight] = useState(10)
-  // const [isMouseOver, setIsMouseOver] = useState(false)
-  // const [isMouseOverBody, setIsMouseOverBody] = useState(false)
-  const [touchShowButtons, setTouchShowButtons] = useState(false)
-  const frameContentElementRef = useRef<any>(null)
-
-  const isTouchScreen = 'A' === 'A'
+  const frameContentElementRef = useRef<HTMLDivElement>(null)
 
   const {
     isFullscreen,
@@ -87,29 +71,6 @@ function _FrameTemplate({
     toggleCollapse,
     togglePin
   } = useSizeToggles()
-
-  const showAllButtons: boolean = renderEditor ? touchShowButtons : true
-  const toggleButtons = isTouchScreen
-    ? () => setTouchShowButtons(mo => !mo)
-    : noOp
-  // const onContainerMouseEnter = isTouchScreen
-  //   ? noOp
-  //   : () => setIsMouseOver(true)
-  // const onContainerMouseLeave = isTouchScreen
-  //   ? noOp
-  //   : () => setIsMouseOver(false)
-
-  // const onBodyMouseEnter = isTouchScreen ? noOp : () => setIsMouseOverBody(true)
-  // const onBodyMouseLeave = isTouchScreen
-  //   ? noOp
-  //   : () => setIsMouseOverBody(false)
-
-  useEffect(() => {
-    if (lastRenderEditor !== renderEditor) {
-      setTouchShowButtons(!renderEditor)
-    }
-    setLastRenderEditor(renderEditor)
-  }, [renderEditor])
 
   useEffect(() => {
     if (!frameContentElementRef.current?.clientHeight) return
@@ -135,18 +96,10 @@ function _FrameTemplate({
       className={classNames.join(' ')}
       data-testid="frame"
       fullscreen={isFullscreen}
-      // onMouseEnter={onContainerMouseEnter}
-      // onMouseLeave={onContainerMouseLeave}
     >
       {header && (
         <FrameTitlebar
-          showAllButtons={showAllButtons}
-          overlayAllButtons={renderEditor}
-          toggleButtons={toggleButtons}
-          showToggleButtons={renderEditor}
           frame={header}
-          renderEditor={renderEditor}
-          setRenderEditor={setRenderEditor}
           fullscreen={isFullscreen}
           fullscreenToggle={toggleFullScreen}
           collapse={isCollapsed}
@@ -160,12 +113,7 @@ function _FrameTemplate({
         />
       )}
 
-      <StyledFrameBody
-        fullscreen={isFullscreen}
-        collapsed={isCollapsed}
-        // onMouseEnter={onBodyMouseEnter}
-        // onMouseLeave={onBodyMouseLeave}
-      >
+      <StyledFrameBody fullscreen={isFullscreen} collapsed={isCollapsed}>
         {sidebar && sidebar()}
         {aside && <StyledFrameAside>{aside}</StyledFrameAside>}
         <StyledFrameMainSection>
@@ -214,11 +162,5 @@ function useSizeToggles() {
     togglePin
   }
 }
-
-const mapStateToProps = (state: GlobalState) => ({
-  isTouchScreen: isTouchScreen(state)
-})
-
-const FrameTemplate = connect(mapStateToProps)(_FrameTemplate)
 
 export default FrameTemplate

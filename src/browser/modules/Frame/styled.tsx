@@ -177,7 +177,7 @@ export const FrameTitleEditorContainer = styled.div`
   border-radius: 2px;
   padding-left: 6px;
   padding-top: 3px;
-  margin: 3px 5px 3px 3px;
+  margin: 3px 0px 3px 3px;
 
   width: 0; // Prevents the editor from growing past flex-grow: 1
   flex-grow: 1;
@@ -201,7 +201,7 @@ export const StyledFrameCommand = styled.label<{ selectedDb: string }>`
   padding-left: 6px;
   font-size: 1.2em;
   line-height: 2.2em;
-  margin: 3px 5px 3px 3px;
+  margin: 3px 0px 3px 3px;
   flex: 1 1 auto;
   min-width: 0;
   white-space: nowrap;

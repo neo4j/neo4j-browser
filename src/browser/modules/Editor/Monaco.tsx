@@ -172,7 +172,8 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
           value,
           wordWrap: 'on',
           wrappingStrategy: 'advanced',
-          occurrencesHighlight: false
+          occurrencesHighlight: false,
+          matchBrackets: 'never'
         }
       )
 

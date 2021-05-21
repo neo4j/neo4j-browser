@@ -76,8 +76,6 @@ const localStorageMiddleware = createReduxMiddleware()
 
 const reducer = combineReducers<GlobalState>({ ...(reducers as any) })
 
-const isTouchScreen: boolean = 'ontouchstart' in window
-
 declare global {
   interface Window {
     __REDUX_DEVTOOLS_EXTENSION__?: (
@@ -217,8 +215,7 @@ store.dispatch({
   relateUrl,
   relateApiToken,
   relateProjectId,
-  neo4jDesktopGraphAppId,
-  isTouchScreen
+  neo4jDesktopGraphAppId
 })
 
 // typePolicies allow apollo cache to use these fields as 'id'
