@@ -73,7 +73,6 @@ import {
 import {
   StyledFrameTitleBar,
   StyledFrameTitlebarButtonSection,
-  FrameTitleEditorContainer,
   StyledFrameCommand
 } from './styled'
 import {
@@ -96,6 +95,7 @@ import { MAIN_WRAPPER_DOM_ID } from '../App/App'
 import styled from 'styled-components'
 import stopIcon from 'icons/stop-icon.svg'
 import runIcon from 'icons/run-icon.svg'
+import { EditorContainer, Header } from '../Editor/styled'
 
 type FrameTitleBarBaseProps = {
   frame: any
@@ -135,6 +135,15 @@ function FrameTitlebar(props: FrameTitleBarProps) {
   const { frame = {} } = props
   const [editorValue, setEditorValue] = useState(props.frame.cmd)
   const [renderEditor, setRenderEditor] = useState(props.frame.isRerun)
+  const [showOverlayButtons, setShowOverlayButtons] = useState(false)
+  const toggleShowOverlayButtons = () => setShowOverlayButtons(s => !s)
+
+  const mountEditor = () => setRenderEditor(true)
+  const unmountEditor = () => {
+    setShowOverlayButtons(false)
+    setRenderEditor(false)
+  }
+
   useEffect(() => {
     // makes sure the frame is updated as links in frame is followed
     editorRef.current?.setValue(props.frame.cmd)
@@ -175,7 +184,7 @@ function FrameTitlebar(props: FrameTitleBarProps) {
     if (e.ctrlKey || e.metaKey) {
       props.onTitlebarCmdClick(editorValue)
     } else {
-      setRenderEditor(true)
+      mountEditor()
     }
   }
 
@@ -205,7 +214,7 @@ function FrameTitlebar(props: FrameTitleBarProps) {
         if (editorRefVal && editorRefVal !== editorValue) {
           setEditorValue(editorRefVal)
         }
-        setRenderEditor(false)
+        unmountEditor()
       }
     }
 
@@ -219,66 +228,49 @@ function FrameTitlebar(props: FrameTitleBarProps) {
   // don't show it as history as well
   const history = (frame.history || []).slice(1)
 
-  const [showOverlayButtons, setShowOverlayButtons] = useState(false)
-  const toggleShowOverlayButtons = () => setShowOverlayButtons(s => !s)
-  const runButton = (
-    <FrameButton
-      data-testid="rerunFrameButton"
-      title="Rerun"
-      onClick={() =>
-        props.request?.status === REQUEST_STATUS_PENDING
-          ? props.cancelQuery(frame.requestId)
-          : run(editorValue)
-      }
-    >
-      {props.request?.status === REQUEST_STATUS_PENDING ? (
-        <StopIcon />
-      ) : (
-        <RunIcon />
-      )}
-    </FrameButton>
-  )
-  const frameButtons = (
-    <FrameButtons {...props} setRenderEditor={setRenderEditor} />
-  )
-
-  const RunContainer = styled.div`
-    background-color: ${props => props.theme.frameSidebarBackground};
-    border-radius: 2px;
+  const OverlayButtonsContainer = styled.div`
+    position: absolute;
+    background-color: ${props => props.theme.secondaryBackground};
+    top: 3px;
+    right: 45px;
+    display: flex;
+    border-radius: 10px;
+    box-shadow: -2px 2px 2px 2px rgba(52, 58, 67, 0.1);
+    height: 30px;
+    align-items: center;
+    overflow: hidden;
   `
-  //TODO merge frame title edtir container and styled frame command
 
   return (
     <StyledFrameTitleBar ref={titleBarRef}>
-      {renderEditor ? (
-        <FrameTitleEditorContainer
-          onClick={onPreviewClick}
-          data-testid="frameCommand"
-        >
-          <Monaco
-            history={history}
-            useDb={frame.useDb}
-            enableMultiStatementMode={true}
-            id={`editor-${frame.id}`}
-            bus={props.bus}
-            onChange={setEditorValue}
-            onExecute={run}
-            value={editorValue}
-            ref={editorRef}
-            toggleFullscreen={props.fullscreenToggle}
-          />
-        </FrameTitleEditorContainer>
-      ) : (
-        <StyledFrameCommand
-          selectedDb={frame.useDb}
-          onClick={onPreviewClick}
-          data-testid="frameCommand"
-          title={`${isMac ? 'Cmd' : 'Ctrl'}+click to copy to editor`}
-        >
-          <DottedLineHover>{editorValue.split('\n').join(' ')}</DottedLineHover>
-        </StyledFrameCommand>
-      )}
-      <RunContainer>
+      <Header>
+        {renderEditor ? (
+          <EditorContainer onClick={onPreviewClick} data-testid="frameCommand">
+            <Monaco
+              history={history}
+              useDb={frame.useDb}
+              enableMultiStatementMode={true}
+              id={`editor-${frame.id}`}
+              bus={props.bus}
+              onChange={setEditorValue}
+              onExecute={run}
+              value={editorValue}
+              ref={editorRef}
+              toggleFullscreen={props.fullscreenToggle}
+            />
+          </EditorContainer>
+        ) : (
+          <StyledFrameCommand
+            selectedDb={frame.useDb}
+            onClick={onPreviewClick}
+            data-testid="frameCommand"
+            title={`${isMac ? 'Cmd' : 'Ctrl'}+click to copy to main editor`}
+          >
+            <DottedLineHover>
+              {editorValue.split('\n').join(' ')}
+            </DottedLineHover>
+          </StyledFrameCommand>
+        )}
         <EditorButton
           data-testid="rerunFrameButton"
           onClick={() =>
@@ -294,23 +286,29 @@ function FrameTitlebar(props: FrameTitleBarProps) {
           }
           width={16}
         />
-      </RunContainer>
-
+      </Header>
       <StyledFrameTitlebarButtonSection>
         {renderEditor ? (
-          <div style={{ position: 'relative', transition: 'width 1s' }}>
+          <div style={{ position: 'relative' }}>
             {showOverlayButtons && (
-              <div
-                style={{
-                  backgroundColor: 'white',
-                  position: 'absolute',
-                  right: '41px',
-                  display: 'flex'
-                }}
-              >
-                {runButton}
-                {frameButtons}
-              </div>
+              <OverlayButtonsContainer>
+                <FrameButton
+                  data-testid="rerunFrameButton"
+                  title="Rerun"
+                  onClick={() =>
+                    props.request?.status === REQUEST_STATUS_PENDING
+                      ? props.cancelQuery(frame.requestId)
+                      : run(editorValue)
+                  }
+                >
+                  {props.request?.status === REQUEST_STATUS_PENDING ? (
+                    <StopIcon />
+                  ) : (
+                    <RunIcon />
+                  )}
+                </FrameButton>
+                <FrameButtons {...props} />
+              </OverlayButtonsContainer>
             )}
             <FrameButton title="More..." onClick={toggleShowOverlayButtons}>
               <NavIcon />
@@ -318,7 +316,7 @@ function FrameTitlebar(props: FrameTitleBarProps) {
           </div>
         ) : (
           <StyledFrameTitlebarButtonSection>
-            {frameButtons}
+            <FrameButtons {...props} />
           </StyledFrameTitlebarButtonSection>
         )}
         <FrameButton
@@ -334,9 +332,7 @@ function FrameTitlebar(props: FrameTitleBarProps) {
   )
 }
 
-function FrameButtons(
-  props: FrameTitleBarProps & { setRenderEditor: (s: boolean) => void }
-) {
+function FrameButtons(props: FrameTitleBarProps) {
   function hasData() {
     return props.numRecords > 0
   }
@@ -419,13 +415,9 @@ function FrameButtons(
 
     return frame.type === 'history' && arrayHasItems(frame.result)
   }
-  /*
-   * Displaying the download icon even if there is no result or visualization
-   * prevents the run/stop icon from "jumping" as the download icon disappears
-   * and reappears when running fast queries.
-   */
-  const displayDownloadIcon = () =>
-    props?.frame?.type === 'cypher' || canExport()
+
+  // Quick reruns of cypher cause buttons to jump
+  const showExportButton = props.frame.type === 'cypher' || canExport()
 
   const fullscreenIcon = props.fullscreen ? <ContractIcon /> : <ExpandIcon />
   const expandCollapseIcon = props.collapse ? <DownIcon /> : <UpIcon />
@@ -441,7 +433,7 @@ function FrameButtons(
       >
         <SaveFavoriteIcon />
       </FrameButton>
-      {displayDownloadIcon() && (
+      {showExportButton && (
         <DropdownButton data-testid="frame-export-dropdown">
           <DownloadIcon />
           <DropdownList>
@@ -508,9 +500,6 @@ function FrameButtons(
         onClick={() => {
           props.collapseToggle()
           props.trackCollapseToggle()
-          if (!props.collapse) {
-            props.setRenderEditor(false)
-          }
         }}
       >
         {expandCollapseIcon}

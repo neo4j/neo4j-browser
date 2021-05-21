@@ -159,8 +159,9 @@ export const StyledFrameTitlebarButtonSection = styled.ul`
 `
 
 export const StyledFrameTitleBar = styled.div`
+  padding: 3px;
   border-bottom: transparent;
-  line-height: ${dim.frameTitlebarHeight}px;
+  line-height: 9px;
   color: ${props => props.theme.frameTitlebarText};
   display: flex;
 `
@@ -199,9 +200,9 @@ export const StyledFrameCommand = styled.label<{ selectedDb: string }>`
   background-color: ${props => props.theme.frameSidebarBackground};
   border-radius: 2px;
   padding-left: 6px;
-  font-size: 1.2em;
-  line-height: 2.2em;
-  margin: 3px 0px 3px 3px;
+  font-size: 17px;
+  line-height: 1.8em;
+  margin: 4px 0px 4px 4px;
   flex: 1 1 auto;
   min-width: 0;
   white-space: nowrap;
