@@ -156,14 +156,13 @@ export const StyledFrameTitlebarButtonSection = styled.ul`
   margin: 0;
   margin-left: auto;
   color: ${props => props.theme.secondaryButtonText};
+  background-color: ${props => props.theme.secondaryBackground};
 `
 
 export const StyledFrameTitleBar = styled.div`
-  padding: 3px;
   border-bottom: transparent;
   line-height: 9px;
   color: ${props => props.theme.frameTitlebarText};
-  display: flex;
 `
 
 export const StyledFrameStatusbarText = styled.label`
