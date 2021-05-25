@@ -109,28 +109,39 @@ describe('Plan output', () => {
     LIMIT 50;`)
     cy.get('[data-testid="planExpandButton"]', { timeout: 10000 }).click()
     const el = cy.get('[data-testid="planSvg"]', { timeout: 10000 })
-    el.should('contain', 'tag')
-      .and('contain', ':Tag')
-      .and('contain', 'Filter')
-      .and('contain', 'Expand(All)')
-      .and('contain', 'EagerAggregation')
-      .and('contain', 'Projection')
-      .and('contain', 'ProduceResults')
-      .and('contain', 'relevantNumberOfPublications')
-      .and('contain', 'relevantNumberOfTags')
-      .and('contain', 'Result')
+    el.then($el => {
+      if ($el.text().includes('DirectedRelationshipTypeScan')) {
+        el.should('contain', 'tag')
+          .and('contain', ':Tag')
+          .and('contain', 'Filter')
+          .and('contain', 'NodeHashJoin')
+          .and('contain', 'EagerAggregation')
+          .and('contain', 'Top')
+          .and('contain', 'Projection')
+          .and('contain', 'ProduceResults')
+          .and('contain', 'relevantNumberOfPublications')
+          .and('contain', 'relevantNumberOfTags')
+          .and('contain', 'Result')
+      } else {
+        el.should('contain', 'tag')
+          .and('contain', ':Tag')
+          .and('contain', 'Filter')
+          .and('contain', 'Expand(All)')
+          .and('contain', 'EagerAggregation')
+          .and('contain', 'Projection')
+          .and('contain', 'ProduceResults')
+          .and('contain', 'relevantNumberOfPublications')
+          .and('contain', 'relevantNumberOfTags')
+          .and('contain', 'Result')
+      }
 
-    cy.executeCommand(':clear')
-    cy.executeCommand(
-      'profile match (n:Person) with n where size ( (n)-[:Follows]->()) > 6 return n;'
-    )
-    cy.get('[data-testid="planExpandButton"]', { timeout: 10000 }).click()
-    const el2 = cy.get('[data-testid="planSvg"]', { timeout: 10000 })
-    el2.should('contain', 'NodeByLabelScan', { timeout: 10000 })
-    if ([3.3, 3.4].includes(Cypress.config('serverVersion'))) {
-      el2.should('contain', 'GetDegreePrimitive')
-    } else if ([3.2, 3.5].includes(Cypress.config('serverVersion'))) {
-      el2.should('contain', 'GetDegree')
-    }
+      cy.executeCommand(':clear')
+      cy.executeCommand(
+        'profile match (n:Person) with n where size ( (n)-[:Follows]->()) > 6 return n;'
+      )
+      cy.get('[data-testid="planExpandButton"]', { timeout: 10000 }).click()
+      const el2 = cy.get('[data-testid="planSvg"]', { timeout: 10000 })
+      el2.should('contain', 'NodeByLabelScan', { timeout: 10000 })
+    })
   })
 })
