@@ -56,11 +56,8 @@ import {
   DownloadIcon,
   ExpandIcon,
   PinIcon,
-  RunIcon,
   UpIcon,
-  SaveFavoriteIcon,
-  StopIcon,
-  NavIcon
+  SaveFavoriteIcon
 } from 'browser-components/icons/Icons'
 import {
   DottedLineHover,
@@ -92,7 +89,6 @@ import { Bus } from 'suber'
 import { addFavorite } from 'shared/modules/favorites/favoritesDuck'
 import { isMac } from '../App/keyboardShortcuts'
 import { MAIN_WRAPPER_DOM_ID } from '../App/App'
-import styled from 'styled-components'
 import stopIcon from 'icons/stop-icon.svg'
 import runIcon from 'icons/run-icon.svg'
 import { EditorContainer, Header } from '../Editor/styled'
@@ -132,17 +128,8 @@ type FrameTitleBarProps = FrameTitleBarBaseProps & {
 }
 
 function FrameTitlebar(props: FrameTitleBarProps) {
-  const { frame = {} } = props
   const [editorValue, setEditorValue] = useState(props.frame.cmd)
   const [renderEditor, setRenderEditor] = useState(props.frame.isRerun)
-  const [showOverlayButtons, setShowOverlayButtons] = useState(false)
-  const toggleShowOverlayButtons = () => setShowOverlayButtons(s => !s)
-
-  const mountEditor = () => setRenderEditor(true)
-  const unmountEditor = () => {
-    setShowOverlayButtons(false)
-    setRenderEditor(false)
-  }
 
   useEffect(() => {
     // makes sure the frame is updated as links in frame is followed
@@ -162,6 +149,7 @@ function FrameTitlebar(props: FrameTitleBarProps) {
   A better solution is to change the frame titlebar to reside outside of the 
   frame contents.
   */
+
   const gainFocusCallback = useCallback(() => {
     if (props.frame.isRerun) {
       editorRef.current?.focus()
@@ -176,163 +164,6 @@ function FrameTitlebar(props: FrameTitleBarProps) {
   }, [props.frame.isRerun])
   useEffect(gainFocusCallback, [gainFocusCallback])
 
-  function run(cmd: string) {
-    props.reRun(frame, cmd)
-  }
-
-  function onPreviewClick(e: React.MouseEvent) {
-    if (e.ctrlKey || e.metaKey) {
-      props.onTitlebarCmdClick(editorValue)
-    } else {
-      mountEditor()
-    }
-  }
-
-  const titleBarRef = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    // We want clicks outside the frame itself, not just the titlebar.
-    // Because of how the component tree is built (we don't have a
-    // reference to the full frame body) we'd need to pass
-    // a ref from each parent to avoid this dom traversal
-    function handleClickOutside(event: MouseEvent) {
-      if (!(event.target instanceof Element)) {
-        return
-      }
-      const insideFrame = titleBarRef.current
-        ?.closest('article')
-        ?.contains(event.target)
-
-      const insideMainWrapper = document
-        .getElementById(MAIN_WRAPPER_DOM_ID)
-        ?.contains(event.target)
-
-      if (!insideFrame && insideMainWrapper) {
-        // Monaco has a 300ms debounce on calling it's onChange
-        // using this ref prevents us from losing the edits made in the
-        // last 300ms before clicking
-        const editorRefVal = editorRef.current?.getValue()
-        if (editorRefVal && editorRefVal !== editorValue) {
-          setEditorValue(editorRefVal)
-        }
-        unmountEditor()
-      }
-    }
-
-    document.addEventListener('mouseup', handleClickOutside)
-    return () => {
-      document.removeEventListener('mouseup', handleClickOutside)
-    }
-  })
-
-  // the last run command (history index 1) is already in the editor
-  // don't show it as history as well
-  const history = (frame.history || []).slice(1)
-
-  const OverlayButtonsContainer = styled.div`
-    position: absolute;
-    background-color: ${props => props.theme.secondaryBackground};
-    top: 3px;
-    right: 45px;
-    display: flex;
-    border-radius: 10px;
-    box-shadow: -2px 2px 2px 2px rgba(52, 58, 67, 0.1);
-    height: 30px;
-    align-items: center;
-    overflow: hidden;
-  `
-
-  return (
-    <StyledFrameTitleBar ref={titleBarRef}>
-      <Header>
-        {renderEditor ? (
-          <EditorContainer onClick={onPreviewClick} data-testid="frameCommand">
-            <Monaco
-              history={history}
-              useDb={frame.useDb}
-              enableMultiStatementMode={true}
-              id={`editor-${frame.id}`}
-              bus={props.bus}
-              onChange={setEditorValue}
-              onExecute={run}
-              value={editorValue}
-              ref={editorRef}
-              toggleFullscreen={props.fullscreenToggle}
-            />
-          </EditorContainer>
-        ) : (
-          <StyledFrameCommand
-            selectedDb={frame.useDb}
-            onClick={onPreviewClick}
-            data-testid="frameCommand"
-            title={`${isMac ? 'Cmd' : 'Ctrl'}+click to copy to main editor`}
-          >
-            <DottedLineHover>
-              {editorValue.split('\n').join(' ')}
-            </DottedLineHover>
-          </StyledFrameCommand>
-        )}
-        <EditorButton
-          data-testid="rerunFrameButton"
-          onClick={() =>
-            props.request?.status === REQUEST_STATUS_PENDING
-              ? props.cancelQuery(frame.requestId)
-              : run(editorValue)
-          }
-          title="Rerun"
-          icon={
-            props.request?.status === REQUEST_STATUS_PENDING
-              ? stopIcon
-              : runIcon
-          }
-          width={16}
-        />
-      </Header>
-      <StyledFrameTitlebarButtonSection>
-        {renderEditor ? (
-          <div style={{ position: 'relative' }}>
-            {showOverlayButtons && (
-              <OverlayButtonsContainer>
-                <FrameButton
-                  data-testid="rerunFrameButton"
-                  title="Rerun"
-                  onClick={() =>
-                    props.request?.status === REQUEST_STATUS_PENDING
-                      ? props.cancelQuery(frame.requestId)
-                      : run(editorValue)
-                  }
-                >
-                  {props.request?.status === REQUEST_STATUS_PENDING ? (
-                    <StopIcon />
-                  ) : (
-                    <RunIcon />
-                  )}
-                </FrameButton>
-                <FrameButtons {...props} />
-              </OverlayButtonsContainer>
-            )}
-            <FrameButton title="More..." onClick={toggleShowOverlayButtons}>
-              <NavIcon />
-            </FrameButton>
-          </div>
-        ) : (
-          <StyledFrameTitlebarButtonSection>
-            <FrameButtons {...props} />
-          </StyledFrameTitlebarButtonSection>
-        )}
-        <FrameButton
-          title="Close"
-          onClick={() => {
-            props.onCloseClick(frame.id, frame.requestId, props.request)
-          }}
-        >
-          <CloseIcon />
-        </FrameButton>
-      </StyledFrameTitlebarButtonSection>
-    </StyledFrameTitleBar>
-  )
-}
-
-function FrameButtons(props: FrameTitleBarProps) {
   function hasData() {
     return props.numRecords > 0
   }
@@ -400,6 +231,8 @@ function FrameButtons(props: FrameTitleBarProps) {
     saveAs(blob, 'style.grass')
   }
 
+  // Quick reruns of cypher cause buttons to jump
+  const showExportButton = props.frame.type === 'cypher' || canExport()
   function canExport() {
     const { frame = {}, visElement } = props
 
@@ -416,95 +249,205 @@ function FrameButtons(props: FrameTitleBarProps) {
     return frame.type === 'history' && arrayHasItems(frame.result)
   }
 
-  // Quick reruns of cypher cause buttons to jump
-  const showExportButton = props.frame.type === 'cypher' || canExport()
+  function run(cmd: string) {
+    props.reRun(frame, cmd)
+  }
 
+  function onPreviewClick(e: React.MouseEvent) {
+    if (e.ctrlKey || e.metaKey) {
+      props.onTitlebarCmdClick(editorValue)
+    } else {
+      setRenderEditor(true)
+    }
+  }
+
+  const titleBarRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    // We want clicks outside the frame itself, not just the titlebar.
+    // Because of how the component tree is built (we don't have a
+    // reference to the full frame body) we'd need to pass
+    // a ref from each parent to avoid this dom traversal
+    function handleClickOutside(event: MouseEvent) {
+      if (!(event.target instanceof Element)) {
+        return
+      }
+      const insideFrame = titleBarRef.current
+        ?.closest('article')
+        ?.contains(event.target)
+
+      const insideMainWrapper = document
+        .getElementById(MAIN_WRAPPER_DOM_ID)
+        ?.contains(event.target)
+
+      if (!insideFrame && insideMainWrapper) {
+        // Monaco has a 300ms debounce on calling it's onChange
+        // using this ref prevents us from losing the edits made in the
+        // last 300ms before clicking
+        const editorRefVal = editorRef.current?.getValue()
+        if (editorRefVal && editorRefVal !== editorValue) {
+          setEditorValue(editorRefVal)
+        }
+        setRenderEditor(false)
+      }
+    }
+
+    document.addEventListener('mouseup', handleClickOutside)
+    return () => {
+      document.removeEventListener('mouseup', handleClickOutside)
+    }
+  })
+
+  const { frame = {} } = props
   const fullscreenIcon = props.fullscreen ? <ContractIcon /> : <ExpandIcon />
   const expandCollapseIcon = props.collapse ? <DownIcon /> : <UpIcon />
-  const frame = props.frame
+  // the last run command (history index 1) is already in the editor
+  // don't show it as history as well
+  const history = (frame.history || []).slice(1)
   return (
-    <>
-      <FrameButton
-        title="Save as Favorite"
-        data-testid="frame-Favorite"
-        onClick={() => {
-          props.newFavorite(frame.cmd)
-        }}
-      >
-        <SaveFavoriteIcon />
-      </FrameButton>
-      {showExportButton && (
-        <DropdownButton data-testid="frame-export-dropdown">
-          <DownloadIcon />
-          <DropdownList>
-            <DropdownContent>
-              <Render if={props.isRelateAvailable}>
-                <DropdownItem onClick={() => props.newProjectFile(frame.cmd)}>
-                  Save as project file
-                </DropdownItem>
-                <DropDownItemDivider />
-              </Render>
-              <Render if={hasData() && frame.type === 'cypher'}>
-                <DropdownItem onClick={() => exportCSV(props.getRecords())}>
-                  Export CSV
-                </DropdownItem>
-                <DropdownItem onClick={() => exportJSON(props.getRecords())}>
-                  Export JSON
-                </DropdownItem>
-              </Render>
-              <Render if={props.visElement}>
-                <DropdownItem onClick={() => exportPNG()}>
-                  Export PNG
-                </DropdownItem>
-                <DropdownItem onClick={() => exportSVG()}>
-                  Export SVG
-                </DropdownItem>
-              </Render>
-              <Render if={canExportTXT()}>
-                <DropdownItem onClick={exportTXT}>Export TXT</DropdownItem>
-              </Render>
-              <Render if={hasData() && frame.type === 'style'}>
-                <DropdownItem
-                  data-testid="exportGrassButton"
-                  onClick={() => exportGrass(props.getRecords())}
-                >
-                  Export GraSS
-                </DropdownItem>
-              </Render>
-            </DropdownContent>
-          </DropdownList>
-        </DropdownButton>
-      )}
-      <FrameButton
-        title="Pin at top"
-        onClick={() => {
-          props.togglePin()
-          // using frame.isPinned causes issues when there are multiple frames in one
-          props.togglePinning(frame.id, props.pinned)
-        }}
-        pressed={props.pinned}
-      >
-        <PinIcon />
-      </FrameButton>
-      <FrameButton
-        title={props.fullscreen ? 'Close fullscreen' : 'Fullscreen'}
-        onClick={() => {
-          props.fullscreenToggle()
-          props.trackFullscreenToggle()
-        }}
-      >
-        {fullscreenIcon}
-      </FrameButton>
-      <FrameButton
-        title={props.collapse ? 'Expand' : 'Collapse'}
-        onClick={() => {
-          props.collapseToggle()
-          props.trackCollapseToggle()
-        }}
-      >
-        {expandCollapseIcon}
-      </FrameButton>
-    </>
+    <StyledFrameTitleBar ref={titleBarRef}>
+      <Header>
+        {renderEditor ? (
+          <EditorContainer onClick={onPreviewClick} data-testid="frameCommand">
+            <Monaco
+              history={history}
+              useDb={frame.useDb}
+              enableMultiStatementMode={true}
+              id={`editor-${frame.id}`}
+              bus={props.bus}
+              onChange={setEditorValue}
+              onExecute={run}
+              value={editorValue}
+              ref={editorRef}
+              toggleFullscreen={props.fullscreenToggle}
+            />
+          </EditorContainer>
+        ) : (
+          <StyledFrameCommand
+            selectedDb={frame.useDb}
+            onClick={onPreviewClick}
+            data-testid="frameCommand"
+            title={`${isMac ? 'Cmd' : 'Ctrl'}+click to copy to main editor`}
+          >
+            <DottedLineHover>
+              {editorValue.split('\n').join(' ')}
+            </DottedLineHover>
+          </StyledFrameCommand>
+        )}
+        <EditorButton
+          data-testid="rerunFrameButton"
+          onClick={() =>
+            props.request?.status === REQUEST_STATUS_PENDING
+              ? props.cancelQuery(frame.requestId)
+              : run(editorValue)
+          }
+          title="Rerun"
+          icon={
+            props.request?.status === REQUEST_STATUS_PENDING
+              ? stopIcon
+              : runIcon
+          }
+          width={16}
+        />
+      </Header>
+      <StyledFrameTitlebarButtonSection>
+        <FrameButton
+          title="Save as Favorite"
+          data-testid="frame-Favorite"
+          onClick={() => {
+            props.newFavorite(frame.cmd)
+          }}
+        >
+          <SaveFavoriteIcon />
+        </FrameButton>
+        {showExportButton && (
+          <DropdownButton data-testid="frame-export-dropdown">
+            <DownloadIcon />
+            <DropdownList>
+              <DropdownContent>
+                <Render if={props.isRelateAvailable}>
+                  <DropdownItem onClick={() => props.newProjectFile(frame.cmd)}>
+                    Save as project file
+                  </DropdownItem>
+                  <DropDownItemDivider />
+                </Render>
+                <Render if={hasData() && frame.type === 'cypher'}>
+                  <DropdownItem onClick={() => exportCSV(props.getRecords())}>
+                    Export CSV
+                  </DropdownItem>
+                  <DropdownItem onClick={() => exportJSON(props.getRecords())}>
+                    Export JSON
+                  </DropdownItem>
+                </Render>
+                <Render if={props.visElement}>
+                  <DropdownItem onClick={() => exportPNG()}>
+                    Export PNG
+                  </DropdownItem>
+                  <DropdownItem onClick={() => exportSVG()}>
+                    Export SVG
+                  </DropdownItem>
+                </Render>
+                <Render if={canExportTXT()}>
+                  <DropdownItem onClick={exportTXT}>Export TXT</DropdownItem>
+                </Render>
+                <Render if={hasData() && frame.type === 'style'}>
+                  <DropdownItem
+                    data-testid="exportGrassButton"
+                    onClick={() => exportGrass(props.getRecords())}
+                  >
+                    Export GraSS
+                  </DropdownItem>
+                </Render>
+              </DropdownContent>
+            </DropdownList>
+          </DropdownButton>
+        )}
+        <FrameButton
+          title="Pin at top"
+          onClick={() => {
+            props.togglePin()
+            // using frame.isPinned causes issues when there are multiple frames in one
+            props.togglePinning(frame.id, props.pinned)
+          }}
+          pressed={props.pinned}
+        >
+          <PinIcon />
+        </FrameButton>
+        <FrameButton
+          title={props.fullscreen ? 'Close fullscreen' : 'Fullscreen'}
+          onClick={() => {
+            props.fullscreenToggle()
+            props.trackFullscreenToggle()
+          }}
+        >
+          {fullscreenIcon}
+        </FrameButton>
+        <FrameButton
+          title={props.collapse ? 'Expand' : 'Collapse'}
+          onClick={() => {
+            props.collapseToggle()
+            props.trackCollapseToggle()
+            if (!props.collapse) {
+              setRenderEditor(false)
+            }
+          }}
+        >
+          {expandCollapseIcon}
+        </FrameButton>
+        <Render if={frame.type === 'edit'}>
+          <FrameButton title="Run" onClick={() => props.onRunClick()}>
+            <SVGInline svg={controlsPlay} width="12px" />
+          </FrameButton>
+        </Render>
+        <FrameButton
+          title="Close"
+          onClick={() => {
+            props.onCloseClick(frame.id, frame.requestId, props.request)
+          }}
+        >
+          <CloseIcon />
+        </FrameButton>
+      </StyledFrameTitlebarButtonSection>
+    </StyledFrameTitleBar>
   )
 }
 

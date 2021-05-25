@@ -31,7 +31,7 @@ describe('Saved Scripts', () => {
 
   it('can save a result as favorite', () => {
     cy.executeCommand('RETURN 1')
-    cy.get('[data-testid=frame-Favorite]').click({ force: true })
+    cy.get('[data-testid=frame-Favorite]').click()
 
     // saved in the list and can populate editor
     cy.get('[data-testid="navicon-RETURN 1"').click({ force: true })
@@ -62,7 +62,7 @@ describe('Saved Scripts', () => {
     cy.get('[data-testid=editor-discard]').click()
     cy.executeCommand(':clear')
     cy.executeCommand(':help cypher')
-    cy.get('[data-testid=frame-Favorite]').click({ force: true })
+    cy.get('[data-testid=frame-Favorite]').click()
 
     cy.get('[data-testid="savedScriptsButton-New folder"]').click()
     cy.get('[data-testid=editSavedScriptFolderName]').type('fldr{enter}')
