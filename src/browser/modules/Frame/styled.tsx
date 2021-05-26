@@ -22,10 +22,9 @@ import styled from 'styled-components'
 import { dim } from 'browser-styles/constants'
 
 type FullscreenProps = { fullscreen: boolean }
-//${props => props.theme.secondaryBackground};
 export const StyledFrame = styled.article<FullscreenProps>`
   width: auto;
-  background-color: black;
+  background-color: ${props => props.theme.secondaryBackground};
   border: ${props => props.theme.frameBorder};
 
   ${props =>
