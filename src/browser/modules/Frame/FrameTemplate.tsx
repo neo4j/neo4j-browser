@@ -21,6 +21,7 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { Frame } from 'shared/modules/stream/streamDuck'
 import FrameTitlebar from './FrameTitlebar'
+import FrameEditor from './FrameEditor'
 
 import {
   StyledFrame,
@@ -55,7 +56,6 @@ function FrameTemplate({
   numRecords = 0,
   getRecords,
   visElement,
-  runQuery,
   sidebar,
   aside,
   statusbar
@@ -106,10 +106,16 @@ function FrameTemplate({
           collapseToggle={toggleCollapse}
           pinned={isPinned}
           togglePin={togglePin}
+        />
+      )}
+
+      {header && (
+        <FrameEditor
+          frame={header}
+          fullscreenToggle={toggleFullScreen}
           numRecords={numRecords}
           getRecords={getRecords}
           visElement={visElement}
-          runQuery={runQuery}
         />
       )}
 
