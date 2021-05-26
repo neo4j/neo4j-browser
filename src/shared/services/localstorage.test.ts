@@ -97,7 +97,10 @@ describe('localstorage', () => {
   })
 
   describe('localstorage redux middleware', () => {
-    const createAndInvokeMiddlewareWithRetainFlag = (retain: boolean) => {
+    const createAndInvokeMiddlewareWithRetainFlag = (
+      retain: boolean,
+      edition = 'enterprise'
+    ) => {
       const setItemMock = jest.fn()
       ls.applyKeys('connections')
       ls.setStorage(({
@@ -109,6 +112,9 @@ describe('localstorage', () => {
           connectionsById: { $$discovery: { password: 'secret password' } }
         },
         meta: {
+          server: {
+            edition
+          },
           settings: {
             'browser.retain_connection_credentials': retain
           }
