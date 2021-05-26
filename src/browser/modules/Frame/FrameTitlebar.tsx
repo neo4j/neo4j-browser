@@ -79,12 +79,19 @@ function FrameTitlebar({
   trackFullscreenToggle,
   trackCollapseToggle
 }: FrameTitleBarProps) {
-  const fullscreenIcon = fullscreen ? <ContractIcon /> : <ExpandIcon />
-  const expandCollapseIcon = collapse ? <DownIcon /> : <UpIcon />
+  const fullscreenIcon = fullscreen ? (
+    <ContractIcon width={10} />
+  ) : (
+    <ExpandIcon width={10} />
+  )
+  const expandCollapseIcon = collapse ? (
+    <DownIcon width={10} />
+  ) : (
+    <UpIcon width={10} />
+  )
   const TitleBarHeader = styled.div`
     display: flex;
     justify-content: flex-end;
-    background-color: ${props => props.theme.secondaryBackground};
     border-radius: 2px 2px 0 0;
   `
 
@@ -98,8 +105,9 @@ function FrameTitlebar({
           togglePinning(frame.id, pinned)
         }}
         pressed={pinned}
+        size={30}
       >
-        <PinIcon />
+        <PinIcon width={10} />
       </FrameButton>
       <FrameButton
         title={collapse ? 'Expand' : 'Collapse'}
@@ -107,6 +115,7 @@ function FrameTitlebar({
           collapseToggle()
           trackCollapseToggle()
         }}
+        size={30}
       >
         {expandCollapseIcon}
       </FrameButton>
@@ -116,11 +125,12 @@ function FrameTitlebar({
           fullscreenToggle()
           trackFullscreenToggle()
         }}
+        size={30}
       >
         {fullscreenIcon}
       </FrameButton>
-      <FrameButton title="Close" onClick={onCloseClick}>
-        <CloseIcon />
+      <FrameButton title="Close" onClick={onCloseClick} size={30}>
+        <CloseIcon width={10} />
       </FrameButton>
     </TitleBarHeader>
   )

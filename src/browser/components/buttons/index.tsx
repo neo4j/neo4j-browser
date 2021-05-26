@@ -323,16 +323,16 @@ export const FrameButton = (props: any): JSX.Element => {
   )
 }
 
-const StyledFrameButton = styled.li`
+const StyledFrameButton = styled.li<{ size?: number }>`
   color: ${props => props.theme.secondaryButtonText};
   background-color: transparent;
   border-left: transparent;
-  height: ${dim.frameTitlebarHeight}px;
-  width: ${dim.frameButtonWidth}px;
+  height: ${props => props.size || dim.frameTitlebarHeight}px;
+  width: ${props => props.size || dim.frameButtonWidth}px;
   cursor: pointer;
   overflow: hidden;
   text-align: center;
-  line-height: 40px;
+  line-height: ${props => props.size || 40}px;
   display: inline-block;
   &:hover {
     background-color: ${props => props.theme.secondaryButtonBackgroundHover};

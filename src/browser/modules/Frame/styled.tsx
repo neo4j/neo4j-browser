@@ -22,10 +22,10 @@ import styled from 'styled-components'
 import { dim } from 'browser-styles/constants'
 
 type FullscreenProps = { fullscreen: boolean }
-
+//${props => props.theme.secondaryBackground};
 export const StyledFrame = styled.article<FullscreenProps>`
   width: auto;
-  background-color: ${props => props.theme.secondaryBackground};
+  background-color: black;
   border: ${props => props.theme.frameBorder};
 
   ${props =>
@@ -45,6 +45,7 @@ z-index: 130;`
   box-shadow: 0px 0px 2px rgba(52, 58, 67, 0.1),
     0px 1px 2px rgba(52, 58, 67, 0.08), 0px 1px 4px rgba(52, 58, 67, 0.08);
   border-radius: 2px;
+  padding-bottom: 3px;
 `
 
 export const StyledFrameBody = styled.div<
@@ -64,7 +65,7 @@ export const StyledFrameBody = styled.div<
   display: ${props => (props.collapsed ? 'none' : 'flex')};
   flex-direction: row;
   width: 100%;
-  padding: 30px;
+  padding: 30px 30px 0px 30px;
 
   .has-carousel &,
   .has-stack & {

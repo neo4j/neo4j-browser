@@ -307,12 +307,6 @@ export const BinIcon = (): JSX.Element => (
   />
 )
 
-export const ExpandIcon = (): JSX.Element => (
-  <IconContainer icon={expand} width={SMALL_SIZE} />
-)
-export const ContractIcon = (): JSX.Element => (
-  <IconContainer icon={shrink} width={SMALL_SIZE} />
-)
 export const RefreshIcon = (): JSX.Element => (
   <IconContainer icon={buttonRefreshArrow} width={SMALL_SIZE} />
 )
@@ -323,23 +317,31 @@ export const StopIcon = (): JSX.Element => (
   <IconContainer icon={stopIcon} width={SMALL_SIZE} />
 )
 
-export const CloseIcon = (): JSX.Element => (
-  <IconContainer icon={close} width={SMALL_SIZE} />
+type WidthProps = { width?: number }
+export const CloseIcon = ({ width = SMALL_SIZE }: WidthProps): JSX.Element => (
+  <IconContainer icon={close} width={width} />
 )
-export const UpIcon = (): JSX.Element => (
-  <IconContainer className="sl-chevron-up" />
+export const UpIcon = ({ width = SMALL_SIZE }: WidthProps): JSX.Element => (
+  <IconContainer fontSize={width} className="sl-chevron-up" />
 )
-export const DownIcon = (): JSX.Element => (
-  <IconContainer className="sl-chevron-down" />
+export const DownIcon = ({ width = SMALL_SIZE }: WidthProps): JSX.Element => (
+  <IconContainer fontSize={width} className="sl-chevron-down" />
 )
+export const PinIcon = ({ width = SMALL_SIZE }: WidthProps): JSX.Element => (
+  <IconContainer icon={pin} width={width} />
+)
+export const ExpandIcon = ({ width = SMALL_SIZE }: WidthProps): JSX.Element => (
+  <IconContainer icon={expand} width={width} />
+)
+export const ContractIcon = ({
+  width = SMALL_SIZE
+}: WidthProps): JSX.Element => <IconContainer icon={shrink} width={width} />
+
 export const DoubleUpIcon = (): JSX.Element => (
   <IconContainer className="sl-double-up" />
 )
 export const DoubleDownIcon = (): JSX.Element => (
   <IconContainer className="sl-double-down" />
-)
-export const PinIcon = (): JSX.Element => (
-  <IconContainer icon={pin} width={SMALL_SIZE} />
 )
 export const SaveFavoriteIcon = (): JSX.Element => (
   <IconContainer icon={saveFavorite} width={SMALL_SIZE} />

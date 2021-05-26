@@ -19,11 +19,11 @@
  */
 
 import React, { ReactNode } from 'react'
+import SVGInline from 'react-svg-inline'
 import styled, {
   CSSProperties,
   FlattenSimpleInterpolation
 } from 'styled-components'
-import SVGInline from 'react-svg-inline'
 
 const StyledIconWrapper = ({
   activeStyle,
@@ -56,7 +56,8 @@ type IconContainerProps = {
   icon?: string
   inactiveStyle?: string
   isOpen?: boolean
-  regulateSize?: 1 | 2
+  regulateSize?: 0.625 | 1 | 2
+  fontSize?: number
   text?: string
   title?: string
   width?: number
@@ -67,10 +68,12 @@ type IconContainerProps = {
 }
 
 export const IconContainer = (props: IconContainerProps): JSX.Element => {
-  const { text, regulateSize, icon, width, title, ...rest } = props
+  const { text, regulateSize, fontSize, icon, width, title, ...rest } = props
 
   const regulateSizeStyle = regulateSize
     ? { fontSize: regulateSize + 'em' }
+    : fontSize
+    ? { fontSize }
     : undefined
 
   const currentIcon = icon ? (
