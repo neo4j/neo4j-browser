@@ -20,6 +20,7 @@
 
 import neo4j from 'neo4j-driver'
 import Rx from 'rxjs/Rx'
+import semver from 'semver'
 import bolt from 'services/bolt/bolt'
 import { isConfigValFalsy } from 'services/bolt/boltHelpers'
 import { APP_START } from 'shared/modules/app/appDuck'
@@ -59,6 +60,7 @@ import {
   isACausalCluster,
   setClientConfig
 } from '../features/featuresDuck'
+import { clearHistory } from 'shared/modules/history/historyDuck'
 
 export const NAME = 'meta'
 export const UPDATE = 'meta/UPDATE'
@@ -106,7 +108,7 @@ export const getStoreId = (state: any) =>
 
 export const getAvailableSettings = (state: any) =>
   (state[NAME] || initialState).settings
-export const allowOutgoingConnections = (state: any) =>
+export const getAllowOutgoingConnections = (state: any) =>
   getAvailableSettings(state)['browser.allow_outgoing_connections']
 export const credentialsTimeout = (state: any) =>
   getAvailableSettings(state)['browser.credential_timeout'] || 0
@@ -114,9 +116,15 @@ export const getRemoteContentHostnameAllowlist = (state: any) =>
   getAvailableSettings(state)['browser.remote_content_hostname_allowlist']
 export const getDefaultRemoteContentHostnameAllowlist = (_state: any) =>
   initialState.settings['browser.remote_content_hostname_allowlist']
-export const shouldRetainConnectionCredentials = (state: any) => {
+export const getRetainConnectionCredentials = (state: any) => {
   const settings = getAvailableSettings(state)
   const conf = settings['browser.retain_connection_credentials']
+  if (conf === null || typeof conf === 'undefined') return false
+  return !isConfigValFalsy(conf)
+}
+export const getRetainEditorHistory = (state: any) => {
+  const settings = getAvailableSettings(state)
+  const conf = settings['browser.retain_editor_history']
   if (conf === null || typeof conf === 'undefined') return false
   return !isConfigValFalsy(conf)
 }
@@ -127,6 +135,25 @@ export const getActiveDbName = (state: any) =>
 /**
  * Helpers
  */
+
+export const VERSION_FOR_EDITOR_HISTORY_SETTING = '4.3.0'
+
+export const versionHasEditorHistorySetting = (version: string) =>
+  semver.gte(version, VERSION_FOR_EDITOR_HISTORY_SETTING)
+
+export const supportsEditorHistorySetting = (state: any) =>
+  versionHasEditorHistorySetting(getVersion(state))
+
+export const shouldAllowOutgoingConnections = (state: any) =>
+  !isEnterprise(state) || getAllowOutgoingConnections(state)
+
+export const shouldRetainConnectionCredentials = (state: any) =>
+  !isEnterprise(state) || getRetainConnectionCredentials(state)
+
+export const shouldRetainEditorHistory = (state: any) =>
+  !isEnterprise(state) ||
+  !supportsEditorHistorySetting(state) ||
+  getRetainEditorHistory(state)
 
 function updateMetaForContext(state: any, meta: any, context: any) {
   if (!meta || !meta.records || !meta.records.length) {
@@ -216,7 +243,8 @@ export const initialState = {
   settings: {
     'browser.allow_outgoing_connections': false,
     'browser.remote_content_hostname_allowlist': 'guides.neo4j.com, localhost',
-    'browser.retain_connection_credentials': false
+    'browser.retain_connection_credentials': false,
+    'browser.retain_editor_history': false
   }
 }
 
@@ -605,6 +633,13 @@ export const serverConfigEpic = (some$: any, store: any) =>
               }
               store.dispatch(setRetainCredentials(retainCredentials))
               value = retainCredentials
+            } else if (name === 'browser.retain_editor_history') {
+              let retainHistory = true
+              // Check if we should wipe user history from localstorage
+              if (typeof value !== 'undefined' && isConfigValFalsy(value)) {
+                retainHistory = false
+              }
+              value = retainHistory
             } else if (name === 'browser.allow_outgoing_connections') {
               // Use isConfigValFalsy to cast undefined to true
               value = !isConfigValFalsy(value)
@@ -623,6 +658,12 @@ export const serverConfigEpic = (some$: any, store: any) =>
             updateUserCapability(USER_CAPABILITIES.serverConfigReadable, true)
           )
           store.dispatch(updateSettings(settings))
+          if (
+            supportsEditorHistorySetting(store.getState()) &&
+            !settings['browser.retain_editor_history']
+          ) {
+            store.dispatch(clearHistory())
+          }
           return Rx.Observable.of(null)
         })
     })

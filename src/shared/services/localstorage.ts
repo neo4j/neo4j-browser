@@ -20,7 +20,10 @@
 
 import { Middleware } from 'redux'
 import { GlobalState } from 'shared/globalState'
-import { shouldRetainConnectionCredentials } from '../modules/dbMeta/dbMetaDuck'
+import {
+  shouldRetainConnectionCredentials,
+  shouldRetainEditorHistory
+} from '../modules/dbMeta/dbMetaDuck'
 import { initialState as settingsInitialState } from '../modules/settings/settingsDuck'
 
 export const keyPrefix = 'neo4j.'
@@ -99,6 +102,8 @@ export function createReduxMiddleware(): Middleware {
             )
           )
         })
+      } else if (key === 'history' && !shouldRetainEditorHistory(state)) {
+        setItem(key, [])
       } else {
         setItem(key, state[key])
       }
