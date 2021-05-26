@@ -142,7 +142,7 @@ export const versionHasEditorHistorySetting = (version: string) =>
   semver.gte(version, VERSION_FOR_EDITOR_HISTORY_SETTING)
 
 export const supportsEditorHistorySetting = (state: any) =>
-  versionHasEditorHistorySetting(getVersion(state))
+  isEnterprise(state) && versionHasEditorHistorySetting(getVersion(state))
 
 export const shouldAllowOutgoingConnections = (state: any) =>
   !isEnterprise(state) || getAllowOutgoingConnections(state)
@@ -151,9 +151,7 @@ export const shouldRetainConnectionCredentials = (state: any) =>
   !isEnterprise(state) || getRetainConnectionCredentials(state)
 
 export const shouldRetainEditorHistory = (state: any) =>
-  !isEnterprise(state) ||
-  !supportsEditorHistorySetting(state) ||
-  getRetainEditorHistory(state)
+  !supportsEditorHistorySetting(state) || getRetainEditorHistory(state)
 
 function updateMetaForContext(state: any, meta: any, context: any) {
   if (!meta || !meta.records || !meta.records.length) {
