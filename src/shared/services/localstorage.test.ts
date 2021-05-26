@@ -97,7 +97,7 @@ describe('localstorage', () => {
   })
 
   describe('localstorage redux middleware', () => {
-    const createAndInvokeMiddlewareWithRetainFlag = (
+    const createAndInvokeMiddlewareWithRetainConnectionFlag = (
       retain: boolean,
       edition = 'enterprise'
     ) => {
@@ -134,7 +134,9 @@ describe('localstorage', () => {
     }
 
     it('removes passwords from connection data if browser.retain_connection_credentials is false', () => {
-      const setItemMock = createAndInvokeMiddlewareWithRetainFlag(false)
+      const setItemMock = createAndInvokeMiddlewareWithRetainConnectionFlag(
+        false
+      )
 
       expect(setItemMock).toHaveBeenCalledWith(
         'neo4j.connections',
@@ -145,13 +147,113 @@ describe('localstorage', () => {
     })
 
     it('retains passwords in connection data if browser.retain_connection_credentials is true', () => {
-      const setItemMock = createAndInvokeMiddlewareWithRetainFlag(true)
+      const setItemMock = createAndInvokeMiddlewareWithRetainConnectionFlag(
+        true
+      )
 
       expect(setItemMock).toHaveBeenCalledWith(
         'neo4j.connections',
         JSON.stringify({
           connectionsById: { $$discovery: { password: 'secret password' } }
         })
+      )
+    })
+
+    const existingHistory = ['history item']
+
+    const createAndInvokeMiddlewareWithRetainHistoryFlag = ({
+      retain,
+      edition = 'enterprise',
+      version = '4.3.0'
+    }: {
+      retain?: boolean
+      edition?: string
+      version?: string
+    }) => {
+      const setItemMock = jest.fn()
+      ls.applyKeys('history')
+      ls.setStorage(({
+        setItem: setItemMock
+      } as Partial<Storage>) as Storage)
+
+      const state = {
+        history: existingHistory,
+        meta: {
+          server: {
+            version,
+            edition
+          },
+          settings: {
+            'browser.retain_editor_history': retain
+          }
+        },
+        connections: {
+          connectionsById: { $$discovery: { password: 'secret password' } }
+        }
+      }
+
+      const store = {
+        getState: () => state,
+        dispatch: jest.fn()
+      }
+      const next = jest.fn(action => action)
+      const action = { type: 'some action' }
+
+      ls.createReduxMiddleware()(store)(next)(action)
+
+      return setItemMock
+    }
+
+    it('removes history from data if browser.retain_editor_history is false', () => {
+      const setItemMock = createAndInvokeMiddlewareWithRetainHistoryFlag({
+        retain: false
+      })
+
+      expect(setItemMock).toHaveBeenCalledWith(
+        'neo4j.history',
+        JSON.stringify([])
+      )
+    })
+
+    it('retains history from data if browser.retain_editor_history is true', () => {
+      const setItemMock = createAndInvokeMiddlewareWithRetainHistoryFlag({
+        retain: true
+      })
+
+      expect(setItemMock).toHaveBeenCalledWith(
+        'neo4j.history',
+        JSON.stringify(existingHistory)
+      )
+    })
+
+    it('removes history from data if browser.retain_editor_history is undefined and server version is >= 4.3.0', () => {
+      const setItemMock = createAndInvokeMiddlewareWithRetainHistoryFlag({})
+
+      expect(setItemMock).toHaveBeenCalledWith(
+        'neo4j.history',
+        JSON.stringify([])
+      )
+    })
+
+    it('retains history from data if browser.retain_editor_history is undefined and server version is < 4.3.0', () => {
+      const setItemMock = createAndInvokeMiddlewareWithRetainHistoryFlag({
+        version: '4.2.0'
+      })
+
+      expect(setItemMock).toHaveBeenCalledWith(
+        'neo4j.history',
+        JSON.stringify(existingHistory)
+      )
+    })
+
+    it('retains history from data if browser.retain_editor_history is undefined and server edition is not enterprise', () => {
+      const setItemMock = createAndInvokeMiddlewareWithRetainHistoryFlag({
+        edition: 'community'
+      })
+
+      expect(setItemMock).toHaveBeenCalledWith(
+        'neo4j.history',
+        JSON.stringify(existingHistory)
       )
     })
   })
