@@ -52,9 +52,7 @@ const ShaddowWrapper = styled.div`
   margin: 0px 3px;
   background-color: ${props => props.theme.secondaryBackground};
   border: solid 1px rgba(52, 58, 67, 0.1);
-  box-shadow: inset 0px 0px 2px rgba(52, 58, 67, 0.1),
-    inset 0px 1px 2px rgba(52, 58, 67, 0.08),
-    inset 0px 1px 4px rgba(52, 58, 67, 0.08);
+  padding: 5px 5px 0 5px;
 `
 
 function FrameTemplate({

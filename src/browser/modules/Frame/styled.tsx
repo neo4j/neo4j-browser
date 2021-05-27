@@ -64,7 +64,7 @@ export const StyledFrameBody = styled.div<
   display: ${props => (props.collapsed ? 'none' : 'flex')};
   flex-direction: row;
   width: 100%;
-  padding: 30px 30px 0px 30px;
+  padding: 30px 30px 10px 30px;
 
   .has-carousel &,
   .has-stack & {
