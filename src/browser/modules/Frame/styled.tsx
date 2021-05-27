@@ -24,7 +24,7 @@ import { dim } from 'browser-styles/constants'
 type FullscreenProps = { fullscreen: boolean }
 export const StyledFrame = styled.article<FullscreenProps>`
   width: auto;
-  background-color: ${props => props.theme.secondaryBackground};
+  background-color: ${props => props.theme.editorBarBackground};
   border: ${props => props.theme.frameBorder};
 
   ${props =>
@@ -163,7 +163,7 @@ export const StyledFrameTitleBar = styled.div`
   border-bottom: transparent;
   line-height: 9px;
   color: ${props => props.theme.frameTitlebarText};
-  margin-bottom: 1px;
+  border-bottom: solid 1px ${props => props.theme.secondaryBackground};
 `
 
 export const StyledFrameStatusbarText = styled.label`
@@ -188,7 +188,7 @@ export const FrameTitleEditorContainer = styled.div`
   line-height: 2.2em;
   font-size: 1.2em;
   color: ${props => props.theme.secondaryButtonText};
-  background-color: ${props => props.theme.frameSidebarBackground};
+  background-color: ${props => props.theme.editorBackground};
   .disable-font-ligatures & {
     font-variant-ligatures: none !important;
   }
@@ -197,7 +197,7 @@ export const FrameTitleEditorContainer = styled.div`
 export const StyledFrameCommand = styled.label<{ selectedDb: string }>`
   font-family: ${props => props.theme.editorFont};
   color: ${props => props.theme.secondaryButtonText};
-  background-color: ${props => props.theme.frameSidebarBackground};
+  background-color: ${props => props.theme.editorBackground};
   border-radius: 2px;
   padding-left: 6px;
   font-size: 17px;

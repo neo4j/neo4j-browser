@@ -28,7 +28,7 @@ const pMarginTop = 6
 const getColor = (theme: 'normal' | 'dark', name: 'svgBackground') => {
   const themes = {
     normal: {
-      svgBackground: '#f9fbfd'
+      svgBackground: '#fff'
     },
     dark: {
       svgBackground: '#292C33'
@@ -200,7 +200,7 @@ export const StyledStatusBar: any = styled.div`
   color: ${props => props.theme.secondaryText};
   font-size: 13px;
   position: absolute;
-  background-color: ${props => props.theme.frameCommandBackground};
+  background-color: ${props => props.theme.frameSidebarBackground};
   white-space: nowrap;
   overflow: hidden;
   bottom: 0;
@@ -269,7 +269,7 @@ export const StyledLegendContents = styled.ul`
 
 export const StyledLegendRow = styled.div`
   border-bottom: transparent;
-  background-color: ${props => props.theme.frameCommandBackground};
+  background-color: ${props => props.theme.frameSidebarBackground};
   &.contracted {
     max-height: ${legendRowHeight}px;
     overflow: hidden;

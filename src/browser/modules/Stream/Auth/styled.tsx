@@ -141,7 +141,7 @@ export const StyledConnectionFooter = styled.span`
 `
 export const StyledCode = styled.code`
   color: #fd766e;
-  background-color: ${props => props.theme.frameCommandBackground};
+  background-color: ${props => props.theme.frameSidebarBackground};
   border-radius: 2px;
   cursor: auto;
   border: none;

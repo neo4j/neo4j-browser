@@ -43,7 +43,7 @@ export const base = {
   primaryBackground: '#D2D5DA',
   secondaryBackground: '#fff',
   editorBarBackground: '#EFEFF4',
-  editorBackground: '#fff',
+  editorBackground: '#F8F9FB',
   drawerBackground: '#30333a',
   topicBackground: '#f8f8f8',
   preBackground: '#f5f5f5',
