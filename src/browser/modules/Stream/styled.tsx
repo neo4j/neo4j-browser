@@ -217,7 +217,6 @@ export const DropdownButton = styled.li`
   line-height: 40px;
   display: inline-block;
   vertical-align: top;
-  /* float: left; */
   &:hover {
     background-color: ${props => props.theme.secondaryButtonBackgroundHover};
     color: ${props => props.theme.secondaryButtonTextHover};
@@ -225,8 +224,6 @@ export const DropdownButton = styled.li`
     text-decoration: none;
     position: relative;
     z-index: 9999;
-  }
-  &:hover {
     > ul li {
       display: block;
     }
@@ -237,7 +234,8 @@ export const DropdownList = styled.ul``
 
 export const DropdownContent = styled.li`
   display: none;
-  position: relative;
+  position: absolute;
+  right: 0px;
   background-color: ${props => props.theme.secondaryBackground};
   color: ${props => props.theme.secondaryButtonText};
   width: 135px;

@@ -163,6 +163,7 @@ export const StyledFrameTitleBar = styled.div`
   border-bottom: transparent;
   line-height: 9px;
   color: ${props => props.theme.frameTitlebarText};
+  margin-bottom: 1px;
 `
 
 export const StyledFrameStatusbarText = styled.label`
