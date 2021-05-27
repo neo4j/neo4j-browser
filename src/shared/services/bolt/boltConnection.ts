@@ -44,7 +44,7 @@ export const hasMultiDbSupport = async (): Promise<boolean> => {
     return false
   }
   const supportsMultiDb = await tmpDriver.supportsMultiDb()
-  return supportsMultiDb.valueOf()
+  return supportsMultiDb
 }
 
 export const validateConnection = (
@@ -59,7 +59,7 @@ export const validateConnection = (
 
   driver
     .supportsMultiDb()
-    .then((multiDbSupport: Boolean) => {
+    .then((multiDbSupport: boolean) => {
       if (!driver || !driver.session) return rej('No connection')
       const session = driver.session({
         defaultAccessMode: neo4j.session.READ,

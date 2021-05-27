@@ -9247,27 +9247,27 @@ neo-async@^2.5.0, neo-async@^2.6.1:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha1-tKr7k+OustgXTKU88WOrfXMIMF8=
 
-neo4j-driver-bolt-connection@^4.3.0-rc02:
-  version "4.3.0-rc02"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-driver-bolt-connection/-/neo4j-driver-bolt-connection-4.3.0-rc02.tgz#7553a10cb92b22421f183fc4f5e28790eb57692e"
-  integrity sha1-dVOhDLkrIkIfGD/E9eKHkOtXaS4=
+neo4j-driver-bolt-connection@^4.3.0:
+  version "4.3.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-driver-bolt-connection/-/neo4j-driver-bolt-connection-4.3.0.tgz#150089f92eb094792a63f62b9a8f0c34725380f3"
+  integrity sha1-FQCJ+S6wlHkqY/Yrmo8MNHJTgPM=
   dependencies:
-    neo4j-driver-core "^4.3.0-rc02"
+    neo4j-driver-core "^4.3.0"
     text-encoding-utf-8 "^1.0.2"
 
-neo4j-driver-core@^4.3.0-rc02:
-  version "4.3.0-rc02"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-driver-core/-/neo4j-driver-core-4.3.0-rc02.tgz#145b595f307db703adbde6521708e0555fedc2f6"
-  integrity sha1-FFtZXzB9twOtveZSFwjgVV/twvY=
+neo4j-driver-core@^4.3.0:
+  version "4.3.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-driver-core/-/neo4j-driver-core-4.3.0.tgz#a6d33f604dec7cf3b200bb14c1ac42292b3ab488"
+  integrity sha1-ptM/YE3sfPOyALsUwaxCKSs6tIg=
 
-neo4j-driver@^4.3.0-rc02:
-  version "4.3.0-rc02"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-driver/-/neo4j-driver-4.3.0-rc02.tgz#5786c3d3beae27f2c08315b5df411847341a34b6"
-  integrity sha1-V4bD076uJ/LAgxW130EYRzQaNLY=
+neo4j-driver@^4.3.0:
+  version "4.3.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-driver/-/neo4j-driver-4.3.0.tgz#367e80925c671d364ecd406d049958469c7ce577"
+  integrity sha1-Nn6AklxnHTZOzUBtBJlYRpx85Xc=
   dependencies:
     "@babel/runtime" "^7.5.5"
-    neo4j-driver-bolt-connection "^4.3.0-rc02"
-    neo4j-driver-core "^4.3.0-rc02"
+    neo4j-driver-bolt-connection "^4.3.0"
+    neo4j-driver-core "^4.3.0"
     rxjs "^6.6.3"
 
 nice-try@^1.0.4:
