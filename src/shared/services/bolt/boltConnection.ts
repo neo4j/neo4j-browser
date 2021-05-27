@@ -59,7 +59,7 @@ export const validateConnection = (
 
   driver
     .supportsMultiDb()
-    .then((multiDbSupport: boolean) => {
+    .then((multiDbSupport: Boolean) => {
       if (!driver || !driver.session) return rej('No connection')
       const session = driver.session({
         defaultAccessMode: neo4j.session.READ,
