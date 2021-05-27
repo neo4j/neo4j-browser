@@ -127,7 +127,7 @@ export const dark = {
   // Backgrounds
   primaryBackground: '#525865',
   secondaryBackground: '#292C33',
-  editorBarBackground: 'transparent',
+  editorBarBackground: '#30333a',
   editorBackground: '#121212',
   drawerBackground: '#30333a',
   frameSidebarBackground: '#31333B',

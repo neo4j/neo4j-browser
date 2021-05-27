@@ -52,7 +52,7 @@ const ShaddowWrapper = styled.div`
   margin: 0px 3px;
   background-color: ${props => props.theme.secondaryBackground};
   border: solid 1px rgba(52, 58, 67, 0.1);
-  padding: 5px 5px 0 5px;
+  padding: 2px 2px 0 2px;
 `
 
 function FrameTemplate({
