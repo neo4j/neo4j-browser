@@ -98,6 +98,8 @@ export function getMetaInContext(state: any, context: any) {
 export const getVersion = (state: any) =>
   (state[NAME] || {}).server ? (state[NAME] || {}).server.version : 0
 export const getEdition = (state: any) => state[NAME].server.edition
+export const hasEdition = (state: any) =>
+  state[NAME].server.edition !== initialState.server.edition
 export const getStoreSize = (state: any) => state[NAME].server.storeSize
 export const getClusterRole = (state: any) => state[NAME].role
 export const isEnterprise = (state: any) =>
@@ -145,7 +147,8 @@ export const supportsEditorHistorySetting = (state: any) =>
   isEnterprise(state) && versionHasEditorHistorySetting(getVersion(state))
 
 export const shouldAllowOutgoingConnections = (state: any) =>
-  !isEnterprise(state) || getAllowOutgoingConnections(state)
+  (hasEdition(state) && !isEnterprise(state)) ||
+  getAllowOutgoingConnections(state)
 
 export const shouldRetainConnectionCredentials = (state: any) =>
   !isEnterprise(state) || getRetainConnectionCredentials(state)
@@ -656,10 +659,8 @@ export const serverConfigEpic = (some$: any, store: any) =>
             updateUserCapability(USER_CAPABILITIES.serverConfigReadable, true)
           )
           store.dispatch(updateSettings(settings))
-          if (
-            supportsEditorHistorySetting(store.getState()) &&
-            !settings['browser.retain_editor_history']
-          ) {
+          // settings must be updated in state for this check to work
+          if (!shouldRetainEditorHistory(store.getState())) {
             store.dispatch(clearHistory())
           }
           return Rx.Observable.of(null)
