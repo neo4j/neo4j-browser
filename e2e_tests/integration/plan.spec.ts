@@ -114,7 +114,6 @@ describe('Plan output', () => {
         el.should('contain', 'tag')
           .and('contain', ':Tag')
           .and('contain', 'Filter')
-          .and('contain', 'NodeHashJoin')
           .and('contain', 'EagerAggregation')
           .and('contain', 'Top')
           .and('contain', 'Projection')
