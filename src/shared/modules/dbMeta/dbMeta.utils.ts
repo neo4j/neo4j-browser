@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import semver from 'semver'
 import { guessSemverVersion } from '../features/featureDuck.utils'
 
 export function extractServerInfo(res: any) {
@@ -44,7 +45,8 @@ export function extractServerInfo(res: any) {
     serverInfo.edition = res.records[0].get('edition')
   }
 
-  if (serverInfo.version.includes('-aura')) {
+  // Some aura servers self report versions that need coercing (eg. 3.5 or 4.3-aura)
+  if (!semver.valid(serverInfo.version)) {
     serverInfo.version = guessSemverVersion(serverInfo.version)
   }
 
