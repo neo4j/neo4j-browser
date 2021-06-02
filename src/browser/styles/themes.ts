@@ -34,7 +34,6 @@ export const base = {
   asideText: '#292C33',
   link: '#428BCA',
   linkHover: '#5dade2',
-  editorCommandColor: '#333',
   topicText: '#428BCA',
   preText: '#333',
   promptText: '#c0c2c5',
@@ -42,7 +41,6 @@ export const base = {
   // Backgrounds
   primaryBackground: '#D2D5DA',
   secondaryBackground: '#fff',
-  editorBarBackground: '#EFEFF4',
   editorBackground: '#fff',
   drawerBackground: '#30333a',
   topicBackground: '#f8f8f8',
@@ -126,7 +124,6 @@ export const dark = {
   secondaryText: '#eee',
   headerText: '#f4f4f4',
   primaryHeaderText: '#f4f4f4',
-  editorCommandColor: '#1abc9c',
   link: '#5CA6D9',
   topicText: '#fff',
   preText: '#fff',
@@ -134,7 +131,6 @@ export const dark = {
   // Backgrounds
   primaryBackground: '#525865',
   secondaryBackground: '#292C33',
-  editorBarBackground: '#30333a',
   editorBackground: '#121212',
   drawerBackground: '#30333a',
   frameSidebarBackground: '#31333B',

@@ -42,8 +42,8 @@ export const MainEditorContainer = styled.div<FullscreenProps>`
   background-color: ${props => props.theme.frameBackground};
   border-radius: 2px;
   box-shadow: ${props => props.theme.standardShadow};
-  margin: 10px 0 0 0;
-  ${props =>
+  margin: 10px 10px 0 10px;
+  padding: ${props =>
     props.fullscreen &&
     `
       position: fixed;

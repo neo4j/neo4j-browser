@@ -46,6 +46,8 @@ export const Banner = styled.div`
   line-height: 49px;
   min-height: 49px;
   margin-top: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
   color: white;
   padding: 0 24px;
   overflow: hidden;

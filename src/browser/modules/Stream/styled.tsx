@@ -22,10 +22,8 @@ import styled, { keyframes } from 'styled-components'
 import { dim } from 'browser-styles/constants'
 import { StyledFrameButton } from '../../components/buttons'
 
-//TODo cleanup, this is to make shaddows apear on frames
 export const StyledStream = styled.div`
-  padding: 0 3px;
-  margin: 0 -3px;
+  padding: 0 10px;
   display: flex;
   flex-direction: column;
   overflow: auto;
