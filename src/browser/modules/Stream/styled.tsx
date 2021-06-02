@@ -20,9 +20,12 @@
 
 import styled, { keyframes } from 'styled-components'
 import { dim } from 'browser-styles/constants'
+import { StyledFrameButton } from '../../components/buttons'
 
+//TODo cleanup, this is to make shaddows apear on frames
 export const StyledStream = styled.div`
-  padding: 0;
+  padding: 0 3px;
+  margin: 0 -3px;
   display: flex;
   flex-direction: column;
   overflow: auto;
@@ -206,22 +209,10 @@ export const SpinnerContainer = styled.div`
   padding-top: 90px;
 `
 
-//TODO
-export const DropdownButton = styled.li`
-  color: #485662;
-  background-color: transparent;
-  height: ${dim.frameTitlebarHeight}px;
-  width: 41px;
-  cursor: pointer;
-  text-align: center;
-  line-height: 40px;
-  display: inline-block;
-  vertical-align: top;
+export const DropdownButton = styled(StyledFrameButton)`
+  overflow: unset;
+
   &:hover {
-    background-color: #b9c3cf;
-    color: ${props => props.theme.secondaryButtonTextHover};
-    fill: ${props => props.theme.secondaryButtonTextHover};
-    text-decoration: none;
     position: relative;
     z-index: 9999;
     > ul li {
@@ -392,6 +383,7 @@ const rollDownAnimation = keyframes`
   }
 `
 export const AnimationContainer = styled.div`
+  margin-top: 10px;
   animation: ${rollDownAnimation} 0.4s ease-in;
 `
 

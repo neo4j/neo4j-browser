@@ -21,11 +21,10 @@
 import styled from 'styled-components'
 import { dim } from 'browser-styles/constants'
 
-// TODO
 type FullscreenProps = { fullscreen: boolean }
 export const StyledFrame = styled.article<FullscreenProps>`
   width: auto;
-  background-color: #f9fcff;
+  background-color: ${props => props.theme.frameBackground};
   border: ${props => props.theme.frameBorder};
 
   ${props =>
@@ -37,13 +36,12 @@ top: 0;
 bottom: 0;
 right: 0;
 z-index: 130;`
-      : 'margin 0 0 10px 0;'}
+      : 'margin 0;'}
 
   &:hover .carousel-intro-animation {
     opacity: 0;
   }
-  box-shadow: 0px 0px 2px rgba(52, 58, 67, 0.1),
-    0px 1px 2px rgba(52, 58, 67, 0.08), 0px 1px 4px rgba(52, 58, 67, 0.08);
+  box-shadow: ${props => props.theme.standardShadow};
   border-radius: 2px;
   padding-bottom: 3px;
 `
@@ -146,11 +144,10 @@ export const StyledFrameSidebar = styled.ul`
   margin: 0;
   border-radius: 2px;
   flex: 0 0 auto;
-  background-color: #fff;
-  box-shadow: 0px 0px 2px rgba(52, 58, 67, 0.1),
-    0px 1px 2px rgba(52, 58, 67, 0.08), 0px 1px 4px rgba(52, 58, 67, 0.08);
+  background-color: ${props => props.theme.frameSidebarBackground};
+  box-shadow: ${props => props.theme.standardShadow};
   z-index: 1;
-` //TODO
+`
 
 export const StyledFrameTitlebarButtonSection = styled.ul`
   flex: 0 0 auto;
@@ -199,11 +196,10 @@ export const FrameTitleEditorContainer = styled.div`
   }
 `
 
-// TODO
 export const StyledFrameCommand = styled.label<{ selectedDb: string }>`
   font-family: ${props => props.theme.editorFont};
   color: ${props => props.theme.secondaryButtonText};
-  background-color: #FFF;
+  background-color: ${props => props.theme.editorBackground};
   border-radius: 2px;
   padding-left: 6px;
   font-size: 17px;

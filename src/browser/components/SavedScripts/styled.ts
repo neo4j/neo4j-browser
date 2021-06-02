@@ -167,8 +167,7 @@ export const ContextMenu = styled.div`
   background-color: ${props => props.theme.secondaryBackground};
   border: ${props => props.theme.frameBorder};
 
-  box-shadow: 0px 0px 2px rgba(52, 58, 67, 0.1),
-    0px 1px 2px rgba(52, 58, 67, 0.08), 0px 1px 4px rgba(52, 58, 67, 0.08);
+  box-shadow: ${props => props.theme.standardShadow};
   border-radius: 2px;
 `
 export const ContextMenuItem = styled.div`

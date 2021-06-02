@@ -362,7 +362,7 @@ export const monacoLightTheme: editor.IStandaloneThemeData = {
   inherit: true,
   rules: lightThemeRules,
   colors: {
-    'editor.background': '#FFFFFF', // TODO
+    'editor.background': base.editorBackground,
     'editorCursor.foreground': '#d6d7db',
     'editorLineNumber.foreground': CypherColor.light_grey,
     'editorLineNumber.activeForeground': CypherColor.light_grey,

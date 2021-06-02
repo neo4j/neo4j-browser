@@ -24,21 +24,6 @@ export const legendRowHeight = 32
 export const inspectorFooterContractedHeight = 22
 const pMarginTop = 6
 
-// Themes is here because the colors are unique to this component
-const getColor = (theme: 'normal' | 'dark', name: 'svgBackground') => {
-  const themes = {
-    normal: {
-      // TODO
-      svgBackground: '#F9FCFF;'
-    },
-    dark: {
-      svgBackground: '#292C33'
-    }
-  }
-  if (themes[theme] === undefined) theme = 'normal'
-  return themes[theme][name] || ''
-}
-
 export const StyledSvgWrapper = styled.div`
   line-height: 0;
   height: 100%;
@@ -46,7 +31,7 @@ export const StyledSvgWrapper = styled.div`
   > svg {
     height: 100%;
     width: 100%;
-    background-color: ${props => getColor(props.theme.name, 'svgBackground')};
+    background-color: ${props => props.theme.frameBackground};
     .node {
       cursor: pointer;
       > .ring {
@@ -195,14 +180,14 @@ export const StyledStatusBarWrapper = styled.div`
   height: 68px;
   display: none;
 `
-//TODO
-export const StyledStatusBar: any = styled.div`
+
+export const StyledStatusBar = styled.div`
   min-height: 39px;
   line-height: 39px;
   color: ${props => props.theme.secondaryText};
   font-size: 13px;
   position: absolute;
-  background-color: #f9fcff;
+  background-color: ${props => props.theme.frameBackground};
   white-space: nowrap;
   overflow: hidden;
   bottom: 0;
@@ -269,18 +254,17 @@ export const StyledLegendContents = styled.ul`
   top: -1px;
 `
 
-// TODO
 export const StyledLegendRow = styled.div`
   border-bottom: transparent;
   &.contracted {
     max-height: ${legendRowHeight}px;
     overflow: hidden;
   }
-  border-bottom: 1px solid #dae4f0;
+  border-bottom: ${props => props.theme.inFrameBorder};
 `
-//TODO
+
 export const StyledLegend = styled.div`
-  background-color: #f9fcff;
+  background-color: ${props => props.theme.frameBackground};
   position: absolute;
   z-index: 1;
   top: 0;

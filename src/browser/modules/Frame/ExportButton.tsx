@@ -145,7 +145,7 @@ function ExportButton({
   return (
     <>
       {canExport() && (
-        <DropdownButton data-testid="frame-export-dropdown">
+        <DropdownButton title="Exports" data-testid="frame-export-dropdown">
           <DownloadIcon />
           {hasData() && (
             <DropdownList>

@@ -46,14 +46,14 @@ export const StyledBody = styled.div`
   flex-direction: row;
   height: inherit;
 `
-//TODO
+
 export const StyledMainWrapper = styled.div`
   flex: auto;
   overflow: auto;
   padding: 0;
   height: auto;
   width: 0;
-  background-color: rgba(215, 229, 241, 0.7);
+  background-color: ${props => props.theme.streamBackgroundColor};
   color: ${props => props.theme.primaryText};
   padding: 0 10px 0 10px;
 `

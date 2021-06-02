@@ -336,7 +336,6 @@ type FrameControlButtonProps = {
   onClick: () => void
   children: React.ReactNode
   title: string
-  //todo these have size 30
 }
 
 export const FrameControlButton = ({
@@ -350,13 +349,12 @@ export const FrameControlButton = ({
   </StyledFrameControlButton>
 )
 
-//TODO
 const StyledFrameControlButton = styled.li<{
   pressed?: boolean
   size?: number
 }>`
   border-radius: 2px;
-  color: #758694;
+  color: ${props => props.theme.frameButtonTextColor};
   background-color: transparent;
   border-left: transparent;
   height: 20px;
@@ -367,22 +365,22 @@ const StyledFrameControlButton = styled.li<{
   line-height: 20px;
   display: inline-block;
   &:hover {
-    background-color: #b9c3cf;
+    background-color: ${props => props.theme.frameButtonHoverBackground};
     color: ${props => props.theme.secondaryButtonTextHover};
     fill: ${props => props.theme.secondaryButtonTextHover};
     text-decoration: none;
   }
   ${props =>
     props.pressed &&
-    `background-color: #B9C3CF;
+    `
+     background-color: ${props.theme.frameButtonHoverBackground};
      color: ${props.theme.secondaryButtonTextHover};
      fill: ${props.theme.secondaryButtonTextHover};
   `}
 `
 
-//TODO
-const StyledFrameButton = styled.li`
-  color: #485662;
+export const StyledFrameButton = styled.li`
+  color: ${props => props.theme.frameButtonTextColor};
   background-color: transparent;
   border-left: transparent;
   height: ${dim.frameTitlebarHeight}px;
@@ -394,7 +392,7 @@ const StyledFrameButton = styled.li`
   display: inline-block;
 
   &:hover {
-    background-color: #b9c3cf;
+    background-color: ${props => props.theme.frameButtonHoverBackground};
     color: ${props => props.theme.secondaryButtonTextHover};
     fill: ${props => props.theme.secondaryButtonTextHover};
     text-decoration: none;

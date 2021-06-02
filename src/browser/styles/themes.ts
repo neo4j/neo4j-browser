@@ -43,7 +43,7 @@ export const base = {
   primaryBackground: '#D2D5DA',
   secondaryBackground: '#fff',
   editorBarBackground: '#EFEFF4',
-  editorBackground: '#F8F9FB',
+  editorBackground: '#fff',
   drawerBackground: '#30333a',
   topicBackground: '#f8f8f8',
   preBackground: '#f5f5f5',
@@ -92,8 +92,15 @@ export const base = {
   drawerSeparator: '1px solid #424650',
 
   // Frame
-  frameSidebarBackground: '#F8F9FB',
-  frameTitlebarText: '#717172'
+  frameSidebarBackground: '#FFF',
+  frameTitlebarText: '#717172',
+  frameButtonTextColor: '#758694',
+  frameButtonDarkTextColor: '#485662',
+  frameButtonHoverBackground: '#b9c3cf',
+  streamBackgroundColor: 'rgba(215, 229, 241, 0.7)',
+  frameBackground: '#F9FCFF',
+  standardShadow:
+    '0px 0px 2px rgba(52, 58, 67, 0.1), 0px 1px 2px rgba(52, 58, 67, 0.08), 0px 1px 4px rgba(52, 58, 67, 0.08);'
 }
 
 export const normal = {
@@ -151,25 +158,3 @@ export const dark = {
   // Borders
   inFrameBorder: '1px solid rgba(255,255,255,0.12)'
 }
-
-// todo
-/* 
-  frameTitlebarText: '#717172',
-
-  streamBackground: 'rgba(215, 229, 241, 0.5)',
-  frameBackground: '#FAFCFF',
-  frameButtonActiveBackgroundColor: '#B9C3CF',
-  frameButtonColor: '#758694',
-  neo4jBlue: '#018BFF',
-  bigFrameButtonColor: '#485662',
-  frameBorderColor: '#EDF7FF
-
-:guide https://guides.neo4j.com/graph-examples/exploring-the-star-wars-social-network/graph_guide
-paddings
-icons colors
-icon borders
-run background color
-
-
-preview
-*/

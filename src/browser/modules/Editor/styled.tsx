@@ -25,11 +25,11 @@ interface FullscreenProps {
 }
 
 export const Header = styled.div`
-  background-color: #ffffff; // TODO unhardcode
+  background-color: ${props => props.theme.editorBackground};
   flex-grow: 1;
   min-width: 0; // Without the min width, the editor doesn't shrink on resize in safari
   display: flex;
-  border: 1px solid #d7e5f1; // TODO unhardcode
+  border: 1px solid #d7e5f1;
   border-radius: 2px;
 `
 
@@ -38,32 +38,28 @@ export const ActionButtonSection = styled.div`
   justify-content: space-between;
 `
 
-export const Frame = styled.div<FullscreenProps>`
-  background-color: #fafcff; // TODO unhardcode
+export const MainEditorContainer = styled.div<FullscreenProps>`
+  background-color: ${props => props.theme.frameBackground};
   border-radius: 2px;
-  box-shadow: 0px 0px 2px rgba(52, 58, 67, 0.1),
-    0px 1px 2px rgba(52, 58, 67, 0.08), 0px 1px 4px rgba(52, 58, 67, 0.08);
-  margin: 10px 0 10px 0;
-  ${(props): string => {
-    if (props.fullscreen) {
-      return `
-  position: fixed;
-  top: 0px;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 100vh;
-  border-radius: 0;
-  z-index: 103;
-  margin: 0;
+  box-shadow: ${props => props.theme.standardShadow};
+  margin: 10px 0 0 0;
+  ${props =>
+    props.fullscreen &&
+    `
+      position: fixed;
+      top: 0px;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 100vh;
+      border-radius: 0;
+      z-index: 103;
+      margin: 0;
 
-  [id^=monaco-] .monaco-editor {
-    height: calc(100vh - 20px) !important;
-  }
-  `
-    }
-    return ''
-  }};
+      [id^=monaco-] .monaco-editor {
+        height: calc(100vh - 20px) !important;
+      }
+  `}};
 `
 
 export const EditorContainer = styled.div`

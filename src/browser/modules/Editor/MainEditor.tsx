@@ -46,7 +46,7 @@ import {
   SET_CONTENT
 } from 'shared/modules/editor/editorDuck'
 import {
-  Frame,
+  MainEditorContainer,
   Header,
   EditorContainer,
   FlexContainer,
@@ -235,7 +235,7 @@ export function EditorFrame({
   )
 
   return (
-    <Frame fullscreen={isFullscreen} data-testid="activeEditor">
+    <MainEditorContainer fullscreen={isFullscreen} data-testid="activeEditor">
       {currentlyEditing && (
         <ScriptTitle data-testid="currentlyEditing" unsaved={showUnsaved}>
           <SVGInline
@@ -325,7 +325,7 @@ export function EditorFrame({
           </FrameButton>
         ))}
       </FlexContainer>
-    </Frame>
+    </MainEditorContainer>
   )
 }
 
