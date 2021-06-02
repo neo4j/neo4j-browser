@@ -27,8 +27,11 @@ import { APP_START } from 'shared/modules/app/appDuck'
 import {
   CONNECTED_STATE,
   CONNECTION_SUCCESS,
+  SWITCH_CONNECTION,
+  SWITCH_CONNECTION_SUCCESS,
   connectionLossFilter,
   DISCONNECTION_SUCCESS,
+  SILENT_DISCONNECT,
   LOST_CONNECTION,
   UPDATE_CONNECTION_STATE,
   setRetainCredentials,
@@ -531,6 +534,7 @@ export const dbMetaEpic = (some$: any, store: any) =>
     .ofType(UPDATE_CONNECTION_STATE)
     .filter((s: any) => s.state === CONNECTED_STATE)
     .merge(some$.ofType(CONNECTION_SUCCESS))
+    .merge(some$.ofType(SWITCH_CONNECTION_SUCCESS))
     .mergeMap(() => {
       return (
         Rx.Observable.timer(1, 20000)
@@ -551,6 +555,7 @@ export const dbMetaEpic = (some$: any, store: any) =>
               .ofType(LOST_CONNECTION)
               .filter(connectionLossFilter)
               .merge(some$.ofType(DISCONNECTION_SUCCESS))
+              .merge(some$.ofType(SILENT_DISCONNECT))
           )
           .mergeMap(() => switchToRequestedDb(store))
           .mapTo({ type: DB_META_DONE })
@@ -658,9 +663,15 @@ export const serverConfigEpic = (some$: any, store: any) =>
           store.dispatch(
             updateUserCapability(USER_CAPABILITIES.serverConfigReadable, true)
           )
+          const prevShouldRetainHistory = shouldRetainEditorHistory(
+            store.getState()
+          )
           store.dispatch(updateSettings(settings))
-          // settings must be updated in state for this check to work
-          if (!shouldRetainEditorHistory(store.getState())) {
+          const shouldRetainHistory = shouldRetainEditorHistory(
+            store.getState()
+          )
+          // if setting changed either prev/next was false so clear history
+          if (prevShouldRetainHistory !== shouldRetainHistory) {
             store.dispatch(clearHistory())
           }
           return Rx.Observable.of(null)
@@ -699,5 +710,14 @@ export const serverInfoEpic = (some$: any, store: any) =>
     })
     .mapTo({ type: 'NOOP' })
 
-export const clearMetaOnDisconnectEpic = (some$: any, _store: any) =>
-  some$.ofType(DISCONNECTION_SUCCESS).mapTo({ type: CLEAR })
+export const clearMetaOnDisconnectEpic = (some$: any, store: any) =>
+  some$
+    .ofType(DISCONNECTION_SUCCESS)
+    .merge(some$.ofType(SWITCH_CONNECTION))
+    .merge(some$.ofType(SILENT_DISCONNECT))
+    .mergeMap(() => {
+      if (!shouldRetainEditorHistory(store.getState())) {
+        store.dispatch(clearHistory())
+      }
+      store.dispatch({ type: CLEAR })
+    })
