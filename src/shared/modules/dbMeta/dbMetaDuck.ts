@@ -719,5 +719,5 @@ export const clearMetaOnDisconnectEpic = (some$: any, store: any) =>
       if (!shouldRetainEditorHistory(store.getState())) {
         store.dispatch(clearHistory())
       }
-      store.dispatch({ type: CLEAR })
+      return Rx.Observable.of({ type: CLEAR })
     })
