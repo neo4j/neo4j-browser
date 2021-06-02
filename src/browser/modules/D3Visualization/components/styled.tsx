@@ -342,10 +342,10 @@ export const StyledZoomHolder = styled.div`
   bottom: 39px;
   right: 0;
   padding: 6px 6px 0 6px;
-  border-left: #e6e9ef solid 1px;
-  border-right: #e6e9ef solid 1px;
-  border-top: #e6e9ef solid 1px;
-  background: #fff;
+  border-left: ${props => props.theme.inFrameBorder};
+  border-right: ${props => props.theme.inFrameBorder};
+  border-top: ${props => props.theme.inFrameBorder};
+  background: ${props => props.theme.frameSidebarBackground};
 `
 
 export const StyledZoomButton = styled.button`

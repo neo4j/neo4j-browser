@@ -29,7 +29,7 @@ export const Header = styled.div`
   flex-grow: 1;
   min-width: 0; // Without the min width, the editor doesn't shrink on resize in safari
   display: flex;
-  border: 1px solid #d7e5f1;
+  border: ${props => props.theme.monacoEditorBorder};
   border-radius: 2px;
 `
 

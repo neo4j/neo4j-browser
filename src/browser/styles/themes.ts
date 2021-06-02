@@ -59,6 +59,10 @@ export const base = {
   editorFont:
     '"Fira Code", "Monaco", "Lucida Console", Courier, monospace !important;',
 
+  // Shadows
+  standardShadow:
+    '0px 0px 2px rgba(52, 58, 67, 0.1), 0px 1px 2px rgba(52, 58, 67, 0.08), 0px 1px 4px rgba(52, 58, 67, 0.08);',
+
   // Headers
   primaryHeaderText: '#fff',
 
@@ -88,17 +92,16 @@ export const base = {
   inFrameBorder: '1px solid #DAE4F0;',
   topicBorder: '1px solid #dadada',
   drawerSeparator: '1px solid #424650',
+  monacoEditorBorder: '1px solid #d7e5f1',
 
   // Frame
   frameSidebarBackground: '#FFF',
   frameTitlebarText: '#717172',
-  frameButtonTextColor: '#758694',
-  frameButtonDarkTextColor: '#485662',
+  frameControlButtonTextColor: '#758694',
+  frameButtonTextColor: '#485662',
   frameButtonHoverBackground: '#b9c3cf',
   streamBackgroundColor: 'rgba(215, 229, 241, 0.7)',
-  frameBackground: '#F9FCFF',
-  standardShadow:
-    '0px 0px 2px rgba(52, 58, 67, 0.1), 0px 1px 2px rgba(52, 58, 67, 0.08), 0px 1px 4px rgba(52, 58, 67, 0.08);'
+  frameBackground: '#F9FCFF'
 }
 
 export const normal = {
@@ -128,12 +131,12 @@ export const dark = {
   topicText: '#fff',
   preText: '#fff',
   asideText: 'rgb(255, 255, 255, 0.87)',
+
   // Backgrounds
   primaryBackground: '#525865',
   secondaryBackground: '#292C33',
   editorBackground: '#121212',
   drawerBackground: '#30333a',
-  frameSidebarBackground: '#31333B',
   topicBackground: 'transparent',
   preBackground: '#282c32',
   alteringTableRowBackground: '#30333a',
@@ -152,5 +155,15 @@ export const dark = {
   secondaryButtonBackgroundHover: '#4D4A57',
 
   // Borders
-  inFrameBorder: '1px solid rgba(255,255,255,0.12)'
+  inFrameBorder: '1px solid rgba(255,255,255,0.12)',
+  monacoEditorBorder: '1px solid #374754',
+
+  // Frame
+  frameSidebarBackground: '#0C1A25',
+  frameTitlebarText: '#717172',
+  frameControlButtonTextColor: '#758694;',
+  frameButtonTextColor: '#F9FCFF;',
+  frameButtonHoverBackground: '#485662',
+  streamBackgroundColor: '#374754',
+  frameBackground: '#192A37;'
 }

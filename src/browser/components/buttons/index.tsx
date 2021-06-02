@@ -354,7 +354,7 @@ const StyledFrameControlButton = styled.li<{
   size?: number
 }>`
   border-radius: 2px;
-  color: ${props => props.theme.frameButtonTextColor};
+  color: ${props => props.theme.frameControlButtonTextColor};
   background-color: transparent;
   border-left: transparent;
   height: 20px;
