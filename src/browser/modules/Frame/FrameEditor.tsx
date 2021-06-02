@@ -40,7 +40,7 @@ import { EditorButton, FrameButton } from 'browser-components/buttons'
 import { SaveFavoriteIcon } from 'browser-components/icons/Icons'
 import { DottedLineHover } from '../Stream/styled'
 import {
-  StyledFrameTitleBar,
+  StyledFrameEditorContainer,
   StyledFrameTitlebarButtonSection,
   StyledFrameCommand
 } from './styled'
@@ -179,7 +179,7 @@ function FrameTitlebar({
   const history = (frame.history || []).slice(1)
 
   return (
-    <StyledFrameTitleBar ref={titleBarRef}>
+    <StyledFrameEditorContainer ref={titleBarRef}>
       <Header>
         {renderEditor ? (
           <EditorContainer onClick={onPreviewClick} data-testid="frameCommand">
@@ -219,27 +219,27 @@ function FrameTitlebar({
           icon={request?.status === REQUEST_STATUS_PENDING ? stopIcon : runIcon}
           width={16}
         />
-        <StyledFrameTitlebarButtonSection>
-          <FrameButton
-            title="Save as Favorite"
-            data-testid="frame-Favorite"
-            onClick={() => {
-              newFavorite(frame.cmd)
-            }}
-          >
-            <SaveFavoriteIcon />
-          </FrameButton>
-          <ExportButton
-            frame={frame}
-            numRecords={numRecords}
-            getRecords={getRecords}
-            visElement={visElement}
-            isRelateAvailable={isRelateAvailable}
-            newProjectFile={newProjectFile}
-          />
-        </StyledFrameTitlebarButtonSection>
       </Header>
-    </StyledFrameTitleBar>
+      <StyledFrameTitlebarButtonSection>
+        <FrameButton
+          title="Save as Favorite"
+          data-testid="frame-Favorite"
+          onClick={() => {
+            newFavorite(frame.cmd)
+          }}
+        >
+          <SaveFavoriteIcon />
+        </FrameButton>
+        <ExportButton
+          frame={frame}
+          numRecords={numRecords}
+          getRecords={getRecords}
+          visElement={visElement}
+          isRelateAvailable={isRelateAvailable}
+          newProjectFile={newProjectFile}
+        />
+      </StyledFrameTitlebarButtonSection>
+    </StyledFrameEditorContainer>
   )
 }
 

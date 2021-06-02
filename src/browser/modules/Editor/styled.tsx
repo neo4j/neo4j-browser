@@ -25,10 +25,12 @@ interface FullscreenProps {
 }
 
 export const Header = styled.div`
-  background-color: ${(props): string => props.theme.editorBackground};
+  background-color: #ffffff; // TODO unhardcode
   flex-grow: 1;
   min-width: 0; // Without the min width, the editor doesn't shrink on resize in safari
   display: flex;
+  border: 1px solid #d7e5f1; // TODO unhardcode
+  border-radius: 2px;
 `
 
 export const ActionButtonSection = styled.div`
@@ -37,8 +39,7 @@ export const ActionButtonSection = styled.div`
 `
 
 export const Frame = styled.div<FullscreenProps>`
-  padding: 3px;
-  background-color: ${props => props.theme.secondaryBackground};
+  background-color: #fafcff; // TODO unhardcode
   border-radius: 2px;
   box-shadow: 0px 0px 2px rgba(52, 58, 67, 0.1),
     0px 1px 2px rgba(52, 58, 67, 0.08), 0px 1px 4px rgba(52, 58, 67, 0.08);
@@ -73,9 +74,12 @@ export const EditorContainer = styled.div`
   width: 0; // needed to prevent the editor from growing the text field
   min-width: 0;
 `
+
 export const FlexContainer = styled.div`
   display: flex;
+  padding: 4px;
 `
+
 export const ScriptTitle = styled.div<{ unsaved: boolean }>`
   font-style: ${props => (props.unsaved ? 'italic' : 'normal')};
   border-bottom: 1px solid rgb(77, 74, 87, 0.3);

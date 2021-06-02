@@ -314,28 +314,87 @@ const StyledSelectedCypherFrameButton = styled(StyledCypherFrameButton)`
   color: ${props => props.theme.secondaryButtonTextHover};
   fill: ${props => props.theme.secondaryButtonTextHover};
 `
-export const FrameButton = (props: any): JSX.Element => {
-  const { pressed, children, ...rest } = props
-  return pressed ? (
-    <StyledFrameButtonPressed {...rest}>{children}</StyledFrameButtonPressed>
-  ) : (
-    <StyledFrameButton {...rest}>{children}</StyledFrameButton>
-  )
+
+type FrameButtonProps = {
+  onClick: () => void
+  children: React.ReactNode
+  title: string
 }
 
-const StyledFrameButton = styled.li<{ size?: number }>`
-  color: ${props => props.theme.secondaryButtonText};
+export const FrameButton = ({
+  onClick,
+  children,
+  title
+}: FrameButtonProps): JSX.Element => (
+  <StyledFrameButton onClick={onClick} title={title}>
+    {children}
+  </StyledFrameButton>
+)
+
+type FrameControlButtonProps = {
+  pressed?: boolean
+  onClick: () => void
+  children: React.ReactNode
+  title: string
+  //todo these have size 30
+}
+
+export const FrameControlButton = ({
+  title,
+  pressed,
+  onClick,
+  children
+}: FrameControlButtonProps): JSX.Element => (
+  <StyledFrameControlButton title={title} pressed={pressed} onClick={onClick}>
+    {children}
+  </StyledFrameControlButton>
+)
+
+//TODO
+const StyledFrameControlButton = styled.li<{
+  pressed?: boolean
+  size?: number
+}>`
+  border-radius: 2px;
+  color: #758694;
   background-color: transparent;
   border-left: transparent;
-  height: ${props => props.size || dim.frameTitlebarHeight}px;
-  width: ${props => props.size || dim.frameButtonWidth}px;
+  height: 20px;
+  width: 20px;
   cursor: pointer;
   overflow: hidden;
   text-align: center;
-  line-height: ${props => props.size || 40}px;
+  line-height: 20px;
   display: inline-block;
   &:hover {
-    background-color: ${props => props.theme.secondaryButtonBackgroundHover};
+    background-color: #b9c3cf;
+    color: ${props => props.theme.secondaryButtonTextHover};
+    fill: ${props => props.theme.secondaryButtonTextHover};
+    text-decoration: none;
+  }
+  ${props =>
+    props.pressed &&
+    `background-color: #B9C3CF;
+     color: ${props.theme.secondaryButtonTextHover};
+     fill: ${props.theme.secondaryButtonTextHover};
+  `}
+`
+
+//TODO
+const StyledFrameButton = styled.li`
+  color: #485662;
+  background-color: transparent;
+  border-left: transparent;
+  height: ${dim.frameTitlebarHeight}px;
+  width: ${dim.frameButtonWidth}px;
+  cursor: pointer;
+  overflow: hidden;
+  text-align: center;
+  line-height: ${dim.frameTitlebarHeight}px;
+  display: inline-block;
+
+  &:hover {
+    background-color: #b9c3cf;
     color: ${props => props.theme.secondaryButtonTextHover};
     fill: ${props => props.theme.secondaryButtonTextHover};
     text-decoration: none;
@@ -356,11 +415,7 @@ export const StyledStatusSection = styled.li`
     text-decoration: none;
   }
 `
-const StyledFrameButtonPressed = styled(StyledFrameButton)`
-  background-color: ${props => props.theme.secondaryButtonBackgroundHover};
-  color: ${props => props.theme.secondaryButtonTextHover};
-  fill: ${props => props.theme.secondaryButtonTextHover};
-`
+
 export const DefaultA = styled.a`
   color: ${props => props.theme.secondaryButtonText};
   &:hover {

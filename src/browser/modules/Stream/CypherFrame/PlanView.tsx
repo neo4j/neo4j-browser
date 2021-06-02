@@ -79,7 +79,7 @@ export class PlanView extends Component<any, PlanViewState> {
 
   extractPlan(result: any) {
     if (result === undefined) return Promise.reject(new Error('No result'))
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       const extractedPlan = bolt.extractPlan(result)
       if (extractedPlan)
         return this.setState({ extractedPlan }, resolve() as any)
@@ -202,6 +202,7 @@ export class PlanStatusbar extends Component<any, PlanStatusbarState> {
         <StyledRightPartial>
           <StyledFrameTitlebarButtonSection>
             <FrameButton
+              title="Collapse Plan"
               data-testid="planCollapseButton"
               onClick={() =>
                 this.props.setParentState({ _planExpand: 'COLLAPSE' })
@@ -211,6 +212,7 @@ export class PlanStatusbar extends Component<any, PlanStatusbarState> {
             </FrameButton>
             <FrameButton
               data-testid="planExpandButton"
+              title="Expand Plan"
               onClick={() =>
                 this.props.setParentState({ _planExpand: 'EXPAND' })
               }

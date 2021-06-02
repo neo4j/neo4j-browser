@@ -87,7 +87,7 @@ export const base = {
 
   // Borders
   frameBorder: 'none',
-  inFrameBorder: '1px solid #e6e9ef',
+  inFrameBorder: '1px solid #DAE4F0;',
   topicBorder: '1px solid #dadada',
   drawerSeparator: '1px solid #424650',
 
@@ -151,3 +151,25 @@ export const dark = {
   // Borders
   inFrameBorder: '1px solid rgba(255,255,255,0.12)'
 }
+
+// todo
+/* 
+  frameTitlebarText: '#717172',
+
+  streamBackground: 'rgba(215, 229, 241, 0.5)',
+  frameBackground: '#FAFCFF',
+  frameButtonActiveBackgroundColor: '#B9C3CF',
+  frameButtonColor: '#758694',
+  neo4jBlue: '#018BFF',
+  bigFrameButtonColor: '#485662',
+  frameBorderColor: '#EDF7FF
+
+:guide https://guides.neo4j.com/graph-examples/exploring-the-star-wars-social-network/graph_guide
+paddings
+icons colors
+icon borders
+run background color
+
+
+preview
+*/

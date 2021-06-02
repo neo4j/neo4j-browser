@@ -28,7 +28,8 @@ const pMarginTop = 6
 const getColor = (theme: 'normal' | 'dark', name: 'svgBackground') => {
   const themes = {
     normal: {
-      svgBackground: '#fff'
+      // TODO
+      svgBackground: '#F9FCFF;'
     },
     dark: {
       svgBackground: '#292C33'
@@ -194,13 +195,14 @@ export const StyledStatusBarWrapper = styled.div`
   height: 68px;
   display: none;
 `
+//TODO
 export const StyledStatusBar: any = styled.div`
   min-height: 39px;
   line-height: 39px;
   color: ${props => props.theme.secondaryText};
   font-size: 13px;
   position: absolute;
-  background-color: ${props => props.theme.frameSidebarBackground};
+  background-color: #f9fcff;
   white-space: nowrap;
   overflow: hidden;
   bottom: 0;
@@ -267,16 +269,18 @@ export const StyledLegendContents = styled.ul`
   top: -1px;
 `
 
+// TODO
 export const StyledLegendRow = styled.div`
   border-bottom: transparent;
-  background-color: ${props => props.theme.frameSidebarBackground};
   &.contracted {
     max-height: ${legendRowHeight}px;
     overflow: hidden;
   }
+  border-bottom: 1px solid #dae4f0;
 `
+//TODO
 export const StyledLegend = styled.div`
-  background-color: ${props => props.theme.secondaryBackground};
+  background-color: #f9fcff;
   position: absolute;
   z-index: 1;
   top: 0;
@@ -355,6 +359,7 @@ export const StyledZoomHolder = styled.div`
   right: 0;
   padding: 6px 6px 0 6px;
   border-left: #e6e9ef solid 1px;
+  border-right: #e6e9ef solid 1px;
   border-top: #e6e9ef solid 1px;
   background: #fff;
 `

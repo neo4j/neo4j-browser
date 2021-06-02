@@ -173,7 +173,6 @@ export const StyledStatsBar = styled.div`
   color: ${props => props.theme.secondaryText};
   font-size: 13px;
   position: relative;
-  background-color: ${props => props.theme.secondaryBackground};
   white-space: nowrap;
   overflow: hidden;
   padding-left: 24px;
@@ -207,8 +206,9 @@ export const SpinnerContainer = styled.div`
   padding-top: 90px;
 `
 
+//TODO
 export const DropdownButton = styled.li`
-  color: ${props => props.theme.secondaryButtonText};
+  color: #485662;
   background-color: transparent;
   height: ${dim.frameTitlebarHeight}px;
   width: 41px;
@@ -218,7 +218,7 @@ export const DropdownButton = styled.li`
   display: inline-block;
   vertical-align: top;
   &:hover {
-    background-color: ${props => props.theme.secondaryButtonBackgroundHover};
+    background-color: #b9c3cf;
     color: ${props => props.theme.secondaryButtonTextHover};
     fill: ${props => props.theme.secondaryButtonTextHover};
     text-decoration: none;

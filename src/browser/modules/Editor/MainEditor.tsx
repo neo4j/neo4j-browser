@@ -24,7 +24,6 @@ import SVGInline from 'react-svg-inline'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { useMutation } from '@apollo/client'
-import { withTheme } from 'styled-components'
 import {
   commandSources,
   executeCommand
@@ -85,7 +84,6 @@ type EditorFrameProps = {
   executeCommand: (cmd: string, source: string) => void
   history: string[]
   projectId: string
-  theme: { linkHover: string }
   updateFavorite: (id: string, value: string) => void
   useDb: null | string
 }
@@ -106,7 +104,6 @@ export function EditorFrame({
   executeCommand,
   history,
   projectId,
-  theme,
   updateFavorite,
   useDb
 }: EditorFrameProps): JSX.Element {
@@ -313,7 +310,6 @@ export function EditorFrame({
             onClick={createRunCommandFunction(commandSources.playButton)}
             title={isMac ? 'Run (⌘↩)' : 'Run (ctrl+enter)'}
             icon={runIcon}
-            color={theme.linkHover}
             key="editor-Run"
             width={16}
           />
@@ -355,5 +351,5 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
 }
 
 export default withBus(
-  connect(mapStateToProps, mapDispatchToProps)(withTheme(EditorFrame))
+  connect(mapStateToProps, mapDispatchToProps)(EditorFrame)
 )

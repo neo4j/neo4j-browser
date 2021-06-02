@@ -21,10 +21,11 @@
 import styled from 'styled-components'
 import { dim } from 'browser-styles/constants'
 
+// TODO
 type FullscreenProps = { fullscreen: boolean }
 export const StyledFrame = styled.article<FullscreenProps>`
   width: auto;
-  background-color: ${props => props.theme.editorBarBackground};
+  background-color: #f9fcff;
   border: ${props => props.theme.frameBorder};
 
   ${props =>
@@ -143,9 +144,13 @@ export const StyledFrameSidebar = styled.ul`
   list-style: none;
   padding-left: 0;
   margin: 0;
+  border-radius: 2px;
   flex: 0 0 auto;
-  background-color: ${props => props.theme.frameSidebarBackground};
-`
+  background-color: #fff;
+  box-shadow: 0px 0px 2px rgba(52, 58, 67, 0.1),
+    0px 1px 2px rgba(52, 58, 67, 0.08), 0px 1px 4px rgba(52, 58, 67, 0.08);
+  z-index: 1;
+` //TODO
 
 export const StyledFrameTitlebarButtonSection = styled.ul`
   flex: 0 0 auto;
@@ -156,14 +161,14 @@ export const StyledFrameTitlebarButtonSection = styled.ul`
   margin: 0;
   margin-left: auto;
   color: ${props => props.theme.secondaryButtonText};
-  background-color: ${props => props.theme.secondaryBackground};
 `
 
-export const StyledFrameTitleBar = styled.div`
+export const StyledFrameEditorContainer = styled.div`
   border-bottom: transparent;
   line-height: 9px;
   color: ${props => props.theme.frameTitlebarText};
-  border-bottom: solid 1px ${props => props.theme.secondaryBackground};
+  display: flex;
+  margin-bottom: 2px;
 `
 
 export const StyledFrameStatusbarText = styled.label`
@@ -194,10 +199,11 @@ export const FrameTitleEditorContainer = styled.div`
   }
 `
 
+// TODO
 export const StyledFrameCommand = styled.label<{ selectedDb: string }>`
   font-family: ${props => props.theme.editorFont};
   color: ${props => props.theme.secondaryButtonText};
-  background-color: ${props => props.theme.editorBackground};
+  background-color: #FFF;
   border-radius: 2px;
   padding-left: 6px;
   font-size: 17px;

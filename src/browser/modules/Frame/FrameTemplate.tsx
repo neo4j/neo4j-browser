@@ -48,10 +48,7 @@ type FrameTemplateProps = {
 }
 
 const ShaddowWrapper = styled.div`
-  border-radius: 2px;
   margin: 0px 3px;
-  background-color: ${props => props.theme.secondaryBackground};
-  border: solid 1px rgba(52, 58, 67, 0.1);
   padding: 2px 2px 0 2px;
 `
 

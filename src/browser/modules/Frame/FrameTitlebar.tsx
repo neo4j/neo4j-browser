@@ -36,7 +36,7 @@ import {
   unpin
 } from 'shared/modules/stream/streamDuck'
 import { sleep } from 'shared/services/utils'
-import { FrameButton } from 'browser-components/buttons'
+import { FrameButton, FrameControlButton } from 'browser-components/buttons'
 import {
   CloseIcon,
   ContractIcon,
@@ -93,11 +93,13 @@ function FrameTitlebar({
     display: flex;
     justify-content: flex-end;
     border-radius: 2px 2px 0 0;
+    padding-top: 3px;
+    padding-right: 3px;
   `
 
   return (
     <TitleBarHeader>
-      <FrameButton
+      <FrameControlButton
         title="Pin at top"
         onClick={() => {
           togglePin()
@@ -105,33 +107,30 @@ function FrameTitlebar({
           togglePinning(frame.id, pinned)
         }}
         pressed={pinned}
-        size={30}
       >
         <PinIcon width={10} />
-      </FrameButton>
-      <FrameButton
+      </FrameControlButton>
+      <FrameControlButton
         title={collapse ? 'Expand' : 'Collapse'}
         onClick={() => {
           collapseToggle()
           trackCollapseToggle()
         }}
-        size={30}
       >
         {expandCollapseIcon}
-      </FrameButton>
-      <FrameButton
+      </FrameControlButton>
+      <FrameControlButton
         title={fullscreen ? 'Close fullscreen' : 'Fullscreen'}
         onClick={() => {
           fullscreenToggle()
           trackFullscreenToggle()
         }}
-        size={30}
       >
         {fullscreenIcon}
-      </FrameButton>
-      <FrameButton title="Close" onClick={onCloseClick} size={30}>
+      </FrameControlButton>
+      <FrameControlButton title="Close" onClick={onCloseClick}>
         <CloseIcon width={10} />
-      </FrameButton>
+      </FrameControlButton>
     </TitleBarHeader>
   )
 }
