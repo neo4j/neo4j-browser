@@ -27,8 +27,6 @@ import { APP_START } from 'shared/modules/app/appDuck'
 import {
   CONNECTED_STATE,
   CONNECTION_SUCCESS,
-  SWITCH_CONNECTION,
-  SWITCH_CONNECTION_SUCCESS,
   connectionLossFilter,
   DISCONNECTION_SUCCESS,
   SILENT_DISCONNECT,
