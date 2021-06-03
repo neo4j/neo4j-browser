@@ -18,8 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react'
 import { connect } from 'react-redux'
+import React from 'react'
 
 import {
   cancel as cancelRequest,
@@ -36,7 +36,7 @@ import {
   unpin
 } from 'shared/modules/stream/streamDuck'
 import { sleep } from 'shared/services/utils'
-import { FrameButton, FrameControlButton } from 'browser-components/buttons'
+import { FrameControlButton } from 'browser-components/buttons'
 import {
   CloseIcon,
   ContractIcon,
@@ -45,9 +45,9 @@ import {
   PinIcon,
   UpIcon
 } from 'browser-components/icons/Icons'
-import styled from 'styled-components'
 import { GlobalState } from 'shared/globalState'
 import { Action, Dispatch } from 'redux'
+import { TitleBarHeader } from './styled'
 
 type FrameTitleBarBaseProps = {
   frame: Frame
@@ -89,13 +89,6 @@ function FrameTitlebar({
   ) : (
     <UpIcon width={10} />
   )
-  const TitleBarHeader = styled.div`
-    display: flex;
-    justify-content: flex-end;
-    border-radius: 2px 2px 0 0;
-    padding-top: 3px;
-    padding-right: 3px;
-  `
 
   return (
     <TitleBarHeader>

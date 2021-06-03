@@ -162,7 +162,7 @@ export const dark = {
   frameSidebarBackground: '#0C1A25',
   frameTitlebarText: '#717172',
   frameControlButtonTextColor: '#D7E5F1',
-  frameButtonTextColor: '#FFF;',
+  frameButtonTextColor: '#FFF',
   frameButtonHoverBackground: '#485662',
   streamBackgroundColor: '#374754',
   frameBackground: '#192A37;'

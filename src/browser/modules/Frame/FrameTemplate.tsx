@@ -29,9 +29,9 @@ import {
   StyledFrameContents,
   StyledFrameStatusbar,
   StyledFrameMainSection,
-  StyledFrameAside
+  StyledFrameAside,
+  ContentContainer
 } from './styled'
-import styled from 'styled-components'
 
 type FrameTemplateProps = {
   contents: JSX.Element | null | string
@@ -46,11 +46,6 @@ type FrameTemplateProps = {
   aside?: JSX.Element | null
   statusbar?: JSX.Element | null
 }
-
-const ShaddowWrapper = styled.div`
-  margin: 0px 3px;
-  padding: 2px 2px 0 2px;
-`
 
 function FrameTemplate({
   header,
@@ -115,7 +110,7 @@ function FrameTemplate({
         />
       )}
 
-      <ShaddowWrapper>
+      <ContentContainer>
         {header && (
           <FrameEditor
             frame={header}
@@ -139,7 +134,7 @@ function FrameTemplate({
             </StyledFrameContents>
           </StyledFrameMainSection>
         </StyledFrameBody>
-      </ShaddowWrapper>
+      </ContentContainer>
 
       {statusbar && (
         <StyledFrameStatusbar

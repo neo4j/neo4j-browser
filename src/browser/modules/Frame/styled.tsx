@@ -219,3 +219,16 @@ export const StyledFrameCommand = styled.label<{ selectedDb: string }>`
     font-variant-ligatures: none !important;
   } 
 `
+
+export const ContentContainer = styled.div`
+  margin: 0px 3px;
+  padding: 2px 2px 0 2px;
+`
+
+export const TitleBarHeader = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  border-radius: 2px 2px 0 0;
+  padding-top: 3px;
+  padding-right: 3px;
+`

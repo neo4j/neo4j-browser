@@ -19,11 +19,11 @@
  */
 
 import React, { ReactNode } from 'react'
-import SVGInline from 'react-svg-inline'
 import styled, {
   CSSProperties,
   FlattenSimpleInterpolation
 } from 'styled-components'
+import SVGInline from 'react-svg-inline'
 
 const StyledIconWrapper = ({
   activeStyle,

@@ -38,7 +38,7 @@ export const ActionButtonSection = styled.div`
   justify-content: space-between;
 `
 
-export const MainEditorContainer = styled.div<FullscreenProps>`
+export const MainEditorWrapper = styled.div<FullscreenProps>`
   background-color: ${props => props.theme.frameBackground};
   border-radius: 2px;
   box-shadow: ${props => props.theme.standardShadow};
