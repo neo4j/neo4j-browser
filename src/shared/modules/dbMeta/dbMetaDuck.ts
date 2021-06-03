@@ -700,6 +700,7 @@ export const serverInfoEpic = (some$: any, store: any) =>
 export const clearMetaOnDisconnectEpic = (some$: any, store: any) =>
   some$
     .ofType(DISCONNECTION_SUCCESS)
+    .merge(some$.ofType(SILENT_DISCONNECT))
     .do(() => {
       if (!shouldRetainEditorHistory(store.getState())) {
         store.dispatch(clearHistory())
