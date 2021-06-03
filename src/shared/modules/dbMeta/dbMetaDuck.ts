@@ -29,6 +29,7 @@ import {
   CONNECTION_SUCCESS,
   connectionLossFilter,
   DISCONNECTION_SUCCESS,
+  SILENT_DISCONNECT,
   LOST_CONNECTION,
   UPDATE_CONNECTION_STATE,
   setRetainCredentials,
@@ -551,6 +552,7 @@ export const dbMetaEpic = (some$: any, store: any) =>
               .ofType(LOST_CONNECTION)
               .filter(connectionLossFilter)
               .merge(some$.ofType(DISCONNECTION_SUCCESS))
+              .merge(some$.ofType(SILENT_DISCONNECT))
           )
           .mergeMap(() => switchToRequestedDb(store))
           .mapTo({ type: DB_META_DONE })
@@ -659,10 +661,6 @@ export const serverConfigEpic = (some$: any, store: any) =>
             updateUserCapability(USER_CAPABILITIES.serverConfigReadable, true)
           )
           store.dispatch(updateSettings(settings))
-          // settings must be updated in state for this check to work
-          if (!shouldRetainEditorHistory(store.getState())) {
-            store.dispatch(clearHistory())
-          }
           return Rx.Observable.of(null)
         })
     })
@@ -699,5 +697,14 @@ export const serverInfoEpic = (some$: any, store: any) =>
     })
     .mapTo({ type: 'NOOP' })
 
-export const clearMetaOnDisconnectEpic = (some$: any, _store: any) =>
-  some$.ofType(DISCONNECTION_SUCCESS).mapTo({ type: CLEAR })
+export const clearMetaOnDisconnectEpic = (some$: any, store: any) =>
+  some$
+    .ofType(DISCONNECTION_SUCCESS)
+    .merge(some$.ofType(SILENT_DISCONNECT))
+    .do(() => {
+      if (!shouldRetainEditorHistory(store.getState())) {
+        store.dispatch(clearHistory())
+      }
+      return Rx.Observable.of(null)
+    })
+    .mapTo({ type: CLEAR })
