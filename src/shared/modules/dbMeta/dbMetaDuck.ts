@@ -534,7 +534,6 @@ export const dbMetaEpic = (some$: any, store: any) =>
     .ofType(UPDATE_CONNECTION_STATE)
     .filter((s: any) => s.state === CONNECTED_STATE)
     .merge(some$.ofType(CONNECTION_SUCCESS))
-    .merge(some$.ofType(SWITCH_CONNECTION_SUCCESS))
     .mergeMap(() => {
       return (
         Rx.Observable.timer(1, 20000)
@@ -663,17 +662,7 @@ export const serverConfigEpic = (some$: any, store: any) =>
           store.dispatch(
             updateUserCapability(USER_CAPABILITIES.serverConfigReadable, true)
           )
-          const prevShouldRetainHistory = shouldRetainEditorHistory(
-            store.getState()
-          )
           store.dispatch(updateSettings(settings))
-          const shouldRetainHistory = shouldRetainEditorHistory(
-            store.getState()
-          )
-          // if setting changed either prev/next was false so clear history
-          if (prevShouldRetainHistory !== shouldRetainHistory) {
-            store.dispatch(clearHistory())
-          }
           return Rx.Observable.of(null)
         })
     })
@@ -713,11 +702,10 @@ export const serverInfoEpic = (some$: any, store: any) =>
 export const clearMetaOnDisconnectEpic = (some$: any, store: any) =>
   some$
     .ofType(DISCONNECTION_SUCCESS)
-    .merge(some$.ofType(SWITCH_CONNECTION))
-    .merge(some$.ofType(SILENT_DISCONNECT))
-    .mergeMap(() => {
+    .do(() => {
       if (!shouldRetainEditorHistory(store.getState())) {
         store.dispatch(clearHistory())
       }
-      return Rx.Observable.of({ type: CLEAR })
+      return Rx.Observable.of(null)
     })
+    .mapTo({ type: CLEAR })
