@@ -97,9 +97,9 @@ export const base = {
   // Frame
   frameSidebarBackground: '#FFF',
   frameTitlebarText: '#717172',
-  frameControlButtonTextColor: '#758694',
-  frameButtonTextColor: '#485662',
-  frameButtonHoverBackground: '#b9c3cf',
+  frameControlButtonTextColor: '#485662',
+  frameButtonTextColor: '#0C1A25',
+  frameButtonHoverBackground: '#B9C3CF',
   streamBackgroundColor: 'rgba(215, 229, 241, 0.7)',
   frameBackground: '#F9FCFF'
 }
@@ -161,8 +161,8 @@ export const dark = {
   // Frame
   frameSidebarBackground: '#0C1A25',
   frameTitlebarText: '#717172',
-  frameControlButtonTextColor: '#758694;',
-  frameButtonTextColor: '#F9FCFF;',
+  frameControlButtonTextColor: '#D7E5F1',
+  frameButtonTextColor: '#FFF;',
   frameButtonHoverBackground: '#485662',
   streamBackgroundColor: '#374754',
   frameBackground: '#192A37;'
