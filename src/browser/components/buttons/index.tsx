@@ -364,7 +364,7 @@ const StyledFrameControlButton = styled.li<{
   text-align: center;
   line-height: 20px;
   display: inline-block;
-  margin-left: 4px;
+  margin-left: 12px;
   &:hover {
     background-color: ${props => props.theme.frameButtonHoverBackground};
     color: ${props => props.theme.secondaryButtonTextHover};

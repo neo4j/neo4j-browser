@@ -353,12 +353,12 @@ export const StyledZoomButton = styled.button`
   list-style-type: none;
   margin-bottom: 10px;
   border: none;
-  color: #9b9da2;
+  color: ${props => props.theme.frameButtonTextColor}
   background: transparent;
   border-color: black;
   padding: 2px 6px 3px;
   &:hover {
-    color: black;
+    opacity: 0.7;
   }
   &:focus {
     outline: none;
@@ -367,7 +367,7 @@ export const StyledZoomButton = styled.button`
     opacity: 0.3;
     cursor: auto;
     &:hover {
-      color: #9b9da2;
+      color: ${props => props.theme.frameButtonTextColor}
     }
   }
 `

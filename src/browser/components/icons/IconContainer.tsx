@@ -57,7 +57,6 @@ type IconContainerProps = {
   inactiveStyle?: string
   isOpen?: boolean
   regulateSize?: 0.625 | 1 | 2
-  fontSize?: number
   text?: string
   title?: string
   width?: number
@@ -68,12 +67,10 @@ type IconContainerProps = {
 }
 
 export const IconContainer = (props: IconContainerProps): JSX.Element => {
-  const { text, regulateSize, fontSize, icon, width, title, ...rest } = props
+  const { text, regulateSize, icon, width, title, ...rest } = props
 
   const regulateSizeStyle = regulateSize
     ? { fontSize: regulateSize + 'em' }
-    : fontSize
-    ? { fontSize }
     : undefined
 
   const currentIcon = icon ? (

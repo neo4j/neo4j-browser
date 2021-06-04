@@ -29,14 +29,17 @@ import arrowRight from 'icons/arrow-right.svg'
 import backArrow from 'icons/back-arrow.svg'
 import buttonRefreshArrow from 'icons/button-refresh-arrow.svg'
 import cannyFeedback from 'icons/canny-feedback.svg'
+import upCaret from 'icons/frame-collapse.svg'
+import downCaret from 'icons/frame-expand.svg'
 import cannyNotifications from 'icons/canny-notifications.svg'
-import close from 'icons/close.svg'
+import close from 'icons/frame-close.svg'
 import cloudCheck from 'icons/cloud-check.svg'
 import cloudRemove from 'icons/cloud-remove.svg'
 import cog from 'icons/cog.svg'
 import databaseCheck from 'icons/database-check.svg'
-import downloadBottom from 'icons/download-bottom.svg'
-import expand from 'icons/expand.svg'
+import download from 'icons/save.svg'
+import expand from 'icons/frame-fullscreen.svg'
+import shrink from 'icons/frame-shrink.svg'
 import file from 'icons/file.svg'
 import folderEmpty from 'icons/folder-empty.svg'
 import help from 'icons/help.svg'
@@ -44,11 +47,10 @@ import monitorPlay from 'icons/monitor-play.svg'
 import navigationMenuVertical from 'icons/navigation-menu-vertical.svg'
 import neo4j from 'icons/neo4j-icon.svg'
 import newFolder from 'icons/folder-add.svg'
-import pin from 'icons/pin.svg'
+import pin from 'icons/frame-pin.svg'
 import ratingStar from 'icons/rating-star.svg'
 import runIcon from 'icons/run-icon.svg'
-import saveFavorite from 'icons/save-favorite.svg'
-import shrink from 'icons/shrink.svg'
+import saveFavorite from 'icons/favorite.svg'
 import skipPrev from 'icons/skip-prev.svg'
 import stopIcon from 'icons/stop-icon.svg'
 import table from 'icons/table.svg'
@@ -278,24 +280,14 @@ export const ZoomInIcon = ({
 }: {
   regulateSize: 1 | 2
 }): JSX.Element => (
-  <IconContainer
-    activeStyle={inactive}
-    inactiveStyle={inactive}
-    regulateSize={regulateSize}
-    className="sl-zoom-in"
-  />
+  <IconContainer regulateSize={regulateSize} className="sl-zoom-in" />
 )
 export const ZoomOutIcon = ({
   regulateSize
 }: {
   regulateSize: 1 | 2
 }): JSX.Element => (
-  <IconContainer
-    activeStyle={inactive}
-    inactiveStyle={inactive}
-    regulateSize={regulateSize}
-    className="sl-zoom-out"
-  />
+  <IconContainer regulateSize={regulateSize} className="sl-zoom-out" />
 )
 
 export const BinIcon = (): JSX.Element => (
@@ -322,10 +314,10 @@ export const CloseIcon = ({ width = SMALL_SIZE }: WidthProps): JSX.Element => (
   <IconContainer icon={close} width={width} />
 )
 export const UpIcon = ({ width = SMALL_SIZE }: WidthProps): JSX.Element => (
-  <IconContainer fontSize={width} className="sl-chevron-up" />
+  <IconContainer icon={upCaret} width={width} />
 )
 export const DownIcon = ({ width = SMALL_SIZE }: WidthProps): JSX.Element => (
-  <IconContainer fontSize={width} className="sl-chevron-down" />
+  <IconContainer icon={downCaret} width={width} />
 )
 export const PinIcon = ({ width = SMALL_SIZE }: WidthProps): JSX.Element => (
   <IconContainer icon={pin} width={width} />
@@ -370,7 +362,7 @@ export const CancelIcon = (): JSX.Element => (
   />
 )
 export const DownloadIcon = (): JSX.Element => (
-  <IconContainer icon={downloadBottom} width={SMALL_SIZE} />
+  <IconContainer icon={download} width={SMALL_SIZE} />
 )
 export const ExpandMenuIcon = (): JSX.Element => (
   <IconContainer activeStyle={blue} className="fa fa-caret-left" />
