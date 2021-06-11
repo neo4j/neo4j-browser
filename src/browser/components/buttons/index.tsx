@@ -351,11 +351,15 @@ export const FrameControlButton = ({
 
 const StyledFrameControlButton = styled.li<{
   pressed?: boolean
-  size?: number
 }>`
   border-radius: 2px;
-  color: ${props => props.theme.frameControlButtonTextColor};
-  background-color: transparent;
+  color: ${props =>
+    props.pressed
+      ? props.theme.secondaryButtonTextHover
+      : props.theme.frameControlButtonTextColor};
+  background-color: ${props =>
+    props.pressed ? props.theme.frameButtonHoverBackground : 'transparent'};
+
   border-left: transparent;
   height: 20px;
   width: 20px;
@@ -371,13 +375,6 @@ const StyledFrameControlButton = styled.li<{
     fill: ${props => props.theme.secondaryButtonTextHover};
     text-decoration: none;
   }
-  ${props =>
-    props.pressed &&
-    `
-     background-color: ${props.theme.frameButtonHoverBackground};
-     color: ${props.theme.secondaryButtonTextHover};
-     fill: ${props.theme.secondaryButtonTextHover};
-  `}
 `
 
 export const StyledFrameButton = styled.li`
