@@ -17,16 +17,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 import React, { Dispatch, useState } from 'react'
 import { connect } from 'react-redux'
 import { Action } from 'redux'
 import {
   DrawerSubHeader,
   DrawerSection,
-  DrawerSectionBody
-} from 'browser-components/drawer'
+  DrawerSectionBody,
+  DrawerExternalLink
+} from 'browser-components/drawer/drawer-styled'
 import {
-  StyledHelpLink,
   StyledHelpItem,
   StyledCommandListItem,
   StyledCommandNamePair,
@@ -43,6 +44,7 @@ import {
   SavedScriptsExpandMenuRightIcon
 } from 'browser-components/icons/Icons'
 import { SavedScriptsFolderCollapseIcon } from 'browser-components/SavedScripts/styled'
+
 const DrawerSubHeaderWithMargin = styled(DrawerSubHeader)`
   margin: 0 24px 0 24px;
 `
@@ -78,9 +80,7 @@ export const DocumentItems = ({
   const listOfItems = items.map(item =>
     'url' in item ? (
       <StyledHelpItem key={item.url}>
-        <StyledHelpLink href={item.url} target="_blank" rel="noreferrer">
-          {item.name}
-        </StyledHelpLink>
+        <DrawerExternalLink href={item.url}>{item.name}</DrawerExternalLink>
       </StyledHelpItem>
     ) : (
       <CommandItem

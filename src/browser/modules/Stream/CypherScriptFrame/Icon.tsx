@@ -20,7 +20,7 @@
 
 import React from 'react'
 import {
-  SmallSpinner,
+  SmallSpinnerIcon,
   SquareIcon,
   CheckedSquareIcon,
   ExclamationTriangleIcon
@@ -35,7 +35,7 @@ interface IconProps {
 export const Icon = ({ status }: IconProps): JSX.Element => {
   switch (status) {
     case 'pending':
-      return <SmallSpinner />
+      return <SmallSpinnerIcon />
     case 'skipped':
     case 'waiting':
       return <SquareIcon />

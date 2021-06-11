@@ -19,7 +19,7 @@
  */
 
 import { QuickInputList } from 'monaco-editor/esm/vs/base/parts/quickinput/browser/quickInputList'
-import { parse } from 'cypher-editor-support'
+import { parse, QueryOrCommand } from 'cypher-editor-support'
 import { debounce } from 'lodash-es'
 import {
   editor,
@@ -40,6 +40,7 @@ import { Bus } from 'suber'
 
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import { QueryResult } from 'neo4j-driver'
 
 const shouldCheckForHints = (code: string) =>
   code.trim().length > 0 &&
@@ -89,6 +90,8 @@ interface MonacoProps {
   toggleFullscreen: () => void
 }
 
+const EXPLAIN_QUERY_PREFIX = 'EXPLAIN '
+const EXPLAIN_QUERY_PREFIX_LENGTH = EXPLAIN_QUERY_PREFIX.length
 const Monaco = forwardRef<MonacoHandles, MonacoProps>(
   (
     {
@@ -118,6 +121,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       },
       setValue(value: string) {
         setValue(value)
+        historyIndexRef.current = -1
       },
       resize(fillContainer = false) {
         resize(fillContainer)
@@ -167,14 +171,16 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
           selectionHighlight: false,
           value,
           wordWrap: 'on',
-          wrappingStrategy: 'advanced'
+          wrappingStrategy: 'advanced',
+          occurrencesHighlight: false,
+          matchBrackets: 'never'
         }
       )
 
       editorRef.current.addCommand(
         KeyCode.Enter,
         () => (isMultiLine() ? newLine() : execute()),
-        '!suggestWidgetVisible'
+        '!suggestWidgetVisible && !findWidgetVisible'
       )
       editorRef.current.addCommand(
         KeyCode.UpArrow,
@@ -204,7 +210,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       editorRef.current.addCommand(
         KeyCode.Escape,
         toggleFullscreen,
-        '!suggestWidgetVisible'
+        '!suggestWidgetVisible && !findWidgetVisible'
       )
 
       onContentUpdate()
@@ -405,9 +411,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
       debouncedUpdateCode()
     }
 
-    const addWarnings = (
-      statements: { start: { line: number }; getText: () => string }[]
-    ) => {
+    const addWarnings = (statements: QueryOrCommand[]) => {
       if (!statements.length) return
 
       const model = editorRef.current?.getModel() as editor.ITextModel
@@ -446,10 +450,10 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
         bus.self(
           CYPHER_REQUEST,
           {
-            query: 'EXPLAIN ' + text,
+            query: EXPLAIN_QUERY_PREFIX + text,
             queryType: NEO4J_BROWSER_USER_ACTION_QUERY
           },
-          response => {
+          (response: { result: QueryResult; success?: boolean }) => {
             if (
               response.success === true &&
               response.result.summary.notifications.length > 0
@@ -457,22 +461,22 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
               editor.setModelMarkers(model, monacoId, [
                 ...editor.getModelMarkers({ owner: monacoId }),
                 ...response.result.summary.notifications.map(
-                  ({
-                    description,
-                    position: { line },
-                    title
-                  }: {
-                    description: string
-                    position: { line: number }
-                    title: string
-                  }) => ({
-                    startLineNumber: statementLineNumber + line,
-                    startColumn: 1,
-                    endLineNumber: statementLineNumber + line,
-                    endColumn: 1000,
-                    message: title + '\n\n' + description,
-                    severity: MarkerSeverity.Warning
-                  })
+                  ({ description, position, title }) => {
+                    const line = 'line' in position ? position.line : 0
+                    const column = 'column' in position ? position.column : 0
+                    return {
+                      startLineNumber: statementLineNumber + line,
+                      startColumn:
+                        statement.start.column +
+                        (line === 1
+                          ? column - EXPLAIN_QUERY_PREFIX_LENGTH
+                          : column),
+                      endLineNumber: statement.stop.line,
+                      endColumn: statement.stop.column + 2,
+                      message: title + '\n\n' + description,
+                      severity: MarkerSeverity.Warning
+                    }
+                  }
                 )
               ])
             }

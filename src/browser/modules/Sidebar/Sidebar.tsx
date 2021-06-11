@@ -18,17 +18,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { ReactFragment, ReactElement } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import DatabaseDrawer from '../DBMSInfo/DBMSInfo'
 import DocumentsDrawer from './Documents'
 import AboutDrawer from './About'
 import SettingsDrawer from './Settings'
+import GuidesDrawer from './GuidesDrawer'
 import Favorites from './favorites'
 import StaticScripts from './static-scripts'
 import ProjectFilesDrawer from './ProjectFiles'
 import TabNavigation, {
-  NavItem
+  NavItem,
+  STANDARD_DRAWER_WIDTH
 } from 'browser-components/TabNavigation/Navigation'
 import BrowserSync from '../Sync/BrowserSync'
 import { GlobalState } from 'shared/globalState'
@@ -48,10 +50,11 @@ import {
   CloudSyncIcon,
   SettingsIcon,
   AboutIcon,
-  ProjectFilesIcon
+  ProjectFilesIcon,
+  GuidesDrawerIcon
 } from 'browser-components/icons/Icons'
 import { getCurrentDraft } from 'shared/modules/sidebar/sidebarDuck'
-import { DrawerHeader } from 'browser-components/drawer'
+import { DrawerHeader } from 'browser-components/drawer/drawer-styled'
 
 interface SidebarProps {
   openDrawer: string
@@ -78,7 +81,7 @@ const Sidebar = ({
     {
       name: 'DBMS',
       title: 'Database Information',
-      icon: function dbIcon(isOpen: boolean): ReactElement {
+      icon: function dbIcon(isOpen: boolean): JSX.Element {
         return (
           <DatabaseIcon
             isOpen={isOpen}
@@ -92,16 +95,16 @@ const Sidebar = ({
     {
       name: 'Favorites',
       title: 'Favorites',
-      icon: function favIcon(isOpen: boolean): ReactElement {
+      icon: function favIcon(isOpen: boolean): JSX.Element {
         return <FavoritesIcon isOpen={isOpen} title="Favorites" />
       },
-      content: function FavoritesDrawer(): ReactFragment {
+      content: function FavoritesDrawer(): JSX.Element {
         return (
-          <>
+          <div style={{ width: STANDARD_DRAWER_WIDTH }}>
             <DrawerHeader> Favorites </DrawerHeader>
             <Favorites />
             {showStaticScripts && <StaticScripts />}
-          </>
+          </div>
         )
       }
     },
@@ -110,7 +113,7 @@ const Sidebar = ({
           {
             name: 'Project Files',
             title: 'Project Files',
-            icon: function projectFilesIcon(isOpen: boolean): ReactElement {
+            icon: function projectFilesIcon(isOpen: boolean): JSX.Element {
               return <ProjectFilesIcon isOpen={isOpen} title="Project Files" />
             },
             content: function ProjectDrawer(): JSX.Element {
@@ -118,14 +121,22 @@ const Sidebar = ({
             }
           }
         ]
-      : [])
+      : []),
+    {
+      name: 'Guides',
+      title: 'Guides',
+      icon: function guidesDrawerIcon(isOpen: boolean): JSX.Element {
+        return <GuidesDrawerIcon isOpen={isOpen} />
+      },
+      content: GuidesDrawer
+    }
   ]
 
   const bottomNavItemsList: NavItem[] = [
     {
       name: 'Documents',
       title: 'Help &amp; Resources',
-      icon: function docsIcon(isOpen: boolean): ReactElement {
+      icon: function docsIcon(isOpen: boolean): JSX.Element {
         return <DocumentsIcon isOpen={isOpen} title="Help &amp; Resources" />
       },
       content: DocumentsDrawer,
@@ -134,7 +145,7 @@ const Sidebar = ({
     {
       name: 'Sync',
       title: 'Browser Sync',
-      icon: function syncIcon(isOpen: boolean): ReactElement {
+      icon: function syncIcon(isOpen: boolean): JSX.Element {
         return (
           <CloudSyncIcon
             isOpen={isOpen}
@@ -148,7 +159,7 @@ const Sidebar = ({
     {
       name: 'Settings',
       title: 'Settings',
-      icon: function settingIcon(isOpen: boolean): ReactElement {
+      icon: function settingIcon(isOpen: boolean): JSX.Element {
         return <SettingsIcon isOpen={isOpen} title="Browser Settings" />
       },
       content: SettingsDrawer
@@ -156,7 +167,7 @@ const Sidebar = ({
     {
       name: 'About',
       title: 'About Neo4j',
-      icon: function aboutIcon(isOpen: boolean): ReactElement {
+      icon: function aboutIcon(isOpen: boolean): JSX.Element {
         return <AboutIcon isOpen={isOpen} title="About Neo4j" />
       },
       content: AboutDrawer

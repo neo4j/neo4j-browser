@@ -1,0 +1,1237 @@
+[[operations]]
+= Browser operations
+:description: This section describes how to administer and use Neo4j Browser.
+
+
+[[dbms-connection]]
+== Connect to a Neo4j DBMS
+
+By default, Neo4j Browser communicates with a Neo4j DBMS via the link:https://7687.org/[Bolt Protocol] using the link:https://neo4j.com/docs/javascript-manual/current/[Neo4j JavaScript Driver] to execute Cypher queries.
+However, it is possible to turn off Bolt and use xref:#http-rest-requests[HTTP(S)] instead, as in older versions of Neo4j Browser.
+
+
+[[uri-schema]]
+=== Connection URI schemas
+
+Neo4j Browser supports the following connection URI schemas:
+
+* `neo4j://`(unencrypted) and `neo4j+s://` (encrypted with TLS) -- work on either a single instance or a cluster.
+Routing is handled by the driver.
+If used on a cluster, it routes to a cluster member, not necessarily the system at the IP that you specified.
+Queries executed over that protocol route according to the transaction functions --_write_ transactions go to the leader and _read_ transactions route between followers and read replicas.
+
+* `bolt://`(unencrypted) and `bolt+s://` (encrypted with TLS) -- connect only to the server with the IP you specify.
+It does not route anywhere else.
+All queries over this protocol go only to this machine, whether they are _read_ or _write_ queries.
+_Write_ queries error out if not being sent to the Cluster leader.
+
+If used on a single server (not a cluster), then queries over them will behave identically.
+A difference in the behavior in `neo4j://` and `bolt://` is seen only if addressing a cluster member.
+
+[TIP]
+====
+For more information on the different connection scenarios, see <<connection-scenarios>>.
+For more information on how to configure connectors (Bolt, HTTP, and HTTPS) for Neo4j and the default ports, see link:https://neo4j.com/docs/operations-manual/{neo4j-version}/configuration/connectors/#connectors[Operations Manual -> Configure connectors] and link:https://neo4j.com/docs/operations-manual/current/configuration/ports/[Operations Manual -> Ports].
+====
+
+
+[[manage-connection]]
+=== Manage connection commands
+
+The `:server` command lets you manage the connection to Neo4j, such as connecting, disconnecting, and viewing metadata for the current connection.
+
+Usage::	`:server <action>`
+
+Actions::
+* `:server status` -- Connection status.
+This is your current connection information.
+* `:server change-password` -- Opens the frame *Password change*, where you can change your current password.
+
+Auth::
+* `:server connect` -- Opens the frame *Connect to Neo4j*.
+If connected to the server, the frame shows the current user and the connection URL.
+Otherwise, enter the name of the database you want to connect, the DBMS URL, and the user credentials.
+* `:server disconnect` -- Opens the frame *Disconnected*, which shows that the current user is disconnected from the server.
+Then, it runs the `:server connect` automatically.
+
+User::
+`:help server user` - opens the frame *User admin*.
+
+
+[[connection-scenarios]]
+=== Connection scenarios
+
+.Neo4j Browser - Bundled with Neo4j
+[options="header", cols="<,<,<"]
+|===
+| Cluster configured
+| TLS encryption
+| URI
+
+| no
+| no
+| `bolt://` or `neo4j://`
+
+| no
+| yes
+| `bolt+s://` or `neo4j+s://`
+
+| yes
+| no
+| `neo4j://`
+
+| yes
+| yes
+| `neo4j+s://`
+
+| yes (connect to one specific cluster member only)
+| no
+| `bolt://`
+
+| yes (connect to one specific cluster member only)
+| yes
+| `bolt+s://`
+|===
+
+If you are developing on your local machine with a single instance:
+
+* Default URL to Neo4j Browser is _http://localhost:7474/browser_ (use your web browser).
+* Default connection URL to Neo4j is _bolt://localhost:7687_.
+
+
+.Neo4j Browser - Neo4j Desktop application
+[options="header", cols="<,<,<"]
+|===
+| Cluster configured
+| TLS encryption
+| URI
+
+| no
+| no
+| `bolt://` or `neo4j://`
+
+| no
+| yes
+| `bolt+s://` or `neo4j+s://`
+
+| yes
+| no
+| `neo4j://`
+
+| yes
+| yes
+| `neo4j+s://`
+
+| yes (connect to one specific cluster member only)
+| no
+| `bolt://`
+
+| yes (connect to one specific cluster member only)
+| yes
+| `bolt+s://`
+|===
+
+
+.Neo4j Browser - Web application
+[options="header", cols="<,<,<"]
+|===
+| Cluster configured
+| TLS encryption
+| URI
+
+| no
+| yes
+| `bolt+s://` or `neo4j+s://`
+
+| yes
+| yes
+| `neo4j+s://`
+
+| yes (connect to one specific cluster member only)
+| yes
+| `bolt+s://`
+|===
+
+Neo4j Browser is available as a web application at _https://browser.graphapp.io/_.
+
+.Neo4j Browser - Sandbox
+
+In link:https://neo4j.com/sandbox/[Neo4j sandbox], you can launch a Neo4j Browser web application by clicking *Open with Browser*.
+It automatically connects with a connection URL similar to:
+
+`bolt+s://ba99a8c2d1c755f0c0cc2a95d0a627ea.neo4jsandbox.com:7687`
+
+.Neo4j Browser - Neo4j Aura
+
+In the https://console.neo4j.io[Neo4j Aura console], Neo4j Browser can be accessed as a web application within the user interface.
+The Neo4j Browser web application connects to your Neo4j instance without having to enter any connection URL.
+
+The connection URL is similar to:
+
+`neo4j+s://358a0e8a.databases.neo4j.io`
+
+Each database has a `dbid` that can be inferred from the Aura Console.
+
+The URL _\https://<dbid>.databases.neo4j.io/browser/_ can also be used to access Neo4j Browser for that specific `dbid` on Neo4j Aura.
+
+[[security-browser]]
+== Browser credentials handling
+
+Neo4j Browser has two mechanisms for avoiding users having to enter their Neo4j credentials repeatedly.
+
+First, while the Browser is open in a web browser tab, it ensures that the existing database session is kept alive.
+This is subject to a timeout.
+The timeout is configured in the setting link:https://neo4j.com/docs/operations-manual/current/reference/configuration-settings/#config_browser.credential_timeout[`browser.credential_timeout`].
+The timeout is reset whenever there is user interaction with the Browser.
+
+Second, the Browser can also cache the user's Neo4j credentials locally.
+When credentials are cached, they are stored unencrypted in the web browser's local storage.
+If the web browser tab is closed and then re-opened, the session is automatically re-established using the cached credentials.
+This local storage is also subject to the timeout configured in the setting `browser.credential_timeout`.
+In addition, caching credentials in browser local storage can be disabled altogether.
+To disable credentials caching, set link:https://neo4j.com/docs/operations-manual/current/reference/configuration-settings/#config_browser.retain_connection_credentials[`browser.retain_connection_credentials=false`] in the server configuration.
+
+If the user issues a `:server disconnect` command, any existing session is terminated, and the credentials are cleared from the local storage.
+
+
+[[adjust-settings]]
+== Adjust Browser settings
+
+The Neo4j Browser defaults for all settings can be adjusted at any time in Neo4j Browser and globally.
+
+To view all currently configured settings, run `:config`.
+
+
+.Show the configuration settings
+====
+[source, shell, role=noplay]
+----
+:config
+----
+.Example output
+[source, shell, role=noheader]
+----
+{
+  "maxHistory": 20,
+  "theme": "auto",
+  "initCmd": ":play start",
+  "playImplicitInitCommands": true,
+  "initialNodeDisplay": 300,
+  "maxNeighbours": 100,
+  "showSampleScripts": true,
+  "browserSyncDebugServer": null,
+  "maxRows": 1000,
+  "maxFieldItems": 500,
+  "shouldReportUdc": true,
+  "autoComplete": true,
+  "scrollToTop": true,
+  "maxFrames": 30,
+  "codeFontLigatures": true,
+  "useBoltRouting": false,
+  "editorLint": false,
+  "useCypherThread": true,
+  "enableMultiStatementMode": true,
+  "connectionTimeout": 30000,
+  "showPerformanceOverlay": false
+}
+----
+====
+
+
+.Available Browser settings
+[options="header" cols=",,,"]
+|===
+| Browser Setting
+| Default value
+| Description
+| Configurable in the *Browser Settings* drawer
+
+| `maxHistory`
+| `30`
+| The maximum number of recently executed queries kept in Browser.
+When reached, old entries get retired.
+The command history is persisted across Browser restarts.
+| yes
+
+| `theme`
+| `auto`
+| Neo4j Browser UI theme.
+Possible values: `auto`, `normal`, `outline`, and `dark`.
+| yes
+
+| `initCmd`
+| `:play start`
+| The initial command that is run when connected to the graph.
+| yes
+
+| `playImplicitInitCommands`
+| `true`
+| If `true`, Browser automatically runs the command set in `initCmd` on startup, for example `:play start`.
+| no
+
+| `initialNodeDisplay`
+| `300`
+| Limit the number of nodes displayed on the first load of the graph visualization.
+| yes
+
+| `maxNeighbours`
+| `100`
+| The maximum number of neighbours for a node.
+| yes
+
+| `showSampleScripts`
+| `true`
+| Whether to display the *Sample Scripts* tab in *Favorites*.
+| yes
+
+| `browserSyncDebugServer`
+| `null`
+| Internal setting, used for debugging Browser Sync.
+| yes
+
+| `maxRows`
+| `1000`
+| The maximum rows to render in the *Table* and *Text* result views.
+| yes
+
+| `maxFieldItems`
+| `500`
+| Limit the length of the returned lists.
+For example, if a node has 1000 labels, the list will be cut off to the value set in `maxFieldItems`.
+| no
+
+| `shouldReportUdc`
+| `true`
+| Report less user metrics (user data collection).
+| no
+
+| `autoComplete`
+| `true`
+| Automatic completion of missing relationships. +
+When you execute a query, any relationships not explicitly returned by the query, but that exist between the nodes will be shown in the graph. 
+You can disable for queries where it is important to see only the relationships the query returns.
+This behavior is controlled by the `Connect result nodes` in *Browser Settings*. 
+| yes
+
+| `scrollToTop`
+| `true`
+| Automatically scroll stream to top on new frames.
+| yes
+
+| `maxFrames`
+| `30`
+| The maximum number of result frames.
+When reached, old frames get retired.
+| yes
+
+| `codeFontLigatures`
+| `true`
+| Allow font ligatures for the Cypher editor bar and Cypher snippets.
+| yes
+
+| `useBoltRouting`
+| `false`
+| Whether to use Bolt routing.
+The Bolt+routing feature on Neo4j drivers discovers a cluster member (drivers have a load-balancing feature).
+| no
+
+| `editorLint`
+| `false`
+| Enable/disable squiggly lines under text.
+| no
+
+| `useCypherThread`
+| `true`
+| Run Cypher queries through a web worker (background thread) to increase performance.
+| no
+
+| `enableMultiStatementMode`
+| `true`
+| Allows you to write and edit multi-line queries (use a semicolon (`;`) to separate statements).
+| yes
+
+| `connectionTimeout`
+| `30000`
+| The timeout in ms when establishing a connection to Neo4j.
+| yes
+
+| `showPerformanceOverlay`
+| `false`
+| Internal setting, used for showing a performance overlay (FPS and memory usage).
+| no
+
+| `editorAutocomplete`
+| `true`
+| Trigger autocomplete when typing.
+| no
+|===
+
+
+[[adjust-in-browser]]
+=== Adjust settings in Browser
+
+To change the configuration settings locally in Neo4j Browser, you can either use the tabs in the Browser Settings drawer or, in the Cypher editor, type the command `:config` together with the setting and the new value.
+
+
+.Adjust an individual setting
+====
+The example shows how to change the maximum number of neighbors for a node.
+[source, cypher]
+----
+:config maxNeighbours:100
+----
+====
+
+
+.Adjust several settings
+====
+The example shows how to change the `maxFrames` from its default of `50` to `10` and the theme to `outline`.
+[source, cypher]
+----
+:config {maxFrames: 10, theme: "outline"}
+----
+After making the change, re-running `:config` reports that `maxFrames` has been set to `10`, and the theme is defined to `outline`.
+The *Browser Settings* drawer also reflects this change.
+====
+
+
+[WARNING]
+====
+Adjusting the settings first resets the configuration to the default configuration and then sets the given configurations.
+====
+
+
+[[adjust-globally]]
+=== Adjust settings globally
+
+To change the configuration settings for all users of Neo4j Browser, modify the _neo4j.conf_ file, or if using link:[Neo4j Desktop], navigate to the DBMS which settings you want to update, click the ellipsis dropdown menu, and select *Settings*.
+
+For example, to change the `maxFrames` from its default of `50` to `10` and the theme to `outline`, add the following line to _neo4j.conf_:
+
+
+[source, properties]
+----
+browser.post_connect_cmd=config {maxFrames:10, theme: "outline"}
+----
+
+This changes the `maxFrames` from its default of `50` to `10` and then restarts Neo4j.
+
+
+.Global Browser settings
+[options="header" cols=",,"]
+|===
+| Browser Setting
+| Default value
+| Description
+
+| `browser.allow_outgoing_connections`
+| `true`
+| Configure the policy for outgoing Neo4j Browser connections.
+
+| `browser.credential_timeout`
+| `0s`
+| Configure the Neo4j Browser to time out logged-in users after this idle period.
+Setting this to `0` indicates no limit.
+Valid units are `ns`, `μs`, `ms`, `s`, `m`, `h`, and `d`; default unit is `s`).
+
+| `browser.post_connect_cmd`
+|
+| Commands to be run when Neo4j Browser successfully connects to the server.
+Separate multiple commands with a semicolon (`;`).
+
+| `browser.remote_content_hostname_whitelist`
+| `guides.neo4j.com,localhost`
+| Whitelist of hosts for the Neo4j Browser to be allowed to fetch content from.
+
+| `browser.retain_connection_credentials`
+| `true`
+| Configure the Neo4j Browser to store or not store user credentials.
+
+| `browser.retain_editor_history`
+| `true`
+| Configure the Neo4j Browser to store or not store editor history.
+|===
+
+
+[[start-browser]]
+== Start with Browser
+
+When you first open Neo4j Browser and connect to a Neo4j DBMS, it automatically executes the command `:play start`. +
+The `:play start` command outputs an entry page containing interactive guides that you can use to learn some Neo4j concepts, try Neo4j with live data (MovieGraph), and write some basic Cypher queries. +
+Besides, you can also navigate to the *Help & Learn* drawer in the sidebar, where you will find more information about useful commands, a lot of built-in guides, and links to documentation.
+
+If you want to change the initially executed command, navigate to the *Browser Settings* drawer in the sidebar and add a new value for the *Initial command to execute* setting.
+
+[TIP]
+====
+For more information on how to enter and run Cypher queries and commands, see xref:visual-tour.adoc#editor[Cypher editor]. +
+For more information about Cypher, see link:https://neo4j.com/docs/cypher-manual/{neo4j-version}/[Cypher Manual] and link:https://neo4j.com/docs/cypher-refcard/{neo4j-version}/[Neo4j Cypher Refcard].
+====
+
+[[results]]
+== Visualize results
+
+There are a variety of ways to view data in Neo4j Browser.
+All queries that you run in the Cypher editor populate a reusable result frame.
+Query results are rendered as:
+
+* Visual graph
+* Table
+* Plain text table
+* JSON
+
+You can switch between those with the icons on the left side of the result frame.
+
+
+[TIP]
+====
+If you cannot see the result, you might be in Graph mode but had your query return tabular/scalar data.
+To see the results, switch the mode to the *Table* view.
+====
+
+
+[[graph-view]]
+=== Graph
+
+The graph visualization functionality is designed to display a node-graph representation of the underlying data stored in the database in response to a given Cypher query.
+It shows circles for nodes and lines for relationships, and is especially useful for determining areas of interest or quickly assessing the current state and organization of the data.
+
+image:graph.png[]
+
+
+.Handy tips
+[TIP]
+====
+* Enable zoom in and out of your graph by entering into fullscreen mode.
+* Expand and remove nodes from the visualization by clicking a node.
+It gets a halo, where you can dismiss a node, expand/collapse child relationships, or unlock the node to re-layout the graph.
+Double-clicking a node expands its child relationships.
+* If you cannot see the whole graph or the results display too close together, you can adjust by moving the visual view and dragging nodes to rearrange them.
+* To move the view to see more parts of the graph, click an empty spot within the graph pane and drag it.
+* To rearrange nodes, click and drag them around.
+* The nodes already have sensible captions assigned by the browser, which auto-selects a property from the property list to use as a caption.
+You can see all the properties of that element if you click any node or relationship.
+Properties appear below the visualization.
+* Larger property sets might be collapsed into a subset, and there is a little triangle on the right to unfold them.
+For example, if you click one of the `Movie` nodes in the MovieGraph (`:play movie graph`), you can see its properties below the graph visualization.
+The same applies to `Actor` nodes and the `ACTED_IN` relationships.
+====
+
+
+[[table-view]]
+=== Table
+
+The *Table* result view displays the result in a table format.
+It also reports the query time, including the actual query execution time, latency, and deserialization costs.
+
+image:table.png[]
+
+Even if you feel that the relationship is not hard to find in the tabular format, imagine if you have a graph containing the entire filmography careers of these persons and hundreds of other actors, directors, and film crew members.
+The connections could easily be lost in a non-visual presentation.
+
+[[text-view]]
+=== Text
+
+The *Text* result view displays the result as a plain text table.
+It also reports the query time, including the actual query execution time, latency, and deserialization costs.
+
+image:text.png[]
+
+
+[[code-view]]
+=== Code
+
+The *Code* result view displays the submitted request, the Neo4j Server version and address, and the response.
+It also reports the query time, including the actual query execution time, latency, and deserialization costs.
+
+image:code.png[]
+
+
+[[export-results]]
+== Export results
+
+You can download your query results using the down-pointed arrow on the right side of the result frame.
+The following download options available:
+
+
+.Download the result from the *Graph* view
+[#download_graph]
+[caption="Export as an image"]
+image:download-graph.png[Export graph, width=50%]
+
+
+.Download the result from the *Table*, *Text*, and *Code* views
+[#download_csv]
+[caption="Export as a CSV file"]
+image:download-csv-json.png[Export table, width=50%]
+
+
+[NOTE]
+====
+The *Save as project file* is available only in Neo4j Desktop.
+For more information, see xref:visual-tour.adoc#saved-files[Project files].
+====
+
+
+[[styling]]
+== Style Neo4j Browser Visualization
+
+You can customize your graph query result either in place or by using Graph Stylesheet (GraSS).
+
+
+[[graph-style]]
+=== Style your graph visualization in place
+
+Neo4j Browser also provides functionality for styling with color and size, based on node labels and relationship types.
+
+If you click any label or relationship above the graph visualization, you can choose its styling in the area below the graph.
+Colors, sizes, and captions are selectable from there.
+To see this for yourself, you can click the `Person` label above the graph and change the color, size, and captions of all nodes labeled with `Person`.
+The same applies to the relationship `ACTED_IN`.
+
+
+.Changes to nodes labeled `Person`
+[#style_person_node]
+[caption="Changes to nodes labeled `Person`"]
+image:style_person_node.png[]
+
+
+.Changes to relationships labeled `ACTED_IN`
+[#style_actedin_relationship]
+[caption="Changes to relationships labeled `ACTED_IN`"]
+image:style_actedin_relationship.png[]
+
+
+[[grass]]
+=== Style your graph visualization using a GraSS file
+
+Alternatively, follow the steps to customize your styles by importing a graph stylesheet (GraSS) file for Neo4j Browser to reference.
+
+. Run the command `:style` and download your current graph style by using the *Export GraSS* option.
++
+[NOTE]
+====
+Neo4j supports both CSS and JSON format as a _.grass_ file contents.
+====
++
+.Sample of a _.grass_ file contents
+====
+[source,css]
+----
+node {
+  diameter: 50px; #<1>
+  color: #A5ABB6; #<2>
+  border-color: #9AA1AC;  #<3>
+  border-width: 2px; #<4>
+  text-color-internal: #FFFFFF; #<5>
+  font-size: 10px;
+}
+relationship {
+  color: #A5ABB6;
+  shaft-width: 1px; #<6>
+  font-size: 8px;
+  padding: 3px;
+  text-color-external: #000000;
+  text-color-internal: #FFFFFF;
+  caption: "<type>"; #<7>
+}
+node.* {
+  color: #C990C0;
+  border-color: #b261a5;
+  text-color-internal: #FFFFFF;
+  defaultCaption: "<id>";
+}
+node.Status {
+  color: #F79767;
+  border-color: #f36924;
+  text-color-internal: #FFFFFF;
+  defaultCaption: "<id>"; #<8>
+  caption: "{name}";
+}
+node.Person {
+  color: #DA7194;
+  border-color: #cc3c6c;
+  text-color-internal: #FFFFFF;
+  defaultCaption: "<id>";
+  caption: "{name}";
+}
+node.Movie {
+  caption: "{title}";
+}
+----
+<1> Diameter of a node circle.
+<2> The color of the circle.
+<3> The color of the circle border.
+<4> The width of the circle border.
+<5> The color of the text that is displayed.
+<6> Diameter of a relationship circle.
+<7> The text that is displayed.
+<8> The default caption if no specific caption is set.
+====
++
+[NOTE]
+====
+If a node has 2 styled labels, only the first (closest to top) style is applied.
+If a node does not have a label that is in the GraSS, `node` is used as the default.
+Same applies to relationships.
+====
++
+. Edit the downloaded file locally using your favourite editor and use drag & drop it to the designated drop area.
+
+
+[TIP]
+====
+The link:https://github.com/neo4j/neo4j-browser/blob/master/src/shared/services/grassUtils.ts[GraSS parser] is open source.
+====
+
+
+[[query-parameters]]
+== Neo4j query parameters
+
+//https://dzone.com/articles/neo4jcypher-getting-hang-query - a blog post by Mark Needham
+
+Neo4j Browser supports querying based on parameters.
+It allows the Cypher query planner to re-use your queries instead of parse and build new execution plans.
+
+Parameters can be used for:
+
+* literals and expressions
+* node and relationship IDs
+
+Parameters cannot be used for the following constructs, as these form part of the query structure that is compiled into a query plan:
+
+* property keys
+* relationship types
+* labels
+
+Parameters may consist of letters and numbers and any combination of these but cannot start with a number or a currency symbol.
+
+
+[TIP]
+====
+For more details on the Cypher parameters, see link:https://neo4j.com/docs/cypher-manual/{neo4j-version}/syntax/parameters/[Cypher Manual v.{neo4j-version} - Parameters].
+====
+
+
+[[set-params]]
+=== Set query parameters
+
+You can set a parameter to be sent with your queries by using the `:param` command.
+Using parameters rather than hard-coded values allows for the reuse of the query plan cache.
+
+The `+:param name => 'Example'+` command defines a parameter named `name`, which will be sent along with your queries. +
+The right hand side of `=>` is sent to the server and evaluated as Cypher with an implicit `RETURN` in front.
+This gives better type safety since some types (especially numbers) in JavaScript are hard to match with Neo4j:s type system.
+To see the list of all currently set query parameters and their values, use the `:params` command.
+For more information on how to use the commands, see `:help param` and `:help params`.
+
+
+[NOTE]
+====
+If you are using a multi-database DBMS, parameters cannot be declared when using the `system` database.
+Switch to a different database and declare, then switch back to the `system` database and use them.
+====
+
+
+.Set a parameter as an integer
+====
+[source, browser command, role=noheader]
+----
+:param x => 1
+----
+====
+
+
+.Set a parameter as a float
+====
+[source, browser command, role=noheader]
+----
+:param x => 1.0
+----
+====
+
+
+.Set a parameter as a string
+====
+[source, browser command, role=noheader]
+----
+:param x => "Example"
+----
+====
+
+
+.Set a parameter as an object
+=====
+
+. Map
++
+[source, browser command, role=noheader]
+----
+:param obj1 => ({props: {name: "Tom Hanks", born:1956}})
+----
++
+[source, parameter, role=noheader]
+.The obj1 parameter
+----
+$obj1 = {"props": {"name": "Tom Hanks", "born": 1956}}
+----
++
+[NOTE]
+====
+Maps like `{x: 1, y: 2}` must be wrapped in parentheses `({x: 1, y: 2})`.
+====
++
+. List
++
+[source, browser command, role=noheader]
+----
+:param obj2 => [1, 2, 3, 4]
+----
++
+[source, parameter, role=noheader]
+.The obj2 parameter
+----
+$obj2 = [1, 2, 3, 4]
+----
+
+=====
+
+
+.Cypher query example with a parameter
+=====
+
+[source, browser command, role=noheader]
+----
+:param name => 'Tom Hanks';
+----
+
+[source, cypher, role=noplay]
+----
+MATCH (n:Person)
+WHERE n.name = $name
+RETURN n
+----
+
+[NOTE]
+====
+To run this example, in the *Browser Settings* drawer, check *Enable multi statement query editor*.
+Note that you do not see the output as you are used to when you run multiple statements.
+In Neo4j Browser, the current state of multi-statement is to set up your environment with multiple statements so that you can execute queries and examine the results, one by one.
+Alternatively, you can run the `:param` command separately from the `MATCH` query.
+====
+
+=====
+
+
+=== Cypher result
+
+It is possible to save the result from a Cypher query to a parameter. +
+
+The syntax is:
+
+
+[source, browser command, role=noheader]
+----
+:param <parameter_name> => { CYPHER STATEMENT }
+----
+
+
+.One row returned
+====
+This example shows a result of one record returned.
+
+[source, browser command, role=noheader]
+----
+:param result1 => { RETURN 1 AS foo }
+----
+
+[source, parameter, role=noheader]
+.The result1 parameter
+----
+$result1 = [{foo: 1}]
+----
+====
+
+
+.Several rows returned
+====
+This example shows a result of three records returned.
+
+[source, browser command, role=noheader]
+----
+:param result2 => { UNWIND [1, 2, 3] AS nbr RETURN nbr }
+----
+
+[source, parameter, role=noheader]
+.The result2 parameter
+----
+$result2 = [{"nbr": 1}, {"nbr": 2}, {"nbr": 3}]}
+----
+====
+
+
+.One row with a node returned
+====
+[source, browser command, role=noheader]
+----
+:param result3 => { MATCH (n) WHERE n.name = "Example" RETURN n }
+----
+
+[source, parameter, role=noheader]
+.The result3 parameter
+----
+$result3 = [{"n": {"identity": 4, "labels": [], "properties": {"name": "Example"}}}]
+----
+====
+
+
+=== Destructuring
+
+It is possible to pick individual values from your result using destructuring and set a specific parameter to a specific value. +
+
+The syntax is:
+
+
+[source, browser command, role=noheader]
+----
+:param [{<returned_parameter>: <parameter_name>, ...}, ...] => { CYPHER STATEMENT }
+----
+
+
+.One row returned
+====
+[source, browser command, role=noheader]
+----
+:param [{foo}] => { RETURN 1 AS foo }
+----
+
+[source, parameter, role=noheader]
+----
+$foo = 1
+----
+====
+
+
+.Rename destructured parameter
+====
+[source, browser command, role=noheader]
+----
+:param [{foo: bar}] => { RETURN 1 AS foo }
+----
+
+[source, parameter, role=noheader]
+----
+$bar = 1
+----
+====
+
+
+.Syntax
+====
+[source, browser command, role=noheader]
+----
+:param [{foo1: bar1, foo2: bar2}] => { RETURN 1 AS foo1, 2 AS foo2 }
+----
+
+[source, parameter, role=noheader]
+----
+$bar1 = 1
+$bar2 = 2
+----
+====
+
+
+.Several rows returned
+====
+[source, browser command, role=noheader]
+----
+:param [{nbr: x}] => { UNWIND [2, 3, 1] AS nbr RETURN nbr ORDER BY nbr ASCENDING }
+----
+
+[source, parameter, role=noheader]
+----
+$x = 1
+----
+
+[source, browser command, role=noheader]
+----
+:param [nbr, nbr, nbr] => { UNWIND [2, 3, 1] AS nbr RETURN nbr ORDER BY nbr ASC }
+----
+
+[source, parameter, role=noheader]
+----
+$nbr = 3
+----
+
+[source, browser command, role=noheader]
+----
+:param [{nbr: x}, nbr, nbr] => { UNWIND [2, 3, 1] AS nbr RETURN nbr ORDER BY nbr ASC }
+----
+
+[source, parameter, role=noheader]
+----
+$x = 1
+$nbr = 3
+----
+
+[source, browser command, role=noheader]
+----
+:param [{nbr: x}, {nbr: y}, {nbr: z}] => { UNWIND [2, 3, 1] AS nbr RETURN nbr ORDER BY nbr ASC }
+----
+
+[source, parameter, role=noheader]
+----
+$x = 1
+$y = 2
+$z = 3
+----
+
+[source, browser command, role=noheader]
+----
+:param [{n: example}] => { MATCH (n) WHERE n.name = "Example" RETURN n LIMIT 1}
+----
+
+[source, parameter, role=noheader]
+----
+$example = {"identity": 4, "labels": [], "properties": {"name": "Example"}}}
+----
+====
+
+
+[[clear-params]]
+=== Clear parameters
+
+You can clear all currently set parameters from Neo4j Browser by running:
+
+
+[source, browser command, role=noheader]
+----
+:params {}
+----
+
+
+=== Set several paramters
+
+You can set several parameters with the `:params` command, this also clears all currently set parameters.
+
+
+[NOTE]
+====
+Integers are set to float with this style.
+====
+
+
+.Set several parameters
+====
+[source, browser command, role=noheader]
+----
+:params {x: 1, y: 2.0, z: 'abc', d: null, e: true, f: false}
+----
+
+[source, parameter, role=noheader]
+----
+$x = 1.0
+$y = 2.0
+$z = "abc"
+$d = null
+$e = true
+$f = false
+----
+====
+
+
+=== Duration for the query parameters
+
+Parameters are not saved when you close the browser.
+You can save a `:params` command as a favorite to quickly populate parameters again.
+
+//Depending on how the favorite have been saved you can.
+//Save the favorites to persist in the cloud with Browser Sync.
+//Save the favorites to persist on the disk if you are using Neo4j Desktop.
+//Save the favorites to persist in the browsers local storage.
+//The localStorage and sessionStorage properties allow to save key/value pairs in a web browser.
+
+
+[[url-parameters]]
+== Browser URL parameters
+
+Neo4j Browser supports some URL parameters defined in the query component.
+The query component is preceded by a question mark (`?`) and contains a query string that is a sequence of key–value pairs separated by an ampersand (`&`).
+
+
+=== Connection frame
+
+Pre-populate the connection frame with the connection URL and set the database. +
+
+The syntax is:
+
+[source, browser URL, role=noheader]
+----
+http://localhost:7474/browser?dbms=[connectionURL]&db=[databaseName]
+----
+
+[source, browser URL, role=noheader, subs="macros"]
+----
++http://localhost:7474/browser?connectURL=[connectionURL]&db=[databaseName]+ label:deprecated[]
+----
+
+
+.Connection URL and database
+====
+This pre-populates the connection frame with:
+
+* Connect URL: `neo4j://localhost:7687`
+* Database: `neo4j123`
+* Username: `alice`
+
+[source, browser URL, role=noheader]
+----
+http://localhost:7474/browser?dbms=neo4j://alice@localhost:7687&db=neo4j123
+----
+====
+
+
+=== Pre-populate the editor
+
+Pre-populate the editor with a command when Neo4j Browser starts.
+Supported browser commands are:
+
+* `param`
+* `params`
+* `play`
+
+The `:play` command runs automatically. +
+
+The syntax is:
+
+[source, browser URL, role=noheader]
+----
+http://localhost:7474/browser?cmd=[command]&arg=[argument]
+----
+
+
+.Play movies
+====
+[source, browser command, role=noheader]
+----
+:play movies
+----
+
+[source, browser URL, role=noheader]
+----
+http://localhost:7474/browser?cmd=play&arg=movies
+----
+====
+
+
+.Param
+====
+[source, browser command, role=noheader]
+----
+:param example=>1
+----
+
+[source, browser URL, role=noheader]
+----
+http://localhost:7474/browser?cmd=param&arg=example=>1
+----
+====
+
+
+.Params
+====
+[source, browser command, role=noheader]
+----
+:params {example:1,foo:"bar"}
+----
+
+[source, browser URL, role=noheader]
+----
+http://localhost:7474/browser?cmd=params&arg={example:1,foo:"bar"}
+----
+====
+
+
+[[http-rest-requests]]
+== HTTP REST requests
+
+Neo4j Browser supports the following HTTP REST commands:
+
+* `:delete` -- HTTP DELETE.
+* `:get`  -- HTTP GET.
+* `:head` -- HTTP HEAD.
+* `:post` -- HTTP POST.
+* `:put` -- HTTP PUT.
+
+It is possible to use these commands to query the link:https://neo4j.com/docs/http-api/{neo4j-version}/[Neo4j HTTP API].
+
+[NOTE]
+====
+The link:https://neo4j.com/docs/rest-docs/3.5/[Neo4j REST API] was deprecated in Neo4j 3.5 and was removed from Neo4j 4.X versions.
+====
+
+//The HTTP API can return JSON or JOLT.
+//ACCEPT: application/json
+//ACCEPT: application/vnd.neo4j.jolt
+//ACCEPT: application/vnd.neo4j.jolt+json+seq
+
+
+.HTTP API
+====
+[source, browser command, role=noheader]
+----
+:get /
+----
+
+[source, JSON response, role=noheader, subs="attributes+,macros"]
+----
+{
+  "bolt_routing" : "neo4j://localhost:7687",
+  "transaction" : +"http://localhost:7474/db/{databaseName}/tx",+
+  "bolt_direct" : "bolt://localhost:7687",
+  "neo4j_version" : "{neo4j-version-exact}",
+  "neo4j_edition" : "enterprise"
+}
+----
+====
+
+
+.HTTP API -- transaction
+====
+[source, browser command, role=noheader]
+----
+:post /db/neo4j/tx
+----
+
+[source, JSON response, role=noheader]
+----
+{"results":[],"errors":[],"commit":"http://localhost:7474/db/neo4j/tx/2/commit","transaction":{"expires":"Fri, 20 Jan 2222 10:11:12 GMT"}}
+----
+====
+
+
+.HTTP API -- transaction and commit
+====
+[source, browser command, role=noheader]
+----
+:post /db/neo4j/tx/commit {
+"statements": [
+{
+  "statement": "CREATE (n $props) RETURN n",
+  "parameters": {
+    "props": {
+      "name": "My Node"
+    }
+  }
+},
+{
+  "statement": "CREATE (n $props) RETURN n",
+  "parameters": {
+    "props": {
+      "name": "Another Node"
+    }
+  }
+}]
+}
+----
+====

@@ -24,7 +24,7 @@ import {
   DrawerSection,
   DrawerSubHeader,
   DrawerSectionBody
-} from 'browser-components/drawer/index'
+} from 'browser-components/drawer/drawer-styled'
 import { uniqBy } from 'lodash-es'
 import { escapeCypherIdentifier } from 'services/utils'
 
@@ -35,6 +35,9 @@ const Select = styled.select`
 `
 
 const EMPTY_OPTION = 'Select db to use'
+
+const HOUSE_EMOJI = '\u{1F3E0}'
+const NBSP_CHAR = '\u{00A0}'
 
 export const DatabaseSelector = ({
   databases = [],
@@ -59,6 +62,9 @@ export const DatabaseSelector = ({
     )
   }
   const uniqDatabases = uniqBy(databasesList, 'name')
+  const homeDb =
+    uniqDatabases.find((db: any) => db.home) ||
+    uniqDatabases.find((db: any) => db.default)
 
   return (
     <DrawerSection>
@@ -70,12 +76,10 @@ export const DatabaseSelector = ({
           onChange={selectionChange}
         >
           {uniqDatabases.map(db => {
-            const defaultStr = db.default ? ' - default' : ''
-
             return (
               <option key={db.name} value={db.name}>
                 {db.name}
-                {defaultStr}
+                {db === homeDb ? NBSP_CHAR + HOUSE_EMOJI : ''}
               </option>
             )
           })}

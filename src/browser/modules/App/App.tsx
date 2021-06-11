@@ -34,7 +34,7 @@ import { utilizeBrowserSync } from 'shared/modules/features/featuresDuck'
 import { getOpenDrawer } from 'shared/modules/sidebar/sidebarDuck'
 import { getErrorMessage } from 'shared/modules/commands/commandsDuck'
 import {
-  allowOutgoingConnections,
+  shouldAllowOutgoingConnections,
   getDatabases
 } from 'shared/modules/dbMeta/dbMetaDuck'
 import {
@@ -67,6 +67,8 @@ import UserInteraction from '../UserInteraction'
 import DocTitle from '../DocTitle'
 import asTitleString from '../DocTitle/titleStringBuilder'
 import Intercom from '../Intercom'
+import Segment, { MetricsData } from '../Segment'
+import { CannyLoader } from 'browser-services/canny'
 import Render from 'browser-components/Render'
 import BrowserSyncInit from '../Sync/BrowserSyncInit'
 import { getMetadata, getUserAuthStatus } from 'shared/modules/sync/syncDuck'
@@ -84,6 +86,9 @@ import {
 import { METRICS_EVENT, udcInit } from 'shared/modules/udc/udcDuck'
 import { useKeyboardShortcuts } from './keyboardShortcuts'
 import PerformanceOverlay from './PerformanceOverlay'
+export const MAIN_WRAPPER_DOM_ID = 'MAIN_WRAPPER_DOM_ID'
+
+declare let SEGMENT_KEY: string
 
 export function App(props: any) {
   const [derivedTheme, setEnvironmentTheme] = useDerivedTheme(
@@ -100,16 +105,23 @@ export function App(props: any) {
 
   useKeyboardShortcuts(props.bus)
 
-  const eventMetricsCallback = useRef((_: any) => {})
+  const eventMetricsCallback = useRef((_: MetricsData) => {})
+  const segmentTrackCallback = useRef((_: MetricsData) => {})
 
   useEffect(() => {
     const unsub =
       props.bus &&
-      props.bus.take(METRICS_EVENT, ({ category, label, data }: any) => {
-        eventMetricsCallback &&
-          eventMetricsCallback.current &&
-          eventMetricsCallback.current({ category, label, data })
-      })
+      props.bus.take(
+        METRICS_EVENT,
+        ({ category, label, data }: MetricsData) => {
+          eventMetricsCallback &&
+            eventMetricsCallback.current &&
+            eventMetricsCallback.current({ category, label, data })
+          segmentTrackCallback &&
+            segmentTrackCallback.current &&
+            segmentTrackCallback.current({ category, label, data })
+        }
+      )
     const initAction = udcInit()
     props.bus && props.bus.send(initAction.type, initAction)
     return () => unsub && unsub()
@@ -140,6 +152,10 @@ export function App(props: any) {
 
   const setEventMetricsCallback = (fn: any) => {
     eventMetricsCallback.current = fn
+  }
+
+  const setTrackSegmentCallback = (fn: any) => {
+    segmentTrackCallback.current = fn
   }
 
   return (
@@ -178,6 +194,11 @@ export function App(props: any) {
               <UserInteraction />
               <Render if={loadExternalScripts}>
                 <Intercom appID="lq70afwx" />
+                <Segment
+                  segmentKey={SEGMENT_KEY}
+                  setTrackCallback={setTrackSegmentCallback}
+                />
+                <CannyLoader />
               </Render>
               <Render if={syncConsent && loadExternalScripts && loadSync}>
                 <BrowserSyncInit
@@ -191,7 +212,7 @@ export function App(props: any) {
                   <ErrorBoundary>
                     <Sidebar openDrawer={drawer} onNavClick={handleNavClick} />
                   </ErrorBoundary>
-                  <StyledMainWrapper>
+                  <StyledMainWrapper id={MAIN_WRAPPER_DOM_ID}>
                     <Main
                       activeConnection={activeConnection}
                       connectionState={connectionState}
@@ -224,7 +245,7 @@ const mapStateToProps = (state: any) => {
     lastConnectionUpdate: getLastConnectionUpdate(state),
     errorMessage: getErrorMessage(state),
     loadExternalScripts:
-      allowOutgoingConnections(state) !== false && isConnected(state),
+      shouldAllowOutgoingConnections(state) !== false && isConnected(state),
     titleString: asTitleString(connectionData),
     defaultConnectionData: getConnectionData(state, CONNECTION_ID),
     syncConsent: state.syncConsent.consented,

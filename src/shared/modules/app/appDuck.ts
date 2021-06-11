@@ -18,8 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
-
 // Action type constants
 export const NAME = 'app'
 export const APP_START = `${NAME}/APP_START`
@@ -32,8 +30,9 @@ export const DESKTOP = 'DESKTOP'
 export const WEB = 'WEB'
 export const CLOUD = 'CLOUD'
 
-const SECURE_SCHEMES = ['neo4j+s', 'bolt+s']
-const INSECURE_SCHEMES = ['neo4j', 'bolt']
+export const SECURE_SCHEMES = ['neo4j+s', 'bolt+s']
+export const INSECURE_SCHEMES = ['neo4j', 'bolt']
+export const CLOUD_SCHEMES = ['neo4j+s']
 
 // Selectors
 export const getHostedUrl = (state: any) =>
@@ -44,14 +43,9 @@ export const hasDiscoveryEndpoint = (state: any) =>
 export const inWebEnv = (state: any) => getEnv(state) === WEB
 export const inCloudEnv = (state: any) => getEnv(state) === CLOUD
 export const inWebBrowser = (state: any) => [WEB, CLOUD].includes(getEnv(state))
-export const getAllowedAuthSchemes = (state: any) =>
-  inCloudEnv(state) ? [NATIVE] : [NATIVE, NO_AUTH]
+export const inDesktop = (state: any) => getEnv(state) === DESKTOP
 
 export const getAllowedBoltSchemes = (state: any, encryptionFlag?: any) => {
-  if (inCloudEnv(state) /* Aura only allows neo4j+s */) {
-    return ['neo4j+s']
-  }
-
   const isHosted = inWebBrowser(state)
   const hostedUrl = getHostedUrl(state)
   return !isHosted

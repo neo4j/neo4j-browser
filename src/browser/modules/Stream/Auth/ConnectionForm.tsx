@@ -43,10 +43,7 @@ import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
 import ConnectForm from './ConnectForm'
 import ConnectedView from './ConnectedView'
 import ChangePasswordForm from './ChangePasswordForm'
-import {
-  getAllowedAuthSchemes,
-  getAllowedBoltSchemes
-} from 'shared/modules/app/appDuck'
+import { getAllowedBoltSchemes } from 'shared/modules/app/appDuck'
 import { FOCUS } from 'shared/modules/editor/editorDuck'
 import {
   generateBoltUrl,
@@ -56,8 +53,21 @@ import {
 } from 'services/boltscheme.utils'
 import { StyledConnectionBody } from './styled'
 import { CONNECTION_ID } from 'shared/modules/discovery/discoveryDuck'
+import { isCloudHost } from 'shared/services/utils'
+import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
+import { CLOUD_SCHEMES } from 'shared/modules/app/appDuck'
+import { AuthenticationMethod } from 'shared/modules/connections/connectionsDuck'
 
 type ConnectionFormState = any
+
+const isAuraHost = (host: string) => isCloudHost(host, NEO4J_CLOUD_DOMAINS)
+
+function getAllowedAuthMethodsForHost(host: string): AuthenticationMethod[] {
+  return isAuraHost(host) ? [NATIVE] : [NATIVE, NO_AUTH]
+}
+
+const getAllowedSchemesForHost = (host: string, allowedSchemes: string[]) =>
+  isAuraHost(host) ? CLOUD_SCHEMES : allowedSchemes
 
 export class ConnectionForm extends Component<any, ConnectionFormState> {
   constructor(props: any) {
@@ -67,10 +77,15 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
     const authenticationMethod =
       (connection && connection.authenticationMethod) || NATIVE
 
+    const allowedSchemes = getAllowedSchemesForHost(
+      connection.host,
+      props.allowedSchemes
+    )
+
     this.state = {
       requestedUseDb: '',
       ...connection,
-      host: generateBoltUrl(props.allowedSchemes, connection.host),
+      host: generateBoltUrl(allowedSchemes, connection.host),
       authenticationMethod,
       isLoading: false,
       passwordChangeNeeded: props.passwordChangeNeeded || false,
@@ -111,7 +126,10 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
           ) {
             doneFn()
             this.setState({ passwordChangeNeeded: true })
-          } else if (isNonSupportedRoutingSchemeError(res.error)) {
+          } else if (
+            !isAuraHost(this.state.host) &&
+            isNonSupportedRoutingSchemeError(res.error)
+          ) {
             // Need to switch scheme to bolt:// for Neo4j 3.x connections
             const url = toggleSchemeRouting(this.state.host)
             this.props.error(
@@ -169,7 +187,11 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
   }
 
   onHostChange(fallbackScheme: any, val: any) {
-    const url = generateBoltUrl(this.props.allowedSchemes, val, fallbackScheme)
+    const allowedSchemes = getAllowedSchemesForHost(
+      val,
+      this.props.allowedSchemes
+    )
+    const url = generateBoltUrl(allowedSchemes, val, fallbackScheme)
     this.setState({
       host: url,
       hostInputVal: url
@@ -307,6 +329,11 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
         </StyledConnectionBody>
       )
     } else if (!this.props.isConnected && !this.state.passwordChangeNeeded) {
+      const host = this.state.hostInputVal || this.state.host
+      const allowedSchemes = getAllowedSchemesForHost(
+        host,
+        this.props.allowedSchemes
+      )
       view = (
         <ConnectForm
           onConnectClick={this.connect.bind(this)}
@@ -317,14 +344,16 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
           onAuthenticationMethodChange={this.onAuthenticationMethodChange.bind(
             this
           )}
-          host={this.state.hostInputVal || this.state.host}
+          host={host}
           username={this.state.username}
           password={this.state.password}
           database={this.state.requestedUseDb}
           supportsMultiDb={this.state.supportsMultiDb}
           used={this.state.used}
-          allowedSchemes={this.props.allowedSchemes}
-          allowedAuthMethods={this.props.allowedAuthMethods}
+          allowedSchemes={allowedSchemes}
+          allowedAuthMethods={getAllowedAuthMethodsForHost(
+            this.state.hostInputVal || this.state.host
+          )}
           authenticationMethod={this.state.authenticationMethod}
         />
       )
@@ -342,8 +371,7 @@ const mapStateToProps = (state: any) => {
     playImplicitInitCommands: getPlayImplicitInitCommands(state),
     storeCredentials: shouldRetainConnectionCredentials(state),
     isConnected: isConnected(state),
-    allowedSchemes: getAllowedBoltSchemes(state),
-    allowedAuthMethods: getAllowedAuthSchemes(state)
+    allowedSchemes: getAllowedBoltSchemes(state)
   }
 }
 
@@ -365,7 +393,6 @@ const mergeProps = (stateProps: any, dispatchProps: any, ownProps: any) => {
     storeCredentials: stateProps.storeCredentials,
     isConnected: stateProps.isConnected,
     allowedSchemes: stateProps.allowedSchemes,
-    allowedAuthMethods: stateProps.allowedAuthMethods,
     discoveredData: stateProps.discoveredData,
     ...ownProps,
     ...dispatchProps,

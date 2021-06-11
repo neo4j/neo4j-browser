@@ -65,7 +65,7 @@
     padding-left: 0.25em;
     padding-right: 0.25em;
     white-space: pre-wrap;
-    word-break: break-all;
+    word-break: break-word;
     word-wrap: break-word;
 
     .disable-font-ligatures & {
@@ -85,7 +85,7 @@
     }
     &.runnable {
       cursor: pointer;
-      border: transparent;
+      border: 2px solid transparent;
       border-radius: 2px;
       background-color: rgba(0, 0, 0, 0.1);
     }
@@ -309,6 +309,11 @@
       font-variant-ligatures: none !important;
     }
   }
+  & a [data-populate],
+  [data-exec] {
+    cursor: pointer;
+  }
+
   & pre {
     word-break: break-all;
     word-wrap: break-word;
@@ -318,6 +323,7 @@
   & code {
     color: #fd766e;
     border-radius: 2px;
+    background-color: transparent;
 
     a {
       color: #fd766e !important;
@@ -424,9 +430,18 @@
       margin: 6px 0 20px 0;
       overflow: hidden;
     }
-   
   }
-  .padding5 {padding: 5px;}
-  .padding30  {padding-top: 30px;} 
-  .table-padding {padding-top: 10px;}
+  .padding5 {
+    padding: 5px;
+  }
+  .padding30 {
+    padding-top: 30px;
+  }
+  .table-padding {
+    padding-top: 10px;
+  }
+}
+
+.undecorated {
+  list-style: none;
 }

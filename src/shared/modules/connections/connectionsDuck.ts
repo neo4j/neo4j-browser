@@ -22,10 +22,7 @@ import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
 import * as discovery from 'shared/modules/discovery/discoveryDuck'
 import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
-import {
-  fetchMetaData,
-  CLEAR as CLEAR_META
-} from 'shared/modules/dbMeta/dbMetaDuck'
+import { fetchMetaData } from 'shared/modules/dbMeta/dbMetaDuck'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import {
   getInitCmd,
@@ -34,6 +31,8 @@ import {
 } from 'shared/modules/settings/settingsDuck'
 import { inWebEnv, USER_CLEAR, APP_START } from 'shared/modules/app/appDuck'
 import { GlobalState } from 'shared/globalState'
+import { isCloudHost } from 'shared/services/utils'
+import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
 
 export const NAME = 'connections'
 export const SET_ACTIVE = 'connections/SET_ACTIVE'
@@ -71,6 +70,7 @@ export type ConnectionReduxState = {
   connectionState: ConnectionState
   lastUpdate: number
   useDb: string | null
+  lastUseDb: string | null
 }
 type ConnectionState =
   | typeof DISCONNECTED_STATE
@@ -101,7 +101,8 @@ const initialState: ConnectionReduxState = {
   activeConnection: null,
   connectionState: DISCONNECTED_STATE,
   lastUpdate: 0,
-  useDb: null
+  useDb: null,
+  lastUseDb: null
 }
 /**
  * Selectors
@@ -115,6 +116,10 @@ export function getConnection(
       connection => connection && connection.id === id
     ) || null
   )
+}
+
+export function getLastUseDb(state: GlobalState): string | null {
+  return (state[NAME] || {}).lastUseDb
 }
 
 export function getUseDb(state: GlobalState): string | null {
@@ -149,6 +154,16 @@ export function getActiveConnectionData(state: GlobalState): Connection | null {
 export function getAuthEnabled(state: GlobalState): boolean {
   const data = getConnectionData(state, state[NAME].activeConnection)
   return data?.authEnabled ?? false
+}
+
+export function getConnectedHost(state: GlobalState): string | null {
+  const data = getConnectionData(state, state[NAME].activeConnection)
+  return data?.host ?? null
+}
+
+export function isConnectedAuraHost(state: GlobalState): boolean {
+  const host = getConnectedHost(state)
+  return host ? isCloudHost(host, NEO4J_CLOUD_DOMAINS) : false
 }
 
 export function getConnectionData(
@@ -274,7 +289,12 @@ export default function(state = initialState, action: any) {
     case UPDATE_AUTH_ENABLED:
       return updateAuthEnabledHelper(state, action.authEnabled)
     case USE_DB:
-      return { ...state, useDb: action.useDb }
+      const { useDb } = action
+      let lastUseDb = useDb
+      if (useDb === null) {
+        lastUseDb = state.useDb || state.lastUseDb
+      }
+      return { ...state, lastUseDb, useDb }
     case USER_CLEAR:
       return initialState
     default:
@@ -343,6 +363,8 @@ export const setAuthEnabled = (authEnabled: any) => {
 }
 
 export const useDb = (db: any = null) => ({ type: USE_DB, useDb: db })
+
+export const resetUseDb = () => ({ type: USE_DB, useDb: null })
 
 // Epics
 export const useDbEpic = (action$: any) => {
@@ -437,7 +459,7 @@ function shouldTryAutoconnecting(conn: Connection | null): boolean {
 export const startupConnectEpic = (action$: any, store: any) => {
   return action$
     .ofType(discovery.DONE)
-    .do(() => store.dispatch(useDb(null)))
+    .do(() => store.dispatch(resetUseDb()))
     .mergeMap(async ({ discovered }: DiscoverDataAction) => {
       const connectionTimeout = getConnectionTimeout(store.getState())
       const savedConnection = getConnection(
@@ -547,7 +569,7 @@ export const disconnectEpic = (action$: any, store: any) => {
     .ofType(DISCONNECT)
     .merge(action$.ofType(USER_CLEAR))
     .do(() => bolt.closeConnection())
-    .do(() => store.dispatch(useDb(null)))
+    .do(() => store.dispatch(resetUseDb()))
     .do((action: any) =>
       store.dispatch(updateConnection({ id: action.id, password: '' }))
     )
@@ -557,8 +579,7 @@ export const silentDisconnectEpic = (action$: any, store: any) => {
   return action$
     .ofType(SILENT_DISCONNECT)
     .do(() => bolt.closeConnection())
-    .do(() => store.dispatch(useDb(null)))
-    .do(() => store.dispatch({ type: CLEAR_META }))
+    .do(() => store.dispatch(resetUseDb()))
     .mapTo(setActiveConnection(null, true))
 }
 export const disconnectSuccessEpic = (action$: any) => {

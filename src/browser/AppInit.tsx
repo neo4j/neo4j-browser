@@ -43,14 +43,13 @@ import * as Sentry from '@sentry/react'
 import { Integrations } from '@sentry/tracing'
 import { CaptureConsole } from '@sentry/integrations'
 
-import { CannySDK } from 'browser-services/canny'
 import { createReduxMiddleware, getAll, applyKeys } from 'services/localstorage'
 import { GlobalState } from 'shared/globalState'
 import { APP_START } from 'shared/modules/app/appDuck'
 import { detectRuntimeEnv } from 'services/utils'
 import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
 import { version } from 'project-root/package.json'
-import { allowOutgoingConnections } from 'shared/modules/dbMeta/dbMetaDuck'
+import { shouldAllowOutgoingConnections } from 'shared/modules/dbMeta/dbMetaDuck'
 import { getUuid } from 'shared/modules/udc/udcDuck'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
@@ -168,7 +167,7 @@ export function setupSentry(): void {
         }
       },
       beforeSend: event =>
-        allowOutgoingConnections(store.getState())
+        shouldAllowOutgoingConnections(store.getState())
           ? scrubQueryParamsAndUrl(event)
           : null,
       environment: 'unset'
@@ -252,14 +251,6 @@ const client = new ApolloClient({
   cache: apolloCache,
   link: uploadLink
 })
-
-CannySDK.init()
-  .then(() => {
-    window.CannyIsLoaded = true
-  })
-  .catch(() => {
-    window.CannyIsLoaded = false
-  })
 
 const AppInit = (): JSX.Element => {
   return (

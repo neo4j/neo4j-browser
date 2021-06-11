@@ -24,6 +24,7 @@ import semver from 'semver'
 
 import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 import { formatDocVersion } from 'browser/modules/Sidebar/Documents'
+import { DrawerExternalLink } from './drawer/drawer-styled'
 
 const movedPages: { [key: string]: { oldPage: string; oldContent: string } } = {
   '/administration/indexes-for-search-performance/': {
@@ -52,7 +53,7 @@ export function ManualLink({
   children,
   neo4jVersion,
   minVersion
-}: any) {
+}: any): JSX.Element {
   let cleanPage = page.replace(/^\//, '')
   let content = children
   if (isPageMoved(chapter, page, neo4jVersion)) {
@@ -70,15 +71,11 @@ export function ManualLink({
 
   const url = `https://neo4j.com/docs/${chapter}/${version}/${cleanPage}`
 
-  return (
-    <a href={url} target="_blank" rel="noreferrer">
-      {content}
-    </a>
-  )
+  return <DrawerExternalLink href={url}>{content}</DrawerExternalLink>
 }
 
 const mapStateToProps = (state: any) => ({
   neo4jVersion: getVersion(state)
 })
 
-export default connect<any, any, any, any>(mapStateToProps, null)(ManualLink)
+export default connect(mapStateToProps)(ManualLink)

@@ -20,6 +20,7 @@
 
 import neo4j from 'neo4j-driver'
 import Rx from 'rxjs/Rx'
+import semver from 'semver'
 import bolt from 'services/bolt/bolt'
 import { isConfigValFalsy } from 'services/bolt/boltHelpers'
 import { APP_START } from 'shared/modules/app/appDuck'
@@ -28,12 +29,14 @@ import {
   CONNECTION_SUCCESS,
   connectionLossFilter,
   DISCONNECTION_SUCCESS,
+  SILENT_DISCONNECT,
   LOST_CONNECTION,
   UPDATE_CONNECTION_STATE,
   setRetainCredentials,
   setAuthEnabled,
   onLostConnection,
   getUseDb,
+  getLastUseDb,
   useDb,
   getActiveConnectionData,
   updateConnection
@@ -58,6 +61,7 @@ import {
   isACausalCluster,
   setClientConfig
 } from '../features/featuresDuck'
+import { clearHistory } from 'shared/modules/history/historyDuck'
 
 export const NAME = 'meta'
 export const UPDATE = 'meta/UPDATE'
@@ -95,6 +99,8 @@ export function getMetaInContext(state: any, context: any) {
 export const getVersion = (state: any) =>
   (state[NAME] || {}).server ? (state[NAME] || {}).server.version : 0
 export const getEdition = (state: any) => state[NAME].server.edition
+export const hasEdition = (state: any) =>
+  state[NAME].server.edition !== initialState.server.edition
 export const getStoreSize = (state: any) => state[NAME].server.storeSize
 export const getClusterRole = (state: any) => state[NAME].role
 export const isEnterprise = (state: any) =>
@@ -105,7 +111,7 @@ export const getStoreId = (state: any) =>
 
 export const getAvailableSettings = (state: any) =>
   (state[NAME] || initialState).settings
-export const allowOutgoingConnections = (state: any) =>
+export const getAllowOutgoingConnections = (state: any) =>
   getAvailableSettings(state)['browser.allow_outgoing_connections']
 export const credentialsTimeout = (state: any) =>
   getAvailableSettings(state)['browser.credential_timeout'] || 0
@@ -113,9 +119,15 @@ export const getRemoteContentHostnameAllowlist = (state: any) =>
   getAvailableSettings(state)['browser.remote_content_hostname_allowlist']
 export const getDefaultRemoteContentHostnameAllowlist = (_state: any) =>
   initialState.settings['browser.remote_content_hostname_allowlist']
-export const shouldRetainConnectionCredentials = (state: any) => {
+export const getRetainConnectionCredentials = (state: any) => {
   const settings = getAvailableSettings(state)
   const conf = settings['browser.retain_connection_credentials']
+  if (conf === null || typeof conf === 'undefined') return false
+  return !isConfigValFalsy(conf)
+}
+export const getRetainEditorHistory = (state: any) => {
+  const settings = getAvailableSettings(state)
+  const conf = settings['browser.retain_editor_history']
   if (conf === null || typeof conf === 'undefined') return false
   return !isConfigValFalsy(conf)
 }
@@ -126,6 +138,24 @@ export const getActiveDbName = (state: any) =>
 /**
  * Helpers
  */
+
+export const VERSION_FOR_EDITOR_HISTORY_SETTING = '4.3.0'
+
+export const versionHasEditorHistorySetting = (version: string) =>
+  semver.gte(version, VERSION_FOR_EDITOR_HISTORY_SETTING)
+
+export const supportsEditorHistorySetting = (state: any) =>
+  isEnterprise(state) && versionHasEditorHistorySetting(getVersion(state))
+
+export const shouldAllowOutgoingConnections = (state: any) =>
+  (hasEdition(state) && !isEnterprise(state)) ||
+  getAllowOutgoingConnections(state)
+
+export const shouldRetainConnectionCredentials = (state: any) =>
+  !isEnterprise(state) || getRetainConnectionCredentials(state)
+
+export const shouldRetainEditorHistory = (state: any) =>
+  !supportsEditorHistorySetting(state) || getRetainEditorHistory(state)
 
 function updateMetaForContext(state: any, meta: any, context: any) {
   if (!meta || !meta.records || !meta.records.length) {
@@ -215,7 +245,8 @@ export const initialState = {
   settings: {
     'browser.allow_outgoing_connections': false,
     'browser.remote_content_hostname_allowlist': 'guides.neo4j.com, localhost',
-    'browser.retain_connection_credentials': false
+    'browser.retain_connection_credentials': false,
+    'browser.retain_editor_history': false
   }
 }
 
@@ -452,10 +483,20 @@ const switchToRequestedDb = (store: any) => {
   const activeConnection = getActiveConnectionData(store.getState())
   const requestedUseDb = activeConnection?.requestedUseDb
 
-  const switchToDefaultDb = () => {
-    const defaultDb = databases.find((db: any) => db.default)
-    if (defaultDb) {
-      store.dispatch(useDb(defaultDb.name))
+  const switchToLastUsedOrDefaultDb = () => {
+    const lastUsedDb = getLastUseDb(store.getState())
+    if (lastUsedDb && databases.some((db: any) => db.name === lastUsedDb)) {
+      store.dispatch(useDb(lastUsedDb))
+    } else {
+      const homeDb = databases.find((db: any) => db.home)
+      if (homeDb) {
+        store.dispatch(useDb(homeDb.name))
+      } else {
+        const defaultDb = databases.find((db: any) => db.default)
+        if (defaultDb) {
+          store.dispatch(useDb(defaultDb.name))
+        }
+      }
     }
   }
 
@@ -478,10 +519,10 @@ const switchToRequestedDb = (store: any) => {
       store.dispatch(executeCommand(`:use ${requestedUseDb}`), {
         source: commandSources.auto
       })
-      switchToDefaultDb()
+      switchToLastUsedOrDefaultDb()
     }
   } else {
-    switchToDefaultDb()
+    switchToLastUsedOrDefaultDb()
   }
   return Rx.Observable.of(null)
 }
@@ -511,6 +552,7 @@ export const dbMetaEpic = (some$: any, store: any) =>
               .ofType(LOST_CONNECTION)
               .filter(connectionLossFilter)
               .merge(some$.ofType(DISCONNECTION_SUCCESS))
+              .merge(some$.ofType(SILENT_DISCONNECT))
           )
           .mergeMap(() => switchToRequestedDb(store))
           .mapTo({ type: DB_META_DONE })
@@ -594,6 +636,13 @@ export const serverConfigEpic = (some$: any, store: any) =>
               }
               store.dispatch(setRetainCredentials(retainCredentials))
               value = retainCredentials
+            } else if (name === 'browser.retain_editor_history') {
+              let retainHistory = true
+              // Check if we should wipe user history from localstorage
+              if (typeof value !== 'undefined' && isConfigValFalsy(value)) {
+                retainHistory = false
+              }
+              value = retainHistory
             } else if (name === 'browser.allow_outgoing_connections') {
               // Use isConfigValFalsy to cast undefined to true
               value = !isConfigValFalsy(value)
@@ -648,5 +697,14 @@ export const serverInfoEpic = (some$: any, store: any) =>
     })
     .mapTo({ type: 'NOOP' })
 
-export const clearMetaOnDisconnectEpic = (some$: any, _store: any) =>
-  some$.ofType(DISCONNECTION_SUCCESS).mapTo({ type: CLEAR })
+export const clearMetaOnDisconnectEpic = (some$: any, store: any) =>
+  some$
+    .ofType(DISCONNECTION_SUCCESS)
+    .merge(some$.ofType(SILENT_DISCONNECT))
+    .do(() => {
+      if (!shouldRetainEditorHistory(store.getState())) {
+        store.dispatch(clearHistory())
+      }
+      return Rx.Observable.of(null)
+    })
+    .mapTo({ type: CLEAR })

@@ -56,7 +56,7 @@ import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { driverDatabaseSelection } from 'shared/modules/features/versionedFeatures'
 import { isEnterprise } from 'shared/modules/dbMeta/dbMetaDuck'
 import { EnterpriseOnlyFrame } from 'browser-components/EditionView'
-import { inCloudEnv } from 'shared/modules/app/appDuck'
+import { isConnectedAuraHost } from 'shared/modules/connections/connectionsDuck'
 
 type UserAddState = any
 
@@ -432,7 +432,7 @@ export class UserAdd extends Component<any, UserAddState> {
 const mapStateToProps = (state: any) => {
   const { database } = driverDatabaseSelection(state, 'system') || {}
   const isEnterpriseEdition = isEnterprise(state)
-  const isAura = inCloudEnv(state)
+  const isAura = isConnectedAuraHost(state)
 
   return {
     canAssignRolesToUser: canAssignRolesToUser(state),

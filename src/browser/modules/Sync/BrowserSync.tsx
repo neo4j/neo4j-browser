@@ -21,7 +21,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import TimeAgo from 'react-timeago'
-import { allowOutgoingConnections } from 'shared/modules/dbMeta/dbMetaDuck'
+import { shouldAllowOutgoingConnections } from 'shared/modules/dbMeta/dbMetaDuck'
 import {
   getConnectionState,
   DISCONNECTED_STATE
@@ -52,7 +52,7 @@ import {
   DrawerSubHeader,
   DrawerSectionBody,
   DrawerToppedHeader
-} from 'browser-components/drawer'
+} from 'browser-components/drawer/drawer-styled'
 import { FormButton, SyncSignInButton } from 'browser-components/buttons'
 import { BinIcon } from 'browser-components/icons/Icons'
 import {
@@ -282,7 +282,7 @@ const mapStateToProps = (state: any) => {
     browserSyncConfig: getBrowserSyncConfig(state),
     syncConsent: state.syncConsent.consented,
     connectionState: getConnectionState(state),
-    isAllowed: allowOutgoingConnections(state) !== false
+    isAllowed: shouldAllowOutgoingConnections(state) !== false
   }
 }
 

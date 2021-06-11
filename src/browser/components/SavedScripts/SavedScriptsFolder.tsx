@@ -51,7 +51,7 @@ interface SavedScriptsFolderProps {
   forceEdit: boolean
   onDoneEditing: () => void
   selectedScriptIds: string[]
-  children: JSX.Element[]
+  children: React.ReactNode
 }
 
 function SavedScriptsFolder({
@@ -100,7 +100,11 @@ function SavedScriptsFolder({
   const toggleOverlay = () => setShowOverlay(t => !t)
   const contextMenuContent = [
     renameFolder && (
-      <ContextMenuItem data-testid="contextMenuRename" onClick={beginEditing}>
+      <ContextMenuItem
+        data-testid="contextMenuRename"
+        onClick={beginEditing}
+        key="rename"
+      >
         Rename folder
       </ContextMenuItem>
     ),
@@ -108,6 +112,7 @@ function SavedScriptsFolder({
       <ContextMenuItem
         data-testid="contextMenuRemove"
         onClick={() => removeFolder(folder.id)}
+        key="remove"
       >
         Delete folder
       </ContextMenuItem>

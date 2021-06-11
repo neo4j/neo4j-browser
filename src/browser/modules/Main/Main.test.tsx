@@ -28,7 +28,7 @@ const mockStore = configureMockStore()
 const store = mockStore({})
 
 jest.mock(
-  '../Editor/EditorFrame',
+  '../Editor/MainEditor',
   () =>
     function EmptyDiv() {
       return <div />

@@ -19,7 +19,7 @@
  */
 import d3 from 'd3'
 import Renderer from '../components/renderer'
-import icons from '../renders/icons'
+import icons from './d3Icons'
 
 const noop = function() {}
 

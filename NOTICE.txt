@@ -427,7 +427,7 @@ Third-party licenses
 │     ├─ VendorName: Tab Atkins Jr.
 │     └─ VendorUrl: https://github.com/tabatkins/railroad-diagrams
 ├─ GPL-3.0
-│  └─ cypher-editor-support@1.1.7
+│  └─ cypher-editor-support@1.1.8
 │     ├─ URL: git://github.com/neo4j-contrib/cypher-editor.git
 │     └─ VendorName: Neo Technology Inc.
 ├─ ISC

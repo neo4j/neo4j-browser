@@ -30,7 +30,7 @@ import {
   TRACK_CANNY_FEATURE_REQUEST
 } from 'shared/modules/sidebar/sidebarDuck'
 import DocumentItems from './DocumentItems'
-import { Drawer, DrawerHeader } from 'browser-components/drawer'
+import { Drawer, DrawerHeader } from 'browser-components/drawer/drawer-styled'
 import {
   CannyFeedbackIcon,
   CannyNotificationsIcon
@@ -61,6 +61,10 @@ const getReferences = (version: string, v: string) => {
     {
       name: 'Getting Started with Neo4j',
       url: `https://neo4j.com/docs/getting-started/${v}`
+    },
+    {
+      name: 'Neo4j Browser Manual',
+      url: 'https://neo4j.com/docs/browser-manual/current'
     },
     {
       name: 'Cypher Introduction',
@@ -126,16 +130,6 @@ const useful = [
   { name: 'System info', command: ':sysinfo' }
 ]
 
-const guides = [
-  { name: 'Intro to Neo4j Browser', command: ':play intro' },
-  { name: 'Cypher basics', command: ':play cypher' },
-  { name: 'Queries with Cypher - Movies use case', command: ':play movies' },
-  {
-    name: 'More guides',
-    url: 'https://neo4j.com/graphgists/'
-  }
-]
-
 type DocumentsProps = {
   version: string
   urlVersion: string
@@ -157,9 +151,11 @@ const Documents = (props: DocumentsProps) => {
     <Drawer id="db-documents">
       <StyledHeaderContainer>
         <DrawerHeader>Help &amp; Learn</DrawerHeader>
-        <a data-canny-changelog onClick={props.trackCannyChangelog}>
-          <CannyNotificationsIcon />
-        </a>
+        {window.Canny && (
+          <a data-canny-changelog onClick={props.trackCannyChangelog}>
+            <CannyNotificationsIcon />
+          </a>
+        )}
       </StyledHeaderContainer>
       <StyledFeedbackButton
         color="twitter"
@@ -176,9 +172,8 @@ const Documents = (props: DocumentsProps) => {
       ></StyledFeedbackButton>
       <StyledFullSizeDrawerBody>
         <DocumentItems header="Useful commands" items={useful} />
-        <DocumentItems header="Built-in guides" items={guides} />
         <DocumentItems header="Documentation links" items={docs} />
-        <DocumentItems expandable header="Other Resources" items={other} />
+        <DocumentItems header="Other Resources" items={other} />
       </StyledFullSizeDrawerBody>
     </Drawer>
   )

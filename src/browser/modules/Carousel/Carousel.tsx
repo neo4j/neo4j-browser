@@ -46,7 +46,7 @@ export default function Carousel({
   originFrameId,
   initialSlide = 1,
   slides = []
-}: any) {
+}: any): JSX.Element {
   const [visibleSlide, setVisibleSlide] = useState(() => {
     if (initialSlide <= slides.length) {
       return initialSlide - 1

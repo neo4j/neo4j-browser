@@ -18,7 +18,7 @@ const canaryManifest = {
     short_name: 'Neo4j Browser Canary',
     icons: [
       {
-        src: './assets/images/device-icons/neo4j-desktop-canary.svg',
+        src: './assets/images/device-icons/neo4j-browser-canary.svg',
         type: 'svg'
       }
     ]

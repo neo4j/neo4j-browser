@@ -56,7 +56,7 @@ export function getCurrentUser(state: any) {
 /**
  * Reducer
  */
-export default function user(state = initialState, action: any) {
+export default function reducer(state = initialState, action: any) {
   switch (action.type) {
     case APP_START:
       return { ...initialState, ...state }

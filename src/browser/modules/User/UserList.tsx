@@ -45,7 +45,7 @@ import { connect } from 'react-redux'
 import { isEnterprise } from 'shared/modules/dbMeta/dbMetaDuck'
 import FrameAside from '../Frame/FrameAside'
 import { EnterpriseOnlyFrame } from 'browser-components/EditionView'
-import { inCloudEnv } from 'shared/modules/app/appDuck'
+import { isConnectedAuraHost } from 'shared/modules/connections/connectionsDuck'
 
 type UserListState = any
 
@@ -255,7 +255,7 @@ export class UserList extends Component<any, UserListState> {
 const mapStateToProps = (state: any) => {
   const { database } = driverDatabaseSelection(state, 'system') || {}
   const isEnterpriseEdition = isEnterprise(state)
-  const isAura = inCloudEnv(state)
+  const isAura = isConnectedAuraHost(state)
 
   return {
     useSystemDb: database,

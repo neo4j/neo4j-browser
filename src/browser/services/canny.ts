@@ -18,6 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Component, ReactNode } from 'react'
+import { canUseDOM } from 'services/utils'
+
 export const cannyOptions = {
   appID: '601d00fb7a41e3035f75e1e8',
   position: 'right',
@@ -34,7 +37,7 @@ declare global {
   }
 }
 
-export const CannySDK = {
+const CannySDK = {
   init: (): Promise<Event> =>
     new Promise(function(resolve, reject) {
       // Code obtained from Canny.io; See: https://developers.canny.io/install
@@ -54,7 +57,7 @@ export const CannySDK = {
           return
         }
         const f = document.getElementsByTagName('script')[0]
-        const e = document.createElement('script') as HTMLScriptElement
+        const e = document.createElement('script')
         e.type = 'text/javascript'
         e.async = true
         e.src = 'https://canny.io/sdk.js'
@@ -73,4 +76,31 @@ export const CannySDK = {
         window.addEventListener('load', loadCanny, false)
       }
     })
+}
+
+export class CannyLoader extends Component {
+  componentDidMount(): void {
+    CannySDK.init()
+      .then(() => {
+        window.CannyIsLoaded = true
+      })
+      .catch(() => {
+        window.CannyIsLoaded = false
+      })
+  }
+
+  shouldComponentUpdate(): boolean {
+    return false
+  }
+
+  componentWillUnmount(): void {
+    if (canUseDOM()) {
+      delete (window as any).CannyIsLoaded
+      delete (window as any).Canny
+    }
+  }
+
+  render(): ReactNode {
+    return null
+  }
 }

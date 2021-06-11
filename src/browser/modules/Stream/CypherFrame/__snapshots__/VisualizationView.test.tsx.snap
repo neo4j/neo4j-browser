@@ -5,7 +5,7 @@ exports[`Visualization renders 1`] = `<div />`;
 exports[`Visualization renders with result and escapes any HTML 1`] = `
 <div>
   <div
-    class="sc-bYSBpT fHjFHH"
+    class="sc-hXRMBi hlksWq"
   >
     <div
       class="sc-iAyFgw ikvPvE one-legend-row"
@@ -15,7 +15,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
         class="sc-dxgOiQ kpiaUr one-row"
       >
         <div
-          class="sc-kpOJdX TkCyn contracted"
+          class="sc-kpOJdX kvPbrS contracted"
         >
           <ul
             class="sc-dnqmqq sc-ckVGcZ edBnTi list-inline"
@@ -64,7 +64,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
         </div>
       </div>
       <div
-        class="sc-bdVaJa hfwGEH"
+        class="sc-bdVaJa ckbiDw"
       >
         <svg
           class="neod3viz"
@@ -131,21 +131,21 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
           </g>
         </svg>
         <div
-          class="sc-eHgmQL fbpore"
+          class="sc-eHgmQL fBSINn"
         >
           <button
-            class="sc-cvbbAY ZoyPP faded zoom-in"
+            class="sc-cvbbAY cqXpvD faded zoom-in"
           >
             <i
-              class="sc-kTUwUJ kTUBv sl-zoom-in"
+              class="sc-kasBVs hnaEbv sl-zoom-in"
               style="font-size: 1em;"
             />
           </button>
           <button
-            class="sc-cvbbAY ZoyPP zoom-out"
+            class="sc-cvbbAY cqXpvD zoom-out"
           >
             <i
-              class="sc-dqBHgY fvzyDv sl-zoom-out"
+              class="sc-hgHYgh fmMYuK sl-zoom-out"
               style="font-size: 1em;"
             />
           </button>

@@ -19,11 +19,24 @@
  */
 const helpers = require('./webpack-helpers')
 const path = require('path')
+const createStyledComponentsTransformer = require('typescript-plugin-styled-components')
+  .default
+const styledComponentsTransformer = createStyledComponentsTransformer()
 
 module.exports = [
   {
     test: /\.(ts|tsx)?$/,
-    use: { loader: 'ts-loader', options: { transpileOnly: true } },
+    use: {
+      loader: 'ts-loader',
+      options: {
+        transpileOnly: true,
+        getCustomTransformers: () => ({
+          before: [
+            ...(helpers.isProduction ? [] : [styledComponentsTransformer])
+          ]
+        })
+      }
+    },
     include: [path.resolve('src')],
     exclude: /node_modules/
   },

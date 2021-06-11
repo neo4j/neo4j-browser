@@ -35,10 +35,10 @@ describe('editor reducer', () => {
     // Given
     const helpAction = actions.addHistory(':help', 20)
     const historyAction = actions.addHistory(':history', 20)
-    const initalState = [':help']
+    const initialState = [':help']
 
     // When
-    const nextState = reducer(initalState, helpAction)
+    const nextState = reducer(initialState, helpAction)
 
     // Then
     expect(nextState).toEqual([':help'])
@@ -51,18 +51,18 @@ describe('editor reducer', () => {
   })
 
   test('takes editor.actionTypes.SET_MAX_HISTORY into account', () => {
-    const initalState = [':help', ':help', ':help']
+    const initialState = [':help', ':help', ':help']
 
     const helpAction = actions.addHistory(':history', 3)
-    const nextState = reducer(initalState, helpAction)
+    const nextState = reducer(initialState, helpAction)
     expect(nextState).toEqual([':history', ':help', ':help'])
   })
 
   test('handles editor.actionTypes.CLEAR_HISTORY', () => {
     // Given
-    const initalState = [':emily']
+    const initialState = [':emily']
     const anAction = actions.addHistory(':elliot', 3)
-    const state = reducer(initalState, anAction)
+    const state = reducer(initialState, anAction)
 
     // When
     const nextState = reducer(state, actions.clearHistory())

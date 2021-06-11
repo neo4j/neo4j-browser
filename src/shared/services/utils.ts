@@ -461,6 +461,18 @@ export async function sleep(ms: any) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
+export function isCloudHost(host: string, cloudDomains: string[]): boolean {
+  return isCloudParsedUrl(parseUrl(host), cloudDomains)
+}
+
+function isCloudParsedUrl(
+  parsedUrl: parseUrl,
+  cloudDomains: string[]
+): boolean {
+  const { hostname } = parsedUrl
+  return cloudDomains.some(cloudDomain => hostname.endsWith(cloudDomain))
+}
+
 export function detectRuntimeEnv(win?: any, cloudDomains: string[] = []) {
   if (win && win.neo4jDesktopApi) {
     return DESKTOP
@@ -476,10 +488,8 @@ export function detectRuntimeEnv(win?: any, cloudDomains: string[] = []) {
   ) {
     return DESKTOP
   }
-  for (const cloudDomain of cloudDomains) {
-    if (parsedUrl.hostname.endsWith(cloudDomain)) {
-      return CLOUD
-    }
+  if (isCloudParsedUrl(parsedUrl, cloudDomains)) {
+    return CLOUD
   }
 
   return WEB

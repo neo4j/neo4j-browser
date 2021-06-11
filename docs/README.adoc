@@ -1,0 +1,13 @@
+To build the Browser Manual locally:
+
+1. Create a fork of https://github.com/neo4j/neo4j-browser.
+2. In your working directory, clone https://github.com/neo4j/neo4j-browser using `git clone git@github.com:neo4j/neo4j-browser.git`.
+3. Add your user as a remote using `git remote add <your github username> git@github.com:<your github username>/neo4j-browser.git`
+4. Rename `origin` to `upstream` using `git remote rename origin upstream`.
+5. Checkout the `master` branch using `git checkout master`.
+6. Run `git pull`.
+7. (Optional) Create your own branch using `git checkout -b <branch-name>`if you want to create a Pull Request.
+6. `cd` into the _docs_ directory.
+7. Run `npm install`.
+8. Run `npm start`.
+9. Open http://localhost:8002 in a browser.
