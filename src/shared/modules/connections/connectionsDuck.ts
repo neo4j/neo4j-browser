@@ -22,10 +22,7 @@ import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
 import * as discovery from 'shared/modules/discovery/discoveryDuck'
 import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
-import {
-  fetchMetaData,
-  CLEAR as CLEAR_META
-} from 'shared/modules/dbMeta/dbMetaDuck'
+import { fetchMetaData } from 'shared/modules/dbMeta/dbMetaDuck'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import {
   getInitCmd,
@@ -583,7 +580,6 @@ export const silentDisconnectEpic = (action$: any, store: any) => {
     .ofType(SILENT_DISCONNECT)
     .do(() => bolt.closeConnection())
     .do(() => store.dispatch(resetUseDb()))
-    .do(() => store.dispatch({ type: CLEAR_META }))
     .mapTo(setActiveConnection(null, true))
 }
 export const disconnectSuccessEpic = (action$: any) => {

@@ -446,6 +446,10 @@ Separate multiple commands with a semicolon (`;`).
 | `browser.retain_connection_credentials`
 | `true`
 | Configure the Neo4j Browser to store or not store user credentials.
+
+| `browser.retain_editor_history`
+| `true`
+| Configure the Neo4j Browser to store or not store editor history.
 |===
 
 
