@@ -96,7 +96,9 @@ const noEmptyLines = function(lines: any[]) {
 
 const fitCaptionIntoCircle = function(node: any, style: any) {
   const template = style.forNode(node).get('caption')
-  const captionText = style.interpolate(template, node)
+  const nodeText = style.interpolate(template, node)
+  const captionText =
+    nodeText.length > 100 ? nodeText.substring(0, 100) : nodeText
   const fontFamily = 'sans-serif'
   const fontSize = parseFloat(style.forNode(node).get('font-size'))
   const lineHeight = fontSize
