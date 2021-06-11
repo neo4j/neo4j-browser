@@ -128,7 +128,7 @@ export const StyledCommand = styled(DrawerBrowserCommand)`
 
 export const StyledCarousel = styled.div`
   height: 100%;
-  padding-bottom: 20px;
+  padding-bottom: 50px;
   width: 100%;
   outline: none;
 

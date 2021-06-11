@@ -54,10 +54,14 @@ function GuidesDrawer({
   const scrollRef = useRef<HTMLDivElement>(null)
 
   return (
-    <StyledGuidesDrawer id="guide-drawer" ref={scrollRef}>
+    <StyledGuidesDrawer
+      id="guide-drawer"
+      data-testid="guideDrawer"
+      ref={scrollRef}
+    >
       <StyledGuidesDrawerHeader onClick={backToAllGuides}>
         {!isDefaultGuide(guide) && (
-          <BackIconContainer>
+          <BackIconContainer data-testid="guidesBackButton">
             <BackIcon width={16} />
           </BackIconContainer>
         )}

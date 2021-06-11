@@ -28,11 +28,11 @@ const slides = [
     <h5>Try:</h5>
     <ul className="undecorated">
       <li>
-        <a data-exec=":help">:help</a> - for general help about using Neo4j
+        <a data-exec="help">:help</a> - for general help about using Neo4j
         Browser
       </li>
       <li>
-        <a data-exec=":guide intro">:guide intro</a> - to see a few available
+        <a data-exec="guide intro">:guide intro</a> - to see a few available
         guides
       </li>
       <li>

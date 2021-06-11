@@ -25,10 +25,9 @@ import {
   GuideNavButton,
   GuideUl,
   StyledCarousel,
-  GuideProgressContainer,
-  StyledProgressCount,
-  CarouselIndicator
+  GuideProgressContainer
 } from '../Sidebar/styled'
+import Pagination from './Pagination'
 
 type GuideCarouselProps = {
   slides: JSX.Element[]
@@ -66,32 +65,31 @@ function GuidesCarousel({
   const moreThanOneSlide = slides.length > 1
 
   return (
-    <StyledCarousel>
+    <StyledCarousel className="disable-font-ligatures">
       <Directives content={currentSlide} />
       {moreThanOneSlide && (
         <GuideNavContainer>
-          <GuideNavButton onClick={prevSlide} disabled={onFirstSlide}>
+          <GuideNavButton
+            onClick={prevSlide}
+            disabled={onFirstSlide}
+            data-testid="guidePreviousSlide"
+          >
             Previous
           </GuideNavButton>
           <GuideUl>
             <GuideProgressContainer>
-              <StyledProgressCount>
-                {`${currentSlideIndex + 1} / ${slides.length}`}
-              </StyledProgressCount>
-              {slides.slice(0, 25).map((_, i) => (
-                <CarouselIndicator
-                  key={i}
-                  aria-label={`${i + 1}`}
-                  onClick={() => gotoSlide(i)}
-                  active={i === currentSlideIndex}
-                >
-                  <span />
-                </CarouselIndicator>
-              ))}
-              {slides.length >= 25 && '...'}
+              <Pagination
+                gotoIndex={gotoSlide}
+                itemCount={slides.length}
+                selectedIndex={currentSlideIndex}
+              />
             </GuideProgressContainer>
           </GuideUl>
-          <GuideNavButton onClick={nextSlide} disabled={onLastSlide}>
+          <GuideNavButton
+            onClick={nextSlide}
+            disabled={onLastSlide}
+            data-testid="guideNextSlide"
+          >
             Next
           </GuideNavButton>
         </GuideNavContainer>

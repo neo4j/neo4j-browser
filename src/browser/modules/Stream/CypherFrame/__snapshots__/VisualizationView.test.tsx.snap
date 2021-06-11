@@ -137,7 +137,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
             class="sc-cvbbAY cqXpvD faded zoom-in"
           >
             <i
-              class="sc-kasBVs hnaEbv sl-zoom-in"
+              class="sc-iGPElx hwXBaT sl-zoom-in"
               style="font-size: 1em;"
             />
           </button>
@@ -145,7 +145,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
             class="sc-cvbbAY cqXpvD zoom-out"
           >
             <i
-              class="sc-hgHYgh fmMYuK sl-zoom-out"
+              class="sc-kasBVs hnaEbv sl-zoom-out"
               style="font-size: 1em;"
             />
           </button>

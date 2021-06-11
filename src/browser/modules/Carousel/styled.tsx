@@ -437,6 +437,9 @@ export const StyledSidebarSlide = styled.div.attrs({
     list-style-position: inside;
     padding-left: 0;
     margin-top: 0.5em;
+    p {
+      display: inline-block;
+    }
   }
 
   &.slide input {

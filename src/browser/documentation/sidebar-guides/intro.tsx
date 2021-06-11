@@ -185,7 +185,7 @@ const slides = [
     <h3>Jump into code</h3>
     <ul className="undecorated">
       <li>
-        <a data-exec=":guide cypher">Cypher Guide</a> - Learn Cypher basics
+        <a data-exec="guide cypher">Cypher Guide</a> - Learn Cypher basics
       </li>
     </ul>
   </SidebarSlide>
