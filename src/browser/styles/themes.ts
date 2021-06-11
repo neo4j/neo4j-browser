@@ -164,6 +164,6 @@ export const dark = {
   frameControlButtonTextColor: '#D7E5F1',
   frameButtonTextColor: '#FFF',
   frameButtonHoverBackground: '#485662',
-  streamBackgroundColor: '#374754',
-  frameBackground: '#192A37;'
+  streamBackgroundColor: '#535864',
+  frameBackground: '#292C33;'
 }
