@@ -159,7 +159,7 @@ export const dark = {
   monacoEditorBorder: '1px solid #374754',
 
   // Frame
-  frameSidebarBackground: '#0C1A25',
+  frameSidebarBackground: '#121212',
   frameTitlebarText: '#717172',
   frameControlButtonTextColor: '#D7E5F1',
   frameButtonTextColor: '#FFF',

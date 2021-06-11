@@ -230,5 +230,5 @@ export const TitleBarHeader = styled.div`
   justify-content: flex-end;
   border-radius: 2px 2px 0 0;
   padding-top: 3px;
-  padding-right: 3px;
+  padding-right: 7px;
 `
