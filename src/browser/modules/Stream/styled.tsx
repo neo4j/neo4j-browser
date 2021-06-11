@@ -20,9 +20,10 @@
 
 import styled, { keyframes } from 'styled-components'
 import { dim } from 'browser-styles/constants'
+import { StyledFrameButton } from '../../components/buttons'
 
 export const StyledStream = styled.div`
-  padding: 0;
+  padding: 0 10px;
   display: flex;
   flex-direction: column;
   overflow: auto;
@@ -173,7 +174,6 @@ export const StyledStatsBar = styled.div`
   color: ${props => props.theme.secondaryText};
   font-size: 13px;
   position: relative;
-  background-color: ${props => props.theme.secondaryBackground};
   white-space: nowrap;
   overflow: hidden;
   padding-left: 24px;
@@ -207,25 +207,12 @@ export const SpinnerContainer = styled.div`
   padding-top: 90px;
 `
 
-export const DropdownButton = styled.li`
-  color: ${props => props.theme.secondaryButtonText};
-  background-color: transparent;
-  height: ${dim.frameTitlebarHeight}px;
-  width: 41px;
-  cursor: pointer;
-  text-align: center;
-  line-height: 40px;
-  display: inline-block;
-  /* float: left; */
+export const DropdownButton = styled(StyledFrameButton)`
+  overflow: unset;
+
   &:hover {
-    background-color: ${props => props.theme.secondaryButtonBackgroundHover};
-    color: ${props => props.theme.secondaryButtonTextHover};
-    fill: ${props => props.theme.secondaryButtonTextHover};
-    text-decoration: none;
     position: relative;
     z-index: 9999;
-  }
-  &:hover {
     > ul li {
       display: block;
     }
@@ -236,7 +223,8 @@ export const DropdownList = styled.ul``
 
 export const DropdownContent = styled.li`
   display: none;
-  position: relative;
+  position: absolute;
+  right: 0px;
   background-color: ${props => props.theme.secondaryBackground};
   color: ${props => props.theme.secondaryButtonText};
   width: 135px;
@@ -393,6 +381,7 @@ const rollDownAnimation = keyframes`
   }
 `
 export const AnimationContainer = styled.div`
+  margin-top: 10px;
   animation: ${rollDownAnimation} 0.4s ease-in;
 `
 

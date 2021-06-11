@@ -21,7 +21,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import TimeAgo from 'react-timeago'
-import { allowOutgoingConnections } from 'shared/modules/dbMeta/dbMetaDuck'
+import { shouldAllowOutgoingConnections } from 'shared/modules/dbMeta/dbMetaDuck'
 import {
   getConnectionState,
   DISCONNECTED_STATE
@@ -282,7 +282,7 @@ const mapStateToProps = (state: any) => {
     browserSyncConfig: getBrowserSyncConfig(state),
     syncConsent: state.syncConsent.consented,
     connectionState: getConnectionState(state),
-    isAllowed: allowOutgoingConnections(state) !== false
+    isAllowed: shouldAllowOutgoingConnections(state) !== false
   }
 }
 

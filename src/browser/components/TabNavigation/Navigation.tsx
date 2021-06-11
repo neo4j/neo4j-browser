@@ -188,7 +188,7 @@ class Navigation extends Component<NavigationProps, NavigationState> {
         </StyledTabsWrapper>
         <StyledDrawer
           width={width}
-          ref={(ref: any) => {
+          ref={ref => {
             if (ref) {
               // Remove old listeners so we don't get multiple callbacks.
               // This function is called more than once with same html element

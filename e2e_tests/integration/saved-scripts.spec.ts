@@ -63,6 +63,7 @@ describe('Saved Scripts', () => {
     cy.executeCommand(':clear')
     cy.executeCommand(':help cypher')
     cy.get('[data-testid=frame-Favorite]').click()
+    cy.get('[data-testid="scriptTitle-:help cypher"]').should('exist')
 
     cy.get('[data-testid="savedScriptsButton-New folder"]').click()
     cy.get('[data-testid=editSavedScriptFolderName]').type('fldr{enter}')

@@ -91,7 +91,7 @@ const prependPlayIcon = (element: any, onClick: () => void) => {
   prependIcon(element, 'fa fa-play-circle-o', onClick)
 }
 
-const bindDynamicInputToDom = (element: any) => {
+const bindDynamicInputToTheDom = (element: any) => {
   const valueForElems = element.querySelectorAll('[value-for]')
   const valueKeyElems = element.querySelectorAll('[value-key]')
   if (valueForElems.length > 0 && valueKeyElems.length > 0) {
@@ -143,7 +143,7 @@ export const Directives = (props: any) => {
           }
         })
       })
-      bindDynamicInputToDom(elem)
+      bindDynamicInputToTheDom(elem)
     }
   }
   return <div ref={callback}>{props.content}</div>

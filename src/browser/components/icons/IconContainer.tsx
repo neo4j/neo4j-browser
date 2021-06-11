@@ -56,7 +56,7 @@ type IconContainerProps = {
   icon?: string
   inactiveStyle?: string
   isOpen?: boolean
-  regulateSize?: 1 | 2
+  regulateSize?: 0.625 | 1 | 2
   text?: string
   title?: string
   width?: number

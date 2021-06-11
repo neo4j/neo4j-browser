@@ -34,7 +34,7 @@ import { utilizeBrowserSync } from 'shared/modules/features/featuresDuck'
 import { getOpenDrawer } from 'shared/modules/sidebar/sidebarDuck'
 import { getErrorMessage } from 'shared/modules/commands/commandsDuck'
 import {
-  allowOutgoingConnections,
+  shouldAllowOutgoingConnections,
   getDatabases
 } from 'shared/modules/dbMeta/dbMetaDuck'
 import {
@@ -86,6 +86,7 @@ import {
 import { METRICS_EVENT, udcInit } from 'shared/modules/udc/udcDuck'
 import { useKeyboardShortcuts } from './keyboardShortcuts'
 import PerformanceOverlay from './PerformanceOverlay'
+export const MAIN_WRAPPER_DOM_ID = 'MAIN_WRAPPER_DOM_ID'
 
 declare let SEGMENT_KEY: string
 
@@ -211,7 +212,7 @@ export function App(props: any) {
                   <ErrorBoundary>
                     <Sidebar openDrawer={drawer} onNavClick={handleNavClick} />
                   </ErrorBoundary>
-                  <StyledMainWrapper>
+                  <StyledMainWrapper id={MAIN_WRAPPER_DOM_ID}>
                     <Main
                       activeConnection={activeConnection}
                       connectionState={connectionState}
@@ -244,7 +245,7 @@ const mapStateToProps = (state: any) => {
     lastConnectionUpdate: getLastConnectionUpdate(state),
     errorMessage: getErrorMessage(state),
     loadExternalScripts:
-      allowOutgoingConnections(state) !== false && isConnected(state),
+      shouldAllowOutgoingConnections(state) !== false && isConnected(state),
     titleString: asTitleString(connectionData),
     defaultConnectionData: getConnectionData(state, CONNECTION_ID),
     syncConsent: state.syncConsent.consented,
