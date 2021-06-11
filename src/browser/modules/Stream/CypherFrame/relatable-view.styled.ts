@@ -23,7 +23,7 @@ export const RelatableStyleWrapper = styled.div`
   .relatable__table-row,
   .relatable__table-row.relatable__table-header-row
     .relatable__table-header-cell {
-    background-color: ${props => props.theme.secondaryBackground};
+    background-color: ${props => props.theme.frameBackground};
     color: ${props => props.theme.secondaryText};
   }
   .relatable__table-row-number {
@@ -41,7 +41,6 @@ export const RelatableStyleWrapper = styled.div`
 
 export const StyledJsonPre = styled.pre`
   background-color: ${props => props.theme.preBackground};
-  -webkit-border-radius: 5px;
   border-radius: 5px;
   margin: 20px 10px;
   border-bottom: none;
