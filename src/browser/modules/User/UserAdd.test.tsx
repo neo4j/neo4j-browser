@@ -28,7 +28,7 @@ import { listRolesQuery } from 'shared/modules/cypher/boltUserHelper'
 
 // Stubbing out title bar & template as they depend on store
 jest.mock('browser/modules/Frame/FrameTitlebar', () => () => null)
-jest.mock('browser/modules/Frame/FrameTemplate', () => () => null)
+jest.mock('browser/modules/Frame/FrameEditor', () => () => null)
 
 describe('<UserAdd />', () => {
   it('should send a Cypher request to list user roles when mounted', () => {

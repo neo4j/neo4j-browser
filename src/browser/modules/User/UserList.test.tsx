@@ -31,7 +31,7 @@ import {
 
 // Stubbing out title bar & template as they depend on store
 jest.mock('browser/modules/Frame/FrameTitlebar', () => () => null)
-jest.mock('browser/modules/Frame/FrameTemplate', () => () => null)
+jest.mock('browser/modules/Frame/FrameEditor', () => () => null)
 
 describe('<UserList />', () => {
   it('should list users and user roles when enterprise edition is mounted', () => {
