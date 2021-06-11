@@ -34,7 +34,6 @@ export const base = {
   asideText: '#292C33',
   link: '#428BCA',
   linkHover: '#5dade2',
-  editorCommandColor: '#333',
   topicText: '#428BCA',
   preText: '#333',
   promptText: '#c0c2c5',
@@ -42,7 +41,6 @@ export const base = {
   // Backgrounds
   primaryBackground: '#D2D5DA',
   secondaryBackground: '#fff',
-  editorBarBackground: '#EFEFF4',
   editorBackground: '#fff',
   drawerBackground: '#30333a',
   topicBackground: '#f8f8f8',
@@ -60,6 +58,10 @@ export const base = {
   streamlineFontFamily: 'streamline',
   editorFont:
     '"Fira Code", "Monaco", "Lucida Console", Courier, monospace !important;',
+
+  // Shadows
+  standardShadow:
+    '0px 0px 2px rgba(52, 58, 67, 0.1), 0px 1px 2px rgba(52, 58, 67, 0.08), 0px 1px 4px rgba(52, 58, 67, 0.08);',
 
   // Headers
   primaryHeaderText: '#fff',
@@ -87,13 +89,20 @@ export const base = {
 
   // Borders
   frameBorder: 'none',
-  inFrameBorder: '1px solid #e6e9ef',
+  inFrameBorder: '1px solid #DAE4F0;',
   topicBorder: '1px solid #dadada',
   drawerSeparator: '1px solid #424650',
+  monacoEditorBorder: '1px solid #d7e5f1',
 
   // Frame
-  frameSidebarBackground: '#F8F9FB',
-  frameTitlebarText: '#717172'
+  frameSidebarBackground: '#FFF',
+  frameTitlebarText: '#717172',
+  frameControlButtonTextColor: '#485662',
+  frameButtonTextColor: '#0C1A25',
+  frameButtonHoverBackground: '#B9C3CF',
+  streamBackgroundColor: 'rgba(215, 229, 241, 0.7)',
+  frameBackground: '#F9FCFF',
+  accordionContentBackground: 'white'
 }
 
 export const normal = {
@@ -119,18 +128,16 @@ export const dark = {
   secondaryText: '#eee',
   headerText: '#f4f4f4',
   primaryHeaderText: '#f4f4f4',
-  editorCommandColor: '#1abc9c',
   link: '#5CA6D9',
   topicText: '#fff',
   preText: '#fff',
   asideText: 'rgb(255, 255, 255, 0.87)',
+
   // Backgrounds
   primaryBackground: '#525865',
   secondaryBackground: '#292C33',
-  editorBarBackground: 'transparent',
   editorBackground: '#121212',
   drawerBackground: '#30333a',
-  frameSidebarBackground: '#31333B',
   topicBackground: 'transparent',
   preBackground: '#282c32',
   alteringTableRowBackground: '#30333a',
@@ -149,5 +156,16 @@ export const dark = {
   secondaryButtonBackgroundHover: '#4D4A57',
 
   // Borders
-  inFrameBorder: '1px solid rgba(255,255,255,0.12)'
+  inFrameBorder: '1px solid rgba(255,255,255,0.12)',
+  monacoEditorBorder: '1px solid #374754',
+
+  // Frame
+  frameSidebarBackground: '#121212',
+  frameTitlebarText: '#717172',
+  frameControlButtonTextColor: '#D7E5F1',
+  frameButtonTextColor: '#FFF',
+  frameButtonHoverBackground: '#485662',
+  streamBackgroundColor: '#535864',
+  frameBackground: '#292C33',
+  accordionContentBackground: '#31333B'
 }

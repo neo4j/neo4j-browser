@@ -21,6 +21,7 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { Frame } from 'shared/modules/stream/streamDuck'
 import FrameTitlebar from './FrameTitlebar'
+import FrameEditor from './FrameEditor'
 
 import {
   StyledFrame,
@@ -28,7 +29,8 @@ import {
   StyledFrameContents,
   StyledFrameStatusbar,
   StyledFrameMainSection,
-  StyledFrameAside
+  StyledFrameAside,
+  ContentContainer
 } from './styled'
 
 type FrameTemplateProps = {
@@ -55,13 +57,12 @@ function FrameTemplate({
   numRecords = 0,
   getRecords,
   visElement,
-  runQuery,
   sidebar,
   aside,
   statusbar
 }: FrameTemplateProps): JSX.Element {
   const [lastHeight, setLastHeight] = useState(10)
-  const frameContentElementRef = useRef<any>(null)
+  const frameContentElementRef = useRef<HTMLDivElement>(null)
 
   const {
     isFullscreen,
@@ -106,26 +107,34 @@ function FrameTemplate({
           collapseToggle={toggleCollapse}
           pinned={isPinned}
           togglePin={togglePin}
-          numRecords={numRecords}
-          getRecords={getRecords}
-          visElement={visElement}
-          runQuery={runQuery}
         />
       )}
 
-      <StyledFrameBody fullscreen={isFullscreen} collapsed={isCollapsed}>
-        {sidebar && sidebar()}
-        {aside && <StyledFrameAside>{aside}</StyledFrameAside>}
-        <StyledFrameMainSection>
-          <StyledFrameContents
-            fullscreen={isFullscreen}
-            ref={frameContentElementRef}
-            data-testid="frameContents"
-          >
-            {contents}
-          </StyledFrameContents>
-        </StyledFrameMainSection>
-      </StyledFrameBody>
+      <ContentContainer>
+        {header && (
+          <FrameEditor
+            frame={header}
+            fullscreenToggle={toggleFullScreen}
+            numRecords={numRecords}
+            getRecords={getRecords}
+            visElement={visElement}
+          />
+        )}
+
+        <StyledFrameBody fullscreen={isFullscreen} collapsed={isCollapsed}>
+          {sidebar && sidebar()}
+          {aside && <StyledFrameAside>{aside}</StyledFrameAside>}
+          <StyledFrameMainSection>
+            <StyledFrameContents
+              fullscreen={isFullscreen}
+              ref={frameContentElementRef}
+              data-testid="frameContents"
+            >
+              {contents}
+            </StyledFrameContents>
+          </StyledFrameMainSection>
+        </StyledFrameBody>
+      </ContentContainer>
 
       {statusbar && (
         <StyledFrameStatusbar

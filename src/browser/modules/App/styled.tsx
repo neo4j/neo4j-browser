@@ -53,7 +53,6 @@ export const StyledMainWrapper = styled.div`
   padding: 0;
   height: auto;
   width: 0;
-  background-color: ${props => props.theme.primaryBackground};
+  background-color: ${props => props.theme.streamBackgroundColor};
   color: ${props => props.theme.primaryText};
-  padding: 0 10px 0 10px;
 `

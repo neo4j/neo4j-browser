@@ -25,10 +25,12 @@ interface FullscreenProps {
 }
 
 export const Header = styled.div`
-  background-color: ${(props): string => props.theme.frameSidebarBackground};
+  background-color: ${props => props.theme.editorBackground};
   flex-grow: 1;
   min-width: 0; // Without the min width, the editor doesn't shrink on resize in safari
   display: flex;
+  border: ${props => props.theme.monacoEditorBorder};
+  border-radius: 2px;
 `
 
 export const ActionButtonSection = styled.div`
@@ -36,33 +38,28 @@ export const ActionButtonSection = styled.div`
   justify-content: space-between;
 `
 
-export const Frame = styled.div<FullscreenProps>`
-  padding: 3px;
-  background-color: ${props => props.theme.secondaryBackground};
+export const MainEditorWrapper = styled.div<FullscreenProps>`
+  background-color: ${props => props.theme.frameBackground};
   border-radius: 2px;
-  box-shadow: 0px 0px 2px rgba(52, 58, 67, 0.1),
-    0px 1px 2px rgba(52, 58, 67, 0.08), 0px 1px 4px rgba(52, 58, 67, 0.08);
-  margin: 10px 0 10px 0;
-  ${(props): string => {
-    if (props.fullscreen) {
-      return `
-  position: fixed;
-  top: 0px;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 100vh;
-  border-radius: 0;
-  z-index: 103;
-  margin: 0;
+  box-shadow: ${props => props.theme.standardShadow};
+  margin: 10px 10px 0 10px;
+  ${props =>
+    props.fullscreen &&
+    `
+      position: fixed;
+      top: 0px;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 100vh;
+      border-radius: 0;
+      z-index: 103;
+      margin: 0;
 
-  [id^=monaco-] .monaco-editor {
-    height: calc(100vh - 20px) !important;
-  }
-  `
-    }
-    return ''
-  }};
+      [id^=monaco-] .monaco-editor {
+        height: calc(100vh - 20px) !important;
+      }
+  `}};
 `
 
 export const EditorContainer = styled.div`
@@ -73,9 +70,12 @@ export const EditorContainer = styled.div`
   width: 0; // needed to prevent the editor from growing the text field
   min-width: 0;
 `
+
 export const FlexContainer = styled.div`
   display: flex;
+  padding: 4px;
 `
+
 export const ScriptTitle = styled.div<{ unsaved: boolean }>`
   font-style: ${props => (props.unsaved ? 'italic' : 'normal')};
   border-bottom: 1px solid rgb(77, 74, 87, 0.3);

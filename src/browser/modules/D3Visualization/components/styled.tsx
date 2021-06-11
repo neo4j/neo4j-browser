@@ -24,20 +24,6 @@ export const legendRowHeight = 32
 export const inspectorFooterContractedHeight = 22
 const pMarginTop = 6
 
-// Themes is here because the colors are unique to this component
-const getColor = (theme: 'normal' | 'dark', name: 'svgBackground') => {
-  const themes = {
-    normal: {
-      svgBackground: '#f9fbfd'
-    },
-    dark: {
-      svgBackground: '#292C33'
-    }
-  }
-  if (themes[theme] === undefined) theme = 'normal'
-  return themes[theme][name] || ''
-}
-
 export const StyledSvgWrapper = styled.div`
   line-height: 0;
   height: 100%;
@@ -45,7 +31,7 @@ export const StyledSvgWrapper = styled.div`
   > svg {
     height: 100%;
     width: 100%;
-    background-color: ${props => getColor(props.theme.name, 'svgBackground')};
+    background-color: ${props => props.theme.frameBackground};
     .node {
       cursor: pointer;
       > .ring {
@@ -194,13 +180,14 @@ export const StyledStatusBarWrapper = styled.div`
   height: 68px;
   display: none;
 `
-export const StyledStatusBar: any = styled.div`
+
+export const StyledStatusBar = styled.div`
   min-height: 39px;
   line-height: 39px;
   color: ${props => props.theme.secondaryText};
   font-size: 13px;
   position: absolute;
-  background-color: ${props => props.theme.frameCommandBackground};
+  background-color: ${props => props.theme.frameBackground};
   white-space: nowrap;
   overflow: hidden;
   bottom: 0;
@@ -269,14 +256,15 @@ export const StyledLegendContents = styled.ul`
 
 export const StyledLegendRow = styled.div`
   border-bottom: transparent;
-  background-color: ${props => props.theme.frameCommandBackground};
   &.contracted {
     max-height: ${legendRowHeight}px;
     overflow: hidden;
   }
+  border-bottom: ${props => props.theme.inFrameBorder};
 `
+
 export const StyledLegend = styled.div`
-  background-color: ${props => props.theme.secondaryBackground};
+  background-color: ${props => props.theme.frameBackground};
   position: absolute;
   z-index: 1;
   top: 0;
@@ -354,9 +342,10 @@ export const StyledZoomHolder = styled.div`
   bottom: 39px;
   right: 0;
   padding: 6px 6px 0 6px;
-  border-left: #e6e9ef solid 1px;
-  border-top: #e6e9ef solid 1px;
-  background: #fff;
+  border-left: ${props => props.theme.inFrameBorder};
+  border-right: ${props => props.theme.inFrameBorder};
+  border-top: ${props => props.theme.inFrameBorder};
+  background: ${props => props.theme.frameSidebarBackground};
 `
 
 export const StyledZoomButton = styled.button`
@@ -364,12 +353,12 @@ export const StyledZoomButton = styled.button`
   list-style-type: none;
   margin-bottom: 10px;
   border: none;
-  color: #9b9da2;
+  color: ${props => props.theme.frameButtonTextColor}
   background: transparent;
   border-color: black;
   padding: 2px 6px 3px;
   &:hover {
-    color: black;
+    opacity: 0.7;
   }
   &:focus {
     outline: none;
@@ -378,7 +367,7 @@ export const StyledZoomButton = styled.button`
     opacity: 0.3;
     cursor: auto;
     &:hover {
-      color: #9b9da2;
+      color: ${props => props.theme.frameButtonTextColor}
     }
   }
 `
