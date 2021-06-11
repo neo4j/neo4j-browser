@@ -101,7 +101,8 @@ export const base = {
   frameButtonTextColor: '#0C1A25',
   frameButtonHoverBackground: '#B9C3CF',
   streamBackgroundColor: 'rgba(215, 229, 241, 0.7)',
-  frameBackground: '#F9FCFF'
+  frameBackground: '#F9FCFF',
+  accordionContentBackground: 'white'
 }
 
 export const normal = {
@@ -165,5 +166,6 @@ export const dark = {
   frameButtonTextColor: '#FFF',
   frameButtonHoverBackground: '#485662',
   streamBackgroundColor: '#535864',
-  frameBackground: '#292C33;'
+  frameBackground: '#292C33',
+  accordionContentBackground: '#31333B'
 }

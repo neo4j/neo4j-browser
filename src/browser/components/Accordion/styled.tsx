@@ -14,6 +14,6 @@ export const TitleBar = styled.div`
 `
 
 export const ContentArea = styled.div`
-  background-color: white;
+  background-color: ${props => props.theme.accordionContentBackground};
   min-height: 50px;
 `
