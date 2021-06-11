@@ -55,6 +55,7 @@ import skipPrev from 'icons/skip-prev.svg'
 import stopIcon from 'icons/stop-icon.svg'
 import table from 'icons/table.svg'
 import text from 'icons/text.svg'
+import vizIcon from 'icons/hierarchy-9.svg'
 
 const inactive = `
   color: #797979;
@@ -257,7 +258,7 @@ export const TableIcon = (): JSX.Element => (
   <IconContainer icon={table} text="Table" width={LARGE_SIZE} />
 )
 export const VisualizationIcon = (): JSX.Element => (
-  <IconContainer icon={neo4j} text="Graph" width={LARGE_SIZE} />
+  <IconContainer icon={vizIcon} text="Graph" width={LARGE_SIZE} />
 )
 export const AsciiIcon = (): JSX.Element => (
   <IconContainer icon={text} text="Text" width={18} />
