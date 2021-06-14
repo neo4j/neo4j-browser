@@ -87,6 +87,27 @@ a| Create an edit frame.
 m| +:get <request>+
 a| REST command, send an HTTP GET request.
 
+m| :guide
+a|
+Show the guide drawer.
+The guide drawer contains interactive Neo4j Browser guides for learning concepts and tools with Neo4j.
+
+m| +:guide <guide-name>+
+a|
+Show the guide drawer with a specific Neo4j Browser guide.
+The name can be specified with or without the Hyphen (`-`) character, e.g, `:guide movie-graph` or `:guide movie graph`.
+
+m| +:guide <URL>+
+a|
+Show the guide drawer with a custom Neo4j Browser guide from the specified URL.
+
+[NOTE]
+====
+There are also other Neo4j Browser guides created by Neo4j staff and community members to help others learn Neo4j or how to use the tools in its ecosystem.
+You can check out the currently published list on the link:https://portal.graphgist.org/graph_guides[GraphGist Portal (Graph Guides section)]. +
+For more information on how to create a custom Browser guide, see link:https://neo4j.com/developer/guide-create-neo4j-browser-guide/[creating a custom Browser guide].
+====
+
 m| :help
 a| Display help about topics and commands.
 
@@ -103,7 +124,23 @@ m| +:put <request>+
 a| REST command, send an HTTP PUT request.
 
 m| :play
-a| Play tutorials and guides.
+a| Play Neo4j Browser guides.
+
+m| +:play <guide-name>+
+a|
+Play a specific Neo4j Browser guide.
+The name can be specified with or without the Hyphen (`-`) character, e.g, `:play movie-graph` or `:play movie graph`.
+
+m| +:play <URL>+
+a|
+Play a custom Neo4j Browser guide from the specified URL.
+
+[NOTE]
+====
+There are also other Neo4j Browser guides created by Neo4j staff and community members to help others learn Neo4j or how to use the tools in its ecosystem.
+You can check out the currently published list on the link:https://portal.graphgist.org/graph_guides[GraphGist Portal (Graph Guides section)]. +
+For more information on how to create a custom Browser guide, see link:https://neo4j.com/developer/guide-create-neo4j-browser-guide/[creating a custom Browser guide].
+====
 
 m| +:post <request>+
 a| REST command, send an HTTP POST request.

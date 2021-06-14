@@ -1096,11 +1096,12 @@ http://localhost:7474/browser?dbms=neo4j://alice@localhost:7687&db=neo4j123
 Pre-populate the editor with a command when Neo4j Browser starts.
 Supported browser commands are:
 
+* `guide`
 * `param`
 * `params`
 * `play`
 
-The `:play` command runs automatically. +
+The `:play` and `:guide` commands run automatically. +
 
 The syntax is:
 
@@ -1108,6 +1109,20 @@ The syntax is:
 ----
 http://localhost:7474/browser?cmd=[command]&arg=[argument]
 ----
+
+
+.Guide intro
+====
+[source, browser command, role=noheader]
+----
+:guide intro
+----
+
+[source, browser URL, role=noheader]
+----
+http://localhost:7474/browser?cmd=guide&arg=intro
+----
+====
 
 
 .Play movies
