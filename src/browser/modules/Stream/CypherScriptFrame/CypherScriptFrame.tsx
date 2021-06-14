@@ -72,7 +72,7 @@ function CypherScriptFrame({
                       data-testid="multi-statement-list-title"
                       {...titleProps}
                     >
-                      <PointerFrameCommand selectedDb={frames[id].cmd}>
+                      <PointerFrameCommand selectedDb={frames[id].useDb || ''}>
                         {frames[id].cmd}
                       </PointerFrameCommand>
                       <StyledFrameTitlebarButtonSection>
