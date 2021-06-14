@@ -108,15 +108,10 @@ For more information, see link:https://neo4j.com/docs/desktop-manual/current/vis
 [[guides]]
 === Guides
 
-Neo4j Browser provides many interactive Neo4j Browser guides for learning concepts and tools with Neo4j.
+The Neo4j Browser Guides drawer provides many interactive guides for learning concepts and tools with Neo4j.
 Some of them come with Neo4j Browser out-of-the-box, no matter what system or installation you are using.
 
 image:guides.png[width=60%]
-
-[TIP]
-====
-You can pin a guide, so it does not get pushed down to the bottom of the window as you run queries by clicking the pushpin button.
-====
 
 .Built-in guides and commands
 [cols="1,3",options="header"]

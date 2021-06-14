@@ -1101,7 +1101,7 @@ Supported browser commands are:
 * `params`
 * `play`
 
-The `:play` and `:guide` command runs automatically. +
+The `:play` and `:guide` commands run automatically. +
 
 The syntax is:
 

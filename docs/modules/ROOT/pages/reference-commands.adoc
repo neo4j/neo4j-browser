@@ -95,7 +95,7 @@ The guide drawer contains interactive Neo4j Browser guides for learning concepts
 m| +:guide <guide-name>+
 a|
 Show the guide drawer with a specific Neo4j Browser guide.
-The name can be specified with or without the Hyphen (`-`) character, e.g `:guide movie-graph` or `:guide movie graph`.
+The name can be specified with or without the Hyphen (`-`) character, e.g, `:guide movie-graph` or `:guide movie graph`.
 
 m| +:guide <URL>+
 a|
@@ -129,7 +129,7 @@ a| Play Neo4j Browser guides.
 m| +:play <guide-name>+
 a|
 Play a specific Neo4j Browser guide.
-The name can be specified with or without the Hyphen (`-`) character, e.g `:play movie-graph` or `:play movie graph`.
+The name can be specified with or without the Hyphen (`-`) character, e.g, `:play movie-graph` or `:play movie graph`.
 
 m| +:play <URL>+
 a|
