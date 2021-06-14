@@ -4,12 +4,12 @@ import {
   DrawerExternalLink,
   DrawerSubHeader
 } from 'browser-components/drawer/drawer-styled'
-import { SidebarSlide } from 'browser/modules/Carousel/Slide'
+import { BuiltInGuideSidebarSlide } from 'browser/modules/Carousel/Slide'
 import { LinkContainer, MarginTop, MarginTopLi, NoBulletsUl } from './styled'
 
 const title = '--DEFAULT_INDEX_GUIDE--'
 const slides = [
-  <SidebarSlide key="first">
+  <BuiltInGuideSidebarSlide key="first">
     You can also access Browser guides by running
     <DrawerBrowserCommand data-populate=":guide [guide name]">
       :guide [guide name]
@@ -61,7 +61,7 @@ const slides = [
         More guides
       </DrawerExternalLink>
     </LinkContainer>
-  </SidebarSlide>
+  </BuiltInGuideSidebarSlide>
 ]
 
 export default { title, slides }

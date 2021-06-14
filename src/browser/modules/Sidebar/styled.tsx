@@ -282,7 +282,7 @@ export const GuideTitle = styled.div`
   text-overflow: ellipsis;
   font-size: 2em;
   line-height: normal;
-  padding: 0 18px;
+  padding: 0 15px;
   margin-bottom: 10px;
   font-family: ${props => props.theme.drawerHeaderFontFamily};
 `
@@ -290,9 +290,6 @@ export const GuideTitle = styled.div`
 export const BackIconContainer = styled.span`
   cursor: pointer;
   margin-right: 5px;
-`
-export const CarouselWrapper = styled.div`
-  padding: 0 18px;
 `
 
 export const GuideNavContainer = styled.div`

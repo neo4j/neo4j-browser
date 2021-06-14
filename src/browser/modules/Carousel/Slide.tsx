@@ -80,6 +80,16 @@ const SidebarSlide = React.forwardRef(
   )
 )
 
+// We want to migrate our built in sidebar guides to be generated ASCII doc, but until
+// then we'll need to add some extra padding this way instead
+const BuiltInGuideSidebarSlide = (props: {
+  children: React.ReactNode
+}): JSX.Element => (
+  <StyledSidebarSlide className={styles.slide} style={{ padding: '0 15px' }}>
+    {props.children}
+  </StyledSidebarSlide>
+)
+
 SidebarSlide.displayName = 'SidebarSlide'
 
-export { SidebarSlide }
+export { SidebarSlide, BuiltInGuideSidebarSlide }
