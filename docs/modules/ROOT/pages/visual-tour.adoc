@@ -108,7 +108,7 @@ For more information, see link:https://neo4j.com/docs/desktop-manual/current/vis
 [[guides]]
 === Guides
 
-Neo4j Browser provides many interactive guides for learning concepts and tools with Neo4j.
+Neo4j Browser provides many interactive Neo4j Browser guides for learning concepts and tools with Neo4j.
 Some of them come with Neo4j Browser out-of-the-box, no matter what system or installation you are using.
 
 image:guides.png[width=60%]
@@ -124,40 +124,40 @@ You can pin a guide, so it does not get pushed down to the bottom of the window 
 | Guide command
 | Description
 
-| `:play intro`
+| `:guide intro`
 | Neo4j Browser User Interface.
 
-| `:play concepts`
+| `:guide concepts`
 | Basic property-graph concepts to get you going.
 
-| `:play learn`
+| `:guide learn`
 | Learn (Graph database fundamentals).
 
-| `:play cypher`
+| `:guide cypher`
 | Cypher basics - create, match, patterns.
 
-| `:play movie graph`
+| `:guide movie-graph`
 | The Movie Graph, a mini graph model of connections between actors and movies.
 
-| `:play northwind graph`
+| `:guide northwind-graph`
 | The Northwind Database, a classic use case of RDBMS to graph with import instructions and queries.
 
-|`:play start`
+| `:guide start`
 | Getting started with Neo4j Browser - concepts, write-code, system info.
 
-| `:play write-code`
+| `:guide write-code`
 | Jump right into coding with example data graphs (Shows both guides for The Movie graph and The Northwind graph).
 
-| `:play fabric`
+| `:guide fabric`
 | The basics of setting up and using Neo4j Fabric.
 
-| `:play`
-| Use `:play <url>` to play a custom guide.
+| `:guide <URL>`
+| Use `:guide <URL>` to play a custom Neo4j Browser guide.
 |===
 
 [NOTE]
 ====
-There are also other guides created by Neo4j staff and community members to help others learn Neo4j or how to use the tools in its ecosystem.
+There are also other Neo4j Browser guides created by Neo4j staff and community members to help others learn Neo4j or how to use the tools in its ecosystem.
 You can check out the currently published list on the link:https://portal.graphgist.org/graph_guides[GraphGist Portal (Graph Guides section)]. +
 For more information on how to create a custom Browser guide, see link:https://neo4j.com/developer/guide-create-neo4j-browser-guide/[creating a custom Browser guide].
 ====

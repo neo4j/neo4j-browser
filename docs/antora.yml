@@ -1,13 +1,13 @@
 name: browser-manual
 title: Neo4j Browser
-version: '4.2'
+version: '4.3'
 start_page: ROOT:index.adoc
 nav:
 - modules/ROOT/content-nav.adoc
 asciidoc:
   attributes:
-    neo4j-version: '4.2'
-    neo4j-version-exact: '4.2.5'
-    neo4j-buildnumber: '4.2'
-    neo4j-browser-version: '4.2.5'
-    docs-version: '4.2'
+    neo4j-version: '4.3'
+    neo4j-version-exact: '4.3.0'
+    neo4j-buildnumber: '4.3'
+    neo4j-browser-version: '4.3.0'
+    docs-version: '4.3'
