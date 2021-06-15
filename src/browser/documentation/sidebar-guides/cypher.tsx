@@ -20,11 +20,11 @@
 
 import React from 'react'
 import ManualLink from 'browser-components/ManualLink'
-import { SidebarSlide } from '../../modules/Carousel/Slide'
+import { BuiltInGuideSidebarSlide } from '../../modules/Carousel/Slide'
 
 const title = 'Cypher'
 const slides = [
-  <SidebarSlide key="first">
+  <BuiltInGuideSidebarSlide key="first">
     <p className="lead">Neo4j's graph query language</p>
     <p>Neo4j's Cypher language is purpose built for working with graph data.</p>
     <ul className="big">
@@ -32,8 +32,8 @@ const slides = [
       <li>familiar SQL-like clauses</li>
       <li>declarative, describing what to find, not how to find it</li>
     </ul>
-  </SidebarSlide>,
-  <SidebarSlide key="second">
+  </BuiltInGuideSidebarSlide>,
+  <BuiltInGuideSidebarSlide key="second">
     <h3>CREATE</h3>
     <p className="lead">Create a node</p>
     <p>Let's use Cypher to generate a small social graph.</p>
@@ -55,8 +55,8 @@ const slides = [
         <code>{'{}'}</code> brackets to add properties to the node
       </li>
     </ul>
-  </SidebarSlide>,
-  <SidebarSlide key="third">
+  </BuiltInGuideSidebarSlide>,
+  <BuiltInGuideSidebarSlide key="third">
     <h3>MATCH</h3>
     <p className="lead">Finding nodes</p>
     <p>Now find the node representing Emil:</p>
@@ -82,8 +82,8 @@ const slides = [
         <code>RETURN</code> clause used to request particular results
       </li>
     </ul>
-  </SidebarSlide>,
-  <SidebarSlide key="forth">
+  </BuiltInGuideSidebarSlide>,
+  <BuiltInGuideSidebarSlide key="forth">
     <h3>CREATE more</h3>
     <p className="lead">Nodes and relationships</p>
     <p>
@@ -101,8 +101,8 @@ CREATE (js:Person { name: "Johan", from: "Sweden", learn: "surfing" }),
 (ir)-[:KNOWS]->(js),(ir)-[:KNOWS]->(ally),
 (rvb)-[:KNOWS]->(ally)`}
     </pre>
-  </SidebarSlide>,
-  <SidebarSlide key="fifth">
+  </BuiltInGuideSidebarSlide>,
+  <BuiltInGuideSidebarSlide key="fifth">
     <h3>Pattern matching</h3>
     <p className="lead">Describe what to find in the graph</p>
     <p className="summary">
@@ -130,8 +130,8 @@ WHERE ee.name = "Emil" RETURN ee, friends`}
         will be bound to Emil's friends
       </li>
     </ul>
-  </SidebarSlide>,
-  <SidebarSlide key="sixth">
+  </BuiltInGuideSidebarSlide>,
+  <BuiltInGuideSidebarSlide key="sixth">
     <h3>Recommend</h3>
     <p className="lead">Using patterns</p>
     <p className="summary">
@@ -157,8 +157,8 @@ RETURN DISTINCT surfer`}
         will contain Allison, a friend of a friend who surfs
       </li>
     </ul>
-  </SidebarSlide>,
-  <SidebarSlide key="seventh">
+  </BuiltInGuideSidebarSlide>,
+  <BuiltInGuideSidebarSlide key="seventh">
     <h3>Analyze</h3>
     <p className="lead">Using the visual query plan</p>
     <p className="summary">
@@ -170,8 +170,8 @@ RETURN DISTINCT surfer`}
 WHERE js.name = "Johan" AND surfer.hobby = "surfing"
 RETURN DISTINCT surfer`}
     </pre>
-  </SidebarSlide>,
-  <SidebarSlide key="eighth">
+  </BuiltInGuideSidebarSlide>,
+  <BuiltInGuideSidebarSlide key="eighth">
     <h3>Live Cypher warnings</h3>
     <p className="lead">Identify query problems in real time</p>
     <p>
@@ -182,8 +182,8 @@ RETURN DISTINCT surfer`}
       src="./assets/images/screen_cypher_warn.png"
       className="img-responsive"
     />
-  </SidebarSlide>,
-  <SidebarSlide key="nineth">
+  </BuiltInGuideSidebarSlide>,
+  <BuiltInGuideSidebarSlide key="nineth">
     <h3>Next steps</h3>
     <p>
       Start your application using Cypher to create and query graph data. See{' '}
@@ -204,7 +204,7 @@ RETURN DISTINCT surfer`}
         of the Neo4j Developer Manual
       </li>
     </ul>
-  </SidebarSlide>
+  </BuiltInGuideSidebarSlide>
 ]
 
 export default { title, slides }

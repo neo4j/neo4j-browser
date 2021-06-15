@@ -20,13 +20,13 @@
 
 import React from 'react'
 import ManualLink from 'browser-components/ManualLink'
-import { SidebarSlide } from '../../modules/Carousel/Slide'
+import { BuiltInGuideSidebarSlide } from '../../modules/Carousel/Slide'
 import { DrawerExternalLink } from 'browser-components/drawer/drawer-styled'
 
 const title = 'Movie Graph'
 const category = 'graphExamples'
 const slides = [
-  <SidebarSlide key="s1">
+  <BuiltInGuideSidebarSlide key="s1">
     <p>
       <em>The Movie Graph</em> is a mini graph application containing actors and
       directors that are related through the movies they've collaborated on.
@@ -51,8 +51,8 @@ const slides = [
       <b>WARNING:</b> This guide will modify the data in the currently active
       database.{' '}
     </p>
-  </SidebarSlide>,
-  <SidebarSlide key="s2">
+  </BuiltInGuideSidebarSlide>,
+  <BuiltInGuideSidebarSlide key="s2">
     <h3>Create</h3>
     <p>
       Below is a code block containing a single Cypher query statement composed
@@ -580,8 +580,8 @@ MATCH (a)-[:ACTED_IN]->(m)<-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10;`}
       <small>:help</small> <a help-topic="cypher">cypher</a>{' '}
       <a help-topic="create">CREATE</a>
     </p>
-  </SidebarSlide>,
-  <SidebarSlide key="s3">
+  </BuiltInGuideSidebarSlide>,
+  <BuiltInGuideSidebarSlide key="s3">
     <h3>Find</h3>
     <p>Example queries for finding individual nodes.</p>
     <ol>
@@ -614,8 +614,8 @@ MATCH (a)-[:ACTED_IN]->(m)<-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10;`}
       <small>:help</small> <a help-topic="match">MATCH</a>{' '}
       <a help-topic="where">WHERE</a> <a help-topic="return">RETURN</a>
     </p>
-  </SidebarSlide>,
-  <SidebarSlide key="s4">
+  </BuiltInGuideSidebarSlide>,
+  <BuiltInGuideSidebarSlide key="s4">
     <h3>Query</h3>
     <p>Finding patterns within the graph.</p>
     <ol>
@@ -652,8 +652,8 @@ MATCH (a)-[:ACTED_IN]->(m)<-[:DIRECTED]-(d) RETURN a,m,d LIMIT 10;`}
     <p>
       <small>:help</small> <a help-topic="match">MATCH</a>
     </p>
-  </SidebarSlide>,
-  <SidebarSlide key="s5">
+  </BuiltInGuideSidebarSlide>,
+  <BuiltInGuideSidebarSlide key="s5">
     <h3>Solve</h3>
     <p>
       You've heard of the classic "Six Degrees of Kevin Bacon"? That is simply a
@@ -684,8 +684,8 @@ RETURN p`}
       Note you only need to compare property values like this when first
       creating relationships
     </aside>
-  </SidebarSlide>,
-  <SidebarSlide key="s6">
+  </BuiltInGuideSidebarSlide>,
+  <BuiltInGuideSidebarSlide key="s6">
     <h3>Recommend</h3>
     <p>
       Let's recommend new co-actors for Tom Hanks. A basic recommendation
@@ -716,8 +716,8 @@ RETURN cocoActors.name AS Recommended, count(*) AS Strength ORDER BY Strength DE
   (coActors)-[:ACTED_IN]->(m2)<-[:ACTED_IN]-(cruise:Person {name:"Tom Cruise"})
 RETURN tom, m, coActors, m2, cruise`}
     </pre>
-  </SidebarSlide>,
-  <SidebarSlide key="s7">
+  </BuiltInGuideSidebarSlide>,
+  <BuiltInGuideSidebarSlide key="s7">
     <h3>Clean up</h3>
     <p>When you're done experimenting, you can remove the movie data set.</p>
     <p>
@@ -737,8 +737,8 @@ RETURN tom, m, coActors, m2, cruise`}
     <p>
       <small>:help</small> <a help-topic="delete">DELETE</a>
     </p>
-  </SidebarSlide>,
-  <SidebarSlide key="s8">
+  </BuiltInGuideSidebarSlide>,
+  <BuiltInGuideSidebarSlide key="s8">
     <h3>Next steps</h3>
     <ul className="undecorated">
       <li>
@@ -768,7 +768,7 @@ RETURN tom, m, coActors, m2, cruise`}
         </ManualLink>
       </li>
     </ul>
-  </SidebarSlide>
+  </BuiltInGuideSidebarSlide>
 ]
 
 export default { title, category, slides }

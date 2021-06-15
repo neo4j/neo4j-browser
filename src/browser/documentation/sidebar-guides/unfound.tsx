@@ -18,12 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { SidebarSlide } from 'browser/modules/Carousel/Slide'
+import { BuiltInGuideSidebarSlide } from 'browser/modules/Carousel/Slide'
 import React from 'react'
 const title = 'Not found'
 
 const slides = [
-  <SidebarSlide key="first">
+  <BuiltInGuideSidebarSlide key="first">
     <p>Apologies, but there doesn't seem to be any content about that.</p>
     <h5>Try:</h5>
     <ul className="undecorated">
@@ -40,7 +40,7 @@ const slides = [
         information about Neo4j
       </li>
     </ul>
-  </SidebarSlide>
+  </BuiltInGuideSidebarSlide>
 ]
 
 export default { title, slides }

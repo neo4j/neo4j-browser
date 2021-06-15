@@ -37,6 +37,8 @@ export const base = {
   topicText: '#428BCA',
   preText: '#333',
   promptText: '#c0c2c5',
+  neo4jBlue: '#018BFF',
+  darkBlue: '#0056B3',
 
   // Backgrounds
   primaryBackground: '#D2D5DA',

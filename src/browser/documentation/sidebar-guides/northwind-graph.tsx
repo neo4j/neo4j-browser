@@ -20,13 +20,13 @@
 
 import React from 'react'
 import ManualLink from 'browser-components/ManualLink'
-import { SidebarSlide } from '../../modules/Carousel/Slide'
+import { BuiltInGuideSidebarSlide } from '../../modules/Carousel/Slide'
 import { DrawerExternalLink } from 'browser-components/drawer/drawer-styled'
 
 const title = 'Northwind Graph'
 const category = 'graphExamples'
 const slides = [
-  <SidebarSlide key="s1">
+  <BuiltInGuideSidebarSlide key="s1">
     <p className="lead">From RDBMS to Graph, using a classic dataset</p>
     <p>
       The <em>Northwind Graph</em> demonstrates how to migrate from a relational
@@ -41,8 +41,8 @@ const slides = [
       <li>Relate: transform foreign key references into data relationships</li>
       <li>Promote: transform join records into relationships</li>
     </ol>
-  </SidebarSlide>,
-  <SidebarSlide key="s2">
+  </BuiltInGuideSidebarSlide>,
+  <BuiltInGuideSidebarSlide key="s2">
     <h3>Product Catalog</h3>
     <p>
       Northwind sells food products in a few categories, provided by suppliers.
@@ -94,8 +94,8 @@ SET n = row`}
       <small>:help</small> <a help-topic="cypher">cypher</a>{' '}
       <a help-topic="load-csv">LOAD CSV</a>
     </p>
-  </SidebarSlide>,
-  <SidebarSlide key="s3">
+  </BuiltInGuideSidebarSlide>,
+  <BuiltInGuideSidebarSlide key="s3">
     <h3>Product Catalog Graph</h3>
     <p>
       The products, categories and suppliers are related through foreign key
@@ -144,8 +144,8 @@ CREATE (s)-[:SUPPLIES]->(p)`}
       <small>:help</small> <a help-topic="cypher">cypher</a>{' '}
       <a help-topic="match">MATCH</a>
     </p>
-  </SidebarSlide>,
-  <SidebarSlide key="s4">
+  </BuiltInGuideSidebarSlide>,
+  <BuiltInGuideSidebarSlide key="s4">
     <h3>Querying Product Catalog Graph</h3>
     <p>Lets try some queries using patterns.</p>
     <p>
@@ -172,8 +172,8 @@ RETURN DISTINCT s.companyName as ProduceSuppliers`}
       <small>:help</small> <a help-topic="cypher">cypher</a>{' '}
       <a help-topic="match">MATCH</a>
     </p>
-  </SidebarSlide>,
-  <SidebarSlide key="s5">
+  </BuiltInGuideSidebarSlide>,
+  <BuiltInGuideSidebarSlide key="s5">
     <h3>Customer Orders</h3>
     <p>
       Northwind customers place orders which may detail multiple products.
@@ -214,8 +214,8 @@ CREATE (c)-[:PURCHASED]->(o)`}
       <small>:help</small> <a help-topic="cypher">cypher</a>{' '}
       <a help-topic="load-csv">LOAD CSV</a>
     </p>
-  </SidebarSlide>,
-  <SidebarSlide key="s6">
+  </BuiltInGuideSidebarSlide>,
+  <BuiltInGuideSidebarSlide key="s6">
     <h3>Customer Order Graph</h3>
     <p>
       Notice that Order Details are always part of an Order and that they{' '}
@@ -255,8 +255,8 @@ RETURN DISTINCT cust.contactName as CustomerName, SUM(o.quantity) AS TotalProduc
       <small>:help</small> <a help-topic="cypher">cypher</a>{' '}
       <a help-topic="load-csv">LOAD CSV</a>
     </p>
-  </SidebarSlide>,
-  <SidebarSlide key="s7">
+  </BuiltInGuideSidebarSlide>,
+  <BuiltInGuideSidebarSlide key="s7">
     <h3>Next steps</h3>
     <ul className="undecorated">
       <li>
@@ -285,7 +285,7 @@ RETURN DISTINCT cust.contactName as CustomerName, SUM(o.quantity) AS TotalProduc
         </ManualLink>
       </li>
     </ul>
-  </SidebarSlide>
+  </BuiltInGuideSidebarSlide>
 ]
 
 export default { title, category, slides }
