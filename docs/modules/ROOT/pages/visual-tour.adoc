@@ -332,10 +332,13 @@ For more information about keyboard shortcuts, use the command `:help keys`.
 [[reusable-frames]]
 == Reusable result frames
 
-Neo4j Browser reusable result frames allow you to edit the query of an existing result directly in the result frame and re-run to update the result in situ. +
-Each reusable frame maintains its own local history of commands and updates the main one in the Cypher editor, should you need to instantiate a new result frame from there.
+Neo4j Browser reusable result frames allow you to edit the query of an existing result directly in the result frame and re-run to update the result in situ.
 
 image:inline-result-editor.gif[]
+
+Each reusable frame maintains its own local history of commands and updates the main one in the Cypher editor, should you need to instantiate a new result frame from there.
+
+image:result-frame.png[]
 
 [[frame-views]]
 === Result frame views

@@ -308,9 +308,9 @@ For example, if a node has 1000 labels, the list will be cut off to the value se
 | `autoComplete`
 | `true`
 | Automatic completion of missing relationships. +
-When you execute a query, any relationships not explicitly returned by the query, but that exist between the nodes will be shown in the graph. 
+When you execute a query, any relationships not explicitly returned by the query, but that exist between the nodes will be shown in the graph.
 You can disable for queries where it is important to see only the relationships the query returns.
-This behavior is controlled by the `Connect result nodes` in *Browser Settings*. 
+This behavior is controlled by the `Connect result nodes` in *Browser Settings*.
 | yes
 
 | `scrollToTop`
@@ -513,7 +513,7 @@ Double-clicking a node expands its child relationships.
 You can see all the properties of that element if you click any node or relationship.
 Properties appear below the visualization.
 * Larger property sets might be collapsed into a subset, and there is a little triangle on the right to unfold them.
-For example, if you click one of the `Movie` nodes in the MovieGraph (`:play movie graph`), you can see its properties below the graph visualization.
+For example, if you click one of the `Movie` nodes in the MovieGraph (`:guide movie graph`), you can see its properties below the graph visualization.
 The same applies to `Actor` nodes and the `ACTED_IN` relationships.
 ====
 
@@ -586,14 +586,14 @@ Neo4j Browser also provides functionality for styling with color and size, based
 
 If you click any label or relationship above the graph visualization, you can choose its styling in the area below the graph.
 Colors, sizes, and captions are selectable from there.
-To see this for yourself, you can click the `Person` label above the graph and change the color, size, and captions of all nodes labeled with `Person`.
+To see this for yourself, you can click the `Movie` label above the graph and change the color, size, and captions of all nodes labeled with `Movie`.
 The same applies to the relationship `ACTED_IN`.
 
 
-.Changes to nodes labeled `Person`
-[#style_person_node]
-[caption="Changes to nodes labeled `Person`"]
-image:style_person_node.png[]
+.Changes to nodes labeled `Movie`
+[#style_movie_node]
+[caption="Changes to nodes labeled `Movie`"]
+image:style_movie_node.png[]
 
 
 .Changes to relationships labeled `ACTED_IN`
