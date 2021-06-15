@@ -78,6 +78,33 @@ export default [
     ]
   },
   {
+    name: ':guide',
+    description: ' - guides to help you get started',
+    commands: [
+      {
+        name: 'intro',
+        description: ' - getting started with Neo4j Browser'
+      },
+      {
+        name: 'concepts',
+        description: ' - basic concepts to get you going'
+      },
+      {
+        name: 'cypher',
+        description: ' - basics: create, match, delete'
+      },
+      {
+        name: 'movies',
+        description:
+          '- queries and recommendations with Cypher - movie use case'
+      },
+      {
+        name: 'northwind',
+        description: ' - from RDBMS to Graph, using a classic dataset'
+      }
+    ]
+  },
+  {
     name: ':server',
     description: ' - manage the connection to Neo4j',
     commands: [
