@@ -317,12 +317,16 @@ export const GuideNavButton = styled.button`
   border: none;
   background-color: inherit;
   font-size: 1.2em;
-  color: ${props => props.theme.link};
+  color: ${props => props.theme.neo4jBlue};
   outline: none;
   padding: 5px 0;
 
   :disabled {
     opacity: 0;
+  }
+
+  :hover {
+    color: ${props => props.theme.darkBlue};
   }
 `
 
