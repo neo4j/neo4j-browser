@@ -19,7 +19,7 @@
  */
 
 import React from 'react'
-import { PaginationItem } from './styled'
+import { PaginationItem, Dots } from './styled'
 type PaginationProps = {
   gotoIndex: (index: number) => void
   itemCount: number
@@ -93,7 +93,7 @@ function Pagination({
       {paginationHelper(itemCount, selectedIndex).map(
         (slideIndexOrDots, index) => {
           if (slideIndexOrDots === DOTS) {
-            return <span key={index}>…</span>
+            return <Dots key={index}>…</Dots>
           } else {
             const displayNumber = slideIndexOrDots + 1
             return (
