@@ -198,7 +198,7 @@ function FrameTitlebar({
           </EditorContainer>
         ) : (
           <StyledFrameCommand
-            selectedDb={frame.useDb || ''}
+            selectedDb={frame.useDb}
             onClick={onPreviewClick}
             data-testid="frameCommand"
             title={`${isMac ? 'Cmd' : 'Ctrl'}+click to copy to main editor`}
