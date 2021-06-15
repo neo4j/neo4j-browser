@@ -102,17 +102,10 @@ SET n = row`}
       <h4>Create indexes</h4>
       <figure>
         <pre className="pre-scrollable code runnable">
-          CREATE INDEX ON :Product(productID)
-        </pre>
-      </figure>
-      <figure>
-        <pre className="pre-scrollable code runnable">
-          CREATE INDEX ON :Category(categoryID)
-        </pre>
-      </figure>
-      <figure>
-        <pre className="pre-scrollable code runnable">
-          CREATE INDEX ON :Supplier(supplierID)
+          CREATE INDEX ON :Product(productID);
+          CREATE INDEX ON :Product(productName);
+          CREATE INDEX ON :Category(categoryID);
+          CREATE INDEX ON :Supplier(supplierID);
         </pre>
       </figure>
     </div>
