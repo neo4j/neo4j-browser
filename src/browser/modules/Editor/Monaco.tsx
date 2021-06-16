@@ -160,6 +160,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
           links: false,
           minimap: { enabled: false },
           overviewRulerBorder: false,
+          overviewRulerLanes: 0,
           quickSuggestions: false,
           renderLineHighlight: 'none',
           scrollbar: {
@@ -171,9 +172,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
           selectionHighlight: false,
           value,
           wordWrap: 'on',
-          wrappingStrategy: 'advanced',
-          occurrencesHighlight: false,
-          matchBrackets: 'never'
+          wrappingStrategy: 'advanced'
         }
       )
 
