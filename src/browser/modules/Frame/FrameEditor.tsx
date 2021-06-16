@@ -174,6 +174,20 @@ function FrameTitlebar({
     }
   })
 
+  useEffect(() => {
+    if (renderEditor) {
+      editorRef.current?.focus()
+
+      // Jump cursor to end
+      const lines = (editorRef.current?.getValue() || '').split('\n')
+      const linesLength = lines.length
+      editorRef.current?.setPosition({
+        lineNumber: linesLength,
+        column: lines[linesLength - 1].length + 1
+      })
+    }
+  }, [renderEditor])
+
   // the last run command (history index 1) is already in the editor
   // don't show it as history as well
   const history = (frame.history || []).slice(1)
