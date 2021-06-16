@@ -72,7 +72,9 @@ exports[`RelatableViews RelatableView does not display bodyMessage if rows, and 
               class="relatable__table-cell relatable__table-body-cell"
               role="cell"
             >
-              <span>
+              <span
+                class="sc-hEsumM cPMQJb"
+              >
                 "String with HTML &lt;strong&gt;in&lt;/strong&gt; it"
               </span>
             </td>
