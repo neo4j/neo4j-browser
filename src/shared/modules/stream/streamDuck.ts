@@ -64,9 +64,14 @@ function addFrame(state: FramesState, newState: Frame) {
   }
 
   const frameObject = state.byId[newState.id] || { stack: [], isPinned: false }
+  const pastHistory = frameObject.stack[0]?.history || []
+  const createNewHistoryEntry = newState.cmd !== pastHistory[0]
+
   const newFrame = {
     ...newState,
-    history: [newState.cmd, ...(frameObject.stack[0]?.history || [])]
+    history: createNewHistoryEntry
+      ? [newState.cmd, ...pastHistory]
+      : pastHistory
   }
   if (newState.isRerun) {
     frameObject.stack = [newFrame]
