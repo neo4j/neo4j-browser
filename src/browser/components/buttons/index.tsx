@@ -72,6 +72,7 @@ const BaseButton: any = styled.span`
   cursor: pointer;
   vertical-align: middle;
   display: inline-block;
+  flex-shrink: 0; // Prevents button from shrinking in safari
   &:hover {
     opacity: 0.55;
   }
