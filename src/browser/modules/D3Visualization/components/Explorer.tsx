@@ -216,9 +216,6 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
         className={
           Object.keys(this.state.stats.relTypes).length ? '' : 'one-legend-row'
         }
-        forcePaddingBottom={
-          inspectingItemType ? this.state.forcePaddingBottom : null
-        }
       >
         {legend}
         <GraphComponent

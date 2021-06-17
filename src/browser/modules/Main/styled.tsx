@@ -83,13 +83,13 @@ export const StyledCodeBlockFrame = styled(StyledCodeBlock)`
   cursor: pointer;
 `
 
-export const SyncDisconnectedBanner: any = styled(Banner)`
+export const SyncDisconnectedBanner = styled(Banner)`
   background-color: ${props => props.theme.auth};
   display: flex;
   justify-content: space-between;
 `
 
-export const SyncSignInBarButton: any = styled(SyncSignInButton)`
+export const SyncSignInBarButton = styled(SyncSignInButton)`
   padding: 0 8px 0 8px;
   margin: 0 12px 0 12px;
   vertical-align: baseline;

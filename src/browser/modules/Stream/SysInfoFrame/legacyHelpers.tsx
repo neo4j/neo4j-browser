@@ -69,7 +69,7 @@ export const Sysinfo = ({
               <QuestionIcon title="Values shown in `:sysinfo` may differ between cluster members" />
             </span>
           }
-          colspan="5"
+          colspan={5}
         >
           <SysInfoTableEntry
             key="cc-entry"
@@ -84,7 +84,7 @@ export const Sysinfo = ({
         </SysInfoTable>
       </Render>
       <Render if={arrayHasItems(haInstances)}>
-        <SysInfoTable key="cluster-table" header="Cluster" colspan="4">
+        <SysInfoTable key="cluster-table" header="Cluster" colspan={4}>
           <SysInfoTableEntry
             key="ha-entry"
             headers={['Id', 'Alive', 'Available', 'Is Master']}

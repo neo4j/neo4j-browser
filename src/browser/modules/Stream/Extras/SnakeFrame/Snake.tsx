@@ -228,7 +228,7 @@ class SnakeFrame extends React.Component<any> {
   render() {
     return (
       <SnakeCanvas
-        tabIndex="1"
+        tabIndex={1}
         ref={this.canvas}
         width={this.gameState.world.width}
         height={this.gameState.world.height}
