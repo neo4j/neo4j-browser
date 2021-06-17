@@ -26,7 +26,8 @@ import { splitMdxColumns, splitMdxRows } from './splitMdx'
 import { StyledColumn, StyledRow, StyledSlide } from './styled'
 import { validateJSX } from './validateJSX'
 
-const MdxColumn = ({ column: mdx = '' }) => {
+type ColumnProps = { column: string }
+const MdxColumn = ({ column: mdx = '' }: ColumnProps) => {
   // Provide components that should be available in MDX guides
   const components = {}
   // Provide variables that should be available in MDX guides
@@ -47,7 +48,8 @@ const MdxColumn = ({ column: mdx = '' }) => {
   )
 }
 
-const MdxRow = ({ row = '' }) => (
+type RowProps = { row: string }
+const MdxRow = ({ row = '' }: RowProps) => (
   <StyledRow>
     {splitMdxColumns(row).map((column, index) => (
       <MdxColumn key={index} column={column} />
@@ -55,7 +57,11 @@ const MdxRow = ({ row = '' }) => (
   </StyledRow>
 )
 
-const MdxSlide = ({ mdx = '', isSidebarSlide = false }) => (
+type MdxSlideProps = { mdx: string; isSidebarSlide?: boolean }
+const MdxSlide = ({
+  mdx = '',
+  isSidebarSlide = false
+}: MdxSlideProps): JSX.Element => (
   <Slide isSidebarSlide={isSidebarSlide}>
     <StyledSlide>
       {splitMdxRows(mdx).map((row, index) => (
