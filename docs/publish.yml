@@ -1,0 +1,48 @@
+site:
+  title: Neo4j Docs
+  url: https://neo4j.com/docs
+  start_page: browser-manual:ROOT:index.adoc
+
+content:
+  sources:
+  - url: https://github.com/neo4j/neo4j-browser.git
+    start_path: docs
+    branches: 
+    - master
+    include: docs/
+    exclude:
+    - '!**/_includes/*'
+    - '!**/readme.adoc'
+    - '!**/README.adoc'
+ui:
+  bundle:
+    url: https://s3-eu-west-1.amazonaws.com/static-content.neo4j.com/build/ui-bundle-latest.zip
+    snapshot: true
+  output_dir: /assets
+
+urls:
+  html_extension_style: indexify
+
+asciidoc:
+  extensions:
+  - "@neo4j-documentation/remote-include"
+  - "@neo4j-documentation/macros"
+  attributes:
+    page-theme: docs
+    page-type: Docs
+    page-search-type: Docs
+    page-search-site: Reference Docs
+    page-canonical-root: /docs
+    page-pagination: true
+    page-no-canonical: true
+    page-origin-private: false
+    page-hide-toc: false
+    page-mixpanel: 4bfb2414ab973c741b6f067bf06d5575
+    # page-cdn: /static/assets
+    includePDF: false
+    nonhtmloutput: ""
+    sectnums: true,
+    sectnumlevel: 3,
+    experimental: ''
+    copyright: 2021
+    common-license-page-uri: https://neo4j.com/docs/license/
