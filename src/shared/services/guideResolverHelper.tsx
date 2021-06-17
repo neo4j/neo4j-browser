@@ -146,7 +146,7 @@ async function resolveRemoteGuideFromName(
   const allowlistStr = getRemoteContentHostnameAllowlist(state)
   const allowlist = extractAllowlistFromConfigString(allowlistStr)
   const defaultAllowlist = extractAllowlistFromConfigString(
-    getDefaultRemoteContentHostnameAllowlist(state)
+    getDefaultRemoteContentHostnameAllowlist()
   )
   const resolvedWildcardAllowlist = resolveAllowlistWildcard(
     allowlist,

@@ -22,8 +22,7 @@ import React from 'react'
 import {
   FULLSCREEN_SHORTCUT,
   FOCUS_SHORTCUT,
-  printShortcut,
-  isMac
+  printShortcut
 } from 'browser/modules/App/keyboardShortcuts'
 const title = 'Keys'
 const subtitle = 'Keyboard shortcuts'

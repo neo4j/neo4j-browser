@@ -33,7 +33,7 @@ let timer: any = null
 export const credentialsTimeoutEpic = (action$: any, store: any) =>
   action$
     .ofType(USER_INTERACTION)
-    .do((_action: any) => {
+    .do(() => {
       const cTimeout = parseTimeMillis(credentialsTimeout(store.getState()))
       if (!cTimeout) return clearTimeout(timer)
       clearTimeout(timer)

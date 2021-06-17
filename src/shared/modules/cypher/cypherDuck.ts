@@ -87,7 +87,7 @@ const queryAndResolve = async (
         })
   })
 }
-const callClusterMember = async (connection: any, action: any, _store: any) => {
+const callClusterMember = async (connection: any, action: any) => {
   return new Promise(resolve => {
     bolt
       .directConnect(connection, undefined, undefined, false) // Ignore validation errors
@@ -167,7 +167,7 @@ export const adHocCypherRequestEpic = (some$: any, store: any) =>
       ...connection,
       host: action.host
     }
-    return callClusterMember(tempConnection, action, store)
+    return callClusterMember(tempConnection, action)
   })
 
 export const clusterCypherRequestEpic = (some$: any, store: any) =>
@@ -194,7 +194,7 @@ export const clusterCypherRequestEpic = (some$: any, store: any) =>
                 host
               }
               return Rx.Observable.fromPromise(
-                callClusterMember(tempConnection, action, store)
+                callClusterMember(tempConnection, action)
               )
             })
           }
@@ -256,7 +256,7 @@ export const handleForcePasswordChangeEpic = (some$: any, store: any) =>
       ) => {
         if (!action.$$responseChannel) return Rx.Observable.of(null)
 
-        return new Promise((resolve, _reject) => {
+        return new Promise(resolve => {
           bolt
             .directConnect(
               action,

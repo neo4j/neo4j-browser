@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from 'react'
-import { FOCUS, EXPAND } from 'shared/modules/editor/editorDuck'
+import { FOCUS } from 'shared/modules/editor/editorDuck'
 import { Bus } from 'suber'
 
 export const isMac = /Mac|iPad/.test(navigator.platform)
@@ -67,19 +67,6 @@ export function useKeyboardShortcuts(bus: Bus): void {
       if (isOutsideTextArea(e) && matchesShortcut(e, FOCUS_SHORTCUT)) {
         e.preventDefault()
         trigger(FOCUS)
-      }
-    },
-    [trigger]
-  )
-
-  const fullscreenEditor = useCallback(
-    (e: KeyboardEvent): void => {
-      if (
-        matchesShortcut(e, FULLSCREEN_SHORTCUT) ||
-        matchesShortcut(e, OLD_FULLSCREEN_SHORTCUT)
-      ) {
-        e.preventDefault()
-        trigger(EXPAND)
       }
     },
     [trigger]
