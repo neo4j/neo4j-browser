@@ -94,7 +94,7 @@ type CypherFrameProps = CypherFrameBaseProps & {
   onRecentViewChanged: (view: viewTypes.FrameView) => void
 }
 
-export type CypherFrameState = {
+type CypherFrameState = {
   openView?: viewTypes.FrameView
   fullscreen: boolean
   collapse: boolean

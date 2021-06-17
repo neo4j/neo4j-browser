@@ -19,22 +19,10 @@
  */
 import React from 'react'
 import { render } from '@testing-library/react'
-import { H1, H2, H3, H4, H5 } from './Headers'
+import { H3 } from './Headers'
 
 describe('headers', () => {
-  test('H1 renders', () => {
-    render(<H1 />)
-  })
-  test('H2 renders', () => {
-    render(<H2 />)
-  })
   test('H3 renders', () => {
     render(<H3 />)
-  })
-  test('H4 renders', () => {
-    render(<H4 />)
-  })
-  test('H5 renders', () => {
-    render(<H5 />)
   })
 })

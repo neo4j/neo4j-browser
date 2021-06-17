@@ -44,9 +44,6 @@ export const DrawerHeader = styled.h4`
 export const DrawerToppedHeader = styled(DrawerHeader)`
   padding-top: 8px;
 `
-export const DrawerSeparator = styled.div`
-  border-bottom: 1px solid #424650;
-`
 
 export const DrawerSubHeader = styled.h5`
   color: ${props => props.theme.primaryHeaderText};

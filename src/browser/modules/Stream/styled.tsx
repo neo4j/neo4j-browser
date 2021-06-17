@@ -39,10 +39,6 @@ export const PaddedDiv = styled.div`
     props.fullscreen ? dim.frameTitlebarHeight + 20 + 'px' : '20px'};
 `
 
-export const PaddedTableViewDiv = styled(PaddedDiv)`
-  width: 100%;
-`
-
 export const DottedLineHover = styled.span`
   cursor: pointer;
   &:hover {
@@ -190,10 +186,6 @@ export const StyledTruncatedMessage = styled.span`
 
 export const StyledOneRowStatsBar = styled(StyledStatsBar)`
   height: 39px;
-`
-
-export const StyledSchemaBody = styled(StyledPreformattedArea)`
-  padding-top: 6px;
 `
 
 export const StyledBodyMessage = styled.div`

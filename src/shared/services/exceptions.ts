@@ -44,7 +44,7 @@ export function BoltConnectionError(): BrowserError {
   }
 }
 
-export function BoltError(obj: {
+function BoltError(obj: {
   fields: [{ code: string; message: string }]
 }): BrowserError {
   return {
@@ -54,7 +54,7 @@ export function BoltError(obj: {
   }
 }
 
-export function Neo4jError(obj: { message: string }): BrowserError {
+function Neo4jError(obj: { message: string }): BrowserError {
   const type = 'Neo4jError'
   return {
     type,
@@ -72,7 +72,7 @@ export function UnknownCommandError(error: { cmd: string }): BrowserError {
   }
 }
 
-export function UndefinedError(error: { cmd: string }): BrowserError {
+function UndefinedError(error: { cmd: string }): BrowserError {
   const type = 'UndefinedError'
   return {
     type,
@@ -106,7 +106,7 @@ export function UnsupportedError(message: string): BrowserError {
   return { type, code: type, message }
 }
 
-export function NotFoundError(message: string): BrowserError {
+function NotFoundError(message: string): BrowserError {
   const type = 'NotFoundError'
   return { type, code: type, message }
 }

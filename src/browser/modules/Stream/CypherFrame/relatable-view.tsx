@@ -136,7 +136,7 @@ const renderObject = (entry: any) => {
   )
 }
 
-export function RelatableBodyMessage({ maxRows, result }: any) {
+function RelatableBodyMessage({ maxRows, result }: any) {
   const { bodyMessage } = getBodyAndStatusBarMessages(result, maxRows)
 
   return (

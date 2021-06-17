@@ -36,7 +36,7 @@ import ClickToCode from 'browser/modules/ClickToCode/index'
 import { StyledCodeBlockFrame } from 'browser/modules/Main/styled'
 import { uniqBy } from 'lodash-es'
 
-export const DbsFrame = (props: any) => {
+const DbsFrame = (props: any) => {
   const { frame } = props
   const { dbs = [] } = frame
   const dbsToShow: any[] = uniqBy(dbs, 'name')

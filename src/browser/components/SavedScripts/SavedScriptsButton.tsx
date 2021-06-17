@@ -33,7 +33,7 @@ type SavedScriptsButtonProps = {
   color?: SemanticCOLORS
 }
 
-export default function SavedScriptsButton({
+function SavedScriptsButton({
   onClick,
   title,
   iconName,
@@ -51,9 +51,6 @@ export default function SavedScriptsButton({
 }
 
 type OnClickProp = { onClick: ReactEventHandler }
-
-const EditButton = ({ onClick }: OnClickProp): JSX.Element =>
-  SavedScriptsButton({ onClick, title: 'Edit', iconName: 'pencil' })
 
 const ExportButton = ({ onClick }: OnClickProp): JSX.Element => (
   <StyledSavedScriptsButton
@@ -112,9 +109,7 @@ const RedRemoveButton = ({ onClick }: OnClickProp): JSX.Element =>
   })
 
 export {
-  SavedScriptsButton,
   ExportButton,
-  EditButton,
   RunButton,
   NewFolderButton,
   RemoveButton,

@@ -42,16 +42,3 @@ export const StyledTd = styled.td`
   line-height: 26px;
   padding: 10px 16px 10px 0;
 `
-
-export const StyledJsonPre = styled.pre`
-  background-color: ${props => props.theme.runnableBackground};
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-  margin: 20px 10px;
-  border-bottom: none;
-  color: ${props => props.theme.preText};
-  line-height: 26px;
-  padding: 2px 10px;
-  max-width: 100%;
-  /*white-space: pre-line;*/
-`

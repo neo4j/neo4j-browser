@@ -26,7 +26,7 @@ import {
   DARK_THEME
 } from 'shared/modules/settings/settingsDuck'
 
-export type BrowserTheme =
+type BrowserTheme =
   | typeof LIGHT_THEME
   | typeof OUTLINE_THEME
   | typeof DARK_THEME

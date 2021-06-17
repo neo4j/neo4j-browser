@@ -168,34 +168,6 @@ export const StyledFrameEditorContainer = styled.div`
   margin-bottom: 2px;
 `
 
-export const StyledFrameStatusbarText = styled.label`
-  flex: 1 1 auto;
-`
-
-export const CurrentDbText = styled.div`
-  color: ${props => props.theme.promptText};
-`
-
-export const FrameTitleEditorContainer = styled.div`
-  border-radius: 2px;
-  padding-left: 6px;
-  padding-top: 3px;
-  margin: 3px 0px 3px 3px;
-
-  width: 0; // Prevents the editor from growing past flex-grow: 1
-  flex-grow: 1;
-  display: flex;
-
-  font-family: ${props => props.theme.editorFont};
-  line-height: 2.2em;
-  font-size: 1.2em;
-  color: ${props => props.theme.secondaryButtonText};
-  background-color: ${props => props.theme.editorBackground};
-  .disable-font-ligatures & {
-    font-variant-ligatures: none !important;
-  }
-`
-
 export const StyledFrameCommand = styled.label<{ selectedDb: string | null }>`
   font-family: ${props => props.theme.editorFont};
   color: ${props => props.theme.secondaryButtonText};

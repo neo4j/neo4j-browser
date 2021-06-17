@@ -82,10 +82,6 @@ export const SavedScriptsFolderHeader = styled.div`
   padding-bottom: 5px;
 `
 
-export const SavedScriptsFolderBody = styled.div`
-  margin-left: 15px;
-`
-
 export const SavedScriptsFolderLabel = styled.div`
   flex: 1;
   margin-right: 10px;

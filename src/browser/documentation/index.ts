@@ -159,7 +159,7 @@ type PlayDocs = {
   chapters: Record<PlayChapter, DocItem>
 }
 
-export type PlayChapter =
+type PlayChapter =
   | 'concepts'
   | 'cypher'
   | 'iconography'

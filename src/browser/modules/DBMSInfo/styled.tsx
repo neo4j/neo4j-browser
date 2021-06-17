@@ -82,7 +82,7 @@ export const StyledValueUCFirst = styled(StyledValue)`
   }
 `
 
-export const StyledLink = styled.a`
+const StyledLink = styled.a`
   cursor: pointer;
   color: #4183c4;
   &:hover {

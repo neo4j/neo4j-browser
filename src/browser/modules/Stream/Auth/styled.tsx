@@ -93,10 +93,6 @@ export const StyledBoltUrlHintText = styled.span`
   display: none;
 `
 
-export const StyledSegmentedConnectionTextInput = styled(StyledInput)`
-  min-width: 200px;
-  width: 44%;
-`
 export const StyledRevealablePasswordWrapper = styled.div`
   position: relative;
   display: inline-block;
