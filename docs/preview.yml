@@ -32,7 +32,6 @@ asciidoc:
     page-search-type: Docs
     page-search-site: Reference Docs
     page-canonical-root: /docs
-    page-disabletracking: true
     page-pagination: true
     page-no-canonical: true
     page-origin-private: true
