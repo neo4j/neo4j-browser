@@ -118,11 +118,10 @@ type MonacoState = { currentHistoryIndex: number; draft: string }
 class Monaco extends React.Component<MonacoProps, MonacoState> {
   state: MonacoState = { currentHistoryIndex: 0, draft: '' }
 
-  monacoId = `monaco-${this.props.id}`
   editor?: editor.IStandaloneCodeEditor
   container?: HTMLElement
-  isFullscreen = false
 
+  getMonacoId = (): string => `monaco-${this.props.id}`
   debouncedUpdateCode = debounce(() => {
     const text =
       this.editor
@@ -153,8 +152,6 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
   resize = (fillContainer: boolean): void => {
     if (!this.container || !this.editor) return
     const contentHeight = this.editor.getContentHeight()
-
-    this.isFullscreen = fillContainer
 
     const height = fillContainer
       ? Math.min(window.innerHeight - 20, this.container.scrollHeight)
@@ -256,14 +253,83 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
     const model = this.editor?.getModel()
     if (!model) return
 
-    editor.setModelMarkers(model, this.monacoId, [])
+    editor.setModelMarkers(model, this.getMonacoId(), [])
 
     this.updateGutterCharWidth(this.props.useDb || '')
     this.debouncedUpdateCode()
   }
 
+  addWarnings = (statements: QueryOrCommand[]): void => {
+    const model = this.editor?.getModel()
+    if (!statements.length || !model) return
+
+    // clearing markers again solves issue with incorrect multi-statement warning when user spam clicks setting on and off
+    editor.setModelMarkers(model, this.getMonacoId(), [])
+
+    // add multi statement warning if multi setting is off
+    if (statements.length > 1 && !this.props.enableMultiStatementMode) {
+      const secondStatementLine = statements[1].start.line
+      editor.setModelMarkers(model, this.getMonacoId(), [
+        {
+          startLineNumber: secondStatementLine,
+          startColumn: 1,
+          endLineNumber: secondStatementLine,
+          endColumn: 1000,
+          message:
+            'To use multi statement queries, please enable multi statement in the settings panel.',
+          severity: MarkerSeverity.Warning
+        }
+      ])
+    }
+
+    // add a warning for each notification returned by explain query
+    statements.forEach(statement => {
+      const text = statement.getText()
+      if (!shouldCheckForHints(text)) {
+        return
+      }
+      const statementLineNumber = statement.start.line - 1
+
+      this.props.bus.self(
+        CYPHER_REQUEST,
+        {
+          query: EXPLAIN_QUERY_PREFIX + text,
+          queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+        },
+        (response: { result: QueryResult; success?: boolean }) => {
+          if (
+            response.success === true &&
+            response.result.summary.notifications.length > 0
+          ) {
+            editor.setModelMarkers(model, this.getMonacoId(), [
+              ...editor.getModelMarkers({ owner: this.getMonacoId() }),
+              ...response.result.summary.notifications.map(
+                ({ description, position, title }) => {
+                  const line = 'line' in position ? position.line : 0
+                  const column = 'column' in position ? position.column : 0
+                  return {
+                    startLineNumber: statementLineNumber + line,
+                    startColumn:
+                      statement.start.column +
+                      (line === 1
+                        ? column - EXPLAIN_QUERY_PREFIX_LENGTH
+                        : column),
+                    endLineNumber: statement.stop.line,
+                    endColumn: statement.stop.column + 2,
+                    message: title + '\n\n' + description,
+                    severity: MarkerSeverity.Warning
+                  }
+                }
+              )
+            ])
+          }
+        }
+      )
+    })
+  }
+
   componentDidMount = (): void => {
-    this.container = document.getElementById(this.monacoId) ?? undefined
+    this.container = document.getElementById(this.getMonacoId()) ?? undefined
     if (!this.container) return
 
     this.editor = editor.create(this.container, {
@@ -341,14 +407,13 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
     this.editor.onDidChangeModelContent(this.onContentUpdate)
     this.editor.onDidContentSizeChange(() => this.resize(false))
 
-    const container = document.getElementById(this.monacoId)
     const resizeObserver = new ResizeObserver(() => {
       // Wrapped in requestAnimationFrame to avoid the error "ResizeObserver loop limit exceeded"
       window.requestAnimationFrame(() => {
         this.editor?.layout()
       })
     })
-    container && resizeObserver.observe(container)
+    resizeObserver.observe(this.container)
 
     /*
      * This moves the the command palette widget out of of the overflow-guard div where overlay widgets
@@ -371,82 +436,13 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
     }
   }
 
-  addWarnings = (statements: QueryOrCommand[]): void => {
-    const model = this.editor?.getModel()
-    if (!statements.length || !model) return
-
-    // clearing markers again solves issue with incorrect multi-statement warning when user spam clicks setting on and off
-    editor.setModelMarkers(model, this.monacoId, [])
-
-    // add multi statement warning if multi setting is off
-    if (statements.length > 1 && !this.props.enableMultiStatementMode) {
-      const secondStatementLine = statements[1].start.line
-      editor.setModelMarkers(model, this.monacoId, [
-        {
-          startLineNumber: secondStatementLine,
-          startColumn: 1,
-          endLineNumber: secondStatementLine,
-          endColumn: 1000,
-          message:
-            'To use multi statement queries, please enable multi statement in the settings panel.',
-          severity: MarkerSeverity.Warning
-        }
-      ])
-    }
-
-    // add a warning for each notification returned by explain query
-    statements.forEach(statement => {
-      const text = statement.getText()
-      if (!shouldCheckForHints(text)) {
-        return
-      }
-      const statementLineNumber = statement.start.line - 1
-
-      this.props.bus.self(
-        CYPHER_REQUEST,
-        {
-          query: EXPLAIN_QUERY_PREFIX + text,
-          queryType: NEO4J_BROWSER_USER_ACTION_QUERY
-        },
-        (response: { result: QueryResult; success?: boolean }) => {
-          if (
-            response.success === true &&
-            response.result.summary.notifications.length > 0
-          ) {
-            editor.setModelMarkers(model, this.monacoId, [
-              ...editor.getModelMarkers({ owner: this.monacoId }),
-              ...response.result.summary.notifications.map(
-                ({ description, position, title }) => {
-                  const line = 'line' in position ? position.line : 0
-                  const column = 'column' in position ? position.column : 0
-                  return {
-                    startLineNumber: statementLineNumber + line,
-                    startColumn:
-                      statement.start.column +
-                      (line === 1
-                        ? column - EXPLAIN_QUERY_PREFIX_LENGTH
-                        : column),
-                    endLineNumber: statement.stop.line,
-                    endColumn: statement.stop.column + 2,
-                    message: title + '\n\n' + description,
-                    severity: MarkerSeverity.Warning
-                  }
-                }
-              )
-            ])
-          }
-        }
-      )
-    })
-  }
-
   componentWillUnmount = (): void => {
     this.editor?.dispose()
     this.debouncedUpdateCode?.cancel()
   }
 
   render(): JSX.Element {
-    return <MonacoStyleWrapper id={this.monacoId} />
+    return <MonacoStyleWrapper id={this.getMonacoId()} />
   }
 }
 
