@@ -51,7 +51,7 @@ import {
 import { getScrollToTop } from 'shared/modules/settings/settingsDuck'
 import DbsFrame from './Auth/DbsFrame'
 
-const trans = {
+const nameToFrame: Record<string, React.ComponentType<any>> = {
   error: ErrorFrame,
   cypher: CypherFrame,
   'cypher-script': CypherScriptFrame,
@@ -80,10 +80,10 @@ const trans = {
   default: DefaultFrame
 }
 
-type FrameType = keyof typeof trans
+type FrameType = keyof typeof nameToFrame
 
 const getFrame = (type: FrameType) => {
-  return trans[type] || trans.default
+  return nameToFrame[type] || nameToFrame.default
 }
 
 type StreamProps = {
