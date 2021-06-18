@@ -33,10 +33,19 @@ import {
 import { StyledFrameTitlebarButtonSection } from 'browser/modules/Frame/styled'
 import Ellipsis from 'browser-components/Ellipsis'
 import queryPlan from '../../D3Visualization/lib/visualization/components/queryPlan'
+import { PlanExpand } from './CypherFrame'
 
-type PlanViewState = any
+type PlanViewState = { extractedPlan: any }
+export type PlanViewProps = {
+  _planExpand: PlanExpand
+  setPlanExpand: (p: PlanExpand) => void
+  result: any
+  updated: any
+  assignVisElement: (a: any, b: any) => void
+  fullscreen: boolean
+}
 
-export class PlanView extends Component<any, PlanViewState> {
+export class PlanView extends Component<PlanViewProps, PlanViewState> {
   el: any
   plan: any
   constructor(props: any) {
@@ -48,7 +57,7 @@ export class PlanView extends Component<any, PlanViewState> {
 
   componentDidMount() {
     this.extractPlan(this.props.result)
-      .then(() => this.props.setParentState({ _planExpand: 'EXPAND' }))
+      .then(() => this.props.setPlanExpand('EXPAND'))
       .catch(() => {})
   }
 
@@ -151,10 +160,17 @@ export class PlanView extends Component<any, PlanViewState> {
   }
 }
 
-type PlanStatusbarState = any
+type PlanStatusbarState = { extractedPlan: any }
+type PlanStatusbarProps = {
+  result: any
+  setPlanExpand: (p: PlanExpand) => void
+}
 
-export class PlanStatusbar extends Component<any, PlanStatusbarState> {
-  state = {
+export class PlanStatusbar extends Component<
+  PlanStatusbarProps,
+  PlanStatusbarState
+> {
+  state: PlanStatusbarState = {
     extractedPlan: null
   }
 
@@ -181,7 +197,7 @@ export class PlanStatusbar extends Component<any, PlanStatusbarState> {
   }
 
   render() {
-    const plan: any = this.state.extractedPlan
+    const plan = this.state.extractedPlan
     if (!plan) return null
     const { result = {} } = this.props
     return (
@@ -204,18 +220,14 @@ export class PlanStatusbar extends Component<any, PlanStatusbarState> {
             <FrameButton
               title="Collapse Plan"
               data-testid="planCollapseButton"
-              onClick={() =>
-                this.props.setParentState({ _planExpand: 'COLLAPSE' })
-              }
+              onClick={() => this.props.setPlanExpand('COLLAPSE')}
             >
               <DoubleUpIcon />
             </FrameButton>
             <FrameButton
               data-testid="planExpandButton"
               title="Expand Plan"
-              onClick={() =>
-                this.props.setParentState({ _planExpand: 'EXPAND' })
-              }
+              onClick={() => this.props.setPlanExpand('EXPAND')}
             >
               <DoubleDownIcon />
             </FrameButton>
