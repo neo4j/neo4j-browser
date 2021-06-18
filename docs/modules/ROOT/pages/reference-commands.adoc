@@ -34,7 +34,6 @@ The editor in Neo4j Browser understands a few client-side commands, which begin 
 //UseDbFrame - :use <databaseName>
 //DbsFrame - :dbs
 //StyleFrame - :style
-//EditFrame - :edit
 //DefaultFrame
 //SnakeFrame - Easter egg
 
@@ -80,9 +79,6 @@ a| Show databases available for the current user.
 
 m| +:delete <request>+
 a| REST command, send an HTTP DELETE request.
-
-m| :edit
-a| Create an edit frame.
 
 m| +:get <request>+
 a| REST command, send an HTTP GET request.
