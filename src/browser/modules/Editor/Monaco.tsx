@@ -23,17 +23,11 @@ import { parse, QueryOrCommand } from 'cypher-editor-support'
 import { debounce } from 'lodash-es'
 import {
   editor,
-  IPosition,
   KeyCode,
   KeyMod,
   MarkerSeverity
 } from 'monaco-editor/esm/vs/editor/editor.api'
-import React, {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useRef
-} from 'react'
+import React from 'react'
 import ResizeObserver from 'resize-observer-polyfill'
 import styled from 'styled-components'
 import { Bus } from 'suber'
@@ -54,13 +48,7 @@ const shouldCheckForHints = (code: string) =>
     .toUpperCase()
     .startsWith('PROFILE')
 
-export interface MonacoHandles {
-  focus: () => void
-  getValue: () => string
-  setValue: (value: string) => void
-  resize: (fillContainer?: boolean, fixedHeight?: number) => void
-  setPosition: (position: { lineNumber: number; column: number }) => void
-}
+export type MonacoHandles = Monaco
 
 const MonacoStyleWrapper = styled.div`
   height: 100%;
@@ -76,23 +64,13 @@ const MonacoStyleWrapper = styled.div`
   }
 `
 
-interface MonacoProps {
-  bus: Bus
-  enableMultiStatementMode?: boolean
-  fontLigatures?: boolean
-  history?: string[]
-  id: string
-  value?: string
-  onChange?: (value: string) => void
-  onDisplayHelpKeys?: () => void
-  onExecute?: (value: string) => void
-  useDb?: null | string
-  toggleFullscreen: () => void
-} // Trigger update when multi statement setting is changed to update warnings //    useEffect(() => { //     onContentUpdate() //    // eslint-disable-next-line react-hooks/exhaustive-deps // }, [enableMultiStatementMode, useDb] //useEffect(() => { //editorRef.current?.updateOptions({ fontLigatures }) //}, [fontLigatures])
+// TODO refactor
+// TODO test all features
+// todo.. storybook?
+// Trigger update when multi statement setting is changed to update warnings //    useEffect(() => { //     onContentUpdate() //    // eslint-disable-next-line react-hooks/exhaustive-deps // }, [enableMultiStatementMode, useDb] //useEffect(() => { //editorRef.current?.updateOptions({ fontLigatures }) //}, [fontLigatures])
 
 // TODO
-// The monaco render method does not redraw line numbers
-
+// trigger redraw when database was changed
 // Getting and setting content and cursor is done to force a redraw
 /*
     useEffect(() => {
@@ -100,62 +78,29 @@ interface MonacoProps {
       editorRef.current?.setValue(editorRef.current?.getValue() || '')
       editorRef.current?.setPosition(cursorPosition)
     }, [useDb]
-    */ const EXPLAIN_QUERY_PREFIX =
-  'EXPLAIN '
+    */
+
+// TODO
+// check default props
+
+// TODO cleanup methods and how to do history
+
+/*j
+;(enableMultiStatementMode = true),
+  (fontLigatures = true),
+  (history = []),
+  id,
+  (value = ''),
+  (onChange = () => undefined),
+  (onDisplayHelpKeys = () => undefined),
+  (onExecute = () => undefined),
+  useDb,
+  toggleFullscreen
+  */
+
+const EXPLAIN_QUERY_PREFIX = 'EXPLAIN '
 const EXPLAIN_QUERY_PREFIX_LENGTH = EXPLAIN_QUERY_PREFIX.length
-const Monaco = forwardRef<MonacoHandles, MonacoProps>(
-  (
-    {
-      bus,
-      enableMultiStatementMode = true,
-      fontLigatures = true,
-      history = [],
-      id,
-      value = '',
-      onChange = () => undefined,
-      onDisplayHelpKeys = () => undefined,
-      onExecute = () => undefined,
-      useDb,
-      toggleFullscreen
-    }: MonacoProps,
-    ref
-  ): JSX.Element => {
-    useImperativeHandle(ref, () => ({
-      focus() {},
-      getValue() {
-        return ''
-      },
-      setValue() {},
-      resize() {},
-      setPosition() {}
-    }))
-
-    return (
-      <InnerMonacoComp
-        {...{
-          bus,
-          enableMultiStatementMode,
-          fontLigatures,
-          history,
-          id,
-          value,
-          onChange,
-          onDisplayHelpKeys,
-          onExecute,
-          useDb,
-          toggleFullscreen,
-          setHandles: () => {}
-        }}
-      />
-    )
-  }
-)
-Monaco.displayName = 'MonacoFunctionWrapper'
-
-type InnerState = { currentHistoryIndex: number; draft: string }
-//TODO is multiline seems broken
-//TODO history is whack
-interface InnerMonacoProps {
+interface MonacoProps {
   bus: Bus
   enableMultiStatementMode?: boolean
   fontLigatures?: boolean
@@ -167,12 +112,17 @@ interface InnerMonacoProps {
   onExecute?: (value: string) => void
   useDb?: null | string
   toggleFullscreen: () => void
-  setHandles: (obj: MonacoHandles) => void
 }
+type MonacoState = { currentHistoryIndex: number; draft: string }
 
-class InnerMonacoComp extends React.Component<InnerMonacoProps, InnerState> {
+class Monaco extends React.Component<MonacoProps, MonacoState> {
+  state: MonacoState = { currentHistoryIndex: 0, draft: '' }
+
   monacoId = `monaco-${this.props.id}`
   editor?: editor.IStandaloneCodeEditor
+  container?: HTMLElement
+  isFullscreen = false
+
   debouncedUpdateCode = debounce(() => {
     const text =
       this.editor
@@ -183,22 +133,24 @@ class InnerMonacoComp extends React.Component<InnerMonacoProps, InnerState> {
     this.props.onChange && this.props.onChange(text)
     this.addWarnings(parse(text).referencesListener.queriesAndCommands)
   }, 300)
+  focus = (): void => {
+    this.editor?.focus()
+  }
+  setPosition = (pos: { lineNumber: number; column: number }): void => {
+    this.editor?.setPosition(pos)
+  }
+  newLine = (): void => this.editor?.trigger('keyboard', 'type', { text: '\n' })
+  isMultiLine = (): boolean =>
+    (this.editor?.getModel()?.getLineCount() || 0) > 1
 
-  state: InnerState = { currentHistoryIndex: 0, draft: '' }
-  container?: HTMLElement
-  isFullscreen = false
-
-  newLine = () => this.editor?.trigger('keyboard', 'type', { text: '\n' })
-  isMultiLine = () => (this.editor?.getModel()?.getLineCount() || 0) > 1
-
-  updateGutterCharWidth = (dbName: string) => {
+  updateGutterCharWidth = (dbName: string): void => {
     this.editor?.updateOptions({
       lineNumbersMinChars:
         dbName.length && !this.isMultiLine() ? dbName.length * 1.3 : 2
     })
   }
 
-  resize = (fillContainer: boolean) => {
+  resize = (fillContainer: boolean): void => {
     if (!this.container || !this.editor) return
     const contentHeight = this.editor.getContentHeight()
 
@@ -215,7 +167,9 @@ class InnerMonacoComp extends React.Component<InnerMonacoProps, InnerState> {
     })
   }
 
-  setValue = (value: string) => {
+  getValue = (): string => this.editor?.getValue() || ''
+  setValue = (value: string): void => {
+    // TODO external set value did more stuff as well
     if (!this.editor) return
     this.editor.setValue(value)
     this.editor.focus()
@@ -229,7 +183,7 @@ class InnerMonacoComp extends React.Component<InnerMonacoProps, InnerState> {
     })
   }
 
-  handleUp = () => {
+  handleUp = (): void => {
     if (this.isMultiLine()) {
       this.editor?.trigger('', 'cursorUp', null)
     } else {
@@ -237,7 +191,7 @@ class InnerMonacoComp extends React.Component<InnerMonacoProps, InnerState> {
     }
   }
 
-  viewHistoryPrevious = () => {
+  viewHistoryPrevious = (): void => {
     const { history } = this.props
     const { currentHistoryIndex } = this.state
 
@@ -257,7 +211,7 @@ class InnerMonacoComp extends React.Component<InnerMonacoProps, InnerState> {
     }))
   }
 
-  handleDown = () => {
+  handleDown = (): void => {
     if (this.isMultiLine()) {
       this.editor?.trigger('', 'cursorDown', null)
     } else {
@@ -265,7 +219,7 @@ class InnerMonacoComp extends React.Component<InnerMonacoProps, InnerState> {
     }
   }
 
-  viewHistoryNext = () => {
+  viewHistoryNext = (): void => {
     const { history } = this.props
     const { currentHistoryIndex } = this.state
     //TODO check what checks are needed
@@ -286,8 +240,8 @@ class InnerMonacoComp extends React.Component<InnerMonacoProps, InnerState> {
     this.setValue(this.props.history[currentHistoryIndex - 1])
   }
 
-  execute = () => {
-    const value = this.editor?.getValue() || ''
+  execute = (): void => {
+    const value = this.getValue()
     const onlyWhitespace = value.trim() === ''
 
     if (!onlyWhitespace) {
@@ -298,17 +252,17 @@ class InnerMonacoComp extends React.Component<InnerMonacoProps, InnerState> {
     }
   }
 
-  onContentUpdate = () => {
+  onContentUpdate = (): void => {
     const model = this.editor?.getModel()
     if (!model) return
 
     editor.setModelMarkers(model, this.monacoId, [])
 
     this.updateGutterCharWidth(this.props.useDb || '')
-    this.debouncedUpdateCode && this.debouncedUpdateCode()
+    this.debouncedUpdateCode()
   }
 
-  componentDidMount = () => {
+  componentDidMount = (): void => {
     this.container = document.getElementById(this.monacoId) ?? undefined
     if (!this.container) return
 
@@ -405,7 +359,7 @@ class InnerMonacoComp extends React.Component<InnerMonacoProps, InnerState> {
     const quickInputDOMNode = this.editor.getContribution<
       { widget: { domNode: HTMLElement } } & editor.IEditorContribution
     >('editor.controller.quickInput').widget.domNode
-    // @ts-ignore
+    // @ts-ignore since we use internal APIs
     this.editor._modelData.view._contentWidgets.overflowingContentWidgetsDomNode.domNode.appendChild(
       quickInputDOMNode.parentNode?.removeChild(quickInputDOMNode)
     )
@@ -417,7 +371,7 @@ class InnerMonacoComp extends React.Component<InnerMonacoProps, InnerState> {
     }
   }
 
-  addWarnings = (statements: QueryOrCommand[]) => {
+  addWarnings = (statements: QueryOrCommand[]): void => {
     const model = this.editor?.getModel()
     if (!statements.length || !model) return
 
@@ -486,12 +440,12 @@ class InnerMonacoComp extends React.Component<InnerMonacoProps, InnerState> {
     })
   }
 
-  componentWillUnmount = () => {
+  componentWillUnmount = (): void => {
     this.editor?.dispose()
     this.debouncedUpdateCode?.cancel()
   }
 
-  render() {
+  render(): JSX.Element {
     return <MonacoStyleWrapper id={this.monacoId} />
   }
 }

@@ -208,6 +208,7 @@ function FrameTitlebar({
               value={editorValue}
               ref={editorRef}
               toggleFullscreen={fullscreenToggle}
+              onDisplayHelpKeys={() => {}}
             />
           </EditorContainer>
         ) : (
