@@ -29,14 +29,14 @@ import { worldColor, foodColor } from './helpers'
 const width = 600
 const height = 300
 
-const GameDiv: any = styled.div`
+const GameDiv = styled.div<{ width: number; height: number }>`
   margin: 30px auto;
-  width: ${props => (props as any).width}px;
-  height: ${props => (props as any).height + 50}px;
+  width: ${props => props.width}px;
+  height: ${props => props.height + 50}px;
 `
 
-const SplashScreen = styled(GameDiv)`
-  background-color: ${props => (props as any).backgroundColor};
+const SplashScreen = styled(GameDiv)<{ backgroundColor: string }>`
+  background-color: ${props => props.backgroundColor};
 `
 
 const SplashContents = styled.div`
@@ -56,8 +56,10 @@ const SplashContents = styled.div`
   }
 `
 
-export const InitialStartButton: any = styled(FormButton)`
-  background-color: ${(props: any) => props.backgroundColor};
+export const InitialStartButton: any = styled(FormButton)<{
+  backgroundColor: string
+}>`
+  background-color: ${props => props.backgroundColor};
   color: #ffffff;
 `
 

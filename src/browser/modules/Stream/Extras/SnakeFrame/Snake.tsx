@@ -34,7 +34,7 @@ import {
   maxSpeed
 } from './helpers'
 
-const SnakeCanvas: any = styled.canvas`
+const SnakeCanvas = styled.canvas`
   border: 1px solid #787878;
   &:focus {
     outline: none;
