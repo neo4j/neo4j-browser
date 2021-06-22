@@ -67,6 +67,7 @@ import { shouldTriggerConnectEvent, getTodayDate } from './udcHelpers'
 import api from 'services/intercom'
 import cmdHelper from 'shared/services/commandInterpreterHelper'
 import { extractStatementsFromString } from 'services/commandUtils'
+import { isGuideChapter, isPlayChapter } from 'browser/documentation'
 
 // Action types
 export const NAME = 'udc'
@@ -377,6 +378,30 @@ export const trackCommandUsageEpic: Epic<Action, GlobalState> = action$ =>
     }
 
     const type = cmdHelper.interpret(action.cmd.slice(1))?.name
+
+    if (type === 'play') {
+      const guideName = action.cmd.substr(':play'.length).trim()
+
+      const content = isPlayChapter(guideName) ? guideName : 'non-built-in'
+
+      return metricsEvent({
+        category: 'command',
+        label: 'non-cypher',
+        data: { source: action.source || 'unknown', type, content }
+      })
+    }
+
+    if (type === 'guide') {
+      const guideName = action.cmd.substr(':guide'.length).trim()
+
+      const content = isGuideChapter(guideName) ? guideName : 'non-built-in'
+
+      return metricsEvent({
+        category: 'command',
+        label: 'non-cypher',
+        data: { source: action.source || 'unknown', type, content }
+      })
+    }
 
     return metricsEvent({
       category: 'command',
