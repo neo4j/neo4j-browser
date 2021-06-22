@@ -382,7 +382,7 @@ export const trackCommandUsageEpic: Epic<Action, GlobalState> = action$ =>
     if (type === 'play') {
       const guideName = action.cmd.substr(':play'.length).trim()
 
-      const content = isPlayChapter(guideName) ? guideName : 'non-built-in'
+      const content = isPlayChapter(guideName) ? 'built-in' : 'non-built-in'
 
       return metricsEvent({
         category: 'command',
@@ -394,7 +394,7 @@ export const trackCommandUsageEpic: Epic<Action, GlobalState> = action$ =>
     if (type === 'guide') {
       const guideName = action.cmd.substr(':guide'.length).trim()
 
-      const content = isGuideChapter(guideName) ? guideName : 'non-built-in'
+      const content = isGuideChapter(guideName) ? 'built-in' : 'non-built-in'
 
       return metricsEvent({
         category: 'command',
