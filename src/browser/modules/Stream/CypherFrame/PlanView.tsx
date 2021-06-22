@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from 'react'
+import React, { Component, ReactNode } from 'react'
 import { PlanSVG } from './PlanView.styled'
 import { dim } from 'browser-styles/constants'
 import { deepEquals, shallowEquals } from 'services/utils'
@@ -174,13 +174,13 @@ export class PlanStatusbar extends Component<
     extractedPlan: null
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     if (this.props === undefined || this.props.result === undefined) return
     const extractedPlan = bolt.extractPlan(this.props.result, true)
     if (extractedPlan) this.setState({ extractedPlan })
   }
 
-  componentDidUpdate(prevProps: any) {
+  componentDidUpdate(prevProps: PlanStatusbarProps): void {
     if (this.props.result === undefined) return
     if (
       prevProps.result === undefined ||
@@ -191,12 +191,15 @@ export class PlanStatusbar extends Component<
     }
   }
 
-  shouldComponentUpdate(_props: {}, state: PlanStatusbarState) {
+  shouldComponentUpdate(
+    _nextProps: PlanStatusbarProps,
+    nextState: PlanStatusbarState
+  ): boolean {
     if (this.props.result === undefined) return true
-    return !deepEquals(state, this.state)
+    return !deepEquals(nextState, this.state)
   }
 
-  render() {
+  render(): ReactNode {
     const plan = this.state.extractedPlan
     if (!plan) return null
     const { result = {} } = this.props
