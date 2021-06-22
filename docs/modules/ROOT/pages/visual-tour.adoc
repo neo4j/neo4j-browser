@@ -321,7 +321,7 @@ Neo4j Browser reusable result frames allow you to edit the query of an existing 
 
 image:inline-result-editor.gif[]
 
-You can also use _Cmd + click_ to send it back to the main editor and re-run it from there.
+You can also use _Cmd/Ctrl + click_ to send it back to the main editor and re-run it from there.
 
 image:result-frame.png[]
 
