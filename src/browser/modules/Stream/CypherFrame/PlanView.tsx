@@ -192,17 +192,21 @@ export class PlanStatusbar extends Component<
   }
 
   shouldComponentUpdate(
-    _nextProps: PlanStatusbarProps,
+    nextProps: PlanStatusbarProps,
     nextState: PlanStatusbarState
   ): boolean {
-    if (this.props.result === undefined) return true
-    return !deepEquals(nextState, this.state)
+    if (!this.props?.result?.summary) return true
+
+    return (
+      !deepEquals(nextState, this.state) ||
+      !deepEquals(nextProps.result?.summary, this.props.result?.summary)
+    )
   }
 
   render(): ReactNode {
     const plan = this.state.extractedPlan
-    if (!plan) return null
     const { result = {} } = this.props
+    if (!plan || !result.summary) return null
     return (
       <StyledOneRowStatsBar>
         <StyledLeftPartial>
