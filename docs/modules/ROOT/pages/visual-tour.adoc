@@ -125,9 +125,6 @@ image:guides.png[width=60%]
 | `:guide concepts`
 | Basic property-graph concepts to get you going.
 
-| `:guide learn`
-| Learn (Graph database fundamentals).
-
 | `:guide cypher`
 | Cypher basics - create, match, patterns.
 
@@ -136,18 +133,6 @@ image:guides.png[width=60%]
 
 | `:guide northwind-graph`
 | The Northwind Database, a classic use case of RDBMS to graph with import instructions and queries.
-
-| `:guide start`
-| Getting started with Neo4j Browser - concepts, write-code, system info.
-
-| `:guide write-code`
-| Jump right into coding with example data graphs (Shows both guides for The Movie graph and The Northwind graph).
-
-| `:guide fabric`
-| The basics of setting up and using Neo4j Fabric.
-
-| `:guide <URL>`
-| Use `:guide <URL>` to play a custom Neo4j Browser guide.
 |===
 
 [NOTE]
@@ -332,13 +317,15 @@ For more information about keyboard shortcuts, use the command `:help keys`.
 [[reusable-frames]]
 == Reusable result frames
 
-Neo4j Browser reusable result frames allow you to edit the query of an existing result directly in the result frame and re-run to update the result in situ.
+Neo4j Browser reusable result frames allow you to edit the query of an existing result directly in the result frame and re-run it to update the result in situ.
 
 image:inline-result-editor.gif[]
 
-Each reusable frame maintains its own local history of commands and updates the main one in the Cypher editor, should you need to instantiate a new result frame from there.
+You can also use _Cmd + click_ to send it back to the main editor and re-run it from there.
 
 image:result-frame.png[]
+
+Each reusable frame maintains its own local history of commands and updates the main one in the Cypher editor, should you need to instantiate a new result frame from there.
 
 [[frame-views]]
 === Result frame views
