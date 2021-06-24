@@ -24,7 +24,7 @@ function ClipboardCopier({
       <CopyIconContainer
         onClick={() =>
           copyToClipboard(text)
-            .then(() => showPopup('Copied.'))
+            .then(() => showPopup('Copied'))
             .catch(() => showPopup('Copying text failed.'))
         }
       >
