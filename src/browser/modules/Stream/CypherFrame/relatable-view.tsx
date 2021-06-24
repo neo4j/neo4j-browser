@@ -23,7 +23,6 @@ import { Icon } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
 import {
-  copyToClipboard,
   getBodyAndStatusBarMessages,
   resultHasTruncatedFields
 } from './helpers'
@@ -34,6 +33,7 @@ import {
 } from 'shared/modules/settings/settingsDuck'
 import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 import ClickableUrls from '../../../components/ClickableUrls'
+import ClipboardCopier from '../../../components/ClipboardCopier'
 import { StyledStatsBar, StyledTruncatedMessage } from '../styled'
 import Ellipsis from '../../../components/Ellipsis'
 import {
@@ -44,7 +44,6 @@ import {
 } from './relatable-view.styled'
 import { stringifyMod, unescapeDoubleQuotesForDisplay } from 'services/utils'
 import { GlobalState } from 'shared/globalState'
-import { CopyIcon } from '../../../components/icons/Icons'
 
 const RelatableView = connect((state: GlobalState) => ({
   maxRows: getMaxRows(state),
@@ -119,6 +118,7 @@ const renderCell = (entry: any) => {
     )
   }
 }
+
 const renderObject = (entry: any) => {
   if (isInt(entry)) return entry.toString()
   if (entry === null) return <em>null</em>
@@ -128,9 +128,7 @@ const renderObject = (entry: any) => {
 
   return (
     <StyledJsonPre>
-      <CopyIconPositioner onClick={() => copyToClipboard(text)}>
-        <CopyIcon title="Copy to clipboard" width={25} />
-      </CopyIconPositioner>
+      <ClipboardCopier textToCopy={text} positionAbsolute />
       <ClickableUrls text={text} WrappingTag={StyledJsonPre} />
     </StyledJsonPre>
   )
