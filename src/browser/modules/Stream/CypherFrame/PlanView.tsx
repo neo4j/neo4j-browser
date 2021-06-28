@@ -18,7 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component, ReactNode } from 'react'
+import React, { Component, ReactNode, PureComponent } from 'react'
+import memoize from 'memoize-one'
 import { PlanSVG } from './PlanView.styled'
 import { dim } from 'browser-styles/constants'
 import { deepEquals, shallowEquals } from 'services/utils'
@@ -166,7 +167,7 @@ type PlanStatusbarProps = {
   setPlanExpand: (p: PlanExpand) => void
 }
 
-export class PlanStatusbar extends Component<
+export class PlanStatusbar extends PureComponent<
   PlanStatusbarProps,
   PlanStatusbarState
 > {
@@ -174,33 +175,19 @@ export class PlanStatusbar extends Component<
     extractedPlan: null
   }
 
-  componentDidMount(): void {
-    if (this.props === undefined || this.props.result === undefined) return
-    const extractedPlan = bolt.extractPlan(this.props.result, true)
-    if (extractedPlan) this.setState({ extractedPlan })
-  }
-
-  componentDidUpdate(prevProps: PlanStatusbarProps): void {
-    if (this.props.result === undefined) return
-    if (
-      prevProps.result === undefined ||
-      !deepEquals(this.props.result.summary, prevProps.result.summary)
-    ) {
-      const extractedPlan = bolt.extractPlan(this.props.result, true)
-      this.setState({ extractedPlan })
+  getPlan = memoize((propsResult, extractedPlan) => {
+    if (deepEquals(propsResult, extractedPlan)) {
+      return extractedPlan
     }
-  }
-
-  shouldComponentUpdate(
-    _nextProps: PlanStatusbarProps,
-    nextState: PlanStatusbarState
-  ): boolean {
-    if (this.props.result === undefined) return true
-    return !deepEquals(nextState, this.state)
-  }
+    this.setState({ extractedPlan: propsResult })
+    return propsResult
+  })
 
   render(): ReactNode {
-    const plan = this.state.extractedPlan
+    const plan = this.getPlan(
+      bolt.extractPlan(this.props.result, true),
+      this.state.extractedPlan
+    )
     if (!plan) return null
     const { result = {} } = this.props
     return (
