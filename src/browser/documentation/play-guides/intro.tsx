@@ -95,7 +95,9 @@ const slides = [
       </p>
     </div>
     <div className="col-sm-4">
-      <img src="./assets/images/Keystrokes2.gif" className="img-responsive" />
+      <video autoPlay loop muted playsInline>
+        <source src="./assets/images/Keystrokes.mp4" type="video/mp4" />
+      </video>
     </div>
   </Slide>,
   <Slide key="s3">
@@ -142,10 +144,9 @@ const slides = [
       <p>Adjust your preferences in the Settings sidebar tab.</p>
     </div>
     <div className="col-sm-4">
-      <img
-        src="./assets/images/ReusableFrame2.gif"
-        className="img-responsive"
-      />
+      <video autoPlay loop muted playsInline>
+        <source src="./assets/images/ReusableFrame.mp4" type="video/mp4" />
+      </video>
     </div>
   </Slide>,
   <Slide key="s5">
@@ -185,7 +186,9 @@ const slides = [
       </p>
     </div>
     <div className="col-sm-4">
-      <img src="./assets/images/Favorites2.gif" className="img-responsive" />
+      <video autoPlay loop muted playsInline>
+        <source src="./assets/images/Favorites.mp4" type="video/mp4" />
+      </video>
     </div>
   </Slide>,
 
@@ -199,7 +202,9 @@ const slides = [
       folder can be reached through Neo4j Desktop and your hard disk.
     </div>
     <div className="col-sm-4">
-      <img src="./assets/images/ProjectFiles2.gif" className="img-responsive" />
+      <video autoPlay loop muted playsInline>
+        <source src="./assets/images/ProjectFiles.mp4" type="video/mp4" />
+      </video>
     </div>
   </Slide>,
 
