@@ -308,10 +308,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
 
     const handleUp = () => {
       if (isMultiLine()) {
-        const { column = 1, lineNumber = 1 } =
-          editorRef.current?.getPosition() || {}
-        editorRef.current?.setPosition({ column, lineNumber: lineNumber - 1 })
-        editorRef.current?.revealLine(lineNumber - 1)
+        editorRef.current?.trigger('', 'cursorUp', null)
       } else {
         viewHistoryPrevious()
       }
@@ -319,10 +316,7 @@ const Monaco = forwardRef<MonacoHandles, MonacoProps>(
 
     const handleDown = () => {
       if (isMultiLine()) {
-        const { column = 1, lineNumber = 1 } =
-          editorRef.current?.getPosition() || {}
-        editorRef.current?.setPosition({ column, lineNumber: lineNumber + 1 })
-        editorRef.current?.revealLine(lineNumber + 1)
+        editorRef.current?.trigger('', 'cursorDown', null)
       } else {
         viewHistoryNext()
       }
