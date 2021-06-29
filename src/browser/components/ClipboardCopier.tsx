@@ -20,7 +20,7 @@ function ClipboardCopier({
     <CopyIconContainer
       onClick={() =>
         copyToClipboard(text)
-          .then(() => showPopup('Copied to clipboard'))
+          .then(() => showPopup('✔️ Copied to clipboard'))
           .catch(() => showPopup('Copying text failed'))
       }
     >
@@ -41,7 +41,6 @@ function InfoPopup({ text }: InfoPopupProps) {
 }
 const PopupTextContainer = styled.span`
   position: absolute;
-  z-index: 1;
   white-space: nowrap;
   right: 30px;
   bottom: 0;
