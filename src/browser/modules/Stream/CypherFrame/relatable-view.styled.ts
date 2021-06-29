@@ -52,13 +52,11 @@ export const StyledJsonPre = styled.pre`
   position: relative;
 `
 
-export const CopyIconPositioner = styled.span`
-  position: 'absolute';
-  right: '15px';
-  top: '15px';
-  cursor: 'pointer';
-`
-
 export const StyledPreSpan = styled.span`
   white-space: pre;
+`
+export const CopyIconAbsolutePositioner = styled.span`
+  position: absolute;
+  right: 15px;
+  top: 15px;
 `

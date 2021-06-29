@@ -37,7 +37,7 @@ import ClipboardCopier from '../../../components/ClipboardCopier'
 import { StyledStatsBar, StyledTruncatedMessage } from '../styled'
 import Ellipsis from '../../../components/Ellipsis'
 import {
-  CopyIconPositioner,
+  CopyIconAbsolutePositioner,
   RelatableStyleWrapper,
   StyledJsonPre,
   StyledPreSpan
@@ -128,7 +128,9 @@ const renderObject = (entry: any) => {
 
   return (
     <StyledJsonPre>
-      <ClipboardCopier textToCopy={text} positionAbsolute />
+      <CopyIconAbsolutePositioner>
+        <ClipboardCopier textToCopy={text} />
+      </CopyIconAbsolutePositioner>
       <ClickableUrls text={text} WrappingTag={StyledJsonPre} />
     </StyledJsonPre>
   )

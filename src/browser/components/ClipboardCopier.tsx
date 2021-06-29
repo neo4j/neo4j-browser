@@ -4,41 +4,32 @@ import { CopyIcon } from './icons/Icons'
 
 type ClipboardCopierProps = {
   textToCopy: string
-  positionAbsolute?: boolean
   iconSize?: number
 }
 function ClipboardCopier({
   textToCopy: text,
-  positionAbsolute = false,
   iconSize = 20
 }: ClipboardCopierProps): JSX.Element {
   const [messageToShow, setMessageToShow] = useState<string | null>(null)
   function showPopup(text: string) {
     setMessageToShow(text)
-    setTimeout(() => setMessageToShow(null), 1000)
+    setTimeout(() => setMessageToShow(null), 1500)
   }
-  const Wrapper = positionAbsolute ? CopyIconAbsolutePositioner : React.Fragment
 
   return (
-    <Wrapper>
-      <CopyIconContainer
-        onClick={() =>
-          copyToClipboard(text)
-            .then(() => showPopup('Copied'))
-            .catch(() => showPopup('Copying text failed.'))
-        }
-      >
-        <CopyIcon title="Copy to clipboard" width={iconSize} />
-        {messageToShow && <InfoPopup text={messageToShow} />}
-      </CopyIconContainer>
-    </Wrapper>
+    <CopyIconContainer
+      onClick={() =>
+        copyToClipboard(text)
+          .then(() => showPopup('Copied to clipboard'))
+          .catch(() => showPopup('Copying text failed'))
+      }
+    >
+      <CopyIcon title="Copy to clipboard" width={iconSize} />
+      {messageToShow && <InfoPopup text={messageToShow} />}
+    </CopyIconContainer>
   )
 }
-const CopyIconAbsolutePositioner = styled.span`
-  position: absolute;
-  right: 15px;
-  top: 15px;
-`
+
 const CopyIconContainer = styled.span`
   cursor: pointer;
   position: relative;
@@ -51,8 +42,15 @@ function InfoPopup({ text }: InfoPopupProps) {
 const PopupTextContainer = styled.span`
   position: absolute;
   z-index: 1;
-  white-space: normal;
+  white-space: nowrap;
   right: 30px;
+  bottom: 0;
+  border-radius: 2px;
+  background-color: ${props => props.theme.frameSidebarBackground};
+  box-shadow: ${props => props.theme.standardShadow};
+  color: ${props => props.theme.primaryText}
+  font-family: ${props => props.theme.drawerHeaderFontFamily};
+  padding: 0 5px;
 `
 
 export function copyToClipboard(text: string): Promise<void> {
