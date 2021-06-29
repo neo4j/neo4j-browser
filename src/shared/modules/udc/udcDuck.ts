@@ -379,34 +379,22 @@ export const trackCommandUsageEpic: Epic<Action, GlobalState> = action$ =>
 
     const type = cmdHelper.interpret(action.cmd.slice(1))?.name
 
+    const extraData: Record<string, string | number> = {}
+
     if (type === 'play') {
       const guideName = action.cmd.substr(':play'.length).trim()
-
-      const content = isPlayChapter(guideName) ? 'built-in' : 'non-built-in'
-
-      return metricsEvent({
-        category: 'command',
-        label: 'non-cypher',
-        data: { source: action.source || 'unknown', type, content }
-      })
-    }
-
-    if (type === 'guide') {
+      extraData.content = isPlayChapter(guideName) ? 'built-in' : 'non-built-in'
+    } else if (type === 'guide') {
       const guideName = action.cmd.substr(':guide'.length).trim()
-
-      const content = isGuideChapter(guideName) ? 'built-in' : 'non-built-in'
-
-      return metricsEvent({
-        category: 'command',
-        label: 'non-cypher',
-        data: { source: action.source || 'unknown', type, content }
-      })
+      extraData.content = isGuideChapter(guideName)
+        ? 'built-in'
+        : 'non-built-in'
     }
 
     return metricsEvent({
       category: 'command',
       label: 'non-cypher',
-      data: { source: action.source || 'unknown', type }
+      data: { source: action.source || 'unknown', type, ...extraData }
     })
   })
 
