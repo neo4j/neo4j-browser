@@ -50,3 +50,7 @@ export const StyledJsonPre = styled.pre`
   max-width: 500px;
   white-space: pre-wrap;
 `
+
+export const StyledPreSpan = styled.span`
+  white-space: pre;
+`

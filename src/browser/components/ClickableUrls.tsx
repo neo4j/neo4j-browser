@@ -22,7 +22,7 @@ const URL_REGEX = /(?:https?|s?ftp|bolt):\/\/(?:(?:[^\s()<>]+|\((?:[^\s()<>]+|(?
 
 interface ClickableUrlsProps {
   text?: string | null
-  WrappingTag?: keyof JSX.IntrinsicElements
+  WrappingTag?: keyof JSX.IntrinsicElements | React.ElementType
 }
 
 export default function ClickableUrls({
