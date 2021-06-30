@@ -144,12 +144,10 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
     this.internalSetValue(value)
   }
   private internalSetValue = (value: string): void => {
-    // TODO external set value did more stuff as well
     if (!this.editor) return
     this.editor.setValue(value)
     this.editor.focus()
 
-    // TODO why do we need to do this
     const lines = this.editor.getModel()?.getLinesContent() || []
     const linesLength = lines.length
     this.editor.setPosition({
@@ -170,7 +168,7 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
     const { history } = this.props
     const { currentHistoryIndex } = this.state
 
-    if (!history.length) return
+    if (history.length === 0) return
     if (currentHistoryIndex + 1 === history.length) return
     if (currentHistoryIndex === -1) {
       // Save what's currently in the editor as a local draft
@@ -197,8 +195,8 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
   private viewHistoryNext = (): void => {
     const { history } = this.props
     const { currentHistoryIndex } = this.state
-    //TODO check what checks are needed
-    if (!history.length) return
+
+    if (history.length === 0) return
     if (currentHistoryIndex <= -1) return
     if (currentHistoryIndex === 0) {
       // Read saved draft
