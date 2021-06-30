@@ -23,6 +23,7 @@ import { parse, QueryOrCommand } from 'cypher-editor-support'
 import { debounce } from 'lodash-es'
 import {
   editor,
+  IPosition,
   KeyCode,
   KeyMod,
   MarkerSeverity
@@ -64,53 +65,20 @@ const MonacoStyleWrapper = styled.div`
   }
 `
 
-// TODO refactor
-// TODO test all features
-// todo.. storybook?
-// Trigger update when multi statement setting is changed to update warnings //    useEffect(() => { //     onContentUpdate() //    // eslint-disable-next-line react-hooks/exhaustive-deps // }, [enableMultiStatementMode, useDb] //useEffect(() => { //editorRef.current?.updateOptions({ fontLigatures }) //}, [fontLigatures])
-
-// TODO
-// trigger redraw when database was changed
-// Getting and setting content and cursor is done to force a redraw
-/*
-    useEffect(() => {
-      const cursorPosition = editorRef?.current?.getPosition() as IPosition
-      editorRef.current?.setValue(editorRef.current?.getValue() || '')
-      editorRef.current?.setPosition(cursorPosition)
-    }, [useDb]
-    */
-
-// TODO
-// check default props
-
-// TODO cleanup methods and how to do history
-
-/*j
-;(enableMultiStatementMode = true),
-  (fontLigatures = true),
-  (history = []),
-  id,
-  (value = ''),
-  (onChange = () => undefined),
-  (onDisplayHelpKeys = () => undefined),
-  (onExecute = () => undefined),
-  useDb,
-  toggleFullscreen
-  */
-
 const EXPLAIN_QUERY_PREFIX = 'EXPLAIN '
 const EXPLAIN_QUERY_PREFIX_LENGTH = EXPLAIN_QUERY_PREFIX.length
-interface MonacoProps {
+type MonacoDefaultProps = { value: string; onDisplayHelpKeys: () => void }
+type MonacoProps = MonacoDefaultProps & {
   bus: Bus
-  enableMultiStatementMode?: boolean
-  fontLigatures?: boolean
+  enableMultiStatementMode: boolean
+  fontLigatures: boolean
   history: string[]
   id: string
   value?: string
-  onChange?: (value: string) => void
-  onDisplayHelpKeys: () => void
-  onExecute?: (value: string) => void
-  useDb?: null | string
+  onChange: (value: string) => void
+  onDisplayHelpKeys?: () => void
+  onExecute: (value: string) => void
+  useDb: null | string
   toggleFullscreen: () => void
 }
 type MonacoState = { currentHistoryIndex: number; draft: string }
@@ -121,6 +89,11 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
   editor?: editor.IStandaloneCodeEditor
   container?: HTMLElement
 
+  static defaultProps: MonacoDefaultProps = {
+    value: '',
+    onDisplayHelpKeys: () => undefined
+  }
+
   getMonacoId = (): string => `monaco-${this.props.id}`
   debouncedUpdateCode = debounce(() => {
     const text =
@@ -129,7 +102,7 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
         ?.getLinesContent()
         .join('\n') || ''
 
-    this.props.onChange && this.props.onChange(text)
+    this.props.onChange(text)
     this.addWarnings(parse(text).referencesListener.queriesAndCommands)
   }, 300)
   focus = (): void => {
@@ -242,7 +215,7 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
     const onlyWhitespace = value.trim() === ''
 
     if (!onlyWhitespace) {
-      this.props.onExecute && this.props.onExecute(value)
+      this.props.onExecute(value)
       this.setState(oldState => ({
         currentHistoryIndex: oldState.currentHistoryIndex - 1
       }))
@@ -436,13 +409,32 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
     }
   }
 
+  render(): JSX.Element {
+    return <MonacoStyleWrapper id={this.getMonacoId()} />
+  }
+
+  componentDidUpdate(prevProps: MonacoProps): void {
+    const { useDb, fontLigatures, enableMultiStatementMode } = this.props
+    if (fontLigatures !== prevProps.fontLigatures) {
+      this.editor?.updateOptions({ fontLigatures })
+    }
+
+    // Line numbers need to be redrawn after db is changed
+    if (useDb !== prevProps.useDb) {
+      const cursorPosition = this.editor?.getPosition() as IPosition
+      this.editor?.setValue(this.editor?.getValue() || '')
+      this.editor?.setPosition(cursorPosition)
+    }
+
+    // If changing multistatement setting, add or remove warnings if needed
+    if (enableMultiStatementMode !== prevProps.enableMultiStatementMode) {
+      this.onContentUpdate()
+    }
+  }
+
   componentWillUnmount = (): void => {
     this.editor?.dispose()
     this.debouncedUpdateCode?.cancel()
-  }
-
-  render(): JSX.Element {
-    return <MonacoStyleWrapper id={this.getMonacoId()} />
   }
 }
 

@@ -55,6 +55,10 @@ import { EditorContainer, Header } from '../Editor/styled'
 import ExportButton from './ExportButton'
 import { GlobalState } from 'shared/globalState'
 import { Action, Dispatch } from 'redux'
+import {
+  codeFontLigatures,
+  shouldEnableMultiStatementMode
+} from 'shared/modules/settings/settingsDuck'
 
 type FrameTitleBarBaseProps = {
   frame: Frame
@@ -68,6 +72,8 @@ type FrameTitleBarBaseProps = {
 type FrameTitleBarProps = FrameTitleBarBaseProps & {
   request: BrowserRequest | null
   isRelateAvailable: boolean
+  codeFontLigatures: boolean
+  enableMultiStatementMode: boolean
   newFavorite: (cmd: string) => void
   newProjectFile: (cmd: string) => void
   cancelQuery: (requestId: string) => void
@@ -78,6 +84,8 @@ type FrameTitleBarProps = FrameTitleBarBaseProps & {
 function FrameTitlebar({
   request,
   isRelateAvailable,
+  codeFontLigatures,
+  enableMultiStatementMode,
   newFavorite,
   newProjectFile,
   cancelQuery,
@@ -200,7 +208,8 @@ function FrameTitlebar({
             <Monaco
               history={history}
               useDb={frame.useDb}
-              enableMultiStatementMode={true}
+              enableMultiStatementMode={enableMultiStatementMode}
+              fontLigatures={codeFontLigatures}
               id={`editor-${frame.id}`}
               bus={bus}
               onChange={setEditorValue}
@@ -208,7 +217,6 @@ function FrameTitlebar({
               value={editorValue}
               ref={editorRef}
               toggleFullscreen={fullscreenToggle}
-              onDisplayHelpKeys={() => {}}
             />
           </EditorContainer>
         ) : (
@@ -268,7 +276,9 @@ const mapStateToProps = (
 
   return {
     request,
-    isRelateAvailable: app.isRelateAvailable(state)
+    isRelateAvailable: app.isRelateAvailable(state),
+    codeFontLigatures: codeFontLigatures(state),
+    enableMultiStatementMode: shouldEnableMultiStatementMode(state)
   }
 }
 
