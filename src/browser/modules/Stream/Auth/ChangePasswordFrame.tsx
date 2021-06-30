@@ -32,10 +32,7 @@ import { getActiveConnection } from 'shared/modules/connections/connectionsDuck'
 
 type ChangePasswordFrameState = any
 
-export class ChangePasswordFrame extends Component<
-  any,
-  ChangePasswordFrameState
-> {
+class ChangePasswordFrame extends Component<any, ChangePasswordFrameState> {
   constructor(props: any) {
     super(props)
     const connection = this.props.frame.connectionData

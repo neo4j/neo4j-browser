@@ -106,7 +106,7 @@ const CloseButton = styled.button`
   line-height: 1;
 `
 
-export const SmallText = styled.span`
+const SmallText = styled.span`
   font-size: 85%;
 `
 
@@ -118,7 +118,7 @@ const AlertP = styled.p`
   margin: 10px;
 `
 
-export const StyledSimpleLink = styled.a`
+const StyledSimpleLink = styled.a`
   cursor: pointer;
   text-decoration: none;
   &:hover {

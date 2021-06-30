@@ -70,9 +70,6 @@ export const getInterpreter = (interpret: any, cmd: any, ignore = false) => {
   return interpret(cleanCommand(cmd).substr(1))
 }
 
-export const isNamedInterpreter = (interpreter: any) =>
-  interpreter && interpreter.name !== 'catch-all'
-
 export const extractPostConnectCommandsFromServerConfig = (str: any) => {
   const substituteStr = '@@semicolon@@'
   const substituteRe = new RegExp(substituteStr, 'g')

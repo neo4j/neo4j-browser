@@ -202,7 +202,7 @@ export const StyledErrorBoundaryButton = styled(StyledFormButton)`
     background-color: #fbf1f0;
   }
 `
-export const StyledDestructiveButton = styled(StyledFormButton)`
+const StyledDestructiveButton = styled(StyledFormButton)`
   color: #fff;
   border: 1px solid #da4433;
   background-color: #da4433;
@@ -407,29 +407,6 @@ export const StyledStatusSection = styled.li`
     text-decoration: none;
   }
 `
-
-export const DefaultA = styled.a`
-  color: ${props => props.theme.secondaryButtonText};
-  &:hover {
-    color: ${props => props.theme.secondaryBackground};
-    text-decoration: none;
-  }
-`
-export const FrameButtonAChild = styled(DefaultA)`
-  display: block;
-  text-decoration: none;
-  &:focus,
-  &:active,
-  &:hover {
-    outline: 0;
-    text-decoration: none;
-  }
-`
-
-export const ActionButton = (props: any): JSX.Element => {
-  const { className, ...rest } = props
-  return <button className={className + ' ' + styles.action} {...rest} />
-}
 
 const BaseCarouselButton = styled.button`
   color: ${props => props.theme.secondaryButtonText};

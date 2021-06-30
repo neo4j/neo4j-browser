@@ -50,7 +50,7 @@ import {
 import icon from 'icons/task-list-download.svg'
 import arrayHasItems from '../../../shared/utils/array-has-items'
 
-export function FileDrop(props: any) {
+function FileDrop(props: any) {
   const [fileHoverState, setFileHoverState] = useState(false)
   const [userSelect, setUserSelect] = useState(false)
   const [file, setFile] = useState(null)

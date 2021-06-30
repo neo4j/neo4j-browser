@@ -30,7 +30,7 @@ import { StyledConnectionAside, StyledConnectionBodyContainer } from './styled'
 
 type State = any
 
-export class ConnectionFrame extends Component<any, State> {
+class ConnectionFrame extends Component<any, State> {
   constructor(props: {}) {
     super(props)
     this.state = {

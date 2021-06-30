@@ -18,6 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { H1, H2, H3, H4, H5 } from './Headers'
+import { H3 } from './Headers'
 
-export { H1, H2, H3, H4, H5 }
+export { H3 }

@@ -42,7 +42,7 @@ export const StyledMain = styled.div`
   height: 100vh;
 `
 
-export const Banner = styled.div`
+const Banner = styled.div`
   line-height: 49px;
   min-height: 49px;
   margin-top: 10px;
@@ -66,14 +66,6 @@ export const NotAuthedBanner = styled(Banner)`
   background-color: ${props => props.theme.auth};
 `
 
-export const StyledCodeBlockAuthBar = styled(StyledCodeBlock)`
-  background-color: white;
-  color: ${props => props.theme.auth};
-`
-export const StyledCodeBlockErrorBar = styled(StyledCodeBlock)`
-  background-color: white;
-  color: ${props => props.theme.error};
-`
 export const StyledCodeBlockFrame = styled(StyledCodeBlock)`
   white-space: nowrap;
   overflow: hidden;

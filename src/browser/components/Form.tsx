@@ -105,11 +105,6 @@ const StyledRadioEntry = styled.div`
   margin: 10px 0;
 `
 
-export const TextInput = (props: any) => {
-  const { children, ...rest } = props
-  return <StyledSettingTextInput {...rest}>{children}</StyledSettingTextInput>
-}
-
 export const CheckboxSelector = (props: any) => (
   <StyledCheckbox type="checkbox" {...props} />
 )

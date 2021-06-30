@@ -39,10 +39,6 @@ export const StyledStatusBar = styled.div`
   padding-left: 24px;
 `
 
-export const RefreshQueriesButton = styled(FrameButton)`
-  float: right;
-`
-
 export const AutoRefreshSpan = styled.span`
   float: right;
   margin-right: 10px;

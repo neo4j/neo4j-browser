@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react'
 import styled from 'styled-components'
 
 export const H3 = styled.h3`
@@ -27,15 +26,3 @@ export const H3 = styled.h3`
   font-family: ${props => props.theme.primaryFontFamily};
   color: ${props => props.theme.headerText};
 `
-export const H2 = (props: any) => {
-  return <h2 {...props} />
-}
-export const H1 = (props: any) => {
-  return <h1 {...props} />
-}
-export const H4 = (props: any) => {
-  return <h4 {...props} />
-}
-export const H5 = (props: any) => {
-  return <h5 {...props} />
-}
