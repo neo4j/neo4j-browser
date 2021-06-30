@@ -102,7 +102,7 @@ export class Visualization extends Component<any, VisualizationState> {
           this.autoCompleteCallback &&
             this.autoCompleteCallback(graph.relationships)
         })
-        .catch(_e => {})
+        .catch(() => {})
     } else {
       this.autoCompleteCallback && this.autoCompleteCallback([])
     }

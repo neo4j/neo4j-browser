@@ -328,7 +328,7 @@ export const StyledCaptionSelector = styled.a`
   }
 `
 
-export const StyledFullSizeContainer: any = styled.div`
+export const StyledFullSizeContainer = styled.div`
   position: relative;
   height: 100%;
 `

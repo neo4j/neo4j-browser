@@ -131,5 +131,5 @@ export const getCurrentUserEpic = (some$: any, store: any) =>
       return updateCurrentUser(username, roles)
     })
 
-export const clearCurrentUserOnDisconnectEpic = (some$: any, _store: any) =>
+export const clearCurrentUserOnDisconnectEpic = (some$: any) =>
   some$.ofType(DISCONNECTION_SUCCESS).mapTo({ type: CLEAR })

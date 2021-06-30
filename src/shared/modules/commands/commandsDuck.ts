@@ -307,7 +307,7 @@ export const fetchGuideFromAllowlistEpic = (some$: any, store: any) =>
     const allowlistStr = getRemoteContentHostnameAllowlist(store.getState())
     const allowlist = extractAllowlistFromConfigString(allowlistStr)
     const defaultAllowlist = extractAllowlistFromConfigString(
-      getDefaultRemoteContentHostnameAllowlist(store.getState())
+      getDefaultRemoteContentHostnameAllowlist()
     )
     const resolvedWildcardAllowlist = resolveAllowlistWildcard(
       allowlist,

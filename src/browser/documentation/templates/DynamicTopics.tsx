@@ -132,12 +132,18 @@ const Categories = ({ types, type, i }: any) => {
   )
 }
 
+type DynamicTopicsProps = {
+  description: string
+  footer: string
+  filter: any[]
+  docs: any
+}
 export const DynamicTopics = ({
-  docs = {} as any,
+  docs = {},
   description = '',
   footer = '',
-  filter = [] as any[]
-}) => {
+  filter = []
+}: DynamicTopicsProps): JSX.Element => {
   let filteredDocs: any = {}
   if (filter.length) {
     Object.keys(docs)

@@ -56,23 +56,23 @@
         "react"
       ],
       "rules": {
-        "@typescript-eslint/explicit-function-return-type": "off",
-        "@typescript-eslint/no-empty-function": "warn",
+        "@typescript-eslint/ban-ts-comment": "warn",
         "@typescript-eslint/ban-types": "warn",
-        "react/prop-types": "warn",
-        "prefer-spread": "warn",
-        "react/no-unescaped-entities": "warn",
-        "no-var": "warn",
-        "@typescript-eslint/no-unused-vars": "warn",
-        "react-hooks/exhaustive-deps": "warn",
-        "@typescript-eslint/no-this-alias": "warn",
-        "prefer-rest-params": "warn",
-        "@typescript-eslint/no-var-requires": "warn",
-        "react-hooks/rules-of-hooks": "warn",
+        "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/explicit-module-boundary-types": "warn",
-        "@typescript-eslint/no-non-null-assertion": "warn",
+        "@typescript-eslint/no-empty-function": "warn",
         "@typescript-eslint/no-explicit-any": "warn",
-        "@typescript-eslint/ban-ts-comment": "warn"
+        "@typescript-eslint/no-non-null-assertion": "warn",
+        "@typescript-eslint/no-this-alias": "warn",
+        "@typescript-eslint/no-unused-vars": "warn",
+        "@typescript-eslint/no-var-requires": "warn",
+        "no-var": "warn",
+        "prefer-rest-params": "warn",
+        "prefer-spread": "warn",
+        "react-hooks/exhaustive-deps": "warn",
+        "react-hooks/rules-of-hooks": "warn",
+        "react/no-unescaped-entities": "warn",
+        "react/prop-types": "error"
       }
     }
   ]

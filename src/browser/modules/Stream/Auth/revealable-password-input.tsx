@@ -23,7 +23,6 @@ import {
 } from './styled'
 
 export default function RevealablePasswordInput({
-  setRef,
   isRevealed,
   toggleReveal,
   ...props

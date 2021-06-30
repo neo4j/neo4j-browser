@@ -34,7 +34,7 @@ import {
   maxSpeed
 } from './helpers'
 
-const SnakeCanvas: any = styled.canvas`
+const SnakeCanvas = styled.canvas`
   border: 1px solid #787878;
   &:focus {
     outline: none;
@@ -228,7 +228,7 @@ class SnakeFrame extends React.Component<any> {
   render() {
     return (
       <SnakeCanvas
-        tabIndex="1"
+        tabIndex={1}
         ref={this.canvas}
         width={this.gameState.world.width}
         height={this.gameState.world.height}

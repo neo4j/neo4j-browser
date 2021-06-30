@@ -92,7 +92,7 @@ class SyncReminderBanner extends Component<any, SyncReminderBannerState> {
 
     return (
       <Render if={visible}>
-        <SyncDisconnectedBanner height="100px">
+        <SyncDisconnectedBanner>
           <StyledSyncReminderSpan>
             You are currently not signed into Neo4j Browser Sync. Connect
             through a simple social sign-in to get started.

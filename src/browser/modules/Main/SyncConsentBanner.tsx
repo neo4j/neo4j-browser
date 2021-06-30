@@ -57,7 +57,7 @@ const SyncReminderBanner = React.memo(function SyncReminderBanner({
 
   return (
     <Render if={visible}>
-      <SyncDisconnectedBanner height="100px">
+      <SyncDisconnectedBanner>
         <StyledSyncReminderSpan>
           To enjoy the full Neo4j Browser experience, we advise you to use
           <SyncSignInBarButton onClick={onGetstartedClicked}>

@@ -108,7 +108,7 @@ export default function Carousel({
     <StyledCarousel
       data-testid="carousel"
       onKeyUp={(e: any) => onKeyDown(e)}
-      tabIndex="0"
+      tabIndex={0}
     >
       {visibleSlide > 0 && (
         <CarouselButton

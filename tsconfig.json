@@ -17,7 +17,7 @@
     "noFallthroughCasesInSwitch": true,
     "jsx": "react",
     "outDir": "./build",
-    "allowJs": true,
+    "allowJs": false,
     "resolveJsonModule": true,
     "baseUrl": "./src",
     "paths": {
