@@ -22,7 +22,7 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { Provider } from 'react-redux'
 
-import { CypherFrame } from './index'
+import { CypherFrame } from './CypherFrame'
 import { Frame } from 'shared/modules/stream/streamDuck'
 import {
   BrowserRequest,

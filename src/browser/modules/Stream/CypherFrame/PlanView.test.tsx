@@ -21,14 +21,13 @@
 import React from 'react'
 import { render } from '@testing-library/react/pure'
 import neo4j from 'neo4j-driver'
-import { PlanView, PlanStatusbar } from './PlanView'
+import { PlanView, PlanStatusbar, PlanViewProps } from './PlanView'
 
 describe('PlanViews', () => {
   describe('PlanView', () => {
     test('displays plan view if it exists', () => {
       // Given
-      const props = {
-        query: 'MATCH xx0',
+      const props: PlanViewProps = {
         result: {
           summary: {
             plan: {
@@ -39,7 +38,12 @@ describe('PlanViews', () => {
               identifiers: ['n']
             }
           }
-        }
+        },
+        updated: 0,
+        fullscreen: false,
+        setPlanExpand: () => undefined,
+        assignVisElement: () => undefined,
+        planExpand: 'EXPAND'
       }
 
       // When
@@ -69,7 +73,8 @@ describe('PlanViews', () => {
               dbHits: 'xx3'
             }
           }
-        }
+        },
+        setPlanExpand: () => undefined
       }
 
       // When
