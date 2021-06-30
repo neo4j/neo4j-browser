@@ -33,9 +33,11 @@ import {
 } from 'shared/modules/settings/settingsDuck'
 import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 import ClickableUrls from '../../../components/ClickableUrls'
+import ClipboardCopier from '../../../components/ClipboardCopier'
 import { StyledStatsBar, StyledTruncatedMessage } from '../styled'
 import Ellipsis from '../../../components/Ellipsis'
 import {
+  CopyIconAbsolutePositioner,
   RelatableStyleWrapper,
   StyledJsonPre,
   StyledPreSpan
@@ -116,16 +118,21 @@ const renderCell = (entry: any) => {
     )
   }
 }
+
 const renderObject = (entry: any) => {
   if (isInt(entry)) return entry.toString()
   if (entry === null) return <em>null</em>
+  const text = unescapeDoubleQuotesForDisplay(
+    stringifyMod(entry, stringModifier, true)
+  )
+
   return (
-    <ClickableUrls
-      text={unescapeDoubleQuotesForDisplay(
-        stringifyMod(entry, stringModifier, true)
-      )}
-      WrappingTag={StyledJsonPre}
-    />
+    <StyledJsonPre>
+      <CopyIconAbsolutePositioner>
+        <ClipboardCopier textToCopy={text} />
+      </CopyIconAbsolutePositioner>
+      <ClickableUrls text={text} />
+    </StyledJsonPre>
   )
 }
 

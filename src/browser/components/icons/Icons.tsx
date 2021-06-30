@@ -36,6 +36,7 @@ import close from 'icons/frame-close.svg'
 import cloudCheck from 'icons/cloud-check.svg'
 import cloudRemove from 'icons/cloud-remove.svg'
 import cog from 'icons/cog.svg'
+import copy from 'icons/copy.svg'
 import databaseCheck from 'icons/database-check.svg'
 import download from 'icons/save.svg'
 import expand from 'icons/frame-fullscreen.svg'
@@ -465,6 +466,15 @@ export const CannyNotificationsIcon = (): JSX.Element => (
   <IconContainer icon={cannyNotifications} />
 )
 
-export const BackIcon = ({ width }: { width: number }): JSX.Element => (
+export const BackIcon = ({ width }: WidthProps): JSX.Element => (
   <IconContainer width={width} icon={backArrow} />
+)
+
+type TitleAndWidthProps = WidthProps & { title: string }
+
+export const CopyIcon = ({
+  width = SMALL_SIZE,
+  title
+}: TitleAndWidthProps): JSX.Element => (
+  <IconContainer title={title} width={width} icon={copy} />
 )

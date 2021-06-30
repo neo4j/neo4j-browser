@@ -47,10 +47,16 @@ export const StyledJsonPre = styled.pre`
   color: ${props => props.theme.preText};
   line-height: 26px;
   padding: 2px 10px;
-  max-width: 500px;
+  max-width: 100%;
   white-space: pre-wrap;
+  position: relative;
 `
 
 export const StyledPreSpan = styled.span`
   white-space: pre;
+`
+export const CopyIconAbsolutePositioner = styled.span`
+  position: absolute;
+  right: 15px;
+  top: 15px;
 `
