@@ -37,7 +37,7 @@ import { PlanExpand } from './CypherFrame'
 
 type PlanViewState = { extractedPlan: any }
 export type PlanViewProps = {
-  _planExpand: PlanExpand
+  planExpand: PlanExpand
   setPlanExpand: (p: PlanExpand) => void
   result: any
   updated: any
@@ -82,7 +82,7 @@ export class PlanView extends Component<PlanViewProps, PlanViewState> {
       props.fullscreen !== this.props.fullscreen ||
       !deepEquals(props.result.summary, this.props.result.summary) ||
       !shallowEquals(state, this.state) ||
-      props._planExpand !== this.props._planExpand
+      props.planExpand !== this.props.planExpand
     )
   }
 
@@ -113,10 +113,10 @@ export class PlanView extends Component<PlanViewProps, PlanViewState> {
 
   ensureToggleExpand(prevProps: any) {
     if (
-      this.props._planExpand &&
-      this.props._planExpand !== prevProps._planExpand
+      this.props.planExpand &&
+      this.props.planExpand !== prevProps.planExpand
     ) {
-      switch (this.props._planExpand) {
+      switch (this.props.planExpand) {
         case 'COLLAPSE': {
           this.toggleExpanded(false)
           break

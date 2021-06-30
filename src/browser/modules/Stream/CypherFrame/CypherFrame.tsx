@@ -101,9 +101,9 @@ type CypherFrameState = {
   frameHeight: number
   hasVis: boolean
   errors?: unknown
-  _asciiMaxColWidth?: number
-  _asciiSetColWidth?: string
-  _planExpand: PlanExpand
+  asciiMaxColWidth?: number
+  asciiSetColWidth?: string
+  planExpand: PlanExpand
 }
 export type PlanExpand = 'EXPAND' | 'COLLAPSE'
 
@@ -119,7 +119,9 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
     collapse: false,
     frameHeight: 472,
     hasVis: false,
-    _planExpand: 'EXPAND'
+    asciiMaxColWidth: undefined,
+    asciiSetColWidth: undefined,
+    planExpand: 'EXPAND'
   }
 
   changeView(view: viewTypes.FrameView): void {
@@ -151,9 +153,9 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
       this.state.fullscreen !== state.fullscreen ||
       this.state.frameHeight !== state.frameHeight ||
       this.state.collapse !== state.collapse ||
-      this.state._asciiMaxColWidth !== state._asciiMaxColWidth ||
-      this.state._asciiSetColWidth !== state._asciiSetColWidth ||
-      this.state._planExpand !== state._planExpand ||
+      this.state.asciiMaxColWidth !== state.asciiMaxColWidth ||
+      this.state.asciiSetColWidth !== state.asciiSetColWidth ||
+      this.state.planExpand !== state.planExpand ||
       this.state.hasVis !== state.hasVis
     )
   }
@@ -308,12 +310,12 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
       >
         <Display if={this.state.openView === viewTypes.TEXT} lazy>
           <AsciiView
-            _asciiSetColWidth={this.state._asciiSetColWidth}
+            asciiSetColWidth={this.state.asciiSetColWidth}
             maxRows={this.props.maxRows}
             result={result}
             updated={this.props.request.updated}
-            setAsciiMaxColWidth={_asciiMaxColWidth =>
-              this.setState({ _asciiMaxColWidth })
+            setAsciiMaxColWidth={asciiMaxColWidth =>
+              this.setState({ asciiMaxColWidth })
             }
           />
         </Display>
@@ -331,7 +333,7 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
         </Display>
         <Display if={this.state.openView === viewTypes.PLAN} lazy>
           <PlanView
-            _planExpand={this.state._planExpand}
+            planExpand={this.state.planExpand}
             result={result}
             updated={this.props.request.updated}
             fullscreen={this.state.fullscreen}
@@ -339,8 +341,8 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
               this.visElement = { svgElement, graphElement, type: 'plan' }
               this.setState({ hasVis: true })
             }}
-            setPlanExpand={(_planExpand: PlanExpand) =>
-              this.setState({ _planExpand })
+            setPlanExpand={(planExpand: PlanExpand) =>
+              this.setState({ planExpand })
             }
           />
         </Display>
@@ -367,13 +369,13 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
       <StyledStatsBarContainer>
         <Display if={this.state.openView === viewTypes.TEXT} lazy>
           <AsciiStatusbar
-            _asciiMaxColWidth={this.state._asciiMaxColWidth}
-            _asciiSetColWidth={this.state._asciiSetColWidth}
+            asciiMaxColWidth={this.state.asciiMaxColWidth}
+            asciiSetColWidth={this.state.asciiSetColWidth}
             maxRows={this.props.maxRows}
             result={result}
             updated={this.props.request.updated}
-            setAsciiSetColWidth={_asciiSetColWidth =>
-              this.setState({ _asciiSetColWidth })
+            setAsciiSetColWidth={asciiSetColWidth =>
+              this.setState({ asciiSetColWidth })
             }
           />
         </Display>
@@ -398,8 +400,8 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
         <Display if={this.state.openView === viewTypes.PLAN} lazy>
           <PlanStatusbar
             result={result}
-            setPlanExpand={(_planExpand: PlanExpand) =>
-              this.setState({ _planExpand })
+            setPlanExpand={(planExpand: PlanExpand) =>
+              this.setState({ planExpand })
             }
           />
         </Display>

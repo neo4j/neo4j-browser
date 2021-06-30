@@ -43,7 +43,7 @@ describe('PlanViews', () => {
         fullscreen: false,
         setPlanExpand: () => undefined,
         assignVisElement: () => undefined,
-        _planExpand: 'EXPAND'
+        planExpand: 'EXPAND'
       }
 
       // When

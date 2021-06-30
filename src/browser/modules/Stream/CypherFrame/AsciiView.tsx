@@ -51,7 +51,7 @@ interface BaseAsciiViewComponentProps {
   result: BrowserRequestResult
   updated?: number
   maxRows: unknown
-  _asciiSetColWidth?: string
+  asciiSetColWidth?: string
   setAsciiMaxColWidth: { (asciiMaxColWidth: number): void }
 }
 interface AsciiViewComponentProps extends BaseAsciiViewComponentProps {
@@ -88,7 +88,7 @@ export class AsciiViewComponent extends Component<
       this.props.result !== undefined &&
       this.props.updated === props.updated &&
       props.maxRows === this.props.maxRows &&
-      props._asciiSetColWidth === this.props._asciiSetColWidth
+      props.asciiSetColWidth === this.props.asciiSetColWidth
     ) {
       return true
     }
@@ -134,7 +134,7 @@ export class AsciiViewComponent extends Component<
   }
 
   render(): JSX.Element {
-    const { _asciiSetColWidth: maxColWidth = 70 } = this.props
+    const { asciiSetColWidth: maxColWidth = 70 } = this.props
     const { serializedRows, bodyMessage } = this.state
     let contents = <StyledBodyMessage>{bodyMessage}</StyledBodyMessage>
     if (
@@ -158,8 +158,8 @@ export const AsciiView = connect((state: GlobalState) => ({
 }))(AsciiViewComponent)
 
 interface BaseAsciiStatusbarComponentProps {
-  _asciiMaxColWidth?: number
-  _asciiSetColWidth?: string
+  asciiMaxColWidth?: number
+  asciiSetColWidth?: string
   maxRows: number
   result: BrowserRequestResult
   setAsciiSetColWidth: { (asciiSetColWidth: string): void }
@@ -195,7 +195,7 @@ export class AsciiStatusbarComponent extends Component<
   }
 
   makeState(props: AsciiStatusbarComponentProps): void {
-    this.setMaxSliderWidth(props._asciiMaxColWidth)
+    this.setMaxSliderWidth(props.asciiMaxColWidth)
     const { statusBarMessage = null } =
       getBodyAndStatusBarMessages(props.result, props.maxRows) || {}
     const hasTruncatedFields = resultHasTruncatedFields(
@@ -213,8 +213,8 @@ export class AsciiStatusbarComponent extends Component<
       state.maxColWidth !== this.state.maxColWidth ||
       state.maxSliderWidth !== this.state.maxSliderWidth ||
       props.updated !== this.props.updated ||
-      props._asciiMaxColWidth !== this.props._asciiMaxColWidth ||
-      props._asciiSetColWidth !== this.props._asciiSetColWidth
+      props.asciiMaxColWidth !== this.props.asciiMaxColWidth ||
+      props.asciiSetColWidth !== this.props.asciiSetColWidth
     )
   }
 
