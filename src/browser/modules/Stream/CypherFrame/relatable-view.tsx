@@ -131,7 +131,7 @@ const renderObject = (entry: any) => {
       <CopyIconAbsolutePositioner>
         <ClipboardCopier textToCopy={text} />
       </CopyIconAbsolutePositioner>
-      <ClickableUrls text={text} WrappingTag={StyledJsonPre} />
+      <ClickableUrls text={text} />
     </StyledJsonPre>
   )
 }
