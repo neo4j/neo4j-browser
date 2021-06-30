@@ -50,7 +50,6 @@ import {
 } from 'shared/modules/connections/connectionsDuck'
 import { getScrollToTop } from 'shared/modules/settings/settingsDuck'
 import DbsFrame from './Auth/DbsFrame'
-import EditFrame from './EditFrame'
 
 const trans = {
   error: ErrorFrame,
@@ -78,7 +77,6 @@ const trans = {
   'reset-db': UseDbFrame,
   dbs: DbsFrame,
   style: StyleFrame,
-  edit: EditFrame,
   default: DefaultFrame
 }
 

@@ -34,25 +34,6 @@ describe('commandInterpreterHelper', () => {
       expect(actualCommandName).toEqual(expectedCommandName)
     })
 
-    it('should recognize :edit command with query', () => {
-      const query = 'some cypher query'
-      const cmd = `edit ${query}`
-      const expectedCommandName = 'edit'
-
-      const actualCommandName = helper.interpret(cmd).name
-
-      expect(actualCommandName).toEqual(expectedCommandName)
-    })
-
-    it('should recognize :edit command without query', () => {
-      const cmd = 'edit'
-      const expectedCommandName = 'edit'
-
-      const actualCommandName = helper.interpret(cmd).name
-
-      expect(actualCommandName).toEqual(expectedCommandName)
-    })
-
     test('should find :config helper with params', () => {
       // Given
       const cmd = 'config cmdchar:"/"'
