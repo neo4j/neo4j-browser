@@ -1,6 +1,6 @@
 # Neo4j Browser
 
-Neo4j Browser is the general purpose graphical user interface for Neo4j.
+Neo4j Browser is the general purpose graphical user interface for Neo4j. Query, visualize, administrate and monitor the database with modern and easy-to-use tools. 
 
 ![neo4j browser screenshot](./.github/neo4j-browser-screenshot.png)
 
@@ -19,11 +19,11 @@ Have an idea for a new feature? You're welcome to leave suggestions and ideas [h
 Contributions welcome! More information in our [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Development 
-Running Neo4j Browser locally requires Node.js (^12.4.0) and yarn (`npm install -g yarn`). 
+Running Neo4j Browser locally requires Node.js (^12.4.0) and for dependencies we use yarn (`npm install -g yarn`). 
 To install dependencies and then start the development server at `http://localhost:8080`:
 
 ```shell
-yarn
+yarn install
 yarn start
 ```
 
