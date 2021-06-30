@@ -1,5 +1,7 @@
 <!---
 BEFORE YOU SUBMIT please search open/closed issues since someone might have asked the same thing before!
+
+For feature requests see: https://neo4j-browser.canny.io/feature-requests
 -->
 
 ### Description
