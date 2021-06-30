@@ -94,8 +94,8 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
     onDisplayHelpKeys: () => undefined
   }
 
-  getMonacoId = (): string => `monaco-${this.props.id}`
-  debouncedUpdateCode = debounce(() => {
+  private getMonacoId = (): string => `monaco-${this.props.id}`
+  private debouncedUpdateCode = debounce(() => {
     const text =
       this.editor
         ?.getModel()
@@ -111,11 +111,12 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
   setPosition = (pos: { lineNumber: number; column: number }): void => {
     this.editor?.setPosition(pos)
   }
-  newLine = (): void => this.editor?.trigger('keyboard', 'type', { text: '\n' })
-  isMultiLine = (): boolean =>
+  private newLine = (): void =>
+    this.editor?.trigger('keyboard', 'type', { text: '\n' })
+  private isMultiLine = (): boolean =>
     (this.editor?.getModel()?.getLineCount() || 0) > 1
 
-  updateGutterCharWidth = (dbName: string): void => {
+  private updateGutterCharWidth = (dbName: string): void => {
     this.editor?.updateOptions({
       lineNumbersMinChars:
         dbName.length && !this.isMultiLine() ? dbName.length * 1.3 : 2
@@ -139,6 +140,10 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
 
   getValue = (): string => this.editor?.getValue() || ''
   setValue = (value: string): void => {
+    this.setState({ currentHistoryIndex: -1 })
+    this.internalSetValue(value)
+  }
+  private internalSetValue = (value: string): void => {
     // TODO external set value did more stuff as well
     if (!this.editor) return
     this.editor.setValue(value)
@@ -153,7 +158,7 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
     })
   }
 
-  handleUp = (): void => {
+  private handleUp = (): void => {
     if (this.isMultiLine()) {
       this.editor?.trigger('', 'cursorUp', null)
     } else {
@@ -161,7 +166,7 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
     }
   }
 
-  viewHistoryPrevious = (): void => {
+  private viewHistoryPrevious = (): void => {
     const { history } = this.props
     const { currentHistoryIndex } = this.state
 
@@ -175,13 +180,13 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
       })
       return
     }
-    this.setValue(history[currentHistoryIndex])
+    this.internalSetValue(history[currentHistoryIndex])
     this.setState(oldState => ({
       currentHistoryIndex: oldState.currentHistoryIndex + 1
     }))
   }
 
-  handleDown = (): void => {
+  private handleDown = (): void => {
     if (this.isMultiLine()) {
       this.editor?.trigger('', 'cursorDown', null)
     } else {
@@ -189,7 +194,7 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
     }
   }
 
-  viewHistoryNext = (): void => {
+  private viewHistoryNext = (): void => {
     const { history } = this.props
     const { currentHistoryIndex } = this.state
     //TODO check what checks are needed
@@ -200,17 +205,17 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
       this.setState(oldState => ({
         currentHistoryIndex: oldState.currentHistoryIndex - 1
       }))
-      this.setValue(this.state.draft)
+      this.internalSetValue(this.state.draft)
       return
     }
 
     this.setState(oldState => ({
       currentHistoryIndex: oldState.currentHistoryIndex - 1
     }))
-    this.setValue(this.props.history[currentHistoryIndex - 1])
+    this.internalSetValue(this.props.history[currentHistoryIndex - 1])
   }
 
-  execute = (): void => {
+  private execute = (): void => {
     const value = this.getValue()
     const onlyWhitespace = value.trim() === ''
 
@@ -222,7 +227,7 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
     }
   }
 
-  onContentUpdate = (): void => {
+  private onContentUpdate = (): void => {
     const model = this.editor?.getModel()
     if (!model) return
 
@@ -232,7 +237,7 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
     this.debouncedUpdateCode()
   }
 
-  addWarnings = (statements: QueryOrCommand[]): void => {
+  private addWarnings = (statements: QueryOrCommand[]): void => {
     const model = this.editor?.getModel()
     if (!statements.length || !model) return
 
