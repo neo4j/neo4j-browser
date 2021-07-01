@@ -89,12 +89,6 @@ module.exports = {
               name: 'neo4j-driver',
               chunks: 'all',
               enforce: true
-            },
-            worker: {
-              test: /boltWorker/,
-              name: 'worker',
-              chunks: 'all',
-              enforce: true
             }
           }
         }

@@ -152,3 +152,11 @@ declare module 'monaco-editor/esm/vs/base/parts/quickinput/browser/quickInputLis
     }
   }
 }
+
+declare module 'shared/services/bolt/boltWorker' {
+  class WebpackWorker extends Worker {
+    constructor()
+  }
+
+  export default WebpackWorker
+}
