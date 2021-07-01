@@ -31,7 +31,7 @@ module.exports = {
   entry: [path.resolve(helpers.browserPath, 'index.tsx')],
   output: {
     filename: 'app-[hash].js',
-    chunkFilename: '[name].chunkhash.bundle.js',
+    chunkFilename: '[name]-[hash].bundle.js',
     publicPath: '',
     path: helpers.buildPath,
     globalObject: 'this'

@@ -128,7 +128,8 @@ module.exports = () => {
         '!unusualLineTerminators',
         '!viewportSemanticTokens'
       ],
-      languages: []
+      languages: [],
+      filename: '[name]-[hash].worker.js'
     })
   ]
 
