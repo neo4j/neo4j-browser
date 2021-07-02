@@ -23,19 +23,19 @@ const createStyledComponentsTransformer = require('typescript-plugin-styled-comp
   .default
 const styledComponentsTransformer = createStyledComponentsTransformer()
 
+const tsLoaderOptions = {
+  transpileOnly: true,
+  getCustomTransformers: () => ({
+    before: [...(helpers.isProduction ? [] : [styledComponentsTransformer])]
+  })
+}
+
 module.exports = [
   {
     test: /\.(ts|tsx)?$/,
     use: {
       loader: 'ts-loader',
-      options: {
-        transpileOnly: true,
-        getCustomTransformers: () => ({
-          before: [
-            ...(helpers.isProduction ? [] : [styledComponentsTransformer])
-          ]
-        })
-      }
+      options: tsLoaderOptions
     },
     include: [path.resolve('src')],
     exclude: /node_modules/
@@ -138,5 +138,20 @@ module.exports = [
   {
     test: /\.html?$/,
     use: ['html-loader']
+  },
+  {
+    test: /boltWorker\.ts/,
+    use: [
+      {
+        loader: 'worker-loader',
+        options: {
+          name: 'bolt-worker-[hash].js'
+        }
+      },
+      {
+        loader: 'ts-loader',
+        options: tsLoaderOptions
+      }
+    ]
   }
 ]

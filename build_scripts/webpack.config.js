@@ -31,7 +31,7 @@ module.exports = {
   entry: [path.resolve(helpers.browserPath, 'index.tsx')],
   output: {
     filename: 'app-[hash].js',
-    chunkFilename: '[name].chunkhash.bundle.js',
+    chunkFilename: '[name]-[hash].bundle.js',
     publicPath: '',
     path: helpers.buildPath,
     globalObject: 'this'
@@ -87,12 +87,6 @@ module.exports = {
             'neo4j-driver': {
               test: /[\\/]node_modules[\\/](text-encoding|neo4j-driver)[\\/]/,
               name: 'neo4j-driver',
-              chunks: 'all',
-              enforce: true
-            },
-            worker: {
-              test: /boltWorker/,
-              name: 'worker',
               chunks: 'all',
               enforce: true
             }

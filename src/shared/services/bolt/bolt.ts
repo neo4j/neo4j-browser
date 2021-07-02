@@ -37,8 +37,7 @@ import {
 import { NATIVE } from 'services/bolt/boltHelpers'
 import { setupBoltWorker, addTypesAsField } from './setup-bolt-worker'
 
-// @ts-expect-error ts-migrate(2307) FIXME: Cannot find module 'worker-loader?inline!./boltWor... Remove this comment to see the full error message
-import BoltWorkerModule from 'worker-loader?inline!./boltWorker'
+import BoltWorkerModule from 'shared/services/bolt/boltWorker'
 import { Connection } from 'shared/modules/connections/connectionsDuck'
 
 let connectionProperties: {} | null = null
