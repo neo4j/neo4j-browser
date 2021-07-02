@@ -8,7 +8,8 @@
   "propertiesToCopyToManifest": [
     "description",
     "homepage",
-    "neo4jDesktop"
+    "neo4jDesktop",
+    "version"
   ],
   "repository": {
     "type": "git",
