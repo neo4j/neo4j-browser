@@ -574,6 +574,8 @@ export const serverConfigEpic = (some$: any, store: any) =>
           try {
             supportsMultiDb = await bolt.hasMultiDbSupport()
           } catch (e) {
+            // if hasMultiDbSupport throws there's no instance of neo4j running anymore
+            onLostConnection(store.dispatch)(e)
             return reject(e)
           }
 
