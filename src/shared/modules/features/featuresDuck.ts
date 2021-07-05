@@ -127,9 +127,9 @@ export const featuresDiscoveryEpic = (action$: any, store: any) => {
     .ofType(CONNECTION_SUCCESS)
     .mergeMap(() => {
       return new Promise(async (resolve, reject) => {
-        const supportsMultiDb = await bolt.hasMultiDbSupport()
-        bolt
-          .routedReadTransaction(
+        try {
+          const supportsMultiDb = await bolt.hasMultiDbSupport()
+          const res = await bolt.routedReadTransaction(
             'CALL dbms.procedures YIELD name',
             {},
             {
@@ -140,8 +140,10 @@ export const featuresDiscoveryEpic = (action$: any, store: any) => {
               })
             }
           )
-          .then(resolve)
-          .catch(reject)
+          resolve(res)
+        } catch (e) {
+          reject(e)
+        }
       })
         .then((res: any) => {
           store.dispatch(

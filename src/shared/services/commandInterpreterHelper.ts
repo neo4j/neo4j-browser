@@ -259,54 +259,62 @@ const availableCommands = [
   {
     name: 'reset-db',
     match: (cmd: any) => new RegExp(`^${useDbCommand}$`).test(cmd),
-    async exec(action: any, put: any, store: any) {
-      const supportsMultiDb = await bolt.hasMultiDbSupport()
-      if (supportsMultiDb) {
-        put(useDb(null))
-        put(fetchMetaData())
-        put(
-          frames.add({
-            useDb: getUseDb(store.getState()),
-            ...action,
-            type: 'reset-db'
-          })
-        )
-      } else {
-        put(
-          frames.add({
-            useDb: getUseDb(store.getState()),
-            ...action,
-            type: 'error',
-            error: UnsupportedError('No multi db support detected.')
-          })
-        )
-      }
+    exec(action: any, put: any, store: any) {
+      bolt
+        .hasMultiDbSupport()
+        .then(supportsMultiDb => {
+          if (supportsMultiDb) {
+            put(useDb(null))
+            put(fetchMetaData())
+            put(
+              frames.add({
+                useDb: getUseDb(store.getState()),
+                ...action,
+                type: 'reset-db'
+              })
+            )
+          } else {
+            put(
+              frames.add({
+                useDb: getUseDb(store.getState()),
+                ...action,
+                type: 'error',
+                error: UnsupportedError('No multi db support detected.')
+              })
+            )
+          }
+        })
+        .catch(() => undefined)
     }
   },
   {
     name: 'dbs',
     match: (cmd: any) => new RegExp(`^${listDbsCommand}$`).test(cmd),
-    async exec(action: any, put: any, store: any) {
-      const supportsMultiDb = await bolt.hasMultiDbSupport()
-      if (supportsMultiDb) {
-        put(
-          frames.add({
-            useDb: getUseDb(store.getState()),
-            ...action,
-            type: 'dbs',
-            dbs: getDatabases(store.getState())
-          })
-        )
-      } else {
-        put(
-          frames.add({
-            useDb: getUseDb(store.getState()),
-            ...action,
-            type: 'error',
-            error: UnsupportedError('No multi db support detected.')
-          })
-        )
-      }
+    exec(action: any, put: any, store: any) {
+      bolt
+        .hasMultiDbSupport()
+        .then(supportsMultiDb => {
+          if (supportsMultiDb) {
+            put(
+              frames.add({
+                useDb: getUseDb(store.getState()),
+                ...action,
+                type: 'dbs',
+                dbs: getDatabases(store.getState())
+              })
+            )
+          } else {
+            put(
+              frames.add({
+                useDb: getUseDb(store.getState()),
+                ...action,
+                type: 'error',
+                error: UnsupportedError('No multi db support detected.')
+              })
+            )
+          }
+        })
+        .catch(() => undefined)
     }
   },
   {
