@@ -182,6 +182,7 @@
     "jsonic": "^0.3.0",
     "jszip": "^3.2.2",
     "lodash-es": "^4.17.15",
+    "memoize-one": "^5.2.1",
     "monaco-editor": "0.23.0",
     "neo4j-driver": "^4.3.1",
     "react": "^16.9.0",

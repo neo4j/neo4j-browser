@@ -18,7 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component, ReactNode } from 'react'
+import React, { Component, ReactNode, PureComponent } from 'react'
+import memoize from 'memoize-one'
 import { PlanSVG } from './PlanView.styled'
 import { dim } from 'browser-styles/constants'
 import { deepEquals, shallowEquals } from 'services/utils'
@@ -160,83 +161,56 @@ export class PlanView extends Component<PlanViewProps, PlanViewState> {
   }
 }
 
-type PlanStatusbarState = { extractedPlan: any }
 type PlanStatusbarProps = {
   result: any
   setPlanExpand: (p: PlanExpand) => void
 }
 
-export class PlanStatusbar extends Component<
-  PlanStatusbarProps,
-  PlanStatusbarState
-> {
-  state: PlanStatusbarState = {
-    extractedPlan: null
-  }
+export function PlanStatusbar(props: PlanStatusbarProps) {
+  const extractMemoizedPlan = memoize(
+    result => bolt.extractPlan(result, true),
+    (a: any, b: any) => deepEquals(a[0]?.result?.summary, b[0]?.result?.summary)
+  )
 
-  componentDidMount(): void {
-    if (this.props === undefined || this.props.result === undefined) return
-    const extractedPlan = bolt.extractPlan(this.props.result, true)
-    if (extractedPlan) this.setState({ extractedPlan })
-  }
+  const { result } = props
+  if (!result || !result.summary) return null
 
-  componentDidUpdate(prevProps: PlanStatusbarProps): void {
-    if (this.props.result === undefined) return
-    if (
-      prevProps.result === undefined ||
-      !deepEquals(this.props.result.summary, prevProps.result.summary)
-    ) {
-      const extractedPlan = bolt.extractPlan(this.props.result, true)
-      this.setState({ extractedPlan })
-    }
-  }
+  const plan = extractMemoizedPlan(result)
+  if (!plan) return null
 
-  shouldComponentUpdate(
-    _nextProps: PlanStatusbarProps,
-    nextState: PlanStatusbarState
-  ): boolean {
-    if (this.props.result === undefined) return true
-    return !deepEquals(nextState, this.state)
-  }
-
-  render(): ReactNode {
-    const plan = this.state.extractedPlan
-    if (!plan) return null
-    const { result = {} } = this.props
-    return (
-      <StyledOneRowStatsBar>
-        <StyledLeftPartial>
-          <Ellipsis>
-            Cypher version: {plan.root.version}, planner: {plan.root.planner},
-            runtime: {plan.root.runtime}.
-            {plan.root.totalDbHits
-              ? ` ${
-                  plan.root.totalDbHits
-                } total db hits in ${result.summary.resultAvailableAfter
-                  .add(result.summary.resultConsumedAfter)
-                  .toNumber() || 0} ms.`
-              : ''}
-          </Ellipsis>
-        </StyledLeftPartial>
-        <StyledRightPartial>
-          <StyledFrameTitlebarButtonSection>
-            <FrameButton
-              title="Collapse Plan"
-              data-testid="planCollapseButton"
-              onClick={() => this.props.setPlanExpand('COLLAPSE')}
-            >
-              <DoubleUpIcon />
-            </FrameButton>
-            <FrameButton
-              data-testid="planExpandButton"
-              title="Expand Plan"
-              onClick={() => this.props.setPlanExpand('EXPAND')}
-            >
-              <DoubleDownIcon />
-            </FrameButton>
-          </StyledFrameTitlebarButtonSection>
-        </StyledRightPartial>
-      </StyledOneRowStatsBar>
-    )
-  }
+  return (
+    <StyledOneRowStatsBar>
+      <StyledLeftPartial>
+        <Ellipsis>
+          Cypher version: {plan.root.version}, planner: {plan.root.planner},
+          runtime: {plan.root.runtime}.
+          {plan.root.totalDbHits
+            ? ` ${
+                plan.root.totalDbHits
+              } total db hits in ${result.summary.resultAvailableAfter
+                .add(result.summary.resultConsumedAfter)
+                .toNumber() || 0} ms.`
+            : ''}
+        </Ellipsis>
+      </StyledLeftPartial>
+      <StyledRightPartial>
+        <StyledFrameTitlebarButtonSection>
+          <FrameButton
+            title="Collapse Plan"
+            data-testid="planCollapseButton"
+            onClick={() => props.setPlanExpand('COLLAPSE')}
+          >
+            <DoubleUpIcon />
+          </FrameButton>
+          <FrameButton
+            data-testid="planExpandButton"
+            title="Expand Plan"
+            onClick={() => props.setPlanExpand('EXPAND')}
+          >
+            <DoubleDownIcon />
+          </FrameButton>
+        </StyledFrameTitlebarButtonSection>
+      </StyledRightPartial>
+    </StyledOneRowStatsBar>
+  )
 }

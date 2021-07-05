@@ -8916,6 +8916,11 @@ memoize-one@^5.0.0:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/memoize-one/-/memoize-one-5.1.1.tgz#047b6e3199b508eaec03504de71229b8eb1d75c0"
   integrity sha1-BHtuMZm1COrsA1BN5xIpuOsddcA=
 
+memoize-one@^5.2.1:
+  version "5.2.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/memoize-one/-/memoize-one-5.2.1.tgz#8337aa3c4335581839ec01c3d594090cebe8f00e"
+  integrity sha1-gzeqPEM1WBg57AHD1ZQJDOvo8A4=
+
 memory-fs@^0.4.1:
   version "0.4.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/memory-fs/-/memory-fs-0.4.1.tgz#3a9a20b8462523e447cfbc7e8bb80ed667bfc552"
