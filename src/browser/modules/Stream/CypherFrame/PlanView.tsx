@@ -161,69 +161,56 @@ export class PlanView extends Component<PlanViewProps, PlanViewState> {
   }
 }
 
-type PlanStatusbarState = { extractedPlan: any }
 type PlanStatusbarProps = {
   result: any
   setPlanExpand: (p: PlanExpand) => void
 }
 
-export class PlanStatusbar extends PureComponent<
-  PlanStatusbarProps,
-  PlanStatusbarState
-> {
-  state: PlanStatusbarState = {
-    extractedPlan: null
-  }
+export function PlanStatusbar(props: PlanStatusbarProps) {
+  const extractMemoizedPlan = memoize(
+    result => bolt.extractPlan(result, true),
+    (a: any, b: any) => deepEquals(a[0]?.result?.summary, b[0]?.result?.summary)
+  )
 
-  getPlan = memoize((propsResult, extractedPlan) => {
-    if (deepEquals(propsResult, extractedPlan)) {
-      return extractedPlan
-    }
-    this.setState({ extractedPlan: propsResult })
-    return propsResult
-  })
+  const { result } = props
+  if (!result || !result.summary) return null
 
-  render(): ReactNode {
-    const plan = this.getPlan(
-      bolt.extractPlan(this.props.result, true),
-      this.state.extractedPlan
-    )
-    if (!plan) return null
-    const { result = {} } = this.props
-    return (
-      <StyledOneRowStatsBar>
-        <StyledLeftPartial>
-          <Ellipsis>
-            Cypher version: {plan.root.version}, planner: {plan.root.planner},
-            runtime: {plan.root.runtime}.
-            {plan.root.totalDbHits
-              ? ` ${
-                  plan.root.totalDbHits
-                } total db hits in ${result.summary.resultAvailableAfter
-                  .add(result.summary.resultConsumedAfter)
-                  .toNumber() || 0} ms.`
-              : ''}
-          </Ellipsis>
-        </StyledLeftPartial>
-        <StyledRightPartial>
-          <StyledFrameTitlebarButtonSection>
-            <FrameButton
-              title="Collapse Plan"
-              data-testid="planCollapseButton"
-              onClick={() => this.props.setPlanExpand('COLLAPSE')}
-            >
-              <DoubleUpIcon />
-            </FrameButton>
-            <FrameButton
-              data-testid="planExpandButton"
-              title="Expand Plan"
-              onClick={() => this.props.setPlanExpand('EXPAND')}
-            >
-              <DoubleDownIcon />
-            </FrameButton>
-          </StyledFrameTitlebarButtonSection>
-        </StyledRightPartial>
-      </StyledOneRowStatsBar>
-    )
-  }
+  const plan = extractMemoizedPlan(result)
+  if (!plan) return null
+
+  return (
+    <StyledOneRowStatsBar>
+      <StyledLeftPartial>
+        <Ellipsis>
+          Cypher version: {plan.root.version}, planner: {plan.root.planner},
+          runtime: {plan.root.runtime}.
+          {plan.root.totalDbHits
+            ? ` ${
+                plan.root.totalDbHits
+              } total db hits in ${result.summary.resultAvailableAfter
+                .add(result.summary.resultConsumedAfter)
+                .toNumber() || 0} ms.`
+            : ''}
+        </Ellipsis>
+      </StyledLeftPartial>
+      <StyledRightPartial>
+        <StyledFrameTitlebarButtonSection>
+          <FrameButton
+            title="Collapse Plan"
+            data-testid="planCollapseButton"
+            onClick={() => props.setPlanExpand('COLLAPSE')}
+          >
+            <DoubleUpIcon />
+          </FrameButton>
+          <FrameButton
+            data-testid="planExpandButton"
+            title="Expand Plan"
+            onClick={() => props.setPlanExpand('EXPAND')}
+          >
+            <DoubleDownIcon />
+          </FrameButton>
+        </StyledFrameTitlebarButtonSection>
+      </StyledRightPartial>
+    </StyledOneRowStatsBar>
+  )
 }
