@@ -5,7 +5,7 @@ exports[`Visualization renders 1`] = `<div />`;
 exports[`Visualization renders with result and escapes any HTML 1`] = `
 <div>
   <div
-    class="sc-bwCtUz bxryAr"
+    class="sc-bwCtUz hJgGYC"
   >
     <div
       class="sc-iAyFgw ikvPvE one-legend-row"
@@ -152,7 +152,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
         </div>
       </div>
       <div
-        class="sc-gqjmRU dwJWly status-bar"
+        class="sc-gqjmRU jKEGNe status-bar"
       >
         <div
           class="sc-VigVT joQvFy status"
