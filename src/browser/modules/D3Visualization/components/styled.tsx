@@ -181,12 +181,13 @@ export const StyledStatusBarWrapper = styled.div`
   display: none;
 `
 
-export const StyledStatusBar = styled.div`
+export const StyledStatusBar = styled.div<{ fullscreen?: boolean }>`
   min-height: 39px;
   line-height: 39px;
   color: ${props => props.theme.secondaryText};
   font-size: 13px;
-  position: absolute;
+  position: ${props => (props.fullscreen ? 'fixed' : 'absolute')};
+  z-index: ${props => (props.fullscreen ? 1 : 0)};
   background-color: ${props => props.theme.frameBackground};
   white-space: nowrap;
   overflow: hidden;
@@ -337,8 +338,8 @@ export const StyledInspectorFooterStatusMessage = styled.div`
   font-weight: bold;
 `
 
-export const StyledZoomHolder = styled.div`
-  position: absolute;
+export const StyledZoomHolder = styled.div<{ fullscreen: boolean }>`
+  position: ${props => (props.fullscreen ? 'fixed' : 'absolute')};
   bottom: 39px;
   right: 0;
   padding: 6px 6px 0 6px;

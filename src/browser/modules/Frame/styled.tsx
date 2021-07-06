@@ -65,7 +65,6 @@ export const StyledFrameBody = styled.div<
   flex-direction: row;
   width: 100%;
   padding: 30px 30px 10px 30px;
-  ${props => props.fullscreen && 'margin-bottom: 31px;'}
 
   .has-carousel &,
   .has-stack & {
