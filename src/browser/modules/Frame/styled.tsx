@@ -49,6 +49,7 @@ z-index: 130;`
 export const StyledFrameBody = styled.div<
   FullscreenProps & { collapsed: boolean }
 >`
+  flex-grow: 1;
   overflow: auto;
   min-height: ${dim.frameBodyHeight / 2}px;
   max-height: ${props => {
@@ -64,6 +65,7 @@ export const StyledFrameBody = styled.div<
   flex-direction: row;
   width: 100%;
   padding: 30px 30px 10px 30px;
+  ${props => props.fullscreen && 'margin-bottom: 31px;'}
 
   .has-carousel &,
   .has-stack & {
@@ -122,8 +124,16 @@ export const StyledFrameContents = styled.div<FullscreenProps>`
 
 export const StyledFrameStatusbar = styled.div<FullscreenProps>`
   border-top: ${props => props.theme.inFrameBorder};
-  height: ${dim.frameStatusbarHeight - 1}px;
-  ${props => (props.fullscreen ? 'margin-top: -78px;' : '')};
+  height: ${dim.frameStatusbarHeight}px;
+  ${props =>
+    props.fullscreen &&
+    `position: fixed; 
+     bottom: 0;
+     left: 0;
+     right: 0;
+     z-index: 2;
+     background-color: ${props.theme.frameBackground}
+  `}
   display: flex;
   flex-direction: row;
   flex: none;
@@ -195,6 +205,9 @@ export const StyledFrameCommand = styled.label<{ selectedDb: string | null }>`
 export const ContentContainer = styled.div`
   margin: 0px 3px;
   padding: 2px 2px 0 2px;
+  display: flex;
+  flex-direction: column;
+  max-height: 100vh;
 `
 
 export const TitleBarHeader = styled.div`
