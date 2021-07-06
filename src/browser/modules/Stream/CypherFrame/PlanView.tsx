@@ -166,12 +166,12 @@ type PlanStatusbarProps = {
   setPlanExpand: (p: PlanExpand) => void
 }
 
-export function PlanStatusbar(props: PlanStatusbarProps) {
-  const extractMemoizedPlan = memoize(
-    result => bolt.extractPlan(result, true),
-    (a: any, b: any) => deepEquals(a[0]?.result?.summary, b[0]?.result?.summary)
-  )
+const extractMemoizedPlan = memoize(
+  result => bolt.extractPlan(result, true),
+  (a: any, b: any) => deepEquals(a[0]?.result?.summary, b[0]?.result?.summary)
+)
 
+export function PlanStatusbar(props: PlanStatusbarProps) {
   const { result } = props
   if (!result || !result.summary) return null
 
