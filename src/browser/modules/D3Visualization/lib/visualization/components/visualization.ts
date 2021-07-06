@@ -131,7 +131,7 @@ const vizFn = function(
     const limitsReached = { zoomInLimit: false, zoomOutLimit: false }
 
     if (isZoomingIn) {
-      zoomLevel = Number((zoomBehavior.scale() * (1 + 0.2 * 1)).toFixed(2))
+      zoomLevel = Number((zoomBehavior.scale() * (1 + 0.3 * 1)).toFixed(2))
       if (zoomLevel >= zoomBehavior.scaleExtent()[1]) {
         limitsReached.zoomInLimit = true
         interpolateZoom(zoomBehavior.translate(), zoomBehavior.scaleExtent()[1])
@@ -139,7 +139,7 @@ const vizFn = function(
         interpolateZoom(zoomBehavior.translate(), zoomLevel)
       }
     } else {
-      zoomLevel = Number((zoomBehavior.scale() * (1 + 0.2 * -1)).toFixed(2))
+      zoomLevel = Number((zoomBehavior.scale() * (1 + 0.3 * -1)).toFixed(2))
       if (zoomLevel <= zoomBehavior.scaleExtent()[0]) {
         limitsReached.zoomOutLimit = true
         interpolateZoom(zoomBehavior.translate(), zoomBehavior.scaleExtent()[0])
