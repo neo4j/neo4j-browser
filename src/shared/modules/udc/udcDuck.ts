@@ -191,7 +191,7 @@ export default function reducer(
     case CLEAR_EVENTS:
       return { ...state, events: [] }
     case USER_CLEAR:
-      return initialState
+      return { ...initialState, uuid: state.uuid || initialState.uuid }
     case UPDATE_DATA:
       const { type, ...rest } = action
       return { ...state, ...rest }
