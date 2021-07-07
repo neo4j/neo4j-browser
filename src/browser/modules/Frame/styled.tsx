@@ -47,9 +47,10 @@ z-index: 130;`
 `
 
 export const StyledFrameBody = styled.div<
-  FullscreenProps & { collapsed: boolean }
+  FullscreenProps & { collapsed: boolean; preventOverflow?: boolean }
 >`
-  overflow: auto;
+  flex: 1;
+  overflow: ${props => (props.preventOverflow ? 'hidden' : 'auto')};
   min-height: ${dim.frameBodyHeight / 2}px;
   max-height: ${props => {
     if (props.collapsed) {

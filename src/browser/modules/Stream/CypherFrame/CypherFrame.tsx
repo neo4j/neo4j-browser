@@ -307,6 +307,7 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
         data-testid="frame-loaded-contents"
         fullscreen={this.state.fullscreen}
         collapsed={this.state.collapse}
+        preventOverflow={this.state.openView === viewTypes.VISUALIZATION}
       >
         <Display if={this.state.openView === viewTypes.TEXT} lazy>
           <AsciiView
