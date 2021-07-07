@@ -65,7 +65,6 @@ export const StyledFrameBody = styled.div<
   flex-direction: row;
   width: 100%;
   padding: 30px 30px 10px 30px;
-  ${props => props.fullscreen && `margin-bottom: 30px;`}
 
   .has-carousel &,
   .has-stack & {
@@ -125,15 +124,6 @@ export const StyledFrameContents = styled.div<FullscreenProps>`
 export const StyledFrameStatusbar = styled.div<FullscreenProps>`
   border-top: ${props => props.theme.inFrameBorder};
   height: ${dim.frameStatusbarHeight - 1}px;
-  ${props =>
-    props.fullscreen &&
-    `position: fixed; 
-     bottom: 0;
-     left: 0;
-     right: 0;
-     z-index: 2;
-     background-color: ${props.theme.frameBackground}
-  `}
   display: flex;
   flex-direction: row;
   flex: none;
@@ -207,7 +197,7 @@ export const ContentContainer = styled.div`
   padding: 2px 2px 0 2px;
   display: flex;
   flex-direction: column;
-  max-height: 100vh;
+  max-height: calc(100vh - 23px);
 `
 
 export const TitleBarHeader = styled.div`
