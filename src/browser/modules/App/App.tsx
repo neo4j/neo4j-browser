@@ -114,12 +114,14 @@ export function App(props: any) {
       props.bus.take(
         METRICS_EVENT,
         ({ category, label, data }: MetricsData) => {
-          eventMetricsCallback &&
-            eventMetricsCallback.current &&
-            eventMetricsCallback.current({ category, label, data })
-          segmentTrackCallback &&
-            segmentTrackCallback.current &&
-            segmentTrackCallback.current({ category, label, data })
+          if (!window.Cypress) {
+            eventMetricsCallback &&
+              eventMetricsCallback.current &&
+              eventMetricsCallback.current({ category, label, data })
+            segmentTrackCallback &&
+              segmentTrackCallback.current &&
+              segmentTrackCallback.current({ category, label, data })
+          }
         }
       )
     const initAction = udcInit()

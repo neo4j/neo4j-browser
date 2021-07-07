@@ -166,10 +166,16 @@ export function setupSentry(): void {
           return 0.2
         }
       },
-      beforeSend: event =>
-        shouldAllowOutgoingConnections(store.getState())
-          ? scrubQueryParamsAndUrl(event)
-          : null,
+      beforeSend: event => {
+        const inCI = window.Cypress
+        const allowsOutGoing = shouldAllowOutgoingConnections(store.getState())
+
+        if (allowsOutGoing && !inCI) {
+          return scrubQueryParamsAndUrl(event)
+        } else {
+          return null
+        }
+      },
       environment: 'unset'
     })
     Sentry.setUser({ id: getUuid(store.getState()) })
