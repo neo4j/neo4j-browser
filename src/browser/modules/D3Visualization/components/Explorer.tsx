@@ -205,6 +205,10 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
         />
       )
     }
+    const inspectingItemType =
+      !this.state.inspectorContracted &&
+      ((this.state.hoveredItem && this.state.hoveredItem.type !== 'canvas') ||
+        (this.state.selectedItem && this.state.selectedItem.type !== 'canvas'))
 
     return (
       <StyledFullSizeContainer
