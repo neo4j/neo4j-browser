@@ -49,7 +49,6 @@ z-index: 130;`
 export const StyledFrameBody = styled.div<
   FullscreenProps & { collapsed: boolean }
 >`
-  flex-grow: 1;
   overflow: auto;
   min-height: ${dim.frameBodyHeight / 2}px;
   max-height: ${props => {
@@ -65,7 +64,7 @@ export const StyledFrameBody = styled.div<
   flex-direction: row;
   width: 100%;
   padding: 30px 30px 10px 30px;
-  ${props => props.fullscreen && `margin-bottom: ${dim.frameStatusbarHeight}px`}
+  ${props => props.fullscreen && `margin-bottom: 30px;`}
 
   .has-carousel &,
   .has-stack & {
