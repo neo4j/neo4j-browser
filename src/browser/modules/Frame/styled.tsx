@@ -124,7 +124,7 @@ export const StyledFrameContents = styled.div<FullscreenProps>`
 
 export const StyledFrameStatusbar = styled.div<FullscreenProps>`
   border-top: ${props => props.theme.inFrameBorder};
-  height: ${dim.frameStatusbarHeight}px;
+  height: ${dim.frameStatusbarHeight - 1}px;
   ${props =>
     props.fullscreen &&
     `position: fixed; 
