@@ -347,27 +347,19 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
           />
         </Display>
         <Display if={this.state.openView === viewTypes.VISUALIZATION} lazy>
-          <div
-            style={{
-              maxHeight: '100%',
-              overflow: 'hidden',
-              position: 'relative'
+          <VisualizationConnectedBus
+            fullscreen={this.state.fullscreen}
+            result={result}
+            updated={this.props.request.updated}
+            frameHeight={this.state.frameHeight}
+            assignVisElement={(svgElement: any, graphElement: any) => {
+              this.visElement = { svgElement, graphElement, type: 'graph' }
+              this.setState({ hasVis: true })
             }}
-          >
-            <VisualizationConnectedBus
-              fullscreen={this.state.fullscreen}
-              result={result}
-              updated={this.props.request.updated}
-              frameHeight={this.state.frameHeight}
-              assignVisElement={(svgElement: any, graphElement: any) => {
-                this.visElement = { svgElement, graphElement, type: 'graph' }
-                this.setState({ hasVis: true })
-              }}
-              initialNodeDisplay={this.props.initialNodeDisplay}
-              autoComplete={this.props.autoComplete}
-              maxNeighbours={this.props.maxNeighbours}
-            />
-          </div>
+            initialNodeDisplay={this.props.initialNodeDisplay}
+            autoComplete={this.props.autoComplete}
+            maxNeighbours={this.props.maxNeighbours}
+          />
         </Display>
       </StyledFrameBody>
     )
