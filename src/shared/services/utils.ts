@@ -494,3 +494,5 @@ export function detectRuntimeEnv(win?: any, cloudDomains: string[] = []) {
 
   return WEB
 }
+
+export const isRunningE2ETest = !!window.Cypress
