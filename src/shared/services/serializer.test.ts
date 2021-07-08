@@ -99,5 +99,19 @@ describe('resultTransform', () => {
       const s = CSVSerializer(cols)
       expect(s.output()).toEqual('"{""name"":""John""}"')
     })
+    test('should escape newlines in values properly ', () => {
+      const cols = ['a\nb', 'b\nc']
+      const s = CSVSerializer(cols)
+      expect(s.output()).toEqual(
+        `"a
+b","b
+c"`
+      )
+    })
+    test('should escape newlines in values properly even with \r', () => {
+      const cols = ['a\r\nb', 'b\r\nc']
+      const s = CSVSerializer(cols)
+      expect(s.output()).toEqual(`"a\r\nb","b\r\nc"`)
+    })
   })
 })

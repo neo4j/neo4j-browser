@@ -24,7 +24,7 @@ const csvNewline = '\n'
 const csvEscape = (str: any) => {
   if (!isString(str)) return str
   if (isEmptyString(str)) return '""'
-  if (hasQuotes(str) || hasDelimiterChars(str)) {
+  if (hasQuotes(str) || hasDelimiterChars(str) || hasNewLines(str)) {
     return `"${str.replace(/"/g, '""')}"`
   }
   return str
@@ -33,6 +33,7 @@ const serializeObject = (input: any) =>
   isObject(input) ? JSON.stringify(input) : input
 
 const hasDelimiterChars = (str: any) => str && str.indexOf(csvDelimiter) > -1
+const hasNewLines = (str: any) => str && str.indexOf(csvNewline) > -1
 const hasQuotes = (str: any) => str && str.indexOf('"') > -1
 const isString = (str: any) => typeof str === 'string'
 const isObject = (str: any) => typeof str === 'object' && str !== null
