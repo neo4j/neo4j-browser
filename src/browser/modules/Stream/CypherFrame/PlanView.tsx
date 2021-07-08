@@ -168,7 +168,8 @@ type PlanStatusbarProps = {
 
 const extractMemoizedPlan = memoize(
   result => bolt.extractPlan(result, true),
-  (a: any, b: any) => deepEquals(a[0]?.summary, b[0]?.summary)
+  (newArgs: any[], lastArgs: any[]) =>
+    deepEquals(newArgs[0]?.summary, lastArgs[0]?.summary)
 )
 
 export function PlanStatusbar(props: PlanStatusbarProps) {
