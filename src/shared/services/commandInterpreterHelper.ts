@@ -80,8 +80,7 @@ import {
   InvalidGrassError,
   UnsupportedError,
   DatabaseUnavailableError,
-  DatabaseNotFoundError,
-  BoltConnectionError
+  DatabaseNotFoundError
 } from 'services/exceptions'
 import {
   parseHttpVerbCommand,
@@ -285,16 +284,7 @@ const availableCommands = [
             )
           }
         })
-        .catch(() =>
-          put(
-            frames.add({
-              useDb: getUseDb(store.getState()),
-              ...action,
-              type: 'error',
-              error: BoltConnectionError()
-            })
-          )
-        )
+        .catch(() => undefined)
     }
   },
   {
