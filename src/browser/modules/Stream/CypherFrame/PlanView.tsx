@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component, ReactNode, PureComponent } from 'react'
+import React, { Component } from 'react'
 import memoize from 'memoize-one'
 import { PlanSVG } from './PlanView.styled'
 import { dim } from 'browser-styles/constants'
@@ -166,12 +166,13 @@ type PlanStatusbarProps = {
   setPlanExpand: (p: PlanExpand) => void
 }
 
-export function PlanStatusbar(props: PlanStatusbarProps) {
-  const extractMemoizedPlan = memoize(
-    result => bolt.extractPlan(result, true),
-    (a: any, b: any) => deepEquals(a[0]?.result?.summary, b[0]?.result?.summary)
-  )
+const extractMemoizedPlan = memoize(
+  result => bolt.extractPlan(result, true),
+  (newArgs: any[], lastArgs: any[]) =>
+    deepEquals(newArgs[0]?.summary, lastArgs[0]?.summary)
+)
 
+export function PlanStatusbar(props: PlanStatusbarProps) {
   const { result } = props
   if (!result || !result.summary) return null
 

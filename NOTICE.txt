@@ -1341,6 +1341,9 @@ Third-party licenses
 │  ├─ memoize-one@5.1.1
 │  │  ├─ URL: https://github.com/alexreardon/memoize-one.git
 │  │  └─ VendorName: Alex Reardon
+│  ├─ memoize-one@5.2.1
+│  │  ├─ URL: https://github.com/alexreardon/memoize-one.git
+│  │  └─ VendorName: Alex Reardon
 │  ├─ merge-anything@2.4.4
 │  │  ├─ URL: git+https://github.com/mesqueeb/merge-anything.git
 │  │  ├─ VendorName: Luca Ban - Mesqueeb
