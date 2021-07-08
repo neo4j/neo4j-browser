@@ -376,7 +376,7 @@ const databaseList = (store: any) =>
           return resolve(null)
         }
 
-        const res = bolt.directTransaction(
+        const res = await bolt.directTransaction(
           'SHOW DATABASES',
           {},
           {
