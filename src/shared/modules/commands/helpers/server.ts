@@ -48,7 +48,7 @@ export function handleServerCommand(action: any, put: any, store: any) {
   return {
     ...action,
     type: 'error',
-    error: { message: UnknownCommandError(action.cmd).message }
+    error: UnknownCommandError({ cmd: action.cmd })
   }
 }
 
