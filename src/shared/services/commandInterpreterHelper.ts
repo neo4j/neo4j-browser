@@ -80,7 +80,8 @@ import {
   InvalidGrassError,
   UnsupportedError,
   DatabaseUnavailableError,
-  DatabaseNotFoundError
+  DatabaseNotFoundError,
+  BoltConnectionError
 } from 'services/exceptions'
 import {
   parseHttpVerbCommand,
@@ -260,7 +261,7 @@ const availableCommands = [
     name: 'reset-db',
     match: (cmd: any) => new RegExp(`^${useDbCommand}$`).test(cmd),
     exec(action: any, put: any, store: any) {
-      bolt
+      return bolt
         .hasMultiDbSupport()
         .then(supportsMultiDb => {
           if (supportsMultiDb) {
@@ -284,7 +285,16 @@ const availableCommands = [
             )
           }
         })
-        .catch(() => undefined)
+        .catch(() =>
+          put(
+            frames.add({
+              useDb: getUseDb(store.getState()),
+              ...action,
+              type: 'error',
+              error: BoltConnectionError()
+            })
+          )
+        )
     }
   },
   {
