@@ -219,10 +219,7 @@ const closeConnectionInWorkers = (): void => {
 }
 
 export default {
-  hasMultiDbSupport: async (): Promise<boolean> => {
-    const supportsMultiDb = await boltConnection.hasMultiDbSupport()
-    return supportsMultiDb
-  },
+  hasMultiDbSupport: boltConnection.hasMultiDbSupport,
   useDb: (db: any) => (_useDb = db),
   directConnect: boltConnection.directConnect,
   openConnection,

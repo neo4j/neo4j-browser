@@ -370,12 +370,13 @@ export const serverInfoQuery =
 const databaseList = (store: any) =>
   Rx.Observable.fromPromise(
     new Promise(async (resolve, reject) => {
-      const supportsMultiDb = await bolt.hasMultiDbSupport()
-      if (!supportsMultiDb) {
-        return resolve(null)
-      }
-      bolt
-        .directTransaction(
+      try {
+        const supportsMultiDb = await bolt.hasMultiDbSupport()
+        if (!supportsMultiDb) {
+          return resolve(null)
+        }
+
+        const res = await bolt.directTransaction(
           'SHOW DATABASES',
           {},
           {
@@ -386,8 +387,10 @@ const databaseList = (store: any) =>
             useDb: SYSTEM_DB
           }
         )
-        .then(resolve)
-        .catch(reject)
+        resolve(res)
+      } catch (e) {
+        reject(e)
+      }
     })
   )
     .catch(() => {
@@ -567,7 +570,15 @@ export const serverConfigEpic = (some$: any, store: any) =>
       // Server configuration
       return Rx.Observable.fromPromise(
         new Promise(async (resolve, reject) => {
-          const supportsMultiDb = await bolt.hasMultiDbSupport()
+          let supportsMultiDb: boolean
+          try {
+            supportsMultiDb = await bolt.hasMultiDbSupport()
+          } catch (e) {
+            // if hasMultiDbSupport throws there's no instance of neo4j running anymore
+            onLostConnection(store.dispatch)(e)
+            return reject(e)
+          }
+
           bolt
             .directTransaction(
               `CALL ${
