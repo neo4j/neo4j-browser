@@ -20,7 +20,7 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-import { SysInfoFrame } from './index'
+import { SysInfoFrame } from './SysInfoFrame'
 
 jest.mock(
   'browser/modules/Frame/FrameTemplate',
