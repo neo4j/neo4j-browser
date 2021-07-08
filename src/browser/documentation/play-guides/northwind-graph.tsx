@@ -107,6 +107,11 @@ SET n = row`}
       </figure>
       <figure>
         <pre className="pre-scrollable code runnable">
+          CREATE INDEX ON :Product(productName)
+        </pre>
+      </figure>
+      <figure>
+        <pre className="pre-scrollable code runnable">
           CREATE INDEX ON :Category(categoryID)
         </pre>
       </figure>

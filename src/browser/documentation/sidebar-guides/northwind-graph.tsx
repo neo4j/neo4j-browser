@@ -84,6 +84,9 @@ SET n = row`}
       CREATE INDEX ON :Product(productID)
     </pre>
     <pre className="pre-scrollable code runnable">
+      CREATE INDEX ON :Product(productName)
+    </pre>
+    <pre className="pre-scrollable code runnable">
       CREATE INDEX ON :Category(categoryID)
     </pre>
     <pre className="pre-scrollable code runnable">
