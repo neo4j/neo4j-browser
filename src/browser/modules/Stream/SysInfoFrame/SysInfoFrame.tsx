@@ -87,14 +87,13 @@ export class SysInfoFrame extends Component<
     autoRefresh: false,
     autoRefreshInterval: 20 // seconds
   }
-  helpers = this.props.hasMultiDbSupport ? helpers : legacyHelpers
 
   componentDidMount(): void {
     this.getSysInfo()
   }
 
   componentDidUpdate(
-    _prevProps: SysInfoFrameProps,
+    prevProps: SysInfoFrameProps,
     prevState: SysInfoFrameState
   ): void {
     if (prevState.autoRefresh !== this.state.autoRefresh) {
@@ -107,13 +106,19 @@ export class SysInfoFrame extends Component<
         this.timer && clearInterval(this.timer)
       }
     }
+
+    if (prevProps.useDb !== this.props.useDb) {
+      this.getSysInfo()
+    }
   }
 
   getSysInfo(): void {
     const { bus, isConnected, useDb } = this.props
-    const { sysinfoQuery, responseHandler } = this.helpers
+    const { sysinfoQuery, responseHandler } = this.props.hasMultiDbSupport
+      ? helpers
+      : legacyHelpers
 
-    if (bus && isConnected) {
+    if (bus && isConnected && useDb) {
       this.setState({ lastFetch: Date.now() })
       bus.self(
         CYPHER_REQUEST,
@@ -121,12 +126,8 @@ export class SysInfoFrame extends Component<
           query: sysinfoQuery(useDb),
           queryType: NEO4J_BROWSER_USER_ACTION_QUERY
         },
-        responseHandler(newState => {
-          this.setState(newState)
-        }, useDb)
+        responseHandler(this.setState.bind(this), useDb)
       )
-    } else {
-      this.setState({ error: 'No connection available' })
     }
   }
 

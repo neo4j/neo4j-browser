@@ -20,9 +20,124 @@
 
 import { flattenAttributes } from './sysinfo-utils'
 import { toHumanReadableBytes } from 'services/utils'
+import { string } from 'browser/modules/Editor/cypher/functions'
+
+/*
+The database provides a number of ways to monitor it's health, we use JMX MBeans.
+JMX MBeans is a java extension that allows us to query the database for stats and is enabled by default since neo4j 4.2.2. 
+It's used through the `dbms.queryJmx(<searchprefix>=<metric_name>)` where the searchprefix is 'neo4j.metrics:name'
+ and the metric_name name has a few variations and depends on the following: 
+- If it's a "global" or "database" metric (global meaning the entire dbms in this context)
+- What `metrics.prefix` is set to in neo4j.conf (default is neo4j)
+- If `metrics.namespaces.enabled` is true of false in neo4j.conf (this setting was introduced when multidb was added)
+
+An example - The `store.size.total` metric, which is a "database" metric, with namespaces.enabled=false and prefix unset:
+neo4j.neo4j.store.size.total 
+
+Full query:
+CALL dbms.queryJmx("neo4j.metrics:name=neo4j.neo4j.store.size.total")
+
+When a query is malformed, or the specific metric is filtered out an empty array is returned but no error.
+So to debug a jmx query make sure to read the docs on the exact syntax and check the metrics.filter setting.
+
+See docs for reference on what metrics exist & how to correctly query jmx: https://neo4j.com/docs/operations-manual/current/monitoring/metrics/reference/
+See docs for what metrics are filtered out by default and other for relevant settings: https://neo4j.com/docs/operations-manual/current/reference/configuration-settings/#config_metrics.namespaces.enabled
+*/
+type SysInfoMetrics = {
+  group: string
+  type: MetricType
+  baseMetricNames: string[]
+}
+const sysInfoMetrics: SysInfoMetrics[] = [
+  {
+    group: 'Store Size',
+    type: 'database',
+    baseMetricNames: ['store.size.total']
+  },
+  {
+    group: 'Page cache',
+    type: 'dbms',
+    baseMetricNames: [
+      'page_cache.flushes',
+      'page_cache.evictions',
+      'page_cache.eviction_exceptions',
+      'page_cache.hit_ratio',
+      'page_cache.usage_ratio'
+    ]
+  },
+  {
+    group: 'Primitive Count',
+    type: 'database',
+    baseMetricNames: [
+      'ids_in_use.node',
+      'ids_in_use.property',
+      'ids_in_use.relationship',
+      'ids_in_use.relationship_type'
+    ]
+  },
+  {
+    group: 'Transactions',
+    type: 'database',
+    baseMetricNames: [
+      'transaction.last_committed_tx_id',
+      'transaction.active',
+      'transaction.peak_concurrent',
+      'transaction.started',
+      'transaction.committed'
+    ]
+  }
+]
+
+type MetricType = 'database' | 'dbms'
+type GetFullMetricNameParams = {
+  baseMetricName: string
+  type: MetricType
+  group: string
+}
+class MetricsQueryBuilder {
+  databaseName: string
+  namespacesEnabled: boolean
+  userConfiguredPrefix: string
+
+  constructor(
+    databaseName: string,
+    namespacesEnabled: boolean,
+    userConfiguredPrefix: string
+  ) {
+    this.databaseName = databaseName
+    this.namespacesEnabled = namespacesEnabled
+    this.userConfiguredPrefix = userConfiguredPrefix
+  }
+
+  getFullMetricName = ({
+    baseMetricName,
+    type,
+    group
+  }: GetFullMetricNameParams) => {
+    // Build full metric name of format:
+    // <user-configured-prefix>.[namespace?].[databaseName?].<metric-name>
+    const parts = [this.userConfiguredPrefix]
+    if (this.namespacesEnabled) {
+      parts.push(type)
+    }
+
+    if (type === 'database') {
+      parts.push(this.databaseName)
+    }
+
+    parts.push(baseMetricName)
+    const fullMetricName = parts.join('.')
+
+    return `CALL dbms.queryJmx("neo4j.metrics:name=${fullMetricName}") YIELD name, attributes RETURN "${group}" AS group, name, attributes`
+  }
+
+  getSysInfoQuery = () => {
+    //const sysInfoMetrics.map(({ group, type, baseMetricNames }) => {
+    //})
+  }
+}
 
 const jmxPrefix = 'neo4j.metrics:name='
-
 export const sysinfoQuery = (useDb?: string | null): string => `
 // Store size. Per db
 CALL dbms.queryJmx("${jmxPrefix}neo4j.${useDb}.store.size.total") YIELD name, attributes
