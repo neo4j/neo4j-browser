@@ -27,10 +27,9 @@ import { Database } from 'shared/modules/dbMeta/dbMetaDuck'
 
 const baseProps = {
   databases: [],
-  bus: {} as Bus,
+  bus: ({ self: () => undefined } as unknown) as Bus,
   frame: {} as Frame,
   hasMultiDbSupport: true,
-  isACausalCluster: true,
   isConnected: true,
   isEnterprise: true,
   useDb: 'neo4j'
@@ -48,23 +47,6 @@ jest.mock(
 )
 
 describe('sysinfo component', () => {
-  test('should render causal cluster table', () => {
-    // Given
-    const props = { isACausalCluster: true, isConnected: true }
-
-    // When
-    const { getByText, container } = render(
-      <SysInfoFrame {...baseProps} {...props} />
-    )
-
-    // Then
-    expect(getByText('Causal Cluster Members')).not.toBeNull()
-    expect(
-      container.querySelector(
-        '[data-testid="sysinfo-casual-cluster-members-title"]'
-      )
-    ).not.toBeNull()
-  })
   test('should not render causal cluster table', () => {
     // Given
     const props = { isACausalCluster: false, isConnected: true }
