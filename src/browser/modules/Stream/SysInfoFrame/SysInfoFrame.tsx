@@ -22,7 +22,6 @@ import React, { Component, ReactNode } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import { isACausalCluster } from 'shared/modules/features/featuresDuck'
 import { Database, isEnterprise } from 'shared/modules/dbMeta/dbMetaDuck'
 import {
   isConnected,
@@ -66,7 +65,6 @@ type SysInfoFrameProps = {
   databases: Database[]
   frame: Frame
   hasMultiDbSupport: boolean
-  isACausalCluster: boolean
   isConnected: boolean
   isEnterprise: boolean
   useDb: string | null
@@ -112,12 +110,8 @@ export class SysInfoFrame extends Component<
   }
 
   getSysInfo(): void {
-    const { bus, isConnected, useDb, isACausalCluster } = this.props
-    const {
-      sysinfoQuery,
-      responseHandler,
-      clusterResponseHandler
-    } = this.helpers
+    const { bus, isConnected, useDb } = this.props
+    const { sysinfoQuery, responseHandler } = this.helpers
 
     if (bus && isConnected) {
       this.setState({ lastFetch: Date.now() })
@@ -127,21 +121,10 @@ export class SysInfoFrame extends Component<
           query: sysinfoQuery(useDb),
           queryType: NEO4J_BROWSER_USER_ACTION_QUERY
         },
-        //@ts-ignore
-        responseHandler(this.setState.bind(this), useDb)
+        responseHandler(newState => {
+          this.setState(newState)
+        }, useDb)
       )
-
-      if (isACausalCluster) {
-        bus.self(
-          CYPHER_REQUEST,
-          {
-            query: 'CALL dbms.cluster.overview',
-            queryType: NEO4J_BROWSER_USER_ACTION_QUERY
-          },
-          //@ts-ignore
-          clusterResponseHandler(this.setState.bind(this))
-        )
-      }
     } else {
       this.setState({ error: 'No connection available' })
     }
@@ -213,7 +196,6 @@ export class SysInfoFrame extends Component<
 
 const mapStateToProps = (state: GlobalState) => ({
   hasMultiDbSupport: hasMultiDbSupport(state),
-  isACausalCluster: isACausalCluster(state),
   isEnterprise: isEnterprise(state),
   isConnected: isConnected(state),
   databases: getDatabases(state),

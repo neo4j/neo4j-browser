@@ -132,11 +132,10 @@ export const getRetainEditorHistory = (state: any) => {
   return !isConfigValFalsy(conf)
 }
 
-// These should become enums
 export type Database = {
   name: string
   address: string
-  role: string // "standalone etc"
+  role: string
   requestedStatus: string
   currentStatus: string
   error: string
@@ -144,6 +143,7 @@ export type Database = {
   home?: boolean
   status: string
 }
+
 export const getDatabases = (state: any): Database[] =>
   (state[NAME] || initialState).databases
 export const getActiveDbName = (state: any) =>

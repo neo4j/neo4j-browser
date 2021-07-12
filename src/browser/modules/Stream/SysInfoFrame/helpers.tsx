@@ -18,11 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react'
-import { flattenAttributes, mapSysInfoRecords } from './sysinfo-utils'
-import { toHumanReadableBytes, toKeyString } from 'services/utils'
-import Render from 'browser-components/Render/index'
-import { SysInfoFrameState } from './SysInfoFrame'
+import { flattenAttributes } from './sysinfo-utils'
+import { toHumanReadableBytes } from 'services/utils'
 
 const jmxPrefix = 'neo4j.metrics:name='
 
@@ -81,7 +78,7 @@ RETURN "Transactions" AS group, name, attributes
 `
 
 export const responseHandler = (
-  setState: (state: Partial<SysInfoFrameState>) => void,
+  setState: (newState: any) => void,
   useDb?: string | null
 ) =>
   function(res: any): void {
@@ -180,46 +177,4 @@ export const responseHandler = (
       transactions,
       success: true
     })
-  }
-
-export const clusterResponseHandler = (
-  setState: (state: Partial<SysInfoFrameState>) => void
-) =>
-  function(res: any) {
-    if (!res.success) {
-      setState({ error: 'No causal cluster results', success: false })
-      return
-    }
-    const mappedResult = mapSysInfoRecords(res.result.records)
-    const mappedTableComponents = mappedResult.map((ccRecord: any) => {
-      const httpUrlForMember = ccRecord.addresses.filter((address: any) => {
-        return (
-          !address.includes(window.location.href) &&
-          (window.location.protocol.startsWith('file:')
-            ? address.startsWith('http://')
-            : address.startsWith(window.location.protocol))
-        )
-      })
-      const databases = Object.keys(ccRecord.databases).map(
-        db => `${db}: ${ccRecord.databases[db]}`
-      )
-      return [
-        databases.join(', '),
-        ccRecord.addresses.join(', '),
-        <Render
-          key={toKeyString(httpUrlForMember[0])}
-          if={httpUrlForMember.length !== 0}
-        >
-          <a
-            rel="noopener noreferrer"
-            target="_blank"
-            href={httpUrlForMember[0]}
-          >
-            Open
-          </a>
-        </Render>
-      ]
-    })
-    //@ts-ignore
-    setState({ cc: [{ value: mappedTableComponents }], success: true })
   }
