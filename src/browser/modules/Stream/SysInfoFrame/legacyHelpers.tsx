@@ -29,7 +29,7 @@ import arrayHasItems from 'shared/utils/array-has-items'
 import Render from 'browser-components/Render'
 import {
   SysInfoTableContainer,
-  SysInfoTable,
+  StyledSysInfoTable,
   SysInfoTableEntry
 } from 'browser-components/Tables'
 import { QuestionIcon } from 'browser-components/icons/Icons'
@@ -48,20 +48,20 @@ export const Sysinfo = ({
 }: any) => {
   return (
     <SysInfoTableContainer>
-      <SysInfoTable key="StoreSizes" header="Store Sizes">
+      <StyledSysInfoTable key="StoreSizes" header="Store Sizes">
         {buildTableData(storeSizes)}
-      </SysInfoTable>
-      <SysInfoTable key="IDAllocation" header="ID Allocation">
+      </StyledSysInfoTable>
+      <StyledSysInfoTable key="IDAllocation" header="ID Allocation">
         {buildTableData(idAllocation)}
-      </SysInfoTable>
-      <SysInfoTable key="PageCache" header="Page Cache">
+      </StyledSysInfoTable>
+      <StyledSysInfoTable key="PageCache" header="Page Cache">
         {buildTableData(pageCache)}
-      </SysInfoTable>
-      <SysInfoTable key="Transactionss" header="Transactions">
+      </StyledSysInfoTable>
+      <StyledSysInfoTable key="Transactionss" header="Transactions">
         {buildTableData(transactions)}
-      </SysInfoTable>
+      </StyledSysInfoTable>
       <Render if={isACausalCluster}>
-        <SysInfoTable
+        <StyledSysInfoTable
           key="cc-table"
           header={
             <span data-testid="sysinfo-casual-cluster-members-title">
@@ -76,21 +76,21 @@ export const Sysinfo = ({
             headers={['Roles', 'Addresses', 'Groups', 'Database', 'Actions']}
           />
           {buildTableData(cc)}
-        </SysInfoTable>
+        </StyledSysInfoTable>
       </Render>
       <Render if={arrayHasItems(ha)}>
-        <SysInfoTable key="ha-table" header="High Availability">
+        <StyledSysInfoTable key="ha-table" header="High Availability">
           {buildTableData(ha)}
-        </SysInfoTable>
+        </StyledSysInfoTable>
       </Render>
       <Render if={arrayHasItems(haInstances)}>
-        <SysInfoTable key="cluster-table" header="Cluster" colspan={4}>
+        <StyledSysInfoTable key="cluster-table" header="Cluster" colspan={4}>
           <SysInfoTableEntry
             key="ha-entry"
             headers={['Id', 'Alive', 'Available', 'Is Master']}
           />
           {buildTableData(haInstances)}
-        </SysInfoTable>
+        </StyledSysInfoTable>
       </Render>
     </SysInfoTableContainer>
   )

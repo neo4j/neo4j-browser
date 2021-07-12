@@ -19,20 +19,14 @@
  */
 
 import React from 'react'
-import {
-  buildTableData,
-  buildDatabaseTable,
-  flattenAttributes,
-  mapSysInfoRecords
-} from './sysinfo-utils'
+import { flattenAttributes, mapSysInfoRecords } from './sysinfo-utils'
 import { toHumanReadableBytes, toKeyString } from 'services/utils'
-import { SysInfoTableContainer, SysInfoTable } from 'browser-components/Tables'
 import Render from 'browser-components/Render/index'
-import { StyledInfoMessage } from './../../Stream/styled'
+import { SysInfoFrameState } from './SysInfoFrame'
 
 const jmxPrefix = 'neo4j.metrics:name='
 
-export const sysinfoQuery = (useDb: any) => `
+export const sysinfoQuery = (useDb?: string | null): string => `
 // Store size. Per db
 CALL dbms.queryJmx("${jmxPrefix}neo4j.${useDb}.store.size.total") YIELD name, attributes
 RETURN "Store Size" AS group, name, attributes
@@ -86,62 +80,14 @@ CALL dbms.queryJmx("${jmxPrefix}neo4j.${useDb}.transaction.committed") YIELD nam
 RETURN "Transactions" AS group, name, attributes
 `
 
-export const Sysinfo = ({
-  databases,
-  pageCache,
-  storeSizes,
-  idAllocation,
-  transactions,
-  isEnterpriseEdition
-}: any) => {
-  const mappedDatabases = [
-    {
-      value: databases.map((db: any) => {
-        return [
-          db.name,
-          db.address,
-          db.role,
-          db.status,
-          db.default ? 'true' : '-',
-          db.error
-        ]
-      })
-    }
-  ]
-
-  return isEnterpriseEdition ? (
-    <SysInfoTableContainer>
-      <SysInfoTable key="StoreSize" header="Store Size" colspan={2}>
-        {buildTableData(storeSizes)}
-      </SysInfoTable>
-      <SysInfoTable key="IDAllocation" header="Id Allocation">
-        {buildTableData(idAllocation)}
-      </SysInfoTable>
-      <SysInfoTable key="PageCache" header="Page Cache">
-        {buildTableData(pageCache)}
-      </SysInfoTable>
-      <SysInfoTable key="Transactions" header="Transactions">
-        {buildTableData(transactions)}
-      </SysInfoTable>
-      {buildDatabaseTable(mappedDatabases)}
-    </SysInfoTableContainer>
-  ) : (
-    <div>
-      <StyledInfoMessage>
-        Complete sysinfo is available only in Neo4j Enterprise Edition.
-      </StyledInfoMessage>
-      <SysInfoTableContainer>
-        {buildDatabaseTable(mappedDatabases)}
-      </SysInfoTableContainer>
-    </div>
-  )
-}
-
-export const responseHandler = (setState: any, useDb: any) =>
-  function(res: any): any {
+export const responseHandler = (
+  setState: (state: Partial<SysInfoFrameState>) => void,
+  useDb?: string | null
+) =>
+  function(res: any): void {
     if (!res || !res.result || !res.result.records) {
       setState({ success: false })
-      return null
+      return
     }
     const intoGroups = res.result.records.reduce(
       (grouped: any, record: any) => {
@@ -182,13 +128,13 @@ export const responseHandler = (setState: any, useDb: any) =>
       {
         label: 'Hit Ratio',
         value: cache['neo4j.page_cache.hit_ratio'],
-        mapper: (v: any) => `${(v * 100).toFixed(2)}%`,
+        mapper: (v: number) => `${(v * 100).toFixed(2)}%`,
         optional: true
       },
       {
         label: 'Usage Ratio',
         value: cache['neo4j.page_cache.usage_ratio'],
-        mapper: (v: any) => `${(v * 100).toFixed(2)}%`,
+        mapper: (v: number) => `${(v * 100).toFixed(2)}%`,
         optional: true
       }
     ]
@@ -236,7 +182,9 @@ export const responseHandler = (setState: any, useDb: any) =>
     })
   }
 
-export const clusterResponseHandler = (setState: any) =>
+export const clusterResponseHandler = (
+  setState: (state: Partial<SysInfoFrameState>) => void
+) =>
   function(res: any) {
     if (!res.success) {
       setState({ error: 'No causal cluster results', success: false })
@@ -272,5 +220,6 @@ export const clusterResponseHandler = (setState: any) =>
         </Render>
       ]
     })
+    //@ts-ignore
     setState({ cc: [{ value: mappedTableComponents }], success: true })
   }

@@ -21,6 +21,20 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { SysInfoFrame } from './SysInfoFrame'
+import { Frame } from 'shared/modules/stream/streamDuck'
+import { Bus } from 'suber'
+import { Database } from 'shared/modules/dbMeta/dbMetaDuck'
+
+const baseProps = {
+  databases: [],
+  bus: {} as Bus,
+  frame: {} as Frame,
+  hasMultiDbSupport: true,
+  isACausalCluster: true,
+  isConnected: true,
+  isEnterprise: true,
+  useDb: 'neo4j'
+}
 
 jest.mock(
   'browser/modules/Frame/FrameTemplate',
@@ -39,7 +53,9 @@ describe('sysinfo component', () => {
     const props = { isACausalCluster: true, isConnected: true }
 
     // When
-    const { getByText, container } = render(<SysInfoFrame {...props} />)
+    const { getByText, container } = render(
+      <SysInfoFrame {...baseProps} {...props} />
+    )
 
     // Then
     expect(getByText('Causal Cluster Members')).not.toBeNull()
@@ -54,7 +70,7 @@ describe('sysinfo component', () => {
     const props = { isACausalCluster: false, isConnected: true }
 
     // When
-    const { queryByTestId } = render(<SysInfoFrame {...props} />)
+    const { queryByTestId } = render(<SysInfoFrame {...baseProps} {...props} />)
 
     // Then
     expect(queryByTestId('sysinfo-casual-cluster-members-title')).toBeNull()
@@ -65,7 +81,7 @@ describe('sysinfo component', () => {
     const props = { isConnected: false }
 
     // When
-    const { getByText } = render(<SysInfoFrame {...props} />)
+    const { getByText } = render(<SysInfoFrame {...baseProps} {...props} />)
 
     // Then
     expect(getByText(/No connection available/i)).not.toBeNull()
@@ -76,7 +92,7 @@ describe('sysinfo component', () => {
     const databases = [
       { name: 'neo4j', address: '0.0.0.0:7687', status: 'online' },
       { name: 'system', address: '0.0.0.0:7687', status: 'online' }
-    ]
+    ] as Database[]
     const props = {
       isConnected: true,
       isEnterprise: true,
@@ -85,7 +101,7 @@ describe('sysinfo component', () => {
     }
 
     // When
-    const { queryByText } = render(<SysInfoFrame {...props} />)
+    const { queryByText } = render(<SysInfoFrame {...baseProps} {...props} />)
 
     // Then
     expect(queryByText('Databases')).not.toBeNull()
@@ -106,7 +122,7 @@ describe('sysinfo component', () => {
     const databases = [
       { name: 'neo4j', address: '0.0.0.0:7687', status: 'online' },
       { name: 'system', address: '0.0.0.0:7687', status: 'online' }
-    ]
+    ] as Database[]
     const props = {
       isConnected: true,
       isEnterprise: false,
@@ -115,7 +131,7 @@ describe('sysinfo component', () => {
     }
 
     // When
-    const { queryByText } = render(<SysInfoFrame {...props} />)
+    const { queryByText } = render(<SysInfoFrame {...baseProps} {...props} />)
 
     // Then
     expect(queryByText('Databases')).not.toBeNull()

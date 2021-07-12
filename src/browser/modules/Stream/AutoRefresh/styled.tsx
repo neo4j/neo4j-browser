@@ -19,7 +19,6 @@
  */
 import React from 'react'
 import styled from 'styled-components'
-import { FrameButton } from 'browser-components/buttons'
 import styles from './toggleStyles.css'
 
 export const StatusbarWrapper = styled.div`
@@ -48,17 +47,18 @@ const ToggleLabel = styled.label`
   cursor: pointer;
 `
 
-export const AutoRefreshToggle = (props: any) => {
-  return (
-    <ToggleLabel>
-      AUTO-REFRESH &nbsp;
-      <input
-        type="checkbox"
-        checked={props.checked}
-        onChange={props.onChange}
-        className={styles['toggle-check-input']}
-      />
-      <span className={styles['toggle-check-text']} />
-    </ToggleLabel>
-  )
-}
+export const AutoRefreshToggle = (props: {
+  checked: boolean
+  onChange: React.ChangeEventHandler<HTMLInputElement>
+}): JSX.Element => (
+  <ToggleLabel>
+    AUTO-REFRESH &nbsp;
+    <input
+      type="checkbox"
+      checked={props.checked}
+      onChange={props.onChange}
+      className={styles['toggle-check-input']}
+    />
+    <span className={styles['toggle-check-text']} />
+  </ToggleLabel>
+)

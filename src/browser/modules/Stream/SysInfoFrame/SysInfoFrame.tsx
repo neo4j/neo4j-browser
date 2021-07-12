@@ -18,19 +18,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from 'react'
+import React, { Component, ReactNode } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { isACausalCluster } from 'shared/modules/features/featuresDuck'
-import { isEnterprise } from 'shared/modules/dbMeta/dbMetaDuck'
+import { Database, isEnterprise } from 'shared/modules/dbMeta/dbMetaDuck'
 import {
   isConnected,
   getUseDb
 } from 'shared/modules/connections/connectionsDuck'
 import FrameTemplate from 'browser/modules/Frame/FrameTemplate'
 import FrameError from 'browser/modules/Frame/FrameError'
-import Render from 'browser-components/Render'
 import {
   StyledStatusBar,
   AutoRefreshToggle,
@@ -43,37 +42,63 @@ import { ErrorsView } from '../CypherFrame/ErrorsView'
 import { getDatabases } from 'shared/modules/dbMeta/dbMetaDuck'
 import * as legacyHelpers from './legacyHelpers'
 import * as helpers from './helpers'
+import { SysInfoTable } from './SysInfoTable'
+import { Bus } from 'suber'
+import { GlobalState } from 'shared/globalState'
+import { Frame } from 'shared/modules/stream/streamDuck'
 
-type SysInfoFrameState = any
+export type DatabaseMetric = { label: string; value?: string }
+export type SysInfoFrameState = {
+  lastFetch?: null | number
+  storeSizes: DatabaseMetric[]
+  idAllocation: DatabaseMetric[]
+  pageCache: DatabaseMetric[]
+  transactions: DatabaseMetric[]
+  error: string
+  results: boolean
+  success: boolean
+  autoRefresh: boolean
+  autoRefreshInterval: number
+}
 
-export class SysInfoFrame extends Component<any, SysInfoFrameState> {
-  helpers: any
-  timer: any
-  constructor(props: {}) {
-    super(props)
-    this.state = {
-      lastFetch: null,
-      cc: [],
-      ha: [],
-      haInstances: [],
-      storeSizes: [],
-      idAllocation: [],
-      pageCache: [],
-      transactions: [],
-      error: '',
-      results: false,
-      success: null,
-      autoRefresh: false,
-      autoRefreshInterval: 20 // seconds
-    }
-    this.helpers = this.props.hasMultiDbSupport ? helpers : legacyHelpers
+type SysInfoFrameProps = {
+  bus: Bus
+  databases: Database[]
+  frame: Frame
+  hasMultiDbSupport: boolean
+  isACausalCluster: boolean
+  isConnected: boolean
+  isEnterprise: boolean
+  useDb: string | null
+}
+
+export class SysInfoFrame extends Component<
+  SysInfoFrameProps,
+  SysInfoFrameState
+> {
+  timer: number | null = null
+  state: SysInfoFrameState = {
+    lastFetch: null,
+    storeSizes: [],
+    idAllocation: [],
+    pageCache: [],
+    transactions: [],
+    error: '',
+    results: false,
+    success: false,
+    autoRefresh: false,
+    autoRefreshInterval: 20 // seconds
   }
+  helpers = this.props.hasMultiDbSupport ? helpers : legacyHelpers
 
-  componentDidMount() {
+  componentDidMount(): void {
     this.getSysInfo()
   }
 
-  componentDidUpdate(prevProps: any, prevState: SysInfoFrameState) {
+  componentDidUpdate(
+    _prevProps: SysInfoFrameProps,
+    prevState: SysInfoFrameState
+  ): void {
     if (prevState.autoRefresh !== this.state.autoRefresh) {
       if (this.state.autoRefresh) {
         this.timer = setInterval(
@@ -81,37 +106,40 @@ export class SysInfoFrame extends Component<any, SysInfoFrameState> {
           this.state.autoRefreshInterval * 1000
         )
       } else {
-        clearInterval(this.timer)
+        this.timer && clearInterval(this.timer)
       }
-    }
-    if (
-      this.props.frame &&
-      this.props.frame.ts !== prevProps.frame.ts &&
-      this.props.frame.isRerun
-    ) {
-      this.getSysInfo()
     }
   }
 
-  getSysInfo() {
-    if (this.props.bus && this.props.isConnected) {
+  getSysInfo(): void {
+    const { bus, isConnected, useDb, isACausalCluster } = this.props
+    const {
+      sysinfoQuery,
+      responseHandler,
+      clusterResponseHandler
+    } = this.helpers
+
+    if (bus && isConnected) {
       this.setState({ lastFetch: Date.now() })
-      this.props.bus.self(
+      bus.self(
         CYPHER_REQUEST,
         {
-          query: this.helpers.sysinfoQuery(this.props.useDb),
+          query: sysinfoQuery(useDb),
           queryType: NEO4J_BROWSER_USER_ACTION_QUERY
         },
-        this.helpers.responseHandler(this.setState.bind(this), this.props.useDb)
+        //@ts-ignore
+        responseHandler(this.setState.bind(this), useDb)
       )
-      if (this.props.isACausalCluster) {
-        this.props.bus.self(
+
+      if (isACausalCluster) {
+        bus.self(
           CYPHER_REQUEST,
           {
             query: 'CALL dbms.cluster.overview',
             queryType: NEO4J_BROWSER_USER_ACTION_QUERY
           },
-          this.helpers.clusterResponseHandler(this.setState.bind(this))
+          //@ts-ignore
+          clusterResponseHandler(this.setState.bind(this))
         )
       }
     } else {
@@ -119,52 +147,63 @@ export class SysInfoFrame extends Component<any, SysInfoFrameState> {
     }
   }
 
-  setAutoRefresh(autoRefresh: any) {
-    this.setState({ autoRefresh: autoRefresh })
+  setAutoRefresh(autoRefresh: boolean): void {
+    this.setState({ autoRefresh })
 
     if (autoRefresh) {
       this.getSysInfo()
     }
   }
 
-  render() {
-    const SysinfoComponent = this.helpers.Sysinfo
-    const content = !this.props.isConnected ? (
+  render(): ReactNode {
+    const {
+      autoRefresh,
+      error,
+      idAllocation,
+      lastFetch,
+      pageCache,
+      storeSizes,
+      success,
+      transactions
+    } = this.state
+    const { databases, frame, isConnected, isEnterprise } = this.props
+
+    const content = !isConnected ? (
       <ErrorsView
         result={{ code: 'No connection', message: 'No connection available' }}
       />
     ) : (
-      <SysinfoComponent
-        {...this.state}
-        databases={this.props.databases}
-        isACausalCluster={this.props.isACausalCluster}
-        isEnterpriseEdition={this.props.isEnterprise}
-        useDb={this.props.useDb}
+      <SysInfoTable
+        pageCache={pageCache}
+        storeSizes={storeSizes}
+        idAllocation={idAllocation}
+        transactions={transactions}
+        databases={databases}
+        isEnterpriseEdition={isEnterprise}
       />
     )
 
     return (
       <FrameTemplate
-        header={this.props.frame}
+        header={frame}
         contents={content}
         statusbar={
           <StatusbarWrapper>
-            <Render if={this.state.error}>
-              <FrameError message={this.state.error} />
-            </Render>
-            <Render if={this.state.success}>
+            {error && <FrameError message={error} />}
+            {success && (
               <StyledStatusBar>
-                {this.state.lastFetch &&
-                  `Updated: ${new Date(this.state.lastFetch).toISOString()}`}
-                {this.state.success}
+                {lastFetch && `Updated: ${new Date(lastFetch).toISOString()}`}
+
+                {success}
+
                 <AutoRefreshSpan>
                   <AutoRefreshToggle
-                    checked={this.state.autoRefresh}
-                    onChange={(e: any) => this.setAutoRefresh(e.target.checked)}
+                    checked={autoRefresh}
+                    onChange={e => this.setAutoRefresh(e.target.checked)}
                   />
                 </AutoRefreshSpan>
               </StyledStatusBar>
-            </Render>
+            )}
           </StatusbarWrapper>
         }
       />
@@ -172,15 +211,13 @@ export class SysInfoFrame extends Component<any, SysInfoFrameState> {
   }
 }
 
-const mapStateToProps = (state: any) => {
-  return {
-    hasMultiDbSupport: hasMultiDbSupport(state),
-    isACausalCluster: isACausalCluster(state),
-    isEnterprise: isEnterprise(state),
-    isConnected: isConnected(state),
-    databases: getDatabases(state),
-    useDb: getUseDb(state)
-  }
-}
+const mapStateToProps = (state: GlobalState) => ({
+  hasMultiDbSupport: hasMultiDbSupport(state),
+  isACausalCluster: isACausalCluster(state),
+  isEnterprise: isEnterprise(state),
+  isConnected: isConnected(state),
+  databases: getDatabases(state),
+  useDb: getUseDb(state)
+})
 
 export default withBus(connect(mapStateToProps)(SysInfoFrame))

@@ -54,7 +54,7 @@ export const SysInfoTableContainer = styled.div`
   padding: 30px;
   width: 100%;
 `
-export const SysInfoTable = ({ header, colspan, children }: any) => {
+export const StyledSysInfoTable = ({ header, colspan, children }: any) => {
   return (
     <StyledTable>
       <thead>
