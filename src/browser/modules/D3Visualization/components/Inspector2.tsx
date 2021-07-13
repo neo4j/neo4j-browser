@@ -34,7 +34,10 @@ import {
   StyledInspectorFooterRowListPair,
   StyledInspectorFooterRowListKey,
   StyledInspectorFooterRowListValue,
-  StyledInlineList
+  StyledInlineList,
+  StyledStatusBar2,
+  StyledStatus2,
+  StyledInspectorFooter2
 } from './styled'
 import { GrassEditor } from './GrassEditor'
 import { RowExpandToggleComponent } from './RowExpandToggle'
@@ -49,7 +52,11 @@ const mapItemProperties = (itemProperties: any) =>
       keyA < keyB ? -1 : keyA === keyB ? 0 : 1
     )
     .map((prop: any, i: any) => (
-      <StyledInspectorFooterRowListPair className="pair" key={'prop' + i}>
+      <StyledInspectorFooterRowListPair
+        className="pair"
+        key={'prop' + i}
+        style={{ display: 'flex' }}
+      >
         <StyledInspectorFooterRowListKey className="key">
           {prop.key + ': '}
         </StyledInspectorFooterRowListKey>
@@ -80,7 +87,7 @@ const mapLabels = (graphStyle: any, itemLabels: any) => {
 
 type InspectorComponentState = any
 
-export class InspectorComponent extends Component<
+export class InspectorComponent2 extends Component<
   any,
   InspectorComponentState
 > {
@@ -104,19 +111,29 @@ export class InspectorComponent extends Component<
     let type
     let inspectorContent
 
-    if (this.props.hoveredItem && this.props.hoveredItem.type !== 'canvas') {
-      item = this.props.hoveredItem.item
-      type = this.props.hoveredItem.type
-    } else if (this.props.selectedItem) {
-      item = this.props.selectedItem.item
-      type = this.props.selectedItem.type
-    } else if (this.props.hoveredItem) {
-      // Canvas
+    item = this.props.selectedItem.item
+    type = this.props.selectedItem.type
+
+    if (item && (type === 'node' || type === 'relationship')) {
+      if (
+        this.props.hoveredItem &&
+        (this.props.hoveredItem.type === 'node' ||
+          this.props.hoveredItem.type === 'relationship')
+      ) {
+        item = this.props.hoveredItem.item
+        type = this.props.hoveredItem.type
+      }
+    } else if (!item && this.props.hoveredItem.type === 'canvas') {
       item = this.props.hoveredItem.item
       type = this.props.hoveredItem.type
     }
+
+    // console.log('++item 2', item)
+    // console.log('++type 2', type)
+
     if (item && type) {
       // if (type === 'legend-item') {
+      //   console.log('++legend-item')
       //   inspectorContent = (
       //     <GrassEditor
       //       selectedLabel={item.selectedLabel}
@@ -124,106 +141,116 @@ export class InspectorComponent extends Component<
       //     />
       //   )
       // }
-      if (type === 'status-item') {
-        inspectorContent = (
-          <StyledInspectorFooterStatusMessage className="value">
-            {item}
-          </StyledInspectorFooterStatusMessage>
-        )
-      }
-      if (type === 'context-menu-item') {
+      // if (type === 'status-item') {
+      //   console.log('++status-item')
+      //   inspectorContent = (
+      //     <StyledInspectorFooterStatusMessage className="value">
+      //       {item}
+      //     </StyledInspectorFooterStatusMessage>
+      //   )
+      // }
+      // if (type === 'context-menu-item') {
+      //   console.log('++context-menu-item')
+      //   inspectorContent = (
+      //     <StyledInlineList className="list-inline">
+      //       <StyledTokenContextMenuKey
+      //         key="token"
+      //         className={
+      //           'token' + ' ' + 'token-context-menu-key' + ' ' + 'token-label'
+      //         }
+      //       >
+      //         <SVGInline svg={item.label} width="12px" />
+      //       </StyledTokenContextMenuKey>
+      //       <StyledInspectorFooterRowListPair key="pair" className="pair">
+      //         <StyledInspectorFooterRowListValue className="value">
+      //           {item.content}
+      //         </StyledInspectorFooterRowListValue>
+      //       </StyledInspectorFooterRowListPair>
+      //     </StyledInlineList>
+      //   )
+      // }
+      if (type === 'canvas') {
+        // console.log('++canvas')
+        const description = `Displaying ${numberToUSLocale(
+          item.nodeCount
+        )} nodes, ${numberToUSLocale(item.relationshipCount)} relationships.`
         inspectorContent = (
           <StyledInlineList className="list-inline">
-            <StyledTokenContextMenuKey
-              key="token"
-              className={
-                'token' + ' ' + 'token-context-menu-key' + ' ' + 'token-label'
-              }
-            >
-              <SVGInline svg={item.label} width="12px" />
-            </StyledTokenContextMenuKey>
-            <StyledInspectorFooterRowListPair key="pair" className="pair">
+            <StyledInspectorFooterRowListPair className="pair" key="pair">
               <StyledInspectorFooterRowListValue className="value">
-                {item.content}
+                {this.props.hasTruncatedFields && (
+                  <StyledTruncatedMessage>
+                    <Icon name="warning sign" /> Record fields have been
+                    truncated.&nbsp;
+                  </StyledTruncatedMessage>
+                )}
+                {description}
               </StyledInspectorFooterRowListValue>
             </StyledInspectorFooterRowListPair>
           </StyledInlineList>
         )
+      } else if (type === 'node') {
+        // console.log('++node')
+        inspectorContent = (
+          <StyledInlineList className="list-inline">
+            {mapLabels(this.state.graphStyle, item.labels)}
+            <StyledInspectorFooterRowListPair
+              key="pair"
+              className="pair"
+              style={{ display: 'flex' }}
+            >
+              <StyledInspectorFooterRowListKey className="key">
+                {'<id>:'}
+              </StyledInspectorFooterRowListKey>
+              <StyledInspectorFooterRowListValue className="value">
+                {item.id}
+              </StyledInspectorFooterRowListValue>
+            </StyledInspectorFooterRowListPair>
+            {mapItemProperties(item.properties)}
+          </StyledInlineList>
+        )
+      } else if (type === 'relationship') {
+        // console.log('++relationship')
+        const style = {
+          backgroundColor: this.state.graphStyle
+            .forRelationship(item)
+            .get('color'),
+          color: this.state.graphStyle
+            .forRelationship(item)
+            .get('text-color-internal')
+        }
+        inspectorContent = (
+          <StyledInlineList className="list-inline">
+            <StyledTokenRelationshipType
+              key="token"
+              style={style}
+              className={'token' + ' ' + 'token-relationship-type'}
+            >
+              {item.type}
+            </StyledTokenRelationshipType>
+            <StyledInspectorFooterRowListPair key="pair" className="pair">
+              <StyledInspectorFooterRowListKey className="key">
+                {'<id>:'}
+              </StyledInspectorFooterRowListKey>
+              <StyledInspectorFooterRowListValue className="value">
+                {item.id}
+              </StyledInspectorFooterRowListValue>
+            </StyledInspectorFooterRowListPair>
+            {mapItemProperties(item.properties)}
+          </StyledInlineList>
+        )
       }
-      // else if (type === 'canvas') {
-      //   const description = `Displaying ${numberToUSLocale(
-      //     item.nodeCount
-      //   )} nodes, ${numberToUSLocale(item.relationshipCount)} relationships.`
-      //   inspectorContent = (
-      //     <StyledInlineList className="list-inline">
-      //       <StyledInspectorFooterRowListPair className="pair" key="pair">
-      //         <StyledInspectorFooterRowListValue className="value">
-      //           {this.props.hasTruncatedFields && (
-      //             <StyledTruncatedMessage>
-      //               <Icon name="warning sign" /> Record fields have been
-      //               truncated.&nbsp;
-      //             </StyledTruncatedMessage>
-      //           )}
-      //           {description}
-      //         </StyledInspectorFooterRowListValue>
-      //       </StyledInspectorFooterRowListPair>
-      //     </StyledInlineList>
-      //   )
-      // } else if (type === 'node') {
-      //   inspectorContent = (
-      //     <StyledInlineList className="list-inline">
-      //       {mapLabels(this.state.graphStyle, item.labels)}
-      //       <StyledInspectorFooterRowListPair key="pair" className="pair">
-      //         <StyledInspectorFooterRowListKey className="key">
-      //           {'<id>:'}
-      //         </StyledInspectorFooterRowListKey>
-      //         <StyledInspectorFooterRowListValue className="value">
-      //           {item.id}
-      //         </StyledInspectorFooterRowListValue>
-      //       </StyledInspectorFooterRowListPair>
-      //       {mapItemProperties(item.properties)}
-      //     </StyledInlineList>
-      //   )
-      // } else if (type === 'relationship') {
-      //   const style = {
-      //     backgroundColor: this.state.graphStyle
-      //       .forRelationship(item)
-      //       .get('color'),
-      //     color: this.state.graphStyle
-      //       .forRelationship(item)
-      //       .get('text-color-internal')
-      //   }
-      //   inspectorContent = (
-      //     <StyledInlineList className="list-inline">
-      //       <StyledTokenRelationshipType
-      //         key="token"
-      //         style={style}
-      //         className={'token' + ' ' + 'token-relationship-type'}
-      //       >
-      //         {item.type}
-      //       </StyledTokenRelationshipType>
-      //       <StyledInspectorFooterRowListPair key="pair" className="pair">
-      //         <StyledInspectorFooterRowListKey className="key">
-      //           {'<id>:'}
-      //         </StyledInspectorFooterRowListKey>
-      //         <StyledInspectorFooterRowListValue className="value">
-      //           {item.id}
-      //         </StyledInspectorFooterRowListValue>
-      //       </StyledInspectorFooterRowListPair>
-      //       {mapItemProperties(item.properties)}
-      //     </StyledInlineList>
-      //   )
-      // }
     }
 
     return (
-      <StyledStatusBar className="status-bar">
-        <StyledStatus className="status">
-          <StyledInspectorFooter
+      <StyledStatusBar2 className="status-bar">
+        <StyledStatus2 className="status">
+          <StyledInspectorFooter2
             className={
-              this.state.contracted
-                ? 'contracted inspector-footer'
-                : 'inspector-footer'
+              // this.state.contracted
+              //   ? 'contracted inspector-footer'
+              //   :
+              'inspector-footer'
             }
           >
             <StyledInspectorFooterRow
@@ -231,19 +258,19 @@ export class InspectorComponent extends Component<
               className="inspector-footer-row"
               ref={this.setFooterRowELem.bind(this)}
             >
-              {type === 'canvas' ? null : (
+              {/* {type === 'canvas' ? null : (
                 <RowExpandToggleComponent
                   contracted={this.state.contracted}
                   rowElem={this.footerRowElem}
                   containerHeight={inspectorFooterContractedHeight}
                   onClick={this.toggleExpand.bind(this)}
                 />
-              )}
+              )} */}
               {inspectorContent}
             </StyledInspectorFooterRow>
-          </StyledInspectorFooter>
-        </StyledStatus>
-      </StyledStatusBar>
+          </StyledInspectorFooter2>
+        </StyledStatus2>
+      </StyledStatusBar2>
     )
   }
 

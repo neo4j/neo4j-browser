@@ -300,7 +300,7 @@ export class GrassEditorComponent extends Component<any> {
       return null
     }
     return (
-      <StyledInlineList className="style-picker">
+      <StyledInlineList className="style-picker" style={{ display: 'grid' }}>
         {title}
         {pickers}
       </StyledInlineList>
