@@ -87,10 +87,48 @@ export class SysInfoFrame extends Component<
     autoRefresh: false,
     autoRefreshInterval: 20 // seconds
   }
+  metricsSettings?: {
+    namespacesEnabled: boolean
+    userConfiguredPrefix: string
+    jmxDisabled: boolean
+    metricsDisabled: boolean
+  }
 
   componentDidMount(): void {
-    this.getSysInfo()
+    this.getSettings().then(this.getSysInfo.bind(this))
   }
+
+  getSettings = (): Promise<void> =>
+    new Promise((resolve, reject) => {
+      const { bus, isConnected } = this.props
+
+      if (bus && isConnected) {
+        bus.self(
+          CYPHER_REQUEST,
+          {
+            query: 'CALL dbms.listConfig("metrics.")',
+            queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+          },
+          ({ success, result }) => {
+            if (success) {
+              result.records.forEach((record: any) => {
+                const name = record.get('name')
+                const value = record.get('value')
+                //if(name === "metrics.)
+                //namespacesEnabled
+                //userConfiguredPrefix
+                //console.log(name, value)
+                resolve()
+              })
+            } else {
+              reject()
+            }
+          }
+        )
+      } else {
+        reject()
+      }
+    })
 
   componentDidUpdate(
     prevProps: SysInfoFrameProps,
@@ -123,10 +161,14 @@ export class SysInfoFrame extends Component<
       bus.self(
         CYPHER_REQUEST,
         {
-          query: sysinfoQuery(useDb),
+          query: sysinfoQuery({
+            databaseName: useDb,
+            namespacesEnabled: false,
+            userConfiguredPrefix: 'neo4j'
+          }),
           queryType: NEO4J_BROWSER_USER_ACTION_QUERY
         },
-        responseHandler(this.setState.bind(this), useDb)
+        responseHandler(this.setState.bind(this))
       )
     }
   }

@@ -55,7 +55,7 @@ const sysInfoMetrics: SysInfoMetrics[] = [
     baseMetricNames: ['store.size.total']
   },
   {
-    group: 'Page cache',
+    group: 'Page Cache',
     type: 'dbms',
     baseMetricNames: [
       'page_cache.flushes',
@@ -89,118 +89,76 @@ const sysInfoMetrics: SysInfoMetrics[] = [
 ]
 
 type MetricType = 'database' | 'dbms'
-type GetFullMetricNameParams = {
+type MetricSettings = {
+  databaseName: string
+  namespacesEnabled: boolean
+  userConfiguredPrefix: string
+}
+type ConstructorParams = MetricSettings & {
   baseMetricName: string
   type: MetricType
   group: string
 }
-class MetricsQueryBuilder {
-  databaseName: string
-  namespacesEnabled: boolean
-  userConfiguredPrefix: string
 
-  constructor(
-    databaseName: string,
-    namespacesEnabled: boolean,
-    userConfiguredPrefix: string
-  ) {
-    this.databaseName = databaseName
-    this.namespacesEnabled = namespacesEnabled
-    this.userConfiguredPrefix = userConfiguredPrefix
+function constructQuery({
+  userConfiguredPrefix,
+  namespacesEnabled,
+  databaseName,
+  baseMetricName,
+  type,
+  group
+}: ConstructorParams) {
+  // Build full metric name of format:
+  // <user-configured-prefix>.[namespace?].[databaseName?].<metric-name>
+  const parts = [userConfiguredPrefix]
+  if (namespacesEnabled) {
+    parts.push(type)
   }
 
-  getFullMetricName = ({
-    baseMetricName,
-    type,
-    group
-  }: GetFullMetricNameParams) => {
-    // Build full metric name of format:
-    // <user-configured-prefix>.[namespace?].[databaseName?].<metric-name>
-    const parts = [this.userConfiguredPrefix]
-    if (this.namespacesEnabled) {
-      parts.push(type)
-    }
-
-    if (type === 'database') {
-      parts.push(this.databaseName)
-    }
-
-    parts.push(baseMetricName)
-    const fullMetricName = parts.join('.')
-
-    return `CALL dbms.queryJmx("neo4j.metrics:name=${fullMetricName}") YIELD name, attributes RETURN "${group}" AS group, name, attributes`
+  if (type === 'database') {
+    parts.push(databaseName)
   }
 
-  getSysInfoQuery = () => {
-    //const sysInfoMetrics.map(({ group, type, baseMetricNames }) => {
-    //})
-  }
+  parts.push(baseMetricName)
+  const fullMetricName = parts.join('.')
+
+  return `CALL dbms.queryJmx("neo4j.metrics:name=${fullMetricName}") YIELD name, attributes RETURN "${group}" AS group, name, attributes`
 }
 
-const jmxPrefix = 'neo4j.metrics:name='
-export const sysinfoQuery = (useDb?: string | null): string => `
-// Store size. Per db
-CALL dbms.queryJmx("${jmxPrefix}neo4j.${useDb}.store.size.total") YIELD name, attributes
-RETURN "Store Size" AS group, name, attributes
-UNION ALL
+export function sysinfoQuery({
+  databaseName,
+  namespacesEnabled,
+  userConfiguredPrefix
+}: MetricSettings): string {
+  const queries = sysInfoMetrics
+    .map(({ group, type, baseMetricNames }) =>
+      baseMetricNames.map(baseMetricName =>
+        constructQuery({
+          databaseName,
+          namespacesEnabled,
+          userConfiguredPrefix,
+          baseMetricName,
+          group,
+          type
+        })
+      )
+    )
+    .reduce(flatten, [])
+  const joinedToBigQuery = queries.join(' UNION ALL\n') + ';'
+  return joinedToBigQuery
+}
 
-// Page cache. Per DBMS.
-CALL dbms.queryJmx("${jmxPrefix}neo4j.page_cache.flushes") YIELD name, attributes
-RETURN "Page Cache" AS group, name, attributes
-UNION ALL
-CALL dbms.queryJmx("${jmxPrefix}neo4j.page_cache.evictions") YIELD name, attributes
-RETURN "Page Cache" AS group, name, attributes
-UNION ALL
-CALL dbms.queryJmx("${jmxPrefix}neo4j.page_cache.eviction_exceptions") YIELD name, attributes
-RETURN "Page Cache" AS group, name, attributes
-UNION ALL
-CALL dbms.queryJmx("${jmxPrefix}neo4j.page_cache.hit_ratio") YIELD name, attributes
-RETURN "Page Cache" AS group, name, attributes
-UNION ALL
-CALL dbms.queryJmx("${jmxPrefix}neo4j.page_cache.usage_ratio") YIELD name, attributes
-RETURN "Page Cache" AS group, name, attributes
-UNION ALL
+function flatten<T>(acc: T[], curr: T[]): T[] {
+  return acc.concat(curr)
+}
 
-// Primitive counts. Per db.
-CALL dbms.queryJmx("${jmxPrefix}neo4j.${useDb}.ids_in_use.node") YIELD name, attributes
-RETURN "Primitive Count" AS group, name, attributes
-UNION ALL
-CALL dbms.queryJmx("${jmxPrefix}neo4j.${useDb}.ids_in_use.property") YIELD name, attributes
-RETURN "Primitive Count" AS group, name, attributes
-UNION ALL
-CALL dbms.queryJmx("${jmxPrefix}neo4j.${useDb}.ids_in_use.relationship") YIELD name, attributes
-RETURN "Primitive Count" AS group, name, attributes
-UNION ALL
-CALL dbms.queryJmx("${jmxPrefix}neo4j.${useDb}.ids_in_use.relationship_type") YIELD name, attributes
-RETURN "Primitive Count" AS group, name, attributes
-UNION ALL
-
-// Transactions. Per db.
-CALL dbms.queryJmx("${jmxPrefix}neo4j.${useDb}.transaction.last_committed_tx_id") YIELD name, attributes
-RETURN "Transactions" AS group, name, attributes
-UNION ALL
-CALL dbms.queryJmx("${jmxPrefix}neo4j.${useDb}.transaction.active") YIELD name, attributes
-RETURN "Transactions" AS group, name, attributes
-UNION ALL
-CALL dbms.queryJmx("${jmxPrefix}neo4j.${useDb}.transaction.peak_concurrent") YIELD name, attributes
-RETURN "Transactions" AS group, name, attributes
-UNION ALL
-CALL dbms.queryJmx("${jmxPrefix}neo4j.${useDb}.transaction.started") YIELD name, attributes
-RETURN "Transactions" AS group, name, attributes
-UNION ALL
-CALL dbms.queryJmx("${jmxPrefix}neo4j.${useDb}.transaction.committed") YIELD name, attributes
-RETURN "Transactions" AS group, name, attributes
-`
-
-export const responseHandler = (
-  setState: (newState: any) => void,
-  useDb?: string | null
-) =>
+export const responseHandler = (setState: (newState: any) => void) =>
   function(res: any): void {
     if (!res || !res.result || !res.result.records) {
       setState({ success: false })
       return
     }
+
     const intoGroups = res.result.records.reduce(
       (grouped: any, record: any) => {
         if (!grouped.hasOwnProperty(record.get('group'))) {
@@ -210,7 +168,10 @@ export const responseHandler = (
           }
         }
         const mappedRecord = {
-          name: record.get('name').replace(jmxPrefix, ''),
+          name: record
+            .get('name')
+            .split('.')
+            .pop(),
           value: (
             record.get('attributes').Count || record.get('attributes').Value
           ).value
@@ -226,26 +187,27 @@ export const responseHandler = (
     const storeSizes = [
       {
         label: 'Size',
-        value: toHumanReadableBytes(size[`neo4j.${useDb}.store.size.total`])
+        value: toHumanReadableBytes(size.total)
       }
     ]
+
     const cache = flattenAttributes(intoGroups['Page Cache'])
     const pageCache = [
-      { label: 'Flushes', value: cache['neo4j.page_cache.flushes'] },
-      { label: 'Evictions', value: cache['neo4j.page_cache.evictions'] },
+      { label: 'Flushes', value: cache.flushes },
+      { label: 'Evictions', value: cache.evictions },
       {
         label: 'Eviction Exceptions',
-        value: cache['neo4j.page_cache.eviction_exceptions']
+        value: cache.eviction_exceptions
       },
       {
         label: 'Hit Ratio',
-        value: cache['neo4j.page_cache.hit_ratio'],
+        value: cache.hit_ratio,
         mapper: (v: number) => `${(v * 100).toFixed(2)}%`,
         optional: true
       },
       {
         label: 'Usage Ratio',
-        value: cache['neo4j.page_cache.usage_ratio'],
+        value: cache.usage_ratio,
         mapper: (v: number) => `${(v * 100).toFixed(2)}%`,
         optional: true
       }
@@ -254,18 +216,18 @@ export const responseHandler = (
     // Primitive count
     const primitive = flattenAttributes(intoGroups['Primitive Count'])
     const idAllocation = [
-      { label: 'Node ID', value: primitive[`neo4j.${useDb}.ids_in_use.node`] },
+      { label: 'Node ID', value: primitive.node },
       {
         label: 'Property ID',
-        value: primitive[`neo4j.${useDb}.ids_in_use.property`]
+        value: primitive.property
       },
       {
         label: 'Relationship ID',
-        value: primitive[`neo4j.${useDb}.ids_in_use.relationship`]
+        value: primitive.relationship
       },
       {
         label: 'Relationship Type ID',
-        value: primitive[`neo4j.${useDb}.ids_in_use.relationship_type`]
+        value: primitive.relationship_type
       }
     ]
 
@@ -274,15 +236,15 @@ export const responseHandler = (
     const transactions = [
       {
         label: 'Last Tx Id',
-        value: tx[`neo4j.${useDb}.transaction.last_committed_tx_id`]
+        value: tx.last_committed_tx_id
       },
-      { label: 'Current', value: tx[`neo4j.${useDb}.transaction.active`] },
+      { label: 'Current', value: tx.active },
       {
         label: 'Peak',
-        value: tx[`neo4j.${useDb}.transaction.peak_concurrent`]
+        value: tx.peak_concurrent
       },
-      { label: 'Opened', value: tx[`neo4j.${useDb}.transaction.started`] },
-      { label: 'Committed', value: tx[`neo4j.${useDb}.transaction.committed`] }
+      { label: 'Opened', value: tx.started },
+      { label: 'Committed', value: tx.committed }
     ]
 
     setState({

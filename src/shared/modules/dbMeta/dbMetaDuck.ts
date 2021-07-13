@@ -259,7 +259,10 @@ export const initialState = {
     'browser.allow_outgoing_connections': false,
     'browser.remote_content_hostname_allowlist': 'guides.neo4j.com, localhost',
     'browser.retain_connection_credentials': false,
-    'browser.retain_editor_history': false
+    'browser.retain_editor_history': false,
+    'metrics.enabled': true,
+    'metrics.prefix': 'neo4j',
+    'metrics.namespaces.enabled': false
   }
 }
 

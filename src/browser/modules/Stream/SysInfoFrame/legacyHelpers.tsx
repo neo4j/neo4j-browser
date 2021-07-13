@@ -19,12 +19,8 @@
  */
 
 import React from 'react'
-import {
-  getTableDataFromRecords,
-  mapLegacySysInfoRecords,
-  buildTableData
-} from './sysinfo-utils'
-import { toHumanReadableBytes, toKeyString } from 'services/utils'
+import { getTableDataFromRecords, buildTableData } from './sysinfo-utils'
+import { toHumanReadableBytes } from 'services/utils'
 import arrayHasItems from 'shared/utils/array-has-items'
 import Render from 'browser-components/Render'
 import {
