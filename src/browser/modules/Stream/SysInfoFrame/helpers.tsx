@@ -20,7 +20,6 @@
 
 import { flattenAttributes } from './sysinfo-utils'
 import { toHumanReadableBytes } from 'services/utils'
-import { string } from 'browser/modules/Editor/cypher/functions'
 
 /*
 The database provides a number of ways to monitor it's health, we use JMX MBeans.
@@ -58,11 +57,10 @@ const sysInfoMetrics: SysInfoMetrics[] = [
     group: 'Page Cache',
     type: 'dbms',
     baseMetricNames: [
-      'page_cache.flushes',
-      'page_cache.evictions',
-      'page_cache.eviction_exceptions',
+      'page_cache.hits',
       'page_cache.hit_ratio',
-      'page_cache.usage_ratio'
+      'page_cache.usage_ratio',
+      'page_cache.page_faults'
     ]
   },
   {
@@ -80,10 +78,11 @@ const sysInfoMetrics: SysInfoMetrics[] = [
     type: 'database',
     baseMetricNames: [
       'transaction.last_committed_tx_id',
-      'transaction.active',
       'transaction.peak_concurrent',
-      'transaction.started',
-      'transaction.committed'
+      'transaction.active_read',
+      'transaction.active_write',
+      'transaction.committed_read',
+      'transaction.committed_write'
     ]
   }
 ]
@@ -193,12 +192,8 @@ export const responseHandler = (setState: (newState: any) => void) =>
 
     const cache = flattenAttributes(intoGroups['Page Cache'])
     const pageCache = [
-      { label: 'Flushes', value: cache.flushes },
-      { label: 'Evictions', value: cache.evictions },
-      {
-        label: 'Eviction Exceptions',
-        value: cache.eviction_exceptions
-      },
+      { label: 'Hits', value: cache.hits },
+      { label: 'Page Faults', value: cache.page_faults },
       {
         label: 'Hit Ratio',
         value: cache.hit_ratio,
@@ -238,13 +233,14 @@ export const responseHandler = (setState: (newState: any) => void) =>
         label: 'Last Tx Id',
         value: tx.last_committed_tx_id
       },
-      { label: 'Current', value: tx.active },
+      { label: 'Current Read', value: tx.active_read },
+      { label: 'Current Write', value: tx.active_write },
       {
-        label: 'Peak',
+        label: 'Peak Transactions',
         value: tx.peak_concurrent
       },
-      { label: 'Opened', value: tx.started },
-      { label: 'Committed', value: tx.committed }
+      { label: 'Committed Read', value: tx.committed_read },
+      { label: 'Committed Write', value: tx.committed_write }
     ]
 
     setState({
