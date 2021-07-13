@@ -115,7 +115,7 @@ export function App(props: any) {
       props.bus.take(
         METRICS_EVENT,
         ({ category, label, data }: MetricsData) => {
-          if (!isRunningE2ETest) {
+          if (!isRunningE2ETest()) {
             eventMetricsCallback &&
               eventMetricsCallback.current &&
               eventMetricsCallback.current({ category, label, data })

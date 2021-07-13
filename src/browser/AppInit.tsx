@@ -169,7 +169,7 @@ export function setupSentry(): void {
       beforeSend: event => {
         const allowsOutgoing = shouldAllowOutgoingConnections(store.getState())
 
-        if (allowsOutgoing && !isRunningE2ETest) {
+        if (allowsOutgoing && !isRunningE2ETest()) {
           return scrubQueryParamsAndUrl(event)
         } else {
           return null
