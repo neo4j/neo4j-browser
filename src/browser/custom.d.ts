@@ -11,6 +11,10 @@ declare module 'ascii-data-table'
 declare module 'react-timeago'
 declare module '@neo4j/browser-lambda-parser'
 
+interface Window {
+  Cypress?: unknown
+}
+
 declare module 'react-suber' {
   interface BusProps {
     bus: Bus

@@ -46,7 +46,7 @@ import { CaptureConsole } from '@sentry/integrations'
 import { createReduxMiddleware, getAll, applyKeys } from 'services/localstorage'
 import { GlobalState } from 'shared/globalState'
 import { APP_START } from 'shared/modules/app/appDuck'
-import { detectRuntimeEnv } from 'services/utils'
+import { detectRuntimeEnv, isRunningE2ETest } from 'services/utils'
 import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
 import { version } from 'project-root/package.json'
 import { shouldAllowOutgoingConnections } from 'shared/modules/dbMeta/dbMetaDuck'
@@ -166,10 +166,15 @@ export function setupSentry(): void {
           return 0.2
         }
       },
-      beforeSend: event =>
-        shouldAllowOutgoingConnections(store.getState())
-          ? scrubQueryParamsAndUrl(event)
-          : null,
+      beforeSend: event => {
+        const allowsOutgoing = shouldAllowOutgoingConnections(store.getState())
+
+        if (allowsOutgoing && !isRunningE2ETest()) {
+          return scrubQueryParamsAndUrl(event)
+        } else {
+          return null
+        }
+      },
       environment: 'unset'
     })
     Sentry.setUser({ id: getUuid(store.getState()) })
