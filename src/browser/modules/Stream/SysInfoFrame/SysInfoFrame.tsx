@@ -116,7 +116,7 @@ export class SysInfoFrame extends Component<
               result.records.forEach((record: any) => {
                 const name = record.get('name')
                 const value = record.get('value')
-                //if(name === "metrics.)
+                //if(name === "metrics.prefix")
                 //namespacesEnabled
                 //userConfiguredPrefix
                 //console.log(name, value)

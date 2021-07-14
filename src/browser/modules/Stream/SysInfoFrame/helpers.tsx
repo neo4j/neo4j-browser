@@ -186,7 +186,7 @@ export const responseHandler = (setState: (newState: any) => void) =>
     const storeSizes = [
       {
         label: 'Size',
-        value: toHumanReadableBytes(size.total)
+        value: size.total ? toHumanReadableBytes(size.total) : size.total
       }
     ]
 
@@ -243,9 +243,12 @@ export const responseHandler = (setState: (newState: any) => void) =>
       { label: 'Committed Write', value: tx.committed_write }
     ]
 
-    const valuesMissing = Object.values(intoGroups).some((group: any) =>
-      group.attributes.some((item: any) => !!item.value)
-    )
+    const valuesMissing = [
+      storeSizes,
+      pageCache,
+      idAllocation,
+      transactions
+    ].some(type => type.some((item: any) => !item.value))
 
     setState({
       pageCache,
