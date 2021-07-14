@@ -109,7 +109,7 @@ function constructQuery({
 }: ConstructorParams) {
   // Build full metric name of format:
   // <user-configured-prefix>.[namespace?].[databaseName?].<metric-name>
-  const parts = [userConfiguredPrefix]
+  const parts = []
   if (namespacesEnabled) {
     parts.push(type)
   }
@@ -119,9 +119,9 @@ function constructQuery({
   }
 
   parts.push(baseMetricName)
-  const fullMetricName = parts.join('.')
+  const metricName = parts.join('.')
 
-  return `CALL dbms.queryJmx("neo4j.metrics:name=${fullMetricName}") YIELD name, attributes RETURN "${group}" AS group, name, attributes`
+  return `CALL dbms.queryJmx("${userConfiguredPrefix}.metrics:name=${userConfiguredPrefix}.${metricName}") YIELD name, attributes RETURN "${group}" AS group, name, attributes`
 }
 
 export function sysinfoQuery({

@@ -28,7 +28,6 @@ import {
   getUseDb
 } from 'shared/modules/connections/connectionsDuck'
 import FrameTemplate from 'browser/modules/Frame/FrameTemplate'
-import FrameError from 'browser/modules/Frame/FrameError'
 import {
   StyledStatusBar,
   AutoRefreshToggle,
@@ -60,6 +59,8 @@ export type SysInfoFrameState = {
   success: boolean
   autoRefresh: boolean
   autoRefreshInterval: number
+  namespacesEnabled: boolean
+  userConfiguredPrefix: string
 }
 
 type SysInfoFrameProps = {
@@ -87,13 +88,9 @@ export class SysInfoFrame extends Component<
     results: false,
     success: false,
     autoRefresh: false,
-    autoRefreshInterval: 20 // seconds
-  }
-  metricsSettings?: {
-    namespacesEnabled: boolean
-    userConfiguredPrefix: string
-    jmxDisabled: boolean
-    metricsDisabled: boolean
+    autoRefreshInterval: 20, // seconds
+    namespacesEnabled: false,
+    userConfiguredPrefix: 'neo4j'
   }
 
   componentDidMount(): void {
@@ -113,15 +110,25 @@ export class SysInfoFrame extends Component<
           },
           ({ success, result }) => {
             if (success) {
-              result.records.forEach((record: any) => {
-                const name = record.get('name')
-                const value = record.get('value')
-                //if(name === "metrics.prefix")
-                //namespacesEnabled
-                //userConfiguredPrefix
-                //console.log(name, value)
-                resolve()
-              })
+              const newState = result.records.reduce(
+                (newState: Partial<SysInfoFrameState>, record: any) => {
+                  const name = record.get('name')
+                  const value = record.get('value')
+                  if (name === 'metrics.prefix') {
+                    return { ...newState, userConfiguredPrefix: value }
+                  }
+
+                  if (name === 'metrics.namespaces.enabled') {
+                    return { ...newState, namespacesEnabled: value === 'true' }
+                  }
+
+                  return newState
+                },
+                {}
+              )
+
+              this.setState(newState)
+              resolve()
             } else {
               this.setState({ success: false })
               reject()
@@ -155,6 +162,7 @@ export class SysInfoFrame extends Component<
   }
 
   getSysInfo(): void {
+    const { userConfiguredPrefix, namespacesEnabled } = this.state
     const { bus, isConnected, useDb } = this.props
     const { sysinfoQuery, responseHandler } = this.props.hasMultiDbSupport
       ? helpers
@@ -167,8 +175,8 @@ export class SysInfoFrame extends Component<
         {
           query: sysinfoQuery({
             databaseName: useDb,
-            namespacesEnabled: false,
-            userConfiguredPrefix: 'neo4j'
+            namespacesEnabled,
+            userConfiguredPrefix
           }),
           queryType: NEO4J_BROWSER_USER_ACTION_QUERY
         },
