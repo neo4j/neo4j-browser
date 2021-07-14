@@ -123,11 +123,13 @@ export class SysInfoFrame extends Component<
                 resolve()
               })
             } else {
+              this.setState({ success: false })
               reject()
             }
           }
         )
       } else {
+        this.setState({ success: false })
         reject()
       }
     })
@@ -196,20 +198,21 @@ export class SysInfoFrame extends Component<
     } = this.state
     const { databases, frame, isConnected, isEnterprise } = this.props
 
-    const content = !isConnected ? (
-      <ErrorsView
-        result={{ code: 'No connection', message: 'No connection available' }}
-      />
-    ) : (
-      <SysInfoTable
-        pageCache={pageCache}
-        storeSizes={storeSizes}
-        idAllocation={idAllocation}
-        transactions={transactions}
-        databases={databases}
-        isEnterpriseEdition={isEnterprise}
-      />
-    )
+    const content =
+      !isConnected && success ? (
+        <ErrorsView
+          result={{ code: 'No connection', message: 'No connection available' }}
+        />
+      ) : (
+        <SysInfoTable
+          pageCache={pageCache}
+          storeSizes={storeSizes}
+          idAllocation={idAllocation}
+          transactions={transactions}
+          databases={databases}
+          isEnterpriseEdition={isEnterprise}
+        />
+      )
 
     return (
       <FrameTemplate
