@@ -243,11 +243,18 @@ export const responseHandler = (setState: (newState: any) => void) =>
       { label: 'Committed Write', value: tx.committed_write }
     ]
 
+    const valuesMissing = Object.values(intoGroups).some((group: any) =>
+      group.attributes.some((item: any) => !!item.value)
+    )
+
     setState({
       pageCache,
       storeSizes,
       idAllocation,
       transactions,
-      success: true
+      success: true,
+      errorMessage: valuesMissing
+        ? 'Some metrics missing, check neo4j.conf'
+        : null
     })
   }

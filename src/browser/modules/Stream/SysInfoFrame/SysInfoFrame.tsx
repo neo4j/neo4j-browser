@@ -45,6 +45,8 @@ import { SysInfoTable } from './SysInfoTable'
 import { Bus } from 'suber'
 import { GlobalState } from 'shared/globalState'
 import { Frame } from 'shared/modules/stream/streamDuck'
+import { ExclamationTriangleIcon } from '../../../components/icons/Icons'
+import styled from 'styled-components'
 
 export type DatabaseMetric = { label: string; value?: string }
 export type SysInfoFrameState = {
@@ -53,7 +55,7 @@ export type SysInfoFrameState = {
   idAllocation: DatabaseMetric[]
   pageCache: DatabaseMetric[]
   transactions: DatabaseMetric[]
-  error: string
+  errorMessage: string | null
   results: boolean
   success: boolean
   autoRefresh: boolean
@@ -81,7 +83,7 @@ export class SysInfoFrame extends Component<
     idAllocation: [],
     pageCache: [],
     transactions: [],
-    error: '',
+    errorMessage: null,
     results: false,
     success: false,
     autoRefresh: false,
@@ -184,7 +186,7 @@ export class SysInfoFrame extends Component<
   render(): ReactNode {
     const {
       autoRefresh,
-      error,
+      errorMessage,
       idAllocation,
       lastFetch,
       pageCache,
@@ -215,27 +217,31 @@ export class SysInfoFrame extends Component<
         contents={content}
         statusbar={
           <StatusbarWrapper>
-            {error && <FrameError message={error} />}
-            {success && (
-              <StyledStatusBar>
-                {lastFetch && `Updated: ${new Date(lastFetch).toISOString()}`}
-
-                {success}
-
-                <AutoRefreshSpan>
-                  <AutoRefreshToggle
-                    checked={autoRefresh}
-                    onChange={e => this.setAutoRefresh(e.target.checked)}
-                  />
-                </AutoRefreshSpan>
-              </StyledStatusBar>
-            )}
+            <StyledStatusBar>
+              {lastFetch && `Updated: ${new Date(lastFetch).toISOString()}`}
+              {errorMessage && (
+                <InlineError>
+                  <ExclamationTriangleIcon /> {errorMessage}
+                </InlineError>
+              )}
+              <AutoRefreshSpan>
+                <AutoRefreshToggle
+                  checked={autoRefresh}
+                  onChange={e => this.setAutoRefresh(e.target.checked)}
+                />
+              </AutoRefreshSpan>
+            </StyledStatusBar>
           </StatusbarWrapper>
         }
       />
     )
   }
 }
+
+const InlineError = styled.span`
+  color: ${props => props.theme.error};
+  padding-left: 15px;
+`
 
 const mapStateToProps = (state: GlobalState) => ({
   hasMultiDbSupport: hasMultiDbSupport(state),
