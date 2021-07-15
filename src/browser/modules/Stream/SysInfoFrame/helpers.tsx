@@ -24,17 +24,23 @@ import { toHumanReadableBytes } from 'services/utils'
 /*
 The database provides a number of ways to monitor it's health, we use JMX MBeans.
 JMX MBeans is a java extension that allows us to query the database for stats and is enabled by default since neo4j 4.2.2. 
-It's used through the `dbms.queryJmx(<searchprefix>=<metric_name>)` where the searchprefix is 'neo4j.metrics:name'
+It's used through the `dbms.queryJmx(<searchprefix>=<metric_name>)` where the searchprefix is '<userDefinedPrefix>.metrics:name'
  and the metric_name name has a few variations and depends on the following: 
 - If it's a "global" or "database" metric (global meaning the entire dbms in this context)
 - What `metrics.prefix` is set to in neo4j.conf (default is neo4j)
 - If `metrics.namespaces.enabled` is true of false in neo4j.conf (this setting was introduced when multidb was added)
 
-An example - The `store.size.total` metric, which is a "database" metric, with namespaces.enabled=false and prefix unset:
-neo4j.neo4j.store.size.total 
+An example using the `store.size.total` metric with the following config: 
+- which is a "database" metric, 
+- with namespaces.enabled=false, 
+- against a database called foo and 
+- metrics.prefix=abc
 
-Full query:
-CALL dbms.queryJmx("neo4j.metrics:name=neo4j.neo4j.store.size.total")
+The metric name will be :
+abc.foo.store.size.total 
+
+And the full query:
+CALL dbms.queryJmx("abc.metrics:name=abc.foo.store.size.total")
 
 When a query is malformed, or the specific metric is filtered out an empty array is returned but no error.
 So to debug a jmx query make sure to read the docs on the exact syntax and check the metrics.filter setting.
@@ -154,6 +160,7 @@ function flatten<T>(acc: T[], curr: T[]): T[] {
 export const responseHandler = (setState: (newState: any) => void) =>
   function(res: any): void {
     if (!res || !res.result || !res.result.records) {
+      setState({ errorMessage: 'Failed to call dbms.queryJmx' })
       return
     }
 
@@ -247,7 +254,9 @@ export const responseHandler = (setState: (newState: any) => void) =>
       pageCache,
       idAllocation,
       transactions
-    ].some(type => type.some((item: any) => !item.value))
+    ].some(metricType =>
+      metricType.some((item: any) => item.value === undefined)
+    )
 
     setState({
       pageCache,

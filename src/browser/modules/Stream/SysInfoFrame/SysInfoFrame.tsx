@@ -45,7 +45,7 @@ import { Bus } from 'suber'
 import { GlobalState } from 'shared/globalState'
 import { Frame } from 'shared/modules/stream/streamDuck'
 import { ExclamationTriangleIcon } from '../../../components/icons/Icons'
-import styled from 'styled-components'
+import { InlineError } from './styled'
 
 export type DatabaseMetric = { label: string; value?: string }
 export type SysInfoFrameState = {
@@ -93,8 +93,8 @@ export class SysInfoFrame extends Component<
 
   componentDidMount(): void {
     this.getSettings()
-      .then(this.getSysInfo.bind(this))
-      .catch(() => this.setState({ errorMessage: "Couldn't fetch settings" }))
+      .then(this.getSysInfo)
+      .catch(errorMessage => this.setState({ errorMessage }))
   }
 
   getSettings = (): Promise<void> =>
@@ -130,12 +130,12 @@ export class SysInfoFrame extends Component<
               this.setState(newState)
               resolve()
             } else {
-              reject()
+              reject('Failed to run listConfig')
             }
           }
         )
       } else {
-        reject()
+        reject('Connection error')
       }
     })
 
@@ -146,7 +146,7 @@ export class SysInfoFrame extends Component<
     if (prevState.autoRefresh !== this.state.autoRefresh) {
       if (this.state.autoRefresh) {
         this.timer = setInterval(
-          this.getSysInfo.bind(this),
+          this.getSysInfo,
           this.state.autoRefreshInterval * 1000
         )
       } else {
@@ -159,7 +159,7 @@ export class SysInfoFrame extends Component<
     }
   }
 
-  getSysInfo(): void {
+  getSysInfo = (): void => {
     const { userConfiguredPrefix, namespacesEnabled } = this.state
     const { bus, isConnected, useDb } = this.props
     const { sysinfoQuery, responseHandler } = this.props.hasMultiDbSupport
@@ -183,7 +183,7 @@ export class SysInfoFrame extends Component<
     }
   }
 
-  setAutoRefresh(autoRefresh: boolean): void {
+  setAutoRefresh = (autoRefresh: boolean): void => {
     this.setState({ autoRefresh })
 
     if (autoRefresh) {
@@ -244,11 +244,6 @@ export class SysInfoFrame extends Component<
     )
   }
 }
-
-const InlineError = styled.span`
-  color: ${props => props.theme.error};
-  padding-left: 15px;
-`
 
 const mapStateToProps = (state: GlobalState) => ({
   hasMultiDbSupport: hasMultiDbSupport(state),
