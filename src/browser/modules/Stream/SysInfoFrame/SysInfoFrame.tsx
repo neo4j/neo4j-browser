@@ -28,7 +28,6 @@ import {
   getUseDb
 } from 'shared/modules/connections/connectionsDuck'
 import FrameTemplate from 'browser/modules/Frame/FrameTemplate'
-import FrameError from 'browser/modules/Frame/FrameError'
 import {
   StyledStatusBar,
   AutoRefreshToggle,
@@ -45,6 +44,8 @@ import { SysInfoTable } from './SysInfoTable'
 import { Bus } from 'suber'
 import { GlobalState } from 'shared/globalState'
 import { Frame } from 'shared/modules/stream/streamDuck'
+import { ExclamationTriangleIcon } from '../../../components/icons/Icons'
+import { InlineError } from './styled'
 
 export type DatabaseMetric = { label: string; value?: string }
 export type SysInfoFrameState = {
@@ -53,11 +54,12 @@ export type SysInfoFrameState = {
   idAllocation: DatabaseMetric[]
   pageCache: DatabaseMetric[]
   transactions: DatabaseMetric[]
-  error: string
+  errorMessage: string | null
   results: boolean
-  success: boolean
   autoRefresh: boolean
   autoRefreshInterval: number
+  namespacesEnabled: boolean
+  userConfiguredPrefix: string
 }
 
 type SysInfoFrameProps = {
@@ -81,56 +83,107 @@ export class SysInfoFrame extends Component<
     idAllocation: [],
     pageCache: [],
     transactions: [],
-    error: '',
+    errorMessage: null,
     results: false,
-    success: false,
     autoRefresh: false,
-    autoRefreshInterval: 20 // seconds
+    autoRefreshInterval: 20, // seconds
+    namespacesEnabled: false,
+    userConfiguredPrefix: 'neo4j'
   }
-  helpers = this.props.hasMultiDbSupport ? helpers : legacyHelpers
 
   componentDidMount(): void {
-    this.getSysInfo()
+    this.getSettings()
+      .then(this.getSysInfo)
+      .catch(errorMessage => this.setState({ errorMessage }))
   }
 
+  getSettings = (): Promise<void> =>
+    new Promise((resolve, reject) => {
+      const { bus, isConnected } = this.props
+
+      if (bus && isConnected) {
+        bus.self(
+          CYPHER_REQUEST,
+          {
+            query: 'CALL dbms.listConfig("metrics.")',
+            queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+          },
+          ({ success, result }) => {
+            if (success) {
+              const newState = result.records.reduce(
+                (newState: Partial<SysInfoFrameState>, record: any) => {
+                  const name = record.get('name')
+                  const value = record.get('value')
+                  if (name === 'metrics.prefix') {
+                    return { ...newState, userConfiguredPrefix: value }
+                  }
+
+                  if (name === 'metrics.namespaces.enabled') {
+                    return { ...newState, namespacesEnabled: value === 'true' }
+                  }
+
+                  return newState
+                },
+                {}
+              )
+
+              this.setState(newState)
+              resolve()
+            } else {
+              reject('Failed to run listConfig')
+            }
+          }
+        )
+      } else {
+        reject('Could not reach server')
+      }
+    })
+
   componentDidUpdate(
-    _prevProps: SysInfoFrameProps,
+    prevProps: SysInfoFrameProps,
     prevState: SysInfoFrameState
   ): void {
     if (prevState.autoRefresh !== this.state.autoRefresh) {
       if (this.state.autoRefresh) {
         this.timer = setInterval(
-          this.getSysInfo.bind(this),
+          this.getSysInfo,
           this.state.autoRefreshInterval * 1000
         )
       } else {
         this.timer && clearInterval(this.timer)
       }
     }
+
+    if (prevProps.useDb !== this.props.useDb) {
+      this.getSysInfo()
+    }
   }
 
-  getSysInfo(): void {
+  getSysInfo = (): void => {
+    const { userConfiguredPrefix, namespacesEnabled } = this.state
     const { bus, isConnected, useDb } = this.props
-    const { sysinfoQuery, responseHandler } = this.helpers
+    const { sysinfoQuery, responseHandler } = this.props.hasMultiDbSupport
+      ? helpers
+      : legacyHelpers
 
-    if (bus && isConnected) {
+    if (bus && isConnected && useDb) {
       this.setState({ lastFetch: Date.now() })
       bus.self(
         CYPHER_REQUEST,
         {
-          query: sysinfoQuery(useDb),
+          query: sysinfoQuery({
+            databaseName: useDb,
+            namespacesEnabled,
+            userConfiguredPrefix
+          }),
           queryType: NEO4J_BROWSER_USER_ACTION_QUERY
         },
-        responseHandler(newState => {
-          this.setState(newState)
-        }, useDb)
+        responseHandler(this.setState.bind(this))
       )
-    } else {
-      this.setState({ error: 'No connection available' })
     }
   }
 
-  setAutoRefresh(autoRefresh: boolean): void {
+  setAutoRefresh = (autoRefresh: boolean): void => {
     this.setState({ autoRefresh })
 
     if (autoRefresh) {
@@ -141,21 +194,16 @@ export class SysInfoFrame extends Component<
   render(): ReactNode {
     const {
       autoRefresh,
-      error,
+      errorMessage,
       idAllocation,
       lastFetch,
       pageCache,
       storeSizes,
-      success,
       transactions
     } = this.state
     const { databases, frame, isConnected, isEnterprise } = this.props
 
-    const content = !isConnected ? (
-      <ErrorsView
-        result={{ code: 'No connection', message: 'No connection available' }}
-      />
-    ) : (
+    const content = isConnected ? (
       <SysInfoTable
         pageCache={pageCache}
         storeSizes={storeSizes}
@@ -163,6 +211,10 @@ export class SysInfoFrame extends Component<
         transactions={transactions}
         databases={databases}
         isEnterpriseEdition={isEnterprise}
+      />
+    ) : (
+      <ErrorsView
+        result={{ code: 'No connection', message: 'No connection available' }}
       />
     )
 
@@ -172,21 +224,20 @@ export class SysInfoFrame extends Component<
         contents={content}
         statusbar={
           <StatusbarWrapper>
-            {error && <FrameError message={error} />}
-            {success && (
-              <StyledStatusBar>
-                {lastFetch && `Updated: ${new Date(lastFetch).toISOString()}`}
-
-                {success}
-
-                <AutoRefreshSpan>
-                  <AutoRefreshToggle
-                    checked={autoRefresh}
-                    onChange={e => this.setAutoRefresh(e.target.checked)}
-                  />
-                </AutoRefreshSpan>
-              </StyledStatusBar>
-            )}
+            <StyledStatusBar>
+              {lastFetch && `Updated: ${new Date(lastFetch).toISOString()}`}
+              {errorMessage && (
+                <InlineError>
+                  <ExclamationTriangleIcon /> {errorMessage}
+                </InlineError>
+              )}
+              <AutoRefreshSpan>
+                <AutoRefreshToggle
+                  checked={autoRefresh}
+                  onChange={e => this.setAutoRefresh(e.target.checked)}
+                />
+              </AutoRefreshSpan>
+            </StyledStatusBar>
           </StatusbarWrapper>
         }
       />
