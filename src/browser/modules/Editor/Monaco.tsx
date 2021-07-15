@@ -81,10 +81,13 @@ type MonacoProps = MonacoDefaultProps & {
   useDb: null | string
   toggleFullscreen: () => void
 }
-type MonacoState = { currentHistoryIndex: number; draft: string }
+type MonacoState = {
+  currentHistoryIndex: number
+  drafts: Record<number, string>
+}
 
 class Monaco extends React.Component<MonacoProps, MonacoState> {
-  state: MonacoState = { currentHistoryIndex: 0, draft: '' }
+  state: MonacoState = { currentHistoryIndex: 0, drafts: {} }
 
   editor?: editor.IStandaloneCodeEditor
   container?: HTMLElement
@@ -166,22 +169,24 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
 
   private viewHistoryPrevious = (): void => {
     const { history } = this.props
-    const { currentHistoryIndex } = this.state
+    const { currentHistoryIndex, drafts } = this.state
 
     if (history.length === 0) return
     if (currentHistoryIndex + 1 === history.length) return
-    if (currentHistoryIndex === -1) {
-      // Save what's currently in the editor as a local draft
-      this.setState({
-        draft: this.editor?.getValue() || '',
-        currentHistoryIndex: 0
-      })
-      return
-    }
-    this.internalSetValue(history[currentHistoryIndex])
+
+    const newHistoryIndex = currentHistoryIndex + 1
+
     this.setState(oldState => ({
-      currentHistoryIndex: oldState.currentHistoryIndex + 1
+      currentHistoryIndex: newHistoryIndex,
+      drafts: {
+        ...oldState.drafts,
+        [oldState.currentHistoryIndex]: this.editor?.getValue() || ''
+      }
     }))
+
+    const newEditorValue = drafts[newHistoryIndex] || history[newHistoryIndex]
+
+    this.internalSetValue(newEditorValue)
   }
 
   private handleDown = (): void => {
@@ -194,23 +199,24 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
 
   private viewHistoryNext = (): void => {
     const { history } = this.props
-    const { currentHistoryIndex } = this.state
+    const { currentHistoryIndex, drafts } = this.state
 
     if (history.length === 0) return
     if (currentHistoryIndex <= -1) return
-    if (currentHistoryIndex === 0) {
-      // Read saved draft
-      this.setState(oldState => ({
-        currentHistoryIndex: oldState.currentHistoryIndex - 1
-      }))
-      this.internalSetValue(this.state.draft)
-      return
-    }
+
+    const newHistoryIndex = currentHistoryIndex - 1
 
     this.setState(oldState => ({
-      currentHistoryIndex: oldState.currentHistoryIndex - 1
+      currentHistoryIndex: newHistoryIndex,
+      drafts: {
+        ...oldState.drafts,
+        [oldState.currentHistoryIndex]: this.editor?.getValue() || ''
+      }
     }))
-    this.internalSetValue(this.props.history[currentHistoryIndex - 1])
+
+    const newEditorValue = drafts[newHistoryIndex] || history[newHistoryIndex]
+
+    this.internalSetValue(newEditorValue)
   }
 
   private execute = (): void => {
