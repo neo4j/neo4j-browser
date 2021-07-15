@@ -184,7 +184,10 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
       }
     }))
 
-    const newEditorValue = drafts[newHistoryIndex] || history[newHistoryIndex]
+    const newEditorValue =
+      drafts[newHistoryIndex] === undefined
+        ? history[newHistoryIndex]
+        : drafts[newHistoryIndex]
 
     this.internalSetValue(newEditorValue)
   }
@@ -202,7 +205,7 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
     const { currentHistoryIndex, drafts } = this.state
 
     if (history.length === 0) return
-    if (currentHistoryIndex <= -1) return
+    if (currentHistoryIndex < -1) return
 
     const newHistoryIndex = currentHistoryIndex - 1
 
@@ -214,7 +217,10 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
       }
     }))
 
-    const newEditorValue = drafts[newHistoryIndex] || history[newHistoryIndex]
+    const newEditorValue =
+      drafts[newHistoryIndex] === undefined
+        ? history[newHistoryIndex]
+        : drafts[newHistoryIndex]
 
     this.internalSetValue(newEditorValue)
   }
