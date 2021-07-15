@@ -131,7 +131,20 @@ export const getRetainEditorHistory = (state: any) => {
   if (conf === null || typeof conf === 'undefined') return false
   return !isConfigValFalsy(conf)
 }
-export const getDatabases = (state: any) =>
+
+export type Database = {
+  name: string
+  address: string
+  role: string
+  requestedStatus: string
+  currentStatus: string
+  error: string
+  default: boolean
+  home?: boolean
+  status: string
+}
+
+export const getDatabases = (state: any): Database[] =>
   (state[NAME] || initialState).databases
 export const getActiveDbName = (state: any) =>
   ((state[NAME] || {}).settings || {})['dbms.active_database']
