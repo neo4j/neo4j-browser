@@ -134,16 +134,16 @@ function FrameTemplate({
             </StyledFrameContents>
           </StyledFrameMainSection>
         </StyledFrameBody>
-      </ContentContainer>
 
-      {statusbar && (
-        <StyledFrameStatusbar
-          fullscreen={isFullscreen}
-          data-testid="frameStatusbar"
-        >
-          {statusbar}
-        </StyledFrameStatusbar>
-      )}
+        {statusbar && (
+          <StyledFrameStatusbar
+            fullscreen={isFullscreen}
+            data-testid="frameStatusbar"
+          >
+            {statusbar}
+          </StyledFrameStatusbar>
+        )}
+      </ContentContainer>
     </StyledFrame>
   )
 }

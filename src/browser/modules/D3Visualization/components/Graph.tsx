@@ -134,7 +134,7 @@ export class GraphComponent extends Component<any, State> {
 
   zoomButtons() {
     return (
-      <StyledZoomHolder>
+      <StyledZoomHolder fullscreen={this.props.fullscreen}>
         <StyledZoomButton
           className={
             this.state.zoomInLimitReached ? 'faded zoom-in' : 'zoom-in'

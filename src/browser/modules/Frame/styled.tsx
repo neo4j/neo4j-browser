@@ -47,9 +47,10 @@ z-index: 130;`
 `
 
 export const StyledFrameBody = styled.div<
-  FullscreenProps & { collapsed: boolean }
+  FullscreenProps & { collapsed: boolean; preventOverflow?: boolean }
 >`
-  overflow: auto;
+  flex: 1;
+  overflow: ${props => (props.preventOverflow ? 'hidden' : 'auto')};
   min-height: ${dim.frameBodyHeight / 2}px;
   max-height: ${props => {
     if (props.collapsed) {
@@ -123,7 +124,6 @@ export const StyledFrameContents = styled.div<FullscreenProps>`
 export const StyledFrameStatusbar = styled.div<FullscreenProps>`
   border-top: ${props => props.theme.inFrameBorder};
   height: ${dim.frameStatusbarHeight - 1}px;
-  ${props => (props.fullscreen ? 'margin-top: -78px;' : '')};
   display: flex;
   flex-direction: row;
   flex: none;
@@ -195,6 +195,9 @@ export const StyledFrameCommand = styled.label<{ selectedDb: string | null }>`
 export const ContentContainer = styled.div`
   margin: 0px 3px;
   padding: 2px 2px 0 2px;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 23px);
 `
 
 export const TitleBarHeader = styled.div`
