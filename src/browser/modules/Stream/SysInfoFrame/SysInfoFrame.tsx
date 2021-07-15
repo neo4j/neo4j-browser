@@ -135,7 +135,7 @@ export class SysInfoFrame extends Component<
           }
         )
       } else {
-        reject('Connection error')
+        reject('Could not reach server')
       }
     })
 
