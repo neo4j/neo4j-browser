@@ -154,7 +154,6 @@ function flatten<T>(acc: T[], curr: T[]): T[] {
 export const responseHandler = (setState: (newState: any) => void) =>
   function(res: any): void {
     if (!res || !res.result || !res.result.records) {
-      setState({ success: false })
       return
     }
 
@@ -255,7 +254,6 @@ export const responseHandler = (setState: (newState: any) => void) =>
       storeSizes,
       idAllocation,
       transactions,
-      success: true,
       errorMessage: valuesMissing
         ? 'Some metrics missing, check neo4j.conf'
         : null

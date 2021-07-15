@@ -56,7 +56,6 @@ export type SysInfoFrameState = {
   transactions: DatabaseMetric[]
   errorMessage: string | null
   results: boolean
-  success: boolean
   autoRefresh: boolean
   autoRefreshInterval: number
   namespacesEnabled: boolean
@@ -86,7 +85,6 @@ export class SysInfoFrame extends Component<
     transactions: [],
     errorMessage: null,
     results: false,
-    success: false,
     autoRefresh: false,
     autoRefreshInterval: 20, // seconds
     namespacesEnabled: false,
@@ -94,7 +92,9 @@ export class SysInfoFrame extends Component<
   }
 
   componentDidMount(): void {
-    this.getSettings().then(this.getSysInfo.bind(this))
+    this.getSettings()
+      .then(this.getSysInfo.bind(this))
+      .catch(() => this.setState({ errorMessage: "Couldn't fetch settings" }))
   }
 
   getSettings = (): Promise<void> =>
@@ -130,13 +130,11 @@ export class SysInfoFrame extends Component<
               this.setState(newState)
               resolve()
             } else {
-              this.setState({ success: false })
               reject()
             }
           }
         )
       } else {
-        this.setState({ success: false })
         reject()
       }
     })
@@ -201,26 +199,24 @@ export class SysInfoFrame extends Component<
       lastFetch,
       pageCache,
       storeSizes,
-      success,
       transactions
     } = this.state
     const { databases, frame, isConnected, isEnterprise } = this.props
 
-    const content =
-      !isConnected && success ? (
-        <ErrorsView
-          result={{ code: 'No connection', message: 'No connection available' }}
-        />
-      ) : (
-        <SysInfoTable
-          pageCache={pageCache}
-          storeSizes={storeSizes}
-          idAllocation={idAllocation}
-          transactions={transactions}
-          databases={databases}
-          isEnterpriseEdition={isEnterprise}
-        />
-      )
+    const content = isConnected ? (
+      <SysInfoTable
+        pageCache={pageCache}
+        storeSizes={storeSizes}
+        idAllocation={idAllocation}
+        transactions={transactions}
+        databases={databases}
+        isEnterpriseEdition={isEnterprise}
+      />
+    ) : (
+      <ErrorsView
+        result={{ code: 'No connection', message: 'No connection available' }}
+      />
+    )
 
     return (
       <FrameTemplate
