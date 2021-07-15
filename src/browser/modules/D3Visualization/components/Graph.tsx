@@ -35,7 +35,7 @@ export class GraphComponent extends Component<any, State> {
   graphView: any
   svgElement: any
   state = {
-    zoomInLimitReached: true,
+    zoomInLimitReached: false,
     zoomOutLimitReached: false
   }
 
