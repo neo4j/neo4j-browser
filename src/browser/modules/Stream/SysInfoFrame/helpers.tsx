@@ -160,7 +160,7 @@ function flatten<T>(acc: T[], curr: T[]): T[] {
 export const responseHandler = (setState: (newState: any) => void) =>
   function(res: any): void {
     if (!res || !res.result || !res.result.records) {
-      setState({ errorMessage: 'Failed to call dbms.queryJmx' })
+      setState({ errorMessage: 'Call to dbms.queryJmx failed' })
       return
     }
 
