@@ -24,11 +24,15 @@ import { GlobalState } from 'shared/globalState'
 export const NAME = 'guides'
 export const START_GUIDE = 'sidebar/START_GUIDE'
 export const GOTO_SLIDE = 'sidebar/GOTO_SLIDE'
+export const UPDATE_EXTERNAL_GUIDES = 'sidebar/UPDATE_EXTERNAL_GUIDES'
 
 export const isDefaultGuide = (guide: Guide): boolean =>
   guide.title === defaultGuide.title
 
 export const getGuide = (state: GlobalState): Guide => state[NAME].guide
+export const listExternalGuides = (state: GlobalState): Guide[] =>
+  state[NAME].externalGuides
+
 export type Guide = {
   currentSlide: number
   title: string
@@ -41,12 +45,14 @@ const defaultGuide: Guide = {
 }
 export interface GuideState {
   guide: Guide
+  externalGuides: Guide[]
 }
 const initialState: GuideState = {
-  guide: defaultGuide
+  guide: defaultGuide,
+  externalGuides: []
 }
 
-type GuideAction = StartAction | GotoSlideAction
+type GuideAction = StartAction | GotoSlideAction | UpdateGuideAction
 
 interface StartAction {
   type: typeof START_GUIDE
@@ -56,6 +62,10 @@ interface StartAction {
 interface GotoSlideAction {
   type: typeof GOTO_SLIDE
   slideIndex: number
+}
+interface UpdateGuideAction {
+  type: typeof UPDATE_EXTERNAL_GUIDES
+  updatedGuides: Guide[]
 }
 
 export default function reducer(
@@ -70,9 +80,21 @@ export default function reducer(
         ...state,
         guide: { ...state.guide, currentSlide: action.slideIndex }
       }
+    case UPDATE_EXTERNAL_GUIDES:
+      return { ...state, externalGuides: action.updatedGuides }
     default:
       return state
   }
+}
+
+export function clearExternalGuides(): UpdateGuideAction {
+  return updateExternalGuides([])
+}
+
+export function updateExternalGuides(
+  updatedGuides: Guide[]
+): UpdateGuideAction {
+  return { type: UPDATE_EXTERNAL_GUIDES, updatedGuides }
 }
 
 export function startGuide(guide: Guide = defaultGuide): StartAction {

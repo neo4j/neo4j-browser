@@ -26,7 +26,8 @@ import {
   startGuide,
   Guide,
   isDefaultGuide,
-  gotoSlide
+  gotoSlide,
+  listExternalGuides
 } from 'shared/modules/guides/guidesDuck'
 import { GlobalState } from 'shared/globalState'
 import GuideCarousel from '../GuideCarousel/GuideCarousel'
@@ -78,11 +79,15 @@ function GuidesDrawer({
           scrollRef.current?.scrollIntoView({ block: 'start' })
         }
       />
+      {isDefaultGuide(guide) && ''}
     </StyledGuidesDrawer>
   )
 }
 
-const mapStateToProps = (state: GlobalState) => ({ guide: getGuide(state) })
+const mapStateToProps = (state: GlobalState) => ({
+  guide: getGuide(state),
+  externalGuides: listExternalGuides(state)
+})
 const mapDispatchToProps = (dispatch: any) => ({
   backToAllGuides: () => dispatch(startGuide()),
   gotoSlide: (slideIndex: number) => dispatch(gotoSlide(slideIndex))
