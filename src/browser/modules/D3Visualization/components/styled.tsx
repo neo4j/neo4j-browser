@@ -146,6 +146,18 @@ export const StyledInspectorFooter = styled.div`
   }
 `
 
+export const StyledInspectorFooter2 = styled.div`
+  margin-top: 6px;
+  font-size: 12px;
+  width: 100%;
+  white-space: normal;
+  overflow: auto;
+  &.contracted {
+    max-height: ${inspectorFooterContractedHeight}px;
+    overflow: hidden;
+  }
+`
+
 export const StyledInspectorFooterRow = styled.ul`
   list-style: none;
   word-break: break-word;
@@ -168,6 +180,7 @@ export const StyledInlineList = styled.ul`
   padding-left: 0;
   list-style: none;
   word-break: break-word;
+  // display: grid;
 `
 
 export const StyledInlineListItem = styled.li`
@@ -196,6 +209,19 @@ export const StyledStatusBar = styled.div`
   border-top: ${props => props.theme.inFrameBorder};
 `
 
+export const StyledStatusBar2 = styled.div`
+  // min-height: 39px;
+  // line-height: 39px;
+  color: ${props => props.theme.secondaryText};
+  font-size: 13px;
+  // position: absolute;
+  background-color: ${props => props.theme.frameBackground};
+  white-space: nowrap;
+  border-top: ${props => props.theme.inFrameBorder};
+  width: 100%;
+  height: 100%;
+`
+
 export const StyledStatus = styled.div`
   position: relative;
   float: left;
@@ -206,6 +232,18 @@ export const StyledStatus = styled.div`
   margin-top: 3px;
   max-height: 64px;
   overflow: auto;
+`
+
+export const StyledStatus2 = styled.div`
+  position: relative;
+  float: left;
+  padding-left: 16px;
+  margin-top: 0;
+  margin-bottom: 0;
+  width: 100%;
+  margin-top: 3px;
+  // max-height: 64px;
+  // overflow: auto;
 `
 
 export const StyledInspectorFooterRowListPair = styled(StyledInlineListItem)`
@@ -267,7 +305,7 @@ export const StyledLegend = styled.div`
   background-color: ${props => props.theme.frameBackground};
   position: absolute;
   z-index: 1;
-  top: 0;
+  // top: 0;
   right: 0;
   left: 0;
 `
@@ -339,8 +377,10 @@ export const StyledInspectorFooterStatusMessage = styled.div`
 
 export const StyledZoomHolder = styled.div`
   position: absolute;
-  bottom: 39px;
-  right: 0;
+  // bottom: 39px;
+  // right: 0;
+  left: 0;
+  top: 0
   padding: 6px 6px 0 6px;
   border-left: ${props => props.theme.inFrameBorder};
   border-right: ${props => props.theme.inFrameBorder};
