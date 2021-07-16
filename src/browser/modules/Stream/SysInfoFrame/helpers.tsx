@@ -57,7 +57,7 @@ const sysInfoMetrics: SysInfoMetrics[] = [
   {
     group: 'Store Size',
     type: 'database',
-    baseMetricNames: ['store.size.total']
+    baseMetricNames: ['store.size.total', 'store.size.database']
   },
   {
     group: 'Page Cache',
@@ -191,8 +191,14 @@ export const responseHandler = (setState: (newState: any) => void) =>
     const size = flattenAttributes(intoGroups['Store Size'])
     const storeSizes = [
       {
-        label: 'Size',
+        label: 'Total',
         value: size.total ? toHumanReadableBytes(size.total) : size.total
+      },
+      {
+        label: 'Database',
+        value: size.database
+          ? toHumanReadableBytes(size.database)
+          : size.database
       }
     ]
 
