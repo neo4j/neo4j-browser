@@ -19,14 +19,17 @@
  */
 
 import Rx from 'rxjs/Rx'
+import remote from 'services/remote'
 import { updateConnection } from 'shared/modules/connections/connectionsDuck'
 import {
   APP_START,
   USER_CLEAR,
   hasDiscoveryEndpoint,
+  getHostedUrl,
   getAllowedBoltSchemes,
   CLOUD_SCHEMES
 } from 'shared/modules/app/appDuck'
+import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
 import { getUrlParamValue } from 'services/utils'
 import { generateBoltUrl } from 'services/boltscheme.utils'
 import { getUrlInfo } from 'shared/services/utils'
@@ -41,7 +44,6 @@ import {
   authLog,
   removeSearchParamsInBrowserHistory
 } from 'shared/modules/auth/helpers'
-import { REDIRECT_URI, SSO_REDIRECT } from 'shared/modules/auth/constants'
 import {
   checkAndMergeSSOProviders,
   shouldRedirectToSSOServer,
@@ -145,21 +147,30 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
     .ofType(APP_START)
     .map((action: any) => {
       if (!action.url) return action
+      const { searchParams } = new URL(action.url)
+
       const passedURL =
-        getUrlParamValue('dbms', action.url) ||
-        getUrlParamValue('connectURL', action.url)
+        searchParams.get('dbms') || searchParams.get('connectURL')
 
-      const passedDb = getUrlParamValue('db', action.url)
+      const passedDb = searchParams.get('db')
 
-      if (!passedURL || !passedURL.length) return action
-      action.forceURL = decodeURIComponent(passedURL[0])
-      action.requestedUseDb = passedDb && passedDb[0]
+      if (passedURL) {
+        action.forceURL = decodeURIComponent(passedURL)
+        action.requestedUseDb = passedDb
+      }
+
+      const discoveryURL = searchParams.get('discoveryURL')
+
+      if (discoveryURL) {
+        action.discoveryURL = discoveryURL
+      }
+
       return action
     })
     .merge(some$.ofType(USER_CLEAR))
     .mergeMap((action: any) => {
       // Only when in a environment were we can guess discovery endpoint
-      if (!hasDiscoveryEndpoint(store.getState())) {
+      if (!action.discoveryURL || !hasDiscoveryEndpoint(store.getState())) {
         return Promise.resolve({ type: 'NOOP' })
       }
       if (action.forceURL) {
@@ -184,39 +195,41 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
         })
       }
       return Rx.Observable.fromPromise(
-        //remote
-        //  .getJSON(getDiscoveryEndpoint(getHostedUrl(store.getState())))
-
-        // Uncomment below and comment out above when doing manual tests in dev mode to
-        // fake discovery response
-        Promise.resolve({
-          bolt: 'bolt://localhost:7687',
-          neo4j_version: '4',
-          sso_providers: [
-            {
-              id: 'keycloak-oidc',
-              name: 'KeyCloak',
-              auth_flow: 'pkce',
-              auth_endpoint:
-                'http://localhost:18080/auth/realms/myrealm/protocol/openid-connect/auth',
-              token_endpoint:
-                'http://localhost:18080/auth/realms/myrealm/protocol/openid-connect/token',
-              well_known_discovery_uri:
-                'http://localhost:18080/auth/realms/myrealm/.well-known/openid-configuration',
-              params: {
-                client_id: 'account',
-                redirect_uri:
-                  'http://localhost:8080?idp_id=keycloak-oidc&auth_flow_step=redirect_uri',
-                response_type: 'code',
-                scope: 'openid groups'
-              },
-              config: {
-                principal: 'preferred_username',
-                code_challenge_method: 'S256'
-              }
-            }
-          ]
-        })
+        remote
+          .getJSON(
+            action.discoveryURL ||
+              getDiscoveryEndpoint(getHostedUrl(store.getState()))
+          )
+          // Uncomment below and comment out above when doing manual tests in dev mode to
+          // fake discovery response
+          //Promise.resolve({
+          //bolt: 'bolt://localhost:7687',
+          //neo4j_version: '4',
+          //sso_providers: [
+          //{
+          //id: 'keycloak-oidc',
+          //name: 'KeyCloak',
+          //auth_flow: 'pkce',
+          //auth_endpoint:
+          //'http://localhost:18080/auth/realms/myrealm/protocol/openid-connect/auth',
+          //token_endpoint:
+          //'http://localhost:18080/auth/realms/myrealm/protocol/openid-connect/token',
+          //well_known_discovery_uri:
+          //'http://localhost:18080/auth/realms/myrealm/.well-known/openid-configuration',
+          //params: {
+          //client_id: 'account',
+          //redirect_uri:
+          //'http://localhost:8080?idp_id=keycloak-oidc&auth_flow_step=redirect_uri',
+          //response_type: 'code',
+          //scope: 'openid groups'
+          //},
+          //config: {
+          //principal: 'preferred_username',
+          //code_challenge_method: 'S256'
+          //}
+          //}
+          //]
+          //})
           .then(async result => {
             const ssoProviders =
               // @ts-ignore

@@ -125,7 +125,7 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
 
   return (
     <StyledConnectionForm onSubmit={onConnectClick}>
-      {ssoProviders.length && (
+      {ssoProviders.length ? (
         <div>
           SSO server{ssoProviders.length > 1 ? 's' : ''} detected:
           {ssoProviders.map((provider: any) => (
@@ -137,7 +137,7 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
             </FormButton>
           ))}
         </div>
-      )}
+      ) : null}
       <StyledConnectionFormEntry>
         <StyledConnectionLabel htmlFor="url-input" title={hoverText}>
           Connect URL
