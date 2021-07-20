@@ -107,7 +107,7 @@ export const authRequestForSSO = idpId => {
   }
 }
 
-export const handleAuthFromRedirect = sendSignal =>
+export const handleAuthFromRedirect = () =>
   new Promise((resolve, reject) => {
     const {
       idp_id: idpId,
@@ -155,7 +155,6 @@ export const handleAuthFromRedirect = sendSignal =>
         { access_token: accessToken, id_token: idToken },
         idpId
       )
-      sendSignal({ type: 'RETRY', credentials })
       resolve(credentials)
     } else {
       authLog('Attempting to fetch token information in "PKCE flow"')
@@ -176,7 +175,6 @@ export const handleAuthFromRedirect = sendSignal =>
               console.log('SSO:: PKCE SUCCESS RESULT', result)
 
               const credentials = getCredentialsFromAuthResult(result, idpId)
-              sendSignal({ type: 'RETRY', credentials })
               resolve(credentials)
             }
           })

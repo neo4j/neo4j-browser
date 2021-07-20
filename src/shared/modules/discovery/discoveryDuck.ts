@@ -218,7 +218,9 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
           ]
         })
           .then(async result => {
-            const ssoProviders = result.sso_providers //|| result.ssoproviders || result.ssoProviders
+            const ssoProviders =
+              // @ts-ignore
+              result.sso_providers || result.ssoproviders || result.ssoProviders
             let creds: { username?: string; password?: string } = {}
 
             if (ssoProviders) {
@@ -237,13 +239,16 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
               } else if (wasRedirectedBackFromSSOServer(searchParams)) {
                 authLog('Handling auth_flow_step redirect')
 
-                creds = await handleAuthFromRedirect(() => undefined)
+                creds = await handleAuthFromRedirect()
               }
             } else {
               authLog('No SSO providers found on endpoint')
             }
 
-            let host = result && result.bolt
+            let host =
+              result &&
+              // @ts-ignore
+              (result.bolt_routing || result.bolt_direct || result.bolt)
             // Try to get info from server
             if (!host) {
               throw new Error('No bolt address found')

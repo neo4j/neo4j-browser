@@ -213,6 +213,7 @@ if (wasRedirectedBackFromSSOServer()) {
 
 // URL we're on
 const url = window.location.href
+
 const searchParams = new URL(url).searchParams
 
 // Desktop/Relate params
