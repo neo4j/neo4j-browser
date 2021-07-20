@@ -42,7 +42,11 @@ import {
   removeSearchParamsInBrowserHistory
 } from 'shared/modules/auth/helpers'
 import { REDIRECT_URI, SSO_REDIRECT } from 'shared/modules/auth/constants'
-import { checkAndMergeSSOProviders } from 'shared/modules/auth/common'
+import {
+  checkAndMergeSSOProviders,
+  shouldRedirectToSSOServer,
+  wasRedirectedBackFromSSOServer
+} from 'shared/modules/auth/common'
 import { searchParamsToRemoveAfterAutoRedirect } from 'shared/modules/auth/settings'
 
 export const NAME = 'discover-bolt-host'
@@ -218,34 +222,25 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
             let creds: { username?: string; password?: string } = {}
 
             if (ssoProviders) {
-              authLog('SSO providers found on endpoint ')
+              authLog('SSO providers found on endpoint')
               checkAndMergeSSOProviders(ssoProviders, true)
+              const { searchParams } = new URL(window.location.href)
 
-              // TODO function should redirect to sso,
-              // TODO function was redirected back
-              const searchParams = new URL(window.location.href).searchParams
-              const cmd = (searchParams.get('cmd') || '').toLowerCase()
-              const arg = searchParams.get('arg')
-              const authFlowStep = (
-                searchParams.get('auth_flow_step') || ''
-              ).toLowerCase()
-
-              if (cmd === SSO_REDIRECT && arg) {
-                authLog(`Initialised with cmd: "${cmd}" and arg: "${arg}"`)
+              if (shouldRedirectToSSOServer(searchParams)) {
+                const idpId = searchParams.get('arg')
+                authLog(`Initialised with idpId: "${idpId}"`)
 
                 removeSearchParamsInBrowserHistory(
                   searchParamsToRemoveAfterAutoRedirect
                 )
-
-                authRequestForSSO(arg)
-              } else if (authFlowStep === REDIRECT_URI) {
+                authRequestForSSO(idpId)
+              } else if (wasRedirectedBackFromSSOServer(searchParams)) {
                 authLog('Handling auth_flow_step redirect')
 
                 creds = await handleAuthFromRedirect(() => undefined)
               }
             } else {
-              const errMsg = 'No SSO providers found on endpoint'
-              authLog(errMsg)
+              authLog('No SSO providers found on endpoint')
             }
 
             let host = result && result.bolt

@@ -55,7 +55,7 @@ import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import {
   restoreSearchParams,
-  redirectedBackFromSSOServer
+  wasRedirectedBackFromSSOServer
 } from 'shared/modules/auth/common'
 
 // Configure localstorage sync
@@ -207,7 +207,7 @@ const env = detectRuntimeEnv(window, NEO4J_CLOUD_DOMAINS)
 // To work around this they are stored in sessionStorage before
 // we redirect to the server, and then restore them when we get
 // redirected back
-if (redirectedBackFromSSOServer()) {
+if (wasRedirectedBackFromSSOServer()) {
   restoreSearchParams()
 }
 

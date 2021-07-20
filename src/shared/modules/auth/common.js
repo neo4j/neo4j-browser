@@ -3,6 +3,7 @@ import { isObject } from 'lodash'
 import {
   AUTH_STORAGE_SSO_PROVIDERS,
   AUTH_STORAGE_URL_SEARCH_PARAMS,
+  SSO_REDIRECT,
   REDIRECT_URI
 } from './constants'
 import { addSearchParamsInBrowserHistory, authLog } from './helpers'
@@ -180,8 +181,18 @@ export const temporarlyStoreUrlSearchParams = () => {
   )
 }
 
-export const redirectedBackFromSSOServer = () => {
-  const searchParams = new URL(window.location.href).searchParams
+export const shouldRedirectToSSOServer = (
+  searchParams = new URL(window.location.href).searchParams
+) => {
+  const cmd = (searchParams.get('cmd') || '').toLowerCase()
+  const arg = searchParams.get('arg')
+
+  return cmd === SSO_REDIRECT && arg
+}
+
+export const wasRedirectedBackFromSSOServer = (
+  searchParams = new URL(window.location.href).searchParams
+) => {
   const authFlowStep = (searchParams.get('auth_flow_step') || '').toLowerCase()
 
   return authFlowStep === REDIRECT_URI
