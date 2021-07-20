@@ -65,8 +65,11 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
   const [scheme, setScheme] = useState(
     props.allowedSchemes ? `${getScheme(props.host)}://` : ''
   )
+  const [ssoProviders, setSsoProviders] = useState<any[]>([])
 
-  const ssoProviders = getSSOProvidersFromStorage()
+  useEffect(() => {
+    setSsoProviders(getSSOProvidersFromStorage())
+  }, [])
 
   useEffect(() => {
     if (props.allowedSchemes) {
