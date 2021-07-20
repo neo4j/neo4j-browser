@@ -10880,11 +10880,6 @@ querystring@0.2.0, querystring@^0.2.0:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/querystring/-/querystring-0.2.0.tgz#b209849203bb25df820da756e747005878521620"
   integrity sha1-sgmEkgO7Jd+CDadW50cAWHhSFiA=
 
-querystring@^0.2.1:
-  version "0.2.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/querystring/-/querystring-0.2.1.tgz#40d77615bb09d16902a85c3e38aa8b5ed761c2dd"
-  integrity sha1-QNd2FbsJ0WkCqFw+OKqLXtdhwt0=
-
 querystringify@^2.1.1:
   version "2.2.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/querystringify/-/querystringify-2.2.0.tgz#3345941b4153cb9d082d8eee4cda2016a9aef7f6"

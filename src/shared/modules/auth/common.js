@@ -10,26 +10,16 @@ import {
   mandatoryKeysForSSOProviders,
   searchParamsToSaveForAfterAuthRedirect
 } from './settings'
-import { parse as parseQueryString } from 'querystring'
 
 export const getInitialisationParameters = (
-  urlSearchParams = window.location.search,
-  urlHashParams = window.location.hash
+  urlSearchParams = window.location.search
 ) => {
-  let initParams = {}
-  try {
-    initParams = {
-      ...parseQueryString(urlSearchParams.replace(/^\?/, '')),
-      ...parseQueryString(urlHashParams.replace(/^#/, ''))
-    }
-    Object.keys(initParams).forEach(key => {
-      if (initParams[key].trim().length === 0) {
-        initParams[key] = null
-      }
-    })
-  } catch (exc) {
-    console.warn('Exception occured while parsing Browser URL parameters', exc)
-  }
+  const initParams = {}
+
+  new URLSearchParams(urlSearchParams).forEach((value, key) => {
+    initParams[key] = value
+  })
+
   return initParams
 }
 

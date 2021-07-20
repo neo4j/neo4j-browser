@@ -156,7 +156,6 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
       if (!passedURL || !passedURL.length) return action
       action.forceURL = decodeURIComponent(passedURL[0])
       action.requestedUseDb = passedDb && passedDb[0]
-
       return action
     })
     .merge(some$.ofType(USER_CLEAR))
