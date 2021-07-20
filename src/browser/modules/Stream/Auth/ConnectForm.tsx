@@ -125,14 +125,19 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
 
   return (
     <StyledConnectionForm onSubmit={onConnectClick}>
-      {ssoProviders.map((provider: any) => (
-        <button
-          key={provider.id}
-          onClick={() => authRequestForSSO(provider.id)}
-        >
-          {provider.name}
-        </button>
-      ))}
+      {ssoProviders.length && (
+        <div>
+          SSO server{ssoProviders.length > 1 ? 's' : ''} detected:
+          {ssoProviders.map((provider: any) => (
+            <FormButton
+              key={provider.id}
+              onClick={() => authRequestForSSO(provider.id)}
+            >
+              {provider.name}
+            </FormButton>
+          ))}
+        </div>
+      )}
       <StyledConnectionFormEntry>
         <StyledConnectionLabel htmlFor="url-input" title={hoverText}>
           Connect URL
