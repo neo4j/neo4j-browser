@@ -158,19 +158,11 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
       if (!hasDiscoveryEndpoint(store.getState())) {
         return Promise.resolve({ type: 'NOOP' })
       }
-      const searchParams = new URL(window.location.href).searchParams
-      const authFlowStep =
-        (searchParams.get('auth_flow_step') || '').toLowerCase() ===
-        REDIRECT_URI
-      if (action.forceURL && !authFlowStep) {
-        const { username, password, protocol, host } = getUrlInfo(
-          action.forceURL
-        )
-        console.log(username, password)
+      if (action.forceURL) {
+        const { username, protocol, host } = getUrlInfo(action.forceURL)
 
         const discovered = {
           username,
-          password,
           requestedUseDb: action.requestedUseDb,
           host: `${protocol ? `${protocol}//` : ''}${host}`,
           supportsMultiDb: !!action.requestedUseDb,
@@ -232,6 +224,7 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
               authLog(errMsg)
             }
 
+            const searchParams = new URL(window.location.href).searchParams
             const cmd = (searchParams.get('cmd') || '').toLowerCase()
             const arg = searchParams.get('arg')
             const authFlowStep = (

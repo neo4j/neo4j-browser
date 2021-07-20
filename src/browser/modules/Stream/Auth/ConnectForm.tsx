@@ -127,7 +127,7 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
           key={provider.id}
           onClick={() => authRequestForSSO(provider.id)}
         >
-          hej {provider.name}
+          {provider.name}
         </button>
       ))}
       <StyledConnectionFormEntry>
