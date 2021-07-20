@@ -215,35 +215,37 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
         })
           .then(async result => {
             const ssoProviders = result.sso_providers //|| result.ssoproviders || result.ssoProviders
+            let creds: { username?: string; password?: string } = {}
 
             if (ssoProviders) {
               authLog('SSO providers found on endpoint ')
               checkAndMergeSSOProviders(ssoProviders, true)
+
+              // TODO function should redirect to sso,
+              // TODO function was redirected back
+              const searchParams = new URL(window.location.href).searchParams
+              const cmd = (searchParams.get('cmd') || '').toLowerCase()
+              const arg = searchParams.get('arg')
+              const authFlowStep = (
+                searchParams.get('auth_flow_step') || ''
+              ).toLowerCase()
+
+              if (cmd === SSO_REDIRECT && arg) {
+                authLog(`Initialised with cmd: "${cmd}" and arg: "${arg}"`)
+
+                removeSearchParamsInBrowserHistory(
+                  searchParamsToRemoveAfterAutoRedirect
+                )
+
+                authRequestForSSO(arg)
+              } else if (authFlowStep === REDIRECT_URI) {
+                authLog('Handling auth_flow_step redirect')
+
+                creds = await handleAuthFromRedirect(() => undefined)
+              }
             } else {
               const errMsg = 'No SSO providers found on endpoint'
               authLog(errMsg)
-            }
-
-            const searchParams = new URL(window.location.href).searchParams
-            const cmd = (searchParams.get('cmd') || '').toLowerCase()
-            const arg = searchParams.get('arg')
-            const authFlowStep = (
-              searchParams.get('auth_flow_step') || ''
-            ).toLowerCase()
-            if (cmd === SSO_REDIRECT && arg) {
-              authLog(`Initialised with cmd: "${cmd}" and arg: "${arg}"`)
-
-              removeSearchParamsInBrowserHistory(
-                searchParamsToRemoveAfterAutoRedirect
-              )
-
-              authRequestForSSO(arg)
-            } else if (authFlowStep === REDIRECT_URI) {
-              authLog('Handling auth_flow_step redirect')
-
-              const host = result && result.bolt
-              const creds = await handleAuthFromRedirect(() => undefined)
-              return { type: DONE, discovered: { host, ...creds.credentials } }
             }
 
             let host = result && result.bolt
@@ -260,8 +262,8 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
             const supportsMultiDb =
               !isAura && parseInt((result.neo4j_version || '0').charAt(0)) >= 4
             const discovered = supportsMultiDb
-              ? { supportsMultiDb, host }
-              : { host }
+              ? { supportsMultiDb, host, ...creds }
+              : { host, ...creds }
 
             return { type: DONE, discovered }
           })

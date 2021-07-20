@@ -156,7 +156,7 @@ export const handleAuthFromRedirect = sendSignal =>
         idpId
       )
       sendSignal({ type: 'RETRY', credentials })
-      resolve({ credentials })
+      resolve(credentials)
     } else {
       authLog('Attempting to fetch token information in "PKCE flow"')
 
@@ -177,7 +177,7 @@ export const handleAuthFromRedirect = sendSignal =>
 
               const credentials = getCredentialsFromAuthResult(result, idpId)
               sendSignal({ type: 'RETRY', credentials })
-              resolve({ credentials })
+              resolve(credentials)
             }
           })
         })
