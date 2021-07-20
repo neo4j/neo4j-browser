@@ -437,6 +437,7 @@ type DiscoverDataAction = {
   type: typeof discovery.DONE
   discovered?: {
     username?: string
+    password?: string
     requestedUseDb?: string
     restApi?: string
     supportsMultiDb?: string
@@ -489,6 +490,7 @@ export const startupConnectEpic = (action$: any, store: any) => {
           store.getState(),
           discovery.CONNECTION_ID
         )
+        debugger
 
         if (shouldTryAutoconnecting(connUpdatedWithDiscovery)) {
           // Try connecting

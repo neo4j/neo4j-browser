@@ -34,6 +34,8 @@ import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
 import { toKeyString } from 'services/utils'
 import { stripScheme, getScheme } from 'services/boltscheme.utils'
 import { AuthenticationMethod } from 'shared/modules/connections/connectionsDuck'
+import { authRequestForSSO } from 'shared/modules/auth/index.js'
+import { getSSOProvidersFromStorage } from 'shared/modules/auth/common.js'
 
 const readableauthenticationMethods: Record<AuthenticationMethod, string> = {
   [NATIVE]: 'Username / Password',
@@ -63,6 +65,8 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
   const [scheme, setScheme] = useState(
     props.allowedSchemes ? `${getScheme(props.host)}://` : ''
   )
+
+  const ssoProviders = getSSOProvidersFromStorage()
 
   useEffect(() => {
     if (props.allowedSchemes) {
@@ -118,6 +122,14 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
 
   return (
     <StyledConnectionForm onSubmit={onConnectClick}>
+      {ssoProviders.map((provider: any) => (
+        <button
+          key={provider.id}
+          onClick={() => authRequestForSSO(provider.id)}
+        >
+          hej {provider.name}
+        </button>
+      ))}
       <StyledConnectionFormEntry>
         <StyledConnectionLabel htmlFor="url-input" title={hoverText}>
           Connect URL
