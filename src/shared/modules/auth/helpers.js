@@ -1,11 +1,17 @@
 import { isObject } from 'lodash'
 import { AUTH_LOGGING_PREFIX } from './constants'
-import { isAuthLoggingEnabled } from './settings'
+import { isAuthLoggingEnabled, isAuthDebuggingEnabled } from './settings'
 
 export const authLog = (msg, type = 'log') => {
   if (!isAuthLoggingEnabled) return
   if (!['log', 'error', 'warn'].includes(type)) return
   console[type](`${AUTH_LOGGING_PREFIX} ${msg}`)
+}
+
+export const authDebug = (msg, content) => {
+  if (!isAuthDebuggingEnabled) return
+  console.log(`${AUTH_LOGGING_PREFIX} - DEBUG - ${msg}`)
+  console.dir(content)
 }
 
 export const createNonce = () =>

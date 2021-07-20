@@ -6,7 +6,7 @@ import {
   SSO_REDIRECT,
   REDIRECT_URI
 } from './constants'
-import { addSearchParamsInBrowserHistory, authLog } from './helpers'
+import { addSearchParamsInBrowserHistory, authLog, authDebug } from './helpers'
 import {
   mandatoryKeysForSSOProviderParams,
   mandatoryKeysForSSOProviders
@@ -117,8 +117,7 @@ export const getCredentialsFromAuthResult = (result, idpId) => {
   const _parseJWTAndSetCredentials = toParseToken => {
     const parsedJWT = jwtDecode(toParseToken)
 
-    // TODO: remove this
-    console.log('Parsed JWT: ', parsedJWT)
+    authDebug('Credentials, parsed JWT', parsedJWT)
 
     if (!parsedJWT) {
       authLog(`Could not parse JWT for idp_id: ${idpId}, aborting`, 'warn')

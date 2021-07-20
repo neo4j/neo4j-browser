@@ -30,3 +30,4 @@ export const searchParamsToSaveForAfterAuthRedirect = [
 ]
 
 export const isAuthLoggingEnabled = true // TODO: create a setting? or just check the NODE_ENV? always log warn and error?
+export const isAuthDebuggingEnabled = true // TODO: check the NODE_ENV, shall only work in development

@@ -17,6 +17,7 @@ import {
   createCodeVerifier,
   createCodeChallenge,
   authLog,
+  authDebug,
   removeSearchParamsInBrowserHistory
 } from './helpers'
 import { searchParamsToRemoveAfterAuthRedirect } from './settings'
@@ -148,8 +149,8 @@ export const handleAuthFromRedirect = () =>
     if ((tokenType || '').toLowerCase() === BEARER && accessToken) {
       authLog('Successfully aquired access_token in "implict flow"')
 
-      // TODO: remove this
-      console.log('SSO:: IMPLICT SUCCESS RESULT', [accessToken, idToken])
+      authDebug('Implicit flow id_token', idToken)
+      authDebug('Implicit flow access_token', accessToken)
 
       const credentials = getCredentialsFromAuthResult(
         { access_token: accessToken, id_token: idToken },
@@ -170,9 +171,7 @@ export const handleAuthFromRedirect = () =>
               reject(errorMsg)
             } else {
               authLog('Successfully aquired token results')
-
-              // TODO: remove this
-              console.log('SSO:: PKCE SUCCESS RESULT', result)
+              authDebug('PKCE flow result', result)
 
               const credentials = getCredentialsFromAuthResult(result, idpId)
               resolve(credentials)
