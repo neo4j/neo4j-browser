@@ -53,6 +53,10 @@ import { shouldAllowOutgoingConnections } from 'shared/modules/dbMeta/dbMetaDuck
 import { getUuid } from 'shared/modules/udc/udcDuck'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
+import {
+  restoreSearchParams,
+  redirectedBackFromSSOServer
+} from 'shared/modules/auth/common'
 
 // Configure localstorage sync
 applyKeys(
@@ -199,9 +203,16 @@ export function setupSentry(): void {
 // Introduce environment to be able to fork functionality
 const env = detectRuntimeEnv(window, NEO4J_CLOUD_DOMAINS)
 
+// SSO requires a redirect that removes our search parameters
+// To work around this they are stored in sessionStorage before
+// we redirect to the server, and then restore them when we get
+// redirected back
+if (redirectedBackFromSSOServer()) {
+  restoreSearchParams()
+}
+
 // URL we're on
 const url = window.location.href
-
 const searchParams = new URL(url).searchParams
 
 // Desktop/Relate params

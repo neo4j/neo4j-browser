@@ -1,14 +1,14 @@
 import jwtDecode from 'jwt-decode'
-import { isObject, pick } from 'lodash'
+import { isObject } from 'lodash'
 import {
   AUTH_STORAGE_SSO_PROVIDERS,
-  AUTH_STORAGE_URL_SEARCH_PARAMS
+  AUTH_STORAGE_URL_SEARCH_PARAMS,
+  REDIRECT_URI
 } from './constants'
 import { addSearchParamsInBrowserHistory, authLog } from './helpers'
 import {
   mandatoryKeysForSSOProviderParams,
-  mandatoryKeysForSSOProviders,
-  searchParamsToSaveForAfterAuthRedirect
+  mandatoryKeysForSSOProviders
 } from './settings'
 
 export const getInitialisationParameters = (
@@ -167,49 +167,39 @@ export const getCredentialsFromAuthResult = (result, idpId) => {
 
 export const temporarlyStoreUrlSearchParams = () => {
   const currentBrowserURLParams = getInitialisationParameters()
-  const toSaveSearchParams = pick(
-    currentBrowserURLParams,
-    searchParamsToSaveForAfterAuthRedirect
-  )
 
   authLog(
     `Temporarly storing the url search params. data: "${JSON.stringify(
-      toSaveSearchParams
+      currentBrowserURLParams
     )}"`
   )
+
   window.sessionStorage.setItem(
     AUTH_STORAGE_URL_SEARCH_PARAMS,
-    JSON.stringify(toSaveSearchParams)
+    JSON.stringify(currentBrowserURLParams)
   )
 }
 
-export const addStoredUrlSearchParamsToBrowserHistory = (
-  toRetrieveParams,
-  isClearStore = false
-) => {
-  if (!toRetrieveParams || !toRetrieveParams.length) {
-    authLog(
-      'Invalid arguments provided for retrieving temporarly stored url search params, aborting'
-    )
-    return
-  }
+export const redirectedBackFromSSOServer = () => {
+  const searchParams = new URL(window.location.href).searchParams
+  const authFlowStep = (searchParams.get('auth_flow_step') || '').toLowerCase()
 
-  authLog(
-    `Retrieving temporarly stored url search params, params: "${toRetrieveParams}"`
-  )
+  return authFlowStep === REDIRECT_URI
+}
+
+export const restoreSearchParams = () => {
+  authLog(`Retrieving temporarly stored url search params`)
+
   try {
     const storedParams = JSON.parse(
       window.sessionStorage.getItem(AUTH_STORAGE_URL_SEARCH_PARAMS)
     )
-
-    if (isClearStore) {
-      window.sessionStorage.setItem(AUTH_STORAGE_URL_SEARCH_PARAMS, '')
-    }
+    window.sessionStorage.setItem(AUTH_STORAGE_URL_SEARCH_PARAMS, '')
 
     if (isObject(storedParams)) {
-      const retrievedParams = pick(storedParams, toRetrieveParams)
-      addSearchParamsInBrowserHistory(retrievedParams)
-      return retrievedParams
+      addSearchParamsInBrowserHistory(storedParams)
+
+      return storedParams
     } else {
       authLog('Invalid temporarly stored url search params')
       return null

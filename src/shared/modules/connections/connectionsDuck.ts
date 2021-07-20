@@ -490,7 +490,6 @@ export const startupConnectEpic = (action$: any, store: any) => {
           store.getState(),
           discovery.CONNECTION_ID
         )
-        debugger
 
         if (shouldTryAutoconnecting(connUpdatedWithDiscovery)) {
           // Try connecting

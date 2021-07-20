@@ -19,17 +19,14 @@
  */
 
 import Rx from 'rxjs/Rx'
-import remote from 'services/remote'
 import { updateConnection } from 'shared/modules/connections/connectionsDuck'
 import {
   APP_START,
   USER_CLEAR,
   hasDiscoveryEndpoint,
-  getHostedUrl,
   getAllowedBoltSchemes,
   CLOUD_SCHEMES
 } from 'shared/modules/app/appDuck'
-import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
 import { getUrlParamValue } from 'services/utils'
 import { generateBoltUrl } from 'services/boltscheme.utils'
 import { getUrlInfo } from 'shared/services/utils'
@@ -45,10 +42,7 @@ import {
   removeSearchParamsInBrowserHistory
 } from 'shared/modules/auth/helpers'
 import { REDIRECT_URI, SSO_REDIRECT } from 'shared/modules/auth/constants'
-import {
-  addStoredUrlSearchParamsToBrowserHistory,
-  checkAndMergeSSOProviders
-} from 'shared/modules/auth/common'
+import { checkAndMergeSSOProviders } from 'shared/modules/auth/common'
 import { searchParamsToRemoveAfterAutoRedirect } from 'shared/modules/auth/settings'
 
 export const NAME = 'discover-bolt-host'
@@ -238,8 +232,6 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
               authLog(errMsg)
             }
 
-            const searchParams = new URL(window.location.href).searchParams
-
             const cmd = (searchParams.get('cmd') || '').toLowerCase()
             const arg = searchParams.get('arg')
             const authFlowStep = (
@@ -256,10 +248,6 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
             } else if (authFlowStep === REDIRECT_URI) {
               authLog('Handling auth_flow_step redirect')
 
-              addStoredUrlSearchParamsToBrowserHistory([
-                'connectURL',
-                'discoveryURL'
-              ])
               const host = result && result.bolt
               const creds = await handleAuthFromRedirect(() => undefined)
               return { type: DONE, discovered: { host, ...creds.credentials } }
