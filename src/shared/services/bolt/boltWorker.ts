@@ -73,6 +73,7 @@ const onmessage = function(message: {
       host: string
       username: string
       password: string
+      useDirectReadTransaction: boolean
     }
     connectionType:
       | typeof DIRECT_CONNECTION
@@ -97,7 +98,12 @@ const onmessage = function(message: {
       connectionProperties
     } = message.data
     beforeWork()
-    const { txMetadata, useDb, autoCommit } = connectionProperties
+    const {
+      txMetadata,
+      useDb,
+      autoCommit,
+      useDirectReadTransaction
+    } = connectionProperties
     ensureConnection(
       connectionProperties as any,
       connectionProperties.opts,
@@ -111,7 +117,14 @@ const onmessage = function(message: {
         const res: any = connectionTypeMap[connectionType].create(
           input,
           applyGraphTypes(parameters),
-          { requestId, cancelable, txMetadata, useDb, autoCommit }
+          {
+            requestId,
+            cancelable,
+            txMetadata,
+            useDb,
+            autoCommit,
+            useDirectReadTransaction
+          }
         )
         connectionTypeMap[connectionType]
           .getPromise(res)

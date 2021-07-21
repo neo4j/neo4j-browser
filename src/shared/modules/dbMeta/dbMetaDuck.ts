@@ -397,7 +397,8 @@ const databaseList = (store: any) =>
             ...getBackgroundTxMetadata({
               hasServerSupport: canSendTxMetadata(store.getState())
             }),
-            useDb: SYSTEM_DB
+            useDb: SYSTEM_DB,
+            useDirectReadTransaction: true
           }
         )
         resolve(res)
@@ -475,7 +476,8 @@ const clusterRole = (store: any) =>
             useCypherThread: shouldUseCypherThread(store.getState()),
             ...getBackgroundTxMetadata({
               hasServerSupport: canSendTxMetadata(store.getState())
-            })
+            }),
+            useDirectReadTransaction: true
           }
         )
         .then(resolve)
@@ -605,7 +607,8 @@ export const serverConfigEpic = (some$: any, store: any) =>
                 useCypherThread: shouldUseCypherThread(store.getState()),
                 ...getBackgroundTxMetadata({
                   hasServerSupport: canSendTxMetadata(store.getState())
-                })
+                }),
+                useDirectReadTransaction: true
               }
             )
             .then((r: any) => {
@@ -630,7 +633,8 @@ export const serverConfigEpic = (some$: any, store: any) =>
                       useCypherThread: shouldUseCypherThread(store.getState()),
                       ...getBackgroundTxMetadata({
                         hasServerSupport: canSendTxMetadata(store.getState())
-                      })
+                      }),
+                      useDirectReadTransaction: true
                     }
                   )
                   .then(resolve)
@@ -705,7 +709,8 @@ export const serverInfoEpic = (some$: any, store: any) =>
             useCypherThread: shouldUseCypherThread(store.getState()),
             ...getBackgroundTxMetadata({
               hasServerSupport: canSendTxMetadata(store.getState())
-            })
+            }),
+            useDirectReadTransaction: true
           }
         )
       )

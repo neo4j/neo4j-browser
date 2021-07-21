@@ -181,7 +181,8 @@ function directTransaction(
     cancelable = false,
     onLostConnection = () => {},
     txMetadata = undefined,
-    useDb = null
+    useDb = null,
+    useDirectReadTransaction
   } = requestMetaData
   if (useCypherThread && window.Worker) {
     const id = requestId || v4()
@@ -194,7 +195,8 @@ function directTransaction(
       {
         ...connectionProperties,
         txMetadata,
-        useDb: useDb || _useDb
+        useDb: useDb || _useDb,
+        useDirectReadTransaction
       }
     )
     const workerPromise = setupBoltWorker(
@@ -209,7 +211,8 @@ function directTransaction(
       requestId,
       cancelable,
       txMetadata,
-      useDb: useDb || _useDb
+      useDb: useDb || _useDb,
+      useDirectReadTransaction
     })
   }
 }
