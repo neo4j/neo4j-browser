@@ -116,7 +116,6 @@ const onmessage = function(message: {
         connectionTypeMap[connectionType]
           .getPromise(res)
           .then(r => {
-            ;((self as unknown) as ServiceWorker).postMessage('testing testing')
             afterWork()
             ;((self as unknown) as ServiceWorker).postMessage(
               cypherResponseMessage(r)
