@@ -82,9 +82,13 @@ type MonacoProps = MonacoDefaultProps & {
   toggleFullscreen: () => void
 }
 type MonacoState = { currentHistoryIndex: number; draft: string }
+const UNRUN_CMD_HISTORY_INDEX = -1
 
 class Monaco extends React.Component<MonacoProps, MonacoState> {
-  state: MonacoState = { currentHistoryIndex: 0, draft: '' }
+  state: MonacoState = {
+    currentHistoryIndex: UNRUN_CMD_HISTORY_INDEX,
+    draft: ''
+  }
 
   editor?: editor.IStandaloneCodeEditor
   container?: HTMLElement
@@ -140,7 +144,7 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
 
   getValue = (): string => this.editor?.getValue() || ''
   setValue = (value: string): void => {
-    this.setState({ currentHistoryIndex: -1 })
+    this.setState({ currentHistoryIndex: UNRUN_CMD_HISTORY_INDEX })
     this.internalSetValue(value)
   }
   private internalSetValue = (value: string): void => {
@@ -167,21 +171,21 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
   private viewHistoryPrevious = (): void => {
     const { history } = this.props
     const { currentHistoryIndex } = this.state
+    const newHistoryIndex = currentHistoryIndex + 1
 
     if (history.length === 0) return
-    if (currentHistoryIndex + 1 === history.length) return
-    if (currentHistoryIndex === -1) {
+    if (newHistoryIndex === history.length) return
+
+    if (currentHistoryIndex === UNRUN_CMD_HISTORY_INDEX) {
       // Save what's currently in the editor as a local draft
       this.setState({
         draft: this.editor?.getValue() || '',
         currentHistoryIndex: 0
       })
-      return
     }
-    this.internalSetValue(history[currentHistoryIndex])
-    this.setState(oldState => ({
-      currentHistoryIndex: oldState.currentHistoryIndex + 1
-    }))
+
+    this.internalSetValue(history[newHistoryIndex])
+    this.setState({ currentHistoryIndex: newHistoryIndex })
   }
 
   private handleDown = (): void => {
@@ -195,22 +199,19 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
   private viewHistoryNext = (): void => {
     const { history } = this.props
     const { currentHistoryIndex } = this.state
+    const newHistoryIndex = currentHistoryIndex - 1
 
     if (history.length === 0) return
-    if (currentHistoryIndex <= -1) return
-    if (currentHistoryIndex === 0) {
+    if (currentHistoryIndex === UNRUN_CMD_HISTORY_INDEX) return
+
+    if (newHistoryIndex === UNRUN_CMD_HISTORY_INDEX) {
       // Read saved draft
-      this.setState(oldState => ({
-        currentHistoryIndex: oldState.currentHistoryIndex - 1
-      }))
       this.internalSetValue(this.state.draft)
-      return
+    } else {
+      this.internalSetValue(this.props.history[newHistoryIndex])
     }
 
-    this.setState(oldState => ({
-      currentHistoryIndex: oldState.currentHistoryIndex - 1
-    }))
-    this.internalSetValue(this.props.history[currentHistoryIndex - 1])
+    this.setState({ currentHistoryIndex: newHistoryIndex })
   }
 
   private execute = (): void => {
@@ -219,9 +220,7 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
 
     if (!onlyWhitespace) {
       this.props.onExecute(value)
-      this.setState(oldState => ({
-        currentHistoryIndex: oldState.currentHistoryIndex - 1
-      }))
+      this.setState({ currentHistoryIndex: UNRUN_CMD_HISTORY_INDEX })
     }
   }
 
