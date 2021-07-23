@@ -216,7 +216,13 @@ export class SysInfoFrame extends Component<
       storeSizes,
       transactions
     } = this.state
-    const { databases, frame, isConnected, isEnterprise } = this.props
+    const {
+      databases,
+      frame,
+      isConnected,
+      isEnterprise,
+      hasMultiDbSupport
+    } = this.props
 
     const content = isConnected ? (
       <SysInfoTable
@@ -226,6 +232,7 @@ export class SysInfoFrame extends Component<
         transactions={transactions}
         databases={databases}
         isEnterpriseEdition={isEnterprise}
+        hasMultiDbSupport={hasMultiDbSupport}
       />
     ) : (
       <ErrorsView
