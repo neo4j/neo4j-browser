@@ -30,7 +30,6 @@ import {
   CLOUD_SCHEMES
 } from 'shared/modules/app/appDuck'
 import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
-import { getUrlParamValue } from 'services/utils'
 import { generateBoltUrl } from 'services/boltscheme.utils'
 import { getUrlInfo } from 'shared/services/utils'
 import { isConnectedAuraHost } from 'shared/modules/connections/connectionsDuck'
@@ -252,7 +251,11 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
               } else if (wasRedirectedBackFromSSOServer()) {
                 authLog('Handling auth_flow_step redirect')
 
-                creds = await handleAuthFromRedirect()
+                try {
+                  creds = await handleAuthFromRedirect()
+                } catch (e) {
+                  authLog(e)
+                }
               }
             } else {
               authLog('No SSO providers found on endpoint')

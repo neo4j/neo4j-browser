@@ -14,12 +14,15 @@ import {
   mandatoryKeysForSSOProviders
 } from './settings'
 
-export const getInitialisationParameters = (
-  urlSearchParams = window.location.search
-) => {
-  const initParams = {}
+export const getInitialisationParameters = () => {
+  const urlSearchParams = window.location.search
+  const urlHashParamsAsSearchParams = '?' + window.location.hash.substring(1)
 
+  const initParams = {}
   new URLSearchParams(urlSearchParams).forEach((value, key) => {
+    initParams[key] = value
+  })
+  new URLSearchParams(urlHashParamsAsSearchParams).forEach((value, key) => {
     initParams[key] = value
   })
 
