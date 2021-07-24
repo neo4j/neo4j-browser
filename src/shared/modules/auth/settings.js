@@ -29,5 +29,10 @@ export const searchParamsToSaveForAfterAuthRedirect = [
   'run'
 ]
 
-export const isAuthLoggingEnabled = true // TODO: create a setting? or just check the NODE_ENV? always log warn and error?
-export const isAuthDebuggingEnabled = true // TODO: check the NODE_ENV, shall only work in development
+export const defaultTokenTypePrincipal = 'access_token'
+export const defaultTokenTypeAuthentication = 'access_token'
+export const defaultGrantType = 'authorization_code'
+export const defaultCodeChallengeMethod = 'S256'
+
+export const isAuthLoggingEnabled = true
+export const isAuthDebuggingEnabled = process.env.NODE_ENV !== 'production'

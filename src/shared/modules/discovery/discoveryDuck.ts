@@ -241,7 +241,7 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
               checkAndMergeSSOProviders(ssoProviders, true)
               const { searchParams } = new URL(window.location.href)
 
-              if (shouldRedirectToSSOServer(searchParams)) {
+              if (shouldRedirectToSSOServer()) {
                 const idpId = searchParams.get('arg')
                 authLog(`Initialised with idpId: "${idpId}"`)
 
@@ -249,7 +249,7 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
                   searchParamsToRemoveAfterAutoRedirect
                 )
                 authRequestForSSO(idpId)
-              } else if (wasRedirectedBackFromSSOServer(searchParams)) {
+              } else if (wasRedirectedBackFromSSOServer()) {
                 authLog('Handling auth_flow_step redirect')
 
                 creds = await handleAuthFromRedirect()

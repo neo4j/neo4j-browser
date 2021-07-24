@@ -3,11 +3,13 @@ import { isObject } from 'lodash'
 import {
   AUTH_STORAGE_SSO_PROVIDERS,
   AUTH_STORAGE_URL_SEARCH_PARAMS,
-  SSO_REDIRECT,
-  REDIRECT_URI
+  REDIRECT_URI,
+  SSO_REDIRECT
 } from './constants'
 import { addSearchParamsInBrowserHistory, authLog, authDebug } from './helpers'
 import {
+  defaultTokenTypeAuthentication,
+  defaultTokenTypePrincipal,
   mandatoryKeysForSSOProviderParams,
   mandatoryKeysForSSOProviders
 } from './settings'
@@ -97,6 +99,13 @@ export const getSSOProvidersFromStorage = () => {
     authLog('No SSO providers in (local) storage found')
     return []
   }
+  if (!window.isSecureContext) {
+    authLog(
+      'This application is NOT executed in a secure context. SSO support is therefore disabled. Load the application in a secure context to proceed with SSO.',
+      'warn'
+    )
+    return []
+  }
   return ssoProviders
 }
 
@@ -114,55 +123,50 @@ export const getSSOProviderByIdpId = idpId => {
 }
 
 export const getCredentialsFromAuthResult = (result, idpId) => {
-  const _parseJWTAndSetCredentials = toParseToken => {
-    const parsedJWT = jwtDecode(toParseToken)
-
-    authDebug('Credentials, parsed JWT', parsedJWT)
-
-    if (!parsedJWT) {
-      authLog(`Could not parse JWT for idp_id: ${idpId}, aborting`, 'warn')
-      return { username: '', password: '' }
-    }
-
-    const email = parsedJWT[principal] || parsedJWT.email || parsedJWT.sub
-    authLog(`Credentials assembly, username: ${email}`)
-
-    return { username: email, password: result.access_token }
-  }
-
-  let credentials = {}
+  const emptyCredentials = { username: '', password: '' }
   authLog(`Attempting to assemble credentials for idp_id: ${idpId}`)
 
   if (!result || !idpId) {
     authLog('No result or idp_id passed in', 'warn')
-    return credentials
+    return emptyCredentials
   }
 
   const selectedSSOProvider = getSSOProviderByIdpId(idpId)
-  if (!selectedSSOProvider) return
+  if (!selectedSSOProvider) return emptyCredentials
+
+  const tokenTypePrincipal =
+    selectedSSOProvider.config?.['token_type_principal'] ||
+    defaultTokenTypePrincipal
+  authLog(
+    `Credentials, using token type "${tokenTypePrincipal}" to retrieve principal`
+  )
+
+  const parsedJWT = jwtDecode(result[tokenTypePrincipal])
+  authDebug('Credentials, parsed JWT', parsedJWT)
+
+  if (!parsedJWT) {
+    authLog(
+      `Could not parse JWT of type "${tokenTypePrincipal}" for idp_id "${idpId}", aborting`,
+      'warn'
+    )
+    return emptyCredentials
+  }
 
   const principal = selectedSSOProvider.config?.principal || ''
-  authLog(`Credentials, principal: ${principal}`)
+  authLog(`Credentials, provided principal in config: ${principal}`)
 
-  switch (idpId) {
-    case 'google-oidc':
-      if (!result.id_token) {
-        authLog('No id_token in google-oidc result!', 'warn')
-        authLog(
-          `We do not support auth_flow: "${selectedSSOProvider.auth_flow}" for idp_id: "${idpId}" at the moment`,
-          'warn'
-        )
-        // INFO: Another HTTP call would be needed to get an id_token.
-        credentials = { username: '', password: '' }
-        break
-      }
-      credentials = _parseJWTAndSetCredentials(result.id_token)
-      break
-    default:
-      credentials = _parseJWTAndSetCredentials(result.access_token)
-      break
-  }
-  return credentials
+  const credsPrincipal =
+    parsedJWT[principal] || parsedJWT.email || parsedJWT.sub
+  authLog(`Credentials assembly with username: ${credsPrincipal}`)
+
+  const tokenTypeAuthentication =
+    selectedSSOProvider.config?.['token_type_authentication'] ||
+    defaultTokenTypeAuthentication
+  authLog(
+    `Credentials assembly with token type "${tokenTypeAuthentication}" as password`
+  )
+
+  return { username: credsPrincipal, password: result[tokenTypeAuthentication] }
 }
 
 export const temporarlyStoreUrlSearchParams = () => {
@@ -173,42 +177,33 @@ export const temporarlyStoreUrlSearchParams = () => {
       currentBrowserURLParams
     )}"`
   )
-
   window.sessionStorage.setItem(
     AUTH_STORAGE_URL_SEARCH_PARAMS,
     JSON.stringify(currentBrowserURLParams)
   )
 }
 
-export const shouldRedirectToSSOServer = (
-  searchParams = new URL(window.location.href).searchParams
-) => {
-  const cmd = (searchParams.get('cmd') || '').toLowerCase()
-  const arg = searchParams.get('arg')
-
-  return cmd === SSO_REDIRECT && arg
+export const shouldRedirectToSSOServer = () => {
+  const { cmd, arg } = getInitialisationParameters()
+  return (cmd || '').toLowerCase() === SSO_REDIRECT && arg
 }
 
-export const wasRedirectedBackFromSSOServer = (
-  searchParams = new URL(window.location.href).searchParams
-) => {
-  const authFlowStep = (searchParams.get('auth_flow_step') || '').toLowerCase()
-
-  return authFlowStep === REDIRECT_URI
+export const wasRedirectedBackFromSSOServer = () => {
+  const { auth_flow_step: authFlowStep } = getInitialisationParameters()
+  return (authFlowStep || '').toLowerCase() === REDIRECT_URI
 }
 
 export const restoreSearchParams = () => {
   authLog(`Retrieving temporarly stored url search params`)
-
   try {
     const storedParams = JSON.parse(
       window.sessionStorage.getItem(AUTH_STORAGE_URL_SEARCH_PARAMS)
     )
+
     window.sessionStorage.setItem(AUTH_STORAGE_URL_SEARCH_PARAMS, '')
 
     if (isObject(storedParams)) {
       addSearchParamsInBrowserHistory(storedParams)
-
       return storedParams
     } else {
       authLog('Invalid temporarly stored url search params')

@@ -20,7 +20,11 @@ import {
   authDebug,
   removeSearchParamsInBrowserHistory
 } from './helpers'
-import { searchParamsToRemoveAfterAuthRedirect } from './settings'
+import {
+  defaultCodeChallengeMethod,
+  defaultGrantType,
+  searchParamsToRemoveAfterAuthRedirect
+} from './settings'
 
 export const authRequestForSSO = idpId => {
   const selectedSSOProvider = getSSOProviderByIdpId(idpId)
@@ -82,7 +86,8 @@ export const authRequestForSSO = idpId => {
   }
 
   if (selectedSSOProvider.auth_flow === PKCE) {
-    const codeChallengeMethod = ssoConfig.code_challenge_method || 'S256'
+    const codeChallengeMethod =
+      ssoConfig.code_challenge_method || defaultCodeChallengeMethod
     authLog(
       `Auth flow "PKCE", using code_challenge_method: "${codeChallengeMethod}"`
     )
@@ -101,7 +106,7 @@ export const authRequestForSSO = idpId => {
       }
     )
   } else if (selectedSSOProvider.auth_flow === IMPLICIT) {
-    authLog('Auth flow "implicit"')
+    authLog('Auth flow "implicit flow"')
     _submitForm(form, params)
   } else {
     authLog(`Auth flow "${selectedSSOProvider.auth_flow}" is not supported.`)
@@ -147,7 +152,7 @@ export const handleAuthFromRedirect = () =>
     window.sessionStorage.setItem(AUTH_STORAGE_STATE, '')
 
     if ((tokenType || '').toLowerCase() === BEARER && accessToken) {
-      authLog('Successfully aquired access_token in "implict flow"')
+      authLog('Successfully aquired access_token in "implicit flow"')
 
       authDebug('Implicit flow id_token', idToken)
       authDebug('Implicit flow access_token', accessToken)
@@ -192,7 +197,7 @@ export const authRequestForToken = (idpId, code) => {
 
   const ssoParams = selectedSSOProvider.params || {}
   let details = {
-    grant_type: 'authorization_code',
+    grant_type: defaultGrantType,
     client_id: ssoParams.client_id,
     redirect_uri: ssoParams.redirect_uri,
     code_verifier: window.sessionStorage.getItem(AUTH_STORAGE_CODE_VERIFIER),
