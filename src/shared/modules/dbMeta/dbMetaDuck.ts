@@ -389,7 +389,7 @@ const databaseList = (store: any) =>
           return resolve(null)
         }
 
-        const res = await bolt.directTransaction(
+        const res = await bolt.routedReadTransaction(
           'SHOW DATABASES',
           {},
           {
@@ -397,8 +397,7 @@ const databaseList = (store: any) =>
             ...getBackgroundTxMetadata({
               hasServerSupport: canSendTxMetadata(store.getState())
             }),
-            useDb: SYSTEM_DB,
-            useDirectReadTransaction: true
+            useDb: SYSTEM_DB
           }
         )
         resolve(res)
@@ -469,15 +468,14 @@ const clusterRole = (store: any) =>
         return resolve(null)
       }
       bolt
-        .directTransaction(
+        .routedReadTransaction(
           getDbClusterRole(store.getState()),
           {},
           {
             useCypherThread: shouldUseCypherThread(store.getState()),
             ...getBackgroundTxMetadata({
               hasServerSupport: canSendTxMetadata(store.getState())
-            }),
-            useDirectReadTransaction: true
+            })
           }
         )
         .then(resolve)
@@ -595,7 +593,7 @@ export const serverConfigEpic = (some$: any, store: any) =>
           }
 
           bolt
-            .directTransaction(
+            .routedReadTransaction(
               `CALL ${
                 hasClientConfig(store.getState()) !== false
                   ? 'dbms.clientConfig()'
@@ -607,8 +605,7 @@ export const serverConfigEpic = (some$: any, store: any) =>
                 useCypherThread: shouldUseCypherThread(store.getState()),
                 ...getBackgroundTxMetadata({
                   hasServerSupport: canSendTxMetadata(store.getState())
-                }),
-                useDirectReadTransaction: true
+                })
               }
             )
             .then((r: any) => {
@@ -625,7 +622,7 @@ export const serverConfigEpic = (some$: any, store: any) =>
                 store.dispatch(setClientConfig(false))
 
                 bolt
-                  .directTransaction(
+                  .routedReadTransaction(
                     `CALL dbms.listConfig()`,
                     {},
                     {
@@ -633,8 +630,7 @@ export const serverConfigEpic = (some$: any, store: any) =>
                       useCypherThread: shouldUseCypherThread(store.getState()),
                       ...getBackgroundTxMetadata({
                         hasServerSupport: canSendTxMetadata(store.getState())
-                      }),
-                      useDirectReadTransaction: true
+                      })
                     }
                   )
                   .then(resolve)
@@ -702,15 +698,14 @@ export const serverInfoEpic = (some$: any, store: any) =>
       const db = getUseDb(state)
       const query = db === SYSTEM_DB ? 'SHOW DATABASES' : serverInfoQuery
       return Rx.Observable.fromPromise(
-        bolt.directTransaction(
+        bolt.routedReadTransaction(
           query,
           {},
           {
             useCypherThread: shouldUseCypherThread(store.getState()),
             ...getBackgroundTxMetadata({
               hasServerSupport: canSendTxMetadata(store.getState())
-            }),
-            useDirectReadTransaction: true
+            })
           }
         )
       )

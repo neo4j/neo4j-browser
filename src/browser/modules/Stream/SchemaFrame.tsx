@@ -26,7 +26,7 @@ import { replace, toUpper } from 'lodash-es'
 import semver from 'semver'
 
 import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
-import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import { ROUTED_CYPHER_READ_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import FrameTemplate from '../Frame/FrameTemplate'
 import Slide from '../Carousel/Slide'
 import {
@@ -162,21 +162,19 @@ export class SchemaFrame extends Component<any, SchemaFrameState> {
     if (this.props.bus) {
       // Indexes
       this.props.bus.self(
-        CYPHER_REQUEST,
+        ROUTED_CYPHER_READ_REQUEST,
         {
           query: 'CALL db.indexes()',
-          queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
-          useDirectReadTransaction: true
+          queryType: NEO4J_BROWSER_USER_ACTION_QUERY
         },
         this.responseHandler('indexes')
       )
       // Constraints
       this.props.bus.self(
-        CYPHER_REQUEST,
+        ROUTED_CYPHER_READ_REQUEST,
         {
           query: 'CALL db.constraints()',
-          queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
-          useDirectReadTransaction: true
+          queryType: NEO4J_BROWSER_USER_ACTION_QUERY
         },
         this.responseHandler('constraints')
       )

@@ -46,6 +46,7 @@ import {
 const NAME = 'cypher'
 export const CYPHER_REQUEST = `${NAME}/REQUEST`
 export const ROUTED_CYPHER_WRITE_REQUEST = `${NAME}/ROUTED_WRITE_REQUEST`
+export const ROUTED_CYPHER_READ_REQUEST = `${NAME}/ROUTED_READ_REQUEST`
 export const AD_HOC_CYPHER_REQUEST = `${NAME}/AD_HOC_REQUEST`
 export const CLUSTER_CYPHER_REQUEST = `${NAME}/CLUSTER_REQUEST`
 export const FORCE_CHANGE_PASSWORD = `${NAME}/FORCE_CHANGE_PASSWORD`
@@ -117,10 +118,7 @@ export const cypherRequestEpic = (some$: any, store: any) =>
         ...getUserTxMetadata(action.queryType || null)({
           hasServerSupport: canSendTxMetadata(store.getState())
         }),
-        useDb: action.useDb,
-        ...(action.useDirectReadTransaction
-          ? { useDirectReadTransaction: true }
-          : {})
+        useDb: action.useDb
       })
       .then((r: any) => ({
         type: action.$$responseChannel,
@@ -134,7 +132,36 @@ export const cypherRequestEpic = (some$: any, store: any) =>
       }))
   })
 
-export const routedCypherRequestEpic = (some$: any, store: any) =>
+export const routedReadCypherRequestEpic = (some$: any, store: any) =>
+  some$.ofType(ROUTED_CYPHER_WRITE_REQUEST).mergeMap((action: any) => {
+    if (!action.$$responseChannel) return Rx.Observable.of(null)
+
+    const [id, promise] = bolt.routedReadTransaction(
+      action.query,
+      action.params,
+      {
+        useCypherThread: shouldUseCypherThread(store.getState()),
+        ...getUserTxMetadata(action.queryType || null)({
+          hasServerSupport: canSendTxMetadata(store.getState())
+        }),
+        cancelable: true,
+        useDb: action.useDb
+      }
+    )
+    return promise
+      .then((result: any) => ({
+        type: action.$$responseChannel,
+        success: true,
+        result
+      }))
+      .catch((error: any) => ({
+        type: action.$$responseChannel,
+        success: false,
+        error
+      }))
+  })
+
+export const routedWriteCypherRequestEpic = (some$: any, store: any) =>
   some$.ofType(ROUTED_CYPHER_WRITE_REQUEST).mergeMap((action: any) => {
     if (!action.$$responseChannel) return Rx.Observable.of(null)
 

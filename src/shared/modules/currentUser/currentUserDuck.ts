@@ -98,7 +98,7 @@ export const getCurrentUserEpic = (some$: any, store: any) =>
         }
         try {
           const supportsMultiDb = await bolt.hasMultiDbSupport()
-          const res = await bolt.directTransaction(
+          const res = await bolt.routedReadTransaction(
             getShowCurrentUserProcedure(
               supportsMultiDb
                 ? FIRST_MULTI_DB_SUPPORT
@@ -110,8 +110,7 @@ export const getCurrentUserEpic = (some$: any, store: any) =>
               ...getBackgroundTxMetadata({
                 hasServerSupport: canSendTxMetadata(store.getState())
               }),
-              useDb: supportsMultiDb ? SYSTEM_DB : '',
-              useDirectReadTransaction: true
+              useDb: supportsMultiDb ? SYSTEM_DB : ''
             }
           )
 

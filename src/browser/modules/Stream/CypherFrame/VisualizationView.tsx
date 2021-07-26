@@ -28,7 +28,7 @@ import { withBus } from 'react-suber'
 import { ExplorerComponent } from '../../D3Visualization/components/Explorer'
 import { StyledVisContainer } from './VisualizationView.styled'
 
-import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import { ROUTED_CYPHER_READ_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
 import { resultHasTruncatedFields } from 'browser/modules/Stream/CypherFrame/helpers'
@@ -119,11 +119,10 @@ export class Visualization extends Component<any, VisualizationState> {
     return new Promise((resolve, reject) => {
       this.props.bus &&
         this.props.bus.self(
-          CYPHER_REQUEST,
+          ROUTED_CYPHER_READ_REQUEST,
           {
             query: query,
-            queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
-            useDirectReadTransaction: true
+            queryType: NEO4J_BROWSER_USER_ACTION_QUERY
           },
           (response: any) => {
             if (!response.success) {
@@ -158,12 +157,11 @@ export class Visualization extends Component<any, VisualizationState> {
     return new Promise<any>((resolve, reject) => {
       this.props.bus &&
         this.props.bus.self(
-          CYPHER_REQUEST,
+          ROUTED_CYPHER_READ_REQUEST,
           {
             query,
             params: { existingNodeIds, newNodeIds },
-            queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
-            useDirectReadTransaction: true
+            queryType: NEO4J_BROWSER_USER_ACTION_QUERY
           },
           (response: any) => {
             if (!response.success) {

@@ -21,7 +21,7 @@
 import React, { Component, ReactNode } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
-import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import { ROUTED_CYPHER_READ_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { Database, isEnterprise } from 'shared/modules/dbMeta/dbMetaDuck'
 import {
   isConnected,
@@ -103,11 +103,10 @@ export class SysInfoFrame extends Component<
 
       if (bus && isConnected) {
         bus.self(
-          CYPHER_REQUEST,
+          ROUTED_CYPHER_READ_REQUEST,
           {
             query: 'CALL dbms.listConfig("metrics.")',
-            queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
-            uuseDirectReadTransaction: true
+            queryType: NEO4J_BROWSER_USER_ACTION_QUERY
           },
           ({ success, result }) => {
             if (success) {
@@ -170,15 +169,14 @@ export class SysInfoFrame extends Component<
     if (bus && isConnected && useDb) {
       this.setState({ lastFetch: Date.now() })
       bus.self(
-        CYPHER_REQUEST,
+        ROUTED_CYPHER_READ_REQUEST,
         {
           query: sysinfoQuery({
             databaseName: useDb,
             namespacesEnabled,
             userConfiguredPrefix
           }),
-          queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
-          useDirectReadTransaction: true
+          queryType: NEO4J_BROWSER_USER_ACTION_QUERY
         },
         responseHandler(this.setState.bind(this))
       )

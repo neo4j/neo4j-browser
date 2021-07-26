@@ -34,7 +34,7 @@ import styled from 'styled-components'
 import { Bus } from 'suber'
 
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
-import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import { ROUTED_CYPHER_READ_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { QueryResult } from 'neo4j-driver'
 
 const shouldCheckForHints = (code: string) =>
@@ -442,11 +442,10 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
         const statementLineNumber = statement.start.line - 1
 
         bus.self(
-          CYPHER_REQUEST,
+          ROUTED_CYPHER_READ_REQUEST,
           {
             query: EXPLAIN_QUERY_PREFIX + text,
-            queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
-            useDirectReadTransaction: true
+            queryType: NEO4J_BROWSER_USER_ACTION_QUERY
           },
           (response: { result: QueryResult; success?: boolean }) => {
             if (
