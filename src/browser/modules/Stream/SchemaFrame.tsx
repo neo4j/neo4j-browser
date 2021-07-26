@@ -165,7 +165,8 @@ export class SchemaFrame extends Component<any, SchemaFrameState> {
         CYPHER_REQUEST,
         {
           query: 'CALL db.indexes()',
-          queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+          queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
+          useDirectReadTransaction: true
         },
         this.responseHandler('indexes')
       )
@@ -174,7 +175,8 @@ export class SchemaFrame extends Component<any, SchemaFrameState> {
         CYPHER_REQUEST,
         {
           query: 'CALL db.constraints()',
-          queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+          queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
+          useDirectReadTransaction: true
         },
         this.responseHandler('constraints')
       )

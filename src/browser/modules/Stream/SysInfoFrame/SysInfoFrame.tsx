@@ -106,7 +106,8 @@ export class SysInfoFrame extends Component<
           CYPHER_REQUEST,
           {
             query: 'CALL dbms.listConfig("metrics.")',
-            queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+            queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
+            uuseDirectReadTransaction: true
           },
           ({ success, result }) => {
             if (success) {
@@ -176,7 +177,8 @@ export class SysInfoFrame extends Component<
             namespacesEnabled,
             userConfiguredPrefix
           }),
-          queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+          queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
+          useDirectReadTransaction: true
         },
         responseHandler(this.setState.bind(this))
       )

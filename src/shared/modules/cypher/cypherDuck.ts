@@ -117,7 +117,10 @@ export const cypherRequestEpic = (some$: any, store: any) =>
         ...getUserTxMetadata(action.queryType || null)({
           hasServerSupport: canSendTxMetadata(store.getState())
         }),
-        useDb: action.useDb
+        useDb: action.useDb,
+        ...(action.useDirectReadTransaction
+          ? { useDirectReadTransaction: true }
+          : {})
       })
       .then((r: any) => ({
         type: action.$$responseChannel,

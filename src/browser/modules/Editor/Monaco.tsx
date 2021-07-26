@@ -428,9 +428,57 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
       this.editor?.setPosition(cursorPosition)
     }
 
+<<<<<<< HEAD
     // If changing multistatement setting, add or remove warnings if needed
     if (enableMultiStatementMode !== prevProps.enableMultiStatementMode) {
       this.onContentUpdate()
+=======
+      // add a warning for each notification returned by explain query
+      statements.forEach(statement => {
+        const text = statement.getText()
+        if (!shouldCheckForHints(text)) {
+          return
+        }
+        const statementLineNumber = statement.start.line - 1
+
+        bus.self(
+          CYPHER_REQUEST,
+          {
+            query: EXPLAIN_QUERY_PREFIX + text,
+            queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
+            useDirectReadTransaction: true
+          },
+          (response: { result: QueryResult; success?: boolean }) => {
+            if (
+              response.success === true &&
+              response.result.summary.notifications.length > 0
+            ) {
+              editor.setModelMarkers(model, monacoId, [
+                ...editor.getModelMarkers({ owner: monacoId }),
+                ...response.result.summary.notifications.map(
+                  ({ description, position, title }) => {
+                    const line = 'line' in position ? position.line : 0
+                    const column = 'column' in position ? position.column : 0
+                    return {
+                      startLineNumber: statementLineNumber + line,
+                      startColumn:
+                        statement.start.column +
+                        (line === 1
+                          ? column - EXPLAIN_QUERY_PREFIX_LENGTH
+                          : column),
+                      endLineNumber: statement.stop.line,
+                      endColumn: statement.stop.column + 2,
+                      message: title + '\n\n' + description,
+                      severity: MarkerSeverity.Warning
+                    }
+                  }
+                )
+              ])
+            }
+          }
+        )
+      })
+>>>>>>> fcb815ecc1 (Move more queries and test)
     }
   }
 

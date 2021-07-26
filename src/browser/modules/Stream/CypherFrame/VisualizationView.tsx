@@ -120,7 +120,11 @@ export class Visualization extends Component<any, VisualizationState> {
       this.props.bus &&
         this.props.bus.self(
           CYPHER_REQUEST,
-          { query: query, queryType: NEO4J_BROWSER_USER_ACTION_QUERY },
+          {
+            query: query,
+            queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
+            useDirectReadTransaction: true
+          },
           (response: any) => {
             if (!response.success) {
               reject(new Error())
@@ -158,7 +162,8 @@ export class Visualization extends Component<any, VisualizationState> {
           {
             query,
             params: { existingNodeIds, newNodeIds },
-            queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+            queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
+            useDirectReadTransaction: true
           },
           (response: any) => {
             if (!response.success) {
