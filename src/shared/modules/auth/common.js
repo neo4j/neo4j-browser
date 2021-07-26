@@ -195,7 +195,7 @@ export const wasRedirectedBackFromSSOServer = () => {
   return (authFlowStep || '').toLowerCase() === REDIRECT_URI
 }
 
-export const restoreSearchParams = () => {
+export const restoreSearchAndHashParamsParams = () => {
   authLog(`Retrieving temporarly stored url search params`)
   try {
     const storedParams = JSON.parse(
@@ -204,8 +204,12 @@ export const restoreSearchParams = () => {
 
     window.sessionStorage.setItem(AUTH_STORAGE_URL_SEARCH_PARAMS, '')
 
+    debugger
     if (isObject(storedParams)) {
+      const crntHashParams = window.location.hash || undefined
       addSearchParamsInBrowserHistory(storedParams)
+      const newUrl = `${window.location.href}${crntHashParams || ''}`
+      window.history.replaceState({}, '', newUrl)
       return storedParams
     } else {
       authLog('Invalid temporarly stored url search params')

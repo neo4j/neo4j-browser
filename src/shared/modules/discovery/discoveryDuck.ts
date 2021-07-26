@@ -222,8 +222,6 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
                 removeSearchParamsInBrowserHistory(
                   searchParamsToRemoveAfterAutoRedirect
                 )
-                // TODO check that stuff that shouldn't be in URL is not in url
-                // TODO UI -> errors
                 authRequestForSSO(idpId)
               } else if (wasRedirectedBackFromSSOServer()) {
                 authLog('Handling auth_flow_step redirect')

@@ -95,7 +95,6 @@ export const authRequestForSSO = idpId => {
     const codeVerifier = createCodeVerifier(codeChallengeMethod)
     window.sessionStorage.setItem(AUTH_STORAGE_CODE_VERIFIER, codeVerifier)
 
-    debugger
     createCodeChallenge(codeChallengeMethod, codeVerifier).then(
       codeChallenge => {
         params = {
@@ -112,9 +111,6 @@ export const authRequestForSSO = idpId => {
   } else {
     authLog(`Auth flow "${selectedSSOProvider.auth_flow}" is not supported.`)
   }
-}
-const removeHashParamsFromSessionStorage = () => {
-  searchParamsToRemoveAfterAuthRedirect.forEach(param)
 }
 
 export const handleAuthFromRedirect = () =>
