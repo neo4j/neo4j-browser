@@ -448,7 +448,6 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
             queryType: NEO4J_BROWSER_USER_ACTION_QUERY
           },
           (response: { result: QueryResult; success?: boolean }) => {
-            console.log(response)
             if (
               response.success === true &&
               response.result.summary.notifications.length > 0

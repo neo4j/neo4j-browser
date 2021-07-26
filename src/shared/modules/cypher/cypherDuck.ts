@@ -211,6 +211,7 @@ export const clusterCypherRequestEpic = (some$: any, store: any) =>
           const addresses = flatten(
             res.records.map((record: any) => record.get('addresses'))
           ).filter((address: any) => address.startsWith('bolt://'))
+          // TODO we should run -> unique here.
           return {
             action,
             observables: addresses.map((host: any) => {
