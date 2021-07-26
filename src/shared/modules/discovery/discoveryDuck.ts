@@ -203,35 +203,10 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
           // fake discovery response
           //Promise.resolve({
           //bolt: 'bolt://localhost:7687',
-          //neo4j_version: '4',
-          //sso_providers: [
-          //{
-          //id: 'keycloak-oidc',
-          //name: 'KeyCloak',
-          //auth_flow: 'pkce',
-          //auth_endpoint:
-          //'http://localhost:18080/auth/realms/myrealm/protocol/openid-connect/auth',
-          //token_endpoint:
-          //'http://localhost:18080/auth/realms/myrealm/protocol/openid-connect/token',
-          //well_known_discovery_uri:
-          //'http://localhost:18080/auth/realms/myrealm/.well-known/openid-configuration',
-          //params: {
-          //client_id: 'account',
-          //redirect_uri:
-          //'http://localhost:8080?idp_id=keycloak-oidc&auth_flow_step=redirect_uri',
-          //response_type: 'code',
-          //scope: 'openid groups'
-          //},
-          //config: {
-          //principal: 'preferred_username',
-          //code_challenge_method: 'S256'
-          //}
-          //}
-          //]
+          //neo4j_version: '4'
           //})
           .then(async result => {
             const ssoProviders =
-              // @ts-ignore
               result.sso_providers || result.ssoproviders || result.ssoProviders
             let creds: { username?: string; password?: string } = {}
 
@@ -247,6 +222,8 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
                 removeSearchParamsInBrowserHistory(
                   searchParamsToRemoveAfterAutoRedirect
                 )
+                // TODO check that stuff that shouldn't be in URL is not in url
+                // TODO UI -> errors
                 authRequestForSSO(idpId)
               } else if (wasRedirectedBackFromSSOServer()) {
                 authLog('Handling auth_flow_step redirect')
@@ -263,7 +240,6 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
 
             let host =
               result &&
-              // @ts-ignore
               (result.bolt_routing || result.bolt_direct || result.bolt)
             // Try to get info from server
             if (!host) {

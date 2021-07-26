@@ -112,6 +112,9 @@ export const authRequestForSSO = idpId => {
     authLog(`Auth flow "${selectedSSOProvider.auth_flow}" is not supported.`)
   }
 }
+const removeHashParamsFromSessionStorage = () => {
+  searchParamsToRemoveAfterAuthRedirect.forEach(param)
+}
 
 export const handleAuthFromRedirect = () =>
   new Promise((resolve, reject) => {
