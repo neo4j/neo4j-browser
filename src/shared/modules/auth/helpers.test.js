@@ -51,7 +51,7 @@ describe('addSearchParamsInBrowserHistory', () => {
     )
   })
 
-  test('keeps URL hash parameters', () => {
+  test('does not keep URL hash parameters', () => {
     const hashUrlParams = '#code=df56&code_verifier=rt43'
     window.history.replaceState(
       {},
@@ -62,9 +62,7 @@ describe('addSearchParamsInBrowserHistory', () => {
       originalWindowLocationHref + hashUrlParams
     )
     addSearchParamsInBrowserHistory({ rest: 'test' })
-    expect(window.location.href).toEqual(
-      originalWindowLocationHref + '?rest=test' + hashUrlParams
-    )
+    expect(window.location.href).toEqual('http://localhost/?code=843cvg')
   })
 })
 

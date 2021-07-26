@@ -21,13 +21,6 @@ export const searchParamsToRemoveAfterAuthRedirect = [
   'session_state',
   'code'
 ]
-export const searchParamsToSaveForAfterAuthRedirect = [
-  'connectURL',
-  'discoveryURL',
-  'search',
-  'perspective',
-  'run'
-]
 
 export const defaultTokenTypePrincipal = 'access_token'
 export const defaultTokenTypeAuthentication = 'access_token'

@@ -174,7 +174,6 @@ export const getCredentialsFromAuthResult = (result, idpId) => {
 
 export const temporarlyStoreUrlSearchParams = () => {
   const currentBrowserURLParams = getInitialisationParameters()
-
   authLog(
     `Temporarly storing the url search params. data: "${JSON.stringify(
       currentBrowserURLParams

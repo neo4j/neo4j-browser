@@ -72,7 +72,6 @@ export const createCodeChallenge = async (method, codeVerifier) => {
 export const addSearchParamsInBrowserHistory = paramsToAddObj => {
   if (!paramsToAddObj || !isObject(paramsToAddObj)) return
 
-  const crntHashParams = window.location.hash || undefined
   const searchParams = new URLSearchParams(window.location.search)
   Object.entries(paramsToAddObj).forEach(([key, value]) => {
     if (key && value && value.length) {
@@ -80,10 +79,10 @@ export const addSearchParamsInBrowserHistory = paramsToAddObj => {
     }
   })
 
-  const newUrl = `${
-    window.location.origin
-  }?${searchParams.toString()}${crntHashParams || ''}`
-  window.history.replaceState({ path: newUrl }, '', newUrl)
+  const newUrlSearchParams = new URLSearchParams(cleansedSearchParams)
+
+  const newUrl = `${window.location.origin}?${newUrlSearchParams.toString()}`
+  window.history.replaceState({}, '', newUrl)
 }
 
 export const removeSearchParamsInBrowserHistory = paramsToRemove => {
