@@ -79,7 +79,7 @@ export const addSearchParamsInBrowserHistory = paramsToAddObj => {
     }
   })
 
-  const newUrlSearchParams = new URLSearchParams(cleansedSearchParams)
+  const newUrlSearchParams = new URLSearchParams(searchParams)
 
   const newUrl = `${window.location.origin}?${newUrlSearchParams.toString()}`
   window.history.replaceState({}, '', newUrl)

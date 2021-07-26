@@ -95,6 +95,7 @@ export const authRequestForSSO = idpId => {
     const codeVerifier = createCodeVerifier(codeChallengeMethod)
     window.sessionStorage.setItem(AUTH_STORAGE_CODE_VERIFIER, codeVerifier)
 
+    debugger
     createCodeChallenge(codeChallengeMethod, codeVerifier).then(
       codeChallenge => {
         params = {
