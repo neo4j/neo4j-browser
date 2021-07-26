@@ -62,10 +62,11 @@ import {
 } from './modules/editor/editorDuck'
 import {
   adHocCypherRequestEpic,
-  routedCypherRequestEpic,
-  cypherRequestEpic,
   clusterCypherRequestEpic,
-  handleForcePasswordChangeEpic
+  cypherRequestEpic,
+  handleForcePasswordChangeEpic,
+  routedReadCypherRequestEpic,
+  routedWriteCypherRequestEpic
 } from './modules/cypher/cypherDuck'
 import {
   featuresDiscoveryEpic,
@@ -129,7 +130,8 @@ export default combineEpics(
   injectDiscoveryEpic,
   populateEditorFromUrlEpic,
   adHocCypherRequestEpic,
-  routedCypherRequestEpic,
+  routedReadCypherRequestEpic,
+  routedWriteCypherRequestEpic,
   cypherRequestEpic,
   clusterCypherRequestEpic,
   clearLocalstorageEpic,

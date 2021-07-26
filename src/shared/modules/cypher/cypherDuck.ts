@@ -133,21 +133,17 @@ export const cypherRequestEpic = (some$: any, store: any) =>
   })
 
 export const routedReadCypherRequestEpic = (some$: any, store: any) =>
-  some$.ofType(ROUTED_CYPHER_WRITE_REQUEST).mergeMap((action: any) => {
+  some$.ofType(ROUTED_CYPHER_READ_REQUEST).mergeMap((action: any) => {
     if (!action.$$responseChannel) return Rx.Observable.of(null)
 
-    const [id, promise] = bolt.routedReadTransaction(
-      action.query,
-      action.params,
-      {
-        useCypherThread: shouldUseCypherThread(store.getState()),
-        ...getUserTxMetadata(action.queryType || null)({
-          hasServerSupport: canSendTxMetadata(store.getState())
-        }),
-        cancelable: true,
-        useDb: action.useDb
-      }
-    )
+    console.log('query', action.query)
+    const promise = bolt.routedReadTransaction(action.query, action.params, {
+      useCypherThread: shouldUseCypherThread(store.getState()),
+      ...getUserTxMetadata(action.queryType || null)({
+        hasServerSupport: canSendTxMetadata(store.getState())
+      }),
+      useDb: action.useDb
+    })
     return promise
       .then((result: any) => ({
         type: action.$$responseChannel,

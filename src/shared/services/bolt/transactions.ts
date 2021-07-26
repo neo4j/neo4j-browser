@@ -123,10 +123,7 @@ export function directTransaction(
   } = opts
   const session = getGlobalDrivers()
     ?.getDirectDriver()
-    ?.session({
-      defaultAccessMode: neo4j.session.WRITE,
-      database: useDb
-    })
+    ?.session({ defaultAccessMode: neo4j.session.WRITE, database: useDb })
   if (!cancelable) return _transaction(input, parameters, session, txMetadata)
   return _trackedTransaction(input, parameters, session, requestId, txMetadata)
 }
