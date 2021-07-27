@@ -170,6 +170,7 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
     .mergeMap((action: any) => {
       // Only when in a environment were we can guess discovery endpoint
       if (!action.discoveryURL || !hasDiscoveryEndpoint(store.getState())) {
+        authLog('No    ')
         return Promise.resolve({ type: 'NOOP' })
       }
       if (action.forceURL) {
@@ -193,12 +194,12 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
           discovered: onlyTruthy
         })
       }
+      const discoveryEndpoint = getDiscoveryEndpoint(
+        getHostedUrl(store.getState())
+      )
       return Rx.Observable.fromPromise(
         remote
-          .getJSON(
-            action.discoveryURL ||
-              getDiscoveryEndpoint(getHostedUrl(store.getState()))
-          )
+          .getJSON(action.discoveryURL || discoveryEndpoint)
           // Uncomment below and comment out above when doing manual tests in dev mode to
           // fake discovery response
           //Promise.resolve({
@@ -233,7 +234,10 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
                 }
               }
             } else {
-              authLog('No SSO providers found on endpoint')
+              authLog(
+                `No SSO providers found in data at endpoint ${action.discoveryURL ||
+                  discoveryEndpoint}`
+              )
             }
 
             let host =
@@ -241,6 +245,7 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
               (result.bolt_routing || result.bolt_direct || result.bolt)
             // Try to get info from server
             if (!host) {
+              authLog('No host found in discovery data, aborting')
               throw new Error('No bolt address found')
             }
             host = generateBoltUrl(
@@ -258,6 +263,10 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
             return { type: DONE, discovered }
           })
           .catch(() => {
+            authLog(
+              `No discovery json data found at ${action.discoveryURL ||
+                discoveryEndpoint}`
+            )
             throw new Error('No info from endpoint')
           })
       ).catch(() => {
