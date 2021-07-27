@@ -169,7 +169,7 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
     .merge(some$.ofType(USER_CLEAR))
     .mergeMap((action: any) => {
       // Only when in a environment were we can guess discovery endpoint
-      if (!action.discoveryURL || !hasDiscoveryEndpoint(store.getState())) {
+      if (!action.discoveryURL && !hasDiscoveryEndpoint(store.getState())) {
         authLog('No discovery endpoint found or passed')
         return Promise.resolve({ type: 'NOOP' })
       }
