@@ -203,8 +203,8 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
           // Uncomment below and comment out above when doing manual tests in dev mode to
           // fake discovery response
           //Promise.resolve({
-          //bolt: 'bolt://localhost:7687',
-          //neo4j_version: '4'
+          // bolt: 'bolt://localhost:7687',
+          // neo4j_version: '4.0.3'
           //})
           .then(async result => {
             const ssoProviders =
