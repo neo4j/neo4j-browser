@@ -131,9 +131,10 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
     : ''
 
   const { ssoError } = props
+  const showSso = ssoProviders.length > 0 || ssoError
   return (
     <FormContainer>
-      {ssoProviders.length > 0 && (
+      {showSso && (
         <SsoOptions>
           <H3>Single sign-on</H3>
           {ssoProviders.map((provider: any) => (

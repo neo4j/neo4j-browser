@@ -445,8 +445,8 @@ type DiscoverDataAction = {
     host?: string
     encrypted?: string
     hasForceUrl?: boolean
+    ssoError?: string
   }
-  ssoError?: string
 }
 
 function shouldTryAutoconnecting(conn: Connection | null): boolean {
@@ -523,7 +523,12 @@ export const startupConnectEpic = (action$: any, store: any) => {
 
       // Otherwise fail autoconnect
       store.dispatch(setActiveConnection(null))
-      store.dispatch(discovery.updateDiscoveryConnection({ password: '' }))
+      store.dispatch(
+        discovery.updateDiscoveryConnection({
+          password: '',
+          ssoError: discovered?.ssoError
+        })
+      )
       return Promise.resolve({ type: STARTUP_CONNECTION_FAILED })
     })
 }

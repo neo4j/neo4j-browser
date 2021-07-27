@@ -5,7 +5,7 @@ import { isAuthLoggingEnabled, isAuthDebuggingEnabled } from './settings'
 export const authLog = (msg, type = 'log') => {
   if (!isAuthLoggingEnabled) return
   if (!['log', 'error', 'warn'].includes(type)) return
-  console[type](`${AUTH_LOGGING_PREFIX} ${msg}`)
+  console[type](`${AUTH_LOGGING_PREFIX} [${new Date().toISOString()}] ${msg}`)
 }
 
 export const authDebug = (msg, content) => {

@@ -166,7 +166,8 @@ export const getCredentialsFromAuthResult = (result, idpId) => {
     selectedSSOProvider.config?.['token_type_authentication'] ||
     defaultTokenTypeAuthentication
   authLog(
-    `Credentials assembly with token type "${tokenTypeAuthentication}" as password`
+    `Credentials assembled with token type "${tokenTypeAuthentication}" as password.
+If connection still does not succeed, make sure neo4j.conf is set up correctly`
   )
 
   return { username: credsPrincipal, password: result[tokenTypeAuthentication] }
@@ -204,7 +205,6 @@ export const restoreSearchAndHashParamsParams = () => {
 
     window.sessionStorage.setItem(AUTH_STORAGE_URL_SEARCH_PARAMS, '')
 
-    debugger
     if (isObject(storedParams)) {
       const crntHashParams = window.location.hash || undefined
       addSearchParamsInBrowserHistory(storedParams)

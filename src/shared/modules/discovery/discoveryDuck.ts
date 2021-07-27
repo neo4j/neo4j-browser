@@ -170,7 +170,7 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
     .mergeMap((action: any) => {
       // Only when in a environment were we can guess discovery endpoint
       if (!action.discoveryURL || !hasDiscoveryEndpoint(store.getState())) {
-        authLog('No    ')
+        authLog('No discovery endpoint found or passed')
         return Promise.resolve({ type: 'NOOP' })
       }
       if (action.forceURL) {
@@ -266,29 +266,36 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
             const supportsMultiDb =
               !isAura && parseInt((result.neo4j_version || '0').charAt(0)) >= 4
             const discovered = supportsMultiDb
-              ? { supportsMultiDb, host, ...creds, ssoError }
-              : { host, ...creds, ssoError }
+              ? { supportsMultiDb, host, ssoError, ...creds }
+              : { host, ssoError, ...creds }
 
-            return { type: DONE, discovered, ssoError }
+            return { type: DONE, discovered }
           })
           .catch(() => {
             const noDataFoundMessage = `No discovery json data found at ${action.discoveryURL ||
               discoveryEndpoint}`
-            const noHttpPrefixMessage = action?.discoveryURL.startsWith('http')
-              ? 'Double check that the url is a valid url (including HTTP(S)).'
-              : ''
-            const noJsonSuffixMessage = action?.discoveryURL.endsWith('.json')
-              ? 'Double check that the discovery url returns a valid JSON file.'
-              : ''
+            const noHttpPrefixMessage = action?.discoveryURL
+              .toLowerCase()
+              .startsWith('http')
+              ? ''
+              : 'Double check that the url is a valid url (including HTTP(S)).'
+            const noJsonSuffixMessage = action?.discoveryURL
+              .toLowerCase()
+              .endsWith('.json')
+              ? ''
+              : 'Double check that the discovery url returns a valid JSON file.'
+
             const ssoError = [
               noDataFoundMessage,
               noHttpPrefixMessage,
               noJsonSuffixMessage
-            ].join('\n')
+            ]
+              .join('\n')
+              .trim()
             authLog(ssoError)
 
             if (action.discoveryURL) {
-              return { type: DONE, ssoError }
+              return { type: DONE, discovered: { ssoError } }
             }
             throw new Error('No info from endpoint')
           })

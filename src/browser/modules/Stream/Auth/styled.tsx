@@ -169,4 +169,5 @@ export const SsoError = styled.div`
   background-color: rgba(253, 118, 110, 0.3);
   border-radius: 2px;
   padding: 3px;
+  white-space: pre-line;
 `
