@@ -28,14 +28,19 @@ import {
 
 export const authRequestForSSO = idpId => {
   const selectedSSOProvider = getSSOProviderByIdpId(idpId)
-  if (!selectedSSOProvider) return
+  if (!selectedSSOProvider) {
+    const error = `Invalid OAuth2 endpoint: "${oauth2Endpoint}"`
+    authLog(error)
+    return error
+  }
 
   temporarlyStoreUrlSearchParams()
 
   const oauth2Endpoint = selectedSSOProvider.auth_endpoint
   if (!oauth2Endpoint) {
-    authLog(`Invalid OAuth2 endpoint: "${oauth2Endpoint}"`)
-    return
+    const error = `Invalid OAuth2 endpoint: "${oauth2Endpoint}"`
+    authLog(error)
+    return error
   }
   authLog(`Using OAuth2 endpoint: "${oauth2Endpoint}" for idp_id: ${idpId}`)
 
@@ -109,7 +114,9 @@ export const authRequestForSSO = idpId => {
     authLog('Auth flow "implicit flow"')
     _submitForm(form, params)
   } else {
-    authLog(`Auth flow "${selectedSSOProvider.auth_flow}" is not supported.`)
+    const error = `Auth flow "${selectedSSOProvider.auth_flow}" is not supported.`
+    authLog(error)
+    return error
   }
 }
 

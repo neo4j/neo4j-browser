@@ -210,6 +210,7 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
             const ssoProviders =
               result.sso_providers || result.ssoproviders || result.ssoProviders
             let creds: { username?: string; password?: string } = {}
+            let ssoError: string | undefined
 
             if (ssoProviders) {
               authLog('SSO providers found on endpoint')
@@ -223,13 +224,17 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
                 removeSearchParamsInBrowserHistory(
                   searchParamsToRemoveAfterAutoRedirect
                 )
-                authRequestForSSO(idpId)
+                const err = authRequestForSSO(idpId)
+                if (err) {
+                  ssoError = err
+                }
               } else if (wasRedirectedBackFromSSOServer()) {
                 authLog('Handling auth_flow_step redirect')
 
                 try {
                   creds = await handleAuthFromRedirect()
                 } catch (e) {
+                  ssoError = e
                   authLog(e)
                 }
               }
@@ -238,6 +243,10 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
                 `No SSO providers found in data at endpoint ${action.discoveryURL ||
                   discoveryEndpoint}`
               )
+              // We assume if discoveryURL is set that they intended to use SSO
+              if (action.discoveryURL) {
+                ssoError = `No SSO providers found at ${action.discoveryURL}`
+              }
             }
 
             let host =
@@ -257,16 +266,30 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
             const supportsMultiDb =
               !isAura && parseInt((result.neo4j_version || '0').charAt(0)) >= 4
             const discovered = supportsMultiDb
-              ? { supportsMultiDb, host, ...creds }
-              : { host, ...creds }
+              ? { supportsMultiDb, host, ...creds, ssoError }
+              : { host, ...creds, ssoError }
 
-            return { type: DONE, discovered }
+            return { type: DONE, discovered, ssoError }
           })
           .catch(() => {
-            authLog(
-              `No discovery json data found at ${action.discoveryURL ||
-                discoveryEndpoint}`
-            )
+            const noDataFoundMessage = `No discovery json data found at ${action.discoveryURL ||
+              discoveryEndpoint}`
+            const noHttpPrefixMessage = action?.discoveryURL.startsWith('http')
+              ? 'Double check that the url is a valid url (including HTTP(S)).'
+              : ''
+            const noJsonSuffixMessage = action?.discoveryURL.endsWith('.json')
+              ? 'Double check that the discovery url returns a valid JSON file.'
+              : ''
+            const ssoError = [
+              noDataFoundMessage,
+              noHttpPrefixMessage,
+              noJsonSuffixMessage
+            ].join('\n')
+            authLog(ssoError)
+
+            if (action.discoveryURL) {
+              return { type: DONE, ssoError }
+            }
             throw new Error('No info from endpoint')
           })
       ).catch(() => {

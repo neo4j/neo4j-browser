@@ -93,6 +93,7 @@ export type Connection = {
   authenticationMethod: AuthenticationMethod
   requestedUseDb?: string
   restApi?: string
+  ssoError?: string
 }
 
 const initialState: ConnectionReduxState = {
@@ -445,6 +446,7 @@ type DiscoverDataAction = {
     encrypted?: string
     hasForceUrl?: boolean
   }
+  ssoError?: string
 }
 
 function shouldTryAutoconnecting(conn: Connection | null): boolean {
