@@ -468,7 +468,7 @@ const clusterRole = (store: any) =>
         return resolve(null)
       }
       bolt
-        .routedReadTransaction(
+        .directTransaction(
           getDbClusterRole(store.getState()),
           {},
           {

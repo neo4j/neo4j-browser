@@ -27,8 +27,10 @@ import bolt from 'services/bolt/bolt'
 import { withBus } from 'react-suber'
 import { ExplorerComponent } from '../../D3Visualization/components/Explorer'
 import { StyledVisContainer } from './VisualizationView.styled'
-
-import { ROUTED_CYPHER_READ_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import {
+  CYPHER_REQUEST,
+  ROUTED_CYPHER_READ_REQUEST
+} from 'shared/modules/cypher/cypherDuck'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
 import { resultHasTruncatedFields } from 'browser/modules/Stream/CypherFrame/helpers'
@@ -157,7 +159,7 @@ export class Visualization extends Component<any, VisualizationState> {
     return new Promise<any>((resolve, reject) => {
       this.props.bus &&
         this.props.bus.self(
-          ROUTED_CYPHER_READ_REQUEST,
+          CYPHER_REQUEST, // Not a routed read because we don't yet use Bookmarks (see docs)
           {
             query,
             params: { existingNodeIds, newNodeIds },
