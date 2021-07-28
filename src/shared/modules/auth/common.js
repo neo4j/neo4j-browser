@@ -3,8 +3,7 @@ import { isObject } from 'lodash'
 import {
   AUTH_STORAGE_SSO_PROVIDERS,
   AUTH_STORAGE_URL_SEARCH_PARAMS,
-  REDIRECT_URI,
-  SSO_REDIRECT
+  REDIRECT_URI
 } from './constants'
 import { addSearchParamsInBrowserHistory, authLog, authDebug } from './helpers'
 import {
@@ -166,8 +165,7 @@ export const getCredentialsFromAuthResult = (result, idpId) => {
     selectedSSOProvider.config?.['token_type_authentication'] ||
     defaultTokenTypeAuthentication
   authLog(
-    `Credentials assembled with token type "${tokenTypeAuthentication}" as password.
-If connection still does not succeed, make sure neo4j.conf is set up correctly`
+    `Credentials assembled with token type "${tokenTypeAuthentication}" as password. If connection still does not succeed, make sure neo4j.conf is set up correctly`
   )
 
   return { username: credsPrincipal, password: result[tokenTypeAuthentication] }
@@ -184,11 +182,6 @@ export const temporarlyStoreUrlSearchParams = () => {
     AUTH_STORAGE_URL_SEARCH_PARAMS,
     JSON.stringify(currentBrowserURLParams)
   )
-}
-
-export const shouldRedirectToSSOServer = () => {
-  const { cmd, arg } = getInitialisationParameters()
-  return (cmd || '').toLowerCase() === SSO_REDIRECT && arg
 }
 
 export const wasRedirectedBackFromSSOServer = () => {

@@ -446,6 +446,7 @@ type DiscoverDataAction = {
     encrypted?: string
     hasForceUrl?: boolean
     ssoError?: string
+    attemptSsoLogin?: boolean
   }
 }
 
@@ -512,7 +513,10 @@ export const startupConnectEpic = (action$: any, store: any) => {
                 store.dispatch(
                   discovery.updateDiscoveryConnection({
                     username: '',
-                    password: ''
+                    password: '',
+                    ssoError: discovered.attemptSsoLogin
+                      ? 'SSO token was not accepted by neo4j'
+                      : undefined
                   })
                 )
                 resolve({ type: STARTUP_CONNECTION_FAILED })

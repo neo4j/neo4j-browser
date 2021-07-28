@@ -159,7 +159,7 @@ export const SsoOptions = styled.div`
   border-right: 1px solid rgb(77, 74, 87, 0.3);
   padding-right: 30px;
   margin-right: 30px;
-  max-width: 200px;
+  max-width: 300px;
 `
 export const SsoButtonContainer = styled.div`
   margin-bottom: 5px;

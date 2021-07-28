@@ -45,7 +45,6 @@ import {
 } from 'shared/modules/auth/helpers'
 import {
   checkAndMergeSSOProviders,
-  shouldRedirectToSSOServer,
   wasRedirectedBackFromSSOServer
 } from 'shared/modules/auth/common'
 import { searchParamsToRemoveAfterAutoRedirect } from 'shared/modules/auth/settings'
@@ -158,7 +157,10 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
         action.requestedUseDb = passedDb
       }
 
-      const discoveryURL = searchParams.get('discoveryURL')
+      const discoveryURL =
+        searchParams.get('discoveryURL') ||
+        searchParams.get('discoveryurl') ||
+        searchParams.get('discoveryUrl')
 
       if (discoveryURL) {
         action.discoveryURL = discoveryURL
@@ -216,15 +218,15 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
               authLog('SSO providers found on endpoint')
               checkAndMergeSSOProviders(ssoProviders, true)
               const { searchParams } = new URL(window.location.href)
+              const sso_redirect = searchParams.get('sso_redirect')
 
-              if (shouldRedirectToSSOServer()) {
-                const idpId = searchParams.get('arg')
-                authLog(`Initialised with idpId: "${idpId}"`)
+              if (sso_redirect) {
+                authLog(`Initialised with idpId: "${sso_redirect}"`)
 
                 removeSearchParamsInBrowserHistory(
                   searchParamsToRemoveAfterAutoRedirect
                 )
-                const err = authRequestForSSO(idpId)
+                const err = authRequestForSSO(sso_redirect)
                 if (err) {
                   ssoError = err
                 }
@@ -254,9 +256,16 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
               (result.bolt_routing || result.bolt_direct || result.bolt)
             // Try to get info from server
             if (!host) {
-              authLog('No host found in discovery data, aborting')
-              throw new Error('No bolt address found')
+              if (ssoProviders) {
+                const ssoError = 'No host found in discovery data'
+                authLog(ssoError)
+
+                return { type: DONE, discovered: { ssoError } }
+              } else {
+                throw new Error('No bolt address found')
+              }
             }
+
             host = generateBoltUrl(
               getAllowedBoltSchemesForHost(store.getState(), host),
               host
@@ -265,13 +274,17 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
             const isAura = isConnectedAuraHost(store.getState())
             const supportsMultiDb =
               !isAura && parseInt((result.neo4j_version || '0').charAt(0)) >= 4
-            const discovered = supportsMultiDb
-              ? { supportsMultiDb, host, ssoError, ...creds }
-              : { host, ssoError, ...creds }
+            const discovered = {
+              supportsMultiDb,
+              host,
+              ssoError,
+              ...creds,
+              attemptSsoLogin: !!creds.password
+            }
 
             return { type: DONE, discovered }
           })
-          .catch(() => {
+          .catch(e => {
             const noDataFoundMessage = `No discovery json data found at ${action.discoveryURL ||
               discoveryEndpoint}`
             const noHttpPrefixMessage = action?.discoveryURL
@@ -286,13 +299,17 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
               : 'Double check that the discovery url returns a valid JSON file.'
 
             const ssoError = [
+              e.message,
               noDataFoundMessage,
               noHttpPrefixMessage,
               noJsonSuffixMessage
             ]
+              .map(error => {
+                authLog(error)
+                return error
+              })
               .join('\n')
               .trim()
-            authLog(ssoError)
 
             if (action.discoveryURL) {
               return { type: DONE, discovered: { ssoError } }

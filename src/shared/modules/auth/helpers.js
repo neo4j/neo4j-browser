@@ -1,11 +1,26 @@
 import { isObject } from 'lodash'
-import { AUTH_LOGGING_PREFIX } from './constants'
+import { AUTH_LOGGING_PREFIX, AUTH_STORAGE_LOGS } from './constants'
 import { isAuthLoggingEnabled, isAuthDebuggingEnabled } from './settings'
+import { saveAs } from 'file-saver'
 
 export const authLog = (msg, type = 'log') => {
   if (!isAuthLoggingEnabled) return
   if (!['log', 'error', 'warn'].includes(type)) return
-  console[type](`${AUTH_LOGGING_PREFIX} [${new Date().toISOString()}] ${msg}`)
+  const log = `${AUTH_LOGGING_PREFIX} [${new Date().toISOString()}] ${msg}`
+  const logs = sessionStorage.getItem(AUTH_STORAGE_LOGS) || ''
+  const logsLines = logs.split('\n')
+
+  const truncatedOldLogs =
+    logsLines.length > 200 ? logsLines.slice(-199).join('\n') : logs
+
+  sessionStorage.setItem(AUTH_STORAGE_LOGS, `${truncatedOldLogs}${log}\n`)
+}
+
+export const downloadAuthLogs = () => {
+  const blob = new Blob([sessionStorage.getItem(AUTH_STORAGE_LOGS)], {
+    type: 'text/plain;charset=utf-8'
+  })
+  saveAs(blob, 'sso.log')
 }
 
 export const authDebug = (msg, content) => {

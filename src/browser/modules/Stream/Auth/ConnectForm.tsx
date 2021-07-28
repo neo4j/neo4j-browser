@@ -42,6 +42,7 @@ import { authRequestForSSO } from 'shared/modules/auth/index.js'
 import { getSSOProvidersFromStorage } from 'shared/modules/auth/common.js'
 import { H3 } from 'browser-components/headers'
 import { StyledCypherErrorMessage } from '../styled'
+import { downloadAuthLogs } from 'shared/modules/auth/helpers'
 
 const readableauthenticationMethods: Record<AuthenticationMethod, string> = {
   [NATIVE]: 'Username / Password',
@@ -148,6 +149,7 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
             <SsoError>
               <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>
               <div>{ssoError}</div>
+              <button onClick={downloadAuthLogs}> download logs </button>
             </SsoError>
           )}
         </SsoOptions>
