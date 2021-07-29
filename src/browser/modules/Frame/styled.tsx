@@ -195,7 +195,6 @@ export const StyledFrameCommand = styled.label<{ selectedDb: string | null }>`
 export const ContentContainer = styled.div`
   margin: 0px 3px;
   padding: 2px 2px 0 2px;
-  position: relative;
 `
 
 export const TitleBarHeader = styled.div`
