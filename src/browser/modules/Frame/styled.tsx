@@ -204,3 +204,13 @@ export const TitleBarHeader = styled.div`
   padding-top: 3px;
   padding-right: 7px;
 `
+
+export const StyledFramePopover = styled.div`
+  position: absolute;
+  top: 100px;
+  right: 100px;
+  background-color: white;
+  border: 1px solid black;
+  padding: 10px;
+  z-index: 2;
+`

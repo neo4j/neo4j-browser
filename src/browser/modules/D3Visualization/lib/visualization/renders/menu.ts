@@ -23,7 +23,81 @@ import icons from './d3Icons'
 
 const noop = function() {}
 
-const numberOfItemsInContextMenu = 3
+const donutRemoveNode = new Renderer({
+  onGraphChange(selection: any, viz: any) {
+    return createMenuItem(
+      selection,
+      viz,
+      'nodeClose',
+      1,
+      'remove_node',
+      [-8, 0],
+      'Remove',
+      'Dismiss'
+    )
+  },
+
+  onTick: noop
+})
+
+const donutExpandNode = new Renderer({
+  onGraphChange(selection: any, viz: any) {
+    return createMenuItem(
+      selection,
+      viz,
+      'nodeDblClicked',
+      2,
+      'expand_node',
+      [-8, -10],
+      'Expand / Collapse',
+      'Expand / Collapse child relationships'
+    )
+  },
+
+  onTick: noop
+})
+
+const donutUnlockNode = new Renderer({
+  onGraphChange(selection: any, viz: any) {
+    return createMenuItem(
+      selection,
+      viz,
+      'nodeUnlock',
+      3,
+      'unlock_node',
+      [-10, -6],
+      'Unlock',
+      'Unlock the node to re-layout the graph'
+    )
+  },
+
+  onTick: noop
+})
+const donutFilteredNode = new Renderer({
+  onGraphChange(selection: any, viz: any) {
+    return createMenuItem(
+      selection,
+      viz,
+      'nodeFilterClicked',
+      4,
+      'filtered_node',
+      [-8, -10],
+      'Filter',
+      'Filter displayed relationships'
+    )
+  },
+
+  onTick: noop
+})
+
+const menu: any[] = [
+  donutExpandNode,
+  donutRemoveNode,
+  donutUnlockNode,
+  donutFilteredNode
+]
+
+const numberOfItemsInContextMenu = menu.length
 
 const arc = function(radius?: any, itemNumber?: any, width?: any) {
   const localWidth = width == null ? 30 : width
@@ -122,7 +196,7 @@ const createMenuItem = function(
         )},${Math.floor(
           // @ts-expect-error ts-migrate(2554) FIXME: Expected 3 arguments, but got 2.
           arc(node.radius, itemNumber).centroid()[1] + (position[1] * 100) / 100
-        )}) scale(0.7)`
+        )}) scale(${itemNumber !== 4 ? '0.7' : '0.04'})`
       },
       color(node: any) {
         return viz.style.forNode(node).get('text-color-internal')
@@ -155,62 +229,5 @@ const createMenuItem = function(
 
   return iconPath.exit().remove()
 }
-
-const donutRemoveNode = new Renderer({
-  onGraphChange(selection: any, viz: any) {
-    return createMenuItem(
-      selection,
-      viz,
-      'nodeClose',
-      1,
-      'remove_node',
-      [-8, 0],
-      'Remove',
-      'Dismiss'
-    )
-  },
-
-  onTick: noop
-})
-
-const donutExpandNode = new Renderer({
-  onGraphChange(selection: any, viz: any) {
-    return createMenuItem(
-      selection,
-      viz,
-      'nodeDblClicked',
-      2,
-      'expand_node',
-      [-8, -10],
-      'Expand / Collapse',
-      'Expand / Collapse child relationships'
-    )
-  },
-
-  onTick: noop
-})
-
-const donutUnlockNode = new Renderer({
-  onGraphChange(selection: any, viz: any) {
-    return createMenuItem(
-      selection,
-      viz,
-      'nodeUnlock',
-      3,
-      'unlock_node',
-      [-10, -6],
-      'Unlock',
-      'Unlock the node to re-layout the graph'
-    )
-  },
-
-  onTick: noop
-})
-
-const menu: any[] = []
-
-menu.push(donutExpandNode)
-menu.push(donutRemoveNode)
-menu.push(donutUnlockNode)
 
 export { menu }

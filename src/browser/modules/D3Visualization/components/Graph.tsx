@@ -100,7 +100,8 @@ export class GraphComponent extends Component<any, State> {
         this.props.getNodeNeighbours,
         this.props.onItemMouseOver,
         this.props.onItemSelect,
-        this.props.onGraphModelChange
+        this.props.onGraphModelChange,
+        this.props.filterNodeNeighbours
       )
       this.graphEH.bindEventHandlers()
       this.props.onGraphModelChange(getGraphStats(this.graph))

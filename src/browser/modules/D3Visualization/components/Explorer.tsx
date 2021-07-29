@@ -29,6 +29,9 @@ import { StyledFullSizeContainer } from './styled'
 import { GlobalState } from 'shared/globalState'
 import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
 import { connect } from 'react-redux'
+import NeighboursPickerPopover, {
+  INeighboursPickerPopoverProps
+} from './NeighboursPickerPopover'
 
 const deduplicateNodes = (nodes: any) => {
   return nodes.reduce(
@@ -45,10 +48,23 @@ const deduplicateNodes = (nodes: any) => {
   ).nodes
 }
 
-type ExplorerComponentState = any
+type ExplorerComponentState = {
+  stats: { labels: any; relTypes: any }
+  graphStyle: any
+  styleVersion: number
+  nodes: any[]
+  relationships: any[]
+  selectedItem: any
+  hoveredItem?: any
+  freezeLegend?: boolean
+  inspectorContracted?: any
+  forcePaddingBottom?: any
+  neighboursPicker: null | INeighboursPickerPopoverProps
+}
 
 export class ExplorerComponent extends Component<any, ExplorerComponentState> {
   defaultStyle: any
+
   constructor(props: any) {
     super(props)
     const graphStyle = neoGraphStyle()
@@ -79,11 +95,30 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
       styleVersion: 0,
       nodes,
       relationships,
-      selectedItem
+      selectedItem,
+      neighboursPicker: null
     }
+
+    this.filterNodeNeighbours = this.filterNodeNeighbours.bind(this)
   }
 
-  getNodeNeighbours(node: any, currentNeighbours: any, callback: any) {
+  filterNodeNeighbours(
+    node: { id: string },
+    selection: string[],
+    callback: Function
+  ): void {
+    this.props.fetchNeighbours(node.id).then((result: any) => {
+      this.setState({
+        neighboursPicker: { ...result, callback, node, selection }
+      })
+    })
+  }
+
+  getNodeNeighbours(
+    node: { id: string },
+    currentNeighbours: string[],
+    callback: Function
+  ) {
     if (currentNeighbours.length > this.props.maxNeighbours) {
       callback(null, { nodes: [], relationships: [] })
     }
@@ -180,6 +215,7 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
       forcePaddingBottom: inspectorHeight
     })
   }
+  closeNeighboursPicker = () => this.setState({ neighboursPicker: null })
 
   render() {
     // This is a workaround to make the style reset to the same colors as when starting the browser with an empty style
@@ -223,6 +259,7 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
           frameHeight={this.props.frameHeight}
           relationships={this.state.relationships}
           nodes={this.state.nodes}
+          filterNodeNeighbours={this.filterNodeNeighbours}
           getNodeNeighbours={this.getNodeNeighbours.bind(this)}
           onItemMouseOver={this.onItemMouseOver.bind(this)}
           onItemSelect={this.onItemSelect.bind(this)}
@@ -241,10 +278,17 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
           graphStyle={this.state.graphStyle}
           onExpandToggled={this.onInspectorExpandToggled.bind(this)}
         />
+        {this.state.neighboursPicker && (
+          <NeighboursPickerPopover
+            {...this.state.neighboursPicker}
+            onClose={this.closeNeighboursPicker}
+          />
+        )}
       </StyledFullSizeContainer>
     )
   }
 }
+
 export const Explorer = connect((state: GlobalState) => ({
   maxFieldItems: getMaxFieldItems(state)
 }))(ExplorerComponent)

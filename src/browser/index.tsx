@@ -21,6 +21,10 @@ import './init'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import AppInit, { setupSentry } from './AppInit'
+import Modal from 'react-modal'
+
+const divId = 'mount'
+Modal.setAppElement('#' + divId)
 
 setupSentry()
-ReactDOM.render(<AppInit />, document.getElementById('mount'))
+ReactDOM.render(<AppInit />, document.getElementById(divId))

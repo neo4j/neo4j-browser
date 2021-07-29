@@ -172,7 +172,8 @@ export default class Graph {
     return this.nodeMap[id]
   }
 
-  findNodeNeighbourIds(id: any) {
+  // Returns already existing neighbours in the graph
+  findNodeNeighbourIds(id: any): string[] {
     return this._relationships
       .filter(
         (relationship: any) =>

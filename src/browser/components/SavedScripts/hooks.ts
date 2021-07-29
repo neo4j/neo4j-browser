@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 
 type NameUpdateFns = {
   isEditing: boolean
@@ -85,4 +85,11 @@ export function useCustomBlur(
   }, [onBlur])
 
   return ref
+}
+
+export function useForceUpdate() {
+  const [, setTick] = useState(0)
+  return useCallback(() => {
+    setTick(tick => tick + 1)
+  }, [])
 }

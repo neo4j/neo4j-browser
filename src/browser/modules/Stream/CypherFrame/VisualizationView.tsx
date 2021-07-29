@@ -108,7 +108,7 @@ export class Visualization extends Component<any, VisualizationState> {
     }
   }
 
-  getNeighbours(id: any, currentNeighbourIds = []) {
+  fetchNeighbours = (id: any, currentNeighbourIds = []) => {
     const query = `MATCH path = (a)--(o)
                    WHERE id(a) = ${id}
                    AND NOT (id(o) IN[${currentNeighbourIds.join(',')}])
@@ -134,14 +134,16 @@ export class Visualization extends Component<any, VisualizationState> {
                 false,
                 this.props.maxFieldItems
               )
-              this.autoCompleteRelationships(
-                this.graph._nodes,
-                resultGraph.nodes
-              )
               resolve({ ...resultGraph, count: count })
             }
           }
         )
+    })
+  }
+  getNeighbours(id: any, currentNeighbourIds = []) {
+    return this.fetchNeighbours(id, currentNeighbourIds).then((result: any) => {
+      this.autoCompleteRelationships(this.graph._nodes, result.nodes)
+      return result
     })
   }
 
@@ -194,6 +196,7 @@ export class Visualization extends Component<any, VisualizationState> {
           graphStyleData={this.props.graphStyleData}
           updateStyle={this.props.updateStyle}
           getNeighbours={this.getNeighbours.bind(this)}
+          fetchNeighbours={this.fetchNeighbours}
           nodes={this.state.nodes}
           relationships={this.state.relationships}
           fullscreen={this.props.fullscreen}
