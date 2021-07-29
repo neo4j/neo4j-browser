@@ -172,6 +172,7 @@ export default class Graph {
     return this.nodeMap[id]
   }
 
+  // Returns already existing neighbours in the graph
   findNodeNeighbourIds(id: any) {
     return this._relationships
       .filter(

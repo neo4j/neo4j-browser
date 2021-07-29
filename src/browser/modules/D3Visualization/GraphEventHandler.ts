@@ -28,13 +28,19 @@ export class GraphEventHandler {
   onItemMouseOver: any
   onItemSelected: any
   selectedItem: any
+  filterNodeNeighbours: (
+    node: { id: string },
+    selection: string[],
+    callback: Function
+  ) => void
   constructor(
     graph: any,
     graphView: any,
     getNodeNeighbours: any,
     onItemMouseOver: any,
     onItemSelected: any,
-    onGraphModelChange: any
+    onGraphModelChange: any,
+    filterNodeNeighbours: GraphEventHandler['filterNodeNeighbours']
   ) {
     this.graph = graph
     this.graphView = graphView
@@ -43,6 +49,7 @@ export class GraphEventHandler {
     this.onItemMouseOver = onItemMouseOver
     this.onItemSelected = onItemSelected
     this.onGraphModelChange = onGraphModelChange
+    this.filterNodeNeighbours = filterNodeNeighbours
   }
 
   graphModelChanged() {
@@ -103,6 +110,23 @@ export class GraphEventHandler {
     }
     d.fixed = false
     this.deselectItem()
+  }
+
+  nodeFilterClicked(d: any) {
+    const graph = this.graph
+    const graphView = this.graphView
+    const graphModelChanged = this.graphModelChanged.bind(this)
+    this.filterNodeNeighbours(
+      d,
+      this.graph.findAllRelationshipToNode(d.id),
+      (err: any, { nodes, relationships }: any) => {
+        if (err) return
+        graph.addExpandedNodes(d, mapNodes(nodes))
+        graph.addRelationships(mapRelationships(relationships, graph))
+        graphView.update()
+        graphModelChanged()
+      }
+    )
   }
 
   nodeDblClicked(d: any) {
@@ -212,6 +236,7 @@ export class GraphEventHandler {
       .on('nodeClose', this.nodeClose.bind(this))
       .on('nodeClicked', this.nodeClicked.bind(this))
       .on('nodeDblClicked', this.nodeDblClicked.bind(this))
+      .on('nodeFilterClicked', this.nodeFilterClicked.bind(this))
       .on('nodeUnlock', this.nodeUnlock.bind(this))
     this.onItemMouseOut()
   }

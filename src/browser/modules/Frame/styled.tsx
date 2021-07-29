@@ -195,6 +195,7 @@ export const StyledFrameCommand = styled.label<{ selectedDb: string | null }>`
 export const ContentContainer = styled.div`
   margin: 0px 3px;
   padding: 2px 2px 0 2px;
+  position: relative;
 `
 
 export const TitleBarHeader = styled.div`
@@ -203,4 +204,14 @@ export const TitleBarHeader = styled.div`
   border-radius: 2px 2px 0 0;
   padding-top: 3px;
   padding-right: 7px;
+`
+
+export const StyledFramePopover = styled.div`
+  position: absolute;
+  top: 100px;
+  right: 100px;
+  background-color: white;
+  border: 1px solid black;
+  padding: 10px;
+  z-index: 2;
 `

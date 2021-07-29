@@ -364,7 +364,6 @@ const vizFn = function(
   const clickHandler = vizClickHandler()
   clickHandler.on('click', onNodeClick)
   clickHandler.on('dblclick', onNodeDblClick)
-
   return viz
 }
 
