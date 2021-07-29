@@ -139,7 +139,6 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
             }
           })
         }
-        // TODO instead of calling callback, pass callback with results to popover for filtering
         callback(null, { nodes: nodes, relationships: result.relationships })
       },
       () => {
