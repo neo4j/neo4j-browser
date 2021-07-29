@@ -2,16 +2,21 @@
 = Browser operations
 :description: This section describes how to administer and use Neo4j Browser.
 
-
 [[dbms-connection]]
 == Connect to a Neo4j DBMS
 
-By default, Neo4j Browser communicates with a Neo4j DBMS via the link:https://7687.org/[Bolt Protocol] using the link:https://neo4j.com/docs/javascript-manual/current/[Neo4j JavaScript Driver] to execute Cypher queries.
-However, it is possible to turn off Bolt and use xref:#http-rest-requests[HTTP(S)] instead, as in older versions of Neo4j Browser.
+Neo4j Browser is the easiest way to access a Neo4j database.
+To establish a connection, you enter the DBMS URL, the name of the database you want to connect, and the user credentials.
+You can also use the `:server` command to manage the connection to Neo4j.
+For more information, see <<manage-connection>>.
 
+image:home-screen.png[]
 
 [[uri-schema]]
 === Connection URI schemas
+
+By default, Neo4j Browser communicates with a Neo4j DBMS via the link:https://7687.org/[Bolt Protocol] using the link:https://neo4j.com/docs/javascript-manual/current/[Neo4j JavaScript Driver] to execute Cypher queries.
+However, it is possible to turn off Bolt and use xref:#http-rest-requests[HTTP(S)] instead, as in older versions of Neo4j Browser.
 
 Neo4j Browser supports the following connection URI schemas:
 
