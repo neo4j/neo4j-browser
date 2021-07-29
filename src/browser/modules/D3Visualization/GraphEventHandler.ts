@@ -118,9 +118,22 @@ export class GraphEventHandler {
     const graphModelChanged = this.graphModelChanged.bind(this)
     this.filterNodeNeighbours(
       d,
-      this.graph.findAllRelationshipToNode(d.id),
+      this.graph.findAllRelationshipToNode(d).map((t: any) => t.id),
       (err: any, { nodes, relationships }: any) => {
         if (err) return
+        const toDelete: string[] = this.graph
+          .findNodeNeighbourIds(d.id)
+          .filter(
+            (id: string) =>
+              nodes.find((t: { id: string }) => t.id === id) === undefined
+          )
+        if (toDelete.length > 0) {
+          toDelete.forEach(id => {
+            const node = this.graph.findNode(id)
+            this.graph.removeConnectedRelationships(node)
+            this.graph.removeNode(node)
+          })
+        }
         graph.addExpandedNodes(d, mapNodes(nodes))
         graph.addRelationships(mapRelationships(relationships, graph))
         graphView.update()

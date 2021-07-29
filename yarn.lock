@@ -2305,6 +2305,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-modal@^3.12.1":
+  version "3.12.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/react-modal/-/react-modal-3.12.1.tgz#fd1558762ed96020291b831190c85bc721aad3c1"
+  integrity sha1-/RVYdi7ZYCApG4MRkMhbxyGq08E=
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-native@*":
   version "0.63.18"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/react-native/-/react-native-0.63.18.tgz#748d82c6453befe97285393ad9530472d8de56af"

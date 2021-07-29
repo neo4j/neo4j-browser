@@ -107,7 +107,7 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
     selection: string[],
     callback: Function
   ): void {
-    this.props.fetchNeighbours(node.id, selection).then((result: any) => {
+    this.props.fetchNeighbours(node.id).then((result: any) => {
       this.setState({
         neighboursPicker: { ...result, callback, node, selection }
       })
@@ -216,6 +216,7 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
       forcePaddingBottom: inspectorHeight
     })
   }
+  closeNeighboursPicker = () => this.setState({ neighboursPicker: null })
 
   render() {
     // This is a workaround to make the style reset to the same colors as when starting the browser with an empty style
@@ -279,7 +280,10 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
           onExpandToggled={this.onInspectorExpandToggled.bind(this)}
         />
         {this.state.neighboursPicker && (
-          <NeighboursPickerPopover {...this.state.neighboursPicker} />
+          <NeighboursPickerPopover
+            {...this.state.neighboursPicker}
+            onClose={this.closeNeighboursPicker}
+          />
         )}
       </StyledFullSizeContainer>
     )
