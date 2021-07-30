@@ -3,6 +3,11 @@ import styled from 'styled-components'
 import Modal from 'react-modal'
 import { useForceUpdate } from 'browser-components/SavedScripts/hooks'
 import { flatten } from 'lodash-es'
+import NeighboursPickerItem, {
+  INeighboursPickerItem
+} from './NeighboursPickerItem'
+import { motion, AnimatePresence } from 'framer-motion'
+
 const customStyles = {
   content: {
     top: '50%',
@@ -13,34 +18,45 @@ const customStyles = {
     transform: 'translate(-50%, -50%)'
   }
 }
+
+interface INeighbourNode {
+  id: string
+  labels: string[]
+  properties: any
+}
+
+interface INeighbourRel {
+  endNodeId: string
+  id: string
+  properties: any
+  startNodeId: string
+  type: string
+}
+
+export interface IDisplayRelMapItem {
+  id: string
+  type: string
+  direction: 'IN' | 'OUT'
+  node?: INeighbourNode
+}
+
+interface IDisplayRelMap {
+  [key: string]: IDisplayRelMapItem[]
+}
+
 export interface INeighboursPickerPopoverProps {
   node: {
     id: string
     propertyMap: any
   }
-  nodes: Array<{
-    id: string
-    labels: string[]
-    properties: any
-  }>
-  relationships: Array<{
-    endNodeId: string
-    id: string
-    properties: any
-    startNodeId: string
-    type: string
-  }>
+  nodes: INeighbourNode[]
+  relationships: INeighbourRel[]
   count: number
   callback: Function
   selection: string[]
   onClose: () => void
 }
-const TD = styled.td`
-  padding: 5px;
-`
-const TR = styled.tr`
-  border-top: 1px solid #5c5c5c;
-`
+
 const ScrollDiv = styled.div`
   max-height: 400px;
   overflow-y: auto;
@@ -70,32 +86,51 @@ const NeighboursPickerPopover: React.FC<INeighboursPickerPopoverProps> = ({
   callback
 }: INeighboursPickerPopoverProps) => {
   const forceUpdate = useForceUpdate()
-  const options = React.useMemo(() => {
-    return relationships.map(rel => {
+  const options: INeighboursPickerItem[] = React.useMemo(() => {
+    const relMap: [IDisplayRelMap, IDisplayRelMap] = [{}, {}] // dir in and out
+    relationships.map(rel => {
       const direction: 'IN' | 'OUT' = rel.startNodeId === node.id ? 'OUT' : 'IN'
       const targetNodeId = direction === 'OUT' ? rel.endNodeId : rel.startNodeId
-      return {
+      const result = {
         id: rel.id,
         type: rel.type,
         direction,
         node: nodes.find(t => t.id === targetNodeId)
       }
+      const currentMap = result.direction === 'IN' ? relMap[0] : relMap[1]
+      if (currentMap[result.type]) {
+        currentMap[result.type].push(result)
+      } else {
+        currentMap[result.type] = [result]
+      }
+      return result
     })
+    return flatten(
+      relMap.map(currentMap =>
+        Object.keys(currentMap).map(type => ({
+          id: currentMap[type][0].id,
+          amount: currentMap[type].length,
+          type,
+          direction: currentMap[type][0].direction,
+          items: currentMap[type]
+        }))
+      )
+    )
   }, [nodes, relationships, node])
 
-  const handleChange = React.useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const id: string = e.target.dataset.id + ''
-      const index = selection.indexOf(id)
-      if (index === -1) {
-        selection.push(id)
-      } else {
-        selection.splice(index, 1)
-      }
-      forceUpdate()
-    },
-    []
-  )
+  // const handleChange = React.useCallback(
+  //   (e: React.ChangeEvent<HTMLInputElement>) => {
+  //     const id: string = e.target.dataset.id + ''
+  //     const index = selection.indexOf(id)
+  //     if (index === -1) {
+  //       selection.push(id)
+  //     } else {
+  //       selection.splice(index, 1)
+  //     }
+  //     forceUpdate()
+  //   },
+  //   []
+  // )
 
   const handleApply = React.useCallback(() => {
     const filteredRelationships = relationships.filter(t =>
@@ -111,6 +146,11 @@ const NeighboursPickerPopover: React.FC<INeighboursPickerPopoverProps> = ({
     onClose()
   }, [selection, node, nodes, relationships, callback, onClose])
 
+  const [
+    activeItem,
+    setActiveItem
+  ] = React.useState<INeighboursPickerItem | null>(null)
+
   return (
     <Modal
       isOpen={true}
@@ -123,24 +163,23 @@ const NeighboursPickerPopover: React.FC<INeighboursPickerPopoverProps> = ({
       <ScrollDiv>
         <table>
           <tbody>
-            {options.map(t => (
-              <TR key={t.id}>
-                <TD>
-                  <input
-                    type={'checkbox'}
-                    data-id={t.id}
-                    checked={selection.includes(t.id)}
-                    onChange={handleChange}
-                  />
-                </TD>
-                <TD>{t.direction === 'OUT' ? '>' : '<'}</TD>
-                <TD>{t.type}</TD>
-                <TD>{t.node?.labels.join(' ')}</TD>
-                <TD>
-                  {t.node?.properties.name ?? t.node?.properties.title ?? ''}
-                </TD>
-              </TR>
-            ))}
+            <AnimatePresence>
+              {options.map(t => {
+                if (activeItem === null || activeItem === t) {
+                  return (
+                    <NeighboursPickerItem
+                      key={t.id}
+                      item={t}
+                      selection={selection}
+                      onUpdate={forceUpdate}
+                      setActiveItem={setActiveItem}
+                    />
+                  )
+                } else {
+                  return null
+                }
+              })}
+            </AnimatePresence>
           </tbody>
         </table>
       </ScrollDiv>

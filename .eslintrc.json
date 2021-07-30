@@ -72,7 +72,7 @@
         "react-hooks/exhaustive-deps": "warn",
         "react-hooks/rules-of-hooks": "warn",
         "react/no-unescaped-entities": "warn",
-        "react/prop-types": "error"
+        "react/prop-types": "off"
       }
     }
   ]

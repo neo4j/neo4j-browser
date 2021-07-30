@@ -31,7 +31,7 @@ import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
 import { connect } from 'react-redux'
 import NeighboursPickerPopover, {
   INeighboursPickerPopoverProps
-} from './NeighboursPickerPopover'
+} from './popover/NeighboursPickerPopover'
 
 const deduplicateNodes = (nodes: any) => {
   return nodes.reduce(
