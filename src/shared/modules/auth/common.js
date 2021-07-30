@@ -94,10 +94,10 @@ export const checkAndMergeSSOProviders = (
 }
 
 export const getSSOProvidersFromStorage = () => {
-  const ssoProviders = JSON.parse(
+  const SSOProviders = JSON.parse(
     window.sessionStorage.getItem(AUTH_STORAGE_SSO_PROVIDERS)
   )
-  if (!ssoProviders || !ssoProviders.length) {
+  if (!SSOProviders || !SSOProviders.length) {
     authLog('No SSO providers in (local) storage found')
     return []
   }
@@ -108,13 +108,13 @@ export const getSSOProvidersFromStorage = () => {
     )
     return []
   }
-  return ssoProviders
+  return SSOProviders
 }
 
 export const getSSOProviderByIdpId = idpId => {
-  const ssoProviders = getSSOProvidersFromStorage()
+  const SSOProviders = getSSOProvidersFromStorage()
 
-  const selectedSSOProvider = ssoProviders.find(
+  const selectedSSOProvider = SSOProviders.find(
     provider => provider.id === idpId
   )
   if (!selectedSSOProvider) {
@@ -171,7 +171,7 @@ export const getCredentialsFromAuthResult = (result, idpId) => {
   return { username: credsPrincipal, password: result[tokenTypeAuthentication] }
 }
 
-export const temporarlyStoreUrlSearchParams = () => {
+export const temporarilyStoreUrlSearchParams = () => {
   const currentBrowserURLParams = getInitialisationParameters()
   authLog(
     `Temporarly storing the url search params. data: "${JSON.stringify(
@@ -189,8 +189,8 @@ export const wasRedirectedBackFromSSOServer = () => {
   return (authFlowStep || '').toLowerCase() === REDIRECT_URI
 }
 
-export const restoreSearchAndHashParamsParams = () => {
-  authLog(`Retrieving temporarly stored url search params`)
+export const restoreSearchAndHashParams = () => {
+  authLog(`Retrieving temporarily stored url search params`)
   try {
     const storedParams = JSON.parse(
       window.sessionStorage.getItem(AUTH_STORAGE_URL_SEARCH_PARAMS)
@@ -205,12 +205,12 @@ export const restoreSearchAndHashParamsParams = () => {
       window.history.replaceState({}, '', newUrl)
       return storedParams
     } else {
-      authLog('Invalid temporarly stored url search params')
+      authLog('Invalid temporarily stored url search params')
       return null
     }
   } catch (err) {
     authLog(
-      `Error when parsing temporarly stored url search params, err: ${err}`
+      `Error when parsing temporarily stored url search params, err: ${err}`
     )
     return null
   }

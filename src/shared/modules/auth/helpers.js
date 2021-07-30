@@ -20,7 +20,7 @@ export const downloadAuthLogs = () => {
   const blob = new Blob([sessionStorage.getItem(AUTH_STORAGE_LOGS)], {
     type: 'text/plain;charset=utf-8'
   })
-  saveAs(blob, 'sso.log')
+  saveAs(blob, 'neo4j-browser-sso.log')
 }
 
 export const authDebug = (msg, content) => {

@@ -209,26 +209,26 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
           // neo4j_version: '4.0.3'
           //})
           .then(async result => {
-            const ssoProviders =
+            const SSOProviders =
               result.sso_providers || result.ssoproviders || result.ssoProviders
             let creds: { username?: string; password?: string } = {}
-            let ssoError: string | undefined
+            let SSOError: string | undefined
 
-            if (ssoProviders) {
+            if (SSOProviders) {
               authLog('SSO providers found on endpoint')
-              checkAndMergeSSOProviders(ssoProviders, true)
+              checkAndMergeSSOProviders(SSOProviders, true)
               const { searchParams } = new URL(window.location.href)
-              const sso_redirect = searchParams.get('sso_redirect')
+              const SSORedirect = searchParams.get('sso_redirect')
 
-              if (sso_redirect) {
-                authLog(`Initialised with idpId: "${sso_redirect}"`)
+              if (SSORedirect) {
+                authLog(`Initialised with idpId: "${SSORedirect}"`)
 
                 removeSearchParamsInBrowserHistory(
                   searchParamsToRemoveAfterAutoRedirect
                 )
-                const err = authRequestForSSO(sso_redirect)
+                const err = authRequestForSSO(SSORedirect)
                 if (err) {
-                  ssoError = err
+                  SSOError = err
                 }
               } else if (wasRedirectedBackFromSSOServer()) {
                 authLog('Handling auth_flow_step redirect')
@@ -236,7 +236,7 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
                 try {
                   creds = await handleAuthFromRedirect()
                 } catch (e) {
-                  ssoError = e
+                  SSOError = e
                   authLog(e)
                 }
               }
@@ -247,7 +247,7 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
               )
               // We assume if discoveryURL is set that they intended to use SSO
               if (action.discoveryURL) {
-                ssoError = `No SSO providers found at ${action.discoveryURL}`
+                SSOError = `No SSO providers found at ${action.discoveryURL}`
               }
             }
 
@@ -256,11 +256,11 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
               (result.bolt_routing || result.bolt_direct || result.bolt)
             // Try to get info from server
             if (!host) {
-              if (ssoProviders) {
-                const ssoError = 'No host found in discovery data'
-                authLog(ssoError)
+              if (SSOProviders) {
+                const SSOError = 'No host found in discovery data'
+                authLog(SSOError)
 
-                return { type: DONE, discovered: { ssoError } }
+                return { type: DONE, discovered: { SSOError } }
               } else {
                 throw new Error('No bolt address found')
               }
@@ -277,9 +277,9 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
             const discovered = {
               supportsMultiDb,
               host,
-              ssoError,
+              SSOError,
               ...creds,
-              attemptSsoLogin: !!creds.password
+              attemptSSOLogin: !!creds.password
             }
 
             return { type: DONE, discovered }
@@ -298,7 +298,7 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
               ? ''
               : 'Double check that the discovery url returns a valid JSON file.'
 
-            const ssoError = [
+            const SSOError = [
               e.message,
               noDataFoundMessage,
               noHttpPrefixMessage,
@@ -312,7 +312,7 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
               .trim()
 
             if (action.discoveryURL) {
-              return { type: DONE, discovered: { ssoError } }
+              return { type: DONE, discovered: { SSOError } }
             }
             throw new Error('No info from endpoint')
           })

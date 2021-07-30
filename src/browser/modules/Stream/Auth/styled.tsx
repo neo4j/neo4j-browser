@@ -151,20 +151,20 @@ export const StyledCode = styled.code`
 
 export const StyledDbsRow = styled.li``
 
-export const FormContainer = styled.div`
+export const StyledFormContainer = styled.div`
   display: flex;
 `
 
-export const SsoOptions = styled.div`
+export const StyledSSOOptions = styled.div`
   border-right: 1px solid rgb(77, 74, 87, 0.3);
   padding-right: 30px;
   margin-right: 30px;
   max-width: 300px;
 `
-export const SsoButtonContainer = styled.div`
+export const StyledSSOButtonContainer = styled.div`
   margin-bottom: 5px;
 `
-export const SsoError = styled.div`
+export const StyledSSOError = styled.div`
   margin-top: 30px;
   background-color: rgba(253, 118, 110, 0.3);
   border-radius: 2px;

@@ -93,7 +93,7 @@ export type Connection = {
   authenticationMethod: AuthenticationMethod
   requestedUseDb?: string
   restApi?: string
-  ssoError?: string
+  SSOError?: string
 }
 
 const initialState: ConnectionReduxState = {
@@ -445,8 +445,8 @@ type DiscoverDataAction = {
     host?: string
     encrypted?: string
     hasForceUrl?: boolean
-    ssoError?: string
-    attemptSsoLogin?: boolean
+    SSOError?: string
+    attemptSSOLogin?: boolean
   }
 }
 
@@ -514,7 +514,7 @@ export const startupConnectEpic = (action$: any, store: any) => {
                   discovery.updateDiscoveryConnection({
                     username: '',
                     password: '',
-                    ssoError: discovered.attemptSsoLogin
+                    SSOError: discovered.attemptSSOLogin
                       ? 'SSO token was not accepted by neo4j'
                       : undefined
                   })
@@ -530,7 +530,7 @@ export const startupConnectEpic = (action$: any, store: any) => {
       store.dispatch(
         discovery.updateDiscoveryConnection({
           password: '',
-          ssoError: discovered?.ssoError
+          SSOError: discovered?.SSOError
         })
       )
       return Promise.resolve({ type: STARTUP_CONNECTION_FAILED })

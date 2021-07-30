@@ -29,10 +29,10 @@ import {
   StyledConnectionFormEntry,
   StyledSegment,
   StyledBoltUrlHintText,
-  FormContainer,
-  SsoOptions,
-  SsoButtonContainer,
-  SsoError
+  StyledFormContainer,
+  StyledSSOOptions,
+  StyledSSOButtonContainer,
+  StyledSSOError
 } from './styled'
 import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
 import { toKeyString } from 'services/utils'
@@ -65,7 +65,7 @@ interface ConnectFormProps {
   username: string
   used: boolean
   supportsMultiDb: boolean
-  ssoError?: string
+  SSOError?: string
 }
 
 export default function ConnectForm(props: ConnectFormProps): JSX.Element {
@@ -73,10 +73,10 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
   const [scheme, setScheme] = useState(
     props.allowedSchemes ? `${getScheme(props.host)}://` : ''
   )
-  const [ssoProviders, setSsoProviders] = useState<any[]>([])
+  const [SSOProviders, setSSOProviders] = useState<any[]>([])
 
   useEffect(() => {
-    setSsoProviders(getSSOProvidersFromStorage())
+    setSSOProviders(getSSOProvidersFromStorage())
   }, [])
 
   useEffect(() => {
@@ -131,28 +131,28 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
       }:// for a direct connection to a single instance.`
     : ''
 
-  const { ssoError } = props
-  const showSso = ssoProviders.length > 0 || ssoError
+  const { SSOError } = props
+  const showSSO = SSOProviders.length > 0 || SSOError
   return (
-    <FormContainer>
-      {showSso && (
-        <SsoOptions>
+    <StyledFormContainer>
+      {showSSO && (
+        <StyledSSOOptions>
           <H3>Single sign-on</H3>
-          {ssoProviders.map((provider: any) => (
-            <SsoButtonContainer key={provider.id}>
+          {SSOProviders.map((provider: any) => (
+            <StyledSSOButtonContainer key={provider.id}>
               <FormButton onClick={() => authRequestForSSO(provider.id)}>
                 {provider.name}
               </FormButton>
-            </SsoButtonContainer>
+            </StyledSSOButtonContainer>
           ))}
-          {ssoError && (
-            <SsoError>
+          {SSOError && (
+            <StyledSSOError>
               <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>
-              <div>{ssoError}</div>
+              <div>{SSOError}</div>
               <button onClick={downloadAuthLogs}> download logs </button>
-            </SsoError>
+            </StyledSSOError>
           )}
-        </SsoOptions>
+        </StyledSSOOptions>
       )}
       <StyledConnectionForm onSubmit={onConnectClick}>
         <StyledConnectionFormEntry>
@@ -266,6 +266,6 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
         </Render>
         <Render if={connecting}>Connecting...</Render>
       </StyledConnectionForm>
-    </FormContainer>
+    </StyledFormContainer>
   )
 }

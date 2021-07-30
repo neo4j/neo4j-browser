@@ -2,7 +2,7 @@ import {
   getCredentialsFromAuthResult,
   getInitialisationParameters,
   getSSOProviderByIdpId,
-  temporarlyStoreUrlSearchParams
+  temporarilyStoreUrlSearchParams
 } from './common'
 import {
   AUTH_STORAGE_CODE_VERIFIER,
@@ -34,7 +34,7 @@ export const authRequestForSSO = idpId => {
     return error
   }
 
-  temporarlyStoreUrlSearchParams()
+  temporarilyStoreUrlSearchParams()
 
   const oauth2Endpoint = selectedSSOProvider.auth_endpoint
   if (!oauth2Endpoint) {
@@ -48,28 +48,28 @@ export const authRequestForSSO = idpId => {
   form.setAttribute('method', 'GET')
   form.setAttribute('action', oauth2Endpoint)
 
-  const ssoParams = selectedSSOProvider.params || {}
+  const SSOParams = selectedSSOProvider.params || {}
   const state = createStateForRequest()
   let params = {
-    ...ssoParams,
+    ...SSOParams,
     state
   }
   window.sessionStorage.setItem(AUTH_STORAGE_STATE, state)
 
-  const ssoExtraAuthParams = selectedSSOProvider.auth_params || {}
-  if (ssoExtraAuthParams) {
+  const SSOExtraAuthParams = selectedSSOProvider.auth_params || {}
+  if (SSOExtraAuthParams) {
     params = {
       ...params,
-      ...ssoExtraAuthParams
+      ...SSOExtraAuthParams
     }
   }
 
   authLog(
-    `Using the following authorization parameter: ${JSON.stringify(ssoParams)}`
+    `Using the following authorization parameter: ${JSON.stringify(SSOParams)}`
   )
 
-  const ssoConfig = selectedSSOProvider.config || {}
-  if (ssoConfig.implicit_flow_requires_nonce) {
+  const SSOConfig = selectedSSOProvider.config || {}
+  if (SSOConfig.implicit_flow_requires_nonce) {
     params = {
       ...params,
       nonce: createNonce()
@@ -92,7 +92,7 @@ export const authRequestForSSO = idpId => {
 
   if (selectedSSOProvider.auth_flow === PKCE) {
     const codeChallengeMethod =
-      ssoConfig.code_challenge_method || defaultCodeChallengeMethod
+      SSOConfig.code_challenge_method || defaultCodeChallengeMethod
     authLog(
       `Auth flow "PKCE", using code_challenge_method: "${codeChallengeMethod}"`
     )
@@ -202,21 +202,21 @@ export const authRequestForToken = (idpId, code) => {
   const selectedSSOProvider = getSSOProviderByIdpId(idpId)
   if (!selectedSSOProvider) return
 
-  const ssoParams = selectedSSOProvider.params || {}
+  const SSOParams = selectedSSOProvider.params || {}
   let details = {
     grant_type: defaultGrantType,
-    client_id: ssoParams.client_id,
-    redirect_uri: ssoParams.redirect_uri,
+    client_id: SSOParams.client_id,
+    redirect_uri: SSOParams.redirect_uri,
     code_verifier: window.sessionStorage.getItem(AUTH_STORAGE_CODE_VERIFIER),
     code
   }
   window.sessionStorage.setItem(AUTH_STORAGE_CODE_VERIFIER, '')
 
-  const ssoExtraTokenParams = selectedSSOProvider.token_params || {}
-  if (ssoExtraTokenParams) {
+  const SSOExtraTokenParams = selectedSSOProvider.token_params || {}
+  if (SSOExtraTokenParams) {
     details = {
       ...details,
-      ...ssoExtraTokenParams
+      ...SSOExtraTokenParams
     }
   }
 

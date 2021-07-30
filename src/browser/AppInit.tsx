@@ -54,7 +54,7 @@ import { getUuid } from 'shared/modules/udc/udcDuck'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import {
-  restoreSearchAndHashParamsParams,
+  restoreSearchAndHashParams,
   wasRedirectedBackFromSSOServer
 } from 'shared/modules/auth/common'
 
@@ -208,7 +208,7 @@ const env = detectRuntimeEnv(window, NEO4J_CLOUD_DOMAINS)
 // we redirect to the server, and then restore them when we get
 // redirected back
 if (wasRedirectedBackFromSSOServer()) {
-  restoreSearchAndHashParamsParams()
+  restoreSearchAndHashParams()
 }
 
 // URL we're on
