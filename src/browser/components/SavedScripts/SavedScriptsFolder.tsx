@@ -122,7 +122,7 @@ function SavedScriptsFolder({
     ),
     exportScripts && (
       <ContextMenuItem
-        data-testid="contextMenuExport"
+        data-testid="contextMenuExportZip"
         onClick={() => exportScripts('ZIPFILE')}
         key="exportZip"
       >
@@ -131,7 +131,7 @@ function SavedScriptsFolder({
     ),
     exportScripts && (
       <ContextMenuItem
-        data-testid="contextMenuRemove"
+        data-testid="contextMenuExportCypherFile"
         onClick={() => exportScripts('CYPHERFILE')}
         key="exportAsCypher"
       >
