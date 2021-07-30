@@ -27,7 +27,7 @@ import {
 } from 'shared/modules/commands/commandsDuck'
 import * as favoritesDuck from 'shared/modules/favorites/favoritesDuck'
 import * as foldersDuck from 'shared/modules/favorites/foldersDuck'
-import { exportFavorites } from 'services/exporting/favoriteUtils'
+import { exporters, ExportFormat } from 'services/exporting/favoriteUtils'
 
 const mapFavoritesStateToProps = (state: any) => {
   const folders = foldersDuck
@@ -83,9 +83,10 @@ const mapFavoritesDispatchToProps = (dispatch: any, ownProps: any) => ({
   },
   exportScripts(
     favorites: favoritesDuck.Favorite[],
-    folders: foldersDuck.Folder[]
+    folders: foldersDuck.Folder[],
+    format: ExportFormat
   ) {
-    exportFavorites(favorites, folders)
+    exporters[format](favorites, folders)
   },
   addScript(content: string) {
     dispatch(favoritesDuck.addFavorite(content))
