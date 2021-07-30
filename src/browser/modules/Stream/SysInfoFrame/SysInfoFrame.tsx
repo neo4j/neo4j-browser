@@ -161,24 +161,39 @@ export class SysInfoFrame extends Component<
 
   getSysInfo = (): void => {
     const { userConfiguredPrefix, namespacesEnabled } = this.state
-    const { bus, isConnected, useDb } = this.props
-    const { sysinfoQuery, responseHandler } = this.props.hasMultiDbSupport
-      ? helpers
-      : legacyHelpers
+    const { useDb, hasMultiDbSupport } = this.props
 
-    if (bus && isConnected && useDb) {
+    if (hasMultiDbSupport && useDb) {
+      this.runCypherQuery(
+        helpers.sysinfoQuery({
+          databaseName: useDb,
+          namespacesEnabled,
+          userConfiguredPrefix
+        }),
+        helpers.responseHandler(this.setState.bind(this))
+      )
+    } else if (!hasMultiDbSupport) {
+      this.runCypherQuery(
+        legacyHelpers.sysinfoQuery(),
+        legacyHelpers.responseHandler(this.setState.bind(this))
+      )
+    }
+  }
+
+  runCypherQuery = (
+    query: string,
+    responseHandler: (res: any) => void
+  ): void => {
+    const { bus, isConnected } = this.props
+    if (bus && isConnected) {
       this.setState({ lastFetch: Date.now() })
       bus.self(
         CYPHER_REQUEST,
         {
-          query: sysinfoQuery({
-            databaseName: useDb,
-            namespacesEnabled,
-            userConfiguredPrefix
-          }),
+          query,
           queryType: NEO4J_BROWSER_USER_ACTION_QUERY
         },
-        responseHandler(this.setState.bind(this))
+        responseHandler
       )
     }
   }
@@ -201,7 +216,13 @@ export class SysInfoFrame extends Component<
       storeSizes,
       transactions
     } = this.state
-    const { databases, frame, isConnected, isEnterprise } = this.props
+    const {
+      databases,
+      frame,
+      isConnected,
+      isEnterprise,
+      hasMultiDbSupport
+    } = this.props
 
     const content = isConnected ? (
       <SysInfoTable
@@ -211,6 +232,7 @@ export class SysInfoFrame extends Component<
         transactions={transactions}
         databases={databases}
         isEnterpriseEdition={isEnterprise}
+        hasMultiDbSupport={hasMultiDbSupport}
       />
     ) : (
       <ErrorsView
