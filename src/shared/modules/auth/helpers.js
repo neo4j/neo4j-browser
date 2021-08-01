@@ -100,7 +100,7 @@ export const addSearchParamsInBrowserHistory = paramsToAddObj => {
   const newUrl = `${
     window.location.origin
   }?${searchParams.toString()}${crntHashParams || ''}`
-  window.history.replaceState({ path: newUrl }, '', newUrl)
+  window.history.replaceState({}, '', newUrl)
 }
 
 export const removeSearchParamsInBrowserHistory = paramsToRemove => {
