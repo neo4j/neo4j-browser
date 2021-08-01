@@ -62,11 +62,16 @@ export const checkAndMergeSSOProviders = (
     }
     if (
       !mandatoryKeysForSSOProviderParams.every(key =>
-        provider?.params?.hasOwnProperty(key)
+        provider.params.hasOwnProperty(key)
       )
     ) {
+      const missingKeys = mandatoryKeysForSSOProviderParams.filter(
+        key => !provider.params.hasOwnProperty(key)
+      )
       authLog(
-        `Dropping invalid discovered SSO provider with id: "${provider.id}", missing params key`
+        `Dropping invalid discovered SSO provider with id: "${
+          provider.id
+        }", missing params key(s) ${missingKeys.join(', ')}`
       )
       return
     }
