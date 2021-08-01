@@ -27,6 +27,13 @@ import {
 } from './settings'
 
 export const authRequestForSSO = idpId => {
+  if (!window.isSecureContext) {
+    const error =
+      'This application is NOT executed in a secure context. SSO support is therefore disabled. Load the application in a secure context to proceed with SSO.'
+
+    authLog(error)
+    throw new Error(error)
+  }
   const selectedSSOProvider = getSSOProviderByIdpId(idpId)
   if (!selectedSSOProvider) {
     const error = `Could not find any SSO provider with idpId: "${idpId}"`

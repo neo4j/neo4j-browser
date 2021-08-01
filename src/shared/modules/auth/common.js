@@ -109,13 +109,6 @@ export const getSSOProvidersFromStorage = () => {
     authLog('No SSO providers in (local) storage found')
     return []
   }
-  if (!window.isSecureContext) {
-    authLog(
-      'This application is NOT executed in a secure context. SSO support is therefore disabled. Load the application in a secure context to proceed with SSO.',
-      'warn'
-    )
-    return []
-  }
   return SSOProviders
 }
 
@@ -162,8 +155,14 @@ export const getCredentialsFromAuthResult = (result, idpId) => {
     return emptyCredentials
   }
 
-  const principal = selectedSSOProvider.config?.principal || ''
-  authLog(`Credentials, provided principal in config: ${principal}`)
+  const principal = selectedSSOProvider.config?.principal
+  if (principal) {
+    authLog(`Credentials, provided principal in config: ${principal}`)
+  } else {
+    authLog(
+      `Credentials, no principal provided in config, falling back to 'username' then 'sub'`
+    )
+  }
 
   const credsPrincipal =
     parsedJWT[principal] || parsedJWT.email || parsedJWT.sub
