@@ -1,3 +1,4 @@
+export const SSO_REDIRECT = 'sso_redirect'
 export const REDIRECT_URI = 'redirect_uri'
 export const BEARER = 'bearer'
 export const PKCE = 'pkce'

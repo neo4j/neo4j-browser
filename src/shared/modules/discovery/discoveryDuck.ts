@@ -170,11 +170,8 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
     })
     .merge(some$.ofType(USER_CLEAR))
     .mergeMap((action: any) => {
-      // Only when in a environment were we can guess discovery endpoint
-      if (!action.discoveryURL && !hasDiscoveryEndpoint(store.getState())) {
-        authLog('No discovery endpoint found or passed')
-        return Promise.resolve({ type: 'NOOP' })
-      }
+      // Note: We currently prefer forceURL over discovery/SSO
+      // with SSO we should change this to be the other way around
       if (action.forceURL) {
         const { username, protocol, host } = getUrlInfo(action.forceURL)
 
@@ -196,6 +193,13 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
           discovered: onlyTruthy
         })
       }
+
+      // Only do network call when we can guess discovery endpoint
+      if (!action.discoveryURL && !hasDiscoveryEndpoint(store.getState())) {
+        authLog('No discovery endpoint found or passed')
+        return Promise.resolve({ type: 'NOOP' })
+      }
+
       const discoveryEndpoint = getDiscoveryEndpoint(
         getHostedUrl(store.getState())
       )
@@ -216,7 +220,15 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
 
             if (SSOProviders) {
               authLog('SSO providers found on endpoint')
-              checkAndMergeSSOProviders(SSOProviders, true)
+              // we're meant to ping both the discoveryEndpoint and
+              // the discoveryURL and then merge them, preferring the
+              // discoveryEndpoint. but that's not implemeted yet.
+
+              const preferNewDataOnCollision = true
+              checkAndMergeSSOProviders(SSOProviders, preferNewDataOnCollision)
+
+              // We should move the SSO redirect handling to be outside of discovery duck. As it
+              // is much closer related to the auto connection code in connectionsDuck
               const { searchParams } = new URL(window.location.href)
               const SSORedirect = searchParams.get('sso_redirect')
 

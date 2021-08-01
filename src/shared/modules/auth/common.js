@@ -184,6 +184,11 @@ export const temporarilyStoreUrlSearchParams = () => {
   )
 }
 
+export const getSSOServerIdIfShouldRedirect = () => {
+  const { searchParams } = new URL(window.location.href)
+  return searchParams.get(SSO_REDIRECT)
+}
+
 export const wasRedirectedBackFromSSOServer = () => {
   const { auth_flow_step: authFlowStep } = getInitialisationParameters()
   return (authFlowStep || '').toLowerCase() === REDIRECT_URI
