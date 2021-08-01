@@ -3,15 +3,17 @@ import { AUTH_LOGGING_PREFIX, AUTH_STORAGE_LOGS } from './constants'
 import { isAuthLoggingEnabled, isAuthDebuggingEnabled } from './settings'
 import { saveAs } from 'file-saver'
 
+const MAX_LOG_LINES = 200
 export const authLog = (msg, type = 'log') => {
   if (!isAuthLoggingEnabled) return
   if (!['log', 'error', 'warn'].includes(type)) return
-  const log = `${AUTH_LOGGING_PREFIX} [${new Date().toISOString()}] ${msg}`
+  const messageNoNewlines = msg.replace('\n', ' ')
+  const log = `${AUTH_LOGGING_PREFIX} [${new Date().toISOString()}] ${messageNoNewlines}`
   const logs = sessionStorage.getItem(AUTH_STORAGE_LOGS) || ''
   const logsLines = logs.split('\n')
 
   const truncatedOldLogs =
-    logsLines.length > 200 ? logsLines.slice(-199).join('\n') : logs
+    logsLines.length > MAX_LOG_LINES ? logsLines.slice(-199).join('\n') : logs
 
   sessionStorage.setItem(AUTH_STORAGE_LOGS, `${truncatedOldLogs}${log}\n`)
 }

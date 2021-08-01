@@ -30,10 +30,10 @@ export const getInitialisationParameters = () => {
 
 export const checkAndMergeSSOProviders = (
   discoveredSSOProviders,
-  isLocalhostOrigin
+  updateExistingProviders
 ) => {
   if (!discoveredSSOProviders || !discoveredSSOProviders.length) {
-    authLog('Invalid discovered SSO providers')
+    authLog('Invalid discovered SSO providers', 'warn')
     return
   }
 
@@ -48,12 +48,15 @@ export const checkAndMergeSSOProviders = (
   }
 
   discoveredSSOProviders.forEach(provider => {
-    if (!provider) return
+    if (!provider) {
+      authlog(`Found invalid discoved sso provider`)
+      return
+    }
     if (
       !mandatoryKeysForSSOProviders.every(key => provider.hasOwnProperty(key))
     ) {
-      authLog(
-        `Dropping invalid discovered SSO provider with id: "${provider.id}", missing key`
+      authlog(
+        `dropping invalid discovered sso provider with id: "${provider.id}", missing key`
       )
       return
     }
@@ -70,7 +73,7 @@ export const checkAndMergeSSOProviders = (
     if (
       currentSSOProviders.find(crntProvider => crntProvider.id === provider.id)
     ) {
-      if (isLocalhostOrigin) {
+      if (updateExistingProviders) {
         const idx = currentSSOProviders.findIndex(
           crntProvider => crntProvider.id === provider.id
         )
@@ -161,9 +164,17 @@ export const getCredentialsFromAuthResult = (result, idpId) => {
     parsedJWT[principal] || parsedJWT.email || parsedJWT.sub
   authLog(`Credentials assembly with username: ${credsPrincipal}`)
 
+  const configuredTokenType =
+    selectedSSOProvider.config?.['token_type_authentication']
   const tokenTypeAuthentication =
-    selectedSSOProvider.config?.['token_type_authentication'] ||
-    defaultTokenTypeAuthentication
+    configuredTokenType || defaultTokenTypeAuthentication
+
+  if (!configuredTokenType) {
+    authLog(
+      `token_type_authentication not configured, using default token type "${defaultTokenTypeAuthentication}".`
+    )
+  }
+
   authLog(
     `Credentials assembled with token type "${tokenTypeAuthentication}" as password. If connection still does not succeed, make sure neo4j.conf is set up correctly`
   )

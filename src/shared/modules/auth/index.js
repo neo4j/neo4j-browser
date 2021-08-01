@@ -29,7 +29,7 @@ import {
 export const authRequestForSSO = idpId => {
   const selectedSSOProvider = getSSOProviderByIdpId(idpId)
   if (!selectedSSOProvider) {
-    const error = `Invalid OAuth2 endpoint: "${oauth2Endpoint}"`
+    const error = `Could not find any SSO provider with idpId: "${idpId}"`
     authLog(error)
     return error
   }
