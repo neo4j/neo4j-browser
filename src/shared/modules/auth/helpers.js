@@ -56,18 +56,17 @@ export const createCodeVerifier = method => {
     case '':
     case null:
     default:
-      const errMsg = `Unsupported or missing code verification method: ${method}`
-      authLog(errMsg)
-      throw new Error(errMsg)
+      throw new Error(
+        `Unsupported or missing code verification method: ${method}`
+      )
   }
 }
 
 export const createCodeChallenge = async (method, codeVerifier) => {
   if (!codeVerifier) {
-    const errMsg =
+    throw new Error(
       'Unable to create code challenger: Missing code verifier argument to createCodeChallenge'
-    authLog(errMsg)
-    throw new Error(errMsg)
+    )
   }
 
   switch (method) {
@@ -83,9 +82,7 @@ export const createCodeChallenge = async (method, codeVerifier) => {
     case '':
     case null:
     default:
-      const errMsg = `Unsupported or missing code challenge method: ${method}`
-      authLog(errMsg)
-      throw new Error(errMsg)
+      throw new Error(`Unsupported or missing code challenge method: ${method}`)
   }
 }
 

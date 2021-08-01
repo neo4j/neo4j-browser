@@ -1,5 +1,4 @@
 import jwtDecode from 'jwt-decode'
-import { isObject } from 'lodash'
 import {
   AUTH_STORAGE_SSO_PROVIDERS,
   AUTH_STORAGE_URL_SEARCH_PARAMS,
@@ -218,20 +217,16 @@ export const restoreSearchAndHashParams = () => {
 
     window.sessionStorage.setItem(AUTH_STORAGE_URL_SEARCH_PARAMS, '')
 
-    if (isObject(storedParams)) {
-      const crntHashParams = window.location.hash || undefined
-      addSearchParamsInBrowserHistory(storedParams)
-      const newUrl = `${window.location.href}${crntHashParams || ''}`
-      window.history.replaceState({}, '', newUrl)
-      return storedParams
-    } else {
-      authLog('Invalid temporarily stored url search params')
-      return null
-    }
+    const crntHashParams = window.location.hash || undefined
+    addSearchParamsInBrowserHistory(storedParams)
+    const newUrl = `${window.location.href}${crntHashParams || ''}`
+    window.history.replaceState({}, '', newUrl)
+    return storedParams
   } catch (err) {
     authLog(
-      `Error when parsing temporarily stored url search params, err: ${err}`
+      `Error when parsing temporarily stored url search params, err: ${err}. Clearing.`
     )
+    window.sessionStorage.setItem(AUTH_STORAGE_URL_SEARCH_PARAMS, '')
     return null
   }
 }

@@ -28,26 +28,20 @@ import {
 
 export const authRequestForSSO = idpId => {
   if (!window.isSecureContext) {
-    const error =
+    throw new Error(
       'This application is NOT executed in a secure context. SSO support is therefore disabled. Load the application in a secure context to proceed with SSO.'
-
-    authLog(error)
-    throw new Error(error)
+    )
   }
   const selectedSSOProvider = getSSOProviderByIdpId(idpId)
   if (!selectedSSOProvider) {
-    const error = `Could not find any SSO provider with idpId: "${idpId}"`
-    authLog(error)
-    throw new Error(error)
+    throw new Error(`Could not find any SSO provider with idpId: "${idpId}"`)
   }
 
   temporarilyStoreUrlSearchParams()
 
   const oauth2Endpoint = selectedSSOProvider.auth_endpoint
   if (!oauth2Endpoint) {
-    const error = `Invalid OAuth2 endpoint: "${oauth2Endpoint}"`
-    authLog(error)
-    throw new Error(error)
+    throw new Error(`Invalid OAuth2 endpoint: "${oauth2Endpoint}"`)
   }
   authLog(`Using OAuth2 endpoint: "${oauth2Endpoint}" for idp_id: ${idpId}`)
 
@@ -121,9 +115,9 @@ export const authRequestForSSO = idpId => {
     authLog('Auth flow "implicit flow"')
     _submitForm(form, params)
   } else {
-    const error = `Auth flow "${selectedSSOProvider.auth_flow}" is not supported.`
-    authLog(error)
-    throw new Error(error)
+    throw new Error(
+      `Auth flow "${selectedSSOProvider.auth_flow}" is not supported.`
+    )
   }
 }
 
@@ -143,24 +137,22 @@ export const handleAuthFromRedirect = () =>
     removeSearchParamsInBrowserHistory(searchParamsToRemoveAfterAuthRedirect)
 
     if (error) {
-      const errorMsg = `Error detected after auth redirect, aborting. Error: ${error}, Error description: ${errorDescription}`
-      authLog(errorMsg, 'warn')
-      reject(new Error(errorMsg))
+      reject(
+        new Error(
+          `Error detected after auth redirect, aborting. Error: ${error}, Error description: ${errorDescription}`
+        )
+      )
       return
     }
 
     if (!idpId) {
-      const errorIdpMsg = 'Invalid idp_id parameter, aborting'
-      authLog(errorIdpMsg, 'warn')
-      reject(new Error(errorIdpMsg))
+      reject(new Error('Invalid idp_id parameter, aborting'))
       return
     }
 
     const savedState = window.sessionStorage.getItem(AUTH_STORAGE_STATE)
     if (state !== savedState) {
-      const errorStateMsg = 'Invalid state parameter, aborting'
-      authLog(errorStateMsg, 'warn')
-      reject(new Error(errorStateMsg))
+      reject(new Error('Invalid state parameter, aborting'))
       return
     }
     window.sessionStorage.setItem(AUTH_STORAGE_STATE, '')
@@ -190,7 +182,6 @@ export const handleAuthFromRedirect = () =>
               const errorType = result?.error || 'unknown'
               const errorDesc = result['error_description'] || 'unknown'
               const errorMsg = `Error detected after auth token request, aborting. Error: ${errorType}, Error description: ${errorDesc}`
-              authLog(errorMsg, 'warn')
               reject(new Error(errorMsg))
             } else {
               authLog('Successfully aquired token results')
@@ -206,9 +197,11 @@ export const handleAuthFromRedirect = () =>
           })
         })
         .catch(err => {
-          const errRequestMsg = `Aquiring token results for PKCE auth flow failed, err: ${err}`
-          authLog(errRequestMsg, 'warn')
-          reject(new Error(errRequestMsg))
+          reject(
+            new Error(
+              `Aquiring token results for PKCE auth flow failed, err: ${err}`
+            )
+          )
         })
     }
   })
