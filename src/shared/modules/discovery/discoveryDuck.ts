@@ -48,6 +48,7 @@ import {
   wasRedirectedBackFromSSOServer
 } from 'shared/modules/auth/common'
 import { searchParamsToRemoveAfterAutoRedirect } from 'shared/modules/auth/settings'
+import { SSO_REDIRECT } from '../auth/constants'
 
 export const NAME = 'discover-bolt-host'
 export const CONNECTION_ID = '$$discovery'
@@ -230,7 +231,7 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
               // We should move the SSO redirect handling to be outside of discovery duck. As it
               // is much closer related to the auto connection code in connectionsDuck
               const { searchParams } = new URL(window.location.href)
-              const SSORedirect = searchParams.get('sso_redirect')
+              const SSORedirect = searchParams.get(SSO_REDIRECT)
 
               if (SSORedirect) {
                 authLog(`Initialised with idpId: "${SSORedirect}"`)
