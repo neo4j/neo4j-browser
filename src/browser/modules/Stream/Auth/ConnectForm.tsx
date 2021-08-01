@@ -42,7 +42,7 @@ import { authRequestForSSO } from 'shared/modules/auth/index.js'
 import { getSSOProvidersFromStorage } from 'shared/modules/auth/common.js'
 import { H3 } from 'browser-components/headers'
 import { StyledCypherErrorMessage } from '../styled'
-import { downloadAuthLogs } from 'shared/modules/auth/helpers'
+import { authLog, downloadAuthLogs } from 'shared/modules/auth/helpers'
 
 const readableauthenticationMethods: Record<AuthenticationMethod, string> = {
   [NATIVE]: 'Username / Password',
@@ -140,7 +140,9 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
           <H3>Single sign-on</H3>
           {SSOProviders.map((provider: any) => (
             <StyledSSOButtonContainer key={provider.id}>
-              <FormButton onClick={() => authRequestForSSO(provider.id)}>
+              <FormButton
+                onClick={() => authRequestForSSO(provider.id).catch(authLog)}
+              >
                 {provider.name}
               </FormButton>
             </StyledSSOButtonContainer>

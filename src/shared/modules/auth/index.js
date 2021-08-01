@@ -26,7 +26,7 @@ import {
   searchParamsToRemoveAfterAuthRedirect
 } from './settings'
 
-export const authRequestForSSO = idpId => {
+export const authRequestForSSO = async idpId => {
   if (!window.isSecureContext) {
     throw new Error(
       'This application is NOT executed in a secure context. SSO support is therefore disabled. Load the application in a secure context to proceed with SSO.'
@@ -98,19 +98,25 @@ export const authRequestForSSO = idpId => {
       `Auth flow "PKCE", using code_challenge_method: "${codeChallengeMethod}"`
     )
 
-    const codeVerifier = createCodeVerifier(codeChallengeMethod)
-    window.sessionStorage.setItem(AUTH_STORAGE_CODE_VERIFIER, codeVerifier)
+    try {
+      const codeVerifier = createCodeVerifier(codeChallengeMethod)
+      window.sessionStorage.setItem(AUTH_STORAGE_CODE_VERIFIER, codeVerifier)
 
-    createCodeChallenge(codeChallengeMethod, codeVerifier).then(
-      codeChallenge => {
-        params = {
-          ...params,
-          code_challenge_method: codeChallengeMethod,
-          code_challenge: codeChallenge
-        }
-        _submitForm(form, params)
+      const codeChallenge = await createCodeChallenge(
+        codeChallengeMethod,
+        codeVerifier
+      )
+      params = {
+        ...params,
+        code_challenge_method: codeChallengeMethod,
+        code_challenge: codeChallenge
       }
-    )
+      _submitForm(form, params)
+    } catch (e) {
+      // caller handles the catching, adding rethrowing to make
+      // it clear we expect `createCodeVerifier` could throw
+      throw e
+    }
   } else if (selectedSSOProvider.auth_flow === IMPLICIT) {
     authLog('Auth flow "implicit flow"')
     _submitForm(form, params)
@@ -163,38 +169,40 @@ export const handleAuthFromRedirect = () =>
       authDebug('Implicit flow id_token', idToken)
       authDebug('Implicit flow access_token', accessToken)
 
-      const credentials = getCredentialsFromAuthResult(
-        { access_token: accessToken, id_token: idToken },
-        idpId
-      )
-      if (credentials.password && credentials.username) {
+      try {
+        const credentials = getCredentialsFromAuthResult(
+          { access_token: accessToken, id_token: idToken },
+          idpId
+        )
         resolve(credentials)
-      } else {
-        reject(new Error("Couldn't get credientals from accesstoken"))
+      } catch (e) {
+        reject(new Error(`Failed to get credentials: ${e.message}`))
       }
     } else {
       authLog('Attempting to fetch token information in "PKCE flow"')
 
       authRequestForToken(idpId, code)
-        .then(data => {
-          data.json().then(result => {
-            if (result && result.error) {
-              const errorType = result?.error || 'unknown'
-              const errorDesc = result['error_description'] || 'unknown'
-              const errorMsg = `Error detected after auth token request, aborting. Error: ${errorType}, Error description: ${errorDesc}`
-              reject(new Error(errorMsg))
-            } else {
-              authLog('Successfully aquired token results')
-              authDebug('PKCE flow result', result)
+        .then(res => res.json())
+        .then(body => {
+          if (body && body.error) {
+            const errorType = body?.error || 'unknown'
+            const errorDesc = body['error_description'] || 'unknown'
+            const errorMsg = `Error detected after auth token request, aborting. Error: ${errorType}, Error description: ${errorDesc}`
+            reject(new Error(errorMsg))
+          } else {
+            authLog('Successfully aquired token results')
+            authDebug('PKCE flow result', body)
 
-              const credentials = getCredentialsFromAuthResult(result, idpId)
-              if (credentials.password && credentials.username) {
-                resolve(credentials)
-              } else {
-                reject(new Error("Couldn't get credientals from accesstoken"))
-              }
+            try {
+              const credentials = getCredentialsFromAuthResult(
+                { access_token: accessToken, id_token: idToken },
+                idpId
+              )
+              resolve(credentials)
+            } catch (e) {
+              reject(new Error(`Failed to get credentials: ${e.message}`))
             }
-          })
+          }
         })
         .catch(err => {
           reject(

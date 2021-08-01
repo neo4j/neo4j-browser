@@ -73,12 +73,16 @@ export const createCodeChallenge = async (method, codeVerifier) => {
     case 'plain':
       return codeVerifier
     case 'S256':
-      let bytes = Uint8Array.from(codeVerifier, t => t.charCodeAt(0))
-      bytes = await window.crypto.subtle.digest('SHA-256', bytes)
-      const stringFromBytes = Array.from(new Uint8Array(bytes), t =>
-        String.fromCharCode(t)
-      ).join('')
-      return _btoaUrlSafe(stringFromBytes)
+      try {
+        let bytes = Uint8Array.from(codeVerifier, t => t.charCodeAt(0))
+        bytes = await window.crypto.subtle.digest('SHA-256', bytes)
+        const stringFromBytes = Array.from(new Uint8Array(bytes), t =>
+          String.fromCharCode(t)
+        ).join('')
+        return _btoaUrlSafe(stringFromBytes)
+      } catch (e) {
+        throw new Error(`Failed to create code challenge with error ${e}`)
+      }
     case '':
     case null:
     default:

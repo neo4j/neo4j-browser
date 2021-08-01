@@ -158,10 +158,7 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
         action.requestedUseDb = passedDb
       }
 
-      const discoveryURL =
-        searchParams.get('discoveryURL') ||
-        searchParams.get('discoveryurl') ||
-        searchParams.get('discoveryUrl')
+      const discoveryURL = searchParams.get('discoveryURL')
 
       if (discoveryURL) {
         action.discoveryURL = discoveryURL
@@ -240,7 +237,7 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
                   searchParamsToRemoveAfterAutoRedirect
                 )
                 try {
-                  authRequestForSSO(SSORedirect)
+                  await authRequestForSSO(SSORedirect)
                 } catch (err) {
                   SSOError = err.message
                   authLog(err)
