@@ -238,18 +238,20 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
                 removeSearchParamsInBrowserHistory(
                   searchParamsToRemoveAfterAutoRedirect
                 )
-                const err = authRequestForSSO(SSORedirect)
-                if (err) {
-                  SSOError = err
+                try {
+                  authRequestForSSO(SSORedirect)
+                } catch (err) {
+                  SSOError = err.message
+                  authLog(err)
                 }
               } else if (wasRedirectedBackFromSSOServer()) {
                 authLog('Handling auth_flow_step redirect')
 
                 try {
                   creds = await handleAuthFromRedirect()
-                } catch (e) {
-                  SSOError = e
-                  authLog(e)
+                } catch (err) {
+                  SSOError = err.message
+                  authLog(err)
                 }
               }
             } else {

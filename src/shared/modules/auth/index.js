@@ -31,7 +31,7 @@ export const authRequestForSSO = idpId => {
   if (!selectedSSOProvider) {
     const error = `Could not find any SSO provider with idpId: "${idpId}"`
     authLog(error)
-    return error
+    throw new Error(error)
   }
 
   temporarilyStoreUrlSearchParams()
@@ -40,7 +40,7 @@ export const authRequestForSSO = idpId => {
   if (!oauth2Endpoint) {
     const error = `Invalid OAuth2 endpoint: "${oauth2Endpoint}"`
     authLog(error)
-    return error
+    throw new Error(error)
   }
   authLog(`Using OAuth2 endpoint: "${oauth2Endpoint}" for idp_id: ${idpId}`)
 
@@ -116,7 +116,7 @@ export const authRequestForSSO = idpId => {
   } else {
     const error = `Auth flow "${selectedSSOProvider.auth_flow}" is not supported.`
     authLog(error)
-    return error
+    throw new Error(error)
   }
 }
 
@@ -138,14 +138,14 @@ export const handleAuthFromRedirect = () =>
     if (error) {
       const errorMsg = `Error detected after auth redirect, aborting. Error: ${error}, Error description: ${errorDescription}`
       authLog(errorMsg, 'warn')
-      reject(errorMsg)
+      reject(new Error(errorMsg))
       return
     }
 
     if (!idpId) {
       const errorIdpMsg = 'Invalid idp_id parameter, aborting'
       authLog(errorIdpMsg, 'warn')
-      reject(errorIdpMsg)
+      reject(new Error(errorIdpMsg))
       return
     }
 
@@ -153,7 +153,7 @@ export const handleAuthFromRedirect = () =>
     if (state !== savedState) {
       const errorStateMsg = 'Invalid state parameter, aborting'
       authLog(errorStateMsg, 'warn')
-      reject(errorStateMsg)
+      reject(new Error(errorStateMsg))
       return
     }
     window.sessionStorage.setItem(AUTH_STORAGE_STATE, '')
@@ -168,7 +168,11 @@ export const handleAuthFromRedirect = () =>
         { access_token: accessToken, id_token: idToken },
         idpId
       )
-      resolve(credentials)
+      if (credentials.password && credentials.username) {
+        resolve(credentials)
+      } else {
+        reject(new Error("Couldn't get credientals from accesstoken"))
+      }
     } else {
       authLog('Attempting to fetch token information in "PKCE flow"')
 
@@ -180,27 +184,33 @@ export const handleAuthFromRedirect = () =>
               const errorDesc = result['error_description'] || 'unknown'
               const errorMsg = `Error detected after auth token request, aborting. Error: ${errorType}, Error description: ${errorDesc}`
               authLog(errorMsg, 'warn')
-              reject(errorMsg)
+              reject(new Error(errorMsg))
             } else {
               authLog('Successfully aquired token results')
               authDebug('PKCE flow result', result)
 
               const credentials = getCredentialsFromAuthResult(result, idpId)
-              resolve(credentials)
+              if (credentials.password && credentials.username) {
+                resolve(credentials)
+              } else {
+                reject(new Error("Couldn't get credientals from accesstoken"))
+              }
             }
           })
         })
         .catch(err => {
           const errRequestMsg = `Aquiring token results for PKCE auth flow failed, err: ${err}`
           authLog(errRequestMsg, 'warn')
-          reject(errRequestMsg)
+          reject(new Error(errRequestMsg))
         })
     }
   })
 
 export const authRequestForToken = (idpId, code) => {
   const selectedSSOProvider = getSSOProviderByIdpId(idpId)
-  if (!selectedSSOProvider) return
+  if (!selectedSSOProvider) {
+    throw new Error(`Missing SSO Provider for idpId: ${idpId}`)
+  }
 
   const SSOParams = selectedSSOProvider.params || {}
   let details = {
