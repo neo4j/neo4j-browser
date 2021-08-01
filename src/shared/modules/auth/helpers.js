@@ -45,8 +45,6 @@ export const createStateForRequest = () => {
 }
 
 export const createCodeVerifier = method => {
-  const errorMessage = `${AUTH_LOGGING_PREFIX} code verifier, Invalid argument`
-
   switch (method) {
     case 'plain':
     case 'S256':
@@ -57,21 +55,25 @@ export const createCodeVerifier = method => {
       return _btoaUrlSafe(randomString)
     case '':
     case null:
-      return null
     default:
-      throw errorMessage
+      const errMsg = `Unsupported or missing code verification method: ${method}`
+      authLog(errMsg)
+      throw new Error(errMsg)
   }
 }
 
 export const createCodeChallenge = async (method, codeVerifier) => {
-  const errorMessage = `${AUTH_LOGGING_PREFIX} code challenge, Invalid argument`
+  if (!codeVerifier) {
+    const errMsg =
+      'Unable to create code challenger: Missing code verifier argument to createCodeChallenge'
+    authLog(errMsg)
+    throw new Error(errMsg)
+  }
 
   switch (method) {
     case 'plain':
-      if (codeVerifier === null) throw errorMessage
       return codeVerifier
     case 'S256':
-      if (codeVerifier === null) throw errorMessage
       let bytes = Uint8Array.from(codeVerifier, t => t.charCodeAt(0))
       bytes = await window.crypto.subtle.digest('SHA-256', bytes)
       const stringFromBytes = Array.from(new Uint8Array(bytes), t =>
@@ -80,9 +82,10 @@ export const createCodeChallenge = async (method, codeVerifier) => {
       return _btoaUrlSafe(stringFromBytes)
     case '':
     case null:
-      return null
     default:
-      throw errorMessage
+      const errMsg = `Unsupported or missing code challenge method: ${method}`
+      authLog(errMsg)
+      throw new Error(errMsg)
   }
 }
 
