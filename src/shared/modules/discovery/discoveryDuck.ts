@@ -172,11 +172,11 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
     .merge(some$.ofType(USER_CLEAR))
     .mergeMap(async (action: any) => {
       // we can get data about which host different mechanisms, they are ranked in
-      // the following order
+      // the following prioritization order
       // 1. Url param - dbms
       // 2. Url param - connectURL
       // 3. database in discovery endpoint
-      // 3. Url param - discoveryURL
+      // 4. Url param - discoveryURL
 
       let dataFromForceUrl: DiscoverableData = {}
 
