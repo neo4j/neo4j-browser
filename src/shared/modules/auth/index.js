@@ -1,7 +1,6 @@
 import {
   getCredentialsFromAuthResult,
   getInitialisationParameters,
-  getSSOProviderByIdpId,
   temporarilyStoreUrlSearchParams
 } from './common'
 import {
@@ -26,15 +25,16 @@ import {
   searchParamsToRemoveAfterAuthRedirect
 } from './settings'
 
-export const authRequestForSSO = async idpId => {
+export const authRequestForSSO = async selectedSSOProvider => {
+  authLog('Initializing auth redirect request for SSO')
+  if (!selectedSSOProvider) {
+    throw new Error('Could not find SSO provider')
+  }
+
   if (!window.isSecureContext) {
     throw new Error(
       'This application is NOT executed in a secure context. SSO support is therefore disabled. Load the application in a secure context to proceed with SSO.'
     )
-  }
-  const selectedSSOProvider = getSSOProviderByIdpId(idpId)
-  if (!selectedSSOProvider) {
-    throw new Error(`Could not find any SSO provider with idpId: "${idpId}"`)
   }
 
   temporarilyStoreUrlSearchParams()
@@ -43,7 +43,9 @@ export const authRequestForSSO = async idpId => {
   if (!oauth2Endpoint) {
     throw new Error(`Invalid OAuth2 endpoint: "${oauth2Endpoint}"`)
   }
-  authLog(`Using OAuth2 endpoint: "${oauth2Endpoint}" for idp_id: ${idpId}`)
+  authLog(
+    `Using OAuth2 endpoint: "${oauth2Endpoint}" for idp_id: ${selectedSSOProvider.id}`
+  )
 
   const form = document.createElement('form')
   form.setAttribute('method', 'GET')
@@ -127,7 +129,7 @@ export const authRequestForSSO = async idpId => {
   }
 }
 
-export const handleAuthFromRedirect = () =>
+export const handleAuthFromRedirect = SSOProviders =>
   new Promise((resolve, reject) => {
     const {
       idp_id: idpId,
@@ -139,6 +141,8 @@ export const handleAuthFromRedirect = () =>
       state,
       error
     } = getInitialisationParameters()
+
+    authLog('Handling auth rediret from SSO server')
 
     removeSearchParamsInBrowserHistory(searchParamsToRemoveAfterAuthRedirect)
 
@@ -163,6 +167,17 @@ export const handleAuthFromRedirect = () =>
     }
     window.sessionStorage.setItem(AUTH_STORAGE_STATE, '')
 
+    const selectedSSOProvider = SSOProviders.find(({ id }) => id === idpId)
+    if (!selectedSSOProvider) {
+      reject(
+        new Error(
+          `Couldn't find identity provider with id ${idpId}, only found ${SSOProviders.map(
+            provider => provider.id
+          ).join(', ')}`
+        )
+      )
+    }
+
     if ((tokenType || '').toLowerCase() === BEARER && accessToken) {
       authLog('Successfully aquired access_token in "implicit flow"')
 
@@ -172,7 +187,7 @@ export const handleAuthFromRedirect = () =>
       try {
         const credentials = getCredentialsFromAuthResult(
           { access_token: accessToken, id_token: idToken },
-          idpId
+          selectedSSOProvider
         )
         resolve(credentials)
       } catch (e) {
@@ -181,7 +196,7 @@ export const handleAuthFromRedirect = () =>
     } else {
       authLog('Attempting to fetch token information in "PKCE flow"')
 
-      authRequestForToken(idpId, code)
+      authRequestForToken(selectedSSOProvider, code)
         .then(res => res.json())
         .then(body => {
           if (body && body.error) {
@@ -195,8 +210,8 @@ export const handleAuthFromRedirect = () =>
 
             try {
               const credentials = getCredentialsFromAuthResult(
-                { access_token: accessToken, id_token: idToken },
-                idpId
+                body,
+                selectedSSOProvider
               )
               resolve(credentials)
             } catch (e) {
@@ -214,12 +229,7 @@ export const handleAuthFromRedirect = () =>
     }
   })
 
-export const authRequestForToken = (idpId, code) => {
-  const selectedSSOProvider = getSSOProviderByIdpId(idpId)
-  if (!selectedSSOProvider) {
-    throw new Error(`Missing SSO Provider for idpId: ${idpId}`)
-  }
-
+export const authRequestForToken = (selectedSSOProvider, code) => {
   const SSOParams = selectedSSOProvider.params || {}
   let details = {
     grant_type: defaultGrantType,
@@ -254,7 +264,7 @@ export const authRequestForToken = (idpId, code) => {
   }
   requestBody = requestBody.join('&')
 
-  authLog(`Request for token in PKCE flow, idp_id: ${idpId}`)
+  authLog(`Request for token in PKCE flow, idp_id: ${selectedSSOProvider.id}`)
   const requestUrl = `${selectedSSOProvider.token_endpoint}?`
   return window.fetch(requestUrl, { ...requestOptions, body: requestBody })
 }

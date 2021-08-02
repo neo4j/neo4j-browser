@@ -1,8 +1,8 @@
 import jwtDecode from 'jwt-decode'
 import {
-  AUTH_STORAGE_SSO_PROVIDERS,
   AUTH_STORAGE_URL_SEARCH_PARAMS,
-  REDIRECT_URI
+  REDIRECT_URI,
+  SSO_REDIRECT
 } from './constants'
 import { addSearchParamsInBrowserHistory, authLog, authDebug } from './helpers'
 import {
@@ -38,6 +38,7 @@ export const getValidSSOProviders = discoveredSSOProviders => {
       'warn'
     )
   }
+
   if (discoveredSSOProviders.length === 0) {
     authLog('List of discovered SSO providers was empty', 'warn')
     return []
@@ -59,7 +60,7 @@ export const getValidSSOProviders = discoveredSSOProviders => {
     const missingParamKeys = mandatoryKeysForSSOProviderParams.filter(
       key => !provider.params.hasOwnProperty(key)
     )
-    if (missingParamKeys !== 0) {
+    if (missingParamKeys.length !== 0) {
       authLog(
         `Dropping invalid discovered SSO provider with id: "${
           provider.id
@@ -75,121 +76,22 @@ export const getValidSSOProviders = discoveredSSOProviders => {
   return validSSOProviders
 }
 
-export const checkAndMergeSSOProviders = (
-  discoveredSSOProviders,
-  updateExistingProviders
-) => {
-  if (!discoveredSSOProviders || !discoveredSSOProviders.length) {
-    authLog('Invalid discovered SSO providers', 'warn')
-    return
-  }
-
-  const currentSSOProviders = getSSOProvidersFromStorage()
-
-  discoveredSSOProviders.forEach(provider => {
-    if (!provider) {
-      authLog(`Found invalid discoved sso provider`)
-      return
-    }
-    if (
-      !mandatoryKeysForSSOProviders.every(key => provider.hasOwnProperty(key))
-    ) {
-      authLog(
-        `dropping invalid discovered sso provider with id: "${provider.id}", missing key`
-      )
-      return
-    }
-    if (
-      !mandatoryKeysForSSOProviderParams.every(key =>
-        provider.params.hasOwnProperty(key)
-      )
-    ) {
-      const missingKeys = mandatoryKeysForSSOProviderParams.filter(
-        key => !provider.params.hasOwnProperty(key)
-      )
-      authLog(
-        `Dropping invalid discovered SSO provider with id: "${
-          provider.id
-        }", missing params key(s) ${missingKeys.join(', ')}`
-      )
-      return
-    }
-    if (
-      currentSSOProviders.find(crntProvider => crntProvider.id === provider.id)
-    ) {
-      if (updateExistingProviders) {
-        const idx = currentSSOProviders.findIndex(
-          crntProvider => crntProvider.id === provider.id
-        )
-        currentSSOProviders.splice(idx, 1)
-        authLog(`Updating SSO provider with id: "${provider.id}"`)
-      } else {
-        authLog(
-          `Not accepting discovered SSO provider with id: "${provider.id}", id exists already`
-        )
-        return
-      }
-    }
-    currentSSOProviders.push(provider)
-  })
-
-  window.sessionStorage.setItem(
-    AUTH_STORAGE_SSO_PROVIDERS,
-    JSON.stringify(currentSSOProviders)
-  )
-  authLog('Checked and merged SSO providers')
-}
-
-export const getSSOProvidersFromStorage = () => {
-  let SSOProviders
-  try {
-    SSOProviders = JSON.parse(
-      window.sessionStorage.getItem(AUTH_STORAGE_SSO_PROVIDERS)
-    )
-  } catch (e) {}
-  if (!Array.isArray(SSOProviders)) {
-    authLog('Found sso defect providers in storage, clearing..', 'warn')
-    window.sessionStorage.setItem(AUTH_STORAGE_SSO_PROVIDERS, [])
-    return []
-  }
-
-  if (SSOProviders.length === 0) {
-    authLog('No SSO providers in (local) storage found')
-    return []
-  }
-
-  return SSOProviders
-}
-
-export const getSSOProviderByIdpId = idpId => {
-  const SSOProviders = getSSOProvidersFromStorage()
-
-  const selectedSSOProvider = SSOProviders.find(
-    provider => provider.id === idpId
+export const getCredentialsFromAuthResult = (result, selectedSSOProvider) => {
+  authLog(
+    `Attempting to assemble credentials for idp_id: ${selectedSSOProvider.id}`
   )
   if (!selectedSSOProvider) {
-    authLog(`No matching SSO provider to passed in argument: ${idpId}`, 'warn')
-    return null
+    throw new Error('No SSO provider passed')
   }
-  return selectedSSOProvider
-}
-
-export const getCredentialsFromAuthResult = (result, idpId) => {
-  authLog(`Attempting to assemble credentials for idp_id: ${idpId}`)
 
   if (!result) {
     throw new Error('Missing result in auth result handler')
   }
-  if (!idpId) {
-    throw new Error('Missing idp_id in auth result handler')
-  }
-
-  const selectedSSOProvider = getSSOProviderByIdpId(idpId)
-  if (!selectedSSOProvider) return emptyCredentials
 
   const tokenTypePrincipal =
     selectedSSOProvider.config?.['token_type_principal'] ||
     defaultTokenTypePrincipal
+
   authLog(
     `Credentials, using token type "${tokenTypePrincipal}" to retrieve principal`
   )
@@ -201,7 +103,7 @@ export const getCredentialsFromAuthResult = (result, idpId) => {
 
   if (!parsedJWT) {
     throw new Error(
-      `Could not parse JWT of type "${tokenTypePrincipal}" for idp_id "${idpId}", aborting`
+      `Could not parse JWT of type "${tokenTypePrincipal}" for idp_id "${selectedSSOProvider.id}", aborting`
     )
   }
   authDebug('Credentials, parsed JWT', parsedJWT)

@@ -37,9 +37,11 @@ import {
 import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
 import { toKeyString } from 'services/utils'
 import { stripScheme, getScheme } from 'services/boltscheme.utils'
-import { AuthenticationMethod } from 'shared/modules/connections/connectionsDuck'
+import {
+  AuthenticationMethod,
+  SSOProvider
+} from 'shared/modules/connections/connectionsDuck'
 import { authRequestForSSO } from 'shared/modules/auth/index.js'
-import { getSSOProvidersFromStorage } from 'shared/modules/auth/common.js'
 import { H3 } from 'browser-components/headers'
 import { StyledCypherErrorMessage } from '../styled'
 import { authLog, downloadAuthLogs } from 'shared/modules/auth/helpers'
@@ -66,6 +68,7 @@ interface ConnectFormProps {
   used: boolean
   supportsMultiDb: boolean
   SSOError?: string
+  SSOProviders: SSOProvider[]
 }
 
 export default function ConnectForm(props: ConnectFormProps): JSX.Element {
@@ -73,11 +76,6 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
   const [scheme, setScheme] = useState(
     props.allowedSchemes ? `${getScheme(props.host)}://` : ''
   )
-  const [SSOProviders, setSSOProviders] = useState<any[]>([])
-
-  useEffect(() => {
-    setSSOProviders(getSSOProvidersFromStorage())
-  }, [])
 
   useEffect(() => {
     if (props.allowedSchemes) {
@@ -131,17 +129,21 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
       }:// for a direct connection to a single instance.`
     : ''
 
-  const { SSOError } = props
+  const { SSOError, SSOProviders } = props
   const showSSO = SSOProviders.length > 0 || SSOError
   return (
     <StyledFormContainer>
       {showSSO && (
         <StyledSSOOptions>
           <H3>Single sign-on</H3>
-          {SSOProviders.map((provider: any) => (
+          {SSOProviders.map((provider: SSOProvider) => (
             <StyledSSOButtonContainer key={provider.id}>
               <FormButton
-                onClick={() => authRequestForSSO(provider.id).catch(authLog)}
+                onClick={() =>
+                  authRequestForSSO(provider).catch((e: any) => {
+                    authLog(e.message)
+                  })
+                }
               >
                 {provider.name}
               </FormButton>
