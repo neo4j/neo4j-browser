@@ -300,7 +300,14 @@ export class GrassEditorComponent extends Component<any> {
       return null
     }
     return (
-      <StyledInlineList className="style-picker" style={{ display: 'grid' }}>
+      <StyledInlineList
+        className="style-picker"
+        style={{
+          display: 'grid',
+          overflowY: 'scroll',
+          maxHeight: `${this.props.frameHeight - 75}px`
+        }}
+      >
         {title}
         {pickers}
       </StyledInlineList>

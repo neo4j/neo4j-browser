@@ -76,15 +76,10 @@ export class NodeInspectorPanel extends Component<
             this.togglePanel(true)
           }}
         >
-          <Popup
-            on="hover"
-            trigger={<Icon name="chevron left" />}
-            mouseEnterDelay={1000}
-            inverted
-            position="right center"
-          >
-            <div>Click to expand the Node Properties Viz</div>
-          </Popup>
+          <Icon
+            title="Click to expand the Node Properties display"
+            name="chevron left"
+          />
         </div>
       )
     }

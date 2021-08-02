@@ -234,6 +234,7 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
           onSelectedLabel={this.onSelectedLabel.bind(this)}
           onSelectedRelType={this.onSelectedRelType.bind(this)}
           selectedLabel={this.state.selectedLabel}
+          frameHeight={this.props.frameHeight}
         />
       )
     } else {
@@ -252,6 +253,7 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
           onSelectedLabel={this.onSelectedLabel.bind(this)}
           onSelectedRelType={this.onSelectedRelType.bind(this)}
           selectedLabel={this.state.selectedLabel}
+          frameHeight={this.props.frameHeight}
         />
       )
     }
@@ -304,7 +306,6 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
             details={inspector2}
             hoveredItem={this.state.hoveredItem}
             selectedItem={this.state.selectedItem}
-            // selectedLabel={this.state.selectedLabel}
           />
         </div>
         <InspectorComponent

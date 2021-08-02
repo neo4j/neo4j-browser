@@ -45,26 +45,75 @@ import ClickableUrls from '../../../components/ClickableUrls'
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
 import { StyledTruncatedMessage } from 'browser/modules/Stream/styled'
 import { Icon } from 'semantic-ui-react'
+import ClipboardCopier from 'browser-components/ClipboardCopier'
 
-const mapItemProperties = (itemProperties: any) =>
-  itemProperties
-    .sort(({ key: keyA }: any, { key: keyB }: any) =>
+const mapItemProperties = (itemId: string, itemProperties: any) => {
+  const clipboardCopy = (textToCopy: string) => (
+    <div style={{ marginLeft: 'auto' }}>
+      <ClipboardCopier textToCopy={textToCopy} iconSize={15} />
+    </div>
+  )
+  const allItemProperties = [`<id>: ${itemId}`]
+  const sortedItemProperties = () => {
+    return itemProperties.sort(({ key: keyA }: any, { key: keyB }: any) =>
       keyA < keyB ? -1 : keyA === keyB ? 0 : 1
     )
-    .map((prop: any, i: any) => (
+  }
+  sortedItemProperties().map((prop: any) => {
+    allItemProperties.push(`${prop.key}: ${prop.value}`)
+  })
+
+  const mappedItemProperties = () => {
+    return sortedItemProperties().map((prop: any, i: any) => {
+      return (
+        <StyledInspectorFooterRowListPair
+          className="pair"
+          key={'prop' + i}
+          style={{
+            display: 'flex',
+            background: `${(i + 1) % 2 === 0 ? 'white' : '#f0f0f0'}`
+          }}
+        >
+          <StyledInspectorFooterRowListKey className="key">
+            {prop.key + ': '}
+          </StyledInspectorFooterRowListKey>
+          <StyledInspectorFooterRowListValue className="value">
+            <ClickableUrls text={optionalToString(prop.value)} />
+          </StyledInspectorFooterRowListValue>
+          {clipboardCopy(`${prop.key}: ${prop.value}`)}
+        </StyledInspectorFooterRowListPair>
+      )
+    })
+  }
+
+  return (
+    <>
+      <div style={{ display: 'flex' }}>
+        <div style={{ marginLeft: 'auto', marginRight: '5px' }}>
+          <ClipboardCopier
+            textToCopy={allItemProperties.join('\n')}
+            iconSize={15}
+            titleText={'Copy all properties to clipboard'}
+          />
+        </div>
+      </div>
       <StyledInspectorFooterRowListPair
+        key="pair"
         className="pair"
-        key={'prop' + i}
-        style={{ display: 'flex' }}
+        style={{ display: 'flex', background: 'white' }}
       >
         <StyledInspectorFooterRowListKey className="key">
-          {prop.key + ': '}
+          {'<id>:'}
         </StyledInspectorFooterRowListKey>
         <StyledInspectorFooterRowListValue className="value">
-          <ClickableUrls text={optionalToString(prop.value)} />
+          {itemId}
         </StyledInspectorFooterRowListValue>
+        {clipboardCopy(`<id>: ${itemId}`)}
       </StyledInspectorFooterRowListPair>
-    ))
+      {mappedItemProperties()}
+    </>
+  )
+}
 
 const mapLabels = (graphStyle: any, itemLabels: any) => {
   return itemLabels.map((label: any, i: any) => {
@@ -194,19 +243,7 @@ export class InspectorComponent2 extends Component<
         inspectorContent = (
           <StyledInlineList className="list-inline">
             {mapLabels(this.state.graphStyle, item.labels)}
-            <StyledInspectorFooterRowListPair
-              key="pair"
-              className="pair"
-              style={{ display: 'flex' }}
-            >
-              <StyledInspectorFooterRowListKey className="key">
-                {'<id>:'}
-              </StyledInspectorFooterRowListKey>
-              <StyledInspectorFooterRowListValue className="value">
-                {item.id}
-              </StyledInspectorFooterRowListValue>
-            </StyledInspectorFooterRowListPair>
-            {mapItemProperties(item.properties)}
+            {mapItemProperties(item.id, item.properties)}
           </StyledInlineList>
         )
       } else if (type === 'relationship') {
@@ -228,15 +265,7 @@ export class InspectorComponent2 extends Component<
             >
               {item.type}
             </StyledTokenRelationshipType>
-            <StyledInspectorFooterRowListPair key="pair" className="pair">
-              <StyledInspectorFooterRowListKey className="key">
-                {'<id>:'}
-              </StyledInspectorFooterRowListKey>
-              <StyledInspectorFooterRowListValue className="value">
-                {item.id}
-              </StyledInspectorFooterRowListValue>
-            </StyledInspectorFooterRowListPair>
-            {mapItemProperties(item.properties)}
+            {mapItemProperties(item.id, item.properties)}
           </StyledInlineList>
         )
       }

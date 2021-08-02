@@ -167,6 +167,7 @@ export const StyledInspectorFooterRow = styled.ul`
 export const StyledInspectorFooterRowListKey = styled.div`
   float: left;
   font-weight: 800;
+  flex: 1;
 `
 
 export const StyledInspectorFooterRowListValue = styled.div`
@@ -174,6 +175,7 @@ export const StyledInspectorFooterRowListValue = styled.div`
   overflow: hidden;
   float: left;
   white-space: pre-wrap;
+  flex: 3;
 `
 
 export const StyledInlineList = styled.ul`

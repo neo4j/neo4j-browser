@@ -63,7 +63,7 @@ export class LegendComponent2 extends Component<any, State> {
   }
 
   render() {
-    console.log('++selected', this.props.selectedLabel)
+    // console.log('++selected', this.props.selectedLabel)
     const mapLabels = (labels: any) => {
       const labelList = Object.keys(labels).map((legendItemKey, i) => {
         const styleForItem = this.props.graphStyle.forNode({
@@ -84,6 +84,8 @@ export class LegendComponent2 extends Component<any, State> {
             <StyledLegendContents className="contents">
               <Popup
                 on="click"
+                basic
+                pinned
                 trigger={
                   <StyledLabelToken
                     onClick={onClick}
@@ -98,11 +100,11 @@ export class LegendComponent2 extends Component<any, State> {
                 }
                 // inverted
                 wide
-                position="bottom center"
+                // position="bottom center"
               >
-                {/* <div>Click to expand the Node Properties Viz</div> */}
                 <GrassEditor
                   selectedLabel={this.props.selectedLabel?.item?.selectedLabel}
+                  frameHeight={this.props.frameHeight}
                 />
               </Popup>
             </StyledLegendContents>
@@ -155,6 +157,8 @@ export class LegendComponent2 extends Component<any, State> {
             <StyledLegendContents className="contents">
               <Popup
                 on="click"
+                basic
+                pinned
                 trigger={
                   <StyledTokenRelationshipType
                     onClick={onClick}
@@ -171,12 +175,13 @@ export class LegendComponent2 extends Component<any, State> {
                 }
                 // inverted
                 wide
-                position="bottom center"
+                // position="bottom center"
               >
                 <GrassEditor
                   selectedRelType={
                     this.props.selectedLabel?.item?.selectedRelType
                   }
+                  frameHeight={this.props.frameHeight}
                 />
               </Popup>
             </StyledLegendContents>

@@ -5,10 +5,12 @@ import { CopyIcon } from './icons/Icons'
 type ClipboardCopierProps = {
   textToCopy: string
   iconSize?: number
+  titleText?: string
 }
 function ClipboardCopier({
   textToCopy: text,
-  iconSize = 20
+  iconSize = 20,
+  titleText = 'Copy to clipboard'
 }: ClipboardCopierProps): JSX.Element {
   const [messageToShow, setMessageToShow] = useState<string | null>(null)
   function showPopup(text: string) {
@@ -24,7 +26,7 @@ function ClipboardCopier({
           .catch(() => showPopup('Copying text failed'))
       }
     >
-      <CopyIcon title="Copy to clipboard" width={iconSize} />
+      <CopyIcon title={titleText} width={iconSize} />
       {messageToShow && <InfoPopup text={messageToShow} />}
     </CopyIconContainer>
   )
