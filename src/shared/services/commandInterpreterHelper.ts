@@ -340,7 +340,10 @@ const availableCommands = [
         userCapabilities: getUserCapabilities(store.getState()),
         serverConfig: getAvailableSettings(store.getState()),
         browserSettings: getSettings(store.getState()),
-        ssoLogs: sessionStorage.getItem(AUTH_STORAGE_LOGS)?.split('\n')
+        ssoLogs: sessionStorage
+          .getItem(AUTH_STORAGE_LOGS)
+          ?.trim()
+          .split('\n')
       }
       put(
         frames.add({
