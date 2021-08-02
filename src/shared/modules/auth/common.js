@@ -27,6 +27,54 @@ export const getInitialisationParameters = () => {
   return initParams
 }
 
+export const getValidSSOProviders = discoveredSSOProviders => {
+  if (!discoveredSSOProviders) {
+    return []
+  }
+
+  if (!Array.isArray(discoveredSSOProviders)) {
+    authLog(
+      `Discovered SSO providers should be a list, got ${discoveredSSOProviders}`,
+      'warn'
+    )
+  }
+  if (discoveredSSOProviders.length === 0) {
+    authLog('List of discovered SSO providers was empty', 'warn')
+    return []
+  }
+
+  const validSSOProviders = discoveredSSOProviders.filter(provider => {
+    const missingKeys = mandatoryKeysForSSOProviders.filter(
+      key => !provider.hasOwnProperty(key)
+    )
+    if (missingKeys.length !== 0) {
+      authLog(
+        `dropping invalid discovered sso provider with id: "${
+          provider.id
+        }", missing key(s) ${missingKeys.join(', ')} `
+      )
+      return false
+    }
+
+    const missingParamKeys = mandatoryKeysForSSOProviderParams.filter(
+      key => !provider.params.hasOwnProperty(key)
+    )
+    if (missingParamKeys !== 0) {
+      authLog(
+        `Dropping invalid discovered SSO provider with id: "${
+          provider.id
+        }", missing params key(s) ${missingKeys.join(', ')}`
+      )
+      return false
+    }
+
+    return true
+  })
+
+  authLog('Checked SSO providers')
+  return validSSOProviders
+}
+
 export const checkAndMergeSSOProviders = (
   discoveredSSOProviders,
   updateExistingProviders
