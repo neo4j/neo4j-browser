@@ -32,7 +32,8 @@ import {
   StyledFormContainer,
   StyledSSOOptions,
   StyledSSOButtonContainer,
-  StyledSSOError
+  StyledSSOError,
+  StyledSSOLogDownload
 } from './styled'
 import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
 import { toKeyString } from 'services/utils'
@@ -42,9 +43,9 @@ import {
   SSOProvider
 } from 'shared/modules/connections/connectionsDuck'
 import { authRequestForSSO } from 'shared/modules/auth/index.js'
-import { H3 } from 'browser-components/headers'
 import { StyledCypherErrorMessage } from '../styled'
 import { authLog, downloadAuthLogs } from 'shared/modules/auth/helpers'
+import { H4 } from 'browser-components/headers/Headers'
 
 const readableauthenticationMethods: Record<AuthenticationMethod, string> = {
   [NATIVE]: 'Username / Password',
@@ -130,13 +131,15 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
     : ''
 
   const { SSOError, SSOProviders } = props
+
   const showSSO = SSOProviders.length > 0 || SSOError
   const [SSORedirectError, setRedirectError] = useState('')
+
   return (
     <StyledFormContainer>
       {showSSO && (
         <StyledSSOOptions>
-          <H3>Single sign-on</H3>
+          <H4>Single sign-on</H4>
           {SSOProviders.map((provider: SSOProvider) => (
             <StyledSSOButtonContainer key={provider.id}>
               <FormButton
@@ -146,6 +149,7 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
                     setRedirectError(e.message)
                   })
                 }
+                style={{ width: '200px' }}
               >
                 {provider.name}
               </FormButton>
@@ -155,15 +159,19 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
             <StyledSSOError>
               <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>
               <div>{SSOError || SSORedirectError}</div>
-              <button onClick={downloadAuthLogs}>
-                download sso error logs
-              </button>
+              <StyledSSOLogDownload
+                style={{ cursor: 'pointer' }}
+                onClick={downloadAuthLogs}
+              >
+                Download logs
+              </StyledSSOLogDownload>
             </StyledSSOError>
           )}
         </StyledSSOOptions>
       )}
       <StyledConnectionForm onSubmit={onConnectClick}>
         <StyledConnectionFormEntry>
+          {showSSO && <H4>Login with Password</H4>}
           <StyledConnectionLabel htmlFor="url-input" title={hoverText}>
             Connect URL
           </StyledConnectionLabel>

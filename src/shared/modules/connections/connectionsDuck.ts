@@ -487,6 +487,13 @@ export const startupConnectEpic = (action$: any, store: any) => {
         store.getState(),
         discovery.CONNECTION_ID
       )
+      // always update SSO state providers
+      store.dispatch(
+        discovery.updateDiscoveryConnection({
+          SSOProviders: discovered?.SSOProviders || [],
+          SSOError: discovered?.SSOError
+        })
+      )
 
       if (
         !(discovered && discovered.hasForceUrl) && // If we have force url, don't try old connection data

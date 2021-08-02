@@ -157,17 +157,20 @@ export const StyledFormContainer = styled.div`
 
 export const StyledSSOOptions = styled.div`
   border-right: 1px solid rgb(77, 74, 87, 0.3);
-  padding-right: 30px;
-  margin-right: 30px;
+  padding-right: 60px;
+  margin-right: 60px;
+  margin-left: 30px;
   max-width: 300px;
 `
+
+export const StyledSSOLogDownload = styled.a`
+  margin-bottom: 12px;
+`
 export const StyledSSOButtonContainer = styled.div`
-  margin-bottom: 5px;
+  margin-bottom: 12px;
 `
 export const StyledSSOError = styled.div`
   margin-top: 30px;
-  background-color: rgba(253, 118, 110, 0.3);
-  border-radius: 2px;
   padding: 3px;
   white-space: pre-line;
 `

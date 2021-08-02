@@ -115,8 +115,8 @@ export const NavigationButtonContainer = styled.li<{ isOpen: boolean }>`
 
 const StyledFormButton = styled.button`
   color: ${props => props.theme.primaryButtonText};
-  background-color: ${props => props.theme.primaryButtonBackground};
-  border: 1px solid ${props => props.theme.primaryButtonBackground};
+  background-color: ${props => props.theme.primary};
+  border: 1px solid ${props => props.theme.primary};
   font-family: ${props => props.theme.primaryFontFamily};
   padding: 6px 18px;
   margin-right: 10px;
@@ -129,9 +129,9 @@ const StyledFormButton = styled.button`
   border-radius: 4px;
   line-height: 20px;
   &:hover {
-    background-color: ${props => props.theme.secondaryButtonBackgroundHover};
+    background-color: ${props => props.theme.primary50};
     color: ${props => props.theme.secondaryButtonTextHover};
-    border: 1px solid ${props => props.theme.secondaryButtonBackgroundHover};
+    border: 1px solid ${props => props.theme.primary50};
   }
 `
 

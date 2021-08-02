@@ -310,6 +310,7 @@ async function fetchDataFromDiscoveryUrl(
   SSOProviders: SSOProvider[]
 }> {
   try {
+    authLog(`Fetching ${url} to discover SSO providers`)
     const result = await remote.getJSON(url)
     // Uncomment below and comment out above when doing manual tests in dev mode to
     // fake discovery response
