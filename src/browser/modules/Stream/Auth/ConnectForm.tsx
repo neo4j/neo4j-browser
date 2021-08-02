@@ -159,10 +159,7 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
             <StyledSSOError>
               <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>
               <div>{SSOError || SSORedirectError}</div>
-              <StyledSSOLogDownload
-                style={{ cursor: 'pointer' }}
-                onClick={downloadAuthLogs}
-              >
+              <StyledSSOLogDownload onClick={downloadAuthLogs}>
                 Download logs
               </StyledSSOLogDownload>
             </StyledSSOError>

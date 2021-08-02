@@ -164,7 +164,7 @@ export const StyledSSOOptions = styled.div`
 `
 
 export const StyledSSOLogDownload = styled.a`
-  margin-bottom: 12px;
+  cursor: pointer;
 `
 export const StyledSSOButtonContainer = styled.div`
   margin-bottom: 12px;
