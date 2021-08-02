@@ -85,7 +85,6 @@ const NeighboursPickerItem: React.FC<IProps> = ({
   const handleNestedChange: React.ChangeEventHandler<HTMLInputElement> = React.useCallback(
     e => {
       const id = e.target.dataset.id ?? ''
-      console.log(id, e.target.checked, selection)
       if (e.target.checked) {
         selection.push(id)
       } else {
