@@ -256,15 +256,15 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
       )
 
       let SSOError
-      const SSORedirect = getSSOServerIdIfShouldRedirect()
-      if (SSORedirect) {
-        authLog(`Initialised with idpId: "${SSORedirect}"`)
+      const SSORedirectId = getSSOServerIdIfShouldRedirect()
+      if (SSORedirectId) {
+        authLog(`Initialised with idpId: "${SSORedirectId}"`)
 
         removeSearchParamsInBrowserHistory(
           searchParamsToRemoveAfterAutoRedirect
         )
         const selectedSSOProvider = mergedDiscoveryData.SSOProviders.find(
-          ({ id }) => id === SSORedirect
+          ({ id }) => id === SSORedirectId
         )
         try {
           await authRequestForSSO(selectedSSOProvider)
