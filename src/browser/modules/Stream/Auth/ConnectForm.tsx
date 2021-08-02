@@ -131,6 +131,7 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
 
   const { SSOError, SSOProviders } = props
   const showSSO = SSOProviders.length > 0 || SSOError
+  const [SSORedirectError, setRedirectError] = useState('')
   return (
     <StyledFormContainer>
       {showSSO && (
@@ -140,8 +141,9 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
             <StyledSSOButtonContainer key={provider.id}>
               <FormButton
                 onClick={() =>
-                  authRequestForSSO(provider).catch((e: any) => {
+                  authRequestForSSO(provider).catch(e => {
                     authLog(e.message)
+                    setRedirectError(e.message)
                   })
                 }
               >
@@ -149,11 +151,13 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
               </FormButton>
             </StyledSSOButtonContainer>
           ))}
-          {SSOError && (
+          {(SSOError || SSORedirectError) && (
             <StyledSSOError>
               <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>
-              <div>{SSOError}</div>
-              <button onClick={downloadAuthLogs}> download logs </button>
+              <div>{SSOError || SSORedirectError}</div>
+              <button onClick={downloadAuthLogs}>
+                download sso error logs
+              </button>
             </StyledSSOError>
           )}
         </StyledSSOOptions>

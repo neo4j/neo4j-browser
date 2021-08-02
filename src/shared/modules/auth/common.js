@@ -1,4 +1,5 @@
 import jwtDecode from 'jwt-decode'
+import { isObject } from 'lodash-es'
 import {
   AUTH_STORAGE_URL_SEARCH_PARAMS,
   REDIRECT_URI,
@@ -171,6 +172,11 @@ export const restoreSearchAndHashParams = () => {
 
     window.sessionStorage.setItem(AUTH_STORAGE_URL_SEARCH_PARAMS, '')
 
+    if (!isObject(storedParams)) {
+      throw new Error(
+        `Stored search params were ${storedParams}, expected an object`
+      )
+    }
     const crntHashParams = window.location.hash || undefined
     addSearchParamsInBrowserHistory(storedParams)
     const newUrl = `${window.location.href}${crntHashParams || ''}`

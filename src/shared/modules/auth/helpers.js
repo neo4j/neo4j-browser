@@ -13,7 +13,9 @@ export const authLog = (msg, type = 'log') => {
   const logsLines = logs.split('\n')
 
   const truncatedOldLogs =
-    logsLines.length > MAX_LOG_LINES ? logsLines.slice(-199).join('\n') : logs
+    logsLines.length > MAX_LOG_LINES
+      ? logsLines.slice(1 - MAX_LOG_LINES).join('\n')
+      : logs
 
   sessionStorage.setItem(AUTH_STORAGE_LOGS, `${truncatedOldLogs}${log}\n`)
 }
