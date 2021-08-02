@@ -143,7 +143,7 @@ export const getCredentialsFromAuthResult = (result, selectedSSOProvider) => {
 export const temporarilyStoreUrlSearchParams = () => {
   const currentBrowserURLParams = getInitialisationParameters()
   authLog(
-    `Temporarly storing the url search params. data: "${JSON.stringify(
+    `Temporarily storing the url search params. data: "${JSON.stringify(
       currentBrowserURLParams
     )}"`
   )
