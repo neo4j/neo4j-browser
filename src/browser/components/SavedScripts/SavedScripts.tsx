@@ -39,6 +39,7 @@ import { Favorite } from 'shared/modules/favorites/favoritesDuck'
 import { useCustomBlur } from './hooks'
 import { AddIcon } from 'browser-components/icons/Icons'
 import uuid from 'uuid'
+import { ExportFormat } from 'services/exporting/favoriteUtils'
 
 interface SavedScriptsProps {
   title?: string
@@ -47,7 +48,11 @@ interface SavedScriptsProps {
   selectScript: (script: Favorite) => void
   execScript: (script: Favorite) => void
   // When optional callbacks aren't provided, respective UI elements are hidden
-  exportScripts?: (scripts: Favorite[], folders: Folder[]) => void
+  exportScripts?: (
+    scripts: Favorite[],
+    folders: Folder[],
+    format?: ExportFormat
+  ) => void
   renameScript?: (script: Favorite, name: string) => void
   moveScript?: (scriptId: string, folderId?: string) => void
   addScript?: (content: string) => void
@@ -245,6 +250,10 @@ export default function SavedScripts({
           folder={folder}
           renameFolder={renameFolder}
           removeFolder={removeFolder}
+          exportScripts={
+            exportScripts &&
+            ((format: ExportFormat) => exportScripts(scripts, [], format))
+          }
           moveScript={moveScript}
           key={folder.id}
           selectedScriptIds={selectedIds}
