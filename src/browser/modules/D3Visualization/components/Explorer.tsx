@@ -102,6 +102,18 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
     this.filterNodeNeighbours = this.filterNodeNeighbours.bind(this)
   }
 
+  updateNeighboursPickerSelection = () => {
+    const { neighboursPicker } = this.state
+    if (neighboursPicker) {
+      this.setState({
+        neighboursPicker: {
+          ...neighboursPicker,
+          selection: neighboursPicker.selection.slice()
+        }
+      })
+    }
+  }
+
   filterNodeNeighbours(
     node: { id: string },
     selection: string[],
@@ -215,6 +227,7 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
       forcePaddingBottom: inspectorHeight
     })
   }
+
   closeNeighboursPicker = () => this.setState({ neighboursPicker: null })
 
   render() {
@@ -282,6 +295,7 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
           <NeighboursPickerPopover
             {...this.state.neighboursPicker}
             onClose={this.closeNeighboursPicker}
+            onUpdate={this.updateNeighboursPickerSelection}
           />
         )}
       </StyledFullSizeContainer>

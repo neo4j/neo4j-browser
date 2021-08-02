@@ -1,12 +1,10 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import Modal from 'react-modal'
-import { useForceUpdate } from 'browser-components/SavedScripts/hooks'
 import { flatten } from 'lodash-es'
 import NeighboursPickerItem, {
   INeighboursPickerItem
 } from './NeighboursPickerItem'
-import { motion, AnimatePresence } from 'framer-motion'
 
 const customStyles = {
   content: {
@@ -55,6 +53,7 @@ export interface INeighboursPickerPopoverProps {
   callback: Function
   selection: string[]
   onClose: () => void
+  onUpdate: () => void
 }
 
 const ScrollDiv = styled.div`
@@ -83,9 +82,9 @@ const NeighboursPickerPopover: React.FC<INeighboursPickerPopoverProps> = ({
   node,
   selection,
   onClose,
-  callback
+  callback,
+  onUpdate
 }: INeighboursPickerPopoverProps) => {
-  const forceUpdate = useForceUpdate()
   const options: INeighboursPickerItem[] = React.useMemo(() => {
     const relMap: [IDisplayRelMap, IDisplayRelMap] = [{}, {}] // dir in and out
     relationships.map(rel => {
@@ -163,23 +162,21 @@ const NeighboursPickerPopover: React.FC<INeighboursPickerPopoverProps> = ({
       <ScrollDiv>
         <table>
           <tbody>
-            <AnimatePresence>
-              {options.map(t => {
-                if (activeItem === null || activeItem === t) {
-                  return (
-                    <NeighboursPickerItem
-                      key={t.id}
-                      item={t}
-                      selection={selection}
-                      onUpdate={forceUpdate}
-                      setActiveItem={setActiveItem}
-                    />
-                  )
-                } else {
-                  return null
-                }
-              })}
-            </AnimatePresence>
+            {options.map(t => {
+              if (activeItem === null || activeItem === t) {
+                return (
+                  <NeighboursPickerItem
+                    key={t.id}
+                    item={t}
+                    selection={selection}
+                    onUpdate={onUpdate}
+                    setActiveItem={setActiveItem}
+                  />
+                )
+              } else {
+                return null
+              }
+            })}
           </tbody>
         </table>
       </ScrollDiv>

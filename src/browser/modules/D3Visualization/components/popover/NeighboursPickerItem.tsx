@@ -26,7 +26,7 @@ const TR = styled.tr`
   border-top: 1px solid #5c5c5c;
 `
 const MotionTR: React.FC = ({ children }) => (
-  <motion.div
+  <motion.tr
     variants={{
       initial: {
         opacity: 0
@@ -41,15 +41,15 @@ const MotionTR: React.FC = ({ children }) => (
     initial={'initial'}
     animate={'animate'}
     exit={'exit'}
-    transition={{
-      type: 'spring',
-      mass: 0.35,
-      stiffness: 45
-    }}
-    layout={'position'}
+    // transition={{
+    //   type: 'spring',
+    //   mass: 0.35,
+    //   stiffness: 45
+    // }}
+    // layout={'position'}
   >
     {children}
-  </motion.div>
+  </motion.tr>
 )
 const NeighboursPickerItem: React.FC<IProps> = ({
   item,
@@ -82,9 +82,26 @@ const NeighboursPickerItem: React.FC<IProps> = ({
     onUpdate()
   }, [item, selection, isChecked, onUpdate])
 
+  const handleNestedChange: React.ChangeEventHandler<HTMLInputElement> = React.useCallback(
+    e => {
+      const id = e.target.dataset.id ?? ''
+      console.log(id, e.target.checked, selection)
+      if (e.target.checked) {
+        selection.push(id)
+      } else {
+        const index = selection.indexOf(id)
+        if (index !== -1) {
+          selection.splice(index, 1)
+        }
+      }
+      onUpdate()
+    },
+    [item, selection, onUpdate]
+  )
+
   React.useEffect(() => {
     if (checkboxRef.current) {
-      if (isChecked) {
+      if (isChecked || selection.length === 0) {
         checkboxRef.current.indeterminate = false
       } else {
         checkboxRef.current.indeterminate = item.items.some(t =>
@@ -122,11 +139,22 @@ const NeighboursPickerItem: React.FC<IProps> = ({
         </TD>
       </MotionTR>
       {open && (
-        <MotionTR>
-          <TD></TD>
-          <TD></TD>
-          <TD>BLEH</TD>
-        </MotionTR>
+        <>
+          {item.items.map(t => (
+            <MotionTR key={t.id}>
+              <TD></TD>
+              <TD>
+                <input
+                  type={'checkbox'}
+                  data-id={t.id}
+                  checked={selection.includes(t.id)}
+                  onChange={handleNestedChange}
+                />
+              </TD>
+              <TD>{t.node?.properties.name ?? t.node?.properties.title}</TD>
+            </MotionTR>
+          ))}
+        </>
       )}
     </>
   )

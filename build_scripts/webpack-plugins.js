@@ -84,11 +84,11 @@ module.exports = () => {
       path: helpers.buildPath,
       filename: 'index.html'
     }),
-    new BundleAnalyzerPlugin({
-      analyzerMode: 'static',
-      openAnalyzer: false,
-      reportFilename: './../bundle-report.html'
-    }),
+    // new BundleAnalyzerPlugin({
+    //   analyzerMode: 'static',
+    //   openAnalyzer: false,
+    //   reportFilename: './../bundle-report.html'
+    // }),
     new ForkTsCheckerWebpackPlugin({
       eslint: {
         files: './src/**/*.{ts,tsx,js,jsx}'
