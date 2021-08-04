@@ -84,7 +84,8 @@ function displayNodeName(node: any): string {
       node.number ??
       node.inspection_lot_id ??
       node.batch_number ??
-      node.id
+      node.id ??
+      ''
     )
   } else {
     return ''
@@ -164,7 +165,7 @@ const NeighboursPickerPopover: React.FC<INeighboursPickerPopoverProps> = ({
     setActiveItem
   ] = React.useState<INeighboursPickerItem | null>(null)
 
-  console.log(options)
+  console.log(options, relationships, nodes)
   return (
     <Modal
       isOpen={true}

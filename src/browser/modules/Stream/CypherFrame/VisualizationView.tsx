@@ -108,14 +108,21 @@ export class Visualization extends Component<any, VisualizationState> {
     }
   }
 
-  fetchNeighbours = (id: any, currentNeighbourIds = []) => {
+  fetchNeighbours = (
+    id: any,
+    currentNeighbourIds: string[] = [],
+    withLimit = false
+  ) => {
     const query = `MATCH path = (a)--(o)
                    WHERE id(a) = ${id}
                    AND NOT (id(o) IN[${currentNeighbourIds.join(',')}])
                    RETURN path, size((a)--()) as c
                    ORDER BY id(o)
-                   LIMIT ${this.props.maxNeighbours -
-                     currentNeighbourIds.length}`
+                   LIMIT ${
+                     withLimit
+                       ? this.props.maxNeighbours - currentNeighbourIds.length
+                       : 10000
+                   }`
     return new Promise((resolve, reject) => {
       this.props.bus &&
         this.props.bus.self(
@@ -134,6 +141,7 @@ export class Visualization extends Component<any, VisualizationState> {
                 false,
                 this.props.maxFieldItems
               )
+              console.log(resultGraph, count, response)
               resolve({ ...resultGraph, count: count })
             }
           }
@@ -141,10 +149,12 @@ export class Visualization extends Component<any, VisualizationState> {
     })
   }
   getNeighbours(id: any, currentNeighbourIds = []) {
-    return this.fetchNeighbours(id, currentNeighbourIds).then((result: any) => {
-      this.autoCompleteRelationships(this.graph._nodes, result.nodes)
-      return result
-    })
+    return this.fetchNeighbours(id, currentNeighbourIds, true).then(
+      (result: any) => {
+        this.autoCompleteRelationships(this.graph._nodes, result.nodes)
+        return result
+      }
+    )
   }
 
   getInternalRelationships(existingNodeIds: any, newNodeIds: any) {
