@@ -48,7 +48,8 @@ import {
   getRemoteContentHostnameAllowlist,
   getDatabases,
   fetchMetaData,
-  getAvailableSettings
+  getAvailableSettings,
+  SYSTEM_DB
 } from 'shared/modules/dbMeta/dbMetaDuck'
 import { canSendTxMetadata } from 'shared/modules/features/versionedFeatures'
 import { fetchRemoteGuide } from 'shared/modules/commands/helpers/play'
@@ -355,14 +356,14 @@ const availableCommands = [
     match: (cmd: any) => /^sysinfo$/.test(cmd),
     exec(action: any, put: any, store: any) {
       const useDb = getUseDb(store.getState())
-      if (useDb === 'system') {
+      if (useDb === SYSTEM_DB) {
         put(
           frames.add({
             useDb,
             ...action,
             type: 'error',
             error: UnsupportedError(
-              'The sysinfo command is not supported while using the system database.'
+              'The :sysinfo command is not supported while using the system database.'
             )
           })
         )
