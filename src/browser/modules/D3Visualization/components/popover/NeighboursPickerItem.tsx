@@ -17,6 +17,7 @@ interface IProps {
   selection: string[]
   onUpdate: () => void
   setActiveItem: (item: INeighboursPickerItem | null) => void
+  displayNodeName: (node: any) => string
 }
 
 const TD = styled.td`
@@ -55,7 +56,8 @@ const NeighboursPickerItem: React.FC<IProps> = ({
   item,
   selection,
   onUpdate,
-  setActiveItem
+  setActiveItem,
+  displayNodeName
 }: IProps) => {
   const [open, setOpen] = React.useState(false)
   const toggleOpen = React.useCallback(() => setOpen(t => !t), [setOpen])
@@ -127,9 +129,7 @@ const NeighboursPickerItem: React.FC<IProps> = ({
         <TD>{item.items[0].node?.labels.join(' ')}</TD>
         <TD>
           {item.items.length === 1 ? (
-            item.items[0].node?.properties.name ??
-            item.items[0].node?.properties.title ??
-            ''
+            displayNodeName(item.items[0].node?.properties)
           ) : (
             <OpenIconDisplay open={open} onClick={toggleOpen}>
               {item.items.length}
@@ -150,7 +150,7 @@ const NeighboursPickerItem: React.FC<IProps> = ({
                   onChange={handleNestedChange}
                 />
               </TD>
-              <TD>{t.node?.properties.name ?? t.node?.properties.title}</TD>
+              <TD>{displayNodeName(t.node?.properties)}</TD>
             </MotionTR>
           ))}
         </>

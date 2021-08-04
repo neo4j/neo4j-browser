@@ -76,6 +76,20 @@ const Button = styled.button`
   border-radius: 1px;
   border: 1px solid #6f6f6f;
 `
+function displayNodeName(node: any): string {
+  if (node) {
+    return (
+      node.title ??
+      node.name ??
+      node.number ??
+      node.inspection_lot_id ??
+      node.batch_number ??
+      node.id
+    )
+  } else {
+    return ''
+  }
+}
 const NeighboursPickerPopover: React.FC<INeighboursPickerPopoverProps> = ({
   nodes,
   relationships,
@@ -150,6 +164,7 @@ const NeighboursPickerPopover: React.FC<INeighboursPickerPopoverProps> = ({
     setActiveItem
   ] = React.useState<INeighboursPickerItem | null>(null)
 
+  console.log(options)
   return (
     <Modal
       isOpen={true}
@@ -158,7 +173,7 @@ const NeighboursPickerPopover: React.FC<INeighboursPickerPopoverProps> = ({
       style={customStyles}
       contentLabel="Node Neighbours"
     >
-      <h5>{node.propertyMap.name ?? node.propertyMap.title}</h5>
+      <h5>{displayNodeName(node.propertyMap)}</h5>
       <ScrollDiv>
         <table>
           <tbody>
@@ -171,6 +186,7 @@ const NeighboursPickerPopover: React.FC<INeighboursPickerPopoverProps> = ({
                     selection={selection}
                     onUpdate={onUpdate}
                     setActiveItem={setActiveItem}
+                    displayNodeName={displayNodeName}
                   />
                 )
               } else {
