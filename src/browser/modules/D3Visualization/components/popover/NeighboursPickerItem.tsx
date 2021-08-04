@@ -1,5 +1,8 @@
 import * as React from 'react'
-import { IDisplayRelMapItem } from './NeighboursPickerPopover'
+import {
+  IDisplayRelMapItem,
+  IDisplayNodeNameFunc
+} from './NeighboursPickerPopover'
 import { AddIcon, ArrowLeft, ArrowRight, RemoveIcon } from './icons'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
@@ -17,7 +20,7 @@ interface IProps {
   selection: string[]
   onUpdate: () => void
   setActiveItem: (item: INeighboursPickerItem | null) => void
-  displayNodeName: (node: any) => string
+  displayNodeName: IDisplayNodeNameFunc
 }
 
 const TD = styled.td`
@@ -129,7 +132,7 @@ const NeighboursPickerItem: React.FC<IProps> = ({
         <TD>{item.items[0].node?.labels.join(' ')}</TD>
         <TD>
           {item.items.length === 1 ? (
-            displayNodeName(item.items[0].node?.properties)
+            displayNodeName(item.items[0].node)
           ) : (
             <OpenIconDisplay open={open} onClick={toggleOpen}>
               {item.items.length}
@@ -150,7 +153,7 @@ const NeighboursPickerItem: React.FC<IProps> = ({
                   onChange={handleNestedChange}
                 />
               </TD>
-              <TD>{displayNodeName(t.node?.properties)}</TD>
+              <TD>{displayNodeName(t.node)}</TD>
             </MotionTR>
           ))}
         </>

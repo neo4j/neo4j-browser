@@ -5,6 +5,8 @@ import { flatten } from 'lodash-es'
 import NeighboursPickerItem, {
   INeighboursPickerItem
 } from './NeighboursPickerItem'
+import { connect } from 'react-redux'
+import { GlobalState } from 'shared/globalState'
 
 const customStyles = {
   content: {
@@ -46,6 +48,7 @@ export interface INeighboursPickerPopoverProps {
   node: {
     id: string
     propertyMap: any
+    labels: string[]
   }
   nodes: INeighbourNode[]
   relationships: INeighbourRel[]
@@ -54,6 +57,7 @@ export interface INeighboursPickerPopoverProps {
   selection: string[]
   onClose: () => void
   onUpdate: () => void
+  grass: any // {[key: string]: {caption: string}}
 }
 
 const ScrollDiv = styled.div`
@@ -76,21 +80,7 @@ const Button = styled.button`
   border-radius: 1px;
   border: 1px solid #6f6f6f;
 `
-function displayNodeName(node: any): string {
-  if (node) {
-    return (
-      node.title ??
-      node.name ??
-      node.number ??
-      node.inspection_lot_id ??
-      node.batch_number ??
-      node.id ??
-      ''
-    )
-  } else {
-    return ''
-  }
-}
+export type IDisplayNodeNameFunc = (node?: INeighbourNode) => string
 const NeighboursPickerPopover: React.FC<INeighboursPickerPopoverProps> = ({
   nodes,
   relationships,
@@ -98,8 +88,21 @@ const NeighboursPickerPopover: React.FC<INeighboursPickerPopoverProps> = ({
   selection,
   onClose,
   callback,
-  onUpdate
+  onUpdate,
+  grass
 }: INeighboursPickerPopoverProps) => {
+  const displayNodeName: IDisplayNodeNameFunc = React.useCallback(
+    node => {
+      if (node) {
+        const input = grass[`node.${node.labels[0]}`].caption
+        const value = input.substring(1, input.length - 1)
+        return node.properties[value] ?? node.properties.id ?? ''
+      } else {
+        return ''
+      }
+    },
+    [grass]
+  )
   const options: INeighboursPickerItem[] = React.useMemo(() => {
     const relMap: [IDisplayRelMap, IDisplayRelMap] = [{}, {}] // dir in and out
     relationships.map(rel => {
@@ -126,10 +129,12 @@ const NeighboursPickerPopover: React.FC<INeighboursPickerPopoverProps> = ({
           amount: currentMap[type].length,
           type,
           direction: currentMap[type][0].direction,
-          items: currentMap[type]
+          items: currentMap[type].sort((a, b) =>
+            displayNodeName(a.node) > displayNodeName(b.node) ? 1 : -1
+          )
         }))
       )
-    )
+    ).sort((a, b) => (a.type > b.type ? 1 : -1))
   }, [nodes, relationships, node])
 
   // const handleChange = React.useCallback(
@@ -164,8 +169,15 @@ const NeighboursPickerPopover: React.FC<INeighboursPickerPopoverProps> = ({
     activeItem,
     setActiveItem
   ] = React.useState<INeighboursPickerItem | null>(null)
-
-  console.log(options, relationships, nodes)
+  const displayNode: INeighbourNode = React.useMemo(
+    () => ({
+      id: node.id,
+      labels: node.labels,
+      properties: node.propertyMap
+    }),
+    [node]
+  )
+  console.log(options, relationships, nodes, node)
   return (
     <Modal
       isOpen={true}
@@ -174,7 +186,7 @@ const NeighboursPickerPopover: React.FC<INeighboursPickerPopoverProps> = ({
       style={customStyles}
       contentLabel="Node Neighbours"
     >
-      <h5>{displayNodeName(node.propertyMap)}</h5>
+      <h5>{displayNodeName(displayNode)}</h5>
       <ScrollDiv>
         <table>
           <tbody>
@@ -205,4 +217,9 @@ const NeighboursPickerPopover: React.FC<INeighboursPickerPopoverProps> = ({
   )
 }
 
-export default NeighboursPickerPopover
+// export default NeighboursPickerPopover
+const mapStateToProps = (state: GlobalState) => ({ grass: state.grass })
+const NeighboursPickerPopoverWrapped = connect(mapStateToProps)(
+  NeighboursPickerPopover
+)
+export default NeighboursPickerPopoverWrapped
