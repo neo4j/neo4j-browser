@@ -190,10 +190,9 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
     // This is a workaround to make the style reset to the same colors as when starting the browser with an empty style
     // If the legend component has the style it will ask the neoGraphStyle object for styling before the graph component,
     // and also doing this in a different order from the graph. This leads to different default colors being assigned to different labels.
-    let legend
-    let legend2
+    let results
     if (this.state.freezeLegend) {
-      legend2 = (
+      results = (
         <ResultsPaneComponent
           stats={this.state.stats}
           graphStyle={neoGraphStyle()}
@@ -204,7 +203,7 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
         />
       )
     } else {
-      legend2 = (
+      results = (
         <ResultsPaneComponent
           stats={this.state.stats}
           graphStyle={this.state.graphStyle}
@@ -259,7 +258,7 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
             setGraph={this.props.setGraph}
           />
           <NodeInspectorPanel
-            results={legend2}
+            results={results}
             details={details}
             hoveredItem={this.state.hoveredItem}
             selectedItem={this.state.selectedItem}
