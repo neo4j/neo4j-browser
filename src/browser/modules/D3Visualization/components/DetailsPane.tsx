@@ -20,16 +20,9 @@
 
 import React, { Component } from 'react'
 import { deepEquals, optionalToString } from 'services/utils'
-import SVGInline from 'react-svg-inline'
 import {
-  inspectorFooterContractedHeight,
-  StyledInspectorFooterStatusMessage,
-  StyledTokenContextMenuKey,
   StyledTokenRelationshipType,
   StyledLabelToken,
-  StyledStatusBar,
-  StyledStatus,
-  StyledInspectorFooter,
   StyledInspectorFooterRow,
   StyledInspectorFooterRowListPair,
   StyledInspectorFooterRowListKey,
@@ -39,8 +32,6 @@ import {
   StyledStatus2,
   StyledInspectorFooter2
 } from './styled'
-import { GrassEditor } from './GrassEditor'
-import { RowExpandToggleComponent } from './RowExpandToggle'
 import ClickableUrls from '../../../components/ClickableUrls'
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
 import { StyledTruncatedMessage } from 'browser/modules/Stream/styled'
@@ -68,7 +59,6 @@ const mapItemProperties = (itemId: string, itemProperties: any) => {
 
   const mappedItemProperties = () => {
     return sortedItemProperties().map((prop: any, i: any) => {
-      console.log('++prop', prop)
       return (
         <StyledInspectorFooterRowListPair
           className="pair"
@@ -167,11 +157,11 @@ const mapLabels = (graphStyle: any, itemLabels: any) => {
   })
 }
 
-type InspectorComponentState = any
+type DetailsPaneComponentState = any
 
-export class InspectorComponent2 extends Component<
+export class DetailsPaneComponent extends Component<
   any,
-  InspectorComponentState
+  DetailsPaneComponentState
 > {
   footerRowElem: any
   constructor(props: any) {
@@ -191,7 +181,7 @@ export class InspectorComponent2 extends Component<
   render() {
     let item
     let type
-    let inspectorContent
+    let detailsContent
 
     item = this.props.selectedItem.item
     type = this.props.selectedItem.type
@@ -210,53 +200,12 @@ export class InspectorComponent2 extends Component<
       type = this.props.hoveredItem.type
     }
 
-    // console.log('++item 2', item)
-    // console.log('++type 2', type)
-
     if (item && type) {
-      // if (type === 'legend-item') {
-      //   console.log('++legend-item')
-      //   inspectorContent = (
-      //     <GrassEditor
-      //       selectedLabel={item.selectedLabel}
-      //       selectedRelType={item.selectedRelType}
-      //     />
-      //   )
-      // }
-      // if (type === 'status-item') {
-      //   console.log('++status-item')
-      //   inspectorContent = (
-      //     <StyledInspectorFooterStatusMessage className="value">
-      //       {item}
-      //     </StyledInspectorFooterStatusMessage>
-      //   )
-      // }
-      // if (type === 'context-menu-item') {
-      //   console.log('++context-menu-item')
-      //   inspectorContent = (
-      //     <StyledInlineList className="list-inline">
-      //       <StyledTokenContextMenuKey
-      //         key="token"
-      //         className={
-      //           'token' + ' ' + 'token-context-menu-key' + ' ' + 'token-label'
-      //         }
-      //       >
-      //         <SVGInline svg={item.label} width="12px" />
-      //       </StyledTokenContextMenuKey>
-      //       <StyledInspectorFooterRowListPair key="pair" className="pair">
-      //         <StyledInspectorFooterRowListValue className="value">
-      //           {item.content}
-      //         </StyledInspectorFooterRowListValue>
-      //       </StyledInspectorFooterRowListPair>
-      //     </StyledInlineList>
-      //   )
-      // }
       if (type === 'canvas') {
-        // console.log('++canvas')
         const description = `Displaying ${numberToUSLocale(
           item.nodeCount
         )} nodes, ${numberToUSLocale(item.relationshipCount)} relationships.`
-        inspectorContent = (
+        detailsContent = (
           <StyledInlineList className="list-inline">
             <StyledInspectorFooterRowListPair className="pair" key="pair">
               <StyledInspectorFooterRowListValue className="value">
@@ -272,8 +221,7 @@ export class InspectorComponent2 extends Component<
           </StyledInlineList>
         )
       } else if (type === 'node') {
-        // console.log('++node')
-        inspectorContent = (
+        detailsContent = (
           <StyledInlineList className="list-inline">
             {mapLabels(this.state.graphStyle, item.labels)}
             {mapItemProperties(item.id, item.properties) || (
@@ -282,7 +230,6 @@ export class InspectorComponent2 extends Component<
           </StyledInlineList>
         )
       } else if (type === 'relationship') {
-        // console.log('++relationship')
         const style = {
           backgroundColor: this.state.graphStyle
             .forRelationship(item)
@@ -292,7 +239,7 @@ export class InspectorComponent2 extends Component<
             .get('text-color-internal'),
           cursor: 'default'
         }
-        inspectorContent = (
+        detailsContent = (
           <StyledInlineList className="list-inline">
             <StyledTokenRelationshipType
               key="token"
@@ -312,28 +259,13 @@ export class InspectorComponent2 extends Component<
     return (
       <StyledStatusBar2 className="status-bar">
         <StyledStatus2 className="status">
-          <StyledInspectorFooter2
-            className={
-              // this.state.contracted
-              //   ? 'contracted inspector-footer'
-              //   :
-              'inspector-footer'
-            }
-          >
+          <StyledInspectorFooter2 className="inspector-footer">
             <StyledInspectorFooterRow
               data-testid="vizInspector"
               className="inspector-footer-row"
               ref={this.setFooterRowELem.bind(this)}
             >
-              {/* {type === 'canvas' ? null : (
-                <RowExpandToggleComponent
-                  contracted={this.state.contracted}
-                  rowElem={this.footerRowElem}
-                  containerHeight={inspectorFooterContractedHeight}
-                  onClick={this.toggleExpand.bind(this)}
-                />
-              )} */}
-              {inspectorContent}
+              {detailsContent}
             </StyledInspectorFooterRow>
           </StyledInspectorFooter2>
         </StyledStatus2>
@@ -343,11 +275,11 @@ export class InspectorComponent2 extends Component<
 
   toggleExpand() {
     this.setState({ contracted: !this.state.contracted }, () => {
-      const inspectorHeight = this.footerRowElem.clientHeight
+      const detailsPaneHeight = this.footerRowElem.clientHeight
       this.props.onExpandToggled &&
         this.props.onExpandToggled(
           this.state.contracted,
-          this.state.contracted ? 0 : inspectorHeight
+          this.state.contracted ? 0 : detailsPaneHeight
         )
     })
   }

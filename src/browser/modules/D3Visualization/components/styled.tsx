@@ -182,7 +182,6 @@ export const StyledInlineList = styled.ul`
   padding-left: 0;
   list-style: none;
   word-break: break-word;
-  // display: grid;
 `
 
 export const StyledInlineListItem = styled.li`
@@ -212,12 +211,8 @@ export const StyledStatusBar = styled.div`
 `
 
 export const StyledStatusBar2 = styled.div`
-  // min-height: 39px;
-  // line-height: 39px;
   color: ${props => props.theme.secondaryText};
   font-size: 13px;
-  // position: absolute;
-  // background-color: ${props => props.theme.frameBackground};
   white-space: nowrap;
   border-top: ${props => props.theme.inFrameBorder};
   width: 100%;
@@ -244,8 +239,6 @@ export const StyledStatus2 = styled.div`
   margin-bottom: 0;
   width: 100%;
   margin-top: 3px;
-  // max-height: 64px;
-  // overflow: auto;
 `
 
 export const StyledInspectorFooterRowListPair = styled(StyledInlineListItem)`
@@ -304,13 +297,11 @@ export const StyledLegendRow = styled.div`
 `
 
 export const StyledLegend = styled.div`
-  // background-color: ${props => props.theme.frameBackground};
   position: absolute;
   z-index: 1;
-  // top: 0;
   right: 0;
   left: 0;
-  padding: 0 15px
+  padding: 0 15px;
 `
 export const StyledLegendInlineList = styled(StyledInlineList)`
   padding: 7px 9px 0px 10px;
@@ -380,8 +371,6 @@ export const StyledInspectorFooterStatusMessage = styled.div`
 
 export const StyledZoomHolder = styled.div`
   position: absolute;
-  // bottom: 39px;
-  // right: 0;
   left: 0;
   top: 0
   padding: 6px 6px 0 6px;

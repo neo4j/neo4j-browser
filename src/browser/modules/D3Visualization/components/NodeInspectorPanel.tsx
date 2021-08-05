@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Icon, SemanticICONS, Popup } from 'semantic-ui-react'
 
 interface NodeInspectorPanelProps {
-  legend: JSX.Element
+  results: JSX.Element
   details: JSX.Element
   hoveredItem: any
   selectedItem: any
@@ -58,7 +58,6 @@ export class NodeInspectorPanel extends Component<
           style={{
             position: 'absolute',
             display: 'flex',
-            // flexDirection: 'row',
             right: 0,
             top: 0,
             zIndex: 1,
@@ -92,7 +91,6 @@ export class NodeInspectorPanel extends Component<
           flexDirection: 'column',
           right: 0,
           height: 'calc(100% - 39px)',
-          // height: '100%',
           top: 0,
           zIndex: 1,
           width: '25%',
@@ -162,7 +160,7 @@ export class NodeInspectorPanel extends Component<
           </div>
         </div>
         <div style={{ height: 'inherit' }}>
-          {this.state.showResults ? this.props.legend : this.props.details}
+          {this.state.showResults ? this.props.results : this.props.details}
         </div>
       </div>
     )

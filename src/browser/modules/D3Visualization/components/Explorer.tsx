@@ -26,13 +26,12 @@ import { deepEquals } from 'services/utils'
 import { GraphComponent } from './Graph'
 import neoGraphStyle from '../graphStyle'
 import { InspectorComponent } from './Inspector'
-import { LegendComponent } from './Legend'
 import { NodeInspectorPanel } from './NodeInspectorPanel'
 import { StyledFullSizeContainer } from './styled'
 import { GlobalState } from 'shared/globalState'
 import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
-import { LegendComponent2 } from './Legend2'
-import { InspectorComponent2 } from './Inspector2'
+import { ResultsPaneComponent } from './ResultsPane'
+import { DetailsPaneComponent } from './DetailsPane'
 
 const deduplicateNodes = (nodes: any) => {
   return nodes.reduce(
@@ -123,7 +122,6 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
   }
 
   onItemSelect(item: any) {
-    console.log('++item', item)
     this.setState({ selectedItem: item })
   }
 
@@ -131,18 +129,6 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
     this.setState({ stats: stats })
     this.props.updateStyle(this.state.graphStyle.toSheet())
   }
-
-  // onSelectedLabel(label: any, propertyKeys: any) {
-  //   this.setState({
-  //     selectedItem: {
-  //       type: 'legend-item',
-  //       item: {
-  //         selectedLabel: { label: label, propertyKeys: propertyKeys },
-  //         selectedRelType: null
-  //       }
-  //     }
-  //   })
-  // }
 
   onSelectedLabel(label: any, propertyKeys: any) {
     this.setState({
@@ -155,18 +141,6 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
       }
     })
   }
-
-  // onSelectedRelType(relType: any, propertyKeys: any) {
-  //   this.setState({
-  //     selectedItem: {
-  //       type: 'legend-item',
-  //       item: {
-  //         selectedLabel: null,
-  //         selectedRelType: { relType: relType, propertyKeys: propertyKeys }
-  //       }
-  //     }
-  //   })
-  // }
 
   onSelectedRelType(relType: any, propertyKeys: any) {
     this.setState({
@@ -219,16 +193,8 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
     let legend
     let legend2
     if (this.state.freezeLegend) {
-      legend = (
-        <LegendComponent
-          stats={this.state.stats}
-          graphStyle={neoGraphStyle()}
-          onSelectedLabel={this.onSelectedLabel.bind(this)}
-          onSelectedRelType={this.onSelectedRelType.bind(this)}
-        />
-      )
       legend2 = (
-        <LegendComponent2
+        <ResultsPaneComponent
           stats={this.state.stats}
           graphStyle={neoGraphStyle()}
           onSelectedLabel={this.onSelectedLabel.bind(this)}
@@ -238,16 +204,8 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
         />
       )
     } else {
-      legend = (
-        <LegendComponent
-          stats={this.state.stats}
-          graphStyle={this.state.graphStyle}
-          onSelectedLabel={this.onSelectedLabel.bind(this)}
-          onSelectedRelType={this.onSelectedRelType.bind(this)}
-        />
-      )
       legend2 = (
-        <LegendComponent2
+        <ResultsPaneComponent
           stats={this.state.stats}
           graphStyle={this.state.graphStyle}
           onSelectedLabel={this.onSelectedLabel.bind(this)}
@@ -258,8 +216,8 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
       )
     }
 
-    const inspector2 = (
-      <InspectorComponent2
+    const details = (
+      <DetailsPaneComponent
         hasTruncatedFields={this.props.hasTruncatedFields}
         fullscreen={this.props.fullscreen}
         hoveredItem={this.state.hoveredItem}
@@ -284,7 +242,6 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
           inspectingItemType ? this.state.forcePaddingBottom : null
         }
       >
-        {/* {legend} */}
         <div style={{ position: 'relative', height: '100%' }}>
           <GraphComponent
             fullscreen={this.props.fullscreen}
@@ -302,8 +259,8 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
             setGraph={this.props.setGraph}
           />
           <NodeInspectorPanel
-            legend={legend2}
-            details={inspector2}
+            results={legend2}
+            details={details}
             hoveredItem={this.state.hoveredItem}
             selectedItem={this.state.selectedItem}
           />

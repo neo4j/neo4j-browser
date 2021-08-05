@@ -304,7 +304,7 @@ export class GrassEditorComponent extends Component<any> {
         className="style-picker"
         style={{
           display: 'grid',
-          overflowY: 'scroll',
+          overflowY: 'auto',
           maxHeight: `${this.props.frameHeight - 75}px`
         }}
       >

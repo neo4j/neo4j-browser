@@ -20,7 +20,6 @@
 
 import React, { Component } from 'react'
 import {
-  legendRowHeight,
   StyledLegendRow,
   StyledTokenRelationshipType,
   StyledLegendInlineListItem,
@@ -30,14 +29,13 @@ import {
   StyledTokenCount,
   StyledLegendInlineList
 } from './styled'
-import { RowExpandToggleComponent } from './RowExpandToggle'
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
-import { Icon, Popup } from 'semantic-ui-react'
+import { Popup } from 'semantic-ui-react'
 import { GrassEditor } from './GrassEditor'
 
 type State = any
 
-export class LegendComponent2 extends Component<any, State> {
+export class ResultsPaneComponent extends Component<any, State> {
   labelRowELem: any
   typeRowElem: any
   constructor(props: {}) {
@@ -63,7 +61,6 @@ export class LegendComponent2 extends Component<any, State> {
   }
 
   render() {
-    // console.log('++selected', this.props.selectedLabel)
     const mapLabels = (labels: any) => {
       if (!labels || !Object.keys(labels).length) {
         return null
@@ -115,23 +112,11 @@ export class LegendComponent2 extends Component<any, State> {
         )
       })
       return (
-        <StyledLegendRow
-        // className={this.state.labelRowContracted ? 'contracted' : ''}
-        >
+        <StyledLegendRow>
           <StyledLegendInlineList
             className="list-inline"
             ref={this.setLabelRowELem.bind(this)}
           >
-            {/* <RowExpandToggleComponent
-              contracted={this.state.labelRowContracted}
-              rowElem={this.labelRowELem}
-              containerHeight={legendRowHeight}
-              onClick={() => {
-                this.setState({
-                  labelRowContracted: !this.state.labelRowContracted
-                })
-              }}
-            /> */}
             {labelList}
           </StyledLegendInlineList>
         </StyledLegendRow>
@@ -176,9 +161,7 @@ export class LegendComponent2 extends Component<any, State> {
                     </StyledTokenCount>
                   </StyledTokenRelationshipType>
                 }
-                // inverted
                 wide
-                // position="bottom center"
               >
                 <GrassEditor
                   selectedRelType={
@@ -192,23 +175,11 @@ export class LegendComponent2 extends Component<any, State> {
         )
       })
       return (
-        <StyledLegendRow
-        // className={this.state.typeRowContracted ? 'contracted' : ''}
-        >
+        <StyledLegendRow>
           <StyledLegendInlineList
             className="list-inline"
             ref={this.setTypeRowELem.bind(this)}
           >
-            {/* <RowExpandToggleComponent
-              contracted={this.state.typeRowContracted}
-              rowElem={this.typeRowElem}
-              containerHeight={legendRowHeight}
-              onClick={() => {
-                this.setState({
-                  typeRowContracted: !this.state.typeRowContracted
-                })
-              }}
-            /> */}
             {relTypeList}
           </StyledLegendInlineList>
         </StyledLegendRow>
