@@ -171,7 +171,7 @@ export const StyledInspectorFooterRowListKey = styled.div`
 `
 
 export const StyledInspectorFooterRowListValue = styled.div`
-  padding-left: 3px;
+  padding: 0 3px;
   overflow: hidden;
   float: left;
   white-space: pre-wrap;
@@ -217,7 +217,7 @@ export const StyledStatusBar2 = styled.div`
   color: ${props => props.theme.secondaryText};
   font-size: 13px;
   // position: absolute;
-  background-color: ${props => props.theme.frameBackground};
+  // background-color: ${props => props.theme.frameBackground};
   white-space: nowrap;
   border-top: ${props => props.theme.inFrameBorder};
   width: 100%;
@@ -304,12 +304,13 @@ export const StyledLegendRow = styled.div`
 `
 
 export const StyledLegend = styled.div`
-  background-color: ${props => props.theme.frameBackground};
+  // background-color: ${props => props.theme.frameBackground};
   position: absolute;
   z-index: 1;
   // top: 0;
   right: 0;
   left: 0;
+  padding: 0 15px
 `
 export const StyledLegendInlineList = styled(StyledInlineList)`
   padding: 7px 9px 0px 10px;

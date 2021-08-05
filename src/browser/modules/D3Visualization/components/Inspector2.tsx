@@ -44,13 +44,16 @@ import { RowExpandToggleComponent } from './RowExpandToggle'
 import ClickableUrls from '../../../components/ClickableUrls'
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
 import { StyledTruncatedMessage } from 'browser/modules/Stream/styled'
-import { Icon } from 'semantic-ui-react'
+import { Icon, Popup } from 'semantic-ui-react'
 import ClipboardCopier from 'browser-components/ClipboardCopier'
 
 const mapItemProperties = (itemId: string, itemProperties: any) => {
+  if (!itemProperties.length) {
+    return null
+  }
   const clipboardCopy = (textToCopy: string) => (
     <div style={{ marginLeft: 'auto' }}>
-      <ClipboardCopier textToCopy={textToCopy} iconSize={15} />
+      <ClipboardCopier textToCopy={textToCopy} iconSize={10} />
     </div>
   )
   const allItemProperties = [`<id>: ${itemId}`]
@@ -65,21 +68,35 @@ const mapItemProperties = (itemId: string, itemProperties: any) => {
 
   const mappedItemProperties = () => {
     return sortedItemProperties().map((prop: any, i: any) => {
+      console.log('++prop', prop)
       return (
         <StyledInspectorFooterRowListPair
           className="pair"
           key={'prop' + i}
           style={{
             display: 'flex',
-            background: `${(i + 1) % 2 === 0 ? 'white' : '#f0f0f0'}`
+            background: `${(i + 1) % 2 === 0 ? 'white' : '#f0f0f0'}`,
+            padding: '5px'
           }}
         >
           <StyledInspectorFooterRowListKey className="key">
             {prop.key + ': '}
           </StyledInspectorFooterRowListKey>
-          <StyledInspectorFooterRowListValue className="value">
-            <ClickableUrls text={optionalToString(prop.value)} />
-          </StyledInspectorFooterRowListValue>
+          <Popup
+            on="hover"
+            basic
+            pinned
+            wide
+            trigger={
+              <StyledInspectorFooterRowListValue className="value">
+                <ClickableUrls text={optionalToString(prop.value)} />
+              </StyledInspectorFooterRowListValue>
+            }
+            mouseEnterDelay={1000}
+            hoverable
+          >
+            Type: {typeof prop.value}
+          </Popup>
           {clipboardCopy(`${prop.key}: ${prop.value}`)}
         </StyledInspectorFooterRowListPair>
       )
@@ -92,7 +109,7 @@ const mapItemProperties = (itemId: string, itemProperties: any) => {
         <div style={{ marginLeft: 'auto', marginRight: '5px' }}>
           <ClipboardCopier
             textToCopy={allItemProperties.join('\n')}
-            iconSize={15}
+            iconSize={10}
             titleText={'Copy all properties to clipboard'}
           />
         </div>
@@ -105,9 +122,21 @@ const mapItemProperties = (itemId: string, itemProperties: any) => {
         <StyledInspectorFooterRowListKey className="key">
           {'<id>:'}
         </StyledInspectorFooterRowListKey>
-        <StyledInspectorFooterRowListValue className="value">
-          {itemId}
-        </StyledInspectorFooterRowListValue>
+        <Popup
+          on="hover"
+          basic
+          pinned
+          wide
+          trigger={
+            <StyledInspectorFooterRowListValue className="value">
+              {itemId}
+            </StyledInspectorFooterRowListValue>
+          }
+          mouseEnterDelay={1000}
+          hoverable
+        >
+          Type: {typeof itemId}
+        </Popup>
         {clipboardCopy(`<id>: ${itemId}`)}
       </StyledInspectorFooterRowListPair>
       {mappedItemProperties()}
@@ -116,11 +145,15 @@ const mapItemProperties = (itemId: string, itemProperties: any) => {
 }
 
 const mapLabels = (graphStyle: any, itemLabels: any) => {
+  if (!itemLabels.length) {
+    return null
+  }
   return itemLabels.map((label: any, i: any) => {
     const graphStyleForLabel = graphStyle.forNode({ labels: [label] })
     const style = {
       backgroundColor: graphStyleForLabel.get('color'),
-      color: graphStyleForLabel.get('text-color-internal')
+      color: graphStyleForLabel.get('text-color-internal'),
+      cursor: 'default'
     }
     return (
       <StyledLabelToken
@@ -243,7 +276,9 @@ export class InspectorComponent2 extends Component<
         inspectorContent = (
           <StyledInlineList className="list-inline">
             {mapLabels(this.state.graphStyle, item.labels)}
-            {mapItemProperties(item.id, item.properties)}
+            {mapItemProperties(item.id, item.properties) || (
+              <div>No properties to display</div>
+            )}
           </StyledInlineList>
         )
       } else if (type === 'relationship') {
@@ -254,7 +289,8 @@ export class InspectorComponent2 extends Component<
             .get('color'),
           color: this.state.graphStyle
             .forRelationship(item)
-            .get('text-color-internal')
+            .get('text-color-internal'),
+          cursor: 'default'
         }
         inspectorContent = (
           <StyledInlineList className="list-inline">
@@ -265,7 +301,9 @@ export class InspectorComponent2 extends Component<
             >
               {item.type}
             </StyledTokenRelationshipType>
-            {mapItemProperties(item.id, item.properties)}
+            {mapItemProperties(item.id, item.properties) || (
+              <div>No properties to display</div>
+            )}
           </StyledInlineList>
         )
       }

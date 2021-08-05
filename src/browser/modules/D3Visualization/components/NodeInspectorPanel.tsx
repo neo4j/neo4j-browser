@@ -98,7 +98,8 @@ export class NodeInspectorPanel extends Component<
           width: '25%',
           background: '#FFFFFF',
           color: 'black',
-          overflowY: 'auto'
+          overflowY: 'auto',
+          padding: '0 10px'
         }}
         onClick={e => {
           e.preventDefault()
@@ -117,7 +118,10 @@ export class NodeInspectorPanel extends Component<
             style={{
               cursor: 'pointer',
               margin: '0 15px 0 5px',
-              backgroundColor: `${this.state.showResults ? 'red' : 'white'}`
+              borderBottom: `${
+                this.state.showResults ? '1px solid #018BFF' : 'none'
+              }`,
+              fontWeight: this.state.showResults ? 'bold' : 'normal'
             }}
             onClick={e => {
               e.stopPropagation()
@@ -130,7 +134,10 @@ export class NodeInspectorPanel extends Component<
             style={{
               cursor: 'pointer',
               margin: '0 5px 0 15px',
-              backgroundColor: `${!this.state.showResults ? 'red' : 'white'}`
+              borderBottom: `${
+                this.state.showResults ? 'none' : '1px solid #018BFF'
+              }`,
+              fontWeight: this.state.showResults ? 'normal' : 'bold'
             }}
             onClick={e => {
               e.stopPropagation()

@@ -65,6 +65,9 @@ export class LegendComponent2 extends Component<any, State> {
   render() {
     // console.log('++selected', this.props.selectedLabel)
     const mapLabels = (labels: any) => {
+      if (!labels || !Object.keys(labels).length) {
+        return null
+      }
       const labelList = Object.keys(labels).map((legendItemKey, i) => {
         const styleForItem = this.props.graphStyle.forNode({
           labels: [legendItemKey]
@@ -213,9 +216,11 @@ export class LegendComponent2 extends Component<any, State> {
     }
     const relTypes = mapRelTypes(this.props.stats.relTypes)
     return (
-      <StyledLegend className={relTypes ? '' : 'one-row'}>
-        Node Labels: {mapLabels(this.props.stats.labels)}
-        Relationship Types: {relTypes}
+      <StyledLegend>
+        Node Labels:{' '}
+        {mapLabels(this.props.stats.labels) || <div>No labels to display</div>}
+        Relationship Types:{' '}
+        {relTypes || <div>No relationship types to display</div>}
       </StyledLegend>
     )
   }
