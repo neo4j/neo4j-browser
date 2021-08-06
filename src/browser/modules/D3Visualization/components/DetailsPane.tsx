@@ -28,9 +28,12 @@ import {
   StyledInspectorFooterRowListKey,
   StyledInspectorFooterRowListValue,
   StyledInlineList,
-  StyledStatusBar2,
-  StyledStatus2,
-  StyledInspectorFooter2
+  StyledDetailsStatusBar,
+  StyledDetailsStatus,
+  StyledDetailsStatusContents,
+  StyledInspectorFooterRowListPairAlternatingRows,
+  StyledInspectorClipboardCopyAll,
+  StyledInspectorFooterRowListKeyValuePair
 } from './styled'
 import ClickableUrls from '../../../components/ClickableUrls'
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
@@ -47,10 +50,18 @@ const mapItemProperties = (itemId: string, itemProperties: any) => {
       <ClipboardCopier textToCopy={textToCopy} iconSize={10} />
     </div>
   )
-  const allItemProperties = [`<id>: ${itemId}`]
+
+  const itemPropertiesIncludingId = [
+    { key: '<id>', value: `${itemId}` },
+    ...itemProperties
+  ]
+
+  const allItemProperties: string[] = []
+
   const sortedItemProperties = () => {
-    return itemProperties.sort(({ key: keyA }: any, { key: keyB }: any) =>
-      keyA < keyB ? -1 : keyA === keyB ? 0 : 1
+    return itemPropertiesIncludingId.sort(
+      ({ key: keyA }: any, { key: keyB }: any) =>
+        keyA < keyB ? -1 : keyA === keyB ? 0 : 1
     )
   }
   sortedItemProperties().map((prop: any) => {
@@ -60,42 +71,46 @@ const mapItemProperties = (itemId: string, itemProperties: any) => {
   const mappedItemProperties = () => {
     return sortedItemProperties().map((prop: any, i: any) => {
       return (
-        <StyledInspectorFooterRowListPair
+        <StyledInspectorFooterRowListPairAlternatingRows
           className="pair"
           key={'prop' + i}
-          style={{
-            display: 'flex',
-            background: `${(i + 1) % 2 === 0 ? 'white' : '#f0f0f0'}`,
-            padding: '5px'
-          }}
+          isFirstOrEvenRow={(i + 1) % 2 === 0}
         >
-          <StyledInspectorFooterRowListKey className="key">
-            {prop.key + ': '}
-          </StyledInspectorFooterRowListKey>
           <Popup
             on="hover"
             basic
-            pinned
             wide
             trigger={
-              <StyledInspectorFooterRowListValue className="value">
-                <ClickableUrls text={optionalToString(prop.value)} />
-              </StyledInspectorFooterRowListValue>
+              <StyledInspectorFooterRowListKeyValuePair>
+                <StyledInspectorFooterRowListKey className="key">
+                  {prop.key + ': '}
+                </StyledInspectorFooterRowListKey>
+                <StyledInspectorFooterRowListValue className="value">
+                  <ClickableUrls text={optionalToString(prop.value)} />
+                </StyledInspectorFooterRowListValue>
+              </StyledInspectorFooterRowListKeyValuePair>
             }
             mouseEnterDelay={1000}
             hoverable
+            // hideOnScroll
+            popperModifiers={{
+              preventOverflow: {
+                // enabled: true,
+                boundariesElement: 'scrollParent'
+              }
+            }}
           >
             Type: {typeof prop.value}
           </Popup>
           {clipboardCopy(`${prop.key}: ${prop.value}`)}
-        </StyledInspectorFooterRowListPair>
+        </StyledInspectorFooterRowListPairAlternatingRows>
       )
     })
   }
 
   return (
     <>
-      <div style={{ display: 'flex' }}>
+      <StyledInspectorClipboardCopyAll>
         <div style={{ marginLeft: 'auto', marginRight: '5px' }}>
           <ClipboardCopier
             textToCopy={allItemProperties.join('\n')}
@@ -103,32 +118,7 @@ const mapItemProperties = (itemId: string, itemProperties: any) => {
             titleText={'Copy all properties to clipboard'}
           />
         </div>
-      </div>
-      <StyledInspectorFooterRowListPair
-        key="pair"
-        className="pair"
-        style={{ display: 'flex', background: 'white' }}
-      >
-        <StyledInspectorFooterRowListKey className="key">
-          {'<id>:'}
-        </StyledInspectorFooterRowListKey>
-        <Popup
-          on="hover"
-          basic
-          pinned
-          wide
-          trigger={
-            <StyledInspectorFooterRowListValue className="value">
-              {itemId}
-            </StyledInspectorFooterRowListValue>
-          }
-          mouseEnterDelay={1000}
-          hoverable
-        >
-          Type: {typeof itemId}
-        </Popup>
-        {clipboardCopy(`<id>: ${itemId}`)}
-      </StyledInspectorFooterRowListPair>
+      </StyledInspectorClipboardCopyAll>
       {mappedItemProperties()}
     </>
   )
@@ -257,9 +247,9 @@ export class DetailsPaneComponent extends Component<
     }
 
     return (
-      <StyledStatusBar2 className="status-bar">
-        <StyledStatus2 className="status">
-          <StyledInspectorFooter2 className="inspector-footer">
+      <StyledDetailsStatusBar className="status-bar">
+        <StyledDetailsStatus className="status">
+          <StyledDetailsStatusContents className="inspector-footer">
             <StyledInspectorFooterRow
               data-testid="vizInspector"
               className="inspector-footer-row"
@@ -267,9 +257,9 @@ export class DetailsPaneComponent extends Component<
             >
               {detailsContent}
             </StyledInspectorFooterRow>
-          </StyledInspectorFooter2>
-        </StyledStatus2>
-      </StyledStatusBar2>
+          </StyledDetailsStatusContents>
+        </StyledDetailsStatus>
+      </StyledDetailsStatusBar>
     )
   }
 

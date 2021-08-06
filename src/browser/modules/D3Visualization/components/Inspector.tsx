@@ -34,7 +34,6 @@ import {
   StyledInlineList
 } from './styled'
 import { RowExpandToggleComponent } from './RowExpandToggle'
-import ClickableUrls from '../../../components/ClickableUrls'
 
 type InspectorComponentState = any
 

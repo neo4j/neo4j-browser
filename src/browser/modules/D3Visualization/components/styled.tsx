@@ -107,6 +107,12 @@ export const StyledSvgWrapper = styled.div`
     }
   }
 `
+
+export const StyledGraphAreaContainer = styled.div`
+  position: relative;
+  height: 100%;
+`
+
 export const StyledStream = styled.div`
   padding: 0;
   display: flex;
@@ -146,7 +152,7 @@ export const StyledInspectorFooter = styled.div`
   }
 `
 
-export const StyledInspectorFooter2 = styled.div`
+export const StyledDetailsStatusContents = styled.div`
   margin-top: 6px;
   font-size: 12px;
   width: 100%;
@@ -162,6 +168,11 @@ export const StyledInspectorFooterRow = styled.ul`
   list-style: none;
   word-break: break-word;
   line-height: 21px;
+`
+
+export const StyledInspectorFooterRowListKeyValuePair = styled.div`
+  flex: 1;
+  display: flex;
 `
 
 export const StyledInspectorFooterRowListKey = styled.div`
@@ -182,6 +193,16 @@ export const StyledInlineList = styled.ul`
   padding-left: 0;
   list-style: none;
   word-break: break-word;
+`
+
+export const StyledInlineListStylePicker = styled(StyledInlineList)<{
+  frameHeight: number
+}>`
+  display: grid;
+  overflow-y: auto;
+  max-height: ${props => props.frameHeight - 75}px;
+  background: ${props => props.theme.editorBackground};
+  color: ${props => props.theme.primaryText};
 `
 
 export const StyledInlineListItem = styled.li`
@@ -210,7 +231,7 @@ export const StyledStatusBar = styled.div`
   border-top: ${props => props.theme.inFrameBorder};
 `
 
-export const StyledStatusBar2 = styled.div`
+export const StyledDetailsStatusBar = styled.div`
   color: ${props => props.theme.secondaryText};
   font-size: 13px;
   white-space: nowrap;
@@ -231,7 +252,7 @@ export const StyledStatus = styled.div`
   overflow: auto;
 `
 
-export const StyledStatus2 = styled.div`
+export const StyledDetailsStatus = styled.div`
   position: relative;
   float: left;
   padding-left: 16px;
@@ -244,6 +265,23 @@ export const StyledStatus2 = styled.div`
 export const StyledInspectorFooterRowListPair = styled(StyledInlineListItem)`
   vertical-align: middle;
   font-size: 13px;
+`
+
+export const StyledInspectorFooterRowListPairAlternatingRows = styled(
+  StyledInspectorFooterRowListPair
+)<{
+  isFirstOrEvenRow: boolean
+}>`
+  display: flex;
+  padding: 5px;
+  background: ${props =>
+    props.isFirstOrEvenRow
+      ? props.theme.alteringTableRowBackground
+      : props.theme.editorBackground};
+`
+
+export const StyledInspectorClipboardCopyAll = styled.div`
+  display: flex;
 `
 
 export const StyledToken = styled(StyledInlineListItem)`
@@ -402,4 +440,56 @@ export const StyledZoomButton = styled.button`
       color: ${props => props.theme.frameButtonTextColor}
     }
   }
+`
+
+export const StyledNodeInspectorCollapsedButton = styled.div`
+  position: absolute;
+  display: flex;
+  right: 0;
+  top: 0;
+  z-index: 1;
+  background: ${props => props.theme.editorBackground};
+  color: ${props => props.theme.primaryText};
+  border-radius: 2px;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+`
+export const StyledNodeInspectorContainer = styled.div`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  right: 0;
+  height: calc(100% - 39px); // 39px is Inspector footer height
+  top: 0;
+  z-index: 1;
+  width: 25%;
+  background: ${props => props.theme.editorBackground};
+  color: ${props => props.theme.primaryText};
+  overflow-y: auto;
+  padding: 0 10px;
+`
+export const StyledNodeInspectorTopMenu = styled.div`
+  height: 20px;
+  margin: 10px 0 10px 0;
+  display: flex;
+  flex-direction: row;
+`
+
+export const StyledNodeInspectorPane = styled.div<{
+  isActive: boolean
+}>`
+  cursor: pointer;
+  margin: 0 15px;
+  border-bottom: ${props => (props.isActive ? '1px solid #018BFF' : 'none')};
+  font-weight: ${props => (props.isActive ? 'bold' : 'normal')};
+`
+
+export const StyledNodeInspectorTopMenuChevron = styled.div`
+  cursor: pointer;
+  position: absolute;
+  margin-right: 15px;
+  right: 0;
 `

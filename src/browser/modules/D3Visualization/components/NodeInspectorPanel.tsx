@@ -1,5 +1,12 @@
 import React, { Component } from 'react'
 import { Icon, SemanticICONS, Popup } from 'semantic-ui-react'
+import {
+  StyledNodeInspectorCollapsedButton,
+  StyledNodeInspectorContainer,
+  StyledNodeInspectorPane,
+  StyledNodeInspectorTopMenu,
+  StyledNodeInspectorTopMenuChevron
+} from './styled'
 
 interface NodeInspectorPanelProps {
   results: JSX.Element
@@ -54,22 +61,7 @@ export class NodeInspectorPanel extends Component<
   render() {
     if (!this.state.expanded) {
       return (
-        <div
-          style={{
-            position: 'absolute',
-            display: 'flex',
-            right: 0,
-            top: 0,
-            zIndex: 1,
-            background: '#FFFFFF',
-            color: 'black',
-            borderRadius: '2px',
-            width: '24px',
-            height: '24px',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer'
-          }}
+        <StyledNodeInspectorCollapsedButton
           onClick={e => {
             e.stopPropagation()
             this.togglePanel(true)
@@ -79,90 +71,49 @@ export class NodeInspectorPanel extends Component<
             title="Click to expand the Node Properties display"
             name="chevron left"
           />
-        </div>
+        </StyledNodeInspectorCollapsedButton>
       )
     }
 
     return (
-      <div
-        style={{
-          position: 'absolute',
-          display: 'flex',
-          flexDirection: 'column',
-          right: 0,
-          height: 'calc(100% - 39px)',
-          top: 0,
-          zIndex: 1,
-          width: '25%',
-          background: '#FFFFFF',
-          color: 'black',
-          overflowY: 'auto',
-          padding: '0 10px'
-        }}
+      <StyledNodeInspectorContainer
         onClick={e => {
           e.preventDefault()
           e.stopPropagation()
         }}
       >
-        <div
-          style={{
-            height: '20px',
-            margin: '10px 0 10px 0',
-            display: 'flex',
-            flexDirection: 'row'
-          }}
-        >
-          <div
-            style={{
-              cursor: 'pointer',
-              margin: '0 15px 0 5px',
-              borderBottom: `${
-                this.state.showResults ? '1px solid #018BFF' : 'none'
-              }`,
-              fontWeight: this.state.showResults ? 'bold' : 'normal'
-            }}
+        <StyledNodeInspectorTopMenu>
+          <StyledNodeInspectorPane
+            isActive={this.state.showResults}
             onClick={e => {
               e.stopPropagation()
               this.setState(() => ({ showResults: true }))
             }}
           >
             Results
-          </div>
-          <div
-            style={{
-              cursor: 'pointer',
-              margin: '0 5px 0 15px',
-              borderBottom: `${
-                this.state.showResults ? 'none' : '1px solid #018BFF'
-              }`,
-              fontWeight: this.state.showResults ? 'normal' : 'bold'
-            }}
+          </StyledNodeInspectorPane>
+          <StyledNodeInspectorPane
+            isActive={!this.state.showResults}
             onClick={e => {
               e.stopPropagation()
               this.setState(() => ({ showResults: false }))
             }}
           >
             Details
-          </div>
-          <div
-            style={{
-              cursor: 'pointer',
-              position: 'absolute',
-              marginRight: '15px',
-              right: 0
-            }}
+          </StyledNodeInspectorPane>
+          <StyledNodeInspectorTopMenuChevron
             onClick={e => {
               e.stopPropagation()
               this.togglePanel(false)
             }}
           >
             <Icon name="chevron right" />
-          </div>
-        </div>
+          </StyledNodeInspectorTopMenuChevron>
+        </StyledNodeInspectorTopMenu>
         <div style={{ height: 'inherit' }}>
           {this.state.showResults ? this.props.results : this.props.details}
         </div>
-      </div>
+      </StyledNodeInspectorContainer>
     )
   }
 }

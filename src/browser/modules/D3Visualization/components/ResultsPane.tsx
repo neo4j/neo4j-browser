@@ -19,6 +19,9 @@
  */
 
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { Popup } from 'semantic-ui-react'
+
 import {
   StyledLegendRow,
   StyledTokenRelationshipType,
@@ -30,12 +33,13 @@ import {
   StyledLegendInlineList
 } from './styled'
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
-import { Popup } from 'semantic-ui-react'
 import { GrassEditor } from './GrassEditor'
+import { DARK_THEME } from 'shared/modules/settings/settingsDuck'
+import { GlobalState } from 'shared/globalState'
 
 type State = any
 
-export class ResultsPaneComponent extends Component<any, State> {
+class ResultsPaneComponent extends Component<any, State> {
   labelRowELem: any
   typeRowElem: any
   constructor(props: {}) {
@@ -98,9 +102,8 @@ export class ResultsPaneComponent extends Component<any, State> {
                     )})`}</StyledTokenCount>
                   </StyledLabelToken>
                 }
-                // inverted
+                inverted={this.props.theme === DARK_THEME}
                 wide
-                // position="bottom center"
               >
                 <GrassEditor
                   selectedLabel={this.props.selectedLabel?.item?.selectedLabel}
@@ -162,6 +165,7 @@ export class ResultsPaneComponent extends Component<any, State> {
                   </StyledTokenRelationshipType>
                 }
                 wide
+                inverted={this.props.theme === DARK_THEME}
               >
                 <GrassEditor
                   selectedRelType={
@@ -196,3 +200,9 @@ export class ResultsPaneComponent extends Component<any, State> {
     )
   }
 }
+
+const mapStateToProps = (state: GlobalState) => ({
+  theme: state.settings.theme
+})
+
+export default connect(mapStateToProps)(ResultsPaneComponent)

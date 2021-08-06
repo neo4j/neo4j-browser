@@ -27,10 +27,10 @@ import { GraphComponent } from './Graph'
 import neoGraphStyle from '../graphStyle'
 import { InspectorComponent } from './Inspector'
 import { NodeInspectorPanel } from './NodeInspectorPanel'
-import { StyledFullSizeContainer } from './styled'
+import { StyledFullSizeContainer, StyledGraphAreaContainer } from './styled'
 import { GlobalState } from 'shared/globalState'
 import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
-import { ResultsPaneComponent } from './ResultsPane'
+import ResultsPaneComponent from './ResultsPane'
 import { DetailsPaneComponent } from './DetailsPane'
 
 const deduplicateNodes = (nodes: any) => {
@@ -190,30 +190,20 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
     // This is a workaround to make the style reset to the same colors as when starting the browser with an empty style
     // If the legend component has the style it will ask the neoGraphStyle object for styling before the graph component,
     // and also doing this in a different order from the graph. This leads to different default colors being assigned to different labels.
-    let results
-    if (this.state.freezeLegend) {
-      results = (
-        <ResultsPaneComponent
-          stats={this.state.stats}
-          graphStyle={neoGraphStyle()}
-          onSelectedLabel={this.onSelectedLabel.bind(this)}
-          onSelectedRelType={this.onSelectedRelType.bind(this)}
-          selectedLabel={this.state.selectedLabel}
-          frameHeight={this.props.frameHeight}
-        />
-      )
-    } else {
-      results = (
-        <ResultsPaneComponent
-          stats={this.state.stats}
-          graphStyle={this.state.graphStyle}
-          onSelectedLabel={this.onSelectedLabel.bind(this)}
-          onSelectedRelType={this.onSelectedRelType.bind(this)}
-          selectedLabel={this.state.selectedLabel}
-          frameHeight={this.props.frameHeight}
-        />
-      )
-    }
+    const graphStyle = this.state.freezeLegend
+      ? neoGraphStyle()
+      : this.state.graphStyle
+
+    const results = (
+      <ResultsPaneComponent
+        stats={this.state.stats}
+        graphStyle={graphStyle}
+        onSelectedLabel={this.onSelectedLabel.bind(this)}
+        onSelectedRelType={this.onSelectedRelType.bind(this)}
+        selectedLabel={this.state.selectedLabel}
+        frameHeight={this.props.frameHeight}
+      />
+    )
 
     const details = (
       <DetailsPaneComponent
@@ -241,7 +231,7 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
           inspectingItemType ? this.state.forcePaddingBottom : null
         }
       >
-        <div style={{ position: 'relative', height: '100%' }}>
+        <StyledGraphAreaContainer>
           <GraphComponent
             fullscreen={this.props.fullscreen}
             frameHeight={this.props.frameHeight}
@@ -263,7 +253,7 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
             hoveredItem={this.state.hoveredItem}
             selectedItem={this.state.selectedItem}
           />
-        </div>
+        </StyledGraphAreaContainer>
         <InspectorComponent
           hasTruncatedFields={this.props.hasTruncatedFields}
           fullscreen={this.props.fullscreen}
