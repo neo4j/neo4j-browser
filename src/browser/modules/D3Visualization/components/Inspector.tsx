@@ -216,7 +216,10 @@ export class InspectorComponent extends Component<
     }
 
     return (
-      <StyledStatusBar className="status-bar">
+      <StyledStatusBar
+        fullscreen={this.props.fullscreen}
+        className="status-bar"
+      >
         <StyledStatus className="status">
           <StyledInspectorFooter
             className={
