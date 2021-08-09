@@ -187,7 +187,7 @@ export const StyledStatusBar = styled.div<{ fullscreen?: boolean }>`
   color: ${props => props.theme.secondaryText};
   font-size: 13px;
   position: ${props => (props.fullscreen ? 'fixed' : 'absolute')};
-  z-index: ${props => (props.fullscreen ? 1 : 0)};
+  z-index: ${props => (props.fullscreen ? 1 : 'auto')};
   background-color: ${props => props.theme.frameBackground};
   white-space: nowrap;
   overflow: hidden;
