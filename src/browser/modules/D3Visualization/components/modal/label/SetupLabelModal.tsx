@@ -4,6 +4,10 @@ import styled from 'styled-components'
 import SetupLabelProperties from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelProperties'
 import { cloneDeep } from 'lodash-es'
 import { ApplyButton, SimpleButton } from '../styled'
+import SetupLabelDisplaySettings, {
+  ISetupLabelDisplaySettingsOnChange,
+  setupLabelDisplaySettingsOptions
+} from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelDisplaySettings'
 
 const SetupLabelButton = styled.button`
   padding: 2px 4px;
@@ -30,10 +34,12 @@ const PreviewLabelButton = styled.button<{ isSelected?: boolean }>`
   width: 100px;
   height: 20px;
   background-color: rgba(255, 255, 255, 0.2);
-  border: 1px dashed rgba(255, 255, 255, 0.6);
-  ${({ isSelected }) => (isSelected ? `font-weight: bold` : '')}
+  border: ${({ isSelected }) =>
+    isSelected
+      ? '2px dashed rgba(255, 255, 255, 1)'
+      : '1px dashed rgba(255, 255, 255, 0.6)'};
 `
-
+//   ${({ isSelected }) => (isSelected ? `font-weight: bold` : '')}
 const RightColumn = styled.div`
   display: inline-block;
   vertical-align: top;
@@ -42,6 +48,7 @@ const RightColumn = styled.div`
 const MarginContainer = styled.div`
   margin-top: 30px;
 `
+
 enum LabelPosition {
   top,
   middle,
@@ -69,6 +76,7 @@ interface IProps {
     classes: string[]
     tag: string
   }
+  captionSettings?: ICurrentCaption
   itemStyle: {
     caption: string
     'border-color': string
@@ -77,14 +85,19 @@ interface IProps {
     diameter: string
     'font-size': string
     'text-color-internal': string
-    [key: string]: string
   }
   propertyKeys: string[]
-  updateStyle: (selector: any, props: any) => void
+  updateStyle: (style: ICurrentCaption) => void
 }
 
 const SetupLabelModal: React.FC<IProps> = props => {
-  const { selector, propertyKeys, itemStyle, updateStyle } = props
+  const {
+    selector,
+    propertyKeys,
+    itemStyle,
+    updateStyle,
+    captionSettings
+  } = props
   const [open, setOpen] = React.useState(false)
   const doOpen = React.useCallback(() => setOpen(true), [])
   const doClose = React.useCallback(() => setOpen(false), [])
@@ -106,10 +119,16 @@ const SetupLabelModal: React.FC<IProps> = props => {
 
   const [currentCaptionSettings, setCurrentCaptionSettings] = React.useState<
     ICurrentCaption
-  >({
-    [LabelPosition.top]: {},
-    [LabelPosition.middle]: cloneDeep(itemStyle),
-    [LabelPosition.bottom]: {}
+  >(() => {
+    if (captionSettings) {
+      return cloneDeep(captionSettings)
+    } else {
+      return {
+        [LabelPosition.top]: {},
+        [LabelPosition.middle]: cloneDeep(itemStyle),
+        [LabelPosition.bottom]: {}
+      }
+    }
   })
   const displayCaption: (
     captionSettings: ICurrentCaptionItem
@@ -144,17 +163,27 @@ const SetupLabelModal: React.FC<IProps> = props => {
     )
     if (amountOfCaptions === 0) {
       alert('Node needs to have at least one label set')
-    } else if (amountOfCaptions === 1) {
-      const caption = allLabelPositions
-        .map(position => currentCaptionSettings[position].caption)
-        .find(t => t != undefined)
-      updateStyle(selector, { caption })
-      doClose()
     } else {
+      updateStyle(currentCaptionSettings)
       doClose()
     }
-  }, [doClose, currentCaptionSettings])
-  console.log(props, itemStyle)
+  }, [doClose, currentCaptionSettings, updateStyle])
+
+  const handleDisplaySettingsChange: ISetupLabelDisplaySettingsOnChange = React.useCallback(
+    ({ key, value }) => {
+      setCurrentCaptionSettings(old => {
+        const cloned = cloneDeep(old)
+        if (value === null) {
+          delete cloned[selectedLabel][key]
+        } else {
+          cloned[selectedLabel][key] = value
+        }
+        return cloned
+      })
+    },
+    [selectedLabel]
+  )
+  console.log(props, currentCaptionSettings)
   return (
     <div>
       <SetupLabelButton onClick={doOpen}>Setup Label</SetupLabelButton>
@@ -173,6 +202,7 @@ const SetupLabelModal: React.FC<IProps> = props => {
               onClick={setSelectedLabel}
               selectedLabel={selectedLabel}
               position={position}
+              style={currentCaptionSettings[position]}
               key={position}
             >
               {displayCaption(currentCaptionSettings[position])}
@@ -182,6 +212,10 @@ const SetupLabelModal: React.FC<IProps> = props => {
         <RightColumn>
           <h4>{title}</h4>
           <div>{labelHeader}</div>
+          <SetupLabelDisplaySettings
+            itemStyle={currentCaptionSettings[selectedLabel]}
+            onChange={handleDisplaySettingsChange}
+          />
         </RightColumn>
         <SetupLabelProperties
           propertyKeys={propertyKeys}
@@ -202,17 +236,36 @@ const PreviewLabel: React.FC<{
   selectedLabel: LabelPosition
   position: LabelPosition
   onClick: (position: LabelPosition) => void
-}> = ({ selectedLabel, position, onClick, children }) => {
+  style: {
+    [key: string]: string
+  }
+}> = ({ selectedLabel, position, onClick, style, children }) => {
   const handleClick = React.useCallback(() => onClick(position), [
     onClick,
     position
   ])
+  const textStyle: { [p: string]: string } = React.useMemo(() => {
+    const result: {
+      [key: string]: string
+    } = {}
+    setupLabelDisplaySettingsOptions.forEach(option => {
+      if (style[option.key]) {
+        result[option.key] = option.value
+      }
+    })
+    return result
+  }, [style])
   return (
     <PreviewLabelButton
       isSelected={selectedLabel === position}
       onClick={handleClick}
     >
-      {children}
+      {children && (
+        <span style={textStyle}>
+          {children}
+          {textStyle['include-property-name'] ? ': value' : ''}
+        </span>
+      )}
     </PreviewLabelButton>
   )
 }

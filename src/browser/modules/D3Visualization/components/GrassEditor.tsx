@@ -206,28 +206,30 @@ export class GrassEditorComponent extends Component<any> {
     propertyKeys: any,
     showTypeSelector = false
   ) {
-    const captionSelector = (displayCaption: string, captionToSave: string) => {
-      const onClick = () => {
-        this.updateStyle(selector, { caption: captionToSave })
-      }
-      const active = styleForItem.props.caption === captionToSave
-      return (
-        <StyledPickerListItem key={toKeyString('caption' + displayCaption)}>
-          <StyledCaptionSelector
-            className={active ? 'active' : ''}
-            onClick={onClick}
-          >
-            {displayCaption}
-          </StyledCaptionSelector>
-        </StyledPickerListItem>
-      )
-    }
-    const captionSelectors = propertyKeys.map((propKey: any) => {
-      return captionSelector(propKey, `{${propKey}}`)
-    })
-    let typeCaptionSelector = null
+    // const captionSelector = (displayCaption: string, captionToSave: string) => {
+    //   const onClick = () => {
+    //     this.updateStyle(selector, { caption: captionToSave })
+    //   }
+    //   const active = styleForItem.props.caption === captionToSave
+    //   return (
+    //     <StyledPickerListItem key={toKeyString('caption' + displayCaption)}>
+    //       <StyledCaptionSelector
+    //         className={active ? 'active' : ''}
+    //         onClick={onClick}
+    //       >
+    //         {displayCaption}
+    //       </StyledCaptionSelector>
+    //     </StyledPickerListItem>
+    //   )
+    // }
+    // const captionSelectors = propertyKeys.map((propKey: any) => {
+    //   return captionSelector(propKey, `{${propKey}}`)
+    // })
+    // let typeCaptionSelector = null
+    // if (showTypeSelector) {
+    //   typeCaptionSelector = captionSelector('<type>', '<type>')
+    // }
     if (showTypeSelector) {
-      typeCaptionSelector = captionSelector('<type>', '<type>')
     }
     return (
       <StyledInlineListItem key="label-picker">
@@ -235,13 +237,12 @@ export class GrassEditorComponent extends Component<any> {
           <SetupLabelModal
             selector={selector}
             itemStyle={styleForItem.props}
+            captionSettings={styleForItem.props?.captionSettings}
             propertyKeys={propertyKeys}
-            updateStyle={this.updateStyle}
+            updateStyle={captionSettings =>
+              this.updateStyle(selector, { captionSettings })
+            }
           />
-          {/*<StyledInlineListItem>Caption:</StyledInlineListItem>*/}
-          {/*{captionSelector('<id>', '<id>')}*/}
-          {/*{typeCaptionSelector}*/}
-          {/*{captionSelectors}*/}
         </StyledInlineList>
       </StyledInlineListItem>
     )
