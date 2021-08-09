@@ -2,7 +2,7 @@ import * as React from 'react'
 import {
   IDisplayRelMapItem,
   IDisplayNodeNameFunc
-} from './NeighboursPickerPopover'
+} from './NeighboursPickerModal'
 import { AddIcon, ArrowLeft, ArrowRight, RemoveIcon } from './icons'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'

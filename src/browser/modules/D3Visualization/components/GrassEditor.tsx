@@ -33,6 +33,7 @@ import {
 } from './styled'
 import * as actions from 'shared/modules/grass/grassDuck'
 import { toKeyString } from 'shared/services/utils'
+import SetupLabelModal from './modal/SetupLabelModal'
 
 export class GrassEditorComponent extends Component<any> {
   graphStyle: any
@@ -52,7 +53,6 @@ export class GrassEditorComponent extends Component<any> {
       this.widths.push(`${5 + 3 * index}px`)
     }
   }
-
   sizeLessThan(size1: any, size2: any) {
     const size1Numerical = size1 ? size1.replace('px', '') + 0 : 0
     const size2Numerical = size1 ? size2.replace('px', '') + 0 : 0
@@ -200,6 +200,53 @@ export class GrassEditorComponent extends Component<any> {
     )
   }
 
+  labelPicker(
+    selector: any,
+    styleForItem: any,
+    propertyKeys: any,
+    showTypeSelector = false
+  ) {
+    const captionSelector = (displayCaption: string, captionToSave: string) => {
+      const onClick = () => {
+        this.updateStyle(selector, { caption: captionToSave })
+      }
+      const active = styleForItem.props.caption === captionToSave
+      return (
+        <StyledPickerListItem key={toKeyString('caption' + displayCaption)}>
+          <StyledCaptionSelector
+            className={active ? 'active' : ''}
+            onClick={onClick}
+          >
+            {displayCaption}
+          </StyledCaptionSelector>
+        </StyledPickerListItem>
+      )
+    }
+    const captionSelectors = propertyKeys.map((propKey: any) => {
+      return captionSelector(propKey, `{${propKey}}`)
+    })
+    let typeCaptionSelector = null
+    if (showTypeSelector) {
+      typeCaptionSelector = captionSelector('<type>', '<type>')
+    }
+    return (
+      <StyledInlineListItem key="label-picker">
+        <StyledInlineList className="label-picker picker">
+          <SetupLabelModal
+            selector={selector}
+            styleForItem={styleForItem}
+            propertyKeys={propertyKeys}
+            updateStyle={this.updateStyle}
+          />
+          {/*<StyledInlineListItem>Caption:</StyledInlineListItem>*/}
+          {/*{captionSelector('<id>', '<id>')}*/}
+          {/*{typeCaptionSelector}*/}
+          {/*{captionSelectors}*/}
+        </StyledInlineList>
+      </StyledInlineListItem>
+    )
+  }
+
   captionPicker(
     selector: any,
     styleForItem: any,
@@ -255,6 +302,11 @@ export class GrassEditorComponent extends Component<any> {
         color: styleForLabel.get('text-color-internal')
       }
       pickers = [
+        this.labelPicker(
+          styleForLabel.selector,
+          styleForLabel,
+          this.props.selectedLabel.propertyKeys
+        ),
         this.colorPicker(styleForLabel.selector, styleForLabel),
         this.sizePicker(styleForLabel.selector, styleForLabel),
         this.captionPicker(

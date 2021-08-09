@@ -1,23 +1,12 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import Modal from 'react-modal'
 import { flatten } from 'lodash-es'
 import NeighboursPickerItem, {
   INeighboursPickerItem
 } from './NeighboursPickerItem'
 import { connect } from 'react-redux'
 import { GlobalState } from 'shared/globalState'
-
-const customStyles = {
-  content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)'
-  }
-}
+import GenericModal from './GenericModal'
 
 interface INeighbourNode {
   id: string
@@ -81,7 +70,7 @@ const Button = styled.button`
   border: 1px solid #6f6f6f;
 `
 export type IDisplayNodeNameFunc = (node?: INeighbourNode) => string
-const NeighboursPickerPopover: React.FC<INeighboursPickerPopoverProps> = ({
+const NeighboursPickerModal: React.FC<INeighboursPickerPopoverProps> = ({
   nodes,
   relationships,
   node,
@@ -194,11 +183,9 @@ const NeighboursPickerPopover: React.FC<INeighboursPickerPopoverProps> = ({
   )
   console.log(options, relationships, nodes, node)
   return (
-    <Modal
+    <GenericModal
       isOpen={true}
-      onAfterOpen={() => {}}
       onRequestClose={onClose}
-      style={customStyles}
       contentLabel="Node Neighbours"
     >
       <h5>{displayNodeName(displayNode)}</h5>
@@ -228,13 +215,13 @@ const NeighboursPickerPopover: React.FC<INeighboursPickerPopoverProps> = ({
         <ApplyButton onClick={handleApply}>Apply</ApplyButton>
         <Button onClick={onClose}>Cancel</Button>
       </MarginContainer>
-    </Modal>
+    </GenericModal>
   )
 }
 
-// export default NeighboursPickerPopover
+// export default NeighboursPickerModal
 const mapStateToProps = (state: GlobalState) => ({ grass: state.grass })
 const NeighboursPickerPopoverWrapped = connect(mapStateToProps)(
-  NeighboursPickerPopover
+  NeighboursPickerModal
 )
 export default NeighboursPickerPopoverWrapped
