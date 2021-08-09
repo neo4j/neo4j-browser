@@ -94,9 +94,24 @@ const NeighboursPickerPopover: React.FC<INeighboursPickerPopoverProps> = ({
   const displayNodeName: IDisplayNodeNameFunc = React.useCallback(
     node => {
       if (node) {
-        const input = grass[`node.${node.labels[0]}`].caption
-        const value = input.substring(1, input.length - 1)
-        return node.properties[value] ?? node.properties.id ?? ''
+        const input = grass[`node.${node.labels[0]}`]?.caption
+        if (input) {
+          const value = input.substring(1, input.length - 1)
+          return (
+            node.properties[value] ??
+            node.properties.name ??
+            node.properties.title ??
+            node.properties.id ??
+            JSON.stringify(node.properties)
+          )
+        } else {
+          return (
+            node.properties.name ??
+            node.properties.title ??
+            node.properties.id ??
+            JSON.stringify(node.properties)
+          )
+        }
       } else {
         return ''
       }
