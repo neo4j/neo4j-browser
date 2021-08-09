@@ -33,7 +33,7 @@ import {
 } from './styled'
 import * as actions from 'shared/modules/grass/grassDuck'
 import { toKeyString } from 'shared/services/utils'
-import SetupLabelModal from './modal/SetupLabelModal'
+import SetupLabelModal from 'browser/modules/D3Visualization/components/modal/label/SetupLabelModal'
 
 export class GrassEditorComponent extends Component<any> {
   graphStyle: any
@@ -59,7 +59,7 @@ export class GrassEditorComponent extends Component<any> {
     return size1Numerical <= size2Numerical
   }
 
-  updateStyle(selector: any, styleProp: any) {
+  updateStyle = (selector: any, styleProp: any) => {
     this.graphStyle.changeForSelector(selector, styleProp)
     this.props.update(this.graphStyle.toSheet())
   }
@@ -234,7 +234,7 @@ export class GrassEditorComponent extends Component<any> {
         <StyledInlineList className="label-picker picker">
           <SetupLabelModal
             selector={selector}
-            styleForItem={styleForItem}
+            itemStyle={styleForItem.props}
             propertyKeys={propertyKeys}
             updateStyle={this.updateStyle}
           />
