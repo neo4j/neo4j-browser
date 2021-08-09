@@ -7,6 +7,7 @@ import NeighboursPickerItem, {
 import { connect } from 'react-redux'
 import { GlobalState } from 'shared/globalState'
 import GenericModal from './GenericModal'
+import { ApplyButton, SimpleButton } from './styled'
 
 interface INeighbourNode {
   id: string
@@ -56,19 +57,7 @@ const ScrollDiv = styled.div`
 const MarginContainer = styled.div`
   margin: 10px 0;
 `
-const ApplyButton = styled.button`
-  padding: 3px 15px;
-  margin-right: 20px;
-  background-color: #008cc1;
-  color: white;
-  border: 1px solid #6f6f6f;
-  border-radius: 1px;
-`
-const Button = styled.button`
-  padding: 3px 15px;
-  border-radius: 1px;
-  border: 1px solid #6f6f6f;
-`
+
 export type IDisplayNodeNameFunc = (node?: INeighbourNode) => string
 const NeighboursPickerModal: React.FC<INeighboursPickerPopoverProps> = ({
   nodes,
@@ -213,7 +202,7 @@ const NeighboursPickerModal: React.FC<INeighboursPickerPopoverProps> = ({
       </ScrollDiv>
       <MarginContainer>
         <ApplyButton onClick={handleApply}>Apply</ApplyButton>
-        <Button onClick={onClose}>Cancel</Button>
+        <SimpleButton onClick={onClose}>Cancel</SimpleButton>
       </MarginContainer>
     </GenericModal>
   )
