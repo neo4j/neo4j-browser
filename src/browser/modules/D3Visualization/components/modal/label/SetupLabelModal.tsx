@@ -2,7 +2,7 @@ import * as React from 'react'
 import GenericModal from 'browser/modules/D3Visualization/components/modal/GenericModal'
 import styled from 'styled-components'
 import SetupLabelProperties from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelProperties'
-import { cloneDeep } from 'lodash-es'
+import { camelCase, cloneDeep } from 'lodash-es'
 import { ApplyButton, SimpleButton } from '../styled'
 import SetupLabelDisplaySettings, {
   ISetupLabelDisplaySettingsOnChange,
@@ -32,7 +32,7 @@ const PreviewLabelButton = styled.button<{ isSelected?: boolean }>`
   display: block;
   margin: 5px auto;
   width: 100px;
-  height: 20px;
+  min-height: 20px;
   background-color: rgba(255, 255, 255, 0.2);
   border: ${({ isSelected }) =>
     isSelected
@@ -49,19 +49,19 @@ const MarginContainer = styled.div`
   margin-top: 30px;
 `
 
-enum LabelPosition {
+export enum LabelPosition {
   top,
   middle,
   bottom
 }
 
-const allLabelPositions: LabelPosition[] = [
+export const allLabelPositions: LabelPosition[] = [
   LabelPosition.top,
   LabelPosition.middle,
   LabelPosition.bottom
 ]
 
-interface ICurrentCaption {
+export interface ICaptionSettings {
   [LabelPosition.top]: ICurrentCaptionItem
   [LabelPosition.middle]: ICurrentCaptionItem
   [LabelPosition.bottom]: ICurrentCaptionItem
@@ -76,7 +76,7 @@ interface IProps {
     classes: string[]
     tag: string
   }
-  captionSettings?: ICurrentCaption
+  captionSettings?: ICaptionSettings
   itemStyle: {
     caption: string
     'border-color': string
@@ -87,7 +87,7 @@ interface IProps {
     'text-color-internal': string
   }
   propertyKeys: string[]
-  updateStyle: (style: ICurrentCaption) => void
+  updateStyle: (style: ICaptionSettings) => void
 }
 
 const SetupLabelModal: React.FC<IProps> = props => {
@@ -118,7 +118,7 @@ const SetupLabelModal: React.FC<IProps> = props => {
   }, [selectedLabel])
 
   const [currentCaptionSettings, setCurrentCaptionSettings] = React.useState<
-    ICurrentCaption
+    ICaptionSettings
   >(() => {
     if (captionSettings) {
       return cloneDeep(captionSettings)
@@ -240,6 +240,7 @@ const PreviewLabel: React.FC<{
     [key: string]: string
   }
 }> = ({ selectedLabel, position, onClick, style, children }) => {
+  const includePropertyKey = 'include-property-name'
   const handleClick = React.useCallback(() => onClick(position), [
     onClick,
     position
@@ -250,7 +251,9 @@ const PreviewLabel: React.FC<{
     } = {}
     setupLabelDisplaySettingsOptions.forEach(option => {
       if (style[option.key]) {
-        result[option.key] = option.value
+        if (includePropertyKey !== option.key) {
+          result[camelCase(option.key)] = option.value
+        }
       }
     })
     return result
@@ -263,7 +266,7 @@ const PreviewLabel: React.FC<{
       {children && (
         <span style={textStyle}>
           {children}
-          {textStyle['include-property-name'] ? ': value' : ''}
+          {style[includePropertyKey] ? ': value' : ''}
         </span>
       )}
     </PreviewLabelButton>
