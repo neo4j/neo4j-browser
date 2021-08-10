@@ -8,6 +8,7 @@ import SetupLabelDisplaySettings, {
   ISetupLabelDisplaySettingsOnChange,
   setupLabelDisplaySettingsOptions
 } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelDisplaySettings'
+import { usePrevious } from 'browser-hooks/hooks'
 
 const SetupLabelButton = styled.button`
   padding: 2px 4px;
@@ -103,9 +104,7 @@ const SetupLabelModal: React.FC<IProps> = props => {
   const doClose = React.useCallback(() => setOpen(false), [])
   const [selectedLabel, setSelectedLabel] = React.useState(LabelPosition.middle)
   const title = selector.classes[0] ?? selector.tag
-  // const caption = React.useMemo(() => {
-  //   return itemStyle.caption.replace(/[{}]/g, '')
-  // }, [itemStyle.caption])
+
   const labelHeader = React.useMemo(() => {
     switch (selectedLabel) {
       case LabelPosition.top:
@@ -117,9 +116,7 @@ const SetupLabelModal: React.FC<IProps> = props => {
     }
   }, [selectedLabel])
 
-  const [currentCaptionSettings, setCurrentCaptionSettings] = React.useState<
-    ICaptionSettings
-  >(() => {
+  const getInitialCaptionSettings: () => ICaptionSettings = React.useCallback(() => {
     if (captionSettings) {
       return cloneDeep(captionSettings)
     } else {
@@ -129,7 +126,19 @@ const SetupLabelModal: React.FC<IProps> = props => {
         [LabelPosition.bottom]: {}
       }
     }
-  })
+  }, [captionSettings, itemStyle])
+
+  const [currentCaptionSettings, setCurrentCaptionSettings] = React.useState<
+    ICaptionSettings
+  >(getInitialCaptionSettings())
+
+  const prevTitle = usePrevious(title)
+  React.useEffect(() => {
+    if (title !== prevTitle) {
+      setCurrentCaptionSettings(getInitialCaptionSettings)
+    }
+  }, [prevTitle, title, getInitialCaptionSettings])
+
   const displayCaption: (
     captionSettings: ICurrentCaptionItem
   ) => string = React.useCallback(
@@ -183,7 +192,6 @@ const SetupLabelModal: React.FC<IProps> = props => {
     },
     [selectedLabel]
   )
-  console.log(props, currentCaptionSettings)
   return (
     <div>
       <SetupLabelButton onClick={doOpen}>Setup Label</SetupLabelButton>
