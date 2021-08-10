@@ -2,7 +2,7 @@ import * as React from 'react'
 import {
   IDisplayRelMapItem,
   IDisplayNodeNameFunc
-} from './NeighboursPickerPopover'
+} from './NeighboursPickerModal'
 import { AddIcon, ArrowLeft, ArrowRight, RemoveIcon } from './icons'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
@@ -22,13 +22,18 @@ interface IProps {
   setActiveItem: (item: INeighboursPickerItem | null) => void
   displayNodeName: IDisplayNodeNameFunc
 }
-
+const Label = styled.label`
+  cursor: pointer;
+`
+const Input = styled.input`
+  margin-right: 5px;
+  vertical-align: middle;
+`
 const TD = styled.td`
-  padding: 5px;
+  padding: 5px 10px;
+  white-space: nowrap;
 `
-const TR = styled.tr`
-  border-top: 1px solid #5c5c5c;
-`
+
 const MotionTR: React.FC = ({ children }) => (
   <motion.tr
     variants={{
@@ -144,16 +149,18 @@ const NeighboursPickerItem: React.FC<IProps> = ({
         <>
           {item.items.map(t => (
             <MotionTR key={t.id}>
-              <TD></TD>
-              <TD>
-                <input
-                  type={'checkbox'}
-                  data-id={t.id}
-                  checked={selection.includes(t.id)}
-                  onChange={handleNestedChange}
-                />
+              <TD />
+              <TD colSpan={2}>
+                <Label>
+                  <Input
+                    type={'checkbox'}
+                    data-id={t.id}
+                    checked={selection.includes(t.id)}
+                    onChange={handleNestedChange}
+                  />
+                  {displayNodeName(t.node)}
+                </Label>
               </TD>
-              <TD>{displayNodeName(t.node)}</TD>
             </MotionTR>
           ))}
         </>

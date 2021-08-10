@@ -33,6 +33,7 @@ import {
 } from './styled'
 import * as actions from 'shared/modules/grass/grassDuck'
 import { toKeyString } from 'shared/services/utils'
+import SetupLabelModal from 'browser/modules/D3Visualization/components/modal/label/SetupLabelModal'
 
 export class GrassEditorComponent extends Component<any> {
   graphStyle: any
@@ -52,14 +53,13 @@ export class GrassEditorComponent extends Component<any> {
       this.widths.push(`${5 + 3 * index}px`)
     }
   }
-
   sizeLessThan(size1: any, size2: any) {
     const size1Numerical = size1 ? size1.replace('px', '') + 0 : 0
     const size2Numerical = size1 ? size2.replace('px', '') + 0 : 0
     return size1Numerical <= size2Numerical
   }
 
-  updateStyle(selector: any, styleProp: any) {
+  updateStyle = (selector: any, styleProp: any) => {
     this.graphStyle.changeForSelector(selector, styleProp)
     this.props.update(this.graphStyle.toSheet())
   }
@@ -200,6 +200,54 @@ export class GrassEditorComponent extends Component<any> {
     )
   }
 
+  labelPicker(
+    selector: any,
+    styleForItem: any,
+    propertyKeys: any,
+    showTypeSelector = false
+  ) {
+    // const captionSelector = (displayCaption: string, captionToSave: string) => {
+    //   const onClick = () => {
+    //     this.updateStyle(selector, { caption: captionToSave })
+    //   }
+    //   const active = styleForItem.props.caption === captionToSave
+    //   return (
+    //     <StyledPickerListItem key={toKeyString('caption' + displayCaption)}>
+    //       <StyledCaptionSelector
+    //         className={active ? 'active' : ''}
+    //         onClick={onClick}
+    //       >
+    //         {displayCaption}
+    //       </StyledCaptionSelector>
+    //     </StyledPickerListItem>
+    //   )
+    // }
+    // const captionSelectors = propertyKeys.map((propKey: any) => {
+    //   return captionSelector(propKey, `{${propKey}}`)
+    // })
+    // let typeCaptionSelector = null
+    // if (showTypeSelector) {
+    //   typeCaptionSelector = captionSelector('<type>', '<type>')
+    // }
+    if (showTypeSelector) {
+    }
+    return (
+      <StyledInlineListItem key="label-picker">
+        <StyledInlineList className="label-picker picker">
+          <SetupLabelModal
+            selector={selector}
+            itemStyle={styleForItem.props}
+            captionSettings={styleForItem.props?.captionSettings}
+            propertyKeys={propertyKeys}
+            updateStyle={captionSettings =>
+              this.updateStyle(selector, { captionSettings })
+            }
+          />
+        </StyledInlineList>
+      </StyledInlineListItem>
+    )
+  }
+
   captionPicker(
     selector: any,
     styleForItem: any,
@@ -255,6 +303,11 @@ export class GrassEditorComponent extends Component<any> {
         color: styleForLabel.get('text-color-internal')
       }
       pickers = [
+        this.labelPicker(
+          styleForLabel.selector,
+          styleForLabel,
+          this.props.selectedLabel.propertyKeys
+        ),
         this.colorPicker(styleForLabel.selector, styleForLabel),
         this.sizePicker(styleForLabel.selector, styleForLabel),
         this.captionPicker(

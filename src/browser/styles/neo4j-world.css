@@ -9,7 +9,7 @@
   font-style: normal;
 }
 .ReactModal__Overlay {
-  z-index: 90;
+  z-index: 200;
 }
 .nw {
   font-family: 'neo4j-world', sans-serif !important;

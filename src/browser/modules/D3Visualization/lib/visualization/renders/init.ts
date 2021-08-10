@@ -72,6 +72,9 @@ const nodeCaption = new Renderer({
 
     text
       .text((line: any) => line.text)
+      .style('font-weight', (line: any) => line.fontWeight ?? 'inherit')
+      .style('text-decoration', (line: any) => line.textDecoration ?? 'inherit')
+      .style('font-style', (line: any) => line.fontStyle ?? 'inherit')
       .attr('x', 0)
       .attr('y', (line: any) => line.baseline)
       .attr('font-size', (line: any) =>

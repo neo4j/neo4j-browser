@@ -19,10 +19,18 @@
  */
 import PairwiseArcsRelationshipRouting from '../utils/pairwiseArcsRelationshipRouting'
 import measureText from '../utils/textMeasurement'
+import {
+  allLabelPositions,
+  ICaptionSettings,
+  LabelPosition
+} from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelModal'
+import { flatten, floor } from 'lodash-es'
+import { includePropertyNameKey } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelDisplaySettings'
 
 export default class NeoD3Geometry {
   relationshipRouting: any
   style: any
+
   constructor(style: any) {
     this.style = style
     this.relationshipRouting = new PairwiseArcsRelationshipRouting(this.style)
@@ -93,37 +101,101 @@ const noEmptyLines = function(lines: any[]) {
   }
   return true
 }
-
-const fitCaptionIntoCircle = function(node: any, style: any) {
-  const template = style.forNode(node).get('caption')
-  const nodeText = style.interpolate(template, node)
-  const captionText =
-    nodeText.length > 100 ? nodeText.substring(0, 100) : nodeText
-  const fontFamily = 'sans-serif'
-  const fontSize = parseFloat(style.forNode(node).get('font-size'))
-  const lineHeight = fontSize
-  const measure = (text: any) => measureText(text, fontFamily, fontSize)
-
-  const words = captionText.split(' ')
-
-  const emptyLine = function(lineCount: any, iLine: any) {
-    let baseline = (1 + iLine - lineCount / 2) * lineHeight
-    if (style.forNode(node).get('icon-code')) {
-      baseline = baseline + node.radius / 3
-    }
-    const containingHeight =
-      iLine < lineCount / 2 ? baseline - lineHeight : baseline
-    const lineWidth =
-      Math.sqrt(square(node.radius) - square(containingHeight)) * 2
-    return {
-      node,
-      text: '',
-      baseline,
-      remainingWidth: lineWidth
-    }
+const emptyLine = ({
+  lineCount,
+  iLine,
+  style,
+  node,
+  lineHeight,
+  fontWeight,
+  fontStyle,
+  textDecoration
+}: {
+  lineCount: number
+  style: any
+  node: any
+  iLine: number
+  lineHeight: number
+  fontWeight?: string
+  fontStyle?: string
+  textDecoration?: string
+}) => {
+  let baseline = (1 + iLine - lineCount / 2) * lineHeight
+  if (style.forNode(node).get('icon-code')) {
+    baseline = baseline + node.radius / 3
   }
+  const containingHeight =
+    iLine < lineCount / 2 ? baseline - lineHeight : baseline
+  const lineWidth =
+    Math.sqrt(square(node.radius) - square(containingHeight)) * 2
+  return {
+    node,
+    text: '',
+    baseline,
+    remainingWidth: lineWidth,
+    fontWeight,
+    fontStyle,
+    textDecoration
+  }
+}
 
-  const fitOnFixedNumberOfLines = function(lineCount: any): [any, number] {
+interface IWordObject {
+  word: string
+  belongsTo: number
+  fontWeight: string
+  fontStyle: string
+  textDecoration: string
+}
+
+const fitMultipleCaptionsIntoCircle = function(
+  node: any,
+  style: any,
+  captionSettings: ICaptionSettings
+) {
+  const fontSize = parseFloat(style.forNode(node).get('font-size'))
+  const maxLines = (node.radius * 2) / fontSize
+  const wordsObjects: IWordObject[] = flatten(
+    allLabelPositions.map((position, index) => {
+      const currentStyle = captionSettings[position]
+      if (currentStyle.caption) {
+        const nodeText: string = style.interpolate(currentStyle.caption, node)
+        const captionText: string =
+          nodeText.length > 100 ? nodeText.substring(0, 100) : nodeText
+        const fontWeight =
+          currentStyle['font-weight'] ?? style.forNode(node).get('font-weight')
+        const fontStyle =
+          currentStyle['font-style'] ?? style.forNode(node).get('font-style')
+        const textDecoration =
+          currentStyle['text-decoration'] ??
+          style.forNode(node).get('text-decoration')
+        const words: string[] = captionText.split(' ')
+        if (currentStyle[includePropertyNameKey]) {
+          words.unshift(`${currentStyle.caption.replace(/[{}]/g, '')}:`)
+        }
+        return words.map(word => ({
+          word,
+          belongsTo: index,
+          fontWeight,
+          fontStyle,
+          textDecoration
+        }))
+      }
+      return []
+    })
+  )
+
+  const fontFamily = 'sans-serif'
+  const lineHeight = fontSize
+
+  const fitMultipleOnFixedNumberOfLines = ({
+    lineCount,
+    words
+  }: {
+    lineCount: any
+    words: IWordObject[]
+  }): [any, number] => {
+    const measure = (text: string) => measureText(text, fontFamily, fontSize)
+
     const lines = []
     let iWord = 0
     for (
@@ -131,7 +203,88 @@ const fitCaptionIntoCircle = function(node: any, style: any) {
       asc ? iLine <= end : iLine >= end;
       asc ? iLine++ : iLine--
     ) {
-      const line = emptyLine(lineCount, iLine)
+      const line = emptyLine({ lineCount, iLine, node, lineHeight, style })
+      const currentWord = words[iWord]
+      let currentCaptionIndex: number | undefined
+      if (currentWord) {
+        currentCaptionIndex = currentWord.belongsTo
+        line.fontWeight = currentWord.fontWeight
+        line.fontStyle = currentWord.fontStyle
+        line.textDecoration = currentWord.textDecoration
+      }
+      while (
+        iWord < words.length &&
+        measure(` ${words[iWord].word}`) < line.remainingWidth &&
+        currentCaptionIndex === words[iWord].belongsTo
+      ) {
+        line.text += ` ${words[iWord].word}`
+        line.remainingWidth -= measure(` ${words[iWord].word}`)
+        iWord++
+      }
+      lines.push(line)
+    }
+    if (iWord < words.length) {
+      addShortenedNextWord(lines[lineCount - 1], words[iWord].word, measure)
+    }
+    return [lines, iWord]
+  }
+
+  let lines = [emptyLine({ lineCount: 1, iLine: 0, lineHeight, style, node })]
+  let consumedWords = 0
+  for (
+    let lineCount = 1, end = maxLines, asc = end >= 1;
+    asc ? lineCount <= end : lineCount >= end;
+    asc ? lineCount++ : lineCount--
+  ) {
+    const [candidateLines, candidateWords] = Array.from(
+      fitMultipleOnFixedNumberOfLines({
+        lineCount,
+        words: wordsObjects
+      })
+    )
+    if (noEmptyLines(candidateLines)) {
+      ;[lines, consumedWords] = Array.from([candidateLines, candidateWords])
+    }
+    if (consumedWords >= wordsObjects.length) {
+      return lines
+    }
+  }
+  return lines
+}
+const fitCaptionIntoCircle = function(node: any, style: any) {
+  const captionSettingsInput = style.forNode(node).get('captionSettings')
+  const captionSettings: ICaptionSettings | null =
+    captionSettingsInput === '' ? null : captionSettingsInput
+  if (captionSettings) {
+    return fitMultipleCaptionsIntoCircle(node, style, captionSettings)
+  }
+  const template = style.forNode(node).get('caption')
+  const nodeText = style.interpolate(template, node)
+  const captionText =
+    nodeText.length > 100 ? nodeText.substring(0, 100) : nodeText
+  const fontFamily = 'sans-serif'
+  const fontSize = parseFloat(style.forNode(node).get('font-size'))
+  const maxLines = (node.radius * 2) / fontSize
+  const lineHeight = fontSize
+  const words = captionText.split(' ')
+
+  const fitOnFixedNumberOfLines = function({
+    lineCount,
+    words
+  }: {
+    lineCount: any
+    words: string[]
+  }): [any, number] {
+    const measure = (text: any) => measureText(text, fontFamily, fontSize)
+
+    const lines = []
+    let iWord = 0
+    for (
+      let iLine = 0, end = lineCount - 1, asc = end >= 0;
+      asc ? iLine <= end : iLine >= end;
+      asc ? iLine++ : iLine--
+    ) {
+      const line = emptyLine({ lineCount, iLine, node, lineHeight, style })
       while (
         iWord < words.length &&
         measure(` ${words[iWord]}`) < line.remainingWidth
@@ -147,18 +300,19 @@ const fitCaptionIntoCircle = function(node: any, style: any) {
     }
     return [lines, iWord]
   }
-
   let consumedWords = 0
-  const maxLines = (node.radius * 2) / fontSize
 
-  let lines = [emptyLine(1, 0)]
+  let lines = [emptyLine({ lineCount: 1, iLine: 0, lineHeight, style, node })]
   for (
     let lineCount = 1, end = maxLines, asc = end >= 1;
     asc ? lineCount <= end : lineCount >= end;
     asc ? lineCount++ : lineCount--
   ) {
     const [candidateLines, candidateWords] = Array.from(
-      fitOnFixedNumberOfLines(lineCount)
+      fitOnFixedNumberOfLines({
+        lineCount,
+        words
+      })
     )
     if (noEmptyLines(candidateLines)) {
       ;[lines, consumedWords] = Array.from([candidateLines, candidateWords])
