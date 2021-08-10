@@ -28,12 +28,7 @@ import {
   KeyMod,
   MarkerSeverity
 } from 'monaco-editor/esm/vs/editor/editor.api'
-import React, {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useRef
-} from 'react'
+import React from 'react'
 import ResizeObserver from 'resize-observer-polyfill'
 import styled from 'styled-components'
 import { Bus } from 'suber'
@@ -54,13 +49,7 @@ const shouldCheckForHints = (code: string) =>
     .toUpperCase()
     .startsWith('PROFILE')
 
-export interface MonacoHandles {
-  focus: () => void
-  getValue: () => string
-  setValue: (value: string) => void
-  resize: (fillContainer?: boolean, fixedHeight?: number) => void
-  setPosition: (position: { lineNumber: number; column: number }) => void
-}
+export type MonacoHandles = Monaco
 
 const MonacoStyleWrapper = styled.div`
   height: 100%;
@@ -76,410 +65,379 @@ const MonacoStyleWrapper = styled.div`
   }
 `
 
-interface MonacoProps {
-  bus: Bus
-  enableMultiStatementMode?: boolean
-  fontLigatures?: boolean
-  history?: string[]
-  id: string
-  value?: string
-  onChange?: (value: string) => void
-  onDisplayHelpKeys?: () => void
-  onExecute?: (value: string) => void
-  useDb?: null | string
-  toggleFullscreen: () => void
-}
-
 const EXPLAIN_QUERY_PREFIX = 'EXPLAIN '
 const EXPLAIN_QUERY_PREFIX_LENGTH = EXPLAIN_QUERY_PREFIX.length
-const Monaco = forwardRef<MonacoHandles, MonacoProps>(
-  (
-    {
-      bus,
-      enableMultiStatementMode = true,
-      fontLigatures = true,
-      history = [],
-      id,
-      value = '',
-      onChange = () => undefined,
-      onDisplayHelpKeys = () => undefined,
-      onExecute = () => undefined,
-      useDb,
-      toggleFullscreen
-    }: MonacoProps,
-    ref
-  ): JSX.Element => {
-    const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null)
-    const monacoId = `monaco-${id}`
+type MonacoDefaultProps = { value: string; onDisplayHelpKeys: () => void }
+type MonacoProps = MonacoDefaultProps & {
+  bus: Bus
+  enableMultiStatementMode: boolean
+  fontLigatures: boolean
+  history: string[]
+  id: string
+  value?: string
+  onChange: (value: string) => void
+  onDisplayHelpKeys?: () => void
+  onExecute: (value: string) => void
+  useDb: null | string
+  toggleFullscreen: () => void
+}
+type MonacoState = { currentHistoryIndex: number; draft: string }
+const UNRUN_CMD_HISTORY_INDEX = -1
 
-    useImperativeHandle(ref, () => ({
-      focus() {
-        editorRef.current?.focus()
-      },
-      getValue() {
-        return editorRef.current?.getValue() || ''
-      },
-      setValue(value: string) {
-        setValue(value)
-        historyIndexRef.current = -1
-      },
-      resize(fillContainer = false) {
-        resize(fillContainer)
-      },
-      setPosition(pos: { lineNumber: number; column: number }) {
-        editorRef.current?.setPosition(pos)
-      }
-    }))
+class Monaco extends React.Component<MonacoProps, MonacoState> {
+  state: MonacoState = {
+    currentHistoryIndex: UNRUN_CMD_HISTORY_INDEX,
+    draft: ''
+  }
 
-    // The monaco render method does not redraw line numbers
-    // Getting and setting content and cursor is done to force a redraw
-    useEffect(() => {
-      const cursorPosition = editorRef?.current?.getPosition() as IPosition
-      editorRef.current?.setValue(editorRef.current?.getValue() || '')
-      editorRef.current?.setPosition(cursorPosition)
-    }, [useDb])
+  editor?: editor.IStandaloneCodeEditor
+  container?: HTMLElement
 
-    // Create monaco instance, listen to text changes and destroy
-    useEffect(() => {
-      editorRef.current = editor.create(
-        document.getElementById(monacoId) as HTMLElement,
+  static defaultProps: MonacoDefaultProps = {
+    value: '',
+    onDisplayHelpKeys: () => undefined
+  }
+
+  private getMonacoId = (): string => `monaco-${this.props.id}`
+  private debouncedUpdateCode = debounce(() => {
+    const text =
+      this.editor
+        ?.getModel()
+        ?.getLinesContent()
+        .join('\n') || ''
+
+    this.props.onChange(text)
+    this.addWarnings(parse(text).referencesListener.queriesAndCommands)
+  }, 300)
+  focus = (): void => {
+    this.editor?.focus()
+  }
+  setPosition = (pos: { lineNumber: number; column: number }): void => {
+    this.editor?.setPosition(pos)
+  }
+  private newLine = (): void =>
+    this.editor?.trigger('keyboard', 'type', { text: '\n' })
+  private isMultiLine = (): boolean =>
+    (this.editor?.getModel()?.getLineCount() || 0) > 1
+
+  private updateGutterCharWidth = (dbName: string): void => {
+    this.editor?.updateOptions({
+      lineNumbersMinChars:
+        dbName.length && !this.isMultiLine() ? dbName.length * 1.3 : 2
+    })
+  }
+
+  resize = (fillContainer: boolean): void => {
+    if (!this.container || !this.editor) return
+    const contentHeight = this.editor.getContentHeight()
+
+    const height = fillContainer
+      ? Math.min(window.innerHeight - 20, this.container.scrollHeight)
+      : Math.min(276, contentHeight) // Upper bound is 12 lines * 23px line height = 276px
+
+    this.container.style.height = `${height}px`
+    this.editor.layout({
+      height,
+      width: this.container.offsetWidth
+    })
+  }
+
+  getValue = (): string => this.editor?.getValue() || ''
+  setValue = (value: string): void => {
+    this.setState({ currentHistoryIndex: UNRUN_CMD_HISTORY_INDEX })
+    this.internalSetValue(value)
+  }
+  private internalSetValue = (value: string): void => {
+    if (!this.editor) return
+    this.editor.setValue(value)
+    this.editor.focus()
+
+    const lines = this.editor.getModel()?.getLinesContent() || []
+    const linesLength = lines.length
+    this.editor.setPosition({
+      lineNumber: linesLength,
+      column: lines[linesLength - 1].length + 1
+    })
+  }
+
+  private handleUp = (): void => {
+    if (this.isMultiLine()) {
+      this.editor?.trigger('', 'cursorUp', null)
+    } else {
+      this.viewHistoryPrevious()
+    }
+  }
+
+  private viewHistoryPrevious = (): void => {
+    const { history } = this.props
+    const { currentHistoryIndex } = this.state
+    const newHistoryIndex = currentHistoryIndex + 1
+
+    if (history.length === 0) return
+    if (newHistoryIndex === history.length) return
+
+    if (currentHistoryIndex === UNRUN_CMD_HISTORY_INDEX) {
+      // Save what's currently in the editor as a local draft
+      this.setState({
+        draft: this.editor?.getValue() || '',
+        currentHistoryIndex: 0
+      })
+    }
+
+    this.internalSetValue(history[newHistoryIndex])
+    this.setState({ currentHistoryIndex: newHistoryIndex })
+  }
+
+  private handleDown = (): void => {
+    if (this.isMultiLine()) {
+      this.editor?.trigger('', 'cursorDown', null)
+    } else {
+      this.viewHistoryNext()
+    }
+  }
+
+  private viewHistoryNext = (): void => {
+    const { history } = this.props
+    const { currentHistoryIndex } = this.state
+    const newHistoryIndex = currentHistoryIndex - 1
+
+    if (history.length === 0) return
+    if (currentHistoryIndex === UNRUN_CMD_HISTORY_INDEX) return
+
+    if (newHistoryIndex === UNRUN_CMD_HISTORY_INDEX) {
+      // Read saved draft
+      this.internalSetValue(this.state.draft)
+    } else {
+      this.internalSetValue(this.props.history[newHistoryIndex])
+    }
+
+    this.setState({ currentHistoryIndex: newHistoryIndex })
+  }
+
+  private execute = (): void => {
+    const value = this.getValue()
+    const onlyWhitespace = value.trim() === ''
+
+    if (!onlyWhitespace) {
+      this.props.onExecute(value)
+      this.setState({ currentHistoryIndex: UNRUN_CMD_HISTORY_INDEX })
+    }
+  }
+
+  private onContentUpdate = (): void => {
+    const model = this.editor?.getModel()
+    if (!model) return
+
+    editor.setModelMarkers(model, this.getMonacoId(), [])
+
+    this.updateGutterCharWidth(this.props.useDb || '')
+    this.debouncedUpdateCode()
+  }
+
+  private addWarnings = (statements: QueryOrCommand[]): void => {
+    const model = this.editor?.getModel()
+    if (!statements.length || !model) return
+
+    // clearing markers again solves issue with incorrect multi-statement warning when user spam clicks setting on and off
+    editor.setModelMarkers(model, this.getMonacoId(), [])
+
+    // add multi statement warning if multi setting is off
+    if (statements.length > 1 && !this.props.enableMultiStatementMode) {
+      const secondStatementLine = statements[1].start.line
+      editor.setModelMarkers(model, this.getMonacoId(), [
         {
-          autoClosingOvertype: 'always',
-          contextmenu: false,
-          cursorStyle: 'block',
-          fontFamily: '"Fira Code", Monaco, "Courier New", Terminal, monospace',
-          fontLigatures,
-          fontSize: 17,
-          fontWeight: '400',
-          hideCursorInOverviewRuler: true,
-          language: 'cypher',
-          lightbulb: { enabled: false },
-          lineHeight: 23,
-          lineNumbers: (line: number) =>
-            isMultiLine() ? line.toString() : `${useDbRef.current || ''}$`,
-          links: false,
-          minimap: { enabled: false },
-          overviewRulerBorder: false,
-          overviewRulerLanes: 0,
-          quickSuggestions: false,
-          renderLineHighlight: 'none',
-          scrollbar: {
-            alwaysConsumeMouseWheel: false,
-            useShadows: false
-          },
-          scrollBeyondLastColumn: 0,
-          scrollBeyondLastLine: false,
-          selectionHighlight: false,
-          value,
-          wordWrap: 'on',
-          wrappingStrategy: 'advanced'
+          startLineNumber: secondStatementLine,
+          startColumn: 1,
+          endLineNumber: secondStatementLine,
+          endColumn: 1000,
+          message:
+            'To use multi statement queries, please enable multi statement in the settings panel.',
+          severity: MarkerSeverity.Warning
         }
-      )
-
-      editorRef.current.addCommand(
-        KeyCode.Enter,
-        () => (isMultiLine() ? newLine() : execute()),
-        '!suggestWidgetVisible && !findWidgetVisible'
-      )
-      editorRef.current.addCommand(
-        KeyCode.UpArrow,
-        handleUp,
-        '!suggestWidgetVisible'
-      )
-      editorRef.current.addCommand(
-        KeyCode.DownArrow,
-        handleDown,
-        '!suggestWidgetVisible'
-      )
-      editorRef.current.addCommand(KeyMod.Shift | KeyCode.Enter, newLine)
-      editorRef.current.addCommand(KeyMod.CtrlCmd | KeyCode.Enter, execute)
-      editorRef.current.addCommand(KeyMod.WinCtrl | KeyCode.Enter, execute)
-      editorRef.current.addCommand(
-        KeyMod.CtrlCmd | KeyCode.UpArrow,
-        viewHistoryPrevious
-      )
-      editorRef.current.addCommand(
-        KeyMod.CtrlCmd | KeyCode.DownArrow,
-        viewHistoryNext
-      )
-      editorRef.current.addCommand(
-        KeyMod.CtrlCmd | KeyCode.US_DOT,
-        onDisplayHelpKeys
-      )
-      editorRef.current.addCommand(
-        KeyCode.Escape,
-        toggleFullscreen,
-        '!suggestWidgetVisible && !findWidgetVisible'
-      )
-
-      onContentUpdate()
-
-      editorRef.current?.onDidChangeModelContent(() => onContentUpdate(true))
-
-      editorRef.current?.onDidContentSizeChange(() =>
-        resize(isFullscreenRef.current)
-      )
-
-      const container = document.getElementById(monacoId) as HTMLElement
-      const resizeObserver = new ResizeObserver(() => {
-        // Wrapped in requestAnimationFrame to avoid the error "ResizeObserver loop limit exceeded"
-        window.requestAnimationFrame(() => {
-          editorRef.current?.layout()
-        })
-      })
-      resizeObserver.observe(container)
-
-      /*
-       * This moves the the command palette widget out of of the overflow-guard div where overlay widgets
-       * are located, into the overflowing content widgets div.
-       * This solves the command palette being squashed when the cypher editor is only a few lines high.
-       * The workaround is based on a suggestion found in the github issue: https://github.com/microsoft/monaco-editor/issues/70
-       */
-      const quickInputDOMNode = editorRef.current.getContribution<
-        { widget: { domNode: HTMLElement } } & editor.IEditorContribution
-      >('editor.controller.quickInput').widget.domNode
-      ;(editorRef.current as any)._modelData.view._contentWidgets.overflowingContentWidgetsDomNode.domNode.appendChild(
-        quickInputDOMNode.parentNode?.removeChild(quickInputDOMNode)
-      )
-      QuickInputList.prototype.layout = function(maxHeight: number) {
-        this.list.getHTMLElement().style.maxHeight =
-          maxHeight < 200 ? '200px' : Math.floor(maxHeight) + 'px'
-        this.list.layout()
-      }
-
-      return () => {
-        editorRef.current?.dispose()
-        debouncedUpdateCode.cancel()
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
-    const isFullscreenRef = useRef<boolean>(false)
-
-    const resize = (fillContainer: boolean) => {
-      const container = document.getElementById(monacoId) as HTMLElement
-      const contentHeight = editorRef.current?.getContentHeight() || 0
-
-      isFullscreenRef.current = fillContainer
-
-      const height = fillContainer
-        ? Math.min(window.innerHeight - 20, container.scrollHeight)
-        : Math.min(276, contentHeight) // Upper bound is 12 lines * 23px line height = 276px
-
-      container.style.height = `${height}px`
-      editorRef.current?.layout({
-        height,
-        width: container.offsetWidth
-      })
+      ])
     }
 
-    // Trigger update when multi statement setting is changed to update warnings
-    useEffect(() => {
-      onContentUpdate()
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [enableMultiStatementMode, useDb])
-
-    useEffect(() => {
-      editorRef.current?.updateOptions({ fontLigatures })
-    }, [fontLigatures])
-
-    const useDbRef = useRef<string | null>(null)
-
-    useEffect(() => {
-      useDbRef.current = useDb || ''
-    }, [useDb])
-
-    const newLine = () => {
-      editorRef.current?.trigger('keyboard', 'type', { text: '\n' })
-    }
-
-    const execute = () => {
-      const value = editorRef.current?.getValue() || ''
-      const onlyWhitespace = value.trim() === ''
-
-      if (!onlyWhitespace) {
-        onExecute(value)
-        historyIndexRef.current = -1
-      }
-    }
-
-    const isMultiLine = () =>
-      (editorRef.current?.getModel()?.getLineCount() as number) > 1
-
-    const handleUp = () => {
-      if (isMultiLine()) {
-        editorRef.current?.trigger('', 'cursorUp', null)
-      } else {
-        viewHistoryPrevious()
-      }
-    }
-
-    const handleDown = () => {
-      if (isMultiLine()) {
-        editorRef.current?.trigger('', 'cursorDown', null)
-      } else {
-        viewHistoryNext()
-      }
-    }
-
-    const setValue = (value: string) => {
-      editorRef.current?.setValue(value)
-      editorRef.current?.focus()
-      const lines = editorRef.current?.getModel()?.getLinesContent() || []
-      const linesLength = lines.length
-      editorRef.current?.setPosition({
-        lineNumber: linesLength,
-        column: lines[linesLength - 1].length + 1
-      })
-    }
-
-    useEffect(() => {
-      historyRef.current = [...history]
-    }, [history])
-
-    const historyRef = useRef<string[]>([])
-    const historyIndexRef = useRef<number>(-1)
-    const draftRef = useRef<string>('')
-
-    const viewHistoryPrevious = () => {
-      const localHistory = historyRef.current
-      const localHistoryIndex = historyIndexRef.current
-
-      if (!localHistory.length) return
-      if (localHistoryIndex + 1 === localHistory.length) return
-      if (localHistoryIndex === -1) {
-        // Save what's currently in the editor as a local draft
-        draftRef.current = editorRef.current?.getValue() || ''
-      }
-      historyIndexRef.current = localHistoryIndex + 1
-      setValue(localHistory[localHistoryIndex + 1])
-    }
-
-    const viewHistoryNext = () => {
-      const localHistory = historyRef.current
-      const localHistoryIndex = historyIndexRef.current
-
-      if (!localHistory.length) return
-      if (localHistoryIndex <= -1) return
-      if (localHistoryIndex === 0) {
-        // Read saved draft
-        historyIndexRef.current = localHistoryIndex - 1
-        setValue(draftRef.current)
+    // add a warning for each notification returned by explain query
+    statements.forEach(statement => {
+      const text = statement.getText()
+      if (!shouldCheckForHints(text)) {
         return
       }
-      historyIndexRef.current = localHistoryIndex - 1
-      setValue(localHistory[localHistoryIndex - 1])
-    }
+      const statementLineNumber = statement.start.line - 1
 
-    // Share current text with parent and add warnings
-    const updateCode = () => {
-      const text =
-        editorRef.current
-          ?.getModel()
-          ?.getLinesContent()
-          .join('\n') || ''
-
-      onChange(text)
-      addWarnings(parse(text).referencesListener.queriesAndCommands)
-    }
-
-    const debouncedUpdateCode = debounce(updateCode, 300)
-
-    const updateGutterCharWidth = (dbName: string) => {
-      editorRef.current?.updateOptions({
-        lineNumbersMinChars:
-          dbName.length && !isMultiLine() ? dbName.length * 1.3 : 2
-      })
-    }
-
-    // On each text change, clear warnings and reset countdown to adding warnings
-    const onContentUpdate = (preferRef = false) => {
-      editor.setModelMarkers(
-        editorRef.current?.getModel() as editor.ITextModel,
-        monacoId,
-        []
-      )
-
-      updateGutterCharWidth((preferRef ? useDbRef.current : useDb) || '')
-      debouncedUpdateCode()
-    }
-
-    const addWarnings = (statements: QueryOrCommand[]) => {
-      if (!statements.length) return
-
-      const model = editorRef.current?.getModel() as editor.ITextModel
-
-      // clearing markers again solves issue with incorrect multi-statement warning when user spam clicks setting on and off
-      editor.setModelMarkers(
-        editorRef.current?.getModel() as editor.ITextModel,
-        monacoId,
-        []
-      )
-
-      // add multi statement warning if multi setting is off
-      if (statements.length > 1 && !enableMultiStatementMode) {
-        const secondStatementLine = statements[1].start.line
-        editor.setModelMarkers(model, monacoId, [
-          {
-            startLineNumber: secondStatementLine,
-            startColumn: 1,
-            endLineNumber: secondStatementLine,
-            endColumn: 1000,
-            message:
-              'To use multi statement queries, please enable multi statement in the settings panel.',
-            severity: MarkerSeverity.Warning
-          }
-        ])
-      }
-
-      // add a warning for each notification returned by explain query
-      statements.forEach(statement => {
-        const text = statement.getText()
-        if (!shouldCheckForHints(text)) {
-          return
-        }
-        const statementLineNumber = statement.start.line - 1
-
-        bus.self(
-          CYPHER_REQUEST,
-          {
-            query: EXPLAIN_QUERY_PREFIX + text,
-            queryType: NEO4J_BROWSER_USER_ACTION_QUERY
-          },
-          (response: { result: QueryResult; success?: boolean }) => {
-            if (
-              response.success === true &&
-              response.result.summary.notifications.length > 0
-            ) {
-              editor.setModelMarkers(model, monacoId, [
-                ...editor.getModelMarkers({ owner: monacoId }),
-                ...response.result.summary.notifications.map(
-                  ({ description, position, title }) => {
-                    const line = 'line' in position ? position.line : 0
-                    const column = 'column' in position ? position.column : 0
-                    return {
-                      startLineNumber: statementLineNumber + line,
-                      startColumn:
-                        statement.start.column +
-                        (line === 1
-                          ? column - EXPLAIN_QUERY_PREFIX_LENGTH
-                          : column),
-                      endLineNumber: statement.stop.line,
-                      endColumn: statement.stop.column + 2,
-                      message: title + '\n\n' + description,
-                      severity: MarkerSeverity.Warning
-                    }
+      this.props.bus.self(
+        CYPHER_REQUEST,
+        {
+          query: EXPLAIN_QUERY_PREFIX + text,
+          queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+        },
+        (response: { result: QueryResult; success?: boolean }) => {
+          if (
+            response.success === true &&
+            response.result.summary.notifications.length > 0
+          ) {
+            editor.setModelMarkers(model, this.getMonacoId(), [
+              ...editor.getModelMarkers({ owner: this.getMonacoId() }),
+              ...response.result.summary.notifications.map(
+                ({ description, position, title }) => {
+                  const line = 'line' in position ? position.line : 0
+                  const column = 'column' in position ? position.column : 0
+                  return {
+                    startLineNumber: statementLineNumber + line,
+                    startColumn:
+                      statement.start.column +
+                      (line === 1
+                        ? column - EXPLAIN_QUERY_PREFIX_LENGTH
+                        : column),
+                    endLineNumber: statement.stop.line,
+                    endColumn: statement.stop.column + 2,
+                    message: title + '\n\n' + description,
+                    severity: MarkerSeverity.Warning
                   }
-                )
-              ])
-            }
+                }
+              )
+            ])
           }
-        )
+        }
+      )
+    })
+  }
+
+  componentDidMount = (): void => {
+    this.container = document.getElementById(this.getMonacoId()) ?? undefined
+    if (!this.container) return
+
+    this.editor = editor.create(this.container, {
+      autoClosingOvertype: 'always',
+      contextmenu: false,
+      cursorStyle: 'block',
+      fontFamily: '"Fira Code", Monaco, "Courier New", Terminal, monospace',
+      fontLigatures: this.props.fontLigatures,
+      fontSize: 17,
+      fontWeight: '400',
+      hideCursorInOverviewRuler: true,
+      language: 'cypher',
+      lightbulb: { enabled: false },
+      lineHeight: 23,
+      lineNumbers: (line: number) =>
+        this.isMultiLine() ? line.toString() : `${this.props.useDb || ''}$`,
+      links: false,
+      minimap: { enabled: false },
+      overviewRulerBorder: false,
+      overviewRulerLanes: 0,
+      quickSuggestions: false,
+      renderLineHighlight: 'none',
+      scrollbar: {
+        alwaysConsumeMouseWheel: false,
+        useShadows: false
+      },
+      scrollBeyondLastColumn: 0,
+      scrollBeyondLastLine: false,
+      selectionHighlight: false,
+      value: this.props.value,
+      wordWrap: 'on',
+      wrappingStrategy: 'advanced'
+    })
+
+    this.editor.addCommand(
+      KeyCode.Enter,
+      () => {
+        this.isMultiLine() ? this.newLine() : this.execute()
+      },
+      '!suggestWidgetVisible && !findWidgetVisible'
+    )
+    this.editor.addCommand(
+      KeyCode.UpArrow,
+      this.handleUp,
+      '!suggestWidgetVisible'
+    )
+    this.editor.addCommand(
+      KeyCode.DownArrow,
+      this.handleDown,
+      '!suggestWidgetVisible'
+    )
+    this.editor.addCommand(KeyMod.Shift | KeyCode.Enter, this.newLine)
+    this.editor.addCommand(KeyMod.CtrlCmd | KeyCode.Enter, this.execute)
+    this.editor.addCommand(KeyMod.WinCtrl | KeyCode.Enter, this.execute)
+    this.editor.addCommand(
+      KeyMod.CtrlCmd | KeyCode.UpArrow,
+      this.viewHistoryPrevious
+    )
+    this.editor.addCommand(
+      KeyMod.CtrlCmd | KeyCode.DownArrow,
+      this.viewHistoryNext
+    )
+    this.editor.addCommand(
+      KeyMod.CtrlCmd | KeyCode.US_DOT,
+      this.props.onDisplayHelpKeys
+    )
+    this.editor.addCommand(
+      KeyCode.Escape,
+      this.props.toggleFullscreen,
+      '!suggestWidgetVisible && !findWidgetVisible'
+    )
+
+    this.onContentUpdate()
+
+    this.editor.onDidChangeModelContent(this.onContentUpdate)
+    this.editor.onDidContentSizeChange(() => this.resize(false))
+
+    const resizeObserver = new ResizeObserver(() => {
+      // Wrapped in requestAnimationFrame to avoid the error "ResizeObserver loop limit exceeded"
+      window.requestAnimationFrame(() => {
+        this.editor?.layout()
       })
+    })
+    resizeObserver.observe(this.container)
+
+    /*
+     * This moves the the command palette widget out of of the overflow-guard div where overlay widgets
+     * are located, into the overflowing content widgets div.
+     * This solves the command palette being squashed when the cypher editor is only a few lines high.
+     * The workaround is based on a suggestion found in the github issue: https://github.com/microsoft/monaco-editor/issues/70
+     */
+    const quickInputDOMNode = this.editor.getContribution<
+      { widget: { domNode: HTMLElement } } & editor.IEditorContribution
+    >('editor.controller.quickInput').widget.domNode
+    // @ts-ignore since we use internal APIs
+    this.editor._modelData.view._contentWidgets.overflowingContentWidgetsDomNode.domNode.appendChild(
+      quickInputDOMNode.parentNode?.removeChild(quickInputDOMNode)
+    )
+
+    QuickInputList.prototype.layout = function(maxHeight: number) {
+      this.list.getHTMLElement().style.maxHeight =
+        maxHeight < 200 ? '200px' : Math.floor(maxHeight) + 'px'
+      this.list.layout()
+    }
+  }
+
+  render(): JSX.Element {
+    return <MonacoStyleWrapper id={this.getMonacoId()} />
+  }
+
+  componentDidUpdate(prevProps: MonacoProps): void {
+    const { useDb, fontLigatures, enableMultiStatementMode } = this.props
+    if (fontLigatures !== prevProps.fontLigatures) {
+      this.editor?.updateOptions({ fontLigatures })
     }
 
-    return <MonacoStyleWrapper id={monacoId} />
+    // Line numbers need to be redrawn after db is changed
+    if (useDb !== prevProps.useDb) {
+      const cursorPosition = this.editor?.getPosition() as IPosition
+      this.editor?.setValue(this.editor?.getValue() || '')
+      this.editor?.setPosition(cursorPosition)
+    }
+
+    // If changing multistatement setting, add or remove warnings if needed
+    if (enableMultiStatementMode !== prevProps.enableMultiStatementMode) {
+      this.onContentUpdate()
+    }
   }
-)
+
+  componentWillUnmount = (): void => {
+    this.editor?.dispose()
+    this.debouncedUpdateCode?.cancel()
+  }
+}
 
 export default Monaco

@@ -15,6 +15,7 @@ type SysInfoFrameProps = {
   pageCache: DatabaseMetric[]
   transactions: DatabaseMetric[]
   isEnterpriseEdition: boolean
+  hasMultiDbSupport: boolean
 }
 
 export const SysInfoTable = ({
@@ -23,7 +24,8 @@ export const SysInfoTable = ({
   storeSizes,
   idAllocation,
   transactions,
-  isEnterpriseEdition
+  isEnterpriseEdition,
+  hasMultiDbSupport
 }: SysInfoFrameProps): JSX.Element => {
   const mappedDatabases = [
     {
@@ -54,7 +56,7 @@ export const SysInfoTable = ({
       <StyledSysInfoTable key="Transactions" header="Transactions">
         {buildTableData(transactions)}
       </StyledSysInfoTable>
-      {buildDatabaseTable(mappedDatabases)}
+      {hasMultiDbSupport && buildDatabaseTable(mappedDatabases)}
     </SysInfoTableContainer>
   ) : (
     <div>
@@ -62,7 +64,7 @@ export const SysInfoTable = ({
         Complete sysinfo is available only in Neo4j Enterprise Edition.
       </StyledInfoMessage>
       <SysInfoTableContainer>
-        {buildDatabaseTable(mappedDatabases)}
+        {hasMultiDbSupport && buildDatabaseTable(mappedDatabases)}
       </SysInfoTableContainer>
     </div>
   )
