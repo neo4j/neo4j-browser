@@ -97,7 +97,12 @@ describe('discoveryOnStartupEpic', () => {
         action,
         {
           type: discovery.DONE,
-          discovered: { host: expectedHost }
+          discovered: {
+            host: expectedHost,
+            SSOError: undefined,
+            SSOProviders: [],
+            supportsMultiDb: false
+          }
         }
       ])
       done()
@@ -118,7 +123,15 @@ describe('discoveryOnStartupEpic', () => {
       // Then
       expect(store.getActions()).toEqual([
         action,
-        { type: discovery.DONE, discovered: { host: expectedHost } }
+        {
+          type: discovery.DONE,
+          discovered: {
+            host: expectedHost,
+            SSOError: undefined,
+            SSOProviders: [],
+            supportsMultiDb: false
+          }
+        }
       ])
       done()
     })
@@ -140,7 +153,12 @@ describe('discoveryOnStartupEpic', () => {
         action,
         {
           type: discovery.DONE,
-          discovered: { host: expectedHost }
+          discovered: {
+            host: expectedHost,
+            SSOError: undefined,
+            SSOProviders: [],
+            supportsMultiDb: false
+          }
         }
       ])
       done()
@@ -166,7 +184,12 @@ describe('discoveryOnStartupEpic', () => {
         action,
         {
           type: discovery.DONE,
-          discovered: { host: expectedHost }
+          discovered: {
+            host: expectedHost,
+            SSOError: undefined,
+            SSOProviders: [],
+            supportsMultiDb: false
+          }
         }
       ])
       done()
@@ -180,16 +203,22 @@ describe('discoveryOnStartupEpic', () => {
     // Given
     const action = {
       type: APP_START,
-      url: 'http://localhost/?connectURL=myhost:8888'
+      url: 'http://localhost/?connectURL=neo4j://myhost:8888'
     }
-    const expectedHost = 'myhost:8888'
+    const expectedHost = 'neo4j://myhost:8888'
     bus.take(discovery.DONE, () => {
       // Then
       expect(store.getActions()).toEqual([
         action,
         {
           type: discovery.DONE,
-          discovered: { host: expectedHost, hasForceURL: true }
+          discovered: {
+            host: expectedHost,
+            SSOError: undefined,
+            SSOProviders: [],
+            supportsMultiDb: false,
+            hasForceURL: true
+          }
         }
       ])
       done()
@@ -203,16 +232,22 @@ describe('discoveryOnStartupEpic', () => {
     // Given
     const action = {
       type: APP_START,
-      url: 'http://localhost/?dbms=myhost:8888'
+      url: 'http://localhost/?dbms=neo4j://myhost:8888'
     }
-    const expectedHost = 'myhost:8888'
+    const expectedHost = 'neo4j://myhost:8888'
     bus.take(discovery.DONE, () => {
       // Then
       expect(store.getActions()).toEqual([
         action,
         {
           type: discovery.DONE,
-          discovered: { host: expectedHost, hasForceURL: true }
+          discovered: {
+            host: expectedHost,
+            SSOError: undefined,
+            SSOProviders: [],
+            supportsMultiDb: false,
+            hasForceURL: true
+          }
         }
       ])
       done()
@@ -226,9 +261,9 @@ describe('discoveryOnStartupEpic', () => {
     // Given
     const action = {
       type: APP_START,
-      url: 'http://localhost/?dbms=myhost:8888&db=test'
+      url: 'http://localhost/?dbms=neo4j://myhost:8888&db=test'
     }
-    const expectedHost = 'myhost:8888'
+    const expectedHost = 'neo4j://myhost:8888'
     bus.take(discovery.DONE, () => {
       // Then
       expect(store.getActions()).toEqual([
@@ -239,7 +274,9 @@ describe('discoveryOnStartupEpic', () => {
             host: expectedHost,
             requestedUseDb: 'test',
             hasForceURL: true,
-            supportsMultiDb: true
+            supportsMultiDb: true,
+            SSOError: undefined,
+            SSOProviders: []
           }
         }
       ])
@@ -256,7 +293,7 @@ describe('discoveryOnStartupEpic', () => {
       type: APP_START,
       url: 'http://localhost/?connectURL=bolt%2Brouting%3A%2F%2Fmyhost%3A8889'
     }
-    const expectedHost = 'bolt+routing://myhost:8889'
+    const expectedHost = 'neo4j://myhost:8889'
     bus.take(discovery.DONE, () => {
       // Then
       expect(store.getActions()).toEqual([
@@ -264,8 +301,11 @@ describe('discoveryOnStartupEpic', () => {
         {
           type: discovery.DONE,
           discovered: {
-            hasForceURL: true,
-            host: expectedHost
+            host: expectedHost,
+            SSOError: undefined,
+            SSOProviders: [],
+            supportsMultiDb: false,
+            hasForceURL: true
           }
         }
       ])
@@ -283,7 +323,7 @@ describe('discoveryOnStartupEpic', () => {
       url:
         'http://localhost/?connectURL=bolt%2Brouting%3A%2F%2Fneo4j%3Aneo4j%40myhost%3A8889'
     }
-    const expectedHost = 'bolt+routing://myhost:8889'
+    const expectedHost = 'neo4j://myhost:8889'
     bus.take(discovery.DONE, () => {
       // Then
       expect(store.getActions()).toEqual([
@@ -291,9 +331,12 @@ describe('discoveryOnStartupEpic', () => {
         {
           type: discovery.DONE,
           discovered: {
-            hasForceURL: true,
+            username: 'neo4j',
             host: expectedHost,
-            username: 'neo4j'
+            SSOError: undefined,
+            SSOProviders: [],
+            supportsMultiDb: false,
+            hasForceURL: true
           }
         }
       ])
@@ -338,7 +381,15 @@ describe('discoveryOnStartupEpic cloud env', () => {
       // Then
       expect(store.getActions()).toEqual([
         action,
-        { type: discovery.DONE, discovered: { host: expectedHost } }
+        {
+          type: discovery.DONE,
+          discovered: {
+            host: expectedHost,
+            SSOError: undefined,
+            SSOProviders: [],
+            supportsMultiDb: false
+          }
+        }
       ])
       done()
     })

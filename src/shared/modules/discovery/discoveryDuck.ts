@@ -239,8 +239,9 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
 
       const isAura = isConnectedAuraHost(store.getState())
       mergedDiscoveryData.supportsMultiDb =
-        !isAura &&
-        parseInt((mergedDiscoveryData.neo4j_version || '0').charAt(0)) >= 4
+        !!action.requestedUseDb ||
+        (!isAura &&
+          parseInt((mergedDiscoveryData.neo4j_version || '0').charAt(0)) >= 4)
 
       if (!mergedDiscoveryData.host) {
         authLog('No host found in discovery data, aborting.')
