@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { withBus } from 'react-suber'
 import { fetchGuideFromAllowlistAction } from 'shared/modules/commands/commandsDuck'
 
@@ -38,36 +38,6 @@ import {
 } from 'browser-components/icons/Icons'
 import { splitMdxSlides } from '../Docs/MDX/splitMdx'
 import { LAST_GUIDE_SLIDE } from 'shared/modules/udc/udcDuck'
-import { connect } from 'react-redux'
-import { GlobalState } from 'shared/globalState'
-import { inCloudEnv } from 'shared/modules/app/appDuck'
-import { getEdition, isEnterprise } from 'shared/modules/dbMeta/dbMetaDuck'
-import { PromotionContainer, AuraPromoLink } from './styled'
-import { ThemeContext } from 'styled-components'
-import { DARK_THEME } from 'shared/modules/settings/settingsDuck'
-
-const AuraPromotion = () => {
-  const theme = useContext(ThemeContext)
-  const isDarkTheme = theme.name === DARK_THEME
-
-  return (
-    <PromotionContainer>
-      <AuraPromoLink
-        href="https://neo4j.com/cloud/aura/pricing/?utm_medium=browser&utm_source=ce&utm_campaign=wl_v1"
-        rel="noreferrer"
-        target="_blank"
-      >
-        Sign up
-      </AuraPromoLink>
-      for a free Neo4j cloud instance with
-      <img
-        src={`./assets/images/aura-logo${isDarkTheme ? '-inverted' : ''}.svg`}
-        alt="Neo4j"
-        style={{ marginLeft: '5px', width: '100%', maxWidth: '140px' }}
-      />
-    </PromotionContainer>
-  )
-}
 
 const {
   play: { chapters }
@@ -80,7 +50,7 @@ const checkHtmlForSlides = (html: any) => {
   return !!slides.length
 }
 
-export function PlayFrame({ stack, bus, showPromotion }: any): JSX.Element {
+export function PlayFrame({ stack, bus }: any): JSX.Element {
   const [stackIndex, setStackIndex] = useState(0)
   const [atSlideStart, setAtSlideStart] = useState<boolean | null>(null)
   const [atSlideEnd, setAtSlideEnd] = useState<boolean | null>(null)
@@ -105,8 +75,7 @@ export function PlayFrame({ stack, bus, showPromotion }: any): JSX.Element {
         currentFrame,
         bus,
         onSlide,
-        shouldUseSlidePointer,
-        showPromotion
+        shouldUseSlidePointer
       )
       if (stillMounted) {
         setInitialPlay(false)
@@ -119,7 +88,7 @@ export function PlayFrame({ stack, bus, showPromotion }: any): JSX.Element {
       stillMounted = false
     }
     // The full dependency array causes a re-run which switches to slide 1
-  }, [bus, currentFrame, showPromotion])
+  }, [bus, currentFrame])
 
   const { guide, aside, hasCarousel, isRemote } = guideObj
 
@@ -189,8 +158,7 @@ function generateContent(
   stackFrame: any,
   bus: any,
   onSlide: any,
-  shouldUseSlidePointer: any,
-  showPromotion = false
+  shouldUseSlidePointer: any
 ): any {
   // Not found
   if (stackFrame.response && stackFrame.response.status === 404) {
@@ -274,25 +242,13 @@ function generateContent(
   // Check if content exists locally
   if (isPlayChapter(guideName)) {
     const { content, title, subtitle, slides = null } = chapters[guideName]
-
-    const isPlayStart = stackFrame.cmd.trim() === ':play start'
-    const updatedContent =
-      isPlayStart && showPromotion ? (
-        <>
-          {content}
-          <AuraPromotion />
-        </>
-      ) : (
-        content
-      )
-
     return {
       guide: (
         <Docs
           lastUpdate={stackFrame.ts}
           originFrameId={stackFrame.id}
           withDirectives
-          content={slides ? null : updatedContent}
+          content={slides ? null : content}
           slides={slides ? slides : null}
           initialSlide={initialSlide}
           onSlide={onSlide}
@@ -359,9 +315,4 @@ const unfound = (
   }
 }
 
-const mapStateToProps = (state: GlobalState) => ({
-  showPromotion:
-    getEdition(state) !== null && !isEnterprise(state) && !inCloudEnv(state)
-})
-
-export default connect(mapStateToProps)(withBus(PlayFrame))
+export default withBus(PlayFrame)

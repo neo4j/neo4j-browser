@@ -25,6 +25,7 @@ import { StyledFrameAside } from '../../Frame/styled'
 export const StyledConnectionForm = styled.form`
   padding: 0 15px;
 
+  flex: 1;
   &.isLoading {
     opacity: 0.5;
   }
@@ -149,3 +150,27 @@ export const StyledCode = styled.code`
 `
 
 export const StyledDbsRow = styled.li``
+
+export const StyledFormContainer = styled.div`
+  display: flex;
+`
+
+export const StyledSSOOptions = styled.div`
+  border-right: 1px solid rgb(77, 74, 87, 0.3);
+  padding-right: 60px;
+  margin-right: 60px;
+  margin-left: 30px;
+  max-width: 300px;
+`
+
+export const StyledSSOLogDownload = styled.a`
+  cursor: pointer;
+`
+export const StyledSSOButtonContainer = styled.div`
+  margin-bottom: 12px;
+`
+export const StyledSSOError = styled.div`
+  margin-top: 30px;
+  padding: 3px;
+  white-space: pre-line;
+`
