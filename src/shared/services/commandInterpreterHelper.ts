@@ -104,6 +104,7 @@ import {
 import { unescapeCypherIdentifier } from './utils'
 import { getLatestFromFrameStack } from 'browser/modules/Stream/stream.utils'
 import { resolveGuide } from './guideResolverHelper'
+import { AUTH_STORAGE_LOGS } from 'shared/modules/auth/constants'
 
 const PLAY_FRAME_TYPES = ['play', 'play-remote']
 
@@ -339,7 +340,11 @@ const availableCommands = [
       const out = {
         userCapabilities: getUserCapabilities(store.getState()),
         serverConfig: getAvailableSettings(store.getState()),
-        browserSettings: getSettings(store.getState())
+        browserSettings: getSettings(store.getState()),
+        ssoLogs: sessionStorage
+          .getItem(AUTH_STORAGE_LOGS)
+          ?.trim()
+          .split('\n')
       }
       put(
         frames.add({

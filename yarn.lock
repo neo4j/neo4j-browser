@@ -8326,6 +8326,11 @@ jws@^4.0.0:
     jwa "^2.0.0"
     safe-buffer "^5.0.1"
 
+jwt-decode@^3.1.2:
+  version "3.1.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/jwt-decode/-/jwt-decode-3.1.2.tgz#3fb319f3675a2df0c2895c8f5e9fa4b67b04ed59"
+  integrity sha1-P7MZ82daLfDCiVyPXp+ktnsE7Vk=
+
 keyboard-key@^1.0.4:
   version "1.1.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/keyboard-key/-/keyboard-key-1.1.0.tgz#6f2e8e37fa11475bb1f1d65d5174f1b35653f5b7"

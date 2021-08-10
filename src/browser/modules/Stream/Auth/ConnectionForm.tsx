@@ -345,6 +345,8 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
             this
           )}
           host={host}
+          SSOError={this.state.SSOError}
+          SSOProviders={this.state.SSOProviders || []}
           username={this.state.username}
           password={this.state.password}
           database={this.state.requestedUseDb}

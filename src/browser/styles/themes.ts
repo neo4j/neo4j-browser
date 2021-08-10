@@ -40,6 +40,10 @@ export const base = {
   neo4jBlue: '#018BFF',
   darkBlue: '#0056B3',
 
+  // Design system colors
+  primary: '#018BFF',
+  primary50: '#0070d9',
+
   // Backgrounds
   primaryBackground: '#D2D5DA',
   secondaryBackground: '#fff',
