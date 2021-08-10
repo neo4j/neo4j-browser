@@ -5,14 +5,20 @@ import SetupLabelProperties from 'project-root/src/browser/modules/D3Visualizati
 import { camelCase, cloneDeep } from 'lodash-es'
 import { ApplyButton, SimpleButton } from '../styled'
 import SetupLabelDisplaySettings, {
+  includePropertyNameKey,
   ISetupLabelDisplaySettingsOnChange,
   setupLabelDisplaySettingsOptions
 } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelDisplaySettings'
-import { usePrevious } from 'browser-hooks/hooks'
 
 const SetupLabelButton = styled.button`
-  padding: 2px 4px;
+  padding: 4px 8px;
+  font-weight: bold;
+  border-radius: 1px;
+  vertical-align: middle;
+  border: 0;
+  background: ${({ theme }) => theme.primaryButtonBackground};
 `
+
 const PreviewNodeContainer = styled.div<{
   backgroundColor?: string
   borderColor?: string
@@ -88,20 +94,32 @@ interface IProps {
     'text-color-internal': string
   }
   propertyKeys: string[]
-  updateStyle: (style: ICaptionSettings) => void
+  updateStyle: (style?: ICaptionSettings) => void
 }
 
-const SetupLabelModal: React.FC<IProps> = props => {
+const SetupLabelModalContainer: React.FC<IProps> = props => {
+  const [open, setOpen] = React.useState(false)
+  const doOpen = React.useCallback(() => setOpen(true), [])
+  const doClose = React.useCallback(() => setOpen(false), [])
+
+  return (
+    <div>
+      <ApplyButton onClick={doOpen}>Setup Label</ApplyButton>
+      {open && <SetupLabelModal doClose={doClose} {...props} />}
+    </div>
+  )
+}
+
+const SetupLabelModal: React.FC<IProps & { doClose: () => void }> = props => {
   const {
     selector,
     propertyKeys,
     itemStyle,
     updateStyle,
-    captionSettings
+    captionSettings,
+    doClose
   } = props
-  const [open, setOpen] = React.useState(false)
-  const doOpen = React.useCallback(() => setOpen(true), [])
-  const doClose = React.useCallback(() => setOpen(false), [])
+
   const [selectedLabel, setSelectedLabel] = React.useState(LabelPosition.middle)
   const title = selector.classes[0] ?? selector.tag
 
@@ -116,14 +134,23 @@ const SetupLabelModal: React.FC<IProps> = props => {
     }
   }, [selectedLabel])
 
+  const doReset = React.useCallback(() => {
+    updateStyle(undefined)
+    doClose()
+  }, [updateStyle])
+
   const getInitialCaptionSettings: () => ICaptionSettings = React.useCallback(() => {
     if (captionSettings) {
       return cloneDeep(captionSettings)
     } else {
+      const middle = cloneDeep(itemStyle)
+      const top = cloneDeep(itemStyle)
+      delete top.caption
+      const bottom = cloneDeep(top)
       return {
-        [LabelPosition.top]: {},
-        [LabelPosition.middle]: cloneDeep(itemStyle),
-        [LabelPosition.bottom]: {}
+        [LabelPosition.top]: top,
+        [LabelPosition.middle]: middle,
+        [LabelPosition.bottom]: bottom
       }
     }
   }, [captionSettings, itemStyle])
@@ -131,13 +158,6 @@ const SetupLabelModal: React.FC<IProps> = props => {
   const [currentCaptionSettings, setCurrentCaptionSettings] = React.useState<
     ICaptionSettings
   >(getInitialCaptionSettings())
-
-  const prevTitle = usePrevious(title)
-  React.useEffect(() => {
-    if (title !== prevTitle) {
-      setCurrentCaptionSettings(getInitialCaptionSettings)
-    }
-  }, [prevTitle, title, getInitialCaptionSettings])
 
   const displayCaption: (
     captionSettings: ICurrentCaptionItem
@@ -193,51 +213,47 @@ const SetupLabelModal: React.FC<IProps> = props => {
     [selectedLabel]
   )
   return (
-    <div>
-      <SetupLabelButton onClick={doOpen}>Setup Label</SetupLabelButton>
-      <GenericModal
-        isOpen={open}
-        onRequestClose={doClose}
-        contentLabel={'Label setup'}
+    <GenericModal
+      isOpen={true}
+      onRequestClose={doClose}
+      contentLabel={'Label setup'}
+    >
+      <PreviewNodeContainer
+        backgroundColor={itemStyle.color}
+        borderColor={itemStyle['border-color']}
+        textColor={itemStyle['text-color-internal']}
       >
-        <PreviewNodeContainer
-          backgroundColor={itemStyle.color}
-          borderColor={itemStyle['border-color']}
-          textColor={itemStyle['text-color-internal']}
-        >
-          {allLabelPositions.map(position => (
-            <PreviewLabel
-              onClick={setSelectedLabel}
-              selectedLabel={selectedLabel}
-              position={position}
-              style={currentCaptionSettings[position]}
-              key={position}
-            >
-              {displayCaption(currentCaptionSettings[position])}
-            </PreviewLabel>
-          ))}
-        </PreviewNodeContainer>
-        <RightColumn>
-          <h4>{title}</h4>
-          <div>{labelHeader}</div>
-          <SetupLabelDisplaySettings
-            itemStyle={currentCaptionSettings[selectedLabel]}
-            onChange={handleDisplaySettingsChange}
-          />
-        </RightColumn>
-        <SetupLabelProperties
-          propertyKeys={propertyKeys}
-          selectedCaption={displayCaption(
-            currentCaptionSettings[selectedLabel]
-          )}
-          onChange={handleRadioInputChange}
+        {allLabelPositions.map(position => (
+          <PreviewLabel
+            onClick={setSelectedLabel}
+            selectedLabel={selectedLabel}
+            position={position}
+            style={currentCaptionSettings[position]}
+            key={position}
+          >
+            {displayCaption(currentCaptionSettings[position])}
+          </PreviewLabel>
+        ))}
+      </PreviewNodeContainer>
+      <RightColumn>
+        <h4>{title}</h4>
+        <div>{labelHeader}</div>
+        <SetupLabelDisplaySettings
+          itemStyle={currentCaptionSettings[selectedLabel]}
+          onChange={handleDisplaySettingsChange}
         />
-        <MarginContainer>
-          <ApplyButton onClick={handleApply}>Apply</ApplyButton>
-          <SimpleButton onClick={doClose}>Cancel</SimpleButton>
-        </MarginContainer>
-      </GenericModal>
-    </div>
+      </RightColumn>
+      <SetupLabelProperties
+        propertyKeys={propertyKeys}
+        selectedCaption={displayCaption(currentCaptionSettings[selectedLabel])}
+        onChange={handleRadioInputChange}
+      />
+      <MarginContainer>
+        <ApplyButton onClick={handleApply}>Apply</ApplyButton>
+        <SimpleButton onClick={doClose}>Cancel</SimpleButton>
+        <SimpleButton onClick={doReset}>Reset to default</SimpleButton>
+      </MarginContainer>
+    </GenericModal>
   )
 }
 const PreviewLabel: React.FC<{
@@ -248,7 +264,6 @@ const PreviewLabel: React.FC<{
     [key: string]: string
   }
 }> = ({ selectedLabel, position, onClick, style, children }) => {
-  const includePropertyKey = 'include-property-name'
   const handleClick = React.useCallback(() => onClick(position), [
     onClick,
     position
@@ -259,7 +274,7 @@ const PreviewLabel: React.FC<{
     } = {}
     setupLabelDisplaySettingsOptions.forEach(option => {
       if (style[option.key]) {
-        if (includePropertyKey !== option.key) {
+        if (includePropertyNameKey !== option.key) {
           result[camelCase(option.key)] = option.value
         }
       }
@@ -274,10 +289,10 @@ const PreviewLabel: React.FC<{
       {children && (
         <span style={textStyle}>
           {children}
-          {style[includePropertyKey] ? ': value' : ''}
+          {style[includePropertyNameKey] ? ': value' : ''}
         </span>
       )}
     </PreviewLabelButton>
   )
 }
-export default SetupLabelModal
+export default SetupLabelModalContainer

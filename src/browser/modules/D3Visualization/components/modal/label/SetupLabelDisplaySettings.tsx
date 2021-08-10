@@ -25,10 +25,10 @@ const DisplaySpan = styled.span`
 const Input = styled.input`
   vertical-align: middle;
 `
-export const includePopertyNameKey = 'include-property-name'
+export const includePropertyNameKey = 'include-property-name'
 export const setupLabelDisplaySettingsOptions: IOption[] = [
   {
-    key: includePopertyNameKey,
+    key: includePropertyNameKey,
     value: 'true',
     description: <DisplaySpan>Include property name</DisplaySpan>
   },
