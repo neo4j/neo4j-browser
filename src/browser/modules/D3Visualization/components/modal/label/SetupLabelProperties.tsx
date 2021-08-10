@@ -6,7 +6,10 @@ interface IProps {
   selectedCaption: string
   onChange: (value: string) => void
 }
-
+const ScrollDiv = styled.div`
+  max-height: 250px;
+  overflow-y: auto;
+`
 const PropertyLabel = styled.label`
   display: block;
   vertical-align: middle;
@@ -48,7 +51,7 @@ const SetupLabelProperties: React.FC<IProps> = ({
   )
   const inputName = 'property'
   return (
-    <div>
+    <ScrollDiv>
       <PropertyLabel>
         <PropertyRadio
           type={'radio'}
@@ -71,7 +74,7 @@ const SetupLabelProperties: React.FC<IProps> = ({
           <PropertyLabelSpan>{displayValue}</PropertyLabelSpan>
         </PropertyLabel>
       ))}
-    </div>
+    </ScrollDiv>
   )
 }
 
