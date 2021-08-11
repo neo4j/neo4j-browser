@@ -12,6 +12,7 @@ export interface INeighboursPickerItem {
   amount: number
   type: string
   direction: 'IN' | 'OUT'
+  labelsSet: Set<string>
   items: IDisplayRelMapItem[]
 }
 
@@ -22,6 +23,7 @@ interface IProps {
   setActiveItem: (item: INeighboursPickerItem | null) => void
   displayNodeName: IDisplayNodeNameFunc
 }
+
 const Label = styled.label`
   cursor: pointer;
 `
@@ -29,9 +31,10 @@ const Input = styled.input`
   margin-right: 5px;
   vertical-align: middle;
 `
-const TD = styled.td`
+const TD = styled.td<{ textAlign?: 'center' }>`
   padding: 5px 10px;
   white-space: nowrap;
+  text-align: ${({ textAlign }) => (textAlign ? textAlign : 'inherit')};
 `
 
 const MotionTR: React.FC = ({ children }) => (
@@ -86,7 +89,9 @@ const NeighboursPickerItem: React.FC<IProps> = ({
       })
     } else {
       item.items.forEach(nested => {
-        selection.push(nested.id)
+        if (!selection.includes(nested.id)) {
+          selection.push(nested.id)
+        }
       })
     }
     onUpdate()
@@ -96,7 +101,9 @@ const NeighboursPickerItem: React.FC<IProps> = ({
     e => {
       const id = e.target.dataset.id ?? ''
       if (e.target.checked) {
-        selection.push(id)
+        if (!selection.includes(id)) {
+          selection.push(id)
+        }
       } else {
         const index = selection.indexOf(id)
         if (index !== -1) {
@@ -134,7 +141,11 @@ const NeighboursPickerItem: React.FC<IProps> = ({
         </TD>
         <TD>{item.direction === 'OUT' ? <ArrowRight /> : <ArrowLeft />}</TD>
         <TD>{item.type}</TD>
-        <TD>{item.items[0].node?.labels.join(' ')}</TD>
+        <TD textAlign={'center'}>
+          {Array.from(item.labelsSet).map(t => (
+            <div key={t}>{t}</div>
+          ))}
+        </TD>
         <TD>
           {item.items.length === 1 ? (
             displayNodeName(item.items[0].node)
@@ -160,6 +171,11 @@ const NeighboursPickerItem: React.FC<IProps> = ({
                   />
                   {displayNodeName(t.node)}
                 </Label>
+              </TD>
+              <TD textAlign={'center'}>
+                {t.node?.labels.map(t => (
+                  <div key={t}>{t}</div>
+                ))}
               </TD>
             </MotionTR>
           ))}

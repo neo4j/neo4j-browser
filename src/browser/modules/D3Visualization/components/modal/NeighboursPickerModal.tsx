@@ -115,34 +115,29 @@ const NeighboursPickerModal: React.FC<INeighboursPickerPopoverProps> = ({
       }
       return result
     })
+
     return flatten(
       relMap.map(currentMap =>
-        Object.keys(currentMap).map(type => ({
-          id: currentMap[type][0].id,
-          amount: currentMap[type].length,
-          type,
-          direction: currentMap[type][0].direction,
-          items: currentMap[type].sort((a, b) =>
+        Object.keys(currentMap).map(type => {
+          const labelsSet = new Set<string>()
+          const items = currentMap[type].sort((a, b) =>
             displayNodeName(a.node) > displayNodeName(b.node) ? 1 : -1
           )
-        }))
+          items.forEach(item => {
+            item.node?.labels.forEach(label => labelsSet.add(label))
+          })
+          return {
+            id: currentMap[type][0].id,
+            amount: currentMap[type].length,
+            type,
+            labelsSet,
+            direction: currentMap[type][0].direction,
+            items
+          }
+        })
       )
     ).sort((a, b) => (a.type > b.type ? 1 : -1))
   }, [nodes, relationships, node])
-
-  // const handleChange = React.useCallback(
-  //   (e: React.ChangeEvent<HTMLInputElement>) => {
-  //     const id: string = e.target.dataset.id + ''
-  //     const index = selection.indexOf(id)
-  //     if (index === -1) {
-  //       selection.push(id)
-  //     } else {
-  //       selection.splice(index, 1)
-  //     }
-  //     forceUpdate()
-  //   },
-  //   []
-  // )
 
   const handleApply = React.useCallback(() => {
     const filteredRelationships = relationships.filter(t =>
@@ -170,7 +165,7 @@ const NeighboursPickerModal: React.FC<INeighboursPickerPopoverProps> = ({
     }),
     [node]
   )
-  console.log(options, relationships, nodes, node)
+  // console.log(options, relationships, nodes, node)
   return (
     <GenericModal
       isOpen={true}
