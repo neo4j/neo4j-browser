@@ -203,34 +203,9 @@ export class GrassEditorComponent extends Component<any> {
   labelPicker(
     selector: any,
     styleForItem: any,
-    propertyKeys: any,
+    propertyKeys: string[],
     showTypeSelector = false
   ) {
-    // const captionSelector = (displayCaption: string, captionToSave: string) => {
-    //   const onClick = () => {
-    //     this.updateStyle(selector, { caption: captionToSave })
-    //   }
-    //   const active = styleForItem.props.caption === captionToSave
-    //   return (
-    //     <StyledPickerListItem key={toKeyString('caption' + displayCaption)}>
-    //       <StyledCaptionSelector
-    //         className={active ? 'active' : ''}
-    //         onClick={onClick}
-    //       >
-    //         {displayCaption}
-    //       </StyledCaptionSelector>
-    //     </StyledPickerListItem>
-    //   )
-    // }
-    // const captionSelectors = propertyKeys.map((propKey: any) => {
-    //   return captionSelector(propKey, `{${propKey}}`)
-    // })
-    // let typeCaptionSelector = null
-    // if (showTypeSelector) {
-    //   typeCaptionSelector = captionSelector('<type>', '<type>')
-    // }
-    if (showTypeSelector) {
-    }
     return (
       <StyledInlineListItem key="label-picker">
         <StyledInlineList className="label-picker picker">
@@ -239,6 +214,7 @@ export class GrassEditorComponent extends Component<any> {
             itemStyle={styleForItem.props}
             captionSettings={styleForItem.props?.captionSettings}
             propertyKeys={propertyKeys}
+            showTypeSelector={showTypeSelector}
             updateStyle={captionSettings =>
               this.updateStyle(selector, { captionSettings })
             }
@@ -332,6 +308,12 @@ export class GrassEditorComponent extends Component<any> {
         color: styleForRelType.get('text-color-internal')
       }
       pickers = [
+        this.labelPicker(
+          styleForRelType.selector,
+          styleForRelType,
+          this.props.selectedRelType.propertyKeys,
+          true
+        ),
         this.colorPicker(styleForRelType.selector, styleForRelType),
         this.widthPicker(styleForRelType.selector, styleForRelType),
         this.captionPicker(

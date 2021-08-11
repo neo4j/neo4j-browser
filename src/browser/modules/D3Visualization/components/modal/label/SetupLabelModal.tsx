@@ -94,6 +94,7 @@ interface IProps {
     'text-color-internal': string
   }
   propertyKeys: string[]
+  showTypeSelector: boolean
   updateStyle: (style?: ICaptionSettings) => void
 }
 
@@ -117,7 +118,8 @@ const SetupLabelModal: React.FC<IProps & { doClose: () => void }> = props => {
     itemStyle,
     updateStyle,
     captionSettings,
-    doClose
+    doClose,
+    showTypeSelector
   } = props
 
   const [selectedLabel, setSelectedLabel] = React.useState(LabelPosition.middle)
@@ -244,6 +246,7 @@ const SetupLabelModal: React.FC<IProps & { doClose: () => void }> = props => {
         />
       </RightColumn>
       <SetupLabelProperties
+        showTypeSelector={showTypeSelector}
         propertyKeys={propertyKeys}
         selectedCaption={displayCaption(currentCaptionSettings[selectedLabel])}
         onChange={handleRadioInputChange}
