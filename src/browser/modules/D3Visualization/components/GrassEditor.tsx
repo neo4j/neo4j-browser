@@ -40,6 +40,7 @@ export class GrassEditorComponent extends Component<any> {
   nodeDisplaySizes: any
   picker: any
   widths: any
+
   constructor(props: any) {
     super(props)
     this.graphStyle = neoGraphStyle()
@@ -53,6 +54,7 @@ export class GrassEditorComponent extends Component<any> {
       this.widths.push(`${5 + 3 * index}px`)
     }
   }
+
   sizeLessThan(size1: any, size2: any) {
     const size1Numerical = size1 ? size1.replace('px', '') + 0 : 0
     const size2Numerical = size1 ? size2.replace('px', '') + 0 : 0
@@ -278,6 +280,8 @@ export class GrassEditorComponent extends Component<any> {
         backgroundColor: styleForLabel.get('color'),
         color: styleForLabel.get('text-color-internal')
       }
+      const displayCaptionPicker =
+        styleForLabel.props?.captionSettings === undefined // do not show caption picker if label settings are set
       pickers = [
         this.labelPicker(
           styleForLabel.selector,
@@ -285,13 +289,17 @@ export class GrassEditorComponent extends Component<any> {
           this.props.selectedLabel.propertyKeys
         ),
         this.colorPicker(styleForLabel.selector, styleForLabel),
-        this.sizePicker(styleForLabel.selector, styleForLabel),
-        this.captionPicker(
-          styleForLabel.selector,
-          styleForLabel,
-          this.props.selectedLabel.propertyKeys
-        )
+        this.sizePicker(styleForLabel.selector, styleForLabel)
       ]
+      if (displayCaptionPicker) {
+        pickers.push(
+          this.captionPicker(
+            styleForLabel.selector,
+            styleForLabel,
+            this.props.selectedLabel.propertyKeys
+          )
+        )
+      }
       title = (
         <StyledLabelToken className="token token-label" style={inlineStyle}>
           {this.props.selectedLabel.label || '*'}
@@ -355,6 +363,7 @@ export class GrassEditorComponent extends Component<any> {
     return this.stylePicker()
   }
 }
+
 const mapStateToProps = (state: any) => {
   return {
     graphStyleData: actions.getGraphStyleData(state),
