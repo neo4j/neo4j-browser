@@ -9,15 +9,7 @@ import SetupLabelDisplaySettings, {
   ISetupLabelDisplaySettingsOnChange,
   setupLabelDisplaySettingsOptions
 } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelDisplaySettings'
-
-const SetupLabelButton = styled.button`
-  padding: 4px 8px;
-  font-weight: bold;
-  border-radius: 1px;
-  vertical-align: middle;
-  border: 0;
-  background: ${({ theme }) => theme.primaryButtonBackground};
-`
+import SetupLabelRelArrowSVG from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelRelArrowSVG'
 
 const PreviewNodeContainer = styled.div<{
   backgroundColor?: string
@@ -34,6 +26,15 @@ const PreviewNodeContainer = styled.div<{
   text-align: center;
   display: inline-block;
   vertical-align: top;
+`
+
+const PreviewRelContainer = styled.div`
+  padding: 30px 0;
+  text-align: center;
+  display: inline-block;
+  vertical-align: top;
+  width: 150px;
+  height: 150px;
 `
 const PreviewLabelButton = styled.button<{ isSelected?: boolean }>`
   display: block;
@@ -96,6 +97,7 @@ interface IProps {
   propertyKeys: string[]
   showTypeSelector: boolean
   updateStyle: (style?: ICaptionSettings) => void
+  isNode: boolean
 }
 
 const SetupLabelModalContainer: React.FC<IProps> = props => {
@@ -119,7 +121,8 @@ const SetupLabelModal: React.FC<IProps & { doClose: () => void }> = props => {
     updateStyle,
     captionSettings,
     doClose,
-    showTypeSelector
+    showTypeSelector,
+    isNode
   } = props
 
   const [selectedLabel, setSelectedLabel] = React.useState(LabelPosition.middle)
@@ -214,29 +217,45 @@ const SetupLabelModal: React.FC<IProps & { doClose: () => void }> = props => {
     },
     [selectedLabel]
   )
+
+  const labelsNodes = allLabelPositions.map(position => (
+    <PreviewLabel
+      onClick={setSelectedLabel}
+      selectedLabel={selectedLabel}
+      position={position}
+      style={currentCaptionSettings[position]}
+      key={position}
+    >
+      {displayCaption(currentCaptionSettings[position])}
+    </PreviewLabel>
+  ))
+
+  let nodeOrRelDiv
+  if (isNode) {
+    nodeOrRelDiv = (
+      <PreviewNodeContainer
+        backgroundColor={itemStyle.color}
+        borderColor={itemStyle['border-color']}
+        textColor={itemStyle['text-color-internal']}
+      >
+        {labelsNodes}
+      </PreviewNodeContainer>
+    )
+  } else {
+    nodeOrRelDiv = (
+      <PreviewRelContainer>
+        <SetupLabelRelArrowSVG />
+        {labelsNodes}
+      </PreviewRelContainer>
+    )
+  }
   return (
     <GenericModal
       isOpen={true}
       onRequestClose={doClose}
       contentLabel={'Label setup'}
     >
-      <PreviewNodeContainer
-        backgroundColor={itemStyle.color}
-        borderColor={itemStyle['border-color']}
-        textColor={itemStyle['text-color-internal']}
-      >
-        {allLabelPositions.map(position => (
-          <PreviewLabel
-            onClick={setSelectedLabel}
-            selectedLabel={selectedLabel}
-            position={position}
-            style={currentCaptionSettings[position]}
-            key={position}
-          >
-            {displayCaption(currentCaptionSettings[position])}
-          </PreviewLabel>
-        ))}
-      </PreviewNodeContainer>
+      {nodeOrRelDiv}
       <RightColumn>
         <h4>{title}</h4>
         <div>{labelHeader}</div>

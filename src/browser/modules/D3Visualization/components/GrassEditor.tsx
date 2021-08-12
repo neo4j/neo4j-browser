@@ -206,7 +206,8 @@ export class GrassEditorComponent extends Component<any> {
     selector: any,
     styleForItem: any,
     propertyKeys: string[],
-    showTypeSelector = false
+    showTypeSelector = false,
+    isNode = true
   ) {
     return (
       <StyledInlineListItem key="label-picker">
@@ -220,6 +221,7 @@ export class GrassEditorComponent extends Component<any> {
             updateStyle={captionSettings =>
               this.updateStyle(selector, { captionSettings })
             }
+            isNode={isNode}
           />
         </StyledInlineList>
       </StyledInlineListItem>
@@ -320,7 +322,8 @@ export class GrassEditorComponent extends Component<any> {
           styleForRelType.selector,
           styleForRelType,
           this.props.selectedRelType.propertyKeys,
-          true
+          true,
+          false
         ),
         this.colorPicker(styleForRelType.selector, styleForRelType),
         this.widthPicker(styleForRelType.selector, styleForRelType),
