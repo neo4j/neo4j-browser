@@ -1,6 +1,6 @@
 import {
   getCredentialsFromAuthResult,
-  getInitializationParameters,
+  getInitialisationParameters,
   temporarilyStoreUrlSearchParams
 } from './common'
 import {
@@ -140,7 +140,7 @@ export const handleAuthFromRedirect = SSOProviders =>
       code,
       state,
       error
-    } = getInitializationParameters()
+    } = getInitialisationParameters()
 
     authLog('Handling auth redirect from SSO server')
 
