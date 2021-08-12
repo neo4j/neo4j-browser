@@ -142,7 +142,7 @@ export const handleAuthFromRedirect = SSOProviders =>
       error
     } = getInitialisationParameters()
 
-    authLog('Handling auth rediret from SSO server')
+    authLog('Handling auth redirect from SSO server')
 
     removeSearchParamsInBrowserHistory(searchParamsToRemoveAfterAuthRedirect)
 
@@ -179,7 +179,7 @@ export const handleAuthFromRedirect = SSOProviders =>
     }
 
     if ((tokenType || '').toLowerCase() === BEARER && accessToken) {
-      authLog('Successfully aquired access_token in "implicit flow"')
+      authLog('Successfully acquired access_token in "implicit flow"')
 
       authDebug('Implicit flow id_token', idToken)
       authDebug('Implicit flow access_token', accessToken)
@@ -205,7 +205,7 @@ export const handleAuthFromRedirect = SSOProviders =>
             const errorMsg = `Error detected after auth token request, aborting. Error: ${errorType}, Error description: ${errorDesc}`
             reject(new Error(errorMsg))
           } else {
-            authLog('Successfully aquired token results')
+            authLog('Successfully acquired token results')
             authDebug('PKCE flow result', body)
 
             try {
@@ -222,7 +222,7 @@ export const handleAuthFromRedirect = SSOProviders =>
         .catch(err => {
           reject(
             new Error(
-              `Aquiring token results for PKCE auth flow failed, err: ${err}`
+              `Acquiring token results for PKCE auth flow failed, err: ${err}`
             )
           )
         })
