@@ -274,7 +274,7 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
           authLog(err.message)
         }
       } else if (wasRedirectedBackFromSSOServer()) {
-        authLog('Handling auth_flow_step redirect')
+        authLog('Initialising auth_flow_step redirect')
 
         try {
           const creds = (await handleAuthFromRedirect(
