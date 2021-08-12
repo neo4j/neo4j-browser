@@ -8299,10 +8299,10 @@ jsx-ast-utils@^2.4.1:
     array-includes "^3.1.1"
     object.assign "^4.1.0"
 
-jszip@^3.2.2:
-  version "3.5.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/jszip/-/jszip-3.5.0.tgz#b4fd1f368245346658e781fec9675802489e15f6"
-  integrity sha1-tP0fNoJFNGZY54H+yWdYAkieFfY=
+jszip@^3.7.0:
+  version "3.7.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/jszip/-/jszip-3.7.0.tgz#9b8b995a4e7c9024653ce743e902076a82fdf4e6"
+  integrity sha1-m4uZWk58kCRlPOdD6QIHaoL99OY=
   dependencies:
     lie "~3.3.0"
     pako "~1.0.2"
