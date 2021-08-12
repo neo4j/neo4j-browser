@@ -13,7 +13,7 @@ import {
   mandatoryKeysForSSOProviders
 } from './settings'
 
-export const getInitialisationParameters = () => {
+export const getInitializationParameters = () => {
   const urlSearchParams = window.location.search
   const urlHashParamsAsSearchParams = '?' + window.location.hash.substring(1)
 
@@ -141,7 +141,7 @@ export const getCredentialsFromAuthResult = (result, selectedSSOProvider) => {
 }
 
 export const temporarilyStoreUrlSearchParams = () => {
-  const currentBrowserURLParams = getInitialisationParameters()
+  const currentBrowserURLParams = getInitializationParameters()
   authLog(
     `Temporarily storing the url search params. data: "${JSON.stringify(
       currentBrowserURLParams
@@ -159,7 +159,7 @@ export const getSSOServerIdIfShouldRedirect = () => {
 }
 
 export const wasRedirectedBackFromSSOServer = () => {
-  const { auth_flow_step: authFlowStep } = getInitialisationParameters()
+  const { auth_flow_step: authFlowStep } = getInitializationParameters()
   return (authFlowStep || '').toLowerCase() === REDIRECT_URI
 }
 

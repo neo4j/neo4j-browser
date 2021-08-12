@@ -1,6 +1,6 @@
 import {
   getCredentialsFromAuthResult,
-  getInitialisationParameters,
+  getInitializationParameters,
   temporarilyStoreUrlSearchParams
 } from './common'
 import {
@@ -26,7 +26,7 @@ import {
 } from './settings'
 
 export const authRequestForSSO = async selectedSSOProvider => {
-  authLog('Initialising auth redirect request for SSO')
+  authLog('Initializing auth redirect request for SSO')
   if (!selectedSSOProvider) {
     throw new Error('Could not find SSO provider')
   }
@@ -140,7 +140,7 @@ export const handleAuthFromRedirect = SSOProviders =>
       code,
       state,
       error
-    } = getInitialisationParameters()
+    } = getInitializationParameters()
 
     authLog('Handling auth redirect from SSO server')
 
