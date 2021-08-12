@@ -13165,10 +13165,10 @@ url-loader@^1.1.2:
     mime "^2.0.3"
     schema-utils "^1.0.0"
 
-url-parse@^1.1.9, url-parse@^1.4.3:
-  version "1.4.7"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/url-parse/-/url-parse-1.4.7.tgz#a8a83535e8c00a316e403a5db4ac1b9b853ae278"
-  integrity sha1-qKg1NejACjFuQDpdtKwbm4U64ng=
+url-parse@^1.4.3, url-parse@^1.5.2:
+  version "1.5.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/url-parse/-/url-parse-1.5.2.tgz#a4eff6fd5ff9fe6ab98ac1f79641819d13247cda"
+  integrity sha1-pO/2/V/5/mq5isH3lkGBnRMkfNo=
   dependencies:
     querystringify "^2.1.1"
     requires-port "^1.0.0"
