@@ -76,4 +76,11 @@ describe('Data export', () => {
       })
     })
   })
+
+  it('can export history', () => {
+    cy.executeCommand(':clear')
+    cy.executeCommand(':history')
+    cy.get('[data-testid="exportGrassButton"]').should('not.exist')
+    cy.get('[data-testid="exportHistoryButton"]').should('not.exist')
+  })
 })
