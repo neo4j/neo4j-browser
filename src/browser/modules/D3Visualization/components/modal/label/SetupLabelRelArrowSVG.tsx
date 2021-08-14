@@ -8,12 +8,18 @@ const SVG = styled.svg`
   width: 150px;
   pointer-events: none;
 `
+const Line = styled.line`
+  stroke: ${({ theme }) => theme.primaryText};
+`
+const Path = styled.path`
+  fill: ${({ theme }) => theme.primaryText};
+`
 const y = 5
 const strokeWidth = 4
 
 const SetupLabelRelArrowSVG: React.FC = () => (
   <SVG>
-    <line
+    <Line
       x1={0}
       x2={20}
       y1={y}
@@ -21,7 +27,7 @@ const SetupLabelRelArrowSVG: React.FC = () => (
       strokeWidth={strokeWidth}
       stroke={'#FFF'}
     />
-    <line
+    <Line
       x1={130}
       x2={141}
       y1={y}
@@ -29,7 +35,7 @@ const SetupLabelRelArrowSVG: React.FC = () => (
       strokeWidth={strokeWidth}
       stroke={'#FFF'}
     />
-    <path d={`M 140 0 L 150 ${y} L 140 ${y * 2} Z`} fill={'#FFF'} />
+    <Path d={`M 140 0 L 150 ${y} L 140 ${y * 2} Z`} fill={'#FFF'} />
   </SVG>
 )
 

@@ -42,11 +42,51 @@ export default class NeoD3Geometry {
     )
   }
 
+  formatMultipleRelationshipCaption(
+    relationship: any,
+    captionSettings: ICaptionSettings
+  ) {
+    if (captionSettings) {
+      relationship.captionSettingsArray = []
+      allLabelPositions.forEach(position => {
+        const currentStyle = captionSettings[position]
+        let caption = this.style.interpolate(currentStyle.caption, relationship)
+        if (currentStyle[includePropertyNameKey]) {
+          caption = `${currentStyle.caption.replace(/[{}]/g, '')}: ` + caption
+        }
+        if (currentStyle.caption) {
+          relationship.captionSettingsArray.push(
+            Object.assign({}, currentStyle, {
+              caption,
+              yOffset: 0
+            })
+          )
+        }
+      })
+      const arrLength = relationship.captionSettingsArray.length
+      switch (arrLength) {
+        case 2:
+          relationship.captionSettingsArray[0].yOffset = -4
+          relationship.captionSettingsArray[1].yOffset = 4
+          break
+        case 3:
+          relationship.captionSettingsArray[0].yOffset = -8
+          relationship.captionSettingsArray[2].yOffset = 8
+          break
+      }
+    }
+  }
+
   formatRelationshipCaptions(relationships: any[]) {
     return (() => {
       const result = []
       for (const relationship of Array.from(relationships)) {
-        const template = this.style.forRelationship(relationship).get('caption')
+        const currentStyle = this.style.forRelationship(relationship)
+        const template = currentStyle.get('caption')
+        this.formatMultipleRelationshipCaption(
+          relationship,
+          currentStyle.get('captionSettings')
+        )
         result.push(
           (relationship.caption = this.style.interpolate(
             template,

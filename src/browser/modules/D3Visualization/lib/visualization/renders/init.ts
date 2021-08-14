@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import Renderer from '../components/renderer'
+import * as d3 from 'd3'
+
 const noop = function() {}
 
 const nodeRingStrokeSize = 8
@@ -180,6 +182,9 @@ const relationshipType = new Renderer({
       .append('text')
       .attr({ 'text-anchor': 'middle' })
       .attr({ 'pointer-events': 'none' })
+      .attr('class', (d: any) =>
+        d.captionSettingsArray != undefined ? 'multi-text' : 'single-text'
+      )
 
     texts
       .attr('font-size', (rel: any) =>
@@ -188,6 +193,23 @@ const relationshipType = new Renderer({
       .attr('fill', (rel: any) =>
         viz.style.forRelationship(rel).get(`text-color-${rel.captionLayout}`)
       )
+
+    texts
+      .filter((rel: any) => rel.captionSettingsArray != undefined)
+      .each(function(this: SVGTextElement, rel: any) {
+        const tspans = d3
+          .select(this)
+          .selectAll('tspan')
+          .data(rel.captionSettingsArray)
+
+        tspans
+          .enter()
+          .append('tspan')
+          .attr({ 'text-anchor': 'middle' })
+          .attr({ 'pointer-events': 'none' })
+
+        return tspans.exit().remove()
+      })
 
     return texts.exit().remove()
   },
@@ -210,7 +232,33 @@ const relationshipType = new Renderer({
           return null
         }
       })
-      .text((rel: any) => rel.shortCaption)
+      .each(function(this: SVGTextElement, rel: any) {
+        const $this = d3.select(this)
+        if (rel.captionSettingsArray != undefined) {
+          $this
+            .selectAll('tspan')
+            .attr('x', rel.arrow.midShaftPoint.x)
+            .attr(
+              'y',
+              (d: any) =>
+                rel.arrow.midShaftPoint.y +
+                parseFloat(viz.style.forRelationship(rel).get('font-size')) /
+                  2 -
+                1 +
+                d.yOffset
+            )
+            .attr('transform', () => {
+              if (rel.naturalAngle < 90 || rel.naturalAngle > 270) {
+                return `rotate(180 ${rel.arrow.midShaftPoint.x} ${rel.arrow.midShaftPoint.y})`
+              } else {
+                return ''
+              }
+            })
+            .text((d: any) => d.shortCaption)
+        } else {
+          $this.text(rel.shortCaption)
+        }
+      })
   }
 })
 
