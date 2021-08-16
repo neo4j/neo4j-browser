@@ -21,9 +21,13 @@ import d3 from 'd3'
 export default function clickHandler() {
   const cc = function(selection: any) {
     // euclidean distance
-    const dist = (a: any, b: any) =>
-      // @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 2.
-      Math.sqrt(Math.pow(a[0] - b[0], 2), Math.pow(a[1] - b[1], 2))
+    const dist = (a: number[], b: number[]): number => {
+      if (a != undefined && b != undefined) {
+        return Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2))
+      } else {
+        return 10
+      }
+    }
     let down: any
     const tolerance = 5
     let wait: any = null

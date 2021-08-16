@@ -317,6 +317,8 @@ export class GrassEditorComponent extends Component<any> {
         backgroundColor: styleForRelType.get('color'),
         color: styleForRelType.get('text-color-internal')
       }
+      const displayCaptionPicker =
+        styleForRelType.props?.captionSettings === undefined // do not show caption picker if label settings are set
       pickers = [
         this.labelPicker(
           styleForRelType.selector,
@@ -326,14 +328,16 @@ export class GrassEditorComponent extends Component<any> {
           false
         ),
         this.colorPicker(styleForRelType.selector, styleForRelType),
-        this.widthPicker(styleForRelType.selector, styleForRelType),
+        this.widthPicker(styleForRelType.selector, styleForRelType)
+      ]
+      if (displayCaptionPicker) {
         this.captionPicker(
           styleForRelType.selector,
           styleForRelType,
           this.props.selectedRelType.propertyKeys,
           true
         )
-      ]
+      }
       title = (
         <StyledTokenRelationshipType
           className="token token-relationship"

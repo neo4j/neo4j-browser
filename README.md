@@ -1,3 +1,10 @@
+## Changes in this fork
+Latest compiled bundle can be downloaded [here](https://github.com/Pfizer-Digital-Manufacturing/neo4j-browser/tree/gh-pages). Click `Code` button and then `Download ZIP` in the dropdown menu.
+You can also use direct [file download link](https://github.com/Pfizer-Digital-Manufacturing/neo4j-browser/archive/refs/heads/gh-pages.zip)
+
+1. Added extra button to node menu that allows to filter related relationships
+2. Added `Label Setup` button to configure label display for nodes and relationships
+
 # Neo4j Browser
 
 Neo4j Browser is the general purpose user interface for working with Neo4j. Query, visualize, administrate and monitor the database
