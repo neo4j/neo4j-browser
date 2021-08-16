@@ -319,6 +319,7 @@ export class GrassEditorComponent extends Component<any> {
       }
       const displayCaptionPicker =
         styleForRelType.props?.captionSettings === undefined // do not show caption picker if label settings are set
+
       pickers = [
         this.labelPicker(
           styleForRelType.selector,
@@ -331,11 +332,13 @@ export class GrassEditorComponent extends Component<any> {
         this.widthPicker(styleForRelType.selector, styleForRelType)
       ]
       if (displayCaptionPicker) {
-        this.captionPicker(
-          styleForRelType.selector,
-          styleForRelType,
-          this.props.selectedRelType.propertyKeys,
-          true
+        pickers.push(
+          this.captionPicker(
+            styleForRelType.selector,
+            styleForRelType,
+            this.props.selectedRelType.propertyKeys,
+            true
+          )
         )
       }
       title = (
