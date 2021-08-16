@@ -45,6 +45,7 @@ import { getEdition, isEnterprise } from 'shared/modules/dbMeta/dbMetaDuck'
 import { PromotionContainer, AuraPromoLink } from './styled'
 import { ThemeContext } from 'styled-components'
 import { DARK_THEME } from 'shared/modules/settings/settingsDuck'
+import { isConnectedAuraHost } from 'shared/modules/connections/connectionsDuck'
 
 const AuraPromotion = () => {
   const theme = useContext(ThemeContext)
@@ -363,7 +364,7 @@ const mapStateToProps = (state: GlobalState) => ({
   showPromotion:
     (getEdition(state) !== null &&
       !isEnterprise(state) &&
-      !inCloudEnv(state)) ||
+      !isConnectedAuraHost(state)) ||
     inDesktop(state)
 })
 
