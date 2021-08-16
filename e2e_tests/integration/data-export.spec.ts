@@ -80,7 +80,14 @@ describe('Data export', () => {
   it('can export history', () => {
     cy.executeCommand(':clear')
     cy.executeCommand(':history')
-    cy.get('[data-testid="exportGrassButton"]').should('not.exist')
-    cy.get('[data-testid="exportHistoryButton"]').should('not.exist')
+    cy.get('[data-testid="frame-export-dropdown"]').trigger('mouseover')
+    cy.get('[data-testid="frame-export-dropdown"]', {
+      timeout: 10000
+    }).within(() => {
+      cy.get('a').then(exportButtonsList => {
+        expect(exportButtonsList).to.have.length(1)
+        expect(exportButtonsList.eq(0)).to.contain('Export TXT')
+      })
+    })
   })
 })
