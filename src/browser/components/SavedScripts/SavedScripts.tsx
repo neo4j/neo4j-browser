@@ -51,7 +51,7 @@ interface SavedScriptsProps {
   exportScripts?: (
     scripts: Favorite[],
     folders: Folder[],
-    format?: ExportFormat
+    format: ExportFormat
   ) => void
   renameScript?: (script: Favorite, name: string) => void
   moveScript?: (scriptId: string, folderId?: string) => void
@@ -204,7 +204,7 @@ export default function SavedScripts({
                   {exportScripts && (
                     <ExportButton
                       onClick={() => {
-                        exportScripts(selectedScripts, folders)
+                        exportScripts(selectedScripts, folders, 'ZIPFILE')
                         setSelectedIds([])
                       }}
                     />
