@@ -49,7 +49,8 @@ describe(':style', () => {
   it('can reset style with button', () => {
     cy.executeCommand(':clear')
     cy.executeCommand(':style')
-    cy.get('[data-testid="exportGrassButton"]', { timeout: 10000 })
+    // can't trigger hover with cypress so we can't know it's visible
+    cy.get('[data-testid="exportGrassButton"]').should('exist')
     cy.get('[data-testid="styleResetButton"]', { timeout: 10000 })
       .first()
       .click()
