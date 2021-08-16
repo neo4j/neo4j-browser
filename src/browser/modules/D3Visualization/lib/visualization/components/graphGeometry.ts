@@ -199,17 +199,21 @@ const fitMultipleCaptionsIntoCircle = function(
 ) {
   const fontSize = parseFloat(style.forNode(node).get('font-size'))
   const maxLines = (node.radius * 2) / fontSize
+  const styleForNode = style.forNode(node)
   const wordsObjects: IWordObject[] = flatten(
     allLabelPositions.map((position, index) => {
       const currentStyle = captionSettings[position]
       if (currentStyle.caption) {
-        const nodeText: string = style.interpolate(currentStyle.caption, node)
+        let nodeText: string = style.interpolate(currentStyle.caption, node)
+        if (nodeText === '' && currentStyle.caption === '<type>') {
+          nodeText = styleForNode?.selector?.classes[0] ?? ''
+        }
         const captionText: string =
           nodeText.length > 100 ? nodeText.substring(0, 100) : nodeText
         const fontWeight =
-          currentStyle['font-weight'] ?? style.forNode(node).get('font-weight')
+          currentStyle['font-weight'] ?? styleForNode.get('font-weight')
         const fontStyle =
-          currentStyle['font-style'] ?? style.forNode(node).get('font-style')
+          currentStyle['font-style'] ?? styleForNode.get('font-style')
         const textDecoration =
           currentStyle['text-decoration'] ??
           style.forNode(node).get('text-decoration')

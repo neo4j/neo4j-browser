@@ -288,7 +288,8 @@ export class GrassEditorComponent extends Component<any> {
         this.labelPicker(
           styleForLabel.selector,
           styleForLabel,
-          this.props.selectedLabel.propertyKeys
+          this.props.selectedLabel.propertyKeys,
+          true
         ),
         this.colorPicker(styleForLabel.selector, styleForLabel),
         this.sizePicker(styleForLabel.selector, styleForLabel)
