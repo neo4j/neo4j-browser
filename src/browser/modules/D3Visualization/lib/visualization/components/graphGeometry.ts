@@ -50,11 +50,14 @@ export default class NeoD3Geometry {
       relationship.captionSettingsArray = []
       allLabelPositions.forEach(position => {
         const currentStyle = captionSettings[position]
-        let caption = this.style.interpolate(currentStyle.caption, relationship)
-        if (currentStyle[includePropertyNameKey]) {
-          caption = `${currentStyle.caption.replace(/[{}]/g, '')}: ` + caption
-        }
         if (currentStyle.caption) {
+          let caption = this.style.interpolate(
+            currentStyle.caption,
+            relationship
+          )
+          if (currentStyle[includePropertyNameKey]) {
+            caption = `${currentStyle.caption.replace(/[{}]/g, '')}: ` + caption
+          }
           relationship.captionSettingsArray.push(
             Object.assign({}, currentStyle, {
               caption,
@@ -74,6 +77,8 @@ export default class NeoD3Geometry {
           relationship.captionSettingsArray[2].yOffset = 8
           break
       }
+    } else {
+      delete relationship.captionSettingsArray
     }
   }
 

@@ -19,6 +19,7 @@
  */
 import Renderer from '../components/renderer'
 import * as d3 from 'd3'
+import { max } from 'lodash-es'
 
 const noop = function() {}
 
@@ -166,9 +167,25 @@ const arrowPath = new Renderer({
   },
 
   onTick(selection: any) {
-    return selection
-      .selectAll('path')
-      .attr('d', (d: any) => d.arrow.outline(d.shortCaptionLength))
+    return selection.selectAll('path').attr(
+      'd',
+      (d: {
+        arrow: {
+          outline: (d: number) => void
+        }
+        shortCaptionLength: number
+        captionSettingsArray: Array<{ shortCaptionLength: number }>
+      }) => {
+        if (d.captionSettingsArray != undefined) {
+          return d.arrow.outline(
+            max(d.captionSettingsArray.map(t => t.shortCaptionLength)) ??
+              d.shortCaptionLength
+          )
+        } else {
+          return d.arrow.outline(d.shortCaptionLength)
+        }
+      }
+    )
   }
 })
 
@@ -197,12 +214,15 @@ const relationshipType = new Renderer({
     texts
       .filter((rel: any) => rel.captionSettingsArray != undefined)
       .each(function(this: SVGTextElement, rel: any) {
+        if (this.children.length === 0) {
+          d3.select(this).text('')
+        }
         const tspans = d3
           .select(this)
           .selectAll('tspan')
           .data(rel.captionSettingsArray)
 
-        tspans
+        const newTspans = tspans
           .enter()
           .append('tspan')
           .attr({ 'text-anchor': 'middle' })
@@ -234,6 +254,7 @@ const relationshipType = new Renderer({
       })
       .each(function(this: SVGTextElement, rel: any) {
         const $this = d3.select(this)
+
         if (rel.captionSettingsArray != undefined) {
           $this
             .selectAll('tspan')
@@ -254,6 +275,9 @@ const relationshipType = new Renderer({
                 return ''
               }
             })
+            .style('font-weight', (d: any) => d['font-weight'])
+            .style('font-style', (d: any) => d['font-style'])
+            .style('text-decoration', (d: any) => d['text-decoration'])
             .text((d: any) => d.shortCaption)
         } else {
           $this.text(rel.shortCaption)

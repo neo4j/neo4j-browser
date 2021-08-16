@@ -66,7 +66,11 @@ export default class circumferentialRelationshipRouting {
     })()
   }
 
-  shortenCaption(relationship: any, caption: any, targetWidth: any) {
+  shortenCaption(
+    relationship: any,
+    caption: any,
+    targetWidth: any
+  ): [string, number] {
     let shortCaption = caption
     while (true) {
       if (shortCaption.length <= 2) {
@@ -201,6 +205,24 @@ export default class circumferentialRelationshipRouting {
                   )
                 }
 
+                if (relationship.captionSettingsArray) {
+                  relationship.captionSettingsArray.forEach((label: any) => {
+                    label.captionLength = this.measureRelationshipCaption(
+                      relationship,
+                      label.caption
+                    )
+                    const temp: [string, number] =
+                      relationship.arrow.shaftLength > label.captionLength
+                        ? [label.caption, label.captionLength]
+                        : this.shortenCaption(
+                            relationship,
+                            label.caption,
+                            relationship.arrow.shaftLength
+                          )
+                    label.shortCaption = temp[0]
+                    label.shortCaptionLength = temp[1]
+                  })
+                }
                 result1.push(
                   ([
                     relationship.shortCaption,
