@@ -259,7 +259,7 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
       let SSOError
       const SSORedirectId = getSSOServerIdIfShouldRedirect()
       if (SSORedirectId) {
-        authLog(`Initialised with idpId: "${SSORedirectId}"`)
+        authLog(`Initialized with idpId: "${SSORedirectId}"`)
 
         removeSearchParamsInBrowserHistory(
           searchParamsToRemoveAfterAutoRedirect
@@ -274,7 +274,7 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
           authLog(err.message)
         }
       } else if (wasRedirectedBackFromSSOServer()) {
-        authLog('Handling auth_flow_step redirect')
+        authLog('Initializing auth_flow_step redirect')
 
         try {
           const creds = (await handleAuthFromRedirect(

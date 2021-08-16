@@ -13,7 +13,7 @@ export const mandatoryKeysForSSOProviderParams = [
   'scope'
 ]
 
-export const searchParamsToRemoveAfterAutoRedirect = ['cmd', 'arg']
+export const searchParamsToRemoveAfterAutoRedirect = ['sso_redirect']
 export const searchParamsToRemoveAfterAuthRedirect = [
   'idp_id',
   'auth_flow_step',
