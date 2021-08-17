@@ -34,8 +34,11 @@ export const downloadPNGFromSVG = (svg: any, graph: any, type: any) => {
 
   // @ts-ignore
   const v = canvg.fromString(ctx, svgData)
-  v.start()
-  return downloadWithDataURI(`${type}.png`, canvas.toDataURL('image/png'))
+  v.render()
+    .then(() =>
+      downloadWithDataURI(`${type}.png`, canvas.toDataURL('image/png'))
+    )
+    .catch(() => {})
 }
 
 export const downloadSVG = (svg: any, graph: any, type: any) => {
