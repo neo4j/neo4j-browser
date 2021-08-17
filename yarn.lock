@@ -3892,7 +3892,7 @@ caniuse-lite@^1.0.0, caniuse-lite@^1.0.30000792, caniuse-lite@^1.0.30000805, can
   resolved "https://neo.jfrog.io/neo/api/npm/npm/caniuse-lite/-/caniuse-lite-1.0.30001131.tgz#afad8a28fc2b7a0d3ae9407e71085a0ead905d54"
   integrity sha1-r62KKPwreg066UB+cQhaDq2QXVQ=
 
-canvg@3.0.7:
+canvg@^3.0.7:
   version "3.0.7"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/canvg/-/canvg-3.0.7.tgz#e45b87a64116af906917f7cad57d370ea372d682"
   integrity sha1-5FuHpkEWr5BpF/fK1X03DqNy1oI=

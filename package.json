@@ -170,7 +170,7 @@
     "antlr4": "^4.8.0",
     "apollo-upload-client": "^14.1.2",
     "ascii-data-table": "^2.1.1",
-    "canvg": "3.0.7",
+    "canvg": "^3.0.7",
     "core-js": "3",
     "cypher-editor-support": "^1.1.8",
     "d3": "3",

@@ -32,13 +32,18 @@ export const downloadPNGFromSVG = (svg: any, graph: any, type: any) => {
   canvas.height = svgObj.attr('height') as any
   const ctx = canvas.getContext('2d')
 
-  // @ts-ignore
-  const v = canvg.fromString(ctx, svgData)
-  v.render()
-    .then(() =>
-      downloadWithDataURI(`${type}.png`, canvas.toDataURL('image/png'))
-    )
-    .catch(() => {})
+  if (ctx) {
+    const v = canvg.fromString(ctx, svgData)
+    v.render()
+      .then(() =>
+        downloadWithDataURI(`${type}.png`, canvas.toDataURL('image/png'))
+      )
+      .catch(() => {
+        /* unhandled */
+      })
+  } else {
+    /* unhandled */
+  }
 }
 
 export const downloadSVG = (svg: any, graph: any, type: any) => {
