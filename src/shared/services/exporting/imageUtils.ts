@@ -30,8 +30,11 @@ export const downloadPNGFromSVG = (svg: any, graph: any, type: any) => {
   const canvas = document.createElement('canvas')
   canvas.width = svgObj.attr('width') as any
   canvas.height = svgObj.attr('height') as any
+  const ctx = canvas.getContext('2d')
 
-  canvg(canvas, svgData)
+  // @ts-ignore
+  const v = canvg.fromString(ctx, svgData)
+  v.start()
   return downloadWithDataURI(`${type}.png`, canvas.toDataURL('image/png'))
 }
 
