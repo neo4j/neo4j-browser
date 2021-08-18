@@ -18,3 +18,13 @@ export const LinkContainer = styled.div`
   justify-content: flex-end;
   width: 100%;
 `
+
+export const Clickable = styled.span`
+  margin-left: 8px;
+  cursor: pointer;
+
+  :hover {
+    text-decoration: underline;
+    color: ${props => props.theme.error};
+  }
+`

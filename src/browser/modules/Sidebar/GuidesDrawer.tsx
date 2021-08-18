@@ -18,16 +18,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useRef } from 'react'
+import React, { Dispatch, useRef } from 'react'
+import { Action } from 'redux'
 import { connect } from 'react-redux'
 
 import {
-  getGuide,
-  startGuide,
+  getCurrentGuide,
   Guide,
-  isDefaultGuide,
   gotoSlide,
-  listExternalGuides
+  getRemoteGuides,
+  resetGuide,
+  setGuide,
+  updateRemoteGuides
 } from 'shared/modules/guides/guidesDuck'
 import { GlobalState } from 'shared/globalState'
 import GuideCarousel from '../GuideCarousel/GuideCarousel'
@@ -39,17 +41,24 @@ import {
   StyledGuidesDrawerHeader,
   StyledDrawerSeparator
 } from './styled'
+import GuidePicker from './GuidePicker'
 
 type GuidesDrawerProps = {
-  guide: Guide
+  currentGuide: Guide | null
   backToAllGuides: () => void
   gotoSlide: (slideIndex: number) => void
+  remoteGuides: Guide[]
+  setGuide: (guide: Guide) => void
+  updateRemoteGuides: (newList: Guide[]) => void
 }
 
 function GuidesDrawer({
-  guide,
+  currentGuide,
   backToAllGuides,
-  gotoSlide
+  gotoSlide,
+  remoteGuides,
+  setGuide,
+  updateRemoteGuides
 }: GuidesDrawerProps): JSX.Element {
   const scrollRef = useRef<HTMLDivElement>(null)
 
@@ -60,7 +69,7 @@ function GuidesDrawer({
       ref={scrollRef}
     >
       <StyledGuidesDrawerHeader onClick={backToAllGuides}>
-        {!isDefaultGuide(guide) && (
+        {currentGuide !== null && (
           <BackIconContainer data-testid="guidesBackButton">
             <BackIcon width={16} />
           </BackIconContainer>
@@ -68,29 +77,41 @@ function GuidesDrawer({
         Neo4j Browser Guides{' '}
       </StyledGuidesDrawerHeader>
       <StyledDrawerSeparator />
-      {!isDefaultGuide(guide) && (
-        <GuideTitle title={guide.title}>{guide.title}</GuideTitle>
+      {currentGuide === null ? (
+        <GuidePicker
+          remoteGuides={remoteGuides}
+          setGuide={setGuide}
+          updateRemoteGuides={updateRemoteGuides}
+        />
+      ) : (
+        <>
+          <GuideTitle title={currentGuide.title}>
+            {currentGuide.title}
+          </GuideTitle>
+          <GuideCarousel
+            slides={currentGuide.slides}
+            currentSlideIndex={currentGuide.currentSlide}
+            gotoSlide={gotoSlide}
+            scrollToTop={() =>
+              scrollRef.current?.scrollIntoView({ block: 'start' })
+            }
+          />
+        </>
       )}
-      <GuideCarousel
-        slides={guide.slides}
-        currentSlideIndex={guide.currentSlide}
-        gotoSlide={gotoSlide}
-        scrollToTop={() =>
-          scrollRef.current?.scrollIntoView({ block: 'start' })
-        }
-      />
-      {isDefaultGuide(guide) && ''}
     </StyledGuidesDrawer>
   )
 }
 
 const mapStateToProps = (state: GlobalState) => ({
-  guide: getGuide(state),
-  externalGuides: listExternalGuides(state)
+  currentGuide: getCurrentGuide(state),
+  remoteGuides: getRemoteGuides(state)
 })
-const mapDispatchToProps = (dispatch: any) => ({
-  backToAllGuides: () => dispatch(startGuide()),
-  gotoSlide: (slideIndex: number) => dispatch(gotoSlide(slideIndex))
+const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
+  backToAllGuides: () => dispatch(resetGuide()),
+  gotoSlide: (slideIndex: number) => dispatch(gotoSlide(slideIndex)),
+  setGuide: (guide: Guide) => dispatch(setGuide(guide)),
+  updateRemoteGuides: (updatedList: Guide[]) =>
+    dispatch(updateRemoteGuides(updatedList))
 })
 const ConnectedGuidesDrawer = connect(
   mapStateToProps,
