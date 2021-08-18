@@ -47,7 +47,7 @@ export interface INeighboursPickerPopoverProps {
   selection: string[]
   onClose: () => void
   onUpdate: () => void
-  grass: any // {[key: string]: {caption: string}}
+  graphStyle: any
 }
 
 const ScrollDiv = styled.div`
@@ -67,12 +67,12 @@ const NeighboursPickerModal: React.FC<INeighboursPickerPopoverProps> = ({
   onClose,
   callback,
   onUpdate,
-  grass
+  graphStyle
 }: INeighboursPickerPopoverProps) => {
   const displayNodeName: IDisplayNodeNameFunc = React.useCallback(
     node => {
       if (node) {
-        const input = grass[`node.${node.labels[0]}`]?.caption
+        const input = graphStyle.forNode(node).get('caption')
         if (input) {
           const value = input.substring(1, input.length - 1)
           return (
@@ -80,21 +80,21 @@ const NeighboursPickerModal: React.FC<INeighboursPickerPopoverProps> = ({
             node.properties.name ??
             node.properties.title ??
             node.properties.id ??
-            JSON.stringify(node.properties)
+            node.id
           )
         } else {
           return (
             node.properties.name ??
             node.properties.title ??
             node.properties.id ??
-            JSON.stringify(node.properties)
+            node.id
           )
         }
       } else {
         return ''
       }
     },
-    [grass]
+    [graphStyle]
   )
   const options: INeighboursPickerItem[] = React.useMemo(() => {
     const relMap: [IDisplayRelMap, IDisplayRelMap] = [{}, {}] // dir in and out
@@ -203,9 +203,9 @@ const NeighboursPickerModal: React.FC<INeighboursPickerPopoverProps> = ({
   )
 }
 
-// export default NeighboursPickerModal
-const mapStateToProps = (state: GlobalState) => ({ grass: state.grass })
-const NeighboursPickerPopoverWrapped = connect(mapStateToProps)(
-  NeighboursPickerModal
-)
-export default NeighboursPickerPopoverWrapped
+export default NeighboursPickerModal
+// const mapStateToProps = (state: GlobalState) => ({ grass: state.grass })
+// const NeighboursPickerPopoverWrapped = connect(mapStateToProps)(
+//   NeighboursPickerModal
+// )
+// export default NeighboursPickerPopoverWrapped

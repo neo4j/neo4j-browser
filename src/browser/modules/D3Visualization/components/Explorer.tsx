@@ -294,6 +294,7 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
         {this.state.neighboursPicker && (
           <NeighboursPickerPopover
             {...this.state.neighboursPicker}
+            graphStyle={this.state.graphStyle}
             onClose={this.closeNeighboursPicker}
             onUpdate={this.updateNeighboursPickerSelection}
           />
