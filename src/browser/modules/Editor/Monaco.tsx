@@ -80,6 +80,7 @@ type MonacoProps = MonacoDefaultProps & {
   onExecute: (value: string) => void
   useDb: null | string
   toggleFullscreen: () => void
+  params: Record<string, unknown>
 }
 type MonacoState = { currentHistoryIndex: number; draft: string }
 const UNRUN_CMD_HISTORY_INDEX = -1
@@ -269,7 +270,8 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
         CYPHER_REQUEST,
         {
           query: EXPLAIN_QUERY_PREFIX + text,
-          queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+          queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
+          params: this.props.params
         },
         (response: { result: QueryResult; success?: boolean }) => {
           if (
