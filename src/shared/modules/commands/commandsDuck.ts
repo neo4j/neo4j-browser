@@ -51,6 +51,7 @@ import {
 import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
 import { add as addFrame } from 'shared/modules/stream/streamDuck'
 import { update as updateQueryResult } from 'shared/modules/requests/requestsDuck'
+import { getItem, setItem } from 'services/localstorage'
 
 export const NAME = 'commands'
 export const SINGLE_COMMAND_QUEUED = `${NAME}/SINGLE_COMMAND_QUEUED`
@@ -274,7 +275,24 @@ export const handleSingleCommandEpic = (action$: any, store: any) =>
         }
       })
     })
-
+function handleStylePostConnectCmd(cmd: string) {
+  const isStyle = cmd.substr(0, 5) === 'style'
+  if (!isStyle) {
+    return true
+  }
+  const urlToStore = cmd.split(' ')[1]
+  if (!urlToStore) {
+    return true
+  }
+  const key = 'lastGrassUrl'
+  const url = getItem(key)
+  if (url === urlToStore) {
+    return false
+  } else {
+    setItem(key, urlToStore)
+    return true
+  }
+}
 export const postConnectCmdEpic = (some$: any, store: any) =>
   some$.ofType(CONNECTION_SUCCESS).mergeMap(() =>
     some$
@@ -290,7 +308,9 @@ export const postConnectCmdEpic = (some$: any, store: any) =>
           )
           if (playImplicitInitCommands && cmds !== undefined) {
             cmds.forEach((cmd: any) => {
-              store.dispatch(executeSystemCommand(`:${cmd}`))
+              if (handleStylePostConnectCmd(cmd)) {
+                store.dispatch(executeSystemCommand(`:${cmd}`))
+              }
             })
           }
         }

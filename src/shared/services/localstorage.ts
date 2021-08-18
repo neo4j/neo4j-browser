@@ -39,6 +39,8 @@ export type key =
   | 'syncConsent'
   | 'udc'
   | 'experimentalFeatures'
+  | 'lastGrassUrl'
+
 const keys: key[] = []
 
 export function getItem(key: key): GlobalState[key] | undefined {

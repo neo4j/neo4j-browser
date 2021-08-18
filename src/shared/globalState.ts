@@ -85,4 +85,5 @@ export interface GlobalState {
   [app]: Record<string, unknown>
   [experimentalFeatures]: typeof experimentalFeaturesInitialState
   [guides]: GuideState
+  lastGrassUrl: string
 }

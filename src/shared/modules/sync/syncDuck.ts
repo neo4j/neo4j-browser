@@ -285,6 +285,7 @@ export const clearSyncEpic = (action$: any) =>
       setItem('folders', null)
       setItem('syncConsent', false)
       setItem('grass', null)
+      setItem('lastGrassUrl', null)
     })
     .mapTo({ type: CLEAR_LOCALSTORAGE })
 
