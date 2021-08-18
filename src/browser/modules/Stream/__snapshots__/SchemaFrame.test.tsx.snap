@@ -10,13 +10,13 @@ exports[`SchemaFrame renders empty 1`] = `
         class="sc-dqBHgY eVMXHH"
       >
         <table
-          class="sc-elNKlv crTwOh"
+          class="sc-feryYK btQlYx"
           data-testid="schemaFrameIndexesTable"
         >
           <thead>
             <tr>
               <th
-                class="sc-hUMlYv eLMLSC table-header"
+                class="sc-ccSCjj AzewN table-header"
               >
                 Indexes
               </th>
@@ -24,10 +24,10 @@ exports[`SchemaFrame renders empty 1`] = `
           </thead>
           <tbody>
             <tr
-              class="sc-bYwvMP idYnbG table-row"
+              class="sc-cJOK jTZERD table-row"
             >
               <td
-                class="sc-ESoVU iGNqwK table-properties"
+                class="sc-jKmXuR emfbvn table-properties"
               >
                 None
               </td>
@@ -35,13 +35,13 @@ exports[`SchemaFrame renders empty 1`] = `
           </tbody>
         </table>
         <table
-          class="sc-elNKlv crTwOh"
+          class="sc-feryYK btQlYx"
           data-testid="schemaFrameConstraintsTable"
         >
           <thead>
             <tr>
               <th
-                class="sc-hUMlYv eLMLSC table-header"
+                class="sc-ccSCjj AzewN table-header"
               >
                 Constraints
               </th>
@@ -49,10 +49,10 @@ exports[`SchemaFrame renders empty 1`] = `
           </thead>
           <tbody>
             <tr
-              class="sc-bYwvMP idYnbG table-row"
+              class="sc-cJOK jTZERD table-row"
             >
               <td
-                class="sc-ESoVU iGNqwK table-properties"
+                class="sc-jKmXuR emfbvn table-properties"
               >
                 None
               </td>
@@ -92,43 +92,43 @@ exports[`SchemaFrame renders empty for Neo4j >= 4.0 1`] = `
         class="sc-dqBHgY eVMXHH"
       >
         <table
-          class="sc-elNKlv crTwOh"
+          class="sc-feryYK btQlYx"
           data-testid="schemaFrameIndexesTable"
         >
           <thead>
             <tr>
               <th
-                class="sc-hUMlYv eLMLSC table-header"
+                class="sc-ccSCjj AzewN table-header"
               >
                 Index Name
               </th>
               <th
-                class="sc-hUMlYv eLMLSC table-header"
+                class="sc-ccSCjj AzewN table-header"
               >
                 Type
               </th>
               <th
-                class="sc-hUMlYv eLMLSC table-header"
+                class="sc-ccSCjj AzewN table-header"
               >
                 Uniqueness
               </th>
               <th
-                class="sc-hUMlYv eLMLSC table-header"
+                class="sc-ccSCjj AzewN table-header"
               >
                 EntityType
               </th>
               <th
-                class="sc-hUMlYv eLMLSC table-header"
+                class="sc-ccSCjj AzewN table-header"
               >
                 LabelsOrTypes
               </th>
               <th
-                class="sc-hUMlYv eLMLSC table-header"
+                class="sc-ccSCjj AzewN table-header"
               >
                 Properties
               </th>
               <th
-                class="sc-hUMlYv eLMLSC table-header"
+                class="sc-ccSCjj AzewN table-header"
               >
                 State
               </th>
@@ -136,42 +136,42 @@ exports[`SchemaFrame renders empty for Neo4j >= 4.0 1`] = `
           </thead>
           <tbody>
             <tr
-              class="sc-bYwvMP idYnbG table-row"
+              class="sc-cJOK jTZERD table-row"
             >
               <td
-                class="sc-ESoVU iGNqwK table-properties"
+                class="sc-jKmXuR emfbvn table-properties"
               >
                 None
               </td>
               <td
-                class="sc-ESoVU iGNqwK table-properties"
+                class="sc-jKmXuR emfbvn table-properties"
               />
               <td
-                class="sc-ESoVU iGNqwK table-properties"
+                class="sc-jKmXuR emfbvn table-properties"
               />
               <td
-                class="sc-ESoVU iGNqwK table-properties"
+                class="sc-jKmXuR emfbvn table-properties"
               />
               <td
-                class="sc-ESoVU iGNqwK table-properties"
+                class="sc-jKmXuR emfbvn table-properties"
               />
               <td
-                class="sc-ESoVU iGNqwK table-properties"
+                class="sc-jKmXuR emfbvn table-properties"
               />
               <td
-                class="sc-ESoVU iGNqwK table-properties"
+                class="sc-jKmXuR emfbvn table-properties"
               />
             </tr>
           </tbody>
         </table>
         <table
-          class="sc-elNKlv crTwOh"
+          class="sc-feryYK btQlYx"
           data-testid="schemaFrameConstraintsTable"
         >
           <thead>
             <tr>
               <th
-                class="sc-hUMlYv eLMLSC table-header"
+                class="sc-ccSCjj AzewN table-header"
               >
                 Constraints
               </th>
@@ -179,10 +179,10 @@ exports[`SchemaFrame renders empty for Neo4j >= 4.0 1`] = `
           </thead>
           <tbody>
             <tr
-              class="sc-bYwvMP idYnbG table-row"
+              class="sc-cJOK jTZERD table-row"
             >
               <td
-                class="sc-ESoVU iGNqwK table-properties"
+                class="sc-jKmXuR emfbvn table-properties"
               >
                 None
               </td>
@@ -222,13 +222,13 @@ exports[`SchemaFrame renders results for Neo4j < 4.0 1`] = `
         class="sc-dqBHgY eVMXHH"
       >
         <table
-          class="sc-elNKlv crTwOh"
+          class="sc-feryYK btQlYx"
           data-testid="schemaFrameIndexesTable"
         >
           <thead>
             <tr>
               <th
-                class="sc-hUMlYv eLMLSC table-header"
+                class="sc-ccSCjj AzewN table-header"
               >
                 Indexes
               </th>
@@ -236,10 +236,10 @@ exports[`SchemaFrame renders results for Neo4j < 4.0 1`] = `
           </thead>
           <tbody>
             <tr
-              class="sc-bYwvMP idYnbG table-row"
+              class="sc-cJOK jTZERD table-row"
             >
               <td
-                class="sc-ESoVU iGNqwK table-properties"
+                class="sc-jKmXuR emfbvn table-properties"
               >
                  ON :Movie(released) ONLINE 
               </td>
@@ -247,13 +247,13 @@ exports[`SchemaFrame renders results for Neo4j < 4.0 1`] = `
           </tbody>
         </table>
         <table
-          class="sc-elNKlv crTwOh"
+          class="sc-feryYK btQlYx"
           data-testid="schemaFrameConstraintsTable"
         >
           <thead>
             <tr>
               <th
-                class="sc-hUMlYv eLMLSC table-header"
+                class="sc-ccSCjj AzewN table-header"
               >
                 Constraints
               </th>
@@ -261,10 +261,10 @@ exports[`SchemaFrame renders results for Neo4j < 4.0 1`] = `
           </thead>
           <tbody>
             <tr
-              class="sc-bYwvMP idYnbG table-row"
+              class="sc-cJOK jTZERD table-row"
             >
               <td
-                class="sc-ESoVU iGNqwK table-properties"
+                class="sc-jKmXuR emfbvn table-properties"
               >
                  ON ( book:Book ) ASSERT book.isbn IS UNIQUE
               </td>
