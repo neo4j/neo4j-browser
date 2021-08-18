@@ -25,7 +25,7 @@ import {
 } from 'shared/modules/connections/connectionsDuck'
 import Editor from '../Editor/MainEditor'
 import Stream from '../Stream/Stream'
-import Render from 'browser-components/Render'
+
 import {
   StyledMain,
   WarningBanner,
@@ -49,18 +49,18 @@ const Main = React.memo(function Main(props: any) {
       <ErrorBoundary>
         <Editor />
       </ErrorBoundary>
-      <Render if={dbIsUnavailable}>
+      {dbIsUnavailable && (
         <ErrorBanner>
           Database '{useDb}' is unavailable. Run{' '}
           <AutoExecButton cmd="sysinfo" /> for more info.
         </ErrorBanner>
-      </Render>
-      <Render if={props.errorMessage}>
+      )}
+      {props.errorMessage && (
         <ErrorBanner data-testid="errorBanner">
           {props.errorMessage}
         </ErrorBanner>
-      </Render>
-      <Render if={props.connectionState === DISCONNECTED_STATE}>
+      )}
+      {props.connectionState === DISCONNECTED_STATE && (
         <NotAuthedBanner data-testid="disconnectedBanner">
           Database access not available. Please use&nbsp;
           <AutoExecButton
@@ -69,30 +69,22 @@ const Main = React.memo(function Main(props: any) {
           />
           &nbsp; to establish connection. There's a graph waiting for you.
         </NotAuthedBanner>
-      </Render>
-      <Render if={props.connectionState === PENDING_STATE && !past10Sec}>
+      )}
+      {props.connectionState === PENDING_STATE && !past10Sec && (
         <WarningBanner data-testid="reconnectBanner">
           Connection to server lost. Reconnecting...
         </WarningBanner>
-      </Render>
-      <Render
-        if={
-          props.connectionState === CONNECTING_STATE && past5Sec && !past10Sec
-        }
-      >
+      )}
+      {props.connectionState === CONNECTING_STATE && past5Sec && !past10Sec && (
         <NotAuthedBanner>Still connecting...</NotAuthedBanner>
-      </Render>
-      <Render if={past10Sec}>
+      )}
+      {past10Sec && (
         <WarningBanner>
           Server is taking a long time to respond...
         </WarningBanner>
-      </Render>
-      <Render if={props.utilizeBrowserSync}>
-        <SyncReminderBanner />
-      </Render>
-      <Render if={props.utilizeBrowserSync}>
-        <SyncConsentBanner />
-      </Render>
+      )}
+      {props.utilizeBrowserSync && <SyncReminderBanner />}
+      {props.utilizeBrowserSync && <SyncConsentBanner />}
       <ErrorBoundary>
         <Stream />
       </ErrorBoundary>

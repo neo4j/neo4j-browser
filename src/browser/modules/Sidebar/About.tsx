@@ -20,7 +20,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { version } from 'project-root/package.json'
-import Render from 'browser-components/Render'
+
 import {
   Drawer,
   DrawerBody,
@@ -78,7 +78,7 @@ const About = ({ serverVersion, serverEdition }: AboutProps) => (
               {version}
             </a>
           </p>
-          <Render if={serverVersion && serverEdition}>
+          {serverVersion && serverEdition && (
             <p>
               Neo4j Server version:{' '}
               <a
@@ -90,7 +90,7 @@ const About = ({ serverVersion, serverEdition }: AboutProps) => (
               </a>{' '}
               ({serverEdition})
             </p>
-          </Render>
+          )}
           <p>
             <a
               href="https://github.com/neo4j/neo4j-browser/wiki/changelog"

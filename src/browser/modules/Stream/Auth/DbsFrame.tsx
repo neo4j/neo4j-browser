@@ -27,7 +27,6 @@ import {
   StyledDbsRow
 } from './styled'
 import { H3 } from 'browser-components/headers'
-import Render from 'browser-components/Render/index'
 import { toKeyString, escapeCypherIdentifier } from 'services/utils'
 import { UnstyledList } from '../styled'
 import { useDbCommand } from 'shared/modules/commands/commandsDuck'
@@ -53,36 +52,39 @@ const DbsFrame = (props: any) => {
       </StyledConnectionAside>
       <StyledConnectionBodyContainer>
         <StyledConnectionBody>
-          <Render if={Array.isArray(dbsToShow) && dbsToShow.length}>
-            Click on one to start using it:
-            <UnstyledList data-testid="dbs-command-list">
-              {dbsToShow.map(db => {
-                return (
-                  <StyledDbsRow key={toKeyString(db.name)}>
-                    <TextCommand
-                      command={`${useDbCommand} ${escapeCypherIdentifier(
-                        db.name
-                      )}`}
-                    />
-                  </StyledDbsRow>
-                )
-              })}
-            </UnstyledList>
-          </Render>
-          <Render if={!Array.isArray(dbsToShow) || !dbsToShow.length}>
-            <div>
-              Either you don't have permission to list available databases or
-              the dbms you're connected to don't support multiple databases.
-            </div>
-            <div>
-              If you know you have access to a database with a certain name, you
-              can use the{' '}
-              <ClickToCode CodeComponent={StyledCodeBlockFrame}>
-                {`:${useDbCommand} databaseName`}
-              </ClickToCode>{' '}
-              command to start using it.
-            </div>
-          </Render>
+          {Array.isArray(dbsToShow) && dbsToShow.length ? (
+            <>
+              Click on one to start using it:
+              <UnstyledList data-testid="dbs-command-list">
+                {dbsToShow.map(db => {
+                  return (
+                    <StyledDbsRow key={toKeyString(db.name)}>
+                      <TextCommand
+                        command={`${useDbCommand} ${escapeCypherIdentifier(
+                          db.name
+                        )}`}
+                      />
+                    </StyledDbsRow>
+                  )
+                })}
+              </UnstyledList>
+            </>
+          ) : (
+            <>
+              <div>
+                Either you don't have permission to list available databases or
+                the dbms you're connected to don't support multiple databases.
+              </div>
+              <div>
+                If you know you have access to a database with a certain name,
+                you can use the{' '}
+                <ClickToCode CodeComponent={StyledCodeBlockFrame}>
+                  {`:${useDbCommand} databaseName`}
+                </ClickToCode>{' '}
+                command to start using it.
+              </div>
+            </>
+          )}
         </StyledConnectionBody>
       </StyledConnectionBodyContainer>
     </>

@@ -54,7 +54,7 @@ import {
   StatusbarWrapper
 } from '../AutoRefresh/styled'
 import { EnterpriseOnlyFrame } from 'browser-components/EditionView'
-import Render from 'browser-components/Render'
+
 import FrameError from '../../Frame/FrameError'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { getDefaultBoltScheme } from 'shared/modules/features/versionedFeatures'
@@ -325,14 +325,14 @@ export class QueriesFrame extends Component<any, QueriesFrameState> {
       )
       statusbar = (
         <StatusbarWrapper>
-          <Render if={this.state.errors && !this.state.success}>
+          {this.state.errors && !this.state.success && (
             <FrameError
               message={(this.state.errors || [])
                 .map((e: any) => `${e.host}: ${e.message}`)
                 .join(', ')}
             />
-          </Render>
-          <Render if={this.state.success}>
+          )}
+          {this.state.success && (
             <StyledStatusBar>
               {this.state.success}
               <AutoRefreshSpan>
@@ -342,7 +342,7 @@ export class QueriesFrame extends Component<any, QueriesFrameState> {
                 />
               </AutoRefreshSpan>
             </StyledStatusBar>
-          </Render>
+          )}
         </StatusbarWrapper>
       )
     } else {

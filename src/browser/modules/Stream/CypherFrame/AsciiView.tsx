@@ -20,7 +20,7 @@
 
 import React, { Component } from 'react'
 import asciitable from 'ascii-data-table'
-import Render from 'browser-components/Render'
+
 import Ellipsis from 'browser-components/Ellipsis'
 import { shallowEquals } from 'services/utils'
 import {
@@ -238,29 +238,30 @@ export class AsciiStatusbarComponent extends Component<
     const { maxColWidth, maxSliderWidth, hasTruncatedFields } = this.state
     return (
       <StyledStatsBar>
-        <Render if={!hasRecords}>
+        {!hasRecords ? (
           <Ellipsis>{this.state.statusBarMessage}</Ellipsis>
-        </Render>
-        <Render if={hasRecords}>
-          {hasTruncatedFields && (
-            <StyledTruncatedMessage>
-              <Icon name="warning sign" /> Record fields have been
-              truncated.&nbsp;
-            </StyledTruncatedMessage>
-          )}
-          <StyledRightPartial>
-            <StyledWidthSliderContainer>
-              Max column width:
-              <StyledWidthSlider
-                value={maxColWidth}
-                onChange={this.setColWidthChanged}
-                type="range"
-                min={this.state.minSliderWidth}
-                max={maxSliderWidth}
-              />
-            </StyledWidthSliderContainer>
-          </StyledRightPartial>
-        </Render>
+        ) : (
+          <>
+            {hasTruncatedFields && (
+              <StyledTruncatedMessage>
+                <Icon name="warning sign" /> Record fields have been
+                truncated.&nbsp;
+              </StyledTruncatedMessage>
+            )}
+            <StyledRightPartial>
+              <StyledWidthSliderContainer>
+                Max column width:
+                <StyledWidthSlider
+                  value={maxColWidth}
+                  onChange={this.setColWidthChanged}
+                  type="range"
+                  min={this.state.minSliderWidth}
+                  max={maxSliderWidth}
+                />
+              </StyledWidthSliderContainer>
+            </StyledRightPartial>
+          </>
+        )}
       </StyledStatsBar>
     )
   }

@@ -34,7 +34,6 @@ import {
 } from 'shared/modules/commands/commandsDuck'
 import { toHumanReadableBytes } from 'services/utils'
 
-import Render from 'browser-components/Render'
 import {
   DrawerSection,
   DrawerSectionBody,
@@ -64,37 +63,37 @@ export const DatabaseKernelInfo = ({
       <DrawerSectionBody>
         <StyledTable>
           <tbody>
-            <Render if={role}>
+            {role && (
               <tr>
                 <StyledKey>Cluster role: </StyledKey>
                 <StyledValue>{role}</StyledValue>
               </tr>
-            </Render>
-            <Render if={version}>
+            )}
+            {version && (
               <tr>
                 <StyledKey>Version: </StyledKey>
                 <StyledValue>{version}</StyledValue>
               </tr>
-            </Render>
-            <Render if={edition}>
+            )}
+            {edition && (
               <tr>
                 <StyledKey>Edition: </StyledKey>
                 <StyledValueUCFirst>{edition}</StyledValueUCFirst>
               </tr>
-            </Render>
-            <Render if={dbName}>
+            )}
+            {dbName && (
               <tr>
                 <StyledKey>Name: </StyledKey>
                 <StyledValue>{dbName}</StyledValue>
               </tr>
-            </Render>
-            <Render if={storeSize}>
+            )}
+            {storeSize && (
               <tr>
                 <StyledKey>Size: </StyledKey>
                 <StyledValue>{toHumanReadableBytes(storeSize)}</StyledValue>
               </tr>
-            </Render>
-            <Render if={databases && databases.length}>
+            )}
+            {databases && databases.length && (
               <tr>
                 <StyledKey>Databases: </StyledKey>
                 <StyledValue>
@@ -103,7 +102,7 @@ export const DatabaseKernelInfo = ({
                   </Link>
                 </StyledValue>
               </tr>
-            </Render>
+            )}
             <tr>
               <StyledKey>Information: </StyledKey>
               <StyledValue>
