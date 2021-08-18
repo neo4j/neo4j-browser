@@ -104,28 +104,7 @@ export const objToCss = (obj?: any) => {
   if (typeof obj !== 'object') {
     return false
   }
-  let output = ''
-  try {
-    const level = '  '
-    for (const selector in obj) {
-      if (obj.hasOwnProperty(selector)) {
-        output += `${selector} {\n${level}`
-        for (const style in obj[selector]) {
-          if (obj[selector].hasOwnProperty(style)) {
-            output += `${style}: ${quoteSpecialStyles(
-              style,
-              obj[selector][style]
-            )};\n${level}`
-          }
-        }
-        output = `${output.trim()}\n`
-        output += '}\n'
-      }
-    }
-  } catch (e) {
-    return false
-  }
-  return output
+  return JSON.stringify(obj)
 }
 
 const shouldQuoteStyle = (style: any) =>
