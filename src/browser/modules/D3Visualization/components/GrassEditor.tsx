@@ -284,11 +284,13 @@ export class GrassEditorComponent extends Component<any> {
       }
       const displayCaptionPicker =
         styleForLabel.props?.captionSettings === undefined // do not show caption picker if label settings are set
+      const propertyKeys = (this.props.selectedLabel
+        .propertyKeys as string[]).sort((a, b) => (a > b ? 1 : -1))
       pickers = [
         this.labelPicker(
           styleForLabel.selector,
           styleForLabel,
-          this.props.selectedLabel.propertyKeys,
+          propertyKeys,
           true
         ),
         this.colorPicker(styleForLabel.selector, styleForLabel),
@@ -299,7 +301,7 @@ export class GrassEditorComponent extends Component<any> {
           this.captionPicker(
             styleForLabel.selector,
             styleForLabel,
-            this.props.selectedLabel.propertyKeys
+            propertyKeys
           )
         )
       }
@@ -320,12 +322,14 @@ export class GrassEditorComponent extends Component<any> {
       }
       const displayCaptionPicker =
         styleForRelType.props?.captionSettings === undefined // do not show caption picker if label settings are set
+      const propertyKeys = (this.props.selectedRelType
+        .propertyKeys as string[]).sort((a, b) => (a > b ? 1 : -1))
 
       pickers = [
         this.labelPicker(
           styleForRelType.selector,
           styleForRelType,
-          this.props.selectedRelType.propertyKeys,
+          propertyKeys,
           true,
           false
         ),
@@ -337,7 +341,7 @@ export class GrassEditorComponent extends Component<any> {
           this.captionPicker(
             styleForRelType.selector,
             styleForRelType,
-            this.props.selectedRelType.propertyKeys,
+            propertyKeys,
             true
           )
         )
