@@ -4,8 +4,6 @@ import { flatten } from 'lodash-es'
 import NeighboursPickerItem, {
   INeighboursPickerItem
 } from './NeighboursPickerItem'
-import { connect } from 'react-redux'
-import { GlobalState } from 'shared/globalState'
 import GenericModal from './GenericModal'
 import { ApplyButton, SimpleButton } from './styled'
 
