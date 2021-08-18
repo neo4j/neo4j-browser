@@ -20,6 +20,7 @@
 
 import { getBrowserName } from 'services/utils'
 import { APP_START } from 'shared/modules/app/appDuck'
+import { setItem } from 'services/localstorage'
 
 export const NAME = 'grass'
 export const UPDATE_GRAPH_STYLE_DATA = 'grass/UPDATE_GRAPH_STYLE_DATA'
@@ -62,6 +63,9 @@ export default function visualization(state = initialState, action: any) {
     case APP_START:
       return !state ? state : { ...initialState, ...state }
     case UPDATE_GRAPH_STYLE_DATA:
+      if (action.styleData === null) {
+        setItem('lastGrassUrl', null)
+      }
       return updateStyleData(state, action.styleData)
     default:
       return state
