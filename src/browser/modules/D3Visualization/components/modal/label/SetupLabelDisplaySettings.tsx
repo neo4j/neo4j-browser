@@ -26,6 +26,7 @@ const Input = styled.input`
   vertical-align: middle;
 `
 export const includePropertyNameKey = 'include-property-name'
+export const replaceUnderscoresWithSpaces = 'replace-underscores-with-spaces'
 export const setupLabelDisplaySettingsOptions: IOption[] = [
   {
     key: includePropertyNameKey,
@@ -58,6 +59,11 @@ export const setupLabelDisplaySettingsOptions: IOption[] = [
         <UnderlineSpan>Underline</UnderlineSpan> text
       </DisplaySpan>
     )
+  },
+  {
+    key: replaceUnderscoresWithSpaces,
+    value: 'true',
+    description: <DisplaySpan>Replace underscores with spaces</DisplaySpan>
   }
 ]
 export type ISetupLabelDisplaySettingsOnChange = (props: {

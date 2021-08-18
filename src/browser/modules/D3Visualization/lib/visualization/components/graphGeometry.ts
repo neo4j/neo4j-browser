@@ -25,7 +25,10 @@ import {
   LabelPosition
 } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelModal'
 import { flatten, floor } from 'lodash-es'
-import { includePropertyNameKey } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelDisplaySettings'
+import {
+  includePropertyNameKey,
+  replaceUnderscoresWithSpaces
+} from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelDisplaySettings'
 
 export default class NeoD3Geometry {
   relationshipRouting: any
@@ -55,6 +58,9 @@ export default class NeoD3Geometry {
             currentStyle.caption,
             relationship
           )
+          if (currentStyle[replaceUnderscoresWithSpaces]) {
+            caption = caption.replace(/[_]/g, ' ')
+          }
           if (currentStyle[includePropertyNameKey]) {
             caption = `${currentStyle.caption.replace(/[{}]/g, '')}: ` + caption
           }
@@ -217,7 +223,18 @@ const fitMultipleCaptionsIntoCircle = function(
         const textDecoration =
           currentStyle['text-decoration'] ??
           style.forNode(node).get('text-decoration')
-        const words: string[] = captionText.split(' ')
+        let words: string[] = captionText.split(' ')
+        if (currentStyle[replaceUnderscoresWithSpaces]) {
+          words = flatten(
+            words.map(w => {
+              if (w.indexOf('_') === -1) {
+                return w
+              } else {
+                return w.split('_')
+              }
+            })
+          )
+        }
         if (currentStyle[includePropertyNameKey]) {
           words.unshift(`${currentStyle.caption.replace(/[{}]/g, '')}:`)
         }
