@@ -93,7 +93,7 @@ export const DatabaseKernelInfo = ({
                 <StyledValue>{toHumanReadableBytes(storeSize)}</StyledValue>
               </tr>
             )}
-            {databases && databases.length && (
+            {databases && databases.length > 0 && (
               <tr>
                 <StyledKey>Databases: </StyledKey>
                 <StyledValue>
