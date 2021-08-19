@@ -36,6 +36,7 @@ plugins.auth.openid.claim.principal=preferred_username
 +
 Optionally, you may set extra logging for the OAuth2 plugin with these settings in the `neo4j.conf` file.
 The logs are found in the `neo4j.log` file.
+The `:debug` command contains logging from the SSO implementation and can be useful when debugging.
 +
 [source, properties]
 ----
@@ -48,51 +49,51 @@ Browser needs to be aware of the identity providers available for use.
 This is done by specifying a URL parameter discoveryURL that specifies a URL to a json file containing the SSO providers.
 Example for Browser: `http://<browser-server-host>:<http-port>?discoveryURL=http://webhost.com/public/discovery.json`.
 
-// The `discovery.json` file must contain entries tailored to your organization’s specific SSO solution.
-// Below is a reference discovery file for the ID provider (IDP) _Keycloak_ containing one SSO provider.
-// It contains all the possible parameters you can provide.
-// You most likely do not need all the parameters.
-// If you are unsure, please consult your Neo4j representative to avoid misconfiguration.
-//
-// [source, parameters]
-// ----
-//
-// {
-// 	// other discovery entries
-// 	// e.g. "bolt": "bolt://localhost:7687"
-// 	//
-// 	"sso_providers": [
-// 	 {
-// 			"id": "keycloak-oidc",  // has to be unique in this file!
-// 			"name": "Keycloak", // displayed in UI
-// 			"auth_flow": "pkce",
-// 			"auth_endpoint": "http://localhost:18080/auth/realms/myrealm/protocol/openid-connect/auth",
-// 			"token_endpoint": "http://localhost:18080/auth/realms/myrealm/protocol/openid-connect/token",
-// 			"well_known_discovery_uri": "http://localhost:18080/auth/realms/myrealm/.well-known/openid-configuration",
-// 			"params": {  // can be used for both the auth and the token request
-// 				"client_id": "account",
-// 				"redirect_uri": "http://localhost:8085?idp_id=keycloak-oidc&auth_flow_step=redirect_uri",
-// 				"response_type": "code",  // depends on the auth_flow
-// 				"scope": "openid groups"
-// 			},
-// 			"auth_params": { // optional
-// 				"param_p": "<extra parameter used only for the auth request>"
-// 			},
-// 			"token_params": { // optional
-// 				"client_secret": "<secret-here>", // this may be required by some Idp's and depended on the auth flow.
-// 				"param_p": "<extra parameter used only for the token request>"
-// 			},
-// 			"config": { // optional settings, these allow you to overwrite the defaults
-// 				"implicit_flow_requires_nonce": false, // Default: false; Desc: Specify if the implicit auth flow requries a nonce in the request
-// 				"principal": "preferred_username",  // Default: email, otherwise sub; Desc: Optional, in which token claim the user's principal is specified
-// 				"token_type_principal": "access_token" // Default: access_token; Desc: Which token type is decoded to acquire the specified principal
-// 				"token_type_authentication": "access_token" // Default: access_token; Desc: Which token type is used as password
-// 				"code_challenge_method": "S256" // Default is "S256" and it's the only supported method at this moment.
-// 			}
-// 		}
-// 	]
-// }
-// ----
+The `discovery.json` file must contain entries tailored to your organization’s specific SSO solution.
+Below is a reference discovery file for the ID provider (IDP) _Keycloak_ containing one SSO provider and set up to be running on port 18080.
+It contains all the possible parameters you can provide.
+You most likely do not need all the parameters.
+If you are unsure, please consult your Neo4j representative to avoid misconfiguration.
+
+[source, parameters]
+----
+
+{
+	// other discovery entries
+	// e.g. "bolt": "bolt://localhost:7687"
+	//
+	"sso_providers": [
+	 {
+			"id": "keycloak-oidc",  // has to be unique in this file!
+			"name": "Keycloak", // displayed in UI
+			"auth_flow": "pkce",
+      "auth_endpoint": "http://localhost:18080/auth/realms/myrealm/protocol/openid-connect/auth",
+ 			"token_endpoint": "http://localhost:18080/auth/realms/myrealm/protocol/openid-connect/token",
+ 			"well_known_discovery_uri": "http://localhost:18080/auth/realms/myrealm/.well-known/openid-configuration",
+			"params": {  // can be used for both the auth and the token request
+				"client_id": "account",
+				"redirect_uri": "http://<browser-server-host>:<http-port>?idp_id=keycloak-oidc&auth_flow_step=redirect_uri",
+				"response_type": "code",  // depends on the auth_flow
+				"scope": "openid groups"
+			},
+			"auth_params": { // optional
+				"param_p": "<extra parameter used only for the auth request>"
+			},
+			"token_params": { // optional
+				"client_secret": "<secret-here>", // this may be required by some Idp's and depended on the auth flow.
+				"param_p": "<extra parameter used only for the token request>"
+			},
+			"config": { // optional settings, these allow you to overwrite the defaults
+				"implicit_flow_requires_nonce": false, // Default: false; Desc: Specify if the implicit auth flow requries a nonce in the request
+				"principal": "preferred_username",  // Default: email, otherwise sub; Desc: Optional, in which token claim the user's principal is specified
+				"token_type_principal": "access_token" // Default: access_token; Desc: Which token type is decoded to acquire the specified principal
+				"token_type_authentication": "access_token" // Default: access_token; Desc: Which token type is used as password
+				"code_challenge_method": "S256" // Default is "S256" and it's the only supported method at this moment.
+			}
+		}
+	]
+}
+----
 
 [IMPORTANT]
 ====
