@@ -1,5 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
+import SetupLabelCompositeProperty from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelCompositeProperty'
 
 interface IProps {
   propertyKeys: string[]
@@ -7,6 +8,7 @@ interface IProps {
   onChange: (value: string) => void
   showTypeSelector: boolean
 }
+
 const ScrollDiv = styled.div`
   max-height: 250px;
   overflow-y: auto;
@@ -15,7 +17,7 @@ const PropertyLabel = styled.label`
   display: block;
   vertical-align: middle;
   cursor: pointer;
-  margin: 5px 0;
+  margin-bottom: 5px;
 `
 const PropertyRadio = styled.input`
   vertical-align: middle;
@@ -27,8 +29,36 @@ const PropertyLabelSpan = styled.span<{ underline?: boolean }>`
 
   ${({ underline }) => (underline ? 'text-decoration: underline' : '')}
 `
-const typeSelectorValue = '<type>'
-const idSelectorValue = '<id>'
+const TabContainer = styled.div``
+const Tab = styled.div<{ active: boolean }>`
+  display: inline-block;
+  border-radius: 2px 2px 0 0;
+  border: 1px solid #0c3246;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 110%;
+  ${({ active }) =>
+    active
+      ? `
+  border-bottom: 1px solid transparent;
+  `
+      : ''}
+`
+
+const BorderDiv = styled.div`
+  border-left: 1px solid #0c3246;
+  border-bottom: 1px solid #0c3246;
+  padding-left: 5px;
+  padding-bottom: 10px;
+`
+export const typeSelectorValue = '<type>'
+export const idSelectorValue = '<id>'
+const compositeSelectorValue = '<composite>'
+
+enum SetupLabelTabEnum {
+  list,
+  custom
+}
 
 const SetupLabelProperties: React.FC<IProps> = ({
   propertyKeys,
@@ -36,6 +66,7 @@ const SetupLabelProperties: React.FC<IProps> = ({
   onChange,
   showTypeSelector
 }) => {
+  const [tab, setTab] = React.useState(SetupLabelTabEnum.list)
   const items: Array<{
     displayValue: string
     captionToSave: string
@@ -54,54 +85,90 @@ const SetupLabelProperties: React.FC<IProps> = ({
     },
     [onChange]
   )
+  const handleCompositeFieldSelect = React.useCallback(
+    (value: string) => {
+      onChange(value)
+    },
+    [onChange]
+  )
   const inputName = 'property'
   return (
-    <ScrollDiv>
-      <PropertyLabel>
-        <PropertyRadio
-          type={'radio'}
-          name={inputName}
-          value={''}
-          checked={'' === selectedCaption}
-          onChange={handleRadioInputChange}
-        />
-        <PropertyLabelSpan underline={true}>Display nothing</PropertyLabelSpan>
-      </PropertyLabel>
-      <PropertyLabel>
-        <PropertyRadio
-          type={'radio'}
-          name={inputName}
-          value={idSelectorValue}
-          checked={idSelectorValue === selectedCaption}
-          onChange={handleRadioInputChange}
-        />
-        <PropertyLabelSpan>{idSelectorValue}</PropertyLabelSpan>
-      </PropertyLabel>
-      {showTypeSelector && (
-        <PropertyLabel>
-          <PropertyRadio
-            type={'radio'}
-            name={inputName}
-            value={typeSelectorValue}
-            checked={typeSelectorValue === selectedCaption}
-            onChange={handleRadioInputChange}
-          />
-          <PropertyLabelSpan>{typeSelectorValue}</PropertyLabelSpan>
-        </PropertyLabel>
-      )}
-      {items.map(({ displayValue, captionToSave }) => (
-        <PropertyLabel key={displayValue}>
-          <PropertyRadio
-            type={'radio'}
-            name={inputName}
-            value={captionToSave}
-            checked={displayValue === selectedCaption}
-            onChange={handleRadioInputChange}
-          />
-          <PropertyLabelSpan>{displayValue}</PropertyLabelSpan>
-        </PropertyLabel>
-      ))}
-    </ScrollDiv>
+    <div>
+      <TabContainer>
+        <Tab
+          active={tab === SetupLabelTabEnum.list}
+          onClick={() => setTab(SetupLabelTabEnum.list)}
+        >
+          List
+        </Tab>
+        <Tab
+          active={tab === SetupLabelTabEnum.custom}
+          onClick={() => setTab(SetupLabelTabEnum.custom)}
+        >
+          Custom
+        </Tab>
+      </TabContainer>
+      <ScrollDiv>
+        {tab === SetupLabelTabEnum.list ? (
+          <BorderDiv>
+            <PropertyLabel>
+              <PropertyRadio
+                type={'radio'}
+                name={inputName}
+                value={''}
+                checked={'' === selectedCaption}
+                onChange={handleRadioInputChange}
+              />
+              <PropertyLabelSpan underline={true}>
+                Display nothing
+              </PropertyLabelSpan>
+            </PropertyLabel>
+            <PropertyLabel>
+              <PropertyRadio
+                type={'radio'}
+                name={inputName}
+                value={idSelectorValue}
+                checked={idSelectorValue === selectedCaption}
+                onChange={handleRadioInputChange}
+              />
+              <PropertyLabelSpan>{idSelectorValue}</PropertyLabelSpan>
+            </PropertyLabel>
+            {showTypeSelector && (
+              <PropertyLabel>
+                <PropertyRadio
+                  type={'radio'}
+                  name={inputName}
+                  value={typeSelectorValue}
+                  checked={typeSelectorValue === selectedCaption}
+                  onChange={handleRadioInputChange}
+                />
+                <PropertyLabelSpan>{typeSelectorValue}</PropertyLabelSpan>
+              </PropertyLabel>
+            )}
+            {items.map(({ displayValue, captionToSave }) => (
+              <PropertyLabel key={displayValue}>
+                <PropertyRadio
+                  type={'radio'}
+                  name={inputName}
+                  value={captionToSave}
+                  checked={captionToSave === selectedCaption}
+                  onChange={handleRadioInputChange}
+                />
+                <PropertyLabelSpan>{displayValue}</PropertyLabelSpan>
+              </PropertyLabel>
+            ))}
+          </BorderDiv>
+        ) : (
+          <BorderDiv>
+            <SetupLabelCompositeProperty
+              onSelect={handleCompositeFieldSelect}
+              properties={propertyKeys}
+              selectedCaption={selectedCaption}
+            />
+          </BorderDiv>
+        )}
+      </ScrollDiv>
+    </div>
   )
 }
 

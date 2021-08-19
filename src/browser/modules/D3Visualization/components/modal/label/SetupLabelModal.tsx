@@ -224,12 +224,15 @@ const SetupLabelModal: React.FC<IProps & { doClose: () => void }> = props => {
       selectedLabel={selectedLabel}
       position={position}
       style={currentCaptionSettings[position]}
+      text={currentCaptionSettings[position].caption}
       key={position}
-    >
-      {displayCaption(currentCaptionSettings[position])}
-    </PreviewLabel>
+    />
   ))
 
+  const isCustom = React.useMemo(() => {
+    const caption = currentCaptionSettings[selectedLabel].caption
+    return false
+  }, [currentCaptionSettings[selectedLabel].caption])
   let nodeOrRelDiv
   if (isNode) {
     nodeOrRelDiv = (
@@ -267,7 +270,7 @@ const SetupLabelModal: React.FC<IProps & { doClose: () => void }> = props => {
       <SetupLabelProperties
         showTypeSelector={showTypeSelector}
         propertyKeys={propertyKeys}
-        selectedCaption={displayCaption(currentCaptionSettings[selectedLabel])}
+        selectedCaption={currentCaptionSettings[selectedLabel].caption}
         onChange={handleRadioInputChange}
       />
       <MarginContainer>
@@ -282,10 +285,11 @@ const PreviewLabel: React.FC<{
   selectedLabel: LabelPosition
   position: LabelPosition
   onClick: (position: LabelPosition) => void
+  text?: string
   style: {
     [key: string]: string
   }
-}> = ({ selectedLabel, position, onClick, style, children }) => {
+}> = ({ selectedLabel, position, onClick, style, text }) => {
   const handleClick = React.useCallback(() => onClick(position), [
     onClick,
     position
@@ -308,10 +312,12 @@ const PreviewLabel: React.FC<{
       isSelected={selectedLabel === position}
       onClick={handleClick}
     >
-      {children && (
+      {text && (
         <span style={textStyle}>
-          {children}
-          {style[includePropertyNameKey] ? ': value' : ''}
+          {style[includePropertyNameKey]
+            ? text.replace(/[{}]/g, '') + ': '
+            : ''}
+          {text}
         </span>
       )}
     </PreviewLabelButton>

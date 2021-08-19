@@ -13,7 +13,8 @@ const customStyles = {
     padding: 0,
     backgroundColor: 'inherit',
     border: '1px solid rgba(0,0,0,0.2)',
-    boxShadow: '2px 2px 2px 1px rgba(0, 0, 0, 0.2)'
+    boxShadow: '2px 2px 2px 1px rgba(0, 0, 0, 0.2)',
+    maxWidth: '70%'
   }
 }
 const ModalBody = styled.div`
