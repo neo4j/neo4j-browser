@@ -6,6 +6,7 @@ interface IOption {
   key: string
   description: React.ReactNode
 }
+
 const Container = styled.div`
   margin: 10px 0;
 `
@@ -70,28 +71,33 @@ export type ISetupLabelDisplaySettingsOnChange = (props: {
   key: string
   value: string | null
 }) => void
+
 interface IProps {
+  isCustom: boolean
   itemStyle: { [key: string]: string }
   onChange: ISetupLabelDisplaySettingsOnChange
 }
 
 const SetupLabelDisplaySettings: React.FC<IProps> = ({
   itemStyle,
-  onChange
+  onChange,
+  isCustom
 }) => (
   <Container>
     {setupLabelDisplaySettingsOptions.map(t => (
-      <SetupLabelDisplaySettingsItem
+      <SetupLabelDisplaySettingsItemMemoed
         key={t.key}
         option={t}
         currentValue={itemStyle[t.key]}
         onChange={onChange}
+        isCustom={isCustom}
       />
     ))}
   </Container>
 )
 
-interface ISetupLabelDisplaySettingsItemProps extends Pick<IProps, 'onChange'> {
+interface ISetupLabelDisplaySettingsItemProps
+  extends Pick<IProps, 'onChange' | 'isCustom'> {
   option: IOption
   currentValue: string
 }
@@ -99,7 +105,8 @@ interface ISetupLabelDisplaySettingsItemProps extends Pick<IProps, 'onChange'> {
 const SetupLabelDisplaySettingsItem: React.FC<ISetupLabelDisplaySettingsItemProps> = ({
   option,
   currentValue,
-  onChange
+  onChange,
+  isCustom
 }) => {
   const isChecked = currentValue === option.value
   const handleChange: (
@@ -107,6 +114,9 @@ const SetupLabelDisplaySettingsItem: React.FC<ISetupLabelDisplaySettingsItemProp
   ) => void = React.useCallback(() => {
     onChange({ key: option.key, value: isChecked ? null : option.value })
   }, [isChecked, option, onChange])
+  const disabled = React.useMemo(() => {
+    return option.key === includePropertyNameKey && isCustom
+  }, [isCustom, option])
   return (
     <div>
       <label>
@@ -115,10 +125,14 @@ const SetupLabelDisplaySettingsItem: React.FC<ISetupLabelDisplaySettingsItemProp
           value={option.value}
           checked={isChecked}
           onChange={handleChange}
+          disabled={disabled}
         />
         {option.description}
       </label>
     </div>
   )
 }
+const SetupLabelDisplaySettingsItemMemoed = React.memo(
+  SetupLabelDisplaySettingsItem
+)
 export default SetupLabelDisplaySettings

@@ -50,7 +50,6 @@ const SetupLabelCompositeProperty: React.FC<IProps> = ({
   selectedCaption
 }) => {
   const [items, setItems] = React.useState<IDisplayItem[]>(() => {
-    console.log('selectedCaption', selectedCaption)
     if (selectedCaption === '') {
       return [generateDisplayItem(properties[0])]
     } else {

@@ -1,7 +1,10 @@
 import * as React from 'react'
 import GenericModal from 'browser/modules/D3Visualization/components/modal/GenericModal'
 import styled from 'styled-components'
-import SetupLabelProperties from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelProperties'
+import SetupLabelProperties, {
+  idSelectorValue,
+  typeSelectorValue
+} from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelProperties'
 import { camelCase, cloneDeep } from 'lodash-es'
 import { ApplyButton, SimpleButton } from '../styled'
 import SetupLabelDisplaySettings, {
@@ -229,10 +232,22 @@ const SetupLabelModal: React.FC<IProps & { doClose: () => void }> = props => {
     />
   ))
 
+  const currentCaption: string | undefined =
+    currentCaptionSettings[selectedLabel].caption
   const isCustom = React.useMemo(() => {
-    const caption = currentCaptionSettings[selectedLabel].caption
-    return false
-  }, [currentCaptionSettings[selectedLabel].caption])
+    if (currentCaption) {
+      return !propertyKeys
+        .concat([idSelectorValue, typeSelectorValue])
+        .includes(currentCaption.replace(/[{}]/g, ''))
+    } else {
+      return true
+    }
+  }, [currentCaption, propertyKeys])
+  React.useEffect(() => {
+    if (isCustom) {
+      handleDisplaySettingsChange({ key: includePropertyNameKey, value: null })
+    }
+  }, [isCustom, handleDisplaySettingsChange])
   let nodeOrRelDiv
   if (isNode) {
     nodeOrRelDiv = (
@@ -263,6 +278,7 @@ const SetupLabelModal: React.FC<IProps & { doClose: () => void }> = props => {
         <h4>{title}</h4>
         <div>{labelHeader}</div>
         <SetupLabelDisplaySettings
+          isCustom={isCustom}
           itemStyle={currentCaptionSettings[selectedLabel]}
           onChange={handleDisplaySettingsChange}
         />
@@ -270,7 +286,7 @@ const SetupLabelModal: React.FC<IProps & { doClose: () => void }> = props => {
       <SetupLabelProperties
         showTypeSelector={showTypeSelector}
         propertyKeys={propertyKeys}
-        selectedCaption={currentCaptionSettings[selectedLabel].caption}
+        selectedCaption={currentCaption}
         onChange={handleRadioInputChange}
       />
       <MarginContainer>
