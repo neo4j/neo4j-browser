@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React from 'react'
-import Render from 'browser-components/Render'
+
 import { ExclamationTriangleIcon } from 'browser-components/icons/Icons'
 import Ellipsis from 'browser-components/Ellipsis'
 import { stringModifier } from 'services/bolt/cypherTypesFormatting'
@@ -32,11 +32,11 @@ const ParamsFrame = ({ frame }: any) => {
   const params = applyGraphTypes(frame.params)
   const contents = (
     <PaddedDiv>
-      <Render if={frame.success !== false}>
+      {frame.success !== false && (
         <pre data-testid="rawParamData">
           {stringifyMod(params, stringModifier, true)}
         </pre>
-      </Render>
+      )}
       <div style={{ marginTop: '20px' }}>
         See <AutoExecButton cmd="help param" /> for usage of the{' '}
         <code>:param</code> command.
@@ -47,14 +47,14 @@ const ParamsFrame = ({ frame }: any) => {
     typeof frame.success === 'undefined' ? null : (
       <StyledStatsBar>
         <Ellipsis>
-          <Render if={frame.success === true}>
+          {frame.success === true && (
             <SuccessText>Successfully set your parameters.</SuccessText>
-          </Render>
-          <Render if={frame.success === false}>
+          )}
+          {frame.success === false && (
             <ErrorText>
               <ExclamationTriangleIcon /> Something went wrong. Read help pages.
             </ErrorText>
-          </Render>
+          )}
         </Ellipsis>
       </StyledStatsBar>
     )

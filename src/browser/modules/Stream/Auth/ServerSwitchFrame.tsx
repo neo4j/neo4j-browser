@@ -27,7 +27,7 @@ import {
 } from './styled'
 import ConnectedView from './ConnectedView'
 import { H3 } from 'browser-components/headers'
-import Render from 'browser-components/Render'
+
 import ClickToCode from '../../ClickToCode'
 
 const connectionFailed = (frame: any) => {
@@ -54,28 +54,26 @@ export const ServerSwitchFrame = (props: any) => {
     <>
       <StyledConnectionAside>
         <span>
-          <Render if={connectionFailed(frame)}>
-            <React.Fragment>
+          {connectionFailed(frame) && (
+            <>
               <H3>Connection failed</H3>
               Could not connect.
-            </React.Fragment>
-          </Render>
-          <Render
-            if={connectionSuccess(
-              frame,
-              activeConnectionData,
-              dynamicConnectionData
-            )}
-          >
-            <React.Fragment>
+            </>
+          )}
+          {connectionSuccess(
+            frame,
+            activeConnectionData,
+            dynamicConnectionData
+          ) && (
+            <>
               <H3>Connection updated</H3>
               You have switched connection.
-            </React.Fragment>
-          </Render>
+            </>
+          )}
         </span>
       </StyledConnectionAside>
       <StyledConnectionBodyContainer>
-        <Render if={connectionFailed(frame)}>
+        {connectionFailed(frame) && (
           <StyledConnectionBody>
             The connection credentials provided could not be used to connect.
             <br />
@@ -85,38 +83,32 @@ export const ServerSwitchFrame = (props: any) => {
             credentials if you have an active graph but the provided credentials
             were wrong.
           </StyledConnectionBody>
-        </Render>
-        <Render
-          if={connectionSuccess(
-            frame,
-            activeConnectionData,
-            dynamicConnectionData
-          )}
-        >
+        )}
+        {connectionSuccess(
+          frame,
+          activeConnectionData,
+          dynamicConnectionData
+        ) && (
           <ConnectedView
             host={activeConnectionData && activeConnectionData.host}
             username={activeConnectionData && activeConnectionData.username}
             showHost
             storeCredentials={storeCredentials}
           />
-        </Render>
-        <Render
-          if={
-            frame.type === 'switch-success' &&
-            activeConnectionData &&
-            dynamicConnectionData &&
-            !dynamicConnectionData.authEnabled
-          }
-        >
-          <div>
-            <ConnectedView
-              host={activeConnectionData && activeConnectionData.host}
-              showHost
-              hideStoreCredentials
-              additionalFooter="You have a working connection with the Neo4j database and server auth is disabled."
-            />
-          </div>
-        </Render>
+        )}
+        {frame.type === 'switch-success' &&
+          activeConnectionData &&
+          dynamicConnectionData &&
+          !dynamicConnectionData.authEnabled && (
+            <div>
+              <ConnectedView
+                host={activeConnectionData && activeConnectionData.host}
+                showHost
+                hideStoreCredentials
+                additionalFooter="You have a working connection with the Neo4j database and server auth is disabled."
+              />
+            </div>
+          )}
       </StyledConnectionBodyContainer>
     </>
   )

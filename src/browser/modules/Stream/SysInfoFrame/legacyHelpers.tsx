@@ -22,7 +22,7 @@ import React from 'react'
 import { getTableDataFromRecords, buildTableData } from './sysinfo-utils'
 import { toHumanReadableBytes } from 'services/utils'
 import arrayHasItems from 'shared/utils/array-has-items'
-import Render from 'browser-components/Render'
+
 import {
   SysInfoTableContainer,
   StyledSysInfoTable,
@@ -56,7 +56,7 @@ export const Sysinfo = ({
       <StyledSysInfoTable key="Transactionss" header="Transactions">
         {buildTableData(transactions)}
       </StyledSysInfoTable>
-      <Render if={isACausalCluster}>
+      {isACausalCluster && (
         <StyledSysInfoTable
           key="cc-table"
           header={
@@ -73,13 +73,13 @@ export const Sysinfo = ({
           />
           {buildTableData(cc)}
         </StyledSysInfoTable>
-      </Render>
-      <Render if={arrayHasItems(ha)}>
+      )}
+      {arrayHasItems(ha) && (
         <StyledSysInfoTable key="ha-table" header="High Availability">
           {buildTableData(ha)}
         </StyledSysInfoTable>
-      </Render>
-      <Render if={arrayHasItems(haInstances)}>
+      )}
+      {arrayHasItems(haInstances) && (
         <StyledSysInfoTable key="cluster-table" header="Cluster" colspan={4}>
           <SysInfoTableEntry
             key="ha-entry"
@@ -87,7 +87,7 @@ export const Sysinfo = ({
           />
           {buildTableData(haInstances)}
         </StyledSysInfoTable>
-      </Render>
+      )}
     </SysInfoTableContainer>
   )
 }
