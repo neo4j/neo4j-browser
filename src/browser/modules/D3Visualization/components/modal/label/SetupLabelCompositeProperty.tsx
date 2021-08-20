@@ -228,7 +228,7 @@ const PropInput: React.FC<{
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = React.useCallback(
     e => {
-      const newValue = e.target.value
+      const newValue = e.target.value.replace(/[{}]/g, '')
       item[prop] = newValue
       setValue(newValue)
     },
