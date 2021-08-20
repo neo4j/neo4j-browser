@@ -8,10 +8,10 @@ import { BuiltInGuideSidebarSlide } from 'browser/modules/Carousel/Slide'
 import {
   LinkContainer,
   MarginTop,
-  MarginTopLi,
   NoBulletsUl,
   Clickable,
-  GuideListEntry
+  GuideListEntry,
+  MarginBottomLi
 } from 'browser/documentation/sidebar-guides/styled'
 import { Guide } from 'shared/modules/guides/guidesDuck'
 import docs, { GuideChapter } from 'browser/documentation'
@@ -48,14 +48,14 @@ const GuidePicker = ({
       :guide [guide name]
     </DrawerBrowserCommand>
     in the code editor.
-    <MarginTop>
+    <MarginTop pixels={25}>
       <DrawerSubHeader as="div" /* prevents guide styling of h5*/>
         Built-in guides
       </DrawerSubHeader>
     </MarginTop>
     <NoBulletsUl>
       {builtInGuides.map(({ name, description }) => (
-        <MarginTopLi
+        <MarginBottomLi
           key={name}
           onClick={() =>
             setGuide({ ...docs.guide.chapters[name], currentSlide: 0 })
@@ -63,12 +63,12 @@ const GuidePicker = ({
         >
           <DrawerBrowserCommand>:guide {name}</DrawerBrowserCommand>
           <MarginTop> {description} </MarginTop>
-        </MarginTopLi>
+        </MarginBottomLi>
       ))}
     </NoBulletsUl>
     {remoteGuides.length !== 0 && (
       <>
-        <MarginTop>
+        <MarginTop pixels={25}>
           <DrawerSubHeader as="div" /* prevents guide styling of h5*/>
             Remote Guides
           </DrawerSubHeader>
