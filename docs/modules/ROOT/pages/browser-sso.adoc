@@ -9,6 +9,7 @@ Your organization needs an existing compatible SSO provider (local or external) 
 Supported providers at this time include OpenID Connect (OIDC) OAuth 2.0 providers Okta, KeyCloak, and Microsoft Azure AD.
 SSO has been tested on Neo4j 4.2.x and 4.3.x deployments.
 Browser supports two authorization flows:
+
 * Authorization Code flow with PKCE
 * Implicit flow
 
@@ -45,16 +46,16 @@ dbms.jvm.additional=-Dorg.apache.commons.logging.simplelog.showdatetime=true
 dbms.jvm.additional=-Dorg.apache.commons.logging.simplelog.log.org.apache.http=DEBUG
 ----
 
-Browser needs to be aware of the identity providers available for use.
+. Browser needs to be aware of the identity providers available for use.
 This is done by specifying a URL parameter discoveryURL that specifies a URL to a json file containing the SSO providers.
 Example for Browser: `http://<browser-server-host>:<http-port>?discoveryURL=http://webhost.com/public/discovery.json`.
-
++
 The `discovery.json` file must contain entries tailored to your organization’s specific SSO solution.
 Below is a reference discovery file for the ID provider (IDP) _Keycloak_ containing one SSO provider and set up to be running on port 18080.
 It contains all the possible parameters you can provide.
 You most likely do not need all the parameters.
 If you are unsure, please consult your Neo4j representative to avoid misconfiguration.
-
++
 [source, parameters]
 ----
 
@@ -94,7 +95,7 @@ If you are unsure, please consult your Neo4j representative to avoid misconfigur
 	]
 }
 ----
-
++
 [IMPORTANT]
 ====
 `redirect_uri` MUST match exactly the redirect_uri specified in the IdP.
