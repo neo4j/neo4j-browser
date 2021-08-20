@@ -62,6 +62,7 @@ import {
   setClientConfig
 } from '../features/featuresDuck'
 import { clearHistory } from 'shared/modules/history/historyDuck'
+import { database } from 'firebase'
 
 export const NAME = 'meta'
 export const UPDATE = 'meta/UPDATE'
@@ -514,7 +515,11 @@ const switchToRequestedDb = (store: any) => {
         } else {
           const systemDb = databases.find((db: any) => db.name === 'system')
           if (systemDb) {
-            store.dispatch(useDb('system'))
+            store.dispatch(useDb(systemDb.name))
+          } else {
+            if (database.length > 0) {
+              store.dispatch(useDb(databases[0].name))
+            }
           }
         }
       }
