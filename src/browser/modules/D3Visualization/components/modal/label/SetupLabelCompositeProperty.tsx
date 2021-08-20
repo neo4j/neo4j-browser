@@ -43,7 +43,20 @@ function generateDisplayItem(property: string): IDisplayItem {
     textLeft: ''
   }
 }
-
+// Reload on caption change
+const SetupLabelCompositePropertyWrapper: React.FC<IProps> = props => {
+  const { selectedCaption } = props
+  const [show, setShow] = React.useState(true)
+  React.useEffect(() => {
+    setShow(false)
+  }, [selectedCaption])
+  React.useEffect(() => {
+    if (!show) {
+      setShow(true)
+    }
+  }, [show])
+  return show ? <SetupLabelCompositePropertyMemoed {...props} /> : null
+}
 const SetupLabelCompositeProperty: React.FC<IProps> = ({
   properties,
   onSelect,
@@ -146,6 +159,9 @@ const SetupLabelCompositeProperty: React.FC<IProps> = ({
     </Container>
   )
 }
+const SetupLabelCompositePropertyMemoed = React.memo(
+  SetupLabelCompositeProperty
+)
 const Select = styled.select`
   color: black;
   vertical-align: middle;
@@ -220,4 +236,5 @@ const PropInput: React.FC<{
   )
   return <Input value={value} onChange={handleChange} />
 }
-export default SetupLabelCompositeProperty
+
+export default React.memo(SetupLabelCompositePropertyWrapper)

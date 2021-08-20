@@ -4,7 +4,7 @@ import SetupLabelCompositeProperty from 'project-root/src/browser/modules/D3Visu
 
 interface IProps {
   propertyKeys: string[]
-  selectedCaption: string
+  selectedCaption?: string
   onChange: (value: string) => void
   showTypeSelector: boolean
 }
@@ -53,7 +53,6 @@ const BorderDiv = styled.div`
 `
 export const typeSelectorValue = '<type>'
 export const idSelectorValue = '<id>'
-const compositeSelectorValue = '<composite>'
 
 enum SetupLabelTabEnum {
   list,
@@ -92,6 +91,16 @@ const SetupLabelProperties: React.FC<IProps> = ({
     [onChange]
   )
   const inputName = 'property'
+  const specialProperties: string[] = React.useMemo(() => {
+    return showTypeSelector
+      ? [idSelectorValue, typeSelectorValue]
+      : [idSelectorValue]
+  }, [showTypeSelector])
+
+  const allProperties: string[] = React.useMemo(
+    () => specialProperties.concat(propertyKeys),
+    [specialProperties, propertyKeys]
+  )
   return (
     <div>
       <TabContainer>
@@ -123,28 +132,18 @@ const SetupLabelProperties: React.FC<IProps> = ({
                 Display nothing
               </PropertyLabelSpan>
             </PropertyLabel>
-            <PropertyLabel>
-              <PropertyRadio
-                type={'radio'}
-                name={inputName}
-                value={idSelectorValue}
-                checked={idSelectorValue === selectedCaption}
-                onChange={handleRadioInputChange}
-              />
-              <PropertyLabelSpan>{idSelectorValue}</PropertyLabelSpan>
-            </PropertyLabel>
-            {showTypeSelector && (
-              <PropertyLabel>
+            {specialProperties.map(t => (
+              <PropertyLabel key={t}>
                 <PropertyRadio
                   type={'radio'}
                   name={inputName}
-                  value={typeSelectorValue}
-                  checked={typeSelectorValue === selectedCaption}
+                  value={`{${t}}`}
+                  checked={`{${t}}` === selectedCaption}
                   onChange={handleRadioInputChange}
                 />
-                <PropertyLabelSpan>{typeSelectorValue}</PropertyLabelSpan>
+                <PropertyLabelSpan>{t}</PropertyLabelSpan>
               </PropertyLabel>
-            )}
+            ))}
             {items.map(({ displayValue, captionToSave }) => (
               <PropertyLabel key={displayValue}>
                 <PropertyRadio
@@ -162,8 +161,8 @@ const SetupLabelProperties: React.FC<IProps> = ({
           <BorderDiv>
             <SetupLabelCompositeProperty
               onSelect={handleCompositeFieldSelect}
-              properties={propertyKeys}
-              selectedCaption={selectedCaption}
+              properties={allProperties}
+              selectedCaption={selectedCaption ?? ''}
             />
           </BorderDiv>
         )}

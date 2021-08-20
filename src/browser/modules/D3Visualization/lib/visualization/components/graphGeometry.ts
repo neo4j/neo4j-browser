@@ -210,10 +210,7 @@ const fitMultipleCaptionsIntoCircle = function(
     allLabelPositions.map((position, index) => {
       const currentStyle = captionSettings[position]
       if (currentStyle.caption) {
-        let nodeText: string = style.interpolate(currentStyle.caption, node)
-        if (nodeText === '' && currentStyle.caption === '<type>') {
-          nodeText = styleForNode?.selector?.classes[0] ?? ''
-        }
+        const nodeText: string = style.interpolate(currentStyle.caption, node)
         const captionText: string =
           nodeText.length > 100 ? nodeText.substring(0, 100) : nodeText
         const fontWeight =

@@ -520,8 +520,9 @@ export default function neoGraphStyle() {
       return defaultColors
     }
 
-    GraphStyle.prototype.interpolate = function(str: any, item: any) {
-      let ips = str.replace(/\{([^{}]*)\}/g, (_a: any, b: any) => {
+    GraphStyle.prototype.interpolate = function(str: string, item: any) {
+      str = str.replace(/{(<id>|<type>)}/g, (_, b) => b)
+      let ips: string = str.replace(/\{([^{}]*)\}/g, (_a, b) => {
         const r = item.propertyMap[b]
         if (typeof r === 'object') {
           return r.join(', ')
@@ -537,10 +538,13 @@ export default function neoGraphStyle() {
       if (ips.length < 1 && str === '{id}' && item.isNode) {
         ips = '<id>'
       }
-      return ips.replace(/^<(id|type)>$/, (_a: any, b: any) => {
+      return ips.replace(/<(id|type)>/g, (_a, b) => {
+        if (item.isNode && b === 'type') {
+          return item.labels[0] ?? ''
+        }
         const r = item[b]
         if (typeof r === 'string' || typeof r === 'number') {
-          return r
+          return r + ''
         }
         return ''
       })
