@@ -10,10 +10,12 @@ import {
   MarginTop,
   MarginTopLi,
   NoBulletsUl,
-  Clickable
+  Clickable,
+  GuideListEntry
 } from 'browser/documentation/sidebar-guides/styled'
 import { Guide } from 'shared/modules/guides/guidesDuck'
 import docs, { GuideChapter } from 'browser/documentation'
+import { BinIcon } from 'browser-components/icons/Icons'
 
 type GuidePickerProps = {
   remoteGuides: Guide[]
@@ -73,7 +75,7 @@ const GuidePicker = ({
         </MarginTop>
         <NoBulletsUl>
           {remoteGuides.map(guide => (
-            <li key={guide.title}>
+            <GuideListEntry key={guide.title}>
               <DrawerBrowserCommand onClick={() => setGuide(guide)}>
                 {guide.title}
               </DrawerBrowserCommand>
@@ -84,9 +86,9 @@ const GuidePicker = ({
                   )
                 }}
               >
-                x
+                <BinIcon />
               </Clickable>
-            </li>
+            </GuideListEntry>
           ))}
         </NoBulletsUl>
       </>

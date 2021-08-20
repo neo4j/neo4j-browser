@@ -20,11 +20,17 @@ export const LinkContainer = styled.div`
 `
 
 export const Clickable = styled.span`
-  margin-left: 8px;
   cursor: pointer;
+  color: ${props => props.theme.error};
 
-  :hover {
-    text-decoration: underline;
-    color: ${props => props.theme.error};
+  visibility: hidden;
+  position: absolute;
+  right: 4px;
+`
+
+export const GuideListEntry = styled.li`
+  position: relative;
+  :hover ${Clickable} {
+    visibility: visible;
   }
 `
