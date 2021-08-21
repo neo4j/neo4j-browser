@@ -100,7 +100,6 @@ function FrameEditor({
   numRecords,
   getRecords,
   visElement,
-  bus
   bus,
   params
 }: FrameEditorProps) {
