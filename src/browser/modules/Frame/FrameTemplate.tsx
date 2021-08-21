@@ -114,7 +114,6 @@ function FrameTemplate({
         {header && (
           <FrameEditor
             frame={header}
-            fullscreen={isFullscreen}
             fullscreenToggle={toggleFullScreen}
             numRecords={numRecords}
             getRecords={getRecords}

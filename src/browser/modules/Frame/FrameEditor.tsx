@@ -63,7 +63,6 @@ import { getParams } from 'shared/modules/params/paramsDuck'
 
 type FrameEditorBaseProps = {
   frame: Frame
-  fullscreen: boolean
   fullscreenToggle: () => void
   numRecords: number
   getRecords: () => any
@@ -95,7 +94,6 @@ function FrameEditor({
   reRun,
   onTitlebarCmdClick,
   frame,
-  fullscreen,
   fullscreenToggle,
   numRecords,
   getRecords,
@@ -222,7 +220,7 @@ function FrameEditor({
               onExecute={run}
               value={editorValue}
               ref={editorRef}
-              fullscreen={fullscreen}
+              fullscreen={false}
               toggleFullscreen={fullscreenToggle}
             />
           </EditorContainer>
