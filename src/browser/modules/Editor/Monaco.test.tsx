@@ -38,6 +38,7 @@ describe('Monaco', () => {
         fullscreen={false}
         toggleFullscreen={noOp}
         bus={{ self: noOp } as any}
+        params={{}}
         id="id"
       />
     )

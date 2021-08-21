@@ -23,7 +23,7 @@ import { saveAs } from 'file-saver'
 import { map } from 'lodash-es'
 
 import { Frame } from 'shared/modules/stream/streamDuck'
-import Render from 'browser-components/Render'
+
 import { CSVSerializer } from 'services/serializer'
 import { DownloadIcon } from 'browser-components/icons/Icons'
 import {
@@ -63,10 +63,6 @@ function ExportButton({
   getRecords,
   visElement
 }: ExportButtonProps): JSX.Element {
-  function hasData() {
-    return numRecords > 0
-  }
-
   function exportCSV(records: any) {
     const exportData = stringifyResultArray(
       csvFormat,
@@ -129,60 +125,75 @@ function ExportButton({
     saveAs(blob, 'style.grass')
   }
 
+  const hasData = numRecords > 0
+  const canExportTXT = frame.type === 'history' && arrayHasItems(frame.result)
   // Quick reruns of cypher cause buttons to jump
-  function canExport() {
-    return (
-      canExportTXT() ||
-      (frame.type === 'cypher' && (hasData() || visElement)) ||
-      (frame.type === 'style' && hasData())
-    )
-  }
-
-  function canExportTXT() {
-    return frame.type === 'history' && arrayHasItems(frame.result)
-  }
+  const canExport =
+    canExportTXT ||
+    (frame.type === 'cypher' && (hasData || visElement)) ||
+    (frame.type === 'style' && hasData)
 
   return (
     <>
-      {canExport() && (
+      {canExport && (
         <DropdownButton title="Exports" data-testid="frame-export-dropdown">
           <DownloadIcon />
-          {hasData() && (
+          {canExport && (
             <DropdownList>
               <DropdownContent>
-                <Render if={isRelateAvailable}>
-                  <DropdownItem onClick={() => newProjectFile(frame.cmd)}>
-                    Save as project file
+                {isRelateAvailable && (
+                  <>
+                    <DropdownItem onClick={() => newProjectFile(frame.cmd)}>
+                      Save as project file
+                    </DropdownItem>
+                    <DropDownItemDivider />
+                  </>
+                )}
+                {hasData && frame.type === 'cypher' && (
+                  <>
+                    <DropdownItem
+                      data-testid="exportCsvButton"
+                      onClick={() => exportCSV(getRecords())}
+                    >
+                      Export CSV
+                    </DropdownItem>
+                    <DropdownItem onClick={() => exportJSON(getRecords())}>
+                      Export JSON
+                    </DropdownItem>
+                  </>
+                )}
+                {visElement && (
+                  <>
+                    <DropdownItem
+                      data-testid="exportPngButton"
+                      onClick={() => exportPNG()}
+                    >
+                      Export PNG
+                    </DropdownItem>
+                    <DropdownItem
+                      data-testid="exportSvgButton"
+                      onClick={() => exportSVG()}
+                    >
+                      Export SVG
+                    </DropdownItem>
+                  </>
+                )}
+                {canExportTXT && (
+                  <DropdownItem
+                    data-testid="exportTxtButton"
+                    onClick={exportTXT}
+                  >
+                    Export TXT
                   </DropdownItem>
-                  <DropDownItemDivider />
-                </Render>
-                <Render if={hasData() && frame.type === 'cypher'}>
-                  <DropdownItem onClick={() => exportCSV(getRecords())}>
-                    Export CSV
-                  </DropdownItem>
-                  <DropdownItem onClick={() => exportJSON(getRecords())}>
-                    Export JSON
-                  </DropdownItem>
-                </Render>
-                <Render if={visElement}>
-                  <DropdownItem onClick={() => exportPNG()}>
-                    Export PNG
-                  </DropdownItem>
-                  <DropdownItem onClick={() => exportSVG()}>
-                    Export SVG
-                  </DropdownItem>
-                </Render>
-                <Render if={canExportTXT()}>
-                  <DropdownItem onClick={exportTXT}>Export TXT</DropdownItem>
-                </Render>
-                <Render if={hasData() && frame.type === 'style'}>
+                )}
+                {hasData && frame.type === 'style' && (
                   <DropdownItem
                     data-testid="exportGrassButton"
                     onClick={() => exportGrass(getRecords())}
                   >
                     Export GraSS
                   </DropdownItem>
-                </Render>
+                )}
               </DropdownContent>
             </DropdownList>
           )}

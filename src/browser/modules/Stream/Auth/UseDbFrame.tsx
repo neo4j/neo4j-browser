@@ -27,7 +27,6 @@ import {
   StyledCode
 } from './styled'
 import { H3 } from 'browser-components/headers'
-import Render from 'browser-components/Render/index'
 import TextCommand from 'browser/modules/DecoratedText/TextCommand'
 import { listDbsCommand } from 'shared/modules/commands/commandsDuck'
 
@@ -46,13 +45,14 @@ const UseDbFrame = (props: any) => {
       </StyledConnectionAside>
       <StyledConnectionBodyContainer>
         <StyledConnectionBody>
-          <Render if={useDb}>
-            Queries from this point and forward are using the database{' '}
-            <StyledCode>{useDb}</StyledCode> as the target.
-          </Render>
-          <Render if={!useDb}>
-            You are now targeting the dbms's default database.
-          </Render>
+          {useDb ? (
+            <>
+              Queries from this point and forward are using the database{' '}
+              <StyledCode>{useDb}</StyledCode> as the target.
+            </>
+          ) : (
+            "You are now targeting the dbms's default database."
+          )}
           <div>
             Use the <TextCommand command={listDbsCommand} /> to list all
             available databases.

@@ -26,3 +26,10 @@ export const H3 = styled.h3`
   font-family: ${props => props.theme.primaryFontFamily};
   color: ${props => props.theme.headerText};
 `
+export const H4 = styled.h3`
+  font-weight: 500;
+  font-size: 18px;
+  font-family: ${props => props.theme.primaryFontFamily};
+  color: ${props => props.theme.headerText};
+  margin-bottom: 32px;
+`

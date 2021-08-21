@@ -49,7 +49,7 @@ import { ErrorsViewBus as ErrorsView, ErrorsStatusbar } from './ErrorsView'
 import { WarningsView, WarningsStatusbar } from './WarningsView'
 import { PlanView, PlanStatusbar } from './PlanView'
 import { VisualizationConnectedBus } from './VisualizationView'
-import Render from 'browser-components/Render'
+
 import Display from 'browser-components/Display'
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
 import {
@@ -206,7 +206,7 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
 
   sidebar = (): JSX.Element => (
     <FrameSidebar>
-      <Render if={this.canShowViz()}>
+      {this.canShowViz() && (
         <CypherFrameButton
           data-testid="cypherFrameSidebarVisualization"
           selected={this.state.openView === viewTypes.VISUALIZATION}
@@ -216,8 +216,8 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
         >
           <VisualizationIcon />
         </CypherFrameButton>
-      </Render>
-      <Render if={!resultIsError(this.props.request)}>
+      )}
+      {!resultIsError(this.props.request) && (
         <CypherFrameButton
           data-testid="cypherFrameSidebarTable"
           selected={this.state.openView === viewTypes.TABLE}
@@ -227,13 +227,8 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
         >
           <TableIcon />
         </CypherFrameButton>
-      </Render>
-      <Render
-        if={
-          resultHasRows(this.props.request) &&
-          !resultIsError(this.props.request)
-        }
-      >
+      )}
+      {resultHasRows(this.props.request) && !resultIsError(this.props.request) && (
         <CypherFrameButton
           data-testid="cypherFrameSidebarAscii"
           selected={this.state.openView === viewTypes.TEXT}
@@ -243,8 +238,8 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
         >
           <AsciiIcon />
         </CypherFrameButton>
-      </Render>
-      <Render if={resultHasPlan(this.props.request)}>
+      )}
+      {resultHasPlan(this.props.request) && (
         <CypherFrameButton
           data-testid="cypherFrameSidebarPlan"
           selected={this.state.openView === viewTypes.PLAN}
@@ -252,8 +247,8 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
         >
           <PlanIcon />
         </CypherFrameButton>
-      </Render>
-      <Render if={resultHasWarnings(this.props.request)}>
+      )}
+      {resultHasWarnings(this.props.request) && (
         <CypherFrameButton
           selected={this.state.openView === viewTypes.WARNINGS}
           onClick={() => {
@@ -262,8 +257,8 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
         >
           <AlertIcon />
         </CypherFrameButton>
-      </Render>
-      <Render if={resultIsError(this.props.request)}>
+      )}
+      {resultIsError(this.props.request) ? (
         <CypherFrameButton
           selected={this.state.openView === viewTypes.ERRORS}
           onClick={() => {
@@ -272,8 +267,7 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
         >
           <ErrorIcon />
         </CypherFrameButton>
-      </Render>
-      <Render if={!resultIsError(this.props.request)}>
+      ) : (
         <CypherFrameButton
           data-testid="cypherFrameSidebarCode"
           selected={this.state.openView === viewTypes.CODE}
@@ -283,7 +277,7 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
         >
           <CodeIcon />
         </CypherFrameButton>
-      </Render>
+      )}
     </FrameSidebar>
   )
 
@@ -307,6 +301,7 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
         data-testid="frame-loaded-contents"
         fullscreen={this.state.fullscreen}
         collapsed={this.state.collapse}
+        preventOverflow={this.state.openView === viewTypes.VISUALIZATION}
       >
         <Display if={this.state.openView === viewTypes.TEXT} lazy>
           <AsciiView
@@ -348,6 +343,7 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
         </Display>
         <Display if={this.state.openView === viewTypes.VISUALIZATION} lazy>
           <VisualizationConnectedBus
+            fullscreen={this.state.fullscreen}
             result={result}
             updated={this.props.request.updated}
             frameHeight={this.state.frameHeight}

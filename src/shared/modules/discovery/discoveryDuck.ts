@@ -18,9 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Rx from 'rxjs/Rx'
 import remote from 'services/remote'
-import { updateConnection } from 'shared/modules/connections/connectionsDuck'
+import {
+  DiscoverableData,
+  SSOProvider,
+  updateConnection
+} from 'shared/modules/connections/connectionsDuck'
 import {
   APP_START,
   USER_CLEAR,
@@ -30,12 +33,25 @@ import {
   CLOUD_SCHEMES
 } from 'shared/modules/app/appDuck'
 import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
-import { getUrlParamValue } from 'services/utils'
 import { generateBoltUrl } from 'services/boltscheme.utils'
 import { getUrlInfo } from 'shared/services/utils'
 import { isConnectedAuraHost } from 'shared/modules/connections/connectionsDuck'
 import { isCloudHost } from 'shared/services/utils'
 import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
+import {
+  authRequestForSSO,
+  handleAuthFromRedirect
+} from 'shared/modules/auth/index'
+import {
+  authLog,
+  removeSearchParamsInBrowserHistory
+} from 'shared/modules/auth/helpers'
+import {
+  getSSOServerIdIfShouldRedirect,
+  getValidSSOProviders,
+  wasRedirectedBackFromSSOServer
+} from 'shared/modules/auth/common'
+import { searchParamsToRemoveAfterAutoRedirect } from 'shared/modules/auth/settings'
 
 export const NAME = 'discover-bolt-host'
 export const CONNECTION_ID = '$$discovery'
@@ -133,23 +149,37 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
     .ofType(APP_START)
     .map((action: any) => {
       if (!action.url) return action
+      const { searchParams } = new URL(action.url)
+
       const passedURL =
-        getUrlParamValue('dbms', action.url) ||
-        getUrlParamValue('connectURL', action.url)
+        searchParams.get('dbms') || searchParams.get('connectURL')
 
-      const passedDb = getUrlParamValue('db', action.url)
+      const passedDb = searchParams.get('db')
 
-      if (!passedURL || !passedURL.length) return action
-      action.forceURL = decodeURIComponent(passedURL[0])
-      action.requestedUseDb = passedDb && passedDb[0]
+      if (passedURL) {
+        action.forceURL = decodeURIComponent(passedURL)
+        action.requestedUseDb = passedDb
+      }
+
+      const discoveryURL = searchParams.get('discoveryURL')
+
+      if (discoveryURL) {
+        action.discoveryURL = discoveryURL
+      }
+
       return action
     })
     .merge(some$.ofType(USER_CLEAR))
-    .mergeMap((action: any) => {
-      // Only when in a environment were we can guess discovery endpoint
-      if (!hasDiscoveryEndpoint(store.getState())) {
-        return Promise.resolve({ type: 'NOOP' })
-      }
+    .mergeMap(async (action: any) => {
+      // we can get data about which host different mechanisms, they are ranked in
+      // the following prioritization order
+      // 1. Url param - dbms
+      // 2. Url param - connectURL
+      // 3. database in discovery endpoint
+      // 4. Url param - discoveryURL
+
+      let dataFromForceUrl: DiscoverableData = {}
+
       if (action.forceURL) {
         const { username, protocol, host } = getUrlInfo(action.forceURL)
 
@@ -166,48 +196,170 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
           .filter(item => item[1] /* truthy check on value */)
           .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
 
-        return Promise.resolve({
-          type: DONE,
-          discovered: onlyTruthy
-        })
+        dataFromForceUrl = onlyTruthy
       }
-      return Rx.Observable.fromPromise(
-        remote
-          .getJSON(getDiscoveryEndpoint(getHostedUrl(store.getState())))
-          // Uncomment below and comment out above when doing manual tests in dev mode to
-          // fake discovery response
-          //Promise.resolve({
-          // bolt: 'bolt://localhost:7687',
-          //neo4j_version: '4.0.3'
-          //})
-          .then(result => {
-            let host =
-              result &&
-              (result.bolt_routing || result.bolt_direct || result.bolt)
-            // Try to get info from server
-            if (!host) {
-              throw new Error('No bolt address found')
+
+      // Only do network call when we can guess discovery endpoint
+      if (!action.discoveryURL && !hasDiscoveryEndpoint(store.getState())) {
+        authLog('No discovery endpoint found or passed')
+        if (action.forceURL) {
+          return Promise.resolve({ type: DONE, discovered: dataFromForceUrl })
+        } else {
+          return Promise.resolve({ type: 'NOOP' })
+        }
+      }
+
+      const discoveryEndpoint = getDiscoveryEndpoint(
+        getHostedUrl(store.getState())
+      )
+      const discoveryEndpointData = await fetchDataFromDiscoveryUrl(
+        discoveryEndpoint
+      )
+      const discoveryURLData = await (action.discoveryURL
+        ? fetchDataFromDiscoveryUrl(action.discoveryURL)
+        : Promise.resolve({ SSOProviders: [] }))
+
+      const newProvidersFromDiscoveryURL = discoveryURLData.SSOProviders.filter(
+        providerFromDiscUrl =>
+          !discoveryEndpointData.SSOProviders.find(
+            provider => providerFromDiscUrl.id === provider.id
+          )
+      )
+
+      const mergedSSOProviders = discoveryEndpointData.SSOProviders.concat(
+        newProvidersFromDiscoveryURL
+      )
+
+      const mergedDiscoveryData = {
+        ...discoveryURLData,
+        ...discoveryEndpointData,
+        ...dataFromForceUrl,
+        SSOProviders: mergedSSOProviders
+      }
+
+      const isAura = isConnectedAuraHost(store.getState())
+      mergedDiscoveryData.supportsMultiDb =
+        !!action.requestedUseDb ||
+        (!isAura &&
+          parseInt((mergedDiscoveryData.neo4j_version || '0').charAt(0)) >= 4)
+
+      if (!mergedDiscoveryData.host) {
+        authLog('No host found in discovery data, aborting.')
+        return { type: DONE }
+      }
+
+      mergedDiscoveryData.host = generateBoltUrl(
+        getAllowedBoltSchemesForHost(
+          store.getState(),
+          mergedDiscoveryData.host
+        ),
+        mergedDiscoveryData.host
+      )
+
+      let SSOError
+      const SSORedirectId = getSSOServerIdIfShouldRedirect()
+      if (SSORedirectId) {
+        authLog(`Initialized with idpId: "${SSORedirectId}"`)
+
+        removeSearchParamsInBrowserHistory(
+          searchParamsToRemoveAfterAutoRedirect
+        )
+        const selectedSSOProvider = mergedDiscoveryData.SSOProviders.find(
+          ({ id }) => id === SSORedirectId
+        )
+        try {
+          await authRequestForSSO(selectedSSOProvider)
+        } catch (err) {
+          SSOError = err.message
+          authLog(err.message)
+        }
+      } else if (wasRedirectedBackFromSSOServer()) {
+        authLog('Initializing auth_flow_step redirect')
+
+        try {
+          const creds = (await handleAuthFromRedirect(
+            mergedDiscoveryData.SSOProviders
+          )) as {
+            username: string
+            password: string
+          }
+
+          return {
+            type: DONE,
+            discovered: {
+              ...mergedDiscoveryData,
+              ...creds,
+              attemptSSOLogin: true
             }
-            host = generateBoltUrl(
-              getAllowedBoltSchemesForHost(store.getState(), host),
-              host
-            )
+          }
+        } catch (err) {
+          SSOError = err.message
+          authLog(err.message)
+        }
+      }
 
-            const isAura = isConnectedAuraHost(store.getState())
-            const supportsMultiDb =
-              !isAura && parseInt((result.neo4j_version || '0').charAt(0)) >= 4
-            const discovered = supportsMultiDb
-              ? { supportsMultiDb, host }
-              : { host }
-
-            return { type: DONE, discovered }
-          })
-          .catch(() => {
-            throw new Error('No info from endpoint')
-          })
-      ).catch(() => {
-        return Promise.resolve({ type: DONE })
-      })
+      return { type: DONE, discovered: { ...mergedDiscoveryData, SSOError } }
     })
     .map((a: any) => a)
+}
+
+async function fetchDataFromDiscoveryUrl(
+  url: string
+): Promise<{
+  host?: string
+  neo4j_version?: string
+  SSOProviders: SSOProvider[]
+}> {
+  try {
+    authLog(`Fetching ${url} to discover SSO providers`)
+    const result = await remote.getJSON(url)
+    // Uncomment below and comment out above when doing manual tests in dev mode to
+    // fake discovery response
+    //Promise.resolve({
+    // bolt: 'bolt://localhost:7687',
+    // neo4j_version: '4.0.3'
+    //})
+    const host =
+      result && (result.bolt_routing || result.bolt_direct || result.bolt)
+
+    const ssoProviderField =
+      result.sso_providers || result.ssoproviders || result.ssoProviders
+
+    if (!ssoProviderField) {
+      authLog(`No sso provider field found on json at ${url}`)
+    }
+
+    const SSOProviders: SSOProvider[] = getValidSSOProviders(ssoProviderField)
+    if (SSOProviders.length === 0) {
+      authLog(`None of the sso providers found at ${url} were valid`)
+    } else {
+      authLog(
+        `Found SSO providers with ids:${SSOProviders.map(p => p.id).join(
+          ', '
+        )} on ${url}`
+      )
+    }
+
+    return { SSOProviders, host }
+  } catch (e) {
+    const noDataFoundMessage = authLog(`No discovery json data found at ${url}`)
+    const noHttpPrefixMessage = url.toLowerCase().startsWith('http')
+      ? ''
+      : 'Double check that the url is a valid url (including HTTP(S)).'
+    const noJsonSuffixMessage = url.toLowerCase().endsWith('.json')
+      ? ''
+      : 'Double check that the discovery url returns a valid JSON file.'
+    ;[
+      `Request to ${url} failed with message: ${e.message}`,
+      noDataFoundMessage,
+      noHttpPrefixMessage,
+      noJsonSuffixMessage
+    ]
+      .filter(a => a)
+      .forEach(err => {
+        authLog(err)
+        return err
+      })
+    return { SSOProviders: [] }
+  }
 }

@@ -11,6 +11,8 @@
 ** xref:deployment-modes.adoc#aura[Neo4j Aura]
 ** xref:deployment-modes.adoc#web-server[Dedicated web server]
 
+* xref:browser-sso.adoc[]
+
 * xref:visual-tour.adoc[Visual tour]
 ** xref:visual-tour.adoc#overview[Overview]
 ** xref:visual-tour.adoc#sidebar[Sidebar]

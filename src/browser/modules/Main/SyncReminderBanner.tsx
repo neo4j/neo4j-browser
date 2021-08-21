@@ -31,7 +31,7 @@ import {
   CONNECTED_STATE,
   getConnectionState
 } from 'shared/modules/connections/connectionsDuck'
-import Render from 'browser-components/Render'
+
 import BrowserSyncAuthWindow from '../Sync/BrowserSyncAuthWindow'
 import { getBrowserSyncConfig } from 'shared/modules/settings/settingsDuck'
 import {
@@ -90,22 +90,20 @@ class SyncReminderBanner extends Component<any, SyncReminderBannerState> {
       authStatus !== SIGNED_IN &&
       this.state.status === 'UP'
 
-    return (
-      <Render if={visible}>
-        <SyncDisconnectedBanner>
-          <StyledSyncReminderSpan>
-            You are currently not signed into Neo4j Browser Sync. Connect
-            through a simple social sign-in to get started.
-            <SyncSignInBarButton onClick={this.logIn.bind(this)}>
-              Sign In
-            </SyncSignInBarButton>
-          </StyledSyncReminderSpan>
-          <StyledSyncReminderButtonContainer>
-            <StyledCancelLink onClick={() => optOutSync()}>X</StyledCancelLink>
-          </StyledSyncReminderButtonContainer>
-        </SyncDisconnectedBanner>
-      </Render>
-    )
+    return visible ? (
+      <SyncDisconnectedBanner>
+        <StyledSyncReminderSpan>
+          You are currently not signed into Neo4j Browser Sync. Connect through
+          a simple social sign-in to get started.
+          <SyncSignInBarButton onClick={this.logIn.bind(this)}>
+            Sign In
+          </SyncSignInBarButton>
+        </StyledSyncReminderSpan>
+        <StyledSyncReminderButtonContainer>
+          <StyledCancelLink onClick={() => optOutSync()}>X</StyledCancelLink>
+        </StyledSyncReminderButtonContainer>
+      </SyncDisconnectedBanner>
+    ) : null
   }
 }
 

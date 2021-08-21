@@ -23,7 +23,6 @@ import {
   StyledCode,
   StyledConnectionFooter
 } from './styled'
-import Render from 'browser-components/Render'
 
 const ConnectedView = ({
   host,
@@ -35,28 +34,29 @@ const ConnectedView = ({
 }: any) => {
   return (
     <StyledConnectionBody>
-      <Render if={username}>
+      {username ? (
         <span>
           You are connected as user <StyledCode>{username}</StyledCode>
           <br />
         </span>
-      </Render>
-      <Render if={!username}>You are connected </Render>
-      <Render if={showHost}>
+      ) : (
+        'You are connected'
+      )}
+      {showHost && (
         <span>
           to <StyledCode>{host}</StyledCode>
           <br />
         </span>
-      </Render>
-      <Render if={!hideStoreCredentials}>
+      )}
+      {!hideStoreCredentials && (
         <StyledConnectionFooter>
           Connection credentials are {storeCredentials ? '' : 'not '}
           stored in your web browser.
         </StyledConnectionFooter>
-      </Render>
-      <Render if={additionalFooter}>
+      )}
+      {additionalFooter && (
         <StyledConnectionFooter>{additionalFooter}</StyledConnectionFooter>
-      </Render>
+      )}
     </StyledConnectionBody>
   )
 }

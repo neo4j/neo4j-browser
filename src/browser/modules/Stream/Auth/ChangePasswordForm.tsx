@@ -27,7 +27,7 @@ import {
   StyledConnectionFormEntry,
   StyledChangePasswordForm
 } from './styled'
-import Render from 'browser-components/Render'
+
 import InputEnterStepping from 'browser-components/InputEnterStepping/InputEnterStepping'
 import RevealablePasswordInput from './revealable-password-input'
 
@@ -125,7 +125,7 @@ export default class ChangePasswordForm extends Component<any, State> {
           }: any) => {
             return (
               <>
-                <Render if={this.props.showExistingPasswordInput}>
+                {this.props.showExistingPasswordInput && (
                   <StyledConnectionFormEntry>
                     <StyledConnectionLabel>
                       Existing password
@@ -141,7 +141,7 @@ export default class ChangePasswordForm extends Component<any, State> {
                       })}
                     />
                   </StyledConnectionFormEntry>
-                </Render>
+                )}
                 <StyledConnectionFormEntry>
                   <StyledConnectionLabel>New password</StyledConnectionLabel>
                   <RevealablePasswordInput
@@ -179,15 +179,16 @@ export default class ChangePasswordForm extends Component<any, State> {
                     })}
                   />
                 </StyledConnectionFormEntry>
-                <Render if={!isLoading}>
+                {isLoading ? (
+                  'Please wait...'
+                ) : (
                   <FormButton
                     data-testid="changePassword"
                     label="Change password"
                     disabled={isLoading}
                     {...getSubmitProps()}
                   />
-                </Render>
-                <Render if={isLoading}>Please wait...</Render>
+                )}
               </>
             )
           }}

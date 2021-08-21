@@ -59,6 +59,7 @@ import {
   codeFontLigatures,
   shouldEnableMultiStatementMode
 } from 'shared/modules/settings/settingsDuck'
+import { getParams } from 'shared/modules/params/paramsDuck'
 
 type FrameEditorBaseProps = {
   frame: Frame
@@ -68,6 +69,7 @@ type FrameEditorBaseProps = {
   getRecords: () => any
   visElement: any
   bus: Bus
+  params: Record<string, unknown>
 }
 
 type FrameEditorProps = FrameEditorBaseProps & {
@@ -99,6 +101,8 @@ function FrameEditor({
   getRecords,
   visElement,
   bus
+  bus,
+  params
 }: FrameEditorProps) {
   const [editorValue, setEditorValue] = useState(frame.cmd)
   const [renderEditor, setRenderEditor] = useState(frame.isRerun)
@@ -214,6 +218,7 @@ function FrameEditor({
               fontLigatures={codeFontLigatures}
               id={`editor-${frame.id}`}
               bus={bus}
+              params={params}
               onChange={setEditorValue}
               onExecute={run}
               value={editorValue}
@@ -281,7 +286,8 @@ const mapStateToProps = (
     request,
     isRelateAvailable: app.isRelateAvailable(state),
     codeFontLigatures: codeFontLigatures(state),
-    enableMultiStatementMode: shouldEnableMultiStatementMode(state)
+    enableMultiStatementMode: shouldEnableMultiStatementMode(state),
+    params: getParams(state)
   }
 }
 

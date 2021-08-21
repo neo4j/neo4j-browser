@@ -40,11 +40,12 @@ import { splitMdxSlides } from '../Docs/MDX/splitMdx'
 import { LAST_GUIDE_SLIDE } from 'shared/modules/udc/udcDuck'
 import { connect } from 'react-redux'
 import { GlobalState } from 'shared/globalState'
-import { inCloudEnv } from 'shared/modules/app/appDuck'
+import { inCloudEnv, inDesktop } from 'shared/modules/app/appDuck'
 import { getEdition, isEnterprise } from 'shared/modules/dbMeta/dbMetaDuck'
 import { PromotionContainer, AuraPromoLink } from './styled'
 import { ThemeContext } from 'styled-components'
 import { DARK_THEME } from 'shared/modules/settings/settingsDuck'
+import { isConnectedAuraHost } from 'shared/modules/connections/connectionsDuck'
 
 const AuraPromotion = () => {
   const theme = useContext(ThemeContext)
@@ -361,7 +362,10 @@ const unfound = (
 
 const mapStateToProps = (state: GlobalState) => ({
   showPromotion:
-    getEdition(state) !== null && !isEnterprise(state) && !inCloudEnv(state)
+    (getEdition(state) !== null &&
+      !isEnterprise(state) &&
+      !isConnectedAuraHost(state)) ||
+    inDesktop(state)
 })
 
 export default connect(mapStateToProps)(withBus(PlayFrame))

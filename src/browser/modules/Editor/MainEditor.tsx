@@ -76,6 +76,7 @@ import {
 import { getUseDb } from 'shared/modules/connections/connectionsDuck'
 import { getHistory } from 'shared/modules/history/historyDuck'
 import { defaultNameFromDisplayContent } from 'browser-components/SavedScripts'
+import { getParams } from 'shared/modules/params/paramsDuck'
 
 type EditorFrameProps = {
   bus: Bus
@@ -86,6 +87,7 @@ type EditorFrameProps = {
   projectId: string
   updateFavorite: (id: string, value: string) => void
   useDb: null | string
+  params: Record<string, unknown>
 }
 
 type SavedScript = {
@@ -97,7 +99,7 @@ type SavedScript = {
   name?: string
 }
 
-export function EditorFrame({
+export function MainEditor({
   bus,
   codeFontLigatures,
   enableMultiStatementMode,
@@ -105,7 +107,8 @@ export function EditorFrame({
   history,
   projectId,
   updateFavorite,
-  useDb
+  useDb,
+  params
 }: EditorFrameProps): JSX.Element {
   const [addFile] = useMutation(ADD_PROJECT_FILE)
   const [unsaved, setUnsaved] = useState(false)
@@ -268,6 +271,7 @@ export function EditorFrame({
               onExecute={createRunCommandFunction(commandSources.editor)}
               ref={editorRef}
               useDb={useDb}
+              params={params}
             />
           </EditorContainer>
           {currentlyEditing && !currentlyEditing.isStatic && (
@@ -336,7 +340,8 @@ const mapStateToProps = (state: GlobalState) => {
     enableMultiStatementMode: shouldEnableMultiStatementMode(state),
     history: getHistory(state),
     projectId: getProjectId(state),
-    useDb: getUseDb(state)
+    useDb: getUseDb(state),
+    params: getParams(state)
   }
 }
 
@@ -351,6 +356,4 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
   }
 }
 
-export default withBus(
-  connect(mapStateToProps, mapDispatchToProps)(EditorFrame)
-)
+export default withBus(connect(mapStateToProps, mapDispatchToProps)(MainEditor))

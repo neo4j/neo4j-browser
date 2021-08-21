@@ -93,6 +93,7 @@ export type Connection = {
   authenticationMethod: AuthenticationMethod
   requestedUseDb?: string
   restApi?: string
+  SSOError?: string
 }
 
 const initialState: ConnectionReduxState = {
@@ -433,17 +434,37 @@ export const verifyConnectionCredentialsEpic = (action$: any) => {
   })
 }
 
-type DiscoverDataAction = {
-  type: typeof discovery.DONE
-  discovered?: {
-    username?: string
-    requestedUseDb?: string
-    restApi?: string
-    supportsMultiDb?: string
-    host?: string
-    encrypted?: string
-    hasForceUrl?: boolean
+export type DiscoverableData = {
+  username?: string
+  password?: string
+  requestedUseDb?: string
+  restApi?: string
+  supportsMultiDb?: boolean
+  host?: string
+  encrypted?: string
+  hasForceUrl?: boolean
+  SSOError?: string
+  attemptSSOLogin?: boolean
+  SSOProviders?: SSOProvider[]
+  neo4jVersion?: string
+}
+export type SSOProvider = {
+  id: string
+  name: string
+  auth_flow: string
+  params: {
+    client_id: string
+    redirect_uri: string
+    response_type: string
+    scope: string
   }
+  auth_endpoint: string
+  well_known_discovery_uri: string
+}
+
+export type DiscoverDataAction = {
+  type: typeof discovery.DONE
+  discovered?: DiscoverableData
 }
 
 function shouldTryAutoconnecting(conn: Connection | null): boolean {
@@ -465,6 +486,13 @@ export const startupConnectEpic = (action$: any, store: any) => {
       const savedConnection = getConnection(
         store.getState(),
         discovery.CONNECTION_ID
+      )
+      // always update SSO state providers
+      store.dispatch(
+        discovery.updateDiscoveryConnection({
+          SSOProviders: discovered?.SSOProviders || [],
+          SSOError: discovered?.SSOError
+        })
       )
 
       if (
@@ -509,7 +537,10 @@ export const startupConnectEpic = (action$: any, store: any) => {
                 store.dispatch(
                   discovery.updateDiscoveryConnection({
                     username: '',
-                    password: ''
+                    password: '',
+                    SSOError: discovered.attemptSSOLogin
+                      ? 'SSO token was not accepted by neo4j'
+                      : undefined
                   })
                 )
                 resolve({ type: STARTUP_CONNECTION_FAILED })
@@ -520,7 +551,12 @@ export const startupConnectEpic = (action$: any, store: any) => {
 
       // Otherwise fail autoconnect
       store.dispatch(setActiveConnection(null))
-      store.dispatch(discovery.updateDiscoveryConnection({ password: '' }))
+      store.dispatch(
+        discovery.updateDiscoveryConnection({
+          password: '',
+          SSOError: discovered?.SSOError
+        })
+      )
       return Promise.resolve({ type: STARTUP_CONNECTION_FAILED })
     })
 }

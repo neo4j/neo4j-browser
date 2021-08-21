@@ -19,7 +19,7 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import Render from 'browser-components/Render'
+
 import { FormButton } from 'browser-components/buttons'
 import {
   StyledConnectionForm,
@@ -28,12 +28,24 @@ import {
   StyledConnectionLabel,
   StyledConnectionFormEntry,
   StyledSegment,
-  StyledBoltUrlHintText
+  StyledBoltUrlHintText,
+  StyledFormContainer,
+  StyledSSOOptions,
+  StyledSSOButtonContainer,
+  StyledSSOError,
+  StyledSSOLogDownload
 } from './styled'
 import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
 import { toKeyString } from 'services/utils'
 import { stripScheme, getScheme } from 'services/boltscheme.utils'
-import { AuthenticationMethod } from 'shared/modules/connections/connectionsDuck'
+import {
+  AuthenticationMethod,
+  SSOProvider
+} from 'shared/modules/connections/connectionsDuck'
+import { authRequestForSSO } from 'shared/modules/auth/index.js'
+import { StyledCypherErrorMessage } from '../styled'
+import { authLog, downloadAuthLogs } from 'shared/modules/auth/helpers'
+import { H4 } from 'browser-components/headers/Headers'
 
 const readableauthenticationMethods: Record<AuthenticationMethod, string> = {
   [NATIVE]: 'Username / Password',
@@ -56,6 +68,8 @@ interface ConnectFormProps {
   username: string
   used: boolean
   supportsMultiDb: boolean
+  SSOError?: string
+  SSOProviders: SSOProvider[]
 }
 
 export default function ConnectForm(props: ConnectFormProps): JSX.Element {
@@ -116,118 +130,156 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
       }:// for a direct connection to a single instance.`
     : ''
 
+  const { SSOError, SSOProviders } = props
+
+  const showSSO = SSOProviders.length > 0 || SSOError
+  const [SSORedirectError, setRedirectError] = useState('')
+
   return (
-    <StyledConnectionForm onSubmit={onConnectClick}>
-      <StyledConnectionFormEntry>
-        <StyledConnectionLabel htmlFor="url-input" title={hoverText}>
-          Connect URL
-        </StyledConnectionLabel>
-        {schemeRestriction ? (
-          <>
-            <StyledSegment>
-              <StyledConnectionSelect
-                onChange={onSchemeChange}
-                value={scheme}
-                data-testid="bolt-scheme-select"
+    <StyledFormContainer>
+      {showSSO && (
+        <StyledSSOOptions>
+          <H4>Single sign-on</H4>
+          {SSOProviders.map((provider: SSOProvider) => (
+            <StyledSSOButtonContainer key={provider.id}>
+              <FormButton
+                onClick={() =>
+                  authRequestForSSO(provider).catch(e => {
+                    authLog(e.message)
+                    setRedirectError(e.message)
+                  })
+                }
+                style={{ width: '200px' }}
               >
-                {props.allowedSchemes.map(s => {
-                  const schemeString = `${s}://`
-                  return (
-                    <option value={schemeString} key={toKeyString(s)}>
-                      {schemeString}
-                    </option>
-                  )
-                })}
-              </StyledConnectionSelect>
+                {provider.name}
+              </FormButton>
+            </StyledSSOButtonContainer>
+          ))}
+          {(SSOError || SSORedirectError) && (
+            <StyledSSOError>
+              <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>
+              <div>{SSOError || SSORedirectError}</div>
+              <StyledSSOLogDownload onClick={downloadAuthLogs}>
+                Download logs
+              </StyledSSOLogDownload>
+            </StyledSSOError>
+          )}
+        </StyledSSOOptions>
+      )}
+      <StyledConnectionForm onSubmit={onConnectClick}>
+        <StyledConnectionFormEntry>
+          {showSSO && <H4>Login with Password</H4>}
+          <StyledConnectionLabel htmlFor="url-input" title={hoverText}>
+            Connect URL
+          </StyledConnectionLabel>
+          {schemeRestriction ? (
+            <>
+              <StyledSegment>
+                <StyledConnectionSelect
+                  onChange={onSchemeChange}
+                  value={scheme}
+                  data-testid="bolt-scheme-select"
+                >
+                  {props.allowedSchemes.map(s => {
+                    const schemeString = `${s}://`
+                    return (
+                      <option value={schemeString} key={toKeyString(s)}>
+                        {schemeString}
+                      </option>
+                    )
+                  })}
+                </StyledConnectionSelect>
+                <StyledConnectionTextInput
+                  onCopy={onCopyBoltUrl}
+                  data-testid="boltaddress"
+                  onChange={onHostChange}
+                  value={stripScheme(props.host)}
+                  id="url-input"
+                />
+              </StyledSegment>
+              <StyledBoltUrlHintText className="url-hint-text">
+                {hoverText}
+              </StyledBoltUrlHintText>
+            </>
+          ) : (
+            <StyledConnectionTextInput
+              data-testid="boltaddress"
+              onChange={onHostChange}
+              defaultValue={props.host}
+            />
+          )}
+        </StyledConnectionFormEntry>
+        {props.supportsMultiDb && (
+          <StyledConnectionFormEntry>
+            <StyledConnectionLabel>
+              Database - leave empty for default
               <StyledConnectionTextInput
-                onCopy={onCopyBoltUrl}
-                data-testid="boltaddress"
-                onChange={onHostChange}
-                value={stripScheme(props.host)}
-                id="url-input"
+                data-testid="database"
+                onChange={props.onDatabaseChange}
+                value={props.database}
               />
-            </StyledSegment>
-            <StyledBoltUrlHintText className="url-hint-text">
-              {hoverText}
-            </StyledBoltUrlHintText>
-          </>
-        ) : (
-          <StyledConnectionTextInput
-            data-testid="boltaddress"
-            onChange={onHostChange}
-            defaultValue={props.host}
-          />
+            </StyledConnectionLabel>
+          </StyledConnectionFormEntry>
         )}
-      </StyledConnectionFormEntry>
-      {props.supportsMultiDb && (
-        <StyledConnectionFormEntry>
-          <StyledConnectionLabel>
-            Database - leave empty for default
-            <StyledConnectionTextInput
-              data-testid="database"
-              onChange={props.onDatabaseChange}
-              value={props.database}
-            />
-          </StyledConnectionLabel>
-        </StyledConnectionFormEntry>
-      )}
 
-      {props.allowedAuthMethods.length > 1 && (
-        <StyledConnectionFormEntry>
-          <StyledConnectionLabel>
-            Authentication type
-            <StyledConnectionSelect
-              data-testid="authenticationMethod"
-              onChange={props.onAuthenticationMethodChange}
-              value={props.authenticationMethod}
-            >
-              {props.allowedAuthMethods.map(auth => (
-                <option value={auth} key={auth}>
-                  {readableauthenticationMethods[auth]}
-                </option>
-              ))}
-            </StyledConnectionSelect>
-          </StyledConnectionLabel>
-        </StyledConnectionFormEntry>
-      )}
+        {props.allowedAuthMethods.length > 1 && (
+          <StyledConnectionFormEntry>
+            <StyledConnectionLabel>
+              Authentication type
+              <StyledConnectionSelect
+                data-testid="authenticationMethod"
+                onChange={props.onAuthenticationMethodChange}
+                value={props.authenticationMethod}
+              >
+                {props.allowedAuthMethods.map(auth => (
+                  <option value={auth} key={auth}>
+                    {readableauthenticationMethods[auth]}
+                  </option>
+                ))}
+              </StyledConnectionSelect>
+            </StyledConnectionLabel>
+          </StyledConnectionFormEntry>
+        )}
 
-      {props.authenticationMethod === NATIVE && (
-        <StyledConnectionFormEntry>
-          <StyledConnectionLabel>
-            Username
-            <StyledConnectionTextInput
-              data-testid="username"
-              onChange={props.onUsernameChange}
-              defaultValue={props.username}
-            />
-          </StyledConnectionLabel>
-        </StyledConnectionFormEntry>
-      )}
+        {props.authenticationMethod === NATIVE && (
+          <StyledConnectionFormEntry>
+            <StyledConnectionLabel>
+              Username
+              <StyledConnectionTextInput
+                data-testid="username"
+                onChange={props.onUsernameChange}
+                defaultValue={props.username}
+              />
+            </StyledConnectionLabel>
+          </StyledConnectionFormEntry>
+        )}
 
-      {props.authenticationMethod === NATIVE && (
-        <StyledConnectionFormEntry>
-          <StyledConnectionLabel>
-            Password
-            <StyledConnectionTextInput
-              data-testid="password"
-              onChange={props.onPasswordChange}
-              defaultValue={props.password}
-              type="password"
-            />
-          </StyledConnectionLabel>
-        </StyledConnectionFormEntry>
-      )}
+        {props.authenticationMethod === NATIVE && (
+          <StyledConnectionFormEntry>
+            <StyledConnectionLabel>
+              Password
+              <StyledConnectionTextInput
+                data-testid="password"
+                onChange={props.onPasswordChange}
+                defaultValue={props.password}
+                type="password"
+              />
+            </StyledConnectionLabel>
+          </StyledConnectionFormEntry>
+        )}
 
-      <Render if={!connecting}>
-        <FormButton
-          data-testid="connect"
-          type="submit"
-          style={{ marginRight: 0 }}
-        >
-          Connect
-        </FormButton>
-      </Render>
-      <Render if={connecting}>Connecting...</Render>
-    </StyledConnectionForm>
+        {connecting ? (
+          'Connecting...'
+        ) : (
+          <FormButton
+            data-testid="connect"
+            type="submit"
+            style={{ marginRight: 0 }}
+          >
+            Connect
+          </FormButton>
+        )}
+      </StyledConnectionForm>
+    </StyledFormContainer>
   )
 }

@@ -23,8 +23,6 @@ import { dim } from 'browser-styles/constants'
 
 export const StyledVisContainer = styled.div<{ fullscreen: boolean }>`
   width: 100%;
-  overflow: hidden;
-  ${props => (props.fullscreen ? 'padding-bottom: 39px' : null)};
   height: ${props =>
     props.fullscreen
       ? '100vh'
