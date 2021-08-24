@@ -258,6 +258,7 @@ export function MainEditor({
               bus={bus}
               enableMultiStatementMode={enableMultiStatementMode}
               history={history}
+              fullscreen={isFullscreen}
               toggleFullscreen={toggleFullscreen}
               id={'main-editor'}
               fontLigatures={codeFontLigatures}

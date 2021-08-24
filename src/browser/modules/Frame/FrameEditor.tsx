@@ -61,7 +61,7 @@ import {
 } from 'shared/modules/settings/settingsDuck'
 import { getParams } from 'shared/modules/params/paramsDuck'
 
-type FrameTitleBarBaseProps = {
+type FrameEditorBaseProps = {
   frame: Frame
   fullscreenToggle: () => void
   numRecords: number
@@ -71,7 +71,7 @@ type FrameTitleBarBaseProps = {
   params: Record<string, unknown>
 }
 
-type FrameTitleBarProps = FrameTitleBarBaseProps & {
+type FrameEditorProps = FrameEditorBaseProps & {
   request: BrowserRequest | null
   isRelateAvailable: boolean
   codeFontLigatures: boolean
@@ -83,7 +83,7 @@ type FrameTitleBarProps = FrameTitleBarBaseProps & {
   onTitlebarCmdClick: (cmd: string) => void
 }
 
-function FrameTitlebar({
+function FrameEditor({
   request,
   isRelateAvailable,
   codeFontLigatures,
@@ -100,7 +100,7 @@ function FrameTitlebar({
   visElement,
   bus,
   params
-}: FrameTitleBarProps) {
+}: FrameEditorProps) {
   const [editorValue, setEditorValue] = useState(frame.cmd)
   const [renderEditor, setRenderEditor] = useState(frame.isRerun)
 
@@ -220,6 +220,7 @@ function FrameTitlebar({
               onExecute={run}
               value={editorValue}
               ref={editorRef}
+              fullscreen={false}
               toggleFullscreen={fullscreenToggle}
             />
           </EditorContainer>
@@ -272,7 +273,7 @@ function FrameTitlebar({
 
 const mapStateToProps = (
   state: GlobalState,
-  ownProps: FrameTitleBarBaseProps
+  ownProps: FrameEditorBaseProps
 ) => {
   const request = ownProps.frame.requestId
     ? getRequest(state, ownProps.frame.requestId)
@@ -289,7 +290,7 @@ const mapStateToProps = (
 
 const mapDispatchToProps = (
   dispatch: Dispatch<Action>,
-  ownProps: FrameTitleBarBaseProps
+  ownProps: FrameEditorBaseProps
 ) => {
   return {
     newFavorite: (cmd: string) => {
@@ -324,5 +325,5 @@ const mapDispatchToProps = (
 }
 
 export default withBus(
-  connect(mapStateToProps, mapDispatchToProps)(FrameTitlebar)
+  connect(mapStateToProps, mapDispatchToProps)(FrameEditor)
 )
