@@ -22,18 +22,19 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import neoGraphStyle from '../graphStyle'
 import {
-  StyledPickerSelector,
-  StyledTokenRelationshipType,
+  StyledCaptionSelector,
+  StyledCircleSelector,
   StyledInlineList,
   StyledInlineListItem,
   StyledLabelToken,
   StyledPickerListItem,
-  StyledCircleSelector,
-  StyledCaptionSelector
+  StyledPickerSelector,
+  StyledTokenRelationshipType
 } from './styled'
 import * as actions from 'shared/modules/grass/grassDuck'
 import { toKeyString } from 'shared/services/utils'
 import SetupLabelModal from 'browser/modules/D3Visualization/components/modal/label/SetupLabelModal'
+import { RelArrowCaptionPosition } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelRelArrowSVG'
 
 export class GrassEditorComponent extends Component<any> {
   graphStyle: any
@@ -214,13 +215,22 @@ export class GrassEditorComponent extends Component<any> {
         <StyledInlineList className="label-picker picker">
           <SetupLabelModal
             selector={selector}
-            itemStyle={styleForItem.props}
-            captionSettings={styleForItem.props?.captionSettings}
+            itemStyleProps={styleForItem.props}
             propertyKeys={propertyKeys}
             showTypeSelector={showTypeSelector}
-            updateStyle={captionSettings =>
-              this.updateStyle(selector, { captionSettings })
-            }
+            updateStyle={props => {
+              if (props) {
+                this.updateStyle(selector, {
+                  captionSettings: props[RelArrowCaptionPosition.center]
+                })
+                this.updateStyle(selector, { extraCaptionSettings: props })
+              } else {
+                this.updateStyle(selector, {
+                  captionSettings: undefined,
+                  extraCaptionSettings: undefined
+                })
+              }
+            }}
             isNode={isNode}
           />
         </StyledInlineList>
