@@ -87,6 +87,7 @@ import { METRICS_EVENT, udcInit } from 'shared/modules/udc/udcDuck'
 import { useKeyboardShortcuts } from './keyboardShortcuts'
 import PerformanceOverlay from './PerformanceOverlay'
 import { isRunningE2ETest } from 'services/utils'
+import { version } from 'project-root/package.json'
 export const MAIN_WRAPPER_DOM_ID = 'MAIN_WRAPPER_DOM_ID'
 
 declare let SEGMENT_KEY: string
@@ -114,8 +115,12 @@ export function App(props: any) {
       props.bus &&
       props.bus.take(
         METRICS_EVENT,
-        ({ category, label, data }: MetricsData) => {
+        ({ category, label, data: originalData }: MetricsData) => {
           if (!isRunningE2ETest()) {
+            const data = {
+              browserVersion: version,
+              ...originalData
+            }
             eventMetricsCallback &&
               eventMetricsCallback.current &&
               eventMetricsCallback.current({ category, label, data })
