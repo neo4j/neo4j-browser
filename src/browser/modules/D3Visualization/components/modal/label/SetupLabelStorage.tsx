@@ -28,13 +28,14 @@ const getInitialCaptionSettings: (props: {
     }
   }
 }
-
-export interface ICaptionSettingsStore {
-  [RelArrowCaptionPosition.center]: ICaptionSettings
+export interface ICaptionSettingsStoreLimited {
   [RelArrowCaptionPosition.startAbove]: ICaptionSettings
   [RelArrowCaptionPosition.startBelow]: ICaptionSettings
   [RelArrowCaptionPosition.endAbove]: ICaptionSettings
   [RelArrowCaptionPosition.endBelow]: ICaptionSettings
+}
+export interface ICaptionSettingsStore extends ICaptionSettingsStoreLimited {
+  [RelArrowCaptionPosition.center]: ICaptionSettings
 }
 
 export interface ISetupLabelStorageProps {

@@ -20,11 +20,22 @@
 import Renderer from '../components/renderer'
 import * as d3 from 'd3'
 import { max } from 'lodash-es'
+import { RelArrowCaptionPosition } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelRelArrowSVG'
 
 const noop = function() {}
 
 const nodeRingStrokeSize = 8
-
+const sideTextsPositions: (
+  | RelArrowCaptionPosition.startAbove
+  | RelArrowCaptionPosition.startBelow
+  | RelArrowCaptionPosition.endAbove
+  | RelArrowCaptionPosition.endBelow
+)[] = [
+  RelArrowCaptionPosition.startAbove,
+  RelArrowCaptionPosition.startBelow,
+  RelArrowCaptionPosition.endAbove,
+  RelArrowCaptionPosition.endBelow
+]
 const nodeOutline = new Renderer({
   onGraphChange(selection: any, viz: any) {
     const circles = selection
@@ -191,19 +202,22 @@ const arrowPath = new Renderer({
 
 const relationshipType = new Renderer({
   name: 'relationshipType',
-  onGraphChange(selection: any, viz: any) {
-    const texts = selection.selectAll('text').data((rel: any) => [rel])
-
-    texts
+  onGraphChange(selection: d3.Selection<any>, viz: any) {
+    const textContainers = selection
+      .selectAll('.textContainer')
+      .data((rel: any) => [rel])
+    const newContainers = textContainers
       .enter()
+      .append('g')
+      .classed('textContainer', true)
+
+    const centerTexts = newContainers
       .append('text')
+      .classed('centerText', true)
       .attr({ 'text-anchor': 'middle' })
       .attr({ 'pointer-events': 'none' })
-      .attr('class', (d: any) =>
-        d.captionSettingsArray != undefined ? 'multi-text' : 'single-text'
-      )
 
-    texts
+    centerTexts
       .attr('font-size', (rel: any) =>
         viz.style.forRelationship(rel).get('font-size')
       )
@@ -211,7 +225,7 @@ const relationshipType = new Renderer({
         viz.style.forRelationship(rel).get(`text-color-${rel.captionLayout}`)
       )
 
-    texts
+    centerTexts
       .filter((rel: any) => rel.captionSettingsArray != undefined)
       .each(function(this: SVGTextElement, rel: any) {
         if (this.children.length === 0) {
@@ -231,12 +245,90 @@ const relationshipType = new Renderer({
         return tspans.exit().remove()
       })
 
-    return texts.exit().remove()
+    const sideTexts = textContainers
+      .filter(
+        rel =>
+          rel.sideCaptions != undefined &&
+          Object.keys(rel.sideCaptions).length > 0
+      )
+      .each(function(this: SVGTextElement, rel: any) {
+        const $this = d3.select(this)
+        sideTextsPositions.forEach(position => {
+          const className = 'sideText' + position
+          const sideTexts = $this
+            .selectAll('.' + className)
+            .data(rel.sideCaptions[position] ?? [])
+
+          sideTexts
+            .enter()
+            .append('text')
+            .classed(className, true)
+            .classed('allSideTexts', true)
+            .attr({
+              'text-anchor': (d: any) =>
+                [
+                  RelArrowCaptionPosition.startBelow,
+                  RelArrowCaptionPosition.startAbove
+                ].includes(d.position)
+                  ? 'start'
+                  : 'end'
+            })
+            .attr({ 'pointer-events': 'none' })
+            .attr('font-size', () =>
+              viz.style.forRelationship(rel).get('font-size')
+            )
+            .attr('fill', () =>
+              viz.style
+                .forRelationship(rel)
+                .get(`text-color-${rel.captionLayout}`)
+            )
+          return sideTexts.exit().remove()
+        })
+      })
+    // add extra captions
+    return textContainers.exit().remove()
   },
 
   onTick(selection: any, viz: any) {
+    selection
+      .selectAll('.textContainer')
+      .each(function(this: SVGGElement, rel: any) {
+        const container = d3.select(this)
+        container
+          .selectAll('.allSideTexts')
+          .attr('x', d =>
+            [
+              RelArrowCaptionPosition.startBelow,
+              RelArrowCaptionPosition.startAbove
+            ].includes(d.position)
+              ? 20
+              : rel.arrow.midShaftPoint.x * 2 - 30
+          )
+          .attr(
+            'y',
+            d =>
+              ([
+                RelArrowCaptionPosition.startBelow,
+                RelArrowCaptionPosition.endBelow
+              ].includes(d.position)
+                ? 15
+                : -15) + d.yOffset
+          )
+          .attr('transform', () => {
+            if (rel.naturalAngle < 90 || rel.naturalAngle > 270) {
+              return `rotate(180 ${rel.arrow.midShaftPoint.x} ${rel.arrow.midShaftPoint.y})`
+            } else {
+              return ''
+            }
+          })
+          .style('font-weight', (d: any) => d['font-weight'])
+          .style('font-style', (d: any) => d['font-style'])
+          .style('text-decoration', (d: any) => d['text-decoration'])
+          .text(d => d.caption)
+      })
+
     return selection
-      .selectAll('text')
+      .selectAll('.centerText')
       .attr('x', (rel: any) => rel.arrow.midShaftPoint.x)
       .attr(
         'y',
@@ -249,7 +341,7 @@ const relationshipType = new Renderer({
         if (rel.naturalAngle < 90 || rel.naturalAngle > 270) {
           return `rotate(180 ${rel.arrow.midShaftPoint.x} ${rel.arrow.midShaftPoint.y})`
         } else {
-          return null
+          return ''
         }
       })
       .each(function(this: SVGTextElement, rel: any) {

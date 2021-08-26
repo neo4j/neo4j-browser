@@ -35,6 +35,7 @@ import * as actions from 'shared/modules/grass/grassDuck'
 import { toKeyString } from 'shared/services/utils'
 import SetupLabelModal from 'browser/modules/D3Visualization/components/modal/label/SetupLabelModal'
 import { RelArrowCaptionPosition } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelRelArrowSVG'
+import { cloneDeep } from 'lodash-es'
 
 export class GrassEditorComponent extends Component<any> {
   graphStyle: any
@@ -220,10 +221,19 @@ export class GrassEditorComponent extends Component<any> {
             showTypeSelector={showTypeSelector}
             updateStyle={props => {
               if (props) {
+                const extraCaptionSettings = cloneDeep(props)
                 this.updateStyle(selector, {
-                  captionSettings: props[RelArrowCaptionPosition.center]
+                  captionSettings:
+                    extraCaptionSettings[RelArrowCaptionPosition.center]
                 })
-                this.updateStyle(selector, { extraCaptionSettings: props })
+                delete extraCaptionSettings[RelArrowCaptionPosition.center]
+                if (Object.keys(extraCaptionSettings).length > 0) {
+                  this.updateStyle(selector, { extraCaptionSettings })
+                } else {
+                  this.updateStyle(selector, {
+                    extraCaptionSettings: undefined
+                  })
+                }
               } else {
                 this.updateStyle(selector, {
                   captionSettings: undefined,

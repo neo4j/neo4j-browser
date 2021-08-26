@@ -29,6 +29,10 @@ import {
   includePropertyNameKey,
   replaceUnderscoresWithSpaces
 } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelDisplaySettings'
+import {
+  ICaptionSettingsStore,
+  ICaptionSettingsStoreLimited
+} from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelStorage'
 
 export default class NeoD3Geometry {
   relationshipRouting: any
@@ -47,13 +51,15 @@ export default class NeoD3Geometry {
 
   formatMultipleRelationshipCaption(
     relationship: any,
-    captionSettings: ICaptionSettings
+    captionSettings: ICaptionSettings,
+    extraCaptionSettings: ICaptionSettingsStoreLimited
   ) {
+    // center caption
     if (captionSettings) {
       relationship.captionSettingsArray = []
       allLabelPositions.forEach(position => {
         const currentStyle = captionSettings[position]
-        if (currentStyle.caption) {
+        if (currentStyle?.caption) {
           let caption = this.style.interpolate(
             currentStyle.caption,
             relationship
@@ -86,6 +92,55 @@ export default class NeoD3Geometry {
     } else {
       delete relationship.captionSettingsArray
     }
+
+    // other captions
+    if (extraCaptionSettings) {
+      relationship.sideCaptions = {}
+      Object.keys(extraCaptionSettings).forEach(relCaptionPosition => {
+        const parsedKey = (relCaptionPosition as unknown) as keyof ICaptionSettingsStoreLimited
+        if (extraCaptionSettings.hasOwnProperty(relCaptionPosition)) {
+          const arr: any[] = []
+          relationship.sideCaptions[relCaptionPosition] = arr
+          const settings: ICaptionSettings = extraCaptionSettings[parsedKey]
+          allLabelPositions.forEach(position => {
+            const currentStyle = settings[position]
+            if (currentStyle?.caption) {
+              let caption = this.style.interpolate(
+                currentStyle.caption,
+                relationship
+              )
+              if (currentStyle[replaceUnderscoresWithSpaces]) {
+                caption = caption.replace(/[_]/g, ' ')
+              }
+              if (currentStyle[includePropertyNameKey]) {
+                caption =
+                  `${currentStyle.caption.replace(/[{}]/g, '')}: ` + caption
+              }
+              arr.push(
+                Object.assign({}, currentStyle, {
+                  caption,
+                  yOffset: 0,
+                  position: parseInt(relCaptionPosition, 10)
+                })
+              )
+            }
+          })
+          const arrLength = arr.length
+          switch (arrLength) {
+            case 2:
+              arr[0].yOffset = -4
+              arr[1].yOffset = 4
+              break
+            case 3:
+              arr[0].yOffset = -8
+              arr[2].yOffset = 8
+              break
+          }
+        }
+      })
+    } else {
+      delete relationship.sideCaptions
+    }
   }
 
   formatRelationshipCaptions(relationships: any[]) {
@@ -96,7 +151,8 @@ export default class NeoD3Geometry {
         const template = currentStyle.get('caption')
         this.formatMultipleRelationshipCaption(
           relationship,
-          currentStyle.get('captionSettings')
+          currentStyle.get('captionSettings'),
+          currentStyle.get('extraCaptionSettings')
         )
         result.push(
           (relationship.caption = this.style.interpolate(

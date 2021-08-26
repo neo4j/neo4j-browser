@@ -26,7 +26,6 @@ const center = 150 / 2
 const start = 20
 const end = 150 - 20
 const arrowHeight = 20
-
 export enum RelArrowCaptionPosition {
   center,
   startAbove,
