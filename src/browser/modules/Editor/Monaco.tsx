@@ -36,6 +36,7 @@ import { Bus } from 'suber'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { QueryResult } from 'neo4j-driver'
+import { applyParamGraphTypes } from 'shared/modules/commands/helpers/cypher'
 
 const shouldCheckForHints = (code: string) =>
   code.trim().length > 0 &&
@@ -272,7 +273,7 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
         {
           query: EXPLAIN_QUERY_PREFIX + text,
           queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
-          params: this.props.params
+          params: applyParamGraphTypes(this.props.params)
         },
         (response: { result: QueryResult; success?: boolean }) => {
           if (
