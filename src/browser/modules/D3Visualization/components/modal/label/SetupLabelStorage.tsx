@@ -36,14 +36,12 @@ const getInitialCaptionSettings: (props: {
     }
   }
 }
-export interface ICaptionSettingsStoreLimited {
+
+export interface ICaptionSettingsStore {
   [RelArrowCaptionPosition.startAbove]: ICaptionSettings
   [RelArrowCaptionPosition.startBelow]: ICaptionSettings
   [RelArrowCaptionPosition.endAbove]: ICaptionSettings
   [RelArrowCaptionPosition.endBelow]: ICaptionSettings
-  [RelArrowCaptionPosition.center]: ICaptionSettings
-}
-export interface ICaptionSettingsStore extends ICaptionSettingsStoreLimited {
   [RelArrowCaptionPosition.center]: ICaptionSettings
 }
 

@@ -28,7 +28,7 @@ import {
   includePropertyNameKey,
   replaceUnderscoresWithSpaces
 } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelDisplaySettings'
-import { ICaptionSettingsStoreLimited } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelStorage'
+import { ICaptionSettingsStore } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelStorage'
 import { RelArrowCaptionPosition } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelRelArrowSVG'
 
 export default class NeoD3Geometry {
@@ -49,7 +49,7 @@ export default class NeoD3Geometry {
   formatMultipleRelationshipCaption(
     relationship: any,
     captionSettings: ICaptionSettings,
-    extraCaptionSettings: ICaptionSettingsStoreLimited
+    extraCaptionSettings: ICaptionSettingsStore
   ) {
     // center caption
     if (captionSettings) {

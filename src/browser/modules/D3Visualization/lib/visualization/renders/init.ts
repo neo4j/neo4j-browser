@@ -343,7 +343,7 @@ const relationshipType = new Renderer({
           .style('font-weight', (d: any) => d['font-weight'])
           .style('font-style', (d: any) => d['font-style'])
           .style('text-decoration', (d: any) => d['text-decoration'])
-          .text(d => d.caption)
+          .text(d => d.shortCaption)
       })
 
     return selection

@@ -293,6 +293,28 @@ export default class PairwiseArcsRelationshipRouting {
                   label.shortCaptionLength = temp[1]
                 })
               }
+              if (relationship.sideCaptions) {
+                Object.keys(relationship.sideCaptions).forEach(position => {
+                  const array = relationship.sideCaptions[position]
+                  array.forEach((label: any) => {
+                    label.captionLength = this.measureRelationshipCaption(
+                      relationship,
+                      label.caption
+                    )
+                    const allowedLength = relationship.arrow.shaftLength / 2
+                    const temp: [string, number] =
+                      allowedLength > label.captionLength
+                        ? [label.caption, label.captionLength]
+                        : this.shortenCaption(
+                            relationship,
+                            label.caption,
+                            allowedLength
+                          )
+                    label.shortCaption = temp[0]
+                    label.shortCaptionLength = temp[1]
+                  })
+                })
+              }
               result1.push(
                 ([
                   relationship.shortCaption,
