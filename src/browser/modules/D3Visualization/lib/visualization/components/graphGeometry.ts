@@ -21,18 +21,15 @@ import PairwiseArcsRelationshipRouting from '../utils/pairwiseArcsRelationshipRo
 import measureText from '../utils/textMeasurement'
 import {
   allLabelPositions,
-  ICaptionSettings,
-  LabelPosition
+  ICaptionSettings
 } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelModal'
-import { flatten, floor } from 'lodash-es'
+import { flatten } from 'lodash-es'
 import {
   includePropertyNameKey,
   replaceUnderscoresWithSpaces
 } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelDisplaySettings'
-import {
-  ICaptionSettingsStore,
-  ICaptionSettingsStoreLimited
-} from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelStorage'
+import { ICaptionSettingsStoreLimited } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelStorage'
+import { RelArrowCaptionPosition } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelRelArrowSVG'
 
 export default class NeoD3Geometry {
   relationshipRouting: any
@@ -97,11 +94,14 @@ export default class NeoD3Geometry {
     if (extraCaptionSettings) {
       relationship.sideCaptions = {}
       Object.keys(extraCaptionSettings).forEach(relCaptionPosition => {
-        const parsedKey = (relCaptionPosition as unknown) as keyof ICaptionSettingsStoreLimited
+        const positionInt: RelArrowCaptionPosition = parseInt(
+          relCaptionPosition,
+          10
+        )
         if (extraCaptionSettings.hasOwnProperty(relCaptionPosition)) {
           const arr: any[] = []
           relationship.sideCaptions[relCaptionPosition] = arr
-          const settings: ICaptionSettings = extraCaptionSettings[parsedKey]
+          const settings: ICaptionSettings = extraCaptionSettings[positionInt]
           allLabelPositions.forEach(position => {
             const currentStyle = settings[position]
             if (currentStyle?.caption) {
@@ -120,7 +120,7 @@ export default class NeoD3Geometry {
                 Object.assign({}, currentStyle, {
                   caption,
                   yOffset: 0,
-                  position: parseInt(relCaptionPosition, 10)
+                  position: positionInt
                 })
               )
             }
@@ -128,12 +128,34 @@ export default class NeoD3Geometry {
           const arrLength = arr.length
           switch (arrLength) {
             case 2:
-              arr[0].yOffset = -4
-              arr[1].yOffset = 4
+              if (
+                [
+                  RelArrowCaptionPosition.startAbove,
+                  RelArrowCaptionPosition.endAbove
+                ].includes(positionInt)
+              ) {
+                arr[0].yOffset = -8
+                arr[1].yOffset = 0
+              } else {
+                arr[0].yOffset = 0
+                arr[1].yOffset = 8
+              }
               break
             case 3:
-              arr[0].yOffset = -8
-              arr[2].yOffset = 8
+              if (
+                [
+                  RelArrowCaptionPosition.startAbove,
+                  RelArrowCaptionPosition.endAbove
+                ].includes(positionInt)
+              ) {
+                arr[0].yOffset = -16
+                arr[1].yOffset = -8
+                arr[2].yOffset = 0
+              } else {
+                arr[0].yOffset = 0
+                arr[1].yOffset = 8
+                arr[2].yOffset = 16
+              }
               break
           }
         }

@@ -13,11 +13,19 @@ import SetupLabelModalBody from 'project-root/src/browser/modules/D3Visualizatio
 const getInitialCaptionSettings: (props: {
   settings?: ICaptionSettings
   template?: any
-}) => ICaptionSettings = ({ settings, template = {} }) => {
+  copyMiddleCaption?: boolean
+}) => ICaptionSettings = ({
+  settings,
+  template = {},
+  copyMiddleCaption = false
+}) => {
   if (settings) {
     return cloneDeep(settings)
   } else {
     const middle = cloneDeep(template)
+    if (!copyMiddleCaption) {
+      delete middle.caption
+    }
     const top = cloneDeep(template)
     delete top.caption
     const bottom = cloneDeep(top)
@@ -33,6 +41,7 @@ export interface ICaptionSettingsStoreLimited {
   [RelArrowCaptionPosition.startBelow]: ICaptionSettings
   [RelArrowCaptionPosition.endAbove]: ICaptionSettings
   [RelArrowCaptionPosition.endBelow]: ICaptionSettings
+  [RelArrowCaptionPosition.center]: ICaptionSettings
 }
 export interface ICaptionSettingsStore extends ICaptionSettingsStoreLimited {
   [RelArrowCaptionPosition.center]: ICaptionSettings
@@ -71,8 +80,8 @@ export interface ISetupLabelStorageProps {
 
 const SetupLabelStorage: React.FC<ISetupLabelStorageProps> = props => {
   const { itemStyleProps, isNode, updateStyle, doClose } = props
-  const { itemStyle, extraCaptionSettings } = itemStyleProps
-
+  const { extraCaptionSettings } = itemStyleProps
+  const itemStyle = itemStyleProps
   const [selectedRelPosition, setRelPosition] = React.useState(
     RelArrowCaptionPosition.center
   )
@@ -84,7 +93,8 @@ const SetupLabelStorage: React.FC<ISetupLabelStorageProps> = props => {
   >({
     [RelArrowCaptionPosition.center]: getInitialCaptionSettings({
       settings: itemStyleProps.captionSettings,
-      template: itemStyle
+      template: itemStyle,
+      copyMiddleCaption: true
     }),
     [RelArrowCaptionPosition.startAbove]: getInitialCaptionSettings({
       settings: extraCaptionSettings?.[RelArrowCaptionPosition.startAbove],

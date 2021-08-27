@@ -211,11 +211,13 @@ const relationshipType = new Renderer({
       .append('g')
       .classed('textContainer', true)
 
-    const centerTexts = newContainers
+    newContainers
       .append('text')
       .classed('centerText', true)
       .attr({ 'text-anchor': 'middle' })
       .attr({ 'pointer-events': 'none' })
+
+    const centerTexts = selection.selectAll('.centerText')
 
     centerTexts
       .attr('font-size', (rel: any) =>
@@ -231,12 +233,13 @@ const relationshipType = new Renderer({
         if (this.children.length === 0) {
           d3.select(this).text('')
         }
+
         const tspans = d3
           .select(this)
           .selectAll('tspan')
           .data(rel.captionSettingsArray)
 
-        const newTspans = tspans
+        tspans
           .enter()
           .append('tspan')
           .attr({ 'text-anchor': 'middle' })
@@ -245,47 +248,30 @@ const relationshipType = new Renderer({
         return tspans.exit().remove()
       })
 
-    const sideTexts = textContainers
-      .filter(
-        rel =>
-          rel.sideCaptions != undefined &&
-          Object.keys(rel.sideCaptions).length > 0
-      )
-      .each(function(this: SVGTextElement, rel: any) {
-        const $this = d3.select(this)
-        sideTextsPositions.forEach(position => {
-          const className = 'sideText' + position
-          const sideTexts = $this
-            .selectAll('.' + className)
-            .data(rel.sideCaptions[position] ?? [])
-
-          sideTexts
-            .enter()
-            .append('text')
-            .classed(className, true)
-            .classed('allSideTexts', true)
-            .attr({
-              'text-anchor': (d: any) =>
-                [
-                  RelArrowCaptionPosition.startBelow,
-                  RelArrowCaptionPosition.startAbove
-                ].includes(d.position)
-                  ? 'start'
-                  : 'end'
-            })
-            .attr({ 'pointer-events': 'none' })
-            .attr('font-size', () =>
-              viz.style.forRelationship(rel).get('font-size')
-            )
-            .attr('fill', () =>
-              viz.style
-                .forRelationship(rel)
-                .get(`text-color-${rel.captionLayout}`)
-            )
-          return sideTexts.exit().remove()
-        })
+    textContainers.each(function(this: SVGTextElement, rel: any) {
+      const $this = d3.select(this)
+      sideTextsPositions.forEach(position => {
+        const className = 'sideText' + position
+        const sideTexts = $this
+          .selectAll('.' + className)
+          .data(rel.sideCaptions?.[position] ?? [])
+        sideTexts
+          .enter()
+          .append('text')
+          .classed(className, true)
+          .classed('allSideTexts', true)
+          .attr({ 'pointer-events': 'none' })
+          .attr('font-size', () =>
+            viz.style.forRelationship(rel).get('font-size')
+          )
+          .attr('fill', () =>
+            viz.style
+              .forRelationship(rel)
+              .get(`text-color-${rel.captionLayout}`)
+          )
+        return sideTexts.exit().remove()
       })
-    // add extra captions
+    })
     return textContainers.exit().remove()
   },
 
@@ -296,24 +282,57 @@ const relationshipType = new Renderer({
         const container = d3.select(this)
         container
           .selectAll('.allSideTexts')
-          .attr('x', d =>
-            [
-              RelArrowCaptionPosition.startBelow,
-              RelArrowCaptionPosition.startAbove
-            ].includes(d.position)
-              ? 20
-              : rel.arrow.midShaftPoint.x * 2 - 30
-          )
-          .attr(
-            'y',
-            d =>
+          .attr({
+            'text-anchor': (d: any) => {
+              if (
+                [
+                  RelArrowCaptionPosition.startBelow,
+                  RelArrowCaptionPosition.startAbove
+                ].includes(d.position)
+              ) {
+                if (rel.naturalAngle < 90 || rel.naturalAngle > 270) {
+                  return 'end'
+                } else {
+                  return 'start'
+                }
+              } else {
+                if (rel.naturalAngle < 90 || rel.naturalAngle > 270) {
+                  return 'start'
+                } else {
+                  return 'end'
+                }
+              }
+            }
+          })
+          .attr('x', d => {
+            const x1 = rel.source.radius
+            const x2 = rel.source.radius + rel.arrow.length - 10
+            if (rel.naturalAngle < 90 || rel.naturalAngle > 270) {
+              return [
+                RelArrowCaptionPosition.startBelow,
+                RelArrowCaptionPosition.startAbove
+              ].includes(d.position)
+                ? x2
+                : x1
+            } else {
+              return [
+                RelArrowCaptionPosition.startBelow,
+                RelArrowCaptionPosition.startAbove
+              ].includes(d.position)
+                ? x1
+                : x2
+            }
+          })
+          .attr('y', d => {
+            return (
               ([
                 RelArrowCaptionPosition.startBelow,
                 RelArrowCaptionPosition.endBelow
               ].includes(d.position)
-                ? 15
-                : -15) + d.yOffset
-          )
+                ? 10
+                : -5) + d.yOffset
+            )
+          })
           .attr('transform', () => {
             if (rel.naturalAngle < 90 || rel.naturalAngle > 270) {
               return `rotate(180 ${rel.arrow.midShaftPoint.x} ${rel.arrow.midShaftPoint.y})`
