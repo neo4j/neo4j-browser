@@ -26,7 +26,7 @@ import {
   PlayIcon
 } from 'browser-components/icons/Icons'
 import { deepEquals } from 'services/utils'
-import Render from 'browser-components/Render'
+
 import {
   commandSources,
   executeCommand,
@@ -75,7 +75,7 @@ export class ErrorsView extends Component<any> {
           <StyledDiv>
             <StyledPreformattedArea>{fullError.message}</StyledPreformattedArea>
           </StyledDiv>
-          <Render if={isUnknownProcedureError(error)}>
+          {isUnknownProcedureError(error) && (
             <StyledLinkContainer>
               <StyledLink
                 onClick={() => onItemClick(bus, listAvailableProcedures)}
@@ -84,8 +84,8 @@ export class ErrorsView extends Component<any> {
                 &nbsp;List available procedures
               </StyledLink>
             </StyledLinkContainer>
-          </Render>
-          <Render if={isNoDbAccessError(error)}>
+          )}
+          {isNoDbAccessError(error) && (
             <StyledLinkContainer>
               <StyledLink
                 onClick={() => onItemClick(bus, `:${listDbsCommand}`)}
@@ -94,8 +94,8 @@ export class ErrorsView extends Component<any> {
                 &nbsp;List available databases
               </StyledLink>
             </StyledLinkContainer>
-          </Render>
-          <Render if={isPeriodicCommitError(error)}>
+          )}
+          {isPeriodicCommitError(error) && (
             <StyledLinkContainer>
               <StyledLink onClick={() => onItemClick(bus, `:help auto`)}>
                 <PlayIcon />
@@ -103,7 +103,7 @@ export class ErrorsView extends Component<any> {
               </StyledLink>
               &nbsp;(auto-committing transactions)
             </StyledLinkContainer>
-          </Render>
+          )}
         </StyledHelpContent>
       </StyledHelpFrame>
     )

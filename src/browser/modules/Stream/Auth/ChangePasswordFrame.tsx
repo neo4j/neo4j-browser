@@ -24,7 +24,7 @@ import { connect } from 'react-redux'
 import ConnectionForm from './ConnectionForm'
 import FrameTemplate from '../../Frame/FrameTemplate'
 import FrameError from '../../Frame/FrameError'
-import Render from 'browser-components/Render'
+
 import { H3 } from 'browser-components/headers'
 import { Lead } from 'browser-components/Text'
 import { StyledConnectionAside } from './styled'
@@ -61,19 +61,18 @@ class ChangePasswordFrame extends Component<any, ChangePasswordFrameState> {
       <>
         <StyledConnectionAside>
           <H3>Password change</H3>
-          <Render if={!this.state.success}>
+          {this.state.success ? (
+            <Lead>Password change successful</Lead>
+          ) : (
             <Lead>
               {this.props.activeConnection
                 ? 'Enter your current password and the new twice to change your password.'
                 : 'Please connect to a database to change the password.'}
             </Lead>
-          </Render>
-          <Render if={this.state.success}>
-            <Lead>Password change successful</Lead>
-          </Render>
+          )}
         </StyledConnectionAside>
 
-        <Render if={this.props.activeConnection}>
+        {this.props.activeConnection && (
           <ConnectionForm
             {...this.props}
             error={this.error}
@@ -81,7 +80,7 @@ class ChangePasswordFrame extends Component<any, ChangePasswordFrameState> {
             forcePasswordChange
             showExistingPasswordInput
           />
-        </Render>
+        )}
       </>
     )
     return (

@@ -67,6 +67,15 @@ Neo4j starts a web server with the `BROWSER` module (Neo4j Browser) on port `747
 Point your web browser to link:http://localhost:7474/browser[_http://localhost:7474/browser_].
 ====
 
+[NOTE]
+====
+New versions of Neo4j Browser are released independently of Neo4j Server.
+The Browser version bundled with Neo4j Server is the latest at the time of the Neo4j Server release.
+Consequently, when used with a Neo4j server, the Browser version may not be the latest one, and new Browser functionality may not be immediately available.
+If you cannot wait for the next release of Neo4j Server and access to the latest version of Browser, refer to the other deployment options below.
+====
+
+
 
 [[bundled-desktop]]
 == Neo4j Desktop

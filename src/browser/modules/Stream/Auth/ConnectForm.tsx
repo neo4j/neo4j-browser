@@ -19,7 +19,7 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import Render from 'browser-components/Render'
+
 import { FormButton } from 'browser-components/buttons'
 import {
   StyledConnectionForm,
@@ -268,7 +268,9 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
           </StyledConnectionFormEntry>
         )}
 
-        <Render if={!connecting}>
+        {connecting ? (
+          'Connecting...'
+        ) : (
           <FormButton
             data-testid="connect"
             type="submit"
@@ -276,8 +278,7 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
           >
             Connect
           </FormButton>
-        </Render>
-        <Render if={connecting}>Connecting...</Render>
+        )}
       </StyledConnectionForm>
     </StyledFormContainer>
   )

@@ -28,7 +28,7 @@ import {
 } from './styled'
 import ConnectedView from './ConnectedView'
 import { H3 } from 'browser-components/headers'
-import Render from 'browser-components/Render'
+
 import {
   getActiveConnectionData,
   getActiveConnection,
@@ -49,39 +49,31 @@ export const ServerStatusFrame = (props: any) => {
         </span>
       </StyledConnectionAside>
       <StyledConnectionBodyContainer>
-        <Render if={!isConnected || !activeConnectionData}>
+        {(!isConnected || !activeConnectionData) && (
           <StyledConnectionBody>
             You are currently not connected to Neo4j.
             <br />
             Execute <ClickToCode>:server connect</ClickToCode> and enter your
             credentials to connect.
           </StyledConnectionBody>
-        </Render>
-        <Render
-          if={
-            isConnected &&
-            activeConnectionData &&
-            activeConnectionData.authEnabled
-          }
-        >
-          <ConnectedView
-            username={activeConnectionData && activeConnectionData.username}
-            showHost
-            host={activeConnectionData && activeConnectionData.host}
-            storeCredentials={storeCredentials}
-          />
-        </Render>
-        <Render
-          if={
-            isConnected &&
-            activeConnectionData &&
-            !activeConnectionData.authEnabled
-          }
-        >
-          <StyledConnectionBody>
-            You have a working connection and server auth is disabled.
-          </StyledConnectionBody>
-        </Render>
+        )}
+        {isConnected &&
+          activeConnectionData &&
+          activeConnectionData.authEnabled && (
+            <ConnectedView
+              username={activeConnectionData && activeConnectionData.username}
+              showHost
+              host={activeConnectionData && activeConnectionData.host}
+              storeCredentials={storeCredentials}
+            />
+          )}
+        {isConnected &&
+          activeConnectionData &&
+          !activeConnectionData.authEnabled && (
+            <StyledConnectionBody>
+              You have a working connection and server auth is disabled.
+            </StyledConnectionBody>
+          )}
       </StyledConnectionBodyContainer>
     </>
   )
