@@ -20,7 +20,6 @@
 
 import React, { Component } from 'react'
 
-import Render from 'browser-components/Render'
 import {
   DrawerSubHeader,
   DrawerSection,
@@ -55,32 +54,34 @@ export class UserDetails extends Component<any> {
                     {mappedRoles}
                   </StyledValue>
                 </tr>
-                <Render if={hasAdminRole}>
-                  <tr>
-                    <StyledKey className="user-list-button">Admin:</StyledKey>
-                    <StyledValue>
-                      <Link
-                        onClick={() =>
-                          this.props.onItemClick(':server user list')
-                        }
-                      >
-                        :server user list
-                      </Link>
-                    </StyledValue>
-                  </tr>
-                  <tr>
-                    <StyledKey className="user-list-button" />
-                    <StyledValue>
-                      <Link
-                        onClick={() =>
-                          this.props.onItemClick(':server user add')
-                        }
-                      >
-                        :server user add
-                      </Link>
-                    </StyledValue>
-                  </tr>
-                </Render>
+                {hasAdminRole && (
+                  <>
+                    <tr>
+                      <StyledKey className="user-list-button">Admin:</StyledKey>
+                      <StyledValue>
+                        <Link
+                          onClick={() =>
+                            this.props.onItemClick(':server user list')
+                          }
+                        >
+                          :server user list
+                        </Link>
+                      </StyledValue>
+                    </tr>
+                    <tr>
+                      <StyledKey className="user-list-button" />
+                      <StyledValue>
+                        <Link
+                          onClick={() =>
+                            this.props.onItemClick(':server user add')
+                          }
+                        >
+                          :server user add
+                        </Link>
+                      </StyledValue>
+                    </tr>
+                  </>
+                )}
                 <tr>
                   <StyledKey className="user-list-button">
                     Disconnect:

@@ -138,6 +138,7 @@ export const SavedScriptsInput = styled.input`
 
 export const ContextMenuContainer = styled.span`
   position: relative;
+  cursor: pointer;
 `
 
 export const ContextMenuHoverParent = styled.span<{ stayVisible?: boolean }>`

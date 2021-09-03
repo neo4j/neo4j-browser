@@ -31,7 +31,7 @@ import {
   CONNECTED_STATE,
   getConnectionState
 } from 'shared/modules/connections/connectionsDuck'
-import Render from 'browser-components/Render'
+
 import { toggle } from 'shared/modules/sidebar/sidebarDuck'
 import {
   optOutSync,
@@ -55,21 +55,19 @@ const SyncReminderBanner = React.memo(function SyncReminderBanner({
     authStatus !== SIGNED_IN &&
     !syncConsent.optedOut
 
-  return (
-    <Render if={visible}>
-      <SyncDisconnectedBanner>
-        <StyledSyncReminderSpan>
-          To enjoy the full Neo4j Browser experience, we advise you to use
-          <SyncSignInBarButton onClick={onGetstartedClicked}>
-            Neo4j Browser Sync
-          </SyncSignInBarButton>
-        </StyledSyncReminderSpan>
-        <StyledSyncReminderButtonContainer>
-          <StyledCancelLink onClick={() => optOutSync()}>X</StyledCancelLink>
-        </StyledSyncReminderButtonContainer>
-      </SyncDisconnectedBanner>
-    </Render>
-  )
+  return visible ? (
+    <SyncDisconnectedBanner>
+      <StyledSyncReminderSpan>
+        To enjoy the full Neo4j Browser experience, we advise you to use
+        <SyncSignInBarButton onClick={onGetstartedClicked}>
+          Neo4j Browser Sync
+        </SyncSignInBarButton>
+      </StyledSyncReminderSpan>
+      <StyledSyncReminderButtonContainer>
+        <StyledCancelLink onClick={() => optOutSync()}>X</StyledCancelLink>
+      </StyledSyncReminderButtonContainer>
+    </SyncDisconnectedBanner>
+  ) : null
 })
 
 const mapStateToProps = (state: any) => {

@@ -30,9 +30,20 @@ export const downloadPNGFromSVG = (svg: any, graph: any, type: any) => {
   const canvas = document.createElement('canvas')
   canvas.width = svgObj.attr('width') as any
   canvas.height = svgObj.attr('height') as any
+  const ctx = canvas.getContext('2d')
 
-  canvg(canvas, svgData)
-  return downloadWithDataURI(`${type}.png`, canvas.toDataURL('image/png'))
+  if (ctx) {
+    const v = canvg.fromString(ctx, svgData)
+    v.render()
+      .then(() =>
+        downloadWithDataURI(`${type}.png`, canvas.toDataURL('image/png'))
+      )
+      .catch(() => {
+        /* unhandled */
+      })
+  } else {
+    /* unhandled */
+  }
 }
 
 export const downloadSVG = (svg: any, graph: any, type: any) => {

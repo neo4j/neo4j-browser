@@ -624,7 +624,10 @@ const availableCommands = [
     name: 'history',
     match: (cmd: any) => /^history(\s+clear)?/.test(cmd),
     exec(action: any, put: any, store: any) {
-      const match = action.cmd.match(/^:history(\s+clear)?/)
+      const match = action.cmd
+        .trim()
+        .toLowerCase()
+        .match(/^:history(\s+clear)?/)
       if (match[0] !== match.input) {
         return put(
           frames.add({
@@ -869,10 +872,10 @@ ${param}`)
 ]
 
 // First to match wins
-const interpret = (cmd: any) => {
+const interpret = (cmd: string) => {
   return availableCommands.reduce((match: any, candidate) => {
     if (match) return match
-    const isMatch = candidate.match(cmd.toLowerCase())
+    const isMatch = candidate.match(cmd.toLowerCase().trim())
     return isMatch ? candidate : null
   }, null)
 }

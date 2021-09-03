@@ -36,6 +36,7 @@ import { Bus } from 'suber'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { QueryResult } from 'neo4j-driver'
+import { applyParamGraphTypes } from 'shared/modules/commands/helpers/cypher'
 
 const shouldCheckForHints = (code: string) =>
   code.trim().length > 0 &&
@@ -79,7 +80,9 @@ type MonacoProps = MonacoDefaultProps & {
   onDisplayHelpKeys?: () => void
   onExecute: (value: string) => void
   useDb: null | string
+  fullscreen: boolean
   toggleFullscreen: () => void
+  params: Record<string, unknown>
 }
 type MonacoState = { currentHistoryIndex: number; draft: string }
 const UNRUN_CMD_HISTORY_INDEX = -1
@@ -269,7 +272,8 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
         CYPHER_REQUEST,
         {
           query: EXPLAIN_QUERY_PREFIX + text,
-          queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+          queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
+          params: applyParamGraphTypes(this.props.params)
         },
         (response: { result: QueryResult; success?: boolean }) => {
           if (
@@ -380,7 +384,7 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
     this.onContentUpdate()
 
     this.editor.onDidChangeModelContent(this.onContentUpdate)
-    this.editor.onDidContentSizeChange(() => this.resize(false))
+    this.editor.onDidContentSizeChange(() => this.resize(this.props.fullscreen))
 
     const resizeObserver = new ResizeObserver(() => {
       // Wrapped in requestAnimationFrame to avoid the error "ResizeObserver loop limit exceeded"

@@ -35,8 +35,10 @@ describe('Monaco', () => {
         history={[]}
         onChange={noOp}
         onExecute={noOp}
+        fullscreen={false}
         toggleFullscreen={noOp}
         bus={{ self: noOp } as any}
+        params={{}}
         id="id"
       />
     )

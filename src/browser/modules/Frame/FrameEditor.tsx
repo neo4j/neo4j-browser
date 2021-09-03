@@ -59,17 +59,19 @@ import {
   codeFontLigatures,
   shouldEnableMultiStatementMode
 } from 'shared/modules/settings/settingsDuck'
+import { getParams } from 'shared/modules/params/paramsDuck'
 
-type FrameTitleBarBaseProps = {
+type FrameEditorBaseProps = {
   frame: Frame
   fullscreenToggle: () => void
   numRecords: number
   getRecords: () => any
   visElement: any
   bus: Bus
+  params: Record<string, unknown>
 }
 
-type FrameTitleBarProps = FrameTitleBarBaseProps & {
+type FrameEditorProps = FrameEditorBaseProps & {
   request: BrowserRequest | null
   isRelateAvailable: boolean
   codeFontLigatures: boolean
@@ -81,7 +83,7 @@ type FrameTitleBarProps = FrameTitleBarBaseProps & {
   onTitlebarCmdClick: (cmd: string) => void
 }
 
-function FrameTitlebar({
+function FrameEditor({
   request,
   isRelateAvailable,
   codeFontLigatures,
@@ -96,8 +98,9 @@ function FrameTitlebar({
   numRecords,
   getRecords,
   visElement,
-  bus
-}: FrameTitleBarProps) {
+  bus,
+  params
+}: FrameEditorProps) {
   const [editorValue, setEditorValue] = useState(frame.cmd)
   const [renderEditor, setRenderEditor] = useState(frame.isRerun)
 
@@ -212,10 +215,12 @@ function FrameTitlebar({
               fontLigatures={codeFontLigatures}
               id={`editor-${frame.id}`}
               bus={bus}
+              params={params}
               onChange={setEditorValue}
               onExecute={run}
               value={editorValue}
               ref={editorRef}
+              fullscreen={false}
               toggleFullscreen={fullscreenToggle}
             />
           </EditorContainer>
@@ -268,7 +273,7 @@ function FrameTitlebar({
 
 const mapStateToProps = (
   state: GlobalState,
-  ownProps: FrameTitleBarBaseProps
+  ownProps: FrameEditorBaseProps
 ) => {
   const request = ownProps.frame.requestId
     ? getRequest(state, ownProps.frame.requestId)
@@ -278,13 +283,14 @@ const mapStateToProps = (
     request,
     isRelateAvailable: app.isRelateAvailable(state),
     codeFontLigatures: codeFontLigatures(state),
-    enableMultiStatementMode: shouldEnableMultiStatementMode(state)
+    enableMultiStatementMode: shouldEnableMultiStatementMode(state),
+    params: getParams(state)
   }
 }
 
 const mapDispatchToProps = (
   dispatch: Dispatch<Action>,
-  ownProps: FrameTitleBarBaseProps
+  ownProps: FrameEditorBaseProps
 ) => {
   return {
     newFavorite: (cmd: string) => {
@@ -319,5 +325,5 @@ const mapDispatchToProps = (
 }
 
 export default withBus(
-  connect(mapStateToProps, mapDispatchToProps)(FrameTitlebar)
+  connect(mapStateToProps, mapDispatchToProps)(FrameEditor)
 )

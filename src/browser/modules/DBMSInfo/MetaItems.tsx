@@ -32,7 +32,7 @@ import {
   StyledShowMoreContainer,
   StyledShowMoreLink
 } from './styled'
-import Render from 'browser-components/Render'
+
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
 import neoGraphStyle from 'browser/modules/D3Visualization/graphStyle'
 import deepmerge from 'deepmerge'
@@ -41,19 +41,17 @@ const wrapperStyle = (styles && styles.wrapper) || ''
 
 const ShowMore = ({ total, shown, moreStep, onMore }: any) => {
   const numMore = total - shown > moreStep ? moreStep : total - shown
-  return (
-    <Render if={shown < total}>
-      <StyledShowMoreContainer>
-        <StyledShowMoreLink onClick={() => onMore(numMore)}>
-          Show {numMore} more
-        </StyledShowMoreLink>
-        &nbsp;|&nbsp;
-        <StyledShowMoreLink onClick={() => onMore(total)}>
-          Show all
-        </StyledShowMoreLink>
-      </StyledShowMoreContainer>
-    </Render>
-  )
+  return shown < total ? (
+    <StyledShowMoreContainer>
+      <StyledShowMoreLink onClick={() => onMore(numMore)}>
+        Show {numMore} more
+      </StyledShowMoreLink>
+      &nbsp;|&nbsp;
+      <StyledShowMoreLink onClick={() => onMore(total)}>
+        Show all
+      </StyledShowMoreLink>
+    </StyledShowMoreContainer>
+  ) : null
 }
 
 function createStyleGetter(graphStyleData: any, kind: string) {
