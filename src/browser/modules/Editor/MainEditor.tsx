@@ -324,7 +324,7 @@ export function MainEditor({
             key={`frame-${title}`}
             title={title}
             onClick={onClick}
-            data-testid={`editor-${testId}`}
+            dataTestId={`editor-${testId}`}
           >
             {icon}
           </FrameButton>

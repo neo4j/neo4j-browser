@@ -315,14 +315,16 @@ type FrameButtonProps = {
   onClick: () => void
   children: React.ReactNode
   title: string
+  dataTestId?: string
 }
 
 export const FrameButton = ({
   onClick,
   children,
-  title
+  title,
+  dataTestId
 }: FrameButtonProps): JSX.Element => (
-  <StyledFrameButton onClick={onClick} title={title}>
+  <StyledFrameButton onClick={onClick} title={title} data-testid={dataTestId}>
     {children}
   </StyledFrameButton>
 )
