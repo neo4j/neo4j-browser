@@ -24,25 +24,37 @@ import { GraphEventHandler } from '../GraphEventHandler'
 import '../lib/visualization/index'
 import { dim } from 'browser-styles/constants'
 import { StyledZoomHolder, StyledSvgWrapper, StyledZoomButton } from './styled'
-import { ZoomInIcon, ZoomOutIcon } from 'browser-components/icons/Icons'
+import {
+  GraphLayoutIcon,
+  ZoomInIcon,
+  ZoomOutIcon
+} from 'browser-components/icons/Icons'
 import graphView from '../lib/visualization/components/graphView'
+import GraphLayoutModal from './modal/GraphLayoutModal'
 
-type State = any
+interface IState {
+  zoomInLimitReached: boolean
+  zoomOutLimitReached: boolean
+  graphLayoutModalOpen: boolean
+}
 
-export class GraphComponent extends Component<any, State> {
+export class GraphComponent extends Component<any, IState> {
   graph: any
   graphEH: any
-  graphView: any
+  graphView!: graphView
   svgElement: any
   state = {
     zoomInLimitReached: false,
-    zoomOutLimitReached: false
+    zoomOutLimitReached: false,
+    graphLayoutModalOpen: false
   }
 
   graphInit(el: any) {
     this.svgElement = el
   }
 
+  graphLayoutClicked = () => this.setState({ graphLayoutModalOpen: true })
+  closeGraphLayoutModal = () => this.setState({ graphLayoutModalOpen: false })
   zoomInClicked(el: any) {
     const limits = this.graphView.zoomIn(el)
     this.setState({
@@ -136,6 +148,9 @@ export class GraphComponent extends Component<any, State> {
   zoomButtons() {
     return (
       <StyledZoomHolder fullscreen={this.props.fullscreen}>
+        <StyledZoomButton onClick={this.graphLayoutClicked}>
+          <GraphLayoutIcon regulateSize={this.props.fullscreen ? 2 : 1} />
+        </StyledZoomButton>
         <StyledZoomButton
           className={
             this.state.zoomInLimitReached ? 'faded zoom-in' : 'zoom-in'
@@ -161,6 +176,10 @@ export class GraphComponent extends Component<any, State> {
       <StyledSvgWrapper>
         <svg className="neod3viz" ref={this.graphInit.bind(this)} />
         {this.zoomButtons()}
+        <GraphLayoutModal
+          isOpen={this.state.graphLayoutModalOpen}
+          onClose={this.closeGraphLayoutModal}
+        />
       </StyledSvgWrapper>
     )
   }
