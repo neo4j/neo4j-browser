@@ -29,7 +29,8 @@ import {
   StyledLabelToken,
   StyledPickerListItem,
   StyledCircleSelector,
-  StyledCaptionSelector
+  StyledCaptionSelector,
+  StyledInlineListStylePicker
 } from './styled'
 import * as actions from 'shared/modules/grass/grassDuck'
 import { toKeyString } from 'shared/services/utils'
@@ -300,10 +301,13 @@ export class GrassEditorComponent extends Component<any> {
       return null
     }
     return (
-      <StyledInlineList className="style-picker">
+      <StyledInlineListStylePicker
+        className="style-picker"
+        frameHeight={this.props.frameHeight}
+      >
         {title}
         {pickers}
-      </StyledInlineList>
+      </StyledInlineListStylePicker>
     )
   }
 

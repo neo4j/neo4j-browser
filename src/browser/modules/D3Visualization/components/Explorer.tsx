@@ -20,15 +20,18 @@
 
 import React, { Component } from 'react'
 import deepmerge from 'deepmerge'
+import { connect } from 'react-redux'
+
 import { deepEquals } from 'services/utils'
 import { GraphComponent } from './Graph'
 import neoGraphStyle from '../graphStyle'
 import { InspectorComponent } from './Inspector'
-import { LegendComponent } from './Legend'
-import { StyledFullSizeContainer } from './styled'
+import { NodeInspectorPanel } from './NodeInspectorPanel'
+import { StyledFullSizeContainer, StyledGraphAreaContainer } from './styled'
 import { GlobalState } from 'shared/globalState'
 import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
-import { connect } from 'react-redux'
+import ResultsPaneComponent from './ResultsPane'
+import { DetailsPaneComponent } from './DetailsPane'
 
 const deduplicateNodes = (nodes: any) => {
   return nodes.reduce(
@@ -79,7 +82,9 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
       styleVersion: 0,
       nodes,
       relationships,
-      selectedItem
+      selectedItem,
+      hoveredItem: {},
+      selectedLabel: {}
     }
   }
 
@@ -127,7 +132,7 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
 
   onSelectedLabel(label: any, propertyKeys: any) {
     this.setState({
-      selectedItem: {
+      selectedLabel: {
         type: 'legend-item',
         item: {
           selectedLabel: { label: label, propertyKeys: propertyKeys },
@@ -139,7 +144,7 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
 
   onSelectedRelType(relType: any, propertyKeys: any) {
     this.setState({
-      selectedItem: {
+      selectedLabel: {
         type: 'legend-item',
         item: {
           selectedLabel: null,
@@ -185,26 +190,32 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
     // This is a workaround to make the style reset to the same colors as when starting the browser with an empty style
     // If the legend component has the style it will ask the neoGraphStyle object for styling before the graph component,
     // and also doing this in a different order from the graph. This leads to different default colors being assigned to different labels.
-    let legend
-    if (this.state.freezeLegend) {
-      legend = (
-        <LegendComponent
-          stats={this.state.stats}
-          graphStyle={neoGraphStyle()}
-          onSelectedLabel={this.onSelectedLabel.bind(this)}
-          onSelectedRelType={this.onSelectedRelType.bind(this)}
-        />
-      )
-    } else {
-      legend = (
-        <LegendComponent
-          stats={this.state.stats}
-          graphStyle={this.state.graphStyle}
-          onSelectedLabel={this.onSelectedLabel.bind(this)}
-          onSelectedRelType={this.onSelectedRelType.bind(this)}
-        />
-      )
-    }
+    const graphStyle = this.state.freezeLegend
+      ? neoGraphStyle()
+      : this.state.graphStyle
+
+    const results = (
+      <ResultsPaneComponent
+        stats={this.state.stats}
+        graphStyle={graphStyle}
+        onSelectedLabel={this.onSelectedLabel.bind(this)}
+        onSelectedRelType={this.onSelectedRelType.bind(this)}
+        selectedLabel={this.state.selectedLabel}
+        frameHeight={this.props.frameHeight}
+      />
+    )
+
+    const details = (
+      <DetailsPaneComponent
+        hasTruncatedFields={this.props.hasTruncatedFields}
+        fullscreen={this.props.fullscreen}
+        hoveredItem={this.state.hoveredItem}
+        selectedItem={this.state.selectedItem}
+        graphStyle={this.state.graphStyle}
+        onExpandToggled={this.onInspectorExpandToggled.bind(this)}
+      />
+    )
+
     const inspectingItemType =
       !this.state.inspectorContracted &&
       ((this.state.hoveredItem && this.state.hoveredItem.type !== 'canvas') ||
@@ -217,22 +228,29 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
           Object.keys(this.state.stats.relTypes).length ? '' : 'one-legend-row'
         }
       >
-        {legend}
-        <GraphComponent
-          fullscreen={this.props.fullscreen}
-          frameHeight={this.props.frameHeight}
-          relationships={this.state.relationships}
-          nodes={this.state.nodes}
-          getNodeNeighbours={this.getNodeNeighbours.bind(this)}
-          onItemMouseOver={this.onItemMouseOver.bind(this)}
-          onItemSelect={this.onItemSelect.bind(this)}
-          graphStyle={this.state.graphStyle}
-          styleVersion={this.state.styleVersion} // cheap way for child to check style updates
-          onGraphModelChange={this.onGraphModelChange.bind(this)}
-          assignVisElement={this.props.assignVisElement}
-          getAutoCompleteCallback={this.props.getAutoCompleteCallback}
-          setGraph={this.props.setGraph}
-        />
+        <StyledGraphAreaContainer>
+          <GraphComponent
+            fullscreen={this.props.fullscreen}
+            frameHeight={this.props.frameHeight}
+            relationships={this.state.relationships}
+            nodes={this.state.nodes}
+            getNodeNeighbours={this.getNodeNeighbours.bind(this)}
+            onItemMouseOver={this.onItemMouseOver.bind(this)}
+            onItemSelect={this.onItemSelect.bind(this)}
+            graphStyle={this.state.graphStyle}
+            styleVersion={this.state.styleVersion} // cheap way for child to check style updates
+            onGraphModelChange={this.onGraphModelChange.bind(this)}
+            assignVisElement={this.props.assignVisElement}
+            getAutoCompleteCallback={this.props.getAutoCompleteCallback}
+            setGraph={this.props.setGraph}
+          />
+          <NodeInspectorPanel
+            results={results}
+            details={details}
+            hoveredItem={this.state.hoveredItem}
+            selectedItem={this.state.selectedItem}
+          />
+        </StyledGraphAreaContainer>
         <InspectorComponent
           hasTruncatedFields={this.props.hasTruncatedFields}
           fullscreen={this.props.fullscreen}

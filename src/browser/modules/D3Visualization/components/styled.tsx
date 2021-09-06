@@ -107,6 +107,12 @@ export const StyledSvgWrapper = styled.div`
     }
   }
 `
+
+export const StyledGraphAreaContainer = styled.div`
+  position: relative;
+  height: 100%;
+`
+
 export const StyledStream = styled.div`
   padding: 0;
   display: flex;
@@ -146,28 +152,57 @@ export const StyledInspectorFooter = styled.div`
   }
 `
 
+export const StyledDetailsStatusContents = styled.div`
+  margin-top: 6px;
+  font-size: 12px;
+  width: 100%;
+  white-space: normal;
+  overflow: auto;
+  &.contracted {
+    max-height: ${inspectorFooterContractedHeight}px;
+    overflow: hidden;
+  }
+`
+
 export const StyledInspectorFooterRow = styled.ul`
   list-style: none;
   word-break: break-word;
   line-height: 21px;
 `
 
+export const StyledInspectorFooterRowListKeyValuePair = styled.div`
+  flex: 1;
+  display: flex;
+`
+
 export const StyledInspectorFooterRowListKey = styled.div`
   float: left;
   font-weight: 800;
+  flex: 1;
 `
 
 export const StyledInspectorFooterRowListValue = styled.div`
-  padding-left: 3px;
+  padding: 0 3px;
   overflow: hidden;
   float: left;
   white-space: pre-wrap;
+  flex: 3;
 `
 
 export const StyledInlineList = styled.ul`
   padding-left: 0;
   list-style: none;
   word-break: break-word;
+`
+
+export const StyledInlineListStylePicker = styled(StyledInlineList)<{
+  frameHeight: number
+}>`
+  display: grid;
+  overflow-y: auto;
+  max-height: ${props => props.frameHeight - 75}px;
+  background: ${props => props.theme.editorBackground};
+  color: ${props => props.theme.primaryText};
 `
 
 export const StyledInlineListItem = styled.li`
@@ -197,6 +232,15 @@ export const StyledStatusBar = styled.div<{ fullscreen?: boolean }>`
   border-top: ${props => props.theme.inFrameBorder};
 `
 
+export const StyledDetailsStatusBar = styled.div`
+  color: ${props => props.theme.secondaryText};
+  font-size: 13px;
+  white-space: nowrap;
+  border-top: ${props => props.theme.inFrameBorder};
+  width: 100%;
+  height: 100%;
+`
+
 export const StyledStatus = styled.div`
   position: relative;
   float: left;
@@ -209,9 +253,36 @@ export const StyledStatus = styled.div`
   overflow: auto;
 `
 
+export const StyledDetailsStatus = styled.div`
+  position: relative;
+  float: left;
+  padding-left: 16px;
+  margin-top: 0;
+  margin-bottom: 0;
+  width: 100%;
+  margin-top: 3px;
+`
+
 export const StyledInspectorFooterRowListPair = styled(StyledInlineListItem)`
   vertical-align: middle;
   font-size: 13px;
+`
+
+export const StyledInspectorFooterRowListPairAlternatingRows = styled(
+  StyledInspectorFooterRowListPair
+)<{
+  isFirstOrEvenRow: boolean
+}>`
+  display: flex;
+  padding: 5px;
+  background: ${props =>
+    props.isFirstOrEvenRow
+      ? props.theme.alteringTableRowBackground
+      : props.theme.editorBackground};
+`
+
+export const StyledInspectorClipboardCopyAll = styled.div`
+  display: flex;
 `
 
 export const StyledToken = styled(StyledInlineListItem)`
@@ -265,12 +336,11 @@ export const StyledLegendRow = styled.div`
 `
 
 export const StyledLegend = styled.div`
-  background-color: ${props => props.theme.frameBackground};
   position: absolute;
   z-index: 1;
-  top: 0;
   right: 0;
   left: 0;
+  padding: 0 15px;
 `
 export const StyledLegendInlineList = styled(StyledInlineList)`
   padding: 7px 9px 0px 10px;
@@ -340,8 +410,8 @@ export const StyledInspectorFooterStatusMessage = styled.div`
 
 export const StyledZoomHolder = styled.div<{ fullscreen: boolean }>`
   position: ${props => (props.fullscreen ? 'fixed' : 'absolute')};
-  bottom: 39px;
-  right: 0;
+  left: 0;
+  top: 0
   padding: 6px 6px 0 6px;
   border-left: ${props => props.theme.inFrameBorder};
   border-right: ${props => props.theme.inFrameBorder};
@@ -371,4 +441,56 @@ export const StyledZoomButton = styled.button`
       color: ${props => props.theme.frameButtonTextColor}
     }
   }
+`
+
+export const StyledNodeInspectorCollapsedButton = styled.div`
+  position: absolute;
+  display: flex;
+  right: 0;
+  top: 0;
+  z-index: 1;
+  background: ${props => props.theme.editorBackground};
+  color: ${props => props.theme.primaryText};
+  border-radius: 2px;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+`
+export const StyledNodeInspectorContainer = styled.div`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  right: 0;
+  height: calc(100% - 39px); // 39px is Inspector footer height
+  top: 0;
+  z-index: 1;
+  width: 25%;
+  background: ${props => props.theme.editorBackground};
+  color: ${props => props.theme.primaryText};
+  overflow-y: auto;
+  padding: 0 10px;
+`
+export const StyledNodeInspectorTopMenu = styled.div`
+  height: 20px;
+  margin: 10px 0 10px 0;
+  display: flex;
+  flex-direction: row;
+`
+
+export const StyledNodeInspectorPane = styled.div<{
+  isActive: boolean
+}>`
+  cursor: pointer;
+  margin: 0 15px;
+  border-bottom: ${props => (props.isActive ? '1px solid #018BFF' : 'none')};
+  font-weight: ${props => (props.isActive ? 'bold' : 'normal')};
+`
+
+export const StyledNodeInspectorTopMenuChevron = styled.div`
+  cursor: pointer;
+  position: absolute;
+  margin-right: 15px;
+  right: 0;
 `

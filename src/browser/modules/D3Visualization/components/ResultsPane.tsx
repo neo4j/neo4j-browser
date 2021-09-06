@@ -19,8 +19,10 @@
  */
 
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { Popup } from 'semantic-ui-react'
+
 import {
-  legendRowHeight,
   StyledLegendRow,
   StyledTokenRelationshipType,
   StyledLegendInlineListItem,
@@ -30,12 +32,14 @@ import {
   StyledTokenCount,
   StyledLegendInlineList
 } from './styled'
-import { RowExpandToggleComponent } from './RowExpandToggle'
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
+import { GrassEditor } from './GrassEditor'
+import { DARK_THEME } from 'shared/modules/settings/settingsDuck'
+import { GlobalState } from 'shared/globalState'
 
 type State = any
 
-export class LegendComponent extends Component<any, State> {
+class ResultsPaneComponent extends Component<any, State> {
   labelRowELem: any
   typeRowElem: any
   constructor(props: {}) {
@@ -62,6 +66,9 @@ export class LegendComponent extends Component<any, State> {
 
   render() {
     const mapLabels = (labels: any) => {
+      if (!labels || !Object.keys(labels).length) {
+        return null
+      }
       const labelList = Object.keys(labels).map((legendItemKey, i) => {
         const styleForItem = this.props.graphStyle.forNode({
           labels: [legendItemKey]
@@ -79,38 +86,40 @@ export class LegendComponent extends Component<any, State> {
         return (
           <StyledLegendInlineListItem key={i} data-testid="viz-legend-labels">
             <StyledLegendContents className="contents">
-              <StyledLabelToken
-                onClick={onClick}
-                style={style}
-                className="token token-label"
+              <Popup
+                on="click"
+                basic
+                pinned
+                trigger={
+                  <StyledLabelToken
+                    onClick={onClick}
+                    style={style}
+                    className="token token-label"
+                  >
+                    {legendItemKey}
+                    <StyledTokenCount className="count">{`(${numberToUSLocale(
+                      labels[legendItemKey].count
+                    )})`}</StyledTokenCount>
+                  </StyledLabelToken>
+                }
+                inverted={this.props.theme === DARK_THEME}
+                wide
               >
-                {legendItemKey}
-                <StyledTokenCount className="count">{`(${numberToUSLocale(
-                  labels[legendItemKey].count
-                )})`}</StyledTokenCount>
-              </StyledLabelToken>
+                <GrassEditor
+                  selectedLabel={this.props.selectedLabel?.item?.selectedLabel}
+                  frameHeight={this.props.frameHeight}
+                />
+              </Popup>
             </StyledLegendContents>
           </StyledLegendInlineListItem>
         )
       })
       return (
-        <StyledLegendRow
-          className={this.state.labelRowContracted ? 'contracted' : ''}
-        >
+        <StyledLegendRow>
           <StyledLegendInlineList
             className="list-inline"
             ref={this.setLabelRowELem.bind(this)}
           >
-            <RowExpandToggleComponent
-              contracted={this.state.labelRowContracted}
-              rowElem={this.labelRowELem}
-              containerHeight={legendRowHeight}
-              onClick={() => {
-                this.setState({
-                  labelRowContracted: !this.state.labelRowContracted
-                })
-              }}
-            />
             {labelList}
           </StyledLegendInlineList>
         </StyledLegendRow>
@@ -137,38 +146,44 @@ export class LegendComponent extends Component<any, State> {
         return (
           <StyledLegendInlineListItem key={i} data-testid="viz-legend-reltypes">
             <StyledLegendContents className="contents">
-              <StyledTokenRelationshipType
-                onClick={onClick}
-                style={style}
-                className="token token-relationship-type"
+              <Popup
+                on="click"
+                basic
+                pinned
+                trigger={
+                  <StyledTokenRelationshipType
+                    onClick={onClick}
+                    style={style}
+                    className="token token-relationship-type"
+                  >
+                    {legendItemKey}
+                    <StyledTokenCount className="count">
+                      {`(${numberToUSLocale(
+                        legendItems[legendItemKey].count
+                      )})`}
+                    </StyledTokenCount>
+                  </StyledTokenRelationshipType>
+                }
+                wide
+                inverted={this.props.theme === DARK_THEME}
               >
-                {legendItemKey}
-                <StyledTokenCount className="count">
-                  {`(${numberToUSLocale(legendItems[legendItemKey].count)})`}
-                </StyledTokenCount>
-              </StyledTokenRelationshipType>
+                <GrassEditor
+                  selectedRelType={
+                    this.props.selectedLabel?.item?.selectedRelType
+                  }
+                  frameHeight={this.props.frameHeight}
+                />
+              </Popup>
             </StyledLegendContents>
           </StyledLegendInlineListItem>
         )
       })
       return (
-        <StyledLegendRow
-          className={this.state.typeRowContracted ? 'contracted' : ''}
-        >
+        <StyledLegendRow>
           <StyledLegendInlineList
             className="list-inline"
             ref={this.setTypeRowELem.bind(this)}
           >
-            <RowExpandToggleComponent
-              contracted={this.state.typeRowContracted}
-              rowElem={this.typeRowElem}
-              containerHeight={legendRowHeight}
-              onClick={() => {
-                this.setState({
-                  typeRowContracted: !this.state.typeRowContracted
-                })
-              }}
-            />
             {relTypeList}
           </StyledLegendInlineList>
         </StyledLegendRow>
@@ -176,10 +191,18 @@ export class LegendComponent extends Component<any, State> {
     }
     const relTypes = mapRelTypes(this.props.stats.relTypes)
     return (
-      <StyledLegend className={relTypes ? '' : 'one-row'}>
-        {mapLabels(this.props.stats.labels)}
-        {relTypes}
+      <StyledLegend>
+        Node Labels:{' '}
+        {mapLabels(this.props.stats.labels) || <div>No labels to display</div>}
+        Relationship Types:{' '}
+        {relTypes || <div>No relationship types to display</div>}
       </StyledLegend>
     )
   }
 }
+
+const mapStateToProps = (state: GlobalState) => ({
+  theme: state.settings.theme
+})
+
+export default connect(mapStateToProps)(ResultsPaneComponent)
