@@ -27,7 +27,7 @@ export class NodeInspectorPanel extends Component<
       expanded: true,
       showResults: true,
       width: 300,
-      dragging: false
+      start: null
     }
   }
 
@@ -77,32 +77,23 @@ export class NodeInspectorPanel extends Component<
       )
     }
 
-    const ref = React.createRef<HTMLDivElement>()
     console.log(this.state.width)
+
     return (
-      <StyledNodeInspectorContainer
-        ref={ref}
-        onClick={e => {
-          e.preventDefault()
-          e.stopPropagation()
-        }}
-      >
+      <StyledNodeInspectorContainer width={this.state.width}>
         <div
-          onMouseDown={() => {
-            this.setState({ dragging: true })
-          }}
-          onMouseUp={() => {
-            this.setState({ dragging: false })
-          }}
-          onMouseLeave={() => this.setState({ dragging: false })}
-          onMouseMove={event => {
-            console.log(event)
-            if (this.state.dragging && ref.current) {
-              ref.current.style.width = `${(parseInt(
-                ref.current.style.width,
-                10
-              ) || 300) - event.movementX}px`
-              console.log(ref.current.style.width)
+          onMouseDown={e => {
+            this.setState({ dragging: true, start: e.clientX })
+            window.onmousemove = (event: any) => {
+              if (this.state.start) {
+                const mov = event.clientX
+                this.setState((oldState: any) => ({
+                  width: 300 - (mov - oldState.start)
+                }))
+              }
+            }
+            window.onmouseup = () => {
+              this.setState({ start: null })
             }
           }}
         >
