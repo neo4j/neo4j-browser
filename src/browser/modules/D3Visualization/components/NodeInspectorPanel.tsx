@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { Icon, SemanticICONS, Popup } from 'semantic-ui-react'
+import React, { Component, useEffect, useRef, useState } from 'react'
+import { Icon } from 'semantic-ui-react'
 import {
   StyledNodeInspectorCollapsedButton,
   StyledNodeInspectorContainer,
@@ -25,7 +25,9 @@ export class NodeInspectorPanel extends Component<
     super(props)
     this.state = {
       expanded: true,
-      showResults: true
+      showResults: true,
+      width: 300,
+      dragging: false
     }
   }
 
@@ -75,13 +77,37 @@ export class NodeInspectorPanel extends Component<
       )
     }
 
+    const ref = React.createRef<HTMLDivElement>()
+    console.log(this.state.width)
     return (
       <StyledNodeInspectorContainer
+        ref={ref}
         onClick={e => {
           e.preventDefault()
           e.stopPropagation()
         }}
       >
+        <div
+          onMouseDown={() => {
+            this.setState({ dragging: true })
+          }}
+          onMouseUp={() => {
+            this.setState({ dragging: false })
+          }}
+          onMouseLeave={() => this.setState({ dragging: false })}
+          onMouseMove={event => {
+            console.log(event)
+            if (this.state.dragging && ref.current) {
+              ref.current.style.width = `${(parseInt(
+                ref.current.style.width,
+                10
+              ) || 300) - event.movementX}px`
+              console.log(ref.current.style.width)
+            }
+          }}
+        >
+          dragger
+        </div>
         <StyledNodeInspectorTopMenu>
           <StyledNodeInspectorPane
             isActive={this.state.showResults}
