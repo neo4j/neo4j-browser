@@ -32,6 +32,8 @@ import {
 import graphView from '../lib/visualization/components/graphView'
 import GraphLayoutModal from './modal/GraphLayoutModal'
 import Graph from 'project-root/src/browser/modules/D3Visualization/lib/visualization/components/graph'
+export const PERSIST_LAYOUT_KEY = 'persistLayout'
+export const PERSIST_LAYOUT_DIRECTION = 'directional'
 export interface IGraphLayoutStats {
   labels: {
     '*': IGraphStat
@@ -110,6 +112,11 @@ export class GraphComponent extends Component<any, IState> {
         this.props.getAutoCompleteCallback(this.addInternalRelationships)
       this.props.assignVisElement &&
         this.props.assignVisElement(this.svgElement, this.graphView)
+      if (
+        localStorage.getItem(PERSIST_LAYOUT_KEY) === PERSIST_LAYOUT_DIRECTION
+      ) {
+        this.onDirectionalLayoutClick(false)
+      }
     }
   }
 
@@ -144,13 +151,19 @@ export class GraphComponent extends Component<any, IState> {
       this.graphView.update()
     }
   }
-  onDirectionalLayoutClick = () => {
+  onDirectionalLayoutClick = (persist: boolean) => {
     this.graphView.graph.layoutRootNodeOnTop()
     this.graphView.update()
+    if (persist) {
+      localStorage.setItem(PERSIST_LAYOUT_KEY, PERSIST_LAYOUT_DIRECTION)
+    }
   }
-  onDefaultLayoutClick = () => {
+  onDefaultLayoutClick = (persist: boolean) => {
     this.graphView.graph.layoutDefault()
     this.graphView.update()
+    if (persist) {
+      localStorage.removeItem(PERSIST_LAYOUT_KEY)
+    }
   }
   addInternalRelationships = (internalRelationships: any) => {
     if (this.graph) {
@@ -202,8 +215,6 @@ export class GraphComponent extends Component<any, IState> {
   }
 
   render() {
-    // @ts-ignore
-    window.test1 = { s: this.state, p: this.props, t: this }
     return (
       <StyledSvgWrapper>
         <svg className="neod3viz" ref={this.graphInit.bind(this)} />

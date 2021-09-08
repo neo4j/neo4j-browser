@@ -1,45 +1,91 @@
 import * as React from 'react'
 import GenericModal from './GenericModal'
-import { IGraphLayoutStats } from '../Graph'
-import { ApplyButton, SimpleButton } from './styled'
+import {
+  IGraphLayoutStats,
+  PERSIST_LAYOUT_DIRECTION,
+  PERSIST_LAYOUT_KEY
+} from '../Graph'
+import { SimpleButton } from './styled'
 import styled from 'styled-components'
 
 interface IProps {
   isOpen: boolean
   onClose: () => void
   stats: IGraphLayoutStats
-  onDirectionalLayoutClick: () => void
-  onDefaultLayoutClick: () => void
+  onDirectionalLayoutClick: (persist: boolean) => void
+  onDefaultLayoutClick: (persist: boolean) => void
 }
 const MarginDiv = styled.div`
-  margin-top: 30px;
+  margin-top: 20px;
 `
+const CheckboxContainer = styled.div`
+  margin: 20px;
+`
+const CheckboxInput = styled.input`
+  margin-right: 5px;
+`
+const Button = styled.button<{ active: boolean }>`
+  padding: 3px 15px;
+  border-radius: 1px;
+  border: 1px solid ${({ active }) => (active ? '#e86d6d' : '#6f6f6f')};
+  margin: 0 20px;
+  ${({ theme }) => {
+    const { secondaryButtonBackground } = theme
+    return {
+      background: secondaryButtonBackground
+    }
+  }}
+  &:hover {
+    ${({ theme }) => {
+      const { secondaryButtonTextHover, secondaryButtonBackgroundHover } = theme
+      return {
+        color: secondaryButtonTextHover,
+        background: secondaryButtonBackgroundHover
+      }
+    }}
+  }
+`
+
 const GraphLayoutModal: React.FC<IProps> = ({
   isOpen,
   onClose,
   onDirectionalLayoutClick,
   onDefaultLayoutClick
 }) => {
+  const [currentMode, setCurrentMode] = React.useState<string | null>(null)
+  React.useEffect(() => {
+    setCurrentMode(localStorage.getItem(PERSIST_LAYOUT_KEY))
+  }, [isOpen])
+  const checkboxRef = React.useRef<HTMLInputElement>(null)
   const handleDirectionalClick = React.useCallback(() => {
-    onDirectionalLayoutClick()
+    onDirectionalLayoutClick(checkboxRef.current?.checked ?? false)
     onClose()
-  }, [onClose, onDirectionalLayoutClick])
+  }, [onClose, onDirectionalLayoutClick, checkboxRef])
   const handleReset = React.useCallback(() => {
-    onDefaultLayoutClick()
+    onDefaultLayoutClick(checkboxRef.current?.checked ?? false)
     onClose()
-  }, [onClose, onDefaultLayoutClick])
+  }, [onClose, onDefaultLayoutClick, checkboxRef])
   return (
     <GenericModal isOpen={isOpen} onRequestClose={onClose}>
       <h2>Graph Layout</h2>
-      <SimpleButton onClick={handleDirectionalClick}>
+      <Button
+        onClick={handleDirectionalClick}
+        active={currentMode === PERSIST_LAYOUT_DIRECTION}
+      >
         <DirectionalFlowIcon />
         Directional flow from root node
-      </SimpleButton>
-      <SimpleButton onClick={handleReset}>
+      </Button>
+      <Button onClick={handleReset} active={currentMode === null}>
         <DefaultIcon />
-        Reset to default
-      </SimpleButton>
+        Default layout
+      </Button>
       {/*<SimpleButton onClick={() => alert('To be done..')} disabled={true}>TBD: Categorized. Group nodes by their type</SimpleButton>*/}
+      <CheckboxContainer>
+        <label>
+          <CheckboxInput type={'checkbox'} ref={checkboxRef} />
+          Use selected layout for future requests
+        </label>
+      </CheckboxContainer>
       <MarginDiv>
         <SimpleButton onClick={onClose}>Cancel</SimpleButton>
       </MarginDiv>
