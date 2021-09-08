@@ -148,6 +148,10 @@ export class GraphComponent extends Component<any, IState> {
     this.graphView.graph.layoutRootNodeOnTop()
     this.graphView.update()
   }
+  onDefaultLayoutClick = () => {
+    this.graphView.graph.layoutDefault()
+    this.graphView.update()
+  }
   addInternalRelationships = (internalRelationships: any) => {
     if (this.graph) {
       this.graph.addInternalRelationships(
@@ -209,6 +213,7 @@ export class GraphComponent extends Component<any, IState> {
           onClose={this.closeGraphLayoutModal}
           stats={this.state.graphLayoutStats}
           onDirectionalLayoutClick={this.onDirectionalLayoutClick}
+          onDefaultLayoutClick={this.onDefaultLayoutClick}
         />
       </StyledSvgWrapper>
     )

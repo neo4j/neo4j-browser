@@ -214,6 +214,12 @@ export default class Graph {
       relationshipMap: this.relationshipMap
     })
   }
+  layoutDefault() {
+    this.nodes().map((node: any) => {
+      node.fixed = false
+      delete node.layout
+    })
+  }
 }
 
 class NodePair {

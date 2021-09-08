@@ -103,7 +103,7 @@ function findRootNodes({
     })
 }
 
-const verticalNodeGap = 250
+const verticalNodeGap = 300
 const horizontalNodeGap = 200
 
 function placeNode({
