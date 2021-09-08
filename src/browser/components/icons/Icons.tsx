@@ -273,6 +273,13 @@ export const ErrorIcon = (): JSX.Element => (
   <IconContainer className="fa fa-file-text-o" text="Error" />
 )
 
+export const GraphLayoutIcon = ({
+  regulateSize
+}: {
+  regulateSize: 1 | 2
+}): JSX.Element => (
+  <IconContainer regulateSize={regulateSize} className="sl-network-trio" />
+)
 export const ZoomInIcon = ({
   regulateSize
 }: {
