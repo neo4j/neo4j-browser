@@ -106,16 +106,14 @@ function findRootNodes({
 const verticalNodeGap = 300
 const horizontalNodeGap = 200
 
-function placeNode({
+function setNodePosition({
   node,
-  nodeMap,
   matrix,
   prevNodesIds,
   row = 0,
   column = 0
 }: {
   node: INode
-  nodeMap: { [key: string]: any }
   matrix: INode[][]
   row?: number
   column?: number
@@ -137,6 +135,31 @@ function placeNode({
   node.fixed = true
   matrix[row][i] = node
   prevNodesIds.add(node.id)
+  return i
+}
+
+function placeNode({
+  node,
+  nodeMap,
+  matrix,
+  prevNodesIds,
+  row = 0,
+  column = 0
+}: {
+  node: INode
+  nodeMap: { [key: string]: any }
+  matrix: INode[][]
+  row?: number
+  column?: number
+  prevNodesIds: Set<string>
+}) {
+  // const newColumn = setNodePosition({
+  //   node,
+  //   matrix,
+  //   prevNodesIds,
+  //   row,
+  //   column
+  // })
   if (node.layout.outputNeighbourNodesIdSet) {
     const arr = Array.from(node.layout.outputNeighbourNodesIdSet)
     const neighboursLength = arr.filter(id => {
@@ -146,26 +169,41 @@ function placeNode({
         !prevNodesIds.has(neighbour.id)
       )
     }).length
-    if (neighboursLength > 1) {
+    if (row === 0 && neighboursLength > 1) {
       node.x = node.px =
         node.x + ((neighboursLength - 1) * horizontalNodeGap) / 2
     }
-    arr.forEach(nodeId => {
-      const neighbour: INode = nodeMap[nodeId]
-      if (
-        neighbour.layout.outputNeighbourNodesIdSet &&
-        !prevNodesIds.has(neighbour.id)
-      ) {
+    arr
+      .map(nodeId => {
+        const neighbour: INode = nodeMap[nodeId]
+        let isPlaced = false
+        let nodeColumn = column
+        if (
+          neighbour.layout.outputNeighbourNodesIdSet &&
+          !prevNodesIds.has(neighbour.id)
+        ) {
+          nodeColumn = setNodePosition({
+            node: neighbour,
+            matrix,
+            prevNodesIds,
+            row: row + 1,
+            column
+          })
+          isPlaced = true
+        }
+        return { node: neighbour, isPlaced, column: nodeColumn }
+      })
+      .filter(({ isPlaced }) => isPlaced)
+      .forEach(({ node, column }) => {
         placeNode({
-          node: neighbour,
+          node,
           nodeMap,
           matrix,
           prevNodesIds,
           row: row + 1,
-          column: i
+          column
         })
-      }
-    })
+      })
   }
 }
 
@@ -218,7 +256,13 @@ export function layoutGraphWithRootNodeOnTop({
       if (index > 0) {
         row = findRowForNode({ node, nodeMap, prevNodesIds: new Set() }) ?? 0
       }
-      placeNode({ node, nodeMap, matrix, prevNodesIds, row })
+      const column = setNodePosition({
+        node,
+        matrix,
+        prevNodesIds,
+        row
+      })
+      placeNode({ node, nodeMap, matrix, prevNodesIds, row, column })
     })
   }
 }
