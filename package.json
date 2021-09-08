@@ -50,7 +50,9 @@
     "wait-on-dev": "wait-on -c ./build_scripts/wait-on-config.js http-get://localhost:8080",
     "wait-on-devs": "wait-on -c ./build_scripts/wait-on-config.js https-get://localhost:8080",
     "wait-on-neo4j": "wait-on -c ./build_scripts/wait-on-config.js http-get://localhost:7474",
-    "wait-on-neo4js": "wait-on -c ./build_scripts/wait-on-config.js https-get://localhost:7473"
+    "wait-on-neo4js": "wait-on -c ./build_scripts/wait-on-config.js https-get://localhost:7473",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "lint-staged": {
     "linters": {
@@ -65,13 +67,17 @@
     "node": ">= 14.16.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.1.2",
-    "@babel/plugin-proposal-class-properties": "^7.1.0",
-    "@babel/plugin-transform-regenerator": "^7.0.0",
-    "@babel/preset-env": "^7.1.0",
-    "@babel/preset-react": "^7.0.0",
+    "@babel/core": "^7.15.5",
+    "@babel/plugin-proposal-class-properties": "^7.14.5",
+    "@babel/plugin-transform-regenerator": "^7.14.5",
+    "@babel/preset-env": "^7.15.4",
+    "@babel/preset-react": "^7.14.5",
     "@hot-loader/react-dom": "^16.8.6",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.1",
+    "@storybook/addon-actions": "^6.3.8",
+    "@storybook/addon-essentials": "^6.3.8",
+    "@storybook/addon-links": "^6.3.8",
+    "@storybook/react": "^6.3.8",
     "@testing-library/jest-dom": "^5.3.0",
     "@testing-library/react": "^10.4.9",
     "@testing-library/react-hooks": "^2.0.1",
@@ -151,6 +157,7 @@
     "style-loader": "^0.23.1",
     "ts-jest": "^25.0.0",
     "ts-loader": "^8.0.2",
+    "tsconfig-paths-webpack-plugin": "^3.5.1",
     "typescript": "^3.9.5",
     "typescript-plugin-styled-components": "^1.5.0",
     "url-loader": "^1.1.2",
@@ -212,5 +219,9 @@
     "unist-util-visit": "^2.0.2",
     "url-parse": "^1.1.9",
     "uuid": "^3.0.1"
-  }
+  },
+  "browserList": [
+    "last 2 version",
+    "not ie > 0"
+  ]
 }

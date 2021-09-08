@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import React, { useState } from 'react'
 import { CopyIcon } from './icons/Icons'
 
-type ClipboardCopierProps = {
+export type ClipboardCopierProps = {
   textToCopy: string
   iconSize?: number
   titleText?: string

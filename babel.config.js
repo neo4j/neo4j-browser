@@ -13,10 +13,7 @@ const toExport = {
       {
         useBuiltIns: 'entry',
         corejs: 3,
-        modules: isTest ? 'commonjs' : false,
-        targets: {
-          browsers: ['last 1 version', 'not ie > 0']
-        }
+        modules: isTest ? 'commonjs' : false
       }
     ]
   ]

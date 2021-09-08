@@ -21,8 +21,6 @@
 module.exports = {
   plugins: {
     precss: {},
-    autoprefixer: {
-      browsers: ['last 1 version', 'not ie > 0']
-    }
+    autoprefixer: {}
   }
 }
