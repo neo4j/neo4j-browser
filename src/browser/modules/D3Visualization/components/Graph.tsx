@@ -59,6 +59,7 @@ export class GraphComponent extends Component<any, IState> {
   graphEH: any
   graphView!: graphView
   svgElement: any
+  isLayoutApplied = false
   state = {
     zoomInLimitReached: false,
     zoomOutLimitReached: false,
@@ -112,11 +113,6 @@ export class GraphComponent extends Component<any, IState> {
         this.props.getAutoCompleteCallback(this.addInternalRelationships)
       this.props.assignVisElement &&
         this.props.assignVisElement(this.svgElement, this.graphView)
-      if (
-        localStorage.getItem(PERSIST_LAYOUT_KEY) === PERSIST_LAYOUT_DIRECTION
-      ) {
-        this.onDirectionalLayoutClick(false)
-      }
     }
   }
 
@@ -185,6 +181,14 @@ export class GraphComponent extends Component<any, IState> {
       this.props.frameHeight !== prevProps.frameHeight
     ) {
       this.graphView.resize()
+    }
+    if (this.graph && !this.isLayoutApplied) {
+      this.isLayoutApplied = true
+      if (
+        localStorage.getItem(PERSIST_LAYOUT_KEY) === PERSIST_LAYOUT_DIRECTION
+      ) {
+        this.onDirectionalLayoutClick(false)
+      }
     }
   }
 
