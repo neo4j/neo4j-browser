@@ -60,6 +60,7 @@ export class GraphComponent extends Component<any, IState> {
   graphView!: graphView
   svgElement: any
   isLayoutApplied = false
+  lastGraphRelLength = 0
   state = {
     zoomInLimitReached: false,
     zoomOutLimitReached: false,
@@ -182,8 +183,13 @@ export class GraphComponent extends Component<any, IState> {
     ) {
       this.graphView.resize()
     }
-    if (this.graph && !this.isLayoutApplied) {
+    if (
+      this.graph &&
+      (!this.isLayoutApplied ||
+        this.lastGraphRelLength !== this.graph.relationships().length)
+    ) {
       this.isLayoutApplied = true
+      this.lastGraphRelLength = this.graph.relationships().length
       if (
         localStorage.getItem(PERSIST_LAYOUT_KEY) === PERSIST_LAYOUT_DIRECTION
       ) {

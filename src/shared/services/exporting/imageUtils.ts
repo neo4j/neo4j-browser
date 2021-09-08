@@ -33,6 +33,7 @@ export const downloadPNGFromSVG = (svg: any, graph: any, type: any) => {
   const ctx = canvas.getContext('2d')
 
   if (ctx) {
+    //@ts-ignore
     const v = canvg.fromString(ctx, svgData)
     v.render()
       .then(() =>
