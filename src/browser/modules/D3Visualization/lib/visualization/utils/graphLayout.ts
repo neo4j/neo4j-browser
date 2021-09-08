@@ -1,11 +1,14 @@
-import { clone, min } from 'lodash-es'
+import { clone, max, min } from 'lodash-es'
 
 interface INode {
   x: number
   px: number
   y: number
   py: number
-  outputNeighbourNodesIdSet?: Set<string>
+  layout: {
+    outputNeighbourNodesIdSet?: Set<string>
+    depth?: number
+  }
   // outputRelationshipIdSet?: Set<string>
   id: string
   fixed?: boolean
@@ -19,21 +22,60 @@ interface IRel {
 
 function addRelToNodeRelSet({ node, id }: { node: INode; id: string }) {
   if (node.id !== id) {
-    if (node.outputNeighbourNodesIdSet) {
-      node.outputNeighbourNodesIdSet.add(id)
+    if (node.layout.outputNeighbourNodesIdSet) {
+      node.layout.outputNeighbourNodesIdSet.add(id)
     } else {
-      node.outputNeighbourNodesIdSet = new Set([id])
+      node.layout.outputNeighbourNodesIdSet = new Set([id])
     }
   }
 }
 
-// TODO Add an algorithm to pick the farthest root node
-function findRootNodeIds({ relationships }: { relationships: IRel[] }) {
+function calcNodeDepth({
+  node,
+  nodeMap,
+  prevNodesIds,
+  depth = 0
+}: {
+  node: INode
+  nodeMap: { [key: string]: any }
+  prevNodesIds: Set<string>
+  depth?: number
+}): number {
+  prevNodesIds.add(node.id)
+  if (node.layout.outputNeighbourNodesIdSet) {
+    return (
+      max(
+        Array.from(node.layout.outputNeighbourNodesIdSet).map(nodeId => {
+          const neighbour: INode = nodeMap[nodeId]
+          if (!prevNodesIds.has(neighbour.id)) {
+            return calcNodeDepth({
+              node: neighbour,
+              nodeMap,
+              prevNodesIds
+            })
+          } else {
+            return depth
+          }
+        })
+      ) ?? depth
+    )
+  } else {
+    return depth
+  }
+}
+
+function findRootNodes({
+  relationships,
+  nodeMap
+}: {
+  relationships: IRel[]
+  nodeMap: { [key: string]: INode }
+}): INode[] {
   const sources = new Set<string>()
   const targets = new Set<string>()
   relationships.forEach(rel => {
-    rel.source.outputNeighbourNodesIdSet = undefined
-    rel.target.outputNeighbourNodesIdSet = undefined
+    rel.source.layout = {}
+    rel.target.layout = {}
     rel.source.fixed = false
     rel.target.fixed = false
   })
@@ -45,7 +87,20 @@ function findRootNodeIds({ relationships }: { relationships: IRel[] }) {
       id: rel.target.id
     })
   })
-  return Array.from(sources).filter(id => !targets.has(id))
+  return Array.from(sources)
+    .filter(id => !targets.has(id))
+    .map(id => {
+      const node = nodeMap[id]
+      node.layout.depth = calcNodeDepth({
+        node,
+        nodeMap,
+        prevNodesIds: new Set()
+      })
+      return node
+    })
+    .sort((a, b) => {
+      return (a.layout.depth ?? 0) > (b.layout.depth ?? 0) ? -1 : 1
+    })
 }
 
 const verticalNodeGap = 250
@@ -82,12 +137,13 @@ function placeNode({
   node.fixed = true
   matrix[row][i] = node
   prevNodesIds.add(node.id)
-  if (node.outputNeighbourNodesIdSet) {
-    const arr = Array.from(node.outputNeighbourNodesIdSet)
+  if (node.layout.outputNeighbourNodesIdSet) {
+    const arr = Array.from(node.layout.outputNeighbourNodesIdSet)
     const neighboursLength = arr.filter(id => {
       const neighbour: INode = nodeMap[id]
       return (
-        neighbour.outputNeighbourNodesIdSet && !prevNodesIds.has(neighbour.id)
+        neighbour.layout.outputNeighbourNodesIdSet &&
+        !prevNodesIds.has(neighbour.id)
       )
     }).length
     if (neighboursLength > 1) {
@@ -97,7 +153,7 @@ function placeNode({
     arr.forEach(nodeId => {
       const neighbour: INode = nodeMap[nodeId]
       if (
-        neighbour.outputNeighbourNodesIdSet &&
+        neighbour.layout.outputNeighbourNodesIdSet &&
         !prevNodesIds.has(neighbour.id)
       ) {
         placeNode({
@@ -125,9 +181,9 @@ function findRowForNode({
   prevNodesIds.add(node.id)
   if (node.fixed) {
     return Math.round(node.y / verticalNodeGap)
-  } else if (node.outputNeighbourNodesIdSet) {
+  } else if (node.layout.outputNeighbourNodesIdSet) {
     return min(
-      Array.from(node.outputNeighbourNodesIdSet).map(nodeId => {
+      Array.from(node.layout.outputNeighbourNodesIdSet).map(nodeId => {
         const neighbour: INode = nodeMap[nodeId]
         if (!prevNodesIds.has(neighbour.id)) {
           const result: number | undefined = findRowForNode({
@@ -153,12 +209,11 @@ export function layoutGraphWithRootNodeOnTop({
   nodeMap: { [key: string]: any }
   relationshipMap: { [key: string]: any }
 }): void {
-  const rootNodeId = findRootNodeIds({ relationships })
-  if (rootNodeId.length > 0) {
+  const rootNodes = findRootNodes({ relationships, nodeMap })
+  if (rootNodes.length > 0) {
     const matrix: INode[][] = []
     const prevNodesIds = new Set<string>()
-    rootNodeId.forEach((id, index) => {
-      const node = nodeMap[id]
+    rootNodes.forEach((node, index) => {
       let row = 0
       if (index > 0) {
         row = findRowForNode({ node, nodeMap, prevNodesIds: new Set() }) ?? 0
