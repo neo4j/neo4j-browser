@@ -102,7 +102,6 @@ type GraphVizItem = {
 
 type DetailsPaneComponentProps = {
   hasTruncatedFields: boolean
-  fullscreen: boolean
   hoveredItem?: GraphVizItem
   selectedItem: GraphVizItem
   graphStyle: any

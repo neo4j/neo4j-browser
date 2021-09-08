@@ -459,14 +459,10 @@ export const StyledNodeInspectorCollapsedButton = styled.div`
   cursor: pointer;
 `
 export const StyledNodeInspectorContainer = styled.div<{ width?: number }>`
-  position: absolute;
   display: flex;
   flex-direction: column;
-  right: 0;
-  height: calc(100% - 39px); // 39px is Inspector footer height
-  top: 0;
-  z-index: 1;
-  width: ${props => props.width || 300}px;
+  width: 100%;
+  height: 100%;
   background: ${props => props.theme.editorBackground};
   color: ${props => props.theme.primaryText};
   overflow-y: auto;

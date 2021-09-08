@@ -210,7 +210,6 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
           />
           <NodeInspectorPanel
             frameHeight={this.props.frameHeight}
-            fullscreen={this.props.fullscreen}
             graphStyle={graphStyle}
             hasTruncatedFields={this.props.hasTruncatedFields}
             hoveredItem={this.state.hoveredItem}
