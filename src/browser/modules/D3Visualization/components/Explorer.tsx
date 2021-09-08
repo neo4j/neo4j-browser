@@ -25,13 +25,10 @@ import { connect } from 'react-redux'
 import { deepEquals } from 'services/utils'
 import { GraphComponent } from './Graph'
 import neoGraphStyle from '../graphStyle'
-import { InspectorComponent } from './Inspector'
 import { NodeInspectorPanel } from './NodeInspectorPanel'
 import { StyledFullSizeContainer, StyledGraphAreaContainer } from './styled'
 import { GlobalState } from 'shared/globalState'
 import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
-import ResultsPaneComponent from './ResultsPane'
-import { DetailsPaneComponent } from './DetailsPane'
 
 const deduplicateNodes = (nodes: any) => {
   return nodes.reduce(
@@ -104,8 +101,9 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
               type: 'status-item',
               item: `Rendering was limited to ${
                 this.props.maxNeighbours
-              } of the node's total ${result.count +
-                currentNeighbours.length} neighbours due to browser config maxNeighbours.`
+              } of the node's total ${
+                result.count + currentNeighbours.length
+              } neighbours due to browser config maxNeighbours.`
             }
           })
         }
@@ -194,28 +192,6 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
       ? neoGraphStyle()
       : this.state.graphStyle
 
-    const results = (
-      <ResultsPaneComponent
-        stats={this.state.stats}
-        graphStyle={graphStyle}
-        onSelectedLabel={this.onSelectedLabel.bind(this)}
-        onSelectedRelType={this.onSelectedRelType.bind(this)}
-        selectedLabel={this.state.selectedLabel}
-        frameHeight={this.props.frameHeight}
-      />
-    )
-
-    const details = (
-      <DetailsPaneComponent
-        hasTruncatedFields={this.props.hasTruncatedFields}
-        fullscreen={this.props.fullscreen}
-        hoveredItem={this.state.hoveredItem}
-        selectedItem={this.state.selectedItem}
-        graphStyle={this.state.graphStyle}
-        onExpandToggled={this.onInspectorExpandToggled.bind(this)}
-      />
-    )
-
     return (
       <StyledFullSizeContainer
         id="svg-vis"
@@ -240,20 +216,19 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
             setGraph={this.props.setGraph}
           />
           <NodeInspectorPanel
-            results={results}
-            details={details}
+            frameHeight={this.props.frameHeight}
+            fullscreen={this.props.fullscreen}
+            graphStyle={graphStyle}
+            hasTruncatedFields={this.props.hasTruncatedFields}
             hoveredItem={this.state.hoveredItem}
+            onExpandToggled={this.onInspectorExpandToggled.bind(this)}
+            onSelectedLabel={this.onSelectedLabel.bind(this)}
+            onSelectedRelType={this.onSelectedRelType.bind(this)}
             selectedItem={this.state.selectedItem}
+            selectedLabel={this.state.selectedLabel}
+            stats={this.state.stats}
           />
         </StyledGraphAreaContainer>
-        <InspectorComponent
-          hasTruncatedFields={this.props.hasTruncatedFields}
-          fullscreen={this.props.fullscreen}
-          hoveredItem={this.state.hoveredItem}
-          selectedItem={this.state.selectedItem}
-          graphStyle={this.state.graphStyle}
-          onExpandToggled={this.onInspectorExpandToggled.bind(this)}
-        />
       </StyledFullSizeContainer>
     )
   }

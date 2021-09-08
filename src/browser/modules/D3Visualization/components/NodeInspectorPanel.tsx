@@ -1,5 +1,7 @@
-import React, { Component, useEffect, useRef, useState } from 'react'
+import React, { Component } from 'react'
 import { Icon } from 'semantic-ui-react'
+import { DetailsPaneComponent } from './DetailsPane'
+import ResultsPane from './ResultsPane'
 import {
   StyledNodeInspectorCollapsedButton,
   StyledNodeInspectorContainer,
@@ -9,10 +11,17 @@ import {
 } from './styled'
 
 interface NodeInspectorPanelProps {
-  results: JSX.Element
-  details: JSX.Element
   hoveredItem: any
   selectedItem: any
+  stats: any
+  graphStyle: any
+  onSelectedLabel: any
+  onSelectedRelType: any
+  selectedLabel: any
+  frameHeight: number
+  hasTruncatedFields: any
+  fullscreen: any
+  onExpandToggled: any
 }
 
 type NodeInspectorPanelState = any
@@ -77,8 +86,6 @@ export class NodeInspectorPanel extends Component<
       )
     }
 
-    console.log(this.state.width)
-
     return (
       <StyledNodeInspectorContainer width={this.state.width}>
         <div
@@ -128,7 +135,30 @@ export class NodeInspectorPanel extends Component<
           </StyledNodeInspectorTopMenuChevron>
         </StyledNodeInspectorTopMenu>
         <div style={{ height: 'inherit' }}>
-          {this.state.showResults ? this.props.results : this.props.details}
+          {this.state.showResults ? (
+            <ResultsPane
+              stats={this.props.stats}
+              graphStyle={this.props.graphStyle}
+              onSelectedLabel={this.props.onSelectedLabel}
+              onSelectedRelType={this.props.onSelectedRelType}
+              selectedLabel={this.props.selectedLabel}
+              frameHeight={this.props.frameHeight}
+              hasTruncatedFields={this.props.hasTruncatedFields}
+              fullscreen={this.props.fullscreen}
+              hoveredItem={this.props.hoveredItem}
+              selectedItem={this.props.selectedItem}
+              onExpandToggled={this.props.onExpandToggled}
+            />
+          ) : (
+            <DetailsPaneComponent
+              hasTruncatedFields={this.props.hasTruncatedFields}
+              fullscreen={this.props.fullscreen}
+              hoveredItem={this.props.hoveredItem}
+              selectedItem={this.props.selectedItem}
+              graphStyle={this.props.graphStyle}
+              onExpandToggled={this.props.onExpandToggled}
+            />
+          )}
         </div>
       </StyledNodeInspectorContainer>
     )

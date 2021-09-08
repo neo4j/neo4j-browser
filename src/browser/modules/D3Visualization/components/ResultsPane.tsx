@@ -39,7 +39,7 @@ import { GlobalState } from 'shared/globalState'
 
 type State = any
 
-class ResultsPaneComponent extends Component<any, State> {
+class ResultsPane extends Component<any, State> {
   labelRowELem: any
   typeRowElem: any
   constructor(props: {}) {
@@ -205,4 +205,4 @@ const mapStateToProps = (state: GlobalState) => ({
   theme: state.settings.theme
 })
 
-export default connect(mapStateToProps)(ResultsPaneComponent)
+export default connect(mapStateToProps)(ResultsPane)
