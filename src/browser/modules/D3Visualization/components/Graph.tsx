@@ -31,29 +31,52 @@ import {
 } from 'browser-components/icons/Icons'
 import graphView from '../lib/visualization/components/graphView'
 import GraphLayoutModal from './modal/GraphLayoutModal'
-
+import Graph from 'project-root/src/browser/modules/D3Visualization/lib/visualization/components/graph'
+export interface IGraphLayoutStats {
+  labels: {
+    '*': IGraphStat
+    [key: string]: IGraphStat
+  }
+  relTypes: {
+    '*': IGraphStat
+    [key: string]: IGraphStat
+  }
+}
 interface IState {
   zoomInLimitReached: boolean
   zoomOutLimitReached: boolean
   graphLayoutModalOpen: boolean
+  graphLayoutStats: IGraphLayoutStats
 }
-
+interface IGraphStat {
+  count: number
+  properties: { [key: string]: string } | string[]
+}
 export class GraphComponent extends Component<any, IState> {
-  graph: any
+  graph!: Graph
   graphEH: any
   graphView!: graphView
   svgElement: any
   state = {
     zoomInLimitReached: false,
     zoomOutLimitReached: false,
-    graphLayoutModalOpen: false
+    graphLayoutModalOpen: false,
+    graphLayoutStats: {
+      labels: { '*': { count: 0, properties: [] } },
+      relTypes: { '*': { count: 0, properties: [] } }
+    }
   }
 
   graphInit(el: any) {
     this.svgElement = el
   }
 
-  graphLayoutClicked = () => this.setState({ graphLayoutModalOpen: true })
+  graphLayoutClicked = () => {
+    this.setState({
+      graphLayoutModalOpen: true,
+      graphLayoutStats: getGraphStats(this.graph)
+    })
+  }
   closeGraphLayoutModal = () => this.setState({ graphLayoutModalOpen: false })
   zoomInClicked(el: any) {
     const limits = this.graphView.zoomIn(el)
@@ -121,7 +144,10 @@ export class GraphComponent extends Component<any, IState> {
       this.graphView.update()
     }
   }
-
+  onDirectionalLayoutClick = () => {
+    this.graphView.graph.layoutRootNodeOnTop()
+    this.graphView.update()
+  }
   addInternalRelationships = (internalRelationships: any) => {
     if (this.graph) {
       this.graph.addInternalRelationships(
@@ -172,6 +198,8 @@ export class GraphComponent extends Component<any, IState> {
   }
 
   render() {
+    // @ts-ignore
+    window.test1 = { s: this.state, p: this.props, t: this }
     return (
       <StyledSvgWrapper>
         <svg className="neod3viz" ref={this.graphInit.bind(this)} />
@@ -179,6 +207,8 @@ export class GraphComponent extends Component<any, IState> {
         <GraphLayoutModal
           isOpen={this.state.graphLayoutModalOpen}
           onClose={this.closeGraphLayoutModal}
+          stats={this.state.graphLayoutStats}
+          onDirectionalLayoutClick={this.onDirectionalLayoutClick}
         />
       </StyledSvgWrapper>
     )

@@ -19,10 +19,11 @@
  */
 import viz from './visualization'
 import layout from './layout'
+import Graph from './graph'
 
 export default class graphView {
   callbacks: any
-  graph: any
+  graph: Graph
   style: any
   viz: any
   constructor(element: any, measureSize: any, graph: any, style: any) {

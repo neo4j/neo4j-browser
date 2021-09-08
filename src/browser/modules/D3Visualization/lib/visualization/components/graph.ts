@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { layoutGraphWithRootNodeOnTop } from 'project-root/src/browser/modules/D3Visualization/lib/visualization/utils/graphLayout'
+
 export default class Graph {
   _nodes: any
   _relationships: any[]
@@ -203,6 +205,16 @@ export default class Graph {
     this._nodes = []
     this.relationshipMap = {}
     return (this._relationships = [])
+  }
+
+  layoutRootNodeOnTop() {
+    // this._nodes.forEach((node:any) => node.fixed = true)
+    console.log(this)
+    layoutGraphWithRootNodeOnTop({
+      relationships: this.relationships(),
+      nodeMap: this.nodeMap,
+      relationshipMap: this.relationshipMap
+    })
   }
 }
 
