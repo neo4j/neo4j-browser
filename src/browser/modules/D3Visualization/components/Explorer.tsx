@@ -177,13 +177,6 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
     }
   }
 
-  onInspectorExpandToggled(contracted: any, inspectorHeight: any) {
-    this.setState({
-      inspectorContracted: contracted,
-      forcePaddingBottom: inspectorHeight
-    })
-  }
-
   render() {
     // This is a workaround to make the style reset to the same colors as when starting the browser with an empty style
     // If the legend component has the style it will ask the neoGraphStyle object for styling before the graph component,
@@ -221,7 +214,6 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
             graphStyle={graphStyle}
             hasTruncatedFields={this.props.hasTruncatedFields}
             hoveredItem={this.state.hoveredItem}
-            onExpandToggled={this.onInspectorExpandToggled.bind(this)}
             onSelectedLabel={this.onSelectedLabel.bind(this)}
             onSelectedRelType={this.onSelectedRelType.bind(this)}
             selectedItem={this.state.selectedItem}

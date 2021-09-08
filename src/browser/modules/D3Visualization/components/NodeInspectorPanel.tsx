@@ -21,7 +21,6 @@ interface NodeInspectorPanelProps {
   frameHeight: number
   hasTruncatedFields: any
   fullscreen: any
-  onExpandToggled: any
 }
 
 type NodeInspectorPanelState = any
@@ -147,7 +146,6 @@ export class NodeInspectorPanel extends Component<
               fullscreen={this.props.fullscreen}
               hoveredItem={this.props.hoveredItem}
               selectedItem={this.props.selectedItem}
-              onExpandToggled={this.props.onExpandToggled}
             />
           ) : (
             <DetailsPaneComponent
@@ -156,7 +154,6 @@ export class NodeInspectorPanel extends Component<
               hoveredItem={this.props.hoveredItem}
               selectedItem={this.props.selectedItem}
               graphStyle={this.props.graphStyle}
-              onExpandToggled={this.props.onExpandToggled}
             />
           )}
         </div>

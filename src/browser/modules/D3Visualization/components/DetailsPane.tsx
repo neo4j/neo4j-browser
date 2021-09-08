@@ -18,8 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from 'react'
-import { deepEquals, optionalToString } from 'services/utils'
+import React from 'react'
+import { optionalToString } from 'services/utils'
 import {
   StyledTokenRelationshipType,
   StyledLabelToken,
@@ -38,7 +38,7 @@ import {
 import ClickableUrls from '../../../components/ClickableUrls'
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
 import { StyledTruncatedMessage } from 'browser/modules/Stream/styled'
-import { Icon, Popup } from 'semantic-ui-react'
+import { Icon } from 'semantic-ui-react'
 import ClipboardCopier from 'browser-components/ClipboardCopier'
 
 const GraphItemProperties = ({
@@ -59,45 +59,28 @@ const GraphItemProperties = ({
       <StyledInspectorClipboardCopyAll>
         <div style={{ marginLeft: 'auto', marginRight: '5px' }}>
           <ClipboardCopier
-            textToCopy={allItemProperties.join('\n')}
+            textToCopy={allItemProperties
+              .map(prop => `${prop.key}: ${prop.value}`)
+              .join('\n')}
             iconSize={10}
             titleText={'Copy all properties to clipboard'}
           />
         </div>
       </StyledInspectorClipboardCopyAll>
-      {allItemProperties.map((prop: any, i: number) => (
+      {allItemProperties.map((prop, index) => (
         <StyledInspectorFooterRowListPairAlternatingRows
           className="pair"
-          key={'prop' + i}
-          isFirstOrEvenRow={(i + 1) % 2 === 0}
+          key={prop.key}
+          isFirstOrEvenRow={(index + 1) % 2 === 0}
         >
-          <Popup
-            on="hover"
-            basic
-            wide
-            trigger={
-              <StyledInspectorFooterRowListKeyValuePair>
-                <StyledInspectorFooterRowListKey className="key">
-                  {prop.key + ': '}
-                </StyledInspectorFooterRowListKey>
-                <StyledInspectorFooterRowListValue className="value">
-                  <ClickableUrls text={optionalToString(prop.value)} />
-                </StyledInspectorFooterRowListValue>
-              </StyledInspectorFooterRowListKeyValuePair>
-            }
-            mouseEnterDelay={1000}
-            hoverable
-            // hideOnScroll
-            popperModifiers={{
-              preventOverflow: {
-                enabled: true,
-                boundariesElement: 'scrollParent'
-              }
-            }}
-          >
-            Type: {typeof prop.value}
-          </Popup>
-
+          <StyledInspectorFooterRowListKeyValuePair>
+            <StyledInspectorFooterRowListKey className="key">
+              {prop.key + ': '}
+            </StyledInspectorFooterRowListKey>
+            <StyledInspectorFooterRowListValue className="value">
+              <ClickableUrls text={optionalToString(prop.value)} />
+            </StyledInspectorFooterRowListValue>
+          </StyledInspectorFooterRowListKeyValuePair>
           <div style={{ marginLeft: 'auto' }}>
             <ClipboardCopier
               textToCopy={`${prop.key}: ${prop.value}`}
@@ -110,164 +93,113 @@ const GraphItemProperties = ({
   )
 }
 
-function Labels({ graphStyle, labels }: any) {
-  return labels.map((label: any, index: number) => {
-    const graphStyleForLabel = graphStyle.forNode({ labels: [label] })
-    const style = {
-      backgroundColor: graphStyleForLabel.get('color'),
-      color: graphStyleForLabel.get('text-color-internal'),
-      cursor: 'default'
-    }
-    return (
-      <StyledLabelToken
-        key={'label' + index}
-        style={style}
-        className={'token' + ' ' + 'token-label'}
-      >
-        {label}
-      </StyledLabelToken>
-    )
-  })
-}
-
+type GraphVizProperty = { key: string; value: string }
 type GraphVizItem = {
   type: 'canvas' | 'node' | 'relationship'
   id: number
-  properties: any
+  properties: GraphVizProperty[]
 }
-type DetailsPaneComponentState = { contracted: boolean }
+
 type DetailsPaneComponentProps = {
   hasTruncatedFields: boolean
   fullscreen: boolean
-  hoveredItem: any
-  selectedItem: any
+  hoveredItem?: GraphVizItem
+  selectedItem: GraphVizItem
   graphStyle: any
-  onExpandToggled: (a: boolean, b: number) => void
 }
 
-export class DetailsPaneComponent extends Component<
-  DetailsPaneComponentProps,
-  DetailsPaneComponentState
-> {
-  footerRowElem: any
-  constructor(props: any) {
-    super(props)
-    this.state = {
-      contracted: true
-    }
-  }
+export function DetailsPaneComponent({
+  hoveredItem,
+  selectedItem,
+  hasTruncatedFields,
+  graphStyle
+}: DetailsPaneComponentProps): JSX.Element {
+  const hoveringNodeOrRelationship =
+    hoveredItem &&
+    (hoveredItem.type === 'node' || hoveredItem.type === 'relationship')
 
-  setFooterRowELem(elem: any) {
-    if (elem) {
-      this.footerRowElem = elem
-    }
-  }
+  // @ts-ignore // TODO red ut detta skräp
+  const { item, type } = hoveringNodeOrRelationship ? hoveredItem : selectedItem
 
-  render() {
-    let item = this.props.selectedItem.item
-    let type = this.props.selectedItem.type
+  return (
+    <StyledDetailsStatusBar className="status-bar">
+      <StyledDetailsStatus className="status">
+        <StyledDetailsStatusContents className="inspector-footer">
+          <StyledInspectorFooterRow
+            data-testid="vizInspector"
+            className="inspector-footer-row"
+          >
+            {type === 'canvas' && (
+              <StyledInlineList className="list-inline">
+                <StyledInspectorFooterRowListPair className="pair" key="pair">
+                  <StyledInspectorFooterRowListValue className="value">
+                    {hasTruncatedFields && (
+                      <StyledTruncatedMessage>
+                        <Icon name="warning sign" /> Record fields have been
+                        truncated.&nbsp;
+                      </StyledTruncatedMessage>
+                    )}
+                    Displaying {numberToUSLocale(item.nodeCount)} nodes,
+                    {numberToUSLocale(item.relationshipCount)} relationships.
+                  </StyledInspectorFooterRowListValue>
+                </StyledInspectorFooterRowListPair>
+              </StyledInlineList>
+            )}
 
-    if (item && (type === 'node' || type === 'relationship')) {
-      if (
-        this.props.hoveredItem &&
-        (this.props.hoveredItem.type === 'node' ||
-          this.props.hoveredItem.type === 'relationship')
-      ) {
-        item = this.props.hoveredItem.item
-        type = this.props.hoveredItem.type
-      }
-    } else if (!item && this.props.hoveredItem.type === 'canvas') {
-      item = this.props.hoveredItem.item
-      type = this.props.hoveredItem.type
-    }
+            {type === 'node' && (
+              <StyledInlineList className="list-inline">
+                {item.labels.map((label: string) => {
+                  const graphStyleForLabel = graphStyle.forNode({
+                    labels: [label]
+                  })
 
-    return (
-      <StyledDetailsStatusBar className="status-bar">
-        <StyledDetailsStatus className="status">
-          <StyledDetailsStatusContents className="inspector-footer">
-            <StyledInspectorFooterRow
-              data-testid="vizInspector"
-              className="inspector-footer-row"
-              ref={this.setFooterRowELem.bind(this)}
-            >
-              {type === 'canvas' && (
-                <StyledInlineList className="list-inline">
-                  <StyledInspectorFooterRowListPair className="pair" key="pair">
-                    <StyledInspectorFooterRowListValue className="value">
-                      {this.props.hasTruncatedFields && (
-                        <StyledTruncatedMessage>
-                          <Icon name="warning sign" /> Record fields have been
-                          truncated.&nbsp;
-                        </StyledTruncatedMessage>
-                      )}
-                      {`Displaying ${numberToUSLocale(
-                        item.nodeCount
-                      )} nodes, ${numberToUSLocale(
-                        item.relationshipCount
-                      )} relationships.`}
-                    </StyledInspectorFooterRowListValue>
-                  </StyledInspectorFooterRowListPair>
-                </StyledInlineList>
-              )}
+                  return (
+                    <StyledLabelToken
+                      key={label}
+                      style={{
+                        backgroundColor: graphStyleForLabel.get('color'),
+                        color: graphStyleForLabel.get('text-color-internal'),
+                        cursor: 'default'
+                      }}
+                      className="token token-label"
+                    >
+                      {label}
+                    </StyledLabelToken>
+                  )
+                })}
+                <GraphItemProperties
+                  id={item.id}
+                  properties={item.properties}
+                />
+              </StyledInlineList>
+            )}
 
-              {type === 'node' && (
-                <StyledInlineList className="list-inline">
-                  <Labels
-                    labels={item.labels}
-                    graphStyle={this.props.graphStyle}
-                  />
-                  <GraphItemProperties
-                    id={item.id}
-                    properties={item.properties}
-                  />
-                </StyledInlineList>
-              )}
-
-              {type === 'relationship' && (
-                <StyledInlineList className="list-inline">
-                  <StyledTokenRelationshipType
-                    key="token"
-                    style={{
-                      backgroundColor: this.props.graphStyle
-                        .forRelationship(item)
-                        .get('color'),
-                      color: this.props.graphStyle
-                        .forRelationship(item)
-                        .get('text-color-internal'),
-                      cursor: 'default'
-                    }}
-                    className={'token' + ' ' + 'token-relationship-type'}
-                  >
-                    {item.type}
-                  </StyledTokenRelationshipType>
-                  <GraphItemProperties
-                    id={item.id}
-                    properties={item.properties}
-                  />
-                </StyledInlineList>
-              )}
-            </StyledInspectorFooterRow>
-          </StyledDetailsStatusContents>
-        </StyledDetailsStatus>
-      </StyledDetailsStatusBar>
-    )
-  }
-
-  toggleExpand() {
-    this.setState({ contracted: !this.state.contracted }, () => {
-      const detailsPaneHeight = this.footerRowElem.clientHeight
-      this.props.onExpandToggled &&
-        this.props.onExpandToggled(
-          this.state.contracted,
-          this.state.contracted ? 0 : detailsPaneHeight
-        )
-    })
-  }
-
-  componentDidUpdate(prevProps: any) {
-    if (!deepEquals(this.props.selectedItem, prevProps.selectedItem)) {
-      this.setState({ contracted: true })
-      this.props.onExpandToggled && this.props.onExpandToggled(true, 0)
-    }
-  }
+            {type === 'relationship' && (
+              <StyledInlineList className="list-inline">
+                <StyledTokenRelationshipType
+                  key="token"
+                  style={{
+                    backgroundColor: graphStyle
+                      .forRelationship(item)
+                      .get('color'),
+                    color: graphStyle
+                      .forRelationship(item)
+                      .get('text-color-internal'),
+                    cursor: 'default'
+                  }}
+                  className="token token-relationship-type"
+                >
+                  {item.type}
+                </StyledTokenRelationshipType>
+                <GraphItemProperties
+                  id={item.id}
+                  properties={item.properties}
+                />
+              </StyledInlineList>
+            )}
+          </StyledInspectorFooterRow>
+        </StyledDetailsStatusContents>
+      </StyledDetailsStatus>
+    </StyledDetailsStatusBar>
+  )
 }
