@@ -208,8 +208,6 @@ export default class Graph {
   }
 
   layoutRootNodeOnTop() {
-    // this._nodes.forEach((node:any) => node.fixed = true)
-    console.log(this)
     layoutGraphWithRootNodeOnTop({
       relationships: this.relationships(),
       nodeMap: this.nodeMap,
