@@ -20,7 +20,7 @@ interface NodeInspectorPanelProps {
   onSelectedRelType: any
   selectedLabel: any
   frameHeight: number
-  hasTruncatedFields: any
+  hasTruncatedFields: boolean
 }
 
 export type NodeInspectorPanelState = {
@@ -113,7 +113,8 @@ export class NodeInspectorPanel extends Component<
           </StyledNodeInspectorTopMenuChevron>
         </StyledNodeInspectorTopMenu>
         <div style={{ height: 'inherit' }}>
-          {this.state.showResults ? (
+          {this.state.showResults &&
+          !['node', 'relationship'].includes(this.props.hoveredItem.type) ? (
             <ResultsPane
               stats={this.props.stats}
               graphStyle={this.props.graphStyle}

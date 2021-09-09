@@ -473,6 +473,8 @@ export const StyledNodeInspectorContainer = styled.div<{ width?: number }>`
   font-family: ${props => props.theme.drawerHeaderFontFamily};
   overflow-y: auto;
   padding: 0 10px;
+  box-shadow: 0px 0px 2px rgba(21, 30, 41, 0.1),
+    0px 1px 2px rgba(21, 30, 41, 0.08), 0px 1px 4px rgba(21, 30, 41, 0.08);
 `
 export const StyledNodeInspectorTopMenu = styled.div`
   height: 20px;

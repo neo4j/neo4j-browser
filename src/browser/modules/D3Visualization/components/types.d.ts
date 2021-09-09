@@ -8,7 +8,7 @@ export type VizItem =
 type Neo4jValue = unknown
 export type VizNodeProperty = { key: string; value: Neo4jValue }
 
-export type NodeItem = {
+type NodeItem = {
   type: 'node'
   item: {
     id: string
@@ -31,7 +31,7 @@ type StatusItem = {
   item: string
 }
 
-export type RelationshipItem = {
+type RelationshipItem = {
   type: 'relationship'
   item: {
     id: string
