@@ -271,12 +271,12 @@ export const StyledInspectorFooterRowListPair = styled(StyledInlineListItem)`
 export const StyledInspectorFooterRowListPairAlternatingRows = styled(
   StyledInspectorFooterRowListPair
 )<{
-  isFirstOrEvenRow: boolean
+  isOddRow: boolean
 }>`
   display: flex;
   padding: 5px;
   background: ${props =>
-    props.isFirstOrEvenRow
+    props.isOddRow
       ? props.theme.alteringTableRowBackground
       : props.theme.editorBackground};
 `

@@ -19,7 +19,11 @@
  */
 
 import React from 'react'
-import { optionalToString } from 'services/utils'
+import {
+  optionalToString,
+  stringifyMod,
+  unescapeDoubleQuotesForDisplay
+} from 'services/utils'
 import {
   StyledTokenRelationshipType,
   StyledLabelToken,
@@ -41,6 +45,7 @@ import { StyledTruncatedMessage } from 'browser/modules/Stream/styled'
 import { Icon } from 'semantic-ui-react'
 import ClipboardCopier from 'browser-components/ClipboardCopier'
 import { VizItem, VizNodeProperty } from './types'
+import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 
 const GraphItemProperties = ({
   id,
@@ -54,9 +59,13 @@ const GraphItemProperties = ({
   }
 
   const allItemProperties = [
-    { key: '<id>', value: `${id}` }, // TODO does it always have an ID?
+    { key: '<id>', value: `${id}` },
     ...properties
   ].sort((a, b) => (a.key < b.key ? -1 : 1))
+  const formatForDisplay = (neo4jValue: unknown) =>
+    unescapeDoubleQuotesForDisplay(
+      stringifyMod(neo4jValue, stringModifier, true)
+    )
 
   return (
     <>
@@ -71,23 +80,25 @@ const GraphItemProperties = ({
           />
         </div>
       </StyledInspectorClipboardCopyAll>
-      {allItemProperties.map((prop, index) => (
+      {allItemProperties.map((property, index) => (
         <StyledInspectorFooterRowListPairAlternatingRows
           className="pair"
-          key={prop.key}
-          isFirstOrEvenRow={(index + 1) % 2 === 0}
+          key={property.key}
+          isOddRow={index % 2 === 1}
         >
           <StyledInspectorFooterRowListKeyValuePair>
             <StyledInspectorFooterRowListKey className="key">
-              {prop.key + ': '}
+              {property.key + ': '}
             </StyledInspectorFooterRowListKey>
             <StyledInspectorFooterRowListValue className="value">
-              <ClickableUrls text={optionalToString(prop.value)} />
+              <ClickableUrls text={formatForDisplay(property.value)} />
             </StyledInspectorFooterRowListValue>
           </StyledInspectorFooterRowListKeyValuePair>
           <div style={{ marginLeft: 'auto' }}>
             <ClipboardCopier
-              textToCopy={`${prop.key}: ${prop.value}`}
+              textToCopy={`${property.key}: ${formatForDisplay(
+                property.value
+              )}`}
               iconSize={10}
             />
           </div>
