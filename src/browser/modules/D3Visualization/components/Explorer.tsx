@@ -29,6 +29,7 @@ import { NodeInspectorPanel } from './NodeInspectorPanel'
 import { StyledFullSizeContainer, StyledGraphAreaContainer } from './styled'
 import { GlobalState } from 'shared/globalState'
 import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
+import { VizItem } from './types'
 
 const deduplicateNodes = (nodes: any) => {
   return nodes.reduce(
@@ -55,7 +56,7 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
     this.defaultStyle = graphStyle.toSheet()
     let relationships = this.props.relationships
     let nodes = deduplicateNodes(this.props.nodes)
-    let selectedItem: any = ''
+    let selectedItem: VizItem = { type: 'status-item', item: 'startup' }
     if (nodes.length > parseInt(this.props.initialNodeDisplay)) {
       nodes = nodes.slice(0, this.props.initialNodeDisplay)
       relationships = this.props.relationships.filter((item: any) => {
@@ -101,9 +102,8 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
               type: 'status-item',
               item: `Rendering was limited to ${
                 this.props.maxNeighbours
-              } of the node's total ${
-                result.count + currentNeighbours.length
-              } neighbours due to browser config maxNeighbours.`
+              } of the node's total ${result.count +
+                currentNeighbours.length} neighbours due to browser config maxNeighbours.`
             }
           })
         }

@@ -410,8 +410,8 @@ export const StyledInspectorFooterStatusMessage = styled.div`
 
 export const StyledZoomHolder = styled.div<{ fullscreen: boolean }>`
   position: ${props => (props.fullscreen ? 'fixed' : 'absolute')};
-  bottom: 39px;
-  right: 0;
+  bottom: 0;
+  left: 0;
   padding: 6px 6px 0 6px;
   border-left: ${props => props.theme.inFrameBorder};
   border-right: ${props => props.theme.inFrameBorder};
@@ -459,12 +459,18 @@ export const StyledNodeInspectorCollapsedButton = styled.div`
   cursor: pointer;
 `
 export const StyledNodeInspectorContainer = styled.div<{ width?: number }>`
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 1;
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 25%;
+  min-width: 300px;
   height: 100%;
   background: ${props => props.theme.editorBackground};
   color: ${props => props.theme.primaryText};
+  font-family: ${props => props.theme.drawerHeaderFontFamily};
   overflow-y: auto;
   padding: 0 10px;
 `

@@ -40,11 +40,15 @@ import numberToUSLocale from 'shared/utils/number-to-US-locale'
 import { StyledTruncatedMessage } from 'browser/modules/Stream/styled'
 import { Icon } from 'semantic-ui-react'
 import ClipboardCopier from 'browser-components/ClipboardCopier'
+import { VizItem, VizNodeProperty } from './types'
 
 const GraphItemProperties = ({
   id,
   properties
-}: Pick<GraphVizItem, 'id' | 'properties'>) => {
+}: {
+  id: string
+  properties: VizNodeProperty[]
+}) => {
   if (!properties.length) {
     return <div>No properties to display</div>
   }
@@ -93,17 +97,10 @@ const GraphItemProperties = ({
   )
 }
 
-type GraphVizProperty = { key: string; value: string }
-type GraphVizItem = {
-  type: 'canvas' | 'node' | 'relationship'
-  id: number
-  properties: GraphVizProperty[]
-}
-
 type DetailsPaneComponentProps = {
   hasTruncatedFields: boolean
-  hoveredItem?: GraphVizItem
-  selectedItem: GraphVizItem
+  hoveredItem: VizItem
+  selectedItem: VizItem
   graphStyle: any
 }
 
@@ -117,8 +114,7 @@ export function DetailsPaneComponent({
     hoveredItem &&
     (hoveredItem.type === 'node' || hoveredItem.type === 'relationship')
 
-  // @ts-ignore // TODO red ut detta skräp
-  const { item, type } = hoveringNodeOrRelationship ? hoveredItem : selectedItem
+  const shownEl = hoveringNodeOrRelationship ? hoveredItem : selectedItem
 
   return (
     <StyledDetailsStatusBar className="status-bar">
@@ -128,7 +124,7 @@ export function DetailsPaneComponent({
             data-testid="vizInspector"
             className="inspector-footer-row"
           >
-            {type === 'canvas' && (
+            {shownEl.type === 'canvas' && (
               <StyledInlineList className="list-inline">
                 <StyledInspectorFooterRowListPair className="pair" key="pair">
                   <StyledInspectorFooterRowListValue className="value">
@@ -138,16 +134,17 @@ export function DetailsPaneComponent({
                         truncated.&nbsp;
                       </StyledTruncatedMessage>
                     )}
-                    Displaying {numberToUSLocale(item.nodeCount)} nodes,
-                    {numberToUSLocale(item.relationshipCount)} relationships.
+                    Displaying {numberToUSLocale(shownEl.item.nodeCount)} nodes,
+                    {numberToUSLocale(shownEl.item.relationshipCount)}{' '}
+                    relationships.
                   </StyledInspectorFooterRowListValue>
                 </StyledInspectorFooterRowListPair>
               </StyledInlineList>
             )}
 
-            {type === 'node' && (
+            {shownEl.type === 'node' && (
               <StyledInlineList className="list-inline">
-                {item.labels.map((label: string) => {
+                {shownEl.item.labels.map((label: string) => {
                   const graphStyleForLabel = graphStyle.forNode({
                     labels: [label]
                   })
@@ -167,32 +164,32 @@ export function DetailsPaneComponent({
                   )
                 })}
                 <GraphItemProperties
-                  id={item.id}
-                  properties={item.properties}
+                  id={shownEl.item.id}
+                  properties={shownEl.item.properties}
                 />
               </StyledInlineList>
             )}
 
-            {type === 'relationship' && (
+            {shownEl.type === 'relationship' && (
               <StyledInlineList className="list-inline">
                 <StyledTokenRelationshipType
                   key="token"
                   style={{
                     backgroundColor: graphStyle
-                      .forRelationship(item)
+                      .forRelationship(shownEl.item)
                       .get('color'),
                     color: graphStyle
-                      .forRelationship(item)
+                      .forRelationship(shownEl.item)
                       .get('text-color-internal'),
                     cursor: 'default'
                   }}
                   className="token token-relationship-type"
                 >
-                  {item.type}
+                  {shownEl.item.type}
                 </StyledTokenRelationshipType>
                 <GraphItemProperties
-                  id={item.id}
-                  properties={item.properties}
+                  id={shownEl.item.id}
+                  properties={shownEl.item.properties}
                 />
               </StyledInlineList>
             )}
