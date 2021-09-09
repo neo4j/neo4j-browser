@@ -19,11 +19,7 @@
  */
 
 import React from 'react'
-import {
-  optionalToString,
-  stringifyMod,
-  unescapeDoubleQuotesForDisplay
-} from 'services/utils'
+import { stringifyMod, unescapeDoubleQuotesForDisplay } from 'services/utils'
 import {
   StyledTokenRelationshipType,
   StyledLabelToken,

@@ -56,7 +56,13 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
     this.defaultStyle = graphStyle.toSheet()
     let relationships = this.props.relationships
     let nodes = deduplicateNodes(this.props.nodes)
-    let selectedItem: VizItem = { type: 'status-item', item: 'startup' }
+    let selectedItem: VizItem = {
+      type: 'canvas',
+      item: {
+        nodeCount: nodes.length,
+        relationshipCount: relationships.length
+      }
+    }
     if (nodes.length > parseInt(this.props.initialNodeDisplay)) {
       nodes = nodes.slice(0, this.props.initialNodeDisplay)
       relationships = this.props.relationships.filter((item: any) => {
@@ -178,6 +184,7 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
   }
 
   render() {
+    console.log(this.state.hoveredItem, this.state.selectedItem)
     // This is a workaround to make the style reset to the same colors as when starting the browser with an empty style
     // If the legend component has the style it will ask the neoGraphStyle object for styling before the graph component,
     // and also doing this in a different order from the graph. This leads to different default colors being assigned to different labels.
