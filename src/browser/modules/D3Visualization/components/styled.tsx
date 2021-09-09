@@ -492,9 +492,18 @@ export const StyledNodeInspectorPane = styled.div<{
   font-weight: ${props => (props.isActive ? 'bold' : 'normal')};
 `
 
-export const StyledNodeInspectorTopMenuChevron = styled.div`
+export const StyledNodeInspectorTopMenuChevron = styled.div<{
+  expanded: boolean
+}>`
   cursor: pointer;
   position: absolute;
-  margin-right: 15px;
-  right: 0;
+  right: 15px;
+  top: 15px;
+  z-index: 2;
+  ${props =>
+    !props.expanded &&
+    `background: ${props.theme.editorBackground};
+     box-shadow: 0px 0px 2px rgba(21, 30, 41, 0.1),
+      0px 1px 2px rgba(21, 30, 41, 0.08), 0px 1px 4px rgba(21, 30, 41, 0.08);
+  `}
 `

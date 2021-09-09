@@ -5,179 +5,189 @@ exports[`Visualization renders 1`] = `<div />`;
 exports[`Visualization renders with result and escapes any HTML 1`] = `
 <div>
   <div
-    class="sc-bwCtUz hJgGYC"
+    class="sc-gqPbQI hQihOE"
   >
     <div
-      class="sc-iAyFgw ikvPvE one-legend-row"
+      class="sc-jDwBTQ ivXJpA one-legend-row"
       id="svg-vis"
     >
       <div
-        class="sc-dxgOiQ kpiaUr one-row"
+        class="sc-bwzfXH jStUkM"
       >
         <div
-          class="sc-kpOJdX kvPbrS contracted"
+          class="sc-bdVaJa ckbiDw"
         >
-          <ul
-            class="sc-dnqmqq sc-ckVGcZ edBnTi list-inline"
+          <svg
+            class="neod3viz"
+            viewBox="0 100 200 0"
           >
-            <li
-              class="sc-iwsKbI sc-jKJlTe bpIrLV"
-              data-testid="viz-legend-labels"
+            <g
+              transform="translate(0,0)"
             >
-              <ul
-                class="sc-kGXeez ijQsDt contents"
-              >
-                <li
-                  class="sc-iwsKbI sc-fjdhpX sc-jzJRlG kiLeKN token token-label"
-                  style="background-color: rgb(247, 151, 103); color: rgb(255, 255, 255);"
-                >
-                  *
-                  <span
-                    class="sc-kgoBCf heNWOu count"
-                  >
-                    (1)
-                  </span>
-                </li>
-              </ul>
-            </li>
-            <li
-              class="sc-iwsKbI sc-jKJlTe bpIrLV"
-              data-testid="viz-legend-labels"
-            >
-              <ul
-                class="sc-kGXeez ijQsDt contents"
-              >
-                <li
-                  class="sc-iwsKbI sc-fjdhpX sc-jzJRlG kiLeKN token token-label"
-                  style="background-color: rgb(201, 144, 192); color: rgb(255, 255, 255);"
-                >
-                  Person
-                  <span
-                    class="sc-kgoBCf heNWOu count"
-                  >
-                    (1)
-                  </span>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div
-        class="sc-bdVaJa ckbiDw"
-      >
-        <svg
-          class="neod3viz"
-          viewBox="0 100 200 0"
-        >
-          <g
-            transform="translate(0,0)"
-          >
-            <rect
-              height="5000"
-              style="fill: none; pointer-events: all;"
-              transform="scale(1)"
-              width="5000"
-              x="-2500"
-              y="-2500"
-            />
-            <g>
-              <g
-                class="layer relationships"
+              <rect
+                height="5000"
+                style="fill: none; pointer-events: all;"
+                transform="scale(1)"
+                width="5000"
+                x="-2500"
+                y="-2500"
               />
-              <g
-                class="layer nodes"
-              >
+              <g>
                 <g
-                  class="node"
+                  class="layer relationships"
+                />
+                <g
+                  class="layer nodes"
                 >
-                  <circle
-                    class="ring"
-                    cx="0"
-                    cy="0"
-                    r="29"
-                    stroke-width="8px"
-                  />
-                  <circle
-                    class="outline"
-                    cx="0"
-                    cy="0"
-                    fill="#C990C0"
-                    r="25"
-                    stroke="#b261a5"
-                    stroke-width="2px"
-                  />
-                  <text
-                    dy="1.5625"
-                    fill="#FFFFFF"
-                    font-family="streamline"
-                    font-size="25"
-                    pointer-events="none"
-                    text-anchor="middle"
-                  />
-                  <text
-                    fill="#FFFFFF"
-                    font-size="10px"
-                    pointer-events="none"
-                    text-anchor="middle"
-                    x="0"
-                    y="5"
+                  <g
+                    class="node"
                   >
-                     &lt;b&gt;…
-                  </text>
+                    <circle
+                      class="ring"
+                      cx="0"
+                      cy="0"
+                      r="29"
+                      stroke-width="8px"
+                    />
+                    <circle
+                      class="outline"
+                      cx="0"
+                      cy="0"
+                      fill="#C990C0"
+                      r="25"
+                      stroke="#b261a5"
+                      stroke-width="2px"
+                    />
+                    <text
+                      dy="1.5625"
+                      fill="#FFFFFF"
+                      font-family="streamline"
+                      font-size="25"
+                      pointer-events="none"
+                      text-anchor="middle"
+                    />
+                    <text
+                      fill="#FFFFFF"
+                      font-size="10px"
+                      pointer-events="none"
+                      text-anchor="middle"
+                      x="0"
+                      y="5"
+                    >
+                       &lt;b&gt;…
+                    </text>
+                  </g>
                 </g>
               </g>
             </g>
-          </g>
-        </svg>
-        <div
-          class="sc-eHgmQL fBSINn"
-        >
-          <button
-            class="sc-cvbbAY cqXpvD zoom-in"
+          </svg>
+          <div
+            class="sc-iRbamj gBmqTJ"
           >
-            <i
-              class="sc-chbbiW fdVihP sl-zoom-in"
-              style="font-size: 1em;"
-            />
-          </button>
-          <button
-            class="sc-cvbbAY cqXpvD zoom-out"
-          >
-            <i
-              class="sc-kxynE dtqwBR sl-zoom-out"
-              style="font-size: 1em;"
-            />
-          </button>
+            <button
+              class="sc-jlyJG dhjgQw zoom-in"
+            >
+              <i
+                class="sc-hgHYgh fmMYuK sl-zoom-in"
+                style="font-size: 1em;"
+              />
+            </button>
+            <button
+              class="sc-jlyJG dhjgQw zoom-out"
+            >
+              <i
+                class="sc-eInJlc dTvmOo sl-zoom-out"
+                style="font-size: 1em;"
+              />
+            </button>
+          </div>
         </div>
-      </div>
-      <div
-        class="sc-gqjmRU iNDOUA status-bar"
-      >
         <div
-          class="sc-VigVT joQvFy status"
+          class="sc-hzDkRC ciFDya"
+        >
+          <i
+            aria-hidden="true"
+            class="chevron right icon"
+            font-size="32"
+          />
+        </div>
+        <div
+          class="sc-csuQGl inEFjz"
         >
           <div
-            class="sc-EHOje dyhqxD contracted inspector-footer"
+            class="sc-Rmtcm iLrPrU"
           >
-            <ul
-              class="sc-bZQynM bQKKoY inspector-footer-row"
-              data-testid="vizInspector"
+            <div
+              class="sc-bRBYWo lVpg"
             >
-              <ul
-                class="sc-dnqmqq bGMIpP list-inline"
+              Results
+            </div>
+            <div
+              class="sc-bRBYWo kJBrpq"
+            >
+              Details
+            </div>
+          </div>
+          <div
+            style="height: inherit;"
+          >
+            <div
+              class="sc-hSdWYo cnPFeK"
+            >
+              Node Labels:
+              <div
+                class="sc-iAyFgw fVJTxU"
               >
-                <li
-                  class="sc-iwsKbI sc-jTzLTM bnPPYH pair"
+                <ul
+                  class="sc-gqjmRU sc-eHgmQL efuoQl list-inline"
                 >
-                  <div
-                    class="sc-htoDjs icDRie value"
+                  <li
+                    class="sc-jTzLTM sc-cvbbAY cLjEQD"
+                    data-testid="viz-legend-labels"
                   >
-                    Displaying 1 nodes, 0 relationships.
-                  </div>
-                </li>
-              </ul>
-            </ul>
+                    <ul
+                      class="sc-kkGfuU bYYoTR contents"
+                    >
+                      <li
+                        class="sc-jTzLTM sc-dxgOiQ sc-ckVGcZ iSMAgL token token-label"
+                        style="background-color: rgb(247, 151, 103); color: rgb(255, 255, 255);"
+                      >
+                        *
+                        <span
+                          class="sc-kEYyzF fnmidr count"
+                        >
+                          (1)
+                        </span>
+                      </li>
+                    </ul>
+                  </li>
+                  <li
+                    class="sc-jTzLTM sc-cvbbAY cLjEQD"
+                    data-testid="viz-legend-labels"
+                  >
+                    <ul
+                      class="sc-kkGfuU bYYoTR contents"
+                    >
+                      <li
+                        class="sc-jTzLTM sc-dxgOiQ sc-ckVGcZ iSMAgL token token-label"
+                        style="background-color: rgb(201, 144, 192); color: rgb(255, 255, 255);"
+                      >
+                        Person
+                        <span
+                          class="sc-kEYyzF fnmidr count"
+                        >
+                          (1)
+                        </span>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+              Relationship Types:
+              <div>
+                No relationship types to display
+              </div>
+            </div>
           </div>
         </div>
       </div>

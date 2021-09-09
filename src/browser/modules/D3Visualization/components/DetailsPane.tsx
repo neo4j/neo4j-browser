@@ -134,7 +134,7 @@ export function DetailsPaneComponent({
                         truncated.&nbsp;
                       </StyledTruncatedMessage>
                     )}
-                    Displaying {numberToUSLocale(shownEl.item.nodeCount)} nodes,
+                    Displaying {numberToUSLocale(shownEl.item.nodeCount)} nodes,{' '}
                     {numberToUSLocale(shownEl.item.relationshipCount)}{' '}
                     relationships.
                   </StyledInspectorFooterRowListValue>
