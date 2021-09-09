@@ -35,6 +35,7 @@ function ClipboardCopier({
 const CopyIconContainer = styled.span`
   cursor: pointer;
   position: relative;
+  color: ${props => props.theme.frameControlButtonTextColor};
 `
 
 type InfoPopupProps = { text: string }
