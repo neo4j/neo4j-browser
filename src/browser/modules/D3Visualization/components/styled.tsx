@@ -290,7 +290,6 @@ export const StyledToken = styled(StyledInlineListItem)`
   font-weight: bold;
   line-height: 1em;
   text-align: center;
-  white-space: nowrap;
   vertical-align: baseline;
   user-select: none;
   font-size: 12px;
@@ -300,10 +299,12 @@ export const StyledToken = styled(StyledInlineListItem)`
 export const StyledLabelToken = styled(StyledToken)`
   padding: 4px 7px 4px 9px;
   border-radius: 20px;
+  word-break: break-all;
 `
 export const StyledTokenRelationshipType = styled(StyledToken)`
   padding: 4px 7px 4px 5px;
   border-radius: 3px;
+  word-break: break-all;
 `
 
 export const tokenPropertyKey = styled(StyledToken)`
