@@ -184,7 +184,6 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
   }
 
   render() {
-    console.log(this.state.hoveredItem, this.state.selectedItem)
     // This is a workaround to make the style reset to the same colors as when starting the browser with an empty style
     // If the legend component has the style it will ask the neoGraphStyle object for styling before the graph component,
     // and also doing this in a different order from the graph. This leads to different default colors being assigned to different labels.
@@ -193,12 +192,7 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
       : this.state.graphStyle
 
     return (
-      <StyledFullSizeContainer
-        id="svg-vis"
-        className={
-          Object.keys(this.state.stats.relTypes).length ? '' : 'one-legend-row'
-        }
-      >
+      <StyledFullSizeContainer id="svg-vis">
         <StyledGraphAreaContainer>
           <GraphComponent
             fullscreen={this.props.fullscreen}

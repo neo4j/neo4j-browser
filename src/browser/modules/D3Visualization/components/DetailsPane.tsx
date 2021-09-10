@@ -78,15 +78,14 @@ const GraphItemProperties = ({
       </StyledInspectorClipboardCopyAll>
       {allItemProperties.map((property, index) => (
         <StyledInspectorFooterRowListPairAlternatingRows
-          className="pair"
           key={property.key}
           isOddRow={index % 2 === 1}
         >
           <StyledInspectorFooterRowListKeyValuePair>
-            <StyledInspectorFooterRowListKey className="key">
+            <StyledInspectorFooterRowListKey>
               {property.key + ': '}
             </StyledInspectorFooterRowListKey>
-            <StyledInspectorFooterRowListValue className="value">
+            <StyledInspectorFooterRowListValue>
               <ClickableUrls text={formatForDisplay(property.value)} />
             </StyledInspectorFooterRowListValue>
           </StyledInspectorFooterRowListKeyValuePair>
@@ -124,17 +123,14 @@ export function DetailsPaneComponent({
   const shownEl = hoveringNodeOrRelationship ? hoveredItem : selectedItem
 
   return (
-    <StyledDetailsStatusBar className="status-bar">
-      <StyledDetailsStatus className="status">
-        <StyledDetailsStatusContents className="inspector-footer">
-          <StyledInspectorFooterRow
-            data-testid="vizInspector"
-            className="inspector-footer-row"
-          >
+    <StyledDetailsStatusBar>
+      <StyledDetailsStatus>
+        <StyledDetailsStatusContents>
+          <StyledInspectorFooterRow data-testid="vizInspector">
             {shownEl.type === 'canvas' && (
-              <StyledInlineList className="list-inline">
-                <StyledInspectorFooterRowListPair className="pair" key="pair">
-                  <StyledInspectorFooterRowListValue className="value">
+              <StyledInlineList>
+                <StyledInspectorFooterRowListPair key="pair">
+                  <StyledInspectorFooterRowListValue>
                     {hasTruncatedFields && (
                       <StyledTruncatedMessage>
                         <Icon name="warning sign" /> Record fields have been
@@ -150,7 +146,7 @@ export function DetailsPaneComponent({
             )}
 
             {shownEl.type === 'node' && (
-              <StyledInlineList className="list-inline">
+              <StyledInlineList>
                 {shownEl.item.labels.map((label: string) => {
                   const graphStyleForLabel = graphStyle.forNode({
                     labels: [label]
@@ -164,7 +160,6 @@ export function DetailsPaneComponent({
                         color: graphStyleForLabel.get('text-color-internal'),
                         cursor: 'default'
                       }}
-                      className="token token-label"
                     >
                       {label}
                     </StyledLabelToken>
@@ -178,7 +173,7 @@ export function DetailsPaneComponent({
             )}
 
             {shownEl.type === 'relationship' && (
-              <StyledInlineList className="list-inline">
+              <StyledInlineList>
                 <StyledTokenRelationshipType
                   key="token"
                   style={{
@@ -190,7 +185,6 @@ export function DetailsPaneComponent({
                       .get('text-color-internal'),
                     cursor: 'default'
                   }}
-                  className="token token-relationship-type"
                 >
                   {shownEl.item.type}
                 </StyledTokenRelationshipType>

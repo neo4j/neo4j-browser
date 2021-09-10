@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
-import { expand } from 'rxjs/operator/expand'
 import { Icon } from 'semantic-ui-react'
 import { DetailsPaneComponent } from './DetailsPane'
 import ResultsPane from './ResultsPane'
 import {
-  StyledNodeInspectorCollapsedButton,
   StyledNodeInspectorContainer,
   StyledNodeInspectorPane,
   StyledNodeInspectorTopMenu,

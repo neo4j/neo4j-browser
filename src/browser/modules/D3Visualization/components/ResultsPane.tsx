@@ -60,7 +60,7 @@ function ResultsPane({
         <div>No labels to display</div>
       ) : (
         <StyledLegendRow>
-          <StyledLegendInlineList className="list-inline">
+          <StyledLegendInlineList>
             {Object.keys(labels).map((legendItemKey, index) => {
               const styleForItem = graphStyle.forNode({
                 labels: [legendItemKey]
@@ -80,19 +80,15 @@ function ResultsPane({
                   key={index}
                   data-testid="viz-legend-labels"
                 >
-                  <StyledLegendContents className="contents">
+                  <StyledLegendContents>
                     <Popup
                       on="click"
                       basic
                       pinned
                       trigger={
-                        <StyledLabelToken
-                          onClick={onClick}
-                          style={style}
-                          className="token token-label"
-                        >
+                        <StyledLabelToken onClick={onClick} style={style}>
                           {legendItemKey}
-                          <StyledTokenCount className="count">{`(${numberToUSLocale(
+                          <StyledTokenCount>{`(${numberToUSLocale(
                             labels[legendItemKey].count
                           )})`}</StyledTokenCount>
                         </StyledLabelToken>
@@ -116,7 +112,7 @@ function ResultsPane({
         <div>No relationship types to display</div>
       ) : (
         <StyledLegendRow>
-          <StyledLegendInlineList className="list-inline">
+          <StyledLegendInlineList>
             {Object.keys(relTypes).map((legendItemKey, i) => {
               const styleForItem = graphStyle.forRelationship({
                 type: legendItemKey
@@ -136,7 +132,7 @@ function ResultsPane({
                   key={i}
                   data-testid="viz-legend-reltypes"
                 >
-                  <StyledLegendContents className="contents">
+                  <StyledLegendContents>
                     <Popup
                       on="click"
                       basic
@@ -145,10 +141,9 @@ function ResultsPane({
                         <StyledTokenRelationshipType
                           onClick={onClick}
                           style={style}
-                          className="token token-relationship-type"
                         >
                           {legendItemKey}
-                          <StyledTokenCount className="count">
+                          <StyledTokenCount>
                             {`(${numberToUSLocale(
                               relTypes[legendItemKey].count
                             )})`}
