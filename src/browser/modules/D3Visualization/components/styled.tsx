@@ -460,16 +460,18 @@ export const StyledNodeInspectorCollapsedButton = styled.div`
   justify-content: center;
   cursor: pointer;
 `
-export const StyledNodeInspectorContainer = styled.div<{ width?: number }>`
+export const StyledNodeInspectorContainer = styled.div<{
+  width: number
+  height: number
+}>`
   position: absolute;
   right: 0;
   top: 0;
   z-index: 1;
-  display: flex;
-  flex-direction: column;
-  width: 25%;
-  min-width: 300px;
-  height: 100%;
+  width: ${props => props.width}px;
+  min-width: 150px;
+  max-width: 100%;
+  height: ${props => props.height}px;
   background: ${props => props.theme.editorBackground};
   color: ${props => props.theme.primaryText};
   font-family: ${props => props.theme.drawerHeaderFontFamily};
@@ -482,7 +484,6 @@ export const StyledNodeInspectorTopMenu = styled.div`
   height: 20px;
   margin: 10px 0 10px 0;
   display: flex;
-  flex-direction: row;
 `
 
 export const StyledNodeInspectorPane = styled.div<{
