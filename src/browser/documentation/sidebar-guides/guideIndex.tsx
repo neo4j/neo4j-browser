@@ -25,20 +25,20 @@ const slides = [
         <DrawerBrowserCommand data-exec="guide intro">
           :guide intro
         </DrawerBrowserCommand>
-        <MarginTop> Intro guide: Neo4j Browser user interface guide </MarginTop>
+        <MarginTop> Intro Guide: Neo4j Browser user interface guide </MarginTop>
       </li>
       <MarginTopLi>
         <DrawerBrowserCommand data-exec="guide concepts">
           :guide concepts
         </DrawerBrowserCommand>
-        <MarginTop> Concepts guide: Property graph model concepts </MarginTop>
+        <MarginTop> Concepts Guide: Property graph model concepts </MarginTop>
       </MarginTopLi>
       <MarginTopLi>
         <DrawerBrowserCommand data-exec="guide cypher">
           :guide cypher
         </DrawerBrowserCommand>
         <MarginTop>
-          Cypher guide: Cypher basics - create, match, delete
+          Cypher Guide: Cypher basics - create, match, delete
         </MarginTop>
       </MarginTopLi>
 
@@ -47,7 +47,7 @@ const slides = [
           :guide movie-graph
         </DrawerBrowserCommand>
         <MarginTop>
-          Movie Graph guide: Queries and recommendations with Cypher - movie use
+          Movie Graph Guide: Queries and recommendations with Cypher - movie use
           case
         </MarginTop>
       </MarginTopLi>
@@ -57,7 +57,7 @@ const slides = [
           :guide northwind-graph
         </DrawerBrowserCommand>
         <MarginTop>
-          Northwind Graph guide: Transform and import relational data into graph
+          Northwind Graph Guide: Transform and import relational data into graph
         </MarginTop>
       </MarginTopLi>
     </NoBulletsUl>
