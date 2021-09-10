@@ -1,5 +1,8 @@
+:description: Neo4j Browser.
+
 [[browser]]
 = Neo4j Browser
+//https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/#keyboard-button-and-menu-macros
 :experimental:
 :sectnums:
 :chapter-label:
@@ -12,13 +15,10 @@ ifndef::backend-pdf[]
 License: link:{common-license-page-uri}[Creative Commons 4.0]
 endif::[]
 
+//License page should be added at the end when generating pdf. (neo4j-manual-modeling-antora)
 ifdef::backend-pdf[]
-(C) {copyright}
-
-License: <<license, Creative Commons 4.0>>
+License: Creative Commons 4.0
 endif::[]
-
-{nbsp} +
 
 [.lead]
 *Neo4j Browser*
@@ -27,10 +27,11 @@ Neo4j Browser is a developer-focused tool that allows you to execute Cypher quer
 It is the default developer interface for both Enterprise and Community editions of Neo4j.
 It comes out-of-the-box with all of Neo4j’s graph database offerings, including Neo4j Server (Community and Enterprise editions) and Neo4j Desktop (all OS versions).
 
-Neo4j Browser is perfect for running ad-hoc graph queries, with just enough ability to prototype a Neo4j-based application.
-It is:
+Neo4j Browser is suitable for running ad-hoc graph queries, with the appropriate ability to prototype a Neo4j-based application.
 
-* Developer focused, for writing and running graph queries with Cypher.
+Neo4j Browser is a tool for developers to interact with the graph, with the main focus on:
+
+* Writing and running graph queries with Cypher.
 * Exportable, tabular results of any query result.
 * Used for graph visualization of query results containing nodes and relationships.
 
@@ -45,25 +46,6 @@ The following areas of Neo4j Browser are covered in this manual:
 * xref:operations.adoc[Browser operations] -- How to administer and use Neo4j Browser.
 
 [.lead]
-*Who should read this*
+_Who should read this?_
 
 This manual is written for developers, database administrators, quality engineers, data scientists, and data architects, who may or may not be familiar with Neo4j.
-
-// Useful links:
-//===============
-// GitHub repo: https://github.com/neo4j/neo4j-browser
-//
-// Neo4j Browser changelog: https://github.com/neo4j/neo4j-browser/wiki/changelog and https://neo4j-browser.canny.io/changelog
-//
-// Neo4j Browser documentation: https://github.com/neo4j/neo4j-browser/tree/master/src/browser/documentation
-//
-// Neo4j Browser help:
-// https://github.com/neo4j/neo4j-browser/blob/master/src/browser/documentation/index.ts
-//
-// This article demonstrates how to use the Neo4j Browser for querying, visualization, and data interaction: https://neo4j.com/developer/neo4j-browser/
-//
-// GraphGists, allow developers to explore with Neo4j Browser how data would be modeled as a graph and see some example queries of that graph data: https://portal.graphgist.org/
-//
-// Style for explaining tasks: https://www.xero.com/uk/accounting-software/pay-bills/
-//
-// YouTube videos: https://www.youtube.com/c/neo4j/search?query=browser
