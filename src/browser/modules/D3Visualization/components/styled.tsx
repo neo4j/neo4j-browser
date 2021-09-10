@@ -470,7 +470,7 @@ export const StyledNodeInspectorContainer = styled.div<{
   z-index: 1;
   width: ${props => props.width}px;
   min-width: 150px;
-  max-width: 100%;
+  max-width: 95%;
   height: ${props => props.height}px;
   background: ${props => props.theme.editorBackground};
   color: ${props => props.theme.primaryText};
