@@ -412,7 +412,8 @@ export const StyledInspectorFooterStatusMessage = styled.div`
 export const StyledZoomHolder = styled.div<{ fullscreen: boolean }>`
   position: ${props => (props.fullscreen ? 'fixed' : 'absolute')};
   bottom: 0;
-  left: 0;
+  right: 0;
+  z-index: 2;
   padding: 6px 6px 0 6px;
   border-left: ${props => props.theme.inFrameBorder};
   border-right: ${props => props.theme.inFrameBorder};
