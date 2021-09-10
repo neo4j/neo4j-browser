@@ -3,13 +3,13 @@ import { Resizable } from 'react-resizable'
 import { Icon } from 'semantic-ui-react'
 import { DetailsPaneComponent } from './DetailsPane'
 import ResultsPane from './ResultsPane'
+import { VizItem } from './types'
 import {
   StyledNodeInspectorContainer,
   StyledNodeInspectorPane,
   StyledNodeInspectorTopMenu,
   StyledNodeInspectorTopMenuChevron
 } from './styled'
-import { VizItem } from './types'
 
 interface NodeInspectorPanelProps {
   hoveredItem: VizItem
@@ -25,7 +25,6 @@ interface NodeInspectorPanelProps {
 
 export type NodeInspectorPanelState = {
   expanded: boolean
-  showResults: boolean
   width: number
 }
 export class NodeInspectorPanel extends Component<
@@ -34,7 +33,6 @@ export class NodeInspectorPanel extends Component<
 > {
   state: NodeInspectorPanelState = {
     expanded: true,
-    showResults: true,
     width: 300
   }
 
@@ -45,13 +43,14 @@ export class NodeInspectorPanel extends Component<
   }
 
   render(): JSX.Element {
-    const { expanded, showResults } = this.state
+    const { expanded } = this.state
     const { hoveredItem, selectedItem } = this.props
 
-    const shouldShowResult =
-      showResults &&
-      !['node', 'relationship'].includes(hoveredItem.type) &&
-      !['node', 'relationship'].includes(selectedItem.type)
+    const relevantItems = ['node', 'relationship']
+    const hoveringNodeOrRelationship =
+      hoveredItem && relevantItems.includes(hoveredItem.type)
+    const shownEl = hoveringNodeOrRelationship ? hoveredItem : selectedItem
+    const showDetails = relevantItems.includes(shownEl.type)
 
     return (
       <>
@@ -81,42 +80,21 @@ export class NodeInspectorPanel extends Component<
               onResize={(_e, { size }) => this.setState({ width: size.width })}
             >
               <div>
-                <StyledNodeInspectorTopMenu>
-                  <StyledNodeInspectorPane
-                    isActive={shouldShowResult}
-                    onClick={e => {
-                      e.stopPropagation()
-                      this.setState({ showResults: true })
-                    }}
-                  >
-                    Results
-                  </StyledNodeInspectorPane>
-                  <StyledNodeInspectorPane
-                    isActive={!shouldShowResult}
-                    onClick={e => {
-                      e.stopPropagation()
-                      this.setState({ showResults: false })
-                    }}
-                  >
-                    Details
-                  </StyledNodeInspectorPane>
-                </StyledNodeInspectorTopMenu>
                 <div style={{ height: this.props.frameHeight }}>
-                  {shouldShowResult ? (
-                    <ResultsPane
-                      stats={this.props.stats}
+                  {showDetails ? (
+                    <DetailsPaneComponent
+                      vizItem={shownEl}
                       graphStyle={this.props.graphStyle}
+                    />
+                  ) : (
+                    <ResultsPane
+                      frameHeight={this.props.frameHeight}
+                      graphStyle={this.props.graphStyle}
+                      hasTruncatedFields={this.props.hasTruncatedFields}
                       onSelectedLabel={this.props.onSelectedLabel}
                       onSelectedRelType={this.props.onSelectedRelType}
                       selectedLabel={this.props.selectedLabel}
-                      frameHeight={this.props.frameHeight}
-                    />
-                  ) : (
-                    <DetailsPaneComponent
-                      hasTruncatedFields={this.props.hasTruncatedFields}
-                      hoveredItem={this.props.hoveredItem}
-                      selectedItem={this.props.selectedItem}
-                      graphStyle={this.props.graphStyle}
+                      stats={this.props.stats}
                     />
                   )}
                 </div>

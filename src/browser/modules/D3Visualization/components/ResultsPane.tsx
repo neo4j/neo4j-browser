@@ -19,7 +19,7 @@
  */
 
 import React from 'react'
-import { Popup } from 'semantic-ui-react'
+import { Icon, Popup } from 'semantic-ui-react'
 
 import {
   StyledLegendRow,
@@ -29,10 +29,14 @@ import {
   StyledLegendContents,
   StyledLabelToken,
   StyledTokenCount,
-  StyledLegendInlineList
+  StyledLegendInlineList,
+  StyledInlineList,
+  StyledInspectorFooterRowListPair,
+  StyledInspectorFooterRowListValue
 } from './styled'
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
 import { GrassEditor } from './GrassEditor'
+import { StyledTruncatedMessage } from 'browser/modules/Stream/styled'
 
 type ResultPaneProps = {
   graphStyle: any
@@ -40,22 +44,48 @@ type ResultPaneProps = {
   onSelectedRelType: (a: any, b: any) => void
   frameHeight: number
   selectedLabel: any
-  stats: any
+  stats: {
+    relTypes: any
+    labels: any
+    nodeCount: number
+    relationshipCount: number
+  }
+  hasTruncatedFields: boolean
 }
 
+// TODO Rename to overview
 function ResultsPane({
   graphStyle,
   onSelectedLabel,
   onSelectedRelType,
   frameHeight,
   selectedLabel,
-  stats
+  stats,
+  hasTruncatedFields
 }: ResultPaneProps): JSX.Element {
-  const { relTypes, labels } = stats
+  const { relTypes, labels, nodeCount, relationshipCount } = stats
 
   return (
     <StyledLegend>
-      Node Labels:
+      <div
+        style={{
+          fontSize: '12px',
+          paddingBottom: '5px',
+          marginTop: '5px',
+          marginBottom: '5px',
+          borderBottom: '1px solid #DAE4F0'
+        }}
+      >
+        {hasTruncatedFields && (
+          <StyledTruncatedMessage>
+            <Icon name="warning sign" /> Record fields have been
+            truncated.&nbsp;
+          </StyledTruncatedMessage>
+        )}
+        Displaying {numberToUSLocale(nodeCount)} nodes,{' '}
+        {numberToUSLocale(relationshipCount)} relationships.
+      </div>
+      Node labels:
       {!labels || !Object.keys(labels).length ? (
         <div>No labels to display</div>
       ) : (

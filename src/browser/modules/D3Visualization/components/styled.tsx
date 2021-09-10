@@ -236,7 +236,6 @@ export const StyledDetailsStatusBar = styled.div`
   color: ${props => props.theme.secondaryText};
   font-size: 13px;
   white-space: nowrap;
-  border-top: ${props => props.theme.inFrameBorder};
   width: 100%;
   height: 100%;
 `
@@ -487,7 +486,7 @@ export const StyledNodeInspectorTopMenu = styled.div`
 `
 
 export const StyledNodeInspectorPane = styled.div<{
-  isActive: boolean
+  isActive?: boolean
 }>`
   cursor: pointer;
   margin: 0 15px;

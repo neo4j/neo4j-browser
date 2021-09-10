@@ -81,7 +81,12 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
       graphStyle.loadRules(rebasedStyle)
     }
     this.state = {
-      stats: { labels: {}, relTypes: {} },
+      stats: {
+        labels: {},
+        relTypes: {},
+        nodeCount: nodes.length,
+        relationshipCount: relationships.length
+      },
       graphStyle,
       styleVersion: 0,
       nodes,
@@ -130,7 +135,12 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
   }
 
   onGraphModelChange(stats: any) {
-    this.setState({ stats: stats })
+    this.setState((oldState: any) => ({
+      stats: {
+        ...oldState.stats,
+        ...stats
+      }
+    }))
     this.props.updateStyle(this.state.graphStyle.toSheet())
   }
 
