@@ -8,7 +8,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
     class="sc-gqPbQI hQihOE"
   >
     <div
-      class="sc-jDwBTQ ivXJpA one-legend-row"
+      class="sc-jDwBTQ ivXJpA"
       id="svg-vis"
     >
       <div
@@ -82,7 +82,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
             </g>
           </svg>
           <div
-            class="sc-iRbamj gBmqTJ"
+            class="sc-iRbamj dOgKho"
           >
             <button
               class="sc-jlyJG dhjgQw zoom-in"
@@ -139,22 +139,22 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
                 class="sc-iAyFgw fVJTxU"
               >
                 <ul
-                  class="sc-gqjmRU sc-eHgmQL efuoQl list-inline"
+                  class="sc-gqjmRU sc-eHgmQL efuoQl"
                 >
                   <li
                     class="sc-jTzLTM sc-cvbbAY cLjEQD"
                     data-testid="viz-legend-labels"
                   >
                     <ul
-                      class="sc-kkGfuU bYYoTR contents"
+                      class="sc-kkGfuU bYYoTR"
                     >
                       <li
-                        class="sc-jTzLTM sc-dxgOiQ sc-ckVGcZ iSMAgL token token-label"
+                        class="sc-jTzLTM sc-dxgOiQ sc-ckVGcZ eTwlcJ"
                         style="background-color: rgb(247, 151, 103); color: rgb(255, 255, 255);"
                       >
                         *
                         <span
-                          class="sc-kEYyzF fnmidr count"
+                          class="sc-kEYyzF fnmidr"
                         >
                           (1)
                         </span>
@@ -166,15 +166,15 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
                     data-testid="viz-legend-labels"
                   >
                     <ul
-                      class="sc-kkGfuU bYYoTR contents"
+                      class="sc-kkGfuU bYYoTR"
                     >
                       <li
-                        class="sc-jTzLTM sc-dxgOiQ sc-ckVGcZ iSMAgL token token-label"
+                        class="sc-jTzLTM sc-dxgOiQ sc-ckVGcZ eTwlcJ"
                         style="background-color: rgb(201, 144, 192); color: rgb(255, 255, 255);"
                       >
                         Person
                         <span
-                          class="sc-kEYyzF fnmidr count"
+                          class="sc-kEYyzF fnmidr"
                         >
                           (1)
                         </span>
