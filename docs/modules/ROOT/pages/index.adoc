@@ -27,7 +27,7 @@ Neo4j Browser is a developer-focused tool that allows you to execute Cypher quer
 It is the default developer interface for both Enterprise and Community editions of Neo4j.
 It comes out-of-the-box with all of Neo4j’s graph database offerings, including Neo4j Server (Community and Enterprise editions) and Neo4j Desktop (all OS versions).
 
-Neo4j Browser is suitable for running ad-hoc graph queries, with the appropriat ability to prototype a Neo4j-based application.
+Neo4j Browser is suitable for running ad-hoc graph queries, with the appropriate ability to prototype a Neo4j-based application.
 
 Neo4j Browser is a tool for developers to interact with the graph, with the main focus on:
 
