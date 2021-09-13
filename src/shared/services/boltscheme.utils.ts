@@ -33,7 +33,9 @@ export const isNonRoutingScheme = (url = '') =>
 
 export const toNonRoutingScheme = (url: string) =>
   typeof url === 'string' &&
-  `${BOLT_DIRECT_SCHEME}${getSchemeFlag(url)}://${stripScheme(url)}`
+  `${BOLT_DIRECT_SCHEME}${getSchemeFlag(url)}://${stripQueryString(
+    stripScheme(url)
+  )}`
 
 export const getScheme = (url: string) => {
   if (!url) {
@@ -52,6 +54,11 @@ export const stripScheme = (url: string) => {
     return _scheme
   }
   return rest.join('://')
+}
+
+export const stripQueryString = (url: string) => {
+  const [_host] = (url || '').split('?')
+  return _host
 }
 
 export const isSecureBoltScheme = (url: string) => {
