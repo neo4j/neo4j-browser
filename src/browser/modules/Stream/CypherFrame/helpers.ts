@@ -19,6 +19,7 @@
  */
 
 import neo4j from 'neo4j-driver'
+import { Duration } from 'luxon'
 import {
   entries,
   flatten,
@@ -443,9 +444,13 @@ export function mapNeo4jValuesToPlainValues(values: any): any {
  */
 function neo4jValueToPlainValue(value: any) {
   switch (get(value, 'constructor')) {
+    case neo4j.types.Duration:
+      return Duration.fromISO(value.toString())
+        .shiftTo('years', 'days', 'months', 'hours', 'minutes', 'seconds')
+        .normalize()
+        .toISO()
     case neo4j.types.Date:
     case neo4j.types.DateTime:
-    case neo4j.types.Duration:
     case neo4j.types.LocalDateTime:
     case neo4j.types.LocalTime:
     case neo4j.types.Time:

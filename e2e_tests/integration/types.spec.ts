@@ -114,6 +114,20 @@ describe('Types in Browser', () => {
         .click()
       cy.resultContains('│"P14M3DT14706S"')
     })
+    it('presents duration type correctly', () => {
+      cy.executeCommand(':clear')
+      const query =
+        'RETURN duration({{}months: 24146, days: 2, nanoseconds: 545000000, seconds: 52641}) AS t1'
+      cy.executeCommand(query)
+      cy.waitForCommandResult()
+
+      cy.resultContains('"P2012Y2M2DT14H37M21.545S"')
+      // Go to ascii view
+      cy.get('[data-testid="cypherFrameSidebarAscii"]')
+        .first()
+        .click()
+      cy.resultContains('│"P2012Y2M2DT14H37M21.545S"')
+    })
     it('presents time type correctly', () => {
       cy.executeCommand(':clear')
       const query =
