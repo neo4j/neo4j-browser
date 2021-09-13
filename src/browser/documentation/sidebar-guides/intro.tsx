@@ -25,7 +25,7 @@ import { isMac } from 'browser/modules/App/keyboardShortcuts'
 const title = 'Intro Guide'
 const slides = [
   <BuiltInGuideSidebarSlide key="s1">
-    <h3>Neo4j Browser</h3>
+    <h3>Navigating Neo4j Browser</h3>
     <p>
       Neo4j Browser is a command-driven client as a web-based shell environment.
       It is perfect for running ad-hoc graph queries, with just enough ability
