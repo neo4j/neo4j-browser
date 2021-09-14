@@ -25,7 +25,7 @@ const slides = [
         <DrawerBrowserCommand data-exec="guide intro">
           :guide intro
         </DrawerBrowserCommand>
-        <MarginTop> Intro Guide: Neo4j Browser user interface guide </MarginTop>
+        <MarginTop> Intro Guide: Navigating Neo4j Browser </MarginTop>
       </li>
       <MarginTopLi>
         <DrawerBrowserCommand data-exec="guide concepts">
