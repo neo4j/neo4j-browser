@@ -18,9 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { optionalToString } from 'services/utils'
 import Graph from './lib/visualization/components/graph'
 import Node from './lib/visualization/components/node'
 import Relationship from './lib/visualization/components/relationship'
+
+const mapProperties = (_: any) => Object.assign({}, ...stringifyValues(_))
+const stringifyValues = (obj: any) =>
+  Object.keys(obj).map(k => ({ [k]: optionalToString(obj[k]) }))
 
 export function createGraph(nodes: any, relationships: any) {
   const graph = new Graph()
@@ -33,7 +38,12 @@ export function createGraph(nodes: any, relationships: any) {
 export function mapNodes(nodes: any) {
   return nodes.map(
     (node: any) =>
-      new Node(node.id, node.labels, node.properties, node.propertyTypes)
+      new Node(
+        node.id,
+        node.labels,
+        mapProperties(node.properties),
+        node.propertyTypes
+      )
   )
 }
 
@@ -46,7 +56,7 @@ export function mapRelationships(relationships: any, graph: any) {
       source,
       target,
       rel.type,
-      rel.properties,
+      mapProperties(rel.properties),
       rel.propertyTypes
     )
   })

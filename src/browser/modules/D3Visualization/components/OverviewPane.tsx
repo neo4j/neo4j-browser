@@ -44,23 +44,24 @@ type ResultPaneProps = {
   stats: {
     relTypes: any
     labels: any
-    nodeCount: number
-    relationshipCount: number
   }
   hasTruncatedFields: boolean
+  nodeCount: number | null
+  relationshipCount: number | null
 }
 
-// TODO Rename to overview
-function ResultsPane({
+function OverviewPane({
   graphStyle,
   onSelectedLabel,
   onSelectedRelType,
   frameHeight,
   selectedLabel,
   stats,
-  hasTruncatedFields
+  hasTruncatedFields,
+  nodeCount,
+  relationshipCount
 }: ResultPaneProps): JSX.Element {
-  const { relTypes, labels, nodeCount, relationshipCount } = stats
+  const { relTypes, labels } = stats
 
   return (
     <StyledLegend>
@@ -79,8 +80,11 @@ function ResultsPane({
             truncated.&nbsp;
           </StyledTruncatedMessage>
         )}
-        Displaying {numberToUSLocale(nodeCount)} nodes,{' '}
-        {numberToUSLocale(relationshipCount)} relationships.
+        {nodeCount !== null &&
+          relationshipCount !== null &&
+          `Displaying ${numberToUSLocale(nodeCount)} nodes, ${numberToUSLocale(
+            relationshipCount
+          )} relationships.`}
       </div>
       Node labels:
       {!labels || !Object.keys(labels).length ? (
@@ -195,4 +199,4 @@ function ResultsPane({
   )
 }
 
-export default ResultsPane
+export default OverviewPane

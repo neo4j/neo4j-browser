@@ -59,7 +59,7 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
     let selectedItem: VizItem = {
       type: 'canvas',
       item: {
-        nodeCount: nodes.length,
+        nodeCount: Math.max(this.props.initialNodeDisplay, nodes.length),
         relationshipCount: relationships.length
       }
     }
@@ -83,9 +83,7 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
     this.state = {
       stats: {
         labels: {},
-        relTypes: {},
-        nodeCount: nodes.length,
-        relationshipCount: relationships.length
+        relTypes: {}
       },
       graphStyle,
       styleVersion: 0,
@@ -135,12 +133,7 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
   }
 
   onGraphModelChange(stats: any) {
-    this.setState((oldState: any) => ({
-      stats: {
-        ...oldState.stats,
-        ...stats
-      }
-    }))
+    this.setState({ stats: stats })
     this.props.updateStyle(this.state.graphStyle.toSheet())
   }
 
@@ -212,7 +205,7 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
             getNodeNeighbours={this.getNodeNeighbours.bind(this)}
             onItemMouseOver={this.onItemMouseOver.bind(this)}
             onItemSelect={this.onItemSelect.bind(this)}
-            graphStyle={this.state.graphStyle}
+            graphStyle={graphStyle}
             styleVersion={this.state.styleVersion} // cheap way for child to check style updates
             onGraphModelChange={this.onGraphModelChange.bind(this)}
             assignVisElement={this.props.assignVisElement}

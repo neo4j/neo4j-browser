@@ -19,7 +19,6 @@
  */
 
 import React from 'react'
-import { stringifyMod, unescapeDoubleQuotesForDisplay } from 'services/utils'
 import {
   StyledTokenRelationshipType,
   StyledLabelToken,
@@ -37,7 +36,6 @@ import {
 import ClickableUrls from '../../../components/ClickableUrls'
 import ClipboardCopier from 'browser-components/ClipboardCopier'
 import { VizItem, VizNodeProperty } from './types'
-import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 
 const GraphItemProperties = ({
   id,
@@ -54,10 +52,6 @@ const GraphItemProperties = ({
     { key: '<id>', value: `${id}`, type: 'string' },
     ...properties
   ].sort((a, b) => (a.key < b.key ? -1 : 1))
-  const formatForDisplay = (neo4jValue: unknown) =>
-    unescapeDoubleQuotesForDisplay(
-      stringifyMod(neo4jValue, stringModifier, true)
-    )
 
   return (
     <>
@@ -72,27 +66,22 @@ const GraphItemProperties = ({
           />
         </div>
       </StyledInspectorClipboardCopyAll>
-      {allItemProperties.map((property, index) => (
+      {allItemProperties.map(({ key, type, value }, index) => (
         <StyledInspectorFooterRowListPairAlternatingRows
-          key={property.key}
+          key={key}
           isOddRow={index % 2 === 1}
-          title={property.type}
+          title={type}
         >
           <StyledInspectorFooterRowListKeyValuePair>
             <StyledInspectorFooterRowListKey>
-              {property.key + ': '}
+              {key}:
             </StyledInspectorFooterRowListKey>
             <StyledInspectorFooterRowListValue>
-              <ClickableUrls text={formatForDisplay(property.value)} />
+              <ClickableUrls text={value} />
             </StyledInspectorFooterRowListValue>
           </StyledInspectorFooterRowListKeyValuePair>
           <div style={{ marginLeft: 'auto' }}>
-            <ClipboardCopier
-              textToCopy={`${property.key}: ${formatForDisplay(
-                property.value
-              )}`}
-              iconSize={10}
-            />
+            <ClipboardCopier textToCopy={`${key}: ${value}`} iconSize={10} />
           </div>
         </StyledInspectorFooterRowListPairAlternatingRows>
       ))}
@@ -144,7 +133,6 @@ export function DetailsPaneComponent({
             {vizItem.type === 'relationship' && (
               <StyledInlineList>
                 <StyledTokenRelationshipType
-                  key="token"
                   style={{
                     backgroundColor: graphStyle
                       .forRelationship(vizItem.item)

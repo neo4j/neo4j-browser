@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Resizable } from 'react-resizable'
 import { Icon } from 'semantic-ui-react'
 import { DetailsPaneComponent } from './DetailsPane'
-import ResultsPane from './ResultsPane'
+import OverviewPane from './OverviewPane'
 import { VizItem } from './types'
 import {
   StyledNodeInspectorContainer,
@@ -85,7 +85,7 @@ export class NodeInspectorPanel extends Component<
                       graphStyle={this.props.graphStyle}
                     />
                   ) : (
-                    <ResultsPane
+                    <OverviewPane
                       frameHeight={this.props.frameHeight}
                       graphStyle={this.props.graphStyle}
                       hasTruncatedFields={this.props.hasTruncatedFields}
@@ -93,6 +93,16 @@ export class NodeInspectorPanel extends Component<
                       onSelectedRelType={this.props.onSelectedRelType}
                       selectedLabel={this.props.selectedLabel}
                       stats={this.props.stats}
+                      nodeCount={
+                        shownEl.type === 'canvas'
+                          ? shownEl.item.nodeCount
+                          : null
+                      }
+                      relationshipCount={
+                        shownEl.type === 'canvas'
+                          ? shownEl.item.relationshipCount
+                          : null
+                      }
                     />
                   )}
                 </div>
