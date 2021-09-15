@@ -40,18 +40,15 @@ import { isCloudHost } from 'shared/services/utils'
 import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
 import {
   authRequestForSSO,
-  handleAuthFromRedirect
-} from 'shared/modules/auth/index'
-import {
+  handleAuthFromRedirect,
+  ISSOProvider,
   authLog,
-  removeSearchParamsInBrowserHistory
-} from 'shared/modules/auth/helpers'
-import {
+  removeSearchParamsInBrowserHistory,
   getSSOServerIdIfShouldRedirect,
   getValidSSOProviders,
-  wasRedirectedBackFromSSOServer
-} from 'shared/modules/auth/common'
-import { searchParamsToRemoveAfterAutoRedirect } from 'shared/modules/auth/settings'
+  wasRedirectedBackFromSSOServer,
+  defaultSearchParamsToRemoveAfterAutoRedirect
+} from 'neo4j-client-sso'
 
 export const NAME = 'discover-bolt-host'
 export const CONNECTION_ID = '$$discovery'
@@ -262,13 +259,13 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
         authLog(`Initialized with idpId: "${SSORedirectId}"`)
 
         removeSearchParamsInBrowserHistory(
-          searchParamsToRemoveAfterAutoRedirect
+          defaultSearchParamsToRemoveAfterAutoRedirect
         )
         const selectedSSOProvider = mergedDiscoveryData.SSOProviders.find(
           ({ id }) => id === SSORedirectId
         )
         try {
-          await authRequestForSSO(selectedSSOProvider)
+          await authRequestForSSO(selectedSSOProvider as ISSOProvider)
         } catch (err) {
           SSOError = err.message
           authLog(err.message)
@@ -357,7 +354,7 @@ async function fetchDataFromDiscoveryUrl(
     ]
       .filter(a => a)
       .forEach(err => {
-        authLog(err)
+        authLog(err as string)
         return err
       })
     return { SSOProviders: [] }
