@@ -42,9 +42,8 @@ import {
   AuthenticationMethod,
   SSOProvider
 } from 'shared/modules/connections/connectionsDuck'
-import { authRequestForSSO } from 'shared/modules/auth/index.js'
 import { StyledCypherErrorMessage } from '../styled'
-import { authLog, downloadAuthLogs } from 'shared/modules/auth/helpers'
+import { authRequestForSSO, authLog, downloadAuthLogs } from 'neo4j-client-sso'
 import { H4 } from 'browser-components/headers/Headers'
 
 const readableauthenticationMethods: Record<AuthenticationMethod, string> = {
