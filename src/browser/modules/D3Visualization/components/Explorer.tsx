@@ -30,6 +30,7 @@ import { StyledFullSizeContainer, StyledGraphAreaContainer } from './styled'
 import { GlobalState } from 'shared/globalState'
 import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
 import { VizItem } from './types'
+import { debounce } from 'lodash'
 
 const deduplicateNodes = (nodes: any) => {
   return nodes.reduce(
@@ -125,8 +126,13 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
   }
 
   onItemMouseOver(item: any) {
-    this.setState({ hoveredItem: item })
+    this.setHoveredItem(item)
   }
+
+  setHoveredItem = debounce(
+    (hoveredItem: VizItem) => this.setState({ hoveredItem }),
+    200
+  )
 
   onItemSelect(item: any) {
     this.setState({ selectedItem: item })
