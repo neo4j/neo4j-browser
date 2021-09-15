@@ -6,8 +6,6 @@ import ResultsPane from './ResultsPane'
 import { VizItem } from './types'
 import {
   StyledNodeInspectorContainer,
-  StyledNodeInspectorPane,
-  StyledNodeInspectorTopMenu,
   StyledNodeInspectorTopMenuChevron
 } from './styled'
 

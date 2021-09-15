@@ -29,10 +29,7 @@ import {
   StyledLegendContents,
   StyledLabelToken,
   StyledTokenCount,
-  StyledLegendInlineList,
-  StyledInlineList,
-  StyledInspectorFooterRowListPair,
-  StyledInspectorFooterRowListValue
+  StyledLegendInlineList
 } from './styled'
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
 import { GrassEditor } from './GrassEditor'

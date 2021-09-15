@@ -5,8 +5,7 @@ export type VizItem =
   | CanvasItem
   | StatusItem
 
-type Neo4jValue = unknown
-export type VizNodeProperty = { key: string; value: Neo4jValue }
+export type VizNodeProperty = { key: string; value: string; type: string }
 
 type NodeItem = {
   type: 'node'

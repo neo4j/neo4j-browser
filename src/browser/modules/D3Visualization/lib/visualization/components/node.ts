@@ -26,7 +26,12 @@ export default class Node {
   isNode = true
   isRelationship = false
 
-  constructor(id: any, labels: any, properties: any) {
+  constructor(
+    id: any,
+    labels: any,
+    properties: any,
+    propertyTypes: Record<string, string>
+  ) {
     this.id = id
     this.labels = labels
     this.propertyMap = properties
@@ -34,7 +39,8 @@ export default class Node {
       const result = []
       for (const key of Object.keys(properties || {})) {
         const value = properties[key]
-        result.push({ key, value })
+        const type = propertyTypes[key]
+        result.push({ key, value, type })
       }
       return result
     })()

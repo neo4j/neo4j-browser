@@ -51,7 +51,7 @@ const GraphItemProperties = ({
   }
 
   const allItemProperties = [
-    { key: '<id>', value: `${id}` },
+    { key: '<id>', value: `${id}`, type: 'string' },
     ...properties
   ].sort((a, b) => (a.key < b.key ? -1 : 1))
   const formatForDisplay = (neo4jValue: unknown) =>
@@ -76,6 +76,7 @@ const GraphItemProperties = ({
         <StyledInspectorFooterRowListPairAlternatingRows
           key={property.key}
           isOddRow={index % 2 === 1}
+          title={property.type}
         >
           <StyledInspectorFooterRowListKeyValuePair>
             <StyledInspectorFooterRowListKey>
