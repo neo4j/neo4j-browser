@@ -31,6 +31,9 @@ import { GlobalState } from 'shared/globalState'
 import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
 import { VizItem } from './types'
 import { debounce } from 'lodash'
+import { GraphStyle } from './OverviewPane'
+import Node from '../lib/visualization/components/node'
+import Relationship from '../lib/visualization/components/relationship'
 
 const deduplicateNodes = (nodes: any) => {
   return nodes.reduce(
@@ -47,11 +50,48 @@ const deduplicateNodes = (nodes: any) => {
   ).nodes
 }
 
-type ExplorerComponentState = any
+type ExplorerComponentProps = {
+  relationships: Relationship[]
+  nodes: Node[]
+  initialNodeDisplay: any
+  maxNeighbours: number
+  graphStyleData: any
+  getNeighbours: any
+  updateStyle: any
+  frameHeight: number
+  fullscreen: boolean
+  assignVisElement: any
+  getAutoCompleteCallback: any
+  setGraph: any
+  hasTruncatedFields: boolean
+}
+type ExplorerComponentState = {
+  graphStyle: GraphStyle
+  hoveredItem: VizItem
+  nodes: Node[]
+  relationships: Relationship[]
+  selectedItem: VizItem
+  selectedLabel?: VizLabelItem
+  stats: { labels: any; relTypes: any }
+  styleVersion: number
+  freezeLegend: boolean
+}
 
-export class ExplorerComponent extends Component<any, ExplorerComponentState> {
+type VizLabelItem = {
+  type: 'legend-item'
+  item: {
+    selectedLabel: any
+    selectedRelType: any
+  }
+}
+
+export class ExplorerComponent extends Component<
+  ExplorerComponentProps,
+  ExplorerComponentState
+> {
   defaultStyle: any
-  constructor(props: any) {
+
+  constructor(props: ExplorerComponentProps) {
     super(props)
     const graphStyle = neoGraphStyle()
     this.defaultStyle = graphStyle.toSheet()
@@ -91,8 +131,9 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
       nodes,
       relationships,
       selectedItem,
-      hoveredItem: {},
-      selectedLabel: {}
+      hoveredItem: selectedItem,
+      selectedLabel: undefined,
+      freezeLegend: false
     }
   }
 
@@ -125,7 +166,7 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
     )
   }
 
-  onItemMouseOver(item: any) {
+  onItemMouseOver(item: VizItem): void {
     this.setHoveredItem(item)
   }
 
@@ -134,8 +175,8 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
     200
   )
 
-  onItemSelect(item: any) {
-    this.setState({ selectedItem: item })
+  onItemSelect(selectedItem: VizItem): void {
+    this.setState({ selectedItem })
   }
 
   onGraphModelChange(stats: any) {

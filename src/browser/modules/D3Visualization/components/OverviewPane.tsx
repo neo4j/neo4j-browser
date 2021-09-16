@@ -35,8 +35,21 @@ import numberToUSLocale from 'shared/utils/number-to-US-locale'
 import { GrassEditor } from './GrassEditor'
 import { StyledTruncatedMessage } from 'browser/modules/Stream/styled'
 
-type ResultPaneProps = {
-  graphStyle: any
+export type GraphStyle = {
+  rules: GraphStyleRule[]
+  resetToDefault: any
+  loadRules: any
+  toSheet: any
+  forNode: any
+  forRelationship: any
+}
+type GraphStyleRule = {
+  props: Record<string, string>
+  selector: { classes: string[]; tag: string }
+}
+
+type OverviewPaneProps = {
+  graphStyle: GraphStyle
   onSelectedLabel: (a: any, b: any) => void
   onSelectedRelType: (a: any, b: any) => void
   frameHeight: number
@@ -60,7 +73,7 @@ function OverviewPane({
   hasTruncatedFields,
   nodeCount,
   relationshipCount
-}: ResultPaneProps): JSX.Element {
+}: OverviewPaneProps): JSX.Element {
   const { relTypes, labels } = stats
 
   return (

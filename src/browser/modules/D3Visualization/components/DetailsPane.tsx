@@ -36,6 +36,9 @@ import {
 import ClickableUrls from '../../../components/ClickableUrls'
 import ClipboardCopier from 'browser-components/ClipboardCopier'
 import { VizItem, VizNodeProperty } from './types'
+import { GrassEditor } from './GrassEditor'
+import { Popup } from 'semantic-ui-react'
+import { GraphStyle } from './OverviewPane'
 
 const GraphItemProperties = ({
   id,
@@ -91,7 +94,7 @@ const GraphItemProperties = ({
 
 type DetailsPaneComponentProps = {
   vizItem: VizItem
-  graphStyle: any
+  graphStyle: GraphStyle
 }
 
 export function DetailsPaneComponent({
@@ -111,16 +114,28 @@ export function DetailsPaneComponent({
                   })
 
                   return (
-                    <StyledLabelToken
+                    <Popup
+                      on="click"
+                      basic
+                      pinned
                       key={label}
-                      style={{
-                        backgroundColor: graphStyleForLabel.get('color'),
-                        color: graphStyleForLabel.get('text-color-internal'),
-                        cursor: 'default'
-                      }}
+                      trigger={
+                        <StyledLabelToken
+                          style={{
+                            backgroundColor: graphStyleForLabel.get('color'),
+                            color: graphStyleForLabel.get(
+                              'text-color-internal'
+                            ),
+                            cursor: 'default'
+                          }}
+                        >
+                          {label}
+                        </StyledLabelToken>
+                      }
+                      wide
                     >
-                      {label}
-                    </StyledLabelToken>
+                      <GrassEditor selectedLabel={label} frameheight={100} />
+                    </Popup>
                   )
                 })}
                 <GraphItemProperties
