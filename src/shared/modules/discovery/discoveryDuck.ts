@@ -41,7 +41,7 @@ import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
 import {
   authRequestForSSO,
   handleAuthFromRedirect,
-  ISSOProvider,
+  SSOProvider as Neo4jClientSSOProvider,
   authLog,
   removeSearchParamsInBrowserHistory,
   getSSOServerIdIfShouldRedirect,
@@ -265,7 +265,7 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
           ({ id }) => id === SSORedirectId
         )
         try {
-          await authRequestForSSO(selectedSSOProvider as ISSOProvider)
+          await authRequestForSSO(selectedSSOProvider as Neo4jClientSSOProvider)
         } catch (err) {
           SSOError = err.message
           authLog(err.message)
