@@ -269,15 +269,9 @@ export const StyledInspectorFooterRowListPair = styled(StyledInlineListItem)`
 
 export const StyledInspectorFooterRowListPairAlternatingRows = styled(
   StyledInspectorFooterRowListPair
-)<{
-  isOddRow: boolean
-}>`
+)`
   display: flex;
   padding: 5px;
-  background: ${props =>
-    props.isOddRow
-      ? props.theme.alteringTableRowBackground
-      : props.theme.editorBackground};
 `
 
 export const StyledInspectorClipboardCopyAll = styled.div`

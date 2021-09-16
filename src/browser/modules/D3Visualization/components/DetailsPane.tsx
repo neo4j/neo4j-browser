@@ -39,6 +39,16 @@ import { VizItem, VizNodeProperty } from './types'
 import { GrassEditor } from './GrassEditor'
 import { Popup } from 'semantic-ui-react'
 import { GraphStyle } from './OverviewPane'
+import styled from 'styled-components'
+
+const AlternatingList = styled.ul`
+  li:nth-child(even) {
+    background: ${props => props.theme.alteringTableRowBackground};
+  }
+  li:nth-child(odd) {
+    background: ${props => props.theme.editorBackground};
+  }
+`
 
 const GraphItemProperties = ({
   id,
@@ -69,25 +79,26 @@ const GraphItemProperties = ({
           />
         </div>
       </StyledInspectorClipboardCopyAll>
-      {allItemProperties.map(({ key, type, value }, index) => (
-        <StyledInspectorFooterRowListPairAlternatingRows
-          key={key}
-          isOddRow={index % 2 === 1}
-          title={type}
-        >
-          <StyledInspectorFooterRowListKeyValuePair>
-            <StyledInspectorFooterRowListKey>
-              {key}:
-            </StyledInspectorFooterRowListKey>
-            <StyledInspectorFooterRowListValue>
-              <ClickableUrls text={value} />
-            </StyledInspectorFooterRowListValue>
-          </StyledInspectorFooterRowListKeyValuePair>
-          <div style={{ marginLeft: 'auto' }}>
-            <ClipboardCopier textToCopy={`${key}: ${value}`} iconSize={10} />
-          </div>
-        </StyledInspectorFooterRowListPairAlternatingRows>
-      ))}
+      <AlternatingList>
+        {allItemProperties.map(({ key, type, value }) => (
+          <StyledInspectorFooterRowListPairAlternatingRows
+            key={key}
+            title={type}
+          >
+            <StyledInspectorFooterRowListKeyValuePair>
+              <StyledInspectorFooterRowListKey>
+                {key}:
+              </StyledInspectorFooterRowListKey>
+              <StyledInspectorFooterRowListValue>
+                <ClickableUrls text={value} />
+              </StyledInspectorFooterRowListValue>
+            </StyledInspectorFooterRowListKeyValuePair>
+            <div style={{ marginLeft: 'auto' }}>
+              <ClipboardCopier textToCopy={`${key}: ${value}`} iconSize={10} />
+            </div>
+          </StyledInspectorFooterRowListPairAlternatingRows>
+        ))}
+      </AlternatingList>
     </>
   )
 }
