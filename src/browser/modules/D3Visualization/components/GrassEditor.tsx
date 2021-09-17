@@ -36,8 +36,22 @@ import { toKeyString } from 'shared/services/utils'
 import SetupLabelModal from 'browser/modules/D3Visualization/components/modal/label/SetupLabelModal'
 import { RelArrowCaptionPosition } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelRelArrowSVG'
 import { cloneDeep } from 'lodash-es'
+import SetupColorModal from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorModal'
 
-export class GrassEditorComponent extends Component<any> {
+export class GrassEditorComponent extends Component<{
+  nodes: Array<{
+    id: string
+    labels: string[]
+    properties: {
+      [key: string]: string
+    }
+  }>
+  selectedLabel: {
+    label: string
+    propertyKeys: string[]
+  }
+  [key: string]: any
+}> {
   graphStyle: any
   nodeDisplaySizes: any
   picker: any
@@ -289,6 +303,36 @@ export class GrassEditorComponent extends Component<any> {
     )
   }
 
+  colorTypePicker() {
+    const { label } = this.props.selectedLabel
+    const properties: {
+      [key: string]: Set<string>
+    } = {}
+    this.props.nodes
+      .filter(node => node.labels.includes(label))
+      .forEach(node => {
+        for (const key in node.properties) {
+          if (node.properties.hasOwnProperty(key)) {
+            if (properties[key]) {
+              properties[key].add(node.properties[key])
+            } else {
+              properties[key] = new Set<string>([node.properties[key]])
+            }
+          }
+        }
+      })
+    return (
+      <StyledInlineListItem key="color-type-picker">
+        <StyledInlineList className="color-type-picker picker">
+          <SetupColorModal
+            properties={properties}
+            // itemStyleProps={styleForItem.props}
+            updateStyle={() => {}}
+          />
+        </StyledInlineList>
+      </StyledInlineListItem>
+    )
+  }
   stylePicker() {
     let pickers
     let title
@@ -313,6 +357,7 @@ export class GrassEditorComponent extends Component<any> {
           propertyKeys,
           true
         ),
+        this.colorTypePicker(),
         this.colorPicker(styleForLabel.selector, styleForLabel),
         this.sizePicker(styleForLabel.selector, styleForLabel)
       ]

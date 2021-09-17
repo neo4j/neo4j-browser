@@ -289,6 +289,7 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
           hoveredItem={this.state.hoveredItem}
           selectedItem={this.state.selectedItem}
           graphStyle={this.state.graphStyle}
+          nodes={this.state.nodes}
           onExpandToggled={this.onInspectorExpandToggled.bind(this)}
         />
         {this.state.neighboursPicker && (

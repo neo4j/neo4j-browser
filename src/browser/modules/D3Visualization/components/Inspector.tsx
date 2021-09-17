@@ -81,7 +81,16 @@ const mapLabels = (graphStyle: any, itemLabels: any) => {
 type InspectorComponentState = any
 
 export class InspectorComponent extends Component<
-  any,
+  {
+    nodes: Array<{
+      id: string
+      labels: string[]
+      properties: {
+        [key: string]: string
+      }
+    }>
+    [key: string]: any
+  },
   InspectorComponentState
 > {
   footerRowElem: any
@@ -119,6 +128,7 @@ export class InspectorComponent extends Component<
       if (type === 'legend-item') {
         inspectorContent = (
           <GrassEditor
+            nodes={this.props.nodes}
             selectedLabel={item.selectedLabel}
             selectedRelType={item.selectedRelType}
           />
