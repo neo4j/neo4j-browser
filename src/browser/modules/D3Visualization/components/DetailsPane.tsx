@@ -148,11 +148,9 @@ export function DetailsPaneComponent({
                       <GrassEditor
                         selectedLabel={{
                           label,
-                          propertyKeys: [
-                            vizItem.item.properties.map(p => p.key)
-                          ]
+                          propertyKeys: vizItem.item.properties.map(p => p.key)
                         }}
-                        frameheight={100}
+                        frameHeight={500}
                       />
                     </Popup>
                   )

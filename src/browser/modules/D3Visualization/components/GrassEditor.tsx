@@ -39,11 +39,11 @@ import { GlobalState } from 'shared/globalState'
 import { Action, Dispatch } from 'redux'
 
 type GrassEditorProps = {
-  graphStyleData: any
-  graphStyle: GraphStyle
-  update: any
-  selectedLabel: { label: string; propertyKeys: any }
-  selectedRelType: any
+  graphStyleData?: any
+  graphStyle?: GraphStyle
+  update?: any
+  selectedLabel?: { label: string; propertyKeys: any }
+  selectedRelType?: any
   frameHeight: number
 }
 
