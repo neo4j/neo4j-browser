@@ -9,7 +9,9 @@ const SetupColorModal: React.FC<ISetupColorStorageProps> = props => {
   const doClose = React.useCallback(() => setOpen(false), [])
   return (
     <div>
-      <ApplyButton onClick={doOpen}>Setup Color</ApplyButton>
+      <ApplyButton onClick={doOpen} backgroundColor={'#f76060'}>
+        Setup Color
+      </ApplyButton>
       {open && (
         <GenericModal
           isOpen={open}

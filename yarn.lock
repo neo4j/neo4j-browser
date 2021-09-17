@@ -2120,6 +2120,11 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/color-name/-/color-name-1.1.1.tgz#1c1261bbeaa10a8055bbc5d8ab84b7b2afc846a0"
   integrity sha1-HBJhu+qhCoBVu8XYq4S3sq/IRqA=
 
+"@types/d3-scale-chromatic@^3.0.0":
+  version "3.0.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/d3-scale-chromatic/-/d3-scale-chromatic-3.0.0.tgz#103124777e8cdec85b20b51fd3397c682ee1e954"
+  integrity sha1-EDEkd36M3shbILUf0zl8aC7h6VQ=
+
 "@types/d3@^3":
   version "3.5.44"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/d3/-/d3-3.5.44.tgz#28635f8bb9adf1cef5bbef2b06778174a9d34383"
@@ -4764,6 +4769,26 @@ cypress@^7.0.1:
     untildify "^4.0.0"
     url "^0.11.0"
     yauzl "^2.10.0"
+
+"d3-color@1 - 3":
+  version "3.0.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-color/-/d3-color-3.0.1.tgz#03316e595955d1fcd39d9f3610ad41bb90194d0a"
+  integrity sha1-AzFuWVlV0fzTnZ82EK1Bu5AZTQo=
+
+"d3-interpolate@1 - 3":
+  version "3.0.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-interpolate/-/d3-interpolate-3.0.1.tgz#3c47aa5b32c5b3dfb56ef3fd4342078a632b400d"
+  integrity sha1-PEeqWzLFs9+1bvP9Q0IHimMrQA0=
+  dependencies:
+    d3-color "1 - 3"
+
+d3-scale-chromatic@^3.0.0:
+  version "3.0.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-scale-chromatic/-/d3-scale-chromatic-3.0.0.tgz#15b4ceb8ca2bb0dcb6d1a641ee03d59c3b62376a"
+  integrity sha1-FbTOuMorsNy20aZB7gPVnDtiN2o=
+  dependencies:
+    d3-color "1 - 3"
+    d3-interpolate "1 - 3"
 
 d3@3:
   version "3.5.17"
