@@ -34,8 +34,20 @@ import {
 } from './styled'
 import * as actions from 'shared/modules/grass/grassDuck'
 import { toKeyString } from 'shared/services/utils'
+import { GraphStyle } from './OverviewPane'
+import { GlobalState } from 'shared/globalState'
+import { Action, Dispatch } from 'redux'
 
-export class GrassEditorComponent extends Component<any> {
+type GrassEditorProps = {
+  graphStyleData: any
+  graphStyle: GraphStyle
+  update: any
+  selectedLabel: { label: string; propertyKeys: any }
+  selectedRelType: any
+  frameHeight: number
+}
+
+export class GrassEditorComponent extends Component<GrassEditorProps> {
   graphStyle: any
   nodeDisplaySizes: any
   picker: any
@@ -324,20 +336,16 @@ export class GrassEditorComponent extends Component<any> {
     return this.stylePicker()
   }
 }
-const mapStateToProps = (state: any) => {
-  return {
-    graphStyleData: actions.getGraphStyleData(state),
-    meta: state.meta
-  }
-}
+const mapStateToProps = (state: GlobalState) => ({
+  graphStyleData: actions.getGraphStyleData(state),
+  meta: state.meta
+})
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    update: (data: any) => {
-      dispatch(actions.updateGraphStyleData(data))
-    }
+const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
+  update: (data: any) => {
+    dispatch(actions.updateGraphStyleData(data))
   }
-}
+})
 
 export const GrassEditor = connect(
   mapStateToProps,
