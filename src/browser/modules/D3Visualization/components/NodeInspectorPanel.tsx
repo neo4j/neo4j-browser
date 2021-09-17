@@ -78,7 +78,13 @@ export class NodeInspectorPanel extends Component<
               onResize={(_e, { size }) => this.setState({ width: size.width })}
             >
               <div>
-                <div style={{ height: this.props.frameHeight }}>
+                <div style={{ height: '40px' }}> header </div>
+                <div
+                  style={{
+                    height: this.props.frameHeight - 40,
+                    overflow: 'auto'
+                  }}
+                >
                   {showDetails ? (
                     <DetailsPaneComponent
                       vizItem={shownEl}
