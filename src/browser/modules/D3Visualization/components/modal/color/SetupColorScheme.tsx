@@ -1,8 +1,7 @@
 import * as React from 'react'
 import * as scale from 'd3-scale-chromatic'
 import styled from 'styled-components'
-import GenericModal from 'project-root/src/browser/modules/D3Visualization/components/modal/GenericModal'
-
+import GenericModal from '../GenericModal'
 type IColorScheme = (t: number) => string
 
 interface IProps {
@@ -68,7 +67,23 @@ const SetupColorScheme: React.FC<IProps> = React.memo(
         scale.interpolateRdBu,
         scale.interpolateRdGy,
         scale.interpolateRdYlBu,
-        scale.interpolateRdYlGn
+        scale.interpolateRdYlGn,
+        scale.interpolateViridis,
+        scale.interpolateMagma,
+        scale.interpolatePlasma,
+        scale.interpolateWarm,
+        scale.interpolateRainbow,
+        scale.interpolateSinebow,
+        scale.interpolateGnBu,
+        scale.interpolateOrRd,
+        scale.interpolatePuBuGn,
+        scale.interpolatePuBu,
+        scale.interpolatePuRd,
+        scale.interpolateRdPu,
+        scale.interpolateYlGnBu,
+        scale.interpolateYlGn,
+        scale.interpolateYlOrBr,
+        scale.interpolateYlOrRd
       ],
       []
     )
