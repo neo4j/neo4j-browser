@@ -1,9 +1,12 @@
 import * as React from 'react'
 import { ISetupColorStorageProps } from './SetupColorStorage'
 import styled from 'styled-components'
-import * as scaleChromatic from 'd3-scale-chromatic'
+import { interpolateTurbo } from 'd3-scale-chromatic'
+import SetupColorScheme from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorScheme'
 const Container = styled.div`
   padding: 10px 20px;
+  max-height: 70vh;
+  overflow-y: auto;
 `
 const InputMarginRight = styled.input`
   margin-right: 5px;
@@ -17,6 +20,9 @@ const Label = styled.label`
 `
 const MarginDiv = styled.div`
   margin: 10px 0;
+`
+const TextPreview = styled.span`
+  ${({ theme }) => theme.primaryText}
 `
 const SetupColorModalBody: React.FC<ISetupColorStorageProps> = props => {
   const { properties } = props
@@ -49,15 +55,25 @@ const SetupColorModalBody: React.FC<ISetupColorStorageProps> = props => {
         : [],
     [properties, selectedProperty]
   )
+  const [colorScheme, setColorScheme] = React.useState<(t: number) => string>(
+    () => interpolateTurbo
+  )
+  const handleColorSchemeChange = React.useCallback(
+    (scheme: (t: number) => string) => {
+      setColorScheme(() => scheme)
+    },
+    []
+  )
   const colors = React.useMemo(() => {
     const length = values.length - 1
+    const isScaled = length < 20
     return values.map((value, i) => {
       return {
-        color: scaleChromatic.interpolateTurbo((i / length) * 0.8 + 0.1),
+        color: colorScheme(isScaled ? (i / length) * 0.8 + 0.1 : i / length),
         value
       }
     })
-  }, [values])
+  }, [values, colorScheme])
   return (
     <Container>
       <h3>Color nodes by property values</h3>
@@ -77,6 +93,10 @@ const SetupColorModalBody: React.FC<ISetupColorStorageProps> = props => {
       {selectedProperty && (
         <>
           <h3>Color map</h3>
+          <SetupColorScheme
+            selected={colorScheme}
+            onChange={handleColorSchemeChange}
+          />
           <div>
             <Label>
               <InputMarginRight
@@ -86,7 +106,7 @@ const SetupColorModalBody: React.FC<ISetupColorStorageProps> = props => {
                 checked={!isManual}
                 onChange={handleMappingChange}
               />
-              Random
+              Generate automatically
             </Label>
             <Label>
               <InputMarginRight
@@ -96,14 +116,14 @@ const SetupColorModalBody: React.FC<ISetupColorStorageProps> = props => {
                 checked={isManual}
                 onChange={handleMappingChange}
               />
-              Custom
+              Custom colors
             </Label>
           </div>
           {isManual && (
             <MarginDiv>
               {colors.map(t => (
                 <div key={t.value} style={{ backgroundColor: t.color }}>
-                  {t.value}
+                  <TextPreview>{t.value}</TextPreview>
                 </div>
               ))}
             </MarginDiv>
