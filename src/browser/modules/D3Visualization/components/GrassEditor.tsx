@@ -33,11 +33,32 @@ import {
 } from './styled'
 import * as actions from 'shared/modules/grass/grassDuck'
 import { toKeyString } from 'shared/services/utils'
-import SetupLabelModal from 'browser/modules/D3Visualization/components/modal/label/SetupLabelModal'
+import SetupLabelModal, {
+  ICaptionSettings
+} from 'browser/modules/D3Visualization/components/modal/label/SetupLabelModal'
 import { RelArrowCaptionPosition } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelRelArrowSVG'
 import { cloneDeep } from 'lodash-es'
 import SetupColorModal from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorModal'
-
+import { IColorSettings } from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorStorage'
+export interface IStyleForLabelProps {
+  'border-color': string
+  'border-width': string
+  caption: string
+  color: string
+  diameter: string
+  'font-size': string
+  'text-color-internal': string
+}
+export interface IStyleForLabel {
+  props: IStyleForLabelProps & {
+    colorSettings?: IColorSettings
+    captionSettings?: ICaptionSettings
+  }
+  selector: {
+    classes: string[]
+    tag: string
+  }
+}
 export class GrassEditorComponent extends Component<{
   nodes: Array<{
     id: string
@@ -303,7 +324,7 @@ export class GrassEditorComponent extends Component<{
     )
   }
 
-  colorTypePicker() {
+  colorTypePicker(styleForLabel: IStyleForLabel) {
     const { label } = this.props.selectedLabel
     const properties: {
       [key: string]: Set<string>
@@ -326,7 +347,8 @@ export class GrassEditorComponent extends Component<{
         <StyledInlineList className="color-type-picker picker">
           <SetupColorModal
             properties={properties}
-            // itemStyleProps={styleForItem.props}
+            selector={styleForLabel.selector}
+            itemStyleProps={styleForLabel.props}
             updateStyle={() => {}}
           />
         </StyledInlineList>
@@ -357,7 +379,7 @@ export class GrassEditorComponent extends Component<{
           propertyKeys,
           true
         ),
-        this.colorTypePicker(),
+        this.colorTypePicker(styleForLabel),
         this.colorPicker(styleForLabel.selector, styleForLabel),
         this.sizePicker(styleForLabel.selector, styleForLabel)
       ]

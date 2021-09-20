@@ -141,7 +141,10 @@ const SetupColorScheme: React.FC<IProps> = React.memo(
           </CustomButtonDiv>
         </div>
         <GenericModal isOpen={open} onRequestClose={doClose}>
-          <ScrollView>{schemeNodes}</ScrollView>
+          <ScrollView>
+            <h5>Pick a color scheme:</h5>
+            {schemeNodes}
+          </ScrollView>
         </GenericModal>
       </div>
     )
