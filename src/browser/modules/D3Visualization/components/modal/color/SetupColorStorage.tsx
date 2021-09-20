@@ -18,7 +18,7 @@ export interface ISetupColorStorageProps {
     [key: string]: string[]
   }
   itemStyleProps: IStyleForLabel['props']
-  updateStyle: (settings: IColorSettings) => void
+  updateStyle: (settings?: IColorSettings) => void
   doClose: () => void
 }
 

@@ -18,7 +18,7 @@ type IRawColorSettings = IColorSettings['settings']
 const SetupColorPicker: React.FC<{
   values: string[]
   initialColorSettings: IRawColorSettings
-  onSubmit: (settings: IRawColorSettings) => void
+  onSubmit: (settings?: IRawColorSettings) => void
   onClose: () => void
 }> = ({ values, initialColorSettings, onClose, onSubmit }) => {
   const [currentColorSettings, setCurrentColorSettings] = React.useState<
@@ -69,6 +69,10 @@ const SetupColorPicker: React.FC<{
     onSubmit(currentColorSettings)
     onClose()
   }, [onSubmit, currentColorSettings, onClose])
+  const onReset = React.useCallback(() => {
+    onSubmit(undefined)
+    onClose()
+  }, [onSubmit, onClose])
   return (
     <>
       <h3>Color map</h3>
@@ -89,6 +93,7 @@ const SetupColorPicker: React.FC<{
       <div>
         <ApplyButton onClick={handleSubmit}>Apply</ApplyButton>
         <SimpleButton onClick={onClose}>Cancel</SimpleButton>
+        <SimpleButton onClick={onReset}>Reset to default</SimpleButton>
       </div>
     </>
   )

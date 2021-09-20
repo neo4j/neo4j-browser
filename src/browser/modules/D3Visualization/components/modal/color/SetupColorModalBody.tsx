@@ -22,7 +22,7 @@ const Label = styled.label`
 `
 const SetupColorModalBody: React.FC<ISetupColorStorageProps & {
   colorSettings: IColorSettings
-  onSubmit: (settings: IColorSettings) => void
+  onSubmit: (settings?: IColorSettings) => void
   handlePropertyChange: React.ChangeEventHandler<HTMLInputElement>
   selectedProperty: string | undefined
 }> = props => {
@@ -40,13 +40,17 @@ const SetupColorModalBody: React.FC<ISetupColorStorageProps & {
   )
 
   const handleSubmit: (
-    settings: IColorSettings['settings']
+    settings?: IColorSettings['settings']
   ) => void = React.useCallback(
     settings => {
-      onSubmit({
-        key: colorSettings.key,
+      onSubmit(
         settings
-      })
+          ? {
+              key: colorSettings.key,
+              settings
+            }
+          : undefined
+      )
     },
     [colorSettings, onSubmit]
   )
