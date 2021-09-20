@@ -50,10 +50,11 @@ import { detectRuntimeEnv, isRunningE2ETest } from 'services/utils'
 import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
 import { version } from 'project-root/package.json'
 import { shouldAllowOutgoingConnections } from 'shared/modules/dbMeta/dbMetaDuck'
-import { getUuid } from 'shared/modules/udc/udcDuck'
+import { getUuid, updateUdcData } from 'shared/modules/udc/udcDuck'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import {
+  removeSearchParamsInBrowserHistory,
   restoreSearchAndHashParams,
   wasRedirectedBackFromSSOServer
 } from 'neo4j-client-sso'
@@ -234,6 +235,12 @@ store.dispatch({
   relateProjectId,
   neo4jDesktopGraphAppId
 })
+
+const auraNtId = searchParams.get('ntid') ?? undefined
+if (auraNtId) {
+  removeSearchParamsInBrowserHistory(['ntid'])
+}
+store.dispatch(updateUdcData({ auraNtId }))
 
 // typePolicies allow apollo cache to use these fields as 'id'
 // for automated cache updates when updating a single existing entity

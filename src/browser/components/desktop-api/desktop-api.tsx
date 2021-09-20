@@ -20,13 +20,10 @@
 import { useEffect } from 'react'
 import { eventToHandler } from './desktop-api.utils'
 
-const DEFAULT_INTEGRATION_POINT = (window as any).neo4jDesktopApi
+export const INTEGRATION_POINT = (window as any).neo4jDesktopApi
 
-function DesktopApi({
-  integrationPoint = DEFAULT_INTEGRATION_POINT,
-  setEventMetricsCallback,
-  ...rest
-}: any) {
+function DesktopApi({ setEventMetricsCallback, ...rest }: any) {
+  const integrationPoint = INTEGRATION_POINT
   const getKerberosTicket =
     (integrationPoint && integrationPoint.getKerberosTicket) || undefined
 

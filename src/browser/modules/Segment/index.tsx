@@ -22,9 +22,8 @@ import { Component } from 'react'
 import { connect } from 'react-redux'
 import { canUseDOM } from 'services/utils'
 import { inDesktop } from 'shared/modules/app/appDuck'
-import { removeSearchParamsInBrowserHistory } from 'neo4j-client-sso'
 
-import { getUuid, updateData } from 'shared/modules/udc/udcDuck'
+import { getAuraNtId, updateUdcData } from 'shared/modules/udc/udcDuck'
 
 export interface MetricsProperties {
   [key: string]: string | number | Date | boolean
@@ -43,7 +42,7 @@ export class Segment extends Component<any> {
       setTrackCallback,
       inDesktop,
       updateData,
-      uuid,
+      auraNtId,
       children, // eslint-disable-line
       ...otherProps
     } = this.props
@@ -117,11 +116,8 @@ export class Segment extends Component<any> {
               })
             }
 
-            const searchParams = new URL(window.location.href).searchParams
-            const segmentId = searchParams.get('ntid')
-            if (segmentId) {
-              window.analytics.identify(segmentId)
-              removeSearchParamsInBrowserHistory(['ntid'])
+            if (auraNtId) {
+              window.analytics.identify(auraNtId)
             }
 
             setTrackCallback(doTrack)
@@ -162,12 +158,12 @@ export class Segment extends Component<any> {
 
 const mapStateToProps = (state: any) => ({
   inDesktop: inDesktop(state),
-  uuid: getUuid(state)
+  auraNtId: getAuraNtId(state)
 })
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    updateData: (data: any) => dispatch(updateData(data))
+    updateData: (data: any) => dispatch(updateUdcData(data))
   }
 }
 export default connect<any, any, any, any>(

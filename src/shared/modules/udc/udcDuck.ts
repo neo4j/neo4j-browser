@@ -136,6 +136,23 @@ const getEvents = (state: GlobalState) =>
   state[NAME].events || initialState.events
 export const getUuid = (state: GlobalState): string =>
   state[NAME].uuid || initialState.uuid
+export const getAuraNtId = (state: GlobalState): string | undefined =>
+  state[NAME].auraNtId
+export const allowUdcInAura = (
+  state: GlobalState
+): 'ALLOW' | 'DENY' | 'UNSET' => {
+  const ntId = state[NAME].auraNtId
+  if (typeof ntId === 'string') {
+    // Set to empty empty string to disable
+    if (ntId === '') {
+      return 'DENY'
+    } else {
+      return 'ALLOW'
+    }
+  }
+
+  return 'UNSET'
+}
 
 interface udcEvent {
   name: string
@@ -152,6 +169,7 @@ export interface udcState {
   cypher_wins: number
   cypher_fails: number
   pingTime: number
+  auraNtId?: string
 }
 
 const initialState: udcState = {
@@ -162,7 +180,8 @@ const initialState: udcState = {
   cypher_fails: 0,
   pingTime: 0,
   lastSnapshot: 0,
-  events: []
+  events: [],
+  auraNtId: undefined
 }
 
 type CleatEventsAction = { type: typeof CLEAR_EVENTS }
@@ -276,7 +295,7 @@ interface UpdateDataAction extends Partial<udcState> {
   type: typeof UPDATE_DATA
 }
 
-export const updateData = (obj: Partial<udcState>): UpdateDataAction => {
+export const updateUdcData = (obj: Partial<udcState>): UpdateDataAction => {
   return {
     type: UPDATE_DATA,
     ...obj
@@ -344,7 +363,7 @@ export const udcStartupEpic: Epic<Action, GlobalState> = (action$, store) =>
         )
       }
       store.dispatch(
-        updateData({ lastSnapshot: Math.round(Date.now() / 1000) })
+        updateUdcData({ lastSnapshot: Math.round(Date.now() / 1000) })
       )
     })
     .mapTo(increment(typeToEventName[EVENT_APP_STARTED]))
@@ -423,7 +442,7 @@ export const bootEpic: Epic<Action, GlobalState> = (action$, store) => {
     .map((action: any) => {
       // Store name locally
       if (!action.userData || !action.userData.name) return action
-      store.dispatch(updateData({ name: action.userData.name }))
+      store.dispatch(updateUdcData({ name: action.userData.name }))
       return action
     })
     .map((action: any) => {
@@ -532,7 +551,7 @@ export const eventFiredEpic: Epic<any, GlobalState> = (
     }
     api('trackEvent', action.name, action.data)
     if (action.name === 'connect') {
-      return updateData({ pingTime: getTodayDate().getTime() })
+      return updateUdcData({ pingTime: getTodayDate().getTime() })
     }
     return { type: 'NOOP' }
   })

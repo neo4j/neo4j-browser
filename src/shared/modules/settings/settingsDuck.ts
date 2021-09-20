@@ -28,6 +28,12 @@ export const REPLACE = 'settings/REPLACE'
 export const DISABLE_IMPLICIT_INIT_COMMANDS =
   'settings/DISABLE_IMPLICIT_INIT_COMMANDS'
 
+export type Theme =
+  | typeof AUTO_THEME
+  | typeof LIGHT_THEME
+  | typeof OUTLINE_THEME
+  | typeof DARK_THEME
+
 export const AUTO_THEME = 'auto'
 export const LIGHT_THEME = 'normal'
 export const OUTLINE_THEME = 'outline'
@@ -83,6 +89,10 @@ export const shouldUseCypherThread = (state: any) => state[NAME].useCypherThread
 export const getConnectionTimeout = (state: any) =>
   state[NAME].connectionTimeout || initialState.connectionTimeout
 export const codeFontLigatures = (state: any) => state[NAME].codeFontLigatures
+export const getAllowCrashReports = (state: GlobalState): boolean =>
+  state[NAME].allowCrashReports || initialState.allowCrashReports
+export const getAllowUserStats = (state: GlobalState): boolean =>
+  state[NAME].allowUserStats || initialState.allowUserStats
 
 export const initialState = {
   maxHistory: 30,
@@ -105,7 +115,9 @@ export const initialState = {
   useCypherThread: true,
   enableMultiStatementMode: true,
   connectionTimeout: 30 * 1000, // 30 seconds
-  showPerformanceOverlay: false
+  showPerformanceOverlay: false,
+  allowCrashReports: true,
+  allowUserStats: true
 }
 
 export default function settings(state = initialState, action: any) {

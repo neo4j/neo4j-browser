@@ -21,7 +21,7 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
 import { canUseDOM } from 'services/utils'
-import { updateData } from 'shared/modules/udc/udcDuck'
+import { updateUdcData } from 'shared/modules/udc/udcDuck'
 
 export class Intercom extends Component<any> {
   componentDidMount() {
@@ -83,7 +83,7 @@ export class Intercom extends Component<any> {
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    updateData: (data: any) => dispatch(updateData(data))
+    updateData: (data: any) => dispatch(updateUdcData(data))
   }
 }
 export default connect<any, any, any, any>(null, mapDispatchToProps)(Intercom)

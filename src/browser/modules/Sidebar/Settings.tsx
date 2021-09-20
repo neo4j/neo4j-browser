@@ -154,6 +154,27 @@ const visualSettings = [
         }
       }
     ]
+  },
+  {
+    title: 'ucd',
+    settings: [
+      {
+        allowUserStats: {
+          displayName: 'allow user stats',
+          tooltip:
+            'Limit number of nodes displayed on first load of the graph visualization.',
+          type: 'checkbox'
+        }
+      },
+      {
+        allowCrashReports: {
+          displayName: 'allow not crash',
+          tooltip:
+            'If this is checked, after a cypher query result is retrieved, a second query is executed to fetch relationships between result nodes.',
+          type: 'checkbox'
+        }
+      }
+    ]
   }
 ]
 

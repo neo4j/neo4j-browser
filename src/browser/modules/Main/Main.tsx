@@ -26,6 +26,7 @@ import {
 import Editor from '../Editor/MainEditor'
 import Stream from '../Stream/Stream'
 
+// todo start a src/utils/selectors.ts
 import {
   StyledMain,
   WarningBanner,
