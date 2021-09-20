@@ -23,20 +23,33 @@ const Label = styled.label`
 const SetupColorModalBody: React.FC<ISetupColorStorageProps & {
   colorSettings: IColorSettings
   defaultSettings: IStyleForLabelProps
+  onSubmit: (settings: IColorSettings) => void
+  handlePropertyChange: React.ChangeEventHandler<HTMLInputElement>
+  selectedProperty: string | undefined
 }> = props => {
-  const { properties, colorSettings } = props
+  const {
+    properties,
+    colorSettings,
+    onSubmit,
+    doClose,
+    selectedProperty,
+    handlePropertyChange
+  } = props
   const keys = React.useMemo(
     () => Object.keys(properties).sort((a, b) => (a > b ? 1 : -1)),
     [properties]
   )
-  const [selectedProperty, setSelectedProperty] = React.useState<
-    string | undefined
-  >(undefined)
-  const handlePropertyChange: React.ChangeEventHandler<HTMLInputElement> = React.useCallback(
-    event => {
-      setSelectedProperty(event.currentTarget.value)
+
+  const handleSubmit: (
+    settings: IColorSettings['settings']
+  ) => void = React.useCallback(
+    settings => {
+      onSubmit({
+        key: colorSettings.key,
+        settings
+      })
     },
-    []
+    [colorSettings, onSubmit]
   )
   return (
     <Container>
@@ -57,7 +70,9 @@ const SetupColorModalBody: React.FC<ISetupColorStorageProps & {
       {selectedProperty && (
         <SetupColorPicker
           values={properties[selectedProperty]}
-          initialColorSettings={colorSettings ? cloneDeep(colorSettings) : {}}
+          onSubmit={handleSubmit}
+          onClose={doClose}
+          initialColorSettings={colorSettings.settings}
         />
       )}
     </Container>

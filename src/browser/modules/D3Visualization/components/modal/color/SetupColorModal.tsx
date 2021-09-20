@@ -3,7 +3,10 @@ import { ApplyButton } from '../styled'
 import GenericModal from '../GenericModal'
 import SetupColorStorage, { ISetupColorStorageProps } from './SetupColorStorage'
 
-const SetupColorModal: React.FC<ISetupColorStorageProps> = props => {
+const SetupColorModal: React.FC<Omit<
+  ISetupColorStorageProps,
+  'doClose'
+>> = props => {
   const [open, setOpen] = React.useState(false)
   const doOpen = React.useCallback(() => setOpen(true), [])
   const doClose = React.useCallback(() => setOpen(false), [])
@@ -18,7 +21,7 @@ const SetupColorModal: React.FC<ISetupColorStorageProps> = props => {
           onRequestClose={doClose}
           contentLabel={'Color setup'}
         >
-          <SetupColorStorage {...props} />
+          <SetupColorStorage doClose={doClose} {...props} />
         </GenericModal>
       )}
     </div>

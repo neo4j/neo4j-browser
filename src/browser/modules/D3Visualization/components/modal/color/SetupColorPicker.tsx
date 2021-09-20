@@ -7,16 +7,24 @@ import styled from 'styled-components'
 import { interpolateTurbo } from 'd3-scale-chromatic'
 import { IColorSettings } from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorStorage'
 import { cloneDeep } from 'lodash-es'
+import {
+  ApplyButton,
+  SimpleButton
+} from 'project-root/src/browser/modules/D3Visualization/components/modal/styled'
 const MarginDiv = styled.div`
   margin: 10px 0;
 `
+type IRawColorSettings = IColorSettings['settings']
 const SetupColorPicker: React.FC<{
   values: string[]
-  initialColorSettings: IColorSettings
-}> = ({ values, initialColorSettings }) => {
+  initialColorSettings: IRawColorSettings
+  onSubmit: (settings: IRawColorSettings) => void
+  onClose: () => void
+}> = ({ values, initialColorSettings, onClose, onSubmit }) => {
   const [currentColorSettings, setCurrentColorSettings] = React.useState<
-    IColorSettings
+    IRawColorSettings
   >(initialColorSettings)
+
   const [colorScheme, setColorScheme] = React.useState<(t: number) => string>(
     () => interpolateTurbo
   )
@@ -37,18 +45,28 @@ const SetupColorPicker: React.FC<{
     []
   )
   React.useEffect(() => {
-    const newSettings: IColorSettings = {}
-    const length = values.length - 1
-    const isScaled = length < 20
-    values.forEach((value, i) => {
-      const color = colorScheme(
-        isScaled ? (i / length) * 0.8 + 0.1 : i / length
-      )
-      newSettings[value] = generateColorsForBase(color)
+    setCurrentColorSettings(old => {
+      if (values.every(value => old[value] != undefined)) {
+        return old
+      } else {
+        const newSettings: IRawColorSettings = {}
+        const length = values.length - 1
+        const isScaled = length < 20
+        values.forEach((value, i) => {
+          const color = colorScheme(
+            isScaled ? (i / length) * 0.8 + 0.1 : i / length
+          )
+          newSettings[value] = generateColorsForBase(color)
+        })
+        return newSettings
+      }
     })
-    setCurrentColorSettings(newSettings)
-  }, [values, colorScheme])
+  }, [values, colorScheme, initialColorSettings])
 
+  const handleSubmit = React.useCallback(() => {
+    onSubmit(currentColorSettings)
+    onClose()
+  }, [onSubmit, currentColorSettings, onClose])
   return (
     <>
       <h3>Color map</h3>
@@ -66,6 +84,10 @@ const SetupColorPicker: React.FC<{
           />
         ))}
       </MarginDiv>
+      <div>
+        <ApplyButton onClick={handleSubmit}>Apply</ApplyButton>
+        <SimpleButton onClick={onClose}>Cancel</SimpleButton>
+      </div>
     </>
   )
 }

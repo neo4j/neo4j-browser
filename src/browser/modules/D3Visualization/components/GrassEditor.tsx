@@ -359,7 +359,11 @@ export class GrassEditorComponent extends Component<{
             properties={properties}
             selector={styleForLabel.selector}
             itemStyleProps={styleForLabel.props}
-            updateStyle={() => {}}
+            updateStyle={colorSettings => {
+              this.updateStyle(styleForLabel.selector, {
+                colorSettings
+              })
+            }}
           />
         </StyledInlineList>
       </StyledInlineListItem>

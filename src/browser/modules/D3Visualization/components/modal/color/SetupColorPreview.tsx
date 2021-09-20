@@ -96,7 +96,11 @@ const SetupColorPreview: React.FC<IProps> = ({ value, style, onChange }) => {
         </MarginDiv>
         <MarginDiv>
           <SketchWrapper>
-            <SketchPicker color={currentColor} onChange={handleChange} />
+            <SketchPicker
+              disableAlpha={true}
+              color={currentColor}
+              onChange={handleChange}
+            />
           </SketchWrapper>
         </MarginDiv>
         <div>
