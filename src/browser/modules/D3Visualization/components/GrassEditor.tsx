@@ -357,7 +357,6 @@ export class GrassEditorComponent extends Component<{
         <StyledInlineList className="color-type-picker picker">
           <SetupColorModal
             properties={properties}
-            selector={styleForLabel.selector}
             itemStyleProps={styleForLabel.props}
             updateStyle={colorSettings => {
               this.updateStyle(styleForLabel.selector, {

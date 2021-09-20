@@ -17,7 +17,6 @@ export interface ISetupColorStorageProps {
   properties: {
     [key: string]: string[]
   }
-  selector: IStyleForLabel['selector']
   itemStyleProps: IStyleForLabel['props']
   updateStyle: (settings: IColorSettings) => void
   doClose: () => void
@@ -54,16 +53,16 @@ const SetupColorStorage: React.FC<ISetupColorStorageProps> = props => {
     if (selectedProperty) {
       setColorSettings({
         key: selectedProperty,
-        settings: {}
+        settings:
+          itemStyleProps.colorSettings?.key === selectedProperty
+            ? itemStyleProps.colorSettings?.settings ?? {}
+            : {}
       })
     }
-  }, [selectedProperty])
-  const itemStyle: IStyleForLabelProps = itemStyleProps
-  console.log(itemStyleProps, colorSettings)
+  }, [selectedProperty, itemStyleProps.colorSettings])
   return (
     <SetupColorModalBody
       colorSettings={colorSettings}
-      defaultSettings={itemStyle}
       onSubmit={updateStyle}
       handlePropertyChange={handlePropertyChange}
       selectedProperty={selectedProperty}

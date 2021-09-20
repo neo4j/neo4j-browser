@@ -24,7 +24,9 @@ const SetupColorPicker: React.FC<{
   const [currentColorSettings, setCurrentColorSettings] = React.useState<
     IRawColorSettings
   >(initialColorSettings)
-
+  React.useEffect(() => {
+    setCurrentColorSettings(initialColorSettings)
+  }, [initialColorSettings])
   const [colorScheme, setColorScheme] = React.useState<(t: number) => string>(
     () => interpolateTurbo
   )

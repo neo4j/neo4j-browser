@@ -22,7 +22,6 @@ const Label = styled.label`
 `
 const SetupColorModalBody: React.FC<ISetupColorStorageProps & {
   colorSettings: IColorSettings
-  defaultSettings: IStyleForLabelProps
   onSubmit: (settings: IColorSettings) => void
   handlePropertyChange: React.ChangeEventHandler<HTMLInputElement>
   selectedProperty: string | undefined
@@ -62,6 +61,7 @@ const SetupColorModalBody: React.FC<ISetupColorStorageProps & {
               name={'type'}
               value={key}
               onChange={handlePropertyChange}
+              checked={key === selectedProperty}
             />
             {key}
           </Label>
