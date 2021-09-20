@@ -21,7 +21,6 @@ import Renderer from '../components/renderer'
 import * as d3 from 'd3'
 import { max } from 'lodash-es'
 import { RelArrowCaptionPosition } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelRelArrowSVG'
-import { IColorSettings } from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorStorage'
 
 const noop = function() {}
 
