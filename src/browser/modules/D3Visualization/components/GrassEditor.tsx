@@ -33,11 +33,46 @@ import {
 } from './styled'
 import * as actions from 'shared/modules/grass/grassDuck'
 import { toKeyString } from 'shared/services/utils'
-import SetupLabelModal from 'browser/modules/D3Visualization/components/modal/label/SetupLabelModal'
+import SetupLabelModal, {
+  ICaptionSettings
+} from 'browser/modules/D3Visualization/components/modal/label/SetupLabelModal'
 import { RelArrowCaptionPosition } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelRelArrowSVG'
 import { cloneDeep } from 'lodash-es'
-
-export class GrassEditorComponent extends Component<any> {
+import SetupColorModal from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorModal'
+import { IColorSettings } from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorStorage'
+export interface IStyleForLabelProps {
+  'border-color': string
+  'border-width': string
+  caption: string
+  color: string
+  diameter: string
+  'font-size': string
+  'text-color-internal': string
+}
+export interface IStyleForLabel {
+  props: IStyleForLabelProps & {
+    colorSettings?: IColorSettings
+    captionSettings?: ICaptionSettings
+  }
+  selector: {
+    classes: string[]
+    tag: string
+  }
+}
+export class GrassEditorComponent extends Component<{
+  nodes: Array<{
+    id: string
+    labels: string[]
+    properties: {
+      [key: string]: string
+    }
+  }>
+  selectedLabel: {
+    label: string
+    propertyKeys: string[]
+  }
+  [key: string]: any
+}> {
   graphStyle: any
   nodeDisplaySizes: any
   picker: any
@@ -289,6 +324,50 @@ export class GrassEditorComponent extends Component<any> {
     )
   }
 
+  colorTypePicker(styleForLabel: IStyleForLabel) {
+    const { label } = this.props.selectedLabel
+    const propertiesSet: {
+      [key: string]: Set<string>
+    } = {}
+    this.props.nodes
+      .filter(node => node.labels.includes(label))
+      .forEach(node => {
+        for (const key in node.properties) {
+          if (node.properties.hasOwnProperty(key)) {
+            if (propertiesSet[key]) {
+              propertiesSet[key].add(node.properties[key])
+            } else {
+              propertiesSet[key] = new Set<string>([node.properties[key]])
+            }
+          }
+        }
+      })
+    const properties: {
+      [key: string]: string[]
+    } = {}
+    for (const key in propertiesSet) {
+      if (propertiesSet.hasOwnProperty(key)) {
+        properties[key] = Array.from(propertiesSet[key]).sort((a, b) =>
+          a > b ? 1 : -1
+        )
+      }
+    }
+    return (
+      <StyledInlineListItem key="color-type-picker">
+        <StyledInlineList className="color-type-picker picker">
+          <SetupColorModal
+            properties={properties}
+            itemStyleProps={styleForLabel.props}
+            updateStyle={colorSettings => {
+              this.updateStyle(styleForLabel.selector, {
+                colorSettings
+              })
+            }}
+          />
+        </StyledInlineList>
+      </StyledInlineListItem>
+    )
+  }
   stylePicker() {
     let pickers
     let title
@@ -304,6 +383,8 @@ export class GrassEditorComponent extends Component<any> {
       }
       const displayCaptionPicker =
         styleForLabel.props?.captionSettings === undefined // do not show caption picker if label settings are set
+      const displayColorPicker =
+        styleForLabel.props?.colorSettings === undefined // do not show caption picker if label settings are set
       const propertyKeys = (this.props.selectedLabel
         .propertyKeys as string[]).sort((a, b) => (a > b ? 1 : -1))
       pickers = [
@@ -313,9 +394,12 @@ export class GrassEditorComponent extends Component<any> {
           propertyKeys,
           true
         ),
-        this.colorPicker(styleForLabel.selector, styleForLabel),
+        this.colorTypePicker(styleForLabel),
         this.sizePicker(styleForLabel.selector, styleForLabel)
       ]
+      if (displayColorPicker) {
+        pickers.push(this.colorPicker(styleForLabel.selector, styleForLabel))
+      }
       if (displayCaptionPicker) {
         pickers.push(
           this.captionPicker(

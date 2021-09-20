@@ -21,6 +21,7 @@ import Renderer from '../components/renderer'
 import * as d3 from 'd3'
 import { max } from 'lodash-es'
 import { RelArrowCaptionPosition } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelRelArrowSVG'
+import { IColorSettings } from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorStorage'
 
 const noop = function() {}
 
@@ -36,6 +37,30 @@ const sideTextsPositions: (
   RelArrowCaptionPosition.endAbove,
   RelArrowCaptionPosition.endBelow
 ]
+
+function getColorStyleForNode({
+  node,
+  currentStyle,
+  key
+}: {
+  node: {
+    propertyMap: {
+      [key: string]: string
+    }
+  }
+  currentStyle: any
+  key: string
+}): {
+  [key: string]: string | undefined
+} {
+  const colorSettings = currentStyle.get('colorSettings')
+  if (colorSettings !== '' && node.propertyMap[colorSettings.key]) {
+    return colorSettings.settings[node.propertyMap[colorSettings.key]][key]
+  } else {
+    return currentStyle.get(key)
+  }
+}
+
 const nodeOutline = new Renderer({
   onGraphChange(selection: any, viz: any) {
     const circles = selection
@@ -56,10 +81,18 @@ const nodeOutline = new Renderer({
         return node.radius
       },
       fill(node: any) {
-        return viz.style.forNode(node).get('color')
+        return getColorStyleForNode({
+          currentStyle: viz.style.forNode(node),
+          node,
+          key: 'color'
+        })
       },
       stroke(node: any) {
-        return viz.style.forNode(node).get('border-color')
+        return getColorStyleForNode({
+          currentStyle: viz.style.forNode(node),
+          node,
+          key: 'border-color'
+        })
       },
       'stroke-width'(node: any) {
         return viz.style.forNode(node).get('border-width')
@@ -96,7 +129,11 @@ const nodeCaption = new Renderer({
       )
       .attr({
         fill(line: any) {
-          return viz.style.forNode(line.node).get('text-color-internal')
+          return getColorStyleForNode({
+            currentStyle: viz.style.forNode(line.node),
+            node: line.node,
+            key: 'text-color-internal'
+          })
         }
       })
 
