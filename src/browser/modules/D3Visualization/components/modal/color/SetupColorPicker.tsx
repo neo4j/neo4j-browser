@@ -11,6 +11,7 @@ import {
   ApplyButton,
   SimpleButton
 } from 'project-root/src/browser/modules/D3Visualization/components/modal/styled'
+import { usePrevious } from 'browser-hooks/hooks'
 const MarginDiv = styled.div`
   margin: 10px 0;
 `
@@ -46,9 +47,13 @@ const SetupColorPicker: React.FC<{
     },
     []
   )
+  const oldColorScheme = usePrevious(colorScheme)
   React.useEffect(() => {
     setCurrentColorSettings(old => {
-      if (values.every(value => old[value] != undefined)) {
+      if (
+        values.every(value => old[value] != undefined) &&
+        oldColorScheme === colorScheme
+      ) {
         return old
       } else {
         const newSettings: IRawColorSettings = {}
@@ -63,7 +68,7 @@ const SetupColorPicker: React.FC<{
         return newSettings
       }
     })
-  }, [values, colorScheme, initialColorSettings])
+  }, [values, colorScheme, initialColorSettings, oldColorScheme])
 
   const handleSubmit = React.useCallback(() => {
     onSubmit(currentColorSettings)
