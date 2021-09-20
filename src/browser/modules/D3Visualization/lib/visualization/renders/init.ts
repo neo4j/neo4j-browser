@@ -54,7 +54,7 @@ function getColorStyleForNode({
   [key: string]: string | undefined
 } {
   const colorSettings = currentStyle.get('colorSettings')
-  if (colorSettings !== '') {
+  if (colorSettings !== '' && node.propertyMap[colorSettings.key]) {
     return colorSettings.settings[node.propertyMap[colorSettings.key]][key]
   } else {
     return currentStyle.get(key)
