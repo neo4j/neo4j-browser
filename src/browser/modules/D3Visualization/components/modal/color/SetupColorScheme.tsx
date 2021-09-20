@@ -115,7 +115,7 @@ const SetupColorScheme: React.FC<IProps> = React.memo(
             <RadioInput
               type={'radio'}
               name={'color-block'}
-              checked={selected === scheme}
+              defaultChecked={selected === scheme}
             />
             {drawBlock(scheme)}
           </CustomButtonDiv>

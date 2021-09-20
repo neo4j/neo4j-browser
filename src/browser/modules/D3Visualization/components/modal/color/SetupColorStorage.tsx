@@ -11,7 +11,7 @@ export interface IColorSettings {
 }
 export interface ISetupColorStorageProps {
   properties: {
-    [key: string]: Set<string>
+    [key: string]: string[]
   }
   selector: IStyleForLabel['selector']
   itemStyleProps: IStyleForLabel['props']

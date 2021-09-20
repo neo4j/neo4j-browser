@@ -326,7 +326,7 @@ export class GrassEditorComponent extends Component<{
 
   colorTypePicker(styleForLabel: IStyleForLabel) {
     const { label } = this.props.selectedLabel
-    const properties: {
+    const propertiesSet: {
       [key: string]: Set<string>
     } = {}
     this.props.nodes
@@ -334,14 +334,24 @@ export class GrassEditorComponent extends Component<{
       .forEach(node => {
         for (const key in node.properties) {
           if (node.properties.hasOwnProperty(key)) {
-            if (properties[key]) {
-              properties[key].add(node.properties[key])
+            if (propertiesSet[key]) {
+              propertiesSet[key].add(node.properties[key])
             } else {
-              properties[key] = new Set<string>([node.properties[key]])
+              propertiesSet[key] = new Set<string>([node.properties[key]])
             }
           }
         }
       })
+    const properties: {
+      [key: string]: string[]
+    } = {}
+    for (const key in propertiesSet) {
+      if (propertiesSet.hasOwnProperty(key)) {
+        properties[key] = Array.from(propertiesSet[key]).sort((a, b) =>
+          a > b ? 1 : -1
+        )
+      }
+    }
     return (
       <StyledInlineListItem key="color-type-picker">
         <StyledInlineList className="color-type-picker picker">

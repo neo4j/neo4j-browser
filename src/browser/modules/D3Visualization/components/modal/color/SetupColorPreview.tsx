@@ -31,50 +31,48 @@ const PreviewNode = styled.div.attrs((props: IPreviewNodeProps) => ({
 }))<IPreviewNodeProps>`
   padding-left: 5px;
   border: 2px solid #fff;
+  cursor: pointer;
 `
 const MarginDiv = styled.div`
   margin: 10px 0;
+`
+const SketchWrapper = styled.div`
+  color: black;
+  input {
+    color: black;
+  }
 `
 const SetupColorPreview: React.FC<IProps> = ({ value, style, onChange }) => {
   const [open, setOpen] = React.useState(false)
   const doOpen = React.useCallback(() => setOpen(true), [])
   const doClose = React.useCallback(() => setOpen(false), [])
-  const handleSubmit = React.useCallback(() => {
-    onChange({
-      color: currentColor,
-      value
-    })
-    doClose()
-  }, [onChange, value])
+
   const handleChange: ColorChangeHandler = React.useCallback(color => {
-    setCurrentColor(`rgb(${color.rgb.b}, ${color.rgb.g}, ${color.rgb.r})`)
+    setCurrentColor(color.hex)
   }, [])
   const [currentColor, setCurrentColor] = React.useState<string>(
     style?.color ?? 'rgb(0, 0, 0)'
   )
-  const fontColor = React.useMemo(
-    () =>
-      fontColorContrast(
-        currentColor.match(/\d+/g)! as [string, string, string]
-      ),
-    [currentColor]
-  )
-  const borderColor = React.useMemo(
-    () =>
-      colord(currentColor)
-        .darken(0.25)
-        .toRgbString(),
-    [currentColor]
-  )
+  const genColor = React.useMemo(() => generateColorsForBase(currentColor), [
+    currentColor
+  ])
+
   React.useEffect(() => {
     setCurrentColor(style?.color ?? '#FFFF')
   }, [style?.color])
+
+  const handleSubmit = React.useCallback(() => {
+    onChange({
+      color: colord(currentColor).toHex(),
+      value
+    })
+    doClose()
+  }, [onChange, value, currentColor])
+
   if (!style) {
     return null
   }
-  if (value === 'Equatorial Guinea in 2011') {
-    console.log(currentColor, style)
-  }
+
   return (
     <div>
       <PreviewNode
@@ -89,15 +87,17 @@ const SetupColorPreview: React.FC<IProps> = ({ value, style, onChange }) => {
         <MarginDiv>
           <PreviewNode
             backgroundColor={currentColor}
-            color={fontColor}
-            borderColor={borderColor}
+            color={genColor['text-color-internal']}
+            borderColor={genColor['border-color']}
             onClick={doOpen}
           >
             {value}
           </PreviewNode>
         </MarginDiv>
         <MarginDiv>
-          <SketchPicker color={currentColor} onChangeComplete={handleChange} />
+          <SketchWrapper>
+            <SketchPicker color={currentColor} onChange={handleChange} />
+          </SketchWrapper>
         </MarginDiv>
         <div>
           <ApplyButton onClick={handleSubmit}>Apply</ApplyButton>
@@ -108,4 +108,15 @@ const SetupColorPreview: React.FC<IProps> = ({ value, style, onChange }) => {
   )
 }
 
+export function generateColorsForBase(
+  color: string
+): Pick<IStyleForLabelProps, 'color' | 'border-color' | 'text-color-internal'> {
+  return {
+    color,
+    'border-color': colord(color)
+      .darken(0.25)
+      .toHex(),
+    'text-color-internal': fontColorContrast(colord(color).toHex())
+  }
+}
 export default SetupColorPreview
