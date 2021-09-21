@@ -19,29 +19,36 @@
  */
 
 const EditorArea = '[data-testid="activeEditor"]'
+const { viewportWidth, viewportHeight } = Cypress.config()
+const MainEditorMaxHeight = 286
+const MainEditorWidth = viewportWidth - 80
+const FrameEditorMaxHeight = 276
+const FrameEditorWidth = viewportWidth - 184
+const FrameEditorFullscreenWidth = viewportWidth - 94
+const FrameMaxHeight = 580
+const FrameFullscreenHeight = viewportHeight - 3
 
 describe('Neo4j Browser', () => {
   before(function() {
     cy.visit(Cypress.config('url'))
       .title()
       .should('include', 'Neo4j Browser')
-    //cy.wait(3000)
+    cy.wait(3000)
   })
 
   it('can fullscreen main editor with shortcut', () => {
     const { viewportWidth, viewportHeight } = Cypress.config()
 
     cy.get(EditorArea).type('{shift}\n'.repeat(20))
-    // Should stop at 286 px (13 lines height)
     cy.get(EditorArea)
       .invoke('height')
-      .should('equal', 286)
+      .should('equal', MainEditorMaxHeight)
 
     cy.get(EditorArea)
       .invoke('width')
-      .should('equal', viewportWidth - 80) // normal editor width
+      .should('equal', MainEditorWidth)
 
-    // unless we're in fullscreen
+    // Go to fullscreen
     cy.get(EditorArea).type('{esc}')
 
     cy.get(EditorArea)
@@ -56,25 +63,24 @@ describe('Neo4j Browser', () => {
     cy.get(EditorArea).type('{esc}')
     cy.get(EditorArea)
       .invoke('height')
-      .should('equal', 286)
+      .should('equal', MainEditorMaxHeight)
 
     cy.get(EditorArea)
       .invoke('width')
-      .should('equal', viewportWidth - 80) // normal editor width
+      .should('equal', MainEditorWidth)
   })
 
   it('can fullscreen main editor by clicking fullscreen icon', () => {
     const { viewportWidth, viewportHeight } = Cypress.config()
 
     cy.get(EditorArea).type('{shift}\n'.repeat(20))
-    // Should stop at 286 px (13 lines height)
     cy.get(EditorArea)
       .invoke('height')
-      .should('equal', 286)
+      .should('equal', MainEditorMaxHeight)
 
     cy.get(EditorArea)
       .invoke('width')
-      .should('equal', viewportWidth - 80) // normal editor width
+      .should('equal', MainEditorWidth)
 
     cy.get('[data-testid="editor-fullscreen"]').click()
 
@@ -84,20 +90,19 @@ describe('Neo4j Browser', () => {
 
     cy.get(EditorArea)
       .invoke('width')
-      .should('equal', viewportWidth) // editor is now full width
+      .should('equal', viewportWidth)
 
     cy.get('[data-testid="editor-fullscreen"]').click()
     cy.get(EditorArea)
       .invoke('height')
-      .should('equal', 286)
+      .should('equal', MainEditorMaxHeight)
 
     cy.get(EditorArea)
       .invoke('width')
-      .should('equal', viewportWidth - 80) // normal editor width
+      .should('equal', MainEditorWidth)
   })
 
   it('re-usable fram can also use fullscreen', () => {
-    const { viewportWidth, viewportHeight } = Cypress.config()
     cy.executeCommand(':clear')
     cy.executeCommand('return 1')
     cy.get('[data-testid="frameCommand"]')
@@ -108,23 +113,21 @@ describe('Neo4j Browser', () => {
       .eq(1)
       .type('{shift}\n'.repeat(20))
 
-    // Should stop at 276 px (max reusable frame height)
     cy.get('[id^=monaco-]')
       .eq(1)
       .invoke('height')
-      .should('equal', 276)
+      .should('equal', FrameEditorMaxHeight)
 
-    // frame height should stop at 580
     cy.get('[id^=monaco-]')
       .eq(1)
       .closest('article')
       .invoke('height')
-      .should('equal', 580)
+      .should('equal', FrameMaxHeight)
 
     cy.get('[id^=monaco-]')
       .eq(1)
       .invoke('width')
-      .should('equal', viewportWidth - 184) // normal reusable-editor width
+      .should('equal', FrameEditorWidth) // normal reusable-editor width
 
     // goto fullscreen
     cy.get('[id^=monaco-]')
@@ -134,37 +137,36 @@ describe('Neo4j Browser', () => {
     cy.get('[id^=monaco-]')
       .eq(1)
       .invoke('height')
-      .should('equal', 276) // reusable keeps the same height on fullscren but content take up whole screen
+      .should('equal', FrameEditorMaxHeight) // reusable keeps the same height on fullscren but content take up whole screen
 
-    // frame height is full height of screen
     cy.get('[id^=monaco-]')
       .eq(1)
       .closest('article')
       .invoke('height')
-      .should('equal', viewportHeight - 3) // excluding some margin
+      .should('equal', FrameFullscreenHeight)
 
     cy.get('[id^=monaco-]')
       .eq(1)
       .invoke('width')
-      .should('equal', viewportWidth - 94) // reusable editor is not quite full with
+      .should('equal', FrameEditorFullscreenWidth)
 
     cy.get('[title="Close fullscreen"]').click()
 
     cy.get('[id^=monaco-]')
       .eq(1)
       .invoke('height')
-      .should('equal', 276)
+      .should('equal', FrameEditorMaxHeight)
 
     cy.get('[id^=monaco-]')
       .eq(1)
       .invoke('width')
-      .should('equal', viewportWidth - 184) // normal editor width
+      .should('equal', FrameEditorWidth)
 
     // frame height back to normal as well
     cy.get('[id^=monaco-]')
       .eq(1)
       .closest('article')
       .invoke('height')
-      .should('equal', 580)
+      .should('equal', FrameMaxHeight)
   })
 })
