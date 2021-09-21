@@ -125,7 +125,7 @@ const Sidebar = ({
     {
       name: 'Guides',
       title: 'Guides',
-      icon: function GuideDrawerIcon(isOpen: boolean): JSX.Element {
+      icon: function GuideDrawerIconComp(isOpen: boolean): JSX.Element {
         return <GuideDrawerIcon isOpen={isOpen} />
       },
       content: GuideDrawer
