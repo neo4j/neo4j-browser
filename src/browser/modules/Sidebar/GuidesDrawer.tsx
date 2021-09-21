@@ -35,15 +35,15 @@ import { GlobalState } from 'shared/globalState'
 import GuideCarousel from '../GuideCarousel/GuideCarousel'
 import { BackIcon } from '../../components/icons/Icons'
 import {
-  StyledGuidesDrawer,
+  StyledGuideDrawer,
   GuideTitle,
   BackIconContainer,
-  StyledGuidesDrawerHeader,
+  StyledGuideDrawerHeader,
   StyledDrawerSeparator
 } from './styled'
 import GuidePicker from './GuidePicker'
 
-type GuidesDrawerProps = {
+type GuideDrawerProps = {
   currentGuide: Guide | null
   backToAllGuides: () => void
   gotoSlide: (slideIndex: number) => void
@@ -52,30 +52,30 @@ type GuidesDrawerProps = {
   updateRemoteGuides: (newList: Guide[]) => void
 }
 
-function GuidesDrawer({
+function GuideDrawer({
   currentGuide,
   backToAllGuides,
   gotoSlide,
   remoteGuides,
   setCurrentGuide,
   updateRemoteGuides
-}: GuidesDrawerProps): JSX.Element {
+}: GuideDrawerProps): JSX.Element {
   const scrollRef = useRef<HTMLDivElement>(null)
 
   return (
-    <StyledGuidesDrawer
+    <StyledGuideDrawer
       id="guide-drawer"
       data-testid="guideDrawer"
       ref={scrollRef}
     >
-      <StyledGuidesDrawerHeader onClick={backToAllGuides}>
+      <StyledGuideDrawerHeader onClick={backToAllGuides}>
         {currentGuide !== null && (
           <BackIconContainer data-testid="guidesBackButton">
             <BackIcon width={16} />
           </BackIconContainer>
         )}
         Neo4j Browser Guides{' '}
-      </StyledGuidesDrawerHeader>
+      </StyledGuideDrawerHeader>
       <StyledDrawerSeparator />
       {currentGuide === null ? (
         <GuidePicker
@@ -98,7 +98,7 @@ function GuidesDrawer({
           />
         </>
       )}
-    </StyledGuidesDrawer>
+    </StyledGuideDrawer>
   )
 }
 
@@ -113,9 +113,9 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
   updateRemoteGuides: (updatedList: Guide[]) =>
     dispatch(updateRemoteGuides(updatedList))
 })
-const ConnectedGuidesDrawer = connect(
+const ConnectedGuideDrawer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(GuidesDrawer)
+)(GuideDrawer)
 
-export default ConnectedGuidesDrawer
+export default ConnectedGuideDrawer
