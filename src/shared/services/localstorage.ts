@@ -36,7 +36,6 @@ export type key =
   | 'documents'
   | 'folders'
   | 'grass'
-  | 'guides'
   | 'syncConsent'
   | 'udc'
   | 'experimentalFeatures'

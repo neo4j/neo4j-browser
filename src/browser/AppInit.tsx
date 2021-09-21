@@ -66,7 +66,6 @@ applyKeys(
   'documents',
   'folders',
   'grass',
-  'guides',
   'syncConsent',
   'udc',
   'experimentalFeatures'
