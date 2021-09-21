@@ -28,7 +28,7 @@ import {
   gotoSlide,
   getRemoteGuides,
   resetGuide,
-  setGuide,
+  setCurrentGuide,
   updateRemoteGuides
 } from 'shared/modules/guides/guidesDuck'
 import { GlobalState } from 'shared/globalState'
@@ -48,7 +48,7 @@ type GuidesDrawerProps = {
   backToAllGuides: () => void
   gotoSlide: (slideIndex: number) => void
   remoteGuides: Guide[]
-  setGuide: (guide: Guide) => void
+  setCurrentGuide: (guide: Guide) => void
   updateRemoteGuides: (newList: Guide[]) => void
 }
 
@@ -57,7 +57,7 @@ function GuidesDrawer({
   backToAllGuides,
   gotoSlide,
   remoteGuides,
-  setGuide,
+  setCurrentGuide,
   updateRemoteGuides
 }: GuidesDrawerProps): JSX.Element {
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -80,7 +80,7 @@ function GuidesDrawer({
       {currentGuide === null ? (
         <GuidePicker
           remoteGuides={remoteGuides}
-          setGuide={setGuide}
+          setCurrentGuide={setCurrentGuide}
           updateRemoteGuides={updateRemoteGuides}
         />
       ) : (
@@ -109,7 +109,7 @@ const mapStateToProps = (state: GlobalState) => ({
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
   backToAllGuides: () => dispatch(resetGuide()),
   gotoSlide: (slideIndex: number) => dispatch(gotoSlide(slideIndex)),
-  setGuide: (guide: Guide) => dispatch(setGuide(guide)),
+  setCurrentGuide: (guide: Guide) => dispatch(setCurrentGuide(guide)),
   updateRemoteGuides: (updatedList: Guide[]) =>
     dispatch(updateRemoteGuides(updatedList))
 })

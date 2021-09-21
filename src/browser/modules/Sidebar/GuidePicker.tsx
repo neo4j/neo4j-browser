@@ -19,7 +19,7 @@ import { BinIcon } from 'browser-components/icons/Icons'
 
 type GuidePickerProps = {
   remoteGuides: Guide[]
-  setGuide: (guide: Guide) => void
+  setCurrentGuide: (guide: Guide) => void
   updateRemoteGuides: (newList: Guide[]) => void
 }
 
@@ -39,7 +39,7 @@ const builtInGuides: { name: GuideChapter; description: string }[] = [
 
 const GuidePicker = ({
   remoteGuides,
-  setGuide,
+  setCurrentGuide,
   updateRemoteGuides
 }: GuidePickerProps): JSX.Element => (
   <BuiltInGuideSidebarSlide>
@@ -58,7 +58,7 @@ const GuidePicker = ({
         <MarginBottomLi
           key={name}
           onClick={() =>
-            setGuide({ ...docs.guide.chapters[name], currentSlide: 0 })
+            setCurrentGuide({ ...docs.guide.chapters[name], currentSlide: 0 })
           }
         >
           <DrawerBrowserCommand>:guide {name}</DrawerBrowserCommand>
@@ -76,7 +76,7 @@ const GuidePicker = ({
         <NoBulletsUl>
           {remoteGuides.map(guide => (
             <GuideListEntry key={guide.title}>
-              <DrawerBrowserCommand onClick={() => setGuide(guide)}>
+              <DrawerBrowserCommand onClick={() => setCurrentGuide(guide)}>
                 {guide.title}
               </DrawerBrowserCommand>
               <Clickable

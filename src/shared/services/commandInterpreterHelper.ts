@@ -40,7 +40,7 @@ import { open } from 'shared/modules/sidebar/sidebarDuck'
 import {
   addGuideIfExternal,
   resetGuide,
-  setGuide
+  setCurrentGuide
 } from 'shared/modules/guides/guidesDuck'
 import { getParams } from 'shared/modules/params/paramsDuck'
 import { getUserCapabilities } from 'shared/modules/features/featuresDuck'
@@ -521,7 +521,7 @@ const availableCommands = [
           title,
           slides
         }
-        put(setGuide(guide))
+        put(setCurrentGuide(guide))
         put(addGuideIfExternal(guide))
 
         put(open('guides'))

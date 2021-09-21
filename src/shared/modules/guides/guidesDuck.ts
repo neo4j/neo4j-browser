@@ -130,7 +130,7 @@ export function addGuideIfExternal(guide: Guide): AddGuideAction {
   return { type: ADD_GUIDE, guide }
 }
 
-export function setGuide(guide: Guide): SetAction {
+export function setCurrentGuide(guide: Guide): SetAction {
   return { type: SET_GUIDE, guide }
 }
 
