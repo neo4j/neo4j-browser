@@ -36,7 +36,7 @@ type GuideCarouselProps = {
   gotoSlide: (slideIndex: number) => void
 }
 
-function GuidesCarousel({
+function GuideCarousel({
   slides,
   currentSlideIndex,
   gotoSlide,
@@ -98,4 +98,4 @@ function GuidesCarousel({
   )
 }
 
-export default GuidesCarousel
+export default GuideCarousel

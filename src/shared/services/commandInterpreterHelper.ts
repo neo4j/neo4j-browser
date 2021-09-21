@@ -37,7 +37,11 @@ import {
   getUseDb
 } from 'shared/modules/connections/connectionsDuck'
 import { open } from 'shared/modules/sidebar/sidebarDuck'
-import { startGuide } from 'shared/modules/guides/guidesDuck'
+import {
+  addGuideIfExternal,
+  resetGuide,
+  setCurrentGuide
+} from 'shared/modules/guides/guidesDuck'
 import { getParams } from 'shared/modules/params/paramsDuck'
 import { getUserCapabilities } from 'shared/modules/features/featuresDuck'
 import {
@@ -505,20 +509,20 @@ const availableCommands = [
     exec(action: any, put: any, store: any) {
       const guideName = action.cmd.substr(':guide'.length).trim()
       if (!guideName) {
-        put(startGuide())
+        put(resetGuide())
         put(open('guides'))
         return
       }
 
       const initialSlide = tryGetRemoteInitialSlideFromUrl(action.cmd)
       resolveGuide(guideName, store.getState()).then(({ slides, title }) => {
-        put(
-          startGuide({
-            currentSlide: initialSlide,
-            title,
-            slides
-          })
-        )
+        const guide = {
+          currentSlide: initialSlide,
+          title,
+          slides
+        }
+        put(setCurrentGuide(guide))
+        put(addGuideIfExternal(guide))
 
         put(open('guides'))
       })

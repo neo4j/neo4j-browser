@@ -22,40 +22,54 @@ import docs from 'browser/documentation'
 import { GlobalState } from 'shared/globalState'
 
 export const NAME = 'guides'
-export const START_GUIDE = 'sidebar/START_GUIDE'
+export const SET_GUIDE = 'sidebar/SET_GUIDE'
 export const GOTO_SLIDE = 'sidebar/GOTO_SLIDE'
+export const UPDATE_REMOTE_GUIDES = 'sidebar/UPDATE_REMOTE_GUIDES'
+export const ADD_GUIDE = 'sidebar/ADD_GUIDE'
 
-export const isDefaultGuide = (guide: Guide): boolean =>
-  guide.title === defaultGuide.title
+export const getCurrentGuide = (state: GlobalState): Guide | null =>
+  state[NAME].currentGuide
+export const getRemoteGuides = (state: GlobalState): Guide[] =>
+  state[NAME].remoteGuides
 
-export const getGuide = (state: GlobalState): Guide => state[NAME].guide
 export type Guide = {
   currentSlide: number
   title: string
   slides: JSX.Element[]
 }
 
-const defaultGuide: Guide = {
-  ...docs.guide.chapters.index,
-  currentSlide: 0
-}
 export interface GuideState {
-  guide: Guide
+  currentGuide: Guide | null
+  remoteGuides: Guide[]
 }
+
 const initialState: GuideState = {
-  guide: defaultGuide
+  currentGuide: null,
+  remoteGuides: []
 }
 
-type GuideAction = StartAction | GotoSlideAction
+type GuideAction =
+  | SetAction
+  | GotoSlideAction
+  | UpdateGuideAction
+  | AddGuideAction
 
-interface StartAction {
-  type: typeof START_GUIDE
-  guide: Guide
+interface SetAction {
+  type: typeof SET_GUIDE
+  guide: Guide | null
 }
 
 interface GotoSlideAction {
   type: typeof GOTO_SLIDE
   slideIndex: number
+}
+interface UpdateGuideAction {
+  type: typeof UPDATE_REMOTE_GUIDES
+  updatedGuides: Guide[]
+}
+interface AddGuideAction {
+  type: typeof ADD_GUIDE
+  guide: Guide
 }
 
 export default function reducer(
@@ -63,20 +77,65 @@ export default function reducer(
   action: GuideAction
 ): GuideState {
   switch (action.type) {
-    case START_GUIDE:
-      return { ...state, guide: action.guide }
+    case SET_GUIDE:
+      return { ...state, currentGuide: action.guide }
     case GOTO_SLIDE:
-      return {
-        ...state,
-        guide: { ...state.guide, currentSlide: action.slideIndex }
+      if (state.currentGuide === null) {
+        return state
+      } else {
+        return {
+          ...state,
+          currentGuide: {
+            ...state.currentGuide,
+            currentSlide: action.slideIndex
+          }
+        }
       }
+    case UPDATE_REMOTE_GUIDES:
+      return { ...state, remoteGuides: action.updatedGuides }
+
+    case ADD_GUIDE:
+      const remoteGuideTitles = state.remoteGuides.map(g => g.title)
+      const builtInGuidesTitles = Object.values(docs.guide.chapters).map(
+        guide => guide.title
+      )
+
+      const alreadyAdded = remoteGuideTitles
+        .concat(builtInGuidesTitles)
+        .includes(action.guide.title)
+
+      if (alreadyAdded) {
+        return state
+      } else {
+        return {
+          ...state,
+          remoteGuides: state.remoteGuides.concat(action.guide)
+        }
+      }
+
     default:
       return state
   }
 }
 
-export function startGuide(guide: Guide = defaultGuide): StartAction {
-  return { type: START_GUIDE, guide }
+export function updateRemoteGuides(updatedGuides: Guide[]): UpdateGuideAction {
+  return { type: UPDATE_REMOTE_GUIDES, updatedGuides }
+}
+
+export function clearRemoteGuides(): UpdateGuideAction {
+  return updateRemoteGuides([])
+}
+
+export function addGuideIfExternal(guide: Guide): AddGuideAction {
+  return { type: ADD_GUIDE, guide }
+}
+
+export function setCurrentGuide(guide: Guide): SetAction {
+  return { type: SET_GUIDE, guide }
+}
+
+export function resetGuide(): SetAction {
+  return { type: SET_GUIDE, guide: null }
 }
 
 export function gotoSlide(slideIndex: number): GotoSlideAction {
