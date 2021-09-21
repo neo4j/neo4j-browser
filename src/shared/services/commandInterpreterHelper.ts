@@ -106,6 +106,7 @@ import { unescapeCypherIdentifier } from './utils'
 import { getLatestFromFrameStack } from 'browser/modules/Stream/stream.utils'
 import { resolveGuide } from './guideResolverHelper'
 import { AUTH_STORAGE_LOGS } from 'shared/modules/auth/constants'
+import { GuideChapter } from 'browser/documentation'
 
 const PLAY_FRAME_TYPES = ['play', 'play-remote']
 
@@ -593,10 +594,9 @@ const availableCommands = [
     exec(action: any, put: any, store: any) {
       // Built in play guides where migrated to
       // use the guide command instead
-      const legacyBuiltInGuides = [
+      const legacyBuiltInGuides: GuideChapter[] = [
         'concepts',
         'cypher',
-        'index',
         'intro',
         'movies',
         'movieGraph',

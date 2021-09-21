@@ -136,7 +136,7 @@ type GuideDocs = {
   chapters: Record<GuideChapter, GuideItem>
 }
 
-type GuideChapter =
+export type GuideChapter =
   | 'concepts'
   | 'cypher'
   | 'index'
