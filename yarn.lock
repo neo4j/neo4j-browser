@@ -2259,9 +2259,9 @@
   integrity sha1-5I08LiZiU0Bc9ATIZU0bzw0zPlw=
 
 "@types/node@^14.14.31":
-  version "14.14.37"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/node/-/node-14.14.37.tgz#a3dd8da4eb84a996c36e331df98d82abd76b516e"
-  integrity sha1-o92NpOuEqZbDbjMd+Y2Cq9drUW4=
+  version "14.17.17"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/node/-/node-14.17.17.tgz#4ec7b71bbcb01a4e55455b60b18b1b6a783fe31d"
+  integrity sha1-Tse3G7ywGk5VRVtgsYsbang/4x0=
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
@@ -2360,14 +2360,14 @@
   integrity sha1-Q9cWj+xvoJiLsaUTppeykpZyGvs=
 
 "@types/sinonjs__fake-timers@^6.0.2":
-  version "6.0.2"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/sinonjs__fake-timers/-/sinonjs__fake-timers-6.0.2.tgz#3a84cf5ec3249439015e14049bd3161419bf9eae"
-  integrity sha1-OoTPXsMklDkBXhQEm9MWFBm/nq4=
+  version "6.0.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/sinonjs__fake-timers/-/sinonjs__fake-timers-6.0.4.tgz#0ecc1b9259b76598ef01942f547904ce61a6a77d"
+  integrity sha1-Dswbklm3ZZjvAZQvVHkEzmGmp30=
 
 "@types/sizzle@^2.3.2":
-  version "2.3.2"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/sizzle/-/sizzle-2.3.2.tgz#a811b8c18e2babab7d542b3365887ae2e4d9de47"
-  integrity sha1-qBG4wY4rq6t9VCszZYh64uTZ3kc=
+  version "2.3.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/sizzle/-/sizzle-2.3.3.tgz#ff5e2f1902969d305225a047c8a0fd5c915cebef"
+  integrity sha1-/14vGQKWnTBSJaBHyKD9XJFc6+8=
 
 "@types/source-list-map@*":
   version "0.1.2"
@@ -3156,9 +3156,9 @@ async@^2.6.2:
     lodash "^4.17.14"
 
 async@^3.2.0:
-  version "3.2.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/async/-/async-3.2.0.tgz#b3a2685c5ebb641d3de02d161002c60fc9f85720"
-  integrity sha1-s6JoXF67ZB094C0WEALGD8n4VyA=
+  version "3.2.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/async/-/async-3.2.1.tgz#d3274ec66d107a47476a4c49136aacdb00665fc8"
+  integrity sha1-0ydOxm0QekdHakxJE2qs2wBmX8g=
 
 asynckit@^0.4.0:
   version "0.4.0"
@@ -4045,9 +4045,9 @@ ci-info@^2.0.0:
   integrity sha1-Z6npZL4xpR4V5QENWObxKDQAL0Y=
 
 ci-info@^3.1.1:
-  version "3.1.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/ci-info/-/ci-info-3.1.1.tgz#9a32fcefdf7bcdb6f0a7e1c0f8098ec57897b80a"
-  integrity sha1-mjL87997zbbwp+HA+AmOxXiXuAo=
+  version "3.2.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/ci-info/-/ci-info-3.2.0.tgz#2876cb948a498797b5236f0095bc057d0dca38b6"
+  integrity sha1-KHbLlIpJh5e1I28AlbwFfQ3KOLY=
 
 cipher-base@^1.0.0, cipher-base@^1.0.1, cipher-base@^1.0.3:
   version "1.0.4"
@@ -4264,10 +4264,10 @@ color@^2.0.1:
     color-convert "^1.9.1"
     color-string "^1.5.2"
 
-colorette@^1.2.2:
-  version "1.3.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/colorette/-/colorette-1.3.0.tgz#ff45d2f0edb244069d3b772adeb04fed38d0a0af"
-  integrity sha1-/0XS8O2yRAadO3cq3rBP7TjQoK8=
+colorette@^1.4.0:
+  version "1.4.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/colorette/-/colorette-1.4.0.tgz#5190fbb87276259a86ad700bff2c6d6faa3fca40"
+  integrity sha1-UZD7uHJ2JZqGrXAL/yxtb6o/ykA=
 
 colors@^1.1.2:
   version "1.4.0"
@@ -4729,10 +4729,10 @@ cypher-editor-support@^1.1.8:
     fuzzaldrin "2.1.0"
     lodash "4.17.15"
 
-cypress@8.3.1:
-  version "8.3.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypress/-/cypress-8.3.1.tgz#c6760dbb907df2570b0e1ac235fa31c30f9260a6"
-  integrity sha1-xnYNu5B98lcLDhrCNfoxww+SYKY=
+cypress@^8.3.1:
+  version "8.4.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypress/-/cypress-8.4.1.tgz#8b5898bf49359cadc28f02ba05d51f63b8e3a717"
+  integrity sha1-i1iYv0k1nK3CjwK6BdUfY7jjpxc=
   dependencies:
     "@cypress/request" "^2.88.6"
     "@cypress/xvfb" "^1.2.4"
@@ -4803,9 +4803,9 @@ date-fns@^1.27.2:
   integrity sha1-LnG/CxGRU9u0zE6I2epaz7UNwFw=
 
 dayjs@^1.10.4:
-  version "1.10.4"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/dayjs/-/dayjs-1.10.4.tgz#8e544a9b8683f61783f570980a8a80eaf54ab1e2"
-  integrity sha1-jlRKm4aD9heD9XCYCoqA6vVKseI=
+  version "1.10.7"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/dayjs/-/dayjs-1.10.7.tgz#2cf5f91add28116748440866a0a1d26f3a6ce468"
+  integrity sha1-LPX5Gt0oEWdIRAhmoKHSbzps5Gg=
 
 debug@2.6.9, debug@^2.2.0, debug@^2.3.3, debug@^2.6.9:
   version "2.6.9"
@@ -8470,12 +8470,12 @@ listr-verbose-renderer@^0.4.0:
     figures "^1.7.0"
 
 listr2@^3.8.3:
-  version "3.11.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/listr2/-/listr2-3.11.1.tgz#a9bab5cd5874fd3cb7827118dbea6fedefbcb43f"
-  integrity sha1-qbq1zVh0/Ty3gnEY2+pv7e+8tD8=
+  version "3.12.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/listr2/-/listr2-3.12.1.tgz#75e515b86c66b60baf253542cc0dced6b60fedaf"
+  integrity sha1-deUVuGxmtguvJTVCzA3O1rYP7a8=
   dependencies:
     cli-truncate "^2.1.0"
-    colorette "^1.2.2"
+    colorette "^1.4.0"
     log-update "^4.0.0"
     p-map "^4.0.0"
     rxjs "^6.6.7"
