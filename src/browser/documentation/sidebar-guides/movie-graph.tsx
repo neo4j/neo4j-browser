@@ -32,7 +32,7 @@ const slides = [
       and directors that are related through the movies they have collaborated
       on.
     </p>
-    <p>This guide shows you how to:</p>
+    <p>This guide shows how to:</p>
     <ol className="big ">
       <li>
         <b>Create:</b> insert movie data into the graph.
