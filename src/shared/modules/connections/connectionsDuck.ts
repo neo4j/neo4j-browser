@@ -576,9 +576,7 @@ export const startupConnectionFailEpic = (action$: any, store: any) => {
   return action$
     .ofType(STARTUP_CONNECTION_FAILED)
     .do(() => {
-      if (getPlayImplicitInitCommands(store.getState())) {
-        store.dispatch(executeSystemCommand(`:server connect`))
-      }
+      store.dispatch(executeSystemCommand(`:server connect`))
     })
     .mapTo({ type: 'NOOP' })
 }
