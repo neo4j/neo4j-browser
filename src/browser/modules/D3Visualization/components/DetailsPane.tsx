@@ -23,64 +23,18 @@ import {
   StyledTokenRelationshipType,
   StyledLabelToken,
   StyledInspectorFooterRow,
-  StyledInspectorFooterRowListKey,
-  StyledInspectorFooterRowListValue,
   StyledInlineList,
   StyledDetailsStatusBar,
   StyledDetailsStatus,
   StyledDetailsStatusContents,
-  StyledInspectorFooterRowListPairAlternatingRows,
-  StyledInspectorClipboardCopyAll,
-  StyledInspectorFooterRowListKeyValuePair
+  AlternatingTable
 } from './styled'
 import ClickableUrls from '../../../components/ClickableUrls'
-import ClipboardCopier, {
-  copyToClipboard
-} from 'browser-components/ClipboardCopier'
+import ClipboardCopier from 'browser-components/ClipboardCopier'
 import { NodeItem, RelationshipItem, VizNodeProperty } from './types'
 import { GrassEditor } from './GrassEditor'
 import { Popup } from 'semantic-ui-react'
 import { GraphStyle } from './OverviewPane'
-import styled from 'styled-components'
-
-const AlternatingList = styled.ul`
-  li:nth-child(even) {
-    background: ${props => props.theme.alteringTableRowBackground};
-  }
-  li:nth-child(odd) {
-    background: ${props => props.theme.editorBackground};
-  }
-`
-
-const GraphItemProperties = ({
-  properties
-}: {
-  properties: VizNodeProperty[]
-}) => {
-  if (!properties.length) {
-    return <div>No properties to display</div>
-  }
-
-  return (
-    <AlternatingList>
-      {properties.map(({ key, type, value }) => (
-        <StyledInspectorFooterRowListPairAlternatingRows key={key} title={type}>
-          <StyledInspectorFooterRowListKeyValuePair>
-            <StyledInspectorFooterRowListKey>
-              {key}:
-            </StyledInspectorFooterRowListKey>
-            <StyledInspectorFooterRowListValue>
-              <ClickableUrls text={value} />
-            </StyledInspectorFooterRowListValue>
-          </StyledInspectorFooterRowListKeyValuePair>
-          <div style={{ marginLeft: 'auto' }}>
-            <ClipboardCopier textToCopy={`${key}: ${value}`} iconSize={10} />
-          </div>
-        </StyledInspectorFooterRowListPairAlternatingRows>
-      ))}
-    </AlternatingList>
-  )
-}
 
 type DetailsPaneComponentProps = {
   vizItem: NodeItem | RelationshipItem
@@ -185,5 +139,52 @@ export function DetailsPaneComponent({
         </StyledDetailsStatusContents>
       </StyledDetailsStatus>
     </StyledDetailsStatusBar>
+  )
+}
+
+const GraphItemProperties = ({
+  properties
+}: {
+  properties: VizNodeProperty[]
+}) => {
+  if (!properties.length) {
+    return <div>No properties to display</div>
+  }
+
+  return (
+    <AlternatingTable>
+      {properties.map(({ key, type, value }) => (
+        <tr key={key} title={type}>
+          <td
+            style={{
+              fontWeight: 700,
+              verticalAlign: 'top',
+              padding: '2px',
+              maxWidth: '200px',
+              minWidth: '40px',
+              whiteSpace: 'nowrap'
+            }}
+          >
+            <div style={{ overflowY: 'auto' }}>{key}: </div>
+          </td>
+          <td style={{ whiteSpace: 'pre-wrap', padding: '2px' }}>
+            <ClickableUrls text={value} />
+          </td>
+          <td
+            style={{
+              padding: '2px 5px',
+              display: 'flex',
+              justifyContent: 'flex-end'
+            }}
+          >
+            <ClipboardCopier
+              titleText={'Copy key and value'}
+              textToCopy={`${key}: ${value}`}
+              iconSize={10}
+            />
+          </td>
+        </tr>
+      ))}
+    </AlternatingTable>
   )
 }

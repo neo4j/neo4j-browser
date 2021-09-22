@@ -170,25 +170,6 @@ export const StyledInspectorFooterRow = styled.ul`
   line-height: 21px;
 `
 
-export const StyledInspectorFooterRowListKeyValuePair = styled.div`
-  flex: 1;
-  display: flex;
-`
-
-export const StyledInspectorFooterRowListKey = styled.div`
-  float: left;
-  font-weight: 800;
-  flex: 1;
-`
-
-export const StyledInspectorFooterRowListValue = styled.div`
-  padding: 0 3px;
-  overflow: hidden;
-  float: left;
-  white-space: pre-wrap;
-  flex: 3;
-`
-
 export const StyledInlineList = styled.ul`
   padding-left: 0;
   list-style: none;
@@ -273,7 +254,6 @@ export const StyledInspectorFooterRowListPair = styled(StyledInlineListItem)`
 export const StyledInspectorFooterRowListPairAlternatingRows = styled(
   StyledInspectorFooterRowListPair
 )`
-  display: flex;
   padding: 5px;
 `
 
@@ -504,4 +484,19 @@ export const StyledNodeInspectorTopMenuChevron = styled.div<{
      box-shadow: 0px 0px 2px rgba(21, 30, 41, 0.1),
       0px 1px 2px rgba(21, 30, 41, 0.08), 0px 1px 4px rgba(21, 30, 41, 0.08);
   `}
+`
+
+export const OverflowContainer = styled.div<{ height: number }>`
+  height: ${props => props.height}px;
+  overflow: auto;
+`
+export const AlternatingTable = styled.table`
+  tr:nth-child(even) {
+    background: ${props => props.theme.alteringTableRowBackground};
+  }
+  tr:nth-child(odd) {
+    background: ${props => props.theme.editorBackground};
+  }
+  font-size: 13px;
+  width: 100%;
 `

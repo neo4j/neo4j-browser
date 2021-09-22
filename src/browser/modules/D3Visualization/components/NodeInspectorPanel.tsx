@@ -6,6 +6,7 @@ import OverviewPane from './OverviewPane'
 import { VizItem } from './types'
 import {
   StyledNodeInspectorContainer,
+  OverflowContainer,
   StyledNodeInspectorTopMenuChevron
 } from './styled'
 
@@ -76,13 +77,10 @@ export class NodeInspectorPanel extends Component<
               resizeHandles={['w']}
               onResize={(_e, { size }) => this.setState({ width: size.width })}
             >
+              {/* React-resizeable requires it's first child to not have a height set, 
+                  therefore we need this wrapping div */}
               <div>
-                <div
-                  style={{
-                    height: this.props.frameHeight,
-                    overflow: 'auto'
-                  }}
-                >
+                <OverflowContainer height={this.props.frameHeight}>
                   {shownEl.type === 'node' ||
                   shownEl.type === 'relationship' ? (
                     <DetailsPaneComponent
@@ -111,7 +109,7 @@ export class NodeInspectorPanel extends Component<
                       }
                     />
                   )}
-                </div>
+                </OverflowContainer>
               </div>
             </Resizable>
           </StyledNodeInspectorContainer>
