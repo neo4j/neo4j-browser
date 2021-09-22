@@ -20,25 +20,31 @@ interface NodeInspectorPanelProps {
   selectedLabel: any
   frameHeight: number
   hasTruncatedFields: boolean
+  width: number
+  setWidth: (width: number) => void
 }
 
 export type NodeInspectorPanelState = {
   expanded: boolean
-  width: number
 }
+export const defaultPanelWidth = (): number => window.innerWidth / 3.5
 export class NodeInspectorPanel extends Component<
   NodeInspectorPanelProps,
   NodeInspectorPanelState
 > {
   state: NodeInspectorPanelState = {
-    expanded: true,
-    width: window.innerWidth / 3.5
+    expanded: true
   }
 
   togglePanel = (): void => {
-    this.setState(oldState => ({
-      expanded: !oldState.expanded
-    }))
+    if (this.state.expanded) {
+      this.props.setWidth(0)
+    } else {
+      this.props.setWidth(defaultPanelWidth())
+    }
+    this.setState({
+      expanded: !this.state.expanded
+    })
   }
 
   render(): JSX.Element {
@@ -68,14 +74,14 @@ export class NodeInspectorPanel extends Component<
 
         {expanded && (
           <StyledNodeInspectorContainer
-            width={this.state.width}
+            width={this.props.width}
             height={this.props.frameHeight}
           >
             <Resizable
-              width={this.state.width}
+              width={this.props.width}
               height={300 /*doesn't matter but required prop */}
               resizeHandles={['w']}
-              onResize={(_e, { size }) => this.setState({ width: size.width })}
+              onResize={(_e, { size }) => this.props.setWidth(size.width)}
             >
               {/* React-resizeable requires it's first child to not have a height set, 
                   therefore we need this wrapping div */}

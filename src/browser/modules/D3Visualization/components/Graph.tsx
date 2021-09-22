@@ -34,9 +34,29 @@ export class GraphComponent extends Component<any, State> {
   graphEH: any
   graphView: any
   svgElement: any
+  state = {
+    zoomInLimitReached: false,
+    zoomOutLimitReached: false
+  }
 
   graphInit(el: any) {
     this.svgElement = el
+  }
+
+  zoomInClicked(el: any) {
+    const limits = this.graphView.zoomIn(el)
+    this.setState({
+      zoomInLimitReached: limits.zoomInLimit,
+      zoomOutLimitReached: limits.zoomOutLimit
+    })
+  }
+
+  zoomOutClicked(el: any) {
+    const limits = this.graphView.zoomOut(el)
+    this.setState({
+      zoomInLimitReached: limits.zoomInLimit,
+      zoomOutLimitReached: limits.zoomOutLimit
+    })
   }
 
   getVisualAreaHeight() {
@@ -112,64 +132,17 @@ export class GraphComponent extends Component<any, State> {
     }
   }
 
-  render() {
+  zoomButtons() {
     return (
-      <StyledSvgWrapper>
-        <svg className="neod3viz" ref={this.graphInit.bind(this)} />
-        {this.graphView && (
-          <ZoomButtons
-            fullscreen={this.props.fullscreen}
-            zoomIn={this.graphView.zoomIn.bind(this)}
-            zoomOut={this.graphView.zoomOut.bind(this)}
-            // TODO ZOOM CRASHES
-          />
-        )}
-      </StyledSvgWrapper>
-    )
-  }
-}
-
-type ZoomLimits = { zoomInLimit: boolean; zoomOutLimit: boolean }
-type ZoomButtonProps = {
-  fullscreen: boolean
-  zoomIn: () => ZoomLimits
-  zoomOut: () => ZoomLimits
-}
-
-type ZoomButtonState = {
-  zoomInLimitReached: boolean
-  zoomOutLimitReached: boolean
-}
-class ZoomButtons extends React.Component<ZoomButtonProps, ZoomButtonState> {
-  state: ZoomButtonState = {
-    zoomInLimitReached: false,
-    zoomOutLimitReached: false
-  }
-
-  zoomInClicked = () => {
-    const limits = this.props.zoomIn()
-    this.setState({
-      zoomInLimitReached: limits.zoomInLimit,
-      zoomOutLimitReached: limits.zoomOutLimit
-    })
-  }
-
-  zoomOutClicked = () => {
-    const limits = this.props.zoomOut()
-    this.setState({
-      zoomInLimitReached: limits.zoomInLimit,
-      zoomOutLimitReached: limits.zoomOutLimit
-    })
-  }
-
-  render() {
-    return (
-      <StyledZoomHolder fullscreen={this.props.fullscreen}>
+      <StyledZoomHolder
+        offset={this.props.offset}
+        fullscreen={this.props.fullscreen}
+      >
         <StyledZoomButton
           className={
             this.state.zoomInLimitReached ? 'faded zoom-in' : 'zoom-in'
           }
-          onClick={this.zoomInClicked}
+          onClick={this.zoomInClicked.bind(this)}
         >
           <ZoomInIcon regulateSize={this.props.fullscreen ? 2 : 1} />
         </StyledZoomButton>
@@ -177,11 +150,20 @@ class ZoomButtons extends React.Component<ZoomButtonProps, ZoomButtonState> {
           className={
             this.state.zoomOutLimitReached ? 'faded zoom-out' : 'zoom-out'
           }
-          onClick={this.zoomOutClicked}
+          onClick={this.zoomOutClicked.bind(this)}
         >
           <ZoomOutIcon regulateSize={this.props.fullscreen ? 2 : 1} />
         </StyledZoomButton>
       </StyledZoomHolder>
+    )
+  }
+
+  render() {
+    return (
+      <StyledSvgWrapper>
+        <svg className="neod3viz" ref={this.graphInit.bind(this)} />
+        {this.zoomButtons()}
+      </StyledSvgWrapper>
     )
   }
 }

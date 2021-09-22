@@ -25,8 +25,12 @@ import { connect } from 'react-redux'
 import { deepEquals } from 'services/utils'
 import { GraphComponent } from './Graph'
 import neoGraphStyle from '../graphStyle'
-import { NodeInspectorPanel } from './NodeInspectorPanel'
-import { StyledFullSizeContainer, StyledGraphAreaContainer } from './styled'
+import { defaultPanelWidth, NodeInspectorPanel } from './NodeInspectorPanel'
+import {
+  panelMinWidth,
+  StyledFullSizeContainer,
+  StyledGraphAreaContainer
+} from './styled'
 import { GlobalState } from 'shared/globalState'
 import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
 import { VizItem } from './types'
@@ -75,6 +79,7 @@ type ExplorerComponentState = {
   stats: { labels: any; relTypes: any }
   styleVersion: number
   freezeLegend: boolean
+  width: number
 }
 
 type VizLabelItem = {
@@ -133,7 +138,8 @@ export class ExplorerComponent extends Component<
       selectedItem,
       hoveredItem: selectedItem,
       selectedLabel: undefined,
-      freezeLegend: false
+      freezeLegend: false,
+      width: defaultPanelWidth()
     }
   }
 
@@ -258,6 +264,7 @@ export class ExplorerComponent extends Component<
             assignVisElement={this.props.assignVisElement}
             getAutoCompleteCallback={this.props.getAutoCompleteCallback}
             setGraph={this.props.setGraph}
+            offset={this.state.width + 4}
           />
           <NodeInspectorPanel
             frameHeight={this.props.frameHeight}
@@ -269,6 +276,10 @@ export class ExplorerComponent extends Component<
             selectedItem={this.state.selectedItem}
             selectedLabel={this.state.selectedLabel}
             stats={this.state.stats}
+            width={this.state.width}
+            setWidth={width =>
+              this.setState({ width: Math.max(panelMinWidth, width) })
+            }
           />
         </StyledGraphAreaContainer>
       </StyledFullSizeContainer>

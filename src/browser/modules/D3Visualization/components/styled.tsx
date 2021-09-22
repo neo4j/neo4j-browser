@@ -22,6 +22,7 @@ import styled from 'styled-components'
 
 export const legendRowHeight = 32
 export const inspectorFooterContractedHeight = 22
+export const panelMinWidth = 300
 
 export const StyledSvgWrapper = styled.div`
   line-height: 0;
@@ -237,10 +238,13 @@ export const StyledFullSizeContainer = styled.div`
   height: 100%;
 `
 
-export const StyledZoomHolder = styled.div<{ fullscreen: boolean }>`
+export const StyledZoomHolder = styled.div<{
+  fullscreen: boolean
+  offset: number
+}>`
   position: ${props => (props.fullscreen ? 'fixed' : 'absolute')};
   bottom: 0;
-  left: 8px;
+  right: ${props => props.offset}px
   padding: 6px 6px 0 6px;
   border-left: ${props => props.theme.inFrameBorder};
   border-right: ${props => props.theme.inFrameBorder};
@@ -281,7 +285,7 @@ export const StyledNodeInspectorContainer = styled.div<{
   top: 0;
   z-index: 1;
   width: ${props => props.width}px;
-  min-width: 300px;
+  min-width: ${panelMinWidth}px;
   max-width: 95%;
   height: ${props => props.height}px;
   background: ${props => props.theme.editorBackground};
