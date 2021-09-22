@@ -494,7 +494,7 @@ export const StyledNodeInspectorTopMenuChevron = styled.div<{
   cursor: pointer;
   position: absolute;
   right: 15px;
-  top: 15px;
+  top: 8px;
   z-index: 2;
   ${props =>
     !props.expanded &&
