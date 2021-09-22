@@ -152,24 +152,6 @@ export const StyledInspectorFooter = styled.div`
   }
 `
 
-export const StyledDetailsStatusContents = styled.div`
-  margin-top: 6px;
-  font-size: 12px;
-  width: 100%;
-  white-space: normal;
-  overflow: auto;
-  &.contracted {
-    max-height: ${inspectorFooterContractedHeight}px;
-    overflow: hidden;
-  }
-`
-
-export const StyledInspectorFooterRow = styled.ul`
-  list-style: none;
-  word-break: break-word;
-  line-height: 21px;
-`
-
 export const StyledInlineList = styled.ul`
   list-style: none;
   word-break: break-word;
@@ -221,18 +203,6 @@ export const StyledStatus = styled.div`
   width: 100%;
   margin-top: 3px;
   max-height: 64px;
-  overflow: auto;
-`
-
-export const StyledDetailsStatus = styled.div<{ maxHeight: number }>`
-  position: relative;
-  float: left;
-  padding-left: 16px;
-  margin-top: 0;
-  margin-bottom: 0;
-  width: 100%;
-  margin-top: 3px;
-  max-height: ${props => props.maxHeight}px;
   overflow: auto;
 `
 
