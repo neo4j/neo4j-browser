@@ -228,7 +228,6 @@ export function App(props: any) {
                       connectionState={connectionState}
                       lastConnectionUpdate={lastConnectionUpdate}
                       errorMessage={errorMessage}
-                      utilizeBrowserSync={loadSync}
                       useDb={useDb}
                       databases={databases}
                     />

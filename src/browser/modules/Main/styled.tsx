@@ -74,35 +74,3 @@ export const StyledCodeBlockFrame = styled(StyledCodeBlock)`
   border-radius: 4px;
   cursor: pointer;
 `
-
-export const SyncDisconnectedBanner = styled(Banner)`
-  background-color: ${props => props.theme.auth};
-  display: flex;
-  justify-content: space-between;
-`
-
-export const SyncSignInBarButton = styled(SyncSignInButton)`
-  padding: 0 8px 0 8px;
-  margin: 0 12px 0 12px;
-  vertical-align: baseline;
-  border: none;
-`
-export const StyledCancelLink = styled.a`
-  cursor: pointer;
-  text-decoration: none;
-  color: #d0d0d0;
-  &:hover {
-    color: #ffffff;
-    text-decoration: none;
-  }
-`
-export const StyledSyncReminderSpan = styled.span`
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  float: left;
-`
-
-export const StyledSyncReminderButtonContainer = styled.div`
-  float: right;
-`
