@@ -48,7 +48,6 @@ export class NodeInspectorPanel extends Component<
     const hoveringNodeOrRelationship =
       hoveredItem && relevantItems.includes(hoveredItem.type)
     const shownEl = hoveringNodeOrRelationship ? hoveredItem : selectedItem
-    const showDetails = relevantItems.includes(shownEl.type)
 
     return (
       <>
@@ -78,14 +77,14 @@ export class NodeInspectorPanel extends Component<
               onResize={(_e, { size }) => this.setState({ width: size.width })}
             >
               <div>
-                <div style={{ height: '40px' }}> header </div>
                 <div
                   style={{
-                    height: this.props.frameHeight - 40,
+                    height: this.props.frameHeight,
                     overflow: 'auto'
                   }}
                 >
-                  {showDetails ? (
+                  {shownEl.type === 'node' ||
+                  shownEl.type === 'relationship' ? (
                     <DetailsPaneComponent
                       vizItem={shownEl}
                       graphStyle={this.props.graphStyle}

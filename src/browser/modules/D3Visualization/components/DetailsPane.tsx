@@ -34,8 +34,10 @@ import {
   StyledInspectorFooterRowListKeyValuePair
 } from './styled'
 import ClickableUrls from '../../../components/ClickableUrls'
-import ClipboardCopier from 'browser-components/ClipboardCopier'
-import { VizItem, VizNodeProperty } from './types'
+import ClipboardCopier, {
+  copyToClipboard
+} from 'browser-components/ClipboardCopier'
+import { NodeItem, RelationshipItem, VizNodeProperty } from './types'
 import { GrassEditor } from './GrassEditor'
 import { Popup } from 'semantic-ui-react'
 import { GraphStyle } from './OverviewPane'
@@ -51,60 +53,37 @@ const AlternatingList = styled.ul`
 `
 
 const GraphItemProperties = ({
-  id,
   properties
 }: {
-  id: string
   properties: VizNodeProperty[]
 }) => {
   if (!properties.length) {
     return <div>No properties to display</div>
   }
 
-  const allItemProperties = [
-    { key: '<id>', value: `${id}`, type: 'string' },
-    ...properties
-  ].sort((a, b) => (a.key < b.key ? -1 : 1))
-
   return (
-    <>
-      <StyledInspectorClipboardCopyAll>
-        <div style={{ marginLeft: 'auto', marginRight: '5px' }}>
-          <ClipboardCopier
-            textToCopy={allItemProperties
-              .map(prop => `${prop.key}: ${prop.value}`)
-              .join('\n')}
-            iconSize={10}
-            titleText={'Copy all properties to clipboard'}
-          />
-        </div>
-      </StyledInspectorClipboardCopyAll>
-      <AlternatingList>
-        {allItemProperties.map(({ key, type, value }) => (
-          <StyledInspectorFooterRowListPairAlternatingRows
-            key={key}
-            title={type}
-          >
-            <StyledInspectorFooterRowListKeyValuePair>
-              <StyledInspectorFooterRowListKey>
-                {key}:
-              </StyledInspectorFooterRowListKey>
-              <StyledInspectorFooterRowListValue>
-                <ClickableUrls text={value} />
-              </StyledInspectorFooterRowListValue>
-            </StyledInspectorFooterRowListKeyValuePair>
-            <div style={{ marginLeft: 'auto' }}>
-              <ClipboardCopier textToCopy={`${key}: ${value}`} iconSize={10} />
-            </div>
-          </StyledInspectorFooterRowListPairAlternatingRows>
-        ))}
-      </AlternatingList>
-    </>
+    <AlternatingList>
+      {properties.map(({ key, type, value }) => (
+        <StyledInspectorFooterRowListPairAlternatingRows key={key} title={type}>
+          <StyledInspectorFooterRowListKeyValuePair>
+            <StyledInspectorFooterRowListKey>
+              {key}:
+            </StyledInspectorFooterRowListKey>
+            <StyledInspectorFooterRowListValue>
+              <ClickableUrls text={value} />
+            </StyledInspectorFooterRowListValue>
+          </StyledInspectorFooterRowListKeyValuePair>
+          <div style={{ marginLeft: 'auto' }}>
+            <ClipboardCopier textToCopy={`${key}: ${value}`} iconSize={10} />
+          </div>
+        </StyledInspectorFooterRowListPairAlternatingRows>
+      ))}
+    </AlternatingList>
   )
 }
 
 type DetailsPaneComponentProps = {
-  vizItem: VizItem
+  vizItem: NodeItem | RelationshipItem
   graphStyle: GraphStyle
 }
 
@@ -112,8 +91,31 @@ export function DetailsPaneComponent({
   vizItem,
   graphStyle
 }: DetailsPaneComponentProps): JSX.Element {
+  const allItemProperties = [
+    { key: '<id>', value: `${vizItem.item.id}`, type: 'string' },
+    ...vizItem.item.properties
+  ].sort((a, b) => (a.key < b.key ? -1 : 1))
+
   return (
     <StyledDetailsStatusBar>
+      <div
+        style={{
+          fontSize: '12px',
+          paddingBottom: '5px',
+          marginTop: '5px',
+          marginBottom: '5px',
+          borderBottom: '1px solid #DAE4F0'
+        }}
+      >
+        {vizItem.type} properties.{' '}
+        <ClipboardCopier
+          textToCopy={allItemProperties
+            .map(prop => `${prop.key}: ${prop.value}`)
+            .join('\n')}
+          iconSize={10}
+          titleText={'Copy all properties to clipboard'}
+        />
+      </div>
       <StyledDetailsStatus>
         <StyledDetailsStatusContents>
           <StyledInspectorFooterRow data-testid="vizInspector">
@@ -155,10 +157,7 @@ export function DetailsPaneComponent({
                     </Popup>
                   )
                 })}
-                <GraphItemProperties
-                  id={vizItem.item.id}
-                  properties={vizItem.item.properties}
-                />
+                <GraphItemProperties properties={allItemProperties} />
               </StyledInlineList>
             )}
 
@@ -177,10 +176,7 @@ export function DetailsPaneComponent({
                 >
                   {vizItem.item.type}
                 </StyledTokenRelationshipType>
-                <GraphItemProperties
-                  id={vizItem.item.id}
-                  properties={vizItem.item.properties}
-                />
+                <GraphItemProperties properties={allItemProperties} />
               </StyledInlineList>
             )}
           </StyledInspectorFooterRow>
