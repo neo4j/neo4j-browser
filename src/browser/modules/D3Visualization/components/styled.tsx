@@ -253,7 +253,7 @@ export const StyledStatus = styled.div`
   overflow: auto;
 `
 
-export const StyledDetailsStatus = styled.div`
+export const StyledDetailsStatus = styled.div<{ maxHeight: number }>`
   position: relative;
   float: left;
   padding-left: 16px;
@@ -261,6 +261,8 @@ export const StyledDetailsStatus = styled.div`
   margin-bottom: 0;
   width: 100%;
   margin-top: 3px;
+  max-height: ${props => props.maxHeight}px;
+  overflow: auto;
 `
 
 export const StyledInspectorFooterRowListPair = styled(StyledInlineListItem)`
@@ -493,7 +495,7 @@ export const StyledNodeInspectorTopMenuChevron = styled.div<{
 }>`
   cursor: pointer;
   position: absolute;
-  right: 15px;
+  right: 0px;
   top: 8px;
   z-index: 2;
   ${props =>

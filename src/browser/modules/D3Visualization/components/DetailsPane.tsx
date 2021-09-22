@@ -85,11 +85,13 @@ const GraphItemProperties = ({
 type DetailsPaneComponentProps = {
   vizItem: NodeItem | RelationshipItem
   graphStyle: GraphStyle
+  frameHeight: number
 }
 
 export function DetailsPaneComponent({
   vizItem,
-  graphStyle
+  graphStyle,
+  frameHeight
 }: DetailsPaneComponentProps): JSX.Element {
   const allItemProperties = [
     { key: '<id>', value: `${vizItem.item.id}`, type: 'string' },
@@ -101,10 +103,10 @@ export function DetailsPaneComponent({
       <div
         style={{
           fontSize: '12px',
+          paddingTop: '5px',
           paddingBottom: '5px',
-          marginTop: '5px',
-          marginBottom: '5px',
-          borderBottom: '1px solid #DAE4F0'
+          borderBottom: '1px solid #DAE4F0',
+          height: '30px'
         }}
       >
         {vizItem.type} properties.{' '}
@@ -116,7 +118,7 @@ export function DetailsPaneComponent({
           titleText={'Copy all properties to clipboard'}
         />
       </div>
-      <StyledDetailsStatus>
+      <StyledDetailsStatus maxHeight={frameHeight - 40}>
         <StyledDetailsStatusContents>
           <StyledInspectorFooterRow data-testid="vizInspector">
             {vizItem.type === 'node' && (
@@ -152,7 +154,7 @@ export function DetailsPaneComponent({
                           label,
                           propertyKeys: vizItem.item.properties.map(p => p.key)
                         }}
-                        frameHeight={500}
+                        frameHeight={frameHeight}
                       />
                     </Popup>
                   )

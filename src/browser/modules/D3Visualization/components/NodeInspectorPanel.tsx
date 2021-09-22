@@ -88,6 +88,7 @@ export class NodeInspectorPanel extends Component<
                     <DetailsPaneComponent
                       vizItem={shownEl}
                       graphStyle={this.props.graphStyle}
+                      frameHeight={this.props.frameHeight}
                     />
                   ) : (
                     <OverviewPane
