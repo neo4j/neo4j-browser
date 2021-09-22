@@ -25,7 +25,7 @@ import { BuiltInGuideSidebarSlide } from '../../modules/Carousel/Slide'
 const title = 'Concepts Guide'
 const category = 'guides'
 const slides = [
-  <BuiltInGuideSidebarSlide key="first">
+  <BuiltInGuideSidebarSlide key="s1">
     <h3>Property graph model concepts</h3>
     <p className="lead">
       <em>Basic concepts to get you going</em>
@@ -42,7 +42,7 @@ const slides = [
       </li>
     </ul>
   </BuiltInGuideSidebarSlide>,
-  <BuiltInGuideSidebarSlide key="second">
+  <BuiltInGuideSidebarSlide key="s2">
     <h3>Nodes</h3>
     <p className="lead">
       <em>Neo4j stores data in a graph as nodes</em>
@@ -63,14 +63,17 @@ const slides = [
       <em>
         <p>Key info:</p>
         <ul>
-          <li>Nodes hold the data for the graph.</li>
+          <li>
+            Nodes often represents entities or discrete objects that can be
+            classified with zero or more labels.
+          </li>
           <li>Data is stored as properties of the nodes.</li>
-          <li>Properties are simple name/value pairs.</li>
+          <li>Properties are simple key-value pairs.</li>
         </ul>
       </em>
     </p>
   </BuiltInGuideSidebarSlide>,
-  <BuiltInGuideSidebarSlide key="third">
+  <BuiltInGuideSidebarSlide key="s3">
     <h3>Labels</h3>
     <p className="lead">
       <em>Associate a set of nodes</em>
@@ -91,25 +94,23 @@ const slides = [
         <p>Key info:</p>
         <ul>
           <li>A node can have zero or more labels.</li>
-          <li>Labels do not have any properties.</li>
+          <li>Labels are used to classify nodes.</li>
         </ul>
       </em>
     </p>
   </BuiltInGuideSidebarSlide>,
-  <BuiltInGuideSidebarSlide key="forth">
+  <BuiltInGuideSidebarSlide key="s4">
     <h3>More Nodes</h3>
     <p className="lead">
-      <em>
-        Neo4j is schema-free. Nodes can have a mix of common and unique
-        properties.
-      </em>
+      <em>Neo4j is schema-free</em>
     </p>
     <p>
       Like any database, storing data in Neo4j can be as simple as adding more
-      nodes. Add a few more nodes and properties:
+      nodes. Nodes can have a mix of common and unique properties. Add a few
+      more nodes and properties:
     </p>
     <ol>
-      <li>Emil had a Klout score of 99.</li>
+      <li>Emil, Klout score of 99.</li>
       <li>Johan, from Sweden, who is learning to surf.</li>
       <li>Ian, from England, who is an author.</li>
       <li>Rik, from Belgium, who has a cat named Orval.</li>
@@ -123,22 +124,32 @@ const slides = [
         <p>Key info:</p>
         <ul>
           <li>Similar nodes can have different properties.</li>
-          <li>Properties can be strings, numbers, or booleans.</li>
+          <li>
+            Properties can hold different data types, such as `number`,
+            `string`, or `boolean`.
+          </li>
+          <li>
+            Properties can also be a homogeneous list (array) containing
+            strings, numbers, or boolean values.
+          </li>
           <li>Neo4j can store billions of nodes.</li>
         </ul>
       </em>
     </p>
   </BuiltInGuideSidebarSlide>,
-  <BuiltInGuideSidebarSlide key="fifth">
+  <BuiltInGuideSidebarSlide key="s5">
     <h3>Relationships</h3>
     <p className="lead">
-      <em>Connect nodes in the graph</em>
+      <em>Connect the nodes</em>
     </p>
     <p>
       The real power of Neo4j is in connected data. To associate any two nodes,
       add a relationship that describes how the records are related.
     </p>
-    <p>In our social graph, you can simply say who KNOWS whom:</p>
+    <p>
+      In our social graph, you can simply say who knows (relationship type
+      KNOWS) whom:
+    </p>
     <ol>
       <li>Emil knows Johan and Ian.</li>
       <li>Johan knows Ian and Rik.</li>
@@ -160,10 +171,10 @@ const slides = [
       </em>
     </p>
   </BuiltInGuideSidebarSlide>,
-  <BuiltInGuideSidebarSlide key="sixth">
+  <BuiltInGuideSidebarSlide key="s6">
     <h3>Relationship properties</h3>
     <p className="lead">
-      <em>Store information shared by two nodes.</em>
+      <em>Store information shared by two nodes</em>
     </p>
     <p>
       In a property graph, relationships can also contain properties that
