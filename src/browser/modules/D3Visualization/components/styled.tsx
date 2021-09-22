@@ -171,7 +171,6 @@ export const StyledInspectorFooterRow = styled.ul`
 `
 
 export const StyledInlineList = styled.ul`
-  padding-left: 0;
   list-style: none;
   word-break: break-word;
 `
@@ -190,7 +189,6 @@ export const StyledInlineListStylePicker = styled(StyledInlineList)<{
 export const StyledInlineListItem = styled.li`
   display: inline-block;
   padding-right: 5px;
-  padding-left: 5px;
 `
 
 export const StyledStatusBarWrapper = styled.div`
@@ -295,32 +293,15 @@ export const StyledTokenContextMenuKey = styled(StyledLabelToken)`
 export const StyledTokenCount = styled.span`
   font-weight: normal;
 `
-export const StyledLegendContents = styled.ul`
-  float: left;
-  line-height: 1em;
-  position: relative;
-  top: 3px;
-  top: -1px;
-`
 
-export const StyledLegendRow = styled.div`
-  border-bottom: transparent;
+export const StyledLegendInlineList = styled(StyledInlineList)`
+  padding: 4px 0;
   &.contracted {
     max-height: ${legendRowHeight}px;
     overflow: hidden;
   }
   border-bottom: ${props => props.theme.inFrameBorder};
-`
-
-export const StyledLegend = styled.div`
-  position: absolute;
-  z-index: 1;
-  right: 0;
-  left: 0;
-  padding: 0 15px;
-`
-export const StyledLegendInlineList = styled(StyledInlineList)`
-  padding: 7px 9px 0px 10px;
+  margin-bottom: 8px;
 `
 export const StyledLegendInlineListItem = styled(StyledInlineListItem)`
   display: inline-block;
@@ -444,14 +425,13 @@ export const StyledNodeInspectorContainer = styled.div<{
   top: 0;
   z-index: 1;
   width: ${props => props.width}px;
-  min-width: 150px;
+  min-width: 300px;
   max-width: 95%;
   height: ${props => props.height}px;
   background: ${props => props.theme.editorBackground};
   color: ${props => props.theme.primaryText};
   font-family: ${props => props.theme.drawerHeaderFontFamily};
   overflow-y: auto;
-  padding: 0 10px;
   box-shadow: 0px 0px 2px rgba(21, 30, 41, 0.1),
     0px 1px 2px rgba(21, 30, 41, 0.08), 0px 1px 4px rgba(21, 30, 41, 0.08);
 `
@@ -476,7 +456,7 @@ export const StyledNodeInspectorTopMenuChevron = styled.div<{
   cursor: pointer;
   position: absolute;
   right: 0px;
-  top: 8px;
+  top: 6px;
   z-index: 2;
   ${props =>
     !props.expanded &&
@@ -489,6 +469,7 @@ export const StyledNodeInspectorTopMenuChevron = styled.div<{
 export const OverflowContainer = styled.div<{ height: number }>`
   height: ${props => props.height}px;
   overflow: auto;
+  padding: 0 14px;
 `
 export const AlternatingTable = styled.table`
   tr:nth-child(even) {

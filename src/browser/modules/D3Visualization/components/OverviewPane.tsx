@@ -22,11 +22,8 @@ import React from 'react'
 import { Icon, Popup } from 'semantic-ui-react'
 
 import {
-  StyledLegendRow,
   StyledTokenRelationshipType,
   StyledLegendInlineListItem,
-  StyledLegend,
-  StyledLegendContents,
   StyledLabelToken,
   StyledTokenCount,
   StyledLegendInlineList
@@ -77,15 +74,14 @@ function OverviewPane({
   const { relTypes, labels } = stats
 
   return (
-    <StyledLegend>
+    <div>
       <div
         style={{
           fontSize: '12px',
-          paddingBottom: '5px',
           marginTop: '5px',
           marginBottom: '5px',
           borderBottom: '1px solid #DAE4F0',
-          height: '30px'
+          height: '25px'
         }}
       >
         {hasTruncatedFields && (
@@ -100,118 +96,115 @@ function OverviewPane({
             relationshipCount
           )} relationships.`}
       </div>
-      <div style={{ maxHeight: `${frameHeight - 40}px`, overflow: 'auto' }}>
-        Node labels:
+      <div
+        style={{
+          maxHeight: `${frameHeight - 40}px`,
+          overflow: 'auto'
+        }}
+      >
+        Node labels
         {!labels || !Object.keys(labels).length ? (
           <div>No labels to display</div>
         ) : (
-          <StyledLegendRow>
-            <StyledLegendInlineList>
-              {Object.keys(labels).map((legendItemKey, index) => {
-                const styleForItem = graphStyle.forNode({
-                  labels: [legendItemKey]
-                })
-                const onClick = () => {
-                  onSelectedLabel(
-                    legendItemKey,
-                    Object.keys(labels[legendItemKey].properties)
-                  )
-                }
-                const style = {
-                  backgroundColor: styleForItem.get('color'),
-                  color: styleForItem.get('text-color-internal')
-                }
-                return (
-                  <StyledLegendInlineListItem
-                    key={index}
-                    data-testid="viz-legend-labels"
-                  >
-                    <StyledLegendContents>
-                      <Popup
-                        on="click"
-                        basic
-                        pinned
-                        trigger={
-                          <StyledLabelToken onClick={onClick} style={style}>
-                            {legendItemKey}
-                            <StyledTokenCount>{`(${numberToUSLocale(
-                              labels[legendItemKey].count
-                            )})`}</StyledTokenCount>
-                          </StyledLabelToken>
-                        }
-                        wide
-                      >
-                        <GrassEditor
-                          selectedLabel={selectedLabel?.item?.selectedLabel}
-                          frameHeight={frameHeight}
-                        />
-                      </Popup>
-                    </StyledLegendContents>
-                  </StyledLegendInlineListItem>
+          <StyledLegendInlineList>
+            {Object.keys(labels).map(legendItemKey => {
+              const styleForItem = graphStyle.forNode({
+                labels: [legendItemKey]
+              })
+              const onClick = () => {
+                onSelectedLabel(
+                  legendItemKey,
+                  Object.keys(labels[legendItemKey].properties)
                 )
-              })}
-            </StyledLegendInlineList>
-          </StyledLegendRow>
+              }
+              const style = {
+                backgroundColor: styleForItem.get('color'),
+                color: styleForItem.get('text-color-internal')
+              }
+              return (
+                <StyledLegendInlineListItem
+                  key={legendItemKey}
+                  data-testid="viz-legend-labels"
+                >
+                  <Popup
+                    on="click"
+                    basic
+                    pinned
+                    trigger={
+                      <StyledLabelToken onClick={onClick} style={style}>
+                        {legendItemKey}
+                        <StyledTokenCount>{`(${numberToUSLocale(
+                          labels[legendItemKey].count
+                        )})`}</StyledTokenCount>
+                      </StyledLabelToken>
+                    }
+                    wide
+                  >
+                    <GrassEditor
+                      selectedLabel={selectedLabel?.item?.selectedLabel}
+                      frameHeight={frameHeight}
+                    />
+                  </Popup>
+                </StyledLegendInlineListItem>
+              )
+            })}
+          </StyledLegendInlineList>
         )}
-        Relationship Types:
+        Relationship Types
         {!relTypes || !Object.keys(relTypes).length ? (
           <div>No relationship types to display</div>
         ) : (
-          <StyledLegendRow>
-            <StyledLegendInlineList>
-              {Object.keys(relTypes).map((legendItemKey, i) => {
-                const styleForItem = graphStyle.forRelationship({
-                  type: legendItemKey
-                })
-                const onClick = () => {
-                  onSelectedRelType(
-                    legendItemKey,
-                    Object.keys(relTypes[legendItemKey].properties)
-                  )
-                }
-                const style = {
-                  backgroundColor: styleForItem.get('color'),
-                  color: styleForItem.get('text-color-internal')
-                }
-                return (
-                  <StyledLegendInlineListItem
-                    key={i}
-                    data-testid="viz-legend-reltypes"
-                  >
-                    <StyledLegendContents>
-                      <Popup
-                        on="click"
-                        basic
-                        pinned
-                        trigger={
-                          <StyledTokenRelationshipType
-                            onClick={onClick}
-                            style={style}
-                          >
-                            {legendItemKey}
-                            <StyledTokenCount>
-                              {`(${numberToUSLocale(
-                                relTypes[legendItemKey].count
-                              )})`}
-                            </StyledTokenCount>
-                          </StyledTokenRelationshipType>
-                        }
-                        wide
-                      >
-                        <GrassEditor
-                          selectedRelType={selectedLabel?.item?.selectedRelType}
-                          frameHeight={frameHeight}
-                        />
-                      </Popup>
-                    </StyledLegendContents>
-                  </StyledLegendInlineListItem>
+          <StyledLegendInlineList>
+            {Object.keys(relTypes).map(legendItemKey => {
+              const styleForItem = graphStyle.forRelationship({
+                type: legendItemKey
+              })
+              const onClick = () => {
+                onSelectedRelType(
+                  legendItemKey,
+                  Object.keys(relTypes[legendItemKey].properties)
                 )
-              })}
-            </StyledLegendInlineList>
-          </StyledLegendRow>
+              }
+              const style = {
+                backgroundColor: styleForItem.get('color'),
+                color: styleForItem.get('text-color-internal')
+              }
+              return (
+                <StyledLegendInlineListItem
+                  key={legendItemKey}
+                  data-testid="viz-legend-reltypes"
+                >
+                  <Popup
+                    on="click"
+                    basic
+                    pinned
+                    trigger={
+                      <StyledTokenRelationshipType
+                        onClick={onClick}
+                        style={style}
+                      >
+                        {legendItemKey}
+                        <StyledTokenCount>
+                          {`(${numberToUSLocale(
+                            relTypes[legendItemKey].count
+                          )})`}
+                        </StyledTokenCount>
+                      </StyledTokenRelationshipType>
+                    }
+                    wide
+                  >
+                    <GrassEditor
+                      selectedRelType={selectedLabel?.item?.selectedRelType}
+                      frameHeight={frameHeight}
+                    />
+                  </Popup>
+                </StyledLegendInlineListItem>
+              )
+            })}
+          </StyledLegendInlineList>
         )}
       </div>
-    </StyledLegend>
+    </div>
   )
 }
 
