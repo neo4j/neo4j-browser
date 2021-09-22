@@ -114,7 +114,7 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
   colorPicker(selector: any, styleForLabel: any) {
     return (
       <StyledInlineListItem key="color-picker">
-        <StyledInlineList className="color-picker picker">
+        <StyledInlineList>
           <StyledInlineListItem>Color:</StyledInlineListItem>
           {this.circleSelector(
             this.graphStyle.defaultColors(),
@@ -135,7 +135,7 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
   sizePicker(selector: any, styleForLabel: any) {
     return (
       <StyledInlineListItem key="size-picker">
-        <StyledInlineList className="size-picker picker">
+        <StyledInlineList>
           <StyledInlineListItem>Size:</StyledInlineListItem>
           {this.circleSelector(
             this.graphStyle.defaultSizes(),
@@ -170,10 +170,7 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
         const active =
           styleForItem.get('shaft-width') === widthValue['shaft-width']
         return (
-          <StyledPickerListItem
-            className="width-picker-item"
-            key={toKeyString('width' + i)}
-          >
+          <StyledPickerListItem key={toKeyString('width' + i)}>
             <StyledPickerSelector
               className={active ? 'active' : ''}
               style={style}
@@ -184,7 +181,7 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
       })
     return (
       <StyledInlineListItem key="width-picker">
-        <StyledInlineList className="width-picker picker">
+        <StyledInlineList>
           <StyledInlineListItem>Line width:</StyledInlineListItem>
           {widthSelectors}
         </StyledInlineList>
@@ -196,7 +193,7 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
     return (
       <li key="icon-picker">
         Icon:
-        <ul className="icon-picker picker">
+        <ul>
           {this.picker(
             this.graphStyle.defaultIconCodes(),
             () => {
@@ -244,7 +241,7 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
     }
     return (
       <StyledInlineListItem key="caption-picker">
-        <StyledInlineList className="caption-picker picker">
+        <StyledInlineList>
           <StyledInlineListItem>Caption:</StyledInlineListItem>
           {captionSelector('<id>', '<id>')}
           {typeCaptionSelector}
@@ -277,7 +274,7 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
         )
       ]
       title = (
-        <StyledLabelToken className="token token-label" style={inlineStyle}>
+        <StyledLabelToken style={inlineStyle}>
           {this.props.selectedLabel.label || '*'}
         </StyledLabelToken>
       )
@@ -302,10 +299,7 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
         )
       ]
       title = (
-        <StyledTokenRelationshipType
-          className="token token-relationship"
-          style={inlineStyle}
-        >
+        <StyledTokenRelationshipType style={inlineStyle}>
           {this.props.selectedRelType.relType || '*'}
         </StyledTokenRelationshipType>
       )
@@ -313,10 +307,7 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
       return null
     }
     return (
-      <StyledInlineListStylePicker
-        className="style-picker"
-        frameHeight={this.props.frameHeight}
-      >
+      <StyledInlineListStylePicker frameHeight={this.props.frameHeight}>
         {title}
         {pickers}
       </StyledInlineListStylePicker>

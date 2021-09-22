@@ -22,7 +22,6 @@ import styled from 'styled-components'
 
 export const legendRowHeight = 32
 export const inspectorFooterContractedHeight = 22
-const pMarginTop = 6
 
 export const StyledSvgWrapper = styled.div`
   line-height: 0;
@@ -113,19 +112,6 @@ export const StyledGraphAreaContainer = styled.div`
   height: 100%;
 `
 
-export const StyledStream = styled.div`
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-`
-
-export const p = styled.div`
-  margin-top: ${pMarginTop}px;
-  font-size: 12px;
-  width: 100%;
-  white-space: normal;
-`
-
 export const StyledRowToggle = styled.div`
   float: right;
   display: block;
@@ -134,22 +120,6 @@ export const StyledRowToggle = styled.div`
   line-height: 21px;
   text-align: center;
   cursor: pointer;
-`
-export const StyledCaret = styled.div`
-  font-size: 17px;
-  vertical-align: middle;
-`
-
-export const StyledInspectorFooter = styled.div`
-  margin-top: 6px;
-  font-size: 12px;
-  width: 100%;
-  white-space: normal;
-  overflow: scroll;
-  &.contracted {
-    max-height: ${inspectorFooterContractedHeight}px;
-    overflow: hidden;
-  }
 `
 
 export const StyledInlineList = styled.ul`
@@ -173,54 +143,6 @@ export const StyledInlineListItem = styled.li`
   padding-right: 5px;
 `
 
-export const StyledStatusBarWrapper = styled.div`
-  height: 68px;
-  display: none;
-`
-
-export const StyledStatusBar = styled.div<{ fullscreen?: boolean }>`
-  min-height: 39px;
-  line-height: 39px;
-  color: ${props => props.theme.secondaryText};
-  font-size: 13px;
-  position: ${props => (props.fullscreen ? 'fixed' : 'absolute')};
-  z-index: ${props => (props.fullscreen ? 1 : 'auto')};
-  background-color: ${props => props.theme.frameBackground};
-  white-space: nowrap;
-  overflow: hidden;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  border-top: ${props => props.theme.inFrameBorder};
-`
-
-export const StyledStatus = styled.div`
-  position: relative;
-  float: left;
-  padding-left: 16px;
-  margin-top: 0;
-  margin-bottom: 0;
-  width: 100%;
-  margin-top: 3px;
-  max-height: 64px;
-  overflow: auto;
-`
-
-export const StyledInspectorFooterRowListPair = styled(StyledInlineListItem)`
-  vertical-align: middle;
-  font-size: 13px;
-`
-
-export const StyledInspectorFooterRowListPairAlternatingRows = styled(
-  StyledInspectorFooterRowListPair
-)`
-  padding: 5px;
-`
-
-export const StyledInspectorClipboardCopyAll = styled.div`
-  display: flex;
-`
-
 export const StyledToken = styled(StyledInlineListItem)`
   display: inline-block;
   font-weight: bold;
@@ -241,15 +163,6 @@ export const StyledTokenRelationshipType = styled(StyledToken)`
   padding: 4px 7px 4px 5px;
   border-radius: 3px;
   word-break: break-all;
-`
-
-export const tokenPropertyKey = styled(StyledToken)`
-  padding: 3px 5px 3px 5px;
-`
-export const StyledTokenContextMenuKey = styled(StyledLabelToken)`
-  color: #f9fbfd;
-  background-color: #d2d5da;
-  padding: 4px 9px;
 `
 
 export const StyledTokenCount = styled.span`
@@ -324,10 +237,6 @@ export const StyledFullSizeContainer = styled.div`
   height: 100%;
 `
 
-export const StyledInspectorFooterStatusMessage = styled.div`
-  font-weight: bold;
-`
-
 export const StyledZoomHolder = styled.div<{ fullscreen: boolean }>`
   position: ${props => (props.fullscreen ? 'fixed' : 'absolute')};
   bottom: 0;
@@ -363,21 +272,6 @@ export const StyledZoomButton = styled.button`
   }
 `
 
-export const StyledNodeInspectorCollapsedButton = styled.div`
-  position: absolute;
-  display: flex;
-  right: 0;
-  top: 0;
-  z-index: 1;
-  background: ${props => props.theme.editorBackground};
-  color: ${props => props.theme.primaryText};
-  border-radius: 2px;
-  width: 24px;
-  height: 24px;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-`
 export const StyledNodeInspectorContainer = styled.div<{
   width: number
   height: number
@@ -397,21 +291,6 @@ export const StyledNodeInspectorContainer = styled.div<{
   box-shadow: 0px 0px 2px rgba(21, 30, 41, 0.1),
     0px 1px 2px rgba(21, 30, 41, 0.08), 0px 1px 4px rgba(21, 30, 41, 0.08);
 `
-export const StyledNodeInspectorTopMenu = styled.div`
-  height: 20px;
-  margin: 10px 0 10px 0;
-  display: flex;
-`
-
-export const StyledNodeInspectorPane = styled.div<{
-  isActive?: boolean
-}>`
-  cursor: pointer;
-  margin: 0 15px;
-  border-bottom: ${props => (props.isActive ? '1px solid #018BFF' : 'none')};
-  font-weight: ${props => (props.isActive ? 'bold' : 'normal')};
-`
-
 export const StyledNodeInspectorTopMenuChevron = styled.div<{
   expanded: boolean
 }>`
