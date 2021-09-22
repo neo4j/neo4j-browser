@@ -35,16 +35,22 @@ const slides = [
     <p>This guide shows how to:</p>
     <ol className="big ">
       <li>
-        <b>Create:</b> insert movie data into the graph.
+        <b>Load:</b> Insert movie data into the graph.
       </li>
       <li>
-        <b>Find:</b> retrieve individual movies and actors.
+        <b>Constrain:</b> Create unique node property constraints.
       </li>
       <li>
-        <b>Query:</b> discover related actors and directors.
+        <b>Index:</b> Index nodes based on their labels.
       </li>
       <li>
-        <b>Solve:</b> the Bacon Path.
+        <b>Find:</b> Retrieve individual movies and actors.
+      </li>
+      <li>
+        <b>Query:</b> Discover related actors and directors.
+      </li>
+      <li>
+        <b>Solve:</b> The Bacon Path.
       </li>
     </ol>
   </BuiltInGuideSidebarSlide>,
@@ -59,7 +65,7 @@ const slides = [
       clauses.
     </p>
     <p>
-      <b>NOTE:</b> This guide assumes that you use an empty graph. If it
+      <b>NOTE: </b> This guide assumes that you use an empty graph. If it
       contains data, see page 7 on how to clean it up.
     </p>
     <hr />
@@ -590,6 +596,45 @@ const slides = [
     </p>
   </BuiltInGuideSidebarSlide>,
   <BuiltInGuideSidebarSlide key="s3">
+    <h3>Create constraints</h3>
+    <p className="lead">
+      <em>Unique node property constraints</em>
+    </p>
+    <p>
+      Create unique node property constraints to ensure that property values are
+      unique for all nodes with a specific label. Adding the unique constraint,
+      implicitly adds an index on that property.
+    </p>
+    <pre className="pre-scrollable code runnable">
+      CREATE CONSTRAINT ON (n:Movie) ASSERT (n.title) IS UNIQUE
+    </pre>
+    <pre className="pre-scrollable code runnable">
+      CREATE CONSTRAINT ON (n:Person) ASSERT (n.name) IS UNIQUE
+    </pre>
+    <hr />
+    <p>
+      <a help-topic="help">:help</a> <a help-topic="cypher">cypher</a>{' '}
+      <a help-topic="create-constraint-on">CREATE CONSTRAINT ON</a>
+    </p>
+  </BuiltInGuideSidebarSlide>,
+  <BuiltInGuideSidebarSlide key="s4">
+    <h3>Index nodes</h3>
+    <p className="lead">
+      <em>
+        Create indexes on one or more properties for all nodes that have a given
+        label. Indexes are used to increase search performance.
+      </em>
+    </p>
+    <pre className="pre-scrollable code runnable">
+      CREATE INDEX FOR (m:Movie) ON (m.released)
+    </pre>
+    <hr />
+    <p>
+      <a help-topic="help">:help</a> <a help-topic="cypher">cypher</a>{' '}
+      <a help-topic="create-index-on">CREATE INDEX FOR</a>
+    </p>
+  </BuiltInGuideSidebarSlide>,
+  <BuiltInGuideSidebarSlide key="s5">
     <h3>Find</h3>
     <p className="lead">
       <em>Find individual nodes</em>
@@ -635,7 +680,7 @@ const slides = [
       <a help-topic="where">WHERE</a> <a help-topic="return">RETURN</a>
     </p>
   </BuiltInGuideSidebarSlide>,
-  <BuiltInGuideSidebarSlide key="s4">
+  <BuiltInGuideSidebarSlide key="s6">
     <h3>Query</h3>
     <p className="lead">
       <em>Find patterns</em>
@@ -686,7 +731,7 @@ const slides = [
       <a help-topic="return">RETURN</a>
     </p>
   </BuiltInGuideSidebarSlide>,
-  <BuiltInGuideSidebarSlide key="s5">
+  <BuiltInGuideSidebarSlide key="s7">
     <h3>Solve</h3>
     <p className="lead">
       <em>Six Degrees of Kevin Bacon</em>
@@ -722,7 +767,7 @@ RETURN p`}
       <a help-topic="return">RETURN</a>
     </p>
   </BuiltInGuideSidebarSlide>,
-  <BuiltInGuideSidebarSlide key="s6">
+  <BuiltInGuideSidebarSlide key="s8">
     <h3>Recommend</h3>
     <p className="lead">
       <em>Recommend new co-actors</em>
@@ -761,14 +806,14 @@ RETURN tom, m, coActors, m2, cruise`}
       <a help-topic="return">RETURN</a>
     </p>
   </BuiltInGuideSidebarSlide>,
-  <BuiltInGuideSidebarSlide key="s7">
+  <BuiltInGuideSidebarSlide key="s9">
     <h3>Clean up</h3>
     <p className="lead">
       <em>Remove the movie data set</em>
     </p>
     <p>When you are done experimenting, you can clean up your graph.</p>
     <p>
-      <b>NOTE:</b>Nodes cannot be deleted if they have relationships, so you
+      <b>NOTE: </b>Nodes cannot be deleted if they have relationships, so you
       need to detach the nodes to delete them.{' '}
     </p>
     <hr />
@@ -790,11 +835,11 @@ RETURN tom, m, coActors, m2, cruise`}
       <a help-topic="help">:help</a> <a help-topic="delete">DELETE</a>{' '}
     </p>
   </BuiltInGuideSidebarSlide>,
-  <BuiltInGuideSidebarSlide key="s8">
+  <BuiltInGuideSidebarSlide key="s10">
     <h3>Next steps</h3>
     <ul className="undecorated">
       <li>
-        <a data-exec="guide northwind-graph">Northwind Graph</a>- from RDBMS to
+        <a data-exec="guide northwind-graph">Northwind Graph</a> – from RDBMS to
         graph.
       </li>
       <li>
