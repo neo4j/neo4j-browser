@@ -19,6 +19,7 @@
  */
 
 import neo4j from 'neo4j-driver'
+import { Duration } from 'luxon'
 import {
   entries,
   flatten,
@@ -38,7 +39,10 @@ import bolt from 'services/bolt/bolt'
 import * as viewTypes from 'shared/modules/stream/frameViewTypes'
 import { recursivelyExtractGraphItems } from 'services/bolt/boltMappings'
 import { stringifyMod, unescapeDoubleQuotesForDisplay } from 'services/utils'
-import { stringModifier } from 'services/bolt/cypherTypesFormatting'
+import {
+  durationFormat,
+  stringModifier
+} from 'services/bolt/cypherTypesFormatting'
 
 /**
  * Checks if a results has records which fields will be truncated when displayed
@@ -443,9 +447,10 @@ export function mapNeo4jValuesToPlainValues(values: any): any {
  */
 function neo4jValueToPlainValue(value: any) {
   switch (get(value, 'constructor')) {
+    case neo4j.types.Duration:
+      return durationFormat(value)
     case neo4j.types.Date:
     case neo4j.types.DateTime:
-    case neo4j.types.Duration:
     case neo4j.types.LocalDateTime:
     case neo4j.types.LocalTime:
     case neo4j.types.Time:

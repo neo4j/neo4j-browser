@@ -2249,6 +2249,11 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/long/-/long-4.0.1.tgz#459c65fa1867dafe6a8f322c4c51695663cc55e9"
   integrity sha1-RZxl+hhn2v5qjzIsTFFpVmPMVek=
 
+"@types/luxon@^2.0.3":
+  version "2.0.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/luxon/-/luxon-2.0.3.tgz#03de7fa45451bffe9978700dca85fd6f242ef961"
+  integrity sha1-A95/pFRRv/6ZeHANyoX9byQu+WE=
+
 "@types/mdast@^3.0.0":
   version "3.0.3"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/mdast/-/mdast-3.0.3.tgz#2d7d671b1cd1ea3deb306ea75036c2a0407d2deb"
@@ -8761,6 +8766,11 @@ lru-cache@^6.0.0:
   integrity sha1-bW/mVw69lqr5D8rR2vo7JWbbOpQ=
   dependencies:
     yallist "^4.0.0"
+
+luxon@^2.0.2:
+  version "2.0.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/luxon/-/luxon-2.0.2.tgz#11f2cd4a11655fdf92e076b5782d7ede5bcdd133"
+  integrity sha1-EfLNShFlX9+S4Ha1eC1+3lvN0TM=
 
 lz-string@^1.4.4:
   version "1.4.4"
