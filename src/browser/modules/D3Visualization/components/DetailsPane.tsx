@@ -23,7 +23,13 @@ import {
   StyledTokenRelationshipType,
   StyledLabelToken,
   StyledInlineList,
-  AlternatingTable
+  AlternatingTable,
+  PaneHeader,
+  PaneBody,
+  OverflowY,
+  ValueCell,
+  CopyCell,
+  KeyCell
 } from './styled'
 import ClickableUrls from '../../../components/ClickableUrls'
 import ClipboardCopier from 'browser-components/ClipboardCopier'
@@ -37,7 +43,6 @@ type DetailsPaneComponentProps = {
   graphStyle: GraphStyle
   frameHeight: number
 }
-
 export function DetailsPaneComponent({
   vizItem,
   graphStyle,
@@ -49,16 +54,8 @@ export function DetailsPaneComponent({
   ].sort((a, b) => (a.key < b.key ? -1 : 1))
 
   return (
-    <div>
-      <div
-        style={{
-          fontSize: '12px',
-          marginTop: '5px',
-          marginBottom: '5px',
-          borderBottom: '1px solid #DAE4F0',
-          height: '25px'
-        }}
-      >
+    <>
+      <PaneHeader>
         {vizItem.type === 'relationship' && (
           <StyledTokenRelationshipType
             style={{
@@ -116,18 +113,13 @@ export function DetailsPaneComponent({
           iconSize={10}
           titleText={'Copy all properties to clipboard'}
         />
-      </div>
-      <div
-        style={{
-          maxHeight: `${frameHeight - 40}px`,
-          overflow: 'auto'
-        }}
-      >
+      </PaneHeader>
+      <PaneBody maxHeight={frameHeight - 40}>
         <StyledInlineList>
           <GraphItemProperties properties={allItemProperties} />
         </StyledInlineList>
-      </div>
-    </div>
+      </PaneBody>
+    </>
   )
 }
 
@@ -144,34 +136,19 @@ const GraphItemProperties = ({
     <AlternatingTable>
       {properties.map(({ key, type, value }) => (
         <tr key={key} title={type}>
-          <td
-            style={{
-              fontWeight: 700,
-              verticalAlign: 'top',
-              padding: '2px',
-              maxWidth: '200px',
-              minWidth: '40px',
-              whiteSpace: 'nowrap'
-            }}
-          >
-            <div style={{ overflowY: 'auto' }}>{key}: </div>
-          </td>
-          <td style={{ whiteSpace: 'pre-wrap', padding: '2px' }}>
+          <KeyCell>
+            <OverflowY>{key}: </OverflowY>
+          </KeyCell>
+          <ValueCell>
             <ClickableUrls text={value} />
-          </td>
-          <td
-            style={{
-              padding: '2px 5px',
-              display: 'flex',
-              justifyContent: 'flex-end'
-            }}
-          >
+          </ValueCell>
+          <CopyCell>
             <ClipboardCopier
               titleText={'Copy key and value'}
               textToCopy={`${key}: ${value}`}
               iconSize={10}
             />
-          </td>
+          </CopyCell>
         </tr>
       ))}
     </AlternatingTable>

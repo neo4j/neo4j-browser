@@ -26,7 +26,9 @@ import {
   StyledLegendInlineListItem,
   StyledLabelToken,
   StyledTokenCount,
-  StyledInlineList
+  StyledLegendInlineList,
+  PaneBody,
+  PaneHeader
 } from './styled'
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
 import { GrassEditor } from './GrassEditor'
@@ -74,16 +76,8 @@ function OverviewPane({
   const { relTypes, labels } = stats
 
   return (
-    <div>
-      <div
-        style={{
-          fontSize: '12px',
-          marginTop: '5px',
-          marginBottom: '5px',
-          borderBottom: '1px solid #DAE4F0',
-          height: '25px'
-        }}
-      >
+    <>
+      <PaneHeader>
         {hasTruncatedFields && (
           <StyledTruncatedMessage>
             <Icon name="warning sign" /> Record fields have been
@@ -95,18 +89,13 @@ function OverviewPane({
           `Displaying ${numberToUSLocale(nodeCount)} nodes, ${numberToUSLocale(
             relationshipCount
           )} relationships.`}
-      </div>
-      <div
-        style={{
-          maxHeight: `${frameHeight - 40}px`,
-          overflow: 'auto'
-        }}
-      >
+      </PaneHeader>
+      <PaneBody maxHeight={frameHeight - 40}>
         Node labels
         {!labels || !Object.keys(labels).length ? (
           <div>No labels to display</div>
         ) : (
-          <StyledInlineList>
+          <StyledLegendInlineList>
             {Object.keys(labels).map(legendItemKey => {
               const styleForItem = graphStyle.forNode({
                 labels: [legendItemKey]
@@ -148,13 +137,13 @@ function OverviewPane({
                 </StyledLegendInlineListItem>
               )
             })}
-          </StyledInlineList>
+          </StyledLegendInlineList>
         )}
         Relationship Types
         {!relTypes || !Object.keys(relTypes).length ? (
           <div>No relationship types to display</div>
         ) : (
-          <StyledInlineList>
+          <StyledLegendInlineList>
             {Object.keys(relTypes).map(legendItemKey => {
               const styleForItem = graphStyle.forRelationship({
                 type: legendItemKey
@@ -201,10 +190,10 @@ function OverviewPane({
                 </StyledLegendInlineListItem>
               )
             })}
-          </StyledInlineList>
+          </StyledLegendInlineList>
         )}
-      </div>
-    </div>
+      </PaneBody>
+    </>
   )
 }
 

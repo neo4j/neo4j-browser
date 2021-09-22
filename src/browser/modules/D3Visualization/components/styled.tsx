@@ -443,3 +443,34 @@ export const AlternatingTable = styled.table`
   font-size: 13px;
   width: 100%;
 `
+export const PaneHeader = styled.div`
+  font-size: 12px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid #dae4f0;
+  height: 25px;
+`
+export const PaneBody = styled.div<{ maxHeight: number }>`
+  max-height: ${props => props.maxHeight}px;
+  overflow: auto;
+`
+export const KeyCell = styled.td`
+  font-weight: 700;
+  vertical-align: top;
+  padding: 2px;
+  max-width: 200px;
+  min-width: 40px;
+  white-space: nowrap;
+`
+export const OverflowY = styled.div`
+  overflow-y: auto;
+`
+export const CopyCell = styled.td`
+  padding: 2px 5px;
+  display: flex;
+  justify-content: flex-end;
+`
+export const ValueCell = styled.td`
+  padding: 2px;
+  white-space: pre-wrap;
+`
