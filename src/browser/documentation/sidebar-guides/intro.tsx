@@ -38,7 +38,7 @@ const slides = [
       <li>
         Graph visualization of query results containing nodes and relationships.
       </li>
-      <li>Convenient exploration of the Neo4j's REST API.</li>
+      <li>Convenient exploration of the Neo4j's HTTP API (REST).</li>
     </ul>
   </BuiltInGuideSidebarSlide>,
   <BuiltInGuideSidebarSlide key="s2">
@@ -47,9 +47,9 @@ const slides = [
       <em>Edit and execute Cypher statements and Browser commands</em>
     </p>
     <p>
-      Editor is the primary interface for entering and running Cypher statements
-      and Browser commands. Browser commands begin with <code>:</code>, for
-      example, <code>:help</code>.
+      The Editor is the primary interface for entering and running Cypher
+      statements and Browser commands. Browser commands begin with{' '}
+      <code>:</code>, for example, <code>:help</code>.
     </p>
     <table>
       <tbody>
