@@ -212,14 +212,6 @@ export const StyledStatusBar = styled.div<{ fullscreen?: boolean }>`
   border-top: ${props => props.theme.inFrameBorder};
 `
 
-export const StyledDetailsStatusBar = styled.div`
-  color: ${props => props.theme.secondaryText};
-  font-size: 13px;
-  white-space: nowrap;
-  width: 100%;
-  height: 100%;
-`
-
 export const StyledStatus = styled.div`
   position: relative;
   float: left;

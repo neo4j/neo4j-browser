@@ -24,7 +24,6 @@ import {
   StyledLabelToken,
   StyledInspectorFooterRow,
   StyledInlineList,
-  StyledDetailsStatusBar,
   StyledDetailsStatus,
   StyledDetailsStatusContents,
   AlternatingTable
@@ -53,14 +52,14 @@ export function DetailsPaneComponent({
   ].sort((a, b) => (a.key < b.key ? -1 : 1))
 
   return (
-    <StyledDetailsStatusBar>
+    <div>
       <div
         style={{
           fontSize: '12px',
-          paddingTop: '5px',
-          paddingBottom: '5px',
+          marginTop: '5px',
+          marginBottom: '5px',
           borderBottom: '1px solid #DAE4F0',
-          height: '30px'
+          height: '25px'
         }}
       >
         {vizItem.type} properties.{' '}
@@ -72,73 +71,72 @@ export function DetailsPaneComponent({
           titleText={'Copy all properties to clipboard'}
         />
       </div>
-      <StyledDetailsStatus maxHeight={frameHeight - 40}>
-        <StyledDetailsStatusContents>
-          <StyledInspectorFooterRow data-testid="vizInspector">
-            {vizItem.type === 'node' && (
-              <StyledInlineList>
-                {vizItem.item.labels.map((label: string) => {
-                  const graphStyleForLabel = graphStyle.forNode({
-                    labels: [label]
-                  })
+      <div
+        style={{
+          maxHeight: `${frameHeight - 40}px`,
+          overflow: 'auto'
+        }}
+      >
+        {vizItem.type === 'node' && (
+          <StyledInlineList>
+            {vizItem.item.labels.map((label: string) => {
+              const graphStyleForLabel = graphStyle.forNode({
+                labels: [label]
+              })
 
-                  return (
-                    <Popup
-                      on="click"
-                      basic
-                      pinned
-                      key={label}
-                      trigger={
-                        <StyledLabelToken
-                          style={{
-                            backgroundColor: graphStyleForLabel.get('color'),
-                            color: graphStyleForLabel.get(
-                              'text-color-internal'
-                            ),
-                            cursor: 'default'
-                          }}
-                        >
-                          {label}
-                        </StyledLabelToken>
-                      }
-                      wide
+              return (
+                <Popup
+                  on="click"
+                  basic
+                  pinned
+                  key={label}
+                  trigger={
+                    <StyledLabelToken
+                      style={{
+                        backgroundColor: graphStyleForLabel.get('color'),
+                        color: graphStyleForLabel.get('text-color-internal'),
+                        cursor: 'default'
+                      }}
                     >
-                      <GrassEditor
-                        selectedLabel={{
-                          label,
-                          propertyKeys: vizItem.item.properties.map(p => p.key)
-                        }}
-                        frameHeight={frameHeight}
-                      />
-                    </Popup>
-                  )
-                })}
-                <GraphItemProperties properties={allItemProperties} />
-              </StyledInlineList>
-            )}
-
-            {vizItem.type === 'relationship' && (
-              <StyledInlineList>
-                <StyledTokenRelationshipType
-                  style={{
-                    backgroundColor: graphStyle
-                      .forRelationship(vizItem.item)
-                      .get('color'),
-                    color: graphStyle
-                      .forRelationship(vizItem.item)
-                      .get('text-color-internal'),
-                    cursor: 'default'
-                  }}
+                      {label}
+                    </StyledLabelToken>
+                  }
+                  wide
                 >
-                  {vizItem.item.type}
-                </StyledTokenRelationshipType>
-                <GraphItemProperties properties={allItemProperties} />
-              </StyledInlineList>
-            )}
-          </StyledInspectorFooterRow>
-        </StyledDetailsStatusContents>
-      </StyledDetailsStatus>
-    </StyledDetailsStatusBar>
+                  <GrassEditor
+                    selectedLabel={{
+                      label,
+                      propertyKeys: vizItem.item.properties.map(p => p.key)
+                    }}
+                    frameHeight={frameHeight}
+                  />
+                </Popup>
+              )
+            })}
+            <GraphItemProperties properties={allItemProperties} />
+          </StyledInlineList>
+        )}
+
+        {vizItem.type === 'relationship' && (
+          <StyledInlineList>
+            <StyledTokenRelationshipType
+              style={{
+                backgroundColor: graphStyle
+                  .forRelationship(vizItem.item)
+                  .get('color'),
+                color: graphStyle
+                  .forRelationship(vizItem.item)
+                  .get('text-color-internal'),
+                cursor: 'default'
+              }}
+            >
+              {vizItem.item.type}
+            </StyledTokenRelationshipType>
+            <GraphItemProperties properties={allItemProperties} />
+          </StyledInlineList>
+        )}
+      </div>
+    </div>
   )
 }
 

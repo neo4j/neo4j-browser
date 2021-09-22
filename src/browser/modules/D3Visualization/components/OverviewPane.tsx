@@ -26,7 +26,7 @@ import {
   StyledLegendInlineListItem,
   StyledLabelToken,
   StyledTokenCount,
-  StyledLegendInlineList
+  StyledInlineList
 } from './styled'
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
 import { GrassEditor } from './GrassEditor'
@@ -106,7 +106,7 @@ function OverviewPane({
         {!labels || !Object.keys(labels).length ? (
           <div>No labels to display</div>
         ) : (
-          <StyledLegendInlineList>
+          <StyledInlineList>
             {Object.keys(labels).map(legendItemKey => {
               const styleForItem = graphStyle.forNode({
                 labels: [legendItemKey]
@@ -148,13 +148,13 @@ function OverviewPane({
                 </StyledLegendInlineListItem>
               )
             })}
-          </StyledLegendInlineList>
+          </StyledInlineList>
         )}
         Relationship Types
         {!relTypes || !Object.keys(relTypes).length ? (
           <div>No relationship types to display</div>
         ) : (
-          <StyledLegendInlineList>
+          <StyledInlineList>
             {Object.keys(relTypes).map(legendItemKey => {
               const styleForItem = graphStyle.forRelationship({
                 type: legendItemKey
@@ -201,7 +201,7 @@ function OverviewPane({
                 </StyledLegendInlineListItem>
               )
             })}
-          </StyledLegendInlineList>
+          </StyledInlineList>
         )}
       </div>
     </div>

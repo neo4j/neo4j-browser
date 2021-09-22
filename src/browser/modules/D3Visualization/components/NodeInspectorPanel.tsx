@@ -32,7 +32,7 @@ export class NodeInspectorPanel extends Component<
 > {
   state: NodeInspectorPanelState = {
     expanded: true,
-    width: 300
+    width: window.innerWidth / 3.5
   }
 
   togglePanel = (): void => {
