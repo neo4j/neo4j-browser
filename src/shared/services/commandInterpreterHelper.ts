@@ -68,7 +68,8 @@ import {
   SINGLE_COMMAND_QUEUED,
   listDbsCommand,
   useDbCommand,
-  autoCommitTxCommand
+  autoCommitTxCommand,
+  executeCommand
 } from 'shared/modules/commands/commandsDuck'
 import {
   getParamName,
@@ -109,6 +110,7 @@ import { unescapeCypherIdentifier } from './utils'
 import { getLatestFromFrameStack } from 'browser/modules/Stream/stream.utils'
 import { resolveGuide } from './guideResolverHelper'
 import { AUTH_STORAGE_LOGS } from 'shared/modules/auth/constants'
+import { GuideChapter } from 'browser/documentation'
 
 const PLAY_FRAME_TYPES = ['play', 'play-remote']
 
@@ -594,6 +596,27 @@ const availableCommands = [
     name: 'play',
     match: (cmd: any) => /^play(\s|$)/.test(cmd),
     exec(action: any, put: any, store: any) {
+      // Built in play guides where migrated to
+      // use the guide command instead
+      const legacyBuiltInGuides: GuideChapter[] = [
+        'concepts',
+        'cypher',
+        'intro',
+        'movies',
+        'movieGraph',
+        'movie-graph',
+        'northwind',
+        'northwindGraph',
+        'northwind-graph'
+      ]
+
+      const guideName = (action.cmd.split(' ')[1] || '').trim()
+
+      if (legacyBuiltInGuides.includes(guideName)) {
+        put(executeCommand(`:guide ${guideName}`))
+        return
+      }
+
       let id
       // We have a frame that generated this command
       if (action.id) {
