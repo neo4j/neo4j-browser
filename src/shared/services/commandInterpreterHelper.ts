@@ -37,7 +37,11 @@ import {
   getUseDb
 } from 'shared/modules/connections/connectionsDuck'
 import { open } from 'shared/modules/sidebar/sidebarDuck'
-import { startGuide } from 'shared/modules/guides/guidesDuck'
+import {
+  addGuideIfExternal,
+  resetGuide,
+  setCurrentGuide
+} from 'shared/modules/guides/guidesDuck'
 import { getParams } from 'shared/modules/params/paramsDuck'
 import { getUserCapabilities } from 'shared/modules/features/featuresDuck'
 import {
@@ -64,7 +68,8 @@ import {
   SINGLE_COMMAND_QUEUED,
   listDbsCommand,
   useDbCommand,
-  autoCommitTxCommand
+  autoCommitTxCommand,
+  executeCommand
 } from 'shared/modules/commands/commandsDuck'
 import {
   getParamName,
@@ -105,6 +110,7 @@ import { unescapeCypherIdentifier } from './utils'
 import { getLatestFromFrameStack } from 'browser/modules/Stream/stream.utils'
 import { resolveGuide } from './guideResolverHelper'
 import { AUTH_STORAGE_LOGS } from 'shared/modules/auth/constants'
+import { GuideChapter } from 'browser/documentation'
 
 const PLAY_FRAME_TYPES = ['play', 'play-remote']
 
@@ -505,20 +511,20 @@ const availableCommands = [
     exec(action: any, put: any, store: any) {
       const guideName = action.cmd.substr(':guide'.length).trim()
       if (!guideName) {
-        put(startGuide())
+        put(resetGuide())
         put(open('guides'))
         return
       }
 
       const initialSlide = tryGetRemoteInitialSlideFromUrl(action.cmd)
       resolveGuide(guideName, store.getState()).then(({ slides, title }) => {
-        put(
-          startGuide({
-            currentSlide: initialSlide,
-            title,
-            slides
-          })
-        )
+        const guide = {
+          currentSlide: initialSlide,
+          title,
+          slides
+        }
+        put(setCurrentGuide(guide))
+        put(addGuideIfExternal(guide))
 
         put(open('guides'))
       })
@@ -590,6 +596,27 @@ const availableCommands = [
     name: 'play',
     match: (cmd: any) => /^play(\s|$)/.test(cmd),
     exec(action: any, put: any, store: any) {
+      // Built in play guides where migrated to
+      // use the guide command instead
+      const legacyBuiltInGuides: GuideChapter[] = [
+        'concepts',
+        'cypher',
+        'intro',
+        'movies',
+        'movieGraph',
+        'movie-graph',
+        'northwind',
+        'northwindGraph',
+        'northwind-graph'
+      ]
+
+      const guideName = (action.cmd.split(' ')[1] || '').trim()
+
+      if (legacyBuiltInGuides.includes(guideName)) {
+        put(executeCommand(`:guide ${guideName}`))
+        return
+      }
+
       let id
       // We have a frame that generated this command
       if (action.id) {

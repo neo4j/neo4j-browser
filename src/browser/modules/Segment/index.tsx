@@ -22,6 +22,7 @@ import { Component } from 'react'
 import { connect } from 'react-redux'
 import { canUseDOM } from 'services/utils'
 import { inDesktop } from 'shared/modules/app/appDuck'
+import { removeSearchParamsInBrowserHistory } from 'shared/modules/auth/helpers'
 import { getUuid, updateData } from 'shared/modules/udc/udcDuck'
 
 export interface MetricsProperties {
@@ -114,7 +115,14 @@ export class Segment extends Component<any> {
                 desktop: inDesktop
               })
             }
-            window.analytics.identify(uuid)
+
+            const searchParams = new URL(window.location.href).searchParams
+            const segmentId = searchParams.get('ntid')
+            if (segmentId) {
+              window.analytics.identify(segmentId)
+              removeSearchParamsInBrowserHistory(['ntid'])
+            }
+
             setTrackCallback(doTrack)
           }
         }

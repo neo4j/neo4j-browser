@@ -5,7 +5,7 @@ exports[`Visualization renders 1`] = `<div />`;
 exports[`Visualization renders with result and escapes any HTML 1`] = `
 <div>
   <div
-    class="sc-gqPbQI hQihOE"
+    class="sc-hORach jcrYzV"
   >
     <div
       class="sc-jDwBTQ ivXJpA"
@@ -82,13 +82,13 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
             </g>
           </svg>
           <div
-            class="sc-iRbamj dOgKho"
+            class="sc-iRbamj gJYkml"
           >
             <button
               class="sc-jlyJG dhjgQw zoom-in"
             >
               <i
-                class="sc-hgHYgh fmMYuK sl-zoom-in"
+                class="sc-clNaTc kfzvLf sl-zoom-in"
                 style="font-size: 1em;"
               />
             </button>
@@ -96,7 +96,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
               class="sc-jlyJG dhjgQw zoom-out"
             >
               <i
-                class="sc-eInJlc dTvmOo sl-zoom-out"
+                class="sc-etwtAo fTgRqt sl-zoom-out"
                 style="font-size: 1em;"
               />
             </button>
@@ -112,82 +112,86 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
           />
         </div>
         <div
-          class="sc-csuQGl inEFjz"
+          class="sc-csuQGl idpDey"
+          width="300"
         >
           <div
-            class="sc-Rmtcm iLrPrU"
+            class="react-resizable"
           >
             <div
-              class="sc-bRBYWo lVpg"
+              style="height: 40px;"
             >
-              Results
+               header 
             </div>
             <div
-              class="sc-bRBYWo kJBrpq"
+              style="overflow: auto;"
             >
-              Details
-            </div>
-          </div>
-          <div
-            style="height: inherit;"
-          >
-            <div
-              class="sc-hSdWYo cnPFeK"
-            >
-              Node Labels:
               <div
-                class="sc-iAyFgw fVJTxU"
+                class="sc-hSdWYo cnPFeK"
               >
-                <ul
-                  class="sc-gqjmRU sc-eHgmQL efuoQl"
+                <div
+                  style="font-size: 12px; padding-bottom: 5px; margin-top: 5px; margin-bottom: 5px; border-bottom: 1px solid #DAE4F0;"
                 >
-                  <li
-                    class="sc-jTzLTM sc-cvbbAY cLjEQD"
-                    data-testid="viz-legend-labels"
+                  Displaying NaN nodes, 0 relationships.
+                </div>
+                Node labels:
+                <div
+                  class="sc-iAyFgw fVJTxU"
+                >
+                  <ul
+                    class="sc-gqjmRU sc-eHgmQL efuoQl"
                   >
-                    <ul
-                      class="sc-kkGfuU bYYoTR"
+                    <li
+                      class="sc-jTzLTM sc-cvbbAY cLjEQD"
+                      data-testid="viz-legend-labels"
                     >
-                      <li
-                        class="sc-jTzLTM sc-dxgOiQ sc-ckVGcZ eTwlcJ"
-                        style="background-color: rgb(247, 151, 103); color: rgb(255, 255, 255);"
+                      <ul
+                        class="sc-kkGfuU bYYoTR"
                       >
-                        *
-                        <span
-                          class="sc-kEYyzF fnmidr"
+                        <li
+                          class="sc-jTzLTM sc-dxgOiQ sc-ckVGcZ eTwlcJ"
+                          style="background-color: rgb(247, 151, 103); color: rgb(255, 255, 255);"
                         >
-                          (1)
-                        </span>
-                      </li>
-                    </ul>
-                  </li>
-                  <li
-                    class="sc-jTzLTM sc-cvbbAY cLjEQD"
-                    data-testid="viz-legend-labels"
-                  >
-                    <ul
-                      class="sc-kkGfuU bYYoTR"
+                          *
+                          <span
+                            class="sc-kEYyzF fnmidr"
+                          >
+                            (1)
+                          </span>
+                        </li>
+                      </ul>
+                    </li>
+                    <li
+                      class="sc-jTzLTM sc-cvbbAY cLjEQD"
+                      data-testid="viz-legend-labels"
                     >
-                      <li
-                        class="sc-jTzLTM sc-dxgOiQ sc-ckVGcZ eTwlcJ"
-                        style="background-color: rgb(201, 144, 192); color: rgb(255, 255, 255);"
+                      <ul
+                        class="sc-kkGfuU bYYoTR"
                       >
-                        Person
-                        <span
-                          class="sc-kEYyzF fnmidr"
+                        <li
+                          class="sc-jTzLTM sc-dxgOiQ sc-ckVGcZ eTwlcJ"
+                          style="background-color: rgb(201, 144, 192); color: rgb(255, 255, 255);"
                         >
-                          (1)
-                        </span>
-                      </li>
-                    </ul>
-                  </li>
-                </ul>
-              </div>
-              Relationship Types:
-              <div>
-                No relationship types to display
+                          Person
+                          <span
+                            class="sc-kEYyzF fnmidr"
+                          >
+                            (1)
+                          </span>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+                Relationship Types:
+                <div>
+                  No relationship types to display
+                </div>
               </div>
             </div>
+            <span
+              class="react-resizable-handle react-resizable-handle-w"
+            />
           </div>
         </div>
       </div>

@@ -511,6 +511,15 @@ const switchToRequestedDb = (store: any) => {
         const defaultDb = databases.find((db: any) => db.default)
         if (defaultDb) {
           store.dispatch(useDb(defaultDb.name))
+        } else {
+          const systemDb = databases.find((db: any) => db.name === SYSTEM_DB)
+          if (systemDb) {
+            store.dispatch(useDb(systemDb.name))
+          } else {
+            if (databases.length > 0) {
+              store.dispatch(useDb(databases[0].name))
+            }
+          }
         }
       }
     }
