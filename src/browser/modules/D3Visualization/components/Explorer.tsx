@@ -93,7 +93,7 @@ export class ExplorerComponent extends Component<
     let selectedItem: VizItem = {
       type: 'canvas',
       item: {
-        nodeCount: Math.max(this.props.initialNodeDisplay, nodes.length),
+        nodeCount: Math.min(this.props.initialNodeDisplay, nodes.length),
         relationshipCount: relationships.length
       }
     }
