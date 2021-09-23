@@ -20,16 +20,16 @@
 
 import React from 'react'
 import {
-  StyledTokenRelationshipType,
-  StyledLabelToken,
-  StyledInlineList,
   AlternatingTable,
-  PaneHeader,
-  PaneBody,
-  OverflowY,
-  ValueCell,
   CopyCell,
-  KeyCell
+  KeyCell,
+  OverflowY,
+  PaneBody,
+  PaneHeader,
+  StyledInlineList,
+  StyledLabelToken,
+  StyledTokenRelationshipType,
+  ValueCell
 } from './styled'
 import ClickableUrls from '../../../components/ClickableUrls'
 import ClipboardCopier from 'browser-components/ClipboardCopier'

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Resizable } from 'react-resizable'
 import { Icon } from 'semantic-ui-react'
 import { DetailsPaneComponent } from './DetailsPane'
-import OverviewPane from './OverviewPane'
+import OverviewPane, { GraphStyle } from './OverviewPane'
 import { VizItem } from './types'
 import {
   StyledNodeInspectorContainer,
@@ -14,10 +14,9 @@ interface NodeInspectorPanelProps {
   hoveredItem: VizItem
   selectedItem: VizItem
   stats: any
-  graphStyle: any
-  onSelectedLabel: any
-  onSelectedRelType: any
-  selectedLabel: any
+  graphStyle: GraphStyle
+  selectLabel: (label: string, propertyKeys: string[]) => void
+  selectRelType: (relType: string, propertyKeys: string[]) => void
   frameHeight: number
   hasTruncatedFields: boolean
   width: number
@@ -55,6 +54,8 @@ export class NodeInspectorPanel extends Component<
     const hoveringNodeOrRelationship =
       hoveredItem && relevantItems.includes(hoveredItem.type)
     const shownEl = hoveringNodeOrRelationship ? hoveredItem : selectedItem
+    const selectedLegendItem =
+      selectedItem.type === 'legend-item' ? selectedItem : undefined
 
     return (
       <>
@@ -99,10 +100,10 @@ export class NodeInspectorPanel extends Component<
                       frameHeight={this.props.frameHeight}
                       graphStyle={this.props.graphStyle}
                       hasTruncatedFields={this.props.hasTruncatedFields}
-                      onSelectedLabel={this.props.onSelectedLabel}
-                      onSelectedRelType={this.props.onSelectedRelType}
-                      selectedLabel={this.props.selectedLabel}
+                      selectLabel={this.props.selectLabel}
+                      selectRelType={this.props.selectRelType}
                       stats={this.props.stats}
+                      legendItem={selectedLegendItem}
                       nodeCount={
                         shownEl.type === 'canvas'
                           ? shownEl.item.nodeCount

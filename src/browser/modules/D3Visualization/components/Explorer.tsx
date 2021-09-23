@@ -75,19 +75,10 @@ type ExplorerComponentState = {
   nodes: Node[]
   relationships: Relationship[]
   selectedItem: VizItem
-  selectedLabel?: VizLabelItem
   stats: { labels: any; relTypes: any }
   styleVersion: number
   freezeLegend: boolean
   width: number
-}
-
-type VizLabelItem = {
-  type: 'legend-item'
-  item: {
-    selectedLabel: any
-    selectedRelType: any
-  }
 }
 
 export class ExplorerComponent extends Component<
@@ -137,7 +128,6 @@ export class ExplorerComponent extends Component<
       relationships,
       selectedItem,
       hoveredItem: selectedItem,
-      selectedLabel: undefined,
       freezeLegend: false,
       width: defaultPanelWidth()
     }
@@ -190,25 +180,23 @@ export class ExplorerComponent extends Component<
     this.props.updateStyle(this.state.graphStyle.toSheet())
   }
 
-  onSelectedLabel(label: any, propertyKeys: any) {
+  selectLabel(label: string, propertyKeys: string[]) {
     this.setState({
-      selectedLabel: {
+      selectedItem: {
         type: 'legend-item',
         item: {
-          selectedLabel: { label: label, propertyKeys: propertyKeys },
-          selectedRelType: null
+          selectedLabel: { label, propertyKeys }
         }
       }
     })
   }
 
-  onSelectedRelType(relType: any, propertyKeys: any) {
+  selectRelType(relType: string, propertyKeys: string[]) {
     this.setState({
-      selectedLabel: {
+      selectedItem: {
         type: 'legend-item',
         item: {
-          selectedLabel: null,
-          selectedRelType: { relType: relType, propertyKeys: propertyKeys }
+          selectedRelType: { relType, propertyKeys }
         }
       }
     })
@@ -271,10 +259,9 @@ export class ExplorerComponent extends Component<
             graphStyle={graphStyle}
             hasTruncatedFields={this.props.hasTruncatedFields}
             hoveredItem={this.state.hoveredItem}
-            onSelectedLabel={this.onSelectedLabel.bind(this)}
-            onSelectedRelType={this.onSelectedRelType.bind(this)}
+            selectLabel={this.selectLabel.bind(this)}
+            selectRelType={this.selectRelType.bind(this)}
             selectedItem={this.state.selectedItem}
-            selectedLabel={this.state.selectedLabel}
             stats={this.state.stats}
             width={this.state.width}
             setWidth={width =>

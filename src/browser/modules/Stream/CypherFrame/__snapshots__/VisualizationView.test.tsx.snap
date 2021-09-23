@@ -5,10 +5,10 @@ exports[`Visualization renders 1`] = `<div />`;
 exports[`Visualization renders with result and escapes any HTML 1`] = `
 <div>
   <div
-    class="sc-hORach jcrYzV"
+    class="sc-ibxdXY dmclze"
   >
     <div
-      class="sc-jDwBTQ ivXJpA"
+      class="sc-jzJRlG eUKzrM"
       id="svg-vis"
     >
       <div
@@ -82,28 +82,29 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
             </g>
           </svg>
           <div
-            class="sc-iRbamj gJYkml"
+            class="sc-cSHVUG gAlWnv"
+            offset="296.57142857142856"
           >
             <button
-              class="sc-jlyJG dhjgQw zoom-in"
+              class="sc-kAzzGY hrkFIX zoom-in"
             >
               <i
-                class="sc-clNaTc kfzvLf sl-zoom-in"
+                class="sc-jtggT cxJBDr sl-zoom-in"
                 style="font-size: 1em;"
               />
             </button>
             <button
-              class="sc-jlyJG dhjgQw zoom-out"
+              class="sc-kAzzGY hrkFIX zoom-out"
             >
               <i
-                class="sc-etwtAo fTgRqt sl-zoom-out"
+                class="sc-ebFjAB bAowKS sl-zoom-out"
                 style="font-size: 1em;"
               />
             </button>
           </div>
         </div>
         <div
-          class="sc-hzDkRC ciFDya"
+          class="sc-kgoBCf erHcgW"
         >
           <i
             aria-hidden="true"
@@ -112,78 +113,61 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
           />
         </div>
         <div
-          class="sc-csuQGl idpDey"
-          width="300"
+          class="sc-chPdSV eCUJJ"
+          width="292.57142857142856"
         >
           <div
             class="react-resizable"
           >
             <div
-              style="height: 40px;"
-            >
-               header 
-            </div>
-            <div
-              style="overflow: auto;"
+              class="sc-kGXeez hacloy"
             >
               <div
-                class="sc-hSdWYo cnPFeK"
+                class="sc-dxgOiQ iqpiQp"
               >
-                <div
-                  style="font-size: 12px; padding-bottom: 5px; margin-top: 5px; margin-bottom: 5px; border-bottom: 1px solid #DAE4F0;"
+                Displaying NaN nodes, 0 relationships.
+              </div>
+              <div
+                class="sc-ckVGcZ cYUlXz"
+              >
+                Node labels
+                <ul
+                  class="sc-bxivhb sc-iwsKbI bfwfdz"
                 >
-                  Displaying NaN nodes, 0 relationships.
-                </div>
-                Node labels:
-                <div
-                  class="sc-iAyFgw fVJTxU"
-                >
-                  <ul
-                    class="sc-gqjmRU sc-eHgmQL efuoQl"
+                  <li
+                    class="sc-EHOje sc-gZMcBi chSRLy"
+                    data-testid="viz-legend-labels"
                   >
                     <li
-                      class="sc-jTzLTM sc-cvbbAY cLjEQD"
-                      data-testid="viz-legend-labels"
+                      class="sc-EHOje sc-bZQynM sc-gzVnrw fjTalv"
+                      style="background-color: rgb(247, 151, 103); color: rgb(255, 255, 255);"
                     >
-                      <ul
-                        class="sc-kkGfuU bYYoTR"
+                      *
+                      <span
+                        class="sc-dnqmqq fFydjc"
                       >
-                        <li
-                          class="sc-jTzLTM sc-dxgOiQ sc-ckVGcZ eTwlcJ"
-                          style="background-color: rgb(247, 151, 103); color: rgb(255, 255, 255);"
-                        >
-                          *
-                          <span
-                            class="sc-kEYyzF fnmidr"
-                          >
-                            (1)
-                          </span>
-                        </li>
-                      </ul>
+                        (1)
+                      </span>
                     </li>
+                  </li>
+                  <li
+                    class="sc-EHOje sc-gZMcBi chSRLy"
+                    data-testid="viz-legend-labels"
+                  >
                     <li
-                      class="sc-jTzLTM sc-cvbbAY cLjEQD"
-                      data-testid="viz-legend-labels"
+                      class="sc-EHOje sc-bZQynM sc-gzVnrw fjTalv"
+                      style="background-color: rgb(201, 144, 192); color: rgb(255, 255, 255);"
                     >
-                      <ul
-                        class="sc-kkGfuU bYYoTR"
+                      Person
+                      <span
+                        class="sc-dnqmqq fFydjc"
                       >
-                        <li
-                          class="sc-jTzLTM sc-dxgOiQ sc-ckVGcZ eTwlcJ"
-                          style="background-color: rgb(201, 144, 192); color: rgb(255, 255, 255);"
-                        >
-                          Person
-                          <span
-                            class="sc-kEYyzF fnmidr"
-                          >
-                            (1)
-                          </span>
-                        </li>
-                      </ul>
+                        (1)
+                      </span>
                     </li>
-                  </ul>
-                </div>
-                Relationship Types:
+                  </li>
+                </ul>
+                Relationship Types
                 <div>
                   No relationship types to display
                 </div>

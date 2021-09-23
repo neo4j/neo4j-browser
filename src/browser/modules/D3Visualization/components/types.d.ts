@@ -4,6 +4,7 @@ export type VizItem =
   | RelationshipItem
   | CanvasItem
   | StatusItem
+  | LegendItem
 
 export type VizNodeProperty = { key: string; value: string; type: string }
 
@@ -44,5 +45,19 @@ type CanvasItem = {
   item: {
     nodeCount: number
     relationshipCount: number
+  }
+}
+
+type LegendItem = {
+  type: 'legend-item'
+  item: {
+    selectedRelType?: {
+      relType: string
+      propertyKeys: string[]
+    }
+    selectedLabel?: {
+      label: string
+      propertyKeys: string[]
+    }
   }
 }

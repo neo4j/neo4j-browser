@@ -33,45 +33,44 @@ import {
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
 import { GrassEditor } from './GrassEditor'
 import { StyledTruncatedMessage } from 'browser/modules/Stream/styled'
+import { LegendItem } from './types'
 
 export type GraphStyle = {
-  rules: GraphStyleRule[]
-  resetToDefault: any
-  loadRules: any
-  toSheet: any
   forNode: any
   forRelationship: any
+  loadRules: any
+  resetToDefault: any
+  rules: GraphStyleRule[]
+  toSheet: any
 }
+
 type GraphStyleRule = {
   props: Record<string, string>
   selector: { classes: string[]; tag: string }
 }
 
 type OverviewPaneProps = {
-  graphStyle: GraphStyle
-  onSelectedLabel: (a: any, b: any) => void
-  onSelectedRelType: (a: any, b: any) => void
   frameHeight: number
-  selectedLabel: any
-  stats: {
-    relTypes: any
-    labels: any
-  }
+  graphStyle: GraphStyle
   hasTruncatedFields: boolean
   nodeCount: number | null
   relationshipCount: number | null
+  selectLabel: (label: string, propertyKeys: string[]) => void
+  selectRelType: (relType: string, propertyKeys: string[]) => void
+  stats: { relTypes: any; labels: any }
+  legendItem?: LegendItem
 }
 
 function OverviewPane({
-  graphStyle,
-  onSelectedLabel,
-  onSelectedRelType,
   frameHeight,
-  selectedLabel,
-  stats,
+  graphStyle,
   hasTruncatedFields,
   nodeCount,
-  relationshipCount
+  relationshipCount,
+  selectLabel,
+  selectRelType,
+  stats,
+  legendItem
 }: OverviewPaneProps): JSX.Element {
   const { relTypes, labels } = stats
 
@@ -101,7 +100,7 @@ function OverviewPane({
                 labels: [legendItemKey]
               })
               const onClick = () => {
-                onSelectedLabel(
+                selectLabel(
                   legendItemKey,
                   Object.keys(labels[legendItemKey].properties)
                 )
@@ -130,7 +129,7 @@ function OverviewPane({
                     wide
                   >
                     <GrassEditor
-                      selectedLabel={selectedLabel?.item?.selectedLabel}
+                      {...legendItem?.item}
                       frameHeight={frameHeight}
                     />
                   </Popup>
@@ -149,7 +148,7 @@ function OverviewPane({
                 type: legendItemKey
               })
               const onClick = () => {
-                onSelectedRelType(
+                selectRelType(
                   legendItemKey,
                   Object.keys(relTypes[legendItemKey].properties)
                 )
@@ -183,7 +182,7 @@ function OverviewPane({
                     wide
                   >
                     <GrassEditor
-                      selectedRelType={selectedLabel?.item?.selectedRelType}
+                      {...legendItem?.item}
                       frameHeight={frameHeight}
                     />
                   </Popup>
