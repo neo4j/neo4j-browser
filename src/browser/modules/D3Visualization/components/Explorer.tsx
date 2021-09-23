@@ -21,19 +21,20 @@
 import React, { Component } from 'react'
 import deepmerge from 'deepmerge'
 import { connect } from 'react-redux'
-
-import { deepEquals } from 'services/utils'
-import { GraphComponent } from './Graph'
-import neoGraphStyle from '../graphStyle'
-import { defaultPanelWidth, NodeInspectorPanel } from './NodeInspectorPanel'
-import { panelMinWidth, StyledFullSizeContainer } from './styled'
-import { GlobalState } from 'shared/globalState'
-import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
-import { VizItem } from './types'
 import { debounce } from 'lodash'
-import { GraphStyle } from './OverviewPane'
+
 import Node from '../lib/visualization/components/node'
 import Relationship from '../lib/visualization/components/relationship'
+import neoGraphStyle from '../graphStyle'
+import { GlobalState } from 'shared/globalState'
+import { GraphComponent } from './Graph'
+import { GraphStats } from '../mapper'
+import { GraphStyle } from './OverviewPane'
+import { VizItem } from './types'
+import { deepEquals } from 'services/utils'
+import { defaultPanelWidth, NodeInspectorPanel } from './NodeInspectorPanel'
+import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
+import { panelMinWidth, StyledFullSizeContainer } from './styled'
 
 const deduplicateNodes = (nodes: any) => {
   return nodes.reduce(
@@ -71,7 +72,7 @@ type ExplorerComponentState = {
   nodes: Node[]
   relationships: Relationship[]
   selectedItem: VizItem
-  stats: { labels: any; relTypes: any }
+  stats: GraphStats
   styleVersion: number
   freezeLegend: boolean
   width: number
@@ -173,31 +174,9 @@ export class ExplorerComponent extends Component<
     this.setState({ selectedItem })
   }
 
-  onGraphModelChange(stats: any) {
-    this.setState({ stats: stats })
+  onGraphModelChange(stats: GraphStats) {
+    this.setState({ stats })
     this.props.updateStyle(this.state.graphStyle.toSheet())
-  }
-
-  selectLabel(label: string, propertyKeys: string[]) {
-    this.setState({
-      selectedItem: {
-        type: 'legend-item',
-        item: {
-          selectedLabel: { label, propertyKeys }
-        }
-      }
-    })
-  }
-
-  selectRelType(relType: string, propertyKeys: string[]) {
-    this.setState({
-      selectedItem: {
-        type: 'legend-item',
-        item: {
-          selectedRelType: { relType, propertyKeys }
-        }
-      }
-    })
   }
 
   componentDidUpdate(prevProps: any) {
@@ -258,8 +237,6 @@ export class ExplorerComponent extends Component<
           graphStyle={graphStyle}
           hasTruncatedFields={this.props.hasTruncatedFields}
           hoveredItem={this.state.hoveredItem}
-          selectLabel={this.selectLabel.bind(this)}
-          selectRelType={this.selectRelType.bind(this)}
           selectedItem={this.state.selectedItem}
           stats={this.state.stats}
           width={this.state.width}

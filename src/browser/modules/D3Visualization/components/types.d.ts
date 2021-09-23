@@ -47,17 +47,3 @@ type CanvasItem = {
     relationshipCount: number
   }
 }
-
-type LegendItem = {
-  type: 'legend-item'
-  item: {
-    selectedRelType?: {
-      relType: string
-      propertyKeys: string[]
-    }
-    selectedLabel?: {
-      label: string
-      propertyKeys: string[]
-    }
-  }
-}

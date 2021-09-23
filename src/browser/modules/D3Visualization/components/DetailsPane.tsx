@@ -19,6 +19,7 @@
  */
 
 import React from 'react'
+
 import {
   AlternatingTable,
   CopyCell,
@@ -31,14 +32,10 @@ import {
 } from './styled'
 import ClickableUrls from '../../../components/ClickableUrls'
 import ClipboardCopier from 'browser-components/ClipboardCopier'
-import { NodeItem, RelationshipItem, VizNodeProperty } from './types'
-import { GrassEditor } from './GrassEditor'
-import { Popup } from 'semantic-ui-react'
+import { NodeItem, RelationshipItem } from './types'
 import { GraphStyle } from './OverviewPane'
-import {
-  StyledLabel,
-  StyledRelationship
-} from 'browser/modules/DBMSInfo/styled'
+import { StyleableNodeLabel } from './StyleableNodeLabel'
+import { StylableRelType } from './StyleableRelType'
 
 type DetailsPaneComponentProps = {
   vizItem: NodeItem | RelationshipItem
@@ -59,53 +56,27 @@ export function DetailsPaneComponent({
     <>
       <PaneHeader>
         {vizItem.type === 'relationship' && (
-          <StyledRelationship
-            style={{
-              backgroundColor: graphStyle
-                .forRelationship(vizItem.item)
-                .get('color'),
-              color: graphStyle
-                .forRelationship(vizItem.item)
-                .get('text-color-internal'),
-              cursor: 'default'
+          <StylableRelType
+            selectedRelType={{
+              propertyKeys: vizItem.item.properties.map(p => p.key),
+              relType: vizItem.item.type
             }}
-          >
-            {vizItem.item.type}
-          </StyledRelationship>
+            frameHeight={frameHeight}
+            graphStyle={graphStyle}
+          />
         )}
         {vizItem.type === 'node' &&
           vizItem.item.labels.map((label: string) => {
-            const graphStyleForLabel = graphStyle.forNode({
-              labels: [label]
-            })
-
             return (
-              <Popup
-                on="click"
-                basic
-                pinned
+              <StyleableNodeLabel
                 key={label}
-                trigger={
-                  <StyledLabel
-                    style={{
-                      backgroundColor: graphStyleForLabel.get('color'),
-                      color: graphStyleForLabel.get('text-color-internal'),
-                      cursor: 'default'
-                    }}
-                  >
-                    {label}
-                  </StyledLabel>
-                }
-                wide
-              >
-                <GrassEditor
-                  selectedLabel={{
-                    label,
-                    propertyKeys: vizItem.item.properties.map(p => p.key)
-                  }}
-                  frameHeight={frameHeight}
-                />
-              </Popup>
+                frameHeight={frameHeight}
+                graphStyle={graphStyle}
+                selectedLabel={{
+                  label,
+                  propertyKeys: vizItem.item.properties.map(p => p.key)
+                }}
+              />
             )
           })}
         <ClipboardCopier
@@ -118,43 +89,29 @@ export function DetailsPaneComponent({
       </PaneHeader>
       <PaneBody maxHeight={frameHeight - 45}>
         <StyledInlineList>
-          <GraphItemProperties properties={allItemProperties} />
+          <AlternatingTable>
+            <tbody>
+              {allItemProperties.map(({ key, type, value }) => (
+                <tr key={key} title={type}>
+                  <KeyCell>
+                    <OverflowY>{key}: </OverflowY>
+                  </KeyCell>
+                  <ValueCell>
+                    <ClickableUrls text={value} />
+                  </ValueCell>
+                  <CopyCell>
+                    <ClipboardCopier
+                      titleText={'Copy key and value'}
+                      textToCopy={`${key}: ${value}`}
+                      iconSize={10}
+                    />
+                  </CopyCell>
+                </tr>
+              ))}
+            </tbody>
+          </AlternatingTable>
         </StyledInlineList>
       </PaneBody>
     </>
-  )
-}
-
-const GraphItemProperties = ({
-  properties
-}: {
-  properties: VizNodeProperty[]
-}) => {
-  if (!properties.length) {
-    return <div>No properties to display</div>
-  }
-
-  return (
-    <AlternatingTable>
-      <tbody>
-        {properties.map(({ key, type, value }) => (
-          <tr key={key} title={type}>
-            <KeyCell>
-              <OverflowY>{key}: </OverflowY>
-            </KeyCell>
-            <ValueCell>
-              <ClickableUrls text={value} />
-            </ValueCell>
-            <CopyCell>
-              <ClipboardCopier
-                titleText={'Copy key and value'}
-                textToCopy={`${key}: ${value}`}
-                iconSize={10}
-              />
-            </CopyCell>
-          </tr>
-        ))}
-      </tbody>
-    </AlternatingTable>
   )
 }

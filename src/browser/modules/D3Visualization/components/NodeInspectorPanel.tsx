@@ -1,29 +1,29 @@
 import React, { Component } from 'react'
 import { Resizable } from 'react-resizable'
 import { Icon } from 'semantic-ui-react'
-import { DetailsPaneComponent } from './DetailsPane'
+
 import OverviewPane, { GraphStyle } from './OverviewPane'
-import { VizItem } from './types'
+import { DetailsPaneComponent } from './DetailsPane'
+import { GraphStats } from '../mapper'
 import {
   StyledNodeInspectorContainer,
   OverflowContainer,
   StyledNodeInspectorTopMenuChevron,
   panelMinWidth
 } from './styled'
+import { VizItem } from './types'
 
 interface NodeInspectorPanelProps {
+  expanded: boolean
+  frameHeight: number
+  graphStyle: GraphStyle
+  hasTruncatedFields: boolean
   hoveredItem: VizItem
   selectedItem: VizItem
-  stats: any
-  graphStyle: GraphStyle
-  selectLabel: (label: string, propertyKeys: string[]) => void
-  selectRelType: (relType: string, propertyKeys: string[]) => void
-  frameHeight: number
-  hasTruncatedFields: boolean
-  width: number
   setWidth: (width: number) => void
-  expanded: boolean
+  stats: GraphStats
   toggleExpanded: () => void
+  width: number
 }
 
 export type NodeInspectorPanelState = {
@@ -39,11 +39,9 @@ export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
       graphStyle,
       hasTruncatedFields,
       hoveredItem,
-      selectLabel,
-      selectRelType,
       selectedItem,
-      stats,
       setWidth,
+      stats,
       toggleExpanded,
       width
     } = this.props
@@ -52,8 +50,6 @@ export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
     const hoveringNodeOrRelationship =
       hoveredItem && relevantItems.includes(hoveredItem.type)
     const shownEl = hoveringNodeOrRelationship ? hoveredItem : selectedItem
-    const selectedLegendItem =
-      selectedItem.type === 'legend-item' ? selectedItem : undefined
 
     return (
       <>
@@ -98,10 +94,7 @@ export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
                       frameHeight={frameHeight}
                       graphStyle={graphStyle}
                       hasTruncatedFields={hasTruncatedFields}
-                      selectLabel={selectLabel}
-                      selectRelType={selectRelType}
                       stats={stats}
-                      legendItem={selectedLegendItem}
                       nodeCount={
                         shownEl.type === 'canvas'
                           ? shownEl.item.nodeCount

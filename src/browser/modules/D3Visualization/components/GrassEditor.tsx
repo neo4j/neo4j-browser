@@ -42,8 +42,8 @@ type GrassEditorProps = {
   graphStyleData?: any
   graphStyle?: GraphStyle
   update?: any
-  selectedLabel?: { label: string; propertyKeys: any }
-  selectedRelType?: any
+  selectedLabel?: { label: string; propertyKeys: string[] }
+  selectedRelType?: { relType: string; propertyKeys: string[] }
   frameHeight: number
 }
 

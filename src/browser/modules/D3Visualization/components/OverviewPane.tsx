@@ -19,22 +19,14 @@
  */
 
 import React from 'react'
-import { Icon, Popup } from 'semantic-ui-react'
+import { Icon } from 'semantic-ui-react'
 
-import {
-  StyledTokenCount,
-  StyledLegendInlineList,
-  PaneBody,
-  PaneHeader
-} from './styled'
+import { StyledLegendInlineList, PaneBody, PaneHeader } from './styled'
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
-import { GrassEditor } from './GrassEditor'
 import { StyledTruncatedMessage } from 'browser/modules/Stream/styled'
-import { LegendItem } from './types'
-import {
-  StyledLabel,
-  StyledRelationship
-} from 'browser/modules/DBMSInfo/styled'
+import { StyleableNodeLabel } from './StyleableNodeLabel'
+import { GraphStats } from '../mapper'
+import { StylableRelType } from './StyleableRelType'
 
 export type GraphStyle = {
   forNode: any
@@ -56,10 +48,7 @@ type OverviewPaneProps = {
   hasTruncatedFields: boolean
   nodeCount: number | null
   relationshipCount: number | null
-  selectLabel: (label: string, propertyKeys: string[]) => void
-  selectRelType: (relType: string, propertyKeys: string[]) => void
-  stats: { relTypes: any; labels: any }
-  legendItem?: LegendItem
+  stats: GraphStats
 }
 
 function OverviewPane({
@@ -68,10 +57,7 @@ function OverviewPane({
   hasTruncatedFields,
   nodeCount,
   relationshipCount,
-  selectLabel,
-  selectRelType,
-  stats,
-  legendItem
+  stats
 }: OverviewPaneProps): JSX.Element {
   const { relTypes, labels } = stats
 
@@ -95,43 +81,17 @@ function OverviewPane({
           <>
             Node labels
             <StyledLegendInlineList>
-              {Object.keys(labels).map(legendItemKey => {
-                const styleForItem = graphStyle.forNode({
-                  labels: [legendItemKey]
-                })
-                const onClick = () => {
-                  selectLabel(
-                    legendItemKey,
-                    Object.keys(labels[legendItemKey].properties)
-                  )
-                }
-                const style = {
-                  backgroundColor: styleForItem.get('color'),
-                  color: styleForItem.get('text-color-internal')
-                }
-                return (
-                  <Popup
-                    on="click"
-                    key={legendItemKey}
-                    basic
-                    pinned
-                    trigger={
-                      <StyledLabel onClick={onClick} style={style}>
-                        {legendItemKey}
-                        <StyledTokenCount>{`(${numberToUSLocale(
-                          labels[legendItemKey].count
-                        )})`}</StyledTokenCount>
-                      </StyledLabel>
-                    }
-                    wide
-                  >
-                    <GrassEditor
-                      {...legendItem?.item}
-                      frameHeight={frameHeight}
-                    />
-                  </Popup>
-                )
-              })}
+              {Object.keys(labels).map((label: string) => (
+                <StyleableNodeLabel
+                  key={label}
+                  graphStyle={graphStyle}
+                  frameHeight={frameHeight}
+                  selectedLabel={{
+                    label,
+                    propertyKeys: Object.keys(labels[label].properties)
+                  }}
+                />
+              ))}
             </StyledLegendInlineList>
           </>
         )}
@@ -139,45 +99,17 @@ function OverviewPane({
           <>
             Relationship Types
             <StyledLegendInlineList>
-              {Object.keys(relTypes).map(legendItemKey => {
-                const styleForItem = graphStyle.forRelationship({
-                  type: legendItemKey
-                })
-                const onClick = () => {
-                  selectRelType(
-                    legendItemKey,
-                    Object.keys(relTypes[legendItemKey].properties)
-                  )
-                }
-                const style = {
-                  backgroundColor: styleForItem.get('color'),
-                  color: styleForItem.get('text-color-internal')
-                }
-                return (
-                  <Popup
-                    on="click"
-                    basic
-                    key={legendItemKey}
-                    pinned
-                    trigger={
-                      <StyledRelationship onClick={onClick} style={style}>
-                        {legendItemKey}
-                        <StyledTokenCount>
-                          {`(${numberToUSLocale(
-                            relTypes[legendItemKey].count
-                          )})`}
-                        </StyledTokenCount>
-                      </StyledRelationship>
-                    }
-                    wide
-                  >
-                    <GrassEditor
-                      {...legendItem?.item}
-                      frameHeight={frameHeight}
-                    />
-                  </Popup>
-                )
-              })}
+              {Object.keys(relTypes).map(relType => (
+                <StylableRelType
+                  key={relType}
+                  graphStyle={graphStyle}
+                  frameHeight={frameHeight}
+                  selectedRelType={{
+                    relType,
+                    propertyKeys: Object.keys(relTypes[relType].properties)
+                  }}
+                />
+              ))}
             </StyledLegendInlineList>
           </>
         )}
