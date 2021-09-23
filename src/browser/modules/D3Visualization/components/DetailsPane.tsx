@@ -134,23 +134,25 @@ const GraphItemProperties = ({
 
   return (
     <AlternatingTable>
-      {properties.map(({ key, type, value }) => (
-        <tr key={key} title={type}>
-          <KeyCell>
-            <OverflowY>{key}: </OverflowY>
-          </KeyCell>
-          <ValueCell>
-            <ClickableUrls text={value} />
-          </ValueCell>
-          <CopyCell>
-            <ClipboardCopier
-              titleText={'Copy key and value'}
-              textToCopy={`${key}: ${value}`}
-              iconSize={10}
-            />
-          </CopyCell>
-        </tr>
-      ))}
+      <tbody>
+        {properties.map(({ key, type, value }) => (
+          <tr key={key} title={type}>
+            <KeyCell>
+              <OverflowY>{key}: </OverflowY>
+            </KeyCell>
+            <ValueCell>
+              <ClickableUrls text={value} />
+            </ValueCell>
+            <CopyCell>
+              <ClipboardCopier
+                titleText={'Copy key and value'}
+                textToCopy={`${key}: ${value}`}
+                iconSize={10}
+              />
+            </CopyCell>
+          </tr>
+        ))}
+      </tbody>
     </AlternatingTable>
   )
 }

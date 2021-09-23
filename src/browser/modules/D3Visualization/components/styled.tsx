@@ -154,6 +154,7 @@ export const StyledToken = styled(StyledInlineListItem)`
   font-size: 12px;
   margin-right: 5px;
   cursor: pointer;
+  margin-bottom: 3px;
 `
 export const StyledLabelToken = styled(StyledToken)`
   padding: 4px 7px 4px 9px;
@@ -179,10 +180,7 @@ export const StyledLegendInlineList = styled(StyledInlineList)`
   border-bottom: ${props => props.theme.inFrameBorder};
   margin-bottom: 8px;
 `
-export const StyledLegendInlineListItem = styled(StyledInlineListItem)`
-  display: inline-block;
-  margin-bottom: 3px;
-`
+
 export const StyledPickerListItem = styled(StyledInlineListItem)`
   padding-right: 5px;
   padding-left: 0;

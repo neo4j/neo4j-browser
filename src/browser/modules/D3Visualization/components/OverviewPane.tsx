@@ -23,7 +23,6 @@ import { Icon, Popup } from 'semantic-ui-react'
 
 import {
   StyledTokenRelationshipType,
-  StyledLegendInlineListItem,
   StyledLabelToken,
   StyledTokenCount,
   StyledLegendInlineList,
@@ -110,30 +109,26 @@ function OverviewPane({
                 color: styleForItem.get('text-color-internal')
               }
               return (
-                <StyledLegendInlineListItem
+                <Popup
+                  on="click"
                   key={legendItemKey}
-                  data-testid="viz-legend-labels"
+                  basic
+                  pinned
+                  trigger={
+                    <StyledLabelToken onClick={onClick} style={style}>
+                      {legendItemKey}
+                      <StyledTokenCount>{`(${numberToUSLocale(
+                        labels[legendItemKey].count
+                      )})`}</StyledTokenCount>
+                    </StyledLabelToken>
+                  }
+                  wide
                 >
-                  <Popup
-                    on="click"
-                    basic
-                    pinned
-                    trigger={
-                      <StyledLabelToken onClick={onClick} style={style}>
-                        {legendItemKey}
-                        <StyledTokenCount>{`(${numberToUSLocale(
-                          labels[legendItemKey].count
-                        )})`}</StyledTokenCount>
-                      </StyledLabelToken>
-                    }
-                    wide
-                  >
-                    <GrassEditor
-                      {...legendItem?.item}
-                      frameHeight={frameHeight}
-                    />
-                  </Popup>
-                </StyledLegendInlineListItem>
+                  <GrassEditor
+                    {...legendItem?.item}
+                    frameHeight={frameHeight}
+                  />
+                </Popup>
               )
             })}
           </StyledLegendInlineList>
@@ -158,35 +153,29 @@ function OverviewPane({
                 color: styleForItem.get('text-color-internal')
               }
               return (
-                <StyledLegendInlineListItem
+                <Popup
+                  on="click"
+                  basic
                   key={legendItemKey}
-                  data-testid="viz-legend-reltypes"
+                  pinned
+                  trigger={
+                    <StyledTokenRelationshipType
+                      onClick={onClick}
+                      style={style}
+                    >
+                      {legendItemKey}
+                      <StyledTokenCount>
+                        {`(${numberToUSLocale(relTypes[legendItemKey].count)})`}
+                      </StyledTokenCount>
+                    </StyledTokenRelationshipType>
+                  }
+                  wide
                 >
-                  <Popup
-                    on="click"
-                    basic
-                    pinned
-                    trigger={
-                      <StyledTokenRelationshipType
-                        onClick={onClick}
-                        style={style}
-                      >
-                        {legendItemKey}
-                        <StyledTokenCount>
-                          {`(${numberToUSLocale(
-                            relTypes[legendItemKey].count
-                          )})`}
-                        </StyledTokenCount>
-                      </StyledTokenRelationshipType>
-                    }
-                    wide
-                  >
-                    <GrassEditor
-                      {...legendItem?.item}
-                      frameHeight={frameHeight}
-                    />
-                  </Popup>
-                </StyledLegendInlineListItem>
+                  <GrassEditor
+                    {...legendItem?.item}
+                    frameHeight={frameHeight}
+                  />
+                </Popup>
               )
             })}
           </StyledLegendInlineList>
