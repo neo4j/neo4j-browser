@@ -108,11 +108,6 @@ export const StyledSvgWrapper = styled.div`
   }
 `
 
-export const StyledGraphAreaContainer = styled.div`
-  position: relative;
-  height: 100%;
-`
-
 export const StyledRowToggle = styled.div`
   float: right;
   display: block;

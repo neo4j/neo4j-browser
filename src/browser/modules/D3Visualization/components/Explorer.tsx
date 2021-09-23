@@ -26,11 +26,7 @@ import { deepEquals } from 'services/utils'
 import { GraphComponent } from './Graph'
 import neoGraphStyle from '../graphStyle'
 import { defaultPanelWidth, NodeInspectorPanel } from './NodeInspectorPanel'
-import {
-  panelMinWidth,
-  StyledFullSizeContainer,
-  StyledGraphAreaContainer
-} from './styled'
+import { panelMinWidth, StyledFullSizeContainer } from './styled'
 import { GlobalState } from 'shared/globalState'
 import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
 import { VizItem } from './types'
@@ -239,46 +235,44 @@ export class ExplorerComponent extends Component<
 
     return (
       <StyledFullSizeContainer id="svg-vis">
-        <StyledGraphAreaContainer>
-          <GraphComponent
-            fullscreen={this.props.fullscreen}
-            frameHeight={this.props.frameHeight}
-            relationships={this.state.relationships}
-            nodes={this.state.nodes}
-            getNodeNeighbours={this.getNodeNeighbours.bind(this)}
-            onItemMouseOver={this.onItemMouseOver.bind(this)}
-            onItemSelect={this.onItemSelect.bind(this)}
-            graphStyle={graphStyle}
-            styleVersion={this.state.styleVersion} // cheap way for child to check style updates
-            onGraphModelChange={this.onGraphModelChange.bind(this)}
-            assignVisElement={this.props.assignVisElement}
-            getAutoCompleteCallback={this.props.getAutoCompleteCallback}
-            setGraph={this.props.setGraph}
-            offset={
-              (this.state.nodePropertiesExpanded ? this.state.width : 0) + 4
-            }
-          />
-          <NodeInspectorPanel
-            frameHeight={this.props.frameHeight}
-            graphStyle={graphStyle}
-            hasTruncatedFields={this.props.hasTruncatedFields}
-            hoveredItem={this.state.hoveredItem}
-            selectLabel={this.selectLabel.bind(this)}
-            selectRelType={this.selectRelType.bind(this)}
-            selectedItem={this.state.selectedItem}
-            stats={this.state.stats}
-            width={this.state.width}
-            setWidth={(width: number) =>
-              this.setState({ width: Math.max(panelMinWidth, width) })
-            }
-            expanded={this.state.nodePropertiesExpanded}
-            toggleExpanded={() =>
-              this.setState(oldState => ({
-                nodePropertiesExpanded: !oldState.nodePropertiesExpanded
-              }))
-            }
-          />
-        </StyledGraphAreaContainer>
+        <GraphComponent
+          fullscreen={this.props.fullscreen}
+          frameHeight={this.props.frameHeight}
+          relationships={this.state.relationships}
+          nodes={this.state.nodes}
+          getNodeNeighbours={this.getNodeNeighbours.bind(this)}
+          onItemMouseOver={this.onItemMouseOver.bind(this)}
+          onItemSelect={this.onItemSelect.bind(this)}
+          graphStyle={graphStyle}
+          styleVersion={this.state.styleVersion} // cheap way for child to check style updates
+          onGraphModelChange={this.onGraphModelChange.bind(this)}
+          assignVisElement={this.props.assignVisElement}
+          getAutoCompleteCallback={this.props.getAutoCompleteCallback}
+          setGraph={this.props.setGraph}
+          offset={
+            (this.state.nodePropertiesExpanded ? this.state.width : 0) + 4
+          }
+        />
+        <NodeInspectorPanel
+          frameHeight={this.props.frameHeight}
+          graphStyle={graphStyle}
+          hasTruncatedFields={this.props.hasTruncatedFields}
+          hoveredItem={this.state.hoveredItem}
+          selectLabel={this.selectLabel.bind(this)}
+          selectRelType={this.selectRelType.bind(this)}
+          selectedItem={this.state.selectedItem}
+          stats={this.state.stats}
+          width={this.state.width}
+          setWidth={(width: number) =>
+            this.setState({ width: Math.max(panelMinWidth, width) })
+          }
+          expanded={this.state.nodePropertiesExpanded}
+          toggleExpanded={() =>
+            this.setState(oldState => ({
+              nodePropertiesExpanded: !oldState.nodePropertiesExpanded
+            }))
+          }
+        />
       </StyledFullSizeContainer>
     )
   }
