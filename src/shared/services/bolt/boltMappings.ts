@@ -213,8 +213,12 @@ export function extractNodesAndRelationshipsFromRecordsForOldVis(
           const jsType = typeof val
           const complexType = jsType === 'object'
           if (complexType) {
-            //@ts-ignore
-            return { ...acc, [key]: val.constructor.name }
+            const valAsAny = val as any
+            const typeName = valAsAny.constructor.name
+            if (typeName === 'Array' && typeof valAsAny.length === 'number') {
+              return { ...acc, [key]: `${typeName}(${valAsAny.length})` }
+            }
+            return { ...acc, [key]: typeName }
           }
           return { ...acc, [key]: jsType }
         },

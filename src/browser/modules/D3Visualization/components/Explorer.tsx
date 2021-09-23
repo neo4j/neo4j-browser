@@ -277,6 +277,7 @@ export class ExplorerComponent extends Component<
     )
   }
 }
+
 export const Explorer = connect((state: GlobalState) => ({
   maxFieldItems: getMaxFieldItems(state)
 }))(ExplorerComponent)
