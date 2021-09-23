@@ -42,9 +42,8 @@ describe('<GrassEditor />', () => {
       </Provider>
     )
 
-    // No test ID on options so grab last one in list through DOM
     const largestSizeOption = container.querySelector(
-      '.style-picker .size-picker li:last-of-type a'
+      '[data-testid="size-picker"] li:last-of-type a'
     ) as HTMLElement
 
     // Click style option to trigger redux action resulting in new graphStyleData

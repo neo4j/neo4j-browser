@@ -135,7 +135,7 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
   sizePicker(selector: any, styleForLabel: any) {
     return (
       <StyledInlineListItem key="size-picker">
-        <StyledInlineList>
+        <StyledInlineList data-testid="size-picker">
           <StyledInlineListItem>Size:</StyledInlineListItem>
           {this.circleSelector(
             this.graphStyle.defaultSizes(),
