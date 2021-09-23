@@ -19,7 +19,6 @@
  */
 
 import React from 'react'
-import ManualLink from 'browser-components/ManualLink'
 import { BuiltInGuideSidebarSlide } from '../../modules/Carousel/Slide'
 
 const title = 'Concepts Guide'
