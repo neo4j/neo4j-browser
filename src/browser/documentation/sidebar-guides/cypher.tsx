@@ -19,7 +19,6 @@
  */
 
 import React from 'react'
-import ManualLink from 'browser-components/ManualLink'
 import { BuiltInGuideSidebarSlide } from '../../modules/Carousel/Slide'
 
 const title = 'Cypher Guide '
@@ -48,11 +47,9 @@ const slides = [
       <li>
         Click this code block and bring it into the Editor:
         <pre className="pre-scrollable code runnable">
-          {
-            'CREATE (ee:Person { name: "Emil", from: "Sweden", kloutScore: 99 })'
-          }
+          {"CREATE (ee:Person {name: 'Emil', from: 'Sweden', kloutScore: 99})"}
         </pre>
-        <ul>
+        <ul style={{ marginLeft: '10px', paddingLeft: '10px' }}>
           <li>
             <code>CREATE</code> creates the node.
           </li>
@@ -60,7 +57,7 @@ const slides = [
             <code>()</code> indicates the node.
           </li>
           <li>
-            <code>ee:Person</code> – <code>ee</code> is the node variable and{' '}
+            <code>ee:Person</code> – <code>ee</code> is the node variable and
             <code>Person</code> is the node label.
           </li>
           <li>
@@ -83,9 +80,9 @@ const slides = [
       <li>
         Click this code block and bring it into the Editor:
         <pre className="pre-scrollable code runnable">
-          MATCH (ee:Person) WHERE ee.name = "Emil" RETURN ee;
+          MATCH (ee:Person) WHERE ee.name = 'Emil' RETURN ee;
         </pre>
-        <ul>
+        <ul style={{ marginLeft: '10px', paddingLeft: '10px' }}>
           <li>
             <code>MATCH</code> specifies a pattern of nodes and relationships.
           </li>
@@ -98,7 +95,7 @@ const slides = [
             <code>WHERE</code> filters the query.
           </li>
           <li>
-            <code>ee.name = "Emil"</code> compares name property to the value{' '}
+            <code>ee.name = 'Emil'</code> compares name property to the value{' '}
             <code>Emil</code>.
           </li>
           <li>
@@ -122,11 +119,11 @@ const slides = [
       once.
     </p>
     <pre className="pre-scrollable code runnable">
-      {`MATCH (ee:Person) WHERE ee.name = "Emil"
-CREATE (js:Person { name: "Johan", from: "Sweden", learn: "surfing" }),
-(ir:Person { name: "Ian", from: "England", title: "author" }),
-(rvb:Person { name: "Rik", from: "Belgium", pet: "Orval" }),
-(ally:Person { name: "Allison", from: "California", hobby: "surfing" }),
+      {`MATCH (ee:Person) WHERE ee.name = 'Emil'
+CREATE (js:Person { name: 'Johan', from: 'Sweden', learn: 'surfing' }),
+(ir:Person { name: 'Ian', from: 'England', title: 'author' }),
+(rvb:Person { name: 'Rik', from: 'Belgium', pet: 'Orval' }),
+(ally:Person { name: 'Allison', from: 'California', hobby: 'surfing' }),
 (ee)-[:KNOWS {since: 2001}]->(js),(ee)-[:KNOWS {rating: 5}]->(ir),
 (js)-[:KNOWS]->(ir),(js)-[:KNOWS]->(rvb),
 (ir)-[:KNOWS]->(js),(ir)-[:KNOWS]->(ally),
@@ -145,9 +142,9 @@ CREATE (js:Person { name: "Johan", from: "Sweden", learn: "surfing" }),
     </p>
     <pre className="pre-scrollable code runnable">
       {`MATCH (ee:Person)-[:KNOWS]-(friends)
-WHERE ee.name = "Emil" RETURN ee, friends`}
+WHERE ee.name = 'Emil' RETURN ee, friends`}
     </pre>
-    <ul>
+    <ul style={{ marginLeft: '10px', paddingLeft: '10px' }}>
       <li>
         <code>MATCH</code> describes what nodes will be retrieved based upon the
         pattern.
@@ -157,7 +154,7 @@ WHERE ee.name = "Emil" RETURN ee, friends`}
         <code>WHERE</code> clause.
       </li>
       <li>
-        <code>-[:KNOWS]-</code> matches <code>KNOWS</code> relationships (in
+        <code>-[:KNOWS]-</code> matches the <code>KNOWS</code> relationships (in
         either direction) from <code>ee</code>.
       </li>
       <li>
@@ -180,6 +177,17 @@ WHERE ee.name = "Emil" RETURN ee, friends`}
       <li>
         <a data-exec="guide northwind-graph">The Northwind Graph</a> – Translate
         and import relation data into graph.
+      </li>
+    </ul>
+    <br />
+    <h3>References</h3>
+    <ul className="undecorated">
+      <li>
+        <a help-topic="commands">Help commands</a> - Useful Neo4j Browser
+        commands
+      </li>
+      <li>
+        <a help-topic="keys">Help keys</a> - Keyboard shortcuts
       </li>
     </ul>
   </BuiltInGuideSidebarSlide>
