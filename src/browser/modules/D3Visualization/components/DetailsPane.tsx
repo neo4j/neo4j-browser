@@ -27,8 +27,6 @@ import {
   PaneBody,
   PaneHeader,
   StyledInlineList,
-  StyledLabelToken,
-  StyledTokenRelationshipType,
   ValueCell
 } from './styled'
 import ClickableUrls from '../../../components/ClickableUrls'
@@ -37,6 +35,10 @@ import { NodeItem, RelationshipItem, VizNodeProperty } from './types'
 import { GrassEditor } from './GrassEditor'
 import { Popup } from 'semantic-ui-react'
 import { GraphStyle } from './OverviewPane'
+import {
+  StyledLabel,
+  StyledRelationship
+} from 'browser/modules/DBMSInfo/styled'
 
 type DetailsPaneComponentProps = {
   vizItem: NodeItem | RelationshipItem
@@ -57,7 +59,7 @@ export function DetailsPaneComponent({
     <>
       <PaneHeader>
         {vizItem.type === 'relationship' && (
-          <StyledTokenRelationshipType
+          <StyledRelationship
             style={{
               backgroundColor: graphStyle
                 .forRelationship(vizItem.item)
@@ -69,7 +71,7 @@ export function DetailsPaneComponent({
             }}
           >
             {vizItem.item.type}
-          </StyledTokenRelationshipType>
+          </StyledRelationship>
         )}
         {vizItem.type === 'node' &&
           vizItem.item.labels.map((label: string) => {
@@ -84,7 +86,7 @@ export function DetailsPaneComponent({
                 pinned
                 key={label}
                 trigger={
-                  <StyledLabelToken
+                  <StyledLabel
                     style={{
                       backgroundColor: graphStyleForLabel.get('color'),
                       color: graphStyleForLabel.get('text-color-internal'),
@@ -92,7 +94,7 @@ export function DetailsPaneComponent({
                     }}
                   >
                     {label}
-                  </StyledLabelToken>
+                  </StyledLabel>
                 }
                 wide
               >
