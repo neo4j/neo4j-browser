@@ -21,34 +21,30 @@ interface NodeInspectorPanelProps {
   hasTruncatedFields: boolean
   width: number
   setWidth: (width: number) => void
+  expanded: boolean
+  toggleExpanded: () => void
 }
 
 export type NodeInspectorPanelState = {
   expanded: boolean
 }
 export const defaultPanelWidth = (): number => window.innerWidth / 3.5
-export class NodeInspectorPanel extends Component<
-  NodeInspectorPanelProps,
-  NodeInspectorPanelState
-> {
-  state: NodeInspectorPanelState = {
-    expanded: true
-  }
-
-  togglePanel = (): void => {
-    if (this.state.expanded) {
-      this.props.setWidth(0)
-    } else {
-      this.props.setWidth(defaultPanelWidth())
-    }
-    this.setState({
-      expanded: !this.state.expanded
-    })
-  }
-
+export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
   render(): JSX.Element {
-    const { expanded } = this.state
-    const { hoveredItem, selectedItem } = this.props
+    const {
+      expanded,
+      frameHeight,
+      graphStyle,
+      hasTruncatedFields,
+      hoveredItem,
+      selectLabel,
+      selectRelType,
+      selectedItem,
+      stats,
+      setWidth,
+      toggleExpanded,
+      width
+    } = this.props
 
     const relevantItems = ['node', 'relationship']
     const hoveringNodeOrRelationship =
@@ -61,7 +57,7 @@ export class NodeInspectorPanel extends Component<
       <>
         <StyledNodeInspectorTopMenuChevron
           expanded={expanded}
-          onClick={this.togglePanel}
+          onClick={toggleExpanded}
         >
           {expanded ? (
             <Icon
@@ -77,35 +73,32 @@ export class NodeInspectorPanel extends Component<
         </StyledNodeInspectorTopMenuChevron>
 
         {expanded && (
-          <StyledNodeInspectorContainer
-            width={this.props.width}
-            height={this.props.frameHeight}
-          >
+          <StyledNodeInspectorContainer width={width} height={frameHeight}>
             <Resizable
-              width={this.props.width}
+              width={width}
               height={300 /*doesn't matter but required prop */}
               resizeHandles={['w']}
-              onResize={(_e, { size }) => this.props.setWidth(size.width)}
+              onResize={(_e, { size }) => setWidth(size.width)}
             >
               {/* React-resizeable requires it's first child to not have a height set, 
                   therefore we need this wrapping div */}
               <div>
-                <OverflowContainer height={this.props.frameHeight}>
+                <OverflowContainer height={frameHeight}>
                   {shownEl.type === 'node' ||
                   shownEl.type === 'relationship' ? (
                     <DetailsPaneComponent
                       vizItem={shownEl}
-                      graphStyle={this.props.graphStyle}
-                      frameHeight={this.props.frameHeight}
+                      graphStyle={graphStyle}
+                      frameHeight={frameHeight}
                     />
                   ) : (
                     <OverviewPane
-                      frameHeight={this.props.frameHeight}
-                      graphStyle={this.props.graphStyle}
-                      hasTruncatedFields={this.props.hasTruncatedFields}
-                      selectLabel={this.props.selectLabel}
-                      selectRelType={this.props.selectRelType}
-                      stats={this.props.stats}
+                      frameHeight={frameHeight}
+                      graphStyle={graphStyle}
+                      hasTruncatedFields={hasTruncatedFields}
+                      selectLabel={selectLabel}
+                      selectRelType={selectRelType}
+                      stats={stats}
                       legendItem={selectedLegendItem}
                       nodeCount={
                         shownEl.type === 'canvas'

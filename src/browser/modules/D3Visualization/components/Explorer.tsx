@@ -79,6 +79,7 @@ type ExplorerComponentState = {
   styleVersion: number
   freezeLegend: boolean
   width: number
+  nodePropertiesExpanded: boolean
 }
 
 export class ExplorerComponent extends Component<
@@ -129,7 +130,8 @@ export class ExplorerComponent extends Component<
       selectedItem,
       hoveredItem: selectedItem,
       freezeLegend: false,
-      width: defaultPanelWidth()
+      width: defaultPanelWidth(),
+      nodePropertiesExpanded: true
     }
   }
 
@@ -252,7 +254,9 @@ export class ExplorerComponent extends Component<
             assignVisElement={this.props.assignVisElement}
             getAutoCompleteCallback={this.props.getAutoCompleteCallback}
             setGraph={this.props.setGraph}
-            offset={this.state.width + 4}
+            offset={
+              (this.state.nodePropertiesExpanded ? this.state.width : 0) + 4
+            }
           />
           <NodeInspectorPanel
             frameHeight={this.props.frameHeight}
@@ -264,8 +268,14 @@ export class ExplorerComponent extends Component<
             selectedItem={this.state.selectedItem}
             stats={this.state.stats}
             width={this.state.width}
-            setWidth={width =>
+            setWidth={(width: number) =>
               this.setState({ width: Math.max(panelMinWidth, width) })
+            }
+            expanded={this.state.nodePropertiesExpanded}
+            toggleExpanded={() =>
+              this.setState(oldState => ({
+                nodePropertiesExpanded: !oldState.nodePropertiesExpanded
+              }))
             }
           />
         </StyledGraphAreaContainer>
