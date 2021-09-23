@@ -35,19 +35,19 @@ exports[`LabelItems renders labels 1`] = `
       class="sc-EHOje fyzZhj"
     >
       <div
-        class="sc-gZMcBi sc-gqjmRU bqcHTp"
+        class="sc-gZMcBi sc-gqjmRU bszfIc"
         data-testid="sidebarMetaItem"
       >
         *
       </div>
       <div
-        class="sc-gZMcBi sc-gqjmRU bqcHTp"
+        class="sc-gZMcBi sc-gqjmRU bszfIc"
         data-testid="sidebarMetaItem"
       >
         MyLabel
       </div>
       <div
-        class="sc-gZMcBi sc-gqjmRU bqcHTp"
+        class="sc-gZMcBi sc-gqjmRU bszfIc"
         data-testid="sidebarMetaItem"
       >
         MyLabel2
@@ -92,13 +92,13 @@ exports[`PropertyItems renders properties 1`] = `
       class="sc-EHOje fyzZhj"
     >
       <div
-        class="sc-gZMcBi sc-jTzLTM qJGnO"
+        class="sc-gZMcBi sc-jTzLTM kqjkqn"
         data-testid="sidebarMetaItem"
       >
         prop1
       </div>
       <div
-        class="sc-gZMcBi sc-jTzLTM qJGnO"
+        class="sc-gZMcBi sc-jTzLTM kqjkqn"
         data-testid="sidebarMetaItem"
       >
         prop2
@@ -143,19 +143,19 @@ exports[`RelationshipItems renders relationshipTypes 1`] = `
       class="sc-EHOje fyzZhj"
     >
       <div
-        class="sc-gZMcBi sc-VigVT iGFmRz"
+        class="sc-gZMcBi sc-VigVT hzykkh"
         data-testid="sidebarMetaItem"
       >
         *
       </div>
       <div
-        class="sc-gZMcBi sc-VigVT iGFmRz"
+        class="sc-gZMcBi sc-VigVT hzykkh"
         data-testid="sidebarMetaItem"
       >
         MY_TYPE
       </div>
       <div
-        class="sc-gZMcBi sc-VigVT iGFmRz"
+        class="sc-gZMcBi sc-VigVT hzykkh"
         data-testid="sidebarMetaItem"
       >
         MY_TYPE2

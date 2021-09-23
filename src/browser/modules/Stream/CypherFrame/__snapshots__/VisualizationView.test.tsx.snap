@@ -5,7 +5,7 @@ exports[`Visualization renders 1`] = `<div />`;
 exports[`Visualization renders with result and escapes any HTML 1`] = `
 <div>
   <div
-    class="sc-eXEjpC jwZnC"
+    class="sc-hZSUBg kQEpqW"
   >
     <div
       class="sc-fjdhpX eoghYa"
@@ -89,7 +89,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
               class="sc-cSHVUG knJUXC zoom-in"
             >
               <i
-                class="sc-dEoRIm bBgzgJ sl-zoom-in"
+                class="sc-gmeYpB imxiti sl-zoom-in"
                 style="font-size: 1em;"
               />
             </button>
@@ -97,19 +97,19 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
               class="sc-cSHVUG knJUXC zoom-out"
             >
               <i
-                class="sc-jtggT cxJBDr sl-zoom-out"
+                class="sc-kZmsYB hLysGl sl-zoom-out"
                 style="font-size: 1em;"
               />
             </button>
           </div>
         </div>
         <div
-          class="sc-chPdSV dqKwfO"
+          class="sc-chPdSV kotctU"
         >
           <i
             aria-hidden="true"
             class="chevron right icon"
-            font-size="32"
+            title="Collapse the Node Properties display"
           />
         </div>
         <div
@@ -123,19 +123,19 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
               class="sc-kgoBCf gXcNGy"
             >
               <div
-                class="sc-kpOJdX gHYrZk"
+                class="sc-kpOJdX jLIuEz"
               >
                 Displaying NaN nodes, 0 relationships.
               </div>
               <div
-                class="sc-dxgOiQ jyxzCx"
+                class="sc-dxgOiQ kjmlGP"
               >
                 Node labels
                 <ul
-                  class="sc-bxivhb sc-iwsKbI bfwfdz"
+                  class="sc-bxivhb sc-iwsKbI eqRuUi"
                 >
-                  <li
-                    class="sc-EHOje sc-bZQynM sc-gzVnrw FEGBq"
+                  <div
+                    class="sc-ibxdXY sc-RefOD emwHTu"
                     style="background-color: rgb(247, 151, 103); color: rgb(255, 255, 255);"
                   >
                     *
@@ -144,9 +144,9 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
                     >
                       (1)
                     </span>
-                  </li>
-                  <li
-                    class="sc-EHOje sc-bZQynM sc-gzVnrw FEGBq"
+                  </div>
+                  <div
+                    class="sc-ibxdXY sc-RefOD emwHTu"
                     style="background-color: rgb(201, 144, 192); color: rgb(255, 255, 255);"
                   >
                     Person
@@ -155,12 +155,8 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
                     >
                       (1)
                     </span>
-                  </li>
+                  </div>
                 </ul>
-                Relationship Types
-                <div>
-                  No relationship types to display
-                </div>
               </div>
             </div>
             <span
