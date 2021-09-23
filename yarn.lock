@@ -6080,6 +6080,11 @@ file-saver@^1.3.8:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/file-saver/-/file-saver-1.3.8.tgz#e68a30c7cb044e2fb362b428469feb291c2e09d8"
   integrity sha1-5oowx8sETi+zYrQoRp/rKRwuCdg=
 
+file-saver@^2.0.5:
+  version "2.0.5"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/file-saver/-/file-saver-2.0.5.tgz#d61cfe2ce059f414d899e9dd6d4107ee25670c38"
+  integrity sha1-1hz+LOBZ9BTYmendbUEH7iVnDDg=
+
 file-uri-to-path@1.0.0:
   version "1.0.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/file-uri-to-path/-/file-uri-to-path-1.0.0.tgz#553a7b8446ff6f684359c445f1e37a05dacc33dd"
@@ -8629,6 +8634,11 @@ lodash.once@^4.1.1:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash.once/-/lodash.once-4.1.1.tgz#0dd3971213c7c56df880977d504c88fb471a97ac"
   integrity sha1-DdOXEhPHxW34gJd9UEyI+0cal6w=
 
+lodash.pick@^4.4.0:
+  version "4.4.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash.pick/-/lodash.pick-4.4.0.tgz#52f05610fff9ded422611441ed1fc123a03001b3"
+  integrity sha1-UvBWEP/53tQiYRRB7R/BI6AwAbM=
+
 lodash.sortby@^4.7.0:
   version "4.7.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash.sortby/-/lodash.sortby-4.7.0.tgz#edd14c824e2cc9c1e0b0a1b42bb5210516a42438"
@@ -9301,6 +9311,15 @@ neo-async@^2.5.0, neo-async@^2.6.1:
   version "2.6.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha1-tKr7k+OustgXTKU88WOrfXMIMF8=
+
+neo4j-client-sso@^0.9.3-alpha.2:
+  version "0.9.3-alpha.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-client-sso/-/neo4j-client-sso-0.9.3-alpha.2.tgz#a4c0d90af1aeb70c94a0e8d36964111eeede7ec8"
+  integrity sha1-pMDZCvGutwyUoOjTaWQRHu7efsg=
+  dependencies:
+    file-saver "^2.0.5"
+    jwt-decode "^3.1.2"
+    lodash.pick "^4.4.0"
 
 neo4j-driver-bolt-connection@^4.3.3:
   version "4.3.3"
