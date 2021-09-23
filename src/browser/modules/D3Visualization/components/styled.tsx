@@ -22,7 +22,7 @@ import styled from 'styled-components'
 
 export const legendRowHeight = 32
 export const inspectorFooterContractedHeight = 22
-const pMarginTop = 6
+export const panelMinWidth = 300
 
 export const StyledSvgWrapper = styled.div`
   line-height: 0;
@@ -107,17 +107,10 @@ export const StyledSvgWrapper = styled.div`
     }
   }
 `
-export const StyledStream = styled.div`
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-`
 
-export const p = styled.div`
-  margin-top: ${pMarginTop}px;
-  font-size: 12px;
-  width: 100%;
-  white-space: normal;
+export const StyledGraphAreaContainer = styled.div`
+  position: relative;
+  height: 100%;
 `
 
 export const StyledRowToggle = styled.div`
@@ -129,89 +122,26 @@ export const StyledRowToggle = styled.div`
   text-align: center;
   cursor: pointer;
 `
-export const StyledCaret = styled.div`
-  font-size: 17px;
-  vertical-align: middle;
-`
-
-export const StyledInspectorFooter = styled.div`
-  margin-top: 6px;
-  font-size: 12px;
-  width: 100%;
-  white-space: normal;
-  overflow: scroll;
-  &.contracted {
-    max-height: ${inspectorFooterContractedHeight}px;
-    overflow: hidden;
-  }
-`
-
-export const StyledInspectorFooterRow = styled.ul`
-  list-style: none;
-  word-break: break-word;
-  line-height: 21px;
-`
-
-export const StyledInspectorFooterRowListKey = styled.div`
-  float: left;
-  font-weight: 800;
-`
-
-export const StyledInspectorFooterRowListValue = styled.div`
-  padding-left: 3px;
-  overflow: hidden;
-  float: left;
-  white-space: pre-wrap;
-`
 
 export const StyledInlineList = styled.ul`
-  padding-left: 0;
   list-style: none;
   word-break: break-word;
+`
+
+export const StyledInlineListStylePicker = styled(StyledInlineList)<{
+  frameHeight: number
+}>`
+  display: grid;
+  overflow-y: auto;
+  max-height: ${props => props.frameHeight - 75}px;
+  background: ${props => props.theme.editorBackground};
+  color: ${props => props.theme.primaryText};
+  padding: 0.833em 1em;
 `
 
 export const StyledInlineListItem = styled.li`
   display: inline-block;
   padding-right: 5px;
-  padding-left: 5px;
-`
-
-export const StyledStatusBarWrapper = styled.div`
-  height: 68px;
-  display: none;
-`
-
-export const StyledStatusBar = styled.div<{ fullscreen?: boolean }>`
-  min-height: 39px;
-  line-height: 39px;
-  color: ${props => props.theme.secondaryText};
-  font-size: 13px;
-  position: ${props => (props.fullscreen ? 'fixed' : 'absolute')};
-  z-index: ${props => (props.fullscreen ? 1 : 'auto')};
-  background-color: ${props => props.theme.frameBackground};
-  white-space: nowrap;
-  overflow: hidden;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  border-top: ${props => props.theme.inFrameBorder};
-`
-
-export const StyledStatus = styled.div`
-  position: relative;
-  float: left;
-  padding-left: 16px;
-  margin-top: 0;
-  margin-bottom: 0;
-  width: 100%;
-  margin-top: 3px;
-  max-height: 64px;
-  overflow: auto;
-`
-
-export const StyledInspectorFooterRowListPair = styled(StyledInlineListItem)`
-  vertical-align: middle;
-  font-size: 13px;
 `
 
 export const StyledToken = styled(StyledInlineListItem)`
@@ -219,66 +149,38 @@ export const StyledToken = styled(StyledInlineListItem)`
   font-weight: bold;
   line-height: 1em;
   text-align: center;
-  white-space: nowrap;
   vertical-align: baseline;
   user-select: none;
   font-size: 12px;
   margin-right: 5px;
   cursor: pointer;
+  margin-bottom: 3px;
 `
 export const StyledLabelToken = styled(StyledToken)`
   padding: 4px 7px 4px 9px;
   border-radius: 20px;
+  word-break: break-all;
 `
 export const StyledTokenRelationshipType = styled(StyledToken)`
   padding: 4px 7px 4px 5px;
   border-radius: 3px;
-`
-
-export const tokenPropertyKey = styled(StyledToken)`
-  padding: 3px 5px 3px 5px;
-`
-export const StyledTokenContextMenuKey = styled(StyledLabelToken)`
-  color: #f9fbfd;
-  background-color: #d2d5da;
-  padding: 4px 9px;
+  word-break: break-all;
 `
 
 export const StyledTokenCount = styled.span`
   font-weight: normal;
 `
-export const StyledLegendContents = styled.ul`
-  float: left;
-  line-height: 1em;
-  position: relative;
-  top: 3px;
-  top: -1px;
-`
 
-export const StyledLegendRow = styled.div`
-  border-bottom: transparent;
+export const StyledLegendInlineList = styled(StyledInlineList)`
+  padding: 4px 0;
   &.contracted {
     max-height: ${legendRowHeight}px;
     overflow: hidden;
   }
   border-bottom: ${props => props.theme.inFrameBorder};
+  margin-bottom: 8px;
 `
 
-export const StyledLegend = styled.div`
-  background-color: ${props => props.theme.frameBackground};
-  position: absolute;
-  z-index: 1;
-  top: 0;
-  right: 0;
-  left: 0;
-`
-export const StyledLegendInlineList = styled(StyledInlineList)`
-  padding: 7px 9px 0px 10px;
-`
-export const StyledLegendInlineListItem = styled(StyledInlineListItem)`
-  display: inline-block;
-  margin-bottom: 3px;
-`
 export const StyledPickerListItem = styled(StyledInlineListItem)`
   padding-right: 5px;
   padding-left: 0;
@@ -334,14 +236,13 @@ export const StyledFullSizeContainer = styled.div`
   height: 100%;
 `
 
-export const StyledInspectorFooterStatusMessage = styled.div`
-  font-weight: bold;
-`
-
-export const StyledZoomHolder = styled.div<{ fullscreen: boolean }>`
+export const StyledZoomHolder = styled.div<{
+  fullscreen: boolean
+  offset: number
+}>`
   position: ${props => (props.fullscreen ? 'fixed' : 'absolute')};
-  bottom: 39px;
-  right: 0;
+  bottom: 0;
+  right: ${props => props.offset}px
   padding: 6px 6px 0 6px;
   border-left: ${props => props.theme.inFrameBorder};
   border-right: ${props => props.theme.inFrameBorder};
@@ -371,4 +272,86 @@ export const StyledZoomButton = styled.button`
       color: ${props => props.theme.frameButtonTextColor}
     }
   }
+`
+
+export const StyledNodeInspectorContainer = styled.div<{
+  width: number
+  height: number
+}>`
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 1;
+  width: ${props => props.width}px;
+  min-width: ${panelMinWidth}px;
+  max-width: 95%;
+  height: ${props => props.height}px;
+  background: ${props => props.theme.editorBackground};
+  color: ${props => props.theme.primaryText};
+  font-family: ${props => props.theme.drawerHeaderFontFamily};
+  overflow-y: auto;
+  box-shadow: 0px 0px 2px rgba(21, 30, 41, 0.1),
+    0px 1px 2px rgba(21, 30, 41, 0.08), 0px 1px 4px rgba(21, 30, 41, 0.08);
+`
+export const StyledNodeInspectorTopMenuChevron = styled.div<{
+  expanded: boolean
+}>`
+  cursor: pointer;
+  position: absolute;
+  right: 0px;
+  top: 6px;
+  z-index: 2;
+  ${props =>
+    !props.expanded &&
+    `background: ${props.theme.editorBackground};
+     box-shadow: 0px 0px 2px rgba(21, 30, 41, 0.1),
+      0px 1px 2px rgba(21, 30, 41, 0.08), 0px 1px 4px rgba(21, 30, 41, 0.08);
+  `}
+`
+
+export const OverflowContainer = styled.div<{ height: number }>`
+  height: ${props => props.height}px;
+  overflow: auto;
+  padding: 0 14px;
+`
+export const AlternatingTable = styled.table`
+  tr:nth-child(even) {
+    background: ${props => props.theme.alteringTableRowBackground};
+  }
+  tr:nth-child(odd) {
+    background: ${props => props.theme.editorBackground};
+  }
+  font-size: 13px;
+  width: 100%;
+`
+export const PaneHeader = styled.div`
+  font-size: 12px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid #dae4f0;
+  height: 25px;
+`
+export const PaneBody = styled.div<{ maxHeight: number }>`
+  max-height: ${props => props.maxHeight}px;
+  overflow: auto;
+`
+export const KeyCell = styled.td`
+  font-weight: 700;
+  vertical-align: top;
+  padding: 2px;
+  max-width: 200px;
+  min-width: 40px;
+  white-space: nowrap;
+`
+export const OverflowY = styled.div`
+  overflow-y: auto;
+`
+export const CopyCell = styled.td`
+  padding: 2px 5px;
+  display: flex;
+  justify-content: flex-end;
+`
+export const ValueCell = styled.td`
+  padding: 2px;
+  white-space: pre-wrap;
 `

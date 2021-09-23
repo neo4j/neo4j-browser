@@ -5,179 +5,177 @@ exports[`Visualization renders 1`] = `<div />`;
 exports[`Visualization renders with result and escapes any HTML 1`] = `
 <div>
   <div
-    class="sc-bwCtUz hJgGYC"
+    class="sc-ibxdXY dmclze"
   >
     <div
-      class="sc-iAyFgw ikvPvE one-legend-row"
+      class="sc-jzJRlG eUKzrM"
       id="svg-vis"
     >
       <div
-        class="sc-dxgOiQ kpiaUr one-row"
+        class="sc-bwzfXH jStUkM"
       >
         <div
-          class="sc-kpOJdX kvPbrS contracted"
+          class="sc-bdVaJa ckbiDw"
         >
-          <ul
-            class="sc-dnqmqq sc-ckVGcZ edBnTi list-inline"
+          <svg
+            class="neod3viz"
+            viewBox="0 100 200 0"
           >
-            <li
-              class="sc-iwsKbI sc-jKJlTe bpIrLV"
-              data-testid="viz-legend-labels"
+            <g
+              transform="translate(0,0)"
             >
-              <ul
-                class="sc-kGXeez ijQsDt contents"
-              >
-                <li
-                  class="sc-iwsKbI sc-fjdhpX sc-jzJRlG kiLeKN token token-label"
-                  style="background-color: rgb(247, 151, 103); color: rgb(255, 255, 255);"
-                >
-                  *
-                  <span
-                    class="sc-kgoBCf heNWOu count"
-                  >
-                    (1)
-                  </span>
-                </li>
-              </ul>
-            </li>
-            <li
-              class="sc-iwsKbI sc-jKJlTe bpIrLV"
-              data-testid="viz-legend-labels"
-            >
-              <ul
-                class="sc-kGXeez ijQsDt contents"
-              >
-                <li
-                  class="sc-iwsKbI sc-fjdhpX sc-jzJRlG kiLeKN token token-label"
-                  style="background-color: rgb(201, 144, 192); color: rgb(255, 255, 255);"
-                >
-                  Person
-                  <span
-                    class="sc-kgoBCf heNWOu count"
-                  >
-                    (1)
-                  </span>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div
-        class="sc-bdVaJa ckbiDw"
-      >
-        <svg
-          class="neod3viz"
-          viewBox="0 100 200 0"
-        >
-          <g
-            transform="translate(0,0)"
-          >
-            <rect
-              height="5000"
-              style="fill: none; pointer-events: all;"
-              transform="scale(1)"
-              width="5000"
-              x="-2500"
-              y="-2500"
-            />
-            <g>
-              <g
-                class="layer relationships"
+              <rect
+                height="5000"
+                style="fill: none; pointer-events: all;"
+                transform="scale(1)"
+                width="5000"
+                x="-2500"
+                y="-2500"
               />
-              <g
-                class="layer nodes"
-              >
+              <g>
                 <g
-                  class="node"
+                  class="layer relationships"
+                />
+                <g
+                  class="layer nodes"
                 >
-                  <circle
-                    class="ring"
-                    cx="0"
-                    cy="0"
-                    r="29"
-                    stroke-width="8px"
-                  />
-                  <circle
-                    class="outline"
-                    cx="0"
-                    cy="0"
-                    fill="#C990C0"
-                    r="25"
-                    stroke="#b261a5"
-                    stroke-width="2px"
-                  />
-                  <text
-                    dy="1.5625"
-                    fill="#FFFFFF"
-                    font-family="streamline"
-                    font-size="25"
-                    pointer-events="none"
-                    text-anchor="middle"
-                  />
-                  <text
-                    fill="#FFFFFF"
-                    font-size="10px"
-                    pointer-events="none"
-                    text-anchor="middle"
-                    x="0"
-                    y="5"
+                  <g
+                    class="node"
                   >
-                     &lt;b&gt;…
-                  </text>
+                    <circle
+                      class="ring"
+                      cx="0"
+                      cy="0"
+                      r="29"
+                      stroke-width="8px"
+                    />
+                    <circle
+                      class="outline"
+                      cx="0"
+                      cy="0"
+                      fill="#C990C0"
+                      r="25"
+                      stroke="#b261a5"
+                      stroke-width="2px"
+                    />
+                    <text
+                      dy="1.5625"
+                      fill="#FFFFFF"
+                      font-family="streamline"
+                      font-size="25"
+                      pointer-events="none"
+                      text-anchor="middle"
+                    />
+                    <text
+                      fill="#FFFFFF"
+                      font-size="10px"
+                      pointer-events="none"
+                      text-anchor="middle"
+                      x="0"
+                      y="5"
+                    >
+                       &lt;b&gt;…
+                    </text>
+                  </g>
                 </g>
               </g>
             </g>
-          </g>
-        </svg>
-        <div
-          class="sc-eHgmQL fBSINn"
-        >
-          <button
-            class="sc-cvbbAY cqXpvD zoom-in"
+          </svg>
+          <div
+            class="sc-cSHVUG gAlWnv"
+            offset="296.57142857142856"
           >
-            <i
-              class="sc-kaNhvL ggfEIx sl-zoom-in"
-              style="font-size: 1em;"
-            />
-          </button>
-          <button
-            class="sc-cvbbAY cqXpvD zoom-out"
-          >
-            <i
-              class="sc-LKuAh dTAZDo sl-zoom-out"
-              style="font-size: 1em;"
-            />
-          </button>
+            <button
+              class="sc-kAzzGY hrkFIX zoom-in"
+            >
+              <i
+                class="sc-jtggT cxJBDr sl-zoom-in"
+                style="font-size: 1em;"
+              />
+            </button>
+            <button
+              class="sc-kAzzGY hrkFIX zoom-out"
+            >
+              <i
+                class="sc-ebFjAB bAowKS sl-zoom-out"
+                style="font-size: 1em;"
+              />
+            </button>
+          </div>
         </div>
-      </div>
-      <div
-        class="sc-gqjmRU iNDOUA status-bar"
-      >
         <div
-          class="sc-VigVT joQvFy status"
+          class="sc-kgoBCf erHcgW"
+        >
+          <i
+            aria-hidden="true"
+            class="chevron right icon"
+            font-size="32"
+          />
+        </div>
+        <div
+          class="sc-chPdSV eCUJJ"
+          width="292.57142857142856"
         >
           <div
-            class="sc-EHOje dyhqxD contracted inspector-footer"
+            class="react-resizable"
           >
-            <ul
-              class="sc-bZQynM bQKKoY inspector-footer-row"
-              data-testid="vizInspector"
+            <div
+              class="sc-kGXeez hacloy"
             >
-              <ul
-                class="sc-dnqmqq bGMIpP list-inline"
+              <div
+                class="sc-dxgOiQ iqpiQp"
               >
-                <li
-                  class="sc-iwsKbI sc-jTzLTM bnPPYH pair"
+                Displaying NaN nodes, 0 relationships.
+              </div>
+              <div
+                class="sc-ckVGcZ cYUlXz"
+              >
+                Node labels
+                <ul
+                  class="sc-bxivhb sc-iwsKbI bfwfdz"
                 >
-                  <div
-                    class="sc-htoDjs icDRie value"
+                  <li
+                    class="sc-EHOje sc-gZMcBi chSRLy"
+                    data-testid="viz-legend-labels"
                   >
-                    Displaying 1 nodes, 0 relationships.
-                  </div>
-                </li>
-              </ul>
-            </ul>
+                    <li
+                      class="sc-EHOje sc-bZQynM sc-gzVnrw fjTalv"
+                      style="background-color: rgb(247, 151, 103); color: rgb(255, 255, 255);"
+                    >
+                      *
+                      <span
+                        class="sc-dnqmqq fFydjc"
+                      >
+                        (1)
+                      </span>
+                    </li>
+                  </li>
+                  <li
+                    class="sc-EHOje sc-gZMcBi chSRLy"
+                    data-testid="viz-legend-labels"
+                  >
+                    <li
+                      class="sc-EHOje sc-bZQynM sc-gzVnrw fjTalv"
+                      style="background-color: rgb(201, 144, 192); color: rgb(255, 255, 255);"
+                    >
+                      Person
+                      <span
+                        class="sc-dnqmqq fFydjc"
+                      >
+                        (1)
+                      </span>
+                    </li>
+                  </li>
+                </ul>
+                Relationship Types
+                <div>
+                  No relationship types to display
+                </div>
+              </div>
+            </div>
+            <span
+              class="react-resizable-handle react-resizable-handle-w"
+            />
           </div>
         </div>
       </div>

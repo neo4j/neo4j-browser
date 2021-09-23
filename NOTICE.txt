@@ -972,6 +972,10 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/sindresorhus/cli-truncate.git
 │  │  ├─ VendorName: Sindre Sorhus
 │  │  └─ VendorUrl: sindresorhus.com
+│  ├─ clsx@1.1.1
+│  │  ├─ URL: https://github.com/lukeed/clsx.git
+│  │  ├─ VendorName: Luke Edwards
+│  │  └─ VendorUrl: https://lukeed.com
 │  ├─ collapse-white-space@1.0.6
 │  │  ├─ URL: https://github.com/wooorm/collapse-white-space.git
 │  │  ├─ VendorName: Titus Wormer
@@ -1543,6 +1547,9 @@ Third-party licenses
 │  │  ├─ URL: git://github.com/zertosh/loose-envify.git
 │  │  ├─ VendorName: Andres Suarez
 │  │  └─ VendorUrl: https://github.com/zertosh/loose-envify
+│  ├─ luxon@2.0.2
+│  │  ├─ URL: https://github.com/moment/luxon
+│  │  └─ VendorName: Isaac Cambron
 │  ├─ magic-string@0.25.7
 │  │  ├─ URL: https://github.com/rich-harris/magic-string
 │  │  └─ VendorName: Rich Harris
@@ -1775,6 +1782,10 @@ Third-party licenses
 │  ├─ react-dom@16.13.1
 │  │  ├─ URL: https://github.com/facebook/react.git
 │  │  └─ VendorUrl: https://reactjs.org/
+│  ├─ react-draggable@4.4.4
+│  │  ├─ URL: https://github.com/react-grid-layout/react-draggable.git
+│  │  ├─ VendorName: Matt Zabriskie
+│  │  └─ VendorUrl: https://github.com/react-grid-layout/react-draggable
 │  ├─ react-is@16.13.1
 │  │  ├─ URL: https://github.com/facebook/react.git
 │  │  └─ VendorUrl: https://reactjs.org/
@@ -1788,6 +1799,10 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/reduxjs/react-redux.git
 │  │  ├─ VendorName: Dan Abramov
 │  │  └─ VendorUrl: https://github.com/reduxjs/react-redux
+│  ├─ react-resizable@3.0.4
+│  │  ├─ URL: git@github.com:react-grid-layout/react-resizable.git
+│  │  ├─ VendorName: Samuel Reed
+│  │  └─ VendorUrl: https://github.com/react-grid-layout/react-resizable
 │  ├─ react-suber@1.0.4
 │  │  ├─ URL: https://github.com/oskarhane/react-suber.git
 │  │  ├─ VendorName: Oskar Hane

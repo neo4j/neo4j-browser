@@ -207,7 +207,19 @@ export function extractNodesAndRelationshipsFromRecordsForOldVis(
     return {
       id: item.identity.toString(),
       labels: item.labels,
-      properties: itemIntToString(item.properties, converters)
+      properties: itemIntToString(item.properties, converters),
+      propertyTypes: Object.entries(item.properties).reduce(
+        (acc, [key, val]) => {
+          const jsType = typeof val
+          const complexType = jsType === 'object'
+          if (complexType) {
+            //@ts-ignore
+            return { ...acc, [key]: val.constructor.name }
+          }
+          return { ...acc, [key]: jsType }
+        },
+        {}
+      )
     }
   })
   let relationships = rawRels
@@ -227,7 +239,19 @@ export function extractNodesAndRelationshipsFromRecordsForOldVis(
       startNodeId: item.start.toString(),
       endNodeId: item.end.toString(),
       type: item.type,
-      properties: itemIntToString(item.properties, converters)
+      properties: itemIntToString(item.properties, converters),
+      propertyTypes: Object.entries(item.properties).reduce(
+        (acc, [key, val]) => {
+          const jsType = typeof val
+          const complexType = jsType === 'object'
+          if (complexType) {
+            //@ts-ignore
+            return { ...acc, [key]: val.constructor.name }
+          }
+          return { ...acc, [key]: jsType }
+        },
+        {}
+      )
     }
   })
   return { nodes, relationships }

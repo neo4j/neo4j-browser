@@ -38,7 +38,12 @@ export function createGraph(nodes: any, relationships: any) {
 export function mapNodes(nodes: any) {
   return nodes.map(
     (node: any) =>
-      new Node(node.id, node.labels, mapProperties(node.properties))
+      new Node(
+        node.id,
+        node.labels,
+        mapProperties(node.properties),
+        node.propertyTypes
+      )
   )
 }
 
@@ -51,7 +56,8 @@ export function mapRelationships(relationships: any, graph: any) {
       source,
       target,
       rel.type,
-      mapProperties(rel.properties)
+      mapProperties(rel.properties),
+      rel.propertyTypes
     )
   })
 }

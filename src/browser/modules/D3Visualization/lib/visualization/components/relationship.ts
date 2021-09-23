@@ -27,7 +27,14 @@ export default class Relationship {
   type: any
   isNode = false
   isRelationship = true
-  constructor(id: any, source: any, target: any, type: any, properties: any) {
+  constructor(
+    id: any,
+    source: any,
+    target: any,
+    type: any,
+    properties: any,
+    propertyTypes: Record<string, string>
+  ) {
     this.id = id
     this.source = source
     this.target = target
@@ -37,7 +44,8 @@ export default class Relationship {
       const result = []
       for (const key of Object.keys(this.propertyMap || {})) {
         const value = this.propertyMap[key]
-        result.push({ key, value })
+        const type = propertyTypes[key]
+        result.push({ key, value, type })
       }
       return result
     })()

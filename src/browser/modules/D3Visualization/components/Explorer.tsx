@@ -20,15 +20,24 @@
 
 import React, { Component } from 'react'
 import deepmerge from 'deepmerge'
+import { connect } from 'react-redux'
+
 import { deepEquals } from 'services/utils'
 import { GraphComponent } from './Graph'
 import neoGraphStyle from '../graphStyle'
-import { InspectorComponent } from './Inspector'
-import { LegendComponent } from './Legend'
-import { StyledFullSizeContainer } from './styled'
+import { defaultPanelWidth, NodeInspectorPanel } from './NodeInspectorPanel'
+import {
+  panelMinWidth,
+  StyledFullSizeContainer,
+  StyledGraphAreaContainer
+} from './styled'
 import { GlobalState } from 'shared/globalState'
 import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
-import { connect } from 'react-redux'
+import { VizItem } from './types'
+import { debounce } from 'lodash'
+import { GraphStyle } from './OverviewPane'
+import Node from '../lib/visualization/components/node'
+import Relationship from '../lib/visualization/components/relationship'
 
 const deduplicateNodes = (nodes: any) => {
   return nodes.reduce(
@@ -45,17 +54,52 @@ const deduplicateNodes = (nodes: any) => {
   ).nodes
 }
 
-type ExplorerComponentState = any
+type ExplorerComponentProps = {
+  relationships: Relationship[]
+  nodes: Node[]
+  initialNodeDisplay: any
+  maxNeighbours: number
+  graphStyleData: any
+  getNeighbours: any
+  updateStyle: any
+  frameHeight: number
+  fullscreen: boolean
+  assignVisElement: any
+  getAutoCompleteCallback: any
+  setGraph: any
+  hasTruncatedFields: boolean
+}
+type ExplorerComponentState = {
+  graphStyle: GraphStyle
+  hoveredItem: VizItem
+  nodes: Node[]
+  relationships: Relationship[]
+  selectedItem: VizItem
+  stats: { labels: any; relTypes: any }
+  styleVersion: number
+  freezeLegend: boolean
+  width: number
+}
 
-export class ExplorerComponent extends Component<any, ExplorerComponentState> {
+export class ExplorerComponent extends Component<
+  ExplorerComponentProps,
+  ExplorerComponentState
+> {
   defaultStyle: any
-  constructor(props: any) {
+
+  constructor(props: ExplorerComponentProps) {
     super(props)
     const graphStyle = neoGraphStyle()
     this.defaultStyle = graphStyle.toSheet()
     let relationships = this.props.relationships
     let nodes = deduplicateNodes(this.props.nodes)
-    let selectedItem: any = ''
+    let selectedItem: VizItem = {
+      type: 'canvas',
+      item: {
+        nodeCount: Math.max(this.props.initialNodeDisplay, nodes.length),
+        relationshipCount: relationships.length
+      }
+    }
     if (nodes.length > parseInt(this.props.initialNodeDisplay)) {
       nodes = nodes.slice(0, this.props.initialNodeDisplay)
       relationships = this.props.relationships.filter((item: any) => {
@@ -74,12 +118,18 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
       graphStyle.loadRules(rebasedStyle)
     }
     this.state = {
-      stats: { labels: {}, relTypes: {} },
+      stats: {
+        labels: {},
+        relTypes: {}
+      },
       graphStyle,
       styleVersion: 0,
       nodes,
       relationships,
-      selectedItem
+      selectedItem,
+      hoveredItem: selectedItem,
+      freezeLegend: false,
+      width: defaultPanelWidth()
     }
   }
 
@@ -112,12 +162,17 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
     )
   }
 
-  onItemMouseOver(item: any) {
-    this.setState({ hoveredItem: item })
+  onItemMouseOver(item: VizItem): void {
+    this.setHoveredItem(item)
   }
 
-  onItemSelect(item: any) {
-    this.setState({ selectedItem: item })
+  setHoveredItem = debounce(
+    (hoveredItem: VizItem) => this.setState({ hoveredItem }),
+    200
+  )
+
+  onItemSelect(selectedItem: VizItem): void {
+    this.setState({ selectedItem })
   }
 
   onGraphModelChange(stats: any) {
@@ -125,25 +180,23 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
     this.props.updateStyle(this.state.graphStyle.toSheet())
   }
 
-  onSelectedLabel(label: any, propertyKeys: any) {
+  selectLabel(label: string, propertyKeys: string[]) {
     this.setState({
       selectedItem: {
         type: 'legend-item',
         item: {
-          selectedLabel: { label: label, propertyKeys: propertyKeys },
-          selectedRelType: null
+          selectedLabel: { label, propertyKeys }
         }
       }
     })
   }
 
-  onSelectedRelType(relType: any, propertyKeys: any) {
+  selectRelType(relType: string, propertyKeys: string[]) {
     this.setState({
       selectedItem: {
         type: 'legend-item',
         item: {
-          selectedLabel: null,
-          selectedRelType: { relType: relType, propertyKeys: propertyKeys }
+          selectedRelType: { relType, propertyKeys }
         }
       }
     })
@@ -174,73 +227,48 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
     }
   }
 
-  onInspectorExpandToggled(contracted: any, inspectorHeight: any) {
-    this.setState({
-      inspectorContracted: contracted,
-      forcePaddingBottom: inspectorHeight
-    })
-  }
-
   render() {
     // This is a workaround to make the style reset to the same colors as when starting the browser with an empty style
     // If the legend component has the style it will ask the neoGraphStyle object for styling before the graph component,
     // and also doing this in a different order from the graph. This leads to different default colors being assigned to different labels.
-    let legend
-    if (this.state.freezeLegend) {
-      legend = (
-        <LegendComponent
-          stats={this.state.stats}
-          graphStyle={neoGraphStyle()}
-          onSelectedLabel={this.onSelectedLabel.bind(this)}
-          onSelectedRelType={this.onSelectedRelType.bind(this)}
-        />
-      )
-    } else {
-      legend = (
-        <LegendComponent
-          stats={this.state.stats}
-          graphStyle={this.state.graphStyle}
-          onSelectedLabel={this.onSelectedLabel.bind(this)}
-          onSelectedRelType={this.onSelectedRelType.bind(this)}
-        />
-      )
-    }
-    const inspectingItemType =
-      !this.state.inspectorContracted &&
-      ((this.state.hoveredItem && this.state.hoveredItem.type !== 'canvas') ||
-        (this.state.selectedItem && this.state.selectedItem.type !== 'canvas'))
+    const graphStyle = this.state.freezeLegend
+      ? neoGraphStyle()
+      : this.state.graphStyle
 
     return (
-      <StyledFullSizeContainer
-        id="svg-vis"
-        className={
-          Object.keys(this.state.stats.relTypes).length ? '' : 'one-legend-row'
-        }
-      >
-        {legend}
-        <GraphComponent
-          fullscreen={this.props.fullscreen}
-          frameHeight={this.props.frameHeight}
-          relationships={this.state.relationships}
-          nodes={this.state.nodes}
-          getNodeNeighbours={this.getNodeNeighbours.bind(this)}
-          onItemMouseOver={this.onItemMouseOver.bind(this)}
-          onItemSelect={this.onItemSelect.bind(this)}
-          graphStyle={this.state.graphStyle}
-          styleVersion={this.state.styleVersion} // cheap way for child to check style updates
-          onGraphModelChange={this.onGraphModelChange.bind(this)}
-          assignVisElement={this.props.assignVisElement}
-          getAutoCompleteCallback={this.props.getAutoCompleteCallback}
-          setGraph={this.props.setGraph}
-        />
-        <InspectorComponent
-          hasTruncatedFields={this.props.hasTruncatedFields}
-          fullscreen={this.props.fullscreen}
-          hoveredItem={this.state.hoveredItem}
-          selectedItem={this.state.selectedItem}
-          graphStyle={this.state.graphStyle}
-          onExpandToggled={this.onInspectorExpandToggled.bind(this)}
-        />
+      <StyledFullSizeContainer id="svg-vis">
+        <StyledGraphAreaContainer>
+          <GraphComponent
+            fullscreen={this.props.fullscreen}
+            frameHeight={this.props.frameHeight}
+            relationships={this.state.relationships}
+            nodes={this.state.nodes}
+            getNodeNeighbours={this.getNodeNeighbours.bind(this)}
+            onItemMouseOver={this.onItemMouseOver.bind(this)}
+            onItemSelect={this.onItemSelect.bind(this)}
+            graphStyle={graphStyle}
+            styleVersion={this.state.styleVersion} // cheap way for child to check style updates
+            onGraphModelChange={this.onGraphModelChange.bind(this)}
+            assignVisElement={this.props.assignVisElement}
+            getAutoCompleteCallback={this.props.getAutoCompleteCallback}
+            setGraph={this.props.setGraph}
+            offset={this.state.width + 4}
+          />
+          <NodeInspectorPanel
+            frameHeight={this.props.frameHeight}
+            graphStyle={graphStyle}
+            hasTruncatedFields={this.props.hasTruncatedFields}
+            hoveredItem={this.state.hoveredItem}
+            selectLabel={this.selectLabel.bind(this)}
+            selectRelType={this.selectRelType.bind(this)}
+            selectedItem={this.state.selectedItem}
+            stats={this.state.stats}
+            width={this.state.width}
+            setWidth={width =>
+              this.setState({ width: Math.max(panelMinWidth, width) })
+            }
+          />
+        </StyledGraphAreaContainer>
       </StyledFullSizeContainer>
     )
   }
