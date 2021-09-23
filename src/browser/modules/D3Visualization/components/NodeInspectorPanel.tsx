@@ -64,10 +64,13 @@ export class NodeInspectorPanel extends Component<
           onClick={this.togglePanel}
         >
           {expanded ? (
-            <Icon name="chevron right" fontSize={32} />
+            <Icon
+              title="Collapse the Node Properties display"
+              name="chevron right"
+            />
           ) : (
             <Icon
-              title="Click to expand the Node Properties display"
+              title="Expand the Node Properties display"
               name="chevron left"
             />
           )}

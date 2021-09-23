@@ -114,7 +114,7 @@ export function DetailsPaneComponent({
           titleText={'Copy all properties to clipboard'}
         />
       </PaneHeader>
-      <PaneBody maxHeight={frameHeight - 40}>
+      <PaneBody maxHeight={frameHeight - 45}>
         <StyledInlineList>
           <GraphItemProperties properties={allItemProperties} />
         </StyledInlineList>

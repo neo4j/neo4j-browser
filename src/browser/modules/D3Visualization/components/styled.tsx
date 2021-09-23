@@ -160,6 +160,7 @@ export const StyledLabelToken = styled(StyledToken)`
   padding: 4px 7px 4px 9px;
   border-radius: 20px;
   word-break: break-all;
+  margin-top: 4px;
 `
 export const StyledTokenRelationshipType = styled(StyledToken)`
   padding: 4px 7px 4px 5px;
@@ -177,8 +178,7 @@ export const StyledLegendInlineList = styled(StyledInlineList)`
     max-height: ${legendRowHeight}px;
     overflow: hidden;
   }
-  border-bottom: ${props => props.theme.inFrameBorder};
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 `
 
 export const StyledPickerListItem = styled(StyledInlineListItem)`
@@ -301,6 +301,9 @@ export const StyledNodeInspectorTopMenuChevron = styled.div<{
   right: 0px;
   top: 6px;
   z-index: 2;
+  width: 32px;
+  height: 32px;
+  padding: 6px;
   ${props =>
     !props.expanded &&
     `background: ${props.theme.editorBackground};
@@ -328,12 +331,12 @@ export const PaneHeader = styled.div`
   font-size: 12px;
   margin-top: 5px;
   margin-bottom: 5px;
-  border-bottom: 1px solid #dae4f0;
   height: 25px;
 `
 export const PaneBody = styled.div<{ maxHeight: number }>`
   max-height: ${props => props.maxHeight}px;
   overflow: auto;
+  margin-top: 14px;
 `
 export const KeyCell = styled.td`
   font-weight: 700;
@@ -354,4 +357,8 @@ export const CopyCell = styled.td`
 export const ValueCell = styled.td`
   padding: 2px;
   white-space: pre-wrap;
+`
+export const SmallText = styled.div`
+  font-size: 12px;
+  margin-bottom: 8px;
 `

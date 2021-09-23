@@ -22,8 +22,6 @@ import React from 'react'
 import { Icon, Popup } from 'semantic-ui-react'
 
 import {
-  StyledTokenRelationshipType,
-  StyledLabelToken,
   StyledTokenCount,
   StyledLegendInlineList,
   PaneBody,
@@ -33,6 +31,10 @@ import numberToUSLocale from 'shared/utils/number-to-US-locale'
 import { GrassEditor } from './GrassEditor'
 import { StyledTruncatedMessage } from 'browser/modules/Stream/styled'
 import { LegendItem } from './types'
+import {
+  StyledLabel,
+  StyledRelationship
+} from 'browser/modules/DBMSInfo/styled'
 
 export type GraphStyle = {
   forNode: any
@@ -88,97 +90,96 @@ function OverviewPane({
             relationshipCount
           )} relationships.`}
       </PaneHeader>
-      <PaneBody maxHeight={frameHeight - 40}>
-        Node labels
-        {!labels || !Object.keys(labels).length ? (
-          <div>No labels to display</div>
-        ) : (
-          <StyledLegendInlineList>
-            {Object.keys(labels).map(legendItemKey => {
-              const styleForItem = graphStyle.forNode({
-                labels: [legendItemKey]
-              })
-              const onClick = () => {
-                selectLabel(
-                  legendItemKey,
-                  Object.keys(labels[legendItemKey].properties)
+      <PaneBody maxHeight={frameHeight - 45}>
+        {labels && Object.keys(labels).length !== 0 && (
+          <>
+            Node labels
+            <StyledLegendInlineList>
+              {Object.keys(labels).map(legendItemKey => {
+                const styleForItem = graphStyle.forNode({
+                  labels: [legendItemKey]
+                })
+                const onClick = () => {
+                  selectLabel(
+                    legendItemKey,
+                    Object.keys(labels[legendItemKey].properties)
+                  )
+                }
+                const style = {
+                  backgroundColor: styleForItem.get('color'),
+                  color: styleForItem.get('text-color-internal')
+                }
+                return (
+                  <Popup
+                    on="click"
+                    key={legendItemKey}
+                    basic
+                    pinned
+                    trigger={
+                      <StyledLabel onClick={onClick} style={style}>
+                        {legendItemKey}
+                        <StyledTokenCount>{`(${numberToUSLocale(
+                          labels[legendItemKey].count
+                        )})`}</StyledTokenCount>
+                      </StyledLabel>
+                    }
+                    wide
+                  >
+                    <GrassEditor
+                      {...legendItem?.item}
+                      frameHeight={frameHeight}
+                    />
+                  </Popup>
                 )
-              }
-              const style = {
-                backgroundColor: styleForItem.get('color'),
-                color: styleForItem.get('text-color-internal')
-              }
-              return (
-                <Popup
-                  on="click"
-                  key={legendItemKey}
-                  basic
-                  pinned
-                  trigger={
-                    <StyledLabelToken onClick={onClick} style={style}>
-                      {legendItemKey}
-                      <StyledTokenCount>{`(${numberToUSLocale(
-                        labels[legendItemKey].count
-                      )})`}</StyledTokenCount>
-                    </StyledLabelToken>
-                  }
-                  wide
-                >
-                  <GrassEditor
-                    {...legendItem?.item}
-                    frameHeight={frameHeight}
-                  />
-                </Popup>
-              )
-            })}
-          </StyledLegendInlineList>
+              })}
+            </StyledLegendInlineList>
+          </>
         )}
-        Relationship Types
-        {!relTypes || !Object.keys(relTypes).length ? (
-          <div>No relationship types to display</div>
-        ) : (
-          <StyledLegendInlineList>
-            {Object.keys(relTypes).map(legendItemKey => {
-              const styleForItem = graphStyle.forRelationship({
-                type: legendItemKey
-              })
-              const onClick = () => {
-                selectRelType(
-                  legendItemKey,
-                  Object.keys(relTypes[legendItemKey].properties)
+        {relTypes && Object.keys(relTypes).length !== 0 && (
+          <>
+            Relationship Types
+            <StyledLegendInlineList>
+              {Object.keys(relTypes).map(legendItemKey => {
+                const styleForItem = graphStyle.forRelationship({
+                  type: legendItemKey
+                })
+                const onClick = () => {
+                  selectRelType(
+                    legendItemKey,
+                    Object.keys(relTypes[legendItemKey].properties)
+                  )
+                }
+                const style = {
+                  backgroundColor: styleForItem.get('color'),
+                  color: styleForItem.get('text-color-internal')
+                }
+                return (
+                  <Popup
+                    on="click"
+                    basic
+                    key={legendItemKey}
+                    pinned
+                    trigger={
+                      <StyledRelationship onClick={onClick} style={style}>
+                        {legendItemKey}
+                        <StyledTokenCount>
+                          {`(${numberToUSLocale(
+                            relTypes[legendItemKey].count
+                          )})`}
+                        </StyledTokenCount>
+                      </StyledRelationship>
+                    }
+                    wide
+                  >
+                    <GrassEditor
+                      {...legendItem?.item}
+                      frameHeight={frameHeight}
+                    />
+                  </Popup>
                 )
-              }
-              const style = {
-                backgroundColor: styleForItem.get('color'),
-                color: styleForItem.get('text-color-internal')
-              }
-              return (
-                <Popup
-                  on="click"
-                  basic
-                  key={legendItemKey}
-                  pinned
-                  trigger={
-                    <StyledTokenRelationshipType
-                      onClick={onClick}
-                      style={style}
-                    >
-                      {legendItemKey}
-                      <StyledTokenCount>
-                        {`(${numberToUSLocale(relTypes[legendItemKey].count)})`}
-                      </StyledTokenCount>
-                    </StyledTokenRelationshipType>
-                  }
-                  wide
-                >
-                  <GrassEditor
-                    {...legendItem?.item}
-                    frameHeight={frameHeight}
-                  />
-                </Popup>
-              )
-            })}
-          </StyledLegendInlineList>
+              })}
+            </StyledLegendInlineList>
+          </>
         )}
       </PaneBody>
     </>
