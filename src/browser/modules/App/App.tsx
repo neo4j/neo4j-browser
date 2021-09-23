@@ -19,7 +19,7 @@
  */
 
 import { editor } from 'monaco-editor'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { ThemeProvider } from 'styled-components'
@@ -92,6 +92,9 @@ export const MAIN_WRAPPER_DOM_ID = 'MAIN_WRAPPER_DOM_ID'
 
 declare let SEGMENT_KEY: string
 
+const getArgsSettingForKey = (args: any[], key: string) =>
+  args[1]?.global?.settings[key]
+
 export function App(props: any) {
   const [derivedTheme, setEnvironmentTheme] = useDerivedTheme(
     props.theme,
@@ -99,6 +102,9 @@ export function App(props: any) {
   )
   // @ts-expect-error ts-migrate(7053) FIXME: No index signature with a parameter of type 'strin... Remove this comment to see the full error message
   const themeData = themes[derivedTheme] || themes[LIGHT_THEME]
+
+  const [desktopAllowTracking, setDesktopAllowTracking] = useState(undefined)
+  const [desktopTrackingId, setDesktopTrackingId] = useState(undefined)
 
   // update cypher editor theme
   useEffect(() => {
@@ -170,6 +176,8 @@ export function App(props: any) {
     <ErrorBoundary>
       <DesktopApi
         onMount={(...args: any[]) => {
+          setDesktopAllowTracking(getArgsSettingForKey(args, 'allowSendStats'))
+          setDesktopTrackingId(getArgsSettingForKey(args, 'trackingId'))
           buildConnectionCreds(...args, { defaultConnectionData })
             .then(creds => props.bus.send(INJECTED_DISCOVERY, creds))
             .catch(() => props.bus.send(INITIAL_SWITCH_CONNECTION_FAILED))
@@ -188,9 +196,13 @@ export function App(props: any) {
             .then(theme => setEnvironmentTheme(theme))
             .catch(setEnvironmentTheme(null))
         }
-        onArgumentsChange={(argsString: any) =>
+        onArgumentsChange={(argsString: any) => {
           props.bus.send(URL_ARGUMENTS_CHANGE, { url: `?${argsString}` })
-        }
+        }}
+        onApplicationSettingsSaved={(...args: any[]) => {
+          setDesktopAllowTracking(getArgsSettingForKey(args, 'allowSendStats'))
+          setDesktopTrackingId(getArgsSettingForKey(args, 'trackingId'))
+        }}
         setEventMetricsCallback={setEventMetricsCallback}
       />
       <PerformanceOverlay />
@@ -224,6 +236,8 @@ export function App(props: any) {
                   </ErrorBoundary>
                   <StyledMainWrapper id={MAIN_WRAPPER_DOM_ID}>
                     <Main
+                      desktopAllowTracking={desktopAllowTracking}
+                      desktopTrackingId={desktopTrackingId}
                       activeConnection={activeConnection}
                       connectionState={connectionState}
                       lastConnectionUpdate={lastConnectionUpdate}
