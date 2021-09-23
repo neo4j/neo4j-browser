@@ -7,7 +7,8 @@ import { VizItem } from './types'
 import {
   StyledNodeInspectorContainer,
   OverflowContainer,
-  StyledNodeInspectorTopMenuChevron
+  StyledNodeInspectorTopMenuChevron,
+  panelMinWidth
 } from './styled'
 
 interface NodeInspectorPanelProps {
@@ -28,7 +29,8 @@ interface NodeInspectorPanelProps {
 export type NodeInspectorPanelState = {
   expanded: boolean
 }
-export const defaultPanelWidth = (): number => window.innerWidth / 3.5
+export const defaultPanelWidth = (): number =>
+  Math.max(window.innerWidth / 3.5, panelMinWidth)
 export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
   render(): JSX.Element {
     const {

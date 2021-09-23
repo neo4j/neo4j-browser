@@ -22,7 +22,7 @@ import styled from 'styled-components'
 
 export const legendRowHeight = 32
 export const inspectorFooterContractedHeight = 22
-export const panelMinWidth = 300
+export const panelMinWidth = 325
 
 export const StyledSvgWrapper = styled.div`
   line-height: 0;
