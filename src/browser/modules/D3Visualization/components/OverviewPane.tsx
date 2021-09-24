@@ -27,6 +27,7 @@ import { StyledTruncatedMessage } from 'browser/modules/Stream/styled'
 import { StyleableNodeLabel } from './StyleableNodeLabel'
 import { GraphStats } from '../mapper'
 import { StylableRelType } from './StyleableRelType'
+import styled from 'styled-components'
 
 export type GraphStyle = {
   forNode: any
@@ -63,19 +64,7 @@ function OverviewPane({
 
   return (
     <>
-      <PaneHeader>
-        {hasTruncatedFields && (
-          <StyledTruncatedMessage>
-            <Icon name="warning sign" /> Record fields have been
-            truncated.&nbsp;
-          </StyledTruncatedMessage>
-        )}
-        {nodeCount !== null &&
-          relationshipCount !== null &&
-          `Displaying ${numberToUSLocale(nodeCount)} nodes, ${numberToUSLocale(
-            relationshipCount
-          )} relationships.`}
-      </PaneHeader>
+      <PaneHeader></PaneHeader>
       <PaneBody maxHeight={frameHeight - 45}>
         {labels && Object.keys(labels).length !== 0 && (
           <>
@@ -113,6 +102,17 @@ function OverviewPane({
             </StyledLegendInlineList>
           </>
         )}
+        {hasTruncatedFields && (
+          <StyledTruncatedMessage>
+            <Icon name="warning sign" /> Record fields have been
+            truncated.&nbsp;
+          </StyledTruncatedMessage>
+        )}
+        {nodeCount !== null &&
+          relationshipCount !== null &&
+          `Displaying ${numberToUSLocale(nodeCount)} nodes, ${numberToUSLocale(
+            relationshipCount
+          )} relationships.`}
       </PaneBody>
     </>
   )
