@@ -5,164 +5,147 @@ exports[`Visualization renders 1`] = `<div />`;
 exports[`Visualization renders with result and escapes any HTML 1`] = `
 <div>
   <div
-    class="sc-hZSUBg kQEpqW"
+    class="sc-iQNlJl iLwHkT"
   >
     <div
-      class="sc-fjdhpX eoghYa"
+      class="sc-jTzLTM bdhVYv"
       id="svg-vis"
     >
       <div
-        class="sc-bwzfXH jStUkM"
+        class="sc-bdVaJa ckbiDw"
       >
-        <div
-          class="sc-bdVaJa ckbiDw"
+        <svg
+          class="neod3viz"
+          viewBox="0 100 200 0"
         >
-          <svg
-            class="neod3viz"
-            viewBox="0 100 200 0"
+          <g
+            transform="translate(0,0)"
           >
-            <g
-              transform="translate(0,0)"
-            >
-              <rect
-                height="5000"
-                style="fill: none; pointer-events: all;"
-                transform="scale(1)"
-                width="5000"
-                x="-2500"
-                y="-2500"
+            <rect
+              height="5000"
+              style="fill: none; pointer-events: all;"
+              transform="scale(1)"
+              width="5000"
+              x="-2500"
+              y="-2500"
+            />
+            <g>
+              <g
+                class="layer relationships"
               />
-              <g>
+              <g
+                class="layer nodes"
+              >
                 <g
-                  class="layer relationships"
-                />
-                <g
-                  class="layer nodes"
+                  class="node"
                 >
-                  <g
-                    class="node"
+                  <circle
+                    class="ring"
+                    cx="0"
+                    cy="0"
+                    r="29"
+                    stroke-width="8px"
+                  />
+                  <circle
+                    class="outline"
+                    cx="0"
+                    cy="0"
+                    fill="#C990C0"
+                    r="25"
+                    stroke="#b261a5"
+                    stroke-width="2px"
+                  />
+                  <text
+                    dy="1.5625"
+                    fill="#FFFFFF"
+                    font-family="streamline"
+                    font-size="25"
+                    pointer-events="none"
+                    text-anchor="middle"
+                  />
+                  <text
+                    fill="#FFFFFF"
+                    font-size="10px"
+                    pointer-events="none"
+                    text-anchor="middle"
+                    x="0"
+                    y="5"
                   >
-                    <circle
-                      class="ring"
-                      cx="0"
-                      cy="0"
-                      r="29"
-                      stroke-width="8px"
-                    />
-                    <circle
-                      class="outline"
-                      cx="0"
-                      cy="0"
-                      fill="#C990C0"
-                      r="25"
-                      stroke="#b261a5"
-                      stroke-width="2px"
-                    />
-                    <text
-                      dy="1.5625"
-                      fill="#FFFFFF"
-                      font-family="streamline"
-                      font-size="25"
-                      pointer-events="none"
-                      text-anchor="middle"
-                    />
-                    <text
-                      fill="#FFFFFF"
-                      font-size="10px"
-                      pointer-events="none"
-                      text-anchor="middle"
-                      x="0"
-                      y="5"
-                    >
-                       &lt;b&gt;…
-                    </text>
-                  </g>
+                     &lt;b&gt;…
+                  </text>
                 </g>
               </g>
             </g>
-          </svg>
-          <div
-            class="sc-jzJRlG bmXesP"
-            offset="296.57142857142856"
-          >
-            <button
-              class="sc-cSHVUG knJUXC zoom-in"
-            >
-              <i
-                class="sc-gmeYpB imxiti sl-zoom-in"
-                style="font-size: 1em;"
-              />
-            </button>
-            <button
-              class="sc-cSHVUG knJUXC zoom-out"
-            >
-              <i
-                class="sc-kZmsYB hLysGl sl-zoom-out"
-                style="font-size: 1em;"
-              />
-            </button>
-          </div>
-        </div>
+          </g>
+        </svg>
         <div
-          class="sc-chPdSV kotctU"
+          class="sc-fjdhpX VgzAu"
+          offset="329"
         >
-          <i
-            aria-hidden="true"
-            class="chevron right icon"
-            title="Collapse the Node Properties display"
-          />
-        </div>
-        <div
-          class="sc-kAzzGY eLmCiI"
-          width="292.57142857142856"
-        >
-          <div
-            class="react-resizable"
+          <button
+            class="sc-jzJRlG hPTWGK zoom-in"
           >
-            <div
-              class="sc-kgoBCf gXcNGy"
-            >
-              <div
-                class="sc-kpOJdX jLIuEz"
-              >
-                Displaying NaN nodes, 0 relationships.
-              </div>
-              <div
-                class="sc-dxgOiQ kjmlGP"
-              >
-                Node labels
-                <ul
-                  class="sc-bxivhb sc-iwsKbI eqRuUi"
-                >
-                  <div
-                    class="sc-ibxdXY sc-RefOD emwHTu"
-                    style="background-color: rgb(247, 151, 103); color: rgb(255, 255, 255);"
-                  >
-                    *
-                    <span
-                      class="sc-dnqmqq fFydjc"
-                    >
-                      (1)
-                    </span>
-                  </div>
-                  <div
-                    class="sc-ibxdXY sc-RefOD emwHTu"
-                    style="background-color: rgb(201, 144, 192); color: rgb(255, 255, 255);"
-                  >
-                    Person
-                    <span
-                      class="sc-dnqmqq fFydjc"
-                    >
-                      (1)
-                    </span>
-                  </div>
-                </ul>
-              </div>
-            </div>
-            <span
-              class="react-resizable-handle react-resizable-handle-w"
+            <i
+              class="sc-cooIXK hExMf sl-zoom-in"
+              style="font-size: 1em;"
             />
+          </button>
+          <button
+            class="sc-jzJRlG hPTWGK zoom-out"
+          >
+            <i
+              class="sc-fcdeBU pgnci sl-zoom-out"
+              style="font-size: 1em;"
+            />
+          </button>
+        </div>
+      </div>
+      <div
+        class="sc-kAzzGY jlhNIW"
+      >
+        <i
+          aria-hidden="true"
+          class="chevron right icon"
+          title="Collapse the Node Properties display"
+        />
+      </div>
+      <div
+        class="sc-cSHVUG btLdEa"
+        width="325"
+      >
+        <div
+          class="sc-chPdSV lduMTw react-resizable"
+        >
+          <div
+            class="sc-kGXeez lhIkLB"
+          >
+            Results
           </div>
+          <div
+            class="sc-kpOJdX gbtuPz"
+          >
+            Node labels
+            <ul
+              class="sc-htpNat sc-dnqmqq hoXvVo"
+            >
+              <div
+                class="sc-kfGgVZ sc-esjQYD evuduT"
+                style="background-color: rgb(247, 151, 103); color: rgb(255, 255, 255); cursor: default;"
+              >
+                *
+              </div>
+              <div
+                class="sc-kfGgVZ sc-esjQYD evuduT"
+                style="background-color: rgb(201, 144, 192); color: rgb(255, 255, 255); cursor: default;"
+              >
+                Person
+              </div>
+            </ul>
+            Displaying NaN nodes, 0 relationships.
+          </div>
+          <span
+            class="react-resizable-handle react-resizable-handle-w"
+          />
         </div>
       </div>
     </div>
