@@ -55,13 +55,16 @@ export function DetailsPaneComponent({
   return (
     <>
       <PaneHeader>
-        <ClipboardCopier
-          textToCopy={allItemProperties
-            .map(prop => `${prop.key}: ${prop.value}`)
-            .join('\n')}
-          titleText="Copy all properties to clipboard"
-          overrideEl={<span> {upperFirst(vizItem.type)} Properties</span>}
-        />
+        <div style={{ marginBottom: '10px' }}>
+          {upperFirst(vizItem.type)} Properties{' '}
+          <ClipboardCopier
+            textToCopy={allItemProperties
+              .map(prop => `${prop.key}: ${prop.value}`)
+              .join('\n')}
+            titleText="Copy all properties to clipboard"
+            iconSize={10}
+          />
+        </div>
         {vizItem.type === 'relationship' && (
           <StylableRelType
             selectedRelType={{
