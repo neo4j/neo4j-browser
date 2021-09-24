@@ -188,7 +188,7 @@
     "luxon": "^2.0.2",
     "memoize-one": "^5.2.1",
     "monaco-editor": "0.23.0",
-    "neo4j-client-sso": "^1.0.0",
+    "neo4j-client-sso": "^1.0.1",
     "neo4j-driver": "^4.3.3",
     "react": "^16.9.0",
     "react-dnd": "^11.1.3",
