@@ -271,7 +271,6 @@ export const StyledZoomButton = styled.button`
 
 export const StyledNodeInspectorContainer = styled.div<{
   width: number
-  height: number
 }>`
   position: absolute;
   right: 0;
@@ -280,11 +279,9 @@ export const StyledNodeInspectorContainer = styled.div<{
   width: ${props => props.width}px;
   min-width: ${panelMinWidth}px;
   max-width: 95%;
-  height: ${props => props.height}px;
   background: ${props => props.theme.editorBackground};
   color: ${props => props.theme.primaryText};
   font-family: ${props => props.theme.drawerHeaderFontFamily};
-  overflow-y: auto;
   box-shadow: 0px 0px 2px rgba(21, 30, 41, 0.1),
     0px 1px 2px rgba(21, 30, 41, 0.08), 0px 1px 4px rgba(21, 30, 41, 0.08);
 `
@@ -307,11 +304,10 @@ export const StyledNodeInspectorTopMenuChevron = styled.div<{
   `}
 `
 
-export const OverflowContainer = styled.div<{ height: number }>`
-  height: ${props => props.height}px;
-  overflow: auto;
+export const PaneContainer = styled.div`
   padding: 0 14px;
 `
+
 export const AlternatingTable = styled.table`
   tr:nth-child(even) {
     background: ${props => props.theme.alteringTableRowBackground};

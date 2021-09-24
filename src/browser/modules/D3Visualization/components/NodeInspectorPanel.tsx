@@ -7,7 +7,7 @@ import { DetailsPaneComponent } from './DetailsPane'
 import { GraphStats } from '../mapper'
 import {
   StyledNodeInspectorContainer,
-  OverflowContainer,
+  PaneContainer,
   StyledNodeInspectorTopMenuChevron,
   panelMinWidth
 } from './styled'
@@ -71,44 +71,37 @@ export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
         </StyledNodeInspectorTopMenuChevron>
 
         {expanded && (
-          <StyledNodeInspectorContainer width={width} height={frameHeight}>
+          <StyledNodeInspectorContainer width={width}>
             <Resizable
               width={width}
               height={300 /*doesn't matter but required prop */}
               resizeHandles={['w']}
               onResize={(_e, { size }) => setWidth(size.width)}
             >
-              {/* React-resizeable requires it's first child to not have a height set, 
-                  therefore we need this wrapping div */}
-              <div>
-                <OverflowContainer height={frameHeight}>
-                  {shownEl.type === 'node' ||
-                  shownEl.type === 'relationship' ? (
-                    <DetailsPaneComponent
-                      vizItem={shownEl}
-                      graphStyle={graphStyle}
-                      frameHeight={frameHeight}
-                    />
-                  ) : (
-                    <OverviewPane
-                      frameHeight={frameHeight}
-                      graphStyle={graphStyle}
-                      hasTruncatedFields={hasTruncatedFields}
-                      stats={stats}
-                      nodeCount={
-                        shownEl.type === 'canvas'
-                          ? shownEl.item.nodeCount
-                          : null
-                      }
-                      relationshipCount={
-                        shownEl.type === 'canvas'
-                          ? shownEl.item.relationshipCount
-                          : null
-                      }
-                    />
-                  )}
-                </OverflowContainer>
-              </div>
+              <PaneContainer>
+                {shownEl.type === 'node' || shownEl.type === 'relationship' ? (
+                  <DetailsPaneComponent
+                    vizItem={shownEl}
+                    graphStyle={graphStyle}
+                    frameHeight={frameHeight}
+                  />
+                ) : (
+                  <OverviewPane
+                    frameHeight={frameHeight}
+                    graphStyle={graphStyle}
+                    hasTruncatedFields={hasTruncatedFields}
+                    stats={stats}
+                    nodeCount={
+                      shownEl.type === 'canvas' ? shownEl.item.nodeCount : null
+                    }
+                    relationshipCount={
+                      shownEl.type === 'canvas'
+                        ? shownEl.item.relationshipCount
+                        : null
+                    }
+                  />
+                )}
+              </PaneContainer>
             </Resizable>
           </StyledNodeInspectorContainer>
         )}
