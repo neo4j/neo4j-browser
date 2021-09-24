@@ -319,11 +319,12 @@ export const AlternatingTable = styled.table`
   width: 100%;
 `
 export const PaneHeader = styled.div`
-  font-size: 12px;
+  font-size: 16px;
   margin-top: 5px;
   margin-bottom: 5px;
   height: 25px;
 `
+
 export const PaneBody = styled.div<{ maxHeight: number }>`
   max-height: ${props => props.maxHeight}px;
   overflow: auto;

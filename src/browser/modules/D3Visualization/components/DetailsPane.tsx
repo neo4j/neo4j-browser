@@ -30,11 +30,14 @@ import {
   ValueCell
 } from './styled'
 import ClickableUrls from '../../../components/ClickableUrls'
-import ClipboardCopier from 'browser-components/ClipboardCopier'
+import ClipboardCopier, {
+  copyToClipboard
+} from 'browser-components/ClipboardCopier'
 import { NodeItem, RelationshipItem } from './types'
 import { GraphStyle } from './OverviewPane'
 import { StyleableNodeLabel } from './StyleableNodeLabel'
 import { StylableRelType } from './StyleableRelType'
+import { upperFirst } from 'services/utils'
 
 type DetailsPaneComponentProps = {
   vizItem: NodeItem | RelationshipItem
@@ -54,6 +57,13 @@ export function DetailsPaneComponent({
   return (
     <>
       <PaneHeader>
+        <ClipboardCopier
+          textToCopy={allItemProperties
+            .map(prop => `${prop.key}: ${prop.value}`)
+            .join('\n')}
+          titleText="Copy all properties to clipboard"
+          overrideEl={<span> {upperFirst(vizItem.type)} Properties</span>}
+        />
         {vizItem.type === 'relationship' && (
           <StylableRelType
             selectedRelType={{
@@ -78,13 +88,6 @@ export function DetailsPaneComponent({
               />
             )
           })}
-        <ClipboardCopier
-          textToCopy={allItemProperties
-            .map(prop => `${prop.key}: ${prop.value}`)
-            .join('\n')}
-          iconSize={10}
-          titleText={'Copy all properties to clipboard'}
-        />
       </PaneHeader>
       <PaneBody maxHeight={frameHeight - 45}>
         <StyledInlineList>

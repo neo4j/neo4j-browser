@@ -6,11 +6,13 @@ type ClipboardCopierProps = {
   textToCopy: string
   iconSize?: number
   titleText?: string
+  overrideEl?: JSX.Element
 }
 function ClipboardCopier({
   textToCopy: text,
   iconSize = 20,
-  titleText = 'Copy to clipboard'
+  titleText = 'Copy to clipboard',
+  overrideEl
 }: ClipboardCopierProps): JSX.Element {
   const [messageToShow, setMessageToShow] = useState<string | null>(null)
   function showPopup(text: string) {
@@ -26,7 +28,11 @@ function ClipboardCopier({
           .catch(() => showPopup('Copying text failed'))
       }
     >
-      <CopyIcon title={titleText} width={iconSize} />
+      {overrideEl ? (
+        <span title={titleText}> {overrideEl} </span>
+      ) : (
+        <CopyIcon title={titleText} width={iconSize} />
+      )}
       {messageToShow && <InfoPopup text={messageToShow} />}
     </CopyIconContainer>
   )

@@ -50,6 +50,7 @@ import {
 } from 'shared/modules/connections/connectionsDuck'
 import { getScrollToTop } from 'shared/modules/settings/settingsDuck'
 import DbsFrame from './Auth/DbsFrame'
+import { upperFirst } from 'services/utils'
 
 const nameToFrame: Record<string, React.ComponentType<any>> = {
   error: ErrorFrame,
@@ -130,7 +131,7 @@ function Stream(props: StreamProps): JSX.Element {
         if (frame.type === 'error') {
           try {
             const cmd = frame.cmd.replace(/^:/, '')
-            const Frame = cmd[0].toUpperCase() + cmd.slice(1) + 'Frame'
+            const Frame = upperFirst(cmd[0]) + 'Frame'
             MyFrame = require('./Extras/index')[Frame]
             if (!MyFrame) {
               MyFrame = getFrame(frame.type)
