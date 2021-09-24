@@ -321,9 +321,7 @@ export const AlternatingTable = styled.table`
 `
 export const PaneHeader = styled.div`
   font-size: 16px;
-  margin-top: 5px;
-  margin-bottom: 5px;
-  height: 25px;
+  margin-top: 10px;
 `
 
 export const PaneBody = styled.div<{ maxHeight: number }>`
