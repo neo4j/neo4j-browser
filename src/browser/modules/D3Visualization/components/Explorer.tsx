@@ -165,10 +165,12 @@ export class ExplorerComponent extends Component<
     this.setHoveredItem(item)
   }
 
-  setHoveredItem = debounce(
-    (hoveredItem: VizItem) => this.setState({ hoveredItem }),
-    200
-  )
+  mounted = true
+  setHoveredItem = debounce((hoveredItem: VizItem) => {
+    if (this.mounted) {
+      this.setState({ hoveredItem })
+    }
+  }, 200)
 
   onItemSelect(selectedItem: VizItem): void {
     this.setState({ selectedItem })
@@ -252,6 +254,10 @@ export class ExplorerComponent extends Component<
         />
       </StyledFullSizeContainer>
     )
+  }
+
+  componentWillUnmount(): void {
+    this.mounted = false
   }
 }
 
