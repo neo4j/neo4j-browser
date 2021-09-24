@@ -10,11 +10,11 @@ import { LinkContainer, MarginTop, MarginTopLi, NoBulletsUl } from './styled'
 const title = '--DEFAULT_INDEX_GUIDE--'
 const slides = [
   <BuiltInGuideSidebarSlide key="first">
-    You can also access Browser guides by running
+    You can also access the built-in guides by running
     <DrawerBrowserCommand data-populate=":guide [guide name]">
       :guide [guide name]
     </DrawerBrowserCommand>
-    in the code editor.
+    in the Browser Editor (a.k.a. Editor).
     <MarginTop>
       <DrawerSubHeader as="div" /* prevents guide styling of h5*/>
         Built-in guides
@@ -25,19 +25,21 @@ const slides = [
         <DrawerBrowserCommand data-exec="guide intro">
           :guide intro
         </DrawerBrowserCommand>
-        <MarginTop> Navigating Neo4j Browser </MarginTop>
+        <MarginTop> Intro Guide: Navigating Neo4j Browser </MarginTop>
       </li>
       <MarginTopLi>
         <DrawerBrowserCommand data-exec="guide concepts">
           :guide concepts
         </DrawerBrowserCommand>
-        <MarginTop> Property graph model concepts </MarginTop>
+        <MarginTop> Concepts Guide: Property graph model concepts </MarginTop>
       </MarginTopLi>
       <MarginTopLi>
         <DrawerBrowserCommand data-exec="guide cypher">
           :guide cypher
         </DrawerBrowserCommand>
-        <MarginTop>Cypher basics - create, match, delete</MarginTop>
+        <MarginTop>
+          Cypher Guide: Cypher basics - create, match, delete
+        </MarginTop>
       </MarginTopLi>
 
       <MarginTopLi>
@@ -45,7 +47,8 @@ const slides = [
           :guide movie-graph
         </DrawerBrowserCommand>
         <MarginTop>
-          Queries and recommendations with Cypher - movie use case
+          Movie Graph Guide: Queries and recommendations with Cypher - movie use
+          case
         </MarginTop>
       </MarginTopLi>
 
@@ -53,7 +56,9 @@ const slides = [
         <DrawerBrowserCommand data-exec="guide northwind-graph">
           :guide northwind-graph
         </DrawerBrowserCommand>
-        <MarginTop>Translate and import relation data into graph</MarginTop>
+        <MarginTop>
+          Northwind Graph Guide: Transform and import relational data into graph
+        </MarginTop>
       </MarginTopLi>
     </NoBulletsUl>
     <LinkContainer>
