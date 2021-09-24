@@ -96,7 +96,9 @@ export function DetailsPaneComponent({
             <tbody>
               {allItemProperties.map(({ key, type, value }) => (
                 <tr key={key} title={type}>
-                  <KeyCell>{key}</KeyCell>
+                  <KeyCell>
+                    <ClickableUrls text={key} />
+                  </KeyCell>
                   <ValueCell>
                     <ClickableUrls text={value} />
                   </ValueCell>

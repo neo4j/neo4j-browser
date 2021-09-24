@@ -328,7 +328,6 @@ export const PaneBody = styled.div<{ maxHeight: number }>`
   max-height: ${props => props.maxHeight}px;
   overflow: auto;
   margin-top: 14px;
-  padding-bottom: 10px;
 `
 export const KeyCell = styled.td`
   font-weight: 700;
