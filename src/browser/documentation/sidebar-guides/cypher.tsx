@@ -150,8 +150,8 @@ WHERE ee.name = 'Emil' RETURN ee, friends`}
         pattern.
       </li>
       <li>
-        <code>(ee)</code> is the anchor node that will be found based upon the{' '}
-        <code>WHERE</code> clause.
+        <code>(ee)</code> is the node reference that will be returned based upon
+        the <code>WHERE</code> clause.
       </li>
       <li>
         <code>-[:KNOWS]-</code> matches the <code>KNOWS</code> relationships (in
@@ -161,8 +161,8 @@ WHERE ee.name = 'Emil' RETURN ee, friends`}
         <code>(friends)</code> represents the nodes that are Emil's friends.
       </li>
       <li>
-        <code>RETURN</code> returns the anchor node <code>(ee)</code> and the
-        related <code>(friends)</code> nodes found.
+        <code>RETURN</code> returns the node, referenced here by{' '}
+        <code>(ee)</code>, and the related <code>(friends)</code> nodes found.
       </li>
     </ul>
   </BuiltInGuideSidebarSlide>,
