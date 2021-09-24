@@ -24,7 +24,6 @@ import {
   AlternatingTable,
   CopyCell,
   KeyCell,
-  OverflowY,
   PaneBody,
   PaneHeader,
   StyledInlineList,
@@ -93,9 +92,7 @@ export function DetailsPaneComponent({
             <tbody>
               {allItemProperties.map(({ key, type, value }) => (
                 <tr key={key} title={type}>
-                  <KeyCell>
-                    <OverflowY>{key}: </OverflowY>
-                  </KeyCell>
+                  <KeyCell>{key}</KeyCell>
                   <ValueCell>
                     <ClickableUrls text={value} />
                   </ValueCell>

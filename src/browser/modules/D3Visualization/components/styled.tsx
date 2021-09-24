@@ -333,13 +333,9 @@ export const KeyCell = styled.td`
   font-weight: 700;
   vertical-align: top;
   padding: 2px;
-  max-width: 200px;
-  min-width: 40px;
-  white-space: nowrap;
+  width: 30%;
 `
-export const OverflowY = styled.div`
-  overflow-y: auto;
-`
+
 export const CopyCell = styled.td`
   padding: 2px 5px;
   display: flex;
@@ -348,6 +344,7 @@ export const CopyCell = styled.td`
 export const ValueCell = styled.td`
   padding: 2px;
   white-space: pre-wrap;
+  vertical-align: top;
 `
 export const SmallText = styled.div`
   font-size: 12px;
