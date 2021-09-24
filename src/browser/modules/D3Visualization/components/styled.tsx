@@ -274,11 +274,12 @@ export const StyledNodeInspectorContainer = styled.div<{
 }>`
   position: absolute;
   right: 0;
-  top: 0;
+  top: 3px;
   z-index: 1;
   width: ${props => props.width}px;
   min-width: ${panelMinWidth}px;
   max-width: 95%;
+  height: 100%;
   background: ${props => props.theme.editorBackground};
   color: ${props => props.theme.primaryText};
   font-family: ${props => props.theme.drawerHeaderFontFamily};
@@ -329,6 +330,7 @@ export const PaneBody = styled.div<{ maxHeight: number }>`
   max-height: ${props => props.maxHeight}px;
   overflow: auto;
   margin-top: 14px;
+  padding-bottom: 10px;
 `
 export const KeyCell = styled.td`
   font-weight: 700;

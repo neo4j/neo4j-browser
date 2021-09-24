@@ -30,9 +30,7 @@ import {
   ValueCell
 } from './styled'
 import ClickableUrls from '../../../components/ClickableUrls'
-import ClipboardCopier, {
-  copyToClipboard
-} from 'browser-components/ClipboardCopier'
+import ClipboardCopier from 'browser-components/ClipboardCopier'
 import { NodeItem, RelationshipItem } from './types'
 import { GraphStyle } from './OverviewPane'
 import { StyleableNodeLabel } from './StyleableNodeLabel'
