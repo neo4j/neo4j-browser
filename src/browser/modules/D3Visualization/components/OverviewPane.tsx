@@ -63,7 +63,7 @@ function OverviewPane({
 
   return (
     <>
-      <PaneHeader>Results</PaneHeader>
+      <PaneHeader>Overview</PaneHeader>
       <PaneBody maxHeight={frameHeight - 45}>
         {labels && Object.keys(labels).length !== 0 && (
           <>
