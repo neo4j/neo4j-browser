@@ -350,3 +350,7 @@ export const SmallText = styled.div`
   font-size: 12px;
   margin-bottom: 8px;
 `
+
+export const PaneTitle = styled.div`
+  margin-bottom: 10px;
+`

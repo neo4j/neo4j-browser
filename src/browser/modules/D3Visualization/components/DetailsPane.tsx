@@ -26,6 +26,7 @@ import {
   KeyCell,
   PaneBody,
   PaneHeader,
+  PaneTitle,
   StyledInlineList,
   ValueCell
 } from './styled'
@@ -55,7 +56,7 @@ export function DetailsPaneComponent({
   return (
     <>
       <PaneHeader>
-        <div style={{ marginBottom: '10px' }}>
+        <PaneTitle>
           {upperFirst(vizItem.type)} Properties{' '}
           <ClipboardCopier
             textToCopy={allItemProperties
@@ -64,7 +65,7 @@ export function DetailsPaneComponent({
             titleText="Copy all properties to clipboard"
             iconSize={10}
           />
-        </div>
+        </PaneTitle>
         {vizItem.type === 'relationship' && (
           <StylableRelType
             selectedRelType={{
