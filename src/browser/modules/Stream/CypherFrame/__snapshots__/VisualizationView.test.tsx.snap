@@ -119,10 +119,10 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
           <div
             class="sc-kGXeez lhIkLB"
           >
-            Results
+            Overview
           </div>
           <div
-            class="sc-kpOJdX gbtuPz"
+            class="sc-kpOJdX fyzTOa"
           >
             Node labels
             <ul
@@ -141,7 +141,11 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
                 Person
               </div>
             </ul>
-            Displaying NaN nodes, 0 relationships.
+            <div
+              style="padding-bottom: 10px;"
+            >
+              Displaying NaN nodes, 0 relationships.
+            </div>
           </div>
           <span
             class="react-resizable-handle react-resizable-handle-w"
