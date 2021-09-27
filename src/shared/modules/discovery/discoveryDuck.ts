@@ -264,11 +264,21 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
         const selectedSSOProvider = mergedDiscoveryData.SSOProviders.find(
           ({ id }) => id === SSORedirectId
         )
-        try {
-          await authRequestForSSO(selectedSSOProvider as Neo4jClientSSOProvider)
-        } catch (err) {
-          SSOError = err.message
-          authLog(err.message)
+        if (selectedSSOProvider)
+          try {
+            await authRequestForSSO(
+              selectedSSOProvider as Neo4jClientSSOProvider
+            )
+          } catch (e) {
+            if (e instanceof Error) {
+              SSOError = e.message
+              authLog(e.message)
+            }
+          }
+        else {
+          authLog(
+            `No SSO provider with id: "${SSORedirectId}" found in disocvery data`
+          )
         }
       } else if (wasRedirectedBackFromSSOServer()) {
         authLog('Initializing auth_flow_step redirect')
@@ -289,9 +299,11 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
               attemptSSOLogin: true
             }
           }
-        } catch (err) {
-          SSOError = err.message
-          authLog(err.message)
+        } catch (e) {
+          if (e instanceof Error) {
+            SSOError = e.message
+            authLog(e.message)
+          }
         }
       }
 
@@ -339,24 +351,23 @@ async function fetchDataFromDiscoveryUrl(
 
     return { SSOProviders, host }
   } catch (e) {
-    const noDataFoundMessage = authLog(`No discovery json data found at ${url}`)
+    const noDataFoundMessage = `No discovery json data found at ${url}`
     const noHttpPrefixMessage = url.toLowerCase().startsWith('http')
       ? ''
       : 'Double check that the url is a valid url (including HTTP(S)).'
     const noJsonSuffixMessage = url.toLowerCase().endsWith('.json')
       ? ''
       : 'Double check that the discovery url returns a valid JSON file.'
-    ;[
-      `Request to ${url} failed with message: ${e.message}`,
+
+    const messages = [
+      `Request to ${url} failed with message: ${e}`,
       noDataFoundMessage,
       noHttpPrefixMessage,
       noJsonSuffixMessage
     ]
-      .filter(a => a)
-      .forEach(err => {
-        authLog(err as string)
-        return err
-      })
+
+    messages.forEach(m => authLog(m))
+
     return { SSOProviders: [] }
   }
 }
