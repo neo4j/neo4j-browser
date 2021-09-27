@@ -22,7 +22,8 @@ import { Component } from 'react'
 import { connect } from 'react-redux'
 import { canUseDOM } from 'services/utils'
 import { inDesktop } from 'shared/modules/app/appDuck'
-import { removeSearchParamsInBrowserHistory } from 'shared/modules/auth/helpers'
+import { removeSearchParamsInBrowserHistory } from 'neo4j-client-sso'
+
 import { getUuid, updateData } from 'shared/modules/udc/udcDuck'
 
 export interface MetricsProperties {
