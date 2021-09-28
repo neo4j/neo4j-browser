@@ -62,7 +62,15 @@ export function mapRelationships(relationships: any, graph: any) {
   })
 }
 
-export function getGraphStats(graph: any) {
+export type GraphStats = {
+  labels?: Record<string, { count: number; properties: Record<string, string> }>
+  relTypes?: Record<
+    string,
+    { count: number; properties: Record<string, string> }
+  >
+}
+
+export function getGraphStats(graph: any): GraphStats {
   const labelStats: any = {}
   const relTypeStats: any = {}
   graph.nodes().forEach((node: any) => {

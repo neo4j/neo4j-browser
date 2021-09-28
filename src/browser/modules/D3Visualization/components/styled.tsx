@@ -22,7 +22,7 @@ import styled from 'styled-components'
 
 export const legendRowHeight = 32
 export const inspectorFooterContractedHeight = 22
-export const panelMinWidth = 300
+export const panelMinWidth = 325
 
 export const StyledSvgWrapper = styled.div`
   line-height: 0;
@@ -108,11 +108,6 @@ export const StyledSvgWrapper = styled.div`
   }
 `
 
-export const StyledGraphAreaContainer = styled.div`
-  position: relative;
-  height: 100%;
-`
-
 export const StyledRowToggle = styled.div`
   float: right;
   display: block;
@@ -160,6 +155,7 @@ export const StyledLabelToken = styled(StyledToken)`
   padding: 4px 7px 4px 9px;
   border-radius: 20px;
   word-break: break-all;
+  margin-top: 4px;
 `
 export const StyledTokenRelationshipType = styled(StyledToken)`
   padding: 4px 7px 4px 5px;
@@ -177,8 +173,7 @@ export const StyledLegendInlineList = styled(StyledInlineList)`
     max-height: ${legendRowHeight}px;
     overflow: hidden;
   }
-  border-bottom: ${props => props.theme.inFrameBorder};
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 `
 
 export const StyledPickerListItem = styled(StyledInlineListItem)`
@@ -276,20 +271,18 @@ export const StyledZoomButton = styled.button`
 
 export const StyledNodeInspectorContainer = styled.div<{
   width: number
-  height: number
 }>`
   position: absolute;
   right: 0;
-  top: 0;
+  top: 3px;
   z-index: 1;
   width: ${props => props.width}px;
   min-width: ${panelMinWidth}px;
   max-width: 95%;
-  height: ${props => props.height}px;
+  height: 100%;
   background: ${props => props.theme.editorBackground};
   color: ${props => props.theme.primaryText};
   font-family: ${props => props.theme.drawerHeaderFontFamily};
-  overflow-y: auto;
   box-shadow: 0px 0px 2px rgba(21, 30, 41, 0.1),
     0px 1px 2px rgba(21, 30, 41, 0.08), 0px 1px 4px rgba(21, 30, 41, 0.08);
 `
@@ -301,6 +294,9 @@ export const StyledNodeInspectorTopMenuChevron = styled.div<{
   right: 0px;
   top: 6px;
   z-index: 2;
+  width: 32px;
+  height: 32px;
+  padding: 6px;
   ${props =>
     !props.expanded &&
     `background: ${props.theme.editorBackground};
@@ -309,11 +305,10 @@ export const StyledNodeInspectorTopMenuChevron = styled.div<{
   `}
 `
 
-export const OverflowContainer = styled.div<{ height: number }>`
-  height: ${props => props.height}px;
-  overflow: auto;
+export const PaneContainer = styled.div`
   padding: 0 14px;
 `
+
 export const AlternatingTable = styled.table`
   tr:nth-child(even) {
     background: ${props => props.theme.alteringTableRowBackground};
@@ -325,27 +320,22 @@ export const AlternatingTable = styled.table`
   width: 100%;
 `
 export const PaneHeader = styled.div`
-  font-size: 12px;
-  margin-top: 5px;
-  margin-bottom: 5px;
-  border-bottom: 1px solid #dae4f0;
-  height: 25px;
+  font-size: 16px;
+  margin-top: 10px;
 `
+
 export const PaneBody = styled.div<{ maxHeight: number }>`
   max-height: ${props => props.maxHeight}px;
   overflow: auto;
+  margin-top: 14px;
 `
 export const KeyCell = styled.td`
   font-weight: 700;
   vertical-align: top;
   padding: 2px;
-  max-width: 200px;
-  min-width: 40px;
-  white-space: nowrap;
+  width: 30%;
 `
-export const OverflowY = styled.div`
-  overflow-y: auto;
-`
+
 export const CopyCell = styled.td`
   padding: 2px 5px;
   display: flex;
@@ -354,4 +344,13 @@ export const CopyCell = styled.td`
 export const ValueCell = styled.td`
   padding: 2px;
   white-space: pre-wrap;
+  vertical-align: top;
+`
+export const SmallText = styled.div`
+  font-size: 12px;
+  margin-bottom: 8px;
+`
+
+export const PaneTitle = styled.div`
+  margin-bottom: 10px;
 `

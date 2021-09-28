@@ -19,20 +19,14 @@
  */
 
 import React from 'react'
-import { Icon, Popup } from 'semantic-ui-react'
+import { Icon } from 'semantic-ui-react'
 
-import {
-  StyledTokenRelationshipType,
-  StyledLabelToken,
-  StyledTokenCount,
-  StyledLegendInlineList,
-  PaneBody,
-  PaneHeader
-} from './styled'
+import { StyledLegendInlineList, PaneBody, PaneHeader } from './styled'
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
-import { GrassEditor } from './GrassEditor'
 import { StyledTruncatedMessage } from 'browser/modules/Stream/styled'
-import { LegendItem } from './types'
+import { StyleableNodeLabel } from './StyleableNodeLabel'
+import { GraphStats } from '../mapper'
+import { StylableRelType } from './StyleableRelType'
 
 export type GraphStyle = {
   forNode: any
@@ -54,10 +48,7 @@ type OverviewPaneProps = {
   hasTruncatedFields: boolean
   nodeCount: number | null
   relationshipCount: number | null
-  selectLabel: (label: string, propertyKeys: string[]) => void
-  selectRelType: (relType: string, propertyKeys: string[]) => void
-  stats: { relTypes: any; labels: any }
-  legendItem?: LegendItem
+  stats: GraphStats
 }
 
 function OverviewPane({
@@ -66,120 +57,63 @@ function OverviewPane({
   hasTruncatedFields,
   nodeCount,
   relationshipCount,
-  selectLabel,
-  selectRelType,
-  stats,
-  legendItem
+  stats
 }: OverviewPaneProps): JSX.Element {
   const { relTypes, labels } = stats
 
   return (
     <>
-      <PaneHeader>
-        {hasTruncatedFields && (
-          <StyledTruncatedMessage>
-            <Icon name="warning sign" /> Record fields have been
-            truncated.&nbsp;
-          </StyledTruncatedMessage>
+      <PaneHeader>Overview</PaneHeader>
+      <PaneBody maxHeight={frameHeight - 45}>
+        {labels && Object.keys(labels).length !== 0 && (
+          <>
+            Node labels
+            <StyledLegendInlineList>
+              {Object.keys(labels).map((label: string) => (
+                <StyleableNodeLabel
+                  key={label}
+                  graphStyle={graphStyle}
+                  frameHeight={frameHeight}
+                  selectedLabel={{
+                    label,
+                    propertyKeys: Object.keys(labels[label].properties)
+                  }}
+                />
+              ))}
+            </StyledLegendInlineList>
+          </>
         )}
-        {nodeCount !== null &&
-          relationshipCount !== null &&
-          `Displaying ${numberToUSLocale(nodeCount)} nodes, ${numberToUSLocale(
-            relationshipCount
-          )} relationships.`}
-      </PaneHeader>
-      <PaneBody maxHeight={frameHeight - 40}>
-        Node labels
-        {!labels || !Object.keys(labels).length ? (
-          <div>No labels to display</div>
-        ) : (
-          <StyledLegendInlineList>
-            {Object.keys(labels).map(legendItemKey => {
-              const styleForItem = graphStyle.forNode({
-                labels: [legendItemKey]
-              })
-              const onClick = () => {
-                selectLabel(
-                  legendItemKey,
-                  Object.keys(labels[legendItemKey].properties)
-                )
-              }
-              const style = {
-                backgroundColor: styleForItem.get('color'),
-                color: styleForItem.get('text-color-internal')
-              }
-              return (
-                <Popup
-                  on="click"
-                  key={legendItemKey}
-                  basic
-                  pinned
-                  trigger={
-                    <StyledLabelToken onClick={onClick} style={style}>
-                      {legendItemKey}
-                      <StyledTokenCount>{`(${numberToUSLocale(
-                        labels[legendItemKey].count
-                      )})`}</StyledTokenCount>
-                    </StyledLabelToken>
-                  }
-                  wide
-                >
-                  <GrassEditor
-                    {...legendItem?.item}
-                    frameHeight={frameHeight}
-                  />
-                </Popup>
-              )
-            })}
-          </StyledLegendInlineList>
+        {relTypes && Object.keys(relTypes).length !== 0 && (
+          <>
+            Relationship Types
+            <StyledLegendInlineList>
+              {Object.keys(relTypes).map(relType => (
+                <StylableRelType
+                  key={relType}
+                  graphStyle={graphStyle}
+                  frameHeight={frameHeight}
+                  selectedRelType={{
+                    relType,
+                    propertyKeys: Object.keys(relTypes[relType].properties)
+                  }}
+                />
+              ))}
+            </StyledLegendInlineList>
+          </>
         )}
-        Relationship Types
-        {!relTypes || !Object.keys(relTypes).length ? (
-          <div>No relationship types to display</div>
-        ) : (
-          <StyledLegendInlineList>
-            {Object.keys(relTypes).map(legendItemKey => {
-              const styleForItem = graphStyle.forRelationship({
-                type: legendItemKey
-              })
-              const onClick = () => {
-                selectRelType(
-                  legendItemKey,
-                  Object.keys(relTypes[legendItemKey].properties)
-                )
-              }
-              const style = {
-                backgroundColor: styleForItem.get('color'),
-                color: styleForItem.get('text-color-internal')
-              }
-              return (
-                <Popup
-                  on="click"
-                  basic
-                  key={legendItemKey}
-                  pinned
-                  trigger={
-                    <StyledTokenRelationshipType
-                      onClick={onClick}
-                      style={style}
-                    >
-                      {legendItemKey}
-                      <StyledTokenCount>
-                        {`(${numberToUSLocale(relTypes[legendItemKey].count)})`}
-                      </StyledTokenCount>
-                    </StyledTokenRelationshipType>
-                  }
-                  wide
-                >
-                  <GrassEditor
-                    {...legendItem?.item}
-                    frameHeight={frameHeight}
-                  />
-                </Popup>
-              )
-            })}
-          </StyledLegendInlineList>
-        )}
+        <div style={{ paddingBottom: '10px' }}>
+          {hasTruncatedFields && (
+            <StyledTruncatedMessage>
+              <Icon name="warning sign" /> Record fields have been
+              truncated.&nbsp;
+            </StyledTruncatedMessage>
+          )}
+          {nodeCount !== null &&
+            relationshipCount !== null &&
+            `Displaying ${numberToUSLocale(
+              nodeCount
+            )} nodes, ${numberToUSLocale(relationshipCount)} relationships.`}
+        </div>
       </PaneBody>
     </>
   )

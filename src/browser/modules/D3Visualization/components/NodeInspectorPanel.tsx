@@ -1,123 +1,107 @@
 import React, { Component } from 'react'
 import { Resizable } from 'react-resizable'
 import { Icon } from 'semantic-ui-react'
-import { DetailsPaneComponent } from './DetailsPane'
+
 import OverviewPane, { GraphStyle } from './OverviewPane'
-import { VizItem } from './types'
+import { DetailsPaneComponent } from './DetailsPane'
+import { GraphStats } from '../mapper'
 import {
   StyledNodeInspectorContainer,
-  OverflowContainer,
-  StyledNodeInspectorTopMenuChevron
+  PaneContainer,
+  StyledNodeInspectorTopMenuChevron,
+  panelMinWidth
 } from './styled'
+import { VizItem } from './types'
 
 interface NodeInspectorPanelProps {
+  expanded: boolean
+  frameHeight: number
+  graphStyle: GraphStyle
+  hasTruncatedFields: boolean
   hoveredItem: VizItem
   selectedItem: VizItem
-  stats: any
-  graphStyle: GraphStyle
-  selectLabel: (label: string, propertyKeys: string[]) => void
-  selectRelType: (relType: string, propertyKeys: string[]) => void
-  frameHeight: number
-  hasTruncatedFields: boolean
-  width: number
   setWidth: (width: number) => void
+  stats: GraphStats
+  toggleExpanded: () => void
+  width: number
 }
 
 export type NodeInspectorPanelState = {
   expanded: boolean
 }
-export const defaultPanelWidth = (): number => window.innerWidth / 3.5
-export class NodeInspectorPanel extends Component<
-  NodeInspectorPanelProps,
-  NodeInspectorPanelState
-> {
-  state: NodeInspectorPanelState = {
-    expanded: true
-  }
-
-  togglePanel = (): void => {
-    if (this.state.expanded) {
-      this.props.setWidth(0)
-    } else {
-      this.props.setWidth(defaultPanelWidth())
-    }
-    this.setState({
-      expanded: !this.state.expanded
-    })
-  }
-
+export const defaultPanelWidth = (): number =>
+  Math.max(window.innerWidth / 3.5, panelMinWidth)
+export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
   render(): JSX.Element {
-    const { expanded } = this.state
-    const { hoveredItem, selectedItem } = this.props
+    const {
+      expanded,
+      frameHeight,
+      graphStyle,
+      hasTruncatedFields,
+      hoveredItem,
+      selectedItem,
+      setWidth,
+      stats,
+      toggleExpanded,
+      width
+    } = this.props
 
     const relevantItems = ['node', 'relationship']
     const hoveringNodeOrRelationship =
       hoveredItem && relevantItems.includes(hoveredItem.type)
     const shownEl = hoveringNodeOrRelationship ? hoveredItem : selectedItem
-    const selectedLegendItem =
-      selectedItem.type === 'legend-item' ? selectedItem : undefined
 
     return (
       <>
         <StyledNodeInspectorTopMenuChevron
           expanded={expanded}
-          onClick={this.togglePanel}
+          onClick={toggleExpanded}
         >
           {expanded ? (
-            <Icon name="chevron right" fontSize={32} />
+            <Icon
+              title="Collapse the Node Properties display"
+              name="chevron right"
+            />
           ) : (
             <Icon
-              title="Click to expand the Node Properties display"
+              title="Expand the Node Properties display"
               name="chevron left"
             />
           )}
         </StyledNodeInspectorTopMenuChevron>
 
         {expanded && (
-          <StyledNodeInspectorContainer
-            width={this.props.width}
-            height={this.props.frameHeight}
-          >
+          <StyledNodeInspectorContainer width={width}>
             <Resizable
-              width={this.props.width}
+              width={width}
               height={300 /*doesn't matter but required prop */}
               resizeHandles={['w']}
-              onResize={(_e, { size }) => this.props.setWidth(size.width)}
+              onResize={(_e, { size }) => setWidth(size.width)}
             >
-              {/* React-resizeable requires it's first child to not have a height set, 
-                  therefore we need this wrapping div */}
-              <div>
-                <OverflowContainer height={this.props.frameHeight}>
-                  {shownEl.type === 'node' ||
-                  shownEl.type === 'relationship' ? (
-                    <DetailsPaneComponent
-                      vizItem={shownEl}
-                      graphStyle={this.props.graphStyle}
-                      frameHeight={this.props.frameHeight}
-                    />
-                  ) : (
-                    <OverviewPane
-                      frameHeight={this.props.frameHeight}
-                      graphStyle={this.props.graphStyle}
-                      hasTruncatedFields={this.props.hasTruncatedFields}
-                      selectLabel={this.props.selectLabel}
-                      selectRelType={this.props.selectRelType}
-                      stats={this.props.stats}
-                      legendItem={selectedLegendItem}
-                      nodeCount={
-                        shownEl.type === 'canvas'
-                          ? shownEl.item.nodeCount
-                          : null
-                      }
-                      relationshipCount={
-                        shownEl.type === 'canvas'
-                          ? shownEl.item.relationshipCount
-                          : null
-                      }
-                    />
-                  )}
-                </OverflowContainer>
-              </div>
+              <PaneContainer>
+                {shownEl.type === 'node' || shownEl.type === 'relationship' ? (
+                  <DetailsPaneComponent
+                    vizItem={shownEl}
+                    graphStyle={graphStyle}
+                    frameHeight={frameHeight}
+                  />
+                ) : (
+                  <OverviewPane
+                    frameHeight={frameHeight}
+                    graphStyle={graphStyle}
+                    hasTruncatedFields={hasTruncatedFields}
+                    stats={stats}
+                    nodeCount={
+                      shownEl.type === 'canvas' ? shownEl.item.nodeCount : null
+                    }
+                    relationshipCount={
+                      shownEl.type === 'canvas'
+                        ? shownEl.item.relationshipCount
+                        : null
+                    }
+                  />
+                )}
+              </PaneContainer>
             </Resizable>
           </StyledNodeInspectorContainer>
         )}

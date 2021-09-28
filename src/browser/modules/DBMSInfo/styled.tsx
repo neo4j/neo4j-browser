@@ -34,6 +34,7 @@ const chip = styled.div`
   span {
     line-height: normal;
   }
+  display: inline-block;
 `
 export const StyledLabel = styled(chip)`
   border-radius: 20px;

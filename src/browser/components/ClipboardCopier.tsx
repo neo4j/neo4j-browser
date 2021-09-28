@@ -36,6 +36,7 @@ const CopyIconContainer = styled.span`
   cursor: pointer;
   position: relative;
   color: ${props => props.theme.frameControlButtonTextColor};
+  font-size: 12px;
 `
 
 type InfoPopupProps = { text: string }

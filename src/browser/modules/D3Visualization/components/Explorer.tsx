@@ -21,23 +21,20 @@
 import React, { Component } from 'react'
 import deepmerge from 'deepmerge'
 import { connect } from 'react-redux'
-
-import { deepEquals } from 'services/utils'
-import { GraphComponent } from './Graph'
-import neoGraphStyle from '../graphStyle'
-import { defaultPanelWidth, NodeInspectorPanel } from './NodeInspectorPanel'
-import {
-  panelMinWidth,
-  StyledFullSizeContainer,
-  StyledGraphAreaContainer
-} from './styled'
-import { GlobalState } from 'shared/globalState'
-import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
-import { VizItem } from './types'
 import { debounce } from 'lodash'
-import { GraphStyle } from './OverviewPane'
+
 import Node from '../lib/visualization/components/node'
 import Relationship from '../lib/visualization/components/relationship'
+import neoGraphStyle from '../graphStyle'
+import { GlobalState } from 'shared/globalState'
+import { GraphComponent } from './Graph'
+import { GraphStats } from '../mapper'
+import { GraphStyle } from './OverviewPane'
+import { VizItem } from './types'
+import { deepEquals } from 'services/utils'
+import { defaultPanelWidth, NodeInspectorPanel } from './NodeInspectorPanel'
+import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
+import { panelMinWidth, StyledFullSizeContainer } from './styled'
 
 const deduplicateNodes = (nodes: any) => {
   return nodes.reduce(
@@ -75,10 +72,11 @@ type ExplorerComponentState = {
   nodes: Node[]
   relationships: Relationship[]
   selectedItem: VizItem
-  stats: { labels: any; relTypes: any }
+  stats: GraphStats
   styleVersion: number
   freezeLegend: boolean
   width: number
+  nodePropertiesExpanded: boolean
 }
 
 export class ExplorerComponent extends Component<
@@ -96,7 +94,7 @@ export class ExplorerComponent extends Component<
     let selectedItem: VizItem = {
       type: 'canvas',
       item: {
-        nodeCount: Math.max(this.props.initialNodeDisplay, nodes.length),
+        nodeCount: Math.min(this.props.initialNodeDisplay, nodes.length),
         relationshipCount: relationships.length
       }
     }
@@ -129,7 +127,8 @@ export class ExplorerComponent extends Component<
       selectedItem,
       hoveredItem: selectedItem,
       freezeLegend: false,
-      width: defaultPanelWidth()
+      width: defaultPanelWidth(),
+      nodePropertiesExpanded: true
     }
   }
 
@@ -166,40 +165,20 @@ export class ExplorerComponent extends Component<
     this.setHoveredItem(item)
   }
 
-  setHoveredItem = debounce(
-    (hoveredItem: VizItem) => this.setState({ hoveredItem }),
-    200
-  )
+  mounted = true
+  setHoveredItem = debounce((hoveredItem: VizItem) => {
+    if (this.mounted) {
+      this.setState({ hoveredItem })
+    }
+  }, 200)
 
   onItemSelect(selectedItem: VizItem): void {
     this.setState({ selectedItem })
   }
 
-  onGraphModelChange(stats: any) {
-    this.setState({ stats: stats })
+  onGraphModelChange(stats: GraphStats) {
+    this.setState({ stats })
     this.props.updateStyle(this.state.graphStyle.toSheet())
-  }
-
-  selectLabel(label: string, propertyKeys: string[]) {
-    this.setState({
-      selectedItem: {
-        type: 'legend-item',
-        item: {
-          selectedLabel: { label, propertyKeys }
-        }
-      }
-    })
-  }
-
-  selectRelType(relType: string, propertyKeys: string[]) {
-    this.setState({
-      selectedItem: {
-        type: 'legend-item',
-        item: {
-          selectedRelType: { relType, propertyKeys }
-        }
-      }
-    })
   }
 
   componentDidUpdate(prevProps: any) {
@@ -237,42 +216,51 @@ export class ExplorerComponent extends Component<
 
     return (
       <StyledFullSizeContainer id="svg-vis">
-        <StyledGraphAreaContainer>
-          <GraphComponent
-            fullscreen={this.props.fullscreen}
-            frameHeight={this.props.frameHeight}
-            relationships={this.state.relationships}
-            nodes={this.state.nodes}
-            getNodeNeighbours={this.getNodeNeighbours.bind(this)}
-            onItemMouseOver={this.onItemMouseOver.bind(this)}
-            onItemSelect={this.onItemSelect.bind(this)}
-            graphStyle={graphStyle}
-            styleVersion={this.state.styleVersion} // cheap way for child to check style updates
-            onGraphModelChange={this.onGraphModelChange.bind(this)}
-            assignVisElement={this.props.assignVisElement}
-            getAutoCompleteCallback={this.props.getAutoCompleteCallback}
-            setGraph={this.props.setGraph}
-            offset={this.state.width + 4}
-          />
-          <NodeInspectorPanel
-            frameHeight={this.props.frameHeight}
-            graphStyle={graphStyle}
-            hasTruncatedFields={this.props.hasTruncatedFields}
-            hoveredItem={this.state.hoveredItem}
-            selectLabel={this.selectLabel.bind(this)}
-            selectRelType={this.selectRelType.bind(this)}
-            selectedItem={this.state.selectedItem}
-            stats={this.state.stats}
-            width={this.state.width}
-            setWidth={width =>
-              this.setState({ width: Math.max(panelMinWidth, width) })
-            }
-          />
-        </StyledGraphAreaContainer>
+        <GraphComponent
+          fullscreen={this.props.fullscreen}
+          frameHeight={this.props.frameHeight}
+          relationships={this.state.relationships}
+          nodes={this.state.nodes}
+          getNodeNeighbours={this.getNodeNeighbours.bind(this)}
+          onItemMouseOver={this.onItemMouseOver.bind(this)}
+          onItemSelect={this.onItemSelect.bind(this)}
+          graphStyle={graphStyle}
+          styleVersion={this.state.styleVersion} // cheap way for child to check style updates
+          onGraphModelChange={this.onGraphModelChange.bind(this)}
+          assignVisElement={this.props.assignVisElement}
+          getAutoCompleteCallback={this.props.getAutoCompleteCallback}
+          setGraph={this.props.setGraph}
+          offset={
+            (this.state.nodePropertiesExpanded ? this.state.width : 0) + 4
+          }
+        />
+        <NodeInspectorPanel
+          frameHeight={this.props.frameHeight}
+          graphStyle={graphStyle}
+          hasTruncatedFields={this.props.hasTruncatedFields}
+          hoveredItem={this.state.hoveredItem}
+          selectedItem={this.state.selectedItem}
+          stats={this.state.stats}
+          width={this.state.width}
+          setWidth={(width: number) =>
+            this.setState({ width: Math.max(panelMinWidth, width) })
+          }
+          expanded={this.state.nodePropertiesExpanded}
+          toggleExpanded={() =>
+            this.setState(oldState => ({
+              nodePropertiesExpanded: !oldState.nodePropertiesExpanded
+            }))
+          }
+        />
       </StyledFullSizeContainer>
     )
   }
+
+  componentWillUnmount(): void {
+    this.mounted = false
+  }
 }
+
 export const Explorer = connect((state: GlobalState) => ({
   maxFieldItems: getMaxFieldItems(state)
 }))(ExplorerComponent)

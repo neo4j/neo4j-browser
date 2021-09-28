@@ -496,3 +496,6 @@ export function detectRuntimeEnv(win?: any, cloudDomains: string[] = []) {
 }
 
 export const isRunningE2ETest = (): boolean => !!window.Cypress
+
+export const upperFirst = (str: string): string =>
+  str[0].toUpperCase() + str.slice(1)
