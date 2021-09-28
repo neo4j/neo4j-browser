@@ -5,10 +5,10 @@ exports[`Visualization renders 1`] = `<div />`;
 exports[`Visualization renders with result and escapes any HTML 1`] = `
 <div>
   <div
-    class="sc-ibxdXY dmclze"
+    class="sc-eXEjpC jwZnC"
   >
     <div
-      class="sc-jzJRlG eUKzrM"
+      class="sc-fjdhpX eoghYa"
       id="svg-vis"
     >
       <div
@@ -82,29 +82,29 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
             </g>
           </svg>
           <div
-            class="sc-cSHVUG gAlWnv"
+            class="sc-jzJRlG bmXesP"
             offset="296.57142857142856"
           >
             <button
-              class="sc-kAzzGY hrkFIX zoom-in"
+              class="sc-cSHVUG knJUXC zoom-in"
             >
               <i
-                class="sc-jtggT cxJBDr sl-zoom-in"
+                class="sc-dEoRIm bBgzgJ sl-zoom-in"
                 style="font-size: 1em;"
               />
             </button>
             <button
-              class="sc-kAzzGY hrkFIX zoom-out"
+              class="sc-cSHVUG knJUXC zoom-out"
             >
               <i
-                class="sc-ebFjAB bAowKS sl-zoom-out"
+                class="sc-jtggT cxJBDr sl-zoom-out"
                 style="font-size: 1em;"
               />
             </button>
           </div>
         </div>
         <div
-          class="sc-kgoBCf erHcgW"
+          class="sc-chPdSV dqKwfO"
         >
           <i
             aria-hidden="true"
@@ -113,58 +113,48 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
           />
         </div>
         <div
-          class="sc-chPdSV eCUJJ"
+          class="sc-kAzzGY eLmCiI"
           width="292.57142857142856"
         >
           <div
             class="react-resizable"
           >
             <div
-              class="sc-kGXeez hacloy"
+              class="sc-kgoBCf gXcNGy"
             >
               <div
-                class="sc-dxgOiQ iqpiQp"
+                class="sc-kpOJdX gHYrZk"
               >
                 Displaying NaN nodes, 0 relationships.
               </div>
               <div
-                class="sc-ckVGcZ cYUlXz"
+                class="sc-dxgOiQ jyxzCx"
               >
                 Node labels
                 <ul
                   class="sc-bxivhb sc-iwsKbI bfwfdz"
                 >
                   <li
-                    class="sc-EHOje sc-gZMcBi chSRLy"
-                    data-testid="viz-legend-labels"
+                    class="sc-EHOje sc-bZQynM sc-gzVnrw FEGBq"
+                    style="background-color: rgb(247, 151, 103); color: rgb(255, 255, 255);"
                   >
-                    <li
-                      class="sc-EHOje sc-bZQynM sc-gzVnrw fjTalv"
-                      style="background-color: rgb(247, 151, 103); color: rgb(255, 255, 255);"
+                    *
+                    <span
+                      class="sc-dnqmqq fFydjc"
                     >
-                      *
-                      <span
-                        class="sc-dnqmqq fFydjc"
-                      >
-                        (1)
-                      </span>
-                    </li>
+                      (1)
+                    </span>
                   </li>
                   <li
-                    class="sc-EHOje sc-gZMcBi chSRLy"
-                    data-testid="viz-legend-labels"
+                    class="sc-EHOje sc-bZQynM sc-gzVnrw FEGBq"
+                    style="background-color: rgb(201, 144, 192); color: rgb(255, 255, 255);"
                   >
-                    <li
-                      class="sc-EHOje sc-bZQynM sc-gzVnrw fjTalv"
-                      style="background-color: rgb(201, 144, 192); color: rgb(255, 255, 255);"
+                    Person
+                    <span
+                      class="sc-dnqmqq fFydjc"
                     >
-                      Person
-                      <span
-                        class="sc-dnqmqq fFydjc"
-                      >
-                        (1)
-                      </span>
-                    </li>
+                      (1)
+                    </span>
                   </li>
                 </ul>
                 Relationship Types
