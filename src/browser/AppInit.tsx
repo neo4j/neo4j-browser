@@ -56,7 +56,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import {
   restoreSearchAndHashParams,
   wasRedirectedBackFromSSOServer
-} from 'shared/modules/auth/common'
+} from 'neo4j-client-sso'
 
 // Configure localstorage sync
 applyKeys(

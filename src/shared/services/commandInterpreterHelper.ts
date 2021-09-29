@@ -109,8 +109,8 @@ import {
 import { unescapeCypherIdentifier } from './utils'
 import { getLatestFromFrameStack } from 'browser/modules/Stream/stream.utils'
 import { resolveGuide } from './guideResolverHelper'
-import { AUTH_STORAGE_LOGS } from 'shared/modules/auth/constants'
 import { GuideChapter } from 'browser/documentation'
+import { AUTH_STORAGE_LOGS } from 'neo4j-client-sso'
 
 const PLAY_FRAME_TYPES = ['play', 'play-remote']
 

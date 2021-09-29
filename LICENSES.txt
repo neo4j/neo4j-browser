@@ -194,7 +194,7 @@ SOFTWARE.
 
 -----
 
-The following software may be included in this product: @firebase/auth, gaxios, gcp-metadata, google-auth-library, long. A copy of the source code may be downloaded from https://github.com/firebase/firebase-js-sdk.git (@firebase/auth), https://github.com/googleapis/gaxios.git (gaxios), https://github.com/googleapis/gcp-metadata.git (gcp-metadata), https://github.com/googleapis/google-auth-library-nodejs.git (google-auth-library), https://github.com/dcodeIO/long.js.git (long). This software contains the following license and notice below:
+The following software may be included in this product: @firebase/auth, gaxios, gcp-metadata, google-auth-library, long, neo4j-client-sso. A copy of the source code may be downloaded from https://github.com/firebase/firebase-js-sdk.git (@firebase/auth), https://github.com/googleapis/gaxios.git (gaxios), https://github.com/googleapis/gcp-metadata.git (gcp-metadata), https://github.com/googleapis/google-auth-library-nodejs.git (google-auth-library), https://github.com/dcodeIO/long.js.git (long), git+https://github.com/neo4j-devtools/neo4j-client-sso.git (neo4j-client-sso). This software contains the following license and notice below:
 
 Apache License
                            Version 2.0, January 2004
@@ -4872,7 +4872,7 @@ SOFTWARE.
 
 -----
 
-The following software may be included in this product: file-saver. A copy of the source code may be downloaded from git+https://github.com/eligrey/FileSaver.js.git. This software contains the following license and notice below:
+The following software may be included in this product: file-saver. A copy of the source code may be downloaded from https://github.com/eligrey/FileSaver.js. This software contains the following license and notice below:
 
 The MIT License
 
@@ -7206,7 +7206,7 @@ terms above.
 
 -----
 
-The following software may be included in this product: lodash.camelcase, lodash.once, lodash.uniq. A copy of the source code may be downloaded from https://github.com/lodash/lodash.git (lodash.camelcase), https://github.com/lodash/lodash.git (lodash.once), https://github.com/lodash/lodash.git (lodash.uniq). This software contains the following license and notice below:
+The following software may be included in this product: lodash.camelcase, lodash.once, lodash.pick, lodash.uniq. A copy of the source code may be downloaded from https://github.com/lodash/lodash.git (lodash.camelcase), https://github.com/lodash/lodash.git (lodash.once), https://github.com/lodash/lodash.git (lodash.pick), https://github.com/lodash/lodash.git (lodash.uniq). This software contains the following license and notice below:
 
 Copyright jQuery Foundation and other contributors <https://jquery.org/>
 
