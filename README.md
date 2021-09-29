@@ -48,7 +48,7 @@ So to run tests on your existing 4.2 database with the password "hunter2" withou
 
 All the available options for `--env` are:
 ```
-server=3.5|4.0|4.1|4.2 (default 3.5)
+server=3.5|4.0|4.1|4.2|4.3 (default 4.3)
 edition=enterprise|community|aura (default enterprise)
 browser-password=<your-pw> (default 'newpassword')
 include-import-tests=true|false (default false)
@@ -63,4 +63,4 @@ CYPRESS_E2E_TEST_ENV=local|null (if the initial set of pw should run or not) (de
 CYPRESS_BASE_URL=<url to reach the browser to test> (default http://localhost:8080)
 ```
 
-Example: `CYPRESS_E2E_TEST_ENV="local" CYPRESS_BASE_URL=http://localhost:30000 cypress open --env server=3.5`
+Example: `CYPRESS_E2E_TEST_ENV="local" CYPRESS_BASE_URL=http://localhost:30000 cypress open --env server=4.2`
