@@ -266,7 +266,7 @@ export const initialState = {
     'browser.remote_content_hostname_allowlist': 'guides.neo4j.com, localhost',
     'browser.retain_connection_credentials': false,
     'browser.retain_editor_history': false,
-    'clients.allow_telemetry': false
+    'clients.allow_telemetry': true
   }
 }
 

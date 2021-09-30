@@ -138,6 +138,8 @@ export const getUuid = (state: GlobalState): string =>
   state[NAME].uuid || initialState.uuid
 export const getAuraNtId = (state: GlobalState): string | undefined =>
   state[NAME].auraNtId
+export const getConsentBannerShownCount = (state: GlobalState): number =>
+  state[NAME].consentBannerShownCount || initialState.consentBannerShownCount
 export const allowUdcInAura = (
   state: GlobalState
 ): 'ALLOW' | 'DENY' | 'UNSET' => {
@@ -170,6 +172,7 @@ export interface udcState {
   cypher_fails: number
   pingTime: number
   auraNtId?: string
+  consentBannerShownCount: number
 }
 
 const initialState: udcState = {
@@ -181,7 +184,8 @@ const initialState: udcState = {
   pingTime: 0,
   lastSnapshot: 0,
   events: [],
-  auraNtId: undefined
+  auraNtId: undefined,
+  consentBannerShownCount: 0
 }
 
 type CleatEventsAction = { type: typeof CLEAR_EVENTS }

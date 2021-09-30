@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   DISCONNECTED_STATE,
   PENDING_STATE,
@@ -30,7 +30,10 @@ import {
   StyledMain,
   WarningBanner,
   ErrorBanner,
-  NotAuthedBanner
+  NotAuthedBanner,
+  UdcConsentBanner,
+  DismissConsentBanner,
+  UnderlineClickable
 } from './styled'
 import ErrorBoundary from 'browser-components/ErrorBoundary'
 import { useSlowConnectionState } from './main.hooks'
@@ -38,21 +41,37 @@ import AutoExecButton from '../Stream/auto-exec-button'
 
 const Main = React.memo(function Main(props: any) {
   const [past5Sec, past10Sec] = useSlowConnectionState(props)
-  const { databases, useDb } = props
+  const {
+    databases,
+    useDb,
+    showUdcConsentBanner,
+    incrementConsentBannerShownCount,
+    openSettingsDrawer
+  } = props
   const dbMeta = databases && databases.find((db: any) => db.name === useDb)
   const dbIsUnavailable = useDb && (!dbMeta || dbMeta.status !== 'online')
+  useEffect(() => {
+    showUdcConsentBanner && incrementConsentBannerShownCount()
+  }, [showUdcConsentBanner])
 
-  // TODO closeable, link to setttings
+  // todo link to settings
   return (
     <StyledMain data-testid="main">
       <ErrorBoundary>
         <Editor />
       </ErrorBoundary>
       {props.showUdcConsentBanner && (
-        <ErrorBanner>
-          To help make Neo4j Browser better we collect information on product
-          usage. Review your settings at any time.
-        </ErrorBanner>
+        <UdcConsentBanner>
+          <span>
+            To help make Neo4j Browser better we collect information on product
+            usage. Review your{' '}
+            <UnderlineClickable onClick={openSettingsDrawer}>
+              settings
+            </UnderlineClickable>{' '}
+            at any time.
+          </span>
+          <DismissConsentBanner onClick={props.dismissConsentBanner} />
+        </UdcConsentBanner>
       )}
       {dbIsUnavailable && (
         <ErrorBanner>

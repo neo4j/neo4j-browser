@@ -20,7 +20,6 @@
 
 import styled, { keyframes } from 'styled-components'
 import { StyledCodeBlock } from '../ClickToCode/styled'
-import { SyncSignInButton } from 'browser-components/buttons'
 
 const grow = (height: any) => {
   return keyframes`
@@ -64,6 +63,26 @@ export const WarningBanner = styled(Banner)`
 `
 export const NotAuthedBanner = styled(Banner)`
   background-color: ${props => props.theme.auth};
+`
+
+export const UdcConsentBanner = styled(Banner)`
+  background-color: ${props => props.theme.auth};
+  display: flex;
+  justify-content: space-between;
+`
+export const DismissConsentBanner = styled.span`
+  &:hover {
+    cursor: pointer;
+  }
+  &:after {
+    content: 'X';
+  }
+`
+export const UnderlineClickable = styled.span`
+  &:hover {
+    cursor: pointer;
+  }
+  text-decoration: underline;
 `
 
 export const StyledCodeBlockFrame = styled(StyledCodeBlock)`

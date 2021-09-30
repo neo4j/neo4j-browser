@@ -33,7 +33,7 @@ import {
   getAllowUserStats
 } from 'shared/modules/settings/settingsDuck'
 import { utilizeBrowserSync } from 'shared/modules/features/featuresDuck'
-import { getOpenDrawer } from 'shared/modules/sidebar/sidebarDuck'
+import { getOpenDrawer, open } from 'shared/modules/sidebar/sidebarDuck'
 import { getErrorMessage } from 'shared/modules/commands/commandsDuck'
 import {
   shouldAllowOutgoingConnections,
@@ -95,8 +95,10 @@ import {
 } from 'browser-components/desktop-api/desktop-api.handlers'
 import {
   allowUdcInAura,
+  getConsentBannerShownCount,
   METRICS_EVENT,
-  udcInit
+  udcInit,
+  updateUdcData
 } from 'shared/modules/udc/udcDuck'
 import { useKeyboardShortcuts } from './keyboardShortcuts'
 import PerformanceOverlay from './PerformanceOverlay'
@@ -259,11 +261,14 @@ class App extends React.Component<AppProps, AppState> {
       experimentalFeatures,
       handleNavClick,
       lastConnectionUpdate,
+      limitingFactorForTelemetry,
       loadExternalScripts,
       loadSync,
       setEnvironmentTheme,
       store,
       syncConsent,
+      consentBannerShownCount,
+      setConsentBannerShownCount,
       themeData,
       titleString,
       useDb
@@ -366,7 +371,19 @@ class App extends React.Component<AppProps, AppState> {
                         errorMessage={errorMessage}
                         useDb={useDb}
                         databases={databases}
-                        showBrowser
+                        showUdcConsentBanner={
+                          limitingFactorForTelemetry === 'BROWSER_SETTING' &&
+                          consentBannerShownCount <= 5
+                        }
+                        dismissConsentBanner={() =>
+                          setConsentBannerShownCount(6)
+                        }
+                        incrementConsentBannerShownCount={() =>
+                          setConsentBannerShownCount(
+                            consentBannerShownCount + 1
+                          )
+                        }
+                        openSettingsDrawer={this.props.openSettingsDrawer}
                       />
                     </StyledMainWrapper>
                   </StyledBody>
@@ -408,7 +425,8 @@ const mapStateToProps = (state: GlobalState) => {
     neo4jConfAllowsUdc:
       getAllowOutgoingConnections(state) && getClientsAllowTelemetry(state),
     browserAllowCrashReports: getAllowCrashReports(state),
-    browserAllowUserStats: getAllowUserStats(state)
+    browserAllowUserStats: getAllowUserStats(state),
+    consentBannerShownCount: getConsentBannerShownCount(state)
   }
 }
 
@@ -416,6 +434,12 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     handleNavClick: (id: any) => {
       dispatch(toggle(id))
+    },
+    setConsentBannerShownCount: (consentBannerShownCount: number) => {
+      dispatch(updateUdcData({ consentBannerShownCount }))
+    },
+    openSettingsDrawer: () => {
+      dispatch(open('settings'))
     }
   }
 }
