@@ -81,11 +81,7 @@ import { getMetadata, getUserAuthStatus } from 'shared/modules/sync/syncDuck'
 import ErrorBoundary from 'browser-components/ErrorBoundary'
 import { getExperimentalFeatures } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
 import FeatureToggleProvider from '../FeatureToggle/FeatureToggleProvider'
-import {
-  inDesktop,
-  inWebEnv,
-  URL_ARGUMENTS_CHANGE
-} from 'shared/modules/app/appDuck'
+import { inWebEnv, URL_ARGUMENTS_CHANGE } from 'shared/modules/app/appDuck'
 import useDerivedTheme from 'browser-hooks/useDerivedTheme'
 import FileDrop from 'browser-components/FileDrop/FileDrop'
 import DesktopApi from 'browser-components/desktop-api/desktop-api'
@@ -106,76 +102,13 @@ import { isRunningE2ETest } from 'services/utils'
 import { version } from 'project-root/package.json'
 import { GlobalState } from 'shared/globalState'
 import { Bus } from 'suber'
+import {
+  usedTelemetrySettingSource,
+  TelemetrySettingSource
+} from 'shared/utils/selectors'
 export const MAIN_WRAPPER_DOM_ID = 'MAIN_WRAPPER_DOM_ID'
 
 declare let SEGMENT_KEY: string
-
-export type LimitingFactor =
-  | 'AURA'
-  | 'BROWSER_SETTING'
-  | 'NEO4J_CONF'
-  | 'DESKTOP_SETTING'
-  | 'SETTINGS_NOT_LOADED'
-  | 'IN_CYPRESS'
-
-type TelemetrySettings = {
-  allowUserStats: boolean
-  allowCrashReporting: boolean
-}
-
-export function getLimitingFactorForTelemetry(
-  state: GlobalState
-): LimitingFactor {
-  if (isRunningE2ETest()) {
-    return 'IN_CYPRESS'
-  }
-
-  if (!isConnected(state) || !isServerConfigDone(state)) {
-    return 'SETTINGS_NOT_LOADED'
-  }
-
-  if (!getAllowOutgoingConnections(state) || !getClientsAllowTelemetry(state)) {
-    return 'NEO4J_CONF'
-  }
-
-  if (inDesktop(state)) {
-    return 'DESKTOP_SETTING'
-  }
-
-  if (isConnectedAuraHost(state) && allowUdcInAura(state) !== 'UNSET') {
-    return 'AURA'
-  }
-
-  return 'BROWSER_SETTING'
-}
-
-type AppProps = any
-
-function AppWithHooks(props: AppProps) {
-  const [derivedTheme, setEnvironmentTheme] = useDerivedTheme(
-    props.theme,
-    LIGHT_THEME
-  )
-  // @ts-expect-error ts-migrate(7053) FIXME: No index signature with a parameter of type 'strin... Remove this comment to see the full error message
-  const themeData = themes[derivedTheme] || themes[LIGHT_THEME]
-
-  // update cypher editor theme
-  useEffect(() => {
-    editor.setTheme(derivedTheme)
-  }, [derivedTheme])
-  return (
-    <App
-      themeData={themeData}
-      setEnvironmentTheme={setEnvironmentTheme}
-      {...props}
-    />
-  )
-}
-
-function KeyboardShortcuts({ bus }: { bus: Bus }) {
-  useKeyboardShortcuts(bus)
-  return null
-}
 
 type AppState = {
   desktopAllowsCrashReporting: boolean
@@ -183,7 +116,7 @@ type AppState = {
   desktopTrackingId?: string
 }
 
-class App extends React.Component<AppProps, AppState> {
+class App extends React.Component<any, AppState> {
   state: AppState = {
     desktopTrackingId: undefined,
     desktopAllowsCrashReporting: false,
@@ -191,12 +124,17 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   shouldSendMetricsData = () => {
-    const rules: Record<LimitingFactor, TelemetrySettings> = {
+    const rules: Record<
+      TelemetrySettingSource,
+      {
+        allowUserStats: boolean
+        allowCrashReporting: boolean
+      }
+    > = {
       SETTINGS_NOT_LOADED: {
         allowCrashReporting: false,
         allowUserStats: false
       },
-      IN_CYPRESS: { allowCrashReporting: false, allowUserStats: false },
       DESKTOP_SETTING: {
         allowCrashReporting: this.state.desktopAllowsCrashReporting,
         allowUserStats: this.state.desktopAllowsUserStats
@@ -215,7 +153,7 @@ class App extends React.Component<AppProps, AppState> {
       }
     }
 
-    return rules[this.props.limitingFactorForTelemetry as LimitingFactor]
+    return rules[this.props.telemetrySettingSource as TelemetrySettingSource]
   }
 
   eventMetricsCallback = (_: MetricsData) => {}
@@ -223,7 +161,7 @@ class App extends React.Component<AppProps, AppState> {
   unsub = () => {}
 
   eventHandler = ({ category, label, data: originalData }: MetricsData) => {
-    if (this.shouldSendMetricsData()) {
+    if (!isRunningE2ETest() && this.shouldSendMetricsData()) {
       const data = {
         browserVersion: version,
         ...originalData
@@ -254,6 +192,7 @@ class App extends React.Component<AppProps, AppState> {
       bus,
       codeFontLigatures,
       connectionState,
+      consentBannerShownCount,
       databases,
       defaultConnectionData,
       drawer,
@@ -261,14 +200,14 @@ class App extends React.Component<AppProps, AppState> {
       experimentalFeatures,
       handleNavClick,
       lastConnectionUpdate,
-      limitingFactorForTelemetry,
       loadExternalScripts,
       loadSync,
+      openSettingsDrawer,
+      setConsentBannerShownCount,
       setEnvironmentTheme,
       store,
       syncConsent,
-      consentBannerShownCount,
-      setConsentBannerShownCount,
+      telemetrySettingSource,
       themeData,
       titleString,
       useDb
@@ -372,7 +311,7 @@ class App extends React.Component<AppProps, AppState> {
                         useDb={useDb}
                         databases={databases}
                         showUdcConsentBanner={
-                          limitingFactorForTelemetry === 'BROWSER_SETTING' &&
+                          telemetrySettingSource === 'BROWSER_SETTING' &&
                           consentBannerShownCount <= 5
                         }
                         dismissConsentBanner={() =>
@@ -383,7 +322,7 @@ class App extends React.Component<AppProps, AppState> {
                             consentBannerShownCount + 1
                           )
                         }
-                        openSettingsDrawer={this.props.openSettingsDrawer}
+                        openSettingsDrawer={openSettingsDrawer}
                       />
                     </StyledMainWrapper>
                   </StyledBody>
@@ -395,6 +334,32 @@ class App extends React.Component<AppProps, AppState> {
       </ErrorBoundary>
     )
   }
+}
+
+function ThemeHookAppWrapper(props: any) {
+  const [derivedTheme, setEnvironmentTheme] = useDerivedTheme(
+    props.theme,
+    LIGHT_THEME
+  )
+  // @ts-expect-error ts-migrate(7053) FIXME: No index signature with a parameter of type 'strin... Remove this comment to see the full error message
+  const themeData = themes[derivedTheme] || themes[LIGHT_THEME]
+
+  // update cypher editor theme
+  useEffect(() => {
+    editor.setTheme(derivedTheme)
+  }, [derivedTheme])
+  return (
+    <App
+      themeData={themeData}
+      setEnvironmentTheme={setEnvironmentTheme}
+      {...props}
+    />
+  )
+}
+
+function KeyboardShortcuts({ bus }: { bus: Bus }) {
+  useKeyboardShortcuts(bus)
+  return null
 }
 
 const mapStateToProps = (state: GlobalState) => {
@@ -420,7 +385,7 @@ const mapStateToProps = (state: GlobalState) => {
     isWebEnv: inWebEnv(state),
     useDb: getUseDb(state),
     databases: getDatabases(state),
-    limitingFactorForTelemetry: getLimitingFactorForTelemetry(state),
+    telemetrySettingSource: usedTelemetrySettingSource(state),
     auraAllowsUdc: allowUdcInAura(state) === 'ALLOW',
     neo4jConfAllowsUdc:
       getAllowOutgoingConnections(state) && getClientsAllowTelemetry(state),
@@ -445,5 +410,5 @@ const mapDispatchToProps = (dispatch: any) => {
 }
 
 export default withBus(
-  connect(mapStateToProps, mapDispatchToProps)(AppWithHooks)
+  connect(mapStateToProps, mapDispatchToProps)(ThemeHookAppWrapper)
 )

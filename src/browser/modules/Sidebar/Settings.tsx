@@ -42,7 +42,10 @@ import {
   disableExperimentalFeature
 } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
 import FeatureToggle from 'browser/modules/FeatureToggle/FeatureToggle'
-import { getLimitingFactorForTelemetry, LimitingFactor } from '../App/App'
+import {
+  usedTelemetrySettingSource,
+  TelemetrySettingSource
+} from 'shared/utils/selectors'
 
 const visualSettings = [
   {
@@ -158,8 +161,10 @@ const visualSettings = [
   }
 ]
 
-function getTelemetryVisualSetting(limitingFactor: LimitingFactor) {
-  const settingsByFactor: Record<LimitingFactor, any> = {
+function getTelemetryVisualSetting(
+  telemetrySettingSource: TelemetrySettingSource
+) {
+  const settingsByFactor: Record<TelemetrySettingSource, any> = {
     SETTINGS_NOT_LOADED: [
       {
         allowUserStats: {
@@ -197,7 +202,6 @@ function getTelemetryVisualSetting(limitingFactor: LimitingFactor) {
         }
       }
     ],
-    IN_CYPRESS: [],
     BROWSER_SETTING: [
       {
         allowUserStats: {
@@ -219,7 +223,7 @@ function getTelemetryVisualSetting(limitingFactor: LimitingFactor) {
   }
 
   const title = 'Product Analytics'
-  const settings = settingsByFactor[limitingFactor]
+  const settings = settingsByFactor[telemetrySettingSource]
   return { title, settings }
 }
 
@@ -229,12 +233,12 @@ export const Settings = ({
   experimentalFeatures = {},
   onSettingsSave = () => {},
   onFeatureChange,
-  limitingFactor
+  telemetrySettingSource
 }: any) => {
   if (!settings) return null
 
   const mappedSettings = visualSettings
-    .concat([getTelemetryVisualSetting(limitingFactor)])
+    .concat([getTelemetryVisualSetting(telemetrySettingSource)])
     .map((visualSetting: any) => {
       const title = <DrawerSubHeader>{visualSetting.title}</DrawerSubHeader>
       const mapSettings = visualSetting.settings
@@ -373,7 +377,7 @@ const mapStateToProps = (state: any) => {
     experimentalFeatures: getExperimentalFeatures(state),
     settings: state.settings,
     visualSettings,
-    limitingFactor: getLimitingFactorForTelemetry(state)
+    telemetrySettingSource: usedTelemetrySettingSource(state)
   }
 }
 
