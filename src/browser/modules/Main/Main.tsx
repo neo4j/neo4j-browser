@@ -26,7 +26,6 @@ import {
 import Editor from '../Editor/MainEditor'
 import Stream from '../Stream/Stream'
 
-// todo start a src/utils/selectors.ts
 import {
   StyledMain,
   WarningBanner,
@@ -43,11 +42,18 @@ const Main = React.memo(function Main(props: any) {
   const dbMeta = databases && databases.find((db: any) => db.name === useDb)
   const dbIsUnavailable = useDb && (!dbMeta || dbMeta.status !== 'online')
 
+  // TODO closeable, link to setttings
   return (
     <StyledMain data-testid="main">
       <ErrorBoundary>
         <Editor />
       </ErrorBoundary>
+      {props.showUdcConsentBanner && (
+        <ErrorBanner>
+          To help make Neo4j Browser better we collect information on product
+          usage. Review your settings at any time.
+        </ErrorBanner>
+      )}
       {dbIsUnavailable && (
         <ErrorBanner>
           Database '{useDb}' is unavailable. Run{' '}

@@ -42,6 +42,7 @@ import {
   disableExperimentalFeature
 } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
 import FeatureToggle from 'browser/modules/FeatureToggle/FeatureToggle'
+import { getLimitingFactorForTelemetry, LimitingFactor } from '../App/App'
 
 const visualSettings = [
   {
@@ -154,111 +155,167 @@ const visualSettings = [
         }
       }
     ]
-  },
-  {
-    title: 'ucd',
-    settings: [
+  }
+]
+
+function getTelemetryVisualSetting(limitingFactor: LimitingFactor) {
+  const settingsByFactor: Record<LimitingFactor, any> = {
+    SETTINGS_NOT_LOADED: [
       {
         allowUserStats: {
-          displayName: 'allow user stats',
+          displayName: 'Product usage',
           tooltip:
-            'Limit number of nodes displayed on first load of the graph visualization.',
+            'Product usage analytics is disabled before database connection is fully established',
+          type: 'info'
+        }
+      }
+    ],
+    DESKTOP_SETTING: [
+      {
+        allowUserStats: {
+          displayName: 'Product usage',
+          tooltip: 'Configured in Desktop Settings',
+          type: 'info'
+        }
+      }
+    ],
+    NEO4J_CONF: [
+      {
+        allowUserStats: {
+          displayName: 'Product usage',
+          tooltip: 'Configured in neo4j.conf via clients.allow_telemetry',
+          type: 'info'
+        }
+      }
+    ],
+    AURA: [
+      {
+        allowUserStats: {
+          displayName: 'Product usage',
+          tooltip: 'Configured by Aura Console',
+          type: 'info'
+        }
+      }
+    ],
+    IN_CYPRESS: [],
+    BROWSER_SETTING: [
+      {
+        allowUserStats: {
+          displayName: 'Product usage',
+          tooltip:
+            'This data helps us prioritise features and improvements. No personal infromation is collected or sent.',
           type: 'checkbox'
         }
       },
       {
         allowCrashReports: {
-          displayName: 'allow not crash',
+          displayName: 'Crash reports',
           tooltip:
-            'If this is checked, after a cypher query result is retrieved, a second query is executed to fetch relationships between result nodes.',
+            'Crash reports allow us to quickly diagnose and fix problems. No personal information is collected or sent.',
           type: 'checkbox'
         }
       }
     ]
   }
-]
+
+  const title = 'Product Analytics'
+  const settings = settingsByFactor[limitingFactor]
+  return { title, settings }
+}
 
 export const Settings = ({
   settings,
   visualSettings,
   experimentalFeatures = {},
   onSettingsSave = () => {},
-  onFeatureChange
+  onFeatureChange,
+  limitingFactor
 }: any) => {
   if (!settings) return null
-  const mappedSettings = visualSettings.map((visualSetting: any) => {
-    const title = <DrawerSubHeader>{visualSetting.title}</DrawerSubHeader>
-    const mapSettings = visualSetting.settings
-      // @ts-expect-error ts-migrate(7030) FIXME: Not all code paths return a value.
-      .map((settingObj: any) => {
-        const setting = Object.keys(settingObj)[0]
-        if (typeof settings[setting] === 'undefined') return null
-        const visual = settingObj[setting].displayName
-        const tooltip = settingObj[setting].tooltip || ''
-        const type = settingObj[setting].type || 'input'
 
-        if (type === 'input') {
-          return (
-            <StyledSetting key={toKeyString(visual)}>
-              <StyledSettingLabel title={tooltip}>
-                {visual}
-                <StyledSettingTextInput
+  const mappedSettings = visualSettings
+    .concat([getTelemetryVisualSetting(limitingFactor)])
+    .map((visualSetting: any) => {
+      const title = <DrawerSubHeader>{visualSetting.title}</DrawerSubHeader>
+      const mapSettings = visualSetting.settings
+        .map((settingObj: any) => {
+          const setting = Object.keys(settingObj)[0]
+          if (typeof settings[setting] === 'undefined') return null
+          const visual = settingObj[setting].displayName
+          const tooltip = settingObj[setting].tooltip || ''
+          const type = settingObj[setting].type || 'input'
+
+          if (type === 'input') {
+            return (
+              <StyledSetting key={toKeyString(visual)}>
+                <StyledSettingLabel title={tooltip}>
+                  {visual}
+                  <StyledSettingTextInput
+                    onChange={(event: any) => {
+                      settings[setting] = event.target.value
+                      onSettingsSave(settings)
+                    }}
+                    defaultValue={settings[setting]}
+                    title={tooltip}
+                    className={setting}
+                  />
+                </StyledSettingLabel>
+              </StyledSetting>
+            )
+          }
+
+          if (type === 'radio') {
+            return (
+              <StyledSetting key={toKeyString(visual)}>
+                <StyledSettingLabel title={tooltip}>
+                  {visual}
+                </StyledSettingLabel>
+                <RadioSelector
+                  options={settingObj[setting].options}
                   onChange={(event: any) => {
                     settings[setting] = event.target.value
                     onSettingsSave(settings)
                   }}
-                  defaultValue={settings[setting]}
-                  title={tooltip}
-                  className={setting}
+                  selectedValue={settings[setting]}
                 />
-              </StyledSettingLabel>
-            </StyledSetting>
-          )
-        }
+              </StyledSetting>
+            )
+          }
 
-        if (type === 'radio') {
-          return (
-            <StyledSetting key={toKeyString(visual)}>
-              <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
-              <RadioSelector
-                options={settingObj[setting].options}
-                onChange={(event: any) => {
-                  settings[setting] = event.target.value
-                  onSettingsSave(settings)
-                }}
-                selectedValue={settings[setting]}
-              />
-            </StyledSetting>
-          )
-        }
+          if (type === 'checkbox') {
+            return (
+              <StyledSetting key={toKeyString(visual)}>
+                <StyledSettingLabel title={tooltip}>
+                  <CheckboxSelector
+                    onChange={(event: any) => {
+                      settings[setting] = event.target.checked
+                      onSettingsSave(settings)
+                    }}
+                    checked={settings[setting]}
+                    data-testid={setting}
+                  />
+                  {visual}
+                </StyledSettingLabel>
+              </StyledSetting>
+            )
+          }
 
-        if (type === 'checkbox') {
-          return (
-            <StyledSetting key={toKeyString(visual)}>
-              <StyledSettingLabel title={tooltip}>
-                <CheckboxSelector
-                  onChange={(event: any) => {
-                    settings[setting] = event.target.checked
-                    onSettingsSave(settings)
-                  }}
-                  checked={settings[setting]}
-                  data-testid={setting}
-                />
-                {visual}
-              </StyledSettingLabel>
-            </StyledSetting>
-          )
-        }
-      })
-      .filter((setting: any) => setting !== null)
+          if (type === 'info') {
+            return (
+              <StyledSetting key={toKeyString(visual)}>{tooltip}</StyledSetting>
+            )
+          }
+          return null
+        })
+        .filter((setting: any) => setting !== null)
 
-    return (
-      <React.Fragment key={toKeyString(visualSetting.title)}>
-        {title}
-        {mapSettings}
-      </React.Fragment>
-    )
-  })
+      return (
+        <React.Fragment key={toKeyString(visualSetting.title)}>
+          {title}
+          {mapSettings}
+        </React.Fragment>
+      )
+    })
 
   const mappedExperimentalFeatures = Object.keys(experimentalFeatures)
     .map(key => {
@@ -315,7 +372,8 @@ const mapStateToProps = (state: any) => {
   return {
     experimentalFeatures: getExperimentalFeatures(state),
     settings: state.settings,
-    visualSettings
+    visualSettings,
+    limitingFactor: getLimitingFactorForTelemetry(state)
   }
 }
 

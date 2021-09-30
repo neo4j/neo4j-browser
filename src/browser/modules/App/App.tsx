@@ -88,9 +88,7 @@ import {
 } from 'shared/modules/app/appDuck'
 import useDerivedTheme from 'browser-hooks/useDerivedTheme'
 import FileDrop from 'browser-components/FileDrop/FileDrop'
-import DesktopApi, {
-  INTEGRATION_POINT
-} from 'browser-components/desktop-api/desktop-api'
+import DesktopApi from 'browser-components/desktop-api/desktop-api'
 import {
   buildConnectionCreds,
   getDesktopTheme
@@ -110,7 +108,7 @@ export const MAIN_WRAPPER_DOM_ID = 'MAIN_WRAPPER_DOM_ID'
 
 declare let SEGMENT_KEY: string
 
-type LimitingFactor =
+export type LimitingFactor =
   | 'AURA'
   | 'BROWSER_SETTING'
   | 'NEO4J_CONF'
@@ -123,7 +121,9 @@ type TelemetrySettings = {
   allowCrashReporting: boolean
 }
 
-function getLimitingFactorForTelemetry(state: GlobalState): LimitingFactor {
+export function getLimitingFactorForTelemetry(
+  state: GlobalState
+): LimitingFactor {
   if (isRunningE2ETest()) {
     return 'IN_CYPRESS'
   }
@@ -366,6 +366,7 @@ class App extends React.Component<AppProps, AppState> {
                         errorMessage={errorMessage}
                         useDb={useDb}
                         databases={databases}
+                        showBrowser
                       />
                     </StyledMainWrapper>
                   </StyledBody>
