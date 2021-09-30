@@ -203,7 +203,7 @@ function getTelemetryVisualSetting(limitingFactor: LimitingFactor) {
         allowUserStats: {
           displayName: 'Product usage',
           tooltip:
-            'This data helps us prioritise features and improvements. No personal infromation is collected or sent.',
+            'This data helps us prioritise features and improvements. No personal information is collected or sent.',
           type: 'checkbox'
         }
       },

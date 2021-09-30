@@ -54,7 +54,6 @@ const Main = React.memo(function Main(props: any) {
     showUdcConsentBanner && incrementConsentBannerShownCount()
   }, [showUdcConsentBanner])
 
-  // todo link to settings
   return (
     <StyledMain data-testid="main">
       <ErrorBoundary>

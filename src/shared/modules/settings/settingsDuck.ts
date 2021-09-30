@@ -28,12 +28,6 @@ export const REPLACE = 'settings/REPLACE'
 export const DISABLE_IMPLICIT_INIT_COMMANDS =
   'settings/DISABLE_IMPLICIT_INIT_COMMANDS'
 
-export type Theme =
-  | typeof AUTO_THEME
-  | typeof LIGHT_THEME
-  | typeof OUTLINE_THEME
-  | typeof DARK_THEME
-
 export const AUTO_THEME = 'auto'
 export const LIGHT_THEME = 'normal'
 export const OUTLINE_THEME = 'outline'

@@ -139,7 +139,7 @@ const slides = [
   <BuiltInGuideSidebarSlide key="s5">
     <h3>Sidebar: Database</h3>
     <p className="lead">
-      <em>Database infromation</em>
+      <em>Database information</em>
     </p>
     When Neo4j is installed, it is initiated with two databases – a{' '}
     <code>system</code> database and a default <code>neo4j</code> database.
