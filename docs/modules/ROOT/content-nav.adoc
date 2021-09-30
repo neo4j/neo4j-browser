@@ -11,8 +11,6 @@
 ** xref:deployment-modes.adoc#aura[Neo4j Aura]
 ** xref:deployment-modes.adoc#web-server[Dedicated web server]
 
-* xref:browser-sso.adoc[]
-
 * xref:visual-tour.adoc[Visual tour]
 ** xref:visual-tour.adoc#overview[Overview]
 ** xref:visual-tour.adoc#sidebar[Sidebar]
@@ -28,6 +26,7 @@
 * xref:operations.adoc[Browser operations]
 ** xref:operations.adoc#dbms-connection[Connect to a Neo4j DBMS]
 ** xref:operations.adoc#security-browser[Browser credentials handling]
+** xref:operations.adoc#browser-sso[Browser Single Sign-On]
 ** xref:operations.adoc#adjust-settings[Adjust Browser settings]
 ** xref:operations.adoc#start-browser[Start with Browser]
 ** xref:operations.adoc#results[Visualize results]
