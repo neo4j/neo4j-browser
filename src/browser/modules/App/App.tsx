@@ -38,7 +38,6 @@ import { getErrorMessage } from 'shared/modules/commands/commandsDuck'
 import {
   shouldAllowOutgoingConnections,
   getDatabases,
-  isServerConfigDone,
   getClientsAllowTelemetry,
   getAllowOutgoingConnections
 } from 'shared/modules/dbMeta/dbMetaDuck'
@@ -53,8 +52,7 @@ import {
   SWITCH_CONNECTION_FAILED,
   SWITCH_CONNECTION,
   SILENT_DISCONNECT,
-  getUseDb,
-  isConnectedAuraHost
+  getUseDb
 } from 'shared/modules/connections/connectionsDuck'
 import { toggle } from 'shared/modules/sidebar/sidebarDuck'
 import {
@@ -116,7 +114,7 @@ type AppState = {
   desktopTrackingId?: string
 }
 
-class App extends React.Component<any, AppState> {
+export class App extends React.Component<any, AppState> {
   state: AppState = {
     desktopTrackingId: undefined,
     desktopAllowsCrashReporting: false,

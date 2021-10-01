@@ -40,7 +40,11 @@ test('Settings renders with strange characters in display name', () => {
 
   // When
   const { container } = render(
-    <Settings settings={settings} visualSettings={visualSettings} />
+    <Settings
+      settings={settings}
+      visualSettings={visualSettings}
+      telemetrySettingSource="BROWSER_SETTING"
+    />
   )
 
   // Then

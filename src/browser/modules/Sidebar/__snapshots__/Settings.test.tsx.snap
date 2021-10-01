@@ -40,6 +40,11 @@ exports[`Settings renders with strange characters in display name 1`] = `
               />
             </label>
           </div>
+          <h5
+            class="sc-bxivhb jqgGlu"
+          >
+            Product Analytics
+          </h5>
         </div>
         <div
           class="sc-EHOje fyzZhj"

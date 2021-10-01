@@ -24,6 +24,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import configureMockStore from 'redux-mock-store'
+import { normal } from 'browser/styles/themes'
 import { App } from './App'
 
 const mockStore = configureMockStore()
@@ -45,7 +46,9 @@ describe('App', () => {
   test('App loads', async () => {
     // Given
     const props = {
-      store
+      store,
+      themeData: normal,
+      setEnvironmentTheme: () => undefined
     }
 
     // When
