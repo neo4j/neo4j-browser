@@ -5,9 +5,9 @@ import {
   isConnectedAuraHost
 } from 'shared/modules/connections/connectionsDuck'
 import {
-  getAllowOutgoingConnections,
   getClientsAllowTelemetry,
-  isServerConfigDone
+  isServerConfigDone,
+  shouldAllowOutgoingConnections
 } from 'shared/modules/dbMeta/dbMetaDuck'
 import { allowUdcInAura } from 'shared/modules/udc/udcDuck'
 
@@ -25,7 +25,10 @@ export function usedTelemetrySettingSource(
     return 'SETTINGS_NOT_LOADED'
   }
 
-  if (!getAllowOutgoingConnections(state) || !getClientsAllowTelemetry(state)) {
+  if (
+    !shouldAllowOutgoingConnections(state) ||
+    !getClientsAllowTelemetry(state)
+  ) {
     return 'NEO4J_CONF'
   }
 
