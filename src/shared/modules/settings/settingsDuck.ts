@@ -27,6 +27,9 @@ export const UPDATE = 'settings/UPDATE'
 export const REPLACE = 'settings/REPLACE'
 export const DISABLE_IMPLICIT_INIT_COMMANDS =
   'settings/DISABLE_IMPLICIT_INIT_COMMANDS'
+export const TRACK_OPT_OUT_USER_STATS = 'settings/TRACK_OPT_OUT_USER_STATS'
+export const TRACK_OPT_OUT_CRASH_REPORTS =
+  'settings/TRACK_OPT_OUT_CRASH_REPORTS'
 
 export const AUTO_THEME = 'auto'
 export const LIGHT_THEME = 'normal'
@@ -84,9 +87,9 @@ export const getConnectionTimeout = (state: any) =>
   state[NAME].connectionTimeout || initialState.connectionTimeout
 export const codeFontLigatures = (state: any) => state[NAME].codeFontLigatures
 export const getAllowCrashReports = (state: GlobalState): boolean =>
-  state[NAME].allowCrashReports || initialState.allowCrashReports
+  state[NAME].allowCrashReports ?? initialState.allowCrashReports
 export const getAllowUserStats = (state: GlobalState): boolean =>
-  state[NAME].allowUserStats || initialState.allowUserStats
+  state[NAME].allowUserStats ?? initialState.allowUserStats
 
 export const initialState = {
   maxHistory: 30,

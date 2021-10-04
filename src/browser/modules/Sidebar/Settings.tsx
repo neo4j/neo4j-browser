@@ -161,9 +161,15 @@ const visualSettings = [
   }
 ]
 
-function getTelemetryVisualSetting(
+function getTelemetryVisualSetting({
+  telemetrySettingSource,
+  trackEnabledCrashReports,
+  trackEnabledUserStats
+}: {
   telemetrySettingSource: TelemetrySettingSource
-) {
+  trackEnabledCrashReports: () => void
+  trackEnabledUserStats: () => void
+}) {
   const settingsByFactor: Record<TelemetrySettingSource, any> = {
     SETTINGS_NOT_LOADED: [
       {
@@ -204,19 +210,21 @@ function getTelemetryVisualSetting(
     ],
     BROWSER_SETTING: [
       {
-        allowUserStats: {
-          displayName: 'Product usage',
-          tooltip:
-            'This data helps us prioritise features and improvements. No personal information is collected or sent.',
-          type: 'checkbox'
-        }
-      },
-      {
         allowCrashReports: {
           displayName: 'Crash reports',
           tooltip:
             'Crash reports allow us to quickly diagnose and fix problems. No personal information is collected or sent.',
-          type: 'checkbox'
+          type: 'checkbox',
+          onChange: trackEnabledCrashReports
+        }
+      },
+      {
+        allowUserStats: {
+          displayName: 'Product usage',
+          tooltip:
+            'This data helps us prioritise features and improvements. No personal information is collected or sent.',
+          type: 'checkbox',
+          onChange: trackEnabledUserStats
         }
       }
     ]
@@ -233,12 +241,20 @@ export const Settings = ({
   experimentalFeatures = {},
   onSettingsSave = () => {},
   onFeatureChange,
-  telemetrySettingSource
+  telemetrySettingSource,
+  trackEnabledCrashReports,
+  trackEnabledUserStats
 }: any) => {
   if (!settings) return null
 
   const mappedSettings = visualSettings
-    .concat([getTelemetryVisualSetting(telemetrySettingSource)])
+    .concat([
+      getTelemetryVisualSetting({
+        telemetrySettingSource,
+        trackEnabledCrashReports,
+        trackEnabledUserStats
+      })
+    ])
     .map((visualSetting: any) => {
       const title = <DrawerSubHeader>{visualSetting.title}</DrawerSubHeader>
       const mapSettings = visualSetting.settings
@@ -248,6 +264,14 @@ export const Settings = ({
           const visual = settingObj[setting].displayName
           const tooltip = settingObj[setting].tooltip || ''
           const type = settingObj[setting].type || 'input'
+          const onSettingChange = settingObj[setting].onChange
+
+          const formChangeHandler = (event: any) => {
+            const newValue = event.target.value
+            settings[setting] = newValue
+            onSettingChange && onSettingChange(newValue)
+            onSettingsSave(settings)
+          }
 
           if (type === 'input') {
             return (
@@ -256,7 +280,9 @@ export const Settings = ({
                   {visual}
                   <StyledSettingTextInput
                     onChange={(event: any) => {
-                      settings[setting] = event.target.value
+                      const newValue = event.target.value
+                      settings[setting] = newValue
+                      onSettingChange && onSettingChange(newValue)
                       onSettingsSave(settings)
                     }}
                     defaultValue={settings[setting]}
@@ -277,7 +303,9 @@ export const Settings = ({
                 <RadioSelector
                   options={settingObj[setting].options}
                   onChange={(event: any) => {
-                    settings[setting] = event.target.value
+                    const newValue = event.target.value
+                    settings[setting] = newValue
+                    onSettingChange && onSettingChange(newValue)
                     onSettingsSave(settings)
                   }}
                   selectedValue={settings[setting]}
@@ -292,7 +320,9 @@ export const Settings = ({
                 <StyledSettingLabel title={tooltip}>
                   <CheckboxSelector
                     onChange={(event: any) => {
-                      settings[setting] = event.target.checked
+                      const newValue = event.target.checked
+                      settings[setting] = newValue
+                      onSettingChange && onSettingChange(newValue)
                       onSettingsSave(settings)
                     }}
                     checked={settings[setting]}
@@ -385,6 +415,12 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     onSettingsSave: (settings: any) => {
       dispatch(actions.update(settings))
+    },
+    trackEnabledCrashReports() {
+      dispatch({ type: actions.TRACK_OPT_OUT_CRASH_REPORTS })
+    },
+    trackEnabledUserStats: () => {
+      dispatch({ type: actions.TRACK_OPT_OUT_USER_STATS })
     },
     onFeatureChange: (name: any, on: any) => {
       if (on) {
