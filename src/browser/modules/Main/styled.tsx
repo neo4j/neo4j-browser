@@ -75,7 +75,8 @@ export const DismissConsentBanner = styled.span`
     cursor: pointer;
   }
   &:after {
-    content: 'X';
+    content: '\00D7';
+    font-size: 1.4rem;
   }
 `
 export const UnderlineClickable = styled.span`
