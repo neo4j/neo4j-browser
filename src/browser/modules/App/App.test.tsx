@@ -18,13 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global jest, test, expect */
 /* eslint-disable react/display-name */
 
 import React from 'react'
 import { render } from '@testing-library/react'
 import configureMockStore from 'redux-mock-store'
-import { normal } from 'browser/styles/themes'
 import { App } from './App'
 
 const mockStore = configureMockStore()
@@ -47,8 +45,11 @@ describe('App', () => {
     // Given
     const props = {
       store,
-      themeData: normal,
-      setEnvironmentTheme: () => undefined
+      telemetrySettings: {
+        allowUserStats: false,
+        allowCrashReporting: false,
+        source: 'BROWSER_SETTING'
+      }
     }
 
     // When

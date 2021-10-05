@@ -5,11 +5,20 @@ import {
   isConnectedAuraHost
 } from 'shared/modules/connections/connectionsDuck'
 import {
+  getAllowOutgoingConnections,
   getClientsAllowTelemetry,
   isServerConfigDone,
   shouldAllowOutgoingConnections
 } from 'shared/modules/dbMeta/dbMetaDuck'
-import { allowUdcInAura } from 'shared/modules/udc/udcDuck'
+import {
+  getAllowCrashReports,
+  getAllowUserStats
+} from 'shared/modules/settings/settingsDuck'
+import {
+  allowUdcInAura,
+  getAllowCrashReportsInDesktop,
+  getAllowUserStatsInDesktop
+} from 'shared/modules/udc/udcDuck'
 
 export type TelemetrySettingSource =
   | 'AURA'
@@ -18,7 +27,7 @@ export type TelemetrySettingSource =
   | 'DESKTOP_SETTING'
   | 'SETTINGS_NOT_LOADED'
 
-export function usedTelemetrySettingSource(
+function usedTelemetrySettingSource(
   state: GlobalState
 ): TelemetrySettingSource {
   if (!isConnected(state) || !isServerConfigDone(state)) {
@@ -41,4 +50,47 @@ export function usedTelemetrySettingSource(
   }
 
   return 'BROWSER_SETTING'
+}
+
+export type TelemetrySettings = {
+  allowUserStats: boolean
+  allowCrashReporting: boolean
+  source: TelemetrySettingSource
+}
+export const getTelemetrySettings = (state: GlobalState): TelemetrySettings => {
+  const source = usedTelemetrySettingSource(state)
+  const confAllowsUdc =
+    getAllowOutgoingConnections(state) && getClientsAllowTelemetry(state)
+  const auraAllowsUdc = allowUdcInAura(state) === 'ALLOW'
+
+  const rules: Record<
+    TelemetrySettingSource,
+    {
+      allowUserStats: boolean
+      allowCrashReporting: boolean
+    }
+  > = {
+    SETTINGS_NOT_LOADED: {
+      allowCrashReporting: false,
+      allowUserStats: false
+    },
+    DESKTOP_SETTING: {
+      allowCrashReporting: getAllowCrashReportsInDesktop(state),
+      allowUserStats: getAllowUserStatsInDesktop(state)
+    },
+    AURA: {
+      allowCrashReporting: auraAllowsUdc,
+      allowUserStats: auraAllowsUdc
+    },
+    BROWSER_SETTING: {
+      allowCrashReporting: getAllowCrashReports(state),
+      allowUserStats: getAllowUserStats(state)
+    },
+    NEO4J_CONF: {
+      allowCrashReporting: confAllowsUdc,
+      allowUserStats: confAllowsUdc
+    }
+  }
+
+  return { source, ...rules[source] }
 }

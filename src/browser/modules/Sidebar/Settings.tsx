@@ -43,9 +43,11 @@ import {
 } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
 import FeatureToggle from 'browser/modules/FeatureToggle/FeatureToggle'
 import {
-  usedTelemetrySettingSource,
+  TelemetrySettings,
+  getTelemetrySettings,
   TelemetrySettingSource
 } from 'shared/utils/selectors'
+import { GlobalState } from 'shared/globalState'
 
 const visualSettings = [
   {
@@ -162,13 +164,13 @@ const visualSettings = [
 ]
 
 function getTelemetryVisualSetting({
-  telemetrySettingSource,
-  trackEnabledCrashReports,
-  trackEnabledUserStats
+  telemetrySettings,
+  trackOptOutCrashReports,
+  trackOptOutUserStats
 }: {
-  telemetrySettingSource: TelemetrySettingSource
-  trackEnabledCrashReports: () => void
-  trackEnabledUserStats: () => void
+  telemetrySettings: TelemetrySettings
+  trackOptOutCrashReports: (optedIn: boolean) => void
+  trackOptOutUserStats: (optedIn: boolean) => void
 }) {
   const settingsByFactor: Record<TelemetrySettingSource, any> = {
     SETTINGS_NOT_LOADED: [
@@ -176,7 +178,7 @@ function getTelemetryVisualSetting({
         allowUserStats: {
           displayName: 'Product usage',
           tooltip:
-            'Product usage analytics is disabled before database connection is fully established',
+            'Product usage analytics is disabled before database connection is fully established.',
           type: 'info'
         }
       }
@@ -184,8 +186,12 @@ function getTelemetryVisualSetting({
     DESKTOP_SETTING: [
       {
         allowUserStats: {
-          displayName: 'Product usage',
-          tooltip: 'Configured in Desktop Settings',
+          displayName: 'Product Analytics',
+          tooltip: `Product Usage Statistics are ${
+            telemetrySettings.allowUserStats ? 'enabled' : 'disabled'
+          } and crash reports are ${
+            telemetrySettings.allowCrashReporting ? 'sent' : 'not sent'
+          }. These settings can be changed in desktop.`,
           type: 'info'
         }
       }
@@ -194,7 +200,9 @@ function getTelemetryVisualSetting({
       {
         allowUserStats: {
           displayName: 'Product usage',
-          tooltip: 'Configured in neo4j.conf via clients.allow_telemetry',
+          tooltip: `Your database is ${
+            telemetrySettings.allowUserStats ? '' : 'not '
+          }configured to send product analytics data by neo4j.conf.`,
           type: 'info'
         }
       }
@@ -203,7 +211,9 @@ function getTelemetryVisualSetting({
       {
         allowUserStats: {
           displayName: 'Product usage',
-          tooltip: 'Configured by Aura Console',
+          tooltip: `Your database is ${
+            telemetrySettings.allowUserStats ? '' : 'not '
+          }configured to send product analytics data by Aura.`,
           type: 'info'
         }
       }
@@ -215,7 +225,7 @@ function getTelemetryVisualSetting({
           tooltip:
             'Crash reports allow us to quickly diagnose and fix problems. No personal information is collected or sent.',
           type: 'checkbox',
-          onChange: trackEnabledCrashReports
+          onChange: trackOptOutCrashReports
         }
       },
       {
@@ -224,14 +234,14 @@ function getTelemetryVisualSetting({
           tooltip:
             'This data helps us prioritise features and improvements. No personal information is collected or sent.',
           type: 'checkbox',
-          onChange: trackEnabledUserStats
+          onChange: trackOptOutUserStats
         }
       }
     ]
   }
 
   const title = 'Product Analytics'
-  const settings = settingsByFactor[telemetrySettingSource]
+  const settings = settingsByFactor[telemetrySettings.source]
   return { title, settings }
 }
 
@@ -241,18 +251,18 @@ export const Settings = ({
   experimentalFeatures = {},
   onSettingsSave = () => {},
   onFeatureChange,
-  telemetrySettingSource,
-  trackEnabledCrashReports,
-  trackEnabledUserStats
+  telemetrySettings,
+  trackOptOutCrashReports,
+  trackOptOutUserStats
 }: any) => {
   if (!settings) return null
 
   const mappedSettings = visualSettings
     .concat([
       getTelemetryVisualSetting({
-        telemetrySettingSource,
-        trackEnabledCrashReports,
-        trackEnabledUserStats
+        telemetrySettings,
+        trackOptOutCrashReports,
+        trackOptOutUserStats
       })
     ])
     .map((visualSetting: any) => {
@@ -265,13 +275,6 @@ export const Settings = ({
           const tooltip = settingObj[setting].tooltip || ''
           const type = settingObj[setting].type || 'input'
           const onSettingChange = settingObj[setting].onChange
-
-          const formChangeHandler = (event: any) => {
-            const newValue = event.target.value
-            settings[setting] = newValue
-            onSettingChange && onSettingChange(newValue)
-            onSettingsSave(settings)
-          }
 
           if (type === 'input') {
             return (
@@ -402,12 +405,12 @@ export const Settings = ({
   )
 }
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: GlobalState) => {
   return {
     experimentalFeatures: getExperimentalFeatures(state),
     settings: state.settings,
     visualSettings,
-    telemetrySettingSource: usedTelemetrySettingSource(state)
+    telemetrySettings: getTelemetrySettings(state)
   }
 }
 
@@ -416,11 +419,15 @@ const mapDispatchToProps = (dispatch: any) => {
     onSettingsSave: (settings: any) => {
       dispatch(actions.update(settings))
     },
-    trackEnabledCrashReports() {
-      dispatch({ type: actions.TRACK_OPT_OUT_CRASH_REPORTS })
+    trackOptOutCrashReports(optedIn: boolean) {
+      if (!optedIn) {
+        dispatch({ type: actions.TRACK_OPT_OUT_CRASH_REPORTS })
+      }
     },
-    trackEnabledUserStats: () => {
-      dispatch({ type: actions.TRACK_OPT_OUT_USER_STATS })
+    trackOptOutUserStats: (optedIn: boolean) => {
+      if (!optedIn) {
+        dispatch({ type: actions.TRACK_OPT_OUT_USER_STATS })
+      }
     },
     onFeatureChange: (name: any, on: any) => {
       if (on) {

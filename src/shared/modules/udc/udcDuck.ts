@@ -140,6 +140,14 @@ export const getUuid = (state: GlobalState): string =>
   state[NAME].uuid || initialState.uuid
 export const getAuraNtId = (state: GlobalState): string | undefined =>
   state[NAME].auraNtId
+export const getDesktopTrackingId = (state: GlobalState): string | undefined =>
+  state[NAME].desktopTrackingId
+export const getAllowUserStatsInDesktop = (state: GlobalState): boolean =>
+  state[NAME].allowUserStatsInDesktop ?? initialState.allowUserStatsInDesktop
+export const getAllowCrashReportsInDesktop = (state: GlobalState): boolean =>
+  state[NAME].allowCrashReportsInDesktop ??
+  initialState.allowCrashReportsInDesktop
+
 export const getConsentBannerShownCount = (state: GlobalState): number =>
   state[NAME].consentBannerShownCount || initialState.consentBannerShownCount
 export const allowUdcInAura = (
@@ -175,6 +183,9 @@ export interface udcState {
   pingTime: number
   auraNtId?: string
   consentBannerShownCount: number
+  desktopTrackingId?: string
+  allowUserStatsInDesktop: boolean
+  allowCrashReportsInDesktop: boolean
 }
 
 const initialState: udcState = {
@@ -187,7 +198,10 @@ const initialState: udcState = {
   lastSnapshot: 0,
   events: [],
   auraNtId: undefined,
-  consentBannerShownCount: 0
+  consentBannerShownCount: 0,
+  desktopTrackingId: undefined,
+  allowUserStatsInDesktop: false,
+  allowCrashReportsInDesktop: false
 }
 
 type CleatEventsAction = { type: typeof CLEAR_EVENTS }

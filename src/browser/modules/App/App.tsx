@@ -19,7 +19,7 @@
  */
 
 import { editor } from 'monaco-editor'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { ThemeProvider } from 'styled-components'
@@ -28,18 +28,14 @@ import {
   getTheme,
   getBrowserSyncConfig,
   codeFontLigatures,
-  LIGHT_THEME,
-  getAllowCrashReports,
-  getAllowUserStats
+  LIGHT_THEME
 } from 'shared/modules/settings/settingsDuck'
 import { utilizeBrowserSync } from 'shared/modules/features/featuresDuck'
 import { getOpenDrawer, open } from 'shared/modules/sidebar/sidebarDuck'
 import { getErrorMessage } from 'shared/modules/commands/commandsDuck'
 import {
   shouldAllowOutgoingConnections,
-  getDatabases,
-  getClientsAllowTelemetry,
-  getAllowOutgoingConnections
+  getDatabases
 } from 'shared/modules/dbMeta/dbMetaDuck'
 import {
   getActiveConnection,
@@ -88,7 +84,6 @@ import {
   getDesktopTheme
 } from 'browser-components/desktop-api/desktop-api.handlers'
 import {
-  allowUdcInAura,
   getConsentBannerShownCount,
   METRICS_EVENT,
   udcInit,
@@ -99,242 +94,13 @@ import PerformanceOverlay from './PerformanceOverlay'
 import { isRunningE2ETest } from 'services/utils'
 import { version } from 'project-root/package.json'
 import { GlobalState } from 'shared/globalState'
-import { Bus } from 'suber'
-import {
-  usedTelemetrySettingSource,
-  TelemetrySettingSource
-} from 'shared/utils/selectors'
+import { getTelemetrySettings } from 'shared/utils/selectors'
+
 export const MAIN_WRAPPER_DOM_ID = 'MAIN_WRAPPER_DOM_ID'
 
 declare let SEGMENT_KEY: string
 
-type AppState = {
-  desktopAllowsCrashReporting: boolean
-  desktopAllowsUserStats: boolean
-  desktopTrackingId?: string
-}
-
-export class App extends React.Component<any, AppState> {
-  state: AppState = {
-    desktopTrackingId: undefined,
-    desktopAllowsCrashReporting: false,
-    desktopAllowsUserStats: false
-  }
-
-  shouldSendMetricsData = () => {
-    const rules: Record<
-      TelemetrySettingSource,
-      {
-        allowUserStats: boolean
-        allowCrashReporting: boolean
-      }
-    > = {
-      SETTINGS_NOT_LOADED: {
-        allowCrashReporting: false,
-        allowUserStats: false
-      },
-      DESKTOP_SETTING: {
-        allowCrashReporting: this.state.desktopAllowsCrashReporting,
-        allowUserStats: this.state.desktopAllowsUserStats
-      },
-      AURA: {
-        allowCrashReporting: this.props.allowUdcInAura,
-        allowUserStats: this.props.allowUdcInAura
-      },
-      BROWSER_SETTING: {
-        allowCrashReporting: this.props.browserAllowCrashReports,
-        allowUserStats: this.props.browserAllowUserStats
-      },
-      NEO4J_CONF: {
-        allowCrashReporting: this.props.neo4jConfAllowsUdc,
-        allowUserStats: this.props.neo4jConfAllowsUdc
-      }
-    }
-
-    return rules[this.props.telemetrySettingSource as TelemetrySettingSource]
-  }
-
-  eventMetricsCallback = (_: MetricsData) => {}
-  segmentTrackCallback = (_: MetricsData) => {}
-  unsub = () => {}
-
-  eventHandler = ({ category, label, data: originalData }: MetricsData) => {
-    if (!isRunningE2ETest() && this.shouldSendMetricsData()) {
-      const data = {
-        browserVersion: version,
-        ...originalData
-      }
-      this.eventMetricsCallback({ category, label, data })
-      this.segmentTrackCallback({ category, label, data })
-    }
-  }
-
-  componentDidMount() {
-    const { bus } = this.props
-    if (bus) {
-      this.unsub = bus.take(METRICS_EVENT, this.eventHandler)
-      const initAction = udcInit()
-      bus && bus.send(initAction.type, initAction)
-    }
-  }
-  componentWillUnmount() {
-    this.unsub && this.unsub()
-  }
-
-  render() {
-    const {
-      activeConnection,
-      browserSyncAuthStatus,
-      browserSyncConfig,
-      browserSyncMetadata,
-      bus,
-      codeFontLigatures,
-      connectionState,
-      consentBannerShownCount,
-      databases,
-      defaultConnectionData,
-      drawer,
-      errorMessage,
-      experimentalFeatures,
-      handleNavClick,
-      lastConnectionUpdate,
-      loadExternalScripts,
-      loadSync,
-      openSettingsDrawer,
-      setConsentBannerShownCount,
-      setEnvironmentTheme,
-      store,
-      syncConsent,
-      telemetrySettingSource,
-      themeData,
-      titleString,
-      useDb
-    } = this.props
-
-    const wrapperClassNames = codeFontLigatures ? '' : 'disable-font-ligatures'
-
-    return (
-      <ErrorBoundary>
-        <DesktopApi
-          onMount={(...args: any[]) => {
-            const { allowSendStats, allowSendReports, trackingId } = args[1]
-              ?.global?.settings || {
-              allowSendReports: false,
-              allowSendStats: false
-            }
-            this.setState({
-              desktopAllowsCrashReporting: allowSendReports,
-              desktopAllowsUserStats: allowSendStats,
-              desktopTrackingId: trackingId
-            })
-
-            buildConnectionCreds(...args, { defaultConnectionData })
-              .then(creds => bus.send(INJECTED_DISCOVERY, creds))
-              .catch(() => bus.send(INITIAL_SWITCH_CONNECTION_FAILED))
-            getDesktopTheme(...args)
-              .then(theme => setEnvironmentTheme(theme))
-              .catch(setEnvironmentTheme(null))
-          }}
-          onGraphActive={(...args: any[]) => {
-            buildConnectionCreds(...args, { defaultConnectionData })
-              .then(creds => bus.send(SWITCH_CONNECTION, creds))
-              .catch(() => bus.send(SWITCH_CONNECTION_FAILED))
-          }}
-          onGraphInactive={() => bus.send(SILENT_DISCONNECT)}
-          onColorSchemeUpdated={(...args: any[]) =>
-            getDesktopTheme(...args)
-              .then(theme => setEnvironmentTheme(theme))
-              .catch(setEnvironmentTheme(null))
-          }
-          onArgumentsChange={(argsString: any) => {
-            bus.send(URL_ARGUMENTS_CHANGE, { url: `?${argsString}` })
-          }}
-          onApplicationSettingsSaved={(...args: any[]) => {
-            const { allowSendStats, allowSendReports, trackingId } = args[1]
-              ?.global?.settings || {
-              allowSendReports: false,
-              allowSendStats: false
-            }
-            this.setState({
-              desktopAllowsCrashReporting: allowSendReports,
-              desktopAllowsUserStats: allowSendStats,
-              desktopTrackingId: trackingId
-            })
-          }}
-          setEventMetricsCallback={(fn: any) =>
-            (this.eventMetricsCallback = fn)
-          }
-        />
-        <PerformanceOverlay />
-        <ThemeProvider theme={themeData}>
-          <FeatureToggleProvider features={experimentalFeatures}>
-            <FileDrop store={store}>
-              <StyledWrapper className={wrapperClassNames}>
-                <DocTitle titleString={titleString} />
-                <KeyboardShortcuts bus={bus} />
-                <UserInteraction />
-                {loadExternalScripts && (
-                  <>
-                    <Intercom appID="lq70afwx" />
-                    <Segment
-                      segmentKey={SEGMENT_KEY}
-                      setTrackCallback={(fn: any) =>
-                        (this.segmentTrackCallback = fn)
-                      }
-                    />
-                    <CannyLoader />
-                  </>
-                )}
-                {syncConsent && loadExternalScripts && loadSync && (
-                  <BrowserSyncInit
-                    authStatus={browserSyncAuthStatus}
-                    authData={browserSyncMetadata}
-                    config={browserSyncConfig}
-                  />
-                )}
-                <StyledApp>
-                  <StyledBody>
-                    <ErrorBoundary>
-                      <Sidebar
-                        openDrawer={drawer}
-                        onNavClick={handleNavClick}
-                      />
-                    </ErrorBoundary>
-                    <StyledMainWrapper id={MAIN_WRAPPER_DOM_ID}>
-                      <Main
-                        activeConnection={activeConnection}
-                        connectionState={connectionState}
-                        lastConnectionUpdate={lastConnectionUpdate}
-                        errorMessage={errorMessage}
-                        useDb={useDb}
-                        databases={databases}
-                        showUdcConsentBanner={
-                          telemetrySettingSource === 'BROWSER_SETTING' &&
-                          consentBannerShownCount <= 5
-                        }
-                        dismissConsentBanner={() =>
-                          setConsentBannerShownCount(6)
-                        }
-                        incrementConsentBannerShownCount={() =>
-                          setConsentBannerShownCount(
-                            consentBannerShownCount + 1
-                          )
-                        }
-                        openSettingsDrawer={openSettingsDrawer}
-                      />
-                    </StyledMainWrapper>
-                  </StyledBody>
-                </StyledApp>
-              </StyledWrapper>
-            </FileDrop>
-          </FeatureToggleProvider>
-        </ThemeProvider>
-      </ErrorBoundary>
-    )
-  }
-}
-
-function ThemeHookAppWrapper(props: any) {
+export function App(props: any) {
   const [derivedTheme, setEnvironmentTheme] = useDerivedTheme(
     props.theme,
     LIGHT_THEME
@@ -346,18 +112,181 @@ function ThemeHookAppWrapper(props: any) {
   useEffect(() => {
     editor.setTheme(derivedTheme)
   }, [derivedTheme])
-  return (
-    <App
-      themeData={themeData}
-      setEnvironmentTheme={setEnvironmentTheme}
-      {...props}
-    />
-  )
-}
 
-function KeyboardShortcuts({ bus }: { bus: Bus }) {
-  useKeyboardShortcuts(bus)
-  return null
+  useKeyboardShortcuts(props.bus)
+
+  const eventMetricsCallback = useRef((_: MetricsData) => {})
+  const segmentTrackCallback = useRef((_: MetricsData) => {})
+
+  useEffect(() => {
+    const unsub =
+      props.bus &&
+      props.bus.take(
+        METRICS_EVENT,
+        ({ category, label, data: originalData }: MetricsData) => {
+          if (!isRunningE2ETest() && props.telemetrySettings.allowUserStats) {
+            const data = {
+              browserVersion: version,
+              ...originalData
+            }
+            console.log(category, label, data, props.telemetrySettings)
+            eventMetricsCallback &&
+              eventMetricsCallback.current &&
+              eventMetricsCallback.current({ category, label, data })
+            segmentTrackCallback &&
+              segmentTrackCallback.current &&
+              segmentTrackCallback.current({ category, label, data })
+          }
+        }
+      )
+    return () => unsub && unsub()
+  }, [props.telemetrySettings.allowUserStats, props.bus])
+
+  useEffect(() => {
+    const initAction = udcInit()
+    props.bus && props.bus.send(initAction.type, initAction)
+  }, [props.bus])
+
+  const {
+    activeConnection,
+    browserSyncAuthStatus,
+    browserSyncConfig,
+    browserSyncMetadata,
+    bus,
+    codeFontLigatures,
+    connectionState,
+    consentBannerShownCount,
+    databases,
+    defaultConnectionData,
+    drawer,
+    errorMessage,
+    experimentalFeatures,
+    handleNavClick,
+    lastConnectionUpdate,
+    loadExternalScripts,
+    loadSync,
+    openSettingsDrawer,
+    setConsentBannerShownCount,
+    store,
+    syncConsent,
+    telemetrySettings,
+    titleString,
+    useDb,
+    updateDesktopUDCSettings
+  } = props
+
+  const wrapperClassNames = codeFontLigatures ? '' : 'disable-font-ligatures'
+
+  return (
+    <ErrorBoundary>
+      <DesktopApi
+        onMount={(...args: any[]) => {
+          const { allowSendStats, allowSendReports, trackingId } = args[1]
+            ?.global?.settings || {
+            allowSendReports: false,
+            allowSendStats: false
+          }
+          updateDesktopUDCSettings({
+            desktopAllowsCrashReporting: allowSendReports,
+            desktopAllowsUserStats: allowSendStats,
+            desktopTrackingId: trackingId
+          })
+
+          buildConnectionCreds(...args, { defaultConnectionData })
+            .then(creds => bus.send(INJECTED_DISCOVERY, creds))
+            .catch(() => bus.send(INITIAL_SWITCH_CONNECTION_FAILED))
+          getDesktopTheme(...args)
+            .then(theme => setEnvironmentTheme(theme))
+            .catch(setEnvironmentTheme(null))
+        }}
+        onGraphActive={(...args: any[]) => {
+          buildConnectionCreds(...args, { defaultConnectionData })
+            .then(creds => bus.send(SWITCH_CONNECTION, creds))
+            .catch(() => bus.send(SWITCH_CONNECTION_FAILED))
+        }}
+        onGraphInactive={() => bus.send(SILENT_DISCONNECT)}
+        onColorSchemeUpdated={(...args: any[]) =>
+          getDesktopTheme(...args)
+            .then(theme => setEnvironmentTheme(theme))
+            .catch(setEnvironmentTheme(null))
+        }
+        onArgumentsChange={(argsString: any) => {
+          bus.send(URL_ARGUMENTS_CHANGE, { url: `?${argsString}` })
+        }}
+        onApplicationSettingsSaved={(...args: any[]) => {
+          const { allowSendStats, allowSendReports, trackingId } = args[1]
+            ?.global?.settings || {
+            allowSendReports: false,
+            allowSendStats: false
+          }
+          updateDesktopUDCSettings({
+            desktopAllowsCrashReporting: allowSendReports,
+            desktopAllowsUserStats: allowSendStats,
+            desktopTrackingId: trackingId
+          })
+        }}
+        setEventMetricsCallback={(fn: any) =>
+          (eventMetricsCallback.current = fn)
+        }
+      />
+      <PerformanceOverlay />
+      <ThemeProvider theme={themeData}>
+        <FeatureToggleProvider features={experimentalFeatures}>
+          <FileDrop store={store}>
+            <StyledWrapper className={wrapperClassNames}>
+              <DocTitle titleString={titleString} />
+              <UserInteraction />
+              {loadExternalScripts && (
+                <>
+                  <Intercom appID="lq70afwx" />
+                  <Segment
+                    segmentKey={SEGMENT_KEY}
+                    setTrackCallback={(fn: any) =>
+                      (segmentTrackCallback.current = fn)
+                    }
+                  />
+                  <CannyLoader />
+                </>
+              )}
+              {syncConsent && loadExternalScripts && loadSync && (
+                <BrowserSyncInit
+                  authStatus={browserSyncAuthStatus}
+                  authData={browserSyncMetadata}
+                  config={browserSyncConfig}
+                />
+              )}
+              <StyledApp>
+                <StyledBody>
+                  <ErrorBoundary>
+                    <Sidebar openDrawer={drawer} onNavClick={handleNavClick} />
+                  </ErrorBoundary>
+                  <StyledMainWrapper id={MAIN_WRAPPER_DOM_ID}>
+                    <Main
+                      activeConnection={activeConnection}
+                      connectionState={connectionState}
+                      lastConnectionUpdate={lastConnectionUpdate}
+                      errorMessage={errorMessage}
+                      useDb={useDb}
+                      databases={databases}
+                      showUdcConsentBanner={
+                        telemetrySettings.source === 'BROWSER_SETTING' &&
+                        consentBannerShownCount <= 5
+                      }
+                      dismissConsentBanner={() => setConsentBannerShownCount(6)}
+                      incrementConsentBannerShownCount={() =>
+                        setConsentBannerShownCount(consentBannerShownCount + 1)
+                      }
+                      openSettingsDrawer={openSettingsDrawer}
+                    />
+                  </StyledMainWrapper>
+                </StyledBody>
+              </StyledApp>
+            </StyledWrapper>
+          </FileDrop>
+        </FeatureToggleProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
+  )
 }
 
 const mapStateToProps = (state: GlobalState) => {
@@ -383,16 +312,15 @@ const mapStateToProps = (state: GlobalState) => {
     isWebEnv: inWebEnv(state),
     useDb: getUseDb(state),
     databases: getDatabases(state),
-    telemetrySettingSource: usedTelemetrySettingSource(state),
-    auraAllowsUdc: allowUdcInAura(state) === 'ALLOW',
-    neo4jConfAllowsUdc:
-      getAllowOutgoingConnections(state) && getClientsAllowTelemetry(state),
-    browserAllowCrashReports: getAllowCrashReports(state),
-    browserAllowUserStats: getAllowUserStats(state),
+    telemetrySettings: getTelemetrySettings(state),
     consentBannerShownCount: getConsentBannerShownCount(state)
   }
 }
-
+type DesktopTrackingSettings = {
+  allowUserStatsInDesktop: boolean
+  allowCrashReportsInDesktop: boolean
+  desktopTrackingId?: string
+}
 const mapDispatchToProps = (dispatch: any) => {
   return {
     handleNavClick: (id: any) => {
@@ -401,12 +329,23 @@ const mapDispatchToProps = (dispatch: any) => {
     setConsentBannerShownCount: (consentBannerShownCount: number) => {
       dispatch(updateUdcData({ consentBannerShownCount }))
     },
+    updateDesktopUDCSettings: ({
+      allowUserStatsInDesktop,
+      allowCrashReportsInDesktop,
+      desktopTrackingId
+    }: DesktopTrackingSettings) => {
+      dispatch(
+        updateUdcData({
+          allowUserStatsInDesktop,
+          allowCrashReportsInDesktop,
+          desktopTrackingId
+        })
+      )
+    },
     openSettingsDrawer: () => {
       dispatch(open('settings'))
     }
   }
 }
 
-export default withBus(
-  connect(mapStateToProps, mapDispatchToProps)(ThemeHookAppWrapper)
-)
+export default withBus(connect(mapStateToProps, mapDispatchToProps)(App))

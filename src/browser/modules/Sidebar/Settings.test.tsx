@@ -43,7 +43,11 @@ test('Settings renders with strange characters in display name', () => {
     <Settings
       settings={settings}
       visualSettings={visualSettings}
-      telemetrySettingSource="BROWSER_SETTING"
+      telemetrySettings={{
+        allowUserStats: false,
+        allowCrashReporting: false,
+        source: 'BROWSER_SETTING'
+      }}
     />
   )
 
