@@ -202,7 +202,7 @@ function getTelemetryVisualSetting({
           displayName: 'Product usage',
           tooltip: `Your database is ${
             telemetrySettings.allowUserStats ? '' : 'not '
-          }configured to send product analytics data by neo4j.conf.`,
+          }configured to send product analytics data in neo4j.conf.`,
           type: 'info'
         }
       }
@@ -211,9 +211,9 @@ function getTelemetryVisualSetting({
       {
         allowUserStats: {
           displayName: 'Product usage',
-          tooltip: `Your database is ${
+          tooltip: `Aura Console has configured your database to ${
             telemetrySettings.allowUserStats ? '' : 'not '
-          }configured to send product analytics data by Aura.`,
+          } send product analytics data.`,
           type: 'info'
         }
       }

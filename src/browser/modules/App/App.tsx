@@ -129,7 +129,6 @@ export function App(props: any) {
               browserVersion: version,
               ...originalData
             }
-            console.log(category, label, data, props.telemetrySettings)
             eventMetricsCallback &&
               eventMetricsCallback.current &&
               eventMetricsCallback.current({ category, label, data })
@@ -186,7 +185,6 @@ export function App(props: any) {
             allowSendReports: false,
             allowSendStats: false
           }
-          console.log(args[1])
           updateDesktopUDCSettings({
             allowCrashReportsInDesktop: allowSendReports,
             allowUserStatsInDesktop: allowSendStats,
