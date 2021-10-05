@@ -191,7 +191,7 @@ function getTelemetryVisualSetting({
             telemetrySettings.allowUserStats ? 'sent' : 'not sent'
           } and crash reports are ${
             telemetrySettings.allowCrashReporting ? 'sent' : 'not sent'
-          }. These settings can be changed in desktop.`,
+          }. These settings can be changed in Desktop.`,
           type: 'info'
         }
       }
