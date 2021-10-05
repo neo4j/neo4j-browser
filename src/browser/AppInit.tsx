@@ -49,7 +49,6 @@ import { APP_START } from 'shared/modules/app/appDuck'
 import { detectRuntimeEnv, isRunningE2ETest } from 'services/utils'
 import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
 import { version } from 'project-root/package.json'
-import { shouldAllowOutgoingConnections } from 'shared/modules/dbMeta/dbMetaDuck'
 import { getUuid, updateUdcData } from 'shared/modules/udc/udcDuck'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
@@ -58,6 +57,7 @@ import {
   restoreSearchAndHashParams,
   wasRedirectedBackFromSSOServer
 } from 'neo4j-client-sso'
+import { getTelemetrySettings } from 'shared/utils/selectors'
 
 // Configure localstorage sync
 applyKeys(
@@ -172,9 +172,9 @@ export function setupSentry(): void {
         }
       },
       beforeSend: event => {
-        const allowsOutgoing = shouldAllowOutgoingConnections(store.getState())
+        const { allowCrashReporting } = getTelemetrySettings(store.getState())
 
-        if (allowsOutgoing && !isRunningE2ETest()) {
+        if (allowCrashReporting && !isRunningE2ETest()) {
           return scrubQueryParamsAndUrl(event)
         } else {
           return null

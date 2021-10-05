@@ -221,7 +221,7 @@ function getTelemetryVisualSetting({
     BROWSER_SETTING: [
       {
         allowCrashReports: {
-          displayName: 'Crash reports',
+          displayName: 'Send anonymous crash reports',
           tooltip:
             'Crash reports allow us to quickly diagnose and fix problems. No personal information is collected or sent.',
           type: 'checkbox',
@@ -230,7 +230,7 @@ function getTelemetryVisualSetting({
       },
       {
         allowUserStats: {
-          displayName: 'Product usage',
+          displayName: 'Send anonymous usage statistics',
           tooltip:
             'This data helps us prioritise features and improvements. No personal information is collected or sent.',
           type: 'checkbox',
