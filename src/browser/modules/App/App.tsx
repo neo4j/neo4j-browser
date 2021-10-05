@@ -186,9 +186,10 @@ export function App(props: any) {
             allowSendReports: false,
             allowSendStats: false
           }
+          console.log(args[1])
           updateDesktopUDCSettings({
-            desktopAllowsCrashReporting: allowSendReports,
-            desktopAllowsUserStats: allowSendStats,
+            allowCrashReportsInDesktop: allowSendReports,
+            allowUserStatsInDesktop: allowSendStats,
             desktopTrackingId: trackingId
           })
 
@@ -220,8 +221,8 @@ export function App(props: any) {
             allowSendStats: false
           }
           updateDesktopUDCSettings({
-            desktopAllowsCrashReporting: allowSendReports,
-            desktopAllowsUserStats: allowSendStats,
+            allowCrashReportsInDesktop: allowSendReports,
+            allowUserStatsInDesktop: allowSendStats,
             desktopTrackingId: trackingId
           })
         }}

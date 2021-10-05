@@ -187,8 +187,8 @@ function getTelemetryVisualSetting({
       {
         allowUserStats: {
           displayName: 'Product Analytics',
-          tooltip: `Product Usage Statistics are ${
-            telemetrySettings.allowUserStats ? 'enabled' : 'disabled'
+          tooltip: `Product usage statistics are ${
+            telemetrySettings.allowUserStats ? 'sent' : 'not sent'
           } and crash reports are ${
             telemetrySettings.allowCrashReporting ? 'sent' : 'not sent'
           }. These settings can be changed in desktop.`,
