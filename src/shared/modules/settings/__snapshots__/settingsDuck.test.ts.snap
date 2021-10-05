@@ -2,6 +2,8 @@
 
 exports[`settings reducer handles REPLACE 1`] = `
 Object {
+  "allowCrashReports": true,
+  "allowUserStats": true,
   "autoComplete": true,
   "browserSyncDebugServer": null,
   "codeFontLigatures": true,

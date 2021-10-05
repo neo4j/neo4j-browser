@@ -17,11 +17,13 @@ Object {
     "storeSize": null,
     "version": null,
   },
+  "serverConfigDone": false,
   "settings": Object {
     "browser.allow_outgoing_connections": false,
     "browser.remote_content_hostname_allowlist": "guides.neo4j.com, localhost",
     "browser.retain_connection_credentials": false,
     "browser.retain_editor_history": false,
+    "clients.allow_telemetry": true,
   },
 }
 `;
@@ -42,11 +44,13 @@ Object {
     "storeSize": null,
     "version": null,
   },
+  "serverConfigDone": false,
   "settings": Object {
     "browser.allow_outgoing_connections": false,
     "browser.remote_content_hostname_allowlist": "guides.neo4j.com, localhost",
     "browser.retain_connection_credentials": false,
     "browser.retain_editor_history": false,
+    "clients.allow_telemetry": true,
   },
 }
 `;

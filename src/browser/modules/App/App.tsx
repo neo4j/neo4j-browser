@@ -19,7 +19,7 @@
  */
 
 import { editor } from 'monaco-editor'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { ThemeProvider } from 'styled-components'
@@ -31,7 +31,7 @@ import {
   LIGHT_THEME
 } from 'shared/modules/settings/settingsDuck'
 import { utilizeBrowserSync } from 'shared/modules/features/featuresDuck'
-import { getOpenDrawer } from 'shared/modules/sidebar/sidebarDuck'
+import { getOpenDrawer, open } from 'shared/modules/sidebar/sidebarDuck'
 import { getErrorMessage } from 'shared/modules/commands/commandsDuck'
 import {
   shouldAllowOutgoingConnections,
@@ -83,17 +83,22 @@ import {
   buildConnectionCreds,
   getDesktopTheme
 } from 'browser-components/desktop-api/desktop-api.handlers'
-import { METRICS_EVENT, udcInit } from 'shared/modules/udc/udcDuck'
+import {
+  getConsentBannerShownCount,
+  METRICS_EVENT,
+  udcInit,
+  updateUdcData
+} from 'shared/modules/udc/udcDuck'
 import { useKeyboardShortcuts } from './keyboardShortcuts'
 import PerformanceOverlay from './PerformanceOverlay'
 import { isRunningE2ETest } from 'services/utils'
 import { version } from 'project-root/package.json'
+import { GlobalState } from 'shared/globalState'
+import { getTelemetrySettings } from 'shared/utils/selectors'
+
 export const MAIN_WRAPPER_DOM_ID = 'MAIN_WRAPPER_DOM_ID'
 
 declare let SEGMENT_KEY: string
-
-const getArgsSettingForKey = (args: any[], key: string) =>
-  args[1]?.global?.settings[key]
 
 export function App(props: any) {
   const [derivedTheme, setEnvironmentTheme] = useDerivedTheme(
@@ -102,9 +107,6 @@ export function App(props: any) {
   )
   // @ts-expect-error ts-migrate(7053) FIXME: No index signature with a parameter of type 'strin... Remove this comment to see the full error message
   const themeData = themes[derivedTheme] || themes[LIGHT_THEME]
-
-  const [desktopAllowTracking, setDesktopAllowTracking] = useState(undefined)
-  const [desktopTrackingId, setDesktopTrackingId] = useState(undefined)
 
   // update cypher editor theme
   useEffect(() => {
@@ -122,7 +124,7 @@ export function App(props: any) {
       props.bus.take(
         METRICS_EVENT,
         ({ category, label, data: originalData }: MetricsData) => {
-          if (!isRunningE2ETest()) {
+          if (!isRunningE2ETest() && props.telemetrySettings.allowUserStats) {
             const data = {
               browserVersion: version,
               ...originalData
@@ -136,88 +138,111 @@ export function App(props: any) {
           }
         }
       )
+    return () => unsub && unsub()
+  }, [props.telemetrySettings.allowUserStats, props.bus])
+
+  useEffect(() => {
     const initAction = udcInit()
     props.bus && props.bus.send(initAction.type, initAction)
-    return () => unsub && unsub()
-  }, [])
+  }, [props.bus])
 
   const {
-    drawer,
-    handleNavClick,
     activeConnection,
+    browserSyncAuthStatus,
+    browserSyncConfig,
+    browserSyncMetadata,
+    bus,
+    codeFontLigatures,
     connectionState,
-    lastConnectionUpdate,
+    consentBannerShownCount,
+    databases,
+    defaultConnectionData,
+    drawer,
     errorMessage,
+    experimentalFeatures,
+    handleNavClick,
+    lastConnectionUpdate,
     loadExternalScripts,
     loadSync,
-    syncConsent,
-    browserSyncMetadata,
-    browserSyncConfig,
-    browserSyncAuthStatus,
-    experimentalFeatures,
+    openSettingsDrawer,
+    setConsentBannerShownCount,
     store,
-    codeFontLigatures,
-    defaultConnectionData,
+    syncConsent,
+    telemetrySettings,
+    titleString,
     useDb,
-    databases
+    updateDesktopUDCSettings
   } = props
 
   const wrapperClassNames = codeFontLigatures ? '' : 'disable-font-ligatures'
-
-  const setEventMetricsCallback = (fn: any) => {
-    eventMetricsCallback.current = fn
-  }
-
-  const setTrackSegmentCallback = (fn: any) => {
-    segmentTrackCallback.current = fn
-  }
 
   return (
     <ErrorBoundary>
       <DesktopApi
         onMount={(...args: any[]) => {
-          setDesktopAllowTracking(getArgsSettingForKey(args, 'allowSendStats'))
-          setDesktopTrackingId(getArgsSettingForKey(args, 'trackingId'))
+          const { allowSendStats, allowSendReports, trackingId } = args[1]
+            ?.global?.settings || {
+            allowSendReports: false,
+            allowSendStats: false
+          }
+          updateDesktopUDCSettings({
+            allowCrashReportsInDesktop: allowSendReports,
+            allowUserStatsInDesktop: allowSendStats,
+            desktopTrackingId: trackingId
+          })
+
           buildConnectionCreds(...args, { defaultConnectionData })
-            .then(creds => props.bus.send(INJECTED_DISCOVERY, creds))
-            .catch(() => props.bus.send(INITIAL_SWITCH_CONNECTION_FAILED))
+            .then(creds => bus.send(INJECTED_DISCOVERY, creds))
+            .catch(() => bus.send(INITIAL_SWITCH_CONNECTION_FAILED))
           getDesktopTheme(...args)
             .then(theme => setEnvironmentTheme(theme))
             .catch(setEnvironmentTheme(null))
         }}
         onGraphActive={(...args: any[]) => {
           buildConnectionCreds(...args, { defaultConnectionData })
-            .then(creds => props.bus.send(SWITCH_CONNECTION, creds))
-            .catch(() => props.bus.send(SWITCH_CONNECTION_FAILED))
+            .then(creds => bus.send(SWITCH_CONNECTION, creds))
+            .catch(() => bus.send(SWITCH_CONNECTION_FAILED))
         }}
-        onGraphInactive={() => props.bus.send(SILENT_DISCONNECT)}
+        onGraphInactive={() => bus.send(SILENT_DISCONNECT)}
         onColorSchemeUpdated={(...args: any[]) =>
           getDesktopTheme(...args)
             .then(theme => setEnvironmentTheme(theme))
             .catch(setEnvironmentTheme(null))
         }
         onArgumentsChange={(argsString: any) => {
-          props.bus.send(URL_ARGUMENTS_CHANGE, { url: `?${argsString}` })
+          bus.send(URL_ARGUMENTS_CHANGE, { url: `?${argsString}` })
         }}
         onApplicationSettingsSaved={(...args: any[]) => {
-          setDesktopAllowTracking(getArgsSettingForKey(args, 'allowSendStats'))
-          setDesktopTrackingId(getArgsSettingForKey(args, 'trackingId'))
+          const { allowSendStats, allowSendReports, trackingId } = args[1]
+            ?.global?.settings || {
+            allowSendReports: false,
+            allowSendStats: false
+          }
+          updateDesktopUDCSettings({
+            allowCrashReportsInDesktop: allowSendReports,
+            allowUserStatsInDesktop: allowSendStats,
+            desktopTrackingId: trackingId
+          })
         }}
-        setEventMetricsCallback={setEventMetricsCallback}
+        setEventMetricsCallback={(fn: any) =>
+          (eventMetricsCallback.current = fn)
+        }
       />
       <PerformanceOverlay />
       <ThemeProvider theme={themeData}>
         <FeatureToggleProvider features={experimentalFeatures}>
           <FileDrop store={store}>
             <StyledWrapper className={wrapperClassNames}>
-              <DocTitle titleString={props.titleString} />
+              <DocTitle titleString={titleString} />
               <UserInteraction />
               {loadExternalScripts && (
                 <>
                   <Intercom appID="lq70afwx" />
                   <Segment
                     segmentKey={SEGMENT_KEY}
-                    setTrackCallback={setTrackSegmentCallback}
+                    setTrackCallback={(fn: any) =>
+                      (segmentTrackCallback.current = fn)
+                    }
                   />
                   <CannyLoader />
                 </>
@@ -236,14 +261,21 @@ export function App(props: any) {
                   </ErrorBoundary>
                   <StyledMainWrapper id={MAIN_WRAPPER_DOM_ID}>
                     <Main
-                      desktopAllowTracking={desktopAllowTracking}
-                      desktopTrackingId={desktopTrackingId}
                       activeConnection={activeConnection}
                       connectionState={connectionState}
                       lastConnectionUpdate={lastConnectionUpdate}
                       errorMessage={errorMessage}
                       useDb={useDb}
                       databases={databases}
+                      showUdcConsentBanner={
+                        telemetrySettings.source === 'BROWSER_SETTING' &&
+                        consentBannerShownCount <= 5
+                      }
+                      dismissConsentBanner={() => setConsentBannerShownCount(6)}
+                      incrementConsentBannerShownCount={() =>
+                        setConsentBannerShownCount(consentBannerShownCount + 1)
+                      }
+                      openSettingsDrawer={openSettingsDrawer}
                     />
                   </StyledMainWrapper>
                 </StyledBody>
@@ -256,7 +288,7 @@ export function App(props: any) {
   )
 }
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: GlobalState) => {
   const connectionData = getActiveConnectionData(state)
   return {
     experimentalFeatures: getExperimentalFeatures(state),
@@ -278,14 +310,39 @@ const mapStateToProps = (state: any) => {
     loadSync: utilizeBrowserSync(state),
     isWebEnv: inWebEnv(state),
     useDb: getUseDb(state),
-    databases: getDatabases(state)
+    databases: getDatabases(state),
+    telemetrySettings: getTelemetrySettings(state),
+    consentBannerShownCount: getConsentBannerShownCount(state)
   }
 }
-
+type DesktopTrackingSettings = {
+  allowUserStatsInDesktop: boolean
+  allowCrashReportsInDesktop: boolean
+  desktopTrackingId?: string
+}
 const mapDispatchToProps = (dispatch: any) => {
   return {
     handleNavClick: (id: any) => {
       dispatch(toggle(id))
+    },
+    setConsentBannerShownCount: (consentBannerShownCount: number) => {
+      dispatch(updateUdcData({ consentBannerShownCount }))
+    },
+    updateDesktopUDCSettings: ({
+      allowUserStatsInDesktop,
+      allowCrashReportsInDesktop,
+      desktopTrackingId
+    }: DesktopTrackingSettings) => {
+      dispatch(
+        updateUdcData({
+          allowUserStatsInDesktop,
+          allowCrashReportsInDesktop,
+          desktopTrackingId
+        })
+      )
+    },
+    openSettingsDrawer: () => {
+      dispatch(open('settings'))
     }
   }
 }

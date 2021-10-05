@@ -62,6 +62,7 @@ import {
   setClientConfig
 } from '../features/featuresDuck'
 import { clearHistory } from 'shared/modules/history/historyDuck'
+import { GlobalState } from 'shared/globalState'
 
 export const NAME = 'meta'
 export const UPDATE = 'meta/UPDATE'
@@ -108,11 +109,16 @@ export const isEnterprise = (state: any) =>
 export const isBeta = (state: any) => /-/.test(state[NAME].server.version)
 export const getStoreId = (state: any) =>
   state[NAME] && state[NAME].server ? state[NAME].server.storeId : null
+export const isServerConfigDone = (state: GlobalState): boolean =>
+  state[NAME].serverConfigDone
 
 export const getAvailableSettings = (state: any) =>
   (state[NAME] || initialState).settings
 export const getAllowOutgoingConnections = (state: any) =>
   getAvailableSettings(state)['browser.allow_outgoing_connections']
+export const getClientsAllowTelemetry = (state: GlobalState): boolean =>
+  getAvailableSettings(state)['clients.allow_telemetry'] ??
+  initialState.settings['clients.allow_telemetry']
 export const credentialsTimeout = (state: any) =>
   getAvailableSettings(state)['browser.credential_timeout'] || 0
 export const getRemoteContentHostnameAllowlist = (state: any) =>
@@ -255,11 +261,13 @@ export const initialState = {
     storeSize: null
   },
   databases: [],
+  serverConfigDone: false,
   settings: {
     'browser.allow_outgoing_connections': false,
     'browser.remote_content_hostname_allowlist': 'guides.neo4j.com, localhost',
     'browser.retain_connection_credentials': false,
-    'browser.retain_editor_history': false
+    'browser.retain_editor_history': false,
+    'clients.allow_telemetry': true
   }
 }
 
@@ -287,7 +295,7 @@ export default function meta(state = initialState, unalteredAction: any) {
 
   switch (action.type) {
     case APP_START:
-      return { ...initialState, ...state }
+      return { ...initialState, ...state, serverConfigDone: false }
     case UPDATE:
       const { type, ...rest } = action
       return { ...state, ...rest }
@@ -679,6 +687,8 @@ export const serverConfigEpic = (some$: any, store: any) =>
             } else if (name === 'browser.allow_outgoing_connections') {
               // Use isConfigValFalsy to cast undefined to true
               value = !isConfigValFalsy(value)
+            } else if (name === 'clients.allow_telemetry') {
+              value = !isConfigValFalsy(value)
             } else if (name === 'dbms.security.auth_enabled') {
               let authEnabled = true
               if (typeof value !== 'undefined' && isConfigValFalsy(value)) {
@@ -697,6 +707,7 @@ export const serverConfigEpic = (some$: any, store: any) =>
           return Rx.Observable.of(null)
         })
     })
+    .do(() => store.dispatch(update({ serverConfigDone: true })))
     .mapTo({ type: 'SERVER_CONFIG_DONE' })
 
 export const serverInfoEpic = (some$: any, store: any) =>

@@ -42,6 +42,12 @@ import {
   disableExperimentalFeature
 } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
 import FeatureToggle from 'browser/modules/FeatureToggle/FeatureToggle'
+import {
+  TelemetrySettings,
+  getTelemetrySettings,
+  TelemetrySettingSource
+} from 'shared/utils/selectors'
+import { GlobalState } from 'shared/globalState'
 
 const visualSettings = [
   {
@@ -157,87 +163,196 @@ const visualSettings = [
   }
 ]
 
+function getTelemetryVisualSetting({
+  telemetrySettings,
+  trackOptOutCrashReports,
+  trackOptOutUserStats
+}: {
+  telemetrySettings: TelemetrySettings
+  trackOptOutCrashReports: (optedIn: boolean) => void
+  trackOptOutUserStats: (optedIn: boolean) => void
+}) {
+  const settingsByFactor: Record<TelemetrySettingSource, any> = {
+    SETTINGS_NOT_LOADED: [
+      {
+        allowUserStats: {
+          displayName: 'Product usage',
+          tooltip:
+            'Product usage analytics is disabled before database connection is fully established.',
+          type: 'info'
+        }
+      }
+    ],
+    DESKTOP_SETTING: [
+      {
+        allowUserStats: {
+          displayName: 'Product Analytics',
+          tooltip: `Product usage statistics are ${
+            telemetrySettings.allowUserStats ? 'sent' : 'not sent'
+          } and crash reports are ${
+            telemetrySettings.allowCrashReporting ? 'sent' : 'not sent'
+          }. These settings can be changed in Desktop.`,
+          type: 'info'
+        }
+      }
+    ],
+    NEO4J_CONF: [
+      {
+        allowUserStats: {
+          displayName: 'Product usage',
+          tooltip: `Your database is ${
+            telemetrySettings.allowUserStats ? '' : 'not '
+          }configured to send product analytics data in neo4j.conf.`,
+          type: 'info'
+        }
+      }
+    ],
+    AURA: [
+      {
+        allowUserStats: {
+          displayName: 'Product usage',
+          tooltip: `Aura Console has configured your database to ${
+            telemetrySettings.allowUserStats ? '' : 'not '
+          } send product analytics data.`,
+          type: 'info'
+        }
+      }
+    ],
+    BROWSER_SETTING: [
+      {
+        allowCrashReports: {
+          displayName: 'Send anonymous crash reports',
+          tooltip:
+            'Crash reports allow us to quickly diagnose and fix problems. No personal information is collected or sent.',
+          type: 'checkbox',
+          onChange: trackOptOutCrashReports
+        }
+      },
+      {
+        allowUserStats: {
+          displayName: 'Send anonymous usage statistics',
+          tooltip:
+            'This data helps us prioritise features and improvements. No personal information is collected or sent.',
+          type: 'checkbox',
+          onChange: trackOptOutUserStats
+        }
+      }
+    ]
+  }
+
+  const title = 'Product Analytics'
+  const settings = settingsByFactor[telemetrySettings.source]
+  return { title, settings }
+}
+
 export const Settings = ({
   settings,
   visualSettings,
   experimentalFeatures = {},
   onSettingsSave = () => {},
-  onFeatureChange
+  onFeatureChange,
+  telemetrySettings,
+  trackOptOutCrashReports,
+  trackOptOutUserStats
 }: any) => {
   if (!settings) return null
-  const mappedSettings = visualSettings.map((visualSetting: any) => {
-    const title = <DrawerSubHeader>{visualSetting.title}</DrawerSubHeader>
-    const mapSettings = visualSetting.settings
-      // @ts-expect-error ts-migrate(7030) FIXME: Not all code paths return a value.
-      .map((settingObj: any) => {
-        const setting = Object.keys(settingObj)[0]
-        if (typeof settings[setting] === 'undefined') return null
-        const visual = settingObj[setting].displayName
-        const tooltip = settingObj[setting].tooltip || ''
-        const type = settingObj[setting].type || 'input'
 
-        if (type === 'input') {
-          return (
-            <StyledSetting key={toKeyString(visual)}>
-              <StyledSettingLabel title={tooltip}>
-                {visual}
-                <StyledSettingTextInput
-                  onChange={(event: any) => {
-                    settings[setting] = event.target.value
-                    onSettingsSave(settings)
-                  }}
-                  defaultValue={settings[setting]}
-                  title={tooltip}
-                  className={setting}
-                />
-              </StyledSettingLabel>
-            </StyledSetting>
-          )
-        }
-
-        if (type === 'radio') {
-          return (
-            <StyledSetting key={toKeyString(visual)}>
-              <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
-              <RadioSelector
-                options={settingObj[setting].options}
-                onChange={(event: any) => {
-                  settings[setting] = event.target.value
-                  onSettingsSave(settings)
-                }}
-                selectedValue={settings[setting]}
-              />
-            </StyledSetting>
-          )
-        }
-
-        if (type === 'checkbox') {
-          return (
-            <StyledSetting key={toKeyString(visual)}>
-              <StyledSettingLabel title={tooltip}>
-                <CheckboxSelector
-                  onChange={(event: any) => {
-                    settings[setting] = event.target.checked
-                    onSettingsSave(settings)
-                  }}
-                  checked={settings[setting]}
-                  data-testid={setting}
-                />
-                {visual}
-              </StyledSettingLabel>
-            </StyledSetting>
-          )
-        }
+  const mappedSettings = visualSettings
+    .concat([
+      getTelemetryVisualSetting({
+        telemetrySettings,
+        trackOptOutCrashReports,
+        trackOptOutUserStats
       })
-      .filter((setting: any) => setting !== null)
+    ])
+    .map((visualSetting: any) => {
+      const title = <DrawerSubHeader>{visualSetting.title}</DrawerSubHeader>
+      const mapSettings = visualSetting.settings
+        .map((settingObj: any) => {
+          const setting = Object.keys(settingObj)[0]
+          if (typeof settings[setting] === 'undefined') return null
+          const visual = settingObj[setting].displayName
+          const tooltip = settingObj[setting].tooltip || ''
+          const type = settingObj[setting].type || 'input'
+          const onSettingChange = settingObj[setting].onChange
 
-    return (
-      <React.Fragment key={toKeyString(visualSetting.title)}>
-        {title}
-        {mapSettings}
-      </React.Fragment>
-    )
-  })
+          if (type === 'input') {
+            return (
+              <StyledSetting key={toKeyString(visual)}>
+                <StyledSettingLabel title={tooltip}>
+                  {visual}
+                  <StyledSettingTextInput
+                    onChange={(event: any) => {
+                      const newValue = event.target.value
+                      settings[setting] = newValue
+                      onSettingChange && onSettingChange(newValue)
+                      onSettingsSave(settings)
+                    }}
+                    defaultValue={settings[setting]}
+                    title={tooltip}
+                    className={setting}
+                  />
+                </StyledSettingLabel>
+              </StyledSetting>
+            )
+          }
+
+          if (type === 'radio') {
+            return (
+              <StyledSetting key={toKeyString(visual)}>
+                <StyledSettingLabel title={tooltip}>
+                  {visual}
+                </StyledSettingLabel>
+                <RadioSelector
+                  options={settingObj[setting].options}
+                  onChange={(event: any) => {
+                    const newValue = event.target.value
+                    settings[setting] = newValue
+                    onSettingChange && onSettingChange(newValue)
+                    onSettingsSave(settings)
+                  }}
+                  selectedValue={settings[setting]}
+                />
+              </StyledSetting>
+            )
+          }
+
+          if (type === 'checkbox') {
+            return (
+              <StyledSetting key={toKeyString(visual)}>
+                <StyledSettingLabel title={tooltip}>
+                  <CheckboxSelector
+                    onChange={(event: any) => {
+                      const newValue = event.target.checked
+                      settings[setting] = newValue
+                      onSettingChange && onSettingChange(newValue)
+                      onSettingsSave(settings)
+                    }}
+                    checked={settings[setting]}
+                    data-testid={setting}
+                  />
+                  {visual}
+                </StyledSettingLabel>
+              </StyledSetting>
+            )
+          }
+
+          if (type === 'info') {
+            return (
+              <StyledSetting key={toKeyString(visual)}>{tooltip}</StyledSetting>
+            )
+          }
+          return null
+        })
+        .filter((setting: any) => setting !== null)
+
+      return (
+        <React.Fragment key={toKeyString(visualSetting.title)}>
+          {title}
+          {mapSettings}
+        </React.Fragment>
+      )
+    })
 
   const mappedExperimentalFeatures = Object.keys(experimentalFeatures)
     .map(key => {
@@ -290,11 +405,12 @@ export const Settings = ({
   )
 }
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: GlobalState) => {
   return {
     experimentalFeatures: getExperimentalFeatures(state),
     settings: state.settings,
-    visualSettings
+    visualSettings,
+    telemetrySettings: getTelemetrySettings(state)
   }
 }
 
@@ -302,6 +418,16 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     onSettingsSave: (settings: any) => {
       dispatch(actions.update(settings))
+    },
+    trackOptOutCrashReports(optedIn: boolean) {
+      if (!optedIn) {
+        dispatch({ type: actions.TRACK_OPT_OUT_CRASH_REPORTS })
+      }
+    },
+    trackOptOutUserStats: (optedIn: boolean) => {
+      if (!optedIn) {
+        dispatch({ type: actions.TRACK_OPT_OUT_USER_STATS })
+      }
     },
     onFeatureChange: (name: any, on: any) => {
       if (on) {

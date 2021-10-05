@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global jest, test, expect */
 /* eslint-disable react/display-name */
 
 import React from 'react'
@@ -45,7 +44,12 @@ describe('App', () => {
   test('App loads', async () => {
     // Given
     const props = {
-      store
+      store,
+      telemetrySettings: {
+        allowUserStats: false,
+        allowCrashReporting: false,
+        source: 'BROWSER_SETTING'
+      }
     }
 
     // When
