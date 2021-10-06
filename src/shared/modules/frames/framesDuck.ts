@@ -22,7 +22,7 @@ import uuid from 'uuid'
 import 'rxjs/add/operator/do'
 import 'rxjs/add/operator/mapTo'
 import { moveInArray } from 'services/utils'
-import { APP_START } from 'shared/modules/app/appDuck'
+import { APP_START, AppStartAction } from 'shared/modules/app/appDuck'
 import {
   getMaxFrames,
   UPDATE as SETTINGS_UPDATE
@@ -396,6 +396,7 @@ export interface EnsureMaxFramesAction {
 }
 
 type StreamActions =
+  | AppStartAction
   | AddFrameAction
   | RemoveFrameAction
   | ClearFramesAction

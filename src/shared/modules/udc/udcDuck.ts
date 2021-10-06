@@ -18,21 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Action, MiddlewareAPI } from 'redux'
-import { ActionsObservable, Epic } from 'redux-observable'
-import { v4 } from 'uuid'
+import { Action } from 'redux'
+import { Epic } from 'redux-observable'
 import { USER_CLEAR } from '../app/appDuck'
 import { GlobalState } from 'shared/globalState'
-import {
-  AUTHORIZED,
-  CLEAR_SYNC,
-  CLEAR_SYNC_AND_LOCAL
-} from 'shared/modules/sync/syncDuck'
-import {
-  getVersion,
-  getStoreId,
-  isBeta
-} from 'shared/modules/dbMeta/dbMetaDuck'
+
 import {
   TRACK_CANNY_FEATURE_REQUEST,
   TRACK_CANNY_CHANGELOG
@@ -46,11 +36,7 @@ import {
   TRACK_SAVE_AS_PROJECT_FILE,
   UNPIN
 } from 'shared/modules/frames/framesDuck'
-import {
-  CYPHER_SUCCEEDED,
-  CYPHER_FAILED,
-  COMMAND_QUEUED
-} from 'shared/modules/commands/commandsDuck'
+import { COMMAND_QUEUED } from 'shared/modules/commands/commandsDuck'
 import {
   ADD_FAVORITE,
   LOAD_FAVORITES,
@@ -59,85 +45,21 @@ import {
   getFavorites
 } from 'shared/modules/favorites/favoritesDuck'
 import {
-  shouldReportUdc,
   getSettings,
   TRACK_OPT_OUT_CRASH_REPORTS,
   TRACK_OPT_OUT_USER_STATS
 } from 'shared/modules/settings/settingsDuck'
-import { CONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
-import { shouldTriggerConnectEvent, getTodayDate } from './udcHelpers'
-import api from 'services/intercom'
 import cmdHelper from 'shared/services/commandInterpreterHelper'
 import { extractStatementsFromString } from 'services/commandUtils'
 import { isGuideChapter, isPlayChapter } from 'browser/documentation'
 
 // Action types
 export const NAME = 'udc'
-const INCREMENT = 'udc/INCREMENT'
-const EVENT_QUEUE = 'udc/EVENT_QUEUE'
-const EVENT_FIRED = 'udc/EVENT_FIRED'
-const CLEAR_EVENTS = 'udc/CLEAR_EVENTS'
 const UPDATE_DATA = 'udc/UPDATE_DATA'
-const BOOTED = 'udc/BOOTED'
 export const METRICS_EVENT = 'udc/METRICS_EVENT'
 export const UDC_STARTUP = 'udc/STARTUP'
 export const LAST_GUIDE_SLIDE = 'udc/LAST_GUIDE_SLIDE'
 
-let booted = false
-
-// Event constants
-export const EVENT_APP_STARTED = 'EVENT_APP_STARTED'
-export const EVENT_BROWSER_SYNC_LOGOUT = 'EVENT_BROWSER_SYNC_LOGOUT'
-export const EVENT_BROWSER_SYNC_LOGIN = 'EVENT_BROWSER_SYNC_LOGIN'
-export const EVENT_DRIVER_CONNECTED = 'EVENT_DRIVER_CONNECTED'
-
-type TrackedEventOccurrenceTypes =
-  | 'cypher_wins'
-  | 'cypher_fails'
-  | 'client_starts'
-
-const typeToEventName: { [key: string]: TrackedEventOccurrenceTypes } = {
-  [CYPHER_SUCCEEDED]: 'cypher_wins',
-  [CYPHER_FAILED]: 'cypher_fails',
-  [EVENT_APP_STARTED]: 'client_starts'
-}
-
-export const typeToMetricsObject = {
-  [CYPHER_SUCCEEDED]: { category: 'cypher', label: 'succeeded' },
-  [CYPHER_FAILED]: { category: 'cypher', label: 'failed' },
-  [EVENT_APP_STARTED]: { category: 'app', label: 'started' },
-  [EVENT_DRIVER_CONNECTED]: { category: 'driver', label: 'connected' },
-  [EVENT_BROWSER_SYNC_LOGOUT]: {
-    category: 'browser_sync',
-    label: 'logged_out'
-  },
-  [EVENT_BROWSER_SYNC_LOGIN]: { category: 'browser_sync', label: 'logged_in' }
-}
-
-// Selectors
-const getData = (state: GlobalState) => {
-  const { events, ...rest } = state[NAME] || initialState
-  return rest
-}
-const getLastSnapshotTime = (state: GlobalState) =>
-  (state[NAME] && state[NAME].lastSnapshot) || initialState.lastSnapshot
-const getName = (state: GlobalState) => state[NAME].name || 'Graph Friend'
-const getCompanies = (state: GlobalState) => {
-  if (getVersion(state) && getStoreId(state)) {
-    return [
-      {
-        type: 'company',
-        name: `Neo4j ${getVersion(state)} ${getStoreId(state)}`,
-        company_id: getStoreId(state)
-      }
-    ]
-  }
-  return null
-}
-const getEvents = (state: GlobalState) =>
-  state[NAME].events || initialState.events
-export const getUuid = (state: GlobalState): string =>
-  state[NAME].uuid || initialState.uuid
 export const getAuraNtId = (state: GlobalState): string | undefined =>
   state[NAME].auraNtId
 export const getDesktopTrackingId = (state: GlobalState): string | undefined =>
@@ -147,7 +69,6 @@ export const getAllowUserStatsInDesktop = (state: GlobalState): boolean =>
 export const getAllowCrashReportsInDesktop = (state: GlobalState): boolean =>
   state[NAME].allowCrashReportsInDesktop ??
   initialState.allowCrashReportsInDesktop
-
 export const getConsentBannerShownCount = (state: GlobalState): number =>
   state[NAME].consentBannerShownCount || initialState.consentBannerShownCount
 export const allowUdcInAura = (
@@ -165,22 +86,18 @@ export const allowUdcInAura = (
 
   return 'UNSET'
 }
+const getLastSnapshotTime = (state: GlobalState) =>
+  (state[NAME] && state[NAME].lastSnapshot) || initialState.lastSnapshot
 
-interface udcEvent {
-  name: string
-  data: unknown
+const aWeekSinceLastSnapshot = (state: GlobalState) => {
+  const now = Math.round(Date.now() / 1000)
+  const lastSnapshot = getLastSnapshotTime(state)
+  const aWeekInSeconds = 60 * 60 * 24 * 7
+  return now - lastSnapshot > aWeekInSeconds
 }
 
-export interface udcState {
-  events: udcEvent[]
+export interface UdcState {
   lastSnapshot: number
-  name?: string
-  uuid: string
-  created_at: number
-  client_starts: number
-  cypher_wins: number
-  cypher_fails: number
-  pingTime: number
   auraNtId?: string
   consentBannerShownCount: number
   desktopTrackingId?: string
@@ -188,15 +105,8 @@ export interface udcState {
   allowCrashReportsInDesktop: boolean
 }
 
-const initialState: udcState = {
-  uuid: v4(),
-  created_at: Math.round(Date.now() / 1000),
-  client_starts: 0,
-  cypher_wins: 0,
-  cypher_fails: 0,
-  pingTime: 0,
+const initialState: UdcState = {
   lastSnapshot: 0,
-  events: [],
   auraNtId: undefined,
   consentBannerShownCount: 0,
   desktopTrackingId: undefined,
@@ -204,33 +114,14 @@ const initialState: udcState = {
   allowCrashReportsInDesktop: false
 }
 
-type CleatEventsAction = { type: typeof CLEAR_EVENTS }
-type BootedAction = { type: typeof BOOTED }
-
-type udcActionsUnion =
-  | IncrementAction
-  | AddToEventQueueAction
-  | CleatEventsAction
-  | UpdateDataAction
-  | BootedAction
-
 // Reducer
 export default function reducer(
   state = initialState,
-  action: udcActionsUnion
-): udcState {
+  action: UpdateDataAction | { type: typeof USER_CLEAR }
+): UdcState {
   switch (action.type) {
-    case INCREMENT:
-      return { ...state, [action.what]: (state[action.what] || 0) + 1 }
-    case EVENT_QUEUE:
-      return {
-        ...state,
-        events: (state.events || []).concat(action.event).slice(-100)
-      }
-    case CLEAR_EVENTS:
-      return { ...state, events: [] }
     case USER_CLEAR:
-      return { ...initialState, uuid: state.uuid || initialState.uuid }
+      return { ...initialState }
     case UPDATE_DATA:
       const { type, ...rest } = action
       return { ...state, ...rest }
@@ -238,20 +129,6 @@ export default function reducer(
       return state
   }
 }
-
-interface IncrementAction {
-  type: typeof INCREMENT
-  what: TrackedEventOccurrenceTypes
-}
-
-// Action creators
-const increment = (what: TrackedEventOccurrenceTypes): IncrementAction => {
-  return {
-    type: INCREMENT,
-    what
-  }
-}
-
 interface UdcInitAction {
   type: typeof UDC_STARTUP
 }
@@ -259,38 +136,6 @@ interface UdcInitAction {
 export const udcInit = (): UdcInitAction => {
   return {
     type: UDC_STARTUP
-  }
-}
-
-interface AddToEventQueueAction {
-  type: typeof EVENT_QUEUE
-  event: udcEvent
-}
-
-export const addToEventQueue = (
-  name: string,
-  data: unknown
-): AddToEventQueueAction => {
-  return {
-    type: EVENT_QUEUE,
-    event: {
-      name,
-      data
-    }
-  }
-}
-
-interface EventFiredAction {
-  type: typeof EVENT_FIRED
-  name: string
-  data: unknown
-}
-
-const eventFired = (name: string, data: unknown = null): EventFiredAction => {
-  return {
-    type: EVENT_FIRED,
-    name,
-    data
   }
 }
 
@@ -311,33 +156,23 @@ const metricsEvent = (payload: MetricsEvent): MetricsEventAction => {
   }
 }
 
-interface UpdateDataAction extends Partial<udcState> {
+interface UpdateDataAction extends Partial<UdcState> {
   type: typeof UPDATE_DATA
 }
 
-export const updateUdcData = (obj: Partial<udcState>): UpdateDataAction => {
+export const updateUdcData = (obj: Partial<UdcState>): UpdateDataAction => {
   return {
     type: UPDATE_DATA,
     ...obj
   }
 }
 
-function aWeekSinceLastSnapshot(store: MiddlewareAPI<GlobalState>) {
-  const now = Math.round(Date.now() / 1000)
-  const lastSnapshot = getLastSnapshotTime(store.getState())
-  const aWeekInSeconds = 60 * 60 * 24 * 7
-  return now - lastSnapshot > aWeekInSeconds
-}
-
 // Epics
 export const udcStartupEpic: Epic<Action, GlobalState> = (action$, store) =>
   action$
     .ofType(UDC_STARTUP)
-    .do(() =>
-      store.dispatch(metricsEvent(typeToMetricsObject[EVENT_APP_STARTED]))
-    )
     .do(() => {
-      if (!aWeekSinceLastSnapshot(store)) {
+      if (!aWeekSinceLastSnapshot(store.getState())) {
         return
       }
 
@@ -386,16 +221,7 @@ export const udcStartupEpic: Epic<Action, GlobalState> = (action$, store) =>
         updateUdcData({ lastSnapshot: Math.round(Date.now() / 1000) })
       )
     })
-    .mapTo(increment(typeToEventName[EVENT_APP_STARTED]))
-
-export const incrementEventEpic: Epic<Action, GlobalState> = (action$, store) =>
-  action$
-    .ofType(CYPHER_FAILED)
-    .merge(action$.ofType(CYPHER_SUCCEEDED))
-    .do(action =>
-      store.dispatch(metricsEvent(typeToMetricsObject[action.type]))
-    )
-    .map(action => increment(typeToEventName[action.type]))
+    .mapTo({ type: 'NOOP' })
 
 export const trackCommandUsageEpic: Epic<Action, GlobalState> = action$ =>
   action$.ofType(COMMAND_QUEUED).map((action: any) => {
@@ -437,66 +263,6 @@ export const trackCommandUsageEpic: Epic<Action, GlobalState> = action$ =>
     })
   })
 
-export const trackSyncLogoutEpic: Epic<Action, GlobalState> = (
-  action$,
-  store
-) =>
-  action$
-    .ofType(CLEAR_SYNC)
-    .merge(action$.ofType(CLEAR_SYNC_AND_LOCAL))
-    .do(() =>
-      store.dispatch(
-        metricsEvent(typeToMetricsObject[EVENT_BROWSER_SYNC_LOGOUT])
-      )
-    )
-    .map(() => eventFired('syncLogout'))
-
-export const bootEpic: Epic<Action, GlobalState> = (action$, store) => {
-  return action$
-    .ofType(AUTHORIZED) // Browser sync auth
-    .do(() =>
-      store.dispatch(
-        metricsEvent(typeToMetricsObject[EVENT_BROWSER_SYNC_LOGIN])
-      )
-    )
-    .map((action: any) => {
-      // Store name locally
-      if (!action.userData || !action.userData.name) return action
-      store.dispatch(updateUdcData({ name: action.userData.name }))
-      return action
-    })
-    .map((action: any) => {
-      if (booted) return false
-      if (!action.userData || !action.userData.user_id) return false // No info
-      if (!isBeta(store.getState()) && !shouldReportUdc(store.getState())) {
-        // No opt out of pre releases
-        api('boot', { user_id: action.userData.user_id })
-      } else {
-        api('boot', {
-          ...getData(store.getState()),
-          companies: getCompanies(store.getState()),
-          neo4j_version: getVersion(store.getState()),
-          user_id: action.userData.user_id
-        })
-        api('trackEvent', 'syncAuthenticated', {
-          // Track that user connected to browser sync
-          user_id: action.userData.user_id,
-          name: getName(store.getState())
-        })
-        const waitingEvents = getEvents(store.getState())
-        waitingEvents.forEach(
-          event => event && api('trackEvent', event.name, event.data)
-        )
-        store.dispatch({ type: CLEAR_EVENTS })
-      }
-      booted = true
-      return true
-    })
-    .map(didBoot => {
-      return didBoot ? { type: BOOTED } : { type: 'NOOP' }
-    })
-}
-
 const actionsOfInterest = [
   ADD_FAVORITE,
   LAST_GUIDE_SLIDE,
@@ -522,25 +288,6 @@ export const trackReduxActionsEpic: Epic<Action, GlobalState> = action$ =>
       return metricsEvent({ category, label })
     })
 
-export const trackConnectsEpic: Epic<Action, GlobalState> = (action$, store) =>
-  action$
-    .ofType(CONNECTION_SUCCESS)
-    .merge(action$.ofType(BOOTED))
-    .do(() =>
-      store.dispatch(metricsEvent(typeToMetricsObject[EVENT_DRIVER_CONNECTED]))
-    )
-    .map(() => {
-      const state = store.getState()
-      const data = {
-        store_id: getStoreId(state),
-        neo4j_version: getVersion(state),
-        client_starts: state[NAME] ? state[NAME].client_starts : 0,
-        cypher_wins: state[NAME] ? state[NAME].cypher_wins : 0,
-        cypher_fails: state[NAME] ? state[NAME].cypher_fails : 0
-      }
-      return eventFired('connect', data)
-    })
-
 export const trackErrorFramesEpic: Epic<Action, GlobalState> = action$ =>
   action$.ofType(ADD).map((action: any) => {
     const error = action.state.error
@@ -554,26 +301,4 @@ export const trackErrorFramesEpic: Epic<Action, GlobalState> = action$ =>
     } else {
       return { type: 'NOOP' }
     }
-  })
-
-export const eventFiredEpic: Epic<any, GlobalState> = (
-  action$: ActionsObservable<EventFiredAction>,
-  store // Decide what to do with events
-) =>
-  action$.ofType(EVENT_FIRED).map((action: EventFiredAction) => {
-    if (
-      action.name === 'connect' &&
-      !shouldTriggerConnectEvent(store.getState()[NAME])
-    ) {
-      return { type: 'NOOP' }
-    }
-    if (!booted) return addToEventQueue(action.name, action.data)
-    if (!isBeta(store.getState()) && !shouldReportUdc(store.getState())) {
-      return addToEventQueue(action.name, action.data)
-    }
-    api('trackEvent', action.name, action.data)
-    if (action.name === 'connect') {
-      return updateUdcData({ pingTime: getTodayDate().getTime() })
-    }
-    return { type: 'NOOP' }
   })

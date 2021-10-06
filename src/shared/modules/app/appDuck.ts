@@ -20,10 +20,12 @@
 
 // Action type constants
 export const NAME = 'app'
-export const APP_START = `${NAME}/APP_START`
-export const USER_CLEAR = `${NAME}/USER_CLEAR`
+export const APP_START = 'app/APP_START'
+export const USER_CLEAR = 'app/USER_CLEAR'
+export type AppStartAction = { type: typeof APP_START }
+export type UserClearAction = { type: typeof USER_CLEAR }
 
-export const URL_ARGUMENTS_CHANGE = `${NAME}/URL_ARGUMENTS_CHANGE`
+export const URL_ARGUMENTS_CHANGE = `app/URL_ARGUMENTS_CHANGE`
 
 // State constants
 export const DESKTOP = 'DESKTOP'

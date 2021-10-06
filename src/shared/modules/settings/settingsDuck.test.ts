@@ -23,7 +23,6 @@ import reducer, {
   NAME,
   UPDATE,
   REPLACE,
-  shouldReportUdc,
   getInitCmd
 } from './settingsDuck'
 import { dehydrate } from 'services/duckUtils'
@@ -81,26 +80,6 @@ describe('settings reducer', () => {
 })
 
 describe('Selectors', () => {
-  test('shouldReportUdc casts to true for anything not false', () => {
-    // Given
-    const tests = [
-      { test: true, expect: true },
-      { test: 1, expect: true },
-      { test: '1', expect: true },
-      { test: 'on', expect: true },
-      { test: null, expect: true },
-      { test: undefined, expect: true },
-      { test: false, expect: false }
-    ]
-
-    // When && Then
-    tests.forEach(t => {
-      const state = {
-        [NAME]: { shouldReportUdc: t.test }
-      }
-      expect(shouldReportUdc(state)).toEqual(t.expect)
-    })
-  })
   test("let getInitCmd be falsy and cast to empty string if that's the case", () => {
     // Given
     const tests = [
