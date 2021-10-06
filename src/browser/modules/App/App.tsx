@@ -237,7 +237,6 @@ export function App(props: any) {
               <UserInteraction />
               {loadExternalScripts && (
                 <>
-                  <Intercom appID="lq70afwx" />
                   <Segment
                     segmentKey={SEGMENT_KEY}
                     setTrackCallback={(fn: any) =>
