@@ -66,7 +66,6 @@ import Sidebar from '../Sidebar/Sidebar'
 import UserInteraction from '../UserInteraction'
 import DocTitle from '../DocTitle'
 import asTitleString from '../DocTitle/titleStringBuilder'
-import Intercom from '../Intercom'
 import Segment, { MetricsData } from '../Segment'
 import { CannyLoader } from 'browser-services/canny'
 
