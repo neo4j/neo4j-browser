@@ -41,6 +41,8 @@ export const SET_MAX_FRAMES = 'frames/SET_MAX_FRAMES'
 export const TRACK_SAVE_AS_PROJECT_FILE = 'frames/TRACK_SAVE_AS_PROJECT_FILE'
 export const TRACK_FULLSCREEN_TOGGLE = 'frames/TRACK_FULLSCREEN_TOGGLE'
 export const TRACK_COLLAPSE_TOGGLE = 'frames/TRACK_COLLAPSE_TOGGLE'
+export const SET_NODE_PROPERTIES_COLLAPSED_BY_DEFAULT =
+  'frames/SET_NODE_PROPERTIES_COLLAPSED_BY_DEFAULT'
 
 export function getFrame(state: GlobalState, id: string): FrameStack {
   return state[NAME].byId[id]
@@ -52,6 +54,15 @@ export function getFrames(state: GlobalState): FrameStack[] {
 
 export function getRecentView(state: GlobalState): null | FrameView {
   return state[NAME].recentView
+}
+
+export function getNodePropertiesExpandedByDefault(
+  state: GlobalState
+): boolean {
+  return (
+    state[NAME].nodePropertiesExpandedByDefault ??
+    initialState.nodePropertiesExpandedByDefault
+  )
 }
 
 /**
@@ -247,13 +258,15 @@ export interface FramesState {
   byId: { [key: string]: FrameStack }
   recentView: null | FrameView
   maxFrames: number
+  nodePropertiesExpandedByDefault: boolean
 }
 
 export const initialState: FramesState = {
   allIds: [],
   byId: {},
   recentView: null,
-  maxFrames: 30
+  maxFrames: 30,
+  nodePropertiesExpandedByDefault: true
 }
 
 export default function reducer(
@@ -275,6 +288,11 @@ export default function reducer(
       return unpinFrame(state, action.id)
     case SET_RECENT_VIEW:
       return setRecentViewHelper(state, action.view)
+    case SET_NODE_PROPERTIES_COLLAPSED_BY_DEFAULT:
+      return {
+        ...state,
+        nodePropertiesExpandedByDefault: action.expandedByDefault
+      }
     case SET_MAX_FRAMES:
       const newState = {
         ...state,
@@ -358,6 +376,19 @@ export function setRecentView(view: FrameView): SetRecentViewAction {
     view
   }
 }
+export interface SetExpandedByDefaultAction {
+  type: typeof SET_NODE_PROPERTIES_COLLAPSED_BY_DEFAULT
+  expandedByDefault: boolean
+}
+
+export function setNodePropertiesExpandedByDefault(
+  expandedByDefault: boolean
+): SetExpandedByDefaultAction {
+  return {
+    type: SET_NODE_PROPERTIES_COLLAPSED_BY_DEFAULT,
+    expandedByDefault
+  }
+}
 
 interface SetMaxFramesAction {
   type: typeof SET_MAX_FRAMES
@@ -372,6 +403,7 @@ type StreamActions =
   | UnpinFrameAction
   | SetRecentViewAction
   | SetMaxFramesAction
+  | SetExpandedByDefaultAction
 
 interface SettingsUpdateAction {
   type: typeof SETTINGS_UPDATE

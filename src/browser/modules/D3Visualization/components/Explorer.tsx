@@ -20,7 +20,7 @@
 
 import React, { Component } from 'react'
 import deepmerge from 'deepmerge'
-import { connect } from 'react-redux'
+import { connect, ConnectedComponent } from 'react-redux'
 import { debounce } from 'lodash'
 
 import Node from '../lib/visualization/components/node'
@@ -33,8 +33,12 @@ import { GraphStyle } from './OverviewPane'
 import { VizItem } from './types'
 import { deepEquals } from 'services/utils'
 import { defaultPanelWidth, NodeInspectorPanel } from './NodeInspectorPanel'
-import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
 import { panelMinWidth, StyledFullSizeContainer } from './styled'
+import {
+  getNodePropertiesExpandedByDefault,
+  setNodePropertiesExpandedByDefault
+} from 'shared/modules/stream/streamDuck'
+import { Action, Dispatch } from 'redux'
 
 const deduplicateNodes = (nodes: any) => {
   return nodes.reduce(
@@ -66,6 +70,11 @@ type ExplorerComponentProps = {
   setGraph: any
   hasTruncatedFields: boolean
 }
+type ExporerReduxProps = {
+  nodePropertiesExpandedByDefault: boolean
+  setNodePropertiesExpandedByDefault: (expandedByDefault: boolean) => void
+}
+
 type ExplorerComponentState = {
   graphStyle: GraphStyle
   hoveredItem: VizItem
@@ -78,14 +87,15 @@ type ExplorerComponentState = {
   width: number
   nodePropertiesExpanded: boolean
 }
+type FullExplorerProps = ExplorerComponentProps & ExporerReduxProps
 
 export class ExplorerComponent extends Component<
-  ExplorerComponentProps,
+  FullExplorerProps,
   ExplorerComponentState
 > {
   defaultStyle: any
 
-  constructor(props: ExplorerComponentProps) {
+  constructor(props: FullExplorerProps) {
     super(props)
     const graphStyle = neoGraphStyle()
     this.defaultStyle = graphStyle.toSheet()
@@ -128,7 +138,7 @@ export class ExplorerComponent extends Component<
       hoveredItem: selectedItem,
       freezeLegend: false,
       width: defaultPanelWidth(),
-      nodePropertiesExpanded: true
+      nodePropertiesExpanded: this.props.nodePropertiesExpandedByDefault
     }
   }
 
@@ -246,11 +256,13 @@ export class ExplorerComponent extends Component<
             this.setState({ width: Math.max(panelMinWidth, width) })
           }
           expanded={this.state.nodePropertiesExpanded}
-          toggleExpanded={() =>
-            this.setState(oldState => ({
-              nodePropertiesExpanded: !oldState.nodePropertiesExpanded
-            }))
-          }
+          toggleExpanded={() => {
+            const { nodePropertiesExpanded } = this.state
+            this.props.setNodePropertiesExpandedByDefault(
+              !nodePropertiesExpanded
+            )
+            this.setState({ nodePropertiesExpanded: !nodePropertiesExpanded })
+          }}
         />
       </StyledFullSizeContainer>
     )
@@ -261,6 +273,17 @@ export class ExplorerComponent extends Component<
   }
 }
 
-export const Explorer = connect((state: GlobalState) => ({
-  maxFieldItems: getMaxFieldItems(state)
-}))(ExplorerComponent)
+export const Explorer: ConnectedComponent<
+  typeof ExplorerComponent,
+  ExplorerComponentProps
+> = connect(
+  (state: GlobalState) => ({
+    nodePropertiesExpandedByDefault: getNodePropertiesExpandedByDefault(state)
+  }),
+  (dispatch: Dispatch<Action>) => ({
+    setNodePropertiesExpandedByDefault: (expandedByDefault: boolean) =>
+      dispatch(setNodePropertiesExpandedByDefault(expandedByDefault))
+  })
+)(ExplorerComponent)
+
+export default Explorer
