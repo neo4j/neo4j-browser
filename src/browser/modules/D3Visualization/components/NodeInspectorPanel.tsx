@@ -30,7 +30,7 @@ export type NodeInspectorPanelState = {
   expanded: boolean
 }
 export const defaultPanelWidth = (): number =>
-  Math.max(window.innerWidth / 3.5, panelMinWidth)
+  Math.max(window.innerWidth / 5, panelMinWidth)
 export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
   render(): JSX.Element {
     const {

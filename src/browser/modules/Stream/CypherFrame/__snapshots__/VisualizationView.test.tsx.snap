@@ -79,8 +79,8 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
           </g>
         </svg>
         <div
-          class="sc-fjdhpX VgzAu"
-          offset="329"
+          class="sc-fjdhpX hNgrdF"
+          offset="208.8"
         >
           <button
             class="sc-jzJRlG hPTWGK zoom-in"
@@ -110,11 +110,11 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
         />
       </div>
       <div
-        class="sc-cSHVUG btLdEa"
-        width="325"
+        class="sc-cSHVUG caxhVK"
+        width="204.8"
       >
         <div
-          class="sc-chPdSV lduMTw react-resizable"
+          class="sc-chPdSV kFlaMg react-resizable"
         >
           <div
             class="sc-kGXeez lhIkLB"

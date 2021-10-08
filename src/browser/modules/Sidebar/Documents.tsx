@@ -64,7 +64,7 @@ const getReferences = (version: string, v: string) => {
     },
     {
       name: 'Neo4j Browser Manual',
-      url: 'https://neo4j.com/docs/browser-manual/current'
+      url: 'https://neo4j.com/docs/browser-manual/current/'
     },
     {
       name: 'Cypher Introduction',

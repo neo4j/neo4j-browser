@@ -22,7 +22,7 @@ import styled from 'styled-components'
 
 export const legendRowHeight = 32
 export const inspectorFooterContractedHeight = 22
-export const panelMinWidth = 325
+export const panelMinWidth = 200
 
 export const StyledSvgWrapper = styled.div`
   line-height: 0;
@@ -307,6 +307,7 @@ export const StyledNodeInspectorTopMenuChevron = styled.div<{
 
 export const PaneContainer = styled.div`
   padding: 0 14px;
+  height: 100%;
 `
 
 export const AlternatingTable = styled.table`
