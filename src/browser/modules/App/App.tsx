@@ -66,7 +66,6 @@ import Sidebar from '../Sidebar/Sidebar'
 import UserInteraction from '../UserInteraction'
 import DocTitle from '../DocTitle'
 import asTitleString from '../DocTitle/titleStringBuilder'
-import Intercom from '../Intercom'
 import Segment, { MetricsData } from '../Segment'
 import { CannyLoader } from 'browser-services/canny'
 
@@ -237,7 +236,6 @@ export function App(props: any) {
               <UserInteraction />
               {loadExternalScripts && (
                 <>
-                  <Intercom appID="lq70afwx" />
                   <Segment
                     segmentKey={SEGMENT_KEY}
                     setTrackCallback={(fn: any) =>
