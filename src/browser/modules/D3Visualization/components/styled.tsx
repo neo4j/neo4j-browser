@@ -307,6 +307,7 @@ export const StyledNodeInspectorTopMenuChevron = styled.div<{
 
 export const PaneContainer = styled.div`
   padding: 0 14px;
+  height: 100%;
 `
 
 export const AlternatingTable = styled.table`
