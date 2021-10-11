@@ -58,7 +58,9 @@ Images.
 
 `graph.png`
 
-![](graph.png)
+`MATCH p = shortestPath((p1:Person {name: 'Kevin Bacon'})-[*]-(p2:Person {name: 'Meg Ryan'})) RETURN p`
+
+<img src="graph.png" width="200">
 
 `guides.png`
 
