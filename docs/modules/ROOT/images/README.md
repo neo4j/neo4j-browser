@@ -6,7 +6,7 @@ Images.
 
 `browser-with-aura.png`
 
-<img src="browser-with-aura" width="200">
+<img src="browser-with-aura.png" width="200">
 
 `browser-with-desktop.png`
 
