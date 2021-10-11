@@ -108,9 +108,13 @@ Images.
 
 `style_actedin_relationship.png`
 
+`MATCH (tom:Person {name: 'Tom Hanks'})-[ACTED_IN]->(movies) RETURN tom, movies`
+
 <img src="style_actedin_relationship.png" width="200">
 
 `style_movie_node.png`
+
+`MATCH (tom:Person {name: 'Tom Hanks'})-[ACTED_IN]->(movies) RETURN tom, movies`
 
 <img src="style_movie_node.png" width="200">
 
