@@ -56,11 +56,47 @@ Images.
 
 <img src="find-replace.png" width="200">
 
-`graph.png`
-
-`MATCH p = shortestPath((p1:Person {name: 'Kevin Bacon'})-[*]-(p2:Person {name: 'Meg Ryan'})) RETURN p`
+```
+graph.png
+MATCH p = shortestPath((p1:Person {name: 'Kevin Bacon'})-[*]-(p2:Person {name: 'Meg Ryan'})) RETURN p
+```
 
 <img src="graph.png" width="200">
+
+```
+graph_result_frame_style_node_selected_properties.png
+MATCH p = shortestPath((p1:Person {name: 'Kevin Bacon'})-[*]-(p2:Person {name: 'Meg Ryan'})) RETURN p
+```
+
+<img src="graph_result_frame_style_node_selected_properties.png" width="200">
+
+```
+graph_result_frame_style_overview.png
+MATCH p = shortestPath((p1:Person {name: 'Kevin Bacon'})-[*]-(p2:Person {name: 'Meg Ryan'})) RETURN p
+```
+
+<img src="graph_result_frame_style_overview.png" width="200">
+
+```
+graph_result_frame_style_overview_node.png
+MATCH p = shortestPath((p1:Person {name: 'Kevin Bacon'})-[*]-(p2:Person {name: 'Meg Ryan'})) RETURN p
+```
+
+<img src="graph_result_frame_style_overview_node.png" width="200">
+
+```
+graph_result_frame_style_overview_relationship.png
+MATCH p = shortestPath((p1:Person {name: 'Kevin Bacon'})-[*]-(p2:Person {name: 'Meg Ryan'})) RETURN p
+```
+
+<img src="graph_result_frame_style_overview_relationship.png" width="200">
+
+```
+graph_result_frame_style_relationship_selected_properties.png
+MATCH p = shortestPath((p1:Person {name: 'Kevin Bacon'})-[*]-(p2:Person {name: 'Meg Ryan'})) RETURN p
+```
+
+<img src="graph_result_frame_style_relationship_selected_properties.png" width="200">
 
 `guides.png`
 
@@ -105,18 +141,6 @@ Images.
 `settings.png`
 
 <img src="settings.png" width="200">
-
-`style_actedin_relationship.png`
-
-`MATCH (tom:Person {name: 'Tom Hanks'})-[ACTED_IN]->(movies) RETURN tom, movies`
-
-<img src="style_actedin_relationship.png" width="200">
-
-`style_movie_node.png`
-
-`MATCH (tom:Person {name: 'Tom Hanks'})-[ACTED_IN]->(movies) RETURN tom, movies`
-
-<img src="style_movie_node.png" width="200">
 
 `sync.png`
 

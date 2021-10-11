@@ -709,22 +709,52 @@ You can customize your graph query result either in place or by using Graph Styl
 
 Neo4j Browser also provides functionality for styling with color and size, based on node labels and relationship types.
 
-If you click any label or relationship above the graph visualization, you can choose its styling in the area below the graph.
-Colors, sizes, and captions are selectable from there.
-To see this for yourself, you can click the `Movie` label above the graph and change the color, size, and captions of all nodes labeled with `Movie`.
-The same applies to the relationship `ACTED_IN`.
+.Label and type overview
+[caption="Label and type overview"]
+image:graph_result_frame_style_overview.png[]
 
+If you select a node label in the _Overview_, there are several styling possibilites available:
+
+* Color -- set the color for nodes of the selected label.
+* Size  -- set the size for nodes of the selected label.
+* Caption -- set what should be displayed as the caption for nodes of the selected label.
+
+.Set node style
+[caption="Label and type overview"]
+image:graph_result_frame_style_overview_node.png[]
+
+If you select a relationship type in the _Overview_, there are several styling possibilites available:
+
+* Color -- set the color for relationships of the selected type.
+* Line width  -- set the line width for relationships of the selected type.
+* Caption -- set what should be displayed as the caption for relationships of the selected type.
+
+.Set relationship style
+[caption="Label and type overview"]
+image:graph_result_frame_style_overview_relationship.png[]
+
+If you select a node in the _graph result frame_, the _Node Properties_ shows labels and properties; selecting a node label works the same as in the _Overview_.
+
+.Styling for selected node labels
+=====
+You can click the `Movie` label in the graph and change the color, size, and captions of all nodes labeled with `Movie`.
 
 .Changes to nodes labeled `Movie`
-[#style_movie_node]
 [caption="Changes to nodes labeled `Movie`"]
-image:style_movie_node.png[]
+image:graph_result_frame_style_node_selected_properties.png[]
+=====
 
+If you select a relationship in the _graph result frame_, the _Relationship Properties_ shows the type and properties; selecting the type works the same as in the _Overview_.
 
-.Changes to relationships labeled `ACTED_IN`
-[#style_actedin_relationship]
-[caption="Changes to relationships labeled `ACTED_IN`"]
-image:style_actedin_relationship.png[]
+.Styling for selected relationship types
+=====
+You can click a relationship in the graph and change the color, line width, and captions of all relationships with the same type.
+For example the `ACTED_IN` is selected.
+
+.Changes to relationships with type `ACTED_IN`
+[caption="Changes to relationships with type `ACTED_IN`"]
+image:graph_result_frame_style_relationship_selected_properties.png[]
+=====
 
 
 [[grass]]
