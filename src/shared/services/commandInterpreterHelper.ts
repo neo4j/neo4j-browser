@@ -517,17 +517,22 @@ const availableCommands = [
       }
 
       const initialSlide = tryGetRemoteInitialSlideFromUrl(action.cmd)
-      resolveGuide(guideName, store.getState()).then(({ slides, title }) => {
-        const guide = {
-          currentSlide: initialSlide,
-          title,
-          slides
-        }
-        put(setCurrentGuide(guide))
-        put(addGuideIfExternal(guide))
+      resolveGuide(guideName, store.getState()).then(
+        ({ slides, title, isError }) => {
+          const guide = {
+            currentSlide: initialSlide,
+            title,
+            slides,
+            isError
+          }
+          put(setCurrentGuide(guide))
+          if (!guide.isError) {
+            put(addGuideIfExternal(guide))
+          }
 
-        put(open('guides'))
-      })
+          put(open('guides'))
+        }
+      )
     }
   },
   {
