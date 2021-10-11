@@ -43,4 +43,4 @@ const slides = [
   </BuiltInGuideSidebarSlide>
 ]
 
-export default { title, slides }
+export default { title, slides, isError: true }

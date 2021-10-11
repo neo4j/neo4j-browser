@@ -49,7 +49,7 @@ const { chapters } = docs.guide
 export async function resolveGuide(
   guideName: string,
   state: any
-): Promise<{ slides: JSX.Element[]; title: string }> {
+): Promise<{ slides: JSX.Element[]; title: string; isError?: boolean }> {
   const isUrl = guideName.startsWith('http')
   if (isUrl) {
     return await resolveRemoteGuideFromURL(guideName, state)
@@ -88,7 +88,7 @@ function htmlTextToSlides(html: string): JSX.Element[] {
 async function resolveRemoteGuideFromURL(
   guideName: string,
   state: any
-): Promise<{ slides: JSX.Element[]; title: string }> {
+): Promise<{ slides: JSX.Element[]; title: string; isError?: boolean }> {
   const url = guideName
   const urlObject = new URL(url)
   urlObject.href = url
@@ -134,7 +134,8 @@ async function resolveRemoteGuideFromURL(
             </StyledHelpContent>
           </StyledHelpFrame>
         </Slide>
-      ]
+      ],
+      isError: true
     }
   }
 }
