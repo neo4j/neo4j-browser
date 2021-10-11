@@ -2,59 +2,59 @@ Images.
 
 `about.png`
 
-![](about.png)
+<img src="about.png" width="200">
 
 `browser-with-aura.png`
 
-![](browser-with-aura.png)
+<img src="browser-with-aura" width="200">
 
 `browser-with-desktop.png`
 
-![](browser-with-desktop.png)
+<img src="browser-with-desktop.png" width="200">
 
 `browser-with-sandbox.png`
 
-![](browser-with-sandbox.png)
+<img src="browser-with-sandbox.png" width="200">
 
 `code.png`
 
-![](code.png)
+<img src="code.png" width="200">
 
 `command-palette.png`
 
-![](command-palette.png)
+<img src="command-palette.png" width="200">
 
 `configs.png`
 
-![](configs.png)
+<img src="configs.png" width="200">
 
 `database-information.png`
 
-![](database-information.png)
+<img src="database-information.png" width="200">
 
 `download-csv-json.png`
 
-![](download-csv-json.png)
+<img src="download-csv-json.png" width="200">
 
 `download_csv.png`
 
-![](download_csv.png)
+<img src="download_csv.png" width="200">
 
 `download-graph.png`
 
-![](download-graph.png)
+<img src="download-graph.png" width="200">
 
 `download_graph.png`
 
-![](download_graph.png)
+<img src="download_graph.png" width="200">
 
 `favorites.png`
 
-![](favorites.png)
+<img src="favorites.png" width="200">
 
 `find-replace.png`
 
-![](find-replace.png)
+<img src="find-replace.png" width="200">
 
 `graph.png`
 
@@ -64,70 +64,69 @@ Images.
 
 `guides.png`
 
-![](guides.png)
+<img src="guides.png" width="200">
 
 `help.png`
 
-![](help.png)
+<img src="help.png" width="200">
 
 `home-screen.png`
 
-![](home-screen.png)
+<img src="home-screen.png" width="200">
 
 `inline-result-editor.gif`
 
-![](inline-result-editor.gif)
+<img src="inline-result-editor.gif" width="200">
 
 `overview.png` 
 
-![](overview.png)
+<img src="overview.png" width="200">
 
 `play-start.png`
 
-![](play-start.png)
+<img src="play-start.png" width="200">
 
 `result-frame.png`
 
-![](result-frame.png)
+<img src="result-frame.png" width="200">
 
 `sample-scripts.png`
 
-![](sample-scripts.png)
+<img src="sample-scripts.png" width="200">
 
 `screen_editor.png`
 
-![](screen_editor.png)
+<img src="screen_editor.png" width="200">
 
 `screen_stream.png`
 
-![](screen_stream.png)
+<img src="screen_stream.png" width="200">
 
 `settings.png`
 
-![](settings.png)
+<img src="settings.png" width="200">
 
 `style_actedin_relationship.png`
 
-![](style_actedin_relationship.png)
+<img src="style_actedin_relationship.png" width="200">
 
 `style_movie_node.png`
 
-![](style_movie_node.png)
+<img src="style_movie_node.png" width="200">
 
 `sync.png`
 
-![](sync.png)
+<img src="sync.png" width="200">
 
 `sysinfo_stats.png`
 
-![](sysinfo_stats.png)
+<img src="sysinfo_stats.png" width="200">
 
 `table.png`
 
-![](table.png)
+<img src="table.png" width="200">
 
 `text.png`
 
-![](text.png)
-
+<img src="text.png" width="200">
 
