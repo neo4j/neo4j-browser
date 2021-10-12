@@ -199,7 +199,7 @@ const getDriverTypeName = (val: any) => {
   return undefined
 }
 
-const getTypeDisplayName = (val: any) => {
+const getTypeDisplayName = (val: any): string => {
   const jsType = typeof val
   const complexType = jsType === 'object'
 
@@ -215,7 +215,7 @@ const getTypeDisplayName = (val: any) => {
     return `Array(${val.length})`
   }
 
-  return getDriverTypeName(val)
+  return getDriverTypeName(val) || 'Unknown'
 }
 
 export function extractNodesAndRelationshipsFromRecordsForOldVis(
