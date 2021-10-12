@@ -89,7 +89,12 @@ import helpHelp from './dynamic/help'
 import helpPlay from './dynamic/play'
 
 // Play guides
+import playConcepts from './play-guides/concepts'
+import playCypher from './play-guides/cypher'
+import playIntro from './play-guides/intro'
 import playLearn from './play-guides/learn'
+import playMovieGraph from './play-guides/movie-graph'
+import playNorthwindGraph from './play-guides/northwind-graph'
 import playIconography from './play-guides/iconography'
 import playStart from './play-guides/start'
 import playTypography from './play-guides/typography'
@@ -99,6 +104,7 @@ import playWritecode from './play-guides/write-code'
 // Migrated sidebar guides
 import guideConcepts from './sidebar-guides/concepts'
 import guideCypher from './sidebar-guides/cypher'
+import guideIndex from './sidebar-guides/guideIndex'
 import guideIntro from './sidebar-guides/intro'
 import guideMovieGraph from './sidebar-guides/movie-graph'
 import guideNorthwindGraph from './sidebar-guides/northwind-graph'
@@ -133,6 +139,7 @@ type GuideDocs = {
 export type GuideChapter =
   | 'concepts'
   | 'cypher'
+  | 'index'
   | 'intro'
   | 'movie-graph'
   | 'movieGraph'
@@ -153,8 +160,17 @@ type PlayDocs = {
 }
 
 type PlayChapter =
+  | 'concepts'
+  | 'cypher'
   | 'iconography'
+  | 'intro'
   | 'learn'
+  | 'movie-graph'
+  | 'movieGraph'
+  | 'movies'
+  | 'northwind'
+  | 'northwind-graph'
+  | 'northwindGraph'
   | 'start'
   | 'typography'
   | 'unfound'
@@ -323,8 +339,17 @@ const docs: AllDocumentation = {
   play: {
     title: 'Guides & Examples',
     chapters: {
+      concepts: playConcepts,
+      cypher: playCypher,
       iconography: playIconography,
+      intro: playIntro,
       learn: playLearn,
+      movieGraph: playMovieGraph,
+      'movie-graph': playMovieGraph,
+      movies: playMovieGraph,
+      northwind: playNorthwindGraph,
+      'northwind-graph': playNorthwindGraph,
+      northwindGraph: playNorthwindGraph,
       start: playStart,
       typography: playTypography,
       unfound: playUnfound,
@@ -337,6 +362,7 @@ const docs: AllDocumentation = {
     chapters: {
       concepts: guideConcepts,
       cypher: guideCypher,
+      index: guideIndex,
       intro: guideIntro,
       movies: guideMovieGraph,
       movieGraph: guideMovieGraph,

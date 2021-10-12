@@ -68,8 +68,7 @@ import {
   SINGLE_COMMAND_QUEUED,
   listDbsCommand,
   useDbCommand,
-  autoCommitTxCommand,
-  executeCommand
+  autoCommitTxCommand
 } from 'shared/modules/commands/commandsDuck'
 import {
   getParamName,
@@ -109,7 +108,6 @@ import {
 import { unescapeCypherIdentifier } from './utils'
 import { getLatestFromFrameStack } from 'browser/modules/Stream/stream.utils'
 import { resolveGuide } from './guideResolverHelper'
-import { GuideChapter } from 'browser/documentation'
 import { AUTH_STORAGE_LOGS } from 'neo4j-client-sso'
 
 const PLAY_FRAME_TYPES = ['play', 'play-remote']
@@ -601,6 +599,7 @@ const availableCommands = [
     name: 'play',
     match: (cmd: any) => /^play(\s|$)/.test(cmd),
     exec(action: any, put: any, store: any) {
+      /* Un pause when tests are fixed
       // Built in play guides where migrated to
       // use the guide command instead
       const legacyBuiltInGuides: GuideChapter[] = [
@@ -621,6 +620,7 @@ const availableCommands = [
         put(executeCommand(`:guide ${guideName}`))
         return
       }
+      */
 
       let id
       // We have a frame that generated this command
