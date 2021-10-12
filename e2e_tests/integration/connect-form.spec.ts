@@ -169,6 +169,7 @@ describe('Connect form', () => {
         cy.executeCommand('match (n:MovieLabel) delete n')
         cy.executeCommand(':use system')
         cy.executeCommand('DROP DATABASE sidebartest')
+        cy.executeCommand(':use neo4j')
       })
     }
 
@@ -188,6 +189,7 @@ describe('Connect form', () => {
 
         cy.get('[data-testid="drawerDBMS"]').click()
         cy.get('[data-testid="database-selection-list"]').contains('system')
+        cy.executeCommand(':use neo4j')
       })
     }
   }
