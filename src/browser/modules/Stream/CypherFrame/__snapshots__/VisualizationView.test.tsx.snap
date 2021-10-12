@@ -86,7 +86,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
             class="sc-jzJRlG hPTWGK zoom-in"
           >
             <i
-              class="sc-fcdeBU pgnci sl-zoom-in"
+              class="sc-clNaTc kfzvLf sl-zoom-in"
               style="font-size: 1em;"
             />
           </button>
@@ -94,7 +94,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
             class="sc-jzJRlG hPTWGK zoom-out"
           >
             <i
-              class="sc-gmeYpB imxiti sl-zoom-out"
+              class="sc-etwtAo fTgRqt sl-zoom-out"
               style="font-size: 1em;"
             />
           </button>
@@ -111,6 +111,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
       </div>
       <div
         class="sc-cSHVUG caxhVK"
+        data-testid="vizInspector"
         width="204.8"
       >
         <div
