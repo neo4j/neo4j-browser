@@ -49,7 +49,7 @@ export function DetailsPaneComponent({
   frameHeight
 }: DetailsPaneComponentProps): JSX.Element {
   const allItemProperties = [
-    { key: '<id>', value: `${vizItem.item.id}`, type: 'string' },
+    { key: '<id>', value: `${vizItem.item.id}`, type: 'String' },
     ...vizItem.item.properties
   ].sort((a, b) => (a.key < b.key ? -1 : 1))
 
@@ -91,7 +91,7 @@ export function DetailsPaneComponent({
             )
           })}
       </PaneHeader>
-      <PaneBody maxHeight={frameHeight - 45}>
+      <PaneBody frameHeight={frameHeight}>
         <StyledInlineList>
           <AlternatingTable>
             <tbody>

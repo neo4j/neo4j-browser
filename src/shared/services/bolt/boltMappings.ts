@@ -26,7 +26,8 @@ import {
   safelyRemoveObjectProp,
   safelyAddObjectProp,
   escapeReservedProps,
-  unEscapeReservedProps
+  unEscapeReservedProps,
+  upperFirst
 } from '../utils'
 
 export const reservedTypePropertyName = 'transport-class'
@@ -202,8 +203,12 @@ const getTypeDisplayName = (val: any) => {
   const jsType = typeof val
   const complexType = jsType === 'object'
 
+  if (jsType === 'number') {
+    return 'Float'
+  }
+
   if (!complexType) {
-    return jsType
+    return upperFirst(jsType)
   }
 
   if (val instanceof Array) {

@@ -320,13 +320,14 @@ export const AlternatingTable = styled.table`
   font-size: 13px;
   width: 100%;
 `
+
 export const PaneHeader = styled.div`
   font-size: 16px;
   margin-top: 10px;
 `
-
-export const PaneBody = styled.div<{ maxHeight: number }>`
-  max-height: ${props => props.maxHeight}px;
+const PANE_HEADER_HEIGHT = 50
+export const PaneBody = styled.div<{ frameHeight: number }>`
+  max-height: ${props => props.frameHeight - PANE_HEADER_HEIGHT}px;
   overflow: auto;
   margin-top: 14px;
 `
