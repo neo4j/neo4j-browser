@@ -1,4 +1,4 @@
-FROM node:10-jessie
+FROM node:12.22-bullseye-slim
 
 WORKDIR /usr/src
 
