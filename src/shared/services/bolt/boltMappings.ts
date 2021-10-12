@@ -187,6 +187,32 @@ export function extractNodesAndRelationshipsFromRecords(
   return { nodes: rawNodes, relationships: rawRels }
 }
 
+const getDriverTypeName = (val: any) => {
+  const driverTypeMap = neo4j.types as any
+  const driverTypes = Object.keys(neo4j.types)
+  for (const type of driverTypes) {
+    if (val instanceof driverTypeMap[type]) {
+      return type
+    }
+  }
+  return undefined
+}
+
+const getTypeDisplayName = (val: any) => {
+  const jsType = typeof val
+  const complexType = jsType === 'object'
+
+  if (!complexType) {
+    return jsType
+  }
+
+  if (val instanceof Array) {
+    return `Array(${val.length})`
+  }
+
+  return getDriverTypeName(val)
+}
+
 export function extractNodesAndRelationshipsFromRecordsForOldVis(
   records: typeof neo4j.types.Record[],
   types: any,
@@ -209,19 +235,7 @@ export function extractNodesAndRelationshipsFromRecordsForOldVis(
       labels: item.labels,
       properties: itemIntToString(item.properties, converters),
       propertyTypes: Object.entries(item.properties).reduce(
-        (acc, [key, val]) => {
-          const jsType = typeof val
-          const complexType = jsType === 'object'
-          if (complexType) {
-            const valAsAny = val as any
-            const typeName = valAsAny.constructor.name
-            if (typeName === 'Array' && typeof valAsAny.length === 'number') {
-              return { ...acc, [key]: `${typeName}(${valAsAny.length})` }
-            }
-            return { ...acc, [key]: typeName }
-          }
-          return { ...acc, [key]: jsType }
-        },
+        (acc, [key, val]) => ({ ...acc, [key]: getTypeDisplayName(val) }),
         {}
       )
     }
@@ -245,15 +259,7 @@ export function extractNodesAndRelationshipsFromRecordsForOldVis(
       type: item.type,
       properties: itemIntToString(item.properties, converters),
       propertyTypes: Object.entries(item.properties).reduce(
-        (acc, [key, val]) => {
-          const jsType = typeof val
-          const complexType = jsType === 'object'
-          if (complexType) {
-            //@ts-ignore
-            return { ...acc, [key]: val.constructor.name }
-          }
-          return { ...acc, [key]: jsType }
-        },
+        (acc, [key, val]) => ({ ...acc, [key]: getTypeDisplayName(val) }),
         {}
       )
     }
