@@ -56,8 +56,8 @@ const numberFormat = (anything: any) => {
   }
   return undefined
 }
-const spacialFormat = (anything: any) => {
-  const zString = anything.z ? `, z:${anything.z}` : ''
+const spacialFormat = (anything: any): string => {
+  const zString = anything.z !== undefined ? `, z:${anything.z}` : ''
   return `point({srid:${anything.srid}, x:${anything.x}, y:${anything.y}${zString}})`
 }
 
