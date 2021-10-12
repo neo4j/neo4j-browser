@@ -71,7 +71,10 @@ export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
         </StyledNodeInspectorTopMenuChevron>
 
         {expanded && (
-          <StyledNodeInspectorContainer width={width}>
+          <StyledNodeInspectorContainer
+            width={width}
+            data-testid="vizInspector"
+          >
             <Resizable
               width={width}
               height={300 /*doesn't matter but required prop */}
