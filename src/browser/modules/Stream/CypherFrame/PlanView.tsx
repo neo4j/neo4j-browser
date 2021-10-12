@@ -58,7 +58,10 @@ export class PlanView extends Component<PlanViewProps, PlanViewState> {
 
   componentDidMount() {
     this.extractPlan(this.props.result)
-      .then(() => this.props.setPlanExpand('EXPAND'))
+      .then(() => {
+        this.props.setPlanExpand('EXPAND')
+        this.toggleExpanded(true)
+      })
       .catch(() => {})
   }
 
