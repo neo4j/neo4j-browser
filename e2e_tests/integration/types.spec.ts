@@ -161,6 +161,10 @@ describe('Types in Browser', () => {
       cy.get('[data-testid="vizInspector"]')
         .should('contain', 'P11M2DT2H19')
         .and('contain', 'srid:4326')
+        .and('contain', 'date')
+        .and('contain', 'location')
+        .and('contain', 'x:12.78')
+        .and('contain', 'y:56.7')
     })
   }
 })
