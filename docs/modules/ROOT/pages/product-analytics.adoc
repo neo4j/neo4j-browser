@@ -1,25 +1,26 @@
 :description: Product analytics, configure consent settings for sending anonymous analytics data.
 
+
 [[product-analytics]]
 = Product analytics
 
-_Product analytics_, is used to track events and analytics for Neo4j Browser.
+Product analytics, is used to track events and analytics for Neo4j Browser.
 
-Neo4j Browser are integrated directly with Segment, giving it the potential to send analytics data.
+Neo4j Browser is integrated directly with Segment, giving it the potential to send analytics data.
 
 [IMPORTANT]
 ====
-No personal information is collected or sent.
+No personal information is collected.
 ====
 
 == Neo4j Server Browser module
 
-Users are provided with an informational message that they are opted into _product analytics_ with the option to allow them to opt-out.
+A message informs users that they are allowing product analytics to be collected and that they may opt-out of this if they wish.
 
-The setting link:https://neo4j.com/docs/operations-manual/current/reference/configuration-settings/#config_clients.allow_telemetry[`clients.allow_telemetry=false`^] allows per default to opt-out the user from product analytics.
+The setting link:https://neo4j.com/docs/operations-manual/current/reference/configuration-settings/#config_clients.allow_telemetry[`clients.allow_telemetry=false`^] allows the user per default to opt-out of product analytics.
 
 * Send anonymous crash reports -- Crash reports allow us to quickly diagnose and fix problems.
-* Send anonymous usage statistics -- This data helps us prioritise features and improvements.
+* Send anonymous usage statistics -- This data helps us prioritize features and improvements.
 
 .Product analytics settings
 image:product_analytics_consent_browser_settings.png[]
