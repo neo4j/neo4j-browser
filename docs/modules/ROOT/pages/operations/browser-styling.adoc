@@ -139,6 +139,6 @@ Same applies to relationships.
 
 [TIP]
 ====
-The link:https://github.com/neo4j/neo4j-browser/blob/master/src/shared/services/grassUtils.ts[GraSS parser] is open source.
+The link:https://github.com/neo4j/neo4j-browser/blob/master/src/shared/services/grassUtils.ts[GraSS parser^] is open source.
 ====
 

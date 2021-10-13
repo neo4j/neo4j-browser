@@ -1,10 +1,10 @@
-:description: Single Sign-On (SSO) for Neo4j browser.
+:description: Single Sign-On (SSO) for Neo4j Browser.
 
 
 [[browser-sso]]
 = Browser Single Sign-On
 
-Browser provides basic support for some Single Sign-On (SSO) providers under specific Enterprise environment configurations.
+Neo4j Browser provides basic support for some Single Sign-On (SSO) providers under specific Enterprise environment configurations.
 Contact Neo4j Professional Services for additional assistance (see https://neo4j.com/professional-services/ for more information about Professional Services).
 Your organization needs an existing compatible SSO provider (local or external) already configured.
 
