@@ -12,11 +12,11 @@ Neo4j Browser supports the following HTTP REST commands:
 * `:post` -- HTTP POST.
 * `:put` -- HTTP PUT.
 
-It is possible to use these commands to query the link:https://neo4j.com/docs/http-api/{neo4j-version}/[Neo4j HTTP API].
+It is possible to use these commands to query the link:https://neo4j.com/docs/http-api/{neo4j-version}/[Neo4j HTTP API^].
 
 [NOTE]
 ====
-The link:https://neo4j.com/docs/rest-docs/3.5/[Neo4j REST API] was deprecated in Neo4j 3.5 and was removed from Neo4j 4.X versions.
+The link:https://neo4j.com/docs/rest-docs/3.5/[Neo4j REST API^] was deprecated in Neo4j 3.5 and was removed from Neo4j 4.X versions.
 ====
 
 //The HTTP API can return JSON or JOLT.
