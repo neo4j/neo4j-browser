@@ -20,6 +20,6 @@ If you want to change the initially executed command, navigate to the *Browser S
 [TIP]
 ====
 For more information on how to enter and run Cypher queries and commands, see xref:visual-tour.adoc#editor[Cypher editor]. +
-For more information about Cypher, see link:https://neo4j.com/docs/cypher-manual/{neo4j-version}/[Cypher Manual] and link:https://neo4j.com/docs/cypher-refcard/{neo4j-version}/[Neo4j Cypher Refcard].
+For more information about Cypher, see link:https://neo4j.com/docs/cypher-manual/{neo4j-version}/[Cypher Manual^] and link:https://neo4j.com/docs/cypher-refcard/{neo4j-version}/[Neo4j Cypher Refcard^].
 ====
 
