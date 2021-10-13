@@ -5,7 +5,7 @@
 = Browser Single Sign-On
 
 Neo4j Browser provides basic support for some Single Sign-On (SSO) providers under specific Enterprise environment configurations.
-Contact Neo4j Professional Services for additional assistance (see https://neo4j.com/professional-services/ for more information about Professional Services).
+Contact Neo4j Professional Services for additional assistance (see link:https://neo4j.com/professional-services/[_https://neo4j.com/professional-services/_^] for more information about Professional Services).
 Your organization needs an existing compatible SSO provider (local or external) already configured.
 
 [NOTE]
@@ -24,13 +24,13 @@ Browser supports two authorization flows:
 [IMPORTANT]
 ====
 It is strongly advised to use PKCE to ensure security.
-Further information about OpenID Connect and OAuth can be found at https://openid.net/connect/.
+Further information about OpenID Connect and OAuth can be found at link:https://openid.net/connect/[https://openid.net/connect/^].
 ====
 
 In addition to having an SSO provider already configured at your organization, configuring SSO for Browser and Neo4j requires a separate OAuth plugin development engagement with Neo4j Professional Services.
 With these prerequisites in place, two additional steps are required:
 
-. The https://neo4j.com/docs/operations-manual/current/configuration/neo4j-conf/#neo4j-conf[`neo4j.conf`] file should be updated with the following information (be sure to avoid duplicate entries in the `neo4j.conf` file):
+. The link:https://neo4j.com/docs/operations-manual/current/configuration/neo4j-conf/#neo4j-conf[`neo4j.conf`^] file should be updated with the following information (be sure to avoid duplicate entries in the `neo4j.conf` file):
 +
 [source, properties]
 ----
@@ -56,7 +56,12 @@ dbms.jvm.additional=-Dorg.apache.commons.logging.simplelog.log.org.apache.http=D
 
 . Browser needs to be aware of the identity providers available for use.
 This is done by specifying a URL parameter discoveryURL that specifies a URL to a json file containing the SSO providers.
-Example for Browser: `http://<browser-server-host>:<http-port>?discoveryURL=http://webhost.com/public/discovery.json`.
+Example for Browser:
++
+[source, url, role="noheader"]
+----
+http://<browser-server-host>:<http-port>?discoveryURL=http://webhost.com/public/discovery.json
+----
 +
 The `discovery.json` file must contain entries tailored to your organization’s specific SSO solution.
 Below is a reference discovery file for the ID provider (IDP) _Keycloak_ containing one SSO provider and set up to be running on port 18080.
