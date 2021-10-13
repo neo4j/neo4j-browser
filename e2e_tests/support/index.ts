@@ -13,8 +13,14 @@ before(() => {
   }
 })
 
-afterEach(function() {
-  if (this.currentTest?.state === 'failed') {
+function abortEarly() {
+  if (
+    this.currentTest.state === 'failed' &&
+    this.currentTest.currentRetry() === this.currentTest.retries()
+  ) {
     Cypress.runner.stop()
   }
-})
+}
+
+beforeEach(abortEarly)
+afterEach(abortEarly)

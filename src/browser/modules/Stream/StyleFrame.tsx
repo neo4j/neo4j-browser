@@ -74,7 +74,7 @@ const StyleStatusbar = ({
         <StyledFrameTitlebarButtonSection>
           <FrameButton
             title="Reset style"
-            data-testid="styleResetButton"
+            dataTestId="styleResetButton"
             onClick={() => onResetClick(resetStyleAction, rerunAction)}
           >
             <FireExtinguisherIcon title="Reset style" />

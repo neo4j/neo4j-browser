@@ -201,13 +201,13 @@ export function PlanStatusbar(props: PlanStatusbarProps) {
         <StyledFrameTitlebarButtonSection>
           <FrameButton
             title="Collapse Plan"
-            data-testid="planCollapseButton"
+            dataTestId="planCollapseButton"
             onClick={() => props.setPlanExpand('COLLAPSE')}
           >
             <DoubleUpIcon />
           </FrameButton>
           <FrameButton
-            data-testid="planExpandButton"
+            dataTestId="planExpandButton"
             title="Expand Plan"
             onClick={() => props.setPlanExpand('EXPAND')}
           >

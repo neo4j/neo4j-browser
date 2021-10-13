@@ -36,10 +36,10 @@ describe('Viz rendering', () => {
     cy.executeCommand(
       'CREATE (a:TestLabel)-[:CONNECTS]->(b:TestLabel) RETURN a, b'
     )
-    cy.get('[data-testid="viz-legend-reltypes"]', { timeout: 5000 }).contains(
+    cy.get('[data-testid="vizInspector"]', { timeout: 5000 }).contains(
       'CONNECTS'
     )
-    cy.get('[data-testid="viz-legend-labels"]', { timeout: 5000 }).contains(
+    cy.get('[data-testid="vizInspector"]', { timeout: 5000 }).contains(
       'TestLabel'
     )
     cy.executeCommand('MATCH (a:TestLabel) DETACH DELETE a')

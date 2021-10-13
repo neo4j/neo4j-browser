@@ -67,22 +67,17 @@ describe('Guide command', () => {
     cy.get('[data-testid=guideNextSlide]').click()
     cy.get('[data-testid=guideNextSlide]').click()
     cy.get('[data-testid=guideNextSlide]').click()
-    cy.get('[data-testid=guideNextSlide]').click()
-    cy.get('[data-testid=guideNextSlide]').click()
-    cy.get('[data-testid=guideNextSlide]').click()
     cy.get('[data-testid="guideDrawer"]').contains('Next steps')
 
     // switch guide via command
     cy.executeCommand(':guide northwind')
     cy.get('[data-testid="guideDrawer"]').contains('From RDBMS to Graph')
 
-    // Jump to end, then new guide
-    cy.get('[data-testid="pagination-7"]').click()
-    cy.get('[data-testid="guideDrawer"]')
-      .contains('Movie Graph')
-      .click()
-
-    cy.get('[data-testid="guideDrawer"]').contains('mini graph application')
+    // Jump to end
+    cy.get('[data-testid="pagination-11"]').click()
+    cy.get('[data-testid="guideDrawer"]').contains(
+      'Full Northwind import example'
+    )
 
     // Can use back button
     cy.get('[data-testid="guidesBackButton"]').click()

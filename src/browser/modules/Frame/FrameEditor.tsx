@@ -251,7 +251,7 @@ function FrameEditor({
       <StyledFrameTitlebarButtonSection>
         <FrameButton
           title="Save as Favorite"
-          data-testid="frame-Favorite"
+          dataTestId="frame-Favorite"
           onClick={() => {
             newFavorite(frame.cmd)
           }}
