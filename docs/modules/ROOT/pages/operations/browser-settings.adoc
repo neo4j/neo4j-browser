@@ -1,0 +1,261 @@
+:description: Adjust Neo4j Browser settings.
+
+
+[[browser-settings]]
+= Browser settings
+
+The Neo4j Browser defaults for all settings can be adjusted at any time in Neo4j Browser and globally.
+
+To view all currently configured settings, run `:config`.
+
+
+.Show the configuration settings
+====
+[source, shell, role=noplay]
+----
+:config
+----
+.Example output
+[source, shell, role=noheader]
+----
+{
+  "maxHistory": 20,
+  "theme": "auto",
+  "initCmd": ":play start",
+  "playImplicitInitCommands": true,
+  "initialNodeDisplay": 300,
+  "maxNeighbours": 100,
+  "showSampleScripts": true,
+  "browserSyncDebugServer": null,
+  "maxRows": 1000,
+  "maxFieldItems": 500,
+  "shouldReportUdc": true,
+  "autoComplete": true,
+  "scrollToTop": true,
+  "maxFrames": 30,
+  "codeFontLigatures": true,
+  "useBoltRouting": false,
+  "editorLint": false,
+  "useCypherThread": true,
+  "enableMultiStatementMode": true,
+  "connectionTimeout": 30000,
+  "showPerformanceOverlay": false
+}
+----
+====
+
+
+.Available Browser settings
+[options="header" cols=",,,"]
+|===
+| Browser Setting
+| Default value
+| Description
+| Configurable in the *Browser Settings* drawer
+
+| `maxHistory`
+| `30`
+| The maximum number of recently executed queries kept in Browser.
+When reached, old entries get retired.
+The command history is persisted across Browser restarts.
+| yes
+
+| `theme`
+| `auto`
+| Neo4j Browser UI theme.
+Possible values: `auto`, `normal`, `outline`, and `dark`.
+| yes
+
+| `initCmd`
+| `:play start`
+| The initial command that is run when connected to the graph.
+| yes
+
+| `playImplicitInitCommands`
+| `true`
+| If `true`, Browser automatically runs the command set in `initCmd` on startup, for example `:play start`.
+| no
+
+| `initialNodeDisplay`
+| `300`
+| Limit the number of nodes displayed on the first load of the graph visualization.
+| yes
+
+| `maxNeighbours`
+| `100`
+| The maximum number of neighbours for a node.
+| yes
+
+| `showSampleScripts`
+| `true`
+| Whether to display the *Sample Scripts* tab in *Favorites*.
+| yes
+
+| `browserSyncDebugServer`
+| `null`
+| Internal setting, used for debugging Browser Sync.
+| yes
+
+| `maxRows`
+| `1000`
+| The maximum rows to render in the *Table* and *Text* result views.
+| yes
+
+| `maxFieldItems`
+| `500`
+| Limit the length of the returned lists.
+For example, if a node has 1000 labels, the list will be cut off to the value set in `maxFieldItems`.
+| no
+
+| `shouldReportUdc`
+| `true`
+| Report less user metrics (user data collection).
+| no
+
+| `autoComplete`
+| `true`
+| Automatic completion of missing relationships. +
+When you execute a query, any relationships not explicitly returned by the query, but that exist between the nodes will be shown in the graph.
+You can disable for queries where it is important to see only the relationships the query returns.
+This behavior is controlled by the `Connect result nodes` in *Browser Settings*.
+| yes
+
+| `scrollToTop`
+| `true`
+| Automatically scroll stream to top on new frames.
+| yes
+
+| `maxFrames`
+| `30`
+| The maximum number of result frames.
+When reached, old frames get retired.
+| yes
+
+| `codeFontLigatures`
+| `true`
+| Allow font ligatures for the Cypher editor bar and Cypher snippets.
+| yes
+
+| `useBoltRouting`
+| `false`
+| Whether to use Bolt routing.
+The Bolt+routing feature on Neo4j drivers discovers a cluster member (drivers have a load-balancing feature).
+| no
+
+| `editorLint`
+| `false`
+| Enable/disable squiggly lines under text.
+| no
+
+| `useCypherThread`
+| `true`
+| Run Cypher queries through a web worker (background thread) to increase performance.
+| no
+
+| `enableMultiStatementMode`
+| `true`
+| Allows you to write and edit multi-line queries (use a semicolon (`;`) to separate statements).
+| yes
+
+| `connectionTimeout`
+| `30000`
+| The timeout in ms when establishing a connection to Neo4j.
+| yes
+
+| `showPerformanceOverlay`
+| `false`
+| Internal setting, used for showing a performance overlay (FPS and memory usage).
+| no
+
+| `editorAutocomplete`
+| `true`
+| Trigger autocomplete when typing.
+| no
+|===
+
+
+[[adjust-in-browser]]
+== Adjust settings in Browser
+
+To change the configuration settings locally in Neo4j Browser, you can either use the tabs in the Browser Settings drawer or, in the Cypher editor, type the command `:config` together with the setting and the new value.
+
+
+.Adjust an individual setting
+====
+The example shows how to change the maximum number of neighbors for a node.
+[source, cypher]
+----
+:config maxNeighbours:100
+----
+====
+
+
+.Adjust several settings
+====
+The example shows how to change the `maxFrames` from its default of `50` to `10` and the theme to `outline`.
+[source, cypher]
+----
+:config {maxFrames: 10, theme: "outline"}
+----
+After making the change, re-running `:config` reports that `maxFrames` has been set to `10`, and the theme is defined to `outline`.
+The *Browser Settings* drawer also reflects this change.
+====
+
+
+[WARNING]
+====
+Adjusting the settings first resets the configuration to the default configuration and then sets the given configurations.
+====
+
+
+[[adjust-globally]]
+== Adjust settings globally
+
+To change the configuration settings for all users of Neo4j Browser, modify the _neo4j.conf_ file, or if using link:[Neo4j Desktop], navigate to the DBMS which settings you want to update, click the ellipsis dropdown menu, and select *Settings*.
+
+For example, to change the `maxFrames` from its default of `50` to `10` and the theme to `outline`, add the following line to _neo4j.conf_:
+
+
+[source, properties]
+----
+browser.post_connect_cmd=config {maxFrames:10, theme: "outline"}
+----
+
+This changes the `maxFrames` from its default of `50` to `10` and then restarts Neo4j.
+
+
+.Global Browser settings
+[options="header" cols=",,"]
+|===
+| Browser Setting
+| Default value
+| Description
+
+| `browser.allow_outgoing_connections`
+| `true`
+| Configure the policy for outgoing Neo4j Browser connections.
+
+| `browser.credential_timeout`
+| `0s`
+| Configure the Neo4j Browser to time out logged-in users after this idle period.
+Setting this to `0` indicates no limit.
+Valid units are `ns`, `μs`, `ms`, `s`, `m`, `h`, and `d`; default unit is `s`).
+
+| `browser.post_connect_cmd`
+|
+| Commands to be run when Neo4j Browser successfully connects to the server.
+Separate multiple commands with a semicolon (`;`).
+
+| `browser.remote_content_hostname_whitelist`
+| `guides.neo4j.com,localhost`
+| Whitelist of hosts for the Neo4j Browser to be allowed to fetch content from.
+
+| `browser.retain_connection_credentials`
+| `true`
+| Configure the Neo4j Browser to store or not store user credentials.
+
+| `browser.retain_editor_history`
+| `true`
+| Configure the Neo4j Browser to store or not store editor history.
+|===
+

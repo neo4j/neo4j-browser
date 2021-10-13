@@ -1,0 +1,137 @@
+:description: This section describes the different deployment modes of Neo4j Browser.
+
+
+[[deployment-modes]]
+= Deployment modes
+
+There are several different scenarios of how to run Neo4j Browser:
+
+* Neo4j Server -- Neo4j includes an HTTP server that can host the `BROWSER` module (Neo4j Browser).
+* Neo4j Desktop -- Neo4j Browser comes out-of-the-box when you install Neo4j Desktop on your system.
+* Web application -- Neo4j Browser is available as a web application, (link:https://browser.graphapp.io/[Go to Web application^]).
+* Neo4j Sandbox -- Try out Neo4j and Neo4j Browser. (link:https://neo4j.com/sandbox/[Go to Neo4j Sandbox^]).
+* Neo4j Aura -- Neo4j Browser is available from the Neo4j Aura console. (link:https://console.neo4j.io[Go to Neo4j Aura^]).
+* Dedicated web server -- Host Neo4j Browser as a standalone HTTP web application.
+
+
+Neo4j Browser is open source (GNU General Public License v3.0) and the source code can be found at link:https://github.com/neo4j/neo4j-browser[_https://github.com/neo4j/neo4j-browser_^].
+
+**The following web browsers are supported:**
+
+* Chrome (Latest version)
+* Firefox (Latest version)
+* Edge (Latest version)
+
+[WARNING]
+====
+Internet Explorer is not supported.
+====
+
+[TIP]
+====
+For details on how to set up a connection to Neo4j in Neo4j Browser, see xref:operations/dbms-connection.adoc[].
+====
+
+
+[[bundled-neo4j]]
+== Neo4j Server
+
+Neo4j is the world’s leading graph database.
+The architecture is designed for optimal management, storage, and traversal of nodes and relationships.
+There are two editions of Neo4j to choose from, the Community Edition and the Enterprise Edition.
+The Enterprise Edition includes all that Community Edition has to offer, plus extra enterprise requirements such as backups, clustering, and failover capabilities.
+
+Neo4j includes a web server that can host different HTTP modules.
+If you are using the default configuration the web server will be started and host the `BROWSER` module (Neo4j Browser) at port `7474` when you start Neo4j.
+The `BROWSER` module is avaialable in Community Edition and Enterprise Edition.
+
+[NOTE]
+====
+If you do not want to host Neo4j Browser when you start Neo4j, remove `BROWSER` from the comma-separated list of the configuration setting https://neo4j.com/docs/operations-manual/current/reference/configuration-settings/#config_dbms.http_enabled_modules[dbms.http_enabled_modules^].
+====
+
+.Start Neo4j
+====
+Prerequisites for this example:
+
+* Install the Neo4j linux tarball.
+* Current working directory is _<neo4j-home>_.
+* Using the default configuration.
+
+Start Neo4j with the command:
+
+[source, shell]
+----
+bin/neo4j start
+----
+
+Neo4j starts a web server with the `BROWSER` module (Neo4j Browser) on port `7474`. +
+Point your web browser to link:http://localhost:7474/browser[_http://localhost:7474/browser_^].
+====
+
+[NOTE]
+====
+New versions of Neo4j Browser are released independently of Neo4j Server.
+The Browser version bundled with Neo4j Server is the latest at the time of the Neo4j Server release.
+Consequently, when used with a Neo4j server, the Browser version may not be the latest one, and new Browser functionality may not be immediately available.
+If you cannot wait for the next release of Neo4j Server and access to the latest version of Browser, refer to the other deployment options below.
+====
+
+
+
+[[bundled-desktop]]
+== Neo4j Desktop
+
+Neo4j Desktop is a local development environment for working with Neo4j, whether using local database instances or databases located on remote servers.
+It is designed to help you as a new user to learn and experiment with Neo4j locally by including everything you need to get started.
+
+Neo4j Browser comes out-of-the-box when you install Neo4j Desktop on your system.
+By default, Neo4j Browser is configured to start as a Neo4j Desktop application at port `7474`.
+You start the Neo4j Browser application from a project in Neo4j Desktop, provided that the Neo4j DBMS for that project is started.
+
+. Download Neo4j desktop application.
+. Install and start the Neo4j Desktop application using the provided instructions (shown when downloading).
+. Set up your first project and database following step 2 of the provided Neo4j Desktop instructions.
++
+[NOTE]
+====
+Remember your password.
+If you forget it, you have to remove the credentials file in _data/dbms/authorization_.
+====
+. Open the Neo4j Browser.
++
+image:browser-with-desktop.png[]
++
+Alternatively, you can access this from a regular browser window by typing `+http://localhost:7474+` and signing in with *Username:* `neo4j` and *Password:* `<your database password (set up in Desktop)>`. +
+
+
+[[web-application]]
+== Web application
+
+Neo4j Browser is available as a web application at link:https://browser.graphapp.io/[_https://browser.graphapp.io/_^].
+To setup up a connection to Neo4j with this web application (Neo4j Browser), you need a remote Neo4j instance that is configured with TLS.
+
+
+[[sandbox]]
+== Neo4j Sandbox
+
+link:https://neo4j.com/sandbox/[Neo4j Sandbox^] is a free, cloud-based instance of Neo4j, where you can learn about Neo4j, test your ideas, or play around with the pre-built data examples.
+
+When you launch a project, it opens Neo4j Browser as a web application.
+The Neo4j Browser web application connects to your Neo4j instance that the sandbox created for you, without having to enter any connection URI.
+
+image:browser-with-sandbox.png[]
+
+
+[[aura]]
+== Neo4j Aura
+
+link:https://neo4j.com/cloud/aura/[Neo4j Aura^] is Neo4j’s fully managed cloud service.
+Neo4j Aura is a fast, reliable, scalable and completely automated graph database as a cloud service.
+
+Neo4j Browser can be accessed as a web application within the user interface of link:https://console.neo4j.io/[Neo4j Aura console^].
+The Neo4j Browser web application connects to your Neo4j instance without having to enter any connection URI.
+
+image:browser-with-aura.png[]
+
+

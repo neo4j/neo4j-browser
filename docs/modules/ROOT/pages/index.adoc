@@ -41,9 +41,9 @@ Neo4j Browser is a tool for developers to interact with the graph, with the main
 The following areas of Neo4j Browser are covered in this manual:
 
 * xref:about-browser.adoc[About Neo4j Browser] -- The purpose of Neo4j Browser and its high-level capabilities.
-* xref:deployment-modes.adoc[Deployment modes] -- The different deployment modes for running Neo4j Browser.
+* xref:deployment-modes/index.adoc[Deployment modes] -- The different deployment modes for running Neo4j Browser.
 * xref:visual-tour.adoc[Visual tour] -- A visual overview of the UI of Neo4j Browser.
-* xref:operations.adoc[Browser operations] -- How to administer and use Neo4j Browser.
+* xref:operations/index.adoc[Browser operations] -- How to administer and use Neo4j Browser.
 
 [.lead]
 _Who should read this?_

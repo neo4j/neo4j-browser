@@ -1,0 +1,180 @@
+:description: Establish a connection to Neo4j database.
+
+[[dbms-connection]]
+= Connect to a Neo4j DBMS
+
+Neo4j Browser is the easiest way to access a Neo4j database.
+To establish a connection, you enter the DBMS URL, the name of the database you want to connect, and the user credentials.
+You can also use the `:server` command to manage the connection to Neo4j.
+For more information, see <<manage-connection>>.
+
+image:home-screen.png[]
+
+
+[[uri-schema]]
+== Connection URI schemas
+
+By default, Neo4j Browser communicates with a Neo4j DBMS via the link:https://7687.org/[Bolt Protocol] using the link:https://neo4j.com/docs/javascript-manual/current/[Neo4j JavaScript Driver] to execute Cypher queries.
+However, it is possible to turn off Bolt and use xref:operations/rest-requests.adoc[HTTP(S)] instead, as in older versions of Neo4j Browser.
+
+Neo4j Browser supports the following connection URI schemas:
+
+* `neo4j://`(unencrypted) and `neo4j+s://` (encrypted with TLS) -- work on either a single instance or a cluster.
+Routing is handled by the driver.
+If used on a cluster, it routes to a cluster member, not necessarily the system at the IP that you specified.
+Queries executed over that protocol route according to the transaction functions --_write_ transactions go to the leader and _read_ transactions route between followers and read replicas.
+
+* `bolt://`(unencrypted) and `bolt+s://` (encrypted with TLS) -- connect only to the server with the IP you specify.
+It does not route anywhere else.
+All queries over this protocol go only to this machine, whether they are _read_ or _write_ queries.
+_Write_ queries error out if not being sent to the Cluster leader.
+
+If used on a single server (not a cluster), then queries over them will behave identically.
+A difference in the behavior in `neo4j://` and `bolt://` is seen only if addressing a cluster member.
+
+[TIP]
+====
+For more information on the different connection scenarios, see <<connection-scenarios>>.
+For more information on how to configure connectors (Bolt, HTTP, and HTTPS) for Neo4j and the default ports, see link:https://neo4j.com/docs/operations-manual/{neo4j-version}/configuration/connectors/#connectors[Operations Manual -> Configure connectors] and link:https://neo4j.com/docs/operations-manual/current/configuration/ports/[Operations Manual -> Ports].
+====
+
+
+[[manage-connection]]
+== Manage connection commands
+
+The `:server` command lets you manage the connection to Neo4j, such as connecting, disconnecting, and viewing metadata for the current connection.
+
+Usage::	`:server <action>`
+
+Actions::
+* `:server status` -- Connection status.
+This is your current connection information.
+* `:server change-password` -- Opens the frame *Password change*, where you can change your current password.
+
+Auth::
+* `:server connect` -- Opens the frame *Connect to Neo4j*.
+If connected to the server, the frame shows the current user and the connection URL.
+Otherwise, enter the name of the database you want to connect, the DBMS URL, and the user credentials.
+* `:server disconnect` -- Opens the frame *Disconnected*, which shows that the current user is disconnected from the server.
+Then, it runs the `:server connect` automatically.
+
+User::
+`:help server user` - opens the frame *User admin*.
+
+
+[[connection-scenarios]]
+== Connection scenarios
+
+.Neo4j Browser - Bundled with Neo4j
+[options="header", cols="<,<,<"]
+|===
+| Cluster configured
+| TLS encryption
+| URI
+
+| no
+| no
+| `bolt://` or `neo4j://`
+
+| no
+| yes
+| `bolt+s://` or `neo4j+s://`
+
+| yes
+| no
+| `neo4j://`
+
+| yes
+| yes
+| `neo4j+s://`
+
+| yes (connect to one specific cluster member only)
+| no
+| `bolt://`
+
+| yes (connect to one specific cluster member only)
+| yes
+| `bolt+s://`
+|===
+
+If you are developing on your local machine with a single instance:
+
+* Default URL to Neo4j Browser is _http://localhost:7474/browser_ (use your web browser).
+* Default connection URL to Neo4j is _bolt://localhost:7687_.
+
+
+.Neo4j Browser - Neo4j Desktop application
+[options="header", cols="<,<,<"]
+|===
+| Cluster configured
+| TLS encryption
+| URI
+
+| no
+| no
+| `bolt://` or `neo4j://`
+
+| no
+| yes
+| `bolt+s://` or `neo4j+s://`
+
+| yes
+| no
+| `neo4j://`
+
+| yes
+| yes
+| `neo4j+s://`
+
+| yes (connect to one specific cluster member only)
+| no
+| `bolt://`
+
+| yes (connect to one specific cluster member only)
+| yes
+| `bolt+s://`
+|===
+
+
+.Neo4j Browser - Web application
+[options="header", cols="<,<,<"]
+|===
+| Cluster configured
+| TLS encryption
+| URI
+
+| no
+| yes
+| `bolt+s://` or `neo4j+s://`
+
+| yes
+| yes
+| `neo4j+s://`
+
+| yes (connect to one specific cluster member only)
+| yes
+| `bolt+s://`
+|===
+
+Neo4j Browser is available as a web application at _https://browser.graphapp.io/_.
+
+.Neo4j Browser - Sandbox
+
+In link:https://neo4j.com/sandbox/[Neo4j sandbox], you can launch a Neo4j Browser web application by clicking *Open with Browser*.
+It automatically connects with a connection URL similar to:
+
+`bolt+s://ba99a8c2d1c755f0c0cc2a95d0a627ea.neo4jsandbox.com:7687`
+
+.Neo4j Browser - Neo4j Aura
+
+In the https://console.neo4j.io[Neo4j Aura console], Neo4j Browser can be accessed as a web application within the user interface.
+The Neo4j Browser web application connects to your Neo4j instance without having to enter any connection URL.
+
+The connection URL is similar to:
+
+`neo4j+s://358a0e8a.databases.neo4j.io`
+
+Each database has a `dbid` that can be inferred from the Aura Console.
+
+The URL _\https://<dbid>.databases.neo4j.io/browser/_ can also be used to access Neo4j Browser for that specific `dbid` on Neo4j Aura.
+
