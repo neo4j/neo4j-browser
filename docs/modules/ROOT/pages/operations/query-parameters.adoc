@@ -25,7 +25,7 @@ Parameters may consist of letters and numbers and any combination of these but c
 
 [TIP]
 ====
-For more details on the Cypher parameters, see link:https://neo4j.com/docs/cypher-manual/{neo4j-version}/syntax/parameters/[Cypher Manual v.{neo4j-version} - Parameters].
+For more details on the Cypher parameters, see link:https://neo4j.com/docs/cypher-manual/{neo4j-version}/syntax/parameters/[Cypher Manual v.{neo4j-version} - Parameters^].
 ====
 
 
