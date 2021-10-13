@@ -6,11 +6,11 @@ exports[`ErrorsViews ErrorsStatusbar displays error 1`] = `
     class="sc-bdVaJa kwzqrW"
   >
     <span
-      class="sc-iujRgT eAPoje"
+      class="sc-cmthru kPFToU"
       title="Test.Error: Test error description"
     >
       <i
-        class="sc-TFwJa bUEOAT fa fa-exclamation-triangle"
+        class="sc-gJWqzi ydqSI fa fa-exclamation-triangle"
       />
        
       Test.Error: Test error description
@@ -26,42 +26,42 @@ exports[`ErrorsViews ErrorsView displays nothing if no errors 1`] = `<div />`;
 exports[`ErrorsViews ErrorsView displays procedure link if unknown procedure 1`] = `
 <div>
   <div
-    class="sc-gwVKww TlmwU"
+    class="sc-eXEjpC kPoZdn"
   >
     <div
-      class="sc-hXRMBi gdoiP"
+      class="sc-ibxdXY cmogeK"
     >
       <div
-        class="sc-epnACN eNRulG"
+        class="sc-RefOD kIvrQw"
       >
         <div
-          class="sc-cMhqgX sc-esOvli knGZCX"
+          class="sc-eTuwsz sc-hXRMBi jQDnzF"
         >
           ERROR
         </div>
         <h4
-          class="sc-hORach ejJXHh"
+          class="sc-cMhqgX bMiDFV"
         >
           Neo.ClientError.Procedure.ProcedureNotFound
         </h4>
       </div>
       <div
-        class="sc-iQNlJl jxLqkS"
+        class="sc-iQKALj ftJWrM"
       >
         <pre
-          class="sc-bAeIUo kytPrg"
+          class="sc-esOvli bhyhQA"
         >
           not found
         </pre>
       </div>
       <div
-        class="sc-hZSUBg lkKwYb"
+        class="sc-hrWEMg ghWcTV"
       >
         <a
-          class="sc-bsbRJL gGyDKS"
+          class="sc-bwCtUz knprsc"
         >
           <i
-            class="sc-hGoxap dspAmO fa fa-play-circle-o"
+            class="sc-fhYwyz iajfCW fa fa-play-circle-o"
           />
            List available procedures
         </a>
@@ -74,30 +74,30 @@ exports[`ErrorsViews ErrorsView displays procedure link if unknown procedure 1`]
 exports[`ErrorsViews ErrorsView does displays an error 1`] = `
 <div>
   <div
-    class="sc-gwVKww TlmwU"
+    class="sc-eXEjpC kPoZdn"
   >
     <div
-      class="sc-hXRMBi gdoiP"
+      class="sc-ibxdXY cmogeK"
     >
       <div
-        class="sc-epnACN eNRulG"
+        class="sc-RefOD kIvrQw"
       >
         <div
-          class="sc-cMhqgX sc-esOvli knGZCX"
+          class="sc-eTuwsz sc-hXRMBi jQDnzF"
         >
           ERROR
         </div>
         <h4
-          class="sc-hORach ejJXHh"
+          class="sc-cMhqgX bMiDFV"
         >
           Test.Error
         </h4>
       </div>
       <div
-        class="sc-iQNlJl jxLqkS"
+        class="sc-iQKALj ftJWrM"
       >
         <pre
-          class="sc-bAeIUo kytPrg"
+          class="sc-esOvli bhyhQA"
         >
           Test error description
         </pre>
