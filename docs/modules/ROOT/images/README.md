@@ -122,6 +122,18 @@ MATCH p = shortestPath((p1:Person {name: 'Kevin Bacon'})-[*]-(p2:Person {name: '
 
 <img src="play-start.png" width="200">
 
+`product_analytics_consent_browser_running_in_aura.png`
+
+<img src="product_analytics_consent_browser_running_in_aura.png" width="200">
+
+`product_analytics_consent_browser_running_in_desktop.png`
+
+<img src="product_analytics_consent_browser_running_in_desktop.png" width="200">
+
+`product_analytics_consent_browser_settings.png`
+
+<img src="product_analytics_consent_browser_settings.png" width="200">
+
 `result-frame.png`
 
 <img src="result-frame.png" width="200">
