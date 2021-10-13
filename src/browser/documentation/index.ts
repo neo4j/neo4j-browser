@@ -104,7 +104,6 @@ import playWritecode from './play-guides/write-code'
 // Migrated sidebar guides
 import guideConcepts from './sidebar-guides/concepts'
 import guideCypher from './sidebar-guides/cypher'
-import guideIndex from './sidebar-guides/guideIndex'
 import guideIntro from './sidebar-guides/intro'
 import guideMovieGraph from './sidebar-guides/movie-graph'
 import guideNorthwindGraph from './sidebar-guides/northwind-graph'
@@ -139,7 +138,6 @@ type GuideDocs = {
 export type GuideChapter =
   | 'concepts'
   | 'cypher'
-  | 'index'
   | 'intro'
   | 'movie-graph'
   | 'movieGraph'
@@ -362,7 +360,6 @@ const docs: AllDocumentation = {
     chapters: {
       concepts: guideConcepts,
       cypher: guideCypher,
-      index: guideIndex,
       intro: guideIntro,
       movies: guideMovieGraph,
       movieGraph: guideMovieGraph,
