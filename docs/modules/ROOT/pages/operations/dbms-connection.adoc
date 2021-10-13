@@ -14,7 +14,7 @@ image:home-screen.png[]
 [[uri-schema]]
 == Connection URI schemas
 
-By default, Neo4j Browser communicates with a Neo4j DBMS via the link:https://7687.org/[Bolt Protocol] using the link:https://neo4j.com/docs/javascript-manual/current/[Neo4j JavaScript Driver] to execute Cypher queries.
+By default, Neo4j Browser communicates with a Neo4j DBMS via the link:https://7687.org/[Bolt Protocol^] using the link:https://neo4j.com/docs/javascript-manual/current/[Neo4j JavaScript Driver^] to execute Cypher queries.
 However, it is possible to turn off Bolt and use xref:operations/rest-requests.adoc[HTTP(S)] instead, as in older versions of Neo4j Browser.
 
 Neo4j Browser supports the following connection URI schemas:
@@ -35,7 +35,7 @@ A difference in the behavior in `neo4j://` and `bolt://` is seen only if address
 [TIP]
 ====
 For more information on the different connection scenarios, see <<connection-scenarios>>.
-For more information on how to configure connectors (Bolt, HTTP, and HTTPS) for Neo4j and the default ports, see link:https://neo4j.com/docs/operations-manual/{neo4j-version}/configuration/connectors/#connectors[Operations Manual -> Configure connectors] and link:https://neo4j.com/docs/operations-manual/current/configuration/ports/[Operations Manual -> Ports].
+For more information on how to configure connectors (Bolt, HTTP, and HTTPS) for Neo4j and the default ports, see link:https://neo4j.com/docs/operations-manual/{neo4j-version}/configuration/connectors/#connectors[Operations Manual -> Configure connectors^] and link:https://neo4j.com/docs/operations-manual/current/configuration/ports/[Operations Manual -> Ports^].
 ====
 
 
@@ -99,8 +99,8 @@ User::
 
 If you are developing on your local machine with a single instance:
 
-* Default URL to Neo4j Browser is _http://localhost:7474/browser_ (use your web browser).
-* Default connection URL to Neo4j is _bolt://localhost:7687_.
+* Default URL to Neo4j Browser is `+http://localhost:7474/browser+` (use your web browser).
+* Default connection URL to Neo4j is `+bolt://localhost:7687+`.
 
 
 .Neo4j Browser - Neo4j Desktop application
@@ -156,7 +156,7 @@ If you are developing on your local machine with a single instance:
 | `bolt+s://`
 |===
 
-Neo4j Browser is available as a web application at _https://browser.graphapp.io/_.
+Neo4j Browser is available as a web application at link:https://browser.graphapp.io/[_https://browser.graphapp.io/_^].
 
 .Neo4j Browser - Sandbox
 
@@ -176,5 +176,5 @@ The connection URL is similar to:
 
 Each database has a `dbid` that can be inferred from the Aura Console.
 
-The URL _\https://<dbid>.databases.neo4j.io/browser/_ can also be used to access Neo4j Browser for that specific `dbid` on Neo4j Aura.
+The URL `+https://<dbid>.databases.neo4j.io/browser/+` can also be used to access Neo4j Browser for that specific `dbid` on Neo4j Aura.
 
