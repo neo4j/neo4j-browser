@@ -1,4 +1,4 @@
-:description: Product analytics, configure consent settings for sending anonymous analytics data.
+:description: Product analytics configure consent settings for sending anonymous analytics data.
 
 
 [[product-analytics]]
@@ -17,7 +17,7 @@ No personal information is collected.
 
 A message informs users that they are allowing product analytics to be collected and that they may opt-out of this if they wish.
 
-The setting link:https://neo4j.com/docs/operations-manual/current/reference/configuration-settings/#config_clients.allow_telemetry[`clients.allow_telemetry=false`^] allows the user per default to opt-out of product analytics.
+The setting link:https://neo4j.com/docs/operations-manual/current/reference/configuration-settings/#config_clients.allow_telemetry[`clients.allow_telemetry=false`^] allows the user to opt-out of product analytics, per default.
 
 * Send anonymous crash reports -- Crash reports allow us to quickly diagnose and fix problems.
 * Send anonymous usage statistics -- This data helps us prioritize features and improvements.
@@ -28,7 +28,7 @@ image:product_analytics_consent_browser_settings.png[]
 
 == Neo4j Desktop and Neo4j Aura
 
-Running Neo4j Browser in Neo4j Desktop and Neo4j Aura the product analytics settings inherits the consent settings managed by those environments.
+Running Neo4j Browser in Neo4j Desktop or Neo4j Aura, the product analytics settings inherit the consent settings managed by those environments.
 
 .Neo4j Desktop
 image:product_analytics_consent_browser_running_in_desktop.png[]
