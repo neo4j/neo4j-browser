@@ -8,7 +8,7 @@ There are several different scenarios of how to run Neo4j Browser:
 * Neo4j Desktop -- Neo4j Browser comes out-of-the-box when you install Neo4j Desktop on your system.
 * link:https://browser.graphapp.io/[Web application] -- Neo4j Browser is available as a web application.
 * link:https://neo4j.com/sandbox/[Neo4j Sandbox] -- Try out Neo4j and Neo4j Browser.
-* link:https://console.neo4j.io[Neo4j Aura] -- Neo4j Browser is available from the Neo4j Aura console.
+* link:https://console.neo4j.io[Neo4j AuraDB] -- Neo4j Browser is available from the Neo4j Aura console.
 * Dedicated web server -- Host Neo4j Browser as a standalone HTTP web application.
 
 
@@ -122,10 +122,10 @@ image:browser-with-sandbox.png[]
 
 
 [[aura]]
-== Neo4j Aura
+== Neo4j AuraDB
 
-link:https://neo4j.com/cloud/aura/[Neo4j Aura] is Neo4j’s fully managed cloud service.
-Neo4j Aura is a fast, reliable, scalable and completely automated graph database as a cloud service.
+link:https://neo4j.com/cloud/aura/[Neo4j AuraDB] is Neo4j’s fully managed cloud service.
+Neo4j AuraDB is a fast, reliable, scalable and completely automated graph database as a cloud service.
 
 Neo4j Browser can be accessed as a web application within the user interface of link:https://console.neo4j.io/[Neo4j Aura console].
 The Neo4j Browser web application connects to your Neo4j instance without having to enter any connection URI.
