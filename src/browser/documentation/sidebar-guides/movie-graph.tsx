@@ -66,7 +66,7 @@ const slides = [
     </p>
     <p>
       <b>NOTE: </b> This guide assumes that you use an empty graph. If it
-      contains data, see page 7 on how to clean it up.
+      contains data, see page 9 on how to clean it up.
     </p>
     <hr />
     <ol>
