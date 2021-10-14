@@ -125,7 +125,7 @@ image:browser-with-sandbox.png[]
 == Neo4j AuraDB
 
 link:https://neo4j.com/cloud/aura/[Neo4j AuraDB] is Neo4j’s fully managed cloud service.
-Neo4j Aurais a fast, reliable, scalable and completely automated graph database as a cloud service.
+Neo4j AuraDB is a fast, reliable, scalable and completely automated graph database as a cloud service.
 
 Neo4j Browser can be accessed as a web application within the user interface of link:https://console.neo4j.io/[Neo4j Aura console].
 The Neo4j Browser web application connects to your Neo4j instance without having to enter any connection URI.
