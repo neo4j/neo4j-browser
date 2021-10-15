@@ -58,7 +58,7 @@ describe('Multi statements', () => {
     // Given
     cy.executeCommand(':clear')
     cy.get('[data-testid="drawerSettings"]').click()
-    cy.get('[data-testid="enableMultiStatementMode"]').click()
+    cy.get('[data-testid="setting-enableMultiStatementMode"]').click()
     cy.get('[data-testid="drawerSettings"]').click()
 
     // When
@@ -75,7 +75,7 @@ describe('Multi statements', () => {
       .should('contain', 'Error')
 
     cy.get('[data-testid="drawerSettings"]').click()
-    cy.get('[data-testid="enableMultiStatementMode"]').click()
+    cy.get('[data-testid="setting-enableMultiStatementMode"]').click()
     cy.get('[data-testid="drawerSettings"]').click()
   })
 

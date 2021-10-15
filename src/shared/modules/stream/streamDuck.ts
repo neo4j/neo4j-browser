@@ -23,7 +23,10 @@ import 'rxjs/add/operator/do'
 import 'rxjs/add/operator/mapTo'
 import { moveInArray } from 'services/utils'
 import { APP_START } from 'shared/modules/app/appDuck'
-import { UPDATE as SETTINGS_UPDATE } from '../settings/settingsDuck'
+import {
+  getMaxFrames,
+  UPDATE as SETTINGS_UPDATE
+} from '../settings/settingsDuck'
 import { Epic } from 'redux-observable'
 import { Action } from 'redux'
 import { FrameView } from 'shared/modules/stream/frameViewTypes'
@@ -33,11 +36,10 @@ export const NAME = 'frames'
 export const ADD = 'frames/ADD'
 export const REMOVE = 'frames/REMOVE'
 export const CLEAR_ALL = 'frames/CLEAR_ALL'
-export const FRAME_TYPE_FILTER_UPDATED = 'frames/FRAME_TYPE_FILTER_UPDATED'
 export const PIN = 'frames/PIN'
 export const UNPIN = 'frames/UNPIN'
 export const SET_RECENT_VIEW = 'frames/SET_RECENT_VIEW'
-export const SET_MAX_FRAMES = 'frames/SET_MAX_FRAMES'
+export const ENSURE_MAX_FRAMES = 'frames/ENSURE_MAX_FRAMES'
 export const TRACK_SAVE_AS_PROJECT_FILE = 'frames/TRACK_SAVE_AS_PROJECT_FILE'
 export const TRACK_FULLSCREEN_TOGGLE = 'frames/TRACK_FULLSCREEN_TOGGLE'
 export const TRACK_COLLAPSE_TOGGLE = 'frames/TRACK_COLLAPSE_TOGGLE'
@@ -115,11 +117,11 @@ function addFrame(state: FramesState, newState: Frame) {
   } else {
     allIds = insertIntoAllIds(state, allIds, newState)
   }
-  return ensureFrameLimit({
+  return {
     ...state,
     allIds,
     byId
-  })
+  }
 }
 
 function insertIntoAllIds(
@@ -193,8 +195,9 @@ function setRecentViewHelper(state: FramesState, recentView: FrameView) {
   }
 }
 
-function ensureFrameLimit(state: FramesState) {
-  const limit = state.maxFrames || 1
+/** TODO **/
+function ensureFrameLimit(state: FramesState, maxFrames: number) {
+  const limit = maxFrames || 1
   if (state.allIds.length <= limit) return state
   const numToRemove = state.allIds.length - limit
   const removeIds = state.allIds
@@ -257,7 +260,6 @@ export interface FramesState {
   allIds: string[]
   byId: { [key: string]: FrameStack }
   recentView: null | FrameView
-  maxFrames: number
   nodePropertiesExpandedByDefault: boolean
 }
 
@@ -265,7 +267,6 @@ export const initialState: FramesState = {
   allIds: [],
   byId: {},
   recentView: null,
-  maxFrames: 30,
   nodePropertiesExpandedByDefault: true
 }
 
@@ -280,6 +281,8 @@ export default function reducer(
       return addFrame(state, action.state)
     case REMOVE:
       return removeFrame(state, action.id)
+    case ENSURE_MAX_FRAMES:
+      return ensureFrameLimit(state, action.maxFrames)
     case CLEAR_ALL:
       return { ...initialState }
     case PIN:
@@ -293,12 +296,6 @@ export default function reducer(
         ...state,
         nodePropertiesExpandedByDefault: action.expandedByDefault
       }
-    case SET_MAX_FRAMES:
-      const newState = {
-        ...state,
-        maxFrames: action.maxFrames
-      }
-      return ensureFrameLimit(newState)
     default:
       return state
   }
@@ -390,8 +387,8 @@ export function setNodePropertiesExpandedByDefault(
   }
 }
 
-interface SetMaxFramesAction {
-  type: typeof SET_MAX_FRAMES
+export interface EnsureMaxFramesAction {
+  type: typeof ENSURE_MAX_FRAMES
   maxFrames: number
 }
 
@@ -402,27 +399,19 @@ type StreamActions =
   | PinFrameAction
   | UnpinFrameAction
   | SetRecentViewAction
-  | SetMaxFramesAction
+  | EnsureMaxFramesAction
   | SetExpandedByDefaultAction
 
-interface SettingsUpdateAction {
-  type: typeof SETTINGS_UPDATE
-  state: { maxFrames: number }
-}
-
 // Epics
-export const maxFramesConfigEpic: Epic<Action, GlobalState> = (
+export const ensureMaxFramesEpic: Epic<Action, GlobalState> = (
   action$,
   store
 ) =>
-  action$
-    .ofType(SETTINGS_UPDATE)
-    .do(action => {
-      const newMaxFrames = (action as SettingsUpdateAction).state.maxFrames
-      if (!newMaxFrames) return
-      store.dispatch({
-        type: SET_MAX_FRAMES,
-        maxFrames: newMaxFrames
-      } as SetMaxFramesAction)
-    })
-    .mapTo({ type: 'NOOP' })
+  action$.ofType(SETTINGS_UPDATE, ADD).map(() => {
+    const maxFrames = getMaxFrames(store.getState())
+    const maxFramesAction: EnsureMaxFramesAction = {
+      type: ENSURE_MAX_FRAMES,
+      maxFrames
+    }
+    return maxFramesAction
+  })
