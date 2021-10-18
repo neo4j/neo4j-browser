@@ -26,7 +26,7 @@ import reducer, {
   initialState
 } from './framesDuck'
 
-describe('streamDuck', () => {
+describe('framesDuck', () => {
   test('can limit frames count', () => {
     // Given
     const init: FramesState = {
