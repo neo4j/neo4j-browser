@@ -34,7 +34,7 @@ For more information, see link:https://neo4j.com/docs/operations-manual/current/
 
 
 [[http-web-servers]]
-=== HTTP web servers
+== HTTP web servers
 
 Here is a list of suggestions for simple HTTP web servers that can be used to host Neo4j Browser.
 
@@ -85,7 +85,7 @@ For more information, see link:https://www.iis.net/[_https://www.iis.net/_^].
 
 
 [[pre-built-neo4j-browser]]
-=== Pre-built Neo4j Browser
+== Pre-built Neo4j Browser
 
 You can download Neo4j Browser from Maven (link:https://search.maven.org/artifact/org.neo4j.client/neo4j-browser[_https://search.maven.org/artifact/org.neo4j.client/neo4j-browser_^]) and serve the web application with an HTTP server.
 
@@ -145,7 +145,7 @@ For details on how to set up a connection to Neo4j in Neo4j Browser, see xref:op
 
 
 [[build-neo4j-browser]]
-=== Build Neo4j Browser
+== Build Neo4j Browser
 
 You can build the source code and host Neo4j Browser.
 

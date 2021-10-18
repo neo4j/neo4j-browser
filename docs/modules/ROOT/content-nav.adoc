@@ -2,6 +2,11 @@
 * xref:about-browser.adoc[About Neo4j Browser]
 
 * xref:deployment-modes/index.adoc[Deployment modes]
+** xref:deployment-modes/neo4j-server.adoc[]
+** xref:deployment-modes/neo4j-desktop.adoc[]
+** xref:deployment-modes/web-application.adoc[]
+** xref:deployment-modes/neo4j-sandbox.adoc[]
+** xref:deployment-modes/neo4j-aura.adoc[]
 ** xref:deployment-modes/dedicated-web-server.adoc[]
 
 * xref:visual-tour.adoc[Visual tour]

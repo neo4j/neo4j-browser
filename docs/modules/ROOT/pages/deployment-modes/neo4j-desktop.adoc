@@ -1,0 +1,28 @@
+:description: Neo4j Browser comes out-of-the-box when you install Neo4j Desktop on your system.
+
+
+[[bundled-desktop]]
+= Neo4j Desktop
+
+Neo4j Desktop is a local development environment for working with Neo4j, whether using local database instances or databases located on remote servers.
+It is designed to help you as a new user to learn and experiment with Neo4j locally by including everything you need to get started.
+
+Neo4j Browser comes out-of-the-box when you install Neo4j Desktop on your system.
+By default, Neo4j Browser is configured to start as a Neo4j Desktop application at port `7474`.
+You start the Neo4j Browser application from a project in Neo4j Desktop, provided that the Neo4j DBMS for that project is started.
+
+. Download Neo4j desktop application.
+. Install and start the Neo4j Desktop application using the provided instructions (shown when downloading).
+. Set up your first project and database following step 2 of the provided Neo4j Desktop instructions.
++
+[NOTE]
+====
+Remember your password.
+If you forget it, you have to remove the credentials file in _data/dbms/authorization_.
+====
+. Open the Neo4j Browser.
++
+image:browser-with-desktop.png[]
++
+Alternatively, you can access this from a regular browser window by typing `+http://localhost:7474+` and signing in with *Username:* `neo4j` and *Password:* `<your database password (set up in Desktop)>`. +
+
