@@ -49,7 +49,7 @@ import {
   getDefaultRemoteContentHostnameAllowlist
 } from '../dbMeta/dbMetaDuck'
 import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
-import { add as addFrame } from 'shared/modules/stream/streamDuck'
+import { add as addFrame } from 'shared/modules/frames/framesDuck'
 import { update as updateQueryResult } from 'shared/modules/requests/requestsDuck'
 
 export const NAME = 'commands'

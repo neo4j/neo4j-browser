@@ -19,7 +19,7 @@
  */
 
 import React, { useRef, useState, useEffect } from 'react'
-import { Frame } from 'shared/modules/stream/streamDuck'
+import { Frame } from 'shared/modules/frames/framesDuck'
 import FrameTitlebar from './FrameTitlebar'
 import FrameEditor from './FrameEditor'
 

@@ -20,7 +20,7 @@
 
 import { getCommandAndParam } from 'services/commandUtils'
 import * as connections from 'shared/modules/connections/connectionsDuck'
-import { add as addFrameAction } from 'shared/modules/stream/streamDuck'
+import { add as addFrameAction } from 'shared/modules/frames/framesDuck'
 import { UnknownCommandError } from 'services/exceptions'
 import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
 

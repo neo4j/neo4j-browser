@@ -43,7 +43,7 @@ import QueriesFrame from './Queries/QueriesFrame'
 import UserList from '../User/UserList'
 import UserAdd from '../User/UserAdd'
 import { GlobalState } from 'shared/globalState'
-import { FrameStack, Frame, getFrames } from 'shared/modules/stream/streamDuck'
+import { FrameStack, Frame, getFrames } from 'shared/modules/frames/framesDuck'
 import {
   getActiveConnectionData,
   Connection

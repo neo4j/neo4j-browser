@@ -29,7 +29,7 @@ import {
 } from '../settings/settingsDuck'
 import { Epic } from 'redux-observable'
 import { Action } from 'redux'
-import { FrameView } from 'shared/modules/stream/frameViewTypes'
+import { FrameView } from 'shared/modules/frames/frameViewTypes'
 import { GlobalState } from 'shared/globalState'
 
 export const NAME = 'frames'

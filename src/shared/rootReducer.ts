@@ -24,7 +24,7 @@ import settingsReducer, {
 import featuresReducer, {
   NAME as features
 } from 'shared/modules/features/featuresDuck'
-import streamReducer, { NAME as stream } from 'shared/modules/stream/streamDuck'
+import streamReducer, { NAME as stream } from 'shared/modules/frames/framesDuck'
 import historyReducer, {
   NAME as history
 } from 'shared/modules/history/historyDuck'

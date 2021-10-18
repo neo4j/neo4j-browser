@@ -24,7 +24,7 @@ import reducer, {
   EnsureMaxFramesAction,
   FramesState,
   initialState
-} from './streamDuck'
+} from './framesDuck'
 
 describe('streamDuck', () => {
   test('can limit frames count', () => {

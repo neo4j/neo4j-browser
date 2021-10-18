@@ -34,7 +34,7 @@ import {
   TRACK_COLLAPSE_TOGGLE,
   TRACK_FULLSCREEN_TOGGLE,
   unpin
-} from 'shared/modules/stream/streamDuck'
+} from 'shared/modules/frames/framesDuck'
 import { sleep } from 'shared/services/utils'
 import { FrameControlButton } from 'browser-components/buttons'
 import {

@@ -21,7 +21,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { SysInfoFrame } from './SysInfoFrame'
-import { Frame } from 'shared/modules/stream/streamDuck'
+import { Frame } from 'shared/modules/frames/framesDuck'
 import { Bus } from 'suber'
 import { Database } from 'shared/modules/dbMeta/dbMetaDuck'
 

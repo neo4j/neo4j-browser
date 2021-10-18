@@ -93,7 +93,7 @@ import {
   trackErrorFramesEpic,
   trackReduxActionsEpic
 } from './modules/udc/udcDuck'
-import { ensureMaxFramesEpic } from './modules/stream/streamDuck'
+import { ensureMaxFramesEpic } from './modules/frames/framesDuck'
 import {
   getCurrentUserEpic,
   clearCurrentUserOnDisconnectEpic

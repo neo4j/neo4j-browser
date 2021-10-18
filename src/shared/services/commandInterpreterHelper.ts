@@ -20,7 +20,7 @@
 
 import * as Sentry from '@sentry/react'
 import bolt from 'services/bolt/bolt'
-import * as frames from 'shared/modules/stream/streamDuck'
+import * as frames from 'shared/modules/frames/framesDuck'
 import { getHostedUrl } from 'shared/modules/app/appDuck'
 import { getHistory, clearHistory } from 'shared/modules/history/historyDuck'
 import { v4 } from 'uuid'

@@ -22,7 +22,7 @@ import React from 'react'
 import { saveAs } from 'file-saver'
 import { map } from 'lodash-es'
 
-import { Frame } from 'shared/modules/stream/streamDuck'
+import { Frame } from 'shared/modules/frames/framesDuck'
 
 import { CSVSerializer } from 'services/serializer'
 import { DownloadIcon } from 'browser-components/icons/Icons'
