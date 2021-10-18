@@ -1,0 +1,13 @@
+:description: Neo4j Sandbox includes Neo4j Browser.
+
+
+[[sandbox]]
+= Neo4j Sandbox
+
+link:https://neo4j.com/sandbox/[Neo4j Sandbox^] is a free, cloud-based instance of Neo4j, where you can learn about Neo4j, test your ideas, or play around with the pre-built data examples.
+
+When you launch a project, it opens Neo4j Browser as a web application.
+The Neo4j Browser web application connects to your Neo4j instance that the sandbox created for you, without having to enter any connection URI.
+
+image:browser-with-sandbox.png[]
+

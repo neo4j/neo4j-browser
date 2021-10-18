@@ -1,7 +1,9 @@
+:description: This section list all the Browser commands.
+
+
 [appendix]
 [[reference-commands]]
 = Command reference
-:description: This section list all the Browser commands.
 
 The editor in Neo4j Browser understands a few client-side commands, which begin with a colon (`:`).
 
@@ -100,8 +102,8 @@ Show the guide drawer with a custom Neo4j Browser guide from the specified URL.
 [NOTE]
 ====
 There are also other Neo4j Browser guides created by Neo4j staff and community members to help others learn Neo4j or how to use the tools in its ecosystem.
-You can check out the currently published list on the link:https://portal.graphgist.org/graph_guides[GraphGist Portal (Graph Guides section)]. +
-For more information on how to create a custom Browser guide, see link:https://neo4j.com/developer/guide-create-neo4j-browser-guide/[creating a custom Browser guide].
+You can check out the currently published list on the link:https://portal.graphgist.org/graph_guides[GraphGist Portal (Graph Guides section)^]. +
+For more information on how to create a custom Browser guide, see link:https://neo4j.com/developer/guide-create-neo4j-browser-guide/[creating a custom Browser guide^].
 ====
 
 m| :help
@@ -134,8 +136,8 @@ Play a custom Neo4j Browser guide from the specified URL.
 [NOTE]
 ====
 There are also other Neo4j Browser guides created by Neo4j staff and community members to help others learn Neo4j or how to use the tools in its ecosystem.
-You can check out the currently published list on the link:https://portal.graphgist.org/graph_guides[GraphGist Portal (Graph Guides section)]. +
-For more information on how to create a custom Browser guide, see link:https://neo4j.com/developer/guide-create-neo4j-browser-guide/[creating a custom Browser guide].
+You can check out the currently published list on the link:https://portal.graphgist.org/graph_guides[GraphGist Portal (Graph Guides section)^]. +
+For more information on how to create a custom Browser guide, see link:https://neo4j.com/developer/guide-create-neo4j-browser-guide/[creating a custom Browser guide^].
 ====
 
 m| +:post <request>+

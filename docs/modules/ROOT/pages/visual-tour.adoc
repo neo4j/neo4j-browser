@@ -1,6 +1,8 @@
+:description: This chapter presents a visual overview of the UI of Neo4j Browser.
+
+
 [[visual-tour]]
 = Visual tour
-:description: This chapter presents a visual overview of the UI of Neo4j Browser.
 
 This section walks you through the UI of Neo4j Browser.
 
@@ -26,7 +28,7 @@ image:database-information.png[width=40%]
 Clicking any one of those options runs a quick query to show you a sample of the graph with those elements.
 * *Connected as* -- Shows the current user and their roles and the Cypher command to disconnect from the server.
 If the current user has an administrative role, two more options are available: `:server user add` and `:server user list`.
-For more information about user's built-in roles and the default privileges, see link:https://neo4j.com/docs/operations-manual/current/authentication-authorization/built-in-roles/[Operations Manual -> Built-in roles].
+For more information about user's built-in roles and the default privileges, see link:https://neo4j.com/docs/operations-manual/current/authentication-authorization/built-in-roles/[Operations Manual -> Built-in roles^].
 * *DBMS* -- Provides information about the Neo4j version and edition, and some helpful DBMS administrative commands:
 ** `:dbs` -- List all databases available for the current user.
 ** `:sysinfo` -- Display data about the Neo4j system, such as store size, ID allocation, page cache, transactions, and databases (name, address, role, status, default database, and errors).
@@ -103,7 +105,7 @@ The *Project files* tab is **Neo4j Desktop** specific.
 Project files allow you to save queries, guides, and other scripts, as Cypher files.
 Unlike favorites, which are saved in your local browser storage, project files are project-specific and are actual files stored in the project directory on your hard drive.
 All save files are listed under the project they refer to.
-For more information, see link:https://neo4j.com/docs/desktop-manual/current/visual-tour/#files[Neo4j Desktop Manual -> Files].
+For more information, see link:https://neo4j.com/docs/desktop-manual/current/visual-tour/#files[Neo4j Desktop Manual -> Files^].
 
 [[guides]]
 === Guides
@@ -138,8 +140,8 @@ image:guides.png[width=60%]
 [NOTE]
 ====
 There are also other Neo4j Browser guides created by Neo4j staff and community members to help others learn Neo4j or how to use the tools in its ecosystem.
-You can check out the currently published list on the link:https://portal.graphgist.org/graph_guides[GraphGist Portal (Graph Guides section)]. +
-For more information on how to create a custom Browser guide, see link:https://neo4j.com/developer/guide-create-neo4j-browser-guide/[creating a custom Browser guide].
+You can check out the currently published list on the link:https://portal.graphgist.org/graph_guides[GraphGist Portal (Graph Guides section)^]. +
+For more information on how to create a custom Browser guide, see link:https://neo4j.com/developer/guide-create-neo4j-browser-guide/[creating a custom Browser guide^].
 ====
 
 // Links to the guides' source:
@@ -213,7 +215,7 @@ The *Browser Settings* drawer contains configurations related to the UI, result 
 image:settings.png[width=40%]
 [TIP]
 ====
-For more information on the Neo4j Browser settings and how to adjust them in the Browser and globally, see xref:operations.adoc#adjust-settings[Adjust Browser settings].
+For more information on the Neo4j Browser settings and how to adjust them in the Browser and globally, see xref:operations/browser-settings.adoc[].
 ====
 
 [[editor]]
@@ -225,7 +227,7 @@ image:screen_editor.png[]
 
 [NOTE]
 ====
-From Neo4j Browser 4.2.4, the Cypher editor is based on link:https://microsoft.github.io/monaco-editor/[Monaco Editor], the code editor that powers link:https://github.com/Microsoft/vscode[Visual Studio Code (VS Code)].
+From Neo4j Browser 4.2.4, the Cypher editor is based on link:https://microsoft.github.io/monaco-editor/[Monaco Editor^], the code editor that powers link:https://github.com/Microsoft/vscode[Visual Studio Code (VS Code)^].
 Even though it is the same text editor as VS Code, it is not the entire VS Code package.
 For example, plugins are not included and are not possible to implement.
 ====
@@ -332,12 +334,12 @@ Each reusable frame maintains its own local history of commands and updates the 
 
 Neo4j Browser supports different result frame views to suit your needs:
 
-* Graph -- Display the result as nodes and relationships and allow xref:operations.adoc#styling[styling] to be configured.
+* Graph -- Display the result as nodes and relationships and allow xref:operations/browser-styling.adoc[styling] to be configured.
 * Table -- Display the result as JSON formatted rows.
 * Text -- Display the result as a plain text table.
 * Code -- Display the submitted request, the Neo4j Server version and address, and the response.
 
-For more details on the different ways of viewing data in Neo4j Browser, see xref:operations.adoc#results[Visualizing results].
+For more details on the different ways of viewing data in Neo4j Browser, see xref:operations/result-frames.adoc[].
 
 [[stream]]
 === Stream
@@ -352,4 +354,5 @@ To remove all the frames from the stream, use the `:clear` command.
 
 Browser settings that maybe useful for you are the maximum number of result frames to display (`maxFrames`) and the size of the command and statement history (`maxHistory`).
 When reached, old frames and history entries get retired.
-For more information on how to adjust Browser Settings, see xref:operations.adoc#adjust-settings[Adjust Browser settings].
+For more information on how to adjust Browser Settings, see xref:operations/browser-settings.adoc[].
+
