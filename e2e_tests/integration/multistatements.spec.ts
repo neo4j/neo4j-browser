@@ -116,6 +116,51 @@ describe('Multi statements', () => {
       .should('contain', 'ERROR')
   })
 
+  it('can use :auto command in multi-statements', () => {
+    // This test requires that the database has at least 1 node
+    cy.executeCommand('create ();')
+    cy.executeCommand(':clear')
+    const query = `:auto MATCH(n){shift}{enter}WITH n
+LIMIT 1
+CREATE (t:MultiStmtTest {{}zid: id(n)})
+RETURN t;
+:auto MATCH(n)
+WITH n
+SKIP 1
+LIMIT 1
+CREATE (t:MultiStmtTest {{}zid: id(n)})
+RETURN t;`
+    cy.executeCommand(query)
+    cy.get('[data-testid="frame"]', { timeout: 10000 }).should('have.length', 1)
+    const frame = cy.get('[data-testid="frame"]', { timeout: 10000 }).first()
+    frame.find('[data-testid="multi-statement-list"]').should('have.length', 1)
+    frame
+      .get('[data-testid="multi-statement-list-title"]')
+      .should('have.length', 2)
+    frame
+      .get('[data-testid="multi-statement-list-title"]')
+      .eq(0)
+      .click()
+    frame
+      .get('[data-testid="multi-statement-list-content"]', { timeout: 10000 })
+      .contains('SUCCESS')
+    frame
+      .get('[data-testid="multi-statement-list-title"]')
+      .eq(1)
+      .click()
+    frame
+      .get('[data-testid="multi-statement-list-content"]', { timeout: 10000 })
+      .contains('SUCCESS')
+    cy.executeCommand('match (n: MultiStmtTest) return n.zid')
+    cy.get('[role="cell"]').then(cells => {
+      cy.wrap(parseInt(cells[0].textContent || '')).should(
+        'equal',
+        parseInt(cells[1].textContent || '') - 1
+      )
+    })
+    cy.executeCommand('match (n: MultiStmtTest) delete n')
+  })
+
   if (Cypress.config('serverVersion') >= 4.0) {
     if (isEnterpriseEdition()) {
       it('Can use :use command in multi-statements', () => {
