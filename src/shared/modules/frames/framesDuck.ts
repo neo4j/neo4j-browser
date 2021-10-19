@@ -195,20 +195,23 @@ function setRecentViewHelper(state: FramesState, recentView: FrameView) {
   }
 }
 
-/** TODO **/
 function ensureFrameLimit(state: FramesState, maxFrames: number) {
-  const limit = maxFrames || 1
-  if (state.allIds.length <= limit) return state
-  const numToRemove = state.allIds.length - limit
-  const removeIds = state.allIds
-    .slice(-1 * numToRemove)
-    .filter(id => !state.byId[id].isPinned)
-  const byId = { ...state.byId }
-  removeIds.forEach(id => delete byId[id])
-  return {
-    ...state,
-    allIds: state.allIds.slice(0, state.allIds.length - removeIds.length),
-    byId
+  if (maxFrames > 0) {
+    const limit = maxFrames
+    if (state.allIds.length <= limit) return state
+    const numToRemove = state.allIds.length - limit
+    const removeIds = state.allIds
+      .slice(-1 * numToRemove)
+      .filter(id => !state.byId[id].isPinned)
+    const byId = { ...state.byId }
+    removeIds.forEach(id => delete byId[id])
+    return {
+      ...state,
+      allIds: state.allIds.slice(0, state.allIds.length - removeIds.length),
+      byId
+    }
+  } else {
+    return state
   }
 }
 
