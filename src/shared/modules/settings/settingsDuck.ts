@@ -57,6 +57,8 @@ export const getMaxRows = (state: GlobalState): number =>
   state[NAME].maxRows || initialState.maxRows
 export const getMaxFieldItems = (state: GlobalState): number =>
   get(state, [NAME, 'maxFieldItems'], initialState.maxFieldItems)
+export const getMaxFrames = (state: GlobalState): number =>
+  state[NAME].maxFrames
 export const getInitialNodeDisplay = (state: GlobalState): number =>
   state[NAME].initialNodeDisplay || initialState.initialNodeDisplay
 export const getScrollToTop = (state: any) => state[NAME].scrollToTop

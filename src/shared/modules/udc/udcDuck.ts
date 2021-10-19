@@ -45,7 +45,7 @@ import {
   TRACK_FULLSCREEN_TOGGLE,
   TRACK_SAVE_AS_PROJECT_FILE,
   UNPIN
-} from 'shared/modules/stream/streamDuck'
+} from 'shared/modules/frames/framesDuck'
 import {
   CYPHER_SUCCEEDED,
   CYPHER_FAILED,

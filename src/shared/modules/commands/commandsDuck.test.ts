@@ -27,7 +27,7 @@ import * as commands from './commandsDuck'
 import helper from 'services/commandInterpreterHelper'
 import { update as updateQueryResult } from '../requests/requestsDuck'
 import { send } from 'shared/modules/requests/requestsDuck'
-import * as frames from 'shared/modules/stream/streamDuck'
+import * as frames from 'shared/modules/frames/framesDuck'
 import { disconnectAction } from 'shared/modules/connections/connectionsDuck'
 import {
   update as updateParams,

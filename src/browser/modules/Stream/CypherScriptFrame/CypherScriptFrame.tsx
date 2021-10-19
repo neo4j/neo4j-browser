@@ -25,7 +25,7 @@ import {
   getRequest,
   BrowserRequest
 } from 'shared/modules/requests/requestsDuck'
-import { Frame, getFrame } from 'shared/modules/stream/streamDuck'
+import { Frame, getFrame } from 'shared/modules/frames/framesDuck'
 import { StyledStatusSection } from 'browser-components/buttons'
 
 import { StyledFrameTitlebarButtonSection } from 'browser/modules/Frame/styled'

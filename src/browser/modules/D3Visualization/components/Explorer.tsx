@@ -37,7 +37,7 @@ import { panelMinWidth, StyledFullSizeContainer } from './styled'
 import {
   getNodePropertiesExpandedByDefault,
   setNodePropertiesExpandedByDefault
-} from 'shared/modules/stream/streamDuck'
+} from 'shared/modules/frames/framesDuck'
 import { Action, Dispatch } from 'redux'
 
 const deduplicateNodes = (nodes: any) => {

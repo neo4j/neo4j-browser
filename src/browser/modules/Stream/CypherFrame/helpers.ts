@@ -36,7 +36,7 @@ import {
 
 import bolt from 'services/bolt/bolt'
 
-import * as viewTypes from 'shared/modules/stream/frameViewTypes'
+import * as viewTypes from 'shared/modules/frames/frameViewTypes'
 import { recursivelyExtractGraphItems } from 'services/bolt/boltMappings'
 import { stringifyMod, unescapeDoubleQuotesForDisplay } from 'services/utils'
 import {

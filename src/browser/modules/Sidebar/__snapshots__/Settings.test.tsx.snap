@@ -35,6 +35,7 @@ exports[`Settings renders with strange characters in display name 1`] = `
               åäö üüü
               <input
                 class="sc-jhAzac eBGTid testSetting"
+                data-testid="setting-testSetting"
                 title=""
                 value="true"
               />

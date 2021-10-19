@@ -26,7 +26,7 @@ import {
   NAME as features,
   initialState as featuresInitialState
 } from './modules/features/featuresDuck'
-import { FramesState, NAME as frames } from './modules/stream/streamDuck'
+import { FramesState, NAME as frames } from './modules/frames/framesDuck'
 import { NAME as history } from './modules/history/historyDuck'
 import {
   NAME as user,

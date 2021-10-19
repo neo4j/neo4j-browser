@@ -51,7 +51,7 @@ import { PlanView, PlanStatusbar } from './PlanView'
 import { VisualizationConnectedBus } from './VisualizationView'
 
 import Display from 'browser-components/Display'
-import * as viewTypes from 'shared/modules/stream/frameViewTypes'
+import * as viewTypes from 'shared/modules/frames/frameViewTypes'
 import {
   resultHasRows,
   resultHasWarnings,
@@ -73,7 +73,7 @@ import {
   getRecentView,
   Frame,
   SetRecentViewAction
-} from 'shared/modules/stream/streamDuck'
+} from 'shared/modules/frames/framesDuck'
 import { CancelView } from './CancelView'
 import RelatableView, {
   RelatableStatusbar

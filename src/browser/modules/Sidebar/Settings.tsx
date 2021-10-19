@@ -291,6 +291,7 @@ export const Settings = ({
                     defaultValue={settings[setting]}
                     title={tooltip}
                     className={setting}
+                    data-testid={`setting-${setting}`}
                   />
                 </StyledSettingLabel>
               </StyledSetting>
@@ -312,6 +313,7 @@ export const Settings = ({
                     onSettingsSave(settings)
                   }}
                   selectedValue={settings[setting]}
+                  data-testid={`setting-${setting}`}
                 />
               </StyledSetting>
             )
@@ -329,7 +331,7 @@ export const Settings = ({
                       onSettingsSave(settings)
                     }}
                     checked={settings[setting]}
-                    data-testid={setting}
+                    data-testid={`setting-${setting}`}
                   />
                   {visual}
                 </StyledSettingLabel>

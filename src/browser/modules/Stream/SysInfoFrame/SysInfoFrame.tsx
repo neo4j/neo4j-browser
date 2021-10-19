@@ -43,7 +43,7 @@ import * as helpers from './helpers'
 import { SysInfoTable } from './SysInfoTable'
 import { Bus } from 'suber'
 import { GlobalState } from 'shared/globalState'
-import { Frame } from 'shared/modules/stream/streamDuck'
+import { Frame } from 'shared/modules/frames/framesDuck'
 import { ExclamationTriangleIcon } from '../../../components/icons/Icons'
 import { InlineError } from './styled'
 

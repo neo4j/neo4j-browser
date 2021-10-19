@@ -19,7 +19,7 @@
  */
 
 import neo4j from 'neo4j-driver'
-import * as viewTypes from 'shared/modules/stream/frameViewTypes'
+import * as viewTypes from 'shared/modules/frames/frameViewTypes'
 import {
   resultHasNodes,
   resultHasRows,

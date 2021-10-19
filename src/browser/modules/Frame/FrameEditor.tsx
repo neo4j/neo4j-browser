@@ -35,7 +35,7 @@ import {
 import {
   Frame,
   TRACK_SAVE_AS_PROJECT_FILE
-} from 'shared/modules/stream/streamDuck'
+} from 'shared/modules/frames/framesDuck'
 import { EditorButton, FrameButton } from 'browser-components/buttons'
 import { SaveFavoriteIcon } from 'browser-components/icons/Icons'
 import { DottedLineHover } from '../Stream/styled'
