@@ -25,7 +25,8 @@ import { moveInArray } from 'services/utils'
 import { APP_START } from 'shared/modules/app/appDuck'
 import {
   getMaxFrames,
-  UPDATE as SETTINGS_UPDATE
+  UPDATE as SETTINGS_UPDATE,
+  initialState as settingsDefaultState
 } from '../settings/settingsDuck'
 import { Epic } from 'redux-observable'
 import { Action } from 'redux'
@@ -196,22 +197,18 @@ function setRecentViewHelper(state: FramesState, recentView: FrameView) {
 }
 
 function ensureFrameLimit(state: FramesState, maxFrames: number) {
-  if (maxFrames > 0) {
-    const limit = maxFrames
-    if (state.allIds.length <= limit) return state
-    const numToRemove = state.allIds.length - limit
-    const removeIds = state.allIds
-      .slice(-1 * numToRemove)
-      .filter(id => !state.byId[id].isPinned)
-    const byId = { ...state.byId }
-    removeIds.forEach(id => delete byId[id])
-    return {
-      ...state,
-      allIds: state.allIds.slice(0, state.allIds.length - removeIds.length),
-      byId
-    }
-  } else {
-    return state
+  const limit = maxFrames > 0 ? maxFrames : settingsDefaultState.maxFrames
+  if (state.allIds.length <= limit) return state
+  const numToRemove = state.allIds.length - limit
+  const removeIds = state.allIds
+    .slice(-1 * numToRemove)
+    .filter(id => !state.byId[id].isPinned)
+  const byId = { ...state.byId }
+  removeIds.forEach(id => delete byId[id])
+  return {
+    ...state,
+    allIds: state.allIds.slice(0, state.allIds.length - removeIds.length),
+    byId
   }
 }
 
