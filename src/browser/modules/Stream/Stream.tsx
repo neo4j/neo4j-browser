@@ -131,7 +131,7 @@ function Stream(props: StreamProps): JSX.Element {
         if (frame.type === 'error') {
           try {
             const cmd = frame.cmd.replace(/^:/, '')
-            const Frame = upperFirst(cmd[0]) + 'Frame'
+            const Frame = upperFirst(cmd) + 'Frame'
             MyFrame = require('./Extras/index')[Frame]
             if (!MyFrame) {
               MyFrame = getFrame(frame.type)
