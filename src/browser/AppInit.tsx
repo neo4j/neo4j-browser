@@ -49,7 +49,7 @@ import { APP_START } from 'shared/modules/app/appDuck'
 import { detectRuntimeEnv, isRunningE2ETest } from 'services/utils'
 import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
 import { version } from 'project-root/package.json'
-import { updateUdcData } from 'shared/modules/udc/udcDuck'
+import { getUuid, updateUdcData } from 'shared/modules/udc/udcDuck'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import {
@@ -182,6 +182,7 @@ export function setupSentry(): void {
       },
       environment: 'unset'
     })
+    Sentry.setUser({ id: getUuid(store.getState()) })
 
     fetch('./manifest.json')
       .then(res => res.json())

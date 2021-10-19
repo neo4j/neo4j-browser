@@ -52,6 +52,7 @@ import {
 import cmdHelper from 'shared/services/commandInterpreterHelper'
 import { extractStatementsFromString } from 'services/commandUtils'
 import { isGuideChapter, isPlayChapter } from 'browser/documentation'
+import { v4 } from 'uuid'
 
 // Action types
 export const NAME = 'udc'
@@ -62,6 +63,8 @@ export const LAST_GUIDE_SLIDE = 'udc/LAST_GUIDE_SLIDE'
 
 export const getAuraNtId = (state: GlobalState): string | undefined =>
   state[NAME].auraNtId
+export const getUuid = (state: GlobalState): string =>
+  state[NAME].uuid || initialState.uuid
 export const getDesktopTrackingId = (state: GlobalState): string | undefined =>
   state[NAME].desktopTrackingId
 export const getAllowUserStatsInDesktop = (state: GlobalState): boolean =>
@@ -99,6 +102,7 @@ const aWeekSinceLastSnapshot = (state: GlobalState) => {
 export interface UdcState {
   lastSnapshot: number
   auraNtId?: string
+  uuid: string
   consentBannerShownCount: number
   desktopTrackingId?: string
   allowUserStatsInDesktop: boolean
@@ -108,6 +112,7 @@ export interface UdcState {
 const initialState: UdcState = {
   lastSnapshot: 0,
   auraNtId: undefined,
+  uuid: v4(),
   consentBannerShownCount: 0,
   desktopTrackingId: undefined,
   allowUserStatsInDesktop: false,
