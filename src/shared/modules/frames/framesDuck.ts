@@ -197,7 +197,8 @@ function setRecentViewHelper(state: FramesState, recentView: FrameView) {
 }
 
 function ensureFrameLimit(state: FramesState, maxFrames: number) {
-  const limit = maxFrames > 0 ? maxFrames : settingsDefaultState.maxFrames
+  const limit =
+    maxFrames >= 1 ? Math.floor(maxFrames) : settingsDefaultState.maxFrames
   if (state.allIds.length <= limit) return state
   const numToRemove = state.allIds.length - limit
   const removeIds = state.allIds
