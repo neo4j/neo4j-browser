@@ -13,7 +13,7 @@ Object {
   "initCmd": ":play start",
   "initialNodeDisplay": 300,
   "maxFieldItems": 500,
-  "maxFrames": 30,
+  "maxFrames": 15,
   "maxHistory": 30,
   "maxNeighbours": 100,
   "maxRows": 1000,
