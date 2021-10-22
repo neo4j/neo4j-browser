@@ -115,15 +115,15 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
         width="204.8"
       >
         <div
-          class="sc-chPdSV kFlaMg react-resizable"
+          class="sc-chPdSV iEZMKC react-resizable"
         >
           <div
-            class="sc-kGXeez lhIkLB"
+            class="sc-kGXeez eoOSxY"
           >
             Overview
           </div>
           <div
-            class="sc-kpOJdX fyzTOa"
+            class="sc-kpOJdX buqxsO"
           >
             Node labels
             <ul

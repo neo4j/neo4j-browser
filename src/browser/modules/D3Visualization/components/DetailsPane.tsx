@@ -91,7 +91,7 @@ export function DetailsPaneComponent({
             )
           })}
       </PaneHeader>
-      <PaneBody frameHeight={frameHeight}>
+      <PaneBody>
         <StyledInlineList>
           <AlternatingTable>
             <tbody>
