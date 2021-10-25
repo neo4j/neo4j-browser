@@ -153,10 +153,14 @@ RETURN t;`
       .contains('SUCCESS')
     cy.executeCommand('match (n: MultiStmtTest) return n.zid')
     cy.get('[role="cell"]').then(cells => {
-      cy.wrap(parseInt(cells[0].textContent || '')).should(
-        'equal',
-        parseInt(cells[1].textContent || '') - 1
-      )
+      const firstResult = parseInt(cells[0].textContent || '')
+      const secondResult = parseInt(cells[1].textContent || '')
+
+      // One row should be 1 larger than the other, but the order is not guaranteed
+      cy.wrap(firstResult).should('be.oneOf', [
+        secondResult - 1,
+        secondResult + 1
+      ])
     })
     cy.executeCommand('match (n: MultiStmtTest) delete n')
   })
