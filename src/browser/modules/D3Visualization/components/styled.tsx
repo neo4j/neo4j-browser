@@ -156,11 +156,13 @@ export const StyledLabelToken = styled(StyledToken)`
   border-radius: 20px;
   word-break: break-all;
   margin-top: 4px;
+  cursor: default;
 `
 export const StyledTokenRelationshipType = styled(StyledToken)`
   padding: 4px 7px 4px 5px;
   border-radius: 3px;
   word-break: break-all;
+  cursor: default;
 `
 
 export const StyledTokenCount = styled.span`
@@ -168,12 +170,11 @@ export const StyledTokenCount = styled.span`
 `
 
 export const StyledLegendInlineList = styled(StyledInlineList)`
-  padding: 4px 0;
+  padding: 4px 0 0 0;
   &.contracted {
     max-height: ${legendRowHeight}px;
     overflow: hidden;
   }
-  margin-bottom: 12px;
 `
 
 export const StyledPickerListItem = styled(StyledInlineListItem)`
@@ -333,6 +334,9 @@ export const PaneBody = styled.div`
   overflow: auto;
   margin: 14px 0;
   flex: 0 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 `
 export const KeyCell = styled.td`
   font-weight: 700;
@@ -351,11 +355,19 @@ export const ValueCell = styled.td`
   white-space: pre-wrap;
   vertical-align: top;
 `
-export const SmallText = styled.div`
-  font-size: 12px;
-  margin-bottom: 8px;
-`
 
 export const PaneTitle = styled.div`
   margin-bottom: 10px;
+`
+
+export const PaneBodySectionTitle = styled.span`
+  font-weight: 700;
+`
+
+export const PaneBodySectionSmallText = styled.span`
+  font-size: 0.9rem;
+`
+export const PaneBodySectionHeaderWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
 `

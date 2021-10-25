@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 
 import {
   AlternatingTable,
@@ -32,12 +32,59 @@ import {
 } from './styled'
 import ClickableUrls from '../../../components/ClickableUrls'
 import ClipboardCopier from 'browser-components/ClipboardCopier'
-import { NodeItem, RelationshipItem } from './types'
+import { NodeItem, RelationshipItem, VizNodeProperty } from './types'
 import { GraphStyle } from './OverviewPane'
 import { StyleableNodeLabel } from './StyleableNodeLabel'
 import { StylableRelType } from './StyleableRelType'
 import { upperFirst } from 'services/utils'
+import { ShowMoreOrAll } from 'browser-components/ShowMoreOrAll/ShowMoreOrAll'
 
+type PropertiesViewProps = {
+  visibleProperties: VizNodeProperty[]
+  onMoreClick: (numMore: number) => void
+  totalNumItems: number
+  moreStep: number
+}
+function PropertiesView({
+  visibleProperties,
+  totalNumItems,
+  onMoreClick,
+  moreStep
+}: PropertiesViewProps) {
+  return (
+    <>
+      <StyledInlineList>
+        <AlternatingTable>
+          <tbody>
+            {visibleProperties.map(({ key, type, value }) => (
+              <tr key={key} title={type}>
+                <KeyCell>
+                  <ClickableUrls text={key} />
+                </KeyCell>
+                <ValueCell>
+                  <ClickableUrls text={value} />
+                </ValueCell>
+                <CopyCell>
+                  <ClipboardCopier
+                    titleText={'Copy key and value'}
+                    textToCopy={`${key}: ${value}`}
+                    iconSize={10}
+                  />
+                </CopyCell>
+              </tr>
+            ))}
+          </tbody>
+        </AlternatingTable>
+      </StyledInlineList>
+      <ShowMoreOrAll
+        total={totalNumItems}
+        shown={visibleProperties.length}
+        moreStep={moreStep}
+        onMore={onMoreClick}
+      />
+    </>
+  )
+}
 type DetailsPaneComponentProps = {
   vizItem: NodeItem | RelationshipItem
   graphStyle: GraphStyle
@@ -48,10 +95,19 @@ export function DetailsPaneComponent({
   graphStyle,
   frameHeight
 }: DetailsPaneComponentProps): JSX.Element {
+  const moreStep = 1000
+  const [propertiesMax, setPropertiesMax] = useState(moreStep)
+
   const allItemProperties = [
     { key: '<id>', value: `${vizItem.item.id}`, type: 'String' },
     ...vizItem.item.properties
   ].sort((a, b) => (a.key < b.key ? -1 : 1))
+  const visibleItemProperties = allItemProperties.slice(0, propertiesMax)
+
+  const handleMorePropertiesClick = (numMore: number) => {
+    const newMax = propertiesMax + numMore
+    setPropertiesMax(newMax)
+  }
 
   return (
     <>
@@ -92,29 +148,12 @@ export function DetailsPaneComponent({
           })}
       </PaneHeader>
       <PaneBody>
-        <StyledInlineList>
-          <AlternatingTable>
-            <tbody>
-              {allItemProperties.map(({ key, type, value }) => (
-                <tr key={key} title={type}>
-                  <KeyCell>
-                    <ClickableUrls text={key} />
-                  </KeyCell>
-                  <ValueCell>
-                    <ClickableUrls text={value} />
-                  </ValueCell>
-                  <CopyCell>
-                    <ClipboardCopier
-                      titleText={'Copy key and value'}
-                      textToCopy={`${key}: ${value}`}
-                      iconSize={10}
-                    />
-                  </CopyCell>
-                </tr>
-              ))}
-            </tbody>
-          </AlternatingTable>
-        </StyledInlineList>
+        <PropertiesView
+          visibleProperties={visibleItemProperties}
+          onMoreClick={(numMore: number) => handleMorePropertiesClick(numMore)}
+          moreStep={moreStep}
+          totalNumItems={allItemProperties.length}
+        />
       </PaneBody>
     </>
   )

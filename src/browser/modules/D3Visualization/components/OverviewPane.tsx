@@ -18,15 +18,45 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { Icon } from 'semantic-ui-react'
 
-import { StyledLegendInlineList, PaneBody, PaneHeader } from './styled'
+import {
+  StyledLegendInlineList,
+  PaneBody,
+  PaneHeader,
+  PaneBodySectionTitle,
+  PaneBodySectionSmallText,
+  PaneBodySectionHeaderWrapper
+} from './styled'
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
 import { StyledTruncatedMessage } from 'browser/modules/Stream/styled'
 import { StyleableNodeLabel } from './StyleableNodeLabel'
 import { GraphStats } from '../mapper'
 import { StylableRelType } from './StyleableRelType'
+import { ShowMoreOrAll } from 'browser-components/ShowMoreOrAll/ShowMoreOrAll'
+
+type PaneBodySectionHeaderProps = {
+  title: string
+  numOfElementsVisible: number
+  totalNumOfElements: number
+}
+function PaneBodySectionHeader({
+  title,
+  numOfElementsVisible,
+  totalNumOfElements
+}: PaneBodySectionHeaderProps) {
+  return (
+    <PaneBodySectionHeaderWrapper>
+      <PaneBodySectionTitle>{title}</PaneBodySectionTitle>
+      {numOfElementsVisible < totalNumOfElements && (
+        <PaneBodySectionSmallText>
+          {`(showing ${numOfElementsVisible} of ${totalNumOfElements})`}
+        </PaneBodySectionSmallText>
+      )}
+    </PaneBodySectionHeaderWrapper>
+  )
+}
 
 export type GraphStyle = {
   forNode: any
@@ -59,17 +89,39 @@ function OverviewPane({
   relationshipCount,
   stats
 }: OverviewPaneProps): JSX.Element {
+  const moreStep = 50
+  const [labelsMax, setLabelsMax] = useState(moreStep)
+  const [relationshipsMax, setRelationshipsMax] = useState(moreStep)
+
+  function onMoreClick(type: any, currentMax: number) {
+    const map: any = {
+      labels: setLabelsMax,
+      relationships: setRelationshipsMax
+    }
+    return (num: number) => map[type](currentMax + num)
+  }
+
   const { relTypes, labels } = stats
+  const visibleLabelKeys = labels ? Object.keys(labels).slice(0, labelsMax) : []
+  const visibleRelationshipKeys = relTypes
+    ? Object.keys(relTypes).slice(0, relationshipsMax)
+    : []
+  const totalNumOfLabelTypes = labels ? Object.keys(labels).length : 0
+  const totalNumOfRelTypes = relTypes ? Object.keys(relTypes).length : 0
 
   return (
     <>
-      <PaneHeader>Overview</PaneHeader>
+      <PaneHeader>{'Overview'}</PaneHeader>
       <PaneBody>
-        {labels && Object.keys(labels).length !== 0 && (
-          <>
-            Node labels
+        {labels && visibleLabelKeys.length !== 0 && (
+          <div>
+            <PaneBodySectionHeader
+              title={'Node labels'}
+              numOfElementsVisible={visibleLabelKeys.length}
+              totalNumOfElements={totalNumOfLabelTypes}
+            />
             <StyledLegendInlineList>
-              {Object.keys(labels).map((label: string) => (
+              {visibleLabelKeys.map((label: string) => (
                 <StyleableNodeLabel
                   key={label}
                   graphStyle={graphStyle}
@@ -81,13 +133,23 @@ function OverviewPane({
                 />
               ))}
             </StyledLegendInlineList>
-          </>
+            <ShowMoreOrAll
+              total={totalNumOfLabelTypes}
+              shown={visibleLabelKeys.length}
+              moreStep={moreStep}
+              onMore={onMoreClick('labels', labelsMax)}
+            />
+          </div>
         )}
-        {relTypes && Object.keys(relTypes).length !== 0 && (
-          <>
-            Relationship Types
+        {relTypes && visibleRelationshipKeys.length !== 0 && (
+          <div>
+            <PaneBodySectionHeader
+              title={'Relationship Types'}
+              numOfElementsVisible={visibleRelationshipKeys.length}
+              totalNumOfElements={totalNumOfRelTypes}
+            />
             <StyledLegendInlineList>
-              {Object.keys(relTypes).map(relType => (
+              {visibleRelationshipKeys.map(relType => (
                 <StylableRelType
                   key={relType}
                   graphStyle={graphStyle}
@@ -99,7 +161,13 @@ function OverviewPane({
                 />
               ))}
             </StyledLegendInlineList>
-          </>
+            <ShowMoreOrAll
+              total={totalNumOfRelTypes}
+              shown={visibleRelationshipKeys.length}
+              moreStep={moreStep}
+              onMore={onMoreClick('relationships', relationshipsMax)}
+            />
+          </div>
         )}
         <div style={{ paddingBottom: '10px' }}>
           {hasTruncatedFields && (

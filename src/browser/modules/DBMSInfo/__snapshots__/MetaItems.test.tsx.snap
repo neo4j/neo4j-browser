@@ -38,7 +38,7 @@ exports[`LabelItems renders labels 1`] = `
         class="sc-gZMcBi sc-gqjmRU bszfIc"
         data-testid="sidebarMetaItem"
       >
-        *
+        *(5)
       </div>
       <div
         class="sc-gZMcBi sc-gqjmRU bszfIc"
@@ -146,7 +146,7 @@ exports[`RelationshipItems renders relationshipTypes 1`] = `
         class="sc-gZMcBi sc-VigVT hzykkh"
         data-testid="sidebarMetaItem"
       >
-        *
+        *(5)
       </div>
       <div
         class="sc-gZMcBi sc-VigVT hzykkh"

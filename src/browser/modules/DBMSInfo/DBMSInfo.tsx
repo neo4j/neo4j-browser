@@ -46,13 +46,13 @@ export function DBMSInfo(props: any): JSX.Element {
   const [relationshipsMax, setRelationshipsMax] = useState(moreStep)
   const [propertiesMax, setPropertiesMax] = useState(moreStep)
 
-  function onMoreClick(type: any, currentMax: any) {
+  function onMoreClick(type: any, currentMax: number) {
     const map: any = {
       labels: setLabelsMax,
       relationships: setRelationshipsMax,
       properties: setPropertiesMax
     }
-    return (num: any) => map[type](currentMax + num)
+    return (num: number) => map[type](currentMax + num)
   }
 
   const {
