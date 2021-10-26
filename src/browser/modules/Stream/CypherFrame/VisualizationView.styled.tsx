@@ -25,7 +25,7 @@ export const StyledVisContainer = styled.div<{ fullscreen: boolean }>`
   width: 100%;
   height: ${props =>
     props.fullscreen
-      ? '100vh'
+      ? '100%'
       : dim.frameBodyHeight - dim.frameTitlebarHeight * 2 + 'px'};
   > svg {
     width: 100%;

@@ -308,6 +308,8 @@ export const StyledNodeInspectorTopMenuChevron = styled.div<{
 export const PaneContainer = styled.div`
   padding: 0 14px;
   height: 100%;
+  display: flex;
+  flex-direction: column;
 `
 
 export const AlternatingTable = styled.table`
@@ -324,12 +326,13 @@ export const AlternatingTable = styled.table`
 export const PaneHeader = styled.div`
   font-size: 16px;
   margin-top: 10px;
+  flex: 0 0 auto;
 `
-const PANE_HEADER_HEIGHT = 50
-export const PaneBody = styled.div<{ frameHeight: number }>`
-  max-height: ${props => props.frameHeight - PANE_HEADER_HEIGHT}px;
+
+export const PaneBody = styled.div`
   overflow: auto;
-  margin-top: 14px;
+  margin: 14px 0;
+  flex: 0 1 auto;
 `
 export const KeyCell = styled.td`
   font-weight: 700;
