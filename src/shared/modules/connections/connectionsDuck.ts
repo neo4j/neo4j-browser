@@ -21,7 +21,7 @@
 import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
 import * as discovery from 'shared/modules/discovery/discoveryDuck'
-import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
+import { NATIVE, NO_AUTH, SSO } from 'services/bolt/boltHelpers'
 import { fetchMetaData } from 'shared/modules/dbMeta/dbMetaDuck'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import {
@@ -78,7 +78,7 @@ type ConnectionState =
   | typeof PENDING_STATE
   | typeof CONNECTING_STATE
 
-export type AuthenticationMethod = typeof NATIVE | typeof NO_AUTH
+export type AuthenticationMethod = typeof NATIVE | typeof NO_AUTH | typeof SSO
 const onlyValidConnId = '$$discovery'
 // we only use one connection, but can't update the redux state
 // to match that fact until we've merged proper single sign on

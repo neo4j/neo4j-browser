@@ -35,7 +35,7 @@ import {
   StyledSSOError,
   StyledSSOLogDownload
 } from './styled'
-import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
+import { NATIVE, NO_AUTH, SSO } from 'services/bolt/boltHelpers'
 import { toKeyString } from 'services/utils'
 import { stripScheme, getScheme } from 'services/boltscheme.utils'
 import {
@@ -48,7 +48,8 @@ import { H4 } from 'browser-components/headers/Headers'
 
 const readableauthenticationMethods: Record<AuthenticationMethod, string> = {
   [NATIVE]: 'Username / Password',
-  [NO_AUTH]: 'No authentication'
+  [NO_AUTH]: 'No authentication',
+  [SSO]: 'Single Sign On'
 }
 
 interface ConnectFormProps {
@@ -131,43 +132,20 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
 
   const { SSOError, SSOProviders } = props
 
+  // TODO unused
   const showSSO = SSOProviders.length > 0 || SSOError
   const [SSORedirectError, setRedirectError] = useState('')
 
   return (
     <StyledFormContainer>
-      {showSSO && (
+      {/* {showSSO && (
         <StyledSSOOptions>
           <H4>Single sign-on</H4>
-          {SSOProviders.map((provider: SSOProvider) => (
-            <StyledSSOButtonContainer key={provider.id}>
-              <FormButton
-                onClick={() =>
-                  authRequestForSSO(provider).catch(e => {
-                    authLog(e.message)
-                    setRedirectError(e.message)
-                  })
-                }
-                style={{ width: '200px' }}
-              >
-                {provider.name}
-              </FormButton>
-            </StyledSSOButtonContainer>
-          ))}
-          {(SSOError || SSORedirectError) && (
-            <StyledSSOError>
-              <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>
-              <div>{SSOError || SSORedirectError}</div>
-              <StyledSSOLogDownload onClick={downloadAuthLogs}>
-                Download logs
-              </StyledSSOLogDownload>
-            </StyledSSOError>
-          )}
+          TODO: Remove Me later
         </StyledSSOOptions>
-      )}
+      )} */}
       <StyledConnectionForm onSubmit={onConnectClick}>
         <StyledConnectionFormEntry>
-          {showSSO && <H4>Login with Password</H4>}
           <StyledConnectionLabel htmlFor="url-input" title={hoverText}>
             Connect URL
           </StyledConnectionLabel>
@@ -267,17 +245,43 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
           </StyledConnectionFormEntry>
         )}
 
-        {connecting ? (
-          'Connecting...'
-        ) : (
-          <FormButton
-            data-testid="connect"
-            type="submit"
-            style={{ marginRight: 0 }}
-          >
-            Connect
-          </FormButton>
+        {props.authenticationMethod === SSO &&
+          SSOProviders.map((provider: SSOProvider) => (
+            <StyledSSOButtonContainer key={provider.id}>
+              <FormButton
+                onClick={() =>
+                  authRequestForSSO(provider).catch(e => {
+                    authLog(e.message)
+                    setRedirectError(e.message)
+                  })
+                }
+                style={{ width: '200px' }}
+              >
+                {provider.name}
+              </FormButton>
+            </StyledSSOButtonContainer>
+          ))}
+        {props.authenticationMethod === SSO && (SSOError || SSORedirectError) && (
+          <StyledSSOError>
+            <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>
+            <div>{SSOError || SSORedirectError}</div>
+            <StyledSSOLogDownload onClick={downloadAuthLogs}>
+              Download logs
+            </StyledSSOLogDownload>
+          </StyledSSOError>
         )}
+
+        {connecting
+          ? 'Connecting...'
+          : props.authenticationMethod !== SSO && (
+              <FormButton
+                data-testid="connect"
+                type="submit"
+                style={{ marginRight: 0 }}
+              >
+                Connect
+              </FormButton>
+            )}
       </StyledConnectionForm>
     </StyledFormContainer>
   )

@@ -38,7 +38,7 @@ import {
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
 import { FORCE_CHANGE_PASSWORD } from 'shared/modules/cypher/cypherDuck'
-import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
+import { NATIVE, NO_AUTH, SSO } from 'services/bolt/boltHelpers'
 
 import ConnectForm from './ConnectForm'
 import ConnectedView from './ConnectedView'
@@ -57,13 +57,14 @@ import { isCloudHost } from 'shared/services/utils'
 import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
 import { CLOUD_SCHEMES } from 'shared/modules/app/appDuck'
 import { AuthenticationMethod } from 'shared/modules/connections/connectionsDuck'
+import { stripQueryString, stripScheme } from 'shared/services/boltscheme.utils'
 
 type ConnectionFormState = any
 
 const isAuraHost = (host: string) => isCloudHost(host, NEO4J_CLOUD_DOMAINS)
 
 function getAllowedAuthMethodsForHost(host: string): AuthenticationMethod[] {
-  return isAuraHost(host) ? [NATIVE] : [NATIVE, NO_AUTH]
+  return isAuraHost(host) ? [NATIVE, SSO] : [NATIVE, SSO, NO_AUTH]
 }
 
 const getAllowedSchemesForHost = (host: string, allowedSchemes: string[]) =>
@@ -192,6 +193,14 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
       this.props.allowedSchemes
     )
     const url = generateBoltUrl(allowedSchemes, val, fallbackScheme)
+    const newHost = stripScheme(stripQueryString(val))
+    const discoveryHost = stripScheme(
+      stripQueryString(this.props.discoveredData.host)
+    )
+    if (newHost !== discoveryHost) {
+      //
+    }
+
     this.setState({
       host: url,
       hostInputVal: url
