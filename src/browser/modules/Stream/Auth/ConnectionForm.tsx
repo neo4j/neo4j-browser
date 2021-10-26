@@ -21,6 +21,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
+import { debounce } from 'lodash-es'
 import {
   getActiveConnectionData,
   getActiveConnection,
@@ -52,12 +53,19 @@ import {
   isNonSupportedRoutingSchemeError
 } from 'services/boltscheme.utils'
 import { StyledConnectionBody } from './styled'
-import { CONNECTION_ID } from 'shared/modules/discovery/discoveryDuck'
+import {
+  CONNECTION_ID,
+  fetchBrowserDiscoveryDataFromUrl
+} from 'shared/modules/discovery/discoveryDuck'
 import { isCloudHost } from 'shared/services/utils'
 import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
 import { CLOUD_SCHEMES } from 'shared/modules/app/appDuck'
 import { AuthenticationMethod } from 'shared/modules/connections/connectionsDuck'
-import { stripQueryString, stripScheme } from 'shared/services/boltscheme.utils'
+import {
+  stripQueryString,
+  stripScheme,
+  boltToHttp
+} from 'shared/services/boltscheme.utils'
 
 type ConnectionFormState = any
 
@@ -73,8 +81,7 @@ const getAllowedSchemesForHost = (host: string, allowedSchemes: string[]) =>
 export class ConnectionForm extends Component<any, ConnectionFormState> {
   constructor(props: any) {
     super(props)
-    const connection =
-      this.props.discoveredData || this.props.frame.connectionData || {}
+    const connection = this.getConnection()
     const authenticationMethod =
       (connection && connection.authenticationMethod) || NATIVE
 
@@ -94,6 +101,10 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
       successCallback: props.onSuccess || (() => {}),
       used: props.isConnected
     }
+  }
+
+  getConnection() {
+    return this.props.discoveredData || this.props.frame.connectionData || {}
   }
 
   tryConnect = (password: any, doneFn: any) => {
@@ -187,24 +198,45 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
     this.props.error({})
   }
 
+  fetchHostDiscovery = debounce((host: string) => {
+    const discoveryHost = stripScheme(
+      stripQueryString(this.props.discoveredData.host)
+    )
+    const newHost = stripScheme(stripQueryString(host))
+    if (newHost !== discoveryHost) {
+      this.setState({ SSOLoading: true })
+      fetchBrowserDiscoveryDataFromUrl(boltToHttp(host)).then(result => {
+        if (result) {
+          this.setState({
+            SSOProviders: result.ssoProviders,
+            SSOError: undefined,
+            SSOLoading: false
+          })
+        } else {
+          // TODO - set correct SSOError content, not just this placeholder text?
+          this.setState({
+            SSOError: 'Failed to load SSO providers',
+            SSOLoading: false
+          })
+        }
+      })
+    } else {
+      // TODO will this overwrite any state that we don't want it to?
+      this.setState({ ...this.getConnection() })
+    }
+  }, 200)
+
   onHostChange(fallbackScheme: any, val: any) {
     const allowedSchemes = getAllowedSchemesForHost(
       val,
       this.props.allowedSchemes
     )
     const url = generateBoltUrl(allowedSchemes, val, fallbackScheme)
-    const newHost = stripScheme(stripQueryString(val))
-    const discoveryHost = stripScheme(
-      stripQueryString(this.props.discoveredData.host)
-    )
-    if (newHost !== discoveryHost) {
-      //
-    }
-
     this.setState({
       host: url,
       hostInputVal: url
     })
+    this.fetchHostDiscovery(val)
     this.props.error({})
   }
 

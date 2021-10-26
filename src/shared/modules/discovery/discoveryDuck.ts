@@ -251,7 +251,7 @@ type ExtraDiscoveryFields = {
 
 type BrowserDiscoveryResult = DiscoveryResult & ExtraDiscoveryFields
 
-async function fetchBrowserDiscoveryDataFromUrl(
+export async function fetchBrowserDiscoveryDataFromUrl(
   url: string
 ): Promise<BrowserDiscoveryResult | null> {
   const res = await fetchDiscoveryDataFromUrl(url)

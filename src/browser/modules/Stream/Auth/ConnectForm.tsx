@@ -250,6 +250,7 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
             <StyledSSOButtonContainer key={provider.id}>
               <FormButton
                 onClick={() =>
+                  // TODO - set session storage with current connect host, which is: props.host
                   authRequestForSSO(provider).catch(e => {
                     authLog(e.message)
                     setRedirectError(e.message)
