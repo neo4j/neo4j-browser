@@ -20,7 +20,6 @@
 
 import {
   DiscoverableData,
-  SSOProvider,
   updateConnection
 } from 'shared/modules/connections/connectionsDuck'
 import {
@@ -31,10 +30,13 @@ import {
   getAllowedBoltSchemes,
   CLOUD_SCHEMES
 } from 'shared/modules/app/appDuck'
-import { getDiscoveryEndpoint, SSO } from 'services/bolt/boltHelpers'
-import { generateBoltUrl } from 'services/boltscheme.utils'
-import { getUrlInfo, hostIsAllowed } from 'shared/services/utils'
-import { isConnectedAuraHost } from 'shared/modules/connections/connectionsDuck'
+import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
+import {
+  boltToHttp,
+  boltUrlsHaveSameHost,
+  generateBoltUrl
+} from 'services/boltscheme.utils'
+import { getUrlInfo } from 'shared/services/utils'
 import { isCloudHost } from 'shared/services/utils'
 import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
 import {
@@ -47,12 +49,8 @@ import {
   defaultSearchParamsToRemoveAfterAutoRedirect,
   fetchDiscoveryDataFromUrl,
   DiscoveryResult,
-  Success,
-  FetchError,
-  NoProviderError
+  FetchError
 } from 'neo4j-client-sso'
-import { connect } from 'react-redux'
-import { merge } from 'lodash'
 
 export const NAME = 'discover-bolt-host'
 export const CONNECTION_ID = '$$discovery'
@@ -77,12 +75,6 @@ export default function reducer(state = initialState, action: any = {}) {
       return state
   }
 }
-
-// export enum DiscoveryResultStatus {
-//   Success = 0,
-//   FetchError = 1,
-//   NoProviderError = 2
-// }
 
 // Action Creators
 export const setBoltHost = (bolt: any) => {
@@ -174,94 +166,30 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
         action.discoveryURL = discoveryURL
       }
 
+      const sessionStorageHost = 'abc' // TODO pickup and remove session storage host
+      if (sessionStorageHost) {
+        action.sessionStorageHost = sessionStorageHost
+      }
+
       return action
     })
     .merge(some$.ofType(USER_CLEAR))
     .mergeMap(async (action: any) => {
-      // For now we only want discoverydata we know is relevant to a specific bolt host
-      // We can discover data from the following sources
-      // encoded in action.forceURL
-      // from hosted discovery
-      // from fetching discoveryURL
-      // from fetching the connectURL
-      // from fetching a host entered previously
+      const { success, discoveryData } = await getAndMergeDiscoveryData({
+        action,
+        hostedURL: getHostedUrl(store.getState()),
+        hasDiscoveryEndpoint: hasDiscoveryEndpoint(store.getState()),
+        generateBoltUrlWithAllowedScheme: (boltUrl: string) =>
+          generateBoltUrl(
+            getAllowedBoltSchemesForHost(store.getState(), boltUrl),
+            boltUrl
+          )
+      })
 
-      // We can get a host from these sources. we pick one host to be most relevant
-      // Order is:
-      /* 
-      entered previously
-      from forceURL
-      from discoveryURL
-      from hosted
-
-      we fetch all these, merge on what host we care about
-      */
-
-      let dataFromForceUrl: DiscoverableData = {}
-
-      if (action.forceURL) {
-        const { username, protocol, host } = getUrlInfo(action.forceURL)
-
-        const discovered = {
-          username,
-          requestedUseDb: action.requestedUseDb,
-          host: `${protocol ? `${protocol}//` : ''}${host}`,
-          supportsMultiDb: !!action.requestedUseDb,
-          encrypted: action.encrypted,
-          restApi: action.restApi,
-          hasForceURL: true
-        }
-        const onlyTruthy = Object.entries(discovered)
-          .filter(item => item[1] /* truthy check on value */)
-          .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
-
-        dataFromForceUrl = onlyTruthy
-      }
-
-      const discoveryEndpoint = getDiscoveryEndpoint(
-        getHostedUrl(store.getState())
-      )
-      const discoveryEndpointData = await fetchBrowserDiscoveryDataFromUrl(
-        discoveryEndpoint
-      )
-      const discoveryURLData = await (action.discoveryURL
-        ? fetchBrowserDiscoveryDataFromUrl(action.discoveryURL)
-        : Promise.resolve({
-            status: NoProviderError,
-            ssoProviders: [],
-            host: undefined
-          }))
-
-      // startup
-      // fetch all of them
-      // merge via priority
-      // discard incorrect hosts, and log
-      // read from session storage for the redirect
-      // decorate the host later
-
-      // connect form
-      // show what startup has
-      // 1st step if they edit -> fetch that bolt host, (keep in local state for now) ignore everything else
-      // 2nd step -> annotate with hosts, avoid refecthing and enable merging all four
-
-      const isAura = isConnectedAuraHost(store.getState())
-      mergedDiscoveryData.supportsMultiDb =
-        !!action.requestedUseDb ||
-        (!isAura &&
-          parseInt((mergedDiscoveryData.neo4jVersion || '0').charAt(0)) >= 4)
-
-      if (!mergedDiscoveryData.host) {
-        authLog('No host found in discovery data, aborting.')
+      if (!success) {
         return { type: DONE }
       }
-
-      mergedDiscoveryData.host = generateBoltUrl(
-        getAllowedBoltSchemesForHost(
-          store.getState(),
-          mergedDiscoveryData.host
-        ),
-        mergedDiscoveryData.host
-      )
+      const SSOProviders = discoveryData.SSOProviders || []
 
       let SSOError
       const SSORedirectId = getSSOServerIdIfShouldRedirect()
@@ -271,12 +199,12 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
         removeSearchParamsInBrowserHistory(
           defaultSearchParamsToRemoveAfterAutoRedirect
         )
-        const selectedSSOProvider = mergedDiscoveryData.SSOProviders.find(
+        const selectedSSOProvider = SSOProviders.find(
           ({ id }) => id === SSORedirectId
         )
         if (selectedSSOProvider)
           try {
-            await authRequestForSSO(selectedSSOProvider as SSOProvider)
+            await authRequestForSSO(selectedSSOProvider)
           } catch (e) {
             if (e instanceof Error) {
               SSOError = e.message
@@ -285,24 +213,19 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
           }
         else {
           authLog(
-            `No SSO provider with id: "${SSORedirectId}" found in disocvery data`
+            `No SSO provider with id: "${SSORedirectId}" found in discovery data`
           )
         }
       } else if (wasRedirectedBackFromSSOServer()) {
         authLog('Initializing auth_flow_step redirect')
 
         try {
-          const creds = (await handleAuthFromRedirect(
-            mergedDiscoveryData.SSOProviders
-          )) as {
-            username: string
-            password: string
-          }
+          const creds = await handleAuthFromRedirect(SSOProviders)
 
           return {
             type: DONE,
             discovered: {
-              ...mergedDiscoveryData,
+              ...discoveryData,
               ...creds,
               attemptSSOLogin: true
             }
@@ -315,16 +238,7 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
         }
       }
 
-      return {
-        type: DONE,
-        discovered: {
-          ...mergedDiscoveryData,
-          SSOError,
-          authenticationMethod: SSOError
-            ? SSO
-            : mergedDiscoveryData.authenticationMethod
-        }
-      }
+      return { type: DONE, discovered: { ...discoveryData, SSOError } }
     })
     .map((a: any) => a)
 }
@@ -339,9 +253,13 @@ type BrowserDiscoveryResult = DiscoveryResult & ExtraDiscoveryFields
 
 async function fetchBrowserDiscoveryDataFromUrl(
   url: string
-): Promise<BrowserDiscoveryResult> {
+): Promise<BrowserDiscoveryResult | null> {
   const res = await fetchDiscoveryDataFromUrl(url)
   const { otherDataDiscovered } = res
+
+  if (res.status === FetchError) {
+    return null
+  }
 
   const strOrUndefined = (val: unknown) =>
     typeof val === 'string' ? val : undefined
@@ -357,62 +275,183 @@ async function fetchBrowserDiscoveryDataFromUrl(
   return { ...res, host, neo4jEdition, neo4jVersion }
 }
 
-// async function fetchDataFromDiscoveryUrl(
-//   url: string
-// ): Promise<{
-//   host?: string
-//   neo4j_version?: string
-//   SSOProviders: SSOProvider[]
-// }> {
-//   try {
-//     authLog(`Fetching ${url} to discover SSO providers`)
-//     const result = await remote.getJSON(url)
-//     // Uncomment below and comment out above when doing manual tests in dev mode to
-//     // fake discovery response
-//     //Promise.resolve({
-//     // bolt: 'bolt://localhost:7687',
-//     // neo4j_version: '4.0.3'
-//     //})
-//     const host =
-//       result && (result.bolt_routing || result.bolt_direct || result.bolt)
+// TODO check if we need to check host is allowed? `hostIsAllowed`
+// TODO do we need to log more about why disc data was missing
 
-//     const ssoProviderField =
-//       result.sso_providers || result.ssoproviders || result.ssoProviders
+type DataFromPreviousAction = {
+  forceURL: string
+  discoveryURL: string
+  requestedUseDb: string
+  encrypted: boolean
+  restApi: string
+  sessionStorageHost: string | null
+}
 
-//     if (!ssoProviderField) {
-//       authLog(`No sso provider field found on json at ${url}`)
-//     }
+type GetAndMergeDiscoveryDataParams = {
+  action: DataFromPreviousAction
+  hostedURL: string
+  hasDiscoveryEndpoint: boolean
+  generateBoltUrlWithAllowedScheme: (boltUrl: string) => string
+}
 
-//     const SSOProviders: SSOProvider[] = getValidSSOProviders(ssoProviderField)
-//     if (SSOProviders.length === 0) {
-//       authLog(`None of the sso providers found at ${url} were valid`)
-//     } else {
-//       authLog(
-//         `Found SSO providers with ids:${SSOProviders.map(p => p.id).join(
-//           ', '
-//         )} on ${url}`
-//       )
-//     }
+export async function getAndMergeDiscoveryData({
+  action,
+  hostedURL,
+  hasDiscoveryEndpoint,
+  generateBoltUrlWithAllowedScheme
+}: GetAndMergeDiscoveryDataParams): Promise<{
+  success: boolean
+  discoveryData: DiscoverableData
+}> {
+  const { sessionStorageHost, forceURL } = action
 
-//     return { SSOProviders, host }
-//   } catch (e) {
-//     const noDataFoundMessage = `No discovery json data found at ${url}`
-//     const noHttpPrefixMessage = url.toLowerCase().startsWith('http')
-//       ? ''
-//       : 'Double check that the url is a valid url (including HTTP(S)).'
-//     const noJsonSuffixMessage = url.toLowerCase().endsWith('.json')
-//       ? ''
-//       : 'Double check that the discovery url returns a valid JSON file.'
+  let dataFromForceURL: DiscoverableData = {}
+  if (forceURL) {
+    const { username, protocol, host } = getUrlInfo(action.forceURL)
 
-//     const messages = [
-//       `Request to ${url} failed with message: ${e}`,
-//       noDataFoundMessage,
-//       noHttpPrefixMessage,
-//       noJsonSuffixMessage
-//     ]
+    const discovered = {
+      username,
+      requestedUseDb: action.requestedUseDb,
+      host: `${protocol ? `${protocol}//` : ''}${host}`,
+      supportsMultiDb: !!action.requestedUseDb,
+      encrypted: action.encrypted,
+      restApi: action.restApi,
+      hasForceURL: true
+    }
 
-//     messages.forEach(m => authLog(m))
+    const onlyTruthy = Object.entries(discovered)
+      .filter(item => item[1] /* truthy check on value */)
+      .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
 
-//     return { SSOProviders: [] }
-//   }
-// }
+    dataFromForceURL = onlyTruthy
+  }
+
+  const sessionStorageHostPromise = sessionStorageHost
+    ? fetchBrowserDiscoveryDataFromUrl(
+        boltToHttp(generateBoltUrlWithAllowedScheme(sessionStorageHost))
+      )
+    : Promise.resolve(null)
+
+  const forceUrlHostPromise = dataFromForceURL.host
+    ? fetchBrowserDiscoveryDataFromUrl(
+        boltToHttp(generateBoltUrlWithAllowedScheme(dataFromForceURL.host))
+      )
+    : Promise.resolve(null)
+
+  const discoveryUrlParamPromise = action.discoveryURL
+    ? fetchBrowserDiscoveryDataFromUrl(action.discoveryURL)
+    : Promise.resolve(null)
+
+  const discoveryEndpointPromise = hasDiscoveryEndpoint
+    ? fetchBrowserDiscoveryDataFromUrl(getDiscoveryEndpoint(hostedURL))
+    : Promise.resolve(null)
+
+  // Promise all is safe since fetchDataFromDiscoveryUrl never rejects
+  const [
+    sessionStorageHostData,
+    forceUrlHostData,
+    discoveryUrlParamData,
+    discoveryEndpointData
+  ] = await Promise.all([
+    sessionStorageHostPromise,
+    forceUrlHostPromise,
+    discoveryUrlParamPromise,
+    discoveryEndpointPromise
+  ])
+
+  type TaggedDiscoveryData = DiscoverableData & {
+    host: string
+    source: string
+    hasData: boolean
+  }
+
+  const normalisedDiscoveryData = [
+    {
+      host: sessionStorageHost,
+      source: 'connectForm',
+      hasData: sessionStorageHostData === null,
+      ...sessionStorageHostData
+    },
+    {
+      host: action.forceURL,
+      source: 'connectURL',
+      hasData: forceUrlHostData === null,
+      ...forceUrlHostData
+    },
+    {
+      source: 'discoveryURL',
+      hasData: discoveryUrlParamData === null,
+      ...discoveryUrlParamData
+    },
+    {
+      source: 'discoveryEndpoint',
+      hasData: discoveryEndpointData === null,
+      ...discoveryEndpointData
+    }
+  ].filter((entry): entry is TaggedDiscoveryData => {
+    if (!entry.hasData) {
+      authLog(`No discovery data from source ${entry.source}.`) // say url as well?
+      return false
+    }
+
+    if ('host' in entry && entry.host) {
+      authLog(
+        `Couldn't find bolt host to associate with discovery data from source ${entry.source}, dropping.`
+      )
+      return false
+    }
+    return true
+  })
+
+  if (normalisedDiscoveryData.length === 0) {
+    authLog('No valid discovery data found, aborting SSO flow')
+    return { success: false, discoveryData: {} }
+  }
+
+  const [mainDiscoveryData, ...otherDiscoveryData] = normalisedDiscoveryData
+  authLog(
+    `Using host: ${mainDiscoveryData.host} from ${mainDiscoveryData.source} for SSO flow.`
+  )
+
+  let mergedDiscoveryData = mainDiscoveryData
+  if (otherDiscoveryData.length > 1) {
+    const otherDiscoveryDataWithMatchingHost = otherDiscoveryData.filter(
+      ({ host, source }) => {
+        if (boltUrlsHaveSameHost(mainDiscoveryData.host, host)) {
+          return true
+        } else {
+          authLog(
+            `Dropping discovery data from ${source} as it's bolt host: ${host} doesn't match ${mainDiscoveryData.host}.`
+          )
+          return false
+        }
+      }
+    )
+
+    otherDiscoveryDataWithMatchingHost.forEach(data => {
+      authLog(`Merging discovery data from ${data.source} as hosts match`)
+      const currentSSOProviders = mergedDiscoveryData.SSOProviders || []
+      const currentSSOProviderIds = new Set(currentSSOProviders.map(p => p.id))
+      const newSSOProviders = (data.SSOProviders || []).filter(newProvider =>
+        currentSSOProviderIds.has(newProvider.id)
+      )
+      mergedDiscoveryData = {
+        ...data,
+        ...mergedDiscoveryData,
+        SSOProviders: currentSSOProviders.concat(newSSOProviders)
+      }
+    })
+  }
+
+  const isAura = isCloudHost(mergedDiscoveryData.host, NEO4J_CLOUD_DOMAINS)
+  mergedDiscoveryData.supportsMultiDb =
+    !!action.requestedUseDb ||
+    (!isAura &&
+      parseInt((mergedDiscoveryData.neo4jVersion || '0').charAt(0)) >= 4)
+
+  mergedDiscoveryData.host = generateBoltUrlWithAllowedScheme(
+    mergedDiscoveryData.host
+  )
+
+  return { success: true, discoveryData: mergedDiscoveryData }
+}

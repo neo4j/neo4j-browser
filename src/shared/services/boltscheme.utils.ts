@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { INSECURE_SCHEMES, SECURE_SCHEMES } from 'shared/modules/app/appDuck'
+
 const BOLT_DIRECT_SCHEME = 'bolt'
 const BOLT_ROUTING_SCHEME = 'neo4j'
 
@@ -55,6 +57,9 @@ export const stripScheme = (url: string) => {
   }
   return rest.join('://')
 }
+
+export const boltUrlsHaveSameHost = (host1: string, host2: string): boolean =>
+  stripScheme(stripQueryString(host1)) === stripScheme(stripQueryString(host2))
 
 export const stripQueryString = (url: string) => {
   const [_host] = (url || '').split('?')
@@ -118,6 +123,17 @@ export const toggleSchemeRouting = (url = '') => {
     return url.replace(BOLT_DIRECT_SCHEME, BOLT_ROUTING_SCHEME)
   }
   return url
+}
+
+export const boltToHttp = (boltHost: string): string => {
+  const withOutScheme = stripScheme(boltHost)
+  if (SECURE_SCHEMES.some(scheme => boltHost.startsWith(scheme))) {
+    return `https://${withOutScheme}`
+  }
+  if (INSECURE_SCHEMES.some(scheme => boltHost.startsWith(scheme))) {
+    return `http://${withOutScheme}`
+  }
+  return boltHost
 }
 
 export const generateBoltUrl = (
