@@ -81,7 +81,7 @@ describe('getAndMergeDiscoveryData', () => {
     expect(discoveryData).toBeTruthy()
     expect(discoveryData?.host).toEqual(boltHost)
     expect(discoveryData?.source).toEqual(DISCOVERY_ENDPOINT)
-    expect(discoveryData?.ssoProviders).toEqual([])
+    expect(discoveryData?.SSOProviders).toEqual([])
     expect(discoveryData?.SSOError).toEqual(undefined)
     expect(discoveryData?.neo4jVersion).toEqual(neo4jVersion)
     expect(discoveryData?.urlMissing).toEqual(false)
@@ -125,7 +125,7 @@ describe('getAndMergeDiscoveryData', () => {
 
     // Then
     expect(discoveryData).toBeTruthy()
-    expect(discoveryData?.ssoProviders?.map(p => p.id)).toEqual([
+    expect(discoveryData?.SSOProviders?.map(p => p.id)).toEqual([
       'google',
       'lundskommun'
     ])
@@ -164,7 +164,7 @@ describe('getAndMergeDiscoveryData', () => {
     // Then
     expect(discoveryData).toBeTruthy()
     expect(discoveryData?.host).toEqual('bolthost')
-    expect(discoveryData?.ssoProviders?.map(p => p.id)).toEqual([
+    expect(discoveryData?.SSOProviders?.map(p => p.id)).toEqual([
       'malmöstad',
       'göteborg',
       'petalburg',
