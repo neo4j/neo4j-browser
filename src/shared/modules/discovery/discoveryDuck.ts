@@ -181,7 +181,7 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
       if (!success) {
         return { type: DONE }
       }
-      const SSOProviders = discoveryData.ssoProviders || []
+      const SSOProviders = discoveryData.SSOProviders || []
 
       let SSOError
       const SSORedirectId = getSSOServerIdIfShouldRedirect()

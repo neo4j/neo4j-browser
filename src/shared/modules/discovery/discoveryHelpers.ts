@@ -227,15 +227,15 @@ export async function getAndMergeDiscoveryData({
 
     otherDiscoveryDataWithMatchingHost.forEach(data => {
       authLog(`Merging discovery data from ${data.source} as hosts match`)
-      const currentSSOProviders = mergedDiscoveryData.ssoProviders || []
+      const currentSSOProviders = mergedDiscoveryData.SSOProviders || []
       const currentSSOProviderIds = new Set(currentSSOProviders.map(p => p.id))
-      const newSSOProviders = (data.ssoProviders || []).filter(
+      const newSSOProviders = (data.SSOProviders || []).filter(
         newProvider => !currentSSOProviderIds.has(newProvider.id)
       )
       mergedDiscoveryData = {
         ...data,
         ...mergedDiscoveryData,
-        ssoProviders: currentSSOProviders.concat(newSSOProviders)
+        SSOProviders: currentSSOProviders.concat(newSSOProviders)
       }
     })
   }
