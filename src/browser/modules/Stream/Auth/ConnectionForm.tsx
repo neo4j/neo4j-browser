@@ -65,6 +65,7 @@ import {
   boltToHttp
 } from 'shared/services/boltscheme.utils'
 import { fetchBrowserDiscoveryDataFromUrl } from 'shared/modules/discovery/discoveryHelpers'
+import { Success } from 'neo4j-client-sso'
 
 type ConnectionFormState = any
 
@@ -194,6 +195,9 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
       authenticationMethod === NO_AUTH ? '' : this.state.username || 'neo4j'
     const password = authenticationMethod === NO_AUTH ? '' : this.state.password
     this.setState({ authenticationMethod, username, password })
+    if (authenticationMethod === SSO) {
+      this.fetchHostDiscovery(this.state.host)
+    }
     this.props.error({})
   }
 
@@ -205,9 +209,9 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
     if (newHost !== discoveryHost) {
       this.setState({ SSOLoading: true })
       fetchBrowserDiscoveryDataFromUrl(boltToHttp(host)).then(result => {
-        if (result) {
+        if (result.status === Success) {
           this.setState({
-            SSOProviders: result.ssoProviders,
+            SSOProviders: result.SSOProviders,
             SSOError: undefined,
             SSOLoading: false
           })
@@ -221,7 +225,7 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
       })
     } else {
       // TODO will this overwrite any state that we don't want it to?
-      this.setState({ ...this.getConnection() })
+      this.setState({ ...this.getConnection(), SSOLoading: false })
     }
   }, 200)
 
@@ -235,7 +239,9 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
       host: url,
       hostInputVal: url
     })
-    this.fetchHostDiscovery(val)
+    if (this.state.authenticationMethod === SSO) {
+      this.fetchHostDiscovery(val)
+    }
     this.props.error({})
   }
 
