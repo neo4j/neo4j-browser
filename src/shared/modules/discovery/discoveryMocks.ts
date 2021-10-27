@@ -18,16 +18,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const fakeDiscoveryResponse = (
-  providerIds: string[],
+type FakeDiscoveryParams = {
+  providerIds?: string[]
   host?: string
-) => ({
+  neo4jEdition?: 'enterprise' | 'community'
+  neo4jVersion?: string
+}
+export const fakeDiscoveryResponse = ({
+  providerIds = [],
+  host,
+  neo4jVersion = '4.4.0',
+  neo4jEdition = 'enterprise'
+}: FakeDiscoveryParams): any => ({
   ...(host
     ? {
         bolt_routing: host,
         bolt_direct: host,
-        neo4j_version: '4.4.0',
-        neo4j_edition: 'enterprise'
+        neo4j_version: neo4jVersion,
+        neo4j_edition: neo4jEdition
       }
     : {}),
   auth_config: {

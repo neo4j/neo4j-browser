@@ -81,20 +81,27 @@ type GetAndMergeDiscoveryDataParams = {
   generateBoltUrlWithAllowedScheme: (boltUrl: string) => string
 }
 type TaggedDiscoveryData = DiscoverableData & {
-  source: string
+  source: DiscoveryDataSource
   urlMissing: boolean
   host: string
 }
+
+type DiscoveryDataSource =
+  | 'connectForm'
+  | 'discoveryURL'
+  | 'connectURL'
+  | 'discoveryEndpoint'
+export const CONNECT_FORM = 'connectForm'
+export const DISCOVERY_URL = 'discoveryURL'
+export const CONNECT_URL = 'connectURL'
+export const DISCOVERY_ENDPOINT = 'discoveryEndpoint'
 
 export async function getAndMergeDiscoveryData({
   action,
   hostedURL,
   hasDiscoveryEndpoint,
   generateBoltUrlWithAllowedScheme
-}: GetAndMergeDiscoveryDataParams): Promise<{
-  success: boolean
-  discoveryData: DiscoverableData
-}> {
+}: GetAndMergeDiscoveryDataParams): Promise<TaggedDiscoveryData | null> {
   const { sessionStorageHost, forceURL } = action
 
   let dataFromForceURL: DiscoverableData = {}
@@ -153,24 +160,24 @@ export async function getAndMergeDiscoveryData({
 
   const normalisedDiscoveryData: TaggedDiscoveryData[] = [
     {
-      source: 'connectForm',
+      source: CONNECT_FORM,
       host: sessionStorageHost,
       urlMissing: sessionStorageHostData === null,
       ...sessionStorageHostData
     },
     {
-      source: 'connectURL',
+      source: CONNECT_URL,
       host: action.forceURL,
       urlMissing: forceUrlHostData === null,
       ...forceUrlHostData
     },
     {
-      source: 'discoveryURL',
+      source: DISCOVERY_URL,
       urlMissing: discoveryUrlParamData === null,
       ...discoveryUrlParamData
     },
     {
-      source: 'discoveryEndpoint',
+      source: DISCOVERY_ENDPOINT,
       urlMissing: discoveryEndpointData === null,
       ...discoveryEndpointData
     }
@@ -202,7 +209,7 @@ export async function getAndMergeDiscoveryData({
 
   if (normalisedDiscoveryData.length === 0) {
     authLog('No valid discovery data found, aborting SSO flow')
-    return { success: false, discoveryData: {} }
+    return null
   }
 
   const [mainDiscoveryData, ...otherDiscoveryData] = normalisedDiscoveryData
@@ -250,5 +257,5 @@ export async function getAndMergeDiscoveryData({
     mergedDiscoveryData.host
   )
 
-  return { success: true, discoveryData: mergedDiscoveryData }
+  return mergedDiscoveryData
 }

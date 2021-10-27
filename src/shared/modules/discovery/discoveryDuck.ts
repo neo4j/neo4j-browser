@@ -167,7 +167,7 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
     })
     .merge(some$.ofType(USER_CLEAR))
     .mergeMap(async (action: any) => {
-      const { success, discoveryData } = await getAndMergeDiscoveryData({
+      const discoveryData = await getAndMergeDiscoveryData({
         action,
         hostedURL: getHostedUrl(store.getState()),
         hasDiscoveryEndpoint: hasDiscoveryEndpoint(store.getState()),
@@ -178,7 +178,7 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
           )
       })
 
-      if (!success) {
+      if (!discoveryData) {
         return { type: DONE }
       }
       const SSOProviders = discoveryData.SSOProviders || []

@@ -21,45 +21,140 @@
 import nock from 'nock'
 import 'isomorphic-fetch'
 
-import { getAndMergeDiscoveryData } from './discoveryHelpers'
+import {
+  CONNECT_FORM,
+  DISCOVERY_ENDPOINT,
+  getAndMergeDiscoveryData
+} from './discoveryHelpers'
 import { fakeDiscoveryResponse } from './discoveryMocks'
 // int8 a felmeddelanden och använd dem i testerna
+// assert on logs
+const baseAction = {
+  encrypted: false,
+  requestedUseDb: '',
+  restApi: '',
+  sessionStorageHost: '',
+  forceURL: '',
+  discoveryURL: ''
+}
+const sessionStorageHost = 'http://sessionStorageHost.com'
+const hostedURL = 'http://hostedURL.com'
+const forceURL = 'http://forceURL.com'
+const discoveryURL = 'http://discoveryURL.com'
+const generateBoltUrlWithAllowedScheme = (s: string) => s
 
+let logs = []
+const logger = console.log
 describe('getAndMergeDiscoveryData', () => {
+  beforeAll(() => {
+    console.log = (text: string) => logs.push(text)
+  })
+
+  beforeEach(() => {
+    logs = []
+  })
+
   afterEach(() => {
     nock.cleanAll()
   })
-  test('prioritises session storage data highest', async () => {
-    const logs: string[] = []
-    console.log = (text: string) => logs.push(text)
+
+  afterAll(() => {
+    console.log = logger
+  })
+
+  test('finds host when only discovery endpoint is set up', async () => {
+    const boltHost = 'neo4j://localhost:7687'
+    const browserHost = 'http://localhost:7474'
+    const neo4jVersion = '4.4.1'
+
+    nock(browserHost)
+      .get('/')
+      .reply(200, fakeDiscoveryResponse({ host: boltHost, neo4jVersion }))
+
+    // When
+    const discoveryData = await getAndMergeDiscoveryData({
+      action: baseAction,
+      hostedURL: browserHost,
+      generateBoltUrlWithAllowedScheme,
+      hasDiscoveryEndpoint: true
+    })
+    expect(discoveryData).toBeTruthy()
+    expect(discoveryData?.host).toEqual(boltHost)
+    expect(discoveryData?.source).toEqual(DISCOVERY_ENDPOINT)
+    expect(discoveryData?.ssoProviders).toEqual([])
+    expect(discoveryData?.SSOError).toEqual(undefined)
+    expect(discoveryData?.neo4jVersion).toEqual(neo4jVersion)
+    expect(discoveryData?.urlMissing).toEqual(false)
+  })
+
+  test('finds and priotises sso providers from session storage/connect form when all discovery sources are present, but doesnt merge when hosts differ', async () => {
     // Given
-    const sessionStorageHost = 'http://sessionStorageHost.com'
-    const hostedURL = 'http://hostedURL.com'
-    const forceURL = 'http://forceURL.com'
-    const discoveryURL = 'http://discoveryURL.com'
     ;[hostedURL, forceURL, discoveryURL].forEach(host =>
       nock(host)
         .get('/')
-        .reply(200, fakeDiscoveryResponse(['azure'], 'bolthost'))
+        .reply(
+          200,
+          fakeDiscoveryResponse({ providerIds: ['azure'], host: 'otherhost' })
+        )
     )
 
     nock(sessionStorageHost)
       .get('/')
-      .reply(200, fakeDiscoveryResponse(['google'], 'bolthost'))
+      .reply(
+        200,
+        fakeDiscoveryResponse({
+          providerIds: ['google', 'lundskommun'],
+          host: 'bolthost'
+        })
+      )
 
     const action = {
+      ...baseAction,
       discoveryURL,
       forceURL,
-      sessionStorageHost,
-      encrypted: false,
-      requestedUseDb: '',
-      restApi: ''
+      sessionStorageHost
     }
-    const generateBoltUrlWithAllowedScheme = (s: string) => s
-    const hasDiscoveryEndpoint = true
 
     // When
-    const { success, discoveryData } = await getAndMergeDiscoveryData({
+    const discoveryData = await getAndMergeDiscoveryData({
+      action,
+      hostedURL,
+      generateBoltUrlWithAllowedScheme,
+      hasDiscoveryEndpoint: true
+    })
+
+    // Then
+    expect(discoveryData).toBeTruthy()
+    expect(discoveryData?.ssoProviders?.map(p => p.id)).toEqual([
+      'google',
+      'lundskommun'
+    ])
+    expect(discoveryData?.source).toEqual(CONNECT_FORM)
+  })
+
+  test('finds sso providers from all discovery sources and merges if hosts are identical', async () => {
+    // Given
+    const hasDiscoveryEndpoint = true
+    ;[
+      { host: sessionStorageHost, providerIds: ['malmöstad'] },
+      { host: hostedURL, providerIds: ['trelleborg'] },
+      { host: forceURL, providerIds: ['göteborg'] },
+      { host: discoveryURL, providerIds: ['petalburg'] }
+    ].forEach(({ host, providerIds }) => {
+      nock(host)
+        .get('/')
+        .reply(200, fakeDiscoveryResponse({ providerIds, host: 'bolthost' }))
+    })
+
+    const action = {
+      ...baseAction,
+      discoveryURL,
+      forceURL,
+      sessionStorageHost
+    }
+
+    // When
+    const discoveryData = await getAndMergeDiscoveryData({
       action,
       hostedURL,
       generateBoltUrlWithAllowedScheme,
@@ -67,9 +162,14 @@ describe('getAndMergeDiscoveryData', () => {
     })
 
     // Then
-    // Asserta på logs som variabler
-    //expect(logs.join('\n')).toBe({})
-    expect(success).toBe(true)
-    expect(discoveryData).toEqual({})
+    expect(discoveryData).toBeTruthy()
+    expect(discoveryData?.host).toEqual('bolthost')
+    expect(discoveryData?.ssoProviders?.map(p => p.id)).toEqual([
+      'malmöstad',
+      'göteborg',
+      'petalburg',
+      'trelleborg'
+    ])
+    expect(discoveryData?.source).toEqual(CONNECT_FORM)
   })
 })
