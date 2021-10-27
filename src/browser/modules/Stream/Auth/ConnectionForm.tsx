@@ -240,7 +240,7 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
       hostInputVal: url
     })
     if (this.state.authenticationMethod === SSO) {
-      this.fetchHostDiscovery(val)
+      this.fetchHostDiscovery(url)
     }
     this.props.error({})
   }
