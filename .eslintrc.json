@@ -1,6 +1,10 @@
 {
   "parser": "babel-eslint",
-  "extends": ["plugin:react/recommended", "prettier"],
+  "extends": [
+    "plugin:react/recommended",
+    "plugin:json/recommended",
+    "prettier"
+  ],
   "parserOptions": {
     "sourceType": "module"
   },
