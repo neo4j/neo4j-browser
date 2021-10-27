@@ -22,7 +22,8 @@ import {
   authLog,
   fetchDiscoveryDataFromUrl,
   DiscoveryResult,
-  FetchError
+  FetchError,
+  NoProviderError
 } from 'neo4j-client-sso'
 import { DiscoverableData } from 'shared/modules/connections/connectionsDuck'
 import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
@@ -40,12 +41,12 @@ type BrowserDiscoveryResult = DiscoveryResult & ExtraDiscoveryFields
 
 export async function fetchBrowserDiscoveryDataFromUrl(
   url: string
-): Promise<BrowserDiscoveryResult | null> {
+): Promise<BrowserDiscoveryResult> {
   const res = await fetchDiscoveryDataFromUrl(url)
   const { otherDataDiscovered } = res
 
   if (res.status === FetchError) {
-    return null //TODO better errorhandling
+    return res
   }
 
   const strOrUndefined = (val: unknown) =>
@@ -63,7 +64,6 @@ export async function fetchBrowserDiscoveryDataFromUrl(
 }
 
 // TODO check if we need to check host is allowed? `hostIsAllowed`
-// TODO do we need to log more about why disc data was missing
 
 type DataFromPreviousAction = {
   forceURL: string
@@ -81,9 +81,9 @@ type GetAndMergeDiscoveryDataParams = {
   generateBoltUrlWithAllowedScheme: (boltUrl: string) => string
 }
 type TaggedDiscoveryData = DiscoverableData & {
-  host: string
   source: string
-  hasData: boolean
+  urlMissing: boolean
+  host: string
 }
 
 export async function getAndMergeDiscoveryData({
@@ -151,32 +151,43 @@ export async function getAndMergeDiscoveryData({
     discoveryEndpointPromise
   ])
 
-  const normalisedDiscoveryData = [
+  const normalisedDiscoveryData: TaggedDiscoveryData[] = [
     {
-      host: sessionStorageHost,
       source: 'connectForm',
-      hasData: sessionStorageHostData !== null,
+      host: sessionStorageHost,
+      urlMissing: sessionStorageHostData === null,
       ...sessionStorageHostData
     },
     {
-      host: action.forceURL,
       source: 'connectURL',
-      hasData: forceUrlHostData !== null,
+      host: action.forceURL,
+      urlMissing: forceUrlHostData === null,
       ...forceUrlHostData
     },
     {
       source: 'discoveryURL',
-      hasData: discoveryUrlParamData !== null,
+      urlMissing: discoveryUrlParamData === null,
       ...discoveryUrlParamData
     },
     {
       source: 'discoveryEndpoint',
-      hasData: discoveryEndpointData !== null,
+      urlMissing: discoveryEndpointData === null,
       ...discoveryEndpointData
     }
   ].filter((entry): entry is TaggedDiscoveryData => {
-    if (!entry.hasData) {
-      authLog(`No discovery data from source ${entry.source}.`) // say url as well?
+    if (entry.urlMissing || !('status' in entry)) {
+      // source wasn't fetched
+      authLog(`Found no url from source: ${entry.source} to fetch.`)
+      return false
+    }
+
+    if (entry.status === FetchError) {
+      authLog(`Failed to fetch source ${entry.source}.`)
+      return false
+    }
+
+    if (entry.status === NoProviderError) {
+      authLog(`Found no valid ssoproviders from source ${entry.source}.`)
       return false
     }
 
