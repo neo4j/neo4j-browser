@@ -42,6 +42,7 @@ import {
   AuthenticationMethod,
   SSOProvider
 } from 'shared/modules/connections/connectionsDuck'
+import { AUTH_STORAGE_CONNECT_HOST } from 'shared/services/utils'
 import { StyledCypherErrorMessage } from '../styled'
 import { authRequestForSSO, authLog, downloadAuthLogs } from 'neo4j-client-sso'
 import { H4 } from 'browser-components/headers/Headers'
@@ -249,13 +250,13 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
           SSOProviders.map((provider: SSOProvider) => (
             <StyledSSOButtonContainer key={provider.id}>
               <FormButton
-                onClick={() =>
-                  // TODO - set session storage with current connect host, which is: props.host
+                onClick={() => {
+                  sessionStorage.setItem(AUTH_STORAGE_CONNECT_HOST, props.host)
                   authRequestForSSO(provider).catch(e => {
                     authLog(e.message)
                     setRedirectError(e.message)
                   })
-                }
+                }}
                 style={{ width: '200px' }}
               >
                 {provider.name}

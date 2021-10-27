@@ -36,8 +36,11 @@ import {
   boltUrlsHaveSameHost,
   generateBoltUrl
 } from 'services/boltscheme.utils'
-import { getUrlInfo } from 'shared/services/utils'
-import { isCloudHost } from 'shared/services/utils'
+import {
+  getUrlInfo,
+  isCloudHost,
+  AUTH_STORAGE_CONNECT_HOST
+} from 'shared/services/utils'
 import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
 import {
   authRequestForSSO,
@@ -166,8 +169,11 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
         action.discoveryURL = discoveryURL
       }
 
-      const sessionStorageHost = 'abc' // TODO pickup and remove session storage host
+      const sessionStorageHost = sessionStorage.getItem(
+        AUTH_STORAGE_CONNECT_HOST
+      )
       if (sessionStorageHost) {
+        sessionStorage.removeItem(AUTH_STORAGE_CONNECT_HOST)
         action.sessionStorageHost = sessionStorageHost
       }
 
