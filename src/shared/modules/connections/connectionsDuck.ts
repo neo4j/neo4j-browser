@@ -445,7 +445,7 @@ export type DiscoverableData = {
   hasForceUrl?: boolean
   SSOError?: string
   attemptSSOLogin?: boolean
-  SSOProviders?: SSOProvider[]
+  ssoProviders?: SSOProvider[]
   neo4jVersion?: string
 }
 export type SSOProvider = {
@@ -490,7 +490,7 @@ export const startupConnectEpic = (action$: any, store: any) => {
       // always update SSO state providers
       store.dispatch(
         discovery.updateDiscoveryConnection({
-          SSOProviders: discovered?.SSOProviders || [],
+          SSOProviders: discovered?.ssoProviders || [],
           SSOError: discovered?.SSOError
         })
       )

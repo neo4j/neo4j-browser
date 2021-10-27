@@ -53,10 +53,8 @@ import {
   isNonSupportedRoutingSchemeError
 } from 'services/boltscheme.utils'
 import { StyledConnectionBody } from './styled'
-import {
-  CONNECTION_ID,
-  fetchBrowserDiscoveryDataFromUrl
-} from 'shared/modules/discovery/discoveryDuck'
+import { CONNECTION_ID } from 'shared/modules/discovery/discoveryDuck'
+
 import { isCloudHost } from 'shared/services/utils'
 import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
 import { CLOUD_SCHEMES } from 'shared/modules/app/appDuck'
@@ -66,6 +64,7 @@ import {
   stripScheme,
   boltToHttp
 } from 'shared/services/boltscheme.utils'
+import { fetchBrowserDiscoveryDataFromUrl } from 'shared/modules/discovery/discoveryHelpers'
 
 type ConnectionFormState = any
 
