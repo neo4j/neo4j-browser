@@ -48,8 +48,7 @@ export function StylableRelType({
               .get('color'),
             color: graphStyle
               .forRelationship(selectedRelType.relType)
-              .get('text-color-internal'),
-            cursor: 'default'
+              .get('text-color-internal')
           }}
         >
           {selectedRelType.relType}
