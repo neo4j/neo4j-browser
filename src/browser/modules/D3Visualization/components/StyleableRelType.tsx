@@ -34,6 +34,9 @@ export function StylableRelType({
   graphStyle,
   frameHeight
 }: StylableRelTypeProps): JSX.Element {
+  const styleForRelType = graphStyle.forRelationship({
+    type: selectedRelType.relType
+  })
   return (
     <Popup
       on="click"
@@ -43,12 +46,8 @@ export function StylableRelType({
       trigger={
         <StyledRelationship
           style={{
-            backgroundColor: graphStyle
-              .forRelationship(selectedRelType.relType)
-              .get('color'),
-            color: graphStyle
-              .forRelationship(selectedRelType.relType)
-              .get('text-color-internal')
+            backgroundColor: styleForRelType.get('color'),
+            color: styleForRelType.get('text-color-internal')
           }}
         >
           {selectedRelType.relType}
