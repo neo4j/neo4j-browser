@@ -262,7 +262,8 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
       const styleForLabel = this.graphStyle.forNode({ labels: labelList })
       const inlineStyle = {
         backgroundColor: styleForLabel.get('color'),
-        color: styleForLabel.get('text-color-internal')
+        color: styleForLabel.get('text-color-internal'),
+        cursor: 'default'
       }
       pickers = [
         this.colorPicker(styleForLabel.selector, styleForLabel),
@@ -286,7 +287,8 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
       const styleForRelType = this.graphStyle.forRelationship(relTypeSelector)
       const inlineStyle = {
         backgroundColor: styleForRelType.get('color'),
-        color: styleForRelType.get('text-color-internal')
+        color: styleForRelType.get('text-color-internal'),
+        cursor: 'default'
       }
       pickers = [
         this.colorPicker(styleForRelType.selector, styleForRelType),

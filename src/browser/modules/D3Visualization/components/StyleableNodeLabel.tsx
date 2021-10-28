@@ -54,8 +54,7 @@ export function StyleableNodeLabel({
           {...onClick}
           style={{
             backgroundColor: graphStyleForLabel.get('color'),
-            color: graphStyleForLabel.get('text-color-internal'),
-            cursor: 'default'
+            color: graphStyleForLabel.get('text-color-internal')
           }}
         >
           {selectedLabel.label}
