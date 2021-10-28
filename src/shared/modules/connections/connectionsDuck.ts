@@ -19,6 +19,7 @@
  */
 
 import Rx from 'rxjs/Rx'
+import { handleRefreshingToken } from 'neo4j-client-sso'
 import bolt from 'services/bolt/bolt'
 import * as discovery from 'shared/modules/discovery/discoveryDuck'
 import { NATIVE, NO_AUTH, SSO } from 'services/bolt/boltHelpers'
@@ -94,6 +95,7 @@ export type Connection = {
   requestedUseDb?: string
   restApi?: string
   SSOError?: string
+  SSOProviders?: [SSOProvider]
 }
 
 const initialState: ConnectionReduxState = {
@@ -629,6 +631,17 @@ export const connectionLostEpic = (action$: any, store: any) =>
     // Only retry in web env and if we're supposed to be connected
     .filter(() => inWebEnv(store.getState()) && isConnected(store.getState()))
     .throttleTime(5000)
+    .do(() => {
+      if (action$.error.code === 'Neo.ClientError.Security.TokenExpired') {
+        const SSOProviders = getActiveConnectionData(store.getState())
+          ?.SSOProviders
+        if (SSOProviders) {
+          handleRefreshingToken(SSOProviders).then(credentials => {
+            store.dispatch(discovery.updateDiscoveryConnection(credentials))
+          })
+        }
+      }
+    })
     .do(() => store.dispatch(updateConnectionState(PENDING_STATE)))
     .mergeMap(() => {
       const connection = getActiveConnectionData(store.getState())

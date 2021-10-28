@@ -163,6 +163,8 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
         action.sessionStorageHost = sessionStorageHost
       }
 
+      // TODO: if discovery connection has host and NOT connectURL or discoveryURL then add discovery connection to action
+
       return action
     })
     .merge(some$.ofType(USER_CLEAR))

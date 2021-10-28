@@ -145,6 +145,8 @@ export async function getAndMergeDiscoveryData({
     ? fetchBrowserDiscoveryDataFromUrl(getDiscoveryEndpoint(hostedURL))
     : Promise.resolve(null)
 
+  // TODO: add logic for handling discovery connect host here
+
   // Promise all is safe since fetchDataFromDiscoveryUrl never rejects
   const [
     sessionStorageHostData,
