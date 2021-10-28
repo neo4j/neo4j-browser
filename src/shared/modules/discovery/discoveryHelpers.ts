@@ -163,15 +163,15 @@ export async function getAndMergeDiscoveryData({
   const normalisedDiscoveryData: TaggedDiscoveryData[] = [
     {
       source: CONNECT_FORM,
-      host: sessionStorageHost,
       urlMissing: sessionStorageHostData === null,
-      ...sessionStorageHostData
+      ...sessionStorageHostData,
+      host: sessionStorageHostData?.host || sessionStorageHost
     },
     {
       source: CONNECT_URL,
-      host: action.forceURL,
       urlMissing: forceUrlHostData === null,
-      ...forceUrlHostData
+      ...forceUrlHostData,
+      host: forceUrlHostData?.host || action.forceURL
     },
     {
       source: DISCOVERY_URL,
@@ -185,18 +185,17 @@ export async function getAndMergeDiscoveryData({
     }
   ].filter((entry): entry is TaggedDiscoveryData => {
     if (entry.urlMissing || !('status' in entry)) {
-      // source wasn't fetched
       authLog(`Found no url from source: ${entry.source} to fetch.`)
       return false
     }
 
     if (entry.status === FetchError) {
-      authLog(`Failed to fetch source ${entry.source}.`)
+      authLog(`Failed to fetch source: ${entry.source}.`)
       return false
     }
 
     if (entry.status === NoProviderError) {
-      authLog(`Found no valid ssoproviders from source ${entry.source}.`)
+      authLog(`Found no valid ssoproviders from source: ${entry.source}.`)
       return false
     }
 

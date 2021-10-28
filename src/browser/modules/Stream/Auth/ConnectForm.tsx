@@ -30,7 +30,6 @@ import {
   StyledSegment,
   StyledBoltUrlHintText,
   StyledFormContainer,
-  StyledSSOOptions,
   StyledSSOButtonContainer,
   StyledSSOError,
   StyledSSOLogDownload
@@ -45,7 +44,6 @@ import {
 import { AUTH_STORAGE_CONNECT_HOST } from 'shared/services/utils'
 import { StyledCypherErrorMessage } from '../styled'
 import { authRequestForSSO, authLog, downloadAuthLogs } from 'neo4j-client-sso'
-import { H4 } from 'browser-components/headers/Headers'
 
 const readableauthenticationMethods: Record<AuthenticationMethod, string> = {
   [NATIVE]: 'Username / Password',
@@ -132,19 +130,10 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
     : ''
 
   const { SSOError, SSOProviders } = props
-
-  // TODO unused
-  const showSSO = SSOProviders.length > 0 || SSOError
   const [SSORedirectError, setRedirectError] = useState('')
 
   return (
     <StyledFormContainer>
-      {/* {showSSO && (
-        <StyledSSOOptions>
-          <H4>Single sign-on</H4>
-          TODO: Remove Me later
-        </StyledSSOOptions>
-      )} */}
       <StyledConnectionForm onSubmit={onConnectClick}>
         <StyledConnectionFormEntry>
           <StyledConnectionLabel htmlFor="url-input" title={hoverText}>

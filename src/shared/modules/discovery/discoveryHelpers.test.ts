@@ -173,3 +173,6 @@ describe('getAndMergeDiscoveryData', () => {
     expect(discoveryData?.source).toEqual(CONNECT_FORM)
   })
 })
+
+// Tests yet not written:
+// test connect form and connectURL working even when host is missing
