@@ -69,7 +69,7 @@ export const autoCommitTxCommand = 'auto'
 
 const initialState = {}
 export const getErrorMessage = (state: any) => state[NAME].errorMessage
-export const allowlistedMultiCommands = () => [':param', ':use']
+export const allowlistedMultiCommands = () => [':param', ':use', ':auto']
 
 export default function reducer(state = initialState, action: any) {
   switch (action.type) {
