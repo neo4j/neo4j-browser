@@ -179,11 +179,15 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
       })
 
       if (!discoveryData) {
-        return { type: DONE }
+        return {
+          type: DONE,
+          discovered: { SSOProviders: [], SSOError: 'No SSO providers found' }
+        }
       }
       const SSOProviders = discoveryData.SSOProviders || []
 
-      let SSOError
+      let SSOError =
+        SSOProviders.length > 0 ? undefined : 'No SSO providers found'
       const SSORedirectId = getSSOServerIdIfShouldRedirect()
       if (SSORedirectId) {
         authLog(`Initialized with idpId: "${SSORedirectId}"`)
@@ -214,6 +218,10 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
         try {
           const creds = await handleAuthFromRedirect(SSOProviders)
 
+          if (SSOError) {
+            discoveryData.SSOError = SSOError
+          }
+
           return {
             type: DONE,
             discovered: {
@@ -230,7 +238,10 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
         }
       }
 
-      return { type: DONE, discovered: { ...discoveryData, SSOError } }
+      if (SSOError) {
+        discoveryData.SSOError = SSOError
+      }
+      return { type: DONE, discovered: { ...discoveryData } }
     })
     .map((a: any) => a)
 }
