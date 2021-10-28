@@ -224,8 +224,8 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
         }
       })
     } else {
-      // TODO will this overwrite any state that we don't want it to?
-      this.setState({ ...this.getConnection(), SSOLoading: false })
+      const { SSOProviders, SSOError } = this.getConnection()
+      this.setState({ SSOProviders, SSOError, SSOLoading: false })
     }
   }, 200)
 
