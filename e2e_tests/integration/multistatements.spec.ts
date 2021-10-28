@@ -117,19 +117,9 @@ describe('Multi statements', () => {
   })
 
   it('can use :auto command in multi-statements', () => {
-    // This test requires that the database has at least 1 node
     cy.executeCommand('create ();')
     cy.executeCommand(':clear')
-    const query = `:auto MATCH(n){shift}{enter}WITH n
-LIMIT 1
-CREATE (t:MultiStmtTest {{}zid: id(n)})
-RETURN t;
-:auto MATCH(n)
-WITH n
-SKIP 1
-LIMIT 1
-CREATE (t:MultiStmtTest {{}zid: id(n)})
-RETURN t;`
+    const query = `:auto CREATE (t:MultiStmtTest {{}name: "Pacifidlog"}) RETURN t;:auto CREATE (t:MultiStmtTest {{}name: "Wyndon"}) RETURN t;`
     cy.executeCommand(query)
     cy.get('[data-testid="frame"]', { timeout: 10000 }).should('have.length', 1)
     const frame = cy.get('[data-testid="frame"]', { timeout: 10000 }).first()
@@ -151,17 +141,9 @@ RETURN t;`
     frame
       .get('[data-testid="multi-statement-list-content"]', { timeout: 10000 })
       .contains('SUCCESS')
-    cy.executeCommand('match (n: MultiStmtTest) return n.zid')
-    cy.get('[role="cell"]').then(cells => {
-      const firstResult = parseInt(cells[0].textContent || '')
-      const secondResult = parseInt(cells[1].textContent || '')
-
-      // One row should be 1 larger than the other, but the order is not guaranteed
-      cy.wrap(firstResult).should('be.oneOf', [
-        secondResult - 1,
-        secondResult + 1
-      ])
-    })
+    cy.executeCommand('match (n: MultiStmtTest) return n.name')
+    cy.get('[role="cell"]').contains('Pacifidlog')
+    cy.get('[role="cell"]').contains('Wyndon')
     cy.executeCommand('match (n: MultiStmtTest) delete n')
   })
 
