@@ -637,19 +637,67 @@ export const connectionLostEpic = (action$: any, store: any) =>
     // Only retry in web env and if we're supposed to be connected
     .filter(() => inWebEnv(store.getState()) && isConnected(store.getState()))
     .throttleTime(5000)
-    .do((action: any) => {
+    .do(() => store.dispatch(updateConnectionState(PENDING_STATE)))
+    .mergeMap((action: any) => {
       if (action.error.code === 'Neo.ClientError.Security.TokenExpired') {
         const SSOProviders = getActiveConnectionData(store.getState())
           ?.SSOProviders
         if (SSOProviders) {
-          handleRefreshingToken(SSOProviders).then(credentials => {
-            store.dispatch(discovery.updateDiscoveryConnection(credentials))
-          })
+          return Rx.Observable.fromPromise(
+            (async function() {
+              //TODO can throw?
+              const credentials = await handleRefreshingToken(SSOProviders)
+              store.dispatch(discovery.updateDiscoveryConnection(credentials))
+              const connection = getActiveConnectionData(store.getState())
+              if (!connection) {
+                return null
+              }
+              return bolt
+                .directConnect(
+                  connection,
+                  {
+                    connectionTimeout: getConnectionTimeout(store.getState())
+                  },
+                  () =>
+                    setTimeout(() => {
+                      throw new Error('Couldnt reconnect. Lost.')
+                    }, 5000)
+                )
+                .then(() => {
+                  bolt.closeConnection()
+                  bolt
+                    .openConnection(
+                      connection,
+                      {
+                        connectionTimeout: getConnectionTimeout(
+                          store.getState()
+                        )
+                      },
+                      onLostConnection(store.dispatch)
+                    )
+                    .then(() => {
+                      store.dispatch(updateConnectionState(CONNECTED_STATE))
+                      return { type: 'Success' }
+                    })
+                    .catch(() => {
+                      throw new Error('Error on connect')
+                    })
+                })
+                .catch(e => {
+                  // Don't retry if auth failed
+                  if (e.code === 'Neo.ClientError.Security.Unauthorized') {
+                    return { type: e.code }
+                  } else {
+                    setTimeout(() => {
+                      throw new Error('Couldnt reconnect.')
+                    }, 5000)
+                    return
+                  }
+                })
+            })()
+          )
         }
       }
-    })
-    .do(() => store.dispatch(updateConnectionState(PENDING_STATE)))
-    .mergeMap(() => {
       const connection = getActiveConnectionData(store.getState())
       if (!connection) return Rx.Observable.of(1)
       return (

@@ -9312,10 +9312,10 @@ neo-async@^2.5.0, neo-async@^2.6.1:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha1-tKr7k+OustgXTKU88WOrfXMIMF8=
 
-neo4j-client-sso@^1.0.2:
-  version "1.0.2"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-client-sso/-/neo4j-client-sso-1.0.2.tgz#f4007f5b7b0bedb0a4e217d9490d413825b48b02"
-  integrity sha1-9AB/W3sL7bCk4hfZSQ1BOCW0iwI=
+neo4j-client-sso@^1.1.0:
+  version "1.1.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-client-sso/-/neo4j-client-sso-1.1.0.tgz#80d58540a2254ce254a253c420b6c88dc54a429c"
+  integrity sha1-gNWFQKIlTOJUolPEILbIjcVKQpw=
   dependencies:
     file-saver "^2.0.5"
     jwt-decode "^3.1.2"

@@ -5815,7 +5815,7 @@ SOFTWARE.
 
 -----
 
-The following software may be included in this product: neo4j-driver. A copy of the source code may be downloaded from git://github.com/neo4j/neo4j-javascript-driver.git. This software contains the following license and notice below:
+The following software may be included in this product: neo4j-driver, neo4j-driver-bolt-connection, neo4j-driver-core. A copy of the source code may be downloaded from git://github.com/neo4j/neo4j-javascript-driver.git (neo4j-driver), git://github.com/neo4j/neo4j-javascript-driver.git (neo4j-driver-bolt-connection), git://github.com/neo4j/neo4j-javascript-driver.git (neo4j-driver-core). This software contains the following license and notice below:
 
 Apache License
                            Version 2.0, January 2004
