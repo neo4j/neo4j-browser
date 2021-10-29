@@ -20,6 +20,7 @@
 
 import neo4j, { Driver } from 'neo4j-driver'
 import { buildTxFunctionByMode } from 'services/bolt/boltHelpers'
+import { isBoltConnectionErrorCode } from './boltConnectionErrors'
 import { Connection } from 'shared/modules/connections/connectionsDuck'
 import { createDriverOrFailFn } from './driverFactory'
 import {
@@ -79,13 +80,7 @@ export const validateConnection = (
             // Only invalidate the connection if not available
             // or not authed
             // or credentials have expired
-            const invalidStates = [
-              'ServiceUnavailable',
-              'Neo.ClientError.Security.AuthenticationRateLimit',
-              'Neo.ClientError.Security.Unauthorized',
-              'Neo.ClientError.Security.CredentialsExpired'
-            ]
-            if (!e.code || invalidStates.includes(e.code)) {
+            if (!e.code || isBoltConnectionErrorCode(e.code)) {
               rej(e)
             } else {
               res(driver)
