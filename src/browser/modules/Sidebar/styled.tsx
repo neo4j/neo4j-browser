@@ -88,7 +88,7 @@ export const StyledName = styled.div`
 `
 
 export const StyledFullSizeDrawerBody = styled(DrawerBody)`
-  padding: 0;
+  padding: 0 0 12px 0;
 `
 
 export const StyledHeaderContainer = styled.div`

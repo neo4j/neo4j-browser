@@ -3,10 +3,10 @@
 exports[`LabelItems renders empty 1`] = `
 <div>
   <div
-    class="sc-ifAKCX kHWkUt"
+    class="sc-ifAKCX gXIdDM"
   >
     <h5
-      class="sc-bxivhb jqgGlu"
+      class="sc-bxivhb gjWjEn"
     >
       Node Labels
     </h5>
@@ -24,10 +24,10 @@ exports[`LabelItems renders empty 1`] = `
 exports[`LabelItems renders labels 1`] = `
 <div>
   <div
-    class="sc-ifAKCX kHWkUt"
+    class="sc-ifAKCX gXIdDM"
   >
     <h5
-      class="sc-bxivhb jqgGlu"
+      class="sc-bxivhb gjWjEn"
     >
       Node Labels
     </h5>
@@ -60,10 +60,10 @@ exports[`LabelItems renders labels 1`] = `
 exports[`PropertyItems renders empty 1`] = `
 <div>
   <div
-    class="sc-ifAKCX kHWkUt"
+    class="sc-ifAKCX gXIdDM"
   >
     <h5
-      class="sc-bxivhb jqgGlu"
+      class="sc-bxivhb gjWjEn"
     >
       Property Keys
     </h5>
@@ -81,10 +81,10 @@ exports[`PropertyItems renders empty 1`] = `
 exports[`PropertyItems renders properties 1`] = `
 <div>
   <div
-    class="sc-ifAKCX kHWkUt"
+    class="sc-ifAKCX gXIdDM"
   >
     <h5
-      class="sc-bxivhb jqgGlu"
+      class="sc-bxivhb gjWjEn"
     >
       Property Keys
     </h5>
@@ -111,10 +111,10 @@ exports[`PropertyItems renders properties 1`] = `
 exports[`RelationshipItems renders empty 1`] = `
 <div>
   <div
-    class="sc-ifAKCX kHWkUt"
+    class="sc-ifAKCX gXIdDM"
   >
     <h5
-      class="sc-bxivhb jqgGlu"
+      class="sc-bxivhb gjWjEn"
     >
       Relationship Types
     </h5>
@@ -132,10 +132,10 @@ exports[`RelationshipItems renders empty 1`] = `
 exports[`RelationshipItems renders relationshipTypes 1`] = `
 <div>
   <div
-    class="sc-ifAKCX kHWkUt"
+    class="sc-ifAKCX gXIdDM"
   >
     <h5
-      class="sc-bxivhb jqgGlu"
+      class="sc-bxivhb gjWjEn"
     >
       Relationship Types
     </h5>

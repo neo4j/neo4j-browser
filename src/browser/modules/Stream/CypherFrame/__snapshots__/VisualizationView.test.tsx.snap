@@ -5,7 +5,7 @@ exports[`Visualization renders 1`] = `<div />`;
 exports[`Visualization renders with result and escapes any HTML 1`] = `
 <div>
   <div
-    class="sc-cMhqgX kLjcxD"
+    class="sc-hZSUBg kQEpqW"
   >
     <div
       class="sc-jTzLTM bdhVYv"
@@ -86,7 +86,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
             class="sc-jzJRlG hPTWGK zoom-in"
           >
             <i
-              class="sc-kZmsYB hLysGl sl-zoom-in"
+              class="sc-gmeYpB imxiti sl-zoom-in"
               style="font-size: 1em;"
             />
           </button>
@@ -94,7 +94,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
             class="sc-jzJRlG hPTWGK zoom-out"
           >
             <i
-              class="sc-RcBXQ fMosHO sl-zoom-out"
+              class="sc-kZmsYB hLysGl sl-zoom-out"
               style="font-size: 1em;"
             />
           </button>
@@ -127,7 +127,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
           >
             <div>
               <div
-                class="sc-kkGfuU dHXSKu"
+                class="sc-kkGfuU eOTllS"
               >
                 <span
                   class="sc-hMqMXs hFEDhg"
