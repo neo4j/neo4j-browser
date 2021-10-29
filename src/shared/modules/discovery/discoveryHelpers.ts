@@ -25,7 +25,10 @@ import {
   FetchError,
   NoProviderError
 } from 'neo4j-client-sso'
-import { DiscoverableData } from 'shared/modules/connections/connectionsDuck'
+import {
+  DiscoverableData,
+  Connection
+} from 'shared/modules/connections/connectionsDuck'
 import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
 import { boltToHttp, boltUrlsHaveSameHost } from 'services/boltscheme.utils'
 import { getUrlInfo, isCloudHost } from 'shared/services/utils'
@@ -72,6 +75,7 @@ type DataFromPreviousAction = {
   requestedUseDb?: string
   encrypted?: boolean
   restApi?: string
+  discoveryConnection?: Connection
 }
 
 type GetAndMergeDiscoveryDataParams = {
@@ -90,11 +94,18 @@ type DiscoveryDataSource =
   | 'connectForm'
   | 'discoveryURL'
   | 'connectURL'
+  | 'discoveryConnection'
   | 'discoveryEndpoint'
 export const CONNECT_FORM = 'connectForm'
 export const DISCOVERY_URL = 'discoveryURL'
 export const CONNECT_URL = 'connectURL'
+export const DISCOVERY_CONNECTION = 'discoveryConnection'
 export const DISCOVERY_ENDPOINT = 'discoveryEndpoint'
+
+const onlyTruthyValues = (obj: any) =>
+  Object.entries(obj)
+    .filter(item => item[1] /* truthy check on value */)
+    .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
 
 export async function getAndMergeDiscoveryData({
   action,
@@ -102,11 +113,12 @@ export async function getAndMergeDiscoveryData({
   hasDiscoveryEndpoint,
   generateBoltUrlWithAllowedScheme
 }: GetAndMergeDiscoveryDataParams): Promise<TaggedDiscoveryData | null> {
-  const { sessionStorageHost, forceURL } = action
+  const { sessionStorageHost, forceURL, discoveryConnection } = action
 
   let dataFromForceURL: DiscoverableData = {}
+  let dataFromConnection: DiscoverableData = {}
   if (forceURL) {
-    const { username, protocol, host } = getUrlInfo(action.forceURL)
+    const { username, protocol, host } = getUrlInfo(forceURL)
 
     const discovered = {
       username,
@@ -118,11 +130,16 @@ export async function getAndMergeDiscoveryData({
       hasForceURL: true
     }
 
-    const onlyTruthy = Object.entries(discovered)
-      .filter(item => item[1] /* truthy check on value */)
-      .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
+    dataFromForceURL = onlyTruthyValues(discovered)
+  } else if (discoveryConnection) {
+    const discovered = {
+      username: discoveryConnection.username,
+      requestedUseDb: discoveryConnection.db,
+      host: discoveryConnection.host,
+      supportsMultiDb: !!discoveryConnection.db
+    }
 
-    dataFromForceURL = onlyTruthy
+    dataFromConnection = onlyTruthyValues(discovered)
   }
 
   const sessionStorageHostPromise = sessionStorageHost
@@ -137,6 +154,12 @@ export async function getAndMergeDiscoveryData({
       )
     : Promise.resolve(null)
 
+  const discoveryConnectionHostPromise = dataFromConnection.host
+    ? fetchBrowserDiscoveryDataFromUrl(
+        boltToHttp(generateBoltUrlWithAllowedScheme(dataFromConnection.host))
+      )
+    : Promise.resolve(null)
+
   const discoveryUrlParamPromise = action.discoveryURL
     ? fetchBrowserDiscoveryDataFromUrl(action.discoveryURL)
     : Promise.resolve(null)
@@ -145,21 +168,22 @@ export async function getAndMergeDiscoveryData({
     ? fetchBrowserDiscoveryDataFromUrl(getDiscoveryEndpoint(hostedURL))
     : Promise.resolve(null)
 
-  // TODO: add logic for handling discovery connect host here
-
   // Promise all is safe since fetchDataFromDiscoveryUrl never rejects
   const [
     sessionStorageHostData,
     forceUrlHostData,
     discoveryUrlParamData,
+    discoveryConnectionHostData,
     discoveryEndpointData
   ] = await Promise.all([
     sessionStorageHostPromise,
     forceUrlHostPromise,
     discoveryUrlParamPromise,
+    discoveryConnectionHostPromise,
     discoveryEndpointPromise
   ])
 
+  // Ordered by importance, top-most data takes precedence
   const normalisedDiscoveryData: TaggedDiscoveryData[] = [
     {
       source: CONNECT_FORM,
@@ -177,6 +201,12 @@ export async function getAndMergeDiscoveryData({
       source: DISCOVERY_URL,
       urlMissing: discoveryUrlParamData === null,
       ...discoveryUrlParamData
+    },
+    {
+      source: DISCOVERY_CONNECTION,
+      urlMissing: discoveryConnectionHostData === null,
+      ...discoveryConnectionHostData,
+      host: discoveryConnectionHostData?.host || discoveryConnection?.host
     },
     {
       source: DISCOVERY_ENDPOINT,

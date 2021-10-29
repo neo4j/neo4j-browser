@@ -18,7 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { updateConnection } from 'shared/modules/connections/connectionsDuck'
+import {
+  updateConnection,
+  getConnection
+} from 'shared/modules/connections/connectionsDuck'
 import {
   APP_START,
   USER_CLEAR,
@@ -163,7 +166,10 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
         action.sessionStorageHost = sessionStorageHost
       }
 
-      // TODO: if discovery connection has host and NOT connectURL or discoveryURL then add discovery connection to action
+      const discoveryConnection = getConnection(store.getState(), CONNECTION_ID)
+      if (discoveryConnection) {
+        action.discoveryConnection = discoveryConnection
+      }
 
       return action
     })

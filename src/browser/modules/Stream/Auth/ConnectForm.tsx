@@ -69,6 +69,8 @@ interface ConnectFormProps {
   supportsMultiDb: boolean
   SSOError?: string
   SSOProviders: SSOProvider[]
+  SSOLoading?: boolean
+  onSSOProviderClicked: () => void
 }
 
 export default function ConnectForm(props: ConnectFormProps): JSX.Element {
@@ -129,7 +131,7 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
       }:// for a direct connection to a single instance.`
     : ''
 
-  const { SSOError, SSOProviders } = props
+  const { SSOError, SSOProviders, SSOLoading } = props
   const [SSORedirectError, setRedirectError] = useState('')
 
   return (
@@ -236,10 +238,12 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
         )}
 
         {props.authenticationMethod === SSO &&
+          !SSOLoading &&
           SSOProviders.map((provider: SSOProvider) => (
             <StyledSSOButtonContainer key={provider.id}>
               <FormButton
                 onClick={() => {
+                  props.onSSOProviderClicked()
                   sessionStorage.setItem(AUTH_STORAGE_CONNECT_HOST, props.host)
                   authRequestForSSO(provider).catch(e => {
                     authLog(e.message)
@@ -252,15 +256,17 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
               </FormButton>
             </StyledSSOButtonContainer>
           ))}
-        {props.authenticationMethod === SSO && (SSOError || SSORedirectError) && (
-          <StyledSSOError>
-            <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>
-            <div>{SSOError || SSORedirectError}</div>
-            <StyledSSOLogDownload onClick={downloadAuthLogs}>
-              Download logs
-            </StyledSSOLogDownload>
-          </StyledSSOError>
-        )}
+        {props.authenticationMethod === SSO &&
+          !SSOLoading &&
+          (SSOError || SSORedirectError) && (
+            <StyledSSOError>
+              <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>
+              <div>{SSOError || SSORedirectError}</div>
+              <StyledSSOLogDownload onClick={downloadAuthLogs}>
+                Download logs
+              </StyledSSOLogDownload>
+            </StyledSSOError>
+          )}
 
         {connecting
           ? 'Connecting...'

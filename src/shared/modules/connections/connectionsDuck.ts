@@ -215,7 +215,11 @@ const mergeConnectionHelper = (
   return {
     ...state,
     connectionsById: {
-      $$discovery: { ...currentConnection, ...connection, id: onlyValidConnId }
+      [discovery.CONNECTION_ID]: {
+        ...currentConnection,
+        ...connection,
+        id: onlyValidConnId
+      }
     },
     allConnectionIds: [onlyValidConnId]
   }
@@ -515,6 +519,7 @@ export const startupConnectEpic = (action$: any, store: any) => {
       // merge with discovery data if we have any and try again
       if (discovered) {
         store.dispatch(discovery.updateDiscoveryConnection(discovered))
+        console.log('discovered: ' + JSON.stringify(discovered))
         const connUpdatedWithDiscovery = getConnection(
           store.getState(),
           discovery.CONNECTION_ID
@@ -534,7 +539,8 @@ export const startupConnectEpic = (action$: any, store: any) => {
                 store.dispatch(setActiveConnection(discovery.CONNECTION_ID))
                 resolve({ type: STARTUP_CONNECTION_SUCCESS })
               })
-              .catch(() => {
+              .catch(err => {
+                console.log('error: ' + JSON.stringify(err))
                 store.dispatch(setActiveConnection(null))
                 store.dispatch(
                   discovery.updateDiscoveryConnection({
@@ -631,8 +637,8 @@ export const connectionLostEpic = (action$: any, store: any) =>
     // Only retry in web env and if we're supposed to be connected
     .filter(() => inWebEnv(store.getState()) && isConnected(store.getState()))
     .throttleTime(5000)
-    .do(() => {
-      if (action$.error.code === 'Neo.ClientError.Security.TokenExpired') {
+    .do((action: any) => {
+      if (action.error.code === 'Neo.ClientError.Security.TokenExpired') {
         const SSOProviders = getActiveConnectionData(store.getState())
           ?.SSOProviders
         if (SSOProviders) {

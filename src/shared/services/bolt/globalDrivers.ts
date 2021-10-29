@@ -20,7 +20,7 @@
 
 import neo4j, { Driver } from 'neo4j-driver'
 import { createDriverOrFailFn } from './driverFactory'
-import { KERBEROS, NATIVE } from 'services/bolt/boltHelpers'
+import { KERBEROS, NATIVE, SSO } from 'services/bolt/boltHelpers'
 import {
   isNonRoutingScheme,
   toNonRoutingScheme,
@@ -108,6 +108,7 @@ export const buildAuthObj = (props: {
     auth = neo4j.auth.kerberos(props.password)
   } else if (
     props.authenticationMethod === NATIVE ||
+    props.authenticationMethod === SSO ||
     !props.authenticationMethod
   ) {
     auth = neo4j.auth.basic(props.username, props.password)

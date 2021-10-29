@@ -189,6 +189,12 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
     this.props.error({})
   }
 
+  onSSOProviderClicked = () => {
+    this.props.updateConnection({
+      authenticationMethod: this.state.authenticationMethod
+    })
+  }
+
   onAuthenticationMethodChange(event: any) {
     const authenticationMethod = event.target.value
     const username =
@@ -393,6 +399,7 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
           host={host}
           SSOError={this.state.SSOError}
           SSOProviders={this.state.SSOProviders || []}
+          SSOLoading={this.state.SSOLoading}
           username={this.state.username}
           password={this.state.password}
           database={this.state.requestedUseDb}
@@ -403,6 +410,7 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
             this.state.hostInputVal || this.state.host
           )}
           authenticationMethod={this.state.authenticationMethod}
+          onSSOProviderClicked={this.onSSOProviderClicked}
         />
       )
     }
