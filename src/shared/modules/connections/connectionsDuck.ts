@@ -523,7 +523,11 @@ export const startupConnectEpic = (action$: any, store: any) => {
       // merge with discovery data if we have any and try again
       if (discovered) {
         store.dispatch(discovery.updateDiscoveryConnection(discovered))
-        authLog(`discovered: ${JSON.stringify(discovered)}`)
+        authLog(
+          `discovered these SSO providers: ${JSON.stringify(
+            discovered.SSOProviders
+          )}`
+        )
         const connUpdatedWithDiscovery = getConnection(
           store.getState(),
           discovery.CONNECTION_ID
