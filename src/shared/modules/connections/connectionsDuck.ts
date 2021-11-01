@@ -34,6 +34,7 @@ import { inWebEnv, USER_CLEAR, APP_START } from 'shared/modules/app/appDuck'
 import { GlobalState } from 'shared/globalState'
 import { isCloudHost } from 'shared/services/utils'
 import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
+import { authDebug } from 'project-root/../neo4j-client-sso2/packages/neo4j-client-sso/lib/esm/helpers'
 
 export const NAME = 'connections'
 export const SET_ACTIVE = 'connections/SET_ACTIVE'
@@ -519,7 +520,7 @@ export const startupConnectEpic = (action$: any, store: any) => {
       // merge with discovery data if we have any and try again
       if (discovered) {
         store.dispatch(discovery.updateDiscoveryConnection(discovered))
-        console.log('discovered: ' + JSON.stringify(discovered))
+        authDebug('discovered: ', discovered)
         const connUpdatedWithDiscovery = getConnection(
           store.getState(),
           discovery.CONNECTION_ID
@@ -539,8 +540,7 @@ export const startupConnectEpic = (action$: any, store: any) => {
                 store.dispatch(setActiveConnection(discovery.CONNECTION_ID))
                 resolve({ type: STARTUP_CONNECTION_SUCCESS })
               })
-              .catch(err => {
-                console.log('error: ' + JSON.stringify(err))
+              .catch(() => {
                 store.dispatch(setActiveConnection(null))
                 store.dispatch(
                   discovery.updateDiscoveryConnection({
