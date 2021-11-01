@@ -66,8 +66,6 @@ export async function fetchBrowserDiscoveryDataFromUrl(
   return { ...res, host, neo4jEdition, neo4jVersion }
 }
 
-// TODO check if we need to check host is allowed? `hostIsAllowed`
-
 type DataFromPreviousAction = {
   forceURL: string
   discoveryURL: string

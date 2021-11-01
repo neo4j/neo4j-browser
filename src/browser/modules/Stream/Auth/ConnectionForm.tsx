@@ -65,7 +65,7 @@ import {
   boltToHttp
 } from 'shared/services/boltscheme.utils'
 import { fetchBrowserDiscoveryDataFromUrl } from 'shared/modules/discovery/discoveryHelpers'
-import { Success } from 'neo4j-client-sso'
+import { Success, authLog } from 'neo4j-client-sso'
 
 type ConnectionFormState = any
 
@@ -222,9 +222,10 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
             SSOLoading: false
           })
         } else {
-          // TODO - set correct SSOError content, not just this placeholder text?
+          const message = `Failed to load SSO providers ${result.message}`
+          authLog(message)
           this.setState({
-            SSOError: 'Failed to load SSO providers',
+            SSOError: message,
             SSOLoading: false
           })
         }
