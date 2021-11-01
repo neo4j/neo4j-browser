@@ -35,7 +35,7 @@ import ClipboardCopier from 'browser-components/ClipboardCopier'
 import { NodeItem, RelationshipItem, VizNodeProperty } from './types'
 import { GraphStyle } from './OverviewPane'
 import { StyleableNodeLabel } from './StyleableNodeLabel'
-import { StylableRelType } from './StyleableRelType'
+import { StyleableRelType } from './StyleableRelType'
 import { upperFirst } from 'services/utils'
 import { ShowMoreOrAll } from 'browser-components/ShowMoreOrAll/ShowMoreOrAll'
 
@@ -85,6 +85,8 @@ function PropertiesView({
     </>
   )
 }
+
+export const DETAILS_PANE_STEP_SIZE = 1000
 type DetailsPaneComponentProps = {
   vizItem: NodeItem | RelationshipItem
   graphStyle: GraphStyle
@@ -95,8 +97,7 @@ export function DetailsPaneComponent({
   graphStyle,
   frameHeight
 }: DetailsPaneComponentProps): JSX.Element {
-  const moreStep = 1000
-  const [propertiesMax, setPropertiesMax] = useState(moreStep)
+  const [propertiesMax, setPropertiesMax] = useState(DETAILS_PANE_STEP_SIZE)
 
   const allItemProperties = [
     { key: '<id>', value: `${vizItem.item.id}`, type: 'String' },
@@ -123,7 +124,7 @@ export function DetailsPaneComponent({
           />
         </PaneTitle>
         {vizItem.type === 'relationship' && (
-          <StylableRelType
+          <StyleableRelType
             selectedRelType={{
               propertyKeys: vizItem.item.properties.map(p => p.key),
               relType: vizItem.item.type
@@ -151,7 +152,7 @@ export function DetailsPaneComponent({
         <PropertiesView
           visibleProperties={visibleItemProperties}
           onMoreClick={(numMore: number) => handleMorePropertiesClick(numMore)}
-          moreStep={moreStep}
+          moreStep={DETAILS_PANE_STEP_SIZE}
           totalNumItems={allItemProperties.length}
         />
       </PaneBody>

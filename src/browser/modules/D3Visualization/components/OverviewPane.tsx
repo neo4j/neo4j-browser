@@ -33,7 +33,7 @@ import numberToUSLocale from 'shared/utils/number-to-US-locale'
 import { StyledTruncatedMessage } from 'browser/modules/Stream/styled'
 import { StyleableNodeLabel } from './StyleableNodeLabel'
 import { GraphStats } from '../mapper'
-import { StylableRelType } from './StyleableRelType'
+import { StyleableRelType } from './StyleableRelType'
 import { ShowMoreOrAll } from 'browser-components/ShowMoreOrAll/ShowMoreOrAll'
 
 type PaneBodySectionHeaderProps = {
@@ -81,6 +81,8 @@ type OverviewPaneProps = {
   stats: GraphStats
 }
 
+export const OVERVIEW_STEP_SIZE = 50
+
 function OverviewPane({
   frameHeight,
   graphStyle,
@@ -89,9 +91,8 @@ function OverviewPane({
   relationshipCount,
   stats
 }: OverviewPaneProps): JSX.Element {
-  const moreStep = 50
-  const [labelsMax, setLabelsMax] = useState(moreStep)
-  const [relationshipsMax, setRelationshipsMax] = useState(moreStep)
+  const [labelsMax, setLabelsMax] = useState(OVERVIEW_STEP_SIZE)
+  const [relationshipsMax, setRelationshipsMax] = useState(OVERVIEW_STEP_SIZE)
 
   function onMoreClick(type: any, currentMax: number) {
     const map: any = {
@@ -136,7 +137,7 @@ function OverviewPane({
             <ShowMoreOrAll
               total={totalNumOfLabelTypes}
               shown={visibleLabelKeys.length}
-              moreStep={moreStep}
+              moreStep={OVERVIEW_STEP_SIZE}
               onMore={onMoreClick('labels', labelsMax)}
             />
           </div>
@@ -150,7 +151,7 @@ function OverviewPane({
             />
             <StyledLegendInlineList>
               {visibleRelationshipKeys.map(relType => (
-                <StylableRelType
+                <StyleableRelType
                   key={relType}
                   graphStyle={graphStyle}
                   frameHeight={frameHeight}
@@ -164,7 +165,7 @@ function OverviewPane({
             <ShowMoreOrAll
               total={totalNumOfRelTypes}
               shown={visibleRelationshipKeys.length}
-              moreStep={moreStep}
+              moreStep={OVERVIEW_STEP_SIZE}
               onMore={onMoreClick('relationships', relationshipsMax)}
             />
           </div>

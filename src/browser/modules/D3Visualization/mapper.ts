@@ -62,12 +62,17 @@ export function mapRelationships(relationships: any, graph: any) {
   })
 }
 
+export type GraphStatsLabels = Record<
+  string,
+  { count: number; properties: Record<string, string> }
+>
+export type GraphStatsRelationshipTypes = Record<
+  string,
+  { count: number; properties: Record<string, string> }
+>
 export type GraphStats = {
-  labels?: Record<string, { count: number; properties: Record<string, string> }>
-  relTypes?: Record<
-    string,
-    { count: number; properties: Record<string, string> }
-  >
+  labels?: GraphStatsLabels
+  relTypes?: GraphStatsRelationshipTypes
 }
 
 export function getGraphStats(graph: any): GraphStats {
