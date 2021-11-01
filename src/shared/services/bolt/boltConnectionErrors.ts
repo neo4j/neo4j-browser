@@ -1,9 +1,12 @@
+export const UnauthorizedDriverError = 'Neo.ClientError.Security.Unauthorized'
+export const TokenExpiredDriverError = 'Neo.ClientError.Security.TokenExpired'
+
 const BoltConnectionErrors = [
   'ServiceUnavailable',
   'Neo.ClientError.Security.AuthenticationRateLimit',
-  'Neo.ClientError.Security.Unauthorized',
   'Neo.ClientError.Security.CredentialsExpired',
-  'Neo.ClientError.Security.TokenExpired'
+  UnauthorizedDriverError,
+  TokenExpiredDriverError
 ]
 
 export const isBoltConnectionErrorCode = (code: any) =>

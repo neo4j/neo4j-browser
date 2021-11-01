@@ -19,7 +19,7 @@
  */
 
 import Rx from 'rxjs/Rx'
-import { handleRefreshingToken } from 'neo4j-client-sso'
+import { handleRefreshingToken, authLog } from 'neo4j-client-sso'
 import bolt from 'services/bolt/bolt'
 import * as discovery from 'shared/modules/discovery/discoveryDuck'
 import { NATIVE, NO_AUTH, SSO } from 'services/bolt/boltHelpers'
@@ -34,7 +34,10 @@ import { inWebEnv, USER_CLEAR, APP_START } from 'shared/modules/app/appDuck'
 import { GlobalState } from 'shared/globalState'
 import { isCloudHost } from 'shared/services/utils'
 import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
-import { authDebug } from 'project-root/../neo4j-client-sso2/packages/neo4j-client-sso/lib/esm/helpers'
+import {
+  TokenExpiredDriverError,
+  UnauthorizedDriverError
+} from 'services/bolt/boltConnectionErrors'
 
 export const NAME = 'connections'
 export const SET_ACTIVE = 'connections/SET_ACTIVE'
@@ -520,7 +523,7 @@ export const startupConnectEpic = (action$: any, store: any) => {
       // merge with discovery data if we have any and try again
       if (discovered) {
         store.dispatch(discovery.updateDiscoveryConnection(discovered))
-        authDebug('discovered: ', discovered)
+        authLog(`discovered: ${JSON.stringify(discovered)}`)
         const connUpdatedWithDiscovery = getConnection(
           store.getState(),
           discovery.CONNECTION_ID
@@ -639,71 +642,38 @@ export const connectionLostEpic = (action$: any, store: any) =>
     .throttleTime(5000)
     .do(() => store.dispatch(updateConnectionState(PENDING_STATE)))
     .mergeMap((action: any) => {
-      if (action.error.code === 'Neo.ClientError.Security.TokenExpired') {
-        const SSOProviders = getActiveConnectionData(store.getState())
-          ?.SSOProviders
-        if (SSOProviders) {
-          return Rx.Observable.fromPromise(
-            (async function() {
-              //TODO can throw?
-              const credentials = await handleRefreshingToken(SSOProviders)
-              store.dispatch(discovery.updateDiscoveryConnection(credentials))
-              const connection = getActiveConnectionData(store.getState())
-              if (!connection) {
-                return null
-              }
-              return bolt
-                .directConnect(
-                  connection,
-                  {
-                    connectionTimeout: getConnectionTimeout(store.getState())
-                  },
-                  () =>
-                    setTimeout(() => {
-                      throw new Error('Couldnt reconnect. Lost.')
-                    }, 5000)
-                )
-                .then(() => {
-                  bolt.closeConnection()
-                  bolt
-                    .openConnection(
-                      connection,
-                      {
-                        connectionTimeout: getConnectionTimeout(
-                          store.getState()
-                        )
-                      },
-                      onLostConnection(store.dispatch)
-                    )
-                    .then(() => {
-                      store.dispatch(updateConnectionState(CONNECTED_STATE))
-                      return { type: 'Success' }
-                    })
-                    .catch(() => {
-                      throw new Error('Error on connect')
-                    })
-                })
-                .catch(e => {
-                  // Don't retry if auth failed
-                  if (e.code === 'Neo.ClientError.Security.Unauthorized') {
-                    return { type: e.code }
-                  } else {
-                    setTimeout(() => {
-                      throw new Error('Couldnt reconnect.')
-                    }, 5000)
-                    return
-                  }
-                })
-            })()
-          )
-        }
-      }
-      const connection = getActiveConnectionData(store.getState())
-      if (!connection) return Rx.Observable.of(1)
       return (
         Rx.Observable.of(1)
           .mergeMap(() => {
-            return new Promise((resolve, reject) => {
+            return new Promise(async (resolve, reject) => {
+              let connection: Connection | null = null
+              if (action.error.code === TokenExpiredDriverError) {
+                authLog(
+                  'Detected access token expiry, starting refresh attempt'
+                )
+                const SSOProviders = getActiveConnectionData(store.getState())
+                  ?.SSOProviders
+                if (SSOProviders) {
+                  try {
+                    const credentials = await handleRefreshingToken(
+                      SSOProviders
+                    )
+                    store.dispatch(
+                      discovery.updateDiscoveryConnection(credentials)
+                    )
+                    connection = getActiveConnectionData(store.getState())
+                    authLog(
+                      'Successfully refreshed token, attempting to reconnect'
+                    )
+                  } catch (e) {
+                    authLog(`Failed to refresh token: ${e}`)
+                  }
+                }
+              } else {
+                connection = getActiveConnectionData(store.getState())
+              }
+              if (!connection) return reject('No connection object found')
+
               bolt
                 .directConnect(
                   connection,
@@ -720,7 +690,7 @@ export const connectionLostEpic = (action$: any, store: any) =>
                   bolt.closeConnection()
                   bolt
                     .openConnection(
-                      connection,
+                      connection!,
                       {
                         connectionTimeout: getConnectionTimeout(
                           store.getState()
@@ -736,7 +706,7 @@ export const connectionLostEpic = (action$: any, store: any) =>
                 })
                 .catch(e => {
                   // Don't retry if auth failed
-                  if (e.code === 'Neo.ClientError.Security.Unauthorized') {
+                  if (e.code === UnauthorizedDriverError) {
                     resolve({ type: e.code })
                   } else {
                     setTimeout(
@@ -761,7 +731,7 @@ export const connectionLostEpic = (action$: any, store: any) =>
               return
             }
             // If no connection because of auth failure, close and unset active connection
-            if (res.type === 'Neo.ClientError.Security.Unauthorized') {
+            if (res.type === UnauthorizedDriverError) {
               bolt.closeConnection()
               store.dispatch(setActiveConnection(null))
             }
