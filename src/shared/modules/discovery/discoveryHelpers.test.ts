@@ -27,8 +27,7 @@ import {
   getAndMergeDiscoveryData
 } from './discoveryHelpers'
 import { fakeDiscoveryResponse } from './discoveryMocks'
-// int8 a felmeddelanden och använd dem i testerna
-// assert on logs
+
 const baseAction = {
   encrypted: false,
   requestedUseDb: '',

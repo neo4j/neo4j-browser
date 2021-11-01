@@ -84,7 +84,7 @@ type ConnectionState =
   | typeof CONNECTING_STATE
 
 export type AuthenticationMethod = typeof NATIVE | typeof NO_AUTH | typeof SSO
-const onlyValidConnId = '$$discovery'
+const onlyValidConnId = discovery.CONNECTION_ID
 // we only use one connection, but can't update the redux state
 // to match that fact until we've merged proper single sign on
 // and sandbox can use that instead of their fork
@@ -99,7 +99,7 @@ export type Connection = {
   requestedUseDb?: string
   restApi?: string
   SSOError?: string
-  SSOProviders?: [SSOProvider]
+  SSOProviders?: SSOProvider[]
 }
 
 const initialState: ConnectionReduxState = {
@@ -219,7 +219,7 @@ const mergeConnectionHelper = (
   return {
     ...state,
     connectionsById: {
-      [discovery.CONNECTION_ID]: {
+      [onlyValidConnId]: {
         ...currentConnection,
         ...connection,
         id: onlyValidConnId
