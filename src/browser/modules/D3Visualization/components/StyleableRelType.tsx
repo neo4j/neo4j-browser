@@ -24,16 +24,16 @@ import { Popup } from 'semantic-ui-react'
 import { GraphStyle } from './OverviewPane'
 import { StyledRelationship } from 'browser/modules/DBMSInfo/styled'
 
-export type StylableRelTypeProps = {
+export type StyleableRelTypeProps = {
   graphStyle: GraphStyle
   frameHeight: number
-  selectedRelType: { relType: string; propertyKeys: string[] }
+  selectedRelType: { relType: string; propertyKeys: string[]; count?: number }
 }
 export function StyleableRelType({
   selectedRelType,
   graphStyle,
   frameHeight
-}: StylableRelTypeProps): JSX.Element {
+}: StyleableRelTypeProps): JSX.Element {
   const styleForRelType = graphStyle.forRelationship({
     type: selectedRelType.relType
   })
@@ -50,7 +50,9 @@ export function StyleableRelType({
             color: styleForRelType.get('text-color-internal')
           }}
         >
-          {selectedRelType.relType}
+          {selectedRelType.count !== undefined
+            ? `${selectedRelType.relType} (${selectedRelType.count})`
+            : `${selectedRelType.relType}`}
         </StyledRelationship>
       }
       wide
