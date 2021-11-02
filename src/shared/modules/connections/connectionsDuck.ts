@@ -102,7 +102,7 @@ export type Connection = {
   SSOProviders?: SSOProvider[]
 }
 
-const initialState: ConnectionReduxState = {
+export const initialState: ConnectionReduxState = {
   allConnectionIds: [],
   connectionsById: {},
   activeConnection: null,
@@ -451,7 +451,7 @@ export type DiscoverableData = {
   supportsMultiDb?: boolean
   host?: string
   encrypted?: string
-  hasForceUrl?: boolean
+  hasForceURL?: boolean
   SSOError?: string
   attemptSSOLogin?: boolean
   SSOProviders?: SSOProvider[]
@@ -505,7 +505,8 @@ export const startupConnectEpic = (action$: any, store: any) => {
       )
 
       if (
-        !(discovered && discovered.hasForceUrl) && // If we have force url, don't try old connection data
+        //TODO Considder the SSO implications of this
+        !(discovered && discovered.hasForceURL) && // If we have force url, don't try old connection data
         shouldTryAutoconnecting(savedConnection)
       ) {
         try {

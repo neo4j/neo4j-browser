@@ -93,6 +93,7 @@ type TaggedDiscoveryData = DiscoverableData & {
   source: DiscoveryDataSource
   urlMissing: boolean
   host: string
+  onlyCheckForHost?: boolean
 }
 
 type DiscoveryDataSource =
@@ -122,6 +123,7 @@ export async function getAndMergeDiscoveryData({
 
   let dataFromForceURL: DiscoverableData = {}
   let dataFromConnection: DiscoverableData = {}
+
   if (forceURL) {
     const { username, protocol, host } = getUrlInfo(forceURL)
 
@@ -198,9 +200,13 @@ export async function getAndMergeDiscoveryData({
     },
     {
       source: CONNECT_URL,
+      // The "dataFromForceURL" we want to keep regardless if there was a network request or not.
+      // if we're dealing with a pre 4.4 server the disc request will fail even as there's a db present
+      onlyCheckForHost: true,
       urlMissing: forceUrlHostData === null,
+      ...dataFromForceURL,
       ...forceUrlHostData,
-      host: forceUrlHostData?.host || action.forceURL
+      host: forceUrlHostData?.host || dataFromForceURL.host
     },
     {
       source: DISCOVERY_URL,
@@ -219,14 +225,16 @@ export async function getAndMergeDiscoveryData({
       ...discoveryEndpointData
     }
   ].filter((entry): entry is TaggedDiscoveryData => {
-    if (entry.urlMissing || !('status' in entry)) {
-      authLog(`Found no url from source: ${entry.source} to fetch.`)
-      return false
-    }
+    if ('onlyCheckForHost' in entry && !entry.onlyCheckForHost) {
+      if (entry.urlMissing || !('status' in entry)) {
+        authLog(`Found no url from source: ${entry.source} to fetch.`)
+        return false
+      }
 
-    if (entry.status === FetchError) {
-      authLog(`Failed to fetch source: ${entry.source}.`)
-      return false
+      if (entry.status === FetchError) {
+        authLog(`Failed to fetch source: ${entry.source}.`)
+        return false
+      }
     }
 
     if (!('host' in entry) || !entry.host) {
@@ -258,7 +266,8 @@ export async function getAndMergeDiscoveryData({
     'encrypted',
     'SSOError',
     'SSOProviders',
-    'neo4jVersion'
+    'neo4jVersion',
+    'hasForceURL'
   ]
 
   let mergedDiscoveryData = pick(mainDiscoveryData, keysToCopy)

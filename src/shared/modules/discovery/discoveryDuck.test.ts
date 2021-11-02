@@ -24,6 +24,7 @@ import { createBus, createReduxMiddleware } from 'suber'
 import nock from 'nock'
 
 import * as discovery from './discoveryDuck'
+import * as connections from '../connections/connectionsDuck'
 import { APP_START, WEB, CLOUD } from 'shared/modules/app/appDuck'
 import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
 
@@ -38,7 +39,7 @@ describe('discoveryOnStartupEpic', () => {
   ])
   beforeAll(() => {
     store = mockStore({
-      connections: {},
+      connections: connections.initialState,
       app: {
         env: WEB
       }
@@ -234,8 +235,8 @@ describe('discoveryOnStartupEpic', () => {
             host: expectedHost,
             SSOError: discovery.NO_SSO_PROVIDERS_ERROR_TEXT,
             SSOProviders: [],
-            supportsMultiDb: false,
-            hasForceURL: true
+            hasForceURL: true,
+            supportsMultiDb: false
           }
         }
       ])

@@ -21,11 +21,7 @@
 import nock from 'nock'
 import 'isomorphic-fetch'
 
-import {
-  CONNECT_FORM,
-  DISCOVERY_ENDPOINT,
-  getAndMergeDiscoveryData
-} from './discoveryHelpers'
+import { getAndMergeDiscoveryData } from './discoveryHelpers'
 import { fakeDiscoveryResponse } from './discoveryMocks'
 
 const baseAction = {
@@ -249,3 +245,4 @@ test('finds sso providers from some providers and merges without overriding', as
 // new check
 // Correct sso error
 // test with weird stuff in localstorage
+// check the data that comes form forcde uRL
