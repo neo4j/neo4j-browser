@@ -115,7 +115,7 @@ type LabelItemsProps = {
   totalNumItems: number
   onItemClick: () => void
   moreStep: number
-  onMoreClick: (num: number) => any
+  onMoreClick: (num: number) => void
   count: number
   graphStyleData: any
 }

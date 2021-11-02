@@ -24,7 +24,7 @@ type ShowMoreOrAllProps = {
   total: number
   shown: number
   moreStep: number
-  onMore: (num: number) => any
+  onMore: (num: number) => void
 }
 export const ShowMoreOrAll = ({
   total,
@@ -32,7 +32,7 @@ export const ShowMoreOrAll = ({
   moreStep,
   onMore
 }: ShowMoreOrAllProps) => {
-  const numMore = total - shown > moreStep ? moreStep : total - shown
+  const numMore = Math.min(moreStep, total - shown)
   return shown < total ? (
     <div>
       <StyledShowMoreLink onClick={() => onMore(numMore)}>

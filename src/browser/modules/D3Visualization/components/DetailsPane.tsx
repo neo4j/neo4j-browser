@@ -97,17 +97,18 @@ export function DetailsPaneComponent({
   graphStyle,
   frameHeight
 }: DetailsPaneComponentProps): JSX.Element {
-  const [propertiesMax, setPropertiesMax] = useState(DETAILS_PANE_STEP_SIZE)
+  const [maxPropertiesCount, setMaxPropertiesCount] = useState(
+    DETAILS_PANE_STEP_SIZE
+  )
 
   const allItemProperties = [
     { key: '<id>', value: `${vizItem.item.id}`, type: 'String' },
     ...vizItem.item.properties
   ].sort((a, b) => (a.key < b.key ? -1 : 1))
-  const visibleItemProperties = allItemProperties.slice(0, propertiesMax)
+  const visibleItemProperties = allItemProperties.slice(0, maxPropertiesCount)
 
   const handleMorePropertiesClick = (numMore: number) => {
-    const newMax = propertiesMax + numMore
-    setPropertiesMax(newMax)
+    setMaxPropertiesCount(maxPropertiesCount + numMore)
   }
 
   return (
@@ -151,7 +152,7 @@ export function DetailsPaneComponent({
       <PaneBody>
         <PropertiesView
           visibleProperties={visibleItemProperties}
-          onMoreClick={(numMore: number) => handleMorePropertiesClick(numMore)}
+          onMoreClick={handleMorePropertiesClick}
           moreStep={DETAILS_PANE_STEP_SIZE}
           totalNumItems={allItemProperties.length}
         />

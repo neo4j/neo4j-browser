@@ -91,21 +91,25 @@ function OverviewPane({
   relationshipCount,
   stats
 }: OverviewPaneProps): JSX.Element {
-  const [labelsMax, setLabelsMax] = useState(OVERVIEW_STEP_SIZE)
-  const [relationshipsMax, setRelationshipsMax] = useState(OVERVIEW_STEP_SIZE)
+  const [maxLabelsCount, setMaxLabelsCount] = useState(OVERVIEW_STEP_SIZE)
+  const [maxRelationshipsCount, setMaxRelationshipsCount] = useState(
+    OVERVIEW_STEP_SIZE
+  )
 
-  function onMoreClick(type: any, currentMax: number) {
-    const map: any = {
-      labels: setLabelsMax,
-      relationships: setRelationshipsMax
-    }
-    return (num: number) => map[type](currentMax + num)
+  const onMoreLabelsClick = (numMore: number) => {
+    setMaxLabelsCount(maxLabelsCount + numMore)
+  }
+
+  const onMoreRelationshipsClick = (numMore: number) => {
+    setMaxRelationshipsCount(maxRelationshipsCount + numMore)
   }
 
   const { relTypes, labels } = stats
-  const visibleLabelKeys = labels ? Object.keys(labels).slice(0, labelsMax) : []
+  const visibleLabelKeys = labels
+    ? Object.keys(labels).slice(0, maxLabelsCount)
+    : []
   const visibleRelationshipKeys = relTypes
-    ? Object.keys(relTypes).slice(0, relationshipsMax)
+    ? Object.keys(relTypes).slice(0, maxRelationshipsCount)
     : []
   const totalNumOfLabelTypes = labels ? Object.keys(labels).length : 0
   const totalNumOfRelTypes = relTypes ? Object.keys(relTypes).length : 0
@@ -138,7 +142,7 @@ function OverviewPane({
               total={totalNumOfLabelTypes}
               shown={visibleLabelKeys.length}
               moreStep={OVERVIEW_STEP_SIZE}
-              onMore={onMoreClick('labels', labelsMax)}
+              onMore={onMoreLabelsClick}
             />
           </div>
         )}
@@ -166,7 +170,7 @@ function OverviewPane({
               total={totalNumOfRelTypes}
               shown={visibleRelationshipKeys.length}
               moreStep={OVERVIEW_STEP_SIZE}
-              onMore={onMoreClick('relationships', relationshipsMax)}
+              onMore={onMoreRelationshipsClick}
             />
           </div>
         )}

@@ -42,17 +42,20 @@ import { getDatabases } from 'shared/modules/dbMeta/dbMetaDuck'
 
 export function DBMSInfo(props: any): JSX.Element {
   const moreStep = 50
-  const [labelsMax, setLabelsMax] = useState(moreStep)
-  const [relationshipsMax, setRelationshipsMax] = useState(moreStep)
-  const [propertiesMax, setPropertiesMax] = useState(moreStep)
+  const [maxLabelsCount, setMaxLabelsCount] = useState(moreStep)
+  const [maxRelationshipsCount, setMaxRelationshipsCount] = useState(moreStep)
+  const [maxPropertiesCount, setMaxPropertiesCount] = useState(moreStep)
 
-  function onMoreClick(type: any, currentMax: number) {
-    const map: any = {
-      labels: setLabelsMax,
-      relationships: setRelationshipsMax,
-      properties: setPropertiesMax
-    }
-    return (num: number) => map[type](currentMax + num)
+  const onMoreLabelsClick = (numMore: number) => {
+    setMaxLabelsCount(maxLabelsCount + numMore)
+  }
+
+  const onMoreRelationshipsClick = (numMore: number) => {
+    setMaxRelationshipsCount(maxRelationshipsCount + numMore)
+  }
+
+  const onMorePropertiesClick = (numMore: number) => {
+    setMaxPropertiesCount(maxPropertiesCount + numMore)
   }
 
   const {
@@ -76,29 +79,31 @@ export function DBMSInfo(props: any): JSX.Element {
         />
         <LabelItems
           count={nodes}
-          labels={labels.slice(0, labelsMax).map((l: any) => l.val)}
+          labels={labels.slice(0, maxLabelsCount).map((l: any) => l.val)}
           totalNumItems={labels.length}
           onItemClick={onItemClick}
-          onMoreClick={onMoreClick('labels', labelsMax)}
+          onMoreClick={onMoreLabelsClick}
           moreStep={moreStep}
           graphStyleData={props.graphStyleData}
         />
         <RelationshipItems
           count={relationships}
           relationshipTypes={relationshipTypes
-            .slice(0, relationshipsMax)
+            .slice(0, maxRelationshipsCount)
             .map((l: any) => l.val)}
           onItemClick={onItemClick}
           totalNumItems={relationshipTypes.length}
-          onMoreClick={onMoreClick('relationships', relationshipsMax)}
+          onMoreClick={onMoreRelationshipsClick}
           moreStep={moreStep}
           graphStyleData={props.graphStyleData}
         />
         <PropertyItems
-          properties={properties.slice(0, propertiesMax).map((l: any) => l.val)}
+          properties={properties
+            .slice(0, maxPropertiesCount)
+            .map((l: any) => l.val)}
           onItemClick={onItemClick}
           totalNumItems={properties.length}
-          onMoreClick={onMoreClick('properties', propertiesMax)}
+          onMoreClick={onMorePropertiesClick}
           moreStep={moreStep}
         />
         <UserDetails user={user} onItemClick={onItemClick} />
