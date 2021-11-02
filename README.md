@@ -27,6 +27,11 @@ yarn install
 yarn start
 ```
 
+Or to run in production mode:
+```shell
+yarn start-prod
+```
+
 ### Testing overview
 Neo4j Browser has both unit and end to end tests running automatically on every pull request. To run the tests locally:
 
