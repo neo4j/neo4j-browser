@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React from 'react'
-import { StyledShowMoreLink } from './styled'
+import { StyledShowMoreButton } from './styled'
 
 type ShowMoreOrAllProps = {
   total: number
@@ -35,13 +35,13 @@ export const ShowMoreOrAll = ({
   const numMore = Math.min(moreStep, total - shown)
   return shown < total ? (
     <div>
-      <StyledShowMoreLink onClick={() => onMore(numMore)}>
+      <StyledShowMoreButton onClick={() => onMore(numMore)}>
         Show {numMore} more
-      </StyledShowMoreLink>
+      </StyledShowMoreButton>
       &nbsp;|&nbsp;
-      <StyledShowMoreLink onClick={() => onMore(total)}>
+      <StyledShowMoreButton onClick={() => onMore(total)}>
         Show all
-      </StyledShowMoreLink>
+      </StyledShowMoreButton>
     </div>
   ) : null
 }

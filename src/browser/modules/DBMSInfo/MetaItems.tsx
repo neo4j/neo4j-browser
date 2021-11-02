@@ -31,6 +31,8 @@ import numberToUSLocale from 'shared/utils/number-to-US-locale'
 import neoGraphStyle from 'browser/modules/D3Visualization/graphStyle'
 import deepmerge from 'deepmerge'
 import { ShowMoreOrAll } from 'browser-components/ShowMoreOrAll/ShowMoreOrAll'
+import { ThemeProvider } from 'styled-components'
+import { dark } from 'browser-styles/themes'
 
 const wrapperStyle = (styles && styles.wrapper) || ''
 
@@ -152,12 +154,14 @@ const LabelItems = ({
       <DrawerSectionBody className={wrapperStyle}>
         {labelItems}
       </DrawerSectionBody>
-      <ShowMoreOrAll
-        total={totalNumItems}
-        shown={labels.length}
-        moreStep={moreStep}
-        onMore={onMoreClick}
-      />
+      <ThemeProvider theme={dark}>
+        <ShowMoreOrAll
+          total={totalNumItems}
+          shown={labels.length}
+          moreStep={moreStep}
+          onMore={onMoreClick}
+        />
+      </ThemeProvider>
     </DrawerSection>
   )
 }
