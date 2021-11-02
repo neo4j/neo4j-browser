@@ -193,6 +193,7 @@ export function App(props: any) {
           buildConnectionCreds(...args, { defaultConnectionData })
             .then(creds => bus.send(INJECTED_DISCOVERY, creds))
             .catch(() => bus.send(INITIAL_SWITCH_CONNECTION_FAILED))
+
           getDesktopTheme(...args)
             .then(theme => setEnvironmentTheme(theme))
             .catch(setEnvironmentTheme(null))

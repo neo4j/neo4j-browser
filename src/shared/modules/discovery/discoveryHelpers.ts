@@ -33,6 +33,7 @@ import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
 import { boltToHttp, boltUrlsHaveSameHost } from 'services/boltscheme.utils'
 import { getUrlInfo, isCloudHost } from 'shared/services/utils'
 import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
+import { pick } from 'lodash'
 
 type ExtraDiscoveryFields = {
   host?: string
@@ -63,7 +64,13 @@ export async function fetchBrowserDiscoveryDataFromUrl(
   const neo4jVersion = strOrUndefined(otherDataDiscovered.neo4j_version)
   const neo4jEdition = strOrUndefined(otherDataDiscovered.neo4j_edition)
 
-  return { ...res, host, neo4jEdition, neo4jVersion }
+  return {
+    ...res,
+    host,
+    ...(host ? { host } : {}),
+    ...(neo4jEdition ? { neo4jEdition } : {}),
+    ...(neo4jVersion ? { neo4jVersion } : {})
+  }
 }
 
 type DataFromPreviousAction = {
@@ -110,7 +117,7 @@ export async function getAndMergeDiscoveryData({
   hostedURL,
   hasDiscoveryEndpoint,
   generateBoltUrlWithAllowedScheme
-}: GetAndMergeDiscoveryDataParams): Promise<TaggedDiscoveryData | null> {
+}: GetAndMergeDiscoveryDataParams): Promise<DiscoverableData | null> {
   const { sessionStorageHost, forceURL, discoveryConnection } = action
 
   let dataFromForceURL: DiscoverableData = {}
@@ -222,11 +229,6 @@ export async function getAndMergeDiscoveryData({
       return false
     }
 
-    if (entry.status === NoProviderError) {
-      authLog(`Found no valid ssoproviders from source: ${entry.source}.`)
-      return false
-    }
-
     if (!('host' in entry) || !entry.host) {
       authLog(
         `Couldn't find bolt host to associate with discovery data from source ${entry.source}, dropping.`
@@ -246,7 +248,20 @@ export async function getAndMergeDiscoveryData({
     `Using host: ${mainDiscoveryData.host} from ${mainDiscoveryData.source} for SSO flow.`
   )
 
-  let mergedDiscoveryData = mainDiscoveryData
+  const keysToCopy: (keyof DiscoverableData)[] = [
+    'username',
+    'password',
+    'requestedUseDb',
+    'restApi',
+    'supportsMultiDb',
+    'host',
+    'encrypted',
+    'SSOError',
+    'SSOProviders',
+    'neo4jVersion'
+  ]
+
+  let mergedDiscoveryData = pick(mainDiscoveryData, keysToCopy)
   if (otherDiscoveryData.length > 1) {
     const otherDiscoveryDataWithMatchingHost = otherDiscoveryData.filter(
       ({ host, source }) => {
@@ -269,7 +284,7 @@ export async function getAndMergeDiscoveryData({
         newProvider => !currentSSOProviderIds.has(newProvider.id)
       )
       mergedDiscoveryData = {
-        ...data,
+        ...pick(data, keysToCopy),
         ...mergedDiscoveryData,
         SSOProviders: currentSSOProviders.concat(newSSOProviders)
       }

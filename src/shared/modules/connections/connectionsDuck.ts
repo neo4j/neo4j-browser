@@ -443,7 +443,6 @@ export const verifyConnectionCredentialsEpic = (action$: any) => {
       })
   })
 }
-
 export type DiscoverableData = {
   username?: string
   password?: string

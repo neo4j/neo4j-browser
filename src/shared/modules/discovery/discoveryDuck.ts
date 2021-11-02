@@ -125,6 +125,7 @@ export const injectDiscoveryEpic = (action$: any, store: any) =>
   action$
     .ofType(INJECTED_DISCOVERY)
     .map((action: any) => {
+      console.log('fired')
       const connectUrl = generateBoltUrl(
         getAllowedBoltSchemesForHost(
           store.getState(),

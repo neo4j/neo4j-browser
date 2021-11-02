@@ -61,7 +61,7 @@ describe('getAndMergeDiscoveryData', () => {
     console.log = logger
   })
 
-  test('finds host when only discovery endpoint is set up', async () => {
+  test('finds host when only discovery endpoint (with SSO) is set up', async () => {
     const boltHost = 'neo4j://localhost:7687'
     const browserHost = 'http://localhost:7474'
     const neo4jVersion = '4.4.1'
@@ -79,11 +79,41 @@ describe('getAndMergeDiscoveryData', () => {
     })
     expect(discoveryData).toBeTruthy()
     expect(discoveryData?.host).toEqual(boltHost)
-    expect(discoveryData?.source).toEqual(DISCOVERY_ENDPOINT)
+    //expect(discoveryData?.source).toEqual(DISCOVERY_ENDPOINT)
     expect(discoveryData?.SSOProviders).toEqual([])
     expect(discoveryData?.SSOError).toEqual(undefined)
     expect(discoveryData?.neo4jVersion).toEqual(neo4jVersion)
-    expect(discoveryData?.urlMissing).toEqual(false)
+  })
+
+  test('finds host when only discovery endpoint (pre 4.4, without SSO) is set up', async () => {
+    const boltHost = 'neo4j://localhost:7687'
+    const browserHost = 'http://localhost:7474'
+    const neo4jVersion = '4.3.1'
+
+    nock(browserHost)
+      .get('/')
+      .reply(200, {
+        bolt_routing: boltHost,
+        bolt_direct: boltHost,
+        neo4j_version: neo4jVersion,
+        neo4j_edition: 'enterprise'
+      })
+
+    // When
+    const discoveryData = await getAndMergeDiscoveryData({
+      action: baseAction,
+      hostedURL: browserHost,
+      generateBoltUrlWithAllowedScheme,
+      hasDiscoveryEndpoint: true
+    })
+    expect(discoveryData).toBeTruthy()
+    expect(discoveryData?.host).toEqual(boltHost)
+
+    // expect(discoveryData?.source).toEqual(DISCOVERY_ENDPOINT)
+    // Todo test source via logs
+    expect(discoveryData?.SSOProviders).toEqual([])
+    expect(discoveryData?.SSOError).toEqual(undefined)
+    expect(discoveryData?.neo4jVersion).toEqual(neo4jVersion)
   })
 
   test('finds and priotises sso providers from session storage/connect form when all discovery sources are present, but doesnt merge when hosts differ', async () => {
@@ -128,7 +158,7 @@ describe('getAndMergeDiscoveryData', () => {
       'google',
       'lundskommun'
     ])
-    expect(discoveryData?.source).toEqual(CONNECT_FORM)
+    // expect(discoveryData?.source).toEqual(CONNECT_FORM)
   })
 
   test('finds sso providers from all discovery sources and merges if hosts are identical', async () => {
@@ -169,9 +199,53 @@ describe('getAndMergeDiscoveryData', () => {
       'petalburg',
       'trelleborg'
     ])
-    expect(discoveryData?.source).toEqual(CONNECT_FORM)
+    //expect(discoveryData?.source).toEqual(CONNECT_FORM)
   })
+})
+
+test('finds sso providers from some providers and merges without overriding', async () => {
+  // Given
+  const hasDiscoveryEndpoint = true
+  ;[
+    { host: sessionStorageHost, providerIds: ['malmöstad'] },
+    { host: hostedURL, providerIds: ['trelleborg'] },
+    { host: forceURL, providerIds: ['göteborg'] },
+    { host: discoveryURL, providerIds: ['petalburg'] }
+  ].forEach(({ host, providerIds }) => {
+    nock(host)
+      .get('/')
+      .reply(200, fakeDiscoveryResponse({ providerIds, host: 'bolthost' }))
+  })
+
+  const action = {
+    ...baseAction,
+    discoveryURL,
+    forceURL,
+    sessionStorageHost
+  }
+
+  // When
+  const discoveryData = await getAndMergeDiscoveryData({
+    action,
+    hostedURL,
+    generateBoltUrlWithAllowedScheme,
+    hasDiscoveryEndpoint
+  })
+
+  // Then
+  expect(discoveryData).toBeTruthy()
+  expect(discoveryData?.host).toEqual('bolthost')
+  expect(discoveryData?.SSOProviders?.map(p => p.id)).toEqual([
+    'malmöstad',
+    'göteborg',
+    'petalburg',
+    'trelleborg'
+  ])
+  //expect(discoveryData?.source).toEqual(CONNECT_FORM)
 })
 
 // Tests yet not written:
 // test connect form and connectURL working even when host is missing
+// new check
+// Correct sso error
+// test with weird stuff in localstorage
