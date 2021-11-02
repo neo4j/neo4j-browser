@@ -24,12 +24,12 @@ import { Popup } from 'semantic-ui-react'
 import { GraphStyle } from './OverviewPane'
 import { StyledRelationship } from 'browser/modules/DBMSInfo/styled'
 
-type StylableRelTypeProps = {
+export type StylableRelTypeProps = {
   graphStyle: GraphStyle
   frameHeight: number
   selectedRelType: { relType: string; propertyKeys: string[] }
 }
-export function StylableRelType({
+export function StyleableRelType({
   selectedRelType,
   graphStyle,
   frameHeight

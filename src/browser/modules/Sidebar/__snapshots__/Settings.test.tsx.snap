@@ -12,16 +12,16 @@ exports[`Settings renders with strange characters in display name 1`] = `
       Browser Settings
     </h4>
     <div
-      class="sc-bZQynM gNquDR"
+      class="sc-bZQynM jzFffY"
     >
       <div
-        class="sc-ifAKCX kHWkUt"
+        class="sc-ifAKCX gXIdDM"
       >
         <div
           class="sc-EHOje fyzZhj"
         >
           <h5
-            class="sc-bxivhb jqgGlu"
+            class="sc-bxivhb gjWjEn"
           >
             Test åäö settings
           </h5>
@@ -42,7 +42,7 @@ exports[`Settings renders with strange characters in display name 1`] = `
             </label>
           </div>
           <h5
-            class="sc-bxivhb jqgGlu"
+            class="sc-bxivhb gjWjEn"
           >
             Product Analytics
           </h5>

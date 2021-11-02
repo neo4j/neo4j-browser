@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 
 import {
   AlternatingTable,
@@ -32,12 +32,61 @@ import {
 } from './styled'
 import ClickableUrls from '../../../components/ClickableUrls'
 import ClipboardCopier from 'browser-components/ClipboardCopier'
-import { NodeItem, RelationshipItem } from './types'
+import { NodeItem, RelationshipItem, VizNodeProperty } from './types'
 import { GraphStyle } from './OverviewPane'
 import { StyleableNodeLabel } from './StyleableNodeLabel'
-import { StylableRelType } from './StyleableRelType'
+import { StyleableRelType } from './StyleableRelType'
 import { upperFirst } from 'services/utils'
+import { ShowMoreOrAll } from 'browser-components/ShowMoreOrAll/ShowMoreOrAll'
 
+type PropertiesViewProps = {
+  visibleProperties: VizNodeProperty[]
+  onMoreClick: (numMore: number) => void
+  totalNumItems: number
+  moreStep: number
+}
+function PropertiesView({
+  visibleProperties,
+  totalNumItems,
+  onMoreClick,
+  moreStep
+}: PropertiesViewProps) {
+  return (
+    <>
+      <StyledInlineList>
+        <AlternatingTable>
+          <tbody>
+            {visibleProperties.map(({ key, type, value }) => (
+              <tr key={key} title={type}>
+                <KeyCell>
+                  <ClickableUrls text={key} />
+                </KeyCell>
+                <ValueCell>
+                  <ClickableUrls text={value} />
+                </ValueCell>
+                <CopyCell>
+                  <ClipboardCopier
+                    titleText={'Copy key and value'}
+                    textToCopy={`${key}: ${value}`}
+                    iconSize={10}
+                  />
+                </CopyCell>
+              </tr>
+            ))}
+          </tbody>
+        </AlternatingTable>
+      </StyledInlineList>
+      <ShowMoreOrAll
+        total={totalNumItems}
+        shown={visibleProperties.length}
+        moreStep={moreStep}
+        onMore={onMoreClick}
+      />
+    </>
+  )
+}
+
+export const DETAILS_PANE_STEP_SIZE = 1000
 type DetailsPaneComponentProps = {
   vizItem: NodeItem | RelationshipItem
   graphStyle: GraphStyle
@@ -48,10 +97,19 @@ export function DetailsPaneComponent({
   graphStyle,
   frameHeight
 }: DetailsPaneComponentProps): JSX.Element {
+  const [maxPropertiesCount, setMaxPropertiesCount] = useState(
+    DETAILS_PANE_STEP_SIZE
+  )
+
   const allItemProperties = [
     { key: '<id>', value: `${vizItem.item.id}`, type: 'String' },
     ...vizItem.item.properties
   ].sort((a, b) => (a.key < b.key ? -1 : 1))
+  const visibleItemProperties = allItemProperties.slice(0, maxPropertiesCount)
+
+  const handleMorePropertiesClick = (numMore: number) => {
+    setMaxPropertiesCount(maxPropertiesCount + numMore)
+  }
 
   return (
     <>
@@ -67,7 +125,7 @@ export function DetailsPaneComponent({
           />
         </PaneTitle>
         {vizItem.type === 'relationship' && (
-          <StylableRelType
+          <StyleableRelType
             selectedRelType={{
               propertyKeys: vizItem.item.properties.map(p => p.key),
               relType: vizItem.item.type
@@ -92,29 +150,12 @@ export function DetailsPaneComponent({
           })}
       </PaneHeader>
       <PaneBody>
-        <StyledInlineList>
-          <AlternatingTable>
-            <tbody>
-              {allItemProperties.map(({ key, type, value }) => (
-                <tr key={key} title={type}>
-                  <KeyCell>
-                    <ClickableUrls text={key} />
-                  </KeyCell>
-                  <ValueCell>
-                    <ClickableUrls text={value} />
-                  </ValueCell>
-                  <CopyCell>
-                    <ClipboardCopier
-                      titleText={'Copy key and value'}
-                      textToCopy={`${key}: ${value}`}
-                      iconSize={10}
-                    />
-                  </CopyCell>
-                </tr>
-              ))}
-            </tbody>
-          </AlternatingTable>
-        </StyledInlineList>
+        <PropertiesView
+          visibleProperties={visibleItemProperties}
+          onMoreClick={handleMorePropertiesClick}
+          moreStep={DETAILS_PANE_STEP_SIZE}
+          totalNumItems={allItemProperties.length}
+        />
       </PaneBody>
     </>
   )

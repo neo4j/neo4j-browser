@@ -18,15 +18,45 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { Icon } from 'semantic-ui-react'
 
-import { StyledLegendInlineList, PaneBody, PaneHeader } from './styled'
+import {
+  StyledLegendInlineList,
+  PaneBody,
+  PaneHeader,
+  PaneBodySectionTitle,
+  PaneBodySectionSmallText,
+  PaneBodySectionHeaderWrapper
+} from './styled'
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
 import { StyledTruncatedMessage } from 'browser/modules/Stream/styled'
 import { StyleableNodeLabel } from './StyleableNodeLabel'
 import { GraphStats } from '../mapper'
-import { StylableRelType } from './StyleableRelType'
+import { StyleableRelType } from './StyleableRelType'
+import { ShowMoreOrAll } from 'browser-components/ShowMoreOrAll/ShowMoreOrAll'
+
+type PaneBodySectionHeaderProps = {
+  title: string
+  numOfElementsVisible: number
+  totalNumOfElements: number
+}
+function PaneBodySectionHeader({
+  title,
+  numOfElementsVisible,
+  totalNumOfElements
+}: PaneBodySectionHeaderProps) {
+  return (
+    <PaneBodySectionHeaderWrapper>
+      <PaneBodySectionTitle>{title}</PaneBodySectionTitle>
+      {numOfElementsVisible < totalNumOfElements && (
+        <PaneBodySectionSmallText>
+          {`(showing ${numOfElementsVisible} of ${totalNumOfElements})`}
+        </PaneBodySectionSmallText>
+      )}
+    </PaneBodySectionHeaderWrapper>
+  )
+}
 
 export type GraphStyle = {
   forNode: any
@@ -51,6 +81,8 @@ type OverviewPaneProps = {
   stats: GraphStats
 }
 
+export const OVERVIEW_STEP_SIZE = 50
+
 function OverviewPane({
   frameHeight,
   graphStyle,
@@ -59,17 +91,42 @@ function OverviewPane({
   relationshipCount,
   stats
 }: OverviewPaneProps): JSX.Element {
+  const [maxLabelsCount, setMaxLabelsCount] = useState(OVERVIEW_STEP_SIZE)
+  const [maxRelationshipsCount, setMaxRelationshipsCount] = useState(
+    OVERVIEW_STEP_SIZE
+  )
+
+  const onMoreLabelsClick = (numMore: number) => {
+    setMaxLabelsCount(maxLabelsCount + numMore)
+  }
+
+  const onMoreRelationshipsClick = (numMore: number) => {
+    setMaxRelationshipsCount(maxRelationshipsCount + numMore)
+  }
+
   const { relTypes, labels } = stats
+  const visibleLabelKeys = labels
+    ? Object.keys(labels).slice(0, maxLabelsCount)
+    : []
+  const visibleRelationshipKeys = relTypes
+    ? Object.keys(relTypes).slice(0, maxRelationshipsCount)
+    : []
+  const totalNumOfLabelTypes = labels ? Object.keys(labels).length : 0
+  const totalNumOfRelTypes = relTypes ? Object.keys(relTypes).length : 0
 
   return (
     <>
-      <PaneHeader>Overview</PaneHeader>
+      <PaneHeader>{'Overview'}</PaneHeader>
       <PaneBody>
-        {labels && Object.keys(labels).length !== 0 && (
-          <>
-            Node labels
+        {labels && visibleLabelKeys.length !== 0 && (
+          <div>
+            <PaneBodySectionHeader
+              title={'Node labels'}
+              numOfElementsVisible={visibleLabelKeys.length}
+              totalNumOfElements={totalNumOfLabelTypes}
+            />
             <StyledLegendInlineList>
-              {Object.keys(labels).map((label: string) => (
+              {visibleLabelKeys.map((label: string) => (
                 <StyleableNodeLabel
                   key={label}
                   graphStyle={graphStyle}
@@ -81,14 +138,24 @@ function OverviewPane({
                 />
               ))}
             </StyledLegendInlineList>
-          </>
+            <ShowMoreOrAll
+              total={totalNumOfLabelTypes}
+              shown={visibleLabelKeys.length}
+              moreStep={OVERVIEW_STEP_SIZE}
+              onMore={onMoreLabelsClick}
+            />
+          </div>
         )}
-        {relTypes && Object.keys(relTypes).length !== 0 && (
-          <>
-            Relationship Types
+        {relTypes && visibleRelationshipKeys.length !== 0 && (
+          <div>
+            <PaneBodySectionHeader
+              title={'Relationship Types'}
+              numOfElementsVisible={visibleRelationshipKeys.length}
+              totalNumOfElements={totalNumOfRelTypes}
+            />
             <StyledLegendInlineList>
-              {Object.keys(relTypes).map(relType => (
-                <StylableRelType
+              {visibleRelationshipKeys.map(relType => (
+                <StyleableRelType
                   key={relType}
                   graphStyle={graphStyle}
                   frameHeight={frameHeight}
@@ -99,7 +166,13 @@ function OverviewPane({
                 />
               ))}
             </StyledLegendInlineList>
-          </>
+            <ShowMoreOrAll
+              total={totalNumOfRelTypes}
+              shown={visibleRelationshipKeys.length}
+              moreStep={OVERVIEW_STEP_SIZE}
+              onMore={onMoreRelationshipsClick}
+            />
+          </div>
         )}
         <div style={{ paddingBottom: '10px' }}>
           {hasTruncatedFields && (

@@ -101,12 +101,3 @@ export const Link = (props: any) => {
     </StyledLink>
   )
 }
-
-export const StyledShowMoreContainer = styled.div`
-  margin-top: 10px;
-`
-
-export const StyledShowMoreLink = styled.span`
-  cursor: pointer;
-  color: ${props => props.theme.link};
-`

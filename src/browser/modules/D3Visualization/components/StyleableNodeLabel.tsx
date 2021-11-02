@@ -24,7 +24,7 @@ import { Popup } from 'semantic-ui-react'
 import { GraphStyle } from './OverviewPane'
 import { StyledLabel } from 'browser/modules/DBMSInfo/styled'
 
-type StyleableNodeLabelProps = {
+export type StyleableNodeLabelProps = {
   selectedLabel: {
     label: string
     propertyKeys: string[]
