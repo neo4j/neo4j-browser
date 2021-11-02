@@ -28,7 +28,8 @@ import {
   hasDiscoveryEndpoint,
   getHostedUrl,
   getAllowedBoltSchemes,
-  CLOUD_SCHEMES
+  CLOUD_SCHEMES,
+  inDesktop
 } from 'shared/modules/app/appDuck'
 import { generateBoltUrl } from 'services/boltscheme.utils'
 import { isCloudHost, AUTH_STORAGE_CONNECT_HOST } from 'shared/services/utils'
@@ -177,6 +178,9 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
     })
     .merge(some$.ofType(USER_CLEAR))
     .mergeMap(async (action: any) => {
+      if (inDesktop(store.getState())) {
+        return { type: 'NOOP' }
+      }
       const discoveryData = await getAndMergeDiscoveryData({
         action,
         hostedURL: getHostedUrl(store.getState()),
