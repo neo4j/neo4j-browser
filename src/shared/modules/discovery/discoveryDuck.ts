@@ -53,6 +53,8 @@ const SET = `${NAME}/SET`
 export const DONE = `${NAME}/DONE`
 export const INJECTED_DISCOVERY = `${NAME}/INJECTED_DISCOVERY`
 
+export const NO_SSO_PROVIDERS_ERROR_TEXT = 'No SSO providers found'
+
 // Reducer
 export default function reducer(state = initialState, action: any = {}) {
   switch (action.type) {
@@ -189,13 +191,16 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
       if (!discoveryData) {
         return {
           type: DONE,
-          discovered: { SSOProviders: [], SSOError: 'No SSO providers found' }
+          discovered: {
+            SSOProviders: [],
+            SSOError: NO_SSO_PROVIDERS_ERROR_TEXT
+          }
         }
       }
       const SSOProviders = discoveryData.SSOProviders || []
 
       let SSOError =
-        SSOProviders.length > 0 ? undefined : 'No SSO providers found'
+        SSOProviders.length > 0 ? undefined : NO_SSO_PROVIDERS_ERROR_TEXT
       const SSORedirectId = getSSOServerIdIfShouldRedirect()
       if (SSORedirectId) {
         authLog(`Initialized with idpId: "${SSORedirectId}"`)
