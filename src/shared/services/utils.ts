@@ -48,6 +48,9 @@ export const serialExecution = (...args: any[]) => {
   return out
 }
 
+export const AUTH_STORAGE_PREFIX = '/browser-auth#'
+export const AUTH_STORAGE_CONNECT_HOST = `${AUTH_STORAGE_PREFIX}connect_host`
+
 const linkPromises = (next: any) => {
   if (!next || !next.workFn) {
     return Promise.reject(Error('Nothing to do'))

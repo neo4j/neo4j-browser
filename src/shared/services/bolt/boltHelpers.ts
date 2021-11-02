@@ -24,6 +24,7 @@ import { getUrlInfo } from 'services/utils'
 export const KERBEROS = 'KERBEROS'
 export const NATIVE = 'NATIVE'
 export const NO_AUTH = 'NO_AUTH'
+export const SSO = 'SSO'
 
 export const getDiscoveryEndpoint = (url?: string): string => {
   const info = getUrlInfo(url || 'http://localhost:7474/')

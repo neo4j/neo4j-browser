@@ -23,6 +23,7 @@ import * as connections from 'shared/modules/connections/connectionsDuck'
 import { add as addFrameAction } from 'shared/modules/frames/framesDuck'
 import { UnknownCommandError } from 'services/exceptions'
 import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
+import { clearRefreshTokenData } from 'neo4j-client-sso'
 
 export function handleServerCommand(action: any, put: any, store: any) {
   const [serverCmd, props] = getCommandAndParam(action.cmd.substr(1))
@@ -31,6 +32,7 @@ export function handleServerCommand(action: any, put: any, store: any) {
     return connect(action, put, store)
   }
   if (serverCmd === 'disconnect') {
+    clearRefreshTokenData()
     return handleDisconnectCommand(action, put)
   }
   if (serverCmd === 'user') {

@@ -30,25 +30,25 @@ import {
   StyledSegment,
   StyledBoltUrlHintText,
   StyledFormContainer,
-  StyledSSOOptions,
   StyledSSOButtonContainer,
   StyledSSOError,
   StyledSSOLogDownload
 } from './styled'
-import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
+import { NATIVE, NO_AUTH, SSO } from 'services/bolt/boltHelpers'
 import { toKeyString } from 'services/utils'
 import { stripScheme, getScheme } from 'services/boltscheme.utils'
 import {
   AuthenticationMethod,
   SSOProvider
 } from 'shared/modules/connections/connectionsDuck'
+import { AUTH_STORAGE_CONNECT_HOST } from 'shared/services/utils'
 import { StyledCypherErrorMessage } from '../styled'
 import { authRequestForSSO, authLog, downloadAuthLogs } from 'neo4j-client-sso'
-import { H4 } from 'browser-components/headers/Headers'
 
 const readableauthenticationMethods: Record<AuthenticationMethod, string> = {
   [NATIVE]: 'Username / Password',
-  [NO_AUTH]: 'No authentication'
+  [NO_AUTH]: 'No authentication',
+  [SSO]: 'Single Sign On'
 }
 
 interface ConnectFormProps {
@@ -69,6 +69,8 @@ interface ConnectFormProps {
   supportsMultiDb: boolean
   SSOError?: string
   SSOProviders: SSOProvider[]
+  SSOLoading?: boolean
+  onSSOProviderClicked: () => void
 }
 
 export default function ConnectForm(props: ConnectFormProps): JSX.Element {
@@ -129,45 +131,13 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
       }:// for a direct connection to a single instance.`
     : ''
 
-  const { SSOError, SSOProviders } = props
-
-  const showSSO = SSOProviders.length > 0 || SSOError
+  const { SSOError, SSOProviders, SSOLoading } = props
   const [SSORedirectError, setRedirectError] = useState('')
 
   return (
     <StyledFormContainer>
-      {showSSO && (
-        <StyledSSOOptions>
-          <H4>Single sign-on</H4>
-          {SSOProviders.map((provider: SSOProvider) => (
-            <StyledSSOButtonContainer key={provider.id}>
-              <FormButton
-                onClick={() =>
-                  authRequestForSSO(provider).catch(e => {
-                    authLog(e.message)
-                    setRedirectError(e.message)
-                  })
-                }
-                style={{ width: '200px' }}
-              >
-                {provider.name}
-              </FormButton>
-            </StyledSSOButtonContainer>
-          ))}
-          {(SSOError || SSORedirectError) && (
-            <StyledSSOError>
-              <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>
-              <div>{SSOError || SSORedirectError}</div>
-              <StyledSSOLogDownload onClick={downloadAuthLogs}>
-                Download logs
-              </StyledSSOLogDownload>
-            </StyledSSOError>
-          )}
-        </StyledSSOOptions>
-      )}
       <StyledConnectionForm onSubmit={onConnectClick}>
         <StyledConnectionFormEntry>
-          {showSSO && <H4>Login with Password</H4>}
           <StyledConnectionLabel htmlFor="url-input" title={hoverText}>
             Connect URL
           </StyledConnectionLabel>
@@ -267,17 +237,48 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
           </StyledConnectionFormEntry>
         )}
 
-        {connecting ? (
-          'Connecting...'
-        ) : (
-          <FormButton
-            data-testid="connect"
-            type="submit"
-            style={{ marginRight: 0 }}
-          >
-            Connect
-          </FormButton>
-        )}
+        {props.authenticationMethod === SSO &&
+          !SSOLoading &&
+          SSOProviders.map((provider: SSOProvider) => (
+            <StyledSSOButtonContainer key={provider.id}>
+              <FormButton
+                onClick={() => {
+                  props.onSSOProviderClicked()
+                  sessionStorage.setItem(AUTH_STORAGE_CONNECT_HOST, props.host)
+                  authRequestForSSO(provider).catch(e => {
+                    authLog(e.message)
+                    setRedirectError(e.message)
+                  })
+                }}
+                style={{ width: '200px' }}
+              >
+                {provider.name}
+              </FormButton>
+            </StyledSSOButtonContainer>
+          ))}
+        {props.authenticationMethod === SSO &&
+          !SSOLoading &&
+          (SSOError || SSORedirectError) && (
+            <StyledSSOError>
+              <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>
+              <div>{SSOError || SSORedirectError}</div>
+              <StyledSSOLogDownload onClick={downloadAuthLogs}>
+                Download logs
+              </StyledSSOLogDownload>
+            </StyledSSOError>
+          )}
+
+        {connecting
+          ? 'Connecting...'
+          : props.authenticationMethod !== SSO && (
+              <FormButton
+                data-testid="connect"
+                type="submit"
+                style={{ marginRight: 0 }}
+              >
+                Connect
+              </FormButton>
+            )}
       </StyledConnectionForm>
     </StyledFormContainer>
   )

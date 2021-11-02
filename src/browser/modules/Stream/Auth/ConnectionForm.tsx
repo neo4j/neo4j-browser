@@ -21,6 +21,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
+import { debounce } from 'lodash-es'
 import {
   getActiveConnectionData,
   getActiveConnection,
@@ -38,7 +39,7 @@ import {
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
 import { FORCE_CHANGE_PASSWORD } from 'shared/modules/cypher/cypherDuck'
-import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
+import { NATIVE, NO_AUTH, SSO } from 'services/bolt/boltHelpers'
 
 import ConnectForm from './ConnectForm'
 import ConnectedView from './ConnectedView'
@@ -53,17 +54,25 @@ import {
 } from 'services/boltscheme.utils'
 import { StyledConnectionBody } from './styled'
 import { CONNECTION_ID } from 'shared/modules/discovery/discoveryDuck'
+
 import { isCloudHost } from 'shared/services/utils'
 import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
 import { CLOUD_SCHEMES } from 'shared/modules/app/appDuck'
 import { AuthenticationMethod } from 'shared/modules/connections/connectionsDuck'
+import {
+  stripQueryString,
+  stripScheme,
+  boltToHttp
+} from 'shared/services/boltscheme.utils'
+import { fetchBrowserDiscoveryDataFromUrl } from 'shared/modules/discovery/discoveryHelpers'
+import { Success, authLog } from 'neo4j-client-sso'
 
 type ConnectionFormState = any
 
 const isAuraHost = (host: string) => isCloudHost(host, NEO4J_CLOUD_DOMAINS)
 
 function getAllowedAuthMethodsForHost(host: string): AuthenticationMethod[] {
-  return isAuraHost(host) ? [NATIVE] : [NATIVE, NO_AUTH]
+  return isAuraHost(host) ? [NATIVE, SSO] : [NATIVE, SSO, NO_AUTH]
 }
 
 const getAllowedSchemesForHost = (host: string, allowedSchemes: string[]) =>
@@ -72,8 +81,7 @@ const getAllowedSchemesForHost = (host: string, allowedSchemes: string[]) =>
 export class ConnectionForm extends Component<any, ConnectionFormState> {
   constructor(props: any) {
     super(props)
-    const connection =
-      this.props.discoveredData || this.props.frame.connectionData || {}
+    const connection = this.getConnection()
     const authenticationMethod =
       (connection && connection.authenticationMethod) || NATIVE
 
@@ -93,6 +101,10 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
       successCallback: props.onSuccess || (() => {}),
       used: props.isConnected
     }
+  }
+
+  getConnection() {
+    return this.props.discoveredData || this.props.frame.connectionData || {}
   }
 
   tryConnect = (password: any, doneFn: any) => {
@@ -177,14 +189,52 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
     this.props.error({})
   }
 
+  onSSOProviderClicked = () => {
+    this.props.updateConnection({
+      authenticationMethod: this.state.authenticationMethod
+    })
+  }
+
   onAuthenticationMethodChange(event: any) {
     const authenticationMethod = event.target.value
     const username =
       authenticationMethod === NO_AUTH ? '' : this.state.username || 'neo4j'
     const password = authenticationMethod === NO_AUTH ? '' : this.state.password
     this.setState({ authenticationMethod, username, password })
+    if (authenticationMethod === SSO) {
+      this.fetchHostDiscovery(this.state.host)
+    }
     this.props.error({})
   }
+
+  fetchHostDiscovery = debounce((host: string) => {
+    const discoveryHost = stripScheme(
+      stripQueryString(this.props.discoveredData.host)
+    )
+    const newHost = stripScheme(stripQueryString(host))
+    if (newHost !== discoveryHost) {
+      this.setState({ SSOLoading: true })
+      fetchBrowserDiscoveryDataFromUrl(boltToHttp(host)).then(result => {
+        if (result.status === Success) {
+          this.setState({
+            SSOProviders: result.SSOProviders,
+            SSOError: undefined,
+            SSOLoading: false
+          })
+        } else {
+          const message = `Failed to load SSO providers ${result.message}`
+          authLog(message)
+          this.setState({
+            SSOError: message,
+            SSOLoading: false
+          })
+        }
+      })
+    } else {
+      const { SSOProviders, SSOError } = this.getConnection()
+      this.setState({ SSOProviders, SSOError, SSOLoading: false })
+    }
+  }, 200)
 
   onHostChange(fallbackScheme: any, val: any) {
     const allowedSchemes = getAllowedSchemesForHost(
@@ -196,6 +246,9 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
       host: url,
       hostInputVal: url
     })
+    if (this.state.authenticationMethod === SSO) {
+      this.fetchHostDiscovery(url)
+    }
     this.props.error({})
   }
 
@@ -347,6 +400,7 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
           host={host}
           SSOError={this.state.SSOError}
           SSOProviders={this.state.SSOProviders || []}
+          SSOLoading={this.state.SSOLoading}
           username={this.state.username}
           password={this.state.password}
           database={this.state.requestedUseDb}
@@ -357,6 +411,7 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
             this.state.hostInputVal || this.state.host
           )}
           authenticationMethod={this.state.authenticationMethod}
+          onSSOProviderClicked={this.onSSOProviderClicked}
         />
       )
     }
