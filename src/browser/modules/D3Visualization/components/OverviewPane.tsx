@@ -133,7 +133,8 @@ function OverviewPane({
                   frameHeight={frameHeight}
                   selectedLabel={{
                     label,
-                    propertyKeys: Object.keys(labels[label].properties)
+                    propertyKeys: Object.keys(labels[label].properties),
+                    count: labels[label].count
                   }}
                 />
               ))}
@@ -161,7 +162,8 @@ function OverviewPane({
                   frameHeight={frameHeight}
                   selectedRelType={{
                     relType,
-                    propertyKeys: Object.keys(relTypes[relType].properties)
+                    propertyKeys: Object.keys(relTypes[relType].properties),
+                    count: relTypes[relType].count
                   }}
                 />
               ))}

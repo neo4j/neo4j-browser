@@ -28,6 +28,7 @@ export type StyleableNodeLabelProps = {
   selectedLabel: {
     label: string
     propertyKeys: string[]
+    count?: number
   }
   graphStyle: GraphStyle
   frameHeight: number
@@ -57,7 +58,9 @@ export function StyleableNodeLabel({
             color: graphStyleForLabel.get('text-color-internal')
           }}
         >
-          {selectedLabel.label}
+          {selectedLabel.count !== undefined
+            ? `${selectedLabel.label} (${selectedLabel.count})`
+            : `${selectedLabel.label}`}
         </StyledLabel>
       }
       wide

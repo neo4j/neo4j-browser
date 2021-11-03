@@ -142,13 +142,13 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
                   class="sc-eXEjpC sc-ibxdXY YDulL"
                   style="background-color: rgb(247, 151, 103); color: rgb(255, 255, 255);"
                 >
-                  *
+                  * (1)
                 </div>
                 <div
                   class="sc-eXEjpC sc-ibxdXY YDulL"
                   style="background-color: rgb(201, 144, 192); color: rgb(255, 255, 255);"
                 >
-                  Person
+                  Person (1)
                 </div>
               </ul>
             </div>
