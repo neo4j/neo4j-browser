@@ -1,8 +1,8 @@
 import React from 'react'
-import { StylableRelTypeProps } from '../StyleableRelType'
+import { StyleableRelTypeProps } from '../StyleableRelType'
 
 export function StyleableRelType({
   selectedRelType
-}: StylableRelTypeProps): JSX.Element {
+}: StyleableRelTypeProps): JSX.Element {
   return <div>{selectedRelType.relType}</div>
 }
