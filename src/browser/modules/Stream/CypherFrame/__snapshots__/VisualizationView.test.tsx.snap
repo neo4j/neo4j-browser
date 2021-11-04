@@ -110,12 +110,12 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
         />
       </div>
       <div
-        class="sc-cSHVUG caxhVK"
-        data-testid="vizInspector"
+        class="sc-cSHVUG gCTDTC"
         width="204.8"
       >
         <div
           class="sc-chPdSV iEZMKC react-resizable"
+          data-testid="vizInspector"
         >
           <div
             class="sc-kGXeez eoOSxY"

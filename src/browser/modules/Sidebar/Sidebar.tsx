@@ -176,7 +176,7 @@ const Sidebar = ({
 
   return (
     <TabNavigation
-      openDrawer={openDrawer}
+      selectedDrawerName={openDrawer}
       onNavClick={onNavClick}
       topNavItems={topNavItemsList}
       bottomNavItems={bottomNavItemsList}

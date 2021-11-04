@@ -278,7 +278,7 @@ export const StyledNodeInspectorContainer = styled.div<{
   top: 3px;
   z-index: 1;
   width: ${props => props.width}px;
-  min-width: ${panelMinWidth}px;
+  transition: 0.2s ease-out;
   max-width: 95%;
   height: 100%;
   background: ${props => props.theme.editorBackground};

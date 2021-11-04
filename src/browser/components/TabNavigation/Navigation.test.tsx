@@ -58,7 +58,7 @@ describe('<Navigation />', () => {
     const { getByTestId, queryByTestId, rerender } = render(
       <Navigation
         onNavClick={onNavClick}
-        openDrawer={openDrawer}
+        selectedDrawerName={openDrawer}
         topNavItems={topNavItems}
       />
     )
@@ -70,45 +70,13 @@ describe('<Navigation />', () => {
     rerender(
       <Navigation
         onNavClick={onNavClick}
-        openDrawer={openDrawer}
+        selectedDrawerName={openDrawer}
         topNavItems={topNavItems}
       />
     )
 
     // expect documents drawer to be open
     expect(queryByTestId('documents-content')).toBeTruthy()
-  })
-
-  it('should close drawer when button is clicked on open drawer', () => {
-    let openDrawer = 'documents'
-    const onNavClick = (clickedDrawer: any) => {
-      openDrawer = toggleDrawer(openDrawer, clickedDrawer)
-    }
-
-    // render with documents drawer open
-    const { getByTestId, queryByTestId, rerender } = render(
-      <Navigation
-        onNavClick={onNavClick}
-        openDrawer={openDrawer}
-        topNavItems={topNavItems}
-      />
-    )
-
-    // click documents button
-    fireEvent.click(getByTestId('documents-icon'))
-
-    // rerender with updated openDrawer value
-    rerender(
-      <Navigation
-        onNavClick={onNavClick}
-        openDrawer={openDrawer}
-        topNavItems={topNavItems}
-      />
-    )
-
-    // expect drawer to be closed
-    expect(queryByTestId('documents-content')).toBeNull()
-    expect(queryByTestId('dbms-content')).toBeNull()
   })
 
   it('should switch drawer when different button is clicked than currently open', () => {
@@ -121,7 +89,7 @@ describe('<Navigation />', () => {
     const { getByTestId, queryByTestId, rerender } = render(
       <Navigation
         onNavClick={onNavClick}
-        openDrawer={openDrawer}
+        selectedDrawerName={openDrawer}
         topNavItems={topNavItems}
       />
     )
@@ -133,7 +101,7 @@ describe('<Navigation />', () => {
     rerender(
       <Navigation
         onNavClick={onNavClick}
-        openDrawer={openDrawer}
+        selectedDrawerName={openDrawer}
         topNavItems={topNavItems}
       />
     )
