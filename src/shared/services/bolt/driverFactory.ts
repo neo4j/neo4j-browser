@@ -25,7 +25,7 @@ export const createDriverOrFailFn = (
   url: string,
   auth: AuthToken,
   opts: Config,
-  failFn: (error: Error) => void = () => {}
+  failFn: (error: Error) => void = () => undefined
 ): Driver | null => {
   // This is needed, I haven't figured out why. I don't find any mutations to
   // the object, so not sure what's going on.
@@ -34,7 +34,7 @@ export const createDriverOrFailFn = (
     const res = neo4j.driver(url, auth, spreadOpts)
     return res
   } catch (e) {
-    failFn(e)
+    failFn(<Error>e)
     return null
   }
 }
