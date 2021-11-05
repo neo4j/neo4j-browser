@@ -85,32 +85,42 @@ describe('<DetailsPane />', () => {
   test('should handle show all properties', async () => {
     renderComponent({ properties: getMockProperties(1001) })
 
-    expect(screen.getByText('Show all')).toBeInTheDocument()
-    expect(screen.getByText('Show 2 more')).toBeInTheDocument() // id is added to list of properties so only showing 999
+    expect(screen.getByRole('button', { name: 'Show all' })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'Show 2 more' })
+    ).toBeInTheDocument() // id is added to list of properties so only showing 999
     expect(screen.queryByText('prop1000')).not.toBeInTheDocument()
 
     const showAllButton = screen.getByText('Show all')
     showAllButton.click()
 
     expect(screen.getByText('prop1000')).toBeInTheDocument()
-    expect(screen.queryByText('Show all')).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: 'Show all' })
+    ).not.toBeInTheDocument()
   })
 
   test('should handle show more properties', async () => {
     renderComponent({ properties: getMockProperties(2001) })
 
     expect(
-      screen.getByText(`Show ${DETAILS_PANE_STEP_SIZE} more`)
+      screen.getByRole('button', {
+        name: `Show ${DETAILS_PANE_STEP_SIZE} more`
+      })
     ).toBeInTheDocument()
     expect(screen.queryByText('prop1000')).not.toBeInTheDocument()
 
-    const showMoreButton = screen.getByText(
-      `Show ${DETAILS_PANE_STEP_SIZE} more`
-    )
+    const showMoreButton = screen.getByRole('button', {
+      name: `Show ${DETAILS_PANE_STEP_SIZE} more`
+    })
     showMoreButton.click()
 
     expect(screen.getByText('prop1000')).toBeInTheDocument()
-    expect(screen.queryByText('Show all')).toBeInTheDocument()
-    expect(screen.getByText('Show 2 more')).toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: 'Show all' })
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'Show 2 more' })
+    ).toBeInTheDocument()
   })
 })

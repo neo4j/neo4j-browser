@@ -53,7 +53,7 @@ describe('<OverviewPane />', () => {
 
   const getRelTypes: (length: number) => GraphStatsRelationshipTypes = length =>
     Array.from({ length: length }).reduce(
-      (acc: GraphStatsLabels, _current, index) => {
+      (acc: GraphStatsRelationshipTypes, _current, index) => {
         return {
           ...acc,
           ['relType' + index]: { count: 1, properties: { key: 'abc' } }
@@ -96,15 +96,19 @@ describe('<OverviewPane />', () => {
     }
     renderComponent({ graphStats: stats })
 
-    expect(screen.getByText('Show all')).toBeInTheDocument()
-    expect(screen.getByText('Show 1 more')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Show all' })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'Show 1 more' })
+    ).toBeInTheDocument()
     expect(screen.queryByText('label50')).not.toBeInTheDocument()
 
-    const showAllButton = screen.getByText('Show all')
+    const showAllButton = screen.getByRole('button', { name: 'Show all' })
     showAllButton.click()
 
     expect(screen.getByText('label50')).toBeInTheDocument()
-    expect(screen.queryByText('Show all')).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: 'Show all' })
+    ).not.toBeInTheDocument()
   })
 
   test('should handle show more labels', () => {
@@ -114,18 +118,24 @@ describe('<OverviewPane />', () => {
     }
     renderComponent({ graphStats: stats })
 
-    expect(screen.getByText('Show all')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Show all' })).toBeInTheDocument()
     expect(
-      screen.getByText(`Show ${OVERVIEW_STEP_SIZE} more`)
+      screen.getByRole('button', { name: `Show ${OVERVIEW_STEP_SIZE} more` })
     ).toBeInTheDocument()
     expect(screen.queryByText('label50')).not.toBeInTheDocument()
 
-    const showMoreButton = screen.getByText(`Show ${OVERVIEW_STEP_SIZE} more`)
+    const showMoreButton = screen.getByRole('button', {
+      name: `Show ${OVERVIEW_STEP_SIZE} more`
+    })
     showMoreButton.click()
 
     expect(screen.getByText('label50')).toBeInTheDocument()
-    expect(screen.queryByText('Show all')).toBeInTheDocument()
-    expect(screen.getByText('Show 2 more')).toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: 'Show all' })
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'Show 2 more' })
+    ).toBeInTheDocument()
   })
 
   test('should handle show all rel types', () => {
@@ -135,15 +145,19 @@ describe('<OverviewPane />', () => {
     }
     renderComponent({ graphStats: stats })
 
-    expect(screen.getByText('Show all')).toBeInTheDocument()
-    expect(screen.getByText('Show 1 more')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Show all' })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'Show 1 more' })
+    ).toBeInTheDocument()
     expect(screen.queryByText('relType50')).not.toBeInTheDocument()
 
-    const showAllButton = screen.getByText('Show all')
+    const showAllButton = screen.getByRole('button', { name: 'Show all' })
     showAllButton.click()
 
     expect(screen.getByText('relType50')).toBeInTheDocument()
-    expect(screen.queryByText('Show all')).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: 'Show all' })
+    ).not.toBeInTheDocument()
   })
 
   test('should handle show more rel types', () => {
@@ -153,17 +167,23 @@ describe('<OverviewPane />', () => {
     }
     renderComponent({ graphStats: stats })
 
-    expect(screen.getByText('Show all')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Show all' })).toBeInTheDocument()
     expect(
-      screen.getByText(`Show ${OVERVIEW_STEP_SIZE} more`)
+      screen.getByRole('button', { name: `Show ${OVERVIEW_STEP_SIZE} more` })
     ).toBeInTheDocument()
     expect(screen.queryByText('relType50')).not.toBeInTheDocument()
 
-    const showMoreButton = screen.getByText(`Show ${OVERVIEW_STEP_SIZE} more`)
+    const showMoreButton = screen.getByRole('button', {
+      name: `Show ${OVERVIEW_STEP_SIZE} more`
+    })
     showMoreButton.click()
 
     expect(screen.getByText('relType50')).toBeInTheDocument()
-    expect(screen.queryByText('Show all')).toBeInTheDocument()
-    expect(screen.getByText('Show 2 more')).toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: 'Show all' })
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'Show 2 more' })
+    ).toBeInTheDocument()
   })
 })

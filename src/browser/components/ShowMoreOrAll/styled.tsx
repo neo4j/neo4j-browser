@@ -20,7 +20,9 @@
 
 import styled from 'styled-components'
 
-export const StyledShowMoreLink = styled.span`
-  cursor: pointer;
+export const StyledShowMoreButton = styled.button`
+  border: none;
+  outline: none;
+  background-color: inherit;
   color: ${props => props.theme.link};
 `
