@@ -23,6 +23,7 @@ import React, { useState } from 'react'
 import {
   AlternatingTable,
   CopyCell,
+  StyledExpandValueButton,
   KeyCell,
   PaneBody,
   PaneHeader,
@@ -38,6 +39,36 @@ import { StyleableNodeLabel } from './StyleableNodeLabel'
 import { StyleableRelType } from './StyleableRelType'
 import { upperFirst } from 'services/utils'
 import { ShowMoreOrAll } from 'browser-components/ShowMoreOrAll/ShowMoreOrAll'
+
+const MAX_LENGTH = 150
+type ExpandableValueProps = {
+  value: string
+  type: string
+}
+function ExpandableValue({ value }: ExpandableValueProps) {
+  const [expanded, setExpanded] = useState(false)
+
+  const handleExpandClick = () => {
+    setExpanded(true)
+  }
+
+  let valueShown = expanded
+    ? value
+    : value.slice(0, Math.min(MAX_LENGTH, value.length))
+  const valueIsTrimmed = valueShown.length !== value.length
+  valueShown += valueIsTrimmed ? '...' : ''
+
+  return (
+    <>
+      <ClickableUrls text={valueShown} />
+      {valueIsTrimmed && (
+        <StyledExpandValueButton onClick={handleExpandClick}>
+          {' Show all'}
+        </StyledExpandValueButton>
+      )}
+    </>
+  )
+}
 
 type PropertiesViewProps = {
   visibleProperties: VizNodeProperty[]
@@ -62,7 +93,7 @@ function PropertiesView({
                   <ClickableUrls text={key} />
                 </KeyCell>
                 <ValueCell>
-                  <ClickableUrls text={value} />
+                  <ExpandableValue value={value} type={type} />
                 </ValueCell>
                 <CopyCell>
                   <ClipboardCopier
