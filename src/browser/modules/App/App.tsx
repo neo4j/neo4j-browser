@@ -256,7 +256,10 @@ export function App(props: any) {
               <StyledApp>
                 <StyledBody>
                   <ErrorBoundary>
-                    <Sidebar openDrawer={drawer} onNavClick={handleNavClick} />
+                    <Sidebar
+                      selectedDrawerName={drawer}
+                      onNavClick={handleNavClick}
+                    />
                   </ErrorBoundary>
                   <StyledMainWrapper id={MAIN_WRAPPER_DOM_ID}>
                     <Main

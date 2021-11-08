@@ -64,13 +64,13 @@ interface NavigationProps {
 
 interface NavigationState {
   transitionState: DrawerTransitionState
-  lastSelectedDrawerName: string | null
+  closingDrawerName: string | null
 }
 
 class Navigation extends Component<NavigationProps, NavigationState> {
   state: NavigationState = {
     transitionState: this.props.selectedDrawerName ? Open : Closed,
-    lastSelectedDrawerName: null
+    closingDrawerName: null
   }
 
   componentDidMount(): void {
@@ -87,7 +87,7 @@ class Navigation extends Component<NavigationProps, NavigationState> {
     prevProps: NavigationProps,
     prevState: NavigationState
   ): void {
-    let lastSelectedDrawerName: string | null = null
+    let closingDrawerName: string | null = null
     let newTransitionState: DrawerTransitionState = prevState.transitionState
     if (prevProps.selectedDrawerName !== this.props.selectedDrawerName) {
       if (this.props.selectedDrawerName) {
@@ -96,7 +96,7 @@ class Navigation extends Component<NavigationProps, NavigationState> {
           prevState.transitionState === Closing
         ) {
           newTransitionState = Opening
-          lastSelectedDrawerName = null
+          closingDrawerName = null
         }
       } else {
         if (
@@ -104,12 +104,12 @@ class Navigation extends Component<NavigationProps, NavigationState> {
           prevState.transitionState === Opening
         ) {
           newTransitionState = Closing
-          lastSelectedDrawerName = prevProps.selectedDrawerName
+          closingDrawerName = prevProps.selectedDrawerName
         }
       }
       this.setState({
         transitionState: newTransitionState,
-        lastSelectedDrawerName: lastSelectedDrawerName
+        closingDrawerName: closingDrawerName
       })
     }
   }
@@ -178,7 +178,7 @@ class Navigation extends Component<NavigationProps, NavigationState> {
       this.props.selectedDrawerName
     )
 
-    const isDrawerVisible = () => this.state.transitionState !== Closed
+    const drawerIsVisible = this.state.transitionState !== Closed
 
     const drawerWidth =
       this.props.selectedDrawerName === GUIDE_DRAWER_ID
@@ -196,9 +196,9 @@ class Navigation extends Component<NavigationProps, NavigationState> {
           <StyledBottomNav>{bottomNavItemsList}</StyledBottomNav>
         </StyledTabsWrapper>
         <StyledDrawer width={width} onTransitionEnd={this.onTransitionEnd}>
-          {isDrawerVisible() &&
+          {drawerIsVisible &&
             getContentToShow(
-              this.props.selectedDrawerName || this.state.lastSelectedDrawerName
+              this.props.selectedDrawerName || this.state.closingDrawerName
             )}
         </StyledDrawer>
       </StyledSidebar>

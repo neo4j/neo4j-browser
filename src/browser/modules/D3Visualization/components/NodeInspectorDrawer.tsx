@@ -32,21 +32,21 @@ type DrawerTransitionState =
   | typeof Opening
 
 type NodeInspectorDrawerProps = {
-  openDrawer: boolean
+  isOpen: boolean
   width: number
   children: JSX.Element
 }
 export function NodeInspectorDrawer({
   width,
-  openDrawer,
+  isOpen,
   children
 }: NodeInspectorDrawerProps): JSX.Element {
   const [transitionState, setTransitionState] = useState<DrawerTransitionState>(
-    openDrawer ? Open : Closed
+    isOpen ? Open : Closed
   )
 
   useEffect(() => {
-    if (openDrawer) {
+    if (isOpen) {
       if (transitionState === Closed || transitionState === Closing) {
         setTransitionState(Opening)
       }
@@ -55,7 +55,7 @@ export function NodeInspectorDrawer({
         setTransitionState(Closing)
       }
     }
-  }, [openDrawer, transitionState])
+  }, [isOpen, transitionState])
 
   const onTransitionEnd = (event: TransitionEvent<HTMLDivElement>): void => {
     if (event.propertyName !== 'width') {
@@ -79,7 +79,7 @@ export function NodeInspectorDrawer({
 
   return (
     <StyledNodeInspectorContainer
-      width={!openDrawer ? 0 : width}
+      width={!isOpen ? 0 : width}
       onTransitionEnd={onTransitionEnd}
     >
       {drawerIsVisible && children}

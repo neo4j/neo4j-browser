@@ -57,7 +57,7 @@ import { getCurrentDraft } from 'shared/modules/sidebar/sidebarDuck'
 import { DrawerHeader } from 'browser-components/drawer/drawer-styled'
 
 interface SidebarProps {
-  openDrawer: string
+  selectedDrawerName: string
   onNavClick: () => void
   neo4jConnectionState: string
   showStaticScripts: boolean
@@ -68,7 +68,7 @@ interface SidebarProps {
 }
 
 const Sidebar = ({
-  openDrawer,
+  selectedDrawerName,
   onNavClick,
   neo4jConnectionState,
   showStaticScripts,
@@ -176,7 +176,7 @@ const Sidebar = ({
 
   return (
     <TabNavigation
-      selectedDrawerName={openDrawer}
+      selectedDrawerName={selectedDrawerName}
       onNavClick={onNavClick}
       topNavItems={topNavItemsList}
       bottomNavItems={bottomNavItemsList}

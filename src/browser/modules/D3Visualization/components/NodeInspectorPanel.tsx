@@ -6,7 +6,6 @@ import OverviewPane, { GraphStyle } from './OverviewPane'
 import { DetailsPaneComponent } from './DetailsPane'
 import { GraphStats } from '../mapper'
 import {
-  StyledNodeInspectorContainer,
   PaneContainer,
   StyledNodeInspectorTopMenuChevron,
   panelMinWidth
@@ -68,7 +67,7 @@ export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
           )}
         </StyledNodeInspectorTopMenuChevron>
 
-        <NodeInspectorDrawer width={width} openDrawer={expanded}>
+        <NodeInspectorDrawer width={width} isOpen={expanded}>
           <Resizable
             width={width}
             data-testid="vizInspector"
