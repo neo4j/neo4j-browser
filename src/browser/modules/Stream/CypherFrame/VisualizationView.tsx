@@ -53,6 +53,7 @@ export class Visualization extends Component<any, VisualizationState> {
   shouldComponentUpdate(props: any, state: VisualizationState) {
     return (
       this.props.updated !== props.updated ||
+      this.props.fullscreen !== props.fullscreen ||
       !deepEquals(props.graphStyleData, this.props.graphStyleData) ||
       this.state.updated !== state.updated ||
       this.props.frameHeight !== props.frameHeight ||
