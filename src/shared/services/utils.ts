@@ -312,10 +312,10 @@ export const arrayToObject = (array: any) =>
 export const stringifyMod = (
   value: any,
   modFn: any = null,
-  pretty: any = false,
+  pretty: boolean | number = false,
   skipOpeningIndentation = false
-): any => {
-  const prettyLevel = !pretty ? false : pretty === true ? 1 : parseInt(pretty)
+): string => {
+  const prettyLevel = !pretty ? false : pretty === true ? 1 : +pretty
   const nextPrettyLevel = prettyLevel ? prettyLevel + 1 : false
   const newLine = prettyLevel ? '\n' : ''
   const indentation =

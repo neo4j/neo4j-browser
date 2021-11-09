@@ -16,7 +16,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { isInt } from 'neo4j-driver'
+import { isInt, QueryResult } from 'neo4j-driver'
 import Relatable from '@relate-by-ui/relatable'
 import { get, head, map, slice } from 'lodash-es'
 import { Icon } from 'semantic-ui-react'
@@ -44,6 +44,8 @@ import {
 } from './relatable-view.styled'
 import { stringifyMod, unescapeDoubleQuotesForDisplay } from 'services/utils'
 import { GlobalState } from 'shared/globalState'
+import { BrowserRequestResult } from 'project-root/src/shared/modules/requests/requestsDuck'
+import Record from 'neo4j-driver-core/types/record'
 
 const RelatableView = connect((state: GlobalState) => ({
   maxRows: getMaxRows(state),
@@ -52,14 +54,24 @@ const RelatableView = connect((state: GlobalState) => ({
 
 export default RelatableView
 
+type RelatableViewComponentProps = {
+  maxRows: number
+  maxFieldItems: number
+  result: BrowserRequestResult
+  updated?: number
+}
 export function RelatableViewComponent({
   maxRows,
-  result,
-  maxFieldItems
-}: any) {
-  const { records = [] } = result
+  maxFieldItems,
+  result
+}: RelatableViewComponentProps): JSX.Element | null {
+  const records = useMemo(
+    () => (result ? (result as QueryResult).records || [] : []),
+    [result]
+  )
+
   const columns = useMemo(() => getColumns(records, Number(maxFieldItems)), [
-    result,
+    records,
     maxFieldItems
   ])
   const data = useMemo(() => slice(records, 0, maxRows), [records, maxRows])
@@ -75,12 +87,12 @@ export function RelatableViewComponent({
   )
 }
 
-function getColumns(records: any, maxFieldItems: any) {
+function getColumns(records: Record[], maxFieldItems: number) {
   const keys = get(head(records), 'keys', [])
 
   return map(keys, key => ({
     Header: key,
-    accessor: (record: any) => {
+    accessor: (record: Record) => {
       const fieldItem = record.get(key)
 
       if (!Array.isArray(fieldItem)) return fieldItem
@@ -91,7 +103,10 @@ function getColumns(records: any, maxFieldItems: any) {
   }))
 }
 
-function CypherCell({ cell }: any) {
+type CypherCellProps = {
+  cell: any
+}
+function CypherCell({ cell }: CypherCellProps) {
   const { value } = cell
   return renderCell(value)
 }
@@ -136,7 +151,11 @@ const renderObject = (entry: any) => {
   )
 }
 
-function RelatableBodyMessage({ maxRows, result }: any) {
+type RelatableBodyMessageProps = {
+  maxRows: number
+  result: BrowserRequestResult
+}
+function RelatableBodyMessage({ maxRows, result }: RelatableBodyMessageProps) {
   const { bodyMessage } = getBodyAndStatusBarMessages(result, maxRows)
 
   return (
@@ -151,11 +170,17 @@ export const RelatableStatusbar = connect((state: GlobalState) => ({
   maxFieldItems: getMaxFieldItems(state)
 }))(RelatableStatusbarComponent)
 
+type RelatableStatusbarComponentProps = {
+  maxRows: number
+  maxFieldItems: number
+  result?: QueryResult | BrowserRequestResult | null
+  updated?: number
+}
 export function RelatableStatusbarComponent({
   maxRows,
   result,
   maxFieldItems
-}: any) {
+}: RelatableStatusbarComponentProps): JSX.Element {
   const hasTruncatedFields = useMemo(
     () => resultHasTruncatedFields(result, maxFieldItems),
     [result, maxFieldItems]
