@@ -4,18 +4,12 @@
 [[browser-sso]]
 = Browser Single Sign-On
 
-Neo4j Browser provides basic support for some Single Sign-On (SSO) providers under specific Enterprise environment configurations.
-Contact Neo4j Professional Services for additional assistance (see link:https://neo4j.com/professional-services/[_https://neo4j.com/professional-services/_^] for more information about Professional Services).
+Neo4j Browser provides support for Single Sign-On (SSO) providers under specific Enterprise environment configurations.
 Your organization needs an existing compatible SSO provider (local or external) already configured.
 
-[NOTE]
-====
-Single Sign-On is _only_ available with the Enterprise Edition of Neo4j and requires engagement from Neo4j Professional Services to configure.
-General availability of SSO for Enterprise customers that does not require Professional Services' involvement is planned in a future release.
-====
-
 Supported providers at this time include OpenID Connect (OIDC) OAuth 2.0 providers Okta, KeyCloak, and Microsoft Azure AD.
-SSO has been tested on Neo4j 4.2.x and 4.3.x deployments.
+SSO has been tested on Neo4j 4.2.x, 4.3.x, and 4.4.x deployments.
+
 Browser supports two authorization flows:
 
 * Authorization Code flow with PKCE.
@@ -23,15 +17,20 @@ Browser supports two authorization flows:
 
 [IMPORTANT]
 ====
+Security information should always be exchanged use encrypted transport, and therefore HTTPS should be used.
+Mixed HTTP/HTTPS flows for single sign-on are not supported.
+====
+
+[IMPORTANT]
+====
 It is strongly advised to use PKCE to ensure security.
 Further information about OpenID Connect and OAuth can be found at link:https://openid.net/connect/[https://openid.net/connect/^].
 ====
 
-In addition to having an SSO provider already configured at your organization, configuring SSO for Browser and Neo4j requires a separate OAuth plugin development engagement with Neo4j Professional Services.
-With these prerequisites in place, two additional steps are required:
+With the prerequisites in place, you need to update the link:https://neo4j.com/docs/operations-manual/current/configuration/neo4j-conf/#neo4j-conf[`neo4j.conf`^] file with the following information:
+Make sure to avoid duplicate entries in the `neo4j.conf` file.
 
-. The link:https://neo4j.com/docs/operations-manual/current/configuration/neo4j-conf/#neo4j-conf[`neo4j.conf`^] file should be updated with the following information (be sure to avoid duplicate entries in the `neo4j.conf` file):
-+
+
 [source, properties]
 ----
 dbms.security.auth_enabled=true
@@ -42,11 +41,11 @@ plugins.auth.openid.group_to_role_mapping=reader=reader;editor=editor;publisher=
 plugins.auth.openid.claim.groups=groups
 plugins.auth.openid.claim.principal=preferred_username
 ----
-+
+
 Optionally, you may set extra logging for the OAuth2 plugin with these settings in the `neo4j.conf` file.
 The logs are found in the `neo4j.log` file.
 The `:debug` command contains logging from the SSO implementation and can be useful when debugging.
-+
+
 [source, properties]
 ----
 dbms.jvm.additional=-Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.SimpleLog
@@ -54,65 +53,65 @@ dbms.jvm.additional=-Dorg.apache.commons.logging.simplelog.showdatetime=true
 dbms.jvm.additional=-Dorg.apache.commons.logging.simplelog.log.org.apache.http=DEBUG
 ----
 
-. Browser needs to be aware of the identity providers available for use.
-This is done by specifying a URL parameter discoveryURL that specifies a URL to a json file containing the SSO providers.
-Example for Browser:
-+
-[source, url, role="noheader"]
-----
-http://<browser-server-host>:<http-port>?discoveryURL=http://webhost.com/public/discovery.json
-----
-+
-The `discovery.json` file must contain entries tailored to your organization’s specific SSO solution.
-Below is a reference discovery file for the ID provider (IDP) _Keycloak_ containing one SSO provider and set up to be running on port 18080.
-It contains all the possible parameters you can provide.
-You most likely do not need all the parameters.
-If you are unsure, please consult Neo4j Professional Services to avoid misconfiguration.
-+
-[source, parameters]
-----
-
-{
-	// other discovery entries
-	// e.g. "bolt": "bolt://localhost:7687"
-	//
-	"sso_providers": [
-	 {
-			"id": "keycloak-oidc",  // has to be unique in this file!
-			"name": "Keycloak", // displayed in UI
-			"auth_flow": "pkce",
-      "auth_endpoint": "http://localhost:18080/auth/realms/myrealm/protocol/openid-connect/auth",
- 			"token_endpoint": "http://localhost:18080/auth/realms/myrealm/protocol/openid-connect/token",
- 			"well_known_discovery_uri": "http://localhost:18080/auth/realms/myrealm/.well-known/openid-configuration",
-			"params": {  // can be used for both the auth and the token request
-				"client_id": "account",
-				"redirect_uri": "http://<browser-server-host>:<http-port>?idp_id=keycloak-oidc&auth_flow_step=redirect_uri",
-				"response_type": "code",  // depends on the auth_flow
-				"scope": "openid groups"
-			},
-			"auth_params": { // optional
-				"param_p": "<extra parameter used only for the auth request>"
-			},
-			"token_params": { // optional
-				"client_secret": "<secret-here>", // this may be required by some Idp's and depended on the auth flow.
-				"param_p": "<extra parameter used only for the token request>"
-			},
-			"config": { // optional settings, these allow you to overwrite the defaults
-				"implicit_flow_requires_nonce": false, // Default: false; Desc: Specify if the implicit auth flow requries a nonce in the request
-				"principal": "preferred_username",  // Default: email, otherwise sub; Desc: Optional, in which token claim the user's principal is specified
-				"token_type_principal": "access_token" // Default: access_token; Desc: Which token type is decoded to acquire the specified principal
-				"token_type_authentication": "access_token" // Default: access_token; Desc: Which token type is used as password
-				"code_challenge_method": "S256" // Default is "S256" and it's the only supported method at this moment.
-			}
-		}
-	]
-}
-----
-+
-[IMPORTANT]
-====
-`redirect_uri` MUST match exactly the redirect_uri specified in the IdP.
-====
+// . Browser needs to be aware of the identity providers available for use.
+// This is done by specifying a URL parameter discoveryURL that specifies a URL to a json file containing the SSO providers.
+// Example for Browser:
+// +
+// [source, url, role="noheader"]
+// ----
+// http://<browser-server-host>:<http-port>?discoveryURL=http://webhost.com/public/discovery.json
+// ----
+// +
+// The `discovery.json` file must contain entries tailored to your organization’s specific SSO solution.
+// Below is a reference discovery file for the ID provider (IDP) _Keycloak_ containing one SSO provider and set up to be running on port 18080.
+// It contains all the possible parameters you can provide.
+// You most likely do not need all the parameters.
+// If you are unsure, please consult Neo4j Professional Services to avoid misconfiguration.
+// +
+// [source, parameters]
+// ----
+//
+// {
+// 	// other discovery entries
+// 	// e.g. "bolt": "bolt://localhost:7687"
+// 	//
+// 	"sso_providers": [
+// 	 {
+// 			"id": "keycloak-oidc",  // has to be unique in this file!
+// 			"name": "Keycloak", // displayed in UI
+// 			"auth_flow": "pkce",
+//       "auth_endpoint": "http://localhost:18080/auth/realms/myrealm/protocol/openid-connect/auth",
+//  			"token_endpoint": "http://localhost:18080/auth/realms/myrealm/protocol/openid-connect/token",
+//  			"well_known_discovery_uri": "http://localhost:18080/auth/realms/myrealm/.well-known/openid-configuration",
+// 			"params": {  // can be used for both the auth and the token request
+// 				"client_id": "account",
+// 				"redirect_uri": "http://<browser-server-host>:<http-port>?idp_id=keycloak-oidc&auth_flow_step=redirect_uri",
+// 				"response_type": "code",  // depends on the auth_flow
+// 				"scope": "openid groups"
+// 			},
+// 			"auth_params": { // optional
+// 				"param_p": "<extra parameter used only for the auth request>"
+// 			},
+// 			"token_params": { // optional
+// 				"client_secret": "<secret-here>", // this may be required by some Idp's and depended on the auth flow.
+// 				"param_p": "<extra parameter used only for the token request>"
+// 			},
+// 			"config": { // optional settings, these allow you to overwrite the defaults
+// 				"implicit_flow_requires_nonce": false, // Default: false; Desc: Specify if the implicit auth flow requries a nonce in the request
+// 				"principal": "preferred_username",  // Default: email, otherwise sub; Desc: Optional, in which token claim the user's principal is specified
+// 				"token_type_principal": "access_token" // Default: access_token; Desc: Which token type is decoded to acquire the specified principal
+// 				"token_type_authentication": "access_token" // Default: access_token; Desc: Which token type is used as password
+// 				"code_challenge_method": "S256" // Default is "S256" and it's the only supported method at this moment.
+// 			}
+// 		}
+// 	]
+// }
+// ----
+// +
+// [IMPORTANT]
+// ====
+// `redirect_uri` MUST match exactly the redirect_uri specified in the IdP.
+// ====
 
 
 The following URL parameters support SSO in Browser:
@@ -125,4 +124,3 @@ The following URL parameters support SSO in Browser:
 |`auth_flow_step` | `auth_flow_step=<arg>`	| `auth_flow_step=redirect_uri`	| If the user arrives back to the client application with the URL param `auth_flow_step=redirect_uri`, this indicates that it is time to proceed in the auth process.
 |`idp_id` | `idp_id=<idp_id>`	| `idp_id=keycloak-oidc` 	| The user arrives with a URL param named idp_id, mapped to the information in the discovery data to figure out how to proceed.
 |===
-
