@@ -17,10 +17,13 @@ No personal information is collected.
 
 A message informs users that they are allowing product analytics to be collected and that they may opt-out of this if they wish.
 
-The setting link:https://neo4j.com/docs/operations-manual/current/reference/configuration-settings/#config_clients.allow_telemetry[`clients.allow_telemetry=false`^] allows the user to opt-out of product analytics, per default.
-
 * Send anonymous crash reports -- Crash reports allow us to quickly diagnose and fix problems.
 * Send anonymous usage statistics -- This data helps us prioritize features and improvements.
+
+[NOTE]
+====
+The Neo4j DBMS configuration setting link:https://neo4j.com/docs/operations-manual/current/reference/configuration-settings/#config_clients.allow_telemetry[`clients.allow_telemetry`^] configures the initial state for allowing product analytics.
+====
 
 .Product analytics settings
 image:product_analytics_consent_browser_settings.png[]
