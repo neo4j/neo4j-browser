@@ -49,16 +49,16 @@ describe('<Navigation />', () => {
     clicked && clicked !== current ? clicked : null
 
   it('should open drawer when button is clicked on closed drawer', () => {
-    let openDrawer = ''
+    let selectedDrawerName = ''
     const onNavClick = (clickedDrawer: any) => {
-      openDrawer = toggleDrawer(openDrawer, clickedDrawer)
+      selectedDrawerName = toggleDrawer(selectedDrawerName, clickedDrawer)
     }
 
     // render with closed drawer
     const { getByTestId, queryByTestId, rerender } = render(
       <Navigation
         onNavClick={onNavClick}
-        openDrawer={openDrawer}
+        selectedDrawerName={selectedDrawerName}
         topNavItems={topNavItems}
       />
     )
@@ -66,11 +66,11 @@ describe('<Navigation />', () => {
     // click documents button
     fireEvent.click(getByTestId('documents-icon'))
 
-    // rerender with updated openDrawer value
+    // rerender with updated selectedDrawerName value
     rerender(
       <Navigation
         onNavClick={onNavClick}
-        openDrawer={openDrawer}
+        selectedDrawerName={selectedDrawerName}
         topNavItems={topNavItems}
       />
     )
@@ -79,49 +79,17 @@ describe('<Navigation />', () => {
     expect(queryByTestId('documents-content')).toBeTruthy()
   })
 
-  it('should close drawer when button is clicked on open drawer', () => {
-    let openDrawer = 'documents'
-    const onNavClick = (clickedDrawer: any) => {
-      openDrawer = toggleDrawer(openDrawer, clickedDrawer)
-    }
-
-    // render with documents drawer open
-    const { getByTestId, queryByTestId, rerender } = render(
-      <Navigation
-        onNavClick={onNavClick}
-        openDrawer={openDrawer}
-        topNavItems={topNavItems}
-      />
-    )
-
-    // click documents button
-    fireEvent.click(getByTestId('documents-icon'))
-
-    // rerender with updated openDrawer value
-    rerender(
-      <Navigation
-        onNavClick={onNavClick}
-        openDrawer={openDrawer}
-        topNavItems={topNavItems}
-      />
-    )
-
-    // expect drawer to be closed
-    expect(queryByTestId('documents-content')).toBeNull()
-    expect(queryByTestId('dbms-content')).toBeNull()
-  })
-
   it('should switch drawer when different button is clicked than currently open', () => {
-    let openDrawer = 'documents'
+    let selectedDrawerName = 'documents'
     const onNavClick = (clickedDrawer: any) => {
-      openDrawer = toggleDrawer(openDrawer, clickedDrawer)
+      selectedDrawerName = toggleDrawer(selectedDrawerName, clickedDrawer)
     }
 
     // render with documents drawer open
     const { getByTestId, queryByTestId, rerender } = render(
       <Navigation
         onNavClick={onNavClick}
-        openDrawer={openDrawer}
+        selectedDrawerName={selectedDrawerName}
         topNavItems={topNavItems}
       />
     )
@@ -129,11 +97,11 @@ describe('<Navigation />', () => {
     // click DBMS button
     fireEvent.click(getByTestId('dbms-icon'))
 
-    // rerender with updated openDrawer value
+    // rerender with updated selectedDrawerName value
     rerender(
       <Navigation
         onNavClick={onNavClick}
-        openDrawer={openDrawer}
+        selectedDrawerName={selectedDrawerName}
         topNavItems={topNavItems}
       />
     )

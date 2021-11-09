@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from 'react'
+import React, { Component, TransitionEvent } from 'react'
 import {
   StyledNavigationButton,
   NavigationButtonContainer,
@@ -34,12 +34,18 @@ import {
 } from './styled'
 import { GUIDE_DRAWER_ID } from 'shared/modules/sidebar/sidebarDuck'
 
+export const LARGE_DRAWER_WIDTH = 500
+export const STANDARD_DRAWER_WIDTH = 300
+
 const Closing = 'CLOSING'
 const Closed = 'CLOSED'
 const Open = 'OPEN'
 const Opening = 'OPENING'
-export const LARGE_DRAWER_WIDTH = 500
-export const STANDARD_DRAWER_WIDTH = 300
+type DrawerTransitionState =
+  | typeof Closing
+  | typeof Closed
+  | typeof Open
+  | typeof Opening
 
 export interface NavItem {
   name: string
@@ -50,37 +56,24 @@ export interface NavItem {
 }
 
 interface NavigationProps {
-  openDrawer: string
+  selectedDrawerName: string | null
   onNavClick: (name: string) => void
   topNavItems: NavItem[]
   bottomNavItems?: NavItem[]
 }
 
-type TransitionState =
-  | typeof Closing
-  | typeof Closed
-  | typeof Open
-  | typeof Opening
-
 interface NavigationState {
-  transitionState?: TransitionState
-  drawerContent?: null | string
+  transitionState: DrawerTransitionState
+  closingDrawerName: string | null
 }
 
 class Navigation extends Component<NavigationProps, NavigationState> {
-  _onTransitionEnd: () => void
-  transitionState?: TransitionState
-  state: NavigationState = {}
-  constructor(props: NavigationProps) {
-    super(props)
-    this._onTransitionEnd = this.onTransitionEnd.bind(this)
+  state: NavigationState = {
+    transitionState: this.props.selectedDrawerName ? Open : Closed,
+    closingDrawerName: null
   }
 
   componentDidMount(): void {
-    this.setState({
-      transitionState: Closed
-    })
-
     window.Canny && window.Canny('initChangelog', cannyOptions)
   }
 
@@ -94,37 +87,44 @@ class Navigation extends Component<NavigationProps, NavigationState> {
     prevProps: NavigationProps,
     prevState: NavigationState
   ): void {
-    if (prevProps.openDrawer !== this.props.openDrawer) {
-      const newState: NavigationState = {}
-      if (this.props.openDrawer) {
-        newState.drawerContent = this.props.openDrawer
+    let closingDrawerName: string | null = null
+    let newTransitionState: DrawerTransitionState = prevState.transitionState
+    if (prevProps.selectedDrawerName !== this.props.selectedDrawerName) {
+      if (this.props.selectedDrawerName) {
         if (
           prevState.transitionState === Closed ||
           prevState.transitionState === Closing
         ) {
-          newState.transitionState = Opening
+          newTransitionState = Opening
+          closingDrawerName = null
         }
       } else {
-        newState.drawerContent = ''
         if (
           prevState.transitionState === Open ||
           prevState.transitionState === Opening
         ) {
-          newState.transitionState = Closing
+          newTransitionState = Closing
+          closingDrawerName = prevProps.selectedDrawerName
         }
       }
-      this.setState(newState)
+      this.setState({
+        transitionState: newTransitionState,
+        closingDrawerName: closingDrawerName
+      })
     }
   }
 
-  onTransitionEnd(): void {
-    if (this.transitionState === Closing) {
+  onTransitionEnd = (event: TransitionEvent<HTMLDivElement>): void => {
+    if (event.propertyName !== 'width') {
+      return
+    }
+
+    if (this.state.transitionState === Closing) {
       this.setState({
-        transitionState: Closed,
-        drawerContent: null
+        transitionState: Closed
       })
     }
-    if (this.transitionState === Opening) {
+    if (this.state.transitionState === Opening) {
       this.setState({
         transitionState: Open
       })
@@ -134,9 +134,12 @@ class Navigation extends Component<NavigationProps, NavigationState> {
   render(): JSX.Element {
     const { onNavClick, topNavItems, bottomNavItems = [] } = this.props
 
-    const buildNavList = (list: NavItem[], selected?: null | string) =>
+    const buildNavList = (
+      list: NavItem[],
+      selectedDrawerName?: null | string
+    ) =>
       list.map(item => {
-        const isOpen = item.name.toLowerCase() === selected
+        const isOpen = item.name.toLowerCase() === selectedDrawerName
         return (
           <div key={item.name}>
             {item.enableCannyBadge ? (
@@ -156,48 +159,47 @@ class Navigation extends Component<NavigationProps, NavigationState> {
         )
       })
 
-    const getContentToShow = (openDrawer?: null | string) => {
-      if (openDrawer) {
+    const getContentToShow = (selectedDrawerName?: null | string) => {
+      if (selectedDrawerName) {
         const filteredList = topNavItems
           .concat(bottomNavItems)
-          .filter(item => item.name.toLowerCase() === openDrawer)
+          .filter(item => item.name.toLowerCase() === selectedDrawerName)
         const TabContent = filteredList[0].content
         return <TabContent />
       }
       return null
     }
-    const topNavItemsList = buildNavList(topNavItems, this.state.drawerContent)
+    const topNavItemsList = buildNavList(
+      topNavItems,
+      this.props.selectedDrawerName
+    )
     const bottomNavItemsList = buildNavList(
       bottomNavItems,
-      this.state.drawerContent
+      this.props.selectedDrawerName
     )
 
+    const drawerIsVisible = this.state.transitionState !== Closed
+
     const drawerWidth =
-      this.props.openDrawer === GUIDE_DRAWER_ID
+      this.props.selectedDrawerName === GUIDE_DRAWER_ID
         ? LARGE_DRAWER_WIDTH
         : STANDARD_DRAWER_WIDTH
     const useFullWidth =
       this.state.transitionState === Open ||
       this.state.transitionState === Opening
     const width = useFullWidth ? drawerWidth : 0
+
     return (
       <StyledSidebar>
         <StyledTabsWrapper>
           <StyledTopNav>{topNavItemsList}</StyledTopNav>
           <StyledBottomNav>{bottomNavItemsList}</StyledBottomNav>
         </StyledTabsWrapper>
-        <StyledDrawer
-          width={width}
-          ref={ref => {
-            if (ref) {
-              // Remove old listeners so we don't get multiple callbacks.
-              // This function is called more than once with same html element
-              ref.removeEventListener('transitionend', this._onTransitionEnd)
-              ref.addEventListener('transitionend', this._onTransitionEnd)
-            }
-          }}
-        >
-          {getContentToShow(this.state.drawerContent)}
+        <StyledDrawer width={width} onTransitionEnd={this.onTransitionEnd}>
+          {drawerIsVisible &&
+            getContentToShow(
+              this.props.selectedDrawerName || this.state.closingDrawerName
+            )}
         </StyledDrawer>
       </StyledSidebar>
     )

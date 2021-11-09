@@ -6,12 +6,12 @@ import OverviewPane, { GraphStyle } from './OverviewPane'
 import { DetailsPaneComponent } from './DetailsPane'
 import { GraphStats } from '../mapper'
 import {
-  StyledNodeInspectorContainer,
   PaneContainer,
   StyledNodeInspectorTopMenuChevron,
   panelMinWidth
 } from './styled'
 import { VizItem } from './types'
+import { NodeInspectorDrawer } from './NodeInspectorDrawer'
 
 interface NodeInspectorPanelProps {
   expanded: boolean
@@ -26,9 +26,6 @@ interface NodeInspectorPanelProps {
   width: number
 }
 
-export type NodeInspectorPanelState = {
-  expanded: boolean
-}
 export const defaultPanelWidth = (): number =>
   Math.max(window.innerWidth / 5, panelMinWidth)
 export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
@@ -70,44 +67,40 @@ export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
           )}
         </StyledNodeInspectorTopMenuChevron>
 
-        {expanded && (
-          <StyledNodeInspectorContainer
+        <NodeInspectorDrawer width={width} isOpen={expanded}>
+          <Resizable
             width={width}
             data-testid="vizInspector"
+            height={300 /*doesn't matter but required prop */}
+            resizeHandles={['w']}
+            onResize={(_e, { size }) => setWidth(size.width)}
           >
-            <Resizable
-              width={width}
-              height={300 /*doesn't matter but required prop */}
-              resizeHandles={['w']}
-              onResize={(_e, { size }) => setWidth(size.width)}
-            >
-              <PaneContainer>
-                {shownEl.type === 'node' || shownEl.type === 'relationship' ? (
-                  <DetailsPaneComponent
-                    vizItem={shownEl}
-                    graphStyle={graphStyle}
-                    frameHeight={frameHeight}
-                  />
-                ) : (
-                  <OverviewPane
-                    frameHeight={frameHeight}
-                    graphStyle={graphStyle}
-                    hasTruncatedFields={hasTruncatedFields}
-                    stats={stats}
-                    nodeCount={
-                      shownEl.type === 'canvas' ? shownEl.item.nodeCount : null
-                    }
-                    relationshipCount={
-                      shownEl.type === 'canvas'
-                        ? shownEl.item.relationshipCount
-                        : null
-                    }
-                  />
-                )}
-              </PaneContainer>
-            </Resizable>
-          </StyledNodeInspectorContainer>
-        )}
+            <PaneContainer>
+              {shownEl.type === 'node' || shownEl.type === 'relationship' ? (
+                <DetailsPaneComponent
+                  vizItem={shownEl}
+                  graphStyle={graphStyle}
+                  frameHeight={frameHeight}
+                />
+              ) : (
+                <OverviewPane
+                  frameHeight={frameHeight}
+                  graphStyle={graphStyle}
+                  hasTruncatedFields={hasTruncatedFields}
+                  stats={stats}
+                  nodeCount={
+                    shownEl.type === 'canvas' ? shownEl.item.nodeCount : null
+                  }
+                  relationshipCount={
+                    shownEl.type === 'canvas'
+                      ? shownEl.item.relationshipCount
+                      : null
+                  }
+                />
+              )}
+            </PaneContainer>
+          </Resizable>
+        </NodeInspectorDrawer>
       </>
     )
   }
