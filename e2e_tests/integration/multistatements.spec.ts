@@ -41,6 +41,9 @@ describe('Multi statements', () => {
   })
 
   it('can run multiple statements (non open by default)', () => {
+    // Avoid the problem when executing the script under system database:
+    // Neo.DatabaseError.Statement.ExecutionFailed: Not a recognised system command or procedure. This Cypher command can only be executed in a user database: RETURN 1 AS `1`
+    cy.executeCommand(':use neo4j')
     cy.executeCommand(':clear')
     cy.executeCommand(validQuery)
     cy.get('[data-testid="frame"]', { timeout: 10000 }).should('have.length', 1)
