@@ -40,13 +40,17 @@ import { StyleableRelType } from './StyleableRelType'
 import { upperFirst } from 'services/utils'
 import { ShowMoreOrAll } from 'browser-components/ShowMoreOrAll/ShowMoreOrAll'
 
-const MAX_LENGTH = 150
+export const MAX_LENGTH_SMALL = 150
+export const MAX_LENGTH_LARGE = 300
 type ExpandableValueProps = {
   value: string
   type: string
+  wideMode: boolean
 }
-function ExpandableValue({ value }: ExpandableValueProps) {
+function ExpandableValue({ value, wideMode }: ExpandableValueProps) {
   const [expanded, setExpanded] = useState(false)
+
+  const maxLength = wideMode ? MAX_LENGTH_LARGE : MAX_LENGTH_SMALL
 
   const handleExpandClick = () => {
     setExpanded(true)
@@ -54,7 +58,7 @@ function ExpandableValue({ value }: ExpandableValueProps) {
 
   let valueShown = expanded
     ? value
-    : value.slice(0, Math.min(MAX_LENGTH, value.length))
+    : value.slice(0, Math.min(maxLength, value.length))
   const valueIsTrimmed = valueShown.length !== value.length
   valueShown += valueIsTrimmed ? '...' : ''
 
@@ -70,17 +74,20 @@ function ExpandableValue({ value }: ExpandableValueProps) {
   )
 }
 
+const WIDE_VIEW_THRESHOLD = 900
 type PropertiesViewProps = {
   visibleProperties: VizNodeProperty[]
   onMoreClick: (numMore: number) => void
   totalNumItems: number
   moreStep: number
+  nodeInspectorWidth: number
 }
 function PropertiesView({
   visibleProperties,
   totalNumItems,
   onMoreClick,
-  moreStep
+  moreStep,
+  nodeInspectorWidth
 }: PropertiesViewProps) {
   return (
     <>
@@ -93,7 +100,11 @@ function PropertiesView({
                   <ClickableUrls text={key} />
                 </KeyCell>
                 <ValueCell>
-                  <ExpandableValue value={value} type={type} />
+                  <ExpandableValue
+                    value={value}
+                    type={type}
+                    wideMode={nodeInspectorWidth > WIDE_VIEW_THRESHOLD}
+                  />
                 </ValueCell>
                 <CopyCell>
                   <ClipboardCopier
@@ -122,11 +133,13 @@ type DetailsPaneComponentProps = {
   vizItem: NodeItem | RelationshipItem
   graphStyle: GraphStyle
   frameHeight: number
+  nodeInspectorWidth: number
 }
 export function DetailsPaneComponent({
   vizItem,
   graphStyle,
-  frameHeight
+  frameHeight,
+  nodeInspectorWidth
 }: DetailsPaneComponentProps): JSX.Element {
   const [maxPropertiesCount, setMaxPropertiesCount] = useState(
     DETAILS_PANE_STEP_SIZE
@@ -186,6 +199,7 @@ export function DetailsPaneComponent({
           onMoreClick={handleMorePropertiesClick}
           moreStep={DETAILS_PANE_STEP_SIZE}
           totalNumItems={allItemProperties.length}
+          nodeInspectorWidth={nodeInspectorWidth}
         />
       </PaneBody>
     </>

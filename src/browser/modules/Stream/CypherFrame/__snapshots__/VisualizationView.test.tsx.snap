@@ -5,7 +5,7 @@ exports[`Visualization renders 1`] = `<div />`;
 exports[`Visualization renders with result and escapes any HTML 1`] = `
 <div>
   <div
-    class="sc-hZSUBg kQEpqW"
+    class="sc-cMhqgX kLjcxD"
   >
     <div
       class="sc-jTzLTM bdhVYv"
@@ -86,7 +86,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
             class="sc-jzJRlG hPTWGK zoom-in"
           >
             <i
-              class="sc-cpmLhU gDDHKC sl-zoom-in"
+              class="sc-dymIpo kVHyJW sl-zoom-in"
               style="font-size: 1em;"
             />
           </button>
@@ -94,7 +94,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
             class="sc-jzJRlG hPTWGK zoom-out"
           >
             <i
-              class="sc-dymIpo kVHyJW sl-zoom-out"
+              class="sc-bnXvFD bIRcfT sl-zoom-out"
               style="font-size: 1em;"
             />
           </button>
@@ -139,13 +139,13 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
                 class="sc-htpNat sc-dnqmqq OaEcl"
               >
                 <div
-                  class="sc-eXEjpC sc-ibxdXY YDulL"
+                  class="sc-ibxdXY sc-RefOD emwHTu"
                   style="background-color: rgb(247, 151, 103); color: rgb(255, 255, 255);"
                 >
                   * (1)
                 </div>
                 <div
-                  class="sc-eXEjpC sc-ibxdXY YDulL"
+                  class="sc-ibxdXY sc-RefOD emwHTu"
                   style="background-color: rgb(201, 144, 192); color: rgb(255, 255, 255);"
                 >
                   Person (1)

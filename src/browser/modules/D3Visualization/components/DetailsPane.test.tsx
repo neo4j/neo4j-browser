@@ -19,8 +19,12 @@
  */
 
 import React from 'react'
-import { render, screen } from '@testing-library/react'
-import { DETAILS_PANE_STEP_SIZE, DetailsPaneComponent } from './DetailsPane'
+import { render, screen, waitFor } from '@testing-library/react'
+import {
+  DETAILS_PANE_STEP_SIZE,
+  DetailsPaneComponent,
+  MAX_LENGTH_SMALL
+} from './DetailsPane'
 import { VizItem, VizNodeProperty } from './types'
 
 describe('<DetailsPane />', () => {
@@ -78,6 +82,7 @@ describe('<DetailsPane />', () => {
         frameHeight={0}
         graphStyle={mockGraphStyle}
         vizItem={mockVizItem}
+        nodeInspectorWidth={200}
       />
     )
   }
@@ -122,5 +127,37 @@ describe('<DetailsPane />', () => {
     expect(
       screen.getByRole('button', { name: 'Show 2 more' })
     ).toBeInTheDocument()
+  })
+
+  test('should handle show more on long property value', async () => {
+    const fullText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`
+    const mockProperty = {
+      key: 'propWithLongValue',
+      type: 'string',
+      value: fullText
+    }
+    renderComponent({ properties: [mockProperty] })
+
+    const expectedCutValue = fullText.slice(0, MAX_LENGTH_SMALL) + '...'
+
+    await waitFor(() =>
+      expect(screen.getByText(expectedCutValue)).toBeInTheDocument()
+    )
+    expect(
+      screen.getByRole('button', {
+        name: 'Show all'
+      })
+    ).toBeInTheDocument()
+    expect(screen.queryByText(fullText)).not.toBeInTheDocument()
+
+    const showAllButton = screen.getByRole('button', {
+      name: 'Show all'
+    })
+    showAllButton.click()
+
+    await waitFor(() => expect(screen.getByText(fullText)).toBeInTheDocument())
+    expect(
+      screen.queryByRole('button', { name: 'Show all' })
+    ).not.toBeInTheDocument()
   })
 })
