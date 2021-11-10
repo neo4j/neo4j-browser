@@ -925,10 +925,17 @@
     core-js-pure "^3.16.0"
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.1.2", "@babel/runtime@^7.10.2", "@babel/runtime@^7.10.3", "@babel/runtime@^7.11.2", "@babel/runtime@^7.5.4", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
+"@babel/runtime@^7.1.2", "@babel/runtime@^7.10.2", "@babel/runtime@^7.11.2", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
   version "7.11.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@babel/runtime/-/runtime-7.11.2.tgz#f549c13c754cc40b87644b9fa9f09a6a95fe0736"
   integrity sha1-9UnBPHVMxAuHZEufqfCaapX+BzY=
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
+"@babel/runtime@^7.12.5", "@babel/runtime@^7.5.4":
+  version "7.16.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@babel/runtime/-/runtime-7.16.3.tgz#b86f0db02a04187a3c17caa77de69840165d42d5"
+  integrity sha1-uG8NsCoEGHo8F8qnfeaYQBZdQtU=
   dependencies:
     regenerator-runtime "^0.13.4"
 
@@ -1631,15 +1638,15 @@
     "@types/yargs" "^15.0.0"
     chalk "^3.0.0"
 
-"@jest/types@^26.3.0":
-  version "26.3.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@jest/types/-/types-26.3.0.tgz#97627bf4bdb72c55346eef98e3b3f7ddc4941f71"
-  integrity sha1-l2J79L23LFU0bu+Y47P33cSUH3E=
+"@jest/types@^27.2.5":
+  version "27.2.5"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@jest/types/-/types-27.2.5.tgz#420765c052605e75686982d24b061b4cbba22132"
+  integrity sha1-QgdlwFJgXnVoaYLSSwYbTLuiITI=
   dependencies:
     "@types/istanbul-lib-coverage" "^2.0.0"
     "@types/istanbul-reports" "^3.0.0"
     "@types/node" "*"
-    "@types/yargs" "^15.0.0"
+    "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
 "@literal-jsx/parser@^0.1.7":
@@ -1996,24 +2003,24 @@
     prop-types "^15.7.2"
     react-is "^16.6.3"
 
-"@testing-library/dom@^7.22.3":
-  version "7.26.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@testing-library/dom/-/dom-7.26.0.tgz#da4d052dc426a4ccc916303369c6e7552126f680"
-  integrity sha1-2k0FLcQmpMzJFjAzacbnVSEm9oA=
+"@testing-library/dom@^8.0.0":
+  version "8.11.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@testing-library/dom/-/dom-8.11.0.tgz#3679dfb4db58e0d2b95e4b0929eaf45237b60d94"
+  integrity sha1-NnnftNtY4NK5XksJKer0Uje2DZQ=
   dependencies:
     "@babel/code-frame" "^7.10.4"
-    "@babel/runtime" "^7.10.3"
+    "@babel/runtime" "^7.12.5"
     "@types/aria-query" "^4.2.0"
-    aria-query "^4.2.2"
+    aria-query "^5.0.0"
     chalk "^4.1.0"
-    dom-accessibility-api "^0.5.1"
+    dom-accessibility-api "^0.5.9"
     lz-string "^1.4.4"
-    pretty-format "^26.4.2"
+    pretty-format "^27.0.2"
 
-"@testing-library/jest-dom@^5.3.0":
-  version "5.11.4"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@testing-library/jest-dom/-/jest-dom-5.11.4.tgz#f325c600db352afb92995c2576022b35621ddc99"
-  integrity sha1-8yXGANs1KvuSmVwldgIrNWId3Jk=
+"@testing-library/jest-dom@^5.15.0":
+  version "5.15.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@testing-library/jest-dom/-/jest-dom-5.15.0.tgz#4f5295dbc476a14aec3b07176434b3d51aae5da7"
+  integrity sha1-T1KV28R2oUrsOwcXZDSz1RquXac=
   dependencies:
     "@babel/runtime" "^7.9.2"
     "@types/testing-library__jest-dom" "^5.9.1"
@@ -2021,10 +2028,11 @@
     chalk "^3.0.0"
     css "^3.0.0"
     css.escape "^1.5.1"
+    dom-accessibility-api "^0.5.6"
     lodash "^4.17.15"
     redent "^3.0.0"
 
-"@testing-library/react-hooks@^2.0.1":
+"@testing-library/react-hooks@^2.0.3":
   version "2.0.3"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@testing-library/react-hooks/-/react-hooks-2.0.3.tgz#305a6c76facb5fa1d185792b9eb11b1ca1b63fb7"
   integrity sha1-MFpsdvrLX6HRhXkrnrEbHKG2P7c=
@@ -2032,13 +2040,13 @@
     "@babel/runtime" "^7.5.4"
     "@types/testing-library__react-hooks" "^2.0.0"
 
-"@testing-library/react@^10.4.9":
-  version "10.4.9"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@testing-library/react/-/react-10.4.9.tgz#9faa29c6a1a217bf8bbb96a28bd29d7a847ca150"
-  integrity sha1-n6opxqGiF7+Lu5aii9KdeoR8oVA=
+"@testing-library/react@^12.1.2":
+  version "12.1.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@testing-library/react/-/react-12.1.2.tgz#f1bc9a45943461fa2a598bb4597df1ae044cfc76"
+  integrity sha1-8byaRZQ0YfoqWYu0WX3xrgRM/HY=
   dependencies:
-    "@babel/runtime" "^7.10.3"
-    "@testing-library/dom" "^7.22.3"
+    "@babel/runtime" "^7.12.5"
+    "@testing-library/dom" "^8.0.0"
 
 "@types/antlr4@^4.7.2":
   version "4.7.2"
@@ -2337,9 +2345,9 @@
     "@types/react" "*"
 
 "@types/react-test-renderer@*":
-  version "16.9.3"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/react-test-renderer/-/react-test-renderer-16.9.3.tgz#96bab1860904366f4e848b739ba0e2f67bcae87e"
-  integrity sha1-lrqxhgkENm9OhItzm6Di9nvK6H4=
+  version "17.0.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/react-test-renderer/-/react-test-renderer-17.0.1.tgz#3120f7d1c157fba9df0118dae20cb0297ee0e06b"
+  integrity sha1-MSD30cFX+6nfARja4gywKX7g4Gs=
   dependencies:
     "@types/react" "*"
 
@@ -2480,6 +2488,13 @@
   version "15.0.5"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/yargs/-/yargs-15.0.5.tgz#947e9a6561483bdee9adffc983e91a6902af8b79"
   integrity sha1-lH6aZWFIO97prf/Jg+kaaQKvi3k=
+  dependencies:
+    "@types/yargs-parser" "*"
+
+"@types/yargs@^16.0.0":
+  version "16.0.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/yargs/-/yargs-16.0.4.tgz#26aad98dd2c2a38e421086ea9ad42b9e51642977"
+  integrity sha1-JqrZjdLCo45CEIbqmtQrnlFkKXc=
   dependencies:
     "@types/yargs-parser" "*"
 
@@ -2920,6 +2935,11 @@ ansi-regex@^5.0.0:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/ansi-regex/-/ansi-regex-5.0.0.tgz#388539f55179bf39339c81af30a654d69f87cb75"
   integrity sha1-OIU59VF5vzkznIGvMKZU1p+Hy3U=
 
+ansi-regex@^5.0.1:
+  version "5.0.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/ansi-regex/-/ansi-regex-5.0.1.tgz#082cb2c89c9fe8659a311a53bd6a4dc5301db304"
+  integrity sha1-CCyyyJyf6GWaMRpTvWpNxTAdswQ=
+
 ansi-styles@^2.2.1:
   version "2.2.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/ansi-styles/-/ansi-styles-2.2.1.tgz#b432dd3358b634cf75e1e4664368240533c1ddbe"
@@ -2939,6 +2959,11 @@ ansi-styles@^4.0.0, ansi-styles@^4.1.0:
   dependencies:
     "@types/color-name" "^1.1.1"
     color-convert "^2.0.1"
+
+ansi-styles@^5.0.0:
+  version "5.2.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/ansi-styles/-/ansi-styles-5.2.0.tgz#07449690ad45777d1924ac2abb2fc8895dba836b"
+  integrity sha1-B0SWkK1Fd30ZJKwquy/IiV26g2s=
 
 antlr4@4.7.0:
   version "4.7.0"
@@ -3004,6 +3029,11 @@ aria-query@^4.2.2:
   dependencies:
     "@babel/runtime" "^7.10.2"
     "@babel/runtime-corejs3" "^7.10.2"
+
+aria-query@^5.0.0:
+  version "5.0.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/aria-query/-/aria-query-5.0.0.tgz#210c21aaf469613ee8c9a62c7f86525e058db52c"
+  integrity sha1-IQwhqvRpYT7oyaYsf4ZSXgWNtSw=
 
 arr-diff@^4.0.0:
   version "4.0.0"
@@ -5084,10 +5114,10 @@ doctrine@^3.0.0:
   dependencies:
     esutils "^2.0.2"
 
-dom-accessibility-api@^0.5.1:
-  version "0.5.2"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/dom-accessibility-api/-/dom-accessibility-api-0.5.2.tgz#ef3cdb5d3f0d599d8f9c8b18df2fb63c9793739d"
-  integrity sha1-7zzbXT8NWZ2PnIsY3y+2PJeTc50=
+dom-accessibility-api@^0.5.6, dom-accessibility-api@^0.5.9:
+  version "0.5.10"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/dom-accessibility-api/-/dom-accessibility-api-0.5.10.tgz#caa6d08f60388d0bb4539dd75fe458a9a1d0014c"
+  integrity sha1-yqbQj2A4jQu0U53XX+RYqaHQAUw=
 
 dom-converter@^0.2:
   version "0.2.0"
@@ -10695,15 +10725,15 @@ pretty-format@^25.2.1, pretty-format@^25.5.0:
     ansi-styles "^4.0.0"
     react-is "^16.12.0"
 
-pretty-format@^26.4.2:
-  version "26.4.2"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/pretty-format/-/pretty-format-26.4.2.tgz#d081d032b398e801e2012af2df1214ef75a81237"
-  integrity sha1-0IHQMrOY6AHiASry3xIU73WoEjc=
+pretty-format@^27.0.2:
+  version "27.3.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/pretty-format/-/pretty-format-27.3.1.tgz#7e9486365ccdd4a502061fa761d3ab9ca1b78df5"
+  integrity sha1-fpSGNlzN1KUCBh+nYdOrnKG3jfU=
   dependencies:
-    "@jest/types" "^26.3.0"
-    ansi-regex "^5.0.0"
-    ansi-styles "^4.0.0"
-    react-is "^16.12.0"
+    "@jest/types" "^27.2.5"
+    ansi-regex "^5.0.1"
+    ansi-styles "^5.0.0"
+    react-is "^17.0.1"
 
 private@~0.1.5:
   version "0.1.8"
@@ -11001,6 +11031,11 @@ react-is@^16.12.0, react-is@^16.6.0, react-is@^16.6.3, react-is@^16.7.0, react-i
   version "16.13.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha1-eJcppNw23imZ3BVt1sHZwYzqVqQ=
+
+react-is@^17.0.1:
+  version "17.0.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
+  integrity sha1-5pHUqOnHiTZWVVOas3J2Kw77VPA=
 
 react-lifecycles-compat@^3.0.0, react-lifecycles-compat@^3.0.4:
   version "3.0.4"
