@@ -77,9 +77,7 @@ export const validateConnection = (
           })
           .catch((e: { code: string; message: string }) => {
             session.close()
-            // Only invalidate the connection if not available
-            // or not authed
-            // or credentials have expired
+            // Only invalidate bolt connection error
             if (!e.code || isBoltConnectionErrorCode(e.code)) {
               rej(e)
             } else {
