@@ -74,7 +74,7 @@ function ExpandableValue({ value, wideMode }: ExpandableValueProps) {
   )
 }
 
-const WIDE_VIEW_THRESHOLD = 900
+export const WIDE_VIEW_THRESHOLD = 900
 type PropertiesViewProps = {
   visibleProperties: VizNodeProperty[]
   onMoreClick: (numMore: number) => void
