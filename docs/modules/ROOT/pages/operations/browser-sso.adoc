@@ -38,16 +38,16 @@ This is done by updating the link:https://neo4j.com/docs/operations-manual/curre
 
 Make sure to avoid duplicate entries in the `neo4j.conf` file.
 
-Optionally, you may set extra logging for the OAuth2 plugin with these settings in the `neo4j.conf` file.
-The logs are found in the `neo4j.log` file.
-The `:debug` command contains logging from the SSO implementation and can be useful when debugging.
-
-[source, properties]
-----
-dbms.jvm.additional=-Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.SimpleLog
-dbms.jvm.additional=-Dorg.apache.commons.logging.simplelog.showdatetime=true
-dbms.jvm.additional=-Dorg.apache.commons.logging.simplelog.log.org.apache.http=DEBUG
-----
+// Optionally, you may set extra logging for the OAuth2 plugin with these settings in the `neo4j.conf` file.
+// The logs are found in the `neo4j.log` file.
+// The `:debug` command contains logging from the SSO implementation and can be useful when debugging.
+//
+// [source, properties]
+// ----
+// dbms.jvm.additional=-Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.SimpleLog
+// dbms.jvm.additional=-Dorg.apache.commons.logging.simplelog.showdatetime=true
+// dbms.jvm.additional=-Dorg.apache.commons.logging.simplelog.log.org.apache.http=DEBUG
+// ----
 
 
 // The following are instructions on how to use the PS plugin and can remain commented out until we know we don't need them anymore.
@@ -123,13 +123,13 @@ dbms.jvm.additional=-Dorg.apache.commons.logging.simplelog.log.org.apache.http=D
 // ====
 
 
-The following URL parameters support SSO in Browser:
-
-.URL parameters
-[cols="2,3,3,3", options=header]
-|===
-| URL (search parameter)   	| Syntax | Example | Description
-|`sso_redirect` | `sso_redirect=<idp_id>` 	| `sso_redirect=keycloak-oidc`	| Use to auto-redirect to SSO login page.
-|`auth_flow_step` | `auth_flow_step=<arg>`	| `auth_flow_step=redirect_uri`	| If the user arrives back to the client application with the URL param `auth_flow_step=redirect_uri`, this indicates that it is time to proceed in the auth process.
-|`idp_id` | `idp_id=<idp_id>`	| `idp_id=keycloak-oidc` 	| The user arrives with a URL param named idp_id, mapped to the information in the discovery data to figure out how to proceed.
-|===
+// The following URL parameters support SSO in Browser:
+//
+// .URL parameters
+// [cols="2,3,3,3", options=header]
+// |===
+// | URL (search parameter)   	| Syntax | Example | Description
+// |`sso_redirect` | `sso_redirect=<idp_id>` 	| `sso_redirect=keycloak-oidc`	| Use to auto-redirect to SSO login page.
+// |`auth_flow_step` | `auth_flow_step=<arg>`	| `auth_flow_step=redirect_uri`	| If the user arrives back to the client application with the URL param `auth_flow_step=redirect_uri`, this indicates that it is time to proceed in the auth process.
+// |`idp_id` | `idp_id=<idp_id>`	| `idp_id=keycloak-oidc` 	| The user arrives with a URL param named idp_id, mapped to the information in the discovery data to figure out how to proceed.
+// |===
