@@ -51,7 +51,7 @@ function runTests() {
   // it(':param x => 1+1', () => {
   // Avoid the problem when executing the script under system database:
   // Syntax Error: Parameters cannot be declared when using system database.
-  cy.executeCommand(':use neo4j')
+  cy.useNeo4jDatabase()
   cy.executeCommand(':clear')
   // Set param
   setParamQ = ':param x => 1+1'

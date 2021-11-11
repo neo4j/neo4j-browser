@@ -62,6 +62,10 @@ declare global {
        * Custom command for dropping user on currently connected database
        */
       dropUser(username: string): Cypress.Chainable<void>
+      /**
+       * Use Neo4j database unser server >= 4.0
+       */
+      useNeo4jDatabase(): Cypress.Chainable<void>
       getEditor(): Cypress.Chainable<JQuery<HTMLElement>>
       getFrames(): Cypress.Chainable<JQuery<HTMLElement>>
       getPrevInFrameStackBtn(): Cypress.Chainable<JQuery<HTMLElement>>

@@ -188,3 +188,6 @@ Cypress.Commands.add('dropUser', username => {
     cy.executeCommand(':clear')
   }
 })
+Cypress.Commands.add('useNeo4jDatabase', () => {
+  if (Cypress.config('serverVersion') >= 4.0) cy.executeCommand(':use neo4j')
+})
