@@ -58,7 +58,7 @@ export async function resolveGuide(
   console.log('link', identifier)
   const isUrl = identifier.startsWith('http')
   if (isUrl) {
-    return await resolveRemoteGuideFromURL(identifier, state)
+    return await resolveRemoteGuideByUrl(identifier, state)
   }
 
   if (isGuideChapter(identifier)) {
@@ -91,7 +91,7 @@ function htmlTextToSlides(html: string): JSX.Element[] {
   return [<Slide key="first" html={html} isSidebarSlide />]
 }
 
-async function resolveRemoteGuideFromURL(
+async function resolveRemoteGuideByUrl(
   url: string,
   state: any
 ): Promise<{

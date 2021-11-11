@@ -18,10 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Epic } from 'redux-observable'
 import docs from 'browser/documentation'
 import { GlobalState } from 'shared/globalState'
+import { resolveGuide } from '../../services/guideResolverHelper'
 
 export const NAME = 'guides'
+export const FETCH_GUIDE = 'guides/FETCH_GUIDE'
 export const SET_GUIDE = 'sidebar/SET_GUIDE'
 export const GOTO_SLIDE = 'sidebar/GOTO_SLIDE'
 export const UPDATE_REMOTE_GUIDES = 'sidebar/UPDATE_REMOTE_GUIDES'
@@ -50,22 +53,29 @@ const initialState: GuideState = {
   remoteGuides: []
 }
 
-type GuideAction =
-  | SetAction
+export type GuideAction =
+  | FetchGuideAction
+  | SetGuideAction
   | GotoSlideAction
   | UpdateGuideAction
   | AddGuideAction
 
-interface SetAction {
+export interface SetGuideAction {
   type: typeof SET_GUIDE
   guide: Guide | null
 }
 
-interface GotoSlideAction {
+export interface GotoSlideAction {
   type: typeof GOTO_SLIDE
   slideIndex: number
 }
-interface UpdateGuideAction {
+
+export interface FetchGuideAction {
+  type: typeof FETCH_GUIDE
+  identifier: string
+}
+
+export interface UpdateGuideAction {
   type: typeof UPDATE_REMOTE_GUIDES
   updatedGuides: Guide[]
 }
@@ -73,6 +83,18 @@ interface AddGuideAction {
   type: typeof ADD_GUIDE
   guide: Guide
 }
+
+export const fetchRemoteGuideEpic: Epic<GuideAction, GlobalState> = action$ =>
+  action$
+    .ofType(FETCH_GUIDE)
+    .map(() =>
+      setCurrentGuide({
+        currentSlide: 0,
+        identifier: 'test',
+        title: 'test',
+        slides: []
+      })
+    )
 
 export default function reducer(
   state = initialState,
@@ -134,11 +156,15 @@ export function addRemoteGuide(guide: Guide): AddGuideAction {
   return { type: ADD_GUIDE, guide }
 }
 
-export function setCurrentGuide(guide: Guide): SetAction {
+export function fetchRemoteGuide(identifier: string): FetchGuideAction {
+  return { type: FETCH_GUIDE, identifier }
+}
+
+export function setCurrentGuide(guide: Guide): SetGuideAction {
   return { type: SET_GUIDE, guide }
 }
 
-export function resetGuide(): SetAction {
+export function resetGuide(): SetGuideAction {
   return { type: SET_GUIDE, guide: null }
 }
 

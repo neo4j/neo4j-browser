@@ -93,6 +93,7 @@ import {
   getCurrentUserEpic,
   clearCurrentUserOnDisconnectEpic
 } from './modules/currentUser/currentUserDuck'
+import { fetchRemoteGuideEpic } from './modules/guides/guidesDuck'
 
 export default combineEpics(
   handleCommandEpic,
@@ -148,5 +149,6 @@ export default combineEpics(
   trackErrorFramesEpic,
   trackReduxActionsEpic,
   initializeCypherEditorEpic,
-  updateEditorSupportSchemaEpic
+  updateEditorSupportSchemaEpic,
+  fetchRemoteGuideEpic
 )

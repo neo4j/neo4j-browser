@@ -13,14 +13,20 @@ import {
   GuideListEntry,
   MarginBottomLi
 } from 'browser/documentation/sidebar-guides/styled'
-import { Guide } from 'shared/modules/guides/guidesDuck'
+import {
+  Guide,
+  SetGuideAction,
+  FetchGuideAction,
+  UpdateGuideAction
+} from 'shared/modules/guides/guidesDuck'
 import docs, { GuideChapter } from 'browser/documentation'
 import { BinIcon } from 'browser-components/icons/Icons'
 
 type GuidePickerProps = {
   remoteGuides: Guide[]
-  setCurrentGuide: (guide: Guide) => void
-  updateRemoteGuides: (newList: Guide[]) => void
+  setCurrentGuide: (guide: Guide) => SetGuideAction
+  fetchRemoteGuide: (identifier: string) => FetchGuideAction
+  updateRemoteGuides: (newList: Guide[]) => UpdateGuideAction
 }
 
 const builtInGuides: { identifier: GuideChapter; description: string }[] = [
@@ -43,6 +49,7 @@ const builtInGuides: { identifier: GuideChapter; description: string }[] = [
 const GuidePicker = ({
   remoteGuides,
   setCurrentGuide,
+  // fetchRemoteGuide,
   updateRemoteGuides
 }: GuidePickerProps): JSX.Element => (
   <BuiltInGuideSidebarSlide>
