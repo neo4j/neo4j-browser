@@ -23,16 +23,19 @@ type GuidePickerProps = {
   updateRemoteGuides: (newList: Guide[]) => void
 }
 
-const builtInGuides: { name: GuideChapter; description: string }[] = [
-  { name: 'intro', description: 'Navigating Neo4j Browser' },
-  { name: 'concepts', description: 'Property graph model concepts' },
-  { name: 'cypher', description: 'Cypher basics - create, match, delete' },
+const builtInGuides: { identifier: GuideChapter; description: string }[] = [
+  { identifier: 'intro', description: 'Navigating Neo4j Browser' },
+  { identifier: 'concepts', description: 'Property graph model concepts' },
   {
-    name: 'movie-graph',
+    identifier: 'cypher',
+    description: 'Cypher basics - create, match, delete'
+  },
+  {
+    identifier: 'movie-graph',
     description: 'Queries and recommendations with Cypher - movie use case}'
   },
   {
-    name: 'northwind-graph',
+    identifier: 'northwind-graph',
     description: 'Translate and import relation data into graph'
   }
 ]
@@ -54,14 +57,18 @@ const GuidePicker = ({
       </DrawerSubHeader>
     </MarginTop>
     <NoBulletsUl>
-      {builtInGuides.map(({ name, description }) => (
+      {builtInGuides.map(({ identifier, description }) => (
         <MarginBottomLi
-          key={name}
+          key={identifier}
           onClick={() =>
-            setCurrentGuide({ ...docs.guide.chapters[name], currentSlide: 0 })
+            setCurrentGuide({
+              ...docs.guide.chapters[identifier],
+              identifier,
+              currentSlide: 0
+            })
           }
         >
-          <DrawerBrowserCommand>:guide {name}</DrawerBrowserCommand>
+          <DrawerBrowserCommand>:guide {identifier}</DrawerBrowserCommand>
           <MarginTop> {description} </MarginTop>
         </MarginBottomLi>
       ))}

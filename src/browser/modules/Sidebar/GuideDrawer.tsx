@@ -89,7 +89,7 @@ function GuideDrawer({
             {currentGuide.title}
           </GuideTitle>
           <GuideCarousel
-            slides={currentGuide.slides}
+            slides={currentGuide.slides ?? []}
             currentSlideIndex={currentGuide.currentSlide}
             gotoSlide={gotoSlide}
             scrollToTop={() =>

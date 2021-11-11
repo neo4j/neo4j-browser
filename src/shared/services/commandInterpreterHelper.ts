@@ -38,7 +38,7 @@ import {
 } from 'shared/modules/connections/connectionsDuck'
 import { open } from 'shared/modules/sidebar/sidebarDuck'
 import {
-  addGuideIfExternal,
+  addRemoteGuide,
   resetGuide,
   setCurrentGuide
 } from 'shared/modules/guides/guidesDuck'
@@ -506,29 +506,30 @@ const availableCommands = [
   {
     name: 'guide',
     match: (cmd: any) => /^guide(\s|$)/.test(cmd),
-    exec(action: any, put: any, store: any) {
-      const guideName = action.cmd.substr(':guide'.length).trim()
-      if (!guideName) {
-        put(resetGuide())
-        put(open('guides'))
+    exec(action: any, dispatch: any, store: any) {
+      const guideLink = action.cmd.substr(':guide'.length).trim()
+      if (!guideLink) {
+        dispatch(resetGuide())
+        dispatch(open('guides'))
         return
       }
 
       const initialSlide = tryGetRemoteInitialSlideFromUrl(action.cmd)
-      resolveGuide(guideName, store.getState()).then(
-        ({ slides, title, isError }) => {
+      resolveGuide(guideLink, store.getState()).then(
+        ({ slides, title, identifier, isError }) => {
           const guide = {
             currentSlide: initialSlide,
             title,
+            identifier,
             slides,
             isError
           }
-          put(setCurrentGuide(guide))
+          dispatch(setCurrentGuide(guide))
           if (!guide.isError) {
-            put(addGuideIfExternal(guide))
+            dispatch(addRemoteGuide(guide))
           }
 
-          put(open('guides'))
+          dispatch(open('guides'))
         }
       )
     }

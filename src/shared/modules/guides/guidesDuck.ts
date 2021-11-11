@@ -35,7 +35,9 @@ export const getRemoteGuides = (state: GlobalState): Guide[] =>
 export type Guide = {
   currentSlide: number
   title: string
-  slides: JSX.Element[]
+  identifier: string
+  isRemote?: boolean
+  slides?: JSX.Element[]
 }
 
 export interface GuideState {
@@ -95,10 +97,12 @@ export default function reducer(
       return { ...state, remoteGuides: action.updatedGuides }
 
     case ADD_GUIDE:
+      // Use title as the unique identifier doesn't seem correct
       const remoteGuideTitles = state.remoteGuides.map(g => g.title)
       const builtInGuidesTitles = Object.values(docs.guide.chapters).map(
         guide => guide.title
       )
+      console.log(builtInGuidesTitles)
 
       const alreadyAdded = remoteGuideTitles
         .concat(builtInGuidesTitles)
@@ -126,7 +130,7 @@ export function clearRemoteGuides(): UpdateGuideAction {
   return updateRemoteGuides([])
 }
 
-export function addGuideIfExternal(guide: Guide): AddGuideAction {
+export function addRemoteGuide(guide: Guide): AddGuideAction {
   return { type: ADD_GUIDE, guide }
 }
 
