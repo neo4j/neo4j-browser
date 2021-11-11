@@ -1,13 +1,20 @@
 :description: Single Sign-On (SSO) for Neo4j Browser.
 
-
+[role=enterprise-edition]
 [[browser-sso]]
 = Browser Single Sign-On
 
-Neo4j Browser provides support for Single Sign-On (SSO) providers under specific Enterprise environment configurations.
-Your organization needs an existing compatible SSO provider (local or external) already configured.
+Neo4j Browser provides support for Single Sign-On (SSO) providers under specific Enterprise environment configurations when used with (self-hosted) Neo4j Server v4.4 and later.
+Additionally, you need a compatible SSO provider (local or external) already configured.
+For more information on the configuration, see link:https://neo4j.com/docs/operations-manual/current/authentication-authorization/sso-integration/#auth-sso-parameters[Operations Manual -> OIDC configuration settings^].
 
-Supported providers at this time include OpenID Connect (OIDC) OAuth 2.0 providers Okta, KeyCloak, and Microsoft Azure AD.
+[NOTE]
+====
+For deployments other than with self-hosted Neo4j Server v4.4+, SSO can be configured with a separate OAuth plugin which requires engagement from Professional Services.
+See link:https://neo4j.com/professional-services/[^] for more information about Professional Services.
+====
+
+Supported providers at this time include OpenID Connect (OIDC) OAuth 2.0 providers Google, KeyCloak, Microsoft Azure AD, and Okta.
 SSO has been tested on Neo4j 4.2.x, 4.3.x, and 4.4.x deployments.
 
 Browser supports two authorization flows:
@@ -17,30 +24,27 @@ Browser supports two authorization flows:
 
 [IMPORTANT]
 ====
-Security information should always be exchanged use encrypted transport, and therefore HTTPS should be used.
-Mixed HTTP/HTTPS flows for single sign-on are not supported.
-====
-
-[IMPORTANT]
-====
 It is strongly advised to use PKCE to ensure security.
 Further information about OpenID Connect and OAuth can be found at link:https://openid.net/connect/[https://openid.net/connect/^].
 ====
 
-With the prerequisites in place, you need to update the link:https://neo4j.com/docs/operations-manual/current/configuration/neo4j-conf/#neo4j-conf[`neo4j.conf`^] file with the following information:
-Make sure to avoid duplicate entries in the `neo4j.conf` file.
+[IMPORTANT]
+====
+Security information should always be exchanged use encrypted transport, and therefore HTTPS should be used.
+Mixed HTTP/HTTPS flows for single sign-on are not supported.
+====
 
+Once your SSO provider is configured, you need to update the following in the link:https://neo4j.com/docs/operations-manual/current/configuration/neo4j-conf/#neo4j-conf[`neo4j.conf`^] file accordingly:
 
 [source, properties]
 ----
 dbms.security.auth_enabled=true
-dbms.security.authentication_providers=native,plugin-org.neo4j.auth.openid.OpenIdPlugin
-dbms.security.authorization_providers=native,plugin-org.neo4j.auth.openid.OpenIdPlugin
-plugins.auth.openid.configuration=https://login.org.com/.well-known/openid-configuration
-plugins.auth.openid.group_to_role_mapping=reader=reader;editor=editor;publisher=publisher;architect=architect;admin=admin
-plugins.auth.openid.claim.groups=groups
-plugins.auth.openid.claim.principal=preferred_username
+dbms.security.authentication_providers=<provider>,native
+dbms.security.authorization_providers=<provider>,native
 ----
+
+The placeholder `<provider>` should be replaced with a name representing your SSO provider.
+Make sure to avoid duplicate entries in the `neo4j.conf` file.
 
 Optionally, you may set extra logging for the OAuth2 plugin with these settings in the `neo4j.conf` file.
 The logs are found in the `neo4j.log` file.
@@ -53,6 +57,19 @@ dbms.jvm.additional=-Dorg.apache.commons.logging.simplelog.showdatetime=true
 dbms.jvm.additional=-Dorg.apache.commons.logging.simplelog.log.org.apache.http=DEBUG
 ----
 
+
+
+// updates to neo4j.conf
+// [source, properties]
+// ----
+// dbms.security.auth_enabled=true
+// dbms.security.authentication_providers=native,plugin-org.neo4j.auth.openid.OpenIdPlugin
+// dbms.security.authorization_providers=native,plugin-org.neo4j.auth.openid.OpenIdPlugin
+// plugins.auth.openid.configuration=https://login.org.com/.well-known/openid-configuration
+// plugins.auth.openid.group_to_role_mapping=reader=reader;editor=editor;publisher=publisher;architect=architect;admin=admin
+// plugins.auth.openid.claim.groups=groups
+// plugins.auth.openid.claim.principal=preferred_username
+// ----
 // . Browser needs to be aware of the identity providers available for use.
 // This is done by specifying a URL parameter discoveryURL that specifies a URL to a json file containing the SSO providers.
 // Example for Browser:
