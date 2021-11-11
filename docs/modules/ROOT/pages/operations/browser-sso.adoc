@@ -29,7 +29,7 @@ Further information about OpenID Connect and OAuth can be found at link:https://
 
 [IMPORTANT]
 ====
-Security information should always be exchanged use encrypted transport, and therefore HTTPS should be used.
+Security information should always be exchanged with encrypted transport, and therefore HTTPS should be used.
 Mixed HTTP/HTTPS flows for single sign-on are not supported.
 ====
 
