@@ -14,8 +14,7 @@ For deployments other than with self-hosted Neo4j Server v4.4+, SSO can be confi
 See link:https://neo4j.com/professional-services/[^] for more information about Professional Services.
 ====
 
-Supported providers at this time include OpenID Connect (OIDC) OAuth 2.0 providers Google, KeyCloak, Microsoft Azure AD, and Okta.
-SSO has been tested on Neo4j 4.2.x, 4.3.x, and 4.4.x deployments.
+Supported providers at this time include OpenID Connect (OIDC) OAuth 2.0 providers KeyCloak, Microsoft Azure AD, and Okta.
 
 Browser supports two authorization flows:
 
@@ -34,16 +33,9 @@ Security information should always be exchanged use encrypted transport, and the
 Mixed HTTP/HTTPS flows for single sign-on are not supported.
 ====
 
-Once your SSO provider is configured, you need to update the following in the link:https://neo4j.com/docs/operations-manual/current/configuration/neo4j-conf/#neo4j-conf[`neo4j.conf`^] file accordingly:
+Once your SSO provider is configured, you need to configure Neo4j to use OpenID Connect.
+This is done by updating the link:https://neo4j.com/docs/operations-manual/current/configuration/neo4j-conf/#neo4j-conf[`neo4j.conf`^] file according to the instructions in link:https://neo4j.com/docs/operations-manual/current/authentication-authorization/sso-integration/#auth-sso-configure-sso[Operations Manual -> Configure Neo4j to use OpenId Connect^].
 
-[source, properties]
-----
-dbms.security.auth_enabled=true
-dbms.security.authentication_providers=<provider>,native
-dbms.security.authorization_providers=<provider>,native
-----
-
-The placeholder `<provider>` should be replaced with a name representing your SSO provider.
 Make sure to avoid duplicate entries in the `neo4j.conf` file.
 
 Optionally, you may set extra logging for the OAuth2 plugin with these settings in the `neo4j.conf` file.
@@ -58,7 +50,7 @@ dbms.jvm.additional=-Dorg.apache.commons.logging.simplelog.log.org.apache.http=D
 ----
 
 
-
+// The following are instructions on how to use the PS plugin and can remain commented out until we know we don't need them anymore.
 // updates to neo4j.conf
 // [source, properties]
 // ----
