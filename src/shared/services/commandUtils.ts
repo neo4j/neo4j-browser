@@ -153,6 +153,7 @@ export const getCommandAndParam = (str: any) => {
   return [serverCmd, props]
 }
 
+// Consider to move this method to guideResolverHelper
 export function tryGetRemoteInitialSlideFromUrl(url: string): number {
   const hashBang = includes(url, '#') ? last(split(url, '#')) : ''
 

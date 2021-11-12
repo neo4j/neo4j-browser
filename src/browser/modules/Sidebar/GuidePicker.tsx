@@ -49,7 +49,7 @@ const builtInGuides: { identifier: GuideChapter; description: string }[] = [
 const GuidePicker = ({
   remoteGuides,
   setCurrentGuide,
-  // fetchRemoteGuide,
+  fetchRemoteGuide,
   updateRemoteGuides
 }: GuidePickerProps): JSX.Element => (
   <BuiltInGuideSidebarSlide>
@@ -90,7 +90,9 @@ const GuidePicker = ({
         <NoBulletsUl>
           {remoteGuides.map(guide => (
             <GuideListEntry key={guide.title}>
-              <DrawerBrowserCommand onClick={() => setCurrentGuide(guide)}>
+              <DrawerBrowserCommand
+                onClick={() => fetchRemoteGuide(guide.identifier)}
+              >
                 {guide.title}
               </DrawerBrowserCommand>
               <Clickable

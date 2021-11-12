@@ -18,10 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Observable } from 'rxjs'
 import { Epic } from 'redux-observable'
 import docs from 'browser/documentation'
 import { GlobalState } from 'shared/globalState'
+import { tryGetRemoteInitialSlideFromUrl } from 'services/commandUtils'
 import { resolveGuide } from '../../services/guideResolverHelper'
+import { OpenAction, open } from '../sidebar/sidebarDuck'
 
 export const NAME = 'guides'
 export const FETCH_GUIDE = 'guides/FETCH_GUIDE'
@@ -39,7 +42,6 @@ export type Guide = {
   currentSlide: number
   title: string
   identifier: string
-  isRemote?: boolean
   slides?: JSX.Element[]
 }
 
@@ -84,17 +86,31 @@ interface AddGuideAction {
   guide: Guide
 }
 
-export const fetchRemoteGuideEpic: Epic<GuideAction, GlobalState> = action$ =>
-  action$
-    .ofType(FETCH_GUIDE)
-    .map(() =>
-      setCurrentGuide({
-        currentSlide: 0,
-        identifier: 'test',
-        title: 'test',
-        slides: []
-      })
+export const fetchRemoteGuideEpic: Epic<
+  FetchGuideAction | SetGuideAction | OpenAction | AddGuideAction,
+  GlobalState
+> = (action$, store$) =>
+  action$.ofType(FETCH_GUIDE).flatMap(action => {
+    const initialSlide = tryGetRemoteInitialSlideFromUrl(
+      (<FetchGuideAction>action).identifier
     )
+    return Observable.fromPromise(
+      resolveGuide((<FetchGuideAction>action).identifier, store$.getState())
+    ).mergeMap(({ title, identifier, slides, isError }) => {
+      const guide: Guide = {
+        currentSlide: initialSlide,
+        title,
+        identifier,
+        slides
+      }
+
+      const streamActions: Array<
+        SetGuideAction | OpenAction | AddGuideAction
+      > = [setCurrentGuide(guide), open('guides')]
+      if (!isError) streamActions.push(addRemoteGuide(guide))
+      return streamActions
+    })
+  })
 
 export default function reducer(
   state = initialState,

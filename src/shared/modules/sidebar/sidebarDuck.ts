@@ -81,7 +81,7 @@ interface ToggleAction {
   drawerId: DrawerId
 }
 
-interface OpenAction {
+export interface OpenAction {
   type: typeof OPEN
   drawerId: DrawerId
 }

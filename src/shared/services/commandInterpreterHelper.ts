@@ -19,11 +19,13 @@
  */
 
 import * as Sentry from '@sentry/react'
+import { v4 } from 'uuid'
+import { Store, Dispatch } from 'redux'
+import { GlobalState } from 'shared/globalState'
 import bolt from 'services/bolt/bolt'
 import * as frames from 'shared/modules/frames/framesDuck'
 import { getHostedUrl } from 'shared/modules/app/appDuck'
 import { getHistory, clearHistory } from 'shared/modules/history/historyDuck'
-import { v4 } from 'uuid'
 import {
   update as updateQueryResult,
   REQUEST_STATUS_SUCCESS,
@@ -37,11 +39,7 @@ import {
   getUseDb
 } from 'shared/modules/connections/connectionsDuck'
 import { open } from 'shared/modules/sidebar/sidebarDuck'
-import {
-  addRemoteGuide,
-  resetGuide,
-  setCurrentGuide
-} from 'shared/modules/guides/guidesDuck'
+import { fetchRemoteGuide, resetGuide } from 'shared/modules/guides/guidesDuck'
 import { getParams } from 'shared/modules/params/paramsDuck'
 import { getUserCapabilities } from 'shared/modules/features/featuresDuck'
 import {
@@ -56,16 +54,17 @@ import {
   SYSTEM_DB
 } from 'shared/modules/dbMeta/dbMetaDuck'
 import { canSendTxMetadata } from 'shared/modules/features/versionedFeatures'
-import { fetchRemoteGuide } from 'shared/modules/commands/helpers/play'
+import { fetchRemoteGuideAsync } from 'shared/modules/commands/helpers/play'
 import remote from 'services/remote'
 import { isLocalRequest, authHeaderFromCredentials } from 'services/remoteUtils'
 import { handleServerCommand } from 'shared/modules/commands/helpers/server'
 import { handleCypherCommand } from 'shared/modules/commands/helpers/cypher'
 import {
+  SINGLE_COMMAND_QUEUED,
+  ExecuteCommandAction,
   showErrorMessage,
   successfulCypher,
   unsuccessfulCypher,
-  SINGLE_COMMAND_QUEUED,
   listDbsCommand,
   useDbCommand,
   autoCommitTxCommand
@@ -505,33 +504,16 @@ const availableCommands = [
   },
   {
     name: 'guide',
-    match: (cmd: any) => /^guide(\s|$)/.test(cmd),
-    exec(action: any, dispatch: any, store: any) {
-      const guideLink = action.cmd.substr(':guide'.length).trim()
-      if (!guideLink) {
+    match: (cmd: string) => /^guide(\s|$)/.test(cmd),
+    exec(action: ExecuteCommandAction, dispatch: Dispatch<GlobalState>) {
+      const guideIdentifier = action.cmd.substr(':guide'.length).trim()
+      if (!guideIdentifier) {
         dispatch(resetGuide())
         dispatch(open('guides'))
         return
       }
 
-      const initialSlide = tryGetRemoteInitialSlideFromUrl(action.cmd)
-      resolveGuide(guideLink, store.getState()).then(
-        ({ slides, title, identifier, isError }) => {
-          const guide = {
-            currentSlide: initialSlide,
-            title,
-            identifier,
-            slides,
-            isError
-          }
-          dispatch(setCurrentGuide(guide))
-          if (!guide.isError) {
-            dispatch(addRemoteGuide(guide))
-          }
-
-          dispatch(open('guides'))
-        }
-      )
+      dispatch(fetchRemoteGuide(guideIdentifier))
     }
   },
   {
@@ -564,7 +546,7 @@ const availableCommands = [
         ? urlObject.pathname.split('.').pop()
         : 'html'
       const allowlist = getRemoteContentHostnameAllowlist(store.getState())
-      fetchRemoteGuide(url, allowlist)
+      fetchRemoteGuideAsync(url, allowlist)
         .then(r => {
           put(
             frames.add({

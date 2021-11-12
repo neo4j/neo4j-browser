@@ -18,11 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// Need to refactor
 import { hostIsAllowed } from 'services/utils'
 import { cleanHtml } from 'services/remoteUtils'
 import remote from 'services/remote'
 
-export const fetchRemoteGuide = (url: any, allowlist = null) => {
+export const fetchRemoteGuideAsync = (url: any, allowlist = null) => {
   return new Promise<void>((resolve, reject) => {
     if (!hostIsAllowed(url, allowlist)) {
       return reject(

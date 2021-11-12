@@ -29,9 +29,9 @@ import {
   FetchGuideAction,
   UpdateGuideAction,
   getCurrentGuide,
-  gotoSlide,
   getRemoteGuides,
   resetGuide,
+  gotoSlide,
   setCurrentGuide,
   fetchRemoteGuide,
   updateRemoteGuides
@@ -51,7 +51,7 @@ import GuidePicker from './GuidePicker'
 type GuideDrawerProps = {
   currentGuide: Guide | null
   remoteGuides: Guide[]
-  backToAllGuides: () => void
+  backToAllGuides: () => SetGuideAction
   gotoSlide: (slideIndex: number) => GotoSlideAction
   setCurrentGuide: (guide: Guide) => SetGuideAction
   fetchRemoteGuide: (identifier: string) => FetchGuideAction

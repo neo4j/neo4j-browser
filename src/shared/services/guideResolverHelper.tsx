@@ -28,7 +28,7 @@ import {
   extractAllowlistFromConfigString,
   resolveAllowlistWildcard
 } from './utils'
-import { fetchRemoteGuide } from 'shared/modules/commands/helpers/play'
+import { fetchRemoteGuideAsync } from 'shared/modules/commands/helpers/play'
 import {
   getDefaultRemoteContentHostnameAllowlist,
   getRemoteContentHostnameAllowlist
@@ -43,19 +43,20 @@ import {
   StyledHelpFrame,
   StyledPreformattedArea
 } from 'browser/modules/Stream/styled'
+import { GlobalState } from 'shared/globalState'
 
 const { chapters } = docs.guide
 
 export async function resolveGuide(
   identifier: string,
-  state: any
+  state: GlobalState
 ): Promise<{
   slides: JSX.Element[]
   title: string
   identifier: string
   isError?: boolean
 }> {
-  console.log('link', identifier)
+  console.log('id', identifier)
   const isUrl = identifier.startsWith('http')
   if (isUrl) {
     return await resolveRemoteGuideByUrl(identifier, state)
@@ -93,7 +94,7 @@ function htmlTextToSlides(html: string): JSX.Element[] {
 
 async function resolveRemoteGuideByUrl(
   url: string,
-  state: any
+  state: GlobalState
 ): Promise<{
   slides: JSX.Element[]
   title: string
@@ -108,7 +109,7 @@ async function resolveRemoteGuideByUrl(
   const allowlist = getRemoteContentHostnameAllowlist(state)
 
   try {
-    const remoteGuide = await fetchRemoteGuide(url, allowlist)
+    const remoteGuide = await fetchRemoteGuideAsync(url, allowlist)
     const titleRegexMatch = remoteGuide.match(/<title>(.*?)<\/title>/)
     const title = (titleRegexMatch && titleRegexMatch[1])?.trim() || url
     if (['md', 'mdx'].includes(filenameExtension)) {
@@ -175,7 +176,7 @@ async function resolveRemoteGuideByName(
     .reduce(
       (promiseChain: Promise<any>, currentUrl: string) =>
         promiseChain
-          .catch(() => fetchRemoteGuide(currentUrl, allowlistStr))
+          .catch(() => fetchRemoteGuideAsync(currentUrl, allowlistStr))
           .then(r => Promise.resolve(r)),
       Promise.reject(new Error())
     )
