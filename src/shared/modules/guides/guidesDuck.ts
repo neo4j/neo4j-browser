@@ -100,13 +100,13 @@ export const fetchRemoteGuideEpic: Epic<
       const guide: Guide = {
         currentSlide: initialSlide,
         title,
-        identifier,
-        slides
+        identifier
       }
 
       const streamActions: Array<
         SetGuideAction | OpenAction | AddGuideAction
-      > = [setCurrentGuide(guide), open('guides')]
+      > = [setCurrentGuide({ ...guide, slides }), open('guides')]
+      // To keep Redux store as small as possible, we don't save slides into it
       if (!isError) streamActions.push(addRemoteGuide(guide))
       return streamActions
     })
