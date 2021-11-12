@@ -74,7 +74,7 @@
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.1",
     "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react": "^12.1.2",
-    "@testing-library/react-hooks": "^2.0.3",
+    "@testing-library/react-hooks": "^7.0.2",
     "@types/antlr4": "^4.7.2",
     "@types/apollo-upload-client": "^14.1.0",
     "@types/d3": "^3",
