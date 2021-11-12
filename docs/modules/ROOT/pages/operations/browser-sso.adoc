@@ -48,8 +48,8 @@ Example for Browser: `\https://<browser-server-host>:<http-port>?discoveryURL=ht
 [IMPORTANT]
 ====
 Browser will prioritize in the following order, in case of conflicting data:
-. `discoveryURL`
 . `neo4j.conf`
+. `discoveryURL`
 ====
 
 // Optionally, you may set extra logging for the OAuth2 plugin with these settings in the `neo4j.conf` file.
