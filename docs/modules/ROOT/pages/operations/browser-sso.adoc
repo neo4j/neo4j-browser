@@ -38,6 +38,20 @@ This is done by updating the link:https://neo4j.com/docs/operations-manual/curre
 
 Make sure to avoid duplicate entries in the `neo4j.conf` file.
 
+Browser needs to be aware of the identity providers available for use.
+When used with Neo4j v4.4+, this is specified the `neo4j.conf` file, as described above.
+
+Deployments that use an earlier version of Neo4j require a separate OAuth plugin and assistance from Professional Services, as mentioned previously.
+However, in such cases, the identity providers can be specified by a URL parameter `discoveryURL` that defines a URL to a json file containing the SSO providers.
+Example for Browser: `\https://<browser-server-host>:<http-port>?discoveryURL=https://webhost.com/public/discovery.json`
+
+[IMPORTANT]
+====
+Browser will prioritize in the following order, in case of conflicting data:
+. `discoveryURL`
+. `neo4j.conf`
+====
+
 // Optionally, you may set extra logging for the OAuth2 plugin with these settings in the `neo4j.conf` file.
 // The logs are found in the `neo4j.log` file.
 // The `:debug` command contains logging from the SSO implementation and can be useful when debugging.
