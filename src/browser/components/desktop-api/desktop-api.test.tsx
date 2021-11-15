@@ -19,7 +19,7 @@
  */
 
 import React from 'react'
-import { render, wait } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 import DesktopApi from './desktop-api'
 
 describe('<DesktopApi>', () => {
@@ -74,7 +74,7 @@ describe('<DesktopApi>', () => {
     const { rerender } = render(
       <DesktopApi integrationPoint={integrationPoint} onMount={mFn} />
     )
-    await wait(() => expect(mFn).toHaveBeenCalledTimes(1))
+    await waitFor(() => expect(mFn).toHaveBeenCalledTimes(1))
 
     // When
     rerender(<DesktopApi integrationPoint={integrationPoint} />)
@@ -96,9 +96,7 @@ describe('<DesktopApi>', () => {
     }
 
     // When
-    const { container } = render(
-      <DesktopApi integrationPoint={integrationPoint} onXxx={fn} />
-    )
+    render(<DesktopApi integrationPoint={integrationPoint} onXxx={fn} />)
 
     // Then
     expect(fn).toHaveBeenCalledTimes(0)
