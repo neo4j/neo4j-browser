@@ -40,17 +40,8 @@ import {
   StyledFullSizeDrawerBody,
   StyledHeaderContainer
 } from './styled'
+import { formatDocVersion } from './docsUtils'
 
-export const formatDocVersion = (v = ''): string => {
-  if (!semver.valid(v)) {
-    // All non-strings return
-    return 'current'
-  }
-  if (semver.prerelease(v)) {
-    return `${semver.major(v)}.${semver.minor(v)}-preview`
-  }
-  return `${semver.major(v)}.${semver.minor(v)}` || 'current'
-}
 export const shouldLinkToNewRefs = (v: string): boolean => {
   if (!semver.valid(v)) return false
   return semver.gte(v, '3.5.0-alpha01')

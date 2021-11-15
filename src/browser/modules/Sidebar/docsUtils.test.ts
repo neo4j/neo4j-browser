@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { formatDocVersion } from './Documents'
+import { formatDocVersion } from './docsUtils'
 
 test('formatDocVersion', () => {
   const tests = [
