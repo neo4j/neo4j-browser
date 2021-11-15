@@ -94,6 +94,7 @@ import { isRunningE2ETest } from 'services/utils'
 import { version } from 'project-root/package.json'
 import { GlobalState } from 'shared/globalState'
 import { getTelemetrySettings } from 'shared/utils/selectors'
+import { cannyOptions } from 'browser-services/canny'
 
 export const MAIN_WRAPPER_DOM_ID = 'MAIN_WRAPPER_DOM_ID'
 
@@ -172,6 +173,11 @@ export function App(props: any) {
     useDb,
     updateDesktopUDCSettings
   } = props
+
+  useEffect(() => {
+    window.Canny && window.Canny('initChangelog', cannyOptions)
+    return window.Canny && window.Canny('closeChangelog')
+  })
 
   const wrapperClassNames = codeFontLigatures ? '' : 'disable-font-ligatures'
 

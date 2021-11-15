@@ -24,7 +24,6 @@ import {
   NavigationButtonContainer,
   StyledCannyBadgeAnchor
 } from 'browser-components/buttons'
-import { cannyOptions } from 'browser-services/canny'
 import {
   StyledSidebar,
   StyledDrawer,
@@ -71,16 +70,6 @@ class Navigation extends Component<NavigationProps, NavigationState> {
   state: NavigationState = {
     transitionState: this.props.selectedDrawerName ? Open : Closed,
     closingDrawerName: null
-  }
-
-  componentDidMount(): void {
-    window.Canny && window.Canny('initChangelog', cannyOptions)
-  }
-
-  componentWillUnmount(): void {
-    if (window.Canny) {
-      window.Canny('closeChangelog')
-    }
   }
 
   componentDidUpdate(
