@@ -4,7 +4,8 @@
 [[browser-sso]]
 = Browser Single Sign-On
 
-Neo4j Browser provides support for Single Sign-On (SSO) providers under specific Enterprise environment configurations when used with (self-hosted) Neo4j Server v4.4 and later.
+Neo4j Browser provides support for Single Sign-On (SSO) providers.
+This is an Enterprise feature and requires specific configuration and a (self-hosted) Neo4j Server v4.4 and later.
 Additionally, you need a compatible SSO provider (local or external) already configured.
 For more information on the configuration, see link:https://neo4j.com/docs/operations-manual/current/authentication-authorization/sso-integration/#auth-sso-parameters[Operations Manual -> OIDC configuration settings^].
 
@@ -42,15 +43,17 @@ Browser needs to be aware of the identity providers available for use.
 When used with Neo4j v4.4+, this is specified the `neo4j.conf` file, as described above.
 
 Deployments that use an earlier version of Neo4j require a separate OAuth plugin and assistance from Professional Services, as mentioned previously.
-However, in such cases, the identity providers can be specified by a URL parameter `discoveryURL` that defines a URL to a json file containing the SSO providers.
-Example for Browser: `\https://<browser-server-host>:<http-port>?discoveryURL=https://webhost.com/public/discovery.json`
+However, in such cases, the identity providers can be specified by a URL parameter `discoveryURL` that defines a URL to a .json file containing the SSO providers.
 
-[IMPORTANT]
-====
-Browser will prioritize in the following order, in case of conflicting data:
-. `neo4j.conf`
-. `discoveryURL`
-====
+Example for Browser: +
+`\https://<browser-server-host>:<http-port>?discoveryURL=https://webhost.com/public/discovery.json`
+
+// [IMPORTANT]
+// ====
+// Browser will prioritize in the following order, in case of conflicting data:
+// . `neo4j.conf`
+// . `discoveryURL`
+// ====
 
 // Optionally, you may set extra logging for the OAuth2 plugin with these settings in the `neo4j.conf` file.
 // The logs are found in the `neo4j.log` file.
