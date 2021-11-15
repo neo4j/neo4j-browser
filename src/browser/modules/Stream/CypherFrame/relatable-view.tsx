@@ -16,7 +16,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { isInt, QueryResult } from 'neo4j-driver'
+import { isInt, QueryResult, Record } from 'neo4j-driver'
 import Relatable from '@relate-by-ui/relatable'
 import { get, head, map, slice } from 'lodash-es'
 import { Icon } from 'semantic-ui-react'
@@ -45,7 +45,6 @@ import {
 import { stringifyMod, unescapeDoubleQuotesForDisplay } from 'services/utils'
 import { GlobalState } from 'shared/globalState'
 import { BrowserRequestResult } from 'project-root/src/shared/modules/requests/requestsDuck'
-import Record from 'neo4j-driver-core/types/record'
 
 const RelatableView = connect((state: GlobalState) => ({
   maxRows: getMaxRows(state),
@@ -66,7 +65,7 @@ export function RelatableViewComponent({
   result
 }: RelatableViewComponentProps): JSX.Element | null {
   const records = useMemo(
-    () => (result ? (result as QueryResult).records || [] : []),
+    () => (result && 'records' in result ? result.records : []),
     [result]
   )
 
@@ -170,7 +169,7 @@ export const RelatableStatusbar = connect((state: GlobalState) => ({
   maxFieldItems: getMaxFieldItems(state)
 }))(RelatableStatusbarComponent)
 
-type RelatableStatusbarComponentProps = {
+type RelatableStatusBarComponentProps = {
   maxRows: number
   maxFieldItems: number
   result?: QueryResult | BrowserRequestResult | null
@@ -180,7 +179,7 @@ export function RelatableStatusbarComponent({
   maxRows,
   result,
   maxFieldItems
-}: RelatableStatusbarComponentProps): JSX.Element {
+}: RelatableStatusBarComponentProps): JSX.Element {
   const hasTruncatedFields = useMemo(
     () => resultHasTruncatedFields(result, maxFieldItems),
     [result, maxFieldItems]

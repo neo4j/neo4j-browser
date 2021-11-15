@@ -21,7 +21,7 @@
 
 import parseUrl from 'url-parse'
 import { DESKTOP, CLOUD, WEB } from 'shared/modules/app/appDuck'
-import { trimStart, trimEnd } from 'lodash-es'
+import { trimStart, trimEnd, isNumber } from 'lodash-es'
 
 /**
  * The work objects expected shape:
@@ -315,7 +315,7 @@ export const stringifyMod = (
   pretty: boolean | number = false,
   skipOpeningIndentation = false
 ): string => {
-  const prettyLevel = !pretty ? false : pretty === true ? 1 : +pretty
+  const prettyLevel = isNumber(pretty) ? pretty : +pretty
   const nextPrettyLevel = prettyLevel ? prettyLevel + 1 : false
   const newLine = prettyLevel ? '\n' : ''
   const indentation =
