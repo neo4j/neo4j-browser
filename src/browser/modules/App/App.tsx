@@ -115,8 +115,8 @@ export function App(props: any) {
 
   useKeyboardShortcuts(props.bus)
 
-  const eventMetricsCallback = useRef((_: MetricsData) => {})
-  const segmentTrackCallback = useRef((_: MetricsData) => {})
+  const eventMetricsCallback = useRef((_: MetricsData) => _)
+  const segmentTrackCallback = useRef((_: MetricsData) => _)
 
   useEffect(() => {
     const unsub =
@@ -146,6 +146,11 @@ export function App(props: any) {
     props.bus && props.bus.send(initAction.type, initAction)
   }, [props.bus])
 
+  useEffect(() => {
+    window.Canny && window.Canny('initChangelog', cannyOptions)
+    return window.Canny && window.Canny('closeChangelog')
+  })
+
   const {
     activeConnection,
     browserSyncAuthStatus,
@@ -173,11 +178,6 @@ export function App(props: any) {
     useDb,
     updateDesktopUDCSettings
   } = props
-
-  useEffect(() => {
-    window.Canny && window.Canny('initChangelog', cannyOptions)
-    return window.Canny && window.Canny('closeChangelog')
-  })
 
   const wrapperClassNames = codeFontLigatures ? '' : 'disable-font-ligatures'
 

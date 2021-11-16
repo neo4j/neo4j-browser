@@ -50,6 +50,7 @@ export interface NavItem {
   name: string
   title: string
   icon: (isOpen: boolean) => JSX.Element
+  // Need to clean up code and properly type content
   content: any
   enableCannyBadge?: boolean
 }

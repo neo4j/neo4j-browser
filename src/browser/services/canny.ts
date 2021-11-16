@@ -29,9 +29,14 @@ export const cannyOptions = {
 export const CANNY_FEATURE_REQUEST_URL =
   'https://neo4j-browser.canny.io/feature-requests'
 
+interface CannyOptions {
+  appID: string
+  position: string
+  align: string
+}
 declare global {
   interface Window {
-    Canny?: { (command: string, options?: unknown): void }
+    Canny?: { (command: string, options?: CannyOptions): void }
     CannyIsLoaded?: boolean
     attachEvent?: typeof window.addEventListener
   }
@@ -46,26 +51,30 @@ const CannySDK = {
         return
       }
 
-      const canny = function(...args: unknown[]) {
+      const canny = function(...args: [string, CannyOptions?]) {
         canny.q.push(args)
       }
-      canny.q = [] as unknown[]
+
+      canny.q = [] as [string, CannyOptions?][]
       window.Canny = canny
 
       function loadCanny() {
         if (document.getElementById('canny-jssdk')) {
           return
         }
-        const f = document.getElementsByTagName('script')[0]
-        const e = document.createElement('script')
-        e.type = 'text/javascript'
-        e.async = true
-        e.src = 'https://canny.io/sdk.js'
-        e.onerror = reject
-        e.onload = resolve
-        e.addEventListener('error', reject)
-        e.addEventListener('load', resolve)
-        f?.parentNode?.insertBefore(e, f)
+        const firstScriptElement = document.getElementsByTagName('script')[0]
+        const scriptElement = document.createElement('script')
+        scriptElement.type = 'text/javascript'
+        scriptElement.async = true
+        scriptElement.src = 'https://canny.io/sdk.js'
+        scriptElement.onerror = reject
+        scriptElement.onload = resolve
+        scriptElement.addEventListener('error', reject)
+        scriptElement.addEventListener('load', resolve)
+        firstScriptElement?.parentNode?.insertBefore(
+          scriptElement,
+          firstScriptElement
+        )
       }
 
       if (document.readyState === 'complete') {
@@ -95,8 +104,8 @@ export class CannyLoader extends Component {
 
   componentWillUnmount(): void {
     if (canUseDOM()) {
-      delete (window as any).CannyIsLoaded
-      delete (window as any).Canny
+      delete window.CannyIsLoaded
+      delete window.Canny
     }
   }
 
