@@ -18,12 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { formatDocVersion } from 'browser/modules/Sidebar/docsUtils'
 import React from 'react'
 import { connect } from 'react-redux'
 import semver from 'semver'
 
 import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
-import { formatDocVersion } from 'browser/modules/Sidebar/Documents'
 import { DrawerExternalLink } from './drawer/drawer-styled'
 
 const movedPages: { [key: string]: { oldPage: string; oldContent: string } } = {
