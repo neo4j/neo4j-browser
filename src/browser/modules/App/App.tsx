@@ -148,7 +148,7 @@ export function App(props: any) {
 
   useEffect(() => {
     window.Canny && window.Canny('initChangelog', cannyOptions)
-    return window.Canny && window.Canny('closeChangelog')
+    return () => window.Canny && window.Canny('closeChangelog')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [window.Canny])
 

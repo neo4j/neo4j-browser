@@ -133,11 +133,14 @@ class Navigation extends Component<NavigationProps, NavigationState> {
         return (
           <div key={item.name}>
             {item.enableCannyBadge ? (
-              <StyledCannyBadgeAnchor data-canny-changelog />
+              <StyledCannyBadgeAnchor
+                data-testid={`navigationCanny${item.name}`}
+                data-canny-changelog
+              />
             ) : null}
             <NavigationButtonContainer
               title={item.title}
-              data-testid={'drawer' + item.name}
+              data-testid={`drawer${item.name}`}
               onClick={() => onNavClick(item.name.toLowerCase())}
               isOpen={isOpen}
             >

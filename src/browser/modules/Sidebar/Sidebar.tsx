@@ -79,6 +79,7 @@ const Sidebar = ({
 }: SidebarProps) => {
   const topNavItemsList: NavItem[] = [
     {
+      // Consider use constant variable to store those keys
       name: 'DBMS',
       title: 'Database Information',
       icon: function dbIcon(isOpen: boolean): JSX.Element {
