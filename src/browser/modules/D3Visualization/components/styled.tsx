@@ -272,13 +272,14 @@ export const StyledZoomButton = styled.button`
 
 export const StyledNodeInspectorContainer = styled.div<{
   width: number
+  shouldAnimate: boolean
 }>`
   position: absolute;
   right: 0;
   top: 3px;
   z-index: 1;
   width: ${props => props.width}px;
-  transition: 0.2s ease-out;
+  ${props => props.shouldAnimate && 'transition: 0.2s ease-out;'}
   max-width: 95%;
   height: 100%;
   background: ${props => props.theme.editorBackground};
