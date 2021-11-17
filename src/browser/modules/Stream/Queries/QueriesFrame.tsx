@@ -36,7 +36,8 @@ import {
 } from 'shared/modules/cypher/cypherDuck'
 import {
   getConnectionState,
-  CONNECTED_STATE
+  CONNECTED_STATE,
+  ConnectionState
 } from 'shared/modules/connections/connectionsDuck'
 import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
 import {
@@ -59,10 +60,27 @@ import FrameError from '../../Frame/FrameError'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { getDefaultBoltScheme } from 'shared/modules/features/versionedFeatures'
 import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
+import { GlobalState } from 'project-root/src/shared/globalState'
 
-type QueriesFrameState = any
+type QueriesFrameState = {
+  queries: any[]
+  autoRefresh: boolean
+  autoRefreshInterval: number
+  success: null | boolean | string
+  errors: any[]
+}
 
-export class QueriesFrame extends Component<any, QueriesFrameState> {
+type QueriesFrameProps = {
+  frame: any
+  bus: any
+  availableProcedures: any
+  connectionState: ConnectionState
+  neo4jVersion: string | null
+}
+export class QueriesFrame extends Component<
+  QueriesFrameProps,
+  QueriesFrameState
+> {
   timer: any
   state = {
     queries: [],
@@ -365,7 +383,7 @@ export class QueriesFrame extends Component<any, QueriesFrameState> {
   }
 }
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: GlobalState) => {
   return {
     availableProcedures: getAvailableProcedures(state) || [],
     connectionState: getConnectionState(state),

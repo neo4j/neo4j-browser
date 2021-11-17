@@ -97,9 +97,9 @@ export function getMetaInContext(state: any, context: any) {
   }
 }
 
-export const getVersion = (state: any): string | null =>
+export const getVersion = (state: GlobalState): string | null =>
   (state[NAME] || {}).server ? (state[NAME] || {}).server.version : null
-export const getEdition = (state: any) => state[NAME].server.edition
+export const getEdition = (state: GlobalState) => state[NAME].server.edition
 export const hasEdition = (state: any) =>
   state[NAME].server.edition !== initialState.server.edition
 export const getStoreSize = (state: any) => state[NAME].server.storeSize

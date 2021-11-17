@@ -45,7 +45,7 @@ function asChangeLogUrl(serverVersion: string): string | undefined {
 
 interface AboutProps {
   serverVersion: string | null
-  serverEdition: string
+  serverEdition: string | null
 }
 
 const About = ({ serverVersion, serverEdition }: AboutProps) => (

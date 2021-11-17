@@ -22,6 +22,7 @@ import semver from 'semver'
 import { getVersion, getActiveDbName } from '../dbMeta/dbMetaDuck'
 import { getUseDb } from '../connections/connectionsDuck'
 import { guessSemverVersion } from './featureDuck.utils'
+import { GlobalState } from 'project-root/src/shared/globalState'
 
 const NEO4J_TX_METADATA_VERSION = '3.5.0-alpha01'
 const NEO4J_4_0 = '4.0.0-alpha01'
@@ -31,70 +32,71 @@ export const FIRST_MULTI_DB_SUPPORT = NEO4J_4_0
 // compatible bolt server.
 export const FIRST_NO_MULTI_DB_SUPPORT = '3.4.0'
 
-export const canSendTxMetadata = (state: any) => {
+export const canSendTxMetadata = (state: GlobalState) => {
   const serverVersion = guessSemverVersion(getVersion(state))
 
-  if (!semver.valid(serverVersion)) {
+  if (!serverVersion || !semver.valid(serverVersion)) {
     return false
+  } else {
+    return semver.gt(serverVersion, NEO4J_TX_METADATA_VERSION)
   }
-  return semver.gt(serverVersion, NEO4J_TX_METADATA_VERSION)
 }
 
-export const getShowCurrentUserProcedure = (serverVersion: any) => {
-  serverVersion = guessSemverVersion(serverVersion)
+export const getShowCurrentUserProcedure = (serverVersion: string) => {
+  const serverVersionGuessed = guessSemverVersion(serverVersion)
 
   const pre4 = 'CALL dbms.security.showCurrentUser()'
-  if (!semver.valid(serverVersion)) {
+  if (!semver.valid(serverVersionGuessed)) {
     return pre4
   }
-  if (semver.gte(serverVersion, NEO4J_4_0)) {
+  if (serverVersionGuessed && semver.gte(serverVersionGuessed, NEO4J_4_0)) {
     return 'CALL dbms.showCurrentUser()'
   }
   return pre4
 }
 
-export const getDbClusterRole = (state: any) => {
+export const getDbClusterRole = (state: GlobalState) => {
   const pre4 = 'CALL dbms.cluster.role() YIELD role'
   const serverVersion = guessSemverVersion(getVersion(state))
   if (!semver.valid(serverVersion)) {
     return pre4
   }
-  if (semver.gte(serverVersion, NEO4J_4_0)) {
+  if (serverVersion && semver.gte(serverVersion, NEO4J_4_0)) {
     const db = getUseDb(state)
     return `CALL dbms.cluster.role("${db}") YIELD role`
   }
   return pre4
 }
 
-export const hasMultiDbSupport = (state: any) => {
+export const hasMultiDbSupport = (state: GlobalState) => {
   const serverVersion = guessSemverVersion(getVersion(state))
   if (!semver.valid(serverVersion)) {
     return false
   }
-  if (semver.gte(serverVersion, NEO4J_4_0)) {
+  if (serverVersion && semver.gte(serverVersion, NEO4J_4_0)) {
     return true
   }
   return false
 }
 
-export const getUsedDbName = (state: any) => {
+export const getUsedDbName = (state: GlobalState) => {
   const serverVersion = guessSemverVersion(getVersion(state))
   if (!semver.valid(serverVersion)) {
     return undefined
   }
-  if (semver.gte(serverVersion, NEO4J_4_0)) {
+  if (serverVersion && semver.gte(serverVersion, NEO4J_4_0)) {
     return getUseDb(state)
   }
   return getActiveDbName(state)
 }
 
-export const getDefaultBoltScheme = (serverVersion: any) => {
-  serverVersion = guessSemverVersion(serverVersion)
+export const getDefaultBoltScheme = (serverVersion: string | null) => {
+  const serverVersionGuessed = guessSemverVersion(serverVersion)
   const pre4 = 'bolt://'
-  if (!semver.valid(serverVersion)) {
+  if (!semver.valid(serverVersionGuessed)) {
     return pre4
   }
-  if (semver.gte(serverVersion, NEO4J_4_0)) {
+  if (serverVersionGuessed && semver.gte(serverVersionGuessed, NEO4J_4_0)) {
     return 'neo4j://'
   }
   return pre4
@@ -109,7 +111,7 @@ export const changeUserPasswordQuery = (state: any, oldPw: any, newPw: any) => {
   if (!semver.valid(serverVersion)) {
     return pre4
   }
-  if (semver.gte(serverVersion, NEO4J_4_0)) {
+  if (serverVersion && semver.gte(serverVersion, NEO4J_4_0)) {
     return {
       query: 'ALTER CURRENT USER SET PASSWORD FROM $oldPw TO $newPw',
       parameters: { oldPw, newPw }
@@ -118,13 +120,13 @@ export const changeUserPasswordQuery = (state: any, oldPw: any, newPw: any) => {
   return pre4
 }
 
-export const driverDatabaseSelection = (state: any, database: any) => {
+export const driverDatabaseSelection = (state: GlobalState, database: any) => {
   const pre4 = undefined
   const serverVersion = guessSemverVersion(getVersion(state))
   if (!semver.valid(serverVersion)) {
     return pre4
   }
-  if (semver.gte(serverVersion, NEO4J_4_0)) {
+  if (serverVersion && semver.gte(serverVersion, NEO4J_4_0)) {
     return { database }
   }
   return pre4
