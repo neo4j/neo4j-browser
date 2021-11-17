@@ -23,6 +23,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import {
   DETAILS_PANE_STEP_SIZE,
   DetailsPaneComponent,
+  ELLIPSIS,
   MAX_LENGTH_LARGE,
   MAX_LENGTH_SMALL,
   WIDE_VIEW_THRESHOLD
@@ -145,7 +146,7 @@ describe('<DetailsPane />', () => {
       width: WIDE_VIEW_THRESHOLD - 1
     })
 
-    const expectedCutValue = fullText.slice(0, MAX_LENGTH_SMALL) + '...'
+    const expectedCutValue = fullText.slice(0, MAX_LENGTH_SMALL) + ELLIPSIS
 
     await waitFor(() =>
       expect(screen.getByText(expectedCutValue)).toBeInTheDocument()
@@ -180,7 +181,7 @@ describe('<DetailsPane />', () => {
       width: WIDE_VIEW_THRESHOLD + 1
     })
 
-    const expectedCutValue = fullText.slice(0, MAX_LENGTH_LARGE) + '...'
+    const expectedCutValue = fullText.slice(0, MAX_LENGTH_LARGE) + ELLIPSIS
 
     await waitFor(() =>
       expect(screen.getByText(expectedCutValue)).toBeInTheDocument()

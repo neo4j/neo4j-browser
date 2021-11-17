@@ -40,6 +40,7 @@ import { StyleableRelType } from './StyleableRelType'
 import { upperFirst } from 'services/utils'
 import { ShowMoreOrAll } from 'browser-components/ShowMoreOrAll/ShowMoreOrAll'
 
+export const ELLIPSIS = '\u2026'
 export const MAX_LENGTH_SMALL = 150
 export const MAX_LENGTH_LARGE = 300
 type ExpandableValueProps = {
@@ -56,11 +57,9 @@ function ExpandableValue({ value, wideMode }: ExpandableValueProps) {
     setExpanded(true)
   }
 
-  let valueShown = expanded
-    ? value
-    : value.slice(0, Math.min(maxLength, value.length))
+  let valueShown = expanded ? value : value.slice(0, maxLength)
   const valueIsTrimmed = valueShown.length !== value.length
-  valueShown += valueIsTrimmed ? '...' : ''
+  valueShown += valueIsTrimmed ? ELLIPSIS : ''
 
   return (
     <>
