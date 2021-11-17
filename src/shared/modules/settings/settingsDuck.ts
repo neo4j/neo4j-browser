@@ -62,8 +62,6 @@ export const getMaxFrames = (state: GlobalState): number =>
 export const getInitialNodeDisplay = (state: GlobalState): number =>
   state[NAME].initialNodeDisplay || initialState.initialNodeDisplay
 export const getScrollToTop = (state: any) => state[NAME].scrollToTop
-export const shouldReportUdc = (state: any) =>
-  state[NAME].shouldReportUdc !== false
 export const shouldAutoComplete = (state: any) =>
   state[NAME].autoComplete !== false
 export const shouldEditorLint = (state: any) => state[NAME].editorLint === true
@@ -104,7 +102,6 @@ export const initialState = {
   browserSyncDebugServer: null,
   maxRows: 1000,
   maxFieldItems: 500,
-  shouldReportUdc: true,
   autoComplete: true,
   scrollToTop: true,
   maxFrames: 15,

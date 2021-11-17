@@ -83,12 +83,7 @@ import {
 } from './modules/sync/syncDuck'
 import { credentialsTimeoutEpic } from './modules/credentialsPolicy/credentialsPolicyDuck'
 import {
-  bootEpic,
-  incrementEventEpic,
   udcStartupEpic,
-  trackSyncLogoutEpic,
-  trackConnectsEpic,
-  eventFiredEpic,
   trackCommandUsageEpic,
   trackErrorFramesEpic,
   trackReduxActionsEpic
@@ -145,12 +140,7 @@ export default combineEpics(
   syncFoldersEpic,
   syncGrassEpic,
   credentialsTimeoutEpic,
-  bootEpic,
   udcStartupEpic,
-  incrementEventEpic,
-  trackSyncLogoutEpic,
-  trackConnectsEpic,
-  eventFiredEpic,
   ensureMaxFramesEpic,
   getCurrentUserEpic,
   clearCurrentUserOnDisconnectEpic,

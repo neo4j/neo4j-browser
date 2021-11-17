@@ -55,7 +55,7 @@ import {
 } from './modules/sync/syncDuck'
 import { NAME as folders, Folder } from './modules/favorites/foldersDuck'
 import { NAME as commands } from './modules/commands/commandsDuck'
-import { NAME as udc, udcState } from './modules/udc/udcDuck'
+import { NAME as udc, UdcState } from './modules/udc/udcDuck'
 import { NAME as app } from './modules/app/appDuck'
 import { NAME as guides, GuideState } from './modules/guides/guidesDuck'
 import {
@@ -81,7 +81,7 @@ export interface GlobalState {
   [syncConsent]: typeof initialConsentState
   [folders]: Folder[]
   [commands]: unknown
-  [udc]: udcState
+  [udc]: UdcState
   [app]: Record<string, unknown>
   [experimentalFeatures]: typeof experimentalFeaturesInitialState
   [guides]: GuideState

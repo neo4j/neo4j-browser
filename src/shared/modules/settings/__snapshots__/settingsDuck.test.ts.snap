@@ -20,7 +20,6 @@ Object {
   "new": "conf",
   "playImplicitInitCommands": true,
   "scrollToTop": true,
-  "shouldReportUdc": true,
   "showPerformanceOverlay": false,
   "showSampleScripts": true,
   "theme": "auto",
