@@ -24,10 +24,6 @@ import { connect } from 'react-redux'
 
 import {
   Guide,
-  GotoSlideAction,
-  SetGuideAction,
-  FetchGuideAction,
-  UpdateGuideAction,
   getCurrentGuide,
   getRemoteGuides,
   resetGuide,
@@ -51,11 +47,11 @@ import GuidePicker from './GuidePicker'
 type GuideDrawerProps = {
   currentGuide: Guide | null
   remoteGuides: Guide[]
-  backToAllGuides: () => SetGuideAction
-  gotoSlide: (slideIndex: number) => GotoSlideAction
-  setCurrentGuide: (guide: Guide) => SetGuideAction
-  fetchRemoteGuide: (identifier: string) => FetchGuideAction
-  updateRemoteGuides: (newList: Guide[]) => UpdateGuideAction
+  backToAllGuides: () => void
+  gotoSlide: (slideIndex: number) => void
+  setCurrentGuide: (guide: Guide) => void
+  fetchRemoteGuide: (identifier: string) => void
+  updateRemoteGuides: (newList: Guide[]) => void
 }
 
 function GuideDrawer({

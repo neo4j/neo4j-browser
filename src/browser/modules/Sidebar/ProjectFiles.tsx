@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React, { Dispatch } from 'react'
-import { Action } from 'redux'
+import React from 'react'
+import { Action, Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { useMutation } from '@apollo/client'
 import { getProjectId } from 'shared/modules/app/appDuck'
@@ -33,7 +33,10 @@ import {
   updateCacheAddProjectFile
 } from '../../components/ProjectFiles/projectFilesUtils'
 import { ADD_PROJECT_FILE } from '../../components/ProjectFiles/projectFilesConstants'
-import { setDraftScript } from 'shared/modules/sidebar/sidebarDuck'
+import {
+  SetDraftScriptAction,
+  setDraftScript
+} from 'shared/modules/sidebar/sidebarDuck'
 import { CYPHER_FILE_EXTENSION } from 'services/exporting/favoriteUtils'
 
 interface ProjectFilesProps {
@@ -91,7 +94,7 @@ const mapStateToProps = (state: any) => ({
   projectId: getProjectId(state)
 })
 
-const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
+const mapDispatchToProps = (dispatch: Dispatch<SetDraftScriptAction>) => ({
   resetDraft: () => {
     dispatch(setDraftScript(null, 'project files'))
   }

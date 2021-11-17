@@ -86,7 +86,7 @@ export interface OpenAction {
   drawerId: DrawerId
 }
 
-interface SetDraftScriptAction {
+export interface SetDraftScriptAction {
   type: typeof SET_DRAFT_SCRIPT
   cmd: string | null
   scriptId: string | null

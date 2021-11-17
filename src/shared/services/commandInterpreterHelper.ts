@@ -20,7 +20,7 @@
 
 import * as Sentry from '@sentry/react'
 import { v4 } from 'uuid'
-import { Store, Dispatch } from 'redux'
+import { Dispatch, Action } from 'redux'
 import { GlobalState } from 'shared/globalState'
 import bolt from 'services/bolt/bolt'
 import * as frames from 'shared/modules/frames/framesDuck'
@@ -61,7 +61,7 @@ import { handleServerCommand } from 'shared/modules/commands/helpers/server'
 import { handleCypherCommand } from 'shared/modules/commands/helpers/cypher'
 import {
   SINGLE_COMMAND_QUEUED,
-  ExecuteCommandAction,
+  ExecuteSingleCommandAction,
   showErrorMessage,
   successfulCypher,
   unsuccessfulCypher,
@@ -505,7 +505,7 @@ const availableCommands = [
   {
     name: 'guide',
     match: (cmd: string) => /^guide(\s|$)/.test(cmd),
-    exec(action: ExecuteCommandAction, dispatch: Dispatch<GlobalState>) {
+    exec(action: ExecuteSingleCommandAction, dispatch: Dispatch<Action>) {
       const guideIdentifier = action.cmd.substr(':guide'.length).trim()
       if (!guideIdentifier) {
         dispatch(resetGuide())
