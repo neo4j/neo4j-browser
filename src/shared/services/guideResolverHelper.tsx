@@ -56,7 +56,6 @@ export async function resolveGuide(
   identifier: string
   isError?: boolean
 }> {
-  console.log('id', identifier)
   const isUrl = identifier.startsWith('http')
   if (isUrl) {
     return await resolveRemoteGuideByUrl(identifier, state)
@@ -156,7 +155,7 @@ async function resolveRemoteGuideByUrl(
 
 async function resolveRemoteGuideByName(
   guideName: string,
-  state: any
+  state: GlobalState
 ): Promise<{ slides: JSX.Element[]; title: string; identifier: string }> {
   const allowlistStr = getRemoteContentHostnameAllowlist(state)
   const allowlist = extractAllowlistFromConfigString(allowlistStr)
@@ -168,13 +167,13 @@ async function resolveRemoteGuideByName(
     defaultAllowlist
   )
   const urlAllowlist = addProtocolsToUrlList(resolvedWildcardAllowlist)
-  const possibleGuidesUrls: string[] = urlAllowlist.map(
+  const possibleGuidesUrls = urlAllowlist.map(
     (url: string) => `${url}/${guideName}`
   )
 
   return possibleGuidesUrls
     .reduce(
-      (promiseChain: Promise<any>, currentUrl: string) =>
+      (promiseChain: Promise<string>, currentUrl: string) =>
         promiseChain
           .catch(() => fetchRemoteGuideAsync(currentUrl, allowlistStr))
           .then(r => Promise.resolve(r)),

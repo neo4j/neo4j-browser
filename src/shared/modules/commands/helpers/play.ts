@@ -23,15 +23,18 @@ import { hostIsAllowed } from 'services/utils'
 import { cleanHtml } from 'services/remoteUtils'
 import remote from 'services/remote'
 
-export const fetchRemoteGuideAsync = (url: any, allowlist = null) => {
+export const fetchRemoteGuideAsync = async (
+  url: string,
+  allowlistStr?: string
+): Promise<string> => {
   return new Promise<void>((resolve, reject) => {
-    if (!hostIsAllowed(url, allowlist)) {
+    if (!hostIsAllowed(url, allowlistStr)) {
       return reject(
         new Error('Hostname is not allowed according to server allowlist')
       )
     }
     resolve()
-  }).then(() => {
+  }).then(async () => {
     return remote
       .get(url, { pragma: 'no-cache', 'cache-control': 'no-cache' })
       .then(r => {

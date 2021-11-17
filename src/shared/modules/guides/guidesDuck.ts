@@ -140,7 +140,6 @@ export default function reducer(
       const builtInGuidesTitles = Object.values(docs.guide.chapters).map(
         guide => guide.title
       )
-      console.log(builtInGuidesTitles)
 
       const alreadyAdded = remoteGuideTitles
         .concat(builtInGuidesTitles)
