@@ -372,3 +372,10 @@ export const PaneBodySectionHeaderWrapper = styled.div`
   display: flex;
   flex-direction: column;
 `
+
+export const StyledExpandValueButton = styled.button`
+  border: none;
+  outline: none;
+  background-color: inherit;
+  color: ${props => props.theme.link};
+`

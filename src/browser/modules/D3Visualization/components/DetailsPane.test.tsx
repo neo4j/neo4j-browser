@@ -19,8 +19,14 @@
  */
 
 import React from 'react'
-import { render, screen } from '@testing-library/react'
-import { DETAILS_PANE_STEP_SIZE, DetailsPaneComponent } from './DetailsPane'
+import { render, screen, waitFor } from '@testing-library/react'
+import {
+  DETAILS_PANE_STEP_SIZE,
+  DetailsPaneComponent,
+  MAX_LENGTH_LARGE,
+  MAX_LENGTH_SMALL,
+  WIDE_VIEW_THRESHOLD
+} from './DetailsPane'
 import { VizItem, VizNodeProperty } from './types'
 
 describe('<DetailsPane />', () => {
@@ -46,11 +52,13 @@ describe('<DetailsPane />', () => {
     properties?: VizItem[]
     labels?: string[]
     type?: 'node' | 'relationship'
+    width?: number
   }
   const renderComponent = ({
     properties = [],
     labels = [],
-    type = 'node'
+    type = 'node',
+    width = 200
   }: RenderComponentProps) => {
     let mockVizItem: VizItem
     switch (type) {
@@ -78,6 +86,7 @@ describe('<DetailsPane />', () => {
         frameHeight={0}
         graphStyle={mockGraphStyle}
         vizItem={mockVizItem}
+        nodeInspectorWidth={width}
       />
     )
   }
@@ -122,5 +131,59 @@ describe('<DetailsPane />', () => {
     expect(
       screen.getByRole('button', { name: 'Show 2 more' })
     ).toBeInTheDocument()
+  })
+
+  test('should handle show more on long property value', async () => {
+    const fullText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`
+    const mockProperty = {
+      key: 'propWithLongValue',
+      type: 'string',
+      value: fullText
+    }
+    renderComponent({
+      properties: [mockProperty],
+      width: WIDE_VIEW_THRESHOLD - 1
+    })
+
+    const expectedCutValue = fullText.slice(0, MAX_LENGTH_SMALL) + '...'
+
+    await waitFor(() =>
+      expect(screen.getByText(expectedCutValue)).toBeInTheDocument()
+    )
+    expect(
+      screen.getByRole('button', {
+        name: 'Show all'
+      })
+    ).toBeInTheDocument()
+    expect(screen.queryByText(fullText)).not.toBeInTheDocument()
+
+    const showAllButton = screen.getByRole('button', {
+      name: 'Show all'
+    })
+    showAllButton.click()
+
+    await waitFor(() => expect(screen.getByText(fullText)).toBeInTheDocument())
+    expect(
+      screen.queryByRole('button', { name: 'Show all' })
+    ).not.toBeInTheDocument()
+  })
+
+  test('should cut a long property value to longer size when in wide mode', async () => {
+    const fullText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`
+    const mockProperty = {
+      key: 'propWithLongValue',
+      type: 'string',
+      value: fullText
+    }
+    renderComponent({
+      properties: [mockProperty],
+      width: WIDE_VIEW_THRESHOLD + 1
+    })
+
+    const expectedCutValue = fullText.slice(0, MAX_LENGTH_LARGE) + '...'
+
+    await waitFor(() =>
+      expect(screen.getByText(expectedCutValue)).toBeInTheDocument()
+    )
   })
 })
