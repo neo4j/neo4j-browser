@@ -40,7 +40,7 @@ import {
   getPlayImplicitInitCommands,
   shouldEnableMultiStatementMode
 } from '../settings/settingsDuck'
-import { fetchRemoteGuideAsync } from './helpers/play'
+import { fetchRemoteGuideAsync } from './helpers/playAndGuides'
 import { CONNECTION_SUCCESS } from '../connections/connectionsDuck'
 import {
   UPDATE_SETTINGS,

@@ -54,7 +54,7 @@ import {
   SYSTEM_DB
 } from 'shared/modules/dbMeta/dbMetaDuck'
 import { canSendTxMetadata } from 'shared/modules/features/versionedFeatures'
-import { fetchRemoteGuideAsync } from 'shared/modules/commands/helpers/play'
+import { fetchRemoteGuideAsync } from 'shared/modules/commands/helpers/playAndGuides'
 import remote from 'services/remote'
 import { isLocalRequest, authHeaderFromCredentials } from 'services/remoteUtils'
 import { handleServerCommand } from 'shared/modules/commands/helpers/server'

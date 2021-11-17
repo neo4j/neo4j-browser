@@ -20,7 +20,6 @@
 
 import { Observable } from 'rxjs'
 import { Epic } from 'redux-observable'
-import docs from 'browser/documentation'
 import { GlobalState } from 'shared/globalState'
 import { tryGetRemoteInitialSlideFromUrl } from 'services/guideResolverHelper'
 import { resolveGuide } from '../../services/guideResolverHelper'
@@ -31,23 +30,23 @@ export const FETCH_GUIDE = 'guides/FETCH_GUIDE'
 export const SET_GUIDE = 'sidebar/SET_GUIDE'
 export const GOTO_SLIDE = 'sidebar/GOTO_SLIDE'
 export const UPDATE_REMOTE_GUIDES = 'sidebar/UPDATE_REMOTE_GUIDES'
-export const ADD_GUIDE = 'sidebar/ADD_GUIDE'
+export const ADD_REMOTE_GUIDE = 'sidebar/ADD_REMOTE_GUIDE'
 
 export const getCurrentGuide = (state: GlobalState): Guide | null =>
   state[NAME].currentGuide
-export const getRemoteGuides = (state: GlobalState): Guide[] =>
+export const getRemoteGuides = (state: GlobalState): RemoteGuide[] =>
   state[NAME].remoteGuides
 
 export type Guide = {
   currentSlide: number
   title: string
   identifier: string
-  slides?: JSX.Element[]
+  slides: JSX.Element[]
 }
-
+export type RemoteGuide = Omit<Guide, 'slides'>
 export interface GuideState {
   currentGuide: Guide | null
-  remoteGuides: Guide[]
+  remoteGuides: RemoteGuide[]
 }
 
 const initialState: GuideState = {
@@ -60,7 +59,7 @@ export type GuideAction =
   | SetGuideAction
   | GotoSlideAction
   | UpdateGuideAction
-  | AddGuideAction
+  | AddRemoteGuideAction
 
 export interface SetGuideAction {
   type: typeof SET_GUIDE
@@ -79,15 +78,15 @@ export interface FetchGuideAction {
 
 export interface UpdateGuideAction {
   type: typeof UPDATE_REMOTE_GUIDES
-  updatedGuides: Guide[]
+  updatedGuides: RemoteGuide[]
 }
-interface AddGuideAction {
-  type: typeof ADD_GUIDE
-  guide: Guide
+interface AddRemoteGuideAction {
+  type: typeof ADD_REMOTE_GUIDE
+  guide: RemoteGuide
 }
 
 export const fetchRemoteGuideEpic: Epic<
-  FetchGuideAction | SetGuideAction | OpenSidebarAction | AddGuideAction,
+  FetchGuideAction | SetGuideAction | OpenSidebarAction | AddRemoteGuideAction,
   GlobalState
 > = (action$, store$) =>
   action$.ofType(FETCH_GUIDE).flatMap(action => {
@@ -97,14 +96,14 @@ export const fetchRemoteGuideEpic: Epic<
     return Observable.fromPromise(
       resolveGuide((<FetchGuideAction>action).identifier, store$.getState())
     ).mergeMap(({ title, identifier, slides, isError }) => {
-      const guide: Guide = {
+      const guide: RemoteGuide = {
         currentSlide: initialSlide,
         title,
         identifier
       }
 
       const streamActions: Array<
-        SetGuideAction | OpenSidebarAction | AddGuideAction
+        SetGuideAction | OpenSidebarAction | AddRemoteGuideAction
       > = [setCurrentGuide({ ...guide, slides }), open('guides')]
       // To keep Redux store as small as possible, we don't save slides into it
       if (!isError) streamActions.push(addRemoteGuide(guide))
@@ -134,16 +133,10 @@ export default function reducer(
     case UPDATE_REMOTE_GUIDES:
       return { ...state, remoteGuides: action.updatedGuides }
 
-    case ADD_GUIDE:
-      // Use title as the unique identifier doesn't seem correct
-      const remoteGuideTitles = state.remoteGuides.map(g => g.title)
-      const builtInGuidesTitles = Object.values(docs.guide.chapters).map(
-        guide => guide.title
-      )
+    case ADD_REMOTE_GUIDE:
+      const remoteGuideTitles = state.remoteGuides.map(g => g.identifier)
 
-      const alreadyAdded = remoteGuideTitles
-        .concat(builtInGuidesTitles)
-        .includes(action.guide.title)
+      const alreadyAdded = remoteGuideTitles.includes(action.guide.identifier)
 
       if (alreadyAdded) {
         return state
@@ -159,7 +152,9 @@ export default function reducer(
   }
 }
 
-export function updateRemoteGuides(updatedGuides: Guide[]): UpdateGuideAction {
+export function updateRemoteGuides(
+  updatedGuides: RemoteGuide[]
+): UpdateGuideAction {
   return { type: UPDATE_REMOTE_GUIDES, updatedGuides }
 }
 
@@ -167,8 +162,8 @@ export function clearRemoteGuides(): UpdateGuideAction {
   return updateRemoteGuides([])
 }
 
-export function addRemoteGuide(guide: Guide): AddGuideAction {
-  return { type: ADD_GUIDE, guide }
+function addRemoteGuide(guide: RemoteGuide): AddRemoteGuideAction {
+  return { type: ADD_REMOTE_GUIDE, guide }
 }
 
 export function fetchRemoteGuide(identifier: string): FetchGuideAction {

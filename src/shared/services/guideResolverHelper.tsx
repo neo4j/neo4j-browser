@@ -30,7 +30,7 @@ import {
   extractAllowlistFromConfigString,
   resolveAllowlistWildcard
 } from './utils'
-import { fetchRemoteGuideAsync } from 'shared/modules/commands/helpers/play'
+import { fetchRemoteGuideAsync } from 'shared/modules/commands/helpers/playAndGuides'
 import {
   getDefaultRemoteContentHostnameAllowlist,
   getRemoteContentHostnameAllowlist

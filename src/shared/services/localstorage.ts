@@ -76,8 +76,6 @@ export function getAll(): Partial<GlobalState> {
           ...(current as typeof settingsInitialState),
           playImplicitInitCommands: true
         }
-      } else if (key === 'guides') {
-        out[key] = { ...(current as GuideState), currentGuide: null }
       } else {
         Object.assign(out, { [key]: current })
       }
@@ -110,6 +108,8 @@ export function createReduxMiddleware(): Middleware {
         })
       } else if (key === 'history' && !shouldRetainEditorHistory(state)) {
         setItem(key, [])
+      } else if (key === 'guides') {
+        setItem(key, { ...state[key], currentGuide: null })
       } else {
         setItem(key, state[key])
       }
