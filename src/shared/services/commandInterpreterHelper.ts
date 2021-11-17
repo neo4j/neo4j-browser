@@ -100,13 +100,10 @@ import {
   getUserDirectTxMetadata,
   getBackgroundTxMetadata
 } from 'shared/services/bolt/txMetadata'
-import {
-  getCommandAndParam,
-  tryGetRemoteInitialSlideFromUrl
-} from './commandUtils'
+import { getCommandAndParam } from './commandUtils'
 import { unescapeCypherIdentifier } from './utils'
 import { getLatestFromFrameStack } from 'browser/modules/Stream/stream.utils'
-import { resolveGuide } from './guideResolverHelper'
+import { tryGetRemoteInitialSlideFromUrl } from './guideResolverHelper'
 import { AUTH_STORAGE_LOGS } from 'neo4j-client-sso'
 
 const PLAY_FRAME_TYPES = ['play', 'play-remote']

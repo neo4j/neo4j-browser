@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { includes, last, split, startsWith } from 'lodash-es'
+
 import { extractStatements } from 'cypher-editor-support'
 
 export function cleanCommand(cmd: any) {
@@ -151,15 +151,4 @@ export const getCommandAndParam = (str: any) => {
     ' '
   )
   return [serverCmd, props]
-}
-
-// Consider to move this method to guideResolverHelper
-export function tryGetRemoteInitialSlideFromUrl(url: string): number {
-  const hashBang = includes(url, '#') ? last(split(url, '#')) : ''
-
-  if (!startsWith(hashBang, 'slide-')) return 0
-
-  const slideIndex = Number(last(split(hashBang, 'slide-')))
-
-  return !isNaN(slideIndex) ? slideIndex : 0
 }

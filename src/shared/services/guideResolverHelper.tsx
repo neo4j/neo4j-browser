@@ -19,6 +19,8 @@
  */
 
 import React from 'react'
+import { includes, last, split, startsWith } from 'lodash-es'
+
 import MdxSlide from 'browser/modules/Docs/MDX/MdxSlide'
 import Slide from 'browser/modules/Carousel/Slide'
 import docs, { isGuideChapter } from 'browser/documentation'
@@ -46,6 +48,16 @@ import {
 import { GlobalState } from 'shared/globalState'
 
 const { chapters } = docs.guide
+
+export function tryGetRemoteInitialSlideFromUrl(url: string): number {
+  const hashBang = includes(url, '#') ? last(split(url, '#')) : ''
+
+  if (!startsWith(hashBang, 'slide-')) return 0
+
+  const slideIndex = Number(last(split(hashBang, 'slide-')))
+
+  return !isNaN(slideIndex) ? slideIndex : 0
+}
 
 export async function resolveGuide(
   identifier: string,

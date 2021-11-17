@@ -22,7 +22,7 @@ import { Observable } from 'rxjs'
 import { Epic } from 'redux-observable'
 import docs from 'browser/documentation'
 import { GlobalState } from 'shared/globalState'
-import { tryGetRemoteInitialSlideFromUrl } from 'services/commandUtils'
+import { tryGetRemoteInitialSlideFromUrl } from 'services/guideResolverHelper'
 import { resolveGuide } from '../../services/guideResolverHelper'
 import { OpenAction, open } from '../sidebar/sidebarDuck'
 
