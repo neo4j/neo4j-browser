@@ -74,14 +74,14 @@ function toggleDrawer(state: SidebarState, drawer: DrawerId): SidebarState {
   return { draftScript: null, drawer, scriptId: null }
 }
 
-type SidebarAction = ToggleAction | SetDraftScriptAction | OpenAction
+type SidebarAction = ToggleAction | SetDraftScriptAction | OpenSidebarAction
 
 interface ToggleAction {
   type: typeof TOGGLE
   drawerId: DrawerId
 }
 
-export interface OpenAction {
+export interface OpenSidebarAction {
   type: typeof OPEN
   drawerId: DrawerId
 }
@@ -116,7 +116,7 @@ export function toggle(drawerId: DrawerId): ToggleAction {
   return { type: TOGGLE, drawerId }
 }
 
-export function open(drawerId: DrawerId): OpenAction {
+export function open(drawerId: DrawerId): OpenSidebarAction {
   return { type: OPEN, drawerId }
 }
 

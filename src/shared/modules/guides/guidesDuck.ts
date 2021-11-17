@@ -24,7 +24,7 @@ import docs from 'browser/documentation'
 import { GlobalState } from 'shared/globalState'
 import { tryGetRemoteInitialSlideFromUrl } from 'services/guideResolverHelper'
 import { resolveGuide } from '../../services/guideResolverHelper'
-import { OpenAction, open } from '../sidebar/sidebarDuck'
+import { OpenSidebarAction, open } from '../sidebar/sidebarDuck'
 
 export const NAME = 'guides'
 export const FETCH_GUIDE = 'guides/FETCH_GUIDE'
@@ -87,7 +87,7 @@ interface AddGuideAction {
 }
 
 export const fetchRemoteGuideEpic: Epic<
-  FetchGuideAction | SetGuideAction | OpenAction | AddGuideAction,
+  FetchGuideAction | SetGuideAction | OpenSidebarAction | AddGuideAction,
   GlobalState
 > = (action$, store$) =>
   action$.ofType(FETCH_GUIDE).flatMap(action => {
@@ -104,7 +104,7 @@ export const fetchRemoteGuideEpic: Epic<
       }
 
       const streamActions: Array<
-        SetGuideAction | OpenAction | AddGuideAction
+        SetGuideAction | OpenSidebarAction | AddGuideAction
       > = [setCurrentGuide({ ...guide, slides }), open('guides')]
       // To keep Redux store as small as possible, we don't save slides into it
       if (!isError) streamActions.push(addRemoteGuide(guide))
