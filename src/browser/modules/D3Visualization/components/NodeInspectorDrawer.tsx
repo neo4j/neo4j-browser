@@ -69,18 +69,16 @@ export function NodeInspectorDrawer({
     }
   }
 
-  const drawerIsVisible = () => {
-    return (
-      transitionState === Opening ||
-      transitionState === Open ||
-      transitionState === Closing
-    )
-  }
+  const drawerIsVisible =
+    transitionState === Opening ||
+    transitionState === Open ||
+    transitionState === Closing
 
   return (
     <StyledNodeInspectorContainer
       width={!isOpen ? 0 : width}
       onTransitionEnd={onTransitionEnd}
+      shouldAnimate={transitionState !== Open}
     >
       {drawerIsVisible && children}
     </StyledNodeInspectorContainer>
