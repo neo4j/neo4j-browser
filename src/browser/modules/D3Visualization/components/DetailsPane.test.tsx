@@ -23,8 +23,9 @@ import { render, screen, waitFor } from '@testing-library/react'
 import {
   DETAILS_PANE_STEP_SIZE,
   DetailsPaneComponent,
-  MAX_LENGTH_LARGE,
-  MAX_LENGTH_SMALL,
+  ELLIPSIS,
+  MAX_LENGTH_WIDE,
+  MAX_LENGTH_NARROW,
   WIDE_VIEW_THRESHOLD
 } from './DetailsPane'
 import { VizItem, VizNodeProperty } from './types'
@@ -145,7 +146,7 @@ describe('<DetailsPane />', () => {
       width: WIDE_VIEW_THRESHOLD - 1
     })
 
-    const expectedCutValue = fullText.slice(0, MAX_LENGTH_SMALL) + '...'
+    const expectedCutValue = fullText.slice(0, MAX_LENGTH_NARROW) + ELLIPSIS
 
     await waitFor(() =>
       expect(screen.getByText(expectedCutValue)).toBeInTheDocument()
@@ -180,7 +181,7 @@ describe('<DetailsPane />', () => {
       width: WIDE_VIEW_THRESHOLD + 1
     })
 
-    const expectedCutValue = fullText.slice(0, MAX_LENGTH_LARGE) + '...'
+    const expectedCutValue = fullText.slice(0, MAX_LENGTH_WIDE) + ELLIPSIS
 
     await waitFor(() =>
       expect(screen.getByText(expectedCutValue)).toBeInTheDocument()

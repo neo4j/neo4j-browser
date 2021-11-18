@@ -40,27 +40,27 @@ import { StyleableRelType } from './StyleableRelType'
 import { upperFirst } from 'services/utils'
 import { ShowMoreOrAll } from 'browser-components/ShowMoreOrAll/ShowMoreOrAll'
 
-export const MAX_LENGTH_SMALL = 150
-export const MAX_LENGTH_LARGE = 300
+export const ELLIPSIS = '\u2026'
+export const WIDE_VIEW_THRESHOLD = 900
+export const MAX_LENGTH_NARROW = 150
+export const MAX_LENGTH_WIDE = 300
 type ExpandableValueProps = {
   value: string
-  type: string
-  wideMode: boolean
+  width: number
 }
-function ExpandableValue({ value, wideMode }: ExpandableValueProps) {
+function ExpandableValue({ value, width }: ExpandableValueProps) {
   const [expanded, setExpanded] = useState(false)
 
-  const maxLength = wideMode ? MAX_LENGTH_LARGE : MAX_LENGTH_SMALL
+  const maxLength =
+    width > WIDE_VIEW_THRESHOLD ? MAX_LENGTH_WIDE : MAX_LENGTH_NARROW
 
   const handleExpandClick = () => {
     setExpanded(true)
   }
 
-  let valueShown = expanded
-    ? value
-    : value.slice(0, Math.min(maxLength, value.length))
+  let valueShown = expanded ? value : value.slice(0, maxLength)
   const valueIsTrimmed = valueShown.length !== value.length
-  valueShown += valueIsTrimmed ? '...' : ''
+  valueShown += valueIsTrimmed ? ELLIPSIS : ''
 
   return (
     <>
@@ -74,7 +74,6 @@ function ExpandableValue({ value, wideMode }: ExpandableValueProps) {
   )
 }
 
-export const WIDE_VIEW_THRESHOLD = 900
 type PropertiesViewProps = {
   visibleProperties: VizNodeProperty[]
   onMoreClick: (numMore: number) => void
@@ -100,11 +99,7 @@ function PropertiesView({
                   <ClickableUrls text={key} />
                 </KeyCell>
                 <ValueCell>
-                  <ExpandableValue
-                    value={value}
-                    type={type}
-                    wideMode={nodeInspectorWidth > WIDE_VIEW_THRESHOLD}
-                  />
+                  <ExpandableValue value={value} width={nodeInspectorWidth} />
                 </ValueCell>
                 <CopyCell>
                   <ClipboardCopier
