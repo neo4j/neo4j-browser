@@ -27,6 +27,7 @@ import {
 } from 'browser-components/drawer/drawer-styled'
 import { uniqBy } from 'lodash-es'
 import { escapeCypherIdentifier } from 'services/utils'
+import { Database } from 'shared/modules/dbMeta/dbMetaDuck'
 
 const Select = styled.select`
   width: 100%;
@@ -39,32 +40,34 @@ const EMPTY_OPTION = 'Select db to use'
 const HOUSE_EMOJI = '\u{1F3E0}'
 const NBSP_CHAR = '\u{00A0}'
 
+type DatabaseSelectorProps = {
+  databases?: Database[]
+  selectedDb?: string
+  onChange?: (dbName: string) => void
+}
 export const DatabaseSelector = ({
   databases = [],
   selectedDb = '',
-  onChange = () => {}
-}: any) => {
-  if (!Array.isArray(databases) || databases.length < 1) {
-    return null
-  }
-  const selectionChange = ({ target }: any) => {
-    if (target.value === EMPTY_OPTION) {
-      return
+  onChange = () => undefined
+}: DatabaseSelectorProps): JSX.Element | null => {
+  const selectionChange = ({
+    target
+  }: React.ChangeEvent<HTMLSelectElement>) => {
+    if (target.value !== EMPTY_OPTION) {
+      onChange(escapeCypherIdentifier(target.value))
     }
-    onChange(escapeCypherIdentifier(target.value))
   }
 
-  let databasesList = databases
+  // todo look into if the empty option is needed
+  const databasesList: (Partial<Database> & {
+    name: string
+  })[] = databases
   if (!selectedDb) {
-    databasesList = ([] as any[]).concat(
-      [{ name: EMPTY_OPTION, status: null }],
-      databases
-    )
+    databasesList.unshift({ name: EMPTY_OPTION })
   }
-  const uniqDatabases = uniqBy(databasesList, 'name')
+
   const homeDb =
-    uniqDatabases.find((db: any) => db.home) ||
-    uniqDatabases.find((db: any) => db.default)
+    databasesList.find(db => db.home) || databasesList.find(db => db.default)
 
   return (
     <DrawerSection>
@@ -75,11 +78,14 @@ export const DatabaseSelector = ({
           data-testid="database-selection-list"
           onChange={selectionChange}
         >
-          {uniqDatabases.map(db => {
+          {databasesList.map(db => {
             return (
               <option key={db.name} value={db.name}>
                 {db.name}
                 {db === homeDb ? NBSP_CHAR + HOUSE_EMOJI : ''}
+                {db.aliases &&
+                  db.aliases.length > 0 &&
+                  ` (${db.aliases.join(',')})`}
               </option>
             )
           })}
