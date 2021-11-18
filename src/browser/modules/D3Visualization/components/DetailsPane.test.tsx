@@ -24,8 +24,8 @@ import {
   DETAILS_PANE_STEP_SIZE,
   DetailsPaneComponent,
   ELLIPSIS,
-  MAX_LENGTH_LARGE,
-  MAX_LENGTH_SMALL,
+  MAX_LENGTH_WIDE,
+  MAX_LENGTH_NARROW,
   WIDE_VIEW_THRESHOLD
 } from './DetailsPane'
 import { VizItem, VizNodeProperty } from './types'
@@ -146,7 +146,7 @@ describe('<DetailsPane />', () => {
       width: WIDE_VIEW_THRESHOLD - 1
     })
 
-    const expectedCutValue = fullText.slice(0, MAX_LENGTH_SMALL) + ELLIPSIS
+    const expectedCutValue = fullText.slice(0, MAX_LENGTH_NARROW) + ELLIPSIS
 
     await waitFor(() =>
       expect(screen.getByText(expectedCutValue)).toBeInTheDocument()
@@ -181,7 +181,7 @@ describe('<DetailsPane />', () => {
       width: WIDE_VIEW_THRESHOLD + 1
     })
 
-    const expectedCutValue = fullText.slice(0, MAX_LENGTH_LARGE) + ELLIPSIS
+    const expectedCutValue = fullText.slice(0, MAX_LENGTH_WIDE) + ELLIPSIS
 
     await waitFor(() =>
       expect(screen.getByText(expectedCutValue)).toBeInTheDocument()
