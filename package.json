@@ -41,7 +41,7 @@
     "starts": "cross-env NODE_ENV=development webpack-dev-server --https --colors --config ./build_scripts/webpack.config.js",
     "start-prod": "cross-env NODE_ENV=production webpack-dev-server --colors --config ./build_scripts/webpack.config.js",
     "starts-prod": "cross-env NODE_ENV=production webpack-dev-server --https --colors --config ./build_scripts/webpack.config.js",
-    "test": "npm run lint && npm run jest",
+    "test": "tsc --noEmit && npm run lint && npm run jest",
     "test-unit": "test",
     "test-e2e": "npx concurrently --kill-others -n 'neo4j,cypress,browser' 'docker run --env NEO4J_AUTH=neo4j/newpassword -p7474:7474 -p7687:7687 neo4j:4.2.2' 'yarn wait-on-neo4j && yarn wait-on-dev && yarn e2e-local --env server=4.2' 'yarn && yarn start'",
     "update-licenses": "sh ./scripts/generate_licenses.sh",
