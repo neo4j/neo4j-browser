@@ -24,7 +24,7 @@ const title = 'Not found'
 
 const slides = [
   <BuiltInGuideSidebarSlide key="first">
-    <p>Apologies, but there doesn't seem to be any content about that.</p>
+    <p>Apologies, but there doesn&apos;t seem to be any content about that.</p>
     <h5>Try:</h5>
     <ul className="undecorated">
       <li>

@@ -18,9 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Record as Neo4jRecord } from 'neo4j-driver'
+import React, { Component } from 'react'
+import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
-import React, { Component, Dispatch } from 'react'
+
+import { Record as Neo4jRecord } from 'neo4j-driver'
+
 import FrameTemplate from '../../Frame/FrameTemplate'
 import { CypherFrameButton } from 'browser-components/buttons'
 import Centered from 'browser-components/Centered'
@@ -51,7 +54,7 @@ import { PlanView, PlanStatusbar } from './PlanView'
 import { VisualizationConnectedBus } from './VisualizationView'
 
 import Display from 'browser-components/Display'
-import * as viewTypes from 'shared/modules/frames/frameViewTypes'
+import * as ViewTypes from 'shared/modules/frames/frameViewTypes'
 import {
   resultHasRows,
   resultHasWarnings,
@@ -91,11 +94,11 @@ type CypherFrameProps = CypherFrameBaseProps & {
   maxNeighbours: number
   maxRows: number
   request: BrowserRequest
-  onRecentViewChanged: (view: viewTypes.FrameView) => void
+  onRecentViewChanged: (view: ViewTypes.FrameView) => void
 }
 
 type CypherFrameState = {
-  openView?: viewTypes.FrameView
+  openView?: ViewTypes.FrameView
   fullscreen: boolean
   collapse: boolean
   frameHeight: number
@@ -124,7 +127,7 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
     planExpand: 'EXPAND'
   }
 
-  changeView(view: viewTypes.FrameView): void {
+  changeView(view: ViewTypes.FrameView): void {
     this.setState({ openView: view })
     if (this.props.onRecentViewChanged) {
       this.props.onRecentViewChanged(view)
@@ -167,7 +170,7 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
     if (this.props.request.status !== REQUEST_STATUS_PENDING) {
       const openView = initialView(this.props, this.state)
       if (openView !== this.state.openView) {
-        const hasVis = openView === viewTypes.ERRORS ? false : this.state.hasVis
+        const hasVis = openView === ViewTypes.ERRORS ? false : this.state.hasVis
         this.setState({ openView, hasVis })
       }
     } else {
@@ -177,7 +180,7 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
 
     // When frame re-use leads to result without visualization
     const doneLoading = this.props.request.status === REQUEST_STATUS_SUCCESS
-    const currentlyShowingViz = this.state.openView === viewTypes.VISUALIZATION
+    const currentlyShowingViz = this.state.openView === ViewTypes.VISUALIZATION
     if (doneLoading && currentlyShowingViz && !this.canShowViz()) {
       const view = initialView(this.props, {
         ...this.state,
@@ -209,9 +212,9 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
       {this.canShowViz() && (
         <CypherFrameButton
           data-testid="cypherFrameSidebarVisualization"
-          selected={this.state.openView === viewTypes.VISUALIZATION}
+          selected={this.state.openView === ViewTypes.VISUALIZATION}
           onClick={() => {
-            this.changeView(viewTypes.VISUALIZATION)
+            this.changeView(ViewTypes.VISUALIZATION)
           }}
         >
           <VisualizationIcon />
@@ -220,9 +223,9 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
       {!resultIsError(this.props.request) && (
         <CypherFrameButton
           data-testid="cypherFrameSidebarTable"
-          selected={this.state.openView === viewTypes.TABLE}
+          selected={this.state.openView === ViewTypes.TABLE}
           onClick={() => {
-            this.changeView(viewTypes.TABLE)
+            this.changeView(ViewTypes.TABLE)
           }}
         >
           <TableIcon />
@@ -231,9 +234,9 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
       {resultHasRows(this.props.request) && !resultIsError(this.props.request) && (
         <CypherFrameButton
           data-testid="cypherFrameSidebarAscii"
-          selected={this.state.openView === viewTypes.TEXT}
+          selected={this.state.openView === ViewTypes.TEXT}
           onClick={() => {
-            this.changeView(viewTypes.TEXT)
+            this.changeView(ViewTypes.TEXT)
           }}
         >
           <AsciiIcon />
@@ -242,17 +245,17 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
       {resultHasPlan(this.props.request) && (
         <CypherFrameButton
           data-testid="cypherFrameSidebarPlan"
-          selected={this.state.openView === viewTypes.PLAN}
-          onClick={() => this.changeView(viewTypes.PLAN)}
+          selected={this.state.openView === ViewTypes.PLAN}
+          onClick={() => this.changeView(ViewTypes.PLAN)}
         >
           <PlanIcon />
         </CypherFrameButton>
       )}
       {resultHasWarnings(this.props.request) && (
         <CypherFrameButton
-          selected={this.state.openView === viewTypes.WARNINGS}
+          selected={this.state.openView === ViewTypes.WARNINGS}
           onClick={() => {
-            this.changeView(viewTypes.WARNINGS)
+            this.changeView(ViewTypes.WARNINGS)
           }}
         >
           <AlertIcon />
@@ -260,9 +263,9 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
       )}
       {resultIsError(this.props.request) ? (
         <CypherFrameButton
-          selected={this.state.openView === viewTypes.ERRORS}
+          selected={this.state.openView === ViewTypes.ERRORS}
           onClick={() => {
-            this.changeView(viewTypes.ERRORS)
+            this.changeView(ViewTypes.ERRORS)
           }}
         >
           <ErrorIcon />
@@ -270,9 +273,9 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
       ) : (
         <CypherFrameButton
           data-testid="cypherFrameSidebarCode"
-          selected={this.state.openView === viewTypes.CODE}
+          selected={this.state.openView === ViewTypes.CODE}
           onClick={() => {
-            this.changeView(viewTypes.CODE)
+            this.changeView(ViewTypes.CODE)
           }}
         >
           <CodeIcon />
@@ -301,9 +304,9 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
         data-testid="frame-loaded-contents"
         fullscreen={this.state.fullscreen}
         collapsed={this.state.collapse}
-        preventOverflow={this.state.openView === viewTypes.VISUALIZATION}
+        preventOverflow={this.state.openView === ViewTypes.VISUALIZATION}
       >
-        <Display if={this.state.openView === viewTypes.TEXT} lazy>
+        <Display if={this.state.openView === ViewTypes.TEXT} lazy>
           <AsciiView
             asciiSetColWidth={this.state.asciiSetColWidth}
             maxRows={this.props.maxRows}
@@ -314,19 +317,19 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
             }
           />
         </Display>
-        <Display if={this.state.openView === viewTypes.TABLE} lazy>
+        <Display if={this.state.openView === ViewTypes.TABLE} lazy>
           <RelatableView updated={this.props.request.updated} result={result} />
         </Display>
-        <Display if={this.state.openView === viewTypes.CODE} lazy>
+        <Display if={this.state.openView === ViewTypes.CODE} lazy>
           <CodeView result={result} request={request} query={query} />
         </Display>
-        <Display if={this.state.openView === viewTypes.ERRORS} lazy>
+        <Display if={this.state.openView === ViewTypes.ERRORS} lazy>
           <ErrorsView result={result} updated={this.props.request.updated} />
         </Display>
-        <Display if={this.state.openView === viewTypes.WARNINGS} lazy>
+        <Display if={this.state.openView === ViewTypes.WARNINGS} lazy>
           <WarningsView result={result} updated={this.props.request.updated} />
         </Display>
-        <Display if={this.state.openView === viewTypes.PLAN} lazy>
+        <Display if={this.state.openView === ViewTypes.PLAN} lazy>
           <PlanView
             planExpand={this.state.planExpand}
             result={result}
@@ -341,7 +344,7 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
             }
           />
         </Display>
-        <Display if={this.state.openView === viewTypes.VISUALIZATION} lazy>
+        <Display if={this.state.openView === ViewTypes.VISUALIZATION} lazy>
           <VisualizationConnectedBus
             fullscreen={this.state.fullscreen}
             result={result}
@@ -363,7 +366,7 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
   getStatusbar(result: BrowserRequestResult): JSX.Element {
     return (
       <StyledStatsBarContainer>
-        <Display if={this.state.openView === viewTypes.TEXT} lazy>
+        <Display if={this.state.openView === ViewTypes.TEXT} lazy>
           <AsciiStatusbar
             asciiMaxColWidth={this.state.asciiMaxColWidth}
             asciiSetColWidth={this.state.asciiSetColWidth}
@@ -375,25 +378,25 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
             }
           />
         </Display>
-        <Display if={this.state.openView === viewTypes.TABLE} lazy>
+        <Display if={this.state.openView === ViewTypes.TABLE} lazy>
           <RelatableStatusbar
             updated={this.props.request.updated}
             result={result}
           />
         </Display>
-        <Display if={this.state.openView === viewTypes.CODE} lazy>
+        <Display if={this.state.openView === ViewTypes.CODE} lazy>
           <CodeStatusbar result={result} />
         </Display>
-        <Display if={this.state.openView === viewTypes.ERRORS} lazy>
+        <Display if={this.state.openView === ViewTypes.ERRORS} lazy>
           <ErrorsStatusbar result={result} />
         </Display>
-        <Display if={this.state.openView === viewTypes.WARNINGS} lazy>
+        <Display if={this.state.openView === ViewTypes.WARNINGS} lazy>
           <WarningsStatusbar
             result={result}
             updated={this.props.request.updated}
           />
         </Display>
-        <Display if={this.state.openView === viewTypes.PLAN} lazy>
+        <Display if={this.state.openView === ViewTypes.PLAN} lazy>
           <PlanStatusbar
             result={result}
             setPlanExpand={(planExpand: PlanExpand) =>
@@ -422,7 +425,7 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
         this.getFrameContents(request, result, query)
       )
     const statusBar =
-      this.state.openView !== viewTypes.VISUALIZATION &&
+      this.state.openView !== ViewTypes.VISUALIZATION &&
       requestStatus !== 'error'
         ? this.getStatusbar(result)
         : null
@@ -439,8 +442,8 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
         onResize={this.onResize}
         visElement={
           this.state.hasVis &&
-          (this.state.openView === viewTypes.VISUALIZATION ||
-            this.state.openView === viewTypes.PLAN)
+          (this.state.openView === ViewTypes.VISUALIZATION ||
+            this.state.openView === ViewTypes.PLAN)
             ? this.visElement
             : null
         }
@@ -462,7 +465,7 @@ const mapStateToProps = (
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<SetRecentViewAction>) => ({
-  onRecentViewChanged: (view: viewTypes.FrameView) => {
+  onRecentViewChanged: (view: ViewTypes.FrameView) => {
     dispatch(setRecentView(view))
   }
 })

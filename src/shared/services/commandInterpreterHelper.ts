@@ -19,11 +19,13 @@
  */
 
 import * as Sentry from '@sentry/react'
+import { v4 } from 'uuid'
+import { Dispatch, Action } from 'redux'
+import { GlobalState } from 'shared/globalState'
 import bolt from 'services/bolt/bolt'
 import * as frames from 'shared/modules/frames/framesDuck'
 import { getHostedUrl } from 'shared/modules/app/appDuck'
 import { getHistory, clearHistory } from 'shared/modules/history/historyDuck'
-import { v4 } from 'uuid'
 import {
   update as updateQueryResult,
   REQUEST_STATUS_SUCCESS,
@@ -37,11 +39,7 @@ import {
   getUseDb
 } from 'shared/modules/connections/connectionsDuck'
 import { open } from 'shared/modules/sidebar/sidebarDuck'
-import {
-  addGuideIfExternal,
-  resetGuide,
-  setCurrentGuide
-} from 'shared/modules/guides/guidesDuck'
+import { fetchRemoteGuide, resetGuide } from 'shared/modules/guides/guidesDuck'
 import { getParams } from 'shared/modules/params/paramsDuck'
 import { getUserCapabilities } from 'shared/modules/features/featuresDuck'
 import {
@@ -56,16 +54,17 @@ import {
   SYSTEM_DB
 } from 'shared/modules/dbMeta/dbMetaDuck'
 import { canSendTxMetadata } from 'shared/modules/features/versionedFeatures'
-import { fetchRemoteGuide } from 'shared/modules/commands/helpers/play'
+import { fetchRemoteGuideAsync } from 'shared/modules/commands/helpers/playAndGuides'
 import remote from 'services/remote'
 import { isLocalRequest, authHeaderFromCredentials } from 'services/remoteUtils'
 import { handleServerCommand } from 'shared/modules/commands/helpers/server'
 import { handleCypherCommand } from 'shared/modules/commands/helpers/cypher'
 import {
+  SINGLE_COMMAND_QUEUED,
+  ExecuteSingleCommandAction,
   showErrorMessage,
   successfulCypher,
   unsuccessfulCypher,
-  SINGLE_COMMAND_QUEUED,
   listDbsCommand,
   useDbCommand,
   autoCommitTxCommand
@@ -101,13 +100,10 @@ import {
   getUserDirectTxMetadata,
   getBackgroundTxMetadata
 } from 'shared/services/bolt/txMetadata'
-import {
-  getCommandAndParam,
-  tryGetRemoteInitialSlideFromUrl
-} from './commandUtils'
+import { getCommandAndParam } from './commandUtils'
 import { unescapeCypherIdentifier } from './utils'
 import { getLatestFromFrameStack } from 'browser/modules/Stream/stream.utils'
-import { resolveGuide } from './guideResolverHelper'
+import { tryGetRemoteInitialSlideFromUrl } from './guideResolverHelper'
 import { AUTH_STORAGE_LOGS } from 'neo4j-client-sso'
 
 const PLAY_FRAME_TYPES = ['play', 'play-remote']
@@ -505,32 +501,16 @@ const availableCommands = [
   },
   {
     name: 'guide',
-    match: (cmd: any) => /^guide(\s|$)/.test(cmd),
-    exec(action: any, put: any, store: any) {
-      const guideName = action.cmd.substr(':guide'.length).trim()
-      if (!guideName) {
-        put(resetGuide())
-        put(open('guides'))
+    match: (cmd: string) => /^guide(\s|$)/.test(cmd),
+    exec(action: ExecuteSingleCommandAction, dispatch: Dispatch<Action>) {
+      const guideIdentifier = action.cmd.substr(':guide'.length).trim()
+      if (!guideIdentifier) {
+        dispatch(resetGuide())
+        dispatch(open('guides'))
         return
       }
 
-      const initialSlide = tryGetRemoteInitialSlideFromUrl(action.cmd)
-      resolveGuide(guideName, store.getState()).then(
-        ({ slides, title, isError }) => {
-          const guide = {
-            currentSlide: initialSlide,
-            title,
-            slides,
-            isError
-          }
-          put(setCurrentGuide(guide))
-          if (!guide.isError) {
-            put(addGuideIfExternal(guide))
-          }
-
-          put(open('guides'))
-        }
-      )
+      dispatch(fetchRemoteGuide(guideIdentifier))
     }
   },
   {
@@ -563,7 +543,7 @@ const availableCommands = [
         ? urlObject.pathname.split('.').pop()
         : 'html'
       const allowlist = getRemoteContentHostnameAllowlist(store.getState())
-      fetchRemoteGuide(url, allowlist)
+      fetchRemoteGuideAsync(url, allowlist)
         .then(r => {
           put(
             frames.add({

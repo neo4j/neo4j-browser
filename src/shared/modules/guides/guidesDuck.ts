@@ -18,29 +18,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import docs from 'browser/documentation'
+import { Observable } from 'rxjs'
+import { Epic } from 'redux-observable'
 import { GlobalState } from 'shared/globalState'
+import { tryGetRemoteInitialSlideFromUrl } from 'services/guideResolverHelper'
+import { resolveGuide } from '../../services/guideResolverHelper'
+import { OpenSidebarAction, open } from '../sidebar/sidebarDuck'
+import { isGuideChapter } from 'browser/documentation'
 
 export const NAME = 'guides'
+export const FETCH_GUIDE = 'guides/FETCH_GUIDE'
 export const SET_GUIDE = 'sidebar/SET_GUIDE'
 export const GOTO_SLIDE = 'sidebar/GOTO_SLIDE'
 export const UPDATE_REMOTE_GUIDES = 'sidebar/UPDATE_REMOTE_GUIDES'
-export const ADD_GUIDE = 'sidebar/ADD_GUIDE'
+export const ADD_REMOTE_GUIDE = 'sidebar/ADD_REMOTE_GUIDE'
 
 export const getCurrentGuide = (state: GlobalState): Guide | null =>
   state[NAME].currentGuide
-export const getRemoteGuides = (state: GlobalState): Guide[] =>
+export const getRemoteGuides = (state: GlobalState): RemoteGuide[] =>
   state[NAME].remoteGuides
 
 export type Guide = {
   currentSlide: number
   title: string
+  identifier: string
   slides: JSX.Element[]
 }
-
+export type RemoteGuide = Omit<Guide, 'slides'>
 export interface GuideState {
   currentGuide: Guide | null
-  remoteGuides: Guide[]
+  remoteGuides: RemoteGuide[]
 }
 
 const initialState: GuideState = {
@@ -48,29 +55,62 @@ const initialState: GuideState = {
   remoteGuides: []
 }
 
-type GuideAction =
-  | SetAction
+export type GuideAction =
+  | FetchGuideAction
+  | SetGuideAction
   | GotoSlideAction
   | UpdateGuideAction
-  | AddGuideAction
+  | AddRemoteGuideAction
 
-interface SetAction {
+export interface SetGuideAction {
   type: typeof SET_GUIDE
   guide: Guide | null
 }
 
-interface GotoSlideAction {
+export interface GotoSlideAction {
   type: typeof GOTO_SLIDE
   slideIndex: number
 }
-interface UpdateGuideAction {
+
+export interface FetchGuideAction {
+  type: typeof FETCH_GUIDE
+  identifier: string
+}
+
+export interface UpdateGuideAction {
   type: typeof UPDATE_REMOTE_GUIDES
-  updatedGuides: Guide[]
+  updatedGuides: RemoteGuide[]
 }
-interface AddGuideAction {
-  type: typeof ADD_GUIDE
-  guide: Guide
+interface AddRemoteGuideAction {
+  type: typeof ADD_REMOTE_GUIDE
+  guide: RemoteGuide
 }
+
+export const fetchRemoteGuideEpic: Epic<
+  FetchGuideAction | SetGuideAction | OpenSidebarAction | AddRemoteGuideAction,
+  GlobalState
+> = (action$, store$) =>
+  action$.ofType(FETCH_GUIDE).flatMap(action => {
+    const initialSlide = tryGetRemoteInitialSlideFromUrl(
+      (<FetchGuideAction>action).identifier
+    )
+    return Observable.fromPromise(
+      resolveGuide((<FetchGuideAction>action).identifier, store$.getState())
+    ).mergeMap(({ title, identifier, slides, isError }) => {
+      const guide: RemoteGuide = {
+        currentSlide: initialSlide,
+        title,
+        identifier
+      }
+
+      const streamActions: Array<
+        SetGuideAction | OpenSidebarAction | AddRemoteGuideAction
+      > = [setCurrentGuide({ ...guide, slides }), open('guides')]
+      // To keep Redux store as small as possible, we don't save slides into it
+      if (!isError) streamActions.push(addRemoteGuide(guide))
+      return streamActions
+    })
+  })
 
 export default function reducer(
   state = initialState,
@@ -94,17 +134,13 @@ export default function reducer(
     case UPDATE_REMOTE_GUIDES:
       return { ...state, remoteGuides: action.updatedGuides }
 
-    case ADD_GUIDE:
-      const remoteGuideTitles = state.remoteGuides.map(g => g.title)
-      const builtInGuidesTitles = Object.values(docs.guide.chapters).map(
-        guide => guide.title
-      )
-
-      const alreadyAdded = remoteGuideTitles
-        .concat(builtInGuidesTitles)
-        .includes(action.guide.title)
-
-      if (alreadyAdded) {
+    case ADD_REMOTE_GUIDE:
+      if (
+        !!state.remoteGuides.find(
+          remoteGuide => remoteGuide.identifier === action.guide.identifier
+        ) ||
+        isGuideChapter(action.guide.identifier)
+      ) {
         return state
       } else {
         return {
@@ -118,7 +154,9 @@ export default function reducer(
   }
 }
 
-export function updateRemoteGuides(updatedGuides: Guide[]): UpdateGuideAction {
+export function updateRemoteGuides(
+  updatedGuides: RemoteGuide[]
+): UpdateGuideAction {
   return { type: UPDATE_REMOTE_GUIDES, updatedGuides }
 }
 
@@ -126,15 +164,19 @@ export function clearRemoteGuides(): UpdateGuideAction {
   return updateRemoteGuides([])
 }
 
-export function addGuideIfExternal(guide: Guide): AddGuideAction {
-  return { type: ADD_GUIDE, guide }
+function addRemoteGuide(guide: RemoteGuide): AddRemoteGuideAction {
+  return { type: ADD_REMOTE_GUIDE, guide }
 }
 
-export function setCurrentGuide(guide: Guide): SetAction {
+export function fetchRemoteGuide(identifier: string): FetchGuideAction {
+  return { type: FETCH_GUIDE, identifier }
+}
+
+export function setCurrentGuide(guide: Guide): SetGuideAction {
   return { type: SET_GUIDE, guide }
 }
 
-export function resetGuide(): SetAction {
+export function resetGuide(): SetGuideAction {
   return { type: SET_GUIDE, guide: null }
 }
 

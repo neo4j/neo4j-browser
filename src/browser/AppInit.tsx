@@ -69,7 +69,8 @@ applyKeys(
   'grass',
   'syncConsent',
   'udc',
-  'experimentalFeatures'
+  'experimentalFeatures',
+  'guides'
 )
 
 // Create suber bus

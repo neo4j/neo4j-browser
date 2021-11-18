@@ -121,9 +121,9 @@ export const getClientsAllowTelemetry = (state: GlobalState): boolean =>
   initialState.settings['clients.allow_telemetry']
 export const credentialsTimeout = (state: any) =>
   getAvailableSettings(state)['browser.credential_timeout'] || 0
-export const getRemoteContentHostnameAllowlist = (state: any) =>
+export const getRemoteContentHostnameAllowlist = (state: GlobalState): string =>
   getAvailableSettings(state)['browser.remote_content_hostname_allowlist']
-export const getDefaultRemoteContentHostnameAllowlist = () =>
+export const getDefaultRemoteContentHostnameAllowlist = (): string =>
   initialState.settings['browser.remote_content_hostname_allowlist']
 export const getRetainConnectionCredentials = (state: any) => {
   const settings = getAvailableSettings(state)

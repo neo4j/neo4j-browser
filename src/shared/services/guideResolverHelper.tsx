@@ -19,6 +19,8 @@
  */
 
 import React from 'react'
+import { includes, last, split, startsWith } from 'lodash-es'
+
 import MdxSlide from 'browser/modules/Docs/MDX/MdxSlide'
 import Slide from 'browser/modules/Carousel/Slide'
 import docs, { isGuideChapter } from 'browser/documentation'
@@ -28,7 +30,7 @@ import {
   extractAllowlistFromConfigString,
   resolveAllowlistWildcard
 } from './utils'
-import { fetchRemoteGuide } from 'shared/modules/commands/helpers/play'
+import { fetchRemoteGuideAsync } from 'shared/modules/commands/helpers/playAndGuides'
 import {
   getDefaultRemoteContentHostnameAllowlist,
   getRemoteContentHostnameAllowlist
@@ -43,27 +45,43 @@ import {
   StyledHelpFrame,
   StyledPreformattedArea
 } from 'browser/modules/Stream/styled'
+import { GlobalState } from 'shared/globalState'
 
 const { chapters } = docs.guide
 
+export function tryGetRemoteInitialSlideFromUrl(url: string): number {
+  const hashBang = includes(url, '#') ? last(split(url, '#')) : ''
+
+  if (!startsWith(hashBang, 'slide-')) return 0
+
+  const slideIndex = Number(last(split(hashBang, 'slide-')))
+
+  return !isNaN(slideIndex) ? slideIndex : 0
+}
+
 export async function resolveGuide(
-  guideName: string,
-  state: any
-): Promise<{ slides: JSX.Element[]; title: string; isError?: boolean }> {
-  const isUrl = guideName.startsWith('http')
+  identifier: string,
+  state: GlobalState
+): Promise<{
+  slides: JSX.Element[]
+  title: string
+  identifier: string
+  isError?: boolean
+}> {
+  const isUrl = identifier.startsWith('http')
   if (isUrl) {
-    return await resolveRemoteGuideFromURL(guideName, state)
+    return await resolveRemoteGuideByUrl(identifier, state)
   }
 
-  if (isGuideChapter(guideName)) {
-    return chapters[guideName]
+  if (isGuideChapter(identifier)) {
+    return { ...chapters[identifier], identifier }
   }
 
   try {
-    return await resolveRemoteGuideFromName(guideName, state)
+    return await resolveRemoteGuideByName(identifier, state)
   } catch (e) {}
 
-  return guideUnfound
+  return { ...guideUnfound, identifier }
 }
 
 function mdxTextToSlides(mdx: string): JSX.Element[] {
@@ -85,11 +103,15 @@ function htmlTextToSlides(html: string): JSX.Element[] {
   return [<Slide key="first" html={html} isSidebarSlide />]
 }
 
-async function resolveRemoteGuideFromURL(
-  guideName: string,
-  state: any
-): Promise<{ slides: JSX.Element[]; title: string; isError?: boolean }> {
-  const url = guideName
+async function resolveRemoteGuideByUrl(
+  url: string,
+  state: GlobalState
+): Promise<{
+  slides: JSX.Element[]
+  title: string
+  identifier: string
+  isError?: boolean
+}> {
   const urlObject = new URL(url)
   urlObject.href = url
   const filenameExtension =
@@ -98,23 +120,25 @@ async function resolveRemoteGuideFromURL(
   const allowlist = getRemoteContentHostnameAllowlist(state)
 
   try {
-    const remoteGuide = await fetchRemoteGuide(url, allowlist)
+    const remoteGuide = await fetchRemoteGuideAsync(url, allowlist)
     const titleRegexMatch = remoteGuide.match(/<title>(.*?)<\/title>/)
-    const title = (titleRegexMatch && titleRegexMatch[1])?.trim() || guideName
+    const title = (titleRegexMatch && titleRegexMatch[1])?.trim() || url
     if (['md', 'mdx'].includes(filenameExtension)) {
       return {
         slides: mdxTextToSlides(remoteGuide),
-        title
+        title,
+        identifier: url
       }
     } else {
       return {
         slides: htmlTextToSlides(remoteGuide),
-        title
+        title,
+        identifier: url
       }
     }
   } catch (e) {
     if (e.response && e.response.status === 404) {
-      return guideUnfound
+      return { ...guideUnfound, identifier: url }
     }
     return {
       title: 'Error',
@@ -135,15 +159,16 @@ async function resolveRemoteGuideFromURL(
           </StyledHelpFrame>
         </Slide>
       ],
+      identifier: url,
       isError: true
     }
   }
 }
 
-async function resolveRemoteGuideFromName(
+async function resolveRemoteGuideByName(
   guideName: string,
-  state: any
-): Promise<{ slides: JSX.Element[]; title: string }> {
+  state: GlobalState
+): Promise<{ slides: JSX.Element[]; title: string; identifier: string }> {
   const allowlistStr = getRemoteContentHostnameAllowlist(state)
   const allowlist = extractAllowlistFromConfigString(allowlistStr)
   const defaultAllowlist = extractAllowlistFromConfigString(
@@ -154,20 +179,21 @@ async function resolveRemoteGuideFromName(
     defaultAllowlist
   )
   const urlAllowlist = addProtocolsToUrlList(resolvedWildcardAllowlist)
-  const possibleGuidesUrls: string[] = urlAllowlist.map(
+  const possibleGuidesUrls = urlAllowlist.map(
     (url: string) => `${url}/${guideName}`
   )
 
   return possibleGuidesUrls
     .reduce(
-      (promiseChain: Promise<any>, currentUrl: string) =>
+      (promiseChain: Promise<string>, currentUrl: string) =>
         promiseChain
-          .catch(() => fetchRemoteGuide(currentUrl, allowlistStr))
+          .catch(() => fetchRemoteGuideAsync(currentUrl, allowlistStr))
           .then(r => Promise.resolve(r)),
       Promise.reject(new Error())
     )
     .then(text => ({
       slides: htmlTextToSlides(text),
-      title: guideName
+      title: guideName,
+      identifier: guideName
     }))
 }
