@@ -77,7 +77,7 @@ const browserSyncConfig = (host = 'https://auth.neo4j.com') => ({
   logoutUrl: 'https://neo4j-sync.auth0.com/v2/logout',
   firebaseConfig: {
     apiKey: 'AIzaSyA1RwZMBWHxqRGyY3CK60leRkr56H6GHV4',
-    databaseURL: 'https://fiery-heat-7952.firebaseio.com',
+    databaseUrl: 'https://fiery-heat-7952.firebaseio.com',
     messagingSenderId: '352959348981'
   }
 })
