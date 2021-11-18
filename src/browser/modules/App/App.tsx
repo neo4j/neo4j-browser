@@ -34,8 +34,8 @@ import { utilizeBrowserSync } from 'shared/modules/features/featuresDuck'
 import { getOpenDrawer, open } from 'shared/modules/sidebar/sidebarDuck'
 import { getErrorMessage } from 'shared/modules/commands/commandsDuck'
 import {
-  shouldAllowOutgoingConnections,
-  getDatabases
+  findDatabaseByNameOrAlias,
+  shouldAllowOutgoingConnections
 } from 'shared/modules/dbMeta/dbMetaDuck'
 import {
   getActiveConnection,
@@ -154,7 +154,7 @@ export function App(props: any) {
     codeFontLigatures,
     connectionState,
     consentBannerShownCount,
-    databases,
+    databaseIsUnavailable,
     defaultConnectionData,
     drawer,
     errorMessage,
@@ -268,7 +268,7 @@ export function App(props: any) {
                       lastConnectionUpdate={lastConnectionUpdate}
                       errorMessage={errorMessage}
                       useDb={useDb}
-                      databases={databases}
+                      databaseIsUnavailable={databaseIsUnavailable}
                       showUdcConsentBanner={
                         telemetrySettings.source === 'BROWSER_SETTING' &&
                         consentBannerShownCount <= 5
@@ -291,6 +291,11 @@ export function App(props: any) {
 }
 
 const mapStateToProps = (state: GlobalState) => {
+  const useDb = getUseDb(state)
+  const databaseIsUnavailable =
+    useDb === null ||
+    findDatabaseByNameOrAlias(state, useDb)?.status !== 'online'
+
   const connectionData = getActiveConnectionData(state)
   return {
     experimentalFeatures: getExperimentalFeatures(state),
@@ -311,8 +316,8 @@ const mapStateToProps = (state: GlobalState) => {
     browserSyncAuthStatus: getUserAuthStatus(state),
     loadSync: utilizeBrowserSync(state),
     isWebEnv: inWebEnv(state),
-    useDb: getUseDb(state),
-    databases: getDatabases(state),
+    useDb,
+    databaseIsUnavailable,
     telemetrySettings: getTelemetrySettings(state),
     consentBannerShownCount: getConsentBannerShownCount(state)
   }

@@ -51,7 +51,8 @@ import {
   getDatabases,
   fetchMetaData,
   getAvailableSettings,
-  SYSTEM_DB
+  SYSTEM_DB,
+  Database
 } from 'shared/modules/dbMeta/dbMetaDuck'
 import { canSendTxMetadata } from 'shared/modules/features/versionedFeatures'
 import { fetchRemoteGuideAsync } from 'shared/modules/commands/helpers/playAndGuides'
@@ -219,7 +220,9 @@ const availableCommands = [
         const cleanDbName = unescapeCypherIdentifier(normalizedName)
 
         const dbMeta = getDatabases(store.getState()).find(
-          (db: any) => db.name.toLowerCase() === cleanDbName
+          (db: Database) =>
+            db.name.toLowerCase() === cleanDbName ||
+            db.aliases?.find(alias => alias.toLowerCase() === cleanDbName)
         )
 
         // Do we have a db with that name?
@@ -297,6 +300,7 @@ const availableCommands = [
         .hasMultiDbSupport()
         .then(supportsMultiDb => {
           if (supportsMultiDb) {
+            // TODO should also list aliases
             put(
               frames.add({
                 useDb: getUseDb(store.getState()),
