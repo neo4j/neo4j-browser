@@ -24,6 +24,7 @@ import { GlobalState } from 'shared/globalState'
 import { tryGetRemoteInitialSlideFromUrl } from 'services/guideResolverHelper'
 import { resolveGuide } from '../../services/guideResolverHelper'
 import { OpenSidebarAction, open } from '../sidebar/sidebarDuck'
+import { isGuideChapter } from 'browser/documentation'
 
 export const NAME = 'guides'
 export const FETCH_GUIDE = 'guides/FETCH_GUIDE'
@@ -134,11 +135,12 @@ export default function reducer(
       return { ...state, remoteGuides: action.updatedGuides }
 
     case ADD_REMOTE_GUIDE:
-      const remoteGuideTitles = state.remoteGuides.map(g => g.identifier)
-
-      const alreadyAdded = remoteGuideTitles.includes(action.guide.identifier)
-
-      if (alreadyAdded) {
+      if (
+        !!state.remoteGuides.find(
+          remoteGuide => remoteGuide.identifier === action.guide.identifier
+        ) ||
+        isGuideChapter(action.guide.identifier)
+      ) {
         return state
       } else {
         return {
