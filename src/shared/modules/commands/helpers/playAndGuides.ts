@@ -33,11 +33,11 @@ export const fetchRemoteGuideAsync = async (
       )
     }
     resolve()
-  }).then(async () => {
-    return remote
+  }).then(() =>
+    remote
       .get(url, { pragma: 'no-cache', 'cache-control': 'no-cache' })
       .then(r => {
         return cleanHtml(r)
       })
-  })
+  )
 }
