@@ -25,7 +25,6 @@ import {
   DrawerSubHeader,
   DrawerSectionBody
 } from 'browser-components/drawer/drawer-styled'
-import { uniqBy } from 'lodash-es'
 import { escapeCypherIdentifier } from 'services/utils'
 import { Database } from 'shared/modules/dbMeta/dbMetaDuck'
 
@@ -85,9 +84,6 @@ export const DatabaseSelector = ({
               <option key={db.name} value={db.name}>
                 {db.name}
                 {db === homeDb ? NBSP_CHAR + HOUSE_EMOJI : ''}
-                {db.aliases &&
-                  db.aliases.length > 0 &&
-                  ` (${db.aliases.join(',')})`}
               </option>
             )
           })}
