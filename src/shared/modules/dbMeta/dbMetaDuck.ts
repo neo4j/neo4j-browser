@@ -164,8 +164,6 @@ export type Database = {
   status: string
 }
 
-// TODO create a selector that gets a database by it's name or alias name
-
 export const getDatabases = (state: any): Database[] =>
   (state[NAME] || initialState).databases
 export const getActiveDbName = (state: any) =>
@@ -520,7 +518,6 @@ const clusterRole = (store: any) =>
 
 const switchToRequestedDb = (store: any) => {
   if (getUseDb(store.getState())) return Rx.Observable.of(null)
-  // needs to care about aliases
 
   const databases = getDatabases(store.getState())
   const activeConnection = getActiveConnectionData(store.getState())
@@ -528,18 +525,18 @@ const switchToRequestedDb = (store: any) => {
 
   const switchToLastUsedOrDefaultDb = () => {
     const lastUsedDb = getLastUseDb(store.getState())
-    if (lastUsedDb && databases.some((db: any) => db.name === lastUsedDb)) {
+    if (lastUsedDb && findDatabaseByNameOrAlias(store.getState(), lastUsedDb)) {
       store.dispatch(useDb(lastUsedDb))
     } else {
-      const homeDb = databases.find((db: any) => db.home)
+      const homeDb = databases.find(db => db.home)
       if (homeDb) {
         store.dispatch(useDb(homeDb.name))
       } else {
-        const defaultDb = databases.find((db: any) => db.default)
+        const defaultDb = databases.find(db => db.default)
         if (defaultDb) {
           store.dispatch(useDb(defaultDb.name))
         } else {
-          const systemDb = databases.find((db: any) => db.name === SYSTEM_DB)
+          const systemDb = databases.find(db => db.name === SYSTEM_DB)
           if (systemDb) {
             store.dispatch(useDb(systemDb.name))
           } else {

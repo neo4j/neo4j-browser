@@ -263,7 +263,6 @@ export function App(props: any) {
                   </ErrorBoundary>
                   <StyledMainWrapper id={MAIN_WRAPPER_DOM_ID}>
                     <Main
-                      activeConnection={activeConnection}
                       connectionState={connectionState}
                       lastConnectionUpdate={lastConnectionUpdate}
                       errorMessage={errorMessage}

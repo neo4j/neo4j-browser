@@ -48,20 +48,23 @@ jest.mock(
       return <div />
     }
 )
+const useDb = 'some database'
+const noOp = () => undefined
+const mainBaseProps = {
+  useDb,
+  store,
+  connectionState: 2,
+  lastConnectionUpdate: 0,
+  showUdcConsentBanner: false,
+  dismissConsentBanner: noOp,
+  incrementConsentBannerShownCount: noOp,
+  openSettingsDrawer: noOp
+}
 
 describe('<Main />', () => {
-  it('should display an ErrorBanner when useDb is not in databases list', () => {
-    const useDb = 'some database'
-    const databases: any = []
-
+  it('should display an ErrorBanner when useDb is unavailable', () => {
     const { queryByText } = render(
-      <Main
-        {...{
-          databases,
-          useDb,
-          store
-        }}
-      />
+      <Main {...mainBaseProps} databaseIsUnavailable={true} />
     )
 
     expect(
@@ -69,22 +72,13 @@ describe('<Main />', () => {
     ).toBeTruthy()
   })
 
-  it('should display an ErrorBanner when useDb is not online in databases list', () => {
-    const useDb = 'some database'
-    const databases = [{ name: useDb, status: 'offline' }]
-
+  it('should not show Errorbanner before we have a useDb', () => {
     const { queryByText } = render(
-      <Main
-        {...{
-          databases,
-          useDb,
-          store
-        }}
-      />
+      <Main {...mainBaseProps} useDb={null} databaseIsUnavailable={true} />
     )
 
     expect(
       queryByText(`Database '${useDb}' is unavailable.`, { exact: false })
-    ).toBeTruthy()
+    ).toBeFalsy()
   })
 })

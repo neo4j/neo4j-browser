@@ -21,7 +21,6 @@
 import * as Sentry from '@sentry/react'
 import { v4 } from 'uuid'
 import { Dispatch, Action } from 'redux'
-import { GlobalState } from 'shared/globalState'
 import bolt from 'services/bolt/bolt'
 import * as frames from 'shared/modules/frames/framesDuck'
 import { getHostedUrl } from 'shared/modules/app/appDuck'
@@ -300,7 +299,6 @@ const availableCommands = [
         .hasMultiDbSupport()
         .then(supportsMultiDb => {
           if (supportsMultiDb) {
-            // TODO should also list aliases
             put(
               frames.add({
                 useDb: getUseDb(store.getState()),

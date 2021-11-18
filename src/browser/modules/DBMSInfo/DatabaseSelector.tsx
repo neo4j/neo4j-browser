@@ -50,6 +50,9 @@ export const DatabaseSelector = ({
   selectedDb = '',
   onChange = () => undefined
 }: DatabaseSelectorProps): JSX.Element | null => {
+  if (databases.length === 0) {
+    return null
+  }
   const selectionChange = ({
     target
   }: React.ChangeEvent<HTMLSelectElement>) => {
@@ -58,7 +61,6 @@ export const DatabaseSelector = ({
     }
   }
 
-  // todo look into if the empty option is needed
   const databasesList: (Partial<Database> & {
     name: string
   })[] = databases
