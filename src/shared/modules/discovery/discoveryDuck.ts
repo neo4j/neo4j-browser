@@ -111,7 +111,7 @@ const updateDiscoveryState = (action: any, store: any) => {
   ]
   const updateObj: any = keysToCopy.reduce(
     (accObj, key) => (action[key] ? { ...accObj, [key]: action[key] } : accObj),
-    { host: action.forceURL }
+    { host: action.forceUrl }
   )
 
   if (typeof action.encrypted !== 'undefined') {
@@ -134,7 +134,7 @@ export const injectDiscoveryEpic = (action$: any, store: any) =>
         ),
         action.host
       )
-      return updateDiscoveryState({ ...action, forceURL: connectUrl }, store)
+      return updateDiscoveryState({ ...action, forceUrl: connectUrl }, store)
     })
     .mapTo({ type: DONE })
 
@@ -145,20 +145,20 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
       if (!action.url) return action
       const { searchParams } = new URL(action.url)
 
-      const passedURL =
+      const passedUrl =
         searchParams.get('dbms') || searchParams.get('connectURL')
 
       const passedDb = searchParams.get('db')
 
-      if (passedURL) {
-        action.forceURL = decodeURIComponent(passedURL)
+      if (passedUrl) {
+        action.forceUrl = decodeURIComponent(passedUrl)
         action.requestedUseDb = passedDb
       }
 
-      const discoveryURL = searchParams.get('discoveryURL')
+      const discoveryUrl = searchParams.get('discoveryURL')
 
-      if (discoveryURL) {
-        action.discoveryURL = discoveryURL
+      if (discoveryUrl) {
+        action.discoveryUrl = discoveryUrl
       }
 
       const sessionStorageHost = sessionStorage.getItem(
@@ -183,7 +183,7 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
       }
       const discoveryData = await getAndMergeDiscoveryData({
         action,
-        hostedURL: getHostedUrl(store.getState()),
+        hostedUrl: getHostedUrl(store.getState()),
         hasDiscoveryEndpoint: hasDiscoveryEndpoint(store.getState()),
         generateBoltUrlWithAllowedScheme: (boltUrl: string) =>
           generateBoltUrl(
