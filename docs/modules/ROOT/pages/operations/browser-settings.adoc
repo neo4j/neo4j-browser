@@ -179,12 +179,14 @@ The Bolt+routing feature on Neo4j drivers discovers a cluster member (drivers ha
 
 To change the configuration settings locally in Neo4j Browser, you can either use the tabs in the Browser Settings drawer or, in the Editor, type the command `:config` together with the setting and the new value.
 
-.Adjust settings in the Browser UI
-image:settings.png[width=40%]
-
-.Adjust an individual setting using `:confiug`
+.Adjust the Graph Vizualization settings in the Browser Settings drawer
 ====
-The example shows how to change the maximum number of neighbors for a node.
+image:adjust-settings.png[width=40%]
+====
+
+.Adjust an individual setting using `:config`
+====
+The example shows how to change the maximum number of neighbors for a node using the `:config` command.
 [source, cypher]
 ----
 :config maxNeighbours:100
