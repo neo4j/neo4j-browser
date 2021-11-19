@@ -71,20 +71,20 @@ const getReferences = (version: string, v: string) => {
       url: ` https://neo4j.com/docs/cypher-manual/${v}/introduction/ `
     }
   ]
-  const oldRefs = [
-    {
-      name: 'Getting Started',
-      url: `https://neo4j.com/docs/developer-manual/${v}/get-started/`
-    },
-    {
-      name: 'Developer Manual',
-      url: `https://neo4j.com/docs/developer-manual/${v}/`
-    },
-    {
-      name: 'Cypher Introduction',
-      url: `https://neo4j.com/docs/developer-manual/${v}/cypher/`
-    }
-  ]
+  // const oldRefs = [
+  //   {
+  //     name: 'Getting Started',
+  //     url: `https://neo4j.com/docs/developer-manual/${v}/get-started/`
+  //   },
+  //   {
+  //     name: 'Developer Manual',
+  //     url: `https://neo4j.com/docs/developer-manual/${v}/`
+  //   },
+  //   {
+  //     name: 'Cypher Introduction',
+  //     url: `https://neo4j.com/docs/developer-manual/${v}/cypher/`
+  //   }
+  // ]
   const common = [
     {
       name: 'Cypher Refcard',
