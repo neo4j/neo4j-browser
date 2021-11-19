@@ -39,7 +39,7 @@ it('shows error message in statusbar when not connected', () => {
   const props = {
     availableProcedures: ['dbms.listQueries'],
     connectionState: DISCONNECTED_STATE
-  }
+  } as any
   const { getByText } = render(<QueriesFrame {...props} />)
 
   expect(getByText(/Unable to connect to bolt server/i)).not.toBeNull()

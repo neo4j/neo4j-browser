@@ -71,10 +71,10 @@ type QueriesFrameState = {
 }
 
 type QueriesFrameProps = {
-  frame: any
+  frame?: any
   bus: any
   availableProcedures: any
-  connectionState: ConnectionState
+  connectionState: number
   neo4jVersion: string | null
 }
 export class QueriesFrame extends Component<
