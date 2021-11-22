@@ -211,12 +211,10 @@ For the complete list of all Neo4j Browser commands, see xref:reference-commands
 === Browser Settings
 
 The *Browser Settings* drawer contains configurations related to the UI, result frames, and graph visualization.
+You can adjust some of them in place, for example, _Enable multi statement query editor_, _Initial command to execute_, graph limits, result limits, or by using the `:config` command. 
+For the full list of the Neo4j Browser settings and how to adjust them in the Browser and globally, see xref:operations/browser-settings.adoc[].
 
 image:settings.png[width=40%]
-[TIP]
-====
-For more information on the Neo4j Browser settings and how to adjust them in the Browser and globally, see xref:operations/browser-settings.adoc[].
-====
 
 [[editor]]
 == Cypher editor
