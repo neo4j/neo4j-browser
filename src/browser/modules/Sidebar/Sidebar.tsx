@@ -77,7 +77,7 @@ const Sidebar = ({
   isRelateAvailable,
   scriptDraft
 }: SidebarProps) => {
-  const topNavItemsList: NavItem[] = [
+  const topNavItems: NavItem[] = [
     {
       // Consider use constant variable to store those keys
       name: 'DBMS',
@@ -133,7 +133,7 @@ const Sidebar = ({
     }
   ]
 
-  const bottomNavItemsList: NavItem[] = [
+  const bottomNavItems: NavItem[] = [
     {
       name: 'Documents',
       title: 'Help &amp; Resources',
@@ -179,8 +179,8 @@ const Sidebar = ({
     <TabNavigation
       selectedDrawerName={selectedDrawerName}
       onNavClick={onNavClick}
-      topNavItems={topNavItemsList}
-      bottomNavItems={bottomNavItemsList}
+      topNavItems={topNavItems}
+      bottomNavItems={bottomNavItems}
     />
   )
 }
