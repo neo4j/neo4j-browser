@@ -92,6 +92,7 @@ export class CannyLoader extends Component {
     CannySDK.init()
       .then(() => {
         window.CannyIsLoaded = true
+        window.Canny && window.Canny('initChangelog', cannyOptions)
       })
       .catch(() => {
         window.CannyIsLoaded = false
@@ -104,6 +105,8 @@ export class CannyLoader extends Component {
 
   componentWillUnmount(): void {
     if (canUseDOM()) {
+      window.Canny && window.Canny('closeChangelog')
+
       delete window.CannyIsLoaded
       delete window.Canny
     }

@@ -266,7 +266,7 @@ export const getBrowserName = function() {
   return 'Unknown'
 }
 
-export const canUseDOM = () =>
+export const canUseDOM = (): boolean =>
   !!(
     typeof window !== 'undefined' &&
     window.document &&
