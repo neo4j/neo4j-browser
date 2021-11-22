@@ -45,7 +45,7 @@ import {
 } from './styled'
 import GuidePicker from './GuidePicker'
 
-type GuideDrawerProps = {
+export type GuideDrawerProps = {
   currentGuide: Guide | null
   remoteGuides: RemoteGuide[]
   backToAllGuides: () => void
@@ -55,7 +55,7 @@ type GuideDrawerProps = {
   updateRemoteGuides: (newList: RemoteGuide[]) => void
 }
 
-function GuideDrawer({
+export const GuideDrawer = ({
   currentGuide,
   remoteGuides,
   backToAllGuides,
@@ -63,7 +63,7 @@ function GuideDrawer({
   setCurrentGuide,
   fetchRemoteGuide,
   updateRemoteGuides
-}: GuideDrawerProps): JSX.Element {
+}: GuideDrawerProps): JSX.Element => {
   const scrollRef = useRef<HTMLDivElement>(null)
 
   return (
