@@ -48,20 +48,20 @@ describe('Guide command', () => {
       .contains(':guide cypher')
       .click()
 
-    // can progress slide
+    // Can progress slide
     cy.get('[data-testid=guideNextSlide]').click()
     cy.get('[data-testid="guidesDrawer"]').contains('CREATE')
 
-    // remembers slide location
+    // Remembers slide location
     cy.get('[data-testid=navigationGuides]').click()
     cy.get('[data-testid=navigationGuides]').click()
-
-    // can go back
     cy.get('[data-testid="guidesDrawer"]').contains('CREATE')
+
+    // Can go to previous slide
     cy.get('[data-testid=guidePreviousSlide]').click()
     cy.get('[data-testid="guidesDrawer"]').contains('SQL-like clauses')
 
-    // go to end
+    // Go to end
     cy.get('[data-testid=guideNextSlide]').click()
     cy.get('[data-testid=guideNextSlide]').click()
     cy.get('[data-testid=guideNextSlide]').click()
@@ -69,7 +69,7 @@ describe('Guide command', () => {
     cy.get('[data-testid=guideNextSlide]').click()
     cy.get('[data-testid="guidesDrawer"]').contains('Next steps')
 
-    // switch guide via command
+    // Switch guide via command
     cy.executeCommand(':guide northwind')
     cy.get('[data-testid="guidesDrawer"]').contains('From RDBMS to Graph')
 
@@ -81,8 +81,71 @@ describe('Guide command', () => {
 
     // Can use back button
     cy.get('[data-testid="guidesBackButton"]').click()
+    // Same built-in guide won't be added twice
+    cy.get(`[data-testid="builtInGuidenorthwind-graph"]`).should(
+      'have.length',
+      1
+    )
     cy.get('[data-testid="guidesDrawer"]').contains(':guide cypher')
 
     cy.get('[data-testid=navigationGuides]').click()
+  })
+
+  it('can load and persist a remote guide and can be deleted permanantly', () => {
+    const guideUrl = 'https://guides.neo4j.com/sandbox/movies/index.html'
+    cy.executeCommand(':clear')
+    cy.executeCommand(`:guide ${guideUrl}`)
+    cy.get('[data-testid="guidesDrawer"]').should('contain', 'Movies Guide')
+    cy.get('[data-testid="guidesDrawer"]').should('contain', 'What is Cypher?')
+
+    // The item is added into Remote Guides
+    cy.get('[data-testid="guidesBackButton"]').click()
+    cy.get('[data-testid="guidesDrawer"]').contains('Remote Guides')
+
+    // Can display the remote guide after clicking the item
+    cy.get('[data-testid="guidesDrawer"]')
+      .contains('Movies Guide')
+      .click()
+    cy.get('[data-testid="guidesDrawer"]').should('contain', 'Movies Guide')
+    cy.get('[data-testid="guidesDrawer"]').should('contain', 'What is Cypher?')
+
+    // Same remote guide won't be added twice
+    cy.executeCommand(`:guide ${guideUrl}`, { timeout: 3000 })
+    cy.get('[data-testid="guidesBackButton"]').click()
+    cy.get(`[data-testid="removeGuide${guideUrl}"]`).should('have.length', 1)
+
+    // Reload the page
+    cy.reload().then(() => {
+      // Open guides drawer
+      cy.get('[data-testid="navigationGuides"]').click()
+      cy.get('[data-testid="guidesDrawer"]').contains('Remote Guides')
+
+      // Can display the remote guide after clicking the item
+      cy.get('[data-testid="guidesDrawer"]')
+        .contains('Movies Guide')
+        .click()
+      cy.get('[data-testid="guidesDrawer"]').should('contain', 'Movies Guide')
+      cy.get('[data-testid="guidesDrawer"]').should(
+        'contain',
+        'What is Cypher?'
+      )
+
+      // Can click delete button to remote the guide
+      cy.get('[data-testid="guidesBackButton"]').click()
+      cy.get('[data-testid="guidesDrawer"]')
+        .should('contain', 'Movies Guide')
+        .get(`[data-testid="removeGuide${guideUrl}"]`)
+        .click({ force: true })
+      cy.get(`[data-testid="remoteGuide${guideUrl}"]`).should('not.exist')
+      cy.get('[data-testid="remoteGuidesTitle"]').should('not.exist')
+
+      // Reload again and confirm the remote guide no longer exists
+      cy.reload().then(() => {
+        // Open guides drawer
+        cy.get('[data-testid="navigationGuides"]').click()
+        cy.get(`[data-testid="remoteGuide${guideUrl}"]`).should('not.exist')
+        cy.get('[data-testid="remoteGuidesTitle"]').should('not.exist')
+      })
+    })
   })
 })

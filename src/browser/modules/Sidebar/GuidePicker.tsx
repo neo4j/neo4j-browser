@@ -61,6 +61,7 @@ const GuidePicker = ({
     <NoBulletsUl>
       {builtInGuides.map(({ identifier, description }) => (
         <MarginBottomLi
+          data-testid={`builtInGuide${identifier}`}
           key={identifier}
           onClick={() =>
             setCurrentGuide({
@@ -78,22 +79,29 @@ const GuidePicker = ({
     {remoteGuides.length !== 0 && (
       <>
         <MarginTop pixels={25}>
-          <DrawerSubHeader as="div" /* prevents guide styling of h5*/>
+          <DrawerSubHeader
+            as="div"
+            data-testid="remoteGuidesTitle" /* prevents guide styling of h5*/
+          >
             Remote Guides
           </DrawerSubHeader>
         </MarginTop>
         <NoBulletsUl>
           {remoteGuides.map(guide => (
-            <GuideListEntry key={guide.title}>
+            <GuideListEntry key={guide.identifier}>
               <DrawerBrowserCommand
+                data-testid={`remoteGuide${guide.identifier}`}
                 onClick={() => fetchRemoteGuide(guide.identifier)}
               >
                 {guide.title}
               </DrawerBrowserCommand>
               <Clickable
+                data-testid={`removeGuide${guide.identifier}`}
                 onClick={() => {
                   updateRemoteGuides(
-                    remoteGuides.filter(({ title }) => title !== guide.title)
+                    remoteGuides.filter(
+                      ({ identifier }) => identifier !== guide.identifier
+                    )
                   )
                 }}
               >
