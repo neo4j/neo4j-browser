@@ -29,7 +29,7 @@ export const cannyOptions = {
 export const CANNY_FEATURE_REQUEST_URL =
   'https://neo4j-browser.canny.io/feature-requests'
 
-interface CannyOptions {
+export interface CannyOptions {
   appID: string
   position: string
   align: string
@@ -37,7 +37,7 @@ interface CannyOptions {
 declare global {
   interface Window {
     Canny?: { (command: string, options?: CannyOptions): void }
-    CannyIsLoaded?: boolean
+    IsCannyLoaded?: boolean
     attachEvent?: typeof window.addEventListener
   }
 }
@@ -91,11 +91,11 @@ export class CannyLoader extends Component {
   componentDidMount(): void {
     CannySDK.init()
       .then(() => {
-        window.CannyIsLoaded = true
+        window.IsCannyLoaded = true
         window.Canny && window.Canny('initChangelog', cannyOptions)
       })
       .catch(() => {
-        window.CannyIsLoaded = false
+        window.IsCannyLoaded = false
       })
   }
 
@@ -107,7 +107,7 @@ export class CannyLoader extends Component {
     if (canUseDOM()) {
       window.Canny && window.Canny('closeChangelog')
 
-      delete window.CannyIsLoaded
+      delete window.IsCannyLoaded
       delete window.Canny
     }
   }
