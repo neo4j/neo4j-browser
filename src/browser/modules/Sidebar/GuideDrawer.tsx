@@ -69,7 +69,7 @@ function GuideDrawer({
   return (
     <StyledGuideDrawer
       id="guide-drawer"
-      data-testid="guideDrawer"
+      data-testid="guidesDrawer"
       ref={scrollRef}
     >
       <StyledGuideDrawerHeader onClick={backToAllGuides}>

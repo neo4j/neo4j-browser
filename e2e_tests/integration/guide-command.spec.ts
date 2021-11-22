@@ -32,11 +32,11 @@ describe('Guide command', () => {
     cy.executeCommand(':clear')
     cy.executeCommand(':guide not-found-guide-anywhere')
 
-    cy.get('[data-testid="guideDrawer"]').should('contain', 'Not found')
+    cy.get('[data-testid="guidesDrawer"]').should('contain', 'Not found')
 
     // reset state
     cy.executeCommand(':guide')
-    cy.get('[data-testid="guideDrawer"]').should('contain', ':guide movie')
+    cy.get('[data-testid="guidesDrawer"]').should('contain', ':guide movie')
     cy.get('[data-testid=navigationGuides]').click()
   })
 
@@ -44,22 +44,22 @@ describe('Guide command', () => {
     cy.executeCommand(':clear')
     // Open a guide from the sidebar
     cy.get('[data-testid=navigationGuides]').click()
-    cy.get('[data-testid="guideDrawer"]')
+    cy.get('[data-testid="guidesDrawer"]')
       .contains(':guide cypher')
       .click()
 
     // can progress slide
     cy.get('[data-testid=guideNextSlide]').click()
-    cy.get('[data-testid="guideDrawer"]').contains('CREATE')
+    cy.get('[data-testid="guidesDrawer"]').contains('CREATE')
 
     // remembers slide location
     cy.get('[data-testid=navigationGuides]').click()
     cy.get('[data-testid=navigationGuides]').click()
 
     // can go back
-    cy.get('[data-testid="guideDrawer"]').contains('CREATE')
+    cy.get('[data-testid="guidesDrawer"]').contains('CREATE')
     cy.get('[data-testid=guidePreviousSlide]').click()
-    cy.get('[data-testid="guideDrawer"]').contains('SQL-like clauses')
+    cy.get('[data-testid="guidesDrawer"]').contains('SQL-like clauses')
 
     // go to end
     cy.get('[data-testid=guideNextSlide]').click()
@@ -67,21 +67,21 @@ describe('Guide command', () => {
     cy.get('[data-testid=guideNextSlide]').click()
     cy.get('[data-testid=guideNextSlide]').click()
     cy.get('[data-testid=guideNextSlide]').click()
-    cy.get('[data-testid="guideDrawer"]').contains('Next steps')
+    cy.get('[data-testid="guidesDrawer"]').contains('Next steps')
 
     // switch guide via command
     cy.executeCommand(':guide northwind')
-    cy.get('[data-testid="guideDrawer"]').contains('From RDBMS to Graph')
+    cy.get('[data-testid="guidesDrawer"]').contains('From RDBMS to Graph')
 
     // Jump to end
     cy.get('[data-testid="pagination-11"]').click()
-    cy.get('[data-testid="guideDrawer"]').contains(
+    cy.get('[data-testid="guidesDrawer"]').contains(
       'Full Northwind import example'
     )
 
     // Can use back button
     cy.get('[data-testid="guidesBackButton"]').click()
-    cy.get('[data-testid="guideDrawer"]').contains(':guide cypher')
+    cy.get('[data-testid="guidesDrawer"]').contains(':guide cypher')
 
     cy.get('[data-testid=navigationGuides]').click()
   })
