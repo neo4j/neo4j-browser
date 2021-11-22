@@ -47,8 +47,9 @@ export const MAX_LENGTH_WIDE = 300
 type ExpandableValueProps = {
   value: string
   width: number
+  type: string
 }
-function ExpandableValue({ value, width }: ExpandableValueProps) {
+function ExpandableValue({ value, width, type }: ExpandableValueProps) {
   const [expanded, setExpanded] = useState(false)
 
   const maxLength =
@@ -64,12 +65,14 @@ function ExpandableValue({ value, width }: ExpandableValueProps) {
 
   return (
     <>
+      {type.startsWith('Array') && '['}
       <ClickableUrls text={valueShown} />
       {valueIsTrimmed && (
         <StyledExpandValueButton onClick={handleExpandClick}>
           {' Show all'}
         </StyledExpandValueButton>
       )}
+      {type.startsWith('Array') && ']'}
     </>
   )
 }
@@ -99,7 +102,11 @@ function PropertiesView({
                   <ClickableUrls text={key} />
                 </KeyCell>
                 <ValueCell>
-                  <ExpandableValue value={value} width={nodeInspectorWidth} />
+                  <ExpandableValue
+                    value={value}
+                    width={nodeInspectorWidth}
+                    type={type}
+                  />
                 </ValueCell>
                 <CopyCell>
                   <ClipboardCopier
