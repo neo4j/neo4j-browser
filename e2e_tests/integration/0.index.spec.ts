@@ -56,7 +56,7 @@ describe('Neo4j Browser', () => {
 
   it('can show Canny badge in "Document" icon and correspond side bar drawer', () => {
     cy.window().then(win => {
-      if (win.Canny && win.IsCannyLoaded && typeof win.Canny === 'function')
+      if (win.Canny && win.IsCannyLoaded && typeof win.Canny === 'function') {
         // The Canny badge should appear when initially connected to the database
         cy.get('[data-testid="navigationCannyDocuments"]', {
           timeout: 5000
@@ -66,11 +66,12 @@ describe('Neo4j Browser', () => {
           .children('div')
           .should('have.class', 'Canny_Badge')
 
-      // Click the navigation button to open the sidebar to show Documents drawer, and the badge should be shown in the changelog button
-      cy.get('[data-testid="drawerDocuments"]').click()
-      cy.get('[data-testid="documentDrawerCanny"]')
-        .children('div')
-        .should('have.class', 'Canny_BadgeContainer')
+        // Click the navigation button to open the sidebar to show Documents drawer, and the badge should be shown in the changelog button
+        cy.get('[data-testid="drawerDocuments"]').click()
+        cy.get('[data-testid="documentDrawerCanny"]')
+          .children('div')
+          .should('have.class', 'Canny_BadgeContainer')
+      }
     })
   })
 
