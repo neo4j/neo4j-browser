@@ -143,11 +143,11 @@ describe('Connect form', () => {
         cy.get('[data-testid=password]')
           .type(Cypress.config('password'))
           .type('{enter}')
-        cy.get('[data-testid="drawerDBMS"]').click()
+        cy.get('[data-testid="navigationDBMS"]').click()
         cy.get('[data-testid="sidebarMetaItem"]', { timeout: 30000 }).contains(
           'TestLabel'
         )
-        cy.get('[data-testid="drawerDBMS"]').click()
+        cy.get('[data-testid="navigationDBMS"]').click()
 
         // unknown db leads to default db
         cy.executeCommand(':server disconnect')
@@ -160,11 +160,11 @@ describe('Connect form', () => {
         cy.get('[data-testid=password]')
           .type(Cypress.config('password'))
           .type('{enter}')
-        cy.get('[data-testid="drawerDBMS"]').click()
+        cy.get('[data-testid="navigationDBMS"]').click()
         cy.get('[data-testid="sidebarMetaItem"]', { timeout: 30000 }).contains(
           'MovieLabel'
         )
-        cy.get('[data-testid="drawerDBMS"]').click()
+        cy.get('[data-testid="navigationDBMS"]').click()
 
         cy.executeCommand('match (n:MovieLabel) delete n')
         cy.executeCommand(':use system')
@@ -187,7 +187,7 @@ describe('Connect form', () => {
           .type(Cypress.config('password'))
           .type('{enter}')
 
-        cy.get('[data-testid="drawerDBMS"]').click()
+        cy.get('[data-testid="navigationDBMS"]').click()
         cy.get('[data-testid="database-selection-list"]').contains('system')
         cy.executeCommand(':use neo4j')
       })

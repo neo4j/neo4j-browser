@@ -37,13 +37,13 @@ describe('Guide command', () => {
     // reset state
     cy.executeCommand(':guide')
     cy.get('[data-testid="guideDrawer"]').should('contain', ':guide movie')
-    cy.get('[data-testid=drawerGuides]').click()
+    cy.get('[data-testid=navigationGuides]').click()
   })
 
-  it('can walk through a guides', () => {
+  it('can walk through a guide', () => {
     cy.executeCommand(':clear')
     // Open a guide from the sidebar
-    cy.get('[data-testid=drawerGuides]').click()
+    cy.get('[data-testid=navigationGuides]').click()
     cy.get('[data-testid="guideDrawer"]')
       .contains(':guide cypher')
       .click()
@@ -53,8 +53,8 @@ describe('Guide command', () => {
     cy.get('[data-testid="guideDrawer"]').contains('CREATE')
 
     // remembers slide location
-    cy.get('[data-testid=drawerGuides]').click()
-    cy.get('[data-testid=drawerGuides]').click()
+    cy.get('[data-testid=navigationGuides]').click()
+    cy.get('[data-testid=navigationGuides]').click()
 
     // can go back
     cy.get('[data-testid="guideDrawer"]').contains('CREATE')
@@ -83,6 +83,6 @@ describe('Guide command', () => {
     cy.get('[data-testid="guidesBackButton"]').click()
     cy.get('[data-testid="guideDrawer"]').contains(':guide cypher')
 
-    cy.get('[data-testid=drawerGuides]').click()
+    cy.get('[data-testid=navigationGuides]').click()
   })
 })

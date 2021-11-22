@@ -139,7 +139,7 @@ class Navigation extends Component<NavigationProps, NavigationState> {
             ) : null}
             <NavigationButtonContainer
               title={item.title}
-              data-testid={`drawer${item.name}`}
+              data-testid={`navigation${item.name}`}
               onClick={() => onNavClick(item.name.toLowerCase())}
               isOpen={isOpen}
             >
