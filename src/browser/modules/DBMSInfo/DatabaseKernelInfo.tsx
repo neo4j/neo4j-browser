@@ -25,7 +25,8 @@ import {
   getEdition,
   getStoreSize,
   getClusterRole,
-  getDatabases
+  getDatabases,
+  Database
 } from 'shared/modules/dbMeta/dbMetaDuck'
 import {
   executeCommand,
@@ -48,6 +49,15 @@ import {
 } from './styled'
 import { getUsedDbName } from 'shared/modules/features/versionedFeatures'
 
+type DatabaseKernelInfo = {
+  role: any
+  version: string | null
+  edition: string | null
+  dbName: any
+  storeSize: any
+  onItemClick: any
+  databases: Database[]
+}
 export const DatabaseKernelInfo = ({
   role,
   version,
@@ -56,7 +66,7 @@ export const DatabaseKernelInfo = ({
   storeSize,
   onItemClick,
   databases
-}: any) => {
+}: DatabaseKernelInfo) => {
   return (
     <DrawerSection className="database-kernel-info">
       <DrawerSubHeader>DBMS</DrawerSubHeader>

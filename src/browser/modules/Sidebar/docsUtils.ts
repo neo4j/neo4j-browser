@@ -19,8 +19,8 @@
  */
 
 import semver from 'semver'
-export const formatDocVersion = (v = ''): string => {
-  if (!semver.valid(v)) {
+export const formatDocVersion = (v: string | null = ''): string => {
+  if (!v || !semver.valid(v)) {
     // All non-strings return
     return 'current'
   }

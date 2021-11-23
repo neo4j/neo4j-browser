@@ -19,7 +19,7 @@
  */
 import React from 'react'
 import { connect } from 'react-redux'
-import { version } from 'project-root/package.json'
+import { version as browserVersion } from 'project-root/package.json'
 
 import {
   Drawer,
@@ -44,8 +44,8 @@ function asChangeLogUrl(serverVersion: string): string | undefined {
 }
 
 interface AboutProps {
-  serverVersion: string
-  serverEdition: string
+  serverVersion: string | null
+  serverEdition: string | null
 }
 
 const About = ({ serverVersion, serverEdition }: AboutProps) => (
@@ -71,11 +71,11 @@ const About = ({ serverVersion, serverEdition }: AboutProps) => (
           <p>
             Neo4j Browser version:{' '}
             <a
-              href={`https://github.com/neo4j/neo4j-browser/releases/tag/${version}`}
+              href={`https://github.com/neo4j/neo4j-browser/releases/tag/${browserVersion}`}
               target="_blank"
               rel="noreferrer"
             >
-              {version}
+              {browserVersion}
             </a>
           </p>
           {serverVersion && serverEdition && (

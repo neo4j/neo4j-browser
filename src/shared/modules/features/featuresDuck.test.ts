@@ -108,6 +108,6 @@ describe('canSendTxMetadata', () => {
   })
 })
 
-const createVersionState = (version: any) => ({
+const createVersionState: any = (version: any) => ({
   [META_NAME]: { server: { version } }
 })

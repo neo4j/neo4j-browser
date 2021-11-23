@@ -77,7 +77,7 @@ export type ConnectionReduxState = {
   useDb: string | null
   lastUseDb: string | null
 }
-type ConnectionState =
+export type ConnectionState =
   | typeof DISCONNECTED_STATE
   | typeof CONNECTED_STATE
   | typeof PENDING_STATE

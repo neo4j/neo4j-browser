@@ -97,9 +97,9 @@ export function getMetaInContext(state: any, context: any) {
   }
 }
 
-export const getVersion = (state: any) =>
-  (state[NAME] || {}).server ? (state[NAME] || {}).server.version : 0
-export const getEdition = (state: any) => state[NAME].server.edition
+export const getVersion = (state: GlobalState): string | null =>
+  (state[NAME] || {}).server ? (state[NAME] || {}).server.version : null
+export const getEdition = (state: GlobalState) => state[NAME].server.edition
 export const hasEdition = (state: any) =>
   state[NAME].server.edition !== initialState.server.edition
 export const getStoreSize = (state: any) => state[NAME].server.storeSize
@@ -160,8 +160,10 @@ export const getActiveDbName = (state: any) =>
 
 export const VERSION_FOR_EDITOR_HISTORY_SETTING = '4.3.0'
 
-export const versionHasEditorHistorySetting = (version: string) =>
-  semver.gte(version, VERSION_FOR_EDITOR_HISTORY_SETTING)
+export const versionHasEditorHistorySetting = (version: string | null) => {
+  if (!version) return false
+  return semver.gte(version, VERSION_FOR_EDITOR_HISTORY_SETTING)
+}
 
 export const supportsEditorHistorySetting = (state: any) =>
   isEnterprise(state) && versionHasEditorHistorySetting(getVersion(state))
