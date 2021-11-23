@@ -105,8 +105,6 @@ describe('getAndMergeDiscoveryData', () => {
     expect(discoveryData).toBeTruthy()
     expect(discoveryData?.host).toEqual(boltHost)
 
-    // expect(discoveryData?.source).toEqual(DISCOVERY_ENDPOINT)
-    // Todo test source via logs
     expect(discoveryData?.SSOProviders).toEqual([])
     expect(discoveryData?.SSOError).toEqual(undefined)
     expect(discoveryData?.neo4jVersion).toEqual(neo4jVersion)

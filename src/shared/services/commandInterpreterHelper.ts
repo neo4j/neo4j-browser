@@ -21,7 +21,6 @@
 import * as Sentry from '@sentry/react'
 import { v4 } from 'uuid'
 import { Dispatch, Action } from 'redux'
-import { GlobalState } from 'shared/globalState'
 import bolt from 'services/bolt/bolt'
 import * as frames from 'shared/modules/frames/framesDuck'
 import { getHostedUrl } from 'shared/modules/app/appDuck'
@@ -51,7 +50,8 @@ import {
   getDatabases,
   fetchMetaData,
   getAvailableSettings,
-  SYSTEM_DB
+  SYSTEM_DB,
+  findDatabaseByNameOrAlias
 } from 'shared/modules/dbMeta/dbMetaDuck'
 import { canSendTxMetadata } from 'shared/modules/features/versionedFeatures'
 import { fetchRemoteGuideAsync } from 'shared/modules/commands/helpers/playAndGuides'
@@ -217,24 +217,20 @@ const availableCommands = [
 
         const normalizedName = dbName.toLowerCase()
         const cleanDbName = unescapeCypherIdentifier(normalizedName)
+        const dbMeta = findDatabaseByNameOrAlias(store.getState(), cleanDbName)
 
-        const dbMeta = getDatabases(store.getState()).find(
-          (db: any) => db.name.toLowerCase() === cleanDbName
-        )
-
-        // Do we have a db with that name?
         if (!dbMeta) {
           throw DatabaseNotFoundError({ dbName })
         }
         if (dbMeta.status !== 'online') {
-          throw DatabaseUnavailableError({ dbName, dbMeta })
+          throw DatabaseUnavailableError({ dbName: dbMeta.name, dbMeta })
         }
-        put(useDb(cleanDbName))
+        put(useDb(dbMeta.name))
         put(
           frames.add({
             ...action,
             type: 'use-db',
-            useDb: cleanDbName
+            useDb: dbMeta.name
           })
         )
         if (action.requestId) {

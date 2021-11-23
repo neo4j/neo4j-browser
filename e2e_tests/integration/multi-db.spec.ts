@@ -23,6 +23,7 @@ import { isEnterpriseEdition } from '../support/utils'
 /* global Cypress, cy, expect, before */
 
 describe('Multi database', () => {
+  const editor = () => cy.get('#monaco-main-editor')
   const databaseList = () =>
     cy.get('[data-testid="dbs-command-list"] li', {
       timeout: 5000
@@ -76,7 +77,6 @@ describe('Multi database', () => {
     }
     it(':use command works + shows current db in editor gutter', () => {
       cy.executeCommand(':clear')
-      const editor = () => cy.get('#monaco-main-editor')
 
       cy.executeCommand(':use system')
       editor().contains('system$')
@@ -91,6 +91,7 @@ describe('Multi database', () => {
       databaseOptionListOptions().should('have.length', 2)
       cy.get('[data-testid="drawerDBMS"]').click()
     })
+
     if (isEnterpriseEdition()) {
       it('adds databases to the sidebar and adds backticks to special db names', () => {
         // Add db
@@ -145,6 +146,40 @@ describe('Multi database', () => {
 
       cy.executeCommand(':use system')
     })
+
+    if (Cypress.config('serverVersion') >= 4.4) {
+      it('lists aliases with :dbs command', () => {
+        const password = Cypress.config('password')
+        cy.connect('neo4j', password)
+        cy.executeCommand(':clear')
+        // Drop alias in case it already exists
+        cy.executeCommand('drop alias `Mossdeep-24.` for database')
+
+        cy.executeCommand('create alias `Mossdeep-24.` for database neo4j')
+        cy.resultContains('1 system update, no records')
+
+        // Switch to system to see that using alias switches back to neo4j
+        cy.executeCommand(':use system')
+        editor().contains('system$')
+
+        cy.executeCommand(':use `Mossdeep-24.`')
+        editor().contains('neo4j$')
+
+        cy.executeCommand(':use system')
+        editor().contains('system$')
+
+        cy.executeCommand(':dbs')
+        cy.getFrames()
+          .eq(0)
+          .contains(':use `mossdeep-24.`')
+          .click()
+        editor().contains('neo4j$')
+
+        cy.executeCommand('drop alias `Mossdeep-24.` for database;')
+        cy.resultContains('1 system update, no records')
+      })
+    }
+
     if (isEnterpriseEdition()) {
       it('lists new databases with :dbs command', () => {
         cy.executeCommand('CREATE DATABASE sidebartest')
@@ -166,6 +201,7 @@ describe('Multi database', () => {
         databaseList().contains('neo4j')
       })
     }
+
     it('shows error message when trying to set a parameter on system db', () => {
       cy.executeCommand(':clear')
       cy.executeCommand(':use system')
@@ -175,6 +211,7 @@ describe('Multi database', () => {
         .first()
       resultFrame.should('contain', 'cannot be declared')
     })
+
     it('shows error when trying to use a db that doesnt exist', () => {
       cy.executeCommand(':clear')
       cy.executeCommand(':use nonexistingdb')
@@ -183,6 +220,7 @@ describe('Multi database', () => {
         .first()
       resultFrame.should('contain', 'could not be found')
     })
+
     if (isEnterpriseEdition()) {
       it('re-runs query from frame action button on original db', () => {
         cy.executeCommand(':clear')

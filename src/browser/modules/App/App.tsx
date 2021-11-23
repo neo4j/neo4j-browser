@@ -34,8 +34,8 @@ import { utilizeBrowserSync } from 'shared/modules/features/featuresDuck'
 import { getOpenDrawer, open } from 'shared/modules/sidebar/sidebarDuck'
 import { getErrorMessage } from 'shared/modules/commands/commandsDuck'
 import {
-  shouldAllowOutgoingConnections,
-  getDatabases
+  findDatabaseByNameOrAlias,
+  shouldAllowOutgoingConnections
 } from 'shared/modules/dbMeta/dbMetaDuck'
 import {
   getActiveConnection,
@@ -146,7 +146,6 @@ export function App(props: any) {
   }, [props.bus])
 
   const {
-    activeConnection,
     browserSyncAuthStatus,
     browserSyncConfig,
     browserSyncMetadata,
@@ -154,7 +153,7 @@ export function App(props: any) {
     codeFontLigatures,
     connectionState,
     consentBannerShownCount,
-    databases,
+    isDatabaseUnavailable,
     defaultConnectionData,
     drawer,
     errorMessage,
@@ -263,12 +262,11 @@ export function App(props: any) {
                   </ErrorBoundary>
                   <StyledMainWrapper id={MAIN_WRAPPER_DOM_ID}>
                     <Main
-                      activeConnection={activeConnection}
                       connectionState={connectionState}
                       lastConnectionUpdate={lastConnectionUpdate}
                       errorMessage={errorMessage}
                       useDb={useDb}
-                      databases={databases}
+                      isDatabaseUnavailable={isDatabaseUnavailable}
                       showUdcConsentBanner={
                         telemetrySettings.source === 'BROWSER_SETTING' &&
                         consentBannerShownCount <= 5
@@ -291,6 +289,11 @@ export function App(props: any) {
 }
 
 const mapStateToProps = (state: GlobalState) => {
+  const useDb = getUseDb(state)
+  const isDatabaseUnavailable =
+    useDb === null ||
+    findDatabaseByNameOrAlias(state, useDb)?.status !== 'online'
+
   const connectionData = getActiveConnectionData(state)
   return {
     experimentalFeatures: getExperimentalFeatures(state),
@@ -311,8 +314,8 @@ const mapStateToProps = (state: GlobalState) => {
     browserSyncAuthStatus: getUserAuthStatus(state),
     loadSync: utilizeBrowserSync(state),
     isWebEnv: inWebEnv(state),
-    useDb: getUseDb(state),
-    databases: getDatabases(state),
+    useDb,
+    isDatabaseUnavailable,
     telemetrySettings: getTelemetrySettings(state),
     consentBannerShownCount: getConsentBannerShownCount(state)
   }

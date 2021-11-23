@@ -39,27 +39,41 @@ import ErrorBoundary from 'browser-components/ErrorBoundary'
 import { useSlowConnectionState } from './main.hooks'
 import AutoExecButton from '../Stream/auto-exec-button'
 
-const Main = React.memo(function Main(props: any) {
+type MainProps = {
+  connectionState: number
+  isDatabaseUnavailable: boolean
+  errorMessage?: string
+  lastConnectionUpdate: number
+  showUdcConsentBanner: boolean
+  useDb: string | null
+  dismissConsentBanner: () => void
+  incrementConsentBannerShownCount: () => void
+  openSettingsDrawer: () => void
+}
+
+const Main = React.memo(function Main(props: MainProps) {
   const [past5Sec, past10Sec] = useSlowConnectionState(props)
   const {
-    databases,
-    useDb,
+    connectionState,
+    isDatabaseUnavailable,
+    errorMessage,
     showUdcConsentBanner,
+    useDb,
+    dismissConsentBanner,
     incrementConsentBannerShownCount,
     openSettingsDrawer
   } = props
-  const dbMeta = databases && databases.find((db: any) => db.name === useDb)
-  const dbIsUnavailable = useDb && (!dbMeta || dbMeta.status !== 'online')
+
   useEffect(() => {
     showUdcConsentBanner && incrementConsentBannerShownCount()
-  }, [showUdcConsentBanner])
+  }, [showUdcConsentBanner, incrementConsentBannerShownCount])
 
   return (
     <StyledMain data-testid="main">
       <ErrorBoundary>
         <Editor />
       </ErrorBoundary>
-      {props.showUdcConsentBanner && (
+      {showUdcConsentBanner && (
         <UdcConsentBanner>
           <span>
             To help make Neo4j Browser better we collect information on product
@@ -69,36 +83,34 @@ const Main = React.memo(function Main(props: any) {
             </UnderlineClickable>{' '}
             at any time.
           </span>
-          <DismissConsentBanner onClick={props.dismissConsentBanner} />
+          <DismissConsentBanner onClick={dismissConsentBanner} />
         </UdcConsentBanner>
       )}
-      {dbIsUnavailable && (
+      {useDb && isDatabaseUnavailable && (
         <ErrorBanner>
-          Database '{useDb}' is unavailable. Run{' '}
+          Database &apos;{useDb}&apos; is unavailable. Run{' '}
           <AutoExecButton cmd="sysinfo" /> for more info.
         </ErrorBanner>
       )}
-      {props.errorMessage && (
-        <ErrorBanner data-testid="errorBanner">
-          {props.errorMessage}
-        </ErrorBanner>
+      {errorMessage && (
+        <ErrorBanner data-testid="errorBanner">{errorMessage}</ErrorBanner>
       )}
-      {props.connectionState === DISCONNECTED_STATE && (
+      {connectionState === DISCONNECTED_STATE && (
         <NotAuthedBanner data-testid="disconnectedBanner">
           Database access not available. Please use&nbsp;
           <AutoExecButton
             cmd="server connect"
             data-testid="disconnectedBannerCode"
           />
-          &nbsp; to establish connection. There's a graph waiting for you.
+          &nbsp; to establish connection. There&apos;s a graph waiting for you.
         </NotAuthedBanner>
       )}
-      {props.connectionState === PENDING_STATE && !past10Sec && (
+      {connectionState === PENDING_STATE && !past10Sec && (
         <WarningBanner data-testid="reconnectBanner">
           Connection to server lost. Reconnecting...
         </WarningBanner>
       )}
-      {props.connectionState === CONNECTING_STATE && past5Sec && !past10Sec && (
+      {connectionState === CONNECTING_STATE && past5Sec && !past10Sec && (
         <NotAuthedBanner>Still connecting...</NotAuthedBanner>
       )}
       {past10Sec && (

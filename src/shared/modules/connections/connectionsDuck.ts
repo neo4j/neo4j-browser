@@ -505,7 +505,6 @@ export const startupConnectEpic = (action$: any, store: any) => {
       )
 
       if (
-        //TODO Considder the SSO implications of this
         !(discovered && discovered.hasForceURL) && // If we have force url, don't try old connection data
         shouldTryAutoconnecting(savedConnection)
       ) {

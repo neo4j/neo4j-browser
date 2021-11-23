@@ -21,13 +21,27 @@
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { DatabaseSelector } from './DatabaseSelector'
+import { Database } from 'shared/modules/dbMeta/dbMetaDuck'
 
 const testId = 'database-selection-list'
+
+const createDummyDb = (name: string, status = 'online'): Database => ({
+  name,
+  status,
+  address: 'bolt',
+  currentStatus: 'online',
+  default: false,
+  error: '',
+  requestedStatus: '',
+  role: 'LEADER',
+  aliases: [],
+  home: false
+})
 
 describe('DatabaseSelector', () => {
   it('renders empty if no databases in list', () => {
     // Given
-    const databases: any = []
+    const databases: Database[] = []
 
     // When
     const { container } = render(<DatabaseSelector databases={databases} />)
@@ -37,20 +51,12 @@ describe('DatabaseSelector', () => {
   })
   it('updates selection in list', () => {
     // Given
-    const databases = [
-      { name: 'stella', status: 'online' },
-      { name: 'molly', status: 'online' }
-    ]
-    const defaultDb = 'stella'
+    const databases = ['stella', 'molly'].map(n => createDummyDb(n))
     let selected = 'stella'
 
     // When
     const { getByDisplayValue, queryByDisplayValue, rerender } = render(
-      <DatabaseSelector
-        databases={databases}
-        selectedDb={selected}
-        defaultDb={defaultDb}
-      />
+      <DatabaseSelector databases={databases} selectedDb={selected} />
     )
 
     // Then
@@ -59,13 +65,7 @@ describe('DatabaseSelector', () => {
 
     // When
     selected = 'molly'
-    rerender(
-      <DatabaseSelector
-        databases={databases}
-        selectedDb={selected}
-        defaultDb={defaultDb}
-      />
-    )
+    rerender(<DatabaseSelector databases={databases} selectedDb={selected} />)
 
     // Then
     expect(getByDisplayValue(/molly/i)).toBeDefined()
@@ -73,25 +73,16 @@ describe('DatabaseSelector', () => {
 
     // When
     selected = ''
-    rerender(
-      <DatabaseSelector
-        databases={databases}
-        selectedDb={selected}
-        defaultDb={defaultDb}
-      />
-    )
+    rerender(<DatabaseSelector databases={databases} selectedDb={selected} />)
 
-    // Then default db should be selected
+    // Then select db text should be shown
     expect(getByDisplayValue(/select db/i)).toBeDefined()
     expect(queryByDisplayValue(/stella/i)).toBeDefined()
     expect(queryByDisplayValue(/molly/i)).toBeNull()
   })
   it('can handle selections', () => {
     // Given
-    const databases = [
-      { name: 'stella', status: 'online' },
-      { name: 'molly', status: 'online' }
-    ]
+    const databases = ['stella', 'molly'].map(n => createDummyDb(n))
     const onChange = jest.fn()
 
     // When
@@ -116,10 +107,7 @@ describe('DatabaseSelector', () => {
   })
   it('escapes db names when needed', () => {
     // Given
-    const databases = [
-      { name: 'regulardb', status: 'online' },
-      { name: 'db-with-dash', status: 'online' }
-    ]
+    const databases = ['regulardb', 'db-with-dash'].map(n => createDummyDb(n))
     const onChange = jest.fn()
 
     // When

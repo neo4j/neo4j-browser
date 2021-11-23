@@ -79,6 +79,19 @@ export const SYSTEM_DB = 'system'
 /**
  * Selectors
  */
+
+export function findDatabaseByNameOrAlias(
+  state: GlobalState,
+  name: string
+): Database | undefined {
+  const lowerCaseName = name.toLowerCase()
+
+  return state[NAME].databases.find(
+    (db: Database) =>
+      db.name.toLowerCase() === lowerCaseName ||
+      db.aliases?.find(alias => alias.toLowerCase() === lowerCaseName)
+  )
+}
 export function getMetaInContext(state: any, context: any) {
   const inCurrentContext = (e: any) => e.context === context
 
@@ -146,7 +159,8 @@ export type Database = {
   currentStatus: string
   error: string
   default: boolean
-  home?: boolean
+  home?: boolean // introduced in neo4j 4.3
+  aliases?: string[] // introduced in neo4j 4.4
   status: string
 }
 
@@ -511,18 +525,18 @@ const switchToRequestedDb = (store: any) => {
 
   const switchToLastUsedOrDefaultDb = () => {
     const lastUsedDb = getLastUseDb(store.getState())
-    if (lastUsedDb && databases.some((db: any) => db.name === lastUsedDb)) {
+    if (lastUsedDb && findDatabaseByNameOrAlias(store.getState(), lastUsedDb)) {
       store.dispatch(useDb(lastUsedDb))
     } else {
-      const homeDb = databases.find((db: any) => db.home)
+      const homeDb = databases.find(db => db.home)
       if (homeDb) {
         store.dispatch(useDb(homeDb.name))
       } else {
-        const defaultDb = databases.find((db: any) => db.default)
+        const defaultDb = databases.find(db => db.default)
         if (defaultDb) {
           store.dispatch(useDb(defaultDb.name))
         } else {
-          const systemDb = databases.find((db: any) => db.name === SYSTEM_DB)
+          const systemDb = databases.find(db => db.name === SYSTEM_DB)
           if (systemDb) {
             store.dispatch(useDb(systemDb.name))
           } else {
