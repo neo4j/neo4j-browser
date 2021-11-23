@@ -63,12 +63,10 @@ export const DatabaseSelector = ({
 
   const databasesList: (Partial<Database> & {
     name: string
-  })[] = databases
-  if (!selectedDb) {
-    databasesList.unshift({ name: EMPTY_OPTION })
-  }
-  // When connected to a cluster, we get duplicates for each member
-  const uniqDatabases = uniqBy(databases, 'name')
+  })[] = selectedDb ? databases : [{ name: EMPTY_OPTION }, ...databases]
+
+  // When connected to a cluster, we get duplicate dbs for each member
+  const uniqDatabases = uniqBy(databasesList, 'name')
 
   const homeDb =
     uniqDatabases.find(db => db.home) || uniqDatabases.find(db => db.default)
@@ -78,7 +76,7 @@ export const DatabaseSelector = ({
       <DrawerSubHeader>Use database</DrawerSubHeader>
       <DrawerSectionBody>
         <Select
-          value={selectedDb || ''}
+          value={selectedDb}
           data-testid="database-selection-list"
           onChange={selectionChange}
         >
