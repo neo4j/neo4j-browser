@@ -392,5 +392,6 @@ export const AuraPromoLink = styled.a`
 `
 
 export const AliasText = styled.span`
-  font-size: 13px;
+  font-size: 1rem;
+  font-style: italic;
 `
