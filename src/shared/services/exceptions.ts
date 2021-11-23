@@ -125,7 +125,7 @@ export function DatabaseNotFoundError({
   return {
     type,
     code: type,
-    message: `A database with the "${dbName}" name could not be found.`
+    message: `A database with the "${dbName}" name or alias could not be found.`
   }
 }
 

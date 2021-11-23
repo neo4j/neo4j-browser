@@ -217,7 +217,7 @@ const availableCommands = [
 
         const normalizedName = dbName.toLowerCase()
         const cleanDbName = unescapeCypherIdentifier(normalizedName)
-        const dbMeta = findDatabaseByNameOrAlias(store, cleanDbName)
+        const dbMeta = findDatabaseByNameOrAlias(store.getState(), cleanDbName)
 
         if (!dbMeta) {
           throw DatabaseNotFoundError({ dbName })
