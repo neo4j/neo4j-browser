@@ -64,7 +64,7 @@ const mainBaseProps = {
 describe('<Main />', () => {
   it('should display an ErrorBanner when useDb is unavailable', () => {
     const { queryByText } = render(
-      <Main {...mainBaseProps} databaseIsUnavailable={true} />
+      <Main {...mainBaseProps} isDatabaseUnavailable={true} />
     )
 
     expect(
@@ -74,7 +74,7 @@ describe('<Main />', () => {
 
   it('should not show Errorbanner before we have a useDb', () => {
     const { queryByText } = render(
-      <Main {...mainBaseProps} useDb={null} databaseIsUnavailable={true} />
+      <Main {...mainBaseProps} useDb={null} isDatabaseUnavailable={true} />
     )
 
     expect(

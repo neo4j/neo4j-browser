@@ -146,7 +146,6 @@ export function App(props: any) {
   }, [props.bus])
 
   const {
-    activeConnection,
     browserSyncAuthStatus,
     browserSyncConfig,
     browserSyncMetadata,
@@ -154,7 +153,7 @@ export function App(props: any) {
     codeFontLigatures,
     connectionState,
     consentBannerShownCount,
-    databaseIsUnavailable,
+    isDatabaseUnavailable,
     defaultConnectionData,
     drawer,
     errorMessage,
@@ -267,7 +266,7 @@ export function App(props: any) {
                       lastConnectionUpdate={lastConnectionUpdate}
                       errorMessage={errorMessage}
                       useDb={useDb}
-                      databaseIsUnavailable={databaseIsUnavailable}
+                      isDatabaseUnavailable={isDatabaseUnavailable}
                       showUdcConsentBanner={
                         telemetrySettings.source === 'BROWSER_SETTING' &&
                         consentBannerShownCount <= 5
@@ -291,7 +290,7 @@ export function App(props: any) {
 
 const mapStateToProps = (state: GlobalState) => {
   const useDb = getUseDb(state)
-  const databaseIsUnavailable =
+  const isDatabaseUnavailable =
     useDb === null ||
     findDatabaseByNameOrAlias(state, useDb)?.status !== 'online'
 
@@ -316,7 +315,7 @@ const mapStateToProps = (state: GlobalState) => {
     loadSync: utilizeBrowserSync(state),
     isWebEnv: inWebEnv(state),
     useDb,
-    databaseIsUnavailable,
+    isDatabaseUnavailable,
     telemetrySettings: getTelemetrySettings(state),
     consentBannerShownCount: getConsentBannerShownCount(state)
   }

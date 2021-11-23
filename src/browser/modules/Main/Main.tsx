@@ -41,7 +41,7 @@ import AutoExecButton from '../Stream/auto-exec-button'
 
 type MainProps = {
   connectionState: number
-  databaseIsUnavailable: boolean
+  isDatabaseUnavailable: boolean
   errorMessage?: string
   lastConnectionUpdate: number
   showUdcConsentBanner: boolean
@@ -55,7 +55,7 @@ const Main = React.memo(function Main(props: MainProps) {
   const [past5Sec, past10Sec] = useSlowConnectionState(props)
   const {
     connectionState,
-    databaseIsUnavailable,
+    isDatabaseUnavailable,
     errorMessage,
     showUdcConsentBanner,
     useDb,
@@ -86,7 +86,7 @@ const Main = React.memo(function Main(props: MainProps) {
           <DismissConsentBanner onClick={dismissConsentBanner} />
         </UdcConsentBanner>
       )}
-      {useDb && databaseIsUnavailable && (
+      {useDb && isDatabaseUnavailable && (
         <ErrorBanner>
           Database &apos;{useDb}&apos; is unavailable. Run{' '}
           <AutoExecButton cmd="sysinfo" /> for more info.

@@ -51,7 +51,7 @@ import {
   fetchMetaData,
   getAvailableSettings,
   SYSTEM_DB,
-  Database
+  findDatabaseByNameOrAlias
 } from 'shared/modules/dbMeta/dbMetaDuck'
 import { canSendTxMetadata } from 'shared/modules/features/versionedFeatures'
 import { fetchRemoteGuideAsync } from 'shared/modules/commands/helpers/playAndGuides'
@@ -217,12 +217,7 @@ const availableCommands = [
 
         const normalizedName = dbName.toLowerCase()
         const cleanDbName = unescapeCypherIdentifier(normalizedName)
-
-        const dbMeta = getDatabases(store.getState()).find(
-          (db: Database) =>
-            db.name.toLowerCase() === cleanDbName ||
-            db.aliases?.find(alias => alias.toLowerCase() === cleanDbName)
-        )
+        const dbMeta = findDatabaseByNameOrAlias(store, cleanDbName)
 
         if (!dbMeta) {
           throw DatabaseNotFoundError({ dbName })
