@@ -27,6 +27,7 @@ import {
 } from 'browser-components/drawer/drawer-styled'
 import { escapeCypherIdentifier } from 'services/utils'
 import { Database } from 'shared/modules/dbMeta/dbMetaDuck'
+import { uniqBy } from 'lodash'
 
 const Select = styled.select`
   width: 100%;
@@ -66,9 +67,11 @@ export const DatabaseSelector = ({
   if (!selectedDb) {
     databasesList.unshift({ name: EMPTY_OPTION })
   }
+  // When connected to a cluster, we get duplicates for each member
+  const uniqDatabases = uniqBy(databases, 'name')
 
   const homeDb =
-    databasesList.find(db => db.home) || databasesList.find(db => db.default)
+    uniqDatabases.find(db => db.home) || uniqDatabases.find(db => db.default)
 
   return (
     <DrawerSection>
@@ -79,7 +82,7 @@ export const DatabaseSelector = ({
           data-testid="database-selection-list"
           onChange={selectionChange}
         >
-          {databasesList.map(db => {
+          {uniqDatabases.map(db => {
             return (
               <option key={db.name} value={db.name}>
                 {db.name}

@@ -91,6 +91,7 @@ describe('Multi database', () => {
       databaseOptionListOptions().should('have.length', 2)
       cy.get('[data-testid="drawerDBMS"]').click()
     })
+
     if (isEnterpriseEdition()) {
       it('adds databases to the sidebar and adds backticks to special db names', () => {
         // Add db
@@ -145,6 +146,7 @@ describe('Multi database', () => {
 
       cy.executeCommand(':use system')
     })
+
     if (isEnterpriseEdition()) {
       it('lists new databases with :dbs command', () => {
         cy.executeCommand('CREATE DATABASE sidebartest')
