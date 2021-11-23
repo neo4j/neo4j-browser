@@ -32,6 +32,7 @@ import { Epic } from 'redux-observable'
 import { Action } from 'redux'
 import { FrameView } from 'shared/modules/frames/frameViewTypes'
 import { GlobalState } from 'shared/globalState'
+import { Database } from '../dbMeta/dbMetaDuck'
 
 export const NAME = 'frames'
 export const ADD = 'frames/ADD'
@@ -250,6 +251,7 @@ export interface Frame {
   type: string
   useDb: string | null
   history?: string[]
+  dbs?: Database[]
 }
 
 export interface FrameStack {

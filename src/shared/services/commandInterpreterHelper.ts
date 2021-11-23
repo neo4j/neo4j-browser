@@ -224,19 +224,18 @@ const availableCommands = [
             db.aliases?.find(alias => alias.toLowerCase() === cleanDbName)
         )
 
-        // Do we have a db with that name?
         if (!dbMeta) {
           throw DatabaseNotFoundError({ dbName })
         }
         if (dbMeta.status !== 'online') {
-          throw DatabaseUnavailableError({ dbName, dbMeta })
+          throw DatabaseUnavailableError({ dbName: dbMeta.name, dbMeta })
         }
-        put(useDb(cleanDbName))
+        put(useDb(dbMeta.name))
         put(
           frames.add({
             ...action,
             type: 'use-db',
-            useDb: cleanDbName
+            useDb: dbMeta.name
           })
         )
         if (action.requestId) {
