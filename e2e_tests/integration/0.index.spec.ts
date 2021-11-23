@@ -33,6 +33,7 @@ describe('Neo4j Browser', () => {
       .should('include', 'Neo4j Browser')
     cy.wait(3000)
   })
+
   it('sets new login credentials', () => {
     const newPassword = Cypress.config('password')
     cy.setInitialPassword(newPassword)
@@ -45,11 +46,65 @@ describe('Neo4j Browser', () => {
       .contains(':server connect')
       .click()
     cy.typeInFrame(':play movies{enter}', 0)
-    cy.get('[data-testid=frame]').contains('the Bacon Path')
+    cy.get('[data-testid="frame"]').contains('the Bacon Path')
   })
+
   it('can connect', () => {
     const password = Cypress.config('password')
     cy.connect('neo4j', password)
+  })
+
+  it('can show Canny badge in "Document" icon and correspond side bar drawer', () => {
+    cy.window().then(win => {
+      if (win.Canny && win.IsCannyLoaded && typeof win.Canny === 'function') {
+        // The Canny badge should appear when initially connected to the database
+        cy.get('[data-testid="navigationCannyDocuments"]', {
+          timeout: 5000
+        })
+          .children('div')
+          .should('have.class', 'Canny_BadgeContainer')
+          .children('div')
+          .should('have.class', 'Canny_Badge')
+
+        // Click the navigation button to open the sidebar to show Documents drawer, and the badge should be shown in the changelog button
+        cy.get('[data-testid="drawerDocuments"]').click()
+        cy.get('[data-testid="documentDrawerCanny"]')
+          .children('div')
+          .should('have.class', 'Canny_BadgeContainer')
+      }
+    })
+  })
+
+  it('can show changelog and once it is shown the Canny badge will be disappeared', () => {
+    cy.window().then(win => {
+      if (win.Canny && win.IsCannyLoaded && typeof win.Canny === 'function') {
+        // Click the changelog button
+        cy.get('[data-testid="documentDrawerCanny"]').click()
+        cy.get('#canny-changelog-iframe')
+          .should('have.css', 'display')
+          .and('match', /\bblock\b/)
+
+        // Canny badges should be disappeared
+        cy.wait(500)
+        cy.get('[data-testid="documentDrawerCanny"]')
+          .children('div')
+          .should('not.exist')
+        cy.get('[data-testid="navigationCannyDocuments"]', {
+          timeout: 5000
+        })
+          .children('div')
+          .should('not.exist')
+
+        // Close changelog modal
+        cy.get('[data-testid="documentDrawerCanny"]').click()
+        cy.get('#canny-changelog-iframe')
+          .should('have.css', 'display')
+          .and('match', /\bnone\b/)
+
+        // Close sideber
+        cy.get('[data-testid="drawerDocuments"]').click()
+      }
+    })
   })
 
   it('can empty the db', () => {
@@ -62,6 +117,7 @@ describe('Neo4j Browser', () => {
       .first()
       .contains(/completed/i)
   })
+
   it('can run cypher statement', () => {
     cy.executeCommand(':clear')
     const query = 'RETURN 1'
@@ -72,6 +128,7 @@ describe('Neo4j Browser', () => {
       .first()
       .should('contain', 'Started streaming')
   })
+
   it('shows error frame for unknown command', () => {
     cy.executeCommand(':clear')
     const query = ':unknown'
@@ -81,6 +138,7 @@ describe('Neo4j Browser', () => {
       .first()
       .should('contain', 'Error')
   })
+
   it('can exec cypher from `:play movies`', () => {
     cy.executeCommand(':clear')
     const query = ':play movies'
@@ -104,6 +162,7 @@ describe('Neo4j Browser', () => {
       'Keanu Reeves'
     )
   })
+
   it('can display meta items from side drawer', () => {
     cy.executeCommand(':clear')
     cy.get('[data-testid="drawerDBMS"]').click()
@@ -116,6 +175,7 @@ describe('Neo4j Browser', () => {
     )
     cy.get('[data-testid="drawerDBMS"]').click()
   })
+
   it('displays user info in sidebar (when connected)', () => {
     cy.executeCommand(':clear')
     cy.get('[data-testid="drawerDBMS"]').click()
@@ -174,6 +234,7 @@ describe('Neo4j Browser', () => {
       cy.get('input[data-testid="boltaddress"]')
     })
   }
+
   it('displays no user info in sidebar (when not connected)', () => {
     cy.executeCommand(':server disconnect')
     cy.executeCommand(':clear')

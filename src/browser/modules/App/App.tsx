@@ -114,8 +114,8 @@ export function App(props: any) {
 
   useKeyboardShortcuts(props.bus)
 
-  const eventMetricsCallback = useRef((_: MetricsData) => {})
-  const segmentTrackCallback = useRef((_: MetricsData) => {})
+  const eventMetricsCallback = useRef((_: MetricsData) => _)
+  const segmentTrackCallback = useRef((_: MetricsData) => _)
 
   useEffect(() => {
     const unsub =

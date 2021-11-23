@@ -143,7 +143,11 @@ const Documents = (props: DocumentsProps) => {
       <StyledHeaderContainer>
         <DrawerHeader>Help &amp; Learn</DrawerHeader>
         {window.Canny && (
-          <a data-canny-changelog onClick={props.trackCannyChangelog}>
+          <a
+            data-canny-changelog
+            data-testid="documentDrawerCanny"
+            onClick={props.trackCannyChangelog}
+          >
             <CannyNotificationsIcon />
           </a>
         )}
