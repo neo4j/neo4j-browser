@@ -147,36 +147,38 @@ describe('Multi database', () => {
       cy.executeCommand(':use system')
     })
 
-    it('lists aliases with :dbs command', () => {
-      const password = Cypress.config('password')
-      cy.connect('neo4j', password)
-      cy.executeCommand(':clear')
-      // Drop alias in case it already exists
-      cy.executeCommand('drop alias `Mossdeep-24.` for database')
+    if (Cypress.config('serverVersion') >= 4.4) {
+      it('lists aliases with :dbs command', () => {
+        const password = Cypress.config('password')
+        cy.connect('neo4j', password)
+        cy.executeCommand(':clear')
+        // Drop alias in case it already exists
+        cy.executeCommand('drop alias `Mossdeep-24.` for database')
 
-      cy.executeCommand('create alias `Mossdeep-24.` for database neo4j')
-      cy.resultContains('1 system update, no records')
+        cy.executeCommand('create alias `Mossdeep-24.` for database neo4j')
+        cy.resultContains('1 system update, no records')
 
-      // Switch to system to see that using alias switches back to neo4j
-      cy.executeCommand(':use system')
-      editor().contains('system$')
+        // Switch to system to see that using alias switches back to neo4j
+        cy.executeCommand(':use system')
+        editor().contains('system$')
 
-      cy.executeCommand(':use `Mossdeep-24.`')
-      editor().contains('neo4j$')
+        cy.executeCommand(':use `Mossdeep-24.`')
+        editor().contains('neo4j$')
 
-      cy.executeCommand(':use system')
-      editor().contains('system$')
+        cy.executeCommand(':use system')
+        editor().contains('system$')
 
-      cy.executeCommand(':dbs')
-      cy.getFrames()
-        .eq(0)
-        .contains(':use `mossdeep-24.`')
-        .click()
-      editor().contains('neo4j$')
+        cy.executeCommand(':dbs')
+        cy.getFrames()
+          .eq(0)
+          .contains(':use `mossdeep-24.`')
+          .click()
+        editor().contains('neo4j$')
 
-      cy.executeCommand('drop alias `Mossdeep-24.` for database;')
-      cy.resultContains('1 system update, no records')
-    })
+        cy.executeCommand('drop alias `Mossdeep-24.` for database;')
+        cy.resultContains('1 system update, no records')
+      })
+    }
 
     if (isEnterpriseEdition()) {
       it('lists new databases with :dbs command', () => {
