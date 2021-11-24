@@ -135,8 +135,6 @@ export class SnakeFrame extends React.Component<{}, SnakeFrameState> {
 }
 
 const Frame = (props: any) => {
-  return (
-    <FrameTemplate header={props.frame} contents={<SnakeFrame {...props} />} />
-  )
+  return <FrameTemplate contents={<SnakeFrame {...props} />} />
 }
 export default Frame

@@ -34,6 +34,6 @@ const DefaultFrame = ({ frame }: any): JSX.Element => {
     frameContents = 'Unknown command'
   }
 
-  return <FrameTemplate header={frame} contents={frameContents} />
+  return <FrameTemplate contents={frameContents} />
 }
 export default DefaultFrame

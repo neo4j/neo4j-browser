@@ -429,24 +429,22 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
       requestStatus !== 'error'
         ? this.getStatusbar(result)
         : null
-
-    return (
-      <FrameTemplate
-        sidebar={requestStatus !== 'error' ? this.sidebar : undefined}
-        className="no-padding"
-        header={frame}
-        contents={frameContents}
-        statusbar={statusBar}
-        numRecords={result && 'records' in result ? result.records.length : 0}
-        getRecords={this.getRecords}
-        onResize={this.onResize}
-        visElement={
+    //numRecords={result && 'records' in result ? result.records.length : 0}
+    //getRecords={this.getRecords}
+    //onResize={this.onResize}
+    //statusbar={statusBar}
+    /*visElement={
           this.state.hasVis &&
           (this.state.openView === ViewTypes.VISUALIZATION ||
             this.state.openView === ViewTypes.PLAN)
             ? this.visElement
             : null
-        }
+        }*/
+
+    return (
+      <FrameTemplate
+        sidebar={requestStatus !== 'error' ? this.sidebar : undefined}
+        contents={frameContents}
       />
     )
   }

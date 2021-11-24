@@ -21,27 +21,6 @@
 import { connect } from 'react-redux'
 import React, { memo, useRef, useEffect } from 'react'
 import { StyledStream, Padding, AnimationContainer } from './styled'
-import CypherFrame from './CypherFrame/CypherFrame'
-import HistoryFrame from './HistoryFrame'
-import PlayFrame from './PlayFrame'
-import DefaultFrame from '../Frame/DefaultFrame'
-import PreFrame from './PreFrame'
-import ParamsFrame from './ParamsFrame'
-import ErrorFrame from './ErrorFrame'
-import HelpFrame from './HelpFrame'
-import CypherScriptFrame from './CypherScriptFrame/CypherScriptFrame'
-import SchemaFrame from './SchemaFrame'
-import StyleFrame from './StyleFrame'
-import SysInfoFrame from './SysInfoFrame/SysInfoFrame'
-import ConnectionFrame from './Auth/ConnectionFrame'
-import DisconnectFrame from './Auth/DisconnectFrame'
-import ServerStatusFrame from './Auth/ServerStatusFrame'
-import ServerSwitchFrame from './Auth/ServerSwitchFrame'
-import UseDbFrame from './Auth/UseDbFrame'
-import ChangePasswordFrame from './Auth/ChangePasswordFrame'
-import QueriesFrame from './Queries/QueriesFrame'
-import UserList from '../User/UserList'
-import UserAdd from '../User/UserAdd'
 import { GlobalState } from 'shared/globalState'
 import { FrameStack, Frame, getFrames } from 'shared/modules/frames/framesDuck'
 import {
@@ -49,43 +28,7 @@ import {
   Connection
 } from 'shared/modules/connections/connectionsDuck'
 import { getScrollToTop } from 'shared/modules/settings/settingsDuck'
-import DbsFrame from './Auth/DbsFrame'
-import { upperFirst } from 'services/utils'
-
-const nameToFrame: Record<string, React.ComponentType<any>> = {
-  error: ErrorFrame,
-  cypher: CypherFrame,
-  'cypher-script': CypherScriptFrame,
-  'user-list': UserList,
-  'user-add': UserAdd,
-  'change-password': ChangePasswordFrame,
-  pre: PreFrame,
-  play: PlayFrame,
-  'play-remote': PlayFrame,
-  history: HistoryFrame,
-  param: ParamsFrame,
-  params: ParamsFrame,
-  connection: ConnectionFrame,
-  disconnect: DisconnectFrame,
-  schema: SchemaFrame,
-  help: HelpFrame,
-  queries: QueriesFrame,
-  sysinfo: SysInfoFrame,
-  status: ServerStatusFrame,
-  'switch-success': ServerSwitchFrame,
-  'switch-fail': ServerSwitchFrame,
-  'use-db': UseDbFrame,
-  'reset-db': UseDbFrame,
-  dbs: DbsFrame,
-  style: StyleFrame,
-  default: DefaultFrame
-}
-
-type FrameType = keyof typeof nameToFrame
-
-const getFrame = (type: FrameType) => {
-  return nameToFrame[type] || nameToFrame.default
-}
+import { FrameContainer } from './FrameContainer'
 
 type StreamProps = {
   frames: FrameStack[]
@@ -118,32 +61,14 @@ function Stream(props: StreamProps): JSX.Element {
 
   return (
     <StyledStream ref={base} data-testid="stream">
-      {props.frames.map(frameObject => {
-        const frame = frameObject.stack[0]
-
-        const frameProps: BaseFrameProps = {
-          frame: { ...frame, isPinned: frameObject.isPinned },
-          activeConnectionData: props.activeConnectionData,
-          stack: frameObject.stack
-        }
-
-        let MyFrame = getFrame(frame.type as FrameType)
-        if (frame.type === 'error') {
-          try {
-            const cmd = frame.cmd.replace(/^:/, '')
-            const Frame = upperFirst(cmd) + 'Frame'
-            MyFrame = require('./Extras/index')[Frame]
-            if (!MyFrame) {
-              MyFrame = getFrame(frame.type)
-            }
-          } catch (e) {}
-        }
-        return (
-          <AnimationContainer key={frame.id}>
-            <MyFrame {...frameProps} />
-          </AnimationContainer>
-        )
-      })}
+      {props.frames.map((frameObject: FrameStack) => (
+        <AnimationContainer key={frameObject.stack[0].id}>
+          <FrameContainer
+            frameData={frameObject}
+            activeConnectionData={props.activeConnectionData}
+          />
+        </AnimationContainer>
+      ))}
       <Padding />
     </StyledStream>
   )

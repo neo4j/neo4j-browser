@@ -374,7 +374,6 @@ export class QueriesFrame extends Component<
     }
     return (
       <FrameTemplate
-        header={this.props.frame}
         aside={aside}
         contents={frameContents}
         statusbar={statusbar}

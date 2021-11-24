@@ -52,11 +52,10 @@ const StyleFrame = ({ frame }: any) => {
       </PaddedDiv>
     )
   }
+  //numRecords={1}
+  //getRecords={() => grass}
   return (
     <FrameTemplate
-      header={frame}
-      numRecords={1}
-      getRecords={() => grass}
       contents={contents}
       statusbar={<Statusbar frame={frame} />}
     />

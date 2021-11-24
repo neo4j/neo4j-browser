@@ -85,7 +85,6 @@ class ChangePasswordFrame extends Component<any, ChangePasswordFrameState> {
     )
     return (
       <FrameTemplate
-        header={this.props.frame}
         statusbar={
           <FrameError
             code={this.state.error.code}

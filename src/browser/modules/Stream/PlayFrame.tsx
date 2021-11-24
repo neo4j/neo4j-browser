@@ -176,14 +176,7 @@ export function PlayFrame({ stack, bus, showPromotion }: any): JSX.Element {
       </React.Fragment>
     )
   }
-  return (
-    <FrameTemplate
-      className={classNames.join(' ')}
-      header={stack[stackIndex]}
-      aside={aside}
-      contents={guideAndNav}
-    />
-  )
+  return <FrameTemplate aside={aside} contents={guideAndNav} />
 }
 
 function generateContent(

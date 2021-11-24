@@ -218,7 +218,6 @@ export class SysInfoFrame extends Component<
     } = this.state
     const {
       databases,
-      frame,
       isConnected,
       isEnterprise,
       hasMultiDbSupport
@@ -242,7 +241,6 @@ export class SysInfoFrame extends Component<
 
     return (
       <FrameTemplate
-        header={frame}
         contents={content}
         statusbar={
           <StatusbarWrapper>

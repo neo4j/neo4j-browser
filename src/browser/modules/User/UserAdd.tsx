@@ -420,7 +420,6 @@ export class UserAdd extends Component<any, UserAddState> {
 
     return (
       <FrameTemplate
-        header={this.props.frame}
         aside={aside}
         contents={frameContents}
         statusbar={getStatusBar()}

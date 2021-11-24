@@ -45,12 +45,7 @@ export const HistoryFrame = (props: any) => {
         <em>Empty history</em>
       </PaddedDiv>
     )
-  return (
-    <FrameTemplate
-      header={frame}
-      contents={<UnstyledList>{historyRows}</UnstyledList>}
-    />
-  )
+  return <FrameTemplate contents={<UnstyledList>{historyRows}</UnstyledList>} />
 }
 
 export default withBus(HistoryFrame)

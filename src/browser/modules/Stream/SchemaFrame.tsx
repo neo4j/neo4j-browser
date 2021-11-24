@@ -87,7 +87,7 @@ const Indexes = ({ indexes, neo4jVersion }: IndexesProps) => {
   ]
 
   return (
-    <SchemaTable testid="schemaFrameIndexesTable" header={header} rows={rows} />
+    <SchemaTable header={header} testid="schemaFrameIndexesTable" rows={rows} />
   )
 }
 
@@ -98,8 +98,8 @@ const Constraints = ({ constraints }: any) => {
 
   return (
     <SchemaTable
-      testid="schemaFrameConstraintsTable"
       header={['Constraints']}
+      testid="schemaFrameConstraintsTable"
       rows={rows}
     />
   )
@@ -236,9 +236,7 @@ export class SchemaFrame extends Component<any, SchemaFrameState> {
 }
 
 const Frame = (props: any) => {
-  return (
-    <FrameTemplate header={props.frame} contents={<SchemaFrame {...props} />} />
-  )
+  return <FrameTemplate contents={<SchemaFrame {...props} />} />
 }
 
 const mapStateToProps = (state: GlobalState) => ({

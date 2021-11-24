@@ -73,14 +73,7 @@ const HelpFrame = ({ stack = [] }: any) => {
     ) : (
       main
     )
-  return (
-    <FrameTemplate
-      className="helpFrame has-stack"
-      header={currentFrame}
-      aside={aside}
-      contents={contents}
-    />
-  )
+  return <FrameTemplate aside={aside} contents={contents} />
 }
 
 function generateContent(frame: any) {

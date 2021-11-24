@@ -106,9 +106,7 @@ const DbsFrame = (props: BaseFrameProps) => {
 }
 
 const Frame = (props: BaseFrameProps): JSX.Element => {
-  return (
-    <FrameTemplate header={props.frame} contents={<DbsFrame {...props} />} />
-  )
+  return <FrameTemplate contents={<DbsFrame {...props} />} />
 }
 
 export default Frame

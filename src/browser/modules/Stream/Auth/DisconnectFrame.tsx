@@ -23,10 +23,9 @@ import { StyledConnectionAside } from './styled'
 import { H3 } from 'browser-components/headers'
 import { Lead } from 'browser-components/Text'
 
-const Disconnect = ({ frame, activeConnectionData }: any) => {
+const Disconnect = ({ activeConnectionData }: any) => {
   return (
     <FrameTemplate
-      header={frame}
       contents={
         <StyledConnectionAside>
           {activeConnectionData ? (

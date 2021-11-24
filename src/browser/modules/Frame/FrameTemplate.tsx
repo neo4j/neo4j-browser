@@ -18,25 +18,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useRef, useState, useEffect } from 'react'
-import { Frame } from 'shared/modules/frames/framesDuck'
-import FrameTitlebar from './FrameTitlebar'
-import FrameEditor from './FrameEditor'
+import React, { useEffect, useState, useRef } from 'react'
 
 import {
-  StyledFrame,
   StyledFrameBody,
   StyledFrameContents,
   StyledFrameStatusbar,
   StyledFrameMainSection,
-  StyledFrameAside,
-  ContentContainer
+  StyledFrameAside
 } from './styled'
 
 type FrameTemplateProps = {
   contents: JSX.Element | null | string
-  header?: Frame
-  className?: string
   onResize?: (fullscreen: boolean, collapsed: boolean, height: number) => void
   numRecords?: number
   getRecords?: () => any
@@ -45,33 +38,28 @@ type FrameTemplateProps = {
   sidebar?: () => JSX.Element | null
   aside?: JSX.Element | null
   statusbar?: JSX.Element | null
+  removePadding?: boolean
+  hasSlides?: boolean
+  isFullscreen: boolean
+  isCollapsed: boolean
 }
 
 function FrameTemplate({
-  header,
   contents,
   onResize = () => {
     /*noop*/
   },
-  className,
   numRecords = 0,
   getRecords,
   visElement,
   sidebar,
   aside,
-  statusbar
+  statusbar,
+  isFullscreen,
+  isCollapsed
 }: FrameTemplateProps): JSX.Element {
   const [lastHeight, setLastHeight] = useState(10)
   const frameContentElementRef = useRef<HTMLDivElement>(null)
-
-  const {
-    isFullscreen,
-    isCollapsed,
-    isPinned,
-    toggleFullScreen,
-    toggleCollapse,
-    togglePin
-  } = useSizeToggles()
 
   useEffect(() => {
     if (!frameContentElementRef.current?.clientHeight) return
@@ -82,94 +70,33 @@ function FrameTemplate({
       onResize(isFullscreen, isCollapsed, currHeight)
       setLastHeight(currHeight)
     }
-  }, [lastHeight, isPinned, isFullscreen, isCollapsed, onResize])
-
-  const classNames = []
-  if (className) {
-    classNames.push(className)
-  }
-  if (isFullscreen) {
-    classNames.push('is-fullscreen')
-  }
+  }, [lastHeight, isFullscreen, isCollapsed, onResize])
 
   return (
-    <StyledFrame
-      className={classNames.join(' ')}
-      data-testid="frame"
-      fullscreen={isFullscreen}
-    >
-      {header && (
-        <FrameTitlebar
-          frame={header}
-          fullscreen={isFullscreen}
-          fullscreenToggle={toggleFullScreen}
-          collapse={isCollapsed}
-          collapseToggle={toggleCollapse}
-          pinned={isPinned}
-          togglePin={togglePin}
-        />
-      )}
-
-      <ContentContainer>
-        {header && (
-          <FrameEditor
-            frame={header}
-            fullscreenToggle={toggleFullScreen}
-            numRecords={numRecords}
-            getRecords={getRecords}
-            visElement={visElement}
-          />
-        )}
-
-        <StyledFrameBody fullscreen={isFullscreen} collapsed={isCollapsed}>
-          {sidebar && sidebar()}
-          {aside && <StyledFrameAside>{aside}</StyledFrameAside>}
-          <StyledFrameMainSection>
-            <StyledFrameContents
-              fullscreen={isFullscreen}
-              ref={frameContentElementRef}
-              data-testid="frameContents"
-            >
-              {contents}
-            </StyledFrameContents>
-          </StyledFrameMainSection>
-        </StyledFrameBody>
-
-        {statusbar && (
-          <StyledFrameStatusbar
+    <>
+      <StyledFrameBody fullscreen={isFullscreen} collapsed={isCollapsed}>
+        {sidebar && sidebar()}
+        {aside && <StyledFrameAside>{aside}</StyledFrameAside>}
+        <StyledFrameMainSection>
+          <StyledFrameContents
             fullscreen={isFullscreen}
-            data-testid="frameStatusbar"
+            data-testid="frameContents"
           >
-            {statusbar}
-          </StyledFrameStatusbar>
-        )}
-      </ContentContainer>
-    </StyledFrame>
+            {contents}
+          </StyledFrameContents>
+        </StyledFrameMainSection>
+      </StyledFrameBody>
+
+      {statusbar && (
+        <StyledFrameStatusbar
+          fullscreen={isFullscreen}
+          data-testid="frameStatusbar"
+        >
+          {statusbar}
+        </StyledFrameStatusbar>
+      )}
+    </>
   )
-}
-
-function useSizeToggles() {
-  const [isFullscreen, setFullscreen] = useState(false)
-  const [isCollapsed, setCollapsed] = useState(false)
-  const [isPinned, setPinned] = useState(false)
-
-  function toggleFullScreen() {
-    setFullscreen(full => !full)
-  }
-  function toggleCollapse() {
-    setCollapsed(coll => !coll)
-  }
-  function togglePin() {
-    setPinned(pin => !pin)
-  }
-  return {
-    isFullscreen,
-    isCollapsed,
-    isPinned,
-    toggleFullScreen,
-    toggleCollapse,
-    togglePin
-  }
 }
 
 export default FrameTemplate
