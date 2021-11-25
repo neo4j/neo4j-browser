@@ -74,8 +74,8 @@ export async function fetchBrowserDiscoveryDataFromUrl(
 }
 
 type DataFromPreviousAction = {
-  forceURL: string
-  discoveryURL: string
+  forceUrl: string
+  discoveryUrl: string
   sessionStorageHost: string | null
   requestedUseDb?: string
   encrypted?: boolean
@@ -85,7 +85,7 @@ type DataFromPreviousAction = {
 
 type GetAndMergeDiscoveryDataParams = {
   action: DataFromPreviousAction
-  hostedURL: string
+  hostedUrl: string
   hasDiscoveryEndpoint: boolean
   generateBoltUrlWithAllowedScheme: (boltUrl: string) => string
 }
@@ -98,8 +98,8 @@ type TaggedDiscoveryData = DiscoverableData & {
 
 type DiscoveryDataSource =
   | 'connectForm'
-  | 'discoveryURL'
-  | 'connectURL'
+  | 'discoveryUrl'
+  | 'connectUrl'
   | 'discoveryConnection'
   | 'discoveryEndpoint'
 export const CONNECT_FORM = 'connectForm'
@@ -115,17 +115,17 @@ const onlyTruthyValues = (obj: any) =>
 
 export async function getAndMergeDiscoveryData({
   action,
-  hostedURL,
+  hostedUrl,
   hasDiscoveryEndpoint,
   generateBoltUrlWithAllowedScheme
 }: GetAndMergeDiscoveryDataParams): Promise<DiscoverableData | null> {
-  const { sessionStorageHost, forceURL, discoveryConnection } = action
+  const { sessionStorageHost, forceUrl, discoveryConnection } = action
 
-  let dataFromForceURL: DiscoverableData = {}
+  let dataFromForceUrl: DiscoverableData = {}
   let dataFromConnection: DiscoverableData = {}
 
-  if (forceURL) {
-    const { username, protocol, host } = getUrlInfo(forceURL)
+  if (forceUrl) {
+    const { username, protocol, host } = getUrlInfo(forceUrl)
 
     const discovered = {
       username,
@@ -134,10 +134,10 @@ export async function getAndMergeDiscoveryData({
       supportsMultiDb: !!action.requestedUseDb,
       encrypted: action.encrypted,
       restApi: action.restApi,
-      hasForceURL: true
+      hasForceUrl: true
     }
 
-    dataFromForceURL = onlyTruthyValues(discovered)
+    dataFromForceUrl = onlyTruthyValues(discovered)
   } else if (discoveryConnection) {
     const discovered = {
       username: discoveryConnection.username,
@@ -155,9 +155,9 @@ export async function getAndMergeDiscoveryData({
       )
     : Promise.resolve(null)
 
-  const forceUrlHostPromise = dataFromForceURL.host
+  const forceUrlHostPromise = dataFromForceUrl.host
     ? fetchBrowserDiscoveryDataFromUrl(
-        boltToHttp(generateBoltUrlWithAllowedScheme(dataFromForceURL.host))
+        boltToHttp(generateBoltUrlWithAllowedScheme(dataFromForceUrl.host))
       )
     : Promise.resolve(null)
 
@@ -167,12 +167,12 @@ export async function getAndMergeDiscoveryData({
       )
     : Promise.resolve(null)
 
-  const discoveryUrlParamPromise = action.discoveryURL
-    ? fetchBrowserDiscoveryDataFromUrl(action.discoveryURL)
+  const discoveryUrlParamPromise = action.discoveryUrl
+    ? fetchBrowserDiscoveryDataFromUrl(action.discoveryUrl)
     : Promise.resolve(null)
 
   const discoveryEndpointPromise = hasDiscoveryEndpoint
-    ? fetchBrowserDiscoveryDataFromUrl(getDiscoveryEndpoint(hostedURL))
+    ? fetchBrowserDiscoveryDataFromUrl(getDiscoveryEndpoint(hostedUrl))
     : Promise.resolve(null)
 
   // Promise all is safe since fetchDataFromDiscoveryUrl never rejects
@@ -204,9 +204,9 @@ export async function getAndMergeDiscoveryData({
       // if we're dealing with a pre 4.4 server the disc request will fail even as there's a db present
       onlyCheckForHost: true,
       urlMissing: forceUrlHostData === null,
-      ...dataFromForceURL,
+      ...dataFromForceUrl,
       ...forceUrlHostData,
-      host: forceUrlHostData?.host || dataFromForceURL.host
+      host: forceUrlHostData?.host || dataFromForceUrl.host
     },
     {
       source: DISCOVERY_URL,
@@ -267,7 +267,7 @@ export async function getAndMergeDiscoveryData({
     'SSOError',
     'SSOProviders',
     'neo4jVersion',
-    'hasForceURL'
+    'hasForceUrl'
   ]
 
   let mergedDiscoveryData = pick(mainDiscoveryData, keysToCopy)

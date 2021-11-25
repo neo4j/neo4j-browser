@@ -32,57 +32,120 @@ describe('Guide command', () => {
     cy.executeCommand(':clear')
     cy.executeCommand(':guide not-found-guide-anywhere')
 
-    cy.get('[data-testid="guideDrawer"]').should('contain', 'Not found')
+    cy.get('[data-testid="guidesDrawer"]').should('contain', 'Not found')
 
     // reset state
     cy.executeCommand(':guide')
-    cy.get('[data-testid="guideDrawer"]').should('contain', ':guide movie')
-    cy.get('[data-testid=drawerGuides]').click()
+    cy.get('[data-testid="guidesDrawer"]').should('contain', ':guide movie')
+    cy.get('[data-testid=navigationGuides]').click()
   })
 
-  it('can walk through a guides', () => {
+  it('can walk through a guide', () => {
     cy.executeCommand(':clear')
     // Open a guide from the sidebar
-    cy.get('[data-testid=drawerGuides]').click()
-    cy.get('[data-testid="guideDrawer"]')
+    cy.get('[data-testid=navigationGuides]').click()
+    cy.get('[data-testid="guidesDrawer"]')
       .contains(':guide cypher')
       .click()
 
-    // can progress slide
+    // Can progress slide
     cy.get('[data-testid=guideNextSlide]').click()
-    cy.get('[data-testid="guideDrawer"]').contains('CREATE')
+    cy.get('[data-testid="guidesDrawer"]').contains('CREATE')
 
-    // remembers slide location
-    cy.get('[data-testid=drawerGuides]').click()
-    cy.get('[data-testid=drawerGuides]').click()
+    // Remembers slide location
+    cy.get('[data-testid=navigationGuides]').click()
+    cy.get('[data-testid=navigationGuides]').click()
+    cy.get('[data-testid="guidesDrawer"]').contains('CREATE')
 
-    // can go back
-    cy.get('[data-testid="guideDrawer"]').contains('CREATE')
+    // Can go to previous slide
     cy.get('[data-testid=guidePreviousSlide]').click()
-    cy.get('[data-testid="guideDrawer"]').contains('SQL-like clauses')
+    cy.get('[data-testid="guidesDrawer"]').contains('SQL-like clauses')
 
-    // go to end
+    // Go to end
     cy.get('[data-testid=guideNextSlide]').click()
     cy.get('[data-testid=guideNextSlide]').click()
     cy.get('[data-testid=guideNextSlide]').click()
     cy.get('[data-testid=guideNextSlide]').click()
     cy.get('[data-testid=guideNextSlide]').click()
-    cy.get('[data-testid="guideDrawer"]').contains('Next steps')
+    cy.get('[data-testid="guidesDrawer"]').contains('Next steps')
 
-    // switch guide via command
+    // Switch guide via command
     cy.executeCommand(':guide northwind')
-    cy.get('[data-testid="guideDrawer"]').contains('From RDBMS to Graph')
+    cy.get('[data-testid="guidesDrawer"]').contains('From RDBMS to Graph')
 
     // Jump to end
     cy.get('[data-testid="pagination-11"]').click()
-    cy.get('[data-testid="guideDrawer"]').contains(
+    cy.get('[data-testid="guidesDrawer"]').contains(
       'Full Northwind import example'
     )
 
     // Can use back button
     cy.get('[data-testid="guidesBackButton"]').click()
-    cy.get('[data-testid="guideDrawer"]').contains(':guide cypher')
+    // Same built-in guide won't be added twice
+    cy.get(`[data-testid="builtInGuidenorthwind-graph"]`).should(
+      'have.length',
+      1
+    )
+    cy.get('[data-testid="guidesDrawer"]').contains(':guide cypher')
 
-    cy.get('[data-testid=drawerGuides]').click()
+    cy.get('[data-testid=navigationGuides]').click()
+  })
+
+  it('can load and persist a remote guide and can be deleted permanantly', () => {
+    const guideUrl = 'https://guides.neo4j.com/sandbox/movies/index.html'
+    cy.executeCommand(':clear')
+    cy.executeCommand(`:guide ${guideUrl}`, { timeout: 50000 })
+    cy.get('[data-testid="guidesDrawer"]').should('contain', 'Movies Guide')
+    cy.get('[data-testid="guidesDrawer"]').should('contain', 'What is Cypher?')
+
+    // The item is added into Remote Guides
+    cy.get('[data-testid="guidesBackButton"]').click()
+    cy.get('[data-testid="guidesDrawer"]').contains('Remote Guides')
+
+    // Can display the remote guide after clicking the item
+    cy.get('[data-testid="guidesDrawer"]')
+      .contains('Movies Guide')
+      .click()
+    cy.get('[data-testid="guidesDrawer"]').should('contain', 'Movies Guide')
+    cy.get('[data-testid="guidesDrawer"]').should('contain', 'What is Cypher?')
+
+    // Same remote guide won't be added twice
+    cy.executeCommand(`:guide ${guideUrl}`, { timeout: 3000 })
+    cy.get('[data-testid="guidesBackButton"]').click()
+    cy.get(`[data-testid="removeGuide${guideUrl}"]`).should('have.length', 1)
+
+    // Reload the page
+    cy.reload().then(() => {
+      // Open guides drawer
+      cy.get('[data-testid="navigationGuides"]').click()
+      cy.get('[data-testid="guidesDrawer"]').contains('Remote Guides')
+
+      // Can display the remote guide after clicking the item
+      cy.get('[data-testid="guidesDrawer"]')
+        .contains('Movies Guide')
+        .click()
+      cy.get('[data-testid="guidesDrawer"]').should('contain', 'Movies Guide')
+      cy.get('[data-testid="guidesDrawer"]').should(
+        'contain',
+        'What is Cypher?'
+      )
+
+      // Can click delete button to remote the guide
+      cy.get('[data-testid="guidesBackButton"]').click()
+      cy.get('[data-testid="guidesDrawer"]')
+        .should('contain', 'Movies Guide')
+        .get(`[data-testid="removeGuide${guideUrl}"]`)
+        .click({ force: true })
+      cy.get(`[data-testid="remoteGuide${guideUrl}"]`).should('not.exist')
+      cy.get('[data-testid="remoteGuidesTitle"]').should('not.exist')
+
+      // Reload again and confirm the remote guide no longer exists
+      cy.reload().then(() => {
+        // Open guides drawer
+        cy.get('[data-testid="navigationGuides"]').click()
+        cy.get(`[data-testid="remoteGuide${guideUrl}"]`).should('not.exist')
+        cy.get('[data-testid="remoteGuidesTitle"]').should('not.exist')
+      })
+    })
   })
 })

@@ -60,8 +60,8 @@ describe('Commands', () => {
     cy.executeCommand(':help help')
     cy.get('[data-testid="frameCommand"]').contains(':help help')
     // lose focus
-    cy.get('[data-testid=drawerFavorites]').click()
-    cy.get('[data-testid=drawerFavorites]').click()
+    cy.get('[data-testid=navigationFavorites]').click()
+    cy.get('[data-testid=navigationFavorites]').click()
     cy.get('#monaco-main-editor > .monaco-editor').should(
       'not.have.class',
       'focused'
