@@ -54,7 +54,9 @@ const GuidePicker = ({
     </DrawerBrowserCommand>
     in the code editor.
     <MarginTop pixels={25}>
-      <DrawerSubHeader as="div">Built-in guides</DrawerSubHeader>
+      <DrawerSubHeader as="div" /* prevents guide styling of h5*/>
+        Built-in guides
+      </DrawerSubHeader>
     </MarginTop>
     <NoBulletsUl>
       {builtInGuides.map(({ identifier, description }) => (
@@ -77,7 +79,10 @@ const GuidePicker = ({
     {remoteGuides.length !== 0 && (
       <>
         <MarginTop pixels={25}>
-          <DrawerSubHeader as="div" data-testid="remoteGuidesTitle">
+          <DrawerSubHeader
+            as="div" /* prevents guide styling of h5*/
+            data-testid="remoteGuidesTitle"
+          >
             Remote Guides
           </DrawerSubHeader>
         </MarginTop>
