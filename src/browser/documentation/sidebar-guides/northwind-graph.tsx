@@ -59,7 +59,7 @@ const slides = [
     </p>
     <p>
       Northwind sells food products in a few categories provided by suppliers.
-      Let's start by loading the product catalog tables.
+      Let&apos;s start by loading the product catalog tables.
     </p>
     <img
       src="./assets/images/northwind/product-category-supplier.png"
@@ -137,7 +137,7 @@ SET n = row`}
     </p>
     <p>
       The products, categories, and suppliers are related through foreign key
-      references. Let's promote those to data relationships to realize the
+      references. Let&apos;s promote those to data relationships to realize the
       graph.
     </p>
     <img

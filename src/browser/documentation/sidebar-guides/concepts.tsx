@@ -48,7 +48,7 @@ const slides = [
     </p>
     <p>
       The simplest graph has just a single node with some named values called
-      properties. For example, let's draw a social graph:
+      properties. For example, let&apos;s draw a social graph:
     </p>
     <ol>
       <li>Draw a circle for a node.</li>
@@ -82,8 +82,10 @@ const slides = [
       social graph, you label each node that represents a Person.
     </p>
     <ol>
-      <li>Add the label "Person" to the node you created for Emil.</li>
-      <li>Color the "Person" node red.</li>
+      <li>
+        Add the label &quot;Person&quot; to the node you created for Emil.
+      </li>
+      <li>Color the &quot;Person&quot; node red.</li>
     </ol>
     <br />
     <img src="./assets/images/labeled_node.png" className="img-responsive" />
@@ -177,8 +179,8 @@ const slides = [
     </p>
     <p>
       In a property graph, relationships can also contain properties that
-      describe the relationship. Looking more closely at Emil's relationships,
-      note that:
+      describe the relationship. Looking more closely at Emil&apos;s
+      relationships, note that:
     </p>
     <ul>
       <li>Emil has known Johan since 2001.</li>

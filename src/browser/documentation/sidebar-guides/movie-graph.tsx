@@ -647,13 +647,13 @@ const slides = [
     <hr />
     <ul className="undecorated">
       <li>
-        Find the actor named "Tom Hanks":
+        Find the actor named &quot;Tom Hanks&quot;:
         <pre className="pre-scrollable code runnable">
           {'MATCH (tom:Person {name: "Tom Hanks"}) RETURN tom'}
         </pre>
       </li>
       <li>
-        Find the movie with title "Cloud Atlas":
+        Find the movie with title &quot;Cloud Atlas&quot;:
         <pre className="pre-scrollable code runnable">
           {'MATCH (cloudAtlas:Movie {title: "Cloud Atlas"}) RETURN cloudAtlas'}
         </pre>
@@ -701,7 +701,7 @@ const slides = [
         </pre>
       </li>
       <li>
-        Who directed "Cloud Atlas"?
+        Who directed &quot;Cloud Atlas&quot;?
         <pre className="pre-scrollable code runnable">
           {
             'MATCH (cloudAtlas:Movie {title: "Cloud Atlas"})<-[:DIRECTED]-(directors) RETURN directors.name'
@@ -709,7 +709,7 @@ const slides = [
         </pre>
       </li>
       <li>
-        Who were Tom Hanks' co-actors?
+        Who were Tom Hanks&apos; co-actors?
         <pre className="pre-scrollable code runnable">
           {
             'MATCH (tom:Person {name:"Tom Hanks"})-[:ACTED_IN]->(m)<-[:ACTED_IN]-(coActors) RETURN DISTINCT coActors.name'
@@ -717,7 +717,7 @@ const slides = [
         </pre>
       </li>
       <li>
-        How people are related to "Cloud Atlas"?
+        How people are related to &quot;Cloud Atlas&quot;?
         <pre className="pre-scrollable code runnable">
           {
             'MATCH (people:Person)-[relatedTo]-(:Movie {title: "Cloud Atlas"}) RETURN people.name, Type(relatedTo), relatedTo.roles'
@@ -737,14 +737,15 @@ const slides = [
       <em>Six Degrees of Kevin Bacon</em>
     </p>
     <p>
-      You might have heard of the classic "Six Degrees of Kevin Bacon". That is
-      simply the shortest path between two nodes, called the "Bacon Path".
+      You might have heard of the classic &quot;Six Degrees of Kevin
+      Bacon&quot;. That is simply the shortest path between two nodes, called
+      the &quot;Bacon Path&quot;.
     </p>
     <hr />
     <ul className="undecorated">
       <li>
-        Use variable length patterns to find movies and actors up to 4 "hops"
-        away from Kevin Bacon.
+        Use variable length patterns to find movies and actors up to 4
+        &quot;hops&quot; away from Kevin Bacon.
         <pre className="pre-scrollable code runnable">
           {`MATCH (bacon:Person {name:"Kevin Bacon"})-[*1..4]-(hollywood)
 RETURN DISTINCT hollywood`}
@@ -752,7 +753,7 @@ RETURN DISTINCT hollywood`}
       </li>
       <li>
         Use the built-in <code>shortestPath()</code> algorithm to find the
-        "Bacon Path" to Meg Ryan.
+        &quot;Bacon Path&quot; to Meg Ryan.
         <pre className="pre-scrollable code runnable">
           {`MATCH p=shortestPath(
 (bacon:Person {name:"Kevin Bacon"})-[*]-(meg:Person {name:"Meg Ryan"})
@@ -773,7 +774,7 @@ RETURN p`}
       <em>Recommend new co-actors</em>
     </p>
     <p>
-      Let's recommend new co-actors for Tom Hanks. A basic recommendation
+      Let&apos;s recommend new co-actors for Tom Hanks. A basic recommendation
       approach is to find connections past an immediate neighborhood that are
       themselves well connected.
     </p>
