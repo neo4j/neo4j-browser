@@ -23,7 +23,6 @@ import { Action, Dispatch } from 'redux'
 import { connect } from 'react-redux'
 
 import {
-  Guide,
   RemoteGuide,
   getCurrentGuide,
   getRemoteGuides,
@@ -34,6 +33,7 @@ import {
   updateRemoteGuides
 } from 'shared/modules/guides/guidesDuck'
 import { GlobalState } from 'shared/globalState'
+import { Guide } from 'browser/documentation'
 import GuideCarousel from '../GuideCarousel/GuideCarousel'
 import { BackIcon } from '../../components/icons/Icons'
 import {

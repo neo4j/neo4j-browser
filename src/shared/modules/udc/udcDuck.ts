@@ -51,7 +51,7 @@ import {
 } from 'shared/modules/settings/settingsDuck'
 import cmdHelper from 'shared/services/commandInterpreterHelper'
 import { extractStatementsFromString } from 'services/commandUtils'
-import { isGuideChapter, isPlayChapter } from 'browser/documentation'
+import { isBuiltInGuide, isPlayChapter } from 'browser/documentation'
 import { v4 } from 'uuid'
 
 // Action types
@@ -256,7 +256,7 @@ export const trackCommandUsageEpic: Epic<Action, GlobalState> = action$ =>
       extraData.content = isPlayChapter(guideName) ? 'built-in' : 'non-built-in'
     } else if (type === 'guide') {
       const guideName = action.cmd.substr(':guide'.length).trim()
-      extraData.content = isGuideChapter(guideName)
+      extraData.content = isBuiltInGuide(guideName)
         ? 'built-in'
         : 'non-built-in'
     }

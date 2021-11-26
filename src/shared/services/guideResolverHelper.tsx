@@ -23,7 +23,7 @@ import { includes, last, split, startsWith } from 'lodash-es'
 
 import MdxSlide from 'browser/modules/Docs/MDX/MdxSlide'
 import Slide from 'browser/modules/Carousel/Slide'
-import docs, { isGuideChapter } from 'browser/documentation'
+import docs, { isBuiltInGuide } from 'browser/documentation'
 import guideUnfound from 'browser/documentation/sidebar-guides/unfound'
 import {
   addProtocolsToUrlList,
@@ -73,7 +73,7 @@ export async function resolveGuide(
     return await resolveRemoteGuideByUrl(identifier, state)
   }
 
-  if (isGuideChapter(identifier)) {
+  if (isBuiltInGuide(identifier)) {
     return { ...chapters[identifier], identifier }
   }
 

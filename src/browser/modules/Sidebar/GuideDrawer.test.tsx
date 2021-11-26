@@ -22,9 +22,9 @@ import React from 'react'
 import { render, screen } from '@testing-library/react'
 import { Provider } from 'react-redux'
 import configureMockStore, { MockStoreEnhanced } from 'redux-mock-store'
-
+import { Guide } from 'browser/documentation'
 import { GuideDrawerProps, GuideDrawer } from './GuideDrawer'
-import { Guide, RemoteGuide } from 'shared/modules/guides/guidesDuck'
+import { RemoteGuide } from 'shared/modules/guides/guidesDuck'
 
 const createProps = (
   currentGuide: Guide | null,

@@ -13,8 +13,8 @@ import {
   GuideListEntry,
   MarginBottomLi
 } from 'browser/documentation/sidebar-guides/styled'
-import { Guide, RemoteGuide } from 'shared/modules/guides/guidesDuck'
-import docs, { BuiltInGuideIdentifier } from 'browser/documentation'
+import { RemoteGuide } from 'shared/modules/guides/guidesDuck'
+import docs, { BuiltInGuideIdentifier, Guide } from 'browser/documentation'
 import { BinIcon } from 'browser-components/icons/Icons'
 
 type GuidePickerProps = {

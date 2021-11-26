@@ -24,7 +24,7 @@ import { GlobalState } from 'shared/globalState'
 import { tryGetRemoteInitialSlideFromUrl } from 'services/guideResolverHelper'
 import { resolveGuide } from '../../services/guideResolverHelper'
 import { OpenSidebarAction, open } from '../sidebar/sidebarDuck'
-import { isGuideChapter } from 'browser/documentation'
+import { Guide, isBuiltInGuide } from 'browser/documentation'
 
 export const NAME = 'guides'
 export const FETCH_GUIDE = 'guides/FETCH_GUIDE'
@@ -38,12 +38,6 @@ export const getCurrentGuide = (state: GlobalState): Guide | null =>
 export const getRemoteGuides = (state: GlobalState): RemoteGuide[] =>
   state[NAME].remoteGuides
 
-export type Guide = {
-  currentSlide: number
-  title: string
-  identifier: string
-  slides: JSX.Element[]
-}
 export type RemoteGuide = Omit<Guide, 'slides'>
 export interface GuideState {
   currentGuide: Guide | null
@@ -139,7 +133,7 @@ export default function reducer(
         !!state.remoteGuides.find(
           remoteGuide => remoteGuide.identifier === action.guide.identifier
         ) ||
-        isGuideChapter(action.guide.identifier)
+        isBuiltInGuide(action.guide.identifier)
       ) {
         return state
       } else {
