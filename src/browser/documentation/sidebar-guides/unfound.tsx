@@ -21,7 +21,7 @@
 import { BuiltInGuideSidebarSlide } from 'browser/modules/Carousel/Slide'
 import React from 'react'
 const title = 'Not found'
-
+const identifier = 'unfound'
 const slides = [
   <BuiltInGuideSidebarSlide key="first">
     <p>Apologies, but there doesn&apos;t seem to be any content about that.</p>
@@ -43,4 +43,4 @@ const slides = [
   </BuiltInGuideSidebarSlide>
 ]
 
-export default { title, slides, isError: true }
+export default { title, slides, identifier, isError: true }

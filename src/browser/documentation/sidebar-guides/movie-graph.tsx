@@ -25,6 +25,7 @@ import { DrawerExternalLink } from 'browser-components/drawer/drawer-styled'
 
 const title = 'Movie Graph Guide'
 const category = 'graphExamples'
+const identifier = 'movie-graph'
 const slides = [
   <BuiltInGuideSidebarSlide key="s1">
     <p>
@@ -871,4 +872,4 @@ RETURN tom, m, coActors, m2, cruise`}
   </BuiltInGuideSidebarSlide>
 ]
 
-export default { title, category, slides }
+export default { title, category, identifier, slides }

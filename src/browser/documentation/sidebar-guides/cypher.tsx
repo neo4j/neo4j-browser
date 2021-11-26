@@ -21,7 +21,8 @@
 import React from 'react'
 import { BuiltInGuideSidebarSlide } from '../../modules/Carousel/Slide'
 
-const title = 'Cypher Guide '
+const title = 'Cypher Guide'
+const identifier = 'cypher'
 const slides = [
   <BuiltInGuideSidebarSlide key="s1">
     <p className="lead">
@@ -196,4 +197,4 @@ WHERE ee.name = 'Emil' RETURN ee, friends`}
   </BuiltInGuideSidebarSlide>
 ]
 
-export default { title, slides }
+export default { title, identifier, slides }

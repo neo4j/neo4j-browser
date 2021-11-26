@@ -23,6 +23,7 @@ import { BuiltInGuideSidebarSlide } from '../../modules/Carousel/Slide'
 
 const title = 'Concepts Guide'
 const category = 'guides'
+const identifier = 'concepts'
 const slides = [
   <BuiltInGuideSidebarSlide key="s1">
     <h3>Property graph model concepts</h3>
@@ -200,4 +201,4 @@ const slides = [
   </BuiltInGuideSidebarSlide>
 ]
 
-export default { title, category, slides }
+export default { title, category, identifier, slides }

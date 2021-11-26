@@ -23,6 +23,7 @@ import { BuiltInGuideSidebarSlide } from '../../modules/Carousel/Slide'
 import { isMac } from 'browser/modules/App/keyboardShortcuts'
 
 const title = 'Intro Guide'
+const identifier = 'intro'
 const slides = [
   <BuiltInGuideSidebarSlide key="s1">
     <h3>Navigating Neo4j Browser</h3>
@@ -216,4 +217,4 @@ const slides = [
   </BuiltInGuideSidebarSlide>
 ]
 
-export default { title, slides }
+export default { title, identifier, slides }

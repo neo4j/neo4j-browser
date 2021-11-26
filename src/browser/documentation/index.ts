@@ -125,17 +125,20 @@ type DocItem = {
   slides?: JSX.Element[]
 }
 
-type GuideItem = {
+export type Guide = {
+  currentSlide: number
   title: string
+  identifier: string
   slides: JSX.Element[]
+  isError?: boolean
 }
 
 type GuideDocs = {
   title: 'Built-in Browser guides'
-  chapters: Record<GuideChapter, GuideItem>
+  chapters: Record<BuiltInGuideIdentifier, Omit<Guide, 'currentSlide'>>
 }
 
-export type GuideChapter =
+export type BuiltInGuideIdentifier =
   | 'concepts'
   | 'cypher'
   | 'intro'
@@ -148,7 +151,7 @@ export type GuideChapter =
   | 'unfound'
 
 // TypeGuard function to ts to understand that a string is a valid key
-export function isGuideChapter(name: string): name is GuideChapter {
+export function isGuideChapter(name: string): name is BuiltInGuideIdentifier {
   return name in docs.guide.chapters
 }
 

@@ -25,6 +25,7 @@ import { DrawerExternalLink } from 'browser-components/drawer/drawer-styled'
 
 const title = 'Northwind Graph Guide'
 const category = 'graphExamples'
+const identifier = 'northwind-graph'
 const slides = [
   <BuiltInGuideSidebarSlide key="s1">
     <p className="lead">
@@ -338,4 +339,4 @@ RETURN DISTINCT cust.contactName as CustomerName, SUM(o.quantity) AS TotalProduc
   </BuiltInGuideSidebarSlide>
 ]
 
-export default { title, category, slides }
+export default { title, category, identifier, slides }
