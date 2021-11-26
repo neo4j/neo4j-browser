@@ -21,8 +21,8 @@
 import React from 'react'
 import { GrassEditor } from './GrassEditor'
 import { Popup } from 'semantic-ui-react'
-import { GraphStyle } from './OverviewPane'
 import { StyledRelationship } from 'browser/modules/DBMSInfo/styled'
+import { GraphStyle } from 'project-root/src/browser/modules/D3Visualization/graphStyle'
 
 export type StyleableRelTypeProps = {
   graphStyle: GraphStyle
@@ -49,6 +49,7 @@ export function StyleableRelType({
             backgroundColor: styleForRelType.get('color'),
             color: styleForRelType.get('text-color-internal')
           }}
+          data-testid={`property-details-overview-relationship-type-${selectedRelType.relType}`}
         >
           {selectedRelType.count !== undefined
             ? `${selectedRelType.relType} (${selectedRelType.count})`

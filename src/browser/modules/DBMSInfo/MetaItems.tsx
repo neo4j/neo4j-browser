@@ -28,7 +28,7 @@ import {
 import { StyledLabel, StyledRelationship, StyledProperty } from './styled'
 
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
-import neoGraphStyle from 'browser/modules/D3Visualization/graphStyle'
+import { GraphStyle } from 'browser/modules/D3Visualization/graphStyle'
 import deepmerge from 'deepmerge'
 import { ShowMoreOrAll } from 'browser-components/ShowMoreOrAll/ShowMoreOrAll'
 import { ThemeProvider } from 'styled-components'
@@ -37,7 +37,7 @@ import { dark } from 'browser-styles/themes'
 const wrapperStyle = (styles && styles.wrapper) || ''
 
 function createStyleGetter(graphStyleData: any, kind: string) {
-  const graphStyle = neoGraphStyle()
+  const graphStyle = new GraphStyle()
   if (graphStyleData) {
     graphStyle.loadRules(deepmerge(graphStyle.toSheet(), graphStyleData || {}))
   }

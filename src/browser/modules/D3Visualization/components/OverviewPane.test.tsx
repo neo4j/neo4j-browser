@@ -26,19 +26,13 @@ import {
   GraphStatsLabels,
   GraphStatsRelationshipTypes
 } from '../mapper'
+import GraphStyle from 'project-root/src/browser/modules/D3Visualization/graphStyle'
 
 jest.mock('./StyleableNodeLabel')
 jest.mock('./StyleableRelType')
 
 describe('<OverviewPane />', () => {
-  const mockGraphStyle = {
-    forNode: null,
-    forRelationship: null,
-    loadRules: null,
-    resetToDefault: null,
-    rules: [],
-    toSheet: null
-  }
+  const graphStyle = new GraphStyle()
 
   const getMockLabels: (length: number) => GraphStatsLabels = length =>
     Array.from({ length: length }).reduce(
@@ -80,7 +74,7 @@ describe('<OverviewPane />', () => {
     return render(
       <OverviewPane
         frameHeight={0}
-        graphStyle={mockGraphStyle}
+        graphStyle={graphStyle}
         hasTruncatedFields={false}
         nodeCount={nodeCount}
         relationshipCount={relationshipCount}

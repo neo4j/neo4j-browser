@@ -21,8 +21,8 @@
 import React from 'react'
 import { GrassEditor } from './GrassEditor'
 import { Popup } from 'semantic-ui-react'
-import { GraphStyle } from './OverviewPane'
 import { StyledLabel } from 'browser/modules/DBMSInfo/styled'
+import { GraphStyle } from 'project-root/src/browser/modules/D3Visualization/graphStyle'
 
 export type StyleableNodeLabelProps = {
   selectedLabel: {

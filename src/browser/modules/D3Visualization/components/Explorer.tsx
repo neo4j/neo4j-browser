@@ -25,11 +25,10 @@ import { debounce } from 'lodash'
 
 import Node from '../lib/visualization/components/node'
 import Relationship from '../lib/visualization/components/relationship'
-import neoGraphStyle from '../graphStyle'
+import neoGraphStyle, { GraphStyle } from '../graphStyle'
 import { GlobalState } from 'shared/globalState'
 import { GraphComponent } from './Graph'
 import { GraphStats } from '../mapper'
-import { GraphStyle } from './OverviewPane'
 import { VizItem } from './types'
 import { deepEquals } from 'services/utils'
 import { defaultPanelWidth, NodeInspectorPanel } from './NodeInspectorPanel'
@@ -97,7 +96,7 @@ export class ExplorerComponent extends Component<
 
   constructor(props: FullExplorerProps) {
     super(props)
-    const graphStyle = neoGraphStyle()
+    const graphStyle = new GraphStyle()
     this.defaultStyle = graphStyle.toSheet()
     let relationships = this.props.relationships
     let nodes = deduplicateNodes(this.props.nodes)
@@ -221,7 +220,7 @@ export class ExplorerComponent extends Component<
     // If the legend component has the style it will ask the neoGraphStyle object for styling before the graph component,
     // and also doing this in a different order from the graph. This leads to different default colors being assigned to different labels.
     const graphStyle = this.state.freezeLegend
-      ? neoGraphStyle()
+      ? new GraphStyle()
       : this.state.graphStyle
 
     return (
