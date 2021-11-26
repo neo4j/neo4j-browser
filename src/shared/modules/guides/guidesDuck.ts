@@ -19,6 +19,7 @@
  */
 
 import { Observable } from 'rxjs'
+import { isOfType } from 'typesafe-actions'
 import { Epic } from 'redux-observable'
 import { GlobalState } from 'shared/globalState'
 import { tryGetRemoteInitialSlideFromUrl } from 'services/guideResolverHelper'
@@ -84,12 +85,10 @@ export const fetchRemoteGuideEpic: Epic<
   FetchGuideAction | SetGuideAction | OpenSidebarAction | AddRemoteGuideAction,
   GlobalState
 > = (action$, store$) =>
-  action$.ofType(FETCH_GUIDE).flatMap(action => {
-    const initialSlide = tryGetRemoteInitialSlideFromUrl(
-      (<FetchGuideAction>action).identifier
-    )
+  action$.filter(isOfType(FETCH_GUIDE)).flatMap(action => {
+    const initialSlide = tryGetRemoteInitialSlideFromUrl(action.identifier)
     return Observable.fromPromise(
-      resolveGuide((<FetchGuideAction>action).identifier, store$.getState())
+      resolveGuide(action.identifier, store$.getState())
     ).mergeMap(({ title, identifier, slides, isError }) => {
       const guide: RemoteGuide = {
         currentSlide: initialSlide,
