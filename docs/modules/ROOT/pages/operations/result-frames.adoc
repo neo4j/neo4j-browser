@@ -26,7 +26,7 @@ To see the results, switch the mode to the *Table* view.
 == Graph result frame
 
 The graph visualization functionality is designed to display a node-graph representation of the underlying data stored in the database in response to a given Cypher query.
-It shows circles for nodes and lines for relationships, and is especially useful for determining areas of interest or quickly assessing the current state and organization of the data.
+It shows circles for nodes and lines for relationships and is especially useful for determining areas of interest or quickly assessing the current state and structure of the data.
 
 image:graph.png[]
 
@@ -35,18 +35,17 @@ image:graph.png[]
 [TIP]
 ====
 * Enable zoom in and out of your graph by entering into fullscreen mode.
-* Expand and remove nodes from the visualization by clicking a node.
-It gets a halo, where you can dismiss a node, expand/collapse child relationships, or unlock the node to re-layout the graph.
-Double-clicking a node expands its child relationships.
+* Click a node or a relationship to view its properties.
+The nodes already have sensible captions assigned by the Browser, which auto-selects a property from the property list to use as a caption.
+To change how your graph looks like, see xref:operations/browser-styling.adoc[].
+* Click a node to get a halo, where you can:
+** Dismiss/hide a node by clicking the image:dismiss-node.png[width=3%] icon.
+** Expand/collapse child relationships by clicking the icon image:expand-collapse.png[width=3%] icon.
+Alternatively, you can double-click a node.
+** Unlock the node to re-layout it by clicking the image:unlock-relayout.png[width=3%] icon.
+Alternatively, you can click the node and drag it around.
 * If you cannot see the whole graph or the results display too close together, you can adjust by moving the visual view and dragging nodes to rearrange them.
 * To move the view to see more parts of the graph, click an empty spot within the graph pane and drag it.
-* To rearrange nodes, click and drag them around.
-* The nodes already have sensible captions assigned by the browser, which auto-selects a property from the property list to use as a caption.
-You can see all the properties of that element if you click any node or relationship.
-Properties appear below the visualization.
-* Larger property sets might be collapsed into a subset, and there is a little triangle on the right to unfold them.
-For example, if you click one of the `Movie` nodes in the MovieGraph (`:guide movie graph`), you can see its properties below the graph visualization.
-The same applies to `Actor` nodes and the `ACTED_IN` relationships.
 ====
 
 
