@@ -22,7 +22,8 @@ import React, { Component, ReactNode } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import { Database, isEnterprise } from 'shared/modules/dbMeta/dbMetaDuck'
+import { isEnterprise } from 'shared/modules/dbMeta/selectors'
+import { Database } from 'shared/modules/dbMeta/types'
 import {
   isConnected,
   getUseDb
@@ -37,7 +38,7 @@ import {
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { hasMultiDbSupport } from 'shared/modules/features/versionedFeatures'
 import { ErrorsView } from '../CypherFrame/ErrorsView'
-import { getDatabases } from 'shared/modules/dbMeta/dbMetaDuck'
+import { getDatabases } from 'shared/modules/dbMeta/selectors'
 import * as legacyHelpers from './legacyHelpers'
 import * as helpers from './helpers'
 import { SysInfoTable } from './SysInfoTable'

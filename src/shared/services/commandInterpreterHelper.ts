@@ -45,14 +45,14 @@ import {
   updateGraphStyleData,
   getGraphStyleData
 } from 'shared/modules/grass/grassDuck'
+import { SYSTEM_DB } from 'shared/modules/dbMeta/constants'
 import {
   getRemoteContentHostnameAllowlist,
   getDatabases,
-  fetchMetaData,
   getAvailableSettings,
-  SYSTEM_DB,
   findDatabaseByNameOrAlias
-} from 'shared/modules/dbMeta/dbMetaDuck'
+} from 'shared/modules/dbMeta/selectors'
+import { fetchMetaData } from 'shared/modules/dbMeta/actions'
 import { canSendTxMetadata } from 'shared/modules/features/versionedFeatures'
 import { fetchRemoteGuideAsync } from 'shared/modules/commands/helpers/playAndGuides'
 import remote from 'services/remote'

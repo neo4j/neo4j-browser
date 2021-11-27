@@ -37,7 +37,7 @@ import {
   getPlayImplicitInitCommands
 } from 'shared/modules/settings/settingsDuck'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
-import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
+import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/selectors'
 import { FORCE_CHANGE_PASSWORD } from 'shared/modules/cypher/cypherDuck'
 import { NATIVE, NO_AUTH, SSO } from 'services/bolt/boltHelpers'
 

@@ -9,7 +9,7 @@ import {
   getClientsAllowTelemetry,
   isServerConfigDone,
   shouldAllowOutgoingConnections
-} from 'shared/modules/dbMeta/dbMetaDuck'
+} from 'shared/modules/dbMeta/selectors'
 import {
   getAllowCrashReports,
   getAllowUserStats

@@ -28,7 +28,7 @@ import {
 import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
 import { canSendTxMetadata } from '../features/versionedFeatures'
-import { SYSTEM_DB } from '../dbMeta/dbMetaDuck'
+import { SYSTEM_DB } from '../dbMeta/constants'
 
 export const NAME = 'features'
 const CLEAR = 'features/CLEAR'

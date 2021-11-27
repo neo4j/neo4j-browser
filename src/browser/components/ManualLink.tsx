@@ -23,7 +23,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import semver from 'semver'
 
-import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
+import { getVersion } from 'shared/modules/dbMeta/selectors'
 import { DrawerExternalLink } from './drawer/drawer-styled'
 import { GlobalState } from 'project-root/src/shared/globalState'
 

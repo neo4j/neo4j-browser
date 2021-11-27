@@ -5,7 +5,7 @@ import {
   StyledSysInfoTable
 } from 'browser-components/Tables'
 import { StyledInfoMessage } from './../../Stream/styled'
-import { Database } from 'shared/modules/dbMeta/dbMetaDuck'
+import { Database } from 'shared/modules/dbMeta/types'
 import { DatabaseMetric } from './SysInfoFrame'
 
 type SysInfoFrameProps = {

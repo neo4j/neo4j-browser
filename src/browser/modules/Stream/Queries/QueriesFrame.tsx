@@ -58,7 +58,7 @@ import { EnterpriseOnlyFrame } from 'browser-components/EditionView'
 import FrameError from '../../Frame/FrameError'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { getDefaultBoltScheme } from 'shared/modules/features/versionedFeatures'
-import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
+import { getVersion } from 'shared/modules/dbMeta/selectors'
 import { GlobalState } from 'project-root/src/shared/globalState'
 
 type QueriesFrameState = {

@@ -23,7 +23,7 @@ import { handleRefreshingToken, authLog } from 'neo4j-client-sso'
 import bolt from 'services/bolt/bolt'
 import * as discovery from 'shared/modules/discovery/discoveryDuck'
 import { NATIVE, NO_AUTH, SSO } from 'services/bolt/boltHelpers'
-import { fetchMetaData } from 'shared/modules/dbMeta/dbMetaDuck'
+import { fetchMetaData } from 'shared/modules/dbMeta/actions'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import {
   getInitCmd,

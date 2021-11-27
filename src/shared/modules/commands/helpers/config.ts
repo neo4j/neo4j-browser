@@ -24,7 +24,7 @@ import {
   replace
 } from 'shared/modules/settings/settingsDuck'
 import { splitStringOnFirst } from 'services/commandUtils'
-import { getRemoteContentHostnameAllowlist } from 'shared/modules/dbMeta/dbMetaDuck'
+import { getRemoteContentHostnameAllowlist } from 'shared/modules/dbMeta/selectors'
 import { hostIsAllowed } from 'services/utils'
 import { getJSON } from 'services/remote'
 import { isValidUrl } from 'shared/modules/commands/helpers/http'

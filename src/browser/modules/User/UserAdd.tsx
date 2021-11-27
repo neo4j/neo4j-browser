@@ -54,7 +54,7 @@ import {
 import { StyledInput, StyleRolesContainer } from './styled'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { driverDatabaseSelection } from 'shared/modules/features/versionedFeatures'
-import { isEnterprise } from 'shared/modules/dbMeta/dbMetaDuck'
+import { isEnterprise } from 'shared/modules/dbMeta/selectors'
 import { EnterpriseOnlyFrame } from 'browser-components/EditionView'
 import { isConnectedAuraHost } from 'shared/modules/connections/connectionsDuck'
 

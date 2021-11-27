@@ -32,7 +32,7 @@ import { Epic } from 'redux-observable'
 import { Action } from 'redux'
 import { FrameView } from 'shared/modules/frames/frameViewTypes'
 import { GlobalState } from 'shared/globalState'
-import { Database } from '../dbMeta/dbMetaDuck'
+import { Database } from '../dbMeta/types'
 
 export const NAME = 'frames'
 export const ADD = 'frames/ADD'
