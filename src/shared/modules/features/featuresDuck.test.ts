@@ -20,7 +20,7 @@
 
 import reducer, * as features from './featuresDuck'
 import { canSendTxMetadata } from './versionedFeatures'
-import { NAME as META_NAME } from '../dbMeta/dbMetaDuck'
+import { NAME as META_NAME } from '../dbMeta/constants'
 import { dehydrate } from 'services/duckUtils'
 
 describe('features reducer', () => {

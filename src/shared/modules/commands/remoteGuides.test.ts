@@ -34,15 +34,15 @@ jest.mock('services/remote', () => {
 })
 const remote = require.requireMock('services/remote')
 
-jest.mock('shared/modules/dbMeta/dbMetaDuck', () => {
-  const orig = require.requireActual('shared/modules/dbMeta/dbMetaDuck')
+jest.mock('shared/modules/dbMeta/selectors', () => {
+  const orig = require.requireActual('shared/modules/dbMeta/selectors')
   return {
     ...orig,
     getRemoteContentHostnameAllowlist: jest.fn(),
     getDefaultRemoteContentHostnameAllowlist: jest.fn()
   }
 })
-const dbMeta = require.requireMock('shared/modules/dbMeta/dbMetaDuck')
+const dbMeta = require.requireMock('shared/modules/dbMeta/selectors')
 
 describe('fetchGuideFromAllowlistEpic', () => {
   afterEach(() => {

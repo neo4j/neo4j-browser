@@ -21,7 +21,7 @@
 import configureMockStore from 'redux-mock-store'
 import { createEpicMiddleware } from 'redux-observable'
 import { createBus, createReduxMiddleware } from 'suber'
-import { UPDATE_SETTINGS } from 'shared/modules/dbMeta/dbMetaDuck'
+import { UPDATE_SETTINGS } from 'shared/modules/dbMeta/constants'
 
 import * as commands from './commandsDuck'
 import { CONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
