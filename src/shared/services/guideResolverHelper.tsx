@@ -117,7 +117,7 @@ async function resolveRemoteGuideByUrl(
   isError?: boolean
 }> {
   try {
-    // Construct URL probably throws exception and crashes the app
+    // URL constructor can throw would work as well
     const urlObject = new URL(url)
     urlObject.href = url
     const filenameExtension =

@@ -99,8 +99,10 @@ const slides = [
             <code>WHERE</code> filters the query.
           </li>
           <li>
-            <code>{`ee.name = 'Emil'`}</code> compares name property to the
-            value <code>Emil</code>.
+            <code>{`ee.name = 'Emil'`}</code>
+            {` compares name property to the
+            value `}
+            <code>Emil</code>.
           </li>
           <li>
             <code>RETURN</code> returns particular results.
