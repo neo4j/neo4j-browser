@@ -83,10 +83,8 @@ const slides = [
       social graph, you label each node that represents a Person.
     </p>
     <ol>
-      <li>
-        Add the label &quot;Person&quot; to the node you created for Emil.
-      </li>
-      <li>Color the &quot;Person&quot; node red.</li>
+      <li>{`Add the label "Person" to the node you created for Emil.`}</li>
+      <li>{`Color the "Person" node red.`}</li>
     </ol>
     <br />
     <img src="./assets/images/labeled_node.png" className="img-responsive" />
