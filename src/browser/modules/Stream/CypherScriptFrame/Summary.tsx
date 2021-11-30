@@ -60,8 +60,7 @@ const GenericSummary = ({
         <PaddedStatsBar>
           <StyledCypherInfoMessage>INFO</StyledCypherInfoMessage>
           <MessageArea>
-            This query is waiting for it&apos;s turn. The execution is serial
-            and will break on first error.
+            {`This query is waiting for it's turn. The execution is serial and will break on first error.`}
           </MessageArea>
         </PaddedStatsBar>
       )

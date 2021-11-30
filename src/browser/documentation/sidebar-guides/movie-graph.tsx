@@ -710,7 +710,7 @@ const slides = [
         </pre>
       </li>
       <li>
-        Who were Tom Hanks&apos; co-actors?
+        {`Who were Tom Hanks' co-actors?`}
         <pre className="pre-scrollable code runnable">
           {
             'MATCH (tom:Person {name:"Tom Hanks"})-[:ACTED_IN]->(m)<-[:ACTED_IN]-(coActors) RETURN DISTINCT coActors.name'
@@ -775,9 +775,7 @@ RETURN p`}
       <em>Recommend new co-actors</em>
     </p>
     <p>
-      Let&apos;s recommend new co-actors for Tom Hanks. A basic recommendation
-      approach is to find connections past an immediate neighborhood that are
-      themselves well connected.
+      {`Let's recommend new co-actors for Tom Hanks. A basic recommendation approach is to find connections past an immediate neighborhood that are themselves well connected.`}
     </p>
     <hr />
     <p>For Tom Hanks, that means:</p>

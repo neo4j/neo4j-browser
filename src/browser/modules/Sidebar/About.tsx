@@ -179,8 +179,7 @@ const About = ({ serverVersion, serverEdition }: AboutProps) => (
       <DrawerSection>
         <DrawerSubHeader>Thanks</DrawerSubHeader>
         <DrawerSectionBody>
-          Neo4j wouldn&apos;t be possible without a fantastic community. Thanks
-          for all the feedback, discussions and contributions.
+          {`Neo4j wouldn't be possible without a fantastic community. Thanks for all the feedback, discussions and contributions.`}
         </DrawerSectionBody>
       </DrawerSection>
     </DrawerBody>

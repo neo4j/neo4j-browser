@@ -48,8 +48,8 @@ const slides = [
       <em>Neo4j stores data in a graph as nodes</em>
     </p>
     <p>
-      The simplest graph has just a single node with some named values called
-      properties. For example, let&apos;s draw a social graph:
+      {`The simplest graph has just a single node with some named values called
+      properties. For example, let's draw a social graph:`}
     </p>
     <ol>
       <li>Draw a circle for a node.</li>
@@ -179,9 +179,9 @@ const slides = [
       <em>Store information shared by two nodes</em>
     </p>
     <p>
-      In a property graph, relationships can also contain properties that
-      describe the relationship. Looking more closely at Emil&apos;s
-      relationships, note that:
+      {`In a property graph, relationships can also contain properties that
+      describe the relationship. Looking more closely at Emil's
+      relationships, note that:`}
     </p>
     <ul>
       <li>Emil has known Johan since 2001.</li>

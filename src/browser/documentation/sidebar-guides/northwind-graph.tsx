@@ -59,8 +59,8 @@ const slides = [
       <em>Load the product catalog data from external CSV files</em>
     </p>
     <p>
-      Northwind sells food products in a few categories provided by suppliers.
-      Let&apos;s start by loading the product catalog tables.
+      {`Northwind sells food products in a few categories provided by suppliers.
+      Let's start by loading the product catalog tables.`}
     </p>
     <img
       src="./assets/images/northwind/product-category-supplier.png"
@@ -137,9 +137,9 @@ SET n = row`}
       <em>Transform foreign key references into data relationships</em>
     </p>
     <p>
-      The products, categories, and suppliers are related through foreign key
-      references. Let&apos;s promote those to data relationships to realize the
-      graph.
+      {`The products, categories, and suppliers are related through foreign key
+      references. Let's promote those to data relationships to realize the
+      graph.`}
     </p>
     <img
       src="./assets/images/northwind/product-graph.png"
