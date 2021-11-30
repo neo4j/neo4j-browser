@@ -81,21 +81,8 @@ interface AddRemoteGuideAction {
   guide: RemoteGuide
 }
 
-type TypeConstant = string
-
-function checkIsEmpty(arg: unknown) {
-  return arg == null
-}
-
-function throwIsEmpty(argPosition: number): never {
-  throw new Error(`Argument ${argPosition} is empty.`)
-}
-
-function checkInvalidActionTypeInArray(
-  arg: TypeConstant,
-  idx: number
-): void | never {
-  if (arg == null) {
+function checkInvalidActionTypeInArray(arg: string, idx: number): void | never {
+  if (!arg) {
     throw new Error(
       `Argument contains array with empty element at index ${idx}`
     )
@@ -129,8 +116,8 @@ function isOfType<T extends string, A extends { type: T }>(
   actionTypeOrTypes: T | T[],
   action?: A
 ) {
-  if (checkIsEmpty(actionTypeOrTypes)) {
-    throwIsEmpty(1)
+  if (!actionTypeOrTypes) {
+    throw new Error(`Argument 1 is empty.`)
   }
 
   const actionTypes = Array.isArray(actionTypeOrTypes)
