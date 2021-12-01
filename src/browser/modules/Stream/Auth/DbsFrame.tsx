@@ -106,7 +106,13 @@ const DbsFrame = (props: BaseFrameProps) => {
 }
 
 const Frame = (props: BaseFrameProps): JSX.Element => {
-  return <FrameTemplate contents={<DbsFrame {...props} />} />
+  return (
+    <FrameTemplate
+      isCollapsed={props.isCollapsed}
+      isFullscreen={props.isFullscreen}
+      contents={<DbsFrame {...props} />}
+    />
+  )
 }
 
 export default Frame

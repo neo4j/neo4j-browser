@@ -36,8 +36,7 @@ import {
 } from 'shared/modules/cypher/cypherDuck'
 import {
   getConnectionState,
-  CONNECTED_STATE,
-  ConnectionState
+  CONNECTED_STATE
 } from 'shared/modules/connections/connectionsDuck'
 import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
 import {
@@ -76,6 +75,8 @@ type QueriesFrameProps = {
   availableProcedures: any
   connectionState: number
   neo4jVersion: string | null
+  isFullscreen: boolean
+  isCollapsed: boolean
 }
 export class QueriesFrame extends Component<
   QueriesFrameProps,
@@ -374,6 +375,8 @@ export class QueriesFrame extends Component<
     }
     return (
       <FrameTemplate
+        isCollapsed={this.props.isCollapsed}
+        isFullscreen={this.props.isFullscreen}
         aside={aside}
         contents={frameContents}
         statusbar={statusbar}

@@ -45,6 +45,8 @@ interface CypherScriptFrameProps extends BaseFrameProps {
 function CypherScriptFrame({
   frame,
   frames,
+  isFullscreen,
+  isCollapsed,
   requests = {}
 }: CypherScriptFrameProps): JSX.Element {
   const contents = (
@@ -102,7 +104,13 @@ function CypherScriptFrame({
       </ContentSizer>
     </WrapperCenter>
   )
-  return <FrameTemplate contents={contents} />
+  return (
+    <FrameTemplate
+      isCollapsed={isCollapsed}
+      isFullscreen={isFullscreen}
+      contents={contents}
+    />
+  )
 }
 
 const mapStateToProps = (state: any, ownProps: BaseFrameProps) => {

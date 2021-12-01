@@ -32,7 +32,7 @@ import {
 import { FireExtinguisherIcon } from 'browser-components/icons/Icons'
 import { InfoView } from './InfoView'
 
-const StyleFrame = ({ frame }: any) => {
+const StyleFrame = ({ frame, isCollapsed, isFullscreen }: any) => {
   let grass: string | false = ''
   let contents = (
     <InfoView
@@ -56,6 +56,8 @@ const StyleFrame = ({ frame }: any) => {
   //getRecords={() => grass}
   return (
     <FrameTemplate
+      isCollapsed={isCollapsed}
+      isFullscreen={isFullscreen}
       contents={contents}
       statusbar={<Statusbar frame={frame} />}
     />

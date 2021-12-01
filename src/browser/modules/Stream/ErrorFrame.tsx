@@ -72,7 +72,13 @@ export const ErrorView = ({ frame }: any) => {
   )
 }
 
-const ErrorFrame = ({ frame }: any) => {
-  return <FrameTemplate contents={<ErrorView frame={frame} />} />
+const ErrorFrame = ({ frame, isFullscreen, isCollapsed }: any) => {
+  return (
+    <FrameTemplate
+      isCollapsed={isCollapsed}
+      isFullscreen={isFullscreen}
+      contents={<ErrorView frame={frame} />}
+    />
+  )
 }
 export default ErrorFrame

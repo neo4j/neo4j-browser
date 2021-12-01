@@ -30,7 +30,7 @@ import {
   StackPreviousIcon
 } from 'browser-components/icons/Icons'
 
-const HelpFrame = ({ stack = [] }: any) => {
+const HelpFrame = ({ stack = [], isFullscreen, isCollapsed }: any) => {
   const [currentFrameIndex, setCurrentFrameIndex] = useState(0)
   const currentFrame = stack[currentFrameIndex]
 
@@ -73,7 +73,14 @@ const HelpFrame = ({ stack = [] }: any) => {
     ) : (
       main
     )
-  return <FrameTemplate aside={aside} contents={contents} />
+  return (
+    <FrameTemplate
+      isCollapsed={isCollapsed}
+      isFullscreen={isFullscreen}
+      aside={aside}
+      contents={contents}
+    />
+  )
 }
 
 function generateContent(frame: any) {

@@ -80,7 +80,13 @@ export const ServerStatusFrame = (props: any) => {
 }
 
 const Frame = (props: any) => {
-  return <FrameTemplate contents={<ServerStatusFrame {...props} />} />
+  return (
+    <FrameTemplate
+      isCollapsed={props.isCollapsed}
+      isFullscreen={props.isFullscreen}
+      contents={<ServerStatusFrame {...props} />}
+    />
+  )
 }
 
 const mapStateToProps = (state: any) => {

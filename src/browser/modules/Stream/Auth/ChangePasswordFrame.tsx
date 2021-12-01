@@ -85,6 +85,8 @@ class ChangePasswordFrame extends Component<any, ChangePasswordFrameState> {
     )
     return (
       <FrameTemplate
+        isCollapsed={this.props.isCollapsed}
+        isFullscreen={this.props.isFullscreen}
         statusbar={
           <FrameError
             code={this.state.error.code}

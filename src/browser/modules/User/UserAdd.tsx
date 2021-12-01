@@ -420,6 +420,8 @@ export class UserAdd extends Component<any, UserAddState> {
 
     return (
       <FrameTemplate
+        isCollapsed={this.props.isCollapsed}
+        isFullscreen={this.props.isFullscreen}
         aside={aside}
         contents={frameContents}
         statusbar={getStatusBar()}

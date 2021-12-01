@@ -236,7 +236,13 @@ export class SchemaFrame extends Component<any, SchemaFrameState> {
 }
 
 const Frame = (props: any) => {
-  return <FrameTemplate contents={<SchemaFrame {...props} />} />
+  return (
+    <FrameTemplate
+      isCollapsed={props.isCollapsed}
+      isFullscreen={props.isFullscreen}
+      contents={<SchemaFrame {...props} />}
+    />
+  )
 }
 
 const mapStateToProps = (state: GlobalState) => ({

@@ -45,7 +45,13 @@ export const HistoryFrame = (props: any) => {
         <em>Empty history</em>
       </PaddedDiv>
     )
-  return <FrameTemplate contents={<UnstyledList>{historyRows}</UnstyledList>} />
+  return (
+    <FrameTemplate
+      isCollapsed={props.isCollapsed}
+      isFullscreen={props.isFullscreen}
+      contents={<UnstyledList>{historyRows}</UnstyledList>}
+    />
+  )
 }
 
 export default withBus(HistoryFrame)

@@ -40,6 +40,8 @@ export interface BaseFrameProps {
   frame: Frame & { isPinned: boolean }
   activeConnectionData: Connection | null
   stack: Frame[]
+  isFullscreen: boolean
+  isCollapsed: boolean
 }
 
 function Stream(props: StreamProps): JSX.Element {

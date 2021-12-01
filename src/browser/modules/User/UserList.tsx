@@ -243,7 +243,14 @@ export class UserList extends Component<any, UserListState> {
         : 'No users'
       frameContents = <>{renderedListOfUsers}</>
     }
-    return <FrameTemplate contents={frameContents} aside={aside} />
+    return (
+      <FrameTemplate
+        isCollapsed={this.props.isCollapsed}
+        isFullscreen={this.props.isFullscreen}
+        contents={frameContents}
+        aside={aside}
+      />
+    )
   }
 }
 const mapStateToProps = (state: any) => {

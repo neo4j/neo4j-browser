@@ -49,6 +49,8 @@ class ConnectionFrame extends Component<any, State> {
   render() {
     return (
       <FrameTemplate
+        isCollapsed={this.props.isCollapsed}
+        isFullscreen={this.props.isFullscreen}
         statusbar={
           <FrameError
             code={this.state.error.code}

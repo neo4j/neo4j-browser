@@ -135,6 +135,12 @@ export class SnakeFrame extends React.Component<{}, SnakeFrameState> {
 }
 
 const Frame = (props: any) => {
-  return <FrameTemplate contents={<SnakeFrame {...props} />} />
+  return (
+    <FrameTemplate
+      isCollapsed={props.isCollapsed}
+      isFullscreen={props.isFullscreen}
+      contents={<SnakeFrame {...props} />}
+    />
+  )
 }
 export default Frame

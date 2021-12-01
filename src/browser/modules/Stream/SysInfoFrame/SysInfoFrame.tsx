@@ -70,6 +70,8 @@ type SysInfoFrameProps = {
   isConnected: boolean
   isEnterprise: boolean
   useDb: string | null
+  isFullscreen: boolean
+  isCollapsed: boolean
 }
 
 export class SysInfoFrame extends Component<
@@ -241,6 +243,8 @@ export class SysInfoFrame extends Component<
 
     return (
       <FrameTemplate
+        isCollapsed={this.props.isCollapsed}
+        isFullscreen={this.props.isFullscreen}
         contents={content}
         statusbar={
           <StatusbarWrapper>

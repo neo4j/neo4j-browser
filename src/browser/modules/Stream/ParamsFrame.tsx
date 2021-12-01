@@ -28,7 +28,7 @@ import { PaddedDiv, ErrorText, SuccessText, StyledStatsBar } from './styled'
 import { applyGraphTypes } from 'services/bolt/boltMappings'
 import AutoExecButton from './auto-exec-button'
 
-const ParamsFrame = ({ frame }: any) => {
+const ParamsFrame = ({ frame, isCollapsed, isFullscreen }: any) => {
   const params = applyGraphTypes(frame.params)
   const contents = (
     <PaddedDiv>
@@ -58,6 +58,13 @@ const ParamsFrame = ({ frame }: any) => {
         </Ellipsis>
       </StyledStatsBar>
     )
-  return <FrameTemplate contents={contents} statusbar={statusbar} />
+  return (
+    <FrameTemplate
+      isCollapsed={isCollapsed}
+      isFullscreen={isFullscreen}
+      contents={contents}
+      statusbar={statusbar}
+    />
+  )
 }
 export default ParamsFrame

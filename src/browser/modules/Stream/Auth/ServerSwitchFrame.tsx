@@ -115,7 +115,13 @@ export const ServerSwitchFrame = (props: any) => {
 }
 
 const Frame = (props: any) => {
-  return <FrameTemplate contents={<ServerSwitchFrame {...props} />} />
+  return (
+    <FrameTemplate
+      isCollapsed={props.isCollapsed}
+      isFullscreen={props.isFullscreen}
+      contents={<ServerSwitchFrame {...props} />}
+    />
+  )
 }
 
 export default Frame

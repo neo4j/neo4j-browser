@@ -49,9 +49,6 @@ function FrameTemplate({
   onResize = () => {
     /*noop*/
   },
-  numRecords = 0,
-  getRecords,
-  visElement,
   sidebar,
   aside,
   statusbar,

@@ -83,12 +83,9 @@ import RelatableView, {
 } from 'browser/modules/Stream/CypherFrame/relatable-view'
 import { requestExceedsVisLimits } from 'browser/modules/Stream/CypherFrame/helpers'
 import { GlobalState } from 'shared/globalState'
+import { BaseFrameProps } from '../Stream'
 
-type CypherFrameBaseProps = {
-  frame: Frame
-}
-
-type CypherFrameProps = CypherFrameBaseProps & {
+type CypherFrameProps = BaseFrameProps & {
   autoComplete: boolean
   initialNodeDisplay: number
   maxNeighbours: number
@@ -424,6 +421,7 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
       ) : (
         this.getFrameContents(request, result, query)
       )
+    /*
     const statusBar =
       this.state.openView !== ViewTypes.VISUALIZATION &&
       requestStatus !== 'error'
@@ -443,17 +441,17 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
 
     return (
       <FrameTemplate
+        isCollapsed={this.props.isCollapsed}
+        isFullscreen={this.props.isFullscreen}
         sidebar={requestStatus !== 'error' ? this.sidebar : undefined}
         contents={frameContents}
+        removePadding
       />
     )
   }
 }
 
-const mapStateToProps = (
-  state: GlobalState,
-  ownProps: CypherFrameBaseProps
-) => ({
+const mapStateToProps = (state: GlobalState, ownProps: BaseFrameProps) => ({
   maxRows: getMaxRows(state),
   initialNodeDisplay: getInitialNodeDisplay(state),
   maxNeighbours: getMaxNeighbours(state),

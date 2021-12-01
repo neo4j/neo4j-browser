@@ -110,7 +110,9 @@ export function FrameContainer(props: FrameContainerProps): JSX.Element {
   const frameProps: BaseFrameProps = {
     frame: { ...frame, isPinned: props.frameData.isPinned },
     activeConnectionData: props.activeConnectionData,
-    stack: props.frameData.stack
+    stack: props.frameData.stack,
+    isFullscreen,
+    isCollapsed
   }
   const FrameComponent = getFrameComponent(props.frameData)
 

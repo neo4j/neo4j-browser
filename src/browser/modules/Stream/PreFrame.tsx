@@ -21,9 +21,11 @@ import React from 'react'
 import FrameTemplate from '../Frame/FrameTemplate'
 import { PaddedDiv } from './styled'
 
-const PreFrame = ({ frame }: any) => {
+const PreFrame = ({ frame, isCollapsed, isFullscreen }: any) => {
   return (
     <FrameTemplate
+      isCollapsed={isCollapsed}
+      isFullscreen={isFullscreen}
       contents={
         <PaddedDiv>
           <pre>{frame.result || frame.contents}</pre>

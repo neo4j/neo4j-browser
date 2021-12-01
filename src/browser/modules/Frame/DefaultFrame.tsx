@@ -20,7 +20,11 @@
 import React from 'react'
 import FrameTemplate from './FrameTemplate'
 
-const DefaultFrame = ({ frame }: any): JSX.Element => {
+const DefaultFrame = ({
+  frame,
+  isCollapsed,
+  isFullscreen
+}: any): JSX.Element => {
   const errors = frame.errors || false
   const contents = frame.contents || false
   let frameContents = contents
@@ -34,6 +38,12 @@ const DefaultFrame = ({ frame }: any): JSX.Element => {
     frameContents = 'Unknown command'
   }
 
-  return <FrameTemplate contents={frameContents} />
+  return (
+    <FrameTemplate
+      isCollapsed={isCollapsed}
+      isFullscreen={isFullscreen}
+      contents={frameContents}
+    />
+  )
 }
 export default DefaultFrame

@@ -23,9 +23,15 @@ import { StyledConnectionAside } from './styled'
 import { H3 } from 'browser-components/headers'
 import { Lead } from 'browser-components/Text'
 
-const Disconnect = ({ activeConnectionData }: any) => {
+const Disconnect = ({
+  activeConnectionData,
+  isCollapsed,
+  isFullscreen
+}: any) => {
   return (
     <FrameTemplate
+      isCollapsed={isCollapsed}
+      isFullscreen={isFullscreen}
       contents={
         <StyledConnectionAside>
           {activeConnectionData ? (

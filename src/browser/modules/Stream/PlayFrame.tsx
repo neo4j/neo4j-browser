@@ -81,7 +81,13 @@ const checkHtmlForSlides = (html: any) => {
   return !!slides.length
 }
 
-export function PlayFrame({ stack, bus, showPromotion }: any): JSX.Element {
+export function PlayFrame({
+  stack,
+  bus,
+  showPromotion,
+  isFullscreen,
+  isCollapsed
+}: any): JSX.Element {
   const [stackIndex, setStackIndex] = useState(0)
   const [atSlideStart, setAtSlideStart] = useState<boolean | null>(null)
   const [atSlideEnd, setAtSlideEnd] = useState<boolean | null>(null)
@@ -176,7 +182,14 @@ export function PlayFrame({ stack, bus, showPromotion }: any): JSX.Element {
       </React.Fragment>
     )
   }
-  return <FrameTemplate aside={aside} contents={guideAndNav} />
+  return (
+    <FrameTemplate
+      isCollapsed={isCollapsed}
+      isFullscreen={isFullscreen}
+      aside={aside}
+      contents={guideAndNav}
+    />
+  )
 }
 
 function generateContent(
