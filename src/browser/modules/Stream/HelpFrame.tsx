@@ -79,6 +79,7 @@ const HelpFrame = ({ stack = [], isFullscreen, isCollapsed }: any) => {
       isFullscreen={isFullscreen}
       aside={aside}
       contents={contents}
+      hasSlides
     />
   )
 }

@@ -109,6 +109,7 @@ function CypherScriptFrame({
       isCollapsed={isCollapsed}
       isFullscreen={isFullscreen}
       contents={contents}
+      removePadding
     />
   )
 }

@@ -164,14 +164,6 @@ export function PlayFrame({
       </CarouselButton>
     )
 
-  const classNames = ['playFrame']
-  if (hasCarousel || stack.length > 1) {
-    classNames.push('has-carousel')
-  }
-  if (isRemote) {
-    classNames.push('is-remote')
-  }
-
   let guideAndNav = guide
   if (stack.length > 1) {
     guideAndNav = (
@@ -188,6 +180,7 @@ export function PlayFrame({
       isFullscreen={isFullscreen}
       aside={aside}
       contents={guideAndNav}
+      hasSlides={hasCarousel || stack.length > 1}
     />
   )
 }

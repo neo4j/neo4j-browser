@@ -46,11 +46,14 @@ z-index: 130;`
   padding-bottom: 3px;
 `
 
-export const StyledFrameBody = styled.div<
-  FullscreenProps & { collapsed: boolean; preventOverflow?: boolean } & {
-    removePadding?: boolean
-  }
->`
+type StyledFrameBodyProps = FullscreenProps & {
+  collapsed: boolean
+  preventOverflow?: boolean
+  removePadding?: boolean
+  hasSlides?: boolean
+}
+
+export const StyledFrameBody = styled.div<StyledFrameBodyProps>`
   flex: 1;
   overflow: ${props => (props.preventOverflow ? 'hidden' : 'auto')};
   min-height: ${dim.frameBodyHeight / 2}px;
@@ -68,13 +71,13 @@ export const StyledFrameBody = styled.div<
   width: 100%;
   padding: 30px 30px 10px 30px;
 
-  .has-carousel &,
-  .has-stack & {
-    position: relative;
+  ${props =>
+    props.hasSlides &&
+    `position: relative;
     padding-bottom: 40px;
     padding-left: 40px;
     padding-right: 40px;
-  }
+  `}
 
   ${props => props.removePadding && 'padding: 0;'}
 `

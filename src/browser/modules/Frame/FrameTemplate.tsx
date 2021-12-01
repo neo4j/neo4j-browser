@@ -54,7 +54,8 @@ function FrameTemplate({
   statusbar,
   removePadding,
   isFullscreen,
-  isCollapsed
+  isCollapsed,
+  hasSlides
 }: FrameTemplateProps): JSX.Element {
   const [lastHeight, setLastHeight] = useState(10)
   const frameContentElementRef = useRef<HTMLDivElement>(null)
@@ -76,6 +77,7 @@ function FrameTemplate({
         fullscreen={isFullscreen}
         collapsed={isCollapsed}
         removePadding={removePadding}
+        hasSlides={hasSlides}
       >
         {sidebar && sidebar()}
         {aside && <StyledFrameAside>{aside}</StyledFrameAside>}

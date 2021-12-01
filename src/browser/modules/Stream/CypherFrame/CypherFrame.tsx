@@ -422,12 +422,12 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
       ) : (
         this.getFrameContents(request, result, query)
       )
-    /*
     const statusBar =
       this.state.openView !== ViewTypes.VISUALIZATION &&
       requestStatus !== 'error'
         ? this.getStatusbar(result)
         : null
+
     //numRecords={result && 'records' in result ? result.records.length : 0}
     //getRecords={this.getRecords}
     //onResize={this.onResize}
@@ -446,6 +446,7 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
         isFullscreen={this.props.isFullscreen}
         sidebar={requestStatus !== 'error' ? this.sidebar : undefined}
         contents={frameContents}
+        statusbar={statusBar}
         removePadding
       />
     )
