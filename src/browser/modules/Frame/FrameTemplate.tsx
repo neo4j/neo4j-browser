@@ -52,6 +52,7 @@ function FrameTemplate({
   sidebar,
   aside,
   statusbar,
+  removePadding,
   isFullscreen,
   isCollapsed
 }: FrameTemplateProps): JSX.Element {
@@ -71,7 +72,11 @@ function FrameTemplate({
 
   return (
     <>
-      <StyledFrameBody fullscreen={isFullscreen} collapsed={isCollapsed}>
+      <StyledFrameBody
+        fullscreen={isFullscreen}
+        collapsed={isCollapsed}
+        removePadding={removePadding}
+      >
         {sidebar && sidebar()}
         {aside && <StyledFrameAside>{aside}</StyledFrameAside>}
         <StyledFrameMainSection>

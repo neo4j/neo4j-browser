@@ -47,7 +47,9 @@ z-index: 130;`
 `
 
 export const StyledFrameBody = styled.div<
-  FullscreenProps & { collapsed: boolean; preventOverflow?: boolean }
+  FullscreenProps & { collapsed: boolean; preventOverflow?: boolean } & {
+    removePadding?: boolean
+  }
 >`
   flex: 1;
   overflow: ${props => (props.preventOverflow ? 'hidden' : 'auto')};
@@ -74,9 +76,7 @@ export const StyledFrameBody = styled.div<
     padding-right: 40px;
   }
 
-  .no-padding & {
-    padding: 0;
-  }
+  ${props => props.removePadding && 'padding: 0;'}
 `
 
 export const StyledFrameMainSection = styled.div`
