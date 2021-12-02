@@ -29,12 +29,14 @@ import {
 } from 'shared/modules/connections/connectionsDuck'
 import { getScrollToTop } from 'shared/modules/settings/settingsDuck'
 import { FrameContainer } from './FrameContainer'
+import { ExportItem } from '../Frame/ExportButton'
 
 type StreamProps = {
   frames: FrameStack[]
   activeConnectionData: Connection | null
   shouldScrollToTop: boolean
 }
+// TODO typer för frames
 
 export interface BaseFrameProps {
   frame: Frame & { isPinned: boolean }
@@ -42,6 +44,7 @@ export interface BaseFrameProps {
   stack: Frame[]
   isFullscreen: boolean
   isCollapsed: boolean
+  setExportItems: (exportItems: ExportItem[]) => void
 }
 
 function Stream(props: StreamProps): JSX.Element {

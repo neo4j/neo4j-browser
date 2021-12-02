@@ -61,7 +61,10 @@ import {
   resultHasPlan,
   resultIsError,
   resultHasNodes,
-  initialView
+  initialView,
+  stringifyResultArray,
+  transformResultRecordsToResultArray,
+  recordToJSONMapper
 } from './helpers'
 import { SpinnerContainer, StyledStatsBarContainer } from '../styled'
 import { StyledFrameBody } from 'browser/modules/Frame/styled'
@@ -84,6 +87,12 @@ import RelatableView, {
 import { requestExceedsVisLimits } from 'browser/modules/Stream/CypherFrame/helpers'
 import { GlobalState } from 'shared/globalState'
 import { BaseFrameProps } from '../Stream'
+import { csvFormat, stringModifier } from 'services/bolt/cypherTypesFormatting'
+import { CSVSerializer } from 'services/serializer'
+import { map } from 'lodash'
+import { stringifyMod } from 'services/utils'
+import { downloadPNGFromSVG, downloadSVG } from 'services/exporting/imageUtils'
+import { saveAs } from 'file-saver'
 
 type CypherFrameProps = BaseFrameProps & {
   autoComplete: boolean
@@ -185,10 +194,24 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
       })
       if (view) this.setState({ openView: view })
     }
+
+    const downloadGraphics = [
+      { name: 'PNG', download: this.exportPNG },
+      { name: 'SVG', download: this.exportSVG }
+    ]
+    this.props.setExportItems([
+      { name: 'CSV', download: this.exportCSV },
+      { name: 'JSON', download: this.exportJSON },
+      ...(this.visElement ? downloadGraphics : [])
+    ])
   }
 
   componentDidMount(): void {
     const view = initialView(this.props, this.state)
+    this.props.setExportItems([
+      { name: 'CSV', download: this.exportCSV },
+      { name: 'JSON', download: this.exportJSON }
+    ])
     if (view) this.setState({ openView: view })
   }
 
@@ -406,6 +429,45 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
     )
   }
 
+  exportCSV = (): void => {
+    const records = this.getRecords()
+    const exportData = stringifyResultArray(
+      csvFormat,
+      transformResultRecordsToResultArray(records)
+    )
+    const data = exportData.slice()
+    const csv = CSVSerializer(data.shift())
+    csv.appendRows(data)
+    const blob = new Blob([csv.output()], {
+      type: 'text/plain;charset=utf-8'
+    })
+    saveAs(blob, 'export.csv')
+  }
+
+  exportJSON = (): void => {
+    const records = this.getRecords()
+    const exportData = map(records, recordToJSONMapper)
+    const data = stringifyMod(exportData, stringModifier, true)
+    const blob = new Blob([data], {
+      type: 'text/plain;charset=utf-8'
+    })
+    saveAs(blob, 'records.json')
+  }
+
+  exportPNG = (): void => {
+    if (this.visElement) {
+      const { svgElement, graphElement, type } = this.visElement
+      downloadPNGFromSVG(svgElement, graphElement, type)
+    }
+  }
+
+  exportSVG = (): void => {
+    if (this.visElement) {
+      const { svgElement, graphElement, type } = this.visElement
+      downloadSVG(svgElement, graphElement, type)
+    }
+  }
+
   render(): JSX.Element {
     const { frame = {} as Frame, request = {} as BrowserRequest } = this.props
     const { cmd: query = '' } = frame
@@ -428,18 +490,6 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
         ? this.getStatusbar(result)
         : null
 
-    //numRecords={result && 'records' in result ? result.records.length : 0}
-    //getRecords={this.getRecords}
-    //onResize={this.onResize}
-    //statusbar={statusBar}
-    /*visElement={
-          this.state.hasVis &&
-          (this.state.openView === ViewTypes.VISUALIZATION ||
-            this.state.openView === ViewTypes.PLAN)
-            ? this.visElement
-            : null
-        }*/
-
     return (
       <FrameTemplate
         isCollapsed={this.props.isCollapsed}
@@ -450,6 +500,9 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
         removePadding
       />
     )
+  }
+  componentWillUnmount() {
+    this.props.setExportItems([])
   }
 }
 

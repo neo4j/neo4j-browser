@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { FrameStack } from 'shared/modules/frames/framesDuck'
 import { Connection } from 'shared/modules/connections/connectionsDuck'
 import { ContentContainer, StyledFrame } from '../Frame/styled'
@@ -47,6 +47,7 @@ import QueriesFrame from './Queries/QueriesFrame'
 import UserList from '../User/UserList'
 import UserAdd from '../User/UserAdd'
 import DbsFrame from './Auth/DbsFrame'
+import { ExportItem } from '../Frame/ExportButton'
 
 // TODO type up these components
 // TODO handle downloads
@@ -107,16 +108,17 @@ export function FrameContainer(props: FrameContainerProps): JSX.Element {
     toggleCollapse
   } = useSizeToggles()
   const frame = props.frameData.stack[0]
+  const [exportItems, setExportItems] = useState<ExportItem[]>([])
   const frameProps: BaseFrameProps = {
     frame: { ...frame, isPinned: props.frameData.isPinned },
     activeConnectionData: props.activeConnectionData,
     stack: props.frameData.stack,
     isFullscreen,
-    isCollapsed
+    isCollapsed,
+    setExportItems
   }
   const FrameComponent = getFrameComponent(props.frameData)
 
-  //className={classNames.join(' ')} // från komponenterna. kolla vilka som det är och hur man kan jobba runt
   return (
     <StyledFrame
       className={isFullscreen ? 'is-fullscreen' : ''}
@@ -136,9 +138,7 @@ export function FrameContainer(props: FrameContainerProps): JSX.Element {
         <FrameEditor
           frame={frame}
           fullscreenToggle={toggleFullscreen}
-          numRecords={0}
-          getRecords={() => {}}
-          visElement={null}
+          exportItems={exportItems}
         />
         <FrameComponent
           {...frameProps}

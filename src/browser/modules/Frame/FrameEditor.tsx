@@ -52,7 +52,7 @@ import { MAIN_WRAPPER_DOM_ID } from '../App/App'
 import stopIcon from 'icons/stop-icon.svg'
 import runIcon from 'icons/run-icon.svg'
 import { EditorContainer, Header } from '../Editor/styled'
-import ExportButton from './ExportButton'
+import ExportButton, { ExportItem } from './ExportButton'
 import { GlobalState } from 'shared/globalState'
 import { Action, Dispatch } from 'redux'
 import {
@@ -64,9 +64,7 @@ import { getParams } from 'shared/modules/params/paramsDuck'
 type FrameEditorBaseProps = {
   frame: Frame
   fullscreenToggle: () => void
-  numRecords: number
-  getRecords: () => any
-  visElement: any
+  exportItems: ExportItem[]
   bus: Bus
   params: Record<string, unknown>
 }
@@ -95,9 +93,7 @@ function FrameEditor({
   onTitlebarCmdClick,
   frame,
   fullscreenToggle,
-  numRecords,
-  getRecords,
-  visElement,
+  exportItems,
   bus,
   params
 }: FrameEditorProps) {
@@ -233,9 +229,7 @@ function FrameEditor({
         </FrameButton>
         <ExportButton
           frame={frame}
-          numRecords={numRecords}
-          getRecords={getRecords}
-          visElement={visElement}
+          exportItems={exportItems}
           isRelateAvailable={isRelateAvailable}
           newProjectFile={newProjectFile}
         />
