@@ -36,7 +36,6 @@ type StreamProps = {
   activeConnectionData: Connection | null
   shouldScrollToTop: boolean
 }
-// TODO typer för frames
 
 export interface BaseFrameProps {
   frame: Frame & { isPinned: boolean }

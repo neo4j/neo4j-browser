@@ -87,7 +87,7 @@ const Indexes = ({ indexes, neo4jVersion }: IndexesProps) => {
   ]
 
   return (
-    <SchemaTable header={header} testid="schemaFrameIndexesTable" rows={rows} />
+    <SchemaTable testid="schemaFrameIndexesTable" header={header} rows={rows} />
   )
 }
 
@@ -98,8 +98,8 @@ const Constraints = ({ constraints }: any) => {
 
   return (
     <SchemaTable
-      header={['Constraints']}
       testid="schemaFrameConstraintsTable"
+      header={['Constraints']}
       rows={rows}
     />
   )

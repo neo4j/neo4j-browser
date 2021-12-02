@@ -49,9 +49,6 @@ import UserAdd from '../User/UserAdd'
 import DbsFrame from './Auth/DbsFrame'
 import { ExportItem } from '../Frame/ExportButton'
 
-// TODO type up these components
-// TODO handle downloads
-// TODO handle fullscreen better
 const nameToFrame: Record<string, React.ComponentType<any>> = {
   error: ErrorFrame,
   cypher: CypherFrame,
@@ -140,10 +137,7 @@ export function FrameContainer(props: FrameContainerProps): JSX.Element {
           fullscreenToggle={toggleFullscreen}
           exportItems={exportItems}
         />
-        <FrameComponent
-          {...frameProps}
-          frameHeight={isFullscreen ? 'calc(100vh - 40px)' : '478px'}
-        />
+        <FrameComponent {...frameProps} />
       </ContentContainer>
     </StyledFrame>
   )

@@ -47,7 +47,6 @@ function ExportButton({
   exportItems = []
 }: ExportButtonProps): JSX.Element {
   const canExport: boolean = exportItems.length > 0 || isRelateAvailable
-  // test if cypher jumps
 
   return (
     <>

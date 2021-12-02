@@ -115,10 +115,6 @@ export const StyledFrameContents = styled.div<FullscreenProps>`
   display: flex;
   width: 100%;
 
-  .has-carousel & {
-    overflow: visible;
-  }
-
   p {
     margin: 0 0 20px 0;
   }
