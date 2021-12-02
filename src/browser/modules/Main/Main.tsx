@@ -88,7 +88,7 @@ const Main = React.memo(function Main(props: MainProps) {
       )}
       {useDb && isDatabaseUnavailable && (
         <ErrorBanner>
-          Database &apos;{useDb}&apos; is unavailable. Run{' '}
+          {`Database '${useDb}' is unavailable. Run `}
           <AutoExecButton cmd="sysinfo" /> for more info.
         </ErrorBanner>
       )}
@@ -102,7 +102,7 @@ const Main = React.memo(function Main(props: MainProps) {
             cmd="server connect"
             data-testid="disconnectedBannerCode"
           />
-          &nbsp; to establish connection. There&apos;s a graph waiting for you.
+          {` to establish connection. There's a graph waiting for you.`}
         </NotAuthedBanner>
       )}
       {connectionState === PENDING_STATE && !past10Sec && (

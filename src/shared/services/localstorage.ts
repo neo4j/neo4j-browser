@@ -20,7 +20,6 @@
 
 import { Middleware } from 'redux'
 import { GlobalState } from 'shared/globalState'
-import { GuideState } from 'shared/modules/guides/guidesDuck'
 import {
   shouldRetainConnectionCredentials,
   shouldRetainEditorHistory
