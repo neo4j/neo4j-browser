@@ -40,8 +40,9 @@ export function StyleableNodeLabel({
   selectedLabel,
   onClick
 }: StyleableNodeLabelProps): JSX.Element {
+  const labels = selectedLabel.label === '*' ? [] : [selectedLabel.label]
   const graphStyleForLabel = graphStyle.forNode({
-    labels: [selectedLabel.label]
+    labels: labels
   })
 
   return (

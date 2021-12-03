@@ -140,7 +140,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
               >
                 <div
                   class="sc-RefOD sc-iQKALj dCvzLq"
-                  style="background-color: rgb(247, 151, 103); color: rgb(255, 255, 255);"
+                  style="background-color: rgb(165, 171, 182); color: rgb(255, 255, 255);"
                 >
                   * (1)
                 </div>
