@@ -78,7 +78,9 @@ it('can list and kill queries', () => {
     availableProcedures: ['dbms.listQueries'],
     connectionState: CONNECTED_STATE,
     bus,
-    neo4jVersion: '4.0.0'
+    neo4jVersion: '4.0.0',
+    isFullscreen: false,
+    isCollapsed: false
   }
 
   const { getByText, getByTestId } = render(<QueriesFrame {...props} />)

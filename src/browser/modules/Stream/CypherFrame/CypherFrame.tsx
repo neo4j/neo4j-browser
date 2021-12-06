@@ -94,7 +94,7 @@ import { stringifyMod } from 'services/utils'
 import { downloadPNGFromSVG, downloadSVG } from 'services/exporting/imageUtils'
 import { saveAs } from 'file-saver'
 
-type CypherFrameProps = BaseFrameProps & {
+export type CypherFrameProps = BaseFrameProps & {
   autoComplete: boolean
   initialNodeDisplay: number
   maxNeighbours: number

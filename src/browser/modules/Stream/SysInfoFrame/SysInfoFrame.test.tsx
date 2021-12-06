@@ -32,7 +32,9 @@ const baseProps = {
   hasMultiDbSupport: true,
   isConnected: true,
   isEnterprise: true,
-  useDb: 'neo4j'
+  useDb: 'neo4j',
+  isFullscreen: false,
+  isCollapsed: false
 }
 
 jest.mock(

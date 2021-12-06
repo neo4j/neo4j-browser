@@ -41,7 +41,7 @@ type VisualizationState = {
   hasTruncatedFields: boolean
 }
 
-type VisualizationProps = {
+export type VisualizationProps = {
   result: any
   graphStyleData: any
   frameHeight: number
