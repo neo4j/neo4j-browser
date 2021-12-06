@@ -78,6 +78,7 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
   }
 
   circleSelector(
+    type: 'color' | 'size',
     styleProps: any,
     styleProvider: any,
     activeProvider: any,
@@ -98,6 +99,7 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
         <StyledPickerListItem
           className={className}
           key={toKeyString('circle' + i)}
+          data-testid={`select-${type}-${i}`}
         >
           <StyledCircleSelector
             className={active ? 'active' : ''}
@@ -117,6 +119,7 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
         <StyledInlineList>
           <StyledInlineListItem>Color:</StyledInlineListItem>
           {this.circleSelector(
+            'color',
             this.graphStyle.defaultColors(),
             (color: any) => {
               return { backgroundColor: color.color }
@@ -138,6 +141,7 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
         <StyledInlineList data-testid="size-picker">
           <StyledInlineListItem>Size:</StyledInlineListItem>
           {this.circleSelector(
+            'size',
             this.graphStyle.defaultSizes(),
             (_size: any, index: any) => {
               return {

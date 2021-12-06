@@ -44,4 +44,32 @@ describe('Viz rendering', () => {
     )
     cy.executeCommand('MATCH (a:TestLabel) DETACH DELETE a')
   })
+  it('can change default color of nodes', () => {
+    const selectorNodeLabelAll =
+      '[data-testid="property-details-overview-node-label-*"]'
+    const defaultColor = 'rgb(165, 171, 182)'
+    const orangeColor = 'rgb(247, 151, 103)'
+    cy.executeCommand(':clear')
+    cy.executeCommand(':style reset')
+    cy.executeCommand(
+      'CREATE (a:TestLabel)-[:CONNECTS]->(b:TestLabel) RETURN a, b'
+    )
+    // Check that default color is set
+    cy.get(selectorNodeLabelAll, { timeout: 5000 }).should(
+      'have.css',
+      'background-color',
+      defaultColor
+    )
+
+    // Change color and make sure color is changed
+    cy.get(selectorNodeLabelAll, { timeout: 5000 }).click()
+    cy.get('[data-testid="select-color-2"]').click()
+    cy.get('[data-testid="vizInspector"]') // Close grass editor
+
+    cy.get(selectorNodeLabelAll, { timeout: 5000 }).should(
+      'have.css',
+      'background-color',
+      orangeColor
+    )
+  })
 })

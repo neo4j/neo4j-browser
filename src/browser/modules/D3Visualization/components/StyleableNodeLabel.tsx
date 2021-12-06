@@ -58,6 +58,7 @@ export function StyleableNodeLabel({
             backgroundColor: graphStyleForLabel.get('color'),
             color: graphStyleForLabel.get('text-color-internal')
           }}
+          data-testid={`property-details-overview-node-label-${selectedLabel.label}`}
         >
           {selectedLabel.count !== undefined
             ? `${selectedLabel.label} (${selectedLabel.count})`
