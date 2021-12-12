@@ -101,18 +101,19 @@ const fitCaptionIntoCircle = function(node: any, style: any) {
     nodeText.length > 100 ? nodeText.substring(0, 100) : nodeText
   const fontFamily = 'sans-serif'
   const fontSize = parseFloat(style.forNode(node).get('font-size'))
-  const lineHeight = fontSize
   const measure = (text: string) => measureText(text, fontFamily, fontSize)
 
   const words = captionText.split(' ')
 
+  const hasIconCode = !!style.forNode(node).get('icon-code')
+
   const emptyLine = function(lineCount: number, lineIndex: number) {
-    let baseline = (1 + lineIndex - lineCount / 2) * lineHeight
-    if (style.forNode(node).get('icon-code')) {
+    let baseline = (1 + lineIndex - lineCount / 2) * fontSize
+    if (hasIconCode) {
       baseline = baseline + node.radius / 3
     }
     const containingHeight =
-      lineIndex < lineCount / 2 ? baseline - lineHeight : baseline
+      lineIndex < lineCount / 2 ? baseline - fontSize : baseline
     const lineWidth =
       Math.sqrt(Math.pow(node.radius, 2) - Math.pow(containingHeight, 2)) * 2
     return {
