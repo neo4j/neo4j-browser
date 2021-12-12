@@ -71,7 +71,6 @@ export default class NeoD3Geometry {
   }
 }
 
-const square = (distance: any) => distance * distance
 const addShortenedNextWord = (line: any, word: any, measure: any) => {
   const result = []
   while (!(word.length <= 2)) {
@@ -98,23 +97,24 @@ const fitCaptionIntoCircle = function(node: any, style: any) {
   const template = style.forNode(node).get('caption')
   const nodeText = style.interpolate(template, node)
   const captionText =
+    // set dynamic max length
     nodeText.length > 100 ? nodeText.substring(0, 100) : nodeText
   const fontFamily = 'sans-serif'
   const fontSize = parseFloat(style.forNode(node).get('font-size'))
   const lineHeight = fontSize
-  const measure = (text: any) => measureText(text, fontFamily, fontSize)
+  const measure = (text: string) => measureText(text, fontFamily, fontSize)
 
   const words = captionText.split(' ')
 
-  const emptyLine = function(lineCount: any, iLine: any) {
-    let baseline = (1 + iLine - lineCount / 2) * lineHeight
+  const emptyLine = function(lineCount: number, lineIndex: number) {
+    let baseline = (1 + lineIndex - lineCount / 2) * lineHeight
     if (style.forNode(node).get('icon-code')) {
       baseline = baseline + node.radius / 3
     }
     const containingHeight =
-      iLine < lineCount / 2 ? baseline - lineHeight : baseline
+      lineIndex < lineCount / 2 ? baseline - lineHeight : baseline
     const lineWidth =
-      Math.sqrt(square(node.radius) - square(containingHeight)) * 2
+      Math.sqrt(Math.pow(node.radius, 2) - Math.pow(containingHeight, 2)) * 2
     return {
       node,
       text: '',

@@ -17,43 +17,40 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import d3 from 'd3'
 
-const measureUsingCanvas = function(text: any, font: any) {
-  // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-  const canvasSelection = d3.select('canvas#textMeasurementCanvas').data([this])
-  canvasSelection
-    .enter()
-    .append('canvas')
-    .attr('id', 'textMeasurementCanvas')
-    .style('display', 'none')
-
-  const canvas = canvasSelection.node() as HTMLCanvasElement
+const measureTextWidthByCanvas = (text: string, font: string): number => {
+  const canvas = document.createElement('canvas')
   const context = canvas.getContext('2d') as CanvasRenderingContext2D
   context.font = font
   return context.measureText(text).width
 }
 
-const cache = function() {
-  const cacheSize = 10000
-  const map: any = {}
-  const list: any = []
-  return (key: any, calc: any) => {
-    const cached = map[key]
+const cacheTextWidth = function() {
+  const CATCH_SIZE = 10000
+  const textMeasureMap: { [key: string]: number } = {}
+  const lruKeyList: string[] = []
+  return (key: string, calculate: () => number) => {
+    const cached = textMeasureMap[key]
     if (cached) {
       return cached
     } else {
-      const result = calc()
-      if (list.length > cacheSize) {
-        delete map[list.splice(0, 1)]
-        list.push(key)
+      const result = calculate()
+      if (lruKeyList.length > CATCH_SIZE) {
+        delete textMeasureMap[lruKeyList.splice(0, 1).toString()]
+        lruKeyList.push(key)
       }
-      return (map[key] = result)
+      return (textMeasureMap[key] = result)
     }
   }
 }
 
-export default function(text: any, fontFamily: any, fontSize: any) {
+export default function(
+  text: string,
+  fontFamily: string,
+  fontSize: number
+): number {
   const font = `normal normal normal ${fontSize}px/normal ${fontFamily}`
-  return cache()(text + font, () => measureUsingCanvas(text, font))
+  return cacheTextWidth()(`[${font}][${text}]`, () =>
+    measureTextWidthByCanvas(text, font)
+  )
 }
