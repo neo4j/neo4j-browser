@@ -38,7 +38,7 @@ const baseProps = {
 }
 
 jest.mock(
-  'browser/modules/Frame/FrameTemplate',
+  'browser/modules/Frame/FrameBodyTemplate',
   // eslint-disable-next-line
   () => ({ contents, children }: any) => (
     <div>

@@ -69,7 +69,7 @@ exports[`GuideDrawer renders list view including Remote Guides list 1`] = `
       class="sc-iujRgT CDjDu"
     />
     <div
-      class="sc-gqjmRU gUGRcR slide"
+      class="sc-gqjmRU kLfrIr slide"
       style="padding: 0px 15px;"
     >
       You can also access Browser guides by running
@@ -249,7 +249,7 @@ exports[`GuideDrawer renders list view without Remote Guides 1`] = `
       class="sc-iujRgT CDjDu"
     />
     <div
-      class="sc-gqjmRU gUGRcR slide"
+      class="sc-gqjmRU kLfrIr slide"
       style="padding: 0px 15px;"
     >
       You can also access Browser guides by running

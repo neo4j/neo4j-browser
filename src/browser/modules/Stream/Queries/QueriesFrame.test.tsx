@@ -27,13 +27,16 @@ import {
   CONNECTED_STATE
 } from 'shared/modules/connections/connectionsDuck'
 
-// eslint-disable-next-line
-jest.mock('../../Frame/FrameTemplate', () => ({ contents, statusBar }: any) => (
-  <div>
-    {contents}
-    {statusBar}
-  </div>
-))
+jest.mock(
+  '../../Frame/FrameBodyTemplate',
+  // eslint-disable-next-line
+  () => ({ contents, statusBar }: any) => (
+    <div>
+      {contents}
+      {statusBar}
+    </div>
+  )
+)
 
 it('shows error message in statusBar when not connected', () => {
   const props = {
