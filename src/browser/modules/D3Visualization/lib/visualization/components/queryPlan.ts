@@ -111,7 +111,15 @@ function queryPlan(this: any, element: any) {
     const details: any[] = []
 
     const wordWrap = function(string: any, className: any) {
-      const measure = (text: any) => measureText(text, fixedWidthFont, 10)
+      const canvas = document.createElement('canvas')
+      const canvas2DContext = canvas.getContext('2d')
+      const measure = (text: any) =>
+        measureText(
+          text,
+          fixedWidthFont,
+          10,
+          <CanvasRenderingContext2D>canvas2DContext
+        )
 
       const words = string.split(/([^a-zA-Z\d])/)
 

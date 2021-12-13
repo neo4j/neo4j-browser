@@ -23,14 +23,22 @@ import measureText from '../utils/textMeasurement'
 export default class NeoD3Geometry {
   relationshipRouting: any
   style: any
+  canvas: HTMLCanvasElement
   constructor(style: any) {
     this.style = style
     this.relationshipRouting = new PairwiseArcsRelationshipRouting(this.style)
+    this.canvas = document.createElement('canvas')
   }
 
   formatNodeCaptions(nodes: any[]) {
-    return Array.from(nodes).map(
-      node => (node.caption = fitCaptionIntoCircle(node, this.style))
+    const canvas2DContext = this.canvas.getContext('2d')
+    Array.from(nodes).map(
+      node =>
+        (node.caption = fitCaptionIntoCircle(
+          node,
+          this.style,
+          <CanvasRenderingContext2D>canvas2DContext
+        ))
     )
   }
 
@@ -93,7 +101,11 @@ const noEmptyLines = function(lines: any[]) {
   return true
 }
 
-const fitCaptionIntoCircle = function(node: any, style: any) {
+const fitCaptionIntoCircle = function(
+  node: any,
+  style: any,
+  canvas2DContext: CanvasRenderingContext2D
+) {
   const template = style.forNode(node).get('caption')
   const nodeText = style.interpolate(template, node)
   const captionText =
@@ -101,7 +113,8 @@ const fitCaptionIntoCircle = function(node: any, style: any) {
     nodeText.length > 100 ? nodeText.substring(0, 100) : nodeText
   const fontFamily = 'sans-serif'
   const fontSize = parseFloat(style.forNode(node).get('font-size'))
-  const measure = (text: string) => measureText(text, fontFamily, fontSize)
+  const measure = (text: string) =>
+    measureText(text, fontFamily, fontSize, canvas2DContext)
 
   const words = captionText.split(' ')
 

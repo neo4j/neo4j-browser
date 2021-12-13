@@ -18,9 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const measureTextWidthByCanvas = (text: string, font: string): number => {
-  const canvas = document.createElement('canvas')
-  const context = canvas.getContext('2d') as CanvasRenderingContext2D
+const measureTextWidthByCanvas = (
+  text: string,
+  font: string,
+  context: CanvasRenderingContext2D
+): number => {
   context.font = font
   return context.measureText(text).width
 }
@@ -47,10 +49,11 @@ const cacheTextWidth = function() {
 export default function(
   text: string,
   fontFamily: string,
-  fontSize: number
+  fontSize: number,
+  canvas2DContext: CanvasRenderingContext2D
 ): number {
   const font = `normal normal normal ${fontSize}px/normal ${fontFamily}`
   return cacheTextWidth()(`[${font}][${text}]`, () =>
-    measureTextWidthByCanvas(text, font)
+    measureTextWidthByCanvas(text, font, canvas2DContext)
   )
 }

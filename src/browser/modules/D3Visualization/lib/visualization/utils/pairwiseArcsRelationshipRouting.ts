@@ -24,8 +24,10 @@ import ArcArrow from './arcArrow'
 
 export default class PairwiseArcsRelationshipRouting {
   style: any
+  canvas: HTMLCanvasElement
   constructor(style: any) {
     this.style = style
+    this.canvas = document.createElement('canvas')
   }
 
   measureRelationshipCaption(relationship: any, caption: any) {
@@ -33,8 +35,15 @@ export default class PairwiseArcsRelationshipRouting {
     const padding = parseFloat(
       this.style.forRelationship(relationship).get('padding')
     )
+    const canvas2DContext = this.canvas.getContext('2d')
     return (
-      measureText(caption, fontFamily, relationship.captionHeight) + padding * 2
+      measureText(
+        caption,
+        fontFamily,
+        relationship.captionHeight,
+        <CanvasRenderingContext2D>canvas2DContext
+      ) +
+      padding * 2
     )
   }
 
