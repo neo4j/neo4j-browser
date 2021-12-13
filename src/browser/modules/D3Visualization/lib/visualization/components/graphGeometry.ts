@@ -79,28 +79,6 @@ export default class NeoD3Geometry {
   }
 }
 
-const addShortenedNextWord = (line: any, word: any, measure: any) => {
-  const result = []
-  while (!(word.length <= 2)) {
-    word = `${word.substr(0, word.length - 2)}\u2026`
-    if (measure(word) < line.remainingWidth) {
-      line.text += ` ${word}`
-      break
-    } else {
-      result.push(undefined)
-    }
-  }
-  return result
-}
-const noEmptyLines = function(lines: any[]) {
-  for (const line of Array.from(lines)) {
-    if (line.text.length === 0) {
-      return false
-    }
-  }
-  return true
-}
-
 const fitCaptionIntoCircle = function(
   node: any,
   style: any,
@@ -115,67 +93,89 @@ const fitCaptionIntoCircle = function(
   const fontSize = parseFloat(style.forNode(node).get('font-size'))
   const measure = (text: string) =>
     measureText(text, fontFamily, fontSize, canvas2DContext)
+  const whiteSpaceMeasureWidth = measure(' ')
 
   const words = captionText.split(' ')
 
   const hasIconCode = !!style.forNode(node).get('icon-code')
 
   const emptyLine = function(lineCount: number, lineIndex: number) {
+    // Calculate baseline of the text
     let baseline = (1 + lineIndex - lineCount / 2) * fontSize
     if (hasIconCode) {
       baseline = baseline + node.radius / 3
     }
-    const containingHeight =
-      lineIndex < lineCount / 2 ? baseline - fontSize : baseline
-    const lineWidth =
-      Math.sqrt(Math.pow(node.radius, 2) - Math.pow(containingHeight, 2)) * 2
+    // The furthest distance between chord (top or bottom of the line) and circle centre
+    const chordCentreDistance =
+      lineIndex < lineCount / 2
+        ? baseline - fontSize / 2
+        : baseline + fontSize / 2
+    const maxLineWidth =
+      Math.sqrt(Math.pow(node.radius, 2) - Math.pow(chordCentreDistance, 2)) * 2
     return {
       node,
       text: '',
       baseline,
-      remainingWidth: lineWidth
+      remainingWidth: maxLineWidth
     }
   }
 
-  const fitOnFixedNumberOfLines = function(lineCount: any): [any, number] {
+  const addShortenedNextWord = (line: any, word: string): string => {
+    while (word.length > 2) {
+      const newWord = `${word.substring(0, word.length - 2)}\u2026`
+      if (measure(newWord) < line.remainingWidth) {
+        return `${line.text
+          .split(' ')
+          .slice(0, -1)
+          .join(' ')} ${newWord}`
+      }
+      word = word.substring(0, word.length - 1)
+    }
+    return `${word}\u2026`
+  }
+
+  const fitOnFixedNumberOfLines = function(lineCount: number): [any, number] {
     const lines = []
-    let iWord = 0
-    for (
-      let iLine = 0, end = lineCount - 1, asc = end >= 0;
-      asc ? iLine <= end : iLine >= end;
-      asc ? iLine++ : iLine--
-    ) {
-      const line = emptyLine(lineCount, iLine)
+    const wordMeasureWidthList: number[] = []
+    words.forEach((word: string) =>
+      wordMeasureWidthList.push(measure(`${word}`))
+    )
+    let wordIndex = 0
+    for (let lineIndex = 0; lineIndex < lineCount; lineIndex++) {
+      const line = emptyLine(lineCount, lineIndex)
       while (
-        iWord < words.length &&
-        measure(` ${words[iWord]}`) < line.remainingWidth
+        wordIndex < words.length &&
+        wordMeasureWidthList[wordIndex] <
+          line.remainingWidth - whiteSpaceMeasureWidth
       ) {
-        line.text += ` ${words[iWord]}`
-        line.remainingWidth -= measure(` ${words[iWord]}`)
-        iWord++
+        line.text = `${line.text} ${words[wordIndex]}`
+        line.remainingWidth -=
+          wordMeasureWidthList[wordIndex] + whiteSpaceMeasureWidth
+        wordIndex++
       }
       lines.push(line)
     }
-    if (iWord < words.length) {
-      addShortenedNextWord(lines[lineCount - 1], words[iWord], measure)
+    if (wordIndex < words.length) {
+      lines[lineCount - 1].text = addShortenedNextWord(
+        lines[lineCount - 1],
+        words[wordIndex]
+      )
     }
-    return [lines, iWord]
+    return [lines, wordIndex]
   }
 
   let consumedWords = 0
   const maxLines = (node.radius * 2) / fontSize
 
   let lines = [emptyLine(1, 0)]
-  for (
-    let lineCount = 1, end = maxLines, asc = end >= 1;
-    asc ? lineCount <= end : lineCount >= end;
-    asc ? lineCount++ : lineCount--
-  ) {
-    const [candidateLines, candidateWords] = Array.from(
-      fitOnFixedNumberOfLines(lineCount)
-    )
-    if (noEmptyLines(candidateLines)) {
-      ;[lines, consumedWords] = Array.from([candidateLines, candidateWords])
+  // Typesetting for finding suitable lines to fit words
+  for (let lineCount = 1; lineCount <= maxLines; lineCount++) {
+    const [candidateLines, candidateWords] = fitOnFixedNumberOfLines(lineCount)
+
+    // If the lines don't have empty line(s), they're probably good fit for the typesetting
+    if (!candidateLines.some((line: any) => !line.text)) {
+      lines = candidateLines
+      consumedWords = candidateWords
     }
     if (consumedWords >= words.length) {
       return lines

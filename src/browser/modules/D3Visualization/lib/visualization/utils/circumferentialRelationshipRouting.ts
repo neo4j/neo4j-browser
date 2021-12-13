@@ -24,8 +24,10 @@ import ArcArrow from './arcArrow'
 
 export default class circumferentialRelationshipRouting {
   style: any
+  canvas: HTMLCanvasElement
   constructor(style: any) {
     this.style = style
+    this.canvas = document.createElement('canvas')
   }
 
   measureRelationshipCaption(relationship: any, caption: any) {
@@ -36,7 +38,17 @@ export default class circumferentialRelationshipRouting {
     const padding = parseFloat(
       this.style.forRelationship(relationship).get('padding')
     )
-    return measureText(caption, fontFamily, fontSize) + padding * 2
+
+    const canvas2DContext = this.canvas.getContext('2d')
+    return (
+      measureText(
+        caption,
+        fontFamily,
+        fontSize,
+        <CanvasRenderingContext2D>canvas2DContext
+      ) +
+      padding * 2
+    )
   }
 
   captionFitsInsideArrowShaftWidth(relationship: any) {
