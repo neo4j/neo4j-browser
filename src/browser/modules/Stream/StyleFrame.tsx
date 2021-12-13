@@ -19,7 +19,7 @@
  */
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
-import FrameTemplate from '../Frame/FrameTemplate'
+import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
 import { PaddedDiv, StyledOneRowStatsBar, StyledRightPartial } from './styled'
 import { StyledFrameTitlebarButtonSection } from 'browser/modules/Frame/styled'
 import { FrameButton } from 'browser-components/buttons'
@@ -74,11 +74,11 @@ const StyleFrame = ({
   }, [setExportItems, grass])
 
   return (
-    <FrameTemplate
+    <FrameBodyTemplate
       isCollapsed={isCollapsed}
       isFullscreen={isFullscreen}
       contents={contents}
-      statusbar={<Statusbar frame={frame} />}
+      statusBar={<Statusbar frame={frame} />}
     />
   )
 }

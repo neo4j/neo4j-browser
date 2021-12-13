@@ -20,7 +20,7 @@
 import React, { useEffect } from 'react'
 import { withBus } from 'react-suber'
 import * as editor from 'shared/modules/editor/editorDuck'
-import FrameTemplate from '../Frame/FrameTemplate'
+import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
 import { UnstyledList, PaddedDiv } from './styled'
 import HistoryRow from './HistoryRow'
 
@@ -72,7 +72,7 @@ export const HistoryFrame = (props: any) => {
       </PaddedDiv>
     )
   return (
-    <FrameTemplate
+    <FrameBodyTemplate
       isCollapsed={props.isCollapsed}
       isFullscreen={props.isFullscreen}
       contents={<UnstyledList>{historyRows}</UnstyledList>}

@@ -20,7 +20,7 @@
 
 import React, { Component } from 'react'
 
-import FrameTemplate from '../../Frame/FrameTemplate'
+import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
 import ConnectionForm from './ConnectionForm'
 import FrameError from '../../Frame/FrameError'
 import { H3 } from 'browser-components/headers'
@@ -48,10 +48,10 @@ class ConnectionFrame extends Component<any, State> {
 
   render() {
     return (
-      <FrameTemplate
+      <FrameBodyTemplate
         isCollapsed={this.props.isCollapsed}
         isFullscreen={this.props.isFullscreen}
-        statusbar={
+        statusBar={
           <FrameError
             code={this.state.error.code}
             message={this.state.error.message}

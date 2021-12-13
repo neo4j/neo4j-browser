@@ -20,7 +20,7 @@
 
 import { connect } from 'react-redux'
 import React from 'react'
-import FrameTemplate from '../../Frame/FrameTemplate'
+import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
 import {
   getRequest,
   BrowserRequest
@@ -105,7 +105,7 @@ function CypherScriptFrame({
     </WrapperCenter>
   )
   return (
-    <FrameTemplate
+    <FrameBodyTemplate
       isCollapsed={isCollapsed}
       isFullscreen={isFullscreen}
       contents={contents}

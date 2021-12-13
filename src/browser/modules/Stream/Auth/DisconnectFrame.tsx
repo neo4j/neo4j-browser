@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React from 'react'
-import FrameTemplate from '../../Frame/FrameTemplate'
+import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
 import { StyledConnectionAside } from './styled'
 import { H3 } from 'browser-components/headers'
 import { Lead } from 'browser-components/Text'
@@ -29,7 +29,7 @@ const Disconnect = ({
   isFullscreen
 }: any) => {
   return (
-    <FrameTemplate
+    <FrameBodyTemplate
       isCollapsed={isCollapsed}
       isFullscreen={isFullscreen}
       contents={

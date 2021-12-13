@@ -51,9 +51,9 @@ import { TitleBarHeader } from './styled'
 
 type FrameTitleBarBaseProps = {
   frame: Frame
-  fullscreen: boolean
+  isFullscreen: boolean
   fullscreenToggle: () => void
-  collapse: boolean
+  isCollapsed: boolean
   collapseToggle: () => void
   pinned: boolean
   togglePin: () => void
@@ -68,9 +68,9 @@ type FrameTitleBarProps = FrameTitleBarBaseProps & {
 
 function FrameTitlebar({
   frame,
-  fullscreen,
+  isFullscreen,
   fullscreenToggle,
-  collapse,
+  isCollapsed,
   collapseToggle,
   pinned,
   togglePin,
@@ -79,12 +79,12 @@ function FrameTitlebar({
   trackFullscreenToggle,
   trackCollapseToggle
 }: FrameTitleBarProps) {
-  const fullscreenIcon = fullscreen ? (
+  const fullscreenIcon = isFullscreen ? (
     <ContractIcon width={10} />
   ) : (
     <ExpandIcon width={10} />
   )
-  const expandCollapseIcon = collapse ? (
+  const expandCollapseIcon = isCollapsed ? (
     <DownIcon width={10} />
   ) : (
     <UpIcon width={10} />
@@ -104,7 +104,7 @@ function FrameTitlebar({
         <PinIcon width={10} />
       </FrameControlButton>
       <FrameControlButton
-        title={collapse ? 'Expand' : 'Collapse'}
+        title={isCollapsed ? 'Expand' : 'Collapse'}
         onClick={() => {
           collapseToggle()
           trackCollapseToggle()
@@ -113,7 +113,7 @@ function FrameTitlebar({
         {expandCollapseIcon}
       </FrameControlButton>
       <FrameControlButton
-        title={fullscreen ? 'Close fullscreen' : 'Fullscreen'}
+        title={isFullscreen ? 'Close fullscreen' : 'Fullscreen'}
         onClick={() => {
           fullscreenToggle()
           trackFullscreenToggle()

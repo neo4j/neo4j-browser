@@ -28,7 +28,6 @@ import { BaseFrameProps } from './Stream'
 import CypherFrame from './CypherFrame/CypherFrame'
 import HistoryFrame from './HistoryFrame'
 import PlayFrame from './PlayFrame'
-import DefaultFrame from '../Frame/DefaultFrame'
 import PreFrame from './PreFrame'
 import ParamsFrame from './ParamsFrame'
 import ErrorFrame from './ErrorFrame'
@@ -74,15 +73,14 @@ const nameToFrame: Record<string, React.ComponentType<any>> = {
   'use-db': UseDbFrame,
   'reset-db': UseDbFrame,
   dbs: DbsFrame,
-  style: StyleFrame,
-  default: DefaultFrame
+  style: StyleFrame
 }
 
 const getFrameComponent = (frameData: FrameStack): React.ComponentType<any> => {
   const { cmd, type } = frameData.stack[0]
-  let MyFrame = nameToFrame[type] || nameToFrame.default
+  let MyFrame = nameToFrame[type]
 
-  if (type === 'error') {
+  if (!MyFrame || type === 'error') {
     try {
       const command = cmd.replace(/^:/, '')
       const Frame = command[0].toUpperCase() + command.slice(1) + 'Frame'
@@ -125,9 +123,9 @@ export function FrameContainer(props: FrameContainerProps): JSX.Element {
       <FrameTitlebar
         frame={frame}
         pinned={props.frameData.isPinned}
-        fullscreen={isFullscreen}
+        isFullscreen={isFullscreen}
         fullscreenToggle={toggleFullscreen}
-        collapse={isCollapsed}
+        isCollapsed={isCollapsed}
         collapseToggle={toggleCollapse}
         togglePin={() => undefined}
       />

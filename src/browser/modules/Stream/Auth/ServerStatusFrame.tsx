@@ -20,7 +20,7 @@
 
 import React from 'react'
 import { connect } from 'react-redux'
-import FrameTemplate from '../../Frame/FrameTemplate'
+import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
 import {
   StyledConnectionAside,
   StyledConnectionBodyContainer,
@@ -81,7 +81,7 @@ export const ServerStatusFrame = (props: any) => {
 
 const Frame = (props: any) => {
   return (
-    <FrameTemplate
+    <FrameBodyTemplate
       isCollapsed={props.isCollapsed}
       isFullscreen={props.isFullscreen}
       contents={<ServerStatusFrame {...props} />}

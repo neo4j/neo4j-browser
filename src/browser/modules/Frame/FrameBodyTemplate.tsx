@@ -28,35 +28,32 @@ import {
   StyledFrameAside
 } from './styled'
 
-type FrameTemplateProps = {
+type FrameBodyTemplateProps = {
   contents: JSX.Element | null | string
   onResize?: (fullscreen: boolean, collapsed: boolean, height: number) => void
-  numRecords?: number
-  getRecords?: () => any
-  visElement?: any
   runQuery?: () => any
   sidebar?: () => JSX.Element | null
   aside?: JSX.Element | null
-  statusbar?: JSX.Element | null
+  statusBar?: JSX.Element | null
   removePadding?: boolean
   hasSlides?: boolean
   isFullscreen: boolean
   isCollapsed: boolean
 }
 
-function FrameTemplate({
+function FrameBodyTemplate({
   contents,
   onResize = () => {
     /*noop*/
   },
   sidebar,
   aside,
-  statusbar,
+  statusBar,
   removePadding,
   isFullscreen,
   isCollapsed,
   hasSlides
-}: FrameTemplateProps): JSX.Element {
+}: FrameBodyTemplateProps): JSX.Element {
   const [lastHeight, setLastHeight] = useState(10)
   const frameContentElementRef = useRef<HTMLDivElement>(null)
 
@@ -91,16 +88,16 @@ function FrameTemplate({
         </StyledFrameMainSection>
       </StyledFrameBody>
 
-      {statusbar && (
+      {statusBar && (
         <StyledFrameStatusbar
           fullscreen={isFullscreen}
           data-testid="frameStatusbar"
         >
-          {statusbar}
+          {statusBar}
         </StyledFrameStatusbar>
       )}
     </>
   )
 }
 
-export default FrameTemplate
+export default FrameBodyTemplate

@@ -27,7 +27,7 @@ import {
   isConnected,
   getUseDb
 } from 'shared/modules/connections/connectionsDuck'
-import FrameTemplate from 'browser/modules/Frame/FrameTemplate'
+import FrameBodyTemplate from 'browser/modules/Frame/FrameBodyTemplate'
 import {
   StyledStatusBar,
   AutoRefreshToggle,
@@ -242,11 +242,11 @@ export class SysInfoFrame extends Component<
     )
 
     return (
-      <FrameTemplate
+      <FrameBodyTemplate
         isCollapsed={this.props.isCollapsed}
         isFullscreen={this.props.isFullscreen}
         contents={content}
-        statusbar={
+        statusBar={
           <StatusbarWrapper>
             <StyledStatusBar>
               {lastFetch && `Updated: ${new Date(lastFetch).toISOString()}`}

@@ -28,14 +28,14 @@ import {
 } from 'shared/modules/connections/connectionsDuck'
 
 // eslint-disable-next-line
-jest.mock('../../Frame/FrameTemplate', () => ({ contents, statusbar }: any) => (
+jest.mock('../../Frame/FrameTemplate', () => ({ contents, statusBar }: any) => (
   <div>
     {contents}
-    {statusbar}
+    {statusBar}
   </div>
 ))
 
-it('shows error message in statusbar when not connected', () => {
+it('shows error message in statusBar when not connected', () => {
   const props = {
     availableProcedures: ['dbms.listQueries'],
     connectionState: DISCONNECTED_STATE

@@ -19,7 +19,7 @@
  */
 
 import React from 'react'
-import FrameTemplate from 'browser/modules/Frame/FrameTemplate'
+import FrameBodyTemplate from 'browser/modules/Frame/FrameBodyTemplate'
 import {
   StyledConnectionAside,
   StyledConnectionBodyContainer,
@@ -107,7 +107,7 @@ const DbsFrame = (props: BaseFrameProps) => {
 
 const Frame = (props: BaseFrameProps): JSX.Element => {
   return (
-    <FrameTemplate
+    <FrameBodyTemplate
       isCollapsed={props.isCollapsed}
       isFullscreen={props.isFullscreen}
       contents={<DbsFrame {...props} />}

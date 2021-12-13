@@ -129,7 +129,7 @@ export const StyledFrameStatusbar = styled.div<FullscreenProps>`
   align-items: center;
   padding-left: 0px;
 
-  .statusbar--success {
+  .statusBar--success {
     color: ${props => props.theme.success};
   }
 `

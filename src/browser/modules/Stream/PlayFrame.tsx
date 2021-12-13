@@ -24,7 +24,7 @@ import { fetchGuideFromAllowlistAction } from 'shared/modules/commands/commandsD
 
 import Docs from '../Docs/Docs'
 import docs, { isPlayChapter } from '../../documentation'
-import FrameTemplate from '../Frame/FrameTemplate'
+import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
 import FrameAside from '../Frame/FrameAside'
 import {
   splitStringOnFirst,
@@ -175,7 +175,7 @@ export function PlayFrame({
     )
   }
   return (
-    <FrameTemplate
+    <FrameBodyTemplate
       isCollapsed={isCollapsed}
       isFullscreen={isFullscreen}
       aside={aside}

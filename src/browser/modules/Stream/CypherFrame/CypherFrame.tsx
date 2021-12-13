@@ -24,7 +24,7 @@ import { connect } from 'react-redux'
 
 import { Record as Neo4jRecord } from 'neo4j-driver'
 
-import FrameTemplate from '../../Frame/FrameTemplate'
+import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
 import { CypherFrameButton } from 'browser-components/buttons'
 import Centered from 'browser-components/Centered'
 import {
@@ -491,12 +491,12 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
         : null
 
     return (
-      <FrameTemplate
+      <FrameBodyTemplate
         isCollapsed={this.props.isCollapsed}
         isFullscreen={this.props.isFullscreen}
         sidebar={requestStatus !== 'error' ? this.sidebar : undefined}
         contents={frameContents}
-        statusbar={statusBar}
+        statusBar={statusBar}
         removePadding
       />
     )

@@ -18,12 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React from 'react'
-import FrameTemplate from '../Frame/FrameTemplate'
+import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
 import { PaddedDiv } from './styled'
 
 const PreFrame = ({ frame, isCollapsed, isFullscreen }: any) => {
   return (
-    <FrameTemplate
+    <FrameBodyTemplate
       isCollapsed={isCollapsed}
       isFullscreen={isFullscreen}
       contents={

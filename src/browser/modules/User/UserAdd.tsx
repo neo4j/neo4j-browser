@@ -38,7 +38,7 @@ import {
 import { ROUTED_CYPHER_WRITE_REQUEST } from 'shared/modules/cypher/cypherDuck'
 
 import RolesSelector from './RolesSelector'
-import FrameTemplate from 'browser/modules/Frame/FrameTemplate'
+import FrameBodyTemplate from 'browser/modules/Frame/FrameBodyTemplate'
 import FrameAside from 'browser/modules/Frame/FrameAside'
 import FrameError from 'browser/modules/Frame/FrameError'
 import FrameSuccess from 'browser/modules/Frame/FrameSuccess'
@@ -419,12 +419,12 @@ export class UserAdd extends Component<any, UserAddState> {
     }
 
     return (
-      <FrameTemplate
+      <FrameBodyTemplate
         isCollapsed={this.props.isCollapsed}
         isFullscreen={this.props.isFullscreen}
         aside={aside}
         contents={frameContents}
-        statusbar={getStatusBar()}
+        statusBar={getStatusBar()}
       />
     )
   }

@@ -20,7 +20,7 @@
 import React, { useEffect, useState } from 'react'
 import Docs from '../Docs/Docs'
 import docs from '../../documentation'
-import FrameTemplate from '../Frame/FrameTemplate'
+import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
 import FrameAside from '../Frame/FrameAside'
 import { transformCommandToHelpTopic } from 'services/commandUtils'
 import { DynamicTopics } from '../../documentation/templates/DynamicTopics'
@@ -74,7 +74,7 @@ const HelpFrame = ({ stack = [], isFullscreen, isCollapsed }: any) => {
       main
     )
   return (
-    <FrameTemplate
+    <FrameBodyTemplate
       isCollapsed={isCollapsed}
       isFullscreen={isFullscreen}
       aside={aside}
