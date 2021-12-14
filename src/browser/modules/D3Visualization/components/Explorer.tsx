@@ -43,15 +43,15 @@ import { Action, Dispatch } from 'redux'
 const deduplicateNodes = (nodes: any) => {
   return nodes.reduce(
     (all: any, curr: any) => {
-      if (all.taken.indexOf(curr.id) > -1) {
+      if (all.taken[curr.id]) {
         return all
       } else {
         all.nodes.push(curr)
-        all.taken.push(curr.id)
+        all.taken[curr.id] = true
         return all
       }
     },
-    { nodes: [], taken: [] }
+    { nodes: [], taken: {} }
   ).nodes
 }
 
