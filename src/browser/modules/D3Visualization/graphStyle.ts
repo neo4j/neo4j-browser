@@ -31,7 +31,7 @@ export class Selector {
     this.classes = classes1 != null ? classes1 : []
   }
 
-  toString = () => {
+  toString = (): string => {
     return selectorArrayToString([this.tag].concat(this.classes))
   }
 }
@@ -55,7 +55,7 @@ class StyleElement {
     return this
   }
 
-  get = (attr: any) => {
+  get = (attr: string) => {
     return this.props[attr] || ''
   }
 }
@@ -108,6 +108,7 @@ const defaultStyle = {
     caption: '<type>'
   }
 }
+type DefaultSizeType = { diameter: string }
 const defaultSizes = [
   {
     diameter: '10px'
@@ -125,6 +126,7 @@ const defaultSizes = [
     diameter: '80px'
   }
 ]
+type DefaultIconCodeType = { 'icon-code': string }
 const defaultIconCodes = [
   {
     'icon-code': 'a'
@@ -148,6 +150,7 @@ const defaultIconCodes = [
     'icon-code': 'k'
   }
 ]
+type DefaultArrayWidthType = { 'shaft-width': string }
 const defaultArrayWidths = [
   {
     'shaft-width': '1px'
@@ -260,17 +263,6 @@ export class GraphStyle {
     return new Selector(tokens[0], tokens.slice(1))
   }
 
-  // TODO: remove not used?
-  selector = (item: any) => {
-    if (item.isNode) {
-      return this.nodeSelector(item)
-    } else if (item.isRelationship) {
-      return this.relationshipSelector(item)
-    } else {
-      return undefined
-    }
-  }
-
   nodeSelector = function(
     node: { labels: null | string[] } = { labels: null }
   ): Selector {
@@ -312,7 +304,9 @@ export class GraphStyle {
     return defaultColors[index]
   }
 
-  getDefaultNodeCaption = function(item: any) {
+  getDefaultNodeCaption = function(
+    item: any
+  ): { caption: string } | { defaultCaption: string } {
     if (
       !item ||
       // @ts-expect-error ts-migrate(2365) FIXME: Operator '>' cannot be applied to types 'boolean' ... Remove this comment to see the full error message
@@ -346,20 +340,11 @@ export class GraphStyle {
     }
   }
 
-  calculateStyle = (selector: Selector) => {
+  calculateStyle = (selector: Selector): StyleElement => {
     return new StyleElement(selector).applyRules(this.rules)
   }
 
-  forEntity = (item: any) => {
-    const selector = this.selector(item)
-    if (selector) {
-      return this.calculateStyle(selector)
-    } else {
-      return undefined
-    }
-  }
-
-  setDefaultNodeStyling = (selector: Selector, item: any) => {
+  setDefaultNodeStyling = (selector: Selector, item: any): void => {
     let defaultColor = true
     let defaultCaption = true
     for (let i = 0; i < this.rules.length; i++) {
@@ -384,12 +369,8 @@ export class GraphStyle {
       )
     }
     if (defaultCaption) {
-      return this.changeForSelector(
-        minimalSelector,
-        this.getDefaultNodeCaption(item)
-      )
+      this.changeForSelector(minimalSelector, this.getDefaultNodeCaption(item))
     }
-    return undefined
   }
 
   changeForSelector = (selector: Selector, props: any): StyleRule => {
@@ -402,20 +383,19 @@ export class GraphStyle {
     return rule
   }
 
-  destroyRule = (rule: StyleRule) => {
+  destroyRule = (rule: StyleRule): void => {
     const idx = this.rules.indexOf(rule)
     if (idx != null) {
       this.rules.splice(idx, 1)
     }
   }
 
-  importGrass = (string: any) => {
+  importGrass = (string: string): void => {
     try {
       const rules = this.parse(string)
-      return this.loadRules(rules)
+      this.loadRules(rules)
     } catch (_error) {
       // e = _error
-      return undefined
     }
   }
 
@@ -478,9 +458,8 @@ export class GraphStyle {
     return rules
   }
 
-  resetToDefault = () => {
+  resetToDefault = (): void => {
     this.loadRules()
-    return true
   }
 
   toSheet = () => {
@@ -491,7 +470,7 @@ export class GraphStyle {
     return sheet
   }
 
-  toString = () => {
+  toString = (): string => {
     let str = ''
     this.rules.forEach((r: StyleRule) => {
       str += `${r.selector.toString()} {\n`
@@ -507,29 +486,28 @@ export class GraphStyle {
     return str
   }
 
-  loadRules = (data?: any) => {
+  loadRules = (data?: any): void => {
     const localData = typeof data === 'object' ? data : defaultStyle
     this.rules.length = 0
     for (const key in localData) {
       const props = localData[key]
       this.rules.push(new StyleRule(this.parseSelector(key), props))
     }
-    return this
   }
 
-  defaultSizes = function() {
+  defaultSizes = function(): DefaultSizeType[] {
     return defaultSizes
   }
 
-  defaultIconCodes = function() {
+  defaultIconCodes = function(): DefaultIconCodeType[] {
     return defaultIconCodes
   }
 
-  defaultArrayWidths = function() {
+  defaultArrayWidths = function(): DefaultArrayWidthType[] {
     return defaultArrayWidths
   }
 
-  defaultColors = function() {
+  defaultColors = function(): DefaultColorType[] {
     return defaultColors
   }
 
@@ -559,7 +537,7 @@ export class GraphStyle {
     })
   }
 
-  forNode = (node: any = {}) => {
+  forNode = (node: any = {}): StyleElement => {
     const selector = this.nodeSelector(node)
     if ((node.labels != null ? node.labels.length : 0) > 0) {
       this.setDefaultNodeStyling(selector, node)
@@ -567,7 +545,7 @@ export class GraphStyle {
     return this.calculateStyle(selector)
   }
 
-  forRelationship = (rel: any) => {
+  forRelationship = (rel: any): StyleElement => {
     const selector = this.relationshipSelector(rel)
     return this.calculateStyle(selector)
   }
