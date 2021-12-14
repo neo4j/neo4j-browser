@@ -97,14 +97,10 @@ const fitCaptionIntoCircle = function(
 
   const words = captionText.split(' ')
 
-  const hasIconCode = !!style.forNode(node).get('icon-code')
-
   const emptyLine = function(lineCount: number, lineIndex: number) {
     // Calculate baseline of the text
-    let baseline = (1 + lineIndex - lineCount / 2) * fontSize
-    if (hasIconCode) {
-      baseline = baseline + node.radius / 3
-    }
+    const baseline = (1 + lineIndex - lineCount / 2) * fontSize
+
     // The furthest distance between chord (top or bottom of the line) and circle centre
     const chordCentreDistance =
       lineIndex < lineCount / 2

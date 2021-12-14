@@ -191,27 +191,6 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
     )
   }
 
-  iconPicker(selector: any) {
-    return (
-      <li key="icon-picker">
-        Icon:
-        <ul>
-          {this.picker(
-            this.graphStyle.defaultIconCodes(),
-            () => {
-              return { fontFamily: 'streamline' }
-            },
-            'icon-picker-item',
-            selector,
-            (iconCode: any) => {
-              return iconCode['icon-code']
-            }
-          )}
-        </ul>
-      </li>
-    )
-  }
-
   captionPicker(
     selector: Selector,
     styleForItem: any,

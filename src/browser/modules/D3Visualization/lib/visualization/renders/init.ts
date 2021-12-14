@@ -89,33 +89,6 @@ const nodeCaption = new Renderer({
   onTick: noop
 })
 
-const nodeIcon = new Renderer({
-  onGraphChange(selection: any, viz: any) {
-    const text = selection.selectAll('text').data((node: any) => node.caption)
-
-    text
-      .enter()
-      .append('text')
-      .attr({ 'text-anchor': 'middle' })
-      .attr({ 'pointer-events': 'none' })
-      .attr({ 'font-family': 'streamline' })
-
-    text
-      .text((line: any) => viz.style.forNode(line.node).get('icon-code'))
-      .attr('dy', (line: any) => line.node.radius / 16)
-      .attr('font-size', (line: any) => line.node.radius)
-      .attr({
-        fill(line: any) {
-          return viz.style.forNode(line.node).get('text-color-internal')
-        }
-      })
-
-    return text.exit().remove()
-  },
-
-  onTick: noop
-})
-
 const nodeRing = new Renderer({
   onGraphChange(selection: any) {
     const circles = selection
@@ -235,7 +208,6 @@ const relationshipOverlay = new Renderer({
 
 const node = []
 node.push(nodeOutline)
-node.push(nodeIcon)
 node.push(nodeCaption)
 node.push(nodeRing)
 
