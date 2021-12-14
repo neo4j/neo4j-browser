@@ -60,6 +60,8 @@ export class GraphComponent extends Component<any, State> {
 
   componentDidMount() {
     if (this.svgElement != null) {
+      // this.initGraphView and this.addInternalRelationships both call this.graph.update(), which is inefficient
+      // need to further investigation
       this.initGraphView()
       this.graph && this.props.setGraph && this.props.setGraph(this.graph)
       this.props.getAutoCompleteCallback &&

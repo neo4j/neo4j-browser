@@ -56,6 +56,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
                     stroke-width="2px"
                   />
                   <text
+                    class="caption"
                     fill="#FFFFFF"
                     font-size="10px"
                     pointer-events="none"

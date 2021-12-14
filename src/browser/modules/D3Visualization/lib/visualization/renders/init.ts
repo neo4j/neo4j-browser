@@ -66,7 +66,8 @@ const nodeCaption = new Renderer({
     text
       .enter()
       .append('text')
-      // .classed('caption', true)
+      // Classed element ensures duplicated data will be removed before adding
+      .classed('caption', true)
       .attr({ 'text-anchor': 'middle' })
       .attr({ 'pointer-events': 'none' })
 
