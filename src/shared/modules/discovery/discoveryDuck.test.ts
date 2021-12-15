@@ -235,7 +235,7 @@ describe('discoveryOnStartupEpic', () => {
             host: expectedHost,
             SSOError: discovery.NO_SSO_PROVIDERS_ERROR_TEXT,
             SSOProviders: [],
-            hasForceURL: true,
+            hasForceUrl: true,
             supportsMultiDb: false
           }
         }
@@ -265,7 +265,7 @@ describe('discoveryOnStartupEpic', () => {
             SSOError: discovery.NO_SSO_PROVIDERS_ERROR_TEXT,
             SSOProviders: [],
             supportsMultiDb: false,
-            hasForceURL: true
+            hasForceUrl: true
           }
         }
       ])
@@ -292,7 +292,7 @@ describe('discoveryOnStartupEpic', () => {
           discovered: {
             host: expectedHost,
             requestedUseDb: 'test',
-            hasForceURL: true,
+            hasForceUrl: true,
             supportsMultiDb: true,
             SSOError: discovery.NO_SSO_PROVIDERS_ERROR_TEXT,
             SSOProviders: []
@@ -324,7 +324,7 @@ describe('discoveryOnStartupEpic', () => {
             SSOError: discovery.NO_SSO_PROVIDERS_ERROR_TEXT,
             SSOProviders: [],
             supportsMultiDb: false,
-            hasForceURL: true
+            hasForceUrl: true
           }
         }
       ])
@@ -355,7 +355,7 @@ describe('discoveryOnStartupEpic', () => {
             SSOError: discovery.NO_SSO_PROVIDERS_ERROR_TEXT,
             SSOProviders: [],
             supportsMultiDb: false,
-            hasForceURL: true
+            hasForceUrl: true
           }
         }
       ])

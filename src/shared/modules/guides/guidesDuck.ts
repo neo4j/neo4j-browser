@@ -24,7 +24,8 @@ import { GlobalState } from 'shared/globalState'
 import { tryGetRemoteInitialSlideFromUrl } from 'services/guideResolverHelper'
 import { resolveGuide } from '../../services/guideResolverHelper'
 import { OpenSidebarAction, open } from '../sidebar/sidebarDuck'
-import { isGuideChapter } from 'browser/documentation'
+import { Guide, isBuiltInGuide } from 'browser/documentation'
+import { isOfType } from 'shared/utils/typeSafeActions'
 
 export const NAME = 'guides'
 export const FETCH_GUIDE = 'guides/FETCH_GUIDE'
@@ -38,12 +39,6 @@ export const getCurrentGuide = (state: GlobalState): Guide | null =>
 export const getRemoteGuides = (state: GlobalState): RemoteGuide[] =>
   state[NAME].remoteGuides
 
-export type Guide = {
-  currentSlide: number
-  title: string
-  identifier: string
-  slides: JSX.Element[]
-}
 export type RemoteGuide = Omit<Guide, 'slides'>
 export interface GuideState {
   currentGuide: Guide | null
@@ -90,12 +85,10 @@ export const fetchRemoteGuideEpic: Epic<
   FetchGuideAction | SetGuideAction | OpenSidebarAction | AddRemoteGuideAction,
   GlobalState
 > = (action$, store$) =>
-  action$.ofType(FETCH_GUIDE).flatMap(action => {
-    const initialSlide = tryGetRemoteInitialSlideFromUrl(
-      (<FetchGuideAction>action).identifier
-    )
+  action$.filter(isOfType(FETCH_GUIDE)).flatMap(action => {
+    const initialSlide = tryGetRemoteInitialSlideFromUrl(action.identifier)
     return Observable.fromPromise(
-      resolveGuide((<FetchGuideAction>action).identifier, store$.getState())
+      resolveGuide(action.identifier, store$.getState())
     ).mergeMap(({ title, identifier, slides, isError }) => {
       const guide: RemoteGuide = {
         currentSlide: initialSlide,
@@ -139,7 +132,7 @@ export default function reducer(
         !!state.remoteGuides.find(
           remoteGuide => remoteGuide.identifier === action.guide.identifier
         ) ||
-        isGuideChapter(action.guide.identifier)
+        isBuiltInGuide(action.guide.identifier)
       ) {
         return state
       } else {

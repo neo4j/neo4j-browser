@@ -23,7 +23,6 @@ import { Action, Dispatch } from 'redux'
 import { connect } from 'react-redux'
 
 import {
-  Guide,
   RemoteGuide,
   getCurrentGuide,
   getRemoteGuides,
@@ -34,6 +33,7 @@ import {
   updateRemoteGuides
 } from 'shared/modules/guides/guidesDuck'
 import { GlobalState } from 'shared/globalState'
+import { Guide } from 'browser/documentation'
 import GuideCarousel from '../GuideCarousel/GuideCarousel'
 import { BackIcon } from '../../components/icons/Icons'
 import {
@@ -45,7 +45,7 @@ import {
 } from './styled'
 import GuidePicker from './GuidePicker'
 
-type GuideDrawerProps = {
+export type GuideDrawerProps = {
   currentGuide: Guide | null
   remoteGuides: RemoteGuide[]
   backToAllGuides: () => void
@@ -55,7 +55,7 @@ type GuideDrawerProps = {
   updateRemoteGuides: (newList: RemoteGuide[]) => void
 }
 
-function GuideDrawer({
+export const GuideDrawer = ({
   currentGuide,
   remoteGuides,
   backToAllGuides,
@@ -63,13 +63,13 @@ function GuideDrawer({
   setCurrentGuide,
   fetchRemoteGuide,
   updateRemoteGuides
-}: GuideDrawerProps): JSX.Element {
+}: GuideDrawerProps): JSX.Element => {
   const scrollRef = useRef<HTMLDivElement>(null)
 
   return (
     <StyledGuideDrawer
       id="guide-drawer"
-      data-testid="guideDrawer"
+      data-testid="guidesDrawer"
       ref={scrollRef}
     >
       <StyledGuideDrawerHeader onClick={backToAllGuides}>
@@ -94,7 +94,7 @@ function GuideDrawer({
             {currentGuide.title}
           </GuideTitle>
           <GuideCarousel
-            slides={currentGuide.slides ?? []}
+            slides={currentGuide.slides}
             currentSlideIndex={currentGuide.currentSlide}
             gotoSlide={gotoSlide}
             scrollToTop={() =>

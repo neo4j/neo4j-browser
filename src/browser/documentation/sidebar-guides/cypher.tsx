@@ -21,13 +21,16 @@
 import React from 'react'
 import { BuiltInGuideSidebarSlide } from '../../modules/Carousel/Slide'
 
-const title = 'Cypher Guide '
+const title = 'Cypher Guide'
+const identifier = 'cypher'
 const slides = [
   <BuiltInGuideSidebarSlide key="s1">
     <p className="lead">
-      <em>Neo4j's graph query language</em>
+      <em>{`Neo4j's graph query language`}</em>
     </p>
-    <p>Neo4j's Cypher language is purpose-built for working with graph data.</p>
+    <p>
+      {`Neo4j's Cypher language is purpose-built for working with graph data.`}
+    </p>
     <ul className="big">
       <li>Uses patterns to describe graph data.</li>
       <li>Familiar SQL-like clauses.</li>
@@ -39,9 +42,10 @@ const slides = [
     <p className="lead">
       <em>Create a node</em>
     </p>
-    <p>Let's use Cypher to generate a small social graph.</p>
+    <p>{`Let's use Cypher to generate a small social graph.`}</p>
     <p>
-      <b>NOTE:</b> This guide assumes that you use an empty graph.{' '}
+      <b>NOTE:</b>
+      {` This guide assumes that you use an empty graph. `}
     </p>
     <ol>
       <li>
@@ -80,7 +84,7 @@ const slides = [
       <li>
         Click this code block and bring it into the Editor:
         <pre className="pre-scrollable code runnable">
-          MATCH (ee:Person) WHERE ee.name = 'Emil' RETURN ee;
+          {`MATCH (ee:Person) WHERE ee.name = 'Emil' RETURN ee;`}
         </pre>
         <ul style={{ marginLeft: '10px', paddingLeft: '10px' }}>
           <li>
@@ -95,7 +99,9 @@ const slides = [
             <code>WHERE</code> filters the query.
           </li>
           <li>
-            <code>ee.name = 'Emil'</code> compares name property to the value{' '}
+            <code>{`ee.name = 'Emil'`}</code>
+            {` compares name property to the
+            value `}
             <code>Emil</code>.
           </li>
           <li>
@@ -138,7 +144,7 @@ CREATE (js:Person { name: 'Johan', from: 'Sweden', learn: 'surfing' }),
       <em>Describe what to find in the graph</em>
     </p>
     <p className="summary">
-      For instance, a pattern can be used to find Emil's friends:
+      {`For instance, a pattern can be used to find Emil's friends:`}
     </p>
     <pre className="pre-scrollable code runnable">
       {`MATCH (ee:Person)-[:KNOWS]-(friends)
@@ -158,7 +164,8 @@ WHERE ee.name = 'Emil' RETURN ee, friends`}
         either direction) from <code>ee</code>.
       </li>
       <li>
-        <code>(friends)</code> represents the nodes that are Emil's friends.
+        <code>(friends)</code>
+        {` represents the nodes that are Emil's friends.`}
       </li>
       <li>
         <code>RETURN</code> returns the node, referenced here by{' '}
@@ -193,4 +200,4 @@ WHERE ee.name = 'Emil' RETURN ee, friends`}
   </BuiltInGuideSidebarSlide>
 ]
 
-export default { title, slides }
+export default { title, identifier, slides }

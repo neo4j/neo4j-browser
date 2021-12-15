@@ -49,14 +49,14 @@ export const parseHttpVerbCommand = (input: any) => {
 }
 
 // Check if valid url, from http://stackoverflow.com/questions/5717093/check-if-a-javascript-string-is-a-url
-export function isValidURL(string: any) {
-  let url
+export function isValidUrl(url: string): boolean {
+  let urlObject
 
   try {
-    url = new URL(string)
+    urlObject = new URL(url)
   } catch (_) {
     return false
   }
 
-  return url.protocol.startsWith('http')
+  return urlObject.protocol.startsWith('http')
 }

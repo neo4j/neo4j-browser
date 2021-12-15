@@ -23,7 +23,7 @@ import { includes, last, split, startsWith } from 'lodash-es'
 
 import MdxSlide from 'browser/modules/Docs/MDX/MdxSlide'
 import Slide from 'browser/modules/Carousel/Slide'
-import docs, { isGuideChapter } from 'browser/documentation'
+import docs, { isBuiltInGuide } from 'browser/documentation'
 import guideUnfound from 'browser/documentation/sidebar-guides/unfound'
 import {
   addProtocolsToUrlList,
@@ -46,6 +46,10 @@ import {
   StyledPreformattedArea
 } from 'browser/modules/Stream/styled'
 import { GlobalState } from 'shared/globalState'
+
+interface ResponseException extends Error {
+  response: Response
+}
 
 const { chapters } = docs.guide
 
@@ -73,7 +77,7 @@ export async function resolveGuide(
     return await resolveRemoteGuideByUrl(identifier, state)
   }
 
-  if (isGuideChapter(identifier)) {
+  if (isBuiltInGuide(identifier)) {
     return { ...chapters[identifier], identifier }
   }
 
@@ -112,14 +116,16 @@ async function resolveRemoteGuideByUrl(
   identifier: string
   isError?: boolean
 }> {
-  const urlObject = new URL(url)
-  urlObject.href = url
-  const filenameExtension =
-    (urlObject.pathname.includes('.') && urlObject.pathname.split('.').pop()) ||
-    'html'
-  const allowlist = getRemoteContentHostnameAllowlist(state)
-
   try {
+    // URL constructor can throw
+    const urlObject = new URL(url)
+    urlObject.href = url
+    const filenameExtension =
+      (urlObject.pathname.includes('.') &&
+        urlObject.pathname.split('.').pop()) ||
+      'html'
+    const allowlist = getRemoteContentHostnameAllowlist(state)
+
     const remoteGuide = await fetchRemoteGuideAsync(url, allowlist)
     const titleRegexMatch = remoteGuide.match(/<title>(.*?)<\/title>/)
     const title = (titleRegexMatch && titleRegexMatch[1])?.trim() || url
@@ -137,7 +143,10 @@ async function resolveRemoteGuideByUrl(
       }
     }
   } catch (e) {
-    if (e.response && e.response.status === 404) {
+    if (
+      (e as ResponseException).response &&
+      (e as ResponseException).response.status === 404
+    ) {
       return { ...guideUnfound, identifier: url }
     }
     return {
@@ -152,7 +161,8 @@ async function resolveRemoteGuideByUrl(
               </StyledHelpDescription>
               <StyledDiv>
                 <StyledPreformattedArea>
-                  {e.name}: {e.message}
+                  {(e as ResponseException).name}:{' '}
+                  {(e as ResponseException).message}
                 </StyledPreformattedArea>
               </StyledDiv>
             </StyledHelpContent>

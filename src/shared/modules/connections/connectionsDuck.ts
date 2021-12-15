@@ -451,7 +451,7 @@ export type DiscoverableData = {
   supportsMultiDb?: boolean
   host?: string
   encrypted?: string
-  hasForceURL?: boolean
+  hasForceUrl?: boolean
   SSOError?: string
   attemptSSOLogin?: boolean
   SSOProviders?: SSOProvider[]
@@ -505,7 +505,7 @@ export const startupConnectEpic = (action$: any, store: any) => {
       )
 
       if (
-        !(discovered && discovered.hasForceURL) && // If we have force url, don't try old connection data
+        !(discovered && discovered.hasForceUrl) && // If we have force url, don't try old connection data
         shouldTryAutoconnecting(savedConnection)
       ) {
         try {

@@ -87,9 +87,9 @@ describe('Multi database', () => {
 
     it('lists databases in sidebar', () => {
       cy.executeCommand(':clear')
-      cy.get('[data-testid="drawerDBMS"]').click()
+      cy.get('[data-testid="navigationDBMS"]').click()
       databaseOptionListOptions().should('have.length', 2)
-      cy.get('[data-testid="drawerDBMS"]').click()
+      cy.get('[data-testid="navigationDBMS"]').click()
     })
 
     if (isEnterpriseEdition()) {
@@ -101,7 +101,7 @@ describe('Multi database', () => {
         cy.executeCommand(':clear')
 
         // Count items in list
-        cy.get('[data-testid="drawerDBMS"]').click()
+        cy.get('[data-testid="navigationDBMS"]').click()
         databaseOptionListOptions().should('have.length', 3)
         databaseOptionListOptions().contains('system')
         databaseOptionListOptions().contains('neo4j')
@@ -131,7 +131,7 @@ describe('Multi database', () => {
         cy.executeCommand(':use system')
         cy.executeCommand('DROP DATABASE `name-with-dash`')
         databaseOptionListOptions().should('have.length', 2)
-        cy.get('[data-testid="drawerDBMS"]').click()
+        cy.get('[data-testid="navigationDBMS"]').click()
       })
     }
 

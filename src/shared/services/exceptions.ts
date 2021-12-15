@@ -25,7 +25,7 @@ type ErrorType =
   | 'UnknownCommandError'
   | 'UndefinedError'
   | 'CouldNotFetchRemoteGuideError'
-  | 'FetchURLError'
+  | 'FetchUrlError'
   | 'UnsupportedError'
   | 'NotFoundError'
   | 'InvalidGrassError'
@@ -92,8 +92,8 @@ export function CouldNotFetchRemoteGuideError(error: {
   }
 }
 
-export function FetchURLError(error: { error: string }): BrowserError {
-  const type = 'FetchURLError'
+export function FetchUrlError(error: { error: string }): BrowserError {
+  const type = 'FetchUrlError'
   return {
     type,
     code: type,
@@ -153,7 +153,7 @@ export function createErrorObject(type: ErrorType, args: any): BrowserError {
     UnknownCommandError,
     UndefinedError,
     CouldNotFetchRemoteGuideError,
-    FetchURLError,
+    FetchUrlError,
     UnsupportedError,
     NotFoundError,
     InvalidGrassError,

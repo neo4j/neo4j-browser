@@ -23,6 +23,7 @@ import { BuiltInGuideSidebarSlide } from '../../modules/Carousel/Slide'
 
 const title = 'Concepts Guide'
 const category = 'guides'
+const identifier = 'concepts'
 const slides = [
   <BuiltInGuideSidebarSlide key="s1">
     <h3>Property graph model concepts</h3>
@@ -47,8 +48,8 @@ const slides = [
       <em>Neo4j stores data in a graph as nodes</em>
     </p>
     <p>
-      The simplest graph has just a single node with some named values called
-      properties. For example, let's draw a social graph:
+      {`The simplest graph has just a single node with some named values called
+      properties. For example, let's draw a social graph:`}
     </p>
     <ol>
       <li>Draw a circle for a node.</li>
@@ -82,8 +83,8 @@ const slides = [
       social graph, you label each node that represents a Person.
     </p>
     <ol>
-      <li>Add the label "Person" to the node you created for Emil.</li>
-      <li>Color the "Person" node red.</li>
+      <li>{`Add the label "Person" to the node you created for Emil.`}</li>
+      <li>{`Color the "Person" node red.`}</li>
     </ol>
     <br />
     <img src="./assets/images/labeled_node.png" className="img-responsive" />
@@ -176,9 +177,9 @@ const slides = [
       <em>Store information shared by two nodes</em>
     </p>
     <p>
-      In a property graph, relationships can also contain properties that
-      describe the relationship. Looking more closely at Emil's relationships,
-      note that:
+      {`In a property graph, relationships can also contain properties that
+      describe the relationship. Looking more closely at Emil's
+      relationships, note that:`}
     </p>
     <ul>
       <li>Emil has known Johan since 2001.</li>
@@ -198,4 +199,4 @@ const slides = [
   </BuiltInGuideSidebarSlide>
 ]
 
-export default { title, category, slides }
+export default { title, category, identifier, slides }

@@ -27,7 +27,7 @@ import { splitStringOnFirst } from 'services/commandUtils'
 import { getRemoteContentHostnameAllowlist } from 'shared/modules/dbMeta/dbMetaDuck'
 import { hostIsAllowed } from 'services/utils'
 import { getJSON } from 'services/remote'
-import { isValidURL } from 'shared/modules/commands/helpers/http'
+import { isValidUrl } from 'shared/modules/commands/helpers/http'
 import jsonic from 'jsonic'
 
 export function handleGetConfigCommand(_action: any, store: any) {
@@ -42,7 +42,7 @@ export function handleUpdateConfigCommand(action: any, put: any, store: any) {
   const p = new Promise((resolve, reject) => {
     if (parts[1] === undefined || parts[1] === '') return resolve(true) // Nothing to do
     const param = parts[1].trim()
-    if (!isValidURL(param)) {
+    if (!isValidUrl(param)) {
       // Not an URL. Parse as command line params
       if (/^"?\{[^}]*\}"?$/.test(param)) {
         // JSON object string {"x": 2, "y":"string"}

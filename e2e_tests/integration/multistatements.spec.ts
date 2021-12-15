@@ -57,9 +57,9 @@ describe('Multi statements', () => {
   it('can force run multiple statements to be executed as one statement', () => {
     // Given
     cy.executeCommand(':clear')
-    cy.get('[data-testid="drawerSettings"]').click()
+    cy.get('[data-testid="navigationSettings"]').click()
     cy.get('[data-testid="setting-enableMultiStatementMode"]').click()
-    cy.get('[data-testid="drawerSettings"]').click()
+    cy.get('[data-testid="navigationSettings"]').click()
 
     // When
     cy.executeCommand(validQuery)
@@ -74,9 +74,9 @@ describe('Multi statements', () => {
       .first()
       .should('contain', 'Error')
 
-    cy.get('[data-testid="drawerSettings"]').click()
+    cy.get('[data-testid="navigationSettings"]').click()
     cy.get('[data-testid="setting-enableMultiStatementMode"]').click()
-    cy.get('[data-testid="drawerSettings"]').click()
+    cy.get('[data-testid="navigationSettings"]').click()
   })
 
   it('can run multiple statements with error open', () => {
@@ -211,9 +211,9 @@ describe('Multi statements', () => {
           .contains('Test1')
 
         // Check sidebar for test1
-        cy.get('[data-testid="drawerDBMS"]').click()
+        cy.get('[data-testid="navigationDBMS"]').click()
         cy.get('[data-testid="sidebarMetaItem"]').contains('Test1')
-        cy.get('[data-testid="drawerDBMS"]').click()
+        cy.get('[data-testid="navigationDBMS"]').click()
 
         cy.executeCommand(':use test2')
         cy.executeCommand('MATCH (n) RETURN distinct labels(n);')
@@ -221,10 +221,10 @@ describe('Multi statements', () => {
           .first()
           .contains('Test2')
 
-        cy.get('[data-testid="drawerDBMS"]').click()
+        cy.get('[data-testid="navigationDBMS"]').click()
 
         cy.get('[data-testid="sidebarMetaItem"]').contains('Test2')
-        cy.get('[data-testid="drawerDBMS"]').click()
+        cy.get('[data-testid="navigationDBMS"]').click()
 
         cy.executeCommand(':use system')
         cy.executeCommand('DROP DATABASE test1')

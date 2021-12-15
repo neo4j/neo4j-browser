@@ -35,6 +35,7 @@ import { StyleableNodeLabel } from './StyleableNodeLabel'
 import { GraphStats } from '../mapper'
 import { StyleableRelType } from './StyleableRelType'
 import { ShowMoreOrAll } from 'browser-components/ShowMoreOrAll/ShowMoreOrAll'
+import { GraphStyle } from 'project-root/src/browser/modules/D3Visualization/graphStyle'
 
 type PaneBodySectionHeaderProps = {
   title: string
@@ -56,20 +57,6 @@ function PaneBodySectionHeader({
       )}
     </PaneBodySectionHeaderWrapper>
   )
-}
-
-export type GraphStyle = {
-  forNode: any
-  forRelationship: any
-  loadRules: any
-  resetToDefault: any
-  rules: GraphStyleRule[]
-  toSheet: any
-}
-
-type GraphStyleRule = {
-  props: Record<string, string>
-  selector: { classes: string[]; tag: string }
 }
 
 type OverviewPaneProps = {

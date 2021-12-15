@@ -13,8 +13,8 @@ import {
   GuideListEntry,
   MarginBottomLi
 } from 'browser/documentation/sidebar-guides/styled'
-import { Guide, RemoteGuide } from 'shared/modules/guides/guidesDuck'
-import docs, { GuideChapter } from 'browser/documentation'
+import { RemoteGuide } from 'shared/modules/guides/guidesDuck'
+import docs, { BuiltInGuideIdentifier, Guide } from 'browser/documentation'
 import { BinIcon } from 'browser-components/icons/Icons'
 
 type GuidePickerProps = {
@@ -24,7 +24,10 @@ type GuidePickerProps = {
   updateRemoteGuides: (newList: RemoteGuide[]) => void
 }
 
-const builtInGuides: { identifier: GuideChapter; description: string }[] = [
+const builtInGuides: {
+  identifier: BuiltInGuideIdentifier
+  description: string
+}[] = [
   { identifier: 'intro', description: 'Navigating Neo4j Browser' },
   { identifier: 'concepts', description: 'Property graph model concepts' },
   {
@@ -61,6 +64,7 @@ const GuidePicker = ({
     <NoBulletsUl>
       {builtInGuides.map(({ identifier, description }) => (
         <MarginBottomLi
+          data-testid={`builtInGuide${identifier}`}
           key={identifier}
           onClick={() =>
             setCurrentGuide({
@@ -78,22 +82,29 @@ const GuidePicker = ({
     {remoteGuides.length !== 0 && (
       <>
         <MarginTop pixels={25}>
-          <DrawerSubHeader as="div" /* prevents guide styling of h5*/>
+          <DrawerSubHeader
+            as="div" /* prevents guide styling of h5*/
+            data-testid="remoteGuidesTitle"
+          >
             Remote Guides
           </DrawerSubHeader>
         </MarginTop>
         <NoBulletsUl>
           {remoteGuides.map(guide => (
-            <GuideListEntry key={guide.title}>
+            <GuideListEntry key={guide.identifier}>
               <DrawerBrowserCommand
+                data-testid={`remoteGuide${guide.identifier}`}
                 onClick={() => fetchRemoteGuide(guide.identifier)}
               >
                 {guide.title}
               </DrawerBrowserCommand>
               <Clickable
+                data-testid={`removeGuide${guide.identifier}`}
                 onClick={() => {
                   updateRemoteGuides(
-                    remoteGuides.filter(({ title }) => title !== guide.title)
+                    remoteGuides.filter(
+                      ({ identifier }) => identifier !== guide.identifier
+                    )
                   )
                 }}
               >

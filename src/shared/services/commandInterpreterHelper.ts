@@ -80,7 +80,7 @@ import {
 import {
   UnknownCommandError,
   CouldNotFetchRemoteGuideError,
-  FetchURLError,
+  FetchUrlError,
   InvalidGrassError,
   UnsupportedError,
   DatabaseUnavailableError,
@@ -88,7 +88,7 @@ import {
 } from 'services/exceptions'
 import {
   parseHttpVerbCommand,
-  isValidURL
+  isValidUrl
 } from 'shared/modules/commands/helpers/http'
 import { fetchRemoteGrass } from 'shared/modules/commands/helpers/grass'
 import { parseGrass, objToCss } from 'shared/services/grassUtils'
@@ -730,7 +730,7 @@ const availableCommands = [
             }
           )
           const url =
-            !isValidURL(r.url) && connectionData.restApi
+            !isValidUrl(r.url) && connectionData.restApi
               ? `${connectionData.restApi}${r.url}`
               : r.url
           let authHeaders = {}
@@ -758,7 +758,7 @@ const availableCommands = [
               )
             })
             .catch(e => {
-              const error = FetchURLError({ error: e.message })
+              const error = FetchUrlError({ error: e.message })
               put(
                 frames.add({
                   useDb: getUseDb(store.getState()),
@@ -829,7 +829,7 @@ const availableCommands = [
       }
 
       if (
-        isValidURL(param) &&
+        isValidUrl(param) &&
         param.includes('.') /* isValid url considers words like rest an url*/
       ) {
         const url = param.startsWith('http') ? param : `http://${param}`

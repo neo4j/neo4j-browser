@@ -1,0 +1,381 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GuideDrawer renders guide slide when a guide is selected 1`] = `
+<div>
+  <div
+    class="sc-cmthru fthsZk"
+    data-testid="guidesDrawer"
+    id="guide-drawer"
+  >
+    <h4
+      class="sc-hMFtBS bOgQOX"
+    >
+      <span
+        class="sc-gqPbQI gVcpvI"
+        data-testid="guidesBackButton"
+      >
+        <i
+          class="sc-fOKMvo gVZzMN"
+        >
+          <span
+            class="SVGInline SVGInline--cleaned"
+          >
+            <svg
+              class="SVGInline-svg SVGInline--cleaned-svg"
+              style="width: 16px;height: 16px;"
+            />
+          </span>
+        </i>
+      </span>
+      Neo4j Browser Guides
+       
+    </h4>
+    <div
+      class="sc-iujRgT CDjDu"
+    />
+    <div
+      class="sc-cLQEGU glkSyE"
+      title="Title"
+    >
+      Title
+    </div>
+    <div
+      class="sc-iuJeZd ktPSbN disable-font-ligatures"
+    >
+      <div>
+        <div>
+          Test Slide
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`GuideDrawer renders list view including Remote Guides list 1`] = `
+<div>
+  <div
+    class="sc-cmthru fthsZk"
+    data-testid="guidesDrawer"
+    id="guide-drawer"
+  >
+    <h4
+      class="sc-hMFtBS bOgQOX"
+    >
+      Neo4j Browser Guides
+       
+    </h4>
+    <div
+      class="sc-iujRgT CDjDu"
+    />
+    <div
+      class="sc-gqjmRU gUGRcR slide"
+      style="padding: 0px 15px;"
+    >
+      You can also access Browser guides by running
+      <span
+        class="sc-jKJlTe gfgIxR remove-play-icon"
+        data-populate=":guide [guide name]"
+      >
+        :guide [guide name]
+      </span>
+      in the code editor.
+      <div
+        class="sc-lkqHmb eiwGIl"
+      >
+        <div
+          class="sc-chPdSV bPmcaA"
+        >
+          Built-in guides
+        </div>
+      </div>
+      <div
+        class="sc-gojNiO ikNDmz"
+      >
+        <li
+          class="sc-bXGyLb eUyJDI"
+          data-testid="builtInGuideintro"
+        >
+          <span
+            class="sc-jKJlTe gfgIxR remove-play-icon"
+          >
+            :guide 
+            intro
+          </span>
+          <div
+            class="sc-lkqHmb cSPHwa"
+          >
+             
+            Navigating Neo4j Browser
+             
+          </div>
+        </li>
+        <li
+          class="sc-bXGyLb eUyJDI"
+          data-testid="builtInGuideconcepts"
+        >
+          <span
+            class="sc-jKJlTe gfgIxR remove-play-icon"
+          >
+            :guide 
+            concepts
+          </span>
+          <div
+            class="sc-lkqHmb cSPHwa"
+          >
+             
+            Property graph model concepts
+             
+          </div>
+        </li>
+        <li
+          class="sc-bXGyLb eUyJDI"
+          data-testid="builtInGuidecypher"
+        >
+          <span
+            class="sc-jKJlTe gfgIxR remove-play-icon"
+          >
+            :guide 
+            cypher
+          </span>
+          <div
+            class="sc-lkqHmb cSPHwa"
+          >
+             
+            Cypher basics - create, match, delete
+             
+          </div>
+        </li>
+        <li
+          class="sc-bXGyLb eUyJDI"
+          data-testid="builtInGuidemovie-graph"
+        >
+          <span
+            class="sc-jKJlTe gfgIxR remove-play-icon"
+          >
+            :guide 
+            movie-graph
+          </span>
+          <div
+            class="sc-lkqHmb cSPHwa"
+          >
+             
+            Queries and recommendations with Cypher - movie use case}
+             
+          </div>
+        </li>
+        <li
+          class="sc-bXGyLb eUyJDI"
+          data-testid="builtInGuidenorthwind-graph"
+        >
+          <span
+            class="sc-jKJlTe gfgIxR remove-play-icon"
+          >
+            :guide 
+            northwind-graph
+          </span>
+          <div
+            class="sc-lkqHmb cSPHwa"
+          >
+             
+            Translate and import relation data into graph
+             
+          </div>
+        </li>
+      </div>
+      <div
+        class="sc-lkqHmb eiwGIl"
+      >
+        <div
+          class="sc-chPdSV bPmcaA"
+          data-testid="remoteGuidesTitle"
+        >
+          Remote Guides
+        </div>
+      </div>
+      <div
+        class="sc-gojNiO ikNDmz"
+      >
+        <li
+          class="sc-krvtoX HZOwu"
+        >
+          <span
+            class="sc-jKJlTe gfgIxR remove-play-icon"
+            data-testid="remoteGuideidentifier"
+          >
+            Title
+          </span>
+          <span
+            class="sc-cbkKFq hwlbJw"
+            data-testid="removeGuideidentifier"
+          >
+            <i
+              class="sc-fYiAbW giXALH sl-bin"
+            />
+          </span>
+        </li>
+      </div>
+      <div
+        class="sc-eLExRp dvdOkB"
+      >
+        <a
+          class="sc-ckVGcZ gpqute"
+          href="https://neo4j.com/graphgists/"
+          rel="noreferrer"
+          target="_blank"
+        >
+          More guides
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`GuideDrawer renders list view without Remote Guides 1`] = `
+<div>
+  <div
+    class="sc-cmthru fthsZk"
+    data-testid="guidesDrawer"
+    id="guide-drawer"
+  >
+    <h4
+      class="sc-hMFtBS bOgQOX"
+    >
+      Neo4j Browser Guides
+       
+    </h4>
+    <div
+      class="sc-iujRgT CDjDu"
+    />
+    <div
+      class="sc-gqjmRU gUGRcR slide"
+      style="padding: 0px 15px;"
+    >
+      You can also access Browser guides by running
+      <span
+        class="sc-jKJlTe gfgIxR remove-play-icon"
+        data-populate=":guide [guide name]"
+      >
+        :guide [guide name]
+      </span>
+      in the code editor.
+      <div
+        class="sc-lkqHmb eiwGIl"
+      >
+        <div
+          class="sc-chPdSV bPmcaA"
+        >
+          Built-in guides
+        </div>
+      </div>
+      <div
+        class="sc-gojNiO ikNDmz"
+      >
+        <li
+          class="sc-bXGyLb eUyJDI"
+          data-testid="builtInGuideintro"
+        >
+          <span
+            class="sc-jKJlTe gfgIxR remove-play-icon"
+          >
+            :guide 
+            intro
+          </span>
+          <div
+            class="sc-lkqHmb cSPHwa"
+          >
+             
+            Navigating Neo4j Browser
+             
+          </div>
+        </li>
+        <li
+          class="sc-bXGyLb eUyJDI"
+          data-testid="builtInGuideconcepts"
+        >
+          <span
+            class="sc-jKJlTe gfgIxR remove-play-icon"
+          >
+            :guide 
+            concepts
+          </span>
+          <div
+            class="sc-lkqHmb cSPHwa"
+          >
+             
+            Property graph model concepts
+             
+          </div>
+        </li>
+        <li
+          class="sc-bXGyLb eUyJDI"
+          data-testid="builtInGuidecypher"
+        >
+          <span
+            class="sc-jKJlTe gfgIxR remove-play-icon"
+          >
+            :guide 
+            cypher
+          </span>
+          <div
+            class="sc-lkqHmb cSPHwa"
+          >
+             
+            Cypher basics - create, match, delete
+             
+          </div>
+        </li>
+        <li
+          class="sc-bXGyLb eUyJDI"
+          data-testid="builtInGuidemovie-graph"
+        >
+          <span
+            class="sc-jKJlTe gfgIxR remove-play-icon"
+          >
+            :guide 
+            movie-graph
+          </span>
+          <div
+            class="sc-lkqHmb cSPHwa"
+          >
+             
+            Queries and recommendations with Cypher - movie use case}
+             
+          </div>
+        </li>
+        <li
+          class="sc-bXGyLb eUyJDI"
+          data-testid="builtInGuidenorthwind-graph"
+        >
+          <span
+            class="sc-jKJlTe gfgIxR remove-play-icon"
+          >
+            :guide 
+            northwind-graph
+          </span>
+          <div
+            class="sc-lkqHmb cSPHwa"
+          >
+             
+            Translate and import relation data into graph
+             
+          </div>
+        </li>
+      </div>
+      <div
+        class="sc-eLExRp dvdOkB"
+      >
+        <a
+          class="sc-ckVGcZ gpqute"
+          href="https://neo4j.com/graphgists/"
+          rel="noreferrer"
+          target="_blank"
+        >
+          More guides
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+`;

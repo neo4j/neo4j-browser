@@ -21,8 +21,8 @@
 import React from 'react'
 import { GrassEditor } from './GrassEditor'
 import { Popup } from 'semantic-ui-react'
-import { GraphStyle } from './OverviewPane'
 import { StyledLabel } from 'browser/modules/DBMSInfo/styled'
+import { GraphStyle } from 'project-root/src/browser/modules/D3Visualization/graphStyle'
 
 export type StyleableNodeLabelProps = {
   selectedLabel: {
@@ -40,8 +40,9 @@ export function StyleableNodeLabel({
   selectedLabel,
   onClick
 }: StyleableNodeLabelProps): JSX.Element {
+  const labels = selectedLabel.label === '*' ? [] : [selectedLabel.label]
   const graphStyleForLabel = graphStyle.forNode({
-    labels: [selectedLabel.label]
+    labels: labels
   })
 
   return (
@@ -57,6 +58,7 @@ export function StyleableNodeLabel({
             backgroundColor: graphStyleForLabel.get('color'),
             color: graphStyleForLabel.get('text-color-internal')
           }}
+          data-testid={`property-details-overview-node-label-${selectedLabel.label}`}
         >
           {selectedLabel.count !== undefined
             ? `${selectedLabel.label} (${selectedLabel.count})`
