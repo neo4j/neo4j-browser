@@ -66,8 +66,8 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
   }
 
   sizeLessThan(size1: string | undefined, size2: string | undefined): boolean {
-    const size1Numerical = size1 ? size1.replace('px', '') + 0 : 0
-    const size2Numerical = size2 ? size2.replace('px', '') + 0 : 0
+    const size1Numerical = size1 ? parseInt(size1.replace('px', '')) : 0
+    const size2Numerical = size2 ? parseInt(size2.replace('px', '')) : 0
     return size1Numerical <= size2Numerical
   }
 

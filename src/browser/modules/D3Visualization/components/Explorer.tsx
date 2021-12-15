@@ -25,7 +25,7 @@ import { debounce } from 'lodash'
 
 import Node from '../lib/visualization/components/node'
 import Relationship from '../lib/visualization/components/relationship'
-import neoGraphStyle, { GraphStyle } from '../graphStyle'
+import { GraphStyle } from '../graphStyle'
 import { GlobalState } from 'shared/globalState'
 import { GraphComponent } from './Graph'
 import { GraphStats } from '../mapper'

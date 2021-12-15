@@ -26,9 +26,9 @@ import {
 export class Selector {
   tag = ''
   classes: string[] = []
-  constructor(tag1: string, classes1: null | string[]) {
-    this.tag = tag1
-    this.classes = classes1 != null ? classes1 : []
+  constructor(tag: string, classes: null | string[]) {
+    this.tag = tag
+    this.classes = classes ?? []
   }
 
   toString = (): string => {
@@ -73,8 +73,11 @@ class StyleRule {
       return false
     }
     for (let i = 0; i < this.selector.classes.length; i++) {
-      const classs = this.selector.classes[i]
-      if (classs != null && selector.classes.indexOf(classs) === -1) {
+      const selectorClass = this.selector.classes[i]
+      if (
+        selectorClass != null &&
+        selector.classes.indexOf(selectorClass) === -1
+      ) {
         return false
       }
     }
@@ -109,7 +112,7 @@ const defaultStyle = {
   }
 }
 type DefaultSizeType = { diameter: string }
-const defaultSizes = [
+const defaultSizes: DefaultSizeType[] = [
   {
     diameter: '10px'
   },
@@ -127,7 +130,7 @@ const defaultSizes = [
   }
 ]
 type DefaultIconCodeType = { 'icon-code': string }
-const defaultIconCodes = [
+const defaultIconCodes: DefaultIconCodeType[] = [
   {
     'icon-code': 'a'
   },
@@ -151,7 +154,7 @@ const defaultIconCodes = [
   }
 ]
 type DefaultArrayWidthType = { 'shaft-width': string }
-const defaultArrayWidths = [
+const defaultArrayWidths: DefaultArrayWidthType[] = [
   {
     'shaft-width': '1px'
   },
@@ -488,7 +491,7 @@ export class GraphStyle {
 
   loadRules = (data?: any): void => {
     const localData = typeof data === 'object' ? data : defaultStyle
-    this.rules.length = 0
+    this.rules = []
     for (const key in localData) {
       const props = localData[key]
       this.rules.push(new StyleRule(this.parseSelector(key), props))
