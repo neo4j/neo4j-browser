@@ -29,16 +29,10 @@ import {
   WIDE_VIEW_THRESHOLD
 } from './DetailsPane'
 import { VizItem, VizNodeProperty } from './types'
+import GraphStyle from 'project-root/src/browser/modules/D3Visualization/graphStyle'
 
 describe('<DetailsPane />', () => {
-  const mockGraphStyle = {
-    forNode: null,
-    forRelationship: null,
-    loadRules: null,
-    resetToDefault: null,
-    rules: [],
-    toSheet: null
-  }
+  const mockGraphStyle = new GraphStyle()
 
   const getMockProperties: (length: number) => VizNodeProperty[] = length =>
     Array.from({ length: length }).map((_v, index) => {

@@ -19,13 +19,14 @@
  */
 import viz from './visualization'
 import layout from './layout'
+import GraphStyle from 'project-root/src/browser/modules/D3Visualization/graphStyle'
 
 export default class graphView {
   callbacks: any
   graph: any
-  style: any
+  style: GraphStyle
   viz: any
-  constructor(element: any, measureSize: any, graph: any, style: any) {
+  constructor(element: any, measureSize: any, graph: any, style: GraphStyle) {
     this.graph = graph
     this.style = style
     const forceLayout = layout.force()
