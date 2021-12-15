@@ -20,9 +20,9 @@
 
 /* global Cypress, cy, before */
 
-const greyColor = 'rgb(165, 171, 182)' // Default color for nodes and relationships
-const orangeColor = 'rgb(247, 151, 103)'
-const purpleColor = 'rgb(201, 144, 192)' // Default first color for a new node label
+const GREY = 'rgb(165, 171, 182)' // Default color for nodes and relationships
+const ORANGE = 'rgb(247, 151, 103)'
+const PURPLE = 'rgb(201, 144, 192)' // Default first color for a new node label
 
 describe('Viz rendering', () => {
   before(function() {
@@ -60,7 +60,7 @@ describe('Viz rendering', () => {
     cy.get(selectorNodeLabelAll, { timeout: 5000 }).should(
       'have.css',
       'background-color',
-      greyColor
+      GREY
     )
 
     // Change color and make sure color is changed
@@ -71,7 +71,7 @@ describe('Viz rendering', () => {
     cy.get(selectorNodeLabelAll, { timeout: 5000 }).should(
       'have.css',
       'background-color',
-      orangeColor
+      ORANGE
     )
   })
   it('can change default color of relationships', () => {
@@ -86,7 +86,7 @@ describe('Viz rendering', () => {
     cy.get(selectorRelationshipsAll, { timeout: 5000 }).should(
       'have.css',
       'background-color',
-      greyColor
+      GREY
     )
 
     // Change color and make sure color is changed
@@ -97,7 +97,7 @@ describe('Viz rendering', () => {
     cy.get(selectorRelationshipsAll, { timeout: 5000 }).should(
       'have.css',
       'background-color',
-      orangeColor
+      ORANGE
     )
   })
   it('can change styling of nodes with certain label', () => {
@@ -112,7 +112,7 @@ describe('Viz rendering', () => {
     cy.get(selectorNodeLabel, { timeout: 5000 }).should(
       'have.css',
       'background-color',
-      purpleColor
+      PURPLE
     )
 
     // Change color and make sure color is changed
@@ -123,7 +123,7 @@ describe('Viz rendering', () => {
     cy.get(selectorNodeLabel, { timeout: 5000 }).should(
       'have.css',
       'background-color',
-      orangeColor
+      ORANGE
     )
   })
   it('can change styling of relationship of certain type', () => {
@@ -138,7 +138,7 @@ describe('Viz rendering', () => {
     cy.get(selectorRelationshipType, { timeout: 5000 }).should(
       'have.css',
       'background-color',
-      greyColor
+      GREY
     )
 
     // Change color and make sure color is changed
@@ -149,7 +149,7 @@ describe('Viz rendering', () => {
     cy.get(selectorRelationshipType, { timeout: 5000 }).should(
       'have.css',
       'background-color',
-      orangeColor
+      ORANGE
     )
   })
 })

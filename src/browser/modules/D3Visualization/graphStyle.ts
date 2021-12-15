@@ -92,7 +92,7 @@ class StyleRule {
   }
 }
 
-const defaultStyle = {
+const DEFAULT_STYLE = {
   node: {
     diameter: '50px',
     color: '#A5ABB6',
@@ -112,7 +112,7 @@ const defaultStyle = {
   }
 }
 type DefaultSizeType = { diameter: string }
-const defaultSizes: DefaultSizeType[] = [
+const DEFAULT_SIZES: DefaultSizeType[] = [
   {
     diameter: '10px'
   },
@@ -130,7 +130,7 @@ const defaultSizes: DefaultSizeType[] = [
   }
 ]
 type DefaultIconCodeType = { 'icon-code': string }
-const defaultIconCodes: DefaultIconCodeType[] = [
+const DEFAULT_ICON_CODES: DefaultIconCodeType[] = [
   {
     'icon-code': 'a'
   },
@@ -154,7 +154,7 @@ const defaultIconCodes: DefaultIconCodeType[] = [
   }
 ]
 type DefaultArrayWidthType = { 'shaft-width': string }
-const defaultArrayWidths: DefaultArrayWidthType[] = [
+const DEFAULT_ARRAY_WIDTHS: DefaultArrayWidthType[] = [
   {
     'shaft-width': '1px'
   },
@@ -186,7 +186,7 @@ type DefaultColorType = {
   'border-color': string
   'text-color-internal': string
 }
-const defaultColors: DefaultColorType[] = [
+const DEFAULT_COLORS: DefaultColorType[] = [
   {
     color: '#604A0E',
     'border-color': '#423204',
@@ -303,8 +303,8 @@ export class GraphStyle {
       })
     const index =
       // @ts-expect-error ts-migrate(2365) FIXME: Operator '>' cannot be applied to types 'number' a... Remove this comment to see the full error message
-      usedColors.length - 1 > defaultColors ? 0 : usedColors.length - 1
-    return defaultColors[index]
+      usedColors.length - 1 > DEFAULT_COLORS ? 0 : usedColors.length - 1
+    return DEFAULT_COLORS[index]
   }
 
   getDefaultNodeCaption = function(
@@ -347,7 +347,7 @@ export class GraphStyle {
     return new StyleElement(selector).applyRules(this.rules)
   }
 
-  setDefaultNodeStyling = (selector: Selector, item: any): void => {
+  setDefaultNodeStyle = (selector: Selector, item: any): void => {
     let defaultColor = true
     let defaultCaption = true
     for (let i = 0; i < this.rules.length; i++) {
@@ -490,7 +490,7 @@ export class GraphStyle {
   }
 
   loadRules = (data?: any): void => {
-    const localData = typeof data === 'object' ? data : defaultStyle
+    const localData = typeof data === 'object' ? data : DEFAULT_STYLE
     this.rules = []
     for (const key in localData) {
       const props = localData[key]
@@ -499,19 +499,19 @@ export class GraphStyle {
   }
 
   defaultSizes = function(): DefaultSizeType[] {
-    return defaultSizes
+    return DEFAULT_SIZES
   }
 
   defaultIconCodes = function(): DefaultIconCodeType[] {
-    return defaultIconCodes
+    return DEFAULT_ICON_CODES
   }
 
   defaultArrayWidths = function(): DefaultArrayWidthType[] {
-    return defaultArrayWidths
+    return DEFAULT_ARRAY_WIDTHS
   }
 
   defaultColors = function(): DefaultColorType[] {
-    return defaultColors
+    return DEFAULT_COLORS
   }
 
   interpolate = (str: any, item: any) => {
@@ -543,7 +543,7 @@ export class GraphStyle {
   forNode = (node: any = {}): StyleElement => {
     const selector = this.nodeSelector(node)
     if ((node.labels != null ? node.labels.length : 0) > 0) {
-      this.setDefaultNodeStyling(selector, node)
+      this.setDefaultNodeStyle(selector, node)
     }
     return this.calculateStyle(selector)
   }
