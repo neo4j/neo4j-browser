@@ -60,8 +60,10 @@ export class GraphComponent extends Component<any, State> {
 
   componentDidMount() {
     if (this.svgElement != null) {
-      // this.initGraphView and this.addInternalRelationships both call this.graph.update(), which is inefficient
-      // need to further investigation
+      // this.initGraphView and this.addInternalRelationships both call this.graph.update()
+      // so, the same graph will be calculated twice
+      // for now, we added conditions to control which parts to be drawn to avoid repeated rendering
+      // the function need to be refactored in a better way in the future
       this.initGraphView()
       this.graph && this.props.setGraph && this.props.setGraph(this.graph)
       this.props.getAutoCompleteCallback &&
@@ -98,7 +100,7 @@ export class GraphComponent extends Component<any, State> {
       this.graphEH.bindEventHandlers()
       this.props.onGraphModelChange(getGraphStats(this.graph))
       this.graphView.resize()
-      this.graphView.update()
+      this.graphView.update({ updateNodes: true, updateRelationships: false })
     }
   }
 
@@ -108,14 +110,14 @@ export class GraphComponent extends Component<any, State> {
         mapRelationships(internalRelationships, this.graph)
       )
       this.props.onGraphModelChange(getGraphStats(this.graph))
-      this.graphView.update()
+      this.graphView.update({ updateNodes: false, updateRelationships: true })
       this.graphEH.onItemMouseOut()
     }
   }
 
   componentDidUpdate(prevProps: any) {
     if (prevProps.styleVersion !== this.props.styleVersion) {
-      this.graphView.update()
+      this.graphView.update({ updateNodes: true, updateRelationships: true })
     }
     if (this.props.isFullscreen !== prevProps.isFullscreen) {
       this.graphView.resize()

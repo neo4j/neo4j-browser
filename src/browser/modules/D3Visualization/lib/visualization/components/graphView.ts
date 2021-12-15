@@ -63,8 +63,8 @@ export default class graphView {
     return this
   }
 
-  update() {
-    this.viz.update()
+  update(options: { updateNodes: boolean; updateRelationships: boolean }) {
+    this.viz.update(options)
     return this
   }
 

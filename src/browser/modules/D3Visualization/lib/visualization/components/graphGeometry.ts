@@ -65,13 +65,21 @@ export default class NeoD3Geometry {
     )
   }
 
-  onGraphChange(graph: any) {
-    this.setNodeRadii(graph.nodes())
-    this.formatNodeCaptions(graph.nodes())
-    this.formatRelationshipCaptions(graph.relationships())
-    return this.relationshipRouting.measureRelationshipCaptions(
-      graph.relationships()
-    )
+  onGraphChange(
+    graph: any,
+    options = { updateNodes: true, updateRelationships: true }
+  ) {
+    if (!!options.updateNodes) {
+      this.setNodeRadii(graph.nodes())
+      this.formatNodeCaptions(graph.nodes())
+    }
+
+    if (!!options.updateRelationships) {
+      this.formatRelationshipCaptions(graph.relationships())
+      this.relationshipRouting.measureRelationshipCaptions(
+        graph.relationships()
+      )
+    }
   }
 
   onTick(graph: any) {

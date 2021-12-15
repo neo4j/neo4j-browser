@@ -267,10 +267,15 @@ const vizFn = function(
     return latestStats
   }
 
-  viz.update = function() {
+  viz.update = function(options: {
+    updateNodes: boolean
+    updateRelationships: boolean
+  }) {
     if (!graph) {
       return
     }
+
+    geometry.onGraphChange(graph, options)
 
     const layers = container
       .selectAll('g.layer')
@@ -300,8 +305,6 @@ const vizFn = function(
       'selected',
       (relationship: any) => relationship.selected
     )
-
-    geometry.onGraphChange(graph)
 
     for (var renderer of Array.from<any>(vizRenderers.relationship)) {
       relationshipGroups.call(renderer.onGraphChange, viz)
