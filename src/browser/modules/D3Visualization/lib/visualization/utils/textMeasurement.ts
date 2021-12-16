@@ -28,7 +28,7 @@ const measureTextWidthByCanvas = (
 }
 
 const cacheTextWidth = function() {
-  const CATCH_SIZE = 10000
+  const CATCH_SIZE = 100000
   const textMeasureMap: { [key: string]: number } = {}
   const lruKeyList: string[] = []
   return (key: string, calculate: () => number) => {

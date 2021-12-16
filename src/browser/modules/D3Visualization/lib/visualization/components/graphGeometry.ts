@@ -94,13 +94,18 @@ const fitCaptionIntoCircle = (
   style: GraphStyle,
   canvas2DContext: CanvasRenderingContext2D
 ): NodeCaptionLine[] => {
+  const fontFamily = 'sans-serif'
+  const fontSize = parseFloat(style.forNode(node).get('font-size'))
+  // Roughly calculate max text length the circle can fit by radius and font size
+  const maxCaptionTextLength = Math.floor(
+    (Math.pow(node.radius, 2) * Math.PI) / Math.pow(fontSize, 2)
+  )
   const template = style.forNode(node).get('caption')
   const nodeText = style.interpolate(template, node)
   const captionText =
-    // set dynamic max length
-    nodeText.length > 100 ? nodeText.substring(0, 100) : nodeText
-  const fontFamily = 'sans-serif'
-  const fontSize = parseFloat(style.forNode(node).get('font-size'))
+    nodeText.length > maxCaptionTextLength
+      ? nodeText.substring(0, maxCaptionTextLength)
+      : nodeText
   const measure = (text: string) =>
     measureText(text, fontFamily, fontSize, canvas2DContext)
   const whiteSpaceMeasureWidth = measure(' ')
