@@ -78,7 +78,6 @@ describe('<DetailsPane />', () => {
     }
     return render(
       <DetailsPaneComponent
-        frameHeight={0}
         graphStyle={mockGraphStyle}
         vizItem={mockVizItem}
         nodeInspectorWidth={width}

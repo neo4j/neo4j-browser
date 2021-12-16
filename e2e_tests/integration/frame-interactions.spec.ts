@@ -189,7 +189,7 @@ describe('Neo4j Browser', () => {
 
     cy.get('[data-testid="cypherFrameSidebarVisualization"]').should('exist')
   })
-  it('can collapse and un-collapse frame in fullscreen', () => {
+  it('can collapse in fullscreen to leave fullscreen', () => {
     cy.executeCommand(':clear')
     cy.executeCommand(
       'CREATE (a:TestLabel)-[:CONNECTS]->(b:TestLabel) RETURN a, b'
@@ -204,8 +204,6 @@ describe('Neo4j Browser', () => {
     cy.get('button[title="Expand"]').click()
 
     cy.get('[data-testid="cypherFrameSidebarVisualization"]').should('exist')
-
-    cy.get('button[title="Close fullscreen"]').click()
   })
   it('can remove the frame by pressing the x button', () => {
     cy.executeCommand(':clear')

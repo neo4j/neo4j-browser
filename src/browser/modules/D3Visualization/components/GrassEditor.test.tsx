@@ -33,7 +33,6 @@ describe('<GrassEditor />', () => {
     const { container } = render(
       <Provider store={store}>
         <GrassEditor
-          frameHeight={500}
           selectedLabel={{
             label: 'foo',
             propertyKeys: []

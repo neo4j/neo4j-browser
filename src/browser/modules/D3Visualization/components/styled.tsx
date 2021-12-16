@@ -123,12 +123,10 @@ export const StyledInlineList = styled.ul`
   word-break: break-word;
 `
 
-export const StyledInlineListStylePicker = styled(StyledInlineList)<{
-  frameHeight: number
-}>`
+export const StyledInlineListStylePicker = styled(StyledInlineList)`
   display: grid;
   overflow-y: auto;
-  max-height: ${props => props.frameHeight - 75}px;
+  max-height: 400px;
   background: ${props => props.theme.editorBackground};
   color: ${props => props.theme.primaryText};
   padding: 0.833em 1em;

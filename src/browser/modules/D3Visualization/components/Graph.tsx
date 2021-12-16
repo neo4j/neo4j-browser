@@ -22,7 +22,6 @@ import React, { Component } from 'react'
 import { createGraph, mapRelationships, getGraphStats } from '../mapper'
 import { GraphEventHandler } from '../GraphEventHandler'
 import '../lib/visualization/index'
-import { dim } from 'browser-styles/constants'
 import { StyledZoomHolder, StyledSvgWrapper, StyledZoomButton } from './styled'
 import { ZoomInIcon, ZoomOutIcon } from 'browser-components/icons/Icons'
 import graphView from '../lib/visualization/components/graphView'
@@ -59,14 +58,6 @@ export class GraphComponent extends Component<any, State> {
     })
   }
 
-  getVisualAreaHeight() {
-    return this.props.frameHeight && this.props.isFullscreen
-      ? this.props.frameHeight -
-          (dim.frameStatusbarHeight + dim.frameTitlebarHeight * 2)
-      : this.props.frameHeight - dim.frameStatusbarHeight ||
-          this.svgElement.parentNode.offsetHeight
-  }
-
   componentDidMount() {
     if (this.svgElement != null) {
       this.initGraphView()
@@ -84,7 +75,7 @@ export class GraphComponent extends Component<any, State> {
       const measureSize = () => {
         return {
           width: this.svgElement.offsetWidth,
-          height: this.getVisualAreaHeight()
+          height: this.svgElement?.clientHeight
         }
       }
       this.graph = createGraph(this.props.nodes, this.props.relationships)
@@ -124,10 +115,7 @@ export class GraphComponent extends Component<any, State> {
     if (prevProps.styleVersion !== this.props.styleVersion) {
       this.graphView.update()
     }
-    if (
-      this.props.isFullscreen !== prevProps.isFullscreen ||
-      this.props.frameHeight !== prevProps.frameHeight
-    ) {
+    if (this.props.isFullscreen !== prevProps.isFullscreen) {
       this.graphView.resize()
     }
   }

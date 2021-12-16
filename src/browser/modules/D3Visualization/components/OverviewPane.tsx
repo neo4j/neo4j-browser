@@ -60,7 +60,6 @@ function PaneBodySectionHeader({
 }
 
 type OverviewPaneProps = {
-  frameHeight: number
   graphStyle: GraphStyle
   hasTruncatedFields: boolean
   nodeCount: number | null
@@ -71,7 +70,6 @@ type OverviewPaneProps = {
 export const OVERVIEW_STEP_SIZE = 50
 
 function OverviewPane({
-  frameHeight,
   graphStyle,
   hasTruncatedFields,
   nodeCount,
@@ -117,7 +115,6 @@ function OverviewPane({
                 <StyleableNodeLabel
                   key={label}
                   graphStyle={graphStyle}
-                  frameHeight={frameHeight}
                   selectedLabel={{
                     label,
                     propertyKeys: Object.keys(labels[label].properties),
@@ -146,7 +143,6 @@ function OverviewPane({
                 <StyleableRelType
                   key={relType}
                   graphStyle={graphStyle}
-                  frameHeight={frameHeight}
                   selectedRelType={{
                     relType,
                     propertyKeys: Object.keys(relTypes[relType].properties),

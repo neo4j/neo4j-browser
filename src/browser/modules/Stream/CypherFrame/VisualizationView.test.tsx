@@ -35,7 +35,6 @@ function mockVizProps(
   overrides?: Partial<VisualizationProps>
 ): VisualizationProps {
   return {
-    frameHeight: 400,
     updated: 23,
     maxNeighbours: 200,
     autoComplete: false,

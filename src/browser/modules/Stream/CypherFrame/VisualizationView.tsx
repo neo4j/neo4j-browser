@@ -44,7 +44,6 @@ type VisualizationState = {
 export type VisualizationProps = {
   result: any
   graphStyleData: any
-  frameHeight: number
   updated: number
   autoComplete: boolean
   maxNeighbours: number
@@ -85,7 +84,6 @@ export class Visualization extends Component<
       this.props.isFullscreen !== props.isFullscreen ||
       !deepEquals(props.graphStyleData, this.props.graphStyleData) ||
       this.state.updated !== state.updated ||
-      this.props.frameHeight !== props.frameHeight ||
       this.props.autoComplete !== props.autoComplete
     )
   }
@@ -227,7 +225,6 @@ export class Visualization extends Component<
           nodes={this.state.nodes}
           relationships={this.state.relationships}
           isFullscreen={this.props.isFullscreen}
-          frameHeight={this.props.frameHeight}
           assignVisElement={this.props.assignVisElement}
           getAutoCompleteCallback={(callback: any) => {
             this.autoCompleteCallback = callback

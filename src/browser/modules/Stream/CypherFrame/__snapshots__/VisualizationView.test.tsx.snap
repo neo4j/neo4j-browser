@@ -16,7 +16,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
       >
         <svg
           class="neod3viz"
-          viewBox="0 -80.5 200 361"
+          viewBox="0 100 200 0"
         >
           <g
             transform="translate(0,0)"

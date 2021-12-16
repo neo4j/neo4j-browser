@@ -16,7 +16,6 @@ import { GraphStyle } from 'project-root/src/browser/modules/D3Visualization/gra
 
 interface NodeInspectorPanelProps {
   expanded: boolean
-  frameHeight: number
   graphStyle: GraphStyle
   hasTruncatedFields: boolean
   hoveredItem: VizItem
@@ -33,7 +32,6 @@ export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
   render(): JSX.Element {
     const {
       expanded,
-      frameHeight,
       graphStyle,
       hasTruncatedFields,
       hoveredItem,
@@ -81,12 +79,10 @@ export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
                 <DetailsPaneComponent
                   vizItem={shownEl}
                   graphStyle={graphStyle}
-                  frameHeight={frameHeight}
                   nodeInspectorWidth={width}
                 />
               ) : (
                 <OverviewPane
-                  frameHeight={frameHeight}
                   graphStyle={graphStyle}
                   hasTruncatedFields={hasTruncatedFields}
                   stats={stats}

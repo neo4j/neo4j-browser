@@ -73,7 +73,6 @@ describe('<OverviewPane />', () => {
   }: RenderComponentProps) => {
     return render(
       <OverviewPane
-        frameHeight={0}
         graphStyle={graphStyle}
         hasTruncatedFields={false}
         nodeCount={nodeCount}

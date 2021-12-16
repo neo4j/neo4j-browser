@@ -134,13 +134,11 @@ export const DETAILS_PANE_STEP_SIZE = 1000
 type DetailsPaneComponentProps = {
   vizItem: NodeItem | RelationshipItem
   graphStyle: GraphStyle
-  frameHeight: number
   nodeInspectorWidth: number
 }
 export function DetailsPaneComponent({
   vizItem,
   graphStyle,
-  frameHeight,
   nodeInspectorWidth
 }: DetailsPaneComponentProps): JSX.Element {
   const [maxPropertiesCount, setMaxPropertiesCount] = useState(
@@ -176,7 +174,6 @@ export function DetailsPaneComponent({
               propertyKeys: vizItem.item.properties.map(p => p.key),
               relType: vizItem.item.type
             }}
-            frameHeight={frameHeight}
             graphStyle={graphStyle}
           />
         )}
@@ -185,7 +182,6 @@ export function DetailsPaneComponent({
             return (
               <StyleableNodeLabel
                 key={label}
-                frameHeight={frameHeight}
                 graphStyle={graphStyle}
                 selectedLabel={{
                   label,

@@ -62,7 +62,6 @@ type ExplorerComponentProps = {
   graphStyleData: any
   getNeighbours: any
   updateStyle: any
-  frameHeight: number
   isFullscreen: boolean
   assignVisElement: any
   getAutoCompleteCallback: any
@@ -226,8 +225,7 @@ export class ExplorerComponent extends Component<
     return (
       <StyledFullSizeContainer id="svg-vis">
         <GraphComponent
-          fullscreen={this.props.isFullscreen}
-          frameHeight={this.props.frameHeight}
+          isFullscreen={this.props.isFullscreen}
           relationships={this.state.relationships}
           nodes={this.state.nodes}
           getNodeNeighbours={this.getNodeNeighbours.bind(this)}
@@ -244,7 +242,6 @@ export class ExplorerComponent extends Component<
           }
         />
         <NodeInspectorPanel
-          frameHeight={this.props.frameHeight}
           graphStyle={graphStyle}
           hasTruncatedFields={this.props.hasTruncatedFields}
           hoveredItem={this.state.hoveredItem}
