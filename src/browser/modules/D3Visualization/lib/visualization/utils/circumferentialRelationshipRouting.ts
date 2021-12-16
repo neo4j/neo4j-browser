@@ -21,11 +21,12 @@ import measureText from './textMeasurement'
 import distributeCircular from './circumferentialDistribution'
 import StraightArrow from './straightArrow'
 import ArcArrow from './arcArrow'
+import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
 
 export default class circumferentialRelationshipRouting {
-  style: any
+  style: GraphStyle
   canvas: HTMLCanvasElement
-  constructor(style: any) {
+  constructor(style: GraphStyle) {
     this.style = style
     this.canvas = document.createElement('canvas')
   }

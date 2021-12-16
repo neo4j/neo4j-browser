@@ -23,13 +23,14 @@ import NeoD3Geometry from './graphGeometry'
 import * as vizRenderers from '../renders/init'
 import { menu as menuRenderer } from '../renders/menu'
 import vizClickHandler from '../utils/clickHandler'
+import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
 
 const vizFn = function(
   el: any,
   measureSize: any,
   graph: any,
   layout: any,
-  style: any
+  style: GraphStyle
 ) {
   const viz: any = { style }
 

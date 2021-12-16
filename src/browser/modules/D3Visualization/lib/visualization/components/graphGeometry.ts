@@ -17,14 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
 import PairwiseArcsRelationshipRouting from '../utils/pairwiseArcsRelationshipRouting'
 import measureText from '../utils/textMeasurement'
 
 export default class NeoD3Geometry {
   relationshipRouting: any
-  style: any
+  style: GraphStyle
   canvas: HTMLCanvasElement
-  constructor(style: any) {
+  constructor(style: GraphStyle) {
     this.style = style
     this.relationshipRouting = new PairwiseArcsRelationshipRouting(this.style)
     this.canvas = document.createElement('canvas')
@@ -89,7 +90,7 @@ export default class NeoD3Geometry {
 
 const fitCaptionIntoCircle = function(
   node: any,
-  style: any,
+  style: GraphStyle,
   canvas2DContext: CanvasRenderingContext2D
 ) {
   const template = style.forNode(node).get('caption')
