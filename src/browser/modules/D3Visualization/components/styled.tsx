@@ -233,10 +233,10 @@ export const StyledFullSizeContainer = styled.div`
 `
 
 export const StyledZoomHolder = styled.div<{
-  fullscreen: boolean
+  isFullscreen: boolean
   offset: number
 }>`
-  position: ${props => (props.fullscreen ? 'fixed' : 'absolute')};
+  position: ${props => (props.isFullscreen ? 'fixed' : 'absolute')};
   bottom: 0;
   right: ${props => props.offset}px
   padding: 6px 6px 0 6px;

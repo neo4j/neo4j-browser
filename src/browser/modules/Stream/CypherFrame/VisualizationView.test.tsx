@@ -41,7 +41,7 @@ function mockVizProps(
     autoComplete: false,
     assignVisElement: () => undefined,
     bus: mockBus,
-    fullscreen: false,
+    isFullscreen: false,
     initialNodeDisplay: 400,
     maxFieldItems: 200,
     result: null,

@@ -189,7 +189,7 @@ function FrameEditor({
               onExecute={run}
               value={editorValue}
               ref={editorRef}
-              fullscreen={false}
+              isFullscreen={false}
               toggleFullscreen={fullscreenToggle}
             />
           </EditorContainer>

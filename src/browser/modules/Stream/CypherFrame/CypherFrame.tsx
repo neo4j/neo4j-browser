@@ -105,8 +105,8 @@ export type CypherFrameProps = BaseFrameProps & {
 
 type CypherFrameState = {
   openView?: ViewTypes.FrameView
-  fullscreen: boolean
-  collapse: boolean
+  isFullscreen: boolean
+  isCollapsed: boolean
   frameHeight: number
   hasVis: boolean
   errors?: unknown
@@ -124,8 +124,8 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
   } = null
   state: CypherFrameState = {
     openView: undefined,
-    fullscreen: false,
-    collapse: false,
+    isFullscreen: false,
+    isCollapsed: false,
     frameHeight: 472,
     hasVis: false,
     asciiMaxColWidth: undefined,
@@ -141,14 +141,14 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
   }
 
   onResize = (
-    fullscreen: boolean,
-    collapse: boolean,
+    isFullscreen: boolean,
+    isCollapsed: boolean,
     frameHeight: number
   ): void => {
     if (frameHeight) {
-      this.setState({ fullscreen, collapse, frameHeight })
+      this.setState({ isFullscreen, isCollapsed, frameHeight })
     } else {
-      this.setState({ fullscreen, collapse })
+      this.setState({ isFullscreen, isCollapsed })
     }
   }
 
@@ -159,9 +159,9 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
     return (
       this.props.request.updated !== props.request.updated ||
       this.state.openView !== state.openView ||
-      this.state.fullscreen !== state.fullscreen ||
+      this.state.isFullscreen !== state.isFullscreen ||
       this.state.frameHeight !== state.frameHeight ||
-      this.state.collapse !== state.collapse ||
+      this.state.isCollapsed !== state.isCollapsed ||
       this.state.asciiMaxColWidth !== state.asciiMaxColWidth ||
       this.state.asciiSetColWidth !== state.asciiSetColWidth ||
       this.state.planExpand !== state.planExpand ||
@@ -322,8 +322,8 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
     return (
       <StyledFrameBody
         data-testid="frame-loaded-contents"
-        fullscreen={this.state.fullscreen}
-        collapsed={this.state.collapse}
+        isFullscreen={this.state.isFullscreen}
+        isCollapsed={this.state.isCollapsed}
         preventOverflow={this.state.openView === ViewTypes.VISUALIZATION}
         removePadding
       >
@@ -355,7 +355,7 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
             planExpand={this.state.planExpand}
             result={result}
             updated={this.props.request.updated}
-            fullscreen={this.state.fullscreen}
+            isFullscreen={this.state.isFullscreen}
             assignVisElement={(svgElement: any, graphElement: any) => {
               this.visElement = { svgElement, graphElement, type: 'plan' }
               this.setState({ hasVis: true })
@@ -367,7 +367,7 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
         </Display>
         <Display if={this.state.openView === ViewTypes.VISUALIZATION} lazy>
           <VisualizationConnectedBus
-            fullscreen={this.state.fullscreen}
+            isFullscreen={this.state.isFullscreen}
             result={result}
             updated={this.props.request.updated}
             frameHeight={this.state.frameHeight}

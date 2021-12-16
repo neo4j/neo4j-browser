@@ -51,7 +51,7 @@ export type VisualizationProps = {
   bus: Bus
   maxFieldItems: number
   initialNodeDisplay: number
-  fullscreen: boolean
+  isFullscreen: boolean
   updateStyle: (style: any) => void
   assignVisElement: (v: any) => void
 }
@@ -76,10 +76,13 @@ export class Visualization extends Component<
     }
   }
 
-  shouldComponentUpdate(props: any, state: VisualizationState) {
+  shouldComponentUpdate(
+    props: VisualizationProps,
+    state: VisualizationState
+  ): boolean {
     return (
       this.props.updated !== props.updated ||
-      this.props.fullscreen !== props.fullscreen ||
+      this.props.isFullscreen !== props.isFullscreen ||
       !deepEquals(props.graphStyleData, this.props.graphStyleData) ||
       this.state.updated !== state.updated ||
       this.props.frameHeight !== props.frameHeight ||
@@ -213,7 +216,7 @@ export class Visualization extends Component<
     if (!this.state.nodes.length) return null
 
     return (
-      <StyledVisContainer fullscreen={this.props.fullscreen}>
+      <StyledVisContainer isFullscreen={this.props.isFullscreen}>
         <Explorer
           maxNeighbours={this.props.maxNeighbours}
           hasTruncatedFields={this.state.hasTruncatedFields}
@@ -223,7 +226,7 @@ export class Visualization extends Component<
           getNeighbours={this.getNeighbours.bind(this)}
           nodes={this.state.nodes}
           relationships={this.state.relationships}
-          fullscreen={this.props.fullscreen}
+          isFullscreen={this.props.isFullscreen}
           frameHeight={this.props.frameHeight}
           assignVisElement={this.props.assignVisElement}
           getAutoCompleteCallback={(callback: any) => {

@@ -21,10 +21,10 @@
 import styled from 'styled-components'
 import { dim } from 'browser-styles/constants'
 
-export const StyledVisContainer = styled.div<{ fullscreen: boolean }>`
+export const StyledVisContainer = styled.div<{ isFullscreen: boolean }>`
   width: 100%;
   height: ${props =>
-    props.fullscreen
+    props.isFullscreen
       ? '100%'
       : dim.frameBodyHeight - dim.frameTitlebarHeight * 2 + 'px'};
   > svg {

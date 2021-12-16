@@ -71,8 +71,8 @@ function FrameBodyTemplate({
   return (
     <>
       <StyledFrameBody
-        fullscreen={isFullscreen}
-        collapsed={isCollapsed}
+        isFullscreen={isFullscreen}
+        isCollapsed={isCollapsed}
         removePadding={removePadding}
         hasSlides={hasSlides}
       >
@@ -80,7 +80,7 @@ function FrameBodyTemplate({
         {aside && <StyledFrameAside>{aside}</StyledFrameAside>}
         <StyledFrameMainSection>
           <StyledFrameContents
-            fullscreen={isFullscreen}
+            isFullscreen={isFullscreen}
             data-testid="frameContents"
           >
             {contents}
@@ -90,7 +90,7 @@ function FrameBodyTemplate({
 
       {statusBar && (
         <StyledFrameStatusbar
-          fullscreen={isFullscreen}
+          isFullscreen={isFullscreen}
           data-testid="frameStatusbar"
         >
           {statusBar}

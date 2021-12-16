@@ -21,7 +21,7 @@
 import styled from 'styled-components'
 
 interface FullscreenProps {
-  fullscreen: boolean
+  isFullscreen: boolean
 }
 
 export const Header = styled.div`
@@ -39,7 +39,7 @@ export const MainEditorWrapper = styled.div<FullscreenProps>`
   box-shadow: ${props => props.theme.standardShadow};
   margin: 10px 10px 0 10px;
   ${props =>
-    props.fullscreen &&
+    props.isFullscreen &&
     `
       position: fixed;
       top: 0px;

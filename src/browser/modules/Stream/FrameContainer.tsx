@@ -118,7 +118,7 @@ export function FrameContainer(props: FrameContainerProps): JSX.Element {
     <StyledFrame
       className={isFullscreen ? 'is-fullscreen' : ''}
       data-testid="frame"
-      fullscreen={isFullscreen}
+      isFullscreen={isFullscreen}
     >
       <FrameTitlebar
         frame={frame}

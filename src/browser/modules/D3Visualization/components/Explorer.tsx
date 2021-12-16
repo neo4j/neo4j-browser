@@ -63,7 +63,7 @@ type ExplorerComponentProps = {
   getNeighbours: any
   updateStyle: any
   frameHeight: number
-  fullscreen: boolean
+  isFullscreen: boolean
   assignVisElement: any
   getAutoCompleteCallback: any
   setGraph: any
@@ -226,7 +226,7 @@ export class ExplorerComponent extends Component<
     return (
       <StyledFullSizeContainer id="svg-vis">
         <GraphComponent
-          fullscreen={this.props.fullscreen}
+          fullscreen={this.props.isFullscreen}
           frameHeight={this.props.frameHeight}
           relationships={this.state.relationships}
           nodes={this.state.nodes}

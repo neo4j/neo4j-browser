@@ -21,14 +21,14 @@
 import styled from 'styled-components'
 import { dim } from 'browser-styles/constants'
 
-type FullscreenProps = { fullscreen: boolean }
+type FullscreenProps = { isFullscreen: boolean }
 export const StyledFrame = styled.article<FullscreenProps>`
   width: auto;
   background-color: ${props => props.theme.frameBackground};
   border: ${props => props.theme.frameBorder};
 
   ${props =>
-    props.fullscreen
+    props.isFullscreen
       ? `margin: 0;
 position: fixed;
 left: 0;
@@ -47,7 +47,7 @@ z-index: 130;`
 `
 
 type StyledFrameBodyProps = FullscreenProps & {
-  collapsed: boolean
+  isCollapsed: boolean
   preventOverflow?: boolean
   removePadding?: boolean
   hasSlides?: boolean
@@ -58,15 +58,15 @@ export const StyledFrameBody = styled.div<StyledFrameBodyProps>`
   overflow: ${props => (props.preventOverflow ? 'hidden' : 'auto')};
   min-height: ${dim.frameBodyHeight / 2}px;
   max-height: ${props => {
-    if (props.collapsed) {
+    if (props.isCollapsed) {
       return 0
     }
-    if (props.fullscreen) {
+    if (props.isFullscreen) {
       return '100%'
     }
     return dim.frameBodyHeight - dim.frameStatusbarHeight + 1 + 'px'
   }};
-  display: ${props => (props.collapsed ? 'none' : 'flex')};
+  display: ${props => (props.isCollapsed ? 'none' : 'flex')};
   flex-direction: row;
   width: 100%;
   padding: 30px 30px 10px 30px;
@@ -107,10 +107,10 @@ export const StyledFrameContents = styled.div<FullscreenProps>`
   overflow: auto;
   min-height: ${dim.frameBodyHeight / 2}px;
   max-height: ${props =>
-    props.fullscreen
+    props.isFullscreen
       ? '100vh'
       : dim.frameBodyHeight - dim.frameStatusbarHeight * 2 + 'px'};
-  ${props => (props.fullscreen ? 'height: 100vh' : null)};
+  ${props => (props.isFullscreen ? 'height: 100vh' : null)};
   flex: auto;
   display: flex;
   width: 100%;

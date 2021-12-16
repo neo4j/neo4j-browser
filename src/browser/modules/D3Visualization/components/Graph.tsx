@@ -60,7 +60,7 @@ export class GraphComponent extends Component<any, State> {
   }
 
   getVisualAreaHeight() {
-    return this.props.frameHeight && this.props.fullscreen
+    return this.props.frameHeight && this.props.isFullscreen
       ? this.props.frameHeight -
           (dim.frameStatusbarHeight + dim.frameTitlebarHeight * 2)
       : this.props.frameHeight - dim.frameStatusbarHeight ||
@@ -125,7 +125,7 @@ export class GraphComponent extends Component<any, State> {
       this.graphView.update()
     }
     if (
-      this.props.fullscreen !== prevProps.fullscreen ||
+      this.props.isFullscreen !== prevProps.isFullscreen ||
       this.props.frameHeight !== prevProps.frameHeight
     ) {
       this.graphView.resize()
@@ -136,7 +136,7 @@ export class GraphComponent extends Component<any, State> {
     return (
       <StyledZoomHolder
         offset={this.props.offset}
-        fullscreen={this.props.fullscreen}
+        isFullscreen={this.props.isFullscreen}
       >
         <StyledZoomButton
           className={
@@ -144,7 +144,7 @@ export class GraphComponent extends Component<any, State> {
           }
           onClick={this.zoomInClicked.bind(this)}
         >
-          <ZoomInIcon regulateSize={this.props.fullscreen ? 2 : 1} />
+          <ZoomInIcon regulateSize={this.props.isFullscreen ? 2 : 1} />
         </StyledZoomButton>
         <StyledZoomButton
           className={
@@ -152,7 +152,7 @@ export class GraphComponent extends Component<any, State> {
           }
           onClick={this.zoomOutClicked.bind(this)}
         >
-          <ZoomOutIcon regulateSize={this.props.fullscreen ? 2 : 1} />
+          <ZoomOutIcon regulateSize={this.props.isFullscreen ? 2 : 1} />
         </StyledZoomButton>
       </StyledZoomHolder>
     )
