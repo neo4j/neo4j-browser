@@ -347,7 +347,7 @@ export const FrameControlButton = ({
   </StyledFrameControlButton>
 )
 
-const StyledFrameControlButton = styled.li<{
+const StyledFrameControlButton = styled.button<{
   pressed?: boolean
 }>`
   border-radius: 2px;
@@ -358,6 +358,8 @@ const StyledFrameControlButton = styled.li<{
   background-color: ${props =>
     props.pressed ? props.theme.frameButtonHoverBackground : 'transparent'};
 
+  outline: none;
+  border: none;
   border-left: transparent;
   height: 20px;
   width: 20px;
