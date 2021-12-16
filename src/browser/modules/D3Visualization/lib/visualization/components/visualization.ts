@@ -19,11 +19,12 @@
  */
 
 import d3 from 'd3'
-import NeoD3Geometry from './graphGeometry'
+import Geometry from './graphGeometry'
 import * as vizRenderers from '../renders/init'
 import { menu as menuRenderer } from '../renders/menu'
 import vizClickHandler from '../utils/clickHandler'
 import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
+import Node from './Node'
 
 const vizFn = function(
   el: any,
@@ -48,7 +49,7 @@ const vizFn = function(
     .attr('transform', 'scale(1)')
 
   const container = baseGroup.append('g')
-  const geometry = new NeoD3Geometry(style)
+  const geometry = new Geometry(style)
 
   // This flags that a panning is ongoing and won't trigger
   // 'canvasClick' event when panning ends.
@@ -63,14 +64,14 @@ const vizFn = function(
   // To be overridden
   viz.trigger = function(_event: any, ..._args: any[]) {}
 
-  const onNodeClick = (node: any) => {
+  const onNodeClick = (node: Node) => {
     updateViz = false
     return viz.trigger('nodeClicked', node)
   }
 
-  const onNodeDblClick = (node: any) => viz.trigger('nodeDblClicked', node)
+  const onNodeDblClick = (node: Node) => viz.trigger('nodeDblClicked', node)
 
-  const onNodeDragToggle = (node: any) => viz.trigger('nodeDragToggle', node)
+  const onNodeDragToggle = (node: Node) => viz.trigger('nodeDragToggle', node)
 
   const onRelationshipClick = (relationship: any) => {
     ;(d3.event as Event).stopPropagation()
@@ -78,8 +79,8 @@ const vizFn = function(
     return viz.trigger('relationshipClicked', relationship)
   }
 
-  const onNodeMouseOver = (node: any) => viz.trigger('nodeMouseOver', node)
-  const onNodeMouseOut = (node: any) => viz.trigger('nodeMouseOut', node)
+  const onNodeMouseOver = (node: Node) => viz.trigger('nodeMouseOver', node)
+  const onNodeMouseOut = (node: Node) => viz.trigger('nodeMouseOut', node)
 
   const onRelMouseOver = (rel: any) => viz.trigger('relMouseOver', rel)
   const onRelMouseOut = (rel: any) => viz.trigger('relMouseOut', rel)
@@ -327,7 +328,7 @@ const vizFn = function(
       .on('mouseover', onNodeMouseOver)
       .on('mouseout', onNodeMouseOut)
 
-    nodeGroups.classed('selected', (node: any) => node.selected)
+    nodeGroups.classed('selected', (node: Node) => node.selected)
 
     for (renderer of Array.from(vizRenderers.node)) {
       nodeGroups.call(renderer.onGraphChange, viz)

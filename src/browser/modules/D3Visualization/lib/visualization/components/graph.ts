@@ -18,8 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import Node from './Node'
+
 export default class Graph {
-  _nodes: any
+  _nodes: Node[]
   _relationships: any[]
   expandedNodeMap: any
   nodeMap: any
@@ -71,14 +73,13 @@ export default class Graph {
     })()
   }
 
-  addNodes(nodes: any[]) {
-    for (const node of Array.from(nodes)) {
+  addNodes(nodes: Node[]): void {
+    for (const node of nodes) {
       if (this.findNode(node.id) == null) {
         this.nodeMap[node.id] = node
         this._nodes.push(node)
       }
     }
-    return this
   }
 
   addExpandedNodes = (node: any, nodes: any[]) => {
@@ -93,7 +94,7 @@ export default class Graph {
     }
   }
 
-  removeNode(node: any) {
+  removeNode(node: Node) {
     if (this.findNode(node.id) != null) {
       delete this.nodeMap[node.id]
       this._nodes.splice(this._nodes.indexOf(node), 1)
@@ -101,7 +102,7 @@ export default class Graph {
     return this
   }
 
-  collapseNode = (node: any) => {
+  collapseNode = (node: Node) => {
     if (!this.expandedNodeMap[node.id]) {
       return
     }
@@ -114,7 +115,7 @@ export default class Graph {
     this.expandedNodeMap[node.id] = []
   }
 
-  updateNode(node: any) {
+  updateNode(node: Node) {
     if (this.findNode(node.id) != null) {
       this.removeNode(node)
       node.expanded = false

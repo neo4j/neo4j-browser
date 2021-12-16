@@ -23,7 +23,7 @@ import deepmerge from 'deepmerge'
 import { connect, ConnectedComponent } from 'react-redux'
 import { debounce } from 'lodash'
 
-import Node from '../lib/visualization/components/node'
+import Node from '../lib/visualization/components/Node'
 import Relationship from '../lib/visualization/components/relationship'
 import { GraphStyle } from '../graphStyle'
 import { GlobalState } from 'shared/globalState'
@@ -109,7 +109,7 @@ export class ExplorerComponent extends Component<
     if (nodes.length > parseInt(this.props.initialNodeDisplay)) {
       nodes = nodes.slice(0, this.props.initialNodeDisplay)
       relationships = this.props.relationships.filter((item: any) => {
-        return nodes.filter((node: any) => node.id === item.startNodeId) > 0
+        return nodes.filter((node: Node) => node.id === item.startNodeId) > 0
       })
       selectedItem = {
         type: 'status-item',
@@ -140,7 +140,7 @@ export class ExplorerComponent extends Component<
     }
   }
 
-  getNodeNeighbours(node: any, currentNeighbours: any, callback: any) {
+  getNodeNeighbours(node: Node, currentNeighbours: any, callback: any) {
     if (currentNeighbours.length > this.props.maxNeighbours) {
       callback(null, { nodes: [], relationships: [] })
     }

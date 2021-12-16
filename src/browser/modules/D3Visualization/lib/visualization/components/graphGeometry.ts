@@ -20,8 +20,9 @@
 import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
 import PairwiseArcsRelationshipRouting from '../utils/pairwiseArcsRelationshipRouting'
 import measureText from '../utils/textMeasurement'
+import Node, { NodeCaptionLine } from './Node'
 
-export default class NeoD3Geometry {
+export default class Geometry {
   relationshipRouting: any
   style: GraphStyle
   canvas: HTMLCanvasElement
@@ -31,9 +32,9 @@ export default class NeoD3Geometry {
     this.canvas = document.createElement('canvas')
   }
 
-  formatNodeCaptions(nodes: any[]) {
+  formatNodeCaptions(nodes: Node[]): void {
     const canvas2DContext = this.canvas.getContext('2d')
-    Array.from(nodes).map(
+    nodes.map(
       node =>
         (node.caption = fitCaptionIntoCircle(
           node,
@@ -59,8 +60,8 @@ export default class NeoD3Geometry {
     })()
   }
 
-  setNodeRadii(nodes: any[]) {
-    return Array.from(nodes).map(
+  setNodeRadii(nodes: Node[]): void {
+    nodes.map(
       node =>
         (node.radius = parseFloat(this.style.forNode(node).get('diameter')) / 2)
     )
@@ -88,11 +89,11 @@ export default class NeoD3Geometry {
   }
 }
 
-const fitCaptionIntoCircle = function(
-  node: any,
+const fitCaptionIntoCircle = (
+  node: Node,
   style: GraphStyle,
   canvas2DContext: CanvasRenderingContext2D
-) {
+): NodeCaptionLine[] => {
   const template = style.forNode(node).get('caption')
   const nodeText = style.interpolate(template, node)
   const captionText =
@@ -106,7 +107,7 @@ const fitCaptionIntoCircle = function(
 
   const words = captionText.split(' ')
 
-  const emptyLine = function(lineCount: number, lineIndex: number) {
+  const emptyLine = (lineCount: number, lineIndex: number): NodeCaptionLine => {
     // Calculate baseline of the text
     const baseline = (1 + lineIndex - lineCount / 2) * fontSize
 
@@ -125,7 +126,10 @@ const fitCaptionIntoCircle = function(
     }
   }
 
-  const addShortenedNextWord = (line: any, word: string): string => {
+  const addShortenedNextWord = (
+    line: NodeCaptionLine,
+    word: string
+  ): string => {
     while (word.length > 2) {
       const newWord = `${word.substring(0, word.length - 2)}\u2026`
       if (measure(newWord) < line.remainingWidth) {
@@ -139,7 +143,9 @@ const fitCaptionIntoCircle = function(
     return `${word}\u2026`
   }
 
-  const fitOnFixedNumberOfLines = function(lineCount: number): [any, number] {
+  const fitOnFixedNumberOfLines = function(
+    lineCount: number
+  ): [NodeCaptionLine[], number] {
     const lines = []
     const wordMeasureWidthList: number[] = []
     words.forEach((word: string) =>
@@ -178,7 +184,7 @@ const fitCaptionIntoCircle = function(
     const [candidateLines, candidateWords] = fitOnFixedNumberOfLines(lineCount)
 
     // If the lines don't have empty line(s), they're probably good fit for the typesetting
-    if (!candidateLines.some((line: any) => !line.text)) {
+    if (!candidateLines.some((line: NodeCaptionLine) => !line.text)) {
       lines = candidateLines
       consumedWords = candidateWords
     }
