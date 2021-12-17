@@ -23,9 +23,9 @@ const { viewportWidth, viewportHeight } = Cypress.config()
 const MainEditorMaxHeight = 286
 const MainEditorWidth = viewportWidth - 80
 const FrameEditorMaxHeight = 276
-const FrameEditorWidth = viewportWidth - 184
-const FrameEditorFullscreenWidth = viewportWidth - 94
-const FrameMaxHeight = 580
+const FrameEditorWidth = viewportWidth - 225
+const FrameEditorFullscreenWidth = viewportWidth - 135
+const FrameMaxHeight = 618
 const FrameFullscreenHeight = viewportHeight - 3
 
 describe('Neo4j Browser', () => {
@@ -34,6 +34,8 @@ describe('Neo4j Browser', () => {
       .title()
       .should('include', 'Neo4j Browser')
     cy.wait(3000)
+    const password = Cypress.config('password')
+    cy.connect('neo4j', password)
   })
 
   it('can fullscreen main editor with shortcut', () => {
@@ -82,6 +84,8 @@ describe('Neo4j Browser', () => {
       .invoke('width')
       .should('equal', MainEditorWidth)
 
+    cy.get('[data-testid="editor-fullscreen"]').should('exist')
+
     cy.get('[data-testid="editor-fullscreen"]').click()
 
     cy.get(EditorArea)
@@ -102,7 +106,7 @@ describe('Neo4j Browser', () => {
       .should('equal', MainEditorWidth)
   })
 
-  it('re-usable fram can also use fullscreen', () => {
+  it('re-usable frame can also use fullscreen', () => {
     cy.executeCommand(':clear')
     cy.executeCommand('return 1')
     cy.get('[data-testid="frameCommand"]')
@@ -168,5 +172,72 @@ describe('Neo4j Browser', () => {
       .closest('article')
       .invoke('height')
       .should('equal', FrameMaxHeight)
+  })
+
+  it('can collapse and un-collapse frame', () => {
+    cy.executeCommand(':clear')
+    cy.executeCommand(
+      'CREATE (a:TestLabel)-[:CONNECTS]->(b:TestLabel) RETURN a, b'
+    )
+    cy.get('button[title="Collapse"]').click()
+
+    cy.get('[data-testid="cypherFrameSidebarVisualization"]').should(
+      'not.be.visible'
+    )
+
+    cy.get('button[title="Expand"]').click()
+
+    cy.get('[data-testid="cypherFrameSidebarVisualization"]').should('exist')
+  })
+  it('can collapse and un-collapse frame in fullscreen', () => {
+    cy.executeCommand(':clear')
+    cy.executeCommand(
+      'CREATE (a:TestLabel)-[:CONNECTS]->(b:TestLabel) RETURN a, b'
+    )
+    cy.get('button[title="Fullscreen"]').click()
+    cy.get('button[title="Collapse"]').click()
+
+    cy.get('[data-testid="cypherFrameSidebarVisualization"]').should(
+      'not.be.visible'
+    )
+
+    cy.get('button[title="Expand"]').click()
+
+    cy.get('[data-testid="cypherFrameSidebarVisualization"]').should('exist')
+
+    cy.get('button[title="Close fullscreen"]').click()
+  })
+  it('can remove the frame by pressing the x button', () => {
+    cy.executeCommand(':clear')
+    cy.executeCommand(
+      'CREATE (a:TestLabel)-[:CONNECTS]->(b:TestLabel) RETURN a, b'
+    )
+
+    cy.get('[data-testid="cypherFrameSidebarVisualization"]').should('exist')
+
+    cy.get('button[title="Close"]').click()
+
+    cy.get('[data-testid="cypherFrameSidebarVisualization"]').should(
+      'not.exist'
+    )
+  })
+  it('can pin and unpin frame', () => {
+    cy.executeCommand(':clear')
+    cy.executeCommand('RETURN 1')
+    cy.get('button[title="Pin at top"]').click()
+    cy.executeCommand('RETURN 2')
+
+    cy.get('[data-testid="frameCommand"]')
+      .first()
+      .contains('RETURN 1')
+
+    cy.get('button[title="Pin at top"]')
+      .first()
+      .click()
+    cy.executeCommand('RETURN 3')
+
+    cy.get('[data-testid="frameCommand"]')
+      .first()
+      .contains('RETURN 3')
   })
 })
