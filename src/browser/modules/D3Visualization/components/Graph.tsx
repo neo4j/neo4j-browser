@@ -75,7 +75,7 @@ export class GraphComponent extends Component<any, State> {
       const measureSize = () => {
         return {
           width: this.svgElement.offsetWidth,
-          height: this.svgElement?.clientHeight
+          height: this.svgElement?.parentElement.clientHeight
         }
       }
       this.graph = createGraph(this.props.nodes, this.props.relationships)
@@ -117,6 +117,7 @@ export class GraphComponent extends Component<any, State> {
     }
     if (this.props.isFullscreen !== prevProps.isFullscreen) {
       this.graphView.resize()
+      this.graphView.update()
     }
   }
 
