@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
 import PairwiseArcsRelationshipRouting from '../utils/pairwiseArcsRelationshipRouting'
 import measureText from '../utils/textMeasurement'
@@ -154,9 +155,8 @@ const fitCaptionIntoCircle = (
     lineCount: number
   ): [NodeCaptionLine[], number] {
     const lines = []
-    const wordMeasureWidthList: number[] = []
-    words.forEach((word: string) =>
-      wordMeasureWidthList.push(measure(`${word}`))
+    const wordMeasureWidthList: number[] = words.map((word: string) =>
+      measure(`${word}`)
     )
     let wordIndex = 0
     for (let lineIndex = 0; lineIndex < lineCount; lineIndex++) {
