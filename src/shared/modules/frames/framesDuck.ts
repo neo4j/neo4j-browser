@@ -226,7 +226,7 @@ interface ConnectionData {
   username: string
 }
 
-interface FrameError {
+export interface FrameError {
   cmd: string
   code: string
   message: string

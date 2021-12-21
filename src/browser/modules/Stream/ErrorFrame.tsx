@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React from 'react'
-import FrameTemplate from '../Frame/FrameTemplate'
+import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
 import { createErrorObject, UnknownCommandError } from 'services/exceptions'
 import { errorMessageFormater } from './errorMessageFormater'
 import {
@@ -72,7 +72,13 @@ export const ErrorView = ({ frame }: any) => {
   )
 }
 
-const ErrorFrame = ({ frame }: any) => {
-  return <FrameTemplate header={frame} contents={<ErrorView frame={frame} />} />
+const ErrorFrame = ({ frame, isFullscreen, isCollapsed }: any) => {
+  return (
+    <FrameBodyTemplate
+      isCollapsed={isCollapsed}
+      isFullscreen={isFullscreen}
+      contents={<ErrorView frame={frame} />}
+    />
+  )
 }
 export default ErrorFrame

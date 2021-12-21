@@ -22,21 +22,28 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { Provider } from 'react-redux'
 
-import { CypherFrame } from './CypherFrame'
+import { CypherFrame, CypherFrameProps } from './CypherFrame'
 import { Frame } from 'shared/modules/frames/framesDuck'
 import {
   BrowserRequest,
   BrowserRequestResult
 } from 'shared/modules/requests/requestsDuck'
 
-const createProps = (status: string, result: BrowserRequestResult) => ({
+const createProps = (
+  status: string,
+  result: BrowserRequestResult
+): CypherFrameProps => ({
   autoComplete: true,
   initialNodeDisplay: 10,
   onRecentViewChanged: () => undefined,
   maxRows: 10,
   maxNeighbours: 10,
-  recentView: null,
-  frame: { cmd: 'return 1' } as Frame,
+  activeConnectionData: null,
+  isCollapsed: false,
+  isFullscreen: false,
+  setExportItems: () => undefined,
+  stack: [],
+  frame: { cmd: 'return 1' } as Frame & { isPinned: false },
   request: {
     status,
     updated: Math.random(),

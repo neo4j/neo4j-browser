@@ -21,7 +21,7 @@ import React from 'react'
 const FrameSuccess = (props: any) => {
   if (!props || !props.message) return null
   return (
-    <span style={{ paddingLeft: '10px' }} className="statusbar--success">
+    <span style={{ paddingLeft: '10px' }} className="statusBar--success">
       {props.message}
     </span>
   )

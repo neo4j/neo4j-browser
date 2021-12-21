@@ -21,7 +21,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
-import FrameTemplate from '../../Frame/FrameTemplate'
+import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
 import FrameAside from '../../Frame/FrameAside'
 import bolt from 'services/bolt/bolt'
 import {
@@ -36,8 +36,7 @@ import {
 } from 'shared/modules/cypher/cypherDuck'
 import {
   getConnectionState,
-  CONNECTED_STATE,
-  ConnectionState
+  CONNECTED_STATE
 } from 'shared/modules/connections/connectionsDuck'
 import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
 import {
@@ -76,6 +75,8 @@ type QueriesFrameProps = {
   availableProcedures: any
   connectionState: number
   neo4jVersion: string | null
+  isFullscreen: boolean
+  isCollapsed: boolean
 }
 export class QueriesFrame extends Component<
   QueriesFrameProps,
@@ -334,14 +335,14 @@ export class QueriesFrame extends Component<
   render() {
     let frameContents
     let aside
-    let statusbar
+    let statusBar
 
     if (this.canListQueries()) {
       frameContents = this.constructViewFromQueryList(
         this.state.queries,
         this.state.errors
       )
-      statusbar = (
+      statusBar = (
         <StatusbarWrapper>
           {this.state.errors && !this.state.success && (
             <FrameError
@@ -373,11 +374,12 @@ export class QueriesFrame extends Component<
       frameContents = <EnterpriseOnlyFrame command={this.props.frame.cmd} />
     }
     return (
-      <FrameTemplate
-        header={this.props.frame}
+      <FrameBodyTemplate
+        isCollapsed={this.props.isCollapsed}
+        isFullscreen={this.props.isFullscreen}
         aside={aside}
         contents={frameContents}
-        statusbar={statusbar}
+        statusBar={statusBar}
       />
     )
   }

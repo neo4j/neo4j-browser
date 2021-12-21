@@ -297,9 +297,6 @@ export const StyledSlide = styled.div`
     padding: 0 6px;
   }
 
-  .has-carousel & {
-    overflow: visible;
-  }
   &.slide .teaser {
     background-color: ${props => props.theme.teaserCardBackground} !important;
   }
@@ -422,9 +419,6 @@ export const StyledSidebarSlide = styled.div.attrs({
     padding: 0 6px;
   }
 
-  .has-carousel & {
-    overflow: visible;
-  }
   &.slide .teaser {
     background-color: ${dark.teaserCardBackground} !important;
   }

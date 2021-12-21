@@ -45,12 +45,8 @@ describe('Data export', () => {
     })
     const exportOptionsConfig = [
       {
-        names: ['Plan', 'Visualization'],
+        names: ['Plan', 'Visualization', 'Table', 'Ascii', 'Code'],
         order: ['CSV', 'JSON', 'PNG', 'SVG']
-      },
-      {
-        names: ['Table', 'Ascii', 'Code'],
-        order: ['CSV', 'JSON']
       }
     ]
     exportOptionsConfig.forEach(config => {
@@ -86,7 +82,7 @@ describe('Data export', () => {
     }).within(() => {
       cy.get('a').then(exportButtonsList => {
         expect(exportButtonsList).to.have.length(1)
-        expect(exportButtonsList.eq(0)).to.contain('Export TXT')
+        expect(exportButtonsList.eq(0)).to.contain('Export history')
       })
     })
   })

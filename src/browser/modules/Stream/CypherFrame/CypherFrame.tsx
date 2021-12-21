@@ -24,7 +24,7 @@ import { connect } from 'react-redux'
 
 import { Record as Neo4jRecord } from 'neo4j-driver'
 
-import FrameTemplate from '../../Frame/FrameTemplate'
+import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
 import { CypherFrameButton } from 'browser-components/buttons'
 import Centered from 'browser-components/Centered'
 import {
@@ -61,7 +61,10 @@ import {
   resultHasPlan,
   resultIsError,
   resultHasNodes,
-  initialView
+  initialView,
+  stringifyResultArray,
+  transformResultRecordsToResultArray,
+  recordToJSONMapper
 } from './helpers'
 import { SpinnerContainer, StyledStatsBarContainer } from '../styled'
 import { StyledFrameBody } from 'browser/modules/Frame/styled'
@@ -83,12 +86,15 @@ import RelatableView, {
 } from 'browser/modules/Stream/CypherFrame/relatable-view'
 import { requestExceedsVisLimits } from 'browser/modules/Stream/CypherFrame/helpers'
 import { GlobalState } from 'shared/globalState'
+import { BaseFrameProps } from '../Stream'
+import { csvFormat, stringModifier } from 'services/bolt/cypherTypesFormatting'
+import { CSVSerializer } from 'services/serializer'
+import { map } from 'lodash'
+import { stringifyMod } from 'services/utils'
+import { downloadPNGFromSVG, downloadSVG } from 'services/exporting/imageUtils'
+import { saveAs } from 'file-saver'
 
-type CypherFrameBaseProps = {
-  frame: Frame
-}
-
-type CypherFrameProps = CypherFrameBaseProps & {
+export type CypherFrameProps = BaseFrameProps & {
   autoComplete: boolean
   initialNodeDisplay: number
   maxNeighbours: number
@@ -99,9 +105,6 @@ type CypherFrameProps = CypherFrameBaseProps & {
 
 type CypherFrameState = {
   openView?: ViewTypes.FrameView
-  fullscreen: boolean
-  collapse: boolean
-  frameHeight: number
   hasVis: boolean
   errors?: unknown
   asciiMaxColWidth?: number
@@ -118,9 +121,6 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
   } = null
   state: CypherFrameState = {
     openView: undefined,
-    fullscreen: false,
-    collapse: false,
-    frameHeight: 472,
     hasVis: false,
     asciiMaxColWidth: undefined,
     asciiSetColWidth: undefined,
@@ -134,18 +134,6 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
     }
   }
 
-  onResize = (
-    fullscreen: boolean,
-    collapse: boolean,
-    frameHeight: number
-  ): void => {
-    if (frameHeight) {
-      this.setState({ fullscreen, collapse, frameHeight })
-    } else {
-      this.setState({ fullscreen, collapse })
-    }
-  }
-
   shouldComponentUpdate(
     props: CypherFrameProps,
     state: CypherFrameState
@@ -153,9 +141,8 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
     return (
       this.props.request.updated !== props.request.updated ||
       this.state.openView !== state.openView ||
-      this.state.fullscreen !== state.fullscreen ||
-      this.state.frameHeight !== state.frameHeight ||
-      this.state.collapse !== state.collapse ||
+      this.props.isCollapsed !== props.isCollapsed ||
+      this.props.isFullscreen !== props.isFullscreen ||
       this.state.asciiMaxColWidth !== state.asciiMaxColWidth ||
       this.state.asciiSetColWidth !== state.asciiSetColWidth ||
       this.state.planExpand !== state.planExpand ||
@@ -188,10 +175,24 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
       })
       if (view) this.setState({ openView: view })
     }
+
+    const downloadGraphics = [
+      { name: 'PNG', download: this.exportPNG },
+      { name: 'SVG', download: this.exportSVG }
+    ]
+    this.props.setExportItems([
+      { name: 'CSV', download: this.exportCSV },
+      { name: 'JSON', download: this.exportJSON },
+      ...(this.visElement ? downloadGraphics : [])
+    ])
   }
 
   componentDidMount(): void {
     const view = initialView(this.props, this.state)
+    this.props.setExportItems([
+      { name: 'CSV', download: this.exportCSV },
+      { name: 'JSON', download: this.exportJSON }
+    ])
     if (view) this.setState({ openView: view })
   }
 
@@ -302,9 +303,10 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
     return (
       <StyledFrameBody
         data-testid="frame-loaded-contents"
-        fullscreen={this.state.fullscreen}
-        collapsed={this.state.collapse}
+        isFullscreen={this.props.isFullscreen}
+        isCollapsed={this.props.isCollapsed}
         preventOverflow={this.state.openView === ViewTypes.VISUALIZATION}
+        removePadding
       >
         <Display if={this.state.openView === ViewTypes.TEXT} lazy>
           <AsciiView
@@ -334,7 +336,7 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
             planExpand={this.state.planExpand}
             result={result}
             updated={this.props.request.updated}
-            fullscreen={this.state.fullscreen}
+            isFullscreen={this.props.isFullscreen}
             assignVisElement={(svgElement: any, graphElement: any) => {
               this.visElement = { svgElement, graphElement, type: 'plan' }
               this.setState({ hasVis: true })
@@ -346,10 +348,9 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
         </Display>
         <Display if={this.state.openView === ViewTypes.VISUALIZATION} lazy>
           <VisualizationConnectedBus
-            fullscreen={this.state.fullscreen}
+            isFullscreen={this.props.isFullscreen}
             result={result}
             updated={this.props.request.updated}
-            frameHeight={this.state.frameHeight}
             assignVisElement={(svgElement: any, graphElement: any) => {
               this.visElement = { svgElement, graphElement, type: 'graph' }
               this.setState({ hasVis: true })
@@ -408,6 +409,45 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
     )
   }
 
+  exportCSV = (): void => {
+    const records = this.getRecords()
+    const exportData = stringifyResultArray(
+      csvFormat,
+      transformResultRecordsToResultArray(records)
+    )
+    const data = exportData.slice()
+    const csv = CSVSerializer(data.shift())
+    csv.appendRows(data)
+    const blob = new Blob([csv.output()], {
+      type: 'text/plain;charset=utf-8'
+    })
+    saveAs(blob, 'export.csv')
+  }
+
+  exportJSON = (): void => {
+    const records = this.getRecords()
+    const exportData = map(records, recordToJSONMapper)
+    const data = stringifyMod(exportData, stringModifier, true)
+    const blob = new Blob([data], {
+      type: 'text/plain;charset=utf-8'
+    })
+    saveAs(blob, 'records.json')
+  }
+
+  exportPNG = (): void => {
+    if (this.visElement) {
+      const { svgElement, graphElement, type } = this.visElement
+      downloadPNGFromSVG(svgElement, graphElement, type)
+    }
+  }
+
+  exportSVG = (): void => {
+    if (this.visElement) {
+      const { svgElement, graphElement, type } = this.visElement
+      downloadSVG(svgElement, graphElement, type)
+    }
+  }
+
   render(): JSX.Element {
     const { frame = {} as Frame, request = {} as BrowserRequest } = this.props
     const { cmd: query = '' } = frame
@@ -431,31 +471,22 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
         : null
 
     return (
-      <FrameTemplate
+      <FrameBodyTemplate
+        isCollapsed={this.props.isCollapsed}
+        isFullscreen={this.props.isFullscreen}
         sidebar={requestStatus !== 'error' ? this.sidebar : undefined}
-        className="no-padding"
-        header={frame}
         contents={frameContents}
-        statusbar={statusBar}
-        numRecords={result && 'records' in result ? result.records.length : 0}
-        getRecords={this.getRecords}
-        onResize={this.onResize}
-        visElement={
-          this.state.hasVis &&
-          (this.state.openView === ViewTypes.VISUALIZATION ||
-            this.state.openView === ViewTypes.PLAN)
-            ? this.visElement
-            : null
-        }
+        statusBar={statusBar}
+        removePadding
       />
     )
   }
+  componentWillUnmount() {
+    this.props.setExportItems([])
+  }
 }
 
-const mapStateToProps = (
-  state: GlobalState,
-  ownProps: CypherFrameBaseProps
-) => ({
+const mapStateToProps = (state: GlobalState, ownProps: BaseFrameProps) => ({
   maxRows: getMaxRows(state),
   initialNodeDisplay: getInitialNodeDisplay(state),
   maxNeighbours: getMaxNeighbours(state),

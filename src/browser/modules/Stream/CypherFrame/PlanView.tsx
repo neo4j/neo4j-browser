@@ -43,7 +43,7 @@ export type PlanViewProps = {
   result: any
   updated: any
   assignVisElement: (a: any, b: any) => void
-  fullscreen: boolean
+  isFullscreen: boolean
 }
 
 export class PlanView extends Component<PlanViewProps, PlanViewState> {
@@ -80,10 +80,10 @@ export class PlanView extends Component<PlanViewProps, PlanViewState> {
       this.props.assignVisElement(this.el, this.plan)
   }
 
-  shouldComponentUpdate(props: any, state: PlanViewState) {
+  shouldComponentUpdate(props: PlanViewProps, state: PlanViewState) {
     if (this.props.result === undefined) return true
     return (
-      props.fullscreen !== this.props.fullscreen ||
+      props.isFullscreen !== this.props.isFullscreen ||
       !deepEquals(props.result.summary, this.props.result.summary) ||
       !shallowEquals(state, this.state) ||
       props.planExpand !== this.props.planExpand
@@ -153,7 +153,7 @@ export class PlanView extends Component<PlanViewProps, PlanViewState> {
       <PlanSVG
         data-testid="planSvg"
         style={
-          this.props.fullscreen
+          this.props.isFullscreen
             ? // @ts-expect-error ts-migrate(2769) FIXME: Object literal may only specify known properties, ... Remove this comment to see the full error message
               { 'padding-bottom': dim.frameStatusbarHeight + 'px' }
             : {}

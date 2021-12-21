@@ -24,7 +24,7 @@ import { fetchGuideFromAllowlistAction } from 'shared/modules/commands/commandsD
 
 import Docs from '../Docs/Docs'
 import docs, { isPlayChapter } from '../../documentation'
-import FrameTemplate from '../Frame/FrameTemplate'
+import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
 import FrameAside from '../Frame/FrameAside'
 import {
   splitStringOnFirst,
@@ -81,7 +81,13 @@ const checkHtmlForSlides = (html: any) => {
   return !!slides.length
 }
 
-export function PlayFrame({ stack, bus, showPromotion }: any): JSX.Element {
+export function PlayFrame({
+  stack,
+  bus,
+  showPromotion,
+  isFullscreen,
+  isCollapsed
+}: any): JSX.Element {
   const [stackIndex, setStackIndex] = useState(0)
   const [atSlideStart, setAtSlideStart] = useState<boolean | null>(null)
   const [atSlideEnd, setAtSlideEnd] = useState<boolean | null>(null)
@@ -158,14 +164,6 @@ export function PlayFrame({ stack, bus, showPromotion }: any): JSX.Element {
       </CarouselButton>
     )
 
-  const classNames = ['playFrame']
-  if (hasCarousel || stack.length > 1) {
-    classNames.push('has-carousel')
-  }
-  if (isRemote) {
-    classNames.push('is-remote')
-  }
-
   let guideAndNav = guide
   if (stack.length > 1) {
     guideAndNav = (
@@ -177,11 +175,12 @@ export function PlayFrame({ stack, bus, showPromotion }: any): JSX.Element {
     )
   }
   return (
-    <FrameTemplate
-      className={classNames.join(' ')}
-      header={stack[stackIndex]}
+    <FrameBodyTemplate
+      isCollapsed={isCollapsed}
+      isFullscreen={isFullscreen}
       aside={aside}
       contents={guideAndNav}
+      hasSlides={hasCarousel || stack.length > 1}
     />
   )
 }

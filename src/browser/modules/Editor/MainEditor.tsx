@@ -238,7 +238,7 @@ export function MainEditor({
   )
 
   return (
-    <MainEditorWrapper fullscreen={isFullscreen} data-testid="activeEditor">
+    <MainEditorWrapper isFullscreen={isFullscreen} data-testid="activeEditor">
       {currentlyEditing && (
         <ScriptTitle data-testid="currentlyEditing" unsaved={showUnsaved}>
           <SVGInline
@@ -258,7 +258,7 @@ export function MainEditor({
               bus={bus}
               enableMultiStatementMode={enableMultiStatementMode}
               history={history}
-              fullscreen={isFullscreen}
+              isFullscreen={isFullscreen}
               toggleFullscreen={toggleFullscreen}
               id={'main-editor'}
               fontLigatures={codeFontLigatures}

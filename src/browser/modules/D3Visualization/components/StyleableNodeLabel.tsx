@@ -31,12 +31,10 @@ export type StyleableNodeLabelProps = {
     count?: number
   }
   graphStyle: GraphStyle
-  frameHeight: number
   onClick?: () => void
 }
 export function StyleableNodeLabel({
   graphStyle,
-  frameHeight,
   selectedLabel,
   onClick
 }: StyleableNodeLabelProps): JSX.Element {
@@ -67,7 +65,7 @@ export function StyleableNodeLabel({
       }
       wide
     >
-      <GrassEditor selectedLabel={selectedLabel} frameHeight={frameHeight} />
+      <GrassEditor selectedLabel={selectedLabel} />
     </Popup>
   )
 }

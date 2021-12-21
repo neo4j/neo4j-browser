@@ -37,7 +37,7 @@ import { StyledLink } from 'browser-components/buttons'
 import { StyledTable, StyledTh } from 'browser-components/DataTables'
 import { StyledButtonContainer } from './styled'
 
-import FrameTemplate from '../Frame/FrameTemplate'
+import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
 import { forceFetch } from 'shared/modules/currentUser/currentUserDuck'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { driverDatabaseSelection } from 'shared/modules/features/versionedFeatures'
@@ -244,8 +244,9 @@ export class UserList extends Component<any, UserListState> {
       frameContents = <>{renderedListOfUsers}</>
     }
     return (
-      <FrameTemplate
-        header={this.props.frame}
+      <FrameBodyTemplate
+        isCollapsed={this.props.isCollapsed}
+        isFullscreen={this.props.isFullscreen}
         contents={frameContents}
         aside={aside}
       />

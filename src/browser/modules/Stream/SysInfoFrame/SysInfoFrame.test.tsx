@@ -32,11 +32,13 @@ const baseProps = {
   hasMultiDbSupport: true,
   isConnected: true,
   isEnterprise: true,
-  useDb: 'neo4j'
+  useDb: 'neo4j',
+  isFullscreen: false,
+  isCollapsed: false
 }
 
 jest.mock(
-  'browser/modules/Frame/FrameTemplate',
+  'browser/modules/Frame/FrameBodyTemplate',
   // eslint-disable-next-line
   () => ({ contents, children }: any) => (
     <div>

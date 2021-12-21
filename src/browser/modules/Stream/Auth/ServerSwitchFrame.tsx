@@ -19,7 +19,7 @@
  */
 
 import React from 'react'
-import FrameTemplate from '../../Frame/FrameTemplate'
+import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
 import {
   StyledConnectionAside,
   StyledConnectionBodyContainer,
@@ -116,8 +116,9 @@ export const ServerSwitchFrame = (props: any) => {
 
 const Frame = (props: any) => {
   return (
-    <FrameTemplate
-      header={props.frame}
+    <FrameBodyTemplate
+      isCollapsed={props.isCollapsed}
+      isFullscreen={props.isFullscreen}
       contents={<ServerSwitchFrame {...props} />}
     />
   )

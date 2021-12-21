@@ -43,7 +43,6 @@ type GrassEditorProps = {
   update?: any
   selectedLabel?: { label: string; propertyKeys: string[] }
   selectedRelType?: { relType: string; propertyKeys: string[] }
-  frameHeight: number
 }
 
 export class GrassEditorComponent extends Component<GrassEditorProps> {
@@ -312,7 +311,7 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
       return null
     }
     return (
-      <StyledInlineListStylePicker frameHeight={this.props.frameHeight}>
+      <StyledInlineListStylePicker>
         {title}
         {pickers}
       </StyledInlineListStylePicker>

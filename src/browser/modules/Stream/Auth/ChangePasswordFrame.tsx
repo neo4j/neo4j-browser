@@ -22,7 +22,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import ConnectionForm from './ConnectionForm'
-import FrameTemplate from '../../Frame/FrameTemplate'
+import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
 import FrameError from '../../Frame/FrameError'
 
 import { H3 } from 'browser-components/headers'
@@ -84,9 +84,10 @@ class ChangePasswordFrame extends Component<any, ChangePasswordFrameState> {
       </>
     )
     return (
-      <FrameTemplate
-        header={this.props.frame}
-        statusbar={
+      <FrameBodyTemplate
+        isCollapsed={this.props.isCollapsed}
+        isFullscreen={this.props.isFullscreen}
+        statusBar={
           <FrameError
             code={this.state.error.code}
             message={this.state.error.message}

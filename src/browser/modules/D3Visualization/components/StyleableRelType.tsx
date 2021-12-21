@@ -26,13 +26,11 @@ import { GraphStyle } from 'project-root/src/browser/modules/D3Visualization/gra
 
 export type StyleableRelTypeProps = {
   graphStyle: GraphStyle
-  frameHeight: number
   selectedRelType: { relType: string; propertyKeys: string[]; count?: number }
 }
 export function StyleableRelType({
   selectedRelType,
-  graphStyle,
-  frameHeight
+  graphStyle
 }: StyleableRelTypeProps): JSX.Element {
   const styleForRelType = graphStyle.forRelationship({
     type: selectedRelType.relType
@@ -58,10 +56,7 @@ export function StyleableRelType({
       }
       wide
     >
-      <GrassEditor
-        selectedRelType={selectedRelType}
-        frameHeight={frameHeight}
-      />
+      <GrassEditor selectedRelType={selectedRelType} />
     </Popup>
   )
 }

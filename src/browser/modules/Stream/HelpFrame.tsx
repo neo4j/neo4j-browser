@@ -20,7 +20,7 @@
 import React, { useEffect, useState } from 'react'
 import Docs from '../Docs/Docs'
 import docs from '../../documentation'
-import FrameTemplate from '../Frame/FrameTemplate'
+import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
 import FrameAside from '../Frame/FrameAside'
 import { transformCommandToHelpTopic } from 'services/commandUtils'
 import { DynamicTopics } from '../../documentation/templates/DynamicTopics'
@@ -30,7 +30,7 @@ import {
   StackPreviousIcon
 } from 'browser-components/icons/Icons'
 
-const HelpFrame = ({ stack = [] }: any) => {
+const HelpFrame = ({ stack = [], isFullscreen, isCollapsed }: any) => {
   const [currentFrameIndex, setCurrentFrameIndex] = useState(0)
   const currentFrame = stack[currentFrameIndex]
 
@@ -74,11 +74,12 @@ const HelpFrame = ({ stack = [] }: any) => {
       main
     )
   return (
-    <FrameTemplate
-      className="helpFrame has-stack"
-      header={currentFrame}
+    <FrameBodyTemplate
+      isCollapsed={isCollapsed}
+      isFullscreen={isFullscreen}
       aside={aside}
       contents={contents}
+      hasSlides
     />
   )
 }

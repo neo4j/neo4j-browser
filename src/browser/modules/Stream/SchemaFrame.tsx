@@ -27,7 +27,7 @@ import semver from 'semver'
 
 import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import FrameTemplate from '../Frame/FrameTemplate'
+import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
 import Slide from '../Carousel/Slide'
 import {
   StyledTable,
@@ -237,7 +237,11 @@ export class SchemaFrame extends Component<any, SchemaFrameState> {
 
 const Frame = (props: any) => {
   return (
-    <FrameTemplate header={props.frame} contents={<SchemaFrame {...props} />} />
+    <FrameBodyTemplate
+      isCollapsed={props.isCollapsed}
+      isFullscreen={props.isFullscreen}
+      contents={<SchemaFrame {...props} />}
+    />
   )
 }
 

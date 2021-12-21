@@ -27,7 +27,7 @@ import {
   isConnected,
   getUseDb
 } from 'shared/modules/connections/connectionsDuck'
-import FrameTemplate from 'browser/modules/Frame/FrameTemplate'
+import FrameBodyTemplate from 'browser/modules/Frame/FrameBodyTemplate'
 import {
   StyledStatusBar,
   AutoRefreshToggle,
@@ -70,6 +70,8 @@ type SysInfoFrameProps = {
   isConnected: boolean
   isEnterprise: boolean
   useDb: string | null
+  isFullscreen: boolean
+  isCollapsed: boolean
 }
 
 export class SysInfoFrame extends Component<
@@ -218,7 +220,6 @@ export class SysInfoFrame extends Component<
     } = this.state
     const {
       databases,
-      frame,
       isConnected,
       isEnterprise,
       hasMultiDbSupport
@@ -241,10 +242,11 @@ export class SysInfoFrame extends Component<
     )
 
     return (
-      <FrameTemplate
-        header={frame}
+      <FrameBodyTemplate
+        isCollapsed={this.props.isCollapsed}
+        isFullscreen={this.props.isFullscreen}
         contents={content}
-        statusbar={
+        statusBar={
           <StatusbarWrapper>
             <StyledStatusBar>
               {lastFetch && `Updated: ${new Date(lastFetch).toISOString()}`}
