@@ -24,7 +24,7 @@ import semver from 'semver'
 
 import { cannyOptions, CANNY_FEATURE_REQUEST_URL } from 'browser-services/canny'
 import { GlobalState } from 'shared/globalState'
-import { getVersion } from 'shared/modules/dbMeta/selectors'
+import { getVersion } from 'shared/modules/dbMeta/state'
 import {
   TRACK_CANNY_CHANGELOG,
   TRACK_CANNY_FEATURE_REQUEST

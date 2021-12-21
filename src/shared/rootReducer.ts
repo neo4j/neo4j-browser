@@ -31,8 +31,7 @@ import historyReducer, {
 import userReducer, {
   NAME as currentUser
 } from 'shared/modules/currentUser/currentUserDuck'
-import { NAME as dbMeta } from 'shared/modules/dbMeta/constants'
-import dbMetaReducer from 'shared/modules/dbMeta/reducer'
+import dbMetaReducer, { NAME as dbMeta } from 'shared/modules/dbMeta/state'
 import favoritesReducer, {
   NAME as documents
 } from 'shared/modules/favorites/favoritesDuck'

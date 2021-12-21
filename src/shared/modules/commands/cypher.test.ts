@@ -57,8 +57,8 @@ jest.mock('shared/modules/params/paramsDuck', () => {
   }
 })
 
-jest.mock('shared/modules/dbMeta/selectors', () => {
-  const orig = require.requireActual('shared/modules/dbMeta/selectors')
+jest.mock('shared/modules/dbMeta/state', () => {
+  const orig = require.requireActual('shared/modules/dbMeta/state')
   return {
     ...orig,
     getVersion: () => '3.5.0' // support for tx metadata

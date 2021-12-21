@@ -38,7 +38,7 @@ import {
 } from 'browser-components/drawer/drawer-styled'
 import { DatabaseSelector } from './DatabaseSelector'
 import { getUseDb } from 'shared/modules/connections/connectionsDuck'
-import { getDatabases } from 'shared/modules/dbMeta/selectors'
+import { getDatabases } from 'shared/modules/dbMeta/state'
 
 export function DBMSInfo(props: any): JSX.Element {
   const moreStep = 50

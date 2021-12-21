@@ -19,18 +19,18 @@
  */
 
 import {
-  UPDATE_META,
+  PARSE_META,
   FORCE_FETCH,
   FETCH_SERVER_INFO,
-  UPDATE,
+  UPDATE_META,
   UPDATE_SETTINGS,
   UPDATE_SERVER
 } from './constants'
-import { extractServerInfo } from './dbMeta.utils'
+import { extractServerInfo } from './utils'
 
 export function updateMeta(meta: any, context?: any) {
   return {
-    type: UPDATE_META,
+    type: PARSE_META,
     meta,
     context
   }
@@ -50,7 +50,7 @@ export function fetchServerInfo() {
 
 export const update = (obj: any) => {
   return {
-    type: UPDATE,
+    type: UPDATE_META,
     ...obj
   }
 }

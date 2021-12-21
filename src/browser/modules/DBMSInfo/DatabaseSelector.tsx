@@ -26,7 +26,7 @@ import {
   DrawerSectionBody
 } from 'browser-components/drawer/drawer-styled'
 import { escapeCypherIdentifier } from 'services/utils'
-import { Database } from 'shared/modules/dbMeta/types'
+import { Database } from 'shared/modules/dbMeta/state'
 import { uniqBy } from 'lodash'
 
 const Select = styled.select`

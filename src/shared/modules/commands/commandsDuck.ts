@@ -47,7 +47,7 @@ import {
   getAvailableSettings,
   getRemoteContentHostnameAllowlist,
   getDefaultRemoteContentHostnameAllowlist
-} from '../dbMeta/selectors'
+} from '../dbMeta/state'
 import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
 import { add as addFrame } from 'shared/modules/frames/framesDuck'
 import { update as updateQueryResult } from 'shared/modules/requests/requestsDuck'

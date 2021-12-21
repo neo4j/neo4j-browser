@@ -51,7 +51,7 @@ import {
   getDatabases,
   getAvailableSettings,
   findDatabaseByNameOrAlias
-} from 'shared/modules/dbMeta/selectors'
+} from 'shared/modules/dbMeta/state'
 import { fetchMetaData } from 'shared/modules/dbMeta/actions'
 import { canSendTxMetadata } from 'shared/modules/features/versionedFeatures'
 import { fetchRemoteGuideAsync } from 'shared/modules/commands/helpers/playAndGuides'

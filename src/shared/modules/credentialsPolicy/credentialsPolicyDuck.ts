@@ -19,7 +19,7 @@
  */
 
 import { USER_INTERACTION } from 'shared/modules/userInteraction/userInteractionDuck'
-import { credentialsTimeout } from 'shared/modules/dbMeta/selectors'
+import { credentialsTimeout } from 'shared/modules/dbMeta/state'
 import {
   disconnectAction,
   getActiveConnection

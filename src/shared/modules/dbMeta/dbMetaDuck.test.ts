@@ -19,13 +19,13 @@
  */
 
 import neo4j from 'neo4j-driver'
-import reducer from './reducer'
+import reducer from './state'
 import {
-  UPDATE_META,
+  PARSE_META,
   UPDATE_SETTINGS,
   UPDATE_SERVER,
-  CLEAR,
-  UPDATE
+  CLEAR_META,
+  UPDATE_META
 } from './constants'
 import { APP_START } from 'shared/modules/app/appDuck'
 
@@ -103,7 +103,7 @@ describe('updating metadata', () => {
     }
 
     const action = {
-      type: UPDATE_META,
+      type: PARSE_META,
       meta: {
         records: [
           returnedLabels,
@@ -156,7 +156,7 @@ describe('updating metadata', () => {
     const returnNothing = () => ({ data: [] })
     const returnNull = () => ({ data: null })
     const action = {
-      type: UPDATE_META,
+      type: PARSE_META,
       meta: {
         records: [
           { result: { name: 'labels' }, get: returnNothing },
@@ -230,7 +230,7 @@ describe('updating metadata', () => {
       }
     }
     const action = {
-      type: CLEAR
+      type: CLEAR_META
     }
 
     // When
@@ -246,7 +246,7 @@ describe('updating metadata', () => {
       myKey: 'val',
       noKey: true
     }
-    const action = { type: UPDATE, myKey: 'yo', secondKey: true }
+    const action = { type: UPDATE_META, myKey: 'yo', secondKey: true }
 
     // When
     const nextState = reducer(initState, action)

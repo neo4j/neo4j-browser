@@ -26,23 +26,23 @@ import {
 } from './commandsDuck'
 
 jest.mock('services/remote', () => {
-  const orig = require.requireActual('services/remote')
+  const orig = jest.requireActual('services/remote')
   return {
     ...orig,
     get: jest.fn()
   }
 })
-const remote = require.requireMock('services/remote')
+const remote = jest.requireMock('services/remote')
 
-jest.mock('shared/modules/dbMeta/selectors', () => {
-  const orig = require.requireActual('shared/modules/dbMeta/selectors')
+jest.mock('shared/modules/dbMeta/state', () => {
+  const orig = jest.requireActual('shared/modules/dbMeta/state')
   return {
     ...orig,
     getRemoteContentHostnameAllowlist: jest.fn(),
     getDefaultRemoteContentHostnameAllowlist: jest.fn()
   }
 })
-const dbMeta = require.requireMock('shared/modules/dbMeta/selectors')
+const dbMeta = jest.requireMock('shared/modules/dbMeta/state')
 
 describe('fetchGuideFromAllowlistEpic', () => {
   afterEach(() => {

@@ -18,13 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const NAME = 'meta'
-export const UPDATE = 'meta/UPDATE'
 export const UPDATE_META = 'meta/UPDATE_META'
+export const PARSE_META = 'meta/PARSE_META'
 export const UPDATE_SERVER = 'meta/UPDATE_SERVER'
 export const FETCH_SERVER_INFO = 'meta/FETCH_SERVER_INFO'
 export const UPDATE_SETTINGS = 'meta/UPDATE_SETTINGS'
-export const CLEAR = 'meta/CLEAR'
+export const CLEAR_META = 'meta/CLEAR'
 export const FORCE_FETCH = 'meta/FORCE_FETCH'
 export const DB_META_DONE = 'meta/DB_META_DONE'
 
@@ -53,29 +52,3 @@ MATCH ()-[]->() RETURN { name:'relationships', data: count(*)} AS result
 `
 export const serverInfoQuery =
   'CALL dbms.components() YIELD name, versions, edition'
-
-// Initial state
-export const initialState = {
-  nodes: 0,
-  relationships: 0,
-  labels: [],
-  relationshipTypes: [],
-  properties: [],
-  functions: [],
-  procedures: [],
-  role: null,
-  server: {
-    version: null,
-    edition: null,
-    storeSize: null
-  },
-  databases: [],
-  serverConfigDone: false,
-  settings: {
-    'browser.allow_outgoing_connections': false,
-    'browser.remote_content_hostname_allowlist': 'guides.neo4j.com, localhost',
-    'browser.retain_connection_credentials': false,
-    'browser.retain_editor_history': false,
-    'clients.allow_telemetry': true
-  }
-}

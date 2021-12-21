@@ -38,7 +38,7 @@ import {
   FIRST_NO_MULTI_DB_SUPPORT
 } from '../features/versionedFeatures'
 import { serverInfoQuery } from '../dbMeta/constants'
-import { getVersion } from '../dbMeta/selectors'
+import { getVersion } from '../dbMeta/state'
 import { updateServerInfo } from '../dbMeta/actions'
 
 const NAME = 'cypher'

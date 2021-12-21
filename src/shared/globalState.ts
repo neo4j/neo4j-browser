@@ -32,8 +32,10 @@ import {
   NAME as user,
   initialState as userInitialState
 } from './modules/currentUser/currentUserDuck'
-import { NAME as meta } from './modules/dbMeta/constants'
-import { initialState as metaInitialState } from './modules/dbMeta/constants'
+import {
+  NAME as meta,
+  initialState as metaInitialState
+} from './modules/dbMeta/state'
 import { NAME as documents, Favorite } from './modules/favorites/favoritesDuck'
 import {
   NAME as connections,

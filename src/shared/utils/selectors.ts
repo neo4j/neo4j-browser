@@ -9,7 +9,7 @@ import {
   getClientsAllowTelemetry,
   isServerConfigDone,
   shouldAllowOutgoingConnections
-} from 'shared/modules/dbMeta/selectors'
+} from 'shared/modules/dbMeta/state'
 import {
   getAllowCrashReports,
   getAllowUserStats

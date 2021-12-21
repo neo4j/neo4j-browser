@@ -52,8 +52,8 @@ jest.mock('shared/modules/params/paramsDuck', () => {
   }
 })
 
-jest.mock('shared/modules/dbMeta/selectors', () => {
-  const orig = jest.requireActual('shared/modules/dbMeta/selectors')
+jest.mock('shared/modules/dbMeta/state', () => {
+  const orig = jest.requireActual('shared/modules/dbMeta/state')
   return {
     ...orig,
     getVersion: () => '4.0.0'

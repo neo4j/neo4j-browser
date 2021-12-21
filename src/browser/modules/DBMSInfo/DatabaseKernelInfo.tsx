@@ -25,9 +25,9 @@ import {
   getEdition,
   getStoreSize,
   getClusterRole,
-  getDatabases
-} from 'shared/modules/dbMeta/selectors'
-import { Database } from 'shared/modules/dbMeta/types'
+  getDatabases,
+  Database
+} from 'shared/modules/dbMeta/state'
 import {
   executeCommand,
   commandSources,

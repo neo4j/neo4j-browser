@@ -28,14 +28,14 @@ import {
   FETCH_SERVER_INFO,
   metaQuery,
   serverInfoQuery,
-  CLEAR
+  CLEAR_META
 } from './constants'
 import { update, updateMeta, updateSettings, updateServerInfo } from './actions'
 import {
   getDatabases,
   findDatabaseByNameOrAlias,
   shouldRetainEditorHistory
-} from './selectors'
+} from './state'
 import { clearHistory } from 'shared/modules/history/historyDuck'
 
 import bolt from 'services/bolt/bolt'
@@ -439,4 +439,4 @@ export const clearMetaOnDisconnectEpic = (some$: any, store: any) =>
       }
       return Rx.Observable.of(null)
     })
-    .mapTo({ type: CLEAR })
+    .mapTo({ type: CLEAR_META })

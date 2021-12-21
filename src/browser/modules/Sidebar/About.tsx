@@ -30,7 +30,7 @@ import {
   DrawerSectionBody,
   DrawerFooter
 } from 'browser-components/drawer/drawer-styled'
-import { getVersion, getEdition } from 'shared/modules/dbMeta/selectors'
+import { getVersion, getEdition } from 'shared/modules/dbMeta/state'
 
 function asChangeLogUrl(serverVersion: string): string | undefined {
   if (!serverVersion) {

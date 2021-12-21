@@ -29,16 +29,16 @@ import {
 } from 'services/bolt/txMetadata'
 
 jest.mock('services/bolt/bolt', () => {
-  const orig = require.requireActual('services/bolt/bolt')
+  const orig = jest.requireActual('services/bolt/bolt')
   return {
     ...orig,
     directTransaction: jest.fn(() => Promise.resolve({ records: [] }))
   }
 })
-const bolt = require.requireMock('services/bolt/bolt')
+const bolt = jest.requireMock('services/bolt/bolt')
 
-jest.mock('shared/modules/dbMeta/selectors')
-const dbMeta = require.requireMock('shared/modules/dbMeta/selectors')
+jest.mock('shared/modules/dbMeta/state')
+const dbMeta = jest.requireMock('shared/modules/dbMeta/state')
 
 describe('cypherRequestEpic', () => {
   let store: any
