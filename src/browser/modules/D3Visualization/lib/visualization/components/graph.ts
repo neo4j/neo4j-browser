@@ -18,10 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Node from './Node'
+import NodeVisualisationModel from './NodeVisualisationModel'
 
 export default class Graph {
-  _nodes: Node[]
+  _nodes: NodeVisualisationModel[]
   _relationships: any[]
   expandedNodeMap: any
   nodeMap: any
@@ -47,7 +47,7 @@ export default class Graph {
     this._relationships = []
   }
 
-  nodes() {
+  nodes(): NodeVisualisationModel[] {
     return this._nodes
   }
 
@@ -73,7 +73,7 @@ export default class Graph {
     })()
   }
 
-  addNodes(nodes: Node[]): void {
+  addNodes(nodes: NodeVisualisationModel[]): void {
     for (const node of nodes) {
       if (this.findNode(node.id) == null) {
         this.nodeMap[node.id] = node
@@ -94,7 +94,7 @@ export default class Graph {
     }
   }
 
-  removeNode(node: Node) {
+  removeNode(node: NodeVisualisationModel) {
     if (this.findNode(node.id) != null) {
       delete this.nodeMap[node.id]
       this._nodes.splice(this._nodes.indexOf(node), 1)
@@ -102,7 +102,7 @@ export default class Graph {
     return this
   }
 
-  collapseNode = (node: Node) => {
+  collapseNode = (node: NodeVisualisationModel) => {
     if (!this.expandedNodeMap[node.id]) {
       return
     }
@@ -115,7 +115,7 @@ export default class Graph {
     this.expandedNodeMap[node.id] = []
   }
 
-  updateNode(node: Node) {
+  updateNode(node: NodeVisualisationModel) {
     if (this.findNode(node.id) != null) {
       this.removeNode(node)
       node.expanded = false

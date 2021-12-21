@@ -17,7 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import Node, { NodeCaptionLine } from '../components/Node'
+import NodeVisualisationModel, {
+  NodeCaptionLine
+} from '../components/NodeVisualisationModel'
 import Renderer from '../components/renderer'
 const noop = function() {}
 
@@ -27,7 +29,7 @@ const nodeOutline = new Renderer({
   onGraphChange(selection: any, viz: any) {
     const circles = selection
       .selectAll('circle.outline')
-      .data((node: Node) => [node])
+      .data((node: NodeVisualisationModel) => [node])
 
     circles
       .enter()
@@ -39,16 +41,16 @@ const nodeOutline = new Renderer({
       })
 
     circles.attr({
-      r(node: Node) {
+      r(node: NodeVisualisationModel) {
         return node.radius
       },
-      fill(node: Node) {
+      fill(node: NodeVisualisationModel) {
         return viz.style.forNode(node).get('color')
       },
-      stroke(node: Node) {
+      stroke(node: NodeVisualisationModel) {
         return viz.style.forNode(node).get('border-color')
       },
-      'stroke-width'(node: Node) {
+      'stroke-width'(node: NodeVisualisationModel) {
         return viz.style.forNode(node).get('border-width')
       }
     })
@@ -62,7 +64,7 @@ const nodeCaption = new Renderer({
   onGraphChange(selection: any, viz: any) {
     const text = selection
       .selectAll('text.caption')
-      .data((node: Node) => node.caption)
+      .data((node: NodeVisualisationModel) => node.caption)
 
     text
       .enter()
@@ -95,7 +97,7 @@ const nodeRing = new Renderer({
   onGraphChange(selection: any) {
     const circles = selection
       .selectAll('circle.ring')
-      .data((node: Node) => [node])
+      .data((node: NodeVisualisationModel) => [node])
     circles
       .enter()
       .insert('circle', '.outline')
@@ -107,7 +109,7 @@ const nodeRing = new Renderer({
       })
 
     circles.attr({
-      r(node: Node) {
+      r(node: NodeVisualisationModel) {
         return node.radius + 4
       }
     })

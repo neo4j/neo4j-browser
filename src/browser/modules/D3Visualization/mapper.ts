@@ -19,8 +19,9 @@
  */
 
 import { optionalToString } from 'services/utils'
+import { Node } from '../Stream/CypherFrame/VisualizationView'
 import Graph from './lib/visualization/components/graph'
-import Node from './lib/visualization/components/Node'
+import NodeVisualisationModel from './lib/visualization/components/NodeVisualisationModel'
 import Relationship from './lib/visualization/components/relationship'
 
 const mapProperties = (_: any) => Object.assign({}, ...stringifyValues(_))
@@ -35,10 +36,10 @@ export function createGraph(nodes: Node[], relationships: any) {
   return graph
 }
 
-export function mapNodes(nodes: any): Node[] {
+export function mapNodes(nodes: Node[]): NodeVisualisationModel[] {
   return nodes.map(
     (node: any) =>
-      new Node(
+      new NodeVisualisationModel(
         node.id,
         node.labels,
         mapProperties(node.properties),

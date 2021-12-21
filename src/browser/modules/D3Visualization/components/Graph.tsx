@@ -25,10 +25,28 @@ import '../lib/visualization/index'
 import { StyledZoomHolder, StyledSvgWrapper, StyledZoomButton } from './styled'
 import { ZoomInIcon, ZoomOutIcon } from 'browser-components/icons/Icons'
 import graphView from '../lib/visualization/components/graphView'
+import { Node } from 'browser/modules/Stream/CypherFrame/VisualizationView'
+import GraphStyle from '../graphStyle'
 
 type State = any
 
-export class GraphComponent extends Component<any, State> {
+type GraphProps = {
+  isFullscreen: boolean
+  relationships: any
+  nodes: Node[]
+  getNodeNeighbours: any
+  onItemMouseOver: any
+  onItemSelect: any
+  graphStyle: GraphStyle
+  styleVersion: any
+  onGraphModelChange: any
+  assignVisElement: any
+  getAutoCompleteCallback: any
+  setGraph: any
+  offset: any
+}
+
+export class GraphComponent extends Component<GraphProps, State> {
   graph: any
   graphEH: any
   graphView: any

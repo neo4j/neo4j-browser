@@ -20,13 +20,13 @@
 
 type NodeProperties = { [key: string]: number | string | boolean }
 export type NodeCaptionLine = {
-  node: Node
+  node: NodeVisualisationModel
   text: string
   baseline: number
   remainingWidth: number
 }
 
-export default class Node {
+export default class NodeVisualisationModel {
   id: string
   labels: string[]
   propertyList: {

@@ -24,7 +24,7 @@ import * as vizRenderers from '../renders/init'
 import { menu as menuRenderer } from '../renders/menu'
 import vizClickHandler from '../utils/clickHandler'
 import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
-import Node from './Node'
+import NodeVisualisationModel from './NodeVisualisationModel'
 
 const vizFn = function(
   el: any,
@@ -64,14 +64,16 @@ const vizFn = function(
   // To be overridden
   viz.trigger = function(_event: any, ..._args: any[]) {}
 
-  const onNodeClick = (node: Node) => {
+  const onNodeClick = (node: NodeVisualisationModel) => {
     updateViz = false
     return viz.trigger('nodeClicked', node)
   }
 
-  const onNodeDblClick = (node: Node) => viz.trigger('nodeDblClicked', node)
+  const onNodeDblClick = (node: NodeVisualisationModel) =>
+    viz.trigger('nodeDblClicked', node)
 
-  const onNodeDragToggle = (node: Node) => viz.trigger('nodeDragToggle', node)
+  const onNodeDragToggle = (node: NodeVisualisationModel) =>
+    viz.trigger('nodeDragToggle', node)
 
   const onRelationshipClick = (relationship: any) => {
     ;(d3.event as Event).stopPropagation()
@@ -79,8 +81,10 @@ const vizFn = function(
     return viz.trigger('relationshipClicked', relationship)
   }
 
-  const onNodeMouseOver = (node: Node) => viz.trigger('nodeMouseOver', node)
-  const onNodeMouseOut = (node: Node) => viz.trigger('nodeMouseOut', node)
+  const onNodeMouseOver = (node: NodeVisualisationModel) =>
+    viz.trigger('nodeMouseOver', node)
+  const onNodeMouseOut = (node: NodeVisualisationModel) =>
+    viz.trigger('nodeMouseOut', node)
 
   const onRelMouseOver = (rel: any) => viz.trigger('relMouseOver', rel)
   const onRelMouseOut = (rel: any) => viz.trigger('relMouseOut', rel)
@@ -328,7 +332,10 @@ const vizFn = function(
       .on('mouseover', onNodeMouseOver)
       .on('mouseout', onNodeMouseOut)
 
-    nodeGroups.classed('selected', (node: Node) => node.selected)
+    nodeGroups.classed(
+      'selected',
+      (node: NodeVisualisationModel) => node.selected
+    )
 
     for (renderer of Array.from(vizRenderers.node)) {
       nodeGroups.call(renderer.onGraphChange, viz)

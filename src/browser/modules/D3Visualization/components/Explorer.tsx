@@ -23,7 +23,6 @@ import deepmerge from 'deepmerge'
 import { connect, ConnectedComponent } from 'react-redux'
 import { debounce } from 'lodash'
 
-import Node from '../lib/visualization/components/Node'
 import Relationship from '../lib/visualization/components/relationship'
 import { GraphStyle } from '../graphStyle'
 import { GlobalState } from 'shared/globalState'
@@ -38,6 +37,7 @@ import {
   setNodePropertiesExpandedByDefault
 } from 'shared/modules/frames/framesDuck'
 import { Action, Dispatch } from 'redux'
+import { Node } from 'browser/modules/Stream/CypherFrame/VisualizationView'
 
 const deduplicateNodes = (nodes: any) => {
   return nodes.reduce(
