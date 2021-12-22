@@ -1,3 +1,7 @@
+import ArcArrow from '../utils/arcArrow'
+import StraightArrow from '../utils/straightArrow'
+import Node from './Node'
+
 /*
  * Copyright (c) "Neo4j"
  * Neo4j Sweden AB [http://neo4j.com]
@@ -17,22 +21,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+export type RelationShipCaptionLayout = 'internal' | 'external'
+type PropertyItem = { key: string; value: string; originalType: string }
 export default class Relationship {
-  id: any
-  propertyList: any
-  propertyMap: any
-  source: any
-  target: any
-  type: any
+  id: string
+  propertyList: PropertyItem[]
+  propertyMap: Record<string, string>
+  source: Node
+  target: Node
+  type: string
   isNode = false
   isRelationship = true
+
+  // values other code thinks relationship should have // TODO intizianio check if valid
+  internal: boolean | undefined
+  caption: string | undefined
+  captionHeight: number | undefined
+  captionLayout: RelationShipCaptionLayout | undefined
+  captionLength: number | undefined
+  naturalAngle: number | undefined
+  arrow: ArcArrow | StraightArrow | undefined
+  selected: boolean
+  shortCaption: string | undefined
+  shortCaptionLength: number | undefined
+  centreDistance: number | undefined
+
   constructor(
-    id: any,
-    source: any,
-    target: any,
-    type: any,
-    properties: any,
+    id: string,
+    source: Node,
+    target: Node,
+    type: string,
+    properties: Record<string, string>,
     propertyTypes: Record<string, string>
   ) {
     this.id = id
@@ -40,22 +59,22 @@ export default class Relationship {
     this.target = target
     this.type = type
     this.propertyMap = properties
-    this.propertyList = (() => {
-      const result = []
-      for (const key of Object.keys(this.propertyMap || {})) {
-        const value = this.propertyMap[key]
-        const type = propertyTypes[key]
-        result.push({ key, value, type })
-      }
-      return result
-    })()
+    this.propertyList = Object.keys(this.propertyMap || {}).reduce(
+      (acc: PropertyItem[], key) =>
+        acc.concat([
+          { key, originalType: propertyTypes[key], value: properties[key] }
+        ]),
+      []
+    )
+
+    this.selected = false
   }
 
-  toJSON() {
+  toJSON(): Record<string, string> {
     return this.propertyMap
   }
 
-  isLoop() {
+  isLoop(): boolean {
     return this.source === this.target
   }
 }

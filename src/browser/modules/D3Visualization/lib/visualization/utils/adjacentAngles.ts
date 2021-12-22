@@ -18,12 +18,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import AngleList from './angleList'
+export type Run = { start: number; end: number }
+
 export default class AdjacentAngles {
-  findRuns(AngleList: any, minSeparation: any) {
+  findRuns(angleList: AngleList, minSeparation: number): Run[] {
     let p = 0
     let start = 0
     let end = 0
-    const runs: any = []
+    const runs: Run[] = []
     const minStart = function() {
       if (runs.length === 0) {
         return 0
@@ -34,7 +37,7 @@ export default class AdjacentAngles {
 
     const scanForDensePair = function() {
       start = p
-      end = AngleList.wrapIndex(p + 1)
+      end = angleList.wrapIndex(p + 1)
       if (end === minStart()) {
         return 'done'
       } else {
@@ -50,8 +53,8 @@ export default class AdjacentAngles {
     const extendEnd = function() {
       if (p === minStart()) {
         return 'done'
-      } else if (tooDense(start, AngleList.wrapIndex(p + 1))) {
-        end = AngleList.wrapIndex(p + 1)
+      } else if (tooDense(start, angleList.wrapIndex(p + 1))) {
+        end = angleList.wrapIndex(p + 1)
         p = end
         return extendEnd
       } else {
@@ -61,7 +64,7 @@ export default class AdjacentAngles {
     }
 
     const extendStart = function() {
-      const candidateStart = AngleList.wrapIndex(p - 1)
+      const candidateStart = angleList.wrapIndex(p - 1)
       if (tooDense(candidateStart, end) && candidateStart !== end) {
         start = candidateStart
         p = start
@@ -76,34 +79,29 @@ export default class AdjacentAngles {
       }
     }
 
-    const tooDense = function(start: any, end: any) {
+    const tooDense = function(start: number, end: number) {
       const run = {
         start,
         end
       }
-      return AngleList.angle(run) < AngleList.length(run) * minSeparation
+      return angleList.angle(run) < angleList.length(run) * minSeparation
     }
 
+    // Recursive function that's hard to properly type
+    let step: 'done' | (() => any) = scanForDensePair
+
     let stepCount = 0
-    let step = scanForDensePair
-    // @ts-expect-error ts-migrate(2367) FIXME: This condition will always return 'true' since the... Remove this comment to see the full error message
     while (step !== 'done') {
-      if (stepCount++ > AngleList.totalLength() * 10) {
+      if (stepCount++ > angleList.totalLength() * 10) {
         console.log(
           'Warning: failed to layout arrows',
-          (() => {
-            const result = []
-            for (const key of Object.keys(AngleList.list || {})) {
-              const value = AngleList.list[key]
-              result.push(`${key}: ${value.angle}`)
-            }
-            return result
-          })().join('\n'),
+          Object.entries(angleList)
+            .map(([key, value]) => `${key}: ${value.angle}`)
+            .join('\n'),
           minSeparation
         )
         break
       }
-      // @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type '() => ...... Remove this comment to see the full error message
       step = step()
     }
 

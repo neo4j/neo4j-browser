@@ -18,21 +18,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-type NodeProperties = { [key: string]: number | string | boolean }
+import Graph from './Graph'
+
+type NodeProperties = { [key: string]: string }
 export type NodeCaptionLine = {
-  node: NodeVisualisationModel
+  node: Node
   text: string
   baseline: number
   remainingWidth: number
 }
 
-export default class NodeVisualisationModel {
+export default class Node {
   id: string
   labels: string[]
   propertyList: {
     key: string
     type: string
-    value: number | string | boolean
+    value: string
   }[]
   propertyMap: NodeProperties
   isNode = true
@@ -45,6 +47,11 @@ export default class NodeVisualisationModel {
   expanded: boolean
   minified: boolean
   contextMenu?: { menuSelection: string; menuContent: string; label: string }
+
+  // extra props TODO check if they make sense
+  x?: number
+  y?: number
+  fixed?: boolean
 
   constructor(
     id: string,
@@ -73,15 +80,9 @@ export default class NodeVisualisationModel {
     return this.propertyMap
   }
 
-  relationshipCount(graph: any): number {
-    let count = 0
-    for (const relationship of Array.from(graph.relationships())) {
-      if (
-        (relationship as any).source === this ||
-        (relationship as any).target === this
-      )
-        count++
-    }
-    return count
+  relationshipCount(graph: Graph): number {
+    return graph
+      .relationships()
+      .filter(rel => rel.source === this || rel.target === this).length
   }
 }

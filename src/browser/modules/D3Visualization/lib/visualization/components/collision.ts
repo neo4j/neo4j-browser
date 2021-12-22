@@ -20,30 +20,48 @@
 import d3 from 'd3'
 
 const collision = {
-  avoidOverlap: (nodes: any) => {
+  avoidOverlap: (nodes: d3.layout.force.Node[]): void => {
     const q = d3.geom.quadtree(nodes)
-    return Array.from(nodes).map(n => q.visit(collide(n)))
+    nodes.forEach(n => q.visit(collide(n)))
   }
 }
-const collide = (node: any) => {
+
+const collide = (node: d3.layout.force.Node) => {
+  // TODO solve/understand these errors
+  // @ts-expect-error
   let r = node.radius + 10
+  // @ts-expect-error
   const nx1 = node.x - r
   const nx2 = node.x + r
+  // @ts-expect-error
   const ny1 = node.y - r
   const ny2 = node.y + r
-  return (quad: any, x1: any, y1: any, x2: any, y2: any) => {
+  return (
+    quad: d3.geom.quadtree.Node<d3.layout.force.Node>,
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number
+  ) => {
     let l, x, y
     if (quad.point && quad.point !== node) {
+      // @ts-expect-error
       x = node.x - quad.point.x
+      // @ts-expect-error
       y = node.y - quad.point.y
       l = Math.sqrt(x * x + y * y)
+      // @ts-expect-error
       r = node.radius + 10 + quad.point.radius
     }
     if ((l as number) < r) {
       l = (((l as number) - r) / (l as number)) * 0.5
+      // @ts-expect-error
       node.x -= (x as number) *= l
+      // @ts-expect-error
       node.y -= (y as number) *= l
+      // @ts-expect-error
       quad.point.x += x
+      // @ts-expect-error
       quad.point.y += y
     }
     return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1

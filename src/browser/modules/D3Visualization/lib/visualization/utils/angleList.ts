@@ -18,25 +18,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Run } from './adjacentAngles'
+
+type Angle = {
+  key: string
+  angle: number
+  fixed: boolean
+}
+
 export default class AngleList {
-  list: any
-  constructor(list: any) {
+  list: Angle[]
+  constructor(list: Angle[]) {
     this.list = list
   }
 
-  getAngle(index: any) {
+  getAngle(index: number): number {
     return this.list[index].angle
   }
 
-  fixed(index: any) {
+  fixed(index: number): boolean | undefined {
     return this.list[index].fixed
   }
 
-  totalLength() {
+  totalLength(): number {
     return this.list.length
   }
 
-  length(run: any) {
+  length(run: Run): number {
     if (run.start < run.end) {
       return run.end - run.start
     } else {
@@ -44,7 +52,7 @@ export default class AngleList {
     }
   }
 
-  angle(run: any) {
+  angle(run: Run): number {
     if (run.start < run.end) {
       return this.list[run.end].angle - this.list[run.start].angle
     } else {
@@ -52,7 +60,7 @@ export default class AngleList {
     }
   }
 
-  wrapIndex(index: any) {
+  wrapIndex(index: number): number {
     if (index === -1) {
       return this.list.length - 1
     } else if (index >= this.list.length) {

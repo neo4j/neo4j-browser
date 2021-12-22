@@ -218,13 +218,32 @@ const getTypeDisplayName = (val: any): string => {
   return getDriverTypeName(val) || 'Unknown'
 }
 
+export type BasicNode = {
+  id: string
+  labels: string[]
+  properties: Record<string, string>
+  propertyTypes: Record<string, string>
+}
+export type BasicRelationship = {
+  id: string
+  startNodeId: string
+  endNodeId: string
+  type: string
+  properties: Record<string, string>
+  propertyTypes: Record<string, string>
+}
+export type BasicNodesAndRels = {
+  nodes: BasicNode[]
+  relationships: BasicRelationship[]
+}
+
 export function extractNodesAndRelationshipsFromRecordsForOldVis(
   records: typeof neo4j.types.Record[],
   types: any,
   filterRels: any,
   converters: Converters,
   maxFieldItems?: any
-) {
+): { nodes: BasicNode[]; relationships: BasicRelationship[] } {
   if (records.length === 0) {
     return { nodes: [], relationships: [] }
   }

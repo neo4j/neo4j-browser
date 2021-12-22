@@ -18,22 +18,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { RelationShipCaptionLayout } from '../components/Relationship'
+
 export default class StraightArrow {
-  length: any
-  midShaftPoint: any
-  outline: any
-  overlay: any
-  shaftLength: any
+  length: number
+  midShaftPoint: { x: number; y: number }
+  outline: (shortCaptionLength: number) => string
+  overlay: (minWidth: number) => string
+  shaftLength: number
   deflection = 0
 
   constructor(
-    startRadius: any,
-    endRadius: any,
-    centreDistance: any,
-    shaftWidth: any,
-    headWidth: any,
-    headHeight: any,
-    captionLayout: any
+    startRadius: number,
+    endRadius: number,
+    centreDistance: number,
+    shaftWidth: number,
+    headWidth: number,
+    headHeight: number,
+    captionLayout: RelationShipCaptionLayout
   ) {
     this.length = centreDistance - (startRadius + endRadius)
 
@@ -49,7 +51,7 @@ export default class StraightArrow {
       y: 0
     }
 
-    this.outline = function(shortCaptionLength: any) {
+    this.outline = function(shortCaptionLength: number) {
       if (captionLayout === 'external') {
         const startBreak =
           startArrow + (this.shaftLength - shortCaptionLength) / 2
@@ -120,7 +122,7 @@ export default class StraightArrow {
       }
     }
 
-    this.overlay = function(minWidth: any) {
+    this.overlay = function(minWidth: number) {
       const radius = Math.max(minWidth / 2, shaftRadius)
       return [
         'M',

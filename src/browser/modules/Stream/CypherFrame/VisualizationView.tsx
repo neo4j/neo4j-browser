@@ -33,18 +33,19 @@ import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
 import { resultHasTruncatedFields } from 'browser/modules/Stream/CypherFrame/helpers'
 import { Bus } from 'suber'
-
-export type Node = {
-  id: string
-  labels: string[]
-  properties: { [key: string]: string | boolean | number }
-  propertyTypes: { [key: string]: string }
-}
+import {
+  BasicNode,
+  BasicNodesAndRels,
+  BasicRelationship
+} from 'services/bolt/boltMappings'
+import Graph from 'browser/modules/D3Visualization/lib/visualization/components/Graph'
+import { GlobalState } from 'shared/globalState'
+import { Action, Dispatch } from 'redux'
 
 type VisualizationState = {
   updated: number
-  nodes: Node[]
-  relationships: any[]
+  nodes: BasicNode[]
+  relationships: BasicRelationship[]
   hasTruncatedFields: boolean
 }
 
@@ -66,8 +67,8 @@ export class Visualization extends Component<
   VisualizationProps,
   VisualizationState
 > {
-  autoCompleteCallback: any
-  graph: any
+  autoCompleteCallback: ((rels: BasicRelationship[]) => void) | undefined
+  graph: Graph | undefined
   state: VisualizationState = {
     nodes: [],
     relationships: [],
@@ -75,7 +76,7 @@ export class Visualization extends Component<
     hasTruncatedFields: false
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     const { records = [] } = this.props.result
     if (records && records.length > 0) {
       this.populateDataToStateFromProps(this.props)
@@ -95,7 +96,7 @@ export class Visualization extends Component<
     )
   }
 
-  componentDidUpdate(prevProps: any) {
+  componentDidUpdate(prevProps: VisualizationProps): void {
     if (
       this.props.updated !== prevProps.updated ||
       this.props.autoComplete !== prevProps.autoComplete
@@ -104,7 +105,7 @@ export class Visualization extends Component<
     }
   }
 
-  populateDataToStateFromProps(props: any) {
+  populateDataToStateFromProps(props: VisualizationProps): void {
     const {
       nodes,
       relationships
@@ -125,25 +126,29 @@ export class Visualization extends Component<
     })
   }
 
-  autoCompleteRelationships(existingNodes: any, newNodes: any) {
+  autoCompleteRelationships(
+    existingNodes: { id: string }[],
+    newNodes: { id: string }[]
+  ): void {
     if (this.props.autoComplete) {
-      const existingNodeIds = existingNodes.map((node: any) =>
-        parseInt(node.id)
-      )
-      const newNodeIds = newNodes.map((node: any) => parseInt(node.id))
+      const existingNodeIds = existingNodes.map(node => parseInt(node.id))
+      const newNodeIds = newNodes.map(node => parseInt(node.id))
 
       this.getInternalRelationships(existingNodeIds, newNodeIds)
         .then(graph => {
           this.autoCompleteCallback &&
             this.autoCompleteCallback(graph.relationships)
         })
-        .catch(() => {})
+        .catch(() => undefined)
     } else {
       this.autoCompleteCallback && this.autoCompleteCallback([])
     }
   }
 
-  getNeighbours(id: any, currentNeighbourIds = []) {
+  getNeighbours(
+    id: string,
+    currentNeighbourIds: string[] = []
+  ): Promise<BasicNodesAndRels & { count: number }> {
     const query = `MATCH path = (a)--(o)
                    WHERE id(a) = ${id}
                    AND NOT (id(o) IN[${currentNeighbourIds.join(',')}])
@@ -170,7 +175,7 @@ export class Visualization extends Component<
                 this.props.maxFieldItems
               )
               this.autoCompleteRelationships(
-                this.graph._nodes,
+                this.graph?.nodes() || [],
                 resultGraph.nodes
               )
               resolve({ ...resultGraph, count: count })
@@ -180,13 +185,15 @@ export class Visualization extends Component<
     })
   }
 
-  getInternalRelationships(existingNodeIds: any, newNodeIds: any) {
-    newNodeIds = newNodeIds.map(neo4j.int)
-    existingNodeIds = existingNodeIds.map(neo4j.int)
-    existingNodeIds = existingNodeIds.concat(newNodeIds)
+  getInternalRelationships(
+    rawExistingNodeIds: number[],
+    rawNewNodeIds: number[]
+  ): Promise<BasicNodesAndRels> {
+    const newNodeIds = rawNewNodeIds.map(neo4j.int)
+    const existingNodeIds = rawExistingNodeIds.map(neo4j.int).concat(newNodeIds)
     const query =
       'MATCH (a)-[r]->(b) WHERE id(a) IN $existingNodeIds AND id(b) IN $newNodeIds RETURN r;'
-    return new Promise<any>((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       this.props.bus &&
         this.props.bus.self(
           CYPHER_REQUEST,
@@ -212,12 +219,12 @@ export class Visualization extends Component<
     })
   }
 
-  setGraph(graph: any) {
+  setGraph(graph: Graph): void {
     this.graph = graph
-    this.autoCompleteRelationships([], this.graph._nodes)
+    this.autoCompleteRelationships([], this.graph.nodes())
   }
 
-  render() {
+  render(): React.ReactNode {
     if (!this.state.nodes.length) return null
 
     return (
@@ -233,7 +240,9 @@ export class Visualization extends Component<
           relationships={this.state.relationships}
           isFullscreen={this.props.isFullscreen}
           assignVisElement={this.props.assignVisElement}
-          getAutoCompleteCallback={(callback: any) => {
+          getAutoCompleteCallback={(
+            callback: (rels: BasicRelationship[]) => void
+          ) => {
             this.autoCompleteCallback = callback
           }}
           setGraph={this.setGraph.bind(this)}
@@ -243,20 +252,16 @@ export class Visualization extends Component<
   }
 }
 
-const mapStateToProps = (state: any) => {
-  return {
-    graphStyleData: grassActions.getGraphStyleData(state),
-    maxFieldItems: getMaxFieldItems(state)
-  }
-}
+const mapStateToProps = (state: GlobalState) => ({
+  graphStyleData: grassActions.getGraphStyleData(state),
+  maxFieldItems: getMaxFieldItems(state)
+})
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    updateStyle: (graphStyleData: any) => {
-      dispatch(grassActions.updateGraphStyleData(graphStyleData))
-    }
+const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
+  updateStyle: (graphStyleData: any) => {
+    dispatch(grassActions.updateGraphStyleData(graphStyleData))
   }
-}
+})
 
 export const VisualizationConnectedBus = withBus(
   connect(mapStateToProps, mapDispatchToProps)(Visualization)
