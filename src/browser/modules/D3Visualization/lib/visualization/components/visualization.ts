@@ -21,13 +21,13 @@
 import d3 from 'd3'
 import Geometry from './graphGeometry'
 import * as vizRenderers from '../renders/init'
-import { menu as menuRenderer } from '../renders/menu'
+import { nodeMenuRenderer } from '../renders/menu'
 import vizClickHandler from '../utils/clickHandler'
 import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
 import NodeVisualisationModel from './NodeVisualisationModel'
 
 const vizFn = function(
-  el: any,
+  el: SVGElement,
   measureSize: any,
   graph: any,
   layout: any,
@@ -341,7 +341,7 @@ const vizFn = function(
       nodeGroups.call(renderer.onGraphChange, viz)
     }
 
-    for (renderer of Array.from(menuRenderer)) {
+    for (const renderer of nodeMenuRenderer) {
       nodeGroups.call(renderer.onGraphChange, viz)
     }
 

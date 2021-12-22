@@ -21,14 +21,14 @@
 import d3 from 'd3'
 import NodeVisualisationModel from '../components/NodeVisualisationModel'
 import Renderer from '../components/renderer'
-import icons from './d3Icons'
+import icons from './icons'
 
 const noOp = () => undefined
 
 const numberOfItemsInContextMenu = 3
 
-const arc = function(radius: number, itemNumber?: any, width?: any) {
-  const localWidth = width == null ? 30 : width
+const drawArc = function(radius: number, itemNumber: number, width?: number) {
+  const localWidth = width ?? 30
   const startAngle =
     ((2 * Math.PI) / numberOfItemsInContextMenu) * (itemNumber - 1)
   const endAngle = startAngle + (2 * Math.PI) / numberOfItemsInContextMenu
@@ -42,32 +42,35 @@ const arc = function(radius: number, itemNumber?: any, width?: any) {
     .padAngle(0.03)
 }
 
-const getSelectedNode = (node: any) => (node.selected ? [node] : [])
+const getSelectedNode = (node: NodeVisualisationModel) =>
+  node.selected ? [node] : []
 
 const attachContextEvent = (
-  event: any,
-  elems: any[],
+  eventType: string,
+  elements: d3.Selection<NodeVisualisationModel>[],
   viz: any,
-  content: any,
-  label: any
+  content: string,
+  label: string
 ) => {
   const result = []
-  for (const elem of Array.from(elems)) {
-    elem.on('mousedown.drag', () => {
+  for (const element of elements) {
+    element.on('mousedown.drag', () => {
       ;(d3.event as Event).stopPropagation()
       return null
     })
-    elem.on('mouseup', (node: any) => viz.trigger(event, node))
-    elem.on('mouseover', (node: any) => {
+    element.on('mouseup', (node: NodeVisualisationModel) =>
+      viz.trigger(eventType, node)
+    )
+    element.on('mouseover', (node: NodeVisualisationModel) => {
       node.contextMenu = {
-        menuSelection: event,
+        menuSelection: eventType,
         menuContent: content,
         label
       }
       return viz.trigger('menuMouseOver', node)
     })
     result.push(
-      elem.on('mouseout', (node: any) => {
+      element.on('mouseout', (node: NodeVisualisationModel) => {
         delete node.contextMenu
         return viz.trigger('menuMouseOut', node)
       })
@@ -77,15 +80,14 @@ const attachContextEvent = (
 }
 
 const createMenuItem = function(
-  this: any,
-  selection: any,
+  selection: d3.Selection<NodeVisualisationModel>,
   viz: any,
-  eventName: any,
-  itemNumber: any,
-  className: any,
-  position: any,
-  textValue: any,
-  helpValue: any
+  eventType: string,
+  itemIndex: number,
+  className: string,
+  position: [number, number],
+  svgIconKey: string,
+  tooltip: string
 ) {
   const path = selection.selectAll(`path.${className}`).data(getSelectedNode)
   const iconPath = selection
@@ -100,50 +102,49 @@ const createMenuItem = function(
     .attr({
       d(node: NodeVisualisationModel) {
         // @ts-expect-error Expected 1-2 arguments, but got 0.ts(2554)
-        return arc(node.radius, itemNumber, 1)()
+        return drawArc(node.radius, itemIndex, 1)()
       }
     })
 
-  const rawSvgIcon = icons[textValue]
-  // console.log(rawSvgIcon)
-  const svg = document.importNode(
+  const rawSvgIcon = icons[svgIconKey]
+  const svgIcon = document.importNode(
     new DOMParser().parseFromString(rawSvgIcon, 'application/xml')
-      .documentElement.firstChild as ChildNode,
+      .documentElement.firstChild as HTMLElement,
     true
   )
   const icon = iconPath
     .enter()
     .append('g')
-    .html((svg as any).getInnerHTML())
+    .html(svgIcon.innerHTML)
     .classed('icon', true)
     .classed(className, true)
     .classed('context-menu-item', true)
     .attr({
       transform(node: NodeVisualisationModel) {
-        console.log(node)
         return `translate(${Math.floor(
           // @ts-expect-error ts-migrate(2554) FIXME: Expected 3 arguments, but got 2.
-          arc(node.radius, itemNumber).centroid()[0] + (position[0] * 100) / 100
+          drawArc(node.radius, itemIndex).centroid()[0] +
+            (position[0] * 100) / 100
         )},${Math.floor(
           // @ts-expect-error ts-migrate(2554) FIXME: Expected 3 arguments, but got 2.
-          arc(node.radius, itemNumber).centroid()[1] + (position[1] * 100) / 100
+          drawArc(node.radius, itemIndex).centroid()[1] +
+            (position[1] * 100) / 100
         )}) scale(0.7)`
       },
       color(node: NodeVisualisationModel) {
         return viz.style.forNode(node).get('text-color-internal')
       }
     })
-  console.log(icon)
 
-  attachContextEvent(eventName, [tab, icon], viz, helpValue, rawSvgIcon)
+  attachContextEvent(eventType, [tab, icon], viz, tooltip, rawSvgIcon)
 
   tab
     .transition()
     .duration(200)
     .attr({
-      d(node: any) {
+      d(node: NodeVisualisationModel) {
         // @ts-expect-error Expected 1-2 arguments, but got 0.ts(2554)
-        return arc(node.radius, itemNumber)()
+        return drawArc(node.radius, itemIndex)()
       }
     })
 
@@ -154,7 +155,7 @@ const createMenuItem = function(
     .attr({
       d(node: NodeVisualisationModel) {
         // @ts-expect-error Expected 1-2 arguments, but got 0.ts(2554)
-        return arc(node.radius, itemNumber, 1)()
+        return drawArc(node.radius, itemIndex, 1)()
       }
     })
     .remove()
@@ -163,7 +164,7 @@ const createMenuItem = function(
 }
 
 const donutRemoveNode = new Renderer({
-  onGraphChange(selection: any, viz: any) {
+  onGraphChange(selection: d3.Selection<NodeVisualisationModel>, viz: any) {
     return createMenuItem(
       selection,
       viz,
@@ -180,7 +181,7 @@ const donutRemoveNode = new Renderer({
 })
 
 const donutExpandNode = new Renderer({
-  onGraphChange(selection: any, viz: any) {
+  onGraphChange(selection: d3.Selection<NodeVisualisationModel>, viz: any) {
     return createMenuItem(
       selection,
       viz,
@@ -197,7 +198,7 @@ const donutExpandNode = new Renderer({
 })
 
 const donutUnlockNode = new Renderer({
-  onGraphChange(selection: any, viz: any) {
+  onGraphChange(selection: d3.Selection<NodeVisualisationModel>, viz: any) {
     return createMenuItem(
       selection,
       viz,
@@ -213,10 +214,8 @@ const donutUnlockNode = new Renderer({
   onTick: noOp
 })
 
-const nodeMenuRenderer: Renderer[] = []
-
-nodeMenuRenderer.push(donutExpandNode)
-nodeMenuRenderer.push(donutRemoveNode)
-nodeMenuRenderer.push(donutUnlockNode)
-
-export { nodeMenuRenderer }
+export const nodeMenuRenderer = [
+  donutExpandNode,
+  donutRemoveNode,
+  donutUnlockNode
+]
