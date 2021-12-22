@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Visualization renders 1`] = `<div />`;
+exports[`Visualization renders empty content 1`] = `<div />`;
 
 exports[`Visualization renders with result and escapes any HTML 1`] = `
 <div>
@@ -56,14 +56,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
                     stroke-width="2px"
                   />
                   <text
-                    dy="1.5625"
-                    fill="#FFFFFF"
-                    font-family="streamline"
-                    font-size="25"
-                    pointer-events="none"
-                    text-anchor="middle"
-                  />
-                  <text
+                    class="caption"
                     fill="#FFFFFF"
                     font-size="10px"
                     pointer-events="none"

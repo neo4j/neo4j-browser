@@ -17,6 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import NodeVisualisationModel, {
+  NodeCaptionLine
+} from '../components/NodeVisualisationModel'
 import Renderer from '../components/renderer'
 const noop = function() {}
 
@@ -26,7 +29,7 @@ const nodeOutline = new Renderer({
   onGraphChange(selection: any, viz: any) {
     const circles = selection
       .selectAll('circle.outline')
-      .data((node: any) => [node])
+      .data((node: NodeVisualisationModel) => [node])
 
     circles
       .enter()
@@ -38,16 +41,16 @@ const nodeOutline = new Renderer({
       })
 
     circles.attr({
-      r(node: any) {
+      r(node: NodeVisualisationModel) {
         return node.radius
       },
-      fill(node: any) {
+      fill(node: NodeVisualisationModel) {
         return viz.style.forNode(node).get('color')
       },
-      stroke(node: any) {
+      stroke(node: NodeVisualisationModel) {
         return viz.style.forNode(node).get('border-color')
       },
-      'stroke-width'(node: any) {
+      'stroke-width'(node: NodeVisualisationModel) {
         return viz.style.forNode(node).get('border-width')
       }
     })
@@ -61,51 +64,25 @@ const nodeCaption = new Renderer({
   onGraphChange(selection: any, viz: any) {
     const text = selection
       .selectAll('text.caption')
-      .data((node: any) => node.caption)
+      .data((node: NodeVisualisationModel) => node.caption)
 
     text
       .enter()
       .append('text')
-      // .classed('caption', true)
+      // Classed element ensures duplicated data will be removed before adding
+      .classed('caption', true)
       .attr({ 'text-anchor': 'middle' })
       .attr({ 'pointer-events': 'none' })
 
     text
-      .text((line: any) => line.text)
+      .text((line: NodeCaptionLine) => line.text)
       .attr('x', 0)
-      .attr('y', (line: any) => line.baseline)
-      .attr('font-size', (line: any) =>
+      .attr('y', (line: NodeCaptionLine) => line.baseline)
+      .attr('font-size', (line: NodeCaptionLine) =>
         viz.style.forNode(line.node).get('font-size')
       )
       .attr({
-        fill(line: any) {
-          return viz.style.forNode(line.node).get('text-color-internal')
-        }
-      })
-
-    return text.exit().remove()
-  },
-
-  onTick: noop
-})
-
-const nodeIcon = new Renderer({
-  onGraphChange(selection: any, viz: any) {
-    const text = selection.selectAll('text').data((node: any) => node.caption)
-
-    text
-      .enter()
-      .append('text')
-      .attr({ 'text-anchor': 'middle' })
-      .attr({ 'pointer-events': 'none' })
-      .attr({ 'font-family': 'streamline' })
-
-    text
-      .text((line: any) => viz.style.forNode(line.node).get('icon-code'))
-      .attr('dy', (line: any) => line.node.radius / 16)
-      .attr('font-size', (line: any) => line.node.radius)
-      .attr({
-        fill(line: any) {
+        fill(line: NodeCaptionLine) {
           return viz.style.forNode(line.node).get('text-color-internal')
         }
       })
@@ -120,7 +97,7 @@ const nodeRing = new Renderer({
   onGraphChange(selection: any) {
     const circles = selection
       .selectAll('circle.ring')
-      .data((node: any) => [node])
+      .data((node: NodeVisualisationModel) => [node])
     circles
       .enter()
       .insert('circle', '.outline')
@@ -132,7 +109,7 @@ const nodeRing = new Renderer({
       })
 
     circles.attr({
-      r(node: any) {
+      r(node: NodeVisualisationModel) {
         return node.radius + 4
       }
     })
@@ -235,7 +212,6 @@ const relationshipOverlay = new Renderer({
 
 const node = []
 node.push(nodeOutline)
-node.push(nodeIcon)
 node.push(nodeCaption)
 node.push(nodeRing)
 

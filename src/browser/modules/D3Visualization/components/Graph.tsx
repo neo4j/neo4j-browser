@@ -25,10 +25,28 @@ import '../lib/visualization/index'
 import { StyledZoomHolder, StyledSvgWrapper, StyledZoomButton } from './styled'
 import { ZoomInIcon, ZoomOutIcon } from 'browser-components/icons/Icons'
 import graphView from '../lib/visualization/components/graphView'
+import { Node } from 'browser/modules/Stream/CypherFrame/VisualizationView'
+import GraphStyle from '../graphStyle'
 
 type State = any
 
-export class GraphComponent extends Component<any, State> {
+type GraphProps = {
+  isFullscreen: boolean
+  relationships: any
+  nodes: Node[]
+  getNodeNeighbours: any
+  onItemMouseOver: any
+  onItemSelect: any
+  graphStyle: GraphStyle
+  styleVersion: any
+  onGraphModelChange: any
+  assignVisElement: any
+  getAutoCompleteCallback: any
+  setGraph: any
+  offset: any
+}
+
+export class GraphComponent extends Component<GraphProps, State> {
   graph: any
   graphEH: any
   graphView: any
@@ -60,6 +78,10 @@ export class GraphComponent extends Component<any, State> {
 
   componentDidMount() {
     if (this.svgElement != null) {
+      // this.initGraphView and this.addInternalRelationships both call this.graph.update()
+      // so, the same graph will be calculated twice
+      // for now, we added conditions to control which parts to be drawn to avoid repeated rendering
+      // the function need to be refactored in a better way in the future
       this.initGraphView()
       this.graph && this.props.setGraph && this.props.setGraph(this.graph)
       this.props.getAutoCompleteCallback &&
@@ -96,7 +118,7 @@ export class GraphComponent extends Component<any, State> {
       this.graphEH.bindEventHandlers()
       this.props.onGraphModelChange(getGraphStats(this.graph))
       this.graphView.resize()
-      this.graphView.update()
+      this.graphView.update({ updateNodes: true, updateRelationships: false })
     }
   }
 
@@ -106,14 +128,14 @@ export class GraphComponent extends Component<any, State> {
         mapRelationships(internalRelationships, this.graph)
       )
       this.props.onGraphModelChange(getGraphStats(this.graph))
-      this.graphView.update()
+      this.graphView.update({ updateNodes: false, updateRelationships: true })
       this.graphEH.onItemMouseOut()
     }
   }
 
   componentDidUpdate(prevProps: any) {
     if (prevProps.styleVersion !== this.props.styleVersion) {
-      this.graphView.update()
+      this.graphView.update({ updateNodes: true, updateRelationships: true })
     }
     if (this.props.isFullscreen !== prevProps.isFullscreen) {
       this.graphView.resize()

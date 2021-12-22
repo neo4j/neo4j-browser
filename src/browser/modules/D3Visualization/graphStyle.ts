@@ -129,30 +129,6 @@ const DEFAULT_SIZES: DefaultSizeType[] = [
     diameter: '80px'
   }
 ]
-type DefaultIconCodeType = { 'icon-code': string }
-const DEFAULT_ICON_CODES: DefaultIconCodeType[] = [
-  {
-    'icon-code': 'a'
-  },
-  {
-    'icon-code': '"'
-  },
-  {
-    'icon-code': 'z'
-  },
-  {
-    'icon-code': '_'
-  },
-  {
-    'icon-code': '/'
-  },
-  {
-    'icon-code': '>'
-  },
-  {
-    'icon-code': 'k'
-  }
-]
 type DefaultArrayWidthType = { 'shaft-width': string }
 const DEFAULT_ARRAY_WIDTHS: DefaultArrayWidthType[] = [
   {
@@ -500,10 +476,6 @@ export class GraphStyle {
 
   defaultSizes = function(): DefaultSizeType[] {
     return DEFAULT_SIZES
-  }
-
-  defaultIconCodes = function(): DefaultIconCodeType[] {
-    return DEFAULT_ICON_CODES
   }
 
   defaultArrayWidths = function(): DefaultArrayWidthType[] {

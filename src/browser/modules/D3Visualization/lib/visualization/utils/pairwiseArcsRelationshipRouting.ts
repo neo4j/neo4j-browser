@@ -21,11 +21,14 @@ import measureText from './textMeasurement'
 import LoopArrow from './loopArrow'
 import StraightArrow from './straightArrow'
 import ArcArrow from './arcArrow'
+import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
 
 export default class PairwiseArcsRelationshipRouting {
-  style: any
-  constructor(style: any) {
+  style: GraphStyle
+  canvas: HTMLCanvasElement
+  constructor(style: GraphStyle) {
     this.style = style
+    this.canvas = document.createElement('canvas')
   }
 
   measureRelationshipCaption(relationship: any, caption: any) {
@@ -33,8 +36,15 @@ export default class PairwiseArcsRelationshipRouting {
     const padding = parseFloat(
       this.style.forRelationship(relationship).get('padding')
     )
+    const canvas2DContext = this.canvas.getContext('2d')
     return (
-      measureText(caption, fontFamily, relationship.captionHeight) + padding * 2
+      measureText(
+        caption,
+        fontFamily,
+        relationship.captionHeight,
+        <CanvasRenderingContext2D>canvas2DContext
+      ) +
+      padding * 2
     )
   }
 

@@ -34,9 +34,16 @@ import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
 import { resultHasTruncatedFields } from 'browser/modules/Stream/CypherFrame/helpers'
 import { Bus } from 'suber'
 
+export type Node = {
+  id: string
+  labels: string[]
+  properties: { [key: string]: string | boolean | number }
+  propertyTypes: { [key: string]: string }
+}
+
 type VisualizationState = {
   updated: number
-  nodes: any[]
+  nodes: Node[]
   relationships: any[]
   hasTruncatedFields: boolean
 }

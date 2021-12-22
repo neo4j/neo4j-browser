@@ -55,7 +55,7 @@ export class GraphEventHandler {
     }
     this.selectedItem = item
     item.selected = true
-    this.graphView.update()
+    this.graphView.update({ updateNodes: true, updateRelationships: true })
   }
 
   deselectItem() {
@@ -70,14 +70,14 @@ export class GraphEventHandler {
         relationshipCount: this.graph.relationships().length
       }
     })
-    this.graphView.update()
+    this.graphView.update({ updateNodes: true, updateRelationships: true })
   }
 
   nodeClose(d: any) {
     this.graph.removeConnectedRelationships(d)
     this.graph.removeNode(d)
     this.deselectItem()
-    this.graphView.update()
+    this.graphView.update({ updateNodes: true, updateRelationships: true })
     this.graphModelChanged()
   }
 
@@ -121,7 +121,7 @@ export class GraphEventHandler {
         if (err) return
         graph.addExpandedNodes(d, mapNodes(nodes))
         graph.addRelationships(mapRelationships(relationships, graph))
-        graphView.update()
+        graphView.update({ updateNodes: true, updateRelationships: true })
         graphModelChanged()
       }
     )
@@ -130,7 +130,7 @@ export class GraphEventHandler {
   nodeCollapse(d: any) {
     d.expanded = false
     this.graph.collapseNode(d)
-    this.graphView.update()
+    this.graphView.update({ updateNodes: true, updateRelationships: true })
     this.graphModelChanged()
   }
 

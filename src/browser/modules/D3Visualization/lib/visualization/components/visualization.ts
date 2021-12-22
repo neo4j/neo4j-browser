@@ -19,17 +19,19 @@
  */
 
 import d3 from 'd3'
-import NeoD3Geometry from './graphGeometry'
+import Geometry from './graphGeometry'
 import * as vizRenderers from '../renders/init'
 import { menu as menuRenderer } from '../renders/menu'
 import vizClickHandler from '../utils/clickHandler'
+import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
+import NodeVisualisationModel from './NodeVisualisationModel'
 
 const vizFn = function(
   el: any,
   measureSize: any,
   graph: any,
   layout: any,
-  style: any
+  style: GraphStyle
 ) {
   const viz: any = { style }
 
@@ -47,7 +49,7 @@ const vizFn = function(
     .attr('transform', 'scale(1)')
 
   const container = baseGroup.append('g')
-  const geometry = new NeoD3Geometry(style)
+  const geometry = new Geometry(style)
 
   // This flags that a panning is ongoing and won't trigger
   // 'canvasClick' event when panning ends.
@@ -62,14 +64,16 @@ const vizFn = function(
   // To be overridden
   viz.trigger = function(_event: any, ..._args: any[]) {}
 
-  const onNodeClick = (node: any) => {
+  const onNodeClick = (node: NodeVisualisationModel) => {
     updateViz = false
     return viz.trigger('nodeClicked', node)
   }
 
-  const onNodeDblClick = (node: any) => viz.trigger('nodeDblClicked', node)
+  const onNodeDblClick = (node: NodeVisualisationModel) =>
+    viz.trigger('nodeDblClicked', node)
 
-  const onNodeDragToggle = (node: any) => viz.trigger('nodeDragToggle', node)
+  const onNodeDragToggle = (node: NodeVisualisationModel) =>
+    viz.trigger('nodeDragToggle', node)
 
   const onRelationshipClick = (relationship: any) => {
     ;(d3.event as Event).stopPropagation()
@@ -77,8 +81,10 @@ const vizFn = function(
     return viz.trigger('relationshipClicked', relationship)
   }
 
-  const onNodeMouseOver = (node: any) => viz.trigger('nodeMouseOver', node)
-  const onNodeMouseOut = (node: any) => viz.trigger('nodeMouseOut', node)
+  const onNodeMouseOver = (node: NodeVisualisationModel) =>
+    viz.trigger('nodeMouseOver', node)
+  const onNodeMouseOut = (node: NodeVisualisationModel) =>
+    viz.trigger('nodeMouseOut', node)
 
   const onRelMouseOver = (rel: any) => viz.trigger('relMouseOver', rel)
   const onRelMouseOut = (rel: any) => viz.trigger('relMouseOut', rel)
@@ -267,10 +273,15 @@ const vizFn = function(
     return latestStats
   }
 
-  viz.update = function() {
+  viz.update = function(options: {
+    updateNodes: boolean
+    updateRelationships: boolean
+  }) {
     if (!graph) {
       return
     }
+
+    geometry.onGraphChange(graph, options)
 
     const layers = container
       .selectAll('g.layer')
@@ -301,8 +312,6 @@ const vizFn = function(
       (relationship: any) => relationship.selected
     )
 
-    geometry.onGraphChange(graph)
-
     for (var renderer of Array.from<any>(vizRenderers.relationship)) {
       relationshipGroups.call(renderer.onGraphChange, viz)
     }
@@ -323,7 +332,10 @@ const vizFn = function(
       .on('mouseover', onNodeMouseOver)
       .on('mouseout', onNodeMouseOut)
 
-    nodeGroups.classed('selected', (node: any) => node.selected)
+    nodeGroups.classed(
+      'selected',
+      (node: NodeVisualisationModel) => node.selected
+    )
 
     for (renderer of Array.from(vizRenderers.node)) {
       nodeGroups.call(renderer.onGraphChange, viz)
