@@ -42,12 +42,12 @@ import {
 } from '../settings/settingsDuck'
 import { fetchRemoteGuideAsync } from './helpers/playAndGuides'
 import { CONNECTION_SUCCESS } from '../connections/connectionsDuck'
+import { UPDATE_SETTINGS } from '../dbMeta/constants'
 import {
-  UPDATE_SETTINGS,
   getAvailableSettings,
   getRemoteContentHostnameAllowlist,
   getDefaultRemoteContentHostnameAllowlist
-} from '../dbMeta/dbMetaDuck'
+} from '../dbMeta/state'
 import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
 import { add as addFrame } from 'shared/modules/frames/framesDuck'
 import { update as updateQueryResult } from 'shared/modules/requests/requestsDuck'

@@ -23,7 +23,7 @@ import { GlobalState } from 'shared/globalState'
 import {
   shouldRetainConnectionCredentials,
   shouldRetainEditorHistory
-} from '../modules/dbMeta/dbMetaDuck'
+} from '../modules/dbMeta/state'
 import { initialState as settingsInitialState } from '../modules/settings/settingsDuck'
 
 export const keyPrefix = 'neo4j.'

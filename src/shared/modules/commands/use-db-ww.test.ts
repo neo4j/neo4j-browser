@@ -25,16 +25,16 @@ import { executeSingleCommand, handleSingleCommandEpic } from './commandsDuck'
 import bolt from 'services/bolt/bolt'
 
 jest.mock('services/bolt/setup-bolt-worker', () => {
-  const orig = require.requireActual('services/bolt/setup-bolt-worker')
+  const orig = jest.requireActual('services/bolt/setup-bolt-worker')
   return {
     ...orig,
     setupBoltWorker: jest.fn(() => Promise.resolve({ records: [] }))
   }
 })
-const setupWorkerModule = require.requireMock('services/bolt/setup-bolt-worker')
+const setupWorkerModule = jest.requireMock('services/bolt/setup-bolt-worker')
 
 jest.mock('shared/modules/settings/settingsDuck', () => {
-  const orig = require.requireActual('shared/modules/settings/settingsDuck')
+  const orig = jest.requireActual('shared/modules/settings/settingsDuck')
   return {
     ...orig,
     shouldUseCypherThread: () => true
@@ -42,15 +42,15 @@ jest.mock('shared/modules/settings/settingsDuck', () => {
 })
 
 jest.mock('shared/modules/params/paramsDuck', () => {
-  const orig = require.requireActual('shared/modules/params/paramsDuck')
+  const orig = jest.requireActual('shared/modules/params/paramsDuck')
   return {
     ...orig,
     getParams: () => ({})
   }
 })
 
-jest.mock('shared/modules/dbMeta/dbMetaDuck', () => {
-  const orig = require.requireActual('shared/modules/dbMeta/dbMetaDuck')
+jest.mock('shared/modules/dbMeta/state', () => {
+  const orig = jest.requireActual('shared/modules/dbMeta/state')
   return {
     ...orig,
     getVersion: () => '4.0.0'

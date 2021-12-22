@@ -34,7 +34,7 @@ import { fetchRemoteGuideAsync } from 'shared/modules/commands/helpers/playAndGu
 import {
   getDefaultRemoteContentHostnameAllowlist,
   getRemoteContentHostnameAllowlist
-} from 'shared/modules/dbMeta/dbMetaDuck'
+} from 'shared/modules/dbMeta/state'
 import { splitMdxSlides } from 'browser/modules/Docs/MDX/splitMdx'
 import {
   StyledCypherErrorMessage,

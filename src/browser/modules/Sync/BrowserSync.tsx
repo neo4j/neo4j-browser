@@ -21,7 +21,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import TimeAgo from 'react-timeago'
-import { shouldAllowOutgoingConnections } from 'shared/modules/dbMeta/dbMetaDuck'
+import { shouldAllowOutgoingConnections } from 'shared/modules/dbMeta/state'
 import {
   getConnectionState,
   DISCONNECTED_STATE

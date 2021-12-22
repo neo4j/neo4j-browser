@@ -33,7 +33,7 @@ import {
   FIRST_MULTI_DB_SUPPORT,
   FIRST_NO_MULTI_DB_SUPPORT
 } from '../features/versionedFeatures'
-import { DB_META_DONE, SYSTEM_DB } from '../dbMeta/dbMetaDuck'
+import { DB_META_DONE, SYSTEM_DB } from '../dbMeta/constants'
 
 export const NAME = 'user'
 export const UPDATE_CURRENT_USER = `${NAME}/UPDATE_CURRENT_USER`

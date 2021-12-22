@@ -34,7 +34,7 @@ import {
   getActiveConnection,
   isConnected
 } from 'shared/modules/connections/connectionsDuck'
-import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
+import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/state'
 import { ClickToCode } from 'browser/modules/ClickToCode/index'
 
 export const ServerStatusFrame = (props: any) => {

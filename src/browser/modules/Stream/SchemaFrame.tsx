@@ -25,7 +25,7 @@ import { withBus } from 'react-suber'
 import { replace, toUpper } from 'lodash-es'
 import semver from 'semver'
 
-import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
+import { getVersion } from 'shared/modules/dbMeta/state'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
 import Slide from '../Carousel/Slide'

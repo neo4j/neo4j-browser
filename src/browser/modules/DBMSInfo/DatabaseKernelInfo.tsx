@@ -27,7 +27,7 @@ import {
   getClusterRole,
   getDatabases,
   Database
-} from 'shared/modules/dbMeta/dbMetaDuck'
+} from 'shared/modules/dbMeta/state'
 import {
   executeCommand,
   commandSources,

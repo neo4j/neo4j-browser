@@ -35,7 +35,7 @@ import {
 import {
   NAME as meta,
   initialState as metaInitialState
-} from './modules/dbMeta/dbMetaDuck'
+} from './modules/dbMeta/state'
 import { NAME as documents, Favorite } from './modules/favorites/favoritesDuck'
 import {
   NAME as connections,

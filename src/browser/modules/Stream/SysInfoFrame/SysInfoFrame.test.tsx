@@ -23,7 +23,7 @@ import { render } from '@testing-library/react'
 import { SysInfoFrame } from './SysInfoFrame'
 import { Frame } from 'shared/modules/frames/framesDuck'
 import { Bus } from 'suber'
-import { Database } from 'shared/modules/dbMeta/dbMetaDuck'
+import { Database } from 'shared/modules/dbMeta/state'
 
 const baseProps = {
   databases: [],

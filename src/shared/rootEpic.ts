@@ -48,7 +48,7 @@ import {
   serverConfigEpic,
   serverInfoEpic,
   clearMetaOnDisconnectEpic
-} from './modules/dbMeta/dbMetaDuck'
+} from './modules/dbMeta/epics'
 import { cancelRequestEpic } from './modules/requests/requestsDuck'
 import {
   discoveryOnStartupEpic,

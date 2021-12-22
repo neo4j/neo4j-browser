@@ -36,7 +36,7 @@ import { getErrorMessage } from 'shared/modules/commands/commandsDuck'
 import {
   findDatabaseByNameOrAlias,
   shouldAllowOutgoingConnections
-} from 'shared/modules/dbMeta/dbMetaDuck'
+} from 'shared/modules/dbMeta/state'
 import {
   getActiveConnection,
   getConnectionState,

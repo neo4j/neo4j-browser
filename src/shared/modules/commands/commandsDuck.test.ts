@@ -39,7 +39,7 @@ import {
 } from 'shared/modules/settings/settingsDuck'
 import { cleanCommand, getInterpreter } from 'services/commandUtils'
 import bolt from 'services/bolt/bolt'
-import { fetchMetaData } from '../dbMeta/dbMetaDuck'
+import { fetchMetaData } from '../dbMeta/actions'
 
 const originalRoutedWriteTransaction = bolt.routedWriteTransaction
 
