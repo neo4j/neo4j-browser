@@ -18,13 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import measureText from './textMeasurement'
-import LoopArrow from './LoopArrow'
-import StraightArrow from './StraightArrow'
-import ArcArrow from './arcArrow'
+import LoopArrow from './LoopArrow2'
+import StraightArrow from './StraightArrow2'
+import ArcArrow from './arcArrow2'
 import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
-import Relationship from '../components/Relationship'
-import Graph from '../components/Graph'
-import { NodePair } from '../components/Graph'
+import Relationship from '../components/relationship2'
+import Graph from '../components/Graph2'
+import { NodePair } from '../components/Graph2'
 
 export default class PairwiseArcsRelationshipRouting {
   style: GraphStyle

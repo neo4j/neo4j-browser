@@ -19,11 +19,11 @@
  */
 import measureText from './textMeasurement'
 import distributeCircular from './circumferentialDistribution'
-import StraightArrow from './StraightArrow'
-import ArcArrow from './arcArrow'
+import StraightArrow from './StraightArrow2'
+import ArcArrow from './arcArrow2'
 import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
-import Relationship from '../components/Relationship'
-import Graph from '../components/Graph'
+import Relationship from '../components/relationship2'
+import Graph from '../components/Graph2'
 
 export type ArrowAngle = {
   floating: Record<string, number>

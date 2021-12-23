@@ -25,13 +25,13 @@ import {
   getGraphStats,
   GraphStats
 } from '../mapper'
-import { GetNodeNeighboursFn, GraphEventHandler } from '../GraphEventHandler'
+import { GetNodeNeighboursFn, GraphEventHandler } from '../GraphEventHandler2'
 import { StyledZoomHolder, StyledSvgWrapper, StyledZoomButton } from './styled'
 import { ZoomInIcon, ZoomOutIcon } from 'browser-components/icons/Icons'
-import GraphView from '../lib/visualization/components/GraphView'
+import GraphView from '../lib/visualization/components/graphView2'
 import GraphStyle from '../graphStyle'
 import { BasicNode, BasicRelationship } from 'services/bolt/boltMappings'
-import Graph from '../lib/visualization/components/Graph'
+import Graph from '../lib/visualization/components/Graph2'
 import { VizItem } from './types'
 
 type GraphState = { zoomInLimitReached: boolean; zoomOutLimitReached: boolean }

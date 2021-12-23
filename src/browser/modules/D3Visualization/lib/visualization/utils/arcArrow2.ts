@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { RelationShipCaptionLayout } from '../components/Relationship'
+import { RelationShipCaptionLayout } from '../components/relationship2'
 
 type Point = { x: number; y: number }
 const square = (l: number) => l * l

@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Node from '../components/Node'
+import Node from '../components/Node2'
 
 export default function circularLayout(
   nodes: Node[],

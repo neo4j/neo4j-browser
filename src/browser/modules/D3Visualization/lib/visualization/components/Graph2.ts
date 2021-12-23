@@ -18,8 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Node from './Node'
-import Relationship from './Relationship'
+import Node from './Node2'
+import Relationship from './relationship2'
 
 type NodeMap = Record<string, string[]>
 function uniq<T>(list: T[]): T[] {

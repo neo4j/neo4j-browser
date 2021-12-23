@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { VizObj } from './Visualization'
+import { VizObj } from './Visualization2'
 
 const noOp = () => undefined
 type RendererEventHandler = (selection: d3.Selection<any>, viz: VizObj) => void

@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Graph from './Graph'
+import Graph from './Graph2'
 
 type NodeProperties = { [key: string]: string }
 export type NodeCaptionLine = {
