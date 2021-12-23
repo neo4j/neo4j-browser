@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { RelationShipCaptionLayout } from '../components/relationship2'
+import { RelationShipCaptionLayout } from '../components/Relationship'
 
 export default class StraightArrow {
   length: number

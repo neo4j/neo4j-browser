@@ -20,10 +20,10 @@
 
 import { BasicNode, BasicNodesAndRels } from 'services/bolt/boltMappings'
 import { VizItem } from './components/types'
-import Graph from './lib/visualization/components/Graph2'
-import GraphView from './lib/visualization/components/graphView2'
-import Node from './lib/visualization/components/Node2'
-import Relationship from './lib/visualization/components/relationship2'
+import Graph from './lib/visualization/components/Graph'
+import GraphView from './lib/visualization/components/GraphView'
+import Node from './lib/visualization/components/Node'
+import Relationship from './lib/visualization/components/Relationship'
 import { mapNodes, mapRelationships, getGraphStats, GraphStats } from './mapper'
 
 export type GetNodeNeighboursFn = (

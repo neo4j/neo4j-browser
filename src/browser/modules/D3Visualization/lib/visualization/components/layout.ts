@@ -21,7 +21,7 @@ import d3 from 'd3'
 import collision from './collision'
 import circularLayout from '../utils/circularLayout'
 import cloneArray from '../utils/arrays'
-import Graph from './Graph2'
+import Graph from './Graph'
 
 type ForceLayout = {
   update: (graph: Graph, size: [number, number]) => any

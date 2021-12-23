@@ -19,13 +19,13 @@
  */
 
 import d3 from 'd3'
-import GraphGeometry from './GraphGeometry2'
+import GraphGeometry from './GraphGeometry'
 import * as vizRenderers from '../renders/init'
 import { nodeMenuRenderer } from '../renders/menu'
 import vizClickHandler from '../utils/clickHandler'
 import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
-import Node from './Node2'
-import Graph from './Graph2'
+import Node from './Node'
+import Graph from './Graph'
 
 export type MeasureSizeFn = () => { width: number; height: number }
 export type VizObj = {

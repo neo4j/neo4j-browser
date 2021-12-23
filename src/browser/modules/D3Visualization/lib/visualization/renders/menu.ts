@@ -19,9 +19,9 @@
  */
 
 import d3 from 'd3'
-import Node from '../components/Node2'
-import Renderer from '../components/renderer2'
-import { VizObj } from '../components/Visualization2'
+import Node from '../components/Node'
+import Renderer from '../components/Renderer'
+import { VizObj } from '../components/Visualization'
 import icons from './d3Icons'
 
 const noOp = () => undefined

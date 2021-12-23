@@ -38,7 +38,7 @@ import {
   BasicNodesAndRels,
   BasicRelationship
 } from 'services/bolt/boltMappings'
-import Graph from 'browser/modules/D3Visualization/lib/visualization/components/Graph2'
+import Graph from 'browser/modules/D3Visualization/lib/visualization/components/Graph'
 import { GlobalState } from 'shared/globalState'
 import { Action, Dispatch } from 'redux'
 

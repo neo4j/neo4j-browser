@@ -19,11 +19,11 @@
  */
 
 import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
-import PairwiseArcsRelationshipRouting from '../utils/pairwiseArcsRelationshipRouting2'
+import PairwiseArcsRelationshipRouting from '../utils/pairwiseArcsRelationshipRouting'
 import measureText from '../utils/textMeasurement'
-import Graph from './Graph2'
-import Node, { NodeCaptionLine } from './Node2'
-import Relationship from './relationship2'
+import Graph from './Graph'
+import Node, { NodeCaptionLine } from './Node'
+import Relationship from './Relationship'
 
 export default class GraphGeometry {
   relationshipRouting: PairwiseArcsRelationshipRouting

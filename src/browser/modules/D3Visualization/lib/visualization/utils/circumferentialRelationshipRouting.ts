@@ -19,11 +19,11 @@
  */
 import measureText from './textMeasurement'
 import distributeCircular from './circumferentialDistribution'
-import StraightArrow from './StraightArrow2'
-import ArcArrow from './arcArrow2'
+import StraightArrow from './StraightArrow'
+import ArcArrow from './ArcArrow'
 import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
-import Relationship from '../components/relationship2'
-import Graph from '../components/Graph2'
+import Relationship from '../components/Relationship'
+import Graph from '../components/Graph'
 
 export type ArrowAngle = {
   floating: Record<string, number>
@@ -105,7 +105,6 @@ export default class circumferentialRelationshipRouting {
   layoutRelationships(graph: Graph): void {
     let dx, dy
     for (const relationship of graph.relationships()) {
-      // TODO broken
       // @ts-expect-error
       dx = relationship.target.x - relationship.source.x
       // @ts-expect-error

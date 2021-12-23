@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import Node, { NodeCaptionLine } from '../components/Node2'
-import Renderer from '../components/renderer2'
+import Node, { NodeCaptionLine } from '../components/Node'
+import Renderer from '../components/Renderer'
 const noop = () => undefined
 
 const nodeRingStrokeSize = 8

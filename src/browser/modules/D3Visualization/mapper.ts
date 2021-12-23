@@ -20,9 +20,9 @@
 
 import { BasicNode, BasicRelationship } from 'services/bolt/boltMappings'
 import { optionalToString } from 'services/utils'
-import Graph from './lib/visualization/components/Graph2'
-import Node from './lib/visualization/components/Node2'
-import Relationship from './lib/visualization/components/relationship2'
+import Graph from './lib/visualization/components/Graph'
+import Node from './lib/visualization/components/Node'
+import Relationship from './lib/visualization/components/Relationship'
 
 const mapProperties = (_: any) => Object.assign({}, ...stringifyValues(_))
 const stringifyValues = (obj: any) =>

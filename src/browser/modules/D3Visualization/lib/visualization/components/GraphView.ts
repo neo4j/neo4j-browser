@@ -17,10 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import viz, { MeasureSizeFn, VizObj } from './Visualization2'
+import viz, { MeasureSizeFn, VizObj } from './Visualization'
 import layout from './layout'
 import GraphStyle from 'project-root/src/browser/modules/D3Visualization/graphStyle'
-import Graph from './Graph2'
+import Graph from './Graph'
 
 export default class GraphView {
   callbacks: any

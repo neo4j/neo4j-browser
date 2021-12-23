@@ -1,6 +1,6 @@
-import ArcArrow from '../utils/arcArrow2'
-import StraightArrow from '../utils/StraightArrow2'
-import Node from './Node2'
+import ArcArrow from '../utils/ArcArrow'
+import StraightArrow from '../utils/StraightArrow'
+import Node from './Node'
 
 /*
  * Copyright (c) "Neo4j"

@@ -41,8 +41,8 @@ import {
   BasicNodesAndRels,
   BasicRelationship
 } from 'services/bolt/boltMappings'
-import Graph from '../lib/visualization/components/Graph2'
-import { GetNodeNeighboursFn } from '../GraphEventHandler2'
+import Graph from '../lib/visualization/components/Graph'
+import { GetNodeNeighboursFn } from '../GraphEventHandler'
 
 type DecuplicateHelper = { nodes: BasicNode[]; taken: Record<string, boolean> }
 const deduplicateNodes = (nodes: BasicNode[]): BasicNode[] =>

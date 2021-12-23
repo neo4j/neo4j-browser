@@ -18,13 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import measureText from './textMeasurement'
-import LoopArrow from './LoopArrow2'
-import StraightArrow from './StraightArrow2'
-import ArcArrow from './arcArrow2'
+import LoopArrow from './LoopArrow'
+import StraightArrow from './StraightArrow'
+import ArcArrow from './ArcArrow'
 import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
-import Relationship from '../components/relationship2'
-import Graph from '../components/Graph2'
-import { NodePair } from '../components/Graph2'
+import Relationship from '../components/Relationship'
+import Graph from '../components/Graph'
+import { NodePair } from '../components/Graph'
 
 export default class PairwiseArcsRelationshipRouting {
   style: GraphStyle
@@ -109,9 +109,9 @@ export default class PairwiseArcsRelationshipRouting {
     nodePairs.forEach(nodePair => {
       if (!nodePair.isLoop()) {
         // TODO type error
-        //@ts-expect-error
+        // @ts-expect-error
         const dx = nodePair.nodeA.x - nodePair.nodeB.x
-        //@ts-expect-error
+        // @ts-expect-error
         const dy = nodePair.nodeA.y - nodePair.nodeB.y
         const angle = ((Math.atan2(dy, dx) / Math.PI) * 180 + 360) % 360
         const centreDistance = Math.sqrt(square(dx) + square(dy))
