@@ -158,6 +158,7 @@ const createMenuItem = function(
 }
 
 const donutRemoveNode = new Renderer({
+  name: 'donutRemoveNode',
   onGraphChange(selection, viz) {
     return createMenuItem(
       selection,
@@ -175,6 +176,7 @@ const donutRemoveNode = new Renderer({
 })
 
 const donutExpandNode = new Renderer({
+  name: 'donutExpandNode',
   onGraphChange(selection, viz) {
     return createMenuItem(
       selection,
@@ -192,6 +194,7 @@ const donutExpandNode = new Renderer({
 })
 
 const donutUnlockNode = new Renderer({
+  name: 'donutUnlockNode',
   onGraphChange(selection, viz) {
     return createMenuItem(
       selection,

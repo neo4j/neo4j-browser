@@ -25,7 +25,7 @@ type RendererEventHandler = (selection: d3.Selection<any>, viz: VizObj) => void
 export default class Renderer {
   onGraphChange: RendererEventHandler
   onTick: RendererEventHandler
-  name: string | undefined
+  name: string
 
   constructor({
     onGraphChange = noOp,
@@ -34,8 +34,8 @@ export default class Renderer {
   }: {
     onGraphChange?: RendererEventHandler
     onTick?: RendererEventHandler
-    name?: string
-  } = {}) {
+    name: string
+  }) {
     this.onGraphChange = onGraphChange
     this.onTick = onTick
     this.name = name

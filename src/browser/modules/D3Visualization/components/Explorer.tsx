@@ -58,7 +58,6 @@ const deduplicateNodes = (nodes: BasicNode[]): BasicNode[] =>
     },
     { nodes: [], taken: {} }
   ).nodes
-// TODO move type decls?
 
 type ExplorerComponentProps = {
   relationships: BasicRelationship[]
@@ -120,7 +119,6 @@ export class ExplorerComponent extends Component<
     if (nodes.length > parseInt(this.props.initialNodeDisplay)) {
       nodes = nodes.slice(0, this.props.initialNodeDisplay)
       relationships = this.props.relationships.filter(item => {
-        // TODO should we add note about relationships not being displayed?
         return !!nodes.find(node => node.id === item.startNodeId)
       })
       selectedItem = {

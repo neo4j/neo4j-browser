@@ -108,10 +108,7 @@ export default class PairwiseArcsRelationshipRouting {
 
     nodePairs.forEach(nodePair => {
       if (!nodePair.isLoop()) {
-        // TODO type error
-        // @ts-expect-error
         const dx = nodePair.nodeA.x - nodePair.nodeB.x
-        // @ts-expect-error
         const dy = nodePair.nodeA.y - nodePair.nodeB.y
         const angle = ((Math.atan2(dy, dx) / Math.PI) * 180 + 360) % 360
         const centreDistance = Math.sqrt(square(dx) + square(dy))

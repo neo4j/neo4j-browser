@@ -105,9 +105,7 @@ export default class circumferentialRelationshipRouting {
   layoutRelationships(graph: Graph): void {
     let dx, dy
     for (const relationship of graph.relationships()) {
-      // @ts-expect-error
       dx = relationship.target.x - relationship.source.x
-      // @ts-expect-error
       dy = relationship.target.y - relationship.source.y
       relationship.naturalAngle =
         ((Math.atan2(dy, dx) / Math.PI) * 180 + 180) % 360
@@ -120,7 +118,6 @@ export default class circumferentialRelationshipRouting {
 
     for (const node of sortedNodes) {
       let angle
-      // TODO is this comparison valid? should we not just compare IDs
       const relationships: Relationship[] = graph
         .relationships()
         .filter(({ source, target }) => source === node || target === node)
@@ -190,9 +187,7 @@ export default class circumferentialRelationshipRouting {
           const headRadius = shaftRadius + 3
           const headHeight = headRadius * 2
 
-          // @ts-expect-error
           dx = relationship.target.x - relationship.source.x
-          // @ts-expect-error
           dy = relationship.target.y - relationship.source.y
 
           const square = (distance: any) => distance * distance

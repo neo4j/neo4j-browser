@@ -48,10 +48,10 @@ export default class Node {
   minified: boolean
   contextMenu?: { menuSelection: string; menuContent: string; label: string }
 
-  // extra props TODO check if they make sense
-  x?: number
-  y?: number
-  fixed?: boolean
+  x: number
+  y: number
+  fixed: boolean
+  initialPositionCalculated: boolean
 
   constructor(
     id: string,
@@ -74,6 +74,10 @@ export default class Node {
     this.selected = false
     this.expanded = false
     this.minified = false
+    this.fixed = false
+    this.x = 0
+    this.y = 0
+    this.initialPositionCalculated = false
   }
 
   toJSON(): NodeProperties {

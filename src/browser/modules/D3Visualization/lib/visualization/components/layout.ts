@@ -31,9 +31,12 @@ type ForceLayout = {
     layoutSteps: number
   }
 }
-const layout = {
+export type Layout = { init: (render: () => number) => ForceLayout }
+export type AvailableLayouts = Record<'force', () => Layout>
+
+const layout: AvailableLayouts = {
   force: () => ({
-    init: (render: any): ForceLayout => {
+    init: render => {
       const linkDistance = 45
 
       const d3force = d3.layout
@@ -72,7 +75,6 @@ const layout = {
             : () => Date.now()
 
         const d3Tick = d3force.tick
-        // TODO fix this garb
         //@ts-expect-error
         d3force.tick = function() {
           const startTick = now()
@@ -81,6 +83,7 @@ const layout = {
             const startCalcs = now()
             currentStats.layoutSteps++
 
+            //@ts-expect-error This only works at runtime, fix when updating d3
             collision.avoidOverlap(d3force.nodes())
 
             if (d3Tick()) {

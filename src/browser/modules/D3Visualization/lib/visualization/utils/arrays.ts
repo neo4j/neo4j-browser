@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// TODO spread instead? this doesn't seem to work with non-trivial stuff
 export default function cloneArray<T>(original: Array<T>): Array<T> {
   const clone = new Array(original.length)
   for (let idx = 0; idx < original.length; idx++) {

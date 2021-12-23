@@ -24,6 +24,7 @@ const noop = () => undefined
 const nodeRingStrokeSize = 8
 
 const nodeOutline = new Renderer({
+  name: 'nodeOutline',
   onGraphChange(selection, viz) {
     const circles = selection
       .selectAll('circle.outline')
@@ -59,6 +60,7 @@ const nodeOutline = new Renderer({
 })
 
 const nodeCaption = new Renderer({
+  name: 'nodeCaption',
   onGraphChange(selection, viz) {
     const text = selection
       .selectAll('text.caption')
@@ -92,6 +94,7 @@ const nodeCaption = new Renderer({
 })
 
 const nodeRing = new Renderer({
+  name: 'nodeRing',
   onGraphChange(selection) {
     const circles = selection
       .selectAll('circle.ring')

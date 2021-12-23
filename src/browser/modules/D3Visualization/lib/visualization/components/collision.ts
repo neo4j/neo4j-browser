@@ -18,51 +18,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import d3 from 'd3'
+import Node from './Node'
 
+type D3MutatedNode = Node & d3.layout.force.Node
 const collision = {
-  avoidOverlap: (nodes: d3.layout.force.Node[]): void => {
+  avoidOverlap: (nodes: D3MutatedNode[]): void => {
     const q = d3.geom.quadtree(nodes)
     nodes.forEach(n => q.visit(collide(n)))
   }
 }
 
-const collide = (node: d3.layout.force.Node) => {
-  // TODO solve/understand these errors
-  // @ts-expect-error
-  let r = node.radius + 10
-  // @ts-expect-error
+const collide = (node: D3MutatedNode) => {
+  const r = node.radius + 10
   const nx1 = node.x - r
   const nx2 = node.x + r
-  // @ts-expect-error
   const ny1 = node.y - r
   const ny2 = node.y + r
   return (
-    quad: d3.geom.quadtree.Node<d3.layout.force.Node>,
+    quad: d3.geom.quadtree.Node<D3MutatedNode>,
     x1: number,
     y1: number,
     x2: number,
     y2: number
   ) => {
-    let l, x, y
     if (quad.point && quad.point !== node) {
-      // @ts-expect-error
-      x = node.x - quad.point.x
-      // @ts-expect-error
-      y = node.y - quad.point.y
-      l = Math.sqrt(x * x + y * y)
-      // @ts-expect-error
-      r = node.radius + 10 + quad.point.radius
-    }
-    if ((l as number) < r) {
-      l = (((l as number) - r) / (l as number)) * 0.5
-      // @ts-expect-error
-      node.x -= (x as number) *= l
-      // @ts-expect-error
-      node.y -= (y as number) *= l
-      // @ts-expect-error
-      quad.point.x += x
-      // @ts-expect-error
-      quad.point.y += y
+      let x = node.x - quad.point.x
+      let y = node.y - quad.point.y
+      let l = Math.sqrt(x * x + y * y)
+      const r = node.radius + 10 + quad.point.radius
+      if (l < r) {
+        l = ((l - r) / l) * 0.5
+        node.x -= x *= l
+        node.y -= y *= l
+        quad.point.x += x
+        quad.point.y += y
+      }
     }
     return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1
   }

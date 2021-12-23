@@ -36,8 +36,7 @@ export default class GraphView {
   ) {
     this.graph = graph
     this.style = style
-    const forceLayout = layout.force()
-    this.viz = viz(element, measureSize, this.graph, forceLayout, this.style)
+    this.viz = viz(element, measureSize, this.graph, layout.force(), this.style)
     this.callbacks = {}
     const { callbacks } = this
     this.viz.trigger = (() => (event: any, ...args: any[]) =>

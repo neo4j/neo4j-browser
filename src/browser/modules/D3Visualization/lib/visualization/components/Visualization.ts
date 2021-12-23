@@ -26,7 +26,20 @@ import vizClickHandler from '../utils/clickHandler'
 import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
 import Node from './Node'
 import Graph from './Graph'
+import { Layout } from './layout'
 
+type StatsBucket = {
+  frameCount: number
+  geometry: number
+  relationshipRenderers: Record<string, number>
+  duration: () => number
+  fps: () => string
+  lps: () => string
+  top: () => string
+  lastFrame?: number
+  firstFrame?: number
+  layout: { layoutSteps: number; layoutTime: number }
+}
 export type MeasureSizeFn = () => { width: number; height: number }
 export type VizObj = {
   style: any
@@ -47,7 +60,7 @@ const vizFn = function(
   el: SVGElement,
   measureSize: MeasureSizeFn,
   graph: Graph,
-  layout: any,
+  layout: Layout,
   style: GraphStyle
 ): VizObj {
   const viz: VizObj = {
@@ -200,44 +213,42 @@ const vizFn = function(
     .on('mousewheel.zoom', null as any)
 
   const newStatsBucket = function() {
-    const bucket: any = {
+    const bucket: StatsBucket = {
       frameCount: 0,
       geometry: 0,
-      relationshipRenderers: (function() {
-        const timings: any = {}
-        vizRenderers.relationship.forEach((r: any) => (timings[r.name] = 0))
-        return timings
-      })()
-    }
-    bucket.duration = () => bucket.lastFrame - bucket.firstFrame
-    bucket.fps = () =>
-      ((1000 * bucket.frameCount) / bucket.duration()).toFixed(1)
-    bucket.lps = () =>
-      ((1000 * bucket.layout.layoutSteps) / bucket.duration()).toFixed(1)
-    bucket.top = function() {
-      let time
-      const renderers = []
-      for (const name in bucket.relationshipRenderers) {
-        time = bucket.relationshipRenderers[name]
+      layout: { layoutSteps: 0, layoutTime: 0 },
+      relationshipRenderers: vizRenderers.relationship
+        .map(r => r.name)
+        .reduce((acc, curr) => ({ ...acc, [curr]: 0 }), {}),
+      duration: () => (bucket.lastFrame ?? 0) - (bucket.firstFrame ?? 0),
+      fps: () => ((1000 * bucket.frameCount) / bucket.duration()).toFixed(1),
+      lps: () =>
+        ((1000 * bucket.layout.layoutSteps) / bucket.duration()).toFixed(1),
+      top: function() {
+        let time
+        const renderers = []
+        for (const name in bucket.relationshipRenderers) {
+          time = bucket.relationshipRenderers[name]
+          renderers.push({
+            name,
+            time
+          })
+        }
         renderers.push({
-          name,
-          time
+          name: 'forceLayout',
+          time: bucket.layout.layoutTime
         })
-      }
-      renderers.push({
-        name: 'forceLayout',
-        time: bucket.layout.layoutTime
-      })
-      renderers.sort((a, b) => b.time - a.time)
-      const totalRenderTime = renderers.reduce(
-        (prev, current) => prev + current.time,
-        0
-      )
-      return renderers
-        .map(
-          d => `${d.name}: ${((100 * d.time) / totalRenderTime).toFixed(1)}%`
+        renderers.sort((a, b) => b.time - a.time)
+        const totalRenderTime = renderers.reduce(
+          (prev, current) => prev + current.time,
+          0
         )
-        .join(', ')
+        return renderers
+          .map(
+            d => `${d.name}: ${((100 * d.time) / totalRenderTime).toFixed(1)}%`
+          )
+          .join(', ')
+      }
     }
     return bucket
   }
@@ -278,7 +289,6 @@ const vizFn = function(
     for (const renderer of vizRenderers.relationship) {
       const startRenderer = now()
       relationshipGroups.call(renderer.onTick, viz)
-      //@ts-expect-error
       currentStats.relationshipRenderers[renderer.name] += now() - startRenderer
     }
 
@@ -294,7 +304,8 @@ const vizFn = function(
     // @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
     .on('dragend.node', () => onNodeDragToggle())
 
-  viz.collectStats = function() {
+  viz.collectStats = function(): StatsBucket {
+    // Todo this is memoryleak
     const latestStats = currentStats
     latestStats.layout = force.collectStats()
     currentStats = newStatsBucket()

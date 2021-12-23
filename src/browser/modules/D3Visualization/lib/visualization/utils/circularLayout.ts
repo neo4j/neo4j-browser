@@ -25,9 +25,7 @@ export default function circularLayout(
   center: { x: number; y: number },
   radius: number
 ): void {
-  const unlocatedNodes = nodes.filter(
-    node => !(node.x != null && node.y != null)
-  )
+  const unlocatedNodes = nodes.filter(node => !node.initialPositionCalculated)
 
   unlocatedNodes.forEach((node, i) => {
     node.x =
@@ -35,5 +33,7 @@ export default function circularLayout(
 
     node.y =
       center.y + radius * Math.cos((2 * Math.PI * i) / unlocatedNodes.length)
+
+    node.initialPositionCalculated = true
   })
 }
