@@ -19,21 +19,68 @@
  */
 
 import d3 from 'd3'
-import Geometry from './graphGeometry'
+import GraphGeometry from './GraphGeometry'
 import * as vizRenderers from '../renders/init'
 import { nodeMenuRenderer } from '../renders/menu'
 import vizClickHandler from '../utils/clickHandler'
 import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
-import NodeVisualisationModel from './NodeVisualisationModel'
+import VizNode from './Node'
+import Graph from './Graph'
+import { Layout } from './layout'
 
+type StatsBucket = {
+  frameCount: number
+  geometry: number
+  relationshipRenderers: Record<string, number>
+  duration: () => number
+  fps: () => string
+  lps: () => string
+  top: () => string
+  lastFrame?: number
+  firstFrame?: number
+  layout: { layoutSteps: number; layoutTime: number }
+}
+export type MeasureSizeFn = () => { width: number; height: number }
+export type VizObj = {
+  style: any
+  trigger: (_event: any, ..._args: any[]) => void
+  zoomInClick: (el: any) => { zoomInLimit: boolean; zoomOutLimit: boolean }
+  zoomOutClick: (el: any) => { zoomInLimit: boolean; zoomOutLimit: boolean }
+  boundingBox: () => void
+  resize: () => void
+  collectStats: () => void
+  update: (options: {
+    updateNodes: boolean
+    updateRelationships: boolean
+  }) => void
+}
+
+const noOp = () => undefined
 const vizFn = function(
   el: SVGElement,
-  measureSize: any,
-  graph: any,
-  layout: any,
+  measureSize: MeasureSizeFn,
+  graph: Graph,
+  layout: Layout,
   style: GraphStyle
-) {
-  const viz: any = { style }
+): VizObj {
+  const viz: VizObj = {
+    style,
+    // to be overwritten externally
+    trigger: noOp,
+    // to be defined later in this file, adding now for type safety
+    zoomInClick: () => ({
+      zoomInLimit: false,
+      zoomOutLimit: false
+    }),
+    zoomOutClick: () => ({
+      zoomInLimit: false,
+      zoomOutLimit: false
+    }),
+    boundingBox: noOp,
+    resize: noOp,
+    collectStats: noOp,
+    update: noOp
+  }
 
   const root = d3.select(el)
   const baseGroup = root.append('g').attr('transform', 'translate(0,0)')
@@ -49,7 +96,7 @@ const vizFn = function(
     .attr('transform', 'scale(1)')
 
   const container = baseGroup.append('g')
-  const geometry = new Geometry(style)
+  const geometry = new GraphGeometry(style)
 
   // This flags that a panning is ongoing and won't trigger
   // 'canvasClick' event when panning ends.
@@ -61,18 +108,14 @@ const vizFn = function(
 
   let updateViz = true
 
-  // To be overridden
-  viz.trigger = function(_event: any, ..._args: any[]) {}
-
-  const onNodeClick = (node: NodeVisualisationModel) => {
+  const onNodeClick = (node: VizNode) => {
     updateViz = false
     return viz.trigger('nodeClicked', node)
   }
 
-  const onNodeDblClick = (node: NodeVisualisationModel) =>
-    viz.trigger('nodeDblClicked', node)
+  const onNodeDblClick = (node: VizNode) => viz.trigger('nodeDblClicked', node)
 
-  const onNodeDragToggle = (node: NodeVisualisationModel) =>
+  const onNodeDragToggle = (node: VizNode) =>
     viz.trigger('nodeDragToggle', node)
 
   const onRelationshipClick = (relationship: any) => {
@@ -81,10 +124,8 @@ const vizFn = function(
     return viz.trigger('relationshipClicked', relationship)
   }
 
-  const onNodeMouseOver = (node: NodeVisualisationModel) =>
-    viz.trigger('nodeMouseOver', node)
-  const onNodeMouseOut = (node: NodeVisualisationModel) =>
-    viz.trigger('nodeMouseOut', node)
+  const onNodeMouseOver = (node: VizNode) => viz.trigger('nodeMouseOver', node)
+  const onNodeMouseOut = (node: VizNode) => viz.trigger('nodeMouseOut', node)
 
   const onRelMouseOver = (rel: any) => viz.trigger('relMouseOver', rel)
   const onRelMouseOut = (rel: any) => viz.trigger('relMouseOut', rel)
@@ -173,44 +214,42 @@ const vizFn = function(
     .on('mousewheel.zoom', null as any)
 
   const newStatsBucket = function() {
-    const bucket: any = {
+    const bucket: StatsBucket = {
       frameCount: 0,
       geometry: 0,
-      relationshipRenderers: (function() {
-        const timings: any = {}
-        vizRenderers.relationship.forEach((r: any) => (timings[r.name] = 0))
-        return timings
-      })()
-    }
-    bucket.duration = () => bucket.lastFrame - bucket.firstFrame
-    bucket.fps = () =>
-      ((1000 * bucket.frameCount) / bucket.duration()).toFixed(1)
-    bucket.lps = () =>
-      ((1000 * bucket.layout.layoutSteps) / bucket.duration()).toFixed(1)
-    bucket.top = function() {
-      let time
-      const renderers = []
-      for (const name in bucket.relationshipRenderers) {
-        time = bucket.relationshipRenderers[name]
+      layout: { layoutSteps: 0, layoutTime: 0 },
+      relationshipRenderers: vizRenderers.relationship
+        .map(r => r.name)
+        .reduce((acc, curr) => ({ ...acc, [curr]: 0 }), {}),
+      duration: () => (bucket.lastFrame ?? 0) - (bucket.firstFrame ?? 0),
+      fps: () => ((1000 * bucket.frameCount) / bucket.duration()).toFixed(1),
+      lps: () =>
+        ((1000 * bucket.layout.layoutSteps) / bucket.duration()).toFixed(1),
+      top: function() {
+        let time
+        const renderers = []
+        for (const name in bucket.relationshipRenderers) {
+          time = bucket.relationshipRenderers[name]
+          renderers.push({
+            name,
+            time
+          })
+        }
         renderers.push({
-          name,
-          time
+          name: 'forceLayout',
+          time: bucket.layout.layoutTime
         })
-      }
-      renderers.push({
-        name: 'forceLayout',
-        time: bucket.layout.layoutTime
-      })
-      renderers.sort((a, b) => b.time - a.time)
-      const totalRenderTime = renderers.reduce(
-        (prev, current) => prev + current.time,
-        0
-      )
-      return renderers
-        .map(
-          d => `${d.name}: ${((100 * d.time) / totalRenderTime).toFixed(1)}%`
+        renderers.sort((a, b) => b.time - a.time)
+        const totalRenderTime = renderers.reduce(
+          (prev, current) => prev + current.time,
+          0
         )
-        .join(', ')
+        return renderers
+          .map(
+            d => `${d.name}: ${((100 * d.time) / totalRenderTime).toFixed(1)}%`
+          )
+          .join(', ')
+      }
     }
     return bucket
   }
@@ -233,9 +272,9 @@ const vizFn = function(
 
     const nodeGroups = container
       .selectAll('g.node')
-      .attr('transform', (d: any) => `translate(${d.x},${d.y})`)
+      .attr('transform', d => `translate(${d.x},${d.y})`)
 
-    for (var renderer of Array.from<any>(vizRenderers.node)) {
+    for (const renderer of vizRenderers.node) {
       nodeGroups.call(renderer.onTick, viz)
     }
 
@@ -243,12 +282,12 @@ const vizFn = function(
       .selectAll('g.relationship')
       .attr(
         'transform',
-        (d: any) =>
+        d =>
           `translate(${d.source.x} ${d.source.y}) rotate(${d.naturalAngle +
             180})`
       )
 
-    for (renderer of Array.from<any>(vizRenderers.relationship)) {
+    for (const renderer of vizRenderers.relationship) {
       const startRenderer = now()
       relationshipGroups.call(renderer.onTick, viz)
       currentStats.relationshipRenderers[renderer.name] += now() - startRenderer
@@ -266,7 +305,7 @@ const vizFn = function(
     // @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
     .on('dragend.node', () => onNodeDragToggle())
 
-  viz.collectStats = function() {
+  viz.collectStats = function(): StatsBucket {
     const latestStats = currentStats
     latestStats.layout = force.collectStats()
     currentStats = newStatsBucket()
@@ -289,7 +328,7 @@ const vizFn = function(
     layers
       .enter()
       .append('g')
-      .attr('class', (d: any) => `layer ${d}`)
+      .attr('class', d => `layer ${d}`)
 
     const nodes = graph.nodes()
     const relationships = graph.relationships()
@@ -297,7 +336,7 @@ const vizFn = function(
     const relationshipGroups = container
       .select('g.layer.relationships')
       .selectAll('g.relationship')
-      .data(relationships, (d: any) => d.id)
+      .data(relationships, d => d.id)
 
     relationshipGroups
       .enter()
@@ -309,10 +348,10 @@ const vizFn = function(
 
     relationshipGroups.classed(
       'selected',
-      (relationship: any) => relationship.selected
+      relationship => relationship.selected
     )
 
-    for (var renderer of Array.from<any>(vizRenderers.relationship)) {
+    for (const renderer of vizRenderers.relationship) {
       relationshipGroups.call(renderer.onGraphChange, viz)
     }
 
@@ -321,7 +360,7 @@ const vizFn = function(
     const nodeGroups = container
       .select('g.layer.nodes')
       .selectAll('g.node')
-      .data(nodes, (d: any) => d.id)
+      .data(nodes, d => d.id)
 
     nodeGroups
       .enter()
@@ -332,12 +371,9 @@ const vizFn = function(
       .on('mouseover', onNodeMouseOver)
       .on('mouseout', onNodeMouseOut)
 
-    nodeGroups.classed(
-      'selected',
-      (node: NodeVisualisationModel) => node.selected
-    )
+    nodeGroups.classed('selected', node => node.selected)
 
-    for (renderer of Array.from(vizRenderers.node)) {
+    for (const renderer of vizRenderers.node) {
       nodeGroups.call(renderer.onGraphChange, viz)
     }
 

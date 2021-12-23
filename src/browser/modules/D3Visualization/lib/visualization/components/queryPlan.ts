@@ -92,7 +92,7 @@ function queryPlan(this: any, element: any) {
       : 0
   }
 
-  const plural = function(noun: any, count: any) {
+  const plural = function(noun: string, count: number) {
     if (count === 1) {
       return noun
     } else {
@@ -108,12 +108,17 @@ function queryPlan(this: any, element: any) {
       return []
     }
 
-    const details: any[] = []
+    const details: {
+      className: string
+      value?: string
+      key?: string
+      y?: number
+    }[] = []
 
-    const wordWrap = function(string: any, className: any) {
+    const wordWrap = function(string: string, className: string) {
       const canvas = document.createElement('canvas')
       const canvas2DContext = canvas.getContext('2d')
-      const measure = (text: any) =>
+      const measure = (text: string) =>
         measureText(
           text,
           fixedWidthFont,
@@ -125,25 +130,23 @@ function queryPlan(this: any, element: any) {
 
       let firstWord = 0
       let lastWord = 1
-      return (() => {
-        const result = []
-        while (firstWord < words.length) {
-          while (
-            lastWord < words.length &&
-            measure(words.slice(firstWord, lastWord + 1).join('')) <
-              operatorWidth - operatorPadding * 2
-          ) {
-            lastWord++
-          }
-          details.push({
-            className,
-            value: words.slice(firstWord, lastWord).join('')
-          })
-          firstWord = lastWord
-          result.push((lastWord = firstWord + 1))
+      const result = []
+      while (firstWord < words.length) {
+        while (
+          lastWord < words.length &&
+          measure(words.slice(firstWord, lastWord + 1).join('')) <
+            operatorWidth - operatorPadding * 2
+        ) {
+          lastWord++
         }
-        return result
-      })()
+        details.push({
+          className,
+          value: words.slice(firstWord, lastWord).join('')
+        })
+        firstWord = lastWord
+        result.push((lastWord = firstWord + 1))
+      }
+      return result
     }
 
     if (
@@ -263,20 +266,14 @@ function queryPlan(this: any, element: any) {
     const collectLinks = function(operator: any, rank: any) {
       operators.push(operator)
       operator.rank = rank
-      return (() => {
-        const result1 = []
-        for (const child of Array.from(operator.children)) {
-          ;(child as any).parent = operator
-          collectLinks(child, rank + 1)
-          result1.push(
-            links.push({
-              source: child,
-              target: operator
-            })
-          )
-        }
-        return result1
-      })()
+      for (const child of Array.from(operator.children)) {
+        ;(child as any).parent = operator
+        collectLinks(child, rank + 1)
+        links.push({
+          source: child,
+          target: operator
+        })
+      }
     }
 
     collectLinks(result, 0)
@@ -326,7 +323,7 @@ function queryPlan(this: any, element: any) {
       return (operator: any) => scale(rows(operator) + 1)
     })()
 
-    for (var operator of Array.from(operators)) {
+    for (const operator of Array.from(operators)) {
       operator.height = operatorHeight(operator)
       operator.costHeight = costHeight(operator)
       if (operator.costHeight > operatorDetailHeight + operatorPadding) {
@@ -351,109 +348,83 @@ function queryPlan(this: any, element: any) {
 
     let currentY = 0
 
-    for (var rank of Array.from(ranks)) {
+    for (const rank of ranks) {
       currentY -= d3.max(rank.values, operatorHeight) + rankMargin
-      for (operator of Array.from(rank.values)) {
+      for (const operator of rank.values) {
         operator.x = 0
         operator.y = currentY
       }
     }
 
     let width = d3.max(
-      ranks.map(
-        (rank: any) => rank.values.length * (operatorWidth + operatorMargin)
-      )
+      ranks.map(rank => rank.values.length * (operatorWidth + operatorMargin))
     )
     const height = -currentY
 
-    const collide = () =>
-      (() => {
-        const result = []
-        for (rank of Array.from(ranks)) {
-          var dx
-          let item
-          var x0 = 0
-          for (operator of Array.from(rank.values)) {
-            dx = x0 - operator.x
-            if (dx > 0) {
-              operator.x += dx
-            }
-            x0 = operator.x + operatorWidth + operatorMargin
-          }
-
-          dx = x0 - operatorMargin - width
+    const collide = () => {
+      const result = []
+      for (const rank of ranks) {
+        let dx
+        let item
+        let x0 = 0
+        for (const operator of rank.values) {
+          dx = x0 - operator.x
           if (dx > 0) {
-            const lastOperator = rank.values[rank.values.length - 1]
-            x0 = lastOperator.x -= dx
-            item = (() => {
-              const result1 = []
-              for (let i = rank.values.length - 2; i >= 0; i--) {
-                let item1
-                operator = rank.values[i]
-                dx = operator.x + operatorWidth + operatorMargin - x0
-                if (dx > 0) {
-                  operator.x -= operatorWidth
-                  item1 = x0 = operator.x
-                }
-                result1.push(item1)
-              }
-              return result1
-            })()
+            operator.x += dx
           }
-          result.push(item)
+          x0 = operator.x + operatorWidth + operatorMargin
         }
-        return result
-      })()
+
+        dx = x0 - operatorMargin - width
+        if (dx > 0) {
+          const lastOperator = rank.values[rank.values.length - 1]
+          x0 = lastOperator.x -= dx
+
+          const item = []
+          for (let i = rank.values.length - 2; i >= 0; i--) {
+            let item1
+            const operator = rank.values[i]
+            dx = operator.x + operatorWidth + operatorMargin - x0
+            if (dx > 0) {
+              operator.x -= operatorWidth
+              item1 = x0 = operator.x
+            }
+            item.push(item1)
+          }
+          return item
+        }
+
+        result.push(item)
+      }
+      return result
+    }
 
     const center = (operator: any) => operator.x + operatorWidth / 2
 
-    const relaxUpwards = (alpha: any) =>
-      (() => {
-        const result = []
-        for (rank of Array.from(ranks)) {
-          result.push(
-            (() => {
-              const result1 = []
-              for (operator of Array.from(rank.values)) {
-                let item
-                if (operator.children.length) {
-                  const x =
-                    d3.sum(
-                      operator.children,
-                      (child: any) => linkWidth(child) * center(child)
-                    ) / d3.sum(operator.children, linkWidth)
-                  item = operator.x += (x - center(operator)) * alpha
-                }
-                result1.push(item)
-              }
-              return result1
-            })()
-          )
+    const relaxUpwards = (alpha: number): void => {
+      for (const rank of ranks) {
+        for (const operator of rank.values) {
+          if (operator.children.length) {
+            const x =
+              d3.sum(
+                operator.children,
+                (child: any) => linkWidth(child) * center(child)
+              ) / d3.sum(operator.children, linkWidth)
+            operator.x += (x - center(operator)) * alpha
+          }
         }
-        return result
-      })()
+      }
+    }
 
-    const relaxDownwards = (alpha: any) =>
-      (() => {
-        const result = []
-        for (rank of Array.from(ranks.slice().reverse())) {
-          result.push(
-            (() => {
-              const result1 = []
-              for (operator of Array.from(rank.values)) {
-                let item
-                if (operator.parent) {
-                  item = operator.x +=
-                    (center(operator.parent) - center(operator)) * alpha
-                }
-                result1.push(item)
-              }
-              return result1
-            })()
-          )
+    const relaxDownwards = (alpha: number): void => {
+      for (const rank of ranks.slice().reverse()) {
+        for (const operator of rank.values) {
+          if (operator.parent) {
+            operator.x += (center(operator.parent) - center(operator)) * alpha
+          }
         }
-        return result
-      })()
+      }
+    }
 
     collide()
     let iterations = 300
@@ -467,9 +438,7 @@ function queryPlan(this: any, element: any) {
     }
 
     width =
-      d3.max(operators, (o: any) => o.x) -
-      d3.min(operators, (o: any) => o.x) +
-      operatorWidth
+      d3.max(operators, o => o.x) - d3.min(operators, o => o.x) + operatorWidth
 
     return [width, height]
   }
@@ -477,8 +446,8 @@ function queryPlan(this: any, element: any) {
   const render = function(
     operators: any,
     links: any,
-    width: any,
-    height: any,
+    width: number,
+    height: number,
     redisplay: any
   ) {
     const svg = d3.select(element)
@@ -497,20 +466,19 @@ function queryPlan(this: any, element: any) {
         ].join(' ')
       )
 
-    const join = (parent: any, children: any) =>
-      ((): any[] => {
-        const result = []
-        for (const child of Array.from(d3.entries<any>(children))) {
-          let item
-          const selection = parent.selectAll(child.key).data(child.value.data)
-          child.value.selections(selection.enter(), selection, selection.exit())
-          if (child.value.children) {
-            item = join(selection, child.value.children)
-          }
-          result.push(item)
+    const join = (parent: any, children: any): any[] => {
+      const result = []
+      for (const child of d3.entries<any>(children)) {
+        let item
+        const selection = parent.selectAll(child.key).data(child.value.data)
+        child.value.selections(selection.enter(), selection, selection.exit())
+        if (child.value.children) {
+          item = join(selection, child.value.children)
         }
-        return result
-      })()
+        result.push(item)
+      }
+      return result
+    }
 
     return join(svg, {
       'g.layer.links': {

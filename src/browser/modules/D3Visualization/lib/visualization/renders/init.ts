@@ -17,19 +17,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import NodeVisualisationModel, {
-  NodeCaptionLine
-} from '../components/NodeVisualisationModel'
-import Renderer from '../components/renderer'
-const noop = function() {}
+import VizNode, { NodeCaptionLine } from '../components/Node'
+import Renderer from '../components/Renderer'
+const noop = () => undefined
 
 const nodeRingStrokeSize = 8
 
 const nodeOutline = new Renderer({
-  onGraphChange(selection: any, viz: any) {
+  name: 'nodeOutline',
+  onGraphChange(selection, viz) {
     const circles = selection
       .selectAll('circle.outline')
-      .data((node: NodeVisualisationModel) => [node])
+      .data((node: VizNode) => [node])
 
     circles
       .enter()
@@ -41,16 +40,16 @@ const nodeOutline = new Renderer({
       })
 
     circles.attr({
-      r(node: NodeVisualisationModel) {
+      r(node: VizNode) {
         return node.radius
       },
-      fill(node: NodeVisualisationModel) {
+      fill(node: VizNode) {
         return viz.style.forNode(node).get('color')
       },
-      stroke(node: NodeVisualisationModel) {
+      stroke(node: VizNode) {
         return viz.style.forNode(node).get('border-color')
       },
-      'stroke-width'(node: NodeVisualisationModel) {
+      'stroke-width'(node: VizNode) {
         return viz.style.forNode(node).get('border-width')
       }
     })
@@ -61,10 +60,11 @@ const nodeOutline = new Renderer({
 })
 
 const nodeCaption = new Renderer({
-  onGraphChange(selection: any, viz: any) {
+  name: 'nodeCaption',
+  onGraphChange(selection, viz) {
     const text = selection
       .selectAll('text.caption')
-      .data((node: NodeVisualisationModel) => node.caption)
+      .data((node: VizNode) => node.caption)
 
     text
       .enter()
@@ -94,10 +94,11 @@ const nodeCaption = new Renderer({
 })
 
 const nodeRing = new Renderer({
-  onGraphChange(selection: any) {
+  name: 'nodeRing',
+  onGraphChange(selection) {
     const circles = selection
       .selectAll('circle.ring')
-      .data((node: NodeVisualisationModel) => [node])
+      .data((node: VizNode) => [node])
     circles
       .enter()
       .insert('circle', '.outline')
@@ -109,7 +110,7 @@ const nodeRing = new Renderer({
       })
 
     circles.attr({
-      r(node: NodeVisualisationModel) {
+      r(node: VizNode) {
         return node.radius + 4
       }
     })
@@ -122,7 +123,7 @@ const nodeRing = new Renderer({
 
 const arrowPath = new Renderer({
   name: 'arrowPath',
-  onGraphChange(selection: any, viz: any) {
+  onGraphChange(selection, viz) {
     const paths = selection.selectAll('path.outline').data((rel: any) => [rel])
 
     paths
@@ -137,17 +138,17 @@ const arrowPath = new Renderer({
     return paths.exit().remove()
   },
 
-  onTick(selection: any) {
+  onTick(selection) {
     return selection
       .selectAll('path')
-      .attr('d', (d: any) => d.arrow.outline(d.shortCaptionLength))
+      .attr('d', d => d.arrow.outline(d.shortCaptionLength))
   }
 })
 
 const relationshipType = new Renderer({
   name: 'relationshipType',
-  onGraphChange(selection: any, viz: any) {
-    const texts = selection.selectAll('text').data((rel: any) => [rel])
+  onGraphChange(selection, viz) {
+    const texts = selection.selectAll('text').data(rel => [rel])
 
     texts
       .enter()
@@ -156,42 +157,43 @@ const relationshipType = new Renderer({
       .attr({ 'pointer-events': 'none' })
 
     texts
-      .attr('font-size', (rel: any) =>
-        viz.style.forRelationship(rel).get('font-size')
-      )
-      .attr('fill', (rel: any) =>
+      .attr('font-size', rel => viz.style.forRelationship(rel).get('font-size'))
+      .attr('fill', rel =>
         viz.style.forRelationship(rel).get(`text-color-${rel.captionLayout}`)
       )
 
     return texts.exit().remove()
   },
 
-  onTick(selection: any, viz: any) {
-    return selection
-      .selectAll('text')
-      .attr('x', (rel: any) => rel.arrow.midShaftPoint.x)
-      .attr(
-        'y',
-        (rel: any) =>
-          rel.arrow.midShaftPoint.y +
-          parseFloat(viz.style.forRelationship(rel).get('font-size')) / 2 -
-          1
-      )
-      .attr('transform', (rel: any) => {
-        if (rel.naturalAngle < 90 || rel.naturalAngle > 270) {
-          return `rotate(180 ${rel.arrow.midShaftPoint.x} ${rel.arrow.midShaftPoint.y})`
-        } else {
-          return null
-        }
-      })
-      .text((rel: any) => rel.shortCaption)
+  onTick(selection, viz) {
+    return (
+      selection
+        .selectAll('text')
+        .attr('x', rel => rel.arrow.midShaftPoint.x)
+        .attr(
+          'y',
+          rel =>
+            rel.arrow.midShaftPoint.y +
+            parseFloat(viz.style.forRelationship(rel).get('font-size')) / 2 -
+            1
+        )
+        // @ts-expect-error not supposed to set transform to null
+        .attr('transform', rel => {
+          if (rel.naturalAngle < 90 || rel.naturalAngle > 270) {
+            return `rotate(180 ${rel.arrow.midShaftPoint.x} ${rel.arrow.midShaftPoint.y})`
+          } else {
+            return null
+          }
+        })
+        .text(rel => rel.shortCaption)
+    )
   }
 })
 
 const relationshipOverlay = new Renderer({
   name: 'relationshipOverlay',
-  onGraphChange(selection: any) {
-    const rects = selection.selectAll('path.overlay').data((rel: any) => [rel])
+  onGraphChange(selection) {
+    const rects = selection.selectAll('path.overlay').data(rel => [rel])
 
     rects
       .enter()
@@ -201,23 +203,17 @@ const relationshipOverlay = new Renderer({
     return rects.exit().remove()
   },
 
-  onTick(selection: any) {
+  onTick(selection) {
     const band = 16
 
     return selection
       .selectAll('path.overlay')
-      .attr('d', (d: any) => d.arrow.overlay(band))
+      .attr('d', d => d.arrow.overlay(band))
   }
 })
 
-const node = []
-node.push(nodeOutline)
-node.push(nodeCaption)
-node.push(nodeRing)
+const node = [nodeOutline, nodeCaption, nodeRing]
 
-const relationship = []
-relationship.push(arrowPath)
-relationship.push(relationshipType)
-relationship.push(relationshipOverlay)
+const relationship = [arrowPath, relationshipType, relationshipOverlay]
 
 export { node, relationship }

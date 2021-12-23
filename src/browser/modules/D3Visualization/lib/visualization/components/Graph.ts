@@ -18,14 +18,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import NodeVisualisationModel from './NodeVisualisationModel'
+import VizNode from './Node'
+import Relationship from './Relationship'
+
+type NodeMap = Record<string, string[]>
+function uniq<T>(list: T[]): T[] {
+  return [...new Set(list)]
+}
 
 export default class Graph {
-  _nodes: NodeVisualisationModel[]
-  _relationships: any[]
-  expandedNodeMap: any
-  nodeMap: any
-  relationshipMap: any
+  _nodes: VizNode[]
+  _relationships: Relationship[]
+  expandedNodeMap: NodeMap
+  nodeMap: Record<string, VizNode>
+  relationshipMap: Record<string, Relationship>
+
   constructor() {
     this.addNodes = this.addNodes.bind(this)
     this.removeNode = this.removeNode.bind(this)
@@ -47,33 +54,33 @@ export default class Graph {
     this._relationships = []
   }
 
-  nodes(): NodeVisualisationModel[] {
+  nodes(): VizNode[] {
     return this._nodes
   }
 
-  relationships() {
+  relationships(): Relationship[] {
     return this._relationships
   }
 
-  groupedRelationships() {
-    const groups: any = {}
-    for (const relationship of Array.from(this._relationships)) {
-      let nodePair: any = new NodePair(relationship.source, relationship.target)
-      nodePair = groups[nodePair] != null ? groups[nodePair] : nodePair
+  groupedRelationships(): NodePair[] {
+    const groups: Record<string, NodePair> = {}
+    for (const relationship of this._relationships) {
+      let nodePair = new NodePair(relationship.source, relationship.target)
+
+      nodePair =
+        groups[nodePair.toString()] != null
+          ? groups[nodePair.toString()]
+          : nodePair
+
       nodePair.relationships.push(relationship)
-      groups[nodePair] = nodePair
+
+      groups[nodePair.toString()] = nodePair
     }
-    return (() => {
-      const result = []
-      for (const ignored in groups) {
-        const pair = groups[ignored]
-        result.push(pair)
-      }
-      return result
-    })()
+
+    return Object.values(groups)
   }
 
-  addNodes(nodes: NodeVisualisationModel[]): void {
+  addNodes(nodes: VizNode[]): void {
     for (const node of nodes) {
       if (this.findNode(node.id) == null) {
         this.nodeMap[node.id] = node
@@ -82,31 +89,30 @@ export default class Graph {
     }
   }
 
-  addExpandedNodes = (node: any, nodes: any[]) => {
+  addExpandedNodes = (node: VizNode, nodes: VizNode[]): void => {
     for (const eNode of Array.from(nodes)) {
       if (this.findNode(eNode.id) == null) {
         this.nodeMap[eNode.id] = eNode
         this._nodes.push(eNode)
         this.expandedNodeMap[node.id] = this.expandedNodeMap[node.id]
-          ? [...new Set(this.expandedNodeMap[node.id].concat([eNode.id]))]
+          ? uniq(this.expandedNodeMap[node.id].concat([eNode.id]))
           : [eNode.id]
       }
     }
   }
 
-  removeNode(node: NodeVisualisationModel) {
+  removeNode(node: VizNode): void {
     if (this.findNode(node.id) != null) {
       delete this.nodeMap[node.id]
       this._nodes.splice(this._nodes.indexOf(node), 1)
     }
-    return this
   }
 
-  collapseNode = (node: NodeVisualisationModel) => {
+  collapseNode = (node: VizNode): void => {
     if (!this.expandedNodeMap[node.id]) {
       return
     }
-    this.expandedNodeMap[node.id].forEach((id: any) => {
+    this.expandedNodeMap[node.id].forEach(id => {
       const eNode = this.nodeMap[id]
       this.collapseNode(eNode)
       this.removeConnectedRelationships(eNode)
@@ -115,27 +121,25 @@ export default class Graph {
     this.expandedNodeMap[node.id] = []
   }
 
-  updateNode(node: NodeVisualisationModel) {
+  updateNode(node: VizNode): void {
     if (this.findNode(node.id) != null) {
       this.removeNode(node)
       node.expanded = false
       node.minified = true
       this.addNodes([node])
     }
-    return this
   }
 
-  removeConnectedRelationships(node: any) {
+  removeConnectedRelationships(node: VizNode): void {
     for (const r of Array.from(this.findAllRelationshipToNode(node))) {
       this.updateNode(r.source)
       this.updateNode(r.target)
       this._relationships.splice(this._relationships.indexOf(r), 1)
       delete this.relationshipMap[r.id]
     }
-    return this
   }
 
-  addRelationships(relationships: any[]) {
+  addRelationships(relationships: Relationship[]): void {
     for (const relationship of Array.from(relationships)) {
       const existingRelationship = this.findRelationship(relationship.id)
       if (existingRelationship != null) {
@@ -146,10 +150,9 @@ export default class Graph {
         this._relationships.push(relationship)
       }
     }
-    return this
   }
 
-  addInternalRelationships(relationships: any[]) {
+  addInternalRelationships(relationships: Relationship[]): void {
     for (const relationship of Array.from(relationships)) {
       relationship.internal = true
       if (this.findRelationship(relationship.id) == null) {
@@ -157,29 +160,28 @@ export default class Graph {
         this._relationships.push(relationship)
       }
     }
-    return this
   }
 
-  pruneInternalRelationships() {
+  pruneInternalRelationships(): void {
     const relationships = this._relationships.filter(
-      (relationship: any) => !relationship.internal
+      relationship => !relationship.internal
     )
     this.relationshipMap = {}
     this._relationships = []
-    return this.addRelationships(relationships)
+    this.addRelationships(relationships)
   }
 
-  findNode(id: any) {
+  findNode(id: string): VizNode {
     return this.nodeMap[id]
   }
 
-  findNodeNeighbourIds(id: any) {
+  findNodeNeighbourIds(id: string): string[] {
     return this._relationships
       .filter(
-        (relationship: any) =>
+        relationship =>
           relationship.source.id === id || relationship.target.id === id
       )
-      .map((relationship: any) => {
+      .map(relationship => {
         if (relationship.target.id === id) {
           return relationship.source.id
         }
@@ -187,30 +189,30 @@ export default class Graph {
       })
   }
 
-  findRelationship(id: any) {
+  findRelationship(id: string): Relationship {
     return this.relationshipMap[id]
   }
 
-  findAllRelationshipToNode(node: any) {
+  findAllRelationshipToNode(node: VizNode): Relationship[] {
     return this._relationships.filter(
-      (relationship: any) =>
+      relationship =>
         relationship.source.id === node.id || relationship.target.id === node.id
     )
   }
 
-  resetGraph() {
+  resetGraph(): void {
     this.nodeMap = {}
     this._nodes = []
     this.relationshipMap = {}
-    return (this._relationships = [])
+    this._relationships = []
   }
 }
 
-class NodePair {
-  nodeA: any
-  nodeB: any
-  relationships: any
-  constructor(node1: any, node2: any) {
+export class NodePair {
+  nodeA: VizNode
+  nodeB: VizNode
+  relationships: Relationship[]
+  constructor(node1: VizNode, node2: VizNode) {
     this.relationships = []
     if (node1.id < node2.id) {
       this.nodeA = node1
@@ -221,11 +223,11 @@ class NodePair {
     }
   }
 
-  isLoop() {
+  isLoop(): boolean {
     return this.nodeA === this.nodeB
   }
 
-  toString() {
+  toString(): string {
     return `${this.nodeA.id}:${this.nodeB.id}`
   }
 }

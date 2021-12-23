@@ -17,20 +17,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+class Point {
+  x: number
+  y: number
+  constructor(x: number, y: number) {
+    this.x = x
+    this.y = y
+  }
+
+  toString() {
+    return `${this.x} ${this.y}`
+  }
+}
 
 export default class LoopArrow {
-  midShaftPoint: any
-  outline: any
-  overlay: any
-  shaftLength: any
+  midShaftPoint: Point
+  outline: () => string
+  overlay: (minWidth: number) => string
+  shaftLength: number
   constructor(
-    nodeRadius: any,
-    straightLength: any,
-    spreadDegrees: any,
-    shaftWidth: any,
-    headWidth: any,
-    headLength: any,
-    captionHeight: any
+    nodeRadius: number,
+    straightLength: number,
+    spreadDegrees: number,
+    shaftWidth: number,
+    headWidth: number,
+    headLength: number,
+    captionHeight: number
   ) {
     const spread = (spreadDegrees * Math.PI) / 180
     const r1 = nodeRadius
@@ -40,20 +52,11 @@ export default class LoopArrow {
     const shaftRadius = shaftWidth / 2
     this.shaftLength = loopRadius * 3 + shaftWidth
 
-    class Point {
-      x: any
-      y: any
-      constructor(x: any, y: any) {
-        this.x = x
-        this.y = y
-      }
-
-      toString() {
-        return `${this.x} ${this.y}`
-      }
-    }
-
-    const normalPoint = function(sweep: any, radius: any, displacement: any) {
+    const normalPoint = function(
+      sweep: number,
+      radius: number,
+      displacement: number
+    ) {
       const localLoopRadius = radius * Math.tan(spread / 2)
       const cy = radius / Math.cos(spread / 2)
       return new Point(
@@ -62,9 +65,9 @@ export default class LoopArrow {
       )
     }
     this.midShaftPoint = normalPoint(0, r3, shaftRadius + captionHeight / 2 + 2)
-    const startPoint = (radius: any, displacement: any) =>
+    const startPoint = (radius: number, displacement: number) =>
       normalPoint((Math.PI + spread) / 2, radius, displacement)
-    const endPoint = (radius: any, displacement: any) =>
+    const endPoint = (radius: number, displacement: number) =>
       normalPoint(-(Math.PI + spread) / 2, radius, displacement)
 
     this.outline = function() {
@@ -107,7 +110,7 @@ export default class LoopArrow {
       ].join(' ')
     }
 
-    this.overlay = function(minWidth: any) {
+    this.overlay = function(minWidth: number) {
       const displacement = Math.max(minWidth / 2, shaftRadius)
       const inner = loopRadius - displacement
       const outer = loopRadius + displacement

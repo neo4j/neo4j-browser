@@ -18,15 +18,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import d3 from 'd3'
+// euclidean distance
+const dist = (a: [number, number], b: [number, number]) =>
+  Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2))
+
+/* This click handler is to prevent clicks meant to 
+drag a node, from triggering onclick events 
+*/
 export default function clickHandler() {
   const cc = function(selection: any) {
-    // euclidean distance
-    const dist = (a: any, b: any) =>
-      // @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 2.
-      Math.sqrt(Math.pow(a[0] - b[0], 2), Math.pow(a[1] - b[1], 2))
-    let down: any
+    let down: [number, number]
     const tolerance = 5
-    let wait: any = null
+    let wait: number | null = null
+
     selection.on('mousedown', () => {
       ;((d3.event as Event).target as any).__data__.fixed = true
       down = d3.mouse(document.body)

@@ -23,7 +23,6 @@ import deepmerge from 'deepmerge'
 import { connect, ConnectedComponent } from 'react-redux'
 import { debounce } from 'lodash'
 
-import Relationship from '../lib/visualization/components/relationship'
 import { GraphStyle } from '../graphStyle'
 import { GlobalState } from 'shared/globalState'
 import { GraphComponent } from './Graph'
@@ -37,11 +36,18 @@ import {
   setNodePropertiesExpandedByDefault
 } from 'shared/modules/frames/framesDuck'
 import { Action, Dispatch } from 'redux'
-import { Node } from 'browser/modules/Stream/CypherFrame/VisualizationView'
+import {
+  BasicNode,
+  BasicNodesAndRels,
+  BasicRelationship
+} from 'services/bolt/boltMappings'
+import Graph from '../lib/visualization/components/Graph'
+import { GetNodeNeighboursFn } from '../GraphEventHandler'
 
-const deduplicateNodes = (nodes: any) => {
-  return nodes.reduce(
-    (all: any, curr: any) => {
+type DecuplicateHelper = { nodes: BasicNode[]; taken: Record<string, boolean> }
+const deduplicateNodes = (nodes: BasicNode[]): BasicNode[] =>
+  nodes.reduce(
+    (all: DecuplicateHelper, curr: BasicNode) => {
       if (all.taken[curr.id]) {
         return all
       } else {
@@ -52,20 +58,24 @@ const deduplicateNodes = (nodes: any) => {
     },
     { nodes: [], taken: {} }
   ).nodes
-}
 
 type ExplorerComponentProps = {
-  relationships: Relationship[]
-  nodes: Node[]
+  relationships: BasicRelationship[]
+  nodes: BasicNode[]
   initialNodeDisplay: any
   maxNeighbours: number
   graphStyleData: any
-  getNeighbours: any
+  getNeighbours: (
+    id: string,
+    currentNeighbourIds: string[] | undefined
+  ) => Promise<BasicNodesAndRels & { count: number }>
   updateStyle: any
   isFullscreen: boolean
-  assignVisElement: any
-  getAutoCompleteCallback: any
-  setGraph: any
+  assignVisElement: (v: any) => void
+  getAutoCompleteCallback: (
+    callback: (rels: BasicRelationship[]) => void
+  ) => void
+  setGraph: (graph: Graph) => void
   hasTruncatedFields: boolean
 }
 type ExporerReduxProps = {
@@ -76,8 +86,8 @@ type ExporerReduxProps = {
 type ExplorerComponentState = {
   graphStyle: GraphStyle
   hoveredItem: VizItem
-  nodes: Node[]
-  relationships: Relationship[]
+  nodes: BasicNode[]
+  relationships: BasicRelationship[]
   selectedItem: VizItem
   stats: GraphStats
   styleVersion: number
@@ -108,8 +118,8 @@ export class ExplorerComponent extends Component<
     }
     if (nodes.length > parseInt(this.props.initialNodeDisplay)) {
       nodes = nodes.slice(0, this.props.initialNodeDisplay)
-      relationships = this.props.relationships.filter((item: any) => {
-        return nodes.filter((node: Node) => node.id === item.startNodeId) > 0
+      relationships = this.props.relationships.filter(item => {
+        return !!nodes.find(node => node.id === item.startNodeId)
       })
       selectedItem = {
         type: 'status-item',
@@ -140,31 +150,31 @@ export class ExplorerComponent extends Component<
     }
   }
 
-  getNodeNeighbours(node: Node, currentNeighbours: any, callback: any) {
-    if (currentNeighbours.length > this.props.maxNeighbours) {
-      callback(null, { nodes: [], relationships: [] })
+  getNodeNeighbours: GetNodeNeighboursFn = (
+    node,
+    currentNeighbourIds,
+    callback
+  ) => {
+    if (currentNeighbourIds.length > this.props.maxNeighbours) {
+      callback({ nodes: [], relationships: [] })
     }
-    this.props.getNeighbours(node.id, currentNeighbours).then(
-      (result: any) => {
-        const nodes = result.nodes
-        if (
-          result.count >
-          this.props.maxNeighbours - currentNeighbours.length
-        ) {
+    this.props.getNeighbours(node.id, currentNeighbourIds).then(
+      ({ nodes, relationships, count }) => {
+        if (count > this.props.maxNeighbours - currentNeighbourIds.length) {
           this.setState({
             selectedItem: {
               type: 'status-item',
               item: `Rendering was limited to ${
                 this.props.maxNeighbours
-              } of the node's total ${result.count +
-                currentNeighbours.length} neighbours due to browser config maxNeighbours.`
+              } of the node's total ${count +
+                currentNeighbourIds.length} neighbours due to browser config maxNeighbours.`
             }
           })
         }
-        callback(null, { nodes: nodes, relationships: result.relationships })
+        callback({ nodes, relationships })
       },
       () => {
-        callback(null, { nodes: [], relationships: [] })
+        callback({ nodes: [], relationships: [] })
       }
     )
   }
@@ -184,12 +194,12 @@ export class ExplorerComponent extends Component<
     this.setState({ selectedItem })
   }
 
-  onGraphModelChange(stats: GraphStats) {
+  onGraphModelChange(stats: GraphStats): void {
     this.setState({ stats })
     this.props.updateStyle(this.state.graphStyle.toSheet())
   }
 
-  componentDidUpdate(prevProps: any) {
+  componentDidUpdate(prevProps: ExplorerComponentProps): void {
     if (!deepEquals(prevProps.graphStyleData, this.props.graphStyleData)) {
       if (this.props.graphStyleData) {
         const rebasedStyle = deepmerge(
@@ -214,7 +224,7 @@ export class ExplorerComponent extends Component<
     }
   }
 
-  render() {
+  render(): JSX.Element {
     // This is a workaround to make the style reset to the same colors as when starting the browser with an empty style
     // If the legend component has the style it will ask the neoGraphStyle object for styling before the graph component,
     // and also doing this in a different order from the graph. This leads to different default colors being assigned to different labels.
