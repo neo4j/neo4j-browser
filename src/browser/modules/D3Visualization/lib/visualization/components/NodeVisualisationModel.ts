@@ -44,6 +44,7 @@ export default class NodeVisualisationModel {
   selected: boolean
   expanded: boolean
   minified: boolean
+  contextMenu?: { menuSelection: string; menuContent: string; label: string }
 
   constructor(
     id: string,
