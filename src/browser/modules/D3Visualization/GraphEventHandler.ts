@@ -30,7 +30,7 @@ export type GetNodeNeighboursFn = (
   node: BasicNode | Node,
   currentNeighbourIds: string[],
   callback: (
-    error: null /* never called with an error, should be removed */,
+    error: null /* never called with an error, should be removed? */,
     data: BasicNodesAndRels
   ) => void
 ) => void

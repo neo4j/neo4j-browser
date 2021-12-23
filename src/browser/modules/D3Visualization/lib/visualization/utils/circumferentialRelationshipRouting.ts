@@ -19,7 +19,7 @@
  */
 import measureText from './textMeasurement'
 import distributeCircular from './circumferentialDistribution'
-import StraightArrow from './straightArrow'
+import StraightArrow from './StraightArrow'
 import ArcArrow from './arcArrow'
 import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
 import Relationship from '../components/Relationship'
