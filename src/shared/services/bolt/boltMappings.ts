@@ -243,7 +243,7 @@ export function extractNodesAndRelationshipsFromRecordsForOldVis(
   filterRels: any,
   converters: Converters,
   maxFieldItems?: any
-): { nodes: BasicNode[]; relationships: BasicRelationship[] } {
+): BasicNodesAndRels {
   if (records.length === 0) {
     return { nodes: [], relationships: [] }
   }

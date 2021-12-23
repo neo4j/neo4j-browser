@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import Node, { NodeCaptionLine } from '../components/Node'
+import VizNode, { NodeCaptionLine } from '../components/Node'
 import Renderer from '../components/Renderer'
 const noop = () => undefined
 
@@ -28,7 +28,7 @@ const nodeOutline = new Renderer({
   onGraphChange(selection, viz) {
     const circles = selection
       .selectAll('circle.outline')
-      .data((node: Node) => [node])
+      .data((node: VizNode) => [node])
 
     circles
       .enter()
@@ -40,16 +40,16 @@ const nodeOutline = new Renderer({
       })
 
     circles.attr({
-      r(node: Node) {
+      r(node: VizNode) {
         return node.radius
       },
-      fill(node: Node) {
+      fill(node: VizNode) {
         return viz.style.forNode(node).get('color')
       },
-      stroke(node: Node) {
+      stroke(node: VizNode) {
         return viz.style.forNode(node).get('border-color')
       },
-      'stroke-width'(node: Node) {
+      'stroke-width'(node: VizNode) {
         return viz.style.forNode(node).get('border-width')
       }
     })
@@ -64,7 +64,7 @@ const nodeCaption = new Renderer({
   onGraphChange(selection, viz) {
     const text = selection
       .selectAll('text.caption')
-      .data((node: Node) => node.caption)
+      .data((node: VizNode) => node.caption)
 
     text
       .enter()
@@ -98,7 +98,7 @@ const nodeRing = new Renderer({
   onGraphChange(selection) {
     const circles = selection
       .selectAll('circle.ring')
-      .data((node: Node) => [node])
+      .data((node: VizNode) => [node])
     circles
       .enter()
       .insert('circle', '.outline')
@@ -110,7 +110,7 @@ const nodeRing = new Renderer({
       })
 
     circles.attr({
-      r(node: Node) {
+      r(node: VizNode) {
         return node.radius + 4
       }
     })

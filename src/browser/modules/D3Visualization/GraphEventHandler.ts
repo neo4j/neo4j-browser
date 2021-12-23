@@ -22,12 +22,12 @@ import { BasicNode, BasicNodesAndRels } from 'services/bolt/boltMappings'
 import { VizItem } from './components/types'
 import Graph from './lib/visualization/components/Graph'
 import GraphView from './lib/visualization/components/GraphView'
-import Node from './lib/visualization/components/Node'
+import VizNode from './lib/visualization/components/Node'
 import Relationship from './lib/visualization/components/Relationship'
 import { mapNodes, mapRelationships, getGraphStats, GraphStats } from './mapper'
 
 export type GetNodeNeighboursFn = (
-  node: BasicNode | Node,
+  node: BasicNode | VizNode,
   currentNeighbourIds: string[],
   callback: (data: BasicNodesAndRels) => void
 ) => void
@@ -86,7 +86,7 @@ export class GraphEventHandler {
     this.graphView.update({ updateNodes: true, updateRelationships: true })
   }
 
-  nodeClose(d: Node): void {
+  nodeClose(d: VizNode): void {
     this.graph.removeConnectedRelationships(d)
     this.graph.removeNode(d)
     this.deselectItem()
@@ -94,7 +94,7 @@ export class GraphEventHandler {
     this.graphModelChanged()
   }
 
-  nodeClicked(d: Node): void {
+  nodeClicked(d: VizNode): void {
     if (!d) {
       return
     }
@@ -110,7 +110,7 @@ export class GraphEventHandler {
     }
   }
 
-  nodeUnlock(d: Node): void {
+  nodeUnlock(d: VizNode): void {
     if (!d) {
       return
     }
@@ -118,7 +118,7 @@ export class GraphEventHandler {
     this.deselectItem()
   }
 
-  nodeDblClicked(d: Node): void {
+  nodeDblClicked(d: VizNode): void {
     if (d.expanded) {
       this.nodeCollapse(d)
       return
@@ -139,14 +139,14 @@ export class GraphEventHandler {
     )
   }
 
-  nodeCollapse(d: Node): void {
+  nodeCollapse(d: VizNode): void {
     d.expanded = false
     this.graph.collapseNode(d)
     this.graphView.update({ updateNodes: true, updateRelationships: true })
     this.graphModelChanged()
   }
 
-  onNodeMouseOver(node: Node): void {
+  onNodeMouseOver(node: VizNode): void {
     if (!node.contextMenu) {
       this.onItemMouseOver({
         type: 'node',
@@ -159,7 +159,7 @@ export class GraphEventHandler {
     }
   }
 
-  onMenuMouseOver(itemWithMenu: Node): void {
+  onMenuMouseOver(itemWithMenu: VizNode): void {
     if (!itemWithMenu.contextMenu) {
       throw new Error('menuMouseOver triggered without menu')
     }

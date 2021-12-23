@@ -22,13 +22,13 @@ import Graph from './Graph'
 
 type NodeProperties = { [key: string]: string }
 export type NodeCaptionLine = {
-  node: Node
+  node: VizNode
   text: string
   baseline: number
   remainingWidth: number
 }
 
-export default class Node {
+export default class VizNode {
   id: string
   labels: string[]
   propertyList: {

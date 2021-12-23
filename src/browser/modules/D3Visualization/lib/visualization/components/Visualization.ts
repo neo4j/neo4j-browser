@@ -24,7 +24,7 @@ import * as vizRenderers from '../renders/init'
 import { nodeMenuRenderer } from '../renders/menu'
 import vizClickHandler from '../utils/clickHandler'
 import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
-import Node from './Node'
+import VizNode from './Node'
 import Graph from './Graph'
 import { Layout } from './layout'
 
@@ -108,14 +108,15 @@ const vizFn = function(
 
   let updateViz = true
 
-  const onNodeClick = (node: Node) => {
+  const onNodeClick = (node: VizNode) => {
     updateViz = false
     return viz.trigger('nodeClicked', node)
   }
 
-  const onNodeDblClick = (node: Node) => viz.trigger('nodeDblClicked', node)
+  const onNodeDblClick = (node: VizNode) => viz.trigger('nodeDblClicked', node)
 
-  const onNodeDragToggle = (node: Node) => viz.trigger('nodeDragToggle', node)
+  const onNodeDragToggle = (node: VizNode) =>
+    viz.trigger('nodeDragToggle', node)
 
   const onRelationshipClick = (relationship: any) => {
     ;(d3.event as Event).stopPropagation()
@@ -123,8 +124,8 @@ const vizFn = function(
     return viz.trigger('relationshipClicked', relationship)
   }
 
-  const onNodeMouseOver = (node: Node) => viz.trigger('nodeMouseOver', node)
-  const onNodeMouseOut = (node: Node) => viz.trigger('nodeMouseOut', node)
+  const onNodeMouseOver = (node: VizNode) => viz.trigger('nodeMouseOver', node)
+  const onNodeMouseOut = (node: VizNode) => viz.trigger('nodeMouseOut', node)
 
   const onRelMouseOver = (rel: any) => viz.trigger('relMouseOver', rel)
   const onRelMouseOut = (rel: any) => viz.trigger('relMouseOut', rel)

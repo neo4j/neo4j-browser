@@ -22,7 +22,7 @@ import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
 import PairwiseArcsRelationshipRouting from '../utils/pairwiseArcsRelationshipRouting'
 import measureText from '../utils/textMeasurement'
 import Graph from './Graph'
-import Node, { NodeCaptionLine } from './Node'
+import VizNode, { NodeCaptionLine } from './Node'
 import Relationship from './Relationship'
 
 export default class GraphGeometry {
@@ -35,7 +35,7 @@ export default class GraphGeometry {
     this.canvas = document.createElement('canvas')
   }
 
-  formatNodeCaptions(nodes: Node[]): void {
+  formatNodeCaptions(nodes: VizNode[]): void {
     const canvas2DContext = this.canvas.getContext('2d')
     if (canvas2DContext) {
       nodes.forEach(
@@ -56,7 +56,7 @@ export default class GraphGeometry {
     })
   }
 
-  setNodeRadii(nodes: Node[]): void {
+  setNodeRadii(nodes: VizNode[]): void {
     nodes.forEach(node => {
       node.radius = parseFloat(this.style.forNode(node).get('diameter')) / 2
     })
@@ -85,7 +85,7 @@ export default class GraphGeometry {
 }
 
 const fitCaptionIntoCircle = (
-  node: Node,
+  node: VizNode,
   style: GraphStyle,
   canvas2DContext: CanvasRenderingContext2D
 ): NodeCaptionLine[] => {

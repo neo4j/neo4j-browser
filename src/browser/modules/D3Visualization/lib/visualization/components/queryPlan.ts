@@ -92,7 +92,7 @@ function queryPlan(this: any, element: any) {
       : 0
   }
 
-  const plural = function(noun: any, count: number) {
+  const plural = function(noun: string, count: number) {
     if (count === 1) {
       return noun
     } else {
@@ -266,18 +266,14 @@ function queryPlan(this: any, element: any) {
     const collectLinks = function(operator: any, rank: any) {
       operators.push(operator)
       operator.rank = rank
-      const result = []
       for (const child of Array.from(operator.children)) {
         ;(child as any).parent = operator
         collectLinks(child, rank + 1)
-        result.push(
-          links.push({
-            source: child,
-            target: operator
-          })
-        )
+        links.push({
+          source: child,
+          target: operator
+        })
       }
-      return result
     }
 
     collectLinks(result, 0)

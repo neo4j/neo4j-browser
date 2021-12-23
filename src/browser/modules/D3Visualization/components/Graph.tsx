@@ -54,7 +54,7 @@ type GraphProps = {
 
 export class GraphComponent extends Component<GraphProps, GraphState> {
   graph: Graph | undefined
-  graphEH: GraphEventHandler | undefined
+  graphEventHandler: GraphEventHandler | undefined
   graphView: GraphView | undefined
   svgElement: any
 
@@ -116,7 +116,7 @@ export class GraphComponent extends Component<GraphProps, GraphState> {
         this.graph,
         this.props.graphStyle
       )
-      this.graphEH = new GraphEventHandler(
+      this.graphEventHandler = new GraphEventHandler(
         this.graph,
         this.graphView,
         this.props.getNodeNeighbours,
@@ -124,7 +124,7 @@ export class GraphComponent extends Component<GraphProps, GraphState> {
         this.props.onItemSelect,
         this.props.onGraphModelChange
       )
-      this.graphEH.bindEventHandlers()
+      this.graphEventHandler.bindEventHandlers()
       this.props.onGraphModelChange(getGraphStats(this.graph))
       this.graphView.resize()
       this.graphView.update({ updateNodes: true, updateRelationships: false })
@@ -140,7 +140,7 @@ export class GraphComponent extends Component<GraphProps, GraphState> {
       )
       this.props.onGraphModelChange(getGraphStats(this.graph))
       this.graphView?.update({ updateNodes: false, updateRelationships: true })
-      this.graphEH?.onItemMouseOut()
+      this.graphEventHandler?.onItemMouseOut()
     }
   }
 

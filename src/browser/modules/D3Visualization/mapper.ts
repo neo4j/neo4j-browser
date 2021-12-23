@@ -21,7 +21,7 @@
 import { BasicNode, BasicRelationship } from 'services/bolt/boltMappings'
 import { optionalToString } from 'services/utils'
 import Graph from './lib/visualization/components/Graph'
-import Node from './lib/visualization/components/Node'
+import VizNode from './lib/visualization/components/Node'
 import Relationship from './lib/visualization/components/Relationship'
 
 const mapProperties = (_: any) => Object.assign({}, ...stringifyValues(_))
@@ -38,10 +38,10 @@ export function createGraph(
   return graph
 }
 
-export function mapNodes(nodes: BasicNode[]): Node[] {
+export function mapNodes(nodes: BasicNode[]): VizNode[] {
   return nodes.map(
     node =>
-      new Node(
+      new VizNode(
         node.id,
         node.labels,
         mapProperties(node.properties),

@@ -1,8 +1,3 @@
-import ArcArrow from '../utils/ArcArrow'
-import LoopArrow from '../utils/LoopArrow'
-import StraightArrow from '../utils/StraightArrow'
-import Node from './Node'
-
 /*
  * Copyright (c) "Neo4j"
  * Neo4j Sweden AB [http://neo4j.com]
@@ -22,6 +17,12 @@ import Node from './Node'
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+import ArcArrow from '../utils/ArcArrow'
+import LoopArrow from '../utils/LoopArrow'
+import StraightArrow from '../utils/StraightArrow'
+import Node from './Node'
+
 export type RelationShipCaptionLayout = 'internal' | 'external'
 type PropertyItem = { key: string; value: string; originalType: string }
 export default class Relationship {

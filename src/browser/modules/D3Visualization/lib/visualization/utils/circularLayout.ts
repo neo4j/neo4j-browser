@@ -18,10 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Node from '../components/Node'
+import VizNode from '../components/Node'
 
 export default function circularLayout(
-  nodes: Node[],
+  nodes: VizNode[],
   center: { x: number; y: number },
   radius: number
 ): void {

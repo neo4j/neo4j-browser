@@ -18,9 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import d3 from 'd3'
-import Node from './Node'
+import VizNode from './Node'
 
-type D3MutatedNode = Node & d3.layout.force.Node
+type D3MutatedNode = VizNode & d3.layout.force.Node
 const collision = {
   avoidOverlap: (nodes: D3MutatedNode[]): void => {
     const q = d3.geom.quadtree(nodes)

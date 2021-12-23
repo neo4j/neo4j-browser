@@ -19,7 +19,7 @@
  */
 
 import d3 from 'd3'
-import Node from '../components/Node'
+import VizNode from '../components/Node'
 import Renderer from '../components/Renderer'
 import { VizObj } from '../components/Visualization'
 import icons from './d3Icons'
@@ -42,7 +42,7 @@ const drawArc = function(radius: number, itemNumber: number, width = 30) {
     .padAngle(0.03)
 }
 
-const getSelectedNode = (node: Node) => (node.selected ? [node] : [])
+const getSelectedNode = (node: VizNode) => (node.selected ? [node] : [])
 
 const attachContextEvent = (
   eventType: string,
@@ -94,7 +94,7 @@ const createMenuItem = function(
     .classed(className, true)
     .classed('context-menu-item', true)
     .attr({
-      d(node: Node) {
+      d(node: VizNode) {
         // @ts-expect-error Expected 1-2 arguments, but got 0.ts(2554)
         return drawArc(node.radius, itemIndex, 1)()
       }
@@ -114,7 +114,7 @@ const createMenuItem = function(
     .classed(className, true)
     .classed('context-menu-item', true)
     .attr({
-      transform(node: Node) {
+      transform(node: VizNode) {
         return `translate(${Math.floor(
           // @ts-expect-error
           drawArc(node.radius, itemIndex).centroid()[0] +
@@ -125,7 +125,7 @@ const createMenuItem = function(
             (position[1] * 100) / 100
         )}) scale(0.7)`
       },
-      color(node: Node) {
+      color(node: VizNode) {
         return viz.style.forNode(node).get('text-color-internal')
       }
     })
@@ -136,7 +136,7 @@ const createMenuItem = function(
     .transition()
     .duration(200)
     .attr({
-      d(node: Node) {
+      d(node: VizNode) {
         // @ts-expect-error Expected 1-2 arguments, but got 0.ts(2554)
         return drawArc(node.radius, itemIndex)()
       }
@@ -147,7 +147,7 @@ const createMenuItem = function(
     .transition()
     .duration(200)
     .attr({
-      d(node: Node) {
+      d(node: VizNode) {
         // @ts-expect-error Expected 1-2 arguments, but got 0.ts(2554)
         return drawArc(node.radius, itemIndex, 1)()
       }
