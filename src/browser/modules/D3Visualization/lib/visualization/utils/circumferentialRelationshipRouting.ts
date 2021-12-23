@@ -127,29 +127,31 @@ export default class circumferentialRelationshipRouting {
       for (const relationship of relationships) {
         relationshipMap[relationship.id] = relationship
 
-        // TODO broken
         if (node === relationship.source) {
-          if (relationship.hasOwnProperty('arrow')) {
+          if (
+            relationship.hasOwnProperty('arrow') &&
+            relationship.arrow &&
+            'deflection' in relationship.arrow
+          ) {
             arrowAngles.fixed[relationship.id] =
-              // @ts-expect-error
               relationship.naturalAngle + relationship.arrow.deflection
           } else {
-            // @ts-expect-error
             arrowAngles.floating[relationship.id] = relationship.naturalAngle
           }
         }
         if (node === relationship.target) {
-          if (relationship.hasOwnProperty('arrow')) {
+          if (
+            relationship.hasOwnProperty('arrow') &&
+            relationship.arrow &&
+            'deflection' in relationship.arrow
+          ) {
             arrowAngles.fixed[relationship.id] =
-              // @ts-expect-error
               (relationship.naturalAngle -
-                // @ts-expect-error
                 relationship.arrow.deflection +
                 180) %
               360
           } else {
             arrowAngles.floating[relationship.id] =
-              // @ts-expect-error
               (relationship.naturalAngle + 180) % 360
           }
         }
@@ -175,10 +177,8 @@ export default class circumferentialRelationshipRouting {
         if (!relationship.hasOwnProperty('arrow')) {
           const deflection: number =
             node === relationship.source
-              ? // @ts-expect-error
-                angle - relationship.naturalAngle
-              : // @ts-expect-error
-                relationship.naturalAngle - angle + (180 % 360)
+              ? angle - relationship.naturalAngle
+              : relationship.naturalAngle - angle + (180 % 360)
 
           const shaftRadius =
             parseFloat(
@@ -193,8 +193,7 @@ export default class circumferentialRelationshipRouting {
           const square = (distance: any) => distance * distance
           const centreDistance = Math.sqrt(square(dx) + square(dy))
 
-          // TODO theres a type error here to be fixed (that makes the calc always true)
-          // @ts-expect-error
+          // @ts-expect-error this math is wrong need to understand what deflections is to fix
           if (Math.abs(deflection < Math.PI / 180)) {
             relationship.arrow = new StraightArrow(
               relationship.source.radius,
@@ -203,7 +202,6 @@ export default class circumferentialRelationshipRouting {
               shaftRadius,
               headRadius,
               headHeight,
-              // @ts-expect-error
               relationship.captionLayout
             )
           } else {
@@ -215,19 +213,16 @@ export default class circumferentialRelationshipRouting {
               shaftRadius * 2,
               headRadius * 2,
               headHeight,
-              // @ts-expect-error
               relationship.captionLayout
             )
           }
 
-          // @ts-expect-error
           if (relationship.arrow.shaftLength > relationship.captionLength) {
             relationship.shortCaption = relationship.caption
             relationship.shortCaptionLength = relationship.captionLength
           } else {
             const [shortCaption, length] = this.shortenCaption(
               relationship,
-              // @ts-expect-error
               relationship.caption,
               relationship.arrow.shaftLength
             )

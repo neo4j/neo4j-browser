@@ -271,7 +271,7 @@ const vizFn = function(
 
     const nodeGroups = container
       .selectAll('g.node')
-      .attr('transform', (d: any) => `translate(${d.x},${d.y})`)
+      .attr('transform', d => `translate(${d.x},${d.y})`)
 
     for (const renderer of vizRenderers.node) {
       nodeGroups.call(renderer.onTick, viz)
@@ -281,7 +281,7 @@ const vizFn = function(
       .selectAll('g.relationship')
       .attr(
         'transform',
-        (d: any) =>
+        d =>
           `translate(${d.source.x} ${d.source.y}) rotate(${d.naturalAngle +
             180})`
       )
@@ -305,7 +305,6 @@ const vizFn = function(
     .on('dragend.node', () => onNodeDragToggle())
 
   viz.collectStats = function(): StatsBucket {
-    // Todo this is memoryleak
     const latestStats = currentStats
     latestStats.layout = force.collectStats()
     currentStats = newStatsBucket()

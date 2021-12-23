@@ -29,10 +29,7 @@ import { mapNodes, mapRelationships, getGraphStats, GraphStats } from './mapper'
 export type GetNodeNeighboursFn = (
   node: BasicNode | Node,
   currentNeighbourIds: string[],
-  callback: (
-    error: null /* never called with an error, should be removed? */,
-    data: BasicNodesAndRels
-  ) => void
+  callback: (data: BasicNodesAndRels) => void
 ) => void
 
 export class GraphEventHandler {
@@ -133,8 +130,7 @@ export class GraphEventHandler {
     this.getNodeNeighbours(
       d,
       this.graph.findNodeNeighbourIds(d.id),
-      (err, { nodes, relationships }) => {
-        if (err) return
+      ({ nodes, relationships }) => {
         graph.addExpandedNodes(d, mapNodes(nodes))
         graph.addRelationships(mapRelationships(relationships, graph))
         graphView.update({ updateNodes: true, updateRelationships: true })

@@ -1,4 +1,5 @@
 import ArcArrow from '../utils/ArcArrow'
+import LoopArrow from '../utils/LoopArrow'
 import StraightArrow from '../utils/StraightArrow'
 import Node from './Node'
 
@@ -33,18 +34,17 @@ export default class Relationship {
   isNode = false
   isRelationship = true
 
-  // values other code thinks relationship should have // TODO intizianio check if valid
-  internal: boolean | undefined
-  caption: string | undefined
-  captionHeight: number | undefined
-  captionLayout: RelationShipCaptionLayout | undefined
-  captionLength: number | undefined
-  naturalAngle: number | undefined
-  arrow: ArcArrow | StraightArrow | undefined
-  selected: boolean
+  naturalAngle: number
+  caption: string
+  captionLength: number
+  captionHeight: number
+  captionLayout: RelationShipCaptionLayout
   shortCaption: string | undefined
   shortCaptionLength: number | undefined
-  centreDistance: number | undefined
+  selected: boolean
+  centreDistance: number
+  internal: boolean | undefined
+  arrow: ArcArrow | LoopArrow | StraightArrow | undefined
 
   constructor(
     id: string,
@@ -68,6 +68,13 @@ export default class Relationship {
     )
 
     this.selected = false
+    // These values are overriden as part of the initial layouting of the graph
+    this.naturalAngle = 0
+    this.caption = ''
+    this.captionLength = 0
+    this.captionHeight = 0
+    this.captionLayout = 'internal'
+    this.centreDistance = 0
   }
 
   toJSON(): Record<string, string> {

@@ -47,8 +47,6 @@ export default class PairwiseArcsRelationshipRouting {
       measureText(
         caption,
         fontFamily,
-        // TODO BROKEN
-        // @ts-expect-error
         relationship.captionHeight,
         <CanvasRenderingContext2D>canvas2DContext
       ) +
@@ -59,8 +57,6 @@ export default class PairwiseArcsRelationshipRouting {
   captionFitsInsideArrowShaftWidth(relationship: Relationship): boolean {
     return (
       parseFloat(this.style.forRelationship(relationship).get('shaft-width')) >
-      // TODO BROKEN
-      // @ts-expect-error
       relationship.captionHeight
     )
   }
@@ -72,8 +68,6 @@ export default class PairwiseArcsRelationshipRouting {
       )
       relationship.captionLength = this.measureRelationshipCaption(
         relationship,
-        // TODO BROKEN
-        // @ts-expect-error
         relationship.caption
       )
 
@@ -136,13 +130,10 @@ export default class PairwiseArcsRelationshipRouting {
               angles.push(relationship.naturalAngle)
             }
             if (relationship.target === node) {
-              //TODO
-              // @ts-expect-error
               angles.push(relationship.naturalAngle + 180)
             }
           }
         }
-        // @ts-expect-error
         angles = angles.map(a => (a + 360) % 360).sort((a, b) => a - b)
 
         if (angles.length > 0) {
@@ -212,8 +203,6 @@ export default class PairwiseArcsRelationshipRouting {
         const headHeight = headWidth
 
         if (nodePair.isLoop()) {
-          //TODO fix types
-          // @ts-expect-error
           relationship.arrow = new LoopArrow(
             relationship.source.radius,
             40,
@@ -221,7 +210,6 @@ export default class PairwiseArcsRelationshipRouting {
             shaftWidth,
             headWidth,
             headHeight,
-            // @ts-expect-error
             relationship.captionHeight
           )
         } else {
@@ -229,7 +217,6 @@ export default class PairwiseArcsRelationshipRouting {
             relationship.arrow = new StraightArrow(
               relationship.source.radius,
               relationship.target.radius,
-              // @ts-expect-error
               relationship.centreDistance,
               shaftWidth,
               headWidth,
@@ -246,7 +233,6 @@ export default class PairwiseArcsRelationshipRouting {
             relationship.arrow = new ArcArrow(
               relationship.source.radius,
               relationship.target.radius,
-              // @ts-expect-error
               relationship.centreDistance,
               deflection,
               shaftWidth,
@@ -258,14 +244,11 @@ export default class PairwiseArcsRelationshipRouting {
         }
 
         ;[relationship.shortCaption, relationship.shortCaptionLength] =
-          // @ts-expect-error
           relationship.arrow.shaftLength > relationship.captionLength
             ? [relationship.caption, relationship.captionLength]
             : this.shortenCaption(
                 relationship,
-                // @ts-expect-error
                 relationship.caption,
-                // @ts-expect-error
                 relationship.arrow.shaftLength
               )
       }

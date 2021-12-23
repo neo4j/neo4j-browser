@@ -21,7 +21,7 @@ import { VizObj } from './Visualization'
 
 const noOp = () => undefined
 type RendererEventHandler = (selection: d3.Selection<any>, viz: VizObj) => void
-// TODO all should probably have a name
+
 export default class Renderer {
   onGraphChange: RendererEventHandler
   onTick: RendererEventHandler

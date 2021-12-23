@@ -156,7 +156,7 @@ export class ExplorerComponent extends Component<
     callback
   ) => {
     if (currentNeighbourIds.length > this.props.maxNeighbours) {
-      callback(null, { nodes: [], relationships: [] })
+      callback({ nodes: [], relationships: [] })
     }
     this.props.getNeighbours(node.id, currentNeighbourIds).then(
       ({ nodes, relationships, count }) => {
@@ -171,10 +171,10 @@ export class ExplorerComponent extends Component<
             }
           })
         }
-        callback(null, { nodes, relationships })
+        callback({ nodes, relationships })
       },
       () => {
-        callback(null, { nodes: [], relationships: [] })
+        callback({ nodes: [], relationships: [] })
       }
     )
   }
