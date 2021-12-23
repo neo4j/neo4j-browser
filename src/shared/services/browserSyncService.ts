@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/database'
@@ -60,10 +59,7 @@ export const syncResourceFor = (userId: any, key: any, value: any) => {
 }
 
 export const setupUser = (userId: any, initialData: any) => {
-  firebase
-    .database()
-    .ref(`users/${userId}`)
-    .set(initialData)
+  firebase.database().ref(`users/${userId}`).set(initialData)
 }
 
 export const signOut = () => {

@@ -19,12 +19,13 @@
  */
 import { Button } from 'semantic-ui-react'
 import styled from 'styled-components'
+
+import { LARGE_DRAWER_WIDTH } from 'browser-components/TabNavigation/Navigation'
 import {
   DrawerBody,
   DrawerBrowserCommand
 } from 'browser-components/drawer/drawer-styled'
 import { dark } from 'browser-styles/themes'
-import { LARGE_DRAWER_WIDTH } from 'browser-components/TabNavigation/Navigation'
 
 export const StyledSetting = styled.div`
   padding-bottom: 15px;

@@ -17,11 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import { Action, AnyAction } from 'redux'
 
-import { recursivelyTypeGraphItems } from './boltMappings'
 import { ROUTED_WRITE_CONNECTION } from './boltConnection'
+import { recursivelyTypeGraphItems } from './boltMappings'
 
 export const RUN_CYPHER_MESSAGE = 'RUN_CYPHER_MESSAGE'
 export const CANCEL_TRANSACTION_MESSAGE = 'CANCEL_TRANSACTION_MESSAGE'

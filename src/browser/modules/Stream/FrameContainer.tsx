@@ -17,36 +17,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import React, { useEffect, useState } from 'react'
 
-import React, { useState, useEffect } from 'react'
-import { FrameStack } from 'shared/modules/frames/framesDuck'
-import { Connection } from 'shared/modules/connections/connectionsDuck'
-import { ContentContainer, StyledFrame } from '../Frame/styled'
-import FrameTitlebar from '../Frame/FrameTitlebar'
+import { ExportItem } from '../Frame/ExportButton'
 import FrameEditor from '../Frame/FrameEditor'
-import { BaseFrameProps } from './Stream'
-import CypherFrame from './CypherFrame/CypherFrame'
-import HistoryFrame from './HistoryFrame'
-import PlayFrame from './PlayFrame'
-import PreFrame from './PreFrame'
-import ParamsFrame from './ParamsFrame'
-import ErrorFrame from './ErrorFrame'
-import HelpFrame from './HelpFrame'
-import CypherScriptFrame from './CypherScriptFrame/CypherScriptFrame'
-import SchemaFrame from './SchemaFrame'
-import StyleFrame from './StyleFrame'
-import SysInfoFrame from './SysInfoFrame/SysInfoFrame'
+import FrameTitlebar from '../Frame/FrameTitlebar'
+import { ContentContainer, StyledFrame } from '../Frame/styled'
+import UserAdd from '../User/UserAdd'
+import UserList from '../User/UserList'
+import ChangePasswordFrame from './Auth/ChangePasswordFrame'
 import ConnectionFrame from './Auth/ConnectionFrame'
+import DbsFrame from './Auth/DbsFrame'
 import DisconnectFrame from './Auth/DisconnectFrame'
 import ServerStatusFrame from './Auth/ServerStatusFrame'
 import ServerSwitchFrame from './Auth/ServerSwitchFrame'
 import UseDbFrame from './Auth/UseDbFrame'
-import ChangePasswordFrame from './Auth/ChangePasswordFrame'
+import CypherFrame from './CypherFrame/CypherFrame'
+import CypherScriptFrame from './CypherScriptFrame/CypherScriptFrame'
+import ErrorFrame from './ErrorFrame'
+import HelpFrame from './HelpFrame'
+import HistoryFrame from './HistoryFrame'
+import ParamsFrame from './ParamsFrame'
+import PlayFrame from './PlayFrame'
+import PreFrame from './PreFrame'
 import QueriesFrame from './Queries/QueriesFrame'
-import UserList from '../User/UserList'
-import UserAdd from '../User/UserAdd'
-import DbsFrame from './Auth/DbsFrame'
-import { ExportItem } from '../Frame/ExportButton'
+import SchemaFrame from './SchemaFrame'
+import { BaseFrameProps } from './Stream'
+import StyleFrame from './StyleFrame'
+import SysInfoFrame from './SysInfoFrame/SysInfoFrame'
+import { Connection } from 'shared/modules/connections/connectionsDuck'
+import { FrameStack } from 'shared/modules/frames/framesDuck'
 
 const nameToFrame: Record<string, React.ComponentType<any>> = {
   error: ErrorFrame,
@@ -96,12 +96,8 @@ type FrameContainerProps = {
 }
 
 export function FrameContainer(props: FrameContainerProps): JSX.Element {
-  const {
-    isFullscreen,
-    toggleFullscreen,
-    isCollapsed,
-    toggleCollapse
-  } = useSizeToggles()
+  const { isFullscreen, toggleFullscreen, isCollapsed, toggleCollapse } =
+    useSizeToggles()
   const frame = props.frameData.stack[0]
   const [exportItems, setExportItems] = useState<ExportItem[]>([])
   const frameProps: BaseFrameProps = {

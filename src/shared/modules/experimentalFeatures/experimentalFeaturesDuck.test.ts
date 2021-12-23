@@ -17,18 +17,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import { APP_START } from '../app/appDuck'
 import reducer, {
   NAME,
-  enableExperimentalFeature,
   disableExperimentalFeature,
-  getExperimentalFeatures,
-  showFeature,
+  enableExperimentalFeature,
   experimentalFeatureSelfName,
-  initialState
+  getExperimentalFeatures,
+  initialState,
+  showFeature
 } from './experimentalFeaturesDuck'
 import { dehydrate } from 'services/duckUtils'
-import { APP_START } from '../app/appDuck'
 
 describe('experimentalFeatures reducer', () => {
   test('handles initial value', () => {

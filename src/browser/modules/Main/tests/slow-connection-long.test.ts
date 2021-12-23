@@ -18,18 +18,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
+import { act, renderHook } from '@testing-library/react-hooks'
 import '@testing-library/react-hooks/dont-cleanup-after-each.js'
-import { renderHook, act } from '@testing-library/react-hooks'
 import mockDate from 'mockdate'
 
+import { useSlowConnectionState } from '../main.hooks'
 import {
   CONNECTED_STATE,
   DISCONNECTED_STATE,
   PENDING_STATE
 } from 'shared/modules/connections/connectionsDuck'
-
-import { useSlowConnectionState } from '../main.hooks'
 
 mockDate.set(0)
 jest.useFakeTimers()

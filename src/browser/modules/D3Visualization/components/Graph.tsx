@@ -17,22 +17,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React, { Component } from 'react'
-import {
-  createGraph,
-  mapRelationships,
-  getGraphStats,
-  GraphStats
-} from '../mapper'
+
 import { GetNodeNeighboursFn, GraphEventHandler } from '../GraphEventHandler'
-import { StyledZoomHolder, StyledSvgWrapper, StyledZoomButton } from './styled'
-import { ZoomInIcon, ZoomOutIcon } from 'browser-components/icons/Icons'
-import GraphView from '../lib/visualization/components/GraphView'
 import GraphStyle from '../graphStyle'
-import { BasicNode, BasicRelationship } from 'services/bolt/boltMappings'
 import Graph from '../lib/visualization/components/Graph'
+import GraphView from '../lib/visualization/components/GraphView'
+import {
+  GraphStats,
+  createGraph,
+  getGraphStats,
+  mapRelationships
+} from '../mapper'
+import { StyledSvgWrapper, StyledZoomButton, StyledZoomHolder } from './styled'
 import { VizItem } from './types'
+import { ZoomInIcon, ZoomOutIcon } from 'browser-components/icons/Icons'
+import { BasicNode, BasicRelationship } from 'services/bolt/boltMappings'
 
 type GraphState = { zoomInLimitReached: boolean; zoomOutLimitReached: boolean }
 

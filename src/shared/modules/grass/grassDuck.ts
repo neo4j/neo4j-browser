@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import { getBrowserName } from 'services/utils'
 import { APP_START } from 'shared/modules/app/appDuck'
 

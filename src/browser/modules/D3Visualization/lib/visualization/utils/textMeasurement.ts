@@ -27,7 +27,7 @@ const measureTextWidthByCanvas = (
   return context.measureText(text).width
 }
 
-const cacheTextWidth = function() {
+const cacheTextWidth = function () {
   const CATCH_SIZE = 100000
   const textMeasureMap: { [key: string]: number } = {}
   const lruKeyList: string[] = []
@@ -46,7 +46,7 @@ const cacheTextWidth = function() {
   }
 }
 
-export default function(
+export default function (
   text: string,
   fontFamily: string,
   fontSize: number,

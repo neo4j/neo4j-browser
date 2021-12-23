@@ -17,26 +17,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import { map, take } from 'lodash-es'
 import React, { Component } from 'react'
-import { deepEquals } from 'services/utils'
+import { connect } from 'react-redux'
+
 import {
   PaddedDiv,
-  StyledTable,
-  StyledTBody,
   StyledAlteringTr,
+  StyledExpandable,
   StyledStrongTd,
-  StyledTd,
-  StyledExpandable
+  StyledTBody,
+  StyledTable,
+  StyledTd
 } from '../styled'
 import {
   RelatableStatusbar,
   RelatableStatusbarComponent
 } from './relatable-view'
-import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
-import { connect } from 'react-redux'
-import { map, take } from 'lodash-es'
+import { deepEquals } from 'services/utils'
 import { GlobalState } from 'shared/globalState'
+import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
 
 type ExpandableContentState = any
 

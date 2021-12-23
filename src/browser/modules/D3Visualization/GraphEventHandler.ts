@@ -17,14 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import { BasicNode, BasicNodesAndRels } from 'services/bolt/boltMappings'
 import { VizItem } from './components/types'
 import Graph from './lib/visualization/components/Graph'
 import GraphView from './lib/visualization/components/GraphView'
 import VizNode from './lib/visualization/components/Node'
 import Relationship from './lib/visualization/components/Relationship'
-import { mapNodes, mapRelationships, getGraphStats, GraphStats } from './mapper'
+import { GraphStats, getGraphStats, mapNodes, mapRelationships } from './mapper'
+import { BasicNode, BasicNodesAndRels } from 'services/bolt/boltMappings'
 
 export type GetNodeNeighboursFn = (
   node: BasicNode | VizNode,

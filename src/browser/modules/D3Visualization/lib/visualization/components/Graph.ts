@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import VizNode from './Node'
 import Relationship from './Relationship'
 
@@ -37,9 +36,8 @@ export default class Graph {
     this.addNodes = this.addNodes.bind(this)
     this.removeNode = this.removeNode.bind(this)
     this.updateNode = this.updateNode.bind(this)
-    this.removeConnectedRelationships = this.removeConnectedRelationships.bind(
-      this
-    )
+    this.removeConnectedRelationships =
+      this.removeConnectedRelationships.bind(this)
     this.addRelationships = this.addRelationships.bind(this)
     this.addInternalRelationships = this.addInternalRelationships.bind(this)
     this.pruneInternalRelationships = this.pruneInternalRelationships.bind(this)

@@ -17,11 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/* global btoa */
 
+/* global btoa */
+import { isNumber, trimEnd, trimStart } from 'lodash-es'
 import parseUrl from 'url-parse'
-import { DESKTOP, CLOUD, WEB } from 'shared/modules/app/appDuck'
-import { trimStart, trimEnd, isNumber } from 'lodash-es'
+
+import { CLOUD, DESKTOP, WEB } from 'shared/modules/app/appDuck'
 
 /**
  * The work objects expected shape:
@@ -256,7 +257,7 @@ export const toHumanReadableBytes = (input: any) => {
   return `${number.toFixed(2)} PiB`
 }
 
-export const getBrowserName = function() {
+export const getBrowserName = function () {
   if (!!(window as any).opera || navigator.userAgent.indexOf(' OPR/') >= 0) {
     return 'Opera'
   }
@@ -342,7 +343,7 @@ export const stringifyMod = (
   const toString = Object.prototype.toString
   const isArray =
     Array.isArray ||
-    function(a) {
+    function (a) {
       return toString.call(a) === '[object Array]'
     }
   const escMap: any = {
@@ -354,7 +355,7 @@ export const stringifyMod = (
     '\r': '\r',
     '\t': '\t'
   }
-  const escFunc = function(m: any) {
+  const escFunc = function (m: any) {
     return (
       escMap[m] || `\\u${(m.charCodeAt(0) + 0x10000).toString(16).substr(1)}`
     )

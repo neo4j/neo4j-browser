@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { Consumer } from './FeatureToggleProvider'
 
 const FeatureToggle = ({ name, on, off }: any) => {

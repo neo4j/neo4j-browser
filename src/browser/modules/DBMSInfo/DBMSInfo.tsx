@@ -17,28 +17,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
-import {
-  commandSources,
-  executeCommand,
-  useDbCommand
-} from 'shared/modules/commands/commandsDuck'
-import { getCurrentUser } from 'shared/modules/currentUser/currentUserDuck'
-import { getGraphStyleData } from 'shared/modules/grass/grassDuck'
-import { LabelItems, RelationshipItems, PropertyItems } from './MetaItems'
-import { UserDetails } from './UserDetails'
+
 import DatabaseKernelInfo from './DatabaseKernelInfo'
+import { DatabaseSelector } from './DatabaseSelector'
+import { LabelItems, PropertyItems, RelationshipItems } from './MetaItems'
+import { UserDetails } from './UserDetails'
 import {
   Drawer,
   DrawerBody,
   DrawerHeader
 } from 'browser-components/drawer/drawer-styled'
-import { DatabaseSelector } from './DatabaseSelector'
+import {
+  commandSources,
+  executeCommand,
+  useDbCommand
+} from 'shared/modules/commands/commandsDuck'
 import { getUseDb } from 'shared/modules/connections/connectionsDuck'
+import { getCurrentUser } from 'shared/modules/currentUser/currentUserDuck'
 import { getDatabases } from 'shared/modules/dbMeta/state'
+import { getGraphStyleData } from 'shared/modules/grass/grassDuck'
 
 export function DBMSInfo(props: any): JSX.Element {
   const moreStep = 50

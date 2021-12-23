@@ -17,10 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import { NAME as META_NAME } from '../dbMeta/state'
 import reducer, * as features from './featuresDuck'
 import { canSendTxMetadata } from './versionedFeatures'
-import { NAME as META_NAME } from '../dbMeta/state'
 import { dehydrate } from 'services/duckUtils'
 
 describe('features reducer', () => {

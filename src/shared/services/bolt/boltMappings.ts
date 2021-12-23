@@ -17,18 +17,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import updateStatsFields from './updateStatisticsFields'
 import { flatten, map, take } from 'lodash-es'
 import neo4j from 'neo4j-driver'
-import { stringModifier } from 'services/bolt/cypherTypesFormatting'
+
 import {
-  safelyRemoveObjectProp,
-  safelyAddObjectProp,
   escapeReservedProps,
+  safelyAddObjectProp,
+  safelyRemoveObjectProp,
   unEscapeReservedProps,
   upperFirst
 } from '../utils'
+import updateStatsFields from './updateStatisticsFields'
+import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 
 export const reservedTypePropertyName = 'transport-class'
 
@@ -160,7 +160,7 @@ const transformPlanArguments = (args: any) => {
   return res
 }
 
-const collectHits = function(operator: any) {
+const collectHits = function (operator: any) {
   let hits = operator.DbHits || 0
   if (operator.children) {
     hits = operator.children.reduce((acc: any, subOperator: any) => {

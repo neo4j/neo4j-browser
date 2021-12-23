@@ -17,14 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import { Middleware } from 'redux'
-import { GlobalState } from 'shared/globalState'
+
 import {
   shouldRetainConnectionCredentials,
   shouldRetainEditorHistory
 } from '../modules/dbMeta/state'
 import { initialState as settingsInitialState } from '../modules/settings/settingsDuck'
+import { GlobalState } from 'shared/globalState'
 
 export const keyPrefix = 'neo4j.'
 let storage = window.localStorage
@@ -86,7 +86,7 @@ export function getAll(): Partial<GlobalState> {
 export function createReduxMiddleware(): Middleware {
   return store => next => action => {
     const result = next(action)
-    const state = (store.getState() as unknown) as GlobalState
+    const state = store.getState() as unknown as GlobalState
 
     keys.forEach(key => {
       if (key === 'connections' && !shouldRetainConnectionCredentials(state)) {

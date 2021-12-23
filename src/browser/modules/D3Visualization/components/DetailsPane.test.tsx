@@ -17,15 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import React from 'react'
 import { render, screen, waitFor } from '@testing-library/react'
+import React from 'react'
+
 import {
   DETAILS_PANE_STEP_SIZE,
   DetailsPaneComponent,
   ELLIPSIS,
-  MAX_LENGTH_WIDE,
   MAX_LENGTH_NARROW,
+  MAX_LENGTH_WIDE,
   WIDE_VIEW_THRESHOLD
 } from './DetailsPane'
 import { VizItem, VizNodeProperty } from './types'

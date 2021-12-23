@@ -17,13 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
 import PairwiseArcsRelationshipRouting from '../utils/pairwiseArcsRelationshipRouting'
 import measureText from '../utils/textMeasurement'
 import Graph from './Graph'
 import VizNode, { NodeCaptionLine } from './Node'
 import Relationship from './Relationship'
+import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
 
 export default class GraphGeometry {
   relationshipRouting: PairwiseArcsRelationshipRouting
@@ -133,17 +132,14 @@ const fitCaptionIntoCircle = (
     while (word.length > 2) {
       const newWord = `${word.substring(0, word.length - 2)}\u2026`
       if (measure(newWord) < line.remainingWidth) {
-        return `${line.text
-          .split(' ')
-          .slice(0, -1)
-          .join(' ')} ${newWord}`
+        return `${line.text.split(' ').slice(0, -1).join(' ')} ${newWord}`
       }
       word = word.substring(0, word.length - 1)
     }
     return `${word}\u2026`
   }
 
-  const fitOnFixedNumberOfLines = function(
+  const fitOnFixedNumberOfLines = function (
     lineCount: number
   ): [NodeCaptionLine[], number] {
     const lines = []

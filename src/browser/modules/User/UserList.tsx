@@ -17,35 +17,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { map } from 'lodash-es'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { withBus } from 'react-suber'
+import uuid from 'uuid'
 
+import FrameAside from '../Frame/FrameAside'
+import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
+import UserInformation from './UserInformation'
+import { StyledButtonContainer } from './styled'
+import { StyledTable, StyledTh } from 'browser-components/DataTables'
+import { EnterpriseOnlyFrame } from 'browser-components/EditionView'
+import { StyledLink } from 'browser-components/buttons'
+import bolt from 'services/bolt/bolt'
+import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import {
   commandSources,
   executeCommand
 } from 'shared/modules/commands/commandsDuck'
-import React, { Component } from 'react'
-import uuid from 'uuid'
-import { withBus } from 'react-suber'
-import { map } from 'lodash-es'
-import {
-  listUsersQuery,
-  listRolesQuery
-} from 'shared/modules/cypher/boltUserHelper'
-import UserInformation from './UserInformation'
-import bolt from 'services/bolt/bolt'
-import { ROUTED_CYPHER_WRITE_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import { StyledLink } from 'browser-components/buttons'
-import { StyledTable, StyledTh } from 'browser-components/DataTables'
-import { StyledButtonContainer } from './styled'
-
-import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
-import { forceFetch } from 'shared/modules/currentUser/currentUserDuck'
-import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
-import { driverDatabaseSelection } from 'shared/modules/features/versionedFeatures'
-import { connect } from 'react-redux'
-import { isEnterprise } from 'shared/modules/dbMeta/state'
-import FrameAside from '../Frame/FrameAside'
-import { EnterpriseOnlyFrame } from 'browser-components/EditionView'
 import { isConnectedAuraHost } from 'shared/modules/connections/connectionsDuck'
+import { forceFetch } from 'shared/modules/currentUser/currentUserDuck'
+import {
+  listRolesQuery,
+  listUsersQuery
+} from 'shared/modules/cypher/boltUserHelper'
+import { ROUTED_CYPHER_WRITE_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import { isEnterprise } from 'shared/modules/dbMeta/state'
+import { driverDatabaseSelection } from 'shared/modules/features/versionedFeatures'
 
 type UserListState = any
 

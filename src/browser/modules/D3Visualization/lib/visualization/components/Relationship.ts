@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import ArcArrow from '../utils/ArcArrow'
 import LoopArrow from '../utils/LoopArrow'
 import StraightArrow from '../utils/StraightArrow'

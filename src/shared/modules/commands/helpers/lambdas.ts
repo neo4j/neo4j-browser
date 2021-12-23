@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
+import { parseLambda } from '@neo4j/browser-lambda-parser'
 import {
   assign,
   head,
@@ -26,7 +26,6 @@ import {
   tail,
   trim
 } from 'lodash-es'
-import { parseLambda } from '@neo4j/browser-lambda-parser'
 
 import bolt from '../../../services/bolt/bolt'
 import { recursivelyTypeGraphItems } from '../../../services/bolt/boltMappings'

@@ -17,12 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import { BasicNode, BasicRelationship } from 'services/bolt/boltMappings'
-import { optionalToString } from 'services/utils'
 import Graph from './lib/visualization/components/Graph'
 import VizNode from './lib/visualization/components/Node'
 import Relationship from './lib/visualization/components/Relationship'
+import { BasicNode, BasicRelationship } from 'services/bolt/boltMappings'
+import { optionalToString } from 'services/utils'
 
 const mapProperties = (_: any) => Object.assign({}, ...stringifyValues(_))
 const stringifyValues = (obj: any) =>

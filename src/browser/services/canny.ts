@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import { Component, ReactNode } from 'react'
+
 import { canUseDOM } from 'services/utils'
 
 export const cannyOptions = {
@@ -44,14 +44,14 @@ declare global {
 
 const CannySDK = {
   init: (): Promise<Event> =>
-    new Promise(function(resolve, reject) {
+    new Promise(function (resolve, reject) {
       // Code obtained from Canny.io; See: https://developers.canny.io/install
 
       if (typeof window.Canny === 'function') {
         return
       }
 
-      const canny = function(...args: [string, CannyOptions?]) {
+      const canny = function (...args: [string, CannyOptions?]) {
         canny.q.push(args)
       }
 

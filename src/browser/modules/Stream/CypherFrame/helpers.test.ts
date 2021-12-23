@@ -17,23 +17,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import neo4j from 'neo4j-driver'
-import * as viewTypes from 'shared/modules/frames/frameViewTypes'
+
 import {
-  resultHasNodes,
-  resultHasRows,
-  resultHasWarnings,
-  resultHasPlan,
-  resultIsError,
-  getRecordsToDisplayInTable,
-  initialView,
   extractRecordsToResultArray,
   flattenGraphItemsInResultArray,
-  stringifyResultArray,
-  recordToJSONMapper
+  getRecordsToDisplayInTable,
+  initialView,
+  recordToJSONMapper,
+  resultHasNodes,
+  resultHasPlan,
+  resultHasRows,
+  resultHasWarnings,
+  resultIsError,
+  stringifyResultArray
 } from './helpers'
-import { stringModifier, csvFormat } from 'services/bolt/cypherTypesFormatting'
+import { csvFormat, stringModifier } from 'services/bolt/cypherTypesFormatting'
+import * as viewTypes from 'shared/modules/frames/frameViewTypes'
 
 describe('helpers', () => {
   test('getRecordsToDisplayInTable should report if there are rows or not in the result', () => {

@@ -17,19 +17,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import neo4j, { Driver } from 'neo4j-driver'
-import { buildTxFunctionByMode } from 'services/bolt/boltHelpers'
+
 import { isBoltConnectionErrorCode } from './boltConnectionErrors'
-import { Connection } from 'shared/modules/connections/connectionsDuck'
 import { createDriverOrFailFn } from './driverFactory'
 import {
-  setGlobalDrivers,
-  getGlobalDrivers,
-  unsetGlobalDrivers,
+  buildAuthObj,
   buildGlobalDriversObject,
-  buildAuthObj
+  getGlobalDrivers,
+  setGlobalDrivers,
+  unsetGlobalDrivers
 } from './globalDrivers'
+import { buildTxFunctionByMode } from 'services/bolt/boltHelpers'
+import { Connection } from 'shared/modules/connections/connectionsDuck'
 
 export const DIRECT_CONNECTION = 'DIRECT_CONNECTION'
 export const ROUTED_WRITE_CONNECTION = 'ROUTED_WRITE_CONNECTION'

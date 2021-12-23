@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import AngleList from './angleList'
+
 export type Run = { start: number; end: number }
 
 export default class AdjacentAngles {
@@ -27,7 +27,7 @@ export default class AdjacentAngles {
     let start = 0
     let end = 0
     const runs: Run[] = []
-    const minStart = function() {
+    const minStart = function () {
       if (runs.length === 0) {
         return 0
       } else {
@@ -35,7 +35,7 @@ export default class AdjacentAngles {
       }
     }
 
-    const scanForDensePair = function() {
+    const scanForDensePair = function () {
       start = p
       end = angleList.wrapIndex(p + 1)
       if (end === minStart()) {
@@ -50,7 +50,7 @@ export default class AdjacentAngles {
       }
     }
 
-    const extendEnd = function() {
+    const extendEnd = function () {
       if (p === minStart()) {
         return 'done'
       } else if (tooDense(start, angleList.wrapIndex(p + 1))) {
@@ -63,7 +63,7 @@ export default class AdjacentAngles {
       }
     }
 
-    const extendStart = function() {
+    const extendStart = function () {
       const candidateStart = angleList.wrapIndex(p - 1)
       if (tooDense(candidateStart, end) && candidateStart !== end) {
         start = candidateStart
@@ -79,7 +79,7 @@ export default class AdjacentAngles {
       }
     }
 
-    const tooDense = function(start: number, end: number) {
+    const tooDense = function (start: number, end: number) {
       const run = {
         start,
         end

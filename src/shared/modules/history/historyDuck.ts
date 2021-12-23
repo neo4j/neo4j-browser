@@ -17,9 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import { GlobalState } from 'shared/globalState'
 import { USER_CLEAR } from '../app/appDuck'
+import { GlobalState } from 'shared/globalState'
 
 export const NAME = 'history'
 export const ADD = 'history/ADD'
@@ -41,7 +40,7 @@ function addHistoryHelper(
   return newHistory.slice(0, maxHistory)
 }
 
-export default function(state: string[] = [], action: any) {
+export default function (state: string[] = [], action: any) {
   switch (action.type) {
     case ADD:
       return addHistoryHelper(state, action.state, action.maxHistory)

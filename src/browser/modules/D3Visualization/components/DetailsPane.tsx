@@ -17,28 +17,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React, { useState } from 'react'
 
+import ClickableUrls from '../../../components/ClickableUrls'
+import { StyleableNodeLabel } from './StyleableNodeLabel'
+import { StyleableRelType } from './StyleableRelType'
 import {
   AlternatingTable,
   CopyCell,
-  StyledExpandValueButton,
   KeyCell,
   PaneBody,
   PaneHeader,
   PaneTitle,
+  StyledExpandValueButton,
   StyledInlineList,
   ValueCell
 } from './styled'
-import ClickableUrls from '../../../components/ClickableUrls'
-import ClipboardCopier from 'browser-components/ClipboardCopier'
 import { NodeItem, RelationshipItem, VizNodeProperty } from './types'
-import { StyleableNodeLabel } from './StyleableNodeLabel'
-import { StyleableRelType } from './StyleableRelType'
-import { upperFirst } from 'services/utils'
+import ClipboardCopier from 'browser-components/ClipboardCopier'
 import { ShowMoreOrAll } from 'browser-components/ShowMoreOrAll/ShowMoreOrAll'
 import { GraphStyle } from 'project-root/src/browser/modules/D3Visualization/graphStyle'
+import { upperFirst } from 'services/utils'
 
 export const ELLIPSIS = '\u2026'
 export const WIDE_VIEW_THRESHOLD = 900

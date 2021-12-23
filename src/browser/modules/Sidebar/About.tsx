@@ -19,18 +19,18 @@
  */
 import React from 'react'
 import { connect } from 'react-redux'
-import { version as browserVersion } from 'project-root/package.json'
 
 import {
   Drawer,
   DrawerBody,
+  DrawerFooter,
   DrawerHeader,
-  DrawerSubHeader,
   DrawerSection,
   DrawerSectionBody,
-  DrawerFooter
+  DrawerSubHeader
 } from 'browser-components/drawer/drawer-styled'
-import { getVersion, getEdition } from 'shared/modules/dbMeta/state'
+import { version as browserVersion } from 'project-root/package.json'
+import { getEdition, getVersion } from 'shared/modules/dbMeta/state'
 
 function asChangeLogUrl(serverVersion: string): string | undefined {
   if (!serverVersion) {

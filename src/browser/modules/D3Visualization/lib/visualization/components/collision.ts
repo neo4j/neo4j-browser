@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import d3 from 'd3'
+
 import VizNode from './Node'
 
 type D3MutatedNode = VizNode & d3.layout.force.Node

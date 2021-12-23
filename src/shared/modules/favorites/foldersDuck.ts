@@ -17,10 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
-import { getBrowserName } from 'services/utils'
 import { folders } from './staticScripts'
+import { getBrowserName } from 'services/utils'
+import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
 
 export const NAME = 'folders'
 export const LOAD_FOLDERS = 'folders/LOAD_FOLDERS'

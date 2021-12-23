@@ -17,25 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import { connect } from 'react-redux'
 import React from 'react'
+import { connect } from 'react-redux'
+import { Action, Dispatch } from 'redux'
 
-import {
-  cancel as cancelRequest,
-  getRequest,
-  BrowserRequest,
-  REQUEST_STATUS_PENDING
-} from 'shared/modules/requests/requestsDuck'
-import {
-  Frame,
-  pin,
-  remove,
-  TRACK_COLLAPSE_TOGGLE,
-  TRACK_FULLSCREEN_TOGGLE,
-  unpin
-} from 'shared/modules/frames/framesDuck'
-import { sleep } from 'shared/services/utils'
+import { TitleBarHeader } from './styled'
 import { FrameControlButton } from 'browser-components/buttons'
 import {
   CloseIcon,
@@ -46,8 +32,21 @@ import {
   UpIcon
 } from 'browser-components/icons/Icons'
 import { GlobalState } from 'shared/globalState'
-import { Action, Dispatch } from 'redux'
-import { TitleBarHeader } from './styled'
+import {
+  Frame,
+  TRACK_COLLAPSE_TOGGLE,
+  TRACK_FULLSCREEN_TOGGLE,
+  pin,
+  remove,
+  unpin
+} from 'shared/modules/frames/framesDuck'
+import {
+  BrowserRequest,
+  REQUEST_STATUS_PENDING,
+  cancel as cancelRequest,
+  getRequest
+} from 'shared/modules/requests/requestsDuck'
+import { sleep } from 'shared/services/utils'
 
 type FrameTitleBarBaseProps = {
   frame: Frame

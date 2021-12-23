@@ -17,32 +17,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import React, { Component } from 'react'
 import deepmerge from 'deepmerge'
-import { connect, ConnectedComponent } from 'react-redux'
 import { debounce } from 'lodash'
-
-import { GraphStyle } from '../graphStyle'
-import { GlobalState } from 'shared/globalState'
-import { GraphComponent } from './Graph'
-import { GraphStats } from '../mapper'
-import { VizItem } from './types'
-import { deepEquals } from 'services/utils'
-import { defaultPanelWidth, NodeInspectorPanel } from './NodeInspectorPanel'
-import { panelMinWidth, StyledFullSizeContainer } from './styled'
-import {
-  getNodePropertiesExpandedByDefault,
-  setNodePropertiesExpandedByDefault
-} from 'shared/modules/frames/framesDuck'
+import React, { Component } from 'react'
+import { ConnectedComponent, connect } from 'react-redux'
 import { Action, Dispatch } from 'redux'
+
+import { GetNodeNeighboursFn } from '../GraphEventHandler'
+import { GraphStyle } from '../graphStyle'
+import Graph from '../lib/visualization/components/Graph'
+import { GraphStats } from '../mapper'
+import { GraphComponent } from './Graph'
+import { NodeInspectorPanel, defaultPanelWidth } from './NodeInspectorPanel'
+import { StyledFullSizeContainer, panelMinWidth } from './styled'
+import { VizItem } from './types'
 import {
   BasicNode,
   BasicNodesAndRels,
   BasicRelationship
 } from 'services/bolt/boltMappings'
-import Graph from '../lib/visualization/components/Graph'
-import { GetNodeNeighboursFn } from '../GraphEventHandler'
+import { deepEquals } from 'services/utils'
+import { GlobalState } from 'shared/globalState'
+import {
+  getNodePropertiesExpandedByDefault,
+  setNodePropertiesExpandedByDefault
+} from 'shared/modules/frames/framesDuck'
 
 type DecuplicateHelper = { nodes: BasicNode[]; taken: Record<string, boolean> }
 const deduplicateNodes = (nodes: BasicNode[]): BasicNode[] =>
@@ -166,8 +165,9 @@ export class ExplorerComponent extends Component<
               type: 'status-item',
               item: `Rendering was limited to ${
                 this.props.maxNeighbours
-              } of the node's total ${count +
-                currentNeighbourIds.length} neighbours due to browser config maxNeighbours.`
+              } of the node's total ${
+                count + currentNeighbourIds.length
+              } neighbours due to browser config maxNeighbours.`
             }
           })
         }

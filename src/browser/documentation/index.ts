@@ -17,29 +17,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 // Help
+import helpBolt from './dynamic/bolt'
+// Dynamic Help
+import helpCommands from './dynamic/commands'
+import helpCypher from './dynamic/cypher'
+import helpHelp from './dynamic/help'
+import helpPlay from './dynamic/play'
 import helpAlterUser from './help/alter-user'
 import helpAuto from './help/auto'
-import helpBolt from './dynamic/bolt'
 import helpBoltEncryption from './help/bolt-encryption'
 import helpBoltRouting from './help/bolt-routing'
 import helpClear from './help/clear'
 import helpContains from './help/contains'
+import helpCreate from './help/create'
 import helpCreateConstraintOn from './help/create-constraint-on'
 import helpCreateDatabase from './help/create-database'
 import helpCreateIndexOn from './help/create-index-on'
 import helpCreateRole from './help/create-role'
 import helpCreateUser from './help/create-user'
-import helpCreate from './help/create'
 import helpDelete from './help/delete'
 import helpDeny from './help/deny'
+import helpDetachDelete from './help/detach-delete'
 import helpDropConstraintOn from './help/drop-constraint-on'
 import helpDropDatabase from './help/drop-database'
 import helpDropIndexOn from './help/drop-index-on'
 import helpDropRole from './help/drop-role'
 import helpDropUser from './help/drop-user'
-import helpDetachDelete from './help/detach-delete'
 import helpEndsWith from './help/ends-with'
 import helpExplain from './help/explain'
 import helpForeach from './help/foreach'
@@ -81,26 +85,18 @@ import helpUnknown from './help/unknown'
 import helpUnwind from './help/unwind'
 import helpWhere from './help/where'
 import helpWith from './help/with'
-
-// Dynamic Help
-import helpCommands from './dynamic/commands'
-import helpCypher from './dynamic/cypher'
-import helpHelp from './dynamic/help'
-import helpPlay from './dynamic/play'
-
 // Play guides
 import playConcepts from './play-guides/concepts'
 import playCypher from './play-guides/cypher'
+import playIconography from './play-guides/iconography'
 import playIntro from './play-guides/intro'
 import playLearn from './play-guides/learn'
 import playMovieGraph from './play-guides/movie-graph'
 import playNorthwindGraph from './play-guides/northwind-graph'
-import playIconography from './play-guides/iconography'
 import playStart from './play-guides/start'
 import playTypography from './play-guides/typography'
 import playUnfound from './play-guides/unfound'
 import playWritecode from './play-guides/write-code'
-
 // Migrated sidebar guides
 import guideConcepts from './sidebar-guides/concepts'
 import guideCypher from './sidebar-guides/cypher'

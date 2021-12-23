@@ -132,14 +132,14 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
                 class="sc-htpNat sc-dnqmqq OaEcl"
               >
                 <div
-                  class="sc-RefOD sc-iQKALj dCvzLq"
+                  class="sc-eHgmQL sc-cvbbAY gubsiZ"
                   data-testid="property-details-overview-node-label-*"
                   style="background-color: rgb(165, 171, 182); color: rgb(255, 255, 255);"
                 >
                   * (1)
                 </div>
                 <div
-                  class="sc-RefOD sc-iQKALj dCvzLq"
+                  class="sc-eHgmQL sc-cvbbAY gubsiZ"
                   data-testid="property-details-overview-node-label-Person"
                   style="background-color: rgb(201, 144, 192); color: rgb(255, 255, 255);"
                 >

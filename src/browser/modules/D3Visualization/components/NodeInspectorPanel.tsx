@@ -2,16 +2,16 @@ import React, { Component } from 'react'
 import { Resizable } from 'react-resizable'
 import { Icon } from 'semantic-ui-react'
 
-import OverviewPane from './OverviewPane'
-import { DetailsPaneComponent } from './DetailsPane'
 import { GraphStats } from '../mapper'
+import { DetailsPaneComponent } from './DetailsPane'
+import { NodeInspectorDrawer } from './NodeInspectorDrawer'
+import OverviewPane from './OverviewPane'
 import {
   PaneContainer,
   StyledNodeInspectorTopMenuChevron,
   panelMinWidth
 } from './styled'
 import { VizItem } from './types'
-import { NodeInspectorDrawer } from './NodeInspectorDrawer'
 import { GraphStyle } from 'project-root/src/browser/modules/D3Visualization/graphStyle'
 
 interface NodeInspectorPanelProps {

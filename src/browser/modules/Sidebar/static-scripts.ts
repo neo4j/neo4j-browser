@@ -14,20 +14,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-import { withBus } from 'react-suber'
 import { connect } from 'react-redux'
-import MyScripts from 'browser/components/SavedScripts'
+import { withBus } from 'react-suber'
 import semver from 'semver'
 
-import * as editor from 'shared/modules/editor/editorDuck'
+import * as favorites from '../../../shared/modules/favorites/favoritesDuck'
+import { getFolders } from '../../../shared/modules/favorites/foldersDuck'
+import MyScripts from 'browser/components/SavedScripts'
 import {
   commandSources,
   executeCommand
 } from 'shared/modules/commands/commandsDuck'
-import * as favorites from '../../../shared/modules/favorites/favoritesDuck'
-import { getFolders } from '../../../shared/modules/favorites/foldersDuck'
 import { getVersion } from 'shared/modules/dbMeta/state'
+import * as editor from 'shared/modules/editor/editorDuck'
 
 const mapFavoritesStateToProps = (state: any) => {
   const version = semver.coerce(getVersion(state) || '0') ?? '0'

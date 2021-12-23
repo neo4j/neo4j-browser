@@ -17,15 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React, { Component } from 'react'
 
+import { Link, StyledKey, StyledTable, StyledValue } from './styled'
 import {
-  DrawerSubHeader,
   DrawerSection,
-  DrawerSectionBody
+  DrawerSectionBody,
+  DrawerSubHeader
 } from 'browser-components/drawer/drawer-styled'
-import { StyledTable, StyledKey, StyledValue, Link } from './styled'
 
 export class UserDetails extends Component<any> {
   render() {

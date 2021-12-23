@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import d3 from 'd3'
+
 import VizNode from '../components/Node'
 import Renderer from '../components/Renderer'
 import { VizObj } from '../components/Visualization'
@@ -28,7 +28,7 @@ const noOp = () => undefined
 
 const numberOfItemsInContextMenu = 3
 
-const drawArc = function(radius: number, itemNumber: number, width = 30) {
+const drawArc = function (radius: number, itemNumber: number, width = 30) {
   const startAngle =
     ((2 * Math.PI) / numberOfItemsInContextMenu) * (itemNumber - 1)
   const endAngle = startAngle + (2 * Math.PI) / numberOfItemsInContextMenu
@@ -73,7 +73,7 @@ const attachContextEvent = (
   })
 }
 
-const createMenuItem = function(
+const createMenuItem = function (
   selection: d3.Selection<any>,
   viz: VizObj,
   eventType: string,

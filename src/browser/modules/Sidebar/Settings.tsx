@@ -19,7 +19,13 @@
  */
 import React from 'react'
 import { connect } from 'react-redux'
-import * as actions from 'shared/modules/settings/settingsDuck'
+
+import {
+  StyledSetting,
+  StyledSettingLabel,
+  StyledSettingTextInput
+} from './styled'
+import { CheckboxSelector, RadioSelector } from 'browser-components/Form'
 import {
   Drawer,
   DrawerBody,
@@ -28,26 +34,21 @@ import {
   DrawerSectionBody,
   DrawerSubHeader
 } from 'browser-components/drawer/drawer-styled'
-import { RadioSelector, CheckboxSelector } from 'browser-components/Form'
-import {
-  StyledSetting,
-  StyledSettingLabel,
-  StyledSettingTextInput
-} from './styled'
-import { toKeyString } from 'services/utils'
-import {
-  getExperimentalFeatures,
-  experimentalFeatureSelfName,
-  enableExperimentalFeature,
-  disableExperimentalFeature
-} from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
 import FeatureToggle from 'browser/modules/FeatureToggle/FeatureToggle'
-import {
-  TelemetrySettings,
-  getTelemetrySettings,
-  TelemetrySettingSource
-} from 'shared/utils/selectors'
+import { toKeyString } from 'services/utils'
 import { GlobalState } from 'shared/globalState'
+import {
+  disableExperimentalFeature,
+  enableExperimentalFeature,
+  experimentalFeatureSelfName,
+  getExperimentalFeatures
+} from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
+import * as actions from 'shared/modules/settings/settingsDuck'
+import {
+  TelemetrySettingSource,
+  TelemetrySettings,
+  getTelemetrySettings
+} from 'shared/utils/selectors'
 
 const visualSettings = [
   {

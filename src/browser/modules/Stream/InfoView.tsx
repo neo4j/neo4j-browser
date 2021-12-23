@@ -18,13 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React, { Component } from 'react'
+
 import {
-  StyledInfoMessage,
-  StyledHelpContent,
-  StyledH4,
-  StyledHelpDescription,
   StyledDiv,
-  StyledHelpFrame
+  StyledH4,
+  StyledHelpContent,
+  StyledHelpDescription,
+  StyledHelpFrame,
+  StyledInfoMessage
 } from './styled'
 
 export class InfoView extends Component<any> {

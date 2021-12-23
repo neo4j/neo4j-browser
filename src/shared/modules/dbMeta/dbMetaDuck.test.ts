@@ -17,16 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import neo4j from 'neo4j-driver'
-import reducer from './state'
+
 import {
-  PARSE_META,
-  UPDATE_SETTINGS,
-  UPDATE_SERVER,
   CLEAR_META,
-  UPDATE_META
+  PARSE_META,
+  UPDATE_META,
+  UPDATE_SERVER,
+  UPDATE_SETTINGS
 } from './constants'
+import reducer from './state'
 import { APP_START } from 'shared/modules/app/appDuck'
 
 describe('hydrating state', () => {

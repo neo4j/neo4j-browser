@@ -17,13 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import { RelationShipCaptionLayout } from '../components/Relationship'
 
 type Point = { x: number; y: number }
 const square = (l: number) => l * l
 
-const intersectWithOtherCircle = function(
+const intersectWithOtherCircle = function (
   fixedPoint: Point,
   radius: number,
   xCenter: number,
@@ -113,7 +112,7 @@ export default class ArcArrow {
       y: cy - arcRadius * Math.cos(midShaftAngle)
     }
 
-    const startTangent = function(dr: number) {
+    const startTangent = function (dr: number) {
       const dx = (dr < 0 ? 1 : -1) * Math.sqrt(square(dr) / (1 + square(g1)))
       const dy = g1 * dx
       return {
@@ -122,7 +121,7 @@ export default class ArcArrow {
       }
     }
 
-    const endTangent = function(dr: number) {
+    const endTangent = function (dr: number) {
       const dx = (dr < 0 ? -1 : 1) * Math.sqrt(square(dr) / (1 + square(g2)))
       const dy = g2 * dx
       return {
@@ -136,7 +135,7 @@ export default class ArcArrow {
       y: cy - (arcRadius + dr) * Math.cos(angle)
     })
 
-    const endNormal = function(dc: number) {
+    const endNormal = function (dc: number) {
       const dx =
         (dc < 0 ? -1 : 1) * Math.sqrt(square(dc) / (1 + square(1 / g2)))
       const dy = dx / g2
@@ -146,7 +145,7 @@ export default class ArcArrow {
       }
     }
 
-    const endOverlayCorner = function(dr: number, dc: number) {
+    const endOverlayCorner = function (dr: number, dc: number) {
       const shoulder = endTangent(dr)
       const arrowTip = endNormal(dc)
       return {
@@ -162,7 +161,7 @@ export default class ArcArrow {
     const positiveSweep = startAttach.y > 0 ? 0 : 1
     const negativeSweep = startAttach.y < 0 ? 0 : 1
 
-    this.outline = function(shortCaptionLength: number) {
+    this.outline = function (shortCaptionLength: number) {
       if (startAngle > endAngle) {
         return [
           'M',
@@ -265,7 +264,7 @@ export default class ArcArrow {
       }
     }
 
-    this.overlay = function(minWidth: number) {
+    this.overlay = function (minWidth: number) {
       const radius = Math.max(minWidth / 2, shaftRadius)
 
       return [

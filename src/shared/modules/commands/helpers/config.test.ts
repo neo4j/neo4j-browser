@@ -17,12 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import nock from 'nock'
+
 import * as config from './config'
-import { update, replace } from 'shared/modules/settings/settingsDuck'
-import dbMetaReducer from 'shared/modules/dbMeta/state'
 import { updateSettings } from 'shared/modules/dbMeta/actions'
+import dbMetaReducer from 'shared/modules/dbMeta/state'
+import { replace, update } from 'shared/modules/settings/settingsDuck'
 
 function FetchError(message: any) {
   // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
@@ -178,9 +178,7 @@ describe('commandsDuck config helper', () => {
   test('handles :config https://okurl.com/cnf.json and calls the replace action creator', () => {
     // Given
     const json = JSON.stringify({ x: 1, y: 'hello' })
-    nock('https://okurl.com')
-      .get('/cnf.json')
-      .reply(200, json)
+    nock('https://okurl.com').get('/cnf.json').reply(200, json)
     const action = { cmd: ':config https://okurl.com/cnf.json' }
     const put = jest.fn()
 
@@ -196,9 +194,7 @@ describe('commandsDuck config helper', () => {
   test('indicates error parsing remote content', () => {
     // Given
     const json = 'no json'
-    nock('https://okurl.com')
-      .get('/cnf.json')
-      .reply(200, json)
+    nock('https://okurl.com').get('/cnf.json').reply(200, json)
     const action = { cmd: ':config https://okurl.com/cnf.json' }
     const put = jest.fn()
 

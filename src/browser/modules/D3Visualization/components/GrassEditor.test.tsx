@@ -17,11 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import { render } from '@testing-library/react'
 import React from 'react'
 import { Provider } from 'react-redux'
 import { combineReducers, createStore } from 'redux'
-import { render } from '@testing-library/react'
 
 import { GrassEditor } from './GrassEditor'
 import reducers from 'shared/rootReducer'

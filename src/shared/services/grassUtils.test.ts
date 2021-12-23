@@ -17,12 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
-  parseGrass,
   objToCss,
-  selectorStringToArray,
-  selectorArrayToString
+  parseGrass,
+  selectorArrayToString,
+  selectorStringToArray
 } from 'services/grassUtils'
 
 describe('parseGrass', () => {

@@ -18,9 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React, { useState } from 'react'
+
 import {
-  RemoveButton,
   RedRemoveButton,
+  RemoveButton,
   RunButton
 } from '../SavedScripts/SavedScriptsButton'
 import {

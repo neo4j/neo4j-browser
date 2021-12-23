@@ -17,19 +17,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React from 'react'
-import FrameBodyTemplate from 'browser/modules/Frame/FrameBodyTemplate'
+
+import { BaseFrameProps } from '../Stream'
 import {
+  StyledCode,
   StyledConnectionAside,
-  StyledConnectionBodyContainer,
   StyledConnectionBody,
-  StyledCode
+  StyledConnectionBodyContainer
 } from './styled'
 import { H3 } from 'browser-components/headers'
 import TextCommand from 'browser/modules/DecoratedText/TextCommand'
+import FrameBodyTemplate from 'browser/modules/Frame/FrameBodyTemplate'
 import { listDbsCommand } from 'shared/modules/commands/commandsDuck'
-import { BaseFrameProps } from '../Stream'
 
 const UseDbFrame = (props: BaseFrameProps) => {
   const { frame } = props

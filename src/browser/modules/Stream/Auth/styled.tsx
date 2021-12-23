@@ -17,10 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import styled from 'styled-components'
-import { StyledInput, StyledSelect } from 'browser-components/Form'
+
 import { StyledFrameAside } from '../../Frame/styled'
+import { StyledInput, StyledSelect } from 'browser-components/Form'
 
 export const StyledConnectionForm = styled.form`
   padding: 0 15px;

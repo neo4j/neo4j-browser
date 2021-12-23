@@ -19,14 +19,15 @@
  */
 import neo4j from 'neo4j-driver'
 import React from 'react'
-import {
-  itemIntToString,
-  extractFromNeoObjects
-} from 'services/bolt/boltMappings'
+
 import {
   StyledSysInfoTable,
   SysInfoTableEntry
 } from 'browser-components/Tables'
+import {
+  extractFromNeoObjects,
+  itemIntToString
+} from 'services/bolt/boltMappings'
 import { toKeyString } from 'services/utils'
 
 export const getTableDataFromRecords = (records: any) => {

@@ -18,13 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React, { ReactEventHandler } from 'react'
+import SVGInline from 'react-svg-inline'
 import { Icon, SemanticICONS } from 'semantic-ui-react'
 import { SemanticCOLORS } from 'semantic-ui-react/dist/commonjs/generic'
+
 import { StyledSavedScriptsButton } from './styled'
-import SVGInline from 'react-svg-inline'
+import { DownloadIcon } from 'browser-components/icons/Icons'
 import newFolderIcon from 'icons/folder-add.svg'
 import hollow_run_icon from 'icons/hollow-run-icon.svg'
-import { DownloadIcon } from 'browser-components/icons/Icons'
 
 type SavedScriptsButtonProps = {
   onClick: ReactEventHandler

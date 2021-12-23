@@ -17,11 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import canvg from 'canvg'
+import FileSaver from 'file-saver'
 
 import { prepareForExport } from './svgUtils'
-import FileSaver from 'file-saver'
 
 export const downloadPNGFromSVG = (svg: any, graph: any, type: any) => {
   const svgObj = prepareForExport(svg, graph, type)
@@ -71,10 +70,7 @@ const downloadWithDataURI = (filename: any, dataURI: any) => {
   } else {
     byteString = unescape(dataURI.split(',')[1])
   }
-  const mimeString = dataURI
-    .split(',')[0]
-    .split(':')[1]
-    .split(';')[0]
+  const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
   const ia = new Uint8Array(byteString.length)
   for (
     i = j = 0, ref = byteString.length;

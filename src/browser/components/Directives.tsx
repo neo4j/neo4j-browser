@@ -20,9 +20,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
+
 import {
-  executeCommand,
-  commandSources
+  commandSources,
+  executeCommand
 } from 'shared/modules/commands/commandsDuck'
 import * as editor from 'shared/modules/editor/editorDuck'
 import { addClass, prependIcon } from 'shared/services/dom-helpers'

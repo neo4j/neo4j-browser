@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import { extractStatements } from 'cypher-editor-support'
 
 export function cleanCommand(cmd: any) {
@@ -28,10 +27,7 @@ export function cleanCommand(cmd: any) {
 
 export function stripEmptyCommandLines(str: any) {
   const skipEmptyLines = (e: any) => !/^\s*$/.test(e)
-  return str
-    .split('\n')
-    .filter(skipEmptyLines)
-    .join('\n')
+  return str.split('\n').filter(skipEmptyLines).join('\n')
 }
 
 export function stripCommandComments(str: any) {

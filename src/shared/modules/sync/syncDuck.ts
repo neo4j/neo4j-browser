@@ -17,38 +17,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import { syncResourceFor } from 'services/browserSyncService'
-
 import { setItem } from 'services/localstorage'
 import { APP_START } from 'shared/modules/app/appDuck'
 import {
-  composeDocumentsToSync,
-  favoritesToLoad,
-  loadFavorites,
-  syncFavorites,
   ADD_FAVORITE,
   REMOVE_FAVORITE,
   SYNC_FAVORITES,
-  UPDATE_FAVORITES
+  UPDATE_FAVORITES,
+  composeDocumentsToSync,
+  favoritesToLoad,
+  loadFavorites,
+  syncFavorites
 } from 'shared/modules/favorites/favoritesDuck'
 import {
-  REMOVE_FOLDER,
   ADD_FOLDER,
-  UPDATE_FOLDERS,
+  REMOVE_FOLDER,
   SYNC_FOLDERS,
+  UPDATE_FOLDERS,
   composeFoldersToSync,
   foldersToLoad,
   loadFolders,
   syncFolders
 } from 'shared/modules/favorites/foldersDuck'
 import {
-  grassToLoad,
-  updateGraphStyleData,
-  composeGrassToSync,
-  syncGrass,
   SYNC_GRASS,
-  UPDATE_GRAPH_STYLE_DATA
+  UPDATE_GRAPH_STYLE_DATA,
+  composeGrassToSync,
+  grassToLoad,
+  syncGrass,
+  updateGraphStyleData
 } from 'shared/modules/grass/grassDuck'
 import { CLEAR_LOCALSTORAGE } from 'shared/modules/localstorage/localstorageDuck'
 

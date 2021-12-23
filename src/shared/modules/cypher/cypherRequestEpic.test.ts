@@ -17,12 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import configureMockStore from 'redux-mock-store'
 import { createEpicMiddleware } from 'redux-observable'
 import { createBus, createReduxMiddleware } from 'suber'
 
-import { cypherRequestEpic, CYPHER_REQUEST } from './cypherDuck'
+import { CYPHER_REQUEST, cypherRequestEpic } from './cypherDuck'
 import {
   NEO4J_BROWSER_USER_QUERY,
   getUserDirectTxMetadata
