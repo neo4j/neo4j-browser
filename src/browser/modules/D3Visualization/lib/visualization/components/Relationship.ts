@@ -17,17 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import ArcArrow from '../utils/ArcArrow'
 import LoopArrow from '../utils/LoopArrow'
 import StraightArrow from '../utils/StraightArrow'
-import Node from './Node'
+import Node from './VizNode'
+import { VizItemProperty } from 'browser/modules/D3Visualization/components/types'
 
 export type RelationShipCaptionLayout = 'internal' | 'external'
-type PropertyItem = { key: string; value: string; originalType: string }
 export default class Relationship {
   id: string
-  propertyList: PropertyItem[]
+  propertyList: VizItemProperty[]
   propertyMap: Record<string, string>
   source: Node
   target: Node
@@ -61,10 +60,8 @@ export default class Relationship {
     this.type = type
     this.propertyMap = properties
     this.propertyList = Object.keys(this.propertyMap || {}).reduce(
-      (acc: PropertyItem[], key) =>
-        acc.concat([
-          { key, originalType: propertyTypes[key], value: properties[key] }
-        ]),
+      (acc: VizItemProperty[], key) =>
+        acc.concat([{ key, type: propertyTypes[key], value: properties[key] }]),
       []
     )
 

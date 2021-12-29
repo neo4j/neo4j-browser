@@ -17,24 +17,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import React from 'react'
 import { render, screen, waitFor } from '@testing-library/react'
+import React from 'react'
+
 import {
   DETAILS_PANE_STEP_SIZE,
   DetailsPaneComponent,
   ELLIPSIS,
-  MAX_LENGTH_WIDE,
   MAX_LENGTH_NARROW,
+  MAX_LENGTH_WIDE,
   WIDE_VIEW_THRESHOLD
 } from './DetailsPane'
-import { VizItem, VizNodeProperty } from './types'
+import { VizItem, VizItemProperty } from './types'
 import GraphStyle from 'project-root/src/browser/modules/D3Visualization/graphStyle'
 
 describe('<DetailsPane />', () => {
   const mockGraphStyle = new GraphStyle()
 
-  const getMockProperties: (length: number) => VizNodeProperty[] = length =>
+  const getMockProperties: (length: number) => VizItemProperty[] = length =>
     Array.from({ length: length }).map((_v, index) => {
       return {
         key: `prop${String(index).padStart(String(length).length, '0')}`,
@@ -44,13 +44,13 @@ describe('<DetailsPane />', () => {
     })
 
   type RenderComponentProps = {
-    properties?: VizItem[]
+    propertyList?: VizItemProperty[]
     labels?: string[]
     type?: 'node' | 'relationship'
     width?: number
   }
   const renderComponent = ({
-    properties = [],
+    propertyList = [],
     labels = [],
     type = 'node',
     width = 200
@@ -62,8 +62,8 @@ describe('<DetailsPane />', () => {
           type: type,
           item: {
             id: 'abc',
-            labels: labels,
-            properties: properties
+            labels,
+            propertyList
           }
         }
         break
@@ -72,7 +72,8 @@ describe('<DetailsPane />', () => {
           type: type,
           item: {
             id: 'abc',
-            properties: properties
+            type: 'abc2',
+            propertyList
           }
         }
     }
@@ -86,7 +87,7 @@ describe('<DetailsPane />', () => {
   }
 
   test('should handle show all properties', async () => {
-    renderComponent({ properties: getMockProperties(1001) })
+    renderComponent({ propertyList: getMockProperties(1001) })
 
     expect(screen.getByRole('button', { name: 'Show all' })).toBeInTheDocument()
     expect(
@@ -104,7 +105,7 @@ describe('<DetailsPane />', () => {
   })
 
   test('should handle show more properties', async () => {
-    renderComponent({ properties: getMockProperties(2001) })
+    renderComponent({ propertyList: getMockProperties(2001) })
 
     expect(
       screen.getByRole('button', {
@@ -135,7 +136,7 @@ describe('<DetailsPane />', () => {
       value: fullText
     }
     renderComponent({
-      properties: [mockProperty],
+      propertyList: [mockProperty],
       width: WIDE_VIEW_THRESHOLD - 1
     })
 
@@ -170,7 +171,7 @@ describe('<DetailsPane />', () => {
       value: fullText
     }
     renderComponent({
-      properties: [mockProperty],
+      propertyList: [mockProperty],
       width: WIDE_VIEW_THRESHOLD + 1
     })
 

@@ -1,20 +1,18 @@
+import Relationship from '../lib/visualization/components/Relationship'
+import VizNode from '../lib/visualization/components/VizNode'
+
 export type VizItem =
   | NodeItem
   | ContextMenuItem
   | RelationshipItem
   | CanvasItem
   | StatusItem
-  | LegendItem
 
-export type VizNodeProperty = { key: string; value: string; type: string }
+export type VizItemProperty = { key: string; value: string; type: string }
 
 type NodeItem = {
   type: 'node'
-  item: {
-    id: string
-    labels: string[]
-    properties: VizNodeProperty[]
-  }
+  item: Pick<VizNode, 'id' | 'labels' | 'propertyList'>
 }
 
 type ContextMenuItem = {
@@ -33,11 +31,7 @@ type StatusItem = {
 
 type RelationshipItem = {
   type: 'relationship'
-  item: {
-    id: string
-    type: string
-    properties: VizNodeProperty[]
-  }
+  item: Pick<Relationship, 'id' | 'type' | 'propertyList'>
 }
 
 type CanvasItem = {

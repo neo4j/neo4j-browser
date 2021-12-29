@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import Graph from './Graph'
+import { VizItemProperty } from 'browser/modules/D3Visualization/components/types'
 
 type NodeProperties = { [key: string]: string }
 export type NodeCaptionLine = {
@@ -31,11 +31,7 @@ export type NodeCaptionLine = {
 export default class VizNode {
   id: string
   labels: string[]
-  propertyList: {
-    key: string
-    type: string
-    value: string
-  }[]
+  propertyList: VizItemProperty[]
   propertyMap: NodeProperties
   isNode = true
   isRelationship = false

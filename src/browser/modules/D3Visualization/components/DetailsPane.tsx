@@ -17,28 +17,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React, { useState } from 'react'
 
+import ClickableUrls from '../../../components/ClickableUrls'
+import { StyleableNodeLabel } from './StyleableNodeLabel'
+import { StyleableRelType } from './StyleableRelType'
 import {
   AlternatingTable,
   CopyCell,
-  StyledExpandValueButton,
   KeyCell,
   PaneBody,
   PaneHeader,
   PaneTitle,
+  StyledExpandValueButton,
   StyledInlineList,
   ValueCell
 } from './styled'
-import ClickableUrls from '../../../components/ClickableUrls'
+import { NodeItem, RelationshipItem, VizItemProperty } from './types'
 import ClipboardCopier from 'browser-components/ClipboardCopier'
-import { NodeItem, RelationshipItem, VizNodeProperty } from './types'
-import { StyleableNodeLabel } from './StyleableNodeLabel'
-import { StyleableRelType } from './StyleableRelType'
-import { upperFirst } from 'services/utils'
 import { ShowMoreOrAll } from 'browser-components/ShowMoreOrAll/ShowMoreOrAll'
 import { GraphStyle } from 'project-root/src/browser/modules/D3Visualization/graphStyle'
+import { upperFirst } from 'services/utils'
 
 export const ELLIPSIS = '\u2026'
 export const WIDE_VIEW_THRESHOLD = 900
@@ -78,7 +77,7 @@ function ExpandableValue({ value, width, type }: ExpandableValueProps) {
 }
 
 type PropertiesViewProps = {
-  visibleProperties: VizNodeProperty[]
+  visibleProperties: VizItemProperty[]
   onMoreClick: (numMore: number) => void
   totalNumItems: number
   moreStep: number
@@ -147,7 +146,7 @@ export function DetailsPaneComponent({
 
   const allItemProperties = [
     { key: '<id>', value: `${vizItem.item.id}`, type: 'String' },
-    ...vizItem.item.properties
+    ...vizItem.item.propertyList
   ].sort((a, b) => (a.key < b.key ? -1 : 1))
   const visibleItemProperties = allItemProperties.slice(0, maxPropertiesCount)
 
@@ -171,7 +170,7 @@ export function DetailsPaneComponent({
         {vizItem.type === 'relationship' && (
           <StyleableRelType
             selectedRelType={{
-              propertyKeys: vizItem.item.properties.map(p => p.key),
+              propertyKeys: vizItem.item.propertyList.map(p => p.key),
               relType: vizItem.item.type
             }}
             graphStyle={graphStyle}
@@ -185,7 +184,7 @@ export function DetailsPaneComponent({
                 graphStyle={graphStyle}
                 selectedLabel={{
                   label,
-                  propertyKeys: vizItem.item.properties.map(p => p.key)
+                  propertyKeys: vizItem.item.propertyList.map(p => p.key)
                 }}
               />
             )

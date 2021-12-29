@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import d3 from 'd3'
+
 // euclidean distance
 const dist = (a: [number, number], b: [number, number]) =>
   Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2))
@@ -26,8 +27,8 @@ const dist = (a: [number, number], b: [number, number]) =>
 drag a node, from triggering onclick events 
 */
 export default function clickHandler() {
-  const cc = function(selection: any) {
-    let down: [number, number]
+  const cc = function (selection: any) {
+    let down: [number, number] | undefined
     const tolerance = 5
     let wait: number | null = null
 
@@ -38,7 +39,7 @@ export default function clickHandler() {
     })
 
     return selection.on('mouseup', () => {
-      if (dist(down, d3.mouse(document.body)) > tolerance) {
+      if (down && dist(down, d3.mouse(document.body)) > tolerance) {
       } else {
         if (wait) {
           window.clearTimeout(wait)
@@ -47,7 +48,10 @@ export default function clickHandler() {
         } else {
           event.click((d3.event as any).target.__data__)
           return (wait = window.setTimeout(
-            (_e => () => (wait = null))(d3.event),
+            (
+              _e => () =>
+                (wait = null)
+            )(d3.event),
             250
           ))
         }

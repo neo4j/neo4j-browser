@@ -17,16 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import d3 from 'd3'
-import GraphGeometry from './GraphGeometry'
+
 import * as vizRenderers from '../renders/init'
 import { nodeMenuRenderer } from '../renders/menu'
 import vizClickHandler from '../utils/clickHandler'
-import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
-import VizNode from './Node'
 import Graph from './Graph'
+import GraphGeometry from './GraphGeometry'
+import VizNode from './VizNode'
 import { Layout } from './layout'
+import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
 
 type StatsBucket = {
   frameCount: number
@@ -56,7 +56,7 @@ export type VizObj = {
 }
 
 const noOp = () => undefined
-const vizFn = function(
+const vizFn = function (
   el: SVGElement,
   measureSize: MeasureSizeFn,
   graph: Graph,
@@ -132,7 +132,7 @@ const vizFn = function(
 
   let zoomLevel = null
 
-  const zoomed = function(): any {
+  const zoomed = function (): any {
     draw = true
     return container.attr(
       'transform',
@@ -155,7 +155,7 @@ const vizFn = function(
           translate
         )
         const s = d3.interpolate(zoomBehavior.scale(), scale)
-        return function(a: number) {
+        return function (a: number) {
           zoomBehavior.scale(s(a)).translate(t(a) as [number, number])
           return zoomed()
         }
@@ -163,17 +163,17 @@ const vizFn = function(
 
   let isZoomingIn = true
 
-  viz.zoomInClick = function() {
+  viz.zoomInClick = function () {
     isZoomingIn = true
     return zoomClick(this)
   }
 
-  viz.zoomOutClick = function() {
+  viz.zoomOutClick = function () {
     isZoomingIn = false
     return zoomClick(this)
   }
 
-  const zoomClick = function(_element: any) {
+  const zoomClick = function (_element: any) {
     draw = true
     const limitsReached = { zoomInLimit: false, zoomOutLimit: false }
 
@@ -213,7 +213,7 @@ const vizFn = function(
     .on('wheel.zoom', null as any)
     .on('mousewheel.zoom', null as any)
 
-  const newStatsBucket = function() {
+  const newStatsBucket = function () {
     const bucket: StatsBucket = {
       frameCount: 0,
       geometry: 0,
@@ -225,7 +225,7 @@ const vizFn = function(
       fps: () => ((1000 * bucket.frameCount) / bucket.duration()).toFixed(1),
       lps: () =>
         ((1000 * bucket.layout.layoutSteps) / bucket.duration()).toFixed(1),
-      top: function() {
+      top: function () {
         let time
         const renderers = []
         for (const name in bucket.relationshipRenderers) {
@@ -261,7 +261,7 @@ const vizFn = function(
       ? () => window.performance.now()
       : () => Date.now()
 
-  const render = function() {
+  const render = function () {
     if (!currentStats.firstFrame) {
       currentStats.firstFrame = now()
     }
@@ -283,8 +283,9 @@ const vizFn = function(
       .attr(
         'transform',
         d =>
-          `translate(${d.source.x} ${d.source.y}) rotate(${d.naturalAngle +
-            180})`
+          `translate(${d.source.x} ${d.source.y}) rotate(${
+            d.naturalAngle + 180
+          })`
       )
 
     for (const renderer of vizRenderers.relationship) {
@@ -305,14 +306,14 @@ const vizFn = function(
     // @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
     .on('dragend.node', () => onNodeDragToggle())
 
-  viz.collectStats = function(): StatsBucket {
+  viz.collectStats = function (): StatsBucket {
     const latestStats = currentStats
     latestStats.layout = force.collectStats()
     currentStats = newStatsBucket()
     return latestStats
   }
 
-  viz.update = function(options: {
+  viz.update = function (options: {
     updateNodes: boolean
     updateRelationships: boolean
   }) {
@@ -393,7 +394,7 @@ const vizFn = function(
     return (updateViz = true)
   }
 
-  viz.resize = function() {
+  viz.resize = function () {
     const size = measureSize()
     return root.attr(
       'viewBox',
