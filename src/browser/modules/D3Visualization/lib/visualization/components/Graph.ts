@@ -17,9 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import VizNode from './Node'
 import Relationship from './Relationship'
+import VizNode from './VizNode'
 
 type NodeMap = Record<string, string[]>
 function uniq<T>(list: T[]): T[] {
@@ -37,9 +36,8 @@ export default class Graph {
     this.addNodes = this.addNodes.bind(this)
     this.removeNode = this.removeNode.bind(this)
     this.updateNode = this.updateNode.bind(this)
-    this.removeConnectedRelationships = this.removeConnectedRelationships.bind(
-      this
-    )
+    this.removeConnectedRelationships =
+      this.removeConnectedRelationships.bind(this)
     this.addRelationships = this.addRelationships.bind(this)
     this.addInternalRelationships = this.addInternalRelationships.bind(this)
     this.pruneInternalRelationships = this.pruneInternalRelationships.bind(this)
@@ -189,7 +187,7 @@ export default class Graph {
       })
   }
 
-  findRelationship(id: string): Relationship {
+  findRelationship(id: string): Relationship | undefined {
     return this.relationshipMap[id]
   }
 

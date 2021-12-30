@@ -17,14 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import { BasicNode, BasicNodesAndRels } from 'services/bolt/boltMappings'
 import { VizItem } from './components/types'
 import Graph from './lib/visualization/components/Graph'
 import GraphView from './lib/visualization/components/GraphView'
-import VizNode from './lib/visualization/components/Node'
 import Relationship from './lib/visualization/components/Relationship'
-import { mapNodes, mapRelationships, getGraphStats, GraphStats } from './mapper'
+import VizNode from './lib/visualization/components/VizNode'
+import { GraphStats, getGraphStats, mapNodes, mapRelationships } from './mapper'
+import { BasicNode, BasicNodesAndRels } from 'services/bolt/boltMappings'
 
 export type GetNodeNeighboursFn = (
   node: BasicNode | VizNode,
@@ -39,7 +38,7 @@ export class GraphEventHandler {
   onGraphModelChange: (stats: GraphStats) => void
   onItemMouseOver: (item: VizItem) => void
   onItemSelected: (item: VizItem) => void
-  selectedItem: VizItem
+  selectedItem: VizNode | Relationship | null
 
   constructor(
     graph: Graph,
@@ -62,7 +61,7 @@ export class GraphEventHandler {
     this.onGraphModelChange(getGraphStats(this.graph))
   }
 
-  selectItem(item: VizItem): void {
+  selectItem(item: VizNode | Relationship): void {
     if (this.selectedItem) {
       this.selectedItem.selected = false
     }
@@ -94,16 +93,16 @@ export class GraphEventHandler {
     this.graphModelChanged()
   }
 
-  nodeClicked(d: VizNode): void {
-    if (!d) {
+  nodeClicked(node: VizNode): void {
+    if (!node) {
       return
     }
-    d.fixed = true
-    if (!d.selected) {
-      this.selectItem(d)
+    node.fixed = true
+    if (!node.selected) {
+      this.selectItem(node)
       this.onItemSelected({
         type: 'node',
-        item: { id: d.id, labels: d.labels, properties: d.propertyList }
+        item: node
       })
     } else {
       this.deselectItem()
@@ -150,11 +149,7 @@ export class GraphEventHandler {
     if (!node.contextMenu) {
       this.onItemMouseOver({
         type: 'node',
-        item: {
-          id: node.id,
-          labels: node.labels,
-          properties: node.propertyList
-        }
+        item: node
       })
     }
   }
@@ -176,11 +171,7 @@ export class GraphEventHandler {
   onRelationshipMouseOver(relationship: Relationship): void {
     this.onItemMouseOver({
       type: 'relationship',
-      item: {
-        id: relationship.id,
-        type: relationship.type,
-        properties: relationship.propertyList
-      }
+      item: relationship
     })
   }
 
@@ -189,11 +180,7 @@ export class GraphEventHandler {
       this.selectItem(relationship)
       this.onItemSelected({
         type: 'relationship',
-        item: {
-          id: relationship.id,
-          type: relationship.type,
-          properties: relationship.propertyList
-        }
+        item: relationship
       })
     } else {
       this.deselectItem()

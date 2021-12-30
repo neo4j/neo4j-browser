@@ -18,7 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import d3 from 'd3'
-import VizNode from './Node'
+
+import VizNode from './VizNode'
 
 type D3MutatedNode = VizNode & d3.layout.force.Node
 const collision = {

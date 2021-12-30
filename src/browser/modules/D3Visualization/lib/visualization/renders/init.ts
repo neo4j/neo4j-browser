@@ -17,8 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import VizNode, { NodeCaptionLine } from '../components/Node'
 import Renderer from '../components/Renderer'
+import VizNode, { NodeCaptionLine } from '../components/VizNode'
+
 const noop = () => undefined
 
 const nodeRingStrokeSize = 8
@@ -30,14 +31,10 @@ const nodeOutline = new Renderer({
       .selectAll('circle.outline')
       .data((node: VizNode) => [node])
 
-    circles
-      .enter()
-      .append('circle')
-      .classed('outline', true)
-      .attr({
-        cx: 0,
-        cy: 0
-      })
+    circles.enter().append('circle').classed('outline', true).attr({
+      cx: 0,
+      cy: 0
+    })
 
     circles.attr({
       r(node: VizNode) {
@@ -126,10 +123,7 @@ const arrowPath = new Renderer({
   onGraphChange(selection, viz) {
     const paths = selection.selectAll('path.outline').data((rel: any) => [rel])
 
-    paths
-      .enter()
-      .append('path')
-      .classed('outline', true)
+    paths.enter().append('path').classed('outline', true)
 
     paths
       .attr('fill', (rel: any) => viz.style.forRelationship(rel).get('color'))
@@ -195,10 +189,7 @@ const relationshipOverlay = new Renderer({
   onGraphChange(selection) {
     const rects = selection.selectAll('path.overlay').data(rel => [rel])
 
-    rects
-      .enter()
-      .append('path')
-      .classed('overlay', true)
+    rects.enter().append('path').classed('overlay', true)
 
     return rects.exit().remove()
   },
