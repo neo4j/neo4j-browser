@@ -17,52 +17,59 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import React, { Component } from 'react'
 import deepmerge from 'deepmerge'
-import { connect, ConnectedComponent } from 'react-redux'
 import { debounce } from 'lodash'
-
-import { GraphStyle } from '../graphStyle'
-import { GlobalState } from 'shared/globalState'
-import { GraphComponent } from './Graph'
-import { GraphStats } from '../mapper'
-import { VizItem } from './types'
-import { deepEquals } from 'services/utils'
-import { defaultPanelWidth, NodeInspectorPanel } from './NodeInspectorPanel'
-import { panelMinWidth, StyledFullSizeContainer } from './styled'
-import {
-  getNodePropertiesExpandedByDefault,
-  setNodePropertiesExpandedByDefault
-} from 'shared/modules/frames/framesDuck'
+import React, { Component } from 'react'
+import { ConnectedComponent, connect } from 'react-redux'
 import { Action, Dispatch } from 'redux'
+
+import { GetNodeNeighboursFn } from '../GraphEventHandler'
+import { GraphStyle } from '../graphStyle'
+import Graph from '../lib/visualization/components/Graph'
+import { GraphStats } from '../mapper'
+import { GraphComponent } from './Graph'
+import { NodeInspectorPanel, defaultPanelWidth } from './NodeInspectorPanel'
+import { StyledFullSizeContainer, panelMinWidth } from './styled'
+import { VizItem } from './types'
 import {
   BasicNode,
   BasicNodesAndRels,
   BasicRelationship
 } from 'services/bolt/boltMappings'
-import Graph from '../lib/visualization/components/Graph'
-import { GetNodeNeighboursFn } from '../GraphEventHandler'
+import { deepEquals } from 'services/utils'
+import { GlobalState } from 'shared/globalState'
+import {
+  getNodePropertiesExpandedByDefault,
+  setNodePropertiesExpandedByDefault
+} from 'shared/modules/frames/framesDuck'
 
-type DecuplicateHelper = { nodes: BasicNode[]; taken: Record<string, boolean> }
-const deduplicateNodes = (nodes: BasicNode[]): BasicNode[] =>
+type DecuplicateHelper = {
+  nodes: BasicNode[]
+  taken: Record<string, boolean>
+  nodeLimitHit: boolean
+}
+
+const deduplicateNodes = (
+  nodes: BasicNode[],
+  limit: number
+): { nodes: BasicNode[]; nodeLimitHit: boolean } =>
   nodes.reduce(
     (all: DecuplicateHelper, curr: BasicNode) => {
-      if (all.taken[curr.id]) {
-        return all
-      } else {
+      if (all.nodes.length === limit) {
+        all.nodeLimitHit = true
+      } else if (!all.taken[curr.id]) {
         all.nodes.push(curr)
         all.taken[curr.id] = true
-        return all
       }
+      return all
     },
-    { nodes: [], taken: {} }
-  ).nodes
+    { nodes: [], taken: {}, nodeLimitHit: false }
+  )
 
 type ExplorerComponentProps = {
   relationships: BasicRelationship[]
   nodes: BasicNode[]
-  initialNodeDisplay: any
+  initialNodeDisplay: number
   maxNeighbours: number
   graphStyleData: any
   getNeighbours: (
@@ -107,25 +114,31 @@ export class ExplorerComponent extends Component<
     super(props)
     const graphStyle = new GraphStyle()
     this.defaultStyle = graphStyle.toSheet()
-    let relationships = this.props.relationships
-    let nodes = deduplicateNodes(this.props.nodes)
-    let selectedItem: VizItem = {
-      type: 'canvas',
-      item: {
-        nodeCount: Math.min(this.props.initialNodeDisplay, nodes.length),
-        relationshipCount: relationships.length
-      }
-    }
-    if (nodes.length > parseInt(this.props.initialNodeDisplay)) {
-      nodes = nodes.slice(0, this.props.initialNodeDisplay)
-      relationships = this.props.relationships.filter(item => {
-        return !!nodes.find(node => node.id === item.startNodeId)
-      })
-      selectedItem = {
-        type: 'status-item',
-        item: `Not all return nodes are being displayed due to Initial Node Display setting. Only ${this.props.initialNodeDisplay} of ${nodes.length} nodes are being displayed`
-      }
-    }
+    const { nodes, nodeLimitHit } = deduplicateNodes(
+      this.props.nodes,
+      this.props.initialNodeDisplay
+    )
+    const relationships = nodeLimitHit
+      ? this.props.relationships.filter(
+          rel =>
+            !!nodes.find(node => node.id === rel.startNodeId) &&
+            !!nodes.find(node => node.id === rel.endNodeId)
+        )
+      : this.props.relationships
+
+    const selectedItem: VizItem = nodeLimitHit
+      ? {
+          type: 'status-item',
+          item: `Not all return nodes are being displayed due to Initial Node Display setting. Only ${this.props.initialNodeDisplay} of ${nodes.length} nodes are being displayed`
+        }
+      : {
+          type: 'canvas',
+          item: {
+            nodeCount: nodes.length,
+            relationshipCount: relationships.length
+          }
+        }
+
     if (this.props.graphStyleData) {
       const rebasedStyle = deepmerge(
         this.defaultStyle,
@@ -166,8 +179,9 @@ export class ExplorerComponent extends Component<
               type: 'status-item',
               item: `Rendering was limited to ${
                 this.props.maxNeighbours
-              } of the node's total ${count +
-                currentNeighbourIds.length} neighbours due to browser config maxNeighbours.`
+              } of the node's total ${
+                count + currentNeighbourIds.length
+              } neighbours due to browser config maxNeighbours.`
             }
           })
         }
