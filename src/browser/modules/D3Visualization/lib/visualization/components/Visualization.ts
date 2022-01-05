@@ -17,15 +17,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import d3 from 'd3'
+import { D3DragEvent, drag as d3Drag } from 'd3-drag'
+import { easeCubic } from 'd3-ease'
+import { Simulation } from 'd3-force'
+import { BaseType, select as d3Select } from 'd3-selection'
+import { Transition } from 'd3-transition'
+import { D3ZoomEvent, zoom as d3Zoom } from 'd3-zoom'
 
 import * as vizRenderers from '../renders/init'
 import { nodeMenuRenderer } from '../renders/menu'
-import vizClickHandler from '../utils/clickHandler'
 import Graph from './Graph'
 import GraphGeometry from './GraphGeometry'
+import Relationship from './Relationship'
 import VizNode from './VizNode'
-import { Layout } from './layout'
+import { Layout, clearSimulationTimeout, setSimulationTimeout } from './layout'
 import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
 
 type StatsBucket = {
@@ -52,6 +57,7 @@ export type VizObj = {
   update: (options: {
     updateNodes: boolean
     updateRelationships: boolean
+    precompute?: boolean
   }) => void
 }
 
@@ -82,7 +88,7 @@ const vizFn = function (
     update: noOp
   }
 
-  const root = d3.select(el)
+  const root = d3Select(el)
   const baseGroup = root.append('g').attr('transform', 'translate(0,0)')
   const rect = baseGroup
     .append('rect')
@@ -107,59 +113,72 @@ const vizFn = function (
   const layoutDimension = 200
 
   let updateViz = true
+  let isZoomClick = false
 
-  const onNodeClick = (node: VizNode) => {
+  const onNodeClick = (_event: Event, node: VizNode) => {
     updateViz = false
     return viz.trigger('nodeClicked', node)
   }
 
-  const onNodeDblClick = (node: VizNode) => viz.trigger('nodeDblClicked', node)
+  const onNodeDblClick = (_event: Event, node: VizNode) =>
+    viz.trigger('nodeDblClicked', node)
 
-  const onNodeDragToggle = (node: VizNode) =>
-    viz.trigger('nodeDragToggle', node)
-
-  const onRelationshipClick = (relationship: any) => {
-    ;(d3.event as Event).stopPropagation()
+  const onRelationshipClick = function (
+    event: Event,
+    relationship: Relationship
+  ) {
+    event.stopPropagation()
     updateViz = false
     return viz.trigger('relationshipClicked', relationship)
   }
 
-  const onNodeMouseOver = (node: VizNode) => viz.trigger('nodeMouseOver', node)
-  const onNodeMouseOut = (node: VizNode) => viz.trigger('nodeMouseOut', node)
+  const onNodeMouseOver = (_event: Event, node: VizNode) =>
+    viz.trigger('nodeMouseOver', node)
 
-  const onRelMouseOver = (rel: any) => viz.trigger('relMouseOver', rel)
-  const onRelMouseOut = (rel: any) => viz.trigger('relMouseOut', rel)
+  const onNodeMouseOut = (_event: Event, node: VizNode) =>
+    viz.trigger('nodeMouseOut', node)
 
-  let zoomLevel = null
+  const onRelMouseOver = (_event: Event, rel: Relationship) =>
+    viz.trigger('relMouseOver', rel)
 
-  const zoomed = function (): any {
-    draw = true
-    return container.attr(
-      'transform',
-      `translate(${zoomBehavior.translate()})scale(${zoomBehavior.scale()})`
-    )
+  const onRelMouseOut = (_event: Event, rel: Relationship) =>
+    viz.trigger('relMouseOut', rel)
+
+  const handleZoomOnShiftScroll = (e: WheelEvent) => {
+    if (e.shiftKey) {
+      const delta =
+        -e.deltaY * (e.deltaMode === 1 ? 0.05 : e.deltaMode ? 1 : 0.002)
+
+      return zoomBehavior.scaleBy(baseGroup, 1 + delta)
+    }
   }
 
-  const zoomBehavior = d3.behavior
-    .zoom()
+  const zoomed = function (
+    e: D3ZoomEvent<SVGGElement, unknown>
+  ): Transition<SVGGElement, unknown, null, undefined> {
+    draw = true
+
+    if (isZoomClick) {
+      // When clicking on the zoom buttons show a longer animation than when
+      // using the scroll wheel.
+      isZoomClick = false
+
+      return container
+        .transition()
+        .duration(400)
+        .ease(easeCubic)
+        .attr('transform', String(e.transform))
+    }
+
+    return container
+      .transition()
+      .duration(20)
+      .attr('transform', String(e.transform))
+  }
+
+  const zoomBehavior = d3Zoom<SVGGElement, unknown>()
     .scaleExtent([0.1, 2])
     .on('zoom', zoomed)
-
-  const interpolateZoom = (translate: any, scale: any) =>
-    d3
-      .transition()
-      .duration(500)
-      .tween('zoom', () => {
-        const t = d3.interpolate<number, number>(
-          zoomBehavior.translate(),
-          translate
-        )
-        const s = d3.interpolate(zoomBehavior.scale(), scale)
-        return function (a: number) {
-          zoomBehavior.scale(s(a)).translate(t(a) as [number, number])
-          return zoomed()
-        }
-      })
 
   let isZoomingIn = true
 
@@ -175,25 +194,11 @@ const vizFn = function (
 
   const zoomClick = function (_element: any) {
     draw = true
+    isZoomClick = true
     const limitsReached = { zoomInLimit: false, zoomOutLimit: false }
 
-    if (isZoomingIn) {
-      zoomLevel = Number((zoomBehavior.scale() * (1 + 0.3 * 1)).toFixed(2))
-      if (zoomLevel >= zoomBehavior.scaleExtent()[1]) {
-        limitsReached.zoomInLimit = true
-        interpolateZoom(zoomBehavior.translate(), zoomBehavior.scaleExtent()[1])
-      } else {
-        interpolateZoom(zoomBehavior.translate(), zoomLevel)
-      }
-    } else {
-      zoomLevel = Number((zoomBehavior.scale() * (1 + 0.3 * -1)).toFixed(2))
-      if (zoomLevel <= zoomBehavior.scaleExtent()[0]) {
-        limitsReached.zoomOutLimit = true
-        interpolateZoom(zoomBehavior.translate(), zoomBehavior.scaleExtent()[0])
-      } else {
-        interpolateZoom(zoomBehavior.translate(), zoomLevel)
-      }
-    }
+    zoomBehavior.scaleBy(baseGroup, isZoomingIn ? 1.3 : 0.7)
+
     return limitsReached
   }
   // Background click event
@@ -209,9 +214,9 @@ const vizFn = function (
     .on('dblclick.zoom', null as any)
     // Single click is not panning
     .on('click.zoom', () => (draw = false))
-    .on('DOMMouseScroll.zoom', null as any)
-    .on('wheel.zoom', null as any)
-    .on('mousewheel.zoom', null as any)
+    .on('DOMMouseScroll.zoom', handleZoomOnShiftScroll)
+    .on('wheel.zoom', handleZoomOnShiftScroll)
+    .on('mousewheel.zoom', handleZoomOnShiftScroll)
 
   const newStatsBucket = function () {
     const bucket: StatsBucket = {
@@ -271,7 +276,7 @@ const vizFn = function (
     currentStats.geometry += now() - startRender
 
     const nodeGroups = container
-      .selectAll('g.node')
+      .selectAll<BaseType, VizNode>('g.node')
       .attr('transform', d => `translate(${d.x},${d.y})`)
 
     for (const renderer of vizRenderers.node) {
@@ -279,7 +284,7 @@ const vizFn = function (
     }
 
     const relationshipGroups = container
-      .selectAll('g.relationship')
+      .selectAll<BaseType, Relationship>('g.relationship')
       .attr(
         'transform',
         d =>
@@ -299,13 +304,6 @@ const vizFn = function (
 
   const force = layout.init(render)
 
-  // Add custom drag event listeners
-  force
-    .drag()
-    .on('dragstart.node', (d: any) => onNodeDragToggle(d))
-    // @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
-    .on('dragend.node', () => onNodeDragToggle())
-
   viz.collectStats = function (): StatsBucket {
     const latestStats = currentStats
     latestStats.layout = force.collectStats()
@@ -316,6 +314,7 @@ const vizFn = function (
   viz.update = function (options: {
     updateNodes: boolean
     updateRelationships: boolean
+    precompute?: boolean
   }) {
     if (!graph) {
       return
@@ -336,7 +335,7 @@ const vizFn = function (
 
     const relationshipGroups = container
       .select('g.layer.relationships')
-      .selectAll('g.relationship')
+      .selectAll<BaseType, Relationship>('g.relationship')
       .data(relationships, d => d.id)
 
     relationshipGroups
@@ -357,20 +356,42 @@ const vizFn = function (
     }
 
     relationshipGroups.exit().remove()
-
     const nodeGroups = container
       .select('g.layer.nodes')
-      .selectAll('g.node')
+      .selectAll<BaseType, VizNode>('g.node')
       .data(nodes, d => d.id)
+
+    function dragHandler(simulation: Simulation<VizNode, Relationship>) {
+      function dragstarted(event: D3DragEvent<SVGGElement, VizNode, any>) {
+        clearSimulationTimeout()
+        if (!event.active) simulation.alphaTarget(0.3).restart()
+      }
+
+      function dragged(event: D3DragEvent<SVGGElement, VizNode, any>) {
+        event.subject.fx = event.x
+        event.subject.fy = event.y
+      }
+
+      function dragended(event: D3DragEvent<SVGGElement, VizNode, any>) {
+        if (!event.active) simulation.alphaTarget(0)
+        setSimulationTimeout(simulation)
+      }
+
+      return d3Drag<SVGGElement, VizNode>()
+        .on('start', dragstarted)
+        .on('drag', dragged)
+        .on('end', dragended)
+    }
 
     nodeGroups
       .enter()
       .append('g')
       .attr('class', 'node')
-      .call(force.drag)
-      .call(clickHandler)
+      .call(dragHandler(force.simulation))
       .on('mouseover', onNodeMouseOver)
       .on('mouseout', onNodeMouseOut)
+      .on('click', onNodeClick)
+      .on('dblclick', onNodeDblClick)
 
     nodeGroups.classed('selected', node => node.selected)
 
@@ -385,7 +406,11 @@ const vizFn = function (
     nodeGroups.exit().remove()
 
     if (updateViz) {
-      force.update(graph, [layoutDimension, layoutDimension])
+      force.update(
+        graph,
+        [layoutDimension, layoutDimension],
+        options.precompute
+      )
 
       viz.resize()
       viz.trigger('updated')
@@ -409,11 +434,6 @@ const vizFn = function (
 
   // @ts-expect-error ts-migrate(2339) FIXME: Property 'boundingBox' does not exist on type '{ s... Remove this comment to see the full error message
   viz.boundingBox = () => container.node().getBBox()
-
-  const clickHandler = vizClickHandler()
-  clickHandler.on('click', onNodeClick)
-  clickHandler.on('dblclick', onNodeDblClick)
-
   return viz
 }
 

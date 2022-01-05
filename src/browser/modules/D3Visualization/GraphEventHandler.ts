@@ -67,7 +67,11 @@ export class GraphEventHandler {
     }
     this.selectedItem = item
     item.selected = true
-    this.graphView.update({ updateNodes: true, updateRelationships: true })
+    this.graphView.update({
+      updateNodes: true,
+      updateRelationships: true,
+      precompute: true
+    })
   }
 
   deselectItem(): void {
@@ -82,14 +86,18 @@ export class GraphEventHandler {
         relationshipCount: this.graph.relationships().length
       }
     })
-    this.graphView.update({ updateNodes: true, updateRelationships: true })
+
+    this.graphView.update({
+      updateNodes: true,
+      updateRelationships: true,
+      precompute: false
+    })
   }
 
   nodeClose(d: VizNode): void {
     this.graph.removeConnectedRelationships(d)
     this.graph.removeNode(d)
     this.deselectItem()
-    this.graphView.update({ updateNodes: true, updateRelationships: true })
     this.graphModelChanged()
   }
 
@@ -97,7 +105,6 @@ export class GraphEventHandler {
     if (!node) {
       return
     }
-    node.fixed = true
     if (!node.selected) {
       this.selectItem(node)
       this.onItemSelected({
@@ -113,7 +120,8 @@ export class GraphEventHandler {
     if (!d) {
       return
     }
-    d.fixed = false
+    d.fx = null
+    d.fy = null
     this.deselectItem()
   }
 

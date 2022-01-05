@@ -17,39 +17,58 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import d3 from 'd3'
-import collision from './collision'
-import circularLayout from '../utils/circularLayout'
+import {
+  Simulation,
+  forceCollide,
+  forceLink,
+  forceManyBody,
+  forceSimulation,
+  forceX,
+  forceY
+} from 'd3-force'
+
 import cloneArray from '../utils/arrays'
+import circularLayout from '../utils/circularLayout'
 import Graph from './Graph'
+import Relationship from './Relationship'
+import VizNode from './VizNode'
 
 type ForceLayout = {
-  update: (graph: Graph, size: [number, number]) => any
-  drag: any
+  update: (
+    graph: Graph,
+    size: [number, number],
+    animate?: boolean
+  ) => Simulation<VizNode, Relationship>
   collectStats: () => {
     layoutTime: number
     layoutSteps: number
   }
+  simulation: Simulation<VizNode, Relationship>
 }
 export type Layout = { init: (render: () => number) => ForceLayout }
 export type AvailableLayouts = Record<'force', () => Layout>
+
+let simulationTimeout: null | number = null
+export const setSimulationTimeout = (
+  simulation: Simulation<VizNode, Relationship>
+) => {
+  simulationTimeout = setTimeout(() => simulation.stop(), 1500)
+}
+export const clearSimulationTimeout = () => {
+  if (simulationTimeout) {
+    clearTimeout(simulationTimeout)
+    simulationTimeout = null
+  }
+}
+
+const SIMULATION_STARTING_TICKS = 800
 
 const layout: AvailableLayouts = {
   force: () => ({
     init: render => {
       const linkDistance = 45
 
-      const d3force = d3.layout
-        .force()
-        .linkDistance(
-          (relationship: any) =>
-            relationship.source.radius +
-            relationship.target.radius +
-            linkDistance
-        )
-        .charge(-1000)
-
-      const newStatsBucket = function() {
+      const newStatsBucket = function () {
         const bucket = {
           layoutTime: 0,
           layoutSteps: 0
@@ -59,52 +78,30 @@ const layout: AvailableLayouts = {
 
       let currentStats = newStatsBucket()
 
-      const collectStats = function() {
+      const collectStats = function () {
         const latestStats = currentStats
         currentStats = newStatsBucket()
         return latestStats
       }
-
-      const accelerateLayout = function() {
-        let maxStepsPerTick = 100
-        const maxAnimationFramesPerSecond = 60
-        const maxComputeTime = 1000 / maxAnimationFramesPerSecond
-        const now =
-          window.performance && window.performance.now
-            ? () => window.performance.now()
-            : () => Date.now()
-
-        const d3Tick = d3force.tick
-        //@ts-expect-error
-        d3force.tick = function() {
-          const startTick = now()
-          let step = maxStepsPerTick
-          while (step-- && now() - startTick < maxComputeTime) {
-            const startCalcs = now()
-            currentStats.layoutSteps++
-
-            //@ts-expect-error This only works at runtime, fix when updating d3
-            collision.avoidOverlap(d3force.nodes())
-
-            if (d3Tick()) {
-              maxStepsPerTick = 2
-              return true
-            }
-            currentStats.layoutTime += now() - startCalcs
-          }
-          render()
-          return false
-        }
-      }
-
-      accelerateLayout()
 
       const oneRelationshipPerPairOfNodes = (graph: Graph) =>
         Array.from(graph.groupedRelationships()).map(
           pair => pair.relationships[0]
         )
 
-      const update = function(graph: Graph, size: [number, number]) {
+      const simulation = forceSimulation<VizNode, Relationship>()
+        .force('charge', forceManyBody())
+        .force('centerX', forceX().strength(0.005))
+        .force('centerY', forceY().strength(0.01))
+        .on('tick', () => render())
+        .stop()
+
+      const update = function (
+        graph: Graph,
+        size: [number, number],
+        precompute = false
+      ) {
+        clearSimulationTimeout()
         const nodes = cloneArray(graph.nodes())
         const relationships = oneRelationshipPerPairOfNodes(graph)
 
@@ -115,15 +112,33 @@ const layout: AvailableLayouts = {
         }
         circularLayout(nodes, center, radius)
 
-        return d3force
+        simulation
           .nodes(nodes)
-          .links(relationships)
-          .size(size)
-          .start()
+          .force(
+            'collide',
+            forceCollide<VizNode>().radius(node => node.radius + 25)
+          )
+          .force(
+            'link',
+            forceLink<VizNode, Relationship>(relationships)
+              .id(node => node.id)
+              .distance(100)
+          )
+
+        if (precompute) {
+          // Precompute the position of nodes instead of running the
+          // simulation with the animation and multiple re-renders
+          simulation.tick(SIMULATION_STARTING_TICKS)
+          render()
+        } else {
+          simulation.restart()
+          setSimulationTimeout(simulation)
+        }
+
+        return simulation
       }
 
-      const drag = d3force.drag
-      return { update, drag, collectStats }
+      return { update, collectStats, simulation }
     }
   })
 }

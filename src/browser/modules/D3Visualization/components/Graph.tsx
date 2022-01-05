@@ -17,22 +17,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React, { Component } from 'react'
-import {
-  createGraph,
-  mapRelationships,
-  getGraphStats,
-  GraphStats
-} from '../mapper'
+
 import { GetNodeNeighboursFn, GraphEventHandler } from '../GraphEventHandler'
-import { StyledZoomHolder, StyledSvgWrapper, StyledZoomButton } from './styled'
-import { ZoomInIcon, ZoomOutIcon } from 'browser-components/icons/Icons'
-import GraphView from '../lib/visualization/components/GraphView'
 import GraphStyle from '../graphStyle'
-import { BasicNode, BasicRelationship } from 'services/bolt/boltMappings'
 import Graph from '../lib/visualization/components/Graph'
+import GraphView from '../lib/visualization/components/GraphView'
+import {
+  GraphStats,
+  createGraph,
+  getGraphStats,
+  mapRelationships
+} from '../mapper'
+import { StyledSvgWrapper, StyledZoomButton, StyledZoomHolder } from './styled'
 import { VizItem } from './types'
+import { ZoomInIcon, ZoomOutIcon } from 'browser-components/icons/Icons'
+import { BasicNode, BasicRelationship } from 'services/bolt/boltMappings'
 
 type GraphState = { zoomInLimitReached: boolean; zoomOutLimitReached: boolean }
 
@@ -127,7 +127,11 @@ export class GraphComponent extends Component<GraphProps, GraphState> {
       this.graphEventHandler.bindEventHandlers()
       this.props.onGraphModelChange(getGraphStats(this.graph))
       this.graphView.resize()
-      this.graphView.update({ updateNodes: true, updateRelationships: false })
+      this.graphView.update({
+        updateNodes: true,
+        updateRelationships: false,
+        precompute: true
+      })
     }
   }
 
@@ -146,11 +150,19 @@ export class GraphComponent extends Component<GraphProps, GraphState> {
 
   componentDidUpdate(prevProps: GraphProps): void {
     if (prevProps.styleVersion !== this.props.styleVersion) {
-      this.graphView?.update({ updateNodes: true, updateRelationships: true })
+      this.graphView?.update({
+        updateNodes: true,
+        updateRelationships: true,
+        precompute: true
+      })
     }
     if (this.props.isFullscreen !== prevProps.isFullscreen) {
       this.graphView?.resize()
-      this.graphView?.update({ updateNodes: true, updateRelationships: true })
+      this.graphView?.update({
+        updateNodes: true,
+        updateRelationships: true,
+        precompute: true
+      })
     }
   }
 
