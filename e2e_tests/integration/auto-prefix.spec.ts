@@ -37,7 +37,7 @@ describe(':auto prefix in browser', () => {
   it('adding :auto enables running periodic commit', () => {
     cy.executeCommand(':auto USING PERIODIC COMMIT RETURN "Laverre";')
     cy.getFrames().contains('ERROR')
-    cy.getFrames().contains('expected "LOAD"')
+    cy.getFrames().contains('LOAD')
   })
 
   if (Cypress.config('serverVersion') >= 4.4) {
