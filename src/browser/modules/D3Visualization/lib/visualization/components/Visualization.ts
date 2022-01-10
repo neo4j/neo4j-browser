@@ -246,9 +246,7 @@ const vizFn = function (
     const layers = container
       .selectAll('g.layer')
       .data(['relationships', 'nodes'])
-    layers
-      .enter()
-      .append('g')
+      .join('g')
       .attr('class', d => `layer ${d}`)
 
     const nodes = graph.nodes()
@@ -258,29 +256,16 @@ const vizFn = function (
       .select('g.layer.relationships')
       .selectAll<BaseType, Relationship>('g.relationship')
       .data(relationships, d => d.id)
-
-    relationshipGroups
-      .enter()
-      .append('g')
+      .join('g')
       .attr('class', 'relationship')
       .on('mousedown', onRelationshipClick)
       .on('mouseover', onRelMouseOver)
       .on('mouseout', onRelMouseOut)
-
-    relationshipGroups.classed(
-      'selected',
-      relationship => relationship.selected
-    )
+      .classed('selected', relationship => relationship.selected)
 
     for (const renderer of vizRenderers.relationship) {
       relationshipGroups.call(renderer.onGraphChange, viz)
     }
-
-    relationshipGroups.exit().remove()
-    const nodeGroups = container
-      .select('g.layer.nodes')
-      .selectAll<BaseType, VizNode>('g.node')
-      .data(nodes, d => d.id)
 
     function dragHandler(simulation: Simulation<VizNode, Relationship>) {
       function dragstarted(event: D3DragEvent<SVGGElement, VizNode, any>) {
@@ -304,17 +289,19 @@ const vizFn = function (
         .on('end', dragended)
     }
 
-    nodeGroups
-      .enter()
-      .append('g')
+    const nodeGroups = container
+      .select('g.layer.nodes')
+      .selectAll<BaseType, VizNode>('g.node')
+      .data(nodes, d => d.id)
+      .join('g')
       .attr('class', 'node')
+      // @ts-ignore
       .call(dragHandler(force.simulation))
       .on('mouseover', onNodeMouseOver)
       .on('mouseout', onNodeMouseOut)
       .on('click', onNodeClick)
       .on('dblclick', onNodeDblClick)
-
-    nodeGroups.classed('selected', node => node.selected)
+      .classed('selected', node => node.selected)
 
     for (const renderer of vizRenderers.node) {
       nodeGroups.call(renderer.onGraphChange, viz)
@@ -323,8 +310,6 @@ const vizFn = function (
     for (const renderer of nodeMenuRenderer) {
       nodeGroups.call(renderer.onGraphChange, viz)
     }
-
-    nodeGroups.exit().remove()
 
     if (updateViz) {
       force.update(
@@ -353,8 +338,7 @@ const vizFn = function (
     )
   }
 
-  // @ts-expect-error ts-migrate(2339) FIXME: Property 'boundingBox' does not exist on type '{ s... Remove this comment to see the full error message
-  viz.boundingBox = () => container.node().getBBox()
+  viz.boundingBox = () => container.node()?.getBBox()
   return viz
 }
 
