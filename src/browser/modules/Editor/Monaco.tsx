@@ -80,7 +80,7 @@ type MonacoProps = MonacoDefaultProps & {
   onDisplayHelpKeys?: () => void
   onExecute: (value: string) => void
   useDb: null | string
-  fullscreen: boolean
+  isFullscreen: boolean
   toggleFullscreen: () => void
   params: Record<string, unknown>
 }
@@ -384,7 +384,9 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
     this.onContentUpdate()
 
     this.editor.onDidChangeModelContent(this.onContentUpdate)
-    this.editor.onDidContentSizeChange(() => this.resize(this.props.fullscreen))
+    this.editor.onDidContentSizeChange(() =>
+      this.resize(this.props.isFullscreen)
+    )
 
     const resizeObserver = new ResizeObserver(() => {
       // Wrapped in requestAnimationFrame to avoid the error "ResizeObserver loop limit exceeded"

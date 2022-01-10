@@ -19,7 +19,12 @@
  */
 
 import uuid from 'uuid'
-import { USER_CLEAR, APP_START } from 'shared/modules/app/appDuck'
+import {
+  USER_CLEAR,
+  APP_START,
+  AppStartAction,
+  UserClearAction
+} from 'shared/modules/app/appDuck'
 import { getBrowserName } from 'services/utils'
 import { scripts as staticScriptsList } from './staticScripts'
 
@@ -36,6 +41,8 @@ export const RENAME_FAVORITE = 'favorites/RENAME_FAVORITES'
 export const UPDATE_FAVORITES = 'favorites/UPDATE_FAVORITES'
 
 type FavoriteAction =
+  | AppStartAction
+  | UserClearAction
   | AddFavoriteAction
   | RemoveFavoriteAction
   | LoadFavoritesAction

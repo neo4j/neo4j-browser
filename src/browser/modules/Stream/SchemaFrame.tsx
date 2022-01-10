@@ -25,9 +25,9 @@ import { withBus } from 'react-suber'
 import { replace, toUpper } from 'lodash-es'
 import semver from 'semver'
 
-import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
+import { getVersion } from 'shared/modules/dbMeta/state'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import FrameTemplate from '../Frame/FrameTemplate'
+import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
 import Slide from '../Carousel/Slide'
 import {
   StyledTable,
@@ -37,9 +37,15 @@ import {
 } from 'browser-components/DataTables'
 import Directives from 'browser-components/Directives'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
+import { GlobalState } from 'project-root/src/shared/globalState'
 
-const Indexes = ({ indexes, neo4jVersion }: any) => {
+type IndexesProps = {
+  indexes: any
+  neo4jVersion: string | null
+}
+const Indexes = ({ indexes, neo4jVersion }: IndexesProps) => {
   if (
+    !neo4jVersion ||
     !semver.valid(neo4jVersion) ||
     semver.satisfies(neo4jVersion, '<4.0.0-rc01')
   ) {
@@ -231,11 +237,15 @@ export class SchemaFrame extends Component<any, SchemaFrameState> {
 
 const Frame = (props: any) => {
   return (
-    <FrameTemplate header={props.frame} contents={<SchemaFrame {...props} />} />
+    <FrameBodyTemplate
+      isCollapsed={props.isCollapsed}
+      isFullscreen={props.isFullscreen}
+      contents={<SchemaFrame {...props} />}
+    />
   )
 }
 
-const mapStateToProps = (state: any) => ({
+const mapStateToProps = (state: GlobalState) => ({
   neo4jVersion: getVersion(state)
 })
 

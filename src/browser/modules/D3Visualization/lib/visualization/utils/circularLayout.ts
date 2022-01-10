@@ -17,26 +17,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import VizNode from '../components/VizNode'
 
-export default function circularLayout(nodes: any[], center: any, radius: any) {
-  const unlocatedNodes = []
-  for (const node of Array.from(nodes)) {
-    if (!(node.x != null && node.y != null)) {
-      unlocatedNodes.push(node)
-    }
-  }
-  return (() => {
-    const result = []
-    for (let i = 0; i < unlocatedNodes.length; i++) {
-      const n = unlocatedNodes[i]
-      n.x =
-        center.x + radius * Math.sin((2 * Math.PI * i) / unlocatedNodes.length)
-      result.push(
-        (n.y =
-          center.y +
-          radius * Math.cos((2 * Math.PI * i) / unlocatedNodes.length))
-      )
-    }
-    return result
-  })()
+export default function circularLayout(
+  nodes: VizNode[],
+  center: { x: number; y: number },
+  radius: number
+): void {
+  const unlocatedNodes = nodes.filter(node => !node.initialPositionCalculated)
+
+  unlocatedNodes.forEach((node, i) => {
+    node.x =
+      center.x + radius * Math.sin((2 * Math.PI * i) / unlocatedNodes.length)
+
+    node.y =
+      center.y + radius * Math.cos((2 * Math.PI * i) / unlocatedNodes.length)
+
+    node.initialPositionCalculated = true
+  })
 }

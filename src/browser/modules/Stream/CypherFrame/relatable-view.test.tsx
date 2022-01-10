@@ -37,7 +37,7 @@ describe('RelatableViews', () => {
           summary: {
             resultAvailableAfter: neo4j.int(5),
             resultConsumedAfter: neo4j.int(5)
-          }
+          } as any
         }
       }
 
@@ -52,11 +52,11 @@ describe('RelatableViews', () => {
     test('does not display bodyMessage if rows, and escapes HTML', () => {
       const value = 'String with HTML <strong>in</strong> it'
       const result = {
-        records: [{ keys: ['x'], _fields: [value], get: () => value }],
+        records: [{ keys: ['x'], _fields: [value], get: () => value }] as any,
         summary: {
           resultAvailableAfter: neo4j.int(5),
           resultConsumedAfter: neo4j.int(5)
-        }
+        } as any
       }
 
       // When
@@ -71,7 +71,7 @@ describe('RelatableViews', () => {
   describe('TableStatusbar', () => {
     test('displays no statusBarMessage', () => {
       // Given
-      const props = { result: {}, maxRows: 0 }
+      const props = { result: null, maxRows: 0 }
 
       // When
       const { container } = render(
@@ -90,9 +90,9 @@ describe('RelatableViews', () => {
           summary: {
             resultAvailableAfter: neo4j.int(5),
             resultConsumedAfter: neo4j.int(5)
-          },
+          } as any,
           maxRows: 100,
-          records: [{ res: 'xx3' }]
+          records: [{ res: 'xx3' }] as any
         }
       }
 

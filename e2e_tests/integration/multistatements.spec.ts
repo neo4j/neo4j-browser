@@ -57,9 +57,9 @@ describe('Multi statements', () => {
   it('can force run multiple statements to be executed as one statement', () => {
     // Given
     cy.executeCommand(':clear')
-    cy.get('[data-testid="drawerSettings"]').click()
-    cy.get('[data-testid="enableMultiStatementMode"]').click()
-    cy.get('[data-testid="drawerSettings"]').click()
+    cy.get('[data-testid="navigationSettings"]').click()
+    cy.get('[data-testid="setting-enableMultiStatementMode"]').click()
+    cy.get('[data-testid="navigationSettings"]').click()
 
     // When
     cy.executeCommand(validQuery)
@@ -74,9 +74,9 @@ describe('Multi statements', () => {
       .first()
       .should('contain', 'Error')
 
-    cy.get('[data-testid="drawerSettings"]').click()
-    cy.get('[data-testid="enableMultiStatementMode"]').click()
-    cy.get('[data-testid="drawerSettings"]').click()
+    cy.get('[data-testid="navigationSettings"]').click()
+    cy.get('[data-testid="setting-enableMultiStatementMode"]').click()
+    cy.get('[data-testid="navigationSettings"]').click()
   })
 
   it('can run multiple statements with error open', () => {
@@ -114,6 +114,37 @@ describe('Multi statements', () => {
       .get('[data-testid="multi-statement-list-content"]', { timeout: 10000 })
       .first()
       .should('contain', 'ERROR')
+  })
+
+  it('can use :auto command in multi-statements', () => {
+    cy.executeCommand('create ();')
+    cy.executeCommand(':clear')
+    const query = `:auto CREATE (t:MultiStmtTest {{}name: "Pacifidlog"}) RETURN t;:auto CREATE (t:MultiStmtTest {{}name: "Wyndon"}) RETURN t;`
+    cy.executeCommand(query)
+    cy.get('[data-testid="frame"]', { timeout: 10000 }).should('have.length', 1)
+    const frame = cy.get('[data-testid="frame"]', { timeout: 10000 }).first()
+    frame.find('[data-testid="multi-statement-list"]').should('have.length', 1)
+    frame
+      .get('[data-testid="multi-statement-list-title"]')
+      .should('have.length', 2)
+    frame
+      .get('[data-testid="multi-statement-list-title"]')
+      .eq(0)
+      .click()
+    frame
+      .get('[data-testid="multi-statement-list-content"]', { timeout: 10000 })
+      .contains('SUCCESS')
+    frame
+      .get('[data-testid="multi-statement-list-title"]')
+      .eq(1)
+      .click()
+    frame
+      .get('[data-testid="multi-statement-list-content"]', { timeout: 10000 })
+      .contains('SUCCESS')
+    cy.executeCommand('match (n: MultiStmtTest) return n.name')
+    cy.get('[role="cell"]').contains('Pacifidlog')
+    cy.get('[role="cell"]').contains('Wyndon')
+    cy.executeCommand('match (n: MultiStmtTest) delete n')
   })
 
   if (Cypress.config('serverVersion') >= 4.0) {
@@ -180,9 +211,9 @@ describe('Multi statements', () => {
           .contains('Test1')
 
         // Check sidebar for test1
-        cy.get('[data-testid="drawerDBMS"]').click()
+        cy.get('[data-testid="navigationDBMS"]').click()
         cy.get('[data-testid="sidebarMetaItem"]').contains('Test1')
-        cy.get('[data-testid="drawerDBMS"]').click()
+        cy.get('[data-testid="navigationDBMS"]').click()
 
         cy.executeCommand(':use test2')
         cy.executeCommand('MATCH (n) RETURN distinct labels(n);')
@@ -190,10 +221,10 @@ describe('Multi statements', () => {
           .first()
           .contains('Test2')
 
-        cy.get('[data-testid="drawerDBMS"]').click()
+        cy.get('[data-testid="navigationDBMS"]').click()
 
         cy.get('[data-testid="sidebarMetaItem"]').contains('Test2')
-        cy.get('[data-testid="drawerDBMS"]').click()
+        cy.get('[data-testid="navigationDBMS"]').click()
 
         cy.executeCommand(':use system')
         cy.executeCommand('DROP DATABASE test1')

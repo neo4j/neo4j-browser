@@ -37,12 +37,12 @@ import { StyledLink } from 'browser-components/buttons'
 import { StyledTable, StyledTh } from 'browser-components/DataTables'
 import { StyledButtonContainer } from './styled'
 
-import FrameTemplate from '../Frame/FrameTemplate'
+import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
 import { forceFetch } from 'shared/modules/currentUser/currentUserDuck'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { driverDatabaseSelection } from 'shared/modules/features/versionedFeatures'
 import { connect } from 'react-redux'
-import { isEnterprise } from 'shared/modules/dbMeta/dbMetaDuck'
+import { isEnterprise } from 'shared/modules/dbMeta/state'
 import FrameAside from '../Frame/FrameAside'
 import { EnterpriseOnlyFrame } from 'browser-components/EditionView'
 import { isConnectedAuraHost } from 'shared/modules/connections/connectionsDuck'
@@ -244,8 +244,9 @@ export class UserList extends Component<any, UserListState> {
       frameContents = <>{renderedListOfUsers}</>
     }
     return (
-      <FrameTemplate
-        header={this.props.frame}
+      <FrameBodyTemplate
+        isCollapsed={this.props.isCollapsed}
+        isFullscreen={this.props.isFullscreen}
         contents={frameContents}
         aside={aside}
       />

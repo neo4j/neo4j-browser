@@ -27,6 +27,9 @@ export const UPDATE = 'settings/UPDATE'
 export const REPLACE = 'settings/REPLACE'
 export const DISABLE_IMPLICIT_INIT_COMMANDS =
   'settings/DISABLE_IMPLICIT_INIT_COMMANDS'
+export const TRACK_OPT_OUT_USER_STATS = 'settings/TRACK_OPT_OUT_USER_STATS'
+export const TRACK_OPT_OUT_CRASH_REPORTS =
+  'settings/TRACK_OPT_OUT_CRASH_REPORTS'
 
 export const AUTO_THEME = 'auto'
 export const LIGHT_THEME = 'normal'
@@ -54,11 +57,11 @@ export const getMaxRows = (state: GlobalState): number =>
   state[NAME].maxRows || initialState.maxRows
 export const getMaxFieldItems = (state: GlobalState): number =>
   get(state, [NAME, 'maxFieldItems'], initialState.maxFieldItems)
+export const getMaxFrames = (state: GlobalState): number =>
+  state[NAME].maxFrames
 export const getInitialNodeDisplay = (state: GlobalState): number =>
   state[NAME].initialNodeDisplay || initialState.initialNodeDisplay
 export const getScrollToTop = (state: any) => state[NAME].scrollToTop
-export const shouldReportUdc = (state: any) =>
-  state[NAME].shouldReportUdc !== false
 export const shouldAutoComplete = (state: any) =>
   state[NAME].autoComplete !== false
 export const shouldEditorLint = (state: any) => state[NAME].editorLint === true
@@ -83,6 +86,10 @@ export const shouldUseCypherThread = (state: any) => state[NAME].useCypherThread
 export const getConnectionTimeout = (state: any) =>
   state[NAME].connectionTimeout || initialState.connectionTimeout
 export const codeFontLigatures = (state: any) => state[NAME].codeFontLigatures
+export const getAllowCrashReports = (state: GlobalState): boolean =>
+  state[NAME].allowCrashReports ?? initialState.allowCrashReports
+export const getAllowUserStats = (state: GlobalState): boolean =>
+  state[NAME].allowUserStats ?? initialState.allowUserStats
 
 export const initialState = {
   maxHistory: 30,
@@ -95,17 +102,18 @@ export const initialState = {
   browserSyncDebugServer: null,
   maxRows: 1000,
   maxFieldItems: 500,
-  shouldReportUdc: true,
   autoComplete: true,
   scrollToTop: true,
-  maxFrames: 30,
+  maxFrames: 15,
   codeFontLigatures: true,
   useBoltRouting: false,
   editorLint: false,
   useCypherThread: true,
   enableMultiStatementMode: true,
   connectionTimeout: 30 * 1000, // 30 seconds
-  showPerformanceOverlay: false
+  showPerformanceOverlay: false,
+  allowCrashReports: true,
+  allowUserStats: true
 }
 
 export default function settings(state = initialState, action: any) {

@@ -21,7 +21,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
-import FrameTemplate from '../../Frame/FrameTemplate'
+import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
 import FrameAside from '../../Frame/FrameAside'
 import bolt from 'services/bolt/bolt'
 import {
@@ -58,11 +58,30 @@ import { EnterpriseOnlyFrame } from 'browser-components/EditionView'
 import FrameError from '../../Frame/FrameError'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { getDefaultBoltScheme } from 'shared/modules/features/versionedFeatures'
-import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
+import { getVersion } from 'shared/modules/dbMeta/state'
+import { GlobalState } from 'project-root/src/shared/globalState'
 
-type QueriesFrameState = any
+type QueriesFrameState = {
+  queries: any[]
+  autoRefresh: boolean
+  autoRefreshInterval: number
+  success: null | boolean | string
+  errors: any[]
+}
 
-export class QueriesFrame extends Component<any, QueriesFrameState> {
+type QueriesFrameProps = {
+  frame?: any
+  bus: any
+  availableProcedures: any
+  connectionState: number
+  neo4jVersion: string | null
+  isFullscreen: boolean
+  isCollapsed: boolean
+}
+export class QueriesFrame extends Component<
+  QueriesFrameProps,
+  QueriesFrameState
+> {
   timer: any
   state = {
     queries: [],
@@ -316,14 +335,14 @@ export class QueriesFrame extends Component<any, QueriesFrameState> {
   render() {
     let frameContents
     let aside
-    let statusbar
+    let statusBar
 
     if (this.canListQueries()) {
       frameContents = this.constructViewFromQueryList(
         this.state.queries,
         this.state.errors
       )
-      statusbar = (
+      statusBar = (
         <StatusbarWrapper>
           {this.state.errors && !this.state.success && (
             <FrameError
@@ -355,17 +374,18 @@ export class QueriesFrame extends Component<any, QueriesFrameState> {
       frameContents = <EnterpriseOnlyFrame command={this.props.frame.cmd} />
     }
     return (
-      <FrameTemplate
-        header={this.props.frame}
+      <FrameBodyTemplate
+        isCollapsed={this.props.isCollapsed}
+        isFullscreen={this.props.isFullscreen}
         aside={aside}
         contents={frameContents}
-        statusbar={statusbar}
+        statusBar={statusBar}
       />
     )
   }
 }
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: GlobalState) => {
   return {
     availableProcedures: getAvailableProcedures(state) || [],
     connectionState: getConnectionState(state),

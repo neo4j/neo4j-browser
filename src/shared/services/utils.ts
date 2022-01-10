@@ -21,7 +21,7 @@
 
 import parseUrl from 'url-parse'
 import { DESKTOP, CLOUD, WEB } from 'shared/modules/app/appDuck'
-import { trimStart, trimEnd } from 'lodash-es'
+import { trimStart, trimEnd, isNumber } from 'lodash-es'
 
 /**
  * The work objects expected shape:
@@ -47,6 +47,9 @@ export const serialExecution = (...args: any[]) => {
   })
   return out
 }
+
+export const AUTH_STORAGE_PREFIX = '/browser-auth#'
+export const AUTH_STORAGE_CONNECT_HOST = `${AUTH_STORAGE_PREFIX}connect_host`
 
 const linkPromises = (next: any) => {
   if (!next || !next.workFn) {
@@ -139,44 +142,57 @@ export const firstSuccessPromise = (list: any, fn: any) => {
   }, Promise.reject(new Error()))
 }
 
-export const hostIsAllowed = (uri: any, allowlist: any = null) => {
-  if (allowlist === '*') return true
-  const urlInfo = getUrlInfo(uri)
+export const hostIsAllowed = (url: string, allowlistStr?: string): boolean => {
+  if (allowlistStr === '*') return true
+  const urlInfo = getUrlInfo(url)
   const hostname = urlInfo.hostname
   const hostnamePlusProtocol = `${urlInfo.protocol}//${hostname}`
-  const allowlistedHosts =
-    allowlist && allowlist !== ''
-      ? extractAllowlistFromConfigString(allowlist)
-      : []
+  const allowlistHostsList = allowlistStr
+    ? extractAllowlistFromConfigString(allowlistStr)
+    : []
   return (
-    allowlistedHosts.indexOf(hostname) > -1 ||
-    allowlistedHosts.indexOf(hostnamePlusProtocol) > -1
+    allowlistHostsList.indexOf(hostname) > -1 ||
+    allowlistHostsList.indexOf(hostnamePlusProtocol) > -1
   )
 }
 
-export const extractAllowlistFromConfigString = (str: any) =>
-  str.split(',').map((s: any) => s.trim().replace(/\/$/, ''))
+export const extractAllowlistFromConfigString = (str: string): string[] =>
+  str.split(',').map((s: string) => s.trim().replace(/\/$/, ''))
 
-export const addProtocolsToUrlList = (list: any) => {
-  return list.reduce((all: any, uri: any) => {
+export const addProtocolsToUrlList = (urlList: (string | null)[]): string[] =>
+  urlList.reduce((all: string[], uri: string | null) => {
     if (!uri || uri === '*') return all
     const urlInfo = getUrlInfo(uri)
     if (urlInfo.protocol) return all.concat(uri)
     return all.concat([`https://${uri}`, `http://${uri}`])
   }, [])
-}
 
 export const resolveAllowlistWildcard = (
-  list: any,
+  allowlist: (string | null)[],
   resolveTo: string[] = []
-) => {
-  return list.reduce((all: any, entry: any) => {
+): (string | null)[] => {
+  return allowlist.reduce((all: (string | null)[], entry: string | null) => {
     return all.concat(entry && entry.trim() === '*' ? resolveTo : entry)
   }, [])
 }
 
-export const getUrlInfo = (url: any) => {
-  const protocolMissing = url.match(/^(.+:\/\/)?/)[1] === undefined
+export const getUrlInfo = (
+  url: string
+): {
+  protocol: string
+  username: string
+  password: string
+  host: string
+  hostname: string
+  port: string
+  pathname: string
+  query: {
+    [key: string]: string | undefined
+  }
+  hash: string
+} => {
+  const matcher = url.match(/^(.+:\/\/)?/)
+  const protocolMissing = matcher === null || matcher[1] === undefined
   // prepend a default protocol, if none was found
   const urlWithProtocol = protocolMissing ? `http://${url}` : url
 
@@ -188,7 +204,7 @@ export const getUrlInfo = (url: any) => {
     hostname,
     port,
     pathname,
-    query: search,
+    query,
     hash
   } = parseUrl(urlWithProtocol, {})
 
@@ -200,7 +216,7 @@ export const getUrlInfo = (url: any) => {
     hostname,
     port,
     pathname,
-    search,
+    query,
     hash
   }
 }
@@ -263,7 +279,7 @@ export const getBrowserName = function() {
   return 'Unknown'
 }
 
-export const canUseDOM = () =>
+export const canUseDOM = (): boolean =>
   !!(
     typeof window !== 'undefined' &&
     window.document &&
@@ -309,10 +325,10 @@ export const arrayToObject = (array: any) =>
 export const stringifyMod = (
   value: any,
   modFn: any = null,
-  pretty: any = false,
+  pretty: boolean | number = false,
   skipOpeningIndentation = false
-): any => {
-  const prettyLevel = !pretty ? false : pretty === true ? 1 : parseInt(pretty)
+): string => {
+  const prettyLevel = isNumber(pretty) ? pretty : +pretty
   const nextPrettyLevel = prettyLevel ? prettyLevel + 1 : false
   const newLine = prettyLevel ? '\n' : ''
   const indentation =
@@ -496,3 +512,6 @@ export function detectRuntimeEnv(win?: any, cloudDomains: string[] = []) {
 }
 
 export const isRunningE2ETest = (): boolean => !!window.Cypress
+
+export const upperFirst = (str: string): string =>
+  str[0].toUpperCase() + str.slice(1)

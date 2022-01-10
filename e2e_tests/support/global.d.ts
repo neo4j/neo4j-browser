@@ -105,6 +105,9 @@ declare global {
     }
   }
   interface Window {
-    neo4jDesktopApi: any
+    neo4jDesktopApi: unknown
+    Canny?: { (command: string, options?: unknown): void }
+    IsCannyLoaded?: boolean
+    attachEvent?: typeof window.addEventListener
   }
 }

@@ -27,6 +27,7 @@ import {
   ROUTED_WRITE_CONNECTION,
   ROUTED_READ_CONNECTION
 } from './boltConnection'
+import { isBoltConnectionErrorCode } from './boltConnectionErrors'
 import {
   routedWriteTransaction,
   cancelTransaction,
@@ -40,7 +41,8 @@ import {
   boltConnectionErrorMessage,
   RUN_CYPHER_MESSAGE,
   CANCEL_TRANSACTION_MESSAGE,
-  CLOSE_CONNECTION_MESSAGE
+  CLOSE_CONNECTION_MESSAGE,
+  BOLT_CONNECTION_ERROR_MESSAGE
 } from './boltWorkerMessages'
 import { applyGraphTypes } from 'services/bolt/boltMappings'
 
@@ -96,6 +98,18 @@ const onmessage = function(message: {
       cancelable,
       connectionProperties
     } = message.data
+
+    const maybeCypherErrorMessage = (error: any) => {
+      if (isBoltConnectionErrorCode(error.code)) {
+        return boltConnectionErrorMessage({
+          ...error,
+          type: BOLT_CONNECTION_ERROR_MESSAGE
+        })
+      } else {
+        return cypherErrorMessage(error)
+      }
+    }
+
     beforeWork()
     const { txMetadata, useDb, autoCommit } = connectionProperties
     ensureConnection(
@@ -124,14 +138,14 @@ const onmessage = function(message: {
           .catch((e: { code: number; message: string }) => {
             afterWork()
             ;((self as unknown) as ServiceWorker).postMessage(
-              cypherErrorMessage({ code: e.code, message: e.message })
+              maybeCypherErrorMessage({ code: e.code, message: e.message })
             )
           })
       })
       .catch(e => {
         afterWork()
         ;((self as unknown) as ServiceWorker).postMessage(
-          cypherErrorMessage({ code: e.code, message: e.message })
+          maybeCypherErrorMessage({ code: e.code, message: e.message })
         )
       })
   } else if (messageType === CANCEL_TRANSACTION_MESSAGE) {

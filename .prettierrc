@@ -7,5 +7,10 @@
   "trailingComma": "none",
   "jsxBracketSameLine": false,
   "arrowParens": "avoid",
-  "jsxSingleQuote": false
+  "jsxSingleQuote": false,
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true,
+  "importOrder": [
+    "^browser/(.*)$|^project-root/(.*)$|^browser-(.*)$|^shared/(.*)$|^services/(.*)$|^icons/(.*)$|^[./]"
+  ]
 }

@@ -19,17 +19,29 @@
  */
 import measureText from './textMeasurement'
 import distributeCircular from './circumferentialDistribution'
-import StraightArrow from './straightArrow'
-import ArcArrow from './arcArrow'
+import StraightArrow from './StraightArrow'
+import ArcArrow from './ArcArrow'
+import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
+import Relationship from '../components/Relationship'
+import Graph from '../components/Graph'
+
+export type ArrowAngle = {
+  floating: Record<string, number>
+  fixed: Record<string, number>
+}
 
 export default class circumferentialRelationshipRouting {
-  style: any
-
-  constructor(style: any) {
+  style: GraphStyle
+  canvas: HTMLCanvasElement
+  constructor(style: GraphStyle) {
     this.style = style
+    this.canvas = document.createElement('canvas')
   }
 
-  measureRelationshipCaption(relationship: any, caption: any) {
+  measureRelationshipCaption(
+    relationship: Relationship,
+    caption: string
+  ): number {
     const fontFamily = 'sans-serif'
     const fontSize = parseFloat(
       this.style.forRelationship(relationship).get('font-size')
@@ -37,40 +49,45 @@ export default class circumferentialRelationshipRouting {
     const padding = parseFloat(
       this.style.forRelationship(relationship).get('padding')
     )
-    return measureText(caption, fontFamily, fontSize) + padding * 2
+
+    const canvas2DContext = this.canvas.getContext('2d')
+    return (
+      measureText(
+        caption,
+        fontFamily,
+        fontSize,
+        <CanvasRenderingContext2D>canvas2DContext
+      ) +
+      padding * 2
+    )
   }
 
-  captionFitsInsideArrowShaftWidth(relationship: any) {
+  captionFitsInsideArrowShaftWidth(relationship: Relationship): boolean {
     return (
       parseFloat(this.style.forRelationship(relationship).get('shaft-width')) >
       parseFloat(this.style.forRelationship(relationship).get('font-size'))
     )
   }
 
-  measureRelationshipCaptions(relationships: any[]) {
-    return (() => {
-      const result = []
-      for (const relationship of Array.from(relationships)) {
-        relationship.captionLength = this.measureRelationshipCaption(
-          relationship,
-          relationship.type
-        )
-        result.push(
-          (relationship.captionLayout = this.captionFitsInsideArrowShaftWidth(
-            relationship
-          )
-            ? 'internal'
-            : 'external')
-        )
-      }
-      return result
-    })()
+  measureRelationshipCaptions(relationships: Relationship[]): void {
+    relationships.forEach(relationship => {
+      relationship.captionLength = this.measureRelationshipCaption(
+        relationship,
+        relationship.type
+      )
+
+      relationship.captionLayout = this.captionFitsInsideArrowShaftWidth(
+        relationship
+      )
+        ? 'internal'
+        : 'external'
+    })
   }
 
   shortenCaption(
-    relationship: any,
-    caption: any,
-    targetWidth: any
+    relationship: Relationship,
+    caption: string,
+    targetWidth: number
   ): [string, number] {
     let shortCaption = caption
     while (true) {
@@ -85,9 +102,9 @@ export default class circumferentialRelationshipRouting {
     }
   }
 
-  layoutRelationships(graph: any) {
+  layoutRelationships(graph: Graph): void {
     let dx, dy
-    for (var relationship of Array.from<any>(graph.relationships())) {
+    for (const relationship of graph.relationships()) {
       dx = relationship.target.x - relationship.source.x
       dy = relationship.target.y - relationship.source.y
       relationship.naturalAngle =
@@ -97,181 +114,163 @@ export default class circumferentialRelationshipRouting {
 
     const sortedNodes = graph
       .nodes()
-      .sort(
-        (a: any, b: any) =>
-          b.relationshipCount(graph) - a.relationshipCount(graph)
-      )
+      .sort((a, b) => b.relationshipCount(graph) - a.relationshipCount(graph))
 
-    return (() => {
-      const result = []
-      for (var node of Array.from(sortedNodes)) {
-        var angle
-        const relationships: any[] = []
-        for (relationship of Array.from(graph.relationships())) {
-          if (relationship.source === node || relationship.target === node) {
-            relationships.push(relationship)
+    for (const node of sortedNodes) {
+      let angle
+      const relationships: Relationship[] = graph
+        .relationships()
+        .filter(({ source, target }) => source === node || target === node)
+
+      const arrowAngles: ArrowAngle = { floating: {}, fixed: {} }
+      const relationshipMap: Record<string, Relationship> = {}
+      for (const relationship of relationships) {
+        relationshipMap[relationship.id] = relationship
+
+        if (node === relationship.source) {
+          if (
+            relationship.hasOwnProperty('arrow') &&
+            relationship.arrow &&
+            'deflection' in relationship.arrow
+          ) {
+            arrowAngles.fixed[relationship.id] =
+              relationship.naturalAngle + relationship.arrow.deflection
+          } else {
+            arrowAngles.floating[relationship.id] = relationship.naturalAngle
           }
         }
-
-        const arrowAngles: any = { floating: {}, fixed: {} }
-        var relationshipMap: any = {}
-        for (relationship of Array.from(relationships)) {
-          relationshipMap[relationship.id] = relationship
-
-          if (node === relationship.source) {
-            if (relationship.hasOwnProperty('arrow')) {
-              arrowAngles.fixed[relationship.id] =
-                relationship.naturalAngle + relationship.arrow.deflection
-            } else {
-              arrowAngles.floating[relationship.id] = relationship.naturalAngle
-            }
-          }
-          if (node === relationship.target) {
-            if (relationship.hasOwnProperty('arrow')) {
-              arrowAngles.fixed[relationship.id] =
-                (relationship.naturalAngle -
-                  relationship.arrow.deflection +
-                  180) %
-                360
-            } else {
-              arrowAngles.floating[relationship.id] =
-                (relationship.naturalAngle + 180) % 360
-            }
+        if (node === relationship.target) {
+          if (
+            relationship.hasOwnProperty('arrow') &&
+            relationship.arrow &&
+            'deflection' in relationship.arrow
+          ) {
+            arrowAngles.fixed[relationship.id] =
+              (relationship.naturalAngle -
+                relationship.arrow.deflection +
+                180) %
+              360
+          } else {
+            arrowAngles.floating[relationship.id] =
+              (relationship.naturalAngle + 180) % 360
           }
         }
-
-        var distributedAngles: any = {}
-        for (var id in arrowAngles.floating) {
-          angle = arrowAngles.floating[id]
-          distributedAngles[id] = angle
-        }
-        for (id in arrowAngles.fixed) {
-          angle = arrowAngles.fixed[id]
-          distributedAngles[id] = angle
-        }
-
-        if (relationships.length > 1) {
-          distributedAngles = distributeCircular(arrowAngles, 30)
-        }
-
-        result.push(
-          (() => {
-            const result1 = []
-            for (id in distributedAngles) {
-              angle = distributedAngles[id]
-              relationship = relationshipMap[id]
-              if (!relationship.hasOwnProperty('arrow')) {
-                let ref: any
-                const deflection =
-                  node === relationship.source
-                    ? angle - relationship.naturalAngle
-                    : relationship.naturalAngle - angle + (180 % 360)
-
-                const shaftRadius =
-                  parseFloat(
-                    this.style.forRelationship(relationship).get('shaft-width')
-                  ) / 2 || 2
-                const headRadius = shaftRadius + 3
-                const headHeight = headRadius * 2
-
-                dx = relationship.target.x - relationship.source.x
-                dy = relationship.target.y - relationship.source.y
-
-                const square = (distance: any) => distance * distance
-                const centreDistance = Math.sqrt(square(dx) + square(dy))
-
-                if (
-                  Math.abs((deflection as unknown) as number) <
-                  Math.PI / 180
-                ) {
-                  relationship.arrow = new StraightArrow(
-                    relationship.source.radius,
-                    relationship.target.radius,
-                    centreDistance,
-                    shaftRadius,
-                    headRadius,
-                    headHeight,
-                    relationship.captionLayout
-                  )
-                } else {
-                  relationship.arrow = new ArcArrow(
-                    relationship.source.radius,
-                    relationship.target.radius,
-                    centreDistance,
-                    deflection,
-                    shaftRadius * 2,
-                    headRadius * 2,
-                    headHeight,
-                    relationship.captionLayout
-                  )
-                }
-
-                if (relationship.captionSettingsArray) {
-                  relationship.captionSettingsArray.forEach((label: any) => {
-                    label.captionLength = this.measureRelationshipCaption(
-                      relationship,
-                      label.caption
-                    )
-                    const temp: [string, number] =
-                      relationship.arrow.shaftLength > label.captionLength
-                        ? [label.caption, label.captionLength]
-                        : this.shortenCaption(
-                            relationship,
-                            label.caption,
-                            relationship.arrow.shaftLength
-                          )
-                    label.shortCaption = temp[0]
-                    label.shortCaptionLength = temp[1]
-                  })
-                }
-                if (relationship.sideCaptions) {
-                  Object.keys(relationship.sideCaptions).forEach(position => {
-                    const array = relationship.sideCaptions[position]
-                    array.forEach((label: any) => {
-                      label.captionLength = this.measureRelationshipCaption(
-                        relationship,
-                        label.caption
-                      )
-                      const allowedLength = relationship.arrow.shaftLength / 2
-                      const temp: [string, number] =
-                        allowedLength > label.captionLength
-                          ? [label.caption, label.captionLength]
-                          : this.shortenCaption(
-                              relationship,
-                              label.caption,
-                              allowedLength
-                            )
-                      label.shortCaption = temp[0]
-                      label.shortCaptionLength = temp[1]
-                    })
-                  })
-                }
-                result1.push(
-                  ([
-                    relationship.shortCaption,
-                    relationship.shortCaptionLength
-                  ] = Array.from(
-                    (ref =
-                      relationship.arrow.shaftLength >
-                      relationship.captionLength
-                        ? [relationship.caption, relationship.captionLength]
-                        : this.shortenCaption(
-                            relationship,
-                            relationship.caption,
-                            relationship.arrow.shaftLength
-                          ))
-                  )),
-                  ref
-                )
-              } else {
-                result1.push(undefined)
-              }
-            }
-            return result1
-          })()
-        )
       }
-      return result
-    })()
+
+      let distributedAngles: Record<string, number> = {}
+      for (const id in arrowAngles.floating) {
+        angle = arrowAngles.floating[id]
+        distributedAngles[id] = angle
+      }
+      for (const id in arrowAngles.fixed) {
+        angle = arrowAngles.fixed[id]
+        distributedAngles[id] = angle
+      }
+
+      if (relationships.length > 1) {
+        distributedAngles = distributeCircular(arrowAngles, 30)
+      }
+
+      for (const id in distributedAngles) {
+        angle = distributedAngles[id]
+        const relationship = relationshipMap[id]
+        if (!relationship.hasOwnProperty('arrow')) {
+          const deflection: number =
+            node === relationship.source
+              ? angle - relationship.naturalAngle
+              : relationship.naturalAngle - angle + (180 % 360)
+
+          const shaftRadius =
+            parseFloat(
+              this.style.forRelationship(relationship).get('shaft-width')
+            ) / 2 || 2
+          const headRadius = shaftRadius + 3
+          const headHeight = headRadius * 2
+
+          dx = relationship.target.x - relationship.source.x
+          dy = relationship.target.y - relationship.source.y
+
+          const square = (distance: any) => distance * distance
+          const centreDistance = Math.sqrt(square(dx) + square(dy))
+
+          // @ts-expect-error this math is wrong need to understand what deflections is to fix
+          if (Math.abs(deflection < Math.PI / 180)) {
+            relationship.arrow = new StraightArrow(
+              relationship.source.radius,
+              relationship.target.radius,
+              centreDistance,
+              shaftRadius,
+              headRadius,
+              headHeight,
+              relationship.captionLayout
+            )
+          } else {
+            relationship.arrow = new ArcArrow(
+              relationship.source.radius,
+              relationship.target.radius,
+              centreDistance,
+              deflection,
+              shaftRadius * 2,
+              headRadius * 2,
+              headHeight,
+              relationship.captionLayout
+            )
+          }
+
+          if (relationship.captionSettingsArray) {
+            relationship.captionSettingsArray.forEach((label: any) => {
+              label.captionLength = this.measureRelationshipCaption(
+                relationship,
+                label.caption
+              )
+              const temp: [string, number] =
+                relationship.arrow.shaftLength > label.captionLength
+                  ? [label.caption, label.captionLength]
+                  : this.shortenCaption(
+                      relationship,
+                      label.caption,
+                      relationship.arrow.shaftLength
+                    )
+              label.shortCaption = temp[0]
+              label.shortCaptionLength = temp[1]
+            })
+          }
+          if (relationship.sideCaptions) {
+            Object.keys(relationship.sideCaptions).forEach(position => {
+              const array = relationship.sideCaptions[position]
+              array.forEach((label: any) => {
+                label.captionLength = this.measureRelationshipCaption(
+                  relationship,
+                  label.caption
+                )
+                const allowedLength = relationship.arrow.shaftLength / 2
+                const temp: [string, number] =
+                  allowedLength > label.captionLength
+                    ? [label.caption, label.captionLength]
+                    : this.shortenCaption(
+                        relationship,
+                        label.caption,
+                        allowedLength
+                      )
+                label.shortCaption = temp[0]
+                label.shortCaptionLength = temp[1]
+              })
+            })
+          }
+          if (relationship.arrow.shaftLength > relationship.captionLength) {
+            relationship.shortCaption = relationship.caption
+            relationship.shortCaptionLength = relationship.captionLength
+          } else {
+            const [shortCaption, length] = this.shortenCaption(
+              relationship,
+              relationship.caption,
+              relationship.arrow.shaftLength
+            )
+            relationship.shortCaption = shortCaption
+            relationship.shortCaptionLength = length
+          }
+        }
+      }
+    }
   }
 }

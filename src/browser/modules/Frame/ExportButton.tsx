@@ -19,12 +19,7 @@
  */
 
 import React from 'react'
-import { saveAs } from 'file-saver'
-import { map } from 'lodash-es'
-
-import { Frame } from 'shared/modules/stream/streamDuck'
-
-import { CSVSerializer } from 'services/serializer'
+import { Frame } from 'shared/modules/frames/framesDuck'
 import { DownloadIcon } from 'browser-components/icons/Icons'
 import {
   DropdownButton,
@@ -33,105 +28,25 @@ import {
   DropDownItemDivider,
   DropdownList
 } from '../Stream/styled'
-import {
-  downloadPNGFromSVG,
-  downloadSVG
-} from 'shared/services/exporting/imageUtils'
-import {
-  stringifyResultArray,
-  transformResultRecordsToResultArray,
-  recordToJSONMapper
-} from 'browser/modules/Stream/CypherFrame/helpers'
-import { csvFormat, stringModifier } from 'services/bolt/cypherTypesFormatting'
-import arrayHasItems from 'shared/utils/array-has-items'
-import { stringifyMod } from 'services/utils'
 
+export type ExportItem = {
+  name: string
+  download: () => void
+}
 type ExportButtonProps = {
   frame: Frame
-  numRecords: number
-  getRecords: () => any
-  visElement: any
   isRelateAvailable: boolean
   newProjectFile: (cmd: string) => void
+  exportItems?: ExportItem[]
 }
 
 function ExportButton({
   isRelateAvailable,
   newProjectFile,
   frame,
-  numRecords,
-  getRecords,
-  visElement
+  exportItems = []
 }: ExportButtonProps): JSX.Element {
-  function exportCSV(records: any) {
-    const exportData = stringifyResultArray(
-      csvFormat,
-      transformResultRecordsToResultArray(records)
-    )
-    const data = exportData.slice()
-    const csv = CSVSerializer(data.shift())
-    csv.appendRows(data)
-    const blob = new Blob([csv.output()], {
-      type: 'text/plain;charset=utf-8'
-    })
-    saveAs(blob, 'export.csv')
-  }
-
-  function exportTXT() {
-    if (frame.type === 'history') {
-      const asTxt = frame.result
-        //@ts-ignore Frame.result is mistyped and is list of strings on history frames..
-        .map((result: string) => {
-          const safe = `${result}`.trim()
-
-          if (safe.startsWith(':')) {
-            return safe
-          }
-
-          return safe.endsWith(';') ? safe : `${safe};`
-        })
-        .join('\n\n')
-      const blob = new Blob([asTxt], {
-        type: 'text/plain;charset=utf-8'
-      })
-
-      saveAs(blob, 'history.txt')
-    }
-  }
-
-  function exportJSON(records: any) {
-    const exportData = map(records, recordToJSONMapper)
-    const data = stringifyMod(exportData, stringModifier, true)
-    const blob = new Blob([data], {
-      type: 'text/plain;charset=utf-8'
-    })
-    saveAs(blob, 'records.json')
-  }
-
-  function exportPNG() {
-    const { svgElement, graphElement, type } = visElement
-    downloadPNGFromSVG(svgElement, graphElement, type)
-  }
-
-  function exportSVG() {
-    const { svgElement, graphElement, type } = visElement
-    downloadSVG(svgElement, graphElement, type)
-  }
-
-  function exportGrass(data: any) {
-    const blob = new Blob([data], {
-      type: 'text/plain;charset=utf-8'
-    })
-    saveAs(blob, 'style.grass')
-  }
-
-  const hasData = numRecords > 0
-  const canExportTXT = frame.type === 'history' && arrayHasItems(frame.result)
-  // Quick reruns of cypher cause buttons to jump
-  const canExport =
-    canExportTXT ||
-    (frame.type === 'cypher' && (hasData || visElement)) ||
-    (frame.type === 'style' && hasData)
+  const canExport: boolean = exportItems.length > 0 || isRelateAvailable
 
   return (
     <>
@@ -149,51 +64,16 @@ function ExportButton({
                     <DropDownItemDivider />
                   </>
                 )}
-                {hasData && frame.type === 'cypher' && (
-                  <>
-                    <DropdownItem
-                      data-testid="exportCsvButton"
-                      onClick={() => exportCSV(getRecords())}
-                    >
-                      Export CSV
-                    </DropdownItem>
-                    <DropdownItem onClick={() => exportJSON(getRecords())}>
-                      Export JSON
-                    </DropdownItem>
-                  </>
-                )}
-                {visElement && (
-                  <>
-                    <DropdownItem
-                      data-testid="exportPngButton"
-                      onClick={() => exportPNG()}
-                    >
-                      Export PNG
-                    </DropdownItem>
-                    <DropdownItem
-                      data-testid="exportSvgButton"
-                      onClick={() => exportSVG()}
-                    >
-                      Export SVG
-                    </DropdownItem>
-                  </>
-                )}
-                {canExportTXT && (
+
+                {exportItems.map(({ name, download }) => (
                   <DropdownItem
-                    data-testid="exportTxtButton"
-                    onClick={exportTXT}
+                    data-testid={`export${name}Button`}
+                    onClick={download}
+                    key={name}
                   >
-                    Export TXT
+                    Export {name}
                   </DropdownItem>
-                )}
-                {hasData && frame.type === 'style' && (
-                  <DropdownItem
-                    data-testid="exportGrassButton"
-                    onClick={() => exportGrass(getRecords())}
-                  >
-                    Export GraSS
-                  </DropdownItem>
-                )}
+                ))}
               </DropdownContent>
             </DropdownList>
           )}

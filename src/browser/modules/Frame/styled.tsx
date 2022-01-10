@@ -21,14 +21,14 @@
 import styled from 'styled-components'
 import { dim } from 'browser-styles/constants'
 
-type FullscreenProps = { fullscreen: boolean }
+type FullscreenProps = { isFullscreen: boolean }
 export const StyledFrame = styled.article<FullscreenProps>`
   width: auto;
   background-color: ${props => props.theme.frameBackground};
   border: ${props => props.theme.frameBorder};
 
   ${props =>
-    props.fullscreen
+    props.isFullscreen
       ? `margin: 0;
 position: fixed;
 left: 0;
@@ -46,37 +46,40 @@ z-index: 130;`
   padding-bottom: 3px;
 `
 
-export const StyledFrameBody = styled.div<
-  FullscreenProps & { collapsed: boolean; preventOverflow?: boolean }
->`
+type StyledFrameBodyProps = FullscreenProps & {
+  isCollapsed: boolean
+  preventOverflow?: boolean
+  removePadding?: boolean
+  hasSlides?: boolean
+}
+
+export const StyledFrameBody = styled.div<StyledFrameBodyProps>`
   flex: 1;
   overflow: ${props => (props.preventOverflow ? 'hidden' : 'auto')};
   min-height: ${dim.frameBodyHeight / 2}px;
   max-height: ${props => {
-    if (props.collapsed) {
+    if (props.isCollapsed) {
       return 0
     }
-    if (props.fullscreen) {
+    if (props.isFullscreen) {
       return '100%'
     }
     return dim.frameBodyHeight - dim.frameStatusbarHeight + 1 + 'px'
   }};
-  display: ${props => (props.collapsed ? 'none' : 'flex')};
+  display: ${props => (props.isCollapsed ? 'none' : 'flex')};
   flex-direction: row;
   width: 100%;
   padding: 30px 30px 10px 30px;
 
-  .has-carousel &,
-  .has-stack & {
-    position: relative;
+  ${props =>
+    props.hasSlides &&
+    `position: relative;
     padding-bottom: 40px;
     padding-left: 40px;
     padding-right: 40px;
-  }
+  `}
 
-  .no-padding & {
-    padding: 0;
-  }
+  ${props => props.removePadding && 'padding: 0;'}
 `
 
 export const StyledFrameMainSection = styled.div`
@@ -104,17 +107,13 @@ export const StyledFrameContents = styled.div<FullscreenProps>`
   overflow: auto;
   min-height: ${dim.frameBodyHeight / 2}px;
   max-height: ${props =>
-    props.fullscreen
+    props.isFullscreen
       ? '100vh'
       : dim.frameBodyHeight - dim.frameStatusbarHeight * 2 + 'px'};
-  ${props => (props.fullscreen ? 'height: 100vh' : null)};
+  ${props => (props.isFullscreen ? 'height: 100vh' : null)};
   flex: auto;
   display: flex;
   width: 100%;
-
-  .has-carousel & {
-    overflow: visible;
-  }
 
   p {
     margin: 0 0 20px 0;
@@ -130,7 +129,7 @@ export const StyledFrameStatusbar = styled.div<FullscreenProps>`
   align-items: center;
   padding-left: 0px;
 
-  .statusbar--success {
+  .statusBar--success {
     color: ${props => props.theme.success};
   }
 `

@@ -17,71 +17,136 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import React, { Component } from 'react'
 import deepmerge from 'deepmerge'
-import { deepEquals } from 'services/utils'
+import { debounce } from 'lodash'
+import React, { Component } from 'react'
+import { ConnectedComponent, connect } from 'react-redux'
+import { Action, Dispatch } from 'redux'
+
+import { GetNodeNeighboursFn } from '../GraphEventHandler'
+import { GraphStyle } from '../graphStyle'
+import Graph from '../lib/visualization/components/Graph'
+import { GraphStats } from '../mapper'
 import { GraphComponent } from './Graph'
-import neoGraphStyle from '../graphStyle'
-import { InspectorComponent } from './Inspector'
-import { LegendComponent } from './Legend'
-import { StyledFullSizeContainer } from './styled'
+import { NodeInspectorPanel, defaultPanelWidth } from './NodeInspectorPanel'
+import { StyledFullSizeContainer, panelMinWidth } from './styled'
+import { VizItem } from './types'
+import {
+  BasicNode,
+  BasicNodesAndRels,
+  BasicRelationship
+} from 'services/bolt/boltMappings'
+import { deepEquals } from 'services/utils'
 import { GlobalState } from 'shared/globalState'
+import {
+  getNodePropertiesExpandedByDefault,
+  setNodePropertiesExpandedByDefault
+} from 'shared/modules/frames/framesDuck'
 import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
 import { connect } from 'react-redux'
 import NeighboursPickerPopover, {
   INeighboursPickerPopoverProps
 } from './modal/NeighboursPickerModal'
 
-const deduplicateNodes = (nodes: any) => {
-  return nodes.reduce(
-    (all: any, curr: any) => {
-      if (all.taken.indexOf(curr.id) > -1) {
-        return all
-      } else {
+type DecuplicateHelper = {
+  nodes: BasicNode[]
+  taken: Record<string, boolean>
+  nodeLimitHit: boolean
+}
+
+const deduplicateNodes = (
+  nodes: BasicNode[],
+  limit: number
+): { nodes: BasicNode[]; nodeLimitHit: boolean } =>
+  nodes.reduce(
+    (all: DecuplicateHelper, curr: BasicNode) => {
+      if (all.nodes.length === limit) {
+        all.nodeLimitHit = true
+      } else if (!all.taken[curr.id]) {
         all.nodes.push(curr)
-        all.taken.push(curr.id)
-        return all
+        all.taken[curr.id] = true
       }
+      return all
     },
-    { nodes: [], taken: [] }
-  ).nodes
+    { nodes: [], taken: {}, nodeLimitHit: false }
+  )
+
+type ExplorerComponentProps = {
+  relationships: BasicRelationship[]
+  nodes: BasicNode[]
+  initialNodeDisplay: number
+  maxNeighbours: number
+  graphStyleData: any
+  getNeighbours: (
+    id: string,
+    currentNeighbourIds: string[] | undefined
+  ) => Promise<BasicNodesAndRels & { count: number }>
+  updateStyle: any
+  isFullscreen: boolean
+  assignVisElement: (v: any) => void
+  getAutoCompleteCallback: (
+    callback: (rels: BasicRelationship[]) => void
+  ) => void
+  setGraph: (graph: Graph) => void
+  hasTruncatedFields: boolean
+}
+type ExporerReduxProps = {
+  nodePropertiesExpandedByDefault: boolean
+  setNodePropertiesExpandedByDefault: (expandedByDefault: boolean) => void
 }
 
 type ExplorerComponentState = {
-  stats: { labels: any; relTypes: any }
-  graphStyle: any
+  graphStyle: GraphStyle
+  hoveredItem: VizItem
+  nodes: BasicNode[]
+  relationships: BasicRelationship[]
+  selectedItem: VizItem
+  stats: GraphStats
   styleVersion: number
-  nodes: any[]
-  relationships: any[]
-  selectedItem: any
-  hoveredItem?: any
-  freezeLegend?: boolean
+  freezeLegend: boolean
+  width: number
+  nodePropertiesExpanded: boolean
   inspectorContracted?: any
   forcePaddingBottom?: any
   neighboursPicker: null | INeighboursPickerPopoverProps
 }
+type FullExplorerProps = ExplorerComponentProps & ExporerReduxProps
 
-export class ExplorerComponent extends Component<any, ExplorerComponentState> {
+export class ExplorerComponent extends Component<
+  FullExplorerProps,
+  ExplorerComponentState
+> {
   defaultStyle: any
 
-  constructor(props: any) {
+  constructor(props: FullExplorerProps) {
     super(props)
-    const graphStyle = neoGraphStyle()
+    const graphStyle = new GraphStyle()
     this.defaultStyle = graphStyle.toSheet()
-    let relationships = this.props.relationships
-    let nodes = deduplicateNodes(this.props.nodes)
-    let selectedItem: any = ''
-    if (nodes.length > parseInt(this.props.initialNodeDisplay)) {
-      nodes = nodes.slice(0, this.props.initialNodeDisplay)
-      relationships = this.props.relationships.filter((item: any) => {
-        return nodes.filter((node: any) => node.id === item.startNodeId) > 0
-      })
-      selectedItem = {
-        type: 'status-item',
-        item: `Not all return nodes are being displayed due to Initial Node Display setting. Only ${this.props.initialNodeDisplay} of ${nodes.length} nodes are being displayed`
-      }
-    }
+    const { nodes, nodeLimitHit } = deduplicateNodes(
+      this.props.nodes,
+      this.props.initialNodeDisplay
+    )
+    const relationships = nodeLimitHit
+      ? this.props.relationships.filter(
+          rel =>
+            !!nodes.find(node => node.id === rel.startNodeId) &&
+            !!nodes.find(node => node.id === rel.endNodeId)
+        )
+      : this.props.relationships
+
+    const selectedItem: VizItem = nodeLimitHit
+      ? {
+          type: 'status-item',
+          item: `Not all return nodes are being displayed due to Initial Node Display setting. Only ${this.props.initialNodeDisplay} of ${nodes.length} nodes are being displayed`
+        }
+      : {
+          type: 'canvas',
+          item: {
+            nodeCount: nodes.length,
+            relationshipCount: relationships.length
+          }
+        }
+
     if (this.props.graphStyleData) {
       const rebasedStyle = deepmerge(
         this.defaultStyle,
@@ -90,12 +155,19 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
       graphStyle.loadRules(rebasedStyle)
     }
     this.state = {
-      stats: { labels: {}, relTypes: {} },
+      stats: {
+        labels: {},
+        relTypes: {}
+      },
       graphStyle,
       styleVersion: 0,
       nodes,
       relationships,
       selectedItem,
+      hoveredItem: selectedItem,
+      freezeLegend: false,
+      width: defaultPanelWidth(),
+      nodePropertiesExpanded: this.props.nodePropertiesExpandedByDefault,
       neighboursPicker: null
     }
 
@@ -126,77 +198,56 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
     })
   }
 
-  getNodeNeighbours(
-    node: { id: string },
-    currentNeighbours: string[],
-    callback: Function
-  ) {
-    if (currentNeighbours.length > this.props.maxNeighbours) {
-      callback(null, { nodes: [], relationships: [] })
+  getNodeNeighbours: GetNodeNeighboursFn = (
+    node,
+    currentNeighbourIds,
+    callback
+  ) => {
+    if (currentNeighbourIds.length > this.props.maxNeighbours) {
+      callback({ nodes: [], relationships: [] })
     }
-    this.props.getNeighbours(node.id, currentNeighbours).then(
-      (result: any) => {
-        const nodes = result.nodes
-        if (
-          result.count >
-          this.props.maxNeighbours - currentNeighbours.length
-        ) {
+    this.props.getNeighbours(node.id, currentNeighbourIds).then(
+      ({ nodes, relationships, count }) => {
+        if (count > this.props.maxNeighbours - currentNeighbourIds.length) {
           this.setState({
             selectedItem: {
               type: 'status-item',
               item: `Rendering was limited to ${
                 this.props.maxNeighbours
-              } of the node's total ${result.count +
-                currentNeighbours.length} neighbours due to browser config maxNeighbours.`
+              } of the node's total ${count +
+                currentNeighbourIds.length} neighbours due to browser config maxNeighbours.`
             }
           })
         }
-        callback(null, { nodes: nodes, relationships: result.relationships })
+        callback({ nodes, relationships })
       },
       () => {
-        callback(null, { nodes: [], relationships: [] })
+        callback({ nodes: [], relationships: [] })
       }
     )
   }
 
-  onItemMouseOver(item: any) {
-    this.setState({ hoveredItem: item })
+  onItemMouseOver(item: VizItem): void {
+    this.setHoveredItem(item)
   }
 
-  onItemSelect(item: any) {
-    this.setState({ selectedItem: item })
+  mounted = true
+  setHoveredItem = debounce((hoveredItem: VizItem) => {
+    if (this.mounted) {
+      this.setState({ hoveredItem })
+    }
+  }, 200)
+
+  onItemSelect(selectedItem: VizItem): void {
+    this.setState({ selectedItem })
   }
 
-  onGraphModelChange(stats: any) {
-    this.setState({ stats: stats })
+  onGraphModelChange(stats: GraphStats): void {
+    this.setState({ stats })
     this.props.updateStyle(this.state.graphStyle.toSheet())
   }
 
-  onSelectedLabel(label: any, propertyKeys: any) {
-    this.setState({
-      selectedItem: {
-        type: 'legend-item',
-        item: {
-          selectedLabel: { label: label, propertyKeys: propertyKeys },
-          selectedRelType: null
-        }
-      }
-    })
-  }
-
-  onSelectedRelType(relType: any, propertyKeys: any) {
-    this.setState({
-      selectedItem: {
-        type: 'legend-item',
-        item: {
-          selectedLabel: null,
-          selectedRelType: { relType: relType, propertyKeys: propertyKeys }
-        }
-      }
-    })
-  }
-
-  componentDidUpdate(prevProps: any) {
+  componentDidUpdate(prevProps: ExplorerComponentProps): void {
     if (!deepEquals(prevProps.graphStyleData, this.props.graphStyleData)) {
       if (this.props.graphStyleData) {
         const rebasedStyle = deepmerge(
@@ -221,76 +272,55 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
     }
   }
 
-  onInspectorExpandToggled(contracted: any, inspectorHeight: any) {
-    this.setState({
-      inspectorContracted: contracted,
-      forcePaddingBottom: inspectorHeight
-    })
-  }
-
   closeNeighboursPicker = () => this.setState({ neighboursPicker: null })
 
-  render() {
+  render(): JSX.Element {
     // This is a workaround to make the style reset to the same colors as when starting the browser with an empty style
     // If the legend component has the style it will ask the neoGraphStyle object for styling before the graph component,
     // and also doing this in a different order from the graph. This leads to different default colors being assigned to different labels.
-    let legend
-    if (this.state.freezeLegend) {
-      legend = (
-        <LegendComponent
-          stats={this.state.stats}
-          graphStyle={neoGraphStyle()}
-          onSelectedLabel={this.onSelectedLabel.bind(this)}
-          onSelectedRelType={this.onSelectedRelType.bind(this)}
-        />
-      )
-    } else {
-      legend = (
-        <LegendComponent
-          stats={this.state.stats}
-          graphStyle={this.state.graphStyle}
-          onSelectedLabel={this.onSelectedLabel.bind(this)}
-          onSelectedRelType={this.onSelectedRelType.bind(this)}
-        />
-      )
-    }
-    const inspectingItemType =
-      !this.state.inspectorContracted &&
-      ((this.state.hoveredItem && this.state.hoveredItem.type !== 'canvas') ||
-        (this.state.selectedItem && this.state.selectedItem.type !== 'canvas'))
+    const graphStyle = this.state.freezeLegend
+      ? new GraphStyle()
+      : this.state.graphStyle
 
     return (
-      <StyledFullSizeContainer
-        id="svg-vis"
-        className={
-          Object.keys(this.state.stats.relTypes).length ? '' : 'one-legend-row'
-        }
-      >
-        {legend}
+      <StyledFullSizeContainer id="svg-vis">
         <GraphComponent
-          fullscreen={this.props.fullscreen}
-          frameHeight={this.props.frameHeight}
+          isFullscreen={this.props.isFullscreen}
           relationships={this.state.relationships}
           nodes={this.state.nodes}
           filterNodeNeighbours={this.filterNodeNeighbours}
           getNodeNeighbours={this.getNodeNeighbours.bind(this)}
           onItemMouseOver={this.onItemMouseOver.bind(this)}
           onItemSelect={this.onItemSelect.bind(this)}
-          graphStyle={this.state.graphStyle}
+          graphStyle={graphStyle}
           styleVersion={this.state.styleVersion} // cheap way for child to check style updates
           onGraphModelChange={this.onGraphModelChange.bind(this)}
           assignVisElement={this.props.assignVisElement}
           getAutoCompleteCallback={this.props.getAutoCompleteCallback}
           setGraph={this.props.setGraph}
+          offset={
+            (this.state.nodePropertiesExpanded ? this.state.width : 0) + 4
+          }
         />
-        <InspectorComponent
+        <NodeInspectorPanel
+          graphStyle={graphStyle}
           hasTruncatedFields={this.props.hasTruncatedFields}
-          fullscreen={this.props.fullscreen}
           hoveredItem={this.state.hoveredItem}
           selectedItem={this.state.selectedItem}
-          graphStyle={this.state.graphStyle}
           nodes={this.state.nodes}
-          onExpandToggled={this.onInspectorExpandToggled.bind(this)}
+          stats={this.state.stats}
+          width={this.state.width}
+          setWidth={(width: number) =>
+            this.setState({ width: Math.max(panelMinWidth, width) })
+          }
+          expanded={this.state.nodePropertiesExpanded}
+          toggleExpanded={() => {
+            const { nodePropertiesExpanded } = this.state
+            this.props.setNodePropertiesExpandedByDefault(
+              !nodePropertiesExpanded
+            )
+            this.setState({ nodePropertiesExpanded: !nodePropertiesExpanded })
+          }}
         />
         {this.state.neighboursPicker && (
           <NeighboursPickerPopover
@@ -303,8 +333,23 @@ export class ExplorerComponent extends Component<any, ExplorerComponentState> {
       </StyledFullSizeContainer>
     )
   }
+
+  componentWillUnmount(): void {
+    this.mounted = false
+  }
 }
 
-export const Explorer = connect((state: GlobalState) => ({
-  maxFieldItems: getMaxFieldItems(state)
-}))(ExplorerComponent)
+export const Explorer: ConnectedComponent<
+  typeof ExplorerComponent,
+  ExplorerComponentProps
+> = connect(
+  (state: GlobalState) => ({
+    nodePropertiesExpandedByDefault: getNodePropertiesExpandedByDefault(state)
+  }),
+  (dispatch: Dispatch<Action>) => ({
+    setNodePropertiesExpandedByDefault: (expandedByDefault: boolean) =>
+      dispatch(setNodePropertiesExpandedByDefault(expandedByDefault))
+  })
+)(ExplorerComponent)
+
+export default Explorer

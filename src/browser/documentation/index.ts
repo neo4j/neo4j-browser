@@ -104,7 +104,6 @@ import playWritecode from './play-guides/write-code'
 // Migrated sidebar guides
 import guideConcepts from './sidebar-guides/concepts'
 import guideCypher from './sidebar-guides/cypher'
-import guideIndex from './sidebar-guides/guideIndex'
 import guideIntro from './sidebar-guides/intro'
 import guideMovieGraph from './sidebar-guides/movie-graph'
 import guideNorthwindGraph from './sidebar-guides/northwind-graph'
@@ -126,20 +125,22 @@ type DocItem = {
   slides?: JSX.Element[]
 }
 
-type GuideItem = {
+export type Guide = {
+  currentSlide: number
   title: string
+  identifier: string
   slides: JSX.Element[]
+  isError?: boolean
 }
 
 type GuideDocs = {
   title: 'Built-in Browser guides'
-  chapters: Record<GuideChapter, GuideItem>
+  chapters: Record<BuiltInGuideIdentifier, Omit<Guide, 'currentSlide'>>
 }
 
-type GuideChapter =
+export type BuiltInGuideIdentifier =
   | 'concepts'
   | 'cypher'
-  | 'index'
   | 'intro'
   | 'movie-graph'
   | 'movieGraph'
@@ -150,9 +151,8 @@ type GuideChapter =
   | 'unfound'
 
 // TypeGuard function to ts to understand that a string is a valid key
-export function isGuideChapter(name: string): name is GuideChapter {
-  return name in docs.guide.chapters
-}
+export const isBuiltInGuide = (name: string): name is BuiltInGuideIdentifier =>
+  name in docs.guide.chapters
 
 type PlayDocs = {
   title: 'Guides & Examples'
@@ -362,7 +362,6 @@ const docs: AllDocumentation = {
     chapters: {
       concepts: guideConcepts,
       cypher: guideCypher,
-      index: guideIndex,
       intro: guideIntro,
       movies: guideMovieGraph,
       movieGraph: guideMovieGraph,

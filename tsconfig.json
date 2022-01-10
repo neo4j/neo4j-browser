@@ -17,8 +17,10 @@
     "noFallthroughCasesInSwitch": true,
     "jsx": "react",
     "outDir": "./build",
+    "noEmit": true,
     "allowJs": true,
     "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
     "baseUrl": "./src",
     "paths": {
       "services/*": ["shared/services/*"],

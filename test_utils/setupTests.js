@@ -17,6 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import nock from 'nock'
+
+import '@testing-library/jest-dom/extend-expect' // Add extra expect functions to be used in tests
 
 // polyfill for jsdom (for tests only)
 // tests with cypher-editor-support breaks without it
@@ -46,3 +49,5 @@ Object.defineProperty(window, 'matchMedia', {
 window.ResizeObserver = class {
   observe() {}
 }
+
+nock.disableNetConnect()

@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, fireEvent, wait } from '@testing-library/react'
+import { render, fireEvent, waitFor } from '@testing-library/react'
 
 import InputEnterStepping from './InputEnterStepping'
 
@@ -50,7 +50,7 @@ test('focuses correctly and submits on enter in last input', async () => {
   // Then
   expect(container).toMatchSnapshot()
   // Need to wait for the focus to get there, since it's set by setTimeout
-  await wait(() =>
+  await waitFor(() =>
     expect(document.activeElement).toEqual(getByDisplayValue('first'))
   )
 

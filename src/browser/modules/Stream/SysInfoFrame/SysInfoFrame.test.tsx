@@ -21,9 +21,9 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { SysInfoFrame } from './SysInfoFrame'
-import { Frame } from 'shared/modules/stream/streamDuck'
+import { Frame } from 'shared/modules/frames/framesDuck'
 import { Bus } from 'suber'
-import { Database } from 'shared/modules/dbMeta/dbMetaDuck'
+import { Database } from 'shared/modules/dbMeta/state'
 
 const baseProps = {
   databases: [],
@@ -32,11 +32,13 @@ const baseProps = {
   hasMultiDbSupport: true,
   isConnected: true,
   isEnterprise: true,
-  useDb: 'neo4j'
+  useDb: 'neo4j',
+  isFullscreen: false,
+  isCollapsed: false
 }
 
 jest.mock(
-  'browser/modules/Frame/FrameTemplate',
+  'browser/modules/Frame/FrameBodyTemplate',
   // eslint-disable-next-line
   () => ({ contents, children }: any) => (
     <div>

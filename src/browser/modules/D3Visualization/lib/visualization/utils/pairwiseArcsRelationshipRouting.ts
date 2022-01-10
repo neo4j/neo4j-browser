@@ -18,61 +18,71 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import measureText from './textMeasurement'
-import LoopArrow from './loopArrow'
-import StraightArrow from './straightArrow'
-import ArcArrow from './arcArrow'
+import LoopArrow from './LoopArrow'
+import StraightArrow from './StraightArrow'
+import ArcArrow from './ArcArrow'
+import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
+import Relationship from '../components/Relationship'
+import Graph from '../components/Graph'
+import { NodePair } from '../components/Graph'
 
 export default class PairwiseArcsRelationshipRouting {
-  style: any
-
-  constructor(style: any) {
+  style: GraphStyle
+  canvas: HTMLCanvasElement
+  constructor(style: GraphStyle) {
     this.style = style
+    this.canvas = document.createElement('canvas')
   }
 
-  measureRelationshipCaption(relationship: any, caption: any) {
+  measureRelationshipCaption(
+    relationship: Relationship,
+    caption: string
+  ): number {
     const fontFamily = 'sans-serif'
     const padding = parseFloat(
       this.style.forRelationship(relationship).get('padding')
     )
+    const canvas2DContext = this.canvas.getContext('2d')
     return (
-      measureText(caption, fontFamily, relationship.captionHeight) + padding * 2
+      measureText(
+        caption,
+        fontFamily,
+        relationship.captionHeight,
+        <CanvasRenderingContext2D>canvas2DContext
+      ) +
+      padding * 2
     )
   }
 
-  captionFitsInsideArrowShaftWidth(relationship: any) {
+  captionFitsInsideArrowShaftWidth(relationship: Relationship): boolean {
     return (
       parseFloat(this.style.forRelationship(relationship).get('shaft-width')) >
       relationship.captionHeight
     )
   }
 
-  measureRelationshipCaptions(relationships: Iterable<any>) {
-    return (() => {
-      const result = []
-      for (const relationship of Array.from(relationships)) {
-        relationship.captionHeight = parseFloat(
-          this.style.forRelationship(relationship).get('font-size')
-        )
-        relationship.captionLength = this.measureRelationshipCaption(
-          relationship,
-          relationship.caption
-        )
-        result.push(
-          (relationship.captionLayout =
-            this.captionFitsInsideArrowShaftWidth(relationship) &&
-            !relationship.isLoop()
-              ? 'internal'
-              : 'external')
-        )
-      }
-      return result
-    })()
+  measureRelationshipCaptions(relationships: Relationship[]): void {
+    relationships.forEach(relationship => {
+      relationship.captionHeight = parseFloat(
+        this.style.forRelationship(relationship).get('font-size')
+      )
+      relationship.captionLength = this.measureRelationshipCaption(
+        relationship,
+        relationship.caption
+      )
+
+      relationship.captionLayout =
+        this.captionFitsInsideArrowShaftWidth(relationship) &&
+        !relationship.isLoop()
+          ? 'internal'
+          : 'external'
+    })
   }
 
   shortenCaption(
-    relationship: any,
-    caption: any,
-    targetWidth: any
+    relationship: Relationship,
+    caption: string,
+    targetWidth: number
   ): [string, number] {
     let shortCaption = caption || 'caption'
     while (true) {
@@ -87,256 +97,200 @@ export default class PairwiseArcsRelationshipRouting {
     }
   }
 
-  computeGeometryForNonLoopArrows(
-    nodePairs: Iterable<{ relationships: Iterable<any>; [key: string]: any }>
-  ) {
-    const square = (distance: any) => distance * distance
-    return (() => {
-      const result = []
-      for (var nodePair of Array.from(nodePairs)) {
-        if (!nodePair.isLoop()) {
-          const dx = nodePair.nodeA.x - nodePair.nodeB.x
-          const dy = nodePair.nodeA.y - nodePair.nodeB.y
-          var angle = ((Math.atan2(dy, dx) / Math.PI) * 180 + 360) % 360
-          var centreDistance = Math.sqrt(square(dx) + square(dy))
-          result.push(
-            (() => {
-              const result1 = []
-              for (const relationship of Array.from(nodePair.relationships)) {
-                relationship.naturalAngle =
-                  relationship.target === nodePair.nodeA
-                    ? (angle + 180) % 360
-                    : angle
-                result1.push((relationship.centreDistance = centreDistance))
-              }
-              return result1
-            })()
-          )
-        } else {
-          result.push(undefined)
-        }
+  computeGeometryForNonLoopArrows(nodePairs: NodePair[]): void {
+    const square = (distance: number) => distance * distance
+
+    nodePairs.forEach(nodePair => {
+      if (!nodePair.isLoop()) {
+        const dx = nodePair.nodeA.x - nodePair.nodeB.x
+        const dy = nodePair.nodeA.y - nodePair.nodeB.y
+        const angle = ((Math.atan2(dy, dx) / Math.PI) * 180 + 360) % 360
+        const centreDistance = Math.sqrt(square(dx) + square(dy))
+
+        nodePair.relationships.forEach(relationship => {
+          relationship.naturalAngle =
+            relationship.target === nodePair.nodeA ? (angle + 180) % 360 : angle
+          relationship.centreDistance = centreDistance
+        })
       }
-      return result
-    })()
+    })
   }
 
   distributeAnglesForLoopArrows(
-    nodePairs: Iterable<any>,
-    relationships: Iterable<any>
-  ) {
-    return (() => {
-      const result = []
-      for (var nodePair of Array.from(nodePairs)) {
-        if (nodePair.isLoop()) {
-          var i, separation
-          let angles = []
-          const node = nodePair.nodeA
-          for (var relationship of Array.from(relationships)) {
-            if (!relationship.isLoop()) {
-              if (relationship.source === node) {
-                angles.push(relationship.naturalAngle)
-              }
-              if (relationship.target === node) {
-                angles.push(relationship.naturalAngle + 180)
-              }
+    nodePairs: NodePair[],
+    relationships: Relationship[]
+  ): void {
+    for (const nodePair of nodePairs) {
+      if (nodePair.isLoop()) {
+        let angles = []
+        const node = nodePair.nodeA
+        for (const relationship of Array.from(relationships)) {
+          if (!relationship.isLoop()) {
+            if (relationship.source === node) {
+              angles.push(relationship.naturalAngle)
+            }
+            if (relationship.target === node) {
+              angles.push(relationship.naturalAngle + 180)
             }
           }
-          angles = angles.map(a => (a + 360) % 360).sort((a, b) => a - b)
-          if (angles.length > 0) {
-            var end, start
-            var biggestGap = {
-              start: 0,
-              end: 0
+        }
+        angles = angles.map(a => (a + 360) % 360).sort((a, b) => a - b)
+
+        if (angles.length > 0) {
+          let end, start
+          const biggestGap = {
+            start: 0,
+            end: 0
+          }
+
+          for (let i = 0; i < angles.length; i++) {
+            const angle = angles[i]
+            start = angle
+            end = i === angles.length - 1 ? angles[0] + 360 : angles[i + 1]
+            if (end - start > biggestGap.end - biggestGap.start) {
+              biggestGap.start = start
+              biggestGap.end = end
             }
-            for (i = 0; i < angles.length; i++) {
-              const angle = angles[i]
-              start = angle
-              end = i === angles.length - 1 ? angles[0] + 360 : angles[i + 1]
-              if (end - start > biggestGap.end - biggestGap.start) {
-                biggestGap.start = start
-                biggestGap.end = end
-              }
-            }
-            separation =
-              (biggestGap.end - biggestGap.start) /
-              (nodePair.relationships.length + 1)
-            result.push(
-              (() => {
-                const result1 = []
-                for (i = 0; i < nodePair.relationships.length; i++) {
-                  relationship = nodePair.relationships[i]
-                  result1.push(
-                    (relationship.naturalAngle =
-                      (biggestGap.start + (i + 1) * separation - 90) % 360)
-                  )
-                }
-                return result1
-              })()
-            )
-          } else {
-            separation = 360 / nodePair.relationships.length
-            result.push(
-              (() => {
-                const result2 = []
-                for (i = 0; i < nodePair.relationships.length; i++) {
-                  relationship = nodePair.relationships[i]
-                  result2.push((relationship.naturalAngle = i * separation))
-                }
-                return result2
-              })()
-            )
+          }
+          const separation =
+            (biggestGap.end - biggestGap.start) /
+            (nodePair.relationships.length + 1)
+          for (let i = 0; i < nodePair.relationships.length; i++) {
+            const relationship = nodePair.relationships[i]
+            relationship.naturalAngle =
+              (biggestGap.start + (i + 1) * separation - 90) % 360
           }
         } else {
-          result.push(undefined)
+          const separation = 360 / nodePair.relationships.length
+          for (let i = 0; i < nodePair.relationships.length; i++) {
+            const relationship = nodePair.relationships[i]
+            relationship.naturalAngle = i * separation
+          }
         }
       }
-      return result
-    })()
+    }
   }
 
-  layoutRelationships(graph: any) {
-    const nodePairs: Iterable<{
-      relationships: any[]
-      [key: string]: any
-    }> = graph.groupedRelationships()
+  layoutRelationships(graph: Graph): void {
+    const nodePairs = graph.groupedRelationships()
+
     this.computeGeometryForNonLoopArrows(nodePairs)
     this.distributeAnglesForLoopArrows(nodePairs, graph.relationships())
 
-    return (() => {
-      const result = []
-      for (var nodePair of Array.from(nodePairs)) {
-        for (var relationship of Array.from(nodePair.relationships)) {
-          delete relationship.arrow
-        }
-
-        var middleRelationshipIndex = (nodePair.relationships.length - 1) / 2
-        var defaultDeflectionStep = 30
-        const maximumTotalDeflection = 150
-        const numberOfSteps = nodePair.relationships.length - 1
-        const totalDeflection = defaultDeflectionStep * numberOfSteps
-
-        var deflectionStep =
-          totalDeflection > maximumTotalDeflection
-            ? maximumTotalDeflection / numberOfSteps
-            : defaultDeflectionStep
-
-        result.push(
-          (() => {
-            const result1 = []
-            for (let i = 0; i < nodePair.relationships.length; i++) {
-              let ref
-              relationship = nodePair.relationships[i]
-              const shaftWidth =
-                parseFloat(
-                  this.style.forRelationship(relationship).get('shaft-width')
-                ) || 2
-              const headWidth = shaftWidth + 6
-              const headHeight = headWidth
-
-              if (nodePair.isLoop()) {
-                relationship.arrow = new LoopArrow(
-                  relationship.source.radius,
-                  40,
-                  defaultDeflectionStep,
-                  shaftWidth,
-                  headWidth,
-                  headHeight,
-                  relationship.captionHeight
-                )
-              } else {
-                if (i === middleRelationshipIndex) {
-                  relationship.arrow = new StraightArrow(
-                    relationship.source.radius,
-                    relationship.target.radius,
-                    relationship.centreDistance,
-                    shaftWidth,
-                    headWidth,
-                    headHeight,
-                    relationship.captionLayout
-                  )
-                } else {
-                  let deflection =
-                    deflectionStep * (i - middleRelationshipIndex)
-
-                  if (nodePair.nodeA !== relationship.source) {
-                    deflection *= -1
-                  }
-
-                  relationship.arrow = new ArcArrow(
-                    relationship.source.radius,
-                    relationship.target.radius,
-                    relationship.centreDistance,
-                    deflection,
-                    shaftWidth,
-                    headWidth,
-                    headHeight,
-                    relationship.captionLayout
-                  )
-                }
-              }
-
-              if (relationship.captionSettingsArray) {
-                relationship.captionSettingsArray.forEach((label: any) => {
-                  label.captionLength = this.measureRelationshipCaption(
-                    relationship,
-                    label.caption
-                  )
-                  const temp: [string, number] =
-                    relationship.arrow.shaftLength > label.captionLength
-                      ? [label.caption, label.captionLength]
-                      : this.shortenCaption(
-                          relationship,
-                          label.caption,
-                          relationship.arrow.shaftLength
-                        )
-                  label.shortCaption = temp[0]
-                  label.shortCaptionLength = temp[1]
-                })
-              }
-              if (relationship.sideCaptions) {
-                Object.keys(relationship.sideCaptions).forEach(position => {
-                  const array = relationship.sideCaptions[position]
-                  array.forEach((label: any) => {
-                    label.captionLength = this.measureRelationshipCaption(
-                      relationship,
-                      label.caption
-                    )
-                    const allowedLength = relationship.arrow.shaftLength / 2
-                    const temp: [string, number] =
-                      allowedLength > label.captionLength
-                        ? [label.caption, label.captionLength]
-                        : this.shortenCaption(
-                            relationship,
-                            label.caption,
-                            allowedLength
-                          )
-                    label.shortCaption = temp[0]
-                    label.shortCaptionLength = temp[1]
-                  })
-                })
-              }
-              result1.push(
-                ([
-                  relationship.shortCaption,
-                  relationship.shortCaptionLength
-                ] = Array.from(
-                  (ref =
-                    relationship.arrow.shaftLength > relationship.captionLength
-                      ? [relationship.caption, relationship.captionLength]
-                      : this.shortenCaption(
-                          relationship,
-                          relationship.caption,
-                          relationship.arrow.shaftLength
-                        ))
-                )),
-                ref
-              )
-            }
-            return result1
-          })()
-        )
+    for (const nodePair of nodePairs) {
+      for (const relationship of nodePair.relationships) {
+        delete relationship.arrow
       }
-      return result
-    })()
+
+      const middleRelationshipIndex = (nodePair.relationships.length - 1) / 2
+      const defaultDeflectionStep = 30
+      const maximumTotalDeflection = 150
+      const numberOfSteps = nodePair.relationships.length - 1
+      const totalDeflection = defaultDeflectionStep * numberOfSteps
+
+      const deflectionStep =
+        totalDeflection > maximumTotalDeflection
+          ? maximumTotalDeflection / numberOfSteps
+          : defaultDeflectionStep
+
+      for (let i = 0; i < nodePair.relationships.length; i++) {
+        const relationship = nodePair.relationships[i]
+        const shaftWidth =
+          parseFloat(
+            this.style.forRelationship(relationship).get('shaft-width')
+          ) || 2
+        const headWidth = shaftWidth + 6
+        const headHeight = headWidth
+
+        if (nodePair.isLoop()) {
+          relationship.arrow = new LoopArrow(
+            relationship.source.radius,
+            40,
+            defaultDeflectionStep,
+            shaftWidth,
+            headWidth,
+            headHeight,
+            relationship.captionHeight
+          )
+        } else {
+          if (i === middleRelationshipIndex) {
+            relationship.arrow = new StraightArrow(
+              relationship.source.radius,
+              relationship.target.radius,
+              relationship.centreDistance,
+              shaftWidth,
+              headWidth,
+              headHeight,
+              relationship.captionLayout
+            )
+          } else {
+            let deflection = deflectionStep * (i - middleRelationshipIndex)
+
+            if (nodePair.nodeA !== relationship.source) {
+              deflection *= -1
+            }
+
+            relationship.arrow = new ArcArrow(
+              relationship.source.radius,
+              relationship.target.radius,
+              relationship.centreDistance,
+              deflection,
+              shaftWidth,
+              headWidth,
+              headHeight,
+              relationship.captionLayout
+            )
+          }
+        }
+        if (relationship.captionSettingsArray) {
+          relationship.captionSettingsArray.forEach((label: any) => {
+            label.captionLength = this.measureRelationshipCaption(
+              relationship,
+              label.caption
+            )
+            const temp: [string, number] =
+              relationship.arrow.shaftLength > label.captionLength
+                ? [label.caption, label.captionLength]
+                : this.shortenCaption(
+                    relationship,
+                    label.caption,
+                    relationship.arrow.shaftLength
+                  )
+            label.shortCaption = temp[0]
+            label.shortCaptionLength = temp[1]
+          })
+        }
+        if (relationship.sideCaptions) {
+          Object.keys(relationship.sideCaptions).forEach(position => {
+            const array = relationship.sideCaptions[position]
+            array.forEach((label: any) => {
+              label.captionLength = this.measureRelationshipCaption(
+                relationship,
+                label.caption
+              )
+              const allowedLength = relationship.arrow.shaftLength / 2
+              const temp: [string, number] =
+                allowedLength > label.captionLength
+                  ? [label.caption, label.captionLength]
+                  : this.shortenCaption(
+                      relationship,
+                      label.caption,
+                      allowedLength
+                    )
+              label.shortCaption = temp[0]
+              label.shortCaptionLength = temp[1]
+            })
+          })
+        }
+        ;[relationship.shortCaption, relationship.shortCaptionLength] =
+          relationship.arrow.shaftLength > relationship.captionLength
+            ? [relationship.caption, relationship.captionLength]
+            : this.shortenCaption(
+                relationship,
+                relationship.caption,
+                relationship.arrow.shaftLength
+              )
+      }
+    }
   }
 }

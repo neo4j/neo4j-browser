@@ -1,0 +1,25 @@
+:description: Execute an initial command at startup.
+
+
+[[initial-command]]
+= Initial command
+
+When you first open Neo4j Browser and connect to a Neo4j DBMS, it automatically executes the command:
+
+[source, browser command, role="noheader"]
+----
+:play start
+----
+
+The `:play start` browser command outputs an entry page containing interactive guides that you can use to learn some Neo4j concepts, try Neo4j with live data (MovieGraph), and write some basic Cypher queries.
+
+Besides, you can also navigate to the *Help & Learn* drawer in the sidebar, where you will find more information about useful commands, a lot of built-in guides, and links to documentation.
+
+If you want to change the initially executed command, navigate to the *Browser Settings* drawer in the sidebar and add a new value for the *Initial command to execute* setting.
+
+[TIP]
+====
+For more information on how to enter and run Cypher queries and commands, see xref:visual-tour.adoc#editor[Cypher editor]. +
+For more information about Cypher, see link:https://neo4j.com/docs/cypher-manual/{neo4j-version}/[Cypher Manual^] and link:https://neo4j.com/docs/cypher-refcard/{neo4j-version}/[Neo4j Cypher Refcard^].
+====
+

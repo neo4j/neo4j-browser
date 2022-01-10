@@ -34,6 +34,7 @@ const chip = styled.div`
   span {
     line-height: normal;
   }
+  display: inline-block;
 `
 export const StyledLabel = styled(chip)`
   border-radius: 20px;
@@ -100,12 +101,3 @@ export const Link = (props: any) => {
     </StyledLink>
   )
 }
-
-export const StyledShowMoreContainer = styled.div`
-  margin-top: 10px;
-`
-
-export const StyledShowMoreLink = styled.span`
-  cursor: pointer;
-  color: ${props => props.theme.link};
-`

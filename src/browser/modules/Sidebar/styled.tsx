@@ -88,7 +88,7 @@ export const StyledName = styled.div`
 `
 
 export const StyledFullSizeDrawerBody = styled(DrawerBody)`
-  padding: 0;
+  padding: 0 0 12px 0;
 `
 
 export const StyledHeaderContainer = styled.div`
@@ -147,14 +147,14 @@ export const GuideUl = styled.ul`
   padding-left: 0 !important;
 `
 
-export const StyledGuidesDrawer = styled.div`
+export const StyledGuideDrawer = styled.div`
   min-height: 100vh;
   position: relative;
   width: ${LARGE_DRAWER_WIDTH}px;
   /* width is set to avoid squashing during opening animation */
 `
 
-export const StyledGuidesDrawerHeader = styled.h4`
+export const StyledGuideDrawerHeader = styled.h4`
   color: ${props => props.theme.primaryHeaderText};
   background-color: ${props => props.theme.drawerBackground};
   font-size: 18px;

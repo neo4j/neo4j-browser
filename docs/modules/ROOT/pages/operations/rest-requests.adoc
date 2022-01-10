@@ -1,0 +1,87 @@
+:description: HTTP REST requests.
+
+
+[[http-rest-requests]]
+= HTTP REST requests
+
+Neo4j Browser supports the following HTTP REST commands:
+
+* `:delete` -- HTTP DELETE.
+* `:get`  -- HTTP GET.
+* `:head` -- HTTP HEAD.
+* `:post` -- HTTP POST.
+* `:put` -- HTTP PUT.
+
+It is possible to use these commands to query the link:https://neo4j.com/docs/http-api/{neo4j-version}/[Neo4j HTTP API^].
+
+[NOTE]
+====
+The link:https://neo4j.com/docs/rest-docs/3.5/[Neo4j REST API^] was deprecated in Neo4j 3.5 and was removed from Neo4j 4.X versions.
+====
+
+//The HTTP API can return JSON or JOLT.
+//ACCEPT: application/json
+//ACCEPT: application/vnd.neo4j.jolt
+//ACCEPT: application/vnd.neo4j.jolt+json+seq
+
+
+.HTTP API
+====
+[source, browser command, role=noheader]
+----
+:get /
+----
+
+[source, JSON response, role=noheader, subs="attributes+,macros"]
+----
+{
+  "bolt_routing" : "neo4j://localhost:7687",
+  "transaction" : +"http://localhost:7474/db/{databaseName}/tx",+
+  "bolt_direct" : "bolt://localhost:7687",
+  "neo4j_version" : "{neo4j-version-exact}",
+  "neo4j_edition" : "enterprise"
+}
+----
+====
+
+
+.HTTP API -- transaction
+====
+[source, browser command, role=noheader]
+----
+:post /db/neo4j/tx
+----
+
+[source, JSON response, role=noheader]
+----
+{"results":[],"errors":[],"commit":"http://localhost:7474/db/neo4j/tx/2/commit","transaction":{"expires":"Fri, 20 Jan 2222 10:11:12 GMT"}}
+----
+====
+
+
+.HTTP API -- transaction and commit
+====
+[source, browser command, role=noheader]
+----
+:post /db/neo4j/tx/commit {
+"statements": [
+{
+  "statement": "CREATE (n $props) RETURN n",
+  "parameters": {
+    "props": {
+      "name": "My Node"
+    }
+  }
+},
+{
+  "statement": "CREATE (n $props) RETURN n",
+  "parameters": {
+    "props": {
+      "name": "Another Node"
+    }
+  }
+}]
+}
+----
+====
+

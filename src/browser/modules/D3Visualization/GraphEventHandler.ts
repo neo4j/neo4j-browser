@@ -17,29 +17,40 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { VizItem } from './components/types'
+import Graph from './lib/visualization/components/Graph'
+import GraphView from './lib/visualization/components/GraphView'
+import Relationship from './lib/visualization/components/Relationship'
+import VizNode from './lib/visualization/components/VizNode'
+import { GraphStats, getGraphStats, mapNodes, mapRelationships } from './mapper'
+import { BasicNode, BasicNodesAndRels } from 'services/bolt/boltMappings'
 
-import { mapNodes, mapRelationships, getGraphStats } from './mapper'
+export type GetNodeNeighboursFn = (
+  node: BasicNode | VizNode,
+  currentNeighbourIds: string[],
+  callback: (data: BasicNodesAndRels) => void
+) => void
 
 export class GraphEventHandler {
-  getNodeNeighbours: any
-  graph: any
-  graphView: any
-  onGraphModelChange: any
-  onItemMouseOver: any
-  onItemSelected: any
-  selectedItem: any
+  getNodeNeighbours: GetNodeNeighboursFn
+  graph: Graph
+  graphView: GraphView
+  onGraphModelChange: (stats: GraphStats) => void
+  onItemMouseOver: (item: VizItem) => void
+  onItemSelected: (item: VizItem) => void
+  selectedItem: VizNode | Relationship | null
   filterNodeNeighbours: (
     node: { id: string },
     selection: string[],
     callback: Function
   ) => void
   constructor(
-    graph: any,
-    graphView: any,
-    getNodeNeighbours: any,
-    onItemMouseOver: any,
-    onItemSelected: any,
-    onGraphModelChange: any,
+    graph: Graph,
+    graphView: GraphView,
+    getNodeNeighbours: GetNodeNeighboursFn,
+    onItemMouseOver: (item: VizItem) => void,
+    onItemSelected: (item: VizItem) => void,
+    onGraphModelChange: (stats: GraphStats) => void,
     filterNodeNeighbours: GraphEventHandler['filterNodeNeighbours']
   ) {
     this.graph = graph
@@ -52,20 +63,20 @@ export class GraphEventHandler {
     this.filterNodeNeighbours = filterNodeNeighbours
   }
 
-  graphModelChanged() {
+  graphModelChanged(): void {
     this.onGraphModelChange(getGraphStats(this.graph))
   }
 
-  selectItem(item: any) {
+  selectItem(item: VizNode | Relationship): void {
     if (this.selectedItem) {
       this.selectedItem.selected = false
     }
     this.selectedItem = item
     item.selected = true
-    this.graphView.update()
+    this.graphView.update({ updateNodes: true, updateRelationships: true })
   }
 
-  deselectItem() {
+  deselectItem(): void {
     if (this.selectedItem) {
       this.selectedItem.selected = false
       this.selectedItem = null
@@ -77,41 +88,40 @@ export class GraphEventHandler {
         relationshipCount: this.graph.relationships().length
       }
     })
-    this.graphView.update()
+    this.graphView.update({ updateNodes: true, updateRelationships: true })
   }
 
-  nodeClose(d: any) {
+  nodeClose(d: VizNode): void {
     this.graph.removeConnectedRelationships(d)
     this.graph.removeNode(d)
     this.deselectItem()
-    this.graphView.update()
+    this.graphView.update({ updateNodes: true, updateRelationships: true })
     this.graphModelChanged()
   }
 
-  nodeClicked(d: any) {
-    if (!d) {
+  nodeClicked(node: VizNode): void {
+    if (!node) {
       return
     }
-    d.fixed = true
-    if (!d.selected) {
-      this.selectItem(d)
+    node.fixed = true
+    if (!node.selected) {
+      this.selectItem(node)
       this.onItemSelected({
         type: 'node',
-        item: { id: d.id, labels: d.labels, properties: d.propertyList }
+        item: node
       })
     } else {
       this.deselectItem()
     }
   }
 
-  nodeUnlock(d: any) {
+  nodeUnlock(d: VizNode): void {
     if (!d) {
       return
     }
     d.fixed = false
     this.deselectItem()
   }
-
   nodeFilterClicked(d: any) {
     const graph = this.graph
     const graphView = this.graphView
@@ -141,8 +151,7 @@ export class GraphEventHandler {
       }
     )
   }
-
-  nodeDblClicked(d: any) {
+  nodeDblClicked(d: VizNode): void {
     if (d.expanded) {
       this.nodeCollapse(d)
       return
@@ -154,37 +163,35 @@ export class GraphEventHandler {
     this.getNodeNeighbours(
       d,
       this.graph.findNodeNeighbourIds(d.id),
-      (err: any, { nodes, relationships }: any) => {
-        if (err) return
+      ({ nodes, relationships }) => {
         graph.addExpandedNodes(d, mapNodes(nodes))
         graph.addRelationships(mapRelationships(relationships, graph))
-        graphView.update()
+        graphView.update({ updateNodes: true, updateRelationships: true })
         graphModelChanged()
       }
     )
   }
 
-  nodeCollapse(d: any) {
+  nodeCollapse(d: VizNode): void {
     d.expanded = false
     this.graph.collapseNode(d)
-    this.graphView.update()
+    this.graphView.update({ updateNodes: true, updateRelationships: true })
     this.graphModelChanged()
   }
 
-  onNodeMouseOver(node: any) {
+  onNodeMouseOver(node: VizNode): void {
     if (!node.contextMenu) {
       this.onItemMouseOver({
         type: 'node',
-        item: {
-          id: node.id,
-          labels: node.labels,
-          properties: node.propertyList
-        }
+        item: node
       })
     }
   }
 
-  onMenuMouseOver(itemWithMenu: any) {
+  onMenuMouseOver(itemWithMenu: VizNode): void {
+    if (!itemWithMenu.contextMenu) {
+      throw new Error('menuMouseOver triggered without menu')
+    }
     this.onItemMouseOver({
       type: 'context-menu-item',
       item: {
@@ -195,38 +202,30 @@ export class GraphEventHandler {
     })
   }
 
-  onRelationshipMouseOver(relationship: any) {
+  onRelationshipMouseOver(relationship: Relationship): void {
     this.onItemMouseOver({
       type: 'relationship',
-      item: {
-        id: relationship.id,
-        type: relationship.type,
-        properties: relationship.propertyList
-      }
+      item: relationship
     })
   }
 
-  onRelationshipClicked(relationship: any) {
+  onRelationshipClicked(relationship: Relationship): void {
     if (!relationship.selected) {
       this.selectItem(relationship)
       this.onItemSelected({
         type: 'relationship',
-        item: {
-          id: relationship.id,
-          type: relationship.type,
-          properties: relationship.propertyList
-        }
+        item: relationship
       })
     } else {
       this.deselectItem()
     }
   }
 
-  onCanvasClicked() {
+  onCanvasClicked(): void {
     this.deselectItem()
   }
 
-  onItemMouseOut() {
+  onItemMouseOut(): void {
     this.onItemMouseOver({
       type: 'canvas',
       item: {
@@ -236,7 +235,7 @@ export class GraphEventHandler {
     })
   }
 
-  bindEventHandlers() {
+  bindEventHandlers(): void {
     this.graphView
       .on('nodeMouseOver', this.onNodeMouseOver.bind(this))
       .on('nodeMouseOut', this.onItemMouseOut.bind(this))

@@ -1,0 +1,36 @@
+:description: Export results.
+
+
+[[export-results]]
+= Export results
+
+You can download your query results using the down-pointed arrow on the right side of the result frame.
+
+The following download options available:
+
+* Export CSV.
+* Export JSON.
+* Export PNG.
+* Export SVG.
+
+Depending on the result frame these options can vary.
+
+
+.Export result, _graph result frame_.
+[#download_graph]
+[caption="Export as an image"]
+image:download-graph.png[Export graph, width=50%]
+
+
+.Export result, _table_, _plain text_, and _code_ result frames.
+[#download_csv]
+[caption="Export as a CSV file"]
+image:download-csv-json.png[Export table, width=50%]
+
+
+[NOTE]
+====
+The *Save as project file* is available only in Neo4j Desktop.
+For more information, see xref:visual-tour.adoc#saved-files[Project files].
+====
+

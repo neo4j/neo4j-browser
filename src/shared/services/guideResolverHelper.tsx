@@ -19,20 +19,22 @@
  */
 
 import React from 'react'
+import { includes, last, split, startsWith } from 'lodash-es'
+
 import MdxSlide from 'browser/modules/Docs/MDX/MdxSlide'
 import Slide from 'browser/modules/Carousel/Slide'
-import docs, { isGuideChapter } from 'browser/documentation'
+import docs, { isBuiltInGuide } from 'browser/documentation'
 import guideUnfound from 'browser/documentation/sidebar-guides/unfound'
 import {
   addProtocolsToUrlList,
   extractAllowlistFromConfigString,
   resolveAllowlistWildcard
 } from './utils'
-import { fetchRemoteGuide } from 'shared/modules/commands/helpers/play'
+import { fetchRemoteGuideAsync } from 'shared/modules/commands/helpers/playAndGuides'
 import {
   getDefaultRemoteContentHostnameAllowlist,
   getRemoteContentHostnameAllowlist
-} from 'shared/modules/dbMeta/dbMetaDuck'
+} from 'shared/modules/dbMeta/state'
 import { splitMdxSlides } from 'browser/modules/Docs/MDX/splitMdx'
 import {
   StyledCypherErrorMessage,
@@ -43,27 +45,47 @@ import {
   StyledHelpFrame,
   StyledPreformattedArea
 } from 'browser/modules/Stream/styled'
+import { GlobalState } from 'shared/globalState'
+
+interface ResponseException extends Error {
+  response: Response
+}
 
 const { chapters } = docs.guide
 
+export function tryGetRemoteInitialSlideFromUrl(url: string): number {
+  const hashBang = includes(url, '#') ? last(split(url, '#')) : ''
+
+  if (!startsWith(hashBang, 'slide-')) return 0
+
+  const slideIndex = Number(last(split(hashBang, 'slide-')))
+
+  return !isNaN(slideIndex) ? slideIndex : 0
+}
+
 export async function resolveGuide(
-  guideName: string,
-  state: any
-): Promise<{ slides: JSX.Element[]; title: string }> {
-  const isUrl = guideName.startsWith('http')
+  identifier: string,
+  state: GlobalState
+): Promise<{
+  slides: JSX.Element[]
+  title: string
+  identifier: string
+  isError?: boolean
+}> {
+  const isUrl = identifier.startsWith('http')
   if (isUrl) {
-    return await resolveRemoteGuideFromURL(guideName, state)
+    return await resolveRemoteGuideByUrl(identifier, state)
   }
 
-  if (isGuideChapter(guideName)) {
-    return chapters[guideName]
+  if (isBuiltInGuide(identifier)) {
+    return { ...chapters[identifier], identifier }
   }
 
   try {
-    return await resolveRemoteGuideFromName(guideName, state)
+    return await resolveRemoteGuideByName(identifier, state)
   } catch (e) {}
 
-  return guideUnfound
+  return { ...guideUnfound, identifier }
 }
 
 function mdxTextToSlides(mdx: string): JSX.Element[] {
@@ -85,36 +107,47 @@ function htmlTextToSlides(html: string): JSX.Element[] {
   return [<Slide key="first" html={html} isSidebarSlide />]
 }
 
-async function resolveRemoteGuideFromURL(
-  guideName: string,
-  state: any
-): Promise<{ slides: JSX.Element[]; title: string }> {
-  const url = guideName
-  const urlObject = new URL(url)
-  urlObject.href = url
-  const filenameExtension =
-    (urlObject.pathname.includes('.') && urlObject.pathname.split('.').pop()) ||
-    'html'
-  const allowlist = getRemoteContentHostnameAllowlist(state)
-
+async function resolveRemoteGuideByUrl(
+  url: string,
+  state: GlobalState
+): Promise<{
+  slides: JSX.Element[]
+  title: string
+  identifier: string
+  isError?: boolean
+}> {
   try {
-    const remoteGuide = await fetchRemoteGuide(url, allowlist)
+    // URL constructor can throw
+    const urlObject = new URL(url)
+    urlObject.href = url
+    const filenameExtension =
+      (urlObject.pathname.includes('.') &&
+        urlObject.pathname.split('.').pop()) ||
+      'html'
+    const allowlist = getRemoteContentHostnameAllowlist(state)
+
+    const remoteGuide = await fetchRemoteGuideAsync(url, allowlist)
     const titleRegexMatch = remoteGuide.match(/<title>(.*?)<\/title>/)
-    const title = (titleRegexMatch && titleRegexMatch[1])?.trim() || guideName
+    const title = (titleRegexMatch && titleRegexMatch[1])?.trim() || url
     if (['md', 'mdx'].includes(filenameExtension)) {
       return {
         slides: mdxTextToSlides(remoteGuide),
-        title
+        title,
+        identifier: url
       }
     } else {
       return {
         slides: htmlTextToSlides(remoteGuide),
-        title
+        title,
+        identifier: url
       }
     }
   } catch (e) {
-    if (e.response && e.response.status === 404) {
-      return guideUnfound
+    if (
+      (e as ResponseException).response &&
+      (e as ResponseException).response.status === 404
+    ) {
+      return { ...guideUnfound, identifier: url }
     }
     return {
       title: 'Error',
@@ -128,21 +161,24 @@ async function resolveRemoteGuideFromURL(
               </StyledHelpDescription>
               <StyledDiv>
                 <StyledPreformattedArea>
-                  {e.name}: {e.message}
+                  {(e as ResponseException).name}:{' '}
+                  {(e as ResponseException).message}
                 </StyledPreformattedArea>
               </StyledDiv>
             </StyledHelpContent>
           </StyledHelpFrame>
         </Slide>
-      ]
+      ],
+      identifier: url,
+      isError: true
     }
   }
 }
 
-async function resolveRemoteGuideFromName(
+async function resolveRemoteGuideByName(
   guideName: string,
-  state: any
-): Promise<{ slides: JSX.Element[]; title: string }> {
+  state: GlobalState
+): Promise<{ slides: JSX.Element[]; title: string; identifier: string }> {
   const allowlistStr = getRemoteContentHostnameAllowlist(state)
   const allowlist = extractAllowlistFromConfigString(allowlistStr)
   const defaultAllowlist = extractAllowlistFromConfigString(
@@ -153,20 +189,21 @@ async function resolveRemoteGuideFromName(
     defaultAllowlist
   )
   const urlAllowlist = addProtocolsToUrlList(resolvedWildcardAllowlist)
-  const possibleGuidesUrls: string[] = urlAllowlist.map(
+  const possibleGuidesUrls = urlAllowlist.map(
     (url: string) => `${url}/${guideName}`
   )
 
   return possibleGuidesUrls
     .reduce(
-      (promiseChain: Promise<any>, currentUrl: string) =>
+      (promiseChain: Promise<string>, currentUrl: string) =>
         promiseChain
-          .catch(() => fetchRemoteGuide(currentUrl, allowlistStr))
+          .catch(() => fetchRemoteGuideAsync(currentUrl, allowlistStr))
           .then(r => Promise.resolve(r)),
       Promise.reject(new Error())
     )
     .then(text => ({
       slides: htmlTextToSlides(text),
-      title: guideName
+      title: guideName,
+      identifier: guideName
     }))
 }

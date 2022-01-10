@@ -17,9 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 import d3 from 'd3'
 export const prepareForExport = (
-  svgElement: any,
+  svgElement: SVGElement,
   graphElement: any,
   type: any
 ) => {
@@ -67,13 +68,12 @@ const getSvgDimensions = (view: any) => {
   return dimensions
 }
 
-const appendGraphLayers = (svgElement: any, svg: any) => {
-  window.d3
-    .select(svgElement)
+const appendGraphLayers = (svgElement: SVGElement, svg: any) => {
+  d3.select(svgElement)
     .selectAll('g.layer')
     .each(function() {
       svg.node().appendChild(
-        window.d3
+        d3
           // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
           .select(this)
           .node()
@@ -82,13 +82,12 @@ const appendGraphLayers = (svgElement: any, svg: any) => {
     })
   return svg
 }
-const appendPlanLayers = (svgElement: any, svg: any) => {
-  window.d3
-    .select(svgElement)
+const appendPlanLayers = (svgElement: SVGElement, svg: any) => {
+  d3.select(svgElement)
     .selectAll('g.layer')
     .each(function() {
       svg.node().appendChild(
-        window.d3
+        d3
           // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
           .select(this)
           .node()

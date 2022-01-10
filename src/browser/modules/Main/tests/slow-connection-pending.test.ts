@@ -19,6 +19,7 @@
  *
  */
 
+import '@testing-library/react-hooks/dont-cleanup-after-each.js'
 import { act, renderHook } from '@testing-library/react-hooks'
 import mockDate from 'mockdate'
 

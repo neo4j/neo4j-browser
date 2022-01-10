@@ -48,7 +48,7 @@ import {
   serverConfigEpic,
   serverInfoEpic,
   clearMetaOnDisconnectEpic
-} from './modules/dbMeta/dbMetaDuck'
+} from './modules/dbMeta/epics'
 import { cancelRequestEpic } from './modules/requests/requestsDuck'
 import {
   discoveryOnStartupEpic,
@@ -83,21 +83,17 @@ import {
 } from './modules/sync/syncDuck'
 import { credentialsTimeoutEpic } from './modules/credentialsPolicy/credentialsPolicyDuck'
 import {
-  bootEpic,
-  incrementEventEpic,
   udcStartupEpic,
-  trackSyncLogoutEpic,
-  trackConnectsEpic,
-  eventFiredEpic,
   trackCommandUsageEpic,
   trackErrorFramesEpic,
   trackReduxActionsEpic
 } from './modules/udc/udcDuck'
-import { maxFramesConfigEpic } from './modules/stream/streamDuck'
+import { ensureMaxFramesEpic } from './modules/frames/framesDuck'
 import {
   getCurrentUserEpic,
   clearCurrentUserOnDisconnectEpic
 } from './modules/currentUser/currentUserDuck'
+import { fetchRemoteGuideEpic } from './modules/guides/guidesDuck'
 
 export default combineEpics(
   handleCommandEpic,
@@ -145,18 +141,14 @@ export default combineEpics(
   syncFoldersEpic,
   syncGrassEpic,
   credentialsTimeoutEpic,
-  bootEpic,
   udcStartupEpic,
-  incrementEventEpic,
-  trackSyncLogoutEpic,
-  trackConnectsEpic,
-  eventFiredEpic,
-  maxFramesConfigEpic,
+  ensureMaxFramesEpic,
   getCurrentUserEpic,
   clearCurrentUserOnDisconnectEpic,
   trackCommandUsageEpic,
   trackErrorFramesEpic,
   trackReduxActionsEpic,
   initializeCypherEditorEpic,
-  updateEditorSupportSchemaEpic
+  updateEditorSupportSchemaEpic,
+  fetchRemoteGuideEpic
 )

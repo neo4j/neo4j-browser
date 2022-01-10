@@ -24,7 +24,7 @@ import DatabaseDrawer from '../DBMSInfo/DBMSInfo'
 import DocumentsDrawer from './Documents'
 import AboutDrawer from './About'
 import SettingsDrawer from './Settings'
-import GuidesDrawer from './GuidesDrawer'
+import GuideDrawer from './GuideDrawer'
 import Favorites from './favorites'
 import StaticScripts from './static-scripts'
 import ProjectFilesDrawer from './ProjectFiles'
@@ -51,13 +51,13 @@ import {
   SettingsIcon,
   AboutIcon,
   ProjectFilesIcon,
-  GuidesDrawerIcon
+  GuideDrawerIcon
 } from 'browser-components/icons/Icons'
 import { getCurrentDraft } from 'shared/modules/sidebar/sidebarDuck'
 import { DrawerHeader } from 'browser-components/drawer/drawer-styled'
 
 interface SidebarProps {
-  openDrawer: string
+  selectedDrawerName: string
   onNavClick: () => void
   neo4jConnectionState: string
   showStaticScripts: boolean
@@ -68,7 +68,7 @@ interface SidebarProps {
 }
 
 const Sidebar = ({
-  openDrawer,
+  selectedDrawerName,
   onNavClick,
   neo4jConnectionState,
   showStaticScripts,
@@ -77,8 +77,9 @@ const Sidebar = ({
   isRelateAvailable,
   scriptDraft
 }: SidebarProps) => {
-  const topNavItemsList: NavItem[] = [
+  const topNavItems: NavItem[] = [
     {
+      // Consider use constant variable to store those keys
       name: 'DBMS',
       title: 'Database Information',
       icon: function dbIcon(isOpen: boolean): JSX.Element {
@@ -125,14 +126,14 @@ const Sidebar = ({
     {
       name: 'Guides',
       title: 'Guides',
-      icon: function guidesDrawerIcon(isOpen: boolean): JSX.Element {
-        return <GuidesDrawerIcon isOpen={isOpen} />
+      icon: function GuideDrawerIconComp(isOpen: boolean): JSX.Element {
+        return <GuideDrawerIcon isOpen={isOpen} />
       },
-      content: GuidesDrawer
+      content: GuideDrawer
     }
   ]
 
-  const bottomNavItemsList: NavItem[] = [
+  const bottomNavItems: NavItem[] = [
     {
       name: 'Documents',
       title: 'Help &amp; Resources',
@@ -176,10 +177,10 @@ const Sidebar = ({
 
   return (
     <TabNavigation
-      openDrawer={openDrawer}
+      selectedDrawerName={selectedDrawerName}
       onNavClick={onNavClick}
-      topNavItems={topNavItemsList}
-      bottomNavItems={bottomNavItemsList}
+      topNavItems={topNavItems}
+      bottomNavItems={bottomNavItems}
     />
   )
 }

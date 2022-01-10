@@ -21,7 +21,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Snake from './Snake'
 import Score from './Score'
-import FrameTemplate from '../../../Frame/FrameTemplate'
+import FrameBodyTemplate from '../../../Frame/FrameBodyTemplate'
 import { PaddedDiv } from '../../styled'
 import { FormButton } from 'browser/components/buttons/index'
 import { worldColor, foodColor } from './helpers'
@@ -136,7 +136,11 @@ export class SnakeFrame extends React.Component<{}, SnakeFrameState> {
 
 const Frame = (props: any) => {
   return (
-    <FrameTemplate header={props.frame} contents={<SnakeFrame {...props} />} />
+    <FrameBodyTemplate
+      isCollapsed={props.isCollapsed}
+      isFullscreen={props.isFullscreen}
+      contents={<SnakeFrame {...props} />}
+    />
   )
 }
 export default Frame

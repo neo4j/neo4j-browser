@@ -15,14 +15,15 @@
  *
  */
 import React from 'react'
-import { useEffect, useState, Dispatch } from 'react'
-import { Action } from 'redux'
+import { useEffect, useState } from 'react'
+import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { useQuery, useMutation, ApolloError } from '@apollo/client'
 import { flatMap } from 'lodash-es'
 
 import * as editor from 'shared/modules/editor/editorDuck'
 import {
+  ExecuteCommandAction,
   commandSources,
   executeCommand
 } from 'shared/modules/commands/commandsDuck'
@@ -168,7 +169,7 @@ const mapStateToProps = (state: any) => ({
   relateUrl: state.app.relateUrl
 })
 
-const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
+const mapDispatchToProps = (dispatch: Dispatch<ExecuteCommandAction>) => ({
   execScript: (cmd: string) => {
     dispatch(executeCommand(cmd, { source: commandSources.projectFile }))
   }

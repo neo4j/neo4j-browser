@@ -17,12 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import Renderer from '../components/renderer'
+import Renderer from '../components/Renderer'
+import VizNode, { NodeCaptionLine } from '../components/VizNode'
 import * as d3 from 'd3'
 import { max } from 'lodash-es'
 import { RelArrowCaptionPosition } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelRelArrowSVG'
 
-const noop = function() {}
+const noop = () => undefined
 
 const nodeRingStrokeSize = 8
 const sideTextsPositions: (
@@ -61,10 +62,11 @@ function getColorStyleForNode({
 }
 
 const nodeOutline = new Renderer({
-  onGraphChange(selection: any, viz: any) {
+  name: 'nodeOutline',
+  onGraphChange(selection, viz) {
     const circles = selection
       .selectAll('circle.outline')
-      .data((node: any) => [node])
+      .data((node: VizNode) => [node])
 
     circles
       .enter()
@@ -76,24 +78,24 @@ const nodeOutline = new Renderer({
       })
 
     circles.attr({
-      r(node: any) {
+      r(node: VizNode) {
         return node.radius
       },
-      fill(node: any) {
+      fill(node: VizNode) {
         return getColorStyleForNode({
           currentStyle: viz.style.forNode(node),
           node,
           key: 'color'
         })
       },
-      stroke(node: any) {
+      stroke(node: VizNode) {
         return getColorStyleForNode({
           currentStyle: viz.style.forNode(node),
           node,
           key: 'border-color'
         })
       },
-      'stroke-width'(node: any) {
+      'stroke-width'(node: VizNode) {
         return viz.style.forNode(node).get('border-width')
       }
     })
@@ -104,30 +106,41 @@ const nodeOutline = new Renderer({
 })
 
 const nodeCaption = new Renderer({
-  onGraphChange(selection: any, viz: any) {
+  name: 'nodeCaption',
+  onGraphChange(selection, viz) {
     const text = selection
       .selectAll('text.caption')
-      .data((node: any) => node.caption)
+      .data((node: VizNode) => node.caption)
 
     text
       .enter()
       .append('text')
-      // .classed('caption', true)
+      // Classed element ensures duplicated data will be removed before adding
+      .classed('caption', true)
       .attr({ 'text-anchor': 'middle' })
       .attr({ 'pointer-events': 'none' })
 
     text
-      .text((line: any) => line.text)
-      .style('font-weight', (line: any) => line.fontWeight ?? 'inherit')
-      .style('text-decoration', (line: any) => line.textDecoration ?? 'inherit')
-      .style('font-style', (line: any) => line.fontStyle ?? 'inherit')
+      .text((line: NodeCaptionLine) => line.text)
+      .style(
+        'font-weight',
+        (line: NodeCaptionLine) => line.fontWeight ?? 'inherit'
+      )
+      .style(
+        'text-decoration',
+        (line: NodeCaptionLine) => line.textDecoration ?? 'inherit'
+      )
+      .style(
+        'font-style',
+        (line: NodeCaptionLine) => line.fontStyle ?? 'inherit'
+      )
       .attr('x', 0)
-      .attr('y', (line: any) => line.baseline)
-      .attr('font-size', (line: any) =>
+      .attr('y', (line: NodeCaptionLine) => line.baseline)
+      .attr('font-size', (line: NodeCaptionLine) =>
         viz.style.forNode(line.node).get('font-size')
       )
       .attr({
-        fill(line: any) {
+        fill(line: NodeCaptionLine) {
           return getColorStyleForNode({
             currentStyle: viz.style.forNode(line.node),
             node: line.node,
@@ -142,38 +155,12 @@ const nodeCaption = new Renderer({
   onTick: noop
 })
 
-const nodeIcon = new Renderer({
-  onGraphChange(selection: any, viz: any) {
-    const text = selection.selectAll('text').data((node: any) => node.caption)
-
-    text
-      .enter()
-      .append('text')
-      .attr({ 'text-anchor': 'middle' })
-      .attr({ 'pointer-events': 'none' })
-      .attr({ 'font-family': 'streamline' })
-
-    text
-      .text((line: any) => viz.style.forNode(line.node).get('icon-code'))
-      .attr('dy', (line: any) => line.node.radius / 16)
-      .attr('font-size', (line: any) => line.node.radius)
-      .attr({
-        fill(line: any) {
-          return viz.style.forNode(line.node).get('text-color-internal')
-        }
-      })
-
-    return text.exit().remove()
-  },
-
-  onTick: noop
-})
-
 const nodeRing = new Renderer({
-  onGraphChange(selection: any) {
+  name: 'nodeRing',
+  onGraphChange(selection) {
     const circles = selection
       .selectAll('circle.ring')
-      .data((node: any) => [node])
+      .data((node: VizNode) => [node])
     circles
       .enter()
       .insert('circle', '.outline')
@@ -185,7 +172,7 @@ const nodeRing = new Renderer({
       })
 
     circles.attr({
-      r(node: any) {
+      r(node: VizNode) {
         return node.radius + 4
       }
     })
@@ -198,7 +185,7 @@ const nodeRing = new Renderer({
 
 const arrowPath = new Renderer({
   name: 'arrowPath',
-  onGraphChange(selection: any, viz: any) {
+  onGraphChange(selection, viz) {
     const paths = selection.selectAll('path.outline').data((rel: any) => [rel])
 
     paths
@@ -238,7 +225,7 @@ const arrowPath = new Renderer({
 
 const relationshipType = new Renderer({
   name: 'relationshipType',
-  onGraphChange(selection: d3.Selection<any>, viz: any) {
+  onGraphChange(selection, viz) {
     const textContainers = selection
       .selectAll('.textContainer')
       .data((rel: any) => [rel])
@@ -311,7 +298,7 @@ const relationshipType = new Renderer({
     return textContainers.exit().remove()
   },
 
-  onTick(selection: any, viz: any) {
+  onTick(selection, viz) {
     selection
       .selectAll('.textContainer')
       .each(function(this: SVGGElement, rel: any) {
@@ -435,8 +422,8 @@ const relationshipType = new Renderer({
 
 const relationshipOverlay = new Renderer({
   name: 'relationshipOverlay',
-  onGraphChange(selection: any) {
-    const rects = selection.selectAll('path.overlay').data((rel: any) => [rel])
+  onGraphChange(selection) {
+    const rects = selection.selectAll('path.overlay').data(rel => [rel])
 
     rects
       .enter()
@@ -446,24 +433,17 @@ const relationshipOverlay = new Renderer({
     return rects.exit().remove()
   },
 
-  onTick(selection: any) {
+  onTick(selection) {
     const band = 16
 
     return selection
       .selectAll('path.overlay')
-      .attr('d', (d: any) => d.arrow.overlay(band))
+      .attr('d', d => d.arrow.overlay(band))
   }
 })
 
-const node = []
-node.push(nodeOutline)
-node.push(nodeIcon)
-node.push(nodeCaption)
-node.push(nodeRing)
+const node = [nodeOutline, nodeCaption, nodeRing]
 
-const relationship = []
-relationship.push(arrowPath)
-relationship.push(relationshipType)
-relationship.push(relationshipOverlay)
+const relationship = [arrowPath, relationshipType, relationshipOverlay]
 
 export { node, relationship }

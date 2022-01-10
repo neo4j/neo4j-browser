@@ -19,7 +19,7 @@
  */
 
 import React from 'react'
-import FrameTemplate from 'browser/modules/Frame/FrameTemplate'
+import FrameBodyTemplate from 'browser/modules/Frame/FrameBodyTemplate'
 import {
   StyledConnectionAside,
   StyledConnectionBodyContainer,
@@ -29,8 +29,9 @@ import {
 import { H3 } from 'browser-components/headers'
 import TextCommand from 'browser/modules/DecoratedText/TextCommand'
 import { listDbsCommand } from 'shared/modules/commands/commandsDuck'
+import { BaseFrameProps } from '../Stream'
 
-const UseDbFrame = (props: any) => {
+const UseDbFrame = (props: BaseFrameProps) => {
   const { frame } = props
   const { useDb } = frame
   return (
@@ -63,9 +64,13 @@ const UseDbFrame = (props: any) => {
   )
 }
 
-const Frame = (props: any) => {
+const Frame = (props: BaseFrameProps): JSX.Element => {
   return (
-    <FrameTemplate header={props.frame} contents={<UseDbFrame {...props} />} />
+    <FrameBodyTemplate
+      isCollapsed={props.isCollapsed}
+      isFullscreen={props.isFullscreen}
+      contents={<UseDbFrame {...props} />}
+    />
   )
 }
 

@@ -31,8 +31,8 @@ import { allowlistedMultiCommands } from 'shared/modules/commands/commandsDuck'
 import { Status } from 'shared/modules/requests/requestsDuck'
 import { BrowserRequest } from 'shared/modules/requests/requestsDuck'
 import { BrowserError } from 'services/exceptions'
+import { upperFirst } from 'services/utils'
 
-const ucFirst = (str: string): string => str[0].toUpperCase() + str.slice(1)
 type GenericSummaryProps = { status: Status }
 
 const GenericSummary = ({
@@ -60,8 +60,7 @@ const GenericSummary = ({
         <PaddedStatsBar>
           <StyledCypherInfoMessage>INFO</StyledCypherInfoMessage>
           <MessageArea>
-            This query is waiting for it&apos;s turn. The execution is serial
-            and will break on first error.
+            {`This query is waiting for it's turn. The execution is serial and will break on first error.`}
           </MessageArea>
         </PaddedStatsBar>
       )
@@ -108,7 +107,7 @@ export const CypherSummary = ({
       return (
         <PaddedStatsBar>
           <StyledCypherSuccessMessage>SUCCESS</StyledCypherSuccessMessage>
-          <MessageArea>{ucFirst(bodyMessage || '')}</MessageArea>
+          <MessageArea>{upperFirst(bodyMessage || '')}</MessageArea>
         </PaddedStatsBar>
       )
     case 'error':

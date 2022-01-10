@@ -26,7 +26,8 @@ import {
   safelyRemoveObjectProp,
   safelyAddObjectProp,
   escapeReservedProps,
-  unEscapeReservedProps
+  unEscapeReservedProps,
+  upperFirst
 } from '../utils'
 
 export const reservedTypePropertyName = 'transport-class'
@@ -187,13 +188,62 @@ export function extractNodesAndRelationshipsFromRecords(
   return { nodes: rawNodes, relationships: rawRels }
 }
 
+const getDriverTypeName = (val: any) => {
+  const driverTypeMap = neo4j.types as any
+  const driverTypes = Object.keys(neo4j.types)
+  for (const type of driverTypes) {
+    if (val instanceof driverTypeMap[type]) {
+      return type
+    }
+  }
+  return undefined
+}
+
+const getTypeDisplayName = (val: any): string => {
+  const jsType = typeof val
+  const complexType = jsType === 'object'
+
+  if (jsType === 'number') {
+    return 'Float'
+  }
+
+  if (!complexType) {
+    return upperFirst(jsType)
+  }
+
+  if (val instanceof Array) {
+    return `Array(${val.length})`
+  }
+
+  return getDriverTypeName(val) || 'Unknown'
+}
+
+export type BasicNode = {
+  id: string
+  labels: string[]
+  properties: Record<string, string>
+  propertyTypes: Record<string, string>
+}
+export type BasicRelationship = {
+  id: string
+  startNodeId: string
+  endNodeId: string
+  type: string
+  properties: Record<string, string>
+  propertyTypes: Record<string, string>
+}
+export type BasicNodesAndRels = {
+  nodes: BasicNode[]
+  relationships: BasicRelationship[]
+}
+
 export function extractNodesAndRelationshipsFromRecordsForOldVis(
   records: typeof neo4j.types.Record[],
   types: any,
   filterRels: any,
   converters: Converters,
   maxFieldItems?: any
-) {
+): BasicNodesAndRels {
   if (records.length === 0) {
     return { nodes: [], relationships: [] }
   }
@@ -207,7 +257,11 @@ export function extractNodesAndRelationshipsFromRecordsForOldVis(
     return {
       id: item.identity.toString(),
       labels: item.labels,
-      properties: itemIntToString(item.properties, converters)
+      properties: itemIntToString(item.properties, converters),
+      propertyTypes: Object.entries(item.properties).reduce(
+        (acc, [key, val]) => ({ ...acc, [key]: getTypeDisplayName(val) }),
+        {}
+      )
     }
   })
   let relationships = rawRels
@@ -227,7 +281,11 @@ export function extractNodesAndRelationshipsFromRecordsForOldVis(
       startNodeId: item.start.toString(),
       endNodeId: item.end.toString(),
       type: item.type,
-      properties: itemIntToString(item.properties, converters)
+      properties: itemIntToString(item.properties, converters),
+      propertyTypes: Object.entries(item.properties).reduce(
+        (acc, [key, val]) => ({ ...acc, [key]: getTypeDisplayName(val) }),
+        {}
+      )
     }
   })
   return { nodes, relationships }

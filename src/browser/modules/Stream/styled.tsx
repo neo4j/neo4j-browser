@@ -33,10 +33,10 @@ export const Padding = styled.div`
 `
 
 // Frames
-export const PaddedDiv = styled.div`
+export const PaddedDiv = styled.div<{ isFullscreen?: boolean }>`
   padding: 0 20px 20px 20px;
-  padding-bottom: ${(props: any) =>
-    props.fullscreen ? dim.frameTitlebarHeight + 20 + 'px' : '20px'};
+  padding-bottom: ${props =>
+    props.isFullscreen ? dim.frameTitlebarHeight + 20 + 'px' : '20px'};
 `
 
 export const DottedLineHover = styled.span`
@@ -389,4 +389,9 @@ export const AuraPromoLink = styled.a`
   cursor: pointer;
   text-decoration: none;
   margin-right: 5px;
+`
+
+export const AliasText = styled.span`
+  font-size: 1rem;
+  font-style: italic;
 `

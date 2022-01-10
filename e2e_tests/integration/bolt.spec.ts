@@ -88,7 +88,7 @@ describe('Bolt connections', () => {
       cy.connect('noroles', '.')
 
       // Check sidebar
-      cy.get('[data-testid="drawerDBMS"]').click()
+      cy.get('[data-testid="navigationDBMS"]').click()
       cy.get('[data-testid="user-details-username"]').should(
         'contain',
         'noroles'
@@ -99,7 +99,7 @@ describe('Bolt connections', () => {
       if (Cypress.config('serverVersion') === 4.1) {
         cy.get('[data-testid="user-details-roles"]').should('contain', 'PUBLIC')
       }
-      cy.get('[data-testid="drawerDBMS"]').click()
+      cy.get('[data-testid="navigationDBMS"]').click()
 
       cy.executeCommand(':server disconnect')
       cy.executeCommand(':server connect')

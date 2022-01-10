@@ -23,12 +23,12 @@ import { ExclamationTriangleIcon } from 'browser-components/icons/Icons'
 import Ellipsis from 'browser-components/Ellipsis'
 import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 import { stringifyMod } from 'services/utils'
-import FrameTemplate from '../Frame/FrameTemplate'
+import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
 import { PaddedDiv, ErrorText, SuccessText, StyledStatsBar } from './styled'
 import { applyGraphTypes } from 'services/bolt/boltMappings'
 import AutoExecButton from './auto-exec-button'
 
-const ParamsFrame = ({ frame }: any) => {
+const ParamsFrame = ({ frame, isCollapsed, isFullscreen }: any) => {
   const params = applyGraphTypes(frame.params)
   const contents = (
     <PaddedDiv>
@@ -43,7 +43,7 @@ const ParamsFrame = ({ frame }: any) => {
       </div>
     </PaddedDiv>
   )
-  const statusbar =
+  const statusBar =
     typeof frame.success === 'undefined' ? null : (
       <StyledStatsBar>
         <Ellipsis>
@@ -59,7 +59,12 @@ const ParamsFrame = ({ frame }: any) => {
       </StyledStatsBar>
     )
   return (
-    <FrameTemplate header={frame} contents={contents} statusbar={statusbar} />
+    <FrameBodyTemplate
+      isCollapsed={isCollapsed}
+      isFullscreen={isFullscreen}
+      contents={contents}
+      statusBar={statusBar}
+    />
   )
 }
 export default ParamsFrame

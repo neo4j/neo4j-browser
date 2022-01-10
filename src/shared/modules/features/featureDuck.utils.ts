@@ -20,7 +20,7 @@
 
 import semver from 'semver'
 
-export const guessSemverVersion = (versionString: any) => {
+export const guessSemverVersion = (versionString: string | null) => {
   if (!versionString) {
     return null
   }

@@ -17,33 +17,43 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import Graph from './lib/visualization/components/Graph'
+import Relationship from './lib/visualization/components/Relationship'
+import VizNode from './lib/visualization/components/VizNode'
+import { BasicNode, BasicRelationship } from 'services/bolt/boltMappings'
 import { optionalToString } from 'services/utils'
-import Graph from './lib/visualization/components/graph'
-import Node from './lib/visualization/components/node'
-import Relationship from './lib/visualization/components/relationship'
 
 const mapProperties = (_: any) => Object.assign({}, ...stringifyValues(_))
 const stringifyValues = (obj: any) =>
   Object.keys(obj).map(k => ({ [k]: optionalToString(obj[k]) }))
 
-export function createGraph(nodes: any, relationships: any) {
+export function createGraph(
+  nodes: BasicNode[],
+  relationships: BasicRelationship[]
+): Graph {
   const graph = new Graph()
   graph.addNodes(mapNodes(nodes))
   graph.addRelationships(mapRelationships(relationships, graph))
-  ;(graph as any).display = { initialNodeDisplay: 300, nodeCount: 1 }
   return graph
 }
 
-export function mapNodes(nodes: any) {
+export function mapNodes(nodes: BasicNode[]): VizNode[] {
   return nodes.map(
-    (node: any) =>
-      new Node(node.id, node.labels, mapProperties(node.properties))
+    node =>
+      new VizNode(
+        node.id,
+        node.labels,
+        mapProperties(node.properties),
+        node.propertyTypes
+      )
   )
 }
 
-export function mapRelationships(relationships: any, graph: any) {
-  return relationships.map((rel: any) => {
+export function mapRelationships(
+  relationships: BasicRelationship[],
+  graph: Graph
+): Relationship[] {
+  return relationships.map(rel => {
     const source = graph.findNode(rel.startNodeId)
     const target = graph.findNode(rel.endNodeId)
     return new Relationship(
@@ -51,22 +61,36 @@ export function mapRelationships(relationships: any, graph: any) {
       source,
       target,
       rel.type,
-      mapProperties(rel.properties)
+      mapProperties(rel.properties),
+      rel.propertyTypes
     )
   })
 }
 
-export function getGraphStats(graph: any) {
-  const labelStats: any = {}
-  const relTypeStats: any = {}
-  graph.nodes().forEach((node: any) => {
-    node.labels.forEach((label: any) => {
+export type GraphStatsLabels = Record<
+  string,
+  { count: number; properties: Record<string, string> }
+>
+export type GraphStatsRelationshipTypes = Record<
+  string,
+  { count: number; properties: Record<string, string> }
+>
+export type GraphStats = {
+  labels?: GraphStatsLabels
+  relTypes?: GraphStatsRelationshipTypes
+}
+
+export function getGraphStats(graph: Graph): GraphStats {
+  const labelStats: GraphStatsLabels = {}
+  const relTypeStats: GraphStatsRelationshipTypes = {}
+  graph.nodes().forEach(node => {
+    node.labels.forEach(label => {
       if (labelStats['*']) {
         labelStats['*'].count = labelStats['*'].count + 1
       } else {
         labelStats['*'] = {
           count: 1,
-          properties: []
+          properties: {}
         }
       }
       if (labelStats[label]) {
@@ -83,13 +107,13 @@ export function getGraphStats(graph: any) {
       }
     })
   })
-  graph.relationships().forEach((rel: any) => {
+  graph.relationships().forEach(rel => {
     if (relTypeStats['*']) {
       relTypeStats['*'].count = relTypeStats['*'].count + 1
     } else {
       relTypeStats['*'] = {
         count: 1,
-        properties: []
+        properties: {}
       }
     }
     if (relTypeStats[rel.type]) {

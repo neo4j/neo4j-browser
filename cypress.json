@@ -28,5 +28,8 @@
   "viewportWidth": 1280,
   "waitForAnimations": true,
   "watchForFileChanges": true,
-  "retries": 1
+  "retries": {
+    "runMode": 1,
+    "openMode": 0
+  }
 }

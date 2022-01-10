@@ -92,7 +92,7 @@ describe('Plan output', () => {
       el.should('contain', 'pagecache misses')
     })
   }
-  it('ouputs and preselects plan when using PROFILE', () => {
+  it('outputs and preselects plan when using PROFILE', () => {
     cy.executeCommand(':clear')
     cy.executeCommand('CREATE (:Tag)')
     cy.executeCommand(':clear')

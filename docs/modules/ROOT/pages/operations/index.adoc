@@ -1,0 +1,19 @@
+:description: This section describes how to administer and use Neo4j Browser.
+
+
+[[operations]]
+= Browser operations
+
+* xref:operations/dbms-connection.adoc[] -- How to establish a connection to a Neo4j DBMS.
+* xref:operations/credentials-handling.adoc[] -- Explaining how credentials are cached for Neo4j Browser.
+* xref:operations/browser-sso.adoc[] -- Supported Single Sign-On providers. label:enterprise[]
+* xref:operations/browser-settings.adoc[] -- Available browser settings.
+* xref:operations/initial-command.adoc[] -- An initial command at startup.
+* xref:operations/result-frames.adoc[] -- Explaining available result frames.
+* xref:operations/export-results.adoc[] -- How to export results.
+* xref:operations/browser-styling.adoc[] -- Customize your graph query result.
+* xref:operations/query-parameters.adoc[] -- Using parameters for Cypher queries.
+* xref:operations/browser-url-parameters.adoc[] -- Available URL parameters.
+* xref:operations/rest-requests.adoc[] -- HTTP REST commands.
+* xref:operations/product-analytics.adoc[] -- Configure consent for anonymous usage statistics.
+

@@ -40,16 +40,16 @@ import {
   getPlayImplicitInitCommands,
   shouldEnableMultiStatementMode
 } from '../settings/settingsDuck'
-import { fetchRemoteGuide } from './helpers/play'
+import { fetchRemoteGuideAsync } from './helpers/playAndGuides'
 import { CONNECTION_SUCCESS } from '../connections/connectionsDuck'
+import { UPDATE_SETTINGS } from '../dbMeta/constants'
 import {
-  UPDATE_SETTINGS,
   getAvailableSettings,
   getRemoteContentHostnameAllowlist,
   getDefaultRemoteContentHostnameAllowlist
-} from '../dbMeta/dbMetaDuck'
+} from '../dbMeta/state'
 import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
-import { add as addFrame } from 'shared/modules/stream/streamDuck'
+import { add as addFrame } from 'shared/modules/frames/framesDuck'
 import { update as updateQueryResult } from 'shared/modules/requests/requestsDuck'
 import { getItem, setItem } from 'services/localstorage'
 
@@ -70,7 +70,7 @@ export const autoCommitTxCommand = 'auto'
 
 const initialState = {}
 export const getErrorMessage = (state: any) => state[NAME].errorMessage
-export const allowlistedMultiCommands = () => [':param', ':use']
+export const allowlistedMultiCommands = () => [':param', ':use', ':auto']
 
 export default function reducer(state = initialState, action: any) {
   switch (action.type) {
@@ -89,6 +89,21 @@ export default function reducer(state = initialState, action: any) {
 
 // Action creators
 
+export interface ExecuteSingleCommandAction {
+  type: typeof SINGLE_COMMAND_QUEUED
+  cmd: string
+  id?: number | string
+  requestId?: string
+  useDb?: string | null
+  isRerun?: boolean
+}
+
+export interface ExecuteCommandAction extends ExecuteSingleCommandAction {
+  type: typeof COMMAND_QUEUED
+  parentId?: string
+  source?: string
+}
+
 export const commandSources = {
   button: 'BUTTON',
   playButton: 'PLAY-BUTTON',
@@ -100,8 +115,33 @@ export const commandSources = {
   sidebar: 'SIDEBAR',
   url: 'URL'
 }
+
+export const executeSingleCommand = (
+  cmd: string,
+  {
+    id,
+    requestId,
+    useDb,
+    isRerun = false
+  }: {
+    id?: number | string
+    requestId?: string
+    useDb?: string | null
+    isRerun?: boolean
+  } = {}
+): ExecuteSingleCommandAction => {
+  return {
+    type: SINGLE_COMMAND_QUEUED,
+    cmd,
+    id,
+    requestId,
+    useDb,
+    isRerun
+  }
+}
+
 export const executeCommand = (
-  cmd: any,
+  cmd: string,
   {
     id = undefined,
     requestId = undefined,
@@ -109,8 +149,15 @@ export const executeCommand = (
     useDb = undefined,
     isRerun = false,
     source = undefined
-  }: any = {}
-) => {
+  }: {
+    id?: number | string
+    requestId?: string
+    parentId?: string
+    useDb?: string | null
+    isRerun?: boolean
+    source?: string
+  } = {}
+): ExecuteCommandAction => {
   return {
     type: COMMAND_QUEUED,
     cmd,
@@ -120,20 +167,6 @@ export const executeCommand = (
     useDb,
     isRerun,
     source
-  }
-}
-
-export const executeSingleCommand = (
-  cmd: any,
-  { id, requestId, useDb, isRerun = false }: any = {}
-) => {
-  return {
-    type: SINGLE_COMMAND_QUEUED,
-    cmd,
-    id,
-    requestId,
-    useDb,
-    isRerun
   }
 }
 
@@ -338,7 +371,7 @@ export const fetchGuideFromAllowlistEpic = (some$: any, store: any) =>
 
     return firstSuccessPromise(guidesUrls, (url: any) => {
       // Get first successful fetch
-      return fetchRemoteGuide(url, allowlistStr).then(r => ({
+      return fetchRemoteGuideAsync(url, allowlistStr).then(r => ({
         type: action.$$responseChannel,
         success: true,
         result: r

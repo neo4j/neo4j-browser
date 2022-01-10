@@ -24,7 +24,7 @@ import { createBus, createReduxMiddleware } from 'suber'
 import * as commands from './commandsDuck'
 import bolt from 'services/bolt/bolt'
 import { addHistory } from 'shared/modules/history/historyDuck'
-import { add as addFrame } from 'shared/modules/stream/streamDuck'
+import { add as addFrame } from 'shared/modules/frames/framesDuck'
 
 // jest.unmock('services/bolt/bolt')
 const originalRoutedWriteTransaction = bolt.routedWriteTransaction

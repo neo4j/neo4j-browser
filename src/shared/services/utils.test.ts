@@ -226,7 +226,7 @@ describe('utils', () => {
       hostname: 'anything.com',
       port: '',
       pathname: '',
-      search: '',
+      query: '',
       hash: '',
       username: '',
       password: ''
@@ -237,7 +237,7 @@ describe('utils', () => {
       hostname: 'anything.com',
       port: '',
       pathname: '',
-      search: '',
+      query: '',
       hash: '',
       username: '',
       password: ''
@@ -248,7 +248,7 @@ describe('utils', () => {
       hostname: 'anything.com',
       port: '8080',
       pathname: '/index.html',
-      search: '',
+      query: '',
       hash: '',
       username: '',
       password: ''
@@ -259,7 +259,7 @@ describe('utils', () => {
       hostname: 'guides.neo4j.com',
       port: '',
       pathname: '',
-      search: '',
+      query: '',
       hash: '',
       username: '',
       password: ''
@@ -270,7 +270,7 @@ describe('utils', () => {
       hostname: 'localhost',
       port: '',
       pathname: '',
-      search: '',
+      query: '',
       hash: '',
       username: '',
       password: ''
@@ -285,7 +285,7 @@ describe('utils', () => {
       hostname: 'guides.neo4j.com',
       port: '1111',
       pathname: '/path',
-      search: '?arg1=a&arg2=2',
+      query: '?arg1=a&arg2=2',
       hash: '',
       username: 'neo',
       password: 'neoPass'

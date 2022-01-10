@@ -87,11 +87,11 @@ describe('Saved Scripts', () => {
     cy.get('[data-testid=navicon-fldr]').click({ force: true })
     cy.get('[data-testid=contextMenuRename]').click()
     cy.get('[data-testid=expandFolder-fldr]').should('not.exist')
-    cy.get('[data-testid=drawerFavorites]').click()
+    cy.get('[data-testid=navigationFavorites]').click()
   })
 
   it('it can use bulk delete', () => {
-    cy.get('[data-testid=drawerFavorites]').click()
+    cy.get('[data-testid=navigationFavorites]').click()
     cy.get('[data-testid=createNewFavorite]')
       .click()
       .click()

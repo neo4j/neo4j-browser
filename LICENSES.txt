@@ -109,7 +109,7 @@ SOFTWARE.
 
 -----
 
-The following software may be included in this product: @firebase/auth, gaxios, gcp-metadata, google-auth-library, long. A copy of the source code may be downloaded from https://github.com/firebase/firebase-js-sdk.git (@firebase/auth), https://github.com/googleapis/gaxios.git (gaxios), https://github.com/googleapis/gcp-metadata.git (gcp-metadata), https://github.com/googleapis/google-auth-library-nodejs.git (google-auth-library), https://github.com/dcodeIO/long.js.git (long). This software contains the following license and notice below:
+The following software may be included in this product: @firebase/auth, gaxios, gcp-metadata, google-auth-library, long, neo4j-client-sso. A copy of the source code may be downloaded from https://github.com/firebase/firebase-js-sdk.git (@firebase/auth), https://github.com/googleapis/gaxios.git (gaxios), https://github.com/googleapis/gcp-metadata.git (gcp-metadata), https://github.com/googleapis/google-auth-library-nodejs.git (google-auth-library), https://github.com/dcodeIO/long.js.git (long), git+https://github.com/neo4j-devtools/neo4j-client-sso.git (neo4j-client-sso). This software contains the following license and notice below:
 
 Apache License
                            Version 2.0, January 2004
@@ -1790,6 +1790,20 @@ LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES
 OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
 WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
 ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+-----
+
+The following software may be included in this product: clsx. A copy of the source code may be downloaded from https://github.com/lukeed/clsx.git. This software contains the following license and notice below:
+
+MIT License
+
+Copyright (c) Luke Edwards <luke.edwards05@gmail.com> (lukeed.com)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----
 
@@ -3651,7 +3665,7 @@ specific language governing permissions and limitations under the License.
 
 -----
 
-The following software may be included in this product: file-saver. A copy of the source code may be downloaded from git+https://github.com/eligrey/FileSaver.js.git. This software contains the following license and notice below:
+The following software may be included in this product: file-saver. A copy of the source code may be downloaded from https://github.com/eligrey/FileSaver.js. This software contains the following license and notice below:
 
 The MIT License
 
@@ -5386,7 +5400,7 @@ terms above.
 
 -----
 
-The following software may be included in this product: lodash.camelcase, lodash.uniq. A copy of the source code may be downloaded from https://github.com/lodash/lodash.git (lodash.camelcase), https://github.com/lodash/lodash.git (lodash.uniq). This software contains the following license and notice below:
+The following software may be included in this product: lodash.camelcase, lodash.pick, lodash.uniq. A copy of the source code may be downloaded from https://github.com/lodash/lodash.git (lodash.camelcase), https://github.com/lodash/lodash.git (lodash.pick), https://github.com/lodash/lodash.git (lodash.uniq). This software contains the following license and notice below:
 
 Copyright jQuery Foundation and other contributors <https://jquery.org/>
 
@@ -5481,6 +5495,18 @@ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+-----
+
+The following software may be included in this product: luxon. A copy of the source code may be downloaded from https://github.com/moment/luxon. This software contains the following license and notice below:
+
+Copyright 2019 JS Foundation and other contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----
 
@@ -5737,11 +5763,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 -----
 
-The following software may be included in this product: ms. A copy of the source code may be downloaded from https://github.com/zeit/ms.git. This software contains the following license and notice below:
+The following software may be included in this product: ms. A copy of the source code may be downloaded from https://github.com/vercel/ms.git. This software contains the following license and notice below:
 
 The MIT License (MIT)
 
-Copyright (c) 2016 Zeit, Inc.
+Copyright (c) 2020 Vercel, Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -5789,7 +5815,7 @@ SOFTWARE.
 
 -----
 
-The following software may be included in this product: neo4j-driver. A copy of the source code may be downloaded from git://github.com/neo4j/neo4j-javascript-driver.git. This software contains the following license and notice below:
+The following software may be included in this product: neo4j-driver, neo4j-driver-bolt-connection, neo4j-driver-core. A copy of the source code may be downloaded from git://github.com/neo4j/neo4j-javascript-driver.git (neo4j-driver), git://github.com/neo4j/neo4j-javascript-driver.git (neo4j-driver-bolt-connection), git://github.com/neo4j/neo4j-javascript-driver.git (neo4j-driver-core). This software contains the following license and notice below:
 
 Apache License
                            Version 2.0, January 2004
@@ -6823,6 +6849,32 @@ SOFTWARE.
 
 -----
 
+The following software may be included in this product: react-draggable. A copy of the source code may be downloaded from https://github.com/react-grid-layout/react-draggable.git. This software contains the following license and notice below:
+
+(MIT License)
+
+Copyright (c) 2014-2016 Matt Zabriskie. All rights reserved.
+ 
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"), 
+to deal in the Software without restriction, including without limitation 
+the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+and/or sell copies of the Software, and to permit persons to whom the 
+Software is furnished to do so, subject to the following conditions:
+ 
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+ 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+DEALINGS IN THE SOFTWARE.
+
+-----
+
 The following software may be included in this product: react-lifecycles-compat. A copy of the source code may be downloaded from https://github.com/reactjs/react-lifecycles-compat.git. This software contains the following license and notice below:
 
 MIT License
@@ -6906,6 +6958,32 @@ The following software may be included in this product: react-redux, redux. A co
 The MIT License (MIT)
 
 Copyright (c) 2015-present Dan Abramov
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+-----
+
+The following software may be included in this product: react-resizable. A copy of the source code may be downloaded from git@github.com:react-grid-layout/react-resizable.git. This software contains the following license and notice below:
+
+The MIT License (MIT)
+
+Copyright (c) 2016-2018 Samuel Reed
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

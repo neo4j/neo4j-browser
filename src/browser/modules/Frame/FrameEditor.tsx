@@ -35,7 +35,7 @@ import {
 import {
   Frame,
   TRACK_SAVE_AS_PROJECT_FILE
-} from 'shared/modules/stream/streamDuck'
+} from 'shared/modules/frames/framesDuck'
 import { EditorButton, FrameButton } from 'browser-components/buttons'
 import { SaveFavoriteIcon } from 'browser-components/icons/Icons'
 import { DottedLineHover } from '../Stream/styled'
@@ -52,7 +52,7 @@ import { MAIN_WRAPPER_DOM_ID } from '../App/App'
 import stopIcon from 'icons/stop-icon.svg'
 import runIcon from 'icons/run-icon.svg'
 import { EditorContainer, Header } from '../Editor/styled'
-import ExportButton from './ExportButton'
+import ExportButton, { ExportItem } from './ExportButton'
 import { GlobalState } from 'shared/globalState'
 import { Action, Dispatch } from 'redux'
 import {
@@ -64,9 +64,7 @@ import { getParams } from 'shared/modules/params/paramsDuck'
 type FrameEditorBaseProps = {
   frame: Frame
   fullscreenToggle: () => void
-  numRecords: number
-  getRecords: () => any
-  visElement: any
+  exportItems: ExportItem[]
   bus: Bus
   params: Record<string, unknown>
 }
@@ -95,9 +93,7 @@ function FrameEditor({
   onTitlebarCmdClick,
   frame,
   fullscreenToggle,
-  numRecords,
-  getRecords,
-  visElement,
+  exportItems,
   bus,
   params
 }: FrameEditorProps) {
@@ -109,33 +105,6 @@ function FrameEditor({
     editorRef.current?.setValue(frame.cmd)
   }, [frame.cmd])
   const editorRef = useRef<MonacoHandles>(null)
-
-  /* When the frametype is changed the titlebar is unmounted
-  and replaced with a new instance. This means focus cursor position are lost.
-  To regain editor focus we run an effect dependant on the isRerun prop.
-  However, when the frame prop changes in some way the effect is retriggered
-  although the "isRun" is still true. Use effect does not check for equality
-  but instead re-runs the effect to take focus again. To prevent this
-  we use the useCallback hook as well. As a best effort we set the cursor position
-  to be at the end of the query.
-
-  A better solution is to change the frame titlebar to reside outside of the 
-  frame contents.
-  */
-
-  const gainFocusCallback = useCallback(() => {
-    if (frame.isRerun) {
-      editorRef.current?.focus()
-
-      const lines = (editorRef.current?.getValue() || '').split('\n')
-      const linesLength = lines.length
-      editorRef.current?.setPosition({
-        lineNumber: linesLength,
-        column: lines[linesLength - 1].length + 1
-      })
-    }
-  }, [frame.isRerun])
-  useEffect(gainFocusCallback, [gainFocusCallback])
 
   function run(cmd: string) {
     reRun(frame, cmd)
@@ -220,7 +189,7 @@ function FrameEditor({
               onExecute={run}
               value={editorValue}
               ref={editorRef}
-              fullscreen={false}
+              isFullscreen={false}
               toggleFullscreen={fullscreenToggle}
             />
           </EditorContainer>
@@ -251,7 +220,7 @@ function FrameEditor({
       <StyledFrameTitlebarButtonSection>
         <FrameButton
           title="Save as Favorite"
-          data-testid="frame-Favorite"
+          dataTestId="frame-Favorite"
           onClick={() => {
             newFavorite(frame.cmd)
           }}
@@ -260,9 +229,7 @@ function FrameEditor({
         </FrameButton>
         <ExportButton
           frame={frame}
-          numRecords={numRecords}
-          getRecords={getRecords}
-          visElement={visElement}
+          exportItems={exportItems}
           isRelateAvailable={isRelateAvailable}
           newProjectFile={newProjectFile}
         />

@@ -1,0 +1,8 @@
+:description: Neo4j Browser web application.
+
+
+[[web-application]]
+= Web application
+
+Neo4j Browser is available as a web application at link:https://browser.neo4j.io/[_https://browser.neo4j.io/_^].
+To setup up a connection to Neo4j with this web application (Neo4j Browser), you need a remote Neo4j instance that is configured with TLS.

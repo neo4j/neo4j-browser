@@ -24,14 +24,14 @@ import settingsReducer, {
 import featuresReducer, {
   NAME as features
 } from 'shared/modules/features/featuresDuck'
-import streamReducer, { NAME as stream } from 'shared/modules/stream/streamDuck'
+import streamReducer, { NAME as stream } from 'shared/modules/frames/framesDuck'
 import historyReducer, {
   NAME as history
 } from 'shared/modules/history/historyDuck'
 import userReducer, {
   NAME as currentUser
 } from 'shared/modules/currentUser/currentUserDuck'
-import dbMetaReducer, { NAME as dbMeta } from 'shared/modules/dbMeta/dbMetaDuck'
+import dbMetaReducer, { NAME as dbMeta } from 'shared/modules/dbMeta/state'
 import favoritesReducer, {
   NAME as documents
 } from 'shared/modules/favorites/favoritesDuck'

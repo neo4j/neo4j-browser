@@ -21,8 +21,8 @@
 import { hostIsAllowed } from 'services/utils'
 import remote from 'services/remote'
 
-export const fetchRemoteGrass = (url: any, allowlist = null) => {
-  return new Promise((resolve, reject) => {
+export const fetchRemoteGrass = (url: any, allowlist?: string) => {
+  return new Promise<void>((resolve, reject) => {
     if (!hostIsAllowed(url, allowlist)) {
       return reject(
         new Error('Hostname is not allowed according to server allowlist')

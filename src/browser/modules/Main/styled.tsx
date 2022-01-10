@@ -20,7 +20,6 @@
 
 import styled, { keyframes } from 'styled-components'
 import { StyledCodeBlock } from '../ClickToCode/styled'
-import { SyncSignInButton } from 'browser-components/buttons'
 
 const grow = (height: any) => {
   return keyframes`
@@ -66,6 +65,27 @@ export const NotAuthedBanner = styled(Banner)`
   background-color: ${props => props.theme.auth};
 `
 
+export const UdcConsentBanner = styled(Banner)`
+  background-color: ${props => props.theme.auth};
+  display: flex;
+  justify-content: space-between;
+`
+export const DismissConsentBanner = styled.span`
+  &:hover {
+    cursor: pointer;
+  }
+  &:after {
+    content: '\\00d7';
+    font-size: 1.4rem;
+  }
+`
+export const UnderlineClickable = styled.span`
+  &:hover {
+    cursor: pointer;
+  }
+  text-decoration: underline;
+`
+
 export const StyledCodeBlockFrame = styled(StyledCodeBlock)`
   white-space: nowrap;
   overflow: hidden;
@@ -73,36 +93,4 @@ export const StyledCodeBlockFrame = styled(StyledCodeBlock)`
   background-color: #f9f2f4;
   border-radius: 4px;
   cursor: pointer;
-`
-
-export const SyncDisconnectedBanner = styled(Banner)`
-  background-color: ${props => props.theme.auth};
-  display: flex;
-  justify-content: space-between;
-`
-
-export const SyncSignInBarButton = styled(SyncSignInButton)`
-  padding: 0 8px 0 8px;
-  margin: 0 12px 0 12px;
-  vertical-align: baseline;
-  border: none;
-`
-export const StyledCancelLink = styled.a`
-  cursor: pointer;
-  text-decoration: none;
-  color: #d0d0d0;
-  &:hover {
-    color: #ffffff;
-    text-decoration: none;
-  }
-`
-export const StyledSyncReminderSpan = styled.span`
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  float: left;
-`
-
-export const StyledSyncReminderButtonContainer = styled.div`
-  float: right;
 `

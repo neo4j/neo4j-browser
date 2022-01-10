@@ -19,8 +19,7 @@
  */
 
 import React from 'react'
-import { render, waitForElement } from '@testing-library/react'
-import '@testing-library/jest-dom/extend-expect'
+import { screen, render, waitFor } from '@testing-library/react'
 
 import FeatureToggle from './FeatureToggle'
 import { FeatureToggleProvider } from './FeatureToggleProvider'
@@ -53,55 +52,53 @@ class ErrorB extends React.Component<{}, ErrorBState> {
 
 describe('FeatureToggle', () => {
   test('shows features when theres no context provider available', () => {
-    const { getByText, queryByText } = render(
-      <FeatureToggle name="testFeature" on={<On />} off={<Off />} />
-    )
+    render(<FeatureToggle name="testFeature" on={<On />} off={<Off />} />)
 
     // Then
-    expect(getByText('Yes')).not.toBeUndefined()
-    expect(queryByText('No')).toBeNull()
+    expect(screen.getByText('Yes')).not.toBeUndefined()
+    expect(screen.queryByText('No')).toBeNull()
   })
   test('shows "on" features when context says so', () => {
     // Given
     const features = { testFeature: { on: true } }
 
-    const { getByText, queryByText } = render(
+    render(
       <FeatureToggleProvider features={features}>
         <FeatureToggle name="testFeature" on={<On />} off={<Off />} />
       </FeatureToggleProvider>
     )
 
     // Then
-    expect(getByText('Yes')).not.toBeUndefined()
-    expect(queryByText('No')).toBeNull()
+    expect(screen.getByText('Yes')).not.toBeUndefined()
+    expect(screen.queryByText('No')).toBeNull()
   })
   test('shows "off" features when context says so', () => {
     // Given
     const features = { testFeature: { on: false } }
 
-    const { getByText, queryByText } = render(
+    render(
       <FeatureToggleProvider features={features}>
         <FeatureToggle name="testFeature" on={<On />} off={<Off />} />
       </FeatureToggleProvider>
     )
 
     // Then
-    expect(getByText('No')).not.toBeUndefined()
-    expect(queryByText('Yes')).toBeNull()
+    expect(screen.getByText('No')).not.toBeUndefined()
+    expect(screen.queryByText('Yes')).toBeNull()
   })
   test('returns null if no "off" prop is availavle', () => {
     // Given
     const features = { testFeature: { on: false } }
 
-    const { queryByText } = render(
+    render(
       <FeatureToggleProvider features={features}>
         <FeatureToggle name="testFeature" on={<On />} />
       </FeatureToggleProvider>
     )
     // Then
 
-    expect(queryByText('Yes')).toBeNull()
-    expect(queryByText('No')).toBeNull()
+    expect(screen.queryByText('Yes')).toBeNull()
+    expect(screen.queryByText('No')).toBeNull()
   })
   test('throws if no "on" prop is available but the feature is to be shown', async () => {
     // Given
@@ -111,7 +108,7 @@ describe('FeatureToggle', () => {
     const features = { testFeature: { on: true } }
 
     // When
-    const { getByTestId } = render(
+    render(
       <ErrorB>
         <FeatureToggleProvider features={features}>
           <FeatureToggle name="testFeature" off={<Off />} />
@@ -120,10 +117,10 @@ describe('FeatureToggle', () => {
     )
 
     // Wait for error propagation
-    await waitForElement(() => getByTestId('error'))
+    await waitFor(() => screen.getByTestId('error'))
 
     // Then
-    expect(getByTestId('error')).toHaveTextContent(
+    expect(screen.getByTestId('error')).toHaveTextContent(
       'No "on" property available for this enabled feature: testFeature for FeatureToggle component.'
     )
 
@@ -137,7 +134,7 @@ describe('FeatureToggle', () => {
     const features = { testFeature: { on: true } }
 
     // When
-    const { getByTestId } = render(
+    render(
       <ErrorB>
         <FeatureToggleProvider features={features}>
           <FeatureToggle on={<On />} off={<Off />} />
@@ -146,10 +143,10 @@ describe('FeatureToggle', () => {
     )
 
     // Wait for error propagation
-    await waitForElement(() => getByTestId('error'))
+    await waitFor(() => screen.getByTestId('error'))
 
     // Then
-    expect(getByTestId('error')).toHaveTextContent(
+    expect(screen.getByTestId('error')).toHaveTextContent(
       'No "name" property provided to FeatureToggle component.'
     )
 

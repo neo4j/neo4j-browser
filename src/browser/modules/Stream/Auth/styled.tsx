@@ -154,15 +154,6 @@ export const StyledDbsRow = styled.li``
 export const StyledFormContainer = styled.div`
   display: flex;
 `
-
-export const StyledSSOOptions = styled.div`
-  border-right: 1px solid rgb(77, 74, 87, 0.3);
-  padding-right: 60px;
-  margin-right: 60px;
-  margin-left: 30px;
-  max-width: 300px;
-`
-
 export const StyledSSOLogDownload = styled.a`
   cursor: pointer;
 `

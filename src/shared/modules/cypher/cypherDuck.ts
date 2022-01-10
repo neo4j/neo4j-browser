@@ -37,11 +37,9 @@ import {
   FIRST_MULTI_DB_SUPPORT,
   FIRST_NO_MULTI_DB_SUPPORT
 } from '../features/versionedFeatures'
-import {
-  updateServerInfo,
-  serverInfoQuery,
-  getVersion
-} from '../dbMeta/dbMetaDuck'
+import { serverInfoQuery } from '../dbMeta/constants'
+import { getVersion } from '../dbMeta/state'
+import { updateServerInfo } from '../dbMeta/actions'
 
 const NAME = 'cypher'
 export const CYPHER_REQUEST = `${NAME}/REQUEST`

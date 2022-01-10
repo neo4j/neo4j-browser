@@ -1,68 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Visualization renders 1`] = `<div />`;
+exports[`Visualization renders empty content 1`] = `<div />`;
 
 exports[`Visualization renders with result and escapes any HTML 1`] = `
 <div>
   <div
-    class="sc-bwCtUz hJgGYC"
+    class="sc-iuJeZd fTWjas"
   >
     <div
-      class="sc-iAyFgw ikvPvE one-legend-row"
+      class="sc-jTzLTM bdhVYv"
       id="svg-vis"
     >
-      <div
-        class="sc-dxgOiQ kpiaUr one-row"
-      >
-        <div
-          class="sc-kpOJdX kvPbrS contracted"
-        >
-          <ul
-            class="sc-dnqmqq sc-ckVGcZ edBnTi list-inline"
-          >
-            <li
-              class="sc-iwsKbI sc-jKJlTe bpIrLV"
-              data-testid="viz-legend-labels"
-            >
-              <ul
-                class="sc-kGXeez ijQsDt contents"
-              >
-                <li
-                  class="sc-iwsKbI sc-fjdhpX sc-jzJRlG kiLeKN token token-label"
-                  style="background-color: rgb(247, 151, 103); color: rgb(255, 255, 255);"
-                >
-                  *
-                  <span
-                    class="sc-kgoBCf heNWOu count"
-                  >
-                    (1)
-                  </span>
-                </li>
-              </ul>
-            </li>
-            <li
-              class="sc-iwsKbI sc-jKJlTe bpIrLV"
-              data-testid="viz-legend-labels"
-            >
-              <ul
-                class="sc-kGXeez ijQsDt contents"
-              >
-                <li
-                  class="sc-iwsKbI sc-fjdhpX sc-jzJRlG kiLeKN token token-label"
-                  style="background-color: rgb(201, 144, 192); color: rgb(255, 255, 255);"
-                >
-                  Person
-                  <span
-                    class="sc-kgoBCf heNWOu count"
-                  >
-                    (1)
-                  </span>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-      </div>
       <div
         class="sc-bdVaJa ckbiDw"
       >
@@ -108,14 +56,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
                     stroke-width="2px"
                   />
                   <text
-                    dy="1.5625"
-                    fill="#FFFFFF"
-                    font-family="streamline"
-                    font-size="25"
-                    pointer-events="none"
-                    text-anchor="middle"
-                  />
-                  <text
+                    class="caption"
                     fill="#FFFFFF"
                     font-size="10px"
                     pointer-events="none"
@@ -131,54 +72,90 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
           </g>
         </svg>
         <div
-          class="sc-eHgmQL fBSINn"
+          class="sc-fjdhpX hNgrdF"
+          offset="208.8"
         >
           <button
-            class="sc-cvbbAY cqXpvD zoom-in"
+            class="sc-jzJRlG hPTWGK zoom-in"
           >
             <i
-              class="sc-chbbiW fdVihP sl-zoom-in"
+              class="sc-bnXvFD bIRcfT sl-zoom-in"
               style="font-size: 1em;"
             />
           </button>
           <button
-            class="sc-cvbbAY cqXpvD zoom-out"
+            class="sc-jzJRlG hPTWGK zoom-out"
           >
             <i
-              class="sc-kxynE dtqwBR sl-zoom-out"
+              class="sc-gFaPwZ cMtXIT sl-zoom-out"
               style="font-size: 1em;"
             />
           </button>
         </div>
       </div>
       <div
-        class="sc-gqjmRU iNDOUA status-bar"
+        class="sc-kAzzGY jlhNIW"
+      >
+        <i
+          aria-hidden="true"
+          class="chevron right icon"
+          title="Collapse the Node Properties display"
+        />
+      </div>
+      <div
+        class="sc-cSHVUG hRkyWa"
+        width="204.8"
       >
         <div
-          class="sc-VigVT joQvFy status"
+          class="sc-chPdSV iEZMKC react-resizable"
+          data-testid="vizInspector"
         >
           <div
-            class="sc-EHOje dyhqxD contracted inspector-footer"
+            class="sc-kGXeez eoOSxY"
           >
-            <ul
-              class="sc-bZQynM bQKKoY inspector-footer-row"
-              data-testid="vizInspector"
-            >
-              <ul
-                class="sc-dnqmqq bGMIpP list-inline"
-              >
-                <li
-                  class="sc-iwsKbI sc-jTzLTM bnPPYH pair"
-                >
-                  <div
-                    class="sc-htoDjs icDRie value"
-                  >
-                    Displaying 1 nodes, 0 relationships.
-                  </div>
-                </li>
-              </ul>
-            </ul>
+            Overview
           </div>
+          <div
+            class="sc-kpOJdX hbdNFu"
+          >
+            <div>
+              <div
+                class="sc-kkGfuU eOTllS"
+              >
+                <span
+                  class="sc-hMqMXs hFEDhg"
+                >
+                  Node labels
+                </span>
+              </div>
+              <ul
+                class="sc-htpNat sc-dnqmqq OaEcl"
+              >
+                <div
+                  class="sc-eHgmQL sc-cvbbAY gubsiZ"
+                  data-testid="property-details-overview-node-label-*"
+                  style="background-color: rgb(165, 171, 182); color: rgb(255, 255, 255);"
+                >
+                  * (1)
+                </div>
+                <div
+                  class="sc-eHgmQL sc-cvbbAY gubsiZ"
+                  data-testid="property-details-overview-node-label-Person"
+                  style="background-color: rgb(201, 144, 192); color: rgb(255, 255, 255);"
+                >
+                  Person (1)
+                </div>
+              </ul>
+            </div>
+            <div
+              style="padding-bottom: 10px;"
+            >
+              Displaying 1 nodes, 0 relationships.
+            </div>
+          </div>
+          <span
+            class="react-resizable-handle react-resizable-handle-w"
+          />
         </div>
       </div>
     </div>

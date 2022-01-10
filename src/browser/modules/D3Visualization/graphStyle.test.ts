@@ -18,12 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Grass from './graphStyle'
+import Grass, { Selector } from './graphStyle'
 
 describe('grass', () => {
   it('can generate a default style', () => {
     // Given
-    const grass = Grass()
+    const grass = new Grass()
 
     // When
     const styleStr = grass.toString()
@@ -54,7 +54,7 @@ relationship {
   })
   it('can generate a style for a node with a simple label', () => {
     // Given
-    const grass = Grass()
+    const grass = new Grass()
     const node = {
       labels: ['foo']
     }
@@ -94,7 +94,7 @@ node.foo {
   })
   it('can generate a style for a node with a label with a dot', () => {
     // Given
-    const grass = Grass()
+    const grass = new Grass()
     const node = {
       labels: ['foo.bar']
     }
@@ -134,11 +134,12 @@ node.foo\\.bar {
   })
   it('can generate a style for a relationship with a type with a dot', () => {
     // Given
-    const grass = Grass()
+    const grass = new Grass()
 
     // When
     grass.loadRules()
-    grass.changeForSelector('relationship.REL\\.TYPE', {
+    const selector = new Selector('relationship', ['REL.TYPE'])
+    grass.changeForSelector(selector, {
       caption: 'yo'
     })
     // grass.forRelationship(rel)

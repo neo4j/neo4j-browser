@@ -25,37 +25,19 @@ import {
   DrawerSection,
   DrawerSectionBody
 } from 'browser-components/drawer/drawer-styled'
-import {
-  StyledLabel,
-  StyledRelationship,
-  StyledProperty,
-  StyledShowMoreContainer,
-  StyledShowMoreLink
-} from './styled'
+import { StyledLabel, StyledRelationship, StyledProperty } from './styled'
 
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
-import neoGraphStyle from 'browser/modules/D3Visualization/graphStyle'
+import { GraphStyle } from 'browser/modules/D3Visualization/graphStyle'
 import deepmerge from 'deepmerge'
+import { ShowMoreOrAll } from 'browser-components/ShowMoreOrAll/ShowMoreOrAll'
+import { ThemeProvider } from 'styled-components'
+import { dark } from 'browser-styles/themes'
 
 const wrapperStyle = (styles && styles.wrapper) || ''
 
-const ShowMore = ({ total, shown, moreStep, onMore }: any) => {
-  const numMore = total - shown > moreStep ? moreStep : total - shown
-  return shown < total ? (
-    <StyledShowMoreContainer>
-      <StyledShowMoreLink onClick={() => onMore(numMore)}>
-        Show {numMore} more
-      </StyledShowMoreLink>
-      &nbsp;|&nbsp;
-      <StyledShowMoreLink onClick={() => onMore(total)}>
-        Show all
-      </StyledShowMoreLink>
-    </StyledShowMoreContainer>
-  ) : null
-}
-
 function createStyleGetter(graphStyleData: any, kind: string) {
-  const graphStyle = neoGraphStyle()
+  const graphStyle = new GraphStyle()
   if (graphStyleData) {
     graphStyle.loadRules(deepmerge(graphStyle.toSheet(), graphStyleData || {}))
   }
@@ -130,6 +112,15 @@ const createItems = (
   })
 }
 
+type LabelItemsProps = {
+  labels: string[]
+  totalNumItems: number
+  onItemClick: () => void
+  moreStep: number
+  onMoreClick: (num: number) => void
+  count: number
+  graphStyleData: any
+}
 const LabelItems = ({
   labels = [],
   totalNumItems,
@@ -138,7 +129,7 @@ const LabelItems = ({
   onMoreClick,
   count,
   graphStyleData
-}: any) => {
+}: LabelItemsProps) => {
   let labelItems: any = <p>There are no labels in database</p>
   if (labels.length) {
     const editorCommandTemplate = (text: any, i: any) => {
@@ -163,14 +154,26 @@ const LabelItems = ({
       <DrawerSectionBody className={wrapperStyle}>
         {labelItems}
       </DrawerSectionBody>
-      <ShowMore
-        total={totalNumItems}
-        shown={labels.length}
-        moreStep={moreStep}
-        onMore={onMoreClick}
-      />
+      <ThemeProvider theme={dark}>
+        <ShowMoreOrAll
+          total={totalNumItems}
+          shown={labels.length}
+          moreStep={moreStep}
+          onMore={onMoreClick}
+        />
+      </ThemeProvider>
     </DrawerSection>
   )
+}
+
+type RelationshipItemsProps = {
+  relationshipTypes: string[]
+  totalNumItems: number
+  onItemClick: () => void
+  moreStep: number
+  onMoreClick: (num: number) => any
+  count: number
+  graphStyleData: any
 }
 const RelationshipItems = ({
   relationshipTypes = [],
@@ -180,7 +183,7 @@ const RelationshipItems = ({
   onMoreClick,
   count,
   graphStyleData
-}: any) => {
+}: RelationshipItemsProps) => {
   let relationshipItems: any = <p>No relationships in database</p>
   if (relationshipTypes.length > 0) {
     const editorCommandTemplate = (text: any, i: any) => {
@@ -207,7 +210,7 @@ const RelationshipItems = ({
       <DrawerSectionBody className={wrapperStyle}>
         {relationshipItems}
       </DrawerSectionBody>
-      <ShowMore
+      <ShowMoreOrAll
         total={totalNumItems}
         shown={relationshipTypes.length}
         moreStep={moreStep}
@@ -216,13 +219,21 @@ const RelationshipItems = ({
     </DrawerSection>
   )
 }
+
+type PropertyItemsProps = {
+  properties: string[]
+  totalNumItems: number
+  onItemClick: () => void
+  moreStep: number
+  onMoreClick: (num: number) => any
+}
 const PropertyItems = ({
   properties,
   totalNumItems,
   onItemClick,
   moreStep,
   onMoreClick
-}: any) => {
+}: PropertyItemsProps) => {
   let propertyItems: any = <p>There are no properties in database</p>
   if (properties.length > 0) {
     const editorCommandTemplate = (text: any) => {
@@ -252,7 +263,7 @@ const PropertyItems = ({
       <DrawerSectionBody className={wrapperStyle}>
         {propertyItems}
       </DrawerSectionBody>
-      <ShowMore
+      <ShowMoreOrAll
         total={totalNumItems}
         shown={properties.length}
         moreStep={moreStep}

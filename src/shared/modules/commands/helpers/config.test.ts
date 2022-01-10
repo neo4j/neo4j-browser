@@ -21,7 +21,8 @@
 import nock from 'nock'
 import * as config from './config'
 import { update, replace } from 'shared/modules/settings/settingsDuck'
-import dbMetaReducer, { updateSettings } from 'shared/modules/dbMeta/dbMetaDuck'
+import dbMetaReducer from 'shared/modules/dbMeta/state'
+import { updateSettings } from 'shared/modules/dbMeta/actions'
 
 function FetchError(message: any) {
   // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message

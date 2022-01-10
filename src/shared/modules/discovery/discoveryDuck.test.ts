@@ -24,6 +24,7 @@ import { createBus, createReduxMiddleware } from 'suber'
 import nock from 'nock'
 
 import * as discovery from './discoveryDuck'
+import * as connections from '../connections/connectionsDuck'
 import { APP_START, WEB, CLOUD } from 'shared/modules/app/appDuck'
 import { getDiscoveryEndpoint } from 'services/bolt/boltHelpers'
 
@@ -38,7 +39,7 @@ describe('discoveryOnStartupEpic', () => {
   ])
   beforeAll(() => {
     store = mockStore({
-      connections: {},
+      connections: connections.initialState,
       app: {
         env: WEB
       }
@@ -59,7 +60,16 @@ describe('discoveryOnStartupEpic', () => {
 
     bus.take(discovery.DONE, () => {
       // Then
-      expect(store.getActions()).toEqual([action, { type: discovery.DONE }])
+      expect(store.getActions()).toEqual([
+        action,
+        {
+          type: discovery.DONE,
+          discovered: {
+            SSOProviders: [],
+            SSOError: discovery.NO_SSO_PROVIDERS_ERROR_TEXT
+          }
+        }
+      ])
       done()
     })
 
@@ -76,7 +86,16 @@ describe('discoveryOnStartupEpic', () => {
 
     bus.take(discovery.DONE, () => {
       // Then
-      expect(store.getActions()).toEqual([action, { type: discovery.DONE }])
+      expect(store.getActions()).toEqual([
+        action,
+        {
+          type: discovery.DONE,
+          discovered: {
+            SSOProviders: [],
+            SSOError: discovery.NO_SSO_PROVIDERS_ERROR_TEXT
+          }
+        }
+      ])
       done()
     })
 
@@ -99,7 +118,7 @@ describe('discoveryOnStartupEpic', () => {
           type: discovery.DONE,
           discovered: {
             host: expectedHost,
-            SSOError: undefined,
+            SSOError: discovery.NO_SSO_PROVIDERS_ERROR_TEXT,
             SSOProviders: [],
             supportsMultiDb: false
           }
@@ -127,7 +146,7 @@ describe('discoveryOnStartupEpic', () => {
           type: discovery.DONE,
           discovered: {
             host: expectedHost,
-            SSOError: undefined,
+            SSOError: discovery.NO_SSO_PROVIDERS_ERROR_TEXT,
             SSOProviders: [],
             supportsMultiDb: false
           }
@@ -155,7 +174,7 @@ describe('discoveryOnStartupEpic', () => {
           type: discovery.DONE,
           discovered: {
             host: expectedHost,
-            SSOError: undefined,
+            SSOError: discovery.NO_SSO_PROVIDERS_ERROR_TEXT,
             SSOProviders: [],
             supportsMultiDb: false
           }
@@ -186,7 +205,7 @@ describe('discoveryOnStartupEpic', () => {
           type: discovery.DONE,
           discovered: {
             host: expectedHost,
-            SSOError: undefined,
+            SSOError: discovery.NO_SSO_PROVIDERS_ERROR_TEXT,
             SSOProviders: [],
             supportsMultiDb: false
           }
@@ -214,10 +233,10 @@ describe('discoveryOnStartupEpic', () => {
           type: discovery.DONE,
           discovered: {
             host: expectedHost,
-            SSOError: undefined,
+            SSOError: discovery.NO_SSO_PROVIDERS_ERROR_TEXT,
             SSOProviders: [],
-            supportsMultiDb: false,
-            hasForceURL: true
+            hasForceUrl: true,
+            supportsMultiDb: false
           }
         }
       ])
@@ -243,10 +262,10 @@ describe('discoveryOnStartupEpic', () => {
           type: discovery.DONE,
           discovered: {
             host: expectedHost,
-            SSOError: undefined,
+            SSOError: discovery.NO_SSO_PROVIDERS_ERROR_TEXT,
             SSOProviders: [],
             supportsMultiDb: false,
-            hasForceURL: true
+            hasForceUrl: true
           }
         }
       ])
@@ -273,9 +292,9 @@ describe('discoveryOnStartupEpic', () => {
           discovered: {
             host: expectedHost,
             requestedUseDb: 'test',
-            hasForceURL: true,
+            hasForceUrl: true,
             supportsMultiDb: true,
-            SSOError: undefined,
+            SSOError: discovery.NO_SSO_PROVIDERS_ERROR_TEXT,
             SSOProviders: []
           }
         }
@@ -302,10 +321,10 @@ describe('discoveryOnStartupEpic', () => {
           type: discovery.DONE,
           discovered: {
             host: expectedHost,
-            SSOError: undefined,
+            SSOError: discovery.NO_SSO_PROVIDERS_ERROR_TEXT,
             SSOProviders: [],
             supportsMultiDb: false,
-            hasForceURL: true
+            hasForceUrl: true
           }
         }
       ])
@@ -333,10 +352,10 @@ describe('discoveryOnStartupEpic', () => {
           discovered: {
             username: 'neo4j',
             host: expectedHost,
-            SSOError: undefined,
+            SSOError: discovery.NO_SSO_PROVIDERS_ERROR_TEXT,
             SSOProviders: [],
             supportsMultiDb: false,
-            hasForceURL: true
+            hasForceUrl: true
           }
         }
       ])
@@ -385,7 +404,7 @@ describe('discoveryOnStartupEpic cloud env', () => {
           type: discovery.DONE,
           discovered: {
             host: expectedHost,
-            SSOError: undefined,
+            SSOError: discovery.NO_SSO_PROVIDERS_ERROR_TEXT,
             SSOProviders: [],
             supportsMultiDb: false
           }

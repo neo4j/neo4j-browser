@@ -20,7 +20,7 @@
 
 import React from 'react'
 import { connect } from 'react-redux'
-import FrameTemplate from '../../Frame/FrameTemplate'
+import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
 import {
   StyledConnectionAside,
   StyledConnectionBodyContainer,
@@ -34,7 +34,7 @@ import {
   getActiveConnection,
   isConnected
 } from 'shared/modules/connections/connectionsDuck'
-import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
+import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/state'
 import { ClickToCode } from 'browser/modules/ClickToCode/index'
 
 export const ServerStatusFrame = (props: any) => {
@@ -81,8 +81,9 @@ export const ServerStatusFrame = (props: any) => {
 
 const Frame = (props: any) => {
   return (
-    <FrameTemplate
-      header={props.frame}
+    <FrameBodyTemplate
+      isCollapsed={props.isCollapsed}
+      isFullscreen={props.isFullscreen}
       contents={<ServerStatusFrame {...props} />}
     />
   )

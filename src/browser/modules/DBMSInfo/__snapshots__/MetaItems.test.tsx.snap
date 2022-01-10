@@ -3,10 +3,10 @@
 exports[`LabelItems renders empty 1`] = `
 <div>
   <div
-    class="sc-ifAKCX kHWkUt"
+    class="sc-ifAKCX gXIdDM"
   >
     <h5
-      class="sc-bxivhb jqgGlu"
+      class="sc-bxivhb gjWjEn"
     >
       Node Labels
     </h5>
@@ -24,10 +24,10 @@ exports[`LabelItems renders empty 1`] = `
 exports[`LabelItems renders labels 1`] = `
 <div>
   <div
-    class="sc-ifAKCX kHWkUt"
+    class="sc-ifAKCX gXIdDM"
   >
     <h5
-      class="sc-bxivhb jqgGlu"
+      class="sc-bxivhb gjWjEn"
     >
       Node Labels
     </h5>
@@ -35,19 +35,19 @@ exports[`LabelItems renders labels 1`] = `
       class="sc-EHOje fyzZhj"
     >
       <div
-        class="sc-gZMcBi sc-gqjmRU bqcHTp"
+        class="sc-gZMcBi sc-gqjmRU bszfIc"
         data-testid="sidebarMetaItem"
       >
-        *
+        *(5)
       </div>
       <div
-        class="sc-gZMcBi sc-gqjmRU bqcHTp"
+        class="sc-gZMcBi sc-gqjmRU bszfIc"
         data-testid="sidebarMetaItem"
       >
         MyLabel
       </div>
       <div
-        class="sc-gZMcBi sc-gqjmRU bqcHTp"
+        class="sc-gZMcBi sc-gqjmRU bszfIc"
         data-testid="sidebarMetaItem"
       >
         MyLabel2
@@ -60,10 +60,10 @@ exports[`LabelItems renders labels 1`] = `
 exports[`PropertyItems renders empty 1`] = `
 <div>
   <div
-    class="sc-ifAKCX kHWkUt"
+    class="sc-ifAKCX gXIdDM"
   >
     <h5
-      class="sc-bxivhb jqgGlu"
+      class="sc-bxivhb gjWjEn"
     >
       Property Keys
     </h5>
@@ -81,10 +81,10 @@ exports[`PropertyItems renders empty 1`] = `
 exports[`PropertyItems renders properties 1`] = `
 <div>
   <div
-    class="sc-ifAKCX kHWkUt"
+    class="sc-ifAKCX gXIdDM"
   >
     <h5
-      class="sc-bxivhb jqgGlu"
+      class="sc-bxivhb gjWjEn"
     >
       Property Keys
     </h5>
@@ -92,13 +92,13 @@ exports[`PropertyItems renders properties 1`] = `
       class="sc-EHOje fyzZhj"
     >
       <div
-        class="sc-gZMcBi sc-jTzLTM qJGnO"
+        class="sc-gZMcBi sc-jTzLTM kqjkqn"
         data-testid="sidebarMetaItem"
       >
         prop1
       </div>
       <div
-        class="sc-gZMcBi sc-jTzLTM qJGnO"
+        class="sc-gZMcBi sc-jTzLTM kqjkqn"
         data-testid="sidebarMetaItem"
       >
         prop2
@@ -111,10 +111,10 @@ exports[`PropertyItems renders properties 1`] = `
 exports[`RelationshipItems renders empty 1`] = `
 <div>
   <div
-    class="sc-ifAKCX kHWkUt"
+    class="sc-ifAKCX gXIdDM"
   >
     <h5
-      class="sc-bxivhb jqgGlu"
+      class="sc-bxivhb gjWjEn"
     >
       Relationship Types
     </h5>
@@ -132,10 +132,10 @@ exports[`RelationshipItems renders empty 1`] = `
 exports[`RelationshipItems renders relationshipTypes 1`] = `
 <div>
   <div
-    class="sc-ifAKCX kHWkUt"
+    class="sc-ifAKCX gXIdDM"
   >
     <h5
-      class="sc-bxivhb jqgGlu"
+      class="sc-bxivhb gjWjEn"
     >
       Relationship Types
     </h5>
@@ -143,19 +143,19 @@ exports[`RelationshipItems renders relationshipTypes 1`] = `
       class="sc-EHOje fyzZhj"
     >
       <div
-        class="sc-gZMcBi sc-VigVT iGFmRz"
+        class="sc-gZMcBi sc-VigVT hzykkh"
         data-testid="sidebarMetaItem"
       >
-        *
+        *(5)
       </div>
       <div
-        class="sc-gZMcBi sc-VigVT iGFmRz"
+        class="sc-gZMcBi sc-VigVT hzykkh"
         data-testid="sidebarMetaItem"
       >
         MY_TYPE
       </div>
       <div
-        class="sc-gZMcBi sc-VigVT iGFmRz"
+        class="sc-gZMcBi sc-VigVT hzykkh"
         data-testid="sidebarMetaItem"
       >
         MY_TYPE2

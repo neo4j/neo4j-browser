@@ -25,7 +25,7 @@ import 'rxjs'
 import bolt from 'services/bolt/bolt'
 import { BrowserError } from 'services/exceptions'
 import { GlobalState } from 'shared/globalState'
-import { APP_START } from 'shared/modules/app/appDuck'
+import { AppStartAction, APP_START } from 'shared/modules/app/appDuck'
 
 export const NAME = 'requests'
 export const REQUEST_SENT = 'requests/SENT'
@@ -108,6 +108,7 @@ type RequestsActionsUnion =
   | UpdateAction
   | CancelAction
   | CanceledAction
+  | AppStartAction
 
 interface SendAction {
   type: typeof REQUEST_SENT

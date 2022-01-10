@@ -315,14 +315,16 @@ type FrameButtonProps = {
   onClick: () => void
   children: React.ReactNode
   title: string
+  dataTestId?: string
 }
 
 export const FrameButton = ({
   onClick,
   children,
-  title
+  title,
+  dataTestId
 }: FrameButtonProps): JSX.Element => (
-  <StyledFrameButton onClick={onClick} title={title}>
+  <StyledFrameButton onClick={onClick} title={title} data-testid={dataTestId}>
     {children}
   </StyledFrameButton>
 )
@@ -345,7 +347,7 @@ export const FrameControlButton = ({
   </StyledFrameControlButton>
 )
 
-const StyledFrameControlButton = styled.li<{
+const StyledFrameControlButton = styled.button<{
   pressed?: boolean
 }>`
   border-radius: 2px;
@@ -356,6 +358,8 @@ const StyledFrameControlButton = styled.li<{
   background-color: ${props =>
     props.pressed ? props.theme.frameButtonHoverBackground : 'transparent'};
 
+  outline: none;
+  border: none;
   border-left: transparent;
   height: 20px;
   width: 20px;

@@ -20,12 +20,12 @@
 
 import { connect } from 'react-redux'
 import React from 'react'
-import FrameTemplate from '../../Frame/FrameTemplate'
+import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
 import {
   getRequest,
   BrowserRequest
 } from 'shared/modules/requests/requestsDuck'
-import { Frame, getFrame } from 'shared/modules/stream/streamDuck'
+import { Frame, getFrame } from 'shared/modules/frames/framesDuck'
 import { StyledStatusSection } from 'browser-components/buttons'
 
 import { StyledFrameTitlebarButtonSection } from 'browser/modules/Frame/styled'
@@ -45,6 +45,8 @@ interface CypherScriptFrameProps extends BaseFrameProps {
 function CypherScriptFrame({
   frame,
   frames,
+  isFullscreen,
+  isCollapsed,
   requests = {}
 }: CypherScriptFrameProps): JSX.Element {
   const contents = (
@@ -103,7 +105,12 @@ function CypherScriptFrame({
     </WrapperCenter>
   )
   return (
-    <FrameTemplate className="no-padding" header={frame} contents={contents} />
+    <FrameBodyTemplate
+      isCollapsed={isCollapsed}
+      isFullscreen={isFullscreen}
+      contents={contents}
+      removePadding
+    />
   )
 }
 

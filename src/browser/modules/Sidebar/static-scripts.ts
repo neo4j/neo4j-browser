@@ -27,7 +27,7 @@ import {
 } from 'shared/modules/commands/commandsDuck'
 import * as favorites from '../../../shared/modules/favorites/favoritesDuck'
 import { getFolders } from '../../../shared/modules/favorites/foldersDuck'
-import { getVersion } from 'shared/modules/dbMeta/dbMetaDuck'
+import { getVersion } from 'shared/modules/dbMeta/state'
 
 const mapFavoritesStateToProps = (state: any) => {
   const version = semver.coerce(getVersion(state) || '0') ?? '0'

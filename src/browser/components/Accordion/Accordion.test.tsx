@@ -21,7 +21,6 @@
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import Accordion from './Accordion'
-import '@testing-library/jest-dom/extend-expect'
 
 describe('<Accordion>', () => {
   test('does not open any content by default and toggles content on title click', () => {

@@ -20,6 +20,10 @@
 
 /* global Cypress, cy, before */
 
+const GREY = 'rgb(165, 171, 182)' // Default color for nodes and relationships
+const ORANGE = 'rgb(247, 151, 103)'
+const PURPLE = 'rgb(201, 144, 192)' // Default first color for a new node label
+
 describe('Viz rendering', () => {
   before(function() {
     cy.visit(Cypress.config('url'))
@@ -36,12 +40,116 @@ describe('Viz rendering', () => {
     cy.executeCommand(
       'CREATE (a:TestLabel)-[:CONNECTS]->(b:TestLabel) RETURN a, b'
     )
-    cy.get('[data-testid="viz-legend-reltypes"]', { timeout: 5000 }).contains(
+    cy.get('[data-testid="vizInspector"]', { timeout: 5000 }).contains(
       'CONNECTS'
     )
-    cy.get('[data-testid="viz-legend-labels"]', { timeout: 5000 }).contains(
+    cy.get('[data-testid="vizInspector"]', { timeout: 5000 }).contains(
       'TestLabel'
     )
     cy.executeCommand('MATCH (a:TestLabel) DETACH DELETE a')
+  })
+  it('can change default color of nodes', () => {
+    const selectorNodeLabelAll =
+      '[data-testid="property-details-overview-node-label-*"]'
+    cy.executeCommand(':clear')
+    cy.executeCommand(':style reset')
+    cy.executeCommand(
+      'CREATE (a:TestLabel)-[:CONNECTS]->(b:TestLabel) RETURN a, b'
+    )
+    // Check that default color is set
+    cy.get(selectorNodeLabelAll, { timeout: 5000 }).should(
+      'have.css',
+      'background-color',
+      GREY
+    )
+
+    // Change color and make sure color is changed
+    cy.get(selectorNodeLabelAll, { timeout: 5000 }).click()
+    cy.get('[data-testid="select-color-2"]').click()
+    cy.get('[data-testid="cypherFrameSidebarVisualization"]').click() // Close grass editor
+
+    cy.get(selectorNodeLabelAll, { timeout: 5000 }).should(
+      'have.css',
+      'background-color',
+      ORANGE
+    )
+  })
+  it('can change default color of relationships', () => {
+    const selectorRelationshipsAll = `[data-testid="property-details-overview-relationship-type-*"]`
+
+    cy.executeCommand(':clear')
+    cy.executeCommand(':style reset')
+    cy.executeCommand(
+      'CREATE (a:TestLabel)-[:CONNECTS]->(b:TestLabel) RETURN a, b'
+    )
+    // Check that default color is set
+    cy.get(selectorRelationshipsAll, { timeout: 5000 }).should(
+      'have.css',
+      'background-color',
+      GREY
+    )
+
+    // Change color and make sure color is changed
+    cy.get(selectorRelationshipsAll, { timeout: 5000 }).click()
+    cy.get('[data-testid="select-color-2"]').click()
+    cy.get('[data-testid="cypherFrameSidebarVisualization"]').click() // Close grass editor
+
+    cy.get(selectorRelationshipsAll, { timeout: 5000 }).should(
+      'have.css',
+      'background-color',
+      ORANGE
+    )
+  })
+  it('can change styling of nodes with certain label', () => {
+    const selectorNodeLabel =
+      '[data-testid="property-details-overview-node-label-TestLabel"]'
+    cy.executeCommand(':clear')
+    cy.executeCommand(':style reset')
+    cy.executeCommand(
+      'CREATE (a:TestLabel)-[:CONNECTS]->(b:TestLabel) RETURN a, b'
+    )
+    // Check that default color is set
+    cy.get(selectorNodeLabel, { timeout: 5000 }).should(
+      'have.css',
+      'background-color',
+      PURPLE
+    )
+
+    // Change color and make sure color is changed
+    cy.get(selectorNodeLabel, { timeout: 5000 }).click()
+    cy.get('[data-testid="select-color-2"]').click()
+    cy.get('[data-testid="cypherFrameSidebarVisualization"]').click() // Close grass editor
+
+    cy.get(selectorNodeLabel, { timeout: 5000 }).should(
+      'have.css',
+      'background-color',
+      ORANGE
+    )
+  })
+  it('can change styling of relationship of certain type', () => {
+    const selectorRelationshipType =
+      '[data-testid="property-details-overview-relationship-type-CONNECTS"]'
+    cy.executeCommand(':clear')
+    cy.executeCommand(':style reset')
+    cy.executeCommand(
+      'CREATE (a:TestLabel)-[:CONNECTS]->(b:TestLabel) RETURN a, b'
+    )
+    // Check that default color is set
+    cy.get(selectorRelationshipType, { timeout: 5000 }).should(
+      'have.css',
+      'background-color',
+      GREY
+    )
+
+    // Change color and make sure color is changed
+    cy.get(selectorRelationshipType, { timeout: 5000 }).click()
+    cy.get('[data-testid="select-color-2"]').click()
+    cy.get('[data-testid="cypherFrameSidebarVisualization"]').click() // Close grass editor
+
+    cy.get(selectorRelationshipType, { timeout: 5000 }).should(
+      'have.css',
+      'background-color',
+      ORANGE
+    )
   })
 })

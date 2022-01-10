@@ -20,7 +20,7 @@
 
 import reducer, * as features from './featuresDuck'
 import { canSendTxMetadata } from './versionedFeatures'
-import { NAME as META_NAME } from '../dbMeta/dbMetaDuck'
+import { NAME as META_NAME } from '../dbMeta/state'
 import { dehydrate } from 'services/duckUtils'
 
 describe('features reducer', () => {
@@ -108,6 +108,6 @@ describe('canSendTxMetadata', () => {
   })
 })
 
-const createVersionState = (version: any) => ({
+const createVersionState: any = (version: any) => ({
   [META_NAME]: { server: { version } }
 })

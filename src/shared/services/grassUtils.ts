@@ -114,7 +114,7 @@ const quoteSpecialStyles = (style: any, value: any) =>
   value +
   (shouldQuoteStyle(style) ? '"' : '')
 
-export const selectorStringToArray = (selector: any) => {
+export const selectorStringToArray = (selector: string) => {
   // Negative lookbehind simulation since js support is very limited.
   // We want to match all . that are not preceded by \\
   // Instead we reverse and look

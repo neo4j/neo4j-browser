@@ -26,7 +26,7 @@ import {
   NAME as features,
   initialState as featuresInitialState
 } from './modules/features/featuresDuck'
-import { FramesState, NAME as frames } from './modules/stream/streamDuck'
+import { FramesState, NAME as frames } from './modules/frames/framesDuck'
 import { NAME as history } from './modules/history/historyDuck'
 import {
   NAME as user,
@@ -35,7 +35,7 @@ import {
 import {
   NAME as meta,
   initialState as metaInitialState
-} from './modules/dbMeta/dbMetaDuck'
+} from './modules/dbMeta/state'
 import { NAME as documents, Favorite } from './modules/favorites/favoritesDuck'
 import {
   NAME as connections,
@@ -55,7 +55,7 @@ import {
 } from './modules/sync/syncDuck'
 import { NAME as folders, Folder } from './modules/favorites/foldersDuck'
 import { NAME as commands } from './modules/commands/commandsDuck'
-import { NAME as udc, udcState } from './modules/udc/udcDuck'
+import { NAME as udc, UdcState } from './modules/udc/udcDuck'
 import { NAME as app } from './modules/app/appDuck'
 import { NAME as guides, GuideState } from './modules/guides/guidesDuck'
 import {
@@ -81,7 +81,7 @@ export interface GlobalState {
   [syncConsent]: typeof initialConsentState
   [folders]: Folder[]
   [commands]: unknown
-  [udc]: udcState
+  [udc]: UdcState
   [app]: Record<string, unknown>
   [experimentalFeatures]: typeof experimentalFeaturesInitialState
   [guides]: GuideState

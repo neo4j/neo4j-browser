@@ -27,19 +27,22 @@ import {
   CONNECTED_STATE
 } from 'shared/modules/connections/connectionsDuck'
 
-// eslint-disable-next-line
-jest.mock('../../Frame/FrameTemplate', () => ({ contents, statusbar }: any) => (
-  <div>
-    {contents}
-    {statusbar}
-  </div>
-))
+jest.mock(
+  '../../Frame/FrameBodyTemplate',
+  // eslint-disable-next-line
+  () => ({ contents, statusBar }: any) => (
+    <div>
+      {contents}
+      {statusBar}
+    </div>
+  )
+)
 
-it('shows error message in statusbar when not connected', () => {
+it('shows error message in statusBar when not connected', () => {
   const props = {
     availableProcedures: ['dbms.listQueries'],
     connectionState: DISCONNECTED_STATE
-  }
+  } as any
   const { getByText } = render(<QueriesFrame {...props} />)
 
   expect(getByText(/Unable to connect to bolt server/i)).not.toBeNull()
@@ -78,7 +81,9 @@ it('can list and kill queries', () => {
     availableProcedures: ['dbms.listQueries'],
     connectionState: CONNECTED_STATE,
     bus,
-    neo4jVersion: '4.0.0'
+    neo4jVersion: '4.0.0',
+    isFullscreen: false,
+    isCollapsed: false
   }
 
   const { getByText, getByTestId } = render(<QueriesFrame {...props} />)

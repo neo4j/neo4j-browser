@@ -2,6 +2,8 @@
 
 exports[`settings reducer handles REPLACE 1`] = `
 Object {
+  "allowCrashReports": true,
+  "allowUserStats": true,
   "autoComplete": true,
   "browserSyncDebugServer": null,
   "codeFontLigatures": true,
@@ -11,14 +13,13 @@ Object {
   "initCmd": ":play start",
   "initialNodeDisplay": 300,
   "maxFieldItems": 500,
-  "maxFrames": 30,
+  "maxFrames": 15,
   "maxHistory": 30,
   "maxNeighbours": 100,
   "maxRows": 1000,
   "new": "conf",
   "playImplicitInitCommands": true,
   "scrollToTop": true,
-  "shouldReportUdc": true,
   "showPerformanceOverlay": false,
   "showSampleScripts": true,
   "theme": "auto",
