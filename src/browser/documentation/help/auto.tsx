@@ -31,7 +31,8 @@ const content = (
       clusters.
       <br />
       Some query types do however need to be sent in auto-committing
-      transactions, <code>USING PERIODIC COMMIT</code> is the most notable one.
+      transactions, <code>CALL {'{...}'} IN TRANSACTIONS </code> is the most
+      notable one.
     </p>
     <table className="table-condensed table-help">
       <tbody>
@@ -47,8 +48,11 @@ const content = (
     </table>
     <section className="example">
       <figure>
-        <pre>{`:auto USING PERIODIC COMMIT
-LOAD CSV WITH HEADER FROM ... `}</pre>
+        <pre>{`:auto LOAD CSV FROM 'file:///artists.csv' AS line
+CALL {
+  WITH line
+  CREATE (:Artist {name: line[1], year: toInteger(line[2])})
+} IN TRANSACTIONS`}</pre>
         <figcaption>
           Example usage of the <em>:auto</em> command.
         </figcaption>
