@@ -39,13 +39,9 @@ type ForceLayout = {
     size: [number, number],
     animate?: boolean
   ) => Simulation<VizNode, Relationship>
-  collectStats: () => {
-    layoutTime: number
-    layoutSteps: number
-  }
   simulation: Simulation<VizNode, Relationship>
 }
-export type Layout = { init: (render: () => number) => ForceLayout }
+export type Layout = { init: (render: () => void) => ForceLayout }
 export type AvailableLayouts = Record<'force', () => Layout>
 
 let simulationTimeout: null | number = null
@@ -67,22 +63,6 @@ const layout: AvailableLayouts = {
   force: () => ({
     init: render => {
       const linkDistance = 45
-
-      const newStatsBucket = function () {
-        const bucket = {
-          layoutTime: 0,
-          layoutSteps: 0
-        }
-        return bucket
-      }
-
-      let currentStats = newStatsBucket()
-
-      const collectStats = function () {
-        const latestStats = currentStats
-        currentStats = newStatsBucket()
-        return latestStats
-      }
 
       const oneRelationshipPerPairOfNodes = (graph: Graph) =>
         Array.from(graph.groupedRelationships()).map(
@@ -138,7 +118,7 @@ const layout: AvailableLayouts = {
         return simulation
       }
 
-      return { update, collectStats, simulation }
+      return { update, simulation }
     }
   })
 }

@@ -33,18 +33,6 @@ import VizNode from './VizNode'
 import { Layout, clearSimulationTimeout, setSimulationTimeout } from './layout'
 import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
 
-type StatsBucket = {
-  frameCount: number
-  geometry: number
-  relationshipRenderers: Record<string, number>
-  duration: () => number
-  fps: () => string
-  lps: () => string
-  top: () => string
-  lastFrame?: number
-  firstFrame?: number
-  layout: { layoutSteps: number; layoutTime: number }
-}
 export type MeasureSizeFn = () => { width: number; height: number }
 export type VizObj = {
   style: any
@@ -53,7 +41,6 @@ export type VizObj = {
   zoomOutClick: (el: any) => { zoomInLimit: boolean; zoomOutLimit: boolean }
   boundingBox: () => void
   resize: () => void
-  collectStats: () => void
   update: (options: {
     updateNodes: boolean
     updateRelationships: boolean
@@ -84,7 +71,6 @@ const vizFn = function (
     }),
     boundingBox: noOp,
     resize: noOp,
-    collectStats: noOp,
     update: noOp
   }
 
@@ -218,62 +204,8 @@ const vizFn = function (
     .on('wheel.zoom', handleZoomOnShiftScroll)
     .on('mousewheel.zoom', handleZoomOnShiftScroll)
 
-  const newStatsBucket = function () {
-    const bucket: StatsBucket = {
-      frameCount: 0,
-      geometry: 0,
-      layout: { layoutSteps: 0, layoutTime: 0 },
-      relationshipRenderers: vizRenderers.relationship
-        .map(r => r.name)
-        .reduce((acc, curr) => ({ ...acc, [curr]: 0 }), {}),
-      duration: () => (bucket.lastFrame ?? 0) - (bucket.firstFrame ?? 0),
-      fps: () => ((1000 * bucket.frameCount) / bucket.duration()).toFixed(1),
-      lps: () =>
-        ((1000 * bucket.layout.layoutSteps) / bucket.duration()).toFixed(1),
-      top: function () {
-        let time
-        const renderers = []
-        for (const name in bucket.relationshipRenderers) {
-          time = bucket.relationshipRenderers[name]
-          renderers.push({
-            name,
-            time
-          })
-        }
-        renderers.push({
-          name: 'forceLayout',
-          time: bucket.layout.layoutTime
-        })
-        renderers.sort((a, b) => b.time - a.time)
-        const totalRenderTime = renderers.reduce(
-          (prev, current) => prev + current.time,
-          0
-        )
-        return renderers
-          .map(
-            d => `${d.name}: ${((100 * d.time) / totalRenderTime).toFixed(1)}%`
-          )
-          .join(', ')
-      }
-    }
-    return bucket
-  }
-
-  let currentStats = newStatsBucket()
-
-  const now =
-    window.performance && window.performance.now
-      ? () => window.performance.now()
-      : () => Date.now()
-
   const render = function () {
-    if (!currentStats.firstFrame) {
-      currentStats.firstFrame = now()
-    }
-    currentStats.frameCount++
-    const startRender = now()
     geometry.onTick(graph)
-    currentStats.geometry += now() - startRender
 
     const nodeGroups = container
       .selectAll<BaseType, VizNode>('g.node')
@@ -294,22 +226,11 @@ const vizFn = function (
       )
 
     for (const renderer of vizRenderers.relationship) {
-      const startRenderer = now()
       relationshipGroups.call(renderer.onTick, viz)
-      currentStats.relationshipRenderers[renderer.name] += now() - startRenderer
     }
-
-    return (currentStats.lastFrame = now())
   }
 
   const force = layout.init(render)
-
-  viz.collectStats = function (): StatsBucket {
-    const latestStats = currentStats
-    latestStats.layout = force.collectStats()
-    currentStats = newStatsBucket()
-    return latestStats
-  }
 
   viz.update = function (options: {
     updateNodes: boolean

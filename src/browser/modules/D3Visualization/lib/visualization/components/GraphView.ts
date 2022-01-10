@@ -87,10 +87,6 @@ export default class GraphView {
     return this.viz.boundingBox()
   }
 
-  collectStats() {
-    return this.viz.collectStats()
-  }
-
   zoomIn(elem: any) {
     return this.viz.zoomInClick(elem)
   }
