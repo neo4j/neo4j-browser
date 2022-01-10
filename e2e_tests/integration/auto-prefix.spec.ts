@@ -36,13 +36,14 @@ describe(':auto prefix in browser', () => {
 
   it('adding :auto enables running periodic commit', () => {
     cy.executeCommand(':auto USING PERIODIC COMMIT RETURN "Laverre";')
-    cy.getFrames().contains('"Laverre"')
+    cy.getFrames().contains('ERROR')
+    cy.getFrames().contains('expected "LOAD"')
   })
 
   if (Cypress.config('serverVersion') >= 4.4) {
     it('shows help link when running CALL IN TRANSACTIONS without :auto', () => {
       cy.executeCommand(
-        'CALL { return "Dendemille" } IN TRANSACTIONS return "Dendemille";'
+        'CALL {{} return "Dendemille" } IN TRANSACTIONS return "Dendemille";'
       )
       cy.getFrames().contains('ERROR')
       cy.getFrames().contains(':auto')
@@ -50,8 +51,9 @@ describe(':auto prefix in browser', () => {
 
     it('adding :auto enables running CALL IN TRANSACTIONS', () => {
       cy.executeCommand(
-        'CALL { return "Undella" } IN TRANSACTIONS return "Undella";'
+        ':auto CALL {{} return "Undella" } IN TRANSACTIONS return "Undella";'
       )
+      cy.getFrames().should('not.contain', 'ERROR')
       cy.getFrames().contains('"Undella"')
     })
   }
