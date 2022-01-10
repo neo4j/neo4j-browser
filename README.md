@@ -4,6 +4,7 @@ You can also use direct [file download link](https://github.com/Pfizer-Digital-M
 
 1. Added extra button to node menu that allows to filter related relationships
 2. Added `Label Setup` button to configure label display for nodes and relationships
+3. Added `Color Setup` button to configure node coloring based on the properties.
 
 # Neo4j Browser
 
