@@ -99,7 +99,16 @@ const aWeekSinceLastSnapshot = (state: GlobalState) => {
   return now - lastSnapshot > aWeekInSeconds
 }
 
-export interface UdcState {
+interface UdcState {
+  lastSnapshot: number
+  auraNtId?: string
+  uuid: string
+  consentBannerShownCount: number
+  desktopTrackingId?: string
+  allowUserStatsInDesktop: boolean
+  allowCrashReportsInDesktop: boolean
+}
+interface UdcStorageFormat {
   lastSnapshot: number
   auraNtId?: string
   uuid: string
