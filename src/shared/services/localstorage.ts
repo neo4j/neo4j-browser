@@ -40,7 +40,26 @@ export type LocalStorageKey =
   | 'udc'
   | 'experimentalFeatures'
   | 'guides'
+
 const keys: LocalStorageKey[] = []
+
+type LocalStorageFormat = {
+  'neo4j-browser.settings': SettingsS
+}
+
+const convertFromStorage = (data: UdcStorageFormat): UdcState => data
+const convertToStorage = (data: UdcState): UdcStorageFormat => data
+const cleanUpStoredData = (data: UdcStorageFormat): UdcStorageFormat =>
+  convertToStorage(convertFromStorage(data))
+// TODO
+/*
+  Typa upp alla stores som inte har typer
+  Be om en massa localstorages
+  Skriva en massa tester (av convertFunctionerna) om hur det ska fungera
+  lägg in functioner i get/setItem i localstorage.ts
+  klart! 
+  
+  */
 
 export function getItem(
   key: LocalStorageKey
