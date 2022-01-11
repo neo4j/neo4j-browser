@@ -17,27 +17,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React, { Component } from 'react'
-import {
-  createGraph,
-  mapRelationships,
-  getGraphStats,
-  GraphStats
-} from '../mapper'
+
 import { GetNodeNeighboursFn, GraphEventHandler } from '../GraphEventHandler'
-import { StyledZoomHolder, StyledSvgWrapper, StyledZoomButton } from './styled'
+import GraphStyle from '../graphStyle'
+import Graph from '../lib/visualization/components/Graph'
+import GraphView from '../lib/visualization/components/GraphView'
+import {
+  GraphStats,
+  createGraph,
+  getGraphStats,
+  mapRelationships
+} from '../mapper'
+import GraphLayoutModal from './modal/GraphLayoutModal'
+import { StyledSvgWrapper, StyledZoomButton, StyledZoomHolder } from './styled'
+import { VizItem } from './types'
 import {
   GraphLayoutIcon,
   ZoomInIcon,
   ZoomOutIcon
 } from 'browser-components/icons/Icons'
-import GraphView from '../lib/visualization/components/GraphView'
-import GraphStyle from '../graphStyle'
 import { BasicNode, BasicRelationship } from 'services/bolt/boltMappings'
-import Graph from '../lib/visualization/components/Graph'
-import GraphLayoutModal from './modal/GraphLayoutModal'
-import { VizItem } from './types'
+
 export const PERSIST_LAYOUT_KEY = 'persistLayout'
 export const PERSIST_LAYOUT_DIRECTION = 'directional'
 interface IGraphStat {
@@ -75,6 +76,7 @@ type GraphProps = {
   getAutoCompleteCallback: any
   setGraph: any
   offset: any
+  filterNodeNeighbours: GraphEventHandler['filterNodeNeighbours']
 }
 
 export class GraphComponent extends Component<GraphProps, GraphState> {
@@ -98,9 +100,13 @@ export class GraphComponent extends Component<GraphProps, GraphState> {
     this.svgElement = el
   }
   graphLayoutClicked = () => {
+    // const stats = getGraphStats(this.graph!);
     this.setState({
       graphLayoutModalOpen: true,
-      graphLayoutStats: getGraphStats(this.graph)
+      graphLayoutStats: {
+        labels: { '*': { count: 0, properties: [] } },
+        relTypes: { '*': { count: 0, properties: [] } }
+      }
     })
   }
   closeGraphLayoutModal = () => this.setState({ graphLayoutModalOpen: false })
@@ -170,15 +176,19 @@ export class GraphComponent extends Component<GraphProps, GraphState> {
     }
   }
   onDirectionalLayoutClick = (persist: boolean) => {
-    this.graphView.graph.layoutRootNodeOnTop()
-    this.graphView.update()
+    if (this.graphView) {
+      this.graphView.graph.layoutRootNodeOnTop()
+      this.graphView.update({ updateNodes: true, updateRelationships: true })
+    }
     if (persist) {
       localStorage.setItem(PERSIST_LAYOUT_KEY, PERSIST_LAYOUT_DIRECTION)
     }
   }
   onDefaultLayoutClick = (persist: boolean) => {
-    this.graphView.graph.layoutDefault()
-    this.graphView.update()
+    if (this.graphView) {
+      this.graphView.graph.layoutDefault()
+      this.graphView.update({ updateNodes: true, updateRelationships: true })
+    }
     if (persist) {
       localStorage.removeItem(PERSIST_LAYOUT_KEY)
     }

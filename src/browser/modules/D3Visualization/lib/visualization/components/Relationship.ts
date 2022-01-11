@@ -44,8 +44,11 @@ export default class Relationship {
   selected: boolean
   centreDistance: number
   internal: boolean | undefined
-  arrow: ArcArrow | LoopArrow | StraightArrow | undefined
+  arrow!: ArcArrow | LoopArrow | StraightArrow
 
+  // custom
+  captionSettingsArray: any[] = []
+  sideCaptions: any
   constructor(
     id: string,
     source: Node,

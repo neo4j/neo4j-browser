@@ -17,25 +17,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React, { useState } from 'react'
 import { Icon } from 'semantic-ui-react'
 
-import {
-  StyledLegendInlineList,
-  PaneBody,
-  PaneHeader,
-  PaneBodySectionTitle,
-  PaneBodySectionSmallText,
-  PaneBodySectionHeaderWrapper
-} from './styled'
-import numberToUSLocale from 'shared/utils/number-to-US-locale'
-import { StyledTruncatedMessage } from 'browser/modules/Stream/styled'
-import { StyleableNodeLabel } from './StyleableNodeLabel'
 import { GraphStats } from '../mapper'
+import { StyleableNodeLabel } from './StyleableNodeLabel'
 import { StyleableRelType } from './StyleableRelType'
+import {
+  PaneBody,
+  PaneBodySectionHeaderWrapper,
+  PaneBodySectionSmallText,
+  PaneBodySectionTitle,
+  PaneHeader,
+  StyledLegendInlineList
+} from './styled'
 import { ShowMoreOrAll } from 'browser-components/ShowMoreOrAll/ShowMoreOrAll'
+import { StyledTruncatedMessage } from 'browser/modules/Stream/styled'
 import { GraphStyle } from 'project-root/src/browser/modules/D3Visualization/graphStyle'
+import { BasicNode } from 'services/bolt/boltMappings'
+import numberToUSLocale from 'shared/utils/number-to-US-locale'
 
 type PaneBodySectionHeaderProps = {
   title: string
@@ -65,6 +65,7 @@ type OverviewPaneProps = {
   nodeCount: number | null
   relationshipCount: number | null
   stats: GraphStats
+  nodes: BasicNode[]
 }
 
 export const OVERVIEW_STEP_SIZE = 50
@@ -74,12 +75,12 @@ function OverviewPane({
   hasTruncatedFields,
   nodeCount,
   relationshipCount,
-  stats
+  stats,
+  nodes
 }: OverviewPaneProps): JSX.Element {
   const [maxLabelsCount, setMaxLabelsCount] = useState(OVERVIEW_STEP_SIZE)
-  const [maxRelationshipsCount, setMaxRelationshipsCount] = useState(
-    OVERVIEW_STEP_SIZE
-  )
+  const [maxRelationshipsCount, setMaxRelationshipsCount] =
+    useState(OVERVIEW_STEP_SIZE)
 
   const onMoreLabelsClick = (numMore: number) => {
     setMaxLabelsCount(maxLabelsCount + numMore)
@@ -114,6 +115,7 @@ function OverviewPane({
               {visibleLabelKeys.map((label: string) => (
                 <StyleableNodeLabel
                   key={label}
+                  nodes={nodes}
                   graphStyle={graphStyle}
                   selectedLabel={{
                     label,
@@ -143,6 +145,7 @@ function OverviewPane({
                 <StyleableRelType
                   key={relType}
                   graphStyle={graphStyle}
+                  nodes={nodes}
                   selectedRelType={{
                     relType,
                     propertyKeys: Object.keys(relTypes[relType].properties),

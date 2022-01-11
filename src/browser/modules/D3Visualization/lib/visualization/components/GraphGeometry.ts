@@ -17,12 +17,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { flatten } from 'lodash-es'
+
 import PairwiseArcsRelationshipRouting from '../utils/pairwiseArcsRelationshipRouting'
 import measureText from '../utils/textMeasurement'
 import Graph from './Graph'
 import Relationship from './Relationship'
 import VizNode, { NodeCaptionLine } from './VizNode'
 import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
+import {
+  includePropertyNameKey,
+  replaceUnderscoresWithSpaces
+} from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelDisplaySettings'
+import {
+  ICaptionSettings,
+  allLabelPositions
+} from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelModal'
+import { RelArrowCaptionPosition } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelRelArrowSVG'
+import { ICaptionSettingsStore } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelStorage'
 
 export default class GraphGeometry {
   relationshipRouting: PairwiseArcsRelationshipRouting
@@ -50,8 +62,128 @@ export default class GraphGeometry {
 
   formatRelationshipCaptions(relationships: Relationship[]): void {
     relationships.forEach(relationship => {
-      const template = this.style.forRelationship(relationship).get('caption')
+      const currentStyle = this.style.forRelationship(relationship)
+      const template = currentStyle.get('caption')
       relationship.caption = this.style.interpolate(template, relationship)
+
+      const captionSettings: ICaptionSettings =
+        currentStyle.get('captionSettings')
+      // center caption
+      if (captionSettings) {
+        relationship.captionSettingsArray = []
+        allLabelPositions.forEach(position => {
+          const currentStyle = captionSettings[position]
+          if (currentStyle?.caption) {
+            let caption = this.style.interpolate(
+              currentStyle.caption,
+              relationship
+            )
+            if (currentStyle[replaceUnderscoresWithSpaces]) {
+              caption = caption.replace(/[_]/g, ' ')
+            }
+            if (currentStyle[includePropertyNameKey]) {
+              caption =
+                `${currentStyle.caption.replace(/[{}]/g, '')}: ` + caption
+            }
+            relationship.captionSettingsArray.push(
+              Object.assign({}, currentStyle, {
+                caption,
+                yOffset: 0
+              })
+            )
+          }
+        })
+        const arrLength = relationship.captionSettingsArray.length
+        switch (arrLength) {
+          case 2:
+            relationship.captionSettingsArray[0].yOffset = -4
+            relationship.captionSettingsArray[1].yOffset = 4
+            break
+          case 3:
+            relationship.captionSettingsArray[0].yOffset = -8
+            relationship.captionSettingsArray[2].yOffset = 8
+            break
+        }
+      } else {
+        delete relationship.captionSettingsArray
+      }
+
+      const extraCaptionSettings: ICaptionSettingsStore = currentStyle.get(
+        'extraCaptionSettings'
+      )
+      // other captions
+      if (extraCaptionSettings) {
+        relationship.sideCaptions = {}
+        Object.keys(extraCaptionSettings).forEach(relCaptionPosition => {
+          const positionInt: RelArrowCaptionPosition = parseInt(
+            relCaptionPosition,
+            10
+          )
+          if (extraCaptionSettings.hasOwnProperty(relCaptionPosition)) {
+            const arr: any[] = []
+            relationship.sideCaptions[relCaptionPosition] = arr
+            const settings: ICaptionSettings = extraCaptionSettings[positionInt]
+            allLabelPositions.forEach(position => {
+              const currentStyle = settings[position]
+              if (currentStyle?.caption) {
+                let caption = this.style.interpolate(
+                  currentStyle.caption,
+                  relationship
+                )
+                if (currentStyle[replaceUnderscoresWithSpaces]) {
+                  caption = caption.replace(/[_]/g, ' ')
+                }
+                if (currentStyle[includePropertyNameKey]) {
+                  caption =
+                    `${currentStyle.caption.replace(/[{}]/g, '')}: ` + caption
+                }
+                arr.push(
+                  Object.assign({}, currentStyle, {
+                    caption,
+                    yOffset: 0,
+                    position: positionInt
+                  })
+                )
+              }
+            })
+            const arrLength = arr.length
+            switch (arrLength) {
+              case 2:
+                if (
+                  [
+                    RelArrowCaptionPosition.startAbove,
+                    RelArrowCaptionPosition.endAbove
+                  ].includes(positionInt)
+                ) {
+                  arr[0].yOffset = -8
+                  arr[1].yOffset = 0
+                } else {
+                  arr[0].yOffset = 0
+                  arr[1].yOffset = 8
+                }
+                break
+              case 3:
+                if (
+                  [
+                    RelArrowCaptionPosition.startAbove,
+                    RelArrowCaptionPosition.endAbove
+                  ].includes(positionInt)
+                ) {
+                  arr[0].yOffset = -16
+                  arr[1].yOffset = -8
+                  arr[2].yOffset = 0
+                } else {
+                  arr[0].yOffset = 0
+                  arr[1].yOffset = 8
+                  arr[2].yOffset = 16
+                }
+                break
+            }
+          }
+        })
+      } else {
+        delete relationship.sideCaptions
+      }
     })
   }
 
@@ -83,11 +215,207 @@ export default class GraphGeometry {
   }
 }
 
+interface IWordObject {
+  word: string
+  belongsTo: number
+  fontWeight: string
+  fontStyle: string
+  textDecoration: string
+}
+const fitMultipleCaptionsIntoCircle = function (
+  node: VizNode,
+  style: GraphStyle,
+  captionSettings: ICaptionSettings,
+  canvas2DContext: CanvasRenderingContext2D
+) {
+  const fontSize = parseFloat(style.forNode(node).get('font-size'))
+  const maxLines = (node.radius * 2) / fontSize
+  const styleForNode = style.forNode(node)
+  const wordsObjects: IWordObject[] = flatten(
+    allLabelPositions.map((position, index) => {
+      const currentStyle = captionSettings[position]
+      if (currentStyle.caption) {
+        const nodeText: string = style.interpolate(currentStyle.caption, node)
+        const captionText: string =
+          nodeText.length > 100 ? nodeText.substring(0, 100) : nodeText
+        const fontWeight =
+          currentStyle['font-weight'] ?? styleForNode.get('font-weight')
+        const fontStyle =
+          currentStyle['font-style'] ?? styleForNode.get('font-style')
+        const textDecoration =
+          currentStyle['text-decoration'] ??
+          style.forNode(node).get('text-decoration')
+        let words: string[] = captionText.split(' ')
+        if (currentStyle[replaceUnderscoresWithSpaces]) {
+          words = flatten(
+            words.map(w => {
+              if (w.indexOf('_') === -1) {
+                return w
+              } else {
+                return w.split('_')
+              }
+            })
+          )
+        }
+        if (currentStyle[includePropertyNameKey]) {
+          words.unshift(`${currentStyle.caption.replace(/[{}]/g, '')}:`)
+        }
+        return words.map(word => ({
+          word,
+          belongsTo: index,
+          fontWeight,
+          fontStyle,
+          textDecoration
+        }))
+      }
+      return []
+    })
+  )
+
+  const fontFamily = 'sans-serif'
+  const lineHeight = fontSize
+  const square = (distance: any) => distance * distance
+  const addShortenedNextWord = (line: any, word: any, measure: any) => {
+    const result = []
+    while (!(word.length <= 2)) {
+      word = `${word.substr(0, word.length - 2)}\u2026`
+      if (measure(word) < line.remainingWidth) {
+        line.text += ` ${word}`
+        break
+      } else {
+        result.push(undefined)
+      }
+    }
+    return result
+  }
+  const noEmptyLines = function (lines: any[]) {
+    for (const line of Array.from(lines)) {
+      if (line.text.length === 0) {
+        return false
+      }
+    }
+    return true
+  }
+
+  const emptyLine = ({
+    lineCount,
+    iLine,
+    style,
+    node,
+    lineHeight,
+    fontWeight,
+    fontStyle,
+    textDecoration
+  }: {
+    lineCount: number
+    style: any
+    node: any
+    iLine: number
+    lineHeight: number
+    fontWeight?: string
+    fontStyle?: string
+    textDecoration?: string
+  }) => {
+    let baseline = (1 + iLine - lineCount / 2) * lineHeight
+    if (style.forNode(node).get('icon-code')) {
+      baseline = baseline + node.radius / 3
+    }
+    const containingHeight =
+      iLine < lineCount / 2 ? baseline - lineHeight : baseline
+    const lineWidth =
+      Math.sqrt(square(node.radius) - square(containingHeight)) * 2
+    return {
+      node,
+      text: '',
+      baseline,
+      remainingWidth: lineWidth,
+      fontWeight,
+      fontStyle,
+      textDecoration
+    }
+  }
+  const fitMultipleOnFixedNumberOfLines = ({
+    lineCount,
+    words
+  }: {
+    lineCount: any
+    words: IWordObject[]
+  }): [any, number] => {
+    const measure = (text: string) =>
+      measureText(text, fontFamily, fontSize, canvas2DContext)
+
+    const lines = []
+    let iWord = 0
+    for (
+      let iLine = 0, end = lineCount - 1, asc = end >= 0;
+      asc ? iLine <= end : iLine >= end;
+      asc ? iLine++ : iLine--
+    ) {
+      const line = emptyLine({ lineCount, iLine, node, lineHeight, style })
+      const currentWord = words[iWord]
+      let currentCaptionIndex: number | undefined
+      if (currentWord) {
+        currentCaptionIndex = currentWord.belongsTo
+        line.fontWeight = currentWord.fontWeight
+        line.fontStyle = currentWord.fontStyle
+        line.textDecoration = currentWord.textDecoration
+      }
+      while (
+        iWord < words.length &&
+        measure(` ${words[iWord].word}`) < line.remainingWidth &&
+        currentCaptionIndex === words[iWord].belongsTo
+      ) {
+        line.text += ` ${words[iWord].word}`
+        line.remainingWidth -= measure(` ${words[iWord].word}`)
+        iWord++
+      }
+      lines.push(line)
+    }
+    if (iWord < words.length) {
+      addShortenedNextWord(lines[lineCount - 1], words[iWord].word, measure)
+    }
+    return [lines, iWord]
+  }
+
+  let lines = [emptyLine({ lineCount: 1, iLine: 0, lineHeight, style, node })]
+  let consumedWords = 0
+  for (
+    let lineCount = 1, end = maxLines, asc = end >= 1;
+    asc ? lineCount <= end : lineCount >= end;
+    asc ? lineCount++ : lineCount--
+  ) {
+    const [candidateLines, candidateWords] = Array.from(
+      fitMultipleOnFixedNumberOfLines({
+        lineCount,
+        words: wordsObjects
+      })
+    )
+    if (noEmptyLines(candidateLines)) {
+      ;[lines, consumedWords] = Array.from([candidateLines, candidateWords])
+    }
+    if (consumedWords >= wordsObjects.length) {
+      return lines
+    }
+  }
+  return lines
+}
 const fitCaptionIntoCircle = (
   node: VizNode,
   style: GraphStyle,
   canvas2DContext: CanvasRenderingContext2D
 ): NodeCaptionLine[] => {
+  const captionSettingsInput = style.forNode(node).get('captionSettings')
+  const captionSettings: ICaptionSettings | null =
+    captionSettingsInput === '' ? null : captionSettingsInput
+  if (captionSettings) {
+    return fitMultipleCaptionsIntoCircle(
+      node,
+      style,
+      captionSettings,
+      canvas2DContext
+    )
+  }
+
   const fontFamily = 'sans-serif'
   const fontSize = parseFloat(style.forNode(node).get('font-size'))
   // Roughly calculate max text length the circle can fit by radius and font size
@@ -132,17 +460,14 @@ const fitCaptionIntoCircle = (
     while (word.length > 2) {
       const newWord = `${word.substring(0, word.length - 2)}\u2026`
       if (measure(newWord) < line.remainingWidth) {
-        return `${line.text
-          .split(' ')
-          .slice(0, -1)
-          .join(' ')} ${newWord}`
+        return `${line.text.split(' ').slice(0, -1).join(' ')} ${newWord}`
       }
       word = word.substring(0, word.length - 1)
     }
     return `${word}\u2026`
   }
 
-  const fitOnFixedNumberOfLines = function(
+  const fitOnFixedNumberOfLines = function (
     lineCount: number
   ): [NodeCaptionLine[], number] {
     const lines = []

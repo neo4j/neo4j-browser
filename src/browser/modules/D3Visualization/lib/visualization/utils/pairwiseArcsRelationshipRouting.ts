@@ -17,14 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import measureText from './textMeasurement'
-import LoopArrow from './LoopArrow'
-import StraightArrow from './StraightArrow'
-import ArcArrow from './ArcArrow'
-import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
-import Relationship from '../components/Relationship'
 import Graph from '../components/Graph'
 import { NodePair } from '../components/Graph'
+import Relationship from '../components/Relationship'
+import ArcArrow from './ArcArrow'
+import LoopArrow from './LoopArrow'
+import StraightArrow from './StraightArrow'
+import measureText from './textMeasurement'
+import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
 
 export default class PairwiseArcsRelationshipRouting {
   style: GraphStyle
@@ -42,13 +42,13 @@ export default class PairwiseArcsRelationshipRouting {
     const padding = parseFloat(
       this.style.forRelationship(relationship).get('padding')
     )
-    const canvas2DContext = this.canvas.getContext('2d')
+    const canvas2DContext = this.canvas.getContext('2d')!
     return (
       measureText(
         caption,
         fontFamily,
         relationship.captionHeight,
-        <CanvasRenderingContext2D>canvas2DContext
+        canvas2DContext
       ) +
       padding * 2
     )
@@ -268,7 +268,7 @@ export default class PairwiseArcsRelationshipRouting {
                 relationship,
                 label.caption
               )
-              const allowedLength = relationship.arrow.shaftLength / 2
+              const allowedLength = relationship.arrow!.shaftLength / 2
               const temp: [string, number] =
                 allowedLength > label.captionLength
                   ? [label.caption, label.captionLength]

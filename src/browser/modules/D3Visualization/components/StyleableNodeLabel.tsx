@@ -17,12 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React from 'react'
-import { GrassEditor } from './GrassEditor'
 import { Popup } from 'semantic-ui-react'
+
+import { GrassEditor } from './GrassEditor'
 import { StyledLabel } from 'browser/modules/DBMSInfo/styled'
 import { GraphStyle } from 'project-root/src/browser/modules/D3Visualization/graphStyle'
+import { BasicNode } from 'services/bolt/boltMappings'
 
 export type StyleableNodeLabelProps = {
   selectedLabel: {
@@ -32,11 +33,13 @@ export type StyleableNodeLabelProps = {
   }
   graphStyle: GraphStyle
   onClick?: () => void
+  nodes: BasicNode[]
 }
 export function StyleableNodeLabel({
   graphStyle,
   selectedLabel,
-  onClick
+  onClick,
+  nodes
 }: StyleableNodeLabelProps): JSX.Element {
   const labels = selectedLabel.label === '*' ? [] : [selectedLabel.label]
   const graphStyleForLabel = graphStyle.forNode({
@@ -65,7 +68,7 @@ export function StyleableNodeLabel({
       }
       wide
     >
-      <GrassEditor selectedLabel={selectedLabel} />
+      <GrassEditor selectedLabel={selectedLabel} nodes={nodes} />
     </Popup>
   )
 }

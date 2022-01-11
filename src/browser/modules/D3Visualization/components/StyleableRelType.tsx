@@ -17,20 +17,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React from 'react'
-import { GrassEditor } from './GrassEditor'
 import { Popup } from 'semantic-ui-react'
+
+import { GrassEditor } from './GrassEditor'
 import { StyledRelationship } from 'browser/modules/DBMSInfo/styled'
 import { GraphStyle } from 'project-root/src/browser/modules/D3Visualization/graphStyle'
+import { BasicNode } from 'services/bolt/boltMappings'
 
 export type StyleableRelTypeProps = {
+  nodes: BasicNode[]
   graphStyle: GraphStyle
   selectedRelType: { relType: string; propertyKeys: string[]; count?: number }
 }
 export function StyleableRelType({
   selectedRelType,
-  graphStyle
+  graphStyle,
+  nodes
 }: StyleableRelTypeProps): JSX.Element {
   const styleForRelType = graphStyle.forRelationship({
     type: selectedRelType.relType
@@ -56,7 +59,7 @@ export function StyleableRelType({
       }
       wide
     >
-      <GrassEditor selectedRelType={selectedRelType} />
+      <GrassEditor selectedRelType={selectedRelType} nodes={nodes} />
     </Popup>
   )
 }

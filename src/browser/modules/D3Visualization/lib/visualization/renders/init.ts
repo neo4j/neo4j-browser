@@ -17,10 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import Renderer from '../components/Renderer'
-import VizNode, { NodeCaptionLine } from '../components/VizNode'
 import * as d3 from 'd3'
 import { max } from 'lodash-es'
+
+import Renderer from '../components/Renderer'
+import VizNode, { NodeCaptionLine } from '../components/VizNode'
 import { RelArrowCaptionPosition } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelRelArrowSVG'
 
 const noop = () => undefined
@@ -68,14 +69,10 @@ const nodeOutline = new Renderer({
       .selectAll('circle.outline')
       .data((node: VizNode) => [node])
 
-    circles
-      .enter()
-      .append('circle')
-      .classed('outline', true)
-      .attr({
-        cx: 0,
-        cy: 0
-      })
+    circles.enter().append('circle').classed('outline', true).attr({
+      cx: 0,
+      cy: 0
+    })
 
     circles.attr({
       r(node: VizNode) {
@@ -86,14 +83,14 @@ const nodeOutline = new Renderer({
           currentStyle: viz.style.forNode(node),
           node,
           key: 'color'
-        })
+        }) as any
       },
       stroke(node: VizNode) {
         return getColorStyleForNode({
           currentStyle: viz.style.forNode(node),
           node,
           key: 'border-color'
-        })
+        }) as any
       },
       'stroke-width'(node: VizNode) {
         return viz.style.forNode(node).get('border-width')
@@ -145,7 +142,7 @@ const nodeCaption = new Renderer({
             currentStyle: viz.style.forNode(line.node),
             node: line.node,
             key: 'text-color-internal'
-          })
+          }) as any
         }
       })
 
@@ -188,10 +185,7 @@ const arrowPath = new Renderer({
   onGraphChange(selection, viz) {
     const paths = selection.selectAll('path.outline').data((rel: any) => [rel])
 
-    paths
-      .enter()
-      .append('path')
-      .classed('outline', true)
+    paths.enter().append('path').classed('outline', true)
 
     paths
       .attr('fill', (rel: any) => viz.style.forRelationship(rel).get('color'))
@@ -252,7 +246,7 @@ const relationshipType = new Renderer({
 
     centerTexts
       .filter((rel: any) => rel.captionSettingsArray != undefined)
-      .each(function(this: SVGTextElement, rel: any) {
+      .each(function (this: SVGTextElement, rel: any) {
         if (this.children.length === 0) {
           d3.select(this).text('')
         }
@@ -271,7 +265,7 @@ const relationshipType = new Renderer({
         return tspans.exit().remove()
       })
 
-    textContainers.each(function(this: SVGTextElement, rel: any) {
+    textContainers.each(function (this: SVGTextElement, rel: any) {
       const $this = d3.select(this)
       sideTextsPositions.forEach(position => {
         const className = 'sideText' + position
@@ -301,7 +295,7 @@ const relationshipType = new Renderer({
   onTick(selection, viz) {
     selection
       .selectAll('.textContainer')
-      .each(function(this: SVGGElement, rel: any) {
+      .each(function (this: SVGGElement, rel: any) {
         const container = d3.select(this)
         container
           .selectAll('.allSideTexts')
@@ -386,7 +380,7 @@ const relationshipType = new Renderer({
           return ''
         }
       })
-      .each(function(this: SVGTextElement, rel: any) {
+      .each(function (this: SVGTextElement, rel: any) {
         const $this = d3.select(this)
 
         if (rel.captionSettingsArray != undefined) {
@@ -425,10 +419,7 @@ const relationshipOverlay = new Renderer({
   onGraphChange(selection) {
     const rects = selection.selectAll('path.overlay').data(rel => [rel])
 
-    rects
-      .enter()
-      .append('path')
-      .classed('overlay', true)
+    rects.enter().append('path').classed('overlay', true)
 
     return rects.exit().remove()
   },

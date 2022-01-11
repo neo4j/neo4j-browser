@@ -29,6 +29,9 @@ import Graph from '../lib/visualization/components/Graph'
 import { GraphStats } from '../mapper'
 import { GraphComponent } from './Graph'
 import { NodeInspectorPanel, defaultPanelWidth } from './NodeInspectorPanel'
+import NeighboursPickerPopover, {
+  INeighboursPickerPopoverProps
+} from './modal/NeighboursPickerModal'
 import { StyledFullSizeContainer, panelMinWidth } from './styled'
 import { VizItem } from './types'
 import {
@@ -43,10 +46,6 @@ import {
   setNodePropertiesExpandedByDefault
 } from 'shared/modules/frames/framesDuck'
 import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
-import { connect } from 'react-redux'
-import NeighboursPickerPopover, {
-  INeighboursPickerPopoverProps
-} from './modal/NeighboursPickerModal'
 
 type DecuplicateHelper = {
   nodes: BasicNode[]
@@ -80,6 +79,9 @@ type ExplorerComponentProps = {
   getNeighbours: (
     id: string,
     currentNeighbourIds: string[] | undefined
+  ) => Promise<BasicNodesAndRels & { count: number }>
+  fetchNeighbours: (
+    id: string
   ) => Promise<BasicNodesAndRels & { count: number }>
   updateStyle: any
   isFullscreen: boolean
@@ -214,8 +216,9 @@ export class ExplorerComponent extends Component<
               type: 'status-item',
               item: `Rendering was limited to ${
                 this.props.maxNeighbours
-              } of the node's total ${count +
-                currentNeighbourIds.length} neighbours due to browser config maxNeighbours.`
+              } of the node's total ${
+                count + currentNeighbourIds.length
+              } neighbours due to browser config maxNeighbours.`
             }
           })
         }

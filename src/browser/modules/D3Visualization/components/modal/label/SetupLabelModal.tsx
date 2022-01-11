@@ -1,6 +1,7 @@
 import * as React from 'react'
-import GenericModal from 'browser/modules/D3Visualization/components/modal/GenericModal'
+
 import { ApplyButton } from '../styled'
+import GenericModal from 'browser/modules/D3Visualization/components/modal/GenericModal'
 import SetupLabelStorage, {
   ISetupLabelStorageProps
 } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelStorage'
@@ -23,14 +24,13 @@ export interface ICaptionSettings {
   [LabelPosition.bottom]: ICurrentCaptionItem
 }
 
-interface ICurrentCaptionItem {
+export interface ICurrentCaptionItem {
   [key: string]: string
 }
 
-const SetupLabelModalContainer: React.FC<Omit<
-  ISetupLabelStorageProps,
-  'doClose'
->> = props => {
+const SetupLabelModalContainer: React.FC<
+  Omit<ISetupLabelStorageProps, 'doClose'>
+> = props => {
   const [open, setOpen] = React.useState(false)
   const doOpen = React.useCallback(() => setOpen(true), [])
   const doClose = React.useCallback(() => setOpen(false), [])

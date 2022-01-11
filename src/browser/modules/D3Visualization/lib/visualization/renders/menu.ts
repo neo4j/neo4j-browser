@@ -26,29 +26,6 @@ import icons from './d3Icons'
 
 const noOp = () => undefined
 
-const menu: any[] = [
-  donutExpandNode,
-  donutRemoveNode,
-  donutUnlockNode,
-  donutFilteredNode
-]
-
-const numberOfItemsInContextMenu = menu.length
-
-const drawArc = function(radius: number, itemNumber: number, width = 30) {
-  const startAngle =
-    ((2 * Math.PI) / numberOfItemsInContextMenu) * (itemNumber - 1)
-  const endAngle = startAngle + (2 * Math.PI) / numberOfItemsInContextMenu
-  const innerRadius = Math.max(radius + 8, 20)
-  return d3.svg
-    .arc()
-    .innerRadius(innerRadius)
-    .outerRadius(innerRadius + width)
-    .startAngle(startAngle)
-    .endAngle(endAngle)
-    .padAngle(0.03)
-}
-
 const getSelectedNode = (node: VizNode) => (node.selected ? [node] : [])
 
 const attachContextEvent = (
@@ -80,14 +57,14 @@ const attachContextEvent = (
   })
 }
 
-const createMenuItem = function(
+const createMenuItem = function (
   selection: d3.Selection<any>,
   viz: VizObj,
   eventType: string,
   itemIndex: number,
   className: string,
   position: [number, number],
-  svgIconKey: 'Expand / Collapse' | 'Unlock' | 'Remove',
+  svgIconKey: 'Expand / Collapse' | 'Unlock' | 'Remove' | 'Filter',
   tooltip: string
 ) {
   const path = selection.selectAll(`path.${className}`).data(getSelectedNode)
@@ -233,7 +210,29 @@ const donutFilteredNode = new Renderer({
     )
   },
 
-  onTick: noop
+  onTick: noOp
 })
+const menu = [
+  donutExpandNode,
+  donutRemoveNode,
+  donutUnlockNode,
+  donutFilteredNode
+]
+
+const numberOfItemsInContextMenu = menu.length
+
+const drawArc = function (radius: number, itemNumber: number, width = 30) {
+  const startAngle =
+    ((2 * Math.PI) / numberOfItemsInContextMenu) * (itemNumber - 1)
+  const endAngle = startAngle + (2 * Math.PI) / numberOfItemsInContextMenu
+  const innerRadius = Math.max(radius + 8, 20)
+  return d3.svg
+    .arc()
+    .innerRadius(innerRadius)
+    .outerRadius(innerRadius + width)
+    .startAngle(startAngle)
+    .endAngle(endAngle)
+    .padAngle(0.03)
+}
 
 export const nodeMenuRenderer = menu

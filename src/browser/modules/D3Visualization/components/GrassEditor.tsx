@@ -17,32 +17,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import { cloneDeep } from 'lodash-es'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Action, Dispatch } from 'redux'
+
 import { GraphStyle, Selector } from '../graphStyle'
 import {
-  StyledPickerSelector,
-  StyledTokenRelationshipType,
+  StyledCaptionSelector,
+  StyledCircleSelector,
   StyledInlineList,
   StyledInlineListItem,
+  StyledInlineListStylePicker,
   StyledLabelToken,
   StyledPickerListItem,
-  StyledCircleSelector,
-  StyledCaptionSelector,
-  StyledInlineListStylePicker
+  StyledPickerSelector,
+  StyledTokenRelationshipType
 } from './styled'
-import * as actions from 'shared/modules/grass/grassDuck'
-import { toKeyString } from 'shared/services/utils'
-import { GlobalState } from 'shared/globalState'
-import { Action, Dispatch } from 'redux'
 import SetupLabelModal, {
   ICaptionSettings
 } from 'browser/modules/D3Visualization/components/modal/label/SetupLabelModal'
-import { RelArrowCaptionPosition } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelRelArrowSVG'
-import { cloneDeep } from 'lodash-es'
 import SetupColorModal from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorModal'
 import { IColorSettings } from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorStorage'
+import { RelArrowCaptionPosition } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelRelArrowSVG'
+import { GlobalState } from 'shared/globalState'
+import * as actions from 'shared/modules/grass/grassDuck'
+import { toKeyString } from 'shared/services/utils'
 
 export interface IStyleForLabelProps {
   'border-color': string
@@ -310,7 +310,7 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
   }
 
   colorTypePicker(styleForLabel: IStyleForLabel) {
-    const { label } = this.props.selectedLabel
+    const { label } = this.props.selectedLabel!
     const propertiesSet: {
       [key: string]: Set<string>
     } = {}
@@ -371,8 +371,9 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
         styleForLabel.props?.captionSettings === undefined // do not show caption picker if label settings are set
       const displayColorPicker =
         styleForLabel.props?.colorSettings === undefined // do not show caption picker if label settings are set
-      const propertyKeys = (this.props.selectedLabel
-        .propertyKeys as string[]).sort((a, b) => (a > b ? 1 : -1))
+      const propertyKeys = (
+        this.props.selectedLabel.propertyKeys as string[]
+      ).sort((a, b) => (a > b ? 1 : -1))
       pickers = [
         this.labelPicker(
           styleForLabel.selector,
@@ -413,8 +414,9 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
       }
       const displayCaptionPicker =
         styleForRelType.props?.captionSettings === undefined // do not show caption picker if label settings are set
-      const propertyKeys = (this.props.selectedRelType
-        .propertyKeys as string[]).sort((a, b) => (a > b ? 1 : -1))
+      const propertyKeys = (
+        this.props.selectedRelType.propertyKeys as string[]
+      ).sort((a, b) => (a > b ? 1 : -1))
 
       pickers = [
         this.labelPicker(
@@ -477,6 +479,7 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
   }
 })
 
+// @ts-ignore
 export const GrassEditor = connect(
   mapStateToProps,
   mapDispatchToProps

@@ -146,7 +146,7 @@ export class GraphEventHandler {
         }
         graph.addExpandedNodes(d, mapNodes(nodes))
         graph.addRelationships(mapRelationships(relationships, graph))
-        graphView.update()
+        graphView.update({ updateNodes: true, updateRelationships: true })
         graphModelChanged()
       }
     )

@@ -26,6 +26,9 @@ export type NodeCaptionLine = {
   text: string
   baseline: number
   remainingWidth: number
+  fontWeight?: string
+  textDecoration?: string
+  fontStyle?: string
 }
 
 export default class VizNode {

@@ -13,6 +13,7 @@ import {
 } from './styled'
 import { VizItem } from './types'
 import { GraphStyle } from 'project-root/src/browser/modules/D3Visualization/graphStyle'
+import { BasicNode } from 'services/bolt/boltMappings'
 
 interface NodeInspectorPanelProps {
   expanded: boolean
@@ -24,6 +25,7 @@ interface NodeInspectorPanelProps {
   stats: GraphStats
   toggleExpanded: () => void
   width: number
+  nodes: BasicNode[]
 }
 
 export const defaultPanelWidth = (): number =>
@@ -78,6 +80,7 @@ export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
               {shownEl.type === 'node' || shownEl.type === 'relationship' ? (
                 <DetailsPaneComponent
                   vizItem={shownEl}
+                  nodes={this.props.nodes}
                   graphStyle={graphStyle}
                   nodeInspectorWidth={width}
                 />
@@ -89,6 +92,7 @@ export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
                   nodeCount={
                     shownEl.type === 'canvas' ? shownEl.item.nodeCount : null
                   }
+                  nodes={this.props.nodes}
                   relationshipCount={
                     shownEl.type === 'canvas'
                       ? shownEl.item.relationshipCount

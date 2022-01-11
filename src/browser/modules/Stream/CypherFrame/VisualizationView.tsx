@@ -17,30 +17,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import neo4j from 'neo4j-driver'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { deepEquals } from 'services/utils'
-import * as grassActions from 'shared/modules/grass/grassDuck'
-import bolt from 'services/bolt/bolt'
 import { withBus } from 'react-suber'
+import { Action, Dispatch } from 'redux'
+import { Bus } from 'suber'
+
 import Explorer from '../../D3Visualization/components/Explorer'
 import { StyledVisContainer } from './VisualizationView.styled'
-
-import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
-import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
+import Graph from 'browser/modules/D3Visualization/lib/visualization/components/Graph'
 import { resultHasTruncatedFields } from 'browser/modules/Stream/CypherFrame/helpers'
-import { Bus } from 'suber'
+import bolt from 'services/bolt/bolt'
 import {
   BasicNode,
   BasicNodesAndRels,
   BasicRelationship
 } from 'services/bolt/boltMappings'
-import Graph from 'browser/modules/D3Visualization/lib/visualization/components/Graph'
+import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
+import { deepEquals } from 'services/utils'
 import { GlobalState } from 'shared/globalState'
-import { Action, Dispatch } from 'redux'
+import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import * as grassActions from 'shared/modules/grass/grassDuck'
+import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
 
 type VisualizationState = {
   updated: number
@@ -106,14 +105,12 @@ export class Visualization extends Component<
   }
 
   populateDataToStateFromProps(props: VisualizationProps): void {
-    const {
-      nodes,
-      relationships
-    } = bolt.extractNodesAndRelationshipsFromRecordsForOldVis(
-      props.result.records,
-      true,
-      props.maxFieldItems
-    )
+    const { nodes, relationships } =
+      bolt.extractNodesAndRelationshipsFromRecordsForOldVis(
+        props.result.records,
+        true,
+        props.maxFieldItems
+      )
     const hasTruncatedFields = resultHasTruncatedFields(
       props.result,
       props.maxFieldItems
@@ -173,11 +170,12 @@ export class Visualization extends Component<
                 response.result.records.length > 0
                   ? parseInt(response.result.records[0].get('c').toString())
                   : 0
-              const resultGraph = bolt.extractNodesAndRelationshipsFromRecordsForOldVis(
-                response.result.records,
-                false,
-                this.props.maxFieldItems
-              )
+              const resultGraph =
+                bolt.extractNodesAndRelationshipsFromRecordsForOldVis(
+                  response.result.records,
+                  false,
+                  this.props.maxFieldItems
+                )
               this.autoCompleteRelationships(
                 this.graph?.nodes() || [],
                 resultGraph.nodes
@@ -194,7 +192,7 @@ export class Visualization extends Component<
   ): Promise<BasicNodesAndRels & { count: number }> {
     return this.fetchNeighbours(id, currentNeighbourIds, true).then(
       (result: any) => {
-        this.autoCompleteRelationships(this.graph._nodes, result.nodes)
+        this.autoCompleteRelationships(this.graph!._nodes, result.nodes)
         return result
       }
     )

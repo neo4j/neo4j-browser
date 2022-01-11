@@ -37,6 +37,7 @@ import { NodeItem, RelationshipItem, VizItemProperty } from './types'
 import ClipboardCopier from 'browser-components/ClipboardCopier'
 import { ShowMoreOrAll } from 'browser-components/ShowMoreOrAll/ShowMoreOrAll'
 import { GraphStyle } from 'project-root/src/browser/modules/D3Visualization/graphStyle'
+import { BasicNode } from 'services/bolt/boltMappings'
 import { upperFirst } from 'services/utils'
 
 export const ELLIPSIS = '\u2026'
@@ -134,11 +135,13 @@ type DetailsPaneComponentProps = {
   vizItem: NodeItem | RelationshipItem
   graphStyle: GraphStyle
   nodeInspectorWidth: number
+  nodes: BasicNode[]
 }
 export function DetailsPaneComponent({
   vizItem,
   graphStyle,
-  nodeInspectorWidth
+  nodeInspectorWidth,
+  nodes
 }: DetailsPaneComponentProps): JSX.Element {
   const [maxPropertiesCount, setMaxPropertiesCount] = useState(
     DETAILS_PANE_STEP_SIZE
@@ -169,6 +172,7 @@ export function DetailsPaneComponent({
         </PaneTitle>
         {vizItem.type === 'relationship' && (
           <StyleableRelType
+            nodes={nodes}
             selectedRelType={{
               propertyKeys: vizItem.item.propertyList.map(p => p.key),
               relType: vizItem.item.type
@@ -181,6 +185,7 @@ export function DetailsPaneComponent({
             return (
               <StyleableNodeLabel
                 key={label}
+                nodes={nodes}
                 graphStyle={graphStyle}
                 selectedLabel={{
                   label,
