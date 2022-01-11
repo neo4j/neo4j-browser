@@ -28,7 +28,7 @@ import {
 } from 'd3-force'
 
 import cloneArray from '../utils/arrays'
-import circularLayout from '../utils/circularLayout'
+import circularLayout from '../utils/spiralLayout'
 import Graph from './Graph'
 import Relationship from './Relationship'
 import VizNode from './VizNode'
@@ -62,8 +62,6 @@ const SIMULATION_STARTING_TICKS = 800
 const layout: AvailableLayouts = {
   force: () => ({
     init: render => {
-      const linkDistance = 45
-
       const oneRelationshipPerPairOfNodes = (graph: Graph) =>
         Array.from(graph.groupedRelationships()).map(
           pair => pair.relationships[0]
@@ -85,12 +83,11 @@ const layout: AvailableLayouts = {
         const nodes = cloneArray(graph.nodes())
         const relationships = oneRelationshipPerPairOfNodes(graph)
 
-        const radius = (nodes.length * linkDistance) / (Math.PI * 2)
         const center = {
           x: size[0] / 2,
           y: size[1] / 2
         }
-        circularLayout(nodes, center, radius)
+        circularLayout(nodes, center)
 
         simulation
           .nodes(nodes)
