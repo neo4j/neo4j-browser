@@ -142,11 +142,15 @@ export class Visualization extends Component<
     }
   }
 
-  fetchNeighbours(
+  fetchNeighbours: (
     id: string,
-    currentNeighbourIds: string[] = [],
+    currentNeighbourIds?: string[],
+    withLimit?: boolean
+  ) => Promise<BasicNodesAndRels & { count: number }> = (
+    id,
+    currentNeighbourIds = [],
     withLimit = false
-  ): Promise<BasicNodesAndRels & { count: number }> {
+  ) => {
     const query = `MATCH path = (a)--(o)
                    WHERE id(a) = ${id}
                    AND NOT (id(o) IN[${currentNeighbourIds.join(',')}])
