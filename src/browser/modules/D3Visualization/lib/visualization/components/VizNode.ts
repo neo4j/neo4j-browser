@@ -85,4 +85,10 @@ export default class VizNode {
       .relationships()
       .filter(rel => rel.source === this || rel.target === this).length
   }
+
+  hasRelationships(graph: Graph): boolean {
+    return graph
+      .relationships()
+      .some(rel => rel.source === this || rel.target === this)
+  }
 }

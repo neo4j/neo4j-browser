@@ -132,6 +132,8 @@ const vizFn = function (
 
   const handleZoomOnShiftScroll = (e: WheelEvent) => {
     if (e.shiftKey) {
+      e.preventDefault()
+
       const delta =
         -e.deltaY * (e.deltaMode === 1 ? 0.05 : e.deltaMode ? 1 : 0.002)
 
@@ -278,8 +280,7 @@ const vizFn = function (
         event.subject.fy = event.y
       }
 
-      function dragended(event: D3DragEvent<SVGGElement, VizNode, any>) {
-        if (!event.active) simulation.alphaTarget(0)
+      function dragended(_event: D3DragEvent<SVGGElement, VizNode, any>) {
         setSimulationTimeout(simulation)
       }
 

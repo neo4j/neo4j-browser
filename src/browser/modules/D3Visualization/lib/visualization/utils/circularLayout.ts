@@ -21,18 +21,17 @@ import VizNode from '../components/VizNode'
 
 export default function spiralLayout(
   nodes: VizNode[],
-  center: { x: number; y: number }
+  center: { x: number; y: number },
+  radius: number
 ): void {
   const unlocatedNodes = nodes.filter(node => !node.initialPositionCalculated)
 
-  const turnDistance = 50
-  let angle = 0
   unlocatedNodes.forEach((node, i) => {
-    const r = Math.sqrt(i / 2 + 1)
-    angle += Math.asin(1 / r)
+    node.x =
+      center.x + radius * Math.sin((2 * Math.PI * i) / unlocatedNodes.length)
 
-    node.x = center.x + Math.cos(angle) * r * turnDistance
-    node.y = center.y + Math.sin(angle) * r * turnDistance
+    node.y =
+      center.y + radius * Math.cos((2 * Math.PI * i) / unlocatedNodes.length)
 
     node.initialPositionCalculated = true
   })

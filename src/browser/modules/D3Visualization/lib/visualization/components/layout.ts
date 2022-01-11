@@ -19,6 +19,7 @@
  */
 import {
   Simulation,
+  forceCenter,
   forceCollide,
   forceLink,
   forceManyBody,
@@ -28,7 +29,7 @@ import {
 } from 'd3-force'
 
 import cloneArray from '../utils/arrays'
-import circularLayout from '../utils/spiralLayout'
+import circularLayout from '../utils/circularLayout'
 import Graph from './Graph'
 import Relationship from './Relationship'
 import VizNode from './VizNode'
@@ -48,7 +49,7 @@ let simulationTimeout: null | number = null
 export const setSimulationTimeout = (
   simulation: Simulation<VizNode, Relationship>
 ) => {
-  simulationTimeout = setTimeout(() => simulation.stop(), 1500)
+  simulationTimeout = setTimeout(() => simulation.stop(), 2000)
 }
 export const clearSimulationTimeout = () => {
   if (simulationTimeout) {
@@ -62,15 +63,15 @@ const SIMULATION_STARTING_TICKS = 800
 const layout: AvailableLayouts = {
   force: () => ({
     init: render => {
+      const linkDistance = 45
+
       const oneRelationshipPerPairOfNodes = (graph: Graph) =>
         Array.from(graph.groupedRelationships()).map(
           pair => pair.relationships[0]
         )
 
       const simulation = forceSimulation<VizNode, Relationship>()
-        .force('charge', forceManyBody())
-        .force('centerX', forceX().strength(0.005))
-        .force('centerY', forceY().strength(0.01))
+        .force('charge', forceManyBody().strength(-450))
         .on('tick', () => render())
         .stop()
 
@@ -83,11 +84,12 @@ const layout: AvailableLayouts = {
         const nodes = cloneArray(graph.nodes())
         const relationships = oneRelationshipPerPairOfNodes(graph)
 
+        const radius = (nodes.length * linkDistance) / (Math.PI * 2)
         const center = {
           x: size[0] / 2,
           y: size[1] / 2
         }
-        circularLayout(nodes, center)
+        circularLayout(nodes, center, radius)
 
         simulation
           .nodes(nodes)
@@ -99,7 +101,27 @@ const layout: AvailableLayouts = {
             'link',
             forceLink<VizNode, Relationship>(relationships)
               .id(node => node.id)
-              .distance(100)
+              .distance(
+                relationship =>
+                  relationship.source.radius +
+                  relationship.target.radius +
+                  linkDistance
+              )
+          )
+          .force('center', forceCenter(center.x, center.y))
+          // Centering forces for nodes with no relationships to prevent them
+          // from getting pushed out of view by the forceManyBody force.
+          .force(
+            'centerX',
+            forceX<VizNode>(center.x).strength(node =>
+              node.hasRelationships(graph) ? 0 : 0.05
+            )
+          )
+          .force(
+            'centerY',
+            forceY<VizNode>(center.y).strength(node =>
+              node.hasRelationships(graph) ? 0 : 0.05
+            )
           )
 
         if (precompute) {
@@ -108,7 +130,7 @@ const layout: AvailableLayouts = {
           simulation.tick(SIMULATION_STARTING_TICKS)
           render()
         } else {
-          simulation.restart()
+          simulation.alpha(1).alphaDecay(0.08).alphaTarget(0.3).restart()
           setSimulationTimeout(simulation)
         }
 
