@@ -45,16 +45,17 @@ export function StyleableNodeLabel({
   const graphStyleForLabel = graphStyle.forNode({
     labels: labels
   })
-
+  const [open, wrapperRef, handleClick] = usePopupControlled(onClick)
   return (
     <Popup
       on="click"
       basic
       pinned
       key={selectedLabel.label}
+      open={open}
       trigger={
         <StyledLabel
-          {...onClick}
+          onClick={handleClick}
           style={{
             backgroundColor: graphStyleForLabel.get('color'),
             color: graphStyleForLabel.get('text-color-internal')
@@ -68,7 +69,40 @@ export function StyleableNodeLabel({
       }
       wide
     >
-      <GrassEditor selectedLabel={selectedLabel} nodes={nodes} />
+      <div ref={wrapperRef}>
+        <GrassEditor selectedLabel={selectedLabel} nodes={nodes} />
+      </div>
     </Popup>
   )
+}
+
+export function usePopupControlled(
+  onClick?: () => void
+): [boolean, React.Ref<HTMLDivElement>, () => void] {
+  const [open, setOpen] = React.useState(false)
+  const wrapperRef = React.useRef<HTMLDivElement>(null)
+  const handleClick = React.useCallback(() => {
+    setOpen(t => !t)
+    if (onClick) {
+      onClick()
+    }
+  }, [onClick])
+  React.useEffect(() => {
+    function handleClickOutside(event: any) {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target) &&
+        document.querySelector('.ReactModal__Overlay') === null
+      ) {
+        setOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [wrapperRef])
+
+  return [open, wrapperRef, handleClick]
 }

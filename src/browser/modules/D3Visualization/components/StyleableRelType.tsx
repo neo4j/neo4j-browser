@@ -22,6 +22,7 @@ import { Popup } from 'semantic-ui-react'
 
 import { GrassEditor } from './GrassEditor'
 import { StyledRelationship } from 'browser/modules/DBMSInfo/styled'
+import { usePopupControlled } from 'project-root/src/browser/modules/D3Visualization/components/StyleableNodeLabel'
 import { GraphStyle } from 'project-root/src/browser/modules/D3Visualization/graphStyle'
 import { BasicNode } from 'services/bolt/boltMappings'
 
@@ -38,14 +39,18 @@ export function StyleableRelType({
   const styleForRelType = graphStyle.forRelationship({
     type: selectedRelType.relType
   })
+  const [open, wrapperRef, handleClick] = usePopupControlled()
+
   return (
     <Popup
       on="click"
       basic
       pinned
       key={selectedRelType.relType}
+      open={open}
       trigger={
         <StyledRelationship
+          onClick={handleClick}
           style={{
             backgroundColor: styleForRelType.get('color'),
             color: styleForRelType.get('text-color-internal')
@@ -59,7 +64,9 @@ export function StyleableRelType({
       }
       wide
     >
-      <GrassEditor selectedRelType={selectedRelType} nodes={nodes} />
+      <div ref={wrapperRef}>
+        <GrassEditor selectedRelType={selectedRelType} nodes={nodes} />
+      </div>
     </Popup>
   )
 }
