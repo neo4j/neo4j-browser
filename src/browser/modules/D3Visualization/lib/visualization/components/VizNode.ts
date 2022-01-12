@@ -48,6 +48,7 @@ export default class VizNode {
   y: number
   fx: number | null = null
   fy: number | null = null
+  hoverFixed: boolean
   initialPositionCalculated: boolean
 
   constructor(
@@ -73,6 +74,7 @@ export default class VizNode {
     this.minified = false
     this.x = 0
     this.y = 0
+    this.hoverFixed = false
     this.initialPositionCalculated = false
   }
 

@@ -118,11 +118,23 @@ const vizFn = function (
     return viz.trigger('relationshipClicked', relationship)
   }
 
-  const onNodeMouseOver = (_event: Event, node: VizNode) =>
-    viz.trigger('nodeMouseOver', node)
+  const onNodeMouseOver = (_event: Event, node: VizNode) => {
+    if (!node.fx && !node.fy) {
+      node.hoverFixed = true
+      node.fx = node.x
+      node.fy = node.y
+    }
+    return viz.trigger('nodeMouseOver', node)
+  }
 
-  const onNodeMouseOut = (_event: Event, node: VizNode) =>
-    viz.trigger('nodeMouseOut', node)
+  const onNodeMouseOut = (_event: Event, node: VizNode) => {
+    if (node.hoverFixed) {
+      node.hoverFixed = false
+      node.fx = null
+      node.fy = null
+    }
+    return viz.trigger('nodeMouseOut', node)
+  }
 
   const onRelMouseOver = (_event: Event, rel: Relationship) =>
     viz.trigger('relMouseOver', rel)
