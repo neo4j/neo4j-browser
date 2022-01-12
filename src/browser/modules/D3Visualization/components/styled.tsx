@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import styled from 'styled-components'
 
 export const legendRowHeight = 32
@@ -137,6 +136,9 @@ export const StyledInlineListItem = styled.li`
   padding-right: 5px;
 `
 
+export const StyledDivMarginTopBottom = styled.div`
+  margin: 3px 0;
+`
 export const StyledToken = styled(StyledInlineListItem)`
   display: inline-block;
   font-weight: bold;

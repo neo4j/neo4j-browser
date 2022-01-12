@@ -1,17 +1,18 @@
 import * as React from 'react'
-import { ApplyButton } from '../styled'
-import GenericModal from '../GenericModal'
-import SetupColorStorage, { ISetupColorStorageProps } from './SetupColorStorage'
 
-const SetupColorModal: React.FC<Omit<
-  ISetupColorStorageProps,
-  'doClose'
->> = props => {
+import GenericModal from '../GenericModal'
+import { ApplyButton } from '../styled'
+import SetupColorStorage, { ISetupColorStorageProps } from './SetupColorStorage'
+import { StyledDivMarginTopBottom } from 'project-root/src/browser/modules/D3Visualization/components/styled'
+
+const SetupColorModal: React.FC<
+  Omit<ISetupColorStorageProps, 'doClose'>
+> = props => {
   const [open, setOpen] = React.useState(false)
   const doOpen = React.useCallback(() => setOpen(true), [])
   const doClose = React.useCallback(() => setOpen(false), [])
   return (
-    <div>
+    <StyledDivMarginTopBottom>
       <ApplyButton onClick={doOpen} backgroundColor={'#f76060'}>
         Setup Color
       </ApplyButton>
@@ -24,7 +25,7 @@ const SetupColorModal: React.FC<Omit<
           <SetupColorStorage doClose={doClose} {...props} />
         </GenericModal>
       )}
-    </div>
+    </StyledDivMarginTopBottom>
   )
 }
 

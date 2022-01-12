@@ -5,6 +5,7 @@ import GenericModal from 'browser/modules/D3Visualization/components/modal/Gener
 import SetupLabelStorage, {
   ISetupLabelStorageProps
 } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelStorage'
+import { StyledDivMarginTopBottom } from 'project-root/src/browser/modules/D3Visualization/components/styled'
 
 export enum LabelPosition {
   top,
@@ -35,7 +36,7 @@ const SetupLabelModalContainer: React.FC<
   const doOpen = React.useCallback(() => setOpen(true), [])
   const doClose = React.useCallback(() => setOpen(false), [])
   return (
-    <div>
+    <StyledDivMarginTopBottom>
       <ApplyButton onClick={doOpen}>Setup Label</ApplyButton>
       {open && (
         <GenericModal
@@ -46,7 +47,7 @@ const SetupLabelModalContainer: React.FC<
           <SetupLabelStorage doClose={doClose} {...props} />
         </GenericModal>
       )}
-    </div>
+    </StyledDivMarginTopBottom>
   )
 }
 
