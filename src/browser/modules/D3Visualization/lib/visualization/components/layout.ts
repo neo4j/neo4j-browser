@@ -71,7 +71,7 @@ const layout: AvailableLayouts = {
         )
 
       const simulation = forceSimulation<VizNode, Relationship>()
-        .force('charge', forceManyBody().strength(-450))
+        .force('charge', forceManyBody().strength(-300))
         .on('tick', () => render())
         .stop()
 
@@ -111,18 +111,8 @@ const layout: AvailableLayouts = {
           .force('center', forceCenter(center.x, center.y))
           // Centering forces for nodes with no relationships to prevent them
           // from getting pushed out of view by the forceManyBody force.
-          .force(
-            'centerX',
-            forceX<VizNode>(center.x).strength(node =>
-              node.hasRelationships(graph) ? 0 : 0.05
-            )
-          )
-          .force(
-            'centerY',
-            forceY<VizNode>(center.y).strength(node =>
-              node.hasRelationships(graph) ? 0 : 0.05
-            )
-          )
+          .force('centerX', forceX<VizNode>(center.x).strength(0.03))
+          .force('centerY', forceY<VizNode>(center.y).strength(0.03))
 
         if (precompute) {
           // Precompute the position of nodes instead of running the
