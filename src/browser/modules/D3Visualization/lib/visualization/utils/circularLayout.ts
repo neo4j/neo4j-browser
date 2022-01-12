@@ -19,7 +19,7 @@
  */
 import VizNode from '../components/VizNode'
 
-export default function spiralLayout(
+export default function circularLayout(
   nodes: VizNode[],
   center: { x: number; y: number },
   radius: number

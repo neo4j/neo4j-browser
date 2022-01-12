@@ -109,8 +109,6 @@ const layout: AvailableLayouts = {
               )
           )
           .force('center', forceCenter(center.x, center.y))
-          // Centering forces for nodes with no relationships to prevent them
-          // from getting pushed out of view by the forceManyBody force.
           .force('centerX', forceX<VizNode>(center.x).strength(0.03))
           .force('centerY', forceY<VizNode>(center.y).strength(0.03))
 
