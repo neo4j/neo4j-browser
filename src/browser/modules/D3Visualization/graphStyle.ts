@@ -325,7 +325,6 @@ export class GraphStyle {
   setDefaultNodeStyle = (selector: Selector, item: any): void => {
     let defaultColor = true
     let defaultCaption = true
-    console.log('B-', selector, item, this.rules)
     for (let i = 0; i < this.rules.length; i++) {
       const rule = this.rules[i]
       if (rule.selector.classes.length > 0 && rule.matches(selector)) {
