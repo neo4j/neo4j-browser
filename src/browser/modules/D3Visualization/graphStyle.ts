@@ -17,10 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
-  selectorStringToArray,
-  selectorArrayToString
+  selectorArrayToString,
+  selectorStringToArray
 } from 'services/grassUtils'
 
 export class Selector {
@@ -237,26 +236,26 @@ export class GraphStyle {
     }
   }
 
-  parseSelector = function(key: string): Selector {
+  parseSelector = function (key: string): Selector {
     const tokens = selectorStringToArray(key)
     return new Selector(tokens[0], tokens.slice(1))
   }
 
-  nodeSelector = function(
+  nodeSelector = function (
     node: { labels: null | string[] } = { labels: null }
   ): Selector {
     const classes = node.labels != null ? node.labels : []
     return new Selector('node', classes)
   }
 
-  relationshipSelector = function(
+  relationshipSelector = function (
     rel: { type: null | string } = { type: null }
   ): Selector {
     const classes = rel.type != null ? [rel.type] : []
     return new Selector('relationship', classes)
   }
 
-  findRule = function(
+  findRule = function (
     selector: Selector,
     rules: StyleRule[]
   ): StyleRule | undefined {
@@ -269,7 +268,7 @@ export class GraphStyle {
     return undefined
   }
 
-  findAvailableDefaultColor = function(rules: StyleRule[]): DefaultColorType {
+  findAvailableDefaultColor = function (rules: StyleRule[]): DefaultColorType {
     const usedColors = rules
       .filter((rule: StyleRule) => {
         return rule.props.color != null
@@ -283,7 +282,7 @@ export class GraphStyle {
     return DEFAULT_COLORS[index]
   }
 
-  getDefaultNodeCaption = function(
+  getDefaultNodeCaption = function (
     item: any
   ): { caption: string } | { defaultCaption: string } {
     if (
@@ -326,6 +325,7 @@ export class GraphStyle {
   setDefaultNodeStyle = (selector: Selector, item: any): void => {
     let defaultColor = true
     let defaultCaption = true
+    console.log('B-', selector, item, this.rules)
     for (let i = 0; i < this.rules.length; i++) {
       const rule = this.rules[i]
       if (rule.selector.classes.length > 0 && rule.matches(selector)) {
@@ -335,6 +335,7 @@ export class GraphStyle {
         if (rule.props.hasOwnProperty('caption')) {
           defaultCaption = false
         }
+        item.preferedLabel = rule.selector.classes[0]
       }
     }
     const minimalSelector = new Selector(
@@ -378,7 +379,7 @@ export class GraphStyle {
     }
   }
 
-  parse = function(string: string) {
+  parse = function (string: string) {
     const chars = string.split('')
     let insideString = false
     let insideProps = false
@@ -474,15 +475,15 @@ export class GraphStyle {
     }
   }
 
-  defaultSizes = function(): DefaultSizeType[] {
+  defaultSizes = function (): DefaultSizeType[] {
     return DEFAULT_SIZES
   }
 
-  defaultArrayWidths = function(): DefaultArrayWidthType[] {
+  defaultArrayWidths = function (): DefaultArrayWidthType[] {
     return DEFAULT_ARRAY_WIDTHS
   }
 
-  defaultColors = function(): DefaultColorType[] {
+  defaultColors = function (): DefaultColorType[] {
     return DEFAULT_COLORS
   }
 
@@ -506,7 +507,7 @@ export class GraphStyle {
     }
     return ips.replace(/<(id|type)>/g, (_a, b) => {
       if (item.isNode && b === 'type') {
-        return item.labels[0] ?? ''
+        return item.preferedLabel ?? item.labels[0] ?? ''
       }
       const r = item[b]
       if (typeof r === 'string' || typeof r === 'number') {
