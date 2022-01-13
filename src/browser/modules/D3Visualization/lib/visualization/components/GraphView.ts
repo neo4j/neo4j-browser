@@ -17,10 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import Graph from './Graph'
 import viz, { MeasureSizeFn, VizObj } from './Visualization'
 import layout from './layout'
 import GraphStyle from 'project-root/src/browser/modules/D3Visualization/graphStyle'
-import Graph from './Graph'
 
 export default class GraphView {
   callbacks: any
@@ -39,10 +39,13 @@ export default class GraphView {
     this.viz = viz(element, measureSize, this.graph, layout.force(), this.style)
     this.callbacks = {}
     const { callbacks } = this
-    this.viz.trigger = (() => (event: any, ...args: any[]) =>
-      Array.from(callbacks[event] || []).map((callback: any) =>
-        callback.apply(null, args)
-      ))()
+    this.viz.trigger = (
+      () =>
+      (event: any, ...args: any[]) =>
+        Array.from(callbacks[event] || []).map((callback: any) =>
+          callback.apply(null, args)
+        )
+    )()
   }
 
   on(event: any, callback: any) {
@@ -71,6 +74,7 @@ export default class GraphView {
   update(options: {
     updateNodes: boolean
     updateRelationships: boolean
+    precompute?: boolean
   }): void {
     this.viz.update(options)
   }
@@ -81,10 +85,6 @@ export default class GraphView {
 
   boundingBox() {
     return this.viz.boundingBox()
-  }
-
-  collectStats() {
-    return this.viz.collectStats()
   }
 
   zoomIn(elem: any) {

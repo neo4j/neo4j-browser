@@ -17,7 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import d3 from 'd3'
+import { BaseType, Selection } from 'd3-selection'
+import { arc as d3Arc } from 'd3-shape'
 
 import Renderer from '../components/Renderer'
 import { VizObj } from '../components/Visualization'
@@ -33,8 +34,7 @@ const drawArc = function (radius: number, itemNumber: number, width = 30) {
     ((2 * Math.PI) / numberOfItemsInContextMenu) * (itemNumber - 1)
   const endAngle = startAngle + (2 * Math.PI) / numberOfItemsInContextMenu
   const innerRadius = Math.max(radius + 8, 20)
-  return d3.svg
-    .arc()
+  return d3Arc()
     .innerRadius(innerRadius)
     .outerRadius(innerRadius + width)
     .startAngle(startAngle)
@@ -46,18 +46,23 @@ const getSelectedNode = (node: VizNode) => (node.selected ? [node] : [])
 
 const attachContextEvent = (
   eventType: string,
-  elements: d3.Selection<any>[],
+  elements: [
+    Selection<SVGPathElement, VizNode, BaseType, VizNode>,
+    Selection<SVGGElement, VizNode, BaseType, VizNode>
+  ],
   viz: VizObj,
   content: string,
   label: string
 ) => {
   elements.forEach(element => {
-    element.on('mousedown.drag', () => {
-      ;(d3.event as Event).stopPropagation()
+    element.on('mousedown.drag', (event: Event) => {
+      event.stopPropagation()
       return null
     })
-    element.on('mouseup', node => viz.trigger(eventType, node))
-    element.on('mouseover', node => {
+    element.on('mouseup', (_event: Event, node: VizNode) =>
+      viz.trigger(eventType, node)
+    )
+    element.on('mouseover', (_event: Event, node: VizNode) => {
       node.contextMenu = {
         menuSelection: eventType,
         menuContent: content,
@@ -66,7 +71,7 @@ const attachContextEvent = (
       return viz.trigger('menuMouseOver', node)
     })
 
-    element.on('mouseout', node => {
+    element.on('mouseout', (_event: Event, node: VizNode) => {
       delete node.contextMenu
       return viz.trigger('menuMouseOut', node)
     })
@@ -74,7 +79,7 @@ const attachContextEvent = (
 }
 
 const createMenuItem = function (
-  selection: d3.Selection<any>,
+  selection: Selection<BaseType, VizNode, BaseType, unknown>,
   viz: VizObj,
   eventType: string,
   itemIndex: number,
@@ -93,11 +98,9 @@ const createMenuItem = function (
     .append('path')
     .classed(className, true)
     .classed('context-menu-item', true)
-    .attr({
-      d(node: VizNode) {
-        // @ts-expect-error Expected 1-2 arguments, but got 0.ts(2554)
-        return drawArc(node.radius, itemIndex, 1)()
-      }
+    .attr('d', node => {
+      // @ts-expect-error Expected 1-2 arguments, but got 0.ts(2554)
+      return drawArc(node.radius, itemIndex, 1)()
     })
 
   const rawSvgIcon = icons[svgIconKey]
@@ -113,21 +116,19 @@ const createMenuItem = function (
     .classed('icon', true)
     .classed(className, true)
     .classed('context-menu-item', true)
-    .attr({
-      transform(node: VizNode) {
-        return `translate(${Math.floor(
-          // @ts-expect-error
-          drawArc(node.radius, itemIndex).centroid()[0] +
-            (position[0] * 100) / 100
-        )},${Math.floor(
-          // @ts-expect-error
-          drawArc(node.radius, itemIndex).centroid()[1] +
-            (position[1] * 100) / 100
-        )}) scale(0.7)`
-      },
-      color(node: VizNode) {
-        return viz.style.forNode(node).get('text-color-internal')
-      }
+    .attr('transform', (node: VizNode) => {
+      return `translate(${Math.floor(
+        // @ts-expect-error
+        drawArc(node.radius, itemIndex).centroid()[0] +
+          (position[0] * 100) / 100
+      )},${Math.floor(
+        // @ts-expect-error
+        drawArc(node.radius, itemIndex).centroid()[1] +
+          (position[1] * 100) / 100
+      )}) scale(0.7)`
+    })
+    .attr('color', (node: VizNode) => {
+      return viz.style.forNode(node).get('text-color-internal')
     })
 
   attachContextEvent(eventType, [tab, icon], viz, tooltip, rawSvgIcon)
@@ -135,29 +136,25 @@ const createMenuItem = function (
   tab
     .transition()
     .duration(200)
-    .attr({
-      d(node: VizNode) {
-        // @ts-expect-error Expected 1-2 arguments, but got 0.ts(2554)
-        return drawArc(node.radius, itemIndex)()
-      }
+    .attr('d', (node: VizNode) => {
+      // @ts-expect-error Expected 1-2 arguments, but got 0.ts(2554)
+      return drawArc(node.radius, itemIndex)()
     })
 
   path
-    .exit()
+    .exit<VizNode>()
     .transition()
     .duration(200)
-    .attr({
-      d(node: VizNode) {
-        // @ts-expect-error Expected 1-2 arguments, but got 0.ts(2554)
-        return drawArc(node.radius, itemIndex, 1)()
-      }
+    .attr('d', (node: VizNode) => {
+      // @ts-expect-error Expected 1-2 arguments, but got 0.ts(2554)
+      return drawArc(node.radius, itemIndex, 1)()
     })
     .remove()
 
   return iconPath.exit().remove()
 }
 
-const donutRemoveNode = new Renderer({
+const donutRemoveNode = new Renderer<VizNode>({
   name: 'donutRemoveNode',
   onGraphChange(selection, viz) {
     return createMenuItem(
@@ -175,7 +172,7 @@ const donutRemoveNode = new Renderer({
   onTick: noOp
 })
 
-const donutExpandNode = new Renderer({
+const donutExpandNode = new Renderer<VizNode>({
   name: 'donutExpandNode',
   onGraphChange(selection, viz) {
     return createMenuItem(
@@ -193,7 +190,7 @@ const donutExpandNode = new Renderer({
   onTick: noOp
 })
 
-const donutUnlockNode = new Renderer({
+const donutUnlockNode = new Renderer<VizNode>({
   name: 'donutUnlockNode',
   onGraphChange(selection, viz) {
     return createMenuItem(

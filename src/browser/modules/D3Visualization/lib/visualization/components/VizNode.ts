@@ -46,7 +46,8 @@ export default class VizNode {
 
   x: number
   y: number
-  fixed: boolean
+  fx: number | null = null
+  fy: number | null = null
   initialPositionCalculated: boolean
 
   constructor(
@@ -70,7 +71,6 @@ export default class VizNode {
     this.selected = false
     this.expanded = false
     this.minified = false
-    this.fixed = false
     this.x = 0
     this.y = 0
     this.initialPositionCalculated = false
@@ -84,5 +84,11 @@ export default class VizNode {
     return graph
       .relationships()
       .filter(rel => rel.source === this || rel.target === this).length
+  }
+
+  hasRelationships(graph: Graph): boolean {
+    return graph
+      .relationships()
+      .some(rel => rel.source === this || rel.target === this)
   }
 }
