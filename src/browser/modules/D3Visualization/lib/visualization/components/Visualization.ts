@@ -284,7 +284,7 @@ const vizFn = function (
     function dragHandler(simulation: Simulation<VizNode, Relationship>) {
       function dragstarted(event: D3DragEvent<SVGGElement, VizNode, any>) {
         clearSimulationTimeout()
-        if (!event.active) simulation.alphaTarget(0.3).restart()
+        if (!event.active) simulation.alphaTarget(0.3).alpha(1).restart()
       }
 
       function dragged(event: D3DragEvent<SVGGElement, VizNode, any>) {
