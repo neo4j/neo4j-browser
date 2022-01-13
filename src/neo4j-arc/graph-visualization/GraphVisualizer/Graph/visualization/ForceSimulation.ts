@@ -66,7 +66,7 @@ export class ForceSimulation {
   }
 
   updateNodes(graph: GraphModel) {
-    const nodes = graph.nodes()
+    const nodes = graph.getNodes()
 
     const radius = (nodes.length * LINK_DISTANCE) / (Math.PI * 2)
     const center = {

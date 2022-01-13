@@ -21,7 +21,7 @@
 import { GraphModel } from '../../models/Graph'
 import { NodeModel } from '../../models/Node'
 import { RelationshipModel } from '../../models/Relationship'
-import { GetNodeNeighboursFn, VizItem } from '../../types'
+import { ExpandNodeHandler, VItem } from '../../types'
 import {
   GraphStats,
   getGraphStats,
@@ -31,20 +31,20 @@ import {
 import { Visualization } from './visualization/Visualization'
 
 export class GraphEventHandlerModel {
-  getNodeNeighbours: GetNodeNeighboursFn
+  getNodeNeighbours: ExpandNodeHandler
   graph: GraphModel
   visualization: Visualization
   onGraphModelChange: (stats: GraphStats) => void
-  onItemMouseOver: (item: VizItem) => void
-  onItemSelected: (item: VizItem) => void
+  onItemMouseOver: (item: VItem) => void
+  onItemSelected: (item: VItem) => void
   selectedItem: NodeModel | RelationshipModel | null
 
   constructor(
     graph: GraphModel,
     visualization: Visualization,
-    getNodeNeighbours: GetNodeNeighboursFn,
-    onItemMouseOver: (item: VizItem) => void,
-    onItemSelected: (item: VizItem) => void,
+    getNodeNeighbours: ExpandNodeHandler,
+    onItemMouseOver: (item: VItem) => void,
+    onItemSelected: (item: VItem) => void,
     onGraphModelChange: (stats: GraphStats) => void
   ) {
     this.graph = graph
@@ -89,8 +89,8 @@ export class GraphEventHandlerModel {
     this.onItemSelected({
       type: 'canvas',
       item: {
-        nodeCount: this.graph.nodes().length,
-        relationshipCount: this.graph.relationships().length
+        nodeCount: this.graph.getNodes().length,
+        relationshipCount: this.graph.getRelationships().length
       }
     })
   }
@@ -157,7 +157,7 @@ export class GraphEventHandlerModel {
 
   nodeCollapse(d: NodeModel): void {
     d.expanded = false
-    this.graph.collapseNode(d)
+    this.graph.collapseNode(d, { nodes: [], relationships: [] })
     this.visualization.update({ updateNodes: true, updateRelationships: true })
     this.graphModelChanged()
   }
@@ -212,8 +212,8 @@ export class GraphEventHandlerModel {
     this.onItemMouseOver({
       type: 'canvas',
       item: {
-        nodeCount: this.graph.nodes().length,
-        relationshipCount: this.graph.relationships().length
+        nodeCount: this.graph.getNodes().length,
+        relationshipCount: this.graph.getRelationships().length
       }
     })
   }

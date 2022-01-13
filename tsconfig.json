@@ -3,7 +3,7 @@
     "module": "commonjs",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "target": "ES6",
+    "target": "es2019",
     "strict": true,
     "sourceMap": true,
     "noImplicitAny": true,

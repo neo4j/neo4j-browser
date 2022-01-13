@@ -1,89 +1,13 @@
-/*
- * Copyright (c) "Neo4j"
- * Neo4j Sweden AB [http://neo4j.com]
- *
- * This file is part of Neo4j.
- *
- * Neo4j is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-import { PairwiseArcsRelationshipRouting } from './utils/PairwiseArcsRelationshipRouting'
-import { measureText } from '../../../utils/textMeasurement'
-import { GraphModel } from '../../../models/Graph'
-import { GraphStyleModel } from '../../../models/GraphStyle'
-import { NodeCaptionLine, NodeModel } from '../../../models/Node'
-import { RelationshipModel } from '../../../models/Relationship'
+import { GraphStyleModel } from '../models/GraphStyle'
+import { NodeModel } from '../models/Node'
+import { measureText } from './textMeasurement'
 
-export class GraphGeometryModel {
-  relationshipRouting: PairwiseArcsRelationshipRouting
-  style: GraphStyleModel
-  canvas: HTMLCanvasElement
-  constructor(style: GraphStyleModel) {
-    this.style = style
-    this.relationshipRouting = new PairwiseArcsRelationshipRouting(this.style)
-    this.canvas = document.createElement('canvas')
-  }
-
-  formatNodeCaptions(nodes: NodeModel[]): void {
-    const canvas2DContext = this.canvas.getContext('2d')
-    if (canvas2DContext) {
-      nodes.forEach(
-        node =>
-          (node.caption = fitCaptionIntoCircle(
-            node,
-            this.style,
-            canvas2DContext
-          ))
-      )
-    }
-  }
-
-  formatRelationshipCaptions(relationships: RelationshipModel[]): void {
-    relationships.forEach(relationship => {
-      const template = this.style.forRelationship(relationship).get('caption')
-      relationship.caption = this.style.interpolate(template, relationship)
-    })
-  }
-
-  setNodeRadii(nodes: NodeModel[]): void {
-    nodes.forEach(node => {
-      node.radius = parseFloat(this.style.forNode(node).get('diameter')) / 2
-    })
-  }
-
-  onGraphChange(
-    graph: GraphModel,
-    options = { updateNodes: true, updateRelationships: true }
-  ): void {
-    if (!!options.updateNodes) {
-      this.setNodeRadii(graph.getNodes())
-      this.formatNodeCaptions(graph.getNodes())
-    }
-
-    if (!!options.updateRelationships) {
-      this.formatRelationshipCaptions(graph.getRelationships())
-      this.relationshipRouting.measureRelationshipCaptions(
-        graph.getRelationships()
-      )
-    }
-  }
-
-  onTick(graph: GraphModel): void {
-    this.relationshipRouting.layoutRelationships(graph)
-  }
+type NodeCaptionLine = {
+  text: string
+  baseline: number
+  remainingWidth: number
 }
-
-const fitCaptionIntoCircle = (
+export const fitCaptionIntoCircle = (
   node: NodeModel,
   style: GraphStyleModel,
   canvas2DContext: CanvasRenderingContext2D
@@ -118,7 +42,6 @@ const fitCaptionIntoCircle = (
     const maxLineWidth =
       Math.sqrt(Math.pow(node.radius, 2) - Math.pow(chordCentreDistance, 2)) * 2
     return {
-      node,
       text: '',
       baseline,
       remainingWidth: maxLineWidth

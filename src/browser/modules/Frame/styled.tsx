@@ -55,7 +55,7 @@ type StyledFrameBodyProps = FullscreenProps & {
 
 export const StyledFrameBody = styled.div<StyledFrameBodyProps>`
   flex: 1;
-  overflow: ${props => (props.preventOverflow ? 'hidden' : 'auto')};
+  overflow: 'auto';
   min-height: ${dim.frameBodyHeight / 2}px;
   max-height: ${props => {
     if (props.isCollapsed) {

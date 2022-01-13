@@ -37,14 +37,14 @@ import {
 } from './styled'
 import { GraphStats } from '../utils/mapper'
 import { GraphStyleModel } from '../models/GraphStyle'
-import { VizItem } from '../types'
+import { VItem } from '../types'
 
 interface NodeInspectorPanelProps {
   expanded: boolean
   graphStyle: GraphStyleModel
   hasTruncatedFields: boolean
-  hoveredItem: VizItem
-  selectedItem: VizItem
+  hoveredItem: VItem
+  selectedItem: VItem
   setWidth: (width: number) => void
   stats: GraphStats
   toggleExpanded: () => void
@@ -82,6 +82,7 @@ export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
       OverviewPaneOverride !== undefined
         ? OverviewPaneOverride
         : DefaultOverviewPane
+    console.log(shownEl, hoveredItem)
 
     return (
       <>
@@ -118,11 +119,13 @@ export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
                   hasTruncatedFields={hasTruncatedFields}
                   stats={stats}
                   nodeCount={
-                    shownEl.type === 'canvas' ? shownEl.item.nodeCount : null
+                    hoveredItem.type === 'canvas'
+                      ? hoveredItem.item.nodeCount
+                      : null
                   }
                   relationshipCount={
-                    shownEl.type === 'canvas'
-                      ? shownEl.item.relationshipCount
+                    hoveredItem.type === 'canvas'
+                      ? hoveredItem.item.relationshipCount
                       : null
                   }
                   infoMessage={

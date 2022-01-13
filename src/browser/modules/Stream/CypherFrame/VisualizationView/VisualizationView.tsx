@@ -143,6 +143,7 @@ export class Visualization extends Component<
     existingNodes: { id: string }[],
     newNodes: { id: string }[]
   ): void {
+    console.log('cb', this.autoCompleteCallback)
     if (this.props.autoComplete) {
       const existingNodeIds = existingNodes.map(node => parseInt(node.id))
       const newNodeIds = newNodes.map(node => parseInt(node.id))
@@ -199,7 +200,7 @@ LIMIT ${maxNewNeighbours}`
                   this.props.maxFieldItems
                 )
               this.autoCompleteRelationships(
-                this.graph?.nodes() || [],
+                this.graph?.getNodes() || [],
                 resultGraph.nodes
               )
               resolve({ ...resultGraph, allNeighboursCount })
@@ -245,7 +246,7 @@ LIMIT ${maxNewNeighbours}`
 
   setGraph(graph: GraphModel): void {
     this.graph = graph
-    this.autoCompleteRelationships([], this.graph.nodes())
+    this.autoCompleteRelationships([], this.graph.getNodes())
   }
 
   render(): React.ReactNode {
@@ -267,6 +268,7 @@ LIMIT ${maxNewNeighbours}`
           getAutoCompleteCallback={(
             callback: (rels: BasicRelationship[]) => void
           ) => {
+            console.log('callback', callback)
             this.autoCompleteCallback = callback
           }}
           setGraph={this.setGraph.bind(this)}

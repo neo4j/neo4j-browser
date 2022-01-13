@@ -17,17 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { BasicNode, BasicRelationship } from 'neo4j-arc/common'
 import { GraphModel } from '../models/Graph'
 import { NodeModel } from '../models/Node'
 import { RelationshipModel } from '../models/Relationship'
-import { BasicNode, BasicRelationship } from 'neo4j-arc/common'
-import { optionalToString } from './utils'
-
-const mapProperties = (_: any) => Object.assign({}, ...stringifyValues(_))
-const stringifyValues = (obj: any) =>
-  Object.keys(obj).map(k => ({
-    [k]: obj[k] === null ? 'null' : optionalToString(obj[k])
-  }))
 
 export function createGraph(
   nodes: BasicNode[],
@@ -42,12 +35,7 @@ export function createGraph(
 export function mapNodes(nodes: BasicNode[]): NodeModel[] {
   return nodes.map(
     node =>
-      new NodeModel(
-        node.id,
-        node.labels,
-        mapProperties(node.properties),
-        node.propertyTypes
-      )
+      new NodeModel(node.id, node.labels, node.properties, node.propertyTypes)
   )
 }
 
@@ -55,16 +43,16 @@ export function mapRelationships(
   relationships: BasicRelationship[],
   graph: GraphModel
 ): RelationshipModel[] {
-  return relationships.map(rel => {
-    const source = graph.findNode(rel.startNodeId)
-    const target = graph.findNode(rel.endNodeId)
+  return relationships.map(relationship => {
+    const source = graph.findNodeById(relationship.startNodeId) as NodeModel
+    const target = graph.findNodeById(relationship.endNodeId) as NodeModel
     return new RelationshipModel(
-      rel.id,
+      relationship.id,
       source,
       target,
-      rel.type,
-      mapProperties(rel.properties),
-      rel.propertyTypes
+      relationship.type,
+      relationship.properties,
+      relationship.propertyTypes
     )
   })
 }
@@ -85,7 +73,7 @@ export type GraphStats = {
 export function getGraphStats(graph: GraphModel): GraphStats {
   const labelStats: GraphStatsLabels = {}
   const relTypeStats: GraphStatsRelationshipTypes = {}
-  graph.nodes().forEach(node => {
+  graph.getNodes().forEach(node => {
     node.labels.forEach(label => {
       if (labelStats['*']) {
         labelStats['*'].count = labelStats['*'].count + 1
@@ -109,7 +97,7 @@ export function getGraphStats(graph: GraphModel): GraphStats {
       }
     })
   })
-  graph.relationships().forEach(rel => {
+  graph.getRelationships().forEach(rel => {
     if (relTypeStats['*']) {
       relTypeStats['*'].count = relTypeStats['*'].count + 1
     } else {

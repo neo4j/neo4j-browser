@@ -33,9 +33,10 @@ import {
 import { DetailsPaneProps } from './DefaultPanelContent/DefaultDetailsPane'
 import { OverviewPaneProps } from './DefaultPanelContent/DefaultOverviewPane'
 import { GraphStyleModel } from '../models/GraphStyle'
-import { GetNodeNeighboursFn, VizItem } from '../types'
 import { GraphStats } from '../utils/mapper'
 import { GraphModel } from '../models/Graph'
+import { GraphCanvas } from './GraphCanvas'
+import { ExpandNodeHandler, VItem } from '../types'
 
 type DeduplicateHelper = {
   nodes: BasicNode[]
@@ -107,10 +108,10 @@ type GraphVisualizerProps = GraphVisualizerDefaultProps & {
 
 type GraphVisualizerState = {
   graphStyle: GraphStyleModel
-  hoveredItem: VizItem
+  hoveredItem: VItem
   nodes: BasicNode[]
   relationships: BasicRelationship[]
-  selectedItem: VizItem
+  selectedItem: VItem
   stats: GraphStats
   styleVersion: number
   freezeLegend: boolean
@@ -122,7 +123,7 @@ export class GraphVisualizer extends Component<
   GraphVisualizerProps,
   GraphVisualizerState
 > {
-  defaultStyle: any
+  defaultStyle: Record<string, Record<string, string>>
 
   static defaultProps: GraphVisualizerDefaultProps = {
     initialNodeDisplay: DEFAULT_INITIAL_NODE_DISPLAY,
@@ -155,7 +156,7 @@ export class GraphVisualizer extends Component<
         )
       : this.props.relationships
 
-    const selectedItem: VizItem = nodeLimitHit
+    const selectedItem: VItem = nodeLimitHit
       ? {
           type: 'status-item',
           item: `Not all return nodes are being displayed due to Initial Node Display setting. Only ${this.props.initialNodeDisplay} of ${this.props.nodes.length} nodes are being displayed`
@@ -192,7 +193,7 @@ export class GraphVisualizer extends Component<
     }
   }
 
-  getNodeNeighbours: GetNodeNeighboursFn = (
+  getNodeNeighbours: ExpandNodeHandler = (
     node,
     currentNeighbourIds,
     callback
@@ -220,18 +221,19 @@ export class GraphVisualizer extends Component<
     }
   }
 
-  onItemMouseOver(item: VizItem): void {
+  onItemMouseOver(item: VItem): void {
+    console.log('item', item)
     this.setHoveredItem(item)
   }
 
   mounted = true
-  setHoveredItem = debounce((hoveredItem: VizItem) => {
+  setHoveredItem = debounce((hoveredItem: VItem) => {
     if (this.mounted) {
       this.setState({ hoveredItem })
     }
   }, 200)
 
-  onItemSelect(selectedItem: VizItem): void {
+  onItemSelect(selectedItem: VItem): void {
     this.setState({ selectedItem })
   }
 
@@ -244,6 +246,7 @@ export class GraphVisualizer extends Component<
 
   componentDidUpdate(prevProps: GraphVisualizerProps): void {
     if (!deepEquals(prevProps.graphStyleData, this.props.graphStyleData)) {
+      console.log('comp should update')
       if (this.props.graphStyleData) {
         const rebasedStyle = deepmerge(
           this.defaultStyle,
@@ -275,27 +278,42 @@ export class GraphVisualizer extends Component<
       ? new GraphStyleModel()
       : this.state.graphStyle
 
+    const renderCanvas = true
+
     return (
       <StyledFullSizeContainer id="svg-vis">
-        <Graph
-          isFullscreen={this.props.isFullscreen}
-          relationships={this.state.relationships}
-          nodes={this.state.nodes}
-          getNodeNeighbours={this.getNodeNeighbours.bind(this)}
-          onItemMouseOver={this.onItemMouseOver.bind(this)}
-          onItemSelect={this.onItemSelect.bind(this)}
-          graphStyle={graphStyle}
-          styleVersion={this.state.styleVersion} // cheap way for child to check style updates
-          onGraphModelChange={this.onGraphModelChange.bind(this)}
-          assignVisElement={this.props.assignVisElement}
-          getAutoCompleteCallback={this.props.getAutoCompleteCallback}
-          setGraph={this.props.setGraph}
-          offset={
-            (this.state.nodePropertiesExpanded ? this.state.width : 0) + 8
-          }
-          wheelZoomInfoMessageEnabled={this.props.wheelZoomInfoMessageEnabled}
-          disableWheelZoomInfoMessage={this.props.disableWheelZoomInfoMessage}
-        />
+        {renderCanvas ? (
+          <GraphCanvas
+            nodes={this.state.nodes}
+            relationships={this.state.relationships}
+            styleVersion={this.state.styleVersion}
+            style={graphStyle}
+            setGraphModel={this.props.setGraph}
+            autoCompleteRelationships={this.props.getAutoCompleteCallback}
+            onItemMouseOver={this.onItemMouseOver.bind(this)}
+            onExpandNode={this.getNodeNeighbours.bind(this)}
+          />
+        ) : (
+          <Graph
+            isFullscreen={this.props.isFullscreen}
+            relationships={this.state.relationships}
+            nodes={this.state.nodes}
+            getNodeNeighbours={this.getNodeNeighbours.bind(this)}
+            onItemMouseOver={this.onItemMouseOver.bind(this)}
+            onItemSelect={this.onItemSelect.bind(this)}
+            graphStyle={graphStyle}
+            styleVersion={this.state.styleVersion} // cheap way for child to check style updates
+            onGraphModelChange={this.onGraphModelChange.bind(this)}
+            assignVisElement={this.props.assignVisElement}
+            getAutoCompleteCallback={this.props.getAutoCompleteCallback}
+            setGraph={this.props.setGraph}
+            offset={
+              (this.state.nodePropertiesExpanded ? this.state.width : 0) + 8
+            }
+            wheelZoomInfoMessageEnabled={this.props.wheelZoomInfoMessageEnabled}
+            disableWheelZoomInfoMessage={this.props.disableWheelZoomInfoMessage}
+          />
+        )}
         <NodeInspectorPanel
           graphStyle={graphStyle}
           hasTruncatedFields={this.props.hasTruncatedFields}

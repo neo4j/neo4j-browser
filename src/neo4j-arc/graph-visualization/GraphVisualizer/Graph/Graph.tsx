@@ -30,7 +30,7 @@ import {
 import { GraphModel } from '../../models/Graph'
 import { GraphEventHandlerModel } from './GraphEventHandlerModel'
 import { GraphStyleModel } from '../../models/GraphStyle'
-import { GetNodeNeighboursFn, VizItem, ZoomLimitsReached } from '../../types'
+import { ExpandNodeHandler, VItem, ZoomLimitsReached } from '../../types'
 import {
   GraphStats,
   createGraph,
@@ -45,9 +45,9 @@ export type GraphProps = {
   isFullscreen: boolean
   relationships: BasicRelationship[]
   nodes: BasicNode[]
-  getNodeNeighbours: GetNodeNeighboursFn
-  onItemMouseOver: (item: VizItem) => void
-  onItemSelect: (item: VizItem) => void
+  getNodeNeighbours: ExpandNodeHandler
+  onItemMouseOver: (item: VItem) => void
+  onItemSelect: (item: VItem) => void
   graphStyle: GraphStyleModel
   styleVersion: number
   onGraphModelChange: (stats: GraphStats) => void

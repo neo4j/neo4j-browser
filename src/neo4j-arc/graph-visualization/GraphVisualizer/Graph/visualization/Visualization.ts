@@ -192,7 +192,7 @@ export class Visualization {
   }
 
   private updateNodes() {
-    const nodes = this.graph.nodes()
+    const nodes = this.graph.getNodes()
     this.geometry.onGraphChange(this.graph, {
       updateNodes: true,
       updateRelationships: false
@@ -221,7 +221,7 @@ export class Visualization {
   }
 
   private updateRelationships() {
-    const relationships = this.graph.relationships()
+    const relationships = this.graph.getRelationships()
     this.geometry.onGraphChange(this.graph, {
       updateNodes: false,
       updateRelationships: true

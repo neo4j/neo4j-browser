@@ -19,9 +19,9 @@
  */
 import { NodeModel } from './models/Node'
 import { RelationshipModel } from './models/Relationship'
-import { BasicNode, BasicNodesAndRels } from 'neo4j-arc/common'
+import { BasicNode, BasicRelationship } from 'neo4j-arc/common'
 
-export type VizItem =
+export type VItem =
   | NodeItem
   | ContextMenuItem
   | RelationshipItem
@@ -71,8 +71,19 @@ export enum ZoomType {
   FIT = 'fit'
 }
 
-export type GetNodeNeighboursFn = (
+export type ExpandNodeHandler = (
   node: BasicNode | NodeModel,
   currentNeighbourIds: string[],
-  callback: (data: BasicNodesAndRels) => void
+  callback: (data: {
+    nodes: BasicNode[]
+    relationships: BasicRelationship[]
+  }) => void
+) => void
+
+export type GraphChangeType = 'init' | 'update' | 'expand' | 'collapse'
+
+export type GraphChangeHandler = (
+  nodes: NodeModel[],
+  relationships: RelationshipModel[],
+  type: GraphChangeType
 ) => void

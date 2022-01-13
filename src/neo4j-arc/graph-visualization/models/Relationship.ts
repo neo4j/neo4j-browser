@@ -17,33 +17,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { VizItemProperty } from 'neo4j-arc/common'
+import { SimulationLinkDatum } from 'd3-force'
+
 import { ArcArrow } from '../utils/ArcArrow'
 import { LoopArrow } from '../utils/LoopArrow'
 import { StraightArrow } from '../utils/StraightArrow'
+import GraphEntityModel from './GraphEntity'
 import { NodeModel } from './Node'
 
 export type RelationshipCaptionLayout = 'internal' | 'external'
-export class RelationshipModel {
-  id: string
-  propertyList: VizItemProperty[]
-  propertyMap: Record<string, string>
+export class RelationshipModel
+  extends GraphEntityModel
+  implements SimulationLinkDatum<NodeModel>
+{
   source: NodeModel
   target: NodeModel
   type: string
-  isNode = false
-  isRelationship = true
+  internal: boolean
 
   naturalAngle: number
   caption: string
   captionLength: number
   captionHeight: number
   captionLayout: RelationshipCaptionLayout
-  shortCaption: string | undefined
-  shortCaptionLength: number | undefined
+  shortCaption: string
+  shortCaptionLength: number
   selected: boolean
   centreDistance: number
-  internal: boolean | undefined
   arrow: ArcArrow | LoopArrow | StraightArrow | undefined
 
   constructor(
@@ -54,16 +54,12 @@ export class RelationshipModel {
     properties: Record<string, string>,
     propertyTypes: Record<string, string>
   ) {
-    this.id = id
+    super(id, properties, propertyTypes, false)
+
     this.source = source
     this.target = target
     this.type = type
-    this.propertyMap = properties
-    this.propertyList = Object.keys(this.propertyMap || {}).reduce(
-      (acc: VizItemProperty[], key) =>
-        acc.concat([{ key, type: propertyTypes[key], value: properties[key] }]),
-      []
-    )
+    this.internal = false
 
     this.selected = false
     // These values are overriden as part of the initial layouting of the graph
@@ -73,6 +69,8 @@ export class RelationshipModel {
     this.captionHeight = 0
     this.captionLayout = 'internal'
     this.centreDistance = 0
+    this.shortCaption = ''
+    this.shortCaptionLength = 0
   }
 
   toJSON(): Record<string, string> {

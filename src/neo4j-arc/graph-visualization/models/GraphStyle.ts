@@ -437,8 +437,8 @@ export class GraphStyleModel {
     this.loadRules()
   }
 
-  toSheet = () => {
-    const sheet: any = {}
+  toSheet = (): Record<string, Record<string, string>> => {
+    const sheet: Record<string, Record<string, string>> = {}
     this.rules.forEach((rule: StyleRule) => {
       sheet[rule.selector.toString()] = rule.props
     })

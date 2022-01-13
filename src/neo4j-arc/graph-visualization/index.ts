@@ -21,7 +21,7 @@
 export { GraphModel } from './models/Graph'
 export { GraphStyleModel, Selector } from './models/GraphStyle'
 
-export type { NodeItem, RelationshipItem, VizItem } from './types'
+export type { NodeItem, RelationshipItem, VItem } from './types'
 
 export type {
   GraphStats,

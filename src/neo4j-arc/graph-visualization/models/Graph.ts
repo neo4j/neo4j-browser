@@ -18,19 +18,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { NodeModel } from './Node'
+import NodePairModel from './NodePair'
 import { RelationshipModel } from './Relationship'
 
-type NodeMap = Record<string, string[]>
-function uniq<T>(list: T[]): T[] {
-  return [...new Set(list)]
-}
-
 export class GraphModel {
-  _nodes: NodeModel[]
-  _relationships: RelationshipModel[]
-  expandedNodeMap: NodeMap
-  nodeMap: Record<string, NodeModel>
-  relationshipMap: Record<string, RelationshipModel>
+  private _nodes: NodeModel[]
+  private _relationships: RelationshipModel[]
+  private _nodeMap: Record<string, NodeModel>
+  private _expandedNodeMap: Record<string, string[]>
+  private _relationshipMap: Record<string, RelationshipModel>
 
   constructor() {
     this.addNodes = this.addNodes.bind(this)
@@ -41,29 +37,29 @@ export class GraphModel {
     this.addRelationships = this.addRelationships.bind(this)
     this.addInternalRelationships = this.addInternalRelationships.bind(this)
     this.pruneInternalRelationships = this.pruneInternalRelationships.bind(this)
-    this.findNode = this.findNode.bind(this)
+    this.findNodeById = this.findNodeById.bind(this)
     this.findNodeNeighbourIds = this.findNodeNeighbourIds.bind(this)
-    this.findRelationship = this.findRelationship.bind(this)
+    this.findRelationshipById = this.findRelationshipById.bind(this)
     this.findAllRelationshipToNode = this.findAllRelationshipToNode.bind(this)
-    this.nodeMap = {}
-    this.expandedNodeMap = {}
     this._nodes = []
-    this.relationshipMap = {}
     this._relationships = []
+    this._nodeMap = {}
+    this._expandedNodeMap = {}
+    this._relationshipMap = {}
   }
 
-  nodes(): NodeModel[] {
+  getNodes(): NodeModel[] {
     return this._nodes
   }
 
-  relationships(): RelationshipModel[] {
+  getRelationships(): RelationshipModel[] {
     return this._relationships
   }
 
-  groupedRelationships(): NodePair[] {
-    const groups: Record<string, NodePair> = {}
+  groupedRelationships(): NodePairModel[] {
+    const groups: Record<string, NodePairModel> = {}
     for (const relationship of this._relationships) {
-      let nodePair = new NodePair(relationship.source, relationship.target)
+      let nodePair = new NodePairModel(relationship.source, relationship.target)
 
       nodePair =
         groups[nodePair.toString()] != null
@@ -80,81 +76,91 @@ export class GraphModel {
 
   addNodes(nodes: NodeModel[]): void {
     for (const node of nodes) {
-      if (this.findNode(node.id) == null) {
-        this.nodeMap[node.id] = node
+      if (!this.findNodeById(node.id)) {
+        this._nodeMap[node.id] = node
         this._nodes.push(node)
       }
     }
   }
 
   addExpandedNodes = (node: NodeModel, nodes: NodeModel[]): void => {
-    for (const eNode of Array.from(nodes)) {
-      if (this.findNode(eNode.id) == null) {
-        this.nodeMap[eNode.id] = eNode
-        this._nodes.push(eNode)
-        this.expandedNodeMap[node.id] = this.expandedNodeMap[node.id]
-          ? uniq(this.expandedNodeMap[node.id].concat([eNode.id]))
-          : [eNode.id]
+    for (const expandedNode of nodes) {
+      if (!this.findNodeById(expandedNode.id)) {
+        this._nodeMap[expandedNode.id] = expandedNode
+        this._nodes.push(expandedNode)
+        this._expandedNodeMap[node.id] = Array.from(
+          new Set(
+            (this._expandedNodeMap[node.id] ?? []).concat([expandedNode.id])
+          )
+        )
       }
     }
+    console.log(this._expandedNodeMap)
   }
 
   removeNode(node: NodeModel): void {
-    if (this.findNode(node.id) != null) {
-      delete this.nodeMap[node.id]
+    if (this.findNodeById(node.id)) {
+      delete this._nodeMap[node.id]
       this._nodes.splice(this._nodes.indexOf(node), 1)
     }
   }
 
-  collapseNode = (node: NodeModel): void => {
-    if (!this.expandedNodeMap[node.id]) {
-      return
+  collapseNode = (
+    node: NodeModel,
+    {
+      nodes,
+      relationships
+    }: { nodes: NodeModel[]; relationships: RelationshipModel[] }
+  ): { nodes: NodeModel[]; relationships: RelationshipModel[] } => {
+    if (!this._expandedNodeMap[node.id]) {
+      return { nodes, relationships }
     }
-    this.expandedNodeMap[node.id].forEach(id => {
-      const eNode = this.nodeMap[id]
-      this.collapseNode(eNode)
-      this.removeConnectedRelationships(eNode)
-      this.removeNode(eNode)
+    console.log(this._expandedNodeMap)
+    this._expandedNodeMap[node.id].forEach(id => {
+      const expandedNode = this._nodeMap[id]
+      nodes = nodes.concat([expandedNode])
+      relationships = relationships.concat(
+        this.findAllRelationshipToNode(expandedNode)
+      )
+      this.collapseNode(expandedNode, { nodes, relationships })
+      this.removeConnectedRelationships(expandedNode)
+      this.removeNode(expandedNode)
     })
-    this.expandedNodeMap[node.id] = []
+    this._expandedNodeMap[node.id] = []
+    return { nodes, relationships }
   }
 
   updateNode(node: NodeModel): void {
-    if (this.findNode(node.id) != null) {
+    if (this.findNodeById(node.id)) {
       this.removeNode(node)
       node.expanded = false
-      node.minified = true
       this.addNodes([node])
     }
   }
 
   removeConnectedRelationships(node: NodeModel): void {
-    for (const r of Array.from(this.findAllRelationshipToNode(node))) {
-      this.updateNode(r.source)
-      this.updateNode(r.target)
-      this._relationships.splice(this._relationships.indexOf(r), 1)
-      delete this.relationshipMap[r.id]
+    for (const relationship of this.findAllRelationshipToNode(node)) {
+      this.updateNode(relationship.source)
+      this.updateNode(relationship.target)
+      this._relationships.splice(this._relationships.indexOf(relationship), 1)
+      delete this._relationshipMap[relationship.id]
     }
   }
 
   addRelationships(relationships: RelationshipModel[]): void {
-    for (const relationship of Array.from(relationships)) {
-      const existingRelationship = this.findRelationship(relationship.id)
-      if (existingRelationship != null) {
-        existingRelationship.internal = false
-      } else {
-        relationship.internal = false
-        this.relationshipMap[relationship.id] = relationship
+    for (const relationship of relationships) {
+      if (!this.findRelationshipById(relationship.id)) {
+        this._relationshipMap[relationship.id] = relationship
         this._relationships.push(relationship)
       }
     }
   }
 
   addInternalRelationships(relationships: RelationshipModel[]): void {
-    for (const relationship of Array.from(relationships)) {
+    for (const relationship of relationships) {
       relationship.internal = true
-      if (this.findRelationship(relationship.id) == null) {
-        this.relationshipMap[relationship.id] = relationship
+      if (!this.findRelationshipById(relationship.id)) {
+        this._relationshipMap[relationship.id] = relationship
         this._relationships.push(relationship)
       }
     }
@@ -164,13 +170,13 @@ export class GraphModel {
     const relationships = this._relationships.filter(
       relationship => !relationship.internal
     )
-    this.relationshipMap = {}
+    this._relationshipMap = {}
     this._relationships = []
     this.addRelationships(relationships)
   }
 
-  findNode(id: string): NodeModel {
-    return this.nodeMap[id]
+  findNodeById(id: string): NodeModel | undefined {
+    return this._nodeMap[id]
   }
 
   findNodeNeighbourIds(id: string): string[] {
@@ -187,8 +193,8 @@ export class GraphModel {
       })
   }
 
-  findRelationship(id: string): RelationshipModel | undefined {
-    return this.relationshipMap[id]
+  findRelationshipById(id: string): RelationshipModel | undefined {
+    return this._relationshipMap[id]
   }
 
   findAllRelationshipToNode(node: NodeModel): RelationshipModel[] {
@@ -198,34 +204,45 @@ export class GraphModel {
     )
   }
 
-  resetGraph(): void {
-    this.nodeMap = {}
-    this._nodes = []
-    this.relationshipMap = {}
-    this._relationships = []
-  }
-}
+  private addNodePairToNodePairMap(
+    nodePairMap: Record<string, NodePairModel>,
+    relationship: RelationshipModel
+  ): void {
+    let nodePair = new NodePairModel(relationship.source, relationship.target)
 
-export class NodePair {
-  nodeA: NodeModel
-  nodeB: NodeModel
-  relationships: RelationshipModel[]
-  constructor(node1: NodeModel, node2: NodeModel) {
-    this.relationships = []
-    if (node1.id < node2.id) {
-      this.nodeA = node1
-      this.nodeB = node2
-    } else {
-      this.nodeA = node2
-      this.nodeB = node1
+    nodePair = nodePairMap[nodePair.toString()]
+      ? nodePairMap[nodePair.toString()]
+      : nodePair
+
+    nodePair.addRelationship(relationship)
+
+    nodePairMap[nodePair.toString()] = nodePair
+  }
+
+  getNodePairs(): NodePairModel[] {
+    const nodePairMap: Record<string, NodePairModel> = {}
+    for (const relationship of this._relationships) {
+      this.addNodePairToNodePairMap(nodePairMap, relationship)
     }
+
+    return Object.values(nodePairMap)
   }
 
-  isLoop(): boolean {
-    return this.nodeA === this.nodeB
+  getNodePairsByNodeId(id: string): NodePairModel[] {
+    const nodePairMap: Record<string, NodePairModel> = {}
+    for (const relationship of this._relationships.filter(
+      r => r.source.id === id || r.target.id === id
+    )) {
+      this.addNodePairToNodePairMap(nodePairMap, relationship)
+    }
+
+    return Object.values(nodePairMap)
   }
 
-  toString(): string {
-    return `${this.nodeA.id}:${this.nodeB.id}`
+  resetGraph(): void {
+    this._nodeMap = {}
+    this._nodes = []
+    this._relationshipMap = {}
+    this._relationships = []
   }
 }
