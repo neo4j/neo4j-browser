@@ -71,8 +71,11 @@ const layout: AvailableLayouts = {
         )
 
       const simulation = forceSimulation<VizNode, Relationship>()
-        .force('charge', forceManyBody().strength(-300))
-        .on('tick', () => render())
+        .force('charge', forceManyBody().strength(-400))
+        .on('tick', () => {
+          simulation.tick(10)
+          render()
+        })
         .stop()
 
       const update = function (

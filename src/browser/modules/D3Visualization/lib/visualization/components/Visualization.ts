@@ -118,11 +118,23 @@ const vizFn = function (
     return viz.trigger('relationshipClicked', relationship)
   }
 
-  const onNodeMouseOver = (_event: Event, node: VizNode) =>
-    viz.trigger('nodeMouseOver', node)
+  const onNodeMouseOver = (_event: Event, node: VizNode) => {
+    if (!node.fx && !node.fy) {
+      node.hoverFixed = true
+      node.fx = node.x
+      node.fy = node.y
+    }
+    return viz.trigger('nodeMouseOver', node)
+  }
 
-  const onNodeMouseOut = (_event: Event, node: VizNode) =>
-    viz.trigger('nodeMouseOut', node)
+  const onNodeMouseOut = (_event: Event, node: VizNode) => {
+    if (node.hoverFixed) {
+      node.hoverFixed = false
+      node.fx = null
+      node.fy = null
+    }
+    return viz.trigger('nodeMouseOut', node)
+  }
 
   const onRelMouseOver = (_event: Event, rel: Relationship) =>
     viz.trigger('relMouseOver', rel)
@@ -272,7 +284,7 @@ const vizFn = function (
     function dragHandler(simulation: Simulation<VizNode, Relationship>) {
       function dragstarted(event: D3DragEvent<SVGGElement, VizNode, any>) {
         clearSimulationTimeout()
-        if (!event.active) simulation.alphaTarget(0.3).restart()
+        if (!event.active) simulation.alphaTarget(0.3).alpha(1).restart()
       }
 
       function dragged(event: D3DragEvent<SVGGElement, VizNode, any>) {
