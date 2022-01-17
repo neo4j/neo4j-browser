@@ -16,18 +16,18 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
       >
         <svg
           class="neod3viz"
-          viewBox="0 100 200 0"
+          viewBox="0 0 0 0"
         >
           <g
             transform="translate(0,0)"
           >
             <rect
-              height="5000"
+              height="100%"
               style="fill: none; pointer-events: all;"
               transform="scale(1)"
-              width="5000"
-              x="-2500"
-              y="-2500"
+              width="100%"
+              x="0"
+              y="0"
             />
             <g>
               <g
@@ -38,7 +38,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
               >
                 <g
                   class="node"
-                  transform="translate(100,100)"
+                  transform="translate(0,0)"
                 >
                   <circle
                     class="ring"

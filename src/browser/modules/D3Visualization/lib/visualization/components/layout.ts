@@ -35,11 +35,7 @@ import Relationship from './Relationship'
 import VizNode from './VizNode'
 
 type ForceLayout = {
-  update: (
-    graph: Graph,
-    size: [number, number],
-    animate?: boolean
-  ) => Simulation<VizNode, Relationship>
+  update: (graph: Graph, animate?: boolean) => Simulation<VizNode, Relationship>
   simulation: Simulation<VizNode, Relationship>
 }
 export type Layout = { init: (render: () => void) => ForceLayout }
@@ -78,19 +74,15 @@ const layout: AvailableLayouts = {
         })
         .stop()
 
-      const update = function (
-        graph: Graph,
-        size: [number, number],
-        precompute = false
-      ) {
+      const update = function (graph: Graph, precompute = false) {
         clearSimulationTimeout()
         const nodes = cloneArray(graph.nodes())
         const relationships = oneRelationshipPerPairOfNodes(graph)
 
         const radius = (nodes.length * linkDistance) / (Math.PI * 2)
         const center = {
-          x: size[0] / 2,
-          y: size[1] / 2
+          x: 0,
+          y: 0
         }
         circularLayout(nodes, center, radius)
 

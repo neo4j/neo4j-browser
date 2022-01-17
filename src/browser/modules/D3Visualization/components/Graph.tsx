@@ -106,7 +106,7 @@ export class GraphComponent extends Component<GraphProps, GraphState> {
     if (!this.graphView) {
       const NeoConstructor = GraphView
       const measureSize = () => ({
-        width: this.svgElement.offsetWidth,
+        width: this.svgElement?.parentElement.clientWidth,
         height: this.svgElement?.parentElement.clientHeight
       })
       this.graph = createGraph(this.props.nodes, this.props.relationships)
