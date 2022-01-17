@@ -1,12 +1,17 @@
 import * as React from 'react'
 import styled from 'styled-components'
+
 import SetupLabelCompositeProperty from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelCompositeProperty'
+import SetupLabelTypeSelector from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelTypeSelector'
 
 interface IProps {
   propertyKeys: string[]
   selectedCaption?: string
   onChange: (value: string) => void
   showTypeSelector: boolean
+  typeList: string[]
+  handleTypeChange: (value: string) => void
+  currentType?: string
 }
 
 const ScrollDiv = styled.div`
@@ -63,7 +68,10 @@ const SetupLabelProperties: React.FC<IProps> = ({
   propertyKeys,
   selectedCaption,
   onChange,
-  showTypeSelector
+  showTypeSelector,
+  typeList,
+  handleTypeChange,
+  currentType
 }) => {
   const [tab, setTab] = React.useState(SetupLabelTabEnum.list)
   const items: Array<{
@@ -132,18 +140,37 @@ const SetupLabelProperties: React.FC<IProps> = ({
                 Display nothing
               </PropertyLabelSpan>
             </PropertyLabel>
-            {specialProperties.map(t => (
-              <PropertyLabel key={t}>
+            <PropertyLabel key={idSelectorValue}>
+              <PropertyRadio
+                type={'radio'}
+                name={inputName}
+                value={`{${idSelectorValue}}`}
+                checked={`{${idSelectorValue}}` === selectedCaption}
+                onChange={handleRadioInputChange}
+              />
+              <PropertyLabelSpan>{idSelectorValue}</PropertyLabelSpan>
+            </PropertyLabel>
+            {showTypeSelector && (
+              <PropertyLabel key={typeSelectorValue}>
                 <PropertyRadio
                   type={'radio'}
                   name={inputName}
-                  value={`{${t}}`}
-                  checked={`{${t}}` === selectedCaption}
+                  value={`{${typeSelectorValue}}`}
+                  checked={`{${typeSelectorValue}}` === selectedCaption}
                   onChange={handleRadioInputChange}
                 />
-                <PropertyLabelSpan>{t}</PropertyLabelSpan>
+                <PropertyLabelSpan>
+                  {typeSelectorValue}
+                  {typeList.length > 0 && (
+                    <SetupLabelTypeSelector
+                      typeList={typeList}
+                      handleTypeChange={handleTypeChange}
+                      currentType={currentType}
+                    />
+                  )}
+                </PropertyLabelSpan>
               </PropertyLabel>
-            ))}
+            )}
             {items.map(({ displayValue, captionToSave }) => (
               <PropertyLabel key={displayValue}>
                 <PropertyRadio

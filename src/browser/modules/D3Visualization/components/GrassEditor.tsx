@@ -229,7 +229,8 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
     styleForItem: any,
     propertyKeys: string[],
     showTypeSelector = false,
-    isNode = true
+    isNode = true,
+    typeList: string[] = []
   ) {
     return (
       <StyledInlineListItem key="label-picker">
@@ -239,6 +240,7 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
             itemStyleProps={styleForItem.props}
             propertyKeys={propertyKeys}
             showTypeSelector={showTypeSelector}
+            typeList={typeList}
             updateStyle={props => {
               if (props) {
                 const extraCaptionSettings = cloneDeep(props)
@@ -379,7 +381,9 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
           styleForLabel.selector,
           styleForLabel,
           propertyKeys,
-          true
+          true,
+          true,
+          getTypeListForNodes(this.props.nodes, labelList)
         ),
         this.colorTypePicker(styleForLabel),
         this.sizePicker(styleForLabel.selector, styleForLabel)
@@ -468,6 +472,24 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
     return this.stylePicker()
   }
 }
+
+function getTypeListForNodes(
+  nodes: GrassEditorProps['nodes'],
+  labels: string[]
+): string[] {
+  if (labels.length > 0) {
+    const typeListSet = new Set<string>([labels[0]])
+    nodes.forEach(node => {
+      if (node.labels.length > 1 && node.labels.includes(labels[0])) {
+        node.labels.forEach(l => typeListSet.add(l))
+      }
+    })
+    return Array.from(typeListSet).sort((a, _) => (a === labels[0] ? -1 : 1))
+  } else {
+    return []
+  }
+}
+
 const mapStateToProps = (state: GlobalState) => ({
   graphStyleData: actions.getGraphStyleData(state),
   meta: state.meta

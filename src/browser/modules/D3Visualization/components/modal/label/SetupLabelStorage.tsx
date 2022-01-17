@@ -1,14 +1,15 @@
+import { cloneDeep } from 'lodash-es'
 import * as React from 'react'
+
 import {
-  allLabelPositions,
   ICaptionSettings,
-  LabelPosition
+  LabelPosition,
+  allLabelPositions
 } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelModal'
+import SetupLabelModalBody from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelModalBody'
 import SetupLabelRelArrowSVG, {
   RelArrowCaptionPosition
 } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelRelArrowSVG'
-import { cloneDeep } from 'lodash-es'
-import SetupLabelModalBody from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelModalBody'
 
 const getInitialCaptionSettings: (props: {
   settings?: ICaptionSettings
@@ -74,10 +75,11 @@ export interface ISetupLabelStorageProps {
   updateStyle: (props?: Partial<ICaptionSettingsStore>) => void
   isNode: boolean
   doClose: () => void
+  typeList: string[]
 }
 
 const SetupLabelStorage: React.FC<ISetupLabelStorageProps> = props => {
-  const { itemStyleProps, isNode, updateStyle, doClose } = props
+  const { itemStyleProps, isNode, updateStyle, doClose, typeList } = props
   const { extraCaptionSettings } = itemStyleProps
   const itemStyle = itemStyleProps
   const [selectedRelPosition, setRelPosition] = React.useState(
@@ -86,31 +88,30 @@ const SetupLabelStorage: React.FC<ISetupLabelStorageProps> = props => {
   const currentRelPosition = isNode
     ? RelArrowCaptionPosition.center
     : selectedRelPosition
-  const [captionSettingsStore, setCaptionSettingsStore] = React.useState<
-    ICaptionSettingsStore
-  >({
-    [RelArrowCaptionPosition.center]: getInitialCaptionSettings({
-      settings: itemStyleProps.captionSettings,
-      template: itemStyle,
-      copyMiddleCaption: true
-    }),
-    [RelArrowCaptionPosition.startAbove]: getInitialCaptionSettings({
-      settings: extraCaptionSettings?.[RelArrowCaptionPosition.startAbove],
-      template: itemStyle
-    }),
-    [RelArrowCaptionPosition.startBelow]: getInitialCaptionSettings({
-      settings: extraCaptionSettings?.[RelArrowCaptionPosition.startBelow],
-      template: itemStyle
-    }),
-    [RelArrowCaptionPosition.endAbove]: getInitialCaptionSettings({
-      settings: extraCaptionSettings?.[RelArrowCaptionPosition.endAbove],
-      template: itemStyle
-    }),
-    [RelArrowCaptionPosition.endBelow]: getInitialCaptionSettings({
-      settings: extraCaptionSettings?.[RelArrowCaptionPosition.endBelow],
-      template: itemStyle
+  const [captionSettingsStore, setCaptionSettingsStore] =
+    React.useState<ICaptionSettingsStore>({
+      [RelArrowCaptionPosition.center]: getInitialCaptionSettings({
+        settings: itemStyleProps.captionSettings,
+        template: itemStyle,
+        copyMiddleCaption: true
+      }),
+      [RelArrowCaptionPosition.startAbove]: getInitialCaptionSettings({
+        settings: extraCaptionSettings?.[RelArrowCaptionPosition.startAbove],
+        template: itemStyle
+      }),
+      [RelArrowCaptionPosition.startBelow]: getInitialCaptionSettings({
+        settings: extraCaptionSettings?.[RelArrowCaptionPosition.startBelow],
+        template: itemStyle
+      }),
+      [RelArrowCaptionPosition.endAbove]: getInitialCaptionSettings({
+        settings: extraCaptionSettings?.[RelArrowCaptionPosition.endAbove],
+        template: itemStyle
+      }),
+      [RelArrowCaptionPosition.endBelow]: getInitialCaptionSettings({
+        settings: extraCaptionSettings?.[RelArrowCaptionPosition.endBelow],
+        template: itemStyle
+      })
     })
-  })
   const updateCaptionSettingsStore: (props: {
     position: LabelPosition
     key: string
@@ -135,7 +136,7 @@ const SetupLabelStorage: React.FC<ISetupLabelStorageProps> = props => {
     const keys = Object.keys(captionSettingsStore)
     for (const key of keys) {
       if (captionSettingsStore.hasOwnProperty(key)) {
-        const parsedKey = (key as unknown) as RelArrowCaptionPosition
+        const parsedKey = key as unknown as RelArrowCaptionPosition
         const value: ICaptionSettings = captionSettingsStore[parsedKey]
         if (
           allLabelPositions.some(
@@ -167,6 +168,7 @@ const SetupLabelStorage: React.FC<ISetupLabelStorageProps> = props => {
       <SetupLabelModalBody
         doClose={doClose}
         selector={props.selector}
+        typeList={typeList}
         captionSettings={captionSettingsStore[currentRelPosition]}
         propertyKeys={props.propertyKeys}
         showTypeSelector={props.showTypeSelector}

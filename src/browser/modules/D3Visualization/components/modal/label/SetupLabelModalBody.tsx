@@ -1,25 +1,26 @@
-import * as React from 'react'
 import { cloneDeep } from 'lodash-es'
+import * as React from 'react'
+import styled from 'styled-components'
+
 import SetupLabelDisplaySettings, {
-  includePropertyNameKey,
-  ISetupLabelDisplaySettingsOnChange
+  ISetupLabelDisplaySettingsOnChange,
+  includePropertyNameKey
 } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelDisplaySettings'
+import {
+  ICaptionSettings,
+  LabelPosition,
+  allLabelPositions
+} from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelModal'
+import SetupLabelPreviewLabel from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelPreviewLabel'
 import SetupLabelProperties, {
   idSelectorValue,
   typeSelectorValue
 } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelProperties'
+import { ISetupLabelStorageProps } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelStorage'
 import {
   ApplyButton,
   SimpleButton
 } from 'project-root/src/browser/modules/D3Visualization/components/modal/styled'
-import {
-  allLabelPositions,
-  ICaptionSettings,
-  LabelPosition
-} from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelModal'
-import { ISetupLabelStorageProps } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelStorage'
-import SetupLabelPreviewLabel from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelPreviewLabel'
-import styled from 'styled-components'
 
 const PreviewNodeContainer = styled.div<{
   backgroundColor?: string
@@ -65,6 +66,7 @@ interface ISetupLabelModalProps
   captionSettings: ICaptionSettings
   onUpdate: IUpdateCaptionSettingsStoreFn
 }
+export const PREFERRED_LABEL_KEY = 'preferred-label'
 const SetupLabelModalBody: React.FC<ISetupLabelModalProps> = props => {
   const {
     selector,
@@ -75,7 +77,8 @@ const SetupLabelModalBody: React.FC<ISetupLabelModalProps> = props => {
     doClose,
     onUpdate,
     showTypeSelector,
-    isNode
+    isNode,
+    typeList
   } = props
 
   const [selectedLabel, setSelectedLabel] = React.useState(LabelPosition.middle)
@@ -102,16 +105,27 @@ const SetupLabelModalBody: React.FC<ISetupLabelModalProps> = props => {
     [selectedLabel, onUpdate]
   )
 
-  const handleDisplaySettingsChange: ISetupLabelDisplaySettingsOnChange = React.useCallback(
-    ({ key, value }) => {
+  const handleTypeChange = React.useCallback(
+    (value: string) =>
       onUpdate({
         position: selectedLabel,
-        key,
+        key: PREFERRED_LABEL_KEY,
         value
-      })
-    },
+      }),
     [selectedLabel, onUpdate]
   )
+
+  const handleDisplaySettingsChange: ISetupLabelDisplaySettingsOnChange =
+    React.useCallback(
+      ({ key, value }) => {
+        onUpdate({
+          position: selectedLabel,
+          key,
+          value
+        })
+      },
+      [selectedLabel, onUpdate]
+    )
   const labelsNodes = allLabelPositions.map(position => (
     <SetupLabelPreviewLabel
       onClick={setSelectedLabel}
@@ -175,6 +189,9 @@ const SetupLabelModalBody: React.FC<ISetupLabelModalProps> = props => {
         propertyKeys={propertyKeys}
         selectedCaption={currentCaption}
         onChange={handleRadioInputChange}
+        typeList={typeList}
+        handleTypeChange={handleTypeChange}
+        currentType={captionSettings[selectedLabel][PREFERRED_LABEL_KEY]}
       />
       <MarginContainer>
         <ApplyButton onClick={onSubmit}>Apply</ApplyButton>

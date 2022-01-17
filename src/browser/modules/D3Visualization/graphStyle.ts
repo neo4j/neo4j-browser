@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { PREFERRED_LABEL_KEY } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelModalBody'
 import {
   selectorArrayToString,
   selectorStringToArray
@@ -334,7 +335,6 @@ export class GraphStyle {
         if (rule.props.hasOwnProperty('caption')) {
           defaultCaption = false
         }
-        item.preferedLabel = rule.selector.classes[0]
       }
     }
     const minimalSelector = new Selector(
@@ -486,7 +486,7 @@ export class GraphStyle {
     return DEFAULT_COLORS
   }
 
-  interpolate = (str: string, item: any) => {
+  interpolate = (str: string, item: any, style?: any) => {
     str = str.replace(/{(<id>|<type>)}/g, (_, b) => b)
     let ips: string = str.replace(/\{([^{}]*)\}/g, (_a, b) => {
       const r = item.propertyMap[b]
@@ -506,7 +506,15 @@ export class GraphStyle {
     }
     return ips.replace(/<(id|type)>/g, (_a, b) => {
       if (item.isNode && b === 'type') {
-        return item.preferedLabel ?? item.labels[0] ?? ''
+        if (style && style[PREFERRED_LABEL_KEY]) {
+          return (
+            item.labels.find((t: string) => t === style[PREFERRED_LABEL_KEY]) ??
+            item.labels[0] ??
+            ''
+          )
+        } else {
+          return item.labels[0] ?? ''
+        }
       }
       const r = item[b]
       if (typeof r === 'string' || typeof r === 'number') {
