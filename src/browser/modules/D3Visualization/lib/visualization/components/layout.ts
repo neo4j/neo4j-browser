@@ -19,7 +19,6 @@
  */
 import {
   Simulation,
-  forceCenter,
   forceCollide,
   forceLink,
   forceManyBody,
@@ -68,6 +67,7 @@ const layout: AvailableLayouts = {
 
       const simulation = forceSimulation<VizNode, Relationship>()
         .force('charge', forceManyBody().strength(-400))
+        .velocityDecay(0.06)
         .on('tick', () => {
           simulation.tick(10)
           render()
@@ -100,10 +100,9 @@ const layout: AvailableLayouts = {
                 relationship =>
                   relationship.source.radius +
                   relationship.target.radius +
-                  linkDistance
+                  linkDistance * 2
               )
           )
-          .force('center', forceCenter(center.x, center.y))
           .force('centerX', forceX<VizNode>(center.x).strength(0.03))
           .force('centerY', forceY<VizNode>(center.y).strength(0.03))
 
@@ -113,7 +112,7 @@ const layout: AvailableLayouts = {
           simulation.tick(SIMULATION_STARTING_TICKS)
           render()
         } else {
-          simulation.alpha(1).alphaDecay(0.08).alphaTarget(0.3).restart()
+          simulation.alpha(1).restart()
           setSimulationTimeout(simulation)
         }
 
