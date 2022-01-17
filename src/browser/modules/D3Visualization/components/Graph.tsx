@@ -158,11 +158,6 @@ export class GraphComponent extends Component<GraphProps, GraphState> {
     }
     if (this.props.isFullscreen !== prevProps.isFullscreen) {
       this.graphView?.resize()
-      this.graphView?.update({
-        updateNodes: true,
-        updateRelationships: true,
-        precompute: true
-      })
     }
   }
 
