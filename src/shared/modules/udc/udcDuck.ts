@@ -43,6 +43,7 @@ import {
   UNPIN
 } from 'shared/modules/frames/framesDuck'
 import {
+  SettingsState,
   TRACK_OPT_OUT_CRASH_REPORTS,
   TRACK_OPT_OUT_USER_STATS,
   getSettings
@@ -181,8 +182,7 @@ export const udcStartupEpic: Epic<Action, GlobalState> = (action$, store) =>
       }
 
       const settings = getSettings(store.getState())
-      const nonSensitiveSettings = [
-        'cmdchar',
+      const nonSensitiveSettings: Array<keyof SettingsState> = [
         'maxHistory',
         'theme',
         'playImplicitInitCommands',

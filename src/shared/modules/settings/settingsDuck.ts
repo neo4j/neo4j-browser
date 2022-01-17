@@ -17,8 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { get } from 'lodash-es'
-
 import { GlobalState } from 'shared/globalState'
 import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
 
@@ -38,7 +36,7 @@ export const DARK_THEME = 'dark'
 
 export const NEO4J_CLOUD_DOMAINS = ['neo4j.io']
 
-export const getSettings = (state: any) => state[NAME]
+export const getSettings = (state: any): SettingsState => state[NAME]
 export const getMaxHistory = (state: any) =>
   state[NAME].maxHistory || initialState.maxHistory
 export const getInitCmd = (state: any) => (state[NAME].initCmd || '').trim()
@@ -52,15 +50,18 @@ export const getBrowserSyncConfig = (
   host = getSettings(state).browserSyncDebugServer
 ) => browserSyncConfig(host || undefined)
 export const getMaxNeighbours = (state: GlobalState): number =>
-  state[NAME].maxNeighbours || initialState.maxNeighbours
+  parseInt(state[NAME].maxNeighbours ?? initialState.maxNeighbours, 10)
 export const getMaxRows = (state: GlobalState): number =>
-  state[NAME].maxRows || initialState.maxRows
+  parseInt(state[NAME].maxRows ?? initialState.maxRows, 10)
 export const getMaxFieldItems = (state: GlobalState): number =>
-  get(state, [NAME, 'maxFieldItems'], initialState.maxFieldItems)
+  parseInt(state[NAME].maxFieldItems ?? initialState.maxFieldItems, 10)
 export const getMaxFrames = (state: GlobalState): number =>
-  state[NAME].maxFrames
+  parseInt(state[NAME].maxFrames ?? initialState.maxFrames, 10)
 export const getInitialNodeDisplay = (state: GlobalState): number =>
-  state[NAME].initialNodeDisplay || initialState.initialNodeDisplay
+  parseInt(
+    state[NAME].initialNodeDisplay ?? initialState.initialNodeDisplay,
+    10
+  )
 export const getScrollToTop = (state: any) => state[NAME].scrollToTop
 export const shouldAutoComplete = (state: any) =>
   state[NAME].autoComplete !== false
@@ -91,26 +92,56 @@ export const getAllowCrashReports = (state: GlobalState): boolean =>
 export const getAllowUserStats = (state: GlobalState): boolean =>
   state[NAME].allowUserStats ?? initialState.allowUserStats
 
-export const initialState = {
-  maxHistory: 30,
+// The some of these strings should be numbers but are sent to redux as strings
+export type SettingsState = {
+  maxHistory: string
+  theme:
+    | typeof AUTO_THEME
+    | typeof LIGHT_THEME
+    | typeof OUTLINE_THEME
+    | typeof DARK_THEME
+  initCmd: string
+  playImplicitInitCommands: boolean
+  initialNodeDisplay: string
+  maxNeighbours: string
+  showSampleScripts: boolean
+  browserSyncDebugServer: any
+  maxRows: string
+  maxFieldItems: string
+  autoComplete: boolean
+  scrollToTop: boolean
+  maxFrames: string
+  codeFontLigatures: boolean
+  useBoltRouting: boolean
+  editorLint: boolean
+  useCypherThread: boolean
+  enableMultiStatementMode: boolean
+  connectionTimeout: string
+  showPerformanceOverlay: boolean
+  allowCrashReports: boolean
+  allowUserStats: boolean
+}
+
+export const initialState: SettingsState = {
+  maxHistory: '30',
   theme: AUTO_THEME,
   initCmd: ':play start',
   playImplicitInitCommands: true,
-  initialNodeDisplay: 300,
-  maxNeighbours: 100,
+  initialNodeDisplay: '300',
+  maxNeighbours: '100',
   showSampleScripts: true,
   browserSyncDebugServer: null,
-  maxRows: 1000,
-  maxFieldItems: 500,
+  maxRows: '1000',
+  maxFieldItems: '500',
   autoComplete: true,
   scrollToTop: true,
-  maxFrames: 15,
+  maxFrames: '15',
   codeFontLigatures: true,
   useBoltRouting: false,
   editorLint: false,
   useCypherThread: true,
   enableMultiStatementMode: true,
-  connectionTimeout: 30 * 1000, // 30 seconds
+  connectionTimeout: (30 * 1000).toString(), // 30 seconds
   showPerformanceOverlay: false,
   allowCrashReports: true,
   allowUserStats: true
@@ -139,14 +170,14 @@ export default function settings(state = initialState, action: any) {
   }
 }
 
-export const update = (settings: any) => {
+export const update = (settings: Partial<SettingsState>) => {
   return {
     type: UPDATE,
     state: settings
   }
 }
 
-export const replace = (settings: any) => {
+export const replace = (settings: Partial<SettingsState>) => {
   return {
     type: REPLACE,
     state: settings

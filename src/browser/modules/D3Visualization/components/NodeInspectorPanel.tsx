@@ -94,6 +94,9 @@ export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
                       ? shownEl.item.relationshipCount
                       : null
                   }
+                  infoMessage={
+                    shownEl.type === 'status-item' ? shownEl.item : null
+                  }
                 />
               )}
             </PaneContainer>

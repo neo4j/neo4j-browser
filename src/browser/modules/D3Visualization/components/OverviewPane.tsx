@@ -64,6 +64,7 @@ type OverviewPaneProps = {
   nodeCount: number | null
   relationshipCount: number | null
   stats: GraphStats
+  infoMessage: string | null
 }
 
 export const OVERVIEW_STEP_SIZE = 50
@@ -73,7 +74,8 @@ function OverviewPane({
   hasTruncatedFields,
   nodeCount,
   relationshipCount,
-  stats
+  stats,
+  infoMessage
 }: OverviewPaneProps): JSX.Element {
   const [maxLabelsCount, setMaxLabelsCount] = useState(OVERVIEW_STEP_SIZE)
   const [maxRelationshipsCount, setMaxRelationshipsCount] =
@@ -162,6 +164,12 @@ function OverviewPane({
             <StyledTruncatedMessage>
               <Icon name="warning sign" /> Record fields have been
               truncated.&nbsp;
+            </StyledTruncatedMessage>
+          )}
+          {infoMessage && (
+            <StyledTruncatedMessage>
+              <Icon name="warning sign" />
+              {infoMessage}&nbsp;
             </StyledTruncatedMessage>
           )}
           {nodeCount !== null &&
