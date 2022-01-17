@@ -80,11 +80,11 @@ const vizFn = function (
     .append('rect')
     .style('fill', 'none')
     .style('pointer-events', 'all')
-    // Make the rect cover the whole surface
-    .attr('x', '-2500')
-    .attr('y', '-2500')
-    .attr('width', '5000')
-    .attr('height', '5000')
+    // Make the rect cover the whole surface, center of the svg viewbox is in (0,0)
+    .attr('x', () => -Math.floor(measureSize().width / 2))
+    .attr('y', () => -Math.floor(measureSize().height / 2))
+    .attr('width', '100%')
+    .attr('height', '100%')
     .attr('transform', 'scale(1)')
 
   const container = baseGroup.append('g')
@@ -93,10 +93,6 @@ const vizFn = function (
   // This flags that a panning is ongoing and won't trigger
   // 'canvasClick' event when panning ends.
   let draw = false
-
-  // Arbitrary dimension used to keep force layout aligned with
-  // the centre of the svg view-port.
-  const layoutDimension = 200
 
   let updateViz = true
   let isZoomClick = false
@@ -325,11 +321,7 @@ const vizFn = function (
     }
 
     if (updateViz) {
-      force.update(
-        graph,
-        [layoutDimension, layoutDimension],
-        options.precompute
-      )
+      force.update(graph, options.precompute)
 
       viz.resize()
       viz.trigger('updated')
@@ -340,12 +332,15 @@ const vizFn = function (
 
   viz.resize = function () {
     const size = measureSize()
-    return root.attr(
+    rect
+      .attr('x', () => -Math.floor(size.width / 2))
+      .attr('y', () => -Math.floor(size.height / 2))
+    root.attr(
       'viewBox',
       [
-        0,
-        (layoutDimension - size.height) / 2,
-        layoutDimension,
+        -Math.floor(size.width / 2),
+        -Math.floor(size.height / 2),
+        size.width,
         size.height
       ].join(' ')
     )
