@@ -1,5 +1,6 @@
-import styled from 'styled-components'
 import React, { useState } from 'react'
+import styled from 'styled-components'
+
 import { CopyIcon } from './icons/Icons'
 
 type ClipboardCopierProps = {
@@ -9,7 +10,7 @@ type ClipboardCopierProps = {
 }
 function ClipboardCopier({
   textToCopy: text,
-  iconSize = 20,
+  iconSize = 16,
   titleText = 'Copy to clipboard'
 }: ClipboardCopierProps): JSX.Element {
   const [messageToShow, setMessageToShow] = useState<string | null>(null)

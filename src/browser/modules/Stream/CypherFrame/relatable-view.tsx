@@ -14,37 +14,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-import React, { useMemo } from 'react'
-import { isInt, QueryResult, Record } from 'neo4j-driver'
 import Relatable from '@relate-by-ui/relatable'
 import { get, head, map, slice } from 'lodash-es'
-import { Icon } from 'semantic-ui-react'
+import { QueryResult, Record, isInt } from 'neo4j-driver'
+import React, { useMemo } from 'react'
 import { connect } from 'react-redux'
+import { Icon } from 'semantic-ui-react'
 
+import ClickableUrls from '../../../components/ClickableUrls'
+import ClipboardCopier from '../../../components/ClipboardCopier'
+import Ellipsis from '../../../components/Ellipsis'
+import { StyledStatsBar, StyledTruncatedMessage } from '../styled'
 import {
   getBodyAndStatusBarMessages,
   resultHasTruncatedFields
 } from './helpers'
-import arrayHasItems from 'shared/utils/array-has-items'
-import {
-  getMaxFieldItems,
-  getMaxRows
-} from 'shared/modules/settings/settingsDuck'
-import { stringModifier } from 'services/bolt/cypherTypesFormatting'
-import ClickableUrls from '../../../components/ClickableUrls'
-import ClipboardCopier from '../../../components/ClipboardCopier'
-import { StyledStatsBar, StyledTruncatedMessage } from '../styled'
-import Ellipsis from '../../../components/Ellipsis'
 import {
   CopyIconAbsolutePositioner,
   RelatableStyleWrapper,
   StyledJsonPre,
   StyledPreSpan
 } from './relatable-view.styled'
+import { BrowserRequestResult } from 'project-root/src/shared/modules/requests/requestsDuck'
+import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 import { stringifyMod, unescapeDoubleQuotesForDisplay } from 'services/utils'
 import { GlobalState } from 'shared/globalState'
-import { BrowserRequestResult } from 'project-root/src/shared/modules/requests/requestsDuck'
+import {
+  getMaxFieldItems,
+  getMaxRows
+} from 'shared/modules/settings/settingsDuck'
+import arrayHasItems from 'shared/utils/array-has-items'
 
 const RelatableView = connect((state: GlobalState) => ({
   maxRows: getMaxRows(state),
@@ -69,10 +68,10 @@ export function RelatableViewComponent({
     [result]
   )
 
-  const columns = useMemo(() => getColumns(records, Number(maxFieldItems)), [
-    records,
-    maxFieldItems
-  ])
+  const columns = useMemo(
+    () => getColumns(records, Number(maxFieldItems)),
+    [records, maxFieldItems]
+  )
   const data = useMemo(() => slice(records, 0, maxRows), [records, maxRows])
 
   if (!arrayHasItems(columns)) {
