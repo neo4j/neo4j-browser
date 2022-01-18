@@ -92,6 +92,15 @@ const SetupLabelProperties: React.FC<IProps> = ({
     },
     [onChange]
   )
+  const handleTypeInputChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      onChange(e.target.value)
+      if (typeList.length > 0) {
+        handleTypeChange(currentType ?? typeList[0])
+      }
+    },
+    [onChange, typeList, currentType, handleTypeChange]
+  )
   const handleCompositeFieldSelect = React.useCallback(
     (value: string) => {
       onChange(value)
@@ -157,7 +166,7 @@ const SetupLabelProperties: React.FC<IProps> = ({
                   name={inputName}
                   value={`{${typeSelectorValue}}`}
                   checked={`{${typeSelectorValue}}` === selectedCaption}
-                  onChange={handleRadioInputChange}
+                  onChange={handleTypeInputChange}
                 />
                 <PropertyLabelSpan>
                   {typeSelectorValue}
