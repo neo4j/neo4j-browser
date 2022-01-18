@@ -47,8 +47,8 @@ const getSelectedNode = (node: VizNode) => (node.selected ? [node] : [])
 const attachContextEvent = (
   eventType: string,
   elements: [
-    Selection<SVGPathElement, VizNode, BaseType, VizNode>,
-    Selection<SVGGElement, VizNode, BaseType, VizNode>
+    Selection<BaseType | SVGPathElement, VizNode, BaseType, VizNode>,
+    Selection<BaseType | SVGGElement, VizNode, BaseType, VizNode>
   ],
   viz: VizObj,
   content: string,
@@ -88,14 +88,10 @@ const createMenuItem = function (
   svgIconKey: 'Expand / Collapse' | 'Unlock' | 'Remove',
   tooltip: string
 ) {
-  const path = selection.selectAll(`path.${className}`).data(getSelectedNode)
-  const iconPath = selection
-    .selectAll(`.icon.${className}`)
+  const tab = selection
+    .selectAll(`path.${className}`)
     .data(getSelectedNode)
-
-  const tab = path
-    .enter()
-    .append('path')
+    .join('path')
     .classed(className, true)
     .classed('context-menu-item', true)
     .attr('d', node => {
@@ -109,9 +105,10 @@ const createMenuItem = function (
       .documentElement.firstChild as HTMLElement,
     true
   )
-  const icon = iconPath
-    .enter()
-    .append('g')
+  const icon = selection
+    .selectAll(`.icon.${className}`)
+    .data(getSelectedNode)
+    .join('g')
     .html(svgIcon.innerHTML)
     .classed('icon', true)
     .classed(className, true)
@@ -140,8 +137,7 @@ const createMenuItem = function (
       // @ts-expect-error Expected 1-2 arguments, but got 0.ts(2554)
       return drawArc(node.radius, itemIndex)()
     })
-
-  path
+    .selection()
     .exit<VizNode>()
     .transition()
     .duration(200)
@@ -151,7 +147,7 @@ const createMenuItem = function (
     })
     .remove()
 
-  return iconPath.exit().remove()
+  return icon
 }
 
 const donutRemoveNode = new Renderer<VizNode>({

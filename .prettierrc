@@ -5,11 +5,11 @@
   "printWidth": 80,
   "semi": false,
   "trailingComma": "none",
-  "jsxBracketSameLine": false,
   "arrowParens": "avoid",
   "jsxSingleQuote": false,
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,
+  "importOrderParserPlugins": ["typescript"],
   "importOrder": [
     "^browser/(.*)$|^project-root/(.*)$|^browser-(.*)$|^shared/(.*)$|^services/(.*)$|^icons/(.*)$|^[./]"
   ]

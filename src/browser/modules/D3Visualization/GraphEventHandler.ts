@@ -105,6 +105,7 @@ export class GraphEventHandler {
     if (!node) {
       return
     }
+    node.hoverFixed = false
     node.fx = node.x
     node.fy = node.y
     if (!node.selected) {

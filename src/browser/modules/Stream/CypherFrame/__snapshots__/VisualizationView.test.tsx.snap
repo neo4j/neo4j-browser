@@ -38,7 +38,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
               >
                 <g
                   class="node"
-                  transform="translate(0,0)"
+                  transform="translate(0,0.030003732090589447)"
                 >
                   <circle
                     class="ring"

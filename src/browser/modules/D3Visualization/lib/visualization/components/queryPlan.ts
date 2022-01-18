@@ -17,7 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import d3 from 'd3'
+// d3-color and d3-scale are used only in this file
+import { hsl, rgb } from 'd3-color'
+import { easeQuadIn } from 'd3-ease'
+import { scaleLog, scaleOrdinal } from 'd3-scale'
+import { BaseType, Selection, select as d3Select } from 'd3-selection'
+import 'd3-transition'
+
+import { groupBy, max, min, sum } from '../utils/arrays'
 import measureText from '../utils/textMeasurement'
 
 function queryPlan(this: any, element: any) {
@@ -63,16 +70,15 @@ function queryPlan(this: any, element: any) {
 
   const augment = (color: any) => ({
     color,
-    'border-color': d3.rgb(color).darker(),
-    'text-color-internal': d3.hsl(color).l < 0.7 ? '#FFFFFF' : '#000000'
+    'border-color': rgb(color).darker(),
+    'text-color-internal': hsl(color).l < 0.7 ? '#FFFFFF' : '#000000'
   })
 
-  const colors = d3.scale
-    .ordinal()
-    .domain(d3.keys(operatorCategories))
+  const colors = scaleOrdinal()
+    .domain(Object.keys(operatorCategories))
     .range(operatorColors)
 
-  const color = function(d: any) {
+  const color = function (d: any) {
     for (const name in operatorCategories) {
       const keywords = operatorCategories[name]
       for (const keyword of Array.from(keywords)) {
@@ -84,7 +90,7 @@ function queryPlan(this: any, element: any) {
     return augment(colors('other'))
   }
 
-  const rows = function(operator: any) {
+  const rows = function (operator: any) {
     let left
     return (left =
       operator.Rows != null ? operator.Rows : operator.EstimatedRows) != null
@@ -92,7 +98,7 @@ function queryPlan(this: any, element: any) {
       : 0
   }
 
-  const plural = function(noun: string, count: number) {
+  const plural = function (noun: string, count: number) {
     if (count === 1) {
       return noun
     } else {
@@ -100,9 +106,10 @@ function queryPlan(this: any, element: any) {
     }
   }
 
-  const formatNumber = d3.format(',.0f')
+  const formatNumber = (n: number) =>
+    Number(n).toLocaleString(undefined, { maximumFractionDigits: 0 })
 
-  const operatorDetails = function(operator: any): any {
+  const operatorDetails = function (operator: any): any {
     let expression, identifiers, index, left, left1
     if (!operator.expanded) {
       return []
@@ -115,7 +122,7 @@ function queryPlan(this: any, element: any) {
       y?: number
     }[] = []
 
-    const wordWrap = function(string: string, className: string) {
+    const wordWrap = function (string: string, className: string) {
       const canvas = document.createElement('canvas')
       const canvas2DContext = canvas.getContext('2d')
       const measure = (text: string) =>
@@ -254,16 +261,16 @@ function queryPlan(this: any, element: any) {
     return details
   }
 
-  const transform = function(queryPlan: any) {
-    const operators: any = []
-    const links: any = []
+  const transform = function (queryPlan: any) {
+    const operators: Array<any> = []
+    const links: Array<any> = []
 
     const result = {
       operatorType: 'Result',
       children: [queryPlan.root]
     }
 
-    const collectLinks = function(operator: any, rank: any) {
+    const collectLinks = function (operator: any, rank: number) {
       operators.push(operator)
       operator.rank = rank
       for (const child of Array.from(operator.children)) {
@@ -281,14 +288,13 @@ function queryPlan(this: any, element: any) {
     return [operators, links]
   }
 
-  const layout = function(operators: any[], links: any[]) {
-    const costHeight = (function() {
-      const scale = d3.scale
-        .log()
+  const layout = function (operators: any[], links: any[]) {
+    const costHeight = (function () {
+      const scale = scaleLog()
         .domain([
           1,
           Math.max(
-            d3.max(operators, (operator: any) => operator.DbHits || 0),
+            max(operators, (operator: any) => operator.DbHits || 0),
             maxComparableDbHits
           )
         ])
@@ -297,7 +303,7 @@ function queryPlan(this: any, element: any) {
         scale((operator.DbHits != null ? operator.DbHits : 0) + 1)
     })()
 
-    const operatorHeight = function(operator: any) {
+    const operatorHeight = function (operator: any) {
       let height = operatorHeaderHeight
       if (operator.expanded) {
         height += operatorDetails(operator).slice(-1)[0].y + operatorPadding * 2
@@ -306,13 +312,12 @@ function queryPlan(this: any, element: any) {
       return height
     }
 
-    const linkWidth = (function() {
-      const scale = d3.scale
-        .log()
+    const linkWidth = (function () {
+      const scale = scaleLog()
         .domain([
           1,
           Math.max(
-            d3.max(operators, (operator: any) => rows(operator) + 1),
+            max(operators, (operator: any) => rows(operator) + 1),
             maxComparableRows
           )
         ])
@@ -329,7 +334,7 @@ function queryPlan(this: any, element: any) {
       if (operator.costHeight > operatorDetailHeight + operatorPadding) {
         operator.alwaysShowCost = true
       }
-      const childrenWidth = d3.sum(operator.children, linkWidth)
+      const childrenWidth = sum(operator.children, linkWidth)
       let tx = (operatorWidth - childrenWidth) / 2
       for (const child of Array.from(operator.children)) {
         ;(child as any).tx = tx
@@ -341,33 +346,32 @@ function queryPlan(this: any, element: any) {
       link.width = linkWidth(link.source)
     }
 
-    const ranks = d3
-      .nest()
-      .key((operator: any) => operator.rank)
-      .entries(operators)
+    const ranks = groupBy(operators, operator => operator.rank)
 
     let currentY = 0
 
-    for (const rank of ranks) {
-      currentY -= d3.max(rank.values, operatorHeight) + rankMargin
-      for (const operator of rank.values) {
+    for (const rankValues of Object.values(ranks)) {
+      currentY -= max(rankValues, operatorHeight) + rankMargin
+      for (const operator of rankValues) {
         operator.x = 0
         operator.y = currentY
       }
     }
 
-    let width = d3.max(
-      ranks.map(rank => rank.values.length * (operatorWidth + operatorMargin))
+    let width = max(
+      Object.values(ranks).map(
+        rank => rank.length * (operatorWidth + operatorMargin)
+      )
     )
     const height = -currentY
 
     const collide = () => {
       const result = []
-      for (const rank of ranks) {
+      for (const rankValues of Object.values(ranks)) {
         let dx
         let item
         let x0 = 0
-        for (const operator of rank.values) {
+        for (const operator of rankValues) {
           dx = x0 - operator.x
           if (dx > 0) {
             operator.x += dx
@@ -377,13 +381,13 @@ function queryPlan(this: any, element: any) {
 
         dx = x0 - operatorMargin - width
         if (dx > 0) {
-          const lastOperator = rank.values[rank.values.length - 1]
+          const lastOperator = rankValues[rankValues.length - 1]
           x0 = lastOperator.x -= dx
 
           const item = []
-          for (let i = rank.values.length - 2; i >= 0; i--) {
+          for (let i = rankValues.length - 2; i >= 0; i--) {
             let item1
-            const operator = rank.values[i]
+            const operator = rankValues[i]
             dx = operator.x + operatorWidth + operatorMargin - x0
             if (dx > 0) {
               operator.x -= operatorWidth
@@ -402,14 +406,14 @@ function queryPlan(this: any, element: any) {
     const center = (operator: any) => operator.x + operatorWidth / 2
 
     const relaxUpwards = (alpha: number): void => {
-      for (const rank of ranks) {
-        for (const operator of rank.values) {
+      for (const rankValues of Object.values(ranks)) {
+        for (const operator of rankValues) {
           if (operator.children.length) {
             const x =
-              d3.sum(
+              sum(
                 operator.children,
                 (child: any) => linkWidth(child) * center(child)
-              ) / d3.sum(operator.children, linkWidth)
+              ) / sum(operator.children, linkWidth)
             operator.x += (x - center(operator)) * alpha
           }
         }
@@ -417,8 +421,8 @@ function queryPlan(this: any, element: any) {
     }
 
     const relaxDownwards = (alpha: number): void => {
-      for (const rank of ranks.slice().reverse()) {
-        for (const operator of rank.values) {
+      for (const rankValues of Object.values(ranks).reverse()) {
+        for (const operator of rankValues) {
           if (operator.parent) {
             operator.x += (center(operator.parent) - center(operator)) * alpha
           }
@@ -437,43 +441,46 @@ function queryPlan(this: any, element: any) {
       alpha *= 0.98
     }
 
-    width =
-      d3.max(operators, o => o.x) - d3.min(operators, o => o.x) + operatorWidth
+    width = max(operators, o => o.x) - min(operators, o => o.x) + operatorWidth
 
     return [width, height]
   }
 
-  const render = function(
+  const render = function (
     operators: any,
     links: any,
     width: number,
     height: number,
     redisplay: any
   ) {
-    const svg = d3.select(element)
-
-    svg
+    const svg = d3Select(element)
       .transition()
       .attr('width', width + margin * 2)
       .attr('height', height + margin * 2)
       .attr(
         'viewBox',
         [
-          d3.min(operators, (o: any) => o.x) - margin,
+          min(operators, (o: any): number => o.x) - margin,
           -margin - height,
           width + margin * 2,
           height + margin * 2
         ].join(' ')
       )
+      .selection()
 
-    const join = (parent: any, children: any): any[] => {
+    const join = (
+      parent: Selection<any, any, any, any>,
+      children: any
+    ): any[] => {
       const result = []
-      for (const child of d3.entries<any>(children)) {
+      for (const child of Object.entries(children)) {
+        const [key, value] = child as any
+
         let item
-        const selection = parent.selectAll(child.key).data(child.value.data)
-        child.value.selections(selection.enter(), selection, selection.exit())
-        if (child.value.children) {
-          item = join(selection, child.value.children)
+        let selection = parent.selectAll(key).data(value.data)
+        selection = value.selections(selection)
+        if (value.children) {
+          item = join(selection, value.children)
         }
         result.push(item)
       }
@@ -483,69 +490,71 @@ function queryPlan(this: any, element: any) {
     return join(svg, {
       'g.layer.links': {
         data: [links],
-        selections(enter: any) {
-          return enter.append('g').attr('class', 'layer links')
+        selections(selection: Selection<any, any, any, any>) {
+          return selection.join('g').attr('class', 'layer links')
         },
         children: {
           '.link': {
             data(d: any) {
               return d
             },
-            selections(enter: any) {
-              return enter.append('g').attr('class', 'link')
+            selections(selection: Selection<any, any, any, any>) {
+              return selection.join('g').attr('class', 'link')
             },
             children: {
               path: {
                 data(d: any) {
                   return [d]
                 },
-                selections(enter: any, update: any) {
-                  enter.append('path').attr('fill', linkColor)
+                selections(selection: Selection<any, any, any, any>) {
+                  return selection
+                    .join('path')
+                    .attr('fill', linkColor)
+                    .transition()
+                    .attr('d', (d: any) => {
+                      const width = Math.max(1, d.width)
+                      const sourceX = d.source.x + operatorWidth / 2
+                      const targetX = d.target.x + d.source.tx
 
-                  return update.transition().attr('d', (d: any) => {
-                    const width = Math.max(1, d.width)
-                    const sourceX = d.source.x + operatorWidth / 2
-                    const targetX = d.target.x + d.source.tx
+                      const sourceY = d.source.y + d.source.height
+                      const targetY = d.target.y
+                      const yi = (n: number) => sourceY * (1 - n) + targetY * n
 
-                    const sourceY = d.source.y + d.source.height
-                    const targetY = d.target.y
-                    const yi = d3.interpolateNumber(sourceY, targetY)
+                      const curvature = 0.5
+                      const control1 = yi(curvature)
+                      const control2 = yi(1 - curvature)
+                      let controlWidth = Math.min(
+                        width / Math.PI,
+                        (targetY - sourceY) / Math.PI
+                      )
+                      if (sourceX > targetX + width / 2) {
+                        controlWidth *= -1
+                      }
 
-                    const curvature = 0.5
-                    const control1 = yi(curvature)
-                    const control2 = yi(1 - curvature)
-                    let controlWidth = Math.min(
-                      width / Math.PI,
-                      (targetY - sourceY) / Math.PI
-                    )
-                    if (sourceX > targetX + width / 2) {
-                      controlWidth *= -1
-                    }
-
-                    return [
-                      'M',
-                      sourceX + width / 2,
-                      sourceY,
-                      'C',
-                      sourceX + width / 2,
-                      control1 - controlWidth,
-                      targetX + width,
-                      control2 - controlWidth,
-                      targetX + width,
-                      targetY,
-                      'L',
-                      targetX,
-                      targetY,
-                      'C',
-                      targetX,
-                      control2 + controlWidth,
-                      sourceX - width / 2,
-                      control1 + controlWidth,
-                      sourceX - width / 2,
-                      sourceY,
-                      'Z'
-                    ].join(' ')
-                  })
+                      return [
+                        'M',
+                        sourceX + width / 2,
+                        sourceY,
+                        'C',
+                        sourceX + width / 2,
+                        control1 - controlWidth,
+                        targetX + width,
+                        control2 - controlWidth,
+                        targetX + width,
+                        targetY,
+                        'L',
+                        targetX,
+                        targetY,
+                        'C',
+                        targetX,
+                        control2 + controlWidth,
+                        sourceX - width / 2,
+                        control1 + controlWidth,
+                        sourceX - width / 2,
+                        sourceY,
+                        'Z'
+                      ].join(' ')
+                    })
                 }
               },
 
@@ -578,19 +587,19 @@ function queryPlan(this: any, element: any) {
                     return []
                   }
                 },
-                selections(enter: any, update: any) {
-                  enter
-                    .append('text')
+                selections(
+                  selection: Selection<BaseType, unknown, BaseType, unknown>
+                ) {
+                  return selection
+                    .join('text')
                     .attr('font-size', detailFontSize)
                     .attr('font-family', standardFont)
                     .attr('fill', 'rgb(107, 174, 214)')
-
-                  return update
+                    .text((d: any) => d.text)
                     .transition()
                     .attr('x', (d: any) => d.x)
                     .attr('y', (d: any) => d.y)
                     .attr('text-anchor', (d: any) => d.anchor)
-                    .text((d: any) => d.text)
                 }
               }
             }
@@ -600,30 +609,37 @@ function queryPlan(this: any, element: any) {
 
       'g.layer.operators': {
         data: [operators],
-        selections(enter: any) {
-          return enter.append('g').attr('class', 'layer operators')
+        selections(selection: Selection<BaseType, unknown, BaseType, unknown>) {
+          return selection.join('g').attr('class', 'layer operators')
         },
         children: {
           '.operator': {
             data(d: any) {
               return d
             },
-            selections(enter: any, update: any) {
-              enter.append('g').attr('class', 'operator')
-
-              return update
+            selections(
+              selection: Selection<BaseType, unknown, BaseType, unknown>
+            ) {
+              return selection
+                .join('g')
+                .attr('class', 'operator')
                 .transition()
-                .attr('transform', (d: any) => `translate(${d.x},${d.y})`)
+                .attr('transform', (d: any) => {
+                  return `translate(${d.x},${d.y})`
+                })
+                .selection()
             },
             children: {
               'rect.background': {
                 data(d: any) {
                   return [d]
                 },
-                selections(enter: any, update: any) {
-                  enter.append('rect').attr('class', 'background')
-
-                  return update
+                selections(
+                  selection: Selection<BaseType, unknown, BaseType, unknown>
+                ) {
+                  return selection
+                    .join('rect')
+                    .attr('class', 'background')
                     .transition()
                     .attr('width', operatorWidth)
                     .attr('height', (d: any) => d.height)
@@ -638,12 +654,14 @@ function queryPlan(this: any, element: any) {
                 data(d: any) {
                   return [d]
                 },
-                selections(enter: any) {
-                  return enter
-                    .append('g')
+                selections(
+                  selection: Selection<BaseType, unknown, BaseType, unknown>
+                ) {
+                  return selection
+                    .join('g')
                     .attr('class', 'header')
                     .attr('pointer-events', 'all')
-                    .on('click', (d: any) => {
+                    .on('click', (_e: Event, d: any) => {
                       d.expanded = !d.expanded
                       return redisplay()
                     })
@@ -653,10 +671,12 @@ function queryPlan(this: any, element: any) {
                     data(d: any) {
                       return [d]
                     },
-                    selections(enter: any, update: any) {
-                      enter.append('path').attr('class', 'banner')
-
-                      return update
+                    selections(
+                      selection: Selection<BaseType, unknown, BaseType, unknown>
+                    ) {
+                      return selection
+                        .join('path')
+                        .attr('class', 'banner')
                         .attr('d', (d: any) => {
                           const shaving =
                             d.height <= operatorHeaderHeight
@@ -734,18 +754,17 @@ function queryPlan(this: any, element: any) {
                         return [d]
                       }
                     },
-                    selections(enter: any, update: any) {
-                      const rotateForExpand = function(d: any) {
-                        // @ts-expect-error
-                        d3.transform()
-                        return `translate(${operatorHeaderHeight /
-                          2}, ${operatorHeaderHeight / 2}) rotate(${
-                          d.expanded ? 90 : 0
-                        }) scale(0.5)`
+                    selections(
+                      selection: Selection<BaseType, unknown, BaseType, unknown>
+                    ) {
+                      const rotateForExpand = function (d: any) {
+                        return `translate(${operatorHeaderHeight / 2}, ${
+                          operatorHeaderHeight / 2
+                        }) rotate(${d.expanded ? 90 : 0}) scale(0.5)`
                       }
 
-                      enter
-                        .append('path')
+                      return selection
+                        .join('path')
                         .attr('class', 'expand')
                         .attr(
                           'fill',
@@ -753,13 +772,10 @@ function queryPlan(this: any, element: any) {
                             color(d.operatorType)['text-color-internal']
                         )
                         .attr('d', 'M -5 -10 L 8.66 0 L -5 10 Z')
-                        .attr('transform', rotateForExpand)
-
-                      return update
                         .transition()
-                        .attrTween('transform', (d: any, _i: any, a: any) =>
-                          d3.interpolateString(a, rotateForExpand(d))
-                        )
+                        .ease(easeQuadIn)
+                        .duration(200)
+                        .attr('transform', rotateForExpand)
                     }
                   },
 
@@ -767,9 +783,11 @@ function queryPlan(this: any, element: any) {
                     data(d: any) {
                       return [d]
                     },
-                    selections(enter: any) {
-                      return enter
-                        .append('text')
+                    selections(
+                      selection: Selection<BaseType, unknown, BaseType, unknown>
+                    ) {
+                      return selection
+                        .join('text')
                         .attr('class', 'title')
                         .attr('font-size', operatorHeaderFontSize)
                         .attr('font-family', standardFont)
@@ -788,10 +806,11 @@ function queryPlan(this: any, element: any) {
 
               'g.detail': {
                 data: operatorDetails,
-                selections(enter: any, update: any, exit: any) {
-                  enter.append('g')
-
-                  update
+                selections(
+                  selection: Selection<BaseType, unknown, BaseType, unknown>
+                ) {
+                  return selection
+                    .join('g')
                     .attr('class', (d: any) => `detail ${d.className}`)
                     .attr(
                       'transform',
@@ -807,8 +826,6 @@ function queryPlan(this: any, element: any) {
                         return standardFont
                       }
                     })
-
-                  return exit.remove()
                 },
                 children: {
                   text: {
@@ -828,17 +845,19 @@ function queryPlan(this: any, element: any) {
                         ]
                       }
                     },
-                    selections(enter: any, update: any, exit: any) {
-                      enter.append('text').attr('font-size', detailFontSize)
-
-                      update
+                    selections(
+                      selection: Selection<BaseType, unknown, BaseType, unknown>
+                    ) {
+                      const text = selection
+                        .join('text')
+                        .attr('font-size', detailFontSize)
                         .attr('x', (d: any) => d.x)
                         .attr('text-anchor', (d: any) => d.anchor)
                         .attr('fill', 'black')
-                        .transition()
-                        .each('end', () => update.text((d: any) => d.text))
 
-                      return exit.remove()
+                      return text
+                        .transition()
+                        .on('end', () => text.text((d: any) => d.text))
                     }
                   },
 
@@ -850,13 +869,13 @@ function queryPlan(this: any, element: any) {
                         return []
                       }
                     },
-                    selections(enter: any, update: any) {
-                      enter
-                        .append('path')
+                    selections(
+                      selection: Selection<BaseType, unknown, BaseType, unknown>
+                    ) {
+                      const divider = selection
+                        .join('path')
                         .attr('class', 'divider')
                         .attr('visibility', 'hidden')
-
-                      return update
                         .attr(
                           'd',
                           [
@@ -869,8 +888,10 @@ function queryPlan(this: any, element: any) {
                           ].join(' ')
                         )
                         .attr('stroke', dividerColor)
+
+                      return divider
                         .transition()
-                        .each('end', () => update.attr('visibility', 'visible'))
+                        .on('end', () => divider.attr('visibility', 'visible'))
                     }
                   }
                 }
@@ -880,79 +901,81 @@ function queryPlan(this: any, element: any) {
                 data(d: any) {
                   return [d]
                 },
-                selections(enter: any, update: any) {
-                  enter
-                    .append('path')
+                selections(
+                  selection: Selection<BaseType, unknown, BaseType, unknown>
+                ) {
+                  return selection
+                    .join('path')
                     .attr('class', 'cost')
                     .attr('fill', costColor)
-
-                  return update.transition().attr('d', (d: any) => {
-                    if (d.costHeight < operatorCornerRadius) {
-                      const shaving =
-                        operatorCornerRadius -
-                        Math.sqrt(
-                          Math.pow(operatorCornerRadius, 2) -
-                            Math.pow(operatorCornerRadius - d.costHeight, 2)
-                        )
-                      return [
-                        'M',
-                        operatorWidth - shaving,
-                        d.height - d.costHeight,
-                        'A',
-                        operatorCornerRadius,
-                        operatorCornerRadius,
-                        0,
-                        0,
-                        1,
-                        operatorWidth - operatorCornerRadius,
-                        d.height,
-                        'L',
-                        operatorCornerRadius,
-                        d.height,
-                        'A',
-                        operatorCornerRadius,
-                        operatorCornerRadius,
-                        0,
-                        0,
-                        1,
-                        shaving,
-                        d.height - d.costHeight,
-                        'Z'
-                      ].join(' ')
-                    } else {
-                      return [
-                        'M',
-                        0,
-                        d.height - d.costHeight,
-                        'L',
-                        operatorWidth,
-                        d.height - d.costHeight,
-                        'L',
-                        operatorWidth,
-                        d.height - operatorCornerRadius,
-                        'A',
-                        operatorCornerRadius,
-                        operatorCornerRadius,
-                        0,
-                        0,
-                        1,
-                        operatorWidth - operatorCornerRadius,
-                        d.height,
-                        'L',
-                        operatorCornerRadius,
-                        d.height,
-                        'A',
-                        operatorCornerRadius,
-                        operatorCornerRadius,
-                        0,
-                        0,
-                        1,
-                        0,
-                        d.height - operatorCornerRadius,
-                        'Z'
-                      ].join(' ')
-                    }
-                  })
+                    .transition()
+                    .attr('d', (d: any) => {
+                      if (d.costHeight < operatorCornerRadius) {
+                        const shaving =
+                          operatorCornerRadius -
+                          Math.sqrt(
+                            Math.pow(operatorCornerRadius, 2) -
+                              Math.pow(operatorCornerRadius - d.costHeight, 2)
+                          )
+                        return [
+                          'M',
+                          operatorWidth - shaving,
+                          d.height - d.costHeight,
+                          'A',
+                          operatorCornerRadius,
+                          operatorCornerRadius,
+                          0,
+                          0,
+                          1,
+                          operatorWidth - operatorCornerRadius,
+                          d.height,
+                          'L',
+                          operatorCornerRadius,
+                          d.height,
+                          'A',
+                          operatorCornerRadius,
+                          operatorCornerRadius,
+                          0,
+                          0,
+                          1,
+                          shaving,
+                          d.height - d.costHeight,
+                          'Z'
+                        ].join(' ')
+                      } else {
+                        return [
+                          'M',
+                          0,
+                          d.height - d.costHeight,
+                          'L',
+                          operatorWidth,
+                          d.height - d.costHeight,
+                          'L',
+                          operatorWidth,
+                          d.height - operatorCornerRadius,
+                          'A',
+                          operatorCornerRadius,
+                          operatorCornerRadius,
+                          0,
+                          0,
+                          1,
+                          operatorWidth - operatorCornerRadius,
+                          d.height,
+                          'L',
+                          operatorCornerRadius,
+                          d.height,
+                          'A',
+                          operatorCornerRadius,
+                          operatorCornerRadius,
+                          0,
+                          0,
+                          1,
+                          0,
+                          d.height - operatorCornerRadius,
+                          'Z'
+                        ].join(' ')
+                      }
+                    })
                 }
               },
 
@@ -972,20 +995,22 @@ function queryPlan(this: any, element: any) {
                     return []
                   }
                 },
-                selections(enter: any, update: any) {
-                  enter
-                    .append('text')
+                selections(
+                  selection: Selection<BaseType, unknown, BaseType, unknown>
+                ) {
+                  const text = selection
+                    .join('text')
                     .attr('class', 'cost')
                     .attr('font-size', detailFontSize)
                     .attr('font-family', standardFont)
                     .attr('fill', 'white')
-
-                  return update
                     .attr('x', operatorWidth / 2)
                     .attr('text-anchor', (d: any) => d.anchor)
+
+                  return text
                     .transition()
                     .attr('y', (d: any) => d.y)
-                    .each('end', () => update.text((d: any) => d.text))
+                    .on('end', () => text.text((d: any) => d.text))
                 }
               },
 
@@ -993,21 +1018,24 @@ function queryPlan(this: any, element: any) {
                 data(d: any) {
                   return [d]
                 },
-                selections(enter: any, update: any) {
-                  enter.append('rect').attr('class', 'outline')
-
-                  return update
-                    .transition()
+                selections(
+                  selection: Selection<BaseType, unknown, BaseType, unknown>
+                ) {
+                  return selection
+                    .join('rect')
+                    .attr('class', 'outline')
                     .attr('width', operatorWidth)
-                    .attr('height', (d: any) => d.height)
                     .attr('rx', operatorCornerRadius)
                     .attr('ry', operatorCornerRadius)
                     .attr('fill', 'none')
                     .attr('stroke-width', 1)
                     .style(
                       'stroke',
+                      // @ts-expect-error
                       (d: any) => color(d.operatorType)['border-color']
                     )
+                    .transition()
+                    .attr('height', (d: any) => d.height)
                 }
               }
             }
@@ -1017,7 +1045,7 @@ function queryPlan(this: any, element: any) {
     })
   }
 
-  const display = function(queryPlan: any) {
+  const display = function (queryPlan: any) {
     const [operators, links] = Array.from(transform(queryPlan))
     const [width, height] = Array.from(layout(operators, links))
     return render(operators, links, width, height, () => display(queryPlan))
