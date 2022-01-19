@@ -9,8 +9,15 @@
   "jsxSingleQuote": false,
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,
-  "importOrderParserPlugins": ["typescript"],
   "importOrder": [
     "^browser/(.*)$|^project-root/(.*)$|^browser-(.*)$|^shared/(.*)$|^services/(.*)$|^icons/(.*)$|^[./]"
-  ]
+  ],
+  "overrides": [
+      {
+        "files": "*.ts",
+        "options": {
+          "importOrderParserPlugins": ["typescript"]
+        }
+      }
+    ]
 }
