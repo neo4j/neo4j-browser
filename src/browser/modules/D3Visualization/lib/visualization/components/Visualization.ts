@@ -30,7 +30,7 @@ import Graph from './Graph'
 import GraphGeometry from './GraphGeometry'
 import Relationship from './Relationship'
 import VizNode from './VizNode'
-import { Layout, clearSimulationTimeout, setSimulationTimeout } from './layout'
+import { Layout } from './layout'
 import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
 
 export type MeasureSizeFn = () => { width: number; height: number }
@@ -278,18 +278,36 @@ const vizFn = function (
     }
 
     function dragHandler(simulation: Simulation<VizNode, Relationship>) {
+      let initialPos: [number, number]
+      let restartedSim = false
+      const tolerance = 25
+
+      const dist = (a: [number, number], b: [number, number]) =>
+        Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2)
+
       function dragstarted(event: D3DragEvent<SVGGElement, VizNode, any>) {
-        clearSimulationTimeout()
-        if (!event.active) simulation.alphaTarget(0.03).alpha(1).restart()
+        initialPos = [event.x, event.y]
+        restartedSim = false
       }
 
       function dragged(event: D3DragEvent<SVGGElement, VizNode, any>) {
+        // This is to prevent clicks/double clicks from restarting the simulation
+        if (dist(initialPos, [event.x, event.y]) > tolerance && !restartedSim) {
+          // Set alphaTarget to a value higher than alphaMin so the simulation
+          // isn't stopped while nodes are being dragged.
+          simulation.alphaTarget(0.09).alpha(1).restart()
+          restartedSim = true
+        }
+
         event.subject.fx = event.x
         event.subject.fy = event.y
       }
 
       function dragended(_event: D3DragEvent<SVGGElement, VizNode, any>) {
-        setSimulationTimeout(simulation)
+        if (restartedSim) {
+          // Reset alphaTarget so the simulation cools down and stops.
+          simulation.alphaTarget(0)
+        }
       }
 
       return d3Drag<SVGGElement, VizNode>()
