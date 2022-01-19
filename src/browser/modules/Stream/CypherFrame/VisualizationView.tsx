@@ -145,11 +145,13 @@ export class Visualization extends Component<
   fetchNeighbours: (
     id: string,
     currentNeighbourIds?: string[],
-    withLimit?: boolean
+    withLimit?: boolean,
+    shouldAutoCompleteRelationships?: boolean
   ) => Promise<BasicNodesAndRels & { count: number }> = (
     id,
     currentNeighbourIds = [],
-    withLimit = false
+    withLimit = false,
+    shouldAutoCompleteRelationships = false
   ) => {
     const query = `MATCH path = (a)--(o)
                    WHERE id(a) = ${id}
@@ -180,10 +182,12 @@ export class Visualization extends Component<
                   false,
                   this.props.maxFieldItems
                 )
-              this.autoCompleteRelationships(
-                this.graph?.nodes() || [],
-                resultGraph.nodes
-              )
+              if (shouldAutoCompleteRelationships) {
+                this.autoCompleteRelationships(
+                  this.graph?.nodes() || [],
+                  resultGraph.nodes
+                )
+              }
               resolve({ ...resultGraph, count: count })
             }
           }
@@ -194,7 +198,7 @@ export class Visualization extends Component<
     id: string,
     currentNeighbourIds: string[] = []
   ): Promise<BasicNodesAndRels & { count: number }> {
-    return this.fetchNeighbours(id, currentNeighbourIds, true).then(
+    return this.fetchNeighbours(id, currentNeighbourIds, true, true).then(
       (result: any) => {
         this.autoCompleteRelationships(this.graph!._nodes, result.nodes)
         return result
