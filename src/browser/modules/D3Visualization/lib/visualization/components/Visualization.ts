@@ -290,7 +290,10 @@ const vizFn = function (
         restartedSim = false
       }
 
-      function dragged(event: D3DragEvent<SVGGElement, VizNode, any>) {
+      function dragged(
+        event: D3DragEvent<SVGGElement, VizNode, any>,
+        node: VizNode
+      ) {
         // This is to prevent clicks/double clicks from restarting the simulation
         if (dist(initialPos, [event.x, event.y]) > tolerance && !restartedSim) {
           // Set alphaTarget to a value higher than alphaMin so the simulation
@@ -299,8 +302,9 @@ const vizFn = function (
           restartedSim = true
         }
 
-        event.subject.fx = event.x
-        event.subject.fy = event.y
+        node.hoverFixed = false
+        node.fx = event.x
+        node.fy = event.y
       }
 
       function dragended(_event: D3DragEvent<SVGGElement, VizNode, any>) {
