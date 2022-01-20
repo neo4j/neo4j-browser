@@ -78,6 +78,12 @@ export class GraphEventHandler {
     if (this.selectedItem) {
       this.selectedItem.selected = false
       this.selectedItem = null
+
+      this.graphView.update({
+        updateNodes: true,
+        updateRelationships: true,
+        precompute: false
+      })
     }
     this.onItemSelected({
       type: 'canvas',
@@ -85,12 +91,6 @@ export class GraphEventHandler {
         nodeCount: this.graph.nodes().length,
         relationshipCount: this.graph.relationships().length
       }
-    })
-
-    this.graphView.update({
-      updateNodes: true,
-      updateRelationships: true,
-      precompute: false
     })
   }
 
