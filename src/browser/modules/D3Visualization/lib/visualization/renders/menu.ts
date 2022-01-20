@@ -21,7 +21,7 @@ import { BaseType, Selection } from 'd3-selection'
 import { arc as d3Arc } from 'd3-shape'
 
 import Renderer from '../components/Renderer'
-import { VizObj } from '../components/Visualization'
+import { Visualization } from '../components/Visualization'
 import VizNode from '../components/VizNode'
 import icons from './d3Icons'
 
@@ -50,7 +50,7 @@ const attachContextEvent = (
     Selection<BaseType | SVGPathElement, VizNode, BaseType, VizNode>,
     Selection<BaseType | SVGGElement, VizNode, BaseType, VizNode>
   ],
-  viz: VizObj,
+  viz: Visualization,
   content: string,
   label: string
 ) => {
@@ -79,8 +79,8 @@ const attachContextEvent = (
 }
 
 const createMenuItem = function (
-  selection: Selection<BaseType, VizNode, BaseType, unknown>,
-  viz: VizObj,
+  selection: Selection<SVGGElement, VizNode, BaseType, unknown>,
+  viz: Visualization,
   eventType: string,
   itemIndex: number,
   className: string,

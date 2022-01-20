@@ -27,7 +27,7 @@ export default function cloneArray<T>(original: Array<T>): Array<T> {
   return clone
 }
 
-function isNullish(x: unknown): x is null | undefined {
+export function isNullish(x: unknown): x is null | undefined {
   return x === null || x === undefined
 }
 

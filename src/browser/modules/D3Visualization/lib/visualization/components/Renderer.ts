@@ -19,12 +19,12 @@
  */
 import { BaseType, Selection } from 'd3-selection'
 
-import { VizObj } from './Visualization'
+import { Visualization } from './Visualization'
 
 const noOp = () => undefined
 type RendererEventHandler<Datum> = (
-  selection: Selection<BaseType, Datum, BaseType, unknown>,
-  viz: VizObj
+  selection: Selection<SVGGElement, Datum, BaseType, unknown>,
+  style: Visualization
 ) => void
 
 export default class Renderer<Datum> {

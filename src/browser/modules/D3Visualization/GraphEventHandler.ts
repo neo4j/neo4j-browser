@@ -67,23 +67,25 @@ export class GraphEventHandler {
     }
     this.selectedItem = item
     item.selected = true
+
     this.graphView.update({
-      updateNodes: true,
-      updateRelationships: true,
-      precompute: true
+      updateNodes: this.selectedItem.isNode,
+      updateRelationships: this.selectedItem.isRelationship,
+      rerender: false
     })
   }
 
   deselectItem(): void {
     if (this.selectedItem) {
       this.selectedItem.selected = false
-      this.selectedItem = null
 
       this.graphView.update({
-        updateNodes: true,
-        updateRelationships: true,
-        precompute: false
+        updateNodes: this.selectedItem.isNode,
+        updateRelationships: this.selectedItem.isRelationship,
+        rerender: false
       })
+
+      this.selectedItem = null
     }
     this.onItemSelected({
       type: 'canvas',
@@ -98,6 +100,11 @@ export class GraphEventHandler {
     this.graph.removeConnectedRelationships(d)
     this.graph.removeNode(d)
     this.deselectItem()
+    this.graphView.update({
+      updateNodes: true,
+      updateRelationships: true,
+      rerender: true
+    })
     this.graphModelChanged()
   }
 

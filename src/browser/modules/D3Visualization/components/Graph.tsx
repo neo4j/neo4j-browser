@@ -67,9 +67,9 @@ export class GraphComponent extends Component<GraphProps, GraphState> {
     this.svgElement = el
   }
 
-  zoomInClicked(el: any): void {
+  zoomInClicked(): void {
     if (this.graphView) {
-      const limits = this.graphView.zoomIn(el)
+      const limits = this.graphView.zoomIn()
       this.setState({
         zoomInLimitReached: limits.zoomInLimit,
         zoomOutLimitReached: limits.zoomOutLimit
@@ -77,9 +77,9 @@ export class GraphComponent extends Component<GraphProps, GraphState> {
     }
   }
 
-  zoomOutClicked(el: any): void {
+  zoomOutClicked(): void {
     if (this.graphView) {
-      const limits = this.graphView.zoomOut(el)
+      const limits = this.graphView.zoomOut()
       this.setState({
         zoomInLimitReached: limits.zoomInLimit,
         zoomOutLimitReached: limits.zoomOutLimit
@@ -127,11 +127,7 @@ export class GraphComponent extends Component<GraphProps, GraphState> {
       this.graphEventHandler.bindEventHandlers()
       this.props.onGraphModelChange(getGraphStats(this.graph))
       this.graphView.resize()
-      this.graphView.update({
-        updateNodes: true,
-        updateRelationships: false,
-        precompute: true
-      })
+      this.graphView.init()
     }
   }
 
@@ -150,11 +146,7 @@ export class GraphComponent extends Component<GraphProps, GraphState> {
 
   componentDidUpdate(prevProps: GraphProps): void {
     if (prevProps.styleVersion !== this.props.styleVersion) {
-      this.graphView?.update({
-        updateNodes: true,
-        updateRelationships: true,
-        precompute: true
-      })
+      this.graphView?.init()
     }
     if (this.props.isFullscreen !== prevProps.isFullscreen) {
       this.graphView?.resize()

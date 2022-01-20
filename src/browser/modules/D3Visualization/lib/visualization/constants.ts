@@ -13,7 +13,7 @@ export const DEFAULT_ALPHA = 1
 export const DEFAULT_ALPHA_TARGET = 0
 // Temperature at which the simulation is stopped.
 export const DEFAULT_ALPHA_MIN = 0.05
-// When dragging we set alphaTarget to a greater value than alphaMin to prevent
+// When dragging we set alphaTarget to a value greater than alphaMin to prevent
 // the simulation from stopping.
 export const DRAGGING_ALPHA_TARGET = 0.09
 
@@ -25,3 +25,5 @@ export const FORCE_COLLIDE_RADIUS = (node: VizNode) => node.radius + 25
 export const FORCE_CHARGE = -400
 export const FORCE_CENTER_X = 0.03
 export const FORCE_CENTER_Y = 0.03
+
+export const ZOOM_SCALE_EXTENT: [number, number] = [0.1, 2]
