@@ -20,9 +20,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
+import { v4 } from 'uuid'
+
 import {
-  executeCommand,
-  commandSources
+  commandSources,
+  executeCommand
 } from 'shared/modules/commands/commandsDuck'
 import * as editor from 'shared/modules/editor/editorDuck'
 import { addClass, prependIcon } from 'shared/services/dom-helpers'
@@ -128,7 +130,7 @@ export const Directives = (props: any) => {
               props.onItemClick(
                 directive.valueExtractor(e),
                 true,
-                props.originFrameId
+                v4() /* new id, new frame */
               )
             })
           }
