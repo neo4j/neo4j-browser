@@ -40,20 +40,7 @@ type ForceLayout = {
 export type Layout = { init: (render: () => void) => ForceLayout }
 export type AvailableLayouts = Record<'force', () => Layout>
 
-let simulationTimeout: null | number = null
-export const setSimulationTimeout = (
-  simulation: Simulation<VizNode, Relationship>
-) => {
-  simulationTimeout = setTimeout(() => simulation.stop(), 2000)
-}
-export const clearSimulationTimeout = () => {
-  if (simulationTimeout) {
-    clearTimeout(simulationTimeout)
-    simulationTimeout = null
-  }
-}
-
-const SIMULATION_STARTING_TICKS = 800
+const SIMULATION_STARTING_TICKS = 300
 
 const layout: AvailableLayouts = {
   force: () => ({
@@ -75,7 +62,6 @@ const layout: AvailableLayouts = {
         .stop()
 
       const update = function (graph: Graph, precompute = false) {
-        clearSimulationTimeout()
         const nodes = cloneArray(graph.nodes())
         const relationships = oneRelationshipPerPairOfNodes(graph)
 
@@ -111,11 +97,9 @@ const layout: AvailableLayouts = {
           // simulation with the animation and multiple re-renders
           simulation.tick(SIMULATION_STARTING_TICKS)
           render()
-        } else {
-          simulation.alpha(1).restart()
-          setSimulationTimeout(simulation)
         }
 
+        simulation.alphaMin(0.05).alpha(1).restart()
         return simulation
       }
 
