@@ -17,8 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import { hydrate, dehydrate } from './duckUtils'
+import { dehydrate, hydrate } from './duckUtils'
 
 describe('hydrate', () => {
   test('should merge initialState with state when hydrated is undefined', () => {

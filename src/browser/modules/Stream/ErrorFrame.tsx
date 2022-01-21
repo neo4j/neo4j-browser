@@ -18,19 +18,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React from 'react'
+
 import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
-import { createErrorObject, UnknownCommandError } from 'services/exceptions'
+import AutoExecButton from './auto-exec-button'
 import { errorMessageFormater } from './errorMessageFormater'
 import {
   StyledCypherErrorMessage,
-  StyledHelpContent,
-  StyledErrorH4,
-  StyledPreformattedArea,
-  StyledHelpDescription,
   StyledDiv,
-  StyledHelpFrame
+  StyledErrorH4,
+  StyledHelpContent,
+  StyledHelpDescription,
+  StyledHelpFrame,
+  StyledPreformattedArea
 } from './styled'
-import AutoExecButton from './auto-exec-button'
+import { UnknownCommandError, createErrorObject } from 'services/exceptions'
 
 export const ErrorView = ({ frame }: any) => {
   if (!frame) return null

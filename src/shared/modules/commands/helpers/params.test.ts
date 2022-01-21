@@ -17,9 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import * as params from './params'
-import { update, replace } from 'shared/modules/params/paramsDuck'
+import { replace, update } from 'shared/modules/params/paramsDuck'
 
 jest.mock('services/bolt/bolt', () => ({
   routedWriteTransaction: jest.fn(() => {

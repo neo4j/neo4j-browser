@@ -17,17 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import { NAME as app } from './modules/app/appDuck'
+import { NAME as commands } from './modules/commands/commandsDuck'
 import {
-  NAME as settings,
-  initialState as settingsInitialState
-} from './modules/settings/settingsDuck'
-import {
-  NAME as features,
-  initialState as featuresInitialState
-} from './modules/features/featuresDuck'
-import { FramesState, NAME as frames } from './modules/frames/framesDuck'
-import { NAME as history } from './modules/history/historyDuck'
+  ConnectionReduxState,
+  NAME as connections
+} from './modules/connections/connectionsDuck'
 import {
   NAME as user,
   initialState as userInitialState
@@ -36,32 +31,36 @@ import {
   NAME as meta,
   initialState as metaInitialState
 } from './modules/dbMeta/state'
-import { NAME as documents, Favorite } from './modules/favorites/favoritesDuck'
-import {
-  NAME as connections,
-  ConnectionReduxState
-} from './modules/connections/connectionsDuck'
-import { NAME as sidebar, SidebarState } from './modules/sidebar/sidebarDuck'
-import { NAME as requests, RequestState } from './modules/requests/requestsDuck'
-import { NAME as params } from './modules/params/paramsDuck'
-import { NAME as grass } from './modules/grass/grassDuck'
-import {
-  NAME_CONSENT as syncConsent,
-  NAME_META as syncMetadata,
-  NAME as sync,
-  initialConsentState,
-  initialMetadataState,
-  initialState as syncInitialState
-} from './modules/sync/syncDuck'
-import { NAME as folders, Folder } from './modules/favorites/foldersDuck'
-import { NAME as commands } from './modules/commands/commandsDuck'
-import { NAME as udc, UdcState } from './modules/udc/udcDuck'
-import { NAME as app } from './modules/app/appDuck'
-import { NAME as guides, GuideState } from './modules/guides/guidesDuck'
 import {
   NAME as experimentalFeatures,
   initialState as experimentalFeaturesInitialState
 } from './modules/experimentalFeatures/experimentalFeaturesDuck'
+import { Favorite, NAME as documents } from './modules/favorites/favoritesDuck'
+import { Folder, NAME as folders } from './modules/favorites/foldersDuck'
+import {
+  NAME as features,
+  initialState as featuresInitialState
+} from './modules/features/featuresDuck'
+import { FramesState, NAME as frames } from './modules/frames/framesDuck'
+import { NAME as grass } from './modules/grass/grassDuck'
+import { GuideState, NAME as guides } from './modules/guides/guidesDuck'
+import { NAME as history } from './modules/history/historyDuck'
+import { NAME as params } from './modules/params/paramsDuck'
+import { RequestState, NAME as requests } from './modules/requests/requestsDuck'
+import {
+  NAME as settings,
+  initialState as settingsInitialState
+} from './modules/settings/settingsDuck'
+import { SidebarState, NAME as sidebar } from './modules/sidebar/sidebarDuck'
+import {
+  initialConsentState,
+  initialMetadataState,
+  NAME as sync,
+  NAME_CONSENT as syncConsent,
+  initialState as syncInitialState,
+  NAME_META as syncMetadata
+} from './modules/sync/syncDuck'
+import { UdcState, NAME as udc } from './modules/udc/udcDuck'
 
 export interface GlobalState {
   [settings]: typeof settingsInitialState

@@ -17,46 +17,45 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import React from 'react'
-import { createEpicMiddleware } from 'redux-observable'
-import {
-  createStore,
-  combineReducers,
-  applyMiddleware,
-  compose,
-  AnyAction,
-  StoreEnhancer
-} from 'redux'
-import { Provider } from 'react-redux'
-import {
-  createBus,
-  createReduxMiddleware as createSuberReduxMiddleware
-} from 'suber'
-import { BusProvider } from 'react-suber'
-import App from './modules/App/App'
-import reducers from 'shared/rootReducer'
-import epics from 'shared/rootEpic'
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
-import { createUploadLink } from 'apollo-upload-client'
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
+import { CaptureConsole } from '@sentry/integrations'
 import * as Sentry from '@sentry/react'
 import { Integrations } from '@sentry/tracing'
-import { CaptureConsole } from '@sentry/integrations'
-
-import { createReduxMiddleware, getAll, applyKeys } from 'services/localstorage'
-import { GlobalState } from 'shared/globalState'
-import { APP_START } from 'shared/modules/app/appDuck'
-import { detectRuntimeEnv, isRunningE2ETest } from 'services/utils'
-import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
-import { version } from 'project-root/package.json'
-import { getUuid, updateUdcData } from 'shared/modules/udc/udcDuck'
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
+import { createUploadLink } from 'apollo-upload-client'
 import {
   removeSearchParamsInBrowserHistory,
   restoreSearchAndHashParams,
   wasRedirectedBackFromSSOServer
 } from 'neo4j-client-sso'
+import React from 'react'
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
+import { Provider } from 'react-redux'
+import { BusProvider } from 'react-suber'
+import {
+  AnyAction,
+  StoreEnhancer,
+  applyMiddleware,
+  combineReducers,
+  compose,
+  createStore
+} from 'redux'
+import { createEpicMiddleware } from 'redux-observable'
+import {
+  createBus,
+  createReduxMiddleware as createSuberReduxMiddleware
+} from 'suber'
+
+import App from './modules/App/App'
+import { version } from 'project-root/package.json'
+import { applyKeys, createReduxMiddleware, getAll } from 'services/localstorage'
+import { detectRuntimeEnv, isRunningE2ETest } from 'services/utils'
+import { GlobalState } from 'shared/globalState'
+import { APP_START } from 'shared/modules/app/appDuck'
+import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
+import { getUuid, updateUdcData } from 'shared/modules/udc/udcDuck'
+import epics from 'shared/rootEpic'
+import reducers from 'shared/rootReducer'
 import { getTelemetrySettings } from 'shared/utils/selectors'
 
 // Configure localstorage sync
@@ -154,17 +153,15 @@ function scrubQueryParamsAndUrl(event: Sentry.Event): Sentry.Event {
 export function setupSentry(): void {
   if (process.env.NODE_ENV === 'production') {
     Sentry.init({
-      dsn:
-        'https://1ea9f7ebd51441cc95906afb2d31d841@o110884.ingest.sentry.io/1232865',
+      dsn: 'https://1ea9f7ebd51441cc95906afb2d31d841@o110884.ingest.sentry.io/1232865',
       release: `neo4j-browser@${version}`,
       integrations: [
         new Integrations.BrowserTracing(),
         new CaptureConsole({ levels: ['error'] })
       ],
       tracesSampler: context => {
-        const isPerformanceTransaction = context.transactionContext.name.startsWith(
-          'performance'
-        )
+        const isPerformanceTransaction =
+          context.transactionContext.name.startsWith('performance')
         if (isPerformanceTransaction) {
           // 1% of performance reports is enough to build stats, raise if needed
           return 0.01

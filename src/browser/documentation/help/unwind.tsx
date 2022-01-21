@@ -17,9 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React from 'react'
+
 import ManualLink from 'browser-components/ManualLink'
+
 const title = 'UNWIND'
 const subtitle = 'Unwind a collection into a sequence of rows'
 const category = 'cypherHelp'

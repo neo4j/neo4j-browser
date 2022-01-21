@@ -17,14 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
-  PARSE_META,
-  FORCE_FETCH,
   FETCH_SERVER_INFO,
+  FORCE_FETCH,
+  PARSE_META,
   UPDATE_META,
-  UPDATE_SETTINGS,
-  UPDATE_SERVER
+  UPDATE_SERVER,
+  UPDATE_SETTINGS
 } from './constants'
 import { extractServerInfo } from './utils'
 

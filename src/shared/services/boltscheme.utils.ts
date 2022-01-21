@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import { INSECURE_SCHEMES, SECURE_SCHEMES } from 'shared/modules/app/appDuck'
 
 const BOLT_DIRECT_SCHEME = 'bolt'

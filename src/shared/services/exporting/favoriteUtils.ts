@@ -17,11 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
-import { Favorite } from 'shared/modules/favorites/favoritesDuck'
-import { saveAs } from 'file-saver' // Polyfill for FF
+
+// Polyfill for FF
 import { getScriptDisplayName } from 'browser/components/SavedScripts'
+import { Favorite } from 'shared/modules/favorites/favoritesDuck'
 import { Folder } from 'shared/modules/favorites/foldersDuck'
 
 export const CYPHER_FILE_EXTENSION = '.cypher'

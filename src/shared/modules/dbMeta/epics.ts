@@ -17,64 +17,62 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import Rx from 'rxjs/Rx'
 import { assign, reduce } from 'lodash-es'
+import Rx from 'rxjs/Rx'
 
 import {
-  SYSTEM_DB,
-  FORCE_FETCH,
-  DB_META_DONE,
-  FETCH_SERVER_INFO,
-  metaQuery,
-  serverInfoQuery,
-  CLEAR_META
-} from './constants'
-import { update, updateMeta, updateSettings, updateServerInfo } from './actions'
-import {
-  getDatabases,
-  findDatabaseByNameOrAlias,
-  shouldRetainEditorHistory
-} from './state'
-import { clearHistory } from 'shared/modules/history/historyDuck'
-
-import bolt from 'services/bolt/bolt'
-import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
-import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
+  FEATURE_DETECTION_DONE,
+  USER_CAPABILITIES,
+  hasClientConfig,
+  isACausalCluster,
+  setClientConfig,
+  updateUserCapability
+} from '../features/featuresDuck'
 import {
   canSendTxMetadata,
   getDbClusterRole
 } from '../features/versionedFeatures'
+import { update, updateMeta, updateServerInfo, updateSettings } from './actions'
 import {
-  CONNECTED_STATE,
-  CONNECTION_SUCCESS,
-  connectionLossFilter,
-  DISCONNECTION_SUCCESS,
-  SILENT_DISCONNECT,
-  LOST_CONNECTION,
-  UPDATE_CONNECTION_STATE,
-  setRetainCredentials,
-  setAuthEnabled,
-  onLostConnection,
-  getUseDb,
-  getLastUseDb,
-  useDb,
-  getActiveConnectionData,
-  updateConnection
-} from 'shared/modules/connections/connectionsDuck'
+  CLEAR_META,
+  DB_META_DONE,
+  FETCH_SERVER_INFO,
+  FORCE_FETCH,
+  SYSTEM_DB,
+  metaQuery,
+  serverInfoQuery
+} from './constants'
 import {
-  hasClientConfig,
-  updateUserCapability,
-  USER_CAPABILITIES,
-  FEATURE_DETECTION_DONE,
-  isACausalCluster,
-  setClientConfig
-} from '../features/featuresDuck'
+  findDatabaseByNameOrAlias,
+  getDatabases,
+  shouldRetainEditorHistory
+} from './state'
+import bolt from 'services/bolt/bolt'
+import { isConfigValFalsy } from 'services/bolt/boltHelpers'
 import {
   commandSources,
   executeCommand
 } from 'shared/modules/commands/commandsDuck'
-import { isConfigValFalsy } from 'services/bolt/boltHelpers'
+import {
+  CONNECTED_STATE,
+  CONNECTION_SUCCESS,
+  DISCONNECTION_SUCCESS,
+  LOST_CONNECTION,
+  SILENT_DISCONNECT,
+  UPDATE_CONNECTION_STATE,
+  connectionLossFilter,
+  getActiveConnectionData,
+  getLastUseDb,
+  getUseDb,
+  onLostConnection,
+  setAuthEnabled,
+  setRetainCredentials,
+  updateConnection,
+  useDb
+} from 'shared/modules/connections/connectionsDuck'
+import { clearHistory } from 'shared/modules/history/historyDuck'
+import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
+import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
 
 const databaseList = (store: any) =>
   Rx.Observable.fromPromise(

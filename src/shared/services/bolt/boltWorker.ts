@@ -17,33 +17,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 /* eslint-env serviceworker */
 import 'core-js/stable'
+
 import { BoltConnectionError } from '../exceptions'
 import {
-  ensureConnection,
-  closeConnection,
   DIRECT_CONNECTION,
+  ROUTED_READ_CONNECTION,
   ROUTED_WRITE_CONNECTION,
-  ROUTED_READ_CONNECTION
+  closeConnection,
+  ensureConnection
 } from './boltConnection'
 import { isBoltConnectionErrorCode } from './boltConnectionErrors'
 import {
-  routedWriteTransaction,
-  cancelTransaction,
-  routedReadTransaction,
-  directTransaction
-} from './transactions'
-import {
-  cypherErrorMessage,
-  cypherResponseMessage,
-  postCancelTransactionMessage,
-  boltConnectionErrorMessage,
-  RUN_CYPHER_MESSAGE,
+  BOLT_CONNECTION_ERROR_MESSAGE,
   CANCEL_TRANSACTION_MESSAGE,
   CLOSE_CONNECTION_MESSAGE,
-  BOLT_CONNECTION_ERROR_MESSAGE
+  RUN_CYPHER_MESSAGE,
+  boltConnectionErrorMessage,
+  cypherErrorMessage,
+  cypherResponseMessage,
+  postCancelTransactionMessage
 } from './boltWorkerMessages'
+import {
+  cancelTransaction,
+  directTransaction,
+  routedReadTransaction,
+  routedWriteTransaction
+} from './transactions'
 import { applyGraphTypes } from 'services/bolt/boltMappings'
 
 const connectionTypeMap = {
@@ -64,7 +66,7 @@ const connectionTypeMap = {
 let busy = false
 const workQue: { (): void }[] = []
 
-const onmessage = function(message: {
+const onmessage = function (message: {
   data: {
     cancelable: boolean
     connectionProperties: {
@@ -116,7 +118,7 @@ const onmessage = function(message: {
       connectionProperties as any,
       connectionProperties.opts,
       () => {
-        ;((self as unknown) as ServiceWorker).postMessage(
+        ;(self as unknown as ServiceWorker).postMessage(
           boltConnectionErrorMessage(BoltConnectionError())
         )
       }
@@ -131,26 +133,26 @@ const onmessage = function(message: {
           .getPromise(res)
           .then(r => {
             afterWork()
-            ;((self as unknown) as ServiceWorker).postMessage(
+            ;(self as unknown as ServiceWorker).postMessage(
               cypherResponseMessage(r)
             )
           })
           .catch((e: { code: number; message: string }) => {
             afterWork()
-            ;((self as unknown) as ServiceWorker).postMessage(
+            ;(self as unknown as ServiceWorker).postMessage(
               maybeCypherErrorMessage({ code: e.code, message: e.message })
             )
           })
       })
       .catch(e => {
         afterWork()
-        ;((self as unknown) as ServiceWorker).postMessage(
+        ;(self as unknown as ServiceWorker).postMessage(
           maybeCypherErrorMessage({ code: e.code, message: e.message })
         )
       })
   } else if (messageType === CANCEL_TRANSACTION_MESSAGE) {
     cancelTransaction(message.data.id, () => {
-      ;((self as unknown) as ServiceWorker).postMessage(
+      ;(self as unknown as ServiceWorker).postMessage(
         postCancelTransactionMessage()
       )
     })
@@ -159,7 +161,7 @@ const onmessage = function(message: {
       closeConnection()
     })
   } else {
-    ;((self as unknown) as ServiceWorker).postMessage(
+    ;(self as unknown as ServiceWorker).postMessage(
       cypherErrorMessage({
         code: -1,
         message: `Unknown message to Bolt Worker: ${messageType}`

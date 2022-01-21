@@ -1,12 +1,13 @@
 import React from 'react'
-import { buildTableData, buildDatabaseTable } from './sysinfo-utils'
-import {
-  SysInfoTableContainer,
-  StyledSysInfoTable
-} from 'browser-components/Tables'
+
 import { StyledInfoMessage } from './../../Stream/styled'
-import { Database } from 'shared/modules/dbMeta/state'
 import { DatabaseMetric } from './SysInfoFrame'
+import { buildDatabaseTable, buildTableData } from './sysinfo-utils'
+import {
+  StyledSysInfoTable,
+  SysInfoTableContainer
+} from 'browser-components/Tables'
+import { Database } from 'shared/modules/dbMeta/state'
 
 type SysInfoFrameProps = {
   databases: Database[]

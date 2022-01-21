@@ -17,22 +17,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import uuid from 'uuid'
+import { Action } from 'redux'
+import { Epic } from 'redux-observable'
 import 'rxjs/add/operator/do'
 import 'rxjs/add/operator/mapTo'
-import { moveInArray } from 'services/utils'
-import { APP_START, AppStartAction } from 'shared/modules/app/appDuck'
+import uuid from 'uuid'
+
+import { Database } from '../dbMeta/state'
 import {
-  getMaxFrames,
   UPDATE as SETTINGS_UPDATE,
+  getMaxFrames,
   initialState as settingsDefaultState
 } from '../settings/settingsDuck'
-import { Epic } from 'redux-observable'
-import { Action } from 'redux'
-import { FrameView } from 'shared/modules/frames/frameViewTypes'
+import { moveInArray } from 'services/utils'
 import { GlobalState } from 'shared/globalState'
-import { Database } from '../dbMeta/state'
+import { APP_START, AppStartAction } from 'shared/modules/app/appDuck'
+import { FrameView } from 'shared/modules/frames/frameViewTypes'
 
 export const NAME = 'frames'
 export const ADD = 'frames/ADD'

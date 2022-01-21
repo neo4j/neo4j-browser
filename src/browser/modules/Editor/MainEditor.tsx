@@ -17,28 +17,50 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import React, { useState, Dispatch, useEffect, useRef } from 'react'
-import { Action } from 'redux'
-import SVGInline from 'react-svg-inline'
+import { useMutation } from '@apollo/client'
+import React, { Dispatch, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
-import { useMutation } from '@apollo/client'
+import SVGInline from 'react-svg-inline'
+import { Action } from 'redux'
+import { Bus } from 'suber'
+
+import Monaco, { MonacoHandles } from './Monaco'
+import {
+  EditorContainer,
+  FlexContainer,
+  Header,
+  MainEditorWrapper,
+  ScriptTitle
+} from './styled'
+import {
+  ADD_PROJECT_FILE,
+  REMOVE_PROJECT_FILE
+} from 'browser-components/ProjectFiles/projectFilesConstants'
+import { getProjectFileDefaultFileName } from 'browser-components/ProjectFiles/projectFilesUtils'
+import { defaultNameFromDisplayContent } from 'browser-components/SavedScripts'
+import { EditorButton, FrameButton } from 'browser-components/buttons'
+import {
+  CloseIcon,
+  ContractIcon,
+  ExpandIcon
+} from 'browser-components/icons/Icons'
+import {
+  FULLSCREEN_SHORTCUT,
+  isMac,
+  printShortcut
+} from 'browser/modules/App/keyboardShortcuts'
+import fileIcon from 'icons/file.svg'
+import runIcon from 'icons/run-icon.svg'
+import updateFavoriteIcon from 'icons/update-favorite.svg'
+import updateFileIcon from 'icons/update-file.svg'
+import { GlobalState } from 'shared/globalState'
+import { getProjectId } from 'shared/modules/app/appDuck'
 import {
   commandSources,
   executeCommand
 } from 'shared/modules/commands/commandsDuck'
-import {
-  REMOVE_FAVORITE,
-  updateFavoriteContent
-} from 'shared/modules/favorites/favoritesDuck'
-import { Bus } from 'suber'
-import {
-  isMac,
-  printShortcut,
-  FULLSCREEN_SHORTCUT
-} from 'browser/modules/App/keyboardShortcuts'
-import { getProjectId } from 'shared/modules/app/appDuck'
+import { getUseDb } from 'shared/modules/connections/connectionsDuck'
 import {
   EDIT_CONTENT,
   EXPAND,
@@ -46,37 +68,15 @@ import {
   SET_CONTENT
 } from 'shared/modules/editor/editorDuck'
 import {
-  MainEditorWrapper,
-  Header,
-  EditorContainer,
-  FlexContainer,
-  ScriptTitle
-} from './styled'
-import { EditorButton, FrameButton } from 'browser-components/buttons'
-import {
-  ExpandIcon,
-  ContractIcon,
-  CloseIcon
-} from 'browser-components/icons/Icons'
-import updateFileIcon from 'icons/update-file.svg'
-import updateFavoriteIcon from 'icons/update-favorite.svg'
-import fileIcon from 'icons/file.svg'
-import runIcon from 'icons/run-icon.svg'
-import {
-  ADD_PROJECT_FILE,
-  REMOVE_PROJECT_FILE
-} from 'browser-components/ProjectFiles/projectFilesConstants'
-import { getProjectFileDefaultFileName } from 'browser-components/ProjectFiles/projectFilesUtils'
-import Monaco, { MonacoHandles } from './Monaco'
-import { GlobalState } from 'shared/globalState'
+  REMOVE_FAVORITE,
+  updateFavoriteContent
+} from 'shared/modules/favorites/favoritesDuck'
+import { getHistory } from 'shared/modules/history/historyDuck'
+import { getParams } from 'shared/modules/params/paramsDuck'
 import {
   codeFontLigatures,
   shouldEnableMultiStatementMode
 } from 'shared/modules/settings/settingsDuck'
-import { getUseDb } from 'shared/modules/connections/connectionsDuck'
-import { getHistory } from 'shared/modules/history/historyDuck'
-import { defaultNameFromDisplayContent } from 'browser-components/SavedScripts'
-import { getParams } from 'shared/modules/params/paramsDuck'
 
 type EditorFrameProps = {
   bus: Bus

@@ -14,8 +14,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-import remote from 'services/remote'
-import { ProjectFileScript } from 'browser-components/ProjectFiles/ProjectFilesList'
 import {
   ApolloCache,
   FetchResult,
@@ -24,15 +22,17 @@ import {
 } from '@apollo/client'
 
 import {
-  ProjectFile,
-  ProjectFilesResult,
-  GET_PROJECT_FILES,
   AddProjectFile,
-  RemoveProjectFile,
-  ProjectFileMapping
+  GET_PROJECT_FILES,
+  ProjectFile,
+  ProjectFileMapping,
+  ProjectFilesResult,
+  RemoveProjectFile
 } from './projectFilesConstants'
-import { CYPHER_FILE_EXTENSION } from 'services/exporting/favoriteUtils'
+import { ProjectFileScript } from 'browser-components/ProjectFiles/ProjectFilesList'
 import { defaultNameFromDisplayContent } from 'browser-components/SavedScripts'
+import { CYPHER_FILE_EXTENSION } from 'services/exporting/favoriteUtils'
+import remote from 'services/remote'
 
 export const ProjectFilesQueryVars = (
   projectId: string

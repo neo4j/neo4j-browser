@@ -17,10 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React from 'react'
-import ManualLink from 'browser-components/ManualLink'
+
 import Slide from '../../modules/Carousel/Slide'
+import ManualLink from 'browser-components/ManualLink'
 
 const title = 'Concepts'
 const category = 'guides'

@@ -22,25 +22,25 @@ import { connect } from 'react-redux'
 import { Action } from 'redux'
 import semver from 'semver'
 
-import { cannyOptions, CANNY_FEATURE_REQUEST_URL } from 'browser-services/canny'
+import DocumentItems from './DocumentItems'
+import { formatDocVersion } from './docsUtils'
+import {
+  StyledFeedbackButton,
+  StyledFullSizeDrawerBody,
+  StyledHeaderContainer
+} from './styled'
+import { Drawer, DrawerHeader } from 'browser-components/drawer/drawer-styled'
+import {
+  CannyFeedbackIcon,
+  CannyNotificationsIcon
+} from 'browser-components/icons/Icons'
+import { CANNY_FEATURE_REQUEST_URL, cannyOptions } from 'browser-services/canny'
 import { GlobalState } from 'shared/globalState'
 import { getVersion } from 'shared/modules/dbMeta/state'
 import {
   TRACK_CANNY_CHANGELOG,
   TRACK_CANNY_FEATURE_REQUEST
 } from 'shared/modules/sidebar/sidebarDuck'
-import DocumentItems from './DocumentItems'
-import { Drawer, DrawerHeader } from 'browser-components/drawer/drawer-styled'
-import {
-  CannyFeedbackIcon,
-  CannyNotificationsIcon
-} from 'browser-components/icons/Icons'
-import {
-  StyledFeedbackButton,
-  StyledFullSizeDrawerBody,
-  StyledHeaderContainer
-} from './styled'
-import { formatDocVersion } from './docsUtils'
 
 export const shouldLinkToNewRefs = (v: string): boolean => {
   if (!semver.valid(v)) return true

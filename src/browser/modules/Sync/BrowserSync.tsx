@@ -17,52 +17,52 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import TimeAgo from 'react-timeago'
-import { shouldAllowOutgoingConnections } from 'shared/modules/dbMeta/state'
+
+import { BrowserSyncSignoutIframe } from './BrowserSyncAuthIframes'
+import BrowserSyncAuthWindow from './BrowserSyncAuthWindow'
 import {
-  getConnectionState,
-  DISCONNECTED_STATE
-} from 'shared/modules/connections/connectionsDuck'
-import {
-  setSyncData,
-  setSyncMetadata,
-  clearSync as clearSyncAction,
-  clearSyncAndLocal as clearSyncAndLocalAction,
-  consentSync,
-  authorizedAs,
-  setSyncAuthData,
-  getLastSyncedAt,
-  getUserAuthStatus,
-  getServiceStatus,
-  getUserData,
-  SIGNED_IN,
-  DOWN,
-  PENDING
-} from 'shared/modules/sync/syncDuck'
-import { signOut } from 'services/browserSyncService'
-import { getBrowserSyncConfig } from 'shared/modules/settings/settingsDuck'
+  AlertBox,
+  ClearLocalConfirmationBox,
+  ConsentCheckBox,
+  SmallHeaderText
+} from './styled'
+import { FormButton, SyncSignInButton } from 'browser-components/buttons'
 import {
   Drawer,
   DrawerBody,
   DrawerHeader,
   DrawerSection,
-  DrawerSubHeader,
   DrawerSectionBody,
+  DrawerSubHeader,
   DrawerToppedHeader
 } from 'browser-components/drawer/drawer-styled'
-import { FormButton, SyncSignInButton } from 'browser-components/buttons'
 import { BinIcon } from 'browser-components/icons/Icons'
+import { signOut } from 'services/browserSyncService'
 import {
-  ConsentCheckBox,
-  AlertBox,
-  ClearLocalConfirmationBox,
-  SmallHeaderText
-} from './styled'
-import BrowserSyncAuthWindow from './BrowserSyncAuthWindow'
-import { BrowserSyncSignoutIframe } from './BrowserSyncAuthIframes'
+  DISCONNECTED_STATE,
+  getConnectionState
+} from 'shared/modules/connections/connectionsDuck'
+import { shouldAllowOutgoingConnections } from 'shared/modules/dbMeta/state'
+import { getBrowserSyncConfig } from 'shared/modules/settings/settingsDuck'
+import {
+  DOWN,
+  PENDING,
+  SIGNED_IN,
+  authorizedAs,
+  clearSync as clearSyncAction,
+  clearSyncAndLocal as clearSyncAndLocalAction,
+  consentSync,
+  getLastSyncedAt,
+  getServiceStatus,
+  getUserAuthStatus,
+  getUserData,
+  setSyncAuthData,
+  setSyncData,
+  setSyncMetadata
+} from 'shared/modules/sync/syncDuck'
 
 type BrowserSyncState = any
 

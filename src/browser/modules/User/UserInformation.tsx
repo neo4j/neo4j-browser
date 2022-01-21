@@ -17,34 +17,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { withBus } from 'react-suber'
 import uuid, { v4 } from 'uuid'
 
-import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import { withBus } from 'react-suber'
-
+import RolesSelector from './RolesSelector'
 import {
-  deleteUser,
-  addRoleToUser,
-  removeRoleFromUser,
-  activateUser,
-  suspendUser
-} from 'shared/modules/cypher/boltUserHelper'
-
+  StyleRolesContainer,
+  StyledButtonContainer,
+  StyledUserTd
+} from './styled'
+import { StyledBodyTr } from 'browser-components/DataTables'
 import { FormButton } from 'browser-components/buttons'
 import { CloseIcon } from 'browser-components/icons/Icons'
-import { StyledBodyTr } from 'browser-components/DataTables'
-import {
-  StyledUserTd,
-  StyledButtonContainer,
-  StyleRolesContainer
-} from './styled'
-
-import RolesSelector from './RolesSelector'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
+import {
+  activateUser,
+  addRoleToUser,
+  deleteUser,
+  removeRoleFromUser,
+  suspendUser
+} from 'shared/modules/cypher/boltUserHelper'
+import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { driverDatabaseSelection } from 'shared/modules/features/versionedFeatures'
-import { connect } from 'react-redux'
 
 type UserInformationState = any
 

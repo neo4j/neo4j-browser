@@ -17,82 +17,79 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import React, { Component } from 'react'
-import { Dispatch } from 'redux'
-import { connect } from 'react-redux'
-
+import { saveAs } from 'file-saver'
+import { map } from 'lodash'
 import { Record as Neo4jRecord } from 'neo4j-driver'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { Dispatch } from 'redux'
 
 import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
-import { CypherFrameButton } from 'browser-components/buttons'
-import Centered from 'browser-components/Centered'
-import {
-  getRequest,
-  REQUEST_STATUS_PENDING,
-  REQUEST_STATUS_SUCCESS,
-  isCancelStatus,
-  BrowserRequest,
-  BrowserRequestResult
-} from 'shared/modules/requests/requestsDuck'
 import FrameSidebar from '../../Frame/FrameSidebar'
-import {
-  VisualizationIcon,
-  TableIcon,
-  AsciiIcon,
-  CodeIcon,
-  PlanIcon,
-  AlertIcon,
-  ErrorIcon,
-  SpinnerIcon
-} from 'browser-components/icons/Icons'
-import { AsciiView, AsciiStatusbar } from './AsciiView'
-import { CodeView, CodeStatusbar } from './CodeView'
-import { ErrorsViewBus as ErrorsView, ErrorsStatusbar } from './ErrorsView'
-import { WarningsView, WarningsStatusbar } from './WarningsView'
-import { PlanView, PlanStatusbar } from './PlanView'
+import { BaseFrameProps } from '../Stream'
+import { SpinnerContainer, StyledStatsBarContainer } from '../styled'
+import { AsciiStatusbar, AsciiView } from './AsciiView'
+import { CancelView } from './CancelView'
+import { CodeStatusbar, CodeView } from './CodeView'
+import { ErrorsStatusbar, ErrorsViewBus as ErrorsView } from './ErrorsView'
+import { PlanStatusbar, PlanView } from './PlanView'
 import { VisualizationConnectedBus } from './VisualizationView'
-
-import Display from 'browser-components/Display'
-import * as ViewTypes from 'shared/modules/frames/frameViewTypes'
+import { WarningsStatusbar, WarningsView } from './WarningsView'
 import {
+  initialView,
+  recordToJSONMapper,
+  resultHasNodes,
+  resultHasPlan,
   resultHasRows,
   resultHasWarnings,
-  resultHasPlan,
   resultIsError,
-  resultHasNodes,
-  initialView,
   stringifyResultArray,
-  transformResultRecordsToResultArray,
-  recordToJSONMapper
+  transformResultRecordsToResultArray
 } from './helpers'
-import { SpinnerContainer, StyledStatsBarContainer } from '../styled'
+import Centered from 'browser-components/Centered'
+import Display from 'browser-components/Display'
+import { CypherFrameButton } from 'browser-components/buttons'
+import {
+  AlertIcon,
+  AsciiIcon,
+  CodeIcon,
+  ErrorIcon,
+  PlanIcon,
+  SpinnerIcon,
+  TableIcon,
+  VisualizationIcon
+} from 'browser-components/icons/Icons'
 import { StyledFrameBody } from 'browser/modules/Frame/styled'
-import {
-  getMaxRows,
-  getInitialNodeDisplay,
-  getMaxNeighbours,
-  shouldAutoComplete
-} from 'shared/modules/settings/settingsDuck'
-import {
-  setRecentView,
-  getRecentView,
-  Frame,
-  SetRecentViewAction
-} from 'shared/modules/frames/framesDuck'
-import { CancelView } from './CancelView'
+import { requestExceedsVisLimits } from 'browser/modules/Stream/CypherFrame/helpers'
 import RelatableView, {
   RelatableStatusbar
 } from 'browser/modules/Stream/CypherFrame/relatable-view'
-import { requestExceedsVisLimits } from 'browser/modules/Stream/CypherFrame/helpers'
-import { GlobalState } from 'shared/globalState'
-import { BaseFrameProps } from '../Stream'
 import { csvFormat, stringModifier } from 'services/bolt/cypherTypesFormatting'
-import { CSVSerializer } from 'services/serializer'
-import { map } from 'lodash'
-import { stringifyMod } from 'services/utils'
 import { downloadPNGFromSVG, downloadSVG } from 'services/exporting/imageUtils'
-import { saveAs } from 'file-saver'
+import { CSVSerializer } from 'services/serializer'
+import { stringifyMod } from 'services/utils'
+import { GlobalState } from 'shared/globalState'
+import * as ViewTypes from 'shared/modules/frames/frameViewTypes'
+import {
+  Frame,
+  SetRecentViewAction,
+  getRecentView,
+  setRecentView
+} from 'shared/modules/frames/framesDuck'
+import {
+  BrowserRequest,
+  BrowserRequestResult,
+  REQUEST_STATUS_PENDING,
+  REQUEST_STATUS_SUCCESS,
+  getRequest,
+  isCancelStatus
+} from 'shared/modules/requests/requestsDuck'
+import {
+  getInitialNodeDisplay,
+  getMaxNeighbours,
+  getMaxRows,
+  shouldAutoComplete
+} from 'shared/modules/settings/settingsDuck'
 
 export type CypherFrameProps = BaseFrameProps & {
   autoComplete: boolean
@@ -451,10 +448,8 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
   render(): JSX.Element {
     const { frame = {} as Frame, request = {} as BrowserRequest } = this.props
     const { cmd: query = '' } = frame
-    const {
-      result = {} as BrowserRequestResult,
-      status: requestStatus
-    } = request
+    const { result = {} as BrowserRequestResult, status: requestStatus } =
+      request
 
     const frameContents =
       requestStatus === REQUEST_STATUS_PENDING ? (

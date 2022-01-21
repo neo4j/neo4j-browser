@@ -18,8 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-import { NATIVE, KERBEROS } from 'services/bolt/boltHelpers'
+import { KERBEROS, NATIVE } from 'services/bolt/boltHelpers'
 import { upperFirst } from 'services/utils'
 
 const notEmpty = (str: any) => str.length > 0

@@ -17,13 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import measureText from './textMeasurement'
-import distributeCircular from './circumferentialDistribution'
-import StraightArrow from './StraightArrow'
-import ArcArrow from './ArcArrow'
-import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
-import Relationship from '../components/Relationship'
 import Graph from '../components/Graph'
+import Relationship from '../components/Relationship'
+import ArcArrow from './ArcArrow'
+import StraightArrow from './StraightArrow'
+import distributeCircular from './circumferentialDistribution'
+import measureText from './textMeasurement'
+import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
 
 export type ArrowAngle = {
   floating: Record<string, number>

@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import { flattenAttributes } from './sysinfo-utils'
 import { toHumanReadableBytes } from 'services/utils'
 
@@ -158,7 +157,7 @@ function flatten<T>(acc: T[], curr: T[]): T[] {
 }
 
 export const responseHandler = (setState: (newState: any) => void) =>
-  function(res: any): void {
+  function (res: any): void {
     if (!res || !res.result || !res.result.records) {
       setState({ errorMessage: 'Call to dbms.queryJmx failed' })
       return
@@ -173,10 +172,7 @@ export const responseHandler = (setState: (newState: any) => void) =>
           }
         }
         const mappedRecord = {
-          name: record
-            .get('name')
-            .split('.')
-            .pop(),
+          name: record.get('name').split('.').pop(),
           value: (
             record.get('attributes').Count || record.get('attributes').Value
           ).value

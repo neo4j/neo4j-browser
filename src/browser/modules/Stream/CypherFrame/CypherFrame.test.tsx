@@ -17,9 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import React from 'react'
 import { render } from '@testing-library/react'
+import React from 'react'
 import { Provider } from 'react-redux'
 
 import { CypherFrame, CypherFrameProps } from './CypherFrame'
@@ -75,13 +74,8 @@ describe('CypherFrame', () => {
     const errorProps = createProps('error', { code: 'Test.Error' } as any)
 
     // When
-    const {
-      queryByText,
-      getByText,
-      getAllByText,
-      getByTestId,
-      rerender
-    } = render(withProvider(store, <CypherFrame {...pendingProps} />))
+    const { queryByText, getByText, getAllByText, getByTestId, rerender } =
+      render(withProvider(store, <CypherFrame {...pendingProps} />))
 
     // Then
     expect(getByTestId('spinner')).not.toBeNull()

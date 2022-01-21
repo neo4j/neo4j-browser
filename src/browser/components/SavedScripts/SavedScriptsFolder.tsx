@@ -19,30 +19,29 @@
  */
 import React, { useState } from 'react'
 import { useDrop } from 'react-dnd'
+
 import { useCustomBlur, useNameUpdate } from './hooks'
-
 import {
-  NavIcon,
-  FolderIcon,
-  SavedScriptsCollapseMenuIcon,
-  SavedScriptsExpandMenuRightIcon
-} from 'browser-components/icons/Icons'
-
-import {
+  ChildrenContainer,
+  ContextMenu,
+  ContextMenuContainer,
+  ContextMenuHoverParent,
+  ContextMenuItem,
+  FolderNameWrapper,
   SavedScriptsButtonWrapper,
   SavedScriptsFolderHeader,
   SavedScriptsFolderLabel,
   SavedScriptsFolderMain,
-  SavedScriptsInput,
-  ChildrenContainer,
-  FolderNameWrapper,
-  ContextMenuHoverParent,
-  ContextMenu,
-  ContextMenuContainer,
-  ContextMenuItem
+  SavedScriptsInput
 } from './styled'
-import { Folder } from 'shared/modules/favorites/foldersDuck'
+import {
+  FolderIcon,
+  NavIcon,
+  SavedScriptsCollapseMenuIcon,
+  SavedScriptsExpandMenuRightIcon
+} from 'browser-components/icons/Icons'
 import { ExportFormat } from 'services/exporting/favoriteUtils'
+import { Folder } from 'shared/modules/favorites/foldersDuck'
 
 interface SavedScriptsFolderProps {
   folder: Folder

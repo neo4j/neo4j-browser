@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo } from 'react'
-import { FOCUS } from 'shared/modules/editor/editorDuck'
 import { Bus } from 'suber'
+
+import { FOCUS } from 'shared/modules/editor/editorDuck'
 
 export const isMac = /Mac|iPad/.test(navigator.platform)
 const modKey = isMac ? 'metaKey' : 'ctrlKey'
@@ -72,9 +73,10 @@ export function useKeyboardShortcuts(bus: Bus): void {
     [trigger]
   )
 
-  const keyboardShortcuts = useMemo(() => [focusEditorOnSlash], [
-    focusEditorOnSlash
-  ])
+  const keyboardShortcuts = useMemo(
+    () => [focusEditorOnSlash],
+    [focusEditorOnSlash]
+  )
 
   useEffect(() => {
     keyboardShortcuts.forEach(shortcut =>

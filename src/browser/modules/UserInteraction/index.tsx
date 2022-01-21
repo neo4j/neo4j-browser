@@ -17,10 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import { Component } from 'react'
 import { withBus } from 'react-suber'
 import { Bus } from 'suber'
+
 import { throttle } from 'services/utils'
 import { USER_INTERACTION } from 'shared/modules/userInteraction/userInteractionDuck'
 

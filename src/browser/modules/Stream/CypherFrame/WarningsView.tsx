@@ -18,19 +18,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React, { Component } from 'react'
-import { deepEquals } from 'services/utils'
+
 import {
+  StyledBr,
+  StyledCypherErrorMessage,
   StyledCypherMessage,
   StyledCypherWarningMessage,
-  StyledCypherErrorMessage,
-  StyledHelpContent,
-  StyledH4,
-  StyledPreformattedArea,
-  StyledHelpDescription,
   StyledDiv,
-  StyledBr,
-  StyledHelpFrame
+  StyledH4,
+  StyledHelpContent,
+  StyledHelpDescription,
+  StyledHelpFrame,
+  StyledPreformattedArea
 } from '../styled'
+import { deepEquals } from 'services/utils'
 
 const getWarningComponent = (severity: any) => {
   if (severity === 'ERROR') {

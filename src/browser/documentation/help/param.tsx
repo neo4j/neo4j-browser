@@ -17,9 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React from 'react'
+
 import ParamsOnSystemDb from './partials/params-on-systemdb'
+
 const title = 'Set a parameter'
 const subtitle = 'Set a parameter to be sent with queries.'
 const category = 'cypherQueries'

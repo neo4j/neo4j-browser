@@ -17,17 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   authenticate,
-  initialize,
-  status,
   getResourceFor,
+  initialize,
   setupUser,
-  signOut
+  signOut,
+  status
 } from 'services/browserSyncService'
 import { getBrowserName } from 'services/utils'
-import { UP, DOWN } from 'shared/modules/sync/syncDuck'
+import { DOWN, UP } from 'shared/modules/sync/syncDuck'
 
 class SyncSignInManager {
   _downTimer: any

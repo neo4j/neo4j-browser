@@ -17,24 +17,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import React from 'react'
 import { includes, last, split, startsWith } from 'lodash-es'
+import React from 'react'
 
-import MdxSlide from 'browser/modules/Docs/MDX/MdxSlide'
-import Slide from 'browser/modules/Carousel/Slide'
-import docs, { isBuiltInGuide } from 'browser/documentation'
-import guideUnfound from 'browser/documentation/sidebar-guides/unfound'
 import {
   addProtocolsToUrlList,
   extractAllowlistFromConfigString,
   resolveAllowlistWildcard
 } from './utils'
-import { fetchRemoteGuideAsync } from 'shared/modules/commands/helpers/playAndGuides'
-import {
-  getDefaultRemoteContentHostnameAllowlist,
-  getRemoteContentHostnameAllowlist
-} from 'shared/modules/dbMeta/state'
+import docs, { isBuiltInGuide } from 'browser/documentation'
+import guideUnfound from 'browser/documentation/sidebar-guides/unfound'
+import Slide from 'browser/modules/Carousel/Slide'
+import MdxSlide from 'browser/modules/Docs/MDX/MdxSlide'
 import { splitMdxSlides } from 'browser/modules/Docs/MDX/splitMdx'
 import {
   StyledCypherErrorMessage,
@@ -46,6 +40,11 @@ import {
   StyledPreformattedArea
 } from 'browser/modules/Stream/styled'
 import { GlobalState } from 'shared/globalState'
+import { fetchRemoteGuideAsync } from 'shared/modules/commands/helpers/playAndGuides'
+import {
+  getDefaultRemoteContentHostnameAllowlist,
+  getRemoteContentHostnameAllowlist
+} from 'shared/modules/dbMeta/state'
 
 interface ResponseException extends Error {
   response: Response

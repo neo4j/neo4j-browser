@@ -19,19 +19,20 @@
  */
 import React from 'react'
 import styled from 'styled-components'
+
 import {
-  UP,
   DOWN,
   LEFT,
   RIGHT,
-  getInitialState,
-  transitionDirection,
-  rect,
-  newFood,
+  UP,
   doesCollide,
   foodColor,
+  getInitialState,
+  maxSpeed,
+  newFood,
+  rect,
   snakeColor,
-  maxSpeed
+  transitionDirection
 } from './helpers'
 
 const SnakeCanvas = styled.canvas`

@@ -17,11 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import React from 'react'
 import { render } from '@testing-library/react/pure'
 import neo4j from 'neo4j-driver'
-import { PlanView, PlanStatusbar, PlanViewProps } from './PlanView'
+import React from 'react'
+
+import { PlanStatusbar, PlanView, PlanViewProps } from './PlanView'
 
 describe('PlanViews', () => {
   describe('PlanView', () => {

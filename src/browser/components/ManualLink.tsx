@@ -17,15 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import { formatDocVersion } from 'browser/modules/Sidebar/docsUtils'
 import React from 'react'
 import { connect } from 'react-redux'
 import semver from 'semver'
 
-import { getVersion } from 'shared/modules/dbMeta/state'
 import { DrawerExternalLink } from './drawer/drawer-styled'
+import { formatDocVersion } from 'browser/modules/Sidebar/docsUtils'
 import { GlobalState } from 'project-root/src/shared/globalState'
+import { getVersion } from 'shared/modules/dbMeta/state'
 
 const movedPages: { [key: string]: { oldPage: string; oldContent: string } } = {
   '/administration/indexes-for-search-performance/': {

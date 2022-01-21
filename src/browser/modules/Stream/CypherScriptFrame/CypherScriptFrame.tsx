@@ -17,23 +17,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import { connect } from 'react-redux'
 import React from 'react'
-import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
-import {
-  getRequest,
-  BrowserRequest
-} from 'shared/modules/requests/requestsDuck'
-import { Frame, getFrame } from 'shared/modules/frames/framesDuck'
-import { StyledStatusSection } from 'browser-components/buttons'
+import { connect } from 'react-redux'
 
-import { StyledFrameTitlebarButtonSection } from 'browser/modules/Frame/styled'
-import { WrapperCenter, ContentSizer, PointerFrameCommand } from './styled'
-import Accordion from 'browser-components/Accordion/Accordion'
-import { Summary, CypherSummary } from './Summary'
-import { Icon } from './Icon'
+import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
 import { BaseFrameProps } from '../Stream'
+import { Icon } from './Icon'
+import { CypherSummary, Summary } from './Summary'
+import { ContentSizer, PointerFrameCommand, WrapperCenter } from './styled'
+import Accordion from 'browser-components/Accordion/Accordion'
+import { StyledStatusSection } from 'browser-components/buttons'
+import { StyledFrameTitlebarButtonSection } from 'browser/modules/Frame/styled'
+import { Frame, getFrame } from 'shared/modules/frames/framesDuck'
+import {
+  BrowserRequest,
+  getRequest
+} from 'shared/modules/requests/requestsDuck'
 
 const isCypher = (str: string) => !str.startsWith(':')
 

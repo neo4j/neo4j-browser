@@ -14,15 +14,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
+import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
 
 import { AutoExecButtonComponent } from './auto-exec-button'
 
 const send = jest.fn()
 
-describe('AutoExecButton', function() {
+describe('AutoExecButton', function () {
   beforeEach(() => {
     jest.resetAllMocks()
   })

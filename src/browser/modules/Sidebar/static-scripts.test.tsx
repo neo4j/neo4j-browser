@@ -17,13 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
-import { Provider } from 'react-redux'
-import { createStore } from 'redux'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
+import { Provider } from 'react-redux'
+import { createStore } from 'redux'
 
 import Favorites from './static-scripts'
 import { folders, scripts } from 'shared/modules/favorites/staticScripts'

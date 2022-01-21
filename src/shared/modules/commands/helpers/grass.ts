@@ -17,9 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import { hostIsAllowed } from 'services/utils'
 import remote from 'services/remote'
+import { hostIsAllowed } from 'services/utils'
 
 export const fetchRemoteGrass = (url: any, allowlist?: string) => {
   return new Promise<void>((resolve, reject) => {

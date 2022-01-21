@@ -17,12 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import { Component } from 'react'
 import { connect } from 'react-redux'
+
 import { canUseDOM } from 'services/utils'
 import { inDesktop } from 'shared/modules/app/appDuck'
-
 import {
   getAuraNtId,
   getDesktopTrackingId,
@@ -55,7 +54,12 @@ export class Segment extends Component<any> {
       return
     }
     if (!(window as any).analytics) {
-      ;(function(window: any, document: Document, segmentKey: string, a?: any) {
+      ;(function (
+        window: any,
+        document: Document,
+        segmentKey: string,
+        a?: any
+      ) {
         const analytics = (window.analytics = window.analytics || [])
         if (!analytics.initialize) {
           if (analytics.invoked) {
@@ -86,8 +90,8 @@ export class Segment extends Component<any> {
               'setAnonymousId',
               'addDestinationMiddleware'
             ]
-            analytics.factory = function(t: any) {
-              return function() {
+            analytics.factory = function (t: any) {
+              return function () {
                 const e = Array.prototype.slice.call(arguments)
                 e.unshift(t)
                 analytics.push(e)
@@ -98,7 +102,7 @@ export class Segment extends Component<any> {
               const e = analytics.methods[t]
               analytics[e] = analytics.factory(e)
             }
-            analytics.load = function(t: any, e: any) {
+            analytics.load = function (t: any, e: any) {
               const n = document.createElement('script')
               n.type = 'text/javascript'
               n.async = !0

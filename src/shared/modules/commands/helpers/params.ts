@@ -18,10 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import jsonic from 'jsonic'
-import { splitStringOnFirst } from 'services/commandUtils'
-import { update, replace } from 'shared/modules/params/paramsDuck'
+
 import { collectLambdaValues, parseLambdaStatement } from './lambdas'
+import { splitStringOnFirst } from 'services/commandUtils'
 import { SYSTEM_DB } from 'shared/modules/dbMeta/constants'
+import { replace, update } from 'shared/modules/params/paramsDuck'
 
 export const extractParams = (param: any) => {
   // early bail, now handled by parser

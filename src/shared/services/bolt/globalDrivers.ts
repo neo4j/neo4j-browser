@@ -17,14 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import neo4j, { Driver } from 'neo4j-driver'
+
 import { createDriverOrFailFn } from './driverFactory'
 import { KERBEROS, NATIVE, SSO } from 'services/bolt/boltHelpers'
 import {
   isNonRoutingScheme,
-  toNonRoutingScheme,
-  isNonSupportedRoutingSchemeError
+  isNonSupportedRoutingSchemeError,
+  toNonRoutingScheme
 } from 'services/boltscheme.utils'
 import { Connection } from 'shared/modules/connections/connectionsDuck'
 

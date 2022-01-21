@@ -17,28 +17,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import { v4 } from 'uuid'
 import neo4j from 'neo4j-driver'
+import { v4 } from 'uuid'
+
 import WorkPool from '../WorkPool'
-import * as mappings from './boltMappings'
 import * as boltConnection from './boltConnection'
+import * as mappings from './boltMappings'
+import {
+  cancelTransactionMessage,
+  closeConnectionMessage,
+  runCypherMessage
+} from './boltWorkerMessages'
+import { addTypesAsField, setupBoltWorker } from './setup-bolt-worker'
 import {
   cancelTransaction as globalCancelTransaction,
+  directTransaction as globalDirectTransaction,
   routedReadTransaction as globalRoutedReadTransaction,
-  routedWriteTransaction as globalRoutedWriteTransaction,
-  directTransaction as globalDirectTransaction
+  routedWriteTransaction as globalRoutedWriteTransaction
 } from './transactions'
-import {
-  runCypherMessage,
-  cancelTransactionMessage,
-  closeConnectionMessage
-} from './boltWorkerMessages'
 import { NATIVE } from 'services/bolt/boltHelpers'
-import { setupBoltWorker, addTypesAsField } from './setup-bolt-worker'
-
-import BoltWorkerModule from 'shared/services/bolt/boltWorker'
 import { Connection } from 'shared/modules/connections/connectionsDuck'
+import BoltWorkerModule from 'shared/services/bolt/boltWorker'
 
 let connectionProperties: {} | null = null
 let _useDb: string | null = null
