@@ -98,6 +98,7 @@ export class SysInfoFrame extends Component<
 
   componentDidMount(): void {
     this.getSettings()
+      // TODO This throws when it shouldn't
       .then(this.getSysInfo)
       .catch(errorMessage => this.setState({ errorMessage }))
   }
