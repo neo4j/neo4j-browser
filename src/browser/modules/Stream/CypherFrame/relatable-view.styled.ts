@@ -14,7 +14,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 import styled from 'styled-components'
 
 export const RelatableStyleWrapper = styled.div`
@@ -42,7 +41,7 @@ export const RelatableStyleWrapper = styled.div`
 export const StyledJsonPre = styled.pre`
   background-color: ${props => props.theme.preBackground};
   border-radius: 5px;
-  margin: 20px 10px;
+  margin: 0px 10px;
   border-bottom: none;
   color: ${props => props.theme.preText};
   line-height: 26px;
@@ -57,6 +56,6 @@ export const StyledPreSpan = styled.span`
 `
 export const CopyIconAbsolutePositioner = styled.span`
   position: absolute;
-  right: 15px;
-  top: 15px;
+  right: 10px;
+  top: 4px;
 `
