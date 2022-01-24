@@ -87,7 +87,7 @@ export const handleParamsCommand = (action: any, put: any, targetDb?: any) => {
   const param = parts[1].trim()
 
   return Promise.resolve().then(() => {
-    if (/^"?\{.*\}"?$/.test(param)) {
+    if (/^"?\{[\s\S]*\}"?$/.test(param)) {
       // JSON object string {"x": 2, "y":"string"}
       try {
         const res = jsonic(param.replace(/^"/, '').replace(/"$/, '')) // Remove any surrounding quotes

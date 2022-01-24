@@ -21,10 +21,8 @@
 /* global Cypress, cy, before */
 
 describe(':param in Browser', () => {
-  before(function() {
-    cy.visit(Cypress.config('url'))
-      .title()
-      .should('include', 'Neo4j Browser')
+  before(function () {
+    cy.visit(Cypress.config('url')).title().should('include', 'Neo4j Browser')
     cy.wait(3000)
   })
   it('handles :param without web worker', () => {
@@ -120,5 +118,18 @@ function runTests() {
     cy.waitForCommandResult()
     cy.resultContains('point({srid:4326, x:12.9082, y:57.7346})')
   }
+  // })
+
+  // :params
+  // it('can set :params with multiple lines syntax', () => {
+  cy.executeCommand(':clear')
+  setParamQ = `:params {{} x: 1,{shift}{enter}stringWithSpace:'with space',{shift}{enter}stringWithTab: 'with\ttab'{}}`
+  cy.executeCommand(setParamQ)
+  cy.get('[data-testid="rawParamData"]', { timeout: 20000 })
+    .first()
+    .should(
+      'contain',
+      '{\n  "x": 1.0,\n  "stringWithSpace": "with space",\n  "stringWithTab": "\'with\ttab\'"\n}'
+    )
   // })
 }
