@@ -18,14 +18,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { QueryResult, types } from 'neo4j-driver'
-import WorkPool from 'services/WorkPool'
+
 import { applyGraphTypes } from './boltMappings'
 import {
+  BOLT_CONNECTION_ERROR_MESSAGE,
   CYPHER_ERROR_MESSAGE,
   CYPHER_RESPONSE_MESSAGE,
-  POST_CANCEL_TRANSACTION_MESSAGE,
-  BOLT_CONNECTION_ERROR_MESSAGE
+  POST_CANCEL_TRANSACTION_MESSAGE
 } from './boltWorkerMessages'
+import WorkPool from 'services/WorkPool'
 
 export const setupBoltWorker = (
   boltWorkPool: WorkPool,

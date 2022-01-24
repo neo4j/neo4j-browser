@@ -17,10 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React from 'react'
-import ManualLink from 'browser-components/ManualLink'
+
 import { BuiltInGuideSidebarSlide } from '../../modules/Carousel/Slide'
+import ManualLink from 'browser-components/ManualLink'
 import { DrawerExternalLink } from 'browser-components/drawer/drawer-styled'
 
 const title = 'Movie Graph Guide'

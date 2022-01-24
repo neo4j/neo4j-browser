@@ -3,15 +3,15 @@
 exports[`LabelItems renders empty 1`] = `
 <div>
   <div
-    class="sc-ifAKCX gXIdDM"
+    class="sc-fjdhpX gbVcme"
   >
     <h5
-      class="sc-bxivhb gjWjEn"
+      class="sc-jTzLTM gMfcEb"
     >
       Node Labels
     </h5>
     <div
-      class="sc-EHOje fyzZhj"
+      class="sc-jzJRlG bBkVBZ"
     >
       <p>
         There are no labels in database
@@ -24,30 +24,30 @@ exports[`LabelItems renders empty 1`] = `
 exports[`LabelItems renders labels 1`] = `
 <div>
   <div
-    class="sc-ifAKCX gXIdDM"
+    class="sc-fjdhpX gbVcme"
   >
     <h5
-      class="sc-bxivhb gjWjEn"
+      class="sc-jTzLTM gMfcEb"
     >
       Node Labels
     </h5>
     <div
-      class="sc-EHOje fyzZhj"
+      class="sc-jzJRlG bBkVBZ"
     >
       <div
-        class="sc-gZMcBi sc-gqjmRU bszfIc"
+        class="sc-bwzfXH sc-htpNat hxlDKB"
         data-testid="sidebarMetaItem"
       >
         *(5)
       </div>
       <div
-        class="sc-gZMcBi sc-gqjmRU bszfIc"
+        class="sc-bwzfXH sc-htpNat hxlDKB"
         data-testid="sidebarMetaItem"
       >
         MyLabel
       </div>
       <div
-        class="sc-gZMcBi sc-gqjmRU bszfIc"
+        class="sc-bwzfXH sc-htpNat hxlDKB"
         data-testid="sidebarMetaItem"
       >
         MyLabel2
@@ -60,15 +60,15 @@ exports[`LabelItems renders labels 1`] = `
 exports[`PropertyItems renders empty 1`] = `
 <div>
   <div
-    class="sc-ifAKCX gXIdDM"
+    class="sc-fjdhpX gbVcme"
   >
     <h5
-      class="sc-bxivhb gjWjEn"
+      class="sc-jTzLTM gMfcEb"
     >
       Property Keys
     </h5>
     <div
-      class="sc-EHOje fyzZhj"
+      class="sc-jzJRlG bBkVBZ"
     >
       <p>
         There are no properties in database
@@ -81,24 +81,24 @@ exports[`PropertyItems renders empty 1`] = `
 exports[`PropertyItems renders properties 1`] = `
 <div>
   <div
-    class="sc-ifAKCX gXIdDM"
+    class="sc-fjdhpX gbVcme"
   >
     <h5
-      class="sc-bxivhb gjWjEn"
+      class="sc-jTzLTM gMfcEb"
     >
       Property Keys
     </h5>
     <div
-      class="sc-EHOje fyzZhj"
+      class="sc-jzJRlG bBkVBZ"
     >
       <div
-        class="sc-gZMcBi sc-jTzLTM kqjkqn"
+        class="sc-bwzfXH sc-ifAKCX hkamDg"
         data-testid="sidebarMetaItem"
       >
         prop1
       </div>
       <div
-        class="sc-gZMcBi sc-jTzLTM kqjkqn"
+        class="sc-bwzfXH sc-ifAKCX hkamDg"
         data-testid="sidebarMetaItem"
       >
         prop2
@@ -111,15 +111,15 @@ exports[`PropertyItems renders properties 1`] = `
 exports[`RelationshipItems renders empty 1`] = `
 <div>
   <div
-    class="sc-ifAKCX gXIdDM"
+    class="sc-fjdhpX gbVcme"
   >
     <h5
-      class="sc-bxivhb gjWjEn"
+      class="sc-jTzLTM gMfcEb"
     >
       Relationship Types
     </h5>
     <div
-      class="sc-EHOje fyzZhj"
+      class="sc-jzJRlG bBkVBZ"
     >
       <p>
         No relationships in database
@@ -132,30 +132,30 @@ exports[`RelationshipItems renders empty 1`] = `
 exports[`RelationshipItems renders relationshipTypes 1`] = `
 <div>
   <div
-    class="sc-ifAKCX gXIdDM"
+    class="sc-fjdhpX gbVcme"
   >
     <h5
-      class="sc-bxivhb gjWjEn"
+      class="sc-jTzLTM gMfcEb"
     >
       Relationship Types
     </h5>
     <div
-      class="sc-EHOje fyzZhj"
+      class="sc-jzJRlG bBkVBZ"
     >
       <div
-        class="sc-gZMcBi sc-VigVT hzykkh"
+        class="sc-bwzfXH sc-bxivhb gbnRcf"
         data-testid="sidebarMetaItem"
       >
         *(5)
       </div>
       <div
-        class="sc-gZMcBi sc-VigVT hzykkh"
+        class="sc-bwzfXH sc-bxivhb gbnRcf"
         data-testid="sidebarMetaItem"
       >
         MY_TYPE
       </div>
       <div
-        class="sc-gZMcBi sc-VigVT hzykkh"
+        class="sc-bwzfXH sc-bxivhb gbnRcf"
         data-testid="sidebarMetaItem"
       >
         MY_TYPE2

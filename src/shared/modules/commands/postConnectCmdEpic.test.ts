@@ -17,14 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import configureMockStore from 'redux-mock-store'
 import { createEpicMiddleware } from 'redux-observable'
 import { createBus, createReduxMiddleware } from 'suber'
-import { UPDATE_SETTINGS } from 'shared/modules/dbMeta/constants'
 
 import * as commands from './commandsDuck'
 import { CONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
+import { UPDATE_SETTINGS } from 'shared/modules/dbMeta/constants'
 
 describe('postConnectCmdEpic', () => {
   test('creates a SYSTEM_COMMAND_QUEUED if found', done => {

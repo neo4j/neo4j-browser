@@ -17,8 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import reducer, { SidebarState, toggle, setDraftScript } from './sidebarDuck'
+import reducer, { SidebarState, setDraftScript, toggle } from './sidebarDuck'
 
 describe('sidebarDuck', () => {
   test('should open a drawer when closed', () => {

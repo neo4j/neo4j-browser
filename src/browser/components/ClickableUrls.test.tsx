@@ -14,9 +14,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-import React from 'react'
 import { render } from '@testing-library/react'
+import React from 'react'
+
 import ClickableUrls from './ClickableUrls'
 
 describe('clickable-urls', () => {

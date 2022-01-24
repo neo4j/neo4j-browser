@@ -17,14 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import uuid from 'uuid'
-import Directives from 'browser-components/Directives'
+
 import Carousel from '../Carousel/Carousel'
 import Slide from '../Carousel/Slide'
 import MdxSlide from './MDX/MdxSlide'
 import { splitMdxSlides } from './MDX/splitMdx'
+import Directives from 'browser-components/Directives'
 
 type DocsProps = {
   slides?: JSX.Element[] | null

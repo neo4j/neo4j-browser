@@ -17,25 +17,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React from 'react'
 import { connect } from 'react-redux'
+
 import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
+import ConnectedView from './ConnectedView'
 import {
   StyledConnectionAside,
-  StyledConnectionBodyContainer,
-  StyledConnectionBody
+  StyledConnectionBody,
+  StyledConnectionBodyContainer
 } from './styled'
-import ConnectedView from './ConnectedView'
 import { H3 } from 'browser-components/headers'
-
+import { ClickToCode } from 'browser/modules/ClickToCode/index'
 import {
-  getActiveConnectionData,
   getActiveConnection,
+  getActiveConnectionData,
   isConnected
 } from 'shared/modules/connections/connectionsDuck'
 import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/state'
-import { ClickToCode } from 'browser/modules/ClickToCode/index'
 
 export const ServerStatusFrame = (props: any) => {
   const { activeConnectionData, storeCredentials, isConnected } = props

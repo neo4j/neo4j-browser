@@ -19,10 +19,11 @@
  */
 import React, { useEffect } from 'react'
 import { withBus } from 'react-suber'
-import * as editor from 'shared/modules/editor/editorDuck'
+
 import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
-import { UnstyledList, PaddedDiv } from './styled'
 import HistoryRow from './HistoryRow'
+import { PaddedDiv, UnstyledList } from './styled'
+import * as editor from 'shared/modules/editor/editorDuck'
 
 export const HistoryFrame = (props: any) => {
   const { frame, bus, setExportItems } = props

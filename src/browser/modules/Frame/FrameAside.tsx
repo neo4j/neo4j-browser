@@ -17,12 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React, { useContext } from 'react'
-import { H3 } from 'browser-components/headers'
-import { Lead } from 'browser-components/Text'
-import { DARK_THEME } from 'shared/modules/settings/settingsDuck'
 import { ThemeContext } from 'styled-components'
+
+import { Lead } from 'browser-components/Text'
+import { H3 } from 'browser-components/headers'
+import { DARK_THEME } from 'shared/modules/settings/settingsDuck'
 
 function FrameAside(props: any) {
   const theme = useContext(ThemeContext)

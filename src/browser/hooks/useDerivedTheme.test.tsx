@@ -17,15 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import { act, render } from '@testing-library/react'
 import React from 'react'
-import { render, act } from '@testing-library/react'
+
 import useDerivedTheme from './useDerivedTheme'
 import {
-  LIGHT_THEME,
-  OUTLINE_THEME,
   AUTO_THEME,
-  DARK_THEME
+  DARK_THEME,
+  LIGHT_THEME,
+  OUTLINE_THEME
 } from 'shared/modules/settings/settingsDuck'
 
 describe('useDerivedTheme', () => {

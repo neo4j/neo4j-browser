@@ -17,14 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import { render } from '@testing-library/react'
 import React from 'react'
 import { createBus } from 'suber'
 
 import { UserAdd } from './UserAdd'
-import { ROUTED_CYPHER_WRITE_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { listRolesQuery } from 'shared/modules/cypher/boltUserHelper'
+import { ROUTED_CYPHER_WRITE_REQUEST } from 'shared/modules/cypher/cypherDuck'
 
 // Stubbing out components dependant on the store
 jest.mock('browser/modules/Frame/FrameTitlebar', () => () => null)

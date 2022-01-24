@@ -3,10 +3,10 @@
 exports[`AsciiViews AsciiStatusbar displays statusBarMessage if no rows 1`] = `
 <div>
   <div
-    class="sc-gipzik hLTrPI"
+    class="sc-jlyJG dMPRjC"
   >
     <div
-      class="sc-bdVaJa kwzqrW"
+      class="sc-uJMKN VhEfq"
     >
       Completed after 10  ms.
     </div>
@@ -17,17 +17,17 @@ exports[`AsciiViews AsciiStatusbar displays statusBarMessage if no rows 1`] = `
 exports[`AsciiViews AsciiStatusbar displays statusBarMessage if no rows 2`] = `
 <div>
   <div
-    class="sc-gipzik hLTrPI"
+    class="sc-jlyJG dMPRjC"
   >
     <div
-      class="sc-caSCKo izUVoK"
+      class="sc-fAjcbJ jiKBrO"
     >
       <div
-        class="sc-kjoXOD gydYuY"
+        class="sc-gisBJw fAQHWm"
       >
         Max column width:
         <input
-          class="sc-cHGsZl dQKxEh"
+          class="sc-kjoXOD fOBTMh"
           max="3"
           min="3"
           type="range"
@@ -42,10 +42,10 @@ exports[`AsciiViews AsciiStatusbar displays statusBarMessage if no rows 2`] = `
 exports[`AsciiViews AsciiView displays bodyMessage if no rows 1`] = `
 <div>
   <div
-    class="sc-kGXeez jXRZHy"
+    class="sc-kgoBCf eFYvIT"
   >
     <div
-      class="sc-hzDkRC bFjnRm"
+      class="sc-bRBYWo cJFbiU"
     >
       (no changes, no records)
     </div>
@@ -56,10 +56,10 @@ exports[`AsciiViews AsciiView displays bodyMessage if no rows 1`] = `
 exports[`AsciiViews AsciiView does not display bodyMessage if rows 1`] = `
 <div>
   <div
-    class="sc-kGXeez jXRZHy"
+    class="sc-kgoBCf eFYvIT"
   >
     <pre
-      class="sc-csuQGl gEmoAQ"
+      class="sc-gipzik gTmrIn"
     >
       ╒═══╕
 │"x"│

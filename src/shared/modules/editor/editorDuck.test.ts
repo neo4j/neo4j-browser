@@ -17,19 +17,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import { EditorSupportCompletionItem } from 'cypher-editor-support'
 import configureMockStore from 'redux-mock-store'
 import { createEpicMiddleware } from 'redux-observable'
 import { createBus, createReduxMiddleware } from 'suber'
-import {
-  populateEditorFromUrlEpic,
-  SET_CONTENT,
-  NOT_SUPPORTED_URL_PARAM_COMMAND,
-  getText
-} from './editorDuck'
+
 import { APP_START, URL_ARGUMENTS_CHANGE } from '../app/appDuck'
 import { COMMAND_QUEUED, executeCommand } from '../commands/commandsDuck'
-import { EditorSupportCompletionItem } from 'cypher-editor-support'
+import {
+  NOT_SUPPORTED_URL_PARAM_COMMAND,
+  SET_CONTENT,
+  getText,
+  populateEditorFromUrlEpic
+} from './editorDuck'
 
 describe('editorDuck Epics', () => {
   let store: any

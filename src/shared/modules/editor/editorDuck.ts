@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   CypherEditorSupport,
   EditorSupportCompletionItem
@@ -33,6 +32,13 @@ import {
 } from 'browser/modules/Editor/CypherMonacoThemes'
 import { CypherTokensProvider } from 'browser/modules/Editor/CypherTokensProvider'
 import cypherFunctions from 'browser/modules/Editor/cypher/functions'
+import {
+  toFunction,
+  toLabel,
+  toProcedure,
+  toPropertyKey,
+  toRelationshipType
+} from 'browser/modules/Editor/editorSchemaConverter'
 import consoleCommands from 'browser/modules/Editor/language/consoleCommands'
 import { getUrlParamValue } from 'services/utils'
 import { GlobalState } from 'shared/globalState'
@@ -47,13 +53,6 @@ import {
   LIGHT_THEME,
   OUTLINE_THEME
 } from 'shared/modules/settings/settingsDuck'
-import {
-  toFunction,
-  toLabel,
-  toProcedure,
-  toPropertyKey,
-  toRelationshipType
-} from 'browser/modules/Editor/editorSchemaConverter'
 
 export const SET_CONTENT = 'editor/SET_CONTENT'
 export const EDIT_CONTENT = 'editor/EDIT_CONTENT'
@@ -204,9 +203,8 @@ export const initializeCypherEditorEpic: Epic<
       languages.registerCompletionItemProvider('cypher', {
         triggerCharacters: ['.', ':', '[', '(', '{', '$'],
         provideCompletionItems: (model, position) => {
-          const { startColumn, endColumn } = model.getWordUntilPosition(
-            position
-          )
+          const { startColumn, endColumn } =
+            model.getWordUntilPosition(position)
           const range = {
             startLineNumber: position.lineNumber,
             endLineNumber: position.lineNumber,
@@ -224,22 +222,20 @@ export const initializeCypherEditorEpic: Epic<
           } catch {}
 
           const { CompletionItemKind } = languages
-          const completionTypes: Record<
-            string,
-            languages.CompletionItemKind
-          > = {
-            keyword: CompletionItemKind.Keyword,
-            label: CompletionItemKind.Field,
-            relationshipType: CompletionItemKind.Reference,
-            variable: CompletionItemKind.Variable,
-            procedure: CompletionItemKind.Function,
-            function: CompletionItemKind.Function,
-            parameter: CompletionItemKind.TypeParameter,
-            propertyKey: CompletionItemKind.Property,
-            consoleCommand: CompletionItemKind.Function,
-            consoleCommandSubcommand: CompletionItemKind.Function,
-            procedureOutput: CompletionItemKind.Operator
-          }
+          const completionTypes: Record<string, languages.CompletionItemKind> =
+            {
+              keyword: CompletionItemKind.Keyword,
+              label: CompletionItemKind.Field,
+              relationshipType: CompletionItemKind.Reference,
+              variable: CompletionItemKind.Variable,
+              procedure: CompletionItemKind.Function,
+              function: CompletionItemKind.Function,
+              parameter: CompletionItemKind.TypeParameter,
+              propertyKey: CompletionItemKind.Property,
+              consoleCommand: CompletionItemKind.Function,
+              consoleCommandSubcommand: CompletionItemKind.Function,
+              procedureOutput: CompletionItemKind.Operator
+            }
 
           // word preceding trigger character, used to determine range (where to insert) procedure suggestions
           const { word } = model.getWordUntilPosition({

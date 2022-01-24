@@ -17,10 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React from 'react'
-import ManualLink from 'browser-components/ManualLink'
+
 import AdminOnSystemDb from './partials/admin-on-systemdb'
+import ManualLink from 'browser-components/ManualLink'
+
 const title = 'SHOW USERS'
 const subtitle = 'List all available users'
 const category = 'administration'

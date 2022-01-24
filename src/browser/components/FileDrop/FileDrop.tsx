@@ -17,38 +17,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import SVGInline from 'react-svg-inline'
 
-import * as editor from 'shared/modules/editor/editorDuck'
-import * as favoritesDuck from 'shared/modules/favorites/favoritesDuck'
-import * as foldersDuck from 'shared/modules/favorites/foldersDuck'
-import { parseGrass } from 'shared/services/grassUtils'
-import { updateGraphStyleData } from 'shared/modules/grass/grassDuck'
-import {
-  showErrorMessage,
-  executeCommand,
-  commandSources
-} from 'shared/modules/commands/commandsDuck'
+import arrayHasItems from '../../../shared/utils/array-has-items'
 import {
   createLoadFavoritesPayload,
   getFolderNamesFromFavorites,
   getMissingFoldersFromNames,
   readZipFiles
 } from './file-drop.utils'
-
 import {
   StyledFileDrop,
-  StyledFileDropInner,
-  StyledFileDropContent,
+  StyledFileDropActionButton,
   StyledFileDropActions,
-  StyledFileDropActionButton
+  StyledFileDropContent,
+  StyledFileDropInner
 } from './styled'
 import icon from 'icons/task-list-download.svg'
-import arrayHasItems from '../../../shared/utils/array-has-items'
+import {
+  commandSources,
+  executeCommand,
+  showErrorMessage
+} from 'shared/modules/commands/commandsDuck'
+import * as editor from 'shared/modules/editor/editorDuck'
+import * as favoritesDuck from 'shared/modules/favorites/favoritesDuck'
+import * as foldersDuck from 'shared/modules/favorites/foldersDuck'
+import { updateGraphStyleData } from 'shared/modules/grass/grassDuck'
+import { parseGrass } from 'shared/services/grassUtils'
 
 function FileDrop(props: any) {
   const [fileHoverState, setFileHoverState] = useState(false)
@@ -134,9 +132,7 @@ function FileDrop(props: any) {
     }
 
     if (extension === 'zip') {
-      readZipFiles(files)
-        .then(saveManyFavorites)
-        .then(resetState)
+      readZipFiles(files).then(saveManyFavorites).then(resetState)
 
       return
     }

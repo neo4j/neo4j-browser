@@ -20,33 +20,33 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
-import {
-  getVersion,
-  getEdition,
-  getStoreSize,
-  getClusterRole,
-  getDatabases,
-  Database
-} from 'shared/modules/dbMeta/state'
-import {
-  executeCommand,
-  commandSources,
-  listDbsCommand
-} from 'shared/modules/commands/commandsDuck'
-import { toHumanReadableBytes } from 'services/utils'
 
+import {
+  Link,
+  StyledKey,
+  StyledTable,
+  StyledValue,
+  StyledValueUCFirst
+} from './styled'
 import {
   DrawerSection,
   DrawerSectionBody,
   DrawerSubHeader
 } from 'browser-components/drawer/drawer-styled'
+import { toHumanReadableBytes } from 'services/utils'
 import {
-  StyledTable,
-  StyledKey,
-  StyledValue,
-  StyledValueUCFirst,
-  Link
-} from './styled'
+  commandSources,
+  executeCommand,
+  listDbsCommand
+} from 'shared/modules/commands/commandsDuck'
+import {
+  Database,
+  getClusterRole,
+  getDatabases,
+  getEdition,
+  getStoreSize,
+  getVersion
+} from 'shared/modules/dbMeta/state'
 import { getUsedDbName } from 'shared/modules/features/versionedFeatures'
 
 type DatabaseKernelInfo = {

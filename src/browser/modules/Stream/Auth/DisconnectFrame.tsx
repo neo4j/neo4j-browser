@@ -18,10 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React from 'react'
+
 import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
 import { StyledConnectionAside } from './styled'
-import { H3 } from 'browser-components/headers'
 import { Lead } from 'browser-components/Text'
+import { H3 } from 'browser-components/headers'
 
 const Disconnect = ({
   activeConnectionData,

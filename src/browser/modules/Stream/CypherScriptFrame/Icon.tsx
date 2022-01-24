@@ -17,15 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React from 'react'
+
+import { ErrorSpan, SuccessSpan, WarningSpan } from './styled'
 import {
-  SmallSpinnerIcon,
-  SquareIcon,
   CheckedSquareIcon,
-  ExclamationTriangleIcon
+  ExclamationTriangleIcon,
+  SmallSpinnerIcon,
+  SquareIcon
 } from 'browser-components/icons/Icons'
-import { WarningSpan, ErrorSpan, SuccessSpan } from './styled'
 import { Status } from 'shared/modules/requests/requestsDuck'
 
 interface IconProps {

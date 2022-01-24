@@ -17,13 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import React from 'react'
 import { render, screen } from '@testing-library/react'
+import React from 'react'
 import { Provider } from 'react-redux'
 import configureMockStore, { MockStoreEnhanced } from 'redux-mock-store'
+
+import { GuideDrawer, GuideDrawerProps } from './GuideDrawer'
 import { Guide } from 'browser/documentation'
-import { GuideDrawerProps, GuideDrawer } from './GuideDrawer'
 import { RemoteGuide } from 'shared/modules/guides/guidesDuck'
 
 const createProps = (

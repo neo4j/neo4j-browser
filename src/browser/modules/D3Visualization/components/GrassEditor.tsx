@@ -17,25 +17,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Action, Dispatch } from 'redux'
+
 import { GraphStyle, Selector } from '../graphStyle'
 import {
-  StyledPickerSelector,
-  StyledTokenRelationshipType,
+  StyledCaptionSelector,
+  StyledCircleSelector,
   StyledInlineList,
   StyledInlineListItem,
+  StyledInlineListStylePicker,
   StyledLabelToken,
   StyledPickerListItem,
-  StyledCircleSelector,
-  StyledCaptionSelector,
-  StyledInlineListStylePicker
+  StyledPickerSelector,
+  StyledTokenRelationshipType
 } from './styled'
+import { GlobalState } from 'shared/globalState'
 import * as actions from 'shared/modules/grass/grassDuck'
 import { toKeyString } from 'shared/services/utils'
-import { GlobalState } from 'shared/globalState'
-import { Action, Dispatch } from 'redux'
 
 type GrassEditorProps = {
   graphStyleData?: any

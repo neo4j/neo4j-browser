@@ -19,7 +19,6 @@
  */
 
 /* global, describe afterEach */
-
 import { flattenAttributes } from './sysinfo-utils'
 
 describe('sysinfo attribute types', () => {

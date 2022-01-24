@@ -17,13 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React from 'react'
+
 import {
-  FULLSCREEN_SHORTCUT,
   FOCUS_SHORTCUT,
+  FULLSCREEN_SHORTCUT,
   printShortcut
 } from 'browser/modules/App/keyboardShortcuts'
+
 const title = 'Keys'
 const subtitle = 'Keyboard shortcuts'
 const category = 'browserUiCommands'

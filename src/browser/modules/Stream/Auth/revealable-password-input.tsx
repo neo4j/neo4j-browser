@@ -18,8 +18,8 @@ import React, { useEffect, useRef } from 'react'
 import { Icon } from 'semantic-ui-react'
 
 import {
-  StyledRevealablePasswordWrapper,
-  StyledConnectionTextInput
+  StyledConnectionTextInput,
+  StyledRevealablePasswordWrapper
 } from './styled'
 
 export default function RevealablePasswordInput({

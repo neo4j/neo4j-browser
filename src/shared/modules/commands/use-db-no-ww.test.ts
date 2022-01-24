@@ -17,12 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import { createEpicMiddleware } from 'redux-observable'
 import { createBus } from 'suber'
-import { flushPromises } from 'services/utils'
+
 import { executeSingleCommand, handleSingleCommandEpic } from './commandsDuck'
 import bolt from 'services/bolt/bolt'
+import { flushPromises } from 'services/utils'
 
 jest.mock('services/bolt/transactions', () => {
   const orig = jest.requireActual('services/bolt/transactions')

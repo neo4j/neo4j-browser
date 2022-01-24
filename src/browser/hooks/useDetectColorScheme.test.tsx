@@ -1,7 +1,8 @@
+import { act, render } from '@testing-library/react'
 import React from 'react'
-import { render, act } from '@testing-library/react'
-import useDetectColorScheme, { colorSchemes } from './useDetectColorScheme'
+
 import { createMediaListenerMatch } from './testUtils'
+import useDetectColorScheme, { colorSchemes } from './useDetectColorScheme'
 
 describe('useDetectColorScheme', () => {
   it('returns null if no window.matchMedia support', () => {

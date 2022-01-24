@@ -17,41 +17,39 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React, { Component } from 'react'
 import { withBus } from 'react-suber'
+
+import {
+  ErrorText,
+  StyledCypherErrorMessage,
+  StyledDiv,
+  StyledErrorH4,
+  StyledHelpContent,
+  StyledHelpDescription,
+  StyledHelpFrame,
+  StyledLink,
+  StyledLinkContainer,
+  StyledPreformattedArea
+} from '../styled'
+import { errorMessageFormater } from './../errorMessageFormater'
 import Ellipsis from 'browser-components/Ellipsis'
 import {
   ExclamationTriangleIcon,
   PlayIcon
 } from 'browser-components/icons/Icons'
+import {
+  isNoDbAccessError,
+  isPeriodicCommitError,
+  isUnknownProcedureError
+} from 'services/cypherErrorsHelper'
 import { deepEquals } from 'services/utils'
-
 import {
   commandSources,
   executeCommand,
   listDbsCommand
 } from 'shared/modules/commands/commandsDuck'
 import { listAvailableProcedures } from 'shared/modules/cypher/procedureFactory'
-import {
-  isUnknownProcedureError,
-  isNoDbAccessError,
-  isPeriodicCommitError
-} from 'services/cypherErrorsHelper'
-import { errorMessageFormater } from './../errorMessageFormater'
-
-import {
-  StyledCypherErrorMessage,
-  StyledHelpContent,
-  StyledErrorH4,
-  StyledPreformattedArea,
-  StyledHelpDescription,
-  StyledDiv,
-  StyledLink,
-  StyledLinkContainer,
-  StyledHelpFrame,
-  ErrorText
-} from '../styled'
 
 export class ErrorsView extends Component<any> {
   shouldComponentUpdate(props: any) {

@@ -17,16 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React, { Component } from 'react'
 
 import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
-import ConnectionForm from './ConnectionForm'
 import FrameError from '../../Frame/FrameError'
-import { H3 } from 'browser-components/headers'
-import { Lead } from 'browser-components/Text'
-
+import ConnectionForm from './ConnectionForm'
 import { StyledConnectionAside, StyledConnectionBodyContainer } from './styled'
+import { Lead } from 'browser-components/Text'
+import { H3 } from 'browser-components/headers'
 
 type State = any
 

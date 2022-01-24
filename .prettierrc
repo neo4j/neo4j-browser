@@ -10,7 +10,9 @@
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,
   "importOrder": [
-    "^browser/(.*)$|^project-root/(.*)$|^browser-(.*)$|^shared/(.*)$|^services/(.*)$|^icons/(.*)$|^[./]"
+    "^@testing-library/react-hooks/dont-cleanup-after-each.js$",
+    "<THIRD_PARTY_MODULES>",
+    "^browser/(.*)$|^project-root/(.*)$|^browser-(.*)$|^shared/(.*)$|^services/(.*)$|^icons/(.*)$|^[./]",
   ],
   "overrides": [
       {

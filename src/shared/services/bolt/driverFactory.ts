@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import neo4j, { AuthToken, Config, Driver } from 'neo4j-driver'
+
 import { version } from 'project-root/package.json'
 
 export const createDriverOrFailFn = (

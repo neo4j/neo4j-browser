@@ -17,9 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import * as utils from './utils'
-import { DESKTOP, CLOUD, WEB } from 'shared/modules/app/appDuck'
+import { CLOUD, DESKTOP, WEB } from 'shared/modules/app/appDuck'
 
 describe('utils', () => {
   describe('serialExecution', () => {
@@ -201,7 +200,7 @@ describe('utils', () => {
       // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       this.val = 'hello'
       // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      this.fn = function(extVal: any) {
+      this.fn = function (extVal: any) {
         callMe(this.val, extVal)
       }
       // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message

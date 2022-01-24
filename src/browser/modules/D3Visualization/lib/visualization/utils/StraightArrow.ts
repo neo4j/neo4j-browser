@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import { RelationShipCaptionLayout } from '../components/Relationship'
 
 export default class StraightArrow {
@@ -51,7 +50,7 @@ export default class StraightArrow {
       y: 0
     }
 
-    this.outline = function(shortCaptionLength: number) {
+    this.outline = function (shortCaptionLength: number) {
       if (captionLayout === 'external') {
         const startBreak =
           startArrow + (this.shaftLength - shortCaptionLength) / 2
@@ -122,7 +121,7 @@ export default class StraightArrow {
       }
     }
 
-    this.overlay = function(minWidth: number) {
+    this.overlay = function (minWidth: number) {
       const radius = Math.max(minWidth / 2, shaftRadius)
       return [
         'M',

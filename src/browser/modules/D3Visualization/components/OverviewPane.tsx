@@ -17,25 +17,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React, { useState } from 'react'
 import { Icon } from 'semantic-ui-react'
 
-import {
-  StyledLegendInlineList,
-  PaneBody,
-  PaneHeader,
-  PaneBodySectionTitle,
-  PaneBodySectionSmallText,
-  PaneBodySectionHeaderWrapper
-} from './styled'
-import numberToUSLocale from 'shared/utils/number-to-US-locale'
-import { StyledTruncatedMessage } from 'browser/modules/Stream/styled'
-import { StyleableNodeLabel } from './StyleableNodeLabel'
 import { GraphStats } from '../mapper'
+import { StyleableNodeLabel } from './StyleableNodeLabel'
 import { StyleableRelType } from './StyleableRelType'
+import {
+  PaneBody,
+  PaneBodySectionHeaderWrapper,
+  PaneBodySectionSmallText,
+  PaneBodySectionTitle,
+  PaneHeader,
+  StyledLegendInlineList
+} from './styled'
 import { ShowMoreOrAll } from 'browser-components/ShowMoreOrAll/ShowMoreOrAll'
+import { StyledTruncatedMessage } from 'browser/modules/Stream/styled'
 import { GraphStyle } from 'project-root/src/browser/modules/D3Visualization/graphStyle'
+import numberToUSLocale from 'shared/utils/number-to-US-locale'
 
 type PaneBodySectionHeaderProps = {
   title: string
@@ -77,9 +76,8 @@ function OverviewPane({
   stats
 }: OverviewPaneProps): JSX.Element {
   const [maxLabelsCount, setMaxLabelsCount] = useState(OVERVIEW_STEP_SIZE)
-  const [maxRelationshipsCount, setMaxRelationshipsCount] = useState(
-    OVERVIEW_STEP_SIZE
-  )
+  const [maxRelationshipsCount, setMaxRelationshipsCount] =
+    useState(OVERVIEW_STEP_SIZE)
 
   const onMoreLabelsClick = (numMore: number) => {
     setMaxLabelsCount(maxLabelsCount + numMore)

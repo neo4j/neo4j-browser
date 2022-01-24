@@ -17,35 +17,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React, { useContext, useEffect, useState } from 'react'
+import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
-import { fetchGuideFromAllowlistAction } from 'shared/modules/commands/commandsDuck'
+import { ThemeContext } from 'styled-components'
 
-import Docs from '../Docs/Docs'
 import docs, { isPlayChapter } from '../../documentation'
-import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
+import Docs from '../Docs/Docs'
+import { splitMdxSlides } from '../Docs/MDX/splitMdx'
 import FrameAside from '../Frame/FrameAside'
+import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
+import { ErrorsView } from './CypherFrame/ErrorsView'
+import { AuraPromoLink, PromotionContainer } from './styled'
+import { CarouselButton } from 'browser-components/buttons/index'
+import {
+  StackNextIcon,
+  StackPreviousIcon
+} from 'browser-components/icons/Icons'
 import {
   splitStringOnFirst,
   transformCommandToHelpTopic
 } from 'services/commandUtils'
-import { ErrorsView } from './CypherFrame/ErrorsView'
-import { CarouselButton } from 'browser-components/buttons/index'
-import {
-  StackPreviousIcon,
-  StackNextIcon
-} from 'browser-components/icons/Icons'
-import { splitMdxSlides } from '../Docs/MDX/splitMdx'
-import { LAST_GUIDE_SLIDE } from 'shared/modules/udc/udcDuck'
-import { connect } from 'react-redux'
 import { GlobalState } from 'shared/globalState'
 import { inCloudEnv, inDesktop } from 'shared/modules/app/appDuck'
-import { getEdition, isEnterprise } from 'shared/modules/dbMeta/state'
-import { PromotionContainer, AuraPromoLink } from './styled'
-import { ThemeContext } from 'styled-components'
-import { DARK_THEME } from 'shared/modules/settings/settingsDuck'
+import { fetchGuideFromAllowlistAction } from 'shared/modules/commands/commandsDuck'
 import { isConnectedAuraHost } from 'shared/modules/connections/connectionsDuck'
+import { getEdition, isEnterprise } from 'shared/modules/dbMeta/state'
+import { DARK_THEME } from 'shared/modules/settings/settingsDuck'
+import { LAST_GUIDE_SLIDE } from 'shared/modules/udc/udcDuck'
 
 const AuraPromotion = () => {
   const theme = useContext(ThemeContext)

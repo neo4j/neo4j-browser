@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React from 'react'
+
 const title = 'Bolt encryption'
 const subtitle = 'Certificate handling in web browsers'
 const category = 'boltProtocol'

@@ -17,38 +17,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import { QuickInputList } from 'monaco-editor/esm/vs/base/parts/quickinput/browser/quickInputList'
-import { parse, QueryOrCommand } from 'cypher-editor-support'
+import { QueryOrCommand, parse } from 'cypher-editor-support'
 import { debounce } from 'lodash-es'
+import { QuickInputList } from 'monaco-editor/esm/vs/base/parts/quickinput/browser/quickInputList'
 import {
-  editor,
   IPosition,
   KeyCode,
   KeyMod,
-  MarkerSeverity
+  MarkerSeverity,
+  editor
 } from 'monaco-editor/esm/vs/editor/editor.api'
+import { QueryResult } from 'neo4j-driver'
 import React from 'react'
 import ResizeObserver from 'resize-observer-polyfill'
 import styled from 'styled-components'
 import { Bus } from 'suber'
 
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
-import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import { QueryResult } from 'neo4j-driver'
 import { applyParamGraphTypes } from 'shared/modules/commands/helpers/cypher'
+import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 
 const shouldCheckForHints = (code: string) =>
   code.trim().length > 0 &&
   !code.trimLeft().startsWith(':') &&
-  !code
-    .trimLeft()
-    .toUpperCase()
-    .startsWith('EXPLAIN') &&
-  !code
-    .trimLeft()
-    .toUpperCase()
-    .startsWith('PROFILE')
+  !code.trimLeft().toUpperCase().startsWith('EXPLAIN') &&
+  !code.trimLeft().toUpperCase().startsWith('PROFILE')
 
 export type MonacoHandles = Monaco
 
@@ -103,11 +96,7 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
 
   private getMonacoId = (): string => `monaco-${this.props.id}`
   private debouncedUpdateCode = debounce(() => {
-    const text =
-      this.editor
-        ?.getModel()
-        ?.getLinesContent()
-        .join('\n') || ''
+    const text = this.editor?.getModel()?.getLinesContent().join('\n') || ''
 
     this.props.onChange(text)
     this.addWarnings(parse(text).referencesListener.queriesAndCommands)
@@ -410,7 +399,7 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
       quickInputDOMNode.parentNode?.removeChild(quickInputDOMNode)
     )
 
-    QuickInputList.prototype.layout = function(maxHeight: number) {
+    QuickInputList.prototype.layout = function (maxHeight: number) {
       this.list.getHTMLElement().style.maxHeight =
         maxHeight < 200 ? '200px' : Math.floor(maxHeight) + 'px'
       this.list.layout()

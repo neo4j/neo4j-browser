@@ -17,11 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import AngleList from './angleList'
 import AdjacentAngles, { Run } from './adjacentAngles'
+import AngleList from './angleList'
 import { ArrowAngle } from './circumferentialRelationshipRouting'
 
-const wrapAngle = function(angle: number) {
+const wrapAngle = function (angle: number) {
   if (angle >= 360) {
     return angle - 360
   } else if (angle < 0) {
@@ -65,7 +65,7 @@ export default function distributeCircular(
 
   const result: Record<string, number> = {}
 
-  const splitByFixedArrows = function(run: Run) {
+  const splitByFixedArrows = function (run: Run) {
     const runs = []
     let currentStart = run.start
     for (
@@ -104,9 +104,8 @@ export default function distributeCircular(
           asc ? i++ : i--
         ) {
           rawAngle = list[run.start].angle + i * separation
-          result[list[angleList.wrapIndex(run.start + i)].key] = wrapAngle(
-            rawAngle
-          )
+          result[list[angleList.wrapIndex(run.start + i)].key] =
+            wrapAngle(rawAngle)
         }
       } else if (angleList.fixed(run.start) && !angleList.fixed(run.end)) {
         for (
@@ -115,9 +114,8 @@ export default function distributeCircular(
           asc1 ? i++ : i--
         ) {
           rawAngle = list[run.start].angle + i * minSeparation
-          result[list[angleList.wrapIndex(run.start + i)].key] = wrapAngle(
-            rawAngle
-          )
+          result[list[angleList.wrapIndex(run.start + i)].key] =
+            wrapAngle(rawAngle)
         }
       } else if (!angleList.fixed(run.start) && angleList.fixed(run.end)) {
         for (
@@ -126,9 +124,8 @@ export default function distributeCircular(
           asc2 ? i++ : i--
         ) {
           rawAngle = list[run.end].angle - (runLength - i) * minSeparation
-          result[list[angleList.wrapIndex(run.start + i)].key] = wrapAngle(
-            rawAngle
-          )
+          result[list[angleList.wrapIndex(run.start + i)].key] =
+            wrapAngle(rawAngle)
         }
       } else {
         const center = list[run.start].angle + angleList.angle(run) / 2
@@ -138,9 +135,8 @@ export default function distributeCircular(
           asc3 ? i++ : i--
         ) {
           rawAngle = center + (i - runLength / 2) * minSeparation
-          result[list[angleList.wrapIndex(run.start + i)].key] = wrapAngle(
-            rawAngle
-          )
+          result[list[angleList.wrapIndex(run.start + i)].key] =
+            wrapAngle(rawAngle)
         }
       }
     }

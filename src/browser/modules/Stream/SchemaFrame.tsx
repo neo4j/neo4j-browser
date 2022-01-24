@@ -17,27 +17,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import { replace, toUpper } from 'lodash-es'
 import React, { Component } from 'react'
-import { v4 } from 'uuid'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
-import { replace, toUpper } from 'lodash-es'
 import semver from 'semver'
+import { v4 } from 'uuid'
 
-import { getVersion } from 'shared/modules/dbMeta/state'
-import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
 import Slide from '../Carousel/Slide'
+import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
 import {
-  StyledTable,
-  StyledTh,
   StyledBodyTr,
-  StyledTd
+  StyledTable,
+  StyledTd,
+  StyledTh
 } from 'browser-components/DataTables'
 import Directives from 'browser-components/Directives'
-import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { GlobalState } from 'project-root/src/shared/globalState'
+import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
+import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import { getVersion } from 'shared/modules/dbMeta/state'
 
 type IndexesProps = {
   indexes: any

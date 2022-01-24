@@ -17,14 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import { USER_INTERACTION } from 'shared/modules/userInteraction/userInteractionDuck'
-import { credentialsTimeout } from 'shared/modules/dbMeta/state'
+import { parseTimeMillis } from 'services/utils'
 import {
   disconnectAction,
   getActiveConnection
 } from 'shared/modules/connections/connectionsDuck'
-import { parseTimeMillis } from 'services/utils'
+import { credentialsTimeout } from 'shared/modules/dbMeta/state'
+import { USER_INTERACTION } from 'shared/modules/userInteraction/userInteractionDuck'
 
 // Local variables (used in epics)
 let timer: any = null

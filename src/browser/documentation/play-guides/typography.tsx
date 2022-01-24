@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React from 'react'
+
 const title = 'Typography'
 const subtitle =
   'The typography is pleasantly minimal. Just enough to make for easy reading of brief content.'

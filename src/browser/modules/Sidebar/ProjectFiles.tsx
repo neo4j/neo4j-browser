@@ -17,27 +17,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React from 'react'
-import { Action, Dispatch } from 'redux'
-import { connect } from 'react-redux'
 import { useMutation } from '@apollo/client'
-import { getProjectId } from 'shared/modules/app/appDuck'
+import React from 'react'
+import { connect } from 'react-redux'
+import { Action, Dispatch } from 'redux'
 
-import { Drawer, DrawerHeader } from 'browser-components/drawer/drawer-styled'
 import ProjectFilesScripts, {
   ProjectFilesError
 } from '../../components/ProjectFiles/ProjectsFilesScripts'
-import NewSavedScript from './NewSavedScript'
+import { ADD_PROJECT_FILE } from '../../components/ProjectFiles/projectFilesConstants'
 import {
   getProjectFileDefaultFileName,
   updateCacheAddProjectFile
 } from '../../components/ProjectFiles/projectFilesUtils'
-import { ADD_PROJECT_FILE } from '../../components/ProjectFiles/projectFilesConstants'
+import NewSavedScript from './NewSavedScript'
+import { Drawer, DrawerHeader } from 'browser-components/drawer/drawer-styled'
+import { CYPHER_FILE_EXTENSION } from 'services/exporting/favoriteUtils'
+import { getProjectId } from 'shared/modules/app/appDuck'
 import {
   SetDraftScriptAction,
   setDraftScript
 } from 'shared/modules/sidebar/sidebarDuck'
-import { CYPHER_FILE_EXTENSION } from 'services/exporting/favoriteUtils'
 
 interface ProjectFilesProps {
   projectId: string
