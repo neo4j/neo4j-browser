@@ -20,7 +20,7 @@
 import neo4j from 'neo4j-driver'
 import React from 'react'
 
-import { SysInfoTable, SysInfoTableEntry } from 'browser-components/Tables'
+import { SysInfoTableEntry } from 'browser-components/Tables'
 import {
   extractFromNeoObjects,
   itemIntToString
@@ -79,17 +79,6 @@ const mappedJMXresult = (records: any) => {
   })
 }
 
-export const mapSysInfoRecords = (records: any) => {
-  return records.map((record: any) => {
-    return {
-      id: record.get('id'),
-      addresses: record.get('addresses'),
-      databases: record.get('databases'),
-      groups: record.get('groups')
-    }
-  })
-}
-
 export const mapLegacySysInfoRecords = (records: any) => {
   return records.map((record: any) => {
     return {
@@ -131,16 +120,4 @@ export function buildTableData(data: any) {
     }
     return <SysInfoTableEntry key={props.label} {...props} />
   })
-}
-
-export function buildDatabaseTable(mappedDatabases: any) {
-  return (
-    <SysInfoTable key="database-table" header="Databases" colspan="6">
-      <SysInfoTableEntry
-        key="database-entry"
-        headers={['Name', 'Address', 'Role', 'Status', 'Default', 'Error']}
-      />
-      {buildTableData(mappedDatabases)}
-    </SysInfoTable>
-  )
 }

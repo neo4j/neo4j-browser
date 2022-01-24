@@ -20,36 +20,56 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
+import { Bus } from 'suber'
 
 import {
   AutoRefreshSpan,
   AutoRefreshToggle,
   StatusbarWrapper,
   StyledStatusBar
-} from '../AutoRefresh/styled'
-import { ErrorsView } from '../CypherFrame/ErrorsView'
-import * as helpers from './helpers'
+} from '../../AutoRefresh/styled'
+import { ErrorsView } from '../../CypherFrame/ErrorsView'
+import { SysInfoDisplay } from './SysInfoDisplay'
 import * as legacyHelpers from './legacyHelpers'
-import Render from 'browser-components/Render'
+import FrameBodyTemplate from 'browser/modules/Frame/FrameBodyTemplate'
 import FrameError from 'browser/modules/Frame/FrameError'
-import FrameTemplate from 'browser/modules/Frame/FrameTemplate'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
-import {
-  getUseDb,
-  isConnected
-} from 'shared/modules/connections/connectionsDuck'
+import { GlobalState } from 'shared/globalState'
+import { isConnected } from 'shared/modules/connections/connectionsDuck'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import { isEnterprise } from 'shared/modules/dbMeta/dbMetaDuck'
-import { getDatabases } from 'shared/modules/dbMeta/dbMetaDuck'
 import { isACausalCluster } from 'shared/modules/features/featuresDuck'
-import { hasMultiDbSupport } from 'shared/modules/features/versionedFeatures'
+import { Frame } from 'shared/modules/frames/framesDuck'
 
-type SysInfoFrameState = any
+type LegacySysInfoFrameState = {
+  lastFetch: null | number
+  cc: any[]
+  ha: any[]
+  haInstances: any[]
+  storeSizes: any[]
+  idAllocation: any[]
+  pageCache: any[]
+  transactions: any[]
+  error: string
+  results: any
+  success: any
+  autoRefresh: boolean
+  autoRefreshInterval: number
+}
+type LegacySysInfoProps = {
+  bus: Bus
+  frame: Frame
+  isConnected: boolean
+  isFullscreen: boolean
+  isCollapsed: boolean
+  isACausalCluster: boolean
+}
 
-export class SysInfoFrame extends Component<any, SysInfoFrameState> {
-  helpers: any
-  timer: any
-  constructor(props: {}) {
+export class LegacySysInfoFrame extends Component<
+  LegacySysInfoProps,
+  LegacySysInfoFrameState
+> {
+  timer: number | undefined
+  constructor(props: LegacySysInfoProps) {
     super(props)
     this.state = {
       lastFetch: null,
@@ -66,14 +86,16 @@ export class SysInfoFrame extends Component<any, SysInfoFrameState> {
       autoRefresh: false,
       autoRefreshInterval: 20 // seconds
     }
-    this.helpers = this.props.hasMultiDbSupport ? helpers : legacyHelpers
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     this.getSysInfo()
   }
 
-  componentDidUpdate(prevProps: any, prevState: SysInfoFrameState) {
+  componentDidUpdate(
+    prevProps: LegacySysInfoProps,
+    prevState: LegacySysInfoFrameState
+  ): void {
     if (prevState.autoRefresh !== this.state.autoRefresh) {
       if (this.state.autoRefresh) {
         this.timer = setInterval(
@@ -93,16 +115,16 @@ export class SysInfoFrame extends Component<any, SysInfoFrameState> {
     }
   }
 
-  getSysInfo() {
+  getSysInfo(): void {
     if (this.props.bus && this.props.isConnected) {
       this.setState({ lastFetch: Date.now() })
       this.props.bus.self(
         CYPHER_REQUEST,
         {
-          query: this.helpers.sysinfoQuery(this.props.useDb),
+          query: legacyHelpers.sysinfoQuery(),
           queryType: NEO4J_BROWSER_USER_ACTION_QUERY
         },
-        this.helpers.responseHandler(this.setState.bind(this), this.props.useDb)
+        legacyHelpers.responseHandler(this.setState.bind(this))
       )
       if (this.props.isACausalCluster) {
         this.props.bus.self(
@@ -111,7 +133,7 @@ export class SysInfoFrame extends Component<any, SysInfoFrameState> {
             query: 'CALL dbms.cluster.overview',
             queryType: NEO4J_BROWSER_USER_ACTION_QUERY
           },
-          this.helpers.clusterResponseHandler(this.setState.bind(this))
+          legacyHelpers.clusterResponseHandler(this.setState.bind(this))
         )
       }
     } else {
@@ -119,52 +141,47 @@ export class SysInfoFrame extends Component<any, SysInfoFrameState> {
     }
   }
 
-  setAutoRefresh(autoRefresh: any) {
-    this.setState({ autoRefresh: autoRefresh })
+  setAutoRefresh(autoRefresh: boolean): void {
+    this.setState({ autoRefresh })
 
     if (autoRefresh) {
       this.getSysInfo()
     }
   }
 
-  render() {
-    const SysinfoComponent = this.helpers.Sysinfo
-    const content = !this.props.isConnected ? (
+  render(): JSX.Element {
+    const { isFullscreen, isCollapsed, isConnected, isACausalCluster } =
+      this.props
+    const { error, success, lastFetch, autoRefresh } = this.state
+
+    const content = isConnected ? (
+      <SysInfoDisplay {...this.state} isACausalCluster={isACausalCluster} />
+    ) : (
       <ErrorsView
         result={{ code: 'No connection', message: 'No connection available' }}
-      />
-    ) : (
-      <SysinfoComponent
-        {...this.state}
-        databases={this.props.databases}
-        isACausalCluster={this.props.isACausalCluster}
-        isEnterpriseEdition={this.props.isEnterprise}
-        useDb={this.props.useDb}
       />
     )
 
     return (
-      <FrameTemplate
-        header={this.props.frame}
+      <FrameBodyTemplate
+        isCollapsed={isCollapsed}
+        isFullscreen={isFullscreen}
         contents={content}
-        statusbar={
+        statusBar={
           <StatusbarWrapper>
-            <Render if={this.state.error}>
-              <FrameError message={this.state.error} />
-            </Render>
-            <Render if={this.state.success}>
+            {error ? <FrameError message={error} /> : null}
+            {success ? (
               <StyledStatusBar>
-                {this.state.lastFetch &&
-                  `Updated: ${new Date(this.state.lastFetch).toISOString()}`}
-                {this.state.success}
+                {lastFetch && `Updated: ${new Date(lastFetch).toISOString()}`}
+                {success}
                 <AutoRefreshSpan>
                   <AutoRefreshToggle
-                    checked={this.state.autoRefresh}
+                    checked={autoRefresh}
                     onChange={(e: any) => this.setAutoRefresh(e.target.checked)}
                   />
                 </AutoRefreshSpan>
               </StyledStatusBar>
-            </Render>
+            ) : null}
           </StatusbarWrapper>
         }
       />
@@ -172,15 +189,9 @@ export class SysInfoFrame extends Component<any, SysInfoFrameState> {
   }
 }
 
-const mapStateToProps = (state: any) => {
-  return {
-    hasMultiDbSupport: hasMultiDbSupport(state),
-    isACausalCluster: isACausalCluster(state),
-    isEnterprise: isEnterprise(state),
-    isConnected: isConnected(state),
-    databases: getDatabases(state),
-    useDb: getUseDb(state)
-  }
-}
+const mapStateToProps = (state: GlobalState) => ({
+  isACausalCluster: isACausalCluster(state),
+  isConnected: isConnected(state)
+})
 
-export default withBus(connect(mapStateToProps)(SysInfoFrame))
+export default withBus(connect(mapStateToProps)(LegacySysInfoFrame))

@@ -30,9 +30,9 @@ import {
   StyledStatusBar
 } from '../AutoRefresh/styled'
 import { ErrorsView } from '../CypherFrame/ErrorsView'
+import LegacySysInfoFrame from './LegacySysInfoFrame'
 import { SysInfoTable } from './SysInfoTable'
 import * as helpers from './helpers'
-import * as legacyHelpers from './legacyHelpers'
 import { InlineError } from './styled'
 import FrameBodyTemplate from 'browser/modules/Frame/FrameBodyTemplate'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
@@ -178,11 +178,6 @@ export class SysInfoFrame extends Component<
         }),
         helpers.responseHandler(this.setState.bind(this))
       )
-    } else if (!hasMultiDbSupport) {
-      this.runCypherQuery(
-        legacyHelpers.sysinfoQuery(),
-        legacyHelpers.responseHandler(this.setState.bind(this))
-      )
     }
   }
 
@@ -222,8 +217,14 @@ export class SysInfoFrame extends Component<
       storeSizes,
       transactions
     } = this.state
-    const { databases, isConnected, isEnterprise, hasMultiDbSupport } =
-      this.props
+    const {
+      databases,
+      isConnected,
+      isEnterprise,
+      hasMultiDbSupport,
+      isCollapsed,
+      isFullscreen
+    } = this.props
 
     const content = isConnected ? (
       <SysInfoTable
@@ -243,8 +244,8 @@ export class SysInfoFrame extends Component<
 
     return (
       <FrameBodyTemplate
-        isCollapsed={this.props.isCollapsed}
-        isFullscreen={this.props.isFullscreen}
+        isCollapsed={isCollapsed}
+        isFullscreen={isFullscreen}
         contents={content}
         statusBar={
           <StatusbarWrapper>
@@ -268,6 +269,13 @@ export class SysInfoFrame extends Component<
     )
   }
 }
+const FrameVersionPicker = (props: SysInfoFrameProps) => {
+  if (props.isConnected && props.isEnterprise && !props.hasMultiDbSupport) {
+    return <LegacySysInfoFrame {...props} />
+  } else {
+    return <SysInfoFrame {...props} />
+  }
+}
 
 const mapStateToProps = (state: GlobalState) => ({
   hasMultiDbSupport: hasMultiDbSupport(state),
@@ -277,4 +285,4 @@ const mapStateToProps = (state: GlobalState) => ({
   useDb: getUseDb(state)
 })
 
-export default withBus(connect(mapStateToProps)(SysInfoFrame))
+export default withBus(connect(mapStateToProps)(FrameVersionPicker))
