@@ -24,7 +24,7 @@ import { splitStringOnFirst } from 'services/commandUtils'
 import { SYSTEM_DB } from 'shared/modules/dbMeta/constants'
 import { replace, update } from 'shared/modules/params/paramsDuck'
 
-export const extractParams = (param: any) => {
+export const extractParams = (param: string) => {
   // early bail, now handled by parser
   if (param.includes('=>')) {
     return {
