@@ -89,8 +89,8 @@ export function GraphComponent(props: GraphProps) {
             mapRelationships(internalRelationships, graph)
           )
           props.onGraphModelChange(getGraphStats(graph))
-          graphView?.update({ updateNodes: false, updateRelationships: true })
-          graphEventHandler?.onItemMouseOut()
+          graphView.update({ updateNodes: false, updateRelationships: true })
+          graphEventHandler.onItemMouseOut()
         }
       )
     props.assignVisElement && props.assignVisElement(svgElement, graphView)

@@ -20,6 +20,7 @@ export const zoomEventHandler = (
     if (e.shiftKey) {
       e.preventDefault()
 
+      // https://github.com/d3/d3-zoom/blob/1bccd3fd56ea24e9658bd7e7c24e9b89410c8967/README.md#zoom_wheelDelta
       const delta =
         -e.deltaY * (e.deltaMode === 1 ? 0.05 : e.deltaMode ? 1 : 0.002)
 

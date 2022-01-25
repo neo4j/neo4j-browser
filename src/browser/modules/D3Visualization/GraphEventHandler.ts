@@ -71,7 +71,7 @@ export class GraphEventHandler {
     this.graphView.update({
       updateNodes: this.selectedItem.isNode,
       updateRelationships: this.selectedItem.isRelationship,
-      rerender: false
+      restartSimulation: false
     })
   }
 
@@ -82,7 +82,7 @@ export class GraphEventHandler {
       this.graphView.update({
         updateNodes: this.selectedItem.isNode,
         updateRelationships: this.selectedItem.isRelationship,
-        rerender: false
+        restartSimulation: false
       })
 
       this.selectedItem = null
@@ -103,7 +103,7 @@ export class GraphEventHandler {
     this.graphView.update({
       updateNodes: true,
       updateRelationships: true,
-      rerender: true
+      restartSimulation: true
     })
     this.graphModelChanged()
   }

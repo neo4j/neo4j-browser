@@ -213,7 +213,7 @@ export class Visualization<T extends Element = SVGElement> {
   update(options: {
     updateNodes: boolean
     updateRelationships: boolean
-    rerender: boolean
+    restartSimulation: boolean
   }) {
     if (options.updateNodes) {
       this.updateNodes()
@@ -223,7 +223,7 @@ export class Visualization<T extends Element = SVGElement> {
       this.updateRelationships()
     }
 
-    if (options.rerender) {
+    if (options.restartSimulation) {
       this.forceSim.restart()
     }
     this.trigger('updated')
