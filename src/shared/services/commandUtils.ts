@@ -37,17 +37,24 @@ export function stripCommandComments(str: any) {
     .join('\n')
 }
 
-export function splitStringOnFirst(str: any, delimiter: any) {
+export function splitStringOnFirst(
+  str: string,
+  delimiter: string | RegExp
+): string[] {
   const parts = str.split(delimiter)
-  return ([] as any[]).concat(parts[0], parts.slice(1).join(delimiter))
+  const strWithoutFirst = str.slice(parts[0].length + 1)
+  return ([] as string[]).concat(parts[0], strWithoutFirst)
 }
 
-export function splitStringOnLast(str: any, delimiter: any) {
+export function splitStringOnLast(
+  str: string,
+  delimiter: string | RegExp
+): string[] {
   const parts = str.split(delimiter)
-  return [].concat(
-    parts.slice(0, parts.length - 1).join(delimiter),
-    parts[parts.length - 1]
-  )
+  const lastPart = parts[parts.length - 1]
+  const stringWithoutLast =
+    parts.length > 1 ? str.slice(0, str.length - lastPart.length - 1) : ''
+  return ([] as string[]).concat(stringWithoutLast, lastPart)
 }
 
 export const isCypherCommand = (cmd: any) => {

@@ -131,5 +131,20 @@ function runTests() {
       'contain',
       '{\n  "x": 1.0,\n  "stringWithSpace": "with space",\n  "stringWithTab": "\'with\ttab\'"\n}'
     )
+  getParamQ = 'RETURN $stringWithSpace'
+  cy.executeCommand(getParamQ)
+  cy.waitForCommandResult()
+  cy.resultContains('"with space"')
+  // })
+  // it('can set :params where a new line is before the {', () => {
+  cy.executeCommand(':clear')
+  setParamQ = `:params{shift}{enter}{{} x: 1,{shift}{enter}stringWithSpace:'with space',{shift}{enter}stringWithTab: 'with\ttab'{}}`
+  cy.executeCommand(setParamQ)
+  cy.get('[data-testid="rawParamData"]', { timeout: 20000 })
+    .first()
+    .should(
+      'contain',
+      '{\n  "x": 1.0,\n  "stringWithSpace": "with space",\n  "stringWithTab": "\'with\ttab\'"\n}'
+    )
   // })
 }

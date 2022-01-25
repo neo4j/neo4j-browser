@@ -83,7 +83,7 @@ export const handleParamsCommand = (action: any, put: any, targetDb?: any) => {
     )
   }
   const strippedCmd = action.cmd.substr(1)
-  const parts = splitStringOnFirst(strippedCmd, ' ')
+  const parts = splitStringOnFirst(strippedCmd, /\s/)
   const param = parts[1].trim()
 
   return Promise.resolve().then(() => {
