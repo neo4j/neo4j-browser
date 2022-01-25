@@ -20,25 +20,32 @@
 import { render } from '@testing-library/react'
 import React from 'react'
 
-import { LegacySysInfoFrame } from './index'
+import { SysInfoDisplay } from './SysInfoDisplay'
 
-const baseProps = {
-  bus: null as any,
-  frame: null as any,
-  isFullscreen: false,
-  isCollapsed: false,
-  isACausalCluster: false
-}
-
-describe('LegacySysInfoFrame', () => {
-  test('should display error when there is no connection', () => {
+describe('sysinfo component', () => {
+  test('should render causal cluster table', () => {
     // Given
-    const props = { ...baseProps, isConnected: false }
+    const props = { isACausalCluster: true, isConnected: true }
 
     // When
-    const { getAllByText } = render(<LegacySysInfoFrame {...props} />)
+    const { getByText, container } = render(<SysInfoDisplay {...props} />)
 
     // Then
-    expect(getAllByText(/No connection available/i)).not.toBeNull()
+    expect(getByText('Causal Cluster Members')).not.toBeNull()
+    expect(
+      container.querySelector(
+        '[data-testid="sysinfo-casual-cluster-members-title"]'
+      )
+    ).not.toBeNull()
+  })
+  test('should not render causal cluster table', () => {
+    // Given
+    const props = { isACausalCluster: false, isConnected: true }
+
+    // When
+    const { queryByTestId } = render(<SysInfoDisplay {...props} />)
+
+    // Then
+    expect(queryByTestId('sysinfo-casual-cluster-members-title')).toBeNull()
   })
 })
