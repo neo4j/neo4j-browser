@@ -30,58 +30,6 @@ import {
 } from 'services/bolt/boltMappings'
 import { toKeyString } from 'services/utils'
 
-export const getTableDataFromRecords = (records: any) => {
-  if (!records || !records.length) {
-    return {}
-  }
-  const mappedJMXresults = mappedJMXresult(records)
-  const jmxQueryPrefix = mappedJMXresults[0].name.split(',')[0]
-  const result = Object.assign(
-    {},
-    ...mappedJMXresults.map((item: any) => {
-      return { [item.name]: item }
-    })
-  )
-  const cache =
-    flattenAttributes(result[`${jmxQueryPrefix},name=Page cache`]) || {}
-  const primitive =
-    flattenAttributes(result[`${jmxQueryPrefix},name=Primitive count`]) || {}
-  const tx =
-    flattenAttributes(result[`${jmxQueryPrefix},name=Transactions`]) || {}
-  const kernel = {
-    ...flattenAttributes(result[`${jmxQueryPrefix},name=Configuration`]),
-    ...flattenAttributes(result[`${jmxQueryPrefix},name=Kernel`]),
-    ...flattenAttributes(result[`${jmxQueryPrefix},name=Store file sizes`]),
-    ...flattenAttributes(result[`${jmxQueryPrefix},name=Store sizes`])
-  }
-  const ha = result[`${jmxQueryPrefix},name=High Availability`]
-    ? flattenAttributes(result[`${jmxQueryPrefix},name=High Availability`])
-    : null
-
-  return {
-    cache,
-    primitive,
-    tx,
-    kernel,
-    ha
-  }
-}
-
-const mappedJMXresult = (records: any) => {
-  return records.map((record: any) => {
-    const origAttributes = record.get('attributes')
-    return {
-      name: record.get('name'),
-      attributes: Object.keys(record.get('attributes')).map(attributeName => {
-        return {
-          name: attributeName,
-          value: origAttributes[attributeName].value
-        }
-      })
-    }
-  })
-}
-
 export const mapSysInfoRecords = (records: any) => {
   return records.map((record: any) => {
     return {
@@ -89,18 +37,6 @@ export const mapSysInfoRecords = (records: any) => {
       addresses: record.get('addresses'),
       databases: record.get('databases'),
       groups: record.get('groups')
-    }
-  })
-}
-
-export const mapLegacySysInfoRecords = (records: any) => {
-  return records.map((record: any) => {
-    return {
-      id: record.get('id'),
-      addresses: record.get('addresses'),
-      role: record.get('role'),
-      groups: record.get('groups'),
-      database: record.get('database')
     }
   })
 }

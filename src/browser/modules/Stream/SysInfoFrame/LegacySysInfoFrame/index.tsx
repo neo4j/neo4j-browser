@@ -18,8 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { withBus } from 'react-suber'
 import { Bus } from 'suber'
 
 import {
@@ -34,10 +32,7 @@ import * as legacyHelpers from './legacyHelpers'
 import FrameBodyTemplate from 'browser/modules/Frame/FrameBodyTemplate'
 import FrameError from 'browser/modules/Frame/FrameError'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
-import { GlobalState } from 'shared/globalState'
-import { isConnected } from 'shared/modules/connections/connectionsDuck'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import { isACausalCluster } from 'shared/modules/features/featuresDuck'
 import { Frame } from 'shared/modules/frames/framesDuck'
 
 type LegacySysInfoFrameState = {
@@ -189,9 +184,4 @@ export class LegacySysInfoFrame extends Component<
   }
 }
 
-const mapStateToProps = (state: GlobalState) => ({
-  isACausalCluster: isACausalCluster(state),
-  isConnected: isConnected(state)
-})
-
-export default withBus(connect(mapStateToProps)(LegacySysInfoFrame))
+export default LegacySysInfoFrame

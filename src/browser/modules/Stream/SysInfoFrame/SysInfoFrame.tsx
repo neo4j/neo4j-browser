@@ -47,6 +47,7 @@ import {
   getDatabases,
   isEnterprise
 } from 'shared/modules/dbMeta/state'
+import { canCallDbmsClusterOverview } from 'shared/modules/features/featuresDuck'
 import { hasMultiDbSupport } from 'shared/modules/features/versionedFeatures'
 import { Frame } from 'shared/modules/frames/framesDuck'
 
@@ -57,6 +58,7 @@ export type SysInfoFrameState = {
   idAllocation: DatabaseMetric[]
   pageCache: DatabaseMetric[]
   transactions: DatabaseMetric[]
+  casualClusterMembers: DatabaseMetric[]
   errorMessage: string | null
   results: boolean
   autoRefresh: boolean
@@ -75,6 +77,7 @@ type SysInfoFrameProps = {
   useDb: string | null
   isFullscreen: boolean
   isCollapsed: boolean
+  canCallClusterOverview: boolean
 }
 
 export class SysInfoFrame extends Component<
@@ -88,6 +91,7 @@ export class SysInfoFrame extends Component<
     idAllocation: [],
     pageCache: [],
     transactions: [],
+    casualClusterMembers: [],
     errorMessage: null,
     results: false,
     autoRefresh: false,
@@ -98,7 +102,6 @@ export class SysInfoFrame extends Component<
 
   componentDidMount(): void {
     this.getSettings()
-      // TODO This throws when it shouldn't
       .then(this.getSysInfo)
       .catch(errorMessage => this.setState({ errorMessage }))
   }
@@ -196,6 +199,16 @@ export class SysInfoFrame extends Component<
         },
         responseHandler
       )
+      if (this.props.canCallClusterOverview) {
+        this.props.bus.self(
+          CYPHER_REQUEST,
+          {
+            query: 'CALL dbms.cluster.overview',
+            queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+          },
+          helpers.clusterResponseHandler(this.setState.bind(this))
+        )
+      }
     }
   }
 
@@ -215,7 +228,8 @@ export class SysInfoFrame extends Component<
       lastFetch,
       pageCache,
       storeSizes,
-      transactions
+      transactions,
+      casualClusterMembers
     } = this.state
     const {
       databases,
@@ -233,6 +247,7 @@ export class SysInfoFrame extends Component<
         idAllocation={idAllocation}
         transactions={transactions}
         databases={databases}
+        casualClusterMembers={casualClusterMembers}
         isEnterpriseEdition={isEnterprise}
         hasMultiDbSupport={hasMultiDbSupport}
       />
@@ -271,7 +286,12 @@ export class SysInfoFrame extends Component<
 }
 const FrameVersionPicker = (props: SysInfoFrameProps) => {
   if (props.isConnected && props.isEnterprise && !props.hasMultiDbSupport) {
-    return <LegacySysInfoFrame {...props} />
+    return (
+      <LegacySysInfoFrame
+        {...props}
+        isACausalCluster={props.canCallClusterOverview}
+      />
+    )
   } else {
     return <SysInfoFrame {...props} />
   }
@@ -282,7 +302,8 @@ const mapStateToProps = (state: GlobalState) => ({
   isEnterprise: isEnterprise(state),
   isConnected: isConnected(state),
   databases: getDatabases(state),
-  useDb: getUseDb(state)
+  useDb: getUseDb(state),
+  canCallClusterOverview: canCallDbmsClusterOverview(state)
 })
 
 export default withBus(connect(mapStateToProps)(FrameVersionPicker))

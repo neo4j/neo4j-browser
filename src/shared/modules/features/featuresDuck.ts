@@ -39,7 +39,10 @@ export const DETECTED_CLIENT_CONFIG = 'features/DETECTED_CLIENT_CONFIG'
 
 export const getAvailableProcedures = (state: any) =>
   state[NAME].availableProcedures
-export const isACausalCluster = (state: any) =>
+
+// having this procedure used to indicate that we're on a cluster
+// but from 4.3 stand alone instances also have it
+export const canCallDbmsClusterOverview = (state: any) =>
   getAvailableProcedures(state).includes('dbms.cluster.overview')
 export const isMultiDatabase = (state: any) =>
   getAvailableProcedures(state).includes('dbms.databases.overview')

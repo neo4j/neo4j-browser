@@ -23,8 +23,8 @@ import Rx from 'rxjs/Rx'
 import {
   FEATURE_DETECTION_DONE,
   USER_CAPABILITIES,
+  canCallDbmsClusterOverview,
   hasClientConfig,
-  isACausalCluster,
   setClientConfig,
   updateUserCapability
 } from '../features/featuresDuck'
@@ -158,7 +158,7 @@ const getLabelsAndTypes = (store: any) =>
 const clusterRole = (store: any) =>
   Rx.Observable.fromPromise(
     new Promise((resolve, reject) => {
-      if (!isACausalCluster(store.getState())) {
+      if (!canCallDbmsClusterOverview(store.getState())) {
         return resolve(null)
       }
       bolt
