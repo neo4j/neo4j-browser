@@ -19,38 +19,44 @@
  */
 import { extractStatements } from 'cypher-editor-support'
 
-export function cleanCommand(cmd: any) {
+export function cleanCommand(cmd: string): string {
   const noComments = stripCommandComments(cmd)
-  const noEmptyLines = stripEmptyCommandLines(noComments)
-  return noEmptyLines
+  return stripEmptyCommandLines(noComments)
 }
 
-export function stripEmptyCommandLines(str: any) {
-  const skipEmptyLines = (e: any) => !/^\s*$/.test(e)
+export function stripEmptyCommandLines(str: string): string {
+  const skipEmptyLines = (e: string) => !/^\s*$/.test(e)
   return str.split('\n').filter(skipEmptyLines).join('\n')
 }
 
-export function stripCommandComments(str: any) {
+export function stripCommandComments(str: string): string {
   return str
     .split('\n')
-    .filter((line: any) => !line.trim().startsWith('//'))
+    .filter((line: string) => !line.trim().startsWith('//'))
     .join('\n')
 }
 
-export function splitStringOnFirst(str: any, delimiter: any) {
+export function splitStringOnFirst(
+  str: string,
+  delimiter: string | RegExp
+): string[] {
   const parts = str.split(delimiter)
-  return ([] as any[]).concat(parts[0], parts.slice(1).join(delimiter))
+  const strWithoutFirst = str.slice(parts[0].length + 1)
+  return ([] as string[]).concat(parts[0], strWithoutFirst)
 }
 
-export function splitStringOnLast(str: any, delimiter: any) {
+export function splitStringOnLast(
+  str: string,
+  delimiter: string | RegExp
+): string[] {
   const parts = str.split(delimiter)
-  return [].concat(
-    parts.slice(0, parts.length - 1).join(delimiter),
-    parts[parts.length - 1]
-  )
+  const lastPart = parts[parts.length - 1]
+  const stringWithoutLast =
+    parts.length > 1 ? str.slice(0, str.length - lastPart.length - 1) : ''
+  return ([] as string[]).concat(stringWithoutLast, lastPart)
 }
 
-export const isCypherCommand = (cmd: any) => {
+export const isCypherCommand = (cmd: string): boolean => {
   const cleanCmd = cleanCommand(cmd)
   return cleanCmd[0] !== ':'
 }
@@ -60,38 +66,41 @@ export const buildCommandObject = (action: any, interpret: any) => {
   return { action, interpreted, useDb: action.useDb }
 }
 
-export const getInterpreter = (interpret: any, cmd: any, ignore = false) => {
+export const getInterpreter = (interpret: any, cmd: string, ignore = false) => {
   if (ignore) return interpret('noop')
   if (isCypherCommand(cmd)) return interpret('cypher')
   return interpret(cleanCommand(cmd).substr(1))
 }
 
-export const extractPostConnectCommandsFromServerConfig = (str: any) => {
+export const extractPostConnectCommandsFromServerConfig = (
+  str: string
+): string[] | undefined => {
   const substituteStr = '@@semicolon@@'
   const substituteRe = new RegExp(substituteStr, 'g')
-  const replaceFn = (m: any) => m.replace(/;/g, substituteStr)
+  const replaceFn = (m: string) => m.replace(/;/g, substituteStr)
   const qs = [/(`[^`]*?`)/g, /("[^"]*?")/g, /('[^']*?')/g]
   qs.forEach(q => (str = str.replace(q, replaceFn)))
   const splitted = str
     .split(';')
-    .map((item: any) => item.trim())
-    .map((item: any) => item.replace(substituteRe, ';'))
-    .filter((item: any) => item && item.length)
+    .map((item: string) => item.trim())
+    .map((item: string) => item.replace(substituteRe, ';'))
+    .filter((item: string) => item && item.length)
   return splitted && splitted.length ? splitted : undefined
 }
 
-const getHelpTopic = (str: any) => splitStringOnFirst(str, ' ')[1] || 'help' // Map empty input to :help help
-const stripPound = (str: any) => splitStringOnFirst(str, '#')[0]
-const lowerCase = (str: any) => str.toLowerCase()
-const trim = (str: any) => str.trim()
-const replaceSpaceWithDash = (str: any) => str.replace(/\s/g, '-')
-const snakeToCamel = (str: any) =>
-  str.replace(/(-\w)/g, (match: any) => match[1].toUpperCase())
-const camelToSnake = (name: any, separator: any) => {
+const getHelpTopic = (str: string) => splitStringOnFirst(str, ' ')[1] || 'help' // Map empty input to :help help
+const stripPound = (str: string) => splitStringOnFirst(str, '#')[0]
+const lowerCase = (str: string) => str.toLowerCase()
+const trim = (str: string) => str.trim()
+const replaceSpaceWithDash = (str: string) => str.replace(/\s/g, '-')
+const snakeToCamel = (str: string) =>
+  str.replace(/(-\w)/g, (match: string) => match[1].toUpperCase())
+const camelToSnake = (name: string, separator: string) => {
   return name
     .replace(
       /([a-z]|(?:[A-Z0-9]+))([A-Z0-9]|$)/g,
-      (_: any, $1: any, $2: any) => $1 + ($2 && (separator || '_') + $2)
+      (_: string, $1: string, $2: string) =>
+        $1 + ($2 && (separator || '_') + $2)
     )
     .toLowerCase()
 }
@@ -105,7 +114,7 @@ export const transformCommandToHelpTopic = (inputStr?: string): string =>
     .map(replaceSpaceWithDash)
     .map(snakeToCamel)[0]
 
-export const transformHelpTopicToCommand = (inputStr: any) => {
+export const transformHelpTopicToCommand = (inputStr: string): string => {
   if (inputStr.indexOf('-') > -1) {
     return inputStr
   }
@@ -115,7 +124,7 @@ export const transformHelpTopicToCommand = (inputStr: any) => {
 const quotedRegex = /^"(.*)"|'(.*)'/
 const arrowFunctionRegex = /^.*=>\s*([^$]*)$/
 
-export const mapParamToCypherStatement = (key: any, param: any) => {
+export const mapParamToCypherStatement = (key: any, param: any): string => {
   const quotedKey = key.match(quotedRegex)
   const cleanKey = quotedKey
     ? `\`${quotedKey[1]}\``
@@ -131,7 +140,7 @@ export const mapParamToCypherStatement = (key: any, param: any) => {
   return returnAs(param)
 }
 
-export const extractStatementsFromString = (str: any) => {
+export const extractStatementsFromString = (str: string) => {
   const cleanCmd = cleanCommand(str)
   const parsed = extractStatements(cleanCmd)
   const { statements } = parsed.referencesListener
@@ -141,7 +150,7 @@ export const extractStatementsFromString = (str: any) => {
     .filter((_: any) => _)
 }
 
-export const getCommandAndParam = (str: any) => {
+export const getCommandAndParam = (str: string): string[] => {
   const [serverCmd, props] = splitStringOnFirst(
     splitStringOnFirst(str, ' ')[1],
     ' '
