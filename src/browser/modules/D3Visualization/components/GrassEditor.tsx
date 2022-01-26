@@ -50,7 +50,7 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
   nodeDisplaySizes: any
   picker: any
   widths: any
-  constructor(props: any) {
+  constructor(props: GrassEditorProps) {
     super(props)
     this.graphStyle = new GraphStyle()
     if (this.props.graphStyleData) {
