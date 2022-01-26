@@ -34,7 +34,7 @@ import {
 import { ShowMoreOrAll } from 'browser-components/ShowMoreOrAll/ShowMoreOrAll'
 import { StyledTruncatedMessage } from 'browser/modules/Stream/styled'
 import { GraphStyle } from 'project-root/src/browser/modules/D3Visualization/graphStyle'
-import { BasicNode } from 'services/bolt/boltMappings'
+import VizNode from 'project-root/src/browser/modules/D3Visualization/lib/visualization/components/VizNode'
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
 
 type PaneBodySectionHeaderProps = {
@@ -65,7 +65,7 @@ type OverviewPaneProps = {
   nodeCount: number | null
   relationshipCount: number | null
   stats: GraphStats
-  nodes: BasicNode[]
+  nodes: VizNode[]
 }
 
 export const OVERVIEW_STEP_SIZE = 50

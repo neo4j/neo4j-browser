@@ -24,10 +24,10 @@ import { GrassEditor } from './GrassEditor'
 import { StyledRelationship } from 'browser/modules/DBMSInfo/styled'
 import { usePopupControlled } from 'project-root/src/browser/modules/D3Visualization/components/StyleableNodeLabel'
 import { GraphStyle } from 'project-root/src/browser/modules/D3Visualization/graphStyle'
-import { BasicNode } from 'services/bolt/boltMappings'
+import VizNode from 'project-root/src/browser/modules/D3Visualization/lib/visualization/components/VizNode'
 
 export type StyleableRelTypeProps = {
-  nodes: BasicNode[]
+  nodes: VizNode[]
   graphStyle: GraphStyle
   selectedRelType: { relType: string; propertyKeys: string[]; count?: number }
 }

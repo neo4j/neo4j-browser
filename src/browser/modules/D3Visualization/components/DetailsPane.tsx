@@ -37,7 +37,7 @@ import { NodeItem, RelationshipItem, VizItemProperty } from './types'
 import ClipboardCopier from 'browser-components/ClipboardCopier'
 import { ShowMoreOrAll } from 'browser-components/ShowMoreOrAll/ShowMoreOrAll'
 import { GraphStyle } from 'project-root/src/browser/modules/D3Visualization/graphStyle'
-import { BasicNode } from 'services/bolt/boltMappings'
+import VizNode from 'project-root/src/browser/modules/D3Visualization/lib/visualization/components/VizNode'
 import { upperFirst } from 'services/utils'
 
 export const ELLIPSIS = '\u2026'
@@ -135,7 +135,7 @@ type DetailsPaneComponentProps = {
   vizItem: NodeItem | RelationshipItem
   graphStyle: GraphStyle
   nodeInspectorWidth: number
-  nodes: BasicNode[]
+  nodes: VizNode[]
 }
 export function DetailsPaneComponent({
   vizItem,

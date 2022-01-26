@@ -13,7 +13,7 @@ import {
 } from './styled'
 import { VizItem } from './types'
 import { GraphStyle } from 'project-root/src/browser/modules/D3Visualization/graphStyle'
-import { BasicNode } from 'services/bolt/boltMappings'
+import VizNode from 'project-root/src/browser/modules/D3Visualization/lib/visualization/components/VizNode'
 
 interface NodeInspectorPanelProps {
   expanded: boolean
@@ -25,7 +25,7 @@ interface NodeInspectorPanelProps {
   stats: GraphStats
   toggleExpanded: () => void
   width: number
-  nodes: BasicNode[]
+  nodes: VizNode[]
 }
 
 export const defaultPanelWidth = (): number =>

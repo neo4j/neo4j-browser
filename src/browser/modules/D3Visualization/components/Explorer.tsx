@@ -34,6 +34,7 @@ import NeighboursPickerPopover, {
 } from './modal/NeighboursPickerModal'
 import { StyledFullSizeContainer, panelMinWidth } from './styled'
 import { VizItem } from './types'
+import VizNode from 'project-root/src/browser/modules/D3Visualization/lib/visualization/components/VizNode'
 import {
   BasicNode,
   BasicNodesAndRels,
@@ -45,7 +46,6 @@ import {
   getNodePropertiesExpandedByDefault,
   setNodePropertiesExpandedByDefault
 } from 'shared/modules/frames/framesDuck'
-import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
 
 type DecuplicateHelper = {
   nodes: BasicNode[]
@@ -73,6 +73,7 @@ const deduplicateNodes = (
 type ExplorerComponentProps = {
   relationships: BasicRelationship[]
   nodes: BasicNode[]
+  graphNodes: VizNode[]
   initialNodeDisplay: number
   maxNeighbours: number
   graphStyleData: any
@@ -310,7 +311,7 @@ export class ExplorerComponent extends Component<
           hasTruncatedFields={this.props.hasTruncatedFields}
           hoveredItem={this.state.hoveredItem}
           selectedItem={this.state.selectedItem}
-          nodes={this.state.nodes}
+          nodes={this.props.graphNodes}
           stats={this.state.stats}
           width={this.state.width}
           setWidth={(width: number) =>

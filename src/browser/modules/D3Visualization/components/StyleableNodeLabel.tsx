@@ -23,7 +23,7 @@ import { Popup } from 'semantic-ui-react'
 import { GrassEditor } from './GrassEditor'
 import { StyledLabel } from 'browser/modules/DBMSInfo/styled'
 import { GraphStyle } from 'project-root/src/browser/modules/D3Visualization/graphStyle'
-import { BasicNode } from 'services/bolt/boltMappings'
+import VizNode from 'project-root/src/browser/modules/D3Visualization/lib/visualization/components/VizNode'
 
 export type StyleableNodeLabelProps = {
   selectedLabel: {
@@ -33,7 +33,7 @@ export type StyleableNodeLabelProps = {
   }
   graphStyle: GraphStyle
   onClick?: () => void
-  nodes: BasicNode[]
+  nodes: VizNode[]
 }
 export function StyleableNodeLabel({
   graphStyle,

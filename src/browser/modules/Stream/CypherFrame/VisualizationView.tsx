@@ -46,6 +46,7 @@ type VisualizationState = {
   nodes: BasicNode[]
   relationships: BasicRelationship[]
   hasTruncatedFields: boolean
+  graph: Graph | undefined
 }
 
 export type VisualizationProps = {
@@ -67,12 +68,12 @@ export class Visualization extends Component<
   VisualizationState
 > {
   autoCompleteCallback: ((rels: BasicRelationship[]) => void) | undefined
-  graph: Graph | undefined
   state: VisualizationState = {
     nodes: [],
     relationships: [],
     updated: 0,
-    hasTruncatedFields: false
+    hasTruncatedFields: false,
+    graph: undefined
   }
 
   componentDidMount(): void {
@@ -91,7 +92,8 @@ export class Visualization extends Component<
       this.props.isFullscreen !== props.isFullscreen ||
       !deepEquals(props.graphStyleData, this.props.graphStyleData) ||
       this.state.updated !== state.updated ||
-      this.props.autoComplete !== props.autoComplete
+      this.props.autoComplete !== props.autoComplete ||
+      this.state.graph !== state.graph
     )
   }
 
@@ -184,7 +186,7 @@ export class Visualization extends Component<
                 )
               if (shouldAutoCompleteRelationships) {
                 this.autoCompleteRelationships(
-                  this.graph?.nodes() || [],
+                  this.state.graph?.nodes() || [],
                   resultGraph.nodes
                 )
               }
@@ -200,7 +202,7 @@ export class Visualization extends Component<
   ): Promise<BasicNodesAndRels & { count: number }> {
     return this.fetchNeighbours(id, currentNeighbourIds, true, true).then(
       (result: any) => {
-        this.autoCompleteRelationships(this.graph!._nodes, result.nodes)
+        this.autoCompleteRelationships(this.state.graph!._nodes, result.nodes)
         return result
       }
     )
@@ -240,9 +242,9 @@ export class Visualization extends Component<
     })
   }
 
-  setGraph(graph: Graph): void {
-    this.graph = graph
-    this.autoCompleteRelationships([], this.graph.nodes())
+  setGraph = (graph: Graph) => {
+    this.setState({ graph })
+    this.autoCompleteRelationships([], graph.nodes())
   }
 
   render(): React.ReactNode {
@@ -259,6 +261,7 @@ export class Visualization extends Component<
           getNeighbours={this.getNeighbours.bind(this)}
           fetchNeighbours={this.fetchNeighbours}
           nodes={this.state.nodes}
+          graphNodes={this.state.graph?.nodes() ?? []}
           relationships={this.state.relationships}
           isFullscreen={this.props.isFullscreen}
           assignVisElement={this.props.assignVisElement}
@@ -267,7 +270,7 @@ export class Visualization extends Component<
           ) => {
             this.autoCompleteCallback = callback
           }}
-          setGraph={this.setGraph.bind(this)}
+          setGraph={this.setGraph}
         />
       </StyledVisContainer>
     )

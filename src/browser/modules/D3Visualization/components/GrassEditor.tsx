@@ -40,6 +40,7 @@ import SetupLabelModal, {
 import SetupColorModal from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorModal'
 import { IColorSettings } from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorStorage'
 import { RelArrowCaptionPosition } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelRelArrowSVG'
+import VizNode from 'project-root/src/browser/modules/D3Visualization/lib/visualization/components/VizNode'
 import { GlobalState } from 'shared/globalState'
 import * as actions from 'shared/modules/grass/grassDuck'
 import { toKeyString } from 'shared/services/utils'
@@ -64,13 +65,7 @@ export interface IStyleForLabel {
   }
 }
 type GrassEditorProps = {
-  nodes: Array<{
-    id: string
-    labels: string[]
-    properties: {
-      [key: string]: string
-    }
-  }>
+  nodes: VizNode[]
   graphStyleData?: any
   graphStyle?: GraphStyle
   update?: any
@@ -319,12 +314,12 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
     this.props.nodes
       .filter(node => node.labels.includes(label))
       .forEach(node => {
-        for (const key in node.properties) {
-          if (node.properties.hasOwnProperty(key)) {
+        for (const key in node.propertyMap) {
+          if (node.propertyMap.hasOwnProperty(key)) {
             if (propertiesSet[key]) {
-              propertiesSet[key].add(node.properties[key])
+              propertiesSet[key].add(node.propertyMap[key])
             } else {
-              propertiesSet[key] = new Set<string>([node.properties[key]])
+              propertiesSet[key] = new Set<string>([node.propertyMap[key]])
             }
           }
         }
