@@ -80,7 +80,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
             class="sc-jzJRlG hPTWGK zoom-in"
           >
             <i
-              class="sc-fhYwyz lacVya sl-zoom-in"
+              class="sc-bnXvFD bIRcfT sl-zoom-in"
               style="font-size: 1em;"
             />
           </button>
@@ -88,7 +88,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
             class="sc-jzJRlG hPTWGK zoom-out"
           >
             <i
-              class="sc-jzgbtB fXppEY sl-zoom-out"
+              class="sc-gFaPwZ cMtXIT sl-zoom-out"
               style="font-size: 1em;"
             />
           </button>

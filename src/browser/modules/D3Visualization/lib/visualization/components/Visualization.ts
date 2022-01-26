@@ -49,7 +49,7 @@ export class Visualization<T extends Element = SVGElement> {
   private geometry: GraphGeometry
   private zoomBehavior: ZoomBehavior<SVGGElement, unknown>
 
-  public forceSim: ForceSimulation
+  forceSim: ForceSimulation
 
   // This flags that a panning is ongoing and won't trigger
   // 'canvasClick' event when panning ends.
@@ -157,9 +157,9 @@ export class Visualization<T extends Element = SVGElement> {
       nodeGroups.call(renderer.onGraphChange, this)
     )
 
-    for (const renderer of nodeMenuRenderer) {
+    nodeMenuRenderer.forEach(renderer =>
       nodeGroups.call(renderer.onGraphChange, this)
-    }
+    )
 
     this.forceSim.updateNodes(this.graph)
     this.forceSim.updateRelationships(this.graph)
@@ -188,7 +188,7 @@ export class Visualization<T extends Element = SVGElement> {
     this.forceSim.updateRelationships(this.graph)
   }
 
-  private zoomClick(isZoomingIn: any) {
+  private zoomClick(isZoomingIn: boolean) {
     this.draw = true
     this.isZoomClick = true
     const limitsReached = { zoomInLimit: false, zoomOutLimit: false }
