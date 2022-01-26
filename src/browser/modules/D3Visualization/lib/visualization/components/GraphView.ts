@@ -81,11 +81,11 @@ export default class GraphView {
   update(options: {
     updateNodes: boolean
     updateRelationships: boolean
-    rerender?: boolean
+    restartSimulation?: boolean
   }): void {
     this.viz.update({
       ...options,
-      rerender: options.rerender ?? true
+      restartSimulation: options.restartSimulation ?? true
     })
   }
 

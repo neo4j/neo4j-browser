@@ -40,7 +40,6 @@ import {
   TICKS_PER_RENDER,
   VELOCITY_DECAY
 } from '../constants'
-import cloneArray from '../utils/arrays'
 import circularLayout from '../utils/circularLayout'
 import Graph from './Graph'
 import Relationship from './Relationship'
@@ -67,7 +66,7 @@ export class ForceSimulation {
   }
 
   updateNodes(graph: Graph) {
-    const nodes = cloneArray(graph.nodes())
+    const nodes = graph.nodes()
 
     const radius = (nodes.length * LINK_DISTANCE) / (Math.PI * 2)
     const center = {
