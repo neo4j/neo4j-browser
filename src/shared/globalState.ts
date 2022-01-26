@@ -32,8 +32,8 @@ import {
   initialState as metaInitialState
 } from './modules/dbMeta/state'
 import {
-  NAME as experimentalFeatures,
-  initialState as experimentalFeaturesInitialState
+  ExperimentalFeaturesState,
+  NAME as experimentalFeatures
 } from './modules/experimentalFeatures/experimentalFeaturesDuck'
 import { Favorite, NAME as documents } from './modules/favorites/favoritesDuck'
 import { Folder, NAME as folders } from './modules/favorites/foldersDuck'
@@ -42,7 +42,7 @@ import {
   initialState as featuresInitialState
 } from './modules/features/featuresDuck'
 import { FramesState, NAME as frames } from './modules/frames/framesDuck'
-import { NAME as grass } from './modules/grass/grassDuck'
+import { GrassState, NAME as grass } from './modules/grass/grassDuck'
 import { GuideState, NAME as guides } from './modules/guides/guidesDuck'
 import { NAME as history } from './modules/history/historyDuck'
 import { NAME as params } from './modules/params/paramsDuck'
@@ -53,7 +53,7 @@ import {
 } from './modules/settings/settingsDuck'
 import { SidebarState, NAME as sidebar } from './modules/sidebar/sidebarDuck'
 import {
-  initialConsentState,
+  SyncConsentState,
   initialMetadataState,
   NAME as sync,
   NAME_CONSENT as syncConsent,
@@ -74,14 +74,14 @@ export interface GlobalState {
   [meta]: typeof metaInitialState
   [documents]: Favorite[]
   [params]: Record<string, unknown>
-  [grass]: unknown
+  [grass]: GrassState
   [sync]: typeof syncInitialState
   [syncMetadata]: typeof initialMetadataState
-  [syncConsent]: typeof initialConsentState
+  [syncConsent]: SyncConsentState
   [folders]: Folder[]
   [commands]: unknown
   [udc]: UdcState
   [app]: Record<string, unknown>
-  [experimentalFeatures]: typeof experimentalFeaturesInitialState
+  [experimentalFeatures]: ExperimentalFeaturesState
   [guides]: GuideState
 }

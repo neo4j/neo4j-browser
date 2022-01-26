@@ -10,6 +10,16 @@ export const showFeature = (state: any, name: any) =>
 
 export const experimentalFeatureSelfName = 'showSelf'
 
+export type Feature = {
+  name: string
+  on: boolean
+  displayName: string
+  tooltip: string
+}
+export type ExperimentalFeaturesState = {
+  [experimentalFeatureSelfName]: Feature
+} & Record<string, Feature>
+
 export const initialState = {
   [experimentalFeatureSelfName]: {
     name: experimentalFeatureSelfName,

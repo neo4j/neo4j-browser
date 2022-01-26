@@ -73,6 +73,7 @@ export const UNKNOWN = 'UNKNOWN'
 export const SIGNED_IN = 'SIGNED_IN'
 export const SIGNED_OUT = 'SIGNED_OUT'
 
+export type SyncConsentState = { consented: boolean; optedOut: boolean }
 export const initialState: any = null
 export const initialConsentState = { consented: false, optedOut: false }
 export const initialMetadataState = {

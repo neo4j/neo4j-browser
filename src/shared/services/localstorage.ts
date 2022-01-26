@@ -23,11 +23,21 @@ import {
   shouldRetainConnectionCredentials,
   shouldRetainEditorHistory
 } from '../modules/dbMeta/state'
-import { initialState as settingsInitialState } from '../modules/settings/settingsDuck'
+import {
+  AUTO_THEME,
+  LIGHT_THEME,
+  SettingsState,
+  initialState as settingsInitialState
+} from '../modules/settings/settingsDuck'
 import { GlobalState } from 'shared/globalState'
-
-export const keyPrefix = 'neo4j.'
-let storage = window.localStorage
+import { ConnectionReduxState } from 'shared/modules/connections/connectionsDuck'
+import { ExperimentalFeaturesState } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
+import { Favorite } from 'shared/modules/favorites/favoritesDuck'
+import { Folder } from 'shared/modules/favorites/foldersDuck'
+import { GrassStyleData } from 'shared/modules/grass/grassDuck'
+import { GuideState } from 'shared/modules/guides/guidesDuck'
+import { SyncConsentState } from 'shared/modules/sync/syncDuck'
+import { UdcState } from 'shared/modules/udc/udcDuck'
 
 export type LocalStorageKey =
   | 'connections'
@@ -41,12 +51,48 @@ export type LocalStorageKey =
   | 'experimentalFeatures'
   | 'guides'
 
+/*
+  | 'connections'
+  | 'settings'
+  | 'history'
+  | 'documents'
+  | 'folders'
+  | 'grass'
+  | 'syncConsent'
+  | 'udc'
+  | 'experimentalFeatures'
+  | 'guides'
+  */
+
+type LocalstorageKeyToReduxShape = {
+  connections: ConnectionReduxState
+  settings: SettingsState
+  history: string[]
+  documents: Favorite[]
+  folders: Folder[]
+  grass: GrassStyleData
+  syncConsent: SyncConsentState
+  udc: UdcState
+  experimentalFeatures: ExperimentalFeaturesState
+  guides: Omit<GuideState, 'currentGuide'> & { currentGuide: null }
+}
+type d = {
+  currentGuide: string | null
+} & { currentGuide: null }
+
+const LocalStorageMappers: Record = {}
+
+export const keyPrefix = 'neo4j.'
+const newKeyPrefix = 'neo4j-browser.'
+let storage = window.localStorage
+
 const keys: LocalStorageKey[] = []
 
 type LocalStorageFormat = {
   'neo4j-browser.settings': SettingsS
 }
 
+// also cleans up
 const convertFromStorage = (data: UdcStorageFormat): UdcState => data
 const convertToStorage = (data: UdcState): UdcStorageFormat => data
 const cleanUpStoredData = (data: UdcStorageFormat): UdcStorageFormat =>

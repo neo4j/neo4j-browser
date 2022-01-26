@@ -18,16 +18,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { getBrowserName } from 'services/utils'
+import { GlobalState } from 'shared/globalState'
 import { APP_START } from 'shared/modules/app/appDuck'
 
 export const NAME = 'grass'
 export const UPDATE_GRAPH_STYLE_DATA = 'grass/UPDATE_GRAPH_STYLE_DATA'
 export const SYNC_GRASS = 'grass/SYNC_GRASS'
 
-export const getGraphStyleData = (state: any) => state[NAME]
+export const getGraphStyleData = (state: GlobalState): GrassState => state[NAME]
 
+type GrassPropertyKeys =
+  | 'color'
+  | 'diameter'
+  | 'border-color'
+  | 'border-width'
+  | 'text-color-internal'
+  | 'text-color-internal'
+  | 'caption'
+  | 'padding'
+  | 'font-size'
+  | 'shaft-width'
+type GrassTag = 'node' | 'relationship'
+type GrassClass = string /* with . escaped with \\ */
+type OptionalGrassClass = '' | `.${GrassClass}`
+// The selector can technically be infinitely long, but we don't want typescript to generate an infinite amount of types
+type GrassSelector =
+  `${GrassTag}${OptionalGrassClass}${OptionalGrassClass}${OptionalGrassClass}${OptionalGrassClass}${OptionalGrassClass}`
+type GrassProperties = Record<GrassPropertyKeys, string>
+export type GrassState = null | GrassStyleData
+export type GrassStyleData = Partial<Record<GrassSelector, GrassProperties>>
 const versionSize = 20
-const initialState: any = null
+const initialState: GrassState = null
 
 export const composeGrassToSync = (store: any, syncValue: any) => {
   const grassFromSync = syncValue.syncObj.grass || []
