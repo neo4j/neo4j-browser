@@ -36,6 +36,9 @@ export const DARK_THEME = 'dark'
 
 export const NEO4J_CLOUD_DOMAINS = ['neo4j.io']
 
+const toNumber = (num: number | string): number =>
+  typeof num === 'number' ? num : parseInt(num, 10)
+
 export const getSettings = (state: any): SettingsState => state[NAME]
 export const getMaxHistory = (state: any) =>
   state[NAME].maxHistory || initialState.maxHistory
@@ -50,18 +53,15 @@ export const getBrowserSyncConfig = (
   host = getSettings(state).browserSyncDebugServer
 ) => browserSyncConfig(host || undefined)
 export const getMaxNeighbours = (state: GlobalState): number =>
-  parseInt(state[NAME].maxNeighbours ?? initialState.maxNeighbours, 10)
+  toNumber(state[NAME].maxNeighbours ?? initialState.maxNeighbours)
 export const getMaxRows = (state: GlobalState): number =>
-  parseInt(state[NAME].maxRows ?? initialState.maxRows, 10)
+  toNumber(state[NAME].maxRows ?? initialState.maxRows)
 export const getMaxFieldItems = (state: GlobalState): number =>
-  parseInt(state[NAME].maxFieldItems ?? initialState.maxFieldItems, 10)
+  toNumber(state[NAME].maxFieldItems ?? initialState.maxFieldItems)
 export const getMaxFrames = (state: GlobalState): number =>
-  parseInt(state[NAME].maxFrames ?? initialState.maxFrames, 10)
+  toNumber(state[NAME].maxFrames ?? initialState.maxFrames)
 export const getInitialNodeDisplay = (state: GlobalState): number =>
-  parseInt(
-    state[NAME].initialNodeDisplay ?? initialState.initialNodeDisplay,
-    10
-  )
+  toNumber(state[NAME].initialNodeDisplay ?? initialState.initialNodeDisplay)
 export const getScrollToTop = (state: any) => state[NAME].scrollToTop
 export const shouldAutoComplete = (state: any) =>
   state[NAME].autoComplete !== false
@@ -92,9 +92,10 @@ export const getAllowCrashReports = (state: GlobalState): boolean =>
 export const getAllowUserStats = (state: GlobalState): boolean =>
   state[NAME].allowUserStats ?? initialState.allowUserStats
 
-// The some of these strings should be numbers but are sent to redux as strings
+// Ideally the string | number types would be only numbers
+// but they're saved as strings in the settings component
 export type SettingsState = {
-  maxHistory: string
+  maxHistory: string | number
   theme:
     | typeof AUTO_THEME
     | typeof LIGHT_THEME
@@ -102,46 +103,46 @@ export type SettingsState = {
     | typeof DARK_THEME
   initCmd: string
   playImplicitInitCommands: boolean
-  initialNodeDisplay: string
-  maxNeighbours: string
+  initialNodeDisplay: string | number
+  maxNeighbours: string | number
   showSampleScripts: boolean
   browserSyncDebugServer: any
-  maxRows: string
-  maxFieldItems: string
+  maxRows: string | number
+  maxFieldItems: string | number
   autoComplete: boolean
   scrollToTop: boolean
-  maxFrames: string
+  maxFrames: string | number
   codeFontLigatures: boolean
   useBoltRouting: boolean
   editorLint: boolean
   useCypherThread: boolean
   enableMultiStatementMode: boolean
-  connectionTimeout: string
+  connectionTimeout: string | number
   showPerformanceOverlay: boolean
   allowCrashReports: boolean
   allowUserStats: boolean
 }
 
 export const initialState: SettingsState = {
-  maxHistory: '30',
+  maxHistory: 30,
   theme: AUTO_THEME,
   initCmd: ':play start',
   playImplicitInitCommands: true,
-  initialNodeDisplay: '300',
-  maxNeighbours: '100',
+  initialNodeDisplay: 300,
+  maxNeighbours: 100,
   showSampleScripts: true,
   browserSyncDebugServer: null,
-  maxRows: '1000',
-  maxFieldItems: '500',
+  maxRows: 1000,
+  maxFieldItems: 500,
   autoComplete: true,
   scrollToTop: true,
-  maxFrames: '15',
+  maxFrames: 15,
   codeFontLigatures: true,
   useBoltRouting: false,
   editorLint: false,
   useCypherThread: true,
   enableMultiStatementMode: true,
-  connectionTimeout: (30 * 1000).toString(), // 30 seconds
+  connectionTimeout: 30 * 1000, // 30 seconds
   showPerformanceOverlay: false,
   allowCrashReports: true,
   allowUserStats: true
