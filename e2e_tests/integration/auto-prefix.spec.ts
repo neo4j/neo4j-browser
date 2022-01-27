@@ -36,6 +36,8 @@ describe(':auto prefix in browser', () => {
 
   it('adding :auto enables running periodic commit', () => {
     cy.executeCommand(':auto USING PERIODIC COMMIT RETURN "Laverre";')
+    // the only valid PERIODIC COMMIT queries require csv files on
+    // the server, so as a shortcut we're just looking for a new error message
     cy.getFrames().contains('ERROR')
     cy.getFrames().contains(/LOAD/i)
   })
