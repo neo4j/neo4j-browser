@@ -30,10 +30,10 @@ import {
   StyledStatusBar
 } from '../AutoRefresh/styled'
 import { ErrorsView } from '../CypherFrame/ErrorsView'
-import LegacySysInfoFrame from './LegacySysInfoFrame'
+import LegacySysInfoFrame from './LegacySysInfoFrame/LegacySysInfoFrame'
 import { SysInfoTable } from './SysInfoTable'
-import * as helpers from './helpers'
 import { InlineError } from './styled'
+import * as helpers from './sysinfoHelpers'
 import FrameBodyTemplate from 'browser/modules/Frame/FrameBodyTemplate'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { GlobalState } from 'shared/globalState'

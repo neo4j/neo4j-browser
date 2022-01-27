@@ -17,28 +17,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { render } from '@testing-library/react'
-import React from 'react'
 
-import { LegacySysInfoFrame } from './index'
+/* global, describe afterEach */
+import { flattenAttributes } from './sysinfoUtils'
 
-const baseProps = {
-  bus: null as any,
-  frame: null as any,
-  isFullscreen: false,
-  isCollapsed: false,
-  isACausalCluster: false
-}
-
-describe('LegacySysInfoFrame', () => {
-  test('should display error when there is no connection', () => {
-    // Given
-    const props = { ...baseProps, isConnected: false }
-
-    // When
-    const { getAllByText } = render(<LegacySysInfoFrame {...props} />)
-
-    // Then
-    expect(getAllByText(/No connection available/i)).not.toBeNull()
+describe('sysinfo attribute types', () => {
+  test('should handle string value', () => {
+    const attributeData = { attributes: [{ name: 'foo', value: 'bar' }] }
+    expect(flattenAttributes(attributeData)).toEqual({ foo: 'bar' })
+  })
+  test('should handle int value', () => {
+    const attributeData = { attributes: [{ name: 'foo', value: 0 }] }
+    expect(flattenAttributes(attributeData)).toEqual({ foo: '0.0' })
+  })
+  test('should handle object value', () => {
+    const attributeData = {
+      attributes: [{ name: 'foo', value: { bar: 'baz' } }]
+    }
+    expect(flattenAttributes(attributeData)).toEqual({ foo: { bar: 'baz' } })
   })
 })

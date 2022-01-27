@@ -28,7 +28,7 @@ import {
 } from '../../AutoRefresh/styled'
 import { ErrorsView } from '../../CypherFrame/ErrorsView'
 import { SysInfoDisplay } from './SysInfoDisplay'
-import * as legacyHelpers from './legacyHelpers'
+import * as legacyHelpers from './sysinfoHelpers'
 import FrameBodyTemplate from 'browser/modules/Frame/FrameBodyTemplate'
 import FrameError from 'browser/modules/Frame/FrameError'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'

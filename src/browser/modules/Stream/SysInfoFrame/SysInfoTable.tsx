@@ -2,7 +2,7 @@ import React from 'react'
 
 import { StyledInfoMessage } from './../../Stream/styled'
 import { DatabaseMetric } from './SysInfoFrame'
-import { buildDatabaseTable, buildTableData } from './sysinfo-utils'
+import { buildDatabaseTable, buildTableData } from './sysinfoUtils'
 import {
   StyledSysInfoTable,
   SysInfoTableContainer,

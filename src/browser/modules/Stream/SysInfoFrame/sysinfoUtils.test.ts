@@ -19,7 +19,7 @@
  */
 
 /* global, describe afterEach */
-import { flattenAttributes } from './sysinfo-utils'
+import { flattenAttributes } from './sysinfoUtils'
 
 describe('sysinfo attribute types', () => {
   test('should handle string value', () => {

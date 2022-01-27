@@ -22,7 +22,7 @@ import React from 'react'
 import {
   getTableDataFromRecords,
   mapLegacySysInfoRecords
-} from './sysinfo-utils'
+} from './sysinfoUtils'
 import { toHumanReadableBytes, toKeyString } from 'services/utils'
 
 export const sysinfoQuery = () => 'CALL dbms.queryJmx("org.neo4j:*")'

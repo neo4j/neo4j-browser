@@ -19,7 +19,7 @@
  */
 import React from 'react'
 
-import { buildTableData } from './sysinfo-utils'
+import { buildTableData } from './sysinfoUtils'
 import {
   StyledSysInfoTable,
   SysInfoTableContainer,

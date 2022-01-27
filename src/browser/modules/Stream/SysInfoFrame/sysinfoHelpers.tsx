@@ -19,7 +19,7 @@
  */
 import React from 'react'
 
-import { flattenAttributes, mapSysInfoRecords } from './sysinfo-utils'
+import { flattenAttributes, mapSysInfoRecords } from './sysinfoUtils'
 import { toHumanReadableBytes, toKeyString } from 'services/utils'
 
 /*
