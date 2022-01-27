@@ -39,8 +39,8 @@ import {
   PlayIcon
 } from 'browser-components/icons/Icons'
 import {
+  isImplicitTransactionError,
   isNoDbAccessError,
-  isPeriodicCommitError,
   isUnknownProcedureError
 } from 'services/cypherErrorsHelper'
 import { deepEquals } from 'services/utils'
@@ -93,7 +93,7 @@ export class ErrorsView extends Component<any> {
               </StyledLink>
             </StyledLinkContainer>
           )}
-          {isPeriodicCommitError(error) && (
+          {isImplicitTransactionError(error) && (
             <StyledLinkContainer>
               <StyledLink onClick={() => onItemClick(bus, `:help auto`)}>
                 <PlayIcon />

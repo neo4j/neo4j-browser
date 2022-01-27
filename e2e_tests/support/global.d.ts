@@ -14,6 +14,13 @@ declare global {
         makeAssertions?: boolean
       ): Cypress.Chainable<void>
       /**
+       * Custom command to run cy.connect if needed
+       */
+      ensureConnection(creds?: {
+        username: string
+        password: string
+      }): Cypress.Chainable<void>
+      /**
        * Custom command to disconnect from neo4j database
        */
       disconnect(): Cypress.Chainable<void>

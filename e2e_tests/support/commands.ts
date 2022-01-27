@@ -29,13 +29,9 @@ Cypress.Commands.add(
     cy.title().should('include', 'Neo4j Browser')
     cy.wait(3000)
 
-    cy.get('input[data-testid="boltaddress"]')
-      .clear()
-      .type(boltUrl)
+    cy.get('input[data-testid="boltaddress"]').clear().type(boltUrl)
 
-    cy.get('input[data-testid="username"]')
-      .clear()
-      .type(username)
+    cy.get('input[data-testid="username"]').clear().type(username)
     cy.get('input[data-testid="password"]').type(initialPassword)
 
     cy.get('button[data-testid="connect"]').click()
@@ -71,16 +67,10 @@ Cypress.Commands.add(
     cy.executeCommand(':clear')
     cy.executeCommand(':server connect')
 
-    cy.get('input[data-testid="boltaddress"]')
-      .clear()
-      .type(boltUrl)
+    cy.get('input[data-testid="boltaddress"]').clear().type(boltUrl)
 
-    cy.get('input[data-testid="username"]')
-      .clear()
-      .type(username)
-    cy.get('input[data-testid="password"]')
-      .clear()
-      .type(password)
+    cy.get('input[data-testid="username"]').clear().type(username)
+    cy.get('input[data-testid="password"]').clear().type(password)
 
     cy.get('button[data-testid="connect"]').click()
     if (makeAssertions) {
@@ -133,9 +123,7 @@ Cypress.Commands.add('resultContains', str => {
 Cypress.Commands.add('addUser', (userName, password, role, force) => {
   cy.get('[id*=username]')
   cy.get('[id*=username]').type(userName)
-  cy.get('[id*=password]')
-    .first()
-    .type(password)
+  cy.get('[id*=password]').first().type(password)
   cy.get('[id*=password-confirm]').type(password)
   cy.get('[id*=roles-selector]').select(role)
   if (force === true) {
@@ -188,3 +176,14 @@ Cypress.Commands.add('dropUser', username => {
     cy.executeCommand(':clear')
   }
 })
+
+Cypress.Commands.add(
+  'ensureConnection',
+  (creds = { username: 'neo4j', password: Cypress.config('password') }) => {
+    cy.contains('Database access not available').then(res => {
+      if (res) {
+        cy.connect(creds.username, creds.password)
+      }
+    })
+  }
+)
