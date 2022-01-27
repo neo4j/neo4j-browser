@@ -41,13 +41,13 @@ import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
 
 export type MeasureSizeFn = () => { width: number; height: number }
 
-export class Visualization<T extends Element = SVGElement> {
-  private root: Selection<T, unknown, BaseType, unknown>
+export class Visualization {
+  private readonly root: Selection<SVGElement, unknown, BaseType, unknown>
   private baseGroup: Selection<SVGGElement, unknown, BaseType, unknown>
   private rect: Selection<SVGRectElement, unknown, BaseType, unknown>
   private container: Selection<SVGGElement, unknown, BaseType, unknown>
   private geometry: GraphGeometry
-  private zoomBehavior: ZoomBehavior<SVGGElement, unknown>
+  private zoomBehavior: ZoomBehavior<SVGElement, unknown>
 
   forceSim: ForceSimulation
 
@@ -57,7 +57,7 @@ export class Visualization<T extends Element = SVGElement> {
   private isZoomClick = false
 
   constructor(
-    element: T,
+    element: SVGElement,
     private measureSize: MeasureSizeFn,
     private graph: Graph,
     public style: GraphStyle,
@@ -90,9 +90,9 @@ export class Visualization<T extends Element = SVGElement> {
     this.container = this.baseGroup.append('g')
     this.geometry = new GraphGeometry(style)
 
-    this.zoomBehavior = d3Zoom<SVGGElement, unknown>()
+    this.zoomBehavior = d3Zoom<SVGElement, unknown>()
       .scaleExtent(ZOOM_SCALE_EXTENT)
-      .on('zoom', (e: D3ZoomEvent<SVGGElement, unknown>) => {
+      .on('zoom', (e: D3ZoomEvent<SVGElement, unknown>) => {
         const isZoomClick = this.isZoomClick
         this.draw = true
         this.isZoomClick = false
@@ -104,9 +104,9 @@ export class Visualization<T extends Element = SVGElement> {
           .attr('transform', String(e.transform))
       })
 
-    this.baseGroup
+    this.root
       .call(this.zoomBehavior)
-      .call(zoomEventHandler, this.baseGroup, this.zoomBehavior)
+      .call(zoomEventHandler, this.root, this.zoomBehavior)
       // Single click is not panning
       .on('click.zoom', () => (this.draw = false))
 
@@ -193,12 +193,12 @@ export class Visualization<T extends Element = SVGElement> {
     this.isZoomClick = true
     const limitsReached = { zoomInLimit: false, zoomOutLimit: false }
 
-    this.zoomBehavior.scaleBy(this.baseGroup, isZoomingIn ? 1.3 : 0.7)
+    this.zoomBehavior.scaleBy(this.root, isZoomingIn ? 1.3 : 0.7)
 
     return limitsReached
   }
 
-  init() {
+  init(): void {
     this.container
       .selectAll('g.layer')
       .data(['relationships', 'nodes'])
@@ -214,7 +214,7 @@ export class Visualization<T extends Element = SVGElement> {
     updateNodes: boolean
     updateRelationships: boolean
     restartSimulation: boolean
-  }) {
+  }): void {
     if (options.updateNodes) {
       this.updateNodes()
     }
@@ -229,11 +229,11 @@ export class Visualization<T extends Element = SVGElement> {
     this.trigger('updated')
   }
 
-  boundingBox() {
+  boundingBox(): DOMRect | undefined {
     return this.container.node()?.getBBox()
   }
 
-  resize() {
+  resize(): void {
     const size = this.measureSize()
 
     this.rect

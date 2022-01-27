@@ -12,9 +12,9 @@ import Relationship from './Relationship'
 import VizNode from './VizNode'
 
 export const zoomEventHandler = (
-  selection: Selection<SVGGElement, unknown, BaseType, unknown>,
-  baseGroup: Selection<SVGGElement, unknown, BaseType, unknown>,
-  zoomBehavior: ZoomBehavior<SVGGElement, unknown>
+  selection: Selection<SVGElement, unknown, BaseType, unknown>,
+  root: Selection<SVGElement, unknown, BaseType, unknown>,
+  zoomBehavior: ZoomBehavior<SVGElement, unknown>
 ) => {
   const handleZoomOnShiftScroll = (e: WheelEvent) => {
     if (e.shiftKey) {
@@ -24,7 +24,7 @@ export const zoomEventHandler = (
       const delta =
         -e.deltaY * (e.deltaMode === 1 ? 0.05 : e.deltaMode ? 1 : 0.002)
 
-      return zoomBehavior.scaleBy(baseGroup, 1 + delta)
+      return zoomBehavior.scaleBy(root, 1 + delta)
     }
   }
 

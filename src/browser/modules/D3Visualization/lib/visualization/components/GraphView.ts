@@ -29,7 +29,7 @@ export default class GraphView {
   viz: Visualization
 
   constructor(
-    element: any,
+    element: SVGElement,
     measureSize: MeasureSizeFn,
     graph: Graph,
     style: GraphStyle

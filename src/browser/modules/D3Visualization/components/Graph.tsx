@@ -75,6 +75,8 @@ export class GraphComponent extends React.Component<GraphProps> {
       assignVisElement
     } = this.props
 
+    if (!this.svgElement.current) return
+
     const measureSize = () => ({
       width: this.svgElement.current?.parentElement?.clientWidth ?? 200,
       height: this.svgElement.current?.parentElement?.clientHeight ?? 200
