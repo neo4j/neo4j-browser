@@ -76,7 +76,7 @@ describe('commandsDuck config helper', () => {
     // Then
     return p.then(res => {
       expect(res).toEqual({ x: 2 })
-      expect(put).toHaveBeenCalledWith(update({ x: 2 }))
+      expect(put).toHaveBeenCalledWith(update({ x: 2 } as any))
     })
   })
   test('handles :config x: 2 and calls the update action creator', () => {
@@ -90,7 +90,7 @@ describe('commandsDuck config helper', () => {
     // Then
     return p.then(res => {
       expect(res).toEqual({ x: 2 })
-      expect(put).toHaveBeenCalledWith(update({ x: 2 }))
+      expect(put).toHaveBeenCalledWith(update({ x: 2 } as any))
     })
   })
   test('handles :config "x y": 2 and calls the update action creator', () => {
@@ -104,7 +104,7 @@ describe('commandsDuck config helper', () => {
     // Then
     return p.then(res => {
       expect(res).toEqual({ 'x y': 2 })
-      expect(put).toHaveBeenCalledWith(update({ 'x y': 2 }))
+      expect(put).toHaveBeenCalledWith(update({ 'x y': 2 } as any))
     })
   })
   test('handles :config {"hej": "ho", "let\'s": "go"} and calls the replace action creator', () => {
@@ -118,7 +118,9 @@ describe('commandsDuck config helper', () => {
     // Then
     return p.then(res => {
       expect(res).toEqual({ hej: 'ho', "let's": 'go' })
-      expect(put).toHaveBeenCalledWith(replace({ hej: 'ho', "let's": 'go' }))
+      expect(put).toHaveBeenCalledWith(
+        replace({ hej: 'ho', "let's": 'go' } as any)
+      )
     })
   })
   test('handles :config {x: 1, y: 2} and calls the replace action creator', () => {
@@ -132,7 +134,7 @@ describe('commandsDuck config helper', () => {
     // Then
     return p.then(res => {
       expect(res).toEqual({ x: 1, y: 2 })
-      expect(put).toHaveBeenCalledWith(replace({ x: 1, y: 2 }))
+      expect(put).toHaveBeenCalledWith(replace({ x: 1, y: 2 } as any))
     })
   })
   test('rejects hostnames not in allowlist', () => {

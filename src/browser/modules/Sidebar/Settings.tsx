@@ -116,14 +116,14 @@ const visualSettings = [
       },
       {
         maxHistory: {
-          displayName: 'Max History',
+          displayName: 'Max history length',
           tooltip:
             'Max number of history entries. When reached, old entries gets retired.'
         }
       },
       {
         scrollToTop: {
-          displayName: 'Scroll To Top',
+          displayName: 'Scroll to top when adding frames',
           tooltip: 'Automatically scroll stream to top on new frames.',
           type: 'checkbox'
         }
@@ -142,13 +142,13 @@ const visualSettings = [
       },
       {
         maxNeighbours: {
-          displayName: 'Max Neighbours',
+          displayName: 'Max neighbours from vis interaction',
           tooltip: 'Limit exploratory queries to this limit.'
         }
       },
       {
         maxRows: {
-          displayName: 'Max Rows',
+          displayName: 'Result view max rows',
           tooltip: "Max number of rows to render in 'Rows' result view"
         }
       },
@@ -419,7 +419,7 @@ const mapStateToProps = (state: GlobalState) => {
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    onSettingsSave: (settings: any) => {
+    onSettingsSave: (settings: Partial<actions.SettingsState>) => {
       dispatch(actions.update(settings))
     },
     trackOptOutCrashReports(optedIn: boolean) {

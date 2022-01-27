@@ -272,7 +272,7 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          updateSettings({ x: 2 }),
+          updateSettings({ x: 2 } as any),
           frames.add({
             ...action,
             type: 'pre',
@@ -301,7 +301,7 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          replaceSettings({ x: 2, y: 3 }),
+          replaceSettings({ x: 2, y: 3 } as any),
           frames.add({
             ...action,
             type: 'pre',

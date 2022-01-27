@@ -48,8 +48,8 @@ import { NAME as history } from './modules/history/historyDuck'
 import { NAME as params } from './modules/params/paramsDuck'
 import { RequestState, NAME as requests } from './modules/requests/requestsDuck'
 import {
-  NAME as settings,
-  initialState as settingsInitialState
+  SettingsState,
+  NAME as settings
 } from './modules/settings/settingsDuck'
 import { SidebarState, NAME as sidebar } from './modules/sidebar/sidebarDuck'
 import {
@@ -63,7 +63,7 @@ import {
 import { UdcState, NAME as udc } from './modules/udc/udcDuck'
 
 export interface GlobalState {
-  [settings]: typeof settingsInitialState
+  [settings]: SettingsState
   [connections]: ConnectionReduxState
   [history]: string[]
   [requests]: RequestState

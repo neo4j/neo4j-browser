@@ -78,6 +78,7 @@ describe('<OverviewPane />', () => {
         nodeCount={nodeCount}
         relationshipCount={relationshipCount}
         stats={graphStats}
+        infoMessage={null}
       />
     )
   }

@@ -17,8 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { get } from 'lodash-es'
-
 import { GlobalState } from 'shared/globalState'
 import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
 
@@ -38,7 +36,10 @@ export const DARK_THEME = 'dark'
 
 export const NEO4J_CLOUD_DOMAINS = ['neo4j.io']
 
-export const getSettings = (state: any) => state[NAME]
+const toNumber = (num: number | string): number =>
+  typeof num === 'number' ? num : parseInt(num, 10)
+
+export const getSettings = (state: any): SettingsState => state[NAME]
 export const getMaxHistory = (state: any) =>
   state[NAME].maxHistory || initialState.maxHistory
 export const getInitCmd = (state: any) => (state[NAME].initCmd || '').trim()
@@ -52,15 +53,15 @@ export const getBrowserSyncConfig = (
   host = getSettings(state).browserSyncDebugServer
 ) => browserSyncConfig(host || undefined)
 export const getMaxNeighbours = (state: GlobalState): number =>
-  state[NAME].maxNeighbours || initialState.maxNeighbours
+  toNumber(state[NAME].maxNeighbours ?? initialState.maxNeighbours)
 export const getMaxRows = (state: GlobalState): number =>
-  state[NAME].maxRows || initialState.maxRows
+  toNumber(state[NAME].maxRows ?? initialState.maxRows)
 export const getMaxFieldItems = (state: GlobalState): number =>
-  get(state, [NAME, 'maxFieldItems'], initialState.maxFieldItems)
+  toNumber(state[NAME].maxFieldItems ?? initialState.maxFieldItems)
 export const getMaxFrames = (state: GlobalState): number =>
-  state[NAME].maxFrames
+  toNumber(state[NAME].maxFrames ?? initialState.maxFrames)
 export const getInitialNodeDisplay = (state: GlobalState): number =>
-  state[NAME].initialNodeDisplay || initialState.initialNodeDisplay
+  toNumber(state[NAME].initialNodeDisplay ?? initialState.initialNodeDisplay)
 export const getScrollToTop = (state: any) => state[NAME].scrollToTop
 export const shouldAutoComplete = (state: any) =>
   state[NAME].autoComplete !== false
@@ -91,7 +92,38 @@ export const getAllowCrashReports = (state: GlobalState): boolean =>
 export const getAllowUserStats = (state: GlobalState): boolean =>
   state[NAME].allowUserStats ?? initialState.allowUserStats
 
-export const initialState = {
+// Ideally the string | number types would be only numbers
+// but they're saved as strings in the settings component
+export type SettingsState = {
+  maxHistory: string | number
+  theme:
+    | typeof AUTO_THEME
+    | typeof LIGHT_THEME
+    | typeof OUTLINE_THEME
+    | typeof DARK_THEME
+  initCmd: string
+  playImplicitInitCommands: boolean
+  initialNodeDisplay: string | number
+  maxNeighbours: string | number
+  showSampleScripts: boolean
+  browserSyncDebugServer: any
+  maxRows: string | number
+  maxFieldItems: string | number
+  autoComplete: boolean
+  scrollToTop: boolean
+  maxFrames: string | number
+  codeFontLigatures: boolean
+  useBoltRouting: boolean
+  editorLint: boolean
+  useCypherThread: boolean
+  enableMultiStatementMode: boolean
+  connectionTimeout: string | number
+  showPerformanceOverlay: boolean
+  allowCrashReports: boolean
+  allowUserStats: boolean
+}
+
+export const initialState: SettingsState = {
   maxHistory: 30,
   theme: AUTO_THEME,
   initCmd: ':play start',
@@ -139,14 +171,14 @@ export default function settings(state = initialState, action: any) {
   }
 }
 
-export const update = (settings: any) => {
+export const update = (settings: Partial<SettingsState>) => {
   return {
     type: UPDATE,
     state: settings
   }
 }
 
-export const replace = (settings: any) => {
+export const replace = (settings: Partial<SettingsState>) => {
   return {
     type: REPLACE,
     state: settings

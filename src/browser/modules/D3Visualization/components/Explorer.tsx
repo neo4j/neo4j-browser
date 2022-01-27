@@ -75,7 +75,7 @@ type ExplorerComponentProps = {
   getNeighbours: (
     id: string,
     currentNeighbourIds: string[] | undefined
-  ) => Promise<BasicNodesAndRels & { count: number }>
+  ) => Promise<BasicNodesAndRels & { allNeighboursCount: number }>
   updateStyle: any
   isFullscreen: boolean
   assignVisElement: (v: any) => void
@@ -129,7 +129,7 @@ export class ExplorerComponent extends Component<
     const selectedItem: VizItem = nodeLimitHit
       ? {
           type: 'status-item',
-          item: `Not all return nodes are being displayed due to Initial Node Display setting. Only ${this.props.initialNodeDisplay} of ${nodes.length} nodes are being displayed`
+          item: `Not all return nodes are being displayed due to Initial Node Display setting. Only ${this.props.initialNodeDisplay} of ${this.props.nodes.length} nodes are being displayed`
         }
       : {
           type: 'canvas',
@@ -172,16 +172,12 @@ export class ExplorerComponent extends Component<
       callback({ nodes: [], relationships: [] })
     }
     this.props.getNeighbours(node.id, currentNeighbourIds).then(
-      ({ nodes, relationships, count }) => {
-        if (count > this.props.maxNeighbours - currentNeighbourIds.length) {
+      ({ nodes, relationships, allNeighboursCount }) => {
+        if (allNeighboursCount > this.props.maxNeighbours) {
           this.setState({
             selectedItem: {
               type: 'status-item',
-              item: `Rendering was limited to ${
-                this.props.maxNeighbours
-              } of the node's total ${
-                count + currentNeighbourIds.length
-              } neighbours due to browser config maxNeighbours.`
+              item: `Rendering was limited to ${this.props.maxNeighbours} of the node's total ${allNeighboursCount} neighbours due to browser config maxNeighbours.`
             }
           })
         }
