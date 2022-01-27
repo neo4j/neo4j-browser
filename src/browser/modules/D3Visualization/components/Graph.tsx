@@ -81,7 +81,7 @@ export class GraphComponent extends React.Component<GraphProps> {
     })
 
     const graph = createGraph(nodes, relationships)
-    const graphView = new GraphView(
+    this.graphView = new GraphView(
       this.svgElement.current,
       measureSize,
       graph,
@@ -90,7 +90,7 @@ export class GraphComponent extends React.Component<GraphProps> {
 
     const graphEventHandler = new GraphEventHandler(
       graph,
-      graphView,
+      this.graphView,
       getNodeNeighbours,
       onItemMouseOver,
       onItemSelect,
@@ -99,8 +99,8 @@ export class GraphComponent extends React.Component<GraphProps> {
     graphEventHandler.bindEventHandlers()
 
     onGraphModelChange(getGraphStats(graph))
-    graphView.resize()
-    graphView.init()
+    this.graphView.resize()
+    this.graphView.init()
 
     if (setGraph) {
       setGraph(graph)
@@ -111,12 +111,15 @@ export class GraphComponent extends React.Component<GraphProps> {
           mapRelationships(internalRelationships, graph)
         )
         onGraphModelChange(getGraphStats(graph))
-        graphView.update({ updateNodes: false, updateRelationships: true })
+        this.graphView?.update({
+          updateNodes: false,
+          updateRelationships: true
+        })
         graphEventHandler.onItemMouseOut()
       })
     }
     if (assignVisElement) {
-      assignVisElement(this.svgElement.current, graphView)
+      assignVisElement(this.svgElement.current, this.graphView)
     }
   }
 
