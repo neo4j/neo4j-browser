@@ -19,7 +19,11 @@
  */
 import { isNullish } from '../utils/arrays'
 import Graph from './Graph'
-import { MeasureSizeFn, Visualization } from './Visualization'
+import {
+  MeasureSizeFn,
+  Visualization,
+  ZoomLimitsReached
+} from './Visualization'
 import GraphStyle from 'project-root/src/browser/modules/D3Visualization/graphStyle'
 
 export default class GraphView {
@@ -31,6 +35,7 @@ export default class GraphView {
   constructor(
     element: SVGElement,
     measureSize: MeasureSizeFn,
+    onZoomEvent: (limitsReached: ZoomLimitsReached) => void,
     graph: Graph,
     style: GraphStyle
   ) {
@@ -41,6 +46,7 @@ export default class GraphView {
     this.viz = new Visualization(
       element,
       measureSize,
+      onZoomEvent,
       this.graph,
       this.style,
       (event: any, ...args: any[]) =>
@@ -93,15 +99,15 @@ export default class GraphView {
     this.viz.resize()
   }
 
-  boundingBox() {
+  boundingBox(): DOMRect | undefined {
     return this.viz.boundingBox()
   }
 
-  zoomIn() {
-    return this.viz.zoomInClick()
+  zoomIn(): void {
+    this.viz.zoomInClick()
   }
 
-  zoomOut() {
-    return this.viz.zoomOutClick()
+  zoomOut(): void {
+    this.viz.zoomOutClick()
   }
 }
