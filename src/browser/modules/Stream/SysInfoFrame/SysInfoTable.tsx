@@ -2,11 +2,13 @@ import React from 'react'
 
 import { StyledInfoMessage } from './../../Stream/styled'
 import { DatabaseMetric } from './SysInfoFrame'
-import { buildDatabaseTable, buildTableData } from './sysinfo-utils'
+import { buildDatabaseTable, buildTableData } from './sysinfoUtils'
 import {
   StyledSysInfoTable,
-  SysInfoTableContainer
+  SysInfoTableContainer,
+  SysInfoTableEntry
 } from 'browser-components/Tables'
+import { QuestionIcon } from 'browser-components/icons/Icons'
 import { Database } from 'shared/modules/dbMeta/state'
 
 type SysInfoFrameProps = {
@@ -15,6 +17,7 @@ type SysInfoFrameProps = {
   idAllocation: DatabaseMetric[]
   pageCache: DatabaseMetric[]
   transactions: DatabaseMetric[]
+  casualClusterMembers: DatabaseMetric[]
   isEnterpriseEdition: boolean
   hasMultiDbSupport: boolean
 }
@@ -26,6 +29,7 @@ export const SysInfoTable = ({
   idAllocation,
   transactions,
   isEnterpriseEdition,
+  casualClusterMembers,
   hasMultiDbSupport
 }: SysInfoFrameProps): JSX.Element => {
   const mappedDatabases = [
@@ -58,6 +62,24 @@ export const SysInfoTable = ({
         {buildTableData(transactions)}
       </StyledSysInfoTable>
       {hasMultiDbSupport && buildDatabaseTable(mappedDatabases)}
+      {casualClusterMembers.length > 0 && (
+        <StyledSysInfoTable
+          key="cc-table"
+          header={
+            <span data-testid="sysinfo-casual-cluster-members-title">
+              Causal Cluster Members{' '}
+              <QuestionIcon title="Values shown in `:sysinfo` may differ between cluster members" />
+            </span>
+          }
+          colspan="3"
+        >
+          <SysInfoTableEntry
+            key="cc-entry"
+            headers={['Roles', 'Addresses', 'Actions']}
+          />
+          {buildTableData(casualClusterMembers)}
+        </StyledSysInfoTable>
+      )}
     </SysInfoTableContainer>
   ) : (
     <div>

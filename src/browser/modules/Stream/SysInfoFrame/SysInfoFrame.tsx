@@ -30,10 +30,10 @@ import {
   StyledStatusBar
 } from '../AutoRefresh/styled'
 import { ErrorsView } from '../CypherFrame/ErrorsView'
+import LegacySysInfoFrame from './LegacySysInfoFrame/LegacySysInfoFrame'
 import { SysInfoTable } from './SysInfoTable'
-import * as helpers from './helpers'
-import * as legacyHelpers from './legacyHelpers'
 import { InlineError } from './styled'
+import * as helpers from './sysinfoHelpers'
 import FrameBodyTemplate from 'browser/modules/Frame/FrameBodyTemplate'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { GlobalState } from 'shared/globalState'
@@ -47,6 +47,7 @@ import {
   getDatabases,
   isEnterprise
 } from 'shared/modules/dbMeta/state'
+import { canCallDbmsClusterOverview } from 'shared/modules/features/featuresDuck'
 import { hasMultiDbSupport } from 'shared/modules/features/versionedFeatures'
 import { Frame } from 'shared/modules/frames/framesDuck'
 
@@ -57,6 +58,7 @@ export type SysInfoFrameState = {
   idAllocation: DatabaseMetric[]
   pageCache: DatabaseMetric[]
   transactions: DatabaseMetric[]
+  casualClusterMembers: DatabaseMetric[]
   errorMessage: string | null
   results: boolean
   autoRefresh: boolean
@@ -75,6 +77,7 @@ type SysInfoFrameProps = {
   useDb: string | null
   isFullscreen: boolean
   isCollapsed: boolean
+  canCallClusterOverview: boolean
 }
 
 export class SysInfoFrame extends Component<
@@ -88,6 +91,7 @@ export class SysInfoFrame extends Component<
     idAllocation: [],
     pageCache: [],
     transactions: [],
+    casualClusterMembers: [],
     errorMessage: null,
     results: false,
     autoRefresh: false,
@@ -177,11 +181,6 @@ export class SysInfoFrame extends Component<
         }),
         helpers.responseHandler(this.setState.bind(this))
       )
-    } else if (!hasMultiDbSupport) {
-      this.runCypherQuery(
-        legacyHelpers.sysinfoQuery(),
-        legacyHelpers.responseHandler(this.setState.bind(this))
-      )
     }
   }
 
@@ -200,6 +199,16 @@ export class SysInfoFrame extends Component<
         },
         responseHandler
       )
+      if (this.props.canCallClusterOverview) {
+        this.props.bus.self(
+          CYPHER_REQUEST,
+          {
+            query: 'CALL dbms.cluster.overview',
+            queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+          },
+          helpers.clusterResponseHandler(this.setState.bind(this))
+        )
+      }
     }
   }
 
@@ -219,10 +228,17 @@ export class SysInfoFrame extends Component<
       lastFetch,
       pageCache,
       storeSizes,
-      transactions
+      transactions,
+      casualClusterMembers
     } = this.state
-    const { databases, isConnected, isEnterprise, hasMultiDbSupport } =
-      this.props
+    const {
+      databases,
+      isConnected,
+      isEnterprise,
+      hasMultiDbSupport,
+      isCollapsed,
+      isFullscreen
+    } = this.props
 
     const content = isConnected ? (
       <SysInfoTable
@@ -231,6 +247,7 @@ export class SysInfoFrame extends Component<
         idAllocation={idAllocation}
         transactions={transactions}
         databases={databases}
+        casualClusterMembers={casualClusterMembers}
         isEnterpriseEdition={isEnterprise}
         hasMultiDbSupport={hasMultiDbSupport}
       />
@@ -242,8 +259,8 @@ export class SysInfoFrame extends Component<
 
     return (
       <FrameBodyTemplate
-        isCollapsed={this.props.isCollapsed}
-        isFullscreen={this.props.isFullscreen}
+        isCollapsed={isCollapsed}
+        isFullscreen={isFullscreen}
         contents={content}
         statusBar={
           <StatusbarWrapper>
@@ -267,13 +284,26 @@ export class SysInfoFrame extends Component<
     )
   }
 }
+const FrameVersionPicker = (props: SysInfoFrameProps) => {
+  if (props.isConnected && props.isEnterprise && !props.hasMultiDbSupport) {
+    return (
+      <LegacySysInfoFrame
+        {...props}
+        isACausalCluster={props.canCallClusterOverview}
+      />
+    )
+  } else {
+    return <SysInfoFrame {...props} />
+  }
+}
 
 const mapStateToProps = (state: GlobalState) => ({
   hasMultiDbSupport: hasMultiDbSupport(state),
   isEnterprise: isEnterprise(state),
   isConnected: isConnected(state),
   databases: getDatabases(state),
-  useDb: getUseDb(state)
+  useDb: getUseDb(state),
+  canCallClusterOverview: canCallDbmsClusterOverview(state)
 })
 
-export default withBus(connect(mapStateToProps)(SysInfoFrame))
+export default withBus(connect(mapStateToProps)(FrameVersionPicker))

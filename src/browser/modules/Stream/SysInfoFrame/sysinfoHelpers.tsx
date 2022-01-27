@@ -17,8 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { flattenAttributes } from './sysinfo-utils'
-import { toHumanReadableBytes } from 'services/utils'
+import React from 'react'
+
+import { flattenAttributes, mapSysInfoRecords } from './sysinfoUtils'
+import { toHumanReadableBytes, toKeyString } from 'services/utils'
 
 /*
 The database provides a number of ways to monitor it's health, we use JMX MBeans.
@@ -268,5 +270,45 @@ export const responseHandler = (setState: (newState: any) => void) =>
       errorMessage: valuesMissing
         ? 'Some metrics missing, check neo4j.conf'
         : null
+    })
+  }
+
+export const clusterResponseHandler = (setState: any) =>
+  function (res: any) {
+    if (!res.success) {
+      setState({ error: 'No causal cluster results', success: false })
+      return
+    }
+    const mappedResult = mapSysInfoRecords(res.result.records)
+    const mappedTableComponents = mappedResult.map((ccRecord: any) => {
+      const httpUrlForMember = ccRecord.addresses.filter((address: any) => {
+        return (
+          !address.includes(window.location.href) &&
+          (window.location.protocol.startsWith('file:')
+            ? address.startsWith('http://')
+            : address.startsWith(window.location.protocol))
+        )
+      })
+      const databases = Object.keys(ccRecord.databases).map(
+        db => `${db}: ${ccRecord.databases[db]}`
+      )
+      return [
+        databases.join(', '),
+        ccRecord.addresses.join(', '),
+        httpUrlForMember.length !== 0 ? (
+          <a
+            rel="noopener noreferrer"
+            key={toKeyString(httpUrlForMember[0])}
+            target="_blank"
+            href={httpUrlForMember[0]}
+          >
+            Open
+          </a>
+        ) : null
+      ]
+    })
+    setState({
+      casualClusterMembers: [{ value: mappedTableComponents }],
+      success: true
     })
   }

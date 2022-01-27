@@ -34,18 +34,9 @@ const baseProps = {
   isEnterprise: true,
   useDb: 'neo4j',
   isFullscreen: false,
-  isCollapsed: false
+  isCollapsed: false,
+  canCallClusterOverview: true
 }
-
-jest.mock('browser/modules/Frame/FrameBodyTemplate', () =>
-  // eslint-disable-next-line
-  ({ contents, children }: any) => (
-    <div>
-      {contents}
-      {children}
-    </div>
-  )
-)
 
 describe('sysinfo component', () => {
   test('should not render causal cluster table', () => {

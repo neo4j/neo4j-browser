@@ -19,77 +19,13 @@
  */
 import React from 'react'
 
-import { buildTableData, getTableDataFromRecords } from './sysinfo-utils'
 import {
-  StyledSysInfoTable,
-  SysInfoTableContainer,
-  SysInfoTableEntry
-} from 'browser-components/Tables'
-import { QuestionIcon } from 'browser-components/icons/Icons'
-import { toHumanReadableBytes } from 'services/utils'
-import arrayHasItems from 'shared/utils/array-has-items'
+  getTableDataFromRecords,
+  mapLegacySysInfoRecords
+} from './sysinfoUtils'
+import { toHumanReadableBytes, toKeyString } from 'services/utils'
 
 export const sysinfoQuery = () => 'CALL dbms.queryJmx("org.neo4j:*")'
-
-export const Sysinfo = ({
-  storeSizes,
-  idAllocation,
-  pageCache,
-  transactions,
-  isACausalCluster,
-  cc,
-  ha,
-  haInstances
-}: any) => {
-  return (
-    <SysInfoTableContainer>
-      <StyledSysInfoTable key="StoreSizes" header="Store Sizes">
-        {buildTableData(storeSizes)}
-      </StyledSysInfoTable>
-      <StyledSysInfoTable key="IDAllocation" header="ID Allocation">
-        {buildTableData(idAllocation)}
-      </StyledSysInfoTable>
-      <StyledSysInfoTable key="PageCache" header="Page Cache">
-        {buildTableData(pageCache)}
-      </StyledSysInfoTable>
-      <StyledSysInfoTable key="Transactionss" header="Transactions">
-        {buildTableData(transactions)}
-      </StyledSysInfoTable>
-      {isACausalCluster && (
-        <StyledSysInfoTable
-          key="cc-table"
-          header={
-            <span data-testid="sysinfo-casual-cluster-members-title">
-              Causal Cluster Members{' '}
-              <QuestionIcon title="Values shown in `:sysinfo` may differ between cluster members" />
-            </span>
-          }
-          colspan={5}
-        >
-          <SysInfoTableEntry
-            key="cc-entry"
-            headers={['Roles', 'Addresses', 'Groups', 'Database', 'Actions']}
-          />
-          {buildTableData(cc)}
-        </StyledSysInfoTable>
-      )}
-      {arrayHasItems(ha) && (
-        <StyledSysInfoTable key="ha-table" header="High Availability">
-          {buildTableData(ha)}
-        </StyledSysInfoTable>
-      )}
-      {arrayHasItems(haInstances) && (
-        <StyledSysInfoTable key="cluster-table" header="Cluster" colspan={4}>
-          <SysInfoTableEntry
-            key="ha-entry"
-            headers={['Id', 'Alive', 'Available', 'Is Master']}
-          />
-          {buildTableData(haInstances)}
-        </StyledSysInfoTable>
-      )}
-    </SysInfoTableContainer>
-  )
-}
 
 export const responseHandler = (setState: any) =>
   function (res: any) {
@@ -230,4 +166,40 @@ export const responseHandler = (setState: any) =>
       ],
       success: true
     })
+  }
+
+export const clusterResponseHandler = (setState: any) =>
+  function (res: any) {
+    if (!res.success) {
+      setState({ error: 'No causal cluster results', success: false })
+      return
+    }
+    const mappedResult = mapLegacySysInfoRecords(res.result.records)
+    const mappedTableComponents = mappedResult.map((ccRecord: any) => {
+      const httpUrlForMember = ccRecord.addresses.filter((address: any) => {
+        return (
+          !address.includes(window.location.href) &&
+          (window.location.protocol.startsWith('file:')
+            ? address.startsWith('http://')
+            : address.startsWith(window.location.protocol))
+        )
+      })
+      return [
+        ccRecord.role,
+        ccRecord.addresses.join(', '),
+        (ccRecord.groups || []).join(', '),
+        ccRecord.database,
+        httpUrlForMember.length !== 0 ? (
+          <a
+            rel="noopener noreferrer"
+            key={toKeyString(httpUrlForMember[0])}
+            target="_blank"
+            href={httpUrlForMember[0]}
+          >
+            Open
+          </a>
+        ) : null
+      ]
+    })
+    setState({ cc: [{ value: mappedTableComponents }], success: true })
   }
