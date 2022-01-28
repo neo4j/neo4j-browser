@@ -32,6 +32,7 @@ import {
 import { StyledSvgWrapper, StyledZoomButton, StyledZoomHolder } from './styled'
 import { VizItem } from './types'
 import { ZoomInIcon, ZoomOutIcon } from 'browser-components/icons/Icons'
+import { ZoomLimitsReached } from 'project-root/src/browser/modules/D3Visualization/lib/visualization/components/Visualization'
 import { BasicNode, BasicRelationship } from 'services/bolt/boltMappings'
 
 type GraphProps = {
@@ -52,12 +53,18 @@ type GraphProps = {
   offset: number
 }
 
-export class GraphComponent extends React.Component<GraphProps> {
+type GraphState = {
+  zoomInLimitReached: boolean
+  zoomOutLimitReached: boolean
+}
+
+export class GraphComponent extends React.Component<GraphProps, GraphState> {
   svgElement: React.RefObject<SVGSVGElement>
   graphView: GraphView | null = null
 
   constructor(props: GraphProps) {
     super(props)
+    this.state = { zoomInLimitReached: false, zoomOutLimitReached: false }
     this.svgElement = React.createRef()
   }
 
@@ -75,6 +82,8 @@ export class GraphComponent extends React.Component<GraphProps> {
       assignVisElement
     } = this.props
 
+    if (!this.svgElement.current) return
+
     const measureSize = () => ({
       width: this.svgElement.current?.parentElement?.clientWidth ?? 200,
       height: this.svgElement.current?.parentElement?.clientHeight ?? 200
@@ -84,6 +93,7 @@ export class GraphComponent extends React.Component<GraphProps> {
     this.graphView = new GraphView(
       this.svgElement.current,
       measureSize,
+      this.handleZoomEvent,
       graph,
       graphStyle
     )
@@ -123,6 +133,18 @@ export class GraphComponent extends React.Component<GraphProps> {
     }
   }
 
+  handleZoomEvent = (limitsReached: ZoomLimitsReached) => {
+    if (
+      limitsReached.zoomInLimitReached !== this.state.zoomInLimitReached ||
+      limitsReached.zoomOutLimitReached !== this.state.zoomOutLimitReached
+    ) {
+      this.setState({
+        zoomInLimitReached: limitsReached.zoomInLimitReached,
+        zoomOutLimitReached: limitsReached.zoomOutLimitReached
+      })
+    }
+  }
+
   zoomInClicked = (): void => {
     if (this.graphView) {
       this.graphView.zoomIn()
@@ -137,14 +159,23 @@ export class GraphComponent extends React.Component<GraphProps> {
 
   render(): JSX.Element {
     const { offset, isFullscreen } = this.props
+    const { zoomInLimitReached, zoomOutLimitReached } = this.state
     return (
       <StyledSvgWrapper>
         <svg className="neod3viz" ref={this.svgElement} />
         <StyledZoomHolder offset={offset} isFullscreen={isFullscreen}>
-          <StyledZoomButton className="zoom-in" onClick={this.zoomInClicked}>
+          <StyledZoomButton
+            aria-label={'zoom-in'}
+            className={zoomInLimitReached ? 'faded zoom-in' : 'zoom-in'}
+            onClick={this.zoomInClicked}
+          >
             <ZoomInIcon regulateSize={isFullscreen ? 2 : 1} />
           </StyledZoomButton>
-          <StyledZoomButton className="zoom-out" onClick={this.zoomOutClicked}>
+          <StyledZoomButton
+            aria-label={'zoom-out'}
+            className={zoomOutLimitReached ? 'faded zoom-out' : 'zoom-out'}
+            onClick={this.zoomOutClicked}
+          >
             <ZoomOutIcon regulateSize={isFullscreen ? 2 : 1} />
           </StyledZoomButton>
         </StyledZoomHolder>
