@@ -211,7 +211,7 @@ Third-party licenses
 │  ├─ long@4.0.0
 │  │  ├─ URL: https://github.com/dcodeIO/long.js.git
 │  │  └─ VendorName: Daniel Wirtz
-│  ├─ neo4j-client-sso@1.2.0
+│  ├─ neo4j-client-sso@1.2.2
 │  │  ├─ URL: git+https://github.com/neo4j-devtools/neo4j-client-sso.git
 │  │  └─ VendorName: Neo4j Engineering
 │  ├─ neo4j-driver-bolt-connection@4.4.0
@@ -339,10 +339,10 @@ Third-party licenses
 │  ├─ buffer-equal-constant-time@1.0.1
 │  │  ├─ URL: git@github.com:goinstant/buffer-equal-constant-time.git
 │  │  └─ VendorName: GoInstant Inc., a salesforce.com company
-│  ├─ d3@3.5.17
-│  │  ├─ URL: https://github.com/mbostock/d3.git
+│  ├─ d3-ease@3.0.1
+│  │  ├─ URL: https://github.com/d3/d3-ease.git
 │  │  ├─ VendorName: Mike Bostock
-│  │  └─ VendorUrl: http://d3js.org/
+│  │  └─ VendorUrl: https://d3js.org/d3-ease/
 │  ├─ exenv@1.2.2
 │  │  ├─ URL: https://github.com/JedWatson/exenv.git
 │  │  ├─ VendorName: Jed Watson
@@ -387,6 +387,74 @@ Third-party licenses
 │  ├─ css-color-keywords@1.0.0
 │  │  ├─ URL: https://github.com/sonicdoe/css-color-keywords.git
 │  │  └─ VendorName: Jakob Krigovsky
+│  ├─ d3-array@3.1.1
+│  │  ├─ URL: https://github.com/d3/d3-array.git
+│  │  ├─ VendorName: Mike Bostock
+│  │  └─ VendorUrl: https://d3js.org/d3-array/
+│  ├─ d3-color@3.0.1
+│  │  ├─ URL: https://github.com/d3/d3-color.git
+│  │  ├─ VendorName: Mike Bostock
+│  │  └─ VendorUrl: https://d3js.org/d3-color/
+│  ├─ d3-dispatch@3.0.1
+│  │  ├─ URL: https://github.com/d3/d3-dispatch.git
+│  │  ├─ VendorName: Mike Bostock
+│  │  └─ VendorUrl: https://d3js.org/d3-dispatch/
+│  ├─ d3-drag@3.0.0
+│  │  ├─ URL: https://github.com/d3/d3-drag.git
+│  │  ├─ VendorName: Mike Bostock
+│  │  └─ VendorUrl: https://d3js.org/d3-drag/
+│  ├─ d3-force@3.0.0
+│  │  ├─ URL: https://github.com/d3/d3-force.git
+│  │  ├─ VendorName: Mike Bostock
+│  │  └─ VendorUrl: https://d3js.org/d3-force/
+│  ├─ d3-format@3.1.0
+│  │  ├─ URL: https://github.com/d3/d3-format.git
+│  │  ├─ VendorName: Mike Bostock
+│  │  └─ VendorUrl: https://d3js.org/d3-format/
+│  ├─ d3-interpolate@3.0.1
+│  │  ├─ URL: https://github.com/d3/d3-interpolate.git
+│  │  ├─ VendorName: Mike Bostock
+│  │  └─ VendorUrl: https://d3js.org/d3-interpolate/
+│  ├─ d3-path@3.0.1
+│  │  ├─ URL: https://github.com/d3/d3-path.git
+│  │  ├─ VendorName: Mike Bostock
+│  │  └─ VendorUrl: https://d3js.org/d3-path/
+│  ├─ d3-quadtree@3.0.1
+│  │  ├─ URL: https://github.com/d3/d3-quadtree.git
+│  │  ├─ VendorName: Mike Bostock
+│  │  └─ VendorUrl: https://d3js.org/d3-quadtree/
+│  ├─ d3-scale@4.0.2
+│  │  ├─ URL: https://github.com/d3/d3-scale.git
+│  │  ├─ VendorName: Mike Bostock
+│  │  └─ VendorUrl: https://d3js.org/d3-scale/
+│  ├─ d3-selection@3.0.0
+│  │  ├─ URL: https://github.com/d3/d3-selection.git
+│  │  ├─ VendorName: Mike Bostock
+│  │  └─ VendorUrl: https://d3js.org/d3-selection/
+│  ├─ d3-shape@3.0.1
+│  │  ├─ URL: https://github.com/d3/d3-shape.git
+│  │  ├─ VendorName: Mike Bostock
+│  │  └─ VendorUrl: https://d3js.org/d3-shape/
+│  ├─ d3-time-format@4.1.0
+│  │  ├─ URL: https://github.com/d3/d3-time-format.git
+│  │  ├─ VendorName: Mike Bostock
+│  │  └─ VendorUrl: https://d3js.org/d3-time-format/
+│  ├─ d3-time@3.0.0
+│  │  ├─ URL: https://github.com/d3/d3-time.git
+│  │  ├─ VendorName: Mike Bostock
+│  │  └─ VendorUrl: https://d3js.org/d3-time/
+│  ├─ d3-timer@3.0.1
+│  │  ├─ URL: https://github.com/d3/d3-timer.git
+│  │  ├─ VendorName: Mike Bostock
+│  │  └─ VendorUrl: https://d3js.org/d3-timer/
+│  ├─ d3-transition@3.0.1
+│  │  ├─ URL: https://github.com/d3/d3-transition.git
+│  │  ├─ VendorName: Mike Bostock
+│  │  └─ VendorUrl: https://d3js.org/d3-transition/
+│  ├─ d3-zoom@3.0.0
+│  │  ├─ URL: https://github.com/d3/d3-zoom.git
+│  │  ├─ VendorName: Mike Bostock
+│  │  └─ VendorUrl: https://d3js.org/d3-zoom/
 │  ├─ get-caller-file@2.0.5
 │  │  ├─ URL: git+https://github.com/stefanpenner/get-caller-file.git
 │  │  ├─ VendorName: Stefan Penner
@@ -396,6 +464,10 @@ Third-party licenses
 │  │  └─ VendorName: Jake Archibald
 │  ├─ inherits@2.0.4
 │  │  └─ URL: git://github.com/isaacs/inherits
+│  ├─ internmap@2.0.3
+│  │  ├─ URL: https://github.com/mbostock/internmap.git
+│  │  ├─ VendorName: Mike Bostock
+│  │  └─ VendorUrl: https://github.com/mbostock/internmap/
 │  ├─ lru-cache@6.0.0
 │  │  ├─ URL: git://github.com/isaacs/node-lru-cache.git
 │  │  └─ VendorName: Isaac Z. Schlueter
