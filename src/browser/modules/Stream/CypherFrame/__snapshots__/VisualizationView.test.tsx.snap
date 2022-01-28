@@ -37,6 +37,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
                 class="layer nodes"
               >
                 <g
+                  aria-label="graph-node1"
                   class="node"
                   transform="translate(0,0.030982068166081952)"
                 >
@@ -77,6 +78,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
           offset="208.8"
         >
           <button
+            aria-label="zoom-in"
             class="sc-jzJRlG hPTWGK zoom-in"
           >
             <i
@@ -85,6 +87,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
             />
           </button>
           <button
+            aria-label="zoom-out"
             class="sc-jzJRlG hPTWGK zoom-out"
           >
             <i
