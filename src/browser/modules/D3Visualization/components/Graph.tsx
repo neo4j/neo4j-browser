@@ -165,12 +165,14 @@ export class GraphComponent extends React.Component<GraphProps, GraphState> {
         <svg className="neod3viz" ref={this.svgElement} />
         <StyledZoomHolder offset={offset} isFullscreen={isFullscreen}>
           <StyledZoomButton
+            aria-label={'zoom-in'}
             className={zoomInLimitReached ? 'faded zoom-in' : 'zoom-in'}
             onClick={this.zoomInClicked}
           >
             <ZoomInIcon regulateSize={isFullscreen ? 2 : 1} />
           </StyledZoomButton>
           <StyledZoomButton
+            aria-label={'zoom-out'}
             className={zoomOutLimitReached ? 'faded zoom-out' : 'zoom-out'}
             onClick={this.zoomOutClicked}
           >

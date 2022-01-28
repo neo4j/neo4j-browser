@@ -163,6 +163,7 @@ export class Visualization {
       .data(nodes, d => d.id)
       .join('g')
       .attr('class', 'node')
+      .attr('aria-label', d => `graph-node${d.id}`)
       .call(nodeEventHandlers, this.trigger, this.forceSim.simulation)
       .classed('selected', node => node.selected)
 
