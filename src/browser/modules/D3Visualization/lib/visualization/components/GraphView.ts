@@ -112,4 +112,8 @@ export default class GraphView {
   zoomOut(): void {
     this.viz.zoomOutClick()
   }
+
+  zoomToFit() {
+    this.viz.zoomToFitClick()
+  }
 }

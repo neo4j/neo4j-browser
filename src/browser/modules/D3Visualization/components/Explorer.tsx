@@ -258,7 +258,7 @@ export class ExplorerComponent extends Component<
           getAutoCompleteCallback={this.props.getAutoCompleteCallback}
           setGraph={this.props.setGraph}
           offset={
-            (this.state.nodePropertiesExpanded ? this.state.width : 0) + 4
+            (this.state.nodePropertiesExpanded ? this.state.width : 0) + 8
           }
         />
         <NodeInspectorPanel

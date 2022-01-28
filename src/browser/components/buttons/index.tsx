@@ -348,12 +348,9 @@ const StyledFrameControlButton = styled.button<{
   pressed?: boolean
 }>`
   border-radius: 2px;
-  color: ${props =>
-    props.pressed
-      ? props.theme.secondaryButtonTextHover
-      : props.theme.frameControlButtonTextColor};
+  color: ${props => props.theme.frameControlButtonTextColor};
   background-color: ${props =>
-    props.pressed ? props.theme.frameButtonHoverBackground : 'transparent'};
+    props.pressed ? props.theme.frameButtonActiveBackground : 'transparent'};
 
   outline: none;
   border: none;
@@ -368,14 +365,14 @@ const StyledFrameControlButton = styled.button<{
   margin-left: 12px;
   &:hover {
     background-color: ${props => props.theme.frameButtonHoverBackground};
-    color: ${props => props.theme.secondaryButtonTextHover};
-    fill: ${props => props.theme.secondaryButtonTextHover};
-    text-decoration: none;
+  }
+  &:active {
+    background-color: ${props => props.theme.frameButtonActiveBackground};
   }
 `
 
 export const StyledFrameButton = styled.li`
-  color: ${props => props.theme.frameButtonTextColor};
+  color: ${props => props.theme.frameButtonTextColorLegacy};
   background-color: transparent;
   border-left: transparent;
   height: ${dim.frameTitlebarHeight}px;
@@ -388,8 +385,6 @@ export const StyledFrameButton = styled.li`
 
   &:hover {
     background-color: ${props => props.theme.frameButtonHoverBackground};
-    color: ${props => props.theme.secondaryButtonTextHover};
-    fill: ${props => props.theme.secondaryButtonTextHover};
     text-decoration: none;
   }
 `

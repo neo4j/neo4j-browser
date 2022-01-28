@@ -31,7 +31,11 @@ import {
 } from '../mapper'
 import { StyledSvgWrapper, StyledZoomButton, StyledZoomHolder } from './styled'
 import { VizItem } from './types'
-import { ZoomInIcon, ZoomOutIcon } from 'browser-components/icons/Icons'
+import {
+  ZoomInIcon,
+  ZoomOutIcon,
+  ZoomToFitIcon
+} from 'browser-components/icons/Icons'
 import { ZoomLimitsReached } from 'project-root/src/browser/modules/D3Visualization/lib/visualization/components/Visualization'
 import { BasicNode, BasicRelationship } from 'services/bolt/boltMappings'
 
@@ -135,7 +139,7 @@ export class GraphComponent extends React.Component<GraphProps, GraphState> {
     }
   }
 
-  handleZoomEvent = (limitsReached: ZoomLimitsReached) => {
+  handleZoomEvent = (limitsReached: ZoomLimitsReached): void => {
     if (
       limitsReached.zoomInLimitReached !== this.state.zoomInLimitReached ||
       limitsReached.zoomOutLimitReached !== this.state.zoomOutLimitReached
@@ -159,6 +163,12 @@ export class GraphComponent extends React.Component<GraphProps, GraphState> {
     }
   }
 
+  zoomToFitClicked = (): void => {
+    if (this.graphView) {
+      this.graphView.zoomToFit()
+    }
+  }
+
   render(): JSX.Element {
     const { offset, isFullscreen } = this.props
     const { zoomInLimitReached, zoomOutLimitReached } = this.state
@@ -171,14 +181,20 @@ export class GraphComponent extends React.Component<GraphProps, GraphState> {
             className={zoomInLimitReached ? 'faded zoom-in' : 'zoom-in'}
             onClick={this.zoomInClicked}
           >
-            <ZoomInIcon regulateSize={isFullscreen ? 2 : 1} />
+            <ZoomInIcon large={isFullscreen} />
           </StyledZoomButton>
           <StyledZoomButton
             aria-label={'zoom-out'}
             className={zoomOutLimitReached ? 'faded zoom-out' : 'zoom-out'}
             onClick={this.zoomOutClicked}
           >
-            <ZoomOutIcon regulateSize={isFullscreen ? 2 : 1} />
+            <ZoomOutIcon large={isFullscreen} />
+          </StyledZoomButton>
+          <StyledZoomButton
+            aria-label={'zoom-to-fit'}
+            onClick={this.zoomToFitClicked}
+          >
+            <ZoomToFitIcon large={isFullscreen} />
           </StyledZoomButton>
         </StyledZoomHolder>
       </StyledSvgWrapper>
