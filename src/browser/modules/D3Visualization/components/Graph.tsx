@@ -134,10 +134,15 @@ export class GraphComponent extends React.Component<GraphProps, GraphState> {
   }
 
   handleZoomEvent = (limitsReached: ZoomLimitsReached) => {
-    this.setState({
-      zoomInLimitReached: limitsReached.zoomInLimitReached,
-      zoomOutLimitReached: limitsReached.zoomOutLimitReached
-    })
+    if (
+      limitsReached.zoomInLimitReached !== this.state.zoomInLimitReached ||
+      limitsReached.zoomOutLimitReached !== this.state.zoomOutLimitReached
+    ) {
+      this.setState({
+        zoomInLimitReached: limitsReached.zoomInLimitReached,
+        zoomOutLimitReached: limitsReached.zoomOutLimitReached
+      })
+    }
   }
 
   zoomInClicked = (): void => {
