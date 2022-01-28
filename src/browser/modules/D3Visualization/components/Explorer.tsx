@@ -78,7 +78,7 @@ type ExplorerComponentProps = {
   ) => Promise<BasicNodesAndRels & { allNeighboursCount: number }>
   updateStyle: any
   isFullscreen: boolean
-  assignVisElement: (v: any) => void
+  assignVisElement: (svgElement: any, graphElement: any) => void
   getAutoCompleteCallback: (
     callback: (rels: BasicRelationship[]) => void
   ) => void

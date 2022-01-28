@@ -18,16 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default function cloneArray<T>(original: Array<T>): Array<T> {
-  const clone = new Array(original.length)
-  for (let idx = 0; idx < original.length; idx++) {
-    const node = original[idx]
-    clone[idx] = node
-  }
-  return clone
-}
-
-function isNullish(x: unknown): x is null | undefined {
+export function isNullish(x: unknown): x is null | undefined {
   return x === null || x === undefined
 }
 

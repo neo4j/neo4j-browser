@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React, { Component } from 'react'
+import React from 'react'
 
 import { GetNodeNeighboursFn, GraphEventHandler } from '../GraphEventHandler'
 import GraphStyle from '../graphStyle'
@@ -34,8 +34,6 @@ import { VizItem } from './types'
 import { ZoomInIcon, ZoomOutIcon } from 'browser-components/icons/Icons'
 import { BasicNode, BasicRelationship } from 'services/bolt/boltMappings'
 
-type GraphState = { zoomInLimitReached: boolean; zoomOutLimitReached: boolean }
-
 type GraphProps = {
   isFullscreen: boolean
   relationships: BasicRelationship[]
@@ -44,149 +42,123 @@ type GraphProps = {
   onItemMouseOver: (item: VizItem) => void
   onItemSelect: (item: VizItem) => void
   graphStyle: GraphStyle
-  styleVersion: any
+  styleVersion: number
   onGraphModelChange: (stats: GraphStats) => void
-  assignVisElement: any
-  getAutoCompleteCallback: any
-  setGraph: any
-  offset: any
+  assignVisElement: (svgElement: any, graphElement: any) => void
+  getAutoCompleteCallback: (
+    callback: (internalRelationships: BasicRelationship[]) => void
+  ) => void
+  setGraph: (graph: Graph) => void
+  offset: number
 }
 
-export class GraphComponent extends Component<GraphProps, GraphState> {
-  graph: Graph | undefined
-  graphEventHandler: GraphEventHandler | undefined
-  graphView: GraphView | undefined
-  svgElement: any
+export class GraphComponent extends React.Component<GraphProps> {
+  svgElement: React.RefObject<SVGSVGElement>
+  graphView: GraphView | null = null
 
-  state: GraphState = {
-    zoomInLimitReached: false,
-    zoomOutLimitReached: false
-  }
-
-  graphInit(el: any): void {
-    this.svgElement = el
-  }
-
-  zoomInClicked(el: any): void {
-    if (this.graphView) {
-      const limits = this.graphView.zoomIn(el)
-      this.setState({
-        zoomInLimitReached: limits.zoomInLimit,
-        zoomOutLimitReached: limits.zoomOutLimit
-      })
-    }
-  }
-
-  zoomOutClicked(el: any): void {
-    if (this.graphView) {
-      const limits = this.graphView.zoomOut(el)
-      this.setState({
-        zoomInLimitReached: limits.zoomInLimit,
-        zoomOutLimitReached: limits.zoomOutLimit
-      })
-    }
+  constructor(props: GraphProps) {
+    super(props)
+    this.svgElement = React.createRef()
   }
 
   componentDidMount(): void {
-    if (this.svgElement != null) {
-      // this.initGraphView and this.addInternalRelationships both call this.graph.update()
-      // so, the same graph will be calculated twice
-      // for now, we added conditions to control which parts to be drawn to avoid repeated rendering
-      // the function need to be refactored in a better way in the future
-      this.initGraphView()
-      this.graph && this.props.setGraph && this.props.setGraph(this.graph)
-      this.props.getAutoCompleteCallback &&
-        this.props.getAutoCompleteCallback(this.addInternalRelationships)
-      this.props.assignVisElement &&
-        this.props.assignVisElement(this.svgElement, this.graphView)
+    const {
+      nodes,
+      relationships,
+      graphStyle,
+      getNodeNeighbours,
+      onItemMouseOver,
+      onItemSelect,
+      onGraphModelChange,
+      setGraph,
+      getAutoCompleteCallback,
+      assignVisElement
+    } = this.props
+
+    const measureSize = () => ({
+      width: this.svgElement.current?.parentElement?.clientWidth ?? 200,
+      height: this.svgElement.current?.parentElement?.clientHeight ?? 200
+    })
+
+    const graph = createGraph(nodes, relationships)
+    this.graphView = new GraphView(
+      this.svgElement.current,
+      measureSize,
+      graph,
+      graphStyle
+    )
+
+    const graphEventHandler = new GraphEventHandler(
+      graph,
+      this.graphView,
+      getNodeNeighbours,
+      onItemMouseOver,
+      onItemSelect,
+      onGraphModelChange
+    )
+    graphEventHandler.bindEventHandlers()
+
+    onGraphModelChange(getGraphStats(graph))
+    this.graphView.resize()
+    this.graphView.init()
+
+    if (setGraph) {
+      setGraph(graph)
+    }
+    if (getAutoCompleteCallback) {
+      getAutoCompleteCallback((internalRelationships: BasicRelationship[]) => {
+        graph.addInternalRelationships(
+          mapRelationships(internalRelationships, graph)
+        )
+        onGraphModelChange(getGraphStats(graph))
+        this.graphView?.update({
+          updateNodes: false,
+          updateRelationships: true
+        })
+        graphEventHandler.onItemMouseOut()
+      })
+    }
+    if (assignVisElement) {
+      assignVisElement(this.svgElement.current, this.graphView)
     }
   }
 
-  initGraphView(): void {
-    if (!this.graphView) {
-      const NeoConstructor = GraphView
-      const measureSize = () => ({
-        width: this.svgElement?.parentElement.clientWidth,
-        height: this.svgElement?.parentElement.clientHeight
-      })
-      this.graph = createGraph(this.props.nodes, this.props.relationships)
-      this.graphView = new NeoConstructor(
-        this.svgElement,
-        measureSize,
-        this.graph,
-        this.props.graphStyle
-      )
-      this.graphEventHandler = new GraphEventHandler(
-        this.graph,
-        this.graphView,
-        this.props.getNodeNeighbours,
-        this.props.onItemMouseOver,
-        this.props.onItemSelect,
-        this.props.onGraphModelChange
-      )
-      this.graphEventHandler.bindEventHandlers()
-      this.props.onGraphModelChange(getGraphStats(this.graph))
-      this.graphView.resize()
-      this.graphView.update({
-        updateNodes: true,
-        updateRelationships: false,
-        precompute: true
-      })
+  zoomInClicked = (): void => {
+    if (this.graphView) {
+      this.graphView.zoomIn()
     }
   }
 
-  addInternalRelationships = (
-    internalRelationships: BasicRelationship[]
-  ): void => {
-    if (this.graph) {
-      this.graph.addInternalRelationships(
-        mapRelationships(internalRelationships, this.graph)
-      )
-      this.props.onGraphModelChange(getGraphStats(this.graph))
-      this.graphView?.update({ updateNodes: false, updateRelationships: true })
-      this.graphEventHandler?.onItemMouseOut()
+  zoomOutClicked = (): void => {
+    if (this.graphView) {
+      this.graphView.zoomOut()
     }
+  }
+
+  render(): JSX.Element {
+    const { offset, isFullscreen } = this.props
+    return (
+      <StyledSvgWrapper>
+        <svg className="neod3viz" ref={this.svgElement} />
+        <StyledZoomHolder offset={offset} isFullscreen={isFullscreen}>
+          <StyledZoomButton className="zoom-in" onClick={this.zoomInClicked}>
+            <ZoomInIcon regulateSize={isFullscreen ? 2 : 1} />
+          </StyledZoomButton>
+          <StyledZoomButton className="zoom-out" onClick={this.zoomOutClicked}>
+            <ZoomOutIcon regulateSize={isFullscreen ? 2 : 1} />
+          </StyledZoomButton>
+        </StyledZoomHolder>
+      </StyledSvgWrapper>
+    )
   }
 
   componentDidUpdate(prevProps: GraphProps): void {
-    if (prevProps.styleVersion !== this.props.styleVersion) {
-      this.graphView?.update({
-        updateNodes: true,
-        updateRelationships: true,
-        precompute: true
-      })
-    }
     if (this.props.isFullscreen !== prevProps.isFullscreen) {
       this.graphView?.resize()
     }
+
+    if (this.props.styleVersion !== prevProps.styleVersion) {
+      this.graphView?.init()
+    }
   }
-
-  zoomButtons = (): JSX.Element => (
-    <StyledZoomHolder
-      offset={this.props.offset}
-      isFullscreen={this.props.isFullscreen}
-    >
-      <StyledZoomButton
-        className={this.state.zoomInLimitReached ? 'faded zoom-in' : 'zoom-in'}
-        onClick={this.zoomInClicked.bind(this)}
-      >
-        <ZoomInIcon regulateSize={this.props.isFullscreen ? 2 : 1} />
-      </StyledZoomButton>
-      <StyledZoomButton
-        className={
-          this.state.zoomOutLimitReached ? 'faded zoom-out' : 'zoom-out'
-        }
-        onClick={this.zoomOutClicked.bind(this)}
-      >
-        <ZoomOutIcon regulateSize={this.props.isFullscreen ? 2 : 1} />
-      </StyledZoomButton>
-    </StyledZoomHolder>
-  )
-
-  render = (): JSX.Element => (
-    <StyledSvgWrapper>
-      <svg className="neod3viz" ref={this.graphInit.bind(this)} />
-      {this.zoomButtons()}
-    </StyledSvgWrapper>
-  )
 }
