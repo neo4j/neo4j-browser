@@ -108,15 +108,6 @@ export interface UdcState {
   allowUserStatsInDesktop: boolean
   allowCrashReportsInDesktop: boolean
 }
-interface UdcStorageFormat {
-  lastSnapshot: number
-  auraNtId?: string
-  uuid: string
-  consentBannerShownCount: number
-  desktopTrackingId?: string
-  allowUserStatsInDesktop: boolean
-  allowCrashReportsInDesktop: boolean
-}
 
 const initialState: UdcState = {
   lastSnapshot: 0,
