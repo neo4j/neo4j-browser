@@ -17,8 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { SyntheticEventData } from 'react-dom/test-utils'
+
 import { syncResourceFor } from 'services/browserSyncService'
-import { setItem } from 'services/localstorage'
+import { setItem } from 'services/localstorage/localstorage'
 import { APP_START } from 'shared/modules/app/appDuck'
 import {
   ADD_FAVORITE,
@@ -263,6 +265,24 @@ export function updateUserAuthStatus(status: any) {
   return {
     type: USER_AUTH_STATUS_UPDATED,
     status
+  }
+}
+
+export function loadSyncConsentFromStorage(
+  stored: null | Partial<SyncConsentState>
+): SyncConsentState {
+  if (!stored) {
+    return initialState
+  }
+  return {
+    consented:
+      typeof stored.consented === 'boolean'
+        ? stored.consented
+        : initialState.consented,
+    optedOut:
+      typeof stored.optedOut === 'boolean'
+        ? stored.optedOut
+        : initialState.optedOut
   }
 }
 

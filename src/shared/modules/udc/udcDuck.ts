@@ -109,7 +109,7 @@ export interface UdcState {
   allowCrashReportsInDesktop: boolean
 }
 
-const initialState: UdcState = {
+export const initialState: UdcState = {
   lastSnapshot: 0,
   auraNtId: undefined,
   uuid: v4(),
@@ -172,6 +172,52 @@ export const updateUdcData = (obj: Partial<UdcState>): UpdateDataAction => {
   }
 }
 
+export function loadUdcFromStorage(stored: unknown): UdcState {
+  if (!stored) {
+    return initialState
+  }
+  const {
+    lastSnapshot,
+    auraNtId,
+    uuid,
+    consentBannerShownCount,
+    desktopTrackingId,
+    allowUserStatsInDesktop,
+    allowCrashReportsInDesktop
+  } = stored as any
+
+  // Todo keep old state around?
+  return {
+    lastSnapshot:
+      typeof lastSnapshot === 'number'
+        ? lastSnapshot
+        : initialState.lastSnapshot,
+
+    auraNtId: typeof auraNtId === 'string' ? auraNtId : initialState.auraNtId,
+
+    uuid: typeof uuid === 'string' ? uuid : initialState.uuid,
+
+    consentBannerShownCount:
+      typeof consentBannerShownCount === 'number'
+        ? consentBannerShownCount
+        : initialState.consentBannerShownCount,
+
+    desktopTrackingId:
+      typeof desktopTrackingId === 'string'
+        ? desktopTrackingId
+        : initialState.desktopTrackingId,
+
+    allowUserStatsInDesktop:
+      typeof allowUserStatsInDesktop === 'boolean'
+        ? allowUserStatsInDesktop
+        : initialState.allowUserStatsInDesktop,
+
+    allowCrashReportsInDesktop:
+      typeof allowCrashReportsInDesktop === 'boolean'
+        ? allowCrashReportsInDesktop
+        : initialState.allowCrashReportsInDesktop
+  }
+}
 // Epics
 export const udcStartupEpic: Epic<Action, GlobalState> = (action$, store) =>
   action$

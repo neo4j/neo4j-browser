@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { getItem } from 'services/localstorage/localstorage'
 import { GlobalState } from 'shared/globalState'
 import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
 
@@ -151,6 +152,11 @@ export const initialState: SettingsState = {
 export default function settings(state = initialState, action: any) {
   switch (action.type) {
     case APP_START:
+      //Todo actually validate the state here? easiest solution?
+      // rethink what we're trying to accomplish.
+      // goals are. saved app state should only be what we think it is.
+      // send sentry event on incorrect datatype??
+      // make sure all redux stores have ...initialstate?
       return { ...initialState, ...state }
     case UPDATE:
       return {
@@ -182,5 +188,116 @@ export const replace = (settings: Partial<SettingsState>) => {
   return {
     type: REPLACE,
     state: settings
+  }
+}
+
+export function loadSettingsFromStorage(stored: any): SettingsState {
+  const init = initialState
+  if (!stored) {
+    return init
+  }
+
+  return {
+    maxHistory: ['number', 'string'].includes(typeof stored.maxHistory)
+      ? stored.maxHistory
+      : init.maxHistory,
+
+    theme: [AUTO_THEME, LIGHT_THEME, OUTLINE_THEME, DARK_THEME].includes(
+      stored.theme
+    )
+      ? stored.theme
+      : init.theme,
+
+    initCmd: typeof stored.initCmd === 'string' ? stored.initCmd : init.initCmd,
+
+    playImplicitInitCommands:
+      typeof stored.playImplicitInitCommands === 'boolean'
+        ? stored.playImplicitInitCommands
+        : init.playImplicitInitCommands,
+
+    initialNodeDisplay: ['number', 'string'].includes(
+      typeof stored.initialNodeDisplay
+    )
+      ? stored.initialNodeDisplay
+      : init.initialNodeDisplay,
+
+    maxNeighbours: ['number', 'string'].includes(typeof stored.maxNeighbours)
+      ? stored.maxNeighbours
+      : init.maxNeighbours,
+
+    showSampleScripts:
+      typeof stored.showSampleScripts === 'boolean'
+        ? stored.showSampleScripts
+        : init.showSampleScripts,
+
+    browserSyncDebugServer: stored.browserSyncDebugServer,
+
+    maxRows: ['number', 'string'].includes(typeof stored.maxRows)
+      ? stored.maxRows
+      : init.maxRows,
+
+    maxFieldItems: ['number', 'string'].includes(typeof stored.maxFieldItems)
+      ? stored.maxFieldItems
+      : init.maxFieldItems,
+
+    autoComplete:
+      typeof stored.autoComplete === 'boolean'
+        ? stored.autoComplete
+        : init.autoComplete,
+
+    scrollToTop:
+      typeof stored.scrollToTop === 'boolean'
+        ? stored.scrollToTop
+        : init.scrollToTop,
+
+    maxFrames: ['number', 'string'].includes(typeof stored.maxFrames)
+      ? stored.maxFrames
+      : init.maxFrames,
+
+    codeFontLigatures:
+      typeof stored.codeFontLigatures === 'boolean'
+        ? stored.codeFontLigatures
+        : init.codeFontLigatures,
+
+    useBoltRouting:
+      typeof stored.codeFontLigatures === 'boolean'
+        ? stored.codeFontLigatures
+        : init.codeFontLigatures,
+
+    editorLint:
+      typeof stored.editorLint === 'boolean'
+        ? stored.editorLint
+        : init.editorLint,
+
+    useCypherThread:
+      typeof stored.useCypherThread === 'boolean'
+        ? stored.useCypherThread
+        : init.useCypherThread,
+
+    enableMultiStatementMode:
+      typeof stored.enableMultiStatementMode === 'boolean'
+        ? stored.enableMultiStatementMode
+        : init.enableMultiStatementMode,
+
+    connectionTimeout: ['number', 'string'].includes(
+      typeof stored.connectionTimeout
+    )
+      ? stored.connectionTimeout
+      : init.connectionTimeout,
+
+    showPerformanceOverlay:
+      typeof stored.showPerformanceOverlay === 'boolean'
+        ? stored.showPerformanceOverlay
+        : init.showPerformanceOverlay,
+
+    allowCrashReports:
+      typeof stored.allowCrashReports === 'boolean'
+        ? stored.allowCrashReports
+        : init.allowCrashReports,
+
+    allowUserStats:
+      typeof stored.allowUserStats === 'boolean'
+        ? stored.allowUserStats
+        : init.allowUserStats
   }
 }

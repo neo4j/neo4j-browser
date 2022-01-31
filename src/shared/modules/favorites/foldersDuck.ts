@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { folder } from 'jszip'
+
 import { folders } from './staticScripts'
 import { getBrowserName } from 'services/utils'
 import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
@@ -38,7 +40,7 @@ export type Folder = {
 }
 
 const versionSize = 20
-const initialState = folders
+export const initialState = folders
 
 const mergeFolders = (list1: Folder[], list2: Folder[]) => {
   return list1.concat(
@@ -87,6 +89,12 @@ export default function reducer(
     default:
       return state
   }
+}
+export function loadFoldersFromStorage(stored: any): Folder[] {
+  if (!stored || Array.isArray(stored)) {
+    return initialState
+  }
+  return stored
 }
 
 export const composeFoldersToSync = (store: any, syncValue: any) => {

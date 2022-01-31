@@ -45,7 +45,7 @@ export interface GuideState {
   remoteGuides: RemoteGuide[]
 }
 
-const initialState: GuideState = {
+export const initialState: GuideState = {
   currentGuide: null,
   remoteGuides: []
 }
@@ -175,4 +175,17 @@ export function resetGuide(): SetGuideAction {
 
 export function gotoSlide(slideIndex: number): GotoSlideAction {
   return { type: GOTO_SLIDE, slideIndex }
+}
+
+export function loadGuidesFromStorage(stored: any): GuideState {
+  if (!stored) {
+    return initialState
+  }
+
+  return {
+    currentGuide: null, // we don't store jsx guides in localstorage
+    remoteGuides: Array.isArray(stored.remoteGuides)
+      ? stored.remoteGuides
+      : initialState.remoteGuides
+  }
 }

@@ -39,8 +39,9 @@ function addHistoryHelper(
   newHistory.unshift(newState)
   return newHistory.slice(0, maxHistory)
 }
-
-export default function (state: string[] = [], action: any) {
+type HistoryState = string[]
+export const initialState: string[] = []
+export default function (state: string[] = initialState, action: any) {
   switch (action.type) {
     case ADD:
       return addHistoryHelper(state, action.state, action.maxHistory)
@@ -63,4 +64,10 @@ export const clearHistory = () => {
   return {
     type: CLEAR
   }
+}
+export function loadHistoryFromStorage(stored: any): HistoryState {
+  if (!stored || !Array.isArray(stored)) {
+    initialState
+  }
+  return stored
 }

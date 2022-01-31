@@ -48,7 +48,7 @@ type GrassProperties = Record<GrassPropertyKeys, string>
 export type GrassState = null | GrassStyleData
 export type GrassStyleData = Partial<Record<GrassSelector, GrassProperties>>
 const versionSize = 20
-const initialState: GrassState = null
+export const initialState: GrassState = null
 
 export const composeGrassToSync = (store: any, syncValue: any) => {
   const grassFromSync = syncValue.syncObj.grass || []
@@ -99,6 +99,13 @@ export function syncGrass(grass: any) {
     type: SYNC_GRASS,
     grass
   }
+}
+export function loadGrassFromStorage(stored: any): GrassState {
+  if (!stored) {
+    return initialState
+  }
+  // TODO there should clean!
+  return stored
 }
 
 export const grassToLoad = (action: any, store: any) => {

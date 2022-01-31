@@ -16,6 +16,12 @@ export type Feature = {
   displayName: string
   tooltip: string
 }
+const valueIsFeature = (val: any): val is Feature =>
+  typeof val.name === 'string' &&
+  typeof val.on === 'boolean' &&
+  typeof val.tooltip === 'string' &&
+  typeof val.displayName === 'string'
+
 export type ExperimentalFeaturesState = {
   [experimentalFeatureSelfName]: Feature
 } & Record<string, Feature>
@@ -82,4 +88,14 @@ export const disableExperimentalFeature = (name: any) => {
     type: FEATURE_OFF,
     name
   }
+}
+
+export function loadExperimentalFeaturesFromStorage(
+  stored: unknown
+): ExperimentalFeaturesState {
+  if (!stored || typeof stored !== 'object') {
+    return initialState
+  }
+  // TODO call is feature
+  return stored as any
 }

@@ -48,7 +48,7 @@ import {
 
 import App from './modules/App/App'
 import { version } from 'project-root/package.json'
-import { applyKeys, createReduxMiddleware, getAll } from 'services/localstorage'
+import { createReduxMiddleware, getAll } from 'services/localstorage'
 import { detectRuntimeEnv, isRunningE2ETest } from 'services/utils'
 import { GlobalState } from 'shared/globalState'
 import { APP_START } from 'shared/modules/app/appDuck'
@@ -57,20 +57,6 @@ import { getUuid, updateUdcData } from 'shared/modules/udc/udcDuck'
 import epics from 'shared/rootEpic'
 import reducers from 'shared/rootReducer'
 import { getTelemetrySettings } from 'shared/utils/selectors'
-
-// Configure localstorage sync
-applyKeys(
-  'connections',
-  'settings',
-  'history',
-  'documents',
-  'folders',
-  'grass',
-  'syncConsent',
-  'udc',
-  'experimentalFeatures',
-  'guides'
-)
 
 // Create suber bus
 const bus = createBus()

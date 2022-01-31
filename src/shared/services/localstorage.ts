@@ -23,8 +23,17 @@ import {
   shouldRetainConnectionCredentials,
   shouldRetainEditorHistory
 } from '../modules/dbMeta/state'
-import { initialState as settingsInitialState } from '../modules/settings/settingsDuck'
+import { loadSettingsFromStorage } from '../modules/settings/settingsDuck'
 import { GlobalState } from 'shared/globalState'
+import { getConnectionsFromLocalStorage } from 'shared/modules/connections/connectionsDuck'
+import { loadExperimentalFeaturesFromStorage } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
+import { loadFavoritesFromStorage } from 'shared/modules/favorites/favoritesDuck'
+import { loadFoldersFromStorage } from 'shared/modules/favorites/foldersDuck'
+import { loadGrassFromStorage } from 'shared/modules/grass/grassDuck'
+import { loadGuidesFromStorage } from 'shared/modules/guides/guidesDuck'
+import { loadHistoryFromStorage } from 'shared/modules/history/historyDuck'
+import { loadSyncConsentFromStorage } from 'shared/modules/sync/syncDuck'
+import { loadUdcFromStorage } from 'shared/modules/udc/udcDuck'
 
 export const keyPrefix = 'neo4j.'
 let storage = window.localStorage
@@ -40,11 +49,22 @@ export type LocalStorageKey =
   | 'udc'
   | 'experimentalFeatures'
   | 'guides'
-const keys: LocalStorageKey[] = []
+const overrideKeys: LocalStorageKey[] = []
+const defaultKeys: LocalStorageKey[] = [
+  'connections',
+  'settings',
+  'history',
+  'documents',
+  'folders',
+  'grass',
+  'syncConsent',
+  'udc',
+  'experimentalFeatures',
+  'guides'
+]
+type LocalStorageState = Pick<GlobalState, LocalStorageKey>
 
-export function getItem(
-  key: LocalStorageKey
-): GlobalState[LocalStorageKey] | undefined {
+export function getItem(key: LocalStorageKey): any {
   try {
     const serializedVal = storage.getItem(keyPrefix + key)
     if (serializedVal === null) return undefined
@@ -64,29 +84,29 @@ export function setItem(key: string, val: unknown): boolean {
     return false
   }
 }
-
-export function getAll(): Partial<GlobalState> {
-  const out: Partial<GlobalState> = {}
-  keys.forEach(key => {
-    const current = getItem(key)
-    if (current !== undefined) {
-      if (key === 'settings') {
-        out[key] = {
-          ...(current as typeof settingsInitialState),
-          playImplicitInitCommands: true
-        }
-      } else {
-        Object.assign(out, { [key]: current })
-      }
-    }
-  })
-  return out
+export function getAll(): LocalStorageState {
+  // each reducer loads and verifies the localstorage state
+  return {
+    connections: getConnectionsFromLocalStorage(getItem('connections')),
+    settings: loadSettingsFromStorage(getItem('settings')),
+    history: loadHistoryFromStorage(getItem('history')),
+    documents: loadFavoritesFromStorage(getItem('documents')),
+    folders: loadFoldersFromStorage(getItem('folders')),
+    grass: loadGrassFromStorage(getItem('grass')),
+    syncConsent: loadSyncConsentFromStorage(getItem('syncConsent')),
+    udc: loadUdcFromStorage(getItem('udc')),
+    experimentalFeatures: loadExperimentalFeaturesFromStorage(
+      getItem('experimentalFeatures')
+    ),
+    guides: loadGuidesFromStorage(getItem('guides'))
+  }
 }
 
 export function createReduxMiddleware(): Middleware {
   return store => next => action => {
     const result = next(action)
     const state = store.getState() as unknown as GlobalState
+    const keys = overrideKeys.length > 0 ? overrideKeys : defaultKeys
 
     keys.forEach(key => {
       if (key === 'connections' && !shouldRetainConnectionCredentials(state)) {
@@ -107,6 +127,12 @@ export function createReduxMiddleware(): Middleware {
         })
       } else if (key === 'history' && !shouldRetainEditorHistory(state)) {
         setItem(key, [])
+      } else if (key === 'documents') {
+        setItem(
+          key,
+          state[key].filter(fav => !fav.isStatic)
+          // store only user defined favorites
+        )
       } else if (key === 'guides') {
         setItem(key, { ...state[key], currentGuide: null })
       } else {
@@ -118,7 +144,7 @@ export function createReduxMiddleware(): Middleware {
 }
 
 export function applyKeys(...newKeys: LocalStorageKey[]): void {
-  keys.push(...newKeys)
+  overrideKeys.push(...newKeys)
 }
 export const setStorage = (s: Storage): void => {
   storage = s

@@ -70,7 +70,7 @@ export type Favorite = {
 }
 
 // reducer
-const initialState: Favorite[] = staticScriptsList.map(script => ({
+export const initialState: Favorite[] = staticScriptsList.map(script => ({
   ...script,
   isStatic: true
 }))
@@ -323,4 +323,13 @@ function contentWithNewName(script: Favorite, newName: string): string {
 ${NonNamecontents.join('\n')}`
     : `//${newName}
 ${script.content}`
+}
+
+export function loadFavoritesFromStorage(stored: any): Favorite[] {
+  if (!stored || Array.isArray(stored)) {
+    return initialState
+  }
+  // remove built-in stored to redux by mistake
+  const onlyUserDefinedFavorites = stored.filter((fav: any) => !fav.isStatic)
+  return initialState.concat(onlyUserDefinedFavorites)
 }

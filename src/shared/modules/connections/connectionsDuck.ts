@@ -26,6 +26,7 @@ import {
   UnauthorizedDriverError
 } from 'services/bolt/boltConnectionErrors'
 import { NATIVE, NO_AUTH, SSO } from 'services/bolt/boltHelpers'
+import { getItem } from 'services/localstorage/localstorage'
 import { GlobalState } from 'shared/globalState'
 import { APP_START, USER_CLEAR, inWebEnv } from 'shared/modules/app/appDuck'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
@@ -67,6 +68,12 @@ export const DISCONNECTED_STATE = 0
 export const CONNECTED_STATE = 1
 export const PENDING_STATE = 2
 export const CONNECTING_STATE = 3
+export const CONNECTION_STATES: [0, 1, 2, 3] = [
+  DISCONNECTED_STATE,
+  CONNECTED_STATE,
+  PENDING_STATE,
+  CONNECTING_STATE
+]
 
 export type ConnectionReduxState = {
   allConnectionIds: string[]
@@ -376,6 +383,48 @@ export const setAuthEnabled = (authEnabled: any) => {
 export const useDb = (db: any = null) => ({ type: USE_DB, useDb: db })
 
 export const resetUseDb = () => ({ type: USE_DB, useDb: null })
+
+export function getConnectionsFromLocalStorage(
+  stored: any
+): ConnectionReduxState {
+  const init = initialState //shorter name saves some space
+  if (!stored) {
+    // redux will set initial state for us, but do it manually as well
+    return init
+  }
+  const {
+    allConnectionIds,
+    connectionsById,
+    activeConnection,
+    connectionState,
+    lastUpdate,
+    useDb,
+    lastUseDb
+  } = stored
+
+  return {
+    allConnectionIds: Array.isArray(allConnectionIds)
+      ? allConnectionIds
+      : init.allConnectionIds,
+
+    connectionsById:
+      typeof connectionsById === 'object'
+        ? connectionsById
+        : init.connectionsById,
+
+    activeConnection: activeConnection ?? init.activeConnection,
+
+    connectionState: CONNECTION_STATES.includes(connectionState)
+      ? connectionState
+      : init.connectionState,
+
+    lastUpdate: typeof lastUpdate === 'number' ? lastUpdate : init.lastUpdate,
+
+    useDb: typeof useDb === 'string' ? useDb : init.useDb,
+
+    lastUseDb: typeof lastUseDb === 'string' ? lastUseDb : init.lastUseDb
+  }
+}
 
 // Epics
 export const useDbEpic = (action$: any) => {
