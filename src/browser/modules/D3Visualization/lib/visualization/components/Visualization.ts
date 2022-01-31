@@ -123,7 +123,7 @@ export class Visualization {
       selection: Selection<SVGElement, unknown, BaseType, unknown>
     ) => {
       const handleZoomOnShiftScroll = (e: WheelEvent) => {
-        const modKeySelected = e.metaKey || e.ctrlKey
+        const modKeySelected = e.metaKey || e.ctrlKey || e.shiftKey
         if (modKeySelected || this.isFullscreen) {
           e.preventDefault()
 
