@@ -79,7 +79,8 @@ export class GraphComponent extends React.Component<GraphProps, GraphState> {
       onGraphModelChange,
       setGraph,
       getAutoCompleteCallback,
-      assignVisElement
+      assignVisElement,
+      isFullscreen
     } = this.props
 
     if (!this.svgElement.current) return
@@ -95,7 +96,8 @@ export class GraphComponent extends React.Component<GraphProps, GraphState> {
       measureSize,
       this.handleZoomEvent,
       graph,
-      graphStyle
+      graphStyle,
+      isFullscreen
     )
 
     const graphEventHandler = new GraphEventHandler(
@@ -109,7 +111,7 @@ export class GraphComponent extends React.Component<GraphProps, GraphState> {
     graphEventHandler.bindEventHandlers()
 
     onGraphModelChange(getGraphStats(graph))
-    this.graphView.resize()
+    this.graphView.resize(isFullscreen)
     this.graphView.init()
 
     if (setGraph) {
@@ -185,7 +187,7 @@ export class GraphComponent extends React.Component<GraphProps, GraphState> {
 
   componentDidUpdate(prevProps: GraphProps): void {
     if (this.props.isFullscreen !== prevProps.isFullscreen) {
-      this.graphView?.resize()
+      this.graphView?.resize(this.props.isFullscreen)
     }
 
     if (this.props.styleVersion !== prevProps.styleVersion) {

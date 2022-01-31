@@ -34,8 +34,7 @@ import Relationship from './Relationship'
 import VizNode from './VizNode'
 import {
   nodeEventHandlers,
-  relationshipEventHandlers,
-  zoomEventHandler
+  relationshipEventHandlers
 } from './mouseEventHandlers'
 import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
 
@@ -67,9 +66,12 @@ export class Visualization {
     private onZoomEvent: (limitsReached: ZoomLimitsReached) => void,
     private graph: Graph,
     public style: GraphStyle,
+    public isFullscreen: boolean,
     public trigger: (event: string, ...args: any[]) => void
   ) {
     this.root = d3Select(element)
+
+    this.isFullscreen = isFullscreen
 
     // Remove the base group element when re-creating the visualization
     this.root.selectAll('g').remove()
@@ -117,9 +119,35 @@ export class Visualization {
           .attr('transform', String(e.transform))
       })
 
+    const zoomEventHandler = (
+      selection: Selection<SVGElement, unknown, BaseType, unknown>
+    ) => {
+      const handleZoomOnShiftScroll = (e: WheelEvent) => {
+        const modKeySelected = e.metaKey || e.ctrlKey || e.shiftKey
+        if (modKeySelected || this.isFullscreen) {
+          e.preventDefault()
+
+          // This is the default implementation of wheelDelta function in d3-zoom v3.0.0
+          // For some reasons typescript complains when trying to get it by calling zoomBehaviour.wheelDelta() instead
+          // but it should be the same (and indeed it works at runtime).
+          // https://github.com/d3/d3-zoom/blob/1bccd3fd56ea24e9658bd7e7c24e9b89410c8967/README.md#zoom_wheelDelta
+          const delta =
+            -e.deltaY * (e.deltaMode === 1 ? 0.05 : e.deltaMode ? 1 : 0.002)
+
+          return this.zoomBehavior.scaleBy(this.root, 1 + delta)
+        }
+      }
+
+      return selection
+        .on('dblclick.zoom', null)
+        .on('DOMMouseScroll.zoom', handleZoomOnShiftScroll)
+        .on('wheel.zoom', handleZoomOnShiftScroll)
+        .on('mousewheel.zoom', handleZoomOnShiftScroll)
+    }
+
     this.root
       .call(this.zoomBehavior)
-      .call(zoomEventHandler, this.root, this.zoomBehavior)
+      .call(zoomEventHandler)
       // Single click is not panning
       .on('click.zoom', () => (this.draw = false))
 
@@ -243,8 +271,9 @@ export class Visualization {
     return this.container.node()?.getBBox()
   }
 
-  resize(): void {
+  resize(isFullscreen: boolean): void {
     const size = this.measureSize()
+    this.isFullscreen = isFullscreen
 
     this.rect
       .attr('x', () => -Math.floor(size.width / 2))

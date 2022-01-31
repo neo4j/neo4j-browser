@@ -191,4 +191,32 @@ describe('Viz rendering', () => {
     // zoom in button has low opacity styling when it is disabled
     cy.get(`[aria-label="zoom-in"]`).should('have.css', 'opacity', '0.3')
   })
+  it('can zoom out with just mouse wheel in fullscreen', () => {
+    cy.executeCommand(':clear')
+    cy.executeCommand(`CREATE (a:TestLabel {name: 'testNode'}) RETURN a`, {
+      parseSpecialCharSequences: false
+    })
+
+    // Enter fullscreen
+    cy.get('article').find(`[title='Fullscreen']`).click()
+
+    cy.get(`#svg-vis`).trigger('mousewheel', { deltaY: 1000 })
+
+    // zoom out limit is reached zoom so button is disabled
+    cy.get(`[aria-label="zoom-out"]`).should('have.css', 'opacity', '0.3')
+
+    // Leave fullscreen
+    cy.get('article').find(`[title='Close fullscreen']`).click()
+  })
+  it('can not zoom out with just mouse wheel when not in fullscreen', () => {
+    cy.executeCommand(':clear')
+    cy.executeCommand(`CREATE (a:TestLabel {name: 'testNode'}) RETURN a`, {
+      parseSpecialCharSequences: false
+    })
+
+    cy.get(`#svg-vis`).trigger('mousewheel', { deltaY: 1000 })
+
+    // zoom out limit is reached zoom so button is disabled
+    cy.get(`[aria-label="zoom-out"]`).should('have.css', 'opacity', '1')
+  })
 })

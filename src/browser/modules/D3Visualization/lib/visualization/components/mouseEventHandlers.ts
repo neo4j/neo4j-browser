@@ -11,30 +11,6 @@ import {
 import Relationship from './Relationship'
 import VizNode from './VizNode'
 
-export const zoomEventHandler = (
-  selection: Selection<SVGElement, unknown, BaseType, unknown>,
-  root: Selection<SVGElement, unknown, BaseType, unknown>,
-  zoomBehavior: ZoomBehavior<SVGElement, unknown>
-) => {
-  const handleZoomOnShiftScroll = (e: WheelEvent) => {
-    if (e.shiftKey) {
-      e.preventDefault()
-
-      // https://github.com/d3/d3-zoom/blob/1bccd3fd56ea24e9658bd7e7c24e9b89410c8967/README.md#zoom_wheelDelta
-      const delta =
-        -e.deltaY * (e.deltaMode === 1 ? 0.05 : e.deltaMode ? 1 : 0.002)
-
-      return zoomBehavior.scaleBy(root, 1 + delta)
-    }
-  }
-
-  return selection
-    .on('dblclick.zoom', null)
-    .on('DOMMouseScroll.zoom', handleZoomOnShiftScroll)
-    .on('wheel.zoom', handleZoomOnShiftScroll)
-    .on('mousewheel.zoom', handleZoomOnShiftScroll)
-}
-
 export const nodeEventHandlers = (
   selection: Selection<SVGGElement, VizNode, BaseType, unknown>,
   trigger: (event: string, node: VizNode) => void,

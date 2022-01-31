@@ -37,7 +37,8 @@ export default class GraphView {
     measureSize: MeasureSizeFn,
     onZoomEvent: (limitsReached: ZoomLimitsReached) => void,
     graph: Graph,
-    style: GraphStyle
+    style: GraphStyle,
+    isFullscreen: boolean
   ) {
     this.graph = graph
     this.style = style
@@ -49,6 +50,7 @@ export default class GraphView {
       onZoomEvent,
       this.graph,
       this.style,
+      isFullscreen,
       (event: any, ...args: any[]) =>
         (this.callbacks[event] || []).forEach((callback: any) =>
           callback.apply(null, args)
@@ -95,8 +97,8 @@ export default class GraphView {
     })
   }
 
-  resize(): void {
-    this.viz.resize()
+  resize(isFullscreen: boolean): void {
+    this.viz.resize(isFullscreen)
   }
 
   boundingBox(): DOMRect | undefined {
