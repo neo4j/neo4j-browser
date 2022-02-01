@@ -23,6 +23,43 @@ import {
   OUTLINE_THEME
 } from 'shared/modules/settings/settingsDuck'
 
+// These colors are to be fetched from the NDL instead when that is published
+const colors = {
+  neutral: {
+    '10': {
+      value: '#FFFFFF'
+    },
+    '20': {
+      value: '#F5F7FA'
+    },
+    '30': {
+      value: '#EEF1F6'
+    },
+    '40': {
+      value: '#E6E9EE'
+    },
+    '50': {
+      value: '#C4C8CD'
+    },
+    '60': {
+      value: '#B2B7BD'
+    },
+    '70': {
+      value: '#717780',
+      opacity10: 'rgb(113, 119, 128, 0.1)',
+      opacity20: 'rgb(113, 119, 128, 0.2)',
+      opacity50: 'rgb(113, 119, 128, 0.5)',
+      opacity60: 'rgb(113, 119, 128, 0.6)'
+    },
+    '80': {
+      value: '#535B66'
+    },
+    '90': {
+      value: '#151E29'
+    }
+  }
+}
+
 export const base = {
   name: 'base',
   // Text colors
@@ -103,8 +140,10 @@ export const base = {
   frameSidebarBackground: '#FFF',
   frameTitlebarText: '#717172',
   frameControlButtonTextColor: '#485662',
-  frameButtonTextColor: '#0C1A25',
-  frameButtonHoverBackground: '#B9C3CF',
+  frameButtonTextColorLegacy: '#0C1A25',
+  frameButtonTextColor: colors.neutral['70'].value,
+  frameButtonHoverBackground: colors.neutral['70'].opacity10,
+  frameButtonActiveBackground: colors.neutral['70'].opacity20,
   streamBackgroundColor: 'rgba(215, 229, 241, 0.7)',
   frameBackground: '#F9FCFF',
   accordionContentBackground: 'white'
@@ -168,8 +207,10 @@ export const dark = {
   frameSidebarBackground: '#121212',
   frameTitlebarText: '#717172',
   frameControlButtonTextColor: '#D7E5F1',
-  frameButtonTextColor: '#FFF',
-  frameButtonHoverBackground: '#485662',
+  frameButtonTextColorLegacy: '#FFF',
+  frameButtonTextColor: colors.neutral['20'].value,
+  frameButtonHoverBackground: colors.neutral['70'].opacity60,
+  frameButtonActiveBackground: colors.neutral['70'].opacity50,
   streamBackgroundColor: '#535864',
   frameBackground: '#292C33',
   accordionContentBackground: '#31333B'

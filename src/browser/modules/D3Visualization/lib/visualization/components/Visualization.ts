@@ -19,9 +19,18 @@
  */
 import { easeCubic } from 'd3-ease'
 import { BaseType, Selection, select as d3Select } from 'd3-selection'
-import { D3ZoomEvent, ZoomBehavior, zoom as d3Zoom } from 'd3-zoom'
+import {
+  D3ZoomEvent,
+  ZoomBehavior,
+  zoom as d3Zoom,
+  zoomIdentity
+} from 'd3-zoom'
 
-import { ZOOM_MAX_SCALE, ZOOM_MIN_SCALE } from '../constants'
+import {
+  ZOOM_FIT_PADDING_PERCENT,
+  ZOOM_MAX_SCALE,
+  ZOOM_MIN_SCALE
+} from '../constants'
 import {
   node as nodeRenderer,
   relationship as relationshipRenderer
@@ -43,6 +52,12 @@ export type MeasureSizeFn = () => { width: number; height: number }
 export type ZoomLimitsReached = {
   zoomInLimitReached: boolean
   zoomOutLimitReached: boolean
+}
+
+enum ZoomType {
+  IN = 'in',
+  OUT = 'out',
+  FIT = 'fit'
 }
 
 export class Visualization {
@@ -230,10 +245,39 @@ export class Visualization {
     this.forceSim.updateRelationships(this.graph)
   }
 
-  private zoomClick(isZoomingIn: boolean): void {
+  private handleZoomClick(zoomType: ZoomType): void {
     this.draw = true
     this.isZoomClick = true
-    this.zoomBehavior.scaleBy(this.root, isZoomingIn ? 1.3 : 0.7)
+
+    if (zoomType === ZoomType.IN) {
+      this.zoomBehavior.scaleBy(this.root, 1.3)
+    } else if (zoomType === ZoomType.OUT) {
+      this.zoomBehavior.scaleBy(this.root, 0.7)
+    } else if (zoomType === ZoomType.FIT) {
+      this.zoomToFitWholeGraph()
+    }
+  }
+
+  private zoomToFitWholeGraph = () => {
+    const graphSize = this.container.node()?.getBBox()
+    const availableWidth = this.root.node()?.clientWidth
+    const availableHeight = this.root.node()?.clientHeight
+
+    if (graphSize && availableWidth && availableHeight) {
+      const graphWidth = graphSize.width
+      const graphHeight = graphSize.height
+
+      if (graphWidth === 0 || graphHeight === 0) return
+
+      const scale =
+        (1 - ZOOM_FIT_PADDING_PERCENT) /
+        Math.max(graphWidth / availableWidth, graphHeight / availableHeight)
+
+      this.zoomBehavior.transform(
+        this.root,
+        zoomIdentity.translate(0, 0).scale(Math.min(scale, ZOOM_MAX_SCALE))
+      )
+    }
   }
 
   init(): void {
@@ -291,10 +335,14 @@ export class Visualization {
   }
 
   zoomInClick(): void {
-    this.zoomClick(true)
+    this.handleZoomClick(ZoomType.IN)
   }
 
   zoomOutClick(): void {
-    this.zoomClick(false)
+    this.handleZoomClick(ZoomType.OUT)
+  }
+
+  zoomToFitClick(): void {
+    this.handleZoomClick(ZoomType.FIT)
   }
 }

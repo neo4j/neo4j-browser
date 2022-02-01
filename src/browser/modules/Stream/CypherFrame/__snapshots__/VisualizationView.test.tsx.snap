@@ -74,26 +74,59 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
           </g>
         </svg>
         <div
-          class="sc-fjdhpX hNgrdF"
-          offset="208.8"
+          class="sc-fjdhpX cGFmGo"
+          offset="212.8"
         >
           <button
             aria-label="zoom-in"
-            class="sc-jzJRlG hPTWGK zoom-in"
+            class="sc-jzJRlG jxmeli zoom-in"
           >
             <i
-              class="sc-bnXvFD bIRcfT sl-zoom-in"
-              style="font-size: 1em;"
-            />
+              class="sc-gFaPwZ cMtXIT"
+            >
+              <span
+                class="SVGInline SVGInline--cleaned"
+              >
+                <svg
+                  class="SVGInline-svg SVGInline--cleaned-svg"
+                  style="width: 20px;height: 20px;"
+                />
+              </span>
+            </i>
           </button>
           <button
             aria-label="zoom-out"
-            class="sc-jzJRlG hPTWGK zoom-out"
+            class="sc-jzJRlG jxmeli zoom-out"
           >
             <i
-              class="sc-gFaPwZ cMtXIT sl-zoom-out"
-              style="font-size: 1em;"
-            />
+              class="sc-fhYwyz lacVya"
+            >
+              <span
+                class="SVGInline SVGInline--cleaned"
+              >
+                <svg
+                  class="SVGInline-svg SVGInline--cleaned-svg"
+                  style="width: 20px;height: 20px;"
+                />
+              </span>
+            </i>
+          </button>
+          <button
+            aria-label="zoom-to-fit"
+            class="sc-jzJRlG jxmeli"
+          >
+            <i
+              class="sc-jzgbtB fXppEY"
+            >
+              <span
+                class="SVGInline SVGInline--cleaned"
+              >
+                <svg
+                  class="SVGInline-svg SVGInline--cleaned-svg"
+                  style="width: 20px;height: 20px;"
+                />
+              </span>
+            </i>
           </button>
         </div>
       </div>
@@ -107,7 +140,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
         />
       </div>
       <div
-        class="sc-cSHVUG hRkyWa"
+        class="sc-cSHVUG eIeDRG"
         width="204.8"
       >
         <div

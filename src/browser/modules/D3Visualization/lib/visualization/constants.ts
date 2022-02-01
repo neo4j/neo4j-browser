@@ -28,3 +28,4 @@ export const FORCE_CENTER_Y = 0.03
 
 export const ZOOM_MIN_SCALE = 0.1
 export const ZOOM_MAX_SCALE = 2
+export const ZOOM_FIT_PADDING_PERCENT = 0.05

@@ -36,6 +36,7 @@ import copy from 'icons/copy.svg'
 import databaseCheck from 'icons/database-check.svg'
 import saveFavorite from 'icons/favorite.svg'
 import file from 'icons/file.svg'
+import fitToScreenIcon from 'icons/fit-to-screen.svg'
 import folderEmpty from 'icons/folder-empty.svg'
 import close from 'icons/frame-close.svg'
 import upCaret from 'icons/frame-collapse.svg'
@@ -53,6 +54,8 @@ import download from 'icons/save.svg'
 import skipPrev from 'icons/skip-prev.svg'
 import table from 'icons/table.svg'
 import text from 'icons/text.svg'
+import zoomInIcon from 'icons/zoom-in.svg'
+import zoomOutIcon from 'icons/zoom-out.svg'
 
 const inactive = `
   color: #797979;
@@ -273,20 +276,36 @@ export const ErrorIcon = (): JSX.Element => (
   <IconContainer className="fa fa-file-text-o" text="Error" />
 )
 
-export const ZoomInIcon = ({
-  regulateSize
-}: {
-  regulateSize: 1 | 2
-}): JSX.Element => (
-  <IconContainer regulateSize={regulateSize} className="sl-zoom-in" />
-)
-export const ZoomOutIcon = ({
-  regulateSize
-}: {
-  regulateSize: 1 | 2
-}): JSX.Element => (
-  <IconContainer regulateSize={regulateSize} className="sl-zoom-out" />
-)
+const ZOOM_ICONS_DEFAULT_SIZE_IN_PX = 20
+const ZOOM_ICONS_LARGE_SCALE_FACTOR = 1.2
+export const ZoomInIcon = ({ large }: { large: boolean }): JSX.Element => {
+  const scale = large ? ZOOM_ICONS_LARGE_SCALE_FACTOR : 1
+  return (
+    <IconContainer
+      icon={zoomInIcon}
+      width={scale * ZOOM_ICONS_DEFAULT_SIZE_IN_PX}
+    />
+  )
+}
+export const ZoomOutIcon = ({ large }: { large: boolean }): JSX.Element => {
+  const scale = large ? ZOOM_ICONS_LARGE_SCALE_FACTOR : 1
+  return (
+    <IconContainer
+      icon={zoomOutIcon}
+      width={scale * ZOOM_ICONS_DEFAULT_SIZE_IN_PX}
+    />
+  )
+}
+
+export const ZoomToFitIcon = ({ large }: { large: boolean }): JSX.Element => {
+  const scale = large ? ZOOM_ICONS_LARGE_SCALE_FACTOR : 1
+  return (
+    <IconContainer
+      icon={fitToScreenIcon}
+      width={scale * ZOOM_ICONS_DEFAULT_SIZE_IN_PX}
+    />
+  )
+}
 
 export const BinIcon = (): JSX.Element => (
   <IconContainer

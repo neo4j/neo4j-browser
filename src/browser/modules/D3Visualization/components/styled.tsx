@@ -234,26 +234,28 @@ export const StyledZoomHolder = styled.div<{
   offset: number
 }>`
   position: ${props => (props.isFullscreen ? 'fixed' : 'absolute')};
+  display: flex;
+  flex-direction: column;
   bottom: 0;
   right: ${props => props.offset}px
-  padding: 6px 6px 0 6px;
   border-left: ${props => props.theme.inFrameBorder};
   border-right: ${props => props.theme.inFrameBorder};
   border-top: ${props => props.theme.inFrameBorder};
   background: ${props => props.theme.frameSidebarBackground};
+  box-shadow: ${props => props.theme.standardShadow};
 `
 
 export const StyledZoomButton = styled.button`
-  display: list-item;
-  list-style-type: none;
-  margin-bottom: 10px;
   border: none;
   color: ${props => props.theme.frameButtonTextColor}
   background: transparent;
-  border-color: black;
-  padding: 2px 6px 3px;
+  padding: 8px;
   &:hover {
-    opacity: 0.7;
+    background: ${props => props.theme.frameButtonHoverBackground};
+    border-radius: 2px;
+  }
+  &:active {
+    background: ${props => props.theme.frameButtonActiveBackground};
   }
   &:focus {
     outline: none;
@@ -261,9 +263,6 @@ export const StyledZoomButton = styled.button`
   &.faded {
     opacity: 0.3;
     cursor: auto;
-    &:hover {
-      color: ${props => props.theme.frameButtonTextColor}
-    }
   }
 `
 
@@ -282,8 +281,7 @@ export const StyledNodeInspectorContainer = styled.div<{
   background: ${props => props.theme.editorBackground};
   color: ${props => props.theme.primaryText};
   font-family: ${props => props.theme.drawerHeaderFontFamily};
-  box-shadow: 0px 0px 2px rgba(21, 30, 41, 0.1),
-    0px 1px 2px rgba(21, 30, 41, 0.08), 0px 1px 4px rgba(21, 30, 41, 0.08);
+  box-shadow: ${props => props.theme.standardShadow};
 `
 export const StyledNodeInspectorTopMenuChevron = styled.div<{
   expanded: boolean
@@ -299,8 +297,7 @@ export const StyledNodeInspectorTopMenuChevron = styled.div<{
   ${props =>
     !props.expanded &&
     `background: ${props.theme.editorBackground};
-     box-shadow: 0px 0px 2px rgba(21, 30, 41, 0.1),
-      0px 1px 2px rgba(21, 30, 41, 0.08), 0px 1px 4px rgba(21, 30, 41, 0.08);
+     box-shadow: ${props.theme.standardShadow};
   `}
 `
 
