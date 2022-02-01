@@ -70,3 +70,5 @@ describe('editor reducer', () => {
     expect(nextState).toEqual([])
   })
 })
+
+describe('loads from localstorage', () => {})

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { getItem } from 'services/localstorage/localstorage'
+import { getItem } from 'services/localstorage'
 import { GlobalState } from 'shared/globalState'
 import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
 
@@ -66,7 +66,6 @@ export const getInitialNodeDisplay = (state: GlobalState): number =>
 export const getScrollToTop = (state: any) => state[NAME].scrollToTop
 export const shouldAutoComplete = (state: any) =>
   state[NAME].autoComplete !== false
-export const shouldEditorLint = (state: any) => state[NAME].editorLint === true
 export const shouldEnableMultiStatementMode = (state: any) =>
   state[NAME].enableMultiStatementMode
 export const shouldshowPerformanceOverlay = (state: any): boolean =>
@@ -83,7 +82,6 @@ const browserSyncConfig = (host = 'https://auth.neo4j.com') => ({
     messagingSenderId: '352959348981'
   }
 })
-export const getUseNewVisualization = (state: any) => state[NAME].useNewVis
 export const shouldUseCypherThread = (state: any) => state[NAME].useCypherThread
 export const getConnectionTimeout = (state: any) =>
   state[NAME].connectionTimeout || initialState.connectionTimeout
@@ -260,9 +258,9 @@ export function loadSettingsFromStorage(stored: any): SettingsState {
         : init.codeFontLigatures,
 
     useBoltRouting:
-      typeof stored.codeFontLigatures === 'boolean'
-        ? stored.codeFontLigatures
-        : init.codeFontLigatures,
+      typeof stored.useBoltRouting === 'boolean'
+        ? stored.useBoltRouting
+        : init.useBoltRouting,
 
     editorLint:
       typeof stored.editorLint === 'boolean'

@@ -26,7 +26,7 @@ import {
   UnauthorizedDriverError
 } from 'services/bolt/boltConnectionErrors'
 import { NATIVE, NO_AUTH, SSO } from 'services/bolt/boltHelpers'
-import { getItem } from 'services/localstorage/localstorage'
+import { getItem } from 'services/localstorage'
 import { GlobalState } from 'shared/globalState'
 import { APP_START, USER_CLEAR, inWebEnv } from 'shared/modules/app/appDuck'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'

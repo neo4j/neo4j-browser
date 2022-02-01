@@ -20,7 +20,7 @@
 import { SyntheticEventData } from 'react-dom/test-utils'
 
 import { syncResourceFor } from 'services/browserSyncService'
-import { setItem } from 'services/localstorage/localstorage'
+import { setItem } from 'services/localstorage'
 import { APP_START } from 'shared/modules/app/appDuck'
 import {
   ADD_FAVORITE,

@@ -37,6 +37,15 @@ import { loadUdcFromStorage } from 'shared/modules/udc/udcDuck'
 
 export const keyPrefix = 'neo4j.'
 let storage = window.localStorage
+// TODO add tests with real data
+// TODO "end to end" tests
+// TODO lookinto warnings about unsupported typescript version
+// TODO make sure we actually cleanup each thing
+// TODO make sure code looks reasonable
+// TODO add an async callback to make sure we don't call save all the time
+// just call it on idle or every 10 seconds
+// editor autocomplete setting has been dropped -> look into!!
+// samma med shouldReportUdc
 
 export type LocalStorageKey =
   | 'connections'
