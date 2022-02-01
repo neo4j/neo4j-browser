@@ -94,7 +94,7 @@ function routedWriteTransaction(
   } = requestMetaData
   if (useCypherThread && window.Worker) {
     const id = requestId || v4()
-    const workFn = runCypherMessage(
+    const payload = runCypherMessage(
       input,
       mappings.recursivelyTypeGraphItems(parameters),
       boltConnection.ROUTED_WRITE_CONNECTION,
@@ -110,7 +110,7 @@ function routedWriteTransaction(
     const workerPromise = setupBoltWorker(
       boltWorkPool,
       id,
-      workFn,
+      payload,
       onLostConnection
     )
     return [id, workerPromise]
@@ -140,7 +140,7 @@ function routedReadTransaction(
   } = requestMetaData
   if (useCypherThread && window.Worker) {
     const id = requestId || v4()
-    const workFn = runCypherMessage(
+    const payload = runCypherMessage(
       input,
       mappings.recursivelyTypeGraphItems(parameters),
       boltConnection.ROUTED_READ_CONNECTION,
@@ -155,7 +155,7 @@ function routedReadTransaction(
     const workerPromise = setupBoltWorker(
       boltWorkPool,
       id,
-      workFn,
+      payload,
       onLostConnection
     )
     return workerPromise
@@ -184,7 +184,7 @@ function directTransaction(
   } = requestMetaData
   if (useCypherThread && window.Worker) {
     const id = requestId || v4()
-    const workFn = runCypherMessage(
+    const payload = runCypherMessage(
       input,
       mappings.recursivelyTypeGraphItems(parameters),
       boltConnection.DIRECT_CONNECTION,
@@ -199,7 +199,7 @@ function directTransaction(
     const workerPromise = setupBoltWorker(
       boltWorkPool,
       id,
-      workFn,
+      payload,
       onLostConnection
     )
     return workerPromise

@@ -20,6 +20,7 @@
 
 /* eslint-env serviceworker */
 import 'core-js/stable'
+import { AnyAction } from 'redux'
 
 import { BoltConnectionError } from '../exceptions'
 import {
@@ -48,25 +49,8 @@ import {
 } from './transactions'
 import { applyGraphTypes } from 'services/bolt/boltMappings'
 
-const connectionTypeMap = {
-  [ROUTED_WRITE_CONNECTION]: {
-    create: routedWriteTransaction,
-    getPromise: (res: Promise<unknown>[]): Promise<unknown> => res[1]
-  },
-  [ROUTED_READ_CONNECTION]: {
-    create: routedReadTransaction,
-    getPromise: (res: Promise<unknown>): Promise<unknown> => res
-  },
-  [DIRECT_CONNECTION]: {
-    create: directTransaction,
-    getPromise: (res: Promise<unknown>): Promise<unknown> => res
-  }
-}
-
-let busy = false
-const workQue: { (): void }[] = []
-
-const onmessage = function (message: {
+declare const self: ServiceWorker
+type WorkerMessage = {
   data: {
     cancelable: boolean
     connectionProperties: {
@@ -88,80 +72,99 @@ const onmessage = function (message: {
     requestId: string
     type: string
   }
-}): void {
-  const messageType = message.data.type
+}
+
+// Something strange is going on here and it could be causing a bug. ALL of the
+// functions used here return an array `[string, Promise<any>]` WHEN they're
+// creating a tracked transaction. But here we assume that ONLY
+// routedWriteTransaction is ALWAYS returning an array.
+const connectionTypeMap = {
+  [ROUTED_WRITE_CONNECTION]: {
+    create: routedWriteTransaction,
+    getPromise: (res: Promise<unknown>[]): Promise<unknown> => res[1]
+  },
+  [ROUTED_READ_CONNECTION]: {
+    create: routedReadTransaction,
+    getPromise: (res: Promise<unknown>): Promise<unknown> => res
+  },
+  [DIRECT_CONNECTION]: {
+    create: directTransaction,
+    getPromise: (res: Promise<unknown>): Promise<unknown> => res
+  }
+}
+
+let busy = false
+const workQueue: { (): void }[] = []
+
+const maybeCypherErrorMessage = (error: any): AnyAction | undefined => {
+  if (isBoltConnectionErrorCode(error.code)) {
+    return boltConnectionErrorMessage({
+      ...error,
+      type: BOLT_CONNECTION_ERROR_MESSAGE
+    })
+  } else {
+    return cypherErrorMessage(error)
+  }
+}
+
+const runCypherMessage = async (data: WorkerMessage['data']) => {
+  const {
+    input,
+    parameters,
+    connectionType,
+    requestId,
+    cancelable,
+    connectionProperties
+  } = data
+
+  const { txMetadata, useDb, autoCommit } = connectionProperties
+  const onLostConnection = () =>
+    self.postMessage(boltConnectionErrorMessage(BoltConnectionError()))
+
+  await ensureConnection(
+    connectionProperties as any,
+    connectionProperties.opts,
+    onLostConnection
+  )
+
+  const transactionType = connectionTypeMap[connectionType]
+  const res: any = transactionType.create(input, applyGraphTypes(parameters), {
+    requestId,
+    cancelable,
+    txMetadata,
+    useDb,
+    autoCommit
+  })
+
+  return transactionType.getPromise(res)
+}
+
+const onmessage = function ({ data }: WorkerMessage): void {
+  const messageType = data.type
 
   if (messageType === RUN_CYPHER_MESSAGE) {
-    const {
-      input,
-      parameters,
-      connectionType,
-      requestId,
-      cancelable,
-      connectionProperties
-    } = message.data
-
-    const maybeCypherErrorMessage = (error: any) => {
-      if (isBoltConnectionErrorCode(error.code)) {
-        return boltConnectionErrorMessage({
-          ...error,
-          type: BOLT_CONNECTION_ERROR_MESSAGE
-        })
-      } else {
-        return cypherErrorMessage(error)
-      }
-    }
-
     beforeWork()
-    const { txMetadata, useDb, autoCommit } = connectionProperties
-    ensureConnection(
-      connectionProperties as any,
-      connectionProperties.opts,
-      () => {
-        ;(self as unknown as ServiceWorker).postMessage(
-          boltConnectionErrorMessage(BoltConnectionError())
-        )
-      }
-    )
-      .then(() => {
-        const res: any = connectionTypeMap[connectionType].create(
-          input,
-          applyGraphTypes(parameters),
-          { requestId, cancelable, txMetadata, useDb, autoCommit }
-        )
-        connectionTypeMap[connectionType]
-          .getPromise(res)
-          .then(r => {
-            afterWork()
-            ;(self as unknown as ServiceWorker).postMessage(
-              cypherResponseMessage(r)
-            )
-          })
-          .catch((e: { code: number; message: string }) => {
-            afterWork()
-            ;(self as unknown as ServiceWorker).postMessage(
-              maybeCypherErrorMessage({ code: e.code, message: e.message })
-            )
-          })
-      })
-      .catch(e => {
+    runCypherMessage(data)
+      .then(res => {
         afterWork()
-        ;(self as unknown as ServiceWorker).postMessage(
-          maybeCypherErrorMessage({ code: e.code, message: e.message })
+        self.postMessage(cypherResponseMessage(res))
+      })
+      .catch(err => {
+        afterWork()
+        self.postMessage(
+          maybeCypherErrorMessage({ code: err.code, message: err.message })
         )
       })
   } else if (messageType === CANCEL_TRANSACTION_MESSAGE) {
-    cancelTransaction(message.data.id, () => {
-      ;(self as unknown as ServiceWorker).postMessage(
-        postCancelTransactionMessage()
-      )
+    cancelTransaction(data.id, () => {
+      self.postMessage(postCancelTransactionMessage())
     })
   } else if (messageType === CLOSE_CONNECTION_MESSAGE) {
     queueWork(() => {
       closeConnection()
     })
   } else {
-    ;(self as unknown as ServiceWorker).postMessage(
+    self.postMessage(
       cypherErrorMessage({
         code: -1,
         message: `Unknown message to Bolt Worker: ${messageType}`
@@ -180,19 +183,23 @@ const afterWork = (): void => {
 }
 
 const queueWork = (fn: () => void): void => {
-  workQue.push(fn)
+  workQueue.push(fn)
   doWork()
 }
 const doWork = (): void => {
   if (busy) {
     return
   }
-  if (!workQue.length) {
+  if (!workQueue.length) {
     return
   }
-  const workFn = workQue.shift()
-  workFn && workFn()
+
+  const workFn = workQueue.shift()
+  if (workFn) {
+    workFn()
+  }
+
   doWork()
 }
 
-self.addEventListener('message', onmessage)
+self.addEventListener('message', onmessage as any)
