@@ -71,4 +71,39 @@ describe('editor reducer', () => {
   })
 })
 
-describe('loads from localstorage', () => {})
+describe('loads from localstorage', () => {
+  it('handles missing stored data', () => {
+    expect(actions.loadHistoryFromStorage(undefined)).toEqual([])
+  })
+  it('handles non list stored data types', () => {
+    expect(actions.loadHistoryFromStorage({ tes: 23 })).toEqual([])
+    expect(actions.loadHistoryFromStorage('history')).toEqual([])
+  })
+  it('handles proper stored data', () => {
+    expect(actions.loadHistoryFromStorage([])).toEqual([])
+    expect(actions.loadHistoryFromStorage(['history'])).toEqual(['history'])
+  })
+  it('handle a real life store', () => {
+    const test = [
+      'match (n) return n',
+      'MATCH p=()-->() RETURN p LIMIT 25',
+      'MATCH (n:Movie) RETURN n LIMIT 25',
+      ':server status',
+      'MATCH (n) RETURN n LIMIT 100',
+      'MATCH (n) RETURN n LIMIT 25',
+      'MATCH (n:Movie) RETURN n LIMIT 25',
+      'MATCH (n:Movie) RETURN n',
+      'MATCH (n:Movie) RETURN n LIMIT 25',
+      'MATCH (n) RETURN n',
+      "PROFILE \nMATCH p=(n:Movie)--(m:Person)--(o:Movie)\nWHERE m.born > 1000\nAND length(p) > 1\nMATCH (mm:Person) WHERE mm.name STARTS WITH 'T'\nMATCH (mmm:Person) WHERE mmm.name STARTS WITH 'E'\nRETURN p, mm, mmm",
+      'PROFILE MATCH (m:Movie), (a:Actor) MATCH (m)--(ax:Actor), (a)--(mx:Movie) RETURN m, a, ax, mx UNION  MATCH (m:Movie), (a:Actor) MATCH (m)--(ax:Actor), (a)--(mx:Movie) RETURN m, a, ax, mx UNION  MATCH (m:Movie), (a:Actor) MATCH (m)--(ax:Actor), (a)--(mx:Movie) RETURN m, a, ax, mx UNION  MATCH (m:Movie), (a:Actor) MATCH (m)--(ax:Actor), (a)--(mx:Movie) RETURN m, a, ax, mx UNION  MATCH (m:Movie), (a:Actor) MATCH (m)--(ax:Actor), (a)--(mx:Movie) RETURN m, a, ax, mx UNION  MATCH (m:Movie), (a:Actor) MATCH (m)--(ax:Actor), (a)--(mx:Movie) RETURN m, a, ax, mx UNION  MATCH (m:Movie), (a:Actor) MATCH (m)--(ax:Actor), (a)--(mx:Movie) RETURN m, a, ax, mx',
+      "PROFILE\nWITH ['Action','Drama','Mystery'] AS genreNames\nUNWIND genreNames AS name\nMATCH (g:Genre {name:name})\nWITH g ORDER BY size( (g)<-[:BELONGS_TO]-() ) ASC\nWITH collect(g) AS genres\nWITH head(genres) AS first, tail(genres) AS rest\nMATCH (first)<-[:BELONGS_TO]-(m:Title)-[:BELONGS_TO]->(other)\nWITH m, collect(other) AS movieGenres, rest\nWHERE all(g IN rest WHERE g IN movieGenres)\nRETURN count(m)",
+      "PROFILE \nMATCH p=(n:Movie)--(m:Person)--(o:Movie)\nWHERE m.born > 1000\nAND length(p) > 1\nMATCH (mm:Person) WHERE mm.name STARTS WITH 'T'\nMATCH (mmm:Person) WHERE mmm.name STARTS WITH 'E'\nRETURN p, mm, mmm",
+      'MATCH (n:Person) RETURN n LIMIT 25',
+      'MATCH (n:Movie) RETURN n LIMIT 25',
+      'MATCH p=()-->() RETURN p LIMIT 250',
+      'MATCH p=()-->() RETURN p LIMIT 25'
+    ]
+    expect(actions.loadHistoryFromStorage(test)).toEqual(test)
+  })
+})

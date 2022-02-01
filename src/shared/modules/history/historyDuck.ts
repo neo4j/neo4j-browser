@@ -67,7 +67,7 @@ export const clearHistory = () => {
 }
 export function loadHistoryFromStorage(stored: any): HistoryState {
   if (!stored || !Array.isArray(stored)) {
-    initialState
+    return initialState
   }
   return stored
 }
