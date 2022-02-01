@@ -326,7 +326,7 @@ ${script.content}`
 }
 
 export function loadFavoritesFromStorage(stored: any): Favorite[] {
-  if (!stored || Array.isArray(stored)) {
+  if (!stored || !Array.isArray(stored)) {
     return initialState
   }
   // remove built-in stored to redux by mistake
