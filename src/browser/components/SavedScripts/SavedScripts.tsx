@@ -95,26 +95,14 @@ export default function SavedScripts({
 
   const scriptsOutsideFolder = scripts
     .filter(script => !script.folder || !folderExists(script.folder))
-    .sort(sortScriptsAlfabethically)
+    .sort(sortScriptsAlphabetically)
 
-  const countFoldersWithName = (name: string) =>
-    folders.filter(folder => folder.name === name).length
-
-  const foldersWithScripts = folders
-    .map(folder => ({
-      folder,
-      scripts: scripts
-        .filter(script => script.folder === folder.id)
-        .sort(sortScriptsAlfabethically)
-    }))
-    .filter(({ folder, scripts }) => {
-      const folderIsEmpty = scripts.length === 0
-      const folderIsDuplicated = countFoldersWithName(folder.name) > 1
-      const isNewFolder = folder.name === 'New Folder'
-      const shouldBeRemoved =
-        folderIsDuplicated && folderIsEmpty && !isNewFolder
-      return !shouldBeRemoved
-    })
+  const foldersWithScripts = folders.map(folder => ({
+    folder,
+    scripts: scripts
+      .filter(script => script.folder === folder.id)
+      .sort(sortScriptsAlphabetically)
+  }))
 
   const [unNamedFolder, setUnNamedFolder] = useState<string | null>(null)
   const [selectedIds, setSelectedIds] = useState<string[]>([])
@@ -130,7 +118,7 @@ export default function SavedScripts({
       const getIdRange = (id1: string, id2: string): string[] => {
         const scriptIds: string[] = scripts
           .concat([]) // to avoid mutating in place by sort
-          .sort(sortScriptsAlfabethically)
+          .sort(sortScriptsAlphabetically)
           .map(getUniqueScriptKey)
         const pos1 = scriptIds.indexOf(id1)
         const pos2 = scriptIds.indexOf(id2)
@@ -301,7 +289,7 @@ function getUniqueScriptKey(script: Favorite) {
   return script.id || getScriptDisplayName(script)
 }
 
-function sortScriptsAlfabethically(a: Favorite, b: Favorite) {
+function sortScriptsAlphabetically(a: Favorite, b: Favorite) {
   const name1 = getScriptDisplayName(a).toLowerCase()
   const name2 = getScriptDisplayName(b).toLowerCase()
   return name1.localeCompare(name2)

@@ -17,8 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { folder } from 'jszip'
-
+import { Favorite } from './favoritesDuck'
 import { folders } from './staticScripts'
 import { getBrowserName } from 'services/utils'
 import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
@@ -40,7 +39,7 @@ export type Folder = {
 }
 
 const versionSize = 20
-export const initialState = folders
+export const initialState: Folder[] = folders
 
 const mergeFolders = (list1: Folder[], list2: Folder[]) => {
   return list1.concat(
@@ -90,11 +89,76 @@ export default function reducer(
       return state
   }
 }
-export function cleanFoldersFromStorage(stored?: Folder[]): Folder[] {
-  if (!stored || Array.isArray(stored)) {
+export function cleanFoldersFromStorage(
+  stored: undefined | Folder[],
+  existingFavs: Favorite[] = []
+): Folder[] {
+  if (!stored || !Array.isArray(stored)) {
     return initialState
   }
-  return stored
+
+  const onlyUserDefinedFolders = stored.filter(folder => !folder.isStatic)
+
+  const countFoldersWithName = (name: string) =>
+    onlyUserDefinedFolders.filter(folder => folder.name === name).length
+  const countFavsInFolder = (folder: Folder) =>
+    existingFavs.filter(fav => fav.folder === folder.id).length
+
+  // There was a bug in the past that caused users localstorages to fill up with
+  // tons of empty duplicated folders. The workaround was previously in the UI
+  // https://github.com/neo4j/neo4j-browser/pull/1308
+  // A side effect of this solution is that if you create two empty folders
+  // with the same name, they get removed (as long as both are empty)
+  // It'd make sense to keep one of them, but because users
+  // localstorages are polluted with tons of old, "deleted" folders
+  // if we started doing it "properly" now, they'd get a lot of unexpected folders
+  // they thought they deleted long ago
+  const realFolders = onlyUserDefinedFolders.filter(folder => {
+    const folderIsEmpty = countFavsInFolder(folder) === 0
+    const folderIsDuplicated = countFoldersWithName(folder.name) > 1
+    const isNewFolder = folder.name === 'New Folder'
+    const shouldBeRemoved = folderIsDuplicated && folderIsEmpty && !isNewFolder
+    return !shouldBeRemoved
+  })
+  return initialState.concat(realFolders)
+  /*
+  // remove built-in stored to redux
+  // more senseible solution -> would be suprising to users.
+  const onlyUserDefinedFolders = stored.filter(folder => !folder.isStatic)
+
+  // an old bug caused us to have tons of duplicated empty folders,
+  // Previously just hidden in the ui https://github.com/neo4j/neo4j-browser/pull/1308
+  const countFavsInFolder = (folder: Folder) =>
+    existingFavs.filter(fav => fav.folder === folder.id).length
+
+  const foldersWithFavs = onlyUserDefinedFolders.filter(
+    folder => countFavsInFolder(folder) > 0
+  )
+
+  const emptyFolders = onlyUserDefinedFolders.filter(
+    folder => countFavsInFolder(folder) === 0
+  )
+
+  const folderIsInList = (folder: Folder, list: Folder[]) =>
+    list.find(({ name }) => folder.name === name)
+
+  // Keep only the first empty folder, rather than all duplicates
+  const deduplicatedEmptyFolders = emptyFolders.reduce(
+    (acc: Folder[], current: Folder) => {
+      if (
+        !folderIsInList(current, acc) &&
+        !folderIsInList(current, foldersWithFavs)
+      ) {
+        return [...acc, current]
+      } else {
+        return acc
+      }
+    },
+    []
+  )
+
+  return initialState.concat(foldersWithFavs).concat(deduplicatedEmptyFolders)
+  */
 }
 
 export const composeFoldersToSync = (store: any, syncValue: any) => {

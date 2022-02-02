@@ -142,6 +142,12 @@ export function createReduxMiddleware(): Middleware {
           state[key].filter(fav => !fav.isStatic)
           // store only user defined favorites
         )
+      } else if (key === 'folders') {
+        setItem(
+          key,
+          state[key].filter(fold => !fold.isStatic)
+          // store only user defined folders
+        )
       } else if (key === 'guides') {
         setItem(key, { ...state[key], currentGuide: null })
       } else {
