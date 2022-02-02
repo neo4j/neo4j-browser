@@ -1,3 +1,4 @@
+import { Favorite } from './favoritesDuck'
 import { Folder, cleanFoldersFromStorage, initialState } from './foldersDuck'
 
 const basicFolder: Folder = { name: 'Couriway', id: 'identity' }
@@ -26,6 +27,30 @@ describe('loads from localstorage', () => {
       ])
     ).toEqual([...initialState, basicFolder])
   })
+  // There as a bug creating tons of empty and duplicated
+  // folders in the past which were saved to localstorages
+  const folder = { id: 'testid', name: 't' }
+  const folder_dup = { id: 'testid2', name: 't' }
+  const folderA = { id: 'a', name: 'a' }
+  const folderB = { id: 'b', name: 'b' }
+  const fav = { content: '', folder: 'testid' }
+  it('duplicated folders get removed if both are empty', () => {
+    // conforms with legacy behaviour
+    expect(
+      cleanFoldersFromStorage([...initialState, folder, folder_dup], [])
+    ).toEqual(initialState)
+  })
+  it('duplicated folder get deduplicated if one is not empty', () => {
+    expect(
+      cleanFoldersFromStorage([...initialState, folder, folder_dup], [fav])
+    ).toEqual([...initialState, folder])
+  })
+  it('empty folders with different names dont get removed', () => {
+    expect(
+      cleanFoldersFromStorage([...initialState, folderA, folderB], [])
+    ).toEqual([...initialState, folderA, folderB])
+  })
+
   it('handles real data from storage', () => {
     expect(cleanFoldersFromStorage(realLifeFolders, realLifeFavs)).toEqual([
       {
