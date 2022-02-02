@@ -24,7 +24,12 @@ import {
 } from 'shared/modules/settings/settingsDuck'
 
 // These colors are to be fetched from the NDL instead when that is published
-const colors = {
+const NDLcolors = {
+  primary: {
+    'bg-weak': '#E6F8FF',
+    'border-weak': '#A3E2FF',
+    icon: '#006FD6'
+  },
   neutral: {
     '10': {
       value: '#FFFFFF'
@@ -56,6 +61,15 @@ const colors = {
     },
     '90': {
       value: '#151E29'
+    },
+    'bg-stronger': {
+      value: '#404752'
+    },
+    'bg-weak': {
+      value: '#FFFFFF'
+    },
+    'text-weakest': {
+      value: '#B2B7BD'
     }
   }
 }
@@ -141,12 +155,17 @@ export const base = {
   frameTitlebarText: '#717172',
   frameControlButtonTextColor: '#485662',
   frameButtonTextColorLegacy: '#0C1A25',
-  frameButtonTextColor: colors.neutral['70'].value,
-  frameButtonHoverBackground: colors.neutral['70'].opacity10,
-  frameButtonActiveBackground: colors.neutral['70'].opacity20,
+  frameButtonTextColor: NDLcolors.neutral['70'].value,
+  frameButtonHoverBackground: NDLcolors.neutral['70'].opacity10,
+  frameButtonActiveBackground: NDLcolors.neutral['70'].opacity20,
   streamBackgroundColor: 'rgba(215, 229, 241, 0.7)',
   frameBackground: '#F9FCFF',
-  accordionContentBackground: 'white'
+  accordionContentBackground: 'white',
+
+  // Info message
+  infoBackground: NDLcolors.primary['bg-weak'],
+  infoBorder: `1px solid ${NDLcolors.primary['border-weak']}`,
+  infoIconColor: NDLcolors.primary.icon
 }
 
 export const normal = {
@@ -208,10 +227,15 @@ export const dark = {
   frameTitlebarText: '#717172',
   frameControlButtonTextColor: '#D7E5F1',
   frameButtonTextColorLegacy: '#FFF',
-  frameButtonTextColor: colors.neutral['20'].value,
-  frameButtonHoverBackground: colors.neutral['70'].opacity60,
-  frameButtonActiveBackground: colors.neutral['70'].opacity50,
+  frameButtonTextColor: NDLcolors.neutral['20'].value,
+  frameButtonHoverBackground: NDLcolors.neutral['70'].opacity60,
+  frameButtonActiveBackground: NDLcolors.neutral['70'].opacity50,
   streamBackgroundColor: '#535864',
   frameBackground: '#292C33',
-  accordionContentBackground: '#31333B'
+  accordionContentBackground: '#31333B',
+
+  // Info message
+  infoBackground: NDLcolors.neutral['bg-stronger'].value,
+  infoBorder: `1px solid ${NDLcolors.neutral['text-weakest'].value}`,
+  infoIconColor: NDLcolors.neutral['bg-weak'].value
 }

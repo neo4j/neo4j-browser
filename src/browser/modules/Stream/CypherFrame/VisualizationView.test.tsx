@@ -51,7 +51,8 @@ function mockVizProps(
 }
 const mockStore = configureMockStore()
 const store = mockStore({
-  frames: {}
+  frames: {},
+  settings: {}
 })
 
 function renderWithRedux(children: JSX.Element) {

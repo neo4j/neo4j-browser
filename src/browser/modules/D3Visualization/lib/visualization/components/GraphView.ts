@@ -36,6 +36,7 @@ export default class GraphView {
     element: SVGElement,
     measureSize: MeasureSizeFn,
     onZoomEvent: (limitsReached: ZoomLimitsReached) => void,
+    onDisplayZoomWheelInfoMessage: () => void,
     graph: Graph,
     style: GraphStyle,
     isFullscreen: boolean
@@ -48,6 +49,7 @@ export default class GraphView {
       element,
       measureSize,
       onZoomEvent,
+      onDisplayZoomWheelInfoMessage,
       this.graph,
       this.style,
       isFullscreen,

@@ -26,7 +26,7 @@ import AboutDrawer from './About'
 import DocumentsDrawer from './Documents'
 import GuideDrawer from './GuideDrawer'
 import ProjectFilesDrawer from './ProjectFiles'
-import SettingsDrawer from './Settings'
+import UserSettingsDrawer from './UserSettings'
 import Favorites from './favorites'
 import StaticScripts from './static-scripts'
 import TabNavigation, {
@@ -162,7 +162,7 @@ const Sidebar = ({
       icon: function settingIcon(isOpen: boolean): JSX.Element {
         return <SettingsIcon isOpen={isOpen} title="Browser Settings" />
       },
-      content: SettingsDrawer
+      content: UserSettingsDrawer
     },
     {
       name: 'About',

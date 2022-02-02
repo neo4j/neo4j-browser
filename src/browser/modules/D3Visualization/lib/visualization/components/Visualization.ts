@@ -79,6 +79,7 @@ export class Visualization {
     element: SVGElement,
     private measureSize: MeasureSizeFn,
     private onZoomEvent: (limitsReached: ZoomLimitsReached) => void,
+    private onDisplayZoomWheelInfoMessage: () => void,
     private graph: Graph,
     public style: GraphStyle,
     public isFullscreen: boolean,
@@ -138,6 +139,9 @@ export class Visualization {
       selection: Selection<SVGElement, unknown, BaseType, unknown>
     ) => {
       const handleZoomOnShiftScroll = (e: WheelEvent) => {
+        if (!this.isFullscreen) {
+          onDisplayZoomWheelInfoMessage()
+        }
         const modKeySelected = e.metaKey || e.ctrlKey || e.shiftKey
         if (modKeySelected || this.isFullscreen) {
           e.preventDefault()

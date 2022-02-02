@@ -107,16 +107,6 @@ export const StyledSvgWrapper = styled.div`
   }
 `
 
-export const StyledRowToggle = styled.div`
-  float: right;
-  display: block;
-  width: 21px;
-  height: 21px;
-  line-height: 21px;
-  text-align: center;
-  cursor: pointer;
-`
-
 export const StyledInlineList = styled.ul`
   list-style: none;
   word-break: break-word;
@@ -160,10 +150,6 @@ export const StyledTokenRelationshipType = styled(StyledToken)`
   border-radius: 3px;
   word-break: break-all;
   cursor: default;
-`
-
-export const StyledTokenCount = styled.span`
-  font-weight: normal;
 `
 
 export const StyledLegendInlineList = styled(StyledInlineList)`
@@ -372,4 +358,59 @@ export const StyledExpandValueButton = styled.button`
   outline: none;
   background-color: inherit;
   color: ${props => props.theme.link};
+`
+
+export const StyledZoomInfoOverlay = styled.div`
+  position: absolute;
+  width: 100%;
+  bottom: 2rem;
+  display: flex;
+  flex-direction: row;
+  pointer-events: none;
+`
+
+export const StyledZoomInfo = styled.div<{ hide: boolean }>`
+  background: ${props => props.theme.infoBackground};
+  position: relative;
+  border: ${props => props.theme.infoBorder};
+  border-radius: 4px;
+  box-shadow: ${props => props.theme.standardShadow}
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1rem;
+  transition: opacity 1.5s ease-in-out;
+  opacity: ${props => (props.hide ? 0 : 1)};
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  gap: 1rem;
+  pointer-events: ${props => (props.hide ? 'none' : 'auto')};
+`
+
+export const StyledZoomInfoTextContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+`
+
+export const StyledZoomInfoText = styled.span`
+  line-height: 1.5rem;
+`
+
+export const StyledZoomInfoIconContainer = styled.div`
+  color: ${props => props.theme.infoIconColor};
+`
+
+export const StyledZoomInfoCheckbox = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: 30px;
+`
+
+export const StyledZoomInfoCheckboxLabel = styled.label`
+  font-size: 12px;
 `

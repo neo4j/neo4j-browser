@@ -68,7 +68,7 @@ export const shouldAutoComplete = (state: any) =>
 export const shouldEditorLint = (state: any) => state[NAME].editorLint === true
 export const shouldEnableMultiStatementMode = (state: any) =>
   state[NAME].enableMultiStatementMode
-export const shouldshowPerformanceOverlay = (state: any): boolean =>
+export const shouldShowPerformanceOverlay = (state: any): boolean =>
   state[NAME].showPerformanceOverlay === true
 
 const browserSyncConfig = (host = 'https://auth.neo4j.com') => ({
@@ -91,6 +91,8 @@ export const getAllowCrashReports = (state: GlobalState): boolean =>
   state[NAME].allowCrashReports ?? initialState.allowCrashReports
 export const getAllowUserStats = (state: GlobalState): boolean =>
   state[NAME].allowUserStats ?? initialState.allowUserStats
+export const shouldShowWheelZoomInfo = (state: GlobalState) =>
+  state[NAME].showWheelZoomInfo
 
 // Ideally the string | number types would be only numbers
 // but they're saved as strings in the settings component
@@ -121,6 +123,7 @@ export type SettingsState = {
   showPerformanceOverlay: boolean
   allowCrashReports: boolean
   allowUserStats: boolean
+  showWheelZoomInfo: boolean
 }
 
 export const initialState: SettingsState = {
@@ -145,7 +148,8 @@ export const initialState: SettingsState = {
   connectionTimeout: 30 * 1000, // 30 seconds
   showPerformanceOverlay: false,
   allowCrashReports: true,
-  allowUserStats: true
+  allowUserStats: true,
+  showWheelZoomInfo: true
 }
 
 export default function settings(state = initialState, action: any) {

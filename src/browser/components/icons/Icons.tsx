@@ -36,7 +36,6 @@ import copy from 'icons/copy.svg'
 import databaseCheck from 'icons/database-check.svg'
 import saveFavorite from 'icons/favorite.svg'
 import file from 'icons/file.svg'
-import fitToScreenIcon from 'icons/fit-to-screen.svg'
 import folderEmpty from 'icons/folder-empty.svg'
 import close from 'icons/frame-close.svg'
 import upCaret from 'icons/frame-collapse.svg'
@@ -46,6 +45,10 @@ import pin from 'icons/frame-pin.svg'
 import shrink from 'icons/frame-shrink.svg'
 import help from 'icons/help.svg'
 import vizIcon from 'icons/hierarchy-9.svg'
+import fitToScreenIcon from 'icons/iconsToBeFetchedFromNDL/fit-to-screen.svg'
+import infoCircle from 'icons/iconsToBeFetchedFromNDL/information-circle.svg'
+import zoomInIcon from 'icons/iconsToBeFetchedFromNDL/zoom-in.svg'
+import zoomOutIcon from 'icons/iconsToBeFetchedFromNDL/zoom-out.svg'
 import monitorPlay from 'icons/monitor-play.svg'
 import navigationMenuVertical from 'icons/navigation-menu-vertical.svg'
 import neo4j from 'icons/neo4j-icon.svg'
@@ -54,8 +57,6 @@ import download from 'icons/save.svg'
 import skipPrev from 'icons/skip-prev.svg'
 import table from 'icons/table.svg'
 import text from 'icons/text.svg'
-import zoomInIcon from 'icons/zoom-in.svg'
-import zoomOutIcon from 'icons/zoom-out.svg'
 
 const inactive = `
   color: #797979;
@@ -287,7 +288,11 @@ export const ZoomInIcon = ({ large }: { large: boolean }): JSX.Element => {
     />
   )
 }
-export const ZoomOutIcon = ({ large }: { large: boolean }): JSX.Element => {
+export const ZoomOutIcon = ({
+  large = false
+}: {
+  large?: boolean
+}): JSX.Element => {
   const scale = large ? ZOOM_ICONS_LARGE_SCALE_FACTOR : 1
   return (
     <IconContainer
@@ -457,3 +462,5 @@ export const CopyIcon = ({
 }: TitleAndWidthProps): JSX.Element => (
   <IconContainer title={title} width={width} icon={copy} />
 )
+
+export const InfoIcon = (): JSX.Element => <IconContainer icon={infoCircle} />

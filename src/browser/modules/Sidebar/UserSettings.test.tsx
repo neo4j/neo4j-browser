@@ -20,7 +20,7 @@
 import { render } from '@testing-library/react'
 import React from 'react'
 
-import { Settings } from './Settings'
+import { UserSettings } from './UserSettings'
 
 test('Settings renders with strange characters in display name', () => {
   // Given
@@ -40,7 +40,7 @@ test('Settings renders with strange characters in display name', () => {
 
   // When
   const { container } = render(
-    <Settings
+    <UserSettings
       settings={settings}
       visualSettings={visualSettings}
       telemetrySettings={{
