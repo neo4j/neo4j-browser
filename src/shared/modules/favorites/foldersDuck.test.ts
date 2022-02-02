@@ -28,39 +28,132 @@ describe('loads from localstorage', () => {
   })
   it('handles real data from storage', () => {
     expect(cleanFoldersFromStorage(realLifeFolders, realLifeFavs)).toEqual([
-      { id: '177b0687-5ded-458f-b07c-47ab1de83f09', name: 'BOM_ModelingClass' },
-      { id: 'abccf0dc-f510-431e-83eb-176b78188b8b', name: 'Play_DataScience' },
-      { id: 'c0fb8901-54fe-4365-b715-52d7073c7be9', name: 'ExampleProject' },
-      { id: '0f14bd4b-5d36-4197-a967-05e0dfa6a32a', name: 'Test_Playbook' },
-      { id: '5aecb8c0-ee59-4416-9224-fc37e4f5f231', name: 'Northwind' },
-      { id: '1746146a-dbf7-486d-9c30-f6930c2a01d9', name: 'Airport_devworks' },
-      { id: '02f19e2e-3b95-45e0-ba60-bbb8a19c8851', name: 'Airport_Class' },
-      { id: 'c59ffbf9-51d8-4769-b02b-39d245c00afd', name: 'Dates' },
-      { id: '1050b419-a475-47d6-bd2b-8de8f0af0e86', name: 'Json' },
-      { id: '9306c44e-b3c2-4304-bcfb-c4e0e4717866', name: 'apoc_load_csv' },
-      { id: '48c1ddd5-de07-4713-9c0d-5d8a1cf51a02', name: 'PLAY GUIDES' },
+      {
+        id: 'basics',
+        isStatic: true,
+        name: 'Basic Queries',
+        versionRange: ''
+      },
+      {
+        id: 'graphs',
+        isStatic: true,
+        name: 'Example Graphs',
+        versionRange: ''
+      },
+      {
+        id: 'profile',
+        isStatic: true,
+        name: 'Data Profiling',
+        versionRange: ''
+      },
+      {
+        id: 'procedures',
+        isStatic: true,
+        name: 'Common Procedures',
+        versionRange: ''
+      },
+      {
+        id: 'b64cbd26-10e5-4827-8624-fff2a63d3586',
+        name: 'AdvancedCypher'
+      },
+      {
+        id: '21716228-3f62-451a-b421-8cb5a7b44fcf',
+        name: 'BOM_Max_2'
+      },
+      {
+        id: '87ffa549-bc9d-451a-94d8-886ddfe22c53',
+        name: 'BOM_Max_1'
+      },
+      {
+        id: '177b0687-5ded-458f-b07c-47ab1de83f09',
+        name: 'BOM_ModelingClass'
+      },
+      // empty but not duplicated, is so kept even though it's empty
+      {
+        id: '71b64b96-5f5d-406f-bce5-b356e4fb7a2b',
+        name: 'DataSciencePlay'
+      },
+      {
+        id: 'abccf0dc-f510-431e-83eb-176b78188b8b',
+        name: 'Play_DataScience'
+      },
+      {
+        id: 'c0fb8901-54fe-4365-b715-52d7073c7be9',
+        name: 'ExampleProject'
+      },
+      {
+        id: '0f14bd4b-5d36-4197-a967-05e0dfa6a32a',
+        name: 'Test_Playbook'
+      },
+      {
+        id: '5aecb8c0-ee59-4416-9224-fc37e4f5f231',
+        name: 'Northwind'
+      },
+      {
+        id: '1746146a-dbf7-486d-9c30-f6930c2a01d9',
+        name: 'Airport_devworks'
+      },
+      {
+        id: '02f19e2e-3b95-45e0-ba60-bbb8a19c8851',
+        name: 'Airport_Class'
+      },
+      {
+        id: 'c59ffbf9-51d8-4769-b02b-39d245c00afd',
+        name: 'Dates'
+      },
+      {
+        id: '1050b419-a475-47d6-bd2b-8de8f0af0e86',
+        name: 'Json'
+      },
+      {
+        id: '9306c44e-b3c2-4304-bcfb-c4e0e4717866',
+        name: 'apoc_load_csv'
+      },
+      {
+        id: '48c1ddd5-de07-4713-9c0d-5d8a1cf51a02',
+        name: 'PLAY GUIDES'
+      },
       {
         id: '99d72f29-5bbf-40fa-b227-b67c094bcd88',
         name: 'A_gdsclass_testing'
       },
-      { id: 'b1d5a702-ed4b-41c2-b70a-9b68e42af62c', name: 'A_GDS_Retail_Demo' },
-      { id: 'b6d68ee8-a6a6-4197-bfb3-7c6d06e65a5e', name: 'Data Validation' },
-
-      { id: 'f3bfd6e8-d677-4cd5-bd9c-ec56bdd2397a', name: 'LinkedList' },
-      { id: 'ae093102-8bc4-4e1d-aa8e-36d69db25556', name: 'Cardinal' },
-      { id: '0ddeacad-a62e-42c7-a6d0-50cbea93b468', name: 'JDBC_mysql' },
-      { id: '20315ade-508b-4491-a019-16fda725c88d', name: 'CSV_apoc' },
-      { id: 'f4a62305-d9d7-4933-8d25-4f33e2065ecc', name: 'fincen' },
-      { id: '71b64b96-5f5d-406f-bce5-b356e4fb7a2b', name: 'DataSciencePlay' },
-      { id: '36164ba5-6401-4c64-82af-d3b30de639cc', name: 'Play Guides' },
-      { id: 'cfdfeb37-b8d2-481d-ab16-7587dac083f6', name: 'All Play Guides' },
-      { id: 'a0be4ad0-01d6-46ed-b05c-0cee6033ad55', name: 'JDBC' },
       {
-        id: 'dff24df8-be80-48d4-912a-0a84e92b1aa3',
-        name: 'A_GDSCLASS_testing'
+        id: 'b1d5a702-ed4b-41c2-b70a-9b68e42af62c',
+        name: 'A_GDS_Retail_Demo'
       },
-      { id: '909bbdb4-e472-4d28-8fc5-326adf67585d', name: 'CSV' },
-      { id: 'b1411242-c053-41c8-9adc-c71bb871cf05', name: 'New Folder' }
+      {
+        id: 'b6d68ee8-a6a6-4197-bfb3-7c6d06e65a5e',
+        name: 'Data Validation'
+      },
+      {
+        id: 'f3bfd6e8-d677-4cd5-bd9c-ec56bdd2397a',
+        name: 'LinkedList'
+      },
+      {
+        id: 'ae093102-8bc4-4e1d-aa8e-36d69db25556',
+        name: 'Cardinal'
+      },
+      {
+        id: '0ddeacad-a62e-42c7-a6d0-50cbea93b468',
+        name: 'JDBC_mysql'
+      },
+      {
+        id: '20315ade-508b-4491-a019-16fda725c88d',
+        name: 'CSV_apoc'
+      },
+      {
+        id: 'f4a62305-d9d7-4933-8d25-4f33e2065ecc',
+        name: 'fincen'
+      },
+      // these two are still in to make the ui less confusing when clicking the new folder button multiple times
+      {
+        id: 'b1411242-c053-41c8-9adc-c71bb871cf05',
+        name: 'New Folder'
+      },
+      {
+        id: 'f32759b6-e3ce-4609-aff2-7ebaf2fafc51',
+        name: 'New Folder'
+      }
     ])
   })
 })
