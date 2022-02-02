@@ -65,7 +65,7 @@ export const clearHistory = () => {
     type: CLEAR
   }
 }
-export function loadHistoryFromStorage(stored: any): HistoryState {
+export function cleanHistoryFromStorage(stored?: HistoryState): HistoryState {
   if (!stored || !Array.isArray(stored)) {
     return initialState
   }

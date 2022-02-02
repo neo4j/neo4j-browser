@@ -90,7 +90,7 @@ export default function reducer(
       return state
   }
 }
-export function loadFoldersFromStorage(stored: any): Folder[] {
+export function cleanFoldersFromStorage(stored?: Folder[]): Folder[] {
   if (!stored || Array.isArray(stored)) {
     return initialState
   }

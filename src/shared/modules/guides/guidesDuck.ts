@@ -177,7 +177,7 @@ export function gotoSlide(slideIndex: number): GotoSlideAction {
   return { type: GOTO_SLIDE, slideIndex }
 }
 
-export function loadGuidesFromStorage(stored: any): GuideState {
+export function cleanGuidesFromStorage(stored?: GuideState): GuideState {
   if (!stored) {
     return initialState
   }

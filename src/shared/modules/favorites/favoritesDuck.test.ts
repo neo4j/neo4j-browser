@@ -125,21 +125,21 @@ describe('favorites actions', () => {
 })
 describe('loadFavoritesFromStorage', () => {
   it('handles missing stored data', () => {
-    expect(favorites.loadFavoritesFromStorage(undefined)).toEqual(
+    expect(favorites.cleanFavoritesFromStorage(undefined)).toEqual(
       favorites.initialState
     )
   })
   it('handles non list stored data types', () => {
-    expect(favorites.loadFavoritesFromStorage({ tes: 23 })).toEqual(
+    expect(favorites.cleanFavoritesFromStorage({ tes: 23 } as any)).toEqual(
       favorites.initialState
     )
-    expect(favorites.loadFavoritesFromStorage('fav')).toEqual(
+    expect(favorites.cleanFavoritesFromStorage('fav' as any)).toEqual(
       favorites.initialState
     )
   })
   it('handles proper stored user data', () => {
     const basicFav = { content: 'fav content' }
-    expect(favorites.loadFavoritesFromStorage([basicFav])).toEqual([
+    expect(favorites.cleanFavoritesFromStorage([basicFav])).toEqual([
       ...favorites.initialState,
       basicFav
     ])
@@ -148,7 +148,7 @@ describe('loadFavoritesFromStorage', () => {
     const basicFav = { content: 'fav content' }
     const staticFav = { isStatic: true, content: 'content' }
     expect(
-      favorites.loadFavoritesFromStorage([
+      favorites.cleanFavoritesFromStorage([
         ...favorites.initialState,
         ...favorites.initialState,
         staticFav,
@@ -344,6 +344,6 @@ describe('loadFavoritesFromStorage', () => {
       }
     ]
 
-    expect(favorites.loadFavoritesFromStorage(data)).toEqual(data)
+    expect(favorites.cleanFavoritesFromStorage(data)).toEqual(data)
   })
 })

@@ -90,12 +90,12 @@ export const disableExperimentalFeature = (name: any) => {
   }
 }
 
-export function loadExperimentalFeaturesFromStorage(
-  stored: unknown
+export function cleanExperimentalFeaturesFromStorage(
+  stored?: ExperimentalFeaturesState
 ): ExperimentalFeaturesState {
   if (!stored || typeof stored !== 'object') {
     return initialState
   }
   // TODO call is feature
-  return stored as any
+  return stored
 }

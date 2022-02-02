@@ -23,17 +23,17 @@ import {
   shouldRetainConnectionCredentials,
   shouldRetainEditorHistory
 } from '../modules/dbMeta/state'
-import { loadSettingsFromStorage } from '../modules/settings/settingsDuck'
+import { cleanSettingsFromStorage } from '../modules/settings/settingsDuck'
 import { GlobalState } from 'shared/globalState'
-import { getConnectionsFromLocalStorage } from 'shared/modules/connections/connectionsDuck'
-import { loadExperimentalFeaturesFromStorage } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
-import { loadFavoritesFromStorage } from 'shared/modules/favorites/favoritesDuck'
-import { loadFoldersFromStorage } from 'shared/modules/favorites/foldersDuck'
-import { loadGrassFromStorage } from 'shared/modules/grass/grassDuck'
-import { loadGuidesFromStorage } from 'shared/modules/guides/guidesDuck'
-import { loadHistoryFromStorage } from 'shared/modules/history/historyDuck'
-import { loadSyncConsentFromStorage } from 'shared/modules/sync/syncDuck'
-import { loadUdcFromStorage } from 'shared/modules/udc/udcDuck'
+import { cleanConnectionsFromStorage } from 'shared/modules/connections/connectionsDuck'
+import { cleanExperimentalFeaturesFromStorage } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
+import { cleanFavoritesFromStorage } from 'shared/modules/favorites/favoritesDuck'
+import { cleanFoldersFromStorage } from 'shared/modules/favorites/foldersDuck'
+import { cleanGrassFromStorage } from 'shared/modules/grass/grassDuck'
+import { cleanGuidesFromStorage } from 'shared/modules/guides/guidesDuck'
+import { cleanHistoryFromStorage } from 'shared/modules/history/historyDuck'
+import { cleanSyncConsentFromStorage } from 'shared/modules/sync/syncDuck'
+import { cleanUdcFromStorage } from 'shared/modules/udc/udcDuck'
 
 export const keyPrefix = 'neo4j.'
 let storage = window.localStorage
@@ -96,18 +96,18 @@ export function setItem(key: string, val: unknown): boolean {
 export function getAll(): LocalStorageState {
   // each reducer loads and verifies the localstorage state
   return {
-    connections: getConnectionsFromLocalStorage(getItem('connections')),
-    settings: loadSettingsFromStorage(getItem('settings')),
-    history: loadHistoryFromStorage(getItem('history')),
-    documents: loadFavoritesFromStorage(getItem('documents')),
-    folders: loadFoldersFromStorage(getItem('folders')),
-    grass: loadGrassFromStorage(getItem('grass')),
-    syncConsent: loadSyncConsentFromStorage(getItem('syncConsent')),
-    udc: loadUdcFromStorage(getItem('udc')),
-    experimentalFeatures: loadExperimentalFeaturesFromStorage(
+    connections: cleanConnectionsFromStorage(getItem('connections')),
+    settings: cleanSettingsFromStorage(getItem('settings')),
+    history: cleanHistoryFromStorage(getItem('history')),
+    documents: cleanFavoritesFromStorage(getItem('documents')),
+    folders: cleanFoldersFromStorage(getItem('folders')),
+    grass: cleanGrassFromStorage(getItem('grass')),
+    syncConsent: cleanSyncConsentFromStorage(getItem('syncConsent')),
+    udc: cleanUdcFromStorage(getItem('udc')),
+    experimentalFeatures: cleanExperimentalFeaturesFromStorage(
       getItem('experimentalFeatures')
     ),
-    guides: loadGuidesFromStorage(getItem('guides'))
+    guides: cleanGuidesFromStorage(getItem('guides'))
   }
 }
 

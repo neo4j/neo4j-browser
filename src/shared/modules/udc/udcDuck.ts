@@ -172,7 +172,7 @@ export const updateUdcData = (obj: Partial<UdcState>): UpdateDataAction => {
   }
 }
 
-export function loadUdcFromStorage(stored: unknown): UdcState {
+export function cleanUdcFromStorage(stored?: UdcState): UdcState {
   if (!stored) {
     return initialState
   }

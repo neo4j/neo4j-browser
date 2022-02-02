@@ -73,15 +73,15 @@ describe('editor reducer', () => {
 
 describe('loads from localstorage', () => {
   it('handles missing stored data', () => {
-    expect(actions.loadHistoryFromStorage(undefined)).toEqual([])
+    expect(actions.cleanHistoryFromStorage(undefined)).toEqual([])
   })
   it('handles non list stored data types', () => {
-    expect(actions.loadHistoryFromStorage({ tes: 23 })).toEqual([])
-    expect(actions.loadHistoryFromStorage('history')).toEqual([])
+    expect(actions.cleanHistoryFromStorage({ tes: 23 } as any)).toEqual([])
+    expect(actions.cleanHistoryFromStorage('history' as any)).toEqual([])
   })
   it('handles proper stored data', () => {
-    expect(actions.loadHistoryFromStorage([])).toEqual([])
-    expect(actions.loadHistoryFromStorage(['history'])).toEqual(['history'])
+    expect(actions.cleanHistoryFromStorage([])).toEqual([])
+    expect(actions.cleanHistoryFromStorage(['history'])).toEqual(['history'])
   })
   it('handle a real life store', () => {
     const test = [
@@ -104,6 +104,6 @@ describe('loads from localstorage', () => {
       'MATCH p=()-->() RETURN p LIMIT 250',
       'MATCH p=()-->() RETURN p LIMIT 25'
     ]
-    expect(actions.loadHistoryFromStorage(test)).toEqual(test)
+    expect(actions.cleanHistoryFromStorage(test)).toEqual(test)
   })
 })

@@ -22,9 +22,9 @@ import reducer, {
   NAME,
   REPLACE,
   UPDATE,
+  cleanSettingsFromStorage,
   getInitCmd,
-  initialState,
-  loadSettingsFromStorage
+  initialState
 } from './settingsDuck'
 import { dehydrate } from 'services/duckUtils'
 
@@ -107,7 +107,7 @@ describe('Selectors', () => {
 
 describe('loading settings from localstorage', () => {
   it('handles missing values', () => {
-    expect(loadSettingsFromStorage(undefined)).toEqual(initialState)
+    expect(cleanSettingsFromStorage(undefined)).toEqual(initialState)
   })
   it('handles malformed and missing values', () => {
     const test = {
@@ -118,7 +118,7 @@ describe('loading settings from localstorage', () => {
       theme: 'non-existent',
       showPerformanceOverlay: { show: true }
     }
-    expect(loadSettingsFromStorage(test)).toEqual(initialState)
+    expect(cleanSettingsFromStorage(test as any)).toEqual(initialState)
   })
 
   it('handles a handful of real life storages', () => {
@@ -287,243 +287,7 @@ describe('loading settings from localstorage', () => {
     }
     const tests = [test1, test2, test3]
     tests.forEach(({ test, expected }) =>
-      expect(loadSettingsFromStorage(test)).toEqual(expected)
+      expect(cleanSettingsFromStorage(test as any)).toEqual(expected)
     )
   })
 })
-
-/*
- const test1 = {
-        maxHistory: 30,
-        theme: 'auto',
-        initCmd: 'MATCH (n) RETURN n',
-        playImplicitInitCommands: true,
-        initialNodeDisplay: 300,
-        maxNeighbours: 100,
-        showSampleScripts: true,
-        browserSyncDebugServer: null,
-        maxRows: 1000,
-        maxFieldItems: 500,
-        autoComplete: true,
-        scrollToTop: true,
-        maxFrames: 30,
-        codeFontLigatures: true,
-        useBoltRouting: false,
-        editorLint: false,
-        useCypherThread: true,
-        enableMultiStatementMode: true,
-        connectionTimeout: 30000,
-        showPerformanceOverlay: false,
-        allowCrashReports: true,
-        allowUserStats: true,
-        shouldReportUdc: true,
-        editorAutocomplete: true,
-        cmdchar: ':'
-      }
-
-  
-      const test2 = {
-        maxHistory: '300',
-        theme: 'normal',
-        initCmd: ':sysinfo',
-        playImplicitInitCommands: true,
-        initialNodeDisplay: '600',
-        maxNeighbours: 100,
-        showSampleScripts: true,
-        browserSyncDebugServer: null,
-        maxRows: 1000,
-        maxFieldItems: 500,
-        autoComplete: true,
-        scrollToTop: true,
-        maxFrames: 30,
-        codeFontLigatures: true,
-        useBoltRouting: false,
-        editorLint: false,
-        useCypherThread: true,
-        enableMultiStatementMode: true,
-        connectionTimeout: 30000,
-        showPerformanceOverlay: false,
-        allowCrashReports: true,
-        allowUserStats: true,
-        shouldReportUdc: true,
-        editorAutocomplete: true,
-        cmdchar: ':'
-      }
-      const test3 
-      {
-        maxHistory: 30,
-        theme: 'auto',
-        initCmd: ':play start',
-        playImplicitInitCommands: true,
-        initialNodeDisplay: 300,
-        maxNeighbours: 100,
-        showSampleScripts: true,
-        browserSyncDebugServer: null,
-        maxRows: 1000,
-        maxFieldItems: 500,
-        autoComplete: true,
-        scrollToTop: true,
-        maxFrames: 30,
-        codeFontLigatures: true,
-        useBoltRouting: false,
-        editorLint: false,
-        useCypherThread: true,
-        enableMultiStatementMode: true,
-        connectionTimeout: 30000,
-        showPerformanceOverlay: false,
-        allowCrashReports: true,
-        allowUserStats: true,
-        shouldReportUdc: true
-      },
-      {
-        maxHistory: 30,
-        theme: 'auto',
-        initCmd: ':play start',
-        playImplicitInitCommands: true,
-        initialNodeDisplay: 300,
-        maxNeighbours: 100,
-        showSampleScripts: true,
-        browserSyncDebugServer: null,
-        maxRows: 1000,
-        maxFieldItems: 500,
-        autoComplete: true,
-        scrollToTop: true,
-        maxFrames: 15,
-        codeFontLigatures: true,
-        useBoltRouting: false,
-        editorLint: false,
-        useCypherThread: true,
-        enableMultiStatementMode: true,
-        connectionTimeout: 30000,
-        showPerformanceOverlay: false,
-        allowCrashReports: true,
-        allowUserStats: true,
-        shouldReportUdc: true
-      },
-      {
-        maxHistory: 30,
-        theme: 'auto',
-        initCmd: ':play start',
-        playImplicitInitCommands: true,
-        initialNodeDisplay: 300,
-        maxNeighbours: 100,
-        showSampleScripts: true,
-        browserSyncDebugServer: null,
-        maxRows: 1000,
-        maxFieldItems: 500,
-        autoComplete: true,
-        scrollToTop: true,
-        maxFrames: 15,
-        codeFontLigatures: true,
-        useBoltRouting: false,
-        editorLint: false,
-        useCypherThread: true,
-        enableMultiStatementMode: true,
-        connectionTimeout: 30000,
-        showPerformanceOverlay: false,
-        allowCrashReports: true,
-        allowUserStats: true
-      },
-      {
-        maxHistory: 30,
-        theme: 'auto',
-        initCmd: ':play start',
-        playImplicitInitCommands: true,
-        initialNodeDisplay: 300,
-        maxNeighbours: 100,
-        showSampleScripts: true,
-        browserSyncDebugServer: null,
-        maxRows: 1000,
-        maxFieldItems: 500,
-        autoComplete: true,
-        scrollToTop: true,
-        maxFrames: 15,
-        codeFontLigatures: true,
-        useBoltRouting: false,
-        editorLint: false,
-        useCypherThread: true,
-        enableMultiStatementMode: true,
-        connectionTimeout: 30000,
-        showPerformanceOverlay: false,
-        allowCrashReports: true,
-        allowUserStats: true,
-        shouldReportUdc: true
-      },
-      {
-        maxHistory: 30,
-        theme: 'auto',
-        initCmd: ':play start',
-        playImplicitInitCommands: true,
-        initialNodeDisplay: 300,
-        maxNeighbours: 100,
-        showSampleScripts: true,
-        browserSyncDebugServer: null,
-        maxRows: 1000,
-        maxFieldItems: 500,
-        autoComplete: true,
-        scrollToTop: true,
-        maxFrames: 15,
-        codeFontLigatures: true,
-        useBoltRouting: false,
-        editorLint: false,
-        useCypherThread: true,
-        enableMultiStatementMode: true,
-        connectionTimeout: 30000,
-        showPerformanceOverlay: false,
-        allowCrashReports: true,
-        allowUserStats: true,
-        shouldReportUdc: true
-      },
-      {
-        maxHistory: '300',
-        theme: 'normal',
-        initCmd: ':sysinfo',
-        playImplicitInitCommands: true,
-        initialNodeDisplay: '600',
-        maxNeighbours: 100,
-        showSampleScripts: true,
-        browserSyncDebugServer: null,
-        maxRows: 1000,
-        maxFieldItems: 500,
-        autoComplete: true,
-        scrollToTop: true,
-        maxFrames: 30,
-        codeFontLigatures: true,
-        useBoltRouting: false,
-        editorLint: false,
-        useCypherThread: true,
-        enableMultiStatementMode: true,
-        connectionTimeout: 30000,
-        showPerformanceOverlay: false,
-        allowCrashReports: true,
-        allowUserStats: true,
-        shouldReportUdc: true,
-        editorAutocomplete: true,
-        cmdchar: ':'
-      },
-      {
-        maxHistory: 30,
-        theme: 'auto',
-        initCmd: ':play start',
-        playImplicitInitCommands: true,
-        initialNodeDisplay: 300,
-        maxNeighbours: 100,
-        showSampleScripts: true,
-        browserSyncDebugServer: null,
-        maxRows: 1000,
-        maxFieldItems: 500,
-        autoComplete: false,
-        scrollToTop: true,
-        maxFrames: 30,
-        codeFontLigatures: true,
-        useBoltRouting: false,
-        editorLint: false,
-        useCypherThread: true,
-        enableMultiStatementMode: true,
-        connectionTimeout: 30000,
-        showPerformanceOverlay: false,
-        allowCrashReports: true,
-        allowUserStats: true,
-        shouldReportUdc: true
-      }
-    ]*/

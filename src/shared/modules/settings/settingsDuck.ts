@@ -189,7 +189,9 @@ export const replace = (settings: Partial<SettingsState>) => {
   }
 }
 
-export function loadSettingsFromStorage(stored: any): SettingsState {
+export function cleanSettingsFromStorage(
+  stored?: SettingsState
+): SettingsState {
   const init = initialState
   if (!stored) {
     return init

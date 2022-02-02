@@ -100,7 +100,7 @@ export function syncGrass(grass: any) {
     grass
   }
 }
-export function loadGrassFromStorage(stored: any): GrassState {
+export function cleanGrassFromStorage(stored?: GrassState): GrassState {
   if (!stored) {
     return initialState
   }

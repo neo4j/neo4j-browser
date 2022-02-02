@@ -384,8 +384,8 @@ export const useDb = (db: any = null) => ({ type: USE_DB, useDb: db })
 
 export const resetUseDb = () => ({ type: USE_DB, useDb: null })
 
-export function getConnectionsFromLocalStorage(
-  stored: any
+export function cleanConnectionsFromStorage(
+  stored?: ConnectionReduxState
 ): ConnectionReduxState {
   const init = initialState //shorter name saves some space
   if (!stored) {

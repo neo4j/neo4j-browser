@@ -268,8 +268,8 @@ export function updateUserAuthStatus(status: any) {
   }
 }
 
-export function loadSyncConsentFromStorage(
-  stored: null | Partial<SyncConsentState>
+export function cleanSyncConsentFromStorage(
+  stored?: SyncConsentState
 ): SyncConsentState {
   if (!stored) {
     return initialState

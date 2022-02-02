@@ -325,11 +325,11 @@ ${NonNamecontents.join('\n')}`
 ${script.content}`
 }
 
-export function loadFavoritesFromStorage(stored: any): Favorite[] {
+export function cleanFavoritesFromStorage(stored?: Favorite[]): Favorite[] {
   if (!stored || !Array.isArray(stored)) {
     return initialState
   }
   // remove built-in stored to redux by mistake
-  const onlyUserDefinedFavorites = stored.filter((fav: any) => !fav.isStatic)
+  const onlyUserDefinedFavorites = stored.filter(fav => !fav.isStatic)
   return initialState.concat(onlyUserDefinedFavorites)
 }
