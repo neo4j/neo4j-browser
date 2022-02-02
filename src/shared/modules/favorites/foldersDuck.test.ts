@@ -1,30 +1,34 @@
-import { Favorite } from './favoritesDuck'
 import { Folder, cleanFoldersFromStorage, initialState } from './foldersDuck'
 
 const basicFolder: Folder = { name: 'Couriway', id: 'identity' }
 describe('loads from localstorage', () => {
   it('handles missing stored data', () => {
-    expect(cleanFoldersFromStorage(undefined)).toEqual(initialState)
-    expect(cleanFoldersFromStorage(undefined as any)).toEqual(initialState)
+    expect(cleanFoldersFromStorage(undefined, [])).toEqual(initialState)
+    expect(cleanFoldersFromStorage(undefined as any, [])).toEqual(initialState)
   })
   it('handles non list stored data types', () => {
-    expect(cleanFoldersFromStorage({ tes: 23 } as any)).toEqual(initialState)
-    expect(cleanFoldersFromStorage('fol' as any)).toEqual(initialState)
+    expect(cleanFoldersFromStorage({ tes: 23 } as any, [])).toEqual(
+      initialState
+    )
+    expect(cleanFoldersFromStorage('fol' as any, [])).toEqual(initialState)
   })
   it('handles proper stored user data', () => {
-    expect(cleanFoldersFromStorage([])).toEqual(initialState)
-    expect(cleanFoldersFromStorage([basicFolder])).toEqual(
+    expect(cleanFoldersFromStorage([], [])).toEqual(initialState)
+    expect(cleanFoldersFromStorage([basicFolder], [])).toEqual(
       initialState.concat([basicFolder])
     )
   })
   it('drops static folders', () => {
     expect(
-      cleanFoldersFromStorage([
-        ...initialState,
-        ...initialState,
-        { ...basicFolder, isStatic: true },
-        basicFolder
-      ])
+      cleanFoldersFromStorage(
+        [
+          ...initialState,
+          ...initialState,
+          { ...basicFolder, isStatic: true },
+          basicFolder
+        ],
+        []
+      )
     ).toEqual([...initialState, basicFolder])
   })
   // There as a bug creating tons of empty and duplicated

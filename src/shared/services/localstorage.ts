@@ -95,12 +95,13 @@ export function setItem(key: string, val: unknown): boolean {
 }
 export function getAll(): LocalStorageState {
   // each reducer loads and verifies the localstorage state
+  const documents = cleanFavoritesFromStorage(getItem('documents'))
   return {
     connections: cleanConnectionsFromStorage(getItem('connections')),
     settings: cleanSettingsFromStorage(getItem('settings')),
     history: cleanHistoryFromStorage(getItem('history')),
-    documents: cleanFavoritesFromStorage(getItem('documents')),
-    folders: cleanFoldersFromStorage(getItem('folders')),
+    documents,
+    folders: cleanFoldersFromStorage(getItem('folders'), documents),
     grass: cleanGrassFromStorage(getItem('grass')),
     syncConsent: cleanSyncConsentFromStorage(getItem('syncConsent')),
     udc: cleanUdcFromStorage(getItem('udc')),

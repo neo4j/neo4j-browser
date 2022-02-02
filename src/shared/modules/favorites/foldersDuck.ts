@@ -91,7 +91,7 @@ export default function reducer(
 }
 export function cleanFoldersFromStorage(
   stored: undefined | Folder[],
-  existingFavs: Favorite[] = []
+  existingFavs: Favorite[]
 ): Folder[] {
   if (!stored || !Array.isArray(stored)) {
     return initialState
