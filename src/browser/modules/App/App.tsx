@@ -69,6 +69,8 @@ import {
 } from 'shared/modules/connections/connectionsDuck'
 import {
   findDatabaseByNameOrAlias,
+  getEdition,
+  isServerConfigDone,
   shouldAllowOutgoingConnections
 } from 'shared/modules/dbMeta/state'
 import {
@@ -125,6 +127,7 @@ export function App(props: any) {
           if (!isRunningE2ETest() && props.telemetrySettings.allowUserStats) {
             const data = {
               browserVersion: version,
+              neo4jEdition: props.edition,
               ...originalData
             }
             eventMetricsCallback &&
@@ -316,7 +319,8 @@ const mapStateToProps = (state: GlobalState) => {
     useDb,
     isDatabaseUnavailable,
     telemetrySettings: getTelemetrySettings(state),
-    consentBannerShownCount: getConsentBannerShownCount(state)
+    consentBannerShownCount: getConsentBannerShownCount(state),
+    edition: isServerConfigDone(state) ? 'PENDING' : getEdition(state)
   }
 }
 type DesktopTrackingSettings = {
