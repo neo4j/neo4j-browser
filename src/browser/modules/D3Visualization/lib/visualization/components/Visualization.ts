@@ -267,6 +267,9 @@ export class Visualization {
       const graphWidth = graphSize.width
       const graphHeight = graphSize.height
 
+      const graphCenterX = graphSize.x + graphWidth / 2
+      const graphCenterY = graphSize.y + graphHeight / 2
+
       if (graphWidth === 0 || graphHeight === 0) return
 
       const scale =
@@ -275,7 +278,9 @@ export class Visualization {
 
       this.zoomBehavior.transform(
         this.root,
-        zoomIdentity.translate(0, 0).scale(Math.min(scale, ZOOM_MAX_SCALE))
+        zoomIdentity
+          .scale(Math.min(scale, ZOOM_MAX_SCALE))
+          .translate(-graphCenterX, -graphCenterY)
       )
     }
   }
