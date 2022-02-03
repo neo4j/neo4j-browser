@@ -107,8 +107,8 @@ export function getAll(): LocalStorageState {
     udc: cleanUdcFromStorage(getItem('udc')), // TODO tests
     experimentalFeatures: cleanExperimentalFeaturesFromStorage(
       getItem('experimentalFeatures')
-    ), // TODO tests
-    guides: cleanGuidesFromStorage(getItem('guides')) // TODO tests
+    ),
+    guides: cleanGuidesFromStorage(getItem('guides'))
   }
 }
 

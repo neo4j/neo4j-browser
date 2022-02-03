@@ -26,7 +26,7 @@ export const UPDATE_GRAPH_STYLE_DATA = 'grass/UPDATE_GRAPH_STYLE_DATA'
 export const SYNC_GRASS = 'grass/SYNC_GRASS'
 
 export const getGraphStyleData = (state: GlobalState): GrassState => state[NAME]
-
+/*
 type GrassPropertyKeys =
   | 'color'
   | 'diameter'
@@ -40,6 +40,7 @@ type GrassPropertyKeys =
   | 'shaft-width'
 type GrassTag = 'node' | 'relationship'
 type GrassClass = string /* with . escaped with \\ */
+/*
 type OptionalGrassClass = '' | `.${GrassClass}`
 // The selector can technically be infinitely long, but we don't want typescript to generate an infinite amount of types
 type GrassSelector =
@@ -47,6 +48,8 @@ type GrassSelector =
 type GrassProperties = Record<GrassPropertyKeys, string>
 export type GrassState = null | GrassStyleData
 export type GrassStyleData = Partial<Record<GrassSelector, GrassProperties>>
+*/
+type GrassState = any
 const versionSize = 20
 export const initialState: GrassState = null
 

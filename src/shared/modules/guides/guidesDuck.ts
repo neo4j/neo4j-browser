@@ -178,7 +178,7 @@ export function gotoSlide(slideIndex: number): GotoSlideAction {
 }
 
 export function cleanGuidesFromStorage(stored?: GuideState): GuideState {
-  if (!stored) {
+  if (!stored || typeof stored !== 'object' || Array.isArray(stored)) {
     return initialState
   }
 
