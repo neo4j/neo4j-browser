@@ -38,8 +38,8 @@ class Work {
   constructor(
     public readonly id: string,
     private payload: any,
-    private onmessage: WorkerMessageHandler,
-    private removeFromQueue: (id: string) => void
+    private removeFromQueue: (id: string) => void,
+    private onmessage?: WorkerMessageHandler
   ) {}
 
   execute = (payload: any) => {
@@ -134,14 +134,14 @@ class WorkPool {
     onmessage
   }: {
     id: string
-    payload: any
-    onmessage: WorkerMessageHandler
+    payload?: any
+    onmessage?: WorkerMessageHandler
   }) {
     const work = new Work(
       id || uuid(),
       payload,
-      onmessage,
-      this.removeFromQueue
+      this.removeFromQueue,
+      onmessage
     )
     this.addToQueue(work)
     this.next()
