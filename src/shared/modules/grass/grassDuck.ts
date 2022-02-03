@@ -49,7 +49,7 @@ type GrassProperties = Record<GrassPropertyKeys, string>
 export type GrassState = null | GrassStyleData
 export type GrassStyleData = Partial<Record<GrassSelector, GrassProperties>>
 */
-type GrassState = any
+export type GrassState = any
 const versionSize = 20
 export const initialState: GrassState = null
 

@@ -103,7 +103,7 @@ export function getAll(): LocalStorageState {
     documents,
     folders: cleanFoldersFromStorage(getItem('folders'), documents),
     grass: cleanGrassFromStorage(getItem('grass')), // TODO tests
-    syncConsent: cleanSyncConsentFromStorage(getItem('syncConsent')), // TODO tests
+    syncConsent: cleanSyncConsentFromStorage(getItem('syncConsent')),
     udc: cleanUdcFromStorage(getItem('udc')), // TODO tests
     experimentalFeatures: cleanExperimentalFeaturesFromStorage(
       getItem('experimentalFeatures')
