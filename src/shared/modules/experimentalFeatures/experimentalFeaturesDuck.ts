@@ -93,9 +93,8 @@ export const disableExperimentalFeature = (name: any) => {
 export function cleanExperimentalFeaturesFromStorage(
   stored?: ExperimentalFeaturesState
 ): ExperimentalFeaturesState {
-  if (!stored || typeof stored !== 'object') {
+  if (!stored || typeof stored !== 'object' || Array.isArray(stored)) {
     return initialState
   }
-  // TODO call is feature
   return stored
 }

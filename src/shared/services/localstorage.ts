@@ -97,18 +97,18 @@ export function getAll(): LocalStorageState {
   // each reducer loads and verifies the localstorage state
   const documents = cleanFavoritesFromStorage(getItem('documents'))
   return {
-    connections: cleanConnectionsFromStorage(getItem('connections')),
+    connections: cleanConnectionsFromStorage(getItem('connections')), // TODO tests
     settings: cleanSettingsFromStorage(getItem('settings')),
     history: cleanHistoryFromStorage(getItem('history')),
     documents,
     folders: cleanFoldersFromStorage(getItem('folders'), documents),
-    grass: cleanGrassFromStorage(getItem('grass')),
-    syncConsent: cleanSyncConsentFromStorage(getItem('syncConsent')),
-    udc: cleanUdcFromStorage(getItem('udc')),
+    grass: cleanGrassFromStorage(getItem('grass')), // TODO tests
+    syncConsent: cleanSyncConsentFromStorage(getItem('syncConsent')), // TODO tests
+    udc: cleanUdcFromStorage(getItem('udc')), // TODO tests
     experimentalFeatures: cleanExperimentalFeaturesFromStorage(
       getItem('experimentalFeatures')
-    ),
-    guides: cleanGuidesFromStorage(getItem('guides'))
+    ), // TODO tests
+    guides: cleanGuidesFromStorage(getItem('guides')) // TODO tests
   }
 }
 

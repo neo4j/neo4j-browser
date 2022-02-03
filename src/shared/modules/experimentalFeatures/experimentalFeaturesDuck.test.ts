@@ -20,6 +20,7 @@
 import { APP_START } from '../app/appDuck'
 import reducer, {
   NAME,
+  cleanExperimentalFeaturesFromStorage,
   disableExperimentalFeature,
   enableExperimentalFeature,
   experimentalFeatureSelfName,
@@ -127,5 +128,48 @@ describe('Selectors', () => {
 
     // Then
     expect(shouldBeAll).toEqual(true)
+  })
+})
+
+describe('loads from localstorage', () => {
+  it('handles missing stored data', () => {
+    expect(cleanExperimentalFeaturesFromStorage(undefined)).toEqual(
+      initialState
+    )
+  })
+  it('handles incorrect stored data types', () => {
+    expect(cleanExperimentalFeaturesFromStorage([] as any)).toEqual(
+      initialState
+    )
+    expect(cleanExperimentalFeaturesFromStorage('string' as any)).toEqual(
+      initialState
+    )
+  })
+  it('handles proper stored data', () => {
+    const newSetting = {
+      goodPerf: {
+        name: 'goodPerf',
+        on: true,
+        displayName: 'Enable good performance',
+        tooltip: 'Click to get good perf'
+      }
+    }
+    expect(cleanExperimentalFeaturesFromStorage(initialState)).toEqual(
+      initialState
+    )
+    expect(
+      cleanExperimentalFeaturesFromStorage({ ...initialState, ...newSetting })
+    ).toEqual({ ...initialState, ...newSetting })
+  })
+  it('handle a real life store', () => {
+    const test = {
+      showSelf: {
+        name: 'showSelf',
+        on: true,
+        displayName: 'Show experimental features',
+        tooltip: 'Show feature section in settings drawer'
+      }
+    }
+    expect(cleanExperimentalFeaturesFromStorage(test)).toEqual(test)
   })
 })
