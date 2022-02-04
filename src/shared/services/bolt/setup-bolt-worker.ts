@@ -56,6 +56,8 @@ export const setupBoltWorker = (
           case POST_CANCEL_TRANSACTION_MESSAGE:
             work.finish()
             break
+          default:
+            return
         }
       }
     })

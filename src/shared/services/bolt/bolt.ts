@@ -224,7 +224,7 @@ export default {
   openConnection,
   closeConnection: () => {
     connectionProperties = null
-    boltConnection.closeConnection()
+    boltConnection.closeGlobalConnection()
     closeConnectionInWorkers()
   },
   directTransaction,

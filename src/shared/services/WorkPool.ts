@@ -122,7 +122,9 @@ class WorkPool {
 
   getWorkById(id: string) {
     return (
+      // search through undone work
       this.queue.find(work => work.id === id) ??
+      // search through work in progress
       this.register.find(worker => worker.id === id)?.work ??
       null
     )
@@ -196,10 +198,11 @@ class WorkPool {
   }
 
   private removeFromQueue(id: string) {
-    this.queue.splice(
-      this.queue.findIndex(el => el.id === id),
-      1
-    )
+    const workIndex = this.queue.findIndex(el => el.id === id)
+    if (workIndex === -1) {
+      return
+    }
+    this.queue.splice(workIndex, 1)
   }
 
   private unregisterWorker = (id: string) => {

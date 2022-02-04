@@ -27,7 +27,7 @@ import {
   DIRECT_CONNECTION,
   ROUTED_READ_CONNECTION,
   ROUTED_WRITE_CONNECTION,
-  closeConnection,
+  closeGlobalConnection,
   ensureConnection
 } from './boltConnection'
 import { isBoltConnectionErrorCode } from './boltConnectionErrors'
@@ -74,23 +74,10 @@ type WorkerMessage = {
   }
 }
 
-// Something strange is going on here and it could be causing a bug. ALL of the
-// functions used here return an array `[string, Promise<any>]` WHEN they're
-// creating a tracked transaction. But here we assume that ONLY
-// routedWriteTransaction is ALWAYS returning an array.
 const connectionTypeMap = {
-  [ROUTED_WRITE_CONNECTION]: {
-    create: routedWriteTransaction,
-    getPromise: (res: Promise<unknown>[]): Promise<unknown> => res[1]
-  },
-  [ROUTED_READ_CONNECTION]: {
-    create: routedReadTransaction,
-    getPromise: (res: Promise<unknown>): Promise<unknown> => res
-  },
-  [DIRECT_CONNECTION]: {
-    create: directTransaction,
-    getPromise: (res: Promise<unknown>): Promise<unknown> => res
-  }
+  [ROUTED_WRITE_CONNECTION]: routedWriteTransaction,
+  [ROUTED_READ_CONNECTION]: routedReadTransaction,
+  [DIRECT_CONNECTION]: directTransaction
 }
 
 let busy = false
@@ -128,7 +115,7 @@ const runCypherMessage = async (data: WorkerMessage['data']) => {
   )
 
   const transactionType = connectionTypeMap[connectionType]
-  const res: any = transactionType.create(input, applyGraphTypes(parameters), {
+  const res: any = transactionType(input, applyGraphTypes(parameters), {
     requestId,
     cancelable,
     txMetadata,
@@ -136,7 +123,11 @@ const runCypherMessage = async (data: WorkerMessage['data']) => {
     autoCommit
   })
 
-  return transactionType.getPromise(res)
+  if (Array.isArray(res)) {
+    return res[1]
+  }
+
+  return res
 }
 
 const onmessage = function ({ data }: WorkerMessage): void {
@@ -161,7 +152,7 @@ const onmessage = function ({ data }: WorkerMessage): void {
     })
   } else if (messageType === CLOSE_CONNECTION_MESSAGE) {
     queueWork(() => {
-      closeConnection()
+      closeGlobalConnection()
     })
   } else {
     self.postMessage(
