@@ -43,9 +43,12 @@ let storage = window.localStorage
 // TODO make sure we actually cleanup each thing
 // TODO make sure code looks reasonable
 // TODO add an async callback to make sure we don't call save all the time
+// TODO should we report when we find incorrect state?
+// TODO make sure sandbox still works
 // just call it on idle or every 10 seconds
 // editor autocomplete setting has been dropped -> look into!!
 // samma med shouldReportUdc
+// TODO udc should we remove the old data?  created at??
 
 export type LocalStorageKey =
   | 'connections'
@@ -104,7 +107,7 @@ export function getAll(): LocalStorageState {
     folders: cleanFoldersFromStorage(getItem('folders'), documents),
     grass: cleanGrassFromStorage(getItem('grass')), // TODO tests
     syncConsent: cleanSyncConsentFromStorage(getItem('syncConsent')),
-    udc: cleanUdcFromStorage(getItem('udc')), // TODO tests
+    udc: cleanUdcFromStorage(getItem('udc')),
     experimentalFeatures: cleanExperimentalFeaturesFromStorage(
       getItem('experimentalFeatures')
     ),

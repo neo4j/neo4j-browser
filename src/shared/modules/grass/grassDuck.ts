@@ -47,6 +47,7 @@ type GrassSelector =
   `${GrassTag}${OptionalGrassClass}${OptionalGrassClass}${OptionalGrassClass}${OptionalGrassClass}${OptionalGrassClass}`
 type GrassProperties = Record<GrassPropertyKeys, string>
 export type GrassState = null | GrassStyleData
+// TODO testa "missing key" 
 export type GrassStyleData = Partial<Record<GrassSelector, GrassProperties>>
 */
 export type GrassState = any
@@ -104,7 +105,7 @@ export function syncGrass(grass: any) {
   }
 }
 export function cleanGrassFromStorage(stored?: GrassState): GrassState {
-  if (!stored) {
+  if (!stored || typeof stored !== 'object' || Array.isArray(stored)) {
     return initialState
   }
   // TODO there should clean!

@@ -17,42 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Action } from 'redux'
-import { Epic } from 'redux-observable'
 import { v4 } from 'uuid'
 
 import { USER_CLEAR } from '../app/appDuck'
-import { isBuiltInGuide, isPlayChapter } from 'browser/documentation'
-import { extractStatementsFromString } from 'services/commandUtils'
 import { GlobalState } from 'shared/globalState'
-import { COMMAND_QUEUED } from 'shared/modules/commands/commandsDuck'
-import {
-  ADD_FAVORITE,
-  LOAD_FAVORITES,
-  REMOVE_FAVORITE,
-  UPDATE_FAVORITE_CONTENT,
-  getFavorites
-} from 'shared/modules/favorites/favoritesDuck'
-import {
-  ADD,
-  PIN,
-  REMOVE,
-  TRACK_COLLAPSE_TOGGLE,
-  TRACK_FULLSCREEN_TOGGLE,
-  TRACK_SAVE_AS_PROJECT_FILE,
-  UNPIN
-} from 'shared/modules/frames/framesDuck'
-import {
-  SettingsState,
-  TRACK_OPT_OUT_CRASH_REPORTS,
-  TRACK_OPT_OUT_USER_STATS,
-  getSettings
-} from 'shared/modules/settings/settingsDuck'
-import {
-  TRACK_CANNY_CHANGELOG,
-  TRACK_CANNY_FEATURE_REQUEST
-} from 'shared/modules/sidebar/sidebarDuck'
-import cmdHelper from 'shared/services/commandInterpreterHelper'
 
 // Action types
 export const NAME = 'udc'
@@ -89,15 +57,8 @@ export const allowUdcInAura = (
 
   return 'UNSET'
 }
-const getLastSnapshotTime = (state: GlobalState) =>
+export const getLastSnapshotTime = (state: GlobalState) =>
   (state[NAME] && state[NAME].lastSnapshot) || initialState.lastSnapshot
-
-const aWeekSinceLastSnapshot = (state: GlobalState) => {
-  const now = Math.round(Date.now() / 1000)
-  const lastSnapshot = getLastSnapshotTime(state)
-  const aWeekInSeconds = 60 * 60 * 24 * 7
-  return now - lastSnapshot > aWeekInSeconds
-}
 
 export interface UdcState {
   lastSnapshot: number
@@ -107,6 +68,7 @@ export interface UdcState {
   desktopTrackingId?: string
   allowUserStatsInDesktop: boolean
   allowCrashReportsInDesktop: boolean
+  segmentKey?: string
 }
 
 export const initialState: UdcState = {
@@ -116,7 +78,8 @@ export const initialState: UdcState = {
   consentBannerShownCount: 0,
   desktopTrackingId: undefined,
   allowUserStatsInDesktop: false,
-  allowCrashReportsInDesktop: false
+  allowCrashReportsInDesktop: false,
+  segmentKey: undefined
 }
 
 // Reducer
@@ -154,7 +117,7 @@ interface MetricsEventAction extends MetricsEvent {
   type: typeof METRICS_EVENT
 }
 
-const metricsEvent = (payload: MetricsEvent): MetricsEventAction => {
+export const metricsEvent = (payload: MetricsEvent): MetricsEventAction => {
   return {
     type: METRICS_EVENT,
     ...payload
@@ -173,7 +136,7 @@ export const updateUdcData = (obj: Partial<UdcState>): UpdateDataAction => {
 }
 
 export function cleanUdcFromStorage(stored?: UdcState): UdcState {
-  if (!stored) {
+  if (!stored || typeof stored !== 'object' || Array.isArray(stored)) {
     return initialState
   }
   const {
@@ -183,8 +146,9 @@ export function cleanUdcFromStorage(stored?: UdcState): UdcState {
     consentBannerShownCount,
     desktopTrackingId,
     allowUserStatsInDesktop,
-    allowCrashReportsInDesktop
-  } = stored as any
+    allowCrashReportsInDesktop,
+    segmentKey
+  } = stored
 
   // Todo keep old state around?
   return {
@@ -215,141 +179,9 @@ export function cleanUdcFromStorage(stored?: UdcState): UdcState {
     allowCrashReportsInDesktop:
       typeof allowCrashReportsInDesktop === 'boolean'
         ? allowCrashReportsInDesktop
-        : initialState.allowCrashReportsInDesktop
+        : initialState.allowCrashReportsInDesktop,
+
+    segmentKey:
+      typeof segmentKey === 'string' ? segmentKey : initialState.segmentKey
   }
 }
-// Epics
-export const udcStartupEpic: Epic<Action, GlobalState> = (action$, store) =>
-  action$
-    .ofType(UDC_STARTUP)
-    .do(() => {
-      if (!aWeekSinceLastSnapshot(store.getState())) {
-        return
-      }
-
-      const settings = getSettings(store.getState())
-      const nonSensitiveSettings: Array<keyof SettingsState> = [
-        'maxHistory',
-        'theme',
-        'playImplicitInitCommands',
-        'initialNodeDisplay',
-        'maxNeighbours',
-        'showSampleScripts',
-        'maxRows',
-        'maxFieldItems',
-        'autoComplete',
-        'scrollToTop',
-        'maxFrames',
-        'codeFontLigatures',
-        'editorLint',
-        'useCypherThread',
-        'enableMultiStatementMode',
-        'connectionTimeout'
-      ]
-      if (settings) {
-        const data = nonSensitiveSettings.reduce(
-          (acc, curr) => ({ ...acc, [curr]: settings[curr] }),
-          {}
-        )
-        store.dispatch(
-          metricsEvent({ category: 'settings', label: 'snapshot', data })
-        )
-      }
-      const favorites = getFavorites(store.getState())
-
-      if (favorites) {
-        const count = favorites.filter(script => !script.isStatic).length
-        store.dispatch(
-          metricsEvent({
-            category: 'favorites',
-            label: 'snapshot',
-            data: { count }
-          })
-        )
-      }
-      store.dispatch(
-        updateUdcData({ lastSnapshot: Math.round(Date.now() / 1000) })
-      )
-    })
-    .mapTo({ type: 'NOOP' })
-
-export const trackCommandUsageEpic: Epic<Action, GlobalState> = action$ =>
-  action$.ofType(COMMAND_QUEUED).map((action: any) => {
-    const isCypher = !action.cmd.startsWith(':')
-    if (isCypher) {
-      const numberOfStatements =
-        extractStatementsFromString(action.cmd)?.length || 1
-      return metricsEvent({
-        category: 'command',
-        label: 'cypher',
-        data: {
-          type: 'cypher',
-          source: action.source || 'unknown',
-          averageWordCount: action.cmd.split(' ').length / numberOfStatements,
-          averageLineCount: action.cmd.split('\n').length / numberOfStatements,
-          numberOfStatements
-        }
-      })
-    }
-
-    const type = cmdHelper.interpret(action.cmd.slice(1))?.name
-
-    const extraData: Record<string, string | number> = {}
-
-    if (type === 'play') {
-      const guideName = action.cmd.substr(':play'.length).trim()
-      extraData.content = isPlayChapter(guideName) ? 'built-in' : 'non-built-in'
-    } else if (type === 'guide') {
-      const guideName = action.cmd.substr(':guide'.length).trim()
-      extraData.content = isBuiltInGuide(guideName)
-        ? 'built-in'
-        : 'non-built-in'
-    }
-
-    return metricsEvent({
-      category: 'command',
-      label: 'non-cypher',
-      data: { source: action.source || 'unknown', type, ...extraData }
-    })
-  })
-
-const actionsOfInterest = [
-  ADD_FAVORITE,
-  LAST_GUIDE_SLIDE,
-  LOAD_FAVORITES,
-  PIN,
-  REMOVE_FAVORITE,
-  REMOVE,
-  TRACK_COLLAPSE_TOGGLE,
-  TRACK_FULLSCREEN_TOGGLE,
-  TRACK_SAVE_AS_PROJECT_FILE,
-  UDC_STARTUP,
-  UNPIN,
-  UPDATE_FAVORITE_CONTENT,
-  TRACK_CANNY_FEATURE_REQUEST,
-  TRACK_CANNY_CHANGELOG,
-  TRACK_OPT_OUT_USER_STATS,
-  TRACK_OPT_OUT_CRASH_REPORTS
-]
-export const trackReduxActionsEpic: Epic<Action, GlobalState> = action$ =>
-  action$
-    .filter(action => actionsOfInterest.includes(action.type))
-    .map(action => {
-      const [category, label] = action.type.split('/')
-      return metricsEvent({ category, label })
-    })
-
-export const trackErrorFramesEpic: Epic<Action, GlobalState> = action$ =>
-  action$.ofType(ADD).map((action: any) => {
-    const error = action.state.error
-    if (error) {
-      const { code, type } = error
-      return metricsEvent({
-        category: 'stream',
-        label: 'errorframe',
-        data: { code, type }
-      })
-    } else {
-      return { type: 'NOOP' }
-    }
-  })

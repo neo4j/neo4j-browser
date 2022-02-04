@@ -93,7 +93,7 @@ import {
   trackErrorFramesEpic,
   trackReduxActionsEpic,
   udcStartupEpic
-} from './modules/udc/udcDuck'
+} from './modules/udc/udcEpics'
 
 export default combineEpics(
   handleCommandEpic,

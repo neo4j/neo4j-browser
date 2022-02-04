@@ -388,8 +388,7 @@ export function cleanConnectionsFromStorage(
   stored?: ConnectionReduxState
 ): ConnectionReduxState {
   const init = initialState //shorter name saves some space
-  if (!stored) {
-    // redux will set initial state for us, but do it manually as well
+  if (!stored || typeof stored !== 'object') {
     return init
   }
   const {

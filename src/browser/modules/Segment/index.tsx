@@ -23,6 +23,7 @@ import { connect } from 'react-redux'
 import { canUseDOM } from 'services/utils'
 import { inDesktop } from 'shared/modules/app/appDuck'
 import {
+  UdcState,
   getAuraNtId,
   getDesktopTrackingId,
   updateUdcData
@@ -175,7 +176,7 @@ const mapStateToProps = (state: any) => ({
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    updateData: (data: any) => dispatch(updateUdcData(data))
+    updateData: (data: Partial<UdcState>) => dispatch(updateUdcData(data))
   }
 }
 export default connect<any, any, any, any>(
