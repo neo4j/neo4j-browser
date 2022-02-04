@@ -100,12 +100,12 @@ export function getAll(): LocalStorageState {
   // each reducer loads and verifies the localstorage state
   const documents = cleanFavoritesFromStorage(getItem('documents'))
   return {
-    connections: cleanConnectionsFromStorage(getItem('connections')), // TODO tests
+    connections: cleanConnectionsFromStorage(getItem('connections')),
     settings: cleanSettingsFromStorage(getItem('settings')),
     history: cleanHistoryFromStorage(getItem('history')),
     documents,
     folders: cleanFoldersFromStorage(getItem('folders'), documents),
-    grass: cleanGrassFromStorage(getItem('grass')), // TODO tests
+    grass: cleanGrassFromStorage(getItem('grass')),
     syncConsent: cleanSyncConsentFromStorage(getItem('syncConsent')),
     udc: cleanUdcFromStorage(getItem('udc')),
     experimentalFeatures: cleanExperimentalFeaturesFromStorage(

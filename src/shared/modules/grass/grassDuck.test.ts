@@ -49,7 +49,7 @@ describe('grass reducer', () => {
   })
 })
 
-describe('loading settings from localstorage', () => {
+describe('loading grass from localstorage', () => {
   it('handles missing stored data', () => {
     expect(cleanGrassFromStorage(undefined)).toEqual(initialState)
   })
@@ -59,6 +59,7 @@ describe('loading settings from localstorage', () => {
   })
   it('handles proper stored data', () => {
     expect(cleanGrassFromStorage({})).toEqual({})
+    expect(cleanGrassFromStorage(initialState)).toEqual(initialState)
     expect(
       cleanGrassFromStorage({ 'node.Person_31': { caption: '{key62964}' } })
     ).toEqual({ 'node.Person_31': { caption: '{key62964}' } })

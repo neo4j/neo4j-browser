@@ -458,3 +458,189 @@ describe('switchConnectionEpic', () => {
     return p
   })
 })
+
+describe('loading connection data from localstorage', () => {
+  it('handles missing stored data', () => {
+    expect(connections.cleanConnectionsFromStorage(undefined)).toEqual(
+      connections.initialState
+    )
+  })
+  it('handles incorrect data types', () => {
+    expect(connections.cleanConnectionsFromStorage('str' as any)).toEqual(
+      connections.initialState
+    )
+    expect(connections.cleanConnectionsFromStorage([{}] as any)).toEqual(
+      connections.initialState
+    )
+    const rightIshConnection = {
+      allConnectionIds: ['$$discovery', undefined, null, 23, 'wsdf'],
+      connectionsById: {
+        $$discovery: {
+          username: 'user',
+          password: 'pw',
+          id: '$$discovery',
+          db: 'neo4j',
+          host: 'host',
+          authEnabled: true,
+          authenticationMethod: 'NATIVE'
+        },
+        null: {},
+        undefined: {},
+        23: {},
+        wsdf: {}
+      },
+      activeConnection: 23,
+      connectionState: 2,
+      lastUpdate: 120,
+      useDb: 'neo4j',
+      lastUseDb: 'neo4j3'
+    }
+    expect(
+      connections.cleanConnectionsFromStorage(rightIshConnection as any)
+    ).toEqual({
+      ...rightIshConnection,
+      allConnectionIds: ['$$discovery'],
+      connectionsById: {
+        $$discovery: {
+          username: 'user',
+          password: 'pw',
+          id: '$$discovery',
+          db: 'neo4j',
+          host: 'host',
+          authEnabled: true,
+          authenticationMethod: 'NATIVE'
+        }
+      },
+      activeConnection: null
+    })
+  })
+  it('handles proper stored data', () => {
+    expect(
+      connections.cleanConnectionsFromStorage(connections.initialState)
+    ).toEqual(connections.initialState)
+    const dummyConnection: connections.ConnectionReduxState = {
+      allConnectionIds: ['$$discovery'],
+      connectionsById: {
+        $$discovery: {
+          username: 'user',
+          password: 'pw',
+          id: '$$discovery',
+          db: 'neo4j',
+          host: 'host',
+          authEnabled: true,
+          authenticationMethod: 'NATIVE'
+        }
+      },
+      activeConnection: '$$discovery',
+      connectionState: 2,
+      lastUpdate: 120,
+      useDb: 'neo4j',
+      lastUseDb: 'neo4j3'
+    }
+
+    expect(connections.cleanConnectionsFromStorage(dummyConnection)).toEqual(
+      dummyConnection
+    )
+  })
+
+  it('handles a handful of real life storages', () => {
+    const SSO_hack_example = {
+      allConnectionIds: ['$$discovery'],
+      connectionsById: {
+        $$discovery: {
+          host: 'boltURL',
+          id: '$$discovery',
+          name: '$$discovery',
+          type: 'bolt',
+          username: 'username',
+          password: 'password'
+        }
+      },
+      activeConnection: '$$discovery',
+      connectionState: 1
+    }
+    const example1 = {
+      allConnectionIds: ['$$discovery'],
+      connectionsById: {
+        $$discovery: {
+          SSOProviders: [
+            {
+              auth_endpoint: 'string',
+              well_known_discovery_uri: 'string',
+              name: 'test test ',
+              auth_flow: 'fsdfaf ',
+              id: 'agcasfd',
+              params: {
+                scope: 'string stinr2',
+                response_type: 'code',
+                client_id: 'string',
+                redirect_uri: 'string5'
+              },
+              token_endpoint: 'string1'
+            } as any
+          ],
+          id: '$$discovery',
+          name: '$$discovery',
+          type: 'bolt',
+          db: 'neo4j',
+          password: 'password',
+          host: 'bolt://localhost:7687',
+          username: 'neo4j',
+          authenticationMethod: 'NATIVE',
+          authEnabled: true,
+          supportsMultiDb: false
+        }
+      },
+      activeConnection: '$$discovery',
+      connectionState: 1,
+      lastUpdate: 1644001009747,
+      useDb: 'neo4j',
+      lastUseDb: 'neo4j'
+    }
+    const example2 = {
+      allConnectionIds: ['$$discovery'],
+      connectionsById: {
+        $$discovery: {
+          host: 'bolt://localhost:7687',
+          username: 'neo4j',
+          password: 'newpassword',
+          restApi: 'https://localhost:7473',
+          encrypted: false,
+          id: '$$discovery',
+          name: '$$discovery',
+          type: 'bolt',
+          db: null,
+          authEnabled: true,
+          authenticationMethod: 'NATIVE',
+          SSOProviders: [],
+          source: 'discoveryConnection',
+          urlMissing: false,
+          status: 'Success',
+          message: 'Success',
+          otherDataDiscovered: {},
+          supportsMultiDb: false
+        }
+      },
+      activeConnection: '$$discovery',
+      connectionState: 0,
+      lastUpdate: 1641903603533,
+      useDb: null,
+      lastUseDb: 'neo4j'
+    }
+
+    expect(
+      connections.cleanConnectionsFromStorage(SSO_hack_example as any)
+    ).toEqual({
+      ...SSO_hack_example,
+      lastUpdate: 0,
+      useDb: null,
+      lastUseDb: null
+    })
+    expect(connections.cleanConnectionsFromStorage(example1 as any)).toEqual(
+      example1
+    )
+    expect(connections.cleanConnectionsFromStorage(example2 as any)).toEqual(
+      example2
+    )
+  })
+})

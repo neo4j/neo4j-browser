@@ -403,15 +403,19 @@ export function cleanConnectionsFromStorage(
 
   return {
     allConnectionIds: Array.isArray(allConnectionIds)
-      ? allConnectionIds
+      ? allConnectionIds.filter(id => id === onlyValidConnId)
       : init.allConnectionIds,
 
     connectionsById:
-      typeof connectionsById === 'object'
-        ? connectionsById
+      typeof connectionsById === 'object' &&
+      typeof connectionsById[onlyValidConnId] === 'object'
+        ? { [onlyValidConnId]: connectionsById[onlyValidConnId] }
         : init.connectionsById,
 
-    activeConnection: activeConnection ?? init.activeConnection,
+    activeConnection:
+      activeConnection === onlyValidConnId
+        ? onlyValidConnId
+        : init.activeConnection,
 
     connectionState: CONNECTION_STATES.includes(connectionState)
       ? connectionState
