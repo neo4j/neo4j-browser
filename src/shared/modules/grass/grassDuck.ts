@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { Accordion } from 'semantic-ui-react'
+
 import { getBrowserName } from 'services/utils'
 import { GlobalState } from 'shared/globalState'
 import { APP_START } from 'shared/modules/app/appDuck'
@@ -108,8 +110,10 @@ export function cleanGrassFromStorage(stored?: GrassState): GrassState {
   if (!stored || typeof stored !== 'object' || Array.isArray(stored)) {
     return initialState
   }
-  // TODO there should clean!
-  return stored
+  // validate that the grass selectors start a valid prefix.
+  return Object.entries(stored)
+    .filter(([key]) => key.startsWith('node') || key.startsWith('relationship'))
+    .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
 }
 
 export const grassToLoad = (action: any, store: any) => {

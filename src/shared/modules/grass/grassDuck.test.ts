@@ -17,7 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import reducer, { UPDATE_GRAPH_STYLE_DATA } from './grassDuck'
+import reducer, {
+  UPDATE_GRAPH_STYLE_DATA,
+  cleanGrassFromStorage,
+  initialState
+} from './grassDuck'
+import { corruptedGrassData, normalGrassData } from './grassTestData'
 
 describe('grass reducer', () => {
   test('handles initial value', () => {
@@ -41,5 +46,34 @@ describe('grass reducer', () => {
     }
     const nextState = reducer(initialState, action)
     expect(nextState).toEqual('style updated again')
+  })
+})
+
+describe('loading settings from localstorage', () => {
+  it('handles missing stored data', () => {
+    expect(cleanGrassFromStorage(undefined)).toEqual(initialState)
+  })
+  it('handles incorrect data types', () => {
+    expect(cleanGrassFromStorage('str' as any)).toEqual(initialState)
+    expect(cleanGrassFromStorage([{}] as any)).toEqual(initialState)
+  })
+  it('handles proper stored data', () => {
+    expect(cleanGrassFromStorage({})).toEqual({})
+    expect(
+      cleanGrassFromStorage({ 'node.Person_31': { caption: '{key62964}' } })
+    ).toEqual({ 'node.Person_31': { caption: '{key62964}' } })
+  })
+  it('handles invalid keys', () => {
+    expect(
+      cleanGrassFromStorage({
+        invalid: 23,
+        'node.Person_31': { caption: '{key62964}' }
+      })
+    ).toEqual({ 'node.Person_31': { caption: '{key62964}' } })
+  })
+
+  it('handles a handful of real life storages', () => {
+    expect(cleanGrassFromStorage(normalGrassData)).toEqual(normalGrassData)
+    expect(cleanGrassFromStorage(corruptedGrassData)).toEqual(initialState)
   })
 })
