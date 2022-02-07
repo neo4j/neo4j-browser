@@ -39,7 +39,6 @@ import {
   Connection,
   getActiveConnectionData
 } from 'shared/modules/connections/connectionsDuck'
-import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 
 const NAME = 'cypher'
 export const CYPHER_REQUEST = `${NAME}/REQUEST`
@@ -111,7 +110,6 @@ export const cypherRequestEpic = (some$: any, store: any) =>
     if (!action.$$responseChannel) return Rx.Observable.of(null)
     return bolt
       .directTransaction(action.query, action.params || undefined, {
-        useCypherThread: shouldUseCypherThread(store.getState()),
         ...getUserTxMetadata(action.queryType || null)({
           hasServerSupport: canSendTxMetadata(store.getState())
         }),
@@ -133,11 +131,10 @@ export const routedCypherRequestEpic = (some$: any, store: any) =>
   some$.ofType(ROUTED_CYPHER_WRITE_REQUEST).mergeMap((action: any) => {
     if (!action.$$responseChannel) return Rx.Observable.of(null)
 
-    const [id, promise] = bolt.routedWriteTransaction(
+    const [_id, promise] = bolt.routedWriteTransaction(
       action.query,
       action.params,
       {
-        useCypherThread: shouldUseCypherThread(store.getState()),
         ...getUserTxMetadata(action.queryType || null)({
           hasServerSupport: canSendTxMetadata(store.getState())
         }),
@@ -174,11 +171,7 @@ export const clusterCypherRequestEpic = (some$: any, store: any) =>
     .mergeMap((action: any) => {
       if (!action.$$responseChannel) return Rx.Observable.of(null)
       return bolt
-        .directTransaction(
-          getCausalClusterAddresses,
-          {},
-          { useCypherThread: shouldUseCypherThread(store.getState()) }
-        )
+        .directTransaction(getCausalClusterAddresses, {})
         .then((res: any) => {
           const addresses = flatten(
             res.records.map((record: any) => record.get('addresses'))

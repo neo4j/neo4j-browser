@@ -17,9 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { QueryResult } from 'neo4j-driver'
 import configureMockStore, { MockStoreEnhanced } from 'redux-mock-store'
 import { createEpicMiddleware } from 'redux-observable'
 import { createBus, createReduxMiddleware } from 'suber'
+import { v4 as uuid } from 'uuid'
 
 import { BoltConnectionError } from '../../services/exceptions'
 import { fetchMetaData } from '../dbMeta/actions'
@@ -172,10 +174,13 @@ describe('commandsDuck', () => {
       const action = commands.executeSingleCommand(cmdString, {
         id
       })
-      bolt.routedWriteTransaction = jest.fn(() =>
-        Promise.resolve({
-          records: [{ get: (): number => 2 }]
-        })
+      bolt.routedWriteTransaction = jest.fn(
+        (_input, _parameters, { requestId }) => [
+          requestId ?? uuid(),
+          Promise.resolve({
+            records: [{ get: (): number => 2 }]
+          } as unknown as QueryResult)
+        ]
       )
 
       bus.take('frames/ADD', () => {

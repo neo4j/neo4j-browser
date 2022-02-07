@@ -83,7 +83,6 @@ const browserSyncConfig = (host = 'https://auth.neo4j.com') => ({
   }
 })
 export const getUseNewVisualization = (state: any) => state[NAME].useNewVis
-export const shouldUseCypherThread = (state: any) => state[NAME].useCypherThread
 export const getConnectionTimeout = (state: any) =>
   state[NAME].connectionTimeout || initialState.connectionTimeout
 export const codeFontLigatures = (state: any) => state[NAME].codeFontLigatures
@@ -117,7 +116,6 @@ export type SettingsState = {
   codeFontLigatures: boolean
   useBoltRouting: boolean
   editorLint: boolean
-  useCypherThread: boolean
   enableMultiStatementMode: boolean
   connectionTimeout: string | number
   showPerformanceOverlay: boolean
@@ -143,7 +141,6 @@ export const initialState: SettingsState = {
   codeFontLigatures: true,
   useBoltRouting: false,
   editorLint: false,
-  useCypherThread: true,
   enableMultiStatementMode: true,
   connectionTimeout: 30 * 1000, // 30 seconds
   showPerformanceOverlay: false,

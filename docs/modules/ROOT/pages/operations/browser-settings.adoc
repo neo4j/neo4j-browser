@@ -36,7 +36,6 @@ To view all currently configured settings, run `:config`.
   "codeFontLigatures": true,
   "useBoltRouting": false,
   "editorLint": false,
-  "useCypherThread": true,
   "enableMultiStatementMode": true,
   "connectionTimeout": 30000,
   "showPerformanceOverlay": false
@@ -145,11 +144,6 @@ The Bolt+routing feature on Neo4j drivers discovers a cluster member (drivers ha
 | `editorLint`
 | `false`
 | Enable/disable squiggly lines under text.
-| no
-
-| `useCypherThread`
-| `true`
-| Run Cypher queries through a web worker (background thread) to increase performance.
 | no
 
 | `enableMultiStatementMode`

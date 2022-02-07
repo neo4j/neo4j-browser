@@ -71,7 +71,6 @@ import {
   useDb
 } from 'shared/modules/connections/connectionsDuck'
 import { clearHistory } from 'shared/modules/history/historyDuck'
-import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
 
 const databaseList = (store: any) =>
@@ -87,7 +86,6 @@ const databaseList = (store: any) =>
           'SHOW DATABASES',
           {},
           {
-            useCypherThread: shouldUseCypherThread(store.getState()),
             ...getBackgroundTxMetadata({
               hasServerSupport: canSendTxMetadata(store.getState())
             }),
@@ -135,7 +133,6 @@ const getLabelsAndTypes = (store: any) =>
         metaQuery,
         {},
         {
-          useCypherThread: shouldUseCypherThread(store.getState()),
           onLostConnection: onLostConnection(store.dispatch),
           ...getBackgroundTxMetadata({
             hasServerSupport: canSendTxMetadata(store.getState())
@@ -166,7 +163,6 @@ const clusterRole = (store: any) =>
           getDbClusterRole(store.getState()),
           {},
           {
-            useCypherThread: shouldUseCypherThread(store.getState()),
             ...getBackgroundTxMetadata({
               hasServerSupport: canSendTxMetadata(store.getState())
             })
@@ -305,7 +301,6 @@ export const serverConfigEpic = (some$: any, store: any) =>
               {},
               {
                 useDb: supportsMultiDb ? SYSTEM_DB : '',
-                useCypherThread: shouldUseCypherThread(store.getState()),
                 ...getBackgroundTxMetadata({
                   hasServerSupport: canSendTxMetadata(store.getState())
                 })
@@ -330,7 +325,6 @@ export const serverConfigEpic = (some$: any, store: any) =>
                     {},
                     {
                       useDb: supportsMultiDb ? SYSTEM_DB : '',
-                      useCypherThread: shouldUseCypherThread(store.getState()),
                       ...getBackgroundTxMetadata({
                         hasServerSupport: canSendTxMetadata(store.getState())
                       })
@@ -408,7 +402,6 @@ export const serverInfoEpic = (some$: any, store: any) =>
           query,
           {},
           {
-            useCypherThread: shouldUseCypherThread(store.getState()),
             ...getBackgroundTxMetadata({
               hasServerSupport: canSendTxMetadata(store.getState())
             })
