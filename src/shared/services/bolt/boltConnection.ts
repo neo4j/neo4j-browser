@@ -143,7 +143,7 @@ export function openConnection(
   return p
 }
 
-export const closeConnection = (): void => {
+export const closeGlobalConnection = (): void => {
   const globalDrivers = getGlobalDrivers()
   if (globalDrivers) {
     globalDrivers.close()

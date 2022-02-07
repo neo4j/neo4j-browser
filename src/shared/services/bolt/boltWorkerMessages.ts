@@ -30,7 +30,7 @@ export const POST_CANCEL_TRANSACTION_MESSAGE = 'POST_CANCEL_TRANSACTION_MESSAGE'
 export const BOLT_CONNECTION_ERROR_MESSAGE = 'BOLT_CONNECTION_ERROR_MESSAGE'
 export const CLOSE_CONNECTION_MESSAGE = 'CLOSE_CONNECTION_MESSAGE'
 
-export const runCypherMessage = (
+export const getWorkerPayloadForRunningCypherMessage = (
   input: string,
   parameters: unknown,
   connectionType = ROUTED_WRITE_CONNECTION,

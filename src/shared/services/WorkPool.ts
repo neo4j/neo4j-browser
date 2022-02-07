@@ -17,7 +17,81 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { QueryResult } from 'neo4j-driver'
 import { v4 as uuid } from 'uuid'
+
+import BoltWorkerModule from 'shared/services/bolt/boltWorker'
+
+export type WorkerMessageHandler = (message: {
+  data: {
+    type: string
+    error: Error
+    result: QueryResult
+  }
+}) => void
+
+class Work {
+  private executed = false
+  private finishFn?: (payload: any) => void = undefined
+  private worker?: Worker = undefined
+
+  constructor(
+    public readonly id: string,
+    private payload: any,
+    private removeFromQueue: (id: string) => void,
+    private onmessage?: WorkerMessageHandler
+  ) {}
+
+  execute = (payload: any) => {
+    if (payload && this.worker) {
+      this.worker.worker.postMessage(payload)
+    }
+  }
+
+  onFinish = (fn: (payload: any) => void) => (this.finishFn = fn)
+
+  finish = () => {
+    if (!this.executed) {
+      this.removeFromQueue(this.id)
+    }
+    this.worker && this.worker.finish(this.id)
+    this.finishFn && this.finishFn({ executed: this.executed, id: this.id })
+  }
+
+  executeInitial = () => {
+    if (this.onmessage && this.worker) {
+      this.worker.worker.onmessage = this.onmessage
+    }
+
+    if (this.payload && this.worker) {
+      this.worker.worker.postMessage(this.payload)
+    }
+
+    this.executed = true
+  }
+
+  assignWorker = (worker: Worker) => {
+    worker.id = this.id
+    worker.state = WorkPool.workerStates.BUSY
+    worker.work = this
+    this.worker = worker
+  }
+}
+
+class Worker {
+  public work?: Work
+  public id?: string
+
+  constructor(
+    public readonly worker: BoltWorkerModule,
+    public state: any,
+    private unregisterWorker: (id: string) => void
+  ) {}
+
+  finish = (id: any) => {
+    this.unregisterWorker(id)
+  }
+}
 
 class WorkPool {
   static workerStates = {
@@ -25,163 +99,119 @@ class WorkPool {
     FREE: 'free'
   }
 
-  createWorker: any
-  maxPoolSize: any
-  q: any
-  register: any
+  createWorker: () => BoltWorkerModule
+  maxPoolSize: number
+  queue: Array<Work> = []
+  register: Array<Worker> = []
 
-  constructor(createWorker: any, maxPoolSize = 15) {
+  constructor(createWorker: () => BoltWorkerModule, maxPoolSize = 15) {
     this.createWorker = createWorker
     this.maxPoolSize = maxPoolSize
-    this.register = []
-    this.q = []
   }
 
   getPoolSize(state?: any) {
     if (!state) {
       return this.register.length
     }
-    return this.register.filter((w: any) => w.state === state).length
+    return this.register.filter(w => w.state === state).length
   }
 
   getQueueSize() {
-    return this.q.length
+    return this.queue.length
   }
 
-  getWorkById(id: any) {
-    for (let i = 0; i < this.q.length; i++) {
-      if (this.q[i].id === id) {
-        return this.q[i]
-      }
-    }
-    for (let i = 0; i < this.register.length; i++) {
-      if (this.register[i].id === id) {
-        return this.register[i].work
-      }
-    }
-    return null
+  getWorkById(id: string) {
+    return (
+      // search through undone work
+      this.queue.find(work => work.id === id) ??
+      // search through work in progress
+      this.register.find(worker => worker.id === id)?.work ??
+      null
+    )
   }
 
-  doWork({ id, payload, onmessage }: any) {
-    const work = this._buildWorkObj({ id: id || uuid(), payload, onmessage })
-    this._addToQ(work)
-    this._next()
+  doWork({
+    id,
+    payload,
+    onmessage
+  }: {
+    id: string
+    payload?: any
+    onmessage?: WorkerMessageHandler
+  }) {
+    const work = new Work(
+      id || uuid(),
+      payload,
+      this.removeFromQueue,
+      onmessage
+    )
+    this.addToQueue(work)
+    this.next()
     return work
   }
 
   messageAllWorkers(msg: any) {
-    this.register.forEach((worker: any) => worker.worker.postMessage(msg))
+    this.register.forEach(worker => worker.worker.postMessage(msg))
   }
 
-  _getFreeWorker() {
-    const len = this.register.length
-    for (let i = len - 1; i >= 0; i--) {
-      if (this.register[i].state === WorkPool.workerStates.FREE) {
-        return this.register[i]
-      }
+  private getFreeWorker() {
+    const freeWorker = this.register.find(
+      worker => worker.state === WorkPool.workerStates.FREE
+    )
+    if (freeWorker) {
+      return freeWorker
     }
+
     const poolSize = this.getPoolSize()
     if (poolSize < this.maxPoolSize) {
-      const workerObj = this._buildWorkerObj(
+      const workerObj = new Worker(
         this.createWorker(),
-        WorkPool.workerStates.BUSY
+        WorkPool.workerStates.BUSY,
+        this.unregisterWorker
       )
       this.register.push(workerObj)
       return workerObj
     }
+
     return null
   }
 
-  _next() {
+  private next() {
     if (!this.getQueueSize()) {
       return
     }
-    const workerObj = this._getFreeWorker()
+    const workerObj = this.getFreeWorker()
     if (!workerObj) {
       return
     }
-    const work = this.q.shift()
-    workerObj.id = work.id
-    work._assignWorker(workerObj)
-    work._executeInitial()
+    const work = this.queue.shift()
+    if (!work) {
+      return
+    }
+
+    work.assignWorker(workerObj)
+    work.executeInitial()
   }
 
-  _addToQ(work: any) {
-    this.q.push(work)
+  private addToQueue(work: Work) {
+    this.queue.push(work)
   }
 
-  _removeFromQ(id: any) {
-    this.q.splice(
-      this.q.findIndex((el: any) => el.id === id),
-      1
-    )
+  private removeFromQueue(id: string) {
+    const workIndex = this.queue.findIndex(el => el.id === id)
+    if (workIndex === -1) {
+      return
+    }
+    this.queue.splice(workIndex, 1)
   }
 
-  _unregisterWorker = (id: any) => {
-    const worker = this._getWorkerById(id)
-    if (worker === null) {
+  private unregisterWorker = (id: string) => {
+    const worker = this.register.find(worker => worker.id === id)
+    if (!worker) {
       return
     }
     worker.state = WorkPool.workerStates.FREE
-    this._next()
-  }
-
-  _buildWorkObj({ id, payload, onmessage }: any) {
-    const obj: any = {
-      id,
-      _worker: undefined,
-      _executed: false,
-      _finishFn: undefined
-    }
-    obj.execute = (payload: any) => {
-      if (payload && obj._workerObj) {
-        obj._workerObj.worker.postMessage(payload)
-      }
-    }
-    obj.onFinish = (fn: any) => (obj._finishFn = fn)
-    obj.finish = () => {
-      if (!obj._executed) {
-        this._removeFromQ(id)
-      }
-      obj._workerObj && obj._workerObj.finish(id)
-      obj._finishFn && obj._finishFn({ executed: obj._executed, id })
-    }
-    obj._executeInitial = () => {
-      if (onmessage) {
-        obj._workerObj.worker.onmessage = onmessage
-      }
-      if (payload) {
-        obj._workerObj.worker.postMessage(payload)
-      }
-      obj._executed = true
-    }
-    obj._assignWorker = (workerObj: any) => {
-      workerObj.state = WorkPool.workerStates.BUSY
-      workerObj.work = obj
-      obj._workerObj = workerObj
-    }
-
-    return obj
-  }
-
-  _buildWorkerObj(worker: any, state: any) {
-    const obj: any = {
-      worker,
-      state
-    }
-    obj.finish = (id: any) => {
-      this._unregisterWorker(id)
-    }
-    return obj
-  }
-
-  _getWorkerById(id: any) {
-    for (let i = 0; i < this.register.length; i++) {
-      if (this.register[i].id === id) {
-        return this.register[i]
-      }
-    }
-    return null
+    this.next()
   }
 }
 
