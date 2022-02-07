@@ -19,9 +19,12 @@
  */
 import { render } from '@testing-library/react'
 import React from 'react'
+import { Provider } from 'react-redux'
+import { combineReducers, createStore } from 'redux'
 import { Bus } from 'suber'
 
-import { SysInfoFrame } from './SysInfoFrame'
+import { SysInfoFrame, SysInfoFrameProps } from './SysInfoFrame'
+import reducers from 'project-root/src/shared/rootReducer'
 import { Database } from 'shared/modules/dbMeta/state'
 import { Frame } from 'shared/modules/frames/framesDuck'
 
@@ -36,6 +39,16 @@ const baseProps = {
   isFullscreen: false,
   isCollapsed: false,
   canCallClusterOverview: true
+}
+
+const mountWithStore = (props: Partial<SysInfoFrameProps>) => {
+  const reducer = combineReducers({ ...(reducers as any) })
+  const store: any = createStore(reducer)
+  return render(
+    <Provider store={store}>
+      <SysInfoFrame {...baseProps} {...props} />
+    </Provider>
+  )
 }
 
 describe('sysinfo component', () => {
@@ -55,7 +68,7 @@ describe('sysinfo component', () => {
     const props = { isConnected: false }
 
     // When
-    const { getByText } = render(<SysInfoFrame {...baseProps} {...props} />)
+    const { getByText } = mountWithStore(props)
 
     // Then
     expect(getByText(/No connection available/i)).not.toBeNull()

@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { GlobalState } from 'shared/globalState'
 import { APP_START } from 'shared/modules/app/appDuck'
 
 export const NAME = 'params'
@@ -26,7 +27,8 @@ const REPLACE = `${NAME}/REPLACE`
 const initialState = {}
 
 // Selectors
-export const getParams = (state: any) => state[NAME]
+export const getParams = (state: GlobalState): Record<string, unknown> =>
+  state[NAME]
 
 // Reducer
 export default function reducer(state = initialState, action: any) {

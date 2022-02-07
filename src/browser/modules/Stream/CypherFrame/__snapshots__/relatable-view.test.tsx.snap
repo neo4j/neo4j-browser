@@ -17,7 +17,7 @@ exports[`RelatableViews RelatableView displays bodyMessage if no rows 1`] = `
 exports[`RelatableViews RelatableView does not display bodyMessage if rows, and escapes HTML 1`] = `
 <div>
   <div
-    class="sc-fYxtnH cQlhRi"
+    class="sc-ktHwxA jGmUiq"
   >
     <div
       class="relatable css-1dne9dv"
@@ -73,7 +73,7 @@ exports[`RelatableViews RelatableView does not display bodyMessage if rows, and 
               role="cell"
             >
               <span
-                class="sc-hEsumM cPMQJb"
+                class="sc-kafWEX dKCJPL"
               >
                 "String with HTML &lt;strong&gt;in&lt;/strong&gt; it"
               </span>

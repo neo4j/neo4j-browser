@@ -67,7 +67,7 @@ export type SysInfoFrameState = {
   userConfiguredPrefix: string
 }
 
-type SysInfoFrameProps = {
+export type SysInfoFrameProps = {
   bus: Bus
   databases: Database[]
   frame: Frame

@@ -395,3 +395,30 @@ export const AliasText = styled.span`
   font-size: 1rem;
   font-style: italic;
 `
+
+export const StyledMissingParamsTemplateLink = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  padding: 8px 0;
+  gap: 5px;
+`
+
+export const StyledParamsTemplateClickableArea = styled.a`
+  font-family: ${props => props.theme.codeBlockFont};
+  font-size: 1.2rem;
+  line-height: 1.8rem;
+  background: ${props => props.theme.codeBlockBackground};
+  color: ${props => props.theme.codeBlockTextColor};
+  cursor: pointer;
+  text-decoration: none;
+  padding: 0 5px;
+  &:hover {
+    background: ${props => props.theme.codeBlockHoveBackground};
+    color: ${props => props.theme.codeBlockTextColor};
+    text-decoration: none;
+  }
+`
+export const StyledSpecifyParamsText = styled.span`
+  color: ${props => props.theme.primaryText};
+`

@@ -18,7 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
+import { Action, Dispatch } from 'redux'
 import { Bus } from 'suber'
 
 import {
@@ -31,7 +33,10 @@ import {
   StyledHelpFrame,
   StyledLink,
   StyledLinkContainer,
-  StyledPreformattedArea
+  StyledMissingParamsTemplateLink,
+  StyledParamsTemplateClickableArea,
+  StyledPreformattedArea,
+  StyledSpecifyParamsText
 } from '../styled'
 import { errorMessageFormater } from './../errorMessageFormater'
 import Ellipsis from 'browser-components/Ellipsis'
@@ -39,32 +44,116 @@ import {
   ExclamationTriangleIcon,
   PlayIcon
 } from 'browser-components/icons/Icons'
-import { BrowserRequestResult } from 'project-root/src/shared/modules/requests/requestsDuck'
+import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 import {
   isImplicitTransactionError,
   isNoDbAccessError,
+  isParameterMissingError,
   isUnknownProcedureError
 } from 'services/cypherErrorsHelper'
 import { BrowserError } from 'services/exceptions'
 import { deepEquals } from 'services/utils'
+import { stringifyMod } from 'services/utils'
+import { GlobalState } from 'shared/globalState'
 import {
   commandSources,
   executeCommand,
   listDbsCommand
 } from 'shared/modules/commands/commandsDuck'
 import { listAvailableProcedures } from 'shared/modules/cypher/procedureFactory'
+import * as editor from 'shared/modules/editor/editorDuck'
+import { getParams } from 'shared/modules/params/paramsDuck'
+import { BrowserRequestResult } from 'shared/modules/requests/requestsDuck'
 
-type ErrorsViewComponentProps = {
+type MissingParamsTemplateLinkProps = {
+  error: BrowserError
+  params: Record<string, unknown>
+  onSetFrameCmd: (cmd: string, autoExec: boolean) => void
+}
+const MissingParamsTemplateLink = ({
+  onSetFrameCmd,
+  params,
+  error
+}: MissingParamsTemplateLinkProps) => {
+  const onGenerateMissingParamsTemplate = (
+    error: BrowserError,
+    params: Record<string, unknown>,
+    onSetFrameCmd: (cmd: string, autoExec: boolean) => void
+  ): void => {
+    const missingParams = getMissingParams(error.message)
+    const template = getSettingMissingParamsTemplate(missingParams, params)
+    onSetFrameCmd(template, false)
+  }
+
+  const getMissingParams = (missingParamsErrorMessage: string) => {
+    const regExp = new RegExp(`^Expected parameter\\(s\\): (.*?)$`, 'g')
+    const match = regExp.exec(missingParamsErrorMessage)
+    if (match && match.length > 1) {
+      return match[1].split(', ')
+    } else {
+      return []
+    }
+  }
+  const getSettingMissingParamsTemplate = (
+    missingParams: string[],
+    existingParams: Record<string, unknown>
+  ): string => {
+    const missingParamsTemplate = missingParams
+      .map(param => `  "${param}": fill_in_your_value`)
+      .join(',\n')
+
+    let existingParamsTemplate = ''
+    const existingParamsIsEmpty = Object.keys(existingParams).length === 0
+    if (!existingParamsIsEmpty) {
+      const existingParamsStringWithBracketsAndSurroundingNewlines =
+        stringifyMod(existingParams, stringModifier, true)
+      const existingParamsStringCleaned =
+        existingParamsStringWithBracketsAndSurroundingNewlines
+          .slice(
+            1,
+            existingParamsStringWithBracketsAndSurroundingNewlines.length - 1
+          )
+          .trim()
+      existingParamsTemplate = `  ${existingParamsStringCleaned}`
+    }
+
+    return `:params \n{\n${missingParamsTemplate},\n\n${existingParamsTemplate}\n}`
+  }
+
+  return (
+    <StyledMissingParamsTemplateLink>
+      <span>Use this template to add missing parameter(s):</span>
+      <StyledParamsTemplateClickableArea
+        onClick={() =>
+          onGenerateMissingParamsTemplate(error, params, onSetFrameCmd)
+        }
+      >
+        :params{'{'}
+        <StyledSpecifyParamsText>specify params</StyledSpecifyParamsText>
+        {'}'}
+      </StyledParamsTemplateClickableArea>
+    </StyledMissingParamsTemplateLink>
+  )
+}
+
+export type ErrorsViewProps = {
   result: BrowserRequestResult
   bus: Bus
+  params: Record<string, unknown>
+  onSetFrameCmd: (cmd: string, autoExec: boolean) => void
 }
-class ErrorsViewComponent extends Component<ErrorsViewComponentProps> {
-  shouldComponentUpdate(props: ErrorsViewComponentProps): boolean {
-    return !deepEquals(props.result, this.props.result)
+
+class ErrorsViewComponent extends Component<ErrorsViewProps> {
+  shouldComponentUpdate(props: ErrorsViewProps): boolean {
+    return (
+      !deepEquals(props.result, this.props.result) ||
+      !deepEquals(props.params, this.props.params)
+    )
   }
 
   render(): null | JSX.Element {
-    const { bus } = this.props
+    const { params, onSetFrameCmd } = this.props
+
     const error = this.props.result as BrowserError
     if (!error || !error.code) {
       return null
@@ -79,12 +168,14 @@ class ErrorsViewComponent extends Component<ErrorsViewComponentProps> {
             <StyledErrorH4>{error.code}</StyledErrorH4>
           </StyledHelpDescription>
           <StyledDiv>
-            <StyledPreformattedArea>{fullError.message}</StyledPreformattedArea>
+            <StyledPreformattedArea data-testid={'cypherFrameErrorMessage'}>
+              {fullError.message}
+            </StyledPreformattedArea>
           </StyledDiv>
           {isUnknownProcedureError(error) && (
             <StyledLinkContainer>
               <StyledLink
-                onClick={() => onItemClick(bus, listAvailableProcedures)}
+                onClick={() => onSetFrameCmd(listAvailableProcedures, true)}
               >
                 <PlayIcon />
                 &nbsp;List available procedures
@@ -94,7 +185,7 @@ class ErrorsViewComponent extends Component<ErrorsViewComponentProps> {
           {isNoDbAccessError(error) && (
             <StyledLinkContainer>
               <StyledLink
-                onClick={() => onItemClick(bus, `:${listDbsCommand}`)}
+                onClick={() => onSetFrameCmd(`:${listDbsCommand}`, true)}
               >
                 <PlayIcon />
                 &nbsp;List available databases
@@ -103,12 +194,19 @@ class ErrorsViewComponent extends Component<ErrorsViewComponentProps> {
           )}
           {isImplicitTransactionError(error) && (
             <StyledLinkContainer>
-              <StyledLink onClick={() => onItemClick(bus, `:help auto`)}>
+              <StyledLink onClick={() => onSetFrameCmd(`:help auto`, true)}>
                 <PlayIcon />
                 &nbsp;Info on the <code>:auto</code> command
               </StyledLink>
               &nbsp;(auto-committing transactions)
             </StyledLinkContainer>
+          )}
+          {isParameterMissingError(error) && (
+            <MissingParamsTemplateLink
+              error={error}
+              params={params}
+              onSetFrameCmd={onSetFrameCmd}
+            />
           )}
         </StyledHelpContent>
       </StyledHelpFrame>
@@ -116,12 +214,31 @@ class ErrorsViewComponent extends Component<ErrorsViewComponentProps> {
   }
 }
 
-const onItemClick = (bus: Bus, statement: string) => {
-  const action = executeCommand(statement, { source: commandSources.button })
-  bus.send(action.type, action)
+const mapStateToProps = (state: GlobalState) => {
+  return {
+    params: getParams(state)
+  }
 }
-
-export const ErrorsView = withBus(ErrorsViewComponent)
+const mapDispatchToProps = (
+  _dispatch: Dispatch<Action>,
+  ownProps: ErrorsViewProps
+) => {
+  return {
+    onSetFrameCmd: (cmd: string, autoExec: boolean) => {
+      if (autoExec) {
+        const action = executeCommand(cmd, {
+          source: commandSources.button
+        })
+        ownProps.bus.send(action.type, action)
+      } else {
+        ownProps.bus.send(editor.SET_CONTENT, editor.setContent(cmd))
+      }
+    }
+  }
+}
+export const ErrorsView = withBus(
+  connect(mapStateToProps, mapDispatchToProps)(ErrorsViewComponent)
+)
 
 type ErrorsStatusBarProps = {
   result: BrowserRequestResult

@@ -19,51 +19,73 @@
  */
 import { render } from '@testing-library/react'
 import React from 'react'
+import { combineReducers, createStore } from 'redux'
+import { createBus } from 'suber'
 
-import { ErrorsStatusbar, ErrorsView } from './ErrorsView'
+import { ErrorsStatusbar, ErrorsView, ErrorsViewProps } from './ErrorsView'
+import reducers from 'project-root/src/shared/rootReducer'
 import { BrowserError } from 'services/exceptions'
+
+const mount = (partOfProps: Partial<ErrorsViewProps>) => {
+  const defaultProps: ErrorsViewProps = {
+    result: null,
+    bus: createBus(),
+    params: {},
+    onSetFrameCmd: jest.fn()
+  }
+  const props = {
+    ...defaultProps,
+    ...partOfProps
+  }
+  const reducer = combineReducers({ ...(reducers as any) })
+  const store: any = createStore(reducer)
+  return render(<ErrorsView store={store} {...props} />)
+}
 
 describe('ErrorsViews', () => {
   describe('ErrorsView', () => {
     test('displays nothing if no errors', () => {
       // Given
       const props = {
-        result: {}
+        result: null
       }
 
       // When
-      const { container } = render(<ErrorsView {...props} />)
+      const { container } = mount(props)
 
       // Then
       expect(container).toMatchSnapshot()
     })
     test('does displays an error', () => {
       // Given
+      const error: BrowserError = {
+        code: 'Test.Error',
+        message: 'Test error description',
+        type: 'Neo4jError'
+      }
       const props = {
-        result: {
-          code: 'Test.Error',
-          message: 'Test error description'
-        }
+        result: error
       }
 
       // When
-      const { container } = render(<ErrorsView {...props} />)
+      const { container } = mount(props)
 
       // Then
       expect(container).toMatchSnapshot()
     })
     test('displays procedure link if unknown procedure', () => {
       // Given
-      const procErrorCode = 'Neo.ClientError.Procedure.ProcedureNotFound'
+      const error: BrowserError = {
+        code: 'Neo.ClientError.Procedure.ProcedureNotFound',
+        message: 'not found',
+        type: 'Neo4jError'
+      }
       const props = {
-        result: {
-          code: procErrorCode,
-          message: 'not found'
-        }
+        result: error
       }
 
       // When
-      const { container, getByText } = render(<ErrorsView {...props} />)
+      const { container, getByText } = mount(props)
 
       // Then
       expect(container).toMatchSnapshot()
@@ -71,16 +93,18 @@ describe('ErrorsViews', () => {
     })
     test('displays procedure link if periodic commit error', () => {
       // Given
+      const error: BrowserError = {
+        code: 'Neo.ClientError.Statement.SemanticError',
+        message:
+          'Executing queries that use periodic commit in an open transaction is not possible.',
+        type: 'Neo4jError'
+      }
       const props = {
-        result: {
-          code: 'Neo.ClientError.Statement.SemanticError',
-          message:
-            'Executing queries that use periodic commit in an open transaction is not possible.'
-        }
+        result: error
       }
 
       // When
-      const { getByText } = render(<ErrorsView {...props} />)
+      const { getByText } = mount(props)
 
       // Then
       // We need to split up because of the use of <code> tags in the rendered document

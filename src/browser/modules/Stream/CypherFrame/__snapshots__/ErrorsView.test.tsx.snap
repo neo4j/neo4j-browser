@@ -3,14 +3,14 @@
 exports[`ErrorsViews ErrorsStatusbar displays error 1`] = `
 <div>
   <div
-    class="sc-uJMKN VhEfq"
+    class="sc-jnlKLf iTDaaZ"
   >
     <span
       class="sc-jDwBTQ fawSKE"
       title="Test.Error: Test error description"
     >
       <i
-        class="sc-eXEjpC biJDBb fa fa-exclamation-triangle"
+        class="sc-iQKALj fRureQ fa fa-exclamation-triangle"
       />
        
       Test.Error: Test error description
@@ -50,6 +50,7 @@ exports[`ErrorsViews ErrorsView displays procedure link if unknown procedure 1`]
       >
         <pre
           class="sc-jAaTju jVGCzW"
+          data-testid="cypherFrameErrorMessage"
         >
           not found
         </pre>
@@ -61,7 +62,7 @@ exports[`ErrorsViews ErrorsView displays procedure link if unknown procedure 1`]
           class="sc-eNQAEJ lmdVTE"
         >
           <i
-            class="sc-esjQYD hZVCtC fa fa-play-circle-o"
+            class="sc-ibxdXY iunAzW fa fa-play-circle-o"
           />
            List available procedures
         </a>
@@ -98,6 +99,7 @@ exports[`ErrorsViews ErrorsView does displays an error 1`] = `
       >
         <pre
           class="sc-jAaTju jVGCzW"
+          data-testid="cypherFrameErrorMessage"
         >
           Test error description
         </pre>

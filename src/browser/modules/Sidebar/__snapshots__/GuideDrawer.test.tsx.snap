@@ -15,7 +15,7 @@ exports[`GuideDrawer renders guide slide when a guide is selected 1`] = `
         data-testid="guidesBackButton"
       >
         <i
-          class="sc-fOKMvo gVZzMN"
+          class="sc-eilVRo gFBzhx"
         >
           <span
             class="SVGInline SVGInline--cleaned"
@@ -81,7 +81,7 @@ exports[`GuideDrawer renders list view including Remote Guides list 1`] = `
       </span>
       in the code editor.
       <div
-        class="sc-lkqHmb eiwGIl"
+        class="sc-krvtoX jZKaMc"
       >
         <div
           class="sc-kEYyzF kpIobp"
@@ -90,10 +90,10 @@ exports[`GuideDrawer renders list view including Remote Guides list 1`] = `
         </div>
       </div>
       <div
-        class="sc-gojNiO ikNDmz"
+        class="sc-lkqHmb jBjITi"
       >
         <li
-          class="sc-bXGyLb eUyJDI"
+          class="sc-cbkKFq ilCdUp"
           data-testid="builtInGuideintro"
         >
           <span
@@ -103,7 +103,7 @@ exports[`GuideDrawer renders list view including Remote Guides list 1`] = `
             intro
           </span>
           <div
-            class="sc-lkqHmb cSPHwa"
+            class="sc-krvtoX gDoQjI"
           >
              
             Navigating Neo4j Browser
@@ -111,7 +111,7 @@ exports[`GuideDrawer renders list view including Remote Guides list 1`] = `
           </div>
         </li>
         <li
-          class="sc-bXGyLb eUyJDI"
+          class="sc-cbkKFq ilCdUp"
           data-testid="builtInGuideconcepts"
         >
           <span
@@ -121,7 +121,7 @@ exports[`GuideDrawer renders list view including Remote Guides list 1`] = `
             concepts
           </span>
           <div
-            class="sc-lkqHmb cSPHwa"
+            class="sc-krvtoX gDoQjI"
           >
              
             Property graph model concepts
@@ -129,7 +129,7 @@ exports[`GuideDrawer renders list view including Remote Guides list 1`] = `
           </div>
         </li>
         <li
-          class="sc-bXGyLb eUyJDI"
+          class="sc-cbkKFq ilCdUp"
           data-testid="builtInGuidecypher"
         >
           <span
@@ -139,7 +139,7 @@ exports[`GuideDrawer renders list view including Remote Guides list 1`] = `
             cypher
           </span>
           <div
-            class="sc-lkqHmb cSPHwa"
+            class="sc-krvtoX gDoQjI"
           >
              
             Cypher basics - create, match, delete
@@ -147,7 +147,7 @@ exports[`GuideDrawer renders list view including Remote Guides list 1`] = `
           </div>
         </li>
         <li
-          class="sc-bXGyLb eUyJDI"
+          class="sc-cbkKFq ilCdUp"
           data-testid="builtInGuidemovie-graph"
         >
           <span
@@ -157,7 +157,7 @@ exports[`GuideDrawer renders list view including Remote Guides list 1`] = `
             movie-graph
           </span>
           <div
-            class="sc-lkqHmb cSPHwa"
+            class="sc-krvtoX gDoQjI"
           >
              
             Queries and recommendations with Cypher - movie use case}
@@ -165,7 +165,7 @@ exports[`GuideDrawer renders list view including Remote Guides list 1`] = `
           </div>
         </li>
         <li
-          class="sc-bXGyLb eUyJDI"
+          class="sc-cbkKFq ilCdUp"
           data-testid="builtInGuidenorthwind-graph"
         >
           <span
@@ -175,7 +175,7 @@ exports[`GuideDrawer renders list view including Remote Guides list 1`] = `
             northwind-graph
           </span>
           <div
-            class="sc-lkqHmb cSPHwa"
+            class="sc-krvtoX gDoQjI"
           >
              
             Translate and import relation data into graph
@@ -184,7 +184,7 @@ exports[`GuideDrawer renders list view including Remote Guides list 1`] = `
         </li>
       </div>
       <div
-        class="sc-lkqHmb eiwGIl"
+        class="sc-krvtoX jZKaMc"
       >
         <div
           class="sc-kEYyzF kpIobp"
@@ -194,10 +194,10 @@ exports[`GuideDrawer renders list view including Remote Guides list 1`] = `
         </div>
       </div>
       <div
-        class="sc-gojNiO ikNDmz"
+        class="sc-lkqHmb jBjITi"
       >
         <li
-          class="sc-krvtoX HZOwu"
+          class="sc-dUjcNx SIWxf"
         >
           <span
             class="sc-jWBwVP dpdnCs remove-play-icon"
@@ -206,17 +206,17 @@ exports[`GuideDrawer renders list view including Remote Guides list 1`] = `
             Title
           </span>
           <span
-            class="sc-cbkKFq hwlbJw"
+            class="sc-fOKMvo clXrDz"
             data-testid="removeGuideidentifier"
           >
             <i
-              class="sc-fYiAbW giXALH sl-bin"
+              class="sc-gHboQg cYpCNN sl-bin"
             />
           </span>
         </li>
       </div>
       <div
-        class="sc-eLExRp dvdOkB"
+        class="sc-fYiAbW jdVfDi"
       >
         <a
           class="sc-cvbbAY iQWpYr"
@@ -261,7 +261,7 @@ exports[`GuideDrawer renders list view without Remote Guides 1`] = `
       </span>
       in the code editor.
       <div
-        class="sc-lkqHmb eiwGIl"
+        class="sc-krvtoX jZKaMc"
       >
         <div
           class="sc-kEYyzF kpIobp"
@@ -270,10 +270,10 @@ exports[`GuideDrawer renders list view without Remote Guides 1`] = `
         </div>
       </div>
       <div
-        class="sc-gojNiO ikNDmz"
+        class="sc-lkqHmb jBjITi"
       >
         <li
-          class="sc-bXGyLb eUyJDI"
+          class="sc-cbkKFq ilCdUp"
           data-testid="builtInGuideintro"
         >
           <span
@@ -283,7 +283,7 @@ exports[`GuideDrawer renders list view without Remote Guides 1`] = `
             intro
           </span>
           <div
-            class="sc-lkqHmb cSPHwa"
+            class="sc-krvtoX gDoQjI"
           >
              
             Navigating Neo4j Browser
@@ -291,7 +291,7 @@ exports[`GuideDrawer renders list view without Remote Guides 1`] = `
           </div>
         </li>
         <li
-          class="sc-bXGyLb eUyJDI"
+          class="sc-cbkKFq ilCdUp"
           data-testid="builtInGuideconcepts"
         >
           <span
@@ -301,7 +301,7 @@ exports[`GuideDrawer renders list view without Remote Guides 1`] = `
             concepts
           </span>
           <div
-            class="sc-lkqHmb cSPHwa"
+            class="sc-krvtoX gDoQjI"
           >
              
             Property graph model concepts
@@ -309,7 +309,7 @@ exports[`GuideDrawer renders list view without Remote Guides 1`] = `
           </div>
         </li>
         <li
-          class="sc-bXGyLb eUyJDI"
+          class="sc-cbkKFq ilCdUp"
           data-testid="builtInGuidecypher"
         >
           <span
@@ -319,7 +319,7 @@ exports[`GuideDrawer renders list view without Remote Guides 1`] = `
             cypher
           </span>
           <div
-            class="sc-lkqHmb cSPHwa"
+            class="sc-krvtoX gDoQjI"
           >
              
             Cypher basics - create, match, delete
@@ -327,7 +327,7 @@ exports[`GuideDrawer renders list view without Remote Guides 1`] = `
           </div>
         </li>
         <li
-          class="sc-bXGyLb eUyJDI"
+          class="sc-cbkKFq ilCdUp"
           data-testid="builtInGuidemovie-graph"
         >
           <span
@@ -337,7 +337,7 @@ exports[`GuideDrawer renders list view without Remote Guides 1`] = `
             movie-graph
           </span>
           <div
-            class="sc-lkqHmb cSPHwa"
+            class="sc-krvtoX gDoQjI"
           >
              
             Queries and recommendations with Cypher - movie use case}
@@ -345,7 +345,7 @@ exports[`GuideDrawer renders list view without Remote Guides 1`] = `
           </div>
         </li>
         <li
-          class="sc-bXGyLb eUyJDI"
+          class="sc-cbkKFq ilCdUp"
           data-testid="builtInGuidenorthwind-graph"
         >
           <span
@@ -355,7 +355,7 @@ exports[`GuideDrawer renders list view without Remote Guides 1`] = `
             northwind-graph
           </span>
           <div
-            class="sc-lkqHmb cSPHwa"
+            class="sc-krvtoX gDoQjI"
           >
              
             Translate and import relation data into graph
@@ -364,7 +364,7 @@ exports[`GuideDrawer renders list view without Remote Guides 1`] = `
         </li>
       </div>
       <div
-        class="sc-eLExRp dvdOkB"
+        class="sc-fYiAbW jdVfDi"
       >
         <a
           class="sc-cvbbAY iQWpYr"

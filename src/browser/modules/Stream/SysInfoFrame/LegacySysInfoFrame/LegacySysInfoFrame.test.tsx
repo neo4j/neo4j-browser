@@ -19,8 +19,11 @@
  */
 import { render } from '@testing-library/react'
 import React from 'react'
+import { Provider } from 'react-redux'
+import { combineReducers, createStore } from 'redux'
 
 import { LegacySysInfoFrame } from './LegacySysInfoFrame'
+import reducers from 'project-root/src/shared/rootReducer'
 
 const baseProps = {
   bus: null as any,
@@ -36,7 +39,13 @@ describe('LegacySysInfoFrame', () => {
     const props = { ...baseProps, isConnected: false }
 
     // When
-    const { getAllByText } = render(<LegacySysInfoFrame {...props} />)
+    const reducer = combineReducers({ ...(reducers as any) })
+    const store: any = createStore(reducer)
+    const { getAllByText } = render(
+      <Provider store={store}>
+        <LegacySysInfoFrame {...props} />
+      </Provider>
+    )
 
     // Then
     expect(getAllByText(/No connection available/i)).not.toBeNull()
