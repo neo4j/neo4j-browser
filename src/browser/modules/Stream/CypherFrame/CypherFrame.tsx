@@ -31,7 +31,7 @@ import { SpinnerContainer, StyledStatsBarContainer } from '../styled'
 import { AsciiStatusbar, AsciiView } from './AsciiView'
 import { CancelView } from './CancelView'
 import { CodeStatusbar, CodeView } from './CodeView'
-import { ErrorsStatusbar, ErrorsViewBus as ErrorsView } from './ErrorsView'
+import { ErrorsStatusbar, ErrorsView } from './ErrorsView'
 import { PlanStatusbar, PlanView } from './PlanView'
 import { VisualizationConnectedBus } from './VisualizationView'
 import { WarningsStatusbar, WarningsView } from './WarningsView'
@@ -476,7 +476,7 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
       />
     )
   }
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     this.props.setExportItems([])
   }
 }

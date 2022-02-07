@@ -112,7 +112,7 @@ type AllDocumentation = {
   play: PlayDocs
   guide: GuideDocs
 }
-type DocItem = {
+export type DocItem = {
   title: string
   subtitle?: string
   category?: string

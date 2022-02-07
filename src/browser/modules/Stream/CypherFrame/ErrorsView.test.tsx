@@ -21,6 +21,7 @@ import { render } from '@testing-library/react'
 import React from 'react'
 
 import { ErrorsStatusbar, ErrorsView } from './ErrorsView'
+import { BrowserError } from 'services/exceptions'
 
 describe('ErrorsViews', () => {
   describe('ErrorsView', () => {
@@ -92,7 +93,7 @@ describe('ErrorsViews', () => {
     test('displays nothing if no error', () => {
       // Given
       const props = {
-        result: {}
+        result: null
       }
 
       // When
@@ -101,11 +102,13 @@ describe('ErrorsViews', () => {
     })
     test('displays error', () => {
       // Given
+      const error: BrowserError = {
+        code: 'Test.Error',
+        message: 'Test error description',
+        type: 'Neo4jError'
+      }
       const props = {
-        result: {
-          code: 'Test.Error',
-          message: 'Test error description'
-        }
+        result: error
       }
 
       // When
