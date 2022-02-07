@@ -5,7 +5,7 @@ export const PRECOMPUTED_TICKS = 300
 export const TICKS_PER_RENDER = 10
 
 // Friction.
-export const VELOCITY_DECAY = 0.06
+export const VELOCITY_DECAY = 0.4
 // Temperature of the simulation. It's a value in the range [0,1] and it
 // decreases over time. Can be seen as the probability that a node will move.
 export const DEFAULT_ALPHA = 1
