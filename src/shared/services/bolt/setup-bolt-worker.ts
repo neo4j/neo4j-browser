@@ -41,20 +41,20 @@ export const setupBoltWorker = (
       onmessage: ({ data }) => {
         switch (data.type) {
           case BOLT_CONNECTION_ERROR_MESSAGE:
-            work.finish()
+            boltWorkPool.finishWork(work.id)
             onLostConnection(data.error)
             reject(data.error)
             break
           case CYPHER_ERROR_MESSAGE:
-            work.finish()
+            boltWorkPool.finishWork(work.id)
             reject(data.error)
             break
           case CYPHER_RESPONSE_MESSAGE:
-            work.finish()
+            boltWorkPool.finishWork(work.id)
             resolve(addTypesAsField(data.result))
             break
           case POST_CANCEL_TRANSACTION_MESSAGE:
-            work.finish()
+            boltWorkPool.finishWork(work.id)
             break
           default:
             return
