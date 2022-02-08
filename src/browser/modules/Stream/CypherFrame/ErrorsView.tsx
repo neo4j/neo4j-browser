@@ -19,6 +19,7 @@
  */
 import React, { Component } from 'react'
 import { withBus } from 'react-suber'
+import { Bus } from 'suber'
 
 import {
   ErrorText,
@@ -38,11 +39,13 @@ import {
   ExclamationTriangleIcon,
   PlayIcon
 } from 'browser-components/icons/Icons'
+import { BrowserRequestResult } from 'project-root/src/shared/modules/requests/requestsDuck'
 import {
   isImplicitTransactionError,
   isNoDbAccessError,
   isUnknownProcedureError
 } from 'services/cypherErrorsHelper'
+import { BrowserError } from 'services/exceptions'
 import { deepEquals } from 'services/utils'
 import {
   commandSources,
@@ -51,13 +54,18 @@ import {
 } from 'shared/modules/commands/commandsDuck'
 import { listAvailableProcedures } from 'shared/modules/cypher/procedureFactory'
 
-export class ErrorsView extends Component<any> {
-  shouldComponentUpdate(props: any) {
+type ErrorsViewComponentProps = {
+  result: BrowserRequestResult
+  bus: Bus
+}
+class ErrorsViewComponent extends Component<ErrorsViewComponentProps> {
+  shouldComponentUpdate(props: ErrorsViewComponentProps): boolean {
     return !deepEquals(props.result, this.props.result)
   }
 
-  render() {
-    const { result: error, bus } = this.props
+  render(): null | JSX.Element {
+    const { bus } = this.props
+    const error = this.props.result as BrowserError
     if (!error || !error.code) {
       return null
     }
@@ -108,20 +116,23 @@ export class ErrorsView extends Component<any> {
   }
 }
 
-const onItemClick = (bus: any, statement: any) => {
+const onItemClick = (bus: Bus, statement: string) => {
   const action = executeCommand(statement, { source: commandSources.button })
   bus.send(action.type, action)
 }
 
-export const ErrorsViewBus = withBus(ErrorsView)
+export const ErrorsView = withBus(ErrorsViewComponent)
 
-export class ErrorsStatusbar extends Component<any> {
-  shouldComponentUpdate(props: any) {
+type ErrorsStatusBarProps = {
+  result: BrowserRequestResult
+}
+export class ErrorsStatusbar extends Component<ErrorsStatusBarProps> {
+  shouldComponentUpdate(props: ErrorsStatusBarProps): boolean {
     return !deepEquals(props.result, this.props.result)
   }
 
-  render() {
-    const error = this.props.result
+  render(): null | JSX.Element {
+    const error = this.props.result as BrowserError
     if (!error || (!error.code && !error.message)) return null
     const fullError = errorMessageFormater(error.code, error.message)
 

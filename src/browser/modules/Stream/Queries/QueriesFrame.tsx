@@ -59,6 +59,7 @@ import {
 import { getVersion } from 'shared/modules/dbMeta/state'
 import { getAvailableProcedures } from 'shared/modules/features/featuresDuck'
 import { getDefaultBoltScheme } from 'shared/modules/features/versionedFeatures'
+import { Bus } from 'suber';
 
 type QueriesFrameState = {
   queries: any[]
@@ -70,7 +71,7 @@ type QueriesFrameState = {
 
 type QueriesFrameProps = {
   frame?: any
-  bus: any
+  bus: Bus
   availableProcedures: any
   connectionState: number
   neo4jVersion: string | null
