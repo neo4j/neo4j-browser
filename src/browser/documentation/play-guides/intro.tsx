@@ -20,7 +20,7 @@
 import React from 'react'
 
 import Slide from '../../modules/Carousel/Slide'
-import { isMac } from 'browser/modules/App/keyboardShortcuts'
+import { isMac } from 'shared/utils/platformUtils'
 
 const title = 'Intro'
 const slides = [

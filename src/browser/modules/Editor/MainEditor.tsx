@@ -47,7 +47,6 @@ import {
 } from 'browser-components/icons/Icons'
 import {
   FULLSCREEN_SHORTCUT,
-  isMac,
   printShortcut
 } from 'browser/modules/App/keyboardShortcuts'
 import fileIcon from 'icons/file.svg'
@@ -77,6 +76,7 @@ import {
   codeFontLigatures,
   shouldEnableMultiStatementMode
 } from 'shared/modules/settings/settingsDuck'
+import { isMac } from 'shared/utils/platformUtils'
 
 type EditorFrameProps = {
   bus: Bus

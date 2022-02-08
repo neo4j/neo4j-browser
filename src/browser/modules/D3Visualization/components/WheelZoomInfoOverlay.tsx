@@ -10,7 +10,7 @@ import {
   StyledZoomInfoTextContainer
 } from './styled'
 import { InfoIcon } from 'browser-components/icons/Icons'
-import { isMac } from 'project-root/src/browser/modules/App/keyboardShortcuts'
+import { isMac } from 'shared/utils/platformUtils'
 
 const getModKeyString = () => (isMac ? 'Cmd' : 'Ctrl or Shift')
 
