@@ -80,10 +80,6 @@ const getReferences = (version: string, v: string) => {
     {
       name: 'Cypher Refcard',
       url: `https://neo4j.com/docs/cypher-refcard/${v}/`
-    },
-    {
-      name: 'Drivers Manual',
-      url: `https://neo4j.com/docs/driver-manual/current/`
     }
   ]
 
@@ -91,6 +87,34 @@ const getReferences = (version: string, v: string) => {
     ...(shouldLinkToNewRefs(version) ? newRefs : oldRefs),
     ...common
   ]
+
+  const graphAcademy = [
+    {
+      name: 'Neo4j Fundamentals',
+      url: `https://graphacademy.neo4j.com/courses/neo4j-fundamentals/`
+    },
+    {
+      name: 'Cypher Fundamentals',
+      url: `https://graphacademy.neo4j.com/courses/cypher-fundamentals/`
+    },
+    {
+      name: 'Graph Data Modeling Fundamentals',
+      url: `https://graphacademy.neo4j.com/courses/modeling-fundamentals/`
+    },
+    {
+      name: 'Importing CSV Data',
+      url: `https://graphacademy.neo4j.com/courses/importing-data/`
+    },
+    {
+      name: 'Courses for Developers',
+      url: `https://graphacademy.neo4j.com/category/developer/`
+    },
+    {
+      name: 'Courses for Data Scientists',
+      url: `https://graphacademy.neo4j.com/category/data-scientist/`
+    }
+  ]
+
   const other = [
     {
       name: 'Operations Manual',
@@ -109,7 +133,7 @@ const getReferences = (version: string, v: string) => {
       url: 'https://neo4j.com/developer/neo4j-browser/'
     }
   ]
-  return { docs, other }
+  return { docs, other, graphAcademy }
 }
 const useful = [
   { name: 'Help by topic', command: ':help' },
@@ -137,7 +161,10 @@ const Documents = (props: DocumentsProps) => {
     }
   }, [])
 
-  const { docs, other } = getReferences(props.version, props.urlVersion)
+  const { docs, other, graphAcademy } = getReferences(
+    props.version,
+    props.urlVersion
+  )
   return (
     <Drawer id="db-documents">
       <StyledHeaderContainer>
@@ -168,6 +195,10 @@ const Documents = (props: DocumentsProps) => {
       <StyledFullSizeDrawerBody>
         <DocumentItems header="Useful commands" items={useful} />
         <DocumentItems header="Documentation links" items={docs} />
+        <DocumentItems
+          header="Free training from GraphAcademy"
+          items={graphAcademy}
+        />
         <DocumentItems header="Other Resources" items={other} />
       </StyledFullSizeDrawerBody>
     </Drawer>
