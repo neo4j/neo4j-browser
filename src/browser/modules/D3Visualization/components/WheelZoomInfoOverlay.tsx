@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react'
+import React from 'react'
 
 import {
   StyledZoomInfo,
@@ -10,29 +10,20 @@ import {
   StyledZoomInfoTextContainer
 } from './styled'
 import { InfoIcon } from 'browser-components/icons/Icons'
+import { isMac } from 'project-root/src/browser/modules/App/keyboardShortcuts'
 
-const getModKeyString = () => {
-  const isOnMacComputer = navigator.appVersion.indexOf('Mac') !== -1
-  if (isOnMacComputer) {
-    return 'Cmd'
-  } else {
-    return 'Ctrl or Shift'
-  }
-}
+const getModKeyString = () => (isMac ? 'Cmd' : 'Ctrl or Shift')
 
 type WheelZoomInfoProps = {
   hide: boolean
-  onShouldShowUpdate: (show: boolean) => void
+  onDisableWheelZoomInfoMessage: () => void
 }
 export const WheelZoomInfoOverlay = ({
   hide,
-  onShouldShowUpdate
+  onDisableWheelZoomInfoMessage
 }: WheelZoomInfoProps) => {
-  const [doNotShowAgain, setDoNotShowAgain] = useState<boolean>(false)
-  const handleCheckBoxChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const doNotShow = event.currentTarget.checked
-    setDoNotShowAgain(doNotShow)
-    onShouldShowUpdate(!doNotShow)
+  const handleCheckBoxClick = () => {
+    onDisableWheelZoomInfoMessage()
   }
   return (
     <StyledZoomInfoOverlay>
@@ -48,8 +39,7 @@ export const WheelZoomInfoOverlay = ({
           <input
             type="checkbox"
             id="wheelZoomInfoCheckbox"
-            checked={doNotShowAgain}
-            onChange={handleCheckBoxChange}
+            onClick={handleCheckBoxClick}
           />
           <StyledZoomInfoCheckboxLabel htmlFor="wheelZoomInfoCheckbox">
             {`Don't show again`}

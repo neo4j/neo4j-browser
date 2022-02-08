@@ -139,9 +139,6 @@ export class Visualization {
       selection: Selection<SVGElement, unknown, BaseType, unknown>
     ) => {
       const handleZoomOnShiftScroll = (e: WheelEvent) => {
-        if (!this.isFullscreen) {
-          onDisplayZoomWheelInfoMessage()
-        }
         const modKeySelected = e.metaKey || e.ctrlKey || e.shiftKey
         if (modKeySelected || this.isFullscreen) {
           e.preventDefault()
@@ -154,6 +151,8 @@ export class Visualization {
             -e.deltaY * (e.deltaMode === 1 ? 0.05 : e.deltaMode ? 1 : 0.002)
 
           return this.zoomBehavior.scaleBy(this.root, 1 + delta)
+        } else {
+          onDisplayZoomWheelInfoMessage()
         }
       }
 
