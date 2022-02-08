@@ -19,6 +19,8 @@
  */
 import * as ls from './localstorage'
 
+jest.mock('lodash-es/debounce', () => (fn: any) => fn)
+
 describe('localstorage', () => {
   test('getItem return items', () => {
     // Given

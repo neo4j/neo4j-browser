@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { debounce } from 'lodash-es'
 import { Middleware } from 'redux'
 
 import {
@@ -83,36 +84,45 @@ export function getAll(): Partial<GlobalState> {
   return out
 }
 
+function storeReduxInLocalStorage(state: GlobalState) {
+  keys.forEach(key => {
+    if (key === 'connections' && !shouldRetainConnectionCredentials(state)) {
+      // if browser.retain_connection_credentials is not true, overwrite password value on all connections
+      setItem(key, {
+        ...state[key],
+        connectionsById: Object.assign(
+          {},
+          ...Object.entries(state[key].connectionsById).map(
+            ([id, connection]) => ({
+              [id]: {
+                ...(connection as Record<string, unknown>),
+                password: ''
+              }
+            })
+          )
+        )
+      })
+    } else if (key === 'history' && !shouldRetainEditorHistory(state)) {
+      setItem(key, [])
+    } else if (key === 'guides') {
+      setItem(key, { ...state[key], currentGuide: null })
+    } else {
+      setItem(key, state[key])
+    }
+  })
+}
+
+const debouncedStore = debounce(storeReduxInLocalStorage, 500, {
+  trailing: true,
+  maxWait: 1000
+})
+
 export function createReduxMiddleware(): Middleware {
   return store => next => action => {
     const result = next(action)
     const state = store.getState() as unknown as GlobalState
+    debouncedStore(state)
 
-    keys.forEach(key => {
-      if (key === 'connections' && !shouldRetainConnectionCredentials(state)) {
-        // if browser.retain_connection_credentials is not true, overwrite password value on all connections
-        setItem(key, {
-          ...state[key],
-          connectionsById: Object.assign(
-            {},
-            ...Object.entries(state[key].connectionsById).map(
-              ([id, connection]) => ({
-                [id]: {
-                  ...(connection as Record<string, unknown>),
-                  password: ''
-                }
-              })
-            )
-          )
-        })
-      } else if (key === 'history' && !shouldRetainEditorHistory(state)) {
-        setItem(key, [])
-      } else if (key === 'guides') {
-        setItem(key, { ...state[key], currentGuide: null })
-      } else {
-        setItem(key, state[key])
-      }
-    })
     return result
   }
 }
