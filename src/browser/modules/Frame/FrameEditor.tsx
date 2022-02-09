@@ -24,7 +24,6 @@ import { Action, Dispatch } from 'redux'
 import { Bus } from 'suber'
 
 import { MAIN_WRAPPER_DOM_ID } from '../App/App'
-import { isMac } from '../App/keyboardShortcuts'
 import Monaco, { MonacoHandles } from '../Editor/Monaco'
 import { EditorContainer, Header } from '../Editor/styled'
 import { DottedLineHover } from '../Stream/styled'
@@ -59,6 +58,7 @@ import {
   shouldEnableMultiStatementMode
 } from 'shared/modules/settings/settingsDuck'
 import * as sidebar from 'shared/modules/sidebar/sidebarDuck'
+import { isMac } from 'shared/utils/platformUtils'
 
 type FrameEditorBaseProps = {
   frame: Frame

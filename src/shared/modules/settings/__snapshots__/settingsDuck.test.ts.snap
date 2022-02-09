@@ -22,6 +22,7 @@ Object {
   "scrollToTop": true,
   "showPerformanceOverlay": false,
   "showSampleScripts": true,
+  "showWheelZoomInfo": true,
   "theme": "auto",
   "useBoltRouting": false,
   "useCypherThread": true,

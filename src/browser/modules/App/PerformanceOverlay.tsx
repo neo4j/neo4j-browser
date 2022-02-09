@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import { shouldshowPerformanceOverlay } from 'shared/modules/settings/settingsDuck'
+import { shouldShowPerformanceOverlay } from 'shared/modules/settings/settingsDuck'
 
 function perfTracker() {
   let lastTime = performance.now()
@@ -139,7 +139,7 @@ const Overlay = styled.div`
 `
 
 const mapStateToProps = (state: any) => ({
-  shouldShow: shouldshowPerformanceOverlay(state)
+  shouldShow: shouldShowPerformanceOverlay(state)
 })
 
 export default connect(mapStateToProps)(PerformanceOverlay)

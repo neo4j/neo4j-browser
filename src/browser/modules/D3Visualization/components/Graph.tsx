@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React from 'react'
+import { connect } from 'react-redux'
+import { Action, Dispatch } from 'redux'
 
 import { GetNodeNeighboursFn, GraphEventHandler } from '../GraphEventHandler'
 import GraphStyle from '../graphStyle'
@@ -29,6 +31,7 @@ import {
   getGraphStats,
   mapRelationships
 } from '../mapper'
+import { WheelZoomInfoOverlay } from './WheelZoomInfoOverlay'
 import { StyledSvgWrapper, StyledZoomButton, StyledZoomHolder } from './styled'
 import { VizItem } from './types'
 import {
@@ -37,7 +40,12 @@ import {
   ZoomToFitIcon
 } from 'browser-components/icons/Icons'
 import { ZoomLimitsReached } from 'project-root/src/browser/modules/D3Visualization/lib/visualization/components/Visualization'
+import { GlobalState } from 'project-root/src/shared/globalState'
+import { shouldShowWheelZoomInfo } from 'project-root/src/shared/modules/settings/settingsDuck'
+import * as actions from 'project-root/src/shared/modules/settings/settingsDuck'
 import { BasicNode, BasicRelationship } from 'services/bolt/boltMappings'
+
+const DISPLAY_WHEEL_ZOOM_INFO_DURATION_MS = 3000
 
 type GraphProps = {
   isFullscreen: boolean
@@ -55,20 +63,28 @@ type GraphProps = {
   ) => void
   setGraph: (graph: Graph) => void
   offset: number
+  wheelZoomInfoMessageEnabled: boolean
+  disableWheelZoomInfoMessage: () => void
 }
 
 type GraphState = {
   zoomInLimitReached: boolean
   zoomOutLimitReached: boolean
+  displayingWheelZoomInfoMessage: boolean
 }
 
-export class GraphComponent extends React.Component<GraphProps, GraphState> {
+class GraphComponent extends React.Component<GraphProps, GraphState> {
   svgElement: React.RefObject<SVGSVGElement>
   graphView: GraphView | null = null
+  displayingWheelZoomInfoTimerId: number | undefined
 
   constructor(props: GraphProps) {
     super(props)
-    this.state = { zoomInLimitReached: false, zoomOutLimitReached: false }
+    this.state = {
+      zoomInLimitReached: false,
+      zoomOutLimitReached: false,
+      displayingWheelZoomInfoMessage: false
+    }
     this.svgElement = React.createRef()
   }
 
@@ -99,6 +115,7 @@ export class GraphComponent extends React.Component<GraphProps, GraphState> {
       this.svgElement.current,
       measureSize,
       this.handleZoomEvent,
+      this.handleDisplayZoomWheelInfoMessage,
       graph,
       graphStyle,
       isFullscreen
@@ -139,6 +156,20 @@ export class GraphComponent extends React.Component<GraphProps, GraphState> {
     }
   }
 
+  componentDidUpdate(prevProps: GraphProps): void {
+    if (this.props.isFullscreen !== prevProps.isFullscreen) {
+      this.graphView?.resize(this.props.isFullscreen)
+    }
+
+    if (this.props.styleVersion !== prevProps.styleVersion) {
+      this.graphView?.init()
+    }
+  }
+
+  componentWillUnmount(): void {
+    clearTimeout(this.displayingWheelZoomInfoTimerId)
+  }
+
   handleZoomEvent = (limitsReached: ZoomLimitsReached): void => {
     if (
       limitsReached.zoomInLimitReached !== this.state.zoomInLimitReached ||
@@ -149,6 +180,24 @@ export class GraphComponent extends React.Component<GraphProps, GraphState> {
         zoomOutLimitReached: limitsReached.zoomOutLimitReached
       })
     }
+  }
+
+  handleDisplayZoomWheelInfoMessage = (): void => {
+    if (
+      !this.state.displayingWheelZoomInfoMessage &&
+      this.props.wheelZoomInfoMessageEnabled
+    ) {
+      this.displayZoomWheelInfoMessage(true)
+      setTimeout(
+        this.displayZoomWheelInfoMessage,
+        DISPLAY_WHEEL_ZOOM_INFO_DURATION_MS,
+        false
+      )
+    }
+  }
+
+  displayZoomWheelInfoMessage = (display: boolean): void => {
+    this.setState({ displayingWheelZoomInfoMessage: display })
   }
 
   zoomInClicked = (): void => {
@@ -170,8 +219,17 @@ export class GraphComponent extends React.Component<GraphProps, GraphState> {
   }
 
   render(): JSX.Element {
-    const { offset, isFullscreen } = this.props
-    const { zoomInLimitReached, zoomOutLimitReached } = this.state
+    const {
+      offset,
+      isFullscreen,
+      wheelZoomInfoMessageEnabled,
+      disableWheelZoomInfoMessage
+    } = this.props
+    const {
+      zoomInLimitReached,
+      zoomOutLimitReached,
+      displayingWheelZoomInfoMessage
+    } = this.state
     return (
       <StyledSvgWrapper>
         <svg className="neod3viz" ref={this.svgElement} />
@@ -197,17 +255,25 @@ export class GraphComponent extends React.Component<GraphProps, GraphState> {
             <ZoomToFitIcon large={isFullscreen} />
           </StyledZoomButton>
         </StyledZoomHolder>
+        {wheelZoomInfoMessageEnabled && (
+          <WheelZoomInfoOverlay
+            hide={isFullscreen || !displayingWheelZoomInfoMessage}
+            onDisableWheelZoomInfoMessage={disableWheelZoomInfoMessage}
+          />
+        )}
       </StyledSvgWrapper>
     )
   }
-
-  componentDidUpdate(prevProps: GraphProps): void {
-    if (this.props.isFullscreen !== prevProps.isFullscreen) {
-      this.graphView?.resize(this.props.isFullscreen)
-    }
-
-    if (this.props.styleVersion !== prevProps.styleVersion) {
-      this.graphView?.init()
-    }
-  }
 }
+
+const mapStateToProps = (state: GlobalState) => ({
+  wheelZoomInfoMessageEnabled: shouldShowWheelZoomInfo(state)
+})
+
+const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
+  disableWheelZoomInfoMessage: () => {
+    dispatch(actions.update({ showWheelZoomInfo: false }))
+  }
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(GraphComponent)

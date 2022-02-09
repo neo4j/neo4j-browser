@@ -2,8 +2,8 @@ import { useCallback, useEffect, useMemo } from 'react'
 import { Bus } from 'suber'
 
 import { FOCUS } from 'shared/modules/editor/editorDuck'
+import { isMac } from 'shared/utils/platformUtils'
 
-export const isMac = /Mac|iPad/.test(navigator.platform)
 const modKey = isMac ? 'metaKey' : 'ctrlKey'
 
 type ModifierKey = 'metaKey' | 'altKey' | 'ctrlKey'

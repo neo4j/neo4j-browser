@@ -159,6 +159,13 @@ const visualSettings = [
             'If this is checked, after a cypher query result is retrieved, a second query is executed to fetch relationships between result nodes.',
           type: 'checkbox'
         }
+      },
+      {
+        showWheelZoomInfo: {
+          displayName: 'Show zoom interactions hint',
+          tooltip: 'Pop-up info block with scroll interactions keybindings.',
+          type: 'checkbox'
+        }
       }
     ]
   }
@@ -246,7 +253,7 @@ function getTelemetryVisualSetting({
   return { title, settings }
 }
 
-export const Settings = ({
+export const UserSettings = ({
   settings,
   visualSettings,
   experimentalFeatures = {},
@@ -442,4 +449,4 @@ const mapDispatchToProps = (dispatch: any) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Settings)
+export default connect(mapStateToProps, mapDispatchToProps)(UserSettings)

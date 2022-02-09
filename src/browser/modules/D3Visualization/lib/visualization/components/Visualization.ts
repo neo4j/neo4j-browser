@@ -79,6 +79,7 @@ export class Visualization {
     element: SVGElement,
     private measureSize: MeasureSizeFn,
     private onZoomEvent: (limitsReached: ZoomLimitsReached) => void,
+    private onDisplayZoomWheelInfoMessage: () => void,
     private graph: Graph,
     public style: GraphStyle,
     public isFullscreen: boolean,
@@ -150,6 +151,8 @@ export class Visualization {
             -e.deltaY * (e.deltaMode === 1 ? 0.05 : e.deltaMode ? 1 : 0.002)
 
           return this.zoomBehavior.scaleBy(this.root, 1 + delta)
+        } else {
+          onDisplayZoomWheelInfoMessage()
         }
       }
 
