@@ -60,7 +60,6 @@ import {
   VisualizationIcon
 } from 'browser-components/icons/Icons'
 import { StyledFrameBody } from 'browser/modules/Frame/styled'
-import { requestExceedsVisLimits } from 'browser/modules/Stream/CypherFrame/helpers'
 import RelatableView, {
   RelatableStatusbar
 } from 'browser/modules/Stream/CypherFrame/relatable-view'
@@ -201,9 +200,7 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
   }
 
   canShowViz = (): boolean =>
-    !requestExceedsVisLimits(this.props.request) &&
-    resultHasNodes(this.props.request) &&
-    !this.state.errors
+    resultHasNodes(this.props.request) && !this.state.errors
 
   sidebar = (): JSX.Element => (
     <FrameSidebar>

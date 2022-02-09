@@ -30,7 +30,6 @@ import {
   some,
   take
 } from 'lodash-es'
-import { Duration } from 'luxon'
 import neo4j from 'neo4j-driver'
 
 import bolt from 'services/bolt/bolt'
@@ -135,12 +134,6 @@ export const flattenArrayDeep = (arr: any) => {
   return result
 }
 
-const VIS_MAX_SAFE_LIMIT = 1000
-
-export const requestExceedsVisLimits = ({ result }: any = {}) => {
-  return resultHasTruncatedFields(result, VIS_MAX_SAFE_LIMIT)
-}
-
 export const resultHasNodes = (request: any, types = neo4j.types) => {
   if (!request) return false
   const { result = {} } = request
@@ -222,8 +215,7 @@ export const initialView = (props: any, state: any = {}) => {
   }
   // No we don't care about the recentView
   // If the response have viz elements, we show the viz
-  if (!requestExceedsVisLimits(props.request) && resultHasNodes(props.request))
-    return viewTypes.VISUALIZATION
+  if (resultHasNodes(props.request)) return viewTypes.VISUALIZATION
   return viewTypes.TABLE
 }
 
