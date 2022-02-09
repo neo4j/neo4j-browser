@@ -49,7 +49,7 @@ describe('cypherRequestEpic', () => {
   ])
   beforeAll(() => {
     store = mockStore({
-      settings: { useCypherThread: false }
+      settings: {}
     })
   })
   afterEach(() => {
@@ -75,10 +75,7 @@ describe('cypherRequestEpic', () => {
           expect(bolt.directTransaction).toHaveBeenCalledWith(
             action.query,
             undefined,
-            {
-              useCypherThread: store.getState().settings.useCypherThread,
-              ...getUserDirectTxMetadata({ hasServerSupport: true })
-            }
+            getUserDirectTxMetadata({ hasServerSupport: true })
           )
           resolve()
         } catch (e) {
@@ -113,9 +110,7 @@ describe('cypherRequestEpic', () => {
           expect(bolt.directTransaction).toHaveBeenCalledWith(
             action.query,
             undefined,
-            {
-              useCypherThread: store.getState().settings.useCypherThread
-            }
+            {}
           )
           resolve()
         } catch (e) {
@@ -150,9 +145,7 @@ describe('cypherRequestEpic', () => {
           expect(bolt.directTransaction).toHaveBeenCalledWith(
             action.query,
             undefined,
-            {
-              useCypherThread: store.getState().settings.useCypherThread
-            }
+            {}
           )
           resolve()
         } catch (e) {

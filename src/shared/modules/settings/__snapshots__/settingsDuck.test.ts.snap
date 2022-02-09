@@ -25,6 +25,5 @@ Object {
   "showWheelZoomInfo": true,
   "theme": "auto",
   "useBoltRouting": false,
-  "useCypherThread": true,
 }
 `;

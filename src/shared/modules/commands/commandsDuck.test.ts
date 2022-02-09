@@ -42,6 +42,8 @@ import {
   update as updateSettings
 } from 'shared/modules/settings/settingsDuck'
 
+jest.mock('shared/services/bolt/boltWorker')
+
 const originalRoutedWriteTransaction = bolt.routedWriteTransaction
 
 const bus = createBus()

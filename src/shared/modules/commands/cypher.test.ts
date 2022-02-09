@@ -41,14 +41,6 @@ jest.mock('services/bolt/bolt', () => {
 })
 const bolt = require.requireMock('services/bolt/bolt')
 
-jest.mock('shared/modules/settings/settingsDuck', () => {
-  const orig = require.requireActual('shared/modules/settings/settingsDuck')
-  return {
-    ...orig,
-    shouldUseCypherThread: () => false
-  }
-})
-
 jest.mock('shared/modules/params/paramsDuck', () => {
   const orig = require.requireActual('shared/modules/params/paramsDuck')
   return {
@@ -150,7 +142,7 @@ describe('Implicit vs explicit transactions', () => {
     const $$responseChannel = 'test-channel3'
     const action: any = executeSingleCommand(
       `// comment
-/* 
+/*
 multiline comment
 */
 // comment
@@ -165,7 +157,7 @@ multiline comment
       expect(bolt.routedWriteTransaction).toHaveBeenCalledTimes(1)
       expect(bolt.routedWriteTransaction).toHaveBeenCalledWith(
         `// comment
-/* 
+/*
 multiline comment
 */
 // comment
