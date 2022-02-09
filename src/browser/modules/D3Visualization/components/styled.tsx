@@ -369,7 +369,7 @@ export const StyledZoomInfoOverlay = styled.div`
   pointer-events: none;
 `
 
-export const StyledZoomInfo = styled.div<{ hide: boolean }>`
+export const StyledZoomInfo = styled.div`
   background: ${props => props.theme.infoBackground};
   position: relative;
   border: ${props => props.theme.infoBorder};
@@ -378,14 +378,12 @@ export const StyledZoomInfo = styled.div<{ hide: boolean }>`
   margin-left: auto;
   margin-right: auto;
   padding: 1rem;
-  transition: opacity 1.5s ease-in-out;
-  opacity: ${props => (props.hide ? 0 : 1)};
   flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   align-items: baseline;
   gap: 1rem;
-  pointer-events: ${props => (props.hide ? 'none' : 'auto')};
+  pointer-events: auto;
 `
 
 export const StyledZoomInfoTextContainer = styled.div`
@@ -403,14 +401,12 @@ export const StyledZoomInfoIconContainer = styled.div`
   color: ${props => props.theme.infoIconColor};
 `
 
-export const StyledZoomInfoCheckbox = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 0.5rem;
-  margin-left: 30px;
-`
-
-export const StyledZoomInfoCheckboxLabel = styled.label`
-  font-size: 12px;
+export const StyledZoomInfoOverlayDoNotDisplayButton = styled.button`
+  padding: 0 3rem;
+  font-size: 1.2rem;
+  line-height: 1.5rem;
+  border: none;
+  outline: none;
+  background-color: inherit;
+  text-decoration-line: underline;
 `
