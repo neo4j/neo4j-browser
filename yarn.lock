@@ -3832,6 +3832,11 @@ base64-js@^1.0.2, base64-js@^1.3.0:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/base64-js/-/base64-js-1.3.1.tgz#58ece8cb75dd07e71ed08c736abc5fac4dbf8df1"
   integrity sha1-WOzoy3XdB+ce0IxzarxfrE2/jfE=
 
+base64-js@^1.3.1:
+  version "1.5.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
+  integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
+
 base@^0.11.1:
   version "0.11.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/base/-/base-0.11.2.tgz#7bde5ced145b6d551a90db87f83c558b4eb48a8f"
@@ -4155,6 +4160,14 @@ buffer@^4.3.0:
     base64-js "^1.0.2"
     ieee754 "^1.1.4"
     isarray "^1.0.0"
+
+buffer@^6.0.3:
+  version "6.0.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/buffer/-/buffer-6.0.3.tgz#2ace578459cc8fbe2a70aaa8f52ee63b6a74c6c6"
+  integrity sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==
+  dependencies:
+    base64-js "^1.3.1"
+    ieee754 "^1.2.1"
 
 builtin-status-codes@^3.0.0:
   version "3.0.0"
@@ -7801,6 +7814,11 @@ ieee754@^1.1.4:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/ieee754/-/ieee754-1.1.13.tgz#ec168558e95aa181fd87d37f55c32bbcb6708b84"
   integrity sha1-7BaFWOlaoYH9h9N/VcMrvLZwi4Q=
 
+ieee754@^1.2.1:
+  version "1.2.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/ieee754/-/ieee754-1.2.1.tgz#8eb7a10a63fff25d15a57b001586d177d1b0d352"
+  integrity sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==
+
 iferr@^0.1.5:
   version "0.1.5"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/iferr/-/iferr-0.1.5.tgz#c60eed69e6d8fdb6b3104a1fcbca1c192dc5b501"
@@ -10073,27 +10091,28 @@ neo4j-client-sso@1.2.2:
     jwt-decode "^3.1.2"
     lodash.pick "^4.4.0"
 
-neo4j-driver-bolt-connection@^4.4.0:
-  version "4.4.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-driver-bolt-connection/-/neo4j-driver-bolt-connection-4.4.0.tgz#19bc93977f31b43ad6710750b674365d35b63003"
-  integrity sha1-GbyTl38xtDrWcQdQtnQ2XTW2MAM=
+neo4j-driver-bolt-connection@^4.4.2:
+  version "4.4.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-driver-bolt-connection/-/neo4j-driver-bolt-connection-4.4.2.tgz#d6651cf98807ff39838b171b470c11894bb87d46"
+  integrity sha512-SoXJla+2J4f9qo35ZRVwQwfB2syMbnl9fAvWs6vQlx/HC5tiObxyrvXP4mM0U5Hton+Jz6PTPAs1jh1GH61W5Q==
   dependencies:
-    neo4j-driver-core "^4.4.0"
-    text-encoding-utf-8 "^1.0.2"
+    buffer "^6.0.3"
+    neo4j-driver-core "^4.4.2"
+    string_decoder "^1.3.0"
 
-neo4j-driver-core@^4.4.0:
-  version "4.4.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-driver-core/-/neo4j-driver-core-4.4.0.tgz#b9d3a6ca53f2aa8705b387e3e0660742e7c57efa"
-  integrity sha1-udOmylPyqocFs4fj4GYHQufFfvo=
+neo4j-driver-core@^4.4.2:
+  version "4.4.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-driver-core/-/neo4j-driver-core-4.4.2.tgz#ad697ddba76228d06865f2a725b29fd203c110a5"
+  integrity sha512-SSHJh+xmaBirnGFlkaiLqAanUfAm9TaQO2c3YOvFvn9KDIHxBQvXC5pXGYiIj1dlObluRdYnFA3YXHZFa5j4ZA==
 
-neo4j-driver@^4.4.0:
-  version "4.4.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-driver/-/neo4j-driver-4.4.0.tgz#f3b39818d14140aedf39abfdb44961abea39bc73"
-  integrity sha1-87OYGNFBQK7fOav9tElhq+o5vHM=
+neo4j-driver@^4.4.2:
+  version "4.4.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-driver/-/neo4j-driver-4.4.2.tgz#507937f7fc750872139e18d56c37087250c00825"
+  integrity sha512-6OVyS2zuysB/8OqX1MiAt7e0DsaoZZ7ahGFwJ2SljoPRP9amC4Lw3+n4AhgKoQX0AsBIl86fwQSBieFg2gZnTg==
   dependencies:
     "@babel/runtime" "^7.5.5"
-    neo4j-driver-bolt-connection "^4.4.0"
-    neo4j-driver-core "^4.4.0"
+    neo4j-driver-bolt-connection "^4.4.2"
+    neo4j-driver-core "^4.4.2"
     rxjs "^6.6.3"
 
 nice-try@^1.0.4:
@@ -13225,7 +13244,7 @@ string.prototype.trimstart@^1.0.1:
     define-properties "^1.1.3"
     es-abstract "^1.17.5"
 
-string_decoder@^1.0.0, string_decoder@^1.1.1:
+string_decoder@^1.0.0, string_decoder@^1.1.1, string_decoder@^1.3.0:
   version "1.3.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/string_decoder/-/string_decoder-1.3.0.tgz#42f114594a46cf1a8e30b0a84f56c78c3edac21e"
   integrity sha1-QvEUWUpGzxqOMLCoT1bHjD7awh4=
@@ -13551,11 +13570,6 @@ test-exclude@^6.0.0:
     "@istanbuljs/schema" "^0.1.2"
     glob "^7.1.4"
     minimatch "^3.0.4"
-
-text-encoding-utf-8@^1.0.2:
-  version "1.0.2"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/text-encoding-utf-8/-/text-encoding-utf-8-1.0.2.tgz#585b62197b0ae437e3c7b5d0af27ac1021e10d13"
-  integrity sha1-WFtiGXsK5Dfjx7XQryesECHhDRM=
 
 text-table@^0.2.0:
   version "0.2.0"
