@@ -45,8 +45,6 @@ import { shouldShowWheelZoomInfo } from 'project-root/src/shared/modules/setting
 import * as actions from 'project-root/src/shared/modules/settings/settingsDuck'
 import { BasicNode, BasicRelationship } from 'services/bolt/boltMappings'
 
-const DISPLAY_WHEEL_ZOOM_INFO_DURATION_MS = 3000
-
 type GraphProps = {
   isFullscreen: boolean
   relationships: BasicRelationship[]
@@ -188,11 +186,6 @@ class GraphComponent extends React.Component<GraphProps, GraphState> {
       this.props.wheelZoomInfoMessageEnabled
     ) {
       this.displayZoomWheelInfoMessage(true)
-      setTimeout(
-        this.displayZoomWheelInfoMessage,
-        DISPLAY_WHEEL_ZOOM_INFO_DURATION_MS,
-        false
-      )
     }
   }
 
@@ -255,12 +248,13 @@ class GraphComponent extends React.Component<GraphProps, GraphState> {
             <ZoomToFitIcon large={isFullscreen} />
           </StyledZoomButton>
         </StyledZoomHolder>
-        {wheelZoomInfoMessageEnabled && (
-          <WheelZoomInfoOverlay
-            hide={isFullscreen || !displayingWheelZoomInfoMessage}
-            onDisableWheelZoomInfoMessage={disableWheelZoomInfoMessage}
-          />
-        )}
+        {wheelZoomInfoMessageEnabled &&
+          !isFullscreen &&
+          displayingWheelZoomInfoMessage && (
+            <WheelZoomInfoOverlay
+              onDisableWheelZoomInfoMessage={disableWheelZoomInfoMessage}
+            />
+          )}
       </StyledSvgWrapper>
     )
   }

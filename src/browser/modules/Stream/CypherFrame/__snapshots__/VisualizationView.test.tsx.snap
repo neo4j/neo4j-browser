@@ -5,7 +5,7 @@ exports[`Visualization renders empty content 1`] = `<div />`;
 exports[`Visualization renders with result and escapes any HTML 1`] = `
 <div>
   <div
-    class="sc-gqPbQI hQihOE"
+    class="sc-cLQEGU cGrwkv"
   >
     <div
       class="sc-gqjmRU gEkgXi"
@@ -82,7 +82,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
             class="sc-jTzLTM fOxCEd zoom-in"
           >
             <i
-              class="sc-bMvGRv iZbHS"
+              class="sc-rBLzX gHzCML"
             >
               <span
                 class="SVGInline SVGInline--cleaned"
@@ -99,7 +99,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
             class="sc-jTzLTM fOxCEd zoom-out"
           >
             <i
-              class="sc-CtfFt nEYvh"
+              class="sc-bMvGRv iZbHS"
             >
               <span
                 class="SVGInline SVGInline--cleaned"
@@ -116,7 +116,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
             class="sc-jTzLTM fOxCEd"
           >
             <i
-              class="sc-laTMn jiKZdL"
+              class="sc-CtfFt nEYvh"
             >
               <span
                 class="SVGInline SVGInline--cleaned"
@@ -169,14 +169,14 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
                 class="sc-bwzfXH sc-gzVnrw cQdYz"
               >
                 <div
-                  class="sc-jAaTju sc-jDwBTQ hnAfZY"
+                  class="sc-cMljjf sc-jAaTju bqoYNF"
                   data-testid="property-details-overview-node-label-*"
                   style="background-color: rgb(165, 171, 182); color: rgb(255, 255, 255);"
                 >
                   * (1)
                 </div>
                 <div
-                  class="sc-jAaTju sc-jDwBTQ hnAfZY"
+                  class="sc-cMljjf sc-jAaTju bqoYNF"
                   data-testid="property-details-overview-node-label-Person"
                   style="background-color: rgb(201, 144, 192); color: rgb(255, 255, 255);"
                 >
