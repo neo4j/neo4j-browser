@@ -39,7 +39,11 @@ const ParamsFrame = ({ frame, isCollapsed, isFullscreen }: any) => {
       )}
       <div style={{ marginTop: '20px' }}>
         See <AutoExecButton cmd="help param" /> for usage of the{' '}
-        <code>:param</code> command.
+        <code>:param</code> command (setting one parameter).
+      </div>
+      <div style={{ marginTop: '5px' }}>
+        See <AutoExecButton cmd="help params" /> for usage of the{' '}
+        <code>:params</code> command (setting multiple parameters).
       </div>
     </PaddedDiv>
   )
