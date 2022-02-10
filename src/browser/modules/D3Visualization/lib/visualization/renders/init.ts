@@ -22,6 +22,8 @@ import { max } from 'lodash-es'
 
 import Renderer from '../components/Renderer'
 import VizNode, { NodeCaptionLine } from '../components/VizNode'
+import { IStyleForLabelProps } from 'project-root/src/browser/modules/D3Visualization/components/GrassEditor'
+import { IColorSettings } from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorStorage'
 import { RelArrowCaptionPosition } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelRelArrowSVG'
 
 const noop = () => undefined
@@ -50,13 +52,16 @@ function getColorStyleForNode({
     }
   }
   currentStyle: any
-  key: string
+  key: keyof IStyleForLabelProps
 }): {
   [key: string]: string | undefined
 } {
-  const colorSettings = currentStyle.get('colorSettings')
+  const colorSettings: IColorSettings | '' = currentStyle.get('colorSettings')
   if (colorSettings !== '' && node.propertyMap[colorSettings.key]) {
-    return colorSettings.settings[node.propertyMap[colorSettings.key]][key]
+    return (
+      colorSettings?.settings?.[node.propertyMap[colorSettings.key]]?.[key] ??
+      currentStyle.get(key)
+    )
   } else {
     return currentStyle.get(key)
   }
