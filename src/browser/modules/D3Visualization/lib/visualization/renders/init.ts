@@ -53,9 +53,7 @@ function getColorStyleForNode({
   }
   currentStyle: any
   key: keyof IStyleForLabelProps
-}): {
-  [key: string]: string | undefined
-} {
+}): string {
   const colorSettings: IColorSettings | '' = currentStyle.get('colorSettings')
   if (colorSettings !== '' && node.propertyMap[colorSettings.key]) {
     return (
@@ -88,14 +86,14 @@ const nodeOutline = new Renderer({
           currentStyle: viz.style.forNode(node),
           node,
           key: 'color'
-        }) as any
+        })
       },
       stroke(node: VizNode) {
         return getColorStyleForNode({
           currentStyle: viz.style.forNode(node),
           node,
           key: 'border-color'
-        }) as any
+        })
       },
       'stroke-width'(node: VizNode) {
         return viz.style.forNode(node).get('border-width')
@@ -147,7 +145,7 @@ const nodeCaption = new Renderer({
             currentStyle: viz.style.forNode(line.node),
             node: line.node,
             key: 'text-color-internal'
-          }) as any
+          })
         }
       })
 
