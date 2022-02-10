@@ -1,11 +1,10 @@
 import { D3DragEvent, drag as d3Drag } from 'd3-drag'
 import { Simulation } from 'd3-force'
 import { BaseType, Selection } from 'd3-selection'
-import { ZoomBehavior } from 'd3-zoom'
 
 import {
-  DEFAULT_ALPHA,
   DEFAULT_ALPHA_TARGET,
+  DRAGGING_ALPHA,
   DRAGGING_ALPHA_TARGET
 } from '../constants'
 import Relationship from './Relationship'
@@ -69,7 +68,7 @@ export const nodeEventHandlers = (
       // isn't stopped while nodes are being dragged.
       simulation
         .alphaTarget(DRAGGING_ALPHA_TARGET)
-        .alpha(DEFAULT_ALPHA)
+        .alpha(DRAGGING_ALPHA)
         .restart()
       restartedSimulation = true
     }

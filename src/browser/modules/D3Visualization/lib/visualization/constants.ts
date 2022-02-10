@@ -5,7 +5,7 @@ export const PRECOMPUTED_TICKS = 300
 export const TICKS_PER_RENDER = 10
 
 // Friction.
-export const VELOCITY_DECAY = 0.06
+export const VELOCITY_DECAY = 0.4
 // Temperature of the simulation. It's a value in the range [0,1] and it
 // decreases over time. Can be seen as the probability that a node will move.
 export const DEFAULT_ALPHA = 1
@@ -13,6 +13,11 @@ export const DEFAULT_ALPHA = 1
 export const DEFAULT_ALPHA_TARGET = 0
 // Temperature at which the simulation is stopped.
 export const DEFAULT_ALPHA_MIN = 0.05
+// The lower this value, the lower the movement of nodes that aren't being
+// dragged. This also affects the perceived elasticity of relationships, a lower
+// value will cause neighboring nodes to take more time to follow the node that
+// is being dragged.
+export const DRAGGING_ALPHA = 0.8
 // When dragging we set alphaTarget to a value greater than alphaMin to prevent
 // the simulation from stopping.
 export const DRAGGING_ALPHA_TARGET = 0.09
