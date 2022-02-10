@@ -95,10 +95,7 @@ import {
   getRequest,
   update as updateQueryResult
 } from 'shared/modules/requests/requestsDuck'
-import {
-  getSettings,
-  shouldUseCypherThread
-} from 'shared/modules/settings/settingsDuck'
+import { getSettings } from 'shared/modules/settings/settingsDuck'
 import { open } from 'shared/modules/sidebar/sidebarDuck'
 import {
   getBackgroundTxMetadata,
@@ -415,7 +412,6 @@ const availableCommands = [
         action,
         put,
         getParams(state),
-        shouldUseCypherThread(state),
         action.type === SINGLE_COMMAND_QUEUED
           ? getUserDirectTxMetadata({
               hasServerSupport: canSendTxMetadata(store.getState())
@@ -836,7 +832,7 @@ const availableCommands = [
               updateAndShowGrass(parsedGrass)
             } else {
               putGrassErrorFrame(
-                `Could not parse grass file containing: 
+                `Could not parse grass file containing:
 ${response}`
               )
             }

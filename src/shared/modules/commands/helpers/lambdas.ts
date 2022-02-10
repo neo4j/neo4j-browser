@@ -74,75 +74,73 @@ export function parseLambdaStatement(lambda: any) {
     })
 }
 
-export function collectLambdaValues(
+export async function collectLambdaValues(
   { parameters, query, variant }: any,
   requestId: any
 ) {
-  return bolt
-    .routedWriteTransaction(
-      query,
-      {},
-      {
-        useCypherThread: false,
-        requestId,
-        cancelable: false
-      }
-    )
-    .then(({ records }: { records: any[] }) => {
-      if (variant === IMPLICIT) {
-        const firstResult: any = head(records)
+  const [_id, request] = bolt.routedWriteTransaction(
+    query,
+    {},
+    {
+      requestId,
+      cancelable: false
+    }
+  )
 
-        return firstResult
-          ? recursivelyTypeGraphItems({
-              [parameters.value]: firstResult.get(head(firstResult.keys))
-            })
-          : {}
-      }
+  const { records }: { records: any[] } = await request
+  if (variant === IMPLICIT) {
+    const firstResult: any = head(records)
 
-      if (parameters.type === TOKEN) {
-        const extractedRecords = map(records, record =>
-          reduce(
-            record.keys,
-            (agg, next) =>
-              assign(agg, {
-                [next]: record.get(next)
-              }),
-            {}
-          )
-        )
+    return firstResult
+      ? recursivelyTypeGraphItems({
+          [parameters.value]: firstResult.get(head(firstResult.keys))
+        })
+      : {}
+  }
 
-        return {
-          [parameters.value]: map(extractedRecords, record =>
-            recursivelyTypeGraphItems(record)
-          )
-        }
-      }
-
-      // future proofing
-      if (parameters.type !== ARRAY) return {}
-
-      const { items } = parameters
-      const extractedRecords = map(
-        slice(records, 0, items.length),
-        (record, index) => {
-          const item = items[index]
-          const keys = item.type === TOKEN ? [item] : item.keys // item.type === OBJECT
-
-          return reduce(
-            keys,
-            (agg, next) =>
-              assign(agg, {
-                [next.alias || next.value]: record.get(next.value)
-              }),
-            {}
-          )
-        }
-      )
-
-      return reduce(
-        extractedRecords,
-        (agg, record) => assign(agg, recursivelyTypeGraphItems(record)),
+  if (parameters.type === TOKEN) {
+    const extractedRecords = map(records, record =>
+      reduce(
+        record.keys,
+        (agg, next) =>
+          assign(agg, {
+            [next]: record.get(next)
+          }),
         {}
       )
-    })
+    )
+
+    return {
+      [parameters.value]: map(extractedRecords, record =>
+        recursivelyTypeGraphItems(record)
+      )
+    }
+  }
+
+  // future proofing
+  if (parameters.type !== ARRAY) return {}
+
+  const { items } = parameters
+  const extractedRecords = map(
+    slice(records, 0, items.length),
+    (record, index) => {
+      const item = items[index]
+      const keys = item.type === TOKEN ? [item] : item.keys // item.type === OBJECT
+
+      return reduce(
+        keys,
+        (agg, next) =>
+          assign(agg, {
+            [next.alias || next.value]: record.get(next.value)
+          }),
+        {}
+      )
+    }
+  )
+
+  return reduce(
+    extractedRecords,
+    (agg, record) => assign(agg, recursivelyTypeGraphItems(record)),
+    {}
+  )
 }

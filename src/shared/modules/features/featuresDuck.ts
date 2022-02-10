@@ -27,7 +27,6 @@ import {
   CONNECTION_SUCCESS,
   DISCONNECTION_SUCCESS
 } from 'shared/modules/connections/connectionsDuck'
-import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
 
 export const NAME = 'features'
@@ -137,7 +136,6 @@ export const featuresDiscoveryEpic = (action$: any, store: any) => {
             {},
             {
               useDb: supportsMultiDb ? SYSTEM_DB : '',
-              useCypherThread: shouldUseCypherThread(store.getState()),
               ...getBackgroundTxMetadata({
                 hasServerSupport: canSendTxMetadata(store.getState())
               })

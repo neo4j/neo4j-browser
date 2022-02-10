@@ -31,7 +31,6 @@ import {
   DISCONNECTION_SUCCESS,
   getAuthEnabled
 } from 'shared/modules/connections/connectionsDuck'
-import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
 
 export const NAME = 'user'
@@ -105,7 +104,6 @@ export const getCurrentUserEpic = (some$: any, store: any) =>
             ),
             {},
             {
-              useCypherThread: shouldUseCypherThread(store.getState()),
               ...getBackgroundTxMetadata({
                 hasServerSupport: canSendTxMetadata(store.getState())
               }),

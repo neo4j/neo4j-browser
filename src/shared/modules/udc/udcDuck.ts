@@ -196,7 +196,6 @@ export const udcStartupEpic: Epic<Action, GlobalState> = (action$, store) =>
         'maxFrames',
         'codeFontLigatures',
         'editorLint',
-        'useCypherThread',
         'enableMultiStatementMode',
         'connectionTimeout'
       ]
