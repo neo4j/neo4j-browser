@@ -65,10 +65,13 @@ import {
   getConnectionState,
   getLastConnectionUpdate,
   getUseDb,
-  isConnected
+  isConnected,
+  isConnectedAuraHost
 } from 'shared/modules/connections/connectionsDuck'
 import {
   findDatabaseByNameOrAlias,
+  getEdition,
+  isServerConfigDone,
   shouldAllowOutgoingConnections
 } from 'shared/modules/dbMeta/state'
 import {
@@ -125,6 +128,8 @@ export function App(props: any) {
           if (!isRunningE2ETest() && props.telemetrySettings.allowUserStats) {
             const data = {
               browserVersion: version,
+              neo4jEdition: props.edition,
+              connectedTo: props.connectedTo,
               ...originalData
             }
             eventMetricsCallback &&
@@ -316,7 +321,13 @@ const mapStateToProps = (state: GlobalState) => {
     useDb,
     isDatabaseUnavailable,
     telemetrySettings: getTelemetrySettings(state),
-    consentBannerShownCount: getConsentBannerShownCount(state)
+    consentBannerShownCount: getConsentBannerShownCount(state),
+    edition: isServerConfigDone(state) ? getEdition(state) : 'PENDING',
+    connectedTo: isConnected(state)
+      ? isConnectedAuraHost(state)
+        ? 'AURA HOST'
+        : 'NON-AURA HOST'
+      : 'NOT CONNECTED'
   }
 }
 type DesktopTrackingSettings = {
