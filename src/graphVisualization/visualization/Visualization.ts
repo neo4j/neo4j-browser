@@ -31,21 +31,21 @@ import {
   ZOOM_MAX_SCALE,
   ZOOM_MIN_SCALE
 } from '../constants'
-import {
-  node as nodeRenderer,
-  relationship as relationshipRenderer
-} from '../renders/init'
-import { nodeMenuRenderer } from '../renders/menu'
+import { GraphModel } from '../models/Graph'
+import { GraphGeometryModel } from '../models/GraphGeometry'
+import { GraphStyleModel } from '../models/GraphStyle'
+import { NodeModel } from '../models/Node'
+import { RelationshipModel } from '../models/Relationship'
 import { ForceSimulation } from './ForceSimulation'
-import Graph from './Graph'
-import GraphGeometry from './GraphGeometry'
-import Relationship from './Relationship'
-import VizNode from './VizNode'
 import {
   nodeEventHandlers,
   relationshipEventHandlers
 } from './mouseEventHandlers'
-import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
+import {
+  node as nodeRenderer,
+  relationship as relationshipRenderer
+} from './renderers/init'
+import { nodeMenuRenderer } from './renderers/menu'
 
 export type MeasureSizeFn = () => { width: number; height: number }
 
@@ -65,7 +65,7 @@ export class Visualization {
   private baseGroup: Selection<SVGGElement, unknown, BaseType, unknown>
   private rect: Selection<SVGRectElement, unknown, BaseType, unknown>
   private container: Selection<SVGGElement, unknown, BaseType, unknown>
-  private geometry: GraphGeometry
+  private geometry: GraphGeometryModel
   private zoomBehavior: ZoomBehavior<SVGElement, unknown>
   private zoomMinScaleExtent: number = ZOOM_MIN_SCALE
 
@@ -81,8 +81,8 @@ export class Visualization {
     private measureSize: MeasureSizeFn,
     private onZoomEvent: (limitsReached: ZoomLimitsReached) => void,
     private onDisplayZoomWheelInfoMessage: () => void,
-    private graph: Graph,
-    public style: GraphStyle,
+    private graph: GraphModel,
+    public style: GraphStyleModel,
     public isFullscreen: boolean,
     public trigger: (event: string, ...args: any[]) => void
   ) {
@@ -113,7 +113,7 @@ export class Visualization {
       })
 
     this.container = this.baseGroup.append('g')
-    this.geometry = new GraphGeometry(style)
+    this.geometry = new GraphGeometryModel(style)
 
     this.zoomBehavior = d3Zoom<SVGElement, unknown>()
       .scaleExtent([this.zoomMinScaleExtent, ZOOM_MAX_SCALE])
@@ -177,13 +177,13 @@ export class Visualization {
     this.geometry.onTick(this.graph)
 
     const nodeGroups = this.container
-      .selectAll<SVGGElement, VizNode>('g.node')
+      .selectAll<SVGGElement, NodeModel>('g.node')
       .attr('transform', d => `translate(${d.x},${d.y})`)
 
     nodeRenderer.forEach(renderer => nodeGroups.call(renderer.onTick, this))
 
     const relationshipGroups = this.container
-      .selectAll<SVGGElement, Relationship>('g.relationship')
+      .selectAll<SVGGElement, RelationshipModel>('g.relationship')
       .attr(
         'transform',
         d =>
@@ -206,7 +206,7 @@ export class Visualization {
 
     const nodeGroups = this.container
       .select('g.layer.nodes')
-      .selectAll<SVGGElement, VizNode>('g.node')
+      .selectAll<SVGGElement, NodeModel>('g.node')
       .data(nodes, d => d.id)
       .join('g')
       .attr('class', 'node')
@@ -235,7 +235,7 @@ export class Visualization {
 
     const relationshipGroups = this.container
       .select('g.layer.relationships')
-      .selectAll<SVGGElement, Relationship>('g.relationship')
+      .selectAll<SVGGElement, RelationshipModel>('g.relationship')
       .data(relationships, d => d.id)
       .join('g')
       .attr('class', 'relationship')

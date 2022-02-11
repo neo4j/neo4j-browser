@@ -224,7 +224,7 @@ const DEFAULT_COLORS: DefaultColorType[] = [
   }
 ]
 
-export class GraphStyle {
+export class GraphStyleModel {
   rules: StyleRule[]
 
   constructor() {
@@ -524,5 +524,3 @@ export class GraphStyle {
     return this.calculateStyle(selector)
   }
 }
-
-export default GraphStyle

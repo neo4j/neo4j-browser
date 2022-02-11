@@ -17,9 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { RelationShipCaptionLayout } from '../components/Relationship'
+import { RelationshipCaptionLayout } from '../models/Relationship'
 
-export default class StraightArrow {
+export class StraightArrow {
   length: number
   midShaftPoint: { x: number; y: number }
   outline: (shortCaptionLength: number) => string
@@ -34,7 +34,7 @@ export default class StraightArrow {
     shaftWidth: number,
     headWidth: number,
     headHeight: number,
-    captionLayout: RelationShipCaptionLayout
+    captionLayout: RelationshipCaptionLayout
   ) {
     this.length = centreDistance - (startRadius + endRadius)
 

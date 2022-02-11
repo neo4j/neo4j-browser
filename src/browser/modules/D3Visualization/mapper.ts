@@ -17,9 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import Graph from './lib/visualization/components/Graph'
-import Relationship from './lib/visualization/components/Relationship'
-import VizNode from './lib/visualization/components/VizNode'
+import { GraphModel, NodeModel, RelationshipModel } from 'graph-visualization'
+
 import { BasicNode, BasicRelationship } from 'services/bolt/boltMappings'
 import { optionalToString } from 'services/utils'
 
@@ -32,17 +31,17 @@ const stringifyValues = (obj: any) =>
 export function createGraph(
   nodes: BasicNode[],
   relationships: BasicRelationship[]
-): Graph {
-  const graph = new Graph()
+): GraphModel {
+  const graph = new GraphModel()
   graph.addNodes(mapNodes(nodes))
   graph.addRelationships(mapRelationships(relationships, graph))
   return graph
 }
 
-export function mapNodes(nodes: BasicNode[]): VizNode[] {
+export function mapNodes(nodes: BasicNode[]): NodeModel[] {
   return nodes.map(
     node =>
-      new VizNode(
+      new NodeModel(
         node.id,
         node.labels,
         mapProperties(node.properties),
@@ -53,12 +52,12 @@ export function mapNodes(nodes: BasicNode[]): VizNode[] {
 
 export function mapRelationships(
   relationships: BasicRelationship[],
-  graph: Graph
-): Relationship[] {
+  graph: GraphModel
+): RelationshipModel[] {
   return relationships.map(rel => {
     const source = graph.findNode(rel.startNodeId)
     const target = graph.findNode(rel.endNodeId)
-    return new Relationship(
+    return new RelationshipModel(
       rel.id,
       source,
       target,
@@ -82,7 +81,7 @@ export type GraphStats = {
   relTypes?: GraphStatsRelationshipTypes
 }
 
-export function getGraphStats(graph: Graph): GraphStats {
+export function getGraphStats(graph: GraphModel): GraphStats {
   const labelStats: GraphStatsLabels = {}
   const relTypeStats: GraphStatsRelationshipTypes = {}
   graph.nodes().forEach(node => {

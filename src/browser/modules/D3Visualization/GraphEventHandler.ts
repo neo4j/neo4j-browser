@@ -17,31 +17,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { VizItem } from './components/types'
-import Graph from './lib/visualization/components/Graph'
+import { GraphModel, NodeModel, RelationshipModel } from 'graph-visualization'
+
+import { VizItem } from '../../../graphVisualization/types'
 import GraphView from './lib/visualization/components/GraphView'
-import Relationship from './lib/visualization/components/Relationship'
-import VizNode from './lib/visualization/components/VizNode'
 import { GraphStats, getGraphStats, mapNodes, mapRelationships } from './mapper'
 import { BasicNode, BasicNodesAndRels } from 'services/bolt/boltMappings'
 
 export type GetNodeNeighboursFn = (
-  node: BasicNode | VizNode,
+  node: BasicNode | NodeModel,
   currentNeighbourIds: string[],
   callback: (data: BasicNodesAndRels) => void
 ) => void
 
 export class GraphEventHandler {
   getNodeNeighbours: GetNodeNeighboursFn
-  graph: Graph
+  graph: GraphModel
   graphView: GraphView
   onGraphModelChange: (stats: GraphStats) => void
   onItemMouseOver: (item: VizItem) => void
   onItemSelected: (item: VizItem) => void
-  selectedItem: VizNode | Relationship | null
+  selectedItem: NodeModel | RelationshipModel | null
 
   constructor(
-    graph: Graph,
+    graph: GraphModel,
     graphView: GraphView,
     getNodeNeighbours: GetNodeNeighboursFn,
     onItemMouseOver: (item: VizItem) => void,
@@ -61,7 +60,7 @@ export class GraphEventHandler {
     this.onGraphModelChange(getGraphStats(this.graph))
   }
 
-  selectItem(item: VizNode | Relationship): void {
+  selectItem(item: NodeModel | RelationshipModel): void {
     if (this.selectedItem) {
       this.selectedItem.selected = false
     }
@@ -96,7 +95,7 @@ export class GraphEventHandler {
     })
   }
 
-  nodeClose(d: VizNode): void {
+  nodeClose(d: NodeModel): void {
     this.graph.removeConnectedRelationships(d)
     this.graph.removeNode(d)
     this.deselectItem()
@@ -108,7 +107,7 @@ export class GraphEventHandler {
     this.graphModelChanged()
   }
 
-  nodeClicked(node: VizNode): void {
+  nodeClicked(node: NodeModel): void {
     if (!node) {
       return
     }
@@ -126,7 +125,7 @@ export class GraphEventHandler {
     }
   }
 
-  nodeUnlock(d: VizNode): void {
+  nodeUnlock(d: NodeModel): void {
     if (!d) {
       return
     }
@@ -135,7 +134,7 @@ export class GraphEventHandler {
     this.deselectItem()
   }
 
-  nodeDblClicked(d: VizNode): void {
+  nodeDblClicked(d: NodeModel): void {
     if (d.expanded) {
       this.nodeCollapse(d)
       return
@@ -156,14 +155,14 @@ export class GraphEventHandler {
     )
   }
 
-  nodeCollapse(d: VizNode): void {
+  nodeCollapse(d: NodeModel): void {
     d.expanded = false
     this.graph.collapseNode(d)
     this.graphView.update({ updateNodes: true, updateRelationships: true })
     this.graphModelChanged()
   }
 
-  onNodeMouseOver(node: VizNode): void {
+  onNodeMouseOver(node: NodeModel): void {
     if (!node.contextMenu) {
       this.onItemMouseOver({
         type: 'node',
@@ -172,7 +171,7 @@ export class GraphEventHandler {
     }
   }
 
-  onMenuMouseOver(itemWithMenu: VizNode): void {
+  onMenuMouseOver(itemWithMenu: NodeModel): void {
     if (!itemWithMenu.contextMenu) {
       throw new Error('menuMouseOver triggered without menu')
     }
@@ -186,14 +185,14 @@ export class GraphEventHandler {
     })
   }
 
-  onRelationshipMouseOver(relationship: Relationship): void {
+  onRelationshipMouseOver(relationship: RelationshipModel): void {
     this.onItemMouseOver({
       type: 'relationship',
       item: relationship
     })
   }
 
-  onRelationshipClicked(relationship: Relationship): void {
+  onRelationshipClicked(relationship: RelationshipModel): void {
     if (!relationship.selected) {
       this.selectItem(relationship)
       this.onItemSelected({

@@ -1,5 +1,5 @@
-import Relationship from './components/Relationship'
-import VizNode from './components/VizNode'
+import { NodeModel } from './models/Node'
+import { RelationshipModel } from './models/Relationship'
 
 export const PRECOMPUTED_TICKS = 300
 export const TICKS_PER_RENDER = 10
@@ -24,9 +24,10 @@ export const DRAGGING_ALPHA_TARGET = 0.09
 
 export const LINK_DISTANCE = 45
 
-export const FORCE_LINK_DISTANCE = (relationship: Relationship): number =>
+export const FORCE_LINK_DISTANCE = (relationship: RelationshipModel): number =>
   relationship.source.radius + relationship.target.radius + LINK_DISTANCE * 2
-export const FORCE_COLLIDE_RADIUS = (node: VizNode): number => node.radius + 25
+export const FORCE_COLLIDE_RADIUS = (node: NodeModel): number =>
+  node.radius + 25
 export const FORCE_CHARGE = -400
 export const FORCE_CENTER_X = 0.03
 export const FORCE_CENTER_Y = 0.03

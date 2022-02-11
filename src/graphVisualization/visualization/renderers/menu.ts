@@ -20,9 +20,9 @@
 import { BaseType, Selection } from 'd3-selection'
 import { arc as d3Arc } from 'd3-shape'
 
-import Renderer from '../components/Renderer'
-import { Visualization } from '../components/Visualization'
-import VizNode from '../components/VizNode'
+import { NodeModel } from '../../models/Node'
+import Renderer from '../Renderer'
+import { Visualization } from '../Visualization'
 import icons from './d3Icons'
 
 const noOp = () => undefined
@@ -42,13 +42,13 @@ const drawArc = function (radius: number, itemNumber: number, width = 30) {
     .padAngle(0.03)
 }
 
-const getSelectedNode = (node: VizNode) => (node.selected ? [node] : [])
+const getSelectedNode = (node: NodeModel) => (node.selected ? [node] : [])
 
 const attachContextEvent = (
   eventType: string,
   elements: [
-    Selection<BaseType | SVGPathElement, VizNode, BaseType, VizNode>,
-    Selection<BaseType | SVGGElement, VizNode, BaseType, VizNode>
+    Selection<BaseType | SVGPathElement, NodeModel, BaseType, NodeModel>,
+    Selection<BaseType | SVGGElement, NodeModel, BaseType, NodeModel>
   ],
   viz: Visualization,
   content: string,
@@ -59,10 +59,10 @@ const attachContextEvent = (
       event.stopPropagation()
       return null
     })
-    element.on('mouseup', (_event: Event, node: VizNode) =>
+    element.on('mouseup', (_event: Event, node: NodeModel) =>
       viz.trigger(eventType, node)
     )
-    element.on('mouseover', (_event: Event, node: VizNode) => {
+    element.on('mouseover', (_event: Event, node: NodeModel) => {
       node.contextMenu = {
         menuSelection: eventType,
         menuContent: content,
@@ -71,7 +71,7 @@ const attachContextEvent = (
       return viz.trigger('menuMouseOver', node)
     })
 
-    element.on('mouseout', (_event: Event, node: VizNode) => {
+    element.on('mouseout', (_event: Event, node: NodeModel) => {
       delete node.contextMenu
       return viz.trigger('menuMouseOut', node)
     })
@@ -79,7 +79,7 @@ const attachContextEvent = (
 }
 
 const createMenuItem = function (
-  selection: Selection<SVGGElement, VizNode, BaseType, unknown>,
+  selection: Selection<SVGGElement, NodeModel, BaseType, unknown>,
   viz: Visualization,
   eventType: string,
   itemIndex: number,
@@ -113,7 +113,7 @@ const createMenuItem = function (
     .classed('icon', true)
     .classed(className, true)
     .classed('context-menu-item', true)
-    .attr('transform', (node: VizNode) => {
+    .attr('transform', (node: NodeModel) => {
       return `translate(${Math.floor(
         // @ts-expect-error
         drawArc(node.radius, itemIndex).centroid()[0] +
@@ -124,7 +124,7 @@ const createMenuItem = function (
           (position[1] * 100) / 100
       )}) scale(0.7)`
     })
-    .attr('color', (node: VizNode) => {
+    .attr('color', (node: NodeModel) => {
       return viz.style.forNode(node).get('text-color-internal')
     })
 
@@ -133,15 +133,15 @@ const createMenuItem = function (
   tab
     .transition()
     .duration(200)
-    .attr('d', (node: VizNode) => {
+    .attr('d', (node: NodeModel) => {
       // @ts-expect-error Expected 1-2 arguments, but got 0.ts(2554)
       return drawArc(node.radius, itemIndex)()
     })
     .selection()
-    .exit<VizNode>()
+    .exit<NodeModel>()
     .transition()
     .duration(200)
-    .attr('d', (node: VizNode) => {
+    .attr('d', (node: NodeModel) => {
       // @ts-expect-error Expected 1-2 arguments, but got 0.ts(2554)
       return drawArc(node.radius, itemIndex, 1)()
     })
@@ -150,7 +150,7 @@ const createMenuItem = function (
   return icon
 }
 
-const donutRemoveNode = new Renderer<VizNode>({
+const donutRemoveNode = new Renderer<NodeModel>({
   name: 'donutRemoveNode',
   onGraphChange(selection, viz) {
     return createMenuItem(
@@ -168,7 +168,7 @@ const donutRemoveNode = new Renderer<VizNode>({
   onTick: noOp
 })
 
-const donutExpandNode = new Renderer<VizNode>({
+const donutExpandNode = new Renderer<NodeModel>({
   name: 'donutExpandNode',
   onGraphChange(selection, viz) {
     return createMenuItem(
@@ -186,7 +186,7 @@ const donutExpandNode = new Renderer<VizNode>({
   onTick: noOp
 })
 
-const donutUnlockNode = new Renderer<VizNode>({
+const donutUnlockNode = new Renderer<NodeModel>({
   name: 'donutUnlockNode',
   onGraphChange(selection, viz) {
     return createMenuItem(

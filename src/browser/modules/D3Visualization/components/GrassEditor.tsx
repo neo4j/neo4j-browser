@@ -21,7 +21,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Action, Dispatch } from 'redux'
 
-import { GraphStyle, Selector } from '../graphStyle'
+import { GraphStyleModel, Selector } from 'graph-visualization'
+
 import {
   StyledCaptionSelector,
   StyledCircleSelector,
@@ -39,20 +40,20 @@ import { toKeyString } from 'shared/services/utils'
 
 type GrassEditorProps = {
   graphStyleData?: any
-  graphStyle?: GraphStyle
+  graphStyle?: GraphStyleModel
   update?: any
   selectedLabel?: { label: string; propertyKeys: string[] }
   selectedRelType?: { relType: string; propertyKeys: string[] }
 }
 
 export class GrassEditorComponent extends Component<GrassEditorProps> {
-  graphStyle: GraphStyle
+  graphStyle: GraphStyleModel
   nodeDisplaySizes: any
   picker: any
   widths: any
   constructor(props: any) {
     super(props)
-    this.graphStyle = new GraphStyle()
+    this.graphStyle = new GraphStyleModel()
     if (this.props.graphStyleData) {
       this.graphStyle.loadRules(this.props.graphStyleData)
     }

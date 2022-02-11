@@ -76,13 +76,22 @@
       }
     },
     {
-      "files": ["src/graphVisualization/**/*.tsx"],
+      "files": [
+        "src/graphVisualization/**/*.ts",
+        "src/graphVisualization/**/*.tsx"
+      ],
       "rules": {
         "react/prefer-stateless-function": [
           "error",
           { "ignorePureComponents": true }
         ],
-        "no-restricted-imports": ["error", "redux", "react-redux"]
+        "no-restricted-imports": [
+          "error",
+          {
+            "paths": ["redux", "react-redux"],
+            "patterns": ["browser*"]
+          }
+        ]
       }
     }
   ]

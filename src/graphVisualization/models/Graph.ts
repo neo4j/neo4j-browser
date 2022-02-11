@@ -17,20 +17,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import Relationship from './Relationship'
-import VizNode from './VizNode'
+import { NodeModel } from './Node'
+import { RelationshipModel } from './Relationship'
 
 type NodeMap = Record<string, string[]>
 function uniq<T>(list: T[]): T[] {
   return [...new Set(list)]
 }
 
-export default class Graph {
-  _nodes: VizNode[]
-  _relationships: Relationship[]
+export class GraphModel {
+  _nodes: NodeModel[]
+  _relationships: RelationshipModel[]
   expandedNodeMap: NodeMap
-  nodeMap: Record<string, VizNode>
-  relationshipMap: Record<string, Relationship>
+  nodeMap: Record<string, NodeModel>
+  relationshipMap: Record<string, RelationshipModel>
 
   constructor() {
     this.addNodes = this.addNodes.bind(this)
@@ -52,11 +52,11 @@ export default class Graph {
     this._relationships = []
   }
 
-  nodes(): VizNode[] {
+  nodes(): NodeModel[] {
     return this._nodes
   }
 
-  relationships(): Relationship[] {
+  relationships(): RelationshipModel[] {
     return this._relationships
   }
 
@@ -78,7 +78,7 @@ export default class Graph {
     return Object.values(groups)
   }
 
-  addNodes(nodes: VizNode[]): void {
+  addNodes(nodes: NodeModel[]): void {
     for (const node of nodes) {
       if (this.findNode(node.id) == null) {
         this.nodeMap[node.id] = node
@@ -87,7 +87,7 @@ export default class Graph {
     }
   }
 
-  addExpandedNodes = (node: VizNode, nodes: VizNode[]): void => {
+  addExpandedNodes = (node: NodeModel, nodes: NodeModel[]): void => {
     for (const eNode of Array.from(nodes)) {
       if (this.findNode(eNode.id) == null) {
         this.nodeMap[eNode.id] = eNode
@@ -99,14 +99,14 @@ export default class Graph {
     }
   }
 
-  removeNode(node: VizNode): void {
+  removeNode(node: NodeModel): void {
     if (this.findNode(node.id) != null) {
       delete this.nodeMap[node.id]
       this._nodes.splice(this._nodes.indexOf(node), 1)
     }
   }
 
-  collapseNode = (node: VizNode): void => {
+  collapseNode = (node: NodeModel): void => {
     if (!this.expandedNodeMap[node.id]) {
       return
     }
@@ -119,7 +119,7 @@ export default class Graph {
     this.expandedNodeMap[node.id] = []
   }
 
-  updateNode(node: VizNode): void {
+  updateNode(node: NodeModel): void {
     if (this.findNode(node.id) != null) {
       this.removeNode(node)
       node.expanded = false
@@ -128,7 +128,7 @@ export default class Graph {
     }
   }
 
-  removeConnectedRelationships(node: VizNode): void {
+  removeConnectedRelationships(node: NodeModel): void {
     for (const r of Array.from(this.findAllRelationshipToNode(node))) {
       this.updateNode(r.source)
       this.updateNode(r.target)
@@ -137,7 +137,7 @@ export default class Graph {
     }
   }
 
-  addRelationships(relationships: Relationship[]): void {
+  addRelationships(relationships: RelationshipModel[]): void {
     for (const relationship of Array.from(relationships)) {
       const existingRelationship = this.findRelationship(relationship.id)
       if (existingRelationship != null) {
@@ -150,7 +150,7 @@ export default class Graph {
     }
   }
 
-  addInternalRelationships(relationships: Relationship[]): void {
+  addInternalRelationships(relationships: RelationshipModel[]): void {
     for (const relationship of Array.from(relationships)) {
       relationship.internal = true
       if (this.findRelationship(relationship.id) == null) {
@@ -169,7 +169,7 @@ export default class Graph {
     this.addRelationships(relationships)
   }
 
-  findNode(id: string): VizNode {
+  findNode(id: string): NodeModel {
     return this.nodeMap[id]
   }
 
@@ -187,11 +187,11 @@ export default class Graph {
       })
   }
 
-  findRelationship(id: string): Relationship | undefined {
+  findRelationship(id: string): RelationshipModel | undefined {
     return this.relationshipMap[id]
   }
 
-  findAllRelationshipToNode(node: VizNode): Relationship[] {
+  findAllRelationshipToNode(node: NodeModel): RelationshipModel[] {
     return this._relationships.filter(
       relationship =>
         relationship.source.id === node.id || relationship.target.id === node.id
@@ -207,10 +207,10 @@ export default class Graph {
 }
 
 export class NodePair {
-  nodeA: VizNode
-  nodeB: VizNode
-  relationships: Relationship[]
-  constructor(node1: VizNode, node2: VizNode) {
+  nodeA: NodeModel
+  nodeB: NodeModel
+  relationships: RelationshipModel[]
+  constructor(node1: NodeModel, node2: NodeModel) {
     this.relationships = []
     if (node1.id < node2.id) {
       this.nodeA = node1

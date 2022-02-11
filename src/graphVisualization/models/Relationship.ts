@@ -17,19 +17,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import ArcArrow from '../utils/ArcArrow'
-import LoopArrow from '../utils/LoopArrow'
-import StraightArrow from '../utils/StraightArrow'
-import Node from './VizNode'
-import { VizItemProperty } from 'browser/modules/D3Visualization/components/types'
+import { VizItemProperty } from '../types'
+import { ArcArrow } from '../utils/ArcArrow'
+import { LoopArrow } from '../utils/LoopArrow'
+import { StraightArrow } from '../utils/StraightArrow'
+import { NodeModel } from './Node'
 
-export type RelationShipCaptionLayout = 'internal' | 'external'
-export default class Relationship {
+export type RelationshipCaptionLayout = 'internal' | 'external'
+export class RelationshipModel {
   id: string
   propertyList: VizItemProperty[]
   propertyMap: Record<string, string>
-  source: Node
-  target: Node
+  source: NodeModel
+  target: NodeModel
   type: string
   isNode = false
   isRelationship = true
@@ -38,7 +38,7 @@ export default class Relationship {
   caption: string
   captionLength: number
   captionHeight: number
-  captionLayout: RelationShipCaptionLayout
+  captionLayout: RelationshipCaptionLayout
   shortCaption: string | undefined
   shortCaptionLength: number | undefined
   selected: boolean
@@ -48,8 +48,8 @@ export default class Relationship {
 
   constructor(
     id: string,
-    source: Node,
-    target: Node,
+    source: NodeModel,
+    target: NodeModel,
     type: string,
     properties: Record<string, string>,
     propertyTypes: Record<string, string>

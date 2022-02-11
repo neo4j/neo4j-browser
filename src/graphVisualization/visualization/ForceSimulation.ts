@@ -40,20 +40,20 @@ import {
   TICKS_PER_RENDER,
   VELOCITY_DECAY
 } from '../constants'
+import { GraphModel } from '../models/Graph'
+import { NodeModel } from '../models/Node'
+import { RelationshipModel } from '../models/Relationship'
 import circularLayout from '../utils/circularLayout'
-import Graph from './Graph'
-import Relationship from './Relationship'
-import VizNode from './VizNode'
 
-const oneRelationshipPerPairOfNodes = (graph: Graph) =>
+const oneRelationshipPerPairOfNodes = (graph: GraphModel) =>
   Array.from(graph.groupedRelationships()).map(pair => pair.relationships[0])
 
 export class ForceSimulation {
-  simulation: Simulation<VizNode, Relationship>
+  simulation: Simulation<NodeModel, RelationshipModel>
   simulationTimeout: null | number = null
 
   constructor(private render: () => void) {
-    this.simulation = forceSimulation<VizNode, Relationship>()
+    this.simulation = forceSimulation<NodeModel, RelationshipModel>()
       .velocityDecay(VELOCITY_DECAY)
       .force('charge', forceManyBody().strength(FORCE_CHARGE))
       .force('centerX', forceX(0).strength(FORCE_CENTER_X))
@@ -65,7 +65,7 @@ export class ForceSimulation {
       .stop()
   }
 
-  updateNodes(graph: Graph) {
+  updateNodes(graph: GraphModel) {
     const nodes = graph.nodes()
 
     const radius = (nodes.length * LINK_DISTANCE) / (Math.PI * 2)
@@ -77,15 +77,15 @@ export class ForceSimulation {
 
     this.simulation
       .nodes(nodes)
-      .force('collide', forceCollide<VizNode>().radius(FORCE_COLLIDE_RADIUS))
+      .force('collide', forceCollide<NodeModel>().radius(FORCE_COLLIDE_RADIUS))
   }
 
-  updateRelationships(graph: Graph) {
+  updateRelationships(graph: GraphModel) {
     const relationships = oneRelationshipPerPairOfNodes(graph)
 
     this.simulation.force(
       'link',
-      forceLink<VizNode, Relationship>(relationships)
+      forceLink<NodeModel, RelationshipModel>(relationships)
         .id(node => node.id)
         .distance(FORCE_LINK_DISTANCE)
     )

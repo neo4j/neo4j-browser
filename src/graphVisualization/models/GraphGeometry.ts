@@ -17,24 +17,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import PairwiseArcsRelationshipRouting from '../utils/pairwiseArcsRelationshipRouting'
-import measureText from '../utils/textMeasurement'
-import Graph from './Graph'
-import Relationship from './Relationship'
-import VizNode, { NodeCaptionLine } from './VizNode'
-import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
+import { PairwiseArcsRelationshipRouting } from '../utils/pairwiseArcsRelationshipRouting'
+import { measureText } from '../utils/textMeasurement'
+import { GraphModel } from './Graph'
+import { GraphStyleModel } from './GraphStyle'
+import { NodeCaptionLine, NodeModel } from './Node'
+import { RelationshipModel } from './Relationship'
 
-export default class GraphGeometry {
+export class GraphGeometryModel {
   relationshipRouting: PairwiseArcsRelationshipRouting
-  style: GraphStyle
+  style: GraphStyleModel
   canvas: HTMLCanvasElement
-  constructor(style: GraphStyle) {
+  constructor(style: GraphStyleModel) {
     this.style = style
     this.relationshipRouting = new PairwiseArcsRelationshipRouting(this.style)
     this.canvas = document.createElement('canvas')
   }
 
-  formatNodeCaptions(nodes: VizNode[]): void {
+  formatNodeCaptions(nodes: NodeModel[]): void {
     const canvas2DContext = this.canvas.getContext('2d')
     if (canvas2DContext) {
       nodes.forEach(
@@ -48,21 +48,21 @@ export default class GraphGeometry {
     }
   }
 
-  formatRelationshipCaptions(relationships: Relationship[]): void {
+  formatRelationshipCaptions(relationships: RelationshipModel[]): void {
     relationships.forEach(relationship => {
       const template = this.style.forRelationship(relationship).get('caption')
       relationship.caption = this.style.interpolate(template, relationship)
     })
   }
 
-  setNodeRadii(nodes: VizNode[]): void {
+  setNodeRadii(nodes: NodeModel[]): void {
     nodes.forEach(node => {
       node.radius = parseFloat(this.style.forNode(node).get('diameter')) / 2
     })
   }
 
   onGraphChange(
-    graph: Graph,
+    graph: GraphModel,
     options = { updateNodes: true, updateRelationships: true }
   ): void {
     if (!!options.updateNodes) {
@@ -78,14 +78,14 @@ export default class GraphGeometry {
     }
   }
 
-  onTick(graph: Graph): void {
+  onTick(graph: GraphModel): void {
     this.relationshipRouting.layoutRelationships(graph)
   }
 }
 
 const fitCaptionIntoCircle = (
-  node: VizNode,
-  style: GraphStyle,
+  node: NodeModel,
+  style: GraphStyleModel,
   canvas2DContext: CanvasRenderingContext2D
 ): NodeCaptionLine[] => {
   const fontFamily = 'sans-serif'

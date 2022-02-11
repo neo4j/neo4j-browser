@@ -17,18 +17,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import Graph from './Graph'
-import { VizItemProperty } from 'browser/modules/D3Visualization/components/types'
+import { VizItemProperty } from '../types'
+import { GraphModel } from './Graph'
 
 type NodeProperties = { [key: string]: string }
 export type NodeCaptionLine = {
-  node: VizNode
+  node: NodeModel
   text: string
   baseline: number
   remainingWidth: number
 }
 
-export default class VizNode {
+export class NodeModel {
   id: string
   labels: string[]
   propertyList: VizItemProperty[]
@@ -82,13 +82,13 @@ export default class VizNode {
     return this.propertyMap
   }
 
-  relationshipCount(graph: Graph): number {
+  relationshipCount(graph: GraphModel): number {
     return graph
       .relationships()
       .filter(rel => rel.source === this || rel.target === this).length
   }
 
-  hasRelationships(graph: Graph): boolean {
+  hasRelationships(graph: GraphModel): boolean {
     return graph
       .relationships()
       .some(rel => rel.source === this || rel.target === this)

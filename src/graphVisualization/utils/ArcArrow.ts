@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { RelationShipCaptionLayout } from '../components/Relationship'
+import { RelationshipCaptionLayout } from '../models/Relationship'
 
 type Point = { x: number; y: number }
 const square = (l: number) => l * l
@@ -44,7 +44,7 @@ const intersectWithOtherCircle = function (
 
   return intersection
 }
-export default class ArcArrow {
+export class ArcArrow {
   deflection: number
   midShaftPoint: Point
   outline: (shortCaptionLength: number) => string
@@ -58,7 +58,7 @@ export default class ArcArrow {
     arrowWidth: number,
     headWidth: number,
     headLength: number,
-    captionLayout: RelationShipCaptionLayout
+    captionLayout: RelationshipCaptionLayout
   ) {
     this.deflection = deflection
 

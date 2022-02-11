@@ -21,9 +21,14 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Action, Dispatch } from 'redux'
 
+import {
+  GraphModel,
+  GraphStyleModel,
+  VizItem,
+  ZoomLimitsReached
+} from 'graph-visualization'
+
 import { GetNodeNeighboursFn, GraphEventHandler } from '../GraphEventHandler'
-import GraphStyle from '../graphStyle'
-import Graph from '../lib/visualization/components/Graph'
 import GraphView from '../lib/visualization/components/GraphView'
 import {
   GraphStats,
@@ -33,13 +38,11 @@ import {
 } from '../mapper'
 import { WheelZoomInfoOverlay } from './WheelZoomInfoOverlay'
 import { StyledSvgWrapper, StyledZoomButton, StyledZoomHolder } from './styled'
-import { VizItem } from './types'
 import {
   ZoomInIcon,
   ZoomOutIcon,
   ZoomToFitIcon
 } from 'browser-components/icons/Icons'
-import { ZoomLimitsReached } from 'project-root/src/browser/modules/D3Visualization/lib/visualization/components/Visualization'
 import { GlobalState } from 'project-root/src/shared/globalState'
 import { shouldShowWheelZoomInfo } from 'project-root/src/shared/modules/settings/settingsDuck'
 import * as actions from 'project-root/src/shared/modules/settings/settingsDuck'
@@ -52,14 +55,14 @@ type GraphProps = {
   getNodeNeighbours: GetNodeNeighboursFn
   onItemMouseOver: (item: VizItem) => void
   onItemSelect: (item: VizItem) => void
-  graphStyle: GraphStyle
+  graphStyle: GraphStyleModel
   styleVersion: number
   onGraphModelChange: (stats: GraphStats) => void
   assignVisElement: (svgElement: any, graphElement: any) => void
   getAutoCompleteCallback: (
     callback: (internalRelationships: BasicRelationship[]) => void
   ) => void
-  setGraph: (graph: Graph) => void
+  setGraph: (graph: GraphModel) => void
   offset: number
   wheelZoomInfoMessageEnabled: boolean
   disableWheelZoomInfoMessage: () => void

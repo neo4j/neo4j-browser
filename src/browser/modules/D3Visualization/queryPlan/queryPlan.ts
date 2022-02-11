@@ -24,8 +24,9 @@ import { scaleLog, scaleOrdinal } from 'd3-scale'
 import { BaseType, Selection, select as d3Select } from 'd3-selection'
 import 'd3-transition'
 
-import { groupBy, max, min, sum } from '../utils/arrays'
-import measureText from '../utils/textMeasurement'
+import { measureText } from 'graph-visualization'
+
+import { groupBy, max, min, sum } from './arrays'
 
 function queryPlan(this: any, element: any) {
   const maxChildOperators = 2 // Fact we know about the cypher compiler

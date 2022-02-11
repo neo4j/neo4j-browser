@@ -7,27 +7,27 @@ import {
   DRAGGING_ALPHA,
   DRAGGING_ALPHA_TARGET
 } from '../constants'
-import Relationship from './Relationship'
-import VizNode from './VizNode'
+import { NodeModel } from '../models/Node'
+import { RelationshipModel } from '../models/Relationship'
 
 export const nodeEventHandlers = (
-  selection: Selection<SVGGElement, VizNode, BaseType, unknown>,
-  trigger: (event: string, node: VizNode) => void,
-  simulation: Simulation<VizNode, Relationship>
+  selection: Selection<SVGGElement, NodeModel, BaseType, unknown>,
+  trigger: (event: string, node: NodeModel) => void,
+  simulation: Simulation<NodeModel, RelationshipModel>
 ) => {
   let initialDragPosition: [number, number]
   let restartedSimulation = false
   const tolerance = 25
 
-  const onNodeClick = (_event: Event, node: VizNode) => {
+  const onNodeClick = (_event: Event, node: NodeModel) => {
     trigger('nodeClicked', node)
   }
 
-  const onNodeDblClick = (_event: Event, node: VizNode) => {
+  const onNodeDblClick = (_event: Event, node: NodeModel) => {
     trigger('nodeDblClicked', node)
   }
 
-  const onNodeMouseOver = (_event: Event, node: VizNode) => {
+  const onNodeMouseOver = (_event: Event, node: NodeModel) => {
     if (!node.fx && !node.fy) {
       node.hoverFixed = true
       node.fx = node.x
@@ -37,7 +37,7 @@ export const nodeEventHandlers = (
     trigger('nodeMouseOver', node)
   }
 
-  const onNodeMouseOut = (_event: Event, node: VizNode) => {
+  const onNodeMouseOut = (_event: Event, node: NodeModel) => {
     if (node.hoverFixed) {
       node.hoverFixed = false
       node.fx = null
@@ -47,14 +47,14 @@ export const nodeEventHandlers = (
     trigger('nodeMouseOut', node)
   }
 
-  const dragstarted = (event: D3DragEvent<SVGGElement, VizNode, any>) => {
+  const dragstarted = (event: D3DragEvent<SVGGElement, NodeModel, any>) => {
     initialDragPosition = [event.x, event.y]
     restartedSimulation = false
   }
 
   const dragged = (
-    event: D3DragEvent<SVGGElement, VizNode, any>,
-    node: VizNode
+    event: D3DragEvent<SVGGElement, NodeModel, any>,
+    node: NodeModel
   ) => {
     // Math.sqrt was removed to avoid unnecessary computation, since this
     // function is called very often when dragging.
@@ -78,7 +78,7 @@ export const nodeEventHandlers = (
     node.fy = event.y
   }
 
-  const dragended = (_event: D3DragEvent<SVGGElement, VizNode, any>) => {
+  const dragended = (_event: D3DragEvent<SVGGElement, NodeModel, any>) => {
     if (restartedSimulation) {
       // Reset alphaTarget so the simulation cools down and stops.
       simulation.alphaTarget(DEFAULT_ALPHA_TARGET)
@@ -87,7 +87,7 @@ export const nodeEventHandlers = (
 
   return selection
     .call(
-      d3Drag<SVGGElement, VizNode>()
+      d3Drag<SVGGElement, NodeModel>()
         .on('start', dragstarted)
         .on('drag', dragged)
         .on('end', dragended)
@@ -99,19 +99,19 @@ export const nodeEventHandlers = (
 }
 
 export const relationshipEventHandlers = (
-  selection: Selection<SVGGElement, Relationship, BaseType, unknown>,
-  trigger: (event: string, rel: Relationship) => void
+  selection: Selection<SVGGElement, RelationshipModel, BaseType, unknown>,
+  trigger: (event: string, rel: RelationshipModel) => void
 ) => {
-  const onRelationshipClick = (event: Event, rel: Relationship) => {
+  const onRelationshipClick = (event: Event, rel: RelationshipModel) => {
     event.stopPropagation()
     trigger('relationshipClicked', rel)
   }
 
-  const onRelMouseOver = (_event: Event, rel: Relationship) => {
+  const onRelMouseOver = (_event: Event, rel: RelationshipModel) => {
     trigger('relMouseOver', rel)
   }
 
-  const onRelMouseOut = (_event: Event, rel: Relationship) => {
+  const onRelMouseOut = (_event: Event, rel: RelationshipModel) => {
     trigger('relMouseOut', rel)
   }
 

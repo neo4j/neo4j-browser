@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { Resizable } from 'react-resizable'
 import { Icon } from 'semantic-ui-react'
 
+import { GraphStyleModel, VizItem } from 'graph-visualization'
+
 import { GraphStats } from '../mapper'
 import { DetailsPaneComponent } from './DetailsPane'
 import { NodeInspectorDrawer } from './NodeInspectorDrawer'
@@ -11,12 +13,10 @@ import {
   StyledNodeInspectorTopMenuChevron,
   panelMinWidth
 } from './styled'
-import { VizItem } from './types'
-import { GraphStyle } from 'project-root/src/browser/modules/D3Visualization/graphStyle'
 
 interface NodeInspectorPanelProps {
   expanded: boolean
-  graphStyle: GraphStyle
+  graphStyle: GraphStyleModel
   hasTruncatedFields: boolean
   hoveredItem: VizItem
   selectedItem: VizItem

@@ -30,7 +30,7 @@ class Point {
   }
 }
 
-export default class LoopArrow {
+export class LoopArrow {
   midShaftPoint: Point
   outline: () => string
   overlay: (minWidth: number) => string

@@ -46,7 +46,7 @@ const cacheTextWidth = function () {
   }
 }
 
-export default function (
+export function measureText(
   text: string,
   fontFamily: string,
   fontSize: number,

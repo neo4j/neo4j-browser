@@ -17,19 +17,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { isNullish } from '../utils/arrays'
-import Graph from './Graph'
 import {
+  GraphModel,
+  GraphStyleModel,
   MeasureSizeFn,
   Visualization,
   ZoomLimitsReached
-} from './Visualization'
-import GraphStyle from 'project-root/src/browser/modules/D3Visualization/graphStyle'
+} from 'graph-visualization'
+
+import { isNullish } from '../utils/arrays'
 
 export default class GraphView {
   callbacks: Record<string, undefined | Array<(...args: any[]) => void>>
-  graph: Graph
-  style: GraphStyle
+  graph: GraphModel
+  style: GraphStyleModel
   viz: Visualization
 
   constructor(
@@ -37,8 +38,8 @@ export default class GraphView {
     measureSize: MeasureSizeFn,
     onZoomEvent: (limitsReached: ZoomLimitsReached) => void,
     onDisplayZoomWheelInfoMessage: () => void,
-    graph: Graph,
-    style: GraphStyle,
+    graph: GraphModel,
+    style: GraphStyleModel,
     isFullscreen: boolean
   ) {
     this.graph = graph

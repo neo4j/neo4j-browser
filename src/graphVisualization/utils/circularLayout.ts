@@ -17,10 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import VizNode from '../components/VizNode'
+import { NodeModel } from '../models/Node'
 
 export default function circularLayout(
-  nodes: VizNode[],
+  nodes: NodeModel[],
   center: { x: number; y: number },
   radius: number
 ): void {

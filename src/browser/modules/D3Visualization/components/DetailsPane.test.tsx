@@ -20,6 +20,8 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import React from 'react'
 
+import { GraphStyleModel, VizItem, VizItemProperty } from 'graph-visualization'
+
 import {
   DETAILS_PANE_STEP_SIZE,
   DetailsPaneComponent,
@@ -28,11 +30,9 @@ import {
   MAX_LENGTH_WIDE,
   WIDE_VIEW_THRESHOLD
 } from './DetailsPane'
-import { VizItem, VizItemProperty } from './types'
-import GraphStyle from 'project-root/src/browser/modules/D3Visualization/graphStyle'
 
 describe('<DetailsPane />', () => {
-  const mockGraphStyle = new GraphStyle()
+  const mockGraphStyle = new GraphStyleModel()
 
   const getMockProperties: (length: number) => VizItemProperty[] = length =>
     Array.from({ length: length }).map((_v, index) => {

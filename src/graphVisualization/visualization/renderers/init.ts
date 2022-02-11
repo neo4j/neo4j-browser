@@ -19,15 +19,15 @@
  */
 import { BaseType } from 'd3-selection'
 
-import Relationship from '../components/Relationship'
-import Renderer from '../components/Renderer'
-import VizNode, { NodeCaptionLine } from '../components/VizNode'
+import { NodeCaptionLine, NodeModel } from '../../models/Node'
+import { RelationshipModel } from '../../models/Relationship'
+import Renderer from '../Renderer'
 
 const noop = () => undefined
 
 const nodeRingStrokeSize = 8
 
-const nodeOutline = new Renderer<VizNode>({
+const nodeOutline = new Renderer<NodeModel>({
   name: 'nodeOutline',
   onGraphChange(selection, viz) {
     return selection
@@ -37,29 +37,29 @@ const nodeOutline = new Renderer<VizNode>({
       .classed('outline', true)
       .attr('cx', 0)
       .attr('cy', 0)
-      .attr('r', (node: VizNode) => {
+      .attr('r', (node: NodeModel) => {
         return node.radius
       })
-      .attr('fill', (node: VizNode) => {
+      .attr('fill', (node: NodeModel) => {
         return viz.style.forNode(node).get('color')
       })
-      .attr('stroke', (node: VizNode) => {
+      .attr('stroke', (node: NodeModel) => {
         return viz.style.forNode(node).get('border-color')
       })
-      .attr('stroke-width', (node: VizNode) => {
+      .attr('stroke-width', (node: NodeModel) => {
         return viz.style.forNode(node).get('border-width')
       })
   },
   onTick: noop
 })
 
-const nodeCaption = new Renderer<VizNode>({
+const nodeCaption = new Renderer<NodeModel>({
   name: 'nodeCaption',
   onGraphChange(selection, viz) {
     return (
       selection
         .selectAll('text.caption')
-        .data((node: VizNode) => node.caption)
+        .data((node: NodeModel) => node.caption)
         .join('text')
         // Classed element ensures duplicated data will be removed before adding
         .classed('caption', true)
@@ -80,12 +80,12 @@ const nodeCaption = new Renderer<VizNode>({
   onTick: noop
 })
 
-const nodeRing = new Renderer<VizNode>({
+const nodeRing = new Renderer<NodeModel>({
   name: 'nodeRing',
   onGraphChange(selection) {
     const circles = selection
       .selectAll('circle.ring')
-      .data((node: VizNode) => [node])
+      .data((node: NodeModel) => [node])
 
     circles
       .enter()
@@ -94,7 +94,7 @@ const nodeRing = new Renderer<VizNode>({
       .attr('cx', 0)
       .attr('cy', 0)
       .attr('stroke-width', `${nodeRingStrokeSize}px`)
-      .attr('r', (node: VizNode) => node.radius + 4)
+      .attr('r', (node: NodeModel) => node.radius + 4)
 
     return circles.exit().remove()
   },
@@ -102,7 +102,7 @@ const nodeRing = new Renderer<VizNode>({
   onTick: noop
 })
 
-const arrowPath = new Renderer<Relationship>({
+const arrowPath = new Renderer<RelationshipModel>({
   name: 'arrowPath',
 
   onGraphChange(selection, viz) {
@@ -117,12 +117,12 @@ const arrowPath = new Renderer<Relationship>({
 
   onTick(selection) {
     return selection
-      .selectAll<BaseType, Relationship>('path')
+      .selectAll<BaseType, RelationshipModel>('path')
       .attr('d', d => d.arrow!.outline(d.shortCaptionLength ?? 0))
   }
 })
 
-const relationshipType = new Renderer<Relationship>({
+const relationshipType = new Renderer<RelationshipModel>({
   name: 'relationshipType',
   onGraphChange(selection, viz) {
     return selection
@@ -139,7 +139,7 @@ const relationshipType = new Renderer<Relationship>({
 
   onTick(selection, viz) {
     return selection
-      .selectAll<BaseType, Relationship>('text')
+      .selectAll<BaseType, RelationshipModel>('text')
       .attr('x', rel => rel?.arrow?.midShaftPoint?.x ?? 0)
       .attr(
         'y',
@@ -161,7 +161,7 @@ const relationshipType = new Renderer<Relationship>({
   }
 })
 
-const relationshipOverlay = new Renderer<Relationship>({
+const relationshipOverlay = new Renderer<RelationshipModel>({
   name: 'relationshipOverlay',
   onGraphChange(selection) {
     return selection
@@ -175,7 +175,7 @@ const relationshipOverlay = new Renderer<Relationship>({
     const band = 16
 
     return selection
-      .selectAll<BaseType, Relationship>('path.overlay')
+      .selectAll<BaseType, RelationshipModel>('path.overlay')
       .attr('d', d => d.arrow!.overlay(band))
   }
 })

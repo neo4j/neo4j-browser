@@ -20,19 +20,20 @@
 import { render, screen } from '@testing-library/react'
 import React from 'react'
 
+import { GraphStyleModel } from 'graph-visualization'
+
 import {
   GraphStats,
   GraphStatsLabels,
   GraphStatsRelationshipTypes
 } from '../mapper'
 import OverviewPane, { OVERVIEW_STEP_SIZE } from './OverviewPane'
-import GraphStyle from 'project-root/src/browser/modules/D3Visualization/graphStyle'
 
 jest.mock('./StyleableNodeLabel')
 jest.mock('./StyleableRelType')
 
 describe('<OverviewPane />', () => {
-  const graphStyle = new GraphStyle()
+  const graphStyle = new GraphStyleModel()
 
   const getMockLabels: (length: number) => GraphStatsLabels = length =>
     Array.from({ length: length }).reduce(

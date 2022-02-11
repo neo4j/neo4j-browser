@@ -1,5 +1,5 @@
-import Relationship from '../lib/visualization/components/Relationship'
-import VizNode from '../lib/visualization/components/VizNode'
+import { NodeModel } from './models/Node'
+import { RelationshipModel } from './models/Relationship'
 
 export type VizItem =
   | NodeItem
@@ -10,9 +10,9 @@ export type VizItem =
 
 export type VizItemProperty = { key: string; value: string; type: string }
 
-type NodeItem = {
+export type NodeItem = {
   type: 'node'
-  item: Pick<VizNode, 'id' | 'labels' | 'propertyList'>
+  item: Pick<NodeModel, 'id' | 'labels' | 'propertyList'>
 }
 
 type ContextMenuItem = {
@@ -29,9 +29,9 @@ type StatusItem = {
   item: string
 }
 
-type RelationshipItem = {
+export type RelationshipItem = {
   type: 'relationship'
-  item: Pick<Relationship, 'id' | 'type' | 'propertyList'>
+  item: Pick<RelationshipModel, 'id' | 'type' | 'propertyList'>
 }
 
 type CanvasItem = {

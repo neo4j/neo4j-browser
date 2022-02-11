@@ -17,25 +17,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import Graph from '../components/Graph'
-import { NodePair } from '../components/Graph'
-import Relationship from '../components/Relationship'
-import ArcArrow from './ArcArrow'
-import LoopArrow from './LoopArrow'
-import StraightArrow from './StraightArrow'
-import measureText from './textMeasurement'
-import GraphStyle from 'browser/modules/D3Visualization/graphStyle'
+import { GraphModel, NodePair } from '../models/Graph'
+import { GraphStyleModel } from '../models/GraphStyle'
+import { RelationshipModel } from '../models/Relationship'
+import { ArcArrow } from './ArcArrow'
+import { LoopArrow } from './LoopArrow'
+import { StraightArrow } from './StraightArrow'
+import { measureText } from './textMeasurement'
 
-export default class PairwiseArcsRelationshipRouting {
-  style: GraphStyle
+export class PairwiseArcsRelationshipRouting {
+  style: GraphStyleModel
   canvas: HTMLCanvasElement
-  constructor(style: GraphStyle) {
+  constructor(style: GraphStyleModel) {
     this.style = style
     this.canvas = document.createElement('canvas')
   }
 
   measureRelationshipCaption(
-    relationship: Relationship,
+    relationship: RelationshipModel,
     caption: string
   ): number {
     const fontFamily = 'sans-serif'
@@ -54,14 +53,14 @@ export default class PairwiseArcsRelationshipRouting {
     )
   }
 
-  captionFitsInsideArrowShaftWidth(relationship: Relationship): boolean {
+  captionFitsInsideArrowShaftWidth(relationship: RelationshipModel): boolean {
     return (
       parseFloat(this.style.forRelationship(relationship).get('shaft-width')) >
       relationship.captionHeight
     )
   }
 
-  measureRelationshipCaptions(relationships: Relationship[]): void {
+  measureRelationshipCaptions(relationships: RelationshipModel[]): void {
     relationships.forEach(relationship => {
       relationship.captionHeight = parseFloat(
         this.style.forRelationship(relationship).get('font-size')
@@ -80,7 +79,7 @@ export default class PairwiseArcsRelationshipRouting {
   }
 
   shortenCaption(
-    relationship: Relationship,
+    relationship: RelationshipModel,
     caption: string,
     targetWidth: number
   ): [string, number] {
@@ -118,7 +117,7 @@ export default class PairwiseArcsRelationshipRouting {
 
   distributeAnglesForLoopArrows(
     nodePairs: NodePair[],
-    relationships: Relationship[]
+    relationships: RelationshipModel[]
   ): void {
     for (const nodePair of nodePairs) {
       if (nodePair.isLoop()) {
@@ -171,7 +170,7 @@ export default class PairwiseArcsRelationshipRouting {
     }
   }
 
-  layoutRelationships(graph: Graph): void {
+  layoutRelationships(graph: GraphModel): void {
     const nodePairs = graph.groupedRelationships()
 
     this.computeGeometryForNonLoopArrows(nodePairs)
