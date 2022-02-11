@@ -47,6 +47,10 @@ import {
 } from './renderers/init'
 import { nodeMenuRenderer } from './renderers/menu'
 
+function isNullish(x: unknown): x is null | undefined {
+  return x === null || x === undefined
+}
+
 export type MeasureSizeFn = () => { width: number; height: number }
 
 export type ZoomLimitsReached = {
@@ -68,6 +72,10 @@ export class Visualization {
   private geometry: GraphGeometryModel
   private zoomBehavior: ZoomBehavior<SVGElement, unknown>
   private zoomMinScaleExtent: number = ZOOM_MIN_SCALE
+  private callbacks: Record<
+    string,
+    undefined | Array<(...args: any[]) => void>
+  > = {}
 
   forceSim: ForceSimulation
 
@@ -83,8 +91,7 @@ export class Visualization {
     private onDisplayZoomWheelInfoMessage: () => void,
     private graph: GraphModel,
     public style: GraphStyleModel,
-    public isFullscreen: boolean,
-    public trigger: (event: string, ...args: any[]) => void
+    public isFullscreen: boolean
   ) {
     this.root = d3Select(element)
 
@@ -318,6 +325,20 @@ export class Visualization {
     }
   }
 
+  on = (event: string, callback: (...args: any[]) => void) => {
+    if (isNullish(this.callbacks[event])) {
+      this.callbacks[event] = []
+    }
+
+    this.callbacks[event]?.push(callback)
+    return this
+  }
+
+  trigger = (event: string, ...args: any[]) => {
+    const callbacksForEvent = this.callbacks[event] ?? []
+    callbacksForEvent.forEach(callback => callback.apply(null, args))
+  }
+
   init(): void {
     this.container
       .selectAll('g.layer')
@@ -335,7 +356,7 @@ export class Visualization {
   update(options: {
     updateNodes: boolean
     updateRelationships: boolean
-    restartSimulation: boolean
+    restartSimulation?: boolean
   }): void {
     if (options.updateNodes) {
       this.updateNodes()
@@ -345,7 +366,7 @@ export class Visualization {
       this.updateRelationships()
     }
 
-    if (options.restartSimulation) {
+    if (options.restartSimulation ?? true) {
       this.forceSim.restart()
     }
     this.trigger('updated')

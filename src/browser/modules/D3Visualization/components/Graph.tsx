@@ -24,12 +24,12 @@ import { Action, Dispatch } from 'redux'
 import {
   GraphModel,
   GraphStyleModel,
+  Visualization,
   VizItem,
   ZoomLimitsReached
 } from 'graph-visualization'
 
 import { GetNodeNeighboursFn, GraphEventHandler } from '../GraphEventHandler'
-import GraphView from '../lib/visualization/components/GraphView'
 import {
   GraphStats,
   createGraph,
@@ -76,7 +76,7 @@ type GraphState = {
 
 class GraphComponent extends React.Component<GraphProps, GraphState> {
   svgElement: React.RefObject<SVGSVGElement>
-  graphView: GraphView | null = null
+  visualization: Visualization | null = null
   displayingWheelZoomInfoTimerId: number | undefined
 
   constructor(props: GraphProps) {
@@ -112,7 +112,7 @@ class GraphComponent extends React.Component<GraphProps, GraphState> {
     })
 
     const graph = createGraph(nodes, relationships)
-    this.graphView = new GraphView(
+    this.visualization = new Visualization(
       this.svgElement.current,
       measureSize,
       this.handleZoomEvent,
@@ -124,7 +124,7 @@ class GraphComponent extends React.Component<GraphProps, GraphState> {
 
     const graphEventHandler = new GraphEventHandler(
       graph,
-      this.graphView,
+      this.visualization,
       getNodeNeighbours,
       onItemMouseOver,
       onItemSelect,
@@ -133,8 +133,8 @@ class GraphComponent extends React.Component<GraphProps, GraphState> {
     graphEventHandler.bindEventHandlers()
 
     onGraphModelChange(getGraphStats(graph))
-    this.graphView.resize(isFullscreen)
-    this.graphView.init()
+    this.visualization.resize(isFullscreen)
+    this.visualization.init()
 
     if (setGraph) {
       setGraph(graph)
@@ -145,7 +145,7 @@ class GraphComponent extends React.Component<GraphProps, GraphState> {
           mapRelationships(internalRelationships, graph)
         )
         onGraphModelChange(getGraphStats(graph))
-        this.graphView?.update({
+        this.visualization?.update({
           updateNodes: false,
           updateRelationships: true
         })
@@ -153,17 +153,17 @@ class GraphComponent extends React.Component<GraphProps, GraphState> {
       })
     }
     if (assignVisElement) {
-      assignVisElement(this.svgElement.current, this.graphView)
+      assignVisElement(this.svgElement.current, this.visualization)
     }
   }
 
   componentDidUpdate(prevProps: GraphProps): void {
     if (this.props.isFullscreen !== prevProps.isFullscreen) {
-      this.graphView?.resize(this.props.isFullscreen)
+      this.visualization?.resize(this.props.isFullscreen)
     }
 
     if (this.props.styleVersion !== prevProps.styleVersion) {
-      this.graphView?.init()
+      this.visualization?.init()
     }
   }
 
@@ -197,20 +197,20 @@ class GraphComponent extends React.Component<GraphProps, GraphState> {
   }
 
   zoomInClicked = (): void => {
-    if (this.graphView) {
-      this.graphView.zoomIn()
+    if (this.visualization) {
+      this.visualization.zoomInClick()
     }
   }
 
   zoomOutClicked = (): void => {
-    if (this.graphView) {
-      this.graphView.zoomOut()
+    if (this.visualization) {
+      this.visualization.zoomOutClick()
     }
   }
 
   zoomToFitClicked = (): void => {
-    if (this.graphView) {
-      this.graphView.zoomToFit()
+    if (this.visualization) {
+      this.visualization.zoomToFitClick()
     }
   }
 

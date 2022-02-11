@@ -17,10 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { GraphModel, NodeModel, RelationshipModel } from 'graph-visualization'
+import {
+  GraphModel,
+  NodeModel,
+  RelationshipModel,
+  Visualization
+} from 'graph-visualization'
 
 import { VizItem } from '../../../graphVisualization/types'
-import GraphView from './lib/visualization/components/GraphView'
 import { GraphStats, getGraphStats, mapNodes, mapRelationships } from './mapper'
 import { BasicNode, BasicNodesAndRels } from 'services/bolt/boltMappings'
 
@@ -33,7 +37,7 @@ export type GetNodeNeighboursFn = (
 export class GraphEventHandler {
   getNodeNeighbours: GetNodeNeighboursFn
   graph: GraphModel
-  graphView: GraphView
+  visualization: Visualization
   onGraphModelChange: (stats: GraphStats) => void
   onItemMouseOver: (item: VizItem) => void
   onItemSelected: (item: VizItem) => void
@@ -41,14 +45,14 @@ export class GraphEventHandler {
 
   constructor(
     graph: GraphModel,
-    graphView: GraphView,
+    visualization: Visualization,
     getNodeNeighbours: GetNodeNeighboursFn,
     onItemMouseOver: (item: VizItem) => void,
     onItemSelected: (item: VizItem) => void,
     onGraphModelChange: (stats: GraphStats) => void
   ) {
     this.graph = graph
-    this.graphView = graphView
+    this.visualization = visualization
     this.getNodeNeighbours = getNodeNeighbours
     this.selectedItem = null
     this.onItemMouseOver = onItemMouseOver
@@ -67,7 +71,7 @@ export class GraphEventHandler {
     this.selectedItem = item
     item.selected = true
 
-    this.graphView.update({
+    this.visualization.update({
       updateNodes: this.selectedItem.isNode,
       updateRelationships: this.selectedItem.isRelationship,
       restartSimulation: false
@@ -78,7 +82,7 @@ export class GraphEventHandler {
     if (this.selectedItem) {
       this.selectedItem.selected = false
 
-      this.graphView.update({
+      this.visualization.update({
         updateNodes: this.selectedItem.isNode,
         updateRelationships: this.selectedItem.isRelationship,
         restartSimulation: false
@@ -99,7 +103,7 @@ export class GraphEventHandler {
     this.graph.removeConnectedRelationships(d)
     this.graph.removeNode(d)
     this.deselectItem()
-    this.graphView.update({
+    this.visualization.update({
       updateNodes: true,
       updateRelationships: true,
       restartSimulation: true
@@ -141,7 +145,7 @@ export class GraphEventHandler {
     }
     d.expanded = true
     const graph = this.graph
-    const graphView = this.graphView
+    const visualization = this.visualization
     const graphModelChanged = this.graphModelChanged.bind(this)
     this.getNodeNeighbours(
       d,
@@ -149,7 +153,7 @@ export class GraphEventHandler {
       ({ nodes, relationships }) => {
         graph.addExpandedNodes(d, mapNodes(nodes))
         graph.addRelationships(mapRelationships(relationships, graph))
-        graphView.update({ updateNodes: true, updateRelationships: true })
+        visualization.update({ updateNodes: true, updateRelationships: true })
         graphModelChanged()
       }
     )
@@ -158,7 +162,7 @@ export class GraphEventHandler {
   nodeCollapse(d: NodeModel): void {
     d.expanded = false
     this.graph.collapseNode(d)
-    this.graphView.update({ updateNodes: true, updateRelationships: true })
+    this.visualization.update({ updateNodes: true, updateRelationships: true })
     this.graphModelChanged()
   }
 
@@ -219,7 +223,7 @@ export class GraphEventHandler {
   }
 
   bindEventHandlers(): void {
-    this.graphView
+    this.visualization
       .on('nodeMouseOver', this.onNodeMouseOver.bind(this))
       .on('nodeMouseOut', this.onItemMouseOut.bind(this))
       .on('menuMouseOver', this.onMenuMouseOver.bind(this))
