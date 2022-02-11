@@ -254,32 +254,25 @@ export class Visualization {
     this.isZoomClick = true
 
     if (zoomType === ZoomType.IN) {
-      this.zoomTo(1.3)
+      this.zoomBehavior.scaleBy(this.root, 1.3)
     } else if (zoomType === ZoomType.OUT) {
-      this.zoomTo(0.7)
+      this.zoomBehavior.scaleBy(this.root, 0.7)
     } else if (zoomType === ZoomType.FIT) {
-      const scaleAndOffset = this.getZoomScaleFactorToFitWholeGraph()
-      if (scaleAndOffset) {
-        const { scale, centerPointOffset } = scaleAndOffset
-        // Do not zoom in more than zoom max scale for really small graphs
-        this.zoomTo(Math.min(scale, ZOOM_MAX_SCALE), {
-          x: centerPointOffset.x,
-          y: centerPointOffset.y
-        })
-      }
+      this.zoomToFit()
     }
   }
 
-  private zoomTo = (scale: number, point?: { x: number; y: number }) => {
-    if (point) {
+  private zoomToFit = () => {
+    const scaleAndOffset = this.getZoomScaleFactorToFitWholeGraph()
+    if (scaleAndOffset) {
+      const { scale, centerPointOffset } = scaleAndOffset
+      // Do not zoom in more than zoom max scale for really small graphs
       this.zoomBehavior.transform(
         this.root,
         zoomIdentity
           .scale(Math.min(scale, ZOOM_MAX_SCALE))
-          .translate(point.x, point.y)
+          .translate(centerPointOffset.x, centerPointOffset.y)
       )
-    } else {
-      this.zoomBehavior.scaleBy(this.root, scale)
     }
   }
 
