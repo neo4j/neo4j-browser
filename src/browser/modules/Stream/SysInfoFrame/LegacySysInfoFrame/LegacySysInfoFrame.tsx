@@ -26,7 +26,7 @@ import {
   StatusbarWrapper,
   StyledStatusBar
 } from '../../AutoRefresh/styled'
-import { ErrorsView } from '../../CypherFrame/ErrorsView'
+import { ErrorsView } from '../../CypherFrame/ErrorsView/ErrorsView'
 import { SysInfoDisplay } from './SysInfoDisplay'
 import * as legacyHelpers from './sysinfoHelpers'
 import FrameBodyTemplate from 'browser/modules/Frame/FrameBodyTemplate'

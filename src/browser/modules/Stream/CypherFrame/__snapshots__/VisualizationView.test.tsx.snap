@@ -5,7 +5,7 @@ exports[`Visualization renders empty content 1`] = `<div />`;
 exports[`Visualization renders with result and escapes any HTML 1`] = `
 <div>
   <div
-    class="sc-cLQEGU cGrwkv"
+    class="sc-bMVAic lkKPLF"
   >
     <div
       class="sc-gqjmRU gEkgXi"
@@ -82,7 +82,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
             class="sc-jTzLTM fOxCEd zoom-in"
           >
             <i
-              class="sc-rBLzX gHzCML"
+              class="sc-laTMn jiKZdL"
             >
               <span
                 class="SVGInline SVGInline--cleaned"
@@ -99,7 +99,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
             class="sc-jTzLTM fOxCEd zoom-out"
           >
             <i
-              class="sc-bMvGRv iZbHS"
+              class="sc-hGoxap ksdJJr"
             >
               <span
                 class="SVGInline SVGInline--cleaned"
@@ -116,7 +116,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
             class="sc-jTzLTM fOxCEd"
           >
             <i
-              class="sc-CtfFt nEYvh"
+              class="sc-fjmCvl fMdbP"
             >
               <span
                 class="SVGInline SVGInline--cleaned"

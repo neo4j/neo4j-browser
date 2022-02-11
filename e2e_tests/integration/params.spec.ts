@@ -147,4 +147,12 @@ function runTests() {
       '{\n  "x": 1.0,\n  "stringWithSpace": "with space",\n  "stringWithTab": "\'with\ttab\'"\n}'
     )
   // })
+  // it('can generate a set params template to use if query is missing param', () => {
+  cy.executeCommand(':clear')
+  cy.executeCommand('return $test1, $test2')
+  const expectedMessage = `Expected parameter(s): test1, test2`
+  cy.get('[data-testid="cypherFrameErrorMessage"]', { timeout: 20000 })
+    .first()
+    .should('contain', expectedMessage)
+  // })
 }

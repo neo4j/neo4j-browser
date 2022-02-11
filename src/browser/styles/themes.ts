@@ -24,30 +24,17 @@ import {
 } from 'shared/modules/settings/settingsDuck'
 
 // These colors are to be fetched from the NDL instead when that is published
-const NDLcolors = {
+const NDLColors = {
   primary: {
     'bg-weak': '#E6F8FF',
     'border-weak': '#A3E2FF',
-    icon: '#006FD6'
+    'hover-weak': 'rgb(1, 139, 255, 0.08)',
+    icon: '#006FD6',
+    text: '#006FD6'
   },
   neutral: {
-    '10': {
-      value: '#FFFFFF'
-    },
     '20': {
       value: '#F5F7FA'
-    },
-    '30': {
-      value: '#EEF1F6'
-    },
-    '40': {
-      value: '#E6E9EE'
-    },
-    '50': {
-      value: '#C4C8CD'
-    },
-    '60': {
-      value: '#B2B7BD'
     },
     '70': {
       value: '#717780',
@@ -56,21 +43,10 @@ const NDLcolors = {
       opacity50: 'rgb(113, 119, 128, 0.5)',
       opacity60: 'rgb(113, 119, 128, 0.6)'
     },
-    '80': {
-      value: '#535B66'
-    },
-    '90': {
-      value: '#151E29'
-    },
-    'bg-stronger': {
-      value: '#404752'
-    },
-    'bg-weak': {
-      value: '#FFFFFF'
-    },
-    'text-weakest': {
-      value: '#B2B7BD'
-    }
+    'bg-stronger': '#404752',
+    'bg-weak': '#FFFFFF',
+    'text-inverse': '#FFFFFF',
+    'text-weakest': '#B2B7BD'
   }
 }
 
@@ -114,6 +90,7 @@ export const base = {
   streamlineFontFamily: 'streamline',
   editorFont:
     '"Fira Code", "Monaco", "Lucida Console", Courier, monospace !important;',
+  codeBlockFont: '"Fira Code", "Monaco", "Lucida Console", Courier, monospace',
 
   // Shadows
   standardShadow:
@@ -155,17 +132,22 @@ export const base = {
   frameTitlebarText: '#717172',
   frameControlButtonTextColor: '#485662',
   frameButtonTextColorLegacy: '#0C1A25',
-  frameButtonTextColor: NDLcolors.neutral['70'].value,
-  frameButtonHoverBackground: NDLcolors.neutral['70'].opacity10,
-  frameButtonActiveBackground: NDLcolors.neutral['70'].opacity20,
+  frameButtonTextColor: NDLColors.neutral['70'].value,
+  frameButtonHoverBackground: NDLColors.neutral['70'].opacity10,
+  frameButtonActiveBackground: NDLColors.neutral['70'].opacity20,
   streamBackgroundColor: 'rgba(215, 229, 241, 0.7)',
   frameBackground: '#F9FCFF',
   accordionContentBackground: 'white',
 
   // Info message
-  infoBackground: NDLcolors.primary['bg-weak'],
-  infoBorder: `1px solid ${NDLcolors.primary['border-weak']}`,
-  infoIconColor: NDLcolors.primary.icon
+  infoBackground: NDLColors.primary['bg-weak'],
+  infoBorder: `1px solid ${NDLColors.primary['border-weak']}`,
+  infoIconColor: NDLColors.primary.icon,
+
+  // Code block
+  codeBlockBackground: '#f5f5f5',
+  codeBlockTextColor: NDLColors.primary.text,
+  codeBlockHoveBackground: NDLColors.primary['hover-weak']
 }
 
 export const normal = {
@@ -227,15 +209,20 @@ export const dark = {
   frameTitlebarText: '#717172',
   frameControlButtonTextColor: '#D7E5F1',
   frameButtonTextColorLegacy: '#FFF',
-  frameButtonTextColor: NDLcolors.neutral['20'].value,
-  frameButtonHoverBackground: NDLcolors.neutral['70'].opacity60,
-  frameButtonActiveBackground: NDLcolors.neutral['70'].opacity50,
+  frameButtonTextColor: NDLColors.neutral['20'].value,
+  frameButtonHoverBackground: NDLColors.neutral['70'].opacity60,
+  frameButtonActiveBackground: NDLColors.neutral['70'].opacity50,
   streamBackgroundColor: '#535864',
   frameBackground: '#292C33',
   accordionContentBackground: '#31333B',
 
   // Info message
-  infoBackground: NDLcolors.neutral['bg-stronger'].value,
-  infoBorder: `1px solid ${NDLcolors.neutral['text-weakest'].value}`,
-  infoIconColor: NDLcolors.neutral['bg-weak'].value
+  infoBackground: NDLColors.neutral['bg-stronger'],
+  infoBorder: `1px solid ${NDLColors.neutral['text-weakest']}`,
+  infoIconColor: NDLColors.neutral['bg-weak'],
+
+  // Code block
+  codeBlockBackground: '#717780',
+  codeBlockTextColor: NDLColors.primary['border-weak'],
+  codeBlockHoveBackground: NDLColors.neutral['bg-stronger']
 }

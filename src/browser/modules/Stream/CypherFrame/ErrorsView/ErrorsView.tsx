@@ -18,11 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
+import { Action, Dispatch } from 'redux'
 import { Bus } from 'suber'
 
+import { errorMessageFormater } from '../../errorMessageFormater'
 import {
-  ErrorText,
   StyledCypherErrorMessage,
   StyledDiv,
   StyledErrorH4,
@@ -32,44 +34,57 @@ import {
   StyledLink,
   StyledLinkContainer,
   StyledPreformattedArea
-} from '../styled'
-import { errorMessageFormater } from './../errorMessageFormater'
-import Ellipsis from 'browser-components/Ellipsis'
-import {
-  ExclamationTriangleIcon,
-  PlayIcon
-} from 'browser-components/icons/Icons'
-import { BrowserRequestResult } from 'project-root/src/shared/modules/requests/requestsDuck'
-import {
-  isImplicitTransactionError,
-  isNoDbAccessError,
-  isUnknownProcedureError
-} from 'services/cypherErrorsHelper'
-import { BrowserError } from 'services/exceptions'
-import { deepEquals } from 'services/utils'
+} from '../../styled'
+import { MissingParamsTemplateLink } from './MissingParamsTemplateLink'
+import { PlayIcon } from 'browser-components/icons/Icons'
+import { GlobalState } from 'project-root/src/shared/globalState'
 import {
   commandSources,
   executeCommand,
   listDbsCommand
-} from 'shared/modules/commands/commandsDuck'
-import { listAvailableProcedures } from 'shared/modules/cypher/procedureFactory'
+} from 'project-root/src/shared/modules/commands/commandsDuck'
+import { listAvailableProcedures } from 'project-root/src/shared/modules/cypher/procedureFactory'
+import * as editor from 'project-root/src/shared/modules/editor/editorDuck'
+import { getParams } from 'project-root/src/shared/modules/params/paramsDuck'
+import { BrowserRequestResult } from 'project-root/src/shared/modules/requests/requestsDuck'
+import { GENERATE_SET_MISSING_PARAMS_TEMPLATE } from 'project-root/src/shared/modules/udc/udcDuck'
+import {
+  isImplicitTransactionError,
+  isNoDbAccessError,
+  isParameterMissingError,
+  isUnknownProcedureError
+} from 'services/cypherErrorsHelper'
+import { BrowserError } from 'services/exceptions'
+import { deepEquals } from 'services/utils'
 
-type ErrorsViewComponentProps = {
+export type ErrorsViewProps = {
   result: BrowserRequestResult
   bus: Bus
+  params: Record<string, unknown>
+  executeCmd: (cmd: string) => void
+  setEditorContent: (cmd: string) => void
 }
-class ErrorsViewComponent extends Component<ErrorsViewComponentProps> {
-  shouldComponentUpdate(props: ErrorsViewComponentProps): boolean {
-    return !deepEquals(props.result, this.props.result)
+
+class ErrorsViewComponent extends Component<ErrorsViewProps> {
+  shouldComponentUpdate(props: ErrorsViewProps): boolean {
+    return (
+      !deepEquals(props.result, this.props.result) ||
+      !deepEquals(props.params, this.props.params)
+    )
   }
 
   render(): null | JSX.Element {
-    const { bus } = this.props
+    const { bus, params, executeCmd, setEditorContent } = this.props
+
     const error = this.props.result as BrowserError
     if (!error || !error.code) {
       return null
     }
     const fullError = errorMessageFormater(null, error.message)
+
+    const handleSetMissingParamsTemplateHelpMessageClick = () => {
+      bus.send(GENERATE_SET_MISSING_PARAMS_TEMPLATE, undefined)
+    }
 
     return (
       <StyledHelpFrame>
@@ -79,13 +94,13 @@ class ErrorsViewComponent extends Component<ErrorsViewComponentProps> {
             <StyledErrorH4>{error.code}</StyledErrorH4>
           </StyledHelpDescription>
           <StyledDiv>
-            <StyledPreformattedArea>{fullError.message}</StyledPreformattedArea>
+            <StyledPreformattedArea data-testid={'cypherFrameErrorMessage'}>
+              {fullError.message}
+            </StyledPreformattedArea>
           </StyledDiv>
           {isUnknownProcedureError(error) && (
             <StyledLinkContainer>
-              <StyledLink
-                onClick={() => onItemClick(bus, listAvailableProcedures)}
-              >
+              <StyledLink onClick={() => executeCmd(listAvailableProcedures)}>
                 <PlayIcon />
                 &nbsp;List available procedures
               </StyledLink>
@@ -93,9 +108,7 @@ class ErrorsViewComponent extends Component<ErrorsViewComponentProps> {
           )}
           {isNoDbAccessError(error) && (
             <StyledLinkContainer>
-              <StyledLink
-                onClick={() => onItemClick(bus, `:${listDbsCommand}`)}
-              >
+              <StyledLink onClick={() => executeCmd(`:${listDbsCommand}`)}>
                 <PlayIcon />
                 &nbsp;List available databases
               </StyledLink>
@@ -103,12 +116,22 @@ class ErrorsViewComponent extends Component<ErrorsViewComponentProps> {
           )}
           {isImplicitTransactionError(error) && (
             <StyledLinkContainer>
-              <StyledLink onClick={() => onItemClick(bus, `:help auto`)}>
+              <StyledLink onClick={() => executeCmd(`:help auto`)}>
                 <PlayIcon />
                 &nbsp;Info on the <code>:auto</code> command
               </StyledLink>
               &nbsp;(auto-committing transactions)
             </StyledLinkContainer>
+          )}
+          {isParameterMissingError(error) && (
+            <MissingParamsTemplateLink
+              error={error}
+              params={params}
+              setEditorContent={setEditorContent}
+              onTemplateHelpMessageClick={
+                handleSetMissingParamsTemplateHelpMessageClick
+              }
+            />
           )}
         </StyledHelpContent>
       </StyledHelpFrame>
@@ -116,32 +139,27 @@ class ErrorsViewComponent extends Component<ErrorsViewComponentProps> {
   }
 }
 
-const onItemClick = (bus: Bus, statement: string) => {
-  const action = executeCommand(statement, { source: commandSources.button })
-  bus.send(action.type, action)
-}
-
-export const ErrorsView = withBus(ErrorsViewComponent)
-
-type ErrorsStatusBarProps = {
-  result: BrowserRequestResult
-}
-export class ErrorsStatusbar extends Component<ErrorsStatusBarProps> {
-  shouldComponentUpdate(props: ErrorsStatusBarProps): boolean {
-    return !deepEquals(props.result, this.props.result)
-  }
-
-  render(): null | JSX.Element {
-    const error = this.props.result as BrowserError
-    if (!error || (!error.code && !error.message)) return null
-    const fullError = errorMessageFormater(error.code, error.message)
-
-    return (
-      <Ellipsis>
-        <ErrorText title={fullError.title}>
-          <ExclamationTriangleIcon /> {fullError.message}
-        </ErrorText>
-      </Ellipsis>
-    )
+const mapStateToProps = (state: GlobalState) => {
+  return {
+    params: getParams(state)
   }
 }
+const mapDispatchToProps = (
+  _dispatch: Dispatch<Action>,
+  ownProps: ErrorsViewProps
+) => {
+  return {
+    executeCmd: (cmd: string) => {
+      const action = executeCommand(cmd, {
+        source: commandSources.button
+      })
+      ownProps.bus.send(action.type, action)
+    },
+    setEditorContent: (cmd: string) => {
+      ownProps.bus.send(editor.SET_CONTENT, editor.setContent(cmd))
+    }
+  }
+}
+export const ErrorsView = withBus(
+  connect(mapStateToProps, mapDispatchToProps)(ErrorsViewComponent)
+)

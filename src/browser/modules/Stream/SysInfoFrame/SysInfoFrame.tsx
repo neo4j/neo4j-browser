@@ -29,7 +29,7 @@ import {
   StatusbarWrapper,
   StyledStatusBar
 } from '../AutoRefresh/styled'
-import { ErrorsView } from '../CypherFrame/ErrorsView'
+import { ErrorsView } from '../CypherFrame/ErrorsView/ErrorsView'
 import LegacySysInfoFrame from './LegacySysInfoFrame/LegacySysInfoFrame'
 import { SysInfoTable } from './SysInfoTable'
 import { InlineError } from './styled'
@@ -67,7 +67,7 @@ export type SysInfoFrameState = {
   userConfiguredPrefix: string
 }
 
-type SysInfoFrameProps = {
+export type SysInfoFrameProps = {
   bus: Bus
   databases: Database[]
   frame: Frame

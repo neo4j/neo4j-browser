@@ -19,35 +19,34 @@
  */
 import { render } from '@testing-library/react'
 import React from 'react'
-import { Provider } from 'react-redux'
-import { combineReducers, createStore } from 'redux'
 
-import { LegacySysInfoFrame } from './LegacySysInfoFrame'
-import reducers from 'project-root/src/shared/rootReducer'
+import { ErrorsStatusbar } from './ErrorsStatusbar'
+import { BrowserError } from 'services/exceptions'
 
-const baseProps = {
-  bus: null as any,
-  frame: null as any,
-  isFullscreen: false,
-  isCollapsed: false,
-  isACausalCluster: false
-}
-
-describe('LegacySysInfoFrame', () => {
-  test('should display error when there is no connection', () => {
+describe('ErrorsStatusbar', () => {
+  test('displays nothing if no error', () => {
     // Given
-    const props = { ...baseProps, isConnected: false }
+    const props = {
+      result: null
+    }
 
     // When
-    const reducer = combineReducers({ ...(reducers as any) })
-    const store: any = createStore(reducer)
-    const { getAllByText } = render(
-      <Provider store={store}>
-        <LegacySysInfoFrame {...props} />
-      </Provider>
-    )
+    const { container } = render(<ErrorsStatusbar {...props} />)
+    expect(container).toMatchSnapshot()
+  })
+  test('displays error', () => {
+    // Given
+    const error: BrowserError = {
+      code: 'Test.Error',
+      message: 'Test error description',
+      type: 'Neo4jError'
+    }
+    const props = {
+      result: error
+    }
 
-    // Then
-    expect(getAllByText(/No connection available/i)).not.toBeNull()
+    // When
+    const { container } = render(<ErrorsStatusbar {...props} />)
+    expect(container).toMatchSnapshot()
   })
 })

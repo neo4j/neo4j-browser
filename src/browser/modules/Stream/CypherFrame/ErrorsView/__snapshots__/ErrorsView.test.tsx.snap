@@ -1,29 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ErrorsViews ErrorsStatusbar displays error 1`] = `
-<div>
-  <div
-    class="sc-uJMKN VhEfq"
-  >
-    <span
-      class="sc-jDwBTQ fawSKE"
-      title="Test.Error: Test error description"
-    >
-      <i
-        class="sc-eXEjpC biJDBb fa fa-exclamation-triangle"
-      />
-       
-      Test.Error: Test error description
-    </span>
-  </div>
-</div>
-`;
+exports[`ErrorsView displays nothing if no errors 1`] = `<div />`;
 
-exports[`ErrorsViews ErrorsStatusbar displays nothing if no error 1`] = `<div />`;
-
-exports[`ErrorsViews ErrorsView displays nothing if no errors 1`] = `<div />`;
-
-exports[`ErrorsViews ErrorsView displays procedure link if unknown procedure 1`] = `
+exports[`ErrorsView displays procedure link if unknown procedure 1`] = `
 <div>
   <div
     class="sc-kpOJdX dcjZxn"
@@ -50,6 +29,7 @@ exports[`ErrorsViews ErrorsView displays procedure link if unknown procedure 1`]
       >
         <pre
           class="sc-jAaTju jVGCzW"
+          data-testid="cypherFrameErrorMessage"
         >
           not found
         </pre>
@@ -61,7 +41,7 @@ exports[`ErrorsViews ErrorsView displays procedure link if unknown procedure 1`]
           class="sc-eNQAEJ lmdVTE"
         >
           <i
-            class="sc-esjQYD hZVCtC fa fa-play-circle-o"
+            class="sc-eXEjpC fSAaHQ fa fa-play-circle-o"
           />
            List available procedures
         </a>
@@ -71,7 +51,7 @@ exports[`ErrorsViews ErrorsView displays procedure link if unknown procedure 1`]
 </div>
 `;
 
-exports[`ErrorsViews ErrorsView does displays an error 1`] = `
+exports[`ErrorsView does displays an error 1`] = `
 <div>
   <div
     class="sc-kpOJdX dcjZxn"
@@ -98,6 +78,7 @@ exports[`ErrorsViews ErrorsView does displays an error 1`] = `
       >
         <pre
           class="sc-jAaTju jVGCzW"
+          data-testid="cypherFrameErrorMessage"
         >
           Test error description
         </pre>
