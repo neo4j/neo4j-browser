@@ -67,6 +67,7 @@ export class Visualization {
   private container: Selection<SVGGElement, unknown, BaseType, unknown>
   private geometry: GraphGeometry
   private zoomBehavior: ZoomBehavior<SVGElement, unknown>
+  private zoomMinScaleExtent: number = ZOOM_MIN_SCALE
 
   forceSim: ForceSimulation
 
@@ -115,7 +116,7 @@ export class Visualization {
     this.geometry = new GraphGeometry(style)
 
     this.zoomBehavior = d3Zoom<SVGElement, unknown>()
-      .scaleExtent([ZOOM_MIN_SCALE, ZOOM_MAX_SCALE])
+      .scaleExtent([this.zoomMinScaleExtent, ZOOM_MAX_SCALE])
       .on('zoom', (e: D3ZoomEvent<SVGElement, unknown>) => {
         const isZoomClick = this.isZoomClick
         this.draw = true
@@ -124,7 +125,7 @@ export class Visualization {
         const currentZoomScale = e.transform.k
         const limitsReached: ZoomLimitsReached = {
           zoomInLimitReached: currentZoomScale >= ZOOM_MAX_SCALE,
-          zoomOutLimitReached: currentZoomScale <= ZOOM_MIN_SCALE
+          zoomOutLimitReached: currentZoomScale <= this.zoomMinScaleExtent
         }
         onZoomEvent(limitsReached)
 
@@ -248,7 +249,7 @@ export class Visualization {
     this.forceSim.updateRelationships(this.graph)
   }
 
-  private handleZoomClick(zoomType: ZoomType): void {
+  private handleZoomClick = (zoomType: ZoomType): void => {
     this.draw = true
     this.isZoomClick = true
 
@@ -257,11 +258,27 @@ export class Visualization {
     } else if (zoomType === ZoomType.OUT) {
       this.zoomBehavior.scaleBy(this.root, 0.7)
     } else if (zoomType === ZoomType.FIT) {
-      this.zoomToFitWholeGraph()
+      this.zoomToFit()
     }
   }
 
-  private zoomToFitWholeGraph = () => {
+  private zoomToFit = () => {
+    const scaleAndOffset = this.getZoomScaleFactorToFitWholeGraph()
+    if (scaleAndOffset) {
+      const { scale, centerPointOffset } = scaleAndOffset
+      // Do not zoom in more than zoom max scale for really small graphs
+      this.zoomBehavior.transform(
+        this.root,
+        zoomIdentity
+          .scale(Math.min(scale, ZOOM_MAX_SCALE))
+          .translate(centerPointOffset.x, centerPointOffset.y)
+      )
+    }
+  }
+
+  private getZoomScaleFactorToFitWholeGraph = ():
+    | { scale: number; centerPointOffset: { x: number; y: number } }
+    | undefined => {
     const graphSize = this.container.node()?.getBBox()
     const availableWidth = this.root.node()?.clientWidth
     const availableHeight = this.root.node()?.clientHeight
@@ -279,12 +296,25 @@ export class Visualization {
         (1 - ZOOM_FIT_PADDING_PERCENT) /
         Math.max(graphWidth / availableWidth, graphHeight / availableHeight)
 
-      this.zoomBehavior.transform(
-        this.root,
-        zoomIdentity
-          .scale(Math.min(scale, ZOOM_MAX_SCALE))
-          .translate(-graphCenterX, -graphCenterY)
-      )
+      const centerPointOffset = { x: -graphCenterX, y: -graphCenterY }
+
+      return { scale: scale, centerPointOffset: centerPointOffset }
+    }
+    return
+  }
+
+  private adjustZoomMinScaleExtentToFitGraph = (): void => {
+    const scaleAndOffset = this.getZoomScaleFactorToFitWholeGraph()
+    const PADDING_FACTOR = 0.75
+    const scaleToFitGraphWithPadding = scaleAndOffset
+      ? scaleAndOffset.scale * PADDING_FACTOR
+      : this.zoomMinScaleExtent
+    if (scaleToFitGraphWithPadding <= this.zoomMinScaleExtent) {
+      this.zoomMinScaleExtent = scaleToFitGraphWithPadding
+      this.zoomBehavior.scaleExtent([
+        scaleToFitGraphWithPadding,
+        ZOOM_MAX_SCALE
+      ])
     }
   }
 
@@ -298,6 +328,8 @@ export class Visualization {
     this.updateNodes()
     this.updateRelationships()
     this.forceSim.precompute()
+
+    this.adjustZoomMinScaleExtentToFitGraph()
   }
 
   update(options: {
