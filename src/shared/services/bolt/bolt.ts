@@ -64,10 +64,10 @@ function openConnection(
 }
 
 function cancelTransaction(id: string, cb: any): void {
-  const work = boltWorkPool.getWorkById(id)
-  if (work) {
-    work.onFinish(cb)
-    work.execute(cancelTransactionMessage(id))
+  const worker = boltWorkPool.getWorkerById(id)
+  if (worker) {
+    worker.work!.onFinish = cb
+    worker.execute(cancelTransactionMessage(id))
   } else {
     globalCancelTransaction(id, cb)
   }

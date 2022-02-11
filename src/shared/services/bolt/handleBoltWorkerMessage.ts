@@ -57,8 +57,8 @@ const connectionTypeMap = {
   [DIRECT_CONNECTION]: directTransaction
 }
 
-let busy = false
-const workQueue: { (): void }[] = []
+let runningCypherQuery = false
+const closeConnectionQueue: Array<() => void> = []
 
 const maybeCypherErrorMessage = (error: any): AnyAction | undefined => {
   if (isBoltConnectionErrorCode(error.code)) {
@@ -110,33 +110,13 @@ const runCypherMessage = async (
   return res
 }
 
-const beforeWork = (): void => {
-  busy = true
-}
-
-const afterWork = (): void => {
-  busy = false
-  doWork()
-}
-
-const queueWork = (fn: () => void): void => {
-  workQueue.push(fn)
-  doWork()
-}
-const doWork = (): void => {
-  if (busy) {
-    return
+const execCloseConnectionQueue = (): void => {
+  while (!runningCypherQuery && closeConnectionQueue.length) {
+    const workFn = closeConnectionQueue.shift()
+    if (workFn) {
+      workFn()
+    }
   }
-  if (!workQueue.length) {
-    return
-  }
-
-  const workFn = workQueue.shift()
-  if (workFn) {
-    workFn()
-  }
-
-  doWork()
 }
 
 export const handleBoltWorkerMessage =
@@ -145,14 +125,16 @@ export const handleBoltWorkerMessage =
     const messageType = data.type
 
     if (messageType === RUN_CYPHER_MESSAGE) {
-      beforeWork()
+      runningCypherQuery = true
       runCypherMessage(data, postMessage)
         .then(res => {
-          afterWork()
+          runningCypherQuery = false
+          execCloseConnectionQueue()
           postMessage(cypherResponseMessage(res))
         })
         .catch(err => {
-          afterWork()
+          runningCypherQuery = false
+          execCloseConnectionQueue()
           postMessage(
             maybeCypherErrorMessage({ code: err.code, message: err.message })
           )
@@ -162,9 +144,8 @@ export const handleBoltWorkerMessage =
         postMessage(postCancelTransactionMessage())
       })
     } else if (messageType === CLOSE_CONNECTION_MESSAGE) {
-      queueWork(() => {
-        closeGlobalConnection()
-      })
+      closeConnectionQueue.push(closeGlobalConnection)
+      execCloseConnectionQueue()
     } else {
       postMessage(
         cypherErrorMessage({

@@ -30,84 +30,61 @@ export type WorkerMessageHandler = (message: {
   }
 }) => void
 
+export enum WORKER_STATE {
+  BUSY = 'busy',
+  FREE = 'free'
+}
+
 class Work {
-  private executed = false
-  private finishFn?: (payload: any) => void = undefined
-  private worker?: Worker = undefined
+  public executed = false
+  public onFinish?: (payload: any) => void = undefined
 
   constructor(
     public readonly id: string,
-    private payload: any,
-    private removeFromQueue: (id: string) => void,
-    private onmessage?: WorkerMessageHandler
+    public readonly payload: any,
+    public readonly onmessage?: WorkerMessageHandler
   ) {}
-
-  execute = (payload: any) => {
-    if (payload && this.worker) {
-      this.worker.worker.postMessage(payload)
-    }
-  }
-
-  onFinish = (fn: (payload: any) => void) => (this.finishFn = fn)
-
-  finish = () => {
-    if (!this.executed) {
-      this.removeFromQueue(this.id)
-    }
-    this.worker && this.worker.finish(this.id)
-    this.finishFn && this.finishFn({ executed: this.executed, id: this.id })
-  }
-
-  executeInitial = () => {
-    if (this.onmessage && this.worker) {
-      this.worker.worker.onmessage = this.onmessage
-    }
-
-    if (this.payload && this.worker) {
-      this.worker.worker.postMessage(this.payload)
-    }
-
-    this.executed = true
-  }
-
-  assignWorker = (worker: Worker) => {
-    worker.id = this.id
-    worker.state = WorkPool.workerStates.BUSY
-    worker.work = this
-    this.worker = worker
-  }
 }
 
 class Worker {
   public work?: Work
-  public id?: string
+  public state = WORKER_STATE.BUSY
 
-  constructor(
-    public readonly worker: BoltWorkerModule,
-    public state: any,
-    private unregisterWorker: (id: string) => void
-  ) {}
+  constructor(public readonly worker: BoltWorkerModule) {}
 
-  finish = (id: any) => {
-    this.unregisterWorker(id)
+  executeInitial = () => {
+    if (!this.work) {
+      return
+    }
+
+    if (this.work.onmessage) {
+      this.worker.onmessage = this.work.onmessage
+    }
+
+    this.execute(this.work.payload)
+    this.work.executed = true
+  }
+
+  execute = (payload: any) => {
+    if (payload) {
+      this.worker.postMessage(payload)
+    }
+  }
+
+  assignWork = (work: Work) => {
+    this.state = WORKER_STATE.BUSY
+    this.work = work
   }
 }
 
 class WorkPool {
-  static workerStates = {
-    BUSY: 'busy',
-    FREE: 'free'
-  }
+  private readonly queue: Array<Work> = []
+  private readonly register: Array<Worker> = []
 
-  createWorker: () => BoltWorkerModule
-  maxPoolSize: number
-  queue: Array<Work> = []
-  register: Array<Worker> = []
-
-  constructor(createWorker: () => BoltWorkerModule, maxPoolSize = 15) {
-    this.createWorker = createWorker
-    this.maxPoolSize = maxPoolSize
-  }
+  constructor(
+    private readonly createWorker: () => BoltWorkerModule,
+    private readonly maxPoolSize = 15
+  ) {}
 
   getPoolSize(state?: any) {
     if (!state) {
@@ -120,12 +97,16 @@ class WorkPool {
     return this.queue.length
   }
 
+  getWorkerById(workId: string) {
+    return this.register.find(worker => worker.work?.id === workId) ?? null
+  }
+
   getWorkById(id: string) {
     return (
       // search through undone work
       this.queue.find(work => work.id === id) ??
       // search through work in progress
-      this.register.find(worker => worker.id === id)?.work ??
+      this.register.find(worker => worker.work?.id === id)?.work ??
       null
     )
   }
@@ -139,12 +120,7 @@ class WorkPool {
     payload?: any
     onmessage?: WorkerMessageHandler
   }) {
-    const work = new Work(
-      id || uuid(),
-      payload,
-      this.removeFromQueue,
-      onmessage
-    )
+    const work = new Work(id || uuid(), payload, onmessage)
     this.addToQueue(work)
     this.next()
     return work
@@ -154,9 +130,30 @@ class WorkPool {
     this.register.forEach(worker => worker.worker.postMessage(msg))
   }
 
+  finishWork(workId: string) {
+    const worker = this.getWorkerById(workId)
+    const work = this.getWorkById(workId)
+
+    if (!work) {
+      return
+    }
+
+    if (!work.executed) {
+      this.removeFromQueue(work.id)
+    }
+
+    if (worker) {
+      this.unregisterWorker(workId)
+    }
+
+    if (work.onFinish) {
+      work.onFinish({ executed: work?.executed, id: workId })
+    }
+  }
+
   private getFreeWorker() {
     const freeWorker = this.register.find(
-      worker => worker.state === WorkPool.workerStates.FREE
+      worker => worker.state === WORKER_STATE.FREE
     )
     if (freeWorker) {
       return freeWorker
@@ -164,11 +161,7 @@ class WorkPool {
 
     const poolSize = this.getPoolSize()
     if (poolSize < this.maxPoolSize) {
-      const workerObj = new Worker(
-        this.createWorker(),
-        WorkPool.workerStates.BUSY,
-        this.unregisterWorker
-      )
+      const workerObj = new Worker(this.createWorker())
       this.register.push(workerObj)
       return workerObj
     }
@@ -180,8 +173,8 @@ class WorkPool {
     if (!this.getQueueSize()) {
       return
     }
-    const workerObj = this.getFreeWorker()
-    if (!workerObj) {
+    const worker = this.getFreeWorker()
+    if (!worker) {
       return
     }
     const work = this.queue.shift()
@@ -189,28 +182,28 @@ class WorkPool {
       return
     }
 
-    work.assignWorker(workerObj)
-    work.executeInitial()
+    worker.assignWork(work)
+    worker.executeInitial()
   }
 
   private addToQueue(work: Work) {
     this.queue.push(work)
   }
 
-  private removeFromQueue(id: string) {
-    const workIndex = this.queue.findIndex(el => el.id === id)
+  private removeFromQueue(workId: string) {
+    const workIndex = this.queue.findIndex(el => el.id === workId)
     if (workIndex === -1) {
       return
     }
     this.queue.splice(workIndex, 1)
   }
 
-  private unregisterWorker = (id: string) => {
-    const worker = this.register.find(worker => worker.id === id)
+  private unregisterWorker = (workId: string) => {
+    const worker = this.register.find(worker => worker.work?.id === workId)
     if (!worker) {
       return
     }
-    worker.state = WorkPool.workerStates.FREE
+    worker.state = WORKER_STATE.FREE
     this.next()
   }
 }
