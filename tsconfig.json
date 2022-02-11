@@ -29,6 +29,7 @@
       "browser-hooks/*": ["browser/hooks/*"],
       "browser-styles/*": ["browser/styles/*"],
       "project-root/*": ["../*"],
+      "graph-visualization": ["graphVisualization"],
       "icons/*": ["browser/icons/*"]
     }
   },

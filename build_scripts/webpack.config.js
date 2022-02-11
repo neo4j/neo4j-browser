@@ -49,7 +49,11 @@ module.exports = {
       'browser-hooks': path.resolve(helpers.browserPath, 'hooks'),
       browser: path.resolve(helpers.browserPath),
       'browser-styles': path.resolve(helpers.browserPath, 'styles'),
-      icons: path.resolve(helpers.browserPath, 'icons')
+      icons: path.resolve(helpers.browserPath, 'icons'),
+      'graph-visualization': path.resolve(
+        helpers.sourcePath,
+        'graphVisualization'
+      )
     },
     extensions: ['.tsx', '.ts', '.js']
   },

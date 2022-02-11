@@ -74,6 +74,16 @@
         "react/no-unescaped-entities": "warn",
         "react/prop-types": "error"
       }
+    },
+    {
+      "files": ["src/graphVisualization/**/*.tsx"],
+      "rules": {
+        "react/prefer-stateless-function": [
+          "error",
+          { "ignorePureComponents": true }
+        ],
+        "no-restricted-imports": ["error", "redux", "react-redux"]
+      }
     }
   ]
 }

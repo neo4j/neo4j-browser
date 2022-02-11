@@ -12,14 +12,15 @@
   "importOrder": [
     "^@testing-library/react-hooks/dont-cleanup-after-each.js$",
     "<THIRD_PARTY_MODULES>",
-    "^browser/(.*)$|^project-root/(.*)$|^browser-(.*)$|^shared/(.*)$|^services/(.*)$|^icons/(.*)$|^[./]",
+    "^graph-visualization$",
+    "^browser/(.*)$|^project-root/(.*)$|^browser-(.*)$|^shared/(.*)$|^services/(.*)$|^icons/(.*)$|^[./]"
   ],
   "overrides": [
-      {
-        "files": "*.ts",
-        "options": {
-          "importOrderParserPlugins": ["typescript"]
-        }
+    {
+      "files": "*.ts",
+      "options": {
+        "importOrderParserPlugins": ["typescript"]
       }
-    ]
+    }
+  ]
 }
