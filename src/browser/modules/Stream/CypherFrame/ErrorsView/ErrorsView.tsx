@@ -34,11 +34,9 @@ import {
   StyledHelpFrame,
   StyledLink,
   StyledLinkContainer,
-  StyledMissingParamsTemplateLink,
-  StyledParamsTemplateClickableArea,
-  StyledPreformattedArea,
-  StyledSpecifyParamsText
+  StyledPreformattedArea
 } from '../../styled'
+import { MissingParamsTemplateLink } from './MissingParamsTemplateLink'
 import Ellipsis from 'browser-components/Ellipsis'
 import {
   ExclamationTriangleIcon,
@@ -54,7 +52,6 @@ import { listAvailableProcedures } from 'project-root/src/shared/modules/cypher/
 import * as editor from 'project-root/src/shared/modules/editor/editorDuck'
 import { getParams } from 'project-root/src/shared/modules/params/paramsDuck'
 import { BrowserRequestResult } from 'project-root/src/shared/modules/requests/requestsDuck'
-import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 import {
   isImplicitTransactionError,
   isNoDbAccessError,
@@ -63,78 +60,6 @@ import {
 } from 'services/cypherErrorsHelper'
 import { BrowserError } from 'services/exceptions'
 import { deepEquals } from 'services/utils'
-import { stringifyMod } from 'services/utils'
-
-type MissingParamsTemplateLinkProps = {
-  error: BrowserError
-  params: Record<string, unknown>
-  onSetFrameCmd: (cmd: string, autoExec: boolean) => void
-}
-const MissingParamsTemplateLink = ({
-  onSetFrameCmd,
-  params,
-  error
-}: MissingParamsTemplateLinkProps) => {
-  const onGenerateMissingParamsTemplate = (
-    error: BrowserError,
-    params: Record<string, unknown>,
-    onSetFrameCmd: (cmd: string, autoExec: boolean) => void
-  ): void => {
-    const missingParams = getMissingParams(error.message)
-    const template = getSettingMissingParamsTemplate(missingParams, params)
-    onSetFrameCmd(template, false)
-  }
-
-  const getMissingParams = (missingParamsErrorMessage: string) => {
-    const regExp = new RegExp(`^Expected parameter\\(s\\): (.*?)$`, 'g')
-    const match = regExp.exec(missingParamsErrorMessage)
-    if (match && match.length > 1) {
-      return match[1].split(', ')
-    } else {
-      return []
-    }
-  }
-  const getSettingMissingParamsTemplate = (
-    missingParams: string[],
-    existingParams: Record<string, unknown>
-  ): string => {
-    const missingParamsTemplate = missingParams
-      .map(param => `  "${param}": fill_in_your_value`)
-      .join(',\n')
-
-    let existingParamsTemplate = ''
-    const existingParamsIsEmpty = Object.keys(existingParams).length === 0
-    if (!existingParamsIsEmpty) {
-      const existingParamsStringWithBracketsAndSurroundingNewlines =
-        stringifyMod(existingParams, stringModifier, true)
-      const existingParamsStringCleaned =
-        existingParamsStringWithBracketsAndSurroundingNewlines
-          .slice(
-            1,
-            existingParamsStringWithBracketsAndSurroundingNewlines.length - 1
-          )
-          .trim()
-      existingParamsTemplate = `  ${existingParamsStringCleaned}`
-    }
-
-    return `:params \n{\n${missingParamsTemplate},\n\n${existingParamsTemplate}\n}`
-  }
-
-  return (
-    <StyledMissingParamsTemplateLink>
-      <span>Use this template to add missing parameter(s):</span>
-      <StyledParamsTemplateClickableArea
-        onClick={() =>
-          onGenerateMissingParamsTemplate(error, params, onSetFrameCmd)
-        }
-      >
-        :params{'{'}
-        <StyledSpecifyParamsText>specify params</StyledSpecifyParamsText>
-        {'}'}
-      </StyledParamsTemplateClickableArea>
-    </StyledMissingParamsTemplateLink>
-  )
-}
 
 export type ErrorsViewProps = {
   result: BrowserRequestResult
@@ -239,26 +164,3 @@ const mapDispatchToProps = (
 export const ErrorsView = withBus(
   connect(mapStateToProps, mapDispatchToProps)(ErrorsViewComponent)
 )
-
-type ErrorsStatusBarProps = {
-  result: BrowserRequestResult
-}
-export class ErrorsStatusbar extends Component<ErrorsStatusBarProps> {
-  shouldComponentUpdate(props: ErrorsStatusBarProps): boolean {
-    return !deepEquals(props.result, this.props.result)
-  }
-
-  render(): null | JSX.Element {
-    const error = this.props.result as BrowserError
-    if (!error || (!error.code && !error.message)) return null
-    const fullError = errorMessageFormater(error.code, error.message)
-
-    return (
-      <Ellipsis>
-        <ErrorText title={fullError.title}>
-          <ExclamationTriangleIcon /> {fullError.message}
-        </ErrorText>
-      </Ellipsis>
-    )
-  }
-}

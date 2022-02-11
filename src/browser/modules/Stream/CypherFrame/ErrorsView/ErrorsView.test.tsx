@@ -22,7 +22,7 @@ import React from 'react'
 import { combineReducers, createStore } from 'redux'
 import { createBus } from 'suber'
 
-import { ErrorsStatusbar, ErrorsView, ErrorsViewProps } from './ErrorsView'
+import { ErrorsView, ErrorsViewProps } from './ErrorsView'
 import reducers from 'project-root/src/shared/rootReducer'
 import { BrowserError } from 'services/exceptions'
 
@@ -42,102 +42,73 @@ const mount = (partOfProps: Partial<ErrorsViewProps>) => {
   return render(<ErrorsView store={store} {...props} />)
 }
 
-describe('ErrorsViews', () => {
-  describe('ErrorsView', () => {
-    test('displays nothing if no errors', () => {
-      // Given
-      const props = {
-        result: null
-      }
+describe('ErrorsView', () => {
+  test('displays nothing if no errors', () => {
+    // Given
+    const props = {
+      result: null
+    }
 
-      // When
-      const { container } = mount(props)
+    // When
+    const { container } = mount(props)
 
-      // Then
-      expect(container).toMatchSnapshot()
-    })
-    test('does displays an error', () => {
-      // Given
-      const error: BrowserError = {
-        code: 'Test.Error',
-        message: 'Test error description',
-        type: 'Neo4jError'
-      }
-      const props = {
-        result: error
-      }
-
-      // When
-      const { container } = mount(props)
-
-      // Then
-      expect(container).toMatchSnapshot()
-    })
-    test('displays procedure link if unknown procedure', () => {
-      // Given
-      const error: BrowserError = {
-        code: 'Neo.ClientError.Procedure.ProcedureNotFound',
-        message: 'not found',
-        type: 'Neo4jError'
-      }
-      const props = {
-        result: error
-      }
-
-      // When
-      const { container, getByText } = mount(props)
-
-      // Then
-      expect(container).toMatchSnapshot()
-      expect(getByText('List available procedures')).not.toBeUndefined()
-    })
-    test('displays procedure link if periodic commit error', () => {
-      // Given
-      const error: BrowserError = {
-        code: 'Neo.ClientError.Statement.SemanticError',
-        message:
-          'Executing queries that use periodic commit in an open transaction is not possible.',
-        type: 'Neo4jError'
-      }
-      const props = {
-        result: error
-      }
-
-      // When
-      const { getByText } = mount(props)
-
-      // Then
-      // We need to split up because of the use of <code> tags in the rendered document
-      expect(getByText(/info on the/i)).not.toBeUndefined()
-      expect(getByText(':auto')).not.toBeUndefined()
-      expect(getByText('(auto-committing transactions)')).not.toBeUndefined()
-    })
+    // Then
+    expect(container).toMatchSnapshot()
   })
-  describe('ErrorsStatusbar', () => {
-    test('displays nothing if no error', () => {
-      // Given
-      const props = {
-        result: null
-      }
+  test('does displays an error', () => {
+    // Given
+    const error: BrowserError = {
+      code: 'Test.Error',
+      message: 'Test error description',
+      type: 'Neo4jError'
+    }
+    const props = {
+      result: error
+    }
 
-      // When
-      const { container } = render(<ErrorsStatusbar {...props} />)
-      expect(container).toMatchSnapshot()
-    })
-    test('displays error', () => {
-      // Given
-      const error: BrowserError = {
-        code: 'Test.Error',
-        message: 'Test error description',
-        type: 'Neo4jError'
-      }
-      const props = {
-        result: error
-      }
+    // When
+    const { container } = mount(props)
 
-      // When
-      const { container } = render(<ErrorsStatusbar {...props} />)
-      expect(container).toMatchSnapshot()
-    })
+    // Then
+    expect(container).toMatchSnapshot()
+  })
+  test('displays procedure link if unknown procedure', () => {
+    // Given
+    const error: BrowserError = {
+      code: 'Neo.ClientError.Procedure.ProcedureNotFound',
+      message: 'not found',
+      type: 'Neo4jError'
+    }
+    const props = {
+      result: error
+    }
+
+    // When
+    const { container, getByText } = mount(props)
+
+    // Then
+    expect(container).toMatchSnapshot()
+    expect(getByText('List available procedures')).not.toBeUndefined()
+  })
+  test('displays procedure link if periodic commit error', () => {
+    // Given
+    const error: BrowserError = {
+      code: 'Neo.ClientError.Statement.SemanticError',
+      message:
+        'Executing queries that use periodic commit in an open transaction is not possible.',
+      type: 'Neo4jError'
+    }
+    const props = {
+      result: error
+    }
+
+    // When
+    const { getByText } = mount(props)
+
+    // Then
+    // We need to split up because of the use of <code> tags in the rendered document
+    expect(getByText(/info on the/i)).not.toBeUndefined()
+    expect(getByText(':auto')).not.toBeUndefined()
+    expect(getByText('(auto-committing transactions)')).not.toBeUndefined()
   })
 })
