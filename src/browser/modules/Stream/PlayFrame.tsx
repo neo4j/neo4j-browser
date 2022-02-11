@@ -21,13 +21,14 @@ import React, { useContext, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { ThemeContext } from 'styled-components'
+import { Bus } from 'suber'
 
 import docs, { DocItem, isPlayChapter } from '../../documentation'
 import Docs from '../Docs/Docs'
 import { splitMdxSlides } from '../Docs/MDX/splitMdx'
 import FrameAside from '../Frame/FrameAside'
 import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
-import { ErrorsView } from './CypherFrame/ErrorsView'
+import { ErrorsView } from './CypherFrame/ErrorsView/ErrorsView'
 import { AuraPromoLink, PromotionContainer } from './styled'
 import { CarouselButton } from 'browser-components/buttons'
 import {
@@ -45,7 +46,6 @@ import { isConnectedAuraHost } from 'shared/modules/connections/connectionsDuck'
 import { getEdition, isEnterprise } from 'shared/modules/dbMeta/state'
 import { DARK_THEME } from 'shared/modules/settings/settingsDuck'
 import { LAST_GUIDE_SLIDE } from 'shared/modules/udc/udcDuck'
-import { Bus } from 'suber';
 
 const AuraPromotion = () => {
   const theme = useContext(ThemeContext)
@@ -108,7 +108,10 @@ export function PlayFrame({
   }
 
   useEffect(() => {
-    stackIndex !== 0 && atSlideEnd && bus && bus.send(LAST_GUIDE_SLIDE, undefined)
+    stackIndex !== 0 &&
+      atSlideEnd &&
+      bus &&
+      bus.send(LAST_GUIDE_SLIDE, undefined)
   }, [stackIndex, bus, atSlideEnd])
 
   useEffect(() => {
@@ -192,7 +195,10 @@ export function PlayFrame({
 }
 
 type Content = {
-  guide: JSX.Element, hasCarousel?: boolean, isRemote?: boolean, aside?: JSX.Element | null;
+  guide: JSX.Element
+  hasCarousel?: boolean
+  isRemote?: boolean
+  aside?: JSX.Element | null
 }
 function generateContent(
   stackFrame: any,

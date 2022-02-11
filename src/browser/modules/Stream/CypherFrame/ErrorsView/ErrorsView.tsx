@@ -23,6 +23,7 @@ import { withBus } from 'react-suber'
 import { Action, Dispatch } from 'redux'
 import { Bus } from 'suber'
 
+import { errorMessageFormater } from '../../errorMessageFormater'
 import {
   ErrorText,
   StyledCypherErrorMessage,
@@ -37,13 +38,22 @@ import {
   StyledParamsTemplateClickableArea,
   StyledPreformattedArea,
   StyledSpecifyParamsText
-} from '../styled'
-import { errorMessageFormater } from './../errorMessageFormater'
+} from '../../styled'
 import Ellipsis from 'browser-components/Ellipsis'
 import {
   ExclamationTriangleIcon,
   PlayIcon
 } from 'browser-components/icons/Icons'
+import { GlobalState } from 'project-root/src/shared/globalState'
+import {
+  commandSources,
+  executeCommand,
+  listDbsCommand
+} from 'project-root/src/shared/modules/commands/commandsDuck'
+import { listAvailableProcedures } from 'project-root/src/shared/modules/cypher/procedureFactory'
+import * as editor from 'project-root/src/shared/modules/editor/editorDuck'
+import { getParams } from 'project-root/src/shared/modules/params/paramsDuck'
+import { BrowserRequestResult } from 'project-root/src/shared/modules/requests/requestsDuck'
 import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 import {
   isImplicitTransactionError,
@@ -54,16 +64,6 @@ import {
 import { BrowserError } from 'services/exceptions'
 import { deepEquals } from 'services/utils'
 import { stringifyMod } from 'services/utils'
-import { GlobalState } from 'shared/globalState'
-import {
-  commandSources,
-  executeCommand,
-  listDbsCommand
-} from 'shared/modules/commands/commandsDuck'
-import { listAvailableProcedures } from 'shared/modules/cypher/procedureFactory'
-import * as editor from 'shared/modules/editor/editorDuck'
-import { getParams } from 'shared/modules/params/paramsDuck'
-import { BrowserRequestResult } from 'shared/modules/requests/requestsDuck'
 
 type MissingParamsTemplateLinkProps = {
   error: BrowserError
