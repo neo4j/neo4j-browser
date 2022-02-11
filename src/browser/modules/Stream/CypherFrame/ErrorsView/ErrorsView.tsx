@@ -25,7 +25,6 @@ import { Bus } from 'suber'
 
 import { errorMessageFormater } from '../../errorMessageFormater'
 import {
-  ErrorText,
   StyledCypherErrorMessage,
   StyledDiv,
   StyledErrorH4,
@@ -37,11 +36,7 @@ import {
   StyledPreformattedArea
 } from '../../styled'
 import { MissingParamsTemplateLink } from './MissingParamsTemplateLink'
-import Ellipsis from 'browser-components/Ellipsis'
-import {
-  ExclamationTriangleIcon,
-  PlayIcon
-} from 'browser-components/icons/Icons'
+import { PlayIcon } from 'browser-components/icons/Icons'
 import { GlobalState } from 'project-root/src/shared/globalState'
 import {
   commandSources,
@@ -52,6 +47,7 @@ import { listAvailableProcedures } from 'project-root/src/shared/modules/cypher/
 import * as editor from 'project-root/src/shared/modules/editor/editorDuck'
 import { getParams } from 'project-root/src/shared/modules/params/paramsDuck'
 import { BrowserRequestResult } from 'project-root/src/shared/modules/requests/requestsDuck'
+import { GENERATE_SET_MISSING_PARAMS_TEMPLATE } from 'project-root/src/shared/modules/udc/udcDuck'
 import {
   isImplicitTransactionError,
   isNoDbAccessError,
@@ -77,13 +73,17 @@ class ErrorsViewComponent extends Component<ErrorsViewProps> {
   }
 
   render(): null | JSX.Element {
-    const { params, onSetFrameCmd } = this.props
+    const { bus, params, onSetFrameCmd } = this.props
 
     const error = this.props.result as BrowserError
     if (!error || !error.code) {
       return null
     }
     const fullError = errorMessageFormater(null, error.message)
+
+    const handleSetMissingParamsTemplateHelpMessageClick = () => {
+      bus.send(GENERATE_SET_MISSING_PARAMS_TEMPLATE, undefined)
+    }
 
     return (
       <StyledHelpFrame>
@@ -131,6 +131,9 @@ class ErrorsViewComponent extends Component<ErrorsViewProps> {
               error={error}
               params={params}
               onSetFrameCmd={onSetFrameCmd}
+              onTemplateHelpMessageClick={
+                handleSetMissingParamsTemplateHelpMessageClick
+              }
             />
           )}
         </StyledHelpContent>

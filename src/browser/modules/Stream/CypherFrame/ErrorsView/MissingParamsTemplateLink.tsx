@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) "Neo4j"
+ * Neo4j Sweden AB [http://neo4j.com]
+ *
+ * This file is part of Neo4j.
+ *
+ * Neo4j is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 import React from 'react'
 
 import {
@@ -13,17 +32,16 @@ type MissingParamsTemplateLinkProps = {
   error: BrowserError
   params: Record<string, unknown>
   onSetFrameCmd: (cmd: string, autoExec: boolean) => void
+  onTemplateHelpMessageClick: () => void
 }
 export const MissingParamsTemplateLink = ({
   onSetFrameCmd,
   params,
-  error
+  error,
+  onTemplateHelpMessageClick
 }: MissingParamsTemplateLinkProps) => {
-  const onGenerateMissingParamsTemplate = (
-    error: BrowserError,
-    params: Record<string, unknown>,
-    onSetFrameCmd: (cmd: string, autoExec: boolean) => void
-  ): void => {
+  const handleTemplateHelpMessageClick = (): void => {
+    onTemplateHelpMessageClick()
     const missingParams = getMissingParams(error.message)
     const template = getSettingMissingParamsTemplate(missingParams, params)
     onSetFrameCmd(template, false)
@@ -68,9 +86,7 @@ export const MissingParamsTemplateLink = ({
     <StyledMissingParamsTemplateLink>
       <span>Use this template to add missing parameter(s):</span>
       <StyledParamsTemplateClickableArea
-        onClick={() =>
-          onGenerateMissingParamsTemplate(error, params, onSetFrameCmd)
-        }
+        onClick={() => handleTemplateHelpMessageClick()}
       >
         :params{'{'}
         <StyledSpecifyParamsText>specify params</StyledSpecifyParamsText>

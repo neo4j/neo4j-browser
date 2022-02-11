@@ -57,6 +57,8 @@ import cmdHelper from 'shared/services/commandInterpreterHelper'
 // Action types
 export const NAME = 'udc'
 const UPDATE_DATA = 'udc/UPDATE_DATA'
+export const GENERATE_SET_MISSING_PARAMS_TEMPLATE =
+  'udc/GENERATE_SET_MISSING_PARAMS_TEMPLATE'
 export const METRICS_EVENT = 'udc/METRICS_EVENT'
 export const UDC_STARTUP = 'udc/STARTUP'
 export const LAST_GUIDE_SLIDE = 'udc/LAST_GUIDE_SLIDE'
@@ -268,6 +270,7 @@ export const trackCommandUsageEpic: Epic<Action, GlobalState> = action$ =>
 
 const actionsOfInterest = [
   ADD_FAVORITE,
+  GENERATE_SET_MISSING_PARAMS_TEMPLATE,
   LAST_GUIDE_SLIDE,
   LOAD_FAVORITES,
   PIN,
