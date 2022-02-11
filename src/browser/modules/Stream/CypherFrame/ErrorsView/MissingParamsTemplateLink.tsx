@@ -58,10 +58,10 @@ export const MissingParamsTemplateLink = ({
             existingParamsStringWithBracketsAndSurroundingNewlines.length - 1
           )
           .trim()
-      existingParamsTemplate = `  ${existingParamsStringCleaned}`
+      existingParamsTemplate = `,\n\n  ${existingParamsStringCleaned}`
     }
 
-    return `:params \n{\n${missingParamsTemplate},\n\n${existingParamsTemplate}\n}`
+    return `:params \n{\n${missingParamsTemplate}${existingParamsTemplate}\n}`
   }
 
   return (
