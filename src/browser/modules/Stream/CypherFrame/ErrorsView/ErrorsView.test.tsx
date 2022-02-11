@@ -31,7 +31,8 @@ const mount = (partOfProps: Partial<ErrorsViewProps>) => {
     result: null,
     bus: createBus(),
     params: {},
-    onSetFrameCmd: jest.fn()
+    executeCmd: jest.fn(),
+    setEditorContent: jest.fn()
   }
   const props = {
     ...defaultProps,

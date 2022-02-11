@@ -31,20 +31,20 @@ import { stringifyMod } from 'services/utils'
 type MissingParamsTemplateLinkProps = {
   error: BrowserError
   params: Record<string, unknown>
-  onSetFrameCmd: (cmd: string, autoExec: boolean) => void
+  setEditorContent: (cmd: string) => void
   onTemplateHelpMessageClick: () => void
 }
 export const MissingParamsTemplateLink = ({
-  onSetFrameCmd,
+  setEditorContent,
   params,
   error,
   onTemplateHelpMessageClick
-}: MissingParamsTemplateLinkProps) => {
+}: MissingParamsTemplateLinkProps): JSX.Element => {
   const handleTemplateHelpMessageClick = (): void => {
     onTemplateHelpMessageClick()
     const missingParams = getMissingParams(error.message)
     const template = getSettingMissingParamsTemplate(missingParams, params)
-    onSetFrameCmd(template, false)
+    setEditorContent(template)
   }
 
   const getMissingParams = (missingParamsErrorMessage: string) => {

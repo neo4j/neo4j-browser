@@ -61,7 +61,8 @@ export type ErrorsViewProps = {
   result: BrowserRequestResult
   bus: Bus
   params: Record<string, unknown>
-  onSetFrameCmd: (cmd: string, autoExec: boolean) => void
+  executeCmd: (cmd: string) => void
+  setEditorContent: (cmd: string) => void
 }
 
 class ErrorsViewComponent extends Component<ErrorsViewProps> {
@@ -73,7 +74,7 @@ class ErrorsViewComponent extends Component<ErrorsViewProps> {
   }
 
   render(): null | JSX.Element {
-    const { bus, params, onSetFrameCmd } = this.props
+    const { bus, params, executeCmd, setEditorContent } = this.props
 
     const error = this.props.result as BrowserError
     if (!error || !error.code) {
@@ -99,9 +100,7 @@ class ErrorsViewComponent extends Component<ErrorsViewProps> {
           </StyledDiv>
           {isUnknownProcedureError(error) && (
             <StyledLinkContainer>
-              <StyledLink
-                onClick={() => onSetFrameCmd(listAvailableProcedures, true)}
-              >
+              <StyledLink onClick={() => executeCmd(listAvailableProcedures)}>
                 <PlayIcon />
                 &nbsp;List available procedures
               </StyledLink>
@@ -109,9 +108,7 @@ class ErrorsViewComponent extends Component<ErrorsViewProps> {
           )}
           {isNoDbAccessError(error) && (
             <StyledLinkContainer>
-              <StyledLink
-                onClick={() => onSetFrameCmd(`:${listDbsCommand}`, true)}
-              >
+              <StyledLink onClick={() => executeCmd(`:${listDbsCommand}`)}>
                 <PlayIcon />
                 &nbsp;List available databases
               </StyledLink>
@@ -119,7 +116,7 @@ class ErrorsViewComponent extends Component<ErrorsViewProps> {
           )}
           {isImplicitTransactionError(error) && (
             <StyledLinkContainer>
-              <StyledLink onClick={() => onSetFrameCmd(`:help auto`, true)}>
+              <StyledLink onClick={() => executeCmd(`:help auto`)}>
                 <PlayIcon />
                 &nbsp;Info on the <code>:auto</code> command
               </StyledLink>
@@ -130,7 +127,7 @@ class ErrorsViewComponent extends Component<ErrorsViewProps> {
             <MissingParamsTemplateLink
               error={error}
               params={params}
-              onSetFrameCmd={onSetFrameCmd}
+              setEditorContent={setEditorContent}
               onTemplateHelpMessageClick={
                 handleSetMissingParamsTemplateHelpMessageClick
               }
@@ -152,15 +149,14 @@ const mapDispatchToProps = (
   ownProps: ErrorsViewProps
 ) => {
   return {
-    onSetFrameCmd: (cmd: string, autoExec: boolean) => {
-      if (autoExec) {
-        const action = executeCommand(cmd, {
-          source: commandSources.button
-        })
-        ownProps.bus.send(action.type, action)
-      } else {
-        ownProps.bus.send(editor.SET_CONTENT, editor.setContent(cmd))
-      }
+    executeCmd: (cmd: string) => {
+      const action = executeCommand(cmd, {
+        source: commandSources.button
+      })
+      ownProps.bus.send(action.type, action)
+    },
+    setEditorContent: (cmd: string) => {
+      ownProps.bus.send(editor.SET_CONTENT, editor.setContent(cmd))
     }
   }
 }
