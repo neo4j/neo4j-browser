@@ -87,6 +87,9 @@ export const MissingParamsTemplateLink = ({
       <span>Use this template to add missing parameter(s):</span>
       <StyledParamsTemplateClickableArea
         onClick={() => handleTemplateHelpMessageClick()}
+        aria-label={
+          'Set editor content with template to be used for setting the missing parameters'
+        }
       >
         :params{'{'}
         <StyledSpecifyParamsText>specify params</StyledSpecifyParamsText>
