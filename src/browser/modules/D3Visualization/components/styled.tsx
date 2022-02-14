@@ -20,92 +20,7 @@
 import styled from 'styled-components'
 
 export const legendRowHeight = 32
-export const inspectorFooterContractedHeight = 22
 export const panelMinWidth = 200
-
-export const StyledSvgWrapper = styled.div`
-  line-height: 0;
-  height: 100%;
-  position: relative;
-  > svg {
-    height: 100%;
-    width: 100%;
-    background-color: ${props => props.theme.frameBackground};
-    .node {
-      cursor: pointer;
-      > .ring {
-        fill: none;
-        opacity: 0;
-        stroke: #6ac6ff;
-      }
-      &.selected {
-        > .ring {
-          stroke: #fdcc59;
-          opacity: 0.3;
-        }
-      }
-      &:hover {
-        > .ring {
-          stroke: #6ac6ff;
-          opacity: 0.3;
-        }
-      }
-    }
-    .relationship {
-      > text {
-        fill: ${props => props.theme.primaryText};
-      }
-      > .overlay {
-        opacity: 0;
-        fill: #6ac6ff;
-      }
-      &.selected {
-        > .overlay {
-          fill: #fdcc59;
-          opacity: 0.3;
-        }
-      }
-      &:hover {
-        > .overlay {
-          fill: #6ac6ff;
-          opacity: 0.3;
-        }
-      }
-    }
-    .remove_node {
-      .expand_node {
-        &:hover {
-          border: 2px #000 solid;
-        }
-      }
-    }
-    .outline {
-      cursor: pointer;
-    }
-    path {
-      &.context-menu-item {
-        stroke-width: 2px;
-        fill: ${props => props.theme.primaryBackground};
-      }
-    }
-    text {
-      line-height: normal;
-      &.context-menu-item {
-        fill: #fff;
-        text-anchor: middle;
-        pointer-events: none;
-        font-size: 14px;
-      }
-    }
-    .context-menu-item {
-      cursor: pointer;
-      &:hover {
-        fill: #b9b9b9;
-        font-size: 14px;
-      }
-    }
-  }
-`
 
 export const StyledInlineList = styled.ul`
   list-style: none;
@@ -120,7 +35,6 @@ export const StyledInlineListStylePicker = styled(StyledInlineList)`
   color: ${props => props.theme.primaryText};
   padding: 0.833em 1em;
 `
-
 export const StyledInlineListItem = styled.li`
   display: inline-block;
   padding-right: 5px;
@@ -151,7 +65,6 @@ export const StyledTokenRelationshipType = styled(StyledToken)`
   word-break: break-all;
   cursor: default;
 `
-
 export const StyledLegendInlineList = styled(StyledInlineList)`
   padding: 4px 0 0 0;
   &.contracted {
@@ -159,7 +72,6 @@ export const StyledLegendInlineList = styled(StyledInlineList)`
     overflow: hidden;
   }
 `
-
 export const StyledPickerListItem = styled(StyledInlineListItem)`
   padding-right: 5px;
   padding-left: 0;
@@ -209,49 +121,10 @@ export const StyledCaptionSelector = styled.a`
     background-color: #9195a0;
   }
 `
-
 export const StyledFullSizeContainer = styled.div`
   position: relative;
   height: 100%;
 `
-
-export const StyledZoomHolder = styled.div<{
-  isFullscreen: boolean
-  offset: number
-}>`
-  position: ${props => (props.isFullscreen ? 'fixed' : 'absolute')};
-  display: flex;
-  flex-direction: column;
-  bottom: 0;
-  right: ${props => props.offset}px
-  border-left: ${props => props.theme.inFrameBorder};
-  border-right: ${props => props.theme.inFrameBorder};
-  border-top: ${props => props.theme.inFrameBorder};
-  background: ${props => props.theme.frameSidebarBackground};
-  box-shadow: ${props => props.theme.standardShadow};
-`
-
-export const StyledZoomButton = styled.button`
-  border: none;
-  color: ${props => props.theme.frameButtonTextColor}
-  background: transparent;
-  padding: 8px;
-  &:hover {
-    background: ${props => props.theme.frameButtonHoverBackground};
-    border-radius: 2px;
-  }
-  &:active {
-    background: ${props => props.theme.frameButtonActiveBackground};
-  }
-  &:focus {
-    outline: none;
-  }
-  &.faded {
-    opacity: 0.3;
-    cursor: auto;
-  }
-`
-
 export const StyledNodeInspectorContainer = styled.div<{
   width: number
   shouldAnimate: boolean
@@ -283,8 +156,8 @@ export const StyledNodeInspectorTopMenuChevron = styled.div<{
   ${props =>
     !props.expanded &&
     `background: ${props.theme.editorBackground};
-     box-shadow: ${props.theme.standardShadow};
-  `}
+       box-shadow: ${props.theme.standardShadow};
+    `}
 `
 
 export const PaneContainer = styled.div`
@@ -358,55 +231,4 @@ export const StyledExpandValueButton = styled.button`
   outline: none;
   background-color: inherit;
   color: ${props => props.theme.link};
-`
-
-export const StyledZoomInfoOverlay = styled.div`
-  position: absolute;
-  width: 100%;
-  bottom: 2rem;
-  display: flex;
-  flex-direction: row;
-  pointer-events: none;
-`
-
-export const StyledZoomInfo = styled.div`
-  background: ${props => props.theme.infoBackground};
-  position: relative;
-  border: ${props => props.theme.infoBorder};
-  border-radius: 4px;
-  box-shadow: ${props => props.theme.standardShadow}
-  margin-left: auto;
-  margin-right: auto;
-  padding: 1rem;
-  flex: 0 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: baseline;
-  gap: 1rem;
-  pointer-events: auto;
-`
-
-export const StyledZoomInfoTextContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 1rem;
-`
-
-export const StyledZoomInfoText = styled.span`
-  line-height: 1.5rem;
-`
-
-export const StyledZoomInfoIconContainer = styled.div`
-  color: ${props => props.theme.infoIconColor};
-`
-
-export const StyledZoomInfoOverlayDoNotDisplayButton = styled.button`
-  padding: 0 3rem;
-  font-size: 1.2rem;
-  line-height: 1.5rem;
-  border: none;
-  outline: none;
-  background-color: inherit;
-  text-decoration-line: underline;
 `

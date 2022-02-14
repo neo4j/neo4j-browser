@@ -18,37 +18,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React from 'react'
-import { connect } from 'react-redux'
-import { Action, Dispatch } from 'redux'
 
+import { GraphModel } from '../models/Graph'
 import {
-  GraphModel,
-  GraphStyleModel,
-  Visualization,
-  VizItem,
-  ZoomLimitsReached
-} from 'graph-visualization'
-
-import { GetNodeNeighboursFn, GraphEventHandler } from '../GraphEventHandler'
+  GetNodeNeighboursFn,
+  GraphEventHandlerModel
+} from '../models/GraphEventHandler'
+import { GraphStyleModel } from '../models/GraphStyle'
+import { VizItem } from '../types'
+import { BasicNode, BasicRelationship } from '../types'
 import {
   GraphStats,
   createGraph,
   getGraphStats,
   mapRelationships
-} from '../mapper'
+} from '../utils/mapper'
+import {
+  Visualization,
+  ZoomLimitsReached
+} from '../visualization/Visualization'
+import { ZoomInIcon, ZoomOutIcon, ZoomToFitIcon } from './Icons'
 import { WheelZoomInfoOverlay } from './WheelZoomInfoOverlay'
 import { StyledSvgWrapper, StyledZoomButton, StyledZoomHolder } from './styled'
-import {
-  ZoomInIcon,
-  ZoomOutIcon,
-  ZoomToFitIcon
-} from 'browser-components/icons/Icons'
-import { GlobalState } from 'project-root/src/shared/globalState'
-import { shouldShowWheelZoomInfo } from 'project-root/src/shared/modules/settings/settingsDuck'
-import * as actions from 'project-root/src/shared/modules/settings/settingsDuck'
-import { BasicNode, BasicRelationship } from 'services/bolt/boltMappings'
 
-type GraphProps = {
+export type GraphProps = {
   isFullscreen: boolean
   relationships: BasicRelationship[]
   nodes: BasicNode[]
@@ -74,7 +67,7 @@ type GraphState = {
   displayingWheelZoomInfoMessage: boolean
 }
 
-class GraphComponent extends React.Component<GraphProps, GraphState> {
+export class Graph extends React.Component<GraphProps, GraphState> {
   svgElement: React.RefObject<SVGSVGElement>
   visualization: Visualization | null = null
   displayingWheelZoomInfoTimerId: number | undefined
@@ -122,7 +115,7 @@ class GraphComponent extends React.Component<GraphProps, GraphState> {
       isFullscreen
     )
 
-    const graphEventHandler = new GraphEventHandler(
+    const graphEventHandler = new GraphEventHandlerModel(
       graph,
       this.visualization,
       getNodeNeighbours,
@@ -262,15 +255,3 @@ class GraphComponent extends React.Component<GraphProps, GraphState> {
     )
   }
 }
-
-const mapStateToProps = (state: GlobalState) => ({
-  wheelZoomInfoMessageEnabled: shouldShowWheelZoomInfo(state)
-})
-
-const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
-  disableWheelZoomInfoMessage: () => {
-    dispatch(actions.update({ showWheelZoomInfo: false }))
-  }
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(GraphComponent)

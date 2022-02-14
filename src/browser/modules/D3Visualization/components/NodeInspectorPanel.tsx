@@ -2,9 +2,8 @@ import React, { Component } from 'react'
 import { Resizable } from 'react-resizable'
 import { Icon } from 'semantic-ui-react'
 
-import { GraphStyleModel, VizItem } from 'graph-visualization'
+import { GraphStats, GraphStyleModel, VizItem } from 'graph-visualization'
 
-import { GraphStats } from '../mapper'
 import { DetailsPaneComponent } from './DetailsPane'
 import { NodeInspectorDrawer } from './NodeInspectorDrawer'
 import OverviewPane from './OverviewPane'

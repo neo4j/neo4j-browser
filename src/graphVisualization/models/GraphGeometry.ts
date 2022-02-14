@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { PairwiseArcsRelationshipRouting } from '../utils/pairwiseArcsRelationshipRouting'
+import { PairwiseArcsRelationshipRouting } from '../utils/PairwiseArcsRelationshipRouting'
 import { measureText } from '../utils/textMeasurement'
 import { GraphModel } from './Graph'
 import { GraphStyleModel } from './GraphStyle'

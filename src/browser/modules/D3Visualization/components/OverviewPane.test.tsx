@@ -20,13 +20,13 @@
 import { render, screen } from '@testing-library/react'
 import React from 'react'
 
-import { GraphStyleModel } from 'graph-visualization'
-
 import {
   GraphStats,
   GraphStatsLabels,
-  GraphStatsRelationshipTypes
-} from '../mapper'
+  GraphStatsRelationshipTypes,
+  GraphStyleModel
+} from 'graph-visualization'
+
 import OverviewPane, { OVERVIEW_STEP_SIZE } from './OverviewPane'
 
 jest.mock('./StyleableNodeLabel')

@@ -20,9 +20,8 @@
 import React, { useState } from 'react'
 import { Icon } from 'semantic-ui-react'
 
-import { GraphStyleModel } from 'graph-visualization'
+import { GraphStats, GraphStyleModel } from 'graph-visualization'
 
-import { GraphStats } from '../mapper'
 import { StyleableNodeLabel } from './StyleableNodeLabel'
 import { StyleableRelType } from './StyleableRelType'
 import {

@@ -23,11 +23,15 @@ import React, { Component } from 'react'
 import { ConnectedComponent, connect } from 'react-redux'
 import { Action, Dispatch } from 'redux'
 
-import { GraphModel, GraphStyleModel, VizItem } from 'graph-visualization'
+import {
+  GetNodeNeighboursFn,
+  GraphModel,
+  GraphStats,
+  GraphStyleModel,
+  VizItem
+} from 'graph-visualization'
 
-import { GetNodeNeighboursFn } from '../GraphEventHandler'
-import { GraphStats } from '../mapper'
-import GraphComponent from './Graph'
+import { GraphConnected } from './GraphConnected'
 import { NodeInspectorPanel, defaultPanelWidth } from './NodeInspectorPanel'
 import { StyledFullSizeContainer, panelMinWidth } from './styled'
 import {
@@ -243,7 +247,7 @@ export class ExplorerComponent extends Component<
 
     return (
       <StyledFullSizeContainer id="svg-vis">
-        <GraphComponent
+        <GraphConnected
           isFullscreen={this.props.isFullscreen}
           relationships={this.state.relationships}
           nodes={this.state.nodes}

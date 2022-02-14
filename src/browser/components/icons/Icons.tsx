@@ -45,10 +45,6 @@ import pin from 'icons/frame-pin.svg'
 import shrink from 'icons/frame-shrink.svg'
 import help from 'icons/help.svg'
 import vizIcon from 'icons/hierarchy-9.svg'
-import fitToScreenIcon from 'icons/iconsToBeFetchedFromNDL/fit-to-screen.svg'
-import infoCircle from 'icons/iconsToBeFetchedFromNDL/information-circle.svg'
-import zoomInIcon from 'icons/iconsToBeFetchedFromNDL/zoom-in.svg'
-import zoomOutIcon from 'icons/iconsToBeFetchedFromNDL/zoom-out.svg'
 import monitorPlay from 'icons/monitor-play.svg'
 import navigationMenuVertical from 'icons/navigation-menu-vertical.svg'
 import neo4j from 'icons/neo4j-icon.svg'
@@ -277,41 +273,6 @@ export const ErrorIcon = (): JSX.Element => (
   <IconContainer className="fa fa-file-text-o" text="Error" />
 )
 
-const ZOOM_ICONS_DEFAULT_SIZE_IN_PX = 20
-const ZOOM_ICONS_LARGE_SCALE_FACTOR = 1.2
-export const ZoomInIcon = ({ large }: { large: boolean }): JSX.Element => {
-  const scale = large ? ZOOM_ICONS_LARGE_SCALE_FACTOR : 1
-  return (
-    <IconContainer
-      icon={zoomInIcon}
-      width={scale * ZOOM_ICONS_DEFAULT_SIZE_IN_PX}
-    />
-  )
-}
-export const ZoomOutIcon = ({
-  large = false
-}: {
-  large?: boolean
-}): JSX.Element => {
-  const scale = large ? ZOOM_ICONS_LARGE_SCALE_FACTOR : 1
-  return (
-    <IconContainer
-      icon={zoomOutIcon}
-      width={scale * ZOOM_ICONS_DEFAULT_SIZE_IN_PX}
-    />
-  )
-}
-
-export const ZoomToFitIcon = ({ large }: { large: boolean }): JSX.Element => {
-  const scale = large ? ZOOM_ICONS_LARGE_SCALE_FACTOR : 1
-  return (
-    <IconContainer
-      icon={fitToScreenIcon}
-      width={scale * ZOOM_ICONS_DEFAULT_SIZE_IN_PX}
-    />
-  )
-}
-
 export const BinIcon = (): JSX.Element => (
   <IconContainer
     activeStyle="white"
@@ -462,5 +423,3 @@ export const CopyIcon = ({
 }: TitleAndWidthProps): JSX.Element => (
   <IconContainer title={title} width={width} icon={copy} />
 )
-
-export const InfoIcon = (): JSX.Element => <IconContainer icon={infoCircle} />

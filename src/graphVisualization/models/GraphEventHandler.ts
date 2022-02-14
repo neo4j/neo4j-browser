@@ -17,16 +17,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { GraphModel } from '../models/Graph'
+import { NodeModel } from '../models/Node'
+import { RelationshipModel } from '../models/Relationship'
+import { BasicNode, BasicNodesAndRels, VizItem } from '../types'
 import {
-  GraphModel,
-  NodeModel,
-  RelationshipModel,
-  Visualization
-} from 'graph-visualization'
-
-import { VizItem } from '../../../graphVisualization/types'
-import { GraphStats, getGraphStats, mapNodes, mapRelationships } from './mapper'
-import { BasicNode, BasicNodesAndRels } from 'services/bolt/boltMappings'
+  GraphStats,
+  getGraphStats,
+  mapNodes,
+  mapRelationships
+} from '../utils/mapper'
+import { Visualization } from '../visualization/Visualization'
 
 export type GetNodeNeighboursFn = (
   node: BasicNode | NodeModel,
@@ -34,7 +35,7 @@ export type GetNodeNeighboursFn = (
   callback: (data: BasicNodesAndRels) => void
 ) => void
 
-export class GraphEventHandler {
+export class GraphEventHandlerModel {
   getNodeNeighbours: GetNodeNeighboursFn
   graph: GraphModel
   visualization: Visualization

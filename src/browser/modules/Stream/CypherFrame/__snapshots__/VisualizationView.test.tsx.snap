@@ -5,14 +5,14 @@ exports[`Visualization renders empty content 1`] = `<div />`;
 exports[`Visualization renders with result and escapes any HTML 1`] = `
 <div>
   <div
-    class="sc-bMVAic lkKPLF"
+    class="sc-bAeIUo kSeZcY"
   >
     <div
-      class="sc-gqjmRU gEkgXi"
+      class="sc-kGXeez jKzZRs"
       id="svg-vis"
     >
       <div
-        class="sc-bdVaJa ckbiDw"
+        class="sc-bwzfXH fcjzSz"
       >
         <svg
           class="neod3viz"
@@ -74,29 +74,12 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
           </g>
         </svg>
         <div
-          class="sc-VigVT fEiqtv"
+          class="sc-htpNat kRvcjq"
           offset="212.8"
         >
           <button
             aria-label="zoom-in"
-            class="sc-jTzLTM fOxCEd zoom-in"
-          >
-            <i
-              class="sc-laTMn jiKZdL"
-            >
-              <span
-                class="SVGInline SVGInline--cleaned"
-              >
-                <svg
-                  class="SVGInline-svg SVGInline--cleaned-svg"
-                  style="width: 20px;height: 20px;"
-                />
-              </span>
-            </i>
-          </button>
-          <button
-            aria-label="zoom-out"
-            class="sc-jTzLTM fOxCEd zoom-out"
+            class="sc-bxivhb jxitkF zoom-in"
           >
             <i
               class="sc-hGoxap ksdJJr"
@@ -112,8 +95,8 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
             </i>
           </button>
           <button
-            aria-label="zoom-to-fit"
-            class="sc-jTzLTM fOxCEd"
+            aria-label="zoom-out"
+            class="sc-bxivhb jxitkF zoom-out"
           >
             <i
               class="sc-fjmCvl fMdbP"
@@ -128,10 +111,27 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
               </span>
             </i>
           </button>
+          <button
+            aria-label="zoom-to-fit"
+            class="sc-bxivhb jxitkF"
+          >
+            <i
+              class="sc-TFwJa bUEOAT"
+            >
+              <span
+                class="SVGInline SVGInline--cleaned"
+              >
+                <svg
+                  class="SVGInline-svg SVGInline--cleaned-svg"
+                  style="width: 20px;height: 20px;"
+                />
+              </span>
+            </i>
+          </button>
         </div>
       </div>
       <div
-        class="sc-jzJRlG eGaAoL"
+        class="sc-dxgOiQ hnCZir"
       >
         <i
           aria-hidden="true"
@@ -140,43 +140,43 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
         />
       </div>
       <div
-        class="sc-fjdhpX feMpry"
+        class="sc-kpOJdX idzfJo"
         width="204.8"
       >
         <div
-          class="sc-cSHVUG jRcvIS react-resizable"
+          class="sc-ckVGcZ eFGykO react-resizable"
           data-testid="vizInspector"
         >
           <div
-            class="sc-chPdSV iqxIkq"
+            class="sc-eNQAEJ ITmwS"
           >
             Overview
           </div>
           <div
-            class="sc-kgoBCf bSxQqW"
+            class="sc-hMqMXs gdGGiH"
           >
             <div>
               <div
-                class="sc-hMqMXs iGVKwm"
+                class="sc-jWBwVP hEwBEr"
               >
                 <span
-                  class="sc-jKJlTe bUxYVH"
+                  class="sc-eHgmQL ZYPhy"
                 >
                   Node labels
                 </span>
               </div>
               <ul
-                class="sc-bwzfXH sc-gzVnrw cQdYz"
+                class="sc-iwsKbI sc-jzJRlG kSaRXC"
               >
                 <div
-                  class="sc-cMljjf sc-jAaTju bqoYNF"
+                  class="sc-jAaTju sc-jDwBTQ hnAfZY"
                   data-testid="property-details-overview-node-label-*"
                   style="background-color: rgb(165, 171, 182); color: rgb(255, 255, 255);"
                 >
                   * (1)
                 </div>
                 <div
-                  class="sc-cMljjf sc-jAaTju bqoYNF"
+                  class="sc-jAaTju sc-jDwBTQ hnAfZY"
                   data-testid="property-details-overview-node-label-Person"
                   style="background-color: rgb(201, 144, 192); color: rgb(255, 255, 255);"
                 >

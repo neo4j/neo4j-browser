@@ -134,28 +134,3 @@ const quoteSpecialStyles = (style: any, value: any) =>
   (shouldQuoteStyle(style) ? '"' : '') +
   value +
   (shouldQuoteStyle(style) ? '"' : '')
-
-export const selectorStringToArray = (selector: string) => {
-  // Negative lookbehind simulation since js support is very limited.
-  // We want to match all . that are not preceded by \\
-  // Instead we reverse and look
-  // for . that are not followed by \\ (negative lookahead)
-  const reverseSelector = selector.split('').reverse().join('')
-  const re = /(.+?)(?!\.\\)(?:\.|$)/g
-  const out = []
-  let m
-  while ((m = re.exec(reverseSelector)) !== null) {
-    const res = m[1].split('').reverse().join('')
-    out.push(res)
-  }
-
-  return out
-    .filter(r => r)
-    .reverse()
-    .map(r => r.replace(/\\./g, '.'))
-}
-
-export const selectorArrayToString = (selectors: any) => {
-  const escaped = selectors.map((r: any) => r.replace(/\./g, '\\.'))
-  return escaped.join('.')
-}
