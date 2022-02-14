@@ -25,7 +25,9 @@ import { optionalToString } from 'services/utils'
 
 const mapProperties = (_: any) => Object.assign({}, ...stringifyValues(_))
 const stringifyValues = (obj: any) =>
-  Object.keys(obj).map(k => ({ [k]: optionalToString(obj[k]) }))
+  Object.keys(obj).map(k => ({
+    [k]: obj[k] === null ? 'null' : optionalToString(obj[k])
+  }))
 
 export function createGraph(
   nodes: BasicNode[],

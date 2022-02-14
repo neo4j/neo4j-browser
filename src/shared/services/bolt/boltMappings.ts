@@ -215,6 +215,10 @@ const getTypeDisplayName = (val: any): string => {
     return `Array(${val.length})`
   }
 
+  if (val === null) {
+    return 'null'
+  }
+
   return getDriverTypeName(val) || 'Unknown'
 }
 
