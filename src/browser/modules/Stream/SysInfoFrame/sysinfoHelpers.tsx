@@ -98,7 +98,7 @@ type MetricType = 'database' | 'dbms'
 type MetricSettings = {
   databaseName: string
   namespacesEnabled: boolean
-  userConfiguredPrefix: string
+  metricsPrefix: string
 }
 type ConstructorParams = MetricSettings & {
   baseMetricName: string
@@ -107,7 +107,7 @@ type ConstructorParams = MetricSettings & {
 }
 
 function constructQuery({
-  userConfiguredPrefix,
+  metricsPrefix,
   namespacesEnabled,
   databaseName,
   baseMetricName,
@@ -128,13 +128,13 @@ function constructQuery({
   parts.push(baseMetricName)
   const metricName = parts.join('.')
 
-  return `CALL dbms.queryJmx("${userConfiguredPrefix}.metrics:name=${userConfiguredPrefix}.${metricName}") YIELD name, attributes RETURN "${group}" AS group, name, attributes`
+  return `CALL dbms.queryJmx("${metricsPrefix}.metrics:name=${metricsPrefix}.${metricName}") YIELD name, attributes RETURN "${group}" AS group, name, attributes`
 }
 
 export function sysinfoQuery({
   databaseName,
   namespacesEnabled,
-  userConfiguredPrefix
+  metricsPrefix
 }: MetricSettings): string {
   const queries = sysInfoMetrics
     .map(({ group, type, baseMetricNames }) =>
@@ -142,7 +142,7 @@ export function sysinfoQuery({
         constructQuery({
           databaseName,
           namespacesEnabled,
-          userConfiguredPrefix,
+          metricsPrefix,
           baseMetricName,
           group,
           type

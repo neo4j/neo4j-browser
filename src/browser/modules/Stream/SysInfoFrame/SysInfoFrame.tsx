@@ -45,6 +45,8 @@ import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import {
   Database,
   getDatabases,
+  getMetricsNamespacesEnabled,
+  getMetricsPrefix,
   isEnterprise
 } from 'shared/modules/dbMeta/state'
 import { hasMultiDbSupport } from 'shared/modules/features/versionedFeatures'
@@ -63,8 +65,6 @@ export type SysInfoFrameState = {
   results: boolean
   autoRefresh: boolean
   autoRefreshInterval: number
-  namespacesEnabled: boolean
-  userConfiguredPrefix: string
 }
 
 export type SysInfoFrameProps = {
@@ -78,6 +78,8 @@ export type SysInfoFrameProps = {
   isFullscreen: boolean
   isCollapsed: boolean
   isOnCausalCluster: boolean
+  namespacesEnabled: boolean
+  metricsPrefix: string
 }
 
 export class SysInfoFrame extends Component<
@@ -95,58 +97,12 @@ export class SysInfoFrame extends Component<
     errorMessage: null,
     results: false,
     autoRefresh: false,
-    autoRefreshInterval: 20, // seconds
-    namespacesEnabled: false,
-    userConfiguredPrefix: 'neo4j'
+    autoRefreshInterval: 20 // seconds
   }
 
   componentDidMount(): void {
-    this.getSettings()
-      .then(this.getSysInfo)
-      .catch(errorMessage => this.setState({ errorMessage }))
+    this.getSysInfo()
   }
-
-  getSettings = (): Promise<void> =>
-    new Promise((resolve, reject) => {
-      const { bus, isConnected } = this.props
-
-      if (bus && isConnected) {
-        bus.self(
-          CYPHER_REQUEST,
-          {
-            query: 'CALL dbms.listConfig("metrics.")',
-            queryType: NEO4J_BROWSER_USER_ACTION_QUERY
-          },
-          ({ success, result }) => {
-            if (success) {
-              const newState = result.records.reduce(
-                (newState: Partial<SysInfoFrameState>, record: any) => {
-                  const name = record.get('name')
-                  const value = record.get('value')
-                  if (name === 'metrics.prefix') {
-                    return { ...newState, userConfiguredPrefix: value }
-                  }
-
-                  if (name === 'metrics.namespaces.enabled') {
-                    return { ...newState, namespacesEnabled: value === 'true' }
-                  }
-
-                  return newState
-                },
-                {}
-              )
-
-              this.setState(newState)
-              resolve()
-            } else {
-              reject('Failed to run listConfig')
-            }
-          }
-        )
-      } else {
-        reject('Could not reach server')
-      }
-    })
 
   componentDidUpdate(
     prevProps: SysInfoFrameProps,
@@ -169,15 +125,15 @@ export class SysInfoFrame extends Component<
   }
 
   getSysInfo = (): void => {
-    const { userConfiguredPrefix, namespacesEnabled } = this.state
-    const { useDb, hasMultiDbSupport } = this.props
+    const { useDb, hasMultiDbSupport, metricsPrefix, namespacesEnabled } =
+      this.props
 
     if (hasMultiDbSupport && useDb) {
       this.runCypherQuery(
         helpers.sysinfoQuery({
           databaseName: useDb,
           namespacesEnabled,
-          userConfiguredPrefix
+          metricsPrefix
         }),
         helpers.responseHandler(this.setState.bind(this))
       )
@@ -303,7 +259,9 @@ const mapStateToProps = (state: GlobalState) => ({
   isConnected: isConnected(state),
   databases: getDatabases(state),
   useDb: getUseDb(state),
-  isOnCausalCluster: isOnCausalCluster(state)
+  isOnCausalCluster: isOnCausalCluster(state),
+  namespacesEnabled: getMetricsNamespacesEnabled(state),
+  metricsPrefix: getMetricsPrefix(state)
 })
 
 export default withBus(connect(mapStateToProps)(FrameVersionPicker))

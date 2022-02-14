@@ -376,7 +376,14 @@ export const serverConfigEpic = (some$: any, store: any) =>
               }
               value = authEnabled
               store.dispatch(setAuthEnabled(authEnabled))
+            } else if (name === 'metrics.namespaces.enabled') {
+              let metricsNamespacesEnabled = true
+              if (typeof value !== 'undefined' && isConfigValFalsy(value)) {
+                metricsNamespacesEnabled = false
+              }
+              value = metricsNamespacesEnabled
             }
+
             all[name] = value
             return all
           }, {})

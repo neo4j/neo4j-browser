@@ -54,7 +54,9 @@ export const initialState = {
     'browser.remote_content_hostname_allowlist': 'guides.neo4j.com, localhost',
     'browser.retain_connection_credentials': false,
     'browser.retain_editor_history': false,
-    'clients.allow_telemetry': true
+    'clients.allow_telemetry': true,
+    'metrics.namespaces.enabled': false,
+    'metrics.prefix': 'neo4j'
   }
 }
 
@@ -142,6 +144,10 @@ export const getRetainEditorHistory = (state: any) => {
   if (conf === null || typeof conf === 'undefined') return false
   return !isConfigValFalsy(conf)
 }
+export const getMetricsNamespacesEnabled = (state: GlobalState): boolean =>
+  getAvailableSettings(state)['metrics.namespaces.enabled']
+export const getMetricsPrefix = (state: GlobalState): string =>
+  getAvailableSettings(state)['metrics.prefix']
 
 export const getDatabases = (state: any): Database[] =>
   (state[NAME] || initialState).databases
