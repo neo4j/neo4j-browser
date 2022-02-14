@@ -1,4 +1,4 @@
-const SubmitQueryButton = '[data-testid="editor-Run"]'
+export const SubmitQueryButton = '[data-testid="editor-Run"]'
 const EditorTextField = '[data-testid="activeEditor"] textarea'
 const VisibleEditor = '#monaco-main-editor'
 /* global Cypress, cy */
