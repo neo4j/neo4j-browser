@@ -119,7 +119,11 @@ export class SysInfoFrame extends Component<
       }
     }
 
-    if (prevProps.useDb !== this.props.useDb) {
+    if (
+      prevProps.useDb !== this.props.useDb ||
+      prevProps.namespacesEnabled !== this.props.namespacesEnabled ||
+      prevProps.metricsPrefix !== this.props.metricsPrefix
+    ) {
       this.getSysInfo()
     }
   }
