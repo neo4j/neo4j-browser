@@ -70,21 +70,6 @@ describe('feature getters', () => {
       'foo.bar'
     )
   })
-  test('should not be a causal cluster', () => {
-    const nextState = reducer(undefined, { type: '' })
-    expect(features.canCallDbmsClusterOverview({ features: nextState })).toBe(
-      false
-    )
-  })
-  test('should be in a causal cluster', () => {
-    const nextState = reducer(
-      { availableProcedures: ['dbms.cluster.overview'] } as any,
-      { type: '' }
-    )
-    expect(features.canCallDbmsClusterOverview({ features: nextState })).toBe(
-      true
-    )
-  })
   test('should not be able to assign roles to user', () => {
     const nextState = reducer(undefined, { type: '' })
     expect(features.canAssignRolesToUser({ features: nextState })).toBe(false)

@@ -38,7 +38,7 @@ const baseProps = {
   useDb: 'neo4j',
   isFullscreen: false,
   isCollapsed: false,
-  canCallClusterOverview: true
+  isOnCausalCluster: true
 }
 
 const mountWithStore = (props: Partial<SysInfoFrameProps>) => {

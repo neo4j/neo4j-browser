@@ -47,9 +47,9 @@ import {
   getDatabases,
   isEnterprise
 } from 'shared/modules/dbMeta/state'
-import { canCallDbmsClusterOverview } from 'shared/modules/features/featuresDuck'
 import { hasMultiDbSupport } from 'shared/modules/features/versionedFeatures'
 import { Frame } from 'shared/modules/frames/framesDuck'
+import { isOnCausalCluster } from 'shared/utils/selectors'
 
 export type DatabaseMetric = { label: string; value?: string }
 export type SysInfoFrameState = {
@@ -77,7 +77,7 @@ export type SysInfoFrameProps = {
   useDb: string | null
   isFullscreen: boolean
   isCollapsed: boolean
-  canCallClusterOverview: boolean
+  isOnCausalCluster: boolean
 }
 
 export class SysInfoFrame extends Component<
@@ -199,7 +199,7 @@ export class SysInfoFrame extends Component<
         },
         responseHandler
       )
-      if (this.props.canCallClusterOverview) {
+      if (this.props.isOnCausalCluster) {
         this.props.bus.self(
           CYPHER_REQUEST,
           {
@@ -289,7 +289,7 @@ const FrameVersionPicker = (props: SysInfoFrameProps) => {
     return (
       <LegacySysInfoFrame
         {...props}
-        isACausalCluster={props.canCallClusterOverview}
+        isACausalCluster={props.isOnCausalCluster}
       />
     )
   } else {
@@ -303,7 +303,7 @@ const mapStateToProps = (state: GlobalState) => ({
   isConnected: isConnected(state),
   databases: getDatabases(state),
   useDb: getUseDb(state),
-  canCallClusterOverview: canCallDbmsClusterOverview(state)
+  isOnCausalCluster: isOnCausalCluster(state)
 })
 
 export default withBus(connect(mapStateToProps)(FrameVersionPicker))

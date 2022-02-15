@@ -82,7 +82,8 @@ it('can list and kill queries', () => {
     bus,
     neo4jVersion: '4.0.0',
     isFullscreen: false,
-    isCollapsed: false
+    isCollapsed: false,
+    isOnCausalCluster: false
   }
 
   const { getByText, getByTestId } = render(<QueriesFrame {...props} />)

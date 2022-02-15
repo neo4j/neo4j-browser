@@ -20,6 +20,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
+import { Bus } from 'suber'
 
 import FrameAside from '../../Frame/FrameAside'
 import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
@@ -59,7 +60,7 @@ import {
 import { getVersion } from 'shared/modules/dbMeta/state'
 import { getAvailableProcedures } from 'shared/modules/features/featuresDuck'
 import { getDefaultBoltScheme } from 'shared/modules/features/versionedFeatures'
-import { Bus } from 'suber';
+import { isOnCausalCluster } from 'shared/utils/selectors'
 
 type QueriesFrameState = {
   queries: any[]
@@ -77,6 +78,7 @@ type QueriesFrameProps = {
   neo4jVersion: string | null
   isFullscreen: boolean
   isCollapsed: boolean
+  isOnCausalCluster: boolean
 }
 export class QueriesFrame extends Component<
   QueriesFrameProps,
@@ -111,16 +113,13 @@ export class QueriesFrame extends Component<
       }
     }
     if (
-      this.props.frame &&
-      this.props.frame.ts !== prevProps.frame.ts &&
-      this.props.frame.isRerun
+      (this.props.frame &&
+        this.props.frame.ts !== prevProps.frame.ts &&
+        this.props.frame.isRerun) ||
+      this.props.isOnCausalCluster !== prevProps.isOnCausalCluster
     ) {
       this.getRunningQueries()
     }
-  }
-
-  isCC() {
-    return this.props.availableProcedures.includes('dbms.cluster.overview')
   }
 
   canListQueries() {
@@ -129,7 +128,7 @@ export class QueriesFrame extends Component<
 
   getRunningQueries(suppressQuerySuccessMessage = false) {
     this.props.bus.self(
-      this.isCC() ? CLUSTER_CYPHER_REQUEST : CYPHER_REQUEST,
+      this.props.isOnCausalCluster ? CLUSTER_CYPHER_REQUEST : CYPHER_REQUEST,
       {
         query: listQueriesProcedure(),
         queryType: NEO4J_BROWSER_USER_ACTION_QUERY
@@ -170,7 +169,7 @@ export class QueriesFrame extends Component<
 
   killQueries(host: any, queryIdList: any) {
     this.props.bus.self(
-      this.isCC() ? AD_HOC_CYPHER_REQUEST : CYPHER_REQUEST,
+      this.props.isOnCausalCluster ? AD_HOC_CYPHER_REQUEST : CYPHER_REQUEST,
       { host, query: killQueriesProcedure(queryIdList) },
       (response: any) => {
         if (response.success) {
@@ -389,7 +388,8 @@ const mapStateToProps = (state: GlobalState) => {
   return {
     availableProcedures: getAvailableProcedures(state) || [],
     connectionState: getConnectionState(state),
-    neo4jVersion: getVersion(state)
+    neo4jVersion: getVersion(state),
+    isOnCausalCluster: isOnCausalCluster(state)
   }
 }
 
