@@ -20,7 +20,8 @@
 import React, { useState } from 'react'
 import { Icon } from 'semantic-ui-react'
 
-import { GraphStats } from '../mapper'
+import { GraphStats, GraphStyleModel } from 'graph-visualization'
+
 import { StyleableNodeLabel } from './StyleableNodeLabel'
 import { StyleableRelType } from './StyleableRelType'
 import {
@@ -33,7 +34,6 @@ import {
 } from './styled'
 import { ShowMoreOrAll } from 'browser-components/ShowMoreOrAll/ShowMoreOrAll'
 import { StyledTruncatedMessage } from 'browser/modules/Stream/styled'
-import { GraphStyle } from 'project-root/src/browser/modules/D3Visualization/graphStyle'
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
 
 type PaneBodySectionHeaderProps = {
@@ -59,7 +59,7 @@ function PaneBodySectionHeader({
 }
 
 type OverviewPaneProps = {
-  graphStyle: GraphStyle
+  graphStyle: GraphStyleModel
   hasTruncatedFields: boolean
   nodeCount: number | null
   relationshipCount: number | null

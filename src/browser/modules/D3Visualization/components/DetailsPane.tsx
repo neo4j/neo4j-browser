@@ -19,6 +19,13 @@
  */
 import React, { useState } from 'react'
 
+import {
+  GraphStyleModel,
+  NodeItem,
+  RelationshipItem,
+  VizItemProperty
+} from 'graph-visualization'
+
 import ClickableUrls from '../../../components/ClickableUrls'
 import { StyleableNodeLabel } from './StyleableNodeLabel'
 import { StyleableRelType } from './StyleableRelType'
@@ -33,10 +40,8 @@ import {
   StyledInlineList,
   ValueCell
 } from './styled'
-import { NodeItem, RelationshipItem, VizItemProperty } from './types'
 import ClipboardCopier from 'browser-components/ClipboardCopier'
 import { ShowMoreOrAll } from 'browser-components/ShowMoreOrAll/ShowMoreOrAll'
-import { GraphStyle } from 'project-root/src/browser/modules/D3Visualization/graphStyle'
 import { upperFirst } from 'services/utils'
 
 export const ELLIPSIS = '\u2026'
@@ -132,7 +137,7 @@ function PropertiesView({
 export const DETAILS_PANE_STEP_SIZE = 1000
 type DetailsPaneComponentProps = {
   vizItem: NodeItem | RelationshipItem
-  graphStyle: GraphStyle
+  graphStyle: GraphStyleModel
   nodeInspectorWidth: number
 }
 export function DetailsPaneComponent({

@@ -23,14 +23,17 @@ import React, { Component } from 'react'
 import { ConnectedComponent, connect } from 'react-redux'
 import { Action, Dispatch } from 'redux'
 
-import { GetNodeNeighboursFn } from '../GraphEventHandler'
-import { GraphStyle } from '../graphStyle'
-import Graph from '../lib/visualization/components/Graph'
-import { GraphStats } from '../mapper'
-import GraphComponent from './Graph'
+import {
+  GetNodeNeighboursFn,
+  GraphModel,
+  GraphStats,
+  GraphStyleModel,
+  VizItem
+} from 'graph-visualization'
+
+import { GraphConnected } from './GraphConnected'
 import { NodeInspectorPanel, defaultPanelWidth } from './NodeInspectorPanel'
 import { StyledFullSizeContainer, panelMinWidth } from './styled'
-import { VizItem } from './types'
 import {
   BasicNode,
   BasicNodesAndRels,
@@ -43,7 +46,7 @@ import {
   setNodePropertiesExpandedByDefault
 } from 'shared/modules/frames/framesDuck'
 
-type DecuplicateHelper = {
+type DeduplicateHelper = {
   nodes: BasicNode[]
   taken: Record<string, boolean>
   nodeLimitHit: boolean
@@ -54,7 +57,7 @@ const deduplicateNodes = (
   limit: number
 ): { nodes: BasicNode[]; nodeLimitHit: boolean } =>
   nodes.reduce(
-    (all: DecuplicateHelper, curr: BasicNode) => {
+    (all: DeduplicateHelper, curr: BasicNode) => {
       if (all.nodes.length === limit) {
         all.nodeLimitHit = true
       } else if (!all.taken[curr.id]) {
@@ -82,7 +85,7 @@ type ExplorerComponentProps = {
   getAutoCompleteCallback: (
     callback: (rels: BasicRelationship[]) => void
   ) => void
-  setGraph: (graph: Graph) => void
+  setGraph: (graph: GraphModel) => void
   hasTruncatedFields: boolean
 }
 type ExporerReduxProps = {
@@ -91,7 +94,7 @@ type ExporerReduxProps = {
 }
 
 type ExplorerComponentState = {
-  graphStyle: GraphStyle
+  graphStyle: GraphStyleModel
   hoveredItem: VizItem
   nodes: BasicNode[]
   relationships: BasicRelationship[]
@@ -112,7 +115,7 @@ export class ExplorerComponent extends Component<
 
   constructor(props: FullExplorerProps) {
     super(props)
-    const graphStyle = new GraphStyle()
+    const graphStyle = new GraphStyleModel()
     this.defaultStyle = graphStyle.toSheet()
     const { nodes, nodeLimitHit } = deduplicateNodes(
       this.props.nodes,
@@ -239,12 +242,12 @@ export class ExplorerComponent extends Component<
     // If the legend component has the style it will ask the neoGraphStyle object for styling before the graph component,
     // and also doing this in a different order from the graph. This leads to different default colors being assigned to different labels.
     const graphStyle = this.state.freezeLegend
-      ? new GraphStyle()
+      ? new GraphStyleModel()
       : this.state.graphStyle
 
     return (
       <StyledFullSizeContainer id="svg-vis">
-        <GraphComponent
+        <GraphConnected
           isFullscreen={this.props.isFullscreen}
           relationships={this.state.relationships}
           nodes={this.state.nodes}

@@ -24,9 +24,10 @@ import { withBus } from 'react-suber'
 import { Action, Dispatch } from 'redux'
 import { Bus } from 'suber'
 
+import { GraphModel } from 'graph-visualization'
+
 import Explorer from '../../D3Visualization/components/Explorer'
 import { StyledVisContainer } from './VisualizationView.styled'
-import Graph from 'browser/modules/D3Visualization/lib/visualization/components/Graph'
 import { resultHasTruncatedFields } from 'browser/modules/Stream/CypherFrame/helpers'
 import bolt from 'services/bolt/bolt'
 import {
@@ -67,7 +68,7 @@ export class Visualization extends Component<
   VisualizationState
 > {
   autoCompleteCallback: ((rels: BasicRelationship[]) => void) | undefined
-  graph: Graph | undefined
+  graph: GraphModel | undefined
   state: VisualizationState = {
     nodes: [],
     relationships: [],
@@ -227,7 +228,7 @@ LIMIT ${maxNewNeighbours}`
     })
   }
 
-  setGraph(graph: Graph): void {
+  setGraph(graph: GraphModel): void {
     this.graph = graph
     this.autoCompleteRelationships([], this.graph.nodes())
   }

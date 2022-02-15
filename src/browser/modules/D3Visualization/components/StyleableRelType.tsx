@@ -20,12 +20,13 @@
 import React from 'react'
 import { Popup } from 'semantic-ui-react'
 
+import { GraphStyleModel } from 'graph-visualization'
+
 import { GrassEditor } from './GrassEditor'
 import { StyledRelationship } from 'browser/modules/DBMSInfo/styled'
-import { GraphStyle } from 'project-root/src/browser/modules/D3Visualization/graphStyle'
 
 export type StyleableRelTypeProps = {
-  graphStyle: GraphStyle
+  graphStyle: GraphStyleModel
   selectedRelType: { relType: string; propertyKeys: string[]; count?: number }
 }
 export function StyleableRelType({

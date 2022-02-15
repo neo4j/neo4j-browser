@@ -23,16 +23,17 @@ import React from 'react'
 import {
   GraphStats,
   GraphStatsLabels,
-  GraphStatsRelationshipTypes
-} from '../mapper'
+  GraphStatsRelationshipTypes,
+  GraphStyleModel
+} from 'graph-visualization'
+
 import OverviewPane, { OVERVIEW_STEP_SIZE } from './OverviewPane'
-import GraphStyle from 'project-root/src/browser/modules/D3Visualization/graphStyle'
 
 jest.mock('./StyleableNodeLabel')
 jest.mock('./StyleableRelType')
 
 describe('<OverviewPane />', () => {
-  const graphStyle = new GraphStyle()
+  const graphStyle = new GraphStyleModel()
 
   const getMockLabels: (length: number) => GraphStatsLabels = length =>
     Array.from({ length: length }).reduce(

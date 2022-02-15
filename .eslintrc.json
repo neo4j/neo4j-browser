@@ -17,7 +17,8 @@
     "react/no-deprecated": "warn",
     "react/display-name": "warn",
     "react/no-unescaped-entities": "off",
-    "import/no-webpack-loader-syntax": "off"
+    "import/no-webpack-loader-syntax": "off",
+    "no-restricted-imports": ["error", { "patterns": ["*graphVisualization*"] }]
   },
   "globals": {
     "it": true,
@@ -73,6 +74,25 @@
         "react-hooks/rules-of-hooks": "warn",
         "react/no-unescaped-entities": "warn",
         "react/prop-types": "error"
+      }
+    },
+    {
+      "files": [
+        "src/graphVisualization/**/*.ts",
+        "src/graphVisualization/**/*.tsx"
+      ],
+      "rules": {
+        "react/prefer-stateless-function": [
+          "error",
+          { "ignorePureComponents": true }
+        ],
+        "no-restricted-imports": [
+          "error",
+          {
+            "paths": ["redux", "react-redux"],
+            "patterns": ["browser*", "shared*", "services*"]
+          }
+        ]
       }
     }
   ]

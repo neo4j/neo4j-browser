@@ -21,6 +21,8 @@ import deepmerge from 'deepmerge'
 import React from 'react'
 import { ThemeProvider } from 'styled-components'
 
+import { GraphStyleModel } from 'graph-visualization'
+
 import styles from './style_meta.css'
 import { StyledLabel, StyledProperty, StyledRelationship } from './styled'
 import { ShowMoreOrAll } from 'browser-components/ShowMoreOrAll/ShowMoreOrAll'
@@ -30,14 +32,13 @@ import {
   DrawerSubHeader
 } from 'browser-components/drawer/drawer-styled'
 import { dark } from 'browser-styles/themes'
-import { GraphStyle } from 'browser/modules/D3Visualization/graphStyle'
 import { escapeCypherIdentifier } from 'services/utils'
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
 
 const wrapperStyle = (styles && styles.wrapper) || ''
 
 function createStyleGetter(graphStyleData: any, kind: string) {
-  const graphStyle = new GraphStyle()
+  const graphStyle = new GraphStyleModel()
   if (graphStyleData) {
     graphStyle.loadRules(deepmerge(graphStyle.toSheet(), graphStyleData || {}))
   }

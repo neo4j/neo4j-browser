@@ -20,7 +20,7 @@
 import memoize from 'memoize-one'
 import React, { Component } from 'react'
 
-import queryPlan from '../../D3Visualization/lib/visualization/components/queryPlan'
+import queryPlan from '../../D3Visualization/queryPlan/queryPlan'
 import {
   StyledLeftPartial,
   StyledOneRowStatsBar,

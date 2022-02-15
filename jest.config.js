@@ -28,7 +28,8 @@ module.exports = {
     'worker-loader': '<rootDir>/test_utils/__mocks__/workerLoaderMock.js',
     'project-root(.*)$': '<rootDir>$1',
     '^monaco-editor$':
-      '<rootDir>/node_modules/monaco-editor/esm/vs/editor/editor.main.js'
+      '<rootDir>/node_modules/monaco-editor/esm/vs/editor/editor.main.js',
+    '^graph-visualization$': '<rootDir>/src/graphVisualization'
   },
   modulePaths: ['<rootDir>/src', '<rootDir>/src/shared'],
   collectCoverageFrom: ['**/src/**/*.ts', '**/src/**/*.tsx'],

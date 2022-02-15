@@ -20,9 +20,10 @@
 import React from 'react'
 import { Popup } from 'semantic-ui-react'
 
+import { GraphStyleModel } from 'graph-visualization'
+
 import { GrassEditor } from './GrassEditor'
 import { StyledLabel } from 'browser/modules/DBMSInfo/styled'
-import { GraphStyle } from 'project-root/src/browser/modules/D3Visualization/graphStyle'
 
 export type StyleableNodeLabelProps = {
   selectedLabel: {
@@ -30,7 +31,7 @@ export type StyleableNodeLabelProps = {
     propertyKeys: string[]
     count?: number
   }
-  graphStyle: GraphStyle
+  graphStyle: GraphStyleModel
   onClick?: () => void
 }
 export function StyleableNodeLabel({
