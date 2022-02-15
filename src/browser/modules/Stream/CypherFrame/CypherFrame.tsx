@@ -178,18 +178,21 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
       { name: 'SVG', download: this.exportSVG }
     ]
     this.props.setExportItems([
-      { name: 'CSV', download: this.exportCSV },
-      { name: 'JSON', download: this.exportJSON },
+      ...(this.getRecords().length > 0
+        ? [{ name: 'CSV', download: this.exportCSV }]
+        : []),
+      ...(this.getRecords().length > 0
+        ? [{ name: 'JSON', download: this.exportJSON }]
+        : []),
+      ...(this.hasStringPlan()
+        ? [{ name: 'PLAN.TXT', download: this.exportStringPlan }]
+        : []),
       ...(this.visElement ? downloadGraphics : [])
     ])
   }
 
   componentDidMount(): void {
     const view = initialView(this.props, this.state)
-    this.props.setExportItems([
-      { name: 'CSV', download: this.exportCSV },
-      { name: 'JSON', download: this.exportJSON }
-    ])
     if (view) this.setState({ openView: view })
   }
 
@@ -427,6 +430,26 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
       type: 'text/plain;charset=utf-8'
     })
     saveAs(blob, 'records.json')
+  }
+
+  hasStringPlan = (): boolean =>
+    // @ts-ignore driver types don't have string-representation yet
+    !!this.props.request?.result?.summary?.plan?.arguments?.[
+      'string-representation'
+    ]
+
+  exportStringPlan = (): void => {
+    const data =
+      // @ts-ignore driver types don't have string-representation yet
+      this.props.request?.result?.summary?.plan?.arguments?.[
+        'string-representation'
+      ]
+    if (data) {
+      const blob = new Blob([data], {
+        type: 'text/plain;charset=utf-8'
+      })
+      saveAs(blob, 'plan.txt')
+    }
   }
 
   exportPNG = (): void => {
