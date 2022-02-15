@@ -175,9 +175,7 @@ export function DetailsPaneComponent({
         {vizItem.type === 'relationship' && (
           <StyleableRelType
             selectedRelType={{
-              propertyKeys: vizItem.item.propertyList.map(
-                (p: VizItemProperty) => p.key
-              ),
+              propertyKeys: vizItem.item.propertyList.map(p => p.key),
               relType: vizItem.item.type
             }}
             graphStyle={graphStyle}
@@ -191,9 +189,7 @@ export function DetailsPaneComponent({
                 graphStyle={graphStyle}
                 selectedLabel={{
                   label,
-                  propertyKeys: vizItem.item.propertyList.map(
-                    (p: VizItemProperty) => p.key
-                  )
+                  propertyKeys: vizItem.item.propertyList.map(p => p.key)
                 }}
               />
             )

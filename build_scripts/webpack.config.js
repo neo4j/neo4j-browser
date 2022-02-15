@@ -50,7 +50,7 @@ module.exports = {
       browser: path.resolve(helpers.browserPath),
       'browser-styles': path.resolve(helpers.browserPath, 'styles'),
       icons: path.resolve(helpers.browserPath, 'icons'),
-      'graph-visualization': path.resolve(
+      'graph-visualization$': path.resolve(
         helpers.sourcePath,
         'graphVisualization'
       )

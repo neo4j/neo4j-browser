@@ -36,6 +36,7 @@ import { GraphGeometryModel } from '../models/GraphGeometry'
 import { GraphStyleModel } from '../models/GraphStyle'
 import { NodeModel } from '../models/Node'
 import { RelationshipModel } from '../models/Relationship'
+import { isNullish } from '../utils/utils'
 import { ForceSimulation } from './ForceSimulation'
 import {
   nodeEventHandlers,
@@ -46,10 +47,6 @@ import {
   relationship as relationshipRenderer
 } from './renderers/init'
 import { nodeMenuRenderer } from './renderers/menu'
-
-function isNullish(x: unknown): x is null | undefined {
-  return x === null || x === undefined
-}
 
 export type MeasureSizeFn = () => { width: number; height: number }
 
