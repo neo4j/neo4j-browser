@@ -153,6 +153,12 @@ const visualSettings = [
         }
       },
       {
+        maxFieldItems: {
+          displayName: 'Max record fields',
+          tooltip: 'Limits the number of fields per returned record'
+        }
+      },
+      {
         autoComplete: {
           displayName: 'Connect result nodes',
           tooltip:

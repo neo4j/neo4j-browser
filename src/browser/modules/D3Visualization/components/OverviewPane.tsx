@@ -162,8 +162,9 @@ function OverviewPane({
         <div style={{ paddingBottom: '10px' }}>
           {hasTruncatedFields && (
             <StyledTruncatedMessage>
-              <Icon name="warning sign" /> Record fields have been
-              truncated.&nbsp;
+              <Icon name="warning sign" />
+              Record fields have been truncated.&nbsp;
+              <br />
             </StyledTruncatedMessage>
           )}
           {infoMessage && (
