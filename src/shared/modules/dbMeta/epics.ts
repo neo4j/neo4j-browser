@@ -23,7 +23,6 @@ import Rx from 'rxjs/Rx'
 import {
   FEATURE_DETECTION_DONE,
   USER_CAPABILITIES,
-  canCallDbmsClusterOverview,
   hasClientConfig,
   setClientConfig,
   updateUserCapability
@@ -72,6 +71,7 @@ import {
 } from 'shared/modules/connections/connectionsDuck'
 import { clearHistory } from 'shared/modules/history/historyDuck'
 import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
+import { isOnCausalCluster } from 'shared/utils/selectors'
 
 const databaseList = (store: any) =>
   Rx.Observable.fromPromise(
@@ -155,7 +155,7 @@ const getLabelsAndTypes = (store: any) =>
 const clusterRole = (store: any) =>
   Rx.Observable.fromPromise(
     new Promise((resolve, reject) => {
-      if (!canCallDbmsClusterOverview(store.getState())) {
+      if (!isOnCausalCluster(store.getState())) {
         return resolve(null)
       }
       bolt
