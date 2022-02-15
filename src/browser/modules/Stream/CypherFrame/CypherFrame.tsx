@@ -177,15 +177,16 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
       { name: 'PNG', download: this.exportPNG },
       { name: 'SVG', download: this.exportSVG }
     ]
+
     this.props.setExportItems([
-      ...(this.getRecords().length > 0
+      ...(this.getRecords().length > 0 && this.state.openView !== ViewTypes.PLAN
         ? [{ name: 'CSV', download: this.exportCSV }]
         : []),
-      ...(this.getRecords().length > 0
+      ...(this.getRecords().length > 0 && this.state.openView !== ViewTypes.PLAN
         ? [{ name: 'JSON', download: this.exportJSON }]
         : []),
-      ...(this.hasStringPlan()
-        ? [{ name: 'PLAN.TXT', download: this.exportStringPlan }]
+      ...(this.hasStringPlan() && this.state.openView === ViewTypes.PLAN
+        ? [{ name: 'TXT', download: this.exportStringPlan }]
         : []),
       ...(this.visElement ? downloadGraphics : [])
     ])
