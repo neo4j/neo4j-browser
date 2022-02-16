@@ -131,7 +131,7 @@ RETURN n
 [NOTE]
 ====
 To run this example, in the *Browser Settings* drawer, check *Enable multi statement query editor*.
-Note that the results are displayed in a different way when you run multpile statements.
+Note that the results are displayed in a different way when you run multiple statements.
 In Neo4j Browser, the current state of multi-statement is to set up your environment with multiple statements so that you can execute queries and examine the results, one by one.
 Alternatively, you can run the `:param` command separately from the `MATCH` query.
 ====
