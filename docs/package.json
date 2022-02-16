@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm run build && npm run serve & npm-watch build",
+    "start": "nodemon -e adoc --exec \"npm run build && npm run serve\"",
     "serve": "node server.js",
     "build": "antora --stacktrace preview.yml",
     "lint": "node scripts/lint-links.js"
@@ -22,23 +22,15 @@
   },
   "homepage": "https://github.com/neo4j/neo4j-browser/docs#readme",
   "dependencies": {
-    "@antora/cli": "^2.3.3",
-    "@antora/site-generator-default": "^2.3.3",
+    "@antora/cli": "^3.0.0",
+    "@antora/site-generator-default": "^3.0.0",
+    "@neo4j-antora/antora-add-notes": "^0.1.6",
+    "@neo4j-antora/antora-modify-sitemaps": "^0.4.2",
     "@neo4j-documentation/macros": "^1.0.0",
-    "@neo4j-documentation/remote-include": "^1.0.0",
-    "express": "^4.17.1",
-    "npm-watch": "^0.6.0"
-  },
-  "watch": {
-    "build": {
-      "patterns": [
-        "modules"
-      ],
-      "extensions": "adoc"
-    }
+    "@neo4j-documentation/remote-include": "^1.0.0"
   },
   "devDependencies": {
-    "cheerio": "^1.0.0-rc.3",
-    "hyperlink": "^4.6.0"
+    "express": "^4.17.1",
+    "nodemon": "^2.0.15"
   }
 }
