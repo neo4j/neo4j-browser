@@ -36,6 +36,7 @@ image:graph-result-frame.png[]
 ====
 * Use the controls in the bottom right corner of the frame to zoom in and out of the visualization.
 Additionally, you can zoom using trackpad zoom gestures or a mouse wheel in combination with a modifier key.
+(If you are in full-screen view, the modifier key is not needed to zoom.)
 On Mac, use `⌘ + scroll` and on Windows and Linux, use `Ctrl + scroll` to trigger zoom.
 You can also use the _Fit to screen_ button to fit all query results into the view.
 * Click a node or a relationship to view its properties.

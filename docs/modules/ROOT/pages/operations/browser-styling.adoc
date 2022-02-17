@@ -2,7 +2,7 @@
 
 
 [[browser-styling]]
-= Neo4j Browser styling
+= Browser styling
 
 You can customize your graph query result either in place or by using Graph Stylesheet (GraSS).
 
@@ -14,9 +14,9 @@ Neo4j Browser also provides functionality for styling with color and size, based
 
 .Label and type overview
 [caption="Label and type overview"]
-image:graph_result_frame_style_overview.png[]
+image:browser-style1.png[]
 
-If you select a node label in the _Overview_, there are several styling possibilites available:
+If you select a node label in the _Overview_, there are several styling options available:
 
 * Color -- set the color for nodes of the selected label.
 * Size  -- set the size for nodes of the selected label.
@@ -24,9 +24,9 @@ If you select a node label in the _Overview_, there are several styling possibil
 
 .Set node style
 [caption="Label and type overview"]
-image:graph_result_frame_style_overview_node.png[]
+image:browser-style2.png[]
 
-If you select a relationship type in the _Overview_, there are several styling possibilites available:
+If you select a relationship type in the _Overview_, there are several styling options available:
 
 * Color -- set the color for relationships of the selected type.
 * Line width  -- set the line width for relationships of the selected type.
@@ -34,7 +34,7 @@ If you select a relationship type in the _Overview_, there are several styling p
 
 .Set relationship style
 [caption="Label and type overview"]
-image:graph_result_frame_style_overview_relationship.png[]
+image:browser-style3.png[]
 
 If you select a node in the _graph result frame_, the _Node Properties_ shows labels and properties; selecting a node label works the same as in the _Overview_.
 
@@ -44,7 +44,7 @@ You can click the `Movie` label in the graph and change the color, size, and cap
 
 .Changes to nodes labeled `Movie`
 [caption="Changes to nodes labeled `Movie`"]
-image:graph_result_frame_style_node_selected_properties.png[]
+image:browser-style4.png[]
 =====
 
 If you select a relationship in the _graph result frame_, the _Relationship Properties_ shows the type and properties; selecting the type works the same as in the _Overview_.
@@ -56,7 +56,7 @@ For example the `ACTED_IN` is selected.
 
 .Changes to relationships with type `ACTED_IN`
 [caption="Changes to relationships with type `ACTED_IN`"]
-image:graph_result_frame_style_relationship_selected_properties.png[]
+image:browser-style5.png[]
 =====
 
 
@@ -141,4 +141,3 @@ Same applies to relationships.
 ====
 The link:https://github.com/neo4j/neo4j-browser/blob/master/src/shared/services/grassUtils.ts[GraSS parser^] is open source.
 ====
-
