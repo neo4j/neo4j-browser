@@ -56,6 +56,10 @@ import {
   StyledEditorButton,
   StyledMainEditorButtonsContainer
 } from 'browser-components/buttons'
+import {
+  FULLSCREEN_SHORTCUT,
+  printShortcut
+} from 'browser/modules/App/keyboardShortcuts'
 
 import { GlobalState } from 'shared/globalState'
 import { getProjectId } from 'shared/modules/app/appDuck'
@@ -84,11 +88,6 @@ import {
 } from 'shared/modules/settings/settingsDuck'
 import { base } from 'browser-styles/themes'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
-
-import {
-  FULLSCREEN_SHORTCUT,
-  printShortcut
-} from 'browser/modules/App/keyboardShortcuts'
 
 type EditorFrameProps = {
   bus: Bus
