@@ -33,7 +33,7 @@ import {
 import {
   RelatableStatusbar,
   RelatableStatusbarComponent
-} from './relatable-view'
+} from './RelatableView/relatable-view'
 import { deepEquals } from 'services/utils'
 import { GlobalState } from 'shared/globalState'
 import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'

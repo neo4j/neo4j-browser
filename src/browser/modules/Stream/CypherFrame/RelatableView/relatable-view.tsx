@@ -21,29 +21,29 @@ import React, { useMemo } from 'react'
 import { connect } from 'react-redux'
 import { Icon } from 'semantic-ui-react'
 
-import ClickableUrls from '../../../components/ClickableUrls'
-import ClipboardCopier from '../../../components/ClipboardCopier'
-import Ellipsis from '../../../components/Ellipsis'
-import { StyledStatsBar, StyledTruncatedMessage } from '../styled'
+import { StyledStatsBar, StyledTruncatedMessage } from '../../styled'
 import {
   getBodyAndStatusBarMessages,
   resultHasTruncatedFields
-} from './helpers'
+} from '../helpers'
 import {
   CopyIconAbsolutePositioner,
   RelatableStyleWrapper,
   StyledJsonPre,
   StyledPreSpan
 } from './relatable-view.styled'
+import ClickableUrls from 'browser-components/ClickableUrls'
+import ClipboardCopier from 'browser-components/ClipboardCopier'
+import Ellipsis from 'browser-components/Ellipsis'
+import { GlobalState } from 'project-root/src/shared/globalState'
 import { BrowserRequestResult } from 'project-root/src/shared/modules/requests/requestsDuck'
-import { stringModifier } from 'services/bolt/cypherTypesFormatting'
-import { stringifyMod, unescapeDoubleQuotesForDisplay } from 'services/utils'
-import { GlobalState } from 'shared/globalState'
 import {
   getMaxFieldItems,
   getMaxRows
-} from 'shared/modules/settings/settingsDuck'
-import arrayHasItems from 'shared/utils/array-has-items'
+} from 'project-root/src/shared/modules/settings/settingsDuck'
+import arrayHasItems from 'project-root/src/shared/utils/array-has-items'
+import { stringModifier } from 'services/bolt/cypherTypesFormatting'
+import { stringifyMod, unescapeDoubleQuotesForDisplay } from 'services/utils'
 
 const RelatableView = connect((state: GlobalState) => ({
   maxRows: getMaxRows(state),
