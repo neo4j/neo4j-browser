@@ -20,7 +20,7 @@
 import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 
-import Monaco from './Monaco'
+import { Monaco } from './Monaco'
 
 const noOp = () => undefined
 

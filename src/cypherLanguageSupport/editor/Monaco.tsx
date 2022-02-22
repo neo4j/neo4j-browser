@@ -31,11 +31,6 @@ import { QueryResult } from 'neo4j-driver'
 import React from 'react'
 import ResizeObserver from 'resize-observer-polyfill'
 import styled from 'styled-components'
-import { Bus } from 'suber'
-
-import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
-import { applyParamGraphTypes } from 'shared/modules/commands/helpers/cypher'
-import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 
 const shouldCheckForHints = (code: string) =>
   code.trim().length > 0 &&
@@ -61,26 +56,31 @@ const MonacoStyleWrapper = styled.div`
 
 const EXPLAIN_QUERY_PREFIX = 'EXPLAIN '
 const EXPLAIN_QUERY_PREFIX_LENGTH = EXPLAIN_QUERY_PREFIX.length
-type MonacoDefaultProps = { value: string; onDisplayHelpKeys: () => void }
-type MonacoProps = MonacoDefaultProps & {
-  bus: Bus
+type MonacoDefaultProps = {
+  value: string
+  onDisplayHelpKeys: () => void
+  onChange: (value: string) => void
+  onExecute: (value: string) => void
+}
+
+export type MonacoProps = MonacoDefaultProps & {
   enableMultiStatementMode: boolean
   fontLigatures: boolean
   history: string[]
   id: string
-  value?: string
-  onChange: (value: string) => void
-  onDisplayHelpKeys?: () => void
-  onExecute: (value: string) => void
-  useDb: null | string
   isFullscreen: boolean
+  onChange?: (value: string) => void
+  onDisplayHelpKeys?: () => void
+  onExecute?: (value: string) => void
+  sendCypherQuery: (query: string) => Promise<QueryResult>
   toggleFullscreen: () => void
-  params: Record<string, unknown>
+  useDb: null | string
+  value: string
 }
 type MonacoState = { currentHistoryIndex: number; draft: string }
 const UNRUN_CMD_HISTORY_INDEX = -1
 
-class Monaco extends React.Component<MonacoProps, MonacoState> {
+export class Monaco extends React.Component<MonacoProps, MonacoState> {
   state: MonacoState = {
     currentHistoryIndex: UNRUN_CMD_HISTORY_INDEX,
     draft: ''
@@ -91,14 +91,16 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
 
   static defaultProps: MonacoDefaultProps = {
     value: '',
-    onDisplayHelpKeys: () => undefined
+    onDisplayHelpKeys: () => undefined,
+    onChange: () => undefined,
+    onExecute: () => undefined
   }
 
   private getMonacoId = (): string => `monaco-${this.props.id}`
   private debouncedUpdateCode = debounce(() => {
     const text = this.editor?.getModel()?.getLinesContent().join('\n') || ''
 
-    this.props.onChange(text)
+    this.props.onChange?.(text)
     this.addWarnings(parse(text).referencesListener.queriesAndCommands)
   }, 300)
   focus = (): void => {
@@ -211,7 +213,7 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
     const onlyWhitespace = value.trim() === ''
 
     if (!onlyWhitespace) {
-      this.props.onExecute(value)
+      this.props.onExecute?.(value)
       this.setState({ currentHistoryIndex: UNRUN_CMD_HISTORY_INDEX })
     }
   }
@@ -257,21 +259,13 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
       }
       const statementLineNumber = statement.start.line - 1
 
-      this.props.bus.self(
-        CYPHER_REQUEST,
-        {
-          query: EXPLAIN_QUERY_PREFIX + text,
-          queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
-          params: applyParamGraphTypes(this.props.params)
-        },
-        (response: { result: QueryResult; success?: boolean }) => {
-          if (
-            response.success === true &&
-            response.result.summary.notifications.length > 0
-          ) {
+      this.props
+        .sendCypherQuery(EXPLAIN_QUERY_PREFIX + text)
+        .then((result: QueryResult) => {
+          if (result.summary.notifications.length > 0) {
             editor.setModelMarkers(model, this.getMonacoId(), [
               ...editor.getModelMarkers({ owner: this.getMonacoId() }),
-              ...response.result.summary.notifications.map(
+              ...result.summary.notifications.map(
                 ({ description, position, title }) => {
                   const line = 'line' in position ? position.line : 0
                   const column = 'column' in position ? position.column : 0
@@ -291,8 +285,8 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
               )
             ])
           }
-        }
-      )
+        })
+        .catch(() => {})
     })
   }
 
@@ -434,5 +428,3 @@ class Monaco extends React.Component<MonacoProps, MonacoState> {
     this.debouncedUpdateCode?.cancel()
   }
 }
-
-export default Monaco

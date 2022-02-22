@@ -26,7 +26,6 @@ import { Bus } from 'suber'
 import { SaveFavoriteIcon, RunIcon, isMac, StopIcon } from 'neo4j-arc/common'
 
 import { MAIN_WRAPPER_DOM_ID } from '../App/App'
-import Monaco, { MonacoHandles } from '../Editor/Monaco'
 import { EditorContainer, Header } from '../Editor/styled'
 import { DottedLineHover } from '../Stream/styled'
 import ExportButton, { ExportItem } from './ExportButton'
@@ -39,6 +38,8 @@ import { FrameButton, StyledEditorButton } from 'browser-components/buttons'
 import { GlobalState } from 'shared/globalState'
 import * as app from 'shared/modules/app/appDuck'
 import * as commands from 'shared/modules/commands/commandsDuck'
+import { applyParamGraphTypes } from 'shared/modules/commands/helpers/cypher'
+import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import * as editor from 'shared/modules/editor/editorDuck'
 import { addFavorite } from 'shared/modules/favorites/favoritesDuck'
 import {
@@ -58,6 +59,9 @@ import {
 } from 'shared/modules/settings/settingsDuck'
 import * as sidebar from 'shared/modules/sidebar/sidebarDuck'
 import { base, stopIconColor } from 'browser-styles/themes'
+import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
+import { QueryResult } from 'neo4j-driver'
+import { Monaco, MonacoHandles } from 'cypherLanguageSupport'
 
 type FrameEditorBaseProps = {
   frame: Frame
@@ -176,19 +180,36 @@ function FrameEditor({
         {renderEditor ? (
           <EditorContainer onClick={onPreviewClick} data-testid="frameCommand">
             <Monaco
-              history={history}
-              useDb={frame.useDb}
               enableMultiStatementMode={enableMultiStatementMode}
               fontLigatures={codeFontLigatures}
+              history={history}
               id={`editor-${frame.id}`}
-              bus={bus}
-              params={params}
+              isFullscreen={false}
               onChange={setEditorValue}
               onExecute={run}
-              value={editorValue}
               ref={editorRef}
-              isFullscreen={false}
               toggleFullscreen={fullscreenToggle}
+              useDb={frame.useDb}
+              value={editorValue}
+              sendCypherQuery={(text: string) =>
+                new Promise((res, rej) =>
+                  bus.self(
+                    CYPHER_REQUEST,
+                    {
+                      query: text,
+                      queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
+                      params: applyParamGraphTypes(params)
+                    },
+                    (response: { result: QueryResult; success?: boolean }) => {
+                      if (response.success === true) {
+                        res(response.result)
+                      } else {
+                        rej(response.result)
+                      }
+                    }
+                  )
+                )
+              }
             />
           </EditorContainer>
         ) : (

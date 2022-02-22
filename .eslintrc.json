@@ -24,7 +24,8 @@
         "patterns": [
           "*/neo4j-arc/*",
           "neo4j-arc/common/*",
-          "neo4j-arc/graph-visualization/*"
+          "neo4j-arc/graph-visualization/*",
+          "neo4j-arc/cypherLanguageSupport/*"
         ]
       }
     ]
@@ -91,8 +92,8 @@
         "no-restricted-imports": [
           "error",
           {
-            "paths": ["redux", "react-redux"],
-            "patterns": ["browser*", "shared*", "services*"]
+            "paths": ["redux", "react-redux", "react-suber"],
+            "patterns": ["^browser*", "shared*", "services*"]
           }
         ]
       }
