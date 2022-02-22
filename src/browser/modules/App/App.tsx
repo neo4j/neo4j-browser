@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { editor } from 'monaco-editor'
+import { setEditorTheme } from 'neo4j-arc/cypher-language-support'
 import React, { useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
@@ -111,7 +111,7 @@ export function App(props: any) {
 
   // update cypher editor theme
   useEffect(() => {
-    editor.setTheme(derivedTheme)
+    setEditorTheme(derivedTheme)
   }, [derivedTheme])
 
   useKeyboardShortcuts(props.bus)

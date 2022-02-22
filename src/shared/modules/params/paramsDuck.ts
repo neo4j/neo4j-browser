@@ -21,7 +21,7 @@ import { GlobalState } from 'shared/globalState'
 import { APP_START } from 'shared/modules/app/appDuck'
 
 export const NAME = 'params'
-const UPDATE = `${NAME}/UPDATE`
+export const UPDATE_PARAMS = `${NAME}/UPDATE`
 const REPLACE = `${NAME}/REPLACE`
 
 const initialState = {}
@@ -35,7 +35,7 @@ export default function reducer(state = initialState, action: any) {
   switch (action.type) {
     case APP_START:
       return { ...initialState, ...state }
-    case UPDATE:
+    case UPDATE_PARAMS:
       return { ...state, ...action.params }
     case REPLACE:
       return { ...action.params }
@@ -47,7 +47,7 @@ export default function reducer(state = initialState, action: any) {
 // Action creators
 export const update = (obj: any) => {
   return {
-    type: UPDATE,
+    type: UPDATE_PARAMS,
     params: obj
   }
 }

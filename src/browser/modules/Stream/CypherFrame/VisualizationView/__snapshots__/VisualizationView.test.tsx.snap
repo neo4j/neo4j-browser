@@ -156,25 +156,25 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
           data-testid="vizInspector"
         >
           <div
-            class="sc-gXRojI cbZAuq"
+            class="sc-bGaVxB cCQIdT"
           >
             Overview
           </div>
           <div
-            class="sc-bGaVxB blQqjv"
+            class="sc-fydGpi FPNNO"
           >
             <div>
               <div
-                class="sc-igXgud cmvmVh"
+                class="sc-JEhMO khepVA"
               >
                 <span
-                  class="sc-gnnDb kdbIFi"
+                  class="sc-cjrPHo dVOfYb"
                 >
                   Node labels
                 </span>
               </div>
               <ul
-                class="sc-bSqaIl sc-hJZKUC dTYomr jkBzat"
+                class="sc-jvvksu sc-ewSTlh jMVxpg kLqGcp"
               >
                 <div
                   class="sc-eCImPb sc-jRQBWg iTIdOK CulBm"
