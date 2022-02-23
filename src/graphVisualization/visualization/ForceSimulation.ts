@@ -22,16 +22,12 @@ import {
   forceCollide,
   forceLink,
   forceManyBody,
-  forceSimulation,
-  forceX,
-  forceY
+  forceSimulation
 } from 'd3-force'
 
 import {
   DEFAULT_ALPHA,
   DEFAULT_ALPHA_MIN,
-  FORCE_CENTER_X,
-  FORCE_CENTER_Y,
   FORCE_CHARGE,
   FORCE_COLLIDE_RADIUS,
   FORCE_LINK_DISTANCE,
@@ -44,6 +40,7 @@ import { GraphModel } from '../models/Graph'
 import { NodeModel } from '../models/Node'
 import { RelationshipModel } from '../models/Relationship'
 import circularLayout from '../utils/circularLayout'
+import { rectangleForce } from './rectangleForce'
 
 const oneRelationshipPerPairOfNodes = (graph: GraphModel) =>
   Array.from(graph.groupedRelationships()).map(pair => pair.relationships[0])
@@ -56,8 +53,7 @@ export class ForceSimulation {
     this.simulation = forceSimulation<NodeModel, RelationshipModel>()
       .velocityDecay(VELOCITY_DECAY)
       .force('charge', forceManyBody().strength(FORCE_CHARGE))
-      .force('centerX', forceX(0).strength(FORCE_CENTER_X))
-      .force('centerY', forceY(0).strength(FORCE_CENTER_Y))
+      .force('gravity', rectangleForce())
       .on('tick', () => {
         this.simulation.tick(TICKS_PER_RENDER)
         render()
