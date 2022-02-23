@@ -32,7 +32,7 @@ const StyledIconWrapper = ({
   ...rest
 }: Exclude<
   IconContainerProps,
-  'text' | 'regulateSize' | 'icon' | 'width' | 'title'
+  'text' | 'fontSize' | 'icon' | 'width' | 'title'
 >) => {
   const I = styled.i`
     ${isOpen ? activeStyle : inactiveStyle};
@@ -55,10 +55,11 @@ type IconContainerProps = {
   icon?: string
   inactiveStyle?: string
   isOpen?: boolean
-  regulateSize?: 0.625 | 1 | 2
   text?: string
   title?: string
   width?: number
+  /** controlling size of icons that are fonts */
+  fontSize?: string
   suppressIconStyles?: true | string
   className?: string
   style?: CSSProperties
@@ -66,11 +67,7 @@ type IconContainerProps = {
 }
 
 export const IconContainer = (props: IconContainerProps): JSX.Element => {
-  const { text, regulateSize, icon, width, title, ...rest } = props
-
-  const regulateSizeStyle = regulateSize
-    ? { fontSize: regulateSize + 'em' }
-    : undefined
+  const { text, icon, width, title, fontSize, ...rest } = props
 
   const currentIcon = icon ? (
     <StyledIconWrapper {...rest}>
@@ -82,7 +79,7 @@ export const IconContainer = (props: IconContainerProps): JSX.Element => {
       />
     </StyledIconWrapper>
   ) : (
-    <StyledIconWrapper {...rest} style={regulateSizeStyle} />
+    <StyledIconWrapper {...rest} style={{ fontSize: fontSize }} />
   )
 
   return text ? (

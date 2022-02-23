@@ -82,7 +82,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
             class="sc-bxivhb jxitkF zoom-in"
           >
             <i
-              class="sc-hGoxap ksdJJr"
+              class="sc-fjmCvl fMdbP"
             >
               <span
                 class="SVGInline SVGInline--cleaned"
@@ -99,7 +99,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
             class="sc-bxivhb jxitkF zoom-out"
           >
             <i
-              class="sc-fjmCvl fMdbP"
+              class="sc-TFwJa bUEOAT"
             >
               <span
                 class="SVGInline SVGInline--cleaned"
@@ -116,7 +116,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
             class="sc-bxivhb jxitkF"
           >
             <i
-              class="sc-TFwJa bUEOAT"
+              class="sc-bHwgHz duwluX"
             >
               <span
                 class="SVGInline SVGInline--cleaned"
@@ -131,12 +131,11 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
         </div>
       </div>
       <div
-        class="sc-dxgOiQ hnCZir"
+        class="sc-dxgOiQ gMCSBA"
+        title="Collapse the Node Properties display"
       >
         <i
-          aria-hidden="true"
-          class="chevron right icon"
-          title="Collapse the Node Properties display"
+          class="sc-krDsej jTMMig fa fa-chevron-right "
         />
       </div>
       <div

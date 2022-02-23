@@ -19,37 +19,11 @@
  */
 import React, { ReactEventHandler } from 'react'
 import SVGInline from 'react-svg-inline'
-import { Icon, SemanticICONS } from 'semantic-ui-react'
-import { SemanticCOLORS } from 'semantic-ui-react/dist/commonjs/generic'
 
 import { StyledSavedScriptsButton } from './styled'
-import { DownloadIcon } from 'browser-components/icons/Icons'
+import { DownloadIcon, TrashIcon } from 'browser-components/icons/Icons'
 import newFolderIcon from 'icons/folder-add.svg'
 import hollow_run_icon from 'icons/hollow-run-icon.svg'
-
-type SavedScriptsButtonProps = {
-  onClick: ReactEventHandler
-  title: string
-  iconName: SemanticICONS
-  color?: SemanticCOLORS
-}
-
-function SavedScriptsButton({
-  onClick,
-  title,
-  iconName,
-  color
-}: SavedScriptsButtonProps): JSX.Element {
-  return (
-    <StyledSavedScriptsButton
-      title={title}
-      data-testid={`savedScriptsButton-${title}`}
-      onClick={onClick}
-    >
-      <Icon color={color} name={iconName} />
-    </StyledSavedScriptsButton>
-  )
-}
 
 type OnClickProp = { onClick: ReactEventHandler }
 
@@ -95,19 +69,32 @@ const NewFolderButton = ({ onClick }: OnClickProp): JSX.Element => (
 )
 
 const RemoveButton = ({ onClick }: OnClickProp): JSX.Element =>
-  SavedScriptsButton({
-    onClick,
-    title: 'Remove',
-    iconName: 'trash alternate outline'
-  })
+  DeleteButton({ onClick, title: 'Remove' })
 
 const RedRemoveButton = ({ onClick }: OnClickProp): JSX.Element =>
-  SavedScriptsButton({
-    onClick,
-    title: 'Remove',
-    iconName: 'trash alternate outline',
-    color: 'red'
-  })
+  DeleteButton({ onClick, title: 'Remove', color: '#ff6769' })
+
+type DeleteButtonProps = {
+  onClick: ReactEventHandler
+  title: string
+  color?: string
+}
+function DeleteButton({
+  onClick,
+  title,
+  color
+}: DeleteButtonProps): JSX.Element {
+  return (
+    <StyledSavedScriptsButton
+      title={title}
+      data-testid={`savedScriptsButton-${title}`}
+      onClick={onClick}
+      color={color}
+    >
+      <TrashIcon fontSize={'14px'} />
+    </StyledSavedScriptsButton>
+  )
+}
 
 export {
   ExportButton,

@@ -108,8 +108,12 @@ export const SavedScriptsButtonWrapper = styled.div`
   }
 `
 
-export const StyledSavedScriptsButton = styled.button`
-  color: #bcc0c9;
+export const SavedScriptsFolderMenuIconWrapper = styled.div`
+  padding: 0 1rem;
+`
+
+export const StyledSavedScriptsButton = styled.button<{ color?: string }>`
+  color: ${props => (props.color ? props.color : '#bcc0c9')};
   background: transparent;
   border: none;
   outline: none;
@@ -118,7 +122,7 @@ export const StyledSavedScriptsButton = styled.button`
   cursor: pointer;
 
   &:hover {
-    color: inherit;
+    color: ${props => (props.color ? props.color : 'inherit')};
   }
 `
 

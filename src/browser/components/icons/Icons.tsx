@@ -396,11 +396,11 @@ export const FolderIcon = (): JSX.Element => (
 )
 
 export const SavedScriptsExpandMenuRightIcon = (): JSX.Element => (
-  <Icon name="caret right" />
+  <IconContainer className="fa fa-caret-right" />
 )
 
 export const SavedScriptsCollapseMenuIcon = (): JSX.Element => (
-  <Icon name="caret down" />
+  <IconContainer className="fa fa-caret-down" />
 )
 
 export const CannyFeedbackIcon = (): JSX.Element => (
@@ -422,4 +422,16 @@ export const CopyIcon = ({
   title
 }: TitleAndWidthProps): JSX.Element => (
   <IconContainer title={title} width={width} icon={copy} />
+)
+
+export const TrashIcon = ({ fontSize }: { fontSize?: string }): JSX.Element => (
+  <IconContainer className="fa fa-thin fa-trash-o" fontSize={fontSize} />
+)
+
+export const ChevronRightIcon = (): JSX.Element => (
+  <IconContainer className="fa fa-chevron-right " />
+)
+
+export const ChevronLeftIcon = (): JSX.Element => (
+  <IconContainer className="fa fa-chevron-left " />
 )
