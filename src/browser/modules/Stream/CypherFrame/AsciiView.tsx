@@ -20,7 +20,6 @@
 import asciitable from 'ascii-data-table'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Icon } from 'semantic-ui-react'
 
 import {
   PaddedDiv,
@@ -40,6 +39,7 @@ import {
   transformResultRecordsToResultArray
 } from './helpers'
 import Ellipsis from 'browser-components/Ellipsis'
+import { WarningIcon } from 'browser-components/icons/Icons'
 import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 import { shallowEquals } from 'services/utils'
 import { GlobalState } from 'shared/globalState'
@@ -243,8 +243,7 @@ export class AsciiStatusbarComponent extends Component<
           <>
             {hasTruncatedFields && (
               <StyledTruncatedMessage>
-                <Icon name="warning sign" /> Record fields have been
-                truncated.&nbsp;
+                <WarningIcon /> Record fields have been truncated.&nbsp;
               </StyledTruncatedMessage>
             )}
             <StyledRightPartial>

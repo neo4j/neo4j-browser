@@ -435,3 +435,7 @@ export const ChevronRightIcon = (): JSX.Element => (
 export const ChevronLeftIcon = (): JSX.Element => (
   <IconContainer className="fa fa-chevron-left " />
 )
+
+export const WarningIcon = (): JSX.Element => (
+  <IconContainer className="fa fa-exclamation-triangle " />
+)

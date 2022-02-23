@@ -18,7 +18,6 @@ import { get, head, map, slice } from 'lodash-es'
 import { QueryResult, Record, isInt } from 'neo4j-driver'
 import React, { useMemo } from 'react'
 import { connect } from 'react-redux'
-import { Icon } from 'semantic-ui-react'
 
 import { StyledStatsBar, StyledTruncatedMessage } from '../../styled'
 import {
@@ -35,6 +34,7 @@ import {
 import ClickableUrls from 'browser-components/ClickableUrls'
 import ClipboardCopier from 'browser-components/ClipboardCopier'
 import Ellipsis from 'browser-components/Ellipsis'
+import { WarningIcon } from 'browser-components/icons/Icons'
 import { GlobalState } from 'project-root/src/shared/globalState'
 import { BrowserRequestResult } from 'project-root/src/shared/modules/requests/requestsDuck'
 import {
@@ -169,7 +169,6 @@ export const RelatableStatusbar = connect((state: GlobalState) => ({
   maxFieldItems: getMaxFieldItems(state)
 }))(RelatableStatusbarComponent)
 
-// TODO: replace Icon warning
 type RelatableStatusBarComponentProps = {
   maxRows: number
   maxFieldItems: number
@@ -195,8 +194,7 @@ export function RelatableStatusbarComponent({
       <Ellipsis>
         {hasTruncatedFields && (
           <StyledTruncatedMessage>
-            <Icon name="warning sign" /> Record fields have been
-            truncated.&nbsp;
+            <WarningIcon /> Record fields have been truncated.&nbsp;
           </StyledTruncatedMessage>
         )}
         {statusBarMessage}
