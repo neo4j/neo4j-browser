@@ -14,7 +14,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-import Relatable from '@relate-by-ui/relatable'
 import { get, head, map, slice } from 'lodash-es'
 import { QueryResult, Record, isInt } from 'neo4j-driver'
 import React, { useMemo } from 'react'
@@ -26,6 +25,7 @@ import {
   getBodyAndStatusBarMessages,
   resultHasTruncatedFields
 } from '../helpers'
+import Relatable from './relatable'
 import {
   CopyIconAbsolutePositioner,
   RelatableStyleWrapper,
@@ -80,6 +80,7 @@ export function RelatableViewComponent({
 
   return (
     <RelatableStyleWrapper>
+      {/* @ts-ignore */}
       <Relatable basic columns={columns} data={data} />
     </RelatableStyleWrapper>
   )
@@ -90,12 +91,12 @@ function getColumns(records: Record[], maxFieldItems: number) {
 
   return map(keys, key => ({
     Header: key,
-    accessor: (record: Record) => {
+    accessor: (record: Record): string => {
       const fieldItem = record.get(key)
 
       if (!Array.isArray(fieldItem)) return fieldItem
 
-      return slice(fieldItem, 0, maxFieldItems)
+      return slice(fieldItem, 0, maxFieldItems).join(',')
     },
     Cell: CypherCell
   }))
@@ -168,6 +169,7 @@ export const RelatableStatusbar = connect((state: GlobalState) => ({
   maxFieldItems: getMaxFieldItems(state)
 }))(RelatableStatusbarComponent)
 
+// TODO: replace Icon warning
 type RelatableStatusBarComponentProps = {
   maxRows: number
   maxFieldItems: number

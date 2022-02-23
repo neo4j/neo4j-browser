@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import '@relate-by-ui/css/semantic/dist/relate-by.min.css'
 import 'core-js/stable'
 import 'regenerator-runtime/runtime'
 
@@ -29,6 +28,7 @@ import './styles/open-sans.css'
 import './styles/react-resizable.css'
 import './styles/streamline.css'
 import './styles/util-classes.css'
+import 'browser-styles/relate-by-ui/relate-by-PARTS.css'
 
 // non web env (just for tests)
 if (typeof btoa === 'undefined') {

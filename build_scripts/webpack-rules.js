@@ -19,8 +19,8 @@
  */
 const helpers = require('./webpack-helpers')
 const path = require('path')
-const createStyledComponentsTransformer = require('typescript-plugin-styled-components')
-  .default
+const createStyledComponentsTransformer =
+  require('typescript-plugin-styled-components').default
 const styledComponentsTransformer = createStyledComponentsTransformer()
 
 const tsLoaderOptions = {
@@ -53,30 +53,26 @@ module.exports = [
   {
     test: /\.(png|gif|jpg|svg)$/,
     include: [
-      path.resolve(helpers.browserPath, 'modules'),
-      path.resolve('node_modules/@relate-by-ui/css')
+      path.resolve(helpers.browserPath, 'modules')
+      // path.resolve('node_modules/@relate-by-ui/css')
     ],
     use: 'file-loader?limit=20480&name=assets/[name]-[hash].[ext]'
   },
   {
     test: /\.woff$/,
-    use:
-      'file-loader?limit=65000&mimetype=application/font-woff&name=assets/fonts/[name].[ext]'
+    use: 'file-loader?limit=65000&mimetype=application/font-woff&name=assets/fonts/[name].[ext]'
   },
   {
     test: /\.woff2$/,
-    use:
-      'file-loader?limit=65000&mimetype=application/font-woff2&name=assets/fonts/[name].[ext]'
+    use: 'file-loader?limit=65000&mimetype=application/font-woff2&name=assets/fonts/[name].[ext]'
   },
   {
     test: /\.[ot]tf$/,
-    use:
-      'file-loader?limit=65000&mimetype=application/octet-stream&name=assets/fonts/[name].[ext]'
+    use: 'file-loader?limit=65000&mimetype=application/octet-stream&name=assets/fonts/[name].[ext]'
   },
   {
     test: /\.eot$/,
-    use:
-      'file-loader?limit=65000&mimetype=application/vnd.ms-fontobject&name=assets/fonts/[name].[ext]'
+    use: 'file-loader?limit=65000&mimetype=application/vnd.ms-fontobject&name=assets/fonts/[name].[ext]'
   },
   {
     test: /\.less$/, // Carousel
@@ -126,8 +122,7 @@ module.exports = [
   },
   {
     test: /\.svg$/,
-    use:
-      'file-loader?limit=65000&mimetype=image/svg+xml&name=assets/fonts/[name].[ext]',
+    use: 'file-loader?limit=65000&mimetype=image/svg+xml&name=assets/fonts/[name].[ext]',
     exclude: [path.resolve(helpers.browserPath, 'icons')]
   },
   {

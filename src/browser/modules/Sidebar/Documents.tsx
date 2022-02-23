@@ -180,7 +180,6 @@ const Documents = (props: DocumentsProps) => {
         )}
       </StyledHeaderContainer>
       <StyledFeedbackButton
-        color="twitter"
         content={
           <>
             <CannyFeedbackIcon />
