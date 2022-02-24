@@ -15,12 +15,13 @@
  *
  */
 import React, { useEffect, useRef } from 'react'
-import { Icon } from 'semantic-ui-react'
 
 import {
   StyledConnectionTextInput,
+  StyledRevealIconWrapper,
   StyledRevealablePasswordWrapper
 } from './styled'
+import { EyeIcon, EyeSlashIcon } from 'browser-components/icons/Icons'
 
 export default function RevealablePasswordInput({
   isRevealed,
@@ -32,7 +33,9 @@ export default function RevealablePasswordInput({
   return (
     <StyledRevealablePasswordWrapper>
       <StyledConnectionTextInput ref={inputRef} {...props} />
-      <Icon name={isRevealed ? 'eye slash' : 'eye'} onClick={toggleReveal} />
+      <StyledRevealIconWrapper onClick={toggleReveal}>
+        {isRevealed ? <EyeIcon /> : <EyeSlashIcon />}
+      </StyledRevealIconWrapper>
     </StyledRevealablePasswordWrapper>
   )
 }

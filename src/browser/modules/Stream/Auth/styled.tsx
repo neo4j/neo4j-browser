@@ -103,19 +103,17 @@ export const StyledRevealablePasswordWrapper = styled.div`
   > input {
     width: calc(100% - 30px);
   }
+`
 
-  > .icon {
-    display: inline-block;
-    width: 25px;
-    color: ${props => props.theme.primaryText};
-    position: absolute;
-    user-select: none;
-    right: 0;
-    top: 5px;
-    height: auto;
-    padding: 3px;
-    cursor: pointer;
-  }
+export const StyledRevealIconWrapper = styled.div`
+  width: 25px;
+  color: ${props => props.theme.primaryText};
+  position: absolute;
+  user-select: none;
+  right: 0;
+  top: 5px;
+  height: auto;
+  padding: 3px;
 `
 
 export const StyledConnectionSelect = styled(StyledSelect)`

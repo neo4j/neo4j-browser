@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React from 'react'
-import { Icon } from 'semantic-ui-react'
 import { css, keyframes } from 'styled-components'
 
 import { IconContainer } from './IconContainer'
@@ -438,4 +437,12 @@ export const ChevronLeftIcon = (): JSX.Element => (
 
 export const WarningIcon = (): JSX.Element => (
   <IconContainer className="fa fa-exclamation-triangle " />
+)
+
+export const EyeIcon = (): JSX.Element => (
+  <IconContainer className="fa fa-eye" />
+)
+
+export const EyeSlashIcon = (): JSX.Element => (
+  <IconContainer className="fa fa-eye-slash" />
 )
