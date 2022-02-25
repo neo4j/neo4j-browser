@@ -1,5 +1,5 @@
 const aspectRatio = 3
-const gravityStrength = 0.1
+const gravityStrength = 0.05
 
 const sq = (d: number) => d * d
 const integral = (a: number, b: number) =>
