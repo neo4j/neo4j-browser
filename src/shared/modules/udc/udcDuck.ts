@@ -22,6 +22,7 @@ import { Epic } from 'redux-observable'
 import { v4 } from 'uuid'
 
 import { USER_CLEAR } from '../app/appDuck'
+import { CONNECT, CONNECTION_SUCCESS } from '../connections/connectionsDuck'
 import { isBuiltInGuide, isPlayChapter } from 'browser/documentation'
 import { extractStatementsFromString } from 'services/commandUtils'
 import { GlobalState } from 'shared/globalState'
@@ -285,7 +286,9 @@ const actionsOfInterest = [
   TRACK_CANNY_FEATURE_REQUEST,
   TRACK_CANNY_CHANGELOG,
   TRACK_OPT_OUT_USER_STATS,
-  TRACK_OPT_OUT_CRASH_REPORTS
+  TRACK_OPT_OUT_CRASH_REPORTS,
+  CONNECT,
+  CONNECTION_SUCCESS
 ]
 export const trackReduxActionsEpic: Epic<Action, GlobalState> = action$ =>
   action$
