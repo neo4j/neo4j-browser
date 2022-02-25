@@ -221,35 +221,33 @@ export class BrowserSync extends Component<any, BrowserSyncState> {
           <DrawerSection>
             <DrawerSubHeader>Sign In or Register</DrawerSubHeader>
             <DrawerSectionBody>
-              <DrawerSection>
-                Neo4j Browser Sync is a companion service for Neo4j Browser.
-                Connect through a simple social sign-in to get started.
-              </DrawerSection>
-              <DrawerSection>
-                <ConsentCheckBox
-                  checked={this.state.userConsented === true}
-                  onChange={(e: any) => {
-                    this.setState({
-                      userConsented: e.target.checked,
-                      showConsentAlert:
-                        this.state.showConsentAlert && !e.target.checked
-                    })
-                    this.props.onConsentSyncChanged(e.target.checked)
-                  }}
-                />
-                {consentAlertContent}
-              </DrawerSection>
-              <DrawerSection>
-                <SyncSignInButton onClick={this.logIn.bind(this)}>
-                  Sign In / Register
-                </SyncSignInButton>
-              </DrawerSection>
+              Neo4j Browser Sync is a companion service for Neo4j Browser.
+              Connect through a simple social sign-in to get started.
+              <br />
+              <br />
+              <ConsentCheckBox
+                checked={this.state.userConsented === true}
+                onChange={(e: any) => {
+                  this.setState({
+                    userConsented: e.target.checked,
+                    showConsentAlert:
+                      this.state.showConsentAlert && !e.target.checked
+                  })
+                  this.props.onConsentSyncChanged(e.target.checked)
+                }}
+              />
+              {consentAlertContent}
+              <SyncSignInButton onClick={this.logIn.bind(this)}>
+                Sign In / Register
+              </SyncSignInButton>
             </DrawerSectionBody>
           </DrawerSection>
           <DrawerSection>
             <DrawerSubHeader>Manage local data</DrawerSubHeader>
             <DrawerSectionBody>
-              <DrawerSection>{clearLocalDataContent}</DrawerSection>
+              {clearLocalDataContent}
+              <br />
+              <br />
               <FormButton
                 data-testid="clearLocalData"
                 label="Clear local data"

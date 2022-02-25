@@ -109,7 +109,7 @@ export const SavedScriptsButtonWrapper = styled.div`
 `
 
 export const SavedScriptsFolderMenuIconWrapper = styled.div`
-  padding: 0 1rem;
+  padding: 0 0.3rem;
 `
 
 export const StyledSavedScriptsButton = styled.button<{ color?: string }>`

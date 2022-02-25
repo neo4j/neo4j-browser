@@ -76,7 +76,6 @@
     "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react": "^12.1.2",
     "@testing-library/react-hooks": "^7.0.2",
-    "@trivago/prettier-plugin-sort-imports": "^3.1.1",
     "@types/antlr4": "^4.7.2",
     "@types/apollo-upload-client": "^14.1.0",
     "@types/d3-color": "^3.0.2",

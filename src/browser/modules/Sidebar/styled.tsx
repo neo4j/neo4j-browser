@@ -27,7 +27,8 @@ import {
 import { dark } from 'browser-styles/themes'
 
 export const StyledSetting = styled.div`
-  padding-bottom: 15px;
+  padding-bottom: 5px;
+  padding-top: 5px;
 `
 
 export const StyledSettingLabel = styled.label`

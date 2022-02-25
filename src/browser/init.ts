@@ -21,13 +21,14 @@ import 'core-js/stable'
 import 'regenerator-runtime/runtime'
 
 import './styles/bootstrap.grid-only.min.css'
-import './styles/fira-code.css'
-import './styles/font-awesome.min.css'
-import './styles/neo4j-world.css'
-import './styles/open-sans.css'
-import './styles/react-resizable.css'
 import './styles/streamline.css'
+import './styles/neo4j-world.css'
+import './styles/font-awesome.min.css'
+import './styles/fira-code.css'
+import './styles/open-sans.css'
 import './styles/util-classes.css'
+import './styles/react-resizable.css'
+
 import 'browser-styles/relate-by-ui/relate-by-PARTS.css'
 
 // non web env (just for tests)
