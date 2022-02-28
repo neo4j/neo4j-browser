@@ -82,9 +82,9 @@ module.exports = {
               chunks: 'all',
               enforce: true
             },
-            'relate-by-ui': {
-              test: /[\\/]node_modules[\\/](@relate-by-ui|semantic-ui-react)[\\/]/,
-              name: 'relate-by-ui',
+            'semantic-ui': {
+              test: /[\\/]node_modules[\\/](semantic-ui-react)[\\/]/,
+              name: 'semantic-ui',
               chunks: 'all',
               enforce: true
             },

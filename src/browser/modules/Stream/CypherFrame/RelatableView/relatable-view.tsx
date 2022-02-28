@@ -91,12 +91,12 @@ function getColumns(records: Record[], maxFieldItems: number) {
 
   return map(keys, key => ({
     Header: key,
-    accessor: (record: Record): string => {
+    accessor: (record: Record) => {
       const fieldItem = record.get(key)
 
       if (!Array.isArray(fieldItem)) return fieldItem
 
-      return slice(fieldItem, 0, maxFieldItems).join(',')
+      return slice(fieldItem, 0, maxFieldItems)
     },
     Cell: CypherCell
   }))

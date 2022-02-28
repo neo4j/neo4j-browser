@@ -52,10 +52,7 @@ module.exports = [
   },
   {
     test: /\.(png|gif|jpg|svg)$/,
-    include: [
-      path.resolve(helpers.browserPath, 'modules')
-      // path.resolve('node_modules/@relate-by-ui/css')
-    ],
+    include: [path.resolve(helpers.browserPath, 'modules')],
     use: 'file-loader?limit=20480&name=assets/[name]-[hash].[ext]'
   },
   {
