@@ -28,8 +28,8 @@ import {
 import docs, { isBuiltInGuide } from 'browser/documentation'
 import guideUnfound from 'browser/documentation/sidebar-guides/unfound'
 import Slide from 'browser/modules/Carousel/Slide'
-import MdxSlide from 'browser/modules/Docs/MDX/MdxSlide'
-import { splitMdxSlides } from 'browser/modules/Docs/MDX/splitMdx'
+import MdSlide from 'browser/modules/Docs/MD/MdSlide'
+import { splitMdSlides } from 'browser/modules/Docs/MD/splitMd'
 import {
   StyledCypherErrorMessage,
   StyledDiv,
@@ -87,10 +87,10 @@ export async function resolveGuide(
   return { ...guideUnfound, identifier }
 }
 
-function mdxTextToSlides(mdx: string): JSX.Element[] {
-  return splitMdxSlides(mdx).map((slide, index) => (
+function mdTextToSlides(md: string): JSX.Element[] {
+  return splitMdSlides(md).map((slide, index) => (
     // index is fine since we'll never move or delete slides
-    <MdxSlide key={index} mdx={slide} isSidebarSlide />
+    <MdSlide key={index} md={slide} isSidebarSlide />
   ))
 }
 
@@ -130,7 +130,7 @@ async function resolveRemoteGuideByUrl(
     const title = (titleRegexMatch && titleRegexMatch[1])?.trim() || url
     if (['md', 'mdx'].includes(filenameExtension)) {
       return {
-        slides: mdxTextToSlides(remoteGuide),
+        slides: mdTextToSlides(remoteGuide),
         title,
         identifier: url
       }

@@ -22,15 +22,15 @@ import uuid from 'uuid'
 
 import Carousel from '../Carousel/Carousel'
 import Slide from '../Carousel/Slide'
-import MdxSlide from './MDX/MdxSlide'
-import { splitMdxSlides } from './MDX/splitMdx'
+import MdSlide from './MD/MdSlide'
+import { splitMdSlides } from './MD/splitMd'
 import Directives from 'browser-components/Directives'
 
 type DocsProps = {
   slides?: JSX.Element[] | null
   content?: JSX.Element | null
   html?: string
-  mdx?: string
+  md?: string
   initialSlide?: number
   onSlide?: Function
   lastUpdate?: number
@@ -42,7 +42,7 @@ export default function Docs({
   slides,
   content,
   html,
-  mdx,
+  md,
   initialSlide,
   onSlide,
   originFrameId,
@@ -71,10 +71,10 @@ export default function Docs({
         return
       }
       slide = <Slide html={html} />
-    } else if (mdx) {
+    } else if (md) {
       setStateSlides(
-        splitMdxSlides(mdx).map(slide => (
-          <MdxSlide key={uuid.v4()} mdx={slide}></MdxSlide>
+        splitMdSlides(md).map(slide => (
+          <MdSlide key={uuid.v4()} md={slide}></MdSlide>
         ))
       )
       return
