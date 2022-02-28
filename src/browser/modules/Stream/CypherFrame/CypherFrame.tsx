@@ -173,23 +173,37 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
       if (view) this.setState({ openView: view })
     }
 
+    const textDownloadEnabled = () =>
+      this.getRecords().length > 0 &&
+      this.state.openView &&
+      [ViewTypes.TEXT, ViewTypes.TABLE, ViewTypes.CODE].includes(
+        this.state.openView
+      )
+    const graphicsDownloadEnabled = () =>
+      this.visElement &&
+      this.state.openView &&
+      [ViewTypes.PLAN, ViewTypes.VISUALIZATION].includes(this.state.openView)
+
+    const downloadText = [
+      { name: 'CSV', download: this.exportCSV },
+      { name: 'JSON', download: this.exportJSON }
+    ]
     const downloadGraphics = [
       { name: 'PNG', download: this.exportPNG },
       { name: 'SVG', download: this.exportSVG }
     ]
+
     this.props.setExportItems([
-      { name: 'CSV', download: this.exportCSV },
-      { name: 'JSON', download: this.exportJSON },
-      ...(this.visElement ? downloadGraphics : [])
+      ...(textDownloadEnabled() ? downloadText : []),
+      ...(this.hasStringPlan() && this.state.openView === ViewTypes.PLAN
+        ? [{ name: 'TXT', download: this.exportStringPlan }]
+        : []),
+      ...(graphicsDownloadEnabled() ? downloadGraphics : [])
     ])
   }
 
   componentDidMount(): void {
     const view = initialView(this.props, this.state)
-    this.props.setExportItems([
-      { name: 'CSV', download: this.exportCSV },
-      { name: 'JSON', download: this.exportJSON }
-    ])
     if (view) this.setState({ openView: view })
   }
 
@@ -427,6 +441,26 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
       type: 'text/plain;charset=utf-8'
     })
     saveAs(blob, 'records.json')
+  }
+
+  hasStringPlan = (): boolean =>
+    // @ts-ignore driver types don't have string-representation yet
+    !!this.props.request?.result?.summary?.plan?.arguments?.[
+      'string-representation'
+    ]
+
+  exportStringPlan = (): void => {
+    const data =
+      // @ts-ignore driver types don't have string-representation yet
+      this.props.request?.result?.summary?.plan?.arguments?.[
+        'string-representation'
+      ]
+    if (data) {
+      const blob = new Blob([data], {
+        type: 'text/plain;charset=utf-8'
+      })
+      saveAs(blob, 'plan.txt')
+    }
   }
 
   exportPNG = (): void => {
