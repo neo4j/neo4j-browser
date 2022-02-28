@@ -32,6 +32,7 @@ import {
   SavedScriptsFolderHeader,
   SavedScriptsFolderLabel,
   SavedScriptsFolderMain,
+  SavedScriptsFolderMenuIconWrapper,
   SavedScriptsInput
 } from './styled'
 import {
@@ -167,11 +168,13 @@ function SavedScriptsFolder({
               data-testid={`expandFolder-${folder.name}`}
               onClick={() => setExpanded(!expanded)}
             >
-              {expanded ? (
-                <SavedScriptsCollapseMenuIcon />
-              ) : (
-                <SavedScriptsExpandMenuRightIcon />
-              )}
+              <SavedScriptsFolderMenuIconWrapper>
+                {expanded ? (
+                  <SavedScriptsCollapseMenuIcon />
+                ) : (
+                  <SavedScriptsExpandMenuRightIcon />
+                )}
+              </SavedScriptsFolderMenuIconWrapper>
               <FolderIcon />
               <FolderNameWrapper> {folder.name} </FolderNameWrapper>
             </SavedScriptsFolderLabel>

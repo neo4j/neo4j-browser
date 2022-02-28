@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Button } from 'semantic-ui-react'
 import styled from 'styled-components'
 
 import { LARGE_DRAWER_WIDTH } from 'browser-components/TabNavigation/Navigation'
@@ -28,7 +27,8 @@ import {
 import { dark } from 'browser-styles/themes'
 
 export const StyledSetting = styled.div`
-  padding-bottom: 15px;
+  padding-bottom: 5px;
+  padding-top: 5px;
 `
 
 export const StyledSettingLabel = styled.label`
@@ -113,14 +113,30 @@ export const StyledHeaderContainer = styled.div`
   }
 `
 
-// important to override semantic UI styles
-export const StyledFeedbackButton = styled(Button)`
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  max-width: fit-content !important;
-  margin: 0 0 25px 25px !important;
-  min-height: fit-content !important;
+export const StyledFeedbackButton = styled.button`
+  background: #55acee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: fit-content;
+  margin: 0 0 25px 25px;
+  min-height: fit-content;
+  outline: 0;
+  border: none;
+  vertical-align: baseline;
+  font-family: 'Open Sans', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  padding: 0.78571429em 1.5em 0.78571429em;
+  font-size: 1rem;
+  line-height: 1em;
+  border-radius: 0.28571429rem;
+
+  :hover {
+    background-color: #35a2f4;
+  }
+
+  :active {
+    background-color: #2795e9;
+  }
 `
 
 export const StyledCommand = styled(DrawerBrowserCommand)`

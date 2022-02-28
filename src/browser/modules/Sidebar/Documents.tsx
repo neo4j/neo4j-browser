@@ -180,18 +180,14 @@ const Documents = (props: DocumentsProps) => {
         )}
       </StyledHeaderContainer>
       <StyledFeedbackButton
-        color="twitter"
-        content={
-          <>
-            <CannyFeedbackIcon />
-            &nbsp; Send Feedback
-          </>
-        }
         onClick={() => {
           props.trackCannyFeatureRequest()
           window.open(CANNY_FEATURE_REQUEST_URL, '_blank')
         }}
-      />
+      >
+        <CannyFeedbackIcon />
+        &nbsp; Send Feedback
+      </StyledFeedbackButton>
       <StyledFullSizeDrawerBody>
         <DocumentItems header="Useful commands" items={useful} />
         <DocumentItems header="Documentation links" items={docs} />

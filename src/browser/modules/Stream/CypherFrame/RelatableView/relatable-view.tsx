@@ -14,36 +14,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-import Relatable from '@relate-by-ui/relatable'
 import { get, head, map, slice } from 'lodash-es'
 import { QueryResult, Record, isInt } from 'neo4j-driver'
 import React, { useMemo } from 'react'
 import { connect } from 'react-redux'
-import { Icon } from 'semantic-ui-react'
 
-import ClickableUrls from '../../../components/ClickableUrls'
-import ClipboardCopier from '../../../components/ClipboardCopier'
-import Ellipsis from '../../../components/Ellipsis'
-import { StyledStatsBar, StyledTruncatedMessage } from '../styled'
+import { StyledStatsBar, StyledTruncatedMessage } from '../../styled'
 import {
   getBodyAndStatusBarMessages,
   resultHasTruncatedFields
-} from './helpers'
+} from '../helpers'
+import Relatable from './relatable'
 import {
   CopyIconAbsolutePositioner,
   RelatableStyleWrapper,
   StyledJsonPre,
   StyledPreSpan
 } from './relatable-view.styled'
+import ClickableUrls from 'browser-components/ClickableUrls'
+import ClipboardCopier from 'browser-components/ClipboardCopier'
+import Ellipsis from 'browser-components/Ellipsis'
+import { WarningIcon } from 'browser-components/icons/Icons'
+import { GlobalState } from 'project-root/src/shared/globalState'
 import { BrowserRequestResult } from 'project-root/src/shared/modules/requests/requestsDuck'
-import { stringModifier } from 'services/bolt/cypherTypesFormatting'
-import { stringifyMod, unescapeDoubleQuotesForDisplay } from 'services/utils'
-import { GlobalState } from 'shared/globalState'
 import {
   getMaxFieldItems,
   getMaxRows
-} from 'shared/modules/settings/settingsDuck'
-import arrayHasItems from 'shared/utils/array-has-items'
+} from 'project-root/src/shared/modules/settings/settingsDuck'
+import arrayHasItems from 'project-root/src/shared/utils/array-has-items'
+import { stringModifier } from 'services/bolt/cypherTypesFormatting'
+import { stringifyMod, unescapeDoubleQuotesForDisplay } from 'services/utils'
 
 const RelatableView = connect((state: GlobalState) => ({
   maxRows: getMaxRows(state),
@@ -80,6 +80,7 @@ export function RelatableViewComponent({
 
   return (
     <RelatableStyleWrapper>
+      {/* @ts-ignore */}
       <Relatable basic columns={columns} data={data} />
     </RelatableStyleWrapper>
   )
@@ -193,8 +194,7 @@ export function RelatableStatusbarComponent({
       <Ellipsis>
         {hasTruncatedFields && (
           <StyledTruncatedMessage>
-            <Icon name="warning sign" /> Record fields have been
-            truncated.&nbsp;
+            <WarningIcon /> Record fields have been truncated.&nbsp;
           </StyledTruncatedMessage>
         )}
         {statusBarMessage}

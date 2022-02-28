@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Resizable } from 'react-resizable'
-import { Icon } from 'semantic-ui-react'
 
 import { GraphStats, GraphStyleModel, VizItem } from 'graph-visualization'
 
@@ -12,6 +11,10 @@ import {
   StyledNodeInspectorTopMenuChevron,
   panelMinWidth
 } from './styled'
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon
+} from 'browser-components/icons/Icons'
 
 interface NodeInspectorPanelProps {
   expanded: boolean
@@ -51,18 +54,13 @@ export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
         <StyledNodeInspectorTopMenuChevron
           expanded={expanded}
           onClick={toggleExpanded}
+          title={
+            expanded
+              ? 'Collapse the Node Properties display'
+              : 'Expand the Node Properties display'
+          }
         >
-          {expanded ? (
-            <Icon
-              title="Collapse the Node Properties display"
-              name="chevron right"
-            />
-          ) : (
-            <Icon
-              title="Expand the Node Properties display"
-              name="chevron left"
-            />
-          )}
+          {expanded ? <ChevronRightIcon /> : <ChevronLeftIcon />}
         </StyledNodeInspectorTopMenuChevron>
 
         <NodeInspectorDrawer width={width} isOpen={expanded}>

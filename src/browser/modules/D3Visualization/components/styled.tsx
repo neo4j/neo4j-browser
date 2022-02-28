@@ -153,6 +153,8 @@ export const StyledNodeInspectorTopMenuChevron = styled.div<{
   width: 32px;
   height: 32px;
   padding: 6px;
+  color: ${props => props.theme.frameNodePropertiesPanelIconTextColor}
+  text-align: center;
   ${props =>
     !props.expanded &&
     `background: ${props.theme.editorBackground};

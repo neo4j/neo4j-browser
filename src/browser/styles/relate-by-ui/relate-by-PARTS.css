@@ -1,0 +1,2650 @@
+/*
+ * # Semantic UI - 2.4.2
+ * https://github.com/Semantic-Org/Semantic-UI
+ * http://www.semantic-ui.com/
+ *
+ * Copyright 2014 Contributors
+ * Released under the MIT license
+ * http://opensource.org/licenses/MIT
+ *
+ */
+/*!
+ * # Semantic UI 2.4.2 - Reset
+ * http://github.com/semantic-org/semantic-ui/
+ *
+ *
+ * Released under the MIT license
+ * http://opensource.org/licenses/MIT
+ *
+ */
+
+/*******************************
+             Reset
+*******************************/
+
+/* Border-Box */
+
+*,
+*:before,
+*:after {
+  -webkit-box-sizing: inherit;
+  box-sizing: inherit;
+}
+
+html {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* iPad Input Shadows */
+
+input[type='text'],
+input[type='email'],
+input[type='search'],
+input[type='password'] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  /* mobile firefox too! */
+}
+
+/*! normalize.css v7.0.0 | MIT License | github.com/necolas/normalize.css */
+
+/* Document
+   ========================================================================== */
+
+/**
+ * 1. Correct the line height in all browsers.
+ * 2. Prevent adjustments of font size after orientation changes in
+ *    IE on Windows Phone and in iOS.
+ */
+
+html {
+  line-height: 1.15;
+  /* 1 */
+  -ms-text-size-adjust: 100%;
+  /* 2 */
+  -webkit-text-size-adjust: 100%;
+  /* 2 */
+}
+
+/* Sections
+   ========================================================================== */
+
+/**
+ * Remove the margin in all browsers (opinionated).
+ */
+
+body {
+  margin: 0;
+}
+
+/**
+ * Correct the font size and margin on `h1` elements within `section` and
+ * `article` contexts in Chrome, Firefox, and Safari.
+ */
+
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+/* Grouping content
+   ========================================================================== */
+
+/**
+ * 1. Add the correct box sizing in Firefox.
+ * 2. Show the overflow in Edge and IE.
+ */
+
+hr {
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+  /* 1 */
+  height: 0;
+  /* 1 */
+  overflow: visible;
+  /* 2 */
+}
+
+/**
+ * 1. Correct the inheritance and scaling of font size in all browsers.
+ * 2. Correct the odd `em` font sizing in all browsers.
+ */
+
+/* Text-level semantics
+   ========================================================================== */
+
+/**
+ * 1. Remove the gray background on active links in IE 10.
+ * 2. Remove gaps in links underline in iOS 8+ and Safari 8+.
+ */
+
+a {
+  background-color: transparent;
+  /* 1 */
+  -webkit-text-decoration-skip: objects;
+  /* 2 */
+}
+
+/**
+ * 1. Remove the bottom border in Chrome 57- and Firefox 39-.
+ * 2. Add the correct text decoration in Chrome, Edge, IE, Opera, and Safari.
+ */
+
+abbr[title] {
+  border-bottom: none;
+  /* 1 */
+  text-decoration: underline;
+  /* 2 */
+  -webkit-text-decoration: underline dotted;
+  text-decoration: underline dotted;
+  /* 2 */
+}
+
+/**
+ * Prevent the duplicate application of `bolder` by the next rule in Safari 6.
+ */
+
+b,
+strong {
+  font-weight: inherit;
+}
+
+/**
+ * Add the correct font weight in Chrome, Edge, and Safari.
+ */
+
+b,
+strong {
+  font-weight: bolder;
+}
+
+/**
+ * 1. Correct the inheritance and scaling of font size in all browsers.
+ * 2. Correct the odd `em` font sizing in all browsers.
+ */
+
+code,
+kbd,
+samp {
+  font-family: monospace, monospace;
+  /* 1 */
+  font-size: 1em;
+  /* 2 */
+}
+
+/**
+ * Add the correct font size in all browsers.
+ */
+
+small {
+  font-size: 80%;
+}
+
+/**
+ * Prevent `sub` and `sup` elements from affecting the line height in
+ * all browsers.
+ */
+
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sub {
+  bottom: -0.25em;
+}
+
+sup {
+  top: -0.5em;
+}
+
+/* Forms
+   ========================================================================== */
+
+/**
+ * 1. Change the font styles in all browsers (opinionated).
+ * 2. Remove the margin in Firefox and Safari.
+ */
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: sans-serif;
+  /* 1 */
+  font-size: 100%;
+  /* 1 */
+  line-height: 1.15;
+  /* 1 */
+  margin: 0;
+  /* 2 */
+}
+
+/**
+ * Show the overflow in IE.
+ * 1. Show the overflow in Edge.
+ */
+
+button,
+input {
+  /* 1 */
+  overflow: visible;
+}
+
+/**
+ * Remove the inheritance of text transform in Edge, Firefox, and IE.
+ * 1. Remove the inheritance of text transform in Firefox.
+ */
+
+button,
+select {
+  /* 1 */
+  text-transform: none;
+}
+
+/**
+ * 1. Prevent a WebKit bug where (2) destroys native `audio` and `video`
+ *    controls in Android 4.
+ * 2. Correct the inability to style clickable types in iOS and Safari.
+ */
+
+button,
+html [type='button'],
+[type='reset'],
+[type='submit'] {
+  -webkit-appearance: button;
+  /* 2 */
+}
+
+/**
+ * Remove the inner border and padding in Firefox.
+ */
+
+button::-moz-focus-inner,
+[type='button']::-moz-focus-inner,
+[type='reset']::-moz-focus-inner,
+[type='submit']::-moz-focus-inner {
+  border-style: none;
+  padding: 0;
+}
+
+/**
+ * Restore the focus styles unset by the previous rule.
+ */
+
+button:-moz-focusring,
+[type='button']:-moz-focusring,
+[type='reset']:-moz-focusring,
+[type='submit']:-moz-focusring {
+  outline: 1px dotted ButtonText;
+}
+
+/**
+ * Correct the padding in Firefox.
+ */
+
+fieldset {
+  padding: 0.35em 0.75em 0.625em;
+}
+
+/**
+ * 1. Correct the text wrapping in Edge and IE.
+ * 2. Correct the color inheritance from `fieldset` elements in IE.
+ * 3. Remove the padding so developers are not caught out when they zero out
+ *    `fieldset` elements in all browsers.
+ */
+
+legend {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  /* 1 */
+  color: inherit;
+  /* 2 */
+  display: table;
+  /* 1 */
+  max-width: 100%;
+  /* 1 */
+  padding: 0;
+  /* 3 */
+  white-space: normal;
+  /* 1 */
+}
+
+/**
+ * 1. Add the correct display in IE 9-.
+ * 2. Add the correct vertical alignment in Chrome, Firefox, and Opera.
+ */
+
+progress {
+  display: inline-block;
+  /* 1 */
+  vertical-align: baseline;
+  /* 2 */
+}
+
+/**
+ * Correct the cursor style of increment and decrement buttons in Chrome.
+ */
+
+[type='number']::-webkit-inner-spin-button,
+[type='number']::-webkit-outer-spin-button {
+  height: auto;
+}
+
+/**
+ * 1. Correct the odd appearance in Chrome and Safari.
+ * 2. Correct the outline style in Safari.
+ */
+
+[type='search'] {
+  -webkit-appearance: textfield;
+  /* 1 */
+  outline-offset: -2px;
+  /* 2 */
+}
+
+/**
+ * Remove the inner padding and cancel buttons in Chrome and Safari on macOS.
+ */
+
+[type='search']::-webkit-search-cancel-button,
+[type='search']::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+/**
+ * 1. Correct the inability to style clickable types in iOS and Safari.
+ * 2. Change font properties to `inherit` in Safari.
+ */
+
+::-webkit-file-upload-button {
+  -webkit-appearance: button;
+  /* 1 */
+  font: inherit;
+  /* 2 */
+}
+
+/* Interactive
+   ========================================================================== */
+
+/*
+ * Add the correct display in IE 9-.
+ * 1. Add the correct display in Edge, IE, and Firefox.
+ */
+
+details,
+menu {
+  display: block;
+}
+
+/*
+ * Add the correct display in all browsers.
+ */
+
+summary {
+  display: list-item;
+}
+
+/*******************************
+         Site Overrides
+*******************************/
+/*!
+ * # Semantic UI 2.4.2 - Site
+ * http://github.com/semantic-org/semantic-ui/
+ *
+ *
+ * Released under the MIT license
+ * http://opensource.org/licenses/MIT
+ *
+ */
+
+/*******************************
+             Page
+*******************************/
+
+html,
+body {
+  height: 100%;
+}
+
+html {
+  font-size: 14px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  min-width: 320px;
+  background: #ffffff;
+  font-size: 14px;
+  line-height: 1.4285em;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+/*******************************
+             Headers
+*******************************/
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: 'Open Sans', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  line-height: 1.28571429em;
+  margin: calc(2rem - 0.14285714em) 0em 1rem;
+  font-weight: bold;
+  padding: 0em;
+}
+
+h1 {
+  min-height: 1rem;
+  font-size: 2rem;
+}
+
+h2 {
+  font-size: 1.71428571rem;
+}
+
+h3 {
+  font-size: 1.28571429rem;
+}
+
+h4 {
+  font-size: 1.07142857rem;
+}
+
+h5 {
+  font-size: 1rem;
+}
+
+h1:first-child,
+h2:first-child,
+h3:first-child,
+h4:first-child,
+h5:first-child {
+  margin-top: 0em;
+}
+
+h1:last-child,
+h2:last-child,
+h3:last-child,
+h4:last-child,
+h5:last-child {
+  margin-bottom: 0em;
+}
+
+/*******************************
+             Text
+*******************************/
+
+p {
+  margin: 0em 0em 1em;
+  line-height: 1.4285em;
+}
+
+p:first-child {
+  margin-top: 0em;
+}
+
+p:last-child {
+  margin-bottom: 0em;
+}
+
+/*-------------------
+        Links
+--------------------*/
+
+a {
+  color: #4183c4;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #1e70bf;
+  text-decoration: none;
+}
+
+/*******************************
+         Scrollbars
+*******************************/
+
+/*******************************
+          Highlighting
+*******************************/
+
+/* Site */
+
+::-moz-selection {
+  background-color: #cce2ff;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+::selection {
+  background-color: #cce2ff;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+/* Form */
+
+textarea::-moz-selection,
+input::-moz-selection {
+  background-color: rgba(100, 100, 100, 0.4);
+  color: rgba(0, 0, 0, 0.87);
+}
+
+textarea::selection,
+input::selection {
+  background-color: rgba(100, 100, 100, 0.4);
+  color: rgba(0, 0, 0, 0.87);
+}
+
+/* Force Simple Scrollbars */
+
+body ::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 10px;
+  height: 10px;
+}
+
+body ::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 0px;
+}
+
+body ::-webkit-scrollbar-thumb {
+  cursor: pointer;
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.25);
+  -webkit-transition: color 0.2s ease;
+  transition: color 0.2s ease;
+}
+
+body ::-webkit-scrollbar-thumb:window-inactive {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+body ::-webkit-scrollbar-thumb:hover {
+  background: rgba(128, 135, 139, 0.8);
+}
+
+/* Inverted UI */
+
+body .ui.inverted::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+body .ui.inverted::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+body .ui.inverted::-webkit-scrollbar-thumb:window-inactive {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+body .ui.inverted::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/*******************************
+        Global Overrides
+*******************************/
+
+.code {
+  background-color: #f3f4f5;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
+
+/*******************************
+            Header
+*******************************/
+
+/** Styling kept for the relatable table */
+
+.ui.header .ui.label {
+  font-size: unset;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+
+/* Positioning */
+
+.ui.header + p {
+  margin-top: 0em;
+}
+
+/*******************************
+             Icon
+*******************************/
+
+i.icon {
+  display: inline-block;
+  opacity: 1;
+  margin: 0em 0.25rem 0em 0em;
+  width: 1.18em;
+  height: 1em;
+  font-family: 'Icons';
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: inherit;
+  text-align: center;
+  speak: none;
+  font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  background: magenta !important;
+}
+
+i.icon:before {
+  background: magenta !important;
+}
+
+/*******************************
+            Label
+*******************************/
+/** Kept for relatable table styling */
+.ui.label {
+  display: inline-block;
+  line-height: 1;
+  vertical-align: baseline;
+  margin: 0em 0.14285714em;
+  background-color: #e8e8e8;
+  background-image: none;
+  padding: 0.5833em 0.833em;
+  color: rgba(0, 0, 0, 0.6);
+  text-transform: none;
+  font-weight: bold;
+  border: 0px solid transparent;
+  border-radius: 0.28571429rem;
+  -webkit-transition: background 0.1s ease;
+  transition: background 0.1s ease;
+}
+
+.ui.label:first-child {
+  margin-left: 0em;
+}
+
+.ui.label:last-child {
+  margin-right: 0em;
+}
+
+/*******************************
+             Table
+*******************************/
+
+/* Prototype */
+
+.ui.table {
+  width: 100%;
+  background: #ffffff;
+  margin: 1em 0em;
+  border: 1px solid rgba(34, 36, 38, 0.15);
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: 0.28571429rem;
+  text-align: left;
+  color: rgba(0, 0, 0, 0.87);
+  border-collapse: separate;
+  border-spacing: 0px;
+}
+
+.ui.table:first-child {
+  margin-top: 0em;
+}
+
+.ui.table:last-child {
+  margin-bottom: 0em;
+}
+
+/*******************************
+             Parts
+*******************************/
+
+/* Table Content */
+
+.ui.table th,
+.ui.table td {
+  -webkit-transition: background 0.1s ease, color 0.1s ease;
+  transition: background 0.1s ease, color 0.1s ease;
+}
+
+/* Headers */
+
+.ui.table thead {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.ui.table thead th {
+  cursor: auto;
+  background: #f9fafb;
+  text-align: inherit;
+  color: rgba(0, 0, 0, 0.87);
+  padding: 0.92857143em 0.78571429em;
+  vertical-align: inherit;
+  font-style: unset;
+  font-weight: bold;
+  text-transform: none;
+  border-bottom: 1px solid rgba(34, 36, 38, 0.1);
+  border-left: none;
+}
+
+.ui.table thead tr > th:first-child {
+  border-left: none;
+}
+
+.ui.table thead tr:first-child > th:first-child {
+  border-radius: 0.28571429rem 0em 0em 0em;
+}
+
+.ui.table thead tr:first-child > th:last-child {
+  border-radius: 0em 0.28571429rem 0em 0em;
+}
+
+.ui.table thead tr:first-child > th:only-child {
+  border-radius: 0.28571429rem 0.28571429rem 0em 0em;
+}
+
+/* Footer */
+
+.ui.table tfoot {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.ui.table tfoot th {
+  cursor: auto;
+  border-top: 1px solid rgba(34, 36, 38, 0.15);
+  background: #f9fafb;
+  text-align: inherit;
+  color: rgba(0, 0, 0, 0.87);
+  padding: 0.78571429em 0.78571429em;
+  vertical-align: middle;
+  font-style: normal;
+  font-weight: normal;
+  text-transform: none;
+}
+
+.ui.table tfoot tr > th:first-child {
+  border-left: none;
+}
+
+.ui.table tfoot tr:first-child > th:first-child {
+  border-radius: 0em 0em 0em 0.28571429rem;
+}
+
+.ui.table tfoot tr:first-child > th:last-child {
+  border-radius: 0em 0em 0.28571429rem 0em;
+}
+
+.ui.table tfoot tr:first-child > th:only-child {
+  border-radius: 0em 0em 0.28571429rem 0.28571429rem;
+}
+
+/* Table Row */
+
+.ui.table tr td {
+  border-top: 1px solid rgba(34, 36, 38, 0.1);
+}
+
+.ui.table tr:first-child td {
+  border-top: none;
+}
+
+/* Repeated tbody */
+
+.ui.table tbody + tbody tr:first-child td {
+  border-top: 1px solid rgba(34, 36, 38, 0.1);
+}
+
+/* Table Cells */
+
+.ui.table td {
+  padding: 0.78571429em 0.78571429em;
+  text-align: inherit;
+}
+
+/* Icons */
+
+.ui.table > .icon {
+  vertical-align: baseline;
+}
+
+.ui.table > .icon:only-child {
+  margin: 0em;
+}
+
+/* Table Segment */
+
+.ui.table.segment {
+  padding: 0em;
+}
+
+.ui.table.segment:after {
+  display: none;
+}
+
+.ui.table.segment.stacked:after {
+  display: block;
+}
+
+/* Responsive */
+
+@media only screen and (max-width: 767px) {
+  .ui.table:not(.unstackable) {
+    width: 100%;
+  }
+
+  .ui.table:not(.unstackable) tbody,
+  .ui.table:not(.unstackable) tr,
+  .ui.table:not(.unstackable) tr > th,
+  .ui.table:not(.unstackable) tr > td {
+    width: auto !important;
+    display: block !important;
+  }
+
+  .ui.table:not(.unstackable) {
+    padding: 0em;
+  }
+
+  .ui.table:not(.unstackable) thead {
+    display: block;
+  }
+
+  .ui.table:not(.unstackable) tfoot {
+    display: block;
+  }
+
+  .ui.table:not(.unstackable) tr {
+    padding-top: 1em;
+    padding-bottom: 1em;
+    -webkit-box-shadow: 0px -1px 0px 0px rgba(0, 0, 0, 0.1) inset !important;
+    box-shadow: 0px -1px 0px 0px rgba(0, 0, 0, 0.1) inset !important;
+  }
+
+  .ui.table:not(.unstackable) tr > th,
+  .ui.table:not(.unstackable) tr > td {
+    background: none;
+    border: none !important;
+    padding: 0.25em 0.75em !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+  }
+
+  .ui.table:not(.unstackable) th:first-child,
+  .ui.table:not(.unstackable) td:first-child {
+    font-weight: bold;
+  }
+
+  /* Definition Table */
+
+  .ui.definition.table:not(.unstackable) thead th:first-child {
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+  }
+}
+
+/*******************************
+            Coupling
+*******************************/
+
+/* UI Image */
+
+.ui.table th .image,
+.ui.table th .image img,
+.ui.table td .image,
+.ui.table td .image img {
+  max-width: none;
+}
+
+/*******************************
+             Types
+*******************************/
+
+/*--------------
+    Complex
+---------------*/
+
+.ui.structured.table {
+  border-collapse: collapse;
+}
+
+.ui.structured.table thead th {
+  border-left: none;
+  border-right: none;
+}
+
+.ui.structured.sortable.table thead th {
+  border-left: 1px solid rgba(34, 36, 38, 0.15);
+  border-right: 1px solid rgba(34, 36, 38, 0.15);
+}
+
+.ui.structured.basic.table th {
+  border-left: none;
+  border-right: none;
+}
+
+.ui.structured.celled.table tr th,
+.ui.structured.celled.table tr td {
+  border-left: 1px solid rgba(34, 36, 38, 0.1);
+  border-right: 1px solid rgba(34, 36, 38, 0.1);
+}
+
+/*--------------
+   Definition
+---------------*/
+
+.ui.definition.table thead:not(.full-width) th:first-child {
+  pointer-events: none;
+  background: transparent;
+  font-weight: normal;
+  color: rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: -1px -1px 0px 1px #ffffff;
+  box-shadow: -1px -1px 0px 1px #ffffff;
+}
+
+.ui.definition.table tfoot:not(.full-width) th:first-child {
+  pointer-events: none;
+  background: transparent;
+  font-weight: normal;
+  color: rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: 1px 1px 0px 1px #ffffff;
+  box-shadow: 1px 1px 0px 1px #ffffff;
+}
+
+/* Remove Border */
+
+.ui.celled.definition.table thead:not(.full-width) th:first-child {
+  -webkit-box-shadow: 0px -1px 0px 1px #ffffff;
+  box-shadow: 0px -1px 0px 1px #ffffff;
+}
+
+.ui.celled.definition.table tfoot:not(.full-width) th:first-child {
+  -webkit-box-shadow: 0px 1px 0px 1px #ffffff;
+  box-shadow: 0px 1px 0px 1px #ffffff;
+}
+
+/* Highlight Defining Column */
+
+.ui.definition.table tr td:first-child:not(.ignored),
+.ui.definition.table tr td.definition {
+  background: rgba(0, 0, 0, 0.03);
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.95);
+  font-size: 1em;
+}
+
+/* Fix 2nd Column */
+
+.ui.definition.table thead:not(.full-width) th:nth-child(2) {
+  border-left: 1px solid rgba(34, 36, 38, 0.15);
+}
+
+.ui.definition.table tfoot:not(.full-width) th:nth-child(2) {
+  border-left: 1px solid rgba(34, 36, 38, 0.15);
+}
+
+.ui.definition.table td:nth-child(2) {
+  border-left: 1px solid rgba(34, 36, 38, 0.15);
+}
+
+/*******************************
+             States
+*******************************/
+
+/*--------------
+    Positive
+---------------*/
+
+.ui.table tr.positive,
+.ui.table td.positive {
+  -webkit-box-shadow: 0px 0px 0px #a3c293 inset;
+  box-shadow: 0px 0px 0px #a3c293 inset;
+}
+
+.ui.table tr.positive,
+.ui.table td.positive {
+  background: #fcfff5 !important;
+  color: #2c662d !important;
+}
+
+/*--------------
+     Negative
+---------------*/
+
+.ui.table tr.negative,
+.ui.table td.negative {
+  -webkit-box-shadow: 0px 0px 0px #e0b4b4 inset;
+  box-shadow: 0px 0px 0px #e0b4b4 inset;
+}
+
+.ui.table tr.negative,
+.ui.table td.negative {
+  background: #fff6f6 !important;
+  color: #9f3a38 !important;
+}
+
+/*--------------
+      Error
+---------------*/
+
+.ui.table tr.error,
+.ui.table td.error {
+  -webkit-box-shadow: 0px 0px 0px #e0b4b4 inset;
+  box-shadow: 0px 0px 0px #e0b4b4 inset;
+}
+
+.ui.table tr.error,
+.ui.table td.error {
+  background: #fff6f6 !important;
+  color: #9f3a38 !important;
+}
+
+/*--------------
+     Warning
+---------------*/
+
+.ui.table tr.warning,
+.ui.table td.warning {
+  -webkit-box-shadow: 0px 0px 0px #c9ba9b inset;
+  box-shadow: 0px 0px 0px #c9ba9b inset;
+}
+
+.ui.table tr.warning,
+.ui.table td.warning {
+  background: #fffaf3 !important;
+  color: #573a08 !important;
+}
+
+/*--------------
+     Active
+---------------*/
+
+.ui.table tr.active,
+.ui.table td.active {
+  -webkit-box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.87) inset;
+  box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.87) inset;
+}
+
+.ui.table tr.active,
+.ui.table td.active {
+  background: #e0e0e0 !important;
+  color: rgba(0, 0, 0, 0.87) !important;
+}
+
+/*--------------
+     Disabled
+---------------*/
+
+.ui.table tr.disabled td,
+.ui.table tr td.disabled,
+.ui.table tr.disabled:hover,
+.ui.table tr:hover td.disabled {
+  pointer-events: none;
+  color: rgba(40, 40, 40, 0.3);
+}
+
+/*******************************
+          Variations
+*******************************/
+
+/*--------------
+    Stackable
+---------------*/
+
+@media only screen and (max-width: 991px) {
+  .ui[class*='tablet stackable'].table,
+  .ui[class*='tablet stackable'].table tbody,
+  .ui[class*='tablet stackable'].table tr,
+  .ui[class*='tablet stackable'].table tr > th,
+  .ui[class*='tablet stackable'].table tr > td {
+    width: 100% !important;
+    display: block !important;
+  }
+
+  .ui[class*='tablet stackable'].table {
+    padding: 0em;
+  }
+
+  .ui[class*='tablet stackable'].table thead {
+    display: block;
+  }
+
+  .ui[class*='tablet stackable'].table tfoot {
+    display: block;
+  }
+
+  .ui[class*='tablet stackable'].table tr {
+    padding-top: 1em;
+    padding-bottom: 1em;
+    -webkit-box-shadow: 0px -1px 0px 0px rgba(0, 0, 0, 0.1) inset !important;
+    box-shadow: 0px -1px 0px 0px rgba(0, 0, 0, 0.1) inset !important;
+  }
+
+  .ui[class*='tablet stackable'].table tr > th,
+  .ui[class*='tablet stackable'].table tr > td {
+    background: none;
+    border: none !important;
+    padding: 0.25em 0.75em;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Definition Table */
+
+  .ui.definition[class*='tablet stackable'].table thead th:first-child {
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+  }
+}
+
+/*--------------
+ Text Alignment
+---------------*/
+
+.ui.table[class*='left aligned'],
+.ui.table [class*='left aligned'] {
+  text-align: left;
+}
+
+.ui.table[class*='center aligned'],
+.ui.table [class*='center aligned'] {
+  text-align: center;
+}
+
+.ui.table[class*='right aligned'],
+.ui.table [class*='right aligned'] {
+  text-align: right;
+}
+
+/*------------------
+ Vertical Alignment
+------------------*/
+
+.ui.table[class*='top aligned'],
+.ui.table [class*='top aligned'] {
+  vertical-align: top;
+}
+
+.ui.table[class*='middle aligned'],
+.ui.table [class*='middle aligned'] {
+  vertical-align: middle;
+}
+
+.ui.table[class*='bottom aligned'],
+.ui.table [class*='bottom aligned'] {
+  vertical-align: bottom;
+}
+
+/*--------------
+    Collapsing
+---------------*/
+
+.ui.table th.collapsing,
+.ui.table td.collapsing {
+  width: 1px;
+  white-space: nowrap;
+}
+
+/*--------------
+     Fixed
+---------------*/
+
+.ui.fixed.table {
+  table-layout: fixed;
+}
+
+.ui.fixed.table th,
+.ui.fixed.table td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/*--------------
+     Striped
+---------------*/
+
+/* Table Striping */
+
+.ui.striped.table > tr:nth-child(2n),
+.ui.striped.table tbody tr:nth-child(2n) {
+  background-color: rgba(0, 0, 50, 0.02);
+}
+
+/* Stripes */
+
+.ui.inverted.striped.table > tr:nth-child(2n),
+.ui.inverted.striped.table tbody tr:nth-child(2n) {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Allow striped active hover */
+
+.ui.striped.selectable.selectable.selectable.table tbody tr.active:hover {
+  background: #efefef !important;
+  color: rgba(0, 0, 0, 0.95) !important;
+}
+
+/*--------------
+   Single Line
+---------------*/
+
+.ui.table[class*='single line'],
+.ui.table [class*='single line'] {
+  white-space: nowrap;
+}
+
+.ui.table[class*='single line'],
+.ui.table [class*='single line'] {
+  white-space: nowrap;
+}
+
+/*-------------------
+       Colors
+--------------------*/
+
+/* Red */
+
+.ui.red.table {
+  border-top: 0.2em solid #ff6769;
+}
+
+.ui.inverted.red.table {
+  background-color: #ff6769 !important;
+  color: #ffffff !important;
+}
+
+/* Orange */
+
+.ui.orange.table {
+  border-top: 0.2em solid #f2711c;
+}
+
+.ui.inverted.orange.table {
+  background-color: #f2711c !important;
+  color: #ffffff !important;
+}
+
+/* Yellow */
+
+.ui.yellow.table {
+  border-top: 0.2em solid #fbbd08;
+}
+
+.ui.inverted.yellow.table {
+  background-color: #fbbd08 !important;
+  color: #ffffff !important;
+}
+
+/* Olive */
+
+.ui.olive.table {
+  border-top: 0.2em solid #b5cc18;
+}
+
+.ui.inverted.olive.table {
+  background-color: #b5cc18 !important;
+  color: #ffffff !important;
+}
+
+/* Green */
+
+.ui.green.table {
+  border-top: 0.2em solid #38d399;
+}
+
+.ui.inverted.green.table {
+  background-color: #38d399 !important;
+  color: #ffffff !important;
+}
+
+/* Teal */
+
+.ui.teal.table {
+  border-top: 0.2em solid #00b5ad;
+}
+
+.ui.inverted.teal.table {
+  background-color: #00b5ad !important;
+  color: #ffffff !important;
+}
+
+/* Blue */
+
+.ui.blue.table {
+  border-top: 0.2em solid #45bff8;
+}
+
+.ui.inverted.blue.table {
+  background-color: #45bff8 !important;
+  color: #ffffff !important;
+}
+
+/* Violet */
+
+.ui.violet.table {
+  border-top: 0.2em solid #6435c9;
+}
+
+.ui.inverted.violet.table {
+  background-color: #6435c9 !important;
+  color: #ffffff !important;
+}
+
+/* Purple */
+
+.ui.purple.table {
+  border-top: 0.2em solid #a333c8;
+}
+
+.ui.inverted.purple.table {
+  background-color: #a333c8 !important;
+  color: #ffffff !important;
+}
+
+/* Pink */
+
+.ui.pink.table {
+  border-top: 0.2em solid #e03997;
+}
+
+.ui.inverted.pink.table {
+  background-color: #e03997 !important;
+  color: #ffffff !important;
+}
+
+/* Brown */
+
+.ui.brown.table {
+  border-top: 0.2em solid #a5673f;
+}
+
+.ui.inverted.brown.table {
+  background-color: #a5673f !important;
+  color: #ffffff !important;
+}
+
+/* Grey */
+
+.ui.grey.table {
+  border-top: 0.2em solid #767676;
+}
+
+.ui.inverted.grey.table {
+  background-color: #767676 !important;
+  color: #ffffff !important;
+}
+
+/* Black */
+
+.ui.black.table {
+  border-top: 0.2em solid #1b1c1d;
+}
+
+.ui.inverted.black.table {
+  background-color: #1b1c1d !important;
+  color: #ffffff !important;
+}
+
+/*--------------
+  Column Count
+---------------*/
+
+/* Grid Based */
+
+.ui.one.column.table td {
+  width: 100%;
+}
+
+.ui.two.column.table td {
+  width: 50%;
+}
+
+.ui.three.column.table td {
+  width: 33.33333333%;
+}
+
+.ui.four.column.table td {
+  width: 25%;
+}
+
+.ui.five.column.table td {
+  width: 20%;
+}
+
+.ui.six.column.table td {
+  width: 16.66666667%;
+}
+
+.ui.seven.column.table td {
+  width: 14.28571429%;
+}
+
+.ui.eight.column.table td {
+  width: 12.5%;
+}
+
+.ui.nine.column.table td {
+  width: 11.11111111%;
+}
+
+.ui.ten.column.table td {
+  width: 10%;
+}
+
+.ui.eleven.column.table td {
+  width: 9.09090909%;
+}
+
+.ui.twelve.column.table td {
+  width: 8.33333333%;
+}
+
+.ui.thirteen.column.table td {
+  width: 7.69230769%;
+}
+
+.ui.fourteen.column.table td {
+  width: 7.14285714%;
+}
+
+.ui.fifteen.column.table td {
+  width: 6.66666667%;
+}
+
+.ui.sixteen.column.table td {
+  width: 6.25%;
+}
+
+/* Column Width */
+
+.ui.table th.one.wide,
+.ui.table td.one.wide {
+  width: 6.25%;
+}
+
+.ui.table th.two.wide,
+.ui.table td.two.wide {
+  width: 12.5%;
+}
+
+.ui.table th.three.wide,
+.ui.table td.three.wide {
+  width: 18.75%;
+}
+
+.ui.table th.four.wide,
+.ui.table td.four.wide {
+  width: 25%;
+}
+
+.ui.table th.five.wide,
+.ui.table td.five.wide {
+  width: 31.25%;
+}
+
+.ui.table th.six.wide,
+.ui.table td.six.wide {
+  width: 37.5%;
+}
+
+.ui.table th.seven.wide,
+.ui.table td.seven.wide {
+  width: 43.75%;
+}
+
+.ui.table th.eight.wide,
+.ui.table td.eight.wide {
+  width: 50%;
+}
+
+.ui.table th.nine.wide,
+.ui.table td.nine.wide {
+  width: 56.25%;
+}
+
+.ui.table th.ten.wide,
+.ui.table td.ten.wide {
+  width: 62.5%;
+}
+
+.ui.table th.eleven.wide,
+.ui.table td.eleven.wide {
+  width: 68.75%;
+}
+
+.ui.table th.twelve.wide,
+.ui.table td.twelve.wide {
+  width: 75%;
+}
+
+.ui.table th.thirteen.wide,
+.ui.table td.thirteen.wide {
+  width: 81.25%;
+}
+
+.ui.table th.fourteen.wide,
+.ui.table td.fourteen.wide {
+  width: 87.5%;
+}
+
+.ui.table th.fifteen.wide,
+.ui.table td.fifteen.wide {
+  width: 93.75%;
+}
+
+.ui.table th.sixteen.wide,
+.ui.table td.sixteen.wide {
+  width: 100%;
+}
+
+/*--------------
+    Sortable
+---------------*/
+
+.ui.sortable.table thead th {
+  cursor: pointer;
+  white-space: nowrap;
+  border-left: 1px solid rgba(34, 36, 38, 0.15);
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.ui.sortable.table thead th:first-child {
+  border-left: none;
+}
+
+.ui.sortable.table thead th.sorted,
+.ui.sortable.table thead th.sorted:hover {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.ui.sortable.table thead th:after {
+  display: none;
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: inherit;
+  content: '';
+  height: 1em;
+  width: auto;
+  opacity: 0.8;
+  margin: 0em 0em 0em 0.5em;
+  font-family: 'Icons';
+}
+
+.ui.sortable.table thead th.ascending:after {
+  content: '\f0d8';
+}
+
+.ui.sortable.table thead th.descending:after {
+  content: '\f0d7';
+}
+
+/* Hover */
+
+.ui.sortable.table th.disabled:hover {
+  cursor: auto;
+  color: rgba(40, 40, 40, 0.3);
+}
+
+.ui.sortable.table thead th:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.8);
+}
+
+/* Sorted */
+
+.ui.sortable.table thead th.sorted {
+  background: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.95);
+}
+
+.ui.sortable.table thead th.sorted:after {
+  display: inline-block;
+}
+
+/* Sorted Hover */
+
+.ui.sortable.table thead th.sorted:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.95);
+}
+
+/* Inverted */
+
+.ui.inverted.sortable.table thead th.sorted {
+  background: rgba(255, 255, 255, 0.15) -webkit-gradient(linear, left top, left
+        bottom, from(transparent), to(rgba(0, 0, 0, 0.05)));
+  background: rgba(255, 255, 255, 0.15) -webkit-linear-gradient(transparent, rgba(0, 0, 0, 0.05));
+  background: rgba(255, 255, 255, 0.15)
+    linear-gradient(transparent, rgba(0, 0, 0, 0.05));
+  color: #ffffff;
+}
+
+.ui.inverted.sortable.table thead th:hover {
+  background: rgba(255, 255, 255, 0.08) -webkit-gradient(linear, left top, left
+        bottom, from(transparent), to(rgba(0, 0, 0, 0.05)));
+  background: rgba(255, 255, 255, 0.08) -webkit-linear-gradient(transparent, rgba(0, 0, 0, 0.05));
+  background: rgba(255, 255, 255, 0.08)
+    linear-gradient(transparent, rgba(0, 0, 0, 0.05));
+  color: #ffffff;
+}
+
+.ui.inverted.sortable.table thead th {
+  border-left-color: transparent;
+  border-right-color: transparent;
+}
+
+/*--------------
+    Inverted
+---------------*/
+
+/* Text Color */
+
+.ui.inverted.table {
+  background: #333333;
+  color: rgba(255, 255, 255, 0.9);
+  border: none;
+}
+
+.ui.inverted.table th {
+  background-color: rgba(0, 0, 0, 0.15);
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.ui.inverted.table tr td {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.ui.inverted.table tr.disabled td,
+.ui.inverted.table tr td.disabled,
+.ui.inverted.table tr.disabled:hover td,
+.ui.inverted.table tr:hover td.disabled {
+  pointer-events: none;
+  color: rgba(225, 225, 225, 0.3);
+}
+
+/* Definition */
+
+.ui.inverted.definition.table tfoot:not(.full-width) th:first-child,
+.ui.inverted.definition.table thead:not(.full-width) th:first-child {
+  background: #ffffff;
+}
+
+.ui.inverted.definition.table tr td:first-child {
+  background: rgba(255, 255, 255, 0.02);
+  color: #ffffff;
+}
+
+/*--------------
+   Collapsing
+---------------*/
+
+.ui.collapsing.table {
+  width: auto;
+}
+
+/*--------------
+      Basic
+---------------*/
+
+.ui.basic.table {
+  background: transparent;
+  border: 1px solid rgba(34, 36, 38, 0.15);
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.ui.basic.table thead,
+.ui.basic.table tfoot {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.ui.basic.table th {
+  background: transparent;
+  border-left: none;
+}
+
+.ui.basic.table tbody tr {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.ui.basic.table td {
+  background: transparent;
+}
+
+.ui.basic.striped.table tbody tr:nth-child(2n) {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+/*--------------
+     Celled
+---------------*/
+
+.ui.celled.table tr th,
+.ui.celled.table tr td {
+  border-left: 1px solid rgba(34, 36, 38, 0.1);
+}
+
+.ui.celled.table tr th:first-child,
+.ui.celled.table tr td:first-child {
+  border-left: none;
+}
+
+/*--------------
+     Padded
+---------------*/
+
+.ui.padded.table th {
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+.ui.padded.table th,
+.ui.padded.table td {
+  padding: 1em 1em;
+}
+
+/* Very */
+
+.ui[class*='very padded'].table th {
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+}
+
+.ui[class*='very padded'].table td {
+  padding: 1.5em 1.5em;
+}
+
+/*--------------
+     Compact
+---------------*/
+
+.ui.compact.table th {
+  padding-left: 0.7em;
+  padding-right: 0.7em;
+}
+
+.ui.compact.table td {
+  padding: 0.5em 0.7em;
+}
+
+/* Very */
+
+.ui[class*='very compact'].table th {
+  padding-left: 0.6em;
+  padding-right: 0.6em;
+}
+
+.ui[class*='very compact'].table td {
+  padding: 0.4em 0.6em;
+}
+
+/*--------------
+      Sizes
+---------------*/
+
+/* Small */
+
+.ui.small.table {
+  font-size: 0.9em;
+}
+
+/* Standard */
+
+.ui.table {
+  font-size: 1em;
+}
+
+/* Large */
+
+.ui.large.table {
+  font-size: 1.1em;
+}
+
+/*******************************
+         Theme Overrides
+*******************************/
+
+/*******************************
+        User Overrides
+*******************************/
+/*!
+ * # Semantic UI 2.4.2 - Popup
+ * http://github.com/semantic-org/semantic-ui/
+ *
+ *
+ * Released under the MIT license
+ * http://opensource.org/licenses/MIT
+ *
+ */
+
+/*******************************
+            Popup
+*******************************/
+
+.ui.popup {
+  display: none;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  /* Fixes content being squished when inline (moz only) */
+  min-width: -webkit-min-content;
+  min-width: -moz-min-content;
+  min-width: min-content;
+  z-index: 1900;
+  border: 1px solid #d4d4d5;
+  line-height: 1.4285em;
+  max-width: 250px;
+  background: #ffffff;
+  padding: 0.833em 1em;
+  font-weight: normal;
+  font-style: normal;
+  color: rgba(0, 0, 0, 0.87);
+  border-radius: 0.28571429rem;
+  -webkit-box-shadow: 0px 2px 4px 0px rgba(34, 36, 38, 0.12),
+    0px 2px 10px 0px rgba(34, 36, 38, 0.15);
+  box-shadow: 0px 2px 4px 0px rgba(34, 36, 38, 0.12),
+    0px 2px 10px 0px rgba(34, 36, 38, 0.15);
+}
+
+.ui.popup > .header {
+  padding: 0em;
+  font-family: 'Open Sans', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  font-size: 1.14285714em;
+  line-height: 1.2;
+  font-weight: bold;
+}
+
+.ui.popup > .header + .content {
+  padding-top: 0.5em;
+}
+
+.ui.popup:before {
+  position: absolute;
+  content: '';
+  width: 0.71428571em;
+  height: 0.71428571em;
+  background: #ffffff;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  z-index: 2;
+  -webkit-box-shadow: 1px 1px 0px 0px #bababc;
+  box-shadow: 1px 1px 0px 0px #bababc;
+}
+
+/*******************************
+            Types
+*******************************/
+
+/*--------------
+    Tooltip
+---------------*/
+
+/* Content */
+
+[data-tooltip] {
+  position: relative;
+}
+
+/* Arrow */
+
+[data-tooltip]:before {
+  pointer-events: none;
+  position: absolute;
+  content: '';
+  font-size: 1rem;
+  width: 0.71428571em;
+  height: 0.71428571em;
+  background: #ffffff;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  z-index: 2;
+  -webkit-box-shadow: 1px 1px 0px 0px #bababc;
+  box-shadow: 1px 1px 0px 0px #bababc;
+}
+
+/* Popup */
+
+[data-tooltip]:after {
+  pointer-events: none;
+  content: attr(data-tooltip);
+  position: absolute;
+  text-transform: none;
+  text-align: left;
+  white-space: nowrap;
+  font-size: 1rem;
+  border: 1px solid #d4d4d5;
+  line-height: 1.4285em;
+  max-width: none;
+  background: #ffffff;
+  padding: 0.833em 1em;
+  font-weight: normal;
+  font-style: normal;
+  color: rgba(0, 0, 0, 0.87);
+  border-radius: 0.28571429rem;
+  -webkit-box-shadow: 0px 2px 4px 0px rgba(34, 36, 38, 0.12),
+    0px 2px 10px 0px rgba(34, 36, 38, 0.15);
+  box-shadow: 0px 2px 4px 0px rgba(34, 36, 38, 0.12),
+    0px 2px 10px 0px rgba(34, 36, 38, 0.15);
+  z-index: 1;
+}
+
+/* Default Position (Top Center) */
+
+[data-tooltip]:not([data-position]):before {
+  top: auto;
+  right: auto;
+  bottom: 100%;
+  left: 50%;
+  background: #ffffff;
+  margin-left: -0.07142857rem;
+  margin-bottom: 0.14285714rem;
+}
+
+[data-tooltip]:not([data-position]):after {
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  bottom: 100%;
+  margin-bottom: 0.5em;
+}
+
+/* Animation */
+
+[data-tooltip]:before,
+[data-tooltip]:after {
+  pointer-events: none;
+  visibility: hidden;
+}
+
+[data-tooltip]:before {
+  opacity: 0;
+  -webkit-transform: rotate(45deg) scale(0) !important;
+  transform: rotate(45deg) scale(0) !important;
+  -webkit-transform-origin: center top;
+  transform-origin: center top;
+  -webkit-transition: all 0.1s ease;
+  transition: all 0.1s ease;
+}
+
+[data-tooltip]:after {
+  opacity: 1;
+  -webkit-transform-origin: center bottom;
+  transform-origin: center bottom;
+  -webkit-transition: all 0.1s ease;
+  transition: all 0.1s ease;
+}
+
+[data-tooltip]:hover:before,
+[data-tooltip]:hover:after {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+[data-tooltip]:hover:before {
+  -webkit-transform: rotate(45deg) scale(1) !important;
+  transform: rotate(45deg) scale(1) !important;
+  opacity: 1;
+}
+
+/* Animation Position */
+
+[data-tooltip]:after,
+[data-tooltip][data-position='top center']:after,
+[data-tooltip][data-position='bottom center']:after {
+  -webkit-transform: translateX(-50%) scale(0) !important;
+  transform: translateX(-50%) scale(0) !important;
+}
+
+[data-tooltip]:hover:after,
+[data-tooltip][data-position='bottom center']:hover:after {
+  -webkit-transform: translateX(-50%) scale(1) !important;
+  transform: translateX(-50%) scale(1) !important;
+}
+
+[data-tooltip][data-position='left center']:after,
+[data-tooltip][data-position='right center']:after {
+  -webkit-transform: translateY(-50%) scale(0) !important;
+  transform: translateY(-50%) scale(0) !important;
+}
+
+[data-tooltip][data-position='left center']:hover:after,
+[data-tooltip][data-position='right center']:hover:after {
+  -webkit-transform: translateY(-50%) scale(1) !important;
+  transform: translateY(-50%) scale(1) !important;
+}
+
+[data-tooltip][data-position='top left']:after,
+[data-tooltip][data-position='top right']:after,
+[data-tooltip][data-position='bottom left']:after,
+[data-tooltip][data-position='bottom right']:after {
+  -webkit-transform: scale(0) !important;
+  transform: scale(0) !important;
+}
+
+[data-tooltip][data-position='top left']:hover:after,
+[data-tooltip][data-position='top right']:hover:after,
+[data-tooltip][data-position='bottom left']:hover:after,
+[data-tooltip][data-position='bottom right']:hover:after {
+  -webkit-transform: scale(1) !important;
+  transform: scale(1) !important;
+}
+
+/*--------------
+    Inverted
+---------------*/
+
+/* Arrow */
+
+[data-tooltip][data-inverted]:before {
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}
+
+/* Arrow Position */
+
+[data-tooltip][data-inverted]:before {
+  background: #1b1c1d;
+}
+
+/* Popup  */
+
+[data-tooltip][data-inverted]:after {
+  background: #1b1c1d;
+  color: #ffffff;
+  border: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+[data-tooltip][data-inverted]:after .header {
+  background-color: unset;
+  color: #ffffff;
+}
+
+/*--------------
+    Position
+---------------*/
+
+/* Top Center */
+
+[data-position='top center'][data-tooltip]:after {
+  top: auto;
+  right: auto;
+  left: 50%;
+  bottom: 100%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  margin-bottom: 0.5em;
+}
+
+[data-position='top center'][data-tooltip]:before {
+  top: auto;
+  right: auto;
+  bottom: 100%;
+  left: 50%;
+  background: #ffffff;
+  margin-left: -0.07142857rem;
+  margin-bottom: 0.14285714rem;
+}
+
+/* Top Left */
+
+[data-position='top left'][data-tooltip]:after {
+  top: auto;
+  right: auto;
+  left: 0;
+  bottom: 100%;
+  margin-bottom: 0.5em;
+}
+
+[data-position='top left'][data-tooltip]:before {
+  top: auto;
+  right: auto;
+  bottom: 100%;
+  left: 1em;
+  margin-left: -0.07142857rem;
+  margin-bottom: 0.14285714rem;
+}
+
+/* Top Right */
+
+[data-position='top right'][data-tooltip]:after {
+  top: auto;
+  left: auto;
+  right: 0;
+  bottom: 100%;
+  margin-bottom: 0.5em;
+}
+
+[data-position='top right'][data-tooltip]:before {
+  top: auto;
+  left: auto;
+  bottom: 100%;
+  right: 1em;
+  margin-left: -0.07142857rem;
+  margin-bottom: 0.14285714rem;
+}
+
+/* Bottom Center */
+
+[data-position='bottom center'][data-tooltip]:after {
+  bottom: auto;
+  right: auto;
+  left: 50%;
+  top: 100%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  margin-top: 0.5em;
+}
+
+[data-position='bottom center'][data-tooltip]:before {
+  bottom: auto;
+  right: auto;
+  top: 100%;
+  left: 50%;
+  margin-left: -0.07142857rem;
+  margin-top: 0.14285714rem;
+}
+
+/* Bottom Left */
+
+[data-position='bottom left'][data-tooltip]:after {
+  left: 0;
+  top: 100%;
+  margin-top: 0.5em;
+}
+
+[data-position='bottom left'][data-tooltip]:before {
+  bottom: auto;
+  right: auto;
+  top: 100%;
+  left: 1em;
+  margin-left: -0.07142857rem;
+  margin-top: 0.14285714rem;
+}
+
+/* Bottom Right */
+
+[data-position='bottom right'][data-tooltip]:after {
+  right: 0;
+  top: 100%;
+  margin-top: 0.5em;
+}
+
+[data-position='bottom right'][data-tooltip]:before {
+  bottom: auto;
+  left: auto;
+  top: 100%;
+  right: 1em;
+  margin-left: -0.14285714rem;
+  margin-top: 0.07142857rem;
+}
+
+/* Left Center */
+
+[data-position='left center'][data-tooltip]:after {
+  right: 100%;
+  top: 50%;
+  margin-right: 0.5em;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+[data-position='left center'][data-tooltip]:before {
+  right: 100%;
+  top: 50%;
+  margin-top: -0.14285714rem;
+  margin-right: -0.07142857rem;
+}
+
+/* Right Center */
+
+[data-position='right center'][data-tooltip]:after {
+  left: 100%;
+  top: 50%;
+  margin-left: 0.5em;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+[data-position='right center'][data-tooltip]:before {
+  left: 100%;
+  top: 50%;
+  margin-top: -0.07142857rem;
+  margin-left: 0.14285714rem;
+}
+
+/* Arrow */
+
+[data-position~='bottom'][data-tooltip]:before {
+  background: #ffffff;
+  -webkit-box-shadow: -1px -1px 0px 0px #bababc;
+  box-shadow: -1px -1px 0px 0px #bababc;
+}
+
+[data-position='left center'][data-tooltip]:before {
+  background: #ffffff;
+  -webkit-box-shadow: 1px -1px 0px 0px #bababc;
+  box-shadow: 1px -1px 0px 0px #bababc;
+}
+
+[data-position='right center'][data-tooltip]:before {
+  background: #ffffff;
+  -webkit-box-shadow: -1px 1px 0px 0px #bababc;
+  box-shadow: -1px 1px 0px 0px #bababc;
+}
+
+[data-position~='top'][data-tooltip]:before {
+  background: #ffffff;
+}
+
+/* Inverted Arrow Color */
+
+[data-inverted][data-position~='bottom'][data-tooltip]:before {
+  background: #1b1c1d;
+  -webkit-box-shadow: -1px -1px 0px 0px #bababc;
+  box-shadow: -1px -1px 0px 0px #bababc;
+}
+
+[data-inverted][data-position='left center'][data-tooltip]:before {
+  background: #1b1c1d;
+  -webkit-box-shadow: 1px -1px 0px 0px #bababc;
+  box-shadow: 1px -1px 0px 0px #bababc;
+}
+
+[data-inverted][data-position='right center'][data-tooltip]:before {
+  background: #1b1c1d;
+  -webkit-box-shadow: -1px 1px 0px 0px #bababc;
+  box-shadow: -1px 1px 0px 0px #bababc;
+}
+
+[data-inverted][data-position~='top'][data-tooltip]:before {
+  background: #1b1c1d;
+}
+
+[data-position~='bottom'][data-tooltip]:before {
+  -webkit-transform-origin: center bottom;
+  transform-origin: center bottom;
+}
+
+[data-position~='bottom'][data-tooltip]:after {
+  -webkit-transform-origin: center top;
+  transform-origin: center top;
+}
+
+[data-position='left center'][data-tooltip]:before {
+  -webkit-transform-origin: top center;
+  transform-origin: top center;
+}
+
+[data-position='left center'][data-tooltip]:after {
+  -webkit-transform-origin: right center;
+  transform-origin: right center;
+}
+
+[data-position='right center'][data-tooltip]:before {
+  -webkit-transform-origin: right center;
+  transform-origin: right center;
+}
+
+[data-position='right center'][data-tooltip]:after {
+  -webkit-transform-origin: left center;
+  transform-origin: left center;
+}
+
+/*--------------
+     Spacing
+---------------*/
+
+.ui.popup {
+  margin: 0em;
+}
+
+/* Extending from Top */
+
+.ui.top.popup {
+  margin: 0em 0em 0.71428571em;
+}
+
+.ui.top.left.popup {
+  -webkit-transform-origin: left bottom;
+  transform-origin: left bottom;
+}
+
+.ui.top.center.popup {
+  -webkit-transform-origin: center bottom;
+  transform-origin: center bottom;
+}
+
+.ui.top.right.popup {
+  -webkit-transform-origin: right bottom;
+  transform-origin: right bottom;
+}
+
+/* Extending from Vertical Center */
+
+.ui.left.center.popup {
+  margin: 0em 0.71428571em 0em 0em;
+  -webkit-transform-origin: right 50%;
+  transform-origin: right 50%;
+}
+
+.ui.right.center.popup {
+  margin: 0em 0em 0em 0.71428571em;
+  -webkit-transform-origin: left 50%;
+  transform-origin: left 50%;
+}
+
+/* Extending from Bottom */
+
+.ui.bottom.popup {
+  margin: 0.71428571em 0em 0em;
+}
+
+.ui.bottom.left.popup {
+  -webkit-transform-origin: left top;
+  transform-origin: left top;
+}
+
+.ui.bottom.center.popup {
+  -webkit-transform-origin: center top;
+  transform-origin: center top;
+}
+
+.ui.bottom.right.popup {
+  -webkit-transform-origin: right top;
+  transform-origin: right top;
+}
+
+/*--------------
+     Pointer
+---------------*/
+
+/*--- Below ---*/
+
+.ui.bottom.center.popup:before {
+  margin-left: -0.30714286em;
+  top: -0.30714286em;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  -webkit-box-shadow: -1px -1px 0px 0px #bababc;
+  box-shadow: -1px -1px 0px 0px #bababc;
+}
+
+.ui.bottom.left.popup {
+  margin-left: 0em;
+}
+
+/*rtl:rename*/
+
+.ui.bottom.left.popup:before {
+  top: -0.30714286em;
+  left: 1em;
+  right: auto;
+  bottom: auto;
+  margin-left: 0em;
+  -webkit-box-shadow: -1px -1px 0px 0px #bababc;
+  box-shadow: -1px -1px 0px 0px #bababc;
+}
+
+.ui.bottom.right.popup {
+  margin-right: 0em;
+}
+
+/*rtl:rename*/
+
+.ui.bottom.right.popup:before {
+  top: -0.30714286em;
+  right: 1em;
+  bottom: auto;
+  left: auto;
+  margin-left: 0em;
+  -webkit-box-shadow: -1px -1px 0px 0px #bababc;
+  box-shadow: -1px -1px 0px 0px #bababc;
+}
+
+/*--- Above ---*/
+
+.ui.top.center.popup:before {
+  top: auto;
+  right: auto;
+  bottom: -0.30714286em;
+  left: 50%;
+  margin-left: -0.30714286em;
+}
+
+.ui.top.left.popup {
+  margin-left: 0em;
+}
+
+/*rtl:rename*/
+
+.ui.top.left.popup:before {
+  bottom: -0.30714286em;
+  left: 1em;
+  top: auto;
+  right: auto;
+  margin-left: 0em;
+}
+
+.ui.top.right.popup {
+  margin-right: 0em;
+}
+
+/*rtl:rename*/
+
+.ui.top.right.popup:before {
+  bottom: -0.30714286em;
+  right: 1em;
+  top: auto;
+  left: auto;
+  margin-left: 0em;
+}
+
+/*--- Left Center ---*/
+
+/*rtl:rename*/
+
+.ui.left.center.popup:before {
+  top: 50%;
+  right: -0.30714286em;
+  bottom: auto;
+  left: auto;
+  margin-top: -0.30714286em;
+  -webkit-box-shadow: 1px -1px 0px 0px #bababc;
+  box-shadow: 1px -1px 0px 0px #bababc;
+}
+
+/*--- Right Center  ---*/
+
+/*rtl:rename*/
+
+.ui.right.center.popup:before {
+  top: 50%;
+  left: -0.30714286em;
+  bottom: auto;
+  right: auto;
+  margin-top: -0.30714286em;
+  -webkit-box-shadow: -1px 1px 0px 0px #bababc;
+  box-shadow: -1px 1px 0px 0px #bababc;
+}
+
+/* Arrow Color By Location */
+
+.ui.bottom.popup:before {
+  background: #ffffff;
+}
+
+.ui.right.center.popup:before,
+.ui.left.center.popup:before {
+  background: #ffffff;
+}
+
+.ui.top.popup:before {
+  background: #ffffff;
+}
+
+/* Inverted Arrow Color */
+
+.ui.inverted.bottom.popup:before {
+  background: #1b1c1d;
+}
+
+.ui.inverted.right.center.popup:before,
+.ui.inverted.left.center.popup:before {
+  background: #1b1c1d;
+}
+
+.ui.inverted.top.popup:before {
+  background: #1b1c1d;
+}
+
+/*******************************
+            Coupling
+*******************************/
+
+/* Immediate Nested Grid */
+
+.ui.popup > .ui.grid:not(.padded) {
+  width: calc(100% + 1.75rem);
+  margin: -0.7rem -0.875rem;
+}
+
+/*******************************
+            States
+*******************************/
+
+.ui.loading.popup {
+  display: block;
+  visibility: hidden;
+  z-index: -1;
+}
+
+.ui.animating.popup,
+.ui.visible.popup {
+  display: block;
+}
+
+.ui.visible.popup {
+  -webkit-transform: translateZ(0px);
+  transform: translateZ(0px);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/*******************************
+            Variations
+*******************************/
+
+/*--------------
+     Basic
+---------------*/
+
+.ui.basic.popup:before {
+  display: none;
+}
+
+/*--------------
+     Wide
+---------------*/
+
+.ui.wide.popup {
+  max-width: 350px;
+}
+
+.ui[class*='very wide'].popup {
+  max-width: 550px;
+}
+
+@media only screen and (max-width: 767px) {
+  .ui.wide.popup,
+  .ui[class*='very wide'].popup {
+    max-width: 250px;
+  }
+}
+
+/*--------------
+     Fluid
+---------------*/
+
+.ui.fluid.popup {
+  width: 100%;
+  max-width: none;
+}
+
+/*--------------
+     Colors
+---------------*/
+
+/* Inverted colors  */
+
+.ui.inverted.popup {
+  background: #1b1c1d;
+  color: #ffffff;
+  border: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.ui.inverted.popup .header {
+  background-color: unset;
+  color: #ffffff;
+}
+
+.ui.inverted.popup:before {
+  background-color: #1b1c1d;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}
+
+/*--------------
+     Flowing
+---------------*/
+
+.ui.flowing.popup {
+  max-width: none;
+}
+
+/*--------------
+     Sizes
+---------------*/
+
+.ui.mini.popup {
+  font-size: 0.78571429rem;
+}
+
+.ui.tiny.popup {
+  font-size: 0.85714286rem;
+}
+
+.ui.small.popup {
+  font-size: 0.92857143rem;
+}
+
+.ui.popup {
+  font-size: 1rem;
+}
+
+.ui.large.popup {
+  font-size: 1.14285714rem;
+}
+
+.ui.huge.popup {
+  font-size: 1.42857143rem;
+}

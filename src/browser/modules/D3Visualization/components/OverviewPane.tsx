@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React, { useState } from 'react'
-import { Icon } from 'semantic-ui-react'
 
 import { GraphStats, GraphStyleModel } from 'graph-visualization'
 
@@ -33,6 +32,7 @@ import {
   StyledLegendInlineList
 } from './styled'
 import { ShowMoreOrAll } from 'browser-components/ShowMoreOrAll/ShowMoreOrAll'
+import { WarningIcon } from 'browser-components/icons/Icons'
 import { StyledTruncatedMessage } from 'browser/modules/Stream/styled'
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
 
@@ -162,15 +162,16 @@ function OverviewPane({
         <div style={{ paddingBottom: '10px' }}>
           {hasTruncatedFields && (
             <StyledTruncatedMessage>
-              <Icon name="warning sign" />
-              Record fields have been truncated.&nbsp;
+              <WarningIcon />
+              &nbsp;Record fields have been truncated.&nbsp;
               <br />
             </StyledTruncatedMessage>
           )}
           {infoMessage && (
             <StyledTruncatedMessage>
-              <Icon name="warning sign" />
-              {infoMessage}&nbsp;
+              <WarningIcon />
+              &nbsp;{infoMessage}&nbsp;
+              <br />
             </StyledTruncatedMessage>
           )}
           {nodeCount !== null &&

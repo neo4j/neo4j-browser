@@ -34,6 +34,9 @@ import { CodeStatusbar, CodeView } from './CodeView'
 import { ErrorsStatusbar } from './ErrorsView/ErrorsStatusbar'
 import { ErrorsView } from './ErrorsView/ErrorsView'
 import { PlanStatusbar, PlanView } from './PlanView'
+import RelatableView, {
+  RelatableStatusbar
+} from './RelatableView/relatable-view'
 import { VisualizationConnectedBus } from './VisualizationView'
 import { WarningsStatusbar, WarningsView } from './WarningsView'
 import {
@@ -61,9 +64,6 @@ import {
   VisualizationIcon
 } from 'browser-components/icons/Icons'
 import { StyledFrameBody } from 'browser/modules/Frame/styled'
-import RelatableView, {
-  RelatableStatusbar
-} from 'browser/modules/Stream/CypherFrame/relatable-view'
 import { csvFormat, stringModifier } from 'services/bolt/cypherTypesFormatting'
 import { downloadPNGFromSVG, downloadSVG } from 'services/exporting/imageUtils'
 import { CSVSerializer } from 'services/serializer'

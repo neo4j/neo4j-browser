@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 27 27">
+    <title>Asset 7</title>
+    <rect x="0.5" y="0.5" width="26" height="26"
+          style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round"/>
+    <line x1="26.5" y1="5.7" x2="0.5" y2="5.7"
+          style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round"/>
+    <line x1="5.7" y1="0.5" x2="5.7" y2="26.5"
+          style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round"/>
+    <path d="M15.5,12.5l2-2v5a2,2,0,0,1-2,2h-5l2-2"
+          style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round"/>
+    <line x1="17.5" y1="10.5" x2="19.5" y2="12.5"
+          style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round"/>
+    <line x1="10.5" y1="17.5" x2="12.5" y2="19.5"
+          style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round"/>
+</svg>
