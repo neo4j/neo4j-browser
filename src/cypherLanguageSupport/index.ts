@@ -24,3 +24,11 @@ export {
   setEditorTheme,
   initalizeCypherSupport as setupCypherSupport
 } from './monaco-editor/editorSupport'
+
+export {
+  toFunction,
+  toLabel,
+  toProcedure,
+  toPropertyKey,
+  toRelationshipType
+} from './monaco-editor/editorSchemaConverter'

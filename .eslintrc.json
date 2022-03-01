@@ -95,7 +95,7 @@
           "error",
           {
             "paths": ["redux", "react-redux", "react-suber"],
-            "patterns": ["^browser*", "shared*", "services*"]
+            "patterns": ["browser/*", "shared/*", "services/*"]
           }
         ]
       }

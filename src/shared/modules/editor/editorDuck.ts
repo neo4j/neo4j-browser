@@ -17,11 +17,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { setupAutocomplete, setupCypherSupport } from 'cypherLanguageSupport'
+import {
+  setupAutocomplete,
+  setupCypherSupport,
+  toFunction,
+  toLabel,
+  toProcedure,
+  toPropertyKey,
+  toRelationshipType
+} from 'cypherLanguageSupport'
 import { Action } from 'redux'
 import { Epic } from 'redux-observable'
 import Rx from 'rxjs/Rx'
 
+import consoleCommands from 'browser/modules/Editor/consoleCommands'
 import { getUrlParamValue } from 'services/utils'
 import { GlobalState } from 'shared/globalState'
 import { APP_START, URL_ARGUMENTS_CHANGE } from 'shared/modules/app/appDuck'
@@ -156,7 +165,18 @@ export const updateEditorSupportSchemaEpic: Epic<Action, GlobalState> = (
   store
 ) =>
   actions$
+    // Kör denna hela tiden??? det måste vara dåligt
     .do(() => {
-      setupAutocomplete(store)
+      const { params, meta } = store.getState()
+
+      setupAutocomplete({
+        consoleCommands,
+        functions: meta.functions.map(toFunction),
+        labels: meta.labels.map(toLabel),
+        parameters: Object.keys(params),
+        procedures: meta.procedures.map(toProcedure),
+        propertyKeys: meta.properties.map(toPropertyKey),
+        relationshipTypes: meta.relationshipTypes.map(toRelationshipType)
+      })
     })
     .ignoreElements()

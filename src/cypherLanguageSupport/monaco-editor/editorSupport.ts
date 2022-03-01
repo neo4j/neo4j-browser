@@ -19,34 +19,33 @@
  */
 import {
   CypherEditorSupport,
-  EditorSupportCompletionItem
+  EditorSupportCompletionItem,
+  EditorSupportSchema
 } from 'cypher-editor-support'
 import { editor, languages } from 'monaco-editor'
 
 import { CypherTokensProvider } from '../language/CypherTokensProvider'
-import consoleCommands from '../language/consoleCommands'
-import functions from '../language/functions'
+import cypherBaseFunctions from '../language/cypherBaseFunctions'
 import { monacoDarkTheme, monacoLightTheme } from './CypherMonacoThemes'
-import {
-  toFunction,
-  toLabel,
-  toProcedure,
-  toPropertyKey,
-  toRelationshipType
-} from './editorSchemaConverter'
 
-export function setupAutocomplete(store: any): void {
-  const state = store.getState()
-  const schema = {
-    consoleCommands: consoleCommands,
-    parameters: Object.keys(state.params),
-    labels: state.meta.labels.map(toLabel),
-    relationshipTypes: state.meta.relationshipTypes.map(toRelationshipType),
-    propertyKeys: state.meta.properties.map(toPropertyKey),
-    functions: [...functions, ...state.meta.functions.map(toFunction)],
-    procedures: state.meta.procedures.map(toProcedure)
-  }
-  editorSupport.setSchema(schema)
+export function setupAutocomplete({
+  consoleCommands,
+  functions = [],
+  labels,
+  parameters,
+  procedures,
+  propertyKeys,
+  relationshipTypes
+}: EditorSupportSchema): void {
+  editorSupport.setSchema({
+    consoleCommands,
+    parameters,
+    labels,
+    relationshipTypes,
+    propertyKeys,
+    functions: [...cypherBaseFunctions, ...functions],
+    procedures
+  })
 }
 
 export function initalizeCypherSupport(): void {
