@@ -25,7 +25,9 @@
           "*/neo4j-arc/*",
           "neo4j-arc/common/*",
           "neo4j-arc/graph-visualization/*",
-          "neo4j-arc/cypherLanguageSupport/*"
+          "neo4j-arc/cypherLanguageSupport/*",
+          "^cypher-editor-support$",
+          "^monaco-editor$"
         ]
       }
     ]

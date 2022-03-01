@@ -36,9 +36,8 @@ describe('Monaco', () => {
         onExecute={noOp}
         isFullscreen={false}
         toggleFullscreen={noOp}
-        bus={{ self: noOp } as any}
-        params={{}}
         id="id"
+        sendCypherQuery={(() => {}) as any}
       />
     )
 
