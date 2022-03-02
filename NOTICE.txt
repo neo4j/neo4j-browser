@@ -693,6 +693,10 @@ Third-party licenses
 │  │  └─ VendorUrl: https://github.com/substack/camelize
 │  ├─ canvg@3.0.7
 │  │  └─ URL: https://github.com/canvg/canvg
+│  ├─ ccount@2.0.1
+│  │  ├─ URL: https://github.com/wooorm/ccount.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
 │  ├─ chalk@2.4.2
 │  │  └─ URL: https://github.com/chalk/chalk.git
 │  ├─ character-entities@2.0.1
@@ -804,6 +808,10 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/sindresorhus/escape-string-regexp.git
 │  │  ├─ VendorName: Sindre Sorhus
 │  │  └─ VendorUrl: sindresorhus.com
+│  ├─ escape-string-regexp@5.0.0
+│  │  ├─ URL: https://github.com/sindresorhus/escape-string-regexp.git
+│  │  ├─ VendorName: Sindre Sorhus
+│  │  └─ VendorUrl: https://sindresorhus.com
 │  ├─ event-target-shim@5.0.1
 │  │  ├─ URL: https://github.com/mysticatea/event-target-shim.git
 │  │  ├─ VendorName: Toru Nagashima
@@ -1010,6 +1018,10 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/lodash/lodash.git
 │  │  ├─ VendorName: John-David Dalton
 │  │  └─ VendorUrl: https://lodash.com/
+│  ├─ longest-streak@3.0.1
+│  │  ├─ URL: https://github.com/wooorm/longest-streak.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
 │  ├─ loose-envify@1.4.0
 │  │  ├─ URL: git://github.com/zertosh/loose-envify.git
 │  │  ├─ VendorName: Andres Suarez
@@ -1017,16 +1029,52 @@ Third-party licenses
 │  ├─ luxon@2.0.2
 │  │  ├─ URL: https://github.com/moment/luxon
 │  │  └─ VendorName: Isaac Cambron
+│  ├─ markdown-table@3.0.2
+│  │  ├─ URL: https://github.com/wooorm/markdown-table.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
 │  ├─ mdast-util-definitions@5.1.0
 │  │  ├─ URL: https://github.com/syntax-tree/mdast-util-definitions.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ mdast-util-find-and-replace@2.1.0
+│  │  ├─ URL: https://github.com/syntax-tree/mdast-util-find-and-replace.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
 │  ├─ mdast-util-from-markdown@1.2.0
 │  │  ├─ URL: https://github.com/syntax-tree/mdast-util-from-markdown.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
+│  ├─ mdast-util-gfm-autolink-literal@1.0.2
+│  │  ├─ URL: https://github.com/syntax-tree/mdast-util-gfm-autolink-literal.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ mdast-util-gfm-footnote@1.0.1
+│  │  ├─ URL: https://github.com/syntax-tree/mdast-util-gfm-footnote.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ mdast-util-gfm-strikethrough@1.0.1
+│  │  ├─ URL: https://github.com/syntax-tree/mdast-util-gfm-strikethrough.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ mdast-util-gfm-table@1.0.3
+│  │  ├─ URL: https://github.com/syntax-tree/mdast-util-gfm-table.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ mdast-util-gfm-task-list-item@1.0.1
+│  │  ├─ URL: https://github.com/syntax-tree/mdast-util-gfm-task-list-item.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ mdast-util-gfm@2.0.0
+│  │  ├─ URL: https://github.com/syntax-tree/mdast-util-gfm.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
 │  ├─ mdast-util-to-hast@12.1.1
 │  │  ├─ URL: https://github.com/syntax-tree/mdast-util-to-hast.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ mdast-util-to-markdown@1.3.0
+│  │  ├─ URL: https://github.com/syntax-tree/mdast-util-to-markdown.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
 │  ├─ mdast-util-to-string@3.1.0
@@ -1047,6 +1095,34 @@ Third-party licenses
 │  │  └─ VendorUrl: https://github.com/mesqueeb/merge-anything#readme
 │  ├─ micromark-core-commonmark@1.0.6
 │  │  ├─ URL: https://github.com/micromark/micromark/tree/main/packages/micromark-core-commonmark
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-extension-gfm-autolink-literal@1.0.3
+│  │  ├─ URL: https://github.com/micromark/micromark-extension-gfm-autolink-literal.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-extension-gfm-footnote@1.0.3
+│  │  ├─ URL: https://github.com/micromark/micromark-extension-gfm-footnote.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-extension-gfm-strikethrough@1.0.4
+│  │  ├─ URL: https://github.com/micromark/micromark-extension-gfm-strikethrough.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-extension-gfm-table@1.0.5
+│  │  ├─ URL: https://github.com/micromark/micromark-extension-gfm-table.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-extension-gfm-tagfilter@1.0.1
+│  │  ├─ URL: https://github.com/micromark/micromark-extension-gfm-tagfilter.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-extension-gfm-task-list-item@1.0.3
+│  │  ├─ URL: https://github.com/micromark/micromark-extension-gfm-task-list-item.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-extension-gfm@2.0.1
+│  │  ├─ URL: https://github.com/micromark/micromark-extension-gfm.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
 │  ├─ micromark-factory-destination@1.0.0
@@ -1302,6 +1378,10 @@ Third-party licenses
 │  ├─ regexp.prototype.flags@1.3.0
 │  │  ├─ URL: git://github.com/es-shims/RegExp.prototype.flags.git
 │  │  └─ VendorName: Jordan Harband
+│  ├─ remark-gfm@3.0.1
+│  │  ├─ URL: https://github.com/remarkjs/remark-gfm.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
 │  ├─ remark-parse@10.0.1
 │  │  ├─ URL: https://github.com/remarkjs/remark/tree/main/packages/remark-parse
 │  │  ├─ VendorName: Titus Wormer
@@ -1509,9 +1589,13 @@ Third-party licenses
 │  ├─ yargs@15.4.1
 │  │  ├─ URL: https://github.com/yargs/yargs.git
 │  │  └─ VendorUrl: https://yargs.js.org/
-│  └─ zen-observable@0.8.15
-│     ├─ URL: https://github.com/zenparsing/zen-observable.git
-│     └─ VendorUrl: https://github.com/zenparsing/zen-observable
+│  ├─ zen-observable@0.8.15
+│  │  ├─ URL: https://github.com/zenparsing/zen-observable.git
+│  │  └─ VendorUrl: https://github.com/zenparsing/zen-observable
+│  └─ zwitch@2.0.2
+│     ├─ URL: https://github.com/wooorm/zwitch.git
+│     ├─ VendorName: Titus Wormer
+│     └─ VendorUrl: https://wooorm.com
 └─ MIT OR SEE LICENSE IN FEEL-FREE.md
    └─ rgbcolor@1.0.1
       ├─ URL: https://github.com/yetzt/node-rgbcolor.git

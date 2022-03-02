@@ -1322,7 +1322,7 @@ SOFTWARE.
 
 -----
 
-The following software may be included in this product: bail, character-entities, mdast-util-to-string, unist-util-position, unist-util-visit. A copy of the source code may be downloaded from https://github.com/wooorm/bail.git (bail), https://github.com/wooorm/character-entities.git (character-entities), https://github.com/syntax-tree/mdast-util-to-string.git (mdast-util-to-string), https://github.com/syntax-tree/unist-util-position.git (unist-util-position), https://github.com/syntax-tree/unist-util-visit.git (unist-util-visit). This software contains the following license and notice below:
+The following software may be included in this product: bail, ccount, character-entities, mdast-util-to-string, unist-util-position, unist-util-visit. A copy of the source code may be downloaded from https://github.com/wooorm/bail.git (bail), https://github.com/wooorm/ccount.git (ccount), https://github.com/wooorm/character-entities.git (character-entities), https://github.com/syntax-tree/mdast-util-to-string.git (mdast-util-to-string), https://github.com/syntax-tree/unist-util-position.git (unist-util-position), https://github.com/syntax-tree/unist-util-visit.git (unist-util-visit). This software contains the following license and notice below:
 
 (The MIT License)
 
@@ -1590,7 +1590,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 -----
 
-The following software may be included in this product: comma-separated-tokens, hast-util-whitespace, mdast-util-to-hast, remark-rehype, space-separated-tokens, unist-util-generated, unist-util-stringify-position, unist-util-visit-parents. A copy of the source code may be downloaded from https://github.com/wooorm/comma-separated-tokens.git (comma-separated-tokens), https://github.com/syntax-tree/hast-util-whitespace.git (hast-util-whitespace), https://github.com/syntax-tree/mdast-util-to-hast.git (mdast-util-to-hast), https://github.com/remarkjs/remark-rehype.git (remark-rehype), https://github.com/wooorm/space-separated-tokens.git (space-separated-tokens), https://github.com/syntax-tree/unist-util-generated.git (unist-util-generated), https://github.com/syntax-tree/unist-util-stringify-position.git (unist-util-stringify-position), https://github.com/syntax-tree/unist-util-visit-parents.git (unist-util-visit-parents). This software contains the following license and notice below:
+The following software may be included in this product: comma-separated-tokens, hast-util-whitespace, mdast-util-to-hast, remark-rehype, space-separated-tokens, unist-util-generated, unist-util-stringify-position, unist-util-visit-parents, zwitch. A copy of the source code may be downloaded from https://github.com/wooorm/comma-separated-tokens.git (comma-separated-tokens), https://github.com/syntax-tree/hast-util-whitespace.git (hast-util-whitespace), https://github.com/syntax-tree/mdast-util-to-hast.git (mdast-util-to-hast), https://github.com/remarkjs/remark-rehype.git (remark-rehype), https://github.com/wooorm/space-separated-tokens.git (space-separated-tokens), https://github.com/syntax-tree/unist-util-generated.git (unist-util-generated), https://github.com/syntax-tree/unist-util-stringify-position.git (unist-util-stringify-position), https://github.com/syntax-tree/unist-util-visit-parents.git (unist-util-visit-parents), https://github.com/wooorm/zwitch.git (zwitch). This software contains the following license and notice below:
 
 (The MIT License)
 
@@ -2655,7 +2655,7 @@ THE SOFTWARE.
 
 -----
 
-The following software may be included in this product: decode-named-character-reference. A copy of the source code may be downloaded from https://github.com/wooorm/decode-named-character-reference.git. This software contains the following license and notice below:
+The following software may be included in this product: decode-named-character-reference, mdast-util-gfm-footnote, micromark-extension-gfm-footnote. A copy of the source code may be downloaded from https://github.com/wooorm/decode-named-character-reference.git (decode-named-character-reference), https://github.com/syntax-tree/mdast-util-gfm-footnote.git (mdast-util-gfm-footnote), https://github.com/micromark/micromark-extension-gfm-footnote.git (micromark-extension-gfm-footnote). This software contains the following license and notice below:
 
 (The MIT License)
 
@@ -3323,6 +3323,20 @@ SOFTWARE.
 
 -----
 
+The following software may be included in this product: escape-string-regexp, is-plain-obj. A copy of the source code may be downloaded from https://github.com/sindresorhus/escape-string-regexp.git (escape-string-regexp), https://github.com/sindresorhus/is-plain-obj.git (is-plain-obj). This software contains the following license and notice below:
+
+MIT License
+
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+-----
+
 The following software may be included in this product: event-target-shim. A copy of the source code may be downloaded from https://github.com/mysticatea/event-target-shim.git. This software contains the following license and notice below:
 
 The MIT License (MIT)
@@ -3973,20 +3987,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-
------
-
-The following software may be included in this product: is-plain-obj. A copy of the source code may be downloaded from https://github.com/sindresorhus/is-plain-obj.git. This software contains the following license and notice below:
-
-MIT License
-
-Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----
 
@@ -5182,6 +5182,33 @@ terms above.
 
 -----
 
+The following software may be included in this product: longest-streak, property-information. A copy of the source code may be downloaded from https://github.com/wooorm/longest-streak.git (longest-streak), https://github.com/wooorm/property-information.git (property-information). This software contains the following license and notice below:
+
+(The MIT License)
+
+Copyright (c) 2015 Titus Wormer <mailto:tituswormer@gmail.com>
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+'Software'), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+-----
+
 The following software may be included in this product: loose-envify. A copy of the source code may be downloaded from git://github.com/zertosh/loose-envify.git. This software contains the following license and notice below:
 
 The MIT License (MIT)
@@ -5240,6 +5267,33 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 -----
 
+The following software may be included in this product: markdown-table. A copy of the source code may be downloaded from https://github.com/wooorm/markdown-table.git. This software contains the following license and notice below:
+
+(The MIT License)
+
+Copyright (c) 2014 Titus Wormer <tituswormer@gmail.com>
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+'Software'), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+-----
+
 The following software may be included in this product: mdast-util-definitions. A copy of the source code may be downloaded from https://github.com/syntax-tree/mdast-util-definitions.git. This software contains the following license and notice below:
 
 (The MIT License)
@@ -5267,7 +5321,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----
 
-The following software may be included in this product: mdast-util-from-markdown. A copy of the source code may be downloaded from https://github.com/syntax-tree/mdast-util-from-markdown.git. This software contains the following license and notice below:
+The following software may be included in this product: mdast-util-find-and-replace, mdast-util-from-markdown, mdast-util-gfm, mdast-util-gfm-autolink-literal, mdast-util-gfm-strikethrough, mdast-util-gfm-table, mdast-util-gfm-task-list-item, mdast-util-to-markdown, micromark-extension-gfm, micromark-extension-gfm-autolink-literal, micromark-extension-gfm-strikethrough, micromark-extension-gfm-table, micromark-extension-gfm-tagfilter, micromark-extension-gfm-task-list-item, remark-gfm. A copy of the source code may be downloaded from https://github.com/syntax-tree/mdast-util-find-and-replace.git (mdast-util-find-and-replace), https://github.com/syntax-tree/mdast-util-from-markdown.git (mdast-util-from-markdown), https://github.com/syntax-tree/mdast-util-gfm.git (mdast-util-gfm), https://github.com/syntax-tree/mdast-util-gfm-autolink-literal.git (mdast-util-gfm-autolink-literal), https://github.com/syntax-tree/mdast-util-gfm-strikethrough.git (mdast-util-gfm-strikethrough), https://github.com/syntax-tree/mdast-util-gfm-table.git (mdast-util-gfm-table), https://github.com/syntax-tree/mdast-util-gfm-task-list-item.git (mdast-util-gfm-task-list-item), https://github.com/syntax-tree/mdast-util-to-markdown.git (mdast-util-to-markdown), https://github.com/micromark/micromark-extension-gfm.git (micromark-extension-gfm), https://github.com/micromark/micromark-extension-gfm-autolink-literal.git (micromark-extension-gfm-autolink-literal), https://github.com/micromark/micromark-extension-gfm-strikethrough.git (micromark-extension-gfm-strikethrough), https://github.com/micromark/micromark-extension-gfm-table.git (micromark-extension-gfm-table), https://github.com/micromark/micromark-extension-gfm-tagfilter.git (micromark-extension-gfm-tagfilter), https://github.com/micromark/micromark-extension-gfm-task-list-item.git (micromark-extension-gfm-task-list-item), https://github.com/remarkjs/remark-gfm.git (remark-gfm). This software contains the following license and notice below:
 
 (The MIT License)
 
@@ -6342,33 +6396,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-
------
-
-The following software may be included in this product: property-information. A copy of the source code may be downloaded from https://github.com/wooorm/property-information.git. This software contains the following license and notice below:
-
-(The MIT License)
-
-Copyright (c) 2015 Titus Wormer <mailto:tituswormer@gmail.com>
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-'Software'), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----
 
