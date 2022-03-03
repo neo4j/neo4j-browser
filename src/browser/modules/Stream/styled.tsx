@@ -406,8 +406,8 @@ export const StyledMissingParamsTemplateLink = styled.div`
 
 export const StyledParamsTemplateClickableArea = styled.a`
   font-family: ${props => props.theme.codeBlockFont};
-  font-size: 1.2rem;
-  line-height: 1.8rem;
+  font-size: 12px;
+  line-height: 18px;
   background: ${props => props.theme.codeBlockBackground};
   color: ${props => props.theme.codeBlockTextColor};
   cursor: pointer;
