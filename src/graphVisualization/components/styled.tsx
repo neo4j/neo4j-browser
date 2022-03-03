@@ -143,7 +143,7 @@ export const StyledZoomButton = styled.button`
 export const StyledZoomInfoOverlay = styled.div`
   position: absolute;
   width: 100%;
-  bottom: 2rem;
+  bottom: 20px;
   display: flex;
   flex-direction: row;
   pointer-events: none;
@@ -157,12 +157,12 @@ export const StyledZoomInfo = styled.div`
   box-shadow: ${props => props.theme.standardShadow}
   margin-left: auto;
   margin-right: auto;
-  padding: 1rem;
+  padding: 10px;
   flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   align-items: baseline;
-  gap: 1rem;
+  gap: 10px;
   pointer-events: auto;
 `
 
@@ -170,11 +170,11 @@ export const StyledZoomInfoTextContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 1rem;
+  gap: 10px;
 `
 
 export const StyledZoomInfoText = styled.span`
-  line-height: 1.5rem;
+  line-height: 15px;
 `
 
 export const StyledZoomInfoIconContainer = styled.div`
@@ -182,9 +182,9 @@ export const StyledZoomInfoIconContainer = styled.div`
 `
 
 export const StyledZoomInfoOverlayDoNotDisplayButton = styled.button`
-  padding: 0 3rem;
-  font-size: 1.2rem;
-  line-height: 1.5rem;
+  padding: 0 30px;
+  font-size: 12px;
+  line-height: 15px;
   border: none;
   outline: none;
   background-color: inherit;
