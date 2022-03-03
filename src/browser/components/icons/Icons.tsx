@@ -273,12 +273,7 @@ export const ErrorIcon = (): JSX.Element => (
 )
 
 export const BinIcon = (): JSX.Element => (
-  <IconContainer
-    activeStyle="white"
-    inactiveStyle="white"
-    suppressIconStyles="true"
-    className="sl-bin"
-  />
+  <IconContainer activeStyle="white" inactiveStyle="white" className="sl-bin" />
 )
 
 type WidthProps = { width?: number }
@@ -373,7 +368,7 @@ export const CheckedSquareIcon = (): JSX.Element => (
 )
 
 export const ExclamationTriangleIcon = (): JSX.Element => (
-  <IconContainer suppressIconStyles className="fa fa-exclamation-triangle" />
+  <IconContainer className="fa fa-exclamation-triangle" />
 )
 
 export const FireExtinguisherIcon = ({

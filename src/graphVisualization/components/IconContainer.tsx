@@ -60,7 +60,6 @@ type IconContainerProps = {
   width?: number
   /** controlling size of icons that are fonts */
   fontSize?: string
-  suppressIconStyles?: true | string
   className?: string
   style?: CSSProperties
   children?: ReactNode
