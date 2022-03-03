@@ -2402,11 +2402,6 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/unist/-/unist-2.0.3.tgz#9c088679876f374eb5983f150d4787aa6fb32d7e"
   integrity sha1-nAiGeYdvN061mD8VDUeHqm+zLX4=
 
-"@types/url-parse@^1.4.3":
-  version "1.4.3"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/url-parse/-/url-parse-1.4.3.tgz#fba49d90f834951cb000a674efee3d6f20968329"
-  integrity sha1-+6SdkPg0lRywAKZ07+49byCWgyk=
-
 "@types/uuid@^8.3.0":
   version "8.3.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/uuid/-/uuid-8.3.0.tgz#215c231dff736d5ba92410e6d602050cce7e273f"
@@ -14030,14 +14025,6 @@ url-loader@^1.1.2:
     loader-utils "^1.1.0"
     mime "^2.0.3"
     schema-utils "^1.0.0"
-
-url-parse@^1.1.9:
-  version "1.4.7"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/url-parse/-/url-parse-1.4.7.tgz#a8a83535e8c00a316e403a5db4ac1b9b853ae278"
-  integrity sha1-qKg1NejACjFuQDpdtKwbm4U64ng=
-  dependencies:
-    querystringify "^2.1.1"
-    requires-port "^1.0.0"
 
 url-parse@^1.4.3, url-parse@^1.5.3:
   version "1.5.9"

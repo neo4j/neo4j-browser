@@ -20,7 +20,6 @@
 
 /* global btoa */
 import { isNumber, trimEnd, trimStart } from 'lodash-es'
-import parseUrl from 'url-parse'
 
 import { CLOUD, DESKTOP, WEB } from 'shared/modules/app/appDuck'
 
@@ -145,7 +144,9 @@ export const firstSuccessPromise = (list: any, fn: any) => {
 
 export const hostIsAllowed = (url: string, allowlistStr?: string): boolean => {
   if (allowlistStr === '*') return true
-  const urlInfo = getUrlInfo(url)
+  const urlInfo = parseURLWithDefaultProtocol(url)
+  if (!urlInfo) return false
+
   const hostname = urlInfo.hostname
   const hostnamePlusProtocol = `${urlInfo.protocol}//${hostname}`
   const allowlistHostsList = allowlistStr
@@ -163,9 +164,13 @@ export const extractAllowlistFromConfigString = (str: string): string[] =>
 export const addProtocolsToUrlList = (urlList: (string | null)[]): string[] =>
   urlList.reduce((all: string[], uri: string | null) => {
     if (!uri || uri === '*') return all
-    const urlInfo = getUrlInfo(uri)
-    if (urlInfo.protocol) return all.concat(uri)
-    return all.concat([`https://${uri}`, `http://${uri}`])
+
+    if (isValidURL(uri)) {
+      return all.concat(uri)
+    } else {
+      const withProtocols = [`https://${uri}`, `http://${uri}`]
+      return all.concat(withProtocols.filter(isValidURL))
+    }
   }, [])
 
 export const resolveAllowlistWildcard = (
@@ -177,48 +182,24 @@ export const resolveAllowlistWildcard = (
   }, [])
 }
 
-export const getUrlInfo = (
-  url: string
-): {
-  protocol: string
-  username: string
-  password: string
-  host: string
-  hostname: string
-  port: string
-  pathname: string
-  query: {
-    [key: string]: string | undefined
+function isValidURL(url: string): boolean {
+  try {
+    new URL(url)
+    return true
+  } catch {
+    return false
   }
-  hash: string
-} => {
+}
+export const parseURLWithDefaultProtocol = (url: string): null | URL => {
   const matcher = url.match(/^(.+:\/\/)?/)
   const protocolMissing = matcher === null || matcher[1] === undefined
   // prepend a default protocol, if none was found
   const urlWithProtocol = protocolMissing ? `http://${url}` : url
 
-  const {
-    protocol,
-    username,
-    password,
-    host,
-    hostname,
-    port,
-    pathname,
-    query,
-    hash
-  } = parseUrl(urlWithProtocol, {})
-
-  return {
-    protocol: protocolMissing ? '' : protocol,
-    username,
-    password,
-    host,
-    hostname,
-    port,
-    pathname,
-    query,
-    hash
+  try {
+    return new URL(urlWithProtocol)
+  } catch {
+    return null
   }
 }
 
@@ -274,6 +255,7 @@ export const getBrowserName = function () {
   if ((document as any).documentMode) {
     return 'Internet Explorer'
   }
+  //@ts-ignore
   if (window.StyleMedia) {
     return 'Edge'
   }
@@ -479,15 +461,12 @@ export async function sleep(ms: any) {
 }
 
 export function isCloudHost(host: string, cloudDomains: string[]): boolean {
-  return isCloudParsedUrl(parseUrl(host), cloudDomains)
-}
-
-function isCloudParsedUrl(
-  parsedUrl: parseUrl,
-  cloudDomains: string[]
-): boolean {
-  const { hostname } = parsedUrl
-  return cloudDomains.some(cloudDomain => hostname.endsWith(cloudDomain))
+  try {
+    const { hostname } = new URL(host)
+    return cloudDomains.some(cloudDomain => hostname.endsWith(cloudDomain))
+  } catch {
+    return false
+  }
 }
 
 export function detectRuntimeEnv(win?: any, cloudDomains: string[] = []) {
@@ -495,17 +474,18 @@ export function detectRuntimeEnv(win?: any, cloudDomains: string[] = []) {
     return DESKTOP
   }
 
-  const parsedUrl =
-    win && win.location && win.location.href
-      ? parseUrl(win.location.href, true)
-      : parseUrl('')
-  if (
-    parsedUrl.query.neo4jDesktopApiUrl &&
-    parsedUrl.query.neo4jDesktopGraphAppClientId
-  ) {
-    return DESKTOP
-  }
-  if (isCloudParsedUrl(parsedUrl, cloudDomains)) {
+  try {
+    const { searchParams } = new URL(win?.location?.href || '')
+
+    if (
+      searchParams.get('neo4jDesktopApiUrl') &&
+      searchParams.get('neo4jDesktopGraphAppClientId')
+    ) {
+      return DESKTOP
+    }
+  } catch {}
+
+  if (isCloudHost(win?.location?.href ?? '', cloudDomains)) {
     return CLOUD
   }
 

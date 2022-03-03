@@ -33,7 +33,7 @@ import {
   DiscoverableData
 } from 'shared/modules/connections/connectionsDuck'
 import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
-import { getUrlInfo, isCloudHost } from 'shared/services/utils'
+import { parseURLWithDefaultProtocol, isCloudHost } from 'shared/services/utils'
 
 type ExtraDiscoveryFields = {
   host?: string
@@ -124,8 +124,9 @@ export async function getAndMergeDiscoveryData({
   let dataFromForceUrl: DiscoverableData = {}
   let dataFromConnection: DiscoverableData = {}
 
-  if (forceUrl) {
-    const { username, protocol, host } = getUrlInfo(forceUrl)
+  const forceUrlData = forceUrl ? parseURLWithDefaultProtocol(forceUrl) : null
+  if (forceUrlData) {
+    const { username, protocol, host } = forceUrlData
 
     const discovered = {
       username,

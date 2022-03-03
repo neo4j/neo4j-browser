@@ -1299,10 +1299,6 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/wooorm/property-information.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
-│  ├─ querystringify@2.2.0
-│  │  ├─ URL: https://github.com/unshiftio/querystringify
-│  │  ├─ VendorName: Arnout Kazemier
-│  │  └─ VendorUrl: https://github.com/unshiftio/querystringify
 │  ├─ raf@3.4.1
 │  │  ├─ URL: git://github.com/chrisdickinson/raf.git
 │  │  └─ VendorName: Chris Dickinson
@@ -1394,10 +1390,6 @@ Third-party licenses
 │  │  ├─ URL: git://github.com/troygoode/node-require-directory.git
 │  │  ├─ VendorName: Troy Goode
 │  │  └─ VendorUrl: https://github.com/troygoode/node-require-directory/
-│  ├─ requires-port@1.0.0
-│  │  ├─ URL: https://github.com/unshiftio/requires-port
-│  │  ├─ VendorName: Arnout Kazemier
-│  │  └─ VendorUrl: https://github.com/unshiftio/requires-port
 │  ├─ ret@0.1.15
 │  │  ├─ URL: git://github.com/fent/ret.js.git
 │  │  ├─ VendorName: Roly Fentanes
@@ -1551,9 +1543,6 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/syntax-tree/unist-util-visit.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
-│  ├─ url-parse@1.4.7
-│  │  ├─ URL: https://github.com/unshiftio/url-parse.git
-│  │  └─ VendorName: Arnout Kazemier
 │  ├─ util-deprecate@1.0.2
 │  │  ├─ URL: git://github.com/TooTallNate/util-deprecate.git
 │  │  ├─ VendorName: Nathan Rajlich
