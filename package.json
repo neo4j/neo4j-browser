@@ -103,6 +103,7 @@
     "@types/semver": "^7.3.4",
     "@types/styled-components": "^5.1.1",
     "@types/uuid": "^8.3.0",
+    "@types/whatwg-url": "^8.2.1",
     "@typescript-eslint/eslint-plugin": "^3.9.0",
     "@typescript-eslint/parser": "^3.9.0",
     "autoprefixer": "^7.1.4",
@@ -224,6 +225,7 @@
     "semver": "^5.5.0",
     "styled-components": "^4.0.0",
     "suber": "^5.0.1",
-    "uuid": "^3.0.1"
+    "uuid": "^3.0.1",
+    "whatwg-url": "^11.0.0"
   }
 }

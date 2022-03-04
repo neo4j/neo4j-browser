@@ -19,6 +19,7 @@
  */
 import { includes, last, split, startsWith } from 'lodash-es'
 import React from 'react'
+import { URL } from 'whatwg-url'
 
 import {
   addProtocolsToUrlList,

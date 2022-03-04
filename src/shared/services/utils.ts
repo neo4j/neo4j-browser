@@ -20,6 +20,7 @@
 
 /* global btoa */
 import { isNumber, trimEnd, trimStart } from 'lodash-es'
+import { URL } from 'whatwg-url' // Firefox & Chrome builtin URL doesn't handle bolt:// protocol properly https://bugs.chromium.org/p/chromium/issues/detail?id=869291
 
 import { CLOUD, DESKTOP, WEB } from 'shared/modules/app/appDuck'
 

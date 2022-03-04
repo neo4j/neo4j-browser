@@ -102,6 +102,7 @@ import {
   getUserDirectTxMetadata
 } from 'shared/services/bolt/txMetadata'
 import { objToCss, parseGrass } from 'shared/services/grassUtils'
+import { URL } from 'whatwg-url'
 
 const PLAY_FRAME_TYPES = ['play', 'play-remote']
 

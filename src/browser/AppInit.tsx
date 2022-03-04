@@ -57,6 +57,7 @@ import { getUuid, updateUdcData } from 'shared/modules/udc/udcDuck'
 import epics from 'shared/rootEpic'
 import reducers from 'shared/rootReducer'
 import { getTelemetrySettings } from 'shared/utils/selectors'
+import { URL } from 'whatwg-url'
 
 // Configure localstorage sync
 applyKeys(

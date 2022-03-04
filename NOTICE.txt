@@ -246,10 +246,14 @@ Third-party licenses
 │     ├─ URL: https://github.com/antlr/antlr4.git
 │     └─ VendorUrl: https://github.com/antlr/antlr4
 ├─ BSD-2-Clause
-│  └─ terser@5.3.2
-│     ├─ URL: https://github.com/terser/terser
-│     ├─ VendorName: Mihai Bazon
-│     └─ VendorUrl: https://terser.org/
+│  ├─ terser@5.3.2
+│  │  ├─ URL: https://github.com/terser/terser
+│  │  ├─ VendorName: Mihai Bazon
+│  │  └─ VendorUrl: https://terser.org/
+│  └─ webidl-conversions@7.0.0
+│     ├─ URL: https://github.com/jsdom/webidl-conversions.git
+│     ├─ VendorName: Domenic Denicola
+│     └─ VendorUrl: https://domenic.me/
 ├─ BSD-3-Clause
 │  ├─ @protobufjs/aspromise@1.1.2
 │  │  ├─ URL: https://github.com/dcodeIO/protobuf.js.git
@@ -1299,6 +1303,10 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/wooorm/property-information.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
+│  ├─ punycode@2.1.1
+│  │  ├─ URL: https://github.com/bestiejs/punycode.js.git
+│  │  ├─ VendorName: Mathias Bynens
+│  │  └─ VendorUrl: https://mths.be/punycode
 │  ├─ raf@3.4.1
 │  │  ├─ URL: git://github.com/chrisdickinson/raf.git
 │  │  └─ VendorName: Chris Dickinson
@@ -1494,6 +1502,9 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/sindresorhus/to-fast-properties.git
 │  │  ├─ VendorName: Sindre Sorhus
 │  │  └─ VendorUrl: sindresorhus.com
+│  ├─ tr46@3.0.0
+│  │  ├─ URL: https://github.com/jsdom/tr46
+│  │  └─ VendorName: Sebastian Mayr
 │  ├─ trough@2.1.0
 │  │  ├─ URL: https://github.com/wooorm/trough.git
 │  │  ├─ VendorName: Titus Wormer
@@ -1567,6 +1578,9 @@ Third-party licenses
 │  │  └─ URL: https://github.com/github/fetch.git
 │  ├─ whatwg-fetch@3.4.1
 │  │  └─ URL: https://github.com/github/fetch.git
+│  ├─ whatwg-url@11.0.0
+│  │  ├─ URL: https://github.com/jsdom/whatwg-url.git
+│  │  └─ VendorName: Sebastian Mayr
 │  ├─ wrap-ansi@6.2.0
 │  │  ├─ URL: https://github.com/chalk/wrap-ansi.git
 │  │  ├─ VendorName: Sindre Sorhus
