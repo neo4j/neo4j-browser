@@ -25,7 +25,7 @@ import { Bus } from 'suber'
 
 import docs, { DocItem, isPlayChapter } from '../../documentation'
 import Docs from '../Docs/Docs'
-import { splitMdxSlides } from '../Docs/MDX/splitMdx'
+import { splitMdSlides } from '../Docs/MD/splitMd'
 import FrameAside from '../Frame/FrameAside'
 import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
 import { ErrorsView } from './CypherFrame/ErrorsView/ErrorsView'
@@ -222,13 +222,13 @@ function generateContent(
           <Docs
             initialSlide={stackFrame.initialSlide || 1}
             lastUpdate={stackFrame.ts}
-            mdx={stackFrame.result}
+            md={stackFrame.result}
             onSlide={onSlide}
             originFrameId={stackFrame.id}
             withDirectives
           />
         ),
-        hasCarousel: splitMdxSlides(stackFrame.result).length > 1,
+        hasCarousel: splitMdSlides(stackFrame.result).length > 1,
         isRemote: true
       }
     }

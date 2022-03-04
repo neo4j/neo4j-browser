@@ -176,6 +176,10 @@ Third-party licenses
 │  │  └─ VendorUrl: https://grpc.io/
 │  ├─ @neo4j/browser-lambda-parser@1.0.5
 │  │  └─ URL: https://github.com/neo4j-apps/lambda-parser
+│  ├─ @scarf/scarf@0.1.8
+│  │  ├─ URL: git+https://github.com/scarf-sh/scarf-js.git
+│  │  ├─ VendorName: Scarf Systems
+│  │  └─ VendorUrl: https://github.com/scarf-sh/scarf-js
 │  ├─ ecdsa-sig-formatter@1.0.11
 │  │  ├─ URL: git+ssh://git@github.com/Brightspace/node-ecdsa-sig-formatter.git
 │  │  ├─ VendorName: D2L Corporation
@@ -242,10 +246,6 @@ Third-party licenses
 │     ├─ URL: https://github.com/antlr/antlr4.git
 │     └─ VendorUrl: https://github.com/antlr/antlr4
 ├─ BSD-2-Clause
-│  ├─ regjsparser@0.6.4
-│  │  ├─ URL: git@github.com:jviereck/regjsparser.git
-│  │  ├─ VendorName: 'Julian Viereck'
-│  │  └─ VendorUrl: https://github.com/jviereck/regjsparser
 │  └─ terser@5.3.2
 │     ├─ URL: https://github.com/terser/terser
 │     ├─ VendorName: Mihai Bazon
@@ -339,6 +339,8 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/d3/d3-ease.git
 │  │  ├─ VendorName: Mike Bostock
 │  │  └─ VendorUrl: https://d3js.org/d3-ease/
+│  ├─ diff@5.0.0
+│  │  └─ URL: git://github.com/kpdecker/jsdiff.git
 │  ├─ exenv@1.2.2
 │  │  ├─ URL: https://github.com/JedWatson/exenv.git
 │  │  ├─ VendorName: Jed Watson
@@ -354,9 +356,6 @@ Third-party licenses
 │  │  ├─ VendorName: Feross Aboukhadijeh
 │  │  └─ VendorUrl: https://feross.org
 │  ├─ moo@0.4.3
-│  │  ├─ URL: https://github.com/tjvr/moo.git
-│  │  └─ VendorName: Tim Radvan
-│  ├─ moo@0.5.1
 │  │  ├─ URL: https://github.com/tjvr/moo.git
 │  │  └─ VendorName: Tim Radvan
 │  ├─ protobufjs@6.10.1
@@ -507,10 +506,6 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/babel/babel.git
 │  │  ├─ VendorName: Sebastian McKenzie
 │  │  └─ VendorUrl: https://babeljs.io/
-│  ├─ @babel/core@7.11.6
-│  │  ├─ URL: https://github.com/babel/babel.git
-│  │  ├─ VendorName: Sebastian McKenzie
-│  │  └─ VendorUrl: https://babeljs.io/
 │  ├─ @babel/generator@7.11.6
 │  │  ├─ URL: https://github.com/babel/babel.git
 │  │  ├─ VendorName: Sebastian McKenzie
@@ -521,26 +516,7 @@ Third-party licenses
 │  │  └─ URL: https://github.com/babel/babel.git
 │  ├─ @babel/helper-get-function-arity@7.10.4
 │  │  └─ URL: https://github.com/babel/babel.git
-│  ├─ @babel/helper-member-expression-to-functions@7.11.0
-│  │  ├─ URL: https://github.com/babel/babel.git
-│  │  └─ VendorName: Justin Ridgewell
 │  ├─ @babel/helper-module-imports@7.10.4
-│  │  ├─ URL: https://github.com/babel/babel.git
-│  │  ├─ VendorName: Logan Smyth
-│  │  └─ VendorUrl: https://babeljs.io/
-│  ├─ @babel/helper-module-transforms@7.11.0
-│  │  ├─ URL: https://github.com/babel/babel.git
-│  │  ├─ VendorName: Logan Smyth
-│  │  └─ VendorUrl: https://babeljs.io/
-│  ├─ @babel/helper-optimise-call-expression@7.10.4
-│  │  └─ URL: https://github.com/babel/babel.git
-│  ├─ @babel/helper-plugin-utils@7.10.4
-│  │  ├─ URL: https://github.com/babel/babel.git
-│  │  ├─ VendorName: Logan Smyth
-│  │  └─ VendorUrl: https://babeljs.io/
-│  ├─ @babel/helper-replace-supers@7.10.4
-│  │  └─ URL: https://github.com/babel/babel.git
-│  ├─ @babel/helper-simple-access@7.10.4
 │  │  ├─ URL: https://github.com/babel/babel.git
 │  │  ├─ VendorName: Logan Smyth
 │  │  └─ VendorUrl: https://babeljs.io/
@@ -550,10 +526,6 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/babel/babel.git
 │  │  ├─ VendorName: The Babel Team
 │  │  └─ VendorUrl: https://babel.dev/team
-│  ├─ @babel/helpers@7.10.4
-│  │  ├─ URL: https://github.com/babel/babel.git
-│  │  ├─ VendorName: Sebastian McKenzie
-│  │  └─ VendorUrl: https://babeljs.io/
 │  ├─ @babel/highlight@7.16.0
 │  │  ├─ URL: https://github.com/babel/babel.git
 │  │  ├─ VendorName: The Babel Team
@@ -562,14 +534,6 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/babel/babel.git
 │  │  ├─ VendorName: Sebastian McKenzie
 │  │  └─ VendorUrl: https://babeljs.io/
-│  ├─ @babel/plugin-proposal-object-rest-spread@7.11.0
-│  │  └─ URL: https://github.com/babel/babel.git
-│  ├─ @babel/plugin-syntax-jsx@7.10.4
-│  │  └─ URL: https://github.com/babel/babel.git
-│  ├─ @babel/plugin-syntax-object-rest-spread@7.8.3
-│  │  └─ URL: https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-object-rest-spread
-│  ├─ @babel/plugin-transform-parameters@7.10.5
-│  │  └─ URL: https://github.com/babel/babel.git
 │  ├─ @babel/runtime-corejs3@7.15.3
 │  │  ├─ URL: https://github.com/babel/babel.git
 │  │  ├─ VendorName: The Babel Team
@@ -599,26 +563,6 @@ Third-party licenses
 │  ├─ @graphql-typed-document-node/core@3.1.0
 │  │  ├─ URL: git@github.com:dotansimha/graphql-typed-document-node.git
 │  │  └─ VendorName: Dotan Simha
-│  ├─ @literal-jsx/parser@0.1.7
-│  │  ├─ URL: https://github.com/kelleyvanevert/literal-jsx.git
-│  │  ├─ VendorName: Kelley van Evert
-│  │  └─ VendorUrl: https://literal-jsx.org/
-│  ├─ @mdx-js/mdx@1.6.18
-│  │  ├─ URL: https://github.com/mdx-js/mdx.git
-│  │  ├─ VendorName: John Otander
-│  │  └─ VendorUrl: https://mdxjs.com/
-│  ├─ @mdx-js/react@1.6.18
-│  │  ├─ URL: https://github.com/mdx-js/mdx.git
-│  │  ├─ VendorName: John Otander
-│  │  └─ VendorUrl: https://mdxjs.com/
-│  ├─ @mdx-js/runtime@1.6.18
-│  │  ├─ URL: https://github.com/mdx-js/mdx.git
-│  │  ├─ VendorName: John Otander
-│  │  └─ VendorUrl: https://mdxjs.com/
-│  ├─ @mdx-js/util@1.6.18
-│  │  ├─ URL: https://github.com/mdx-js/mdx.git
-│  │  ├─ VendorName: John Otander
-│  │  └─ VendorUrl: https://mdxjs.com/
 │  ├─ @react-dnd/asap@4.0.0
 │  │  └─ URL: https://github.com/kriskowal/asap.git
 │  ├─ @react-dnd/invariant@2.0.0
@@ -645,6 +589,9 @@ Third-party licenses
 │  │  └─ VendorUrl: https://github.com/stardust-ui/react/tree/master/packages/react-component-ref
 │  ├─ @types/color-name@1.1.1
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
+│  ├─ @types/debug@4.1.7
+│  │  ├─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
+│  │  └─ VendorUrl: https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/debug
 │  ├─ @types/hast@2.3.1
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
 │  ├─ @types/hoist-non-react-statics@3.3.1
@@ -653,11 +600,13 @@ Third-party licenses
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
 │  ├─ @types/mdast@3.0.3
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
+│  ├─ @types/mdurl@1.0.2
+│  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
+│  ├─ @types/ms@0.7.31
+│  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
 │  ├─ @types/node@12.12.62
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
 │  ├─ @types/node@13.13.21
-│  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
-│  ├─ @types/parse5@5.0.3
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
 │  ├─ @types/prop-types@15.7.3
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
@@ -681,16 +630,6 @@ Third-party licenses
 │  │  ├─ URL: git+https://github.com/mysticatea/abort-controller.git
 │  │  ├─ VendorName: Toru Nagashima
 │  │  └─ VendorUrl: https://github.com/mysticatea/abort-controller#readme
-│  ├─ acorn-dynamic-import@4.0.0
-│  │  ├─ URL: https://github.com/kesne/acorn-dynamic-import
-│  │  ├─ VendorName: Jordan Gensler
-│  │  └─ VendorUrl: https://github.com/kesne/acorn-dynamic-import
-│  ├─ acorn-jsx@5.3.1
-│  │  ├─ URL: https://github.com/acornjs/acorn-jsx
-│  │  └─ VendorUrl: https://github.com/acornjs/acorn-jsx
-│  ├─ acorn@6.4.1
-│  │  ├─ URL: https://github.com/acornjs/acorn.git
-│  │  └─ VendorUrl: https://github.com/acornjs/acorn
 │  ├─ agent-base@6.0.1
 │  │  ├─ URL: git://github.com/TooTallNate/node-agent-base.git
 │  │  ├─ VendorName: Nathan Rajlich
@@ -719,19 +658,11 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/oskarhane/ascii-data-table.git
 │  │  ├─ VendorName: Oskar Hane
 │  │  └─ VendorUrl: http://oskarhane.com/
-│  ├─ babel-plugin-apply-mdx-type-prop@1.6.18
-│  │  ├─ URL: https://github.com/mdx-js/mdx.git
-│  │  ├─ VendorName: John Otander
-│  │  └─ VendorUrl: https://mdxjs.com/
-│  ├─ babel-plugin-extract-import-names@1.6.18
-│  │  ├─ URL: https://github.com/mdx-js/mdx.git
-│  │  ├─ VendorName: John Otander
-│  │  └─ VendorUrl: https://mdxjs.com/
 │  ├─ babel-plugin-styled-components@1.11.1
 │  │  └─ URL: https://github.com/styled-components/babel-plugin-styled-components.git
 │  ├─ babel-plugin-syntax-jsx@6.18.0
 │  │  └─ URL: https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-jsx
-│  ├─ bail@1.0.5
+│  ├─ bail@2.0.2
 │  │  ├─ URL: https://github.com/wooorm/bail.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
@@ -746,20 +677,12 @@ Third-party licenses
 │  ├─ bignumber.js@9.0.0
 │  │  ├─ URL: https://github.com/MikeMcl/bignumber.js.git
 │  │  └─ VendorName: Michael Mclaughlin
-│  ├─ buble-jsx-only@0.19.8
-│  │  ├─ URL: git+https://github.com/datavis-tech/buble-jsx-only
-│  │  ├─ VendorName: Rich Harris
-│  │  └─ VendorUrl: https://github.com/bublejs/buble#README
 │  ├─ buffer-from@1.1.1
 │  │  └─ URL: https://github.com/LinusU/buffer-from.git
 │  ├─ buffer@6.0.3
 │  │  ├─ URL: git://github.com/feross/buffer.git
 │  │  ├─ VendorName: Feross Aboukhadijeh
 │  │  └─ VendorUrl: https://github.com/feross/buffer
-│  ├─ camelcase-css@2.0.1
-│  │  ├─ URL: https://github.com/stevenvachon/camelcase-css.git
-│  │  ├─ VendorName: Steven Vachon
-│  │  └─ VendorUrl: https://www.svachon.com/
 │  ├─ camelcase@5.3.1
 │  │  ├─ URL: https://github.com/sindresorhus/camelcase.git
 │  │  ├─ VendorName: Sindre Sorhus
@@ -770,22 +693,14 @@ Third-party licenses
 │  │  └─ VendorUrl: https://github.com/substack/camelize
 │  ├─ canvg@3.0.7
 │  │  └─ URL: https://github.com/canvg/canvg
-│  ├─ ccount@1.0.5
+│  ├─ ccount@2.0.1
 │  │  ├─ URL: https://github.com/wooorm/ccount.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
 │  ├─ chalk@2.4.2
 │  │  └─ URL: https://github.com/chalk/chalk.git
-│  ├─ character-entities-legacy@1.1.4
-│  │  ├─ URL: https://github.com/wooorm/character-entities-legacy.git
-│  │  ├─ VendorName: Titus Wormer
-│  │  └─ VendorUrl: https://wooorm.com
-│  ├─ character-entities@1.2.4
+│  ├─ character-entities@2.0.1
 │  │  ├─ URL: https://github.com/wooorm/character-entities.git
-│  │  ├─ VendorName: Titus Wormer
-│  │  └─ VendorUrl: https://wooorm.com
-│  ├─ character-reference-invalid@1.1.4
-│  │  ├─ URL: https://github.com/wooorm/character-reference-invalid.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
 │  ├─ classnames@2.2.6
@@ -795,10 +710,6 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/lukeed/clsx.git
 │  │  ├─ VendorName: Luke Edwards
 │  │  └─ VendorUrl: https://lukeed.com
-│  ├─ collapse-white-space@1.0.6
-│  │  ├─ URL: https://github.com/wooorm/collapse-white-space.git
-│  │  ├─ VendorName: Titus Wormer
-│  │  └─ VendorUrl: https://wooorm.com
 │  ├─ color-convert@1.9.3
 │  │  ├─ URL: https://github.com/Qix-/color-convert.git
 │  │  └─ VendorName: Heather Arthur
@@ -813,17 +724,13 @@ Third-party licenses
 │  │  ├─ URL: git@github.com:colorjs/color-name.git
 │  │  ├─ VendorName: DY
 │  │  └─ VendorUrl: https://github.com/colorjs/color-name
-│  ├─ comma-separated-tokens@1.0.8
+│  ├─ comma-separated-tokens@2.0.2
 │  │  ├─ URL: https://github.com/wooorm/comma-separated-tokens.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
 │  ├─ commander@2.20.3
 │  │  ├─ URL: https://github.com/tj/commander.js.git
 │  │  └─ VendorName: TJ Holowaychuk
-│  ├─ convert-source-map@1.7.0
-│  │  ├─ URL: git://github.com/thlorenz/convert-source-map.git
-│  │  ├─ VendorName: Thorsten Lorenz
-│  │  └─ VendorUrl: https://github.com/thlorenz/convert-source-map
 │  ├─ core-js-pure@3.16.1
 │  │  └─ URL: https://github.com/zloirock/core-js.git
 │  ├─ core-js@2.6.11
@@ -847,10 +754,17 @@ Third-party licenses
 │  ├─ debug@4.1.1
 │  │  ├─ URL: git://github.com/visionmedia/debug.git
 │  │  └─ VendorName: TJ Holowaychuk
+│  ├─ debug@4.3.3
+│  │  ├─ URL: git://github.com/debug-js/debug.git
+│  │  └─ VendorName: Josh Junon
 │  ├─ decamelize@1.2.0
 │  │  ├─ URL: https://github.com/sindresorhus/decamelize.git
 │  │  ├─ VendorName: Sindre Sorhus
 │  │  └─ VendorUrl: sindresorhus.com
+│  ├─ decode-named-character-reference@1.0.1
+│  │  ├─ URL: https://github.com/wooorm/decode-named-character-reference.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
 │  ├─ deep-equal@1.1.1
 │  │  ├─ URL: http://github.com/substack/node-deep-equal.git
 │  │  ├─ VendorName: James Halliday
@@ -859,16 +773,13 @@ Third-party licenses
 │  │  ├─ URL: git://github.com/KyleAMathews/deepmerge.git
 │  │  ├─ VendorName: Nick Fisher
 │  │  └─ VendorUrl: https://github.com/KyleAMathews/deepmerge
-│  ├─ deepmerge@3.3.0
-│  │  ├─ URL: git://github.com/TehShrike/deepmerge.git
-│  │  └─ VendorUrl: https://github.com/TehShrike/deepmerge
 │  ├─ define-properties@1.1.3
 │  │  ├─ URL: git://github.com/ljharb/define-properties.git
 │  │  └─ VendorName: Jordan Harband
-│  ├─ detab@2.0.3
-│  │  ├─ URL: https://github.com/wooorm/detab.git
-│  │  ├─ VendorName: Titus Wormer
-│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ dequal@2.0.2
+│  │  ├─ URL: https://github.com/lukeed/dequal.git
+│  │  ├─ VendorName: Luke Edwards
+│  │  └─ VendorUrl: https://lukeed.com
 │  ├─ discontinuous-range@1.0.0
 │  │  ├─ URL: https://github.com/dtudury/discontinuous-range.git
 │  │  ├─ VendorName: David Tudury
@@ -897,6 +808,10 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/sindresorhus/escape-string-regexp.git
 │  │  ├─ VendorName: Sindre Sorhus
 │  │  └─ VendorUrl: sindresorhus.com
+│  ├─ escape-string-regexp@5.0.0
+│  │  ├─ URL: https://github.com/sindresorhus/escape-string-regexp.git
+│  │  ├─ VendorName: Sindre Sorhus
+│  │  └─ VendorUrl: https://sindresorhus.com
 │  ├─ event-target-shim@5.0.1
 │  │  ├─ URL: https://github.com/mysticatea/event-target-shim.git
 │  │  ├─ VendorName: Toru Nagashima
@@ -932,8 +847,6 @@ Third-party licenses
 │  ├─ fuzzaldrin@2.1.0
 │  │  ├─ URL: https://github.com/atom/fuzzaldrin.git
 │  │  └─ VendorUrl: http://atom.github.io/fuzzaldrin
-│  ├─ gensync@1.0.0-beta.1
-│  │  └─ VendorName: Logan Smyth
 │  ├─ globals@11.12.0
 │  │  ├─ URL: https://github.com/sindresorhus/globals.git
 │  │  ├─ VendorName: Sindre Sorhus
@@ -965,32 +878,8 @@ Third-party licenses
 │  │  ├─ URL: git://github.com/tarruda/has.git
 │  │  ├─ VendorName: Thiago de Arruda
 │  │  └─ VendorUrl: https://github.com/tarruda/has
-│  ├─ hast-to-hyperscript@9.0.0
-│  │  ├─ URL: https://github.com/syntax-tree/hast-to-hyperscript.git
-│  │  ├─ VendorName: Titus Wormer
-│  │  └─ VendorUrl: https://wooorm.com
-│  ├─ hast-util-from-parse5@6.0.0
-│  │  ├─ URL: https://github.com/syntax-tree/hast-util-from-parse5.git
-│  │  ├─ VendorName: Titus Wormer
-│  │  └─ VendorUrl: https://wooorm.com
-│  ├─ hast-util-parse-selector@2.2.4
-│  │  ├─ URL: https://github.com/syntax-tree/hast-util-parse-selector.git
-│  │  ├─ VendorName: Titus Wormer
-│  │  └─ VendorUrl: https://wooorm.com
-│  ├─ hast-util-raw@6.0.1
-│  │  ├─ URL: https://github.com/syntax-tree/hast-util-raw.git
-│  │  ├─ VendorName: Titus Wormer
-│  │  └─ VendorUrl: https://wooorm.com
-│  ├─ hast-util-to-parse5@6.0.0
-│  │  ├─ URL: https://github.com/syntax-tree/hast-util-to-parse5.git
-│  │  ├─ VendorName: Titus Wormer
-│  │  └─ VendorUrl: https://wooorm.com
-│  ├─ hastscript@5.1.2
-│  │  ├─ URL: https://github.com/syntax-tree/hastscript.git
-│  │  ├─ VendorName: Titus Wormer
-│  │  └─ VendorUrl: https://wooorm.com
-│  ├─ html-void-elements@1.0.5
-│  │  ├─ URL: https://github.com/wooorm/html-void-elements.git
+│  ├─ hast-util-whitespace@2.0.0
+│  │  ├─ URL: https://github.com/syntax-tree/hast-util-whitespace.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
 │  ├─ http-parser-js@0.5.2
@@ -1012,14 +901,6 @@ Third-party licenses
 │  ├─ invariant@2.2.4
 │  │  ├─ URL: https://github.com/zertosh/invariant
 │  │  └─ VendorName: Andres Suarez
-│  ├─ is-alphabetical@1.0.4
-│  │  ├─ URL: https://github.com/wooorm/is-alphabetical.git
-│  │  ├─ VendorName: Titus Wormer
-│  │  └─ VendorUrl: https://wooorm.com
-│  ├─ is-alphanumerical@1.0.4
-│  │  ├─ URL: https://github.com/wooorm/is-alphanumerical.git
-│  │  ├─ VendorName: Titus Wormer
-│  │  └─ VendorUrl: https://wooorm.com
 │  ├─ is-arguments@1.0.4
 │  │  ├─ URL: git://github.com/ljharb/is-arguments.git
 │  │  ├─ VendorName: Jordan Harband
@@ -1035,26 +916,18 @@ Third-party licenses
 │  ├─ is-date-object@1.0.2
 │  │  ├─ URL: git://github.com/ljharb/is-date-object.git
 │  │  └─ VendorName: Jordan Harband
-│  ├─ is-decimal@1.0.4
-│  │  ├─ URL: https://github.com/wooorm/is-decimal.git
-│  │  ├─ VendorName: Titus Wormer
-│  │  └─ VendorUrl: https://wooorm.com
 │  ├─ is-fullwidth-code-point@3.0.0
 │  │  ├─ URL: https://github.com/sindresorhus/is-fullwidth-code-point.git
 │  │  ├─ VendorName: Sindre Sorhus
 │  │  └─ VendorUrl: sindresorhus.com
-│  ├─ is-hexadecimal@1.0.4
-│  │  ├─ URL: https://github.com/wooorm/is-hexadecimal.git
-│  │  ├─ VendorName: Titus Wormer
-│  │  └─ VendorUrl: https://wooorm.com
 │  ├─ is-negative-zero@2.0.0
 │  │  ├─ URL: git://github.com/ljharb/is-negative-zero.git
 │  │  ├─ VendorName: Jordan Harband
 │  │  └─ VendorUrl: https://github.com/ljharb/is-negative-zero
-│  ├─ is-plain-obj@2.1.0
+│  ├─ is-plain-obj@4.0.0
 │  │  ├─ URL: https://github.com/sindresorhus/is-plain-obj.git
 │  │  ├─ VendorName: Sindre Sorhus
-│  │  └─ VendorUrl: sindresorhus.com
+│  │  └─ VendorUrl: https://sindresorhus.com
 │  ├─ is-regex@1.1.1
 │  │  ├─ URL: git://github.com/ljharb/is-regex.git
 │  │  ├─ VendorName: Jordan Harband
@@ -1074,14 +947,6 @@ Third-party licenses
 │  │  ├─ URL: git+https://github.com/mesqueeb/is-what.git
 │  │  ├─ VendorName: Luca Ban - Mesqueeb
 │  │  └─ VendorUrl: https://github.com/mesqueeb/is-what#readme
-│  ├─ is-whitespace-character@1.0.4
-│  │  ├─ URL: https://github.com/wooorm/is-whitespace-character.git
-│  │  ├─ VendorName: Titus Wormer
-│  │  └─ VendorUrl: https://wooorm.com
-│  ├─ is-word-character@1.0.4
-│  │  ├─ URL: https://github.com/wooorm/is-word-character.git
-│  │  ├─ VendorName: Titus Wormer
-│  │  └─ VendorUrl: https://wooorm.com
 │  ├─ isarray@1.0.0
 │  │  ├─ URL: git://github.com/juliangruber/isarray.git
 │  │  ├─ VendorName: Julian Gruber
@@ -1093,10 +958,6 @@ Third-party licenses
 │  ├─ js-tokens@4.0.0
 │  │  ├─ URL: https://github.com/lydell/js-tokens.git
 │  │  └─ VendorName: Simon Lydell
-│  ├─ jsesc@0.5.0
-│  │  ├─ URL: https://github.com/mathiasbynens/jsesc.git
-│  │  ├─ VendorName: Mathias Bynens
-│  │  └─ VendorUrl: http://mths.be/jsesc
 │  ├─ jsesc@2.5.2
 │  │  ├─ URL: https://github.com/mathiasbynens/jsesc.git
 │  │  ├─ VendorName: Mathias Bynens
@@ -1104,10 +965,6 @@ Third-party licenses
 │  ├─ json-bigint@1.0.0
 │  │  ├─ URL: git@github.com:sidorares/json-bigint.git
 │  │  └─ VendorName: Andrey Sidorov
-│  ├─ json5@2.1.3
-│  │  ├─ URL: git+https://github.com/json5/json5.git
-│  │  ├─ VendorName: Aseem Kishore
-│  │  └─ VendorUrl: http://json5.org/
 │  ├─ jsonic@0.3.1
 │  │  ├─ URL: git://github.com/rjrodger/jsonic.git
 │  │  ├─ VendorName: Richard Rodger
@@ -1125,6 +982,10 @@ Third-party licenses
 │  ├─ keyboard-key@1.1.0
 │  │  ├─ URL: git+ssh://github.com/levithomason/keyboard-key.git
 │  │  └─ VendorName: Levi Thomason
+│  ├─ kleur@4.1.4
+│  │  ├─ URL: https://github.com/lukeed/kleur.git
+│  │  ├─ VendorName: Luke Edwards
+│  │  └─ VendorUrl: https://lukeed.com
 │  ├─ lie@3.1.1
 │  │  └─ URL: https://github.com/calvinmetcalf/lie.git
 │  ├─ lie@3.3.0
@@ -1145,10 +1006,6 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/lodash/lodash.git
 │  │  ├─ VendorName: John-David Dalton
 │  │  └─ VendorUrl: https://lodash.com/
-│  ├─ lodash.uniq@4.5.0
-│  │  ├─ URL: https://github.com/lodash/lodash.git
-│  │  ├─ VendorName: John-David Dalton
-│  │  └─ VendorUrl: https://lodash.com/
 │  ├─ lodash@4.17.15
 │  │  ├─ URL: https://github.com/lodash/lodash.git
 │  │  ├─ VendorName: John-David Dalton
@@ -1161,6 +1018,10 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/lodash/lodash.git
 │  │  ├─ VendorName: John-David Dalton
 │  │  └─ VendorUrl: https://lodash.com/
+│  ├─ longest-streak@3.0.1
+│  │  ├─ URL: https://github.com/wooorm/longest-streak.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
 │  ├─ loose-envify@1.4.0
 │  │  ├─ URL: git://github.com/zertosh/loose-envify.git
 │  │  ├─ VendorName: Andres Suarez
@@ -1168,22 +1029,56 @@ Third-party licenses
 │  ├─ luxon@2.0.2
 │  │  ├─ URL: https://github.com/moment/luxon
 │  │  └─ VendorName: Isaac Cambron
-│  ├─ magic-string@0.25.7
-│  │  ├─ URL: https://github.com/rich-harris/magic-string
-│  │  └─ VendorName: Rich Harris
-│  ├─ markdown-escapes@1.0.4
-│  │  ├─ URL: https://github.com/wooorm/markdown-escapes.git
+│  ├─ markdown-table@3.0.2
+│  │  ├─ URL: https://github.com/wooorm/markdown-table.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
-│  ├─ mdast-squeeze-paragraphs@4.0.0
-│  │  ├─ URL: https://github.com/syntax-tree/mdast-squeeze-paragraphs.git
-│  │  └─ VendorName: Eugene Sharygin
-│  ├─ mdast-util-definitions@3.0.1
+│  ├─ mdast-util-definitions@5.1.0
 │  │  ├─ URL: https://github.com/syntax-tree/mdast-util-definitions.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
-│  ├─ mdast-util-to-hast@9.1.1
+│  ├─ mdast-util-find-and-replace@2.1.0
+│  │  ├─ URL: https://github.com/syntax-tree/mdast-util-find-and-replace.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ mdast-util-from-markdown@1.2.0
+│  │  ├─ URL: https://github.com/syntax-tree/mdast-util-from-markdown.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ mdast-util-gfm-autolink-literal@1.0.2
+│  │  ├─ URL: https://github.com/syntax-tree/mdast-util-gfm-autolink-literal.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ mdast-util-gfm-footnote@1.0.1
+│  │  ├─ URL: https://github.com/syntax-tree/mdast-util-gfm-footnote.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ mdast-util-gfm-strikethrough@1.0.1
+│  │  ├─ URL: https://github.com/syntax-tree/mdast-util-gfm-strikethrough.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ mdast-util-gfm-table@1.0.3
+│  │  ├─ URL: https://github.com/syntax-tree/mdast-util-gfm-table.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ mdast-util-gfm-task-list-item@1.0.1
+│  │  ├─ URL: https://github.com/syntax-tree/mdast-util-gfm-task-list-item.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ mdast-util-gfm@2.0.0
+│  │  ├─ URL: https://github.com/syntax-tree/mdast-util-gfm.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ mdast-util-to-hast@12.1.1
 │  │  ├─ URL: https://github.com/syntax-tree/mdast-util-to-hast.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ mdast-util-to-markdown@1.3.0
+│  │  ├─ URL: https://github.com/syntax-tree/mdast-util-to-markdown.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ mdast-util-to-string@3.1.0
+│  │  ├─ URL: https://github.com/syntax-tree/mdast-util-to-string.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
 │  ├─ mdurl@1.0.1
@@ -1198,23 +1093,134 @@ Third-party licenses
 │  │  ├─ URL: git+https://github.com/mesqueeb/merge-anything.git
 │  │  ├─ VendorName: Luca Ban - Mesqueeb
 │  │  └─ VendorUrl: https://github.com/mesqueeb/merge-anything#readme
+│  ├─ micromark-core-commonmark@1.0.6
+│  │  ├─ URL: https://github.com/micromark/micromark/tree/main/packages/micromark-core-commonmark
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-extension-gfm-autolink-literal@1.0.3
+│  │  ├─ URL: https://github.com/micromark/micromark-extension-gfm-autolink-literal.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-extension-gfm-footnote@1.0.3
+│  │  ├─ URL: https://github.com/micromark/micromark-extension-gfm-footnote.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-extension-gfm-strikethrough@1.0.4
+│  │  ├─ URL: https://github.com/micromark/micromark-extension-gfm-strikethrough.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-extension-gfm-table@1.0.5
+│  │  ├─ URL: https://github.com/micromark/micromark-extension-gfm-table.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-extension-gfm-tagfilter@1.0.1
+│  │  ├─ URL: https://github.com/micromark/micromark-extension-gfm-tagfilter.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-extension-gfm-task-list-item@1.0.3
+│  │  ├─ URL: https://github.com/micromark/micromark-extension-gfm-task-list-item.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-extension-gfm@2.0.1
+│  │  ├─ URL: https://github.com/micromark/micromark-extension-gfm.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-factory-destination@1.0.0
+│  │  ├─ URL: https://github.com/micromark/micromark/tree/main/packages/micromark-factory-destination
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-factory-label@1.0.2
+│  │  ├─ URL: https://github.com/micromark/micromark/tree/main/packages/micromark-factory-label
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-factory-space@1.0.0
+│  │  ├─ URL: https://github.com/micromark/micromark/tree/main/packages/micromark-factory-space
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-factory-title@1.0.2
+│  │  ├─ URL: https://github.com/micromark/micromark/tree/main/packages/micromark-factory-title
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-factory-whitespace@1.0.0
+│  │  ├─ URL: https://github.com/micromark/micromark/tree/main/packages/micromark-factory-whitespace
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-util-character@1.1.0
+│  │  ├─ URL: https://github.com/micromark/micromark/tree/main/packages/micromark-util-character
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-util-chunked@1.0.0
+│  │  ├─ URL: https://github.com/micromark/micromark/tree/main/packages/micromark-util-chunked
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-util-classify-character@1.0.0
+│  │  ├─ URL: https://github.com/micromark/micromark/tree/main/packages/micromark-util-classify-character
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-util-combine-extensions@1.0.0
+│  │  ├─ URL: https://github.com/micromark/micromark/tree/main/packages/micromark-util-combine-extensions
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-util-decode-numeric-character-reference@1.0.0
+│  │  ├─ URL: https://github.com/micromark/micromark/tree/main/packages/micromark-util-decode-numeric-character-reference
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-util-decode-string@1.0.2
+│  │  ├─ URL: https://github.com/micromark/micromark/tree/main/packages/micromark-util-decode-string
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-util-encode@1.0.1
+│  │  ├─ URL: https://github.com/micromark/micromark/tree/main/packages/micromark-util-encode
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-util-html-tag-name@1.0.0
+│  │  ├─ URL: https://github.com/micromark/micromark/tree/main/packages/micromark-util-html-tag-name
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-util-normalize-identifier@1.0.0
+│  │  ├─ URL: https://github.com/micromark/micromark/tree/main/packages/micromark-util-normalize-identifier
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-util-resolve-all@1.0.0
+│  │  ├─ URL: https://github.com/micromark/micromark/tree/main/packages/micromark-util-resolve-all
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-util-sanitize-uri@1.0.0
+│  │  ├─ URL: https://github.com/micromark/micromark/tree/main/packages/micromark-util-sanitize-uri
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-util-subtokenize@1.0.2
+│  │  ├─ URL: https://github.com/micromark/micromark/tree/main/packages/micromark-util-subtokenize
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-util-symbol@1.0.1
+│  │  ├─ URL: https://github.com/micromark/micromark/tree/main/packages/micromark-util-symbol
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark-util-types@1.0.2
+│  │  ├─ URL: https://github.com/micromark/micromark/tree/main/packages/micromark-util-types
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ micromark@3.0.10
+│  │  ├─ URL: https://github.com/micromark/micromark/tree/main/packages/micromark
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
 │  ├─ mime@2.4.6
 │  │  ├─ URL: https://github.com/broofa/mime
 │  │  ├─ VendorName: Robert Kieffer
 │  │  └─ VendorUrl: http://github.com/broofa
-│  ├─ minimist@1.2.5
-│  │  ├─ URL: git://github.com/substack/minimist.git
-│  │  ├─ VendorName: James Halliday
-│  │  └─ VendorUrl: https://github.com/substack/minimist
 │  ├─ monaco-editor@0.23.0
 │  │  ├─ URL: https://github.com/Microsoft/monaco-editor
 │  │  └─ VendorName: Microsoft Corporation
+│  ├─ mri@1.2.0
+│  │  ├─ URL: https://github.com/lukeed/mri.git
+│  │  ├─ VendorName: Luke Edwards
+│  │  └─ VendorUrl: https://lukeed.com
+│  ├─ ms@2.1.2
+│  │  └─ URL: https://github.com/zeit/ms.git
 │  ├─ ms@2.1.3
 │  │  └─ URL: https://github.com/vercel/ms.git
 │  ├─ nearley@2.18.0
-│  │  ├─ URL: https://github.com/hardmath123/nearley.git
-│  │  └─ VendorName: Hardmath123
-│  ├─ nearley@2.19.6
 │  │  ├─ URL: https://github.com/hardmath123/nearley.git
 │  │  └─ VendorName: Hardmath123
 │  ├─ node-fetch@1.7.3
@@ -1260,22 +1266,10 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/sindresorhus/p-try.git
 │  │  ├─ VendorName: Sindre Sorhus
 │  │  └─ VendorUrl: sindresorhus.com
-│  ├─ parse-entities@2.0.0
-│  │  ├─ URL: https://github.com/wooorm/parse-entities.git
-│  │  ├─ VendorName: Titus Wormer
-│  │  └─ VendorUrl: https://wooorm.com
-│  ├─ parse5@6.0.1
-│  │  ├─ URL: git://github.com/inikulin/parse5.git
-│  │  ├─ VendorName: Ivan Nikulin
-│  │  └─ VendorUrl: https://github.com/inikulin/parse5
 │  ├─ path-exists@4.0.0
 │  │  ├─ URL: https://github.com/sindresorhus/path-exists.git
 │  │  ├─ VendorName: Sindre Sorhus
 │  │  └─ VendorUrl: sindresorhus.com
-│  ├─ path-parse@1.0.6
-│  │  ├─ URL: https://github.com/jbgutierrez/path-parse.git
-│  │  ├─ VendorName: Javier Blanco
-│  │  └─ VendorUrl: https://github.com/jbgutierrez/path-parse#readme
 │  ├─ performance-now@2.1.0
 │  │  ├─ URL: git://github.com/braveg1rl/performance-now.git
 │  │  ├─ VendorName: Braveg1rl
@@ -1298,7 +1292,10 @@ Third-party licenses
 │  ├─ prop-types@15.7.2
 │  │  ├─ URL: https://github.com/facebook/prop-types.git
 │  │  └─ VendorUrl: https://facebook.github.io/react/
-│  ├─ property-information@5.5.0
+│  ├─ prop-types@15.8.1
+│  │  ├─ URL: https://github.com/facebook/prop-types.git
+│  │  └─ VendorUrl: https://facebook.github.io/react/
+│  ├─ property-information@6.1.1
 │  │  ├─ URL: https://github.com/wooorm/property-information.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
@@ -1327,8 +1324,14 @@ Third-party licenses
 │  ├─ react-is@16.13.1
 │  │  ├─ URL: https://github.com/facebook/react.git
 │  │  └─ VendorUrl: https://reactjs.org/
+│  ├─ react-is@17.0.2
+│  │  ├─ URL: https://github.com/facebook/react.git
+│  │  └─ VendorUrl: https://reactjs.org/
 │  ├─ react-lifecycles-compat@3.0.4
 │  │  └─ URL: https://github.com/reactjs/react-lifecycles-compat.git
+│  ├─ react-markdown@8.0.0
+│  │  ├─ URL: https://github.com/remarkjs/react-markdown.git
+│  │  └─ VendorName: Espen Hovlandsdal
 │  ├─ react-popper@1.3.7
 │  │  ├─ URL: https://github.com/souporserious/react-popper
 │  │  ├─ VendorName: Travis Arnold
@@ -1348,9 +1351,9 @@ Third-party licenses
 │  ├─ react-svg-inline@2.1.1
 │  │  ├─ URL: https://github.com/MoOx/react-svg-inline.git
 │  │  └─ VendorName: Maxime Thirouin
-│  ├─ react-table@7.7.0
-│  │  ├─ URL: https://github.com/tannerlinsley/react-table
-│  │  └─ VendorUrl: https://react-table.tanstack.com/
+│  ├─ react-table@7.0.4
+│  │  ├─ URL: git+https://github.com/tannerlinsley/react-table.git
+│  │  └─ VendorUrl: https://github.com/tannerlinsley/react-table#readme
 │  ├─ react-timeago@4.4.0
 │  │  ├─ URL: https://github.com/naman34/react-timeago.git
 │  │  ├─ VendorName: Naman Goel
@@ -1369,51 +1372,24 @@ Third-party licenses
 │  ├─ redux@4.0.5
 │  │  ├─ URL: https://github.com/reduxjs/redux.git
 │  │  └─ VendorUrl: http://redux.js.org/
-│  ├─ regenerate-unicode-properties@8.2.0
-│  │  ├─ URL: https://github.com/mathiasbynens/regenerate-unicode-properties.git
-│  │  ├─ VendorName: Mathias Bynens
-│  │  └─ VendorUrl: https://github.com/mathiasbynens/regenerate-unicode-properties
-│  ├─ regenerate@1.4.1
-│  │  ├─ URL: https://github.com/mathiasbynens/regenerate.git
-│  │  ├─ VendorName: Mathias Bynens
-│  │  └─ VendorUrl: https://mths.be/regenerate
 │  ├─ regenerator-runtime@0.13.7
 │  │  ├─ URL: https://github.com/facebook/regenerator/tree/master/packages/regenerator-runtime
 │  │  └─ VendorName: Ben Newman
 │  ├─ regexp.prototype.flags@1.3.0
 │  │  ├─ URL: git://github.com/es-shims/RegExp.prototype.flags.git
 │  │  └─ VendorName: Jordan Harband
-│  ├─ regexpu-core@4.7.0
-│  │  ├─ URL: https://github.com/mathiasbynens/regexpu-core.git
-│  │  ├─ VendorName: Mathias Bynens
-│  │  └─ VendorUrl: https://mths.be/regexpu
-│  ├─ regjsgen@0.5.2
-│  │  ├─ URL: https://github.com/bnjmnt4n/regjsgen.git
-│  │  ├─ VendorName: Benjamin Tan
-│  │  └─ VendorUrl: https://github.com/bnjmnt4n/regjsgen
-│  ├─ remark-footnotes@2.0.0
-│  │  ├─ URL: https://github.com/remarkjs/remark-footnotes.git
+│  ├─ remark-gfm@3.0.1
+│  │  ├─ URL: https://github.com/remarkjs/remark-gfm.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
-│  ├─ remark-mdx@1.6.18
-│  │  ├─ URL: https://github.com/mdx-js/mdx.git
-│  │  ├─ VendorName: Titus Wormer
-│  │  └─ VendorUrl: https://mdxjs.com/
-│  ├─ remark-parse@8.0.3
+│  ├─ remark-parse@10.0.1
 │  │  ├─ URL: https://github.com/remarkjs/remark/tree/main/packages/remark-parse
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://remark.js.org/
-│  ├─ remark-squeeze-paragraphs@4.0.0
-│  │  ├─ URL: https://github.com/remarkjs/remark-squeeze-paragraphs.git
-│  │  └─ VendorName: Eugene Sharygin
-│  ├─ repeat-string@1.6.1
-│  │  ├─ URL: https://github.com/jonschlinkert/repeat-string.git
-│  │  ├─ VendorName: Jon Schlinkert
-│  │  └─ VendorUrl: https://github.com/jonschlinkert/repeat-string
-│  ├─ replace-ext@1.0.0
-│  │  ├─ URL: https://github.com/gulpjs/replace-ext.git
-│  │  ├─ VendorName: Gulp Team
-│  │  └─ VendorUrl: http://gulpjs.com/
+│  ├─ remark-rehype@10.1.0
+│  │  ├─ URL: https://github.com/remarkjs/remark-rehype.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
 │  ├─ require-directory@2.1.1
 │  │  ├─ URL: git://github.com/troygoode/node-require-directory.git
 │  │  ├─ VendorName: Troy Goode
@@ -1422,14 +1398,14 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/unshiftio/requires-port
 │  │  ├─ VendorName: Arnout Kazemier
 │  │  └─ VendorUrl: https://github.com/unshiftio/requires-port
-│  ├─ resolve@1.17.0
-│  │  ├─ URL: git://github.com/browserify/resolve.git
-│  │  ├─ VendorName: James Halliday
-│  │  └─ VendorUrl: http://substack.net
 │  ├─ ret@0.1.15
 │  │  ├─ URL: git://github.com/fent/ret.js.git
 │  │  ├─ VendorName: Roly Fentanes
 │  │  └─ VendorUrl: https://github.com/fent
+│  ├─ sade@1.8.1
+│  │  ├─ URL: https://github.com/lukeed/sade.git
+│  │  ├─ VendorName: Luke Edwards
+│  │  └─ VendorUrl: https://lukeed.com
 │  ├─ safe-buffer@5.1.2
 │  │  ├─ URL: git://github.com/feross/safe-buffer.git
 │  │  ├─ VendorName: Feross Aboukhadijeh
@@ -1459,11 +1435,7 @@ Third-party licenses
 │  │  └─ VendorUrl: github.com/dashed
 │  ├─ source-map-support@0.5.19
 │  │  └─ URL: https://github.com/evanw/node-source-map-support
-│  ├─ sourcemap-codec@1.4.8
-│  │  ├─ URL: https://github.com/Rich-Harris/sourcemap-codec
-│  │  ├─ VendorName: Rich Harris
-│  │  └─ VendorUrl: https://github.com/Rich-Harris/sourcemap-codec
-│  ├─ space-separated-tokens@1.1.5
+│  ├─ space-separated-tokens@2.0.1
 │  │  ├─ URL: https://github.com/wooorm/space-separated-tokens.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
@@ -1471,10 +1443,6 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/flozz/StackBlur.git
 │  │  ├─ VendorName: Mario Klingemann
 │  │  └─ VendorUrl: http://www.quasimondo.com/StackBlurForCanvas/StackBlurDemo.html
-│  ├─ state-toggle@1.0.3
-│  │  ├─ URL: https://github.com/wooorm/state-toggle.git
-│  │  ├─ VendorName: Titus Wormer
-│  │  └─ VendorUrl: https://wooorm.com
 │  ├─ string_decoder@1.1.1
 │  │  ├─ URL: git://github.com/nodejs/string_decoder.git
 │  │  └─ VendorUrl: https://github.com/nodejs/string_decoder
@@ -1534,13 +1502,7 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/sindresorhus/to-fast-properties.git
 │  │  ├─ VendorName: Sindre Sorhus
 │  │  └─ VendorUrl: sindresorhus.com
-│  ├─ trim-trailing-lines@1.1.3
-│  │  ├─ URL: https://github.com/wooorm/trim-trailing-lines.git
-│  │  ├─ VendorName: Titus Wormer
-│  │  └─ VendorUrl: https://wooorm.com
-│  ├─ trim@0.0.1
-│  │  └─ VendorName: TJ Holowaychuk
-│  ├─ trough@1.0.5
+│  ├─ trough@2.1.0
 │  │  ├─ URL: https://github.com/wooorm/trough.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
@@ -1550,61 +1512,42 @@ Third-party licenses
 │  │  └─ VendorUrl: https://github.com/apollographql/invariant-packages
 │  ├─ typed-styles@0.0.7
 │  │  └─ VendorName: lttb
-│  ├─ unherit@1.1.3
-│  │  ├─ URL: https://github.com/wooorm/unherit.git
-│  │  ├─ VendorName: Titus Wormer
-│  │  └─ VendorUrl: https://wooorm.com
-│  ├─ unicode-canonical-property-names-ecmascript@1.0.4
-│  │  ├─ URL: https://github.com/mathiasbynens/unicode-canonical-property-names-ecmascript.git
-│  │  ├─ VendorName: Mathias Bynens
-│  │  └─ VendorUrl: https://github.com/mathiasbynens/unicode-canonical-property-names-ecmascript
-│  ├─ unicode-match-property-ecmascript@1.0.4
-│  │  ├─ URL: https://github.com/mathiasbynens/unicode-match-property-ecmascript.git
-│  │  ├─ VendorName: Mathias Bynens
-│  │  └─ VendorUrl: https://github.com/mathiasbynens/unicode-match-property-ecmascript
-│  ├─ unicode-match-property-value-ecmascript@1.2.0
-│  │  ├─ URL: https://github.com/mathiasbynens/unicode-match-property-value-ecmascript.git
-│  │  ├─ VendorName: Mathias Bynens
-│  │  └─ VendorUrl: https://github.com/mathiasbynens/unicode-match-property-value-ecmascript
-│  ├─ unicode-property-aliases-ecmascript@1.1.0
-│  │  ├─ URL: https://github.com/mathiasbynens/unicode-property-aliases-ecmascript.git
-│  │  ├─ VendorName: Mathias Bynens
-│  │  └─ VendorUrl: https://github.com/mathiasbynens/unicode-property-aliases-ecmascript
-│  ├─ unified@9.2.0
+│  ├─ unified@10.1.1
 │  │  ├─ URL: https://github.com/unifiedjs/unified.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://unifiedjs.com/
-│  ├─ unist-builder@2.0.3
+│  ├─ unist-builder@3.0.0
 │  │  ├─ URL: https://github.com/syntax-tree/unist-builder.git
 │  │  └─ VendorName: Eugene Sharygin
-│  ├─ unist-util-generated@1.1.5
+│  ├─ unist-util-generated@2.0.0
 │  │  ├─ URL: https://github.com/syntax-tree/unist-util-generated.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
-│  ├─ unist-util-is@4.0.2
+│  ├─ unist-util-is@5.1.1
 │  │  ├─ URL: https://github.com/syntax-tree/unist-util-is.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
-│  ├─ unist-util-position@3.1.0
+│  ├─ unist-util-position@4.0.1
 │  │  ├─ URL: https://github.com/syntax-tree/unist-util-position.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
-│  ├─ unist-util-remove-position@2.0.1
-│  │  ├─ URL: https://github.com/syntax-tree/unist-util-remove-position.git
-│  │  ├─ VendorName: Titus Wormer
-│  │  └─ VendorUrl: https://wooorm.com
-│  ├─ unist-util-remove@2.0.0
-│  │  ├─ URL: https://github.com/syntax-tree/unist-util-remove.git
-│  │  └─ VendorName: Eugene Sharygin
-│  ├─ unist-util-stringify-position@2.0.3
+│  ├─ unist-util-stringify-position@3.0.1
 │  │  ├─ URL: https://github.com/syntax-tree/unist-util-stringify-position.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
-│  ├─ unist-util-visit-parents@3.1.0
+│  ├─ unist-util-visit-parents@4.1.1
 │  │  ├─ URL: https://github.com/syntax-tree/unist-util-visit-parents.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
-│  ├─ unist-util-visit@2.0.3
+│  ├─ unist-util-visit-parents@5.1.0
+│  │  ├─ URL: https://github.com/syntax-tree/unist-util-visit-parents.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ unist-util-visit@3.1.0
+│  │  ├─ URL: https://github.com/syntax-tree/unist-util-visit.git
+│  │  ├─ VendorName: Titus Wormer
+│  │  └─ VendorUrl: https://wooorm.com
+│  ├─ unist-util-visit@4.1.0
 │  │  ├─ URL: https://github.com/syntax-tree/unist-util-visit.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
@@ -1617,15 +1560,13 @@ Third-party licenses
 │  │  └─ VendorUrl: https://github.com/TooTallNate/util-deprecate
 │  ├─ uuid@3.4.0
 │  │  └─ URL: https://github.com/uuidjs/uuid.git
-│  ├─ vfile-location@3.1.0
-│  │  ├─ URL: https://github.com/vfile/vfile-location.git
-│  │  ├─ VendorName: Titus Wormer
-│  │  └─ VendorUrl: https://wooorm.com
-│  ├─ vfile-message@2.0.4
+│  ├─ uvu@0.5.3
+│  │  └─ URL: https://github.com/lukeed/uvu.git
+│  ├─ vfile-message@3.1.1
 │  │  ├─ URL: https://github.com/vfile/vfile-message.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
-│  ├─ vfile@4.2.0
+│  ├─ vfile@5.3.1
 │  │  ├─ URL: https://github.com/vfile/vfile.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
@@ -1633,10 +1574,6 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/BerkeleyTrue/warning.git
 │  │  ├─ VendorName: Berkeley Martinez
 │  │  └─ VendorUrl: https://github.com/BerkeleyTrue/warning
-│  ├─ web-namespaces@1.1.4
-│  │  ├─ URL: https://github.com/wooorm/web-namespaces.git
-│  │  ├─ VendorName: Titus Wormer
-│  │  └─ VendorUrl: https://wooorm.com
 │  ├─ whatwg-fetch@2.0.4
 │  │  └─ URL: https://github.com/github/fetch.git
 │  ├─ whatwg-fetch@3.4.1
@@ -1649,17 +1586,13 @@ Third-party licenses
 │  │  ├─ URL: git://github.com/driverdan/node-XMLHttpRequest.git
 │  │  ├─ VendorName: Dan DeFelippi
 │  │  └─ VendorUrl: http://driverdan.com
-│  ├─ xtend@4.0.2
-│  │  ├─ URL: git://github.com/Raynos/xtend.git
-│  │  ├─ VendorName: Raynos
-│  │  └─ VendorUrl: https://github.com/Raynos/xtend
 │  ├─ yargs@15.4.1
 │  │  ├─ URL: https://github.com/yargs/yargs.git
 │  │  └─ VendorUrl: https://yargs.js.org/
 │  ├─ zen-observable@0.8.15
 │  │  ├─ URL: https://github.com/zenparsing/zen-observable.git
 │  │  └─ VendorUrl: https://github.com/zenparsing/zen-observable
-│  └─ zwitch@1.0.5
+│  └─ zwitch@2.0.2
 │     ├─ URL: https://github.com/wooorm/zwitch.git
 │     ├─ VendorName: Titus Wormer
 │     └─ VendorUrl: https://wooorm.com

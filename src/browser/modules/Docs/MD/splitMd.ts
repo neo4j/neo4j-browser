@@ -17,30 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React from 'react'
 
-type State = any
-
-export class MdxErrorBoundary extends React.Component<{}, State> {
-  state = {
-    error: null
-  }
-
-  componentDidCatch(error: any) {
-    this.setState({ error })
-  }
-
-  render() {
-    if (this.state.error) {
-      return (
-        <>
-          Error parsing MDX slide:
-          <pre className="code">
-            <code>{(this.state.error as any).toString()}</code>
-          </pre>
-        </>
-      )
-    }
-    return this.props.children
-  }
-}
+export const splitMdSlides = (md = '') => md.split(/\r?\n---\r?\n/)
+export const splitMdRows = (md = '') => md.split('-| - |-')
+export const splitMdColumns = (md = '') => md.split('-| | |-')

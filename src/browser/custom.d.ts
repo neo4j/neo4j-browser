@@ -5,8 +5,6 @@ declare module '*.svg' {
 
 declare module '*.css'
 declare module '*.less'
-declare module '@mdx-js/runtime'
-declare module '@literal-jsx/parser'
 declare module 'ascii-data-table'
 declare module 'react-timeago'
 declare module '@neo4j/browser-lambda-parser'

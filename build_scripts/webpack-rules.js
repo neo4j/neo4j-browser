@@ -44,9 +44,7 @@ module.exports = [
     test: /\.(js|jsx)$/,
     include: [
       path.resolve('src'),
-      path.resolve('node_modules/@literal-jsx/parser'),
-      path.resolve('node_modules/@neo4j/browser-lambda-parser'),
-      path.resolve('node_modules/remark-mdx')
+      path.resolve('node_modules/@neo4j/browser-lambda-parser')
     ],
     use: 'babel-loader'
   },
