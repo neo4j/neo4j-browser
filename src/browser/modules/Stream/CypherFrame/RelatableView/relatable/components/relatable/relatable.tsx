@@ -58,20 +58,7 @@ export interface IRelatableBasicProps extends IRelatableProps, ITableProps {}
 
 export type IRelatableChildrenProps = PropsWithChildren<IRelatableProps>
 
-export default function Relatable(
-  props: IRelatableChildrenProps | IRelatableBasicProps
-): JSX.Element {
-  // @ts-ignore
-  const { children } = props
-
-  if (children) {
-    return <RelatableState {...props} />
-  }
-
-  return <RelatableBasic {...props} />
-}
-
-function RelatableBasic(props: IRelatableBasicProps): JSX.Element {
+export default function Relatable(props: IRelatableBasicProps): JSX.Element {
   const { columns, data, defaultColumn, paginated, ...rest } = props
 
   return (

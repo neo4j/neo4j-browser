@@ -22,6 +22,8 @@ import React, { useState } from 'react'
 import { useDrop } from 'react-dnd'
 import uuid from 'uuid'
 
+import { AddIcon } from 'common'
+
 import {
   ExportButton,
   NewFolderButton,
@@ -37,7 +39,6 @@ import {
   SavedScriptsNewFavorite
 } from './styled'
 import { getScriptDisplayName } from './utils'
-import { AddIcon } from 'browser-components/icons/Icons'
 import { ExportFormat } from 'services/exporting/favoriteUtils'
 import { Favorite } from 'shared/modules/favorites/favoritesDuck'
 import { Folder } from 'shared/modules/favorites/foldersDuck'

@@ -19,8 +19,10 @@
  */
 import React from 'react'
 
+import { toKeyString } from 'common'
+
 import { flattenAttributes, mapSysInfoRecords } from './sysinfoUtils'
-import { toHumanReadableBytes, toKeyString } from 'services/utils'
+import { toHumanReadableBytes } from 'services/utils'
 
 /*
 The database provides a number of ways to monitor it's health, we use JMX MBeans.

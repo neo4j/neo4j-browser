@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { QuestionIcon } from 'common'
+
 import { StyledInfoMessage } from './../../Stream/styled'
 import { DatabaseMetric } from './SysInfoFrame'
 import { buildDatabaseTable, buildTableData } from './sysinfoUtils'
@@ -8,7 +10,6 @@ import {
   SysInfoTableContainer,
   SysInfoTableEntry
 } from 'browser-components/Tables'
-import { QuestionIcon } from 'browser-components/icons/Icons'
 import { Database } from 'shared/modules/dbMeta/state'
 
 type SysInfoFrameProps = {

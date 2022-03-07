@@ -25,6 +25,8 @@ import SVGInline from 'react-svg-inline'
 import { Action } from 'redux'
 import { Bus } from 'suber'
 
+import { CloseIcon, ContractIcon, ExpandIcon } from 'common'
+
 import Monaco, { MonacoHandles } from './Monaco'
 import {
   EditorContainer,
@@ -41,18 +43,13 @@ import { getProjectFileDefaultFileName } from 'browser-components/ProjectFiles/p
 import { defaultNameFromDisplayContent } from 'browser-components/SavedScripts'
 import { EditorButton, FrameButton } from 'browser-components/buttons'
 import {
-  CloseIcon,
-  ContractIcon,
-  ExpandIcon
-} from 'browser-components/icons/Icons'
-import {
   FULLSCREEN_SHORTCUT,
   printShortcut
 } from 'browser/modules/App/keyboardShortcuts'
-import fileIcon from 'icons/file.svg'
-import runIcon from 'icons/run-icon.svg'
-import updateFavoriteIcon from 'icons/update-favorite.svg'
-import updateFileIcon from 'icons/update-file.svg'
+import fileIcon from 'common/icons/svgs/file.svg'
+import runIcon from 'common/icons/svgs/run-icon.svg'
+import updateFavoriteIcon from 'common/icons/svgs/update-favorite.svg'
+import updateFileIcon from 'common/icons/svgs/update-file.svg'
 import { GlobalState } from 'shared/globalState'
 import { getProjectId } from 'shared/modules/app/appDuck'
 import {

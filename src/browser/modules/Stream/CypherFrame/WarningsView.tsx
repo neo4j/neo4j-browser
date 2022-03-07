@@ -31,7 +31,7 @@ import {
   StyledHelpFrame,
   StyledPreformattedArea
 } from '../styled'
-import { deepEquals } from 'services/utils'
+import { deepEquals } from 'common'
 
 const getWarningComponent = (severity: any) => {
   if (severity === 'ERROR') {

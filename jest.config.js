@@ -31,6 +31,7 @@ module.exports = {
     '^browser-components(.*)$': '<rootDir>/src/browser/components$1',
     '^browser-services(.*)$': '<rootDir>/src/browser/services$1',
     '^browser-hooks(.*)$': '<rootDir>/src/browser/hooks$1',
+    // '^common$': '<rootDir>/src/common', // Not needed???
     'worker-loader': '<rootDir>/test_utils/__mocks__/workerLoaderMock.js',
     'project-root(.*)$': '<rootDir>$1',
     '^monaco-editor$':

@@ -23,6 +23,8 @@ import { withBus } from 'react-suber'
 import { Action, Dispatch } from 'redux'
 import { Bus } from 'suber'
 
+import { PlayIcon } from 'common'
+
 import { errorMessageFormater } from '../../errorMessageFormater'
 import {
   StyledCypherErrorMessage,
@@ -36,7 +38,6 @@ import {
   StyledPreformattedArea
 } from '../../styled'
 import { MissingParamsTemplateLink } from './MissingParamsTemplateLink'
-import { PlayIcon } from 'browser-components/icons/Icons'
 import { GlobalState } from 'project-root/src/shared/globalState'
 import {
   commandSources,
@@ -55,7 +56,7 @@ import {
   isUnknownProcedureError
 } from 'services/cypherErrorsHelper'
 import { BrowserError } from 'services/exceptions'
-import { deepEquals } from 'services/utils'
+import { deepEquals } from 'common'
 
 export type ErrorsViewProps = {
   result: BrowserRequestResult

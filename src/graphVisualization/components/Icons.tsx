@@ -20,10 +20,10 @@
 import React from 'react'
 
 import { IconContainer } from './IconContainer'
-import fitToScreenIcon from 'icons/iconsToBeFetchedFromNDL/fit-to-screen.svg'
-import infoCircle from 'icons/iconsToBeFetchedFromNDL/information-circle.svg'
-import zoomInIcon from 'icons/iconsToBeFetchedFromNDL/zoom-in.svg'
-import zoomOutIcon from 'icons/iconsToBeFetchedFromNDL/zoom-out.svg'
+import fitToScreenIcon from 'common/icons/svgs/iconsToBeFetchedFromNDL/fit-to-screen.svg' // TODO
+import infoCircle from 'common/icons/svgs/iconsToBeFetchedFromNDL/information-circle.svg' // TODO
+import zoomInIcon from 'common/icons/svgs/iconsToBeFetchedFromNDL/zoom-in.svg' // TODO
+import zoomOutIcon from 'common/icons/svgs/iconsToBeFetchedFromNDL/zoom-out.svg' // TODO
 
 const ZOOM_ICONS_DEFAULT_SIZE_IN_PX = 20
 const ZOOM_ICONS_LARGE_SCALE_FACTOR = 1.2

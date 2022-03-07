@@ -21,6 +21,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import TimeAgo from 'react-timeago'
 
+import { BinIcon } from 'common'
+
 import { BrowserSyncSignoutIframe } from './BrowserSyncAuthIframes'
 import BrowserSyncAuthWindow from './BrowserSyncAuthWindow'
 import {
@@ -39,7 +41,6 @@ import {
   DrawerSubHeader,
   DrawerToppedHeader
 } from 'browser-components/drawer/drawer-styled'
-import { BinIcon } from 'browser-components/icons/Icons'
 import { signOut } from 'services/browserSyncService'
 import {
   DISCONNECTED_STATE,

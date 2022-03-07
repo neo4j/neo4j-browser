@@ -17,7 +17,7 @@
 import { render } from '@testing-library/react'
 import React from 'react'
 
-import ClickableUrls from './ClickableUrls'
+import { ClickableUrls } from 'common'
 
 describe('clickable-urls', () => {
   describe('convertUrlsToHrefTags', () => {

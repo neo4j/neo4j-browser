@@ -20,6 +20,8 @@
 import { uniqBy } from 'lodash-es'
 import React from 'react'
 
+import { toKeyString } from 'common'
+
 import { BaseFrameProps } from '../Stream'
 import { AliasText, UnstyledList } from '../styled'
 import {
@@ -33,7 +35,7 @@ import ClickToCode from 'browser/modules/ClickToCode/index'
 import TextCommand from 'browser/modules/DecoratedText/TextCommand'
 import FrameBodyTemplate from 'browser/modules/Frame/FrameBodyTemplate'
 import { StyledCodeBlockFrame } from 'browser/modules/Main/styled'
-import { escapeCypherIdentifier, toKeyString } from 'services/utils'
+import { escapeCypherIdentifier } from 'services/utils'
 import { useDbCommand } from 'shared/modules/commands/commandsDuck'
 
 const DbsFrame = (props: BaseFrameProps) => {

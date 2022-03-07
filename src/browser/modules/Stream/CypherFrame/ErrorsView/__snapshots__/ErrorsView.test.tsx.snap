@@ -5,43 +5,43 @@ exports[`ErrorsView displays nothing if no errors 1`] = `<div />`;
 exports[`ErrorsView displays procedure link if unknown procedure 1`] = `
 <div>
   <div
-    class="sc-kpOJdX dcjZxn"
+    class="sc-hMqMXs OpGWx"
   >
     <div
-      class="sc-dxgOiQ YDkMG"
+      class="sc-kEYyzF dYsnvA"
     >
       <div
-        class="sc-ckVGcZ hWXbch"
+        class="sc-kkGfuU hJCJOW"
       >
         <div
-          class="sc-kEYyzF sc-iAyFgw cCgybq"
+          class="sc-cvbbAY sc-brqgnP ddDdiF"
         >
           ERROR
         </div>
         <h4
-          class="sc-brqgnP ghTbFe"
+          class="sc-iRbamj cKeiXE"
         >
           Neo.ClientError.Procedure.ProcedureNotFound
         </h4>
       </div>
       <div
-        class="sc-jKJlTe loXQau"
+        class="sc-iAyFgw gPlgsX"
       >
         <pre
-          class="sc-jAaTju jVGCzW"
+          class="sc-gipzik bnZudT"
           data-testid="cypherFrameErrorMessage"
         >
           not found
         </pre>
       </div>
       <div
-        class="sc-hMqMXs ensEbq"
+        class="sc-eHgmQL YzCEy"
       >
         <a
-          class="sc-eNQAEJ lmdVTE"
+          class="sc-hSdWYo diOLBu"
         >
           <i
-            class="sc-eXEjpC fSAaHQ fa fa-play-circle-o"
+            class="sc-bwCtUz kPdlNE fa fa-play-circle-o"
           />
            List available procedures
         </a>
@@ -54,30 +54,30 @@ exports[`ErrorsView displays procedure link if unknown procedure 1`] = `
 exports[`ErrorsView does displays an error 1`] = `
 <div>
   <div
-    class="sc-kpOJdX dcjZxn"
+    class="sc-hMqMXs OpGWx"
   >
     <div
-      class="sc-dxgOiQ YDkMG"
+      class="sc-kEYyzF dYsnvA"
     >
       <div
-        class="sc-ckVGcZ hWXbch"
+        class="sc-kkGfuU hJCJOW"
       >
         <div
-          class="sc-kEYyzF sc-iAyFgw cCgybq"
+          class="sc-cvbbAY sc-brqgnP ddDdiF"
         >
           ERROR
         </div>
         <h4
-          class="sc-brqgnP ghTbFe"
+          class="sc-iRbamj cKeiXE"
         >
           Test.Error
         </h4>
       </div>
       <div
-        class="sc-jKJlTe loXQau"
+        class="sc-iAyFgw gPlgsX"
       >
         <pre
-          class="sc-jAaTju jVGCzW"
+          class="sc-gipzik bnZudT"
           data-testid="cypherFrameErrorMessage"
         >
           Test error description

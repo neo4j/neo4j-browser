@@ -36,7 +36,7 @@ import {
   StyledFileDropContent,
   StyledFileDropInner
 } from './styled'
-import icon from 'icons/task-list-download.svg'
+import icon from 'common/icons/svgs/task-list-download.svg'
 import {
   commandSources,
   executeCommand,

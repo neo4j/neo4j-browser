@@ -19,9 +19,10 @@
  */
 import React from 'react'
 
+import { SpinnerIcon } from 'common'
+
 import { SpinnerContainer, StyledBodyMessage } from '../styled'
 import Centered from 'browser-components/Centered'
-import { SpinnerIcon } from 'browser-components/icons/Icons'
 import {
   REQUEST_STATUS_CANCELED,
   REQUEST_STATUS_CANCELING,

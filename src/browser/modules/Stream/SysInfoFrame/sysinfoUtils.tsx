@@ -20,6 +20,8 @@
 import neo4j from 'neo4j-driver'
 import React from 'react'
 
+import { toKeyString } from 'common'
+
 import {
   StyledSysInfoTable,
   SysInfoTableEntry
@@ -28,7 +30,6 @@ import {
   extractFromNeoObjects,
   itemIntToString
 } from 'services/bolt/boltMappings'
-import { toKeyString } from 'services/utils'
 
 export const mapSysInfoRecords = (records: any) => {
   return records.map((record: any) => {

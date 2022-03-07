@@ -20,6 +20,8 @@
 import memoize from 'memoize-one'
 import React, { Component } from 'react'
 
+import { DoubleDownIcon, DoubleUpIcon } from 'common'
+
 import queryPlan from '../../D3Visualization/queryPlan/queryPlan'
 import {
   StyledLeftPartial,
@@ -30,11 +32,11 @@ import { PlanExpand } from './CypherFrame'
 import { PlanSVG } from './PlanView.styled'
 import Ellipsis from 'browser-components/Ellipsis'
 import { FrameButton } from 'browser-components/buttons'
-import { DoubleDownIcon, DoubleUpIcon } from 'browser-components/icons/Icons'
 import { dim } from 'browser-styles/constants'
 import { StyledFrameTitlebarButtonSection } from 'browser/modules/Frame/styled'
 import bolt from 'services/bolt/bolt'
-import { deepEquals, shallowEquals } from 'services/utils'
+import { deepEquals } from 'common'
+import { shallowEquals } from 'services/utils'
 
 type PlanViewState = { extractedPlan: any }
 export type PlanViewProps = {

@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
-import { CopyIcon } from './icons/Icons'
+import { CopyIcon } from '../icons/Icons'
 
 type ClipboardCopierProps = {
   textToCopy: string
   iconSize?: number
   titleText?: string
 }
-function ClipboardCopier({
+export function ClipboardCopier({
   textToCopy: text,
   iconSize = 16,
   titleText = 'Copy to clipboard'
@@ -77,5 +77,3 @@ export function copyToClipboard(text: string): Promise<void> {
     })
   }
 }
-
-export default ClipboardCopier

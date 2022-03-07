@@ -17,11 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { Action, Dispatch } from 'redux'
 import { Bus } from 'suber'
+
+import { SaveFavoriteIcon } from 'common'
 
 import { MAIN_WRAPPER_DOM_ID } from '../App/App'
 import Monaco, { MonacoHandles } from '../Editor/Monaco'
@@ -34,9 +36,8 @@ import {
   StyledFrameTitlebarButtonSection
 } from './styled'
 import { EditorButton, FrameButton } from 'browser-components/buttons'
-import { SaveFavoriteIcon } from 'browser-components/icons/Icons'
-import runIcon from 'icons/run-icon.svg'
-import stopIcon from 'icons/stop-icon.svg'
+import runIcon from 'common/icons/svgs/run-icon.svg'
+import stopIcon from 'common/icons/svgs/stop-icon.svg'
 import { GlobalState } from 'shared/globalState'
 import * as app from 'shared/modules/app/appDuck'
 import * as commands from 'shared/modules/commands/commandsDuck'

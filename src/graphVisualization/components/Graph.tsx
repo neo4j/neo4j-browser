@@ -26,7 +26,7 @@ import {
 } from '../models/GraphEventHandler'
 import { GraphStyleModel } from '../models/GraphStyle'
 import { VizItem } from '../types'
-import { BasicNode, BasicRelationship } from '../types'
+import { BasicNode, BasicRelationship } from 'common'
 import {
   GraphStats,
   createGraph,

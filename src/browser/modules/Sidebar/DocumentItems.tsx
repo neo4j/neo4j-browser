@@ -23,6 +23,11 @@ import { Action } from 'redux'
 import styled from 'styled-components'
 
 import {
+  SavedScriptsCollapseMenuIcon,
+  SavedScriptsExpandMenuRightIcon
+} from 'common'
+
+import {
   StyledCommand,
   StyledCommandListItem,
   StyledCommandNamePair,
@@ -36,10 +41,6 @@ import {
   DrawerSectionBody,
   DrawerSubHeader
 } from 'browser-components/drawer/drawer-styled'
-import {
-  SavedScriptsCollapseMenuIcon,
-  SavedScriptsExpandMenuRightIcon
-} from 'browser-components/icons/Icons'
 import {
   commandSources,
   executeCommand

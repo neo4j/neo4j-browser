@@ -20,11 +20,12 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 
+import { FireExtinguisherIcon } from 'common'
+
 import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
 import { InfoView } from './InfoView'
 import { PaddedDiv, StyledOneRowStatsBar, StyledRightPartial } from './styled'
 import { FrameButton } from 'browser-components/buttons'
-import { FireExtinguisherIcon } from 'browser-components/icons/Icons'
 import { StyledFrameTitlebarButtonSection } from 'browser/modules/Frame/styled'
 import { objToCss } from 'services/grassUtils'
 import {

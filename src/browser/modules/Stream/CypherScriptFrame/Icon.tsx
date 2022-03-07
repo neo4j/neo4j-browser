@@ -19,13 +19,14 @@
  */
 import React from 'react'
 
-import { ErrorSpan, SuccessSpan, WarningSpan } from './styled'
 import {
   CheckedSquareIcon,
   ExclamationTriangleIcon,
   SmallSpinnerIcon,
   SquareIcon
-} from 'browser-components/icons/Icons'
+} from 'common'
+
+import { ErrorSpan, SuccessSpan, WarningSpan } from './styled'
 import { Status } from 'shared/modules/requests/requestsDuck'
 
 interface IconProps {

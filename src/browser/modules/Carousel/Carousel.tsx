@@ -22,6 +22,8 @@ import { useState } from 'react'
 import { useRef } from 'react'
 import { useEffect } from 'react'
 
+import { SlideNextIcon, SlidePreviousIcon } from 'common'
+
 import CarouselSlidePicker from './CarouselSlidePicker'
 import {
   SlideContainer,
@@ -34,10 +36,6 @@ import {
 } from './styled'
 import Directives from 'browser-components/Directives'
 import { CarouselButton } from 'browser-components/buttons'
-import {
-  SlideNextIcon,
-  SlidePreviousIcon
-} from 'browser-components/icons/Icons'
 
 export default function Carousel({
   onSlide,

@@ -21,8 +21,6 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Action, Dispatch } from 'redux'
 
-import { TitleBarHeader } from './styled'
-import { FrameControlButton } from 'browser-components/buttons'
 import {
   CloseIcon,
   ContractIcon,
@@ -30,7 +28,10 @@ import {
   ExpandIcon,
   PinIcon,
   UpIcon
-} from 'browser-components/icons/Icons'
+} from 'common'
+
+import { TitleBarHeader } from './styled'
+import { FrameControlButton } from 'browser-components/buttons'
 import { GlobalState } from 'shared/globalState'
 import {
   Frame,

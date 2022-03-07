@@ -20,8 +20,6 @@
 import deepmerge from 'deepmerge'
 import { debounce } from 'lodash'
 import React, { Component } from 'react'
-import { ConnectedComponent, connect } from 'react-redux'
-import { Action, Dispatch } from 'redux'
 
 import {
   GetNodeNeighboursFn,
@@ -31,20 +29,15 @@ import {
   VizItem
 } from 'graph-visualization'
 
-import { GraphConnected } from './GraphConnected'
+import { Graph } from '../components/Graph'
 import { NodeInspectorPanel, defaultPanelWidth } from './NodeInspectorPanel'
 import { StyledFullSizeContainer, panelMinWidth } from './styled'
 import {
   BasicNode,
   BasicNodesAndRels,
-  BasicRelationship
-} from 'services/bolt/boltMappings'
-import { deepEquals } from 'services/utils'
-import { GlobalState } from 'shared/globalState'
-import {
-  getNodePropertiesExpandedByDefault,
-  setNodePropertiesExpandedByDefault
-} from 'shared/modules/frames/framesDuck'
+  BasicRelationship,
+  deepEquals
+} from 'common'
 
 type DeduplicateHelper = {
   nodes: BasicNode[]
@@ -87,10 +80,10 @@ type ExplorerComponentProps = {
   ) => void
   setGraph: (graph: GraphModel) => void
   hasTruncatedFields: boolean
-}
-type ExporerReduxProps = {
   nodePropertiesExpandedByDefault: boolean
   setNodePropertiesExpandedByDefault: (expandedByDefault: boolean) => void
+  wheelZoomInfoMessageEnabled: boolean
+  disableWheelZoomInfoMessage: () => void
 }
 
 type ExplorerComponentState = {
@@ -105,15 +98,14 @@ type ExplorerComponentState = {
   width: number
   nodePropertiesExpanded: boolean
 }
-type FullExplorerProps = ExplorerComponentProps & ExporerReduxProps
 
-export class ExplorerComponent extends Component<
-  FullExplorerProps,
+export class Explorer extends Component<
+  ExplorerComponentProps,
   ExplorerComponentState
 > {
   defaultStyle: any
 
-  constructor(props: FullExplorerProps) {
+  constructor(props: ExplorerComponentProps) {
     super(props)
     const graphStyle = new GraphStyleModel()
     this.defaultStyle = graphStyle.toSheet()
@@ -247,7 +239,7 @@ export class ExplorerComponent extends Component<
 
     return (
       <StyledFullSizeContainer id="svg-vis">
-        <GraphConnected
+        <Graph
           isFullscreen={this.props.isFullscreen}
           relationships={this.state.relationships}
           nodes={this.state.nodes}
@@ -263,6 +255,8 @@ export class ExplorerComponent extends Component<
           offset={
             (this.state.nodePropertiesExpanded ? this.state.width : 0) + 8
           }
+          wheelZoomInfoMessageEnabled={this.props.wheelZoomInfoMessageEnabled}
+          disableWheelZoomInfoMessage={this.props.disableWheelZoomInfoMessage}
         />
         <NodeInspectorPanel
           graphStyle={graphStyle}
@@ -291,18 +285,3 @@ export class ExplorerComponent extends Component<
     this.mounted = false
   }
 }
-
-export const Explorer: ConnectedComponent<
-  typeof ExplorerComponent,
-  ExplorerComponentProps
-> = connect(
-  (state: GlobalState) => ({
-    nodePropertiesExpandedByDefault: getNodePropertiesExpandedByDefault(state)
-  }),
-  (dispatch: Dispatch<Action>) => ({
-    setNodePropertiesExpandedByDefault: (expandedByDefault: boolean) =>
-      dispatch(setNodePropertiesExpandedByDefault(expandedByDefault))
-  })
-)(ExplorerComponent)
-
-export default Explorer

@@ -46,6 +46,10 @@ function mockVizProps(
     result: null,
     graphStyleData: null,
     updateStyle: () => undefined,
+    nodePropertiesExpandedByDefault: true,
+    setNodePropertiesExpandedByDefault: jest.fn(),
+    wheelZoomInfoMessageEnabled: false,
+    disableWheelZoomInfoMessage: jest.fn(),
     ...overrides
   }
 }

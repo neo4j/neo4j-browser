@@ -19,8 +19,6 @@
  */
 import styled from 'styled-components'
 
-import linkIcon from 'icons/external-link.svg'
-
 export const Drawer = styled.div`
   width: 290px;
   display: flex;
@@ -93,15 +91,6 @@ export const DrawerExternalLink = styled.a.attrs({
 
   &:active {
     text-decoration: none;
-  }
-
-  &:before {
-    display: inline-block;
-    content: ' ';
-    background-image: url('data:image/svg+xml;utf8,${linkIcon}');
-    height: 12px;
-    width: 12px;
-    margin-right: 7px;
   }
 `
 

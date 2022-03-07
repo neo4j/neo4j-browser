@@ -19,7 +19,7 @@
  *
  */
 import { KERBEROS, NATIVE } from 'services/bolt/boltHelpers'
-import { upperFirst } from 'services/utils'
+import { upperFirst } from 'common'
 
 const notEmpty = (str: any) => str.length > 0
 const splitOnUnderscore = (str: any) => str.split('_')

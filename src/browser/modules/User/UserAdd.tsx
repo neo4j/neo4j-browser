@@ -23,6 +23,8 @@ import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import uuid from 'uuid'
 
+import { CloseIcon } from 'common'
+
 import RolesSelector from './RolesSelector'
 import { StyleRolesContainer, StyledInput } from './styled'
 import { EnterpriseOnlyFrame } from 'browser-components/EditionView'
@@ -33,7 +35,6 @@ import {
   StyledLabel
 } from 'browser-components/Form'
 import { FormButton, StyledLink } from 'browser-components/buttons'
-import { CloseIcon } from 'browser-components/icons/Icons'
 import FrameAside from 'browser/modules/Frame/FrameAside'
 import FrameBodyTemplate from 'browser/modules/Frame/FrameBodyTemplate'
 import FrameError from 'browser/modules/Frame/FrameError'

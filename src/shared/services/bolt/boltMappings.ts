@@ -20,15 +20,17 @@
 import { flatten, map, take } from 'lodash-es'
 import neo4j from 'neo4j-driver'
 
+import { upperFirst } from 'common'
+
 import {
   escapeReservedProps,
   safelyAddObjectProp,
   safelyRemoveObjectProp,
-  unEscapeReservedProps,
-  upperFirst
+  unEscapeReservedProps
 } from '../utils'
 import updateStatsFields from './updateStatisticsFields'
 import { stringModifier } from 'services/bolt/cypherTypesFormatting'
+import { BasicNodesAndRels } from 'common/types/neo4j'
 
 export const reservedTypePropertyName = 'transport-class'
 
@@ -220,25 +222,6 @@ const getTypeDisplayName = (val: any): string => {
   }
 
   return getDriverTypeName(val) || 'Unknown'
-}
-
-export type BasicNode = {
-  id: string
-  labels: string[]
-  properties: Record<string, string>
-  propertyTypes: Record<string, string>
-}
-export type BasicRelationship = {
-  id: string
-  startNodeId: string
-  endNodeId: string
-  type: string
-  properties: Record<string, string>
-  propertyTypes: Record<string, string>
-}
-export type BasicNodesAndRels = {
-  nodes: BasicNode[]
-  relationships: BasicRelationship[]
 }
 
 export function extractNodesAndRelationshipsFromRecordsForOldVis(

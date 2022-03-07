@@ -23,50 +23,42 @@ import { Popup } from 'semantic-ui-react'
 import { GraphStyleModel } from 'graph-visualization'
 
 import { GrassEditor } from './GrassEditor'
-import { StyledLabel } from 'browser/modules/DBMSInfo/styled'
+// eslint-disable-next-line no-restricted-imports
+import { StyledRelationship } from 'browser/modules/DBMSInfo/styled'
 
-export type StyleableNodeLabelProps = {
-  selectedLabel: {
-    label: string
-    propertyKeys: string[]
-    count?: number
-  }
+export type StyleableRelTypeProps = {
   graphStyle: GraphStyleModel
-  onClick?: () => void
+  selectedRelType: { relType: string; propertyKeys: string[]; count?: number }
 }
-export function StyleableNodeLabel({
-  graphStyle,
-  selectedLabel,
-  onClick
-}: StyleableNodeLabelProps): JSX.Element {
-  const labels = selectedLabel.label === '*' ? [] : [selectedLabel.label]
-  const graphStyleForLabel = graphStyle.forNode({
-    labels: labels
+export function StyleableRelType({
+  selectedRelType,
+  graphStyle
+}: StyleableRelTypeProps): JSX.Element {
+  const styleForRelType = graphStyle.forRelationship({
+    type: selectedRelType.relType
   })
-
   return (
     <Popup
       on="click"
       basic
       pinned
-      key={selectedLabel.label}
+      key={selectedRelType.relType}
       trigger={
-        <StyledLabel
-          {...onClick}
+        <StyledRelationship
           style={{
-            backgroundColor: graphStyleForLabel.get('color'),
-            color: graphStyleForLabel.get('text-color-internal')
+            backgroundColor: styleForRelType.get('color'),
+            color: styleForRelType.get('text-color-internal')
           }}
-          data-testid={`property-details-overview-node-label-${selectedLabel.label}`}
+          data-testid={`property-details-overview-relationship-type-${selectedRelType.relType}`}
         >
-          {selectedLabel.count !== undefined
-            ? `${selectedLabel.label} (${selectedLabel.count})`
-            : `${selectedLabel.label}`}
-        </StyledLabel>
+          {selectedRelType.count !== undefined
+            ? `${selectedRelType.relType} (${selectedRelType.count})`
+            : `${selectedRelType.relType}`}
+        </StyledRelationship>
       }
       wide
     >
-      <GrassEditor selectedLabel={selectedLabel} />
+      <GrassEditor selectedRelType={selectedRelType} />
     </Popup>
   )
 }

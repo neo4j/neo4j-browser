@@ -5,10 +5,10 @@ exports[`Visualization renders empty content 1`] = `<div />`;
 exports[`Visualization renders with result and escapes any HTML 1`] = `
 <div>
   <div
-    class="sc-bAeIUo kSeZcY"
+    class="sc-dVhcbM khElYF"
   >
     <div
-      class="sc-kGXeez jKzZRs"
+      class="sc-eNQAEJ iQGAor"
       id="svg-vis"
     >
       <div
@@ -82,7 +82,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
             class="sc-bxivhb jxitkF zoom-in"
           >
             <i
-              class="sc-fjmCvl fMdbP"
+              class="sc-TFwJa bUEOAT"
             >
               <span
                 class="SVGInline SVGInline--cleaned"
@@ -99,7 +99,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
             class="sc-bxivhb jxitkF zoom-out"
           >
             <i
-              class="sc-TFwJa bUEOAT"
+              class="sc-bHwgHz duwluX"
             >
               <span
                 class="SVGInline SVGInline--cleaned"
@@ -116,7 +116,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
             class="sc-bxivhb jxitkF"
           >
             <i
-              class="sc-bHwgHz duwluX"
+              class="sc-krDsej jTMMig"
             >
               <span
                 class="SVGInline SVGInline--cleaned"
@@ -131,51 +131,51 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
         </div>
       </div>
       <div
-        class="sc-dxgOiQ gMCSBA"
+        class="sc-kEYyzF coRzop"
         title="Collapse the Node Properties display"
       >
         <i
-          class="sc-krDsej jTMMig fa fa-chevron-right "
+          class="sc-dTdPqK gxKOKd fa fa-chevron-right "
         />
       </div>
       <div
-        class="sc-kpOJdX idzfJo"
+        class="sc-hMqMXs XHvu"
         width="204.8"
       >
         <div
-          class="sc-ckVGcZ eFGykO react-resizable"
+          class="sc-kkGfuU eCGvnL react-resizable"
           data-testid="vizInspector"
         >
           <div
-            class="sc-eNQAEJ ITmwS"
+            class="sc-hSdWYo czkPf"
           >
             Overview
           </div>
           <div
-            class="sc-hMqMXs gdGGiH"
+            class="sc-eHgmQL hYAFKD"
           >
             <div>
               <div
-                class="sc-jWBwVP hEwBEr"
+                class="sc-gPEVay dJwIjI"
               >
                 <span
-                  class="sc-eHgmQL ZYPhy"
+                  class="sc-jAaTju eaXhue"
                 >
                   Node labels
                 </span>
               </div>
               <ul
-                class="sc-iwsKbI sc-jzJRlG kSaRXC"
+                class="sc-fjdhpX sc-kGXeez eQCcCs"
               >
                 <div
-                  class="sc-jAaTju sc-jDwBTQ hnAfZY"
+                  class="sc-jlyJG sc-gipzik cDyDsz"
                   data-testid="property-details-overview-node-label-*"
                   style="background-color: rgb(165, 171, 182); color: rgb(255, 255, 255);"
                 >
                   * (1)
                 </div>
                 <div
-                  class="sc-jAaTju sc-jDwBTQ hnAfZY"
+                  class="sc-jlyJG sc-gipzik cDyDsz"
                   data-testid="property-details-overview-node-label-Person"
                   style="background-color: rgb(201, 144, 192); color: rgb(255, 255, 255);"
                 >

@@ -20,7 +20,7 @@
 import { GraphModel } from '../models/Graph'
 import { NodeModel } from '../models/Node'
 import { RelationshipModel } from '../models/Relationship'
-import { BasicNode, BasicRelationship } from '../types'
+import { BasicNode, BasicRelationship } from 'common'
 import { optionalToString } from '../utils/utils'
 
 const mapProperties = (_: any) => Object.assign({}, ...stringifyValues(_))

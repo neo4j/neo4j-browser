@@ -20,6 +20,13 @@
 import React, { useState } from 'react'
 import { useDrop } from 'react-dnd'
 
+import {
+  FolderIcon,
+  NavIcon,
+  SavedScriptsCollapseMenuIcon,
+  SavedScriptsExpandMenuRightIcon
+} from 'common'
+
 import { useCustomBlur, useNameUpdate } from './hooks'
 import {
   ChildrenContainer,
@@ -35,12 +42,6 @@ import {
   SavedScriptsFolderMenuIconWrapper,
   SavedScriptsInput
 } from './styled'
-import {
-  FolderIcon,
-  NavIcon,
-  SavedScriptsCollapseMenuIcon,
-  SavedScriptsExpandMenuRightIcon
-} from 'browser-components/icons/Icons'
 import { ExportFormat } from 'services/exporting/favoriteUtils'
 import { Folder } from 'shared/modules/favorites/foldersDuck'
 

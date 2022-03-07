@@ -117,27 +117,6 @@ describe('utils', () => {
       })
     })
   })
-  test('can deeply compare objects', () => {
-    // Given
-    const o1 = { a: 'a', b: 'b', c: { c: 'c' } }
-    const o2 = { ...o1 }
-    const o3 = { ...o1, c: { c: 'd' } }
-    const o4 = { ...o1, d: { e: { f: 'g' } } }
-    const o5 = { ...o1, d: { e: { f: 'g' } } }
-
-    // When & Then
-    expect(utils.deepEquals(o1, o2)).toBeTruthy()
-    expect(utils.deepEquals(o1, o3)).toBeFalsy()
-    expect(utils.deepEquals(o4, o5)).toBeTruthy()
-  })
-  test('deepEquals compares object methods by source instead of by reference', () => {
-    const foo1 = { someMethod: () => 'foo' }
-    const foo2 = { someMethod: () => 'foo' }
-    const bar = { someMethod: () => 'bar' }
-
-    expect(utils.deepEquals(foo1, foo2)).toBeTruthy()
-    expect(utils.deepEquals(foo1, bar)).toBeFalsy()
-  })
   test('can shallowEquals compare objects', () => {
     // Given
     const o1 = { a: 1, b: 2, c: 'hello' }
@@ -566,107 +545,87 @@ describe('Object props manipulation', () => {
     })
   })
 })
-describe('toKeyString', () => {
-  it('can encode strings with special characters', () => {
-    // Given
-    const strs = [
-      { str: 'hey ho ', expect: 'aGV5JTIwaG8lMjAlRUYlQTMlQkY=' },
-      {
-        str: '✓ à la mode',
-        expect: 'JUUyJTlDJTkzJTIwJUMzJUEwJTIwbGElMjBtb2Rl'
-      },
-      { str: '😍', expect: 'JUYwJTlGJTk4JThE' }
-    ]
 
-    // When & Then
-    strs.forEach(str => {
-      expect(utils.toKeyString(str.str)).toEqual(str.expect)
-    })
+describe('isCloudHost', () => {
+  it('detects cloud hosts properly', () => {
+    expect(utils.isCloudHost('neo4j+s://foo.neo4j.io', ['neo4j.io'])).toBe(true)
   })
 
-  describe('isCloudHost', () => {
-    it('detects cloud hosts properly', () => {
-      expect(utils.isCloudHost('neo4j+s://foo.neo4j.io', ['neo4j.io'])).toBe(
-        true
-      )
-    })
-
-    it('detects cloud hosts properly when they specify a port', () => {
-      expect(
-        utils.isCloudHost('neo4j+s://foo.neo4j.io:7687', ['neo4j.io'])
-      ).toBe(true)
-    })
-
-    it('detects cloud hosts properly even with query arguments', () => {
-      expect(
-        utils.isCloudHost('neo4j+s://foo.neo4j.io?foo=true', ['neo4j.io'])
-      ).toBe(true)
-    })
-
-    it('does not detect cloud hosts for localhost', () => {
-      expect(utils.isCloudHost('neo4j+s://localhost', ['neo4j.io'])).toBe(false)
-    })
-
-    it('does not detect cloud hosts for hosts that start but not end with the cloud domain', () => {
-      expect(utils.isCloudHost('neo4j+s://neo4j.io.foo', ['neo4j.io'])).toBe(
-        false
-      )
-    })
-  })
-
-  describe('detectRuntimeEnv', () => {
-    const tests: [any, any, any][] = [
-      [
-        'Injected Desktop API',
-        [
-          {
-            neo4jDesktopApi: { exists: true },
-            location: { href: 'https://mydomain.com:7474' }
-          },
-          []
-        ],
-        DESKTOP
-      ],
-      [
-        'URL params Desktop API',
-        [
-          {
-            location: {
-              href: `https://mydomain.com:7474?neo4jDesktopApiUrl=${encodeURIComponent(
-                'https://graphql.api.local:3001'
-              )}&neo4jDesktopGraphAppClientId=xxx`
-            }
-          },
-          []
-        ],
-        DESKTOP
-      ],
-      [
-        'Cloud root domain',
-        [{ location: { href: 'https://cloud.com:7474' } }, ['cloud.com']],
-        CLOUD
-      ],
-      [
-        'Cloud sub domain',
-        [
-          { location: { href: 'https://xyxy.zyzy.cloud.com:7474/path' } },
-          ['cloud.com']
-        ],
-        CLOUD
-      ],
-      [
-        'No cloud match',
-        [{ location: { href: 'https://otherdomain.com:7474' } }, ['cloud.com']],
-        WEB
-      ],
-      ['No input', [undefined], WEB]
-    ]
-
-    test.each(tests)(
-      'Detects correct environment for test named %s',
-      (_name, input: any[], output) => {
-        expect(utils.detectRuntimeEnv(...input)).toEqual(output)
-      }
+  it('detects cloud hosts properly when they specify a port', () => {
+    expect(utils.isCloudHost('neo4j+s://foo.neo4j.io:7687', ['neo4j.io'])).toBe(
+      true
     )
   })
+
+  it('detects cloud hosts properly even with query arguments', () => {
+    expect(
+      utils.isCloudHost('neo4j+s://foo.neo4j.io?foo=true', ['neo4j.io'])
+    ).toBe(true)
+  })
+
+  it('does not detect cloud hosts for localhost', () => {
+    expect(utils.isCloudHost('neo4j+s://localhost', ['neo4j.io'])).toBe(false)
+  })
+
+  it('does not detect cloud hosts for hosts that start but not end with the cloud domain', () => {
+    expect(utils.isCloudHost('neo4j+s://neo4j.io.foo', ['neo4j.io'])).toBe(
+      false
+    )
+  })
+})
+
+describe('detectRuntimeEnv', () => {
+  const tests: [any, any, any][] = [
+    [
+      'Injected Desktop API',
+      [
+        {
+          neo4jDesktopApi: { exists: true },
+          location: { href: 'https://mydomain.com:7474' }
+        },
+        []
+      ],
+      DESKTOP
+    ],
+    [
+      'URL params Desktop API',
+      [
+        {
+          location: {
+            href: `https://mydomain.com:7474?neo4jDesktopApiUrl=${encodeURIComponent(
+              'https://graphql.api.local:3001'
+            )}&neo4jDesktopGraphAppClientId=xxx`
+          }
+        },
+        []
+      ],
+      DESKTOP
+    ],
+    [
+      'Cloud root domain',
+      [{ location: { href: 'https://cloud.com:7474' } }, ['cloud.com']],
+      CLOUD
+    ],
+    [
+      'Cloud sub domain',
+      [
+        { location: { href: 'https://xyxy.zyzy.cloud.com:7474/path' } },
+        ['cloud.com']
+      ],
+      CLOUD
+    ],
+    [
+      'No cloud match',
+      [{ location: { href: 'https://otherdomain.com:7474' } }, ['cloud.com']],
+      WEB
+    ],
+    ['No input', [undefined], WEB]
+  ]
+
+  test.each(tests)(
+    'Detects correct environment for test named %s',
+    (_name, input: any[], output) => {
+      expect(utils.detectRuntimeEnv(...input)).toEqual(output)
+    }
+  )
 })

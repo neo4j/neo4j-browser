@@ -19,13 +19,14 @@
  */
 import React from 'react'
 
+import { QuestionIcon } from 'common'
+
 import { buildTableData } from './sysinfoUtils'
 import {
   StyledSysInfoTable,
   SysInfoTableContainer,
   SysInfoTableEntry
 } from 'browser-components/Tables'
-import { QuestionIcon } from 'browser-components/icons/Icons'
 import arrayHasItems from 'shared/utils/array-has-items'
 
 export const SysInfoDisplay = ({

@@ -19,6 +19,7 @@
  */
 import React, { useState } from 'react'
 
+import { numberToUSLocale, ShowMoreOrAll, WarningMessage } from 'common'
 import { GraphStats, GraphStyleModel } from 'graph-visualization'
 
 import { StyleableNodeLabel } from './StyleableNodeLabel'
@@ -31,10 +32,6 @@ import {
   PaneHeader,
   StyledLegendInlineList
 } from './styled'
-import { ShowMoreOrAll } from 'browser-components/ShowMoreOrAll/ShowMoreOrAll'
-import { WarningIcon } from 'browser-components/icons/Icons'
-import { StyledTruncatedMessage } from 'browser/modules/Stream/styled'
-import numberToUSLocale from 'shared/utils/number-to-US-locale'
 
 type PaneBodySectionHeaderProps = {
   title: string
@@ -161,18 +158,16 @@ function OverviewPane({
         )}
         <div style={{ paddingBottom: '10px' }}>
           {hasTruncatedFields && (
-            <StyledTruncatedMessage>
-              <WarningIcon />
-              &nbsp;Record fields have been truncated.&nbsp;
+            <>
+              <WarningMessage text={'Record fields have been truncated.'} />
               <br />
-            </StyledTruncatedMessage>
+            </>
           )}
           {infoMessage && (
-            <StyledTruncatedMessage>
-              <WarningIcon />
-              &nbsp;{infoMessage}&nbsp;
+            <>
+              <WarningMessage text={infoMessage} />
               <br />
-            </StyledTruncatedMessage>
+            </>
           )}
           {nodeCount !== null &&
             relationshipCount !== null &&

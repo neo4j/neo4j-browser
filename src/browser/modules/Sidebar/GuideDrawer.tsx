@@ -21,7 +21,8 @@ import React, { useRef } from 'react'
 import { connect } from 'react-redux'
 import { Action, Dispatch } from 'redux'
 
-import { BackIcon } from '../../components/icons/Icons'
+import { BackIcon } from 'common'
+
 import GuideCarousel from '../GuideCarousel/GuideCarousel'
 import GuidePicker from './GuidePicker'
 import {

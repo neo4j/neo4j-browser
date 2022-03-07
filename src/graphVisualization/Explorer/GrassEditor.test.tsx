@@ -19,10 +19,13 @@
  */
 import { render } from '@testing-library/react'
 import React from 'react'
+// eslint-disable-next-line no-restricted-imports
 import { Provider } from 'react-redux'
+// eslint-disable-next-line no-restricted-imports
 import { combineReducers, createStore } from 'redux'
 
 import { GrassEditor } from './GrassEditor'
+// eslint-disable-next-line no-restricted-imports
 import reducers from 'shared/rootReducer'
 
 describe('<GrassEditor />', () => {

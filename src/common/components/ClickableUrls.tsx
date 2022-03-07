@@ -25,7 +25,7 @@ interface ClickableUrlsProps {
   WrappingTag?: keyof JSX.IntrinsicElements | React.ElementType
 }
 
-export default function ClickableUrls({
+export function ClickableUrls({
   text,
   WrappingTag = 'span'
 }: ClickableUrlsProps): JSX.Element {

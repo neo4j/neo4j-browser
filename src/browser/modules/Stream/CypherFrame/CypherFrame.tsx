@@ -24,6 +24,17 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
 
+import {
+  AlertIcon,
+  AsciiIcon,
+  CodeIcon,
+  ErrorIcon,
+  PlanIcon,
+  SpinnerIcon,
+  TableIcon,
+  VisualizationIcon
+} from 'common'
+
 import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
 import FrameSidebar from '../../Frame/FrameSidebar'
 import { BaseFrameProps } from '../Stream'
@@ -53,16 +64,6 @@ import {
 import Centered from 'browser-components/Centered'
 import Display from 'browser-components/Display'
 import { CypherFrameButton } from 'browser-components/buttons'
-import {
-  AlertIcon,
-  AsciiIcon,
-  CodeIcon,
-  ErrorIcon,
-  PlanIcon,
-  SpinnerIcon,
-  TableIcon,
-  VisualizationIcon
-} from 'browser-components/icons/Icons'
 import { StyledFrameBody } from 'browser/modules/Frame/styled'
 import { csvFormat, stringModifier } from 'services/bolt/cypherTypesFormatting'
 import { downloadPNGFromSVG, downloadSVG } from 'services/exporting/imageUtils'
@@ -356,6 +357,7 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
           />
         </Display>
         <Display if={this.state.openView === ViewTypes.VISUALIZATION} lazy>
+          {/* TODO componentize this */}
           <VisualizationConnectedBus
             isFullscreen={this.props.isFullscreen}
             result={result}

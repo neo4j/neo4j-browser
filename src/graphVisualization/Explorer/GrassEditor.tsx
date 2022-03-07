@@ -18,9 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React, { Component } from 'react'
+// eslint-disable-next-line no-restricted-imports
 import { connect } from 'react-redux'
+// eslint-disable-next-line no-restricted-imports
 import { Action, Dispatch } from 'redux'
 
+import { toKeyString } from 'common'
 import { GraphStyleModel, Selector } from 'graph-visualization'
 
 import {
@@ -34,9 +37,10 @@ import {
   StyledPickerSelector,
   StyledTokenRelationshipType
 } from './styled'
+// eslint-disable-next-line no-restricted-imports
 import { GlobalState } from 'shared/globalState'
+// eslint-disable-next-line no-restricted-imports
 import * as actions from 'shared/modules/grass/grassDuck'
-import { toKeyString } from 'shared/services/utils'
 
 type GrassEditorProps = {
   graphStyleData?: any

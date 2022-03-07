@@ -19,13 +19,13 @@
  */
 import React, { Component } from 'react'
 
+import { deepEquals, ExclamationTriangleIcon } from 'common'
+
 import Ellipsis from 'browser-components/Ellipsis'
-import { ExclamationTriangleIcon } from 'browser-components/icons/Icons'
 import { errorMessageFormater } from 'project-root/src/browser/modules/Stream/errorMessageFormater'
 import { ErrorText } from 'project-root/src/browser/modules/Stream/styled'
 import { BrowserRequestResult } from 'project-root/src/shared/modules/requests/requestsDuck'
 import { BrowserError } from 'services/exceptions'
-import { deepEquals } from 'services/utils'
 
 type ErrorsStatusBarProps = {
   result: BrowserRequestResult

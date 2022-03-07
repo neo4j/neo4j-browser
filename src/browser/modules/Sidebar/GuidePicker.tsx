@@ -1,11 +1,12 @@
 import React from 'react'
 
+import { BinIcon } from 'common'
+
 import {
   DrawerBrowserCommand,
   DrawerExternalLink,
   DrawerSubHeader
 } from 'browser-components/drawer/drawer-styled'
-import { BinIcon } from 'browser-components/icons/Icons'
 import docs, { BuiltInGuideIdentifier, Guide } from 'browser/documentation'
 import {
   Clickable,

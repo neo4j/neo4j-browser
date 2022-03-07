@@ -26,7 +26,12 @@ import {
   VizItemProperty
 } from 'graph-visualization'
 
-import ClickableUrls from '../../../components/ClickableUrls'
+import {
+  ClickableUrls,
+  ClipboardCopier,
+  ShowMoreOrAll,
+  upperFirst
+} from 'common'
 import { StyleableNodeLabel } from './StyleableNodeLabel'
 import { StyleableRelType } from './StyleableRelType'
 import {
@@ -40,9 +45,6 @@ import {
   StyledInlineList,
   ValueCell
 } from './styled'
-import ClipboardCopier from 'browser-components/ClipboardCopier'
-import { ShowMoreOrAll } from 'browser-components/ShowMoreOrAll/ShowMoreOrAll'
-import { upperFirst } from 'services/utils'
 
 export const ELLIPSIS = '\u2026'
 export const WIDE_VIEW_THRESHOLD = 900

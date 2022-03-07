@@ -20,10 +20,11 @@
 import React, { ReactEventHandler } from 'react'
 import SVGInline from 'react-svg-inline'
 
+import { DownloadIcon, TrashIcon } from 'common'
+
 import { StyledSavedScriptsButton } from './styled'
-import { DownloadIcon, TrashIcon } from 'browser-components/icons/Icons'
-import newFolderIcon from 'icons/folder-add.svg'
-import hollow_run_icon from 'icons/hollow-run-icon.svg'
+import newFolderIcon from 'common/icons/svgs/folder-add.svg' // TODO
+import hollow_run_icon from 'common/icons/svgs/hollow-run-icon.svg' // TODO
 
 type OnClickProp = { onClick: ReactEventHandler }
 

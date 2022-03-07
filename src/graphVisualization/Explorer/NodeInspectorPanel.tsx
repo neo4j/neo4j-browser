@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Resizable } from 'react-resizable'
 
-import { GraphStats, GraphStyleModel, VizItem } from 'graph-visualization'
+import { ChevronLeftIcon, ChevronRightIcon } from 'common'
 
 import { DetailsPaneComponent } from './DetailsPane'
 import { NodeInspectorDrawer } from './NodeInspectorDrawer'
@@ -11,10 +11,9 @@ import {
   StyledNodeInspectorTopMenuChevron,
   panelMinWidth
 } from './styled'
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon
-} from 'browser-components/icons/Icons'
+import { GraphStats } from '../utils/mapper'
+import { GraphStyleModel } from '../models/GraphStyle'
+import { VizItem } from '../types'
 
 interface NodeInspectorPanelProps {
   expanded: boolean
