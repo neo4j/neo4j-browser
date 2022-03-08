@@ -37,6 +37,27 @@ function writeDataToFile(file, data) {
   }
 }
 
+function getCurrentGitRevision() {
+  try {
+    const rev = fs
+      .readFileSync('.git/HEAD')
+      .toString()
+      .trim()
+      .split(/.*[: ]/)
+      .slice(-1)[0]
+    if (rev.indexOf('/') === -1) {
+      return rev
+    } else {
+      return fs
+        .readFileSync('.git/' + rev)
+        .toString()
+        .trim()
+    }
+  } catch (e) {
+    throw new Error('Could not read git revision. Error: ' + e)
+  }
+}
+
 function buildTargetObject(data, dataProp) {
   const out = {}
   const keys = data[dataProp] || []
@@ -52,5 +73,6 @@ module.exports = {
   loadDataFromFile,
   writeDataToFile,
   buildTargetObject,
-  mergeObjects
+  mergeObjects,
+  getCurrentGitRevision
 }

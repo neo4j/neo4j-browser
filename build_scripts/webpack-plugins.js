@@ -21,12 +21,13 @@
 const helpers = require('./webpack-helpers')
 const webpack = require('webpack')
 const path = require('path')
+const fs = require('fs')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-  .BundleAnalyzerPlugin
+const BundleAnalyzerPlugin =
+  require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
@@ -60,10 +61,15 @@ module.exports = () => {
               packageJsonData,
               'propertiesToCopyToManifest'
             )
-            const mergedData = manifestGeneration.mergeObjects(
-              wantedData,
-              JSON.parse(content)
-            )
+            // This is so we can give better build info in the sidebar
+            const gitRevision = manifestGeneration.getCurrentGitRevision()
+
+            const mergedData = {
+              ...wantedData,
+              ...JSON.parse(content),
+              builtAt: new Date().toISOString(),
+              gitRevision
+            }
             return JSON.stringify(mergedData, null, 2)
           }
         },

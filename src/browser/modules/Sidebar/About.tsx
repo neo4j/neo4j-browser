@@ -31,6 +31,8 @@ import {
 } from 'browser-components/drawer/drawer-styled'
 import { version as browserVersion } from 'project-root/package.json'
 import { getEdition, getVersion } from 'shared/modules/dbMeta/state'
+import { getBuiltAt, getGitRevision } from 'shared/modules/app/appDuck'
+import { copyToClipboard } from 'browser-components/ClipboardCopier'
 
 function asChangeLogUrl(serverVersion: string): string | undefined {
   if (!serverVersion) {
@@ -46,9 +48,16 @@ function asChangeLogUrl(serverVersion: string): string | undefined {
 interface AboutProps {
   serverVersion: string | null
   serverEdition: string | null
+  builtAt: string | null
+  gitRevision: string | null
 }
 
-const About = ({ serverVersion, serverEdition }: AboutProps) => (
+const About = ({
+  serverVersion,
+  serverEdition,
+  builtAt,
+  gitRevision
+}: AboutProps) => (
   <Drawer id="db-about">
     <DrawerHeader>About Neo4j</DrawerHeader>
     <DrawerBody>
@@ -78,6 +87,16 @@ const About = ({ serverVersion, serverEdition }: AboutProps) => (
               {browserVersion}
             </a>
           </p>
+          {gitRevision && (
+            <p onClick={() => copyToClipboard(gitRevision)}>
+              Revision: {gitRevision.substring(0, 10)}
+            </p>
+          )}
+          {builtAt && (
+            <p onClick={() => copyToClipboard(builtAt)}>
+              Build date: {new Date(builtAt).toLocaleDateString('se')}
+            </p>
+          )}
           {serverVersion && serverEdition && (
             <p>
               Neo4j Server version:{' '}
@@ -189,7 +208,9 @@ const About = ({ serverVersion, serverEdition }: AboutProps) => (
 const mapStateToProps = (state: any) => {
   return {
     serverVersion: getVersion(state),
-    serverEdition: getEdition(state)
+    serverEdition: getEdition(state),
+    builtAt: getBuiltAt(state),
+    gitRevision: getGitRevision(state)
   }
 }
 

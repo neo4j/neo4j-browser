@@ -21,6 +21,7 @@
 // Action type constants
 export const NAME = 'app'
 export const APP_START = 'app/APP_START'
+export const UPDATE_BUILD_INFO = 'app/UPDATE_BUILD_INFO'
 export const USER_CLEAR = 'app/USER_CLEAR'
 export type AppStartAction = { type: typeof APP_START }
 export type UserClearAction = { type: typeof USER_CLEAR }
@@ -46,6 +47,10 @@ export const inWebEnv = (state: any) => getEnv(state) === WEB
 export const inCloudEnv = (state: any) => getEnv(state) === CLOUD
 export const inWebBrowser = (state: any) => [WEB, CLOUD].includes(getEnv(state))
 export const inDesktop = (state: any) => getEnv(state) === DESKTOP
+export const getGitRevision = (state: any): string | null =>
+  state[NAME].gitRevision ?? null
+export const getBuiltAt = (state: any): string | null =>
+  state[NAME].builtAt ?? null
 
 export const getAllowedBoltSchemes = (state: any, encryptionFlag?: any) => {
   const isHosted = inWebBrowser(state)
@@ -65,6 +70,16 @@ export const isRelateAvailable = (state: any) =>
   state[NAME].relateProjectId
 export const getProjectId = (state: any) => state[NAME].relateProjectId
 
+// action creators
+export const updateBuildInfo = (action: {
+  gitRevision: string
+  builtAt: string
+}) => ({
+  type: UPDATE_BUILD_INFO,
+  gitRevision: action.gitRevision,
+  builtAt: action.builtAt
+})
+
 // Reducer
 export default function reducer(state = { hostedUrl: null }, action: any) {
   switch (action.type) {
@@ -77,6 +92,12 @@ export default function reducer(state = { hostedUrl: null }, action: any) {
         relateApiToken: action.relateApiToken,
         relateProjectId: action.relateProjectId,
         neo4jDesktopGraphAppId: action.neo4jDesktopGraphAppId
+      }
+    case UPDATE_BUILD_INFO:
+      return {
+        ...state,
+        builtAt: action.builtAt,
+        gitRevision: action.gitRevision
       }
     default:
       return state
