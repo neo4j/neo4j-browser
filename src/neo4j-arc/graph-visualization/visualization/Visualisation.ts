@@ -161,7 +161,7 @@ class Visualisation {
           )
         // Bind node circle events.
         this._eventHandler.bindNodeHoverEvent(nodeShapeGfx)
-        this._eventHandler.bindNodeUnHoverEvent(nodeShapeGfx)
+        // this._eventHandler.bindNodeUnHoverEvent(nodeShapeGfx)
         this._eventHandler.bindNodeClickEvent(nodeShapeGfx)
         this._eventHandler.bindNodeDblClickEvent(nodeShapeGfx)
         this._eventHandler.bindNodeReleaseEvent(nodeShapeGfx)
@@ -499,17 +499,16 @@ class Visualisation {
           relationship
         )
       })
+    }
 
+    if (type === 'init' || type === 'expand') {
       this.createNodeDataGfxMapping(nodes)
       this.createRelationshipDataGfxMapping(relationships)
+      this._forceSimulation.simulateNodes()
+      this._forceSimulation.simulateRelationships()
     } else if (type === 'collapse') {
       this.removeNodeDataGfxMapping(nodes)
       this.removeRelationshipDataGfxMapping(relationships)
-    }
-
-    if (type !== 'collapse') {
-      this._forceSimulation.simulateNodes()
-      this._forceSimulation.simulateRelationships()
     }
 
     if (type === 'init') {
@@ -519,8 +518,10 @@ class Visualisation {
       )
         this._forceSimulation.precompute()
       else this._forceSimulation.restart()
-    } else if (type !== 'collapse') {
+    } else if (type === 'expand') {
       if (nodes.length > 0) this._forceSimulation.restart()
+    } else if (type === 'update') {
+      this.updateVisualisation()
     }
   }
 
