@@ -13,11 +13,12 @@ class RelationshipRenderer {
   drawArrowBySvgPath(
     arrow: Graphics,
     svgPath: string | undefined,
-    color: number
+    colour: number
   ): void {
+    // console.log('draw svg path', svgPath)
     if (!svgPath) return
     const pathData = svgPathParser(svgPath)
-    arrow.beginFill(color)
+    arrow.beginFill(colour)
     for (let i = 0; i < pathData.length; i++) {
       switch (pathData[i].type) {
         case 'm':

@@ -125,13 +125,15 @@ class EventHandler {
   }
 
   unHoverNode(): void {
-    const nodeCount = this._graph.getNodes().length
-    const relationshipCount = this._graph.getRelationships().length
-    console.log(nodeCount, relationshipCount)
-    this._externalEventHandler.onItemMouseOver({
-      type: 'canvas',
-      item: { nodeCount, relationshipCount }
-    })
+    if (!this._clickedNode) {
+      const nodeCount = this._graph.getNodes().length
+      const relationshipCount = this._graph.getRelationships().length
+      console.log(nodeCount, relationshipCount)
+      this._externalEventHandler.onItemMouseOver({
+        type: 'canvas',
+        item: { nodeCount, relationshipCount }
+      })
+    }
   }
 
   bindNodeUnHoverEvent(nodeGfx: Container): void {
@@ -307,9 +309,9 @@ class EventHandler {
   releaseNode(): void {
     console.log('release node')
     this._clickedNode = null
-    // Disable node dragging
+    // disable node dragging
     this._interactionManager.off('mousemove', this.appMouseMove)
-    // Enable viewport dragging
+    // enable viewport dragging
     this._viewport.pause = false
   }
 

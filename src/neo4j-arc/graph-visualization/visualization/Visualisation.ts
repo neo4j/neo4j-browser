@@ -38,6 +38,7 @@ class Visualisation {
 
   private _app: Application
   private _viewport: Viewport
+  private _previousZoomScale: number
   private _nodesLayer: Container
   private _relationshipsLayer: Container
 
@@ -62,7 +63,7 @@ class Visualisation {
     this._nodeShapeGfxToNodeData = new WeakMap()
     this._relationshipDataToRelationshipGfx = {}
 
-    // create PIXI application
+    // Create PIXI application
     this._app = new Application({
       width: SCREEN_WIDTH,
       height: SCREEN_HEIGHT,
@@ -81,7 +82,7 @@ class Visualisation {
     const { worldWidth: WORLD_WIDTH, worldHeight: WORLD_HEIGHT } =
       this._layout.initViewportDimension()
 
-    // create PIXI viewport
+    // Create PIXI viewport.
     this._viewport = new Viewport({
       screenWidth: SCREEN_WIDTH,
       screenHeight: SCREEN_HEIGHT,
@@ -89,6 +90,7 @@ class Visualisation {
       worldHeight: WORLD_HEIGHT,
       interaction: interactionManager
     })
+    this._previousZoomScale = 0
     this._app.stage.addChild(this._viewport)
     this._viewport.drag().pinch().wheel().decelerate()
 
@@ -135,13 +137,17 @@ class Visualisation {
 
   get zoomStep(): number {
     const zoom = this._viewport.scale.x
+    return this.calculateZoomStep(zoom)
+  }
+
+  calculateZoomStep(zoom: number): number {
     const zoomSteps = [0.1, 0.2, 0.4, Infinity]
     const zoomStep = zoomSteps.findIndex(zoomStep => zoom <= zoomStep)
     return zoomStep
   }
 
   createNodeDataGfxMapping(nodes: NodeModel[]): void {
-    // Create node graphics
+    // Create node graphics.
     const nodeDataGfxPairs = nodes.map(node => {
       let nodeShapeGfx: Container
       if (this._nodeDataToNodeShapeGfx[node.id]) {
@@ -153,7 +159,7 @@ class Visualisation {
             node.radius,
             this._style.forNode(node).get('color')
           )
-        // Bind node circle events
+        // Bind node circle events.
         this._eventHandler.bindNodeHoverEvent(nodeShapeGfx)
         this._eventHandler.bindNodeUnHoverEvent(nodeShapeGfx)
         this._eventHandler.bindNodeClickEvent(nodeShapeGfx)
@@ -177,7 +183,7 @@ class Visualisation {
       return { node, nodeShapeGfx, nodeCaptionGfx }
     })
 
-    // Map node data and node graphics
+    // Map node data and node graphics.
     nodeDataGfxPairs.forEach(
       ({ node: nodeData, nodeShapeGfx, nodeCaptionGfx }) => {
         this._nodeDataToNodeShapeGfx[nodeData.id] = nodeShapeGfx
@@ -201,7 +207,7 @@ class Visualisation {
   }
 
   createRelationshipDataGfxMapping(relationships: RelationshipModel[]): void {
-    // Create relationship graphics
+    // create relationship graphics
     const relationshipDataGfxPairs = relationships.map(relationship => {
       let relationshipGfx: Container
       if (this._relationshipDataToRelationshipGfx[relationship.id]) {
@@ -219,7 +225,7 @@ class Visualisation {
       return { relationship, relationshipGfx }
     })
 
-    // Map relationship data and relationship graphics
+    // Map relationship data and relationship graphics.
     relationshipDataGfxPairs.forEach(
       ({ relationship: relationshipData, relationshipGfx }) => {
         this._relationshipDataToRelationshipGfx[relationshipData.id] =
@@ -258,14 +264,32 @@ class Visualisation {
 
     // initial draw
     resetViewport()
+    this._previousZoomScale = this._viewport.scale.x
 
     this._viewport.on('frame-end', () => {
+      // console.log(
+      //   'frame-end',
+      //   this._previousZoomScale,
+      //   this._viewport.scale,
+      //   this.calculateZoomStep(this._previousZoomScale),
+      //   this.zoomStep
+      // )
       if (this._viewport.dirty) {
         this.updateVisibility()
         this.requestRender()
         this._viewport.dirty = false
       }
     })
+
+    // this._viewport.on('zoomed-end', () => {
+    //   console.log(
+    //     'zoomed-end',
+    //     this._previousZoomScale,
+    //     this._viewport.scale,
+    //     this.calculateZoomStep(this._previousZoomScale),
+    //     this.zoomStep
+    //   )
+    // })
 
     // prevent body scrolling
     this._app.view.addEventListener('wheel', event => {
@@ -275,13 +299,13 @@ class Visualisation {
   }
 
   updateVisibility = (): void => {
-    // culling
+    // Culling.
     const cull = new Cull()
     cull.addAll(this._nodesLayer.children)
     cull.addAll(this._relationshipsLayer.children)
     cull.cull(this._app.renderer.screen)
 
-    // levels of detail
+    // Levels of detail.
     this._graph.getNodes().forEach(nodeData => {
       const captionGfx = this._nodeDataToNodeCaptionGfx[nodeData.id]
       const caption = captionGfx.getChildByName(CAPTION_NAME)
@@ -297,19 +321,41 @@ class Visualisation {
 
       arrow.visible = this.zoomStep >= 1
       caption.visible = this.zoomStep >= 3
-      if (this.zoomStep >= 1) {
-        arrow.clear()
-        this._relationshipRenderer.drawArrowBySvgPath(
-          arrow,
-          relationshipData.arrow?.outline(
-            this.zoomStep >= 3 ? relationshipData.shortCaptionLength : 0
-          ),
-          colourToNumber(
-            this._style.forRelationship(relationshipData).get('color')
+      const previousZoomStep = this.calculateZoomStep(this._previousZoomScale)
+      if (
+        previousZoomStep !== this.zoomStep &&
+        this._relationshipsLayer.visible
+      ) {
+        if (
+          previousZoomStep < 1 ||
+          (previousZoomStep < 3 && this.zoomStep >= 3) ||
+          (previousZoomStep >= 3 && this.zoomStep < 3)
+        ) {
+          // console.log('SHOULD REDRAW!!!!!!!!!!!!!', this.zoomStep >= 3)
+          arrow.clear()
+          this._relationshipRenderer.drawArrowBySvgPath(
+            arrow,
+            relationshipData.arrow?.outline(
+              this.zoomStep >= 3 ? relationshipData.shortCaptionLength : 0
+            ),
+            colourToNumber(
+              this._style.forRelationship(relationshipData).get('color')
+            )
           )
-        )
+        }
+        // arrow.clear()
+        // this._relationshipRenderer.drawArrowBySvgPath(
+        //   arrow,
+        //   relationshipData.arrow?.outline(
+        //     this.zoomStep >= 3 ? relationshipData.shortCaptionLength : 0
+        //   ),
+        //   colourToNumber(
+        //     this._style.forRelationship(relationshipData).get('color')
+        //   )
+        // )
       }
     })
+    this._previousZoomScale = this._viewport.scale.x
   }
 
   updateGeometry(nodeId?: string): void {
