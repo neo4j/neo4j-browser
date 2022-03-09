@@ -357,7 +357,6 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
           />
         </Display>
         <Display if={this.state.openView === ViewTypes.VISUALIZATION} lazy>
-          {/* TODO componentize this */}
           <VisualizationConnectedBus
             isFullscreen={this.props.isFullscreen}
             result={result}

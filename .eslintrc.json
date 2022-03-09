@@ -20,7 +20,7 @@
     "import/no-webpack-loader-syntax": "off",
     "no-restricted-imports": [
       "error",
-      { "patterns": ["*graphVisualization*", "*/src/common*"] }
+      { "patterns": ["*graphVisualization*", "*/src/common*", "common/*"] }
     ]
   },
   "globals": {

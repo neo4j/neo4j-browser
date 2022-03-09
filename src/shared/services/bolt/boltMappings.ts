@@ -20,7 +20,7 @@
 import { flatten, map, take } from 'lodash-es'
 import neo4j from 'neo4j-driver'
 
-import { upperFirst } from 'common'
+import { upperFirst, BasicNodesAndRels } from 'common'
 
 import {
   escapeReservedProps,
@@ -30,7 +30,6 @@ import {
 } from '../utils'
 import updateStatsFields from './updateStatisticsFields'
 import { stringModifier } from 'services/bolt/cypherTypesFormatting'
-import { BasicNodesAndRels } from 'common/types/neo4j'
 
 export const reservedTypePropertyName = 'transport-class'
 

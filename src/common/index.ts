@@ -1,4 +1,5 @@
 export { deepEquals } from './utils/objectUtils'
+export { isMac } from './utils/platformUtils'
 export { numberToUSLocale, toKeyString, upperFirst } from './utils/stringUtils'
 
 export { BasicNode, BasicNodesAndRels, BasicRelationship } from './types/neo4j'

@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React from 'react'
-import SVGInline from 'react-svg-inline'
 import styled, { StyledComponent } from 'styled-components'
 
 import { hexToRgba } from '../../styles/utils'
@@ -29,22 +28,7 @@ export const CloseButton = (props: any): JSX.Element => {
   return <button {...props}>×</button>
 }
 
-export const EditorButton = (props: any): JSX.Element => {
-  const { icon, title, color, width, onClick, ...rest } = props
-  const overrideColor = { ...(color ? { color } : {}) }
-  return (
-    <BaseButton onClick={onClick} title={title} style={overrideColor}>
-      <SVGInline
-        svg={icon}
-        accessibilityLabel={title}
-        {...rest}
-        width={`${width}px`}
-      />
-    </BaseButton>
-  )
-}
-
-const BaseButton = styled.span`
+export const StyledEditorButton = styled.button<{ color?: string }>`
   font-family: ${props => props.theme.streamlineFontFamily};
   font-style: normal !important;
   font-weight: 400 !important;
@@ -52,9 +36,9 @@ const BaseButton = styled.span`
   text-transform: none !important;
   speak: none;
   -webkit-font-smoothing: antialiased;
-  color: ${props => props.theme.secondaryButtonText};
+  color: ${props => props.color ?? props.theme.secondaryButtonText};
   background-color: ${props => props.theme.secondaryButtonBackground};
-  border-radius: 50%;
+  border: none;
   width: ${dim.frameButtonWidth}px;
   height: 39px;
   font-size: 28px;
@@ -67,6 +51,11 @@ const BaseButton = styled.span`
   flex-shrink: 0; // Prevents button from shrinking in safari
   &:hover {
     opacity: 0.55;
+  }
+
+  svg {
+    display: inline-block;
+    vertical-align: middle;
   }
 `
 

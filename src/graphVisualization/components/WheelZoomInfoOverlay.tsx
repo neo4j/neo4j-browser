@@ -19,8 +19,8 @@
  */
 import React from 'react'
 
-import { isMac } from '../utils/utils'
-import { InfoIcon } from './Icons'
+import { InfoIcon, isMac } from 'common'
+
 import {
   StyledZoomInfo,
   StyledZoomInfoIconContainer,

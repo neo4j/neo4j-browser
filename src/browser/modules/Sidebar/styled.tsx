@@ -56,9 +56,6 @@ export const StyledHelpItem = styled.li`
   margin: 8px 24px 0 24px;
 `
 
-// TODO: refactor to use <Icon>
-const playIconSvgToBeDisplayedOnHover =
-  "<svg fill='none' xmlns='http://www.w3.org/2000/svg'><path fill-rule='evenodd' clip-rule='evenodd' d='M12.7791 6.65634C13.3966 7.04929 13.3966 7.95071 12.7791 8.34366L4.64174 13.522C3.97601 13.9456 3.10486 13.4674 3.10486 12.6783L3.10486 2.32167C3.10486 1.53258 3.97601 1.05437 4.64173 1.47801L12.7791 6.65634Z'  stroke='%2368BDF4' stroke-linejoin='round' /></svg>"
 export const StyledCommandListItem = styled.li`
   list-style-type: none;
   cursor: pointer;
@@ -68,27 +65,39 @@ export const StyledCommandListItem = styled.li`
 
   &:hover {
     background-color: ${props => props.theme.hoverBackground};
+  }
+`
 
-    &:after {
-      content: ' ';
-      position: absolute;
-      top: 15px;
-      right: 5px;
-      background-image: url('data:image/svg+xml;utf8,${playIconSvgToBeDisplayedOnHover}'); // TODO: replace with iconContainer
-      height: 15px;
-      width: 15px;
-    }
+export const StyledCommandRowWrapper = styled.div`
+  display: flex;
+`
+
+export const FlexSpacer = styled.div`
+  flex: 1 1 auto;
+`
+
+export const StyledCommandRunButton = styled.button<{ hidden?: boolean }>`
+  color: ${props => props.theme.primary};
+  background-color: transparent;
+  border: none;
+  display: ${props => (props.hidden ? 'none' : 'block')};
+
+  svg {
+    display: inline-block;
+    vertical-align: middle;
   }
 `
 
 export const StyledCommandNamePair = styled.div`
-  margin: 0px 24px;
+  flex: 0 0 auto;
+  margin: 0px 0px 0px 24px;
   padding: 10px 0;
   display: flex;
+  width: 85%;
 `
 export const StyledName = styled.div`
   width: 50%;
-  margin-right: 5%;
+  margin-right: 5px;
 `
 
 export const StyledFullSizeDrawerBody = styled(DrawerBody)`

@@ -19,6 +19,8 @@
  */
 import React from 'react'
 
+import { ZoomInIcon, ZoomOutIcon, ZoomToFitIcon } from 'common'
+
 import { GraphModel } from '../models/Graph'
 import {
   GetNodeNeighboursFn,
@@ -37,7 +39,6 @@ import {
   Visualization,
   ZoomLimitsReached
 } from '../visualization/Visualization'
-import { ZoomInIcon, ZoomOutIcon, ZoomToFitIcon } from './Icons'
 import { WheelZoomInfoOverlay } from './WheelZoomInfoOverlay'
 import { StyledSvgWrapper, StyledZoomButton, StyledZoomHolder } from './styled'
 

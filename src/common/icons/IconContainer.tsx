@@ -74,7 +74,7 @@ export const IconContainer = (props: IconContainerProps): JSX.Element => {
         cleanup={['title']}
         svg={icon}
         accessibilityLabel={title}
-        width={width + 'px'}
+        width={width ? width + 'px' : undefined}
       />
     </StyledIconWrapper>
   ) : (

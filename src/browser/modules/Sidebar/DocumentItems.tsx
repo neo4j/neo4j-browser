@@ -23,6 +23,7 @@ import { Action } from 'redux'
 import styled from 'styled-components'
 
 import {
+  HollowPlayIcon,
   SavedScriptsCollapseMenuIcon,
   SavedScriptsExpandMenuRightIcon
 } from 'common'
@@ -32,7 +33,10 @@ import {
   StyledCommandListItem,
   StyledCommandNamePair,
   StyledHelpItem,
-  StyledName
+  StyledName,
+  StyledCommandRunButton,
+  StyledCommandRowWrapper,
+  FlexSpacer
 } from './styled'
 import { SavedScriptsFolderCollapseIcon } from 'browser-components/SavedScripts/styled'
 import {
@@ -120,14 +124,28 @@ export const DocumentItems = ({
 }
 
 type CommandItemProps = Command & { executeCommand: (cmd: string) => void }
-const CommandItem = ({ name, command, executeCommand }: CommandItemProps) => (
-  <StyledCommandListItem onClick={() => executeCommand(command)}>
-    <StyledCommandNamePair>
-      <StyledName> {name} </StyledName>
-      <StyledCommand> {command} </StyledCommand>
-    </StyledCommandNamePair>
-  </StyledCommandListItem>
-)
+const CommandItem = ({ name, command, executeCommand }: CommandItemProps) => {
+  const [showRunButton, setShowRunButton] = useState(false)
+
+  return (
+    <StyledCommandListItem
+      onClick={() => executeCommand(command)}
+      onMouseEnter={() => setShowRunButton(true)}
+      onMouseLeave={() => setShowRunButton(false)}
+    >
+      <StyledCommandRowWrapper>
+        <StyledCommandNamePair>
+          <StyledName> {name} </StyledName>
+          <StyledCommand> {command} </StyledCommand>
+        </StyledCommandNamePair>
+        <FlexSpacer />
+        <StyledCommandRunButton hidden={!showRunButton}>
+          <HollowPlayIcon width={20} />
+        </StyledCommandRunButton>
+      </StyledCommandRowWrapper>
+    </StyledCommandListItem>
+  )
+}
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
   executeCommand: (cmd: string) => {

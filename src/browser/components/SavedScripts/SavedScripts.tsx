@@ -201,32 +201,34 @@ export default function SavedScripts({
             <>
               <span>|</span>
               <SavedScriptsButtonWrapper>
-                <span style={{ fontSize: 12 }}>
+                <span style={{ fontSize: '12px' }}>
                   <span style={{ marginRight: '5px' }}>
                     {selectedIds.length} selected{' '}
                   </span>
-                  {exportScripts && (
-                    <ExportButton
-                      onClick={() => {
-                        exportScripts(selectedScripts, folders, 'ZIPFILE')
-                        setSelectedIds([])
-                      }}
-                    />
-                  )}
-                  {removeScripts && (
-                    <RedRemoveButton
-                      onClick={() => {
-                        removeScripts(selectedIds)
-                        setSelectedIds([])
-                      }}
-                    />
-                  )}
                 </span>
+                {exportScripts && (
+                  <ExportButton
+                    onClick={() => {
+                      exportScripts(selectedScripts, folders, 'ZIPFILE')
+                      setSelectedIds([])
+                    }}
+                  />
+                )}
+                {removeScripts && (
+                  <RedRemoveButton
+                    onClick={() => {
+                      removeScripts(selectedIds)
+                      setSelectedIds([])
+                    }}
+                  />
+                )}
                 {newFolderButton}
               </SavedScriptsButtonWrapper>
             </>
           ) : (
-            newFolderButton
+            <SavedScriptsButtonWrapper>
+              {newFolderButton}
+            </SavedScriptsButtonWrapper>
           )}
         </SavedScriptsHeader>
         {scriptsOutsideFolder.map(script => {

@@ -56,6 +56,10 @@ export const MainEditorWrapper = styled.div<FullscreenProps>`
   `}};
 `
 
+export const CurrentEditIconContainer = styled.span`
+  color: ${props => props.theme.currentEditIconColor};
+`
+
 export const EditorContainer = styled.div`
   display: flex;
   align-items: center;

@@ -23,7 +23,7 @@ import { withBus } from 'react-suber'
 import { Action, Dispatch } from 'redux'
 import { Bus } from 'suber'
 
-import { SaveFavoriteIcon } from 'common'
+import { SaveFavoriteIcon, RunIcon, isMac, StopIcon } from 'common'
 
 import { MAIN_WRAPPER_DOM_ID } from '../App/App'
 import Monaco, { MonacoHandles } from '../Editor/Monaco'
@@ -35,9 +35,7 @@ import {
   StyledFrameEditorContainer,
   StyledFrameTitlebarButtonSection
 } from './styled'
-import { EditorButton, FrameButton } from 'browser-components/buttons'
-import runIcon from 'common/icons/svgs/run-icon.svg'
-import stopIcon from 'common/icons/svgs/stop-icon.svg'
+import { FrameButton, StyledEditorButton } from 'browser-components/buttons'
 import { GlobalState } from 'shared/globalState'
 import * as app from 'shared/modules/app/appDuck'
 import * as commands from 'shared/modules/commands/commandsDuck'
@@ -59,7 +57,7 @@ import {
   shouldEnableMultiStatementMode
 } from 'shared/modules/settings/settingsDuck'
 import * as sidebar from 'shared/modules/sidebar/sidebarDuck'
-import { isMac } from 'shared/utils/platformUtils'
+import { base, stopIconColor } from 'browser-styles/themes'
 
 type FrameEditorBaseProps = {
   frame: Frame
@@ -205,17 +203,23 @@ function FrameEditor({
             </DottedLineHover>
           </StyledFrameCommand>
         )}
-        <EditorButton
-          data-testid="rerunFrameButton"
-          onClick={() =>
-            request?.status === REQUEST_STATUS_PENDING
-              ? cancelQuery(frame.requestId)
-              : run(editorValue)
-          }
-          title="Rerun"
-          icon={request?.status === REQUEST_STATUS_PENDING ? stopIcon : runIcon}
-          width={16}
-        />
+        {request?.status === REQUEST_STATUS_PENDING ? (
+          <StyledEditorButton
+            data-testid="stopRunFrameButton"
+            onClick={() => cancelQuery(frame.requestId)}
+            color={stopIconColor}
+          >
+            <StopIcon width={16} title={'Stop'} />
+          </StyledEditorButton>
+        ) : (
+          <StyledEditorButton
+            data-testid="rerunFrameButton"
+            onClick={() => run(editorValue)}
+            color={base.primary}
+          >
+            <RunIcon width={16} title={'Rerun'} />
+          </StyledEditorButton>
+        )}
       </Header>
       <StyledFrameTitlebarButtonSection>
         <FrameButton

@@ -264,7 +264,7 @@ LIMIT ${maxNewNeighbours}`
           setGraph={this.setGraph.bind(this)}
           setNodePropertiesExpandedByDefault={
             this.props.setNodePropertiesExpandedByDefault
-          } /* TODO set state outside? I think we want to be able to set the state from outside... */
+          }
           nodePropertiesExpandedByDefault={
             this.props.nodePropertiesExpandedByDefault
           }

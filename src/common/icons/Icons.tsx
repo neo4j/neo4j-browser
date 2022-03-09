@@ -35,6 +35,8 @@ import copy from './svgs/copy.svg'
 import databaseCheck from './svgs/database-check.svg'
 import saveFavorite from './svgs/favorite.svg'
 import file from './svgs/file.svg'
+import fitToScreenIcon from './svgs/iconsToBeFetchedFromNDL/fit-to-screen.svg'
+import addFolder from './svgs/folder-add.svg'
 import folderEmpty from './svgs/folder-empty.svg'
 import close from './svgs/frame-close.svg'
 import upCaret from './svgs/frame-collapse.svg'
@@ -44,14 +46,23 @@ import pin from './svgs/frame-pin.svg'
 import shrink from './svgs/frame-shrink.svg'
 import help from './svgs/help.svg'
 import vizIcon from './svgs/hierarchy-9.svg'
+import hollowPlay from './svgs/hollow-run-icon.svg'
+import infoCircle from './svgs/iconsToBeFetchedFromNDL/information-circle.svg'
 import monitorPlay from './svgs/monitor-play.svg'
 import navigationMenuVertical from './svgs/navigation-menu-vertical.svg'
 import neo4j from './svgs/neo4j-icon.svg'
 import ratingStar from './svgs/rating-star.svg'
+import run from './svgs/run-icon.svg'
 import download from './svgs/save.svg'
 import skipPrev from './svgs/skip-prev.svg'
+import stop from './svgs/stop-icon.svg'
 import table from './svgs/table.svg'
+import fileDrop from './svgs/task-list-download.svg'
 import text from './svgs/text.svg'
+import zoomInIcon from './svgs/iconsToBeFetchedFromNDL/zoom-in.svg'
+import zoomOutIcon from './svgs/iconsToBeFetchedFromNDL/zoom-out.svg'
+import updateFavorite from './svgs/update-favorite.svg'
+import updateFile from './svgs/update-file.svg'
 
 const inactive = `
   color: #797979;
@@ -441,3 +452,112 @@ export const EyeIcon = (): JSX.Element => (
 export const EyeSlashIcon = (): JSX.Element => (
   <IconContainer className="fa fa-eye-slash" />
 )
+
+const ZOOM_ICONS_DEFAULT_SIZE_IN_PX = 20
+const ZOOM_ICONS_LARGE_SCALE_FACTOR = 1.2
+export const ZoomInIcon = ({ large }: { large: boolean }): JSX.Element => {
+  const scale = large ? ZOOM_ICONS_LARGE_SCALE_FACTOR : 1
+  return (
+    <IconContainer
+      icon={zoomInIcon}
+      width={scale * ZOOM_ICONS_DEFAULT_SIZE_IN_PX}
+    />
+  )
+}
+export const ZoomOutIcon = ({
+  large = false
+}: {
+  large?: boolean
+}): JSX.Element => {
+  const scale = large ? ZOOM_ICONS_LARGE_SCALE_FACTOR : 1
+  return (
+    <IconContainer
+      icon={zoomOutIcon}
+      width={scale * ZOOM_ICONS_DEFAULT_SIZE_IN_PX}
+    />
+  )
+}
+
+export const ZoomToFitIcon = ({ large }: { large: boolean }): JSX.Element => {
+  const scale = large ? ZOOM_ICONS_LARGE_SCALE_FACTOR : 1
+  return (
+    <IconContainer
+      icon={fitToScreenIcon}
+      width={scale * ZOOM_ICONS_DEFAULT_SIZE_IN_PX}
+    />
+  )
+}
+
+export const InfoIcon = (): JSX.Element => <IconContainer icon={infoCircle} />
+
+export const FileDropIcon = ({
+  width,
+  title
+}: {
+  width?: number
+  title?: string
+}): JSX.Element => <IconContainer icon={fileDrop} width={width} title={title} />
+
+export const NewFolderIcon = ({
+  width,
+  title
+}: {
+  width?: number
+  title?: string
+}): JSX.Element => (
+  <IconContainer icon={addFolder} width={width} title={title} />
+)
+
+export const HollowPlayIcon = ({
+  width,
+  title
+}: {
+  width?: number
+  title?: string
+}): JSX.Element => (
+  <IconContainer icon={hollowPlay} width={width} title={title} />
+)
+
+export const FavoriteIcon = ({
+  width,
+  title
+}: {
+  width?: number
+  title?: string
+}): JSX.Element => (
+  <IconContainer icon={updateFavorite} width={width} title={title} />
+)
+
+export const FileIcon = ({
+  width,
+  title
+}: {
+  width?: number
+  title?: string
+}): JSX.Element => <IconContainer icon={file} width={width} title={title} />
+
+export const UpdateFileIcon = ({
+  width,
+  title
+}: {
+  width?: number
+  title?: string
+}): JSX.Element => (
+  <IconContainer icon={updateFile} width={width} title={title} />
+)
+
+export const RunIcon = ({
+  width,
+  title
+}: {
+  width?: number
+  title?: string
+}): JSX.Element => <IconContainer icon={run} width={width} title={title} />
+
+export const StopIcon = ({
+  width,
+  title
+}: {
+  width?: number
+  title?: string
+}): JSX.Element => <IconContainer icon={stop} width={width} title={title} />

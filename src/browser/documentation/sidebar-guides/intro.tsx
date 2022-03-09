@@ -19,8 +19,9 @@
  */
 import React from 'react'
 
+import { isMac } from 'common'
+
 import { BuiltInGuideSidebarSlide } from '../../modules/Carousel/Slide'
-import { isMac } from 'shared/utils/platformUtils'
 
 const title = 'Intro Guide'
 const identifier = 'intro'
