@@ -17,36 +17,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { palette as needlePalette } from '@neo4j-ndl/base/lib/tokens/js/tokens'
+
 import {
   DARK_THEME,
   LIGHT_THEME,
   OUTLINE_THEME
 } from 'shared/modules/settings/settingsDuck'
 
-// These colors are to be fetched from the NDL instead when that is published
+// Currently hard code values for svgs, to be replaced with proper theme colors from NDL
+export const stopIconColor = '#FD766E'
+
+// These and colors in dark theme from light palette are to be translated to corresponding
+// version in dark palette when available
 const NDLColors = {
-  primary: {
-    'bg-weak': '#E6F8FF',
-    'border-weak': '#A3E2FF',
-    'hover-weak': 'rgb(1, 139, 255, 0.08)',
-    icon: '#006FD6',
-    text: '#006FD6'
-  },
   neutral: {
-    '20': {
-      value: '#F5F7FA'
-    },
     '70': {
-      value: '#717780',
-      opacity10: 'rgb(113, 119, 128, 0.1)',
-      opacity20: 'rgb(113, 119, 128, 0.2)',
       opacity50: 'rgb(113, 119, 128, 0.5)',
       opacity60: 'rgb(113, 119, 128, 0.6)'
-    },
-    'bg-stronger': '#404752',
-    'bg-weak': '#FFFFFF',
-    'text-inverse': '#FFFFFF',
-    'text-weakest': '#B2B7BD'
+    }
   }
 }
 
@@ -132,23 +121,23 @@ export const base = {
   frameTitlebarText: '#717172',
   frameControlButtonTextColor: '#485662',
   frameButtonTextColorLegacy: '#0C1A25',
-  frameButtonTextColor: NDLColors.neutral['70'].value,
-  frameButtonHoverBackground: NDLColors.neutral['70'].opacity10,
-  frameButtonActiveBackground: NDLColors.neutral['70'].opacity20,
+  frameButtonTextColor: needlePalette.light.neutral.text.weaker,
+  frameButtonHoverBackground: needlePalette.light.neutral.hover,
+  frameButtonActiveBackground: needlePalette.light.neutral.pressed,
   frameNodePropertiesPanelIconTextColor: '#717172',
   streamBackgroundColor: 'rgba(215, 229, 241, 0.7)',
   frameBackground: '#F9FCFF',
   accordionContentBackground: 'white',
 
   // Info message
-  infoBackground: NDLColors.primary['bg-weak'],
-  infoBorder: `1px solid ${NDLColors.primary['border-weak']}`,
-  infoIconColor: NDLColors.primary.icon,
+  infoBackground: needlePalette.light.primary.bg.weak,
+  infoBorder: `1px solid ${needlePalette.light.primary.border.weak}`,
+  infoIconColor: needlePalette.light.primary.icon,
 
   // Code block
   codeBlockBackground: '#f5f5f5',
-  codeBlockTextColor: NDLColors.primary.text,
-  codeBlockHoveBackground: NDLColors.primary['hover-weak']
+  codeBlockTextColor: needlePalette.light.primary.text,
+  codeBlockHoveBackground: needlePalette.light.primary.hover.weak
 }
 
 export const normal = {
@@ -210,21 +199,22 @@ export const dark = {
   frameTitlebarText: '#717172',
   frameControlButtonTextColor: '#D7E5F1',
   frameButtonTextColorLegacy: '#FFF',
-  frameButtonTextColor: NDLColors.neutral['20'].value,
+  frameButtonTextColor: needlePalette.light.neutral.bg.default,
   frameButtonHoverBackground: NDLColors.neutral['70'].opacity60,
   frameButtonActiveBackground: NDLColors.neutral['70'].opacity50,
   frameNodePropertiesPanelIconTextColor: '#f4f4f4',
   streamBackgroundColor: '#535864',
   frameBackground: '#292C33',
   accordionContentBackground: '#31333B',
+  currentEditIconColor: '#6B6B6B',
 
   // Info message
-  infoBackground: NDLColors.neutral['bg-stronger'],
-  infoBorder: `1px solid ${NDLColors.neutral['text-weakest']}`,
-  infoIconColor: NDLColors.neutral['bg-weak'],
+  infoBackground: needlePalette.light.neutral.bg.strongest,
+  infoBorder: `1px solid ${needlePalette.light.neutral.text.weakest}`,
+  infoIconColor: needlePalette.light.neutral.bg.weak,
 
   // Code block
   codeBlockBackground: '#717780',
-  codeBlockTextColor: NDLColors.primary['border-weak'],
-  codeBlockHoveBackground: NDLColors.neutral['bg-stronger']
+  codeBlockTextColor: needlePalette.light.primary.border.weak,
+  codeBlockHoveBackground: needlePalette.light.neutral.bg.strongest
 }

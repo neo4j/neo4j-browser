@@ -72,6 +72,7 @@
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
     "@hot-loader/react-dom": "^17.0.2",
+    "@neo4j-ndl/base": "^0.1.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.1",
     "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react": "^12.1.2",
