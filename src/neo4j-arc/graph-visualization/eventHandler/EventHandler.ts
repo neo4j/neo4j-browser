@@ -1,5 +1,6 @@
 import { D3DragEvent, DragBehavior, drag } from 'd3-drag'
 import { select } from 'd3-selection'
+import { RelationshipModel } from '../models/Relationship'
 import { uniqBy } from 'lodash-es'
 import { Viewport } from 'pixi-viewport'
 import {
@@ -57,6 +58,7 @@ class EventHandler {
   private _graph: GraphModel
   private _forceSimulation: ForceSimulation
   private _nodeGfxToNodeData: WeakMap<DisplayObject, string>
+  private _relationshipGfxToRelationshipData: WeakMap<DisplayObject, string>
   private _clickedNode: NodeModel | null
   private _dblClickNodeTimeout: number | null
   private _isDblClickNode: boolean
@@ -72,6 +74,7 @@ class EventHandler {
     graph,
     forceSimulation: simulation,
     nodeShapeGfxToNodeData,
+    relationshipGfxToRelationshipData,
     render,
     onGraphChange,
     shouldBindD3DragHandler,
@@ -83,6 +86,7 @@ class EventHandler {
     graph: GraphModel
     forceSimulation: ForceSimulation
     nodeShapeGfxToNodeData: WeakMap<Container, string>
+    relationshipGfxToRelationshipData: WeakMap<Container, string>
     render: (nodeId?: string) => void
     onGraphChange: GraphChangeHandler
     shouldBindD3DragHandler: boolean
@@ -94,6 +98,7 @@ class EventHandler {
     this._graph = graph
     this._forceSimulation = simulation
     this._nodeGfxToNodeData = nodeShapeGfxToNodeData
+    this._relationshipGfxToRelationshipData = relationshipGfxToRelationshipData
     this._clickedNode = null
     this._dblClickNodeTimeout = null
     this._isDblClickNode = false
@@ -318,6 +323,26 @@ class EventHandler {
   bindNodeReleaseEvent(nodeGfx: Container): void {
     nodeGfx.on('mouseup', () => this.releaseNode())
     nodeGfx.on('mouseupoutside', () => this.releaseNode())
+  }
+
+  hoverRelationship(relationship: RelationshipModel): void {
+    console.log('hover', relationship)
+    this._externalEventHandler.onItemMouseOver({
+      type: 'relationship',
+      item: relationship
+    })
+  }
+
+  bindRelationshipHoverEvent(relationshipGfx: Container): void {
+    relationshipGfx.on('mouseover', (event: InteractionEvent) =>
+      this.hoverRelationship(
+        this._graph.findRelationshipById(
+          this._relationshipGfxToRelationshipData.get(
+            event.currentTarget
+          ) as string
+        ) as RelationshipModel
+      )
+    )
   }
 }
 

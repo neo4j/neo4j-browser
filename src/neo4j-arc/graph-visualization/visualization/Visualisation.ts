@@ -35,6 +35,7 @@ class Visualisation {
   private _nodeDataToNodeCaptionGfx: Record<string, Container>
   private _nodeShapeGfxToNodeData: WeakMap<Container, string>
   private _relationshipDataToRelationshipGfx: Record<string, Container>
+  private _relationshipGfxToRelationshipData: WeakMap<Container, string>
 
   private _app: Application
   private _viewport: Viewport
@@ -62,8 +63,9 @@ class Visualisation {
     this._nodeDataToNodeCaptionGfx = {}
     this._nodeShapeGfxToNodeData = new WeakMap()
     this._relationshipDataToRelationshipGfx = {}
+    this._relationshipGfxToRelationshipData = new WeakMap()
 
-    // Create PIXI application
+    // Create PIXI application.
     this._app = new Application({
       width: SCREEN_WIDTH,
       height: SCREEN_HEIGHT,
@@ -117,6 +119,8 @@ class Visualisation {
       graph: this._graph,
       forceSimulation: this._forceSimulation,
       nodeShapeGfxToNodeData: this._nodeShapeGfxToNodeData,
+      relationshipGfxToRelationshipData:
+        this._relationshipGfxToRelationshipData,
       render: this.updateVisualisation.bind(this),
       onGraphChange: this.onGraphChange.bind(this),
       shouldBindD3DragHandler: this.shouldBindD3DragHandler,
@@ -207,7 +211,7 @@ class Visualisation {
   }
 
   createRelationshipDataGfxMapping(relationships: RelationshipModel[]): void {
-    // create relationship graphics
+    // Create relationship graphics.
     const relationshipDataGfxPairs = relationships.map(relationship => {
       let relationshipGfx: Container
       if (this._relationshipDataToRelationshipGfx[relationship.id]) {
@@ -218,6 +222,9 @@ class Visualisation {
           relationship.shortCaption,
           this._style.forRelationship(relationship).get('font-size')
         )
+
+        // Bind relationship events.
+        this._eventHandler.bindRelationshipHoverEvent(relationshipGfx)
       }
 
       this._relationshipsLayer.addChild(relationshipGfx)
@@ -230,6 +237,10 @@ class Visualisation {
       ({ relationship: relationshipData, relationshipGfx }) => {
         this._relationshipDataToRelationshipGfx[relationshipData.id] =
           relationshipGfx
+        this._relationshipGfxToRelationshipData.set(
+          relationshipGfx,
+          relationshipData.id
+        )
       }
     )
   }
@@ -281,16 +292,6 @@ class Visualisation {
       }
     })
 
-    // this._viewport.on('zoomed-end', () => {
-    //   console.log(
-    //     'zoomed-end',
-    //     this._previousZoomScale,
-    //     this._viewport.scale,
-    //     this.calculateZoomStep(this._previousZoomScale),
-    //     this.zoomStep
-    //   )
-    // })
-
     // prevent body scrolling
     this._app.view.addEventListener('wheel', event => {
       event.preventDefault()
@@ -331,7 +332,6 @@ class Visualisation {
           (previousZoomStep < 3 && this.zoomStep >= 3) ||
           (previousZoomStep >= 3 && this.zoomStep < 3)
         ) {
-          // console.log('SHOULD REDRAW!!!!!!!!!!!!!', this.zoomStep >= 3)
           arrow.clear()
           this._relationshipRenderer.drawArrowBySvgPath(
             arrow,
@@ -343,16 +343,6 @@ class Visualisation {
             )
           )
         }
-        // arrow.clear()
-        // this._relationshipRenderer.drawArrowBySvgPath(
-        //   arrow,
-        //   relationshipData.arrow?.outline(
-        //     this.zoomStep >= 3 ? relationshipData.shortCaptionLength : 0
-        //   ),
-        //   colourToNumber(
-        //     this._style.forRelationship(relationshipData).get('color')
-        //   )
-        // )
       }
     })
     this._previousZoomScale = this._viewport.scale.x
