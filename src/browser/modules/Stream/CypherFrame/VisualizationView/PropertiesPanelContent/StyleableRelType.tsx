@@ -20,11 +20,10 @@
 import React from 'react'
 import { Popup } from 'semantic-ui-react'
 
+import { StyledRelationshipChip } from 'common'
 import { GraphStyleModel } from 'graph-visualization'
 
 import { GrassEditor } from './GrassEditor'
-// eslint-disable-next-line no-restricted-imports
-import { StyledRelationship } from 'browser/modules/DBMSInfo/styled'
 
 export type StyleableRelTypeProps = {
   graphStyle: GraphStyleModel
@@ -44,7 +43,7 @@ export function StyleableRelType({
       pinned
       key={selectedRelType.relType}
       trigger={
-        <StyledRelationship
+        <StyledRelationshipChip
           style={{
             backgroundColor: styleForRelType.get('color'),
             color: styleForRelType.get('text-color-internal')
@@ -54,7 +53,7 @@ export function StyleableRelType({
           {selectedRelType.count !== undefined
             ? `${selectedRelType.relType} (${selectedRelType.count})`
             : `${selectedRelType.relType}`}
-        </StyledRelationship>
+        </StyledRelationshipChip>
       }
       wide
     >

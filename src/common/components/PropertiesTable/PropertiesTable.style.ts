@@ -21,10 +21,11 @@ import styled from 'styled-components'
 
 export const panelMinWidth = 200
 
-export const StyledFullSizeContainer = styled.div`
-  position: relative;
-  height: 100%;
+export const StyledInlineList = styled.ul`
+  list-style: none;
+  word-break: break-word;
 `
+
 export const StyledNodeInspectorContainer = styled.div<{
   width: number
   shouldAnimate: boolean
@@ -42,31 +43,16 @@ export const StyledNodeInspectorContainer = styled.div<{
   font-family: ${props => props.theme.drawerHeaderFontFamily};
   box-shadow: ${props => props.theme.standardShadow};
 `
-export const StyledNodeInspectorTopMenuChevron = styled.div<{
-  expanded: boolean
-}>`
-  cursor: pointer;
-  position: absolute;
-  right: 0px;
-  top: 6px;
-  z-index: 2;
-  width: 32px;
-  height: 32px;
-  padding: 6px;
-  color: ${props => props.theme.frameNodePropertiesPanelIconTextColor}
-  text-align: center;
-  ${props =>
-    !props.expanded &&
-    `background: ${props.theme.editorBackground};
-       box-shadow: ${props.theme.standardShadow};
-    `}
-`
 
-export const PaneContainer = styled.div`
-  padding: 0 14px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+export const AlternatingTable = styled.table`
+  tr:nth-child(even) {
+    background: ${props => props.theme.alteringTableRowBackground};
+  }
+  tr:nth-child(odd) {
+    background: ${props => props.theme.editorBackground};
+  }
+  font-size: 13px;
+  width: 100%;
 `
 
 export const PaneHeader = styled.div`
@@ -75,15 +61,31 @@ export const PaneHeader = styled.div`
   flex: 0 0 auto;
 `
 
-export const PaneBody = styled.div`
-  overflow: auto;
-  margin: 14px 0;
-  flex: 0 1 auto;
+export const KeyCell = styled.td`
+  font-weight: 700;
+  vertical-align: top;
+  padding: 2px;
+  width: 30%;
+`
+
+export const CopyCell = styled.td`
+  padding: 2px 5px;
   display: flex;
-  flex-direction: column;
-  gap: 14px;
+  justify-content: flex-end;
+`
+export const ValueCell = styled.td`
+  padding: 2px;
+  white-space: pre-wrap;
+  vertical-align: top;
 `
 
 export const PaneTitle = styled.div`
   margin-bottom: 10px;
+`
+
+export const StyledExpandValueButton = styled.button`
+  border: none;
+  outline: none;
+  background-color: inherit;
+  color: ${props => props.theme.link};
 `

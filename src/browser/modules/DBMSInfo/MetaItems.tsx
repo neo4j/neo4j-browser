@@ -21,11 +21,16 @@ import deepmerge from 'deepmerge'
 import React from 'react'
 import { ThemeProvider } from 'styled-components'
 
-import { numberToUSLocale, ShowMoreOrAll } from 'common'
+import {
+  numberToUSLocale,
+  StyledLabelChip,
+  StyledPropertyChip,
+  StyledRelationshipChip,
+  ShowMoreOrAll
+} from 'common'
 import { GraphStyleModel } from 'graph-visualization'
 
 import styles from './style_meta.css'
-import { StyledLabel, StyledProperty, StyledRelationship } from './styled'
 import {
   DrawerSection,
   DrawerSectionBody,
@@ -141,7 +146,7 @@ const LabelItems = ({
     labelItems = createItems(
       labels,
       onItemClick,
-      { component: StyledLabel },
+      { component: StyledLabelChip },
       editorCommandTemplate,
       true,
       count,
@@ -197,7 +202,7 @@ const RelationshipItems = ({
     relationshipItems = createItems(
       relationshipTypes,
       onItemClick,
-      { component: StyledRelationship },
+      { component: StyledRelationshipChip },
       editorCommandTemplate,
       true,
       count,
@@ -252,7 +257,7 @@ const PropertyItems = ({
     propertyItems = createItems(
       properties,
       onItemClick,
-      { component: StyledProperty },
+      { component: StyledPropertyChip },
       editorCommandTemplate,
       false
     )

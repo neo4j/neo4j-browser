@@ -20,10 +20,9 @@
 import React, { useState } from 'react'
 
 import { numberToUSLocale, ShowMoreOrAll, WarningMessage } from 'common'
-import { GraphStats, GraphStyleModel } from 'graph-visualization'
+import { GraphStyleModel } from '../../models/GraphStyle'
+import { GraphStats } from '../../utils/mapper'
 
-import { StyleableNodeLabel } from './StyleableNodeLabel'
-import { StyleableRelType } from './StyleableRelType'
 import {
   PaneBody,
   PaneBodySectionHeaderWrapper,
@@ -32,6 +31,8 @@ import {
   PaneHeader,
   StyledLegendInlineList
 } from './styled'
+import { NodeLabel } from './NodeLabel'
+import { RelType } from './RelType'
 
 type PaneBodySectionHeaderProps = {
   title: string
@@ -55,7 +56,7 @@ function PaneBodySectionHeader({
   )
 }
 
-type OverviewPaneProps = {
+export type OverviewPaneProps = {
   graphStyle: GraphStyleModel
   hasTruncatedFields: boolean
   nodeCount: number | null
@@ -109,7 +110,7 @@ function OverviewPane({
             />
             <StyledLegendInlineList>
               {visibleLabelKeys.map((label: string) => (
-                <StyleableNodeLabel
+                <NodeLabel
                   key={label}
                   graphStyle={graphStyle}
                   selectedLabel={{
@@ -137,7 +138,7 @@ function OverviewPane({
             />
             <StyledLegendInlineList>
               {visibleRelationshipKeys.map(relType => (
-                <StyleableRelType
+                <RelType
                   key={relType}
                   graphStyle={graphStyle}
                   selectedRelType={{

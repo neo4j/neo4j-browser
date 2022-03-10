@@ -18,56 +18,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React from 'react'
-import { Popup } from 'semantic-ui-react'
 
-import { GraphStyleModel } from 'graph-visualization'
+import { NonClickableLabelChip } from './styled'
 
-import { GrassEditor } from './GrassEditor'
-// eslint-disable-next-line no-restricted-imports
-import { StyledLabel } from 'browser/modules/DBMSInfo/styled'
+import { GraphStyleModel } from '../../models/GraphStyle'
 
-export type StyleableNodeLabelProps = {
+export type NodeLabelProps = {
   selectedLabel: {
     label: string
     propertyKeys: string[]
     count?: number
   }
   graphStyle: GraphStyleModel
-  onClick?: () => void
 }
-export function StyleableNodeLabel({
+export function NodeLabel({
   graphStyle,
-  selectedLabel,
-  onClick
-}: StyleableNodeLabelProps): JSX.Element {
+  selectedLabel
+}: NodeLabelProps): JSX.Element {
   const labels = selectedLabel.label === '*' ? [] : [selectedLabel.label]
   const graphStyleForLabel = graphStyle.forNode({
     labels: labels
   })
 
   return (
-    <Popup
-      on="click"
-      basic
-      pinned
-      key={selectedLabel.label}
-      trigger={
-        <StyledLabel
-          {...onClick}
-          style={{
-            backgroundColor: graphStyleForLabel.get('color'),
-            color: graphStyleForLabel.get('text-color-internal')
-          }}
-          data-testid={`property-details-overview-node-label-${selectedLabel.label}`}
-        >
-          {selectedLabel.count !== undefined
-            ? `${selectedLabel.label} (${selectedLabel.count})`
-            : `${selectedLabel.label}`}
-        </StyledLabel>
-      }
-      wide
+    <NonClickableLabelChip
+      style={{
+        backgroundColor: graphStyleForLabel.get('color'),
+        color: graphStyleForLabel.get('text-color-internal')
+      }}
     >
-      <GrassEditor selectedLabel={selectedLabel} />
-    </Popup>
+      {selectedLabel.count !== undefined
+        ? `${selectedLabel.label} (${selectedLabel.count})`
+        : `${selectedLabel.label}`}
+    </NonClickableLabelChip>
   )
 }

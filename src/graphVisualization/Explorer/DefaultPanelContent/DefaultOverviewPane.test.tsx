@@ -27,12 +27,9 @@ import {
   GraphStyleModel
 } from 'graph-visualization'
 
-import OverviewPane, { OVERVIEW_STEP_SIZE } from './OverviewPane'
+import OverviewPane, { OVERVIEW_STEP_SIZE } from './DefaultOverviewPane'
 
-jest.mock('./StyleableNodeLabel')
-jest.mock('./StyleableRelType')
-
-describe('<OverviewPane />', () => {
+describe('Default <OverviewPane />', () => {
   const graphStyle = new GraphStyleModel()
 
   const getMockLabels: (length: number) => GraphStatsLabels = length =>
@@ -100,7 +97,7 @@ describe('<OverviewPane />', () => {
     const showAllButton = screen.getByRole('button', { name: 'Show all' })
     showAllButton.click()
 
-    expect(screen.getByText('label50')).toBeInTheDocument()
+    expect(screen.getByText('label50 (1)')).toBeInTheDocument()
     expect(
       screen.queryByRole('button', { name: 'Show all' })
     ).not.toBeInTheDocument()
@@ -117,14 +114,14 @@ describe('<OverviewPane />', () => {
     expect(
       screen.getByRole('button', { name: `Show ${OVERVIEW_STEP_SIZE} more` })
     ).toBeInTheDocument()
-    expect(screen.queryByText('label50')).not.toBeInTheDocument()
+    expect(screen.queryByText('label50 (1)')).not.toBeInTheDocument()
 
     const showMoreButton = screen.getByRole('button', {
       name: `Show ${OVERVIEW_STEP_SIZE} more`
     })
     showMoreButton.click()
 
-    expect(screen.getByText('label50')).toBeInTheDocument()
+    expect(screen.getByText('label50 (1)')).toBeInTheDocument()
     expect(
       screen.queryByRole('button', { name: 'Show all' })
     ).toBeInTheDocument()
@@ -144,12 +141,12 @@ describe('<OverviewPane />', () => {
     expect(
       screen.getByRole('button', { name: 'Show 1 more' })
     ).toBeInTheDocument()
-    expect(screen.queryByText('relType50')).not.toBeInTheDocument()
+    expect(screen.queryByText('relType50 (1)')).not.toBeInTheDocument()
 
     const showAllButton = screen.getByRole('button', { name: 'Show all' })
     showAllButton.click()
 
-    expect(screen.getByText('relType50')).toBeInTheDocument()
+    expect(screen.getByText('relType50 (1)')).toBeInTheDocument()
     expect(
       screen.queryByRole('button', { name: 'Show all' })
     ).not.toBeInTheDocument()
@@ -166,14 +163,14 @@ describe('<OverviewPane />', () => {
     expect(
       screen.getByRole('button', { name: `Show ${OVERVIEW_STEP_SIZE} more` })
     ).toBeInTheDocument()
-    expect(screen.queryByText('relType50')).not.toBeInTheDocument()
+    expect(screen.queryByText('relType50 (1)')).not.toBeInTheDocument()
 
     const showMoreButton = screen.getByRole('button', {
       name: `Show ${OVERVIEW_STEP_SIZE} more`
     })
     showMoreButton.click()
 
-    expect(screen.getByText('relType50')).toBeInTheDocument()
+    expect(screen.getByText('relType50 (1)')).toBeInTheDocument()
     expect(
       screen.queryByRole('button', { name: 'Show all' })
     ).toBeInTheDocument()

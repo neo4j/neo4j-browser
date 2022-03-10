@@ -3,11 +3,11 @@
 exports[`ConfirmationButton renders changes state on clicks and finally calls the onConfirmed prop 1`] = `
 <div>
   <button
-    class="sc-EHOje fjtPXW"
+    class="sc-kAzzGY byxJzA"
     data-testid="confirmation-button-initial"
   >
     <i
-      class="sc-bZQynM hUkmUD sl-minus-circle"
+      class="sc-chPdSV jGSntg sl-minus-circle"
     />
   </button>
 </div>
@@ -17,19 +17,19 @@ exports[`ConfirmationButton renders changes state on clicks and finally calls th
 <div>
   <span>
     <button
-      class="sc-EHOje fjtPXW"
+      class="sc-kAzzGY byxJzA"
       data-testid="confirmation-button-confirm"
     >
       <i
-        class="sc-gzVnrw wVgSf sl-arrow-circle-right"
+        class="sc-kgoBCf fSpoUX sl-arrow-circle-right"
       />
     </button>
     <button
-      class="sc-EHOje fjtPXW"
+      class="sc-kAzzGY byxJzA"
       data-testid="confirmation-button-cancel"
     >
       <i
-        class="sc-htoDjs cSwGEq sl-delete-circle"
+        class="sc-kGXeez inDZzG sl-delete-circle"
       />
     </button>
   </span>
@@ -39,11 +39,11 @@ exports[`ConfirmationButton renders changes state on clicks and finally calls th
 exports[`ConfirmationButton renders changes state on clicks and finally calls the onConfirmed prop 3`] = `
 <div>
   <button
-    class="sc-EHOje fjtPXW"
+    class="sc-kAzzGY byxJzA"
     data-testid="confirmation-button-initial"
   >
     <i
-      class="sc-dnqmqq eQMmpD sl-minus-circle"
+      class="sc-kpOJdX dxYPIN sl-minus-circle"
     />
   </button>
 </div>
@@ -52,11 +52,11 @@ exports[`ConfirmationButton renders changes state on clicks and finally calls th
 exports[`ConfirmationButton renders changes state on clicks and finally calls the onConfirmed prop 4`] = `
 <div>
   <button
-    class="sc-EHOje fjtPXW"
+    class="sc-kAzzGY byxJzA"
     data-testid="confirmation-button-initial"
   >
     <i
-      class="sc-gqjmRU leQUPa sl-minus-circle"
+      class="sc-jKJlTe eNZmHS sl-minus-circle"
     />
   </button>
 </div>

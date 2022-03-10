@@ -19,32 +19,19 @@
  */
 import React, { useState } from 'react'
 
-import {
-  GraphStyleModel,
-  NodeItem,
-  RelationshipItem,
-  VizItemProperty
-} from 'graph-visualization'
+import { VizItemProperty } from 'graph-visualization'
 
-import {
-  ClickableUrls,
-  ClipboardCopier,
-  ShowMoreOrAll,
-  upperFirst
-} from 'common'
-import { StyleableNodeLabel } from './StyleableNodeLabel'
-import { StyleableRelType } from './StyleableRelType'
+import { ClickableUrls } from '../ClickableUrls'
 import {
   AlternatingTable,
   CopyCell,
   KeyCell,
-  PaneBody,
-  PaneHeader,
-  PaneTitle,
   StyledExpandValueButton,
   StyledInlineList,
   ValueCell
-} from './styled'
+} from './PropertiesTable.style'
+import { ClipboardCopier } from '../ClipboardCopier'
+import { ShowMoreOrAll } from '../ShowMoreOrAll/ShowMoreOrAll'
 
 export const ELLIPSIS = '\u2026'
 export const WIDE_VIEW_THRESHOLD = 900
@@ -90,13 +77,13 @@ type PropertiesViewProps = {
   moreStep: number
   nodeInspectorWidth: number
 }
-function PropertiesView({
+export const PropertiesTable = ({
   visibleProperties,
   totalNumItems,
   onMoreClick,
   moreStep,
   nodeInspectorWidth
-}: PropertiesViewProps) {
+}: PropertiesViewProps): JSX.Element => {
   return (
     <>
       <StyledInlineList>
@@ -132,80 +119,6 @@ function PropertiesView({
         moreStep={moreStep}
         onMore={onMoreClick}
       />
-    </>
-  )
-}
-
-export const DETAILS_PANE_STEP_SIZE = 1000
-type DetailsPaneComponentProps = {
-  vizItem: NodeItem | RelationshipItem
-  graphStyle: GraphStyleModel
-  nodeInspectorWidth: number
-}
-export function DetailsPaneComponent({
-  vizItem,
-  graphStyle,
-  nodeInspectorWidth
-}: DetailsPaneComponentProps): JSX.Element {
-  const [maxPropertiesCount, setMaxPropertiesCount] = useState(
-    DETAILS_PANE_STEP_SIZE
-  )
-
-  const allItemProperties = [
-    { key: '<id>', value: `${vizItem.item.id}`, type: 'String' },
-    ...vizItem.item.propertyList
-  ].sort((a, b) => (a.key < b.key ? -1 : 1))
-  const visibleItemProperties = allItemProperties.slice(0, maxPropertiesCount)
-
-  const handleMorePropertiesClick = (numMore: number) => {
-    setMaxPropertiesCount(maxPropertiesCount + numMore)
-  }
-
-  return (
-    <>
-      <PaneHeader>
-        <PaneTitle>
-          {upperFirst(vizItem.type)} Properties{' '}
-          <ClipboardCopier
-            textToCopy={allItemProperties
-              .map(prop => `${prop.key}: ${prop.value}`)
-              .join('\n')}
-            titleText="Copy all properties to clipboard"
-            iconSize={10}
-          />
-        </PaneTitle>
-        {vizItem.type === 'relationship' && (
-          <StyleableRelType
-            selectedRelType={{
-              propertyKeys: vizItem.item.propertyList.map(p => p.key),
-              relType: vizItem.item.type
-            }}
-            graphStyle={graphStyle}
-          />
-        )}
-        {vizItem.type === 'node' &&
-          vizItem.item.labels.map((label: string) => {
-            return (
-              <StyleableNodeLabel
-                key={label}
-                graphStyle={graphStyle}
-                selectedLabel={{
-                  label,
-                  propertyKeys: vizItem.item.propertyList.map(p => p.key)
-                }}
-              />
-            )
-          })}
-      </PaneHeader>
-      <PaneBody>
-        <PropertiesView
-          visibleProperties={visibleItemProperties}
-          onMoreClick={handleMorePropertiesClick}
-          moreStep={DETAILS_PANE_STEP_SIZE}
-          totalNumItems={allItemProperties.length}
-          nodeInspectorWidth={nodeInspectorWidth}
-        />
-      </PaneBody>
     </>
   )
 }
