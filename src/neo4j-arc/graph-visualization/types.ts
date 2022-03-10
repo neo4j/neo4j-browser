@@ -85,5 +85,6 @@ export type GraphChangeType = 'init' | 'update' | 'expand' | 'collapse'
 export type GraphChangeHandler = (
   nodes: NodeModel[],
   relationships: RelationshipModel[],
-  type: GraphChangeType
+  type: GraphChangeType,
+  options?: { center?: { x: number; y: number } }
 ) => void

@@ -5,8 +5,10 @@ import {
   forceManyBody,
   forceSimulation,
   forceX,
-  forceY
+  forceY,
+  forceCenter
 } from 'd3-force'
+import { uniqBy } from 'lodash-es'
 
 import {
   DEFAULT_ALPHA,
@@ -30,8 +32,11 @@ import { RelationshipModel } from '../models/Relationship'
 
 class ForceSimulation {
   private _graph: GraphModel
+
+  private _simulationCenter: { x: number; y: number }
   private _simulation: Simulation<NodeModel, RelationshipModel>
   private _nodesToSimulate: NodeModel[]
+  private _shouldSimulateAllNodes: boolean
 
   constructor(
     graph: GraphModel,
@@ -40,13 +45,17 @@ class ForceSimulation {
   ) {
     this._graph = graph
 
+    this._simulationCenter = { x: 0, y: 0 }
+
     this._simulation = forceSimulation<NodeModel, RelationshipModel>()
       .velocityDecay(VELOCITY_DECAY)
       .force('charge', forceManyBody().strength(FORCE_CHARGE))
       .force('centerX', forceX(0).strength(FORCE_CENTER_X))
       .force('centerY', forceY(0).strength(FORCE_CENTER_Y))
       .on('tick', () => {
-        console.log('tick', this._nodesToSimulate)
+        console.log(
+          'tick' /* , this._nodesToSimulate, this._simulationCenter */
+        )
         this._simulation.tick(TICKS_PER_RENDER)
         this._nodesToSimulate.length === 0
           ? render()
@@ -59,22 +68,55 @@ class ForceSimulation {
       .stop()
 
     this._nodesToSimulate = []
+
+    this._shouldSimulateAllNodes = true
   }
 
-  simulateNodes(nodes: NodeModel[]): void {
+  set shouldSimulateAllNodes(value: boolean) {
+    this._shouldSimulateAllNodes = value
+    if (this._shouldSimulateAllNodes) {
+      this._nodesToSimulate = this._graph.getNodes()
+      this._simulationCenter = { x: 0, y: 0 }
+
+      this._simulation.nodes(this._nodesToSimulate).force('center', null)
+    }
+  }
+
+  simulateNodes(nodes: NodeModel[], center?: { x: number; y: number }): void {
     console.log('simulate nodes')
-    this._nodesToSimulate = nodes
+
     // const nodes = this._graph.getNodes()
     const radius = (nodes.length * LINK_DISTANCE) / (Math.PI * 2)
-    const center = {
-      x: 0,
-      y: 0
+    // console.log(center)
+
+    this._simulationCenter = this._shouldSimulateAllNodes
+      ? { x: 0, y: 0 }
+      : { x: center?.x ?? 0, y: center?.y ?? 0 }
+    circularLayout(nodes, this._simulationCenter, radius)
+
+    if (this._shouldSimulateAllNodes) {
+      this._nodesToSimulate = this._graph.getNodes()
+    } else {
+      const adjacentNodes = this._graph
+        .getNodes()
+        .filter(
+          node =>
+            Math.pow(node.x - this._simulationCenter.x, 2) +
+              Math.pow(node.y - this._simulationCenter.y, 2) -
+              Math.pow(radius * 5, 2) <=
+            0
+        )
+      console.log('find nodes', adjacentNodes)
+      this._nodesToSimulate = nodes.concat(adjacentNodes)
     }
-    circularLayout(nodes, center, radius)
 
     this._simulation
-      .nodes(nodes)
+      .nodes(uniqBy(this._nodesToSimulate, 'id'))
       .force('collide', forceCollide<NodeModel>().radius(FORCE_COLLIDE_RADIUS))
+      .force(
+        'center',
+        forceCenter(this._simulationCenter.x, this._simulationCenter.y)
+      )
   }
 
   simulateRelationships(): void {
@@ -99,7 +141,7 @@ class ForceSimulation {
   }
 
   simulateNodeDrag(): void {
-    // set alphaTarget to a value higher than alphaMin so the simulation
+    // Set alphaTarget to a value higher than alphaMin so the simulation
     // isn't stopped while nodes are being dragged.
     this._simulation
       .alphaTarget(DRAGGING_ALPHA_TARGET)
@@ -108,7 +150,7 @@ class ForceSimulation {
   }
 
   stopSimulateNodeDrag(): void {
-    // reset alphaTarget so the simulation cools down and stops
+    // Reset alphaTarget so the simulation cools down and stops.
     this._simulation.alphaTarget(DEFAULT_ALPHA_TARGET)
   }
 }

@@ -28,6 +28,7 @@ export const circularLayout = (
     node.y =
       center.y + radius * Math.cos((2 * Math.PI * i) / unlocatedNodes.length)
 
+    // console.log(node.x, node.y)
     node.initialPositionCalculated = true
   })
 }

@@ -122,18 +122,12 @@ class Visualisation {
       nodeShapeGfxToNodeData: this._nodeShapeGfxToNodeData,
       relationshipGfxToRelationshipData:
         this._relationshipGfxToRelationshipData,
+      shouldBindD3DragHandler: this.shouldSimulateAllNodes.bind(this),
       render: this.updateVisualisation.bind(this),
       onGraphChange: this.onGraphChange.bind(this),
-      shouldBindD3DragHandler: this.shouldBindD3DragHandler,
+      // shouldBindD3DragHandler: this.shouldBindD3DragHandler,
       externalEventHandler
     })
-  }
-
-  get shouldBindD3DragHandler(): boolean {
-    return (
-      this._graph.getRelationships().length + this._graph.getNodes().length <
-      1000
-    )
   }
 
   get view(): Application['view'] {
@@ -143,6 +137,13 @@ class Visualisation {
   get zoomStep(): number {
     const zoom = this._viewport.scale.x
     return this.calculateZoomStep(zoom)
+  }
+
+  shouldSimulateAllNodes(): boolean {
+    return (
+      this._graph.getRelationships().length + this._graph.getNodes().length <
+      1000
+    )
   }
 
   calculateZoomStep(zoom: number): number {
@@ -166,7 +167,7 @@ class Visualisation {
           )
         // Bind node circle events.
         this._eventHandler.bindNodeHoverEvent(nodeShapeGfx)
-        // this._eventHandler.bindNodeUnHoverEvent(nodeShapeGfx)
+        this._eventHandler.bindNodeUnHoverEvent(nodeShapeGfx)
         this._eventHandler.bindNodeClickEvent(nodeShapeGfx)
         this._eventHandler.bindNodeDblClickEvent(nodeShapeGfx)
         this._eventHandler.bindNodeReleaseEvent(nodeShapeGfx)
@@ -480,7 +481,7 @@ class Visualisation {
   updateVisualisation(nodeIds?: string[]): void {
     this.updateGeometry(nodeIds)
     this.updateLayout(nodeIds)
-    this.shouldBindD3DragHandler && this.updateVisibility()
+    this.shouldSimulateAllNodes() && this.updateVisibility()
   }
 
   /**
@@ -492,7 +493,8 @@ class Visualisation {
   onGraphChange(
     nodes: NodeModel[],
     relationships: RelationshipModel[],
-    type: GraphChangeType
+    type: GraphChangeType,
+    options?: { center?: { x: number; y: number } }
   ): void {
     console.log('on graph change', type, nodes, relationships)
     if (type === 'init' || type === 'update' || type === 'expand') {
@@ -511,9 +513,15 @@ class Visualisation {
     if (type === 'init' || type === 'expand') {
       this.createNodeDataGfxMapping(nodes)
       this.createRelationshipDataGfxMapping(relationships)
-      this._forceSimulation.simulateNodes(this._graph.getNodes())
+
+      this._forceSimulation.shouldSimulateAllNodes =
+        this.shouldSimulateAllNodes()
+      nodes.length > 0 &&
+        this._forceSimulation.simulateNodes(nodes, options?.center)
       this._forceSimulation.simulateRelationships()
     } else if (type === 'collapse') {
+      this._forceSimulation.shouldSimulateAllNodes =
+        this.shouldSimulateAllNodes()
       this.removeNodeDataGfxMapping(nodes)
       this.removeRelationshipDataGfxMapping(relationships)
     }

@@ -1,5 +1,5 @@
-import { D3DragEvent, DragBehavior, drag } from 'd3-drag'
-import { select } from 'd3-selection'
+// import { D3DragEvent, DragBehavior, drag } from 'd3-drag'
+// import { select } from 'd3-selection'
 import { RelationshipModel } from '../models/Relationship'
 import { uniqBy } from 'lodash-es'
 import { Viewport } from 'pixi-viewport'
@@ -21,35 +21,35 @@ import ExternalEventHandler from './ExternalEventHandler'
 
 const tolerance = 25
 
-const dragHandler = <E extends HTMLCanvasElement>(
-  dragstartedCallback: () => void,
-  draggedCallback: (event: D3DragEvent<E, NodeModel, NodeModel>) => void,
-  dragendedCallback: () => void
-): DragBehavior<E, NodeModel, NodeModel | null> => {
-  function dragstarted() {
-    console.log('start')
-    dragstartedCallback()
-  }
+// const dragHandler = <E extends HTMLCanvasElement>(
+//   dragstartedCallback: () => void,
+//   draggedCallback: (event: D3DragEvent<E, NodeModel, NodeModel>) => void,
+//   dragendedCallback: () => void
+// ): DragBehavior<E, NodeModel, NodeModel | null> => {
+//   function dragstarted() {
+//     console.log('start')
+//     dragstartedCallback()
+//   }
 
-  function dragged(event: D3DragEvent<E, NodeModel, NodeModel>) {
-    console.log('dragging')
-    if (event.subject) {
-      // event.subject.fx = event.x
-      // event.subject.fy = event.y
-      draggedCallback(event)
-    }
-  }
+//   function dragged(event: D3DragEvent<E, NodeModel, NodeModel>) {
+//     console.log('dragging')
+//     if (event.subject) {
+//       // event.subject.fx = event.x
+//       // event.subject.fy = event.y
+//       draggedCallback(event)
+//     }
+//   }
 
-  function dragended() {
-    console.log('end')
-    dragendedCallback()
-  }
+//   function dragended() {
+//     console.log('end')
+//     dragendedCallback()
+//   }
 
-  return drag<E, NodeModel, NodeModel | null>()
-    .on('start', dragstarted)
-    .on('drag', dragged)
-    .on('end', dragended)
-}
+//   return drag<E, NodeModel, NodeModel | null>()
+//     .on('start', dragstarted)
+//     .on('drag', dragged)
+//     .on('end', dragended)
+// }
 
 class EventHandler {
   private _app: Application
@@ -64,7 +64,9 @@ class EventHandler {
   private _isDblClickNode: boolean
   private _render: (nodeIds: string[]) => void
   private _onGraphChange: GraphChangeHandler
-  private _bindD3Handler = false
+  private _shouldBindD3DragHandler: () => boolean
+  private _restartedSimulation: boolean
+  private _initialDragPosition: { x: number; y: number }
   private _externalEventHandler: ExternalEventHandler
 
   constructor({
@@ -75,9 +77,10 @@ class EventHandler {
     forceSimulation: simulation,
     nodeShapeGfxToNodeData,
     relationshipGfxToRelationshipData,
+    shouldBindD3DragHandler,
     render,
     onGraphChange,
-    shouldBindD3DragHandler,
+    // shouldBindD3DragHandler,
     externalEventHandler
   }: {
     app: Application
@@ -87,9 +90,10 @@ class EventHandler {
     forceSimulation: ForceSimulation
     nodeShapeGfxToNodeData: WeakMap<Container, string>
     relationshipGfxToRelationshipData: WeakMap<Container, string>
+    shouldBindD3DragHandler: () => boolean
     render: (nodeIds?: string[]) => void
     onGraphChange: GraphChangeHandler
-    shouldBindD3DragHandler: boolean
+    // shouldBindD3DragHandler: boolean
     externalEventHandler: ExternalEventHandler
   }) {
     this._app = app
@@ -104,10 +108,14 @@ class EventHandler {
     this._isDblClickNode = false
     this._render = render
     this._onGraphChange = onGraphChange
-    if (shouldBindD3DragHandler) {
-      this._bindD3Handler = shouldBindD3DragHandler
-      this.bindD3DragHandler()
-    }
+    // if (shouldBindD3DragHandler) {
+    //   this._bindD3Handler = shouldBindD3DragHandler
+    //   // this.bindD3DragHandler()
+    // }
+    // this._bindD3Handler = shouldBindD3DragHandler
+    this._shouldBindD3DragHandler = shouldBindD3DragHandler
+    this._restartedSimulation = false
+    this._initialDragPosition = { x: 0, y: 0 }
     this._externalEventHandler = externalEventHandler
   }
 
@@ -145,57 +153,71 @@ class EventHandler {
     nodeGfx.on('mouseout', () => this.unHoverNode())
   }
 
-  bindD3DragHandler(): void {
-    let initialDragPosition: [number, number]
-    let restartedSimulation = false
+  // bindD3DragHandler(): void {
+  //   let initialDragPosition: [number, number]
+  //   let restartedSimulation = false
 
-    select<HTMLCanvasElement, NodeModel>(this._app.renderer.view).call(
-      dragHandler(
-        () => {
-          this._viewport.pause = true
-          const worldPosition = this._viewport.toWorld(
-            this._interactionManager.eventData.data.global
-          )
-          initialDragPosition = [worldPosition.x, worldPosition.y]
-          restartedSimulation = false
-        },
-        event => {
-          if (this._clickedNode && event.subject) {
-            if (this._interactionManager.eventData.type === 'mousemove') {
-              const newPosition = this._viewport.toWorld(
-                this._interactionManager.eventData.data.global
-              )
-              // Math.sqrt was removed to avoid unnecessary computation, since this
-              // function is called very often when dragging.
-              const dist =
-                Math.pow(initialDragPosition[0] - newPosition.x, 2) +
-                Math.pow(initialDragPosition[1] - newPosition.y, 2)
-              if (dist > tolerance && !restartedSimulation) {
-                // Set alphaTarget to a value higher than alphaMin so the simulation
-                // isn't stopped while nodes are being dragged.
-                this._forceSimulation.simulateNodeDrag()
-                restartedSimulation = true
-              }
-              event.subject.fx = newPosition.x
-              event.subject.fy = newPosition.y
-            }
-          }
-        },
-        () => {
-          if (restartedSimulation) {
-            // Reset alphaTarget so the simulation cools down and stops.
-            this._forceSimulation.stopSimulateNodeDrag()
-            this._viewport.pause = false
-          }
-        }
-      )
-        .container(this._app.renderer.view)
-        .subject(() => this._clickedNode)
-    )
-  }
+  //   select<HTMLCanvasElement, NodeModel>(this._app.renderer.view).call(
+  //     dragHandler(
+  //       () => {
+  //         this._viewport.pause = true
+  //         const worldPosition = this._viewport.toWorld(
+  //           this._interactionManager.eventData.data.global
+  //         )
+  //         initialDragPosition = [worldPosition.x, worldPosition.y]
+  //         restartedSimulation = false
+  //       },
+  //       event => {
+  //         if (this._clickedNode && event.subject) {
+  //           if (this._interactionManager.eventData.type === 'mousemove') {
+  //             const newPosition = this._viewport.toWorld(
+  //               this._interactionManager.eventData.data.global
+  //             )
+  //             // Math.sqrt was removed to avoid unnecessary computation, since this
+  //             // function is called very often when dragging.
+  //             const dist =
+  //               Math.pow(initialDragPosition[0] - newPosition.x, 2) +
+  //               Math.pow(initialDragPosition[1] - newPosition.y, 2)
+  //             if (dist > tolerance && !restartedSimulation) {
+  //               // Set alphaTarget to a value higher than alphaMin so the simulation
+  //               // isn't stopped while nodes are being dragged.
+  //               this._forceSimulation.simulateNodeDrag()
+  //               restartedSimulation = true
+  //             }
+  //             event.subject.fx = newPosition.x
+  //             event.subject.fy = newPosition.y
+  //           }
+  //         }
+  //       },
+  //       () => {
+  //         if (restartedSimulation) {
+  //           // Reset alphaTarget so the simulation cools down and stops.
+  //           this._forceSimulation.stopSimulateNodeDrag()
+  //           this._viewport.pause = false
+  //         }
+  //       }
+  //     )
+  //       .container(this._app.renderer.view)
+  //       .subject(() => this._clickedNode)
+  //   )
+  // }
 
   moveNode(node: NodeModel, point: Point): void {
     console.log(point.x, point.y, this._clickedNode)
+
+    // Math.sqrt was removed to avoid unnecessary computation, since this
+    // function is called very often when dragging.
+    const dist =
+      Math.pow(this._initialDragPosition.x - point.x, 2) +
+      Math.pow(this._initialDragPosition.y - point.y, 2)
+    if (dist > tolerance && !this._restartedSimulation) {
+      // Set alphaTarget to a value higher than alphaMin so the simulation
+      // isn't stopped while nodes are being dragged.
+      if (this._shouldBindD3DragHandler() && !this._isDblClickNode) {
+        this._forceSimulation.simulateNodeDrag()
+        this._restartedSimulation = true
+      }
+    }
 
     node.x = point.x
     node.y = point.y
@@ -203,7 +225,7 @@ class EventHandler {
     node.fx = point.x
     node.fy = point.y
 
-    this._render([node.id])
+    !this._shouldBindD3DragHandler() && this._render([node.id])
   }
 
   appMouseMove(event: InteractionEvent): void {
@@ -214,11 +236,8 @@ class EventHandler {
 
     console.log('moving', event)
     // If the drag event is handled by D3Drag, we don't do duplicated re-render
-    !this._bindD3Handler &&
-      this.moveNode(
-        this._clickedNode,
-        this._viewport.toWorld(event.data.global)
-      )
+    // !this._bindD3Handler &&
+    this.moveNode(this._clickedNode, this._viewport.toWorld(event.data.global))
   }
 
   clickNode(node: NodeModel): void {
@@ -228,6 +247,10 @@ class EventHandler {
     node.fy = node.y
 
     this._clickedNode = node
+    this._forceSimulation.shouldSimulateAllNodes =
+      this._shouldBindD3DragHandler()
+    this._initialDragPosition = { x: node.x, y: node.y }
+    this._restartedSimulation = false
 
     // Enable node dragging
     this._interactionManager.on('mousemove', this.appMouseMove.bind(this))
@@ -273,7 +296,9 @@ class EventHandler {
           'id'
         )
         this._graph.addRelationships(expandedRelationships)
-        this._onGraphChange(expandedNodes, expandedRelationships, 'expand')
+        this._onGraphChange(expandedNodes, expandedRelationships, 'expand', {
+          center: { x: node.x, y: node.y }
+        })
       }
     )
   }
@@ -314,9 +339,14 @@ class EventHandler {
   releaseNode(): void {
     console.log('release node')
     this._clickedNode = null
-    // disable node dragging
+    if (this._shouldBindD3DragHandler()) {
+      this._restartedSimulation && this._forceSimulation.stopSimulateNodeDrag()
+    }
+    this._restartedSimulation = false
+
+    // Disable node dragging.
     this._interactionManager.off('mousemove', this.appMouseMove)
-    // enable viewport dragging
+    // Enable viewport dragging.
     this._viewport.pause = false
   }
 
