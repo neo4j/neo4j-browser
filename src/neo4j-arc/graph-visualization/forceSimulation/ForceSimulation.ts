@@ -31,10 +31,11 @@ import { RelationshipModel } from '../models/Relationship'
 class ForceSimulation {
   private _graph: GraphModel
   private _simulation: Simulation<NodeModel, RelationshipModel>
+  private _nodesToSimulate: NodeModel[]
 
   constructor(
     graph: GraphModel,
-    private render: () => void,
+    private render: (nodeIds?: string[]) => void,
     private endSimulationCallback: () => void
   ) {
     this._graph = graph
@@ -45,20 +46,25 @@ class ForceSimulation {
       .force('centerX', forceX(0).strength(FORCE_CENTER_X))
       .force('centerY', forceY(0).strength(FORCE_CENTER_Y))
       .on('tick', () => {
-        console.log('tick')
+        console.log('tick', this._nodesToSimulate)
         this._simulation.tick(TICKS_PER_RENDER)
-        render()
+        this._nodesToSimulate.length === 0
+          ? render()
+          : render(this._nodesToSimulate.map(node => node.id))
       })
       .on('end', () => {
         console.log('end simulation')
         endSimulationCallback()
       })
       .stop()
+
+    this._nodesToSimulate = []
   }
 
-  simulateNodes(): void {
+  simulateNodes(nodes: NodeModel[]): void {
     console.log('simulate nodes')
-    const nodes = this._graph.getNodes()
+    this._nodesToSimulate = nodes
+    // const nodes = this._graph.getNodes()
     const radius = (nodes.length * LINK_DISTANCE) / (Math.PI * 2)
     const center = {
       x: 0,

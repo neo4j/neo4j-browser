@@ -62,7 +62,7 @@ class EventHandler {
   private _clickedNode: NodeModel | null
   private _dblClickNodeTimeout: number | null
   private _isDblClickNode: boolean
-  private _render: (nodeId: string) => void
+  private _render: (nodeIds: string[]) => void
   private _onGraphChange: GraphChangeHandler
   private _bindD3Handler = false
   private _externalEventHandler: ExternalEventHandler
@@ -87,7 +87,7 @@ class EventHandler {
     forceSimulation: ForceSimulation
     nodeShapeGfxToNodeData: WeakMap<Container, string>
     relationshipGfxToRelationshipData: WeakMap<Container, string>
-    render: (nodeId?: string) => void
+    render: (nodeIds?: string[]) => void
     onGraphChange: GraphChangeHandler
     shouldBindD3DragHandler: boolean
     externalEventHandler: ExternalEventHandler
@@ -203,7 +203,7 @@ class EventHandler {
     node.fx = point.x
     node.fy = point.y
 
-    this._render(node.id)
+    this._render([node.id])
   }
 
   appMouseMove(event: InteractionEvent): void {

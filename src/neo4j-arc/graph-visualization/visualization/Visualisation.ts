@@ -24,6 +24,7 @@ import { RelationshipModel } from '../models/Relationship'
 import { colourToNumber } from '../utils/colour'
 import RelationshipRenderer from './renderers/RelationshipRenderer'
 import NodeRenderer from './renderers/NodeRenderer'
+import { uniqBy } from 'lodash-es'
 
 const SCREEN_WIDTH = 1200
 const SCREEN_HEIGHT = 500
@@ -251,6 +252,7 @@ class Visualisation {
         this._relationshipDataToRelationshipGfx[relationship.id]
       this._relationshipsLayer.removeChild(relationshipGfx)
       delete this._relationshipDataToRelationshipGfx[relationship.id]
+      this._relationshipGfxToRelationshipData.delete(relationshipGfx)
     })
   }
 
@@ -348,26 +350,41 @@ class Visualisation {
     this._previousZoomScale = this._viewport.scale.x
   }
 
-  updateGeometry(nodeId?: string): void {
-    this._geometry.pairwiseArcsRelationshipRouting.layoutRelationships(nodeId)
+  updateGeometry(nodeIds?: string[]): void {
+    ;(nodeIds ?? this._graph.getNodes().map(node => node.id)).forEach(
+      nodeId => {
+        this._geometry.pairwiseArcsRelationshipRouting.layoutRelationships(
+          nodeId
+        )
+      }
+    )
     // vGraph
     //   .getRelationships()
     //   .forEach(r => console.log(r.id, r.shortCaptionLength, r.shortCaption))
   }
 
-  updateLayout(nodeId?: string): void {
+  updateLayout(nodeIds?: string[]): void {
     console.log('update layout')
-    const nodes = nodeId
-      ? [<NodeModel>this._graph.findNodeById(nodeId)]
+    const nodes = nodeIds
+      ? this._graph.getNodes().filter(node => nodeIds.includes(node.id))
       : this._graph.getNodes()
-    const relationships = nodeId
-      ? this._graph
-          .getNodePairsByNodeId(nodeId)
-          .reduce(
-            (previousValue, currentValue) =>
-              previousValue.concat(currentValue.relationships),
+    const relationships = nodeIds
+      ? uniqBy(
+          nodeIds.reduce(
+            (relationships, nodeId) =>
+              relationships.concat(
+                this._graph
+                  .getNodePairsByNodeId(nodeId)
+                  .reduce(
+                    (previousValue, nodePair) =>
+                      previousValue.concat(nodePair.relationships),
+                    [] as RelationshipModel[]
+                  )
+              ),
             [] as RelationshipModel[]
-          )
+          ),
+          'id'
+        )
       : this._graph.getRelationships()
 
     nodes.forEach(node => {
@@ -460,9 +477,9 @@ class Visualisation {
     })
   }
 
-  updateVisualisation(nodeId?: string): void {
-    this.updateGeometry(nodeId)
-    this.updateLayout(nodeId)
+  updateVisualisation(nodeIds?: string[]): void {
+    this.updateGeometry(nodeIds)
+    this.updateLayout(nodeIds)
     this.shouldBindD3DragHandler && this.updateVisibility()
   }
 
@@ -494,7 +511,7 @@ class Visualisation {
     if (type === 'init' || type === 'expand') {
       this.createNodeDataGfxMapping(nodes)
       this.createRelationshipDataGfxMapping(relationships)
-      this._forceSimulation.simulateNodes()
+      this._forceSimulation.simulateNodes(this._graph.getNodes())
       this._forceSimulation.simulateRelationships()
     } else if (type === 'collapse') {
       this.removeNodeDataGfxMapping(nodes)
