@@ -38,6 +38,10 @@ function writeDataToFile(file, data) {
 }
 
 function getCurrentGitRevision() {
+  if (process.env.GIT_REVISION) {
+    // If no hash was passed, attempt to read it from disk
+    return process.env.GIT_REVISION
+  }
   try {
     const rev = fs
       .readFileSync('.git/HEAD')
