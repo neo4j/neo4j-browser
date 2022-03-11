@@ -58,7 +58,9 @@ function getCurrentGitRevision() {
         .trim()
     }
   } catch (e) {
-    throw new Error('Could not read git revision. Error: ' + e)
+    // Don't prevent the build from working if hash wasn't present, just log
+    console.error('Could not read git revision. Error: ' + e)
+    return undefined
   }
 }
 
