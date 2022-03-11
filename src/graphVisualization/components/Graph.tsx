@@ -71,7 +71,6 @@ type GraphState = {
 export class Graph extends React.Component<GraphProps, GraphState> {
   svgElement: React.RefObject<SVGSVGElement>
   visualization: Visualization | null = null
-  displayingWheelZoomInfoTimerId: number | undefined
 
   constructor(props: GraphProps) {
     super(props)
@@ -159,10 +158,6 @@ export class Graph extends React.Component<GraphProps, GraphState> {
     if (this.props.styleVersion !== prevProps.styleVersion) {
       this.visualization?.init()
     }
-  }
-
-  componentWillUnmount(): void {
-    clearTimeout(this.displayingWheelZoomInfoTimerId)
   }
 
   handleZoomEvent = (limitsReached: ZoomLimitsReached): void => {

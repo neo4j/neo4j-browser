@@ -219,4 +219,18 @@ describe('Viz rendering', () => {
     // zoom out limit is reached zoom so button is disabled
     cy.get(`[aria-label="zoom-out"]`).should('have.css', 'opacity', '1')
   })
+  it('displays wheel zoom info message which can be closed', () => {
+    cy.executeCommand(':clear')
+    cy.executeCommand(
+      'CREATE (a:TestLabel)-[:CONNECTS]->(b:TestLabel) RETURN a, b'
+    )
+
+    cy.get(`#svg-vis`).trigger('mousewheel', { deltaY: 1000 })
+
+    cy.get('[data-testid=wheelZoomInfoCheckbox]').should('exist')
+
+    cy.get('[data-testid=wheelZoomInfoCheckbox]').click()
+
+    cy.get('[data-testid=wheelZoomInfoCheckbox]').should('not.exist')
+  })
 })

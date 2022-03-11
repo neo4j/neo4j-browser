@@ -99,7 +99,9 @@ export class Visualization extends Component<
       this.props.isFullscreen !== props.isFullscreen ||
       !deepEquals(props.graphStyleData, this.props.graphStyleData) ||
       this.state.updated !== state.updated ||
-      this.props.autoComplete !== props.autoComplete
+      this.props.autoComplete !== props.autoComplete ||
+      this.props.wheelZoomInfoMessageEnabled !==
+        props.wheelZoomInfoMessageEnabled
     )
   }
 
