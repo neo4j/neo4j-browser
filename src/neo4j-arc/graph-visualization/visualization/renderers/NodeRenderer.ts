@@ -48,12 +48,13 @@ class NodeRenderer {
     return this._circleGrapicsTextureMap[radius]
   }
 
-  drawNodeCircleSprite(radius: number, colour: string): Sprite {
+  drawNodeCircleSprite(radius: number, colour: string, opacity = 1): Sprite {
     const circle = new Sprite(this.getCircleGraphicsTextureByRadius(radius))
     circle.name = CIRCLE_NAME
     circle.x = -circle.width / 2
     circle.y = -circle.height / 2
     circle.tint = colourToNumber(colour)
+    circle.alpha = opacity
 
     return circle
   }

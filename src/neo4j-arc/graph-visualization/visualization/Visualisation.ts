@@ -1,5 +1,5 @@
 import { Cull } from '@pixi-essentials/cull'
-import { GraphChangeType } from '../types'
+import { GraphChangeHandler, MoveGfxBetweenLayers } from '../types'
 import { Viewport } from 'pixi-viewport'
 import {
   Application,
@@ -41,14 +41,18 @@ class Visualisation {
   private _app: Application
   private _viewport: Viewport
   private _previousZoomScale: number
+  private _frontNodesLayer: Container
   private _nodesLayer: Container
   private _relationshipsLayer: Container
+  private _hoverHighlightGfx: Container
 
   private _style: GraphStyleModel
   private _geometry: Geometry
   private _layout: Layout
   private _forceSimulation: ForceSimulation
   private _eventHandler: EventHandler
+
+  private _clickedNode: NodeModel | null
 
   private _nodeRenderer: NodeRenderer
   private _relationshipRenderer: RelationshipRenderer
@@ -71,7 +75,6 @@ class Visualisation {
       width: SCREEN_WIDTH,
       height: SCREEN_HEIGHT,
       resolution: RESOLUTION,
-      // backgroundColor: 0xffff,
       backgroundAlpha: 0,
       antialias: true,
       autoDensity: true
@@ -97,10 +100,18 @@ class Visualisation {
     this._app.stage.addChild(this._viewport)
     this._viewport.drag().pinch().wheel().decelerate()
 
+    // Create layers: relationships, front relationships, nodes, front nodes.
     this._relationshipsLayer = new Container()
     this._viewport.addChild(this._relationshipsLayer)
     this._nodesLayer = new Container()
     this._viewport.addChild(this._nodesLayer)
+    this._frontNodesLayer = new Container()
+    this._viewport.addChild(this._frontNodesLayer)
+    this._hoverHighlightGfx = new Container()
+    this._hoverHighlightGfx.name = 'HOVER_HIGHLIGHT'
+    this._hoverHighlightGfx.alpha = 0.35
+
+    this._clickedNode = null
 
     this._style = style
     this._geometry = new Geometry(this._graph, style)
@@ -122,10 +133,11 @@ class Visualisation {
       nodeShapeGfxToNodeData: this._nodeShapeGfxToNodeData,
       relationshipGfxToRelationshipData:
         this._relationshipGfxToRelationshipData,
+      setClickedNode: this.setClickedNode.bind(this),
       shouldBindD3DragHandler: this.shouldSimulateAllNodes.bind(this),
       render: this.updateVisualisation.bind(this),
       onGraphChange: this.onGraphChange.bind(this),
-      // shouldBindD3DragHandler: this.shouldBindD3DragHandler,
+      moveGfxBetweenLayers: this.moveGfxBetweenLayers.bind(this),
       externalEventHandler
     })
   }
@@ -146,13 +158,17 @@ class Visualisation {
     )
   }
 
-  calculateZoomStep(zoom: number): number {
+  setClickedNode(node: NodeModel | null): void {
+    this._clickedNode = node
+  }
+
+  private calculateZoomStep(zoom: number): number {
     const zoomSteps = [0.1, 0.2, 0.4, Infinity]
     const zoomStep = zoomSteps.findIndex(zoomStep => zoom <= zoomStep)
     return zoomStep
   }
 
-  createNodeDataGfxMapping(nodes: NodeModel[]): void {
+  private createNodeDataGfxMapping(nodes: NodeModel[]): void {
     // Create node graphics.
     const nodeDataGfxPairs = nodes.map(node => {
       let nodeShapeGfx: Container
@@ -199,7 +215,7 @@ class Visualisation {
     )
   }
 
-  removeNodeDataGfxMapping(nodes: NodeModel[]): void {
+  private removeNodeDataGfxMapping(nodes: NodeModel[]): void {
     nodes.forEach(node => {
       const nodeShapeGfx = this._nodeDataToNodeShapeGfx[node.id]
       this._nodesLayer.removeChild(nodeShapeGfx)
@@ -212,7 +228,9 @@ class Visualisation {
     })
   }
 
-  createRelationshipDataGfxMapping(relationships: RelationshipModel[]): void {
+  private createRelationshipDataGfxMapping(
+    relationships: RelationshipModel[]
+  ): void {
     // Create relationship graphics.
     const relationshipDataGfxPairs = relationships.map(relationship => {
       let relationshipGfx: Container
@@ -247,7 +265,9 @@ class Visualisation {
     )
   }
 
-  removeRelationshipDataGfxMapping(relationships: RelationshipModel[]): void {
+  private removeRelationshipDataGfxMapping(
+    relationships: RelationshipModel[]
+  ): void {
     relationships.forEach(relationship => {
       const relationshipGfx =
         this._relationshipDataToRelationshipGfx[relationship.id]
@@ -388,6 +408,11 @@ class Visualisation {
         )
       : this._graph.getRelationships()
 
+    if (this._clickedNode) {
+      this._hoverHighlightGfx.x = this._clickedNode.x
+      this._hoverHighlightGfx.y = this._clickedNode.y
+    }
+
     nodes.forEach(node => {
       const nodeShapeGfx = this._nodeDataToNodeShapeGfx[node.id]
       nodeShapeGfx.x = node.x
@@ -478,6 +503,39 @@ class Visualisation {
     })
   }
 
+  private moveNodeGfxToFront(node: NodeModel): void {
+    const nodeShapeGfx = this._nodeDataToNodeShapeGfx[node.id]
+    const nodeCaptionGfx = this._nodeDataToNodeCaptionGfx[node.id]
+    this._nodesLayer.removeChild(nodeShapeGfx)
+    this._nodesLayer.removeChild(nodeCaptionGfx)
+    this._hoverHighlightGfx.x = node.x
+    this._hoverHighlightGfx.y = node.y
+    this._hoverHighlightGfx.addChild(
+      this._nodeRenderer.drawNodeCircleSprite(node.radius + 4, '#6ac6ff')
+    )
+    this._frontNodesLayer.addChild(this._hoverHighlightGfx)
+    this._frontNodesLayer.addChild(nodeShapeGfx)
+    this._frontNodesLayer.addChild(nodeCaptionGfx)
+  }
+
+  private moveNodeGfxToBehind(node: NodeModel): void {
+    this._hoverHighlightGfx.removeChildren()
+    const nodeShapeGfx = this._nodeDataToNodeShapeGfx[node.id]
+    const nodeCaptionGfx = this._nodeDataToNodeCaptionGfx[node.id]
+    this._frontNodesLayer.removeChildren()
+    this._nodesLayer.addChild(nodeShapeGfx)
+    this._nodesLayer.addChild(nodeCaptionGfx)
+  }
+
+  moveGfxBetweenLayers: MoveGfxBetweenLayers = (data, position, type) => {
+    console.log(data, position, type)
+    if (data.isNode) {
+      if (position === 'front')
+        this.moveNodeGfxToFront(data as unknown as NodeModel)
+      else this.moveNodeGfxToBehind(data as unknown as NodeModel)
+    }
+  }
+
   updateVisualisation(nodeIds?: string[]): void {
     this.updateGeometry(nodeIds)
     this.updateLayout(nodeIds)
@@ -485,17 +543,14 @@ class Visualisation {
   }
 
   /**
-   * Handles visualisation models and element mappings updates when graph data-set changes
-   * @param nodes changed nodes
-   * @param relationships changed relationships
+   * Handles models and visualisation element mappings when graph data-set changes,
+   * also triggers force simulation and render under certain change type
+   * @param nodes nodes model have been changed
+   * @param relationships relationships model have been changed
    * @param type type of graph change
+   * @param options addition options to handle the graph visualisation update
    */
-  onGraphChange(
-    nodes: NodeModel[],
-    relationships: RelationshipModel[],
-    type: GraphChangeType,
-    options?: { center?: { x: number; y: number } }
-  ): void {
+  onGraphChange: GraphChangeHandler = (nodes, relationships, type, options) => {
     console.log('on graph change', type, nodes, relationships)
     if (type === 'init' || type === 'update' || type === 'expand') {
       nodes.forEach(node => {

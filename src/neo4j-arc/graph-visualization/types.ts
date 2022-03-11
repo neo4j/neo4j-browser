@@ -20,6 +20,7 @@
 import { NodeModel } from './models/Node'
 import { RelationshipModel } from './models/Relationship'
 import { BasicNode, BasicRelationship } from 'neo4j-arc/common'
+import GraphEntityModel from './models/GraphEntity'
 
 export type VItem =
   | NodeItem
@@ -87,4 +88,10 @@ export type GraphChangeHandler = (
   relationships: RelationshipModel[],
   type: GraphChangeType,
   options?: { center?: { x: number; y: number } }
+) => void
+
+export type MoveGfxBetweenLayers = <T extends GraphEntityModel>(
+  data: T,
+  position: 'front' | 'behind',
+  type: 'hover' | 'select'
 ) => void

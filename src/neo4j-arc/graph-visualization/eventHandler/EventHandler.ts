@@ -15,7 +15,7 @@ import {
 import ForceSimulation from '../forceSimulation/ForceSimulation'
 import { GraphModel } from '../models/Graph'
 import { NodeModel } from '../models/Node'
-import { GraphChangeHandler } from '../types'
+import { GraphChangeHandler, MoveGfxBetweenLayers } from '../types'
 import { mapNodes, mapRelationships } from '../utils/mapper'
 import ExternalEventHandler from './ExternalEventHandler'
 
@@ -57,14 +57,16 @@ class EventHandler {
   private _interactionManager: InteractionManager
   private _graph: GraphModel
   private _forceSimulation: ForceSimulation
-  private _nodeGfxToNodeData: WeakMap<DisplayObject, string>
+  private _nodeShapeGfxToNodeData: WeakMap<DisplayObject, string>
   private _relationshipGfxToRelationshipData: WeakMap<DisplayObject, string>
   private _clickedNode: NodeModel | null
+  private _setClickedNode: (node: NodeModel | null) => void
   private _dblClickNodeTimeout: number | null
   private _isDblClickNode: boolean
   private _render: (nodeIds: string[]) => void
   private _onGraphChange: GraphChangeHandler
   private _shouldBindD3DragHandler: () => boolean
+  private _moveGfxBetweenLayers: MoveGfxBetweenLayers
   private _restartedSimulation: boolean
   private _initialDragPosition: { x: number; y: number }
   private _externalEventHandler: ExternalEventHandler
@@ -77,9 +79,11 @@ class EventHandler {
     forceSimulation: simulation,
     nodeShapeGfxToNodeData,
     relationshipGfxToRelationshipData,
+    setClickedNode,
     shouldBindD3DragHandler,
     render,
     onGraphChange,
+    moveGfxBetweenLayers,
     // shouldBindD3DragHandler,
     externalEventHandler
   }: {
@@ -90,30 +94,37 @@ class EventHandler {
     forceSimulation: ForceSimulation
     nodeShapeGfxToNodeData: WeakMap<Container, string>
     relationshipGfxToRelationshipData: WeakMap<Container, string>
+    setClickedNode: (node: NodeModel | null) => void
     shouldBindD3DragHandler: () => boolean
     render: (nodeIds?: string[]) => void
     onGraphChange: GraphChangeHandler
-    // shouldBindD3DragHandler: boolean
+    moveGfxBetweenLayers: MoveGfxBetweenLayers
     externalEventHandler: ExternalEventHandler
   }) {
+    // PIXI instances.
     this._app = app
     this._viewport = viewport
     this._interactionManager = interactionManager
+
     this._graph = graph
     this._forceSimulation = simulation
-    this._nodeGfxToNodeData = nodeShapeGfxToNodeData
+    this._nodeShapeGfxToNodeData = nodeShapeGfxToNodeData
     this._relationshipGfxToRelationshipData = relationshipGfxToRelationshipData
+
     this._clickedNode = null
     this._dblClickNodeTimeout = null
     this._isDblClickNode = false
+
+    this._setClickedNode = setClickedNode
+    this._shouldBindD3DragHandler = shouldBindD3DragHandler
     this._render = render
     this._onGraphChange = onGraphChange
     // if (shouldBindD3DragHandler) {
     //   this._bindD3Handler = shouldBindD3DragHandler
     //   // this.bindD3DragHandler()
     // }
-    // this._bindD3Handler = shouldBindD3DragHandler
-    this._shouldBindD3DragHandler = shouldBindD3DragHandler
+    this._moveGfxBetweenLayers = moveGfxBetweenLayers
+
     this._restartedSimulation = false
     this._initialDragPosition = { x: 0, y: 0 }
     this._externalEventHandler = externalEventHandler
@@ -125,19 +136,20 @@ class EventHandler {
       type: 'node',
       item: this._clickedNode ?? node
     })
+    this._moveGfxBetweenLayers(node, 'front', 'hover')
   }
 
-  bindNodeHoverEvent(nodeGfx: Container): void {
-    nodeGfx.on('mouseover', (event: InteractionEvent) =>
+  bindNodeHoverEvent(nodeShapeGfx: Container): void {
+    nodeShapeGfx.on('mouseover', (event: InteractionEvent) =>
       this.hoverNode(
         this._graph.findNodeById(
-          this._nodeGfxToNodeData.get(event.currentTarget) as string
+          this._nodeShapeGfxToNodeData.get(event.currentTarget) as string
         ) as NodeModel
       )
     )
   }
 
-  unHoverNode(): void {
+  unHoverNode(node: NodeModel): void {
     if (!this._clickedNode) {
       const nodeCount = this._graph.getNodes().length
       const relationshipCount = this._graph.getRelationships().length
@@ -147,10 +159,17 @@ class EventHandler {
         item: { nodeCount, relationshipCount }
       })
     }
+    this._moveGfxBetweenLayers(node, 'behind', 'hover')
   }
 
   bindNodeUnHoverEvent(nodeGfx: Container): void {
-    nodeGfx.on('mouseout', () => this.unHoverNode())
+    nodeGfx.on('mouseout', (event: InteractionEvent) =>
+      this.unHoverNode(
+        this._graph.findNodeById(
+          this._nodeShapeGfxToNodeData.get(event.currentTarget) as string
+        ) as NodeModel
+      )
+    )
   }
 
   // bindD3DragHandler(): void {
@@ -247,6 +266,7 @@ class EventHandler {
     node.fy = node.y
 
     this._clickedNode = node
+    this._setClickedNode(node)
     this._forceSimulation.shouldSimulateAllNodes =
       this._shouldBindD3DragHandler()
     this._initialDragPosition = { x: node.x, y: node.y }
@@ -263,7 +283,7 @@ class EventHandler {
       console.log('mouse down')
       this.clickNode(
         this._graph.findNodeById(
-          this._nodeGfxToNodeData.get(event.currentTarget) as string
+          this._nodeShapeGfxToNodeData.get(event.currentTarget) as string
         ) as NodeModel
       )
     })
@@ -320,7 +340,7 @@ class EventHandler {
         console.log('dbl click')
         this.dblClickNode(
           this._graph.findNodeById(
-            this._nodeGfxToNodeData.get(nodeGfx) as string
+            this._nodeShapeGfxToNodeData.get(nodeGfx) as string
           ) as NodeModel
         )
         this._dblClickNodeTimeout && clearTimeout(this._dblClickNodeTimeout)
@@ -339,6 +359,7 @@ class EventHandler {
   releaseNode(): void {
     console.log('release node')
     this._clickedNode = null
+    this._setClickedNode(null)
     if (this._shouldBindD3DragHandler()) {
       this._restartedSimulation && this._forceSimulation.stopSimulateNodeDrag()
     }
