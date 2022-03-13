@@ -26,7 +26,7 @@ class NodeRenderer {
   }
 
   drawCircleGraphicsByRadius(radius: number): RenderTexture {
-    // create textures: circle, circle border
+    // Create textures: circle, circle border.
     const circleGraphics = new Graphics()
     circleGraphics.beginFill(TEXTURE_COLOR)
     circleGraphics.drawCircle(radius, radius, radius)

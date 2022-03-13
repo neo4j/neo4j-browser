@@ -1,10 +1,7 @@
-// import { D3DragEvent, DragBehavior, drag } from 'd3-drag'
-// import { select } from 'd3-selection'
 import { RelationshipModel } from '../models/Relationship'
 import { uniqBy } from 'lodash-es'
 import { Viewport } from 'pixi-viewport'
 import {
-  Application,
   Container,
   DisplayObject,
   InteractionEvent,
@@ -19,40 +16,10 @@ import { GraphChangeHandler, MoveGfxBetweenLayers } from '../types'
 import { mapNodes, mapRelationships } from '../utils/mapper'
 import ExternalEventHandler from './ExternalEventHandler'
 
-const tolerance = 25
-
-// const dragHandler = <E extends HTMLCanvasElement>(
-//   dragstartedCallback: () => void,
-//   draggedCallback: (event: D3DragEvent<E, NodeModel, NodeModel>) => void,
-//   dragendedCallback: () => void
-// ): DragBehavior<E, NodeModel, NodeModel | null> => {
-//   function dragstarted() {
-//     console.log('start')
-//     dragstartedCallback()
-//   }
-
-//   function dragged(event: D3DragEvent<E, NodeModel, NodeModel>) {
-//     console.log('dragging')
-//     if (event.subject) {
-//       // event.subject.fx = event.x
-//       // event.subject.fy = event.y
-//       draggedCallback(event)
-//     }
-//   }
-
-//   function dragended() {
-//     console.log('end')
-//     dragendedCallback()
-//   }
-
-//   return drag<E, NodeModel, NodeModel | null>()
-//     .on('start', dragstarted)
-//     .on('drag', dragged)
-//     .on('end', dragended)
-// }
+const DRAG_TOLERANCE = 25
+const DB_CLICK_TIMEOUT = 400
 
 class EventHandler {
-  private _app: Application
   private _viewport: Viewport
   private _interactionManager: InteractionManager
   private _graph: GraphModel
@@ -61,8 +28,11 @@ class EventHandler {
   private _relationshipGfxToRelationshipData: WeakMap<DisplayObject, string>
   private _clickedNode: NodeModel | null
   private _setClickedNode: (node: NodeModel | null) => void
+  private _toggleContextMenu: (node: NodeModel | null) => void
+  private _clickNodeTimeout: number | null
   private _dblClickNodeTimeout: number | null
   private _isDblClickNode: boolean
+  private _selectedItem: NodeModel | null
   private _render: (nodeIds: string[]) => void
   private _onGraphChange: GraphChangeHandler
   private _shouldBindD3DragHandler: () => boolean
@@ -72,7 +42,6 @@ class EventHandler {
   private _externalEventHandler: ExternalEventHandler
 
   constructor({
-    app,
     viewport,
     interactionManager,
     graph,
@@ -80,14 +49,13 @@ class EventHandler {
     nodeShapeGfxToNodeData,
     relationshipGfxToRelationshipData,
     setClickedNode,
+    toggleContextMenu,
     shouldBindD3DragHandler,
     render,
     onGraphChange,
     moveGfxBetweenLayers,
-    // shouldBindD3DragHandler,
     externalEventHandler
   }: {
-    app: Application
     viewport: Viewport
     interactionManager: InteractionManager
     graph: GraphModel
@@ -95,6 +63,7 @@ class EventHandler {
     nodeShapeGfxToNodeData: WeakMap<Container, string>
     relationshipGfxToRelationshipData: WeakMap<Container, string>
     setClickedNode: (node: NodeModel | null) => void
+    toggleContextMenu: (node: NodeModel | null) => void
     shouldBindD3DragHandler: () => boolean
     render: (nodeIds?: string[]) => void
     onGraphChange: GraphChangeHandler
@@ -102,9 +71,14 @@ class EventHandler {
     externalEventHandler: ExternalEventHandler
   }) {
     // PIXI instances.
-    this._app = app
     this._viewport = viewport
     this._interactionManager = interactionManager
+
+    this._viewport.on('clicked', () => {
+      console.log('clicked')
+      this.deselectItem()
+      this._toggleContextMenu(null)
+    })
 
     this._graph = graph
     this._forceSimulation = simulation
@@ -112,17 +86,17 @@ class EventHandler {
     this._relationshipGfxToRelationshipData = relationshipGfxToRelationshipData
 
     this._clickedNode = null
+    this._clickNodeTimeout = null
     this._dblClickNodeTimeout = null
     this._isDblClickNode = false
+    this._selectedItem = null
 
     this._setClickedNode = setClickedNode
+    this._toggleContextMenu = toggleContextMenu
     this._shouldBindD3DragHandler = shouldBindD3DragHandler
     this._render = render
     this._onGraphChange = onGraphChange
-    // if (shouldBindD3DragHandler) {
-    //   this._bindD3Handler = shouldBindD3DragHandler
-    //   // this.bindD3DragHandler()
-    // }
+
     this._moveGfxBetweenLayers = moveGfxBetweenLayers
 
     this._restartedSimulation = false
@@ -131,12 +105,13 @@ class EventHandler {
   }
 
   hoverNode(node: NodeModel): void {
-    console.log('hover', node)
+    // console.log('hover', node)
     this._externalEventHandler.onItemMouseOver({
       type: 'node',
       item: this._clickedNode ?? node
     })
-    this._moveGfxBetweenLayers(node, 'front', 'hover')
+    this._clickedNode?.id !== node.id &&
+      this._moveGfxBetweenLayers(this._clickedNode ?? node, 'front')
   }
 
   bindNodeHoverEvent(nodeShapeGfx: Container): void {
@@ -150,16 +125,18 @@ class EventHandler {
   }
 
   unHoverNode(node: NodeModel): void {
-    if (!this._clickedNode) {
-      const nodeCount = this._graph.getNodes().length
-      const relationshipCount = this._graph.getRelationships().length
-      console.log(nodeCount, relationshipCount)
+    console.log(this._selectedItem)
+
+    const nodeCount = this._graph.getNodes().length
+    const relationshipCount = this._graph.getRelationships().length
+    console.log(nodeCount, relationshipCount)
+    !this._clickedNode &&
       this._externalEventHandler.onItemMouseOver({
         type: 'canvas',
         item: { nodeCount, relationshipCount }
       })
-    }
-    this._moveGfxBetweenLayers(node, 'behind', 'hover')
+
+    !this._clickedNode && this._moveGfxBetweenLayers(node, 'behind')
   }
 
   bindNodeUnHoverEvent(nodeGfx: Container): void {
@@ -172,64 +149,38 @@ class EventHandler {
     )
   }
 
-  // bindD3DragHandler(): void {
-  //   let initialDragPosition: [number, number]
-  //   let restartedSimulation = false
+  selectItem(item: NodeModel): void {
+    if (this._selectedItem) {
+      this._selectedItem.selected = false
+    }
+    this._selectedItem = item
+    item.selected = true
+  }
 
-  //   select<HTMLCanvasElement, NodeModel>(this._app.renderer.view).call(
-  //     dragHandler(
-  //       () => {
-  //         this._viewport.pause = true
-  //         const worldPosition = this._viewport.toWorld(
-  //           this._interactionManager.eventData.data.global
-  //         )
-  //         initialDragPosition = [worldPosition.x, worldPosition.y]
-  //         restartedSimulation = false
-  //       },
-  //       event => {
-  //         if (this._clickedNode && event.subject) {
-  //           if (this._interactionManager.eventData.type === 'mousemove') {
-  //             const newPosition = this._viewport.toWorld(
-  //               this._interactionManager.eventData.data.global
-  //             )
-  //             // Math.sqrt was removed to avoid unnecessary computation, since this
-  //             // function is called very often when dragging.
-  //             const dist =
-  //               Math.pow(initialDragPosition[0] - newPosition.x, 2) +
-  //               Math.pow(initialDragPosition[1] - newPosition.y, 2)
-  //             if (dist > tolerance && !restartedSimulation) {
-  //               // Set alphaTarget to a value higher than alphaMin so the simulation
-  //               // isn't stopped while nodes are being dragged.
-  //               this._forceSimulation.simulateNodeDrag()
-  //               restartedSimulation = true
-  //             }
-  //             event.subject.fx = newPosition.x
-  //             event.subject.fy = newPosition.y
-  //           }
-  //         }
-  //       },
-  //       () => {
-  //         if (restartedSimulation) {
-  //           // Reset alphaTarget so the simulation cools down and stops.
-  //           this._forceSimulation.stopSimulateNodeDrag()
-  //           this._viewport.pause = false
-  //         }
-  //       }
-  //     )
-  //       .container(this._app.renderer.view)
-  //       .subject(() => this._clickedNode)
-  //   )
-  // }
+  deselectItem(): void {
+    if (this._selectedItem) {
+      this._selectedItem.selected = false
+      this._selectedItem = null
+    }
+
+    this._externalEventHandler.onItemSelect({
+      type: 'canvas',
+      item: {
+        nodeCount: this._graph.getNodes().length,
+        relationshipCount: this._graph.getRelationships().length
+      }
+    })
+  }
 
   moveNode(node: NodeModel, point: Point): void {
-    console.log(point.x, point.y, this._clickedNode)
+    // console.log(point.x, point.y, this._clickedNode)
 
     // Math.sqrt was removed to avoid unnecessary computation, since this
     // function is called very often when dragging.
     const dist =
       Math.pow(this._initialDragPosition.x - point.x, 2) +
       Math.pow(this._initialDragPosition.y - point.y, 2)
-    if (dist > tolerance && !this._restartedSimulation) {
+    if (dist > DRAG_TOLERANCE && !this._restartedSimulation) {
       // Set alphaTarget to a value higher than alphaMin so the simulation
       // isn't stopped while nodes are being dragged.
       if (this._shouldBindD3DragHandler() && !this._isDblClickNode) {
@@ -240,22 +191,20 @@ class EventHandler {
 
     node.x = point.x
     node.y = point.y
-    // Make sure node position won't be changed when restart simulation
+    // Make sure node position won't be changed when restart simulation.
     node.fx = point.x
     node.fy = point.y
 
+    // If the drag event is handled by D3Drag, we don't do duplicated re-render.
     !this._shouldBindD3DragHandler() && this._render([node.id])
   }
 
   appMouseMove(event: InteractionEvent): void {
-    // console.log(this._clickedNode)
     if (!this._clickedNode) {
       return
     }
 
-    console.log('moving', event)
-    // If the drag event is handled by D3Drag, we don't do duplicated re-render
-    // !this._bindD3Handler &&
+    // console.log('moving', event)
     this.moveNode(this._clickedNode, this._viewport.toWorld(event.data.global))
   }
 
@@ -267,14 +216,32 @@ class EventHandler {
 
     this._clickedNode = node
     this._setClickedNode(node)
+
+    this._clickNodeTimeout = setTimeout(() => {
+      if (this._interactionManager.eventData.type !== 'mousemove') {
+        if (!node.selected) {
+          this.selectItem(node)
+          this._externalEventHandler.onItemSelect({ type: 'node', item: node })
+          this._toggleContextMenu(node)
+        } else {
+          this.deselectItem()
+          this._toggleContextMenu(null)
+        }
+      }
+      this._clickNodeTimeout && clearTimeout(this._clickNodeTimeout)
+      this._clickNodeTimeout = null
+    }, 50)
+
     this._forceSimulation.shouldSimulateAllNodes =
       this._shouldBindD3DragHandler()
+
     this._initialDragPosition = { x: node.x, y: node.y }
+
     this._restartedSimulation = false
 
-    // Enable node dragging
+    // Enable node dragging.
     this._interactionManager.on('mousemove', this.appMouseMove.bind(this))
-    // Disable viewport dragging
+    // Disable viewport dragging.
     this._viewport.pause = true
   }
 
@@ -323,7 +290,7 @@ class EventHandler {
     )
   }
 
-  dblClickNode(node: NodeModel): void {
+  expandOrCollapseNode(node: NodeModel): void {
     if (node.expanded) {
       console.log('expanded')
       this.collapseNode(node)
@@ -338,7 +305,7 @@ class EventHandler {
       console.log('click event', event)
       if (this._isDblClickNode) {
         console.log('dbl click')
-        this.dblClickNode(
+        this.expandOrCollapseNode(
           this._graph.findNodeById(
             this._nodeShapeGfxToNodeData.get(nodeGfx) as string
           ) as NodeModel
@@ -349,7 +316,7 @@ class EventHandler {
       } else {
         this._dblClickNodeTimeout = setTimeout(
           () => (this._isDblClickNode = false),
-          400
+          DB_CLICK_TIMEOUT
         )
         this._isDblClickNode = true
       }
@@ -358,8 +325,10 @@ class EventHandler {
 
   releaseNode(): void {
     console.log('release node')
+
     this._clickedNode = null
     this._setClickedNode(null)
+
     if (this._shouldBindD3DragHandler()) {
       this._restartedSimulation && this._forceSimulation.stopSimulateNodeDrag()
     }
@@ -378,10 +347,11 @@ class EventHandler {
 
   hoverRelationship(relationship: RelationshipModel): void {
     console.log('hover', relationship)
-    this._externalEventHandler.onItemMouseOver({
-      type: 'relationship',
-      item: relationship
-    })
+    !this._clickedNode &&
+      this._externalEventHandler.onItemMouseOver({
+        type: 'relationship',
+        item: relationship
+      })
   }
 
   bindRelationshipHoverEvent(relationshipGfx: Container): void {
@@ -394,6 +364,13 @@ class EventHandler {
         ) as RelationshipModel
       )
     )
+  }
+
+  bindContextMenuExpandCollapseArcClickEvent(
+    item: Container,
+    node: NodeModel
+  ): void {
+    item.on('click', () => this.expandOrCollapseNode(node))
   }
 }
 

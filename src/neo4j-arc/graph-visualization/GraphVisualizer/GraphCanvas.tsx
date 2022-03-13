@@ -56,6 +56,7 @@ type GraphCanvasProps = {
   autoCompleteRelationships: (
     callback: (internalRelationships: BasicRelationship[]) => void
   ) => void
+  onItemSelect: (item: VItem) => void
   onItemMouseOver: (item: VItem) => void
   onExpandNode: ExpandNodeHandler
 }
@@ -68,6 +69,7 @@ export const GraphCanvas = (props: GraphCanvasProps): JSX.Element => {
     style,
     setGraphModel,
     autoCompleteRelationships,
+    onItemSelect,
     onItemMouseOver,
     onExpandNode
   } = props
@@ -86,6 +88,7 @@ export const GraphCanvas = (props: GraphCanvasProps): JSX.Element => {
     console.log(graph.current.getNodes(), graph.current.getRelationships())
 
     const externalEventHandler = new ExternalEventHandler(
+      onItemSelect,
       onItemMouseOver,
       onExpandNode
     )

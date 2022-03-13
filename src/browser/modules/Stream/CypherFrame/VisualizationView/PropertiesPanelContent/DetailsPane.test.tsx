@@ -22,7 +22,7 @@ import React from 'react'
 
 import { DETAILS_PANE_STEP_SIZE, DetailsPane } from './DetailsPane'
 import { VizItemProperty } from 'neo4j-arc/common'
-import { GraphStyleModel, VizItem } from 'neo4j-arc/graph-visualization'
+import { GraphStyleModel, VItem } from 'neo4j-arc/graph-visualization'
 
 describe('<DetailsPane />', () => {
   const mockGraphStyle = new GraphStyleModel()
@@ -48,7 +48,7 @@ describe('<DetailsPane />', () => {
     type = 'node',
     width = 200
   }: RenderComponentProps) => {
-    let mockVizItem: VizItem
+    let mockVizItem: VItem
     switch (type) {
       case 'node':
         mockVizItem = {

@@ -20,7 +20,7 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import React from 'react'
 
-import { VizItem } from 'neo4j-arc/graph-visualization'
+import { VItem } from 'neo4j-arc/graph-visualization'
 
 import {
   PropertiesTable,
@@ -44,7 +44,7 @@ describe('<DetailsPane />', () => {
     type = 'node',
     width = 200
   }: RenderComponentProps) => {
-    let mockVizItem: VizItem
+    let mockVizItem: VItem
     switch (type) {
       case 'node':
         mockVizItem = {

@@ -25,6 +25,7 @@ import { colourToNumber } from '../utils/colour'
 import RelationshipRenderer from './renderers/RelationshipRenderer'
 import NodeRenderer from './renderers/NodeRenderer'
 import { uniqBy } from 'lodash-es'
+import ContextMenuRenderer from './renderers/ContextMenuRenderer'
 
 const SCREEN_WIDTH = 1200
 const SCREEN_HEIGHT = 500
@@ -42,9 +43,11 @@ class Visualisation {
   private _viewport: Viewport
   private _previousZoomScale: number
   private _frontNodesLayer: Container
+  private _contextMenuLayer: Container
   private _nodesLayer: Container
   private _relationshipsLayer: Container
   private _hoverHighlightGfx: Container
+  private _contextMenuGfx: Container
 
   private _style: GraphStyleModel
   private _geometry: Geometry
@@ -56,6 +59,7 @@ class Visualisation {
 
   private _nodeRenderer: NodeRenderer
   private _relationshipRenderer: RelationshipRenderer
+  private _contextMenuRenderer: ContextMenuRenderer
   private _renderRequestId: number | undefined = undefined
 
   constructor(
@@ -103,13 +107,22 @@ class Visualisation {
     // Create layers: relationships, front relationships, nodes, front nodes.
     this._relationshipsLayer = new Container()
     this._viewport.addChild(this._relationshipsLayer)
+
+    this._contextMenuLayer = new Container()
+    this._viewport.addChild(this._contextMenuLayer)
+
     this._nodesLayer = new Container()
     this._viewport.addChild(this._nodesLayer)
+
+    this._contextMenuGfx = new Container()
+    this._contextMenuLayer.addChild(this._contextMenuGfx)
+
     this._frontNodesLayer = new Container()
     this._viewport.addChild(this._frontNodesLayer)
     this._hoverHighlightGfx = new Container()
     this._hoverHighlightGfx.name = 'HOVER_HIGHLIGHT'
     this._hoverHighlightGfx.alpha = 0.35
+    this._frontNodesLayer.addChild(this._hoverHighlightGfx)
 
     this._clickedNode = null
 
@@ -117,6 +130,7 @@ class Visualisation {
     this._geometry = new Geometry(this._graph, style)
     this._nodeRenderer = new NodeRenderer(this._app.renderer, RESOLUTION)
     this._relationshipRenderer = new RelationshipRenderer(RESOLUTION)
+    this._contextMenuRenderer = new ContextMenuRenderer(this._app.renderer)
 
     this._forceSimulation = new ForceSimulation(
       this._graph,
@@ -125,7 +139,6 @@ class Visualisation {
     )
 
     this._eventHandler = new EventHandler({
-      app: this._app,
       viewport: this._viewport,
       interactionManager,
       graph: this._graph,
@@ -134,6 +147,7 @@ class Visualisation {
       relationshipGfxToRelationshipData:
         this._relationshipGfxToRelationshipData,
       setClickedNode: this.setClickedNode.bind(this),
+      toggleContextMenu: this.toggleContextMenu.bind(this),
       shouldBindD3DragHandler: this.shouldSimulateAllNodes.bind(this),
       render: this.updateVisualisation.bind(this),
       onGraphChange: this.onGraphChange.bind(this),
@@ -160,6 +174,24 @@ class Visualisation {
 
   setClickedNode(node: NodeModel | null): void {
     this._clickedNode = node
+  }
+
+  toggleContextMenu(node: NodeModel | null): void {
+    if (node) {
+      console.log('SELECT NODE', node)
+
+      this._contextMenuGfx.addChild(
+        this._contextMenuRenderer.drawContextMenu(node.radius + 30, node.radius)
+      )
+      this._contextMenuGfx.x = node.x
+      this._contextMenuGfx.y = node.y
+      this._eventHandler.bindContextMenuExpandCollapseArcClickEvent(
+        this._contextMenuRenderer.expandCollpaseItem,
+        node
+      )
+    } else {
+      this._contextMenuGfx.removeChildren()
+    }
   }
 
   private calculateZoomStep(zoom: number): number {
@@ -278,11 +310,14 @@ class Visualisation {
   }
 
   initVisualisation(): void {
+    // Initial draw.
     this.onGraphChange(
       this._graph.getNodes(),
       this._graph.getRelationships(),
       'init'
     )
+
+    // this._viewport.addChild(this._contextMenuRenderer.drawContextMenu())
 
     // initial layout
 
@@ -296,7 +331,6 @@ class Visualisation {
       // this._viewport.setZoom(1)
     }
 
-    // initial draw
     resetViewport()
     this._previousZoomScale = this._viewport.scale.x
 
@@ -315,7 +349,7 @@ class Visualisation {
       }
     })
 
-    // prevent body scrolling
+    // Prevent body scrolling.
     this._app.view.addEventListener('wheel', event => {
       event.preventDefault()
     })
@@ -411,6 +445,9 @@ class Visualisation {
     if (this._clickedNode) {
       this._hoverHighlightGfx.x = this._clickedNode.x
       this._hoverHighlightGfx.y = this._clickedNode.y
+
+      this._contextMenuGfx.x = this._clickedNode.x
+      this._contextMenuGfx.y = this._clickedNode.y
     }
 
     nodes.forEach(node => {
@@ -508,12 +545,12 @@ class Visualisation {
     const nodeCaptionGfx = this._nodeDataToNodeCaptionGfx[node.id]
     this._nodesLayer.removeChild(nodeShapeGfx)
     this._nodesLayer.removeChild(nodeCaptionGfx)
+    this._hoverHighlightGfx.removeChildren()
     this._hoverHighlightGfx.x = node.x
     this._hoverHighlightGfx.y = node.y
     this._hoverHighlightGfx.addChild(
       this._nodeRenderer.drawNodeCircleSprite(node.radius + 4, '#6ac6ff')
     )
-    this._frontNodesLayer.addChild(this._hoverHighlightGfx)
     this._frontNodesLayer.addChild(nodeShapeGfx)
     this._frontNodesLayer.addChild(nodeCaptionGfx)
   }
@@ -522,13 +559,14 @@ class Visualisation {
     this._hoverHighlightGfx.removeChildren()
     const nodeShapeGfx = this._nodeDataToNodeShapeGfx[node.id]
     const nodeCaptionGfx = this._nodeDataToNodeCaptionGfx[node.id]
-    this._frontNodesLayer.removeChildren()
+    this._frontNodesLayer.removeChild(nodeShapeGfx)
+    this._frontNodesLayer.removeChild(nodeCaptionGfx)
     this._nodesLayer.addChild(nodeShapeGfx)
     this._nodesLayer.addChild(nodeCaptionGfx)
   }
 
-  moveGfxBetweenLayers: MoveGfxBetweenLayers = (data, position, type) => {
-    console.log(data, position, type)
+  moveGfxBetweenLayers: MoveGfxBetweenLayers = (data, position) => {
+    console.log(data, position)
     if (data.isNode) {
       if (position === 'front')
         this.moveNodeGfxToFront(data as unknown as NodeModel)
@@ -544,7 +582,7 @@ class Visualisation {
 
   /**
    * Handles models and visualisation element mappings when graph data-set changes,
-   * also triggers force simulation and render under certain change type
+   * also triggers force simulation and render under certain change type.
    * @param nodes nodes model have been changed
    * @param relationships relationships model have been changed
    * @param type type of graph change
@@ -552,6 +590,8 @@ class Visualisation {
    */
   onGraphChange: GraphChangeHandler = (nodes, relationships, type, options) => {
     console.log('on graph change', type, nodes, relationships)
+    // Update graph visual element geometries when initialising the visualisation,
+    // updating visualisation styles or expanding nodes/relationships.
     if (type === 'init' || type === 'update' || type === 'expand') {
       nodes.forEach(node => {
         this._geometry.setNodeRadii(node)

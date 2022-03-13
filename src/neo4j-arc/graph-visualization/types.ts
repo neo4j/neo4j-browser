@@ -92,6 +92,5 @@ export type GraphChangeHandler = (
 
 export type MoveGfxBetweenLayers = <T extends GraphEntityModel>(
   data: T,
-  position: 'front' | 'behind',
-  type: 'hover' | 'select'
+  position: 'front' | 'behind'
 ) => void

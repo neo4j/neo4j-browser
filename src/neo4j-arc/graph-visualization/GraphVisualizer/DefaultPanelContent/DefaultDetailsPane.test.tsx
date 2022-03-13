@@ -26,7 +26,7 @@ import {
 } from './DefaultDetailsPane'
 import { VizItemProperty } from 'neo4j-arc/common'
 import { GraphStyleModel } from '../../models/GraphStyle'
-import { VizItem } from '../../types'
+import { VItem } from '../../types'
 
 describe('<DetailsPane />', () => {
   const mockGraphStyle = new GraphStyleModel()
@@ -52,7 +52,7 @@ describe('<DetailsPane />', () => {
     type = 'node',
     width = 200
   }: RenderComponentProps) => {
-    let mockVizItem: VizItem
+    let mockVizItem: VItem
     switch (type) {
       case 'node':
         mockVizItem = {

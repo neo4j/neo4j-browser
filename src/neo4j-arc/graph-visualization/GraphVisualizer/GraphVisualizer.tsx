@@ -290,6 +290,7 @@ export class GraphVisualizer extends Component<
             style={graphStyle}
             setGraphModel={this.props.setGraph}
             autoCompleteRelationships={this.props.getAutoCompleteCallback}
+            onItemSelect={this.onItemSelect.bind(this)}
             onItemMouseOver={this.onItemMouseOver.bind(this)}
             onExpandNode={this.getNodeNeighbours.bind(this)}
           />
