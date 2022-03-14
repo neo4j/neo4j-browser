@@ -217,78 +217,18 @@ describe('utils', () => {
     expect(callMe).toHaveBeenCalledTimes(1)
     expect(callMe).toHaveBeenCalledWith('hello', 'there')
   })
-  test('getUrlInfo', () => {
+  test('parseURLWithDefaultProtocol', () => {
     // When && Then
-    expect(utils.getUrlInfo('http://anything.com')).toEqual({
-      protocol: 'http:',
-      host: 'anything.com',
-      hostname: 'anything.com',
-      port: '',
-      pathname: '',
-      query: '',
-      hash: '',
-      username: '',
-      password: ''
-    })
-    expect(utils.getUrlInfo('https://anything.com')).toEqual({
-      protocol: 'https:',
-      host: 'anything.com',
-      hostname: 'anything.com',
-      port: '',
-      pathname: '',
-      query: '',
-      hash: '',
-      username: '',
-      password: ''
-    })
-    expect(utils.getUrlInfo('http://anything.com:8080/index.html')).toEqual({
-      protocol: 'http:',
-      host: 'anything.com:8080',
-      hostname: 'anything.com',
-      port: '8080',
-      pathname: '/index.html',
-      query: '',
-      hash: '',
-      username: '',
-      password: ''
-    })
-    expect(utils.getUrlInfo('guides.neo4j.com')).toEqual({
-      protocol: '',
-      host: 'guides.neo4j.com',
-      hostname: 'guides.neo4j.com',
-      port: '',
-      pathname: '',
-      query: '',
-      hash: '',
-      username: '',
-      password: ''
-    })
-    expect(utils.getUrlInfo('http://localhost')).toEqual({
-      protocol: 'http:',
-      host: 'localhost',
-      hostname: 'localhost',
-      port: '',
-      pathname: '',
-      query: '',
-      hash: '',
-      username: '',
-      password: ''
-    })
+    expect(utils.parseURLWithDefaultProtocol('anything.com')).toEqual(
+      new URL('http://anything.com')
+    )
+    expect(utils.parseURLWithDefaultProtocol('guides.neo4j.com')).toEqual(
+      new URL('http://guides.neo4j.com')
+    )
     expect(
-      utils.getUrlInfo(
-        'http://neo:neoPass@guides.neo4j.com:1111/path?arg1=a&arg2=2'
-      )
-    ).toEqual({
-      protocol: 'http:',
-      host: 'guides.neo4j.com:1111',
-      hostname: 'guides.neo4j.com',
-      port: '1111',
-      pathname: '/path',
-      query: '?arg1=a&arg2=2',
-      hash: '',
-      username: 'neo',
-      password: 'neoPass'
-    })
+      utils.parseURLWithDefaultProtocol('https://guides.neo4j.com')
+    ).toEqual(new URL('https://guides.neo4j.com'))
+    expect(utils.parseURLWithDefaultProtocol('')).toEqual(null)
   })
   describe('extractAllowlistFromConfigString', () => {
     test('extracts comma separated string of hosts to array', () => {

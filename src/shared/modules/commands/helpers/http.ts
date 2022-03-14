@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import { URL } from 'whatwg-url'
 export const parseHttpVerbCommand = (input: any) => {
   const p = new Promise((resolve, reject) => {
     const re = /^[^\w]*(get|post|put|delete|head)\s+(\S+)?\s*([\S\s]+)?$/i

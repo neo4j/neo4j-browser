@@ -56,3 +56,10 @@ window.SVGElement.prototype.getBBox = () => ({
 })
 
 nock.disableNetConnect()
+
+// Workaround to get whatwg-url to not fail in tests. This
+// seems to be a problem that goes awawy if we update to node 16
+// https://github.com/jsdom/whatwg-url/issues/209
+import { TextEncoder, TextDecoder } from 'util'
+global.TextEncoder = TextEncoder
+global.TextDecoder = TextDecoder
