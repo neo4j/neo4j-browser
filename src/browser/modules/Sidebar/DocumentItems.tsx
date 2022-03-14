@@ -26,7 +26,7 @@ import {
   HollowPlayIcon,
   SavedScriptsCollapseMenuIcon,
   SavedScriptsExpandMenuRightIcon
-} from 'common'
+} from 'nxComps/common'
 
 import {
   StyledCommand,

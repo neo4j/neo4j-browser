@@ -24,7 +24,7 @@ import {
   ExclamationTriangleIcon,
   SmallSpinnerIcon,
   SquareIcon
-} from 'common'
+} from 'nxComps/common'
 
 import { ErrorSpan, SuccessSpan, WarningSpan } from './styled'
 import { Status } from 'shared/modules/requests/requestsDuck'

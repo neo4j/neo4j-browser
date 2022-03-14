@@ -19,7 +19,7 @@
  */
 import React, { useEffect, useState } from 'react'
 
-import { StackNextIcon, StackPreviousIcon } from 'common'
+import { StackNextIcon, StackPreviousIcon } from 'nxComps/common'
 
 import docs from '../../documentation'
 import { DynamicTopics } from '../../documentation/templates/DynamicTopics'

@@ -19,7 +19,7 @@
  */
 import React from 'react'
 
-import { toKeyString } from 'common'
+import { toKeyString } from 'nxComps/common'
 
 import {
   getTableDataFromRecords,

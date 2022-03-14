@@ -25,7 +25,7 @@ import {
   GraphStatsLabels,
   GraphStatsRelationshipTypes,
   GraphStyleModel
-} from 'graph-visualization'
+} from 'nxComps/graphVisualization'
 
 import OverviewPane, { OVERVIEW_STEP_SIZE } from './OverviewPane'
 

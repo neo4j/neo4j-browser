@@ -16,7 +16,7 @@
  */
 import React, { useEffect, useRef } from 'react'
 
-import { EyeIcon, EyeSlashIcon } from 'common'
+import { EyeIcon, EyeSlashIcon } from 'nxComps/common'
 
 import {
   StyledConnectionTextInput,

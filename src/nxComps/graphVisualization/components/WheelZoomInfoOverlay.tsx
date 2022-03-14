@@ -19,7 +19,7 @@
  */
 import React from 'react'
 
-import { InfoIcon, isMac } from 'common'
+import { InfoIcon, isMac } from 'nxComps/common'
 
 import {
   StyledZoomInfo,

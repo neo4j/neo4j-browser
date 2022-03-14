@@ -20,7 +20,7 @@
 import { uniqBy } from 'lodash-es'
 import React from 'react'
 
-import { toKeyString } from 'common'
+import { toKeyString } from 'nxComps/common'
 
 import { BaseFrameProps } from '../Stream'
 import { AliasText, UnstyledList } from '../styled'

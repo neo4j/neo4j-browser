@@ -19,7 +19,7 @@
  */
 import React from 'react'
 
-import { SpinnerIcon } from 'common'
+import { SpinnerIcon } from 'nxComps/common'
 
 import { SpinnerContainer, StyledBodyMessage } from '../styled'
 import Centered from 'browser-components/Centered'

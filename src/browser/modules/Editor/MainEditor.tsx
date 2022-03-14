@@ -33,7 +33,7 @@ import {
   isMac,
   UpdateFileIcon,
   RunIcon
-} from 'common'
+} from 'nxComps/common'
 
 import Monaco, { MonacoHandles } from './Monaco'
 import {

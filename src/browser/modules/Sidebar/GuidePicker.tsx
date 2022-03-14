@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { BinIcon } from 'common'
+import { BinIcon } from 'nxComps/common'
 
 import {
   DrawerBrowserCommand,

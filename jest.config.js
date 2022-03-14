@@ -35,7 +35,8 @@ module.exports = {
     'project-root(.*)$': '<rootDir>$1',
     '^monaco-editor$':
       '<rootDir>/node_modules/monaco-editor/esm/vs/editor/editor.main.js',
-    '^graph-visualization$': '<rootDir>/src/graphVisualization'
+    '^nxComps/graphVisualization$': '<rootDir>/src/nxComps/graphVisualization',
+    '^nxComps/common$': '<rootDir>/src/nxComps/common'
   },
   modulePaths: ['<rootDir>/src', '<rootDir>/src/shared'],
   collectCoverageFrom: ['**/src/**/*.ts', '**/src/**/*.tsx'],

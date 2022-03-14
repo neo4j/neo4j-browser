@@ -25,7 +25,7 @@ import {
   NavIcon,
   SavedScriptsCollapseMenuIcon,
   SavedScriptsExpandMenuRightIcon
-} from 'common'
+} from 'nxComps/common'
 
 import { useCustomBlur, useNameUpdate } from './hooks'
 import {

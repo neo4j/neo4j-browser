@@ -23,8 +23,8 @@ import { connect } from 'react-redux'
 // eslint-disable-next-line no-restricted-imports
 import { Action, Dispatch } from 'redux'
 
-import { toKeyString } from 'common'
-import { GraphStyleModel, Selector } from 'graph-visualization'
+import { toKeyString } from 'nxComps/common'
+import { GraphStyleModel, Selector } from 'nxComps/graphVisualization'
 
 import {
   StyledCaptionSelector,

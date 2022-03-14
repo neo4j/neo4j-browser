@@ -19,7 +19,7 @@
  */
 import React, { Component } from 'react'
 
-import { deepEquals, ExclamationTriangleIcon } from 'common'
+import { deepEquals, ExclamationTriangleIcon } from 'nxComps/common'
 
 import Ellipsis from 'browser-components/Ellipsis'
 import { errorMessageFormater } from 'project-root/src/browser/modules/Stream/errorMessageFormater'

@@ -19,7 +19,7 @@ import { QueryResult, Record, isInt } from 'neo4j-driver'
 import React, { useMemo } from 'react'
 import { connect } from 'react-redux'
 
-import { ClickableUrls, ClipboardCopier, WarningMessage } from 'common'
+import { ClickableUrls, ClipboardCopier, WarningMessage } from 'nxComps/common'
 
 import { StyledStatsBar } from '../../styled'
 import {

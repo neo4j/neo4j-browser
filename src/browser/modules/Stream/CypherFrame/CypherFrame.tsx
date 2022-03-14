@@ -33,7 +33,7 @@ import {
   SpinnerIcon,
   TableIcon,
   VisualizationIcon
-} from 'common'
+} from 'nxComps/common'
 
 import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
 import FrameSidebar from '../../Frame/FrameSidebar'

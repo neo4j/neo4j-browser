@@ -27,7 +27,7 @@ import {
   GraphStats,
   GraphStyleModel,
   VizItem
-} from 'graph-visualization'
+} from 'nxComps/graphVisualization'
 
 import { Graph } from '../components/Graph'
 import { NodeInspectorPanel, defaultPanelWidth } from './NodeInspectorPanel'
@@ -37,7 +37,7 @@ import {
   BasicNodesAndRels,
   BasicRelationship,
   deepEquals
-} from 'common'
+} from 'nxComps/common'
 
 type DeduplicateHelper = {
   nodes: BasicNode[]

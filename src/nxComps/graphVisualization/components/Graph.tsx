@@ -19,7 +19,7 @@
  */
 import React from 'react'
 
-import { ZoomInIcon, ZoomOutIcon, ZoomToFitIcon } from 'common'
+import { ZoomInIcon, ZoomOutIcon, ZoomToFitIcon } from 'nxComps/common'
 
 import { GraphModel } from '../models/Graph'
 import {
@@ -28,7 +28,7 @@ import {
 } from '../models/GraphEventHandler'
 import { GraphStyleModel } from '../models/GraphStyle'
 import { VizItem } from '../types'
-import { BasicNode, BasicRelationship } from 'common'
+import { BasicNode, BasicRelationship } from 'nxComps/common'
 import {
   GraphStats,
   createGraph,

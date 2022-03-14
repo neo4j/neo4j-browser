@@ -20,7 +20,7 @@
 import React, { Component } from 'react'
 import { Resizable } from 'react-resizable'
 
-import { ChevronLeftIcon, ChevronRightIcon } from 'common'
+import { ChevronLeftIcon, ChevronRightIcon } from 'nxComps/common'
 
 import { DetailsPaneComponent } from './DetailsPane'
 import { NodeInspectorDrawer } from './NodeInspectorDrawer'

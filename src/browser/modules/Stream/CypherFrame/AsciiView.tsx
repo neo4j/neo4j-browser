@@ -21,7 +21,7 @@ import asciitable from 'ascii-data-table'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { WarningMessage } from 'common'
+import { WarningMessage } from 'nxComps/common'
 
 import {
   PaddedDiv,

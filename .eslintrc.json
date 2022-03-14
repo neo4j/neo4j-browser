@@ -20,7 +20,7 @@
     "import/no-webpack-loader-syntax": "off",
     "no-restricted-imports": [
       "error",
-      { "patterns": ["*graphVisualization*", "*/src/common*", "common/*"] }
+      { "patterns": ["*/nxComps*", "*/src/common*", "common/*"] }
     ]
   },
   "globals": {
@@ -81,8 +81,8 @@
     },
     {
       "files": [
-        "src/graphVisualization/**/*.ts",
-        "src/graphVisualization/**/*.tsx"
+        "src/nxComps/graphVisualization/**/*.ts",
+        "src/nxComps/graphVisualization/**/*.tsx"
       ],
       "rules": {
         "no-restricted-imports": [

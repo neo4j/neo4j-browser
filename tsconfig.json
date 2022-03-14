@@ -29,7 +29,8 @@
       "browser-hooks/*": ["browser/hooks/*"],
       "browser-styles/*": ["browser/styles/*"],
       "project-root/*": ["../*"],
-      "graph-visualization": ["graphVisualization"],
+      "nxComps/graphVisualization": ["nxComps/graphVisualization"],
+      "nxComps/common": ["nxComps/common"],
       "icons/*": ["browser/icons/*"]
     }
   },

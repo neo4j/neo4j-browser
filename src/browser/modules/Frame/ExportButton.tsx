@@ -19,7 +19,7 @@
  */
 import React from 'react'
 
-import { DownloadIcon } from 'common'
+import { DownloadIcon } from 'nxComps/common'
 
 import {
   DropDownItemDivider,

@@ -51,10 +51,11 @@ module.exports = {
       'browser-styles': path.resolve(helpers.browserPath, 'styles'),
       icons: path.resolve(helpers.browserPath, 'icons'),
       common: path.resolve(helpers.sourcePath, 'common'),
-      'graph-visualization$': path.resolve(
+      'nxComps/graphVisualization$': path.resolve(
         helpers.sourcePath,
-        'graphVisualization'
-      )
+        'nxComps/graphVisualization'
+      ),
+      'nxComps/common$': path.resolve(helpers.sourcePath, 'nxComps/common')
     },
     extensions: ['.tsx', '.ts', '.js']
   },

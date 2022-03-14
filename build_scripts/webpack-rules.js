@@ -118,12 +118,12 @@ module.exports = [
   {
     test: /\.svg$/,
     use: 'file-loader?limit=65000&mimetype=image/svg+xml&name=assets/fonts/[name].[ext]',
-    exclude: [path.resolve(helpers.sourcePath, 'common/icons/svgs')]
+    exclude: [path.resolve(helpers.sourcePath, 'nxComps/common/icons/svgs')]
   },
   {
     test: /\.svg$/,
     loader: 'raw-loader',
-    include: [path.resolve(helpers.sourcePath, 'common/icons/svgs')]
+    include: [path.resolve(helpers.sourcePath, 'nxComps/common/icons/svgs')]
   },
   {
     test: /\.html?$/,

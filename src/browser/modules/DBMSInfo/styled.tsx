@@ -20,7 +20,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { PlainPlayIcon } from 'common'
+import { PlainPlayIcon } from 'nxComps/common'
 
 const chip = styled.div`
   word-break: break-all;

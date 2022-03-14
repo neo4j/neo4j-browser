@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { QuestionIcon } from 'common'
+import { QuestionIcon } from 'nxComps/common'
 
 import { StyledInfoMessage } from './../../Stream/styled'
 import { DatabaseMetric } from './SysInfoFrame'

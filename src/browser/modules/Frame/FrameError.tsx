@@ -19,7 +19,7 @@
  */
 import React from 'react'
 
-import { ExclamationTriangleIcon } from 'common'
+import { ExclamationTriangleIcon } from 'nxComps/common'
 
 import { errorMessageFormater } from '../Stream/errorMessageFormater'
 import { ErrorText } from '../Stream/styled'

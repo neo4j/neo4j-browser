@@ -19,7 +19,12 @@
  */
 import React, { ReactEventHandler } from 'react'
 
-import { DownloadIcon, TrashIcon, NewFolderIcon, HollowPlayIcon } from 'common'
+import {
+  DownloadIcon,
+  TrashIcon,
+  NewFolderIcon,
+  HollowPlayIcon
+} from 'nxComps/common'
 
 import { StyledSavedScriptsButton } from './styled'
 import { primaryLightColor } from 'browser-styles/themes'

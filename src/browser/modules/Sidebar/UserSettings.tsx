@@ -20,7 +20,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { toKeyString } from 'common'
+import { toKeyString } from 'nxComps/common'
 
 import {
   StyledSetting,

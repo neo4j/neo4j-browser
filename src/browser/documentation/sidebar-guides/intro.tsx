@@ -19,7 +19,7 @@
  */
 import React from 'react'
 
-import { isMac } from 'common'
+import { isMac } from 'nxComps/common'
 
 import { BuiltInGuideSidebarSlide } from '../../modules/Carousel/Slide'
 

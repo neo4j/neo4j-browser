@@ -19,7 +19,7 @@
  */
 import React from 'react'
 
-import { QuestionIcon } from 'common'
+import { QuestionIcon } from 'nxComps/common'
 
 import { buildTableData } from './sysinfoUtils'
 import {

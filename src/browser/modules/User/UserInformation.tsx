@@ -22,7 +22,7 @@ import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import uuid, { v4 } from 'uuid'
 
-import { CloseIcon } from 'common'
+import { CloseIcon } from 'nxComps/common'
 
 import RolesSelector from './RolesSelector'
 import {

@@ -28,7 +28,7 @@ import {
   ExpandIcon,
   PinIcon,
   UpIcon
-} from 'common'
+} from 'nxComps/common'
 
 import { TitleBarHeader } from './styled'
 import { FrameControlButton } from 'browser-components/buttons'

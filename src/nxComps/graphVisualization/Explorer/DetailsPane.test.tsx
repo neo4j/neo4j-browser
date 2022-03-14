@@ -20,7 +20,11 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import React from 'react'
 
-import { GraphStyleModel, VizItem, VizItemProperty } from 'graph-visualization'
+import {
+  GraphStyleModel,
+  VizItem,
+  VizItemProperty
+} from 'nxComps/graphVisualization'
 
 import {
   DETAILS_PANE_STEP_SIZE,

@@ -19,8 +19,8 @@
  */
 import React, { useState } from 'react'
 
-import { numberToUSLocale, ShowMoreOrAll, WarningMessage } from 'common'
-import { GraphStats, GraphStyleModel } from 'graph-visualization'
+import { numberToUSLocale, ShowMoreOrAll, WarningMessage } from 'nxComps/common'
+import { GraphStats, GraphStyleModel } from 'nxComps/graphVisualization'
 
 import { StyleableNodeLabel } from './StyleableNodeLabel'
 import { StyleableRelType } from './StyleableRelType'

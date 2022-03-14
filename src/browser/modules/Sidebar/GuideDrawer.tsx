@@ -21,7 +21,7 @@ import React, { useRef } from 'react'
 import { connect } from 'react-redux'
 import { Action, Dispatch } from 'redux'
 
-import { BackIcon } from 'common'
+import { BackIcon } from 'nxComps/common'
 
 import GuideCarousel from '../GuideCarousel/GuideCarousel'
 import GuidePicker from './GuidePicker'

@@ -21,7 +21,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import TimeAgo from 'react-timeago'
 
-import { BinIcon } from 'common'
+import { BinIcon } from 'nxComps/common'
 
 import { BrowserSyncSignoutIframe } from './BrowserSyncAuthIframes'
 import BrowserSyncAuthWindow from './BrowserSyncAuthWindow'

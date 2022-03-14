@@ -20,7 +20,7 @@
 import memoize from 'memoize-one'
 import React, { Component } from 'react'
 
-import { DoubleDownIcon, DoubleUpIcon } from 'common'
+import { DoubleDownIcon, DoubleUpIcon } from 'nxComps/common'
 
 import queryPlan from '../../D3Visualization/queryPlan/queryPlan'
 import {
@@ -35,7 +35,7 @@ import { FrameButton } from 'browser-components/buttons'
 import { dim } from 'browser-styles/constants'
 import { StyledFrameTitlebarButtonSection } from 'browser/modules/Frame/styled'
 import bolt from 'services/bolt/bolt'
-import { deepEquals } from 'common'
+import { deepEquals } from 'nxComps/common'
 import { shallowEquals } from 'services/utils'
 
 type PlanViewState = { extractedPlan: any }

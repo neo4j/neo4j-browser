@@ -20,7 +20,7 @@
 import { authLog, authRequestForSSO, downloadAuthLogs } from 'neo4j-client-sso'
 import React, { useEffect, useState } from 'react'
 
-import { toKeyString } from 'common'
+import { toKeyString } from 'nxComps/common'
 
 import { StyledCypherErrorMessage } from '../styled'
 import {

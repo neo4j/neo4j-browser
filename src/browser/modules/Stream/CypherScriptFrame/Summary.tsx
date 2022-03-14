@@ -29,7 +29,7 @@ import {
   StyledCypherWarningMessage
 } from 'browser/modules/Stream/styled'
 import { BrowserError } from 'services/exceptions'
-import { upperFirst } from 'common'
+import { upperFirst } from 'nxComps/common'
 import { allowlistedMultiCommands } from 'shared/modules/commands/commandsDuck'
 import { Status } from 'shared/modules/requests/requestsDuck'
 import { BrowserRequest } from 'shared/modules/requests/requestsDuck'

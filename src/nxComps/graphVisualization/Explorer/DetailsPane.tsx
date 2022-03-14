@@ -24,14 +24,14 @@ import {
   NodeItem,
   RelationshipItem,
   VizItemProperty
-} from 'graph-visualization'
+} from 'nxComps/graphVisualization'
 
 import {
   ClickableUrls,
   ClipboardCopier,
   ShowMoreOrAll,
   upperFirst
-} from 'common'
+} from 'nxComps/common'
 import { StyleableNodeLabel } from './StyleableNodeLabel'
 import { StyleableRelType } from './StyleableRelType'
 import {

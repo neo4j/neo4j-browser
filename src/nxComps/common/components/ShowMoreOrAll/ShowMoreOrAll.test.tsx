@@ -20,7 +20,7 @@
 import { render, screen } from '@testing-library/react'
 import React from 'react'
 
-import { ShowMoreOrAll } from 'common'
+import { ShowMoreOrAll } from 'nxComps/common'
 
 describe('<ShowMoreOrAll />', () => {
   type RenderShowMoreOrAllProps = {
