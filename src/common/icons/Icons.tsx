@@ -455,7 +455,11 @@ export const EyeSlashIcon = (): JSX.Element => (
 
 const ZOOM_ICONS_DEFAULT_SIZE_IN_PX = 20
 const ZOOM_ICONS_LARGE_SCALE_FACTOR = 1.2
-export const ZoomInIcon = ({ large }: { large: boolean }): JSX.Element => {
+export const ZoomInIcon = ({
+  large = false
+}: {
+  large?: boolean
+}): JSX.Element => {
   const scale = large ? ZOOM_ICONS_LARGE_SCALE_FACTOR : 1
   return (
     <IconContainer
@@ -478,7 +482,11 @@ export const ZoomOutIcon = ({
   )
 }
 
-export const ZoomToFitIcon = ({ large }: { large: boolean }): JSX.Element => {
+export const ZoomToFitIcon = ({
+  large = false
+}: {
+  large?: boolean
+}): JSX.Element => {
   const scale = large ? ZOOM_ICONS_LARGE_SCALE_FACTOR : 1
   return (
     <IconContainer

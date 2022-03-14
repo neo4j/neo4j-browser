@@ -37,13 +37,13 @@ import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import * as grassActions from 'shared/modules/grass/grassDuck'
 import {
   getMaxFieldItems,
-  shouldShowWheelZoomInfo
+  shouldShowWheelZoomInfo,
+  update as updateSettings
 } from 'shared/modules/settings/settingsDuck'
 import {
   getNodePropertiesExpandedByDefault,
   setNodePropertiesExpandedByDefault
 } from 'shared/modules/frames/framesDuck'
-import * as actions from 'project-root/src/shared/modules/settings/settingsDuck'
 
 type VisualizationState = {
   updated: number
@@ -287,7 +287,7 @@ const mapStateToProps = (state: GlobalState) => ({
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
   disableWheelZoomInfoMessage: () => {
-    dispatch(actions.update({ showWheelZoomInfo: false }))
+    dispatch(updateSettings({ showWheelZoomInfo: false }))
   },
   setNodePropertiesExpandedByDefault: (expandedByDefault: boolean) =>
     dispatch(setNodePropertiesExpandedByDefault(expandedByDefault)),

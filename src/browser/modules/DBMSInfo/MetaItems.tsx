@@ -21,12 +21,11 @@ import deepmerge from 'deepmerge'
 import React from 'react'
 import { ThemeProvider } from 'styled-components'
 
-import { numberToUSLocale } from 'common'
+import { numberToUSLocale, ShowMoreOrAll } from 'common'
 import { GraphStyleModel } from 'graph-visualization'
 
 import styles from './style_meta.css'
 import { StyledLabel, StyledProperty, StyledRelationship } from './styled'
-import { ShowMoreOrAll } from 'common'
 import {
   DrawerSection,
   DrawerSectionBody,

@@ -85,10 +85,6 @@
         "src/graphVisualization/**/*.tsx"
       ],
       "rules": {
-        //        "react/prefer-stateless-function": [
-        //          "error",
-        //          { "ignorePureComponents": true }
-        //        ]
         "no-restricted-imports": [
           "error",
           {
