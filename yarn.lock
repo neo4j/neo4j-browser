@@ -1589,6 +1589,11 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
+"@neo4j-ndl/base@^0.1.0":
+  version "0.1.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@neo4j-ndl/base/-/base-0.1.0.tgz#d1e2094075a2e930f1a3d9f39345b55b554b84ca"
+  integrity sha512-M0R9A6IfINE3G+5pzSs2/92ubjQZykDyELo14fQn3LxNg65c1fIz0azr/UuvMc4W2v9aAew2oFGMR7Ek5UiCag==
+
 "@neo4j/browser-lambda-parser@1.0.5":
   version "1.0.5"
   resolved "https://registry.npmjs.org/@neo4j/browser-lambda-parser/-/browser-lambda-parser-1.0.5.tgz#4dc8bd483768cf188612304b809b7f1e5b3876e7"
