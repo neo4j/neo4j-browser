@@ -19,8 +19,9 @@
  */
 import React from 'react'
 
+import { isMac } from 'common'
+
 import Slide from '../../modules/Carousel/Slide'
-import { isMac } from 'shared/utils/platformUtils'
 
 const title = 'Intro'
 const slides = [

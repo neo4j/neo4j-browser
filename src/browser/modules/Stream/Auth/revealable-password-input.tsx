@@ -16,12 +16,13 @@
  */
 import React, { useEffect, useRef } from 'react'
 
+import { EyeIcon, EyeSlashIcon } from 'common'
+
 import {
   StyledConnectionTextInput,
   StyledRevealIconWrapper,
   StyledRevealablePasswordWrapper
 } from './styled'
-import { EyeIcon, EyeSlashIcon } from 'browser-components/icons/Icons'
 
 export default function RevealablePasswordInput({
   isRevealed,

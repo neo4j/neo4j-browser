@@ -20,11 +20,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 
-import {
-  CancelIcon,
-  MinusIcon,
-  RightArrowIcon
-} from 'browser-components/icons/Icons'
+import { CancelIcon, MinusIcon, RightArrowIcon } from 'common'
 
 const IconButton = styled.button`
   margin-left: 4px;

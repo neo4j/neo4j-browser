@@ -20,6 +20,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
+import { toKeyString } from 'common'
+
 import {
   StyledSetting,
   StyledSettingLabel,
@@ -35,7 +37,6 @@ import {
   DrawerSubHeader
 } from 'browser-components/drawer/drawer-styled'
 import FeatureToggle from 'browser/modules/FeatureToggle/FeatureToggle'
-import { toKeyString } from 'services/utils'
 import { GlobalState } from 'shared/globalState'
 import {
   disableExperimentalFeature,

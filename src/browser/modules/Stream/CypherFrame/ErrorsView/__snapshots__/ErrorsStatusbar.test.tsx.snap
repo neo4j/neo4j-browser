@@ -3,14 +3,14 @@
 exports[`ErrorsStatusbar displays error 1`] = `
 <div>
   <div
-    class="sc-bdVaJa kwzqrW"
+    class="sc-EHOje irnKJZ"
   >
     <span
-      class="sc-iRbamj fWGprr"
+      class="sc-Rmtcm jKxtBU"
       title="Test.Error: Test error description"
     >
       <i
-        class="sc-tilXH kKPDcf fa fa-exclamation-triangle"
+        class="sc-kafWEX deoVPi fa fa-exclamation-triangle"
       />
        
       Test.Error: Test error description

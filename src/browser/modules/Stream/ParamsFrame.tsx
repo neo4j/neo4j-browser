@@ -19,11 +19,12 @@
  */
 import React from 'react'
 
+import { ExclamationTriangleIcon } from 'common'
+
 import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
 import AutoExecButton from './auto-exec-button'
 import { ErrorText, PaddedDiv, StyledStatsBar, SuccessText } from './styled'
 import Ellipsis from 'browser-components/Ellipsis'
-import { ExclamationTriangleIcon } from 'browser-components/icons/Icons'
 import { applyGraphTypes } from 'services/bolt/boltMappings'
 import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 import { stringifyMod } from 'services/utils'

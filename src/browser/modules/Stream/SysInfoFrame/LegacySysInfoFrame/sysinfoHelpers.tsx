@@ -19,11 +19,13 @@
  */
 import React from 'react'
 
+import { toKeyString } from 'common'
+
 import {
   getTableDataFromRecords,
   mapLegacySysInfoRecords
 } from './sysinfoUtils'
-import { toHumanReadableBytes, toKeyString } from 'services/utils'
+import { toHumanReadableBytes } from 'services/utils'
 
 export const sysinfoQuery = () => 'CALL dbms.queryJmx("org.neo4j:*")'
 

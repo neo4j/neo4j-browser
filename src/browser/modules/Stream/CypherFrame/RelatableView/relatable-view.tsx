@@ -19,7 +19,9 @@ import { QueryResult, Record, isInt } from 'neo4j-driver'
 import React, { useMemo } from 'react'
 import { connect } from 'react-redux'
 
-import { StyledStatsBar, StyledTruncatedMessage } from '../../styled'
+import { ClickableUrls, ClipboardCopier, WarningMessage } from 'common'
+
+import { StyledStatsBar } from '../../styled'
 import {
   getBodyAndStatusBarMessages,
   resultHasTruncatedFields
@@ -31,10 +33,7 @@ import {
   StyledJsonPre,
   StyledPreSpan
 } from './relatable-view.styled'
-import ClickableUrls from 'browser-components/ClickableUrls'
-import ClipboardCopier from 'browser-components/ClipboardCopier'
 import Ellipsis from 'browser-components/Ellipsis'
-import { WarningIcon } from 'browser-components/icons/Icons'
 import { GlobalState } from 'project-root/src/shared/globalState'
 import { BrowserRequestResult } from 'project-root/src/shared/modules/requests/requestsDuck'
 import {
@@ -193,9 +192,7 @@ export function RelatableStatusbarComponent({
     <StyledStatsBar>
       <Ellipsis>
         {hasTruncatedFields && (
-          <StyledTruncatedMessage>
-            <WarningIcon /> Record fields have been truncated.&nbsp;
-          </StyledTruncatedMessage>
+          <WarningMessage text={'Record fields have been truncated.'} />
         )}
         {statusBarMessage}
       </Ellipsis>

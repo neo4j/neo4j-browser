@@ -19,16 +19,14 @@
  */
 import React, { useEffect, useState } from 'react'
 
+import { StackNextIcon, StackPreviousIcon } from 'common'
+
 import docs from '../../documentation'
 import { DynamicTopics } from '../../documentation/templates/DynamicTopics'
 import Docs from '../Docs/Docs'
 import FrameAside from '../Frame/FrameAside'
 import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
 import { CarouselButton } from 'browser-components/buttons/index'
-import {
-  StackNextIcon,
-  StackPreviousIcon
-} from 'browser-components/icons/Icons'
 import { transformCommandToHelpTopic } from 'services/commandUtils'
 
 const HelpFrame = ({ stack = [], isFullscreen, isCollapsed }: any) => {

@@ -18,12 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React, { ReactEventHandler } from 'react'
-import SVGInline from 'react-svg-inline'
+
+import { DownloadIcon, TrashIcon, NewFolderIcon, HollowPlayIcon } from 'common'
 
 import { StyledSavedScriptsButton } from './styled'
-import { DownloadIcon, TrashIcon } from 'browser-components/icons/Icons'
-import newFolderIcon from 'icons/folder-add.svg'
-import hollow_run_icon from 'icons/hollow-run-icon.svg'
+import { primaryLightColor } from 'browser-styles/themes'
 
 type OnClickProp = { onClick: ReactEventHandler }
 
@@ -42,14 +41,9 @@ const RunButton = ({ onClick }: OnClickProp): JSX.Element => (
     title="Run"
     data-testid={'savedScriptsButton-Run'}
     onClick={onClick}
+    color={primaryLightColor}
   >
-    <SVGInline
-      cleanup={['title']}
-      svg={hollow_run_icon}
-      accessibilityLabel={'Run'}
-      width="20px"
-      className="centeredSvgIcon"
-    />
+    <HollowPlayIcon title={'Run'} width={20} />
   </StyledSavedScriptsButton>
 )
 const NewFolderButton = ({ onClick }: OnClickProp): JSX.Element => (
@@ -58,13 +52,7 @@ const NewFolderButton = ({ onClick }: OnClickProp): JSX.Element => (
     data-testid={'savedScriptsButton-New folder'}
     onClick={onClick}
   >
-    <SVGInline
-      cleanup={['title']}
-      svg={newFolderIcon}
-      accessibilityLabel={'New folder'}
-      width="15px"
-      className="centeredSvgIcon"
-    />
+    <NewFolderIcon title={'New folder'} width={15} />
   </StyledSavedScriptsButton>
 )
 

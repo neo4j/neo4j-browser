@@ -31,3 +31,5 @@ export {
   GraphStatsRelationshipTypes
 } from './utils/mapper'
 export { measureText } from './utils/textMeasurement'
+
+export { Explorer } from './Explorer/Explorer'

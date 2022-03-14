@@ -21,12 +21,23 @@ import { useMutation } from '@apollo/client'
 import React, { Dispatch, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
-import SVGInline from 'react-svg-inline'
 import { Action } from 'redux'
 import { Bus } from 'suber'
 
+import {
+  CloseIcon,
+  ContractIcon,
+  ExpandIcon,
+  FavoriteIcon,
+  FileIcon,
+  isMac,
+  UpdateFileIcon,
+  RunIcon
+} from 'common'
+
 import Monaco, { MonacoHandles } from './Monaco'
 import {
+  CurrentEditIconContainer,
   EditorContainer,
   FlexContainer,
   Header,
@@ -39,20 +50,11 @@ import {
 } from 'browser-components/ProjectFiles/projectFilesConstants'
 import { getProjectFileDefaultFileName } from 'browser-components/ProjectFiles/projectFilesUtils'
 import { defaultNameFromDisplayContent } from 'browser-components/SavedScripts'
-import { EditorButton, FrameButton } from 'browser-components/buttons'
-import {
-  CloseIcon,
-  ContractIcon,
-  ExpandIcon
-} from 'browser-components/icons/Icons'
+import { FrameButton, StyledEditorButton } from 'browser-components/buttons'
 import {
   FULLSCREEN_SHORTCUT,
   printShortcut
 } from 'browser/modules/App/keyboardShortcuts'
-import fileIcon from 'icons/file.svg'
-import runIcon from 'icons/run-icon.svg'
-import updateFavoriteIcon from 'icons/update-favorite.svg'
-import updateFileIcon from 'icons/update-file.svg'
 import { GlobalState } from 'shared/globalState'
 import { getProjectId } from 'shared/modules/app/appDuck'
 import {
@@ -76,7 +78,7 @@ import {
   codeFontLigatures,
   shouldEnableMultiStatementMode
 } from 'shared/modules/settings/settingsDuck'
-import { isMac } from 'shared/utils/platformUtils'
+import { base } from 'browser-styles/themes'
 
 type EditorFrameProps = {
   bus: Bus
@@ -241,10 +243,15 @@ export function MainEditor({
     <MainEditorWrapper isFullscreen={isFullscreen} data-testid="activeEditor">
       {currentlyEditing && (
         <ScriptTitle data-testid="currentlyEditing" unsaved={showUnsaved}>
-          <SVGInline
-            svg={currentlyEditing.isProjectFile ? fileIcon : updateFavoriteIcon}
-            width="12px"
-          />
+          {currentlyEditing.isProjectFile ? (
+            <CurrentEditIconContainer>
+              <FileIcon width={12} />
+            </CurrentEditIconContainer>
+          ) : (
+            <CurrentEditIconContainer>
+              <FavoriteIcon width={12} />
+            </CurrentEditIconContainer>
+          )}
           {currentlyEditing.isProjectFile ? ' Project file: ' : ' Favorite: '}
           {getName(currentlyEditing)}
           {showUnsaved ? '*' : ''}
@@ -275,7 +282,7 @@ export function MainEditor({
             />
           </EditorContainer>
           {currentlyEditing && !currentlyEditing.isStatic && (
-            <EditorButton
+            <StyledEditorButton
               data-testid="editor-Favorite"
               onClick={() => {
                 setUnsaved(false)
@@ -299,25 +306,25 @@ export function MainEditor({
                 })
               }}
               key={'editor-Favorite'}
-              title={`Update ${
-                currentlyEditing.isProjectFile ? 'project file' : 'favorite'
-              }`}
-              icon={
-                currentlyEditing.isProjectFile
-                  ? updateFileIcon
-                  : updateFavoriteIcon
-              }
-              width={16}
-            />
+            >
+              {currentlyEditing.isProjectFile ? (
+                <UpdateFileIcon width={16} title={'Update project file'} />
+              ) : (
+                <FavoriteIcon width={16} title={'Update favorite'} />
+              )}
+            </StyledEditorButton>
           )}
-          <EditorButton
+          <StyledEditorButton
             data-testid="editor-Run"
             onClick={createRunCommandFunction(commandSources.playButton)}
-            title={isMac ? 'Run (⌘↩)' : 'Run (ctrl+enter)'}
-            icon={runIcon}
             key="editor-Run"
-            width={16}
-          />
+            color={base.primary}
+          >
+            <RunIcon
+              width={16}
+              title={isMac ? 'Run (⌘↩)' : 'Run (ctrl+enter)'}
+            />
+          </StyledEditorButton>
         </Header>
         {buttons.map(({ onClick, icon, title, testId }) => (
           <FrameButton

@@ -20,6 +20,17 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
+import {
+  AboutIcon,
+  CloudSyncIcon,
+  DatabaseIcon,
+  DocumentsIcon,
+  FavoritesIcon,
+  GuideDrawerIcon,
+  ProjectFilesIcon,
+  SettingsIcon
+} from 'common'
+
 import DatabaseDrawer from '../DBMSInfo/DBMSInfo'
 import BrowserSync from '../Sync/BrowserSync'
 import AboutDrawer from './About'
@@ -34,16 +45,6 @@ import TabNavigation, {
   STANDARD_DRAWER_WIDTH
 } from 'browser-components/TabNavigation/Navigation'
 import { DrawerHeader } from 'browser-components/drawer/drawer-styled'
-import {
-  AboutIcon,
-  CloudSyncIcon,
-  DatabaseIcon,
-  DocumentsIcon,
-  FavoritesIcon,
-  GuideDrawerIcon,
-  ProjectFilesIcon,
-  SettingsIcon
-} from 'browser-components/icons/Icons'
 import { GlobalState } from 'shared/globalState'
 import { isRelateAvailable } from 'shared/modules/app/appDuck'
 import {

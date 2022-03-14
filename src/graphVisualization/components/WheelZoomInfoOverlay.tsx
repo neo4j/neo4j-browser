@@ -19,8 +19,8 @@
  */
 import React from 'react'
 
-import { isMac } from '../utils/utils'
-import { InfoIcon } from './Icons'
+import { InfoIcon, isMac } from 'common'
+
 import {
   StyledZoomInfo,
   StyledZoomInfoIconContainer,
@@ -38,7 +38,7 @@ type WheelZoomInfoProps = {
 export const WheelZoomInfoOverlay = ({
   onDisableWheelZoomInfoMessage
 }: WheelZoomInfoProps) => {
-  const handleCheckBoxClick = () => {
+  const handleDoNotDisplayAgainClick = () => {
     onDisableWheelZoomInfoMessage()
   }
   return (
@@ -51,8 +51,8 @@ export const WheelZoomInfoOverlay = ({
           <StyledZoomInfoText>{`Use ${getModKeyString()} + scroll to zoom`}</StyledZoomInfoText>
         </StyledZoomInfoTextContainer>
         <StyledZoomInfoOverlayDoNotDisplayButton
-          id="wheelZoomInfoCheckbox"
-          onClick={handleCheckBoxClick}
+          data-testid="wheelZoomInfoCheckbox"
+          onClick={handleDoNotDisplayAgainClick}
         >
           {"Don't show again"}
         </StyledZoomInfoOverlayDoNotDisplayButton>

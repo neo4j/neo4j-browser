@@ -21,13 +21,14 @@ import asciitable from 'ascii-data-table'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
+import { WarningMessage } from 'common'
+
 import {
   PaddedDiv,
   StyledAsciiPre,
   StyledBodyMessage,
   StyledRightPartial,
   StyledStatsBar,
-  StyledTruncatedMessage,
   StyledWidthSlider,
   StyledWidthSliderContainer
 } from '../styled'
@@ -39,7 +40,6 @@ import {
   transformResultRecordsToResultArray
 } from './helpers'
 import Ellipsis from 'browser-components/Ellipsis'
-import { WarningIcon } from 'browser-components/icons/Icons'
 import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 import { shallowEquals } from 'services/utils'
 import { GlobalState } from 'shared/globalState'
@@ -242,9 +242,7 @@ export class AsciiStatusbarComponent extends Component<
         ) : (
           <>
             {hasTruncatedFields && (
-              <StyledTruncatedMessage>
-                <WarningIcon /> Record fields have been truncated.&nbsp;
-              </StyledTruncatedMessage>
+              <WarningMessage text={'Record fields have been truncated.'} />
             )}
             <StyledRightPartial>
               <StyledWidthSliderContainer>

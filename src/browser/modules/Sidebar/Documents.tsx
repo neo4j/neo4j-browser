@@ -22,6 +22,8 @@ import { connect } from 'react-redux'
 import { Action } from 'redux'
 import semver from 'semver'
 
+import { CannyFeedbackIcon, CannyNotificationsIcon } from 'common'
+
 import DocumentItems from './DocumentItems'
 import { formatDocVersion } from './docsUtils'
 import {
@@ -30,10 +32,6 @@ import {
   StyledHeaderContainer
 } from './styled'
 import { Drawer, DrawerHeader } from 'browser-components/drawer/drawer-styled'
-import {
-  CannyFeedbackIcon,
-  CannyNotificationsIcon
-} from 'browser-components/icons/Icons'
 import { CANNY_FEATURE_REQUEST_URL, cannyOptions } from 'browser-services/canny'
 import { GlobalState } from 'shared/globalState'
 import { getVersion } from 'shared/modules/dbMeta/state'

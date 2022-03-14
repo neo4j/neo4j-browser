@@ -22,6 +22,8 @@ import React, { useState } from 'react'
 import { useDrop } from 'react-dnd'
 import uuid from 'uuid'
 
+import { AddIcon } from 'common'
+
 import {
   ExportButton,
   NewFolderButton,
@@ -37,7 +39,6 @@ import {
   SavedScriptsNewFavorite
 } from './styled'
 import { getScriptDisplayName } from './utils'
-import { AddIcon } from 'browser-components/icons/Icons'
 import { ExportFormat } from 'services/exporting/favoriteUtils'
 import { Favorite } from 'shared/modules/favorites/favoritesDuck'
 import { Folder } from 'shared/modules/favorites/foldersDuck'
@@ -200,32 +201,34 @@ export default function SavedScripts({
             <>
               <span>|</span>
               <SavedScriptsButtonWrapper>
-                <span style={{ fontSize: 12 }}>
+                <span style={{ fontSize: '12px' }}>
                   <span style={{ marginRight: '5px' }}>
                     {selectedIds.length} selected{' '}
                   </span>
-                  {exportScripts && (
-                    <ExportButton
-                      onClick={() => {
-                        exportScripts(selectedScripts, folders, 'ZIPFILE')
-                        setSelectedIds([])
-                      }}
-                    />
-                  )}
-                  {removeScripts && (
-                    <RedRemoveButton
-                      onClick={() => {
-                        removeScripts(selectedIds)
-                        setSelectedIds([])
-                      }}
-                    />
-                  )}
                 </span>
+                {exportScripts && (
+                  <ExportButton
+                    onClick={() => {
+                      exportScripts(selectedScripts, folders, 'ZIPFILE')
+                      setSelectedIds([])
+                    }}
+                  />
+                )}
+                {removeScripts && (
+                  <RedRemoveButton
+                    onClick={() => {
+                      removeScripts(selectedIds)
+                      setSelectedIds([])
+                    }}
+                  />
+                )}
                 {newFolderButton}
               </SavedScriptsButtonWrapper>
             </>
           ) : (
-            newFolderButton
+            <SavedScriptsButtonWrapper>
+              {newFolderButton}
+            </SavedScriptsButtonWrapper>
           )}
         </SavedScriptsHeader>
         {scriptsOutsideFolder.map(script => {

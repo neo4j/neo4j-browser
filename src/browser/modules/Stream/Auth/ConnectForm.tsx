@@ -20,6 +20,8 @@
 import { authLog, authRequestForSSO, downloadAuthLogs } from 'neo4j-client-sso'
 import React, { useEffect, useState } from 'react'
 
+import { toKeyString } from 'common'
+
 import { StyledCypherErrorMessage } from '../styled'
 import {
   StyledBoltUrlHintText,
@@ -37,7 +39,6 @@ import {
 import { FormButton } from 'browser-components/buttons'
 import { NATIVE, NO_AUTH, SSO } from 'services/bolt/boltHelpers'
 import { getScheme, stripScheme } from 'services/boltscheme.utils'
-import { toKeyString } from 'services/utils'
 import {
   AuthenticationMethod,
   SSOProvider

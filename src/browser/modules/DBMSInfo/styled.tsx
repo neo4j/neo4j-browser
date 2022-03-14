@@ -20,7 +20,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { PlainPlayIcon } from 'browser-components/icons/Icons'
+import { PlainPlayIcon } from 'common'
 
 const chip = styled.div`
   word-break: break-all;
@@ -37,6 +37,7 @@ const chip = styled.div`
   }
   display: inline-block;
 `
+
 export const StyledLabel = styled(chip)`
   border-radius: 20px;
   &:hover {

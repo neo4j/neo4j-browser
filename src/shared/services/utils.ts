@@ -93,17 +93,6 @@ const linkPromises = (next: any) => {
   )
 }
 
-export const deepEquals = (x: any, y: any): boolean => {
-  if (x && y && typeof x === 'object' && typeof y === 'object') {
-    if (Object.keys(x).length !== Object.keys(y).length) return false
-    return Object.keys(x).every(key => deepEquals(x[key], y[key]))
-  }
-  if (typeof x === 'function' && typeof y === 'function') {
-    return x.toString() === y.toString()
-  }
-  return x === y
-}
-
 export const shallowEquals = (a: any, b: any) => {
   for (const key in a) if (a[key] !== b[key]) return false
   for (const key in b) if (!(key in a)) return false
@@ -451,8 +440,6 @@ export const optionalToString = (v: any) =>
     ? v.toString()
     : v
 
-export const toKeyString = (str: any) => btoa(encodeURIComponent(str))
-
 export function flushPromises() {
   return new Promise(resolve => setImmediate(resolve))
 }
@@ -494,6 +481,3 @@ export function detectRuntimeEnv(win?: any, cloudDomains: string[] = []) {
 }
 
 export const isRunningE2ETest = (): boolean => !!window.Cypress
-
-export const upperFirst = (str: string): string =>
-  str[0].toUpperCase() + str.slice(1)

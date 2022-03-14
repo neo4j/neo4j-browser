@@ -5,14 +5,14 @@ exports[`Visualization renders empty content 1`] = `<div />`;
 exports[`Visualization renders with result and escapes any HTML 1`] = `
 <div>
   <div
-    class="sc-bAeIUo kSeZcY"
+    class="sc-fMiknA fwyVFf"
   >
     <div
-      class="sc-kGXeez jKzZRs"
+      class="sc-jKJlTe hSTZTC"
       id="svg-vis"
     >
       <div
-        class="sc-bwzfXH fcjzSz"
+        class="sc-EHOje hDUhoX"
       >
         <svg
           class="neod3viz"
@@ -74,12 +74,12 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
           </g>
         </svg>
         <div
-          class="sc-htpNat kRvcjq"
+          class="sc-bZQynM dfRuIZ"
           offset="212.8"
         >
           <button
             aria-label="zoom-in"
-            class="sc-bxivhb jxitkF zoom-in"
+            class="sc-gzVnrw RZDnc zoom-in"
           >
             <i
               class="sc-fjmCvl fMdbP"
@@ -96,7 +96,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
           </button>
           <button
             aria-label="zoom-out"
-            class="sc-bxivhb jxitkF zoom-out"
+            class="sc-gzVnrw RZDnc zoom-out"
           >
             <i
               class="sc-TFwJa bUEOAT"
@@ -113,7 +113,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
           </button>
           <button
             aria-label="zoom-to-fit"
-            class="sc-bxivhb jxitkF"
+            class="sc-gzVnrw RZDnc"
           >
             <i
               class="sc-bHwgHz duwluX"
@@ -131,7 +131,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
         </div>
       </div>
       <div
-        class="sc-dxgOiQ gMCSBA"
+        class="sc-hMqMXs hCdDjQ"
         title="Collapse the Node Properties display"
       >
         <i
@@ -139,43 +139,43 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
         />
       </div>
       <div
-        class="sc-kpOJdX idzfJo"
+        class="sc-eNQAEJ hqdPlJ"
         width="204.8"
       >
         <div
-          class="sc-ckVGcZ eFGykO react-resizable"
+          class="sc-kEYyzF frqzsX react-resizable"
           data-testid="vizInspector"
         >
           <div
-            class="sc-eNQAEJ ITmwS"
+            class="sc-iAyFgw TFSfK"
           >
             Overview
           </div>
           <div
-            class="sc-hMqMXs gdGGiH"
+            class="sc-hSdWYo iPwfdk"
           >
             <div>
               <div
-                class="sc-jWBwVP hEwBEr"
+                class="sc-jDwBTQ ifDvUS"
               >
                 <span
-                  class="sc-eHgmQL ZYPhy"
+                  class="sc-cMljjf SOhvH"
                 >
                   Node labels
                 </span>
               </div>
               <ul
-                class="sc-iwsKbI sc-jzJRlG kSaRXC"
+                class="sc-jTzLTM sc-kgoBCf cITPpZ"
               >
                 <div
-                  class="sc-jAaTju sc-jDwBTQ hnAfZY"
+                  class="sc-iRbamj sc-jlyJG jSoTEm"
                   data-testid="property-details-overview-node-label-*"
                   style="background-color: rgb(165, 171, 182); color: rgb(255, 255, 255);"
                 >
                   * (1)
                 </div>
                 <div
-                  class="sc-jAaTju sc-jDwBTQ hnAfZY"
+                  class="sc-iRbamj sc-jlyJG jSoTEm"
                   data-testid="property-details-overview-node-label-Person"
                   style="background-color: rgb(201, 144, 192); color: rgb(255, 255, 255);"
                 >

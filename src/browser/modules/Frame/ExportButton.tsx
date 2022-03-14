@@ -19,6 +19,8 @@
  */
 import React from 'react'
 
+import { DownloadIcon } from 'common'
+
 import {
   DropDownItemDivider,
   DropdownButton,
@@ -26,7 +28,6 @@ import {
   DropdownItem,
   DropdownList
 } from '../Stream/styled'
-import { DownloadIcon } from 'browser-components/icons/Icons'
 import { Frame } from 'shared/modules/frames/framesDuck'
 
 export type ExportItem = {

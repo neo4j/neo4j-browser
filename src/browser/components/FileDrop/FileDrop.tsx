@@ -20,7 +20,8 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
-import SVGInline from 'react-svg-inline'
+
+import { FileDropIcon } from 'common'
 
 import arrayHasItems from '../../../shared/utils/array-has-items'
 import {
@@ -36,7 +37,6 @@ import {
   StyledFileDropContent,
   StyledFileDropInner
 } from './styled'
-import icon from 'icons/task-list-download.svg'
 import {
   commandSources,
   executeCommand,
@@ -171,7 +171,7 @@ function FileDrop(props: any) {
       {props.children}
       <StyledFileDropInner onClick={resetState}>
         <StyledFileDropContent>
-          <SVGInline svg={icon} accessibilityLabel="Import" width="14rem" />
+          <FileDropIcon width={190} title={'Import'} />
           {userSelect && (
             <StyledFileDropActions>
               <StyledFileDropActionButton

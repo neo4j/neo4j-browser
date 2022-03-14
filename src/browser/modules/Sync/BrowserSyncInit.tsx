@@ -21,7 +21,7 @@ import { Component } from 'react'
 import { connect } from 'react-redux'
 
 import { BrowserSyncAuthIframe } from './BrowserSyncAuthIframes'
-import { deepEquals } from 'services/utils'
+import { deepEquals } from 'common'
 import { getBrowserSyncConfig } from 'shared/modules/settings/settingsDuck'
 import {
   SIGNED_IN,

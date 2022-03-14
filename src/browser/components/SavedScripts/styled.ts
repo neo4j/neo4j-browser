@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { primaryLightColor } from 'browser-styles/themes'
 
 export const SavedScriptsBody = styled.div`
   padding: 0 18px;
@@ -25,6 +26,7 @@ export const SavedScriptsListItemMain = styled.div<{
   padding: 5px;
   display: flex;
   justify-content: space-between;
+  align-items: center
 
   background-color: ${props =>
     props.isSelected ? props.theme.hoverBackground : 'inherit'};
@@ -32,7 +34,7 @@ export const SavedScriptsListItemMain = styled.div<{
   ${props =>
     props.isSelected
       ? `margin-left: -3px;
-border-left: 3px solid #68BDF4;`
+border-left: 3px solid ${primaryLightColor};`
       : ''};
 
   &:hover {
@@ -104,7 +106,12 @@ export const SavedScriptsButtonWrapper = styled.div`
   min-width: 21px;
 
   > button:not(:last-of-type) {
-    margin-right: 5px;
+    margin-right: 2px;
+  }
+
+  svg {
+    display: inline-block;
+    vertical-align: middle;
   }
 `
 

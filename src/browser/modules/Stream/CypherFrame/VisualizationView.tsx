@@ -24,23 +24,26 @@ import { withBus } from 'react-suber'
 import { Action, Dispatch } from 'redux'
 import { Bus } from 'suber'
 
-import { GraphModel } from 'graph-visualization'
+import { GraphModel, Explorer } from 'graph-visualization'
 
-import Explorer from '../../D3Visualization/components/Explorer'
 import { StyledVisContainer } from './VisualizationView.styled'
 import { resultHasTruncatedFields } from 'browser/modules/Stream/CypherFrame/helpers'
 import bolt from 'services/bolt/bolt'
-import {
-  BasicNode,
-  BasicNodesAndRels,
-  BasicRelationship
-} from 'services/bolt/boltMappings'
+import { BasicNode, BasicNodesAndRels, BasicRelationship } from 'common'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
-import { deepEquals } from 'services/utils'
+import { deepEquals } from 'common'
 import { GlobalState } from 'shared/globalState'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import * as grassActions from 'shared/modules/grass/grassDuck'
-import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
+import {
+  getMaxFieldItems,
+  shouldShowWheelZoomInfo,
+  update as updateSettings
+} from 'shared/modules/settings/settingsDuck'
+import {
+  getNodePropertiesExpandedByDefault,
+  setNodePropertiesExpandedByDefault
+} from 'shared/modules/frames/framesDuck'
 
 type VisualizationState = {
   updated: number
@@ -61,6 +64,10 @@ export type VisualizationProps = {
   isFullscreen: boolean
   updateStyle: (style: any) => void
   assignVisElement: (v: any) => void
+  nodePropertiesExpandedByDefault: boolean
+  setNodePropertiesExpandedByDefault: (expandedByDefault: boolean) => void
+  wheelZoomInfoMessageEnabled: boolean
+  disableWheelZoomInfoMessage: () => void
 }
 
 export class Visualization extends Component<
@@ -92,7 +99,9 @@ export class Visualization extends Component<
       this.props.isFullscreen !== props.isFullscreen ||
       !deepEquals(props.graphStyleData, this.props.graphStyleData) ||
       this.state.updated !== state.updated ||
-      this.props.autoComplete !== props.autoComplete
+      this.props.autoComplete !== props.autoComplete ||
+      this.props.wheelZoomInfoMessageEnabled !==
+        props.wheelZoomInfoMessageEnabled
     )
   }
 
@@ -255,6 +264,14 @@ LIMIT ${maxNewNeighbours}`
             this.autoCompleteCallback = callback
           }}
           setGraph={this.setGraph.bind(this)}
+          setNodePropertiesExpandedByDefault={
+            this.props.setNodePropertiesExpandedByDefault
+          }
+          nodePropertiesExpandedByDefault={
+            this.props.nodePropertiesExpandedByDefault
+          }
+          wheelZoomInfoMessageEnabled={this.props.wheelZoomInfoMessageEnabled}
+          disableWheelZoomInfoMessage={this.props.disableWheelZoomInfoMessage}
         />
       </StyledVisContainer>
     )
@@ -263,10 +280,17 @@ LIMIT ${maxNewNeighbours}`
 
 const mapStateToProps = (state: GlobalState) => ({
   graphStyleData: grassActions.getGraphStyleData(state),
-  maxFieldItems: getMaxFieldItems(state)
+  maxFieldItems: getMaxFieldItems(state),
+  nodePropertiesExpandedByDefault: getNodePropertiesExpandedByDefault(state),
+  wheelZoomInfoMessageEnabled: shouldShowWheelZoomInfo(state)
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
+  disableWheelZoomInfoMessage: () => {
+    dispatch(updateSettings({ showWheelZoomInfo: false }))
+  },
+  setNodePropertiesExpandedByDefault: (expandedByDefault: boolean) =>
+    dispatch(setNodePropertiesExpandedByDefault(expandedByDefault)),
   updateStyle: (graphStyleData: any) => {
     dispatch(grassActions.updateGraphStyleData(graphStyleData))
   }

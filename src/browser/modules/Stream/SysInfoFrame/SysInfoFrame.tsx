@@ -22,7 +22,8 @@ import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { Bus } from 'suber'
 
-import { ExclamationTriangleIcon } from '../../../components/icons/Icons'
+import { ExclamationTriangleIcon } from 'common'
+
 import {
   AutoRefreshSpan,
   AutoRefreshToggle,

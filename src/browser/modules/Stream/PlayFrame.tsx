@@ -23,6 +23,8 @@ import { withBus } from 'react-suber'
 import { ThemeContext } from 'styled-components'
 import { Bus } from 'suber'
 
+import { StackNextIcon, StackPreviousIcon } from 'common'
+
 import docs, { DocItem, isPlayChapter } from '../../documentation'
 import Docs from '../Docs/Docs'
 import { splitMdSlides } from '../Docs/MD/splitMd'
@@ -31,10 +33,6 @@ import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
 import { ErrorsView } from './CypherFrame/ErrorsView/ErrorsView'
 import { AuraPromoLink, PromotionContainer } from './styled'
 import { CarouselButton } from 'browser-components/buttons'
-import {
-  StackNextIcon,
-  StackPreviousIcon
-} from 'browser-components/icons/Icons'
 import {
   splitStringOnFirst,
   transformCommandToHelpTopic

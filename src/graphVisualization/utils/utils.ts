@@ -28,8 +28,6 @@ export function optionalToString(value: any) {
     : value
 }
 
-export const isMac = /Mac|iPad/.test(navigator.platform)
-
 export const selectorStringToArray = (selector: string) => {
   // Negative lookbehind simulation since js support is very limited.
   // We want to match all . that are not preceded by \\

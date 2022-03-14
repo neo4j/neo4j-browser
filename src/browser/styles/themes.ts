@@ -27,6 +27,7 @@ import {
 
 // Currently hard code values for svgs, to be replaced with proper theme colors from NDL
 export const stopIconColor = '#FD766E'
+export const primaryLightColor = '#68BDF4'
 
 // These and colors in dark theme from light palette are to be translated to corresponding
 // version in dark palette when available
@@ -128,6 +129,7 @@ export const base = {
   streamBackgroundColor: 'rgba(215, 229, 241, 0.7)',
   frameBackground: '#F9FCFF',
   accordionContentBackground: 'white',
+  currentEditIconColor: '#6B6B6B',
 
   // Info message
   infoBackground: needlePalette.light.primary.bg.weak,

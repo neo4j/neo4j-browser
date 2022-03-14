@@ -20,12 +20,13 @@
 import neo4j from 'neo4j-driver'
 import React from 'react'
 
+import { toKeyString } from 'common'
+
 import { SysInfoTableEntry } from 'browser-components/Tables'
 import {
   extractFromNeoObjects,
   itemIntToString
 } from 'services/bolt/boltMappings'
-import { toKeyString } from 'services/utils'
 
 export const getTableDataFromRecords = (records: any) => {
   if (!records || !records.length) {

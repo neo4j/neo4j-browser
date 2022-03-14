@@ -22,6 +22,8 @@ import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import uuid, { v4 } from 'uuid'
 
+import { CloseIcon } from 'common'
+
 import RolesSelector from './RolesSelector'
 import {
   StyleRolesContainer,
@@ -30,7 +32,6 @@ import {
 } from './styled'
 import { StyledBodyTr } from 'browser-components/DataTables'
 import { FormButton } from 'browser-components/buttons'
-import { CloseIcon } from 'browser-components/icons/Icons'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import {
   activateUser,

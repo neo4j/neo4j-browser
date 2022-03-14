@@ -20,7 +20,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { toKeyString } from 'services/utils'
+import { toKeyString } from 'common'
 
 const StyledTable = styled.table`
   border-radius: 4px;

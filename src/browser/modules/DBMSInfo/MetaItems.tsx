@@ -21,11 +21,11 @@ import deepmerge from 'deepmerge'
 import React from 'react'
 import { ThemeProvider } from 'styled-components'
 
+import { numberToUSLocale, ShowMoreOrAll } from 'common'
 import { GraphStyleModel } from 'graph-visualization'
 
 import styles from './style_meta.css'
 import { StyledLabel, StyledProperty, StyledRelationship } from './styled'
-import { ShowMoreOrAll } from 'browser-components/ShowMoreOrAll/ShowMoreOrAll'
 import {
   DrawerSection,
   DrawerSectionBody,
@@ -33,7 +33,6 @@ import {
 } from 'browser-components/drawer/drawer-styled'
 import { dark } from 'browser-styles/themes'
 import { escapeCypherIdentifier } from 'services/utils'
-import numberToUSLocale from 'shared/utils/number-to-US-locale'
 
 const wrapperStyle = (styles && styles.wrapper) || ''
 
