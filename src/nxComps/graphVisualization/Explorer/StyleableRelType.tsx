@@ -20,11 +20,10 @@
 import React from 'react'
 import { Popup } from 'semantic-ui-react'
 
-import { GraphStyleModel } from 'nxComps/graphVisualization'
-
+import { GraphStyleModel } from '..'
 import { GrassEditor } from './GrassEditor'
-// eslint-disable-next-line no-restricted-imports
-import { StyledRelationship } from 'browser/modules/DBMSInfo/styled'
+
+const StyledRelationship: any = () => <div />
 
 export type StyleableRelTypeProps = {
   graphStyle: GraphStyleModel
@@ -57,8 +56,6 @@ export function StyleableRelType({
         </StyledRelationship>
       }
       wide
-    >
-      <GrassEditor selectedRelType={selectedRelType} />
-    </Popup>
+    ></Popup>
   )
 }

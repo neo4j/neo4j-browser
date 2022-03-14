@@ -17,15 +17,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-export { Graph, GraphProps } from './components/Graph'
+export { Graph } from './components/Graph'
+export type { GraphProps } from './components/Graph'
 
 export { GraphModel } from './models/Graph'
-export { GetNodeNeighboursFn } from './models/GraphEventHandler'
+export type { GetNodeNeighboursFn } from './models/GraphEventHandler'
 export { GraphStyleModel, Selector } from './models/GraphStyle'
 
-export { NodeItem, RelationshipItem, VizItem, VizItemProperty } from './types'
+export type {
+  NodeItem,
+  RelationshipItem,
+  VizItem,
+  VizItemProperty
+} from './types'
 
-export {
+export type {
   GraphStats,
   GraphStatsLabels,
   GraphStatsRelationshipTypes

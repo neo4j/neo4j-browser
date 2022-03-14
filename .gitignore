@@ -20,3 +20,5 @@ release-notes.md
 signature.pem
 HEAD
 neo4j-enterprise-*/
+
+./src/nxComps/dist

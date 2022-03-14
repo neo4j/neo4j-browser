@@ -27,7 +27,7 @@ import {
   GraphStats,
   GraphStyleModel,
   VizItem
-} from 'nxComps/graphVisualization'
+} from '..'
 
 import { Graph } from '../components/Graph'
 import { NodeInspectorPanel, defaultPanelWidth } from './NodeInspectorPanel'
