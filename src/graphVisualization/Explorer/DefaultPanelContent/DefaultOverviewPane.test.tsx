@@ -27,7 +27,7 @@ import {
   GraphStyleModel
 } from 'graph-visualization'
 
-import OverviewPane, { OVERVIEW_STEP_SIZE } from './DefaultOverviewPane'
+import DefaultOverviewPane, { OVERVIEW_STEP_SIZE } from './DefaultOverviewPane'
 
 describe('Default <OverviewPane />', () => {
   const graphStyle = new GraphStyleModel()
@@ -70,7 +70,7 @@ describe('Default <OverviewPane />', () => {
     relationshipCount = 5
   }: RenderComponentProps) => {
     return render(
-      <OverviewPane
+      <DefaultOverviewPane
         graphStyle={graphStyle}
         hasTruncatedFields={false}
         nodeCount={nodeCount}

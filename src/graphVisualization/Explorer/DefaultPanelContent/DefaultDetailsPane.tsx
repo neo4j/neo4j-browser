@@ -19,37 +19,40 @@
  */
 import React, { useState } from 'react'
 
+import { ClipboardCopier, PropertiesTable, upperFirst } from 'common'
 import {
   GraphStyleModel,
   NodeItem,
   RelationshipItem
 } from 'graph-visualization'
 
-import { ClipboardCopier, PropertiesTable, upperFirst } from 'common'
 import { PaneBody, PaneHeader, PaneTitle } from '../styled'
 import { NodeLabel } from './NodeLabel'
 import { RelType } from './RelType'
 
 export const DETAILS_PANE_STEP_SIZE = 1000
-export type DetailsPaneComponentProps = {
+export type DetailsPaneProps = {
   vizItem: NodeItem | RelationshipItem
   graphStyle: GraphStyleModel
   nodeInspectorWidth: number
 }
-export function DetailsPaneComponent({
+export function DefaultDetailsPane({
   vizItem,
   graphStyle,
   nodeInspectorWidth
-}: DetailsPaneComponentProps): JSX.Element {
+}: DetailsPaneProps): JSX.Element {
   const [maxPropertiesCount, setMaxPropertiesCount] = useState(
     DETAILS_PANE_STEP_SIZE
   )
 
-  /* Add id to property list */
-  const allItemProperties = [
-    { key: '<id>', value: `${vizItem.item.id}`, type: 'String' },
-    ...vizItem.item.propertyList
-  ].sort((a, b) => (a.key < b.key ? -1 : 1))
+  const idProperty = {
+    key: '<id>',
+    value: `${vizItem.item.id}`,
+    type: 'String'
+  }
+  const allItemProperties = [idProperty, ...vizItem.item.propertyList].sort(
+    (a, b) => (a.key < b.key ? -1 : 1)
+  )
   const visibleItemProperties = allItemProperties.slice(0, maxPropertiesCount)
 
   const handleMorePropertiesClick = (numMore: number) => {

@@ -67,7 +67,7 @@ export type OverviewPaneProps = {
 
 export const OVERVIEW_STEP_SIZE = 50
 
-function OverviewPane({
+function DefaultOverviewPane({
   graphStyle,
   hasTruncatedFields,
   nodeCount,
@@ -181,4 +181,4 @@ function OverviewPane({
   )
 }
 
-export default OverviewPane
+export default DefaultOverviewPane

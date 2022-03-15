@@ -33,3 +33,5 @@ export {
 export { measureText } from './utils/textMeasurement'
 
 export { Explorer } from './Explorer/Explorer'
+export { DetailsPaneProps } from './Explorer/DefaultPanelContent/DefaultDetailsPane'
+export { OverviewPaneProps } from './Explorer/DefaultPanelContent/DefaultOverviewPane'

@@ -22,7 +22,7 @@ import React from 'react'
 
 import { GraphStyleModel, VizItem, VizItemProperty } from 'graph-visualization'
 
-import { DETAILS_PANE_STEP_SIZE, DetailsPaneComponent } from './DetailsPane'
+import { DETAILS_PANE_STEP_SIZE, DetailsPane } from './DetailsPane'
 
 describe('<DetailsPane />', () => {
   const mockGraphStyle = new GraphStyleModel()
@@ -71,7 +71,7 @@ describe('<DetailsPane />', () => {
         }
     }
     return render(
-      <DetailsPaneComponent
+      <DetailsPane
         graphStyle={mockGraphStyle}
         vizItem={mockVizItem}
         nodeInspectorWidth={width}

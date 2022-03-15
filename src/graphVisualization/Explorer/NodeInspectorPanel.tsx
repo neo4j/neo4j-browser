@@ -23,11 +23,11 @@ import { Resizable } from 'react-resizable'
 import { ChevronLeftIcon, ChevronRightIcon } from 'common'
 
 import {
-  DetailsPaneComponent,
-  DetailsPaneComponentProps
+  DefaultDetailsPane,
+  DetailsPaneProps
 } from './DefaultPanelContent/DefaultDetailsPane'
 import { NodeInspectorDrawer } from './NodeInspectorDrawer'
-import OverviewPane, {
+import DefaultOverviewPane, {
   OverviewPaneProps
 } from './DefaultPanelContent/DefaultOverviewPane'
 import {
@@ -49,7 +49,7 @@ interface NodeInspectorPanelProps {
   stats: GraphStats
   toggleExpanded: () => void
   width: number
-  DetailsPaneOverride?: React.FC<DetailsPaneComponentProps>
+  DetailsPaneOverride?: React.FC<DetailsPaneProps>
   OverviewPaneOverride?: React.FC<OverviewPaneProps>
 }
 
@@ -74,6 +74,14 @@ export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
     const hoveringNodeOrRelationship =
       hoveredItem && relevantItems.includes(hoveredItem.type)
     const shownEl = hoveringNodeOrRelationship ? hoveredItem : selectedItem
+    const DetailsPane =
+      DetailsPaneOverride !== undefined
+        ? DetailsPaneOverride
+        : DefaultDetailsPane
+    const OverviewPane =
+      OverviewPaneOverride !== undefined
+        ? OverviewPaneOverride
+        : DefaultOverviewPane
 
     return (
       <>
@@ -99,35 +107,10 @@ export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
           >
             <PaneContainer>
               {shownEl.type === 'node' || shownEl.type === 'relationship' ? (
-                DetailsPaneOverride !== undefined ? (
-                  <DetailsPaneOverride
-                    vizItem={shownEl}
-                    graphStyle={graphStyle}
-                    nodeInspectorWidth={width}
-                  />
-                ) : (
-                  <DetailsPaneComponent
-                    vizItem={shownEl}
-                    graphStyle={graphStyle}
-                    nodeInspectorWidth={width}
-                  />
-                )
-              ) : OverviewPaneOverride !== undefined ? (
-                <OverviewPaneOverride
+                <DetailsPane
+                  vizItem={shownEl}
                   graphStyle={graphStyle}
-                  hasTruncatedFields={hasTruncatedFields}
-                  stats={stats}
-                  nodeCount={
-                    shownEl.type === 'canvas' ? shownEl.item.nodeCount : null
-                  }
-                  relationshipCount={
-                    shownEl.type === 'canvas'
-                      ? shownEl.item.relationshipCount
-                      : null
-                  }
-                  infoMessage={
-                    shownEl.type === 'status-item' ? shownEl.item : null
-                  }
+                  nodeInspectorWidth={width}
                 />
               ) : (
                 <OverviewPane

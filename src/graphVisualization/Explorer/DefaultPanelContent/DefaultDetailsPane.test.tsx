@@ -24,7 +24,7 @@ import { GraphStyleModel, VizItem, VizItemProperty } from 'graph-visualization'
 
 import {
   DETAILS_PANE_STEP_SIZE,
-  DetailsPaneComponent
+  DefaultDetailsPane
 } from './DefaultDetailsPane'
 
 describe('<DetailsPane />', () => {
@@ -74,7 +74,7 @@ describe('<DetailsPane />', () => {
         }
     }
     return render(
-      <DetailsPaneComponent
+      <DefaultDetailsPane
         graphStyle={mockGraphStyle}
         vizItem={mockVizItem}
         nodeInspectorWidth={width}

@@ -38,7 +38,7 @@ import {
   BasicRelationship,
   deepEquals
 } from 'common'
-import { DetailsPaneComponentProps } from './DefaultPanelContent/DefaultDetailsPane'
+import { DetailsPaneProps } from './DefaultPanelContent/DefaultDetailsPane'
 import { OverviewPaneProps } from './DefaultPanelContent/DefaultOverviewPane'
 
 type DeduplicateHelper = {
@@ -86,7 +86,7 @@ type ExplorerComponentProps = {
   setNodePropertiesExpandedByDefault: (expandedByDefault: boolean) => void
   wheelZoomInfoMessageEnabled: boolean
   disableWheelZoomInfoMessage: () => void
-  DetailsPaneOverride?: React.FC<DetailsPaneComponentProps>
+  DetailsPaneOverride?: React.FC<DetailsPaneProps>
   OverviewPaneOverride?: React.FC<OverviewPaneProps>
 }
 
