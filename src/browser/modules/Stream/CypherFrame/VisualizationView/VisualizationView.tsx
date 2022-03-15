@@ -44,6 +44,8 @@ import {
   getNodePropertiesExpandedByDefault,
   setNodePropertiesExpandedByDefault
 } from 'shared/modules/frames/framesDuck'
+import { DetailsPane } from './PropertiesPanelContent/DetailsPane'
+import OverviewPane from './PropertiesPanelContent/OverviewPane'
 
 type VisualizationState = {
   updated: number
@@ -272,6 +274,8 @@ LIMIT ${maxNewNeighbours}`
           }
           wheelZoomInfoMessageEnabled={this.props.wheelZoomInfoMessageEnabled}
           disableWheelZoomInfoMessage={this.props.disableWheelZoomInfoMessage}
+          DetailsPaneOverride={DetailsPane}
+          OverviewPaneOverride={OverviewPane}
         />
       </StyledVisContainer>
     )

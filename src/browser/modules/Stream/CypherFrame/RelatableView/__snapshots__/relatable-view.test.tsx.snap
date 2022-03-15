@@ -3,10 +3,10 @@
 exports[`RelatableViews RelatableView displays bodyMessage if no rows 1`] = `
 <div>
   <div
-    class="sc-hzDkRC hcVzuj"
+    class="sc-cJSrbW buqieP"
   >
     <div
-      class="sc-btzYZH plTjG"
+      class="sc-kfGgVZ dKnfeM"
     >
       (no changes, no records)
     </div>
@@ -17,10 +17,10 @@ exports[`RelatableViews RelatableView displays bodyMessage if no rows 1`] = `
 exports[`RelatableViews RelatableView does not display bodyMessage if rows, and escapes HTML 1`] = `
 <div>
   <div
-    class="sc-feJyhm gRdHkA"
+    class="sc-gzOgki gByCjq"
   >
     <div
-      class="sc-cIShpX dWBqdH relatable"
+      class="sc-gxMtzJ eqnqvG relatable"
     >
       <table
         class="ui basic table relatable__table "
@@ -73,7 +73,7 @@ exports[`RelatableViews RelatableView does not display bodyMessage if rows, and 
               role="cell"
             >
               <span
-                class="sc-cmTdod grMJIU"
+                class="sc-hwwEjo dbzKYQ"
               >
                 "String with HTML &lt;strong&gt;in&lt;/strong&gt; it"
               </span>
@@ -89,10 +89,10 @@ exports[`RelatableViews RelatableView does not display bodyMessage if rows, and 
 exports[`RelatableViews TableStatusbar displays no statusBarMessage 1`] = `
 <div>
   <div
-    class="sc-hzDkRC hcVzuj"
+    class="sc-cJSrbW buqieP"
   >
     <div
-      class="sc-btzYZH plTjG"
+      class="sc-kfGgVZ dKnfeM"
     />
   </div>
 </div>
@@ -101,10 +101,10 @@ exports[`RelatableViews TableStatusbar displays no statusBarMessage 1`] = `
 exports[`RelatableViews TableStatusbar displays statusBarMessage 1`] = `
 <div>
   <div
-    class="sc-hzDkRC hcVzuj"
+    class="sc-cJSrbW buqieP"
   >
     <div
-      class="sc-btzYZH plTjG"
+      class="sc-kfGgVZ dKnfeM"
     >
       Started streaming 1 records after 5 ms and completed after 10  ms.
     </div>

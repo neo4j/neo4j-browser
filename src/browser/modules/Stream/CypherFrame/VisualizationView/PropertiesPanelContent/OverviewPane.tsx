@@ -20,7 +20,7 @@
 import React, { useState } from 'react'
 
 import { numberToUSLocale, ShowMoreOrAll, WarningMessage } from 'common'
-import { GraphStats, GraphStyleModel } from 'graph-visualization'
+import { OverviewPaneProps } from 'graph-visualization'
 
 import { StyleableNodeLabel } from './StyleableNodeLabel'
 import { StyleableRelType } from './StyleableRelType'
@@ -55,18 +55,9 @@ function PaneBodySectionHeader({
   )
 }
 
-type OverviewPaneProps = {
-  graphStyle: GraphStyleModel
-  hasTruncatedFields: boolean
-  nodeCount: number | null
-  relationshipCount: number | null
-  stats: GraphStats
-  infoMessage: string | null
-}
-
 export const OVERVIEW_STEP_SIZE = 50
 
-function OverviewPane({
+export default function OverviewPane({
   graphStyle,
   hasTruncatedFields,
   nodeCount,
@@ -179,5 +170,3 @@ function OverviewPane({
     </>
   )
 }
-
-export default OverviewPane

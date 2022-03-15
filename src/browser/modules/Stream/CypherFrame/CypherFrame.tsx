@@ -48,7 +48,7 @@ import { PlanStatusbar, PlanView } from './PlanView'
 import RelatableView, {
   RelatableStatusbar
 } from './RelatableView/relatable-view'
-import { VisualizationConnectedBus } from './VisualizationView'
+import { VisualizationConnectedBus } from './VisualizationView/VisualizationView'
 import { WarningsStatusbar, WarningsView } from './WarningsView'
 import {
   initialView,

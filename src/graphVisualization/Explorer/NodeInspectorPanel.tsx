@@ -22,9 +22,14 @@ import { Resizable } from 'react-resizable'
 
 import { ChevronLeftIcon, ChevronRightIcon } from 'common'
 
-import { DetailsPaneComponent } from './DetailsPane'
+import {
+  DefaultDetailsPane,
+  DetailsPaneProps
+} from './DefaultPanelContent/DefaultDetailsPane'
 import { NodeInspectorDrawer } from './NodeInspectorDrawer'
-import OverviewPane from './OverviewPane'
+import DefaultOverviewPane, {
+  OverviewPaneProps
+} from './DefaultPanelContent/DefaultOverviewPane'
 import {
   PaneContainer,
   StyledNodeInspectorTopMenuChevron,
@@ -44,6 +49,8 @@ interface NodeInspectorPanelProps {
   stats: GraphStats
   toggleExpanded: () => void
   width: number
+  DetailsPaneOverride?: React.FC<DetailsPaneProps>
+  OverviewPaneOverride?: React.FC<OverviewPaneProps>
 }
 
 export const defaultPanelWidth = (): number =>
@@ -59,13 +66,22 @@ export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
       setWidth,
       stats,
       toggleExpanded,
-      width
+      width,
+      DetailsPaneOverride,
+      OverviewPaneOverride
     } = this.props
-
     const relevantItems = ['node', 'relationship']
     const hoveringNodeOrRelationship =
       hoveredItem && relevantItems.includes(hoveredItem.type)
     const shownEl = hoveringNodeOrRelationship ? hoveredItem : selectedItem
+    const DetailsPane =
+      DetailsPaneOverride !== undefined
+        ? DetailsPaneOverride
+        : DefaultDetailsPane
+    const OverviewPane =
+      OverviewPaneOverride !== undefined
+        ? OverviewPaneOverride
+        : DefaultOverviewPane
 
     return (
       <>
@@ -91,7 +107,7 @@ export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
           >
             <PaneContainer>
               {shownEl.type === 'node' || shownEl.type === 'relationship' ? (
-                <DetailsPaneComponent
+                <DetailsPane
                   vizItem={shownEl}
                   graphStyle={graphStyle}
                   nodeInspectorWidth={width}
