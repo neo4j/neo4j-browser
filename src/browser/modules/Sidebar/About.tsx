@@ -88,14 +88,14 @@ const About = ({
             </a>
           </p>
           {gitRevision && (
-            <p onClick={() => copyToClipboard(gitRevision)}>
+            <div onClick={() => copyToClipboard(gitRevision)}>
               Revision: {gitRevision.substring(0, 10)}
-            </p>
+            </div>
           )}
           {builtAt && (
-            <p onClick={() => copyToClipboard(builtAt)}>
+            <div onClick={() => copyToClipboard(builtAt)}>
               Build date: {new Date(builtAt).toLocaleDateString('se')}
-            </p>
+            </div>
           )}
           {serverVersion && serverEdition && (
             <p>

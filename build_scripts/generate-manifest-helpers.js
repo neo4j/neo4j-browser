@@ -38,27 +38,20 @@ function writeDataToFile(file, data) {
 }
 
 function getCurrentGitRevision() {
+  // Ideally the hash identifying the latest commit as a environment variable when building
+  // but if it's not passed we'll attempt to read it the git folder. It's only a nice to have
+  // so if we don't succeed, that's fine
   if (process.env.GIT_REVISION) {
-    // If no hash was passed, attempt to read it from disk
     return process.env.GIT_REVISION
   }
   try {
-    const rev = fs
+    return fs
       .readFileSync('.git/HEAD')
       .toString()
       .trim()
       .split(/.*[: ]/)
       .slice(-1)[0]
-    if (rev.indexOf('/') === -1) {
-      return rev
-    } else {
-      return fs
-        .readFileSync('.git/' + rev)
-        .toString()
-        .trim()
-    }
   } catch (e) {
-    // Don't prevent the build from working if hash wasn't present, just log
     console.error('Could not read git revision. Error: ' + e)
     return undefined
   }

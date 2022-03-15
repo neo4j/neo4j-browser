@@ -184,7 +184,7 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
       }
       const discoveryData = await getAndMergeDiscoveryData({
         action,
-        hostedUrl: getHostedUrl(store.getState()),
+        hostedUrl: getHostedUrl(store.getState()) ?? window.location.href,
         hasDiscoveryEndpoint: hasDiscoveryEndpoint(store.getState()),
         generateBoltUrlWithAllowedScheme: (boltUrl: string) =>
           generateBoltUrl(

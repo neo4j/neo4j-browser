@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { NAME as app } from './modules/app/appDuck'
+import { AppState, NAME as app } from './modules/app/appDuck'
 import { NAME as commands } from './modules/commands/commandsDuck'
 import {
   ConnectionReduxState,
@@ -81,7 +81,7 @@ export interface GlobalState {
   [folders]: Folder[]
   [commands]: unknown
   [udc]: UdcState
-  [app]: Record<string, unknown>
+  [app]: AppState
   [experimentalFeatures]: typeof experimentalFeaturesInitialState
   [guides]: GuideState
 }

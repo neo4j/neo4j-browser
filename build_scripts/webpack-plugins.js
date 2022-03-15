@@ -21,7 +21,6 @@
 const helpers = require('./webpack-helpers')
 const webpack = require('webpack')
 const path = require('path')
-const fs = require('fs')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
