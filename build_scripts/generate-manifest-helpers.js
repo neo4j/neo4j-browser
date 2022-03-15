@@ -52,7 +52,7 @@ function getCurrentGitRevision() {
       .split(/.*[: ]/)
       .slice(-1)[0]
   } catch (e) {
-    console.error('Could not read git revision. Error: ' + e)
+    console.log('Could not read git revision. ' + e)
     return undefined
   }
 }
