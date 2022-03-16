@@ -37,26 +37,6 @@ function writeDataToFile(file, data) {
   }
 }
 
-function getCurrentGitRevision() {
-  // Ideally the hash identifying the latest commit as a environment variable when building
-  // but if it's not passed we'll attempt to read it the git folder. It's only a nice to have
-  // so if we don't succeed, that's fine
-  if (process.env.GIT_REVISION) {
-    return process.env.GIT_REVISION
-  }
-  try {
-    return fs
-      .readFileSync('.git/HEAD')
-      .toString()
-      .trim()
-      .split(/.*[: ]/)
-      .slice(-1)[0]
-  } catch (e) {
-    console.log('Could not read git revision. ' + e)
-    return undefined
-  }
-}
-
 function buildTargetObject(data, dataProp) {
   const out = {}
   const keys = data[dataProp] || []
@@ -72,6 +52,5 @@ module.exports = {
   loadDataFromFile,
   writeDataToFile,
   buildTargetObject,
-  mergeObjects,
-  getCurrentGitRevision
+  mergeObjects
 }

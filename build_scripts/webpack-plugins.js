@@ -60,14 +60,13 @@ module.exports = () => {
               packageJsonData,
               'propertiesToCopyToManifest'
             )
-            // This is so we can give better build info in the sidebar
-            const gitRevision = manifestGeneration.getCurrentGitRevision()
 
             const mergedData = {
               ...wantedData,
               ...JSON.parse(content),
+              // This is so we can give better build info in the sidebar
               builtAt: new Date().toISOString(),
-              gitRevision
+              gitRevision: process.env.GIT_REVISION
             }
             return JSON.stringify(mergedData, null, 2)
           }
