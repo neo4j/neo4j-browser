@@ -125,15 +125,13 @@ class EventHandler {
   }
 
   unHoverNode(node: NodeModel): void {
-    console.log(this._selectedItem)
-
-    const nodeCount = this._graph.getNodes().length
-    const relationshipCount = this._graph.getRelationships().length
-    console.log(nodeCount, relationshipCount)
     !this._clickedNode &&
       this._externalEventHandler.onItemMouseOver({
         type: 'canvas',
-        item: { nodeCount, relationshipCount }
+        item: {
+          nodeCount: this._graph.getNodes().length,
+          relationshipCount: this._graph.getRelationships().length
+        }
       })
 
     !this._clickedNode && this._moveGfxBetweenLayers(node, 'behind')
@@ -347,11 +345,13 @@ class EventHandler {
 
   hoverRelationship(relationship: RelationshipModel): void {
     console.log('hover', relationship)
-    !this._clickedNode &&
+    if (!this._clickedNode) {
       this._externalEventHandler.onItemMouseOver({
         type: 'relationship',
         item: relationship
       })
+      this._moveGfxBetweenLayers(relationship, 'front')
+    }
   }
 
   bindRelationshipHoverEvent(relationshipGfx: Container): void {
@@ -364,6 +364,18 @@ class EventHandler {
         ) as RelationshipModel
       )
     )
+  }
+
+  bindRelationshipUnhoverEvent(relationshipGfx: Container): void {
+    relationshipGfx.on('mouseout', () => {
+      this._externalEventHandler.onItemMouseOver({
+        type: 'canvas',
+        item: {
+          nodeCount: this._graph.getNodes().length,
+          relationshipCount: this._graph.getRelationships().length
+        }
+      })
+    })
   }
 
   bindContextMenuExpandCollapseArcClickEvent(

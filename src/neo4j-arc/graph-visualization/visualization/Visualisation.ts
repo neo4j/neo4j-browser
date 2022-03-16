@@ -45,8 +45,10 @@ class Visualisation {
   private _frontNodesLayer: Container
   private _contextMenuLayer: Container
   private _nodesLayer: Container
+  private _frontRelationshipsLayer: Container
+  private _hoverRelationshipHighlightGfx: Container
   private _relationshipsLayer: Container
-  private _hoverHighlightGfx: Container
+  private _hoverNodeHighlightGfx: Container
   private _contextMenuGfx: Container
 
   private _style: GraphStyleModel
@@ -108,6 +110,12 @@ class Visualisation {
     this._relationshipsLayer = new Container()
     this._viewport.addChild(this._relationshipsLayer)
 
+    this._frontRelationshipsLayer = new Container()
+    this._viewport.addChild(this._frontRelationshipsLayer)
+    this._hoverRelationshipHighlightGfx = new Container()
+    this._hoverRelationshipHighlightGfx.alpha = 0.35
+    this._frontRelationshipsLayer.addChild(this._hoverRelationshipHighlightGfx)
+
     this._contextMenuLayer = new Container()
     this._viewport.addChild(this._contextMenuLayer)
 
@@ -119,10 +127,9 @@ class Visualisation {
 
     this._frontNodesLayer = new Container()
     this._viewport.addChild(this._frontNodesLayer)
-    this._hoverHighlightGfx = new Container()
-    this._hoverHighlightGfx.name = 'HOVER_HIGHLIGHT'
-    this._hoverHighlightGfx.alpha = 0.35
-    this._frontNodesLayer.addChild(this._hoverHighlightGfx)
+    this._hoverNodeHighlightGfx = new Container()
+    this._hoverNodeHighlightGfx.alpha = 0.35
+    this._frontNodesLayer.addChild(this._hoverNodeHighlightGfx)
 
     this._clickedNode = null
 
@@ -277,6 +284,7 @@ class Visualisation {
 
         // Bind relationship events.
         this._eventHandler.bindRelationshipHoverEvent(relationshipGfx)
+        this._eventHandler.bindRelationshipUnhoverEvent(relationshipGfx)
       }
 
       this._relationshipsLayer.addChild(relationshipGfx)
@@ -389,16 +397,7 @@ class Visualisation {
           (previousZoomStep < 3 && this.zoomStep >= 3) ||
           (previousZoomStep >= 3 && this.zoomStep < 3)
         ) {
-          arrow.clear()
-          this._relationshipRenderer.drawArrowBySvgPath(
-            arrow,
-            relationshipData.arrow?.outline(
-              this.zoomStep >= 3 ? relationshipData.shortCaptionLength : 0
-            ),
-            colourToNumber(
-              this._style.forRelationship(relationshipData).get('color')
-            )
-          )
+          this.redrawRelationshipArrow(arrow, relationshipData)
         }
       }
     })
@@ -416,6 +415,32 @@ class Visualisation {
     // vGraph
     //   .getRelationships()
     //   .forEach(r => console.log(r.id, r.shortCaptionLength, r.shortCaption))
+  }
+
+  private redrawRelationshipArrow(
+    arrow: Graphics,
+    relationship: RelationshipModel
+  ): void {
+    arrow.clear()
+    this._relationshipRenderer.drawArrowBySvgPath(
+      arrow,
+      relationship.arrow?.outline(
+        this.zoomStep >= 3 ? relationship.shortCaptionLength : 0
+      ),
+      colourToNumber(this._style.forRelationship(relationship).get('color'))
+    )
+  }
+
+  private layoutRelationshipGfx(
+    relationshipGfx: Container,
+    relationship: RelationshipModel
+  ): void {
+    relationshipGfx.x = relationship.source.x
+    relationshipGfx.y = relationship.source.y
+    relationshipGfx.rotation = Math.atan2(
+      relationship.target.y - relationship.source.y,
+      relationship.target.x - relationship.source.x
+    )
   }
 
   updateLayout(nodeIds?: string[]): void {
@@ -443,8 +468,8 @@ class Visualisation {
       : this._graph.getRelationships()
 
     if (this._clickedNode) {
-      this._hoverHighlightGfx.x = this._clickedNode.x
-      this._hoverHighlightGfx.y = this._clickedNode.y
+      this._hoverNodeHighlightGfx.x = this._clickedNode.x
+      this._hoverNodeHighlightGfx.y = this._clickedNode.y
 
       this._contextMenuGfx.x = this._clickedNode.x
       this._contextMenuGfx.y = this._clickedNode.y
@@ -505,22 +530,10 @@ class Visualisation {
 
       const arrow = relationshipGfx.getChildByName(ARROW_NAME) as Graphics
       if (arrow.visible) {
-        arrow.clear()
-        this._relationshipRenderer.drawArrowBySvgPath(
-          arrow,
-          relationship.arrow?.outline(
-            this.zoomStep >= 3 ? relationship.shortCaptionLength : 0
-          ),
-          colourToNumber(this._style.forRelationship(relationship).get('color'))
-        )
+        this.redrawRelationshipArrow(arrow, relationship)
       }
 
-      relationshipGfx.x = relationship.source.x
-      relationshipGfx.y = relationship.source.y
-      relationshipGfx.rotation = Math.atan2(
-        relationship.target.y - relationship.source.y,
-        relationship.target.x - relationship.source.x
-      )
+      this.layoutRelationshipGfx(relationshipGfx, relationship)
 
       // console.log(
       //   this._style
@@ -545,10 +558,10 @@ class Visualisation {
     const nodeCaptionGfx = this._nodeDataToNodeCaptionGfx[node.id]
     this._nodesLayer.removeChild(nodeShapeGfx)
     this._nodesLayer.removeChild(nodeCaptionGfx)
-    this._hoverHighlightGfx.removeChildren()
-    this._hoverHighlightGfx.x = node.x
-    this._hoverHighlightGfx.y = node.y
-    this._hoverHighlightGfx.addChild(
+    this._hoverNodeHighlightGfx.removeChildren()
+    this._hoverNodeHighlightGfx.x = node.x
+    this._hoverNodeHighlightGfx.y = node.y
+    this._hoverNodeHighlightGfx.addChild(
       this._nodeRenderer.drawNodeCircleSprite(node.radius + 4, '#6ac6ff')
     )
     this._frontNodesLayer.addChild(nodeShapeGfx)
@@ -556,7 +569,7 @@ class Visualisation {
   }
 
   private moveNodeGfxToBehind(node: NodeModel): void {
-    this._hoverHighlightGfx.removeChildren()
+    this._hoverNodeHighlightGfx.removeChildren()
     const nodeShapeGfx = this._nodeDataToNodeShapeGfx[node.id]
     const nodeCaptionGfx = this._nodeDataToNodeCaptionGfx[node.id]
     this._frontNodesLayer.removeChild(nodeShapeGfx)
@@ -565,12 +578,35 @@ class Visualisation {
     this._nodesLayer.addChild(nodeCaptionGfx)
   }
 
+  private moveRelationshipGfxToFront(relationship: RelationshipModel): void {
+    const relationshipGfx =
+      this._relationshipDataToRelationshipGfx[relationship.id]
+    this._relationshipsLayer.removeChild(relationshipGfx)
+    this._hoverRelationshipHighlightGfx.removeChildren()
+    this.layoutRelationshipGfx(
+      this._hoverRelationshipHighlightGfx,
+      relationship
+    )
+    const arrow = new Graphics()
+    this._relationshipRenderer.drawArrowBySvgPath(
+      arrow,
+      relationship.arrow?.overlay(16),
+      colourToNumber(this._style.forRelationship(relationship).get('color'))
+    )
+    this._hoverRelationshipHighlightGfx.addChild(arrow)
+    this._frontRelationshipsLayer.addChild(relationshipGfx)
+  }
+
   moveGfxBetweenLayers: MoveGfxBetweenLayers = (data, position) => {
     console.log(data, position)
     if (data.isNode) {
       if (position === 'front')
         this.moveNodeGfxToFront(data as unknown as NodeModel)
       else this.moveNodeGfxToBehind(data as unknown as NodeModel)
+    } else {
+      if (position === 'front') {
+        this.moveRelationshipGfxToFront(data as unknown as RelationshipModel)
+      }
     }
   }
 
