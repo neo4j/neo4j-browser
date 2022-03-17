@@ -3,19 +3,19 @@
 exports[`GuideDrawer renders guide slide when a guide is selected 1`] = `
 <div>
   <div
-    class="sc-bbmXgH ibwxLn"
+    class="sc-dvQaRk iuiENh"
     data-testid="guidesDrawer"
     id="guide-drawer"
   >
     <h4
-      class="sc-gGBfsJ ivunXR"
+      class="sc-TBWPX fiJAaN"
     >
       <span
-        class="sc-fYxtnH jGPXoR"
+        class="sc-ZOtfp jppFYN"
         data-testid="guidesBackButton"
       >
         <i
-          class="sc-itybZL lampxY"
+          class="sc-bdvvtL kSEjuX"
         >
           <span
             class="SVGInline SVGInline--cleaned"
@@ -31,16 +31,16 @@ exports[`GuideDrawer renders guide slide when a guide is selected 1`] = `
        
     </h4>
     <div
-      class="sc-cIShpX doZfFN"
+      class="sc-bTfYFJ bpHA-Dr"
     />
     <div
-      class="sc-jnlKLf QlpBx"
+      class="sc-jIkXHa dUPzoV"
       title="Title"
     >
       Title
     </div>
     <div
-      class="sc-jqCOkK fWvoOV disable-font-ligatures"
+      class="sc-Galmp ivowtc disable-font-ligatures"
     >
       <div>
         <div>
@@ -55,55 +55,55 @@ exports[`GuideDrawer renders guide slide when a guide is selected 1`] = `
 exports[`GuideDrawer renders list view including Remote Guides list 1`] = `
 <div>
   <div
-    class="sc-bbmXgH ibwxLn"
+    class="sc-dvQaRk iuiENh"
     data-testid="guidesDrawer"
     id="guide-drawer"
   >
     <h4
-      class="sc-gGBfsJ ivunXR"
+      class="sc-TBWPX fiJAaN"
     >
       Neo4j Browser Guides
        
     </h4>
     <div
-      class="sc-cIShpX doZfFN"
+      class="sc-bTfYFJ bpHA-Dr"
     />
     <div
-      class="sc-gzOgki bSsAdI slide"
+      class="sc-brSvTw bogpyh slide"
       style="padding: 0px 15px;"
     >
       You can also access Browser guides by running
       <span
-        class="sc-eqIVtm fVNVwW remove-play-icon"
+        class="sc-AjmGg guIoaZ remove-play-icon"
         data-populate=":guide [guide name]"
       >
         :guide [guide name]
       </span>
       in the code editor.
       <div
-        class="sc-fjmCvl fGEqRT"
+        class="sc-gGPzkF bPrEBZ"
       >
         <div
-          class="sc-bRBYWo lhkqIY"
+          class="sc-efQSVx cziNtw"
         >
           Built-in guides
         </div>
       </div>
       <div
-        class="sc-CtfFt klkWoU"
+        class="sc-hZpJaK dsOSrf"
       >
         <li
-          class="sc-hGoxap ldWomB"
+          class="sc-JkixQ kibkeD"
           data-testid="builtInGuideintro"
         >
           <span
-            class="sc-eqIVtm fVNVwW remove-play-icon"
+            class="sc-AjmGg guIoaZ remove-play-icon"
           >
             :guide 
             intro
           </span>
           <div
-            class="sc-fjmCvl hdadTk"
+            class="sc-gGPzkF jYSqFX"
           >
              
             Navigating Neo4j Browser
@@ -111,17 +111,17 @@ exports[`GuideDrawer renders list view including Remote Guides list 1`] = `
           </div>
         </li>
         <li
-          class="sc-hGoxap ldWomB"
+          class="sc-JkixQ kibkeD"
           data-testid="builtInGuideconcepts"
         >
           <span
-            class="sc-eqIVtm fVNVwW remove-play-icon"
+            class="sc-AjmGg guIoaZ remove-play-icon"
           >
             :guide 
             concepts
           </span>
           <div
-            class="sc-fjmCvl hdadTk"
+            class="sc-gGPzkF jYSqFX"
           >
              
             Property graph model concepts
@@ -129,17 +129,17 @@ exports[`GuideDrawer renders list view including Remote Guides list 1`] = `
           </div>
         </li>
         <li
-          class="sc-hGoxap ldWomB"
+          class="sc-JkixQ kibkeD"
           data-testid="builtInGuidecypher"
         >
           <span
-            class="sc-eqIVtm fVNVwW remove-play-icon"
+            class="sc-AjmGg guIoaZ remove-play-icon"
           >
             :guide 
             cypher
           </span>
           <div
-            class="sc-fjmCvl hdadTk"
+            class="sc-gGPzkF jYSqFX"
           >
              
             Cypher basics - create, match, delete
@@ -147,17 +147,17 @@ exports[`GuideDrawer renders list view including Remote Guides list 1`] = `
           </div>
         </li>
         <li
-          class="sc-hGoxap ldWomB"
+          class="sc-JkixQ kibkeD"
           data-testid="builtInGuidemovie-graph"
         >
           <span
-            class="sc-eqIVtm fVNVwW remove-play-icon"
+            class="sc-AjmGg guIoaZ remove-play-icon"
           >
             :guide 
             movie-graph
           </span>
           <div
-            class="sc-fjmCvl hdadTk"
+            class="sc-gGPzkF jYSqFX"
           >
              
             Queries and recommendations with Cypher - movie use case}
@@ -165,17 +165,17 @@ exports[`GuideDrawer renders list view including Remote Guides list 1`] = `
           </div>
         </li>
         <li
-          class="sc-hGoxap ldWomB"
+          class="sc-JkixQ kibkeD"
           data-testid="builtInGuidenorthwind-graph"
         >
           <span
-            class="sc-eqIVtm fVNVwW remove-play-icon"
+            class="sc-AjmGg guIoaZ remove-play-icon"
           >
             :guide 
             northwind-graph
           </span>
           <div
-            class="sc-fjmCvl hdadTk"
+            class="sc-gGPzkF jYSqFX"
           >
              
             Translate and import relation data into graph
@@ -184,42 +184,42 @@ exports[`GuideDrawer renders list view including Remote Guides list 1`] = `
         </li>
       </div>
       <div
-        class="sc-fjmCvl fGEqRT"
+        class="sc-gGPzkF bPrEBZ"
       >
         <div
-          class="sc-bRBYWo lhkqIY"
+          class="sc-efQSVx cziNtw"
           data-testid="remoteGuidesTitle"
         >
           Remote Guides
         </div>
       </div>
       <div
-        class="sc-CtfFt klkWoU"
+        class="sc-hZpJaK dsOSrf"
       >
         <li
-          class="sc-krDsej iYMmXZ"
+          class="sc-hkgtus eoyLrk"
         >
           <span
-            class="sc-eqIVtm fVNVwW remove-play-icon"
+            class="sc-AjmGg guIoaZ remove-play-icon"
             data-testid="remoteGuideidentifier"
           >
             Title
           </span>
           <span
-            class="sc-bHwgHz jgEFHY"
+            class="sc-jivBlf cDmpfO"
             data-testid="removeGuideidentifier"
           >
             <i
-              class="sc-dTdPqK cujozA sl-bin"
+              class="sc-bdvvtL jIQruX sl-bin"
             />
           </span>
         </li>
       </div>
       <div
-        class="sc-TFwJa inRgnw"
+        class="sc-dkQkyq kjJVyU"
       >
         <a
-          class="sc-dVhcbM gVgmjE"
+          class="sc-cNKqjZ gsMctE"
           href="https://neo4j.com/graphgists/"
           rel="noreferrer"
           target="_blank"
@@ -235,55 +235,55 @@ exports[`GuideDrawer renders list view including Remote Guides list 1`] = `
 exports[`GuideDrawer renders list view without Remote Guides 1`] = `
 <div>
   <div
-    class="sc-bbmXgH ibwxLn"
+    class="sc-dvQaRk iuiENh"
     data-testid="guidesDrawer"
     id="guide-drawer"
   >
     <h4
-      class="sc-gGBfsJ ivunXR"
+      class="sc-TBWPX fiJAaN"
     >
       Neo4j Browser Guides
        
     </h4>
     <div
-      class="sc-cIShpX doZfFN"
+      class="sc-bTfYFJ bpHA-Dr"
     />
     <div
-      class="sc-gzOgki bSsAdI slide"
+      class="sc-brSvTw bogpyh slide"
       style="padding: 0px 15px;"
     >
       You can also access Browser guides by running
       <span
-        class="sc-eqIVtm fVNVwW remove-play-icon"
+        class="sc-AjmGg guIoaZ remove-play-icon"
         data-populate=":guide [guide name]"
       >
         :guide [guide name]
       </span>
       in the code editor.
       <div
-        class="sc-fjmCvl fGEqRT"
+        class="sc-gGPzkF bPrEBZ"
       >
         <div
-          class="sc-bRBYWo lhkqIY"
+          class="sc-efQSVx cziNtw"
         >
           Built-in guides
         </div>
       </div>
       <div
-        class="sc-CtfFt klkWoU"
+        class="sc-hZpJaK dsOSrf"
       >
         <li
-          class="sc-hGoxap ldWomB"
+          class="sc-JkixQ kibkeD"
           data-testid="builtInGuideintro"
         >
           <span
-            class="sc-eqIVtm fVNVwW remove-play-icon"
+            class="sc-AjmGg guIoaZ remove-play-icon"
           >
             :guide 
             intro
           </span>
           <div
-            class="sc-fjmCvl hdadTk"
+            class="sc-gGPzkF jYSqFX"
           >
              
             Navigating Neo4j Browser
@@ -291,17 +291,17 @@ exports[`GuideDrawer renders list view without Remote Guides 1`] = `
           </div>
         </li>
         <li
-          class="sc-hGoxap ldWomB"
+          class="sc-JkixQ kibkeD"
           data-testid="builtInGuideconcepts"
         >
           <span
-            class="sc-eqIVtm fVNVwW remove-play-icon"
+            class="sc-AjmGg guIoaZ remove-play-icon"
           >
             :guide 
             concepts
           </span>
           <div
-            class="sc-fjmCvl hdadTk"
+            class="sc-gGPzkF jYSqFX"
           >
              
             Property graph model concepts
@@ -309,17 +309,17 @@ exports[`GuideDrawer renders list view without Remote Guides 1`] = `
           </div>
         </li>
         <li
-          class="sc-hGoxap ldWomB"
+          class="sc-JkixQ kibkeD"
           data-testid="builtInGuidecypher"
         >
           <span
-            class="sc-eqIVtm fVNVwW remove-play-icon"
+            class="sc-AjmGg guIoaZ remove-play-icon"
           >
             :guide 
             cypher
           </span>
           <div
-            class="sc-fjmCvl hdadTk"
+            class="sc-gGPzkF jYSqFX"
           >
              
             Cypher basics - create, match, delete
@@ -327,17 +327,17 @@ exports[`GuideDrawer renders list view without Remote Guides 1`] = `
           </div>
         </li>
         <li
-          class="sc-hGoxap ldWomB"
+          class="sc-JkixQ kibkeD"
           data-testid="builtInGuidemovie-graph"
         >
           <span
-            class="sc-eqIVtm fVNVwW remove-play-icon"
+            class="sc-AjmGg guIoaZ remove-play-icon"
           >
             :guide 
             movie-graph
           </span>
           <div
-            class="sc-fjmCvl hdadTk"
+            class="sc-gGPzkF jYSqFX"
           >
              
             Queries and recommendations with Cypher - movie use case}
@@ -345,17 +345,17 @@ exports[`GuideDrawer renders list view without Remote Guides 1`] = `
           </div>
         </li>
         <li
-          class="sc-hGoxap ldWomB"
+          class="sc-JkixQ kibkeD"
           data-testid="builtInGuidenorthwind-graph"
         >
           <span
-            class="sc-eqIVtm fVNVwW remove-play-icon"
+            class="sc-AjmGg guIoaZ remove-play-icon"
           >
             :guide 
             northwind-graph
           </span>
           <div
-            class="sc-fjmCvl hdadTk"
+            class="sc-gGPzkF jYSqFX"
           >
              
             Translate and import relation data into graph
@@ -364,10 +364,10 @@ exports[`GuideDrawer renders list view without Remote Guides 1`] = `
         </li>
       </div>
       <div
-        class="sc-TFwJa inRgnw"
+        class="sc-dkQkyq kjJVyU"
       >
         <a
-          class="sc-dVhcbM gVgmjE"
+          class="sc-cNKqjZ gsMctE"
           href="https://neo4j.com/graphgists/"
           rel="noreferrer"
           target="_blank"
