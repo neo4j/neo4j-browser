@@ -27,8 +27,6 @@ export type VizItem =
   | CanvasItem
   | StatusItem
 
-export type VizItemProperty = { key: string; value: string; type: string }
-
 export type NodeItem = {
   type: 'node'
   item: Pick<NodeModel, 'id' | 'labels' | 'propertyList'>

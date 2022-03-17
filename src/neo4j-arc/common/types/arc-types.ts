@@ -35,3 +35,5 @@ export type BasicNodesAndRels = {
   nodes: BasicNode[]
   relationships: BasicRelationship[]
 }
+
+export type VizItemProperty = { key: string; value: string; type: string }

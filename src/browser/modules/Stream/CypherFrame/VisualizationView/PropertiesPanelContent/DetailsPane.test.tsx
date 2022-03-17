@@ -20,13 +20,9 @@
 import { render, screen } from '@testing-library/react'
 import React from 'react'
 
-import {
-  GraphStyleModel,
-  VizItem,
-  VizItemProperty
-} from 'neo4j-arc/graph-visualization'
-
 import { DETAILS_PANE_STEP_SIZE, DetailsPane } from './DetailsPane'
+import { VizItemProperty } from 'neo4j-arc/common'
+import { GraphStyleModel, VizItem } from 'neo4j-arc/graph-visualization'
 
 describe('<DetailsPane />', () => {
   const mockGraphStyle = new GraphStyleModel()

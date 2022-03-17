@@ -20,15 +20,12 @@
 import React, { useState } from 'react'
 
 import { ClipboardCopier, PropertiesTable, upperFirst } from 'neo4j-arc/common'
-import {
-  GraphStyleModel,
-  NodeItem,
-  RelationshipItem
-} from 'neo4j-arc/graph-visualization'
+import { NodeItem, RelationshipItem } from '../../types'
 
 import { PaneBody, PaneHeader, PaneTitle } from '../styled'
 import { NodeLabel } from './NodeLabel'
 import { RelType } from './RelType'
+import { GraphStyleModel } from '../../models/GraphStyle'
 
 export const DETAILS_PANE_STEP_SIZE = 1000
 export type DetailsPaneProps = {

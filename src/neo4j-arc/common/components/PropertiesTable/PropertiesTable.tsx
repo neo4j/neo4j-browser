@@ -19,8 +19,6 @@
  */
 import React, { useState } from 'react'
 
-import { VizItemProperty } from 'neo4j-arc/graph-visualization'
-
 import { ClickableUrls } from '../ClickableUrls'
 import {
   AlternatingTable,
@@ -32,6 +30,7 @@ import {
 } from './PropertiesTable.style'
 import { ClipboardCopier } from '../ClipboardCopier'
 import { ShowMoreOrAll } from '../ShowMoreOrAll/ShowMoreOrAll'
+import { VizItemProperty } from 'neo4j-arc/common'
 
 export const ELLIPSIS = '\u2026'
 export const WIDE_VIEW_THRESHOLD = 900

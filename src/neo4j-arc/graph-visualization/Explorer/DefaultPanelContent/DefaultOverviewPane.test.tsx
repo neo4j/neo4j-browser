@@ -18,16 +18,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { render, screen } from '@testing-library/react'
+import { GraphStyleModel } from '../../models/GraphStyle'
 import React from 'react'
 
+import DefaultOverviewPane, { OVERVIEW_STEP_SIZE } from './DefaultOverviewPane'
 import {
   GraphStats,
   GraphStatsLabels,
-  GraphStatsRelationshipTypes,
-  GraphStyleModel
-} from 'neo4j-arc/graph-visualization'
-
-import DefaultOverviewPane, { OVERVIEW_STEP_SIZE } from './DefaultOverviewPane'
+  GraphStatsRelationshipTypes
+} from '../../utils/mapper'
 
 describe('Default <OverviewPane />', () => {
   const graphStyle = new GraphStyleModel()

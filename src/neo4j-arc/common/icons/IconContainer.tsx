@@ -17,12 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React, { ReactNode } from 'react'
+import React, { CSSProperties, ReactNode } from 'react'
 import SVGInline from 'react-svg-inline'
-import styled, {
-  CSSProperties,
-  FlattenSimpleInterpolation
-} from 'styled-components'
+import styled, { FlattenSimpleInterpolation } from 'styled-components'
 
 const StyledI = styled.i<{
   isOpen?: boolean

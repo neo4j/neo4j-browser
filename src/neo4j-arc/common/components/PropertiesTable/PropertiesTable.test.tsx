@@ -20,7 +20,7 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import React from 'react'
 
-import { VizItem, VizItemProperty } from 'neo4j-arc/graph-visualization'
+import { VizItem } from 'neo4j-arc/graph-visualization'
 
 import {
   PropertiesTable,
@@ -29,6 +29,7 @@ import {
   MAX_LENGTH_WIDE,
   WIDE_VIEW_THRESHOLD
 } from './PropertiesTable'
+import { VizItemProperty } from 'neo4j-arc/common'
 
 describe('<DetailsPane />', () => {
   type RenderComponentProps = {

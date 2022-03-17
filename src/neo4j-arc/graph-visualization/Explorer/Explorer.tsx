@@ -21,14 +21,6 @@ import deepmerge from 'deepmerge'
 import { debounce } from 'lodash'
 import React, { Component } from 'react'
 
-import {
-  GetNodeNeighboursFn,
-  GraphModel,
-  GraphStats,
-  GraphStyleModel,
-  VizItem
-} from 'neo4j-arc/graph-visualization'
-
 import { Graph } from '../components/Graph'
 import { NodeInspectorPanel, defaultPanelWidth } from './NodeInspectorPanel'
 import { StyledFullSizeContainer, panelMinWidth } from './styled'
@@ -40,6 +32,11 @@ import {
 } from 'neo4j-arc/common'
 import { DetailsPaneProps } from './DefaultPanelContent/DefaultDetailsPane'
 import { OverviewPaneProps } from './DefaultPanelContent/DefaultOverviewPane'
+import { GraphStyleModel } from '../models/GraphStyle'
+import { VizItem } from '../types'
+import { GetNodeNeighboursFn } from '../models/GraphEventHandler'
+import { GraphStats } from '../utils/mapper'
+import { GraphModel } from '../models/Graph'
 
 type DeduplicateHelper = {
   nodes: BasicNode[]

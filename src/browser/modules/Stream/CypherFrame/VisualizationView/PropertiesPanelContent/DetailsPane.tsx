@@ -20,11 +20,11 @@
 import React, { useState } from 'react'
 
 import { ClipboardCopier, PropertiesTable, upperFirst } from 'neo4j-arc/common'
-import { DetailsPaneProps } from 'neo4j-arc/graph-visualization'
 
 import { StyleableNodeLabel } from './StyleableNodeLabel'
 import { StyleableRelType } from './StyleableRelType'
 import { PaneBody, PaneHeader, PaneTitle } from './styled'
+import { DetailsPaneProps } from 'neo4j-arc'
 
 export const DETAILS_PANE_STEP_SIZE = 1000
 export function DetailsPane({
