@@ -25,7 +25,7 @@ import {
   GraphStatsLabels,
   GraphStatsRelationshipTypes,
   GraphStyleModel
-} from 'graph-visualization'
+} from 'neo4j-arc/graph-visualization'
 
 import OverviewPane, { OVERVIEW_STEP_SIZE } from './OverviewPane'
 

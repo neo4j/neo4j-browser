@@ -17,11 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { BasicNode, BasicNodesAndRels } from 'common'
+import { BasicNode, BasicNodesAndRels } from 'neo4j-arc/common'
 
-import { GraphModel } from '../models/Graph'
-import { NodeModel } from '../models/Node'
-import { RelationshipModel } from '../models/Relationship'
+import { GraphModel } from './Graph'
+import { NodeModel } from './Node'
+import { RelationshipModel } from './Relationship'
 import { VizItem } from '../types'
 import {
   GraphStats,

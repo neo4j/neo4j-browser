@@ -23,7 +23,7 @@ import { withBus } from 'react-suber'
 import { Action, Dispatch } from 'redux'
 import { Bus } from 'suber'
 
-import { PlayIcon } from 'common'
+import { PlayIcon } from 'neo4j-arc/common'
 
 import { errorMessageFormater } from '../../errorMessageFormater'
 import {
@@ -56,7 +56,7 @@ import {
   isUnknownProcedureError
 } from 'services/cypherErrorsHelper'
 import { BrowserError } from 'services/exceptions'
-import { deepEquals } from 'common'
+import { deepEquals } from 'neo4j-arc/common'
 
 export type ErrorsViewProps = {
   result: BrowserRequestResult

@@ -20,7 +20,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { PlainPlayIcon } from 'common'
+import { PlainPlayIcon } from 'neo4j-arc/common'
 
 export const StyledTable = styled.table``
 export const StyledKey = styled.td`

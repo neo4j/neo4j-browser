@@ -19,7 +19,7 @@
  */
 import React, { useState } from 'react'
 
-import { VizItemProperty } from 'graph-visualization'
+import { VizItemProperty } from 'neo4j-arc/graph-visualization'
 
 import { ClickableUrls } from '../ClickableUrls'
 import {

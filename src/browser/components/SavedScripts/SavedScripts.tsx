@@ -22,7 +22,7 @@ import React, { useState } from 'react'
 import { useDrop } from 'react-dnd'
 import uuid from 'uuid'
 
-import { AddIcon } from 'common'
+import { AddIcon } from 'neo4j-arc/common'
 
 import {
   ExportButton,

@@ -19,7 +19,7 @@
  */
 import React from 'react'
 
-import { DownloadIcon } from 'common'
+import { DownloadIcon } from 'neo4j-arc/common'
 
 import {
   DropDownItemDivider,

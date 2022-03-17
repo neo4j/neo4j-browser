@@ -20,8 +20,8 @@
 import { GraphModel } from '../models/Graph'
 import { NodeModel } from '../models/Node'
 import { RelationshipModel } from '../models/Relationship'
-import { BasicNode, BasicRelationship } from 'common'
-import { optionalToString } from '../utils/utils'
+import { BasicNode, BasicRelationship } from 'neo4j-arc/common'
+import { optionalToString } from './utils'
 
 const mapProperties = (_: any) => Object.assign({}, ...stringifyValues(_))
 const stringifyValues = (obj: any) =>

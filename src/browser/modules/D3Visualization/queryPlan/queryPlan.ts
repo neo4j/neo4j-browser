@@ -24,7 +24,7 @@ import { scaleLog, scaleOrdinal } from 'd3-scale'
 import { BaseType, Selection, select as d3Select } from 'd3-selection'
 import 'd3-transition'
 
-import { measureText } from 'graph-visualization'
+import { measureText } from 'neo4j-arc/graph-visualization'
 
 import { groupBy, max, min, sum } from './arrays'
 

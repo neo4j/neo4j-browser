@@ -19,7 +19,7 @@
  */
 import styled from 'styled-components'
 
-import { StyledLabelChip, StyledRelationshipChip } from 'common'
+import { StyledLabelChip, StyledRelationshipChip } from 'neo4j-arc/common'
 
 export const legendRowHeight = 32
 

@@ -19,8 +19,8 @@
  */
 import React, { useState } from 'react'
 
-import { ClipboardCopier, PropertiesTable, upperFirst } from 'common'
-import { DetailsPaneProps } from 'graph-visualization'
+import { ClipboardCopier, PropertiesTable, upperFirst } from 'neo4j-arc/common'
+import { DetailsPaneProps } from 'neo4j-arc/graph-visualization'
 
 import { StyleableNodeLabel } from './StyleableNodeLabel'
 import { StyleableRelType } from './StyleableRelType'

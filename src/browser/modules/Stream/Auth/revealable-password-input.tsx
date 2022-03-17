@@ -16,7 +16,7 @@
  */
 import React, { useEffect, useRef } from 'react'
 
-import { EyeIcon, EyeSlashIcon } from 'common'
+import { EyeIcon, EyeSlashIcon } from 'neo4j-arc/common'
 
 import {
   StyledConnectionTextInput,

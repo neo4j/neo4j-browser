@@ -20,7 +20,7 @@
     "import/no-webpack-loader-syntax": "off",
     "no-restricted-imports": [
       "error",
-      { "patterns": ["*graphVisualization*", "*/src/common*", "common/*"] }
+      { "patterns": ["*/neo4j-arc/*", "neo4j-arc/common/*"] }
     ]
   },
   "globals": {
@@ -80,10 +80,7 @@
       }
     },
     {
-      "files": [
-        "src/graphVisualization/**/*.ts",
-        "src/graphVisualization/**/*.tsx"
-      ],
+      "files": ["src/neo4j-arc/*"],
       "rules": {
         "no-restricted-imports": [
           "error",

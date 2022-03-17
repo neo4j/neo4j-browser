@@ -19,12 +19,12 @@
  */
 import React, { useState } from 'react'
 
-import { ClipboardCopier, PropertiesTable, upperFirst } from 'common'
+import { ClipboardCopier, PropertiesTable, upperFirst } from 'neo4j-arc/common'
 import {
   GraphStyleModel,
   NodeItem,
   RelationshipItem
-} from 'graph-visualization'
+} from 'neo4j-arc/graph-visualization'
 
 import { PaneBody, PaneHeader, PaneTitle } from '../styled'
 import { NodeLabel } from './NodeLabel'

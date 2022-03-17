@@ -20,7 +20,7 @@
 import { flatten, map, take } from 'lodash-es'
 import neo4j from 'neo4j-driver'
 
-import { upperFirst, BasicNodesAndRels } from 'common'
+import { upperFirst, BasicNodesAndRels } from 'neo4j-arc/common'
 
 import {
   escapeReservedProps,

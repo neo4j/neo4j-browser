@@ -19,7 +19,11 @@
  */
 import React, { useState } from 'react'
 
-import { numberToUSLocale, ShowMoreOrAll, WarningMessage } from 'common'
+import {
+  numberToUSLocale,
+  ShowMoreOrAll,
+  WarningMessage
+} from 'neo4j-arc/common'
 import { GraphStyleModel } from '../../models/GraphStyle'
 import { GraphStats } from '../../utils/mapper'
 

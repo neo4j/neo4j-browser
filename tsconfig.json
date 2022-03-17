@@ -29,7 +29,8 @@
       "browser-hooks/*": ["browser/hooks/*"],
       "browser-styles/*": ["browser/styles/*"],
       "project-root/*": ["../*"],
-      "graph-visualization": ["graphVisualization"],
+      "neo4j-arc/graph-visualization": ["neo4j-arc/graph-visualization"],
+      "neo4j-arc/common": ["neo4j-arc/common"],
       "icons/*": ["browser/icons/*"]
     }
   },

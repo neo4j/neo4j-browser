@@ -19,7 +19,7 @@
  */
 import React from 'react'
 
-import { toKeyString } from 'common'
+import { toKeyString } from 'neo4j-arc/common'
 
 import { flattenAttributes, mapSysInfoRecords } from './sysinfoUtils'
 import { toHumanReadableBytes } from 'services/utils'

@@ -20,7 +20,7 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import React from 'react'
 
-import { VizItem, VizItemProperty } from 'graph-visualization'
+import { VizItem, VizItemProperty } from 'neo4j-arc/graph-visualization'
 
 import {
   PropertiesTable,

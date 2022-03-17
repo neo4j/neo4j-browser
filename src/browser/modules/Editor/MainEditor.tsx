@@ -33,7 +33,7 @@ import {
   isMac,
   UpdateFileIcon,
   RunIcon
-} from 'common'
+} from 'neo4j-arc/common'
 
 import Monaco, { MonacoHandles } from './Monaco'
 import {

@@ -17,7 +17,7 @@
 import { render } from '@testing-library/react'
 import React from 'react'
 
-import { ClickableUrls } from 'common'
+import { ClickableUrls } from 'neo4j-arc/common'
 
 describe('clickable-urls', () => {
   describe('convertUrlsToHrefTags', () => {

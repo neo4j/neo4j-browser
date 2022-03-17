@@ -27,7 +27,7 @@ import {
   GraphStats,
   GraphStyleModel,
   VizItem
-} from 'graph-visualization'
+} from 'neo4j-arc/graph-visualization'
 
 import { Graph } from '../components/Graph'
 import { NodeInspectorPanel, defaultPanelWidth } from './NodeInspectorPanel'
@@ -37,7 +37,7 @@ import {
   BasicNodesAndRels,
   BasicRelationship,
   deepEquals
-} from 'common'
+} from 'neo4j-arc/common'
 import { DetailsPaneProps } from './DefaultPanelContent/DefaultDetailsPane'
 import { OverviewPaneProps } from './DefaultPanelContent/DefaultOverviewPane'
 

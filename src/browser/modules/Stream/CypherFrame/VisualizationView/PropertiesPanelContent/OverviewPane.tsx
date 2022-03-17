@@ -19,8 +19,12 @@
  */
 import React, { useState } from 'react'
 
-import { numberToUSLocale, ShowMoreOrAll, WarningMessage } from 'common'
-import { OverviewPaneProps } from 'graph-visualization'
+import {
+  numberToUSLocale,
+  ShowMoreOrAll,
+  WarningMessage
+} from 'neo4j-arc/common'
+import { OverviewPaneProps } from 'neo4j-arc/graph-visualization'
 
 import { StyleableNodeLabel } from './StyleableNodeLabel'
 import { StyleableRelType } from './StyleableRelType'
