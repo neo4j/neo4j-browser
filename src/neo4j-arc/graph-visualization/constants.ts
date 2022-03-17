@@ -58,3 +58,5 @@ export const ZOOM_FIT_PADDING_PERCENT = 0.05
 export const CIRCLE_NAME = 'CIRCLE'
 export const CAPTION_NAME = 'CAPTION'
 export const ARROW_NAME = 'ARROW'
+
+export const HOVER_HIGHLIGHT_COLOUR = '#6ac6ff'

@@ -12,7 +12,12 @@ import {
 
 import { GraphStyleModel } from '../models/GraphStyle'
 
-import { ARROW_NAME, CAPTION_NAME, CIRCLE_NAME } from '../constants'
+import {
+  ARROW_NAME,
+  CAPTION_NAME,
+  CIRCLE_NAME,
+  HOVER_HIGHLIGHT_COLOUR
+} from '../constants'
 import EventHandler from '../eventHandler/EventHandler'
 import ExternalEventHandler from '../eventHandler/ExternalEventHandler'
 import ForceSimulation from '../forceSimulation/ForceSimulation'
@@ -412,9 +417,18 @@ class Visualisation {
         )
       }
     )
-    // vGraph
-    //   .getRelationships()
-    //   .forEach(r => console.log(r.id, r.shortCaptionLength, r.shortCaption))
+  }
+
+  private redrawRelationshipHighlight(
+    arrow: Graphics,
+    relationship: RelationshipModel
+  ): void {
+    arrow.clear()
+    this._relationshipRenderer.drawArrowBySvgPath(
+      arrow,
+      relationship.arrow?.overlay(16),
+      colourToNumber(HOVER_HIGHLIGHT_COLOUR)
+    )
   }
 
   private redrawRelationshipArrow(
@@ -562,7 +576,10 @@ class Visualisation {
     this._hoverNodeHighlightGfx.x = node.x
     this._hoverNodeHighlightGfx.y = node.y
     this._hoverNodeHighlightGfx.addChild(
-      this._nodeRenderer.drawNodeCircleSprite(node.radius + 4, '#6ac6ff')
+      this._nodeRenderer.drawNodeCircleSprite(
+        node.radius + 4,
+        HOVER_HIGHLIGHT_COLOUR
+      )
     )
     this._frontNodesLayer.addChild(nodeShapeGfx)
     this._frontNodesLayer.addChild(nodeCaptionGfx)
@@ -588,13 +605,17 @@ class Visualisation {
       relationship
     )
     const arrow = new Graphics()
-    this._relationshipRenderer.drawArrowBySvgPath(
-      arrow,
-      relationship.arrow?.overlay(16),
-      colourToNumber(this._style.forRelationship(relationship).get('color'))
-    )
+    this.redrawRelationshipHighlight(arrow, relationship)
     this._hoverRelationshipHighlightGfx.addChild(arrow)
     this._frontRelationshipsLayer.addChild(relationshipGfx)
+  }
+
+  private moveRelationshipGfxToBehind(relationship: RelationshipModel): void {
+    this._hoverRelationshipHighlightGfx.removeChildren()
+    const relationshipGfx =
+      this._relationshipDataToRelationshipGfx[relationship.id]
+    this._frontRelationshipsLayer.removeChild(relationshipGfx)
+    this._relationshipsLayer.addChild(relationshipGfx)
   }
 
   moveGfxBetweenLayers: MoveGfxBetweenLayers = (data, position) => {
@@ -606,7 +627,8 @@ class Visualisation {
     } else {
       if (position === 'front') {
         this.moveRelationshipGfxToFront(data as unknown as RelationshipModel)
-      }
+      } else
+        this.moveRelationshipGfxToBehind(data as unknown as RelationshipModel)
     }
   }
 

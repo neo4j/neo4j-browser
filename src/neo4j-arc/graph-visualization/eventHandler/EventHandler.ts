@@ -366,8 +366,12 @@ class EventHandler {
     )
   }
 
+  unhoverRelationship(relationship: RelationshipModel): void {
+    this._moveGfxBetweenLayers(relationship, 'behind')
+  }
+
   bindRelationshipUnhoverEvent(relationshipGfx: Container): void {
-    relationshipGfx.on('mouseout', () => {
+    relationshipGfx.on('mouseout', (event: InteractionEvent) => {
       this._externalEventHandler.onItemMouseOver({
         type: 'canvas',
         item: {
@@ -375,6 +379,13 @@ class EventHandler {
           relationshipCount: this._graph.getRelationships().length
         }
       })
+      this.unhoverRelationship(
+        this._graph.findRelationshipById(
+          this._relationshipGfxToRelationshipData.get(
+            event.currentTarget
+          ) as string
+        ) as RelationshipModel
+      )
     })
   }
 
