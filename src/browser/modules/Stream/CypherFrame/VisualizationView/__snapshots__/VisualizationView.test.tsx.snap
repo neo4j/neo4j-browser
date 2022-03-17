@@ -74,12 +74,12 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
           </g>
         </svg>
         <div
-          class="sc-bkkeKt jABzGR"
+          class="sc-bkkeKt evQJwy"
           offset="212.8"
         >
           <button
             aria-label="zoom-in"
-            class="sc-ieecCq gXyTgH zoom-in"
+            class="sc-ieecCq bzzNkA zoom-in"
           >
             <i
               class="sc-bdvvtL kSEjuX"
@@ -96,7 +96,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
           </button>
           <button
             aria-label="zoom-out"
-            class="sc-ieecCq gXyTgH zoom-out"
+            class="sc-ieecCq bzzNkA zoom-out"
           >
             <i
               class="sc-bdvvtL kSEjuX"
@@ -113,7 +113,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
           </button>
           <button
             aria-label="zoom-to-fit"
-            class="sc-ieecCq gXyTgH"
+            class="sc-ieecCq bzzNkA"
           >
             <i
               class="sc-bdvvtL kSEjuX"

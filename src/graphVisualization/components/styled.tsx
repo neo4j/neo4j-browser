@@ -111,7 +111,7 @@ export const StyledZoomHolder = styled.div<{
   display: flex;
   flex-direction: column;
   bottom: 0;
-  right: ${props => props.offset}px
+  right: ${props => props.offset}px;
   border-left: ${props => props.theme.inFrameBorder};
   border-right: ${props => props.theme.inFrameBorder};
   border-top: ${props => props.theme.inFrameBorder};
@@ -121,7 +121,7 @@ export const StyledZoomHolder = styled.div<{
 
 export const StyledZoomButton = styled.button`
   border: none;
-  color: ${props => props.theme.frameButtonTextColor}
+  color: ${props => props.theme.frameButtonTextColor};
   background: transparent;
   padding: 8px;
   &:hover {
