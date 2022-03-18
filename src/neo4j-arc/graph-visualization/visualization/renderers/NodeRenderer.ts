@@ -9,7 +9,7 @@ import {
   settings
 } from 'pixi.js'
 
-import { CAPTION_NAME, CIRCLE_NAME } from '../../constants'
+import { CAPTION_NAME, CIRCLE_NAME, ZOOM_MAX_SCALE } from '../../constants'
 import { colourToNumber } from '../../utils/colour'
 
 const TEXTURE_COLOR = 0xffffff
@@ -33,7 +33,7 @@ class NodeRenderer {
 
     const circleTexture = this._renderer.generateTexture(circleGraphics, {
       scaleMode: settings.SCALE_MODE,
-      resolution: this._resolution * 4
+      resolution: this._resolution * ZOOM_MAX_SCALE
     })
 
     return circleTexture
@@ -92,7 +92,7 @@ class NodeRenderer {
       align: 'center',
       lineHeight: fontSize * 1.15
     })
-    caption.resolution = this._resolution * 4
+    caption.resolution = this._resolution * ZOOM_MAX_SCALE
     caption.name = CAPTION_NAME
     caption.x = -caption.width / 2
     caption.y = -caption.height / 2

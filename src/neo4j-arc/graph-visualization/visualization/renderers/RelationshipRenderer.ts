@@ -1,7 +1,7 @@
 import { colourToNumber } from '../../utils/colour'
 import { Container, Graphics, Text } from 'pixi.js'
 
-import { ARROW_NAME, CAPTION_NAME } from '../../constants'
+import { ARROW_NAME, CAPTION_NAME, ZOOM_MAX_SCALE } from '../../constants'
 import { arcToCurve, svgPathParser } from '../../utils/svgPathResolver'
 
 class RelationshipRenderer {
@@ -100,7 +100,7 @@ class RelationshipRenderer {
       align: 'center'
     })
     caption.name = CAPTION_NAME
-    caption.resolution = this._resolution * 4
+    caption.resolution = this._resolution * ZOOM_MAX_SCALE
     relationshipGfx.addChild(caption)
 
     return relationshipGfx

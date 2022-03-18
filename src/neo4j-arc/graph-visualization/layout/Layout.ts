@@ -65,10 +65,10 @@ class Layout {
   } {
     const nodes = this._graph.getNodes()
 
-    const minNodeX = Math.min(...nodes.map(node => node.x))
-    const maxNodeX = Math.max(...nodes.map(node => node.x))
-    const minNodeY = Math.min(...nodes.map(node => node.x))
-    const maxNodeY = Math.max(...nodes.map(node => node.x))
+    const minNodeX = Math.min(...nodes.map(node => node.x - node.radius))
+    const maxNodeX = Math.max(...nodes.map(node => node.x + node.radius))
+    const minNodeY = Math.min(...nodes.map(node => node.y - node.radius))
+    const maxNodeY = Math.max(...nodes.map(node => node.y + node.radius))
 
     return { minNodeX, maxNodeX, minNodeY, maxNodeY }
   }

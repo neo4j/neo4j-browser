@@ -284,6 +284,7 @@ export class GraphVisualizer extends Component<
       <StyledFullSizeContainer id="svg-vis">
         {renderCanvas ? (
           <GraphCanvas
+            isFullscreen={this.props.isFullscreen}
             nodes={this.state.nodes}
             relationships={this.state.relationships}
             styleVersion={this.state.styleVersion}
@@ -293,6 +294,11 @@ export class GraphVisualizer extends Component<
             onItemSelect={this.onItemSelect.bind(this)}
             onItemMouseOver={this.onItemMouseOver.bind(this)}
             onExpandNode={this.getNodeNeighbours.bind(this)}
+            controlButtonOffset={
+              (this.state.nodePropertiesExpanded ? this.state.width : 0) + 8
+            }
+            wheelZoomInfoMessageEnabled={this.props.wheelZoomInfoMessageEnabled}
+            disableWheelZoomInfoMessage={this.props.disableWheelZoomInfoMessage}
           />
         ) : (
           <Graph

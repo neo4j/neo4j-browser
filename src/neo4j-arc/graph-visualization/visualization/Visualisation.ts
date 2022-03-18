@@ -6,6 +6,7 @@ import {
   Container,
   Graphics,
   InteractionManager,
+  Point,
   Sprite,
   Text
 } from 'pixi.js'
@@ -16,7 +17,9 @@ import {
   ARROW_NAME,
   CAPTION_NAME,
   CIRCLE_NAME,
-  HOVER_HIGHLIGHT_COLOUR
+  HOVER_HIGHLIGHT_COLOUR,
+  ZOOM_MAX_SCALE,
+  ZOOM_MIN_SCALE
 } from '../constants'
 import EventHandler from '../eventHandler/EventHandler'
 import ExternalEventHandler from '../eventHandler/ExternalEventHandler'
@@ -46,6 +49,8 @@ class Visualisation {
 
   private _app: Application
   private _viewport: Viewport
+  private _isFullscreen: boolean
+  private _zoomOutLimit: number
   private _previousZoomScale: number
   private _frontNodesLayer: Container
   private _contextMenuLayer: Container
@@ -107,9 +112,11 @@ class Visualisation {
       worldHeight: WORLD_HEIGHT,
       interaction: interactionManager
     })
+    this._zoomOutLimit = ZOOM_MIN_SCALE
     this._previousZoomScale = 0
     this._app.stage.addChild(this._viewport)
-    this._viewport.drag().pinch().wheel().decelerate()
+    this._viewport.drag({ wheel: false }).pinch()
+    this._isFullscreen = false
 
     // Create layers: relationships, front relationships, nodes, front nodes.
     this._relationshipsLayer = new Container()
@@ -172,9 +179,62 @@ class Visualisation {
     return this._app.view
   }
 
+  get zoomScale(): number {
+    return this._viewport.scale.x
+  }
+
   get zoomStep(): number {
-    const zoom = this._viewport.scale.x
-    return this.calculateZoomStep(zoom)
+    return this.calculateZoomStep(this.zoomScale)
+  }
+
+  private setZoomOutLimit() {
+    const { minNodeX, maxNodeX, minNodeY, maxNodeY } =
+      this._layout.getBoundaries()
+    const minScale = Math.min(
+      this._app.screen.width / (maxNodeX - minNodeX),
+      this._app.screen.height / (maxNodeY - minNodeY)
+    )
+
+    this._zoomOutLimit = Math.min(
+      minScale * 0.8,
+      this._zoomOutLimit,
+      ZOOM_MIN_SCALE
+    )
+    this._viewport.clampZoom({
+      minScale: this._zoomOutLimit,
+      maxScale: ZOOM_MAX_SCALE
+    })
+  }
+
+  zoomIn(): void {
+    const zoomInScale = this.zoomScale * 1.35
+    this._viewport.animate({
+      position: this._viewport.toWorld(
+        new Point(this._app.view.width / 2, this._app.view.height / 2)
+      ),
+      scale: zoomInScale >= ZOOM_MAX_SCALE ? ZOOM_MAX_SCALE : zoomInScale
+    })
+  }
+
+  zoomOut(): void {
+    this._viewport.animate({
+      position: this._viewport.toWorld(
+        new Point(this._app.view.width / 2, this._app.view.height / 2)
+      ),
+      scale: this.zoomScale * 0.75
+    })
+  }
+
+  private resizeViewport(): void {
+    this._viewport.resize(this._app.view.width, this._app.view.height)
+    this.updateVisibility()
+  }
+
+  toggleFullscreen(isFullscreen: boolean): void {
+    console.log(isFullscreen)
+    this._app.resize()
+    this.resizeViewport()
+    this._isFullscreen = isFullscreen
   }
 
   shouldSimulateAllNodes(): boolean {
@@ -326,7 +386,40 @@ class Visualisation {
     })
   }
 
-  initVisualisation(): void {
+  resetViewport(): void {
+    const { minNodeX, maxNodeX, minNodeY, maxNodeY } =
+      this._layout.getBoundaries()
+    // this._viewport.center = new Point(
+    //   (maxNodeX - minNodeX) / 2,
+    //   (maxNodeY - minNodeY) / 2
+    // )
+    console.log(
+      minNodeX,
+      maxNodeX,
+      minNodeY,
+      maxNodeY,
+      this._app.screen,
+      this._app.view,
+      this._viewport.center
+    )
+    const zoomScale = Math.min(
+      this._app.screen.width / (maxNodeX - minNodeX),
+      this._app.screen.height / (maxNodeY - minNodeY)
+    )
+    this.setZoomOutLimit()
+    this._viewport.animate({
+      position: new Point(
+        (maxNodeX - minNodeX + this._app.view.width) / 2,
+        (maxNodeY - minNodeY) / 2
+      ),
+      scale: zoomScale
+    })
+    // this._viewport.left = minNodeX
+  }
+
+  initVisualisation(parentElement: HTMLDivElement): void {
+    this._app.resizeTo = parentElement
+
     // Initial draw.
     this.onGraphChange(
       this._graph.getNodes(),
@@ -334,31 +427,14 @@ class Visualisation {
       'init'
     )
 
-    // this._viewport.addChild(this._contextMenuRenderer.drawContextMenu())
-
     // initial layout
 
-    const resetViewport = () => {
-      // const {minNodeX, maxNodeX, minNodeY, maxNodeY} = layout.getBoundaries()
-      // viewport.center = new Point(
-      //   (maxNodeX - minNodeX) / 2,
-      //   (maxNodeY - minNodeY) / 2
-      // )
-      this._viewport.fitWorld(true)
-      // this._viewport.setZoom(1)
-    }
-
-    resetViewport()
+    // this.resetViewport()
+    this._viewport.setZoom(1)
     this._previousZoomScale = this._viewport.scale.x
+    this.setZoomOutLimit()
 
     this._viewport.on('frame-end', () => {
-      // console.log(
-      //   'frame-end',
-      //   this._previousZoomScale,
-      //   this._viewport.scale,
-      //   this.calculateZoomStep(this._previousZoomScale),
-      //   this.zoomStep
-      // )
       if (this._viewport.dirty) {
         this.updateVisibility()
         this.requestRender()
@@ -366,14 +442,31 @@ class Visualisation {
       }
     })
 
-    // Prevent body scrolling.
     this._app.view.addEventListener('wheel', event => {
+      console.log('CANVAS SCROLL', event)
+      // Prevent body scrolling.
       event.preventDefault()
+      if (
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        this._isFullscreen
+      ) {
+        this._viewport.wheel({ wheelZoom: true })
+      } else {
+        this._viewport.wheel({ wheelZoom: false })
+      }
+    })
+
+    document.addEventListener('resize', () => {
+      console.log('RESIZE')
+      this.resizeViewport()
     })
     this._app.render()
   }
 
-  updateVisibility = (): void => {
+  updateVisibility(): void {
+    // console.log(this._app)
     // Culling.
     const cull = new Cull()
     cull.addAll(this._nodesLayer.children)
