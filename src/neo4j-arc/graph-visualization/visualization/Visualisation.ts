@@ -201,6 +201,10 @@ class Visualisation {
         this._contextMenuRenderer.expandCollpaseItem,
         node
       )
+      this._eventHandler.bindCloseNodeArcClicEvent(
+        this._contextMenuRenderer.closeNodeSection,
+        node
+      )
     } else {
       this._contextMenuGfx.removeChildren()
     }

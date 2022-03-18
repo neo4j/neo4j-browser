@@ -63,7 +63,6 @@ class NodeRenderer {
     const nodeShapeGfx = new Container()
     nodeShapeGfx.interactive = true
     nodeShapeGfx.buttonMode = true
-    nodeShapeGfx.hitArea = new Circle(0, 0, radius)
 
     nodeShapeGfx.addChild(this.drawNodeCircleSprite(radius, colour))
 

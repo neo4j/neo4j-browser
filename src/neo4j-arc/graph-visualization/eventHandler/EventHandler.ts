@@ -171,8 +171,6 @@ class EventHandler {
   }
 
   moveNode(node: NodeModel, point: Point): void {
-    // console.log(point.x, point.y, this._clickedNode)
-
     // Math.sqrt was removed to avoid unnecessary computation, since this
     // function is called very often when dragging.
     const dist =
@@ -234,7 +232,6 @@ class EventHandler {
       this._shouldBindD3DragHandler()
 
     this._initialDragPosition = { x: node.x, y: node.y }
-
     this._restartedSimulation = false
 
     // Enable node dragging.
@@ -394,6 +391,18 @@ class EventHandler {
     node: NodeModel
   ): void {
     item.on('click', () => this.expandOrCollapseNode(node))
+  }
+
+  closeNode(node: NodeModel): void {
+    const relationshipsToRemove = this._graph.findAllRelationshipToNode(node)
+    this._graph.removeConnectedRelationships(node)
+    this._graph.removeNode(node)
+    this.deselectItem()
+    this._onGraphChange([node], relationshipsToRemove, 'collapse')
+  }
+
+  bindCloseNodeArcClicEvent(item: Container, node: NodeModel): void {
+    item.on('click', () => this.closeNode(node))
   }
 }
 
