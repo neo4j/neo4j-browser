@@ -1,6 +1,6 @@
 # Neo4j Browser
 
-Neo4j Browser is the general purpose graphical user interface for Neo4j. Query, visualize, administrate and monitor the database with modern and easy-to-use tools. 
+Neo4j Browser is the general purpose graphical user interface for Neo4j. Query, visualize, administrate and monitor the database with modern and easy-to-use tools.
 
 ![neo4j browser screenshot](./.github/neo4j-browser-screenshot.png)
 
@@ -18,8 +18,13 @@ Have an idea for a new feature? You're welcome to leave suggestions and ideas [h
 
 Contributions welcome! More information in our [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## Development 
-Running Neo4j Browser locally requires Node.js (^12.4.0) and for dependencies we use yarn (`npm install -g yarn`). 
+## Project structure
+
+Browser has a subproject of re-usable components bundled together and exposed as `neo4j-arc`. Rather than set up mono-repo tooling the we've set up eslint to isolate `neo4j-arc` and given it a seperate build step. Code in browser can only to import code from `neo4j-arc` through `neo4j-arc` aliases (as if it was a seperate project) and `neo4j-arc´ is not allowed to import any code from outside it's own folder.
+
+## Development
+
+Running Neo4j Browser locally requires Node.js (^12.4.0) and for dependencies we use yarn (`npm install -g yarn`).
 To install dependencies and then start the development server at `http://localhost:8080`:
 
 ```shell
@@ -28,11 +33,13 @@ yarn start
 ```
 
 Or to run in production mode:
+
 ```shell
 yarn start-prod
 ```
 
 ### Testing overview
+
 Neo4j Browser has both unit and end to end tests running automatically on every pull request. To run the tests locally:
 
 `yarn test-unit` runs a linter and then our unit tests.
@@ -52,6 +59,7 @@ So to run tests on your existing 4.2 database with the password "hunter2" withou
 `yarn e2e-local --env browser-password=hunter2,server=4.2`
 
 All the available options for `--env` are:
+
 ```
 server=3.5|4.0|4.1|4.2|4.3 (default 4.3)
 edition=enterprise|community|aura (default enterprise)
