@@ -24,6 +24,17 @@ import styled, {
   FlattenSimpleInterpolation
 } from 'styled-components'
 
+const StyledI = styled.i<{
+  isOpen?: boolean
+  activeStyle?: string | FlattenSimpleInterpolation
+  inactiveStyle?: string
+}>`
+  ${props => (props.isOpen ? props.activeStyle : props.inactiveStyle)};
+  &:hover {
+    ${props => props.activeStyle};
+  }
+`
+
 const StyledIconWrapper = ({
   activeStyle,
   inactiveStyle,
@@ -34,13 +45,16 @@ const StyledIconWrapper = ({
   IconContainerProps,
   'text' | 'fontSize' | 'icon' | 'width' | 'title'
 >) => {
-  const I = styled.i`
-    ${isOpen ? activeStyle : inactiveStyle};
-    &:hover {
-      ${activeStyle};
-    }
-  `
-  return <I {...rest}>{children}</I>
+  return (
+    <StyledI
+      isOpen={isOpen}
+      activeStyle={activeStyle}
+      inactiveStyle={inactiveStyle}
+      {...rest}
+    >
+      {children}
+    </StyledI>
+  )
 }
 
 const StyledText = styled.div`
