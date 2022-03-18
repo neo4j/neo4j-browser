@@ -23,7 +23,7 @@ import { withBus } from 'react-suber'
 import { Action, Dispatch } from 'redux'
 import { Bus } from 'suber'
 
-import { SaveFavoriteIcon, RunIcon, isMac, StopIcon } from 'common'
+import { SaveFavoriteIcon, RunIcon, isMac, StopIcon } from 'neo4j-arc/common'
 
 import { MAIN_WRAPPER_DOM_ID } from '../App/App'
 import Monaco, { MonacoHandles } from '../Editor/Monaco'

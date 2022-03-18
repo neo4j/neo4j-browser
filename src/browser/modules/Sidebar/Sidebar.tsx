@@ -29,7 +29,7 @@ import {
   GuideDrawerIcon,
   ProjectFilesIcon,
   SettingsIcon
-} from 'common'
+} from 'neo4j-arc/common'
 
 import DatabaseDrawer from '../DBMSInfo/DBMSInfo'
 import BrowserSync from '../Sync/BrowserSync'

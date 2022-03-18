@@ -35,7 +35,9 @@ module.exports = {
     'project-root(.*)$': '<rootDir>$1',
     '^monaco-editor$':
       '<rootDir>/node_modules/monaco-editor/esm/vs/editor/editor.main.js',
-    '^graph-visualization$': '<rootDir>/src/graphVisualization'
+    '^neo4j-arc/graph-visualization$':
+      '<rootDir>/src/neo4j-arc/graph-visualization',
+    '^neo4j-arc/common$': '<rootDir>/src/neo4j-arc/common'
   },
   modulePaths: ['<rootDir>/src', '<rootDir>/src/shared'],
   collectCoverageFrom: ['**/src/**/*.ts', '**/src/**/*.tsx'],

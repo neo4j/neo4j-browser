@@ -19,7 +19,7 @@
  */
 import React from 'react'
 
-import { ExclamationTriangleIcon } from 'common'
+import { ExclamationTriangleIcon } from 'neo4j-arc/common'
 
 import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
 import AutoExecButton from './auto-exec-button'

@@ -19,7 +19,7 @@
  */
 import React from 'react'
 
-import { SpinnerIcon } from 'common'
+import { SpinnerIcon } from 'neo4j-arc/common'
 
 import { SpinnerContainer, StyledBodyMessage } from '../styled'
 import Centered from 'browser-components/Centered'

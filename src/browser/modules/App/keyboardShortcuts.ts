@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import { Bus } from 'suber'
 
-import { isMac } from 'common'
+import { isMac } from 'neo4j-arc/common'
 
 import { FOCUS } from 'shared/modules/editor/editorDuck'
 

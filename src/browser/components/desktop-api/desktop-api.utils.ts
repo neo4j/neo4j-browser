@@ -19,7 +19,7 @@
  *
  */
 import { KERBEROS, NATIVE } from 'services/bolt/boltHelpers'
-import { upperFirst } from 'common'
+import { upperFirst } from 'neo4j-arc/common'
 
 const notEmpty = (str: any) => str.length > 0
 const splitOnUnderscore = (str: any) => str.split('_')

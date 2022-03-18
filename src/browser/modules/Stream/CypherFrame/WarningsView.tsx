@@ -31,7 +31,7 @@ import {
   StyledHelpFrame,
   StyledPreformattedArea
 } from '../styled'
-import { deepEquals } from 'common'
+import { deepEquals } from 'neo4j-arc/common'
 
 const getWarningComponent = (severity: any) => {
   if (severity === 'ERROR') {

@@ -20,7 +20,7 @@
 import neo4j from 'neo4j-driver'
 import React from 'react'
 
-import { toKeyString } from 'common'
+import { toKeyString } from 'neo4j-arc/common'
 
 import {
   StyledSysInfoTable,

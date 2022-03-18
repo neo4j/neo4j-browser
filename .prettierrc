@@ -12,7 +12,7 @@
   "importOrder": [
     "^@testing-library/react-hooks/dont-cleanup-after-each.js$",
     "<THIRD_PARTY_MODULES>",
-    "^graph-visualization$",
+    "^neo4j-arc/(.*)$",
     "^browser/(.*)$|^project-root/(.*)$|^browser-(.*)$|^shared/(.*)$|^services/(.*)$|^icons/(.*)$|^[./]"
   ],
   "overrides": [

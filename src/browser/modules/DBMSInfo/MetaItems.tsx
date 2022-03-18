@@ -27,8 +27,8 @@ import {
   StyledPropertyChip,
   StyledRelationshipChip,
   ShowMoreOrAll
-} from 'common'
-import { GraphStyleModel } from 'graph-visualization'
+} from 'neo4j-arc/common'
+import { GraphStyleModel } from 'neo4j-arc/graph-visualization'
 
 import styles from './style_meta.css'
 import {

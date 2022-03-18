@@ -20,8 +20,8 @@
 import React from 'react'
 import { Popup } from 'semantic-ui-react'
 
-import { StyledLabelChip } from 'common'
-import { GraphStyleModel } from 'graph-visualization'
+import { StyledLabelChip } from 'neo4j-arc/common'
+import { GraphStyleModel } from 'neo4j-arc/graph-visualization'
 
 import { GrassEditor } from './GrassEditor'
 

@@ -50,11 +50,11 @@ module.exports = {
       browser: path.resolve(helpers.browserPath),
       'browser-styles': path.resolve(helpers.browserPath, 'styles'),
       icons: path.resolve(helpers.browserPath, 'icons'),
-      common: path.resolve(helpers.sourcePath, 'common'),
-      'graph-visualization$': path.resolve(
+      'neo4j-arc/graph-visualization$': path.resolve(
         helpers.sourcePath,
-        'graphVisualization'
-      )
+        'neo4j-arc/graph-visualization'
+      ),
+      'neo4j-arc/common$': path.resolve(helpers.sourcePath, 'neo4j-arc/common')
     },
     extensions: ['.tsx', '.ts', '.js']
   },

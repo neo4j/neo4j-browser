@@ -34,7 +34,7 @@ import {
   RelatableStatusbar,
   RelatableStatusbarComponent
 } from './RelatableView/relatable-view'
-import { deepEquals } from 'common'
+import { deepEquals } from 'neo4j-arc/common'
 import { GlobalState } from 'shared/globalState'
 import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
 

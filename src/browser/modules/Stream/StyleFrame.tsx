@@ -20,7 +20,7 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 
-import { FireExtinguisherIcon } from 'common'
+import { FireExtinguisherIcon } from 'neo4j-arc/common'
 
 import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
 import { InfoView } from './InfoView'

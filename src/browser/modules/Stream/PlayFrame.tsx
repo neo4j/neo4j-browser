@@ -23,7 +23,7 @@ import { withBus } from 'react-suber'
 import { ThemeContext } from 'styled-components'
 import { Bus } from 'suber'
 
-import { StackNextIcon, StackPreviousIcon } from 'common'
+import { StackNextIcon, StackPreviousIcon } from 'neo4j-arc/common'
 
 import docs, { DocItem, isPlayChapter } from '../../documentation'
 import Docs from '../Docs/Docs'

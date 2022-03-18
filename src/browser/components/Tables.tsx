@@ -20,7 +20,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { toKeyString } from 'common'
+import { toKeyString } from 'neo4j-arc/common'
 
 const StyledTable = styled.table`
   border-radius: 4px;
