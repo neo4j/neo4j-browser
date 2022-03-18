@@ -20,7 +20,7 @@ Contributions welcome! More information in our [CONTRIBUTING.md](CONTRIBUTING.md
 
 ## Project structure
 
-Browser has a subproject of re-usable components bundled together and exposed as `neo4j-arc`. Rather than set up mono-repo tooling the we've set up eslint to isolate `neo4j-arc` and given it a seperate build step. Code in browser can only to import code from `neo4j-arc` through `neo4j-arc` aliases (as if it was a seperate project) and `neo4j-arc´ is not allowed to import any code from outside it's own folder.
+Browser has a subproject of re-usable components bundled together and exposed as `neo4j-arc`. Rather than set up mono-repo tooling the we've set up eslint to isolate `neo4j-arc` and given it a seperate build step. Code in browser can only to import code from `neo4j-arc` through `neo4j-arc` aliases (as if it was a seperate project) and `neo4j-arc` is not allowed to import any code from outside it's own folder.
 
 ## Development
 
