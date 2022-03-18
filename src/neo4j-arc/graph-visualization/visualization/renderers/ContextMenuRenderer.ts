@@ -7,7 +7,8 @@ import {
   Sprite,
   Texture,
   AbstractRenderer,
-  SpriteMaskFilter
+  SpriteMaskFilter,
+  Circle
 } from 'pixi.js'
 import { colourToNumber } from '../../utils/colour'
 
@@ -27,11 +28,10 @@ class ContextMenuRenderer {
     return this._expandCollapseSection
   }
 
-  drawArc(
+  private drawArc(
     arcRadius: number,
     division: number,
     colour: string,
-    maskRadius: number,
     rotation: number
   ): Container {
     const arcSection = new Container()
@@ -50,45 +50,42 @@ class ContextMenuRenderer {
     arcSprite.tint = colourToNumber(colour)
     arcSection.addChild(arcSprite)
 
-    const arcMaskGfx = new Container()
-    arcMaskGfx.addChild(arcGraphics)
-
-    const arcExclusionGraphics = new Graphics()
-    arcExclusionGraphics.beginFill(0x000000)
-    arcExclusionGraphics.drawCircle(0, 0, maskRadius)
-    arcExclusionGraphics.endFill()
-    arcMaskGfx.addChild(arcExclusionGraphics)
-
-    const arcMaskTexture = this._renderer.generateTexture(arcMaskGfx)
-    const arcMaskSprite = new Sprite(arcMaskTexture)
-    arcMaskSprite.pivot.x =
-      360 / division <= 90
-        ? maskRadius
-        : Math.sin(degreeToRadian(360 / division - 90)) * arcRadius
-    arcMaskSprite.pivot.y = maskRadius
-    arcMaskSprite.rotation = degreeToRadian(rotation)
-
-    arcSection.addChild(arcMaskSprite)
-
-    arcSprite.filters = [new SpriteMaskFilter(arcMaskSprite)]
-
     return arcSection
   }
 
-  drawIconTextureFromSvg(source: string): Texture<Resource> {
+  private drawIconTextureFromSvg(source: string): Texture<Resource> {
     return Texture.from(source)
+  }
+
+  private drawRingMask(outerRadius: number, innerRadius: number): Sprite {
+    const circleRingGfx = new Graphics()
+    circleRingGfx.beginFill(0xffffff)
+    circleRingGfx.drawCircle(0, 0, outerRadius)
+    circleRingGfx.endFill()
+
+    const circleGfx = new Graphics()
+    circleGfx.beginFill(0x000000)
+    circleGfx.drawCircle(0, 0, innerRadius)
+    circleGfx.endFill()
+
+    const ringMaskGfx = new Container()
+    ringMaskGfx.addChild(circleRingGfx)
+    ringMaskGfx.addChild(circleGfx)
+    const ringMaskTexture = this._renderer.generateTexture(ringMaskGfx)
+    const ringMaskSprite = new Sprite(ringMaskTexture)
+    ringMaskSprite.x = -ringMaskSprite.width / 2
+    ringMaskSprite.y = -ringMaskSprite.height / 2
+
+    return ringMaskSprite
   }
 
   drawContextMenu(radius: number, nodeRadius: number): DisplayObject {
     const contextMenuGfx = new Container()
 
-    const expandCollapseSection = this.drawArc(
-      radius,
-      3,
-      '#ff0000',
-      nodeRadius + 4,
-      30
-    )
+    const arcMaskSprite = this.drawRingMask(radius, nodeRadius + 4)
+    contextMenuGfx.addChild(arcMaskSprite)
+
+    const expandCollapseSection = this.drawArc(radius, 3, '#ff0000', 30)
     expandCollapseSection.interactive = true
     expandCollapseSection.buttonMode = true
     this._expandCollapseSection = expandCollapseSection
@@ -112,6 +109,7 @@ class ContextMenuRenderer {
 
     expandCollapseSection.addChild(expandCollapseSvgSprite)
     contextMenuGfx.addChild(expandCollapseSection)
+    expandCollapseSection.filters = [new SpriteMaskFilter(arcMaskSprite)]
 
     const circle = new Graphics()
     circle.beginFill(0xffffff)
@@ -125,17 +123,7 @@ class ContextMenuRenderer {
     circleSprite.alpha = 0.35
     contextMenuGfx.addChild(circleSprite)
 
-    const circleMaskGfx = new Container()
-    circleMaskGfx.addChild(circle)
-    const circleMask = new Graphics()
-    circleMask.beginFill(0x000000)
-    circleMask.drawCircle(0, 0, nodeRadius)
-    circleMask.endFill()
-    circleMaskGfx.addChild(circleMask)
-    const circleMaskTexture = this._renderer.generateTexture(circleMaskGfx)
-    const circleMaskSprite = new Sprite(circleMaskTexture)
-    circleMaskSprite.x = -circleMaskSprite.width / 2
-    circleMaskSprite.y = -circleMaskSprite.height / 2
+    const circleMaskSprite = this.drawRingMask(nodeRadius + 4, nodeRadius)
     contextMenuGfx.addChild(circleMaskSprite)
 
     circleSprite.filters = [new SpriteMaskFilter(circleMaskSprite)]

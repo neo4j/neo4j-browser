@@ -377,6 +377,10 @@ class Visualisation {
     cull.cull(this._app.renderer.screen)
 
     // Levels of detail.
+    this._contextMenuLayer.visible = this.zoomStep >= 1
+    this._hoverNodeHighlightGfx.visible = this.zoomStep >= 3
+    this._hoverRelationshipHighlightGfx.visible = this.zoomStep >= 3
+
     this._graph.getNodes().forEach(nodeData => {
       const captionGfx = this._nodeDataToNodeCaptionGfx[nodeData.id]
       const caption = captionGfx.getChildByName(CAPTION_NAME)
@@ -496,6 +500,10 @@ class Visualisation {
       let circleSprite = nodeShapeGfx.getChildByName(CIRCLE_NAME)
       if (circleSprite) {
         if ((<Sprite>circleSprite).width !== node.radius * 2) {
+          if (node.selected) {
+            this.toggleContextMenu(null)
+            this.toggleContextMenu(node)
+          }
           nodeShapeGfx.removeChild(circleSprite)
           circleSprite = this._nodeRenderer.drawNodeCircleSprite(
             node.radius,
