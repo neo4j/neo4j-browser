@@ -12,7 +12,7 @@ import Layout from '../layout/Layout'
 import { GraphModel } from '../models/Graph'
 import { GraphStyleModel } from '../models/GraphStyle'
 import { ExpandNodeHandler, VItem } from '../types'
-import { mapNodes, mapRelationships } from '../utils/mapper'
+import { GraphStats, mapNodes, mapRelationships } from '../utils/mapper'
 import Visualisation from '../visualization/Visualisation'
 import { ZoomInIcon, ZoomOutIcon, ZoomToFitIcon } from 'neo4j-arc/common'
 import { ZOOM_MAX_SCALE } from '../constants'
@@ -32,6 +32,7 @@ type GraphCanvasProps = {
   onItemSelect: (item: VItem) => void
   onItemMouseOver: (item: VItem) => void
   onExpandNode: ExpandNodeHandler
+  onGraphModelChange: (stats: GraphStats) => void
   controlButtonOffset: number
   wheelZoomInfoMessageEnabled: boolean
   disableWheelZoomInfoMessage: () => void
@@ -49,6 +50,7 @@ export const GraphCanvas = (props: GraphCanvasProps): JSX.Element => {
     onItemSelect,
     onItemMouseOver,
     onExpandNode,
+    onGraphModelChange,
     controlButtonOffset,
     wheelZoomInfoMessageEnabled,
     disableWheelZoomInfoMessage
@@ -81,7 +83,8 @@ export const GraphCanvas = (props: GraphCanvasProps): JSX.Element => {
         canvasContainer.current,
         graph.current,
         style,
-        externalEventHandler
+        externalEventHandler,
+        onGraphModelChange
       )
       visualisation.current.initVisualisation()
       autoCompleteRelationships(internalRelationships => {

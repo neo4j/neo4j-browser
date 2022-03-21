@@ -35,6 +35,7 @@ import RelationshipRenderer from './renderers/RelationshipRenderer'
 import NodeRenderer from './renderers/NodeRenderer'
 import { uniqBy } from 'lodash-es'
 import ContextMenuRenderer from './renderers/ContextMenuRenderer'
+import { getGraphStats, GraphStats } from '../utils/mapper'
 
 const SCREEN_WIDTH = 1200
 const SCREEN_HEIGHT = 500
@@ -80,7 +81,8 @@ class Visualisation {
     parentElement: HTMLDivElement,
     graph: GraphModel,
     style: GraphStyleModel,
-    externalEventHandler: ExternalEventHandler
+    externalEventHandler: ExternalEventHandler,
+    private onGraphModelChange: (stats: GraphStats) => void
   ) {
     this._graph = graph
     this._nodeDataToNodeShapeGfx = {}
@@ -836,6 +838,8 @@ class Visualisation {
     } else if (type === 'update') {
       this.updateVisualisation()
     }
+
+    this.onGraphModelChange(getGraphStats(this._graph))
   }
 
   requestRender(): void {

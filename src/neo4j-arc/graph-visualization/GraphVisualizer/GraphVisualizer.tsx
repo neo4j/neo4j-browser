@@ -294,6 +294,7 @@ export class GraphVisualizer extends Component<
             onItemSelect={this.onItemSelect.bind(this)}
             onItemMouseOver={this.onItemMouseOver.bind(this)}
             onExpandNode={this.getNodeNeighbours.bind(this)}
+            onGraphModelChange={this.onGraphModelChange.bind(this)}
             controlButtonOffset={
               (this.state.nodePropertiesExpanded ? this.state.width : 0) + 8
             }

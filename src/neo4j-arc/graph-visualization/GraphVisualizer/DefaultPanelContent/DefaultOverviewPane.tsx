@@ -108,7 +108,7 @@ function DefaultOverviewPane({
         {labels && visibleLabelKeys.length !== 0 && (
           <div>
             <PaneBodySectionHeader
-              title={'Node labels'}
+              title={'Node Labels'}
               numOfElementsVisible={visibleLabelKeys.length}
               totalNumOfElements={totalNumOfLabelTypes}
             />

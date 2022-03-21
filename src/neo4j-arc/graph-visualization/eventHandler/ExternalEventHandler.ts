@@ -1,4 +1,5 @@
 import { ExpandNodeHandler, VItem } from '../types'
+import { GraphStats } from '../utils/mapper'
 class ExternalEventHandler {
   onItemSelect: (item: VItem) => void
   onItemMouseOver: (item: VItem) => void
