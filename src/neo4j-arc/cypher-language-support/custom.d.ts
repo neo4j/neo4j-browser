@@ -1,5 +1,7 @@
+import { Lexer } from 'antlr4'
+
 declare module 'cypher-editor-support/src/_generated/CypherLexer' {
-  export class CypherLexer extends (await import('antlr4/index.js')).Lexer {
+  export class CypherLexer extends Lexer {
     constructor(input: unknown)
     channelNames: string[]
     modeNames: string[]
@@ -8,6 +10,16 @@ declare module 'cypher-editor-support/src/_generated/CypherLexer' {
     ruleNames: string[]
     grammarFileName: string;
     [key: string]: number
+  }
+}
+
+declare module 'monaco-editor/esm/vs/base/parts/quickinput/browser/quickInputList' {
+  export class QuickInputList {
+    layout: (maxHeight: number) => void
+    list: {
+      getHTMLElement: () => HTMLElement
+      layout: () => void
+    }
   }
 }
 
@@ -82,16 +94,6 @@ declare module 'cypher-editor-support' {
   export function extractStatements(input: string): {
     referencesListener: {
       statements: [{ raw: () => Record<string, unknown>[] }]
-    }
-  }
-}
-
-declare module 'monaco-editor/esm/vs/base/parts/quickinput/browser/quickInputList' {
-  export class QuickInputList {
-    layout: (maxHeight: number) => void
-    list: {
-      getHTMLElement: () => HTMLElement
-      layout: () => void
     }
   }
 }

@@ -25,7 +25,7 @@ import {
   toProcedure,
   toPropertyKey,
   toRelationshipType
-} from 'cypherLanguageSupport'
+} from 'neo4j-arc/cypher-language-support'
 import { Action } from 'redux'
 import { Epic } from 'redux-observable'
 import Rx from 'rxjs/Rx'

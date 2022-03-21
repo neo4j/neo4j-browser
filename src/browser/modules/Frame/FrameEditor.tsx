@@ -61,7 +61,7 @@ import * as sidebar from 'shared/modules/sidebar/sidebarDuck'
 import { base, stopIconColor } from 'browser-styles/themes'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { QueryResult } from 'neo4j-driver'
-import { Monaco, MonacoHandles } from 'cypherLanguageSupport'
+import { Monaco, MonacoHandles } from 'neo4j-arc/cypher-language-support'
 
 type FrameEditorBaseProps = {
   frame: Frame
