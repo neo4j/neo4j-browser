@@ -78,11 +78,12 @@ export const GraphCanvas = (props: GraphCanvasProps): JSX.Element => {
 
     if (canvasContainer.current) {
       visualisation.current = new Visualisation(
+        canvasContainer.current,
         graph.current,
         style,
         externalEventHandler
       )
-      visualisation.current.initVisualisation(canvasContainer.current)
+      visualisation.current.initVisualisation()
       autoCompleteRelationships(internalRelationships => {
         console.log('internal rel', internalRelationships)
         const expandedRelationships = uniqBy(

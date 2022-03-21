@@ -75,6 +75,7 @@ class Visualisation {
   private _renderRequestId: number | undefined = undefined
 
   constructor(
+    parentElement: HTMLDivElement,
     graph: GraphModel,
     style: GraphStyleModel,
     externalEventHandler: ExternalEventHandler
@@ -88,15 +89,14 @@ class Visualisation {
 
     // Create PIXI application.
     this._app = new Application({
-      width: SCREEN_WIDTH,
-      height: SCREEN_HEIGHT,
+      resizeTo: parentElement,
       resolution: RESOLUTION,
       backgroundAlpha: 0,
       antialias: true,
       autoDensity: true
       // autoStart: false // disable automatic rendering by ticker, render manually instead, only when needed
     })
-    this._app.view.style.width = `${SCREEN_WIDTH}px`
+    // this._app.view.style.width = `${SCREEN_WIDTH}px`
     const interactionManager = new InteractionManager(this._app.renderer)
 
     this._layout = new Layout(this._graph, SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -106,8 +106,8 @@ class Visualisation {
 
     // Create PIXI viewport.
     this._viewport = new Viewport({
-      screenWidth: SCREEN_WIDTH,
-      screenHeight: SCREEN_HEIGHT,
+      screenWidth: this.view.offsetWidth,
+      screenHeight: this.view.offsetHeight,
       worldWidth: WORLD_WIDTH,
       worldHeight: WORLD_HEIGHT,
       interaction: interactionManager
@@ -210,7 +210,7 @@ class Visualisation {
     const zoomInScale = this.zoomScale * 1.35
     this._viewport.animate({
       position: this._viewport.toWorld(
-        new Point(this._app.view.width / 2, this._app.view.height / 2)
+        new Point(this.view.offsetWidth / 2, this.view.offsetHeight / 2)
       ),
       scale: zoomInScale >= ZOOM_MAX_SCALE ? ZOOM_MAX_SCALE : zoomInScale
     })
@@ -219,19 +219,18 @@ class Visualisation {
   zoomOut(): void {
     this._viewport.animate({
       position: this._viewport.toWorld(
-        new Point(this._app.view.width / 2, this._app.view.height / 2)
+        new Point(this.view.offsetWidth / 2, this.view.offsetHeight / 2)
       ),
       scale: this.zoomScale * 0.75
     })
   }
 
   private resizeViewport(): void {
-    this._viewport.resize(this._app.view.width, this._app.view.height)
+    this._viewport.resize(this.view.offsetWidth, this.view.offsetHeight)
     this.updateVisibility()
   }
 
   toggleFullscreen(isFullscreen: boolean): void {
-    console.log(isFullscreen)
     this._app.resize()
     this.resizeViewport()
     this._isFullscreen = isFullscreen
@@ -389,37 +388,19 @@ class Visualisation {
   resetViewport(): void {
     const { minNodeX, maxNodeX, minNodeY, maxNodeY } =
       this._layout.getBoundaries()
-    // this._viewport.center = new Point(
-    //   (maxNodeX - minNodeX) / 2,
-    //   (maxNodeY - minNodeY) / 2
-    // )
-    console.log(
-      minNodeX,
-      maxNodeX,
-      minNodeY,
-      maxNodeY,
-      this._app.screen,
-      this._app.view,
-      this._viewport.center
-    )
+
     const zoomScale = Math.min(
       this._app.screen.width / (maxNodeX - minNodeX),
       this._app.screen.height / (maxNodeY - minNodeY)
     )
     this.setZoomOutLimit()
     this._viewport.animate({
-      position: new Point(
-        (maxNodeX - minNodeX + this._app.view.width) / 2,
-        (maxNodeY - minNodeY) / 2
-      ),
+      position: new Point((maxNodeX + minNodeX) / 2, (maxNodeY + minNodeY) / 2),
       scale: zoomScale
     })
-    // this._viewport.left = minNodeX
   }
 
-  initVisualisation(parentElement: HTMLDivElement): void {
-    this._app.resizeTo = parentElement
-
+  initVisualisation(): void {
     // Initial draw.
     this.onGraphChange(
       this._graph.getNodes(),
@@ -428,9 +409,10 @@ class Visualisation {
     )
 
     // initial layout
-
-    // this.resetViewport()
     this._viewport.setZoom(1)
+    const { minNodeX, maxNodeX, minNodeY, maxNodeY } =
+      this._layout.getBoundaries()
+    // this._viewport.moveCenter((minNodeX + maxNodeX) / 2, (minNodeY + maxNodeY) / 2)
     this._previousZoomScale = this._viewport.scale.x
     this.setZoomOutLimit()
 
