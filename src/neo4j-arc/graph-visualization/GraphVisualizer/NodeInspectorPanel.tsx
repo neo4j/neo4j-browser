@@ -82,7 +82,7 @@ export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
       OverviewPaneOverride !== undefined
         ? OverviewPaneOverride
         : DefaultOverviewPane
-    console.log(shownEl, hoveredItem)
+    // console.log(shownEl, hoveredItem)
 
     return (
       <>

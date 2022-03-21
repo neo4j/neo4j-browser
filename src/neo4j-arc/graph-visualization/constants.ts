@@ -60,3 +60,4 @@ export const CAPTION_NAME = 'CAPTION'
 export const ARROW_NAME = 'ARROW'
 
 export const HOVER_HIGHLIGHT_COLOUR = '#6ac6ff'
+export const SELECT_HIGHLIGHT_COLOUR = '#fdcc59'

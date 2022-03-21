@@ -18,6 +18,7 @@ import {
   CAPTION_NAME,
   CIRCLE_NAME,
   HOVER_HIGHLIGHT_COLOUR,
+  SELECT_HIGHLIGHT_COLOUR,
   ZOOM_MAX_SCALE,
   ZOOM_MIN_SCALE
 } from '../constants'
@@ -56,6 +57,7 @@ class Visualisation {
   private _contextMenuLayer: Container
   private _nodesLayer: Container
   private _frontRelationshipsLayer: Container
+  private _selectRelationshipHighlightGfx: Container
   private _hoverRelationshipHighlightGfx: Container
   private _relationshipsLayer: Container
   private _hoverNodeHighlightGfx: Container
@@ -127,6 +129,9 @@ class Visualisation {
     this._hoverRelationshipHighlightGfx = new Container()
     this._hoverRelationshipHighlightGfx.alpha = 0.35
     this._frontRelationshipsLayer.addChild(this._hoverRelationshipHighlightGfx)
+    this._selectRelationshipHighlightGfx = new Container()
+    this._selectRelationshipHighlightGfx.alpha = 0.35
+    this._frontRelationshipsLayer.addChild(this._selectRelationshipHighlightGfx)
 
     this._contextMenuLayer = new Container()
     this._viewport.addChild(this._contextMenuLayer)
@@ -167,6 +172,7 @@ class Visualisation {
         this._relationshipGfxToRelationshipData,
       setClickedNode: this.setClickedNode.bind(this),
       toggleContextMenu: this.toggleContextMenu.bind(this),
+      toggleSelectedRelationship: this.toggleRelationshipSelect.bind(this),
       shouldBindD3DragHandler: this.shouldSimulateAllNodes.bind(this),
       render: this.updateVisualisation.bind(this),
       onGraphChange: this.onGraphChange.bind(this),
@@ -245,6 +251,27 @@ class Visualisation {
 
   setClickedNode(node: NodeModel | null): void {
     this._clickedNode = node
+  }
+
+  toggleRelationshipSelect(relationship: RelationshipModel | null): void {
+    if (relationship) {
+      console.log('TOGGLE SELECT')
+      this._selectRelationshipHighlightGfx.removeChildren()
+      this.layoutRelationshipGfx(
+        this._selectRelationshipHighlightGfx,
+        relationship
+      )
+      const arrow = new Graphics()
+      arrow.name = ARROW_NAME
+      this.redrawRelationshipHighlight(
+        arrow,
+        relationship,
+        SELECT_HIGHLIGHT_COLOUR
+      )
+      this._selectRelationshipHighlightGfx.addChild(arrow)
+    } else {
+      this._selectRelationshipHighlightGfx.removeChildren()
+    }
   }
 
   toggleContextMenu(node: NodeModel | null): void {
@@ -353,6 +380,8 @@ class Visualisation {
         // Bind relationship events.
         this._eventHandler.bindRelationshipHoverEvent(relationshipGfx)
         this._eventHandler.bindRelationshipUnhoverEvent(relationshipGfx)
+        this._eventHandler.bindRelationshipClickEvent(relationshipGfx)
+        this._eventHandler.bindRelationshipReleaseEvent(relationshipGfx)
       }
 
       this._relationshipsLayer.addChild(relationshipGfx)
@@ -459,6 +488,7 @@ class Visualisation {
     this._contextMenuLayer.visible = this.zoomStep >= 1
     this._hoverNodeHighlightGfx.visible = this.zoomStep >= 3
     this._hoverRelationshipHighlightGfx.visible = this.zoomStep >= 3
+    this._selectRelationshipHighlightGfx.visible = this.zoomStep >= 3
 
     this._graph.getNodes().forEach(nodeData => {
       const captionGfx = this._nodeDataToNodeCaptionGfx[nodeData.id]
@@ -504,13 +534,14 @@ class Visualisation {
 
   private redrawRelationshipHighlight(
     arrow: Graphics,
-    relationship: RelationshipModel
+    relationship: RelationshipModel,
+    colour: string
   ): void {
     arrow.clear()
     this._relationshipRenderer.drawArrowBySvgPath(
       arrow,
       relationship.arrow?.overlay(16),
-      colourToNumber(HOVER_HIGHLIGHT_COLOUR)
+      colourToNumber(colour)
     )
   }
 
@@ -651,6 +682,22 @@ class Visualisation {
           ? 135
           : 0
       )
+
+      if (relationship.selected) {
+        const overlay = this._selectRelationshipHighlightGfx.getChildByName(
+          ARROW_NAME
+        ) as Graphics
+        this.redrawRelationshipHighlight(
+          overlay,
+          relationship,
+          SELECT_HIGHLIGHT_COLOUR
+        )
+
+        this.layoutRelationshipGfx(
+          this._selectRelationshipHighlightGfx,
+          relationship
+        )
+      }
     })
   }
 
@@ -692,7 +739,11 @@ class Visualisation {
       relationship
     )
     const arrow = new Graphics()
-    this.redrawRelationshipHighlight(arrow, relationship)
+    this.redrawRelationshipHighlight(
+      arrow,
+      relationship,
+      HOVER_HIGHLIGHT_COLOUR
+    )
     this._hoverRelationshipHighlightGfx.addChild(arrow)
     this._frontRelationshipsLayer.addChild(relationshipGfx)
   }

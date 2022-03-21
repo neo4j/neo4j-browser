@@ -27,12 +27,17 @@ class EventHandler {
   private _nodeShapeGfxToNodeData: WeakMap<DisplayObject, string>
   private _relationshipGfxToRelationshipData: WeakMap<DisplayObject, string>
   private _clickedNode: NodeModel | null
+  private _clickedRelationship: RelationshipModel | null
   private _setClickedNode: (node: NodeModel | null) => void
   private _toggleContextMenu: (node: NodeModel | null) => void
+  private _toggleSelectedRelationship: (
+    relationship: RelationshipModel | null
+  ) => void
   private _clickNodeTimeout: number | null
   private _dblClickNodeTimeout: number | null
   private _isDblClickNode: boolean
-  private _selectedItem: NodeModel | null
+  private _clickRelationshipTimeout: number | null
+  private _selectedItem: NodeModel | RelationshipModel | null
   private _render: (nodeIds: string[]) => void
   private _onGraphChange: GraphChangeHandler
   private _shouldBindD3DragHandler: () => boolean
@@ -50,6 +55,7 @@ class EventHandler {
     relationshipGfxToRelationshipData,
     setClickedNode,
     toggleContextMenu,
+    toggleSelectedRelationship,
     shouldBindD3DragHandler,
     render,
     onGraphChange,
@@ -64,6 +70,7 @@ class EventHandler {
     relationshipGfxToRelationshipData: WeakMap<Container, string>
     setClickedNode: (node: NodeModel | null) => void
     toggleContextMenu: (node: NodeModel | null) => void
+    toggleSelectedRelationship: (relationship: RelationshipModel | null) => void
     shouldBindD3DragHandler: () => boolean
     render: (nodeIds?: string[]) => void
     onGraphChange: GraphChangeHandler
@@ -75,9 +82,12 @@ class EventHandler {
     this._interactionManager = interactionManager
 
     this._viewport.on('clicked', () => {
-      console.log('clicked')
-      this.deselectItem()
-      this._toggleContextMenu(null)
+      if (!this._clickedRelationship) {
+        console.log('clicked')
+        this._toggleContextMenu(null)
+        this._toggleSelectedRelationship(null)
+        this.deselectItem()
+      }
     })
 
     this._graph = graph
@@ -90,9 +100,12 @@ class EventHandler {
     this._dblClickNodeTimeout = null
     this._isDblClickNode = false
     this._selectedItem = null
+    this._clickedRelationship = null
+    this._clickRelationshipTimeout = null
 
     this._setClickedNode = setClickedNode
     this._toggleContextMenu = toggleContextMenu
+    this._toggleSelectedRelationship = toggleSelectedRelationship
     this._shouldBindD3DragHandler = shouldBindD3DragHandler
     this._render = render
     this._onGraphChange = onGraphChange
@@ -147,7 +160,7 @@ class EventHandler {
     )
   }
 
-  selectItem(item: NodeModel): void {
+  selectItem(item: NodeModel | RelationshipModel): void {
     if (this._selectedItem) {
       this._selectedItem.selected = false
     }
@@ -219,6 +232,7 @@ class EventHandler {
           this.selectItem(node)
           this._externalEventHandler.onItemSelect({ type: 'node', item: node })
           this._toggleContextMenu(node)
+          this._toggleSelectedRelationship(null)
         } else {
           this.deselectItem()
           this._toggleContextMenu(null)
@@ -384,6 +398,49 @@ class EventHandler {
         ) as RelationshipModel
       )
     })
+  }
+
+  clickRelationship(relationship: RelationshipModel): void {
+    this._clickedRelationship = relationship
+    if (!relationship.selected) {
+      this.selectItem(relationship)
+      this._toggleContextMenu(null)
+      this._toggleSelectedRelationship(relationship)
+      this._externalEventHandler.onItemSelect({
+        type: 'relationship',
+        item: relationship
+      })
+    } else {
+      this.deselectItem()
+      this._toggleSelectedRelationship(null)
+    }
+  }
+
+  bindRelationshipClickEvent(relationshipGfx: Container): void {
+    relationshipGfx.on('click', (event: InteractionEvent) => {
+      this.clickRelationship(
+        this._graph.findRelationshipById(
+          this._relationshipGfxToRelationshipData.get(
+            event.currentTarget
+          ) as string
+        ) as RelationshipModel
+      )
+    })
+  }
+
+  releaseRelationship(): void {
+    console.log('release relationship')
+
+    this._clickRelationshipTimeout = setTimeout(() => {
+      this._clickedRelationship = null
+      this._clickRelationshipTimeout &&
+        clearTimeout(this._clickRelationshipTimeout)
+    }, 100)
+  }
+
+  bindRelationshipReleaseEvent(relationshipGfx: Container): void {
+    relationshipGfx.on('mouseup', () => this.releaseRelationship())
+    relationshipGfx.on('mouseupoutside', () => this.releaseRelationship())
   }
 
   bindContextMenuExpandCollapseArcClickEvent(
