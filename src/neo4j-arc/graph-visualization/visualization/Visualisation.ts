@@ -287,8 +287,12 @@ class Visualisation {
         this._contextMenuRenderer.expandCollpaseItem,
         node
       )
-      this._eventHandler.bindCloseNodeArcClicEvent(
+      this._eventHandler.bindCloseNodeArcClickEvent(
         this._contextMenuRenderer.closeNodeSection,
+        node
+      )
+      this._eventHandler.bindUnlockNodeArcClickEvent(
+        this._contextMenuRenderer.unlockNodeSection,
         node
       )
     } else {

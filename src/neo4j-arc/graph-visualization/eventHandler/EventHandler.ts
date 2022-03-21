@@ -119,6 +119,11 @@ class EventHandler {
 
   hoverNode(node: NodeModel): void {
     // console.log('hover', node)
+    if (!node.fx && !node.fy) {
+      node.hoverFixed = true
+      node.fx = node.x
+      node.fy = node.y
+    }
     this._externalEventHandler.onItemMouseOver({
       type: 'node',
       item: this._clickedNode ?? node
@@ -148,6 +153,12 @@ class EventHandler {
       })
 
     !this._clickedNode && this._moveGfxBetweenLayers(node, 'behind')
+
+    if (node.hoverFixed) {
+      node.hoverFixed = false
+      node.fx = null
+      node.fy = null
+    }
   }
 
   bindNodeUnHoverEvent(nodeGfx: Container): void {
@@ -458,8 +469,18 @@ class EventHandler {
     this._onGraphChange([node], relationshipsToRemove, 'collapse')
   }
 
-  bindCloseNodeArcClicEvent(item: Container, node: NodeModel): void {
+  bindCloseNodeArcClickEvent(item: Container, node: NodeModel): void {
     item.on('click', () => this.closeNode(node))
+  }
+
+  unlockNode(node: NodeModel): void {
+    node.fx = null
+    node.fy = null
+    this.deselectItem()
+  }
+
+  bindUnlockNodeArcClickEvent(item: Container, node: NodeModel): void {
+    item.on('click', () => this.unlockNode(node))
   }
 }
 
