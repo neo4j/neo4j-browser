@@ -7,7 +7,7 @@
   "module": "dist/neo4j-arc.mjs",
   "typings": "dist/neo4j-arc.d.ts",
   "scripts": {
-    "build": "yarn && rollup -c && rm -rf node_modules/"
+    "build": "yarn && rollup -c --failAfterWarnings && rm -rf node_modules/"
   },
   "repository": {
     "type": "git",
@@ -43,6 +43,8 @@
     "d3-shape": "^3.0.1",
     "d3-transition": "^3.0.1",
     "d3-zoom": "^3.0.0",
+    "react-dom": "^17.0.2",
+    "react-resizable": "^3.0.4",
     "react-svg-inline": "^2.1.1",
     "styled-components": "^5.3.3"
   },
