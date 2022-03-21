@@ -10,7 +10,7 @@ import {
   SpriteMaskFilter
 } from 'pixi.js'
 import { colourToNumber } from '../../utils/colour'
-import { SELECT_HIGHLIGHT_COLOUR } from '../../constants'
+import { SELECT_HIGHLIGHT_COLOUR, ZOOM_MAX_SCALE } from '../../constants'
 
 const getExpandeCollapseIconSvg = (colour: string): string =>
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g class="icon"><defs><style>.a{fill:none;stroke:${colour};stroke-linecap:round;stroke-linejoin:round;stroke-width:1.5px;}</style></defs><title>Expand / Collapse</title><circle class="a" cx="13.5" cy="10.498" r="3.75"/><circle class="a" cx="21" cy="2.998" r="2.25"/><circle class="a" cx="21" cy="15.748" r="2.25"/><circle class="a" cx="13.5" cy="20.998" r="2.25"/><circle class="a" cx="3" cy="20.998" r="2.25"/><circle class="a" cx="3.75" cy="5.248" r="2.25"/><line class="a" x1="16.151" y1="7.848" x2="19.411" y2="4.588"/><line class="a" x1="16.794" y1="12.292" x2="19.079" y2="14.577"/><line class="a" x1="13.5" y1="14.248" x2="13.5" y2="18.748"/><line class="a" x1="10.851" y1="13.147" x2="4.59" y2="19.408"/><line class="a" x1="10.001" y1="9.149" x2="5.61" y2="6.514"/></g></svg>`
@@ -21,12 +21,14 @@ const getUnlockNodeIconSvg = (colour: string): string =>
 
 class ContextMenuRenderer {
   private _renderer: AbstractRenderer
+  private _resolution: number
   private _expandCollapseSection: Container
   private _closeNodeSection: Container
   private _unlockNodeSection: Container
 
-  constructor(renderer: AbstractRenderer) {
+  constructor(renderer: AbstractRenderer, resolution: number) {
     this._renderer = renderer
+    this._resolution = resolution
     this._expandCollapseSection = new Container()
     this._closeNodeSection = new Container()
     this._unlockNodeSection = new Container()
@@ -59,7 +61,9 @@ class ContextMenuRenderer {
     arcGraphics.arc(0, 0, arcRadius, 0, degreeToRadian(360 / division))
     arcGraphics.lineTo(0, 0)
     arcGraphics.endFill()
-    const arcTexture = this._renderer.generateTexture(arcGraphics)
+    const arcTexture = this._renderer.generateTexture(arcGraphics, {
+      resolution: this._resolution * ZOOM_MAX_SCALE
+    })
     const arcSprite = new Sprite(arcTexture)
     arcSprite.pivot.x =
       Math.sin(degreeToRadian(360 / division - 90)) * arcRadius
@@ -84,7 +88,9 @@ class ContextMenuRenderer {
     const ringMaskGfx = new Container()
     ringMaskGfx.addChild(circleRingGfx)
     ringMaskGfx.addChild(circleGfx)
-    const ringMaskTexture = this._renderer.generateTexture(ringMaskGfx)
+    const ringMaskTexture = this._renderer.generateTexture(ringMaskGfx, {
+      resolution: this._resolution * ZOOM_MAX_SCALE
+    })
     const ringMaskSprite = new Sprite(ringMaskTexture)
     ringMaskSprite.x = -ringMaskSprite.width / 2
     ringMaskSprite.y = -ringMaskSprite.height / 2
@@ -98,53 +104,62 @@ class ContextMenuRenderer {
     const arcMaskSprite = this.drawRingMask(outerRadius, innerRadius + 4)
     contextMenuGfx.addChild(arcMaskSprite)
 
-    const expandCollapseSection = this.drawArc(outerRadius, 3, '#ff0000', 30)
+    const expandCollapseSection = this.drawArc(outerRadius, 3, '#555555', 30)
     this._expandCollapseSection = expandCollapseSection
-    // Width = 150; Height = 150;
+    // Width = 150; Height = 150; (when resolution = 1)
     const expandCollapseSvgSprite = Sprite.from(
-      getExpandeCollapseIconSvg('#ffffff')
+      getExpandeCollapseIconSvg('#ffffff'),
+      { resolution: this._resolution * ZOOM_MAX_SCALE }
     )
-    expandCollapseSvgSprite.pivot.set(75)
-    expandCollapseSvgSprite.scale.set(0.08)
-    expandCollapseSvgSprite.y = outerRadius - 12
+    expandCollapseSvgSprite.pivot.set(18, 0)
+    expandCollapseSvgSprite.scale.set(0.4)
+    expandCollapseSvgSprite.y = outerRadius - 20
 
     expandCollapseSection.addChild(expandCollapseSvgSprite)
     contextMenuGfx.addChild(expandCollapseSection)
     expandCollapseSection.filters = [new SpriteMaskFilter(arcMaskSprite)]
 
-    const closeNodeSection = this.drawArc(outerRadius, 3, '#00ff00', -90)
+    const closeNodeSection = this.drawArc(outerRadius, 3, '#555555', -90)
     this._closeNodeSection = closeNodeSection
-    // Width = 150; Height = 150
-    const closeNodeSvgSprite = Sprite.from(getRemoveNodeIconSvg('#ffffff'))
+    // Width = 150; Height = 150; (when resolution = 1)
+    const closeNodeSvgSprite = Sprite.from(getRemoveNodeIconSvg('#ffffff'), {
+      resolution: this._resolution * ZOOM_MAX_SCALE
+    })
     setTimeout(
       () => console.log(closeNodeSvgSprite.width, closeNodeSvgSprite.height),
       300
     )
-    closeNodeSvgSprite.pivot.set(150, 0)
-    closeNodeSvgSprite.scale.set(0.08)
-    closeNodeSvgSprite.x = ((outerRadius - 12) / 2) * Math.sqrt(3) + 6
+    closeNodeSvgSprite.pivot.set(0, 0)
+    closeNodeSvgSprite.scale.set(0.4)
+    closeNodeSvgSprite.x = ((outerRadius - 12) / 2) * Math.sqrt(3) - 10
     closeNodeSvgSprite.y = -(outerRadius - 12) / 2 - 6
     closeNodeSection.addChild(closeNodeSvgSprite)
 
     contextMenuGfx.addChild(closeNodeSection)
     closeNodeSection.filters = [new SpriteMaskFilter(arcMaskSprite)]
 
-    const unlockNodeSection = this.drawArc(outerRadius, 3, '#0000ff', 150)
+    const unlockNodeSection = this.drawArc(outerRadius, 3, '#555555', 150)
     this._unlockNodeSection = unlockNodeSection
-    const unlockNodeSvgSprite = Sprite.from(getUnlockNodeIconSvg('#ffffff'))
+    // Width = 150; Height = 150; (when resolution = 1)
+    const unlockNodeSvgSprite = Sprite.from(getUnlockNodeIconSvg('#ffffff'), {
+      resolution: this._resolution * ZOOM_MAX_SCALE
+    })
     unlockNodeSvgSprite.pivot.set(0, 0)
-    unlockNodeSvgSprite.scale.set(0.08)
+    unlockNodeSvgSprite.scale.set(0.4)
     unlockNodeSvgSprite.x = -((outerRadius - 12) / 2) * Math.sqrt(3) - 6
     unlockNodeSvgSprite.y = -(outerRadius - 12) / 2 - 6
     unlockNodeSection.addChild(unlockNodeSvgSprite)
 
     contextMenuGfx.addChild(unlockNodeSection)
+    unlockNodeSection.filters = [new SpriteMaskFilter(arcMaskSprite)]
 
     const circle = new Graphics()
     circle.beginFill(0xffffff)
     circle.drawCircle(0, 0, innerRadius + 4)
     circle.endFill()
-    const circleTexture = this._renderer.generateTexture(circle)
+    const circleTexture = this._renderer.generateTexture(circle, {
+      resolution: this._resolution * ZOOM_MAX_SCALE
+    })
     const circleSprite = new Sprite(circleTexture)
     circleSprite.x = -circleSprite.width / 2
     circleSprite.y = -circleSprite.height / 2

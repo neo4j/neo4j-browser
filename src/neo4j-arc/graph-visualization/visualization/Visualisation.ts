@@ -154,7 +154,10 @@ class Visualisation {
     this._geometry = new Geometry(this._graph, style)
     this._nodeRenderer = new NodeRenderer(this._app.renderer, RESOLUTION)
     this._relationshipRenderer = new RelationshipRenderer(RESOLUTION)
-    this._contextMenuRenderer = new ContextMenuRenderer(this._app.renderer)
+    this._contextMenuRenderer = new ContextMenuRenderer(
+      this._app.renderer,
+      RESOLUTION
+    )
 
     this._forceSimulation = new ForceSimulation(
       this._graph,
