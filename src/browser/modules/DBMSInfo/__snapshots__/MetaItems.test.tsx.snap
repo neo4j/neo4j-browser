@@ -3,15 +3,15 @@
 exports[`LabelItems renders empty 1`] = `
 <div>
   <div
-    class="sc-eJwWfJ bxodHI"
+    class="sc-nVkyK ITtau"
   >
     <h5
-      class="sc-jeraig fbVRGV"
+      class="sc-eJwWfJ fawJNs"
     >
       Node Labels
     </h5>
     <div
-      class="sc-nVkyK jrdixH"
+      class="sc-hiwPVj cKOovY"
     >
       <p>
         There are no labels in database
@@ -24,15 +24,15 @@ exports[`LabelItems renders empty 1`] = `
 exports[`LabelItems renders labels 1`] = `
 <div>
   <div
-    class="sc-eJwWfJ bxodHI"
+    class="sc-nVkyK ITtau"
   >
     <h5
-      class="sc-jeraig fbVRGV"
+      class="sc-eJwWfJ fawJNs"
     >
       Node Labels
     </h5>
     <div
-      class="sc-nVkyK jrdixH"
+      class="sc-hiwPVj cKOovY"
     >
       <div
         class="sc-eCImPb sc-jRQBWg iTIdOK CulBm"
@@ -60,15 +60,15 @@ exports[`LabelItems renders labels 1`] = `
 exports[`PropertyItems renders empty 1`] = `
 <div>
   <div
-    class="sc-eJwWfJ bxodHI"
+    class="sc-nVkyK ITtau"
   >
     <h5
-      class="sc-jeraig fbVRGV"
+      class="sc-eJwWfJ fawJNs"
     >
       Property Keys
     </h5>
     <div
-      class="sc-nVkyK jrdixH"
+      class="sc-hiwPVj cKOovY"
     >
       <p>
         There are no properties in database
@@ -81,15 +81,15 @@ exports[`PropertyItems renders empty 1`] = `
 exports[`PropertyItems renders properties 1`] = `
 <div>
   <div
-    class="sc-eJwWfJ bxodHI"
+    class="sc-nVkyK ITtau"
   >
     <h5
-      class="sc-jeraig fbVRGV"
+      class="sc-eJwWfJ fawJNs"
     >
       Property Keys
     </h5>
     <div
-      class="sc-nVkyK jrdixH"
+      class="sc-hiwPVj cKOovY"
     >
       <div
         class="sc-eCImPb sc-iCfMLu iTIdOK dfFAXu"
@@ -111,15 +111,15 @@ exports[`PropertyItems renders properties 1`] = `
 exports[`RelationshipItems renders empty 1`] = `
 <div>
   <div
-    class="sc-eJwWfJ bxodHI"
+    class="sc-nVkyK ITtau"
   >
     <h5
-      class="sc-jeraig fbVRGV"
+      class="sc-eJwWfJ fawJNs"
     >
       Relationship Types
     </h5>
     <div
-      class="sc-nVkyK jrdixH"
+      class="sc-hiwPVj cKOovY"
     >
       <p>
         No relationships in database
@@ -132,15 +132,15 @@ exports[`RelationshipItems renders empty 1`] = `
 exports[`RelationshipItems renders relationshipTypes 1`] = `
 <div>
   <div
-    class="sc-eJwWfJ bxodHI"
+    class="sc-nVkyK ITtau"
   >
     <h5
-      class="sc-jeraig fbVRGV"
+      class="sc-eJwWfJ fawJNs"
     >
       Relationship Types
     </h5>
     <div
-      class="sc-nVkyK jrdixH"
+      class="sc-hiwPVj cKOovY"
     >
       <div
         class="sc-eCImPb sc-gKclnd iTIdOK iWpSfJ"

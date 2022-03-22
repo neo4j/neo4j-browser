@@ -20,6 +20,8 @@
 import React from 'react'
 import { css, keyframes } from 'styled-components'
 
+import { HeroIcon } from '@neo4j-ndl/react'
+
 import { IconContainer } from './IconContainer'
 import addCircle from './svgs/add-circle.svg'
 import appWindowCode from './svgs/app-window-code.svg'
@@ -434,11 +436,11 @@ export const TrashIcon = ({ fontSize }: { fontSize?: string }): JSX.Element => (
 )
 
 export const ChevronRightIcon = (): JSX.Element => (
-  <IconContainer className="fa fa-chevron-right " />
+  <HeroIcon iconName="ChevronRightIcon" type="solid" />
 )
 
 export const ChevronLeftIcon = (): JSX.Element => (
-  <IconContainer className="fa fa-chevron-left " />
+  <HeroIcon iconName="ChevronLeftIcon" type="solid" />
 )
 
 export const WarningIcon = (): JSX.Element => (

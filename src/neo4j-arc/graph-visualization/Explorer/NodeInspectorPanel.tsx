@@ -33,7 +33,8 @@ import DefaultOverviewPane, {
 import {
   PaneContainer,
   StyledNodeInspectorTopMenuChevron,
-  panelMinWidth
+  panelMinWidth,
+  StyledResizable
 } from './styled'
 import { GraphStats } from '../utils/mapper'
 import { GraphStyleModel } from '../models/GraphStyle'
@@ -98,7 +99,7 @@ export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
         </StyledNodeInspectorTopMenuChevron>
 
         <NodeInspectorDrawer width={width} isOpen={expanded}>
-          <Resizable
+          <StyledResizable
             width={width}
             data-testid="vizInspector"
             height={300 /*doesn't matter but required prop */}
@@ -131,7 +132,7 @@ export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
                 />
               )}
             </PaneContainer>
-          </Resizable>
+          </StyledResizable>
         </NodeInspectorDrawer>
       </>
     )
