@@ -97,10 +97,10 @@ class Visualisation {
       resolution: RESOLUTION,
       backgroundAlpha: 0,
       antialias: true,
-      autoDensity: true
-      // autoStart: false // disable automatic rendering by ticker, render manually instead, only when needed
+      autoDensity: true,
+      autoStart: false // disable automatic rendering by ticker, render manually instead, only when needed
     })
-    // this._app.view.style.width = `${SCREEN_WIDTH}px`
+
     const interactionManager = new InteractionManager(this._app.renderer)
 
     this._layout = new Layout(this._graph, SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -239,6 +239,7 @@ class Visualisation {
   private resizeViewport(): void {
     this._viewport.resize(this.view.offsetWidth, this.view.offsetHeight)
     this.updateVisibility()
+    this.requestRender()
   }
 
   toggleFullscreen(isFullscreen: boolean): void {
@@ -277,6 +278,7 @@ class Visualisation {
     } else {
       this._selectRelationshipHighlightGfx.removeChildren()
     }
+    this.requestRender()
   }
 
   toggleContextMenu(node: NodeModel | null): void {
@@ -303,6 +305,7 @@ class Visualisation {
     } else {
       this._contextMenuGfx.removeChildren()
     }
+    this.requestRender()
   }
 
   private calculateZoomStep(zoom: number): number {
@@ -464,8 +467,6 @@ class Visualisation {
 
     this._app.view.addEventListener('wheel', event => {
       console.log('CANVAS SCROLL', event)
-      // Prevent body scrolling.
-      event.preventDefault()
       if (
         event.metaKey ||
         event.ctrlKey ||
@@ -473,6 +474,8 @@ class Visualisation {
         this._isFullscreen
       ) {
         this._viewport.wheel({ wheelZoom: true })
+        // Prevent body scrolling.
+        event.preventDefault()
       } else {
         this._viewport.wheel({ wheelZoom: false })
       }
@@ -482,7 +485,8 @@ class Visualisation {
       console.log('RESIZE')
       this.resizeViewport()
     })
-    this._app.render()
+
+    this.requestRender()
   }
 
   updateVisibility(): void {
@@ -726,6 +730,7 @@ class Visualisation {
     )
     this._frontNodesLayer.addChild(nodeShapeGfx)
     this._frontNodesLayer.addChild(nodeCaptionGfx)
+    this.requestRender()
   }
 
   private moveNodeGfxToBehind(node: NodeModel): void {
@@ -736,6 +741,7 @@ class Visualisation {
     this._frontNodesLayer.removeChild(nodeCaptionGfx)
     this._nodesLayer.addChild(nodeShapeGfx)
     this._nodesLayer.addChild(nodeCaptionGfx)
+    this.requestRender()
   }
 
   private moveRelationshipGfxToFront(relationship: RelationshipModel): void {
@@ -755,6 +761,7 @@ class Visualisation {
     )
     this._hoverRelationshipHighlightGfx.addChild(arrow)
     this._frontRelationshipsLayer.addChild(relationshipGfx)
+    this.requestRender()
   }
 
   private moveRelationshipGfxToBehind(relationship: RelationshipModel): void {
@@ -763,10 +770,10 @@ class Visualisation {
       this._relationshipDataToRelationshipGfx[relationship.id]
     this._frontRelationshipsLayer.removeChild(relationshipGfx)
     this._relationshipsLayer.addChild(relationshipGfx)
+    this.requestRender()
   }
 
   moveGfxBetweenLayers: MoveGfxBetweenLayers = (data, position) => {
-    console.log(data, position)
     if (data.isNode) {
       if (position === 'front')
         this.moveNodeGfxToFront(data as unknown as NodeModel)
@@ -777,12 +784,14 @@ class Visualisation {
       } else
         this.moveRelationshipGfxToBehind(data as unknown as RelationshipModel)
     }
+    this.requestRender()
   }
 
   updateVisualisation(nodeIds?: string[]): void {
     this.updateGeometry(nodeIds)
     this.updateLayout(nodeIds)
     this.shouldSimulateAllNodes() && this.updateVisibility()
+    this.requestRender()
   }
 
   /**
@@ -861,6 +870,7 @@ class Visualisation {
       this._renderRequestId = undefined
     }
 
+    this._viewport.destroy()
     this._app.destroy(true, true)
   }
 }
