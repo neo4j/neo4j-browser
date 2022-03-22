@@ -25,7 +25,10 @@ import {
   TICKS_PER_RENDER,
   VELOCITY_DECAY
 } from '../constants'
-import { circularLayout } from '../layout/utils'
+import {
+  calculateRadius,
+  circularLayout
+} from '../GraphVisualizer/Graph/visualization/utils/circularLayout'
 import { GraphModel } from '../models/Graph'
 import { NodeModel } from '../models/Node'
 import { RelationshipModel } from '../models/Relationship'
@@ -85,9 +88,7 @@ class ForceSimulation {
   simulateNodes(nodes: NodeModel[], center?: { x: number; y: number }): void {
     console.log('simulate nodes')
 
-    // const nodes = this._graph.getNodes()
-    const radius = (nodes.length * LINK_DISTANCE) / (Math.PI * 2)
-    // console.log(center)
+    const radius = calculateRadius(nodes.length, LINK_DISTANCE)
 
     this._simulationCenter = this._shouldSimulateAllNodes
       ? { x: 0, y: 0 }

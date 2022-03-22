@@ -18,6 +18,7 @@ import {
   CAPTION_NAME,
   CIRCLE_NAME,
   HOVER_HIGHLIGHT_COLOUR,
+  LINK_DISTANCE,
   SELECT_HIGHLIGHT_COLOUR,
   ZOOM_MAX_SCALE,
   ZOOM_MIN_SCALE
@@ -36,6 +37,7 @@ import NodeRenderer from './renderers/NodeRenderer'
 import { uniqBy } from 'lodash-es'
 import ContextMenuRenderer from './renderers/ContextMenuRenderer'
 import { getGraphStats, GraphStats } from '../utils/mapper'
+import { calculateRadius } from '../../graph-visualization/GraphVisualizer/Graph/visualization/utils/circularLayout'
 
 const SCREEN_WIDTH = 1200
 const SCREEN_HEIGHT = 500
@@ -105,8 +107,9 @@ class Visualisation {
 
     this._layout = new Layout(this._graph, SCREEN_WIDTH, SCREEN_HEIGHT)
 
-    const { worldWidth: WORLD_WIDTH, worldHeight: WORLD_HEIGHT } =
-      this._layout.initViewportDimension()
+    const radius = calculateRadius(this._graph.getNodes().length, LINK_DISTANCE)
+    const WORLD_WIDTH = Math.max(this.view.offsetWidth * 2, radius * 1.2)
+    const WORLD_HEIGHT = Math.max(this.view.offsetHeight * 2, radius * 1.2)
 
     // Create PIXI viewport.
     this._viewport = new Viewport({

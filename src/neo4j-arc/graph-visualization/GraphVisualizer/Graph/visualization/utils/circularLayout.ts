@@ -19,11 +19,14 @@
  */
 import { NodeModel } from '../../../../models/Node'
 
-export default function circularLayout(
+export const calculateRadius = (nodesCount: number, linkDistance: number) =>
+  (nodesCount * linkDistance) / (Math.PI * 2)
+
+export const circularLayout = (
   nodes: NodeModel[],
   center: { x: number; y: number },
   radius: number
-): void {
+): void => {
   const unlocatedNodes = nodes.filter(node => !node.initialPositionCalculated)
 
   unlocatedNodes.forEach((node, i) => {

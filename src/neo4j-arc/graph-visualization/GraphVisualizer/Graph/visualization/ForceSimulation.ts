@@ -43,7 +43,7 @@ import {
 import { GraphModel } from '../../../models/Graph'
 import { NodeModel } from '../../../models/Node'
 import { RelationshipModel } from '../../../models/Relationship'
-import circularLayout from './utils/circularLayout'
+import { circularLayout } from './utils/circularLayout'
 
 const oneRelationshipPerPairOfNodes = (graph: GraphModel) =>
   Array.from(graph.groupedRelationships()).map(pair => pair.relationships[0])
