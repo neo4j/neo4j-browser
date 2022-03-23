@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { palette as needlePalette } from '@neo4j-ndl/base/lib/tokens/js/tokens'
+import { baseArcTheme } from 'neo4j-arc/common'
 
 import {
   DARK_THEME,
@@ -41,6 +42,7 @@ const NDLColors = {
 }
 
 export const base = {
+  ...baseArcTheme,
   name: 'base',
   // Text colors
   primaryText: '#333',
