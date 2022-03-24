@@ -17,12 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { PairwiseArcsRelationshipRouting } from '../utils/PairwiseArcsRelationshipRouting'
-import { measureText } from '../utils/textMeasurement'
-import { GraphModel } from './Graph'
-import { GraphStyleModel } from './GraphStyle'
-import { NodeCaptionLine, NodeModel } from './Node'
-import { RelationshipModel } from './Relationship'
+import { PairwiseArcsRelationshipRouting } from './utils/PairwiseArcsRelationshipRouting'
+import { measureText } from '../../../utils/textMeasurement'
+import { GraphModel } from '../../../models/Graph'
+import { GraphStyleModel } from '../../../models/GraphStyle'
+import { NodeCaptionLine, NodeModel } from '../../../models/Node'
+import { RelationshipModel } from '../../../models/Relationship'
 
 export class GraphGeometryModel {
   relationshipRouting: PairwiseArcsRelationshipRouting

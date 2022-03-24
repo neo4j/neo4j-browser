@@ -21,7 +21,7 @@ import deepmerge from 'deepmerge'
 import { debounce } from 'lodash'
 import React, { Component } from 'react'
 
-import { Graph } from '../components/Graph'
+import { Graph } from './Graph/Graph'
 import { NodeInspectorPanel, defaultPanelWidth } from './NodeInspectorPanel'
 import { StyledFullSizeContainer, panelMinWidth } from './styled'
 import {
@@ -33,8 +33,7 @@ import {
 import { DetailsPaneProps } from './DefaultPanelContent/DefaultDetailsPane'
 import { OverviewPaneProps } from './DefaultPanelContent/DefaultOverviewPane'
 import { GraphStyleModel } from '../models/GraphStyle'
-import { VizItem } from '../types'
-import { GetNodeNeighboursFn } from '../models/GraphEventHandler'
+import { GetNodeNeighboursFn, VizItem } from '../types'
 import { GraphStats } from '../utils/mapper'
 import { GraphModel } from '../models/Graph'
 

@@ -19,6 +19,7 @@
  */
 import { NodeModel } from './models/Node'
 import { RelationshipModel } from './models/Relationship'
+import { BasicNode, BasicNodesAndRels } from 'neo4j-arc/common'
 
 export type VizItem =
   | NodeItem
@@ -58,3 +59,20 @@ type CanvasItem = {
     relationshipCount: number
   }
 }
+
+export type ZoomLimitsReached = {
+  zoomInLimitReached: boolean
+  zoomOutLimitReached: boolean
+}
+
+export enum ZoomType {
+  IN = 'in',
+  OUT = 'out',
+  FIT = 'fit'
+}
+
+export type GetNodeNeighboursFn = (
+  node: BasicNode | NodeModel,
+  currentNeighbourIds: string[],
+  callback: (data: BasicNodesAndRels) => void
+) => void

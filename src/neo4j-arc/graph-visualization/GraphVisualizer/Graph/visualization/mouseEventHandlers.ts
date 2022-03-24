@@ -25,9 +25,9 @@ import {
   DEFAULT_ALPHA_TARGET,
   DRAGGING_ALPHA,
   DRAGGING_ALPHA_TARGET
-} from '../constants'
-import { NodeModel } from '../models/Node'
-import { RelationshipModel } from '../models/Relationship'
+} from '../../../constants'
+import { NodeModel } from '../../../models/Node'
+import { RelationshipModel } from '../../../models/Relationship'
 
 export const nodeEventHandlers = (
   selection: Selection<SVGGElement, NodeModel, BaseType, unknown>,

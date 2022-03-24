@@ -30,13 +30,13 @@ import {
   ZOOM_FIT_PADDING_PERCENT,
   ZOOM_MAX_SCALE,
   ZOOM_MIN_SCALE
-} from '../constants'
-import { GraphModel } from '../models/Graph'
-import { GraphGeometryModel } from '../models/GraphGeometry'
-import { GraphStyleModel } from '../models/GraphStyle'
-import { NodeModel } from '../models/Node'
-import { RelationshipModel } from '../models/Relationship'
-import { isNullish } from '../utils/utils'
+} from '../../../constants'
+import { GraphModel } from '../../../models/Graph'
+import { GraphGeometryModel } from './GraphGeometryModel'
+import { GraphStyleModel } from '../../../models/GraphStyle'
+import { NodeModel } from '../../../models/Node'
+import { RelationshipModel } from '../../../models/Relationship'
+import { isNullish } from '../../../utils/utils'
 import { ForceSimulation } from './ForceSimulation'
 import {
   nodeEventHandlers,
@@ -47,19 +47,9 @@ import {
   relationship as relationshipRenderer
 } from './renderers/init'
 import { nodeMenuRenderer } from './renderers/menu'
+import { ZoomLimitsReached, ZoomType } from '../../../types'
 
-export type MeasureSizeFn = () => { width: number; height: number }
-
-export type ZoomLimitsReached = {
-  zoomInLimitReached: boolean
-  zoomOutLimitReached: boolean
-}
-
-enum ZoomType {
-  IN = 'in',
-  OUT = 'out',
-  FIT = 'fit'
-}
+type MeasureSizeFn = () => { width: number; height: number }
 
 export class Visualization {
   private readonly root: Selection<SVGElement, unknown, BaseType, unknown>

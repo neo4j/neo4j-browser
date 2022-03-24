@@ -20,7 +20,7 @@
 import { BaseType, Selection } from 'd3-selection'
 import { arc as d3Arc } from 'd3-shape'
 
-import { NodeModel } from '../../models/Node'
+import { NodeModel } from '../../../../models/Node'
 import Renderer from '../Renderer'
 import { Visualization } from '../Visualization'
 import icons from './d3Icons'

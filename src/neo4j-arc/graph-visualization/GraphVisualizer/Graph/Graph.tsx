@@ -19,26 +19,25 @@
  */
 import React from 'react'
 
-import { ZoomInIcon, ZoomOutIcon, ZoomToFitIcon } from 'neo4j-arc/common'
-
-import { GraphModel } from '../models/Graph'
 import {
-  GetNodeNeighboursFn,
-  GraphEventHandlerModel
-} from '../models/GraphEventHandler'
-import { GraphStyleModel } from '../models/GraphStyle'
-import { VizItem } from '../types'
-import { BasicNode, BasicRelationship } from 'neo4j-arc/common'
+  BasicNode,
+  BasicRelationship,
+  ZoomInIcon,
+  ZoomOutIcon,
+  ZoomToFitIcon
+} from 'neo4j-arc/common'
+
+import { GraphModel } from '../../models/Graph'
+import { GraphEventHandlerModel } from './GraphEventHandlerModel'
+import { GraphStyleModel } from '../../models/GraphStyle'
+import { GetNodeNeighboursFn, VizItem, ZoomLimitsReached } from '../../types'
 import {
   GraphStats,
   createGraph,
   getGraphStats,
   mapRelationships
-} from '../utils/mapper'
-import {
-  Visualization,
-  ZoomLimitsReached
-} from '../visualization/Visualization'
+} from '../../utils/mapper'
+import { Visualization } from './visualization/Visualization'
 import { WheelZoomInfoOverlay } from './WheelZoomInfoOverlay'
 import { StyledSvgWrapper, StyledZoomButton, StyledZoomHolder } from './styled'
 
