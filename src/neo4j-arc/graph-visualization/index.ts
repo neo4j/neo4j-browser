@@ -33,6 +33,6 @@ export type {
 } from './utils/mapper'
 export { measureText } from './utils/textMeasurement'
 
-export { Explorer } from './Explorer/Explorer'
-export type { DetailsPaneProps } from './Explorer/DefaultPanelContent/DefaultDetailsPane'
-export type { OverviewPaneProps } from './Explorer/DefaultPanelContent/DefaultOverviewPane'
+export { GraphVisualizer } from './GraphVisualizer/GraphVisualizer'
+export type { DetailsPaneProps } from './GraphVisualizer/DefaultPanelContent/DefaultDetailsPane'
+export type { OverviewPaneProps } from './GraphVisualizer/DefaultPanelContent/DefaultOverviewPane'
