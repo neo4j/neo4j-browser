@@ -41,3 +41,5 @@ export { WarningMessage } from './components/WarningMessage'
 
 // temporary, icons will be fetched from NDL later
 export * from './icons/Icons'
+
+export { ArcThemeProvider, baseArcTheme } from './styles/themes'

@@ -44,6 +44,9 @@ type DeduplicateHelper = {
   nodeLimitHit: boolean
 }
 
+const DEFAULT_INITIAL_NODE_DISPLAY = 300
+const DEFAULT_MAX_NEIGHBOURS = 100
+
 const deduplicateNodes = (
   nodes: BasicNode[],
   limit: number
@@ -61,17 +64,10 @@ const deduplicateNodes = (
     { nodes: [], taken: {}, nodeLimitHit: false }
   )
 
-type ExplorerComponentProps = {
-  relationships: BasicRelationship[]
-  nodes: BasicNode[]
+type ExplorerDefaultProps = {
   initialNodeDisplay: number
   maxNeighbours: number
-  graphStyleData: any
-  getNeighbours: (
-    id: string,
-    currentNeighbourIds: string[] | undefined
-  ) => Promise<BasicNodesAndRels & { allNeighboursCount: number }>
-  updateStyle: any
+  updateStyle: (style: any) => void
   isFullscreen: boolean
   assignVisElement: (svgElement: any, graphElement: any) => void
   getAutoCompleteCallback: (
@@ -83,6 +79,29 @@ type ExplorerComponentProps = {
   setNodePropertiesExpandedByDefault: (expandedByDefault: boolean) => void
   wheelZoomInfoMessageEnabled: boolean
   disableWheelZoomInfoMessage: () => void
+}
+type ExplorerComponentProps = ExplorerDefaultProps & {
+  relationships: BasicRelationship[]
+  nodes: BasicNode[]
+  initialNodeDisplay?: number
+  maxNeighbours?: number
+  graphStyleData?: any
+  getNeighbours?: (
+    id: string,
+    currentNeighbourIds: string[] | undefined
+  ) => Promise<BasicNodesAndRels & { allNeighboursCount: number }>
+  updateStyle?: (style: any) => void
+  isFullscreen?: boolean
+  assignVisElement?: (svgElement: any, graphElement: any) => void
+  getAutoCompleteCallback?: (
+    callback: (rels: BasicRelationship[]) => void
+  ) => void
+  setGraph?: (graph: GraphModel) => void
+  hasTruncatedFields?: boolean
+  nodePropertiesExpandedByDefault?: boolean
+  setNodePropertiesExpandedByDefault?: (expandedByDefault: boolean) => void
+  wheelZoomInfoMessageEnabled?: boolean
+  disableWheelZoomInfoMessage?: () => void
   DetailsPaneOverride?: React.FC<DetailsPaneProps>
   OverviewPaneOverride?: React.FC<OverviewPaneProps>
 }
@@ -105,6 +124,21 @@ export class Explorer extends Component<
   ExplorerComponentState
 > {
   defaultStyle: any
+
+  static defaultProps: ExplorerDefaultProps = {
+    initialNodeDisplay: DEFAULT_INITIAL_NODE_DISPLAY,
+    maxNeighbours: DEFAULT_MAX_NEIGHBOURS,
+    updateStyle: () => undefined,
+    isFullscreen: false,
+    assignVisElement: () => undefined,
+    getAutoCompleteCallback: () => undefined,
+    setGraph: () => undefined,
+    hasTruncatedFields: false,
+    nodePropertiesExpandedByDefault: true,
+    setNodePropertiesExpandedByDefault: () => undefined,
+    wheelZoomInfoMessageEnabled: false,
+    disableWheelZoomInfoMessage: () => undefined
+  }
 
   constructor(props: ExplorerComponentProps) {
     super(props)
@@ -167,22 +201,24 @@ export class Explorer extends Component<
     if (currentNeighbourIds.length > this.props.maxNeighbours) {
       callback({ nodes: [], relationships: [] })
     }
-    this.props.getNeighbours(node.id, currentNeighbourIds).then(
-      ({ nodes, relationships, allNeighboursCount }) => {
-        if (allNeighboursCount > this.props.maxNeighbours) {
-          this.setState({
-            selectedItem: {
-              type: 'status-item',
-              item: `Rendering was limited to ${this.props.maxNeighbours} of the node's total ${allNeighboursCount} neighbours due to browser config maxNeighbours.`
-            }
-          })
+    if (this.props.getNeighbours) {
+      this.props.getNeighbours(node.id, currentNeighbourIds).then(
+        ({ nodes, relationships, allNeighboursCount }) => {
+          if (allNeighboursCount > this.props.maxNeighbours) {
+            this.setState({
+              selectedItem: {
+                type: 'status-item',
+                item: `Rendering was limited to ${this.props.maxNeighbours} of the node's total ${allNeighboursCount} neighbours due to browser config maxNeighbours.`
+              }
+            })
+          }
+          callback({ nodes, relationships })
+        },
+        () => {
+          callback({ nodes: [], relationships: [] })
         }
-        callback({ nodes, relationships })
-      },
-      () => {
-        callback({ nodes: [], relationships: [] })
-      }
-    )
+      )
+    }
   }
 
   onItemMouseOver(item: VizItem): void {
@@ -202,7 +238,9 @@ export class Explorer extends Component<
 
   onGraphModelChange(stats: GraphStats): void {
     this.setState({ stats })
-    this.props.updateStyle(this.state.graphStyle.toSheet())
+    if (this.props.updateStyle) {
+      this.props.updateStyle(this.state.graphStyle.toSheet())
+    }
   }
 
   componentDidUpdate(prevProps: ExplorerComponentProps): void {

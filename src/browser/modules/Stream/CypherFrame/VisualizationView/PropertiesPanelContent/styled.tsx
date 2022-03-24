@@ -32,7 +32,6 @@ export const StyledInlineListStylePicker = styled(StyledInlineList)`
   max-height: 400px;
   background: ${props => props.theme.editorBackground};
   color: ${props => props.theme.primaryText};
-  padding: 0.833em 1em;
 `
 export const StyledInlineListItem = styled.li`
   display: inline-block;

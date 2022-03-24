@@ -1478,6 +1478,11 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
+"@heroicons/react@^1.0.5":
+  version "1.0.6"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@heroicons/react/-/react-1.0.6.tgz#35dd26987228b39ef2316db3b1245c42eb19e324"
+  integrity sha512-JJCXydOFWMDpCP4q13iEplA503MQO3xLoZiKum+955ZCtHINWnx26CUxVxxFQu/uLb4LW3ge15ZpzIkXKkJ8oQ==
+
 "@hot-loader/react-dom@^17.0.2":
   version "17.0.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@hot-loader/react-dom/-/react-dom-17.0.2.tgz#0b24e484093e8f97eb5c72bebdda44fc20bc8400"
@@ -1713,10 +1718,19 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@neo4j-ndl/base@^0.1.0":
-  version "0.1.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@neo4j-ndl/base/-/base-0.1.0.tgz#d1e2094075a2e930f1a3d9f39345b55b554b84ca"
-  integrity sha512-M0R9A6IfINE3G+5pzSs2/92ubjQZykDyELo14fQn3LxNg65c1fIz0azr/UuvMc4W2v9aAew2oFGMR7Ek5UiCag==
+"@neo4j-ndl/base@^0.1.2":
+  version "0.1.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@neo4j-ndl/base/-/base-0.1.2.tgz#fa542746199aea852eef1e091e3b40e252290383"
+  integrity sha512-8ClB7yNF0j+F21WbSYPQsXgTMEDhYhWy0DMPPQEBOp/fGovLgwWX+kUAcDT9olFS+ViZx9/SSBx4fQKVJUfOSA==
+
+"@neo4j-ndl/react@^0.1.2":
+  version "0.1.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@neo4j-ndl/react/-/react-0.1.2.tgz#44e6ecca1d698e095947e470e284497417017a71"
+  integrity sha512-L2aaZIPDinafn8D5xR1RI3Nk5y+F6W5PPmYShrWBNhtLxeLHPHqi/Ivt2l0g/te5G/sOOx/ERt1eGoqWKLss3g==
+  dependencies:
+    "@heroicons/react" "^1.0.5"
+    "@neo4j-ndl/base" "^0.1.2"
+    classnames "^2.3.1"
 
 "@neo4j/browser-lambda-parser@1.0.5":
   version "1.0.5"
@@ -4230,6 +4244,11 @@ classnames@^2.2.1, classnames@^2.2.6:
   version "2.2.6"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
   integrity sha1-Q5Nb/90pHzJtrQogUwmzjQD2UM4=
+
+classnames@^2.3.1:
+  version "2.3.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/classnames/-/classnames-2.3.1.tgz#dfcfa3891e306ec1dad105d0e88f4417b8535e8e"
+  integrity sha512-OlQdbZ7gLfGarSqxesMesDa5uz7KFbID8Kpq/SxIoNGDqY8lSYs0D+hhtBXhcdB3rcbXArFr7vlHheLk1voeNA==
 
 clean-css@4.2.x:
   version "4.2.3"
