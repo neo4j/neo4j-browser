@@ -24,7 +24,7 @@ import { withBus } from 'react-suber'
 import { Action, Dispatch } from 'redux'
 import { Bus } from 'suber'
 
-import { GraphModel, Explorer } from 'neo4j-arc/graph-visualization'
+import { GraphModel, GraphVisualizer } from 'neo4j-arc/graph-visualization'
 
 import { StyledVisContainer } from './VisualizationView.styled'
 import { resultHasTruncatedFields } from 'browser/modules/Stream/CypherFrame/helpers'
@@ -253,7 +253,7 @@ LIMIT ${maxNewNeighbours}`
 
     return (
       <StyledVisContainer isFullscreen={this.props.isFullscreen}>
-        <Explorer
+        <GraphVisualizer
           maxNeighbours={this.props.maxNeighbours}
           hasTruncatedFields={this.state.hasTruncatedFields}
           initialNodeDisplay={this.props.initialNodeDisplay}

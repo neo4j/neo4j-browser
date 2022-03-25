@@ -21,7 +21,7 @@ import deepmerge from 'deepmerge'
 import { debounce } from 'lodash'
 import React, { Component } from 'react'
 
-import { Graph } from '../components/Graph'
+import { Graph } from './Graph/Graph'
 import { NodeInspectorPanel, defaultPanelWidth } from './NodeInspectorPanel'
 import { StyledFullSizeContainer, panelMinWidth } from './styled'
 import {
@@ -33,8 +33,7 @@ import {
 import { DetailsPaneProps } from './DefaultPanelContent/DefaultDetailsPane'
 import { OverviewPaneProps } from './DefaultPanelContent/DefaultOverviewPane'
 import { GraphStyleModel } from '../models/GraphStyle'
-import { VizItem } from '../types'
-import { GetNodeNeighboursFn } from '../models/GraphEventHandler'
+import { GetNodeNeighboursFn, VizItem } from '../types'
 import { GraphStats } from '../utils/mapper'
 import { GraphModel } from '../models/Graph'
 
@@ -64,7 +63,7 @@ const deduplicateNodes = (
     { nodes: [], taken: {}, nodeLimitHit: false }
   )
 
-type ExplorerDefaultProps = {
+type GraphVisualizerDefaultProps = {
   initialNodeDisplay: number
   maxNeighbours: number
   updateStyle: (style: any) => void
@@ -80,7 +79,7 @@ type ExplorerDefaultProps = {
   wheelZoomInfoMessageEnabled: boolean
   disableWheelZoomInfoMessage: () => void
 }
-type ExplorerComponentProps = ExplorerDefaultProps & {
+type GraphVisualizerProps = GraphVisualizerDefaultProps & {
   relationships: BasicRelationship[]
   nodes: BasicNode[]
   initialNodeDisplay?: number
@@ -106,7 +105,7 @@ type ExplorerComponentProps = ExplorerDefaultProps & {
   OverviewPaneOverride?: React.FC<OverviewPaneProps>
 }
 
-type ExplorerComponentState = {
+type GraphVisualizerState = {
   graphStyle: GraphStyleModel
   hoveredItem: VizItem
   nodes: BasicNode[]
@@ -119,13 +118,13 @@ type ExplorerComponentState = {
   nodePropertiesExpanded: boolean
 }
 
-export class Explorer extends Component<
-  ExplorerComponentProps,
-  ExplorerComponentState
+export class GraphVisualizer extends Component<
+  GraphVisualizerProps,
+  GraphVisualizerState
 > {
   defaultStyle: any
 
-  static defaultProps: ExplorerDefaultProps = {
+  static defaultProps: GraphVisualizerDefaultProps = {
     initialNodeDisplay: DEFAULT_INITIAL_NODE_DISPLAY,
     maxNeighbours: DEFAULT_MAX_NEIGHBOURS,
     updateStyle: () => undefined,
@@ -140,7 +139,7 @@ export class Explorer extends Component<
     disableWheelZoomInfoMessage: () => undefined
   }
 
-  constructor(props: ExplorerComponentProps) {
+  constructor(props: GraphVisualizerProps) {
     super(props)
     const graphStyle = new GraphStyleModel()
     this.defaultStyle = graphStyle.toSheet()
@@ -243,7 +242,7 @@ export class Explorer extends Component<
     }
   }
 
-  componentDidUpdate(prevProps: ExplorerComponentProps): void {
+  componentDidUpdate(prevProps: GraphVisualizerProps): void {
     if (!deepEquals(prevProps.graphStyleData, this.props.graphStyleData)) {
       if (this.props.graphStyleData) {
         const rebasedStyle = deepmerge(

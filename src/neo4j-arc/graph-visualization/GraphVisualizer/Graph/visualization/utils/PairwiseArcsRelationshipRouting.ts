@@ -17,13 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { GraphModel, NodePair } from '../models/Graph'
-import { GraphStyleModel } from '../models/GraphStyle'
-import { RelationshipModel } from '../models/Relationship'
-import { ArcArrow } from './ArcArrow'
-import { LoopArrow } from './LoopArrow'
-import { StraightArrow } from './StraightArrow'
-import { measureText } from './textMeasurement'
+import { GraphModel, NodePair } from '../../../../models/Graph'
+import { GraphStyleModel } from '../../../../models/GraphStyle'
+import { RelationshipModel } from '../../../../models/Relationship'
+import { ArcArrow } from '../../../../utils/ArcArrow'
+import { LoopArrow } from '../../../../utils/LoopArrow'
+import { StraightArrow } from '../../../../utils/StraightArrow'
+import { measureText } from '../../../../utils/textMeasurement'
 
 export class PairwiseArcsRelationshipRouting {
   style: GraphStyleModel

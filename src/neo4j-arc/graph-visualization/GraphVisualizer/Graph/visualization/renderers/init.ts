@@ -19,8 +19,8 @@
  */
 import { BaseType } from 'd3-selection'
 
-import { NodeCaptionLine, NodeModel } from '../../models/Node'
-import { RelationshipModel } from '../../models/Relationship'
+import { NodeCaptionLine, NodeModel } from '../../../../models/Node'
+import { RelationshipModel } from '../../../../models/Relationship'
 import Renderer from '../Renderer'
 
 const noop = () => undefined
