@@ -24,9 +24,8 @@ jobs:
       - run: npm -g install yarn
       # - run: yarn test
       - run: yarn build
-      - run: | 
-          if [ $(npm view @neo4j-devtools/arc version) != $(npm view . version) ]; then
-            npm publish
-          fi
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          package: 'src/neo4j-arc/package.json'
+          access: 'public'
