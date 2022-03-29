@@ -50,7 +50,11 @@ import {
 } from 'browser-components/ProjectFiles/projectFilesConstants'
 import { getProjectFileDefaultFileName } from 'browser-components/ProjectFiles/projectFilesUtils'
 import { defaultNameFromDisplayContent } from 'browser-components/SavedScripts'
-import { FrameButton, StyledEditorButton } from 'browser-components/buttons'
+import {
+  FrameButton,
+  StyledEditorButton,
+  StyledMainEditorButtonsContainer
+} from 'browser-components/buttons'
 import {
   FULLSCREEN_SHORTCUT,
   printShortcut
@@ -207,7 +211,7 @@ export function MainEditor({
     },
     {
       onClick: discardEditor,
-      title: 'Close',
+      title: 'Clear',
       icon: <CloseIcon />,
       testId: 'discard'
     }
@@ -326,16 +330,18 @@ export function MainEditor({
             />
           </StyledEditorButton>
         </Header>
-        {buttons.map(({ onClick, icon, title, testId }) => (
-          <FrameButton
-            key={`frame-${title}`}
-            title={title}
-            onClick={onClick}
-            dataTestId={`editor-${testId}`}
-          >
-            {icon}
-          </FrameButton>
-        ))}
+        <StyledMainEditorButtonsContainer>
+          {buttons.map(({ onClick, icon, title, testId }) => (
+            <FrameButton
+              key={`frame-${title}`}
+              title={title}
+              onClick={onClick}
+              dataTestId={`editor-${testId}`}
+            >
+              {icon}
+            </FrameButton>
+          ))}
+        </StyledMainEditorButtonsContainer>
       </FlexContainer>
     </MainEditorWrapper>
   )

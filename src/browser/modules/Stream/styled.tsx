@@ -216,6 +216,7 @@ export const DropdownList = styled.ul``
 export const DropdownContent = styled.li`
   display: none;
   position: absolute;
+  margin-top: 15px;
   right: 0px;
   background-color: ${props => props.theme.secondaryBackground};
   color: ${props => props.theme.secondaryButtonText};

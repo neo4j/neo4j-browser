@@ -82,6 +82,7 @@ export const IconContainer = (props: IconContainerProps): JSX.Element => {
   const currentIcon = icon ? (
     <StyledIconWrapper {...rest}>
       <SVGInline
+        className={'centeredSvgIcon'}
         cleanup={['title']}
         svg={icon}
         accessibilityLabel={title}
@@ -89,7 +90,10 @@ export const IconContainer = (props: IconContainerProps): JSX.Element => {
       />
     </StyledIconWrapper>
   ) : (
-    <StyledIconWrapper {...rest} style={{ fontSize: fontSize }} />
+    <StyledIconWrapper
+      {...rest}
+      style={{ fontSize: fontSize, lineHeight: 'inherit' }}
+    />
   )
 
   return text ? (

@@ -8,6 +8,7 @@ exports[`ConfirmationButton renders changes state on clicks and finally calls th
   >
     <i
       class="sc-bdvvtL hZbmWw sl-minus-circle"
+      style="line-height: inherit;"
     />
   </button>
 </div>
@@ -22,6 +23,7 @@ exports[`ConfirmationButton renders changes state on clicks and finally calls th
     >
       <i
         class="sc-bdvvtL hZbmWw sl-arrow-circle-right"
+        style="line-height: inherit;"
       />
     </button>
     <button
@@ -30,6 +32,7 @@ exports[`ConfirmationButton renders changes state on clicks and finally calls th
     >
       <i
         class="sc-bdvvtL hZbmWw sl-delete-circle"
+        style="line-height: inherit;"
       />
     </button>
   </span>
@@ -44,6 +47,7 @@ exports[`ConfirmationButton renders changes state on clicks and finally calls th
   >
     <i
       class="sc-bdvvtL hZbmWw sl-minus-circle"
+      style="line-height: inherit;"
     />
   </button>
 </div>
@@ -57,6 +61,7 @@ exports[`ConfirmationButton renders changes state on clicks and finally calls th
   >
     <i
       class="sc-bdvvtL hZbmWw sl-minus-circle"
+      style="line-height: inherit;"
     />
   </button>
 </div>

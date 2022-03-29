@@ -59,6 +59,12 @@ export const StyledEditorButton = styled.button<{ color?: string }>`
   }
 `
 
+export const StyledMainEditorButtonsContainer = styled.div`
+  height: ${dim.frameTitlebarHeight}px;
+  display: flex;
+  align-items: center;
+`
+
 export const StyledCannyBadgeAnchor = styled.div`
   pointer-events: none;
 
@@ -80,18 +86,13 @@ export const StyledCannyBadgeAnchor = styled.div`
 export const StyledNavigationButton = styled.button`
   background: transparent;
   border: 0;
-  width: 60px;
-  line-height: 67px;
-  padding-top: 3px;
-  font-size: 28px;
+  padding: 20px 16px;
   &:focus {
     outline: none;
   }
 `
 
 export const NavigationButtonContainer = styled.li<{ isOpen: boolean }>`
-  min-height: 70px;
-  height: 70px;
   background-color: ${props =>
     !props.isOpen ? 'transparent' : props.theme.drawerBackground};
   &:focus {
@@ -346,11 +347,6 @@ const StyledFrameControlButton = styled.button<{
   border-left: transparent;
   height: 20px;
   width: 20px;
-  cursor: pointer;
-  overflow: hidden;
-  text-align: center;
-  line-height: 20px;
-  display: inline-block;
   margin-left: 12px;
   &:hover {
     background-color: ${props => props.theme.frameButtonHoverBackground};
@@ -360,17 +356,12 @@ const StyledFrameControlButton = styled.button<{
   }
 `
 
-export const StyledFrameButton = styled.li`
+export const StyledFrameButton = styled.button`
   color: ${props => props.theme.frameButtonTextColorLegacy};
   background-color: transparent;
   border-left: transparent;
   height: ${dim.frameTitlebarHeight}px;
   width: ${dim.frameButtonWidth}px;
-  cursor: pointer;
-  overflow: hidden;
-  text-align: center;
-  line-height: ${dim.frameTitlebarHeight}px;
-  display: inline-block;
 
   &:hover {
     background-color: ${props => props.theme.frameButtonHoverBackground};

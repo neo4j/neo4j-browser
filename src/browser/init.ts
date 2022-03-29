@@ -30,6 +30,8 @@ import './styles/util-classes.css'
 
 import 'browser-styles/relate-by-ui/relate-by-PARTS.css'
 
+import '@neo4j-ndl/base/lib/neo4j-ds-styles.css'
+
 // non web env (just for tests)
 if (typeof btoa === 'undefined') {
   global.btoa = function (str) {

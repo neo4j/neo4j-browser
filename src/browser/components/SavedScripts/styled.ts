@@ -18,6 +18,7 @@ export const SavedScriptsHeader = styled.h5`
 `
 export const FolderNameWrapper = styled.span`
   margin-left: 5px;
+  line-height: 24px;
 `
 
 export const SavedScriptsListItemMain = styled.div<{
@@ -26,7 +27,7 @@ export const SavedScriptsListItemMain = styled.div<{
   padding: 5px;
   display: flex;
   justify-content: space-between;
-  align-items: center
+  align-items: center;
 
   background-color: ${props =>
     props.isSelected ? props.theme.hoverBackground : 'inherit'};
@@ -117,6 +118,7 @@ export const SavedScriptsButtonWrapper = styled.div`
 
 export const SavedScriptsFolderMenuIconWrapper = styled.div`
   padding: 0 0.3rem;
+  line-height: 24px;
 `
 
 export const StyledSavedScriptsButton = styled.button<{ color?: string }>`
