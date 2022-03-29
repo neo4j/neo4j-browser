@@ -55,9 +55,9 @@ module.exports = {
         'neo4j-arc/graph-visualization'
       ),
       'neo4j-arc/common$': path.resolve(helpers.sourcePath, 'neo4j-arc/common'),
-      cypherLanguageSupport$: path.resolve(
+      'neo4j-arc/cypher-language-support$': path.resolve(
         helpers.sourcePath,
-        'cypherLanguageSupport'
+        'neo4j-arc/cypher-language-support'
       )
     },
     extensions: ['.tsx', '.ts', '.js']

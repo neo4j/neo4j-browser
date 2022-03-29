@@ -4,6 +4,8 @@ import dts from 'rollup-plugin-dts'
 import esbuild from 'rollup-plugin-esbuild'
 import svg from 'rollup-plugin-svg'
 import alias from '@rollup/plugin-alias'
+import css from 'rollup-plugin-postcss'
+import monaco from 'rollup-plugin-monaco-editor'
 
 const name = require('./package.json').main.replace(/\.js$/, '')
 
@@ -34,7 +36,11 @@ const aliasEntries = [
 export default [
   bundle({
     plugins: [
+      css(),
       svg(),
+      monaco({
+        languages: ['json']
+      }),
       esbuild(),
       commonjs(),
       nodeResolve(),
@@ -42,14 +48,18 @@ export default [
     ],
     output: [
       {
-        file: `${name}.js`,
+        //file: `${name}.js`,
+        dir: 'dist1',
         format: 'cjs',
         sourcemap: true
+        //inlineDynamicImports: true
       },
       {
-        file: `${name}.mjs`,
+        dir: 'dist2',
+        //file: `${name}.mjs`,
         format: 'es',
         sourcemap: true
+        //inlineDynamicImports: true
       }
     ]
   }),
