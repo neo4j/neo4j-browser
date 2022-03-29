@@ -1,10 +1,10 @@
 {
   "name": "@neo4j-devtools/arc",
   "version": "0.0.5",
-  "main": "dist/neo4j-arc.js",
+  "main": "cjs-dist/index.js",
   "author": "Neo4j Inc.",
   "license": "GPL-3.0",
-  "module": "dist/neo4j-arc.mjs",
+  "module": "es-dist/index.js",
   "typings": "dist/neo4j-arc.d.ts",
   "scripts": {
     "build": "yarn && rollup -c --failAfterWarnings && rm -rf node_modules/",
@@ -48,6 +48,7 @@
     "d3-shape": "^3.0.1",
     "d3-transition": "^3.0.1",
     "d3-zoom": "^3.0.0",
+    "monaco-editor": "^0.33.0",
     "react-dom": "^17.0.2",
     "react-resizable": "^3.0.4",
     "react-svg-inline": "^2.1.1",

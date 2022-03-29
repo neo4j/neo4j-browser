@@ -49,13 +49,13 @@ export default [
     output: [
       {
         //file: `${name}.js`,
-        dir: 'dist1',
+        dir: 'cjs-dist',
         format: 'cjs',
         sourcemap: true
         //inlineDynamicImports: true
       },
       {
-        dir: 'dist2',
+        dir: 'es-dist',
         //file: `${name}.mjs`,
         format: 'es',
         sourcemap: true

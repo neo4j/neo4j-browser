@@ -1119,6 +1119,11 @@ minimatch@^3.0.2, minimatch@^3.0.4:
   dependencies:
     brace-expansion "^1.1.7"
 
+monaco-editor@^0.33.0:
+  version "0.33.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/monaco-editor/-/monaco-editor-0.33.0.tgz#842e244f3750a2482f8a29c676b5684e75ff34af"
+  integrity sha512-VcRWPSLIUEgQJQIE0pVT8FcGBIgFoxz7jtqctE+IiCxWugD0DwgyQBcZBhdSrdMC84eumoqMZsGl2GTreOzwqw==
+
 ms@2.1.2:
   version "2.1.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"

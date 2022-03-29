@@ -17,6 +17,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import * as monaco from 'monaco-editor'
+// @ts-ignore
+import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker'
+
+// @ts-ignore
+self.MonacoEnvironment = {
+  // @ts-ignore
+  getWorker(_, label) {
+    return new editorWorker()
+  }
+}
 
 export { Monaco } from './monaco-editor/Monaco'
 export type { MonacoHandles, MonacoProps } from './monaco-editor/Monaco'
