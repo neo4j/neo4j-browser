@@ -19,7 +19,7 @@
  */
 import { InputStream } from 'antlr4/index.js'
 import { CypherLexer } from 'cypher-editor-support/src/_generated/CypherLexer'
-import { languages } from 'monaco-editor/esm/vs/editor/editor.api'
+import type { languages } from 'monaco-editor'
 
 class CypherState implements languages.IState {
   clone() {

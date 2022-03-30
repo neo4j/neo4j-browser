@@ -25,11 +25,10 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-  .BundleAnalyzerPlugin
+const BundleAnalyzerPlugin =
+  require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
 const manifestGeneration = require('./generate-manifest-helpers')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 
@@ -97,39 +96,6 @@ module.exports = () => {
     }),
     new ForkTsCheckerNotifierWebpackPlugin({
       title: 'TypeScript'
-    }),
-    new MonacoWebpackPlugin({
-      features: [
-        '!accessibilityHelp',
-        '!anchorSelect',
-        '!caretOperations',
-        '!clipboard',
-        '!codeAction',
-        '!codelens',
-        '!colorDetector',
-        '!contextmenu',
-        '!coreCommands',
-        '!cursorUndo',
-        '!dnd',
-        '!fontZoom',
-        '!gotoError',
-        '!gotoLine',
-        '!gotoSymbol',
-        '!iPadShowKeyboard',
-        '!inspectTokens',
-        '!links',
-        '!parameterHints',
-        '!quickHelp',
-        '!referenceSearch',
-        '!snippets',
-        '!toggleHighContrast',
-        '!toggleTabFocusMode',
-        '!transpose',
-        '!unusualLineTerminators',
-        '!viewportSemanticTokens'
-      ],
-      languages: [],
-      filename: '[name]-[hash].worker.js'
     })
   ]
 

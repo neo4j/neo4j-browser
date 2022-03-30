@@ -24,10 +24,8 @@ const bundle = config => ({
     if (
       !(
         warning.code === 'CIRCULAR_DEPENDENCY' &&
-        (warning.toString().includes('d3') ||
-          warning.toString().includes('luxon'))
-      )
-    ) {
+        ( ['d3','luxon', 'antlr'].some(dep => warning.toString().includes(dep)))
+    ) ){
       warn(warning)
     }
   }

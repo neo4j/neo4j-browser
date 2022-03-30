@@ -148,6 +148,13 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@heroicons/react/-/react-1.0.6.tgz#35dd26987228b39ef2316db3b1245c42eb19e324"
   integrity sha512-JJCXydOFWMDpCP4q13iEplA503MQO3xLoZiKum+955ZCtHINWnx26CUxVxxFQu/uLb4LW3ge15ZpzIkXKkJ8oQ==
 
+"@monaco-editor/loader@^1.3.0":
+  version "1.3.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@monaco-editor/loader/-/loader-1.3.0.tgz#659fbaf1d612ea67b2a0519a18612d1c4813e444"
+  integrity sha512-N3mGq1ktC3zh7WUx3NGO+PSDdNq9Vspk/41rEmRdrCqV9vNbBTRzAOplmUpNQsi+hmTs++ERMBobMERb8Kb+3g==
+  dependencies:
+    state-local "^1.0.6"
+
 "@neo4j-ndl/base@^0.1.2":
   version "0.1.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@neo4j-ndl/base/-/base-0.1.2.tgz#fa542746199aea852eef1e091e3b40e252290383"
@@ -956,6 +963,11 @@ sourcemap-codec@^1.4.8:
   version "1.4.8"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/sourcemap-codec/-/sourcemap-codec-1.4.8.tgz#ea804bd94857402e6992d05a38ef1ae35a9ab4c4"
   integrity sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==
+
+state-local@^1.0.6:
+  version "1.0.7"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/state-local/-/state-local-1.0.7.tgz#da50211d07f05748d53009bee46307a37db386d5"
+  integrity sha512-HTEHMNieakEnoe33shBYcZ7NX83ACUjCu8c40iOGEZsngj9zRnkqS9j1pqQPXwobB0ZcVTk27REb7COQ0UR59w==
 
 styled-components@^5.3.3:
   version "5.3.3"

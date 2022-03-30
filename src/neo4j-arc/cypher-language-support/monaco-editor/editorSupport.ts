@@ -22,11 +22,15 @@ import {
   EditorSupportCompletionItem,
   EditorSupportSchema
 } from 'cypher-editor-support'
-import { editor, languages } from 'monaco-editor'
+import loader from '@monaco-editor/loader'
 
 import { CypherTokensProvider } from '../language/CypherTokensProvider'
 import cypherBaseFunctions from '../language/cypherBaseFunctions'
 import { monacoDarkTheme, monacoLightTheme } from './CypherMonacoThemes'
+
+// False positive
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type { languages } from 'monaco-editor'
 
 export function setupAutocomplete({
   consoleCommands,
@@ -49,92 +53,94 @@ export function setupAutocomplete({
 }
 
 export function initalizeCypherSupport(): void {
-  languages.register({ id: 'cypher' })
-  languages.setTokensProvider('cypher', new CypherTokensProvider())
-  languages.setLanguageConfiguration('cypher', {
-    brackets: [
-      ['(', ')'],
-      ['{', '}'],
-      ['[', ']'],
-      ["'", "'"],
-      ['"', '"']
-    ],
-    comments: {
-      blockComment: ['/*', '*/'],
-      lineComment: '//'
-    }
-  })
-
-  languages.registerCompletionItemProvider('cypher', {
-    triggerCharacters: ['.', ':', '[', '(', '{', '$'],
-    provideCompletionItems: (model, position) => {
-      const { startColumn, endColumn } = model.getWordUntilPosition(position)
-      const range = {
-        startLineNumber: position.lineNumber,
-        endLineNumber: position.lineNumber,
-        startColumn,
-        endColumn
+  loader.init().then(({ editor, languages }) => {
+    languages.register({ id: 'cypher' })
+    languages.setTokensProvider('cypher', new CypherTokensProvider())
+    languages.setLanguageConfiguration('cypher', {
+      brackets: [
+        ['(', ')'],
+        ['{', '}'],
+        ['[', ']'],
+        ["'", "'"],
+        ['"', '"']
+      ],
+      comments: {
+        blockComment: ['/*', '*/'],
+        lineComment: '//'
       }
-      editorSupport.update(model.getValue())
-      let items: EditorSupportCompletionItem[] = []
-      // Cypher editor support repo has internal type errors
-      try {
-        items = editorSupport.getCompletion(
-          position.lineNumber,
-          position.column - 1
-        ).items
-      } catch {}
+    })
 
-      const { CompletionItemKind } = languages
-      const completionTypes: Record<string, languages.CompletionItemKind> = {
-        keyword: CompletionItemKind.Keyword,
-        label: CompletionItemKind.Field,
-        relationshipType: CompletionItemKind.Reference,
-        variable: CompletionItemKind.Variable,
-        procedure: CompletionItemKind.Function,
-        function: CompletionItemKind.Function,
-        parameter: CompletionItemKind.TypeParameter,
-        propertyKey: CompletionItemKind.Property,
-        consoleCommand: CompletionItemKind.Function,
-        consoleCommandSubcommand: CompletionItemKind.Function,
-        procedureOutput: CompletionItemKind.Operator
-      }
+    languages.registerCompletionItemProvider('cypher', {
+      triggerCharacters: ['.', ':', '[', '(', '{', '$'],
+      provideCompletionItems: (model, position) => {
+        const { startColumn, endColumn } = model.getWordUntilPosition(position)
+        const range = {
+          startLineNumber: position.lineNumber,
+          endLineNumber: position.lineNumber,
+          startColumn,
+          endColumn
+        }
+        editorSupport.update(model.getValue())
+        let items: EditorSupportCompletionItem[] = []
+        // Cypher editor support repo has internal type errors
+        try {
+          items = editorSupport.getCompletion(
+            position.lineNumber,
+            position.column - 1
+          ).items
+        } catch {}
 
-      // word preceding trigger character, used to determine range (where to insert) procedure suggestions
-      const { word } = model.getWordUntilPosition({
-        lineNumber: position.lineNumber,
-        column: position.column - 1
-      })
+        const { CompletionItemKind } = languages
+        const completionTypes: Record<string, languages.CompletionItemKind> = {
+          keyword: CompletionItemKind.Keyword,
+          label: CompletionItemKind.Field,
+          relationshipType: CompletionItemKind.Reference,
+          variable: CompletionItemKind.Variable,
+          procedure: CompletionItemKind.Function,
+          function: CompletionItemKind.Function,
+          parameter: CompletionItemKind.TypeParameter,
+          propertyKey: CompletionItemKind.Property,
+          consoleCommand: CompletionItemKind.Function,
+          consoleCommandSubcommand: CompletionItemKind.Function,
+          procedureOutput: CompletionItemKind.Operator
+        }
 
-      const getRange = (type: string, text: string) =>
-        ['consoleCommand', 'label', 'relationshipType'].includes(type)
-          ? { ...range, startColumn: range.startColumn - 1 }
-          : ['function', 'procedure'].includes(type)
-          ? {
-              ...range,
-              startColumn:
-                range.startColumn - (text.lastIndexOf(word) + word.length + 1)
-            }
-          : range
-
-      return {
-        suggestions: items.map((item, index) => {
-          const label = getText(item)
-          return {
-            label,
-            kind: completionTypes[item.type],
-            insertText: label,
-            range: getRange(item.type, label),
-            detail: item.postfix || undefined,
-            sortText: encodeNumberAsSortableString(index)
-          }
+        // word preceding trigger character, used to determine range (where to insert) procedure suggestions
+        const { word } = model.getWordUntilPosition({
+          lineNumber: position.lineNumber,
+          column: position.column - 1
         })
-      }
-    }
-  })
 
-  editor.defineTheme('dark', monacoDarkTheme)
-  editor.defineTheme('light', monacoLightTheme)
+        const getRange = (type: string, text: string) =>
+          ['consoleCommand', 'label', 'relationshipType'].includes(type)
+            ? { ...range, startColumn: range.startColumn - 1 }
+            : ['function', 'procedure'].includes(type)
+            ? {
+                ...range,
+                startColumn:
+                  range.startColumn - (text.lastIndexOf(word) + word.length + 1)
+              }
+            : range
+
+        return {
+          suggestions: items.map((item, index) => {
+            const label = getText(item)
+            return {
+              label,
+              kind: completionTypes[item.type],
+              insertText: label,
+              range: getRange(item.type, label),
+              detail: item.postfix || undefined,
+              sortText: encodeNumberAsSortableString(index)
+            }
+          })
+        }
+      }
+    })
+
+    editor.defineTheme('dark', monacoDarkTheme)
+    editor.defineTheme('light', monacoLightTheme)
+  })
 }
 
 function encodeNumberAsSortableString(number: number): string {
@@ -162,5 +168,7 @@ export const getText = (item: EditorSupportCompletionItem): string =>
 export function setEditorTheme(
   theme: 'normal' | 'dark' | 'light' | 'outline'
 ): void {
-  editor.setTheme(theme === 'dark' ? 'dark' : 'light')
+  loader
+    .init()
+    .then(({ editor }) => editor.setTheme(theme === 'dark' ? 'dark' : 'light'))
 }

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { editor } from 'monaco-editor/esm/vs/editor/editor.api'
+import type { editor } from 'monaco-editor'
 
 // colors from cypher-editor/cypher-codemirror/src/css/_solarized.css
 const enum CypherColor {
@@ -384,7 +384,7 @@ export const monacoLightTheme: editor.IStandaloneThemeData = {
   inherit: true,
   rules: lightThemeRules,
   colors: {
-    'editor.background': '#fff',
+    'editor.background': '#ffffff',
     'editorCursor.foreground': '#d6d7db',
     'editorLineNumber.foreground': CypherColor.light_grey,
     'editorLineNumber.activeForeground': CypherColor.light_grey,

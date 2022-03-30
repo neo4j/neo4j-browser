@@ -19,18 +19,17 @@
  */
 import { QueryOrCommand, parse } from 'cypher-editor-support'
 import { debounce } from 'lodash-es'
-import { QuickInputList } from 'monaco-editor/esm/vs/base/parts/quickinput/browser/quickInputList'
-import {
-  IPosition,
-  KeyCode,
-  KeyMod,
-  MarkerSeverity,
-  editor
-} from 'monaco-editor/esm/vs/editor/editor.api'
+
+import type { IPosition, editor } from 'monaco-editor'
 import { QueryResult } from 'neo4j-driver'
 import React from 'react'
 import ResizeObserver from 'resize-observer-polyfill'
 import styled from 'styled-components'
+import * as monaco from 'monaco-editor'
+import loader from '@monaco-editor/loader'
+
+// loads the monaco source code from node_modules rather than cdn
+loader.config({ monaco })
 
 const shouldCheckForHints = (code: string) =>
   code.trim().length > 0 &&
@@ -39,6 +38,7 @@ const shouldCheckForHints = (code: string) =>
   !code.trimLeft().toUpperCase().startsWith('PROFILE')
 
 export type MonacoHandles = Monaco
+type MonacoApi = typeof monaco
 
 const MonacoStyleWrapper = styled.div`
   height: 100%;
@@ -87,6 +87,7 @@ export class Monaco extends React.Component<MonacoProps, MonacoState> {
     draft: ''
   }
 
+  monaco?: MonacoApi
   editor?: editor.IStandaloneCodeEditor
   container?: HTMLElement
 
@@ -223,7 +224,7 @@ export class Monaco extends React.Component<MonacoProps, MonacoState> {
     const model = this.editor?.getModel()
     if (!model) return
 
-    editor.setModelMarkers(model, this.getMonacoId(), [])
+    this.monaco?.editor.setModelMarkers(model, this.getMonacoId(), [])
 
     this.updateGutterCharWidth(this.props.useDb || '')
     this.debouncedUpdateCode()
@@ -231,7 +232,9 @@ export class Monaco extends React.Component<MonacoProps, MonacoState> {
 
   private addWarnings = (statements: QueryOrCommand[]): void => {
     const model = this.editor?.getModel()
-    if (!statements.length || !model) return
+    if (!statements.length || !model || !this.monaco) return
+
+    const { editor, MarkerSeverity } = this.monaco
 
     // clearing markers again solves issue with incorrect multi-statement warning when user spam clicks setting on and off
     editor.setModelMarkers(model, this.getMonacoId(), [])
@@ -294,113 +297,120 @@ export class Monaco extends React.Component<MonacoProps, MonacoState> {
   }
 
   componentDidMount = (): void => {
-    this.container = document.getElementById(this.getMonacoId()) ?? undefined
-    if (!this.container) return
+    loader.init().then((monaco: MonacoApi) => {
+      const { editor, KeyCode, KeyMod } = monaco
+      this.container = document.getElementById(this.getMonacoId()) ?? undefined
+      if (!this.container) return
 
-    this.editor = editor.create(this.container, {
-      autoClosingOvertype: 'always',
-      contextmenu: false,
-      cursorStyle: 'block',
-      fontFamily: '"Fira Code", Monaco, "Courier New", Terminal, monospace',
-      fontLigatures: this.props.fontLigatures,
-      fontSize: 17,
-      fontWeight: '400',
-      hideCursorInOverviewRuler: true,
-      language: 'cypher',
-      lightbulb: { enabled: false },
-      lineHeight: 23,
-      lineNumbers: (line: number) =>
-        this.isMultiLine() ? line.toString() : `${this.props.useDb || ''}$`,
-      links: false,
-      minimap: { enabled: false },
-      overviewRulerBorder: false,
-      overviewRulerLanes: 0,
-      quickSuggestions: false,
-      renderLineHighlight: 'none',
-      scrollbar: {
-        alwaysConsumeMouseWheel: false,
-        useShadows: false
-      },
-      scrollBeyondLastColumn: 0,
-      scrollBeyondLastLine: false,
-      selectionHighlight: false,
-      value: this.props.value,
-      wordWrap: 'on',
-      wrappingStrategy: 'advanced'
-    })
-
-    this.editor.addCommand(
-      KeyCode.Enter,
-      () => {
-        this.isMultiLine() ? this.newLine() : this.execute()
-      },
-      '!suggestWidgetVisible && !findWidgetVisible'
-    )
-    this.editor.addCommand(
-      KeyCode.UpArrow,
-      this.handleUp,
-      '!suggestWidgetVisible'
-    )
-    this.editor.addCommand(
-      KeyCode.DownArrow,
-      this.handleDown,
-      '!suggestWidgetVisible'
-    )
-    this.editor.addCommand(KeyMod.Shift | KeyCode.Enter, this.newLine)
-    this.editor.addCommand(KeyMod.CtrlCmd | KeyCode.Enter, this.execute)
-    this.editor.addCommand(KeyMod.WinCtrl | KeyCode.Enter, this.execute)
-    this.editor.addCommand(
-      KeyMod.CtrlCmd | KeyCode.UpArrow,
-      this.viewHistoryPrevious
-    )
-    this.editor.addCommand(
-      KeyMod.CtrlCmd | KeyCode.DownArrow,
-      this.viewHistoryNext
-    )
-    this.editor.addCommand(
-      KeyMod.CtrlCmd | KeyCode.US_DOT,
-      this.props.onDisplayHelpKeys
-    )
-    this.editor.addCommand(
-      KeyCode.Escape,
-      this.props.toggleFullscreen,
-      '!suggestWidgetVisible && !findWidgetVisible'
-    )
-
-    this.onContentUpdate()
-
-    this.editor.onDidChangeModelContent(this.onContentUpdate)
-    this.editor.onDidContentSizeChange(() =>
-      this.resize(this.props.isFullscreen)
-    )
-
-    const resizeObserver = new ResizeObserver(() => {
-      // Wrapped in requestAnimationFrame to avoid the error "ResizeObserver loop limit exceeded"
-      window.requestAnimationFrame(() => {
-        this.editor?.layout()
+      this.editor = editor.create(this.container, {
+        autoClosingOvertype: 'always',
+        contextmenu: false,
+        cursorStyle: 'block',
+        fontFamily: '"Fira Code", Monaco, "Courier New", Terminal, monospace',
+        fontLigatures: this.props.fontLigatures,
+        fontSize: 17,
+        fontWeight: '400',
+        hideCursorInOverviewRuler: true,
+        language: 'cypher',
+        lightbulb: { enabled: false },
+        lineHeight: 23,
+        lineNumbers: (line: number) =>
+          this.isMultiLine() ? line.toString() : `${this.props.useDb || ''}$`,
+        links: false,
+        minimap: { enabled: false },
+        overviewRulerBorder: false,
+        overviewRulerLanes: 0,
+        quickSuggestions: false,
+        renderLineHighlight: 'none',
+        scrollbar: {
+          alwaysConsumeMouseWheel: false,
+          useShadows: false
+        },
+        scrollBeyondLastColumn: 0,
+        scrollBeyondLastLine: false,
+        selectionHighlight: false,
+        value: this.props.value,
+        wordWrap: 'on',
+        wrappingStrategy: 'advanced'
       })
+
+      this.editor.addCommand(
+        KeyCode.Enter,
+        () => {
+          this.isMultiLine() ? this.newLine() : this.execute()
+        },
+        '!suggestWidgetVisible && !findWidgetVisible'
+      )
+      this.editor.addCommand(
+        KeyCode.UpArrow,
+        this.handleUp,
+        '!suggestWidgetVisible'
+      )
+      this.editor.addCommand(
+        KeyCode.DownArrow,
+        this.handleDown,
+        '!suggestWidgetVisible'
+      )
+      this.editor.addCommand(KeyMod.Shift | KeyCode.Enter, this.newLine)
+      this.editor.addCommand(KeyMod.CtrlCmd | KeyCode.Enter, this.execute)
+      this.editor.addCommand(KeyMod.WinCtrl | KeyCode.Enter, this.execute)
+      this.editor.addCommand(
+        KeyMod.CtrlCmd | KeyCode.UpArrow,
+        this.viewHistoryPrevious
+      )
+      this.editor.addCommand(
+        KeyMod.CtrlCmd | KeyCode.DownArrow,
+        this.viewHistoryNext
+      )
+      this.editor.addCommand(
+        KeyMod.CtrlCmd | KeyCode.US_DOT,
+        this.props.onDisplayHelpKeys
+      )
+      this.editor.addCommand(
+        KeyCode.Escape,
+        this.props.toggleFullscreen,
+        '!suggestWidgetVisible && !findWidgetVisible'
+      )
+
+      this.onContentUpdate()
+
+      this.editor.onDidChangeModelContent(this.onContentUpdate)
+      this.editor.onDidContentSizeChange(() =>
+        this.resize(this.props.isFullscreen)
+      )
+
+      const resizeObserver = new ResizeObserver(() => {
+        // Wrapped in requestAnimationFrame to avoid the error "ResizeObserver loop limit exceeded"
+        window.requestAnimationFrame(() => {
+          this.editor?.layout()
+        })
+      })
+      resizeObserver.observe(this.container)
+
+      /*
+
+      This workaround  doesn't work with the loader. should be fixed in 0.3.2 but we can't do that now.
+
+       * This moves the the command palette widget out of of the overflow-guard div where overlay widgets
+       * are located, into the overflowing content widgets div.
+       * This solves the command palette being squashed when the cypher editor is only a few lines high.
+       * The workaround is based on a suggestion found in the github issue: https://github.com/microsoft/monaco-editor/issues/70
+      const quickInputDOMNode = this.editor.getContribution<
+        { widget: { domNode: HTMLElement } } & editor.IEditorContribution
+      >('editor.controller.quickInput')?.widget.domNode
+
+      // @ts-ignore since we use internal APIs
+      this.editor._modelData.view._contentWidgets.overflowingContentWidgetsDomNode.domNode.appendChild(
+        quickInputDOMNode?.parentNode?.removeChild(quickInputDOMNode)
+      )
+
+      QuickInputList.prototype.layout = function (maxHeight: number) {
+        this.list.getHTMLElement().style.maxHeight =
+          maxHeight < 200 ? '200px' : Math.floor(maxHeight) + 'px'
+        this.list.layout()
+      }
+       */
     })
-    resizeObserver.observe(this.container)
-
-    /*
-     * This moves the the command palette widget out of of the overflow-guard div where overlay widgets
-     * are located, into the overflowing content widgets div.
-     * This solves the command palette being squashed when the cypher editor is only a few lines high.
-     * The workaround is based on a suggestion found in the github issue: https://github.com/microsoft/monaco-editor/issues/70
-     */
-    const quickInputDOMNode = this.editor.getContribution<
-      { widget: { domNode: HTMLElement } } & editor.IEditorContribution
-    >('editor.controller.quickInput').widget.domNode
-    // @ts-ignore since we use internal APIs
-    this.editor._modelData.view._contentWidgets.overflowingContentWidgetsDomNode.domNode.appendChild(
-      quickInputDOMNode.parentNode?.removeChild(quickInputDOMNode)
-    )
-
-    QuickInputList.prototype.layout = function (maxHeight: number) {
-      this.list.getHTMLElement().style.maxHeight =
-        maxHeight < 200 ? '200px' : Math.floor(maxHeight) + 'px'
-      this.list.layout()
-    }
   }
 
   render(): JSX.Element {
