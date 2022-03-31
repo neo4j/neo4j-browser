@@ -38,9 +38,7 @@ describe('Multi database', () => {
     })
 
   before(() => {
-    cy.visit(Cypress.config('url'))
-      .title()
-      .should('include', 'Neo4j Browser')
+    cy.visit(Cypress.config('url')).title().should('include', 'Neo4j Browser')
     cy.wait(3000)
   })
   it('can connect', () => {
@@ -169,10 +167,7 @@ describe('Multi database', () => {
         editor().contains('system$')
 
         cy.executeCommand(':dbs')
-        cy.getFrames()
-          .eq(0)
-          .contains(':use `mossdeep-24.`')
-          .click()
+        cy.getFrames().eq(0).contains(':use `mossdeep-24.`').click()
         editor().contains('neo4j$')
 
         cy.executeCommand('drop alias `Mossdeep-24.` for database;')
@@ -229,10 +224,8 @@ describe('Multi database', () => {
         cy.executeCommand('RETURN "Test string"')
         cy.executeCommand(':use system')
 
-        // Close first frame
-        cy.get('[title="Close"]', { timeout: 10000 })
-          .eq(1)
-          .click()
+        // Close use db frame
+        cy.get('[title="Close"]', { timeout: 10000 }).eq(0).click()
 
         // Make sure it's closed
         cy.get('[data-testid="frame"]', { timeout: 10000 }).should(

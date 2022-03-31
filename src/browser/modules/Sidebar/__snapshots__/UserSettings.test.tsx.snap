@@ -3,38 +3,38 @@
 exports[`Settings renders with strange characters in display name 1`] = `
 <div>
   <div
-    class="sc-caiLqq eKOWzD"
+    class="sc-iUKqMP gvEBEf"
     id="db-settings"
   >
     <h4
-      class="sc-iUKqMP dBSoRv"
+      class="sc-iAKWXU kLfCqZ"
     >
       Browser Settings
     </h4>
     <div
-      class="sc-dPiLbb yzXlm"
+      class="sc-bBHHxi gsdsdC"
     >
       <div
-        class="sc-cTAqQK diFdii"
+        class="sc-jObWnj krJaWX"
       >
         <div
-          class="sc-jObWnj epnoui"
+          class="sc-dPiLbb iSYVKD"
         >
           <h5
-            class="sc-efQSVx cziNtw"
+            class="sc-cTAqQK bKwFoO"
           >
             Test åäö settings
           </h5>
           <div
-            class="sc-khQegj evRSor"
+            class="sc-hUpaCq iZVZbP"
           >
             <label
-              class="sc-hUpaCq fxKLDB"
+              class="sc-jgrJph hhWzxG"
               title=""
             >
               åäö üüü
               <input
-                class="sc-gSQFLo lKA-Dy testSetting"
+                class="sc-lbhJGD jEoFgl testSetting"
                 data-testid="setting-testSetting"
                 title=""
                 value="true"
@@ -42,13 +42,13 @@ exports[`Settings renders with strange characters in display name 1`] = `
             </label>
           </div>
           <h5
-            class="sc-efQSVx cziNtw"
+            class="sc-cTAqQK bKwFoO"
           >
             Product Analytics
           </h5>
         </div>
         <div
-          class="sc-jObWnj epnoui"
+          class="sc-dPiLbb iSYVKD"
         />
       </div>
     </div>
