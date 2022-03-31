@@ -5,21 +5,27 @@ import esbuild from 'rollup-plugin-esbuild'
 import svg from 'rollup-plugin-svg'
 import alias from '@rollup/plugin-alias'
 
-const name = require('./package.json').main.replace(/\.js$/, '')
+const packageJson = require('./package.json')
+const name = packageJson.main.replace(/\.js$/, '')
 
-const dependenciesNotToBundle = ['react']
+const dependenciesNotToBundle = Object.keys(
+  packageJson.peerDependencies
+).concat(['@neo4j-ndl/base/lib/tokens/js/tokens'])
+
 const bundle = config => ({
   ...config,
   input: 'index.ts',
   external: id => dependenciesNotToBundle.includes(id),
 
-  // We get warnings that we don't need to care about from d3
-  //https://github.com/d3/d3-selection/issues/168
+  // We get some warnings that we don't care about
+  // https://github.com/d3/d3-selection/issues/168
+  // https://github.com/moment/luxon/issues/193
   onwarn: function (warning, warn) {
     if (
       !(
         warning.code === 'CIRCULAR_DEPENDENCY' &&
-        warning.toString().includes('d3')
+        (warning.toString().includes('d3') ||
+          warning.toString().includes('luxon'))
       )
     ) {
       warn(warning)
