@@ -5,40 +5,40 @@ exports[`ErrorsView displays nothing if no errors 1`] = `<div />`;
 exports[`ErrorsView displays procedure link if unknown procedure 1`] = `
 <div>
   <div
-    class="sc-jcFjpl fmaHgx"
+    class="sc-kfPuZi eetjan"
   >
     <div
-      class="sc-caiLqq fJSxRO"
+      class="sc-fKVqWL hFvVsk"
     >
       <div
-        class="sc-iUKqMP gKBHJc"
+        class="sc-bBHxTw cOKOWM"
       >
         <div
-          class="sc-jObWnj sc-bBHHxi egWnei kOXwzt"
+          class="sc-iJKOTD sc-ezbkAF hhmYSB ftYvYV"
         >
           ERROR
         </div>
         <h4
-          class="sc-jgrJph krhPQU"
+          class="sc-hiCibw HoeQn"
         >
           Neo.ClientError.Procedure.ProcedureNotFound
         </h4>
       </div>
       <div
-        class="sc-iAKWXU"
+        class="sc-iwjdpV"
       >
         <pre
-          class="sc-lbhJGD hiKYW"
+          class="sc-cCcXHH haCMIe"
           data-testid="cypherFrameErrorMessage"
         >
           not found
         </pre>
       </div>
       <div
-        class="sc-cTAqQK gxIQKW"
+        class="sc-llYSUQ dMBrER"
       >
         <a
-          class="sc-efQSVx dbxkZS"
+          class="sc-cxpSdN gYcTYD"
         >
           <i
             class="sc-bdvvtL jWhaJw fa fa-play-circle-o"
@@ -55,30 +55,30 @@ exports[`ErrorsView displays procedure link if unknown procedure 1`] = `
 exports[`ErrorsView does displays an error 1`] = `
 <div>
   <div
-    class="sc-jcFjpl fmaHgx"
+    class="sc-kfPuZi eetjan"
   >
     <div
-      class="sc-caiLqq fJSxRO"
+      class="sc-fKVqWL hFvVsk"
     >
       <div
-        class="sc-iUKqMP gKBHJc"
+        class="sc-bBHxTw cOKOWM"
       >
         <div
-          class="sc-jObWnj sc-bBHHxi egWnei kOXwzt"
+          class="sc-iJKOTD sc-ezbkAF hhmYSB ftYvYV"
         >
           ERROR
         </div>
         <h4
-          class="sc-jgrJph krhPQU"
+          class="sc-hiCibw HoeQn"
         >
           Test.Error
         </h4>
       </div>
       <div
-        class="sc-iAKWXU"
+        class="sc-iwjdpV"
       >
         <pre
-          class="sc-lbhJGD hiKYW"
+          class="sc-cCcXHH haCMIe"
           data-testid="cypherFrameErrorMessage"
         >
           Test error description

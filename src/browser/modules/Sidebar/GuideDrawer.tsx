@@ -21,7 +21,7 @@ import React, { useRef } from 'react'
 import { connect } from 'react-redux'
 import { Action, Dispatch } from 'redux'
 
-import { BackIcon } from 'neo4j-arc/common'
+import { BackIcon } from 'browser-components/icons/Icons'
 
 import GuideCarousel from '../GuideCarousel/GuideCarousel'
 import GuidePicker from './GuidePicker'

@@ -23,7 +23,7 @@ import { withBus } from 'react-suber'
 import { Action, Dispatch } from 'redux'
 import { Bus } from 'suber'
 
-import { PlayIcon } from 'neo4j-arc/common'
+import { PlayIcon } from 'browser-components/icons/Icons'
 
 import { errorMessageFormater } from '../../errorMessageFormater'
 import {

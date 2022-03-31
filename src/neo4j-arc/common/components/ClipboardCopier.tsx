@@ -45,8 +45,9 @@ export function ClipboardCopier({
           .then(() => showPopup('✔️ Copied to clipboard'))
           .catch(() => showPopup('Copying text failed'))
       }
+      title={titleText}
     >
-      <CopyIcon title={titleText} width={iconSize} />
+      <CopyIcon width={iconSize} />
       {messageToShow && <InfoPopup text={messageToShow} />}
     </CopyIconContainer>
   )

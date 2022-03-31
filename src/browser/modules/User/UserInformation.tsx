@@ -22,7 +22,7 @@ import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import uuid, { v4 } from 'uuid'
 
-import { CloseIcon } from 'neo4j-arc/common'
+import { CloseIcon } from 'browser-components/icons/Icons'
 
 import RolesSelector from './RolesSelector'
 import {

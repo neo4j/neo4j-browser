@@ -22,7 +22,10 @@ import { connect } from 'react-redux'
 import { Action } from 'redux'
 import semver from 'semver'
 
-import { CannyFeedbackIcon, CannyNotificationsIcon } from 'neo4j-arc/common'
+import {
+  CannyFeedbackIcon,
+  CannyNotificationsIcon
+} from 'browser-components/icons/Icons'
 
 import DocumentItems from './DocumentItems'
 import { formatDocVersion } from './docsUtils'

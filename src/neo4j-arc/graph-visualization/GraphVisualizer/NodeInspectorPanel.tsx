@@ -20,7 +20,7 @@
 import React, { Component } from 'react'
 import { Resizable } from 'react-resizable'
 
-import { ChevronLeftIcon, ChevronRightIcon } from 'neo4j-arc/common'
+import { ChevronLeftIcon, ChevronRightIcon } from '../../common'
 
 import {
   DefaultDetailsPane,

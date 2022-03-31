@@ -104,7 +104,7 @@ export const PropertiesTable = ({
                   <ClipboardCopier
                     titleText={'Copy key and value'}
                     textToCopy={`${key}: ${value}`}
-                    iconSize={10}
+                    iconSize={12}
                   />
                 </CopyCell>
               </tr>

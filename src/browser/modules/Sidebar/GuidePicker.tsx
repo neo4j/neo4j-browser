@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { BinIcon } from 'neo4j-arc/common'
+import { BinIcon } from 'browser-components/icons/Icons'
 
 import {
   DrawerBrowserCommand,

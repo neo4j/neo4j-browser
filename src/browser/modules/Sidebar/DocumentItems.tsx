@@ -26,7 +26,7 @@ import {
   HollowPlayIcon,
   SavedScriptsCollapseMenuIcon,
   SavedScriptsExpandMenuRightIcon
-} from 'neo4j-arc/common'
+} from 'browser-components/icons/Icons'
 
 import {
   StyledCommand,

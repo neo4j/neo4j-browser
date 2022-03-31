@@ -19,7 +19,7 @@
  */
 import React from 'react'
 
-import { QuestionIcon } from 'neo4j-arc/common'
+import { QuestionIcon } from 'browser-components/icons/Icons'
 
 import { buildTableData } from './sysinfoUtils'
 import {
