@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { QuestionIcon } from 'browser-components/icons/Icons'
+import { QuestionIcon } from 'browser-components/icons/LegacyIcons'
 
 import { StyledInfoMessage } from './../../Stream/styled'
 import { DatabaseMetric } from './SysInfoFrame'

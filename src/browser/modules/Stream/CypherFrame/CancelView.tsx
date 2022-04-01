@@ -19,7 +19,7 @@
  */
 import React from 'react'
 
-import { SpinnerIcon } from 'browser-components/icons/Icons'
+import { SpinnerIcon } from 'browser-components/icons/LegacyIcons'
 
 import { SpinnerContainer, StyledBodyMessage } from '../styled'
 import Centered from 'browser-components/Centered'

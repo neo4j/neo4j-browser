@@ -19,7 +19,7 @@
  */
 import React from 'react'
 
-import { ExclamationTriangleIcon } from 'browser-components/icons/Icons'
+import { ExclamationTriangleIcon } from 'browser-components/icons/LegacyIcons'
 
 import { errorMessageFormater } from '../Stream/errorMessageFormater'
 import { ErrorText } from '../Stream/styled'

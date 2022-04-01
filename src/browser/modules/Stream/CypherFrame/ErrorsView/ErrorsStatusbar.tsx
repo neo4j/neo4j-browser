@@ -20,7 +20,7 @@
 import React, { Component } from 'react'
 
 import { deepEquals } from 'neo4j-arc/common'
-import { ExclamationTriangleIcon } from 'browser-components/icons/Icons'
+import { ExclamationTriangleIcon } from 'browser-components/icons/LegacyIcons'
 
 import Ellipsis from 'browser-components/Ellipsis'
 import { errorMessageFormater } from 'project-root/src/browser/modules/Stream/errorMessageFormater'

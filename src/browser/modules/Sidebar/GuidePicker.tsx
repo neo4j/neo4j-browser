@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { BinIcon } from 'browser-components/icons/Icons'
+import { BinIcon } from 'browser-components/icons/LegacyIcons'
 
 import {
   DrawerBrowserCommand,

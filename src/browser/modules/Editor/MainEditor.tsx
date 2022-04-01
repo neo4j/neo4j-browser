@@ -34,7 +34,7 @@ import {
   FileIcon,
   UpdateFileIcon,
   RunIcon
-} from 'browser-components/icons/Icons'
+} from 'browser-components/icons/LegacyIcons'
 import { isMac } from 'neo4j-arc/common'
 
 import {

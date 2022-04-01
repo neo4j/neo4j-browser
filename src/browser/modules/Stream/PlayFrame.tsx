@@ -26,7 +26,7 @@ import { Bus } from 'suber'
 import {
   StackNextIcon,
   StackPreviousIcon
-} from 'browser-components/icons/Icons'
+} from 'browser-components/icons/LegacyIcons'
 
 import docs, { DocItem, isPlayChapter } from '../../documentation'
 import Docs from '../Docs/Docs'

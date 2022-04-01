@@ -19,7 +19,7 @@
  */
 import React from 'react'
 
-import { QuestionIcon } from 'browser-components/icons/Icons'
+import { QuestionIcon } from 'browser-components/icons/LegacyIcons'
 
 import { buildTableData } from './sysinfoUtils'
 import {

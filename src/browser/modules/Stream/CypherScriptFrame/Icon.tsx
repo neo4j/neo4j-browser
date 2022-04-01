@@ -24,7 +24,7 @@ import {
   ExclamationTriangleIcon,
   SmallSpinnerIcon,
   SquareIcon
-} from 'browser-components/icons/Icons'
+} from 'browser-components/icons/LegacyIcons'
 
 import { ErrorSpan, SuccessSpan, WarningSpan } from './styled'
 import { Status } from 'shared/modules/requests/requestsDuck'

@@ -26,7 +26,7 @@ import {
   HollowPlayIcon,
   SavedScriptsCollapseMenuIcon,
   SavedScriptsExpandMenuRightIcon
-} from 'browser-components/icons/Icons'
+} from 'browser-components/icons/LegacyIcons'
 
 import {
   StyledCommand,

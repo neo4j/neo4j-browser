@@ -25,7 +25,7 @@ import semver from 'semver'
 import {
   CannyFeedbackIcon,
   CannyNotificationsIcon
-} from 'browser-components/icons/Icons'
+} from 'browser-components/icons/LegacyIcons'
 
 import DocumentItems from './DocumentItems'
 import { formatDocVersion } from './docsUtils'

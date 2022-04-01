@@ -28,7 +28,7 @@ import {
   SaveFavoriteIcon,
   RunIcon,
   StopIcon
-} from 'browser-components/icons/Icons'
+} from 'browser-components/icons/LegacyIcons'
 
 import { MAIN_WRAPPER_DOM_ID } from '../App/App'
 import { EditorContainer, Header } from '../Editor/styled'

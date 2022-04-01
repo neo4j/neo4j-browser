@@ -33,7 +33,7 @@ import {
   SpinnerIcon,
   TableIcon,
   VisualizationIcon
-} from 'browser-components/icons/Icons'
+} from 'browser-components/icons/LegacyIcons'
 
 import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
 import FrameSidebar from '../../Frame/FrameSidebar'

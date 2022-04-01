@@ -22,7 +22,7 @@ import React, { useEffect, useState } from 'react'
 import {
   StackNextIcon,
   StackPreviousIcon
-} from 'browser-components/icons/Icons'
+} from 'browser-components/icons/LegacyIcons'
 
 import docs from '../../documentation'
 import { DynamicTopics } from '../../documentation/templates/DynamicTopics'

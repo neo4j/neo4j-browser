@@ -19,7 +19,7 @@
  */
 import React from 'react'
 
-import { ExclamationTriangleIcon } from 'browser-components/icons/Icons'
+import { ExclamationTriangleIcon } from 'browser-components/icons/LegacyIcons'
 
 import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
 import AutoExecButton from './auto-exec-button'

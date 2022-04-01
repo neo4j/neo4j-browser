@@ -25,7 +25,7 @@ import { useEffect } from 'react'
 import {
   SlideNextIcon,
   SlidePreviousIcon
-} from 'browser-components/icons/Icons'
+} from 'browser-components/icons/LegacyIcons'
 
 import CarouselSlidePicker from './CarouselSlidePicker'
 import {

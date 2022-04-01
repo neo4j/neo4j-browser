@@ -24,7 +24,7 @@ import {
   TrashIcon,
   NewFolderIcon,
   HollowPlayIcon
-} from 'browser-components/icons/Icons'
+} from '../icons/LegacyIcons'
 
 import { StyledSavedScriptsButton } from './styled'
 import { primaryLightColor } from 'browser-styles/themes'

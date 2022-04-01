@@ -28,7 +28,7 @@ import {
   ExpandIcon,
   PinIcon,
   UpIcon
-} from 'browser-components/icons/Icons'
+} from 'browser-components/icons/LegacyIcons'
 
 import { TitleBarHeader } from './styled'
 import { FrameControlButton } from 'browser-components/buttons'

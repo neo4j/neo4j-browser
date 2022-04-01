@@ -25,7 +25,7 @@ import {
   NavIcon,
   SavedScriptsCollapseMenuIcon,
   SavedScriptsExpandMenuRightIcon
-} from 'browser-components/icons/Icons'
+} from '../icons/LegacyIcons'
 
 import { useCustomBlur, useNameUpdate } from './hooks'
 import {

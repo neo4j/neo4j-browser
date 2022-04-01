@@ -19,7 +19,7 @@
  */
 import React from 'react'
 
-import { DownloadIcon } from 'browser-components/icons/Icons'
+import { DownloadIcon } from 'browser-components/icons/LegacyIcons'
 
 import {
   DropDownItemDivider,
