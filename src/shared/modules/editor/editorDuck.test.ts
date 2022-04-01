@@ -27,9 +27,9 @@ import { COMMAND_QUEUED, executeCommand } from '../commands/commandsDuck'
 import {
   NOT_SUPPORTED_URL_PARAM_COMMAND,
   SET_CONTENT,
-  getText,
   populateEditorFromUrlEpic
 } from './editorDuck'
+import { getText } from 'neo4j-arc/cypher-language-support'
 
 describe('editorDuck Epics', () => {
   let store: any

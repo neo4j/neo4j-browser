@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { useMutation } from '@apollo/client'
+import { Monaco, MonacoHandles } from 'neo4j-arc/cypher-language-support'
+import { QueryResult } from 'neo4j-driver'
 import React, { Dispatch, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
@@ -35,7 +37,6 @@ import {
   RunIcon
 } from 'neo4j-arc/common'
 
-import Monaco, { MonacoHandles } from './Monaco'
 import {
   CurrentEditIconContainer,
   EditorContainer,
@@ -55,17 +56,16 @@ import {
   StyledEditorButton,
   StyledMainEditorButtonsContainer
 } from 'browser-components/buttons'
-import {
-  FULLSCREEN_SHORTCUT,
-  printShortcut
-} from 'browser/modules/App/keyboardShortcuts'
+
 import { GlobalState } from 'shared/globalState'
 import { getProjectId } from 'shared/modules/app/appDuck'
 import {
   commandSources,
   executeCommand
 } from 'shared/modules/commands/commandsDuck'
+import { applyParamGraphTypes } from 'shared/modules/commands/helpers/cypher'
 import { getUseDb } from 'shared/modules/connections/connectionsDuck'
+import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import {
   EDIT_CONTENT,
   EXPAND,
@@ -83,6 +83,12 @@ import {
   shouldEnableMultiStatementMode
 } from 'shared/modules/settings/settingsDuck'
 import { base } from 'browser-styles/themes'
+import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
+
+import {
+  FULLSCREEN_SHORTCUT,
+  printShortcut
+} from 'browser/modules/App/keyboardShortcuts'
 
 type EditorFrameProps = {
   bus: Bus
@@ -266,13 +272,11 @@ export function MainEditor({
         <Header>
           <EditorContainer>
             <Monaco
-              bus={bus}
               enableMultiStatementMode={enableMultiStatementMode}
-              history={history}
-              isFullscreen={isFullscreen}
-              toggleFullscreen={toggleFullscreen}
-              id={'main-editor'}
               fontLigatures={codeFontLigatures}
+              history={history}
+              id={'main-editor'}
+              isFullscreen={isFullscreen}
               onChange={() => {
                 setUnsaved(true)
               }}
@@ -281,8 +285,27 @@ export function MainEditor({
               }
               onExecute={createRunCommandFunction(commandSources.editor)}
               ref={editorRef}
+              toggleFullscreen={toggleFullscreen}
               useDb={useDb}
-              params={params}
+              sendCypherQuery={(text: string) =>
+                new Promise((res, rej) =>
+                  bus.self(
+                    CYPHER_REQUEST,
+                    {
+                      query: text,
+                      queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
+                      params: applyParamGraphTypes(params)
+                    },
+                    (response: { result: QueryResult; success?: boolean }) => {
+                      if (response.success === true) {
+                        res(response.result)
+                      } else {
+                        rej(response.result)
+                      }
+                    }
+                  )
+                )
+              }
             />
           </EditorContainer>
           {currentlyEditing && !currentlyEditing.isStatic && (

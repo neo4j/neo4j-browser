@@ -146,7 +146,7 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
               Error(
                 `Could not connect with the "${getScheme(
                   this.state.host
-                )}://" scheme to this Neoj server. Automatic retry using the "${getScheme(
+                )}://" scheme to this Neo4j server. Automatic retry using the "${getScheme(
                   url
                 )}://" scheme in a moment...`
               )

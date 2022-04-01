@@ -17,38 +17,44 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { FunctionSchema, ProcedureSchema } from 'cypher-editor-support'
 
-export function toLabel(label: any) {
+export function toLabel(label: { val: string }): string {
   return `:${label.val}`
 }
 
-export function toRelationshipType(relationshipType: any) {
+export function toRelationshipType(relationshipType: { val: string }): string {
   return `:${relationshipType.val}`
 }
 
-export function toPropertyKey(propertyKey: any) {
+export function toPropertyKey(propertyKey: { val: string }): string {
   return propertyKey.val
 }
 
-export function toFunction(func: any) {
+export function toFunction(func: {
+  val: string
+  signature: string
+}): FunctionSchema {
   return {
     name: func.val,
     signature: func.signature.replace(func.val, '')
   }
 }
-
-export function toProcedure(procedure: any) {
+export function toProcedure(procedure: {
+  val: string
+  signature: string
+}): ProcedureSchema {
   const name = procedure.val
   const signature = procedure.signature.replace(procedure.val, '')
 
-  let returnItems = []
+  let returnItems: FunctionSchema[] = []
   const matches = signature.match(/\([^)]*\) :: \((.*)\)/i)
   if (matches) {
-    returnItems = matches[1].split(', ').map((returnItem: any) => {
+    returnItems = matches[1].split(', ').map(returnItem => {
       const returnItemMatches = returnItem.match(/(.*) :: (.*)/)
       return {
-        name: returnItemMatches[1],
-        signature: returnItemMatches[2]
+        name: returnItemMatches![1],
+        signature: returnItemMatches![2]
       }
     })
   }

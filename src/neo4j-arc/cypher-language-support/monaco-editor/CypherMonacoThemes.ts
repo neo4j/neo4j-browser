@@ -19,8 +19,6 @@
  */
 import { editor } from 'monaco-editor/esm/vs/editor/editor.api'
 
-import { base, dark } from 'browser-styles/themes'
-
 // colors from cypher-editor/cypher-codemirror/src/css/_solarized.css
 const enum CypherColor {
   black = '#333333',
@@ -374,7 +372,7 @@ export const monacoDarkTheme: editor.IStandaloneThemeData = {
   inherit: true,
   rules: darkThemeRules,
   colors: {
-    'editor.background': dark.editorBackground,
+    'editor.background': '#121212',
     'editorCursor.foreground': '#585a61',
     'editorLineNumber.foreground': CypherColor.white,
     'editorLineNumber.activeForeground': CypherColor.white,
@@ -386,7 +384,7 @@ export const monacoLightTheme: editor.IStandaloneThemeData = {
   inherit: true,
   rules: lightThemeRules,
   colors: {
-    'editor.background': base.editorBackground,
+    'editor.background': '#fff',
     'editorCursor.foreground': '#d6d7db',
     'editorLineNumber.foreground': CypherColor.light_grey,
     'editorLineNumber.activeForeground': CypherColor.light_grey,
