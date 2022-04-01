@@ -23,7 +23,8 @@ export type { MonacoHandles, MonacoProps } from './monaco-editor/Monaco'
 export {
   setupAutocomplete,
   setEditorTheme,
-  initalizeCypherSupport as setupCypherSupport
+  initalizeCypherSupport as setupCypherSupport,
+  getText
 } from './monaco-editor/editorSupport'
 
 export {

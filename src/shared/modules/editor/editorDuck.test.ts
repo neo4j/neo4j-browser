@@ -29,6 +29,7 @@ import {
   SET_CONTENT,
   populateEditorFromUrlEpic
 } from './editorDuck'
+import { getText } from 'neo4j-arc/cypher-language-support'
 
 describe('editorDuck Epics', () => {
   let store: any
@@ -189,5 +190,29 @@ describe('editorDuck Epics', () => {
 
     // When
     store.dispatch(action)
+  })
+})
+
+describe('getting expected text from cypher-editor-support', () => {
+  test('item with procedure type strips surrounding backticks', () => {
+    const item: EditorSupportCompletionItem = {
+      type: 'procedure',
+      view: '',
+      content: '`apoc.coll.avg`',
+      postfix: null
+    }
+
+    expect(getText(item)).toEqual('apoc.coll.avg')
+  })
+
+  test('item with non procedure or function type retains backticks', () => {
+    const item: EditorSupportCompletionItem = {
+      type: 'label',
+      view: '',
+      content: '`a label name wrapped in backticks`',
+      postfix: null
+    }
+
+    expect(getText(item)).toEqual(item.content)
   })
 })

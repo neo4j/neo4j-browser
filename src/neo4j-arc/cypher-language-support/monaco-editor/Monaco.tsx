@@ -56,6 +56,7 @@ const MonacoStyleWrapper = styled.div`
 
 const EXPLAIN_QUERY_PREFIX = 'EXPLAIN '
 const EXPLAIN_QUERY_PREFIX_LENGTH = EXPLAIN_QUERY_PREFIX.length
+const EDITOR_UPDATE_DEBOUNCE_TIME = 300
 type MonacoDefaultProps = {
   value: string
   onDisplayHelpKeys: () => void
@@ -102,7 +103,7 @@ export class Monaco extends React.Component<MonacoProps, MonacoState> {
 
     this.props.onChange?.(text)
     this.addWarnings(parse(text).referencesListener.queriesAndCommands)
-  }, 300)
+  }, EDITOR_UPDATE_DEBOUNCE_TIME)
   focus = (): void => {
     this.editor?.focus()
   }
@@ -286,7 +287,9 @@ export class Monaco extends React.Component<MonacoProps, MonacoState> {
             ])
           }
         })
-        .catch(() => {})
+        .catch(() => {
+          /* Parent should ensure connection */
+        })
     })
   }
 
