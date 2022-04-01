@@ -118,12 +118,12 @@ module.exports = [
   {
     test: /\.svg$/,
     use: 'file-loader?limit=65000&mimetype=image/svg+xml&name=assets/fonts/[name].[ext]',
-    exclude: [path.resolve(helpers.sourcePath, 'neo4j-arc/common/icons/svgs')]
+    exclude: [path.resolve(helpers.browserPath, 'components/icons/svgs')]
   },
   {
     test: /\.svg$/,
     loader: 'raw-loader',
-    include: [path.resolve(helpers.sourcePath, 'neo4j-arc/common/icons/svgs')]
+    include: [path.resolve(helpers.browserPath, 'components/icons/svgs')]
   },
   {
     test: /\.html?$/,

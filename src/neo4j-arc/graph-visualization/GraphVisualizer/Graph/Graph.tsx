@@ -25,7 +25,7 @@ import {
   ZoomInIcon,
   ZoomOutIcon,
   ZoomToFitIcon
-} from 'neo4j-arc/common'
+} from '../../../common'
 
 import { GraphModel } from '../../models/Graph'
 import { GraphEventHandlerModel } from './GraphEventHandlerModel'

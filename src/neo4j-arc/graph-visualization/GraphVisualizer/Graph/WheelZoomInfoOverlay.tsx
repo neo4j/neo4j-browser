@@ -19,7 +19,7 @@
  */
 import React from 'react'
 
-import { InfoIcon, isMac } from 'neo4j-arc/common'
+import { InfoIcon, isMac } from '../../../common'
 
 import {
   StyledZoomInfo,

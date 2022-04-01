@@ -60,7 +60,7 @@ export function DetailsPane({
               .map(prop => `${prop.key}: ${prop.value}`)
               .join('\n')}
             titleText="Copy all properties to clipboard"
-            iconSize={10}
+            iconSize={12}
           />
         </PaneTitle>
         {vizItem.type === 'relationship' && (

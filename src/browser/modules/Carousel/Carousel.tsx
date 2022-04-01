@@ -22,7 +22,10 @@ import { useState } from 'react'
 import { useRef } from 'react'
 import { useEffect } from 'react'
 
-import { SlideNextIcon, SlidePreviousIcon } from 'neo4j-arc/common'
+import {
+  SlideNextIcon,
+  SlidePreviousIcon
+} from 'browser-components/icons/LegacyIcons'
 
 import CarouselSlidePicker from './CarouselSlidePicker'
 import {

@@ -20,7 +20,7 @@
 import React, { useState } from 'react'
 import { useDrag } from 'react-dnd'
 
-import { NavIcon } from 'neo4j-arc/common'
+import { NavIcon } from '../icons/LegacyIcons'
 
 import { RunButton } from './SavedScriptsButton'
 import { useCustomBlur, useNameUpdate } from './hooks'

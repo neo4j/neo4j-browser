@@ -20,7 +20,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 
-import { CancelIcon, MinusIcon, RightArrowIcon } from 'neo4j-arc/common'
+import { CancelIcon, MinusIcon, RightArrowIcon } from '../icons/LegacyIcons'
 
 const IconButton = styled.button`
   margin-left: 4px;

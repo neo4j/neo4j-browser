@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { QuestionIcon } from 'neo4j-arc/common'
+import { QuestionIcon } from 'browser-components/icons/LegacyIcons'
 
 import { StyledInfoMessage } from './../../Stream/styled'
 import { DatabaseMetric } from './SysInfoFrame'

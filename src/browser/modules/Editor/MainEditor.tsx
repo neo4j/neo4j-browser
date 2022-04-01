@@ -32,10 +32,10 @@ import {
   ExpandIcon,
   FavoriteIcon,
   FileIcon,
-  isMac,
   UpdateFileIcon,
   RunIcon
-} from 'neo4j-arc/common'
+} from 'browser-components/icons/LegacyIcons'
+import { isMac } from 'neo4j-arc/common'
 
 import {
   CurrentEditIconContainer,

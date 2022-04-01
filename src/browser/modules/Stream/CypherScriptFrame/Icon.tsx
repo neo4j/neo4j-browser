@@ -24,7 +24,7 @@ import {
   ExclamationTriangleIcon,
   SmallSpinnerIcon,
   SquareIcon
-} from 'neo4j-arc/common'
+} from 'browser-components/icons/LegacyIcons'
 
 import { ErrorSpan, SuccessSpan, WarningSpan } from './styled'
 import { Status } from 'shared/modules/requests/requestsDuck'

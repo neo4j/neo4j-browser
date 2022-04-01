@@ -20,7 +20,10 @@
 import memoize from 'memoize-one'
 import React, { Component } from 'react'
 
-import { DoubleDownIcon, DoubleUpIcon } from 'neo4j-arc/common'
+import {
+  DoubleDownIcon,
+  DoubleUpIcon
+} from 'browser-components/icons/LegacyIcons'
 
 import queryPlan from '../../D3Visualization/queryPlan/queryPlan'
 import {

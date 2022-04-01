@@ -24,7 +24,7 @@ import {
   TrashIcon,
   NewFolderIcon,
   HollowPlayIcon
-} from 'neo4j-arc/common'
+} from '../icons/LegacyIcons'
 
 import { StyledSavedScriptsButton } from './styled'
 import { primaryLightColor } from 'browser-styles/themes'

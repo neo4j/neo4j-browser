@@ -21,7 +21,7 @@ import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 
-import { FileDropIcon } from 'neo4j-arc/common'
+import { FileDropIcon } from '../icons/LegacyIcons'
 
 import arrayHasItems from '../../../shared/utils/array-has-items'
 import {

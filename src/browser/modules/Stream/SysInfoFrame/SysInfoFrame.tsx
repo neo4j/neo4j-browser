@@ -22,7 +22,7 @@ import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { Bus } from 'suber'
 
-import { ExclamationTriangleIcon } from 'neo4j-arc/common'
+import { ExclamationTriangleIcon } from 'browser-components/icons/LegacyIcons'
 
 import {
   AutoRefreshSpan,

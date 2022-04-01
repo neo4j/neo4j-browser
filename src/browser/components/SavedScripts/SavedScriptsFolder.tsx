@@ -25,7 +25,7 @@ import {
   NavIcon,
   SavedScriptsCollapseMenuIcon,
   SavedScriptsExpandMenuRightIcon
-} from 'neo4j-arc/common'
+} from '../icons/LegacyIcons'
 
 import { useCustomBlur, useNameUpdate } from './hooks'
 import {

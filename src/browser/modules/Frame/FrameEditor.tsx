@@ -23,7 +23,12 @@ import { withBus } from 'react-suber'
 import { Action, Dispatch } from 'redux'
 import { Bus } from 'suber'
 
-import { SaveFavoriteIcon, RunIcon, isMac, StopIcon } from 'neo4j-arc/common'
+import { isMac } from 'neo4j-arc/common'
+import {
+  SaveFavoriteIcon,
+  RunIcon,
+  StopIcon
+} from 'browser-components/icons/LegacyIcons'
 
 import { MAIN_WRAPPER_DOM_ID } from '../App/App'
 import { EditorContainer, Header } from '../Editor/styled'

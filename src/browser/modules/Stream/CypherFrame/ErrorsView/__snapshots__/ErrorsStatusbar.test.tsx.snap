@@ -10,7 +10,7 @@ exports[`ErrorsStatusbar displays error 1`] = `
       title="Test.Error: Test error description"
     >
       <i
-        class="sc-bdvvtL kSEjuX fa fa-exclamation-triangle"
+        class="sc-hBUSln jKTDNL fa fa-exclamation-triangle"
         style="line-height: inherit;"
       />
        

@@ -28,7 +28,7 @@ import {
   ExpandIcon,
   PinIcon,
   UpIcon
-} from 'neo4j-arc/common'
+} from 'browser-components/icons/LegacyIcons'
 
 import { TitleBarHeader } from './styled'
 import { FrameControlButton } from 'browser-components/buttons'

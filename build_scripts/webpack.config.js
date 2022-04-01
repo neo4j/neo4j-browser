@@ -49,7 +49,6 @@ module.exports = {
       'browser-hooks': path.resolve(helpers.browserPath, 'hooks'),
       browser: path.resolve(helpers.browserPath),
       'browser-styles': path.resolve(helpers.browserPath, 'styles'),
-      icons: path.resolve(helpers.browserPath, 'icons'),
       'neo4j-arc/graph-visualization$': path.resolve(
         helpers.sourcePath,
         'neo4j-arc/graph-visualization'
