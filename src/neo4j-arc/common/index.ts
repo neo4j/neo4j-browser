@@ -17,8 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-export { deepEquals } from './utils/objectUtils'
+export { deepEquals, mapObjectValues } from './utils/objectUtils'
 export { isMac } from './utils/platformUtils'
+export { extractNodesAndRels } from './utils/driverUtils'
+export {
+  getPropertyTypeDisplayName,
+  propertyToString
+} from './utils/cypherTypeUtils'
 export { numberToUSLocale, toKeyString, upperFirst } from './utils/stringUtils'
 
 export type {
@@ -26,7 +31,16 @@ export type {
   BasicNodesAndRels,
   BasicRelationship,
   VizItemProperty
-} from './types/arc-types'
+} from './types/arcTypes'
+
+export type {
+  CypherBasicPropertyType,
+  CypherDataType,
+  CypherList,
+  CypherMap,
+  CypherProperty,
+  CypherStructuralType
+} from './types/cypherDataTypes'
 
 export { ClickableUrls } from './components/ClickableUrls'
 export { ClipboardCopier } from './components/ClipboardCopier'

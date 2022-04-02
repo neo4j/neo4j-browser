@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import deepmerge from 'deepmerge'
-import { debounce } from 'lodash'
+import { debounce } from 'lodash-es'
 import React, { Component } from 'react'
 
 import { Graph } from './Graph/Graph'
