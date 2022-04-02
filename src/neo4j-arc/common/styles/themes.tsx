@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { palette as needlePalette } from '@neo4j-ndl/base/lib/tokens/js/tokens'
+//import { palette as needlePalette } from '@neo4j-ndl/base/lib/tokens/js/tokens'
 import { ThemeProvider } from 'styled-components'
 import React from 'react'
 
@@ -47,16 +47,16 @@ export const baseArcTheme = {
   // Frame
   frameSidebarBackground: '#FFF',
   frameControlButtonTextColor: '#485662',
-  frameButtonTextColor: needlePalette.light.neutral.text.weaker,
-  frameButtonHoverBackground: needlePalette.light.neutral.hover,
-  frameButtonActiveBackground: needlePalette.light.neutral.pressed,
+  frameButtonTextColor: '#FFF',
+  frameButtonHoverBackground: '#FFF',
+  frameButtonActiveBackground: '#FFF',
   frameNodePropertiesPanelIconTextColor: '#717172',
   frameBackground: '#F9FCFF',
 
   // Info message
-  infoBackground: needlePalette.light.primary.bg.weak,
-  infoBorder: `1px solid ${needlePalette.light.primary.border.weak}`,
-  infoIconColor: needlePalette.light.primary.icon
+  infoBackground: '#FFF',
+  infoBorder: `1px solid #FFF`,
+  infoIconColor: '#FFF'
 }
 
 export const light = {

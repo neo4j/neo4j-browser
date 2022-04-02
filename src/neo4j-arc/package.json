@@ -30,7 +30,6 @@
     "@types/styled-components": "^5.1.24",
     "esbuild": "^0.14.26",
     "monaco-editor": "0.23.0",
-    "neo4j-driver-core": "^4.4.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "rollup": "^2.70.1",
@@ -50,6 +49,8 @@
     "d3-scale": "^4.0.2",
     "d3-selection": "^3.0.0",
     "d3-shape": "^3.0.1",
+    "@neo4j-ndl/base": "^0.1.2",
+    "@neo4j-ndl/react": "^0.1.2",
     "d3-transition": "^3.0.1",
     "d3-zoom": "^3.0.0",
     "deepmerge": "^4.2.2",
@@ -57,13 +58,13 @@
     "luxon": "^2.0.2",
     "react-resizable": "^3.0.4",
     "resize-observer-polyfill": "^1.5.1",
-    "styled-components": "^5.3.3"
+    "styled-components": "^5.3.3",
+    "neo4j-driver-core": "^4.4.5"
   },
   "peerDependencies": {
     "@neo4j-ndl/base": "^0.1.2",
     "@neo4j-ndl/react": "^0.1.2",
     "monaco-editor": "0.23.0",
-    "neo4j-driver-core": "^4.4.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   }

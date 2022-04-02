@@ -25,11 +25,11 @@ import { QueryResult } from 'neo4j-driver-core'
 import React from 'react'
 import ResizeObserver from 'resize-observer-polyfill'
 import styled from 'styled-components'
-import * as monaco from 'monaco-editor'
 import loader from '@monaco-editor/loader'
 
+//import * as monaco from 'monaco-editor'
 // loads the monaco source code from node_modules rather than cdn
-loader.config({ monaco })
+//loader.config({ monaco })
 
 const shouldCheckForHints = (code: string) =>
   code.trim().length > 0 &&
@@ -38,7 +38,7 @@ const shouldCheckForHints = (code: string) =>
   !code.trimLeft().toUpperCase().startsWith('PROFILE')
 
 export type MonacoHandles = Monaco
-type MonacoApi = typeof monaco
+type MonacoApi = any //typeof monaco
 
 const MonacoStyleWrapper = styled.div`
   height: 100%;
