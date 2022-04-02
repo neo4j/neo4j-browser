@@ -21,7 +21,7 @@ import { QueryOrCommand, parse } from 'cypher-editor-support'
 import { debounce } from 'lodash-es'
 
 import type { IPosition, editor } from 'monaco-editor'
-import { QueryResult } from 'neo4j-driver'
+import { QueryResult } from 'neo4j-driver-core'
 import React from 'react'
 import ResizeObserver from 'resize-observer-polyfill'
 import styled from 'styled-components'
