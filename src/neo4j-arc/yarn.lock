@@ -317,6 +317,16 @@ ansi-styles@^3.2.1:
   dependencies:
     color-convert "^1.9.0"
 
+antlr4@4.7.0:
+  version "4.7.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/antlr4/-/antlr4-4.7.0.tgz#297f956ddc06f83397fc0990ecf2e0cf20bfbbee"
+  integrity sha1-KX+VbdwG+DOX/AmQ7PLgzyC/u+4=
+
+antlr4@^4.8.0:
+  version "4.9.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/antlr4/-/antlr4-4.9.3.tgz#268b844ff8ce97d022399a05d4b37aa6ab4047b2"
+  integrity sha512-qNy2odgsa0skmNMCuxzXhM4M8J1YDaPv3TI+vCdnOAanu0N982wBrSqziDKRDctEZLZy9VffqIZXc0UGjjSP/g==
+
 "babel-plugin-styled-components@>= 1.12.0":
   version "2.0.6"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-plugin-styled-components/-/babel-plugin-styled-components-2.0.6.tgz#6f76c7f7224b7af7edc24a4910351948c691fc90"
@@ -387,6 +397,15 @@ csstype@^3.0.2:
   version "3.0.11"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/csstype/-/csstype-3.0.11.tgz#d66700c5eacfac1940deb4e3ee5642792d85cd33"
   integrity sha512-sa6P2wJ+CAbgyy4KFssIb/JNMLxFvKF1pCYCSXS8ZMuqZnMsrxqI2E5sPyoTpxoPU/gVZMzr2zjOfg8GIZOMsw==
+
+cypher-editor-support@^1.1.8:
+  version "1.1.8"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypher-editor-support/-/cypher-editor-support-1.1.8.tgz#6b173de2a67fe91e8493fbbc6ee41cf4c90ee84e"
+  integrity sha512-ZYLhF4+rtKOIgbEKaDq0Hrd4Y9oMydks2NNZsob2COa4Lpn52jnV6b2hoRnHsYcKIQp72VY3nCFR+oht49vEqQ==
+  dependencies:
+    antlr4 "4.7.0"
+    fuzzaldrin "2.1.0"
+    lodash "4.17.15"
 
 "d3-array@2 - 3", "d3-array@2.10.0 - 3":
   version "3.1.1"
@@ -671,6 +690,11 @@ fsevents@~2.3.2:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/fsevents/-/fsevents-2.3.2.tgz#8a526f78b8fdf4623b709e0b975c52c24c02fd1a"
   integrity sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==
 
+fuzzaldrin@2.1.0:
+  version "2.1.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/fuzzaldrin/-/fuzzaldrin-2.1.0.tgz#90204c3e2fdaa6941bb28d16645d418063a90e9b"
+  integrity sha1-kCBMPi/appQbso0WZF1BgGOpDps=
+
 globals@^11.1.0:
   version "11.12.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/globals/-/globals-11.12.0.tgz#ab8795338868a0babd8525758018c2a7eb95c42e"
@@ -718,12 +742,17 @@ lodash-es@^4.17.21:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash-es/-/lodash-es-4.17.21.tgz#43e626c46e6591b7750beb2b50117390c609e3ee"
   integrity sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==
 
+lodash@4.17.15:
+  version "4.17.15"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
+  integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
+
 lodash@^4.17.11:
   version "4.17.21"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
-loose-envify@^1.4.0:
+loose-envify@^1.1.0, loose-envify@^1.4.0:
   version "1.4.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/loose-envify/-/loose-envify-1.4.0.tgz#71ee51fa7be4caec1a63839f7e682d8132d30caf"
   integrity sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==
@@ -741,6 +770,11 @@ magic-string@^0.26.1:
   integrity sha512-ndThHmvgtieXe8J/VGPjG+Apu7v7ItcD5mhEIvOscWjPF/ccOiLxHaSuCAS2G+3x4GKsAbT8u7zdyamupui8Tg==
   dependencies:
     sourcemap-codec "^1.4.8"
+
+monaco-editor@0.23.0:
+  version "0.23.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/monaco-editor/-/monaco-editor-0.23.0.tgz#24844ba5640c7adb3a2a3ff3b520cf2d7170a6f0"
+  integrity sha512-q+CP5zMR/aFiMTE9QlIavGyGicKnG2v/H8qVvybLzeFsARM8f6G9fL0sMST2tyVYCwDKkGamZUI6647A0jR/Lg==
 
 ms@2.1.2:
   version "2.1.2"
@@ -776,6 +810,15 @@ prop-types@15.x, prop-types@^15.6.0:
     object-assign "^4.1.1"
     react-is "^16.13.1"
 
+react-dom@^17.0.2:
+  version "17.0.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-dom/-/react-dom-17.0.2.tgz#ecffb6845e3ad8dbfcdc498f0d0a939736502c23"
+  integrity sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    scheduler "^0.20.2"
+
 react-draggable@^4.0.3:
   version "4.4.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/react-draggable/-/react-draggable-4.4.4.tgz#5b26d9996be63d32d285a426f41055de87e59b2f"
@@ -789,6 +832,11 @@ react-is@^16.13.1, react-is@^16.7.0:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
+react-is@^17.0.2:
+  version "17.0.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
+  integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
+
 react-resizable@^3.0.4:
   version "3.0.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/react-resizable/-/react-resizable-3.0.4.tgz#aa20108eff28c52c6fddaa49abfbef8abf5e581b"
@@ -796,6 +844,19 @@ react-resizable@^3.0.4:
   dependencies:
     prop-types "15.x"
     react-draggable "^4.0.3"
+
+react@^17.0.2:
+  version "17.0.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/react/-/react-17.0.2.tgz#d0b5cc516d29eb3eee383f75b62864cfb6800037"
+  integrity sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+
+resize-observer-polyfill@^1.5.1:
+  version "1.5.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/resize-observer-polyfill/-/resize-observer-polyfill-1.5.1.tgz#0e9020dd3d21024458d4ebd27e23e40269810464"
+  integrity sha512-LwZrotdHOo12nQuZlHEmtuXdqGoOD0OhaxopaNFxWzInpEgaLWoVuAMbTzixuosCx2nEG58ngzW3vxdWoxIgdg==
 
 rollup-plugin-dts@^4.2.0:
   version "4.2.0"
@@ -823,6 +884,14 @@ rollup@^2.70.1:
   integrity sha512-CRYsI5EuzLbXdxC6RnYhOuRdtz4bhejPMSWjsFLfVM/7w/85n2szZv6yExqUXsBdz5KT8eoubeyDUDjhLHEslA==
   optionalDependencies:
     fsevents "~2.3.2"
+
+scheduler@^0.20.2:
+  version "0.20.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/scheduler/-/scheduler-0.20.2.tgz#4baee39436e34aa93b4874bddcbf0fe8b8b50e91"
+  integrity sha512-2eWfGgAqqWFGqtdMmcL5zCMK1U8KlXv8SQFGglL3CEtd0aDVDWgeF/YoCmvln55m5zSk3J/20hTaSBeSObsQDQ==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
 
 shallowequal@^1.1.0:
   version "1.1.0"

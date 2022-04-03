@@ -21,11 +21,9 @@
     "LICENSE"
   ],
   "devDependencies": {
-    "@neo4j-ndl/base": "^0.1.2",
-    "@neo4j-ndl/react": "^0.1.2",
     "@rollup/plugin-alias": "^3.1.9",
     "esbuild": "^0.14.26",
-    "neo4j-driver-core": "^4.4.5",
+    "monaco-editor": "0.23.0",
     "rollup": "^2.70.1",
     "rollup-plugin-dts": "^4.2.0",
     "@types/react": "^17.0.40",
@@ -46,6 +44,10 @@
     "@types/luxon": "^2.3.1",
     "@types/react-resizable": "^1.7.3",
     "@types/styled-components": "^5.1.1",
+    "@neo4j-ndl/base": "^0.1.2",
+    "@neo4j-ndl/react": "^0.1.2",
+    "antlr4": "^4.8.0",
+    "cypher-editor-support": "^1.1.8",
     "d3-color": "^3.0.1",
     "d3-drag": "^3.0.0",
     "d3-ease": "^3.0.1",
@@ -58,14 +60,12 @@
     "deepmerge": "^4.2.2",
     "lodash-es": "^4.17.21",
     "luxon": "^2.0.2",
-    "react-resizable": "^3.0.4",
-    "styled-components": "^5.3.3"
-  },
-  "peerDependencies": {
-    "@neo4j-ndl/base": "^0.1.2",
-    "@neo4j-ndl/react": "^0.1.2",
     "neo4j-driver-core": "^4.4.5",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "react-is": "^17.0.2",
+    "react-resizable": "^3.0.4",
+    "resize-observer-polyfill": "^1.5.1",
+    "styled-components": "^5.3.3"
   }
 }
