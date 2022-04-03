@@ -67,5 +67,12 @@
     "react-resizable": "^3.0.4",
     "resize-observer-polyfill": "^1.5.1",
     "styled-components": "^5.3.3"
+  },
+  "peerDependencies": {
+    "cypher-editor-support": "^1.1.8",
+    "neo4j-driver-core": "^4.4.5",
+    "react": "^17.0.2",
+    "monaco-editor": "0.23.0",
+    "react-dom": "^17.0.2"
   }
 }

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { InputStream } from 'antlr4/index.js'
+import { InputStream } from 'antlr4'
 import { CypherLexer } from 'cypher-editor-support/src/_generated/CypherLexer'
 import { languages } from 'monaco-editor/esm/vs/editor/editor.api'
 
@@ -37,11 +37,11 @@ export class CypherTokensProvider implements languages.TokensProvider {
   }
 
   tokenize(line: string): languages.ILineTokens {
-    //    const lexer = new CypherLexer(new InputStream(line))
+    const lexer = new CypherLexer(new InputStream(line))
 
     return {
       endState: new CypherState(),
-      tokens: [] /*lexer
+      tokens: lexer
         .getAllTokens()
         .filter(token => token !== null && token.type !== -1)
         .map(token => ({
@@ -54,7 +54,6 @@ export class CypherTokensProvider implements languages.TokensProvider {
           startIndex: token.column
         }))
         .sort((a, b) => (a.startIndex > b.startIndex ? 1 : -1))
-        */
     }
   }
 }
