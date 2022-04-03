@@ -43,7 +43,7 @@ export type {
 } from './types/cypherDataTypes'
 
 export { ClickableUrls } from './components/ClickableUrls'
-export { ClipboardCopier } from './components/ClipboardCopier'
+export { ClipboardCopier, copyToClipboard } from './components/ClipboardCopier'
 export {
   StyledLabelChip,
   StyledPropertyChip,

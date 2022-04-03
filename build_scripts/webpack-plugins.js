@@ -66,7 +66,7 @@ module.exports = () => {
               ...JSON.parse(content),
               // This is so we can give better build info in the sidebar
               builtAt: new Date().toISOString(),
-              gitRevision: process.env.GIT_REVISION
+              buildNumber: process.env.BUILD_NUMBER
             }
             return JSON.stringify(mergedData, null, 2)
           }

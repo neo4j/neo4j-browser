@@ -31,8 +31,8 @@ import {
 } from 'browser-components/drawer/drawer-styled'
 import { version as browserVersion } from 'project-root/package.json'
 import { getEdition, getVersion } from 'shared/modules/dbMeta/state'
-import { getBuiltAt, getGitRevision } from 'shared/modules/app/appDuck'
-import { copyToClipboard } from 'browser-components/ClipboardCopier'
+import { getBuiltAt, getBuildNumber } from 'shared/modules/app/appDuck'
+import { copyToClipboard } from 'neo4j-arc/common'
 
 function asChangeLogUrl(serverVersion: string): string | undefined {
   if (!serverVersion) {
@@ -49,14 +49,14 @@ interface AboutProps {
   serverVersion: string | null
   serverEdition: string | null
   builtAt: string | null
-  gitRevision: string | null
+  buildNumber: string | null
 }
 
 const About = ({
   serverVersion,
   serverEdition,
   builtAt,
-  gitRevision
+  buildNumber
 }: AboutProps) => (
   <Drawer id="db-about">
     <DrawerHeader>About Neo4j</DrawerHeader>
@@ -87,9 +87,9 @@ const About = ({
               {browserVersion}
             </a>
           </p>
-          {gitRevision && (
-            <div onClick={() => copyToClipboard(gitRevision)}>
-              Revision: {gitRevision.substring(0, 10)}
+          {buildNumber && (
+            <div onClick={() => copyToClipboard(buildNumber)}>
+              Build number: {buildNumber}
             </div>
           )}
           {builtAt && (
@@ -210,7 +210,7 @@ const mapStateToProps = (state: any) => {
     serverVersion: getVersion(state),
     serverEdition: getEdition(state),
     builtAt: getBuiltAt(state),
-    gitRevision: getGitRevision(state)
+    buildNumber: getBuildNumber(state)
   }
 }
 

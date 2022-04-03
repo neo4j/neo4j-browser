@@ -54,8 +54,8 @@ export const inWebBrowser = (state: GlobalState): boolean =>
   [WEB, CLOUD].includes(getEnv(state))
 export const inDesktop = (state: GlobalState): boolean =>
   getEnv(state) === DESKTOP
-export const getGitRevision = (state: GlobalState): string | null =>
-  state[NAME].gitRevision ?? null
+export const getBuildNumber = (state: GlobalState): string | null =>
+  state[NAME].buildNumber ?? null
 export const getBuiltAt = (state: GlobalState): string | null =>
   state[NAME].builtAt ?? null
 
@@ -85,11 +85,11 @@ export const getProjectId = (state: GlobalState): string | undefined =>
 
 // action creators
 export const updateBuildInfo = (action: {
-  gitRevision: string
-  builtAt: string
+  buildNumber?: string
+  builtAt?: string
 }) => ({
   type: UPDATE_BUILD_INFO,
-  gitRevision: action.gitRevision,
+  buildNumber: action.buildNumber,
   builtAt: action.builtAt
 })
 
@@ -101,7 +101,7 @@ export type AppState = {
   relateProjectId?: string
   neo4jDesktopGraphAppId?: string
   builtAt?: string | null
-  gitRevision?: string | null
+  buildNumber?: string | null
 }
 
 // Reducer
@@ -124,7 +124,7 @@ export default function reducer(
       return {
         ...state,
         builtAt: action.builtAt,
-        gitRevision: action.gitRevision
+        buildNumber: action.buildNumber
       }
     default:
       return state
