@@ -1,36 +1,19 @@
-import commonjs from '@rollup/plugin-commonjs'
-import nodeResolve from '@rollup/plugin-node-resolve'
 import dts from 'rollup-plugin-dts'
 import esbuild from 'rollup-plugin-esbuild'
-import svg from 'rollup-plugin-svg'
 import alias from '@rollup/plugin-alias'
 
 const packageJson = require('./package.json')
 const name = packageJson.main.replace(/\.js$/, '')
 
-const dependenciesNotToBundle = Object.keys(
-  packageJson.peerDependencies
-).concat(['@neo4j-ndl/base/lib/tokens/js/tokens'])
+const dependenciesNotToBundle = Object.keys({
+  ...packageJson.dependencies,
+  ...packageJson.peerDependencies
+}).concat(['@neo4j-ndl/base/lib/tokens/js/tokens'])
 
 const bundle = config => ({
   ...config,
   input: 'index.ts',
-  external: id => dependenciesNotToBundle.includes(id),
-
-  // We get some warnings that we don't care about
-  // https://github.com/d3/d3-selection/issues/168
-  // https://github.com/moment/luxon/issues/193
-  onwarn: function (warning, warn) {
-    if (
-      !(
-        warning.code === 'CIRCULAR_DEPENDENCY' &&
-        (warning.toString().includes('d3') ||
-          warning.toString().includes('luxon'))
-      )
-    ) {
-      warn(warning)
-    }
-  }
+  external: id => dependenciesNotToBundle.includes(id)
 })
 
 const aliasEntries = [
@@ -39,13 +22,7 @@ const aliasEntries = [
 
 export default [
   bundle({
-    plugins: [
-      svg(),
-      esbuild(),
-      commonjs(),
-      nodeResolve(),
-      alias({ entries: aliasEntries })
-    ],
+    plugins: [esbuild(), alias({ entries: aliasEntries })],
     output: [
       {
         file: `${name}.js`,

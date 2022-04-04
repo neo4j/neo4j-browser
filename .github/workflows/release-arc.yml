@@ -24,6 +24,7 @@ jobs:
           scope: '@neo4j-devtools'
       - run: npm -g install yarn
       # - run: yarn test
+      - run: yarn install
       - run: yarn build
       - uses: JS-DevTools/npm-publish@v1
         with:
