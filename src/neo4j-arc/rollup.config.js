@@ -5,10 +5,17 @@ import alias from '@rollup/plugin-alias'
 const packageJson = require('./package.json')
 const name = packageJson.main.replace(/\.js$/, '')
 
+const importsWithPaths = [
+  '@neo4j-ndl/base/lib/tokens/js/tokens',
+  'monaco-editor/esm/vs/base/parts/quickinput/browser/quickInputList',
+  'monaco-editor/esm/vs/editor/editor.api',
+  'cypher-editor-support/src/_generated/CypherLexer'
+]
+
 const dependenciesNotToBundle = Object.keys({
   ...packageJson.dependencies,
   ...packageJson.peerDependencies
-}).concat(['@neo4j-ndl/base/lib/tokens/js/tokens'])
+}).concat(importsWithPaths)
 
 const bundle = config => ({
   ...config,

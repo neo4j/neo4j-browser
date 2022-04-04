@@ -37,7 +37,7 @@ const shouldCheckForHints = (code: string) =>
   !code.trimLeft().toUpperCase().startsWith('EXPLAIN') &&
   !code.trimLeft().toUpperCase().startsWith('PROFILE')
 
-export type MonacoHandles = Monaco
+export type CypherEditorHandles = CypherEditor
 
 /*
 // Using this gives "invalid hook call" for some reason
@@ -60,32 +60,43 @@ const MonacoStyleWrapper = styled.div`
 const EXPLAIN_QUERY_PREFIX = 'EXPLAIN '
 const EXPLAIN_QUERY_PREFIX_LENGTH = EXPLAIN_QUERY_PREFIX.length
 const EDITOR_UPDATE_DEBOUNCE_TIME = 300
-type MonacoDefaultProps = {
-  value: string
-  onDisplayHelpKeys: () => void
-  onChange: (value: string) => void
-  onExecute: (value: string) => void
-}
-
-export type MonacoProps = MonacoDefaultProps & {
+type CypherEditorDefaultProps = {
   enableMultiStatementMode: boolean
   fontLigatures: boolean
   history: string[]
   id: string
   isFullscreen: boolean
-  onChange?: (value: string) => void
-  onDisplayHelpKeys?: () => void
-  onExecute?: (value: string) => void
+  onChange: (value: string) => void
+  onDisplayHelpKeys: () => void
+  onExecute: (value: string) => void
   sendCypherQuery: (query: string) => Promise<QueryResult>
   toggleFullscreen: () => void
   useDb: null | string
   value: string
 }
-type MonacoState = { currentHistoryIndex: number; draft: string }
+
+export type CypherEditorProps = CypherEditorDefaultProps & {
+  enableMultiStatementMode?: boolean
+  fontLigatures?: boolean
+  history?: string[]
+  id?: string
+  isFullscreen?: boolean
+  onChange?: (value: string) => void
+  onDisplayHelpKeys?: () => void
+  onExecute?: (value: string) => void
+  sendCypherQuery?: (query: string) => Promise<QueryResult>
+  toggleFullscreen?: () => void
+  useDb?: null | string
+  value?: string
+}
+type CypherEditorState = { currentHistoryIndex: number; draft: string }
 const UNRUN_CMD_HISTORY_INDEX = -1
 
-export class Monaco extends React.Component<MonacoProps, MonacoState> {
-  state: MonacoState = {
+export class CypherEditor extends React.Component<
+  CypherEditorProps,
+  CypherEditorState
+> {
+  state: CypherEditorState = {
     currentHistoryIndex: UNRUN_CMD_HISTORY_INDEX,
     draft: ''
   }
@@ -93,11 +104,24 @@ export class Monaco extends React.Component<MonacoProps, MonacoState> {
   editor?: editor.IStandaloneCodeEditor
   container?: HTMLElement
 
-  static defaultProps: MonacoDefaultProps = {
-    value: '',
-    onDisplayHelpKeys: () => undefined,
+  static defaultProps: CypherEditorDefaultProps = {
+    enableMultiStatementMode: false,
+    fontLigatures: true,
+    history: [],
+    id: 'main',
+    isFullscreen: false,
     onChange: () => undefined,
-    onExecute: () => undefined
+    onDisplayHelpKeys: () => undefined,
+    onExecute: () => undefined,
+    sendCypherQuery: () =>
+      new Promise(res =>
+        res({
+          result: { summary: { notifications: [] } }
+        } as any)
+      ),
+    toggleFullscreen: () => undefined,
+    useDb: null,
+    value: ''
   }
 
   private getMonacoId = (): string => `monaco-${this.props.id}`
@@ -412,7 +436,7 @@ export class Monaco extends React.Component<MonacoProps, MonacoState> {
     )
   }
 
-  componentDidUpdate(prevProps: MonacoProps): void {
+  componentDidUpdate(prevProps: CypherEditorProps): void {
     const { useDb, fontLigatures, enableMultiStatementMode } = this.props
     if (fontLigatures !== prevProps.fontLigatures) {
       this.editor?.updateOptions({ fontLigatures })

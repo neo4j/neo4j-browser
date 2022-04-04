@@ -20,14 +20,14 @@
 import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 
-import { Monaco } from './Monaco'
+import { CypherEditor } from './CypherEditor'
 
 const noOp = () => undefined
 
 describe('Monaco', () => {
   it('renders a component that functions as a textbox', () => {
     const { getByRole, queryByDisplayValue } = render(
-      <Monaco
+      <CypherEditor
         enableMultiStatementMode={true}
         fontLigatures={true}
         useDb={null}

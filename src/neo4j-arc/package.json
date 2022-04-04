@@ -5,7 +5,7 @@
   "author": "Neo4j Inc.",
   "license": "GPL-3.0",
   "module": "dist/neo4j-arc.mjs",
-  "typings": "dist/index.d.ts",
+  "typings": "dist/neo4j-arc.d.ts",
   "scripts": {
     "build": "rollup -c --failAfterWarnings",
     "test": "echo tbd"
