@@ -96,7 +96,7 @@ type EditorFrameProps = {
   enableMultiStatementMode: boolean
   executeCommand: (cmd: string, source: string) => void
   history: string[]
-  projectId: string
+  projectId?: string
   updateFavorite: (id: string, value: string) => void
   useDb: null | string
   params: Record<string, unknown>
@@ -316,7 +316,7 @@ export function MainEditor({
                 const editorValue = editorRef.current?.getValue() || ''
 
                 const { isProjectFile, name } = currentlyEditing
-                if (isProjectFile && name) {
+                if (isProjectFile && projectId && name) {
                   addFile({
                     variables: {
                       projectId,
