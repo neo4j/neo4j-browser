@@ -153,18 +153,18 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@juggle/resize-observer/-/resize-observer-3.3.1.tgz#b50a781709c81e10701004214340f25475a171a0"
   integrity sha512-zMM9Ds+SawiUkakS7y94Ymqx+S0ORzpG3frZirN3l+UlXUmSUR7hF4wxCVqW+ei94JzV5kt0uXBcoOEAuiydrw==
 
-"@neo4j-ndl/base@^0.1.2":
-  version "0.1.2"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@neo4j-ndl/base/-/base-0.1.2.tgz#fa542746199aea852eef1e091e3b40e252290383"
-  integrity sha512-8ClB7yNF0j+F21WbSYPQsXgTMEDhYhWy0DMPPQEBOp/fGovLgwWX+kUAcDT9olFS+ViZx9/SSBx4fQKVJUfOSA==
+"@neo4j-ndl/base@^0.1.2", "@neo4j-ndl/base@^0.1.4":
+  version "0.1.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@neo4j-ndl/base/-/base-0.1.4.tgz#fd807f444d9226a414967e4c7ee5a9436f1f81cd"
+  integrity sha512-1KAUQV799nTA/YTRxk+fc37Owbw0yhbH3prurktUMzZqlGO3sB0oxQXTRZXtQ6DQwsWaawYNFw66bsKugdPrig==
 
 "@neo4j-ndl/react@^0.1.2":
-  version "0.1.2"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@neo4j-ndl/react/-/react-0.1.2.tgz#44e6ecca1d698e095947e470e284497417017a71"
-  integrity sha512-L2aaZIPDinafn8D5xR1RI3Nk5y+F6W5PPmYShrWBNhtLxeLHPHqi/Ivt2l0g/te5G/sOOx/ERt1eGoqWKLss3g==
+  version "0.1.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@neo4j-ndl/react/-/react-0.1.4.tgz#0d7c6c5b4351ebd56e2a96bcf91d7ea59fc823de"
+  integrity sha512-+QmJBBaSo4wIi6UqVQ4BVGAPatNJoTOo+7V6yGFdlUEUxMAuBmi5tuonHpYa2m4GOL/iNKxipki1JgLnDgdsUQ==
   dependencies:
     "@heroicons/react" "^1.0.5"
-    "@neo4j-ndl/base" "^0.1.2"
+    "@neo4j-ndl/base" "^0.1.4"
     classnames "^2.3.1"
 
 "@rollup/plugin-alias@^3.1.9":
