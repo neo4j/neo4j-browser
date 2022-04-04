@@ -29,7 +29,7 @@ import {
 } from 'monaco-editor/esm/vs/editor/editor.api'
 import { QueryResult } from 'neo4j-driver-core'
 import React from 'react'
-import ResizeObserver from 'resize-observer-polyfill'
+import { ResizeObserver } from '@juggle/resize-observer'
 
 const shouldCheckForHints = (code: string) =>
   code.trim().length > 0 &&

@@ -44,6 +44,7 @@
     "@types/luxon": "^2.3.1",
     "@types/react-resizable": "^1.7.3",
     "@types/styled-components": "^5.1.1",
+    "@juggle/resize-observer": "^3.3.1",
     "@neo4j-ndl/base": "^0.1.2",
     "@neo4j-ndl/react": "^0.1.2",
     "antlr4": "^4.8.0",
@@ -66,14 +67,13 @@
     "react-dom": "^17.0.2",
     "react-is": "^17.0.2",
     "react-resizable": "^3.0.4",
-    "resize-observer-polyfill": "^1.5.1",
     "styled-components": "^5.3.3"
   },
   "peerDependencies": {
     "cypher-editor-support": "^1.1.8",
+    "monaco-editor": "0.23.0",
     "neo4j-driver-core": "^4.4.5",
     "react": "^17.0.2",
-    "monaco-editor": "0.23.0",
     "react-dom": "^17.0.2"
   }
 }
