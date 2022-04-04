@@ -7,7 +7,8 @@
   "module": "dist/neo4j-arc.mjs",
   "typings": "dist/neo4j-arc.d.ts",
   "scripts": {
-    "build": "yarn && rollup -c --failAfterWarnings && rm -rf node_modules/"
+    "build": "yarn && rollup -c --failAfterWarnings && rm -rf node_modules/",
+    "test": "echo tbd"
   },
   "repository": {
     "type": "git",
