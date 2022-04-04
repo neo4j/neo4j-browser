@@ -1,6 +1,6 @@
 {
   "name": "@neo4j-devtools/arc",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "dist/neo4j-arc.js",
   "author": "Neo4j Inc.",
   "license": "GPL-3.0",
@@ -29,6 +29,7 @@
     "@types/react": "^17.0.40",
     "@types/styled-components": "^5.1.24",
     "esbuild": "^0.14.26",
+    "lodash-es": "^4.17.21",
     "neo4j-driver-core": "^4.4.5",
     "rollup": "^2.70.1",
     "rollup-plugin-dts": "^4.2.0",
