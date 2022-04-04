@@ -5,13 +5,8 @@
     "sourceMap": true,
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
-    "declaration": true,
-    "declarationMap": true,
-    "outDir": "dist",
     "paths": {
-      "neo4j-arc/common": ["./common/index.ts"],
-      "neo4j-arc/graph-visualization": ["./graph-visualization/index.ts"]
+      "neo4j-arc/common": ["./common/index.ts"]
     }
-  },
-  "exclude": ["node_modules", "**/*.test.ts", "**/*.test.tsx"]
+  }
 }

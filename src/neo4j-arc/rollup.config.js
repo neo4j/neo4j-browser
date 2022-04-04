@@ -38,7 +38,7 @@ export default [
   }),
   // Build types
   bundle({
-    plugins: [dts({ respectExternal: true }), alias({ entries: aliasEntries })],
+    plugins: [dts(), alias({ entries: aliasEntries })],
     output: {
       file: `${name}.d.ts`,
       format: 'es'

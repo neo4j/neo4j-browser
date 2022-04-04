@@ -70,6 +70,8 @@
     "styled-components": "^5.3.3"
   },
   "peerDependencies": {
+    "@neo4j-ndl/base": "^0.1.2",
+    "@neo4j-ndl/react": "^0.1.2",
     "cypher-editor-support": "^1.1.8",
     "monaco-editor": "0.23.0",
     "neo4j-driver-core": "^4.4.5",
