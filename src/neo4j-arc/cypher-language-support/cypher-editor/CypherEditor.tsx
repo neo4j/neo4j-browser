@@ -30,6 +30,7 @@ import {
 import { QueryResult } from 'neo4j-driver-core'
 import React from 'react'
 import { ResizeObserver } from '@juggle/resize-observer'
+import styled from 'styled-components'
 
 const shouldCheckForHints = (code: string) =>
   code.trim().length > 0 &&
@@ -37,9 +38,6 @@ const shouldCheckForHints = (code: string) =>
   !code.trimLeft().toUpperCase().startsWith('EXPLAIN') &&
   !code.trimLeft().toUpperCase().startsWith('PROFILE')
 
-/*
-// Using this gives "invalid hook call" for some reason
-import styled from 'styled-components'
 const MonacoStyleWrapper = styled.div`
   height: 100%;
   width: 100%;
@@ -53,7 +51,6 @@ const MonacoStyleWrapper = styled.div`
     display: none !important;
   }
 `
-*/
 
 const EXPLAIN_QUERY_PREFIX = 'EXPLAIN '
 const EXPLAIN_QUERY_PREFIX_LENGTH = EXPLAIN_QUERY_PREFIX.length
@@ -429,9 +426,7 @@ export class CypherEditor extends React.Component<
   }
 
   render(): JSX.Element {
-    return (
-      <div style={{ height: '100%', width: '100%' }} id={this.getMonacoId()} />
-    )
+    return <MonacoStyleWrapper id={this.getMonacoId()} />
   }
 
   componentDidUpdate(prevProps: CypherEditorProps): void {
