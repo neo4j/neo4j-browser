@@ -162,6 +162,9 @@ export const PaneBody = styled.div`
 
 export const PaneTitle = styled.div`
   margin-bottom: 10px;
+  display: flex;
+  gap: 5px;
+  align-items: center;
 `
 
 export const PaneBodySectionTitle = styled.span`

@@ -21,17 +21,22 @@ import { WarningIcon } from '../icons/Icons'
 import React from 'react'
 import styled from 'styled-components'
 
-export const StyledWarningMessage = styled.span`
+export const StyledWarningMessageWrapper = styled.div`
   color: orange;
+
+  svg {
+    display: inline;
+  }
 `
+
 type WarningMessageProps = {
   text: string
 }
 export const WarningMessage = ({ text }: WarningMessageProps): JSX.Element => {
   return (
-    <StyledWarningMessage>
+    <StyledWarningMessageWrapper>
       <WarningIcon />
-      &nbsp;{text}&nbsp;
-    </StyledWarningMessage>
+      <span>&nbsp;{text}&nbsp;</span>
+    </StyledWarningMessageWrapper>
   )
 }
