@@ -37,8 +37,6 @@ const shouldCheckForHints = (code: string) =>
   !code.trimLeft().toUpperCase().startsWith('EXPLAIN') &&
   !code.trimLeft().toUpperCase().startsWith('PROFILE')
 
-export type CypherEditorHandles = CypherEditor
-
 /*
 // Using this gives "invalid hook call" for some reason
 import styled from 'styled-components'

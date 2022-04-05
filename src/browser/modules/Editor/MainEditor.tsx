@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { useMutation } from '@apollo/client'
-import { Monaco, MonacoHandles } from 'neo4j-arc/cypher-language-support'
+import { CypherEditor } from 'neo4j-arc/cypher-language-support'
 import { QueryResult } from 'neo4j-driver'
 import React, { Dispatch, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
@@ -128,7 +128,7 @@ export function MainEditor({
   const [currentlyEditing, setCurrentlyEditing] = useState<SavedScript | null>(
     null
   )
-  const editorRef = useRef<MonacoHandles>(null)
+  const editorRef = useRef<CypherEditor>(null)
 
   const toggleFullscreen = () => {
     setFullscreen(fs => !fs)
@@ -271,7 +271,7 @@ export function MainEditor({
       <FlexContainer>
         <Header>
           <EditorContainer>
-            <Monaco
+            <CypherEditor
               enableMultiStatementMode={enableMultiStatementMode}
               fontLigatures={codeFontLigatures}
               history={history}

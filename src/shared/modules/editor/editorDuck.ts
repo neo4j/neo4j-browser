@@ -19,7 +19,7 @@
  */
 import {
   setupAutocomplete,
-  setupCypherSupport,
+  initalizeCypherSupport,
   toFunction,
   toLabel,
   toProcedure,
@@ -158,7 +158,10 @@ export const initializeCypherEditorEpic: Epic<
     .ofType(APP_START)
     .take(1)
     .do(() => {
-      setupCypherSupport()
+      initalizeCypherSupport()
+      setupAutocomplete({
+        consoleCommands
+      })
     })
     .ignoreElements()
 }
@@ -167,7 +170,7 @@ export const updateEditorSupportSchemaEpic: Epic<Action, GlobalState> = (
   store
 ) =>
   actions$
-    .ofType([APP_START, DB_META_DONE, UPDATE_PARAMS])
+    .ofType([DB_META_DONE, UPDATE_PARAMS])
     .do(() => {
       const { params, meta } = store.getState()
 
