@@ -174,6 +174,10 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/grpc/grpc-node.git
 │  │  ├─ VendorName: Google Inc.
 │  │  └─ VendorUrl: https://grpc.io/
+│  ├─ @juggle/resize-observer@3.3.1
+│  │  ├─ URL: git+ssh://git@github.com/juggle/resize-observer.git
+│  │  ├─ VendorName: Juggle
+│  │  └─ VendorUrl: https://juggle.studio/resize-observer/
 │  ├─ @neo4j/browser-lambda-parser@1.0.5
 │  │  └─ URL: https://github.com/neo4j-apps/lambda-parser
 │  ├─ @scarf/scarf@0.1.8
@@ -1048,6 +1052,10 @@ Third-party licenses
 │  │  ├─ VendorName: John-David Dalton
 │  │  └─ VendorUrl: https://lodash.com/custom-builds
 │  ├─ lodash.camelcase@4.3.0
+│  │  ├─ URL: https://github.com/lodash/lodash.git
+│  │  ├─ VendorName: John-David Dalton
+│  │  └─ VendorUrl: https://lodash.com/
+│  ├─ lodash.debounce@4.0.8
 │  │  ├─ URL: https://github.com/lodash/lodash.git
 │  │  ├─ VendorName: John-David Dalton
 │  │  └─ VendorUrl: https://lodash.com/
