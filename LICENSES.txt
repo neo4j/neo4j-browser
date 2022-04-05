@@ -6015,7 +6015,7 @@ terms above.
 
 -----
 
-The following software may be included in this product: lodash.camelcase, lodash.debounce, lodash.pick. A copy of the source code may be downloaded from https://github.com/lodash/lodash.git (lodash.camelcase), https://github.com/lodash/lodash.git (lodash.debounce), https://github.com/lodash/lodash.git (lodash.pick). This software contains the following license and notice below:
+The following software may be included in this product: lodash.camelcase, lodash.pick. A copy of the source code may be downloaded from https://github.com/lodash/lodash.git (lodash.camelcase), https://github.com/lodash/lodash.git (lodash.pick). This software contains the following license and notice below:
 
 Copyright jQuery Foundation and other contributors <https://jquery.org/>
 
