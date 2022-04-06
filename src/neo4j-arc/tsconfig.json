@@ -8,5 +8,6 @@
     "paths": {
       "neo4j-arc/common": ["./common/index.ts"]
     }
-  }
+  },
+  "exclude": ["**/*.test.ts", "**/*.test.tsx"]
 }
