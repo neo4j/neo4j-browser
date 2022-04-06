@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { flatten, map, take } from 'lodash-es'
+import { flatten, map, take } from 'lodash'
 import neo4j from 'neo4j-driver'
 
 import { upperFirst, BasicNodesAndRels } from 'neo4j-arc/common'

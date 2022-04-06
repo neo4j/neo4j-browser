@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-import { filter, find, get, head, map } from 'lodash-es'
+import { filter, find, get, head, map } from 'lodash'
 import React, { useCallback, useState } from 'react'
 import { Button, Divider, Form, Icon, Label, Menu } from 'semantic-ui-react'
 import { FormSelect } from 'semantic-ui-react'

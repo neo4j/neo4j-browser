@@ -29,7 +29,7 @@ import {
   reduce,
   some,
   take
-} from 'lodash-es'
+} from 'lodash'
 import neo4j from 'neo4j-driver'
 
 import bolt from 'services/bolt/bolt'

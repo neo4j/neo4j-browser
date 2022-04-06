@@ -25,7 +25,7 @@ import {
   split,
   tail,
   trim
-} from 'lodash-es'
+} from 'lodash'
 
 import bolt from '../../../services/bolt/bolt'
 import { recursivelyTypeGraphItems } from '../../../services/bolt/boltMappings'

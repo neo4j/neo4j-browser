@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-import { assign, flatMap, map, omit, reduce, values } from 'lodash-es'
+import { assign, flatMap, map, omit, reduce, values } from 'lodash'
 import { useCallback, useMemo, useState } from 'react'
 import {
   UseRowSelectInstanceProps,

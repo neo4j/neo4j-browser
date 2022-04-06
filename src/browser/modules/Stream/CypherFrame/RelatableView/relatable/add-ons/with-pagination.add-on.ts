@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-import { pick, values } from 'lodash-es'
+import { pick, values } from 'lodash'
 import { useMemo } from 'react'
 import {
   UsePaginationInstanceProps,

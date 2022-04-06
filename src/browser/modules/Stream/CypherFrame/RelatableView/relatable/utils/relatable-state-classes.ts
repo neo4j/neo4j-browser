@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-import { entries, kebabCase, keys, map, reduce } from 'lodash-es'
+import { entries, kebabCase, keys, map, reduce } from 'lodash'
 
 import { ROW_STATE_CLASSES, TOOLBAR_STATE_CLASSES } from '../constants'
 

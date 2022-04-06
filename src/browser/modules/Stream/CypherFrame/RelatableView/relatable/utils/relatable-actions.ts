@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-import { filter, find, map, some } from 'lodash-es'
+import { filter, find, map, some } from 'lodash'
 
 import { RelatableAction, TableAddOnReturn } from '../relatable.types'
 

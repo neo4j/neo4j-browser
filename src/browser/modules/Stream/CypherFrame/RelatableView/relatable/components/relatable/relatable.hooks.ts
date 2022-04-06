@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-import { assign, filter, keys, map, pick, reduce, values } from 'lodash-es'
+import { assign, filter, keys, map, pick, reduce, values } from 'lodash'
 import { Dispatch, useCallback, useEffect, useMemo, useState } from 'react'
 import { TableOptions, useTable } from 'react-table'
 

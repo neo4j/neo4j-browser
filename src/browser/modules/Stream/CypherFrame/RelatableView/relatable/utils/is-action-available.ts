@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-import { some } from 'lodash-es'
+import { some } from 'lodash'
 
 import { RelatableAction } from '../relatable.types'
 

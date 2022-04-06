@@ -15,7 +15,7 @@
  *
  */
 import { ApolloError, useMutation, useQuery } from '@apollo/client'
-import { flatMap } from 'lodash-es'
+import { flatMap } from 'lodash'
 import React from 'react'
 import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'

@@ -30,7 +30,7 @@ import {
   startsWith,
   tail,
   values
-} from 'lodash-es'
+} from 'lodash'
 import uuid from 'uuid'
 
 import { CYPHER_FILE_EXTENSION } from 'services/exporting/favoriteUtils'

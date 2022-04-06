@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-import { get, head, map, slice } from 'lodash-es'
+import { get, head, map, slice } from 'lodash'
 import { QueryResult, Record, isInt } from 'neo4j-driver'
 import React, { useMemo } from 'react'
 import { connect } from 'react-redux'

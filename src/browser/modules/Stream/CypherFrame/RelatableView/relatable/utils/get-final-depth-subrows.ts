@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-import { flatMap } from 'lodash-es'
+import { flatMap } from 'lodash'
 
 import arrayHasItems from './array-has-items'
 

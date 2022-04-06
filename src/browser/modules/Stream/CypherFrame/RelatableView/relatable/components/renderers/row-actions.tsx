@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-import { every } from 'lodash-es'
+import { every } from 'lodash'
 import React from 'react'
 import { Checkbox, Icon } from 'semantic-ui-react'
 

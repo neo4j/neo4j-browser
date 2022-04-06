@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { uniq } from 'lodash-es'
+import { uniq } from 'lodash'
 import React, { useState } from 'react'
 import { useDrop } from 'react-dnd'
 import uuid from 'uuid'

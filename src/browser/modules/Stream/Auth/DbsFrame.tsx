@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { uniqBy } from 'lodash-es'
+import { uniqBy } from 'lodash'
 import React from 'react'
 
 import { toKeyString } from 'neo4j-arc/common'

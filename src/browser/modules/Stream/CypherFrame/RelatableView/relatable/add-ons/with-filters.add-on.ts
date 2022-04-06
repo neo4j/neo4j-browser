@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-import { filter, includes, map, values } from 'lodash-es'
+import { filter, includes, map, values } from 'lodash'
 import { useCallback, useMemo, useState } from 'react'
 import {
   Column,

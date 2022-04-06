@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-import { values } from 'lodash-es'
+import { values } from 'lodash'
 import { useCallback, useMemo } from 'react'
 import {
   Column,
