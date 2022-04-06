@@ -27,18 +27,16 @@ import {
   MarkerSeverity,
   editor
 } from 'monaco-editor/esm/vs/editor/editor.api'
-import { QueryResult } from 'neo4j-driver'
+import { QueryResult } from 'neo4j-driver-core'
 import React from 'react'
-import ResizeObserver from 'resize-observer-polyfill'
 import styled from 'styled-components'
+import { ResizeObserver } from '@juggle/resize-observer'
 
 const shouldCheckForHints = (code: string) =>
   code.trim().length > 0 &&
   !code.trimLeft().startsWith(':') &&
   !code.trimLeft().toUpperCase().startsWith('EXPLAIN') &&
   !code.trimLeft().toUpperCase().startsWith('PROFILE')
-
-export type MonacoHandles = Monaco
 
 const MonacoStyleWrapper = styled.div`
   height: 100%;
@@ -57,32 +55,50 @@ const MonacoStyleWrapper = styled.div`
 const EXPLAIN_QUERY_PREFIX = 'EXPLAIN '
 const EXPLAIN_QUERY_PREFIX_LENGTH = EXPLAIN_QUERY_PREFIX.length
 const EDITOR_UPDATE_DEBOUNCE_TIME = 300
-type MonacoDefaultProps = {
-  value: string
-  onDisplayHelpKeys: () => void
-  onChange: (value: string) => void
-  onExecute: (value: string) => void
-}
-
-export type MonacoProps = MonacoDefaultProps & {
+type CypherEditorDefaultProps = {
   enableMultiStatementMode: boolean
   fontLigatures: boolean
   history: string[]
   id: string
   isFullscreen: boolean
-  onChange?: (value: string) => void
-  onDisplayHelpKeys?: () => void
-  onExecute?: (value: string) => void
+  onChange: (value: string) => void
+  onDisplayHelpKeys: () => void
+  onExecute: (value: string) => void
   sendCypherQuery: (query: string) => Promise<QueryResult>
   toggleFullscreen: () => void
   useDb: null | string
   value: string
 }
-type MonacoState = { currentHistoryIndex: number; draft: string }
+
+export type CypherEditorProps = CypherEditorDefaultProps
+const cypherEditorDefaultProps: CypherEditorDefaultProps = {
+  enableMultiStatementMode: false,
+  fontLigatures: true,
+  history: [],
+  id: 'main',
+  isFullscreen: false,
+  onChange: () => undefined,
+  onDisplayHelpKeys: () => undefined,
+  onExecute: () => undefined,
+  sendCypherQuery: () =>
+    new Promise(res =>
+      res({
+        result: { summary: { notifications: [] } }
+      } as any)
+    ),
+  toggleFullscreen: () => undefined,
+  useDb: null,
+  value: ''
+}
+
+type CypherEditorState = { currentHistoryIndex: number; draft: string }
 const UNRUN_CMD_HISTORY_INDEX = -1
 
-export class Monaco extends React.Component<MonacoProps, MonacoState> {
-  state: MonacoState = {
+export class CypherEditor extends React.Component<
+  CypherEditorProps,
+  CypherEditorState
+> {
+  state: CypherEditorState = {
     currentHistoryIndex: UNRUN_CMD_HISTORY_INDEX,
     draft: ''
   }
@@ -90,12 +106,7 @@ export class Monaco extends React.Component<MonacoProps, MonacoState> {
   editor?: editor.IStandaloneCodeEditor
   container?: HTMLElement
 
-  static defaultProps: MonacoDefaultProps = {
-    value: '',
-    onDisplayHelpKeys: () => undefined,
-    onChange: () => undefined,
-    onExecute: () => undefined
-  }
+  static defaultProps = cypherEditorDefaultProps
 
   private getMonacoId = (): string => `monaco-${this.props.id}`
   private debouncedUpdateCode = debounce(() => {
@@ -407,7 +418,7 @@ export class Monaco extends React.Component<MonacoProps, MonacoState> {
     return <MonacoStyleWrapper id={this.getMonacoId()} />
   }
 
-  componentDidUpdate(prevProps: MonacoProps): void {
+  componentDidUpdate(prevProps: CypherEditorProps): void {
     const { useDb, fontLigatures, enableMultiStatementMode } = this.props
     if (fontLigatures !== prevProps.fontLigatures) {
       this.editor?.updateOptions({ fontLigatures })

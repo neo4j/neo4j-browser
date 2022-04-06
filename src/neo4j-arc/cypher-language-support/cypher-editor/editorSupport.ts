@@ -135,6 +135,7 @@ export function initalizeCypherSupport(): void {
 
   editor.defineTheme('dark', monacoDarkTheme)
   editor.defineTheme('light', monacoLightTheme)
+  editor.setTheme('light')
 }
 
 function encodeNumberAsSortableString(number: number): string {
