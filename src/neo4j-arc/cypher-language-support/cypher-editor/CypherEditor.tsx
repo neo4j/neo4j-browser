@@ -30,6 +30,7 @@ import {
 import { QueryResult } from 'neo4j-driver-core'
 import React from 'react'
 import styled from 'styled-components'
+import { ResizeObserver } from '@juggle/resize-observer'
 
 const shouldCheckForHints = (code: string) =>
   code.trim().length > 0 &&
@@ -69,7 +70,26 @@ type CypherEditorDefaultProps = {
   value: string
 }
 
-export type CypherEditorProps = Partial<CypherEditorDefaultProps>
+export type CypherEditorProps = CypherEditorDefaultProps
+const cypherEditorDefaultProps: CypherEditorDefaultProps = {
+  enableMultiStatementMode: false,
+  fontLigatures: true,
+  history: [],
+  id: 'main',
+  isFullscreen: false,
+  onChange: () => undefined,
+  onDisplayHelpKeys: () => undefined,
+  onExecute: () => undefined,
+  sendCypherQuery: () =>
+    new Promise(res =>
+      res({
+        result: { summary: { notifications: [] } }
+      } as any)
+    ),
+  toggleFullscreen: () => undefined,
+  useDb: null,
+  value: ''
+}
 
 type CypherEditorState = { currentHistoryIndex: number; draft: string }
 const UNRUN_CMD_HISTORY_INDEX = -1
@@ -86,25 +106,7 @@ export class CypherEditor extends React.Component<
   editor?: editor.IStandaloneCodeEditor
   container?: HTMLElement
 
-  static defaultProps: CypherEditorDefaultProps = {
-    enableMultiStatementMode: false,
-    fontLigatures: true,
-    history: [],
-    id: 'main',
-    isFullscreen: false,
-    onChange: () => undefined,
-    onDisplayHelpKeys: () => undefined,
-    onExecute: () => undefined,
-    sendCypherQuery: () =>
-      new Promise(res =>
-        res({
-          result: { summary: { notifications: [] } }
-        } as any)
-      ),
-    toggleFullscreen: () => undefined,
-    useDb: null,
-    value: ''
-  }
+  static defaultProps = cypherEditorDefaultProps
 
   private getMonacoId = (): string => `monaco-${this.props.id}`
   private debouncedUpdateCode = debounce(() => {
