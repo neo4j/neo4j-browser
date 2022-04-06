@@ -148,11 +148,6 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@heroicons/react/-/react-1.0.6.tgz#35dd26987228b39ef2316db3b1245c42eb19e324"
   integrity sha512-JJCXydOFWMDpCP4q13iEplA503MQO3xLoZiKum+955ZCtHINWnx26CUxVxxFQu/uLb4LW3ge15ZpzIkXKkJ8oQ==
 
-"@juggle/resize-observer@^3.3.1":
-  version "3.3.1"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@juggle/resize-observer/-/resize-observer-3.3.1.tgz#b50a781709c81e10701004214340f25475a171a0"
-  integrity sha512-zMM9Ds+SawiUkakS7y94Ymqx+S0ORzpG3frZirN3l+UlXUmSUR7hF4wxCVqW+ei94JzV5kt0uXBcoOEAuiydrw==
-
 "@neo4j-ndl/base@^0.1.2", "@neo4j-ndl/base@^0.1.4":
   version "0.1.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@neo4j-ndl/base/-/base-0.1.4.tgz#fd807f444d9226a414967e4c7ee5a9436f1f81cd"

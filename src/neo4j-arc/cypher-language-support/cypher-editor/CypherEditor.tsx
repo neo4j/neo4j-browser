@@ -29,7 +29,6 @@ import {
 } from 'monaco-editor/esm/vs/editor/editor.api'
 import { QueryResult } from 'neo4j-driver-core'
 import React from 'react'
-import { ResizeObserver } from '@juggle/resize-observer'
 import styled from 'styled-components'
 
 const shouldCheckForHints = (code: string) =>
@@ -70,20 +69,8 @@ type CypherEditorDefaultProps = {
   value: string
 }
 
-export type CypherEditorProps = CypherEditorDefaultProps & {
-  enableMultiStatementMode?: boolean
-  fontLigatures?: boolean
-  history?: string[]
-  id?: string
-  isFullscreen?: boolean
-  onChange?: (value: string) => void
-  onDisplayHelpKeys?: () => void
-  onExecute?: (value: string) => void
-  sendCypherQuery?: (query: string) => Promise<QueryResult>
-  toggleFullscreen?: () => void
-  useDb?: null | string
-  value?: string
-}
+export type CypherEditorProps = Partial<CypherEditorDefaultProps>
+
 type CypherEditorState = { currentHistoryIndex: number; draft: string }
 const UNRUN_CMD_HISTORY_INDEX = -1
 
