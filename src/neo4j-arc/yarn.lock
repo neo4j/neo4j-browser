@@ -121,17 +121,17 @@
     "@babel/helper-validator-identifier" "^7.16.7"
     to-fast-properties "^2.0.0"
 
-"@emotion/is-prop-valid@^0.8.8":
-  version "0.8.8"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@emotion/is-prop-valid/-/is-prop-valid-0.8.8.tgz#db28b1c4368a259b60a97311d6a952d4fd01ac1a"
-  integrity sha512-u5WtneEAr5IDG2Wv65yhunPSMLIpuKsbuOktRojfrEiEvRyC85LgPMZI63cr7NUqT8ZIGdSVg8ZKGxIug4lXcA==
+"@emotion/is-prop-valid@^1.1.0":
+  version "1.1.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@emotion/is-prop-valid/-/is-prop-valid-1.1.2.tgz#34ad6e98e871aa6f7a20469b602911b8b11b3a95"
+  integrity sha512-3QnhqeL+WW88YjYbQL5gUIkthuMw7a0NGbZ7wfFVk2kg/CK5w8w5FFa0RzWjyY1+sujN0NWbtSHH6OJmWHtJpQ==
   dependencies:
-    "@emotion/memoize" "0.7.4"
+    "@emotion/memoize" "^0.7.4"
 
-"@emotion/memoize@0.7.4":
-  version "0.7.4"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@emotion/memoize/-/memoize-0.7.4.tgz#19bf0f5af19149111c40d98bb0cf82119f5d9eeb"
-  integrity sha512-Ja/Vfqe3HpuzRsG1oBtWTHk2PGZ7GR+2Vz5iYGelAw8dx32K0y7PjVuxK6z1nMpZOqAFsRUPCkK1YjJ56qJlgw==
+"@emotion/memoize@^0.7.4":
+  version "0.7.5"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@emotion/memoize/-/memoize-0.7.5.tgz#2c40f81449a4e554e9fc6396910ed4843ec2be50"
+  integrity sha512-igX9a37DR2ZPGYtV6suZ6whr8pTFtyHL3K/oLUotxpSVO2ASaprmAe2Dkq7tBo7CRY7MMDrAa9nuQP9/YG8FxQ==
 
 "@emotion/stylis@^0.8.4":
   version "0.8.5"
@@ -181,6 +181,11 @@
   dependencies:
     estree-walker "^2.0.1"
     picomatch "^2.2.2"
+
+"@types/antlr4@^4.7.2":
+  version "4.7.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/antlr4/-/antlr4-4.7.2.tgz#8cfbbcea13d45c42e9a326aa0e55df816cdd07f5"
+  integrity sha512-v6NASzZa4pUgO2QJJqGHTRRBfZDTOk2savuugSfCLatRTd2q+UtW0I7ub9mjzERhm7aWqGxBi886HnJkLYiIEA==
 
 "@types/d3-color@*", "@types/d3-color@^3.0.2":
   version "3.0.2"
@@ -867,10 +872,10 @@ rollup-plugin-dts@^4.2.0:
   optionalDependencies:
     "@babel/code-frame" "^7.16.7"
 
-rollup-plugin-esbuild@^4.8.2:
-  version "4.8.2"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/rollup-plugin-esbuild/-/rollup-plugin-esbuild-4.8.2.tgz#c097b93cd4b622e62206cadb5797589f548cf48c"
-  integrity sha512-wsaYNOjzTb6dN1qCIZsMZ7Q0LWiPJklYs2TDI8vJA2LUbvtPUY+17TC8C0vSat3jPMInfR9XWKdA7ttuwkjsGQ==
+rollup-plugin-esbuild@^4.9.1:
+  version "4.9.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/rollup-plugin-esbuild/-/rollup-plugin-esbuild-4.9.1.tgz#369d137e2b1542c8ee459495fd4f10de812666aa"
+  integrity sha512-qn/x7Wz9p3Xnva99qcb+nopH0d2VJwVnsxJTGEg+Sh2Z3tqQl33MhOwzekVo1YTKgv+yAmosjcBRJygMfGrtLw==
   dependencies:
     "@rollup/pluginutils" "^4.1.1"
     debug "^4.3.3"
@@ -913,14 +918,14 @@ sourcemap-codec@^1.4.8:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/sourcemap-codec/-/sourcemap-codec-1.4.8.tgz#ea804bd94857402e6992d05a38ef1ae35a9ab4c4"
   integrity sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==
 
-styled-components@^5.3.3:
-  version "5.3.3"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/styled-components/-/styled-components-5.3.3.tgz#312a3d9a549f4708f0fb0edc829eb34bde032743"
-  integrity sha512-++4iHwBM7ZN+x6DtPPWkCI4vdtwumQ+inA/DdAsqYd4SVgUKJie5vXyzotA00ttcFdQkCng7zc6grwlfIfw+lw==
+styled-components@^5.3.5:
+  version "5.3.5"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/styled-components/-/styled-components-5.3.5.tgz#a750a398d01f1ca73af16a241dec3da6deae5ec4"
+  integrity sha512-ndETJ9RKaaL6q41B69WudeqLzOpY1A/ET/glXkNZ2T7dPjPqpPCXXQjDFYZWwNnE5co0wX+gTCqx9mfxTmSIPg==
   dependencies:
     "@babel/helper-module-imports" "^7.0.0"
     "@babel/traverse" "^7.4.5"
-    "@emotion/is-prop-valid" "^0.8.8"
+    "@emotion/is-prop-valid" "^1.1.0"
     "@emotion/stylis" "^0.8.4"
     "@emotion/unitless" "^0.7.4"
     babel-plugin-styled-components ">= 1.12.0"

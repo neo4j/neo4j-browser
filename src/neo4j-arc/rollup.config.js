@@ -1,9 +1,7 @@
 import dts from 'rollup-plugin-dts'
 import esbuild from 'rollup-plugin-esbuild'
 import alias from '@rollup/plugin-alias'
-
-const packageJson = require('./package.json')
-const name = packageJson.main.replace(/\.js$/, '')
+import pkg from './package.json'
 
 const importsWithPaths = [
   '@neo4j-ndl/base/lib/tokens/js/tokens',
@@ -13,42 +11,34 @@ const importsWithPaths = [
 ]
 
 const dependenciesNotToBundle = Object.keys({
-  ...packageJson.dependencies,
-  ...packageJson.peerDependencies
+  ...pkg.dependencies,
+  ...pkg.peerDependencies
 }).concat(importsWithPaths)
-
-const bundle = config => ({
-  ...config,
-  input: 'index.ts',
-  external: id => dependenciesNotToBundle.includes(id)
-})
 
 const aliasEntries = [
   { find: 'neo4j-arc/common', replacement: './common/index.ts' }
 ]
 
 export default [
-  bundle({
-    plugins: [esbuild(), alias({ entries: aliasEntries })],
+  {
+    input: 'index.ts',
+    external: id => dependenciesNotToBundle.includes(id),
+    plugins: [/* handles ts */ esbuild(), alias({ entries: aliasEntries })],
     output: [
       {
-        file: `${name}.js`,
-        format: 'cjs',
-        sourcemap: true
-      },
-      {
-        file: `${name}.mjs`,
+        file: pkg.main,
         format: 'es',
         sourcemap: true
       }
     ]
-  }),
+  },
   // Build types
-  bundle({
+  {
+    input: 'index.ts',
     plugins: [dts(), alias({ entries: aliasEntries })],
     output: {
-      file: `${name}.d.ts`,
+      file: pkg.typings,
       format: 'es'
     }
-  })
+  }
 ]
