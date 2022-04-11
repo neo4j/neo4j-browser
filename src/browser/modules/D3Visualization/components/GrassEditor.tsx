@@ -330,7 +330,7 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
     for (const key in propertiesSet) {
       if (propertiesSet.hasOwnProperty(key)) {
         properties[key] = Array.from(propertiesSet[key]).sort((a, b) =>
-          a > b ? 1 : -1
+          a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' })
         )
       }
     }
