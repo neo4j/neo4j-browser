@@ -17,8 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { InputStream } from 'antlr4'
-import { CypherLexer } from 'cypher-editor-support/src/_generated/CypherLexer'
 import { languages } from 'monaco-editor/esm/vs/editor/editor.api'
 
 class CypherState implements languages.IState {
@@ -36,24 +34,10 @@ export class CypherTokensProvider implements languages.TokensProvider {
     return new CypherState()
   }
 
-  tokenize(line: string): languages.ILineTokens {
-    const lexer = new CypherLexer(new InputStream(line))
-
+  tokenize(): languages.ILineTokens {
     return {
       endState: new CypherState(),
-      tokens: lexer
-        .getAllTokens()
-        .filter(token => token !== null && token.type !== -1)
-        .map(token => ({
-          scopes:
-            (
-              lexer.symbolicNames[token.type] ??
-              lexer.literalNames[token.type] ??
-              ''
-            ).toLowerCase() + '.cypher',
-          startIndex: token.column
-        }))
-        .sort((a, b) => (a.startIndex > b.startIndex ? 1 : -1))
+      tokens: []
     }
   }
 }
