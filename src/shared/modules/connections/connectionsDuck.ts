@@ -563,12 +563,20 @@ export const startupConnectEpic = (action$: any, store: any) => {
         }
       }
 
+      const currentConn = getConnection(
+        store.getState(),
+        discovery.CONNECTION_ID
+      )
       // Otherwise fail autoconnect
       store.dispatch(setActiveConnection(null))
       store.dispatch(
         discovery.updateDiscoveryConnection({
           password: '',
-          SSOError: discovered?.SSOError
+          SSOError: discovered?.SSOError,
+          authenticationMethod:
+            (currentConn?.SSOProviders?.length ?? 0) > 1
+              ? SSO
+              : currentConn?.authenticationMethod
         })
       )
       return Promise.resolve({ type: STARTUP_CONNECTION_FAILED })
