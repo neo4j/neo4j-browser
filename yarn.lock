@@ -2061,7 +2061,7 @@
 "@types/antlr4@^4.7.2":
   version "4.7.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/antlr4/-/antlr4-4.7.2.tgz#8cfbbcea13d45c42e9a326aa0e55df816cdd07f5"
-  integrity sha1-jPu86hPUXELpoyaqDlXfgWzdB/U=
+  integrity sha512-v6NASzZa4pUgO2QJJqGHTRRBfZDTOk2savuugSfCLatRTd2q+UtW0I7ub9mjzERhm7aWqGxBi886HnJkLYiIEA==
 
 "@types/apollo-upload-client@^14.1.0":
   version "14.1.0"
@@ -3127,11 +3127,6 @@ antlr4@4.7.0:
   version "4.7.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/antlr4/-/antlr4-4.7.0.tgz#297f956ddc06f83397fc0990ecf2e0cf20bfbbee"
   integrity sha1-KX+VbdwG+DOX/AmQ7PLgzyC/u+4=
-
-antlr4@^4.8.0:
-  version "4.8.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/antlr4/-/antlr4-4.8.0.tgz#f938ec171be7fc2855cd3a533e87647185b32b6a"
-  integrity sha1-+TjsFxvn/ChVzTpTPodkcYWzK2o=
 
 anymatch@^2.0.0:
   version "2.0.0"
@@ -4948,11 +4943,12 @@ cyclist@^1.0.1:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/cyclist/-/cyclist-1.0.1.tgz#596e9698fd0c80e12038c2b82d6eb1b35b6224d9"
   integrity sha1-WW6WmP0MgOEgOMK4LW6xs1tiJNk=
 
-cypher-editor-support@^1.1.8:
-  version "1.1.8"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypher-editor-support/-/cypher-editor-support-1.1.8.tgz#6b173de2a67fe91e8493fbbc6ee41cf4c90ee84e"
-  integrity sha1-axc94qZ/6R6Ek/u8buQc9MkO6E4=
+cypher-editor-support@1.1.10:
+  version "1.1.10"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypher-editor-support/-/cypher-editor-support-1.1.10.tgz#d3cfda36836af19ede9b82f329540fc0b8e302a4"
+  integrity sha512-Sol1PI35rgD9kuQUmYtY7Yrshh4wqDNPSHOv6OWmSRc/Tu4MDIPM5+nGeIpAqmZG1pezPFcqQpUEQNgJY8kCYg==
   dependencies:
+    "@types/antlr4" "^4.7.2"
     antlr4 "4.7.0"
     fuzzaldrin "2.1.0"
     lodash "4.17.15"

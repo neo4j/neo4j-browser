@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { createCypherLexer } from 'cypher-editor-support'
 import { languages } from 'monaco-editor/esm/vs/editor/editor.api'
 
 class CypherState implements languages.IState {
@@ -34,10 +35,23 @@ export class CypherTokensProvider implements languages.TokensProvider {
     return new CypherState()
   }
 
-  tokenize(): languages.ILineTokens {
+  tokenize(line: string): languages.ILineTokens {
+    const lexer = createCypherLexer(line)
     return {
       endState: new CypherState(),
-      tokens: []
+      tokens: lexer
+        .getAllTokens()
+        .filter(token => token !== null && token.type !== -1)
+        .map(token => ({
+          scopes:
+            (
+              lexer.symbolicNames[token.type] ??
+              lexer.literalNames[token.type] ??
+              ''
+            ).toLowerCase() + '.cypher',
+          startIndex: token.column
+        }))
+        .sort((a, b) => (a.startIndex > b.startIndex ? 1 : -1))
     }
   }
 }
