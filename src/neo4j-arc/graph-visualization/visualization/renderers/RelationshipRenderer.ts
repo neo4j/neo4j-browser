@@ -3,6 +3,7 @@ import { Container, Graphics, Text } from 'pixi.js'
 
 import { ARROW_NAME, CAPTION_NAME, ZOOM_MAX_SCALE } from '../../constants'
 import { arcToCurve, svgPathParser } from '../../utils/svgPathResolver'
+import { degreeToRadian } from '../../utils/maths'
 
 class RelationshipRenderer {
   _resolution: number
@@ -15,9 +16,10 @@ class RelationshipRenderer {
     svgPath: string | undefined,
     colour: number
   ): void {
-    // console.log('draw svg path', svgPath)
+    // console.log('svg path', svgPath)
     if (!svgPath) return
     const pathData = svgPathParser(svgPath)
+    // console.log('path parse', pathData)
     arrow.beginFill(colour)
     for (let i = 0; i < pathData.length; i++) {
       switch (pathData[i].type) {
@@ -118,7 +120,7 @@ class RelationshipRenderer {
     caption.pivot.y = caption.height / 2
     caption.x = x
     caption.y = y
-    caption.rotation = rotation
+    caption.rotation = degreeToRadian(rotation)
   }
 }
 

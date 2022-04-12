@@ -38,6 +38,7 @@ import { uniqBy } from 'lodash-es'
 import ContextMenuRenderer from './renderers/ContextMenuRenderer'
 import { getGraphStats, GraphStats } from '../utils/mapper'
 import { calculateRadius } from '../../graph-visualization/GraphVisualizer/Graph/visualization/utils/circularLayout'
+import { degreeToRadian } from '../utils/maths'
 
 const SCREEN_WIDTH = 1200
 const SCREEN_HEIGHT = 500
@@ -516,6 +517,7 @@ class Visualisation {
     this._graph.getRelationships().forEach(relationshipData => {
       const relationshipGfx =
         this._relationshipDataToRelationshipGfx[relationshipData.id]
+
       const arrow = relationshipGfx.getChildByName(ARROW_NAME) as Graphics
       const caption = relationshipGfx.getChildByName(CAPTION_NAME)
 
@@ -579,12 +581,13 @@ class Visualisation {
     relationshipGfx: Container,
     relationship: RelationshipModel
   ): void {
-    relationshipGfx.x = relationship.source.x
-    relationshipGfx.y = relationship.source.y
-    relationshipGfx.rotation = Math.atan2(
-      relationship.target.y - relationship.source.y,
-      relationship.target.x - relationship.source.x
-    )
+    relationshipGfx.position.set(relationship.source.x, relationship.source.y)
+    relationshipGfx.rotation = relationship.isLoop()
+      ? degreeToRadian(relationship.naturalAngle + 180)
+      : Math.atan2(
+          relationship.target.y - relationship.source.y,
+          relationship.target.x - relationship.source.x
+        )
   }
 
   updateLayout(nodeIds?: string[]): void {
@@ -695,7 +698,7 @@ class Visualisation {
         relationship.arrow?.midShaftPoint?.x ?? 0,
         relationship.arrow?.midShaftPoint?.y ?? 0,
         relationship.naturalAngle < 90 || relationship.naturalAngle > 270
-          ? 135
+          ? 180
           : 0
       )
 

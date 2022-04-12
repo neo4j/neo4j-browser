@@ -42,7 +42,6 @@ export class RelationshipModel
   captionLayout: RelationshipCaptionLayout
   shortCaption: string
   shortCaptionLength: number
-  selected: boolean
   centreDistance: number
   arrow: ArcArrow | LoopArrow | StraightArrow | undefined
 
