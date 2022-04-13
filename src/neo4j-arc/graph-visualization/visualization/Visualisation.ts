@@ -442,7 +442,7 @@ class Visualisation {
     this.setZoomOutLimit()
     this._viewport.animate({
       position: new Point((maxNodeX + minNodeX) / 2, (maxNodeY + minNodeY) / 2),
-      scale: zoomScale
+      scale: zoomScale * 0.85 // Make sure the loop arrows are visible on the edge.
     })
   }
 
