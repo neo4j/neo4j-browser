@@ -241,6 +241,7 @@ class Visualisation {
   }
 
   private resizeViewport(): void {
+    console.log('resize view port')
     this._viewport.resize(this.view.offsetWidth, this.view.offsetHeight)
     this.updateVisibility()
     this.requestRender()
@@ -485,7 +486,7 @@ class Visualisation {
       }
     })
 
-    document.addEventListener('resize', () => {
+    window.addEventListener('resize', () => {
       console.log('RESIZE')
       this.resizeViewport()
     })
