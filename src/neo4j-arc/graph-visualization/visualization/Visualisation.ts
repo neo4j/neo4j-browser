@@ -34,7 +34,7 @@ import { RelationshipModel } from '../models/Relationship'
 import { colourToNumber } from '../utils/colour'
 import RelationshipRenderer from './renderers/RelationshipRenderer'
 import NodeRenderer from './renderers/NodeRenderer'
-import { uniqBy } from 'lodash-es'
+import { debounce, uniqBy } from 'lodash-es'
 import ContextMenuRenderer from './renderers/ContextMenuRenderer'
 import { getGraphStats, GraphStats } from '../utils/mapper'
 import { calculateRadius } from '../../graph-visualization/GraphVisualizer/Graph/visualization/utils/circularLayout'
@@ -486,10 +486,13 @@ class Visualisation {
       }
     })
 
-    window.addEventListener('resize', () => {
-      console.log('RESIZE')
-      this.resizeViewport()
-    })
+    window.addEventListener(
+      'resize',
+      debounce(() => {
+        console.log('RESIZE')
+        this.resizeViewport()
+      }, 100)
+    )
 
     this.requestRender()
   }
