@@ -13,7 +13,7 @@ import ForceSimulation from '../forceSimulation/ForceSimulation'
 import { GraphModel } from '../models/Graph'
 import { NodeModel } from '../models/Node'
 import { GraphChangeHandler, MoveGfxBetweenLayers } from '../types'
-import { getGraphStats, mapNodes, mapRelationships } from '../utils/mapper'
+import { mapNodes, mapRelationships } from '../utils/mapper'
 import ExternalEventHandler from './ExternalEventHandler'
 
 const DRAG_TOLERANCE = 25

@@ -40,15 +40,13 @@ class ForceSimulation {
   private _simulation: Simulation<NodeModel, RelationshipModel>
   private _nodesToSimulate: NodeModel[]
   private _shouldSimulateAllNodes: boolean
+  private _endSimulationCallback: () => void
 
-  constructor(
-    graph: GraphModel,
-    private render: (nodeIds?: string[]) => void,
-    private endSimulationCallback: () => void
-  ) {
+  constructor(graph: GraphModel, private render: (nodeIds?: string[]) => void) {
     this._graph = graph
 
     this._simulationCenter = { x: 0, y: 0 }
+    this._endSimulationCallback = () => undefined
 
     this._simulation = forceSimulation<NodeModel, RelationshipModel>()
       .velocityDecay(VELOCITY_DECAY)
@@ -66,7 +64,7 @@ class ForceSimulation {
       })
       .on('end', () => {
         console.log('end simulation')
-        endSimulationCallback()
+        this._endSimulationCallback()
       })
       .stop()
 
@@ -137,7 +135,8 @@ class ForceSimulation {
     this.render()
   }
 
-  restart(): void {
+  restart(endSimulationCallback: () => void): void {
+    this._endSimulationCallback = endSimulationCallback
     this._simulation.alphaMin(DEFAULT_ALPHA_MIN).alpha(DEFAULT_ALPHA).restart()
   }
 

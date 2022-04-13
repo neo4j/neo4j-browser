@@ -167,8 +167,7 @@ class Visualisation {
 
     this._forceSimulation = new ForceSimulation(
       this._graph,
-      this.updateVisualisation.bind(this),
-      this.updateVisibility.bind(this)
+      this.updateVisualisation.bind(this)
     )
 
     this._eventHandler = new EventHandler({
@@ -456,9 +455,6 @@ class Visualisation {
 
     // initial layout
     this._viewport.setZoom(1)
-    const { minNodeX, maxNodeX, minNodeY, maxNodeY } =
-      this._layout.getBoundaries()
-    // this._viewport.moveCenter((minNodeX + maxNodeX) / 2, (minNodeY + maxNodeY) / 2)
     this._previousZoomScale = this._viewport.scale.x
     this.setZoomOutLimit()
 
@@ -595,6 +591,7 @@ class Visualisation {
   }
 
   updateLayout(nodeIds?: string[]): void {
+    if (!this._viewport.visible) return
     console.log('update layout')
     const nodes = nodeIds
       ? this._graph.getNodes().filter(node => nodeIds.includes(node.id))
@@ -829,6 +826,8 @@ class Visualisation {
       })
     }
 
+    // When initialising or expanding entities in the graph view,
+    // data and DisplayObject mapping should be built.
     if (type === 'init' || type === 'expand') {
       this.createNodeDataGfxMapping(nodes)
       this.createRelationshipDataGfxMapping(relationships)
@@ -846,14 +845,21 @@ class Visualisation {
     }
 
     if (type === 'init') {
-      if (
-        this._graph.getNodes().length > 1000 ||
-        this._graph.getRelationships().length > 1000
-      )
-        this._forceSimulation.precompute()
-      else this._forceSimulation.restart()
+      this._viewport.visible = false
+      this._forceSimulation.restart(() => {
+        const { minNodeX, maxNodeX, minNodeY, maxNodeY } =
+          this._layout.getBoundaries()
+        console.log('INIT boundary', minNodeX, maxNodeX, minNodeY, maxNodeY)
+        this._viewport.moveCenter(
+          (minNodeX + maxNodeX) / 2,
+          (minNodeY + maxNodeY) / 2
+        )
+        this._viewport.visible = true
+        this.updateVisualisation()
+      })
     } else if (type === 'expand') {
-      if (nodes.length > 0) this._forceSimulation.restart()
+      if (nodes.length > 0)
+        this._forceSimulation.restart(this.updateVisibility.bind(this))
     } else if (type === 'update') {
       this.updateVisualisation()
     }
@@ -872,7 +878,7 @@ class Visualisation {
   }
 
   /**
-   * Destroy PIXI application and release memory
+   * Destroy PIXI application and release memory.
    */
   destory(): void {
     if (this._renderRequestId) {
