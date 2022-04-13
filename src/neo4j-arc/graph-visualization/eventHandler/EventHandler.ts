@@ -39,6 +39,7 @@ class EventHandler {
   private _clickRelationshipTimeout: number | null
   private _selectedItem: NodeModel | RelationshipModel | null
   private _render: (nodeIds: string[]) => void
+  private _updateVisibility: () => void
   private _onGraphChange: GraphChangeHandler
   private _shouldBindD3DragHandler: () => boolean
   private _moveGfxBetweenLayers: MoveGfxBetweenLayers
@@ -58,6 +59,7 @@ class EventHandler {
     toggleSelectedRelationship,
     shouldBindD3DragHandler,
     render,
+    updateVisibility,
     onGraphChange,
     moveGfxBetweenLayers,
     externalEventHandler
@@ -73,6 +75,7 @@ class EventHandler {
     toggleSelectedRelationship: (relationship: RelationshipModel | null) => void
     shouldBindD3DragHandler: () => boolean
     render: (nodeIds?: string[]) => void
+    updateVisibility: () => void
     onGraphChange: GraphChangeHandler
     moveGfxBetweenLayers: MoveGfxBetweenLayers
     externalEventHandler: ExternalEventHandler
@@ -108,6 +111,7 @@ class EventHandler {
     this._toggleSelectedRelationship = toggleSelectedRelationship
     this._shouldBindD3DragHandler = shouldBindD3DragHandler
     this._render = render
+    this._updateVisibility = updateVisibility
     this._onGraphChange = onGraphChange
 
     this._moveGfxBetweenLayers = moveGfxBetweenLayers
@@ -204,7 +208,9 @@ class EventHandler {
       // Set alphaTarget to a value higher than alphaMin so the simulation
       // isn't stopped while nodes are being dragged.
       if (this._shouldBindD3DragHandler() && !this._isDblClickNode) {
-        this._forceSimulation.simulateNodeDrag()
+        this._forceSimulation.simulateNodeDrag(
+          this._updateVisibility.bind(this)
+        )
         this._restartedSimulation = true
       }
     }

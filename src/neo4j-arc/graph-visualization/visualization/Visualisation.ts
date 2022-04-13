@@ -183,6 +183,7 @@ class Visualisation {
       toggleSelectedRelationship: this.toggleRelationshipSelect.bind(this),
       shouldBindD3DragHandler: this.shouldSimulateAllNodes.bind(this),
       render: this.updateVisualisation.bind(this),
+      updateVisibility: this.updateVisibility.bind(this),
       onGraphChange: this.onGraphChange.bind(this),
       moveGfxBetweenLayers: this.moveGfxBetweenLayers.bind(this),
       externalEventHandler

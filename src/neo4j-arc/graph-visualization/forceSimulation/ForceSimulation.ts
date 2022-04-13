@@ -140,7 +140,8 @@ class ForceSimulation {
     this._simulation.alphaMin(DEFAULT_ALPHA_MIN).alpha(DEFAULT_ALPHA).restart()
   }
 
-  simulateNodeDrag(): void {
+  simulateNodeDrag(endSimulationCallback: () => void): void {
+    this._endSimulationCallback = endSimulationCallback
     // Set alphaTarget to a value higher than alphaMin so the simulation
     // isn't stopped while nodes are being dragged.
     this._simulation
