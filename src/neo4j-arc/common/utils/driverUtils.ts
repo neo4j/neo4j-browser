@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { BasicNodesAndRels } from 'neo4j-arc/common'
 import {
   isNode,
   isPath,
@@ -28,10 +27,18 @@ import {
   Path,
   Record
 } from 'neo4j-driver-core'
+import { DeduplicatedBasicNodesAndRels } from '../types/arcTypes'
 import { getPropertyTypeDisplayName, propertyToString } from './cypherTypeUtils'
 import { mapObjectValues } from './objectUtils'
 
-export const extractNodesAndRels = (records: Record[]): BasicNodesAndRels => {
+export const extractUniqueNodesAndRels = (
+  records: Record[],
+  {
+    nodeLimit,
+    keepDanglingRels
+  }: { nodeLimit?: number; keepDanglingRels?: boolean } = {}
+): DeduplicatedBasicNodesAndRels => {
+  let limitHit = false
   if (records.length === 0) {
     return { nodes: [], relationships: [] }
   }
@@ -48,9 +55,14 @@ export const extractNodesAndRels = (records: Record[]): BasicNodesAndRels => {
 
   const nodeMap = new Map<string, Node>()
   function addNode(n: Node) {
-    const id = n.identity.toString()
-    if (!nodeMap.has(id)) {
-      nodeMap.set(id, n)
+    if (!limitHit) {
+      const id = n.identity.toString()
+      if (!nodeMap.has(id)) {
+        nodeMap.set(id, n)
+      }
+      if (typeof nodeLimit === 'number' && nodeMap.size === nodeLimit) {
+        limitHit = true
+      }
     }
   }
 
@@ -116,9 +128,13 @@ export const extractNodesAndRels = (records: Record[]): BasicNodesAndRels => {
 
   const relationships = Array.from(relMap.values())
     .filter(item => {
-      // We can't display dangling relationships such as
-      // match ()-[a:ACTED_IN]->() return a;
+      if (keepDanglingRels) {
+        return true
+      }
 
+      // We'd get dangling relationships from
+      // match ()-[a:ACTED_IN]->() return a;
+      // or from hitting the node limit
       const start = item.start.toString()
       const end = item.end.toString()
       return nodeMap.has(start) && nodeMap.has(end)
@@ -136,5 +152,5 @@ export const extractNodesAndRels = (records: Record[]): BasicNodesAndRels => {
         )
       }
     })
-  return { nodes, relationships }
+  return { nodes, relationships, limitHit }
 }

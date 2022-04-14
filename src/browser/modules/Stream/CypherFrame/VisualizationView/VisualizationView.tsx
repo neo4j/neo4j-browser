@@ -56,6 +56,7 @@ type VisualizationState = {
   nodes: BasicNode[]
   relationships: BasicRelationship[]
   hasTruncatedFields: boolean
+  nodeLimitHit: boolean
 }
 
 export type VisualizationProps = {
@@ -86,6 +87,7 @@ export class Visualization extends Component<
     nodes: [],
     relationships: [],
     updated: 0,
+    nodeLimitHit: false,
     hasTruncatedFields: false
   }
 
@@ -127,13 +129,28 @@ export class Visualization extends Component<
         true,
         props.maxFieldItems
       )
+
+    const { nodes: uniqNodes, nodeLimitHit } = deduplicateNodes(
+      nodes,
+      this.props.initialNodeDisplay
+    )
+
+    const uniqRels = nodeLimitHit
+      ? relationships.filter(
+          rel =>
+            !!uniqNodes.find(node => node.id === rel.startNodeId) &&
+            !!uniqNodes.find(node => node.id === rel.endNodeId)
+        )
+      : relationships
+
     const hasTruncatedFields = resultHasTruncatedFields(
       props.result,
       props.maxFieldItems
     )
     this.setState({
-      nodes,
-      relationships,
+      nodes: uniqNodes,
+      relationships: uniqRels,
+      nodeLimitHit,
       hasTruncatedFields,
       updated: new Date().getTime()
     })
@@ -256,7 +273,6 @@ LIMIT ${maxNewNeighbours}`
         <GraphVisualizer
           maxNeighbours={this.props.maxNeighbours}
           hasTruncatedFields={this.state.hasTruncatedFields}
-          initialNodeDisplay={this.props.initialNodeDisplay}
           graphStyleData={this.props.graphStyleData}
           updateStyle={this.props.updateStyle}
           getNeighbours={this.getNeighbours.bind(this)}
@@ -264,6 +280,7 @@ LIMIT ${maxNewNeighbours}`
           relationships={this.state.relationships}
           isFullscreen={this.props.isFullscreen}
           assignVisElement={this.props.assignVisElement}
+          nodeLimitHit={this.state.nodeLimitHit}
           getAutoCompleteCallback={(
             callback: (rels: BasicRelationship[]) => void
           ) => {
@@ -307,3 +324,26 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
 export const VisualizationConnectedBus = withBus(
   connect(mapStateToProps, mapDispatchToProps)(Visualization)
 )
+
+type DeduplicateHelper = {
+  nodes: BasicNode[]
+  taken: Record<string, boolean>
+  nodeLimitHit: boolean
+}
+
+const deduplicateNodes = (
+  nodes: BasicNode[],
+  limit: number
+): { nodes: BasicNode[]; nodeLimitHit: boolean } =>
+  nodes.reduce(
+    (all: DeduplicateHelper, curr: BasicNode) => {
+      if (all.nodes.length === limit) {
+        all.nodeLimitHit = true
+      } else if (!all.taken[curr.id]) {
+        all.nodes.push(curr)
+        all.taken[curr.id] = true
+      }
+      return all
+    },
+    { nodes: [], taken: {}, nodeLimitHit: false }
+  )
