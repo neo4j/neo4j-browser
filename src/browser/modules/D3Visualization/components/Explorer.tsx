@@ -34,6 +34,7 @@ import NeighboursPickerPopover, {
 } from './modal/NeighboursPickerModal'
 import { StyledFullSizeContainer, panelMinWidth } from './styled'
 import { VizItem } from './types'
+import Relationship from 'project-root/src/browser/modules/D3Visualization/lib/visualization/components/Relationship'
 import VizNode from 'project-root/src/browser/modules/D3Visualization/lib/visualization/components/VizNode'
 import {
   BasicNode,
@@ -74,6 +75,7 @@ type ExplorerComponentProps = {
   relationships: BasicRelationship[]
   nodes: BasicNode[]
   graphNodes: VizNode[]
+  graphRelationships: Relationship[]
   initialNodeDisplay: number
   maxNeighbours: number
   graphStyleData: any
@@ -312,6 +314,7 @@ export class ExplorerComponent extends Component<
           hoveredItem={this.state.hoveredItem}
           selectedItem={this.state.selectedItem}
           nodes={this.props.graphNodes}
+          relationships={this.props.graphRelationships}
           stats={this.state.stats}
           width={this.state.width}
           setWidth={(width: number) =>

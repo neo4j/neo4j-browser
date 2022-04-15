@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { StyleElement } from 'canvg'
 import { cloneDeep } from 'lodash-es'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
@@ -40,6 +41,7 @@ import SetupLabelModal, {
 import SetupColorModal from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorModal'
 import { IColorSettings } from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorStorage'
 import { RelArrowCaptionPosition } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelRelArrowSVG'
+import Relationship from 'project-root/src/browser/modules/D3Visualization/lib/visualization/components/Relationship'
 import VizNode from 'project-root/src/browser/modules/D3Visualization/lib/visualization/components/VizNode'
 import { GlobalState } from 'shared/globalState'
 import * as actions from 'shared/modules/grass/grassDuck'
@@ -66,13 +68,16 @@ export interface IStyleForLabel {
 }
 type GrassEditorProps = {
   nodes: VizNode[]
+  relationships: Relationship[]
   graphStyleData?: any
   graphStyle?: GraphStyle
   update?: any
   selectedLabel?: { label: string; propertyKeys: string[] }
   selectedRelType?: { relType: string; propertyKeys: string[] }
 }
-
+function stringSorter(a: string, b: string) {
+  return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' })
+}
 export class GrassEditorComponent extends Component<GrassEditorProps> {
   graphStyle: GraphStyle
   nodeDisplaySizes: any
@@ -306,42 +311,46 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
     )
   }
 
-  colorTypePicker(styleForLabel: IStyleForLabel) {
-    const { label } = this.props.selectedLabel!
+  colorTypePicker({
+    items,
+    itemStyle,
+    title
+  }: {
+    items: Array<Pick<VizNode, 'propertyMap'>>
+    itemStyle: IStyleForLabel
+    title: string
+  }) {
     const propertiesSet: {
       [key: string]: Set<string>
     } = {}
-    this.props.nodes
-      .filter(node => node.labels.includes(label))
-      .forEach(node => {
-        for (const key in node.propertyMap) {
-          if (node.propertyMap.hasOwnProperty(key)) {
-            if (propertiesSet[key]) {
-              propertiesSet[key].add(node.propertyMap[key])
-            } else {
-              propertiesSet[key] = new Set<string>([node.propertyMap[key]])
-            }
+    items.forEach(item => {
+      for (const key in item.propertyMap) {
+        if (item.propertyMap.hasOwnProperty(key)) {
+          if (propertiesSet[key]) {
+            propertiesSet[key].add(item.propertyMap[key])
+          } else {
+            propertiesSet[key] = new Set<string>([item.propertyMap[key]])
           }
         }
-      })
+      }
+    })
     const properties: {
       [key: string]: string[]
     } = {}
     for (const key in propertiesSet) {
       if (propertiesSet.hasOwnProperty(key)) {
-        properties[key] = Array.from(propertiesSet[key]).sort((a, b) =>
-          a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' })
-        )
+        properties[key] = Array.from(propertiesSet[key]).sort(stringSorter)
       }
     }
     return (
       <StyledInlineListItem key="color-type-picker">
         <StyledInlineList className="color-type-picker picker">
           <SetupColorModal
+            title={title}
             properties={properties}
-            itemStyleProps={styleForLabel.props}
+            itemStyleProps={itemStyle.props}
             updateStyle={colorSettings => {
-              this.updateStyle(styleForLabel.selector, {
+              this.updateStyle(itemStyle.selector, {
                 colorSettings
               })
             }}
@@ -350,6 +359,7 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
       </StyledInlineListItem>
     )
   }
+
   stylePicker() {
     let pickers
     let title
@@ -370,7 +380,7 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
         styleForLabel.props?.colorSettings === undefined // do not show caption picker if label settings are set
       const propertyKeys = (
         this.props.selectedLabel.propertyKeys as string[]
-      ).sort((a, b) => (a > b ? 1 : -1))
+      ).sort(stringSorter)
       pickers = [
         this.labelPicker(
           styleForLabel.selector,
@@ -380,7 +390,13 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
           true,
           getTypeListForNodes(this.props.nodes, labelList)
         ),
-        this.colorTypePicker(styleForLabel),
+        this.colorTypePicker({
+          items: this.props.nodes.filter(node =>
+            node.labels.includes(this.props.selectedLabel!.label)
+          ),
+          title: 'Color nodes by property values',
+          itemStyle: styleForLabel
+        }),
         this.sizePicker(styleForLabel.selector, styleForLabel)
       ]
       if (displayColorPicker) {
@@ -413,9 +429,12 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
       }
       const displayCaptionPicker =
         styleForRelType.props?.captionSettings === undefined // do not show caption picker if label settings are set
+      const displayColorPicker =
+        styleForRelType.props?.colorSettings === undefined // do not show caption picker if label settings are set
+
       const propertyKeys = (
         this.props.selectedRelType.propertyKeys as string[]
-      ).sort((a, b) => (a > b ? 1 : -1))
+      ).sort(stringSorter)
 
       pickers = [
         this.labelPicker(
@@ -425,9 +444,20 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
           true,
           false
         ),
-        this.colorPicker(styleForRelType.selector, styleForRelType),
+        this.colorTypePicker({
+          items: this.props.relationships.filter(rel =>
+            rel.type.includes(this.props.selectedRelType!.relType)
+          ),
+          title: 'Color relationships by property values',
+          itemStyle: styleForRelType
+        }),
         this.widthPicker(styleForRelType.selector, styleForRelType)
       ]
+      if (displayColorPicker) {
+        pickers.push(
+          this.colorPicker(styleForRelType.selector, styleForRelType)
+        )
+      }
       if (displayCaptionPicker) {
         pickers.push(
           this.captionPicker(

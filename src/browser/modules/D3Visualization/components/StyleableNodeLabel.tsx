@@ -20,10 +20,12 @@
 import React from 'react'
 import { Popup } from 'semantic-ui-react'
 
+import Relationship from '../lib/visualization/components/Relationship'
 import { GrassEditor } from './GrassEditor'
 import { StyledLabel } from 'browser/modules/DBMSInfo/styled'
 import { GraphStyle } from 'project-root/src/browser/modules/D3Visualization/graphStyle'
 import VizNode from 'project-root/src/browser/modules/D3Visualization/lib/visualization/components/VizNode'
+import { relationship } from 'project-root/src/browser/modules/D3Visualization/lib/visualization/renders/init'
 
 export type StyleableNodeLabelProps = {
   selectedLabel: {
@@ -34,12 +36,14 @@ export type StyleableNodeLabelProps = {
   graphStyle: GraphStyle
   onClick?: () => void
   nodes: VizNode[]
+  relationships: Relationship[]
 }
 export function StyleableNodeLabel({
   graphStyle,
   selectedLabel,
   onClick,
-  nodes
+  nodes,
+  relationships
 }: StyleableNodeLabelProps): JSX.Element {
   const labels = selectedLabel.label === '*' ? [] : [selectedLabel.label]
   const graphStyleForLabel = graphStyle.forNode({
@@ -70,7 +74,11 @@ export function StyleableNodeLabel({
       wide
     >
       <div ref={wrapperRef}>
-        <GrassEditor selectedLabel={selectedLabel} nodes={nodes} />
+        <GrassEditor
+          selectedLabel={selectedLabel}
+          nodes={nodes}
+          relationships={relationships}
+        />
       </div>
     </Popup>
   )

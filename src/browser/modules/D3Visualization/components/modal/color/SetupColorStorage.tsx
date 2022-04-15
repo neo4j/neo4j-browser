@@ -1,10 +1,11 @@
+import { cloneDeep } from 'lodash-es'
 import * as React from 'react'
+
 import SetupColorModalBody from './SetupColorModalBody'
 import {
   IStyleForLabel,
   IStyleForLabelProps
 } from 'project-root/src/browser/modules/D3Visualization/components/GrassEditor'
-import { cloneDeep } from 'lodash-es'
 
 export interface IColorSettings {
   key: string
@@ -20,6 +21,7 @@ export interface ISetupColorStorageProps {
   itemStyleProps: IStyleForLabel['props']
   updateStyle: (settings?: IColorSettings) => void
   doClose: () => void
+  title: string
 }
 
 const SetupColorStorage: React.FC<ISetupColorStorageProps> = props => {
@@ -43,12 +45,10 @@ const SetupColorStorage: React.FC<ISetupColorStorageProps> = props => {
   const [selectedProperty, setSelectedProperty] = React.useState<
     string | undefined
   >(colorSettings.key.length > 0 ? colorSettings.key : undefined)
-  const handlePropertyChange: React.ChangeEventHandler<HTMLInputElement> = React.useCallback(
-    event => {
+  const handlePropertyChange: React.ChangeEventHandler<HTMLInputElement> =
+    React.useCallback(event => {
       setSelectedProperty(event.currentTarget.value)
-    },
-    []
-  )
+    }, [])
   React.useEffect(() => {
     if (selectedProperty) {
       setColorSettings({

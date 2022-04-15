@@ -41,12 +41,12 @@ const sideTextsPositions: (
   RelArrowCaptionPosition.endBelow
 ]
 
-function getColorStyleForNode({
-  node,
+function getColorStyleForItem({
+  item,
   currentStyle,
   key
 }: {
-  node: {
+  item: {
     propertyMap: {
       [key: string]: string
     }
@@ -55,9 +55,9 @@ function getColorStyleForNode({
   key: keyof IStyleForLabelProps
 }): string {
   const colorSettings: IColorSettings | '' = currentStyle.get('colorSettings')
-  if (colorSettings !== '' && node.propertyMap[colorSettings.key]) {
+  if (colorSettings !== '' && item.propertyMap[colorSettings.key]) {
     return (
-      colorSettings?.settings?.[node.propertyMap[colorSettings.key]]?.[key] ??
+      colorSettings?.settings?.[item.propertyMap[colorSettings.key]]?.[key] ??
       currentStyle.get(key)
     )
   } else {
@@ -82,16 +82,16 @@ const nodeOutline = new Renderer({
         return node.radius
       },
       fill(node: VizNode) {
-        return getColorStyleForNode({
+        return getColorStyleForItem({
           currentStyle: viz.style.forNode(node),
-          node,
+          item: node,
           key: 'color'
         })
       },
       stroke(node: VizNode) {
-        return getColorStyleForNode({
+        return getColorStyleForItem({
           currentStyle: viz.style.forNode(node),
-          node,
+          item: node,
           key: 'border-color'
         })
       },
@@ -141,9 +141,9 @@ const nodeCaption = new Renderer({
       )
       .attr({
         fill(line: NodeCaptionLine) {
-          return getColorStyleForNode({
+          return getColorStyleForItem({
             currentStyle: viz.style.forNode(line.node),
-            node: line.node,
+            item: line.node,
             key: 'text-color-internal'
           })
         }
@@ -191,7 +191,13 @@ const arrowPath = new Renderer({
     paths.enter().append('path').classed('outline', true)
 
     paths
-      .attr('fill', (rel: any) => viz.style.forRelationship(rel).get('color'))
+      .attr('fill', (rel: any) =>
+        getColorStyleForItem({
+          currentStyle: viz.style.forRelationship(rel),
+          item: rel,
+          key: 'color'
+        })
+      )
       .attr('stroke', 'none')
 
     return paths.exit().remove()

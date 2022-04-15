@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Resizable } from 'react-resizable'
 import { Icon } from 'semantic-ui-react'
 
+import Relationship from '../lib/visualization/components/Relationship'
 import { GraphStats } from '../mapper'
 import { DetailsPaneComponent } from './DetailsPane'
 import { NodeInspectorDrawer } from './NodeInspectorDrawer'
@@ -26,6 +27,7 @@ interface NodeInspectorPanelProps {
   toggleExpanded: () => void
   width: number
   nodes: VizNode[]
+  relationships: Relationship[]
 }
 
 export const defaultPanelWidth = (): number =>
@@ -81,6 +83,7 @@ export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
                 <DetailsPaneComponent
                   vizItem={shownEl}
                   nodes={this.props.nodes}
+                  relationships={this.props.relationships}
                   graphStyle={graphStyle}
                   nodeInspectorWidth={width}
                 />
@@ -93,6 +96,7 @@ export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
                     shownEl.type === 'canvas' ? shownEl.item.nodeCount : null
                   }
                   nodes={this.props.nodes}
+                  relationships={this.props.relationships}
                   relationshipCount={
                     shownEl.type === 'canvas'
                       ? shownEl.item.relationshipCount
