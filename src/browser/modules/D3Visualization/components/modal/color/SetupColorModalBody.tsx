@@ -1,9 +1,7 @@
-import { cloneDeep } from 'lodash-es'
 import * as React from 'react'
 import styled from 'styled-components'
 
 import { IColorSettings, ISetupColorStorageProps } from './SetupColorStorage'
-import { IStyleForLabelProps } from 'project-root/src/browser/modules/D3Visualization/components/GrassEditor'
 import SetupColorPicker from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorPicker'
 
 const Container = styled.div`
@@ -39,7 +37,10 @@ const SetupColorModalBody: React.FC<
     title
   } = props
   const keys = React.useMemo(
-    () => Object.keys(properties).sort((a, b) => (a > b ? 1 : -1)),
+    () =>
+      Object.keys(properties).sort((a, b) =>
+        a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' })
+      ),
     [properties]
   )
 

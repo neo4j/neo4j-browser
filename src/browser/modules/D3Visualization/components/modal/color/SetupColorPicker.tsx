@@ -1,17 +1,19 @@
+import { interpolateTurbo } from 'd3-scale-chromatic'
+import { cloneDeep } from 'lodash-es'
 import * as React from 'react'
-import SetupColorScheme from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorScheme'
+import styled from 'styled-components'
+
+import { usePrevious } from 'browser-hooks/hooks'
 import SetupColorPreview, {
   generateColorsForBase
 } from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorPreview'
-import styled from 'styled-components'
-import { interpolateTurbo } from 'd3-scale-chromatic'
+import SetupColorScheme from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorScheme'
 import { IColorSettings } from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorStorage'
-import { cloneDeep } from 'lodash-es'
 import {
   ApplyButton,
   SimpleButton
 } from 'project-root/src/browser/modules/D3Visualization/components/modal/styled'
-import { usePrevious } from 'browser-hooks/hooks'
+
 const MarginDiv = styled.div`
   margin: 10px 0;
 `
@@ -22,9 +24,8 @@ const SetupColorPicker: React.FC<{
   onSubmit: (settings?: IRawColorSettings) => void
   onClose: () => void
 }> = ({ values, initialColorSettings, onClose, onSubmit }) => {
-  const [currentColorSettings, setCurrentColorSettings] = React.useState<
-    IRawColorSettings
-  >(initialColorSettings)
+  const [currentColorSettings, setCurrentColorSettings] =
+    React.useState<IRawColorSettings>(initialColorSettings)
   React.useEffect(() => {
     setCurrentColorSettings(initialColorSettings)
   }, [initialColorSettings])
@@ -47,19 +48,39 @@ const SetupColorPicker: React.FC<{
     },
     []
   )
+  const [sortVal, setSortVal] = React.useState<'ASC' | 'DESC'>('ASC')
+  const sortedValues = React.useMemo(
+    () =>
+      sortVal === 'ASC'
+        ? values.sort((a, b) =>
+            a.localeCompare(b, undefined, {
+              numeric: true,
+              sensitivity: 'base'
+            })
+          )
+        : values.sort((b, a) =>
+            a.localeCompare(b, undefined, {
+              numeric: true,
+              sensitivity: 'base'
+            })
+          ),
+    [values, sortVal]
+  )
   const oldColorScheme = usePrevious(colorScheme)
+  const oldSort = usePrevious(sortVal)
   React.useEffect(() => {
     setCurrentColorSettings(old => {
       if (
-        values.every(value => old[value] != undefined) &&
-        oldColorScheme === colorScheme
+        sortedValues.every(value => old[value] != undefined) &&
+        oldColorScheme === colorScheme &&
+        oldSort === sortVal
       ) {
         return old
       } else {
         const newSettings: IRawColorSettings = {}
-        const length = values.length - 1
+        const length = sortedValues.length - 1
         const isScaled = length < 20
-        values.forEach((value, i) => {
+        sortedValues.forEach((value, i) => {
           const color = colorScheme(
             isScaled ? (i / length) * 0.8 + 0.1 : i / length
           )
@@ -68,7 +89,14 @@ const SetupColorPicker: React.FC<{
         return newSettings
       }
     })
-  }, [values, colorScheme, initialColorSettings, oldColorScheme])
+  }, [
+    sortedValues,
+    colorScheme,
+    initialColorSettings,
+    oldColorScheme,
+    sortVal,
+    oldSort
+  ])
 
   const handleSubmit = React.useCallback(() => {
     onSubmit(currentColorSettings)
@@ -78,6 +106,7 @@ const SetupColorPicker: React.FC<{
     onSubmit(undefined)
     onClose()
   }, [onSubmit, onClose])
+
   return (
     <>
       <h3>Color map</h3>
@@ -86,7 +115,15 @@ const SetupColorPicker: React.FC<{
         onChange={handleColorSchemeChange}
       />
       <MarginDiv>
-        {values.map(t => (
+        <div>
+          <SortButton onClick={React.useCallback(() => setSortVal('ASC'), [])}>
+            Ascending
+          </SortButton>
+          <SortButton onClick={React.useCallback(() => setSortVal('DESC'), [])}>
+            Descending
+          </SortButton>
+        </div>
+        {sortedValues.map(t => (
           <SetupColorPreview
             key={t}
             value={t}
@@ -104,4 +141,10 @@ const SetupColorPicker: React.FC<{
   )
 }
 
+const SortButton = styled.button`
+  margin-right: 20px;
+  background: transparent;
+  padding: 5px 2px;
+  margin-bottom: 10px;
+`
 export default SetupColorPicker
