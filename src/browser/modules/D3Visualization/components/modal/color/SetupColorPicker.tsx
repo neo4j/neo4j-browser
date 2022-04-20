@@ -23,7 +23,8 @@ const SetupColorPicker: React.FC<{
   initialColorSettings: IRawColorSettings
   onSubmit: (settings?: IRawColorSettings) => void
   onClose: () => void
-}> = ({ values, initialColorSettings, onClose, onSubmit }) => {
+  withLineWidth: boolean
+}> = ({ values, initialColorSettings, onClose, onSubmit, withLineWidth }) => {
   const [currentColorSettings, setCurrentColorSettings] =
     React.useState<IRawColorSettings>(initialColorSettings)
   React.useEffect(() => {
@@ -84,7 +85,11 @@ const SetupColorPicker: React.FC<{
           const color = colorScheme(
             isScaled ? (i / length) * 0.8 + 0.1 : i / length
           )
-          newSettings[value] = generateColorsForBase(color)
+          newSettings[value] = Object.assign(
+            {},
+            old[value],
+            generateColorsForBase(color)
+          )
         })
         return newSettings
       }
@@ -107,6 +112,31 @@ const SetupColorPicker: React.FC<{
     onClose()
   }, [onSubmit, onClose])
 
+  const lineWidthIsSet: boolean = React.useMemo(() => {
+    return Object.keys(initialColorSettings).every(key =>
+      initialColorSettings[key].hasOwnProperty('shaft-width')
+    )
+  }, [])
+  const [doesAffectLineWidth, setAffectLineWidth] =
+    React.useState<boolean>(lineWidthIsSet)
+  const handleAffectLineWidthChange: React.ChangeEventHandler<HTMLInputElement> =
+    React.useCallback(() => {
+      setAffectLineWidth(wasChecked => {
+        const checked = !wasChecked
+        setCurrentColorSettings(oldSettings => {
+          const newSettings = cloneDeep(oldSettings)
+          if (checked) {
+            sortedValues.forEach(
+              (key, i) => (newSettings[key]['shaft-width'] = `${i + 1}px`)
+            )
+          } else {
+            sortedValues.forEach(key => delete newSettings[key]['shaft-width'])
+          }
+          return newSettings
+        })
+        return checked
+      })
+    }, [sortedValues])
   return (
     <>
       <h3>Color map</h3>
@@ -122,6 +152,16 @@ const SetupColorPicker: React.FC<{
           <SortButton onClick={React.useCallback(() => setSortVal('DESC'), [])}>
             Descending
           </SortButton>
+          {withLineWidth && (
+            <LineWidthLabel>
+              <input
+                type={'checkbox'}
+                checked={doesAffectLineWidth}
+                onChange={handleAffectLineWidthChange}
+              />{' '}
+              Affects line width
+            </LineWidthLabel>
+          )}
         </div>
         {sortedValues.map(t => (
           <SetupColorPreview
@@ -146,5 +186,12 @@ const SortButton = styled.button`
   background: transparent;
   padding: 5px 2px;
   margin-bottom: 10px;
+`
+
+const LineWidthLabel = styled.label`
+  background: transparent;
+  padding: 5px 2px;
+  margin-bottom: 10px;
+  float: right;
 `
 export default SetupColorPicker

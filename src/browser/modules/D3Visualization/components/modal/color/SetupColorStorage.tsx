@@ -21,7 +21,7 @@ export interface ISetupColorStorageProps {
   itemStyleProps: IStyleForLabel['props']
   updateStyle: (settings?: IColorSettings) => void
   doClose: () => void
-  title: string
+  isForNode: boolean
 }
 
 const SetupColorStorage: React.FC<ISetupColorStorageProps> = props => {

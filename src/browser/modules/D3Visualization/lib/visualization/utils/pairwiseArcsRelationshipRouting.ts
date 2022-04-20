@@ -195,9 +195,12 @@ export default class PairwiseArcsRelationshipRouting {
 
       for (let i = 0; i < nodePair.relationships.length; i++) {
         const relationship = nodePair.relationships[i]
+        const styleObj = this.style.forRelationship(relationship)
         const shaftWidth =
           parseFloat(
-            this.style.forRelationship(relationship).get('shaft-width')
+            styleObj.props.colorSettings?.settings?.[
+              relationship.propertyMap[styleObj.props.colorSettings?.key]
+            ]?.['shaft-width'] ?? styleObj.get('shaft-width')
           ) || 2
         const headWidth = shaftWidth + 6
         const headHeight = headWidth

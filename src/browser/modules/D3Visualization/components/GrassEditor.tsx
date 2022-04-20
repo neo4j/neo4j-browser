@@ -55,6 +55,7 @@ export interface IStyleForLabelProps {
   diameter: string
   'font-size': string
   'text-color-internal': string
+  'shaft-width': string
 }
 export interface IStyleForLabel {
   props: IStyleForLabelProps & {
@@ -81,7 +82,6 @@ function stringSorter(a: string, b: string) {
 export class GrassEditorComponent extends Component<GrassEditorProps> {
   graphStyle: GraphStyle
   nodeDisplaySizes: any
-  picker: any
   widths: any
   constructor(props: any) {
     super(props)
@@ -194,6 +194,51 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
     )
   }
 
+  // widthTypePicker({
+  //   items,
+  //   itemStyle
+  // }: {
+  //   items: Array<Pick<VizNode, 'propertyMap'>>
+  //   itemStyle: IStyleForLabel
+  // }) {
+  //   const propertiesSet: {
+  //     [key: string]: Set<string>
+  //   } = {}
+  //   items.forEach(item => {
+  //     for (const key in item.propertyMap) {
+  //       if (item.propertyMap.hasOwnProperty(key)) {
+  //         if (propertiesSet[key]) {
+  //           propertiesSet[key].add(item.propertyMap[key])
+  //         } else {
+  //           propertiesSet[key] = new Set<string>([item.propertyMap[key]])
+  //         }
+  //       }
+  //     }
+  //   })
+  //   const properties: {
+  //     [key: string]: string[]
+  //   } = {}
+  //   for (const key in propertiesSet) {
+  //     if (propertiesSet.hasOwnProperty(key)) {
+  //       properties[key] = Array.from(propertiesSet[key]).sort(stringSorter)
+  //     }
+  //   }
+  //   return (
+  //     <StyledInlineListItem key="color-type-picker">
+  //       <StyledInlineList className="color-type-picker picker">
+  //         {/*<SetupColorModal*/}
+  //         {/*  properties={properties}*/}
+  //         {/*  itemStyleProps={itemStyle.props}*/}
+  //         {/*  updateStyle={widthSettings => {*/}
+  //         {/*    this.updateStyle(itemStyle.selector, {*/}
+  //         {/*      widthSettings*/}
+  //         {/*    })*/}
+  //         {/*  }}*/}
+  //         {/*/>*/}
+  //       </StyledInlineList>
+  //     </StyledInlineListItem>
+  //   )
+  // }
   widthPicker(selector: Selector, styleForItem: any) {
     const widthSelectors = this.graphStyle
       .defaultArrayWidths()
@@ -314,11 +359,11 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
   colorTypePicker({
     items,
     itemStyle,
-    title
+    isForNode
   }: {
     items: Array<Pick<VizNode, 'propertyMap'>>
     itemStyle: IStyleForLabel
-    title: string
+    isForNode: boolean
   }) {
     const propertiesSet: {
       [key: string]: Set<string>
@@ -346,7 +391,7 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
       <StyledInlineListItem key="color-type-picker">
         <StyledInlineList className="color-type-picker picker">
           <SetupColorModal
-            title={title}
+            isForNode={isForNode}
             properties={properties}
             itemStyleProps={itemStyle.props}
             updateStyle={colorSettings => {
@@ -394,7 +439,7 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
           items: this.props.nodes.filter(node =>
             node.labels.includes(this.props.selectedLabel!.label)
           ),
-          title: 'Color nodes by property values',
+          isForNode: true,
           itemStyle: styleForLabel
         }),
         this.sizePicker(styleForLabel.selector, styleForLabel)
@@ -448,7 +493,7 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
           items: this.props.relationships.filter(rel =>
             rel.type.includes(this.props.selectedRelType!.relType)
           ),
-          title: 'Color relationships by property values',
+          isForNode: false,
           itemStyle: styleForRelType
         }),
         this.widthPicker(styleForRelType.selector, styleForRelType)

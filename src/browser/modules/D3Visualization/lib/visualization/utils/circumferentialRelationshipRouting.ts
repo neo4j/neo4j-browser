@@ -179,10 +179,12 @@ export default class circumferentialRelationshipRouting {
             node === relationship.source
               ? angle - relationship.naturalAngle
               : relationship.naturalAngle - angle + (180 % 360)
-
+          const styleObj = this.style.forRelationship(relationship);
           const shaftRadius =
             parseFloat(
-              this.style.forRelationship(relationship).get('shaft-width')
+              styleObj.props.colorSettings?.settings?.[
+                relationship.propertyMap[styleObj.props.colorSettings?.key]
+                ]?.['shaft-width'] ?? styleObj.get('shaft-width')
             ) / 2 || 2
           const headRadius = shaftRadius + 3
           const headHeight = headRadius * 2

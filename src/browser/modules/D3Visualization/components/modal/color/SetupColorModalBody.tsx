@@ -34,7 +34,7 @@ const SetupColorModalBody: React.FC<
     doClose,
     selectedProperty,
     handlePropertyChange,
-    title
+    isForNode
   } = props
   const keys = React.useMemo(
     () =>
@@ -60,7 +60,11 @@ const SetupColorModalBody: React.FC<
     )
   return (
     <Container>
-      <h3>{title}</h3>
+      <h3>
+        {isForNode
+          ? 'Color nodes by property values'
+          : 'Color relationships by property values'}
+      </h3>
       <div>
         {keys.map(key => (
           <Label key={key}>
@@ -81,6 +85,7 @@ const SetupColorModalBody: React.FC<
           onSubmit={handleSubmit}
           onClose={doClose}
           initialColorSettings={colorSettings.settings}
+          withLineWidth={!isForNode}
         />
       )}
     </Container>
