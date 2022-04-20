@@ -41,6 +41,7 @@ import {
 import { DISABLE_IMPLICIT_INIT_COMMANDS } from 'shared/modules/settings/settingsDuck'
 import { DB_META_DONE } from '../dbMeta/constants'
 import { UPDATE_PARAMS } from '../params/paramsDuck'
+import { isOfType } from 'shared/utils/typeSafeActions'
 
 export const SET_CONTENT = 'editor/SET_CONTENT'
 export const EDIT_CONTENT = 'editor/EDIT_CONTENT'
@@ -170,7 +171,7 @@ export const updateEditorSupportSchemaEpic: Epic<Action, GlobalState> = (
   store
 ) =>
   actions$
-    .ofType([DB_META_DONE, UPDATE_PARAMS])
+    .filter(isOfType([DB_META_DONE, UPDATE_PARAMS]))
     .do(() => {
       const { params, meta } = store.getState()
 
