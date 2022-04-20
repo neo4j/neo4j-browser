@@ -2,6 +2,8 @@ export const SubmitQueryButton = '[data-testid="editor-Run"]'
 const EditorTextField = '[data-testid="activeEditor"] textarea'
 const VisibleEditor = '#monaco-main-editor'
 /* global Cypress, cy */
+export const selectAllAndDelete =
+  Cypress.platform === 'darwin' ? '{cmd}a {backspace}' : '{ctrl}a {backspace}'
 
 Cypress.Commands.add('getEditor', () => cy.get(VisibleEditor))
 Cypress.Commands.add('getFrames', () => cy.get('[data-testid="frame"]'))
