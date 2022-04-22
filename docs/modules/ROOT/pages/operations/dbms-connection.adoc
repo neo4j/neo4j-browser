@@ -11,13 +11,13 @@ For more information, see <<manage-connection>>.
 image:home-screen.png[]
 
 
-[[uri-schema]]
-== Connection URI schemas
+[[uri-scheme]]
+== Connection URI schemes
 
 By default, Neo4j Browser communicates with a Neo4j DBMS via the link:https://7687.org/[Bolt Protocol^] using the link:https://neo4j.com/docs/javascript-manual/current/[Neo4j JavaScript Driver^] to execute Cypher queries.
 However, it is possible to turn off Bolt and use xref:operations/rest-requests.adoc[HTTP(S)] instead, as in older versions of Neo4j Browser.
 
-Neo4j Browser supports the following connection URI schemas:
+Neo4j Browser supports the following connection URI schemes:
 
 * `neo4j://`(unencrypted) and `neo4j+s://` (encrypted with TLS) -- work on either a single instance or a cluster.
 Routing is handled by the driver.
@@ -36,6 +36,15 @@ A difference in the behavior in `neo4j://` and `bolt://` is seen only if address
 ====
 For more information on the different connection scenarios, see <<connection-scenarios>>.
 For more information on how to configure connectors (Bolt, HTTP, and HTTPS) for Neo4j and the default ports, see link:https://neo4j.com/docs/operations-manual/{neo4j-version}/configuration/connectors/#connectors[Operations Manual -> Configure connectors^] and link:https://neo4j.com/docs/operations-manual/current/configuration/ports/[Operations Manual -> Ports^].
+====
+
+[NOTE]
+====
+URI schemes ending `+ssc` are not supported by Neo4j Browser since the browser’s OS handles certificate trust. 
+If it is necessary to connect to a Neo4j instance using a self-signed certificate from Neo4j Browser, first visit a web page that uses the self-signed certificate in order to prompt the browser to request that certificate trust be granted. 
+Once that trust has been granted, you can connect with URI schemes ending `+s`.
+Alternatevely, you can trust self-signed certificate by installing them on your OS. 
+For more information, see link:https://neo4j.com/docs/operations-manual/current/security/ssl-framework/#ssl-bolt-config[Operations Manual -> SSL Framework, Configure SSL over Bolt]. 
 ====
 
 

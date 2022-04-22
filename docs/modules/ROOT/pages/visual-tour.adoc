@@ -198,7 +198,7 @@ To access the list of all available editor keybindings, press F1 in the Cypher e
 You can click a block shown in the history result to bring it into the editor.
 The command history is persisted across Browser restarts.
 
-| `CALL db.schema.visualization()`
+| `CALL db..visualization()`
 | Show database schema.
 
 | `:sysinfo`
