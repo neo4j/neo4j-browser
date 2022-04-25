@@ -56,6 +56,7 @@ const EXPLAIN_QUERY_PREFIX = 'EXPLAIN '
 const EXPLAIN_QUERY_PREFIX_LENGTH = EXPLAIN_QUERY_PREFIX.length
 const EDITOR_UPDATE_DEBOUNCE_TIME = 300
 type CypherEditorDefaultProps = {
+  className: string
   enableMultiStatementMode: boolean
   fontLigatures: boolean
   history: string[]
@@ -72,6 +73,7 @@ type CypherEditorDefaultProps = {
 
 export type CypherEditorProps = CypherEditorDefaultProps
 const cypherEditorDefaultProps: CypherEditorDefaultProps = {
+  className: '',
   enableMultiStatementMode: false,
   fontLigatures: true,
   history: [],
@@ -415,7 +417,12 @@ export class CypherEditor extends React.Component<
   }
 
   render(): JSX.Element {
-    return <MonacoStyleWrapper id={this.getMonacoId()} />
+    return (
+      <MonacoStyleWrapper
+        id={this.getMonacoId()}
+        className={this.props.className}
+      />
+    )
   }
 
   componentDidUpdate(prevProps: CypherEditorProps): void {
