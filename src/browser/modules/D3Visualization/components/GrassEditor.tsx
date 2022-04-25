@@ -56,6 +56,7 @@ export interface IStyleForLabelProps {
   'font-size': string
   'text-color-internal': string
   'shaft-width': string
+  colorSchemeIndex: number
 }
 export interface IStyleForLabel {
   props: IStyleForLabelProps & {

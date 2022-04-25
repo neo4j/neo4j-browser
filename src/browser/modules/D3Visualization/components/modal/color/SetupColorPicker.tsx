@@ -7,7 +7,9 @@ import { usePrevious } from 'browser-hooks/hooks'
 import SetupColorPreview, {
   generateColorsForBase
 } from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorPreview'
-import SetupColorScheme from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorScheme'
+import SetupColorScheme, {
+  getColorSchemeAtIndex
+} from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorScheme'
 import { IColorSettings } from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorStorage'
 import {
   ApplyButton,
@@ -30,12 +32,18 @@ const SetupColorPicker: React.FC<{
   React.useEffect(() => {
     setCurrentColorSettings(initialColorSettings)
   }, [initialColorSettings])
+  const [colorSchemeIndex, setColorSchemeIndex] = React.useState<number>(
+    currentColorSettings[Object.keys(currentColorSettings)[0]]?.[
+      'colorSchemeIndex'
+    ] ?? 1
+  )
   const [colorScheme, setColorScheme] = React.useState<(t: number) => string>(
-    () => interpolateTurbo
+    () => getColorSchemeAtIndex(colorSchemeIndex)
   )
   const handleColorSchemeChange = React.useCallback(
-    (scheme: (t: number) => string) => {
+    (scheme: (t: number) => string, index: number) => {
       setColorScheme(() => scheme)
+      setColorSchemeIndex(index)
     },
     []
   )
@@ -43,7 +51,11 @@ const SetupColorPicker: React.FC<{
     ({ value, color }: { value: string; color: string }) => {
       setCurrentColorSettings(t => {
         const cloned = cloneDeep(t)
-        cloned[value] = generateColorsForBase(color)
+        cloned[value] = Object.assign(
+          {},
+          t[value],
+          generateColorsForBase(color)
+        )
         return cloned
       })
     },
@@ -88,7 +100,8 @@ const SetupColorPicker: React.FC<{
           newSettings[value] = Object.assign(
             {},
             old[value],
-            generateColorsForBase(color)
+            generateColorsForBase(color),
+            { colorSchemeIndex }
           )
         })
         return newSettings
@@ -97,6 +110,7 @@ const SetupColorPicker: React.FC<{
   }, [
     sortedValues,
     colorScheme,
+    colorSchemeIndex,
     initialColorSettings,
     oldColorScheme,
     sortVal,
@@ -104,7 +118,7 @@ const SetupColorPicker: React.FC<{
   ])
 
   const handleSubmit = React.useCallback(() => {
-    onSubmit(currentColorSettings)
+    onSubmit(cloneDeep(currentColorSettings))
     onClose()
   }, [onSubmit, currentColorSettings, onClose])
   const onReset = React.useCallback(() => {
@@ -113,12 +127,17 @@ const SetupColorPicker: React.FC<{
   }, [onSubmit, onClose])
 
   const lineWidthIsSet: boolean = React.useMemo(() => {
-    return Object.keys(initialColorSettings).every(key =>
-      initialColorSettings[key].hasOwnProperty('shaft-width')
+    const keys = Object.keys(initialColorSettings)
+    return (
+      keys.length > 0 &&
+      keys.every(key => initialColorSettings[key].hasOwnProperty('shaft-width'))
     )
-  }, [])
+  }, [initialColorSettings])
   const [doesAffectLineWidth, setAffectLineWidth] =
     React.useState<boolean>(lineWidthIsSet)
+  React.useEffect(() => {
+    setAffectLineWidth(lineWidthIsSet)
+  }, [lineWidthIsSet])
   const handleAffectLineWidthChange: React.ChangeEventHandler<HTMLInputElement> =
     React.useCallback(() => {
       setAffectLineWidth(wasChecked => {
@@ -137,6 +156,17 @@ const SetupColorPicker: React.FC<{
         return checked
       })
     }, [sortedValues])
+
+  const handleLineWidthChange = React.useCallback(
+    (key: string, value: string) => {
+      setCurrentColorSettings(current => {
+        const newSettings = cloneDeep(current)
+        newSettings[key]['shaft-width'] = value
+        return newSettings
+      })
+    },
+    []
+  )
   return (
     <>
       <h3>Color map</h3>
@@ -169,6 +199,7 @@ const SetupColorPicker: React.FC<{
             value={t}
             style={currentColorSettings[t]}
             onChange={handleColorChange}
+            onLineWidthChange={handleLineWidthChange}
           />
         ))}
       </MarginDiv>
