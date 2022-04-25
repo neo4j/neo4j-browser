@@ -17,8 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { InputStream } from 'antlr4'
-import { CypherLexer } from 'cypher-editor-support/src/_generated/CypherLexer'
+import { createCypherLexer } from 'cypher-editor-support'
 import { languages } from 'monaco-editor/esm/vs/editor/editor.api'
 
 class CypherState implements languages.IState {
@@ -37,8 +36,7 @@ export class CypherTokensProvider implements languages.TokensProvider {
   }
 
   tokenize(line: string): languages.ILineTokens {
-    const lexer = new CypherLexer(new InputStream(line))
-
+    const lexer = createCypherLexer(line)
     return {
       endState: new CypherState(),
       tokens: lexer

@@ -35,5 +35,10 @@ export type BasicNodesAndRels = {
   nodes: BasicNode[]
   relationships: BasicRelationship[]
 }
+export type DeduplicatedBasicNodesAndRels = {
+  nodes: BasicNode[]
+  relationships: BasicRelationship[]
+  limitHit?: boolean
+}
 
 export type VizItemProperty = { key: string; value: string; type: string }

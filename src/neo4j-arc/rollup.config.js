@@ -6,8 +6,7 @@ import pkg from './package.json'
 const importsWithPaths = [
   '@neo4j-ndl/base/lib/tokens/js/tokens',
   'monaco-editor/esm/vs/base/parts/quickinput/browser/quickInputList',
-  'monaco-editor/esm/vs/editor/editor.api',
-  'cypher-editor-support/src/_generated/CypherLexer'
+  'monaco-editor/esm/vs/editor/editor.api'
 ]
 
 const dependenciesNotToBundle = Object.keys({

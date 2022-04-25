@@ -332,11 +332,6 @@ antlr4@4.7.0:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/antlr4/-/antlr4-4.7.0.tgz#297f956ddc06f83397fc0990ecf2e0cf20bfbbee"
   integrity sha1-KX+VbdwG+DOX/AmQ7PLgzyC/u+4=
 
-antlr4@^4.8.0:
-  version "4.9.3"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/antlr4/-/antlr4-4.9.3.tgz#268b844ff8ce97d022399a05d4b37aa6ab4047b2"
-  integrity sha512-qNy2odgsa0skmNMCuxzXhM4M8J1YDaPv3TI+vCdnOAanu0N982wBrSqziDKRDctEZLZy9VffqIZXc0UGjjSP/g==
-
 "babel-plugin-styled-components@>= 1.12.0":
   version "2.0.6"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/babel-plugin-styled-components/-/babel-plugin-styled-components-2.0.6.tgz#6f76c7f7224b7af7edc24a4910351948c691fc90"
@@ -408,11 +403,12 @@ csstype@^3.0.2:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/csstype/-/csstype-3.0.11.tgz#d66700c5eacfac1940deb4e3ee5642792d85cd33"
   integrity sha512-sa6P2wJ+CAbgyy4KFssIb/JNMLxFvKF1pCYCSXS8ZMuqZnMsrxqI2E5sPyoTpxoPU/gVZMzr2zjOfg8GIZOMsw==
 
-cypher-editor-support@^1.1.8:
-  version "1.1.8"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypher-editor-support/-/cypher-editor-support-1.1.8.tgz#6b173de2a67fe91e8493fbbc6ee41cf4c90ee84e"
-  integrity sha512-ZYLhF4+rtKOIgbEKaDq0Hrd4Y9oMydks2NNZsob2COa4Lpn52jnV6b2hoRnHsYcKIQp72VY3nCFR+oht49vEqQ==
+cypher-editor-support@1.1.10:
+  version "1.1.10"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypher-editor-support/-/cypher-editor-support-1.1.10.tgz#d3cfda36836af19ede9b82f329540fc0b8e302a4"
+  integrity sha512-Sol1PI35rgD9kuQUmYtY7Yrshh4wqDNPSHOv6OWmSRc/Tu4MDIPM5+nGeIpAqmZG1pezPFcqQpUEQNgJY8kCYg==
   dependencies:
+    "@types/antlr4" "^4.7.2"
     antlr4 "4.7.0"
     fuzzaldrin "2.1.0"
     lodash "4.17.15"

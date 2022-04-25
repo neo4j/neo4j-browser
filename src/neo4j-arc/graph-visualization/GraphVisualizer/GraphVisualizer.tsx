@@ -37,34 +37,9 @@ import { GetNodeNeighboursFn, VizItem } from '../types'
 import { GraphStats } from '../utils/mapper'
 import { GraphModel } from '../models/Graph'
 
-type DeduplicateHelper = {
-  nodes: BasicNode[]
-  taken: Record<string, boolean>
-  nodeLimitHit: boolean
-}
-
-const DEFAULT_INITIAL_NODE_DISPLAY = 300
 const DEFAULT_MAX_NEIGHBOURS = 100
 
-const deduplicateNodes = (
-  nodes: BasicNode[],
-  limit: number
-): { nodes: BasicNode[]; nodeLimitHit: boolean } =>
-  nodes.reduce(
-    (all: DeduplicateHelper, curr: BasicNode) => {
-      if (all.nodes.length === limit) {
-        all.nodeLimitHit = true
-      } else if (!all.taken[curr.id]) {
-        all.nodes.push(curr)
-        all.taken[curr.id] = true
-      }
-      return all
-    },
-    { nodes: [], taken: {}, nodeLimitHit: false }
-  )
-
 type GraphVisualizerDefaultProps = {
-  initialNodeDisplay: number
   maxNeighbours: number
   updateStyle: (style: any) => void
   isFullscreen: boolean
@@ -82,7 +57,6 @@ type GraphVisualizerDefaultProps = {
 type GraphVisualizerProps = GraphVisualizerDefaultProps & {
   relationships: BasicRelationship[]
   nodes: BasicNode[]
-  initialNodeDisplay?: number
   maxNeighbours?: number
   graphStyleData?: any
   getNeighbours?: (
@@ -97,6 +71,7 @@ type GraphVisualizerProps = GraphVisualizerDefaultProps & {
   ) => void
   setGraph?: (graph: GraphModel) => void
   hasTruncatedFields?: boolean
+  nodeLimitHit?: boolean
   nodePropertiesExpandedByDefault?: boolean
   setNodePropertiesExpandedByDefault?: (expandedByDefault: boolean) => void
   wheelZoomInfoMessageEnabled?: boolean
@@ -125,7 +100,6 @@ export class GraphVisualizer extends Component<
   defaultStyle: any
 
   static defaultProps: GraphVisualizerDefaultProps = {
-    initialNodeDisplay: DEFAULT_INITIAL_NODE_DISPLAY,
     maxNeighbours: DEFAULT_MAX_NEIGHBOURS,
     updateStyle: () => undefined,
     isFullscreen: false,
@@ -143,22 +117,17 @@ export class GraphVisualizer extends Component<
     super(props)
     const graphStyle = new GraphStyleModel()
     this.defaultStyle = graphStyle.toSheet()
-    const { nodes, nodeLimitHit } = deduplicateNodes(
-      this.props.nodes,
-      this.props.initialNodeDisplay
-    )
-    const relationships = nodeLimitHit
-      ? this.props.relationships.filter(
-          rel =>
-            !!nodes.find(node => node.id === rel.startNodeId) &&
-            !!nodes.find(node => node.id === rel.endNodeId)
-        )
-      : this.props.relationships
+    const {
+      nodeLimitHit,
+      nodes,
+      relationships,
+      nodePropertiesExpandedByDefault
+    } = this.props
 
     const selectedItem: VizItem = nodeLimitHit
       ? {
           type: 'status-item',
-          item: `Not all return nodes are being displayed due to Initial Node Display setting. Only ${this.props.initialNodeDisplay} of ${this.props.nodes.length} nodes are being displayed`
+          item: `Not all return nodes are being displayed due to Initial Node Display setting. Only first ${this.props.nodes.length} nodes are displayed.`
         }
       : {
           type: 'canvas',
@@ -188,7 +157,7 @@ export class GraphVisualizer extends Component<
       hoveredItem: selectedItem,
       freezeLegend: false,
       width: defaultPanelWidth(),
-      nodePropertiesExpanded: this.props.nodePropertiesExpandedByDefault
+      nodePropertiesExpanded: nodePropertiesExpandedByDefault
     }
   }
 

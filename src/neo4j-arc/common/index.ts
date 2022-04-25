@@ -19,7 +19,7 @@
  */
 export { deepEquals, mapObjectValues } from './utils/objectUtils'
 export { isMac } from './utils/platformUtils'
-export { extractNodesAndRels } from './utils/driverUtils'
+export { extractUniqueNodesAndRels } from './utils/driverUtils'
 export {
   getPropertyTypeDisplayName,
   propertyToString

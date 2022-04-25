@@ -337,9 +337,6 @@ Third-party licenses
 │  │  ├─ URL: git://github.com/getsentry/sentry-javascript.git
 │  │  ├─ VendorName: Sentry
 │  │  └─ VendorUrl: https://github.com/getsentry/sentry-javascript/tree/master/packages/utils
-│  ├─ antlr4@4.8.0
-│  │  ├─ URL: https://github.com/antlr/antlr4.git
-│  │  └─ VendorUrl: https://github.com/antlr/antlr4
 │  ├─ buffer-equal-constant-time@1.0.1
 │  │  ├─ URL: git@github.com:goinstant/buffer-equal-constant-time.git
 │  │  └─ VendorName: GoInstant Inc., a salesforce.com company
@@ -392,7 +389,7 @@ Third-party licenses
 │  │  ├─ URL: http:
 │  │  ├─ VendorName: Neo4j Inc.
 │  │  └─ VendorUrl: http:
-│  └─ cypher-editor-support@1.1.8
+│  └─ cypher-editor-support@1.1.10
 │     ├─ URL: git://github.com/neo4j-contrib/cypher-editor.git
 │     └─ VendorName: Neo Technology Inc.
 ├─ ISC
@@ -636,6 +633,8 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/stardust-ui/react.git
 │  │  ├─ VendorName: Oleksandr Fediashov
 │  │  └─ VendorUrl: https://github.com/stardust-ui/react/tree/master/packages/react-component-ref
+│  ├─ @types/antlr4@4.7.2
+│  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
 │  ├─ @types/color-name@1.1.1
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
 │  ├─ @types/debug@4.1.7
