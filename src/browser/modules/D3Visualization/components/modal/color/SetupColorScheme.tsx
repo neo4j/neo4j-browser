@@ -1,12 +1,14 @@
-import * as React from 'react'
 import * as scale from 'd3-scale-chromatic'
+import * as React from 'react'
 import styled from 'styled-components'
+
 import GenericModal from '../GenericModal'
+
 type IColorScheme = (t: number) => string
 
 interface IProps {
   selected: IColorScheme
-  onChange: (t: IColorScheme) => void
+  onChange: (t: IColorScheme, index: number) => void
 }
 
 const step = 0.01
@@ -45,58 +47,62 @@ const ScrollView = styled.div`
   overflow-y: auto;
   padding: 0 10px;
 `
+const schemes: IColorScheme[] = [
+  scale.interpolateBlues,
+  scale.interpolateTurbo,
+  scale.interpolateCividis,
+  scale.interpolateBrBG,
+  scale.interpolateGreens,
+  scale.interpolateBuGn,
+  scale.interpolateBuPu,
+  scale.interpolateCool,
+  scale.interpolateCubehelixDefault,
+  scale.interpolateInferno,
+  scale.interpolateGreys,
+  scale.interpolatePRGn,
+  scale.interpolatePiYG,
+  scale.interpolatePuOr,
+  scale.interpolateRdBu,
+  scale.interpolateRdGy,
+  scale.interpolateRdYlBu,
+  scale.interpolateRdYlGn,
+  scale.interpolateViridis,
+  scale.interpolateMagma,
+  scale.interpolatePlasma,
+  scale.interpolateWarm,
+  scale.interpolateRainbow,
+  scale.interpolateSinebow,
+  scale.interpolateGnBu,
+  scale.interpolateOrRd,
+  scale.interpolatePuBuGn,
+  scale.interpolatePuBu,
+  scale.interpolatePuRd,
+  scale.interpolateRdPu,
+  scale.interpolateYlGnBu,
+  scale.interpolateYlGn,
+  scale.interpolateYlOrBr,
+  scale.interpolateYlOrRd
+]
+
+export function getColorSchemeAtIndex(index: number) {
+  return schemes[index]
+}
+
 // eslint-disable-next-line react/display-name
 const SetupColorScheme: React.FC<IProps> = React.memo(
   ({ selected, onChange }) => {
-    const schemes: IColorScheme[] = React.useMemo(
-      () => [
-        scale.interpolateBlues,
-        scale.interpolateTurbo,
-        scale.interpolateCividis,
-        scale.interpolateBrBG,
-        scale.interpolateGreens,
-        scale.interpolateBuGn,
-        scale.interpolateBuPu,
-        scale.interpolateCool,
-        scale.interpolateCubehelixDefault,
-        scale.interpolateInferno,
-        scale.interpolateGreys,
-        scale.interpolatePRGn,
-        scale.interpolatePiYG,
-        scale.interpolatePuOr,
-        scale.interpolateRdBu,
-        scale.interpolateRdGy,
-        scale.interpolateRdYlBu,
-        scale.interpolateRdYlGn,
-        scale.interpolateViridis,
-        scale.interpolateMagma,
-        scale.interpolatePlasma,
-        scale.interpolateWarm,
-        scale.interpolateRainbow,
-        scale.interpolateSinebow,
-        scale.interpolateGnBu,
-        scale.interpolateOrRd,
-        scale.interpolatePuBuGn,
-        scale.interpolatePuBu,
-        scale.interpolatePuRd,
-        scale.interpolateRdPu,
-        scale.interpolateYlGnBu,
-        scale.interpolateYlGn,
-        scale.interpolateYlOrBr,
-        scale.interpolateYlOrRd
-      ],
-      []
-    )
-    const handleClick: React.MouseEventHandler<HTMLDivElement> = React.useCallback(
-      event => {
-        const index = event.currentTarget.dataset.index
-        if (index) {
-          onChange(schemes[parseInt(index, 10)])
-        }
-        doClose()
-      },
-      [onChange, schemes]
-    )
+    const handleClick: React.MouseEventHandler<HTMLDivElement> =
+      React.useCallback(
+        event => {
+          const index = event.currentTarget.dataset.index
+          if (index) {
+            const indexNum = parseInt(index, 10)
+            onChange(schemes[indexNum], indexNum)
+          }
+          doClose()
+        },
+        [onChange, schemes]
+      )
     const drawBlock = React.useCallback((scheme: IColorScheme) => {
       const nodes: React.ReactNode[] = []
       for (let i = 0; i < 1; i += step) {
@@ -126,7 +132,6 @@ const SetupColorScheme: React.FC<IProps> = React.memo(
     const [open, setOpen] = React.useState(false)
     const doOpen = React.useCallback(() => setOpen(true), [])
     const doClose = React.useCallback(() => setOpen(false), [])
-
     return (
       <div>
         <div>

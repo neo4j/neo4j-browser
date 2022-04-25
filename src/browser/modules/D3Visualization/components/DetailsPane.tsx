@@ -20,6 +20,7 @@
 import React, { useState } from 'react'
 
 import ClickableUrls from '../../../components/ClickableUrls'
+import Relationship from '../lib/visualization/components/Relationship'
 import { StyleableNodeLabel } from './StyleableNodeLabel'
 import { StyleableRelType } from './StyleableRelType'
 import {
@@ -136,12 +137,14 @@ type DetailsPaneComponentProps = {
   graphStyle: GraphStyle
   nodeInspectorWidth: number
   nodes: VizNode[]
+  relationships: Relationship[]
 }
 export function DetailsPaneComponent({
   vizItem,
   graphStyle,
   nodeInspectorWidth,
-  nodes
+  nodes,
+  relationships
 }: DetailsPaneComponentProps): JSX.Element {
   const [maxPropertiesCount, setMaxPropertiesCount] = useState(
     DETAILS_PANE_STEP_SIZE
@@ -173,6 +176,7 @@ export function DetailsPaneComponent({
         {vizItem.type === 'relationship' && (
           <StyleableRelType
             nodes={nodes}
+            relationships={relationships}
             selectedRelType={{
               propertyKeys: vizItem.item.propertyList.map(p => p.key),
               relType: vizItem.item.type
@@ -186,6 +190,7 @@ export function DetailsPaneComponent({
               <StyleableNodeLabel
                 key={label}
                 nodes={nodes}
+                relationships={relationships}
                 graphStyle={graphStyle}
                 selectedLabel={{
                   label,

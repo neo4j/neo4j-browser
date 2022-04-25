@@ -20,6 +20,7 @@
 import React from 'react'
 import { Popup } from 'semantic-ui-react'
 
+import Relationship from '../lib/visualization/components/Relationship'
 import { GrassEditor } from './GrassEditor'
 import { StyledRelationship } from 'browser/modules/DBMSInfo/styled'
 import { usePopupControlled } from 'project-root/src/browser/modules/D3Visualization/components/StyleableNodeLabel'
@@ -28,13 +29,15 @@ import VizNode from 'project-root/src/browser/modules/D3Visualization/lib/visual
 
 export type StyleableRelTypeProps = {
   nodes: VizNode[]
+  relationships: Relationship[]
   graphStyle: GraphStyle
   selectedRelType: { relType: string; propertyKeys: string[]; count?: number }
 }
 export function StyleableRelType({
   selectedRelType,
   graphStyle,
-  nodes
+  nodes,
+  relationships
 }: StyleableRelTypeProps): JSX.Element {
   const styleForRelType = graphStyle.forRelationship({
     type: selectedRelType.relType
@@ -65,7 +68,11 @@ export function StyleableRelType({
       wide
     >
       <div ref={wrapperRef}>
-        <GrassEditor selectedRelType={selectedRelType} nodes={nodes} />
+        <GrassEditor
+          selectedRelType={selectedRelType}
+          nodes={nodes}
+          relationships={relationships}
+        />
       </div>
     </Popup>
   )

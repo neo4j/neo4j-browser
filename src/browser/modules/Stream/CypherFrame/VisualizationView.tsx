@@ -262,6 +262,7 @@ export class Visualization extends Component<
           fetchNeighbours={this.fetchNeighbours}
           nodes={this.state.nodes}
           graphNodes={this.state.graph?.nodes() ?? []}
+          graphRelationships={this.state.graph?.relationships() ?? []}
           relationships={this.state.relationships}
           isFullscreen={this.props.isFullscreen}
           assignVisElement={this.props.assignVisElement}

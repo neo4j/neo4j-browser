@@ -34,6 +34,7 @@ import {
 import { ShowMoreOrAll } from 'browser-components/ShowMoreOrAll/ShowMoreOrAll'
 import { StyledTruncatedMessage } from 'browser/modules/Stream/styled'
 import { GraphStyle } from 'project-root/src/browser/modules/D3Visualization/graphStyle'
+import Relationship from 'project-root/src/browser/modules/D3Visualization/lib/visualization/components/Relationship'
 import VizNode from 'project-root/src/browser/modules/D3Visualization/lib/visualization/components/VizNode'
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
 
@@ -66,6 +67,7 @@ type OverviewPaneProps = {
   relationshipCount: number | null
   stats: GraphStats
   nodes: VizNode[]
+  relationships: Relationship[]
 }
 
 export const OVERVIEW_STEP_SIZE = 50
@@ -76,7 +78,8 @@ function OverviewPane({
   nodeCount,
   relationshipCount,
   stats,
-  nodes
+  nodes,
+  relationships
 }: OverviewPaneProps): JSX.Element {
   const [maxLabelsCount, setMaxLabelsCount] = useState(OVERVIEW_STEP_SIZE)
   const [maxRelationshipsCount, setMaxRelationshipsCount] =
@@ -116,6 +119,7 @@ function OverviewPane({
                 <StyleableNodeLabel
                   key={label}
                   nodes={nodes}
+                  relationships={relationships}
                   graphStyle={graphStyle}
                   selectedLabel={{
                     label,
@@ -146,6 +150,7 @@ function OverviewPane({
                   key={relType}
                   graphStyle={graphStyle}
                   nodes={nodes}
+                  relationships={relationships}
                   selectedRelType={{
                     relType,
                     propertyKeys: Object.keys(relTypes[relType].properties),

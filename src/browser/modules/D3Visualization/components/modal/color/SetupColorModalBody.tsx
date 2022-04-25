@@ -1,8 +1,7 @@
 import * as React from 'react'
-import { IColorSettings, ISetupColorStorageProps } from './SetupColorStorage'
 import styled from 'styled-components'
-import { IStyleForLabelProps } from 'project-root/src/browser/modules/D3Visualization/components/GrassEditor'
-import { cloneDeep } from 'lodash-es'
+
+import { IColorSettings, ISetupColorStorageProps } from './SetupColorStorage'
 import SetupColorPicker from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorPicker'
 
 const Container = styled.div`
@@ -20,43 +19,52 @@ const Label = styled.label`
   margin: 5px 0;
   vertical-align: middle;
 `
-const SetupColorModalBody: React.FC<ISetupColorStorageProps & {
-  colorSettings: IColorSettings
-  onSubmit: (settings?: IColorSettings) => void
-  handlePropertyChange: React.ChangeEventHandler<HTMLInputElement>
-  selectedProperty: string | undefined
-}> = props => {
+const SetupColorModalBody: React.FC<
+  ISetupColorStorageProps & {
+    colorSettings: IColorSettings
+    onSubmit: (settings?: IColorSettings) => void
+    handlePropertyChange: React.ChangeEventHandler<HTMLInputElement>
+    selectedProperty: string | undefined
+  }
+> = props => {
   const {
     properties,
     colorSettings,
     onSubmit,
     doClose,
     selectedProperty,
-    handlePropertyChange
+    handlePropertyChange,
+    isForNode
   } = props
   const keys = React.useMemo(
-    () => Object.keys(properties).sort((a, b) => (a > b ? 1 : -1)),
+    () =>
+      Object.keys(properties).sort((a, b) =>
+        a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' })
+      ),
     [properties]
   )
 
-  const handleSubmit: (
-    settings?: IColorSettings['settings']
-  ) => void = React.useCallback(
-    settings => {
-      onSubmit(
-        settings
-          ? {
-              key: colorSettings.key,
-              settings
-            }
-          : undefined
-      )
-    },
-    [colorSettings, onSubmit]
-  )
+  const handleSubmit: (settings?: IColorSettings['settings']) => void =
+    React.useCallback(
+      settings => {
+        onSubmit(
+          settings
+            ? {
+                key: colorSettings.key,
+                settings
+              }
+            : undefined
+        )
+      },
+      [colorSettings, onSubmit]
+    )
   return (
     <Container>
-      <h3>Color nodes by property values</h3>
+      <h3>
+        {isForNode
+          ? 'Color nodes by property values'
+          : 'Color relationships by property values'}
+      </h3>
       <div>
         {keys.map(key => (
           <Label key={key}>
@@ -77,6 +85,7 @@ const SetupColorModalBody: React.FC<ISetupColorStorageProps & {
           onSubmit={handleSubmit}
           onClose={doClose}
           initialColorSettings={colorSettings.settings}
+          withLineWidth={!isForNode}
         />
       )}
     </Container>
