@@ -3,7 +3,11 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import { usePrevious } from 'browser-hooks/hooks'
-import { IStyleForLabelProps } from 'project-root/src/browser/modules/D3Visualization/components/GrassEditor'
+import {
+  IStyleForLabelProps,
+  stringSorter,
+  stringSorterDesc
+} from 'project-root/src/browser/modules/D3Visualization/components/GrassEditor'
 import SetupColorPreview, {
   generateColorsForBase
 } from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorPreview'
@@ -34,12 +38,12 @@ const SetupColorPicker: React.FC<{
   }, [initialColorSettings])
 
   const defaultScheme = React.useMemo(() => {
-    const itemStyle: Partial<IStyleForLabelProps> =
+    const itemStyle: Partial<IStyleForLabelProps> | undefined =
       currentColorSettings[Object.keys(currentColorSettings)[0]]
-    const colorSchemeIndex = itemStyle.colorSchemeIndex ?? 1
+    const colorSchemeIndex = itemStyle?.colorSchemeIndex ?? 1
     return {
       defaultColorSchemeIndex: colorSchemeIndex,
-      defaultColor: itemStyle.color ?? 'rgb(42,76,119)'
+      defaultColor: itemStyle?.color ?? 'rgb(42,76,119)'
     }
   }, [currentColorSettings])
   const [colorSchemeIndex, setColorSchemeIndex] = React.useState<number>(
@@ -76,18 +80,8 @@ const SetupColorPicker: React.FC<{
   const sortedValues = React.useMemo(
     () =>
       sortVal === 'ASC'
-        ? values.sort((a, b) =>
-            a.localeCompare(b, undefined, {
-              numeric: true,
-              sensitivity: 'base'
-            })
-          )
-        : values.sort((b, a) =>
-            a.localeCompare(b, undefined, {
-              numeric: true,
-              sensitivity: 'base'
-            })
-          ),
+        ? values.sort(stringSorter)
+        : values.sort(stringSorterDesc),
     [values, sortVal]
   )
   const oldColorScheme = usePrevious(colorScheme)

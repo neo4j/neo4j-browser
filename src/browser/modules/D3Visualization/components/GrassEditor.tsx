@@ -77,8 +77,17 @@ type GrassEditorProps = {
   selectedLabel?: { label: string; propertyKeys: string[] }
   selectedRelType?: { relType: string; propertyKeys: string[] }
 }
-function stringSorter(a: string, b: string) {
-  return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' })
+export function stringSorter(a: string, b: string) {
+  const an = a as unknown as number
+  const bn = b as unknown as number
+  if (!isNaN(an) && !isNaN(bn)) {
+    return an - bn
+  } else {
+    return a.localeCompare(b, undefined, { sensitivity: 'base' })
+  }
+}
+export function stringSorterDesc(a: string, b: string) {
+  return stringSorter(b, a)
 }
 export class GrassEditorComponent extends Component<GrassEditorProps> {
   graphStyle: GraphStyle
