@@ -62,7 +62,10 @@ export const resultHasTruncatedFields = (result: any, maxFieldItems: any) => {
   )
 }
 
-export function getBodyAndStatusBarMessages(result: any, maxRows: any) {
+export function getBodyAndStatusBarMessages(
+  result: any,
+  maxRows: any
+): { statusBarMessage?: string; bodyMessage?: string } {
   if (!result || !result.summary || !result.summary.resultAvailableAfter) {
     return {}
   }

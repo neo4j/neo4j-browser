@@ -165,6 +165,7 @@ export const StyledStatsBarContainer = styled.div`
   width: 100%;
 `
 export const StyledStatsBar = styled.div`
+  display: flex;
   min-height: 39px;
   line-height: 39px;
   color: ${props => props.theme.secondaryText};
@@ -174,6 +175,10 @@ export const StyledStatsBar = styled.div`
   overflow: hidden;
   padding-left: 24px;
   width: 100%;
+`
+
+export const StyledStatsBarWarningMessageWrapper = styled.div`
+  flex: 0 0 auto;
 `
 
 export const StyledAsciiPre = styled.pre`
