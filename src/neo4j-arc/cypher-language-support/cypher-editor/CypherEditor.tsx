@@ -25,8 +25,8 @@ import {
   KeyCode,
   KeyMod,
   MarkerSeverity,
-  editor
 } from 'monaco-editor/esm/vs/editor/editor.api'
+import { editor } from 'monaco-editor'
 import { QueryResult } from 'neo4j-driver-core'
 import React from 'react'
 import styled from 'styled-components'
