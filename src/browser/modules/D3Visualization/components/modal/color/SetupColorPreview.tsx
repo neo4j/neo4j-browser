@@ -39,7 +39,7 @@ const PreviewNode = styled.div.attrs((props: IPreviewNodeProps) => ({
 const MarginDiv = styled.div`
   margin: 10px 0;
 `
-const SketchWrapper = styled.div`
+export const SketchWrapper = styled.div`
   color: black;
   input {
     color: black;
@@ -48,13 +48,18 @@ const SketchWrapper = styled.div`
 const LineWidthInput = styled.input`
   position: absolute;
   width: 50px;
-  right: 45px;
-  margin-top: 2px;
+  right: 2px;
+  top: 2px;
   opacity: 0.6;
+  color: black;
   &:active,
   &:hover {
     opacity: 1;
   }
+`
+
+const RelativeContainer = styled.div`
+  position: relative;
 `
 const SetupColorPreview: React.FC<IProps> = ({
   value,
@@ -117,21 +122,23 @@ const SetupColorPreview: React.FC<IProps> = ({
   }
   return (
     <div>
-      {lineWidth != undefined && initialLineWidth != undefined && (
-        <LineWidthInput
-          type={'number'}
-          value={lineWidth}
-          onChange={handleLineWidthChange}
-        />
-      )}
-      <PreviewNode
-        backgroundColor={style.color}
-        color={style['text-color-internal']}
-        borderColor={style['border-color']}
-        onClick={doOpen}
-      >
-        {value}
-      </PreviewNode>
+      <RelativeContainer>
+        <PreviewNode
+          backgroundColor={style.color}
+          color={style['text-color-internal']}
+          borderColor={style['border-color']}
+          onClick={doOpen}
+        >
+          {value}
+        </PreviewNode>
+        {lineWidth != undefined && initialLineWidth != undefined && (
+          <LineWidthInput
+            type={'number'}
+            value={lineWidth}
+            onChange={handleLineWidthChange}
+          />
+        )}
+      </RelativeContainer>
       <GenericModal isOpen={open} onRequestClose={doClose}>
         <MarginDiv>
           <PreviewNode

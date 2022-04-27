@@ -1,9 +1,9 @@
-import { interpolateTurbo } from 'd3-scale-chromatic'
 import { cloneDeep } from 'lodash-es'
 import * as React from 'react'
 import styled from 'styled-components'
 
 import { usePrevious } from 'browser-hooks/hooks'
+import { IStyleForLabelProps } from 'project-root/src/browser/modules/D3Visualization/components/GrassEditor'
 import SetupColorPreview, {
   generateColorsForBase
 } from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorPreview'
@@ -32,13 +32,24 @@ const SetupColorPicker: React.FC<{
   React.useEffect(() => {
     setCurrentColorSettings(initialColorSettings)
   }, [initialColorSettings])
+
+  const defaultScheme = React.useMemo(() => {
+    const itemStyle: Partial<IStyleForLabelProps> =
+      currentColorSettings[Object.keys(currentColorSettings)[0]]
+    const colorSchemeIndex = itemStyle.colorSchemeIndex ?? 1
+    return {
+      defaultColorSchemeIndex: colorSchemeIndex,
+      defaultColor: itemStyle.color ?? 'rgb(42,76,119)'
+    }
+  }, [currentColorSettings])
   const [colorSchemeIndex, setColorSchemeIndex] = React.useState<number>(
-    currentColorSettings[Object.keys(currentColorSettings)[0]]?.[
-      'colorSchemeIndex'
-    ] ?? 1
+    defaultScheme.defaultColorSchemeIndex
   )
   const [colorScheme, setColorScheme] = React.useState<(t: number) => string>(
-    () => getColorSchemeAtIndex(colorSchemeIndex)
+    () =>
+      colorSchemeIndex >= 0
+        ? getColorSchemeAtIndex(colorSchemeIndex)
+        : () => defaultScheme.defaultColor
   )
   const handleColorSchemeChange = React.useCallback(
     (scheme: (t: number) => string, index: number) => {
@@ -171,6 +182,7 @@ const SetupColorPicker: React.FC<{
     <>
       <h3>Color map</h3>
       <SetupColorScheme
+        selectedIndex={colorSchemeIndex}
         selected={colorScheme}
         onChange={handleColorSchemeChange}
       />

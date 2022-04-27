@@ -1,14 +1,18 @@
 import * as scale from 'd3-scale-chromatic'
 import * as React from 'react'
+import { ColorChangeHandler, HuePicker, SketchPicker } from 'react-color'
 import styled from 'styled-components'
 
 import GenericModal from '../GenericModal'
+import { SketchWrapper } from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorPreview'
+import { ApplyButton } from 'project-root/src/browser/modules/D3Visualization/components/modal/styled'
 
 type IColorScheme = (t: number) => string
 
 interface IProps {
   selected: IColorScheme
   onChange: (t: IColorScheme, index: number) => void
+  selectedIndex: number
 }
 
 const step = 0.01
@@ -26,6 +30,18 @@ const BlockDiv = styled.div.attrs((props: { backgroundColor: string }) => ({
 const RadioInput = styled.input`
   vertical-align: middle;
   margin-right: 5px;
+`
+
+const SingleColorPreview = styled.div<{ color: string }>`
+  width: 30px;
+  height: 20px;
+  display: inline-block;
+  margin-right: 10px;
+  vertical-align: middle;
+  background-color: ${({ color }) => color};
+`
+const MarginDiv = styled.div`
+  margin: 5px 0;
 `
 const InlineDisplay = styled.div.attrs((props: { marginLeft?: string }) => ({
   style: {
@@ -90,7 +106,7 @@ export function getColorSchemeAtIndex(index: number) {
 
 // eslint-disable-next-line react/display-name
 const SetupColorScheme: React.FC<IProps> = React.memo(
-  ({ selected, onChange }) => {
+  ({ selected, onChange, selectedIndex }) => {
     const handleClick: React.MouseEventHandler<HTMLDivElement> =
       React.useCallback(
         event => {
@@ -132,6 +148,12 @@ const SetupColorScheme: React.FC<IProps> = React.memo(
     const [open, setOpen] = React.useState(false)
     const doOpen = React.useCallback(() => setOpen(true), [])
     const doClose = React.useCallback(() => setOpen(false), [])
+    const handleChange: ColorChangeHandler = React.useCallback(color => {
+      setCurrentColor(color.hex)
+    }, [])
+    const [currentColor, setCurrentColor] = React.useState<string>(
+      selectedIndex <= 0 ? selected(0.5) : 'rgb(42,76,119)'
+    )
     return (
       <div>
         <div>
@@ -147,7 +169,22 @@ const SetupColorScheme: React.FC<IProps> = React.memo(
         </div>
         <GenericModal isOpen={open} onRequestClose={doClose}>
           <ScrollView>
-            <h5>Pick a color scheme:</h5>
+            <h5>Single color:</h5>
+            <SketchWrapper>
+              <HuePicker color={currentColor} onChange={handleChange} />
+              <MarginDiv>
+                <SingleColorPreview color={currentColor} />
+                <ApplyButton
+                  onClick={React.useCallback(() => {
+                    onChange(() => currentColor, -1)
+                    doClose()
+                  }, [currentColor, doClose])}
+                >
+                  Apply
+                </ApplyButton>
+              </MarginDiv>
+            </SketchWrapper>
+            <h5>Or pick a color scheme:</h5>
             {schemeNodes}
           </ScrollView>
         </GenericModal>
