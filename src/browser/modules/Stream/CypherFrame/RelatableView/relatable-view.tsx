@@ -25,7 +25,10 @@ import {
   WarningMessage
 } from 'neo4j-arc/common'
 
-import { StyledStatsBar } from '../../styled'
+import {
+  StyledStatsBar,
+  StyledStatsBarWarningMessageWrapper
+} from '../../styled'
 import {
   getBodyAndStatusBarMessages,
   resultHasTruncatedFields
@@ -194,12 +197,16 @@ export function RelatableStatusbarComponent({
 
   return (
     <StyledStatsBar>
-      <Ellipsis>
-        {hasTruncatedFields && (
+      {hasTruncatedFields && (
+        <StyledStatsBarWarningMessageWrapper>
           <WarningMessage text={'Record fields have been truncated.'} />
-        )}
-        {statusBarMessage}
-      </Ellipsis>
+        </StyledStatsBarWarningMessageWrapper>
+      )}
+      {statusBarMessage && (
+        <Ellipsis>
+          <span>{statusBarMessage}</span>
+        </Ellipsis>
+      )}
     </StyledStatsBar>
   )
 }
