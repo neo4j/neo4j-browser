@@ -20,6 +20,7 @@
 import { QueryOrCommand, parse } from 'cypher-editor-support'
 import { debounce } from 'lodash-es'
 import { QuickInputList } from 'monaco-editor/esm/vs/base/parts/quickinput/browser/quickInputList'
+import 'monaco-editor/esm/vs/editor/editor.main.js'
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api'
 import { QueryResult } from 'neo4j-driver-core'
 import React from 'react'
