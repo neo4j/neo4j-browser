@@ -20,13 +20,8 @@
 import { QueryOrCommand, parse } from 'cypher-editor-support'
 import { debounce } from 'lodash-es'
 import { QuickInputList } from 'monaco-editor/esm/vs/base/parts/quickinput/browser/quickInputList'
-import {
-  IPosition,
-  KeyCode,
-  KeyMod,
-  MarkerSeverity,
-  editor
-} from 'monaco-editor/esm/vs/editor/editor.api'
+import 'monaco-editor/esm/vs/editor/editor.main.js'
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api'
 import { QueryResult } from 'neo4j-driver-core'
 import React from 'react'
 import styled from 'styled-components'
@@ -105,7 +100,7 @@ export class CypherEditor extends React.Component<
     draft: ''
   }
 
-  editor?: editor.IStandaloneCodeEditor
+  editor?: monaco.editor.IStandaloneCodeEditor
   container?: HTMLElement
 
   static defaultProps = cypherEditorDefaultProps
@@ -236,7 +231,7 @@ export class CypherEditor extends React.Component<
     const model = this.editor?.getModel()
     if (!model) return
 
-    editor.setModelMarkers(model, this.getMonacoId(), [])
+    monaco.editor.setModelMarkers(model, this.getMonacoId(), [])
 
     this.updateGutterCharWidth(this.props.useDb || '')
     this.debouncedUpdateCode()
@@ -247,12 +242,12 @@ export class CypherEditor extends React.Component<
     if (!statements.length || !model) return
 
     // clearing markers again solves issue with incorrect multi-statement warning when user spam clicks setting on and off
-    editor.setModelMarkers(model, this.getMonacoId(), [])
+    monaco.editor.setModelMarkers(model, this.getMonacoId(), [])
 
     // add multi statement warning if multi setting is off
     if (statements.length > 1 && !this.props.enableMultiStatementMode) {
       const secondStatementLine = statements[1].start.line
-      editor.setModelMarkers(model, this.getMonacoId(), [
+      monaco.editor.setModelMarkers(model, this.getMonacoId(), [
         {
           startLineNumber: secondStatementLine,
           startColumn: 1,
@@ -260,7 +255,7 @@ export class CypherEditor extends React.Component<
           endColumn: 1000,
           message:
             'To use multi statement queries, please enable multi statement in the settings panel.',
-          severity: MarkerSeverity.Warning
+          severity: monaco.MarkerSeverity.Warning
         }
       ])
     }
@@ -277,8 +272,8 @@ export class CypherEditor extends React.Component<
         .sendCypherQuery(EXPLAIN_QUERY_PREFIX + text)
         .then((result: QueryResult) => {
           if (result.summary.notifications.length > 0) {
-            editor.setModelMarkers(model, this.getMonacoId(), [
-              ...editor.getModelMarkers({ owner: this.getMonacoId() }),
+            monaco.editor.setModelMarkers(model, this.getMonacoId(), [
+              ...monaco.editor.getModelMarkers({ owner: this.getMonacoId() }),
               ...result.summary.notifications.map(
                 ({ description, position, title }) => {
                   const line = 'line' in position ? position.line : 0
@@ -293,7 +288,7 @@ export class CypherEditor extends React.Component<
                     endLineNumber: statement.stop.line,
                     endColumn: statement.stop.column + 2,
                     message: title + '\n\n' + description,
-                    severity: MarkerSeverity.Warning
+                    severity: monaco.MarkerSeverity.Warning
                   }
                 }
               )
@@ -310,7 +305,7 @@ export class CypherEditor extends React.Component<
     this.container = document.getElementById(this.getMonacoId()) ?? undefined
     if (!this.container) return
 
-    this.editor = editor.create(this.container, {
+    this.editor = monaco.editor.create(this.container, {
       autoClosingOvertype: 'always',
       contextmenu: false,
       cursorStyle: 'block',
@@ -342,6 +337,7 @@ export class CypherEditor extends React.Component<
       wrappingStrategy: 'advanced'
     })
 
+    const { KeyCode, KeyMod } = monaco
     this.editor.addCommand(
       KeyCode.Enter,
       () => {
@@ -402,7 +398,7 @@ export class CypherEditor extends React.Component<
      * The workaround is based on a suggestion found in the github issue: https://github.com/microsoft/monaco-editor/issues/70
      */
     const quickInputDOMNode = this.editor.getContribution<
-      { widget: { domNode: HTMLElement } } & editor.IEditorContribution
+      { widget: { domNode: HTMLElement } } & monaco.editor.IEditorContribution
     >('editor.controller.quickInput').widget.domNode
     // @ts-ignore since we use internal APIs
     this.editor._modelData.view._contentWidgets.overflowingContentWidgetsDomNode.domNode.appendChild(
@@ -433,7 +429,7 @@ export class CypherEditor extends React.Component<
 
     // Line numbers need to be redrawn after db is changed
     if (useDb !== prevProps.useDb) {
-      const cursorPosition = this.editor?.getPosition() as IPosition
+      const cursorPosition = this.editor?.getPosition() as monaco.IPosition
       this.editor?.setValue(this.editor?.getValue() || '')
       this.editor?.setPosition(cursorPosition)
     }

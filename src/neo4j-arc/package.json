@@ -1,13 +1,14 @@
 {
   "name": "@neo4j-devtools/arc",
-  "version": "0.0.14",
+  "version": "0.0.18",
   "main": "dist/neo4j-arc.js",
   "author": "Neo4j Inc.",
   "license": "GPL-3.0",
   "typings": "dist/neo4j-arc.d.ts",
   "scripts": {
     "build": "rollup -c --failAfterWarnings",
-    "test": "tsc --noEmit"
+    "test": "tsc --noEmit",
+    "prepublishOnly": "npm run test && npm run build"
   },
   "repository": {
     "type": "git",
