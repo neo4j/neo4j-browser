@@ -7,7 +7,7 @@ const importsWithPaths = [
   '@neo4j-ndl/base/lib/tokens/js/tokens',
   'monaco-editor/esm/vs/base/parts/quickinput/browser/quickInputList',
   'monaco-editor/esm/vs/editor/editor.api',
-  'monaco-editor/esm/vs/editor/editor.main.js'
+  'monaco-editor/esm/vs/editor/editor.all.js'
 ]
 
 const dependenciesNotToBundle = Object.keys({
