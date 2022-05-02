@@ -39,7 +39,9 @@ export type {
   CypherList,
   CypherMap,
   CypherProperty,
-  CypherStructuralType
+  CypherStructuralType,
+  isCypherTemporalType,
+  isCypherBasicPropertyType
 } from './types/cypherDataTypes'
 
 export { ClickableUrls } from './components/ClickableUrls'
