@@ -23,16 +23,11 @@ import {
   isInt,
   Point,
   isDuration,
-  isDate,
-  isDateTime,
-  isLocalDateTime,
-  isLocalTime,
   isPoint,
-  isTime,
   types
 } from 'neo4j-driver-core'
 import { Duration as luxonDuration } from 'luxon'
-import { CypherProperty } from '../types/cypherDataTypes'
+import { CypherProperty, isCypherTemporalType } from '../types/cypherDataTypes'
 
 const getDriverTypeName = (val: CypherProperty) => {
   const driverTypeMap = types
@@ -102,11 +97,7 @@ export function propertyToString(property: CypherProperty): string {
     return 'ByteArray'
   }
 
-  if (
-    [isDate, isTime, isDateTime, isLocalTime, isLocalDateTime].some(tester =>
-      tester(property)
-    )
-  ) {
+  if (isCypherTemporalType(property)) {
     return `"${property.toString()}"`
   }
 
@@ -133,7 +124,10 @@ const numberFormat = (anything: number) => {
   if ([Infinity, -Infinity, NaN].includes(anything)) {
     return `${anything}`
   }
-  return `${anything}.0`
+  if (Math.floor(anything) === anything) {
+    return `${anything}.0`
+  }
+  return anything.toString()
 }
 
 const spacialFormat = (anything: Point): string => {

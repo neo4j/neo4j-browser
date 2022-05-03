@@ -23,10 +23,19 @@ import {
   DateTime,
   Duration,
   Integer,
+  isDate,
+  isDateTime,
+  isDuration,
+  isInt,
+  isLocalDateTime,
+  isLocalTime,
+  isPoint,
+  isTime,
   LocalDateTime,
   LocalTime,
   Path,
   Point,
+  Node,
   Relationship,
   Time
 } from 'neo4j-driver-core'
@@ -60,18 +69,21 @@ import {
 export type CypherBasicPropertyType =
   | null
   | boolean
-  | Integer
-  | BigInt
   | number
   | string
+  | Integer
+  | BigInt
   | Int8Array
+  | CypherTemporalType
+  | Point
+
+export type CypherTemporalType =
   | Date
   | Time
   | DateTime
   | LocalTime
   | LocalDateTime
   | Duration
-  | Point
 
 // Lists are also allowed as property types, as long as all items are the same basic type
 export type CypherProperty = CypherBasicPropertyType | CypherBasicPropertyType[]
@@ -100,3 +112,28 @@ export type CypherDataType =
   | CypherStructuralType
   | CypherMap
   | CypherList
+
+export const isCypherBasicPropertyType = (
+  value: any
+): value is CypherBasicPropertyType => {
+  const valType = typeof value
+
+  return (
+    value === null ||
+    valType === 'boolean' ||
+    valType === 'string' ||
+    valType === 'number' ||
+    valType === 'bigint' ||
+    value.constructor === Int8Array ||
+    isInt(value) ||
+    isCypherTemporalType(value) ||
+    isPoint(value)
+  )
+}
+
+export const isCypherTemporalType = (
+  anything: object
+): anything is CypherTemporalType =>
+  [isDate, isTime, isDateTime, isLocalTime, isLocalDateTime, isDuration].some(
+    tester => tester(anything)
+  )
