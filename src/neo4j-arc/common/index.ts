@@ -39,7 +39,10 @@ export type {
   CypherList,
   CypherMap,
   CypherProperty,
-  CypherStructuralType,
+  CypherStructuralType
+} from './types/cypherDataTypes'
+
+export {
   isCypherTemporalType,
   isCypherBasicPropertyType
 } from './types/cypherDataTypes'
