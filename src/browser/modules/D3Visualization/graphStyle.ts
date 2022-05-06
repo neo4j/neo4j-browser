@@ -366,6 +366,15 @@ export class GraphStyle {
       this.rules.push(rule)
     }
     rule.props = { ...rule.props, ...props }
+
+    // delete undefined keys
+    for (const key in rule.props) {
+      if (rule.props.hasOwnProperty(key)) {
+        if (rule.props[key] === undefined) {
+          delete rule.props[key]
+        }
+      }
+    }
     return rule
   }
 
