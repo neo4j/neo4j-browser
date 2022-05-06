@@ -44,10 +44,14 @@ class StyleElement {
     this.props = {}
   }
 
-  applyRules = (rules: StyleRule[]) => {
+  applyRules = (rules: StyleRule[], ignoreParentRules = false) => {
     for (let i = 0; i < rules.length; i++) {
       const rule = rules[i]
-      if (rule.matches(this.selector)) {
+      if (
+        (!ignoreParentRules ||
+          (ignoreParentRules && rule.selector.classes.length > 0)) &&
+        rule.matches(this.selector)
+      ) {
         this.props = { ...this.props, ...rule.props }
         this.props.caption = this.props.caption || this.props.defaultCaption
       }
@@ -319,8 +323,11 @@ export class GraphStyle {
     }
   }
 
-  calculateStyle = (selector: Selector): StyleElement => {
-    return new StyleElement(selector).applyRules(this.rules)
+  calculateStyle = (
+    selector: Selector,
+    ignoreParentRules = false
+  ): StyleElement => {
+    return new StyleElement(selector).applyRules(this.rules, ignoreParentRules)
   }
 
   setDefaultNodeStyle = (selector: Selector, item: any): void => {
@@ -524,17 +531,17 @@ export class GraphStyle {
     })
   }
 
-  forNode = (node: any = {}): StyleElement => {
+  forNode = (node: any = {}, ignoreParentRules = false): StyleElement => {
     const selector = this.nodeSelector(node)
     if ((node.labels != null ? node.labels.length : 0) > 0) {
       this.setDefaultNodeStyle(selector, node)
     }
-    return this.calculateStyle(selector)
+    return this.calculateStyle(selector, ignoreParentRules)
   }
 
-  forRelationship = (rel: any): StyleElement => {
+  forRelationship = (rel: any, ignoreParentRules = false): StyleElement => {
     const selector = this.relationshipSelector(rel)
-    return this.calculateStyle(selector)
+    return this.calculateStyle(selector, ignoreParentRules)
   }
 }
 

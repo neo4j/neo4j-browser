@@ -204,51 +204,6 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
     )
   }
 
-  // widthTypePicker({
-  //   items,
-  //   itemStyle
-  // }: {
-  //   items: Array<Pick<VizNode, 'propertyMap'>>
-  //   itemStyle: IStyleForLabel
-  // }) {
-  //   const propertiesSet: {
-  //     [key: string]: Set<string>
-  //   } = {}
-  //   items.forEach(item => {
-  //     for (const key in item.propertyMap) {
-  //       if (item.propertyMap.hasOwnProperty(key)) {
-  //         if (propertiesSet[key]) {
-  //           propertiesSet[key].add(item.propertyMap[key])
-  //         } else {
-  //           propertiesSet[key] = new Set<string>([item.propertyMap[key]])
-  //         }
-  //       }
-  //     }
-  //   })
-  //   const properties: {
-  //     [key: string]: string[]
-  //   } = {}
-  //   for (const key in propertiesSet) {
-  //     if (propertiesSet.hasOwnProperty(key)) {
-  //       properties[key] = Array.from(propertiesSet[key]).sort(stringSorter)
-  //     }
-  //   }
-  //   return (
-  //     <StyledInlineListItem key="color-type-picker">
-  //       <StyledInlineList className="color-type-picker picker">
-  //         {/*<SetupColorModal*/}
-  //         {/*  properties={properties}*/}
-  //         {/*  itemStyleProps={itemStyle.props}*/}
-  //         {/*  updateStyle={widthSettings => {*/}
-  //         {/*    this.updateStyle(itemStyle.selector, {*/}
-  //         {/*      widthSettings*/}
-  //         {/*    })*/}
-  //         {/*  }}*/}
-  //         {/*/>*/}
-  //       </StyledInlineList>
-  //     </StyledInlineListItem>
-  //   )
-  // }
   widthPicker(selector: Selector, styleForItem: any) {
     const widthSelectors = this.graphStyle
       .defaultArrayWidths()
@@ -423,7 +378,7 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
         this.props.selectedLabel.label !== '*'
           ? [this.props.selectedLabel.label]
           : []
-      const styleForLabel = this.graphStyle.forNode({ labels: labelList })
+      const styleForLabel = this.graphStyle.forNode({ labels: labelList }, true)
       const inlineStyle = {
         backgroundColor: styleForLabel.get('color'),
         color: styleForLabel.get('text-color-internal'),
@@ -446,9 +401,12 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
           getTypeListForNodes(this.props.nodes, labelList)
         ),
         this.colorTypePicker({
-          items: this.props.nodes.filter(node =>
-            node.labels.includes(this.props.selectedLabel!.label)
-          ),
+          items:
+            this.props.selectedLabel.label !== '*'
+              ? this.props.nodes.filter(node =>
+                  node.labels.includes(this.props.selectedLabel!.label)
+                )
+              : this.props.nodes.slice(),
           isForNode: true,
           itemStyle: styleForLabel
         }),
@@ -472,11 +430,13 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
         </StyledLabelToken>
       )
     } else if (this.props.selectedRelType) {
-      const relTypeSelector =
+      const styleForRelType =
         this.props.selectedRelType.relType !== '*'
-          ? { type: this.props.selectedRelType.relType }
-          : {}
-      const styleForRelType = this.graphStyle.forRelationship(relTypeSelector)
+          ? this.graphStyle.forRelationship(
+              { type: this.props.selectedRelType.relType },
+              true
+            )
+          : this.graphStyle.forRelationship({})
       const inlineStyle = {
         backgroundColor: styleForRelType.get('color'),
         color: styleForRelType.get('text-color-internal'),
@@ -500,9 +460,12 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
           false
         ),
         this.colorTypePicker({
-          items: this.props.relationships.filter(rel =>
-            rel.type.includes(this.props.selectedRelType!.relType)
-          ),
+          items:
+            this.props.selectedRelType.relType !== '*'
+              ? this.props.relationships.filter(rel =>
+                  rel.type.includes(this.props.selectedRelType!.relType)
+                )
+              : this.props.relationships.slice(),
           isForNode: false,
           itemStyle: styleForRelType
         }),
