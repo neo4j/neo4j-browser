@@ -1015,7 +1015,7 @@ function queryPlan(this: any, element: any) {
                 }
               },
 
-              'rect.outline': {
+              'rect.b-outline': {
                 data(d: any) {
                   return [d]
                 },
@@ -1024,7 +1024,7 @@ function queryPlan(this: any, element: any) {
                 ) {
                   return selection
                     .join('rect')
-                    .attr('class', 'outline')
+                    .attr('class', 'b-outline')
                     .attr('width', operatorWidth)
                     .attr('rx', operatorCornerRadius)
                     .attr('ry', operatorCornerRadius)

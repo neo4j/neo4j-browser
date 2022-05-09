@@ -31,10 +31,10 @@ const nodeOutline = new Renderer<NodeModel>({
   name: 'nodeOutline',
   onGraphChange(selection, viz) {
     return selection
-      .selectAll('circle.outline')
+      .selectAll('circle.b-outline')
       .data(node => [node])
       .join('circle')
-      .classed('outline', true)
+      .classed('b-outline', true)
       .attr('cx', 0)
       .attr('cy', 0)
       .attr('r', (node: NodeModel) => {
@@ -89,7 +89,7 @@ const nodeRing = new Renderer<NodeModel>({
 
     circles
       .enter()
-      .insert('circle', '.outline')
+      .insert('circle', '.b-outline')
       .classed('ring', true)
       .attr('cx', 0)
       .attr('cy', 0)
@@ -107,10 +107,10 @@ const arrowPath = new Renderer<RelationshipModel>({
 
   onGraphChange(selection, viz) {
     return selection
-      .selectAll('path.outline')
+      .selectAll('path.b-outline')
       .data((rel: any) => [rel])
       .join('path')
-      .classed('outline', true)
+      .classed('b-outline', true)
       .attr('fill', (rel: any) => viz.style.forRelationship(rel).get('color'))
       .attr('stroke', 'none')
   },

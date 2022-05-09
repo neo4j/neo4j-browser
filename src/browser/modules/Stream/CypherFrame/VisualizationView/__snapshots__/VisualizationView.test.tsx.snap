@@ -49,7 +49,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
                     stroke-width="8px"
                   />
                   <circle
-                    class="outline"
+                    class="b-outline"
                     cx="0"
                     cy="0"
                     fill="#C990C0"
