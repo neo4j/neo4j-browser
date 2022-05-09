@@ -23,14 +23,12 @@ import { withBus } from 'react-suber'
 import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
 import HistoryRow from './HistoryRow'
 import { PaddedDiv, UnstyledList } from './styled'
-import * as editor2 from 'shared/modules/editor/editorDuck'
-import { editor } from 'monaco-editor'
-// @ts-ignore
-window.a = editor
+import * as editor from 'shared/modules/editor/editorDuck'
+
 export const HistoryFrame = (props: any) => {
   const { frame, bus, setExportItems } = props
   const onHistoryClick = (cmd: string) => {
-    bus.send(editor2.SET_CONTENT, editor2.setContent(cmd))
+    bus.send(editor.SET_CONTENT, editor.setContent(cmd))
   }
   useEffect(() => {
     setExportItems([

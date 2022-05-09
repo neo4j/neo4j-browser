@@ -5,14 +5,14 @@ exports[`Visualization renders empty content 1`] = `<div />`;
 exports[`Visualization renders with result and escapes any HTML 1`] = `
 <div>
   <div
-    class="sc-jgrJph cQxClw"
+    class="sc-jgrJph jDcmiD"
   >
     <div
       class="sc-fKVqWL iKdqzS"
       id="svg-vis"
     >
       <div
-        class="sc-hBUSln ACJKf"
+        class="sc-hBUSln cRdmsc"
       >
         <svg
           class="neod3viz"
