@@ -65,7 +65,7 @@ export const StyledVisContainer = styled.div<{ isFullscreen: boolean }>`
     border: 2px #000 solid;
   }
 
-  > .neod3viz .outline,
+  > .neod3viz .b-outline,
   .neod3viz .ring,
   .neod3viz .context-menu-item {
     cursor: pointer;

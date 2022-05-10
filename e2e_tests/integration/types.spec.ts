@@ -21,10 +21,8 @@
 /* global Cypress, cy, before */
 
 describe('Types in Browser', () => {
-  before(function() {
-    cy.visit(Cypress.config('url'))
-      .title()
-      .should('include', 'Neo4j Browser')
+  before(function () {
+    cy.visit(Cypress.config('url')).title().should('include', 'Neo4j Browser')
     cy.wait(3000)
     const password = Cypress.config('password')
     cy.connect('neo4j', password)
@@ -39,9 +37,7 @@ describe('Types in Browser', () => {
       cy.resultContains('9907199254740991')
 
       // Go to ascii view
-      cy.get('[data-testid="cypherFrameSidebarAscii"]')
-        .first()
-        .click()
+      cy.get('[data-testid="cypherFrameSidebarAscii"]').first().click()
       cy.resultContains('│2467500000')
       cy.resultContains('9907199254740991')
     })
@@ -54,9 +50,7 @@ describe('Types in Browser', () => {
       cy.resultContains('point({srid:4326, x:12.78, y:56.7})')
 
       // Go to ascii view
-      cy.get('[data-testid="cypherFrameSidebarAscii"]')
-        .first()
-        .click()
+      cy.get('[data-testid="cypherFrameSidebarAscii"]').first().click()
       cy.resultContains('│point({srid:4326, x:12.78, y:56.7})')
     })
     it('presents datetime type correctly', () => {
@@ -68,9 +62,7 @@ describe('Types in Browser', () => {
 
       cy.resultContains('"2015-07-20T15:11:42[Europe/Stockholm]"')
       // Go to ascii view
-      cy.get('[data-testid="cypherFrameSidebarAscii"]')
-        .first()
-        .click()
+      cy.get('[data-testid="cypherFrameSidebarAscii"]').first().click()
       cy.resultContains('│"2015-07-20T15:11:42[Europe/Stockholm]"')
     })
     it('presents local datetime type correctly', () => {
@@ -82,9 +74,7 @@ describe('Types in Browser', () => {
 
       cy.resultContains('"2015-07-20T15:11:42"')
       // Go to ascii view
-      cy.get('[data-testid="cypherFrameSidebarAscii"]')
-        .first()
-        .click()
+      cy.get('[data-testid="cypherFrameSidebarAscii"]').first().click()
       cy.resultContains('│"2015-07-20T15:11:42"')
     })
     it('presents date type correctly', () => {
@@ -95,9 +85,7 @@ describe('Types in Browser', () => {
 
       cy.resultContains('"2015-07-20"')
       // Go to ascii view
-      cy.get('[data-testid="cypherFrameSidebarAscii"]')
-        .first()
-        .click()
+      cy.get('[data-testid="cypherFrameSidebarAscii"]').first().click()
       cy.resultContains('│"2015-07-20"')
     })
     it('presents duration type correctly', () => {
@@ -109,9 +97,7 @@ describe('Types in Browser', () => {
 
       cy.resultContains('P1Y2M3DT4H5M6S')
       // Go to ascii view
-      cy.get('[data-testid="cypherFrameSidebarAscii"]')
-        .first()
-        .click()
+      cy.get('[data-testid="cypherFrameSidebarAscii"]').first().click()
       cy.resultContains('│P1Y2M3DT4H5M6S')
     })
     it('presents time type correctly', () => {
@@ -123,9 +109,7 @@ describe('Types in Browser', () => {
 
       cy.resultContains('"14:03:04')
       // Go to ascii view
-      cy.get('[data-testid="cypherFrameSidebarAscii"]')
-        .first()
-        .click()
+      cy.get('[data-testid="cypherFrameSidebarAscii"]').first().click()
       cy.resultContains('│"14:03:04')
     })
     it('presents localtime type correctly', () => {
@@ -136,9 +120,7 @@ describe('Types in Browser', () => {
 
       cy.resultContains('"14:03:04"')
       // Go to ascii view
-      cy.get('[data-testid="cypherFrameSidebarAscii"]')
-        .first()
-        .click()
+      cy.get('[data-testid="cypherFrameSidebarAscii"]').first().click()
       cy.resultContains('│"14:03:04"')
     })
     it('renders types in viz correctly', () => {
@@ -147,7 +129,7 @@ describe('Types in Browser', () => {
         "CREATE (p:Types {{}location: point({{}crs: 'wgs-84', x: 12.78, y: 56.7}), date: duration.between(datetime('2014-07-21T21:40:36.143+0200'), date('2015-06-24'))}) RETURN p"
       cy.executeCommand(query)
       // cy.waitForCommandResult()
-      cy.get('circle.outline', { timeout: 10000 }).click()
+      cy.get('circle.b-outline', { timeout: 10000 }).click()
       cy.get('[data-testid="vizInspector"]')
         .should('contain', 'P11M2DT2H19')
         .and('contain', 'srid:4326')
@@ -157,7 +139,7 @@ describe('Types in Browser', () => {
       const query = 'MATCH p=(:Types) RETURN p'
       cy.executeCommand(query)
       // cy.waitForCommandResult()
-      cy.get('circle.outline', { timeout: 10000 }).click()
+      cy.get('circle.b-outline', { timeout: 10000 }).click()
       cy.get('[data-testid="vizInspector"]')
         .should('contain', 'P11M2DT2H19')
         .and('contain', 'srid:4326')

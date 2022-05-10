@@ -75,7 +75,7 @@ export const StyledSvgWrapper = styled.div`
         }
       }
     }
-    .outline {
+    .b-outline {
       cursor: pointer;
     }
     path {
