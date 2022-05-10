@@ -378,7 +378,10 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
         this.props.selectedLabel.label !== '*'
           ? [this.props.selectedLabel.label]
           : []
-      const styleForLabel = this.graphStyle.forNode({ labels: labelList }, true)
+      const styleForLabel = this.graphStyle.forNode(
+        { labels: labelList },
+        labelList.length > 0
+      )
       const inlineStyle = {
         backgroundColor: styleForLabel.get('color'),
         color: styleForLabel.get('text-color-internal'),
