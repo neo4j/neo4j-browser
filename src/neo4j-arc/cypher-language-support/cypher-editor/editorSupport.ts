@@ -23,7 +23,8 @@ import { editor, languages } from 'monaco-editor/esm/vs/editor/editor.api'
 
 import { CypherTokensProvider } from '../language/CypherTokensProvider'
 import cypherBaseFunctions from '../language/cypherBaseFunctions'
-import { monacoDarkTheme, monacoLightTheme } from './CypherMonacoThemes'
+import { getMonacoThemes } from './CypherMonacoThemes'
+import type { CypherColorFallback } from './CypherMonacoThemes'
 
 export function setupAutocomplete({
   consoleCommands,
@@ -45,7 +46,9 @@ export function setupAutocomplete({
   })
 }
 
-export function initalizeCypherSupport(): void {
+export function initalizeCypherSupport(
+  cypherColor?: CypherColorFallback
+): void {
   languages.register({ id: 'cypher' })
   languages.setTokensProvider('cypher', new CypherTokensProvider())
   languages.setLanguageConfiguration('cypher', {
@@ -129,6 +132,8 @@ export function initalizeCypherSupport(): void {
       }
     }
   })
+
+  const { monacoDarkTheme, monacoLightTheme } = getMonacoThemes(cypherColor)
 
   editor.defineTheme('dark', monacoDarkTheme)
   editor.defineTheme('light', monacoLightTheme)
