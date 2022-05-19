@@ -20,25 +20,22 @@
 import { editor } from 'monaco-editor/esm/vs/editor/editor.api'
 
 // colors from cypher-editor/cypher-codemirror/src/css/_solarized.css
-const enum CypherColor {
-  black = '#333333',
-  blue = '#268bd2',
-  cyan = '#2aa198',
-  cyan_grey = '#586e75',
-  green = '#859900',
-  light_grey = '#93a1a1',
-  magenta = '#d33682',
-  orange = '#cb4b16',
-  red = '#dc322f',
-  violet = '#6c71c4',
-  white = '#fdf6e3',
-  yellow = '#b58900'
+const cypherColorFallback = {
+  black: '#333333',
+  blue: '#268bd2',
+  cyan: '#2aa198',
+  cyan_grey: '#586e75',
+  green: '#859900',
+  light_grey: '#93a1a1',
+  magenta: '#d33682',
+  orange: '#cb4b16',
+  red: '#dc322f',
+  violet: '#6c71c4',
+  white: '#fdf6e3',
+  yellow: '#b58900'
 }
 
-const makeCypherTokenThemeRule = (token: string, foreground: CypherColor) => ({
-  token: `${token}.cypher`,
-  foreground
-})
+export type CypherColorFallback = typeof cypherColorFallback
 
 const comments: string[] = ['comment']
 const strings: string[] = ['stringliteral', 'urlhex']
@@ -311,83 +308,108 @@ const tokensWithoutSyntaxHighlighting: string[] = [
   'error_token'
 ]
 
-// syntax highlighting from cypher-editor/cypher-codemirror/src/css/syntax.css
-const sharedRules: editor.ITokenThemeRule[] = [
-  ...strings.map(token => makeCypherTokenThemeRule(token, CypherColor.yellow)),
-  ...numbers.map(token => makeCypherTokenThemeRule(token, CypherColor.cyan)),
+export const getMonacoThemes = (
+  color?: typeof cypherColorFallback
+): {
+  monacoDarkTheme: editor.IStandaloneThemeData
+  monacoLightTheme: editor.IStandaloneThemeData
+} => {
+  const cypherColor = color || cypherColorFallback
 
-  ...keywords.map(token => makeCypherTokenThemeRule(token, CypherColor.green)),
-  ...labels.map(token => makeCypherTokenThemeRule(token, CypherColor.orange)),
-  ...relationshipTypes.map(token =>
-    makeCypherTokenThemeRule(token, CypherColor.orange)
-  ),
-  ...variables.map(token => makeCypherTokenThemeRule(token, CypherColor.blue)),
-  ...procedures.map(token =>
-    makeCypherTokenThemeRule(token, CypherColor.violet)
-  ),
-  ...functions.map(token =>
-    makeCypherTokenThemeRule(token, CypherColor.violet)
-  ),
-  ...parameters.map(token => makeCypherTokenThemeRule(token, CypherColor.red)),
-  ...consoleCommands.map(token =>
-    makeCypherTokenThemeRule(token, CypherColor.magenta)
-  ),
-  ...procedureOutput.map(token =>
-    makeCypherTokenThemeRule(token, CypherColor.blue)
-  )
-]
-const darkThemeRules = [
-  ...sharedRules,
-  ...comments.map(token =>
-    makeCypherTokenThemeRule(token, CypherColor.cyan_grey)
-  ),
-  ...properties.map(token =>
-    makeCypherTokenThemeRule(token, CypherColor.light_grey)
-  ),
-  ...tokensWithoutSyntaxHighlighting.map(token =>
-    makeCypherTokenThemeRule(token, CypherColor.white)
-  ),
-  ...operators.map(token =>
-    makeCypherTokenThemeRule(token, CypherColor.light_grey)
-  )
-]
-const lightThemeRules = [
-  ...sharedRules,
-  ...comments.map(token =>
-    makeCypherTokenThemeRule(token, CypherColor.light_grey)
-  ),
-  ...properties.map(token =>
-    makeCypherTokenThemeRule(token, CypherColor.cyan_grey)
-  ),
-  ...tokensWithoutSyntaxHighlighting.map(token =>
-    makeCypherTokenThemeRule(token, CypherColor.black)
-  ),
-  ...operators.map(token =>
-    makeCypherTokenThemeRule(token, CypherColor.cyan_grey)
-  )
-]
+  const makeCypherTokenThemeRule = (token: string, foreground: string) => ({
+    token: `${token}.cypher`,
+    foreground
+  })
 
-export const monacoDarkTheme: editor.IStandaloneThemeData = {
-  base: 'vs-dark',
-  inherit: true,
-  rules: darkThemeRules,
-  colors: {
-    'editor.background': '#121212',
-    'editorCursor.foreground': '#585a61',
-    'editorLineNumber.foreground': CypherColor.white,
-    'editorLineNumber.activeForeground': CypherColor.white,
-    foreground: CypherColor.white
+  // syntax highlighting from cypher-editor/cypher-codemirror/src/css/syntax.css
+  const sharedRules: editor.ITokenThemeRule[] = [
+    ...strings.map(token =>
+      makeCypherTokenThemeRule(token, cypherColor.yellow)
+    ),
+    ...numbers.map(token => makeCypherTokenThemeRule(token, cypherColor.cyan)),
+
+    ...keywords.map(token =>
+      makeCypherTokenThemeRule(token, cypherColor.green)
+    ),
+    ...labels.map(token => makeCypherTokenThemeRule(token, cypherColor.orange)),
+    ...relationshipTypes.map(token =>
+      makeCypherTokenThemeRule(token, cypherColor.orange)
+    ),
+    ...variables.map(token =>
+      makeCypherTokenThemeRule(token, cypherColor.blue)
+    ),
+    ...procedures.map(token =>
+      makeCypherTokenThemeRule(token, cypherColor.violet)
+    ),
+    ...functions.map(token =>
+      makeCypherTokenThemeRule(token, cypherColor.violet)
+    ),
+    ...parameters.map(token =>
+      makeCypherTokenThemeRule(token, cypherColor.red)
+    ),
+    ...consoleCommands.map(token =>
+      makeCypherTokenThemeRule(token, cypherColor.magenta)
+    ),
+    ...procedureOutput.map(token =>
+      makeCypherTokenThemeRule(token, cypherColor.blue)
+    )
+  ]
+  const darkThemeRules = [
+    ...sharedRules,
+    ...comments.map(token =>
+      makeCypherTokenThemeRule(token, cypherColor.cyan_grey)
+    ),
+    ...properties.map(token =>
+      makeCypherTokenThemeRule(token, cypherColor.light_grey)
+    ),
+    ...tokensWithoutSyntaxHighlighting.map(token =>
+      makeCypherTokenThemeRule(token, cypherColor.white)
+    ),
+    ...operators.map(token =>
+      makeCypherTokenThemeRule(token, cypherColor.light_grey)
+    )
+  ]
+  const lightThemeRules = [
+    ...sharedRules,
+    ...comments.map(token =>
+      makeCypherTokenThemeRule(token, cypherColor.light_grey)
+    ),
+    ...properties.map(token =>
+      makeCypherTokenThemeRule(token, cypherColor.cyan_grey)
+    ),
+    ...tokensWithoutSyntaxHighlighting.map(token =>
+      makeCypherTokenThemeRule(token, cypherColor.black)
+    ),
+    ...operators.map(token =>
+      makeCypherTokenThemeRule(token, cypherColor.cyan_grey)
+    )
+  ]
+
+  const monacoDarkTheme: editor.IStandaloneThemeData = {
+    base: 'vs-dark',
+    inherit: true,
+    rules: darkThemeRules,
+    colors: {
+      'editor.background': '#121212',
+      'editorCursor.foreground': '#585a61',
+      'editorLineNumber.foreground': cypherColor.white,
+      'editorLineNumber.activeForeground': cypherColor.white,
+      foreground: cypherColor.white
+    }
   }
-}
-export const monacoLightTheme: editor.IStandaloneThemeData = {
-  base: 'vs',
-  inherit: true,
-  rules: lightThemeRules,
-  colors: {
-    'editor.background': '#fff',
-    'editorCursor.foreground': '#d6d7db',
-    'editorLineNumber.foreground': CypherColor.light_grey,
-    'editorLineNumber.activeForeground': CypherColor.light_grey,
-    foreground: CypherColor.black
+
+  const monacoLightTheme: editor.IStandaloneThemeData = {
+    base: 'vs',
+    inherit: true,
+    rules: lightThemeRules,
+    colors: {
+      'editor.background': '#fff',
+      'editorCursor.foreground': '#d6d7db',
+      'editorLineNumber.foreground': cypherColor.light_grey,
+      'editorLineNumber.activeForeground': cypherColor.light_grey,
+      foreground: cypherColor.black
+    }
   }
+
+  return { monacoDarkTheme, monacoLightTheme }
 }
