@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { StyleElement } from 'canvg'
+import fontColorContrast from 'font-color-contrast'
 import { cloneDeep } from 'lodash-es'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
@@ -39,8 +40,10 @@ import SetupLabelModal, {
   ICaptionSettings
 } from 'browser/modules/D3Visualization/components/modal/label/SetupLabelModal'
 import SetupColorModal from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorModal'
+import { generateColorsForBase } from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorPreview'
 import { IColorSettings } from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorStorage'
 import { RelArrowCaptionPosition } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelRelArrowSVG'
+import PhotoshopColorModal from 'project-root/src/browser/modules/D3Visualization/components/modal/simpleColor/PhotoshopColorModal'
 import Relationship from 'project-root/src/browser/modules/D3Visualization/lib/visualization/components/Relationship'
 import VizNode from 'project-root/src/browser/modules/D3Visualization/lib/visualization/components/VizNode'
 import { GlobalState } from 'shared/globalState'
@@ -155,6 +158,7 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
   }
 
   colorPicker(selector: any, styleForLabel: any) {
+    console.log(this.graphStyle)
     return (
       <StyledInlineListItem key="color-picker">
         <StyledInlineList>
@@ -171,6 +175,17 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
             'color-picker-item',
             selector
           )}
+          <PhotoshopColorModal
+            currentColor={{
+              color: styleForLabel.get('color') ?? '#000',
+              'border-color': styleForLabel.get('border-color') ?? '#000',
+              'text-color-internal':
+                styleForLabel.get('text-color-internal') ?? '#000'
+            }}
+            onAccept={colors => {
+              this.updateStyle(selector, colors)
+            }}
+          />
         </StyledInlineList>
       </StyledInlineListItem>
     )
