@@ -4,6 +4,7 @@ import styled from 'styled-components'
 
 import { usePrevious } from 'browser-hooks/hooks'
 import {
+  IStyleForLabelNodeProps,
   IStyleForLabelProps,
   stringSorter,
   stringSorterDesc
@@ -15,6 +16,7 @@ import SetupColorScheme, {
   getColorSchemeAtIndex
 } from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorScheme'
 import { IColorSettings } from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorStorage'
+import PhotoshopColorModal from 'project-root/src/browser/modules/D3Visualization/components/modal/simpleColor/PhotoshopColorModal'
 import {
   ApplyButton,
   SimpleButton
@@ -22,6 +24,10 @@ import {
 
 const MarginDiv = styled.div`
   margin: 10px 0;
+`
+const InlineDiv = styled.div`
+  display: inline-block;
+  vertical-align: middle;
 `
 type IRawColorSettings = IColorSettings['settings']
 const SetupColorPicker: React.FC<{
@@ -63,14 +69,10 @@ const SetupColorPicker: React.FC<{
     []
   )
   const handleColorChange = React.useCallback(
-    ({ value, color }: { value: string; color: string }) => {
+    ({ value, colors }: { value: string; colors: IStyleForLabelNodeProps }) => {
       setCurrentColorSettings(t => {
         const cloned = cloneDeep(t)
-        cloned[value] = Object.assign(
-          {},
-          t[value],
-          generateColorsForBase(color)
-        )
+        cloned[value] = Object.assign({}, t[value], colors)
         return cloned
       })
     },
@@ -172,6 +174,7 @@ const SetupColorPicker: React.FC<{
     },
     []
   )
+  const firstSettings = currentColorSettings[sortedValues[0]]
   return (
     <>
       <h3>Color map</h3>
@@ -180,6 +183,37 @@ const SetupColorPicker: React.FC<{
         selected={colorScheme}
         onChange={handleColorSchemeChange}
       />
+      <div>
+        <label>
+          Or use a single color rule for all:{'   '}
+          <InlineDiv>
+            <PhotoshopColorModal
+              currentColor={{
+                color: firstSettings?.color ?? '#000',
+                'border-color': firstSettings?.['border-color'] ?? '#000',
+                'text-color-internal':
+                  firstSettings?.['text-color-internal'] ?? '#000'
+              }}
+              onAccept={React.useCallback(
+                colors => {
+                  setCurrentColorSettings(oldSettings => {
+                    const newSettings = cloneDeep(oldSettings)
+                    sortedValues.forEach(value => {
+                      newSettings[value] = Object.assign(
+                        {},
+                        oldSettings[value],
+                        colors
+                      )
+                    })
+                    return newSettings
+                  })
+                },
+                [sortedValues]
+              )}
+            />
+          </InlineDiv>
+        </label>
+      </div>
       <MarginDiv>
         <div>
           <SortButton onClick={React.useCallback(() => setSortVal('ASC'), [])}>
@@ -199,15 +233,18 @@ const SetupColorPicker: React.FC<{
             </LineWidthLabel>
           )}
         </div>
-        {sortedValues.map(t => (
-          <SetupColorPreview
-            key={t}
-            value={t}
-            style={currentColorSettings[t]}
-            onChange={handleColorChange}
-            onLineWidthChange={handleLineWidthChange}
-          />
-        ))}
+        {sortedValues.map(t => {
+          const style = currentColorSettings[t]
+          return style ? (
+            <SetupColorPreview
+              key={t}
+              value={t}
+              style={style}
+              onChange={handleColorChange}
+              onLineWidthChange={handleLineWidthChange}
+            />
+          ) : null
+        })}
       </MarginDiv>
       <div>
         <ApplyButton onClick={handleSubmit}>Apply</ApplyButton>

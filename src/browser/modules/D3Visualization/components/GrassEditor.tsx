@@ -17,8 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { StyleElement } from 'canvg'
-import fontColorContrast from 'font-color-contrast'
 import { cloneDeep } from 'lodash-es'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
@@ -40,7 +38,6 @@ import SetupLabelModal, {
   ICaptionSettings
 } from 'browser/modules/D3Visualization/components/modal/label/SetupLabelModal'
 import SetupColorModal from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorModal'
-import { generateColorsForBase } from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorPreview'
 import { IColorSettings } from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorStorage'
 import { RelArrowCaptionPosition } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelRelArrowSVG'
 import PhotoshopColorModal from 'project-root/src/browser/modules/D3Visualization/components/modal/simpleColor/PhotoshopColorModal'
@@ -61,6 +58,10 @@ export interface IStyleForLabelProps {
   'shaft-width': string
   colorSchemeIndex: number
 }
+export type IStyleForLabelNodeProps = Pick<
+  IStyleForLabelProps,
+  'color' | 'text-color-internal' | 'border-color'
+>
 export interface IStyleForLabel {
   props: IStyleForLabelProps & {
     colorSettings?: IColorSettings
@@ -158,7 +159,6 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
   }
 
   colorPicker(selector: any, styleForLabel: any) {
-    console.log(this.graphStyle)
     return (
       <StyledInlineListItem key="color-picker">
         <StyledInlineList>
