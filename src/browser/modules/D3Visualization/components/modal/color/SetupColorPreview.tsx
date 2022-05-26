@@ -1,21 +1,19 @@
 import { colord } from 'colord'
 import fontColorContrast from 'font-color-contrast'
 import * as React from 'react'
-import { ChangeEventHandler } from 'react'
-import { ColorChangeHandler, SketchPicker } from 'react-color'
 import styled from 'styled-components'
 
-import { IStyleForLabelProps } from 'project-root/src/browser/modules/D3Visualization/components/GrassEditor'
-import GenericModal from 'project-root/src/browser/modules/D3Visualization/components/modal/GenericModal'
 import {
-  ApplyButton,
-  SimpleButton
-} from 'project-root/src/browser/modules/D3Visualization/components/modal/styled'
+  IStyleForLabelNodeProps,
+  IStyleForLabelProps
+} from 'project-root/src/browser/modules/D3Visualization/components/GrassEditor'
+import GenericModal from 'project-root/src/browser/modules/D3Visualization/components/modal/GenericModal'
+import PhotoshopColorModalBody from 'project-root/src/browser/modules/D3Visualization/components/modal/simpleColor/PhotoshopColorModalBody'
 
 interface IProps {
   value: string
-  style?: Partial<IStyleForLabelProps>
-  onChange: (props: { color: string; value: string }) => void
+  style: Partial<IStyleForLabelProps>
+  onChange: (props: { colors: IStyleForLabelNodeProps; value: string }) => void
   onLineWidthChange: (key: string, value: string) => void
 }
 
@@ -71,29 +69,6 @@ const SetupColorPreview: React.FC<IProps> = ({
   const doOpen = React.useCallback(() => setOpen(true), [])
   const doClose = React.useCallback(() => setOpen(false), [])
 
-  const handleChange: ColorChangeHandler = React.useCallback(color => {
-    setCurrentColor(color.hex)
-  }, [])
-  const [currentColor, setCurrentColor] = React.useState<string>(
-    style?.color ?? 'rgb(0, 0, 0)'
-  )
-  const genColor = React.useMemo(
-    () => generateColorsForBase(currentColor),
-    [currentColor]
-  )
-
-  React.useEffect(() => {
-    setCurrentColor(style?.color ?? '#FFFF')
-  }, [style?.color])
-
-  const handleSubmit = React.useCallback(() => {
-    onChange({
-      color: colord(currentColor).toHex(),
-      value
-    })
-    doClose()
-  }, [onChange, value, currentColor])
-
   const initialLineWidth = React.useMemo(() => {
     if (style && style['shaft-width']) {
       return parseInt(style['shaft-width'])
@@ -108,7 +83,7 @@ const SetupColorPreview: React.FC<IProps> = ({
   React.useEffect(() => {
     setLineWidth(initialLineWidth)
   }, [initialLineWidth])
-  const handleLineWidthChange: ChangeEventHandler<HTMLInputElement> =
+  const handleLineWidthChange: React.ChangeEventHandler<HTMLInputElement> =
     React.useCallback(
       e => {
         const result = parseInt(e.currentTarget.value)
@@ -117,9 +92,6 @@ const SetupColorPreview: React.FC<IProps> = ({
       },
       [onLineWidthChange, value]
     )
-  if (!style) {
-    return null
-  }
   return (
     <div>
       <RelativeContainer>
@@ -139,30 +111,30 @@ const SetupColorPreview: React.FC<IProps> = ({
           />
         )}
       </RelativeContainer>
-      <GenericModal isOpen={open} onRequestClose={doClose}>
-        <MarginDiv>
-          <PreviewNode
-            backgroundColor={currentColor}
-            color={genColor['text-color-internal']}
-            borderColor={genColor['border-color']}
-            onClick={doOpen}
-          >
-            {value}
-          </PreviewNode>
-        </MarginDiv>
-        <MarginDiv>
-          <SketchWrapper>
-            <SketchPicker
-              disableAlpha={true}
-              color={currentColor}
-              onChange={handleChange}
-            />
-          </SketchWrapper>
-        </MarginDiv>
-        <div>
-          <ApplyButton onClick={handleSubmit}>Apply</ApplyButton>
-          <SimpleButton onClick={doClose}>Cancel</SimpleButton>
-        </div>
+
+      <GenericModal
+        isOpen={open}
+        onRequestClose={doClose}
+        contentLabel={'Pick Color'}
+      >
+        <PhotoshopColorModalBody
+          onClose={doClose}
+          currentColor={{
+            color: style.color ?? '#000',
+            'border-color': style['border-color'] ?? '#000',
+            'text-color-internal': style['text-color-internal'] ?? '#000'
+          }}
+          onAccept={React.useCallback(
+            colors => {
+              onChange({
+                colors,
+                value
+              })
+              doClose()
+            },
+            [value, doClose, onChange]
+          )}
+        />
       </GenericModal>
     </div>
   )

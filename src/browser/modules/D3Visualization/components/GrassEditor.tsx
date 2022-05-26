@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { StyleElement } from 'canvg'
 import { cloneDeep } from 'lodash-es'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
@@ -41,6 +40,7 @@ import SetupLabelModal, {
 import SetupColorModal from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorModal'
 import { IColorSettings } from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorStorage'
 import { RelArrowCaptionPosition } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelRelArrowSVG'
+import PhotoshopColorModal from 'project-root/src/browser/modules/D3Visualization/components/modal/simpleColor/PhotoshopColorModal'
 import Relationship from 'project-root/src/browser/modules/D3Visualization/lib/visualization/components/Relationship'
 import VizNode from 'project-root/src/browser/modules/D3Visualization/lib/visualization/components/VizNode'
 import { GlobalState } from 'shared/globalState'
@@ -58,6 +58,10 @@ export interface IStyleForLabelProps {
   'shaft-width': string
   colorSchemeIndex: number
 }
+export type IStyleForLabelNodeProps = Pick<
+  IStyleForLabelProps,
+  'color' | 'text-color-internal' | 'border-color'
+>
 export interface IStyleForLabel {
   props: IStyleForLabelProps & {
     colorSettings?: IColorSettings
@@ -171,6 +175,17 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
             'color-picker-item',
             selector
           )}
+          <PhotoshopColorModal
+            currentColor={{
+              color: styleForLabel.get('color') ?? '#000',
+              'border-color': styleForLabel.get('border-color') ?? '#000',
+              'text-color-internal':
+                styleForLabel.get('text-color-internal') ?? '#000'
+            }}
+            onAccept={colors => {
+              this.updateStyle(selector, colors)
+            }}
+          />
         </StyledInlineList>
       </StyledInlineListItem>
     )
