@@ -41,6 +41,7 @@ import SetupColorModal from 'project-root/src/browser/modules/D3Visualization/co
 import { IColorSettings } from 'project-root/src/browser/modules/D3Visualization/components/modal/color/SetupColorStorage'
 import { RelArrowCaptionPosition } from 'project-root/src/browser/modules/D3Visualization/components/modal/label/SetupLabelRelArrowSVG'
 import PhotoshopColorModal from 'project-root/src/browser/modules/D3Visualization/components/modal/simpleColor/PhotoshopColorModal'
+import SingleColorModal from 'project-root/src/browser/modules/D3Visualization/components/modal/singleColor/SingleColorModal'
 import Relationship from 'project-root/src/browser/modules/D3Visualization/lib/visualization/components/Relationship'
 import VizNode from 'project-root/src/browser/modules/D3Visualization/lib/visualization/components/VizNode'
 import { GlobalState } from 'shared/globalState'
@@ -158,7 +159,27 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
     })
   }
 
-  colorPicker(selector: any, styleForLabel: any) {
+  colorPicker(selector: any, styleForLabel: any, isNode: boolean) {
+    const simpleColorPicker = isNode ? (
+      <PhotoshopColorModal
+        currentColor={{
+          color: styleForLabel.get('color') ?? '#000',
+          'border-color': styleForLabel.get('border-color') ?? '#000',
+          'text-color-internal':
+            styleForLabel.get('text-color-internal') ?? '#000'
+        }}
+        onAccept={colors => {
+          this.updateStyle(selector, colors)
+        }}
+      />
+    ) : (
+      <SingleColorModal
+        color={styleForLabel.get('color') ?? '#000'}
+        onAccept={color => {
+          this.updateStyle(selector, { color })
+        }}
+      />
+    )
     return (
       <StyledInlineListItem key="color-picker">
         <StyledInlineList>
@@ -175,17 +196,7 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
             'color-picker-item',
             selector
           )}
-          <PhotoshopColorModal
-            currentColor={{
-              color: styleForLabel.get('color') ?? '#000',
-              'border-color': styleForLabel.get('border-color') ?? '#000',
-              'text-color-internal':
-                styleForLabel.get('text-color-internal') ?? '#000'
-            }}
-            onAccept={colors => {
-              this.updateStyle(selector, colors)
-            }}
-          />
+          {simpleColorPicker}
         </StyledInlineList>
       </StyledInlineListItem>
     )
@@ -431,7 +442,9 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
         this.sizePicker(styleForLabel.selector, styleForLabel)
       ]
       if (displayColorPicker) {
-        pickers.push(this.colorPicker(styleForLabel.selector, styleForLabel))
+        pickers.push(
+          this.colorPicker(styleForLabel.selector, styleForLabel, true)
+        )
       }
       if (displayCaptionPicker) {
         pickers.push(
@@ -491,7 +504,7 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
       ]
       if (displayColorPicker) {
         pickers.push(
-          this.colorPicker(styleForRelType.selector, styleForRelType)
+          this.colorPicker(styleForRelType.selector, styleForRelType, false)
         )
       }
       if (displayCaptionPicker) {
