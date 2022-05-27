@@ -136,6 +136,13 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
   ) {
     return styleProps.map((styleProp: any, i: any) => {
       const onClick = () => {
+        if (selector.classes.length === 0) {
+          if (selector.tag === 'node') {
+            this.graphStyle.changeAllNodes(styleProp)
+          } else {
+            this.graphStyle.changeAllRels(styleProp)
+          }
+        }
         this.updateStyle(selector, styleProp)
       }
       const style = styleProvider(styleProp, i)
@@ -159,7 +166,7 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
     })
   }
 
-  colorPicker(selector: any, styleForLabel: any, isNode: boolean) {
+  colorPicker(selector: Selector, styleForLabel: any, isNode: boolean) {
     const simpleColorPicker = isNode ? (
       <PhotoshopColorModal
         currentColor={{
@@ -169,6 +176,9 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
             styleForLabel.get('text-color-internal') ?? '#000'
         }}
         onAccept={colors => {
+          if (selector.classes.length === 0) {
+            this.graphStyle.changeAllNodes(colors)
+          }
           this.updateStyle(selector, colors)
         }}
       />
@@ -176,6 +186,9 @@ export class GrassEditorComponent extends Component<GrassEditorProps> {
       <SingleColorModal
         color={styleForLabel.get('color') ?? '#000'}
         onAccept={color => {
+          if (selector.classes.length === 0) {
+            this.graphStyle.changeAllRels({ color })
+          }
           this.updateStyle(selector, { color })
         }}
       />

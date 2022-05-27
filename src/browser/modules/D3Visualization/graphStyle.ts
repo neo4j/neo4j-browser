@@ -377,6 +377,36 @@ export class GraphStyle {
     }
     return rule
   }
+  changeAllNodes = (props: any) => {
+    this.rules
+      .filter(t => t.selector.tag === 'node')
+      .forEach(rule => {
+        rule.props = { ...rule.props, ...props }
+        // delete undefined keys
+        for (const key in rule.props) {
+          if (rule.props.hasOwnProperty(key)) {
+            if (rule.props[key] === undefined) {
+              delete rule.props[key]
+            }
+          }
+        }
+      })
+  }
+  changeAllRels = (props: any) => {
+    this.rules
+      .filter(t => t.selector.tag === 'relationship')
+      .forEach(rule => {
+        rule.props = { ...rule.props, ...props }
+        // delete undefined keys
+        for (const key in rule.props) {
+          if (rule.props.hasOwnProperty(key)) {
+            if (rule.props[key] === undefined) {
+              delete rule.props[key]
+            }
+          }
+        }
+      })
+  }
 
   destroyRule = (rule: StyleRule): void => {
     const idx = this.rules.indexOf(rule)
