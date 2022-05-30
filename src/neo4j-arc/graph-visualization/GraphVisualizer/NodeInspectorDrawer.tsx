@@ -76,7 +76,7 @@ export function NodeInspectorDrawer({
 
   return (
     <StyledNodeInspectorContainer
-      width={!isOpen ? 0 : width}
+      paneWidth={!isOpen ? 0 : width}
       onTransitionEnd={onTransitionEnd}
       shouldAnimate={transitionState !== Open}
     >

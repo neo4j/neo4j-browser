@@ -110,7 +110,7 @@ export const StyledZoomHolder = styled.div<{
   position: ${props => (props.isFullscreen ? 'fixed' : 'absolute')};
   display: flex;
   flex-direction: column;
-  bottom: 0;
+  bottom: 8px;
   right: ${props => props.offset}px;
   border-left: ${props => props.theme.inFrameBorder};
   border-right: ${props => props.theme.inFrameBorder};

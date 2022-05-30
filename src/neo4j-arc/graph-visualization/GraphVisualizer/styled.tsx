@@ -27,29 +27,31 @@ export const StyledFullSizeContainer = styled.div`
   height: 100%;
 `
 export const StyledNodeInspectorContainer = styled.div<{
-  width: number
+  paneWidth: number
   shouldAnimate: boolean
 }>`
   position: absolute;
-  right: 0;
-  top: 3px;
+  right: 8px;
+  top: 8px;
+  bottom: 8px;
   z-index: 1;
-  width: ${props => props.width}px;
+  width: ${props => props.paneWidth}px;
   ${props => props.shouldAnimate && 'transition: 0.2s ease-out;'}
   max-width: 95%;
-  height: 100%;
   background: ${props => props.theme.editorBackground};
   color: ${props => props.theme.primaryText};
   font-family: ${props => props.theme.drawerHeaderFontFamily};
   box-shadow: ${props => props.theme.standardShadow};
+  overflow: hidden;
 `
 export const StyledNodeInspectorTopMenuChevron = styled.div<{
   expanded: boolean
 }>`
+  background-color: #fff;
   cursor: pointer;
   position: absolute;
-  right: 0px;
-  top: 6px;
+  right: 8px;
+  top: 8px;
   z-index: 2;
   width: 32px;
   height: 32px;
@@ -63,7 +65,10 @@ export const StyledNodeInspectorTopMenuChevron = styled.div<{
     `}
 `
 
-export const PaneContainer = styled.div`
+export const PaneContainer = styled.div<{
+  paneWidth: number
+}>`
+  width: ${props => props.paneWidth}px;
   padding: 0 14px;
   height: 100%;
   display: flex;
@@ -83,6 +88,18 @@ export const PaneBody = styled.div`
   display: flex;
   flex-direction: column;
   gap: 14px;
+`
+
+export const PaneBodySectionTitle = styled.span`
+  font-weight: 700;
+`
+
+export const PaneBodySectionSmallText = styled.span`
+  font-size: 0.9rem;
+`
+export const PaneBodySectionHeaderWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
 `
 
 export const PaneTitle = styled.div`
