@@ -260,7 +260,7 @@ export class GraphVisualizer extends Component<
           getAutoCompleteCallback={this.props.getAutoCompleteCallback}
           setGraph={this.props.setGraph}
           offset={
-            (this.state.nodePropertiesExpanded ? this.state.width : 0) + 8
+            (this.state.nodePropertiesExpanded ? this.state.width + 8 : 0) + 8
           }
           wheelZoomInfoMessageEnabled={this.props.wheelZoomInfoMessageEnabled}
           disableWheelZoomInfoMessage={this.props.disableWheelZoomInfoMessage}

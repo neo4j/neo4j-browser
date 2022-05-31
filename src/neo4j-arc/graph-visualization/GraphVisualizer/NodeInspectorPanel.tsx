@@ -105,7 +105,7 @@ export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
             resizeHandles={['w']}
             onResize={(_e, { size }) => setWidth(size.width)}
           >
-            <PaneContainer>
+            <PaneContainer paneWidth={width}>
               {shownEl.type === 'node' || shownEl.type === 'relationship' ? (
                 <DetailsPane
                   vizItem={shownEl}
