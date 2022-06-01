@@ -17,29 +17,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import { QueryResult } from 'neo4j-driver'
 import configureMockStore, { MockStoreEnhanced } from 'redux-mock-store'
 import { createEpicMiddleware } from 'redux-observable'
 import { createBus, createReduxMiddleware } from 'suber'
+import { v4 as uuid } from 'uuid'
 
 import { BoltConnectionError } from '../../services/exceptions'
-import * as commands from './commandsDuck'
-import helper from 'services/commandInterpreterHelper'
-import { update as updateQueryResult } from '../requests/requestsDuck'
-import { send } from 'shared/modules/requests/requestsDuck'
-import * as frames from 'shared/modules/frames/framesDuck'
-import { disconnectAction } from 'shared/modules/connections/connectionsDuck'
-import {
-  update as updateParams,
-  replace as replaceParams
-} from 'shared/modules/params/paramsDuck'
-import {
-  update as updateSettings,
-  replace as replaceSettings
-} from 'shared/modules/settings/settingsDuck'
-import { cleanCommand, getInterpreter } from 'services/commandUtils'
-import bolt from 'services/bolt/bolt'
 import { fetchMetaData } from '../dbMeta/actions'
+import { update as updateQueryResult } from '../requests/requestsDuck'
+import * as commands from './commandsDuck'
+import bolt from 'services/bolt/bolt'
+import helper from 'services/commandInterpreterHelper'
+import { cleanCommand, getInterpreter } from 'services/commandUtils'
+import { disconnectAction } from 'shared/modules/connections/connectionsDuck'
+import * as frames from 'shared/modules/frames/framesDuck'
+import {
+  replace as replaceParams,
+  update as updateParams
+} from 'shared/modules/params/paramsDuck'
+import { send } from 'shared/modules/requests/requestsDuck'
+import {
+  replace as replaceSettings,
+  update as updateSettings
+} from 'shared/modules/settings/settingsDuck'
+
+jest.mock('shared/services/bolt/boltWorker')
 
 const originalRoutedWriteTransaction = bolt.routedWriteTransaction
 
@@ -173,10 +176,13 @@ describe('commandsDuck', () => {
       const action = commands.executeSingleCommand(cmdString, {
         id
       })
-      bolt.routedWriteTransaction = jest.fn(() =>
-        Promise.resolve({
-          records: [{ get: (): number => 2 }]
-        })
+      bolt.routedWriteTransaction = jest.fn(
+        (_input, _parameters, { requestId }) => [
+          requestId ?? uuid(),
+          Promise.resolve({
+            records: [{ get: (): number => 2 }]
+          } as unknown as QueryResult)
+        ]
       )
 
       bus.take('frames/ADD', () => {
@@ -273,7 +279,7 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          updateSettings({ x: 2 }),
+          updateSettings({ x: 2 } as any),
           frames.add({
             ...action,
             type: 'pre',
@@ -302,7 +308,7 @@ describe('commandsDuck', () => {
         // Then
         expect(store.getActions()).toEqual([
           action,
-          replaceSettings({ x: 2, y: 3 }),
+          replaceSettings({ x: 2, y: 3 } as any),
           frames.add({
             ...action,
             type: 'pre',

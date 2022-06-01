@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ErrorsStatusbar displays error 1`] = `
+<div>
+  <div
+    class="sc-fFeiMQ kjEgmO"
+  >
+    <span
+      class="sc-jeraig hOFtwq"
+      title="Test.Error: Test error description"
+    >
+      <i
+        class="sc-hBUSln jKTDNL fa fa-exclamation-triangle"
+        style="line-height: inherit;"
+      />
+       
+      Test.Error: Test error description
+    </span>
+  </div>
+</div>
+`;
+
+exports[`ErrorsStatusbar displays nothing if no error 1`] = `<div />`;

@@ -17,17 +17,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React, { useEffect } from 'react'
-import Directives from 'browser-components/Directives'
+
 import {
-  GuideNavContainer,
   GuideNavButton,
+  GuideNavContainer,
+  GuideProgressContainer,
   GuideUl,
-  StyledCarousel,
-  GuideProgressContainer
+  StyledCarousel
 } from '../Sidebar/styled'
 import Pagination from './Pagination'
+import Directives from 'browser-components/Directives'
 
 type GuideCarouselProps = {
   slides: JSX.Element[]

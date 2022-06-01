@@ -17,30 +17,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React from 'react'
-import { Action, Dispatch } from 'redux'
-import { connect } from 'react-redux'
 import { useMutation } from '@apollo/client'
-import { getProjectId } from 'shared/modules/app/appDuck'
+import React from 'react'
+import { connect } from 'react-redux'
+import { Dispatch } from 'redux'
 
-import { Drawer, DrawerHeader } from 'browser-components/drawer/drawer-styled'
 import ProjectFilesScripts, {
   ProjectFilesError
 } from '../../components/ProjectFiles/ProjectsFilesScripts'
-import NewSavedScript from './NewSavedScript'
+import { ADD_PROJECT_FILE } from '../../components/ProjectFiles/projectFilesConstants'
 import {
   getProjectFileDefaultFileName,
   updateCacheAddProjectFile
 } from '../../components/ProjectFiles/projectFilesUtils'
-import { ADD_PROJECT_FILE } from '../../components/ProjectFiles/projectFilesConstants'
+import NewSavedScript from './NewSavedScript'
+import { Drawer, DrawerHeader } from 'browser-components/drawer/drawer-styled'
+import { CYPHER_FILE_EXTENSION } from 'services/exporting/favoriteUtils'
+import { getProjectId } from 'shared/modules/app/appDuck'
 import {
   SetDraftScriptAction,
   setDraftScript
 } from 'shared/modules/sidebar/sidebarDuck'
-import { CYPHER_FILE_EXTENSION } from 'services/exporting/favoriteUtils'
+import { GlobalState } from 'shared/globalState'
 
 interface ProjectFilesProps {
-  projectId: string
+  projectId: string | undefined
   scriptDraft: string
   resetDraft: () => void
 }
@@ -53,22 +54,24 @@ const ProjectFiles = ({
   const [addFile, { error: apolloError }] = useMutation(ADD_PROJECT_FILE)
 
   function save(inputedFileName: string) {
-    const cypherFileExt = new RegExp(`${CYPHER_FILE_EXTENSION}$`)
-    const fileName = inputedFileName.replace(cypherFileExt, '')
+    if (projectId) {
+      const cypherFileExt = new RegExp(`${CYPHER_FILE_EXTENSION}$`)
+      const fileName = inputedFileName.replace(cypherFileExt, '')
 
-    addFile({
-      variables: {
-        projectId,
-        fileUpload: new File(
-          [scriptDraft],
-          `${fileName}${CYPHER_FILE_EXTENSION}`
-        ) // no destination; only saving to Project root at this point
-      },
-      update: (cache, result) =>
-        updateCacheAddProjectFile(cache, result, projectId)
-    })
-      .then(resetDraft)
-      .catch(e => e)
+      addFile({
+        variables: {
+          projectId,
+          fileUpload: new File(
+            [scriptDraft],
+            `${fileName}${CYPHER_FILE_EXTENSION}`
+          ) // no destination; only saving to Project root at this point
+        },
+        update: (cache, result) =>
+          updateCacheAddProjectFile(cache, result, projectId)
+      })
+        .then(resetDraft)
+        .catch(e => e)
+    }
   }
 
   return (
@@ -90,7 +93,7 @@ const ProjectFiles = ({
   )
 }
 
-const mapStateToProps = (state: any) => ({
+const mapStateToProps = (state: GlobalState) => ({
   projectId: getProjectId(state)
 })
 

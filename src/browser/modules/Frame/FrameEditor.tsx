@@ -17,49 +17,56 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { withBus } from 'react-suber'
+import { Action, Dispatch } from 'redux'
+import { Bus } from 'suber'
 
+import { isMac } from 'neo4j-arc/common'
+import {
+  SaveFavoriteIcon,
+  RunIcon,
+  StopIcon
+} from 'browser-components/icons/LegacyIcons'
+
+import { MAIN_WRAPPER_DOM_ID } from '../App/App'
+import { EditorContainer, Header } from '../Editor/styled'
+import { DottedLineHover } from '../Stream/styled'
+import ExportButton, { ExportItem } from './ExportButton'
+import {
+  StyledFrameCommand,
+  StyledFrameEditorContainer,
+  StyledFrameTitlebarButtonSection
+} from './styled'
+import { FrameButton, StyledEditorButton } from 'browser-components/buttons'
+import { GlobalState } from 'shared/globalState'
 import * as app from 'shared/modules/app/appDuck'
 import * as commands from 'shared/modules/commands/commandsDuck'
-import * as sidebar from 'shared/modules/sidebar/sidebarDuck'
+import { applyParamGraphTypes } from 'shared/modules/commands/helpers/cypher'
+import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import * as editor from 'shared/modules/editor/editorDuck'
-import {
-  cancel as cancelRequest,
-  getRequest,
-  BrowserRequest,
-  REQUEST_STATUS_PENDING
-} from 'shared/modules/requests/requestsDuck'
+import { addFavorite } from 'shared/modules/favorites/favoritesDuck'
 import {
   Frame,
   TRACK_SAVE_AS_PROJECT_FILE
 } from 'shared/modules/frames/framesDuck'
-import { EditorButton, FrameButton } from 'browser-components/buttons'
-import { SaveFavoriteIcon } from 'browser-components/icons/Icons'
-import { DottedLineHover } from '../Stream/styled'
+import { getParams } from 'shared/modules/params/paramsDuck'
 import {
-  StyledFrameEditorContainer,
-  StyledFrameTitlebarButtonSection,
-  StyledFrameCommand
-} from './styled'
-import Monaco, { MonacoHandles } from '../Editor/Monaco'
-import { Bus } from 'suber'
-import { addFavorite } from 'shared/modules/favorites/favoritesDuck'
-import { isMac } from '../App/keyboardShortcuts'
-import { MAIN_WRAPPER_DOM_ID } from '../App/App'
-import stopIcon from 'icons/stop-icon.svg'
-import runIcon from 'icons/run-icon.svg'
-import { EditorContainer, Header } from '../Editor/styled'
-import ExportButton, { ExportItem } from './ExportButton'
-import { GlobalState } from 'shared/globalState'
-import { Action, Dispatch } from 'redux'
+  BrowserRequest,
+  REQUEST_STATUS_PENDING,
+  cancel as cancelRequest,
+  getRequest
+} from 'shared/modules/requests/requestsDuck'
 import {
   codeFontLigatures,
   shouldEnableMultiStatementMode
 } from 'shared/modules/settings/settingsDuck'
-import { getParams } from 'shared/modules/params/paramsDuck'
+import * as sidebar from 'shared/modules/sidebar/sidebarDuck'
+import { base, stopIconColor } from 'browser-styles/themes'
+import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
+import { QueryResult } from 'neo4j-driver'
+import { CypherEditor } from 'neo4j-arc/cypher-language-support'
 
 type FrameEditorBaseProps = {
   frame: Frame
@@ -104,7 +111,7 @@ function FrameEditor({
     // makes sure the frame is updated as links in frame is followed
     editorRef.current?.setValue(frame.cmd)
   }, [frame.cmd])
-  const editorRef = useRef<MonacoHandles>(null)
+  const editorRef = useRef<CypherEditor>(null)
 
   function run(cmd: string) {
     reRun(frame, cmd)
@@ -177,20 +184,37 @@ function FrameEditor({
       <Header>
         {renderEditor ? (
           <EditorContainer onClick={onPreviewClick} data-testid="frameCommand">
-            <Monaco
-              history={history}
-              useDb={frame.useDb}
+            <CypherEditor
               enableMultiStatementMode={enableMultiStatementMode}
               fontLigatures={codeFontLigatures}
+              history={history}
               id={`editor-${frame.id}`}
-              bus={bus}
-              params={params}
+              isFullscreen={false}
               onChange={setEditorValue}
               onExecute={run}
-              value={editorValue}
               ref={editorRef}
-              isFullscreen={false}
               toggleFullscreen={fullscreenToggle}
+              useDb={frame.useDb}
+              value={editorValue}
+              sendCypherQuery={(text: string) =>
+                new Promise((res, rej) =>
+                  bus.self(
+                    CYPHER_REQUEST,
+                    {
+                      query: text,
+                      queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
+                      params: applyParamGraphTypes(params)
+                    },
+                    (response: { result: QueryResult; success?: boolean }) => {
+                      if (response.success === true) {
+                        res(response.result)
+                      } else {
+                        rej(response.result)
+                      }
+                    }
+                  )
+                )
+              }
             />
           </EditorContainer>
         ) : (
@@ -205,17 +229,23 @@ function FrameEditor({
             </DottedLineHover>
           </StyledFrameCommand>
         )}
-        <EditorButton
-          data-testid="rerunFrameButton"
-          onClick={() =>
-            request?.status === REQUEST_STATUS_PENDING
-              ? cancelQuery(frame.requestId)
-              : run(editorValue)
-          }
-          title="Rerun"
-          icon={request?.status === REQUEST_STATUS_PENDING ? stopIcon : runIcon}
-          width={16}
-        />
+        {request?.status === REQUEST_STATUS_PENDING ? (
+          <StyledEditorButton
+            data-testid="stopRunFrameButton"
+            onClick={() => cancelQuery(frame.requestId)}
+            color={stopIconColor}
+          >
+            <StopIcon width={16} title={'Stop'} />
+          </StyledEditorButton>
+        ) : (
+          <StyledEditorButton
+            data-testid="rerunFrameButton"
+            onClick={() => run(editorValue)}
+            color={base.primary}
+          >
+            <RunIcon width={16} title={'Rerun'} />
+          </StyledEditorButton>
+        )}
       </Header>
       <StyledFrameTitlebarButtonSection>
         <FrameButton

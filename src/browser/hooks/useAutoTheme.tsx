@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { useEffect, useState } from 'react'
 
-import { useState, useEffect } from 'react'
 import useDetectColorScheme from './useDetectColorScheme'
 
 export default function useAutoTheme(defaultTheme = 'light') {

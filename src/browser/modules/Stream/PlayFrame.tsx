@@ -17,35 +17,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React, { useContext, useEffect, useState } from 'react'
+import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
-import { fetchGuideFromAllowlistAction } from 'shared/modules/commands/commandsDuck'
+import { ThemeContext } from 'styled-components'
+import { Bus } from 'suber'
 
+import {
+  StackNextIcon,
+  StackPreviousIcon
+} from 'browser-components/icons/LegacyIcons'
+
+import docs, { DocItem, isPlayChapter } from '../../documentation'
 import Docs from '../Docs/Docs'
-import docs, { isPlayChapter } from '../../documentation'
-import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
+import { splitMdSlides } from '../Docs/MD/splitMd'
 import FrameAside from '../Frame/FrameAside'
+import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
+import { ErrorsView } from './CypherFrame/ErrorsView/ErrorsView'
+import { AuraPromoLink, PromotionContainer } from './styled'
+import { CarouselButton } from 'browser-components/buttons'
 import {
   splitStringOnFirst,
   transformCommandToHelpTopic
 } from 'services/commandUtils'
-import { ErrorsView } from './CypherFrame/ErrorsView'
-import { CarouselButton } from 'browser-components/buttons/index'
-import {
-  StackPreviousIcon,
-  StackNextIcon
-} from 'browser-components/icons/Icons'
-import { splitMdxSlides } from '../Docs/MDX/splitMdx'
-import { LAST_GUIDE_SLIDE } from 'shared/modules/udc/udcDuck'
-import { connect } from 'react-redux'
 import { GlobalState } from 'shared/globalState'
-import { inCloudEnv, inDesktop } from 'shared/modules/app/appDuck'
-import { getEdition, isEnterprise } from 'shared/modules/dbMeta/state'
-import { PromotionContainer, AuraPromoLink } from './styled'
-import { ThemeContext } from 'styled-components'
-import { DARK_THEME } from 'shared/modules/settings/settingsDuck'
+import { inDesktop } from 'shared/modules/app/appDuck'
+import { fetchGuideFromAllowlistAction } from 'shared/modules/commands/commandsDuck'
 import { isConnectedAuraHost } from 'shared/modules/connections/connectionsDuck'
+import { getEdition, isEnterprise } from 'shared/modules/dbMeta/state'
+import { DARK_THEME } from 'shared/modules/settings/settingsDuck'
+import { LAST_GUIDE_SLIDE } from 'shared/modules/udc/udcDuck'
 
 const AuraPromotion = () => {
   const theme = useContext(ThemeContext)
@@ -81,13 +82,20 @@ const checkHtmlForSlides = (html: any) => {
   return !!slides.length
 }
 
+type PlayFrameProps = {
+  stack: any
+  bus: Bus
+  showPromotion: boolean
+  isFullscreen: boolean
+  isCollapsed: boolean
+}
 export function PlayFrame({
   stack,
   bus,
   showPromotion,
   isFullscreen,
   isCollapsed
-}: any): JSX.Element {
+}: PlayFrameProps): JSX.Element {
   const [stackIndex, setStackIndex] = useState(0)
   const [atSlideStart, setAtSlideStart] = useState<boolean | null>(null)
   const [atSlideEnd, setAtSlideEnd] = useState<boolean | null>(null)
@@ -101,18 +109,20 @@ export function PlayFrame({
   }
 
   useEffect(() => {
-    stackIndex !== 0 && atSlideEnd && bus && bus.send(LAST_GUIDE_SLIDE)
+    stackIndex !== 0 &&
+      atSlideEnd &&
+      bus &&
+      bus.send(LAST_GUIDE_SLIDE, undefined)
   }, [stackIndex, bus, atSlideEnd])
 
   useEffect(() => {
     let stillMounted = true
     async function generate() {
-      const shouldUseSlidePointer = initialPlay
       const { guide, aside, hasCarousel, isRemote } = await generateContent(
         currentFrame,
         bus,
         onSlide,
-        shouldUseSlidePointer,
+        initialPlay,
         showPromotion
       )
       if (stillMounted) {
@@ -185,13 +195,19 @@ export function PlayFrame({
   )
 }
 
+type Content = {
+  guide: JSX.Element
+  hasCarousel?: boolean
+  isRemote?: boolean
+  aside?: JSX.Element | null
+}
 function generateContent(
   stackFrame: any,
-  bus: any,
+  bus: Bus,
   onSlide: any,
-  shouldUseSlidePointer: any,
+  shouldUseSlidePointer: boolean,
   showPromotion = false
-): any {
+): Content | Promise<Content> {
   // Not found
   if (stackFrame.response && stackFrame.response.status === 404) {
     return unfound(stackFrame, chapters.unfound, onSlide)
@@ -207,13 +223,13 @@ function generateContent(
           <Docs
             initialSlide={stackFrame.initialSlide || 1}
             lastUpdate={stackFrame.ts}
-            mdx={stackFrame.result}
+            md={stackFrame.result}
             onSlide={onSlide}
             originFrameId={stackFrame.id}
             withDirectives
           />
         ),
-        hasCarousel: splitMdxSlides(stackFrame.result).length > 1,
+        hasCarousel: splitMdSlides(stackFrame.result).length > 1,
         isRemote: true
       }
     }
@@ -245,7 +261,6 @@ function generateContent(
               stackFrame.response.status,
             code: 'Remote guide error'
           }}
-          onSlide={onSlide}
         />
       )
     }
@@ -260,7 +275,6 @@ function generateContent(
             message: stackFrame.error.error,
             code: 'Remote guide error'
           }}
-          onSlide={onSlide}
         />
       )
     }
@@ -306,7 +320,7 @@ function generateContent(
     }
   }
 
-  // Check allowlisted remote URLs for name matches
+  // Check allow-listed remote URLs for name matches
   if (bus) {
     const topicInput = (splitStringOnFirst(stackFrame.cmd, ' ')[1] || '').trim()
     const action = fetchGuideFromAllowlistAction(topicInput)
@@ -340,9 +354,9 @@ function generateContent(
 
 const unfound = (
   frame: any,
-  { content, title, subtitle }: any,
+  { content, title, subtitle }: DocItem,
   onSlide: any
-) => {
+): Content => {
   return {
     guide: (
       <Docs

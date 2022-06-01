@@ -17,15 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React from 'react'
-import Centered from 'browser-components/Centered'
+
+import { SpinnerIcon } from 'browser-components/icons/LegacyIcons'
+
 import { SpinnerContainer, StyledBodyMessage } from '../styled'
-import { SpinnerIcon } from 'browser-components/icons/Icons'
+import Centered from 'browser-components/Centered'
 import {
-  Status,
   REQUEST_STATUS_CANCELED,
-  REQUEST_STATUS_CANCELING
+  REQUEST_STATUS_CANCELING,
+  Status
 } from 'shared/modules/requests/requestsDuck'
 
 interface CancelViewProps {

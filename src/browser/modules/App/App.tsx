@@ -17,82 +17,84 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import { editor } from 'monaco-editor'
+import { setEditorTheme } from 'neo4j-arc/cypher-language-support'
 import React, { useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { ThemeProvider } from 'styled-components'
-import * as themes from 'browser/styles/themes'
-import {
-  getTheme,
-  getBrowserSyncConfig,
-  codeFontLigatures,
-  LIGHT_THEME
-} from 'shared/modules/settings/settingsDuck'
-import { utilizeBrowserSync } from 'shared/modules/features/featuresDuck'
-import { getOpenDrawer, open } from 'shared/modules/sidebar/sidebarDuck'
-import { getErrorMessage } from 'shared/modules/commands/commandsDuck'
-import {
-  findDatabaseByNameOrAlias,
-  shouldAllowOutgoingConnections
-} from 'shared/modules/dbMeta/state'
-import {
-  getActiveConnection,
-  getConnectionState,
-  getLastConnectionUpdate,
-  getActiveConnectionData,
-  isConnected,
-  getConnectionData,
-  INITIAL_SWITCH_CONNECTION_FAILED,
-  SWITCH_CONNECTION_FAILED,
-  SWITCH_CONNECTION,
-  SILENT_DISCONNECT,
-  getUseDb
-} from 'shared/modules/connections/connectionsDuck'
-import { toggle } from 'shared/modules/sidebar/sidebarDuck'
-import {
-  CONNECTION_ID,
-  INJECTED_DISCOVERY
-} from 'shared/modules/discovery/discoveryDuck'
-import {
-  StyledWrapper,
-  StyledApp,
-  StyledBody,
-  StyledMainWrapper
-} from './styled'
-import Main from '../Main/Main'
-import Sidebar from '../Sidebar/Sidebar'
-import UserInteraction from '../UserInteraction'
+
 import DocTitle from '../DocTitle'
 import asTitleString from '../DocTitle/titleStringBuilder'
-import Segment, { MetricsData } from '../Segment'
-import { CannyLoader } from 'browser-services/canny'
-
-import BrowserSyncInit from '../Sync/BrowserSyncInit'
-import { getMetadata, getUserAuthStatus } from 'shared/modules/sync/syncDuck'
-import ErrorBoundary from 'browser-components/ErrorBoundary'
-import { getExperimentalFeatures } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
 import FeatureToggleProvider from '../FeatureToggle/FeatureToggleProvider'
-import { inWebEnv, URL_ARGUMENTS_CHANGE } from 'shared/modules/app/appDuck'
-import useDerivedTheme from 'browser-hooks/useDerivedTheme'
+import Main from '../Main/Main'
+import Segment, { MetricsData } from '../Segment'
+import Sidebar from '../Sidebar/Sidebar'
+import BrowserSyncInit from '../Sync/BrowserSyncInit'
+import UserInteraction from '../UserInteraction'
+import PerformanceOverlay from './PerformanceOverlay'
+import { useKeyboardShortcuts } from './keyboardShortcuts'
+import {
+  StyledApp,
+  StyledBody,
+  StyledMainWrapper,
+  StyledWrapper
+} from './styled'
+import ErrorBoundary from 'browser-components/ErrorBoundary'
 import FileDrop from 'browser-components/FileDrop/FileDrop'
 import DesktopApi from 'browser-components/desktop-api/desktop-api'
 import {
   buildConnectionCreds,
   getDesktopTheme
 } from 'browser-components/desktop-api/desktop-api.handlers'
+import useDerivedTheme from 'browser-hooks/useDerivedTheme'
+import { CannyLoader } from 'browser-services/canny'
+import * as themes from 'browser/styles/themes'
+import { version } from 'project-root/package.json'
+import { isRunningE2ETest } from 'services/utils'
+import { GlobalState } from 'shared/globalState'
+import { URL_ARGUMENTS_CHANGE, inWebEnv } from 'shared/modules/app/appDuck'
+import { getErrorMessage } from 'shared/modules/commands/commandsDuck'
 import {
-  getConsentBannerShownCount,
+  INITIAL_SWITCH_CONNECTION_FAILED,
+  SILENT_DISCONNECT,
+  SWITCH_CONNECTION,
+  SWITCH_CONNECTION_FAILED,
+  getActiveConnection,
+  getActiveConnectionData,
+  getConnectionData,
+  getConnectionState,
+  getLastConnectionUpdate,
+  getUseDb,
+  isConnected,
+  isConnectedAuraHost
+} from 'shared/modules/connections/connectionsDuck'
+import {
+  findDatabaseByNameOrAlias,
+  getEdition,
+  isServerConfigDone,
+  shouldAllowOutgoingConnections
+} from 'shared/modules/dbMeta/state'
+import {
+  CONNECTION_ID,
+  INJECTED_DISCOVERY
+} from 'shared/modules/discovery/discoveryDuck'
+import { getExperimentalFeatures } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
+import { utilizeBrowserSync } from 'shared/modules/features/featuresDuck'
+import {
+  LIGHT_THEME,
+  codeFontLigatures,
+  getBrowserSyncConfig,
+  getTheme
+} from 'shared/modules/settings/settingsDuck'
+import { getOpenDrawer, open } from 'shared/modules/sidebar/sidebarDuck'
+import { toggle } from 'shared/modules/sidebar/sidebarDuck'
+import { getMetadata, getUserAuthStatus } from 'shared/modules/sync/syncDuck'
+import {
   METRICS_EVENT,
+  getConsentBannerShownCount,
   udcInit,
   updateUdcData
 } from 'shared/modules/udc/udcDuck'
-import { useKeyboardShortcuts } from './keyboardShortcuts'
-import PerformanceOverlay from './PerformanceOverlay'
-import { isRunningE2ETest } from 'services/utils'
-import { version } from 'project-root/package.json'
-import { GlobalState } from 'shared/globalState'
 import { getTelemetrySettings } from 'shared/utils/selectors'
 import Modal from 'react-modal'
 export const MAIN_WRAPPER_DOM_ID = 'MAIN_WRAPPER_DOM_ID'
@@ -109,7 +111,7 @@ export function App(props: any) {
 
   // update cypher editor theme
   useEffect(() => {
-    editor.setTheme(derivedTheme)
+    setEditorTheme(derivedTheme)
     if (Modal.defaultStyles.overlay) {
       if (derivedTheme?.toLowerCase() === 'dark') {
         Modal.defaultStyles.overlay.backgroundColor = 'rgba(0, 0, 0, 0.4)'
@@ -133,6 +135,8 @@ export function App(props: any) {
           if (!isRunningE2ETest() && props.telemetrySettings.allowUserStats) {
             const data = {
               browserVersion: version,
+              neo4jEdition: props.edition,
+              connectedTo: props.connectedTo,
               ...originalData
             }
             eventMetricsCallback &&
@@ -324,7 +328,13 @@ const mapStateToProps = (state: GlobalState) => {
     useDb,
     isDatabaseUnavailable,
     telemetrySettings: getTelemetrySettings(state),
-    consentBannerShownCount: getConsentBannerShownCount(state)
+    consentBannerShownCount: getConsentBannerShownCount(state),
+    edition: isServerConfigDone(state) ? getEdition(state) : 'PENDING',
+    connectedTo: isConnected(state)
+      ? isConnectedAuraHost(state)
+        ? 'AURA HOST'
+        : 'NON-AURA HOST'
+      : 'NOT CONNECTED'
   }
 }
 type DesktopTrackingSettings = {

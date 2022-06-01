@@ -29,8 +29,14 @@
       "browser-hooks/*": ["browser/hooks/*"],
       "browser-styles/*": ["browser/styles/*"],
       "project-root/*": ["../*"],
+      "neo4j-arc/graph-visualization": ["neo4j-arc/graph-visualization"],
+      "neo4j-arc/common": ["neo4j-arc/common"],
+      "neo4j-arc/cypher-language-support": [
+        "neo4j-arc/cypher-language-support"
+      ],
       "icons/*": ["browser/icons/*"]
     }
   },
-  "include": ["./src/**/*"]
+  "include": ["./src/**/*"],
+  "exclude": ["./src/neo4j-arc/dist*"]
 }

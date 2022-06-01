@@ -21,10 +21,8 @@
 /* global Cypress, cy, before */
 
 describe('Guide command', () => {
-  before(function() {
-    cy.visit(Cypress.config('url'))
-      .title()
-      .should('include', 'Neo4j Browser')
+  before(function () {
+    cy.visit(Cypress.config('url')).title().should('include', 'Neo4j Browser')
     cy.wait(3000)
   })
 
@@ -44,9 +42,7 @@ describe('Guide command', () => {
     cy.executeCommand(':clear')
     // Open a guide from the sidebar
     cy.get('[data-testid=navigationGuides]').click()
-    cy.get('[data-testid="guidesDrawer"]')
-      .contains(':guide cypher')
-      .click()
+    cy.get('[data-testid="guidesDrawer"]').contains(':guide cypher').click()
 
     // Can progress slide
     cy.get('[data-testid=guideNextSlide]').click()
@@ -103,9 +99,7 @@ describe('Guide command', () => {
     cy.get('[data-testid="guidesDrawer"]').contains('Remote Guides')
 
     // Can display the remote guide after clicking the item
-    cy.get('[data-testid="guidesDrawer"]')
-      .contains('Movies Guide')
-      .click()
+    cy.get('[data-testid="guidesDrawer"]').contains('Movies Guide').click()
     cy.get('[data-testid="guidesDrawer"]').should('contain', 'Movies Guide')
     cy.get('[data-testid="guidesDrawer"]').should('contain', 'What is Cypher?')
 
@@ -121,9 +115,7 @@ describe('Guide command', () => {
       cy.get('[data-testid="guidesDrawer"]').contains('Remote Guides')
 
       // Can display the remote guide after clicking the item
-      cy.get('[data-testid="guidesDrawer"]')
-        .contains('Movies Guide')
-        .click()
+      cy.get('[data-testid="guidesDrawer"]').contains('Movies Guide').click()
       cy.get('[data-testid="guidesDrawer"]').should('contain', 'Movies Guide')
       cy.get('[data-testid="guidesDrawer"]').should(
         'contain',
@@ -138,6 +130,8 @@ describe('Guide command', () => {
         .click({ force: true })
       cy.get(`[data-testid="remoteGuide${guideUrl}"]`).should('not.exist')
       cy.get('[data-testid="remoteGuidesTitle"]').should('not.exist')
+      // make sure there's enough time to remove the guide from localstorage (the call is debounced)
+      cy.wait(2000)
 
       // Reload again and confirm the remote guide no longer exists
       cy.reload().then(() => {

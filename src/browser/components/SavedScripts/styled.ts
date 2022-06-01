@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { primaryLightColor } from 'browser-styles/themes'
 
 export const SavedScriptsBody = styled.div`
   padding: 0 18px;
@@ -17,6 +18,7 @@ export const SavedScriptsHeader = styled.h5`
 `
 export const FolderNameWrapper = styled.span`
   margin-left: 5px;
+  line-height: 24px;
 `
 
 export const SavedScriptsListItemMain = styled.div<{
@@ -25,6 +27,7 @@ export const SavedScriptsListItemMain = styled.div<{
   padding: 5px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 
   background-color: ${props =>
     props.isSelected ? props.theme.hoverBackground : 'inherit'};
@@ -32,7 +35,7 @@ export const SavedScriptsListItemMain = styled.div<{
   ${props =>
     props.isSelected
       ? `margin-left: -3px;
-border-left: 3px solid #68BDF4;`
+border-left: 3px solid ${primaryLightColor};`
       : ''};
 
   &:hover {
@@ -104,12 +107,22 @@ export const SavedScriptsButtonWrapper = styled.div`
   min-width: 21px;
 
   > button:not(:last-of-type) {
-    margin-right: 5px;
+    margin-right: 2px;
+  }
+
+  svg {
+    display: inline-block;
+    vertical-align: middle;
   }
 `
 
-export const StyledSavedScriptsButton = styled.button`
-  color: #bcc0c9;
+export const SavedScriptsFolderMenuIconWrapper = styled.div`
+  padding: 0 0.3rem;
+  line-height: 24px;
+`
+
+export const StyledSavedScriptsButton = styled.button<{ color?: string }>`
+  color: ${props => (props.color ? props.color : '#bcc0c9')};
   background: transparent;
   border: none;
   outline: none;
@@ -118,7 +131,7 @@ export const StyledSavedScriptsButton = styled.button`
   cursor: pointer;
 
   &:hover {
-    color: inherit;
+    color: ${props => (props.color ? props.color : 'inherit')};
   }
 `
 

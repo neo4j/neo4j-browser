@@ -17,55 +17,53 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import { debounce } from 'lodash-es'
+import { Success, authLog } from 'neo4j-client-sso'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
-import { debounce } from 'lodash-es'
+
+import ChangePasswordForm from './ChangePasswordForm'
+import ConnectForm from './ConnectForm'
+import ConnectedView from './ConnectedView'
+import { StyledConnectionBody } from './styled'
+import { NATIVE, NO_AUTH, SSO } from 'services/bolt/boltHelpers'
 import {
-  getActiveConnectionData,
-  getActiveConnection,
-  setActiveConnection,
-  updateConnection,
+  generateBoltUrl,
+  getScheme,
+  isNonSupportedRoutingSchemeError,
+  toggleSchemeRouting
+} from 'services/boltscheme.utils'
+import { getAllowedBoltSchemes } from 'shared/modules/app/appDuck'
+import { CLOUD_SCHEMES } from 'shared/modules/app/appDuck'
+import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
+import {
   CONNECT,
   VERIFY_CREDENTIALS,
+  getActiveConnection,
+  getActiveConnectionData,
+  getConnectionData,
   isConnected,
-  getConnectionData
+  setActiveConnection,
+  updateConnection
 } from 'shared/modules/connections/connectionsDuck'
+import { AuthenticationMethod } from 'shared/modules/connections/connectionsDuck'
+import { FORCE_CHANGE_PASSWORD } from 'shared/modules/cypher/cypherDuck'
+import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/state'
+import { CONNECTION_ID } from 'shared/modules/discovery/discoveryDuck'
+import { fetchBrowserDiscoveryDataFromUrl } from 'shared/modules/discovery/discoveryHelpers'
+import { FOCUS } from 'shared/modules/editor/editorDuck'
 import {
   getInitCmd,
   getPlayImplicitInitCommands
 } from 'shared/modules/settings/settingsDuck'
-import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
-import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/state'
-import { FORCE_CHANGE_PASSWORD } from 'shared/modules/cypher/cypherDuck'
-import { NATIVE, NO_AUTH, SSO } from 'services/bolt/boltHelpers'
-
-import ConnectForm from './ConnectForm'
-import ConnectedView from './ConnectedView'
-import ChangePasswordForm from './ChangePasswordForm'
-import { getAllowedBoltSchemes } from 'shared/modules/app/appDuck'
-import { FOCUS } from 'shared/modules/editor/editorDuck'
-import {
-  generateBoltUrl,
-  getScheme,
-  toggleSchemeRouting,
-  isNonSupportedRoutingSchemeError
-} from 'services/boltscheme.utils'
-import { StyledConnectionBody } from './styled'
-import { CONNECTION_ID } from 'shared/modules/discovery/discoveryDuck'
-
-import { isCloudHost } from 'shared/services/utils'
 import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
-import { CLOUD_SCHEMES } from 'shared/modules/app/appDuck'
-import { AuthenticationMethod } from 'shared/modules/connections/connectionsDuck'
 import {
+  boltToHttp,
   stripQueryString,
-  stripScheme,
-  boltToHttp
+  stripScheme
 } from 'shared/services/boltscheme.utils'
-import { fetchBrowserDiscoveryDataFromUrl } from 'shared/modules/discovery/discoveryHelpers'
-import { Success, authLog } from 'neo4j-client-sso'
+import { isCloudHost } from 'shared/services/utils'
 
 type ConnectionFormState = any
 
@@ -148,7 +146,7 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
               Error(
                 `Could not connect with the "${getScheme(
                   this.state.host
-                )}://" scheme to this Neoj server. Automatic retry using the "${getScheme(
+                )}://" scheme to this Neo4j server. Automatic retry using the "${getScheme(
                   url
                 )}://" scheme in a moment...`
               )

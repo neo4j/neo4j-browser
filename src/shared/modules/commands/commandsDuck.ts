@@ -17,23 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import Rx from 'rxjs'
 import { v4 } from 'uuid'
+
+import { CONNECTION_SUCCESS } from '../connections/connectionsDuck'
+import { UPDATE_SETTINGS } from '../dbMeta/constants'
 import {
-  cleanCommand,
-  extractPostConnectCommandsFromServerConfig,
-  buildCommandObject,
-  extractStatementsFromString
-} from 'services/commandUtils'
-import {
-  extractAllowlistFromConfigString,
-  addProtocolsToUrlList,
-  firstSuccessPromise,
-  serialExecution,
-  resolveAllowlistWildcard
-} from 'services/utils'
-import helper from 'services/commandInterpreterHelper'
+  getAvailableSettings,
+  getDefaultRemoteContentHostnameAllowlist,
+  getRemoteContentHostnameAllowlist
+} from '../dbMeta/state'
 import { addHistory } from '../history/historyDuck'
 import {
   getMaxHistory,
@@ -41,13 +34,20 @@ import {
   shouldEnableMultiStatementMode
 } from '../settings/settingsDuck'
 import { fetchRemoteGuideAsync } from './helpers/playAndGuides'
-import { CONNECTION_SUCCESS } from '../connections/connectionsDuck'
-import { UPDATE_SETTINGS } from '../dbMeta/constants'
+import helper from 'services/commandInterpreterHelper'
 import {
-  getAvailableSettings,
-  getRemoteContentHostnameAllowlist,
-  getDefaultRemoteContentHostnameAllowlist
-} from '../dbMeta/state'
+  buildCommandObject,
+  cleanCommand,
+  extractPostConnectCommandsFromServerConfig,
+  extractStatementsFromString
+} from 'services/commandUtils'
+import {
+  addProtocolsToUrlList,
+  extractAllowlistFromConfigString,
+  firstSuccessPromise,
+  resolveAllowlistWildcard,
+  serialExecution
+} from 'services/utils'
 import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
 import { add as addFrame } from 'shared/modules/frames/framesDuck'
 import { update as updateQueryResult } from 'shared/modules/requests/requestsDuck'

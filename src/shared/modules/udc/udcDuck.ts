@@ -17,16 +17,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import { Action } from 'redux'
 import { Epic } from 'redux-observable'
-import { USER_CLEAR } from '../app/appDuck'
-import { GlobalState } from 'shared/globalState'
+import { v4 } from 'uuid'
 
+import { USER_CLEAR } from '../app/appDuck'
+import { CONNECT, CONNECTION_SUCCESS } from '../connections/connectionsDuck'
+import { isBuiltInGuide, isPlayChapter } from 'browser/documentation'
+import { extractStatementsFromString } from 'services/commandUtils'
+import { GlobalState } from 'shared/globalState'
+import { COMMAND_QUEUED } from 'shared/modules/commands/commandsDuck'
 import {
-  TRACK_CANNY_FEATURE_REQUEST,
-  TRACK_CANNY_CHANGELOG
-} from 'shared/modules/sidebar/sidebarDuck'
+  ADD_FAVORITE,
+  LOAD_FAVORITES,
+  REMOVE_FAVORITE,
+  UPDATE_FAVORITE_CONTENT,
+  getFavorites
+} from 'shared/modules/favorites/favoritesDuck'
 import {
   ADD,
   PIN,
@@ -36,27 +43,23 @@ import {
   TRACK_SAVE_AS_PROJECT_FILE,
   UNPIN
 } from 'shared/modules/frames/framesDuck'
-import { COMMAND_QUEUED } from 'shared/modules/commands/commandsDuck'
 import {
-  ADD_FAVORITE,
-  LOAD_FAVORITES,
-  UPDATE_FAVORITE_CONTENT,
-  REMOVE_FAVORITE,
-  getFavorites
-} from 'shared/modules/favorites/favoritesDuck'
-import {
-  getSettings,
+  SettingsState,
   TRACK_OPT_OUT_CRASH_REPORTS,
-  TRACK_OPT_OUT_USER_STATS
+  TRACK_OPT_OUT_USER_STATS,
+  getSettings
 } from 'shared/modules/settings/settingsDuck'
+import {
+  TRACK_CANNY_CHANGELOG,
+  TRACK_CANNY_FEATURE_REQUEST
+} from 'shared/modules/sidebar/sidebarDuck'
 import cmdHelper from 'shared/services/commandInterpreterHelper'
-import { extractStatementsFromString } from 'services/commandUtils'
-import { isBuiltInGuide, isPlayChapter } from 'browser/documentation'
-import { v4 } from 'uuid'
 
 // Action types
 export const NAME = 'udc'
 const UPDATE_DATA = 'udc/UPDATE_DATA'
+export const GENERATE_SET_MISSING_PARAMS_TEMPLATE =
+  'udc/GENERATE_SET_MISSING_PARAMS_TEMPLATE'
 export const METRICS_EVENT = 'udc/METRICS_EVENT'
 export const UDC_STARTUP = 'udc/STARTUP'
 export const LAST_GUIDE_SLIDE = 'udc/LAST_GUIDE_SLIDE'
@@ -182,8 +185,7 @@ export const udcStartupEpic: Epic<Action, GlobalState> = (action$, store) =>
       }
 
       const settings = getSettings(store.getState())
-      const nonSensitiveSettings = [
-        'cmdchar',
+      const nonSensitiveSettings: Array<keyof SettingsState> = [
         'maxHistory',
         'theme',
         'playImplicitInitCommands',
@@ -197,7 +199,6 @@ export const udcStartupEpic: Epic<Action, GlobalState> = (action$, store) =>
         'maxFrames',
         'codeFontLigatures',
         'editorLint',
-        'useCypherThread',
         'enableMultiStatementMode',
         'connectionTimeout'
       ]
@@ -270,6 +271,7 @@ export const trackCommandUsageEpic: Epic<Action, GlobalState> = action$ =>
 
 const actionsOfInterest = [
   ADD_FAVORITE,
+  GENERATE_SET_MISSING_PARAMS_TEMPLATE,
   LAST_GUIDE_SLIDE,
   LOAD_FAVORITES,
   PIN,
@@ -284,7 +286,9 @@ const actionsOfInterest = [
   TRACK_CANNY_FEATURE_REQUEST,
   TRACK_CANNY_CHANGELOG,
   TRACK_OPT_OUT_USER_STATS,
-  TRACK_OPT_OUT_CRASH_REPORTS
+  TRACK_OPT_OUT_CRASH_REPORTS,
+  CONNECT,
+  CONNECTION_SUCCESS
 ]
 export const trackReduxActionsEpic: Epic<Action, GlobalState> = action$ =>
   action$

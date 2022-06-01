@@ -17,25 +17,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React, { useState } from 'react'
 import { useDrag } from 'react-dnd'
-import { useCustomBlur, useNameUpdate } from './hooks'
+
+import { NavIcon } from '../icons/LegacyIcons'
+
 import { RunButton } from './SavedScriptsButton'
+import { useCustomBlur, useNameUpdate } from './hooks'
 import {
+  ContextMenu,
+  ContextMenuContainer,
+  ContextMenuHoverParent,
+  ContextMenuItem,
   SavedScriptsButtonWrapper,
   SavedScriptsInput,
   SavedScriptsListItemDisplayName,
   SavedScriptsListItemMain,
-  ContextMenuHoverParent,
-  ContextMenu,
-  ContextMenuContainer,
-  ContextMenuItem,
   Separator
 } from './styled'
-import { Favorite } from 'shared/modules/favorites/favoritesDuck'
 import { getScriptDisplayName } from './utils'
-import { NavIcon } from 'browser-components/icons/Icons'
+import { Favorite } from 'shared/modules/favorites/favoritesDuck'
 
 interface SavedScriptsListItemProps {
   script: Favorite

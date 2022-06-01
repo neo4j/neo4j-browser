@@ -19,30 +19,31 @@
  */
 import React, { useState } from 'react'
 import { useDrop } from 'react-dnd'
-import { useCustomBlur, useNameUpdate } from './hooks'
 
 import {
-  NavIcon,
   FolderIcon,
+  NavIcon,
   SavedScriptsCollapseMenuIcon,
   SavedScriptsExpandMenuRightIcon
-} from 'browser-components/icons/Icons'
+} from '../icons/LegacyIcons'
 
+import { useCustomBlur, useNameUpdate } from './hooks'
 import {
+  ChildrenContainer,
+  ContextMenu,
+  ContextMenuContainer,
+  ContextMenuHoverParent,
+  ContextMenuItem,
+  FolderNameWrapper,
   SavedScriptsButtonWrapper,
   SavedScriptsFolderHeader,
   SavedScriptsFolderLabel,
   SavedScriptsFolderMain,
-  SavedScriptsInput,
-  ChildrenContainer,
-  FolderNameWrapper,
-  ContextMenuHoverParent,
-  ContextMenu,
-  ContextMenuContainer,
-  ContextMenuItem
+  SavedScriptsFolderMenuIconWrapper,
+  SavedScriptsInput
 } from './styled'
-import { Folder } from 'shared/modules/favorites/foldersDuck'
 import { ExportFormat } from 'services/exporting/favoriteUtils'
+import { Folder } from 'shared/modules/favorites/foldersDuck'
 
 interface SavedScriptsFolderProps {
   folder: Folder
@@ -168,11 +169,13 @@ function SavedScriptsFolder({
               data-testid={`expandFolder-${folder.name}`}
               onClick={() => setExpanded(!expanded)}
             >
-              {expanded ? (
-                <SavedScriptsCollapseMenuIcon />
-              ) : (
-                <SavedScriptsExpandMenuRightIcon />
-              )}
+              <SavedScriptsFolderMenuIconWrapper>
+                {expanded ? (
+                  <SavedScriptsCollapseMenuIcon />
+                ) : (
+                  <SavedScriptsExpandMenuRightIcon />
+                )}
+              </SavedScriptsFolderMenuIconWrapper>
               <FolderIcon />
               <FolderNameWrapper> {folder.name} </FolderNameWrapper>
             </SavedScriptsFolderLabel>

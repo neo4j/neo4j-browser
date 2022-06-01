@@ -17,10 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import { NAME as META_NAME } from '../dbMeta/state'
 import reducer, * as features from './featuresDuck'
 import { canSendTxMetadata } from './versionedFeatures'
-import { NAME as META_NAME } from '../dbMeta/state'
 import { dehydrate } from 'services/duckUtils'
 
 describe('features reducer', () => {
@@ -70,17 +69,6 @@ describe('feature getters', () => {
     expect(features.getAvailableProcedures({ features: nextState })).toContain(
       'foo.bar'
     )
-  })
-  test('should not be a causal cluster', () => {
-    const nextState = reducer(undefined, { type: '' })
-    expect(features.isACausalCluster({ features: nextState })).toBe(false)
-  })
-  test('should be in a causal cluster', () => {
-    const nextState = reducer(
-      { availableProcedures: ['dbms.cluster.overview'] } as any,
-      { type: '' }
-    )
-    expect(features.isACausalCluster({ features: nextState })).toBe(true)
   })
   test('should not be able to assign roles to user', () => {
     const nextState = reducer(undefined, { type: '' })

@@ -18,41 +18,46 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { QueryResult, types } from 'neo4j-driver'
-import WorkPool from 'services/WorkPool'
+
 import { applyGraphTypes } from './boltMappings'
 import {
+  BOLT_CONNECTION_ERROR_MESSAGE,
   CYPHER_ERROR_MESSAGE,
   CYPHER_RESPONSE_MESSAGE,
-  POST_CANCEL_TRANSACTION_MESSAGE,
-  BOLT_CONNECTION_ERROR_MESSAGE
+  POST_CANCEL_TRANSACTION_MESSAGE
 } from './boltWorkerMessages'
+import WorkPool from 'services/WorkPool'
 
 export const setupBoltWorker = (
   boltWorkPool: WorkPool,
   id: string,
-  workFn: any,
+  payload: any,
   onLostConnection: (error: Error) => void = (): void => undefined
-): Promise<unknown> => {
-  const workerPromise = new Promise((resolve, reject) => {
+): Promise<QueryResult> => {
+  const workerPromise = new Promise<QueryResult>((resolve, reject) => {
     const work = boltWorkPool.doWork({
       id,
-      payload: workFn,
-      onmessage: (msg: {
-        data: { type: string; error: Error; result: QueryResult }
-      }) => {
-        if (msg.data.type === BOLT_CONNECTION_ERROR_MESSAGE) {
-          work.finish()
-          onLostConnection(msg.data.error)
-          return reject(msg.data.error)
-        }
-        if (msg.data.type === CYPHER_ERROR_MESSAGE) {
-          work.finish()
-          reject(msg.data.error)
-        } else if (msg.data.type === CYPHER_RESPONSE_MESSAGE) {
-          work.finish()
-          resolve(addTypesAsField(msg.data.result))
-        } else if (msg.data.type === POST_CANCEL_TRANSACTION_MESSAGE) {
-          work.finish()
+      payload,
+      onmessage: ({ data }) => {
+        switch (data.type) {
+          case BOLT_CONNECTION_ERROR_MESSAGE:
+            boltWorkPool.finishWork(work.id)
+            onLostConnection(data.error)
+            reject(data.error)
+            break
+          case CYPHER_ERROR_MESSAGE:
+            boltWorkPool.finishWork(work.id)
+            reject(data.error)
+            break
+          case CYPHER_RESPONSE_MESSAGE:
+            boltWorkPool.finishWork(work.id)
+            resolve(addTypesAsField(data.result))
+            break
+          case POST_CANCEL_TRANSACTION_MESSAGE:
+            boltWorkPool.finishWork(work.id)
+            break
+          default:
+            return
         }
       }
     })

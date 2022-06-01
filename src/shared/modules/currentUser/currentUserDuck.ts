@@ -17,9 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import { DB_META_DONE, SYSTEM_DB } from '../dbMeta/constants'
+import {
+  FIRST_MULTI_DB_SUPPORT,
+  FIRST_NO_MULTI_DB_SUPPORT,
+  canSendTxMetadata,
+  getShowCurrentUserProcedure
+} from '../features/versionedFeatures'
 import bolt from 'services/bolt/bolt'
-import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 import { APP_START } from 'shared/modules/app/appDuck'
 import {
   CONNECTION_SUCCESS,
@@ -27,13 +32,6 @@ import {
   getAuthEnabled
 } from 'shared/modules/connections/connectionsDuck'
 import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
-import {
-  canSendTxMetadata,
-  getShowCurrentUserProcedure,
-  FIRST_MULTI_DB_SUPPORT,
-  FIRST_NO_MULTI_DB_SUPPORT
-} from '../features/versionedFeatures'
-import { DB_META_DONE, SYSTEM_DB } from '../dbMeta/constants'
 
 export const NAME = 'user'
 export const UPDATE_CURRENT_USER = `${NAME}/UPDATE_CURRENT_USER`
@@ -106,7 +104,6 @@ export const getCurrentUserEpic = (some$: any, store: any) =>
             ),
             {},
             {
-              useCypherThread: shouldUseCypherThread(store.getState()),
               ...getBackgroundTxMetadata({
                 hasServerSupport: canSendTxMetadata(store.getState())
               }),

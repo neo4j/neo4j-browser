@@ -17,14 +17,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { palette as needlePalette } from '@neo4j-ndl/base/lib/tokens/js/tokens'
+import { baseArcTheme } from 'neo4j-arc/common'
 
 import {
+  DARK_THEME,
   LIGHT_THEME,
-  OUTLINE_THEME,
-  DARK_THEME
+  OUTLINE_THEME
 } from 'shared/modules/settings/settingsDuck'
 
+// Currently hard code values for svgs, to be replaced with proper theme colors from NDL
+export const stopIconColor = '#FD766E'
+export const primaryLightColor = '#68BDF4'
+
+// These and colors in dark theme from light palette are to be translated to corresponding
+// version in dark palette when available
+const NDLColors = {
+  neutral: {
+    '70': {
+      opacity50: 'rgb(113, 119, 128, 0.5)',
+      opacity60: 'rgb(113, 119, 128, 0.6)'
+    }
+  }
+}
+
 export const base = {
+  ...baseArcTheme,
   name: 'base',
   // Text colors
   primaryText: '#333',
@@ -64,6 +82,7 @@ export const base = {
   streamlineFontFamily: 'streamline',
   editorFont:
     '"Fira Code", "Monaco", "Lucida Console", Courier, monospace !important;',
+  codeBlockFont: '"Fira Code", "Monaco", "Lucida Console", Courier, monospace',
 
   // Shadows
   standardShadow:
@@ -104,11 +123,25 @@ export const base = {
   frameSidebarBackground: '#FFF',
   frameTitlebarText: '#717172',
   frameControlButtonTextColor: '#485662',
-  frameButtonTextColor: '#0C1A25',
-  frameButtonHoverBackground: '#B9C3CF',
+  frameButtonTextColorLegacy: '#0C1A25',
+  frameButtonTextColor: needlePalette.light.neutral.text.weaker,
+  frameButtonHoverBackground: needlePalette.light.neutral.hover,
+  frameButtonActiveBackground: needlePalette.light.neutral.pressed,
+  frameNodePropertiesPanelIconTextColor: '#717172',
   streamBackgroundColor: 'rgba(215, 229, 241, 0.7)',
   frameBackground: '#F9FCFF',
-  accordionContentBackground: 'white'
+  accordionContentBackground: 'white',
+  currentEditIconColor: '#6B6B6B',
+
+  // Info message
+  infoBackground: needlePalette.light.primary.bg.weak,
+  infoBorder: `1px solid ${needlePalette.light.primary.border.weak}`,
+  infoIconColor: needlePalette.light.primary.icon,
+
+  // Code block
+  codeBlockBackground: '#f5f5f5',
+  codeBlockTextColor: needlePalette.light.primary.text,
+  codeBlockHoveBackground: needlePalette.light.primary.hover.weak
 }
 
 export const normal = {
@@ -169,9 +202,23 @@ export const dark = {
   frameSidebarBackground: '#121212',
   frameTitlebarText: '#717172',
   frameControlButtonTextColor: '#D7E5F1',
-  frameButtonTextColor: '#FFF',
-  frameButtonHoverBackground: '#485662',
+  frameButtonTextColorLegacy: '#FFF',
+  frameButtonTextColor: needlePalette.light.neutral.bg.default,
+  frameButtonHoverBackground: NDLColors.neutral['70'].opacity60,
+  frameButtonActiveBackground: NDLColors.neutral['70'].opacity50,
+  frameNodePropertiesPanelIconTextColor: '#f4f4f4',
   streamBackgroundColor: '#535864',
   frameBackground: '#292C33',
-  accordionContentBackground: '#31333B'
+  accordionContentBackground: '#31333B',
+  currentEditIconColor: '#6B6B6B',
+
+  // Info message
+  infoBackground: needlePalette.light.neutral.bg.strongest,
+  infoBorder: `1px solid ${needlePalette.light.neutral.text.weakest}`,
+  infoIconColor: needlePalette.light.neutral.bg.weak,
+
+  // Code block
+  codeBlockBackground: '#717780',
+  codeBlockTextColor: needlePalette.light.primary.border.weak,
+  codeBlockHoveBackground: needlePalette.light.neutral.bg.strongest
 }

@@ -17,18 +17,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import Rx from 'rxjs/Rx'
+
+import { SYSTEM_DB } from '../dbMeta/constants'
+import { canSendTxMetadata } from '../features/versionedFeatures'
 import bolt from 'services/bolt/bolt'
-import { APP_START, DESKTOP, CLOUD } from 'shared/modules/app/appDuck'
+import { APP_START, CLOUD, DESKTOP } from 'shared/modules/app/appDuck'
 import {
   CONNECTION_SUCCESS,
   DISCONNECTION_SUCCESS
 } from 'shared/modules/connections/connectionsDuck'
-import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
 import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
-import { canSendTxMetadata } from '../features/versionedFeatures'
-import { SYSTEM_DB } from '../dbMeta/constants'
 
 export const NAME = 'features'
 const CLEAR = 'features/CLEAR'
@@ -39,8 +38,7 @@ export const DETECTED_CLIENT_CONFIG = 'features/DETECTED_CLIENT_CONFIG'
 
 export const getAvailableProcedures = (state: any) =>
   state[NAME].availableProcedures
-export const isACausalCluster = (state: any) =>
-  getAvailableProcedures(state).includes('dbms.cluster.overview')
+
 export const isMultiDatabase = (state: any) =>
   getAvailableProcedures(state).includes('dbms.databases.overview')
 export const canAssignRolesToUser = (state: any) =>
@@ -64,7 +62,7 @@ export const initialState = {
   }
 }
 
-export default function(state = initialState, action: any) {
+export default function (state = initialState, action: any) {
   switch (action.type) {
     case APP_START:
       return {
@@ -134,7 +132,6 @@ export const featuresDiscoveryEpic = (action$: any, store: any) => {
             {},
             {
               useDb: supportsMultiDb ? SYSTEM_DB : '',
-              useCypherThread: shouldUseCypherThread(store.getState()),
               ...getBackgroundTxMetadata({
                 hasServerSupport: canSendTxMetadata(store.getState())
               })

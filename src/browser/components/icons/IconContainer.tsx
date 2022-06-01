@@ -17,13 +17,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import React, { ReactNode } from 'react'
-import styled, {
-  CSSProperties,
-  FlattenSimpleInterpolation
-} from 'styled-components'
+import React, { CSSProperties, ReactNode } from 'react'
 import SVGInline from 'react-svg-inline'
+import styled, { FlattenSimpleInterpolation } from 'styled-components'
+
+const StyledI = styled.i<{
+  isOpen?: boolean
+  activeStyle?: string | FlattenSimpleInterpolation
+  inactiveStyle?: string
+}>`
+  ${props => (props.isOpen ? props.activeStyle : props.inactiveStyle)};
+  &:hover {
+    ${props => props.activeStyle};
+  }
+`
 
 const StyledIconWrapper = ({
   activeStyle,
@@ -33,15 +40,18 @@ const StyledIconWrapper = ({
   ...rest
 }: Exclude<
   IconContainerProps,
-  'text' | 'regulateSize' | 'icon' | 'width' | 'title'
+  'text' | 'fontSize' | 'icon' | 'width' | 'title'
 >) => {
-  const I = styled.i`
-    ${isOpen ? activeStyle : inactiveStyle};
-    &:hover {
-      ${activeStyle};
-    }
-  `
-  return <I {...rest}>{children}</I>
+  return (
+    <StyledI
+      isOpen={isOpen}
+      activeStyle={activeStyle}
+      inactiveStyle={inactiveStyle}
+      {...rest}
+    >
+      {children}
+    </StyledI>
+  )
 }
 
 const StyledText = styled.div`
@@ -56,34 +66,34 @@ type IconContainerProps = {
   icon?: string
   inactiveStyle?: string
   isOpen?: boolean
-  regulateSize?: 0.625 | 1 | 2
   text?: string
   title?: string
   width?: number
-  suppressIconStyles?: true | string
+  /** controlling size of icons that are fonts */
+  fontSize?: string
   className?: string
   style?: CSSProperties
   children?: ReactNode
 }
 
 export const IconContainer = (props: IconContainerProps): JSX.Element => {
-  const { text, regulateSize, icon, width, title, ...rest } = props
-
-  const regulateSizeStyle = regulateSize
-    ? { fontSize: regulateSize + 'em' }
-    : undefined
+  const { text, icon, width, title, fontSize, ...rest } = props
 
   const currentIcon = icon ? (
     <StyledIconWrapper {...rest}>
       <SVGInline
+        className={'centeredSvgIcon'}
         cleanup={['title']}
         svg={icon}
         accessibilityLabel={title}
-        width={width + 'px'}
+        width={width ? width + 'px' : undefined}
       />
     </StyledIconWrapper>
   ) : (
-    <StyledIconWrapper {...rest} style={regulateSizeStyle} />
+    <StyledIconWrapper
+      {...rest}
+      style={{ fontSize: fontSize, lineHeight: 'inherit' }}
+    />
   )
 
   return text ? (

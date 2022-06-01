@@ -17,33 +17,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import { URL } from 'whatwg-url'
 import {
-  updateConnection,
-  getConnection
-} from 'shared/modules/connections/connectionsDuck'
+  authLog,
+  authRequestForSSO,
+  defaultSearchParamsToRemoveAfterAutoRedirect,
+  getSSOServerIdIfShouldRedirect,
+  handleAuthFromRedirect,
+  removeSearchParamsInBrowserHistory,
+  wasRedirectedBackFromSSOServer
+} from 'neo4j-client-sso'
+
+import { getAndMergeDiscoveryData } from './discoveryHelpers'
+import { generateBoltUrl } from 'services/boltscheme.utils'
 import {
   APP_START,
-  USER_CLEAR,
-  hasDiscoveryEndpoint,
-  getHostedUrl,
-  getAllowedBoltSchemes,
   CLOUD_SCHEMES,
+  USER_CLEAR,
+  getAllowedBoltSchemes,
+  getHostedUrl,
+  hasDiscoveryEndpoint,
   inDesktop
 } from 'shared/modules/app/appDuck'
-import { generateBoltUrl } from 'services/boltscheme.utils'
-import { isCloudHost, AUTH_STORAGE_CONNECT_HOST } from 'shared/services/utils'
-import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
 import {
-  authRequestForSSO,
-  handleAuthFromRedirect,
-  authLog,
-  removeSearchParamsInBrowserHistory,
-  getSSOServerIdIfShouldRedirect,
-  wasRedirectedBackFromSSOServer,
-  defaultSearchParamsToRemoveAfterAutoRedirect
-} from 'neo4j-client-sso'
-import { getAndMergeDiscoveryData } from './discoveryHelpers'
+  getConnection,
+  updateConnection
+} from 'shared/modules/connections/connectionsDuck'
+import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
+import { AUTH_STORAGE_CONNECT_HOST, isCloudHost } from 'shared/services/utils'
 
 export const NAME = 'discover-bolt-host'
 export const CONNECTION_ID = '$$discovery'
@@ -183,7 +184,7 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
       }
       const discoveryData = await getAndMergeDiscoveryData({
         action,
-        hostedUrl: getHostedUrl(store.getState()),
+        hostedUrl: getHostedUrl(store.getState()) ?? window.location.href,
         hasDiscoveryEndpoint: hasDiscoveryEndpoint(store.getState()),
         generateBoltUrlWithAllowedScheme: (boltUrl: string) =>
           generateBoltUrl(

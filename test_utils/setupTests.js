@@ -17,9 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import '@testing-library/jest-dom/extend-expect'
 import nock from 'nock'
 
-import '@testing-library/jest-dom/extend-expect' // Add extra expect functions to be used in tests
+// Add extra expect functions to be used in tests
 
 // polyfill for jsdom (for tests only)
 // tests with cypher-editor-support breaks without it
@@ -49,5 +50,16 @@ Object.defineProperty(window, 'matchMedia', {
 window.ResizeObserver = class {
   observe() {}
 }
+window.SVGElement.prototype.getBBox = () => ({
+  x: 0,
+  y: 0
+})
 
 nock.disableNetConnect()
+
+// Workaround to get whatwg-url to not fail in tests. This
+// seems to be a problem that goes awawy if we update to node 16
+// https://github.com/jsdom/whatwg-url/issues/209
+import { TextEncoder, TextDecoder } from 'util'
+global.TextEncoder = TextEncoder
+global.TextDecoder = TextDecoder

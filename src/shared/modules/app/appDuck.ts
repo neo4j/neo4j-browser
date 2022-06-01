@@ -18,9 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { GlobalState } from 'shared/globalState'
+
 // Action type constants
 export const NAME = 'app'
 export const APP_START = 'app/APP_START'
+export const UPDATE_BUILD_INFO = 'app/UPDATE_BUILD_INFO'
 export const USER_CLEAR = 'app/USER_CLEAR'
 export type AppStartAction = { type: typeof APP_START }
 export type UserClearAction = { type: typeof USER_CLEAR }
@@ -31,23 +34,35 @@ export const URL_ARGUMENTS_CHANGE = 'app/URL_ARGUMENTS_CHANGE'
 export const DESKTOP = 'DESKTOP'
 export const WEB = 'WEB'
 export const CLOUD = 'CLOUD'
+export type Environment = typeof DESKTOP | typeof WEB | typeof CLOUD
 
 export const SECURE_SCHEMES = ['neo4j+s', 'bolt+s']
 export const INSECURE_SCHEMES = ['neo4j', 'bolt']
 export const CLOUD_SCHEMES = ['neo4j+s']
 
 // Selectors
-export const getHostedUrl = (state: any) =>
+export const getHostedUrl = (state: GlobalState): string | null =>
   (state[NAME] || {}).hostedUrl || null
-export const getEnv = (state: any) => (state[NAME] || {}).env || WEB
-export const hasDiscoveryEndpoint = (state: any) =>
+export const getEnv = (state: GlobalState): Environment =>
+  (state[NAME] || {}).env || WEB
+export const hasDiscoveryEndpoint = (state: GlobalState): boolean =>
   [WEB, CLOUD].includes(getEnv(state))
-export const inWebEnv = (state: any) => getEnv(state) === WEB
-export const inCloudEnv = (state: any) => getEnv(state) === CLOUD
-export const inWebBrowser = (state: any) => [WEB, CLOUD].includes(getEnv(state))
-export const inDesktop = (state: any) => getEnv(state) === DESKTOP
+export const inWebEnv = (state: GlobalState): boolean => getEnv(state) === WEB
+export const inCloudEnv = (state: GlobalState): boolean =>
+  getEnv(state) === CLOUD
+export const inWebBrowser = (state: GlobalState): boolean =>
+  [WEB, CLOUD].includes(getEnv(state))
+export const inDesktop = (state: GlobalState): boolean =>
+  getEnv(state) === DESKTOP
+export const getBuildNumber = (state: GlobalState): string | null =>
+  state[NAME].buildNumber ?? null
+export const getBuiltAt = (state: GlobalState): string | null =>
+  state[NAME].builtAt ?? null
 
-export const getAllowedBoltSchemes = (state: any, encryptionFlag?: any) => {
+export const getAllowedBoltSchemes = (
+  state: GlobalState,
+  encryptionFlag?: any
+) => {
   const isHosted = inWebBrowser(state)
   const hostedUrl = getHostedUrl(state)
   return !isHosted
@@ -59,14 +74,41 @@ export const getAllowedBoltSchemes = (state: any, encryptionFlag?: any) => {
     : INSECURE_SCHEMES
 }
 // currently only Desktop specific
-export const isRelateAvailable = (state: any) =>
-  state[NAME].relateUrl &&
-  state[NAME].relateApiToken &&
+export const isRelateAvailable = (state: GlobalState): boolean =>
+  Boolean(
+    state[NAME].relateUrl &&
+      state[NAME].relateApiToken &&
+      state[NAME].relateProjectId
+  )
+export const getProjectId = (state: GlobalState): string | undefined =>
   state[NAME].relateProjectId
-export const getProjectId = (state: any) => state[NAME].relateProjectId
+
+// action creators
+export const updateBuildInfo = (action: {
+  buildNumber?: string
+  builtAt?: string
+}) => ({
+  type: UPDATE_BUILD_INFO,
+  buildNumber: action.buildNumber,
+  builtAt: action.builtAt
+})
+
+export type AppState = {
+  hostedUrl?: string | null
+  env?: Environment
+  relateUrl?: string
+  relateApiToken?: string
+  relateProjectId?: string
+  neo4jDesktopGraphAppId?: string
+  builtAt?: string | null
+  buildNumber?: string | null
+}
 
 // Reducer
-export default function reducer(state = { hostedUrl: null }, action: any) {
+export default function reducer(
+  state: AppState = { hostedUrl: null },
+  action: any
+): AppState {
   switch (action.type) {
     case APP_START:
       return {
@@ -77,6 +119,12 @@ export default function reducer(state = { hostedUrl: null }, action: any) {
         relateApiToken: action.relateApiToken,
         relateProjectId: action.relateProjectId,
         neo4jDesktopGraphAppId: action.neo4jDesktopGraphAppId
+      }
+    case UPDATE_BUILD_INFO:
+      return {
+        ...state,
+        builtAt: action.builtAt,
+        buildNumber: action.buildNumber
       }
     default:
       return state

@@ -17,17 +17,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import { uniqBy } from 'lodash'
 import React from 'react'
 import styled from 'styled-components'
+
 import {
   DrawerSection,
-  DrawerSubHeader,
-  DrawerSectionBody
+  DrawerSectionBody,
+  DrawerSubHeader
 } from 'browser-components/drawer/drawer-styled'
 import { escapeCypherIdentifier } from 'services/utils'
 import { Database } from 'shared/modules/dbMeta/state'
-import { uniqBy } from 'lodash'
 
 const Select = styled.select`
   width: 100%;

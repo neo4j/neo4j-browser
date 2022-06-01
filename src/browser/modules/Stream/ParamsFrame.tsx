@@ -19,14 +19,15 @@
  */
 import React from 'react'
 
-import { ExclamationTriangleIcon } from 'browser-components/icons/Icons'
+import { ExclamationTriangleIcon } from 'browser-components/icons/LegacyIcons'
+
+import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
+import AutoExecButton from './auto-exec-button'
+import { ErrorText, PaddedDiv, StyledStatsBar, SuccessText } from './styled'
 import Ellipsis from 'browser-components/Ellipsis'
+import { applyGraphTypes } from 'services/bolt/boltMappings'
 import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 import { stringifyMod } from 'services/utils'
-import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
-import { PaddedDiv, ErrorText, SuccessText, StyledStatsBar } from './styled'
-import { applyGraphTypes } from 'services/bolt/boltMappings'
-import AutoExecButton from './auto-exec-button'
 
 const ParamsFrame = ({ frame, isCollapsed, isFullscreen }: any) => {
   const params = applyGraphTypes(frame.params)
@@ -39,7 +40,11 @@ const ParamsFrame = ({ frame, isCollapsed, isFullscreen }: any) => {
       )}
       <div style={{ marginTop: '20px' }}>
         See <AutoExecButton cmd="help param" /> for usage of the{' '}
-        <code>:param</code> command.
+        <code>:param</code> command (setting one parameter).
+      </div>
+      <div style={{ marginTop: '5px' }}>
+        See <AutoExecButton cmd="help params" /> for usage of the{' '}
+        <code>:params</code> command (setting multiple parameters).
       </div>
     </PaddedDiv>
   )

@@ -17,82 +17,80 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import React, { Component } from 'react'
-import { Dispatch } from 'redux'
-import { connect } from 'react-redux'
-
+import { saveAs } from 'file-saver'
+import { map } from 'lodash'
 import { Record as Neo4jRecord } from 'neo4j-driver'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { Dispatch } from 'redux'
 
-import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
-import { CypherFrameButton } from 'browser-components/buttons'
-import Centered from 'browser-components/Centered'
 import {
-  getRequest,
-  REQUEST_STATUS_PENDING,
-  REQUEST_STATUS_SUCCESS,
-  isCancelStatus,
-  BrowserRequest,
-  BrowserRequestResult
-} from 'shared/modules/requests/requestsDuck'
-import FrameSidebar from '../../Frame/FrameSidebar'
-import {
-  VisualizationIcon,
-  TableIcon,
+  AlertIcon,
   AsciiIcon,
   CodeIcon,
-  PlanIcon,
-  AlertIcon,
   ErrorIcon,
-  SpinnerIcon
-} from 'browser-components/icons/Icons'
-import { AsciiView, AsciiStatusbar } from './AsciiView'
-import { CodeView, CodeStatusbar } from './CodeView'
-import { ErrorsViewBus as ErrorsView, ErrorsStatusbar } from './ErrorsView'
-import { WarningsView, WarningsStatusbar } from './WarningsView'
-import { PlanView, PlanStatusbar } from './PlanView'
-import { VisualizationConnectedBus } from './VisualizationView'
+  PlanIcon,
+  SpinnerIcon,
+  TableIcon,
+  VisualizationIcon
+} from 'browser-components/icons/LegacyIcons'
 
-import Display from 'browser-components/Display'
-import * as ViewTypes from 'shared/modules/frames/frameViewTypes'
-import {
-  resultHasRows,
-  resultHasWarnings,
-  resultHasPlan,
-  resultIsError,
-  resultHasNodes,
-  initialView,
-  stringifyResultArray,
-  transformResultRecordsToResultArray,
-  recordToJSONMapper
-} from './helpers'
+import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
+import FrameSidebar from '../../Frame/FrameSidebar'
+import { BaseFrameProps } from '../Stream'
 import { SpinnerContainer, StyledStatsBarContainer } from '../styled'
-import { StyledFrameBody } from 'browser/modules/Frame/styled'
-import {
-  getMaxRows,
-  getInitialNodeDisplay,
-  getMaxNeighbours,
-  shouldAutoComplete
-} from 'shared/modules/settings/settingsDuck'
-import {
-  setRecentView,
-  getRecentView,
-  Frame,
-  SetRecentViewAction
-} from 'shared/modules/frames/framesDuck'
+import { AsciiStatusbar, AsciiView } from './AsciiView'
 import { CancelView } from './CancelView'
+import { CodeStatusbar, CodeView } from './CodeView'
+import { ErrorsStatusbar } from './ErrorsView/ErrorsStatusbar'
+import { ErrorsView } from './ErrorsView/ErrorsView'
+import { PlanStatusbar, PlanView } from './PlanView'
 import RelatableView, {
   RelatableStatusbar
-} from 'browser/modules/Stream/CypherFrame/relatable-view'
-import { requestExceedsVisLimits } from 'browser/modules/Stream/CypherFrame/helpers'
-import { GlobalState } from 'shared/globalState'
-import { BaseFrameProps } from '../Stream'
+} from './RelatableView/relatable-view'
+import { VisualizationConnectedBus } from './VisualizationView/VisualizationView'
+import { WarningsStatusbar, WarningsView } from './WarningsView'
+import {
+  initialView,
+  recordToJSONMapper,
+  resultHasNodes,
+  resultHasPlan,
+  resultHasRows,
+  resultHasWarnings,
+  resultIsError,
+  stringifyResultArray,
+  transformResultRecordsToResultArray
+} from './helpers'
+import Centered from 'browser-components/Centered'
+import Display from 'browser-components/Display'
+import { CypherFrameButton } from 'browser-components/buttons'
+import { StyledFrameBody } from 'browser/modules/Frame/styled'
 import { csvFormat, stringModifier } from 'services/bolt/cypherTypesFormatting'
-import { CSVSerializer } from 'services/serializer'
-import { map } from 'lodash'
-import { stringifyMod } from 'services/utils'
 import { downloadPNGFromSVG, downloadSVG } from 'services/exporting/imageUtils'
-import { saveAs } from 'file-saver'
+import { CSVSerializer } from 'services/serializer'
+import { stringifyMod } from 'services/utils'
+import { GlobalState } from 'shared/globalState'
+import * as ViewTypes from 'shared/modules/frames/frameViewTypes'
+import {
+  Frame,
+  SetRecentViewAction,
+  getRecentView,
+  setRecentView
+} from 'shared/modules/frames/framesDuck'
+import {
+  BrowserRequest,
+  BrowserRequestResult,
+  REQUEST_STATUS_PENDING,
+  REQUEST_STATUS_SUCCESS,
+  getRequest,
+  isCancelStatus
+} from 'shared/modules/requests/requestsDuck'
+import {
+  getInitialNodeDisplay,
+  getMaxNeighbours,
+  getMaxRows,
+  shouldAutoComplete
+} from 'shared/modules/settings/settingsDuck'
 
 export type CypherFrameProps = BaseFrameProps & {
   autoComplete: boolean
@@ -176,23 +174,37 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
       if (view) this.setState({ openView: view })
     }
 
+    const textDownloadEnabled = () =>
+      this.getRecords().length > 0 &&
+      this.state.openView &&
+      [ViewTypes.TEXT, ViewTypes.TABLE, ViewTypes.CODE].includes(
+        this.state.openView
+      )
+    const graphicsDownloadEnabled = () =>
+      this.visElement &&
+      this.state.openView &&
+      [ViewTypes.PLAN, ViewTypes.VISUALIZATION].includes(this.state.openView)
+
+    const downloadText = [
+      { name: 'CSV', download: this.exportCSV },
+      { name: 'JSON', download: this.exportJSON }
+    ]
     const downloadGraphics = [
       { name: 'PNG', download: this.exportPNG },
       { name: 'SVG', download: this.exportSVG }
     ]
+
     this.props.setExportItems([
-      { name: 'CSV', download: this.exportCSV },
-      { name: 'JSON', download: this.exportJSON },
-      ...(this.visElement ? downloadGraphics : [])
+      ...(textDownloadEnabled() ? downloadText : []),
+      ...(this.hasStringPlan() && this.state.openView === ViewTypes.PLAN
+        ? [{ name: 'TXT', download: this.exportStringPlan }]
+        : []),
+      ...(graphicsDownloadEnabled() ? downloadGraphics : [])
     ])
   }
 
   componentDidMount(): void {
     const view = initialView(this.props, this.state)
-    this.props.setExportItems([
-      { name: 'CSV', download: this.exportCSV },
-      { name: 'JSON', download: this.exportJSON }
-    ])
     if (view) this.setState({ openView: view })
   }
 
@@ -204,9 +216,7 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
   }
 
   canShowViz = (): boolean =>
-    !requestExceedsVisLimits(this.props.request) &&
-    resultHasNodes(this.props.request) &&
-    !this.state.errors
+    resultHasNodes(this.props.request) && !this.state.errors
 
   sidebar = (): JSX.Element => (
     <FrameSidebar>
@@ -434,6 +444,26 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
     saveAs(blob, 'records.json')
   }
 
+  hasStringPlan = (): boolean =>
+    // @ts-ignore driver types don't have string-representation yet
+    !!this.props.request?.result?.summary?.plan?.arguments?.[
+      'string-representation'
+    ]
+
+  exportStringPlan = (): void => {
+    const data =
+      // @ts-ignore driver types don't have string-representation yet
+      this.props.request?.result?.summary?.plan?.arguments?.[
+        'string-representation'
+      ]
+    if (data) {
+      const blob = new Blob([data], {
+        type: 'text/plain;charset=utf-8'
+      })
+      saveAs(blob, 'plan.txt')
+    }
+  }
+
   exportPNG = (): void => {
     if (this.visElement) {
       const { svgElement, graphElement, type } = this.visElement
@@ -451,10 +481,8 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
   render(): JSX.Element {
     const { frame = {} as Frame, request = {} as BrowserRequest } = this.props
     const { cmd: query = '' } = frame
-    const {
-      result = {} as BrowserRequestResult,
-      status: requestStatus
-    } = request
+    const { result = {} as BrowserRequestResult, status: requestStatus } =
+      request
 
     const frameContents =
       requestStatus === REQUEST_STATUS_PENDING ? (
@@ -481,7 +509,7 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
       />
     )
   }
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     this.props.setExportItems([])
   }
 }

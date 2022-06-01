@@ -17,19 +17,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React, { Component } from 'react'
-import { getRandomWords } from './utils'
-import { FormButton } from 'browser-components/buttons'
-import {
-  StyledConnectionTextInput,
-  StyledConnectionLabel,
-  StyledConnectionFormEntry,
-  StyledChangePasswordForm
-} from './styled'
 
-import InputEnterStepping from 'browser-components/InputEnterStepping/InputEnterStepping'
 import RevealablePasswordInput from './revealable-password-input'
+import {
+  StyledChangePasswordForm,
+  StyledConnectionFormEntry,
+  StyledConnectionLabel,
+  StyledConnectionTextInput
+} from './styled'
+import { getRandomWords } from './utils'
+import InputEnterStepping from 'browser-components/InputEnterStepping/InputEnterStepping'
+import { FormButton } from 'browser-components/buttons'
 
 type State = any
 

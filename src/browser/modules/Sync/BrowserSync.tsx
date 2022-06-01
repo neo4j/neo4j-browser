@@ -17,52 +17,53 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import TimeAgo from 'react-timeago'
-import { shouldAllowOutgoingConnections } from 'shared/modules/dbMeta/state'
+
+import { BinIcon } from 'browser-components/icons/LegacyIcons'
+
+import { BrowserSyncSignoutIframe } from './BrowserSyncAuthIframes'
+import BrowserSyncAuthWindow from './BrowserSyncAuthWindow'
 import {
-  getConnectionState,
-  DISCONNECTED_STATE
-} from 'shared/modules/connections/connectionsDuck'
-import {
-  setSyncData,
-  setSyncMetadata,
-  clearSync as clearSyncAction,
-  clearSyncAndLocal as clearSyncAndLocalAction,
-  consentSync,
-  authorizedAs,
-  setSyncAuthData,
-  getLastSyncedAt,
-  getUserAuthStatus,
-  getServiceStatus,
-  getUserData,
-  SIGNED_IN,
-  DOWN,
-  PENDING
-} from 'shared/modules/sync/syncDuck'
-import { signOut } from 'services/browserSyncService'
-import { getBrowserSyncConfig } from 'shared/modules/settings/settingsDuck'
+  AlertBox,
+  ClearLocalConfirmationBox,
+  ConsentCheckBox,
+  SmallHeaderText
+} from './styled'
+import { FormButton, SyncSignInButton } from 'browser-components/buttons'
 import {
   Drawer,
   DrawerBody,
   DrawerHeader,
   DrawerSection,
-  DrawerSubHeader,
   DrawerSectionBody,
+  DrawerSubHeader,
   DrawerToppedHeader
 } from 'browser-components/drawer/drawer-styled'
-import { FormButton, SyncSignInButton } from 'browser-components/buttons'
-import { BinIcon } from 'browser-components/icons/Icons'
+import { signOut } from 'services/browserSyncService'
 import {
-  ConsentCheckBox,
-  AlertBox,
-  ClearLocalConfirmationBox,
-  SmallHeaderText
-} from './styled'
-import BrowserSyncAuthWindow from './BrowserSyncAuthWindow'
-import { BrowserSyncSignoutIframe } from './BrowserSyncAuthIframes'
+  DISCONNECTED_STATE,
+  getConnectionState
+} from 'shared/modules/connections/connectionsDuck'
+import { shouldAllowOutgoingConnections } from 'shared/modules/dbMeta/state'
+import { getBrowserSyncConfig } from 'shared/modules/settings/settingsDuck'
+import {
+  DOWN,
+  PENDING,
+  SIGNED_IN,
+  authorizedAs,
+  clearSync as clearSyncAction,
+  clearSyncAndLocal as clearSyncAndLocalAction,
+  consentSync,
+  getLastSyncedAt,
+  getServiceStatus,
+  getUserAuthStatus,
+  getUserData,
+  setSyncAuthData,
+  setSyncData,
+  setSyncMetadata
+} from 'shared/modules/sync/syncDuck'
 
 type BrowserSyncState = any
 
@@ -221,35 +222,33 @@ export class BrowserSync extends Component<any, BrowserSyncState> {
           <DrawerSection>
             <DrawerSubHeader>Sign In or Register</DrawerSubHeader>
             <DrawerSectionBody>
-              <DrawerSection>
-                Neo4j Browser Sync is a companion service for Neo4j Browser.
-                Connect through a simple social sign-in to get started.
-              </DrawerSection>
-              <DrawerSection>
-                <ConsentCheckBox
-                  checked={this.state.userConsented === true}
-                  onChange={(e: any) => {
-                    this.setState({
-                      userConsented: e.target.checked,
-                      showConsentAlert:
-                        this.state.showConsentAlert && !e.target.checked
-                    })
-                    this.props.onConsentSyncChanged(e.target.checked)
-                  }}
-                />
-                {consentAlertContent}
-              </DrawerSection>
-              <DrawerSection>
-                <SyncSignInButton onClick={this.logIn.bind(this)}>
-                  Sign In / Register
-                </SyncSignInButton>
-              </DrawerSection>
+              Neo4j Browser Sync is a companion service for Neo4j Browser.
+              Connect through a simple social sign-in to get started.
+              <br />
+              <br />
+              <ConsentCheckBox
+                checked={this.state.userConsented === true}
+                onChange={(e: any) => {
+                  this.setState({
+                    userConsented: e.target.checked,
+                    showConsentAlert:
+                      this.state.showConsentAlert && !e.target.checked
+                  })
+                  this.props.onConsentSyncChanged(e.target.checked)
+                }}
+              />
+              {consentAlertContent}
+              <SyncSignInButton onClick={this.logIn.bind(this)}>
+                Sign In / Register
+              </SyncSignInButton>
             </DrawerSectionBody>
           </DrawerSection>
           <DrawerSection>
             <DrawerSubHeader>Manage local data</DrawerSubHeader>
             <DrawerSectionBody>
-              <DrawerSection>{clearLocalDataContent}</DrawerSection>
+              {clearLocalDataContent}
+              <br />
+              <br />
               <FormButton
                 data-testid="clearLocalData"
                 label="Clear local data"

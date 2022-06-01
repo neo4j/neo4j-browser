@@ -17,9 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import { Session } from 'neo4j-driver'
-import { getUrlInfo } from 'services/utils'
+
+import { parseURLWithDefaultProtocol } from 'services/utils'
 
 export const KERBEROS = 'KERBEROS'
 export const NATIVE = 'NATIVE'
@@ -27,8 +27,13 @@ export const NO_AUTH = 'NO_AUTH'
 export const SSO = 'SSO'
 
 export const getDiscoveryEndpoint = (url?: string): string => {
-  const info = getUrlInfo(url || 'http://localhost:7474/')
-  return `${info.protocol}//${info.host}/`
+  const defaultEndpoint = 'http://localhost/'
+  if (!url) {
+    return defaultEndpoint
+  }
+
+  const info = parseURLWithDefaultProtocol(url)
+  return info ? `${info.protocol}//${info.host}/` : defaultEndpoint
 }
 
 export const isConfigValTruthy = (val: boolean | string | number): boolean =>

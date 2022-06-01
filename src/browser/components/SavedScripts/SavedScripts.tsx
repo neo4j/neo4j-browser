@@ -17,29 +17,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { uniq } from 'lodash-es'
 import React, { useState } from 'react'
 import { useDrop } from 'react-dnd'
-import SavedScriptsFolder from './SavedScriptsFolder'
+import uuid from 'uuid'
+
+import { AddIcon } from '../icons/LegacyIcons'
+
 import {
   ExportButton,
   NewFolderButton,
   RedRemoveButton
 } from './SavedScriptsButton'
+import SavedScriptsFolder from './SavedScriptsFolder'
+import SavedScriptsListItem from './SavedScriptsListItem'
+import { useCustomBlur } from './hooks'
 import {
   SavedScriptsBody,
-  SavedScriptsHeader,
   SavedScriptsButtonWrapper,
+  SavedScriptsHeader,
   SavedScriptsNewFavorite
 } from './styled'
-import { Folder } from 'shared/modules/favorites/foldersDuck'
-import SavedScriptsListItem from './SavedScriptsListItem'
 import { getScriptDisplayName } from './utils'
-import { uniq } from 'lodash-es'
-import { Favorite } from 'shared/modules/favorites/favoritesDuck'
-import { useCustomBlur } from './hooks'
-import { AddIcon } from 'browser-components/icons/Icons'
-import uuid from 'uuid'
 import { ExportFormat } from 'services/exporting/favoriteUtils'
+import { Favorite } from 'shared/modules/favorites/favoritesDuck'
+import { Folder } from 'shared/modules/favorites/foldersDuck'
 
 interface SavedScriptsProps {
   title?: string
@@ -119,46 +121,48 @@ export default function SavedScripts({
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const blurRef = useCustomBlur(() => setSelectedIds([]))
 
-  const onListItemClick = (clickedScriptId: string) => (
-    e: React.MouseEvent
-  ) => {
-    const toggleFn = (ids: string[]) =>
-      ids.includes(clickedScriptId)
-        ? ids.filter(existingId => existingId !== clickedScriptId)
-        : ids.concat(clickedScriptId)
+  const onListItemClick =
+    (clickedScriptId: string) => (e: React.MouseEvent) => {
+      const toggleFn = (ids: string[]) =>
+        ids.includes(clickedScriptId)
+          ? ids.filter(existingId => existingId !== clickedScriptId)
+          : ids.concat(clickedScriptId)
 
-    const getIdRange = (id1: string, id2: string): string[] => {
-      const scriptIds: string[] = scripts
-        .concat([]) // to avoid mutating in place by sort
-        .sort(sortScriptsAlfabethically)
-        .map(getUniqueScriptKey)
-      const pos1 = scriptIds.indexOf(id1)
-      const pos2 = scriptIds.indexOf(id2)
-      if (pos1 === -1 || pos2 == -1) {
-        throw new Error("Can't get range between ids not in list")
+      const getIdRange = (id1: string, id2: string): string[] => {
+        const scriptIds: string[] = scripts
+          .concat([]) // to avoid mutating in place by sort
+          .sort(sortScriptsAlfabethically)
+          .map(getUniqueScriptKey)
+        const pos1 = scriptIds.indexOf(id1)
+        const pos2 = scriptIds.indexOf(id2)
+        if (pos1 === -1 || pos2 == -1) {
+          throw new Error("Can't get range between ids not in list")
+        }
+
+        const smallestFirst = pos1 < pos2 ? [pos1, pos2] : [pos2, pos1]
+        return scriptIds.slice(
+          smallestFirst[0],
+          smallestFirst[1] + 1 /* inclusive slice */
+        )
       }
 
-      const smallestFirst = pos1 < pos2 ? [pos1, pos2] : [pos2, pos1]
-      return scriptIds.slice(
-        smallestFirst[0],
-        smallestFirst[1] + 1 /* inclusive slice */
-      )
+      const manualMultiselect = e.metaKey || e.ctrlKey
+      const bulkSelect = e.shiftKey
+      if (bulkSelect) {
+        setSelectedIds(ids =>
+          ids.length === 0
+            ? [clickedScriptId]
+            : uniq([
+                ...ids,
+                ...getIdRange(ids[ids.length - 1], clickedScriptId)
+              ])
+        )
+      } else if (manualMultiselect) {
+        setSelectedIds(toggleFn)
+      } else {
+        setSelectedIds([clickedScriptId])
+      }
     }
-
-    const manualMultiselect = e.metaKey || e.ctrlKey
-    const bulkSelect = e.shiftKey
-    if (bulkSelect) {
-      setSelectedIds(ids =>
-        ids.length === 0
-          ? [clickedScriptId]
-          : uniq([...ids, ...getIdRange(ids[ids.length - 1], clickedScriptId)])
-      )
-    } else if (manualMultiselect) {
-      setSelectedIds(toggleFn)
-    } else {
-      setSelectedIds([clickedScriptId])
-    }
-  }
 
   const dropOutsideFolder = useDrop<
     { id: string; type: string },
@@ -197,32 +201,34 @@ export default function SavedScripts({
             <>
               <span>|</span>
               <SavedScriptsButtonWrapper>
-                <span style={{ fontSize: 12 }}>
+                <span style={{ fontSize: '12px' }}>
                   <span style={{ marginRight: '5px' }}>
                     {selectedIds.length} selected{' '}
                   </span>
-                  {exportScripts && (
-                    <ExportButton
-                      onClick={() => {
-                        exportScripts(selectedScripts, folders, 'ZIPFILE')
-                        setSelectedIds([])
-                      }}
-                    />
-                  )}
-                  {removeScripts && (
-                    <RedRemoveButton
-                      onClick={() => {
-                        removeScripts(selectedIds)
-                        setSelectedIds([])
-                      }}
-                    />
-                  )}
                 </span>
+                {exportScripts && (
+                  <ExportButton
+                    onClick={() => {
+                      exportScripts(selectedScripts, folders, 'ZIPFILE')
+                      setSelectedIds([])
+                    }}
+                  />
+                )}
+                {removeScripts && (
+                  <RedRemoveButton
+                    onClick={() => {
+                      removeScripts(selectedIds)
+                      setSelectedIds([])
+                    }}
+                  />
+                )}
                 {newFolderButton}
               </SavedScriptsButtonWrapper>
             </>
           ) : (
-            newFolderButton
+            <SavedScriptsButtonWrapper>
+              {newFolderButton}
+            </SavedScriptsButtonWrapper>
           )}
         </SavedScriptsHeader>
         {scriptsOutsideFolder.map(script => {

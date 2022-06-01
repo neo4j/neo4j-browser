@@ -17,16 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import uuid from 'uuid'
+
+import { scripts as staticScriptsList } from './staticScripts'
+import { getBrowserName } from 'services/utils'
 import {
-  USER_CLEAR,
   APP_START,
   AppStartAction,
+  USER_CLEAR,
   UserClearAction
 } from 'shared/modules/app/appDuck'
-import { getBrowserName } from 'services/utils'
-import { scripts as staticScriptsList } from './staticScripts'
 
 export const NAME = 'documents'
 

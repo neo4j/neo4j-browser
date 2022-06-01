@@ -24,6 +24,8 @@ Object {
     "browser.retain_connection_credentials": false,
     "browser.retain_editor_history": false,
     "clients.allow_telemetry": true,
+    "metrics.namespaces.enabled": false,
+    "metrics.prefix": "neo4j",
   },
 }
 `;
@@ -51,6 +53,8 @@ Object {
     "browser.retain_connection_credentials": false,
     "browser.retain_editor_history": false,
     "clients.allow_telemetry": true,
+    "metrics.namespaces.enabled": false,
+    "metrics.prefix": "neo4j",
   },
 }
 `;

@@ -17,13 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import { v4 as uuid } from 'uuid'
-import WorkPool from './WorkPool'
+
+import WorkPool, { WORKER_STATE } from './WorkPool'
 
 describe('Workpool', () => {
   let createWorker: any
-  let register: any
+  let register: WorkPool
   let id: any
   let postMessage: any
   beforeEach(() => {
@@ -47,22 +47,22 @@ describe('Workpool', () => {
     // Then
     expect(register.getQueueSize()).toEqual(0)
     expect(register.getPoolSize()).toEqual(1)
-    expect(register.getPoolSize(WorkPool.workerStates.BUSY)).toEqual(1)
-    expect(register.getPoolSize(WorkPool.workerStates.FREE)).toEqual(0)
+    expect(register.getPoolSize(WORKER_STATE.BUSY)).toEqual(1)
+    expect(register.getPoolSize(WORKER_STATE.FREE)).toEqual(0)
     expect(createWorker).toHaveBeenCalledTimes(1)
     expect(workObj.id).toEqual(id)
 
     // When
-    workObj.finish()
+    register.finishWork(workObj.id)
 
     // Then
     expect(register.getQueueSize()).toEqual(0)
     expect(register.getPoolSize()).toEqual(1)
-    expect(register.getPoolSize(WorkPool.workerStates.BUSY)).toEqual(0)
-    expect(register.getPoolSize(WorkPool.workerStates.FREE)).toEqual(1)
+    expect(register.getPoolSize(WORKER_STATE.BUSY)).toEqual(0)
+    expect(register.getPoolSize(WORKER_STATE.FREE)).toEqual(1)
     expect(createWorker).toHaveBeenCalledTimes(1)
   })
-  test('can have onFinish ques', () => {
+  test('can have onFinish queues', () => {
     // Given
     const id1 = { id: uuid() }
     const id2 = { id: uuid() }
@@ -74,8 +74,8 @@ describe('Workpool', () => {
     // When
     const workObj1 = register.doWork(id1)
     const workObj2 = register.doWork(id2)
-    workObj1.onFinish(onFinishFn1)
-    workObj2.onFinish(onFinishFn2)
+    workObj1.onFinish = onFinishFn1
+    workObj2.onFinish = onFinishFn2
 
     // Then
     expect(createWorker).toHaveBeenCalledTimes(2)
@@ -83,7 +83,7 @@ describe('Workpool', () => {
     expect(onFinishFn2).toHaveBeenCalledTimes(0)
 
     // When
-    workObj1.finish()
+    register.finishWork(workObj1.id)
 
     // Then
     expect(createWorker).toHaveBeenCalledTimes(2)
@@ -92,8 +92,8 @@ describe('Workpool', () => {
 
     // When
     const workObj3 = register.doWork(id3)
-    workObj3.onFinish(onFinishFn3)
-    workObj2.finish()
+    workObj3.onFinish = onFinishFn3
+    register.finishWork(workObj2.id)
 
     // Then
     expect(onFinishFn1).toHaveBeenCalledTimes(1)
@@ -101,7 +101,7 @@ describe('Workpool', () => {
     expect(onFinishFn3).toHaveBeenCalledTimes(0)
 
     // When
-    workObj3.finish()
+    register.finishWork(workObj3.id)
 
     // Then
     expect(onFinishFn1).toHaveBeenCalledTimes(1)
@@ -123,8 +123,8 @@ describe('Workpool', () => {
     expect(createWorker).toHaveBeenCalledTimes(2)
     expect(workObj1.id).toEqual(id1.id)
     expect(workObj2.id).toEqual(id2.id)
-    expect(register.getPoolSize(WorkPool.workerStates.BUSY)).toEqual(2)
-    expect(register.getPoolSize(WorkPool.workerStates.FREE)).toEqual(0)
+    expect(register.getPoolSize(WORKER_STATE.BUSY)).toEqual(2)
+    expect(register.getPoolSize(WORKER_STATE.FREE)).toEqual(0)
   })
   test('re-uses workers if there are available ones', () => {
     // Given
@@ -137,8 +137,8 @@ describe('Workpool', () => {
     const workObj1 = register.doWork(id1)
     const workObj2 = register.doWork(id2)
     register.doWork(id3)
-    workObj1.finish()
-    workObj2.finish()
+    register.finishWork(workObj1.id)
+    register.finishWork(workObj2.id)
 
     // When
     register.doWork(id4)
@@ -146,8 +146,8 @@ describe('Workpool', () => {
     // Then
     expect(createWorker).toHaveBeenCalledTimes(3)
     expect(register.getPoolSize()).toEqual(3)
-    expect(register.getPoolSize(WorkPool.workerStates.FREE)).toEqual(1)
-    expect(register.getPoolSize(WorkPool.workerStates.BUSY)).toEqual(2)
+    expect(register.getPoolSize(WORKER_STATE.FREE)).toEqual(1)
+    expect(register.getPoolSize(WORKER_STATE.BUSY)).toEqual(2)
   })
   it('exposes getWorkById and finds queued and ongoing work', () => {
     // Given
@@ -180,7 +180,7 @@ describe('Workpool', () => {
     // Then
     expect(notWorkObj).toEqual(null)
   })
-  it('respcts the maxPoolSize and put jobs in queue', () => {
+  it('respects the maxPoolSize and put jobs in queue', () => {
     // Given
     const poolSize = 2
     const localRegister = new WorkPool(createWorker, poolSize)
@@ -190,52 +190,44 @@ describe('Workpool', () => {
     const id4 = { id: uuid() }
 
     // When
-    const workObj1: any = localRegister.doWork(id1)
-    const workObj2: any = localRegister.doWork(id2)
-    const workObj3: any = localRegister.doWork(id3)
+    const workObj1 = localRegister.doWork(id1)
+    const workObj2 = localRegister.doWork(id2)
+    const workObj3 = localRegister.doWork(id3)
 
     // Then
     expect(localRegister.getPoolSize()).toEqual(poolSize)
-    expect(localRegister.getPoolSize(WorkPool.workerStates.BUSY)).toEqual(
-      poolSize
-    )
-    expect(localRegister.getPoolSize(WorkPool.workerStates.FREE)).toEqual(0)
+    expect(localRegister.getPoolSize(WORKER_STATE.BUSY)).toEqual(poolSize)
+    expect(localRegister.getPoolSize(WORKER_STATE.FREE)).toEqual(0)
     expect(localRegister.getQueueSize()).toEqual(1)
 
     // When
-    workObj1.finish()
+    localRegister.finishWork(workObj1.id)
 
     // Then
     expect(localRegister.getPoolSize()).toEqual(poolSize)
-    expect(localRegister.getPoolSize(WorkPool.workerStates.BUSY)).toEqual(
-      poolSize
-    )
-    expect(localRegister.getPoolSize(WorkPool.workerStates.FREE)).toEqual(0)
+    expect(localRegister.getPoolSize(WORKER_STATE.BUSY)).toEqual(poolSize)
+    expect(localRegister.getPoolSize(WORKER_STATE.FREE)).toEqual(0)
     expect(localRegister.getQueueSize()).toEqual(0)
 
     // When
-    const workObj4: any = localRegister.doWork(id4)
+    const workObj4 = localRegister.doWork(id4)
 
     // Then
     expect(localRegister.getPoolSize()).toEqual(poolSize)
-    expect(localRegister.getPoolSize(WorkPool.workerStates.BUSY)).toEqual(
-      poolSize
-    )
-    expect(localRegister.getPoolSize(WorkPool.workerStates.FREE)).toEqual(0)
+    expect(localRegister.getPoolSize(WORKER_STATE.BUSY)).toEqual(poolSize)
+    expect(localRegister.getPoolSize(WORKER_STATE.FREE)).toEqual(0)
     expect(localRegister.getQueueSize()).toEqual(1)
 
     // When
-    workObj2.finish()
-    workObj3.finish()
-    workObj4.finish()
+    localRegister.finishWork(workObj2.id)
+    localRegister.finishWork(workObj3.id)
+    localRegister.finishWork(workObj4.id)
 
     // Then
     expect(createWorker).toHaveBeenCalledTimes(poolSize)
     expect(localRegister.getPoolSize()).toEqual(poolSize)
-    expect(localRegister.getPoolSize(WorkPool.workerStates.FREE)).toEqual(
-      poolSize
-    )
-    expect(localRegister.getPoolSize(WorkPool.workerStates.BUSY)).toEqual(0)
+    expect(localRegister.getPoolSize(WORKER_STATE.FREE)).toEqual(poolSize)
+    expect(localRegister.getPoolSize(WORKER_STATE.BUSY)).toEqual(0)
   })
   test('Can message all workers at once', () => {
     const message = { type: 'hello all' }

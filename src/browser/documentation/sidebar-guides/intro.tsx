@@ -17,10 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React from 'react'
+
+import { isMac } from 'neo4j-arc/common'
+
 import { BuiltInGuideSidebarSlide } from '../../modules/Carousel/Slide'
-import { isMac } from 'browser/modules/App/keyboardShortcuts'
 
 const title = 'Intro Guide'
 const identifier = 'intro'

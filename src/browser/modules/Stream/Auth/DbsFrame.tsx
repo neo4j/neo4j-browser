@@ -17,24 +17,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import { uniqBy } from 'lodash-es'
 import React from 'react'
-import FrameBodyTemplate from 'browser/modules/Frame/FrameBodyTemplate'
+
+import { toKeyString } from 'neo4j-arc/common'
+
+import { BaseFrameProps } from '../Stream'
+import { AliasText, UnstyledList } from '../styled'
 import {
   StyledConnectionAside,
-  StyledConnectionBodyContainer,
   StyledConnectionBody,
+  StyledConnectionBodyContainer,
   StyledDbsRow
 } from './styled'
 import { H3 } from 'browser-components/headers'
-import { toKeyString, escapeCypherIdentifier } from 'services/utils'
-import { AliasText, UnstyledList } from '../styled'
-import { useDbCommand } from 'shared/modules/commands/commandsDuck'
-import TextCommand from 'browser/modules/DecoratedText/TextCommand'
 import ClickToCode from 'browser/modules/ClickToCode/index'
+import TextCommand from 'browser/modules/DecoratedText/TextCommand'
+import FrameBodyTemplate from 'browser/modules/Frame/FrameBodyTemplate'
 import { StyledCodeBlockFrame } from 'browser/modules/Main/styled'
-import { uniqBy } from 'lodash-es'
-import { BaseFrameProps } from '../Stream'
+import { escapeCypherIdentifier } from 'services/utils'
+import { useDbCommand } from 'shared/modules/commands/commandsDuck'
 
 const DbsFrame = (props: BaseFrameProps) => {
   const { frame } = props

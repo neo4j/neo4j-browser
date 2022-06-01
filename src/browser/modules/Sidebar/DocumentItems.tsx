@@ -17,33 +17,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React, { Dispatch, useState } from 'react'
 import { connect } from 'react-redux'
 import { Action } from 'redux'
+import styled from 'styled-components'
+
 import {
-  DrawerSubHeader,
-  DrawerSection,
-  DrawerSectionBody,
-  DrawerExternalLink
-} from 'browser-components/drawer/drawer-styled'
+  HollowPlayIcon,
+  SavedScriptsCollapseMenuIcon,
+  SavedScriptsExpandMenuRightIcon
+} from 'browser-components/icons/LegacyIcons'
+
 import {
-  StyledHelpItem,
+  StyledCommand,
   StyledCommandListItem,
   StyledCommandNamePair,
+  StyledHelpItem,
   StyledName,
-  StyledCommand
+  StyledCommandRunButton,
+  StyledCommandRowWrapper,
+  FlexSpacer
 } from './styled'
+import { SavedScriptsFolderCollapseIcon } from 'browser-components/SavedScripts/styled'
+import {
+  DrawerExternalLink,
+  DrawerSection,
+  DrawerSectionBody,
+  DrawerSubHeader
+} from 'browser-components/drawer/drawer-styled'
 import {
   commandSources,
   executeCommand
 } from 'shared/modules/commands/commandsDuck'
-import styled from 'styled-components'
-import {
-  SavedScriptsCollapseMenuIcon,
-  SavedScriptsExpandMenuRightIcon
-} from 'browser-components/icons/Icons'
-import { SavedScriptsFolderCollapseIcon } from 'browser-components/SavedScripts/styled'
 
 const DrawerSubHeaderWithMargin = styled(DrawerSubHeader)`
   margin: 0 24px 0 24px;
@@ -119,14 +124,28 @@ export const DocumentItems = ({
 }
 
 type CommandItemProps = Command & { executeCommand: (cmd: string) => void }
-const CommandItem = ({ name, command, executeCommand }: CommandItemProps) => (
-  <StyledCommandListItem onClick={() => executeCommand(command)}>
-    <StyledCommandNamePair>
-      <StyledName> {name} </StyledName>
-      <StyledCommand> {command} </StyledCommand>
-    </StyledCommandNamePair>
-  </StyledCommandListItem>
-)
+const CommandItem = ({ name, command, executeCommand }: CommandItemProps) => {
+  const [showRunButton, setShowRunButton] = useState(false)
+
+  return (
+    <StyledCommandListItem
+      onClick={() => executeCommand(command)}
+      onMouseEnter={() => setShowRunButton(true)}
+      onMouseLeave={() => setShowRunButton(false)}
+    >
+      <StyledCommandRowWrapper>
+        <StyledCommandNamePair>
+          <StyledName> {name} </StyledName>
+          <StyledCommand> {command} </StyledCommand>
+        </StyledCommandNamePair>
+        <FlexSpacer />
+        <StyledCommandRunButton hidden={!showRunButton}>
+          <HollowPlayIcon width={20} />
+        </StyledCommandRunButton>
+      </StyledCommandRowWrapper>
+    </StyledCommandListItem>
+  )
+}
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
   executeCommand: (cmd: string) => {

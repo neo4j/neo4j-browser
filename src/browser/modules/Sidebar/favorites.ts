@@ -14,20 +14,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-import { withBus } from 'react-suber'
 import { connect } from 'react-redux'
+import { withBus } from 'react-suber'
 import uuid from 'uuid'
-import MyScripts from 'browser/components/SavedScripts'
 
-import * as editor from 'shared/modules/editor/editorDuck'
+import MyScripts from 'browser/components/SavedScripts'
+import { ExportFormat, exporters } from 'services/exporting/favoriteUtils'
 import {
   commandSources,
   executeCommand
 } from 'shared/modules/commands/commandsDuck'
+import * as editor from 'shared/modules/editor/editorDuck'
 import * as favoritesDuck from 'shared/modules/favorites/favoritesDuck'
 import * as foldersDuck from 'shared/modules/favorites/foldersDuck'
-import { exporters, ExportFormat } from 'services/exporting/favoriteUtils'
 
 const mapFavoritesStateToProps = (state: any) => {
   const folders = foldersDuck

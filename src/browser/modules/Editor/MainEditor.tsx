@@ -17,28 +17,55 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import React, { useState, Dispatch, useEffect, useRef } from 'react'
-import { Action } from 'redux'
-import SVGInline from 'react-svg-inline'
+import { useMutation } from '@apollo/client'
+import { CypherEditor } from 'neo4j-arc/cypher-language-support'
+import { QueryResult } from 'neo4j-driver'
+import React, { Dispatch, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
-import { useMutation } from '@apollo/client'
+import { Action } from 'redux'
+import { Bus } from 'suber'
+
+import {
+  CloseIcon,
+  ContractIcon,
+  ExpandIcon,
+  FavoriteIcon,
+  FileIcon,
+  UpdateFileIcon,
+  RunIcon
+} from 'browser-components/icons/LegacyIcons'
+import { isMac } from 'neo4j-arc/common'
+
+import {
+  CurrentEditIconContainer,
+  EditorContainer,
+  FlexContainer,
+  Header,
+  MainEditorWrapper,
+  ScriptTitle
+} from './styled'
+import {
+  ADD_PROJECT_FILE,
+  REMOVE_PROJECT_FILE
+} from 'browser-components/ProjectFiles/projectFilesConstants'
+import { getProjectFileDefaultFileName } from 'browser-components/ProjectFiles/projectFilesUtils'
+import { defaultNameFromDisplayContent } from 'browser-components/SavedScripts'
+import {
+  FrameButton,
+  StyledEditorButton,
+  StyledMainEditorButtonsContainer
+} from 'browser-components/buttons'
+
+import { GlobalState } from 'shared/globalState'
+import { getProjectId } from 'shared/modules/app/appDuck'
 import {
   commandSources,
   executeCommand
 } from 'shared/modules/commands/commandsDuck'
-import {
-  REMOVE_FAVORITE,
-  updateFavoriteContent
-} from 'shared/modules/favorites/favoritesDuck'
-import { Bus } from 'suber'
-import {
-  isMac,
-  printShortcut,
-  FULLSCREEN_SHORTCUT
-} from 'browser/modules/App/keyboardShortcuts'
-import { getProjectId } from 'shared/modules/app/appDuck'
+import { applyParamGraphTypes } from 'shared/modules/commands/helpers/cypher'
+import { getUseDb } from 'shared/modules/connections/connectionsDuck'
+import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import {
   EDIT_CONTENT,
   EXPAND,
@@ -46,37 +73,22 @@ import {
   SET_CONTENT
 } from 'shared/modules/editor/editorDuck'
 import {
-  MainEditorWrapper,
-  Header,
-  EditorContainer,
-  FlexContainer,
-  ScriptTitle
-} from './styled'
-import { EditorButton, FrameButton } from 'browser-components/buttons'
-import {
-  ExpandIcon,
-  ContractIcon,
-  CloseIcon
-} from 'browser-components/icons/Icons'
-import updateFileIcon from 'icons/update-file.svg'
-import updateFavoriteIcon from 'icons/update-favorite.svg'
-import fileIcon from 'icons/file.svg'
-import runIcon from 'icons/run-icon.svg'
-import {
-  ADD_PROJECT_FILE,
-  REMOVE_PROJECT_FILE
-} from 'browser-components/ProjectFiles/projectFilesConstants'
-import { getProjectFileDefaultFileName } from 'browser-components/ProjectFiles/projectFilesUtils'
-import Monaco, { MonacoHandles } from './Monaco'
-import { GlobalState } from 'shared/globalState'
+  REMOVE_FAVORITE,
+  updateFavoriteContent
+} from 'shared/modules/favorites/favoritesDuck'
+import { getHistory } from 'shared/modules/history/historyDuck'
+import { getParams } from 'shared/modules/params/paramsDuck'
 import {
   codeFontLigatures,
   shouldEnableMultiStatementMode
 } from 'shared/modules/settings/settingsDuck'
-import { getUseDb } from 'shared/modules/connections/connectionsDuck'
-import { getHistory } from 'shared/modules/history/historyDuck'
-import { defaultNameFromDisplayContent } from 'browser-components/SavedScripts'
-import { getParams } from 'shared/modules/params/paramsDuck'
+import { base } from 'browser-styles/themes'
+import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
+
+import {
+  FULLSCREEN_SHORTCUT,
+  printShortcut
+} from 'browser/modules/App/keyboardShortcuts'
 
 type EditorFrameProps = {
   bus: Bus
@@ -84,7 +96,7 @@ type EditorFrameProps = {
   enableMultiStatementMode: boolean
   executeCommand: (cmd: string, source: string) => void
   history: string[]
-  projectId: string
+  projectId?: string
   updateFavorite: (id: string, value: string) => void
   useDb: null | string
   params: Record<string, unknown>
@@ -116,7 +128,7 @@ export function MainEditor({
   const [currentlyEditing, setCurrentlyEditing] = useState<SavedScript | null>(
     null
   )
-  const editorRef = useRef<MonacoHandles>(null)
+  const editorRef = useRef<CypherEditor>(null)
 
   const toggleFullscreen = () => {
     setFullscreen(fs => !fs)
@@ -205,7 +217,7 @@ export function MainEditor({
     },
     {
       onClick: discardEditor,
-      title: 'Close',
+      title: 'Clear',
       icon: <CloseIcon />,
       testId: 'discard'
     }
@@ -241,10 +253,15 @@ export function MainEditor({
     <MainEditorWrapper isFullscreen={isFullscreen} data-testid="activeEditor">
       {currentlyEditing && (
         <ScriptTitle data-testid="currentlyEditing" unsaved={showUnsaved}>
-          <SVGInline
-            svg={currentlyEditing.isProjectFile ? fileIcon : updateFavoriteIcon}
-            width="12px"
-          />
+          {currentlyEditing.isProjectFile ? (
+            <CurrentEditIconContainer>
+              <FileIcon width={12} />
+            </CurrentEditIconContainer>
+          ) : (
+            <CurrentEditIconContainer>
+              <FavoriteIcon width={12} />
+            </CurrentEditIconContainer>
+          )}
           {currentlyEditing.isProjectFile ? ' Project file: ' : ' Favorite: '}
           {getName(currentlyEditing)}
           {showUnsaved ? '*' : ''}
@@ -254,14 +271,12 @@ export function MainEditor({
       <FlexContainer>
         <Header>
           <EditorContainer>
-            <Monaco
-              bus={bus}
+            <CypherEditor
               enableMultiStatementMode={enableMultiStatementMode}
-              history={history}
-              isFullscreen={isFullscreen}
-              toggleFullscreen={toggleFullscreen}
-              id={'main-editor'}
               fontLigatures={codeFontLigatures}
+              history={history}
+              id={'main-editor'}
+              isFullscreen={isFullscreen}
               onChange={() => {
                 setUnsaved(true)
               }}
@@ -270,19 +285,38 @@ export function MainEditor({
               }
               onExecute={createRunCommandFunction(commandSources.editor)}
               ref={editorRef}
+              toggleFullscreen={toggleFullscreen}
               useDb={useDb}
-              params={params}
+              sendCypherQuery={(text: string) =>
+                new Promise((res, rej) =>
+                  bus.self(
+                    CYPHER_REQUEST,
+                    {
+                      query: text,
+                      queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
+                      params: applyParamGraphTypes(params)
+                    },
+                    (response: { result: QueryResult; success?: boolean }) => {
+                      if (response.success === true) {
+                        res(response.result)
+                      } else {
+                        rej(response.result)
+                      }
+                    }
+                  )
+                )
+              }
             />
           </EditorContainer>
           {currentlyEditing && !currentlyEditing.isStatic && (
-            <EditorButton
+            <StyledEditorButton
               data-testid="editor-Favorite"
               onClick={() => {
                 setUnsaved(false)
                 const editorValue = editorRef.current?.getValue() || ''
 
                 const { isProjectFile, name } = currentlyEditing
-                if (isProjectFile && name) {
+                if (isProjectFile && projectId && name) {
                   addFile({
                     variables: {
                       projectId,
@@ -299,36 +333,38 @@ export function MainEditor({
                 })
               }}
               key={'editor-Favorite'}
-              title={`Update ${
-                currentlyEditing.isProjectFile ? 'project file' : 'favorite'
-              }`}
-              icon={
-                currentlyEditing.isProjectFile
-                  ? updateFileIcon
-                  : updateFavoriteIcon
-              }
-              width={16}
-            />
+            >
+              {currentlyEditing.isProjectFile ? (
+                <UpdateFileIcon width={16} title={'Update project file'} />
+              ) : (
+                <FavoriteIcon width={16} title={'Update favorite'} />
+              )}
+            </StyledEditorButton>
           )}
-          <EditorButton
+          <StyledEditorButton
             data-testid="editor-Run"
             onClick={createRunCommandFunction(commandSources.playButton)}
-            title={isMac ? 'Run (⌘↩)' : 'Run (ctrl+enter)'}
-            icon={runIcon}
             key="editor-Run"
-            width={16}
-          />
-        </Header>
-        {buttons.map(({ onClick, icon, title, testId }) => (
-          <FrameButton
-            key={`frame-${title}`}
-            title={title}
-            onClick={onClick}
-            dataTestId={`editor-${testId}`}
+            color={base.primary}
           >
-            {icon}
-          </FrameButton>
-        ))}
+            <RunIcon
+              width={16}
+              title={isMac ? 'Run (⌘↩)' : 'Run (ctrl+enter)'}
+            />
+          </StyledEditorButton>
+        </Header>
+        <StyledMainEditorButtonsContainer>
+          {buttons.map(({ onClick, icon, title, testId }) => (
+            <FrameButton
+              key={`frame-${title}`}
+              title={title}
+              onClick={onClick}
+              dataTestId={`editor-${testId}`}
+            >
+              {icon}
+            </FrameButton>
+          ))}
+        </StyledMainEditorButtonsContainer>
       </FlexContainer>
     </MainEditorWrapper>
   )

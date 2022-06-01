@@ -17,9 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import { render, screen, waitFor } from '@testing-library/react'
 import React from 'react'
-import { screen, render, waitFor } from '@testing-library/react'
 
 import FeatureToggle from './FeatureToggle'
 import { FeatureToggleProvider } from './FeatureToggleProvider'

@@ -49,7 +49,15 @@ module.exports = {
       'browser-hooks': path.resolve(helpers.browserPath, 'hooks'),
       browser: path.resolve(helpers.browserPath),
       'browser-styles': path.resolve(helpers.browserPath, 'styles'),
-      icons: path.resolve(helpers.browserPath, 'icons')
+      'neo4j-arc/graph-visualization$': path.resolve(
+        helpers.sourcePath,
+        'neo4j-arc/graph-visualization'
+      ),
+      'neo4j-arc/common$': path.resolve(helpers.sourcePath, 'neo4j-arc/common'),
+      'neo4j-arc/cypher-language-support$': path.resolve(
+        helpers.sourcePath,
+        'neo4j-arc/cypher-language-support'
+      )
     },
     extensions: ['.tsx', '.ts', '.js']
   },
@@ -72,15 +80,9 @@ module.exports = {
               chunks: 'all',
               enforce: true
             },
-            mdx: {
-              test: /[\\/]node_modules[\\/](@babel|@literal-jsx|@mdx-js|acorn|acorn-jsx|hast-util-raw|mdast-util-to-hast|remark-mdx|remark-parse)[\\/]/,
-              name: 'mdx',
-              chunks: 'all',
-              enforce: true
-            },
-            'relate-by-ui': {
-              test: /[\\/]node_modules[\\/](@relate-by-ui|semantic-ui-react)[\\/]/,
-              name: 'relate-by-ui',
+            'semantic-ui': {
+              test: /[\\/]node_modules[\\/](semantic-ui-react)[\\/]/,
+              name: 'semantic-ui',
               chunks: 'all',
               enforce: true
             },

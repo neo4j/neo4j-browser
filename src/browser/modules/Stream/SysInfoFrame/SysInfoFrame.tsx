@@ -17,38 +17,42 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React, { Component, ReactNode } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
+import { Bus } from 'suber'
+
+import { ExclamationTriangleIcon } from 'browser-components/icons/LegacyIcons'
+
+import {
+  AutoRefreshSpan,
+  AutoRefreshToggle,
+  StatusbarWrapper,
+  StyledStatusBar
+} from '../AutoRefresh/styled'
+import { ErrorsView } from '../CypherFrame/ErrorsView/ErrorsView'
+import LegacySysInfoFrame from './LegacySysInfoFrame/LegacySysInfoFrame'
+import { SysInfoTable } from './SysInfoTable'
+import { InlineError } from './styled'
+import * as helpers from './sysinfoHelpers'
+import FrameBodyTemplate from 'browser/modules/Frame/FrameBodyTemplate'
+import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
+import { GlobalState } from 'shared/globalState'
+import {
+  getUseDb,
+  isConnected
+} from 'shared/modules/connections/connectionsDuck'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import {
-  isEnterprise,
   Database,
-  getDatabases
+  getDatabases,
+  getMetricsNamespacesEnabled,
+  getMetricsPrefix,
+  isEnterprise
 } from 'shared/modules/dbMeta/state'
-import {
-  isConnected,
-  getUseDb
-} from 'shared/modules/connections/connectionsDuck'
-import FrameBodyTemplate from 'browser/modules/Frame/FrameBodyTemplate'
-import {
-  StyledStatusBar,
-  AutoRefreshToggle,
-  AutoRefreshSpan,
-  StatusbarWrapper
-} from '../AutoRefresh/styled'
-import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { hasMultiDbSupport } from 'shared/modules/features/versionedFeatures'
-import { ErrorsView } from '../CypherFrame/ErrorsView'
-import * as legacyHelpers from './legacyHelpers'
-import * as helpers from './helpers'
-import { SysInfoTable } from './SysInfoTable'
-import { Bus } from 'suber'
-import { GlobalState } from 'shared/globalState'
 import { Frame } from 'shared/modules/frames/framesDuck'
-import { ExclamationTriangleIcon } from '../../../components/icons/Icons'
-import { InlineError } from './styled'
+import { isOnCausalCluster } from 'shared/utils/selectors'
 
 export type DatabaseMetric = { label: string; value?: string }
 export type SysInfoFrameState = {
@@ -57,15 +61,14 @@ export type SysInfoFrameState = {
   idAllocation: DatabaseMetric[]
   pageCache: DatabaseMetric[]
   transactions: DatabaseMetric[]
+  casualClusterMembers: DatabaseMetric[]
   errorMessage: string | null
   results: boolean
   autoRefresh: boolean
   autoRefreshInterval: number
-  namespacesEnabled: boolean
-  userConfiguredPrefix: string
 }
 
-type SysInfoFrameProps = {
+export type SysInfoFrameProps = {
   bus: Bus
   databases: Database[]
   frame: Frame
@@ -75,6 +78,9 @@ type SysInfoFrameProps = {
   useDb: string | null
   isFullscreen: boolean
   isCollapsed: boolean
+  isOnCausalCluster: boolean
+  namespacesEnabled: boolean
+  metricsPrefix: string
 }
 
 export class SysInfoFrame extends Component<
@@ -88,61 +94,16 @@ export class SysInfoFrame extends Component<
     idAllocation: [],
     pageCache: [],
     transactions: [],
+    casualClusterMembers: [],
     errorMessage: null,
     results: false,
     autoRefresh: false,
-    autoRefreshInterval: 20, // seconds
-    namespacesEnabled: false,
-    userConfiguredPrefix: 'neo4j'
+    autoRefreshInterval: 20 // seconds
   }
 
   componentDidMount(): void {
-    this.getSettings()
-      .then(this.getSysInfo)
-      .catch(errorMessage => this.setState({ errorMessage }))
+    this.getSysInfo()
   }
-
-  getSettings = (): Promise<void> =>
-    new Promise((resolve, reject) => {
-      const { bus, isConnected } = this.props
-
-      if (bus && isConnected) {
-        bus.self(
-          CYPHER_REQUEST,
-          {
-            query: 'CALL dbms.listConfig("metrics.")',
-            queryType: NEO4J_BROWSER_USER_ACTION_QUERY
-          },
-          ({ success, result }) => {
-            if (success) {
-              const newState = result.records.reduce(
-                (newState: Partial<SysInfoFrameState>, record: any) => {
-                  const name = record.get('name')
-                  const value = record.get('value')
-                  if (name === 'metrics.prefix') {
-                    return { ...newState, userConfiguredPrefix: value }
-                  }
-
-                  if (name === 'metrics.namespaces.enabled') {
-                    return { ...newState, namespacesEnabled: value === 'true' }
-                  }
-
-                  return newState
-                },
-                {}
-              )
-
-              this.setState(newState)
-              resolve()
-            } else {
-              reject('Failed to run listConfig')
-            }
-          }
-        )
-      } else {
-        reject('Could not reach server')
-      }
-    })
 
   componentDidUpdate(
     prevProps: SysInfoFrameProps,
@@ -159,28 +120,27 @@ export class SysInfoFrame extends Component<
       }
     }
 
-    if (prevProps.useDb !== this.props.useDb) {
+    if (
+      prevProps.useDb !== this.props.useDb ||
+      prevProps.namespacesEnabled !== this.props.namespacesEnabled ||
+      prevProps.metricsPrefix !== this.props.metricsPrefix
+    ) {
       this.getSysInfo()
     }
   }
 
   getSysInfo = (): void => {
-    const { userConfiguredPrefix, namespacesEnabled } = this.state
-    const { useDb, hasMultiDbSupport } = this.props
+    const { useDb, hasMultiDbSupport, metricsPrefix, namespacesEnabled } =
+      this.props
 
     if (hasMultiDbSupport && useDb) {
       this.runCypherQuery(
         helpers.sysinfoQuery({
           databaseName: useDb,
           namespacesEnabled,
-          userConfiguredPrefix
+          metricsPrefix
         }),
         helpers.responseHandler(this.setState.bind(this))
-      )
-    } else if (!hasMultiDbSupport) {
-      this.runCypherQuery(
-        legacyHelpers.sysinfoQuery(),
-        legacyHelpers.responseHandler(this.setState.bind(this))
       )
     }
   }
@@ -200,6 +160,16 @@ export class SysInfoFrame extends Component<
         },
         responseHandler
       )
+      if (this.props.isOnCausalCluster) {
+        this.props.bus.self(
+          CYPHER_REQUEST,
+          {
+            query: 'CALL dbms.cluster.overview',
+            queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+          },
+          helpers.clusterResponseHandler(this.setState.bind(this))
+        )
+      }
     }
   }
 
@@ -219,13 +189,16 @@ export class SysInfoFrame extends Component<
       lastFetch,
       pageCache,
       storeSizes,
-      transactions
+      transactions,
+      casualClusterMembers
     } = this.state
     const {
       databases,
       isConnected,
       isEnterprise,
-      hasMultiDbSupport
+      hasMultiDbSupport,
+      isCollapsed,
+      isFullscreen
     } = this.props
 
     const content = isConnected ? (
@@ -235,6 +208,7 @@ export class SysInfoFrame extends Component<
         idAllocation={idAllocation}
         transactions={transactions}
         databases={databases}
+        casualClusterMembers={casualClusterMembers}
         isEnterpriseEdition={isEnterprise}
         hasMultiDbSupport={hasMultiDbSupport}
       />
@@ -246,8 +220,8 @@ export class SysInfoFrame extends Component<
 
     return (
       <FrameBodyTemplate
-        isCollapsed={this.props.isCollapsed}
-        isFullscreen={this.props.isFullscreen}
+        isCollapsed={isCollapsed}
+        isFullscreen={isFullscreen}
         contents={content}
         statusBar={
           <StatusbarWrapper>
@@ -271,13 +245,28 @@ export class SysInfoFrame extends Component<
     )
   }
 }
+const FrameVersionPicker = (props: SysInfoFrameProps) => {
+  if (props.isConnected && props.isEnterprise && !props.hasMultiDbSupport) {
+    return (
+      <LegacySysInfoFrame
+        {...props}
+        isACausalCluster={props.isOnCausalCluster}
+      />
+    )
+  } else {
+    return <SysInfoFrame {...props} />
+  }
+}
 
 const mapStateToProps = (state: GlobalState) => ({
   hasMultiDbSupport: hasMultiDbSupport(state),
   isEnterprise: isEnterprise(state),
   isConnected: isConnected(state),
   databases: getDatabases(state),
-  useDb: getUseDb(state)
+  useDb: getUseDb(state),
+  isOnCausalCluster: isOnCausalCluster(state),
+  namespacesEnabled: getMetricsNamespacesEnabled(state),
+  metricsPrefix: getMetricsPrefix(state)
 })
 
-export default withBus(connect(mapStateToProps)(SysInfoFrame))
+export default withBus(connect(mapStateToProps)(FrameVersionPicker))

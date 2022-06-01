@@ -1,7 +1,9 @@
-const SubmitQueryButton = '[data-testid="editor-Run"]'
+export const SubmitQueryButton = '[data-testid="editor-Run"]'
 const EditorTextField = '[data-testid="activeEditor"] textarea'
 const VisibleEditor = '#monaco-main-editor'
 /* global Cypress, cy */
+export const selectAllAndDelete =
+  Cypress.platform === 'darwin' ? '{cmd}a {backspace}' : '{ctrl}a {backspace}'
 
 Cypress.Commands.add('getEditor', () => cy.get(VisibleEditor))
 Cypress.Commands.add('getFrames', () => cy.get('[data-testid="frame"]'))
@@ -29,13 +31,9 @@ Cypress.Commands.add(
     cy.title().should('include', 'Neo4j Browser')
     cy.wait(3000)
 
-    cy.get('input[data-testid="boltaddress"]')
-      .clear()
-      .type(boltUrl)
+    cy.get('input[data-testid="boltaddress"]').clear().type(boltUrl)
 
-    cy.get('input[data-testid="username"]')
-      .clear()
-      .type(username)
+    cy.get('input[data-testid="username"]').clear().type(username)
     cy.get('input[data-testid="password"]').type(initialPassword)
 
     cy.get('button[data-testid="connect"]').click()
@@ -71,16 +69,10 @@ Cypress.Commands.add(
     cy.executeCommand(':clear')
     cy.executeCommand(':server connect')
 
-    cy.get('input[data-testid="boltaddress"]')
-      .clear()
-      .type(boltUrl)
+    cy.get('input[data-testid="boltaddress"]').clear().type(boltUrl)
 
-    cy.get('input[data-testid="username"]')
-      .clear()
-      .type(username)
-    cy.get('input[data-testid="password"]')
-      .clear()
-      .type(password)
+    cy.get('input[data-testid="username"]').clear().type(username)
+    cy.get('input[data-testid="password"]').clear().type(password)
 
     cy.get('button[data-testid="connect"]').click()
     if (makeAssertions) {
@@ -133,9 +125,7 @@ Cypress.Commands.add('resultContains', str => {
 Cypress.Commands.add('addUser', (userName, password, role, force) => {
   cy.get('[id*=username]')
   cy.get('[id*=username]').type(userName)
-  cy.get('[id*=password]')
-    .first()
-    .type(password)
+  cy.get('[id*=password]').first().type(password)
   cy.get('[id*=password-confirm]').type(password)
   cy.get('[id*=roles-selector]').select(role)
   if (force === true) {
@@ -188,3 +178,14 @@ Cypress.Commands.add('dropUser', username => {
     cy.executeCommand(':clear')
   }
 })
+
+Cypress.Commands.add(
+  'ensureConnection',
+  (creds = { username: 'neo4j', password: Cypress.config('password') }) => {
+    cy.contains('Database access not available').then(res => {
+      if (res) {
+        cy.connect(creds.username, creds.password)
+      }
+    })
+  }
+)

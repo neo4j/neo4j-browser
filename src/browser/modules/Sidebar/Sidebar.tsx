@@ -17,44 +17,44 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React from 'react'
 import { connect } from 'react-redux'
+
+import {
+  AboutIcon,
+  CloudSyncIcon,
+  DatabaseIcon,
+  DocumentsIcon,
+  FavoritesIcon,
+  GuideDrawerIcon,
+  ProjectFilesIcon,
+  SettingsIcon
+} from 'browser-components/icons/LegacyIcons'
+
 import DatabaseDrawer from '../DBMSInfo/DBMSInfo'
-import DocumentsDrawer from './Documents'
+import BrowserSync from '../Sync/BrowserSync'
 import AboutDrawer from './About'
-import SettingsDrawer from './Settings'
+import DocumentsDrawer from './Documents'
 import GuideDrawer from './GuideDrawer'
+import ProjectFilesDrawer from './ProjectFiles'
+import UserSettingsDrawer from './UserSettings'
 import Favorites from './favorites'
 import StaticScripts from './static-scripts'
-import ProjectFilesDrawer from './ProjectFiles'
 import TabNavigation, {
   NavItem,
   STANDARD_DRAWER_WIDTH
 } from 'browser-components/TabNavigation/Navigation'
-import BrowserSync from '../Sync/BrowserSync'
-import { GlobalState } from 'shared/globalState'
-import { isUserSignedIn } from 'shared/modules/sync/syncDuck'
-import { utilizeBrowserSync } from 'shared/modules/features/featuresDuck'
-import {
-  PENDING_STATE,
-  CONNECTED_STATE,
-  DISCONNECTED_STATE
-} from 'shared/modules/connections/connectionsDuck'
-import { isRelateAvailable } from 'shared/modules/app/appDuck'
-
-import {
-  DatabaseIcon,
-  FavoritesIcon,
-  DocumentsIcon,
-  CloudSyncIcon,
-  SettingsIcon,
-  AboutIcon,
-  ProjectFilesIcon,
-  GuideDrawerIcon
-} from 'browser-components/icons/Icons'
-import { getCurrentDraft } from 'shared/modules/sidebar/sidebarDuck'
 import { DrawerHeader } from 'browser-components/drawer/drawer-styled'
+import { GlobalState } from 'shared/globalState'
+import { isRelateAvailable } from 'shared/modules/app/appDuck'
+import {
+  CONNECTED_STATE,
+  DISCONNECTED_STATE,
+  PENDING_STATE
+} from 'shared/modules/connections/connectionsDuck'
+import { utilizeBrowserSync } from 'shared/modules/features/featuresDuck'
+import { getCurrentDraft } from 'shared/modules/sidebar/sidebarDuck'
+import { isUserSignedIn } from 'shared/modules/sync/syncDuck'
 
 interface SidebarProps {
   selectedDrawerName: string
@@ -163,7 +163,7 @@ const Sidebar = ({
       icon: function settingIcon(isOpen: boolean): JSX.Element {
         return <SettingsIcon isOpen={isOpen} title="Browser Settings" />
       },
-      content: SettingsDrawer
+      content: UserSettingsDrawer
     },
     {
       name: 'About',

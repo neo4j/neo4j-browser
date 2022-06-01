@@ -17,15 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { select as d3Select } from 'd3-selection'
 
-import d3 from 'd3'
 export const prepareForExport = (
   svgElement: SVGElement,
   graphElement: any,
   type: any
 ) => {
   const dimensions = getSvgDimensions(graphElement)
-  let svg = d3.select(
+  let svg = d3Select(
     document.createElementNS('http://www.w3.org/2000/svg', 'svg')
   )
 
@@ -69,29 +69,25 @@ const getSvgDimensions = (view: any) => {
 }
 
 const appendGraphLayers = (svgElement: SVGElement, svg: any) => {
-  d3.select(svgElement)
+  d3Select(svgElement)
     .selectAll('g.layer')
-    .each(function() {
+    .each(function () {
       svg.node().appendChild(
-        d3
-          // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-          .select(this)
+        d3Select<SVGGElement, unknown>(this as SVGGElement)
           .node()
-          .cloneNode(true)
+          ?.cloneNode(true)
       )
     })
   return svg
 }
 const appendPlanLayers = (svgElement: SVGElement, svg: any) => {
-  d3.select(svgElement)
+  d3Select(svgElement)
     .selectAll('g.layer')
-    .each(function() {
+    .each(function () {
       svg.node().appendChild(
-        d3
-          // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-          .select(this)
+        d3Select<SVGGElement, unknown>(this as SVGGElement)
           .node()
-          .cloneNode(true)
+          ?.cloneNode(true)
       )
     })
   return svg

@@ -17,19 +17,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import React, { memo, useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
-import React, { memo, useRef, useEffect } from 'react'
-import { StyledStream, Padding, AnimationContainer } from './styled'
-import { GlobalState } from 'shared/globalState'
-import { FrameStack, Frame, getFrames } from 'shared/modules/frames/framesDuck'
-import {
-  getActiveConnectionData,
-  Connection
-} from 'shared/modules/connections/connectionsDuck'
-import { getScrollToTop } from 'shared/modules/settings/settingsDuck'
-import { FrameContainer } from './FrameContainer'
+
 import { ExportItem } from '../Frame/ExportButton'
+import { FrameContainer } from './FrameContainer'
+import { AnimationContainer, Padding, StyledStream } from './styled'
+import { GlobalState } from 'shared/globalState'
+import {
+  Connection,
+  getActiveConnectionData
+} from 'shared/modules/connections/connectionsDuck'
+import { Frame, FrameStack, getFrames } from 'shared/modules/frames/framesDuck'
+import { getScrollToTop } from 'shared/modules/settings/settingsDuck'
 
 type StreamProps = {
   frames: FrameStack[]

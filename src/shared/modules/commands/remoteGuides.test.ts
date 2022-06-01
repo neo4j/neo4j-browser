@@ -17,9 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import { createEpicMiddleware } from 'redux-observable'
 import { createBus } from 'suber'
+
 import {
   fetchGuideFromAllowlistAction,
   fetchGuideFromAllowlistEpic
@@ -69,7 +69,6 @@ describe('fetchGuideFromAllowlistEpic', () => {
       expect(
         dbMeta.getDefaultRemoteContentHostnameAllowlist
       ).toHaveBeenCalledTimes(1)
-      expect(remote.get).toHaveBeenCalledTimes(4) // 2 times per hostname
       expect(remote.get).toHaveBeenCalledWith('http://testurl1.test/reco', {
         'cache-control': 'no-cache',
         pragma: 'no-cache'
@@ -86,6 +85,7 @@ describe('fetchGuideFromAllowlistEpic', () => {
         'cache-control': 'no-cache',
         pragma: 'no-cache'
       })
+      expect(remote.get).toHaveBeenCalledTimes(4) // 2 times per hostname
       done()
     })
     bus.send(action.type, action)
@@ -111,7 +111,6 @@ describe('fetchGuideFromAllowlistEpic', () => {
       expect(
         dbMeta.getDefaultRemoteContentHostnameAllowlist
       ).toHaveBeenCalledTimes(1)
-      expect(remote.get).toHaveBeenCalledTimes(2)
       expect(remote.get).toHaveBeenCalledWith('http://configurl1.test/reco', {
         'cache-control': 'no-cache',
         pragma: 'no-cache'
@@ -120,6 +119,7 @@ describe('fetchGuideFromAllowlistEpic', () => {
         'cache-control': 'no-cache',
         pragma: 'no-cache'
       })
+      expect(remote.get).toHaveBeenCalledTimes(2)
       done()
     })
     bus.send(action.type, action)

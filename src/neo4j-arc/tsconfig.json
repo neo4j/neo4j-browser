@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "jsx": "react",
+    "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "paths": {
+      "neo4j-arc/common": ["./common/index.ts"]
+    }
+  },
+  "exclude": ["**/*.test.ts", "**/*.test.tsx"]
+}

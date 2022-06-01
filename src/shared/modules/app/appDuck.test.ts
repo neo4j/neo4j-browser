@@ -17,8 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import reducer, { NAME, APP_START, getHostedUrl } from './appDuck'
+import reducer, { APP_START, NAME, getHostedUrl } from './appDuck'
 
 test('reducer stores hostedUrl', () => {
   // Given
@@ -40,11 +39,11 @@ test('selector getHostedUrl returns whats in the store', () => {
   const action = { type: APP_START, url }
 
   // Then
-  expect(getHostedUrl({ [NAME]: initState })).toEqual(null)
+  expect(getHostedUrl({ [NAME]: initState } as any)).toEqual(null)
 
   // When
   const state = reducer(initState, action)
 
   // Then
-  expect(getHostedUrl({ [NAME]: state })).toEqual(url)
+  expect(getHostedUrl({ [NAME]: state } as any)).toEqual(url)
 })

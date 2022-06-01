@@ -17,27 +17,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import { authLog, handleRefreshingToken } from 'neo4j-client-sso'
 import Rx from 'rxjs/Rx'
-import { handleRefreshingToken, authLog } from 'neo4j-client-sso'
+
 import bolt from 'services/bolt/bolt'
-import * as discovery from 'shared/modules/discovery/discoveryDuck'
-import { NATIVE, NO_AUTH, SSO } from 'services/bolt/boltHelpers'
-import { fetchMetaData } from 'shared/modules/dbMeta/actions'
-import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
-import {
-  getInitCmd,
-  getPlayImplicitInitCommands,
-  getConnectionTimeout
-} from 'shared/modules/settings/settingsDuck'
-import { inWebEnv, USER_CLEAR, APP_START } from 'shared/modules/app/appDuck'
-import { GlobalState } from 'shared/globalState'
-import { isCloudHost } from 'shared/services/utils'
-import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
 import {
   TokenExpiredDriverError,
   UnauthorizedDriverError
 } from 'services/bolt/boltConnectionErrors'
+import { NATIVE, NO_AUTH, SSO } from 'services/bolt/boltHelpers'
+import { GlobalState } from 'shared/globalState'
+import { APP_START, USER_CLEAR, inWebEnv } from 'shared/modules/app/appDuck'
+import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
+import { fetchMetaData } from 'shared/modules/dbMeta/actions'
+import * as discovery from 'shared/modules/discovery/discoveryDuck'
+import {
+  getConnectionTimeout,
+  getInitCmd,
+  getPlayImplicitInitCommands
+} from 'shared/modules/settings/settingsDuck'
+import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
+import { isCloudHost } from 'shared/services/utils'
 
 export const NAME = 'connections'
 export const SET_ACTIVE = 'connections/SET_ACTIVE'
@@ -262,7 +262,7 @@ let memoryUsername = ''
 let memoryPassword = ''
 
 // Reducer
-export default function(state = initialState, action: any) {
+export default function (state = initialState, action: any) {
   switch (action.type) {
     case APP_START:
       return {
@@ -563,12 +563,20 @@ export const startupConnectEpic = (action$: any, store: any) => {
         }
       }
 
+      const currentConn = getConnection(
+        store.getState(),
+        discovery.CONNECTION_ID
+      )
       // Otherwise fail autoconnect
       store.dispatch(setActiveConnection(null))
       store.dispatch(
         discovery.updateDiscoveryConnection({
           password: '',
-          SSOError: discovered?.SSOError
+          SSOError: discovered?.SSOError,
+          authenticationMethod:
+            (currentConn?.SSOProviders?.length ?? 0) > 1
+              ? SSO
+              : currentConn?.authenticationMethod
         })
       )
       return Promise.resolve({ type: STARTUP_CONNECTION_FAILED })
@@ -654,8 +662,9 @@ export const connectionLostEpic = (action$: any, store: any) =>
                 authLog(
                   'Detected access token expiry, starting refresh attempt'
                 )
-                const SSOProviders = getActiveConnectionData(store.getState())
-                  ?.SSOProviders
+                const SSOProviders = getActiveConnectionData(
+                  store.getState()
+                )?.SSOProviders
                 if (SSOProviders) {
                   try {
                     const credentials = await handleRefreshingToken(

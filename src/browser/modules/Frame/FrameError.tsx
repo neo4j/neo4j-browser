@@ -18,10 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React from 'react'
-import { ExclamationTriangleIcon } from 'browser-components/icons/Icons'
-import Ellipsis from 'browser-components/Ellipsis'
+
+import { ExclamationTriangleIcon } from 'browser-components/icons/LegacyIcons'
+
 import { errorMessageFormater } from '../Stream/errorMessageFormater'
 import { ErrorText } from '../Stream/styled'
+import Ellipsis from 'browser-components/Ellipsis'
 
 const FrameError = (props: any) => {
   if (!props || (!props.code && !props.message)) return null

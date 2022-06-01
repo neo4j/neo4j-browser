@@ -19,7 +19,7 @@
  */
 
 /* global btoa */
-import { getUrlInfo } from 'services/utils'
+import { parseURLWithDefaultProtocol } from 'services/utils'
 
 const removeJavascriptFromHref = (string: any) => {
   const localString = string.replace(/href=".*javascript:[^"]*"/, 'href=""')
@@ -46,18 +46,26 @@ export const authHeaderFromCredentials = (username: any, password: any) => {
 }
 
 export const isLocalRequest = (
-  localUrl: any,
-  requestUrl: any,
+  localUrl?: string | null,
+  requestUrl?: string | null,
   opts = { hostnameOnly: false }
-) => {
-  if (!localUrl) return false
+): boolean => {
+  if (!localUrl || !requestUrl) return false
 
-  const localUrlInfo = getUrlInfo(localUrl)
-  const requestUrlInfo = getUrlInfo(requestUrl)
+  const localUrlInfo = parseURLWithDefaultProtocol(localUrl)
+  if (!localUrlInfo) return false
+
+  if (requestUrl.startsWith('/')) return true
+
+  const requestUrlInfo = parseURLWithDefaultProtocol(requestUrl)
+  if (!requestUrlInfo) return false
+
   if (!requestUrlInfo.host) return true // GET /path
+
   if (opts.hostnameOnly === true) {
     return requestUrlInfo.hostname === localUrlInfo.hostname
   } // GET localhost:8080 from localhost:9000
+
   if (
     requestUrlInfo.host === localUrlInfo.host &&
     requestUrlInfo.protocol === localUrlInfo.protocol

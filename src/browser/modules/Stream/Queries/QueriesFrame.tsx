@@ -17,49 +17,50 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
-import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
+import { Bus } from 'suber'
+
 import FrameAside from '../../Frame/FrameAside'
-import bolt from 'services/bolt/bolt'
+import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
+import FrameError from '../../Frame/FrameError'
 import {
-  listQueriesProcedure,
-  killQueriesProcedure
-} from 'shared/modules/cypher/queriesProcedureHelper'
-import { getAvailableProcedures } from 'shared/modules/features/featuresDuck'
+  AutoRefreshSpan,
+  AutoRefreshToggle,
+  StatusbarWrapper,
+  StyledStatusBar
+} from '../AutoRefresh/styled'
 import {
-  CYPHER_REQUEST,
-  CLUSTER_CYPHER_REQUEST,
-  AD_HOC_CYPHER_REQUEST
-} from 'shared/modules/cypher/cypherDuck'
-import {
-  getConnectionState,
-  CONNECTED_STATE
-} from 'shared/modules/connections/connectionsDuck'
-import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
-import {
-  StyledTh,
+  Code,
   StyledHeaderRow,
   StyledTable,
   StyledTableWrapper,
   StyledTd,
-  Code
+  StyledTh
 } from './styled'
-import {
-  StyledStatusBar,
-  AutoRefreshToggle,
-  AutoRefreshSpan,
-  StatusbarWrapper
-} from '../AutoRefresh/styled'
 import { EnterpriseOnlyFrame } from 'browser-components/EditionView'
-
-import FrameError from '../../Frame/FrameError'
-import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
-import { getDefaultBoltScheme } from 'shared/modules/features/versionedFeatures'
-import { getVersion } from 'shared/modules/dbMeta/state'
+import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
 import { GlobalState } from 'project-root/src/shared/globalState'
+import bolt from 'services/bolt/bolt'
+import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
+import {
+  CONNECTED_STATE,
+  getConnectionState
+} from 'shared/modules/connections/connectionsDuck'
+import {
+  AD_HOC_CYPHER_REQUEST,
+  CLUSTER_CYPHER_REQUEST,
+  CYPHER_REQUEST
+} from 'shared/modules/cypher/cypherDuck'
+import {
+  killQueriesProcedure,
+  listQueriesProcedure
+} from 'shared/modules/cypher/queriesProcedureHelper'
+import { getVersion } from 'shared/modules/dbMeta/state'
+import { getAvailableProcedures } from 'shared/modules/features/featuresDuck'
+import { getDefaultBoltScheme } from 'shared/modules/features/versionedFeatures'
+import { isOnCausalCluster } from 'shared/utils/selectors'
 
 type QueriesFrameState = {
   queries: any[]
@@ -71,12 +72,13 @@ type QueriesFrameState = {
 
 type QueriesFrameProps = {
   frame?: any
-  bus: any
+  bus: Bus
   availableProcedures: any
   connectionState: number
   neo4jVersion: string | null
   isFullscreen: boolean
   isCollapsed: boolean
+  isOnCausalCluster: boolean
 }
 export class QueriesFrame extends Component<
   QueriesFrameProps,
@@ -111,16 +113,13 @@ export class QueriesFrame extends Component<
       }
     }
     if (
-      this.props.frame &&
-      this.props.frame.ts !== prevProps.frame.ts &&
-      this.props.frame.isRerun
+      (this.props.frame &&
+        this.props.frame.ts !== prevProps.frame.ts &&
+        this.props.frame.isRerun) ||
+      this.props.isOnCausalCluster !== prevProps.isOnCausalCluster
     ) {
       this.getRunningQueries()
     }
-  }
-
-  isCC() {
-    return this.props.availableProcedures.includes('dbms.cluster.overview')
   }
 
   canListQueries() {
@@ -129,7 +128,7 @@ export class QueriesFrame extends Component<
 
   getRunningQueries(suppressQuerySuccessMessage = false) {
     this.props.bus.self(
-      this.isCC() ? CLUSTER_CYPHER_REQUEST : CYPHER_REQUEST,
+      this.props.isOnCausalCluster ? CLUSTER_CYPHER_REQUEST : CYPHER_REQUEST,
       {
         query: listQueriesProcedure(),
         queryType: NEO4J_BROWSER_USER_ACTION_QUERY
@@ -170,7 +169,7 @@ export class QueriesFrame extends Component<
 
   killQueries(host: any, queryIdList: any) {
     this.props.bus.self(
-      this.isCC() ? AD_HOC_CYPHER_REQUEST : CYPHER_REQUEST,
+      this.props.isOnCausalCluster ? AD_HOC_CYPHER_REQUEST : CYPHER_REQUEST,
       { host, query: killQueriesProcedure(queryIdList) },
       (response: any) => {
         if (response.success) {
@@ -389,7 +388,8 @@ const mapStateToProps = (state: GlobalState) => {
   return {
     availableProcedures: getAvailableProcedures(state) || [],
     connectionState: getConnectionState(state),
-    neo4jVersion: getVersion(state)
+    neo4jVersion: getVersion(state),
+    isOnCausalCluster: isOnCausalCluster(state)
   }
 }
 

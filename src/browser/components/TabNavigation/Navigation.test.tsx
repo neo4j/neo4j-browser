@@ -17,9 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import { fireEvent, render, screen } from '@testing-library/react'
 import React from 'react'
-import { render, fireEvent, screen } from '@testing-library/react'
 
 import Navigation from './Navigation'
 

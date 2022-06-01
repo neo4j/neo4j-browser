@@ -9,7 +9,7 @@ This section walks you through the UI of Neo4j Browser.
 [[overview]]
 == Overview
 
-image:overview.png[]
+image:overview1.png[]
 
 [[sidebar]]
 == Sidebar
@@ -39,7 +39,7 @@ For more information about user's built-in roles and the default privileges, see
 
 The *Favorites* drawer is where you keep your bookmarked queries and commands.
 
-image:favorites.png[]
+image:favorites1.png[]
 
 ==== Save a query as a favorite
 
@@ -60,7 +60,7 @@ To run one of your favorites, click the left-side menu *Favorites*, choose the q
 
 ==== Add a title to a favorite
 
-The first line of the Cypher query or command will be used to name your favorite.
+The first line of the Cypher query or command is used to name your favorite.
 To provide a title or helpful info to your favorite, you can use a comment `//comment` above your query.
 The *Favorites* menu uses this comment to name the saved query.
 
@@ -211,7 +211,7 @@ For the complete list of all Neo4j Browser commands, see xref:reference-commands
 === Browser Settings
 
 The *Browser Settings* drawer contains configurations related to the UI, result frames, and graph visualization.
-You can adjust some of them in place, for example, _Enable multi statement query editor_, _Initial command to execute_, graph limits, result limits, or by using the `:config` command. 
+You can adjust some of them in place, for example, _Enable multi statement query editor_, _Initial command to execute_, graph limits, result limits, or by using the `:config` command.
 For the full list of the Neo4j Browser settings and how to adjust them in the Browser and globally, see xref:operations/browser-settings.adoc[].
 
 image:settings.png[width=40%]
@@ -323,7 +323,7 @@ image:inline-result-editor.gif[]
 
 You can also use _Cmd/Ctrl + click_ to send it back to the main editor and re-run it from there.
 
-image:result-frame.png[]
+image:reusable-frame.png[]
 
 Each reusable frame maintains its own local history of commands and updates the main one in the Cypher editor, should you need to instantiate a new result frame from there.
 
@@ -353,4 +353,3 @@ To remove all the frames from the stream, use the `:clear` command.
 Browser settings that maybe useful for you are the maximum number of result frames to display (`maxFrames`) and the size of the command and statement history (`maxHistory`).
 When reached, old frames and history entries get retired.
 For more information on how to adjust Browser Settings, see xref:operations/browser-settings.adoc[].
-

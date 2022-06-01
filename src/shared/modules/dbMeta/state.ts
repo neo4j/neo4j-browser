@@ -17,19 +17,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import neo4j from 'neo4j-driver'
 
-import { versionHasEditorHistorySetting } from './utils'
-import { GlobalState } from 'shared/globalState'
-import { isConfigValFalsy } from 'services/bolt/boltHelpers'
 import {
-  UPDATE_META,
+  CLEAR_META,
   PARSE_META,
+  UPDATE_META,
   UPDATE_SERVER,
-  UPDATE_SETTINGS,
-  CLEAR_META
+  UPDATE_SETTINGS
 } from './constants'
+import { versionHasEditorHistorySetting } from './utils'
+import { isConfigValFalsy } from 'services/bolt/boltHelpers'
+import { GlobalState } from 'shared/globalState'
 import { APP_START } from 'shared/modules/app/appDuck'
 
 export const NAME = 'meta'
@@ -55,7 +54,9 @@ export const initialState = {
     'browser.remote_content_hostname_allowlist': 'guides.neo4j.com, localhost',
     'browser.retain_connection_credentials': false,
     'browser.retain_editor_history': false,
-    'clients.allow_telemetry': true
+    'clients.allow_telemetry': true,
+    'metrics.namespaces.enabled': false,
+    'metrics.prefix': 'neo4j'
   }
 }
 
@@ -143,6 +144,10 @@ export const getRetainEditorHistory = (state: any) => {
   if (conf === null || typeof conf === 'undefined') return false
   return !isConfigValFalsy(conf)
 }
+export const getMetricsNamespacesEnabled = (state: GlobalState): boolean =>
+  getAvailableSettings(state)['metrics.namespaces.enabled']
+export const getMetricsPrefix = (state: GlobalState): string =>
+  getAvailableSettings(state)['metrics.prefix']
 
 export const getDatabases = (state: any): Database[] =>
   (state[NAME] || initialState).databases

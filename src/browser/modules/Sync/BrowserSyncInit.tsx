@@ -17,25 +17,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import { Component } from 'react'
 import { connect } from 'react-redux'
 
+import { BrowserSyncAuthIframe } from './BrowserSyncAuthIframes'
+import { deepEquals } from 'neo4j-arc/common'
+import { getBrowserSyncConfig } from 'shared/modules/settings/settingsDuck'
 import {
-  setSyncData,
-  setSyncMetadata,
+  SIGNED_IN,
+  SIGNED_OUT,
   authorizedAs,
-  updateServiceStatus,
-  updateUserAuthStatus,
+  clearSync,
   resetSyncMetadata,
   setSyncAuthData,
-  clearSync,
-  SIGNED_IN,
-  SIGNED_OUT
+  setSyncData,
+  setSyncMetadata,
+  updateServiceStatus,
+  updateUserAuthStatus
 } from 'shared/modules/sync/syncDuck'
-import { getBrowserSyncConfig } from 'shared/modules/settings/settingsDuck'
-import { BrowserSyncAuthIframe } from './BrowserSyncAuthIframes'
-import { deepEquals } from 'services/utils'
 
 export function hasAuthData(props: any) {
   return props.authData && props.authData.data_token

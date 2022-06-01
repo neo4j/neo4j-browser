@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import { version } from 'project-root/package.json'
 
 // Application info
@@ -39,19 +38,19 @@ export const getBackgroundTxMetadata = ({ hasServerSupport = false }) => {
   }
 }
 
-export const getUserTxMetadata = (type: any) => ({
-  hasServerSupport = false
-}) => {
-  if (!hasServerSupport || !type) {
-    return {}
-  }
-  return {
-    txMetadata: {
-      type,
-      app: NEO4J_BROWSER_APP_ID
+export const getUserTxMetadata =
+  (type: any) =>
+  ({ hasServerSupport = false }) => {
+    if (!hasServerSupport || !type) {
+      return {}
+    }
+    return {
+      txMetadata: {
+        type,
+        app: NEO4J_BROWSER_APP_ID
+      }
     }
   }
-}
 
 export const getUserDirectTxMetadata = getUserTxMetadata(
   NEO4J_BROWSER_USER_QUERY

@@ -17,17 +17,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import { version } from 'project-root/package.json'
 import { createEpicMiddleware } from 'redux-observable'
 import { createBus } from 'suber'
-import { flushPromises } from 'services/utils'
+
 import {
-  executeSystemCommand,
+  autoCommitTxCommand,
   executeSingleCommand,
-  handleSingleCommandEpic,
-  autoCommitTxCommand
+  executeSystemCommand,
+  handleSingleCommandEpic
 } from './commandsDuck'
+import { version } from 'project-root/package.json'
+import { flushPromises } from 'services/utils'
 
 jest.mock('services/bolt/bolt', () => {
   const orig = require.requireActual('services/bolt/bolt')
@@ -40,14 +40,6 @@ jest.mock('services/bolt/bolt', () => {
   }
 })
 const bolt = require.requireMock('services/bolt/bolt')
-
-jest.mock('shared/modules/settings/settingsDuck', () => {
-  const orig = require.requireActual('shared/modules/settings/settingsDuck')
-  return {
-    ...orig,
-    shouldUseCypherThread: () => false
-  }
-})
 
 jest.mock('shared/modules/params/paramsDuck', () => {
   const orig = require.requireActual('shared/modules/params/paramsDuck')
@@ -150,7 +142,7 @@ describe('Implicit vs explicit transactions', () => {
     const $$responseChannel = 'test-channel3'
     const action: any = executeSingleCommand(
       `// comment
-/* 
+/*
 multiline comment
 */
 // comment
@@ -165,7 +157,7 @@ multiline comment
       expect(bolt.routedWriteTransaction).toHaveBeenCalledTimes(1)
       expect(bolt.routedWriteTransaction).toHaveBeenCalledWith(
         `// comment
-/* 
+/*
 multiline comment
 */
 // comment

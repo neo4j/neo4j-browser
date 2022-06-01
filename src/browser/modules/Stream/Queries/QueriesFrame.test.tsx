@@ -17,20 +17,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
 import { createBus } from 'suber'
+
 import { QueriesFrame } from './QueriesFrame'
 import {
-  DISCONNECTED_STATE,
-  CONNECTED_STATE
+  CONNECTED_STATE,
+  DISCONNECTED_STATE
 } from 'shared/modules/connections/connectionsDuck'
 
-jest.mock(
-  '../../Frame/FrameBodyTemplate',
+jest.mock('../../Frame/FrameBodyTemplate', () =>
   // eslint-disable-next-line
-  () => ({ contents, statusBar }: any) => (
+  ({ contents, statusBar }: any) => (
     <div>
       {contents}
       {statusBar}
@@ -83,7 +82,8 @@ it('can list and kill queries', () => {
     bus,
     neo4jVersion: '4.0.0',
     isFullscreen: false,
-    isCollapsed: false
+    isCollapsed: false,
+    isOnCausalCluster: false
   }
 
   const { getByText, getByTestId } = render(<QueriesFrame {...props} />)

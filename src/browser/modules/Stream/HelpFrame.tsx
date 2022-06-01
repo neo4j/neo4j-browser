@@ -18,17 +18,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React, { useEffect, useState } from 'react'
-import Docs from '../Docs/Docs'
-import docs from '../../documentation'
-import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
-import FrameAside from '../Frame/FrameAside'
-import { transformCommandToHelpTopic } from 'services/commandUtils'
-import { DynamicTopics } from '../../documentation/templates/DynamicTopics'
-import { CarouselButton } from 'browser-components/buttons/index'
+
 import {
   StackNextIcon,
   StackPreviousIcon
-} from 'browser-components/icons/Icons'
+} from 'browser-components/icons/LegacyIcons'
+
+import docs from '../../documentation'
+import { DynamicTopics } from '../../documentation/templates/DynamicTopics'
+import Docs from '../Docs/Docs'
+import FrameAside from '../Frame/FrameAside'
+import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
+import { CarouselButton } from 'browser-components/buttons/index'
+import { transformCommandToHelpTopic } from 'services/commandUtils'
 
 const HelpFrame = ({ stack = [], isFullscreen, isCollapsed }: any) => {
   const [currentFrameIndex, setCurrentFrameIndex] = useState(0)

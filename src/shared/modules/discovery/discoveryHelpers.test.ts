@@ -17,9 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import nock from 'nock'
 import 'isomorphic-fetch'
+import nock from 'nock'
 
 import { getAndMergeDiscoveryData } from './discoveryHelpers'
 import { fakeDiscoveryResponse } from './discoveryMocks'
@@ -86,14 +85,12 @@ describe('getAndMergeDiscoveryData', () => {
     const browserHost = 'http://localhost:7474'
     const neo4jVersion = '4.3.1'
 
-    nock(browserHost)
-      .get('/')
-      .reply(200, {
-        bolt_routing: boltHost,
-        bolt_direct: boltHost,
-        neo4j_version: neo4jVersion,
-        neo4j_edition: 'enterprise'
-      })
+    nock(browserHost).get('/').reply(200, {
+      bolt_routing: boltHost,
+      bolt_direct: boltHost,
+      neo4j_version: neo4jVersion,
+      neo4j_edition: 'enterprise'
+    })
 
     // When
     const discoveryData = await getAndMergeDiscoveryData({

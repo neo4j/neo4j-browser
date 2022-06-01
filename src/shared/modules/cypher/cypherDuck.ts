@@ -17,29 +17,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import Rx from 'rxjs'
 import neo4j from 'neo4j-driver'
+import Rx from 'rxjs'
+
+import { updateServerInfo } from '../dbMeta/actions'
+import { serverInfoQuery } from '../dbMeta/constants'
+import { getVersion } from '../dbMeta/state'
+import {
+  FIRST_MULTI_DB_SUPPORT,
+  FIRST_NO_MULTI_DB_SUPPORT,
+  canSendTxMetadata,
+  changeUserPasswordQuery,
+  driverDatabaseSelection
+} from '../features/versionedFeatures'
+import { getCausalClusterAddresses } from './queriesProcedureHelper'
 import bolt from 'services/bolt/bolt'
+import { buildTxFunctionByMode } from 'services/bolt/boltHelpers'
+import { getUserTxMetadata } from 'services/bolt/txMetadata'
+import { flatten } from 'services/utils'
 import {
   Connection,
   getActiveConnectionData
 } from 'shared/modules/connections/connectionsDuck'
-import { getCausalClusterAddresses } from './queriesProcedureHelper'
-import { buildTxFunctionByMode } from 'services/bolt/boltHelpers'
-import { flatten } from 'services/utils'
-import { shouldUseCypherThread } from 'shared/modules/settings/settingsDuck'
-import { getUserTxMetadata } from 'services/bolt/txMetadata'
-import {
-  canSendTxMetadata,
-  changeUserPasswordQuery,
-  driverDatabaseSelection,
-  FIRST_MULTI_DB_SUPPORT,
-  FIRST_NO_MULTI_DB_SUPPORT
-} from '../features/versionedFeatures'
-import { serverInfoQuery } from '../dbMeta/constants'
-import { getVersion } from '../dbMeta/state'
-import { updateServerInfo } from '../dbMeta/actions'
 
 const NAME = 'cypher'
 export const CYPHER_REQUEST = `${NAME}/REQUEST`
@@ -111,7 +110,6 @@ export const cypherRequestEpic = (some$: any, store: any) =>
     if (!action.$$responseChannel) return Rx.Observable.of(null)
     return bolt
       .directTransaction(action.query, action.params || undefined, {
-        useCypherThread: shouldUseCypherThread(store.getState()),
         ...getUserTxMetadata(action.queryType || null)({
           hasServerSupport: canSendTxMetadata(store.getState())
         }),
@@ -133,11 +131,10 @@ export const routedCypherRequestEpic = (some$: any, store: any) =>
   some$.ofType(ROUTED_CYPHER_WRITE_REQUEST).mergeMap((action: any) => {
     if (!action.$$responseChannel) return Rx.Observable.of(null)
 
-    const [id, promise] = bolt.routedWriteTransaction(
+    const [_id, promise] = bolt.routedWriteTransaction(
       action.query,
       action.params,
       {
-        useCypherThread: shouldUseCypherThread(store.getState()),
         ...getUserTxMetadata(action.queryType || null)({
           hasServerSupport: canSendTxMetadata(store.getState())
         }),
@@ -174,11 +171,7 @@ export const clusterCypherRequestEpic = (some$: any, store: any) =>
     .mergeMap((action: any) => {
       if (!action.$$responseChannel) return Rx.Observable.of(null)
       return bolt
-        .directTransaction(
-          getCausalClusterAddresses,
-          {},
-          { useCypherThread: shouldUseCypherThread(store.getState()) }
-        )
+        .directTransaction(getCausalClusterAddresses, {})
         .then((res: any) => {
           const addresses = flatten(
             res.records.map((record: any) => record.get('addresses'))

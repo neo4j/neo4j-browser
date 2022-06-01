@@ -19,12 +19,13 @@
  */
 import React from 'react'
 import styled from 'styled-components'
-import Snake from './Snake'
-import Score from './Score'
+
 import FrameBodyTemplate from '../../../Frame/FrameBodyTemplate'
 import { PaddedDiv } from '../../styled'
+import Score from './Score'
+import Snake from './Snake'
+import { foodColor, worldColor } from './helpers'
 import { FormButton } from 'browser/components/buttons/index'
-import { worldColor, foodColor } from './helpers'
 
 const width = 600
 const height = 300

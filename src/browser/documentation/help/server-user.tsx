@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React from 'react'
+
 const title = 'User admin'
 const subtitle = 'User management for administrators'
 const category = 'browserUiCommands'

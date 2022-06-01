@@ -131,13 +131,12 @@ RETURN n
 [NOTE]
 ====
 To run this example, in the *Browser Settings* drawer, check *Enable multi statement query editor*.
-Note that you do not see the output as you are used to when you run multiple statements.
+Note that the results are displayed in a different way when you run multiple statements.
 In Neo4j Browser, the current state of multi-statement is to set up your environment with multiple statements so that you can execute queries and examine the results, one by one.
 Alternatively, you can run the `:param` command separately from the `MATCH` query.
 ====
 
 =====
-
 
 == Cypher result
 
@@ -326,7 +325,7 @@ You can clear all currently set parameters from Neo4j Browser by running:
 ----
 
 
-=== Set several paramters
+=== Set several parameters
 
 You can set several parameters with the `:params` command, this also clears all currently set parameters.
 
@@ -355,6 +354,18 @@ $f = false
 ----
 ====
 
+== Parameter assistance
+
+If you run a query using parameters without first declaring them all, Browser returns a `ParameterMissing` error and lists the missing parameter(s).
+You can click the provided template to populate the editor with the command for setting parameters and all you have to do is enter the value(s) for the missing parameter(s).
+Since the result frame is reusable, once you have set your parameter(s), you can run the same Cypher query again without having to re-enter it.
+
+image::param-assist.png[]
+
+[NOTE]
+====
+The command offered with parameter assistance is always `:params` even if you only have one parameter.
+====
 
 == Duration for the query parameters
 
@@ -366,4 +377,3 @@ You can save a `:params` command as a favorite to quickly populate parameters ag
 //Save the favorites to persist on the disk if you are using Neo4j Desktop.
 //Save the favorites to persist in the browsers local storage.
 //The localStorage and sessionStorage properties allow to save key/value pairs in a web browser.
-

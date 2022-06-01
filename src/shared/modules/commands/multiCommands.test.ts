@@ -17,14 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import configureMockStore from 'redux-mock-store'
 import { createEpicMiddleware } from 'redux-observable'
 import { createBus, createReduxMiddleware } from 'suber'
+
 import * as commands from './commandsDuck'
 import bolt from 'services/bolt/bolt'
-import { addHistory } from 'shared/modules/history/historyDuck'
 import { add as addFrame } from 'shared/modules/frames/framesDuck'
+import { addHistory } from 'shared/modules/history/historyDuck'
 
 // jest.unmock('services/bolt/bolt')
 const originalRoutedWriteTransaction = bolt.routedWriteTransaction

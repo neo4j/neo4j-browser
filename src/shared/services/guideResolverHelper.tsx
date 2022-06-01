@@ -17,25 +17,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import React from 'react'
 import { includes, last, split, startsWith } from 'lodash-es'
+import React from 'react'
+import { URL } from 'whatwg-url'
 
-import MdxSlide from 'browser/modules/Docs/MDX/MdxSlide'
-import Slide from 'browser/modules/Carousel/Slide'
-import docs, { isBuiltInGuide } from 'browser/documentation'
-import guideUnfound from 'browser/documentation/sidebar-guides/unfound'
 import {
   addProtocolsToUrlList,
   extractAllowlistFromConfigString,
   resolveAllowlistWildcard
 } from './utils'
-import { fetchRemoteGuideAsync } from 'shared/modules/commands/helpers/playAndGuides'
-import {
-  getDefaultRemoteContentHostnameAllowlist,
-  getRemoteContentHostnameAllowlist
-} from 'shared/modules/dbMeta/state'
-import { splitMdxSlides } from 'browser/modules/Docs/MDX/splitMdx'
+import docs, { isBuiltInGuide } from 'browser/documentation'
+import guideUnfound from 'browser/documentation/sidebar-guides/unfound'
+import Slide from 'browser/modules/Carousel/Slide'
+import MdSlide from 'browser/modules/Docs/MD/MdSlide'
+import { splitMdSlides } from 'browser/modules/Docs/MD/splitMd'
 import {
   StyledCypherErrorMessage,
   StyledDiv,
@@ -46,6 +41,11 @@ import {
   StyledPreformattedArea
 } from 'browser/modules/Stream/styled'
 import { GlobalState } from 'shared/globalState'
+import { fetchRemoteGuideAsync } from 'shared/modules/commands/helpers/playAndGuides'
+import {
+  getDefaultRemoteContentHostnameAllowlist,
+  getRemoteContentHostnameAllowlist
+} from 'shared/modules/dbMeta/state'
 
 interface ResponseException extends Error {
   response: Response
@@ -88,10 +88,10 @@ export async function resolveGuide(
   return { ...guideUnfound, identifier }
 }
 
-function mdxTextToSlides(mdx: string): JSX.Element[] {
-  return splitMdxSlides(mdx).map((slide, index) => (
+function mdTextToSlides(md: string): JSX.Element[] {
+  return splitMdSlides(md).map((slide, index) => (
     // index is fine since we'll never move or delete slides
-    <MdxSlide key={index} mdx={slide} isSidebarSlide />
+    <MdSlide key={index} md={slide} isSidebarSlide />
   ))
 }
 
@@ -131,7 +131,7 @@ async function resolveRemoteGuideByUrl(
     const title = (titleRegexMatch && titleRegexMatch[1])?.trim() || url
     if (['md', 'mdx'].includes(filenameExtension)) {
       return {
-        slides: mdxTextToSlides(remoteGuide),
+        slides: mdTextToSlides(remoteGuide),
         title,
         identifier: url
       }

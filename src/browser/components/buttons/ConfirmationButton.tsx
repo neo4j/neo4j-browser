@@ -17,14 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import {
-  MinusIcon,
-  RightArrowIcon,
-  CancelIcon
-} from 'browser-components/icons/Icons'
+
+import { CancelIcon, MinusIcon, RightArrowIcon } from '../icons/LegacyIcons'
 
 const IconButton = styled.button`
   margin-left: 4px;

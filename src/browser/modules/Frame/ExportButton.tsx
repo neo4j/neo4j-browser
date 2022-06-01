@@ -17,17 +17,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React from 'react'
-import { Frame } from 'shared/modules/frames/framesDuck'
-import { DownloadIcon } from 'browser-components/icons/Icons'
+
+import { DownloadIcon } from 'browser-components/icons/LegacyIcons'
+
 import {
+  DropDownItemDivider,
   DropdownButton,
   DropdownContent,
   DropdownItem,
-  DropDownItemDivider,
   DropdownList
 } from '../Stream/styled'
+import { Frame } from 'shared/modules/frames/framesDuck'
 
 export type ExportItem = {
   name: string

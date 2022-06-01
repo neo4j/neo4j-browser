@@ -18,13 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 import { act, renderHook } from '@testing-library/react-hooks'
 import mockDate from 'mockdate'
 
-import { DISCONNECTED_STATE } from 'shared/modules/connections/connectionsDuck'
-
 import { useSlowConnectionState } from '../main.hooks'
+import { DISCONNECTED_STATE } from 'shared/modules/connections/connectionsDuck'
 
 mockDate.set(0)
 jest.useFakeTimers()

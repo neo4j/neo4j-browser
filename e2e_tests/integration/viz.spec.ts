@@ -25,10 +25,8 @@ const ORANGE = 'rgb(247, 151, 103)'
 const PURPLE = 'rgb(201, 144, 192)' // Default first color for a new node label
 
 describe('Viz rendering', () => {
-  before(function() {
-    cy.visit(Cypress.config('url'))
-      .title()
-      .should('include', 'Neo4j Browser')
+  before(function () {
+    cy.visit(Cypress.config('url')).title().should('include', 'Neo4j Browser')
     cy.wait(3000)
   })
   it('can connect', () => {
@@ -151,5 +149,88 @@ describe('Viz rendering', () => {
       'background-color',
       ORANGE
     )
+  })
+  it('can zoom in with button', () => {
+    cy.executeCommand(':clear')
+    cy.executeCommand(`CREATE (a:TestLabel {name: 'testNode'}) RETURN a`, {
+      parseSpecialCharSequences: false
+    })
+
+    // Check that zoom in button increases the size of the node in the graph view
+    cy.get('svg')
+      .find(`[aria-label^="graph-node"]`)
+      .then($el => $el[0].getBoundingClientRect().width)
+      .then(width => {
+        const originalWidth = width
+        expect(originalWidth).to.be.greaterThan(0)
+
+        const zoomInButton = cy.get(`[aria-label="zoom-in"]`)
+        zoomInButton.click()
+
+        cy.get('svg')
+          .find(`[aria-label^="graph-node"]`)
+          .then($el => $el[0].getBoundingClientRect().width)
+          .then(newWidth => {
+            return expect(newWidth).to.be.greaterThan(originalWidth)
+          })
+      })
+  })
+  it('disables zoom in button after limit is reached', () => {
+    cy.executeCommand(':clear')
+    cy.executeCommand(`CREATE (a:TestLabel {name: 'testNode'}) RETURN a`, {
+      parseSpecialCharSequences: false
+    })
+
+    // Multiple zoom will result in zoom reaching scale limit and the button to be disabled
+    const zoomInButton = cy.get(`[aria-label="zoom-in"]`)
+    zoomInButton.click()
+    zoomInButton.click()
+    zoomInButton.click()
+    zoomInButton.click()
+
+    // zoom in button has low opacity styling when it is disabled
+    cy.get(`[aria-label="zoom-in"]`).should('have.css', 'opacity', '0.3')
+  })
+  it('can zoom out with just mouse wheel in fullscreen', () => {
+    cy.executeCommand(':clear')
+    cy.executeCommand(`CREATE (a:TestLabel {name: 'testNode'}) RETURN a`, {
+      parseSpecialCharSequences: false
+    })
+
+    // Enter fullscreen
+    cy.get('article').find(`[title='Fullscreen']`).click()
+
+    cy.get(`#svg-vis`).trigger('mousewheel', { deltaY: 1000 })
+
+    // zoom out limit is reached zoom so button is disabled
+    cy.get(`[aria-label="zoom-out"]`).should('have.css', 'opacity', '0.3')
+
+    // Leave fullscreen
+    cy.get('article').find(`[title='Close fullscreen']`).click()
+  })
+  it('can not zoom out with just mouse wheel when not in fullscreen', () => {
+    cy.executeCommand(':clear')
+    cy.executeCommand(`CREATE (a:TestLabel {name: 'testNode'}) RETURN a`, {
+      parseSpecialCharSequences: false
+    })
+
+    cy.get(`#svg-vis`).trigger('mousewheel', { deltaY: 1000 })
+
+    // zoom out limit is reached zoom so button is disabled
+    cy.get(`[aria-label="zoom-out"]`).should('have.css', 'opacity', '1')
+  })
+  it('displays wheel zoom info message which can be closed', () => {
+    cy.executeCommand(':clear')
+    cy.executeCommand(
+      'CREATE (a:TestLabel)-[:CONNECTS]->(b:TestLabel) RETURN a, b'
+    )
+
+    cy.get(`#svg-vis`).trigger('mousewheel', { deltaY: 1000 })
+
+    cy.get('[data-testid=wheelZoomInfoCheckbox]').should('exist')
+
+    cy.get('[data-testid=wheelZoomInfoCheckbox]').click()
+
+    cy.get('[data-testid=wheelZoomInfoCheckbox]').should('not.exist')
   })
 })

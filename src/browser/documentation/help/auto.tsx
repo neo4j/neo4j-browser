@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React from 'react'
+
 const title = 'Auto-committing transactions'
 const subtitle = 'Execute a Cypher query within an auto-committing transaction'
 const category = 'browserUiCommands'
@@ -31,7 +31,8 @@ const content = (
       clusters.
       <br />
       Some query types do however need to be sent in auto-committing
-      transactions, <code>USING PERIODIC COMMIT</code> is the most notable one.
+      transactions, <code>CALL {'{...}'} IN TRANSACTIONS </code> is the most
+      notable one.
     </p>
     <table className="table-condensed table-help">
       <tbody>
@@ -47,8 +48,11 @@ const content = (
     </table>
     <section className="example">
       <figure>
-        <pre>{`:auto USING PERIODIC COMMIT
-LOAD CSV WITH HEADER FROM ... `}</pre>
+        <pre>{`:auto LOAD CSV FROM 'file:///artists.csv' AS line
+CALL {
+  WITH line
+  CREATE (:Artist {name: line[1], year: toInteger(line[2])})
+} IN TRANSACTIONS`}</pre>
         <figcaption>
           Example usage of the <em>:auto</em> command.
         </figcaption>

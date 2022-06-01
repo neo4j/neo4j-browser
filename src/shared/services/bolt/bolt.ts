@@ -17,28 +17,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import neo4j, { QueryResult } from 'neo4j-driver'
 import { v4 } from 'uuid'
-import neo4j from 'neo4j-driver'
-import WorkPool from '../WorkPool'
-import * as mappings from './boltMappings'
-import * as boltConnection from './boltConnection'
-import {
-  cancelTransaction as globalCancelTransaction,
-  routedReadTransaction as globalRoutedReadTransaction,
-  routedWriteTransaction as globalRoutedWriteTransaction,
-  directTransaction as globalDirectTransaction
-} from './transactions'
-import {
-  runCypherMessage,
-  cancelTransactionMessage,
-  closeConnectionMessage
-} from './boltWorkerMessages'
-import { NATIVE } from 'services/bolt/boltHelpers'
-import { setupBoltWorker, addTypesAsField } from './setup-bolt-worker'
 
-import BoltWorkerModule from 'shared/services/bolt/boltWorker'
+import WorkPool from '../WorkPool'
+import * as boltConnection from './boltConnection'
+import * as mappings from './boltMappings'
+import {
+  cancelTransactionMessage,
+  closeConnectionMessage,
+  getWorkerPayloadForRunningCypherMessage
+} from './boltWorkerMessages'
+import { addTypesAsField, setupBoltWorker } from './setup-bolt-worker'
+import { cancelTransaction as globalCancelTransaction } from './transactions'
+import { NATIVE } from 'services/bolt/boltHelpers'
 import { Connection } from 'shared/modules/connections/connectionsDuck'
+import BoltWorkerModule from 'shared/services/bolt/boltWorker'
 
 let connectionProperties: {} | null = null
 let _useDb: string | null = null
@@ -70,10 +64,10 @@ function openConnection(
 }
 
 function cancelTransaction(id: string, cb: any): void {
-  const work = boltWorkPool.getWorkById(id)
-  if (work) {
-    work.onFinish(cb)
-    work.execute(cancelTransactionMessage(id))
+  const worker = boltWorkPool.getWorkerById(id)
+  if (worker) {
+    worker.work!.onFinish = cb
+    worker.execute(cancelTransactionMessage(id))
   } else {
     globalCancelTransaction(id, cb)
   }
@@ -83,9 +77,8 @@ function routedWriteTransaction(
   input: any,
   parameters: any,
   requestMetaData: any = {}
-): any {
+): [string, Promise<QueryResult>] {
   const {
-    useCypherThread = false,
     requestId = null,
     cancelable = false,
     onLostConnection = () => {},
@@ -93,125 +86,95 @@ function routedWriteTransaction(
     autoCommit = false,
     useDb = null
   } = requestMetaData
-  if (useCypherThread && window.Worker) {
-    const id = requestId || v4()
-    const workFn = runCypherMessage(
-      input,
-      mappings.recursivelyTypeGraphItems(parameters),
-      boltConnection.ROUTED_WRITE_CONNECTION,
-      id,
-      cancelable,
-      {
-        ...connectionProperties,
-        txMetadata,
-        useDb: useDb || _useDb,
-        autoCommit
-      }
-    )
-    const workerPromise = setupBoltWorker(
-      boltWorkPool,
-      id,
-      workFn,
-      onLostConnection
-    )
-    return [id, workerPromise]
-  } else {
-    return globalRoutedWriteTransaction(input, parameters, {
-      requestId,
-      cancelable,
+  const id = requestId || v4()
+  const payload = getWorkerPayloadForRunningCypherMessage(
+    input,
+    mappings.recursivelyTypeGraphItems(parameters),
+    boltConnection.ROUTED_WRITE_CONNECTION,
+    id,
+    cancelable,
+    {
+      ...connectionProperties,
       txMetadata,
       useDb: useDb || _useDb,
       autoCommit
-    })
-  }
+    }
+  )
+  const workerPromise = setupBoltWorker(
+    boltWorkPool,
+    id,
+    payload,
+    onLostConnection
+  )
+  return [id, workerPromise]
 }
 
 function routedReadTransaction(
   input: any,
   parameters: any,
   requestMetaData: any = {}
-): any {
+): Promise<QueryResult> {
   const {
-    useCypherThread = false,
     requestId = null,
     cancelable = false,
     onLostConnection = () => {},
     txMetadata = undefined,
     useDb = null
   } = requestMetaData
-  if (useCypherThread && window.Worker) {
-    const id = requestId || v4()
-    const workFn = runCypherMessage(
-      input,
-      mappings.recursivelyTypeGraphItems(parameters),
-      boltConnection.ROUTED_READ_CONNECTION,
-      id,
-      cancelable,
-      {
-        ...connectionProperties,
-        txMetadata,
-        useDb: useDb || _useDb
-      }
-    )
-    const workerPromise = setupBoltWorker(
-      boltWorkPool,
-      id,
-      workFn,
-      onLostConnection
-    )
-    return workerPromise
-  } else {
-    return globalRoutedReadTransaction(input, parameters, {
-      requestId,
-      cancelable,
+  const id = requestId || v4()
+  const payload = getWorkerPayloadForRunningCypherMessage(
+    input,
+    mappings.recursivelyTypeGraphItems(parameters),
+    boltConnection.ROUTED_READ_CONNECTION,
+    id,
+    cancelable,
+    {
+      ...connectionProperties,
       txMetadata,
       useDb: useDb || _useDb
-    })
-  }
+    }
+  )
+  const workerPromise = setupBoltWorker(
+    boltWorkPool,
+    id,
+    payload,
+    onLostConnection
+  )
+  return workerPromise
 }
 
 function directTransaction(
   input: any,
   parameters: any,
   requestMetaData: any = {}
-): any {
+): Promise<QueryResult> {
   const {
-    useCypherThread = false,
     requestId = null,
     cancelable = false,
     onLostConnection = () => {},
     txMetadata = undefined,
     useDb = null
   } = requestMetaData
-  if (useCypherThread && window.Worker) {
-    const id = requestId || v4()
-    const workFn = runCypherMessage(
-      input,
-      mappings.recursivelyTypeGraphItems(parameters),
-      boltConnection.DIRECT_CONNECTION,
-      id,
-      cancelable,
-      {
-        ...connectionProperties,
-        txMetadata,
-        useDb: useDb || _useDb
-      }
-    )
-    const workerPromise = setupBoltWorker(
-      boltWorkPool,
-      id,
-      workFn,
-      onLostConnection
-    )
-    return workerPromise
-  } else {
-    return globalDirectTransaction(input, parameters, {
-      requestId,
-      cancelable,
+  const id = requestId || v4()
+  const payload = getWorkerPayloadForRunningCypherMessage(
+    input,
+    mappings.recursivelyTypeGraphItems(parameters),
+    boltConnection.DIRECT_CONNECTION,
+    id,
+    cancelable,
+    {
+      ...connectionProperties,
       txMetadata,
       useDb: useDb || _useDb
-    })
-  }
+    }
+  )
+  const workerPromise = setupBoltWorker(
+    boltWorkPool,
+    id,
+    payload,
+    onLostConnection
+  )
+  return workerPromise
 }
 
 const closeConnectionInWorkers = (): void => {
@@ -225,7 +188,7 @@ export default {
   openConnection,
   closeConnection: () => {
     connectionProperties = null
-    boltConnection.closeConnection()
+    boltConnection.closeGlobalConnection()
     closeConnectionInWorkers()
   },
   directTransaction,

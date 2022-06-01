@@ -17,17 +17,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import neo4j from 'neo4j-driver'
+
 import {
-  itemIntToString,
   arrayIntToString,
+  extractFromNeoObjects,
   extractNodesAndRelationshipsFromRecords,
   extractNodesAndRelationshipsFromRecordsForOldVis,
   extractPlan,
   flattenProperties,
-  objIntToString,
-  extractFromNeoObjects
+  itemIntToString,
+  objIntToString
 } from './boltMappings'
 
 describe('boltMappings', () => {

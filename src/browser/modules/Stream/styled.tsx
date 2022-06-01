@@ -17,10 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import styled, { keyframes } from 'styled-components'
-import { dim } from 'browser-styles/constants'
+
 import { StyledFrameButton } from '../../components/buttons'
+import { dim } from 'browser-styles/constants'
 
 export const StyledStream = styled.div`
   padding: 0 10px;
@@ -165,6 +165,7 @@ export const StyledStatsBarContainer = styled.div`
   width: 100%;
 `
 export const StyledStatsBar = styled.div`
+  display: flex;
   min-height: 39px;
   line-height: 39px;
   color: ${props => props.theme.secondaryText};
@@ -174,6 +175,10 @@ export const StyledStatsBar = styled.div`
   overflow: hidden;
   padding-left: 24px;
   width: 100%;
+`
+
+export const StyledStatsBarWarningMessageWrapper = styled.div`
+  flex: 0 0 auto;
 `
 
 export const StyledAsciiPre = styled.pre`
@@ -216,6 +221,7 @@ export const DropdownList = styled.ul``
 export const DropdownContent = styled.li`
   display: none;
   position: absolute;
+  margin-top: 15px;
   right: 0px;
   background-color: ${props => props.theme.secondaryBackground};
   color: ${props => props.theme.secondaryButtonText};
@@ -394,4 +400,31 @@ export const AuraPromoLink = styled.a`
 export const AliasText = styled.span`
   font-size: 1rem;
   font-style: italic;
+`
+
+export const StyledMissingParamsTemplateLink = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  padding: 8px 0;
+  gap: 5px;
+`
+
+export const StyledParamsTemplateClickableArea = styled.a`
+  font-family: ${props => props.theme.codeBlockFont};
+  font-size: 12px;
+  line-height: 18px;
+  background: ${props => props.theme.codeBlockBackground};
+  color: ${props => props.theme.codeBlockTextColor};
+  cursor: pointer;
+  text-decoration: none;
+  padding: 0 5px;
+  &:hover {
+    background: ${props => props.theme.codeBlockHoveBackground};
+    color: ${props => props.theme.codeBlockTextColor};
+    text-decoration: none;
+  }
+`
+export const StyledSpecifyParamsText = styled.span`
+  color: ${props => props.theme.primaryText};
 `

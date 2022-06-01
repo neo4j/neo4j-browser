@@ -17,12 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import { createEpicMiddleware } from 'redux-observable'
 import { createBus } from 'suber'
-import { flushPromises } from 'services/utils'
+
 import { executeSingleCommand, handleSingleCommandEpic } from './commandsDuck'
 import bolt from 'services/bolt/bolt'
+import { flushPromises } from 'services/utils'
 
 jest.mock('services/bolt/setup-bolt-worker', () => {
   const orig = jest.requireActual('services/bolt/setup-bolt-worker')
@@ -32,14 +32,6 @@ jest.mock('services/bolt/setup-bolt-worker', () => {
   }
 })
 const setupWorkerModule = jest.requireMock('services/bolt/setup-bolt-worker')
-
-jest.mock('shared/modules/settings/settingsDuck', () => {
-  const orig = jest.requireActual('shared/modules/settings/settingsDuck')
-  return {
-    ...orig,
-    shouldUseCypherThread: () => true
-  }
-})
 
 jest.mock('shared/modules/params/paramsDuck', () => {
   const orig = jest.requireActual('shared/modules/params/paramsDuck')

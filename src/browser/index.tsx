@@ -17,10 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import './init'
 import React from 'react'
 import ReactDOM from 'react-dom'
+
 import AppInit, { setupSentry } from './AppInit'
+import './init'
+
 import Modal from 'react-modal'
 
 const divId = 'mount'

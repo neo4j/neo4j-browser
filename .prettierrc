@@ -5,12 +5,22 @@
   "printWidth": 80,
   "semi": false,
   "trailingComma": "none",
-  "jsxBracketSameLine": false,
   "arrowParens": "avoid",
   "jsxSingleQuote": false,
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,
   "importOrder": [
+    "^@testing-library/react-hooks/dont-cleanup-after-each.js$",
+    "<THIRD_PARTY_MODULES>",
+    "^neo4j-arc/(.*)$",
     "^browser/(.*)$|^project-root/(.*)$|^browser-(.*)$|^shared/(.*)$|^services/(.*)$|^icons/(.*)$|^[./]"
+  ],
+  "overrides": [
+    {
+      "files": "*.ts",
+      "options": {
+        "importOrderParserPlugins": ["typescript"]
+      }
+    }
   ]
 }

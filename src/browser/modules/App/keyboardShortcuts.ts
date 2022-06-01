@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useMemo } from 'react'
-import { FOCUS } from 'shared/modules/editor/editorDuck'
 import { Bus } from 'suber'
 
-export const isMac = /Mac|iPad/.test(navigator.platform)
+import { isMac } from 'neo4j-arc/common'
+
+import { FOCUS } from 'shared/modules/editor/editorDuck'
+
 const modKey = isMac ? 'metaKey' : 'ctrlKey'
 
 type ModifierKey = 'metaKey' | 'altKey' | 'ctrlKey'
@@ -72,9 +74,10 @@ export function useKeyboardShortcuts(bus: Bus): void {
     [trigger]
   )
 
-  const keyboardShortcuts = useMemo(() => [focusEditorOnSlash], [
-    focusEditorOnSlash
-  ])
+  const keyboardShortcuts = useMemo(
+    () => [focusEditorOnSlash],
+    [focusEditorOnSlash]
+  )
 
   useEffect(() => {
     keyboardShortcuts.forEach(shortcut =>

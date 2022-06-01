@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import { isEnterpriseEdition } from '../support/utils'
 
 /* global Cypress, cy, before, after */
@@ -26,9 +25,7 @@ describe('Multi statements', () => {
   const validQuery = 'RETURN 1; :config; RETURN 2;'
 
   before(() => {
-    cy.visit(Cypress.config('url'))
-      .title()
-      .should('include', 'Neo4j Browser')
+    cy.visit(Cypress.config('url')).title().should('include', 'Neo4j Browser')
     cy.wait(3000)
     cy.enableMultiStatement()
   })
@@ -115,38 +112,6 @@ describe('Multi statements', () => {
       .first()
       .should('contain', 'ERROR')
   })
-
-  it('can use :auto command in multi-statements', () => {
-    cy.executeCommand('create ();')
-    cy.executeCommand(':clear')
-    const query = `:auto CREATE (t:MultiStmtTest {{}name: "Pacifidlog"}) RETURN t;:auto CREATE (t:MultiStmtTest {{}name: "Wyndon"}) RETURN t;`
-    cy.executeCommand(query)
-    cy.get('[data-testid="frame"]', { timeout: 10000 }).should('have.length', 1)
-    const frame = cy.get('[data-testid="frame"]', { timeout: 10000 }).first()
-    frame.find('[data-testid="multi-statement-list"]').should('have.length', 1)
-    frame
-      .get('[data-testid="multi-statement-list-title"]')
-      .should('have.length', 2)
-    frame
-      .get('[data-testid="multi-statement-list-title"]')
-      .eq(0)
-      .click()
-    frame
-      .get('[data-testid="multi-statement-list-content"]', { timeout: 10000 })
-      .contains('SUCCESS')
-    frame
-      .get('[data-testid="multi-statement-list-title"]')
-      .eq(1)
-      .click()
-    frame
-      .get('[data-testid="multi-statement-list-content"]', { timeout: 10000 })
-      .contains('SUCCESS')
-    cy.executeCommand('match (n: MultiStmtTest) return n.name')
-    cy.get('[role="cell"]').contains('Pacifidlog')
-    cy.get('[role="cell"]').contains('Wyndon')
-    cy.executeCommand('match (n: MultiStmtTest) delete n')
-  })
-
   if (Cypress.config('serverVersion') >= 4.0) {
     if (isEnterpriseEdition()) {
       it('Can use :use command in multi-statements', () => {

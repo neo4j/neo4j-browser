@@ -17,9 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import * as utils from './utils'
-import { DESKTOP, CLOUD, WEB } from 'shared/modules/app/appDuck'
+import { CLOUD, DESKTOP, WEB } from 'shared/modules/app/appDuck'
 
 describe('utils', () => {
   describe('serialExecution', () => {
@@ -118,27 +117,6 @@ describe('utils', () => {
       })
     })
   })
-  test('can deeply compare objects', () => {
-    // Given
-    const o1 = { a: 'a', b: 'b', c: { c: 'c' } }
-    const o2 = { ...o1 }
-    const o3 = { ...o1, c: { c: 'd' } }
-    const o4 = { ...o1, d: { e: { f: 'g' } } }
-    const o5 = { ...o1, d: { e: { f: 'g' } } }
-
-    // When & Then
-    expect(utils.deepEquals(o1, o2)).toBeTruthy()
-    expect(utils.deepEquals(o1, o3)).toBeFalsy()
-    expect(utils.deepEquals(o4, o5)).toBeTruthy()
-  })
-  test('deepEquals compares object methods by source instead of by reference', () => {
-    const foo1 = { someMethod: () => 'foo' }
-    const foo2 = { someMethod: () => 'foo' }
-    const bar = { someMethod: () => 'bar' }
-
-    expect(utils.deepEquals(foo1, foo2)).toBeTruthy()
-    expect(utils.deepEquals(foo1, bar)).toBeFalsy()
-  })
   test('can shallowEquals compare objects', () => {
     // Given
     const o1 = { a: 1, b: 2, c: 'hello' }
@@ -201,7 +179,7 @@ describe('utils', () => {
       // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       this.val = 'hello'
       // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      this.fn = function(extVal: any) {
+      this.fn = function (extVal: any) {
         callMe(this.val, extVal)
       }
       // @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
@@ -218,78 +196,18 @@ describe('utils', () => {
     expect(callMe).toHaveBeenCalledTimes(1)
     expect(callMe).toHaveBeenCalledWith('hello', 'there')
   })
-  test('getUrlInfo', () => {
+  test('parseURLWithDefaultProtocol', () => {
     // When && Then
-    expect(utils.getUrlInfo('http://anything.com')).toEqual({
-      protocol: 'http:',
-      host: 'anything.com',
-      hostname: 'anything.com',
-      port: '',
-      pathname: '',
-      query: '',
-      hash: '',
-      username: '',
-      password: ''
-    })
-    expect(utils.getUrlInfo('https://anything.com')).toEqual({
-      protocol: 'https:',
-      host: 'anything.com',
-      hostname: 'anything.com',
-      port: '',
-      pathname: '',
-      query: '',
-      hash: '',
-      username: '',
-      password: ''
-    })
-    expect(utils.getUrlInfo('http://anything.com:8080/index.html')).toEqual({
-      protocol: 'http:',
-      host: 'anything.com:8080',
-      hostname: 'anything.com',
-      port: '8080',
-      pathname: '/index.html',
-      query: '',
-      hash: '',
-      username: '',
-      password: ''
-    })
-    expect(utils.getUrlInfo('guides.neo4j.com')).toEqual({
-      protocol: '',
-      host: 'guides.neo4j.com',
-      hostname: 'guides.neo4j.com',
-      port: '',
-      pathname: '',
-      query: '',
-      hash: '',
-      username: '',
-      password: ''
-    })
-    expect(utils.getUrlInfo('http://localhost')).toEqual({
-      protocol: 'http:',
-      host: 'localhost',
-      hostname: 'localhost',
-      port: '',
-      pathname: '',
-      query: '',
-      hash: '',
-      username: '',
-      password: ''
-    })
+    expect(utils.parseURLWithDefaultProtocol('anything.com')).toEqual(
+      new URL('http://anything.com')
+    )
+    expect(utils.parseURLWithDefaultProtocol('guides.neo4j.com')).toEqual(
+      new URL('http://guides.neo4j.com')
+    )
     expect(
-      utils.getUrlInfo(
-        'http://neo:neoPass@guides.neo4j.com:1111/path?arg1=a&arg2=2'
-      )
-    ).toEqual({
-      protocol: 'http:',
-      host: 'guides.neo4j.com:1111',
-      hostname: 'guides.neo4j.com',
-      port: '1111',
-      pathname: '/path',
-      query: '?arg1=a&arg2=2',
-      hash: '',
-      username: 'neo',
-      password: 'neoPass'
-    })
+      utils.parseURLWithDefaultProtocol('https://guides.neo4j.com')
+    ).toEqual(new URL('https://guides.neo4j.com'))
+    expect(utils.parseURLWithDefaultProtocol('')).toEqual(null)
   })
   describe('extractAllowlistFromConfigString', () => {
     test('extracts comma separated string of hosts to array', () => {
@@ -627,107 +545,87 @@ describe('Object props manipulation', () => {
     })
   })
 })
-describe('toKeyString', () => {
-  it('can encode strings with special characters', () => {
-    // Given
-    const strs = [
-      { str: 'hey ho ', expect: 'aGV5JTIwaG8lMjAlRUYlQTMlQkY=' },
-      {
-        str: '✓ à la mode',
-        expect: 'JUUyJTlDJTkzJTIwJUMzJUEwJTIwbGElMjBtb2Rl'
-      },
-      { str: '😍', expect: 'JUYwJTlGJTk4JThE' }
-    ]
 
-    // When & Then
-    strs.forEach(str => {
-      expect(utils.toKeyString(str.str)).toEqual(str.expect)
-    })
+describe('isCloudHost', () => {
+  it('detects cloud hosts properly', () => {
+    expect(utils.isCloudHost('neo4j+s://foo.neo4j.io', ['neo4j.io'])).toBe(true)
   })
 
-  describe('isCloudHost', () => {
-    it('detects cloud hosts properly', () => {
-      expect(utils.isCloudHost('neo4j+s://foo.neo4j.io', ['neo4j.io'])).toBe(
-        true
-      )
-    })
-
-    it('detects cloud hosts properly when they specify a port', () => {
-      expect(
-        utils.isCloudHost('neo4j+s://foo.neo4j.io:7687', ['neo4j.io'])
-      ).toBe(true)
-    })
-
-    it('detects cloud hosts properly even with query arguments', () => {
-      expect(
-        utils.isCloudHost('neo4j+s://foo.neo4j.io?foo=true', ['neo4j.io'])
-      ).toBe(true)
-    })
-
-    it('does not detect cloud hosts for localhost', () => {
-      expect(utils.isCloudHost('neo4j+s://localhost', ['neo4j.io'])).toBe(false)
-    })
-
-    it('does not detect cloud hosts for hosts that start but not end with the cloud domain', () => {
-      expect(utils.isCloudHost('neo4j+s://neo4j.io.foo', ['neo4j.io'])).toBe(
-        false
-      )
-    })
-  })
-
-  describe('detectRuntimeEnv', () => {
-    const tests: [any, any, any][] = [
-      [
-        'Injected Desktop API',
-        [
-          {
-            neo4jDesktopApi: { exists: true },
-            location: { href: 'https://mydomain.com:7474' }
-          },
-          []
-        ],
-        DESKTOP
-      ],
-      [
-        'URL params Desktop API',
-        [
-          {
-            location: {
-              href: `https://mydomain.com:7474?neo4jDesktopApiUrl=${encodeURIComponent(
-                'https://graphql.api.local:3001'
-              )}&neo4jDesktopGraphAppClientId=xxx`
-            }
-          },
-          []
-        ],
-        DESKTOP
-      ],
-      [
-        'Cloud root domain',
-        [{ location: { href: 'https://cloud.com:7474' } }, ['cloud.com']],
-        CLOUD
-      ],
-      [
-        'Cloud sub domain',
-        [
-          { location: { href: 'https://xyxy.zyzy.cloud.com:7474/path' } },
-          ['cloud.com']
-        ],
-        CLOUD
-      ],
-      [
-        'No cloud match',
-        [{ location: { href: 'https://otherdomain.com:7474' } }, ['cloud.com']],
-        WEB
-      ],
-      ['No input', [undefined], WEB]
-    ]
-
-    test.each(tests)(
-      'Detects correct environment for test named %s',
-      (_name, input: any[], output) => {
-        expect(utils.detectRuntimeEnv(...input)).toEqual(output)
-      }
+  it('detects cloud hosts properly when they specify a port', () => {
+    expect(utils.isCloudHost('neo4j+s://foo.neo4j.io:7687', ['neo4j.io'])).toBe(
+      true
     )
   })
+
+  it('detects cloud hosts properly even with query arguments', () => {
+    expect(
+      utils.isCloudHost('neo4j+s://foo.neo4j.io?foo=true', ['neo4j.io'])
+    ).toBe(true)
+  })
+
+  it('does not detect cloud hosts for localhost', () => {
+    expect(utils.isCloudHost('neo4j+s://localhost', ['neo4j.io'])).toBe(false)
+  })
+
+  it('does not detect cloud hosts for hosts that start but not end with the cloud domain', () => {
+    expect(utils.isCloudHost('neo4j+s://neo4j.io.foo', ['neo4j.io'])).toBe(
+      false
+    )
+  })
+})
+
+describe('detectRuntimeEnv', () => {
+  const tests: [any, any, any][] = [
+    [
+      'Injected Desktop API',
+      [
+        {
+          neo4jDesktopApi: { exists: true },
+          location: { href: 'https://mydomain.com:7474' }
+        },
+        []
+      ],
+      DESKTOP
+    ],
+    [
+      'URL params Desktop API',
+      [
+        {
+          location: {
+            href: `https://mydomain.com:7474?neo4jDesktopApiUrl=${encodeURIComponent(
+              'https://graphql.api.local:3001'
+            )}&neo4jDesktopGraphAppClientId=xxx`
+          }
+        },
+        []
+      ],
+      DESKTOP
+    ],
+    [
+      'Cloud root domain',
+      [{ location: { href: 'https://cloud.com:7474' } }, ['cloud.com']],
+      CLOUD
+    ],
+    [
+      'Cloud sub domain',
+      [
+        { location: { href: 'https://xyxy.zyzy.cloud.com:7474/path' } },
+        ['cloud.com']
+      ],
+      CLOUD
+    ],
+    [
+      'No cloud match',
+      [{ location: { href: 'https://otherdomain.com:7474' } }, ['cloud.com']],
+      WEB
+    ],
+    ['No input', [undefined], WEB]
+  ]
+
+  test.each(tests)(
+    'Detects correct environment for test named %s',
+    (_name, input: any[], output) => {
+      expect(utils.detectRuntimeEnv(...input)).toEqual(output)
+    }
+  )
 })

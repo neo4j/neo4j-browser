@@ -21,10 +21,8 @@
 /* global Cypress, cy, before */
 
 describe('Data export', () => {
-  before(function() {
-    cy.visit(Cypress.config('url'))
-      .title()
-      .should('include', 'Neo4j Browser')
+  before(function () {
+    cy.visit(Cypress.config('url')).title().should('include', 'Neo4j Browser')
     cy.wait(3000)
   })
   it('can connect', () => {
@@ -32,7 +30,7 @@ describe('Data export', () => {
     cy.connect('neo4j', password)
   })
   context('export options', () => {
-    before(function() {
+    before(function () {
       cy.executeCommand(':clear')
       cy.executeCommand('PROFILE CREATE (n:ExportTest) RETURN n')
       cy.get('[data-testid="frame"]', { timeout: 10000 }).should(
@@ -40,32 +38,31 @@ describe('Data export', () => {
         1
       )
     })
-    after(function() {
+    after(function () {
       cy.executeCommand('MATCH (n:ExportTest) DETACH DELETE n')
     })
-    const exportOptionsConfig = [
-      {
-        names: ['Plan', 'Visualization', 'Table', 'Ascii', 'Code'],
-        order: ['CSV', 'JSON', 'PNG', 'SVG']
-      }
+    const tests = [
+      { panel: 'Visualization', expected: ['PNG', 'SVG'] },
+      { panel: 'Plan', expected: ['PNG', 'SVG'] }, // This test will fail in 5.0 -> one more option is enabled then
+      { panel: 'Table', expected: ['CSV', 'JSON'] },
+      { panel: 'Ascii', expected: ['CSV', 'JSON'] },
+      { panel: 'Code', expected: ['CSV', 'JSON'] }
     ]
-    exportOptionsConfig.forEach(config => {
-      config.names.forEach(name => {
-        it(`shows the correct export buttons for ${name} view`, () => {
-          cy.get(`[data-testid="cypherFrameSidebar${name}"]`, {
-            timeout: 10000
-          }).click()
-          cy.get('[data-testid="frame-export-dropdown"]').trigger('mouseover')
-          cy.get('[data-testid="frame-export-dropdown"]', {
-            timeout: 10000
-          }).within(() => {
-            cy.get('a').then(exportButtonsList => {
-              expect(exportButtonsList).to.have.length(config.order.length)
-              config.order.forEach((exportType, index) => {
-                expect(exportButtonsList.eq(index)).to.contain(
-                  `Export ${exportType}`
-                )
-              })
+    tests.forEach(({ panel, expected }) => {
+      it(`shows the correct export buttons for ${panel} view`, () => {
+        cy.get(`[data-testid="cypherFrameSidebar${panel}"]`, {
+          timeout: 10000
+        }).click()
+        cy.get('[data-testid="frame-export-dropdown"]').trigger('mouseover')
+        cy.get('[data-testid="frame-export-dropdown"]', {
+          timeout: 10000
+        }).within(() => {
+          cy.get('a').then(exportButtonsList => {
+            expect(exportButtonsList).to.have.length(expected.length)
+            expected.forEach((exportType, index) => {
+              expect(exportButtonsList.eq(index)).to.contain(
+                `Export ${exportType}`
+              )
             })
           })
         })

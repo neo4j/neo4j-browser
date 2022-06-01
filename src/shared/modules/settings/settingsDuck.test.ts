@@ -17,12 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import reducer, {
   DISABLE_IMPLICIT_INIT_COMMANDS,
   NAME,
-  UPDATE,
   REPLACE,
+  UPDATE,
   getInitCmd
 } from './settingsDuck'
 import { dehydrate } from 'services/duckUtils'

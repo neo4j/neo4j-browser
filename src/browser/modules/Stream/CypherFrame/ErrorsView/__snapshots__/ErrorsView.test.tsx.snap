@@ -1,0 +1,90 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ErrorsView displays nothing if no errors 1`] = `<div />`;
+
+exports[`ErrorsView displays procedure link if unknown procedure 1`] = `
+<div>
+  <div
+    class="sc-kfPuZi eetjan"
+  >
+    <div
+      class="sc-fKVqWL hFvVsk"
+    >
+      <div
+        class="sc-bBHxTw cOKOWM"
+      >
+        <div
+          class="sc-iJKOTD sc-ezbkAF hhmYSB ftYvYV"
+        >
+          ERROR
+        </div>
+        <h4
+          class="sc-hiCibw HoeQn"
+        >
+          Neo.ClientError.Procedure.ProcedureNotFound
+        </h4>
+      </div>
+      <div
+        class="sc-iwjdpV"
+      >
+        <pre
+          class="sc-cCcXHH haCMIe"
+          data-testid="cypherFrameErrorMessage"
+        >
+          not found
+        </pre>
+      </div>
+      <div
+        class="sc-llYSUQ dMBrER"
+      >
+        <a
+          class="sc-cxpSdN gYcTYD"
+        >
+          <i
+            class="sc-bdvvtL jWhaJw fa fa-play-circle-o"
+            style="line-height: inherit;"
+          />
+           List available procedures
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ErrorsView does displays an error 1`] = `
+<div>
+  <div
+    class="sc-kfPuZi eetjan"
+  >
+    <div
+      class="sc-fKVqWL hFvVsk"
+    >
+      <div
+        class="sc-bBHxTw cOKOWM"
+      >
+        <div
+          class="sc-iJKOTD sc-ezbkAF hhmYSB ftYvYV"
+        >
+          ERROR
+        </div>
+        <h4
+          class="sc-hiCibw HoeQn"
+        >
+          Test.Error
+        </h4>
+      </div>
+      <div
+        class="sc-iwjdpV"
+      >
+        <pre
+          class="sc-cCcXHH haCMIe"
+          data-testid="cypherFrameErrorMessage"
+        >
+          Test error description
+        </pre>
+      </div>
+    </div>
+  </div>
+</div>
+`;

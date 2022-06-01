@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { QueryResult } from 'neo4j-driver'
 
 import bolt from 'services/bolt/bolt'
 import { applyGraphTypes } from 'services/bolt/boltMappings'
@@ -34,15 +35,13 @@ export const handleCypherCommand = (
   action: any,
   put: any,
   params = {} as any,
-  shouldUseCypherThread = false,
   txMetadata = {},
   autoCommit = false
-) => {
+): [string, Promise<QueryResult>] => {
   const [id, request] = bolt.routedWriteTransaction(
     action.query,
     applyParamGraphTypes(params),
     {
-      useCypherThread: shouldUseCypherThread,
       requestId: action.requestId,
       cancelable: true,
       ...txMetadata,

@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { useEffect } from 'react'
+
 import { eventToHandler } from './desktop-api.utils'
 
 const DEFAULT_INTEGRATION_POINT = (window as any).neo4jDesktopApi

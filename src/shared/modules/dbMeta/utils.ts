@@ -17,10 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import semver from 'semver'
-import { VERSION_FOR_EDITOR_HISTORY_SETTING } from './constants'
+
 import { guessSemverVersion } from '../features/featureDuck.utils'
+import { VERSION_FOR_EDITOR_HISTORY_SETTING } from './constants'
 
 type ServerInfo = {
   version: string | null

@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import * as utils from './commandUtils'
 
 describe('commandutils', () => {
@@ -75,6 +74,21 @@ RETURN 2
         str: 'test:"hello :space"',
         delimiter: ':',
         expect: ['test', '"hello :space"']
+      },
+      {
+        str: 'test:"hello :space"',
+        delimiter: /\s/,
+        expect: ['test:"hello', ':space"']
+      },
+      {
+        str: ' :config test:"hello :space"',
+        delimiter: /\s/,
+        expect: ['', ':config test:"hello :space"']
+      },
+      {
+        str: ':config',
+        delimiter: /\s/,
+        expect: [':config', '']
       }
     ]
     testStrs.forEach(obj => {
@@ -95,6 +109,26 @@ RETURN 2
         str: 'test:"hello :space"',
         delimiter: ':',
         expect: ['test:"hello ', 'space"']
+      },
+      {
+        str: ' test:hello',
+        delimiter: ' ',
+        expect: ['', 'test:hello']
+      },
+      {
+        str: 'test:hello ',
+        delimiter: ' ',
+        expect: ['test:hello', '']
+      },
+      {
+        str: 'test:hello',
+        delimiter: ' ',
+        expect: ['', 'test:hello']
+      },
+      {
+        str: 'test:"hello :space"',
+        delimiter: /\s/,
+        expect: ['test:"hello', ':space"']
       }
     ]
     testStrs.forEach(obj => {

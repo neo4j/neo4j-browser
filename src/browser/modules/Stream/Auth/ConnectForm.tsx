@@ -17,33 +17,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { authLog, authRequestForSSO, downloadAuthLogs } from 'neo4j-client-sso'
+import React, { useEffect, useState } from 'react'
 
-import React, { useState, useEffect } from 'react'
+import { toKeyString } from 'neo4j-arc/common'
 
-import { FormButton } from 'browser-components/buttons'
+import { StyledCypherErrorMessage } from '../styled'
 import {
-  StyledConnectionForm,
-  StyledConnectionTextInput,
-  StyledConnectionSelect,
-  StyledConnectionLabel,
-  StyledConnectionFormEntry,
-  StyledSegment,
   StyledBoltUrlHintText,
+  StyledConnectionForm,
+  StyledConnectionFormEntry,
+  StyledConnectionLabel,
+  StyledConnectionSelect,
+  StyledConnectionTextInput,
   StyledFormContainer,
   StyledSSOButtonContainer,
   StyledSSOError,
-  StyledSSOLogDownload
+  StyledSSOLogDownload,
+  StyledSegment
 } from './styled'
+import { FormButton } from 'browser-components/buttons'
 import { NATIVE, NO_AUTH, SSO } from 'services/bolt/boltHelpers'
-import { toKeyString } from 'services/utils'
-import { stripScheme, getScheme } from 'services/boltscheme.utils'
+import { getScheme, stripScheme } from 'services/boltscheme.utils'
 import {
   AuthenticationMethod,
   SSOProvider
 } from 'shared/modules/connections/connectionsDuck'
 import { AUTH_STORAGE_CONNECT_HOST } from 'shared/services/utils'
-import { StyledCypherErrorMessage } from '../styled'
-import { authRequestForSSO, authLog, downloadAuthLogs } from 'neo4j-client-sso'
 
 const readableauthenticationMethods: Record<AuthenticationMethod, string> = {
   [NATIVE]: 'Username / Password',

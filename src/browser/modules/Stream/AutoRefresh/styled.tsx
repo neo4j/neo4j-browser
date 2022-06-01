@@ -19,6 +19,7 @@
  */
 import React from 'react'
 import styled from 'styled-components'
+
 import styles from './toggleStyles.css'
 
 export const StatusbarWrapper = styled.div`

@@ -17,18 +17,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import jsonic from 'jsonic'
 
+import { splitStringOnFirst } from 'services/commandUtils'
+import { getJSON } from 'services/remote'
+import { hostIsAllowed } from 'services/utils'
+import { isValidUrl } from 'shared/modules/commands/helpers/http'
+import { getRemoteContentHostnameAllowlist } from 'shared/modules/dbMeta/state'
 import {
   getSettings,
-  update,
-  replace
+  replace,
+  update
 } from 'shared/modules/settings/settingsDuck'
-import { splitStringOnFirst } from 'services/commandUtils'
-import { getRemoteContentHostnameAllowlist } from 'shared/modules/dbMeta/state'
-import { hostIsAllowed } from 'services/utils'
-import { getJSON } from 'services/remote'
-import { isValidUrl } from 'shared/modules/commands/helpers/http'
-import jsonic from 'jsonic'
 
 export function handleGetConfigCommand(_action: any, store: any) {
   const settingsState = getSettings(store.getState())

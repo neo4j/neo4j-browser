@@ -19,18 +19,20 @@
  */
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
+
+import { FireExtinguisherIcon } from 'browser-components/icons/LegacyIcons'
+
 import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
+import { InfoView } from './InfoView'
 import { PaddedDiv, StyledOneRowStatsBar, StyledRightPartial } from './styled'
-import { StyledFrameTitlebarButtonSection } from 'browser/modules/Frame/styled'
 import { FrameButton } from 'browser-components/buttons'
+import { StyledFrameTitlebarButtonSection } from 'browser/modules/Frame/styled'
 import { objToCss } from 'services/grassUtils'
 import {
-  executeSystemCommand,
+  commandSources,
   executeCommand,
-  commandSources
+  executeSystemCommand
 } from 'shared/modules/commands/commandsDuck'
-import { FireExtinguisherIcon } from 'browser-components/icons/Icons'
-import { InfoView } from './InfoView'
 
 const StyleFrame = ({
   frame,

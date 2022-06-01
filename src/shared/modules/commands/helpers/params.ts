@@ -18,12 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import jsonic from 'jsonic'
-import { splitStringOnFirst } from 'services/commandUtils'
-import { update, replace } from 'shared/modules/params/paramsDuck'
-import { collectLambdaValues, parseLambdaStatement } from './lambdas'
-import { SYSTEM_DB } from 'shared/modules/dbMeta/constants'
 
-export const extractParams = (param: any) => {
+import { collectLambdaValues, parseLambdaStatement } from './lambdas'
+import { splitStringOnFirst } from 'services/commandUtils'
+import { SYSTEM_DB } from 'shared/modules/dbMeta/constants'
+import { replace, update } from 'shared/modules/params/paramsDuck'
+
+export const extractParams = (param: string) => {
   // early bail, now handled by parser
   if (param.includes('=>')) {
     return {
@@ -82,11 +83,11 @@ export const handleParamsCommand = (action: any, put: any, targetDb?: any) => {
     )
   }
   const strippedCmd = action.cmd.substr(1)
-  const parts = splitStringOnFirst(strippedCmd, ' ')
+  const parts = splitStringOnFirst(strippedCmd, /\s/)
   const param = parts[1].trim()
 
   return Promise.resolve().then(() => {
-    if (/^"?\{.*\}"?$/.test(param)) {
+    if (/^"?\{[\s\S]*\}"?$/.test(param)) {
       // JSON object string {"x": 2, "y":"string"}
       try {
         const res = jsonic(param.replace(/^"/, '').replace(/"$/, '')) // Remove any surrounding quotes

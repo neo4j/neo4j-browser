@@ -17,37 +17,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React from 'react'
 import styled, { StyledComponent } from 'styled-components'
-import { dim } from 'browser-styles/constants'
-
-import SVGInline from 'react-svg-inline'
 
 import { hexToRgba } from '../../styles/utils'
-
 import styles from './style.css'
+import { dim } from 'browser-styles/constants'
 
 export const CloseButton = (props: any): JSX.Element => {
   return <button {...props}>×</button>
 }
 
-export const EditorButton = (props: any): JSX.Element => {
-  const { icon, title, color, width, onClick, ...rest } = props
-  const overrideColor = { ...(color ? { color } : {}) }
-  return (
-    <BaseButton onClick={onClick} title={title} style={overrideColor}>
-      <SVGInline
-        svg={icon}
-        accessibilityLabel={title}
-        {...rest}
-        width={`${width}px`}
-      />
-    </BaseButton>
-  )
-}
-
-const BaseButton = styled.span`
+export const StyledEditorButton = styled.button<{ color?: string }>`
   font-family: ${props => props.theme.streamlineFontFamily};
   font-style: normal !important;
   font-weight: 400 !important;
@@ -55,9 +36,9 @@ const BaseButton = styled.span`
   text-transform: none !important;
   speak: none;
   -webkit-font-smoothing: antialiased;
-  color: ${props => props.theme.secondaryButtonText};
+  color: ${props => props.color ?? props.theme.secondaryButtonText};
   background-color: ${props => props.theme.secondaryButtonBackground};
-  border-radius: 50%;
+  border: none;
   width: ${dim.frameButtonWidth}px;
   height: 39px;
   font-size: 28px;
@@ -71,6 +52,17 @@ const BaseButton = styled.span`
   &:hover {
     opacity: 0.55;
   }
+
+  svg {
+    display: inline-block;
+    vertical-align: middle;
+  }
+`
+
+export const StyledMainEditorButtonsContainer = styled.div`
+  height: ${dim.frameTitlebarHeight}px;
+  display: flex;
+  align-items: center;
 `
 
 export const StyledCannyBadgeAnchor = styled.div`
@@ -94,18 +86,13 @@ export const StyledCannyBadgeAnchor = styled.div`
 export const StyledNavigationButton = styled.button`
   background: transparent;
   border: 0;
-  width: 60px;
-  line-height: 67px;
-  padding-top: 3px;
-  font-size: 28px;
+  padding: 20px 16px;
   &:focus {
     outline: none;
   }
 `
 
 export const NavigationButtonContainer = styled.li<{ isOpen: boolean }>`
-  min-height: 70px;
-  height: 70px;
   background-color: ${props =>
     !props.isOpen ? 'transparent' : props.theme.drawerBackground};
   &:focus {
@@ -351,48 +338,33 @@ const StyledFrameControlButton = styled.button<{
   pressed?: boolean
 }>`
   border-radius: 2px;
-  color: ${props =>
-    props.pressed
-      ? props.theme.secondaryButtonTextHover
-      : props.theme.frameControlButtonTextColor};
+  color: ${props => props.theme.frameControlButtonTextColor};
   background-color: ${props =>
-    props.pressed ? props.theme.frameButtonHoverBackground : 'transparent'};
+    props.pressed ? props.theme.frameButtonActiveBackground : 'transparent'};
 
   outline: none;
   border: none;
   border-left: transparent;
   height: 20px;
   width: 20px;
-  cursor: pointer;
-  overflow: hidden;
-  text-align: center;
-  line-height: 20px;
-  display: inline-block;
   margin-left: 12px;
   &:hover {
     background-color: ${props => props.theme.frameButtonHoverBackground};
-    color: ${props => props.theme.secondaryButtonTextHover};
-    fill: ${props => props.theme.secondaryButtonTextHover};
-    text-decoration: none;
+  }
+  &:active {
+    background-color: ${props => props.theme.frameButtonActiveBackground};
   }
 `
 
-export const StyledFrameButton = styled.li`
-  color: ${props => props.theme.frameButtonTextColor};
+export const StyledFrameButton = styled.button`
+  color: ${props => props.theme.frameButtonTextColorLegacy};
   background-color: transparent;
   border-left: transparent;
   height: ${dim.frameTitlebarHeight}px;
   width: ${dim.frameButtonWidth}px;
-  cursor: pointer;
-  overflow: hidden;
-  text-align: center;
-  line-height: ${dim.frameTitlebarHeight}px;
-  display: inline-block;
 
   &:hover {
     background-color: ${props => props.theme.frameButtonHoverBackground};
-    color: ${props => props.theme.secondaryButtonTextHover};
-    fill: ${props => props.theme.secondaryButtonTextHover};
     text-decoration: none;
   }
 `

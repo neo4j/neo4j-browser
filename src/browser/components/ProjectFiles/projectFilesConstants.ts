@@ -14,7 +14,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 import { gql } from '@apollo/client'
 
 export const REMOVE_PROJECT_FILE = 'REMOVE_PROJECT_FILE'

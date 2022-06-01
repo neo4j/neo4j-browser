@@ -1,21 +1,23 @@
 import React from 'react'
+
+import { BinIcon } from 'browser-components/icons/LegacyIcons'
+
 import {
   DrawerBrowserCommand,
   DrawerExternalLink,
   DrawerSubHeader
 } from 'browser-components/drawer/drawer-styled'
-import { BuiltInGuideSidebarSlide } from 'browser/modules/Carousel/Slide'
+import docs, { BuiltInGuideIdentifier, Guide } from 'browser/documentation'
 import {
-  LinkContainer,
-  MarginTop,
-  NoBulletsUl,
   Clickable,
   GuideListEntry,
-  MarginBottomLi
+  LinkContainer,
+  MarginBottomLi,
+  MarginTop,
+  NoBulletsUl
 } from 'browser/documentation/sidebar-guides/styled'
+import { BuiltInGuideSidebarSlide } from 'browser/modules/Carousel/Slide'
 import { RemoteGuide } from 'shared/modules/guides/guidesDuck'
-import docs, { BuiltInGuideIdentifier, Guide } from 'browser/documentation'
-import { BinIcon } from 'browser-components/icons/Icons'
 
 type GuidePickerProps = {
   remoteGuides: RemoteGuide[]

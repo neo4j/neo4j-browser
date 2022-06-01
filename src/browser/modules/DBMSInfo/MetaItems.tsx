@@ -17,33 +17,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import deepmerge from 'deepmerge'
 import React from 'react'
-import { escapeCypherIdentifier } from 'services/utils'
+import { ThemeProvider } from 'styled-components'
+
+import {
+  numberToUSLocale,
+  StyledLabelChip,
+  StyledPropertyChip,
+  StyledRelationshipChip,
+  ShowMoreOrAll
+} from 'neo4j-arc/common'
+import { GraphStyleModel } from 'neo4j-arc/graph-visualization'
+
 import styles from './style_meta.css'
 import {
-  DrawerSubHeader,
   DrawerSection,
-  DrawerSectionBody
+  DrawerSectionBody,
+  DrawerSubHeader
 } from 'browser-components/drawer/drawer-styled'
-import { StyledLabel, StyledRelationship, StyledProperty } from './styled'
-
-import numberToUSLocale from 'shared/utils/number-to-US-locale'
-import { GraphStyle } from 'browser/modules/D3Visualization/graphStyle'
-import deepmerge from 'deepmerge'
-import { ShowMoreOrAll } from 'browser-components/ShowMoreOrAll/ShowMoreOrAll'
-import { ThemeProvider } from 'styled-components'
 import { dark } from 'browser-styles/themes'
+import { escapeCypherIdentifier } from 'services/utils'
 
 const wrapperStyle = (styles && styles.wrapper) || ''
 
 function createStyleGetter(graphStyleData: any, kind: string) {
-  const graphStyle = new GraphStyle()
+  const graphStyle = new GraphStyleModel()
   if (graphStyleData) {
     graphStyle.loadRules(deepmerge(graphStyle.toSheet(), graphStyleData || {}))
   }
 
   if (kind === 'node') {
-    return function(text: string) {
+    return function (text: string) {
       if (graphStyleData) {
         const styleForItem = graphStyle.forNode({
           labels: [text]
@@ -57,7 +62,7 @@ function createStyleGetter(graphStyleData: any, kind: string) {
     }
   }
   if (kind === 'relationship') {
-    return function(text: string) {
+    return function (text: string) {
       if (graphStyleData) {
         const styleForItem = graphStyle.forRelationship({
           type: text
@@ -141,7 +146,7 @@ const LabelItems = ({
     labelItems = createItems(
       labels,
       onItemClick,
-      { component: StyledLabel },
+      { component: StyledLabelChip },
       editorCommandTemplate,
       true,
       count,
@@ -197,7 +202,7 @@ const RelationshipItems = ({
     relationshipItems = createItems(
       relationshipTypes,
       onItemClick,
-      { component: StyledRelationship },
+      { component: StyledRelationshipChip },
       editorCommandTemplate,
       true,
       count,
@@ -252,7 +257,7 @@ const PropertyItems = ({
     propertyItems = createItems(
       properties,
       onItemClick,
-      { component: StyledProperty },
+      { component: StyledPropertyChip },
       editorCommandTemplate,
       false
     )
