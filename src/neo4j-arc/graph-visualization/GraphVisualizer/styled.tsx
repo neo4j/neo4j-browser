@@ -47,7 +47,7 @@ export const StyledNodeInspectorContainer = styled.div<{
 export const StyledNodeInspectorTopMenuChevron = styled.div<{
   expanded: boolean
 }>`
-  background-color: #fff;
+  //background-color: #fff;
   cursor: pointer;
   position: absolute;
   right: 8px;

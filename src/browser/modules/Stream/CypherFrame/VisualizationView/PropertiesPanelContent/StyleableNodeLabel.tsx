@@ -26,6 +26,7 @@ import { GraphStyleModel } from 'neo4j-arc/graph-visualization'
 import { GrassEditor } from './GrassEditor'
 import { RelationshipModel } from 'project-root/src/neo4j-arc/graph-visualization/models/Relationship'
 import { NodeModel } from 'project-root/src/neo4j-arc/graph-visualization/models/Node'
+import { useTheme } from 'styled-components'
 
 export type StyleableNodeLabelProps = {
   selectedLabel: {
@@ -50,8 +51,14 @@ export function StyleableNodeLabel({
     labels: labels
   })
   const [open, wrapperRef, handleClick] = usePopupControlled(onClick)
+  const theme = useTheme()
   return (
     <Popup
+      style={React.useMemo(
+        //@ts-ignore
+        () => ({ backgroundColor: theme.editorBackground }),
+        []
+      )}
       on="click"
       basic
       pinned
