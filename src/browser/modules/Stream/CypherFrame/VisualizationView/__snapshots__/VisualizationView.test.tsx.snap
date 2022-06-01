@@ -5,7 +5,7 @@ exports[`Visualization renders empty content 1`] = `<div />`;
 exports[`Visualization renders with result and escapes any HTML 1`] = `
 <div>
   <div
-    class="sc-jgrJph jDcmiD"
+    class="sc-bBHHxi cJDNuH"
   >
     <div
       class="sc-fKVqWL iKdqzS"
@@ -74,8 +74,8 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
           </g>
         </svg>
         <div
-          class="sc-fotOHu iYXRCx"
-          offset="212.8"
+          class="sc-fotOHu kxkgHI"
+          offset="220.8"
         >
           <button
             aria-label="zoom-in"
@@ -139,7 +139,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
         </div>
       </div>
       <div
-        class="sc-iwjdpV GnCnx"
+        class="sc-iwjdpV kgKHIv"
         title="Collapse the Node Properties display"
       >
         <svg
@@ -156,33 +156,32 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
         </svg>
       </div>
       <div
-        class="sc-bBHxTw gZmqTs"
-        width="204.8"
+        class="sc-bBHxTw cgpIWu"
       >
         <div
-          class="sc-cxpSdN bbQQHs sc-ezbkAF jOaCiN react-resizable"
+          class="sc-cxpSdN ljiZIO sc-ikJyIC cBKZZH react-resizable"
           data-testid="vizInspector"
         >
           <div
-            class="sc-gXRojI cbZAuq"
+            class="sc-eicpiI gDARYg"
           >
             Overview
           </div>
           <div
-            class="sc-bGaVxB blQqjv"
+            class="sc-dkqQuH jJauhh"
           >
             <div>
               <div
-                class="sc-igXgud cmvmVh"
+                class="sc-gXRojI fnAVBM"
               >
                 <span
-                  class="sc-gnnDb kdbIFi"
+                  class="sc-kHxTfl kGozrS"
                 >
                   Node labels
                 </span>
               </div>
               <ul
-                class="sc-bSqaIl sc-hJZKUC dTYomr jkBzat"
+                class="sc-JkixQ sc-jvvksu kRydKe ixIxHD"
               >
                 <div
                   class="sc-dkPtRN sc-hKwDye jYhbHV gKvrSp"
