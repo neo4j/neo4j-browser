@@ -5,10 +5,10 @@ exports[`Visualization renders empty content 1`] = `<div />`;
 exports[`Visualization renders with result and escapes any HTML 1`] = `
 <div>
   <div
-    class="sc-bBHHxi cJDNuH"
+    class="sc-cidDSM bJgiKu"
   >
     <div
-      class="sc-fKVqWL iKdqzS"
+      class="sc-ikJyIC kpXvss"
       id="svg-vis"
     >
       <div
@@ -139,7 +139,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
         </div>
       </div>
       <div
-        class="sc-iwjdpV kgKHIv"
+        class="sc-hiCibw nXgZj"
         title="Collapse the Node Properties display"
       >
         <svg
@@ -156,32 +156,32 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
         </svg>
       </div>
       <div
-        class="sc-bBHxTw cgpIWu"
+        class="sc-jJoQJp bdlJEB"
       >
         <div
-          class="sc-cxpSdN ljiZIO sc-ikJyIC cBKZZH react-resizable"
+          class="sc-gWXbKe jJnEYo sc-cCcXHH iRMzhr react-resizable"
           data-testid="vizInspector"
         >
           <div
-            class="sc-eicpiI gDARYg"
+            class="sc-hkgtus fYrIKh"
           >
             Overview
           </div>
           <div
-            class="sc-dkqQuH jJauhh"
+            class="sc-bSqaIl bqEILb"
           >
             <div>
               <div
-                class="sc-gXRojI fnAVBM"
+                class="sc-iWBNLc iyniyo"
               >
                 <span
-                  class="sc-kHxTfl kGozrS"
+                  class="sc-edERGn jhjrMc"
                 >
                   Node labels
                 </span>
               </div>
               <ul
-                class="sc-JkixQ sc-jvvksu kRydKe ixIxHD"
+                class="sc-gIBqdA sc-dSfdvi ebPuUL fukQJW"
               >
                 <div
                   class="sc-dkPtRN sc-hKwDye jYhbHV gKvrSp"
