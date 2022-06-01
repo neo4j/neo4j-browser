@@ -41,8 +41,8 @@ export default function RevealablePasswordInput({
   )
 }
 
-function useReveal(isRevealed: any) {
-  const inputRef = useRef<any>(null)
+function useReveal(isRevealed: boolean) {
+  const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (!inputRef.current) {
@@ -50,11 +50,7 @@ function useReveal(isRevealed: any) {
     }
 
     inputRef.current.type = isRevealed ? 'text' : 'password'
-
-    return () => {
-      inputRef.current.type = 'password'
-    }
-  }, [inputRef, isRevealed])
+  }, [isRevealed])
 
   return inputRef
 }
