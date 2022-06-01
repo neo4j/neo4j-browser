@@ -3,9 +3,11 @@ import styled from 'styled-components'
 
 const SVGTop = styled.svg`
   vertical-align: top;
+  display: inline-block;
 `
 const SVGMiddle = styled.svg`
   vertical-align: middle;
+  display: inline-block;
 `
 const size = 20
 const sizeSmall = 14

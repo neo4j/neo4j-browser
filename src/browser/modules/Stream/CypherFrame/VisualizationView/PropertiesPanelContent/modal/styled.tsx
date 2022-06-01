@@ -4,14 +4,14 @@ export const ApplyButton = styled.button<{
   backgroundColor?: string
 }>`
   padding: 3px 15px;
-  color: ${({ theme }) => theme.primaryHeaderText}
+  color: ${({ theme }) => theme.primaryHeaderText};
   border: 1px solid #8b8b8b;
   border-radius: 1px;
   background: ${({ theme, backgroundColor }) =>
     backgroundColor ?? theme.primaryButtonBackground};
 
   &:hover {
-    background: ${({ theme }) => theme.hoverBackground}
+    background: ${({ theme }) => theme.hoverBackground};
   }
 `
 export const SimpleButton = styled.button`

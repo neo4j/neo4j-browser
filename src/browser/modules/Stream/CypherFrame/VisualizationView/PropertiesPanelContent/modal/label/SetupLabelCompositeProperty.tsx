@@ -216,6 +216,7 @@ const Input = styled.input`
   background: transparent;
   text-align: center;
   vertical-align: middle;
+  border: 1px solid;
 `
 const PropInput: React.FC<{
   item: IDisplayItem

@@ -258,8 +258,12 @@ const SetupColorPicker: React.FC<{
 const SortButton = styled.button`
   margin-right: 20px;
   background: transparent;
-  padding: 5px 2px;
+  padding: 5px;
   margin-bottom: 10px;
+  border: 1px solid;
+  &:hover {
+    text-decoration: underline;
+  }
 `
 
 const LineWidthLabel = styled.label`

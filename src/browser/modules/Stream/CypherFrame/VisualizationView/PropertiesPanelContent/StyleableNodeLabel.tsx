@@ -52,6 +52,7 @@ export function StyleableNodeLabel({
   })
   const [open, wrapperRef, handleClick] = usePopupControlled(onClick)
   const theme = useTheme()
+  // console.log(theme)
   return (
     <Popup
       style={React.useMemo(

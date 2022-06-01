@@ -13,6 +13,7 @@ const PreviewLabelButton = styled.button<{ isSelected?: boolean }>`
   width: 100px;
   min-height: 20px;
   background-color: rgba(255, 255, 255, 0.2);
+  color: ${({ theme }) => theme.primaryText};
   border: ${({ isSelected }) =>
     isSelected
       ? '2px dashed rgba(255, 255, 255, 1)'
