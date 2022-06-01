@@ -75,40 +75,6 @@ export const PaneContainer = styled.div<{
   flex-direction: column;
 `
 
-export const PaneHeader = styled.div`
-  font-size: 16px;
-  margin-top: 10px;
-  flex: 0 0 auto;
-`
-
-export const PaneBody = styled.div`
-  overflow: auto;
-  margin: 14px 0;
-  flex: 0 1 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-`
-
-export const PaneBodySectionTitle = styled.span`
-  font-weight: 700;
-`
-
-export const PaneBodySectionSmallText = styled.span`
-  font-size: 0.9rem;
-`
-export const PaneBodySectionHeaderWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-`
-
-export const PaneTitle = styled.div`
-  margin-bottom: 10px;
-  display: flex;
-  gap: 5px;
-  align-items: center;
-`
-
 export const StyledResizable = styled(Resizable)`
   .react-resizable {
     position: relative;

@@ -22,7 +22,7 @@ import React, { useState } from 'react'
 import { ClipboardCopier, PropertiesTable, upperFirst } from 'neo4j-arc/common'
 import { NodeItem, RelationshipItem } from '../../types'
 
-import { PaneBody, PaneHeader, PaneTitle } from '../styled'
+import { PaneBody, PaneHeader, PaneTitle } from './styled'
 import { NodeLabel } from './NodeLabel'
 import { RelType } from './RelType'
 import { GraphStyleModel } from '../../models/GraphStyle'

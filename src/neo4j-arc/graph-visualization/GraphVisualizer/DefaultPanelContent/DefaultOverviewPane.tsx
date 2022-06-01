@@ -27,14 +27,14 @@ import {
 import { GraphStyleModel } from '../../models/GraphStyle'
 import { GraphStats } from '../../utils/mapper'
 
-import { StyledLegendInlineList } from './styled'
 import {
   PaneBody,
   PaneHeader,
   PaneBodySectionHeaderWrapper,
   PaneBodySectionSmallText,
-  PaneBodySectionTitle
-} from '../styled'
+  PaneBodySectionTitle,
+  StyledLegendInlineList
+} from './styled'
 
 import { NodeLabel } from './NodeLabel'
 import { RelType } from './RelType'
