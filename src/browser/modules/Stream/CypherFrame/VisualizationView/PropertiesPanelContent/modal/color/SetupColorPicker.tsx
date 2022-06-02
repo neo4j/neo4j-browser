@@ -8,19 +8,12 @@ import {
   IStyleForLabelProps,
   stringSorter,
   stringSorterDesc
-} from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/GrassEditor'
-import SetupColorPreview, {
-  generateColorsForBase
-} from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/modal/color/SetupColorPreview'
-import {
-  ApplyButton,
-  SimpleButton
-} from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/modal/styled'
-import { IColorSettings } from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/modal/color/SetupColorStorage'
-import SetupColorScheme, {
-  getColorSchemeAtIndex
-} from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/modal/color/SetupColorScheme'
-import PhotoshopColorModal from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/modal/simpleColor/PhotoshopColorModal'
+} from '../../GrassEditor'
+import SetupColorPreview, { generateColorsForBase } from './SetupColorPreview'
+import { ApplyButton, SimpleButton } from '../styled'
+import { IColorSettings } from './SetupColorStorage'
+import SetupColorScheme, { getColorSchemeAtIndex } from './SetupColorScheme'
+import PhotoshopColorModal from '../simpleColor/PhotoshopColorModal'
 
 const MarginDiv = styled.div`
   margin: 10px 0;

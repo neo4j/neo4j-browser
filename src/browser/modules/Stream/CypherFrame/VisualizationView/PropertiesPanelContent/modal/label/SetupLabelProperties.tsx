@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import SetupLabelCompositeProperty from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/modal/label/SetupLabelCompositeProperty'
-import SetupLabelTypeSelector from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/modal/label/SetupLabelTypeSelector'
+import SetupLabelCompositeProperty from './SetupLabelCompositeProperty'
+import SetupLabelTypeSelector from './SetupLabelTypeSelector'
 
 interface IProps {
   propertyKeys: string[]

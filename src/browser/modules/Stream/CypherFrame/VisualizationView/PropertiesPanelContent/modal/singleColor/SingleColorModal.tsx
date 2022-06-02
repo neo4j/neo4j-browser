@@ -3,8 +3,7 @@ import { PhotoshopPicker } from 'react-color'
 import styled from 'styled-components'
 
 import GenericModal from '../GenericModal'
-import { ApplyButton } from '../styled'
-import { StyledDivMarginTopBottom } from 'project-root/src/neo4j-arc/graph-visualization/GraphVisualizer/Graph/styled'
+import { ApplyButton, StyledDivMarginTopBottom } from '../styled'
 
 interface IProps {
   color: string

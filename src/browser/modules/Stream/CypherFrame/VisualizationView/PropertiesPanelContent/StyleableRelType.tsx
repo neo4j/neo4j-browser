@@ -24,9 +24,9 @@ import { StyledRelationshipChip } from 'neo4j-arc/common'
 import { GraphStyleModel } from 'neo4j-arc/graph-visualization'
 
 import { GrassEditor } from './GrassEditor'
-import { NodeModel } from 'project-root/src/neo4j-arc/graph-visualization/models/Node'
-import { usePopupControlled } from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/StyleableNodeLabel'
-import { RelationshipModel } from 'project-root/src/neo4j-arc/graph-visualization/models/Relationship'
+import { NodeModel } from 'neo4j-arc/graph-visualization/models/Node'
+import { usePopupControlled } from './StyleableNodeLabel'
+import { RelationshipModel } from 'neo4j-arc/graph-visualization/models/Relationship'
 import { useTheme } from 'styled-components'
 
 export type StyleableRelTypeProps = {

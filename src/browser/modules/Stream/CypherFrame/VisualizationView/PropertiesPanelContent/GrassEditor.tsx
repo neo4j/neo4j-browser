@@ -45,13 +45,13 @@ import * as actions from 'shared/modules/grass/grassDuck'
 import { IColorSettings } from './modal/color/SetupColorStorage'
 import SetupLabelModal, {
   ICaptionSettings
-} from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/modal/label/SetupLabelModal'
-import PhotoshopColorModal from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/modal/simpleColor/PhotoshopColorModal'
-import SetupColorModal from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/modal/color/SetupColorModal'
-import SingleColorModal from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/modal/singleColor/SingleColorModal'
-import { RelArrowCaptionPosition } from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/modal/label/SetupLabelRelArrowSVG'
-import { RelationshipModel } from 'project-root/src/neo4j-arc/graph-visualization/models/Relationship'
-import { NodeModel } from 'project-root/src/neo4j-arc/graph-visualization/models/Node'
+} from './modal/label/SetupLabelModal'
+import PhotoshopColorModal from './modal/simpleColor/PhotoshopColorModal'
+import SetupColorModal from './modal/color/SetupColorModal'
+import SingleColorModal from './modal/singleColor/SingleColorModal'
+import { RelArrowCaptionPosition } from './modal/label/SetupLabelRelArrowSVG'
+import { RelationshipModel } from 'neo4j-arc/graph-visualization/models/Relationship'
+import { NodeModel } from 'neo4j-arc/graph-visualization/models/Node'
 
 export interface IStyleForLabelProps {
   'border-color': string

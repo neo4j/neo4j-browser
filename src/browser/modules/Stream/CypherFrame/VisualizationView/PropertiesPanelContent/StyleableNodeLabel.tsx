@@ -24,8 +24,8 @@ import { StyledLabelChip } from 'neo4j-arc/common'
 import { GraphStyleModel } from 'neo4j-arc/graph-visualization'
 
 import { GrassEditor } from './GrassEditor'
-import { RelationshipModel } from 'project-root/src/neo4j-arc/graph-visualization/models/Relationship'
-import { NodeModel } from 'project-root/src/neo4j-arc/graph-visualization/models/Node'
+import { RelationshipModel } from 'neo4j-arc/graph-visualization/models/Relationship'
+import { NodeModel } from 'neo4j-arc/graph-visualization/models/Node'
 import { useTheme } from 'styled-components'
 
 export type StyleableNodeLabelProps = {

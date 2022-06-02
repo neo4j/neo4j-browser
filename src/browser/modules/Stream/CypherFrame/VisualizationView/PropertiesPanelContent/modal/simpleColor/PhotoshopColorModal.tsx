@@ -1,11 +1,10 @@
 import * as React from 'react'
 
 import GenericModal from '../GenericModal'
-import { ApplyButton } from '../styled'
+import { ApplyButton, StyledDivMarginTopBottom } from '../styled'
 import PhotoshopColorModalBody, {
   IPhotoshopColorModalBodyProps
 } from './PhotoshopColorModalBody'
-import { StyledDivMarginTopBottom } from 'project-root/src/neo4j-arc/graph-visualization/GraphVisualizer/Graph/styled'
 
 const PhotoshopColorModal: React.FC<
   Omit<IPhotoshopColorModalBodyProps, 'onClose'>

@@ -1,5 +1,7 @@
 import styled from 'styled-components'
-
+export const StyledDivMarginTopBottom = styled.div`
+  margin: 3px 0;
+`
 export const ApplyButton = styled.button<{
   backgroundColor?: string
 }>`

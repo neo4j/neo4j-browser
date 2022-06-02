@@ -1,10 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import {
-  allLabelPositions,
-  ICaptionSettings
-} from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/modal/label/SetupLabelModal'
-import { ICaptionSettingsStore } from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/modal/label/SetupLabelStorage'
+import { allLabelPositions, ICaptionSettings } from './SetupLabelModal'
+import { ICaptionSettingsStore } from './SetupLabelStorage'
 
 const SVG = styled.svg`
   position: absolute;

@@ -2,12 +2,9 @@ import { colord } from 'colord'
 import fontColorContrast from 'font-color-contrast'
 import * as React from 'react'
 import styled from 'styled-components'
-import {
-  IStyleForLabelNodeProps,
-  IStyleForLabelProps
-} from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/GrassEditor'
-import GenericModal from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/modal/GenericModal'
-import PhotoshopColorModalBody from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/modal/simpleColor/PhotoshopColorModalBody'
+import { IStyleForLabelNodeProps, IStyleForLabelProps } from '../../GrassEditor'
+import GenericModal from '../GenericModal'
+import PhotoshopColorModalBody from '../simpleColor/PhotoshopColorModalBody'
 
 interface IProps {
   value: string

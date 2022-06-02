@@ -3,22 +3,19 @@ import styled from 'styled-components'
 import SetupLabelDisplaySettings, {
   includePropertyNameKey,
   ISetupLabelDisplaySettingsOnChange
-} from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/modal/label/SetupLabelDisplaySettings'
+} from './SetupLabelDisplaySettings'
 import {
   allLabelPositions,
   ICaptionSettings,
   LabelPosition
-} from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/modal/label/SetupLabelModal'
+} from './SetupLabelModal'
 import SetupLabelProperties, {
   idSelectorValue,
   typeSelectorValue
-} from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/modal/label/SetupLabelProperties'
-import SetupLabelPreviewLabel from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/modal/label/SetupLabelPreviewLabel'
-import {
-  ApplyButton,
-  SimpleButton
-} from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/modal/styled'
-import { ISetupLabelStorageProps } from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/modal/label/SetupLabelStorage'
+} from './SetupLabelProperties'
+import SetupLabelPreviewLabel from './SetupLabelPreviewLabel'
+import { ApplyButton, SimpleButton } from '../styled'
+import { ISetupLabelStorageProps } from './SetupLabelStorage'
 
 const PreviewNodeContainer = styled.div<{
   backgroundColor?: string

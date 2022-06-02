@@ -4,11 +4,11 @@ import {
   allLabelPositions,
   ICaptionSettings,
   LabelPosition
-} from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/modal/label/SetupLabelModal'
-import SetupLabelModalBody from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/modal/label/SetupLabelModalBody'
+} from './SetupLabelModal'
+import SetupLabelModalBody from './SetupLabelModalBody'
 import SetupLabelRelArrowSVG, {
   RelArrowCaptionPosition
-} from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/modal/label/SetupLabelRelArrowSVG'
+} from './SetupLabelRelArrowSVG'
 
 const getInitialCaptionSettings: (props: {
   settings?: ICaptionSettings

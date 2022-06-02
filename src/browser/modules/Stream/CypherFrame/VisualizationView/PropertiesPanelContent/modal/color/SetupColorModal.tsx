@@ -1,9 +1,8 @@
 import * as React from 'react'
 
 import GenericModal from '../GenericModal'
-import { ApplyButton } from '../styled'
+import { ApplyButton, StyledDivMarginTopBottom } from '../styled'
 import SetupColorStorage, { ISetupColorStorageProps } from './SetupColorStorage'
-import { StyledDivMarginTopBottom } from 'project-root/src/neo4j-arc/graph-visualization/GraphVisualizer/Graph/styled'
 
 const SetupColorModal: React.FC<
   Omit<ISetupColorStorageProps, 'doClose'>

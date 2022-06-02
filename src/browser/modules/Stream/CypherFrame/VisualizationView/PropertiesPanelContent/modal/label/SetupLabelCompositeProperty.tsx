@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { v4 as uuidv4 } from 'uuid'
 import { clone } from 'lodash-es'
 import { AddIcon } from 'browser-components/icons/LegacyIcons'
-import { ApplyButton } from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/modal/styled'
+import { ApplyButton } from '../styled'
 
 const Container = styled.div`
   padding-top: 10px;

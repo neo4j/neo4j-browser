@@ -1,11 +1,8 @@
 import * as React from 'react'
 
-import { ApplyButton } from '../styled'
-import SetupLabelStorage, {
-  ISetupLabelStorageProps
-} from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/modal/label/SetupLabelStorage'
-import GenericModal from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/modal/GenericModal'
-import { StyledDivMarginTopBottom } from 'project-root/src/neo4j-arc/graph-visualization/GraphVisualizer/Graph/styled'
+import { ApplyButton, StyledDivMarginTopBottom } from '../styled'
+import SetupLabelStorage, { ISetupLabelStorageProps } from './SetupLabelStorage'
+import GenericModal from '../GenericModal'
 
 export enum LabelPosition {
   top,

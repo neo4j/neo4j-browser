@@ -140,10 +140,6 @@ export const StyledZoomButton = styled.button`
   }
 `
 
-export const StyledDivMarginTopBottom = styled.div`
-  margin: 3px 0;
-`
-
 export const StyledZoomInfoOverlay = styled.div`
   position: absolute;
   width: 100%;

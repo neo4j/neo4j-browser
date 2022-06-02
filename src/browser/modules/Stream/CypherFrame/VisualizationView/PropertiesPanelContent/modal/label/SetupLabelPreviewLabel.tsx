@@ -4,8 +4,8 @@ import styled from 'styled-components'
 import {
   includePropertyNameKey,
   setupLabelDisplaySettingsOptions
-} from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/modal/label/SetupLabelDisplaySettings'
-import { LabelPosition } from 'project-root/src/browser/modules/Stream/CypherFrame/VisualizationView/PropertiesPanelContent/modal/label/SetupLabelModal'
+} from './SetupLabelDisplaySettings'
+import { LabelPosition } from './SetupLabelModal'
 
 const PreviewLabelButton = styled.button<{ isSelected?: boolean }>`
   display: block;
