@@ -27,10 +27,7 @@ import {
   setClientConfig,
   updateUserCapability
 } from '../features/featuresDuck'
-import {
-  canSendTxMetadata,
-  getDbClusterRole
-} from '../features/versionedFeatures'
+import { getDbClusterRole } from '../features/versionedFeatures'
 import { update, updateMeta, updateServerInfo, updateSettings } from './actions'
 import {
   CLEAR_META,
@@ -70,7 +67,7 @@ import {
   useDb
 } from 'shared/modules/connections/connectionsDuck'
 import { clearHistory } from 'shared/modules/history/historyDuck'
-import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
+import { backgroundTxMetadata } from 'shared/services/bolt/txMetadata'
 import { isOnCausalCluster } from 'shared/utils/selectors'
 
 const databaseList = (store: any) =>
@@ -86,9 +83,7 @@ const databaseList = (store: any) =>
           'SHOW DATABASES',
           {},
           {
-            ...getBackgroundTxMetadata({
-              hasServerSupport: canSendTxMetadata(store.getState())
-            }),
+            ...backgroundTxMetadata,
             useDb: SYSTEM_DB
           }
         )
@@ -134,9 +129,7 @@ const getLabelsAndTypes = (store: any) =>
         {},
         {
           onLostConnection: onLostConnection(store.dispatch),
-          ...getBackgroundTxMetadata({
-            hasServerSupport: canSendTxMetadata(store.getState())
-          })
+          ...backgroundTxMetadata
         }
       )
     )
@@ -163,9 +156,7 @@ const clusterRole = (store: any) =>
           getDbClusterRole(store.getState()),
           {},
           {
-            ...getBackgroundTxMetadata({
-              hasServerSupport: canSendTxMetadata(store.getState())
-            })
+            ...backgroundTxMetadata
           }
         )
         .then(resolve)
@@ -301,9 +292,7 @@ export const serverConfigEpic = (some$: any, store: any) =>
               {},
               {
                 useDb: supportsMultiDb ? SYSTEM_DB : '',
-                ...getBackgroundTxMetadata({
-                  hasServerSupport: canSendTxMetadata(store.getState())
-                })
+                ...backgroundTxMetadata
               }
             )
             .then((r: any) => {
@@ -325,9 +314,7 @@ export const serverConfigEpic = (some$: any, store: any) =>
                     {},
                     {
                       useDb: supportsMultiDb ? SYSTEM_DB : '',
-                      ...getBackgroundTxMetadata({
-                        hasServerSupport: canSendTxMetadata(store.getState())
-                      })
+                      ...backgroundTxMetadata
                     }
                   )
                   .then(resolve)
@@ -409,9 +396,7 @@ export const serverInfoEpic = (some$: any, store: any) =>
           query,
           {},
           {
-            ...getBackgroundTxMetadata({
-              hasServerSupport: canSendTxMetadata(store.getState())
-            })
+            ...backgroundTxMetadata
           }
         )
       )

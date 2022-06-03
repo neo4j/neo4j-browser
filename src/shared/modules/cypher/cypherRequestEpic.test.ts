@@ -24,7 +24,7 @@ import { createBus, createReduxMiddleware } from 'suber'
 import { CYPHER_REQUEST, cypherRequestEpic } from './cypherDuck'
 import {
   NEO4J_BROWSER_USER_QUERY,
-  getUserDirectTxMetadata
+  userDirectTxMetadata
 } from 'services/bolt/txMetadata'
 
 jest.mock('services/bolt/bolt', () => {
@@ -75,7 +75,7 @@ describe('cypherRequestEpic', () => {
           expect(bolt.directTransaction).toHaveBeenCalledWith(
             action.query,
             undefined,
-            getUserDirectTxMetadata({ hasServerSupport: true })
+            userDirectTxMetadata
           )
           resolve()
         } catch (e) {
@@ -137,7 +137,7 @@ describe('cypherRequestEpic', () => {
       $$responseChannel: 'test-1'
     }
 
-    const p = new Promise((resolve, reject) => {
+    const p = new Promise<void>((resolve, reject) => {
       bus.take(action.$$responseChannel, () => {
         // Then
         try {

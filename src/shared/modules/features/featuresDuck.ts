@@ -20,14 +20,13 @@
 import Rx from 'rxjs/Rx'
 
 import { SYSTEM_DB } from '../dbMeta/constants'
-import { canSendTxMetadata } from '../features/versionedFeatures'
 import bolt from 'services/bolt/bolt'
 import { APP_START, CLOUD, DESKTOP } from 'shared/modules/app/appDuck'
 import {
   CONNECTION_SUCCESS,
   DISCONNECTION_SUCCESS
 } from 'shared/modules/connections/connectionsDuck'
-import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
+import { backgroundTxMetadata } from 'shared/services/bolt/txMetadata'
 
 export const NAME = 'features'
 const CLEAR = 'features/CLEAR'
@@ -132,9 +131,7 @@ export const featuresDiscoveryEpic = (action$: any, store: any) => {
             {},
             {
               useDb: supportsMultiDb ? SYSTEM_DB : '',
-              ...getBackgroundTxMetadata({
-                hasServerSupport: canSendTxMetadata(store.getState())
-              })
+              ...backgroundTxMetadata
             }
           )
           resolve(res)

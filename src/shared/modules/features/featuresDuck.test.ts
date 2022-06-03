@@ -17,9 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { NAME as META_NAME } from '../dbMeta/state'
 import reducer, * as features from './featuresDuck'
-import { canSendTxMetadata } from './versionedFeatures'
 import { dehydrate } from 'services/duckUtils'
 
 describe('features reducer', () => {
@@ -81,21 +79,4 @@ describe('feature getters', () => {
     )
     expect(features.canAssignRolesToUser({ features: nextState })).toBe(true)
   })
-})
-describe('canSendTxMetadata', () => {
-  // Valid versions that should send
-  const validSemverVersions = ['3.5.0-alpha02', '3.5.0', '3.6.1', '6.2']
-  test.each(validSemverVersions)('version %s returns true', version => {
-    expect(canSendTxMetadata(createVersionState(version))).toEqual(true)
-  })
-
-  // Invalid or old versions that should not send
-  const invalidSemverVersions = ['dev', null, undefined, '3.4.10']
-  test.each(invalidSemverVersions)('version %s returns false', version => {
-    expect(canSendTxMetadata(createVersionState(version))).toEqual(false)
-  })
-})
-
-const createVersionState: any = (version: any) => ({
-  [META_NAME]: { server: { version } }
 })
