@@ -26,7 +26,6 @@ import { getVersion } from '../dbMeta/state'
 import {
   FIRST_MULTI_DB_SUPPORT,
   FIRST_NO_MULTI_DB_SUPPORT,
-  canSendTxMetadata,
   changeUserPasswordQuery,
   driverDatabaseSelection
 } from '../features/versionedFeatures'
@@ -105,14 +104,12 @@ const callClusterMember = async (connection: any, action: any) => {
 }
 
 // Epics
-export const cypherRequestEpic = (some$: any, store: any) =>
+export const cypherRequestEpic = (some$: any) =>
   some$.ofType(CYPHER_REQUEST).mergeMap((action: any) => {
     if (!action.$$responseChannel) return Rx.Observable.of(null)
     return bolt
       .directTransaction(action.query, action.params || undefined, {
-        ...getUserTxMetadata(action.queryType || null)({
-          hasServerSupport: canSendTxMetadata(store.getState())
-        }),
+        ...getUserTxMetadata(action.queryType),
         useDb: action.useDb
       })
       .then((r: any) => ({
@@ -127,7 +124,7 @@ export const cypherRequestEpic = (some$: any, store: any) =>
       }))
   })
 
-export const routedCypherRequestEpic = (some$: any, store: any) =>
+export const routedCypherRequestEpic = (some$: any) =>
   some$.ofType(ROUTED_CYPHER_WRITE_REQUEST).mergeMap((action: any) => {
     if (!action.$$responseChannel) return Rx.Observable.of(null)
 
@@ -135,9 +132,7 @@ export const routedCypherRequestEpic = (some$: any, store: any) =>
       action.query,
       action.params,
       {
-        ...getUserTxMetadata(action.queryType || null)({
-          hasServerSupport: canSendTxMetadata(store.getState())
-        }),
+        ...getUserTxMetadata(action.queryType || null),
         cancelable: true,
         useDb: action.useDb
       }

@@ -24,23 +24,12 @@ import { getActiveDbName, getVersion } from '../dbMeta/state'
 import { guessSemverVersion } from './featureDuck.utils'
 import { GlobalState } from 'project-root/src/shared/globalState'
 
-const NEO4J_TX_METADATA_VERSION = '3.5.0-alpha01'
 const NEO4J_4_0 = '4.0.0-alpha01'
 
 export const FIRST_MULTI_DB_SUPPORT = NEO4J_4_0
 // Keep the following as 3.4.0 as 3.5.X has a
 // compatible bolt server.
 export const FIRST_NO_MULTI_DB_SUPPORT = '3.4.0'
-
-export const canSendTxMetadata = (state: GlobalState) => {
-  const serverVersion = guessSemverVersion(getVersion(state))
-
-  if (!serverVersion || !semver.valid(serverVersion)) {
-    return false
-  } else {
-    return semver.gt(serverVersion, NEO4J_TX_METADATA_VERSION)
-  }
-}
 
 export const getShowCurrentUserProcedure = (serverVersion: string) => {
   const serverVersionGuessed = guessSemverVersion(serverVersion)
