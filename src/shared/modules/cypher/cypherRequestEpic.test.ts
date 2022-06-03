@@ -23,6 +23,7 @@ import { createBus, createReduxMiddleware } from 'suber'
 
 import { CYPHER_REQUEST, cypherRequestEpic } from './cypherDuck'
 import {
+  getUserTxMetadata,
   NEO4J_BROWSER_USER_QUERY,
   userDirectTxMetadata
 } from 'services/bolt/txMetadata'
@@ -67,7 +68,7 @@ describe('cypherRequestEpic', () => {
       $$responseChannel: 'test-1'
     }
 
-    const p = new Promise((resolve, reject) => {
+    const p = new Promise<void>((resolve, reject) => {
       bus.take(action.$$responseChannel, () => {
         // Then
         try {
@@ -76,41 +77,6 @@ describe('cypherRequestEpic', () => {
             action.query,
             undefined,
             userDirectTxMetadata
-          )
-          resolve()
-        } catch (e) {
-          reject(e)
-        }
-      })
-    })
-
-    // When
-    store.dispatch(action)
-
-    // Return
-    return p
-  })
-  test('cypherRequestEpic does NOT pass along tx metadata if no server support', () => {
-    // Given
-    bolt.directTransaction.mockClear()
-    dbMeta.getVersion.mockImplementation(() => '1.0.0') // No tx metadata support
-
-    const action = {
-      type: CYPHER_REQUEST,
-      query: 'RETURN 1',
-      queryType: NEO4J_BROWSER_USER_QUERY,
-      $$responseChannel: 'test-1'
-    }
-
-    const p = new Promise((resolve, reject) => {
-      bus.take(action.$$responseChannel, () => {
-        // Then
-        try {
-          expect(bolt.directTransaction).toHaveBeenCalledTimes(1)
-          expect(bolt.directTransaction).toHaveBeenCalledWith(
-            action.query,
-            undefined,
-            {}
           )
           resolve()
         } catch (e) {
@@ -145,7 +111,7 @@ describe('cypherRequestEpic', () => {
           expect(bolt.directTransaction).toHaveBeenCalledWith(
             action.query,
             undefined,
-            {}
+            getUserTxMetadata()
           )
           resolve()
         } catch (e) {

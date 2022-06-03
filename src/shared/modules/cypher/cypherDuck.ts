@@ -109,7 +109,7 @@ export const cypherRequestEpic = (some$: any) =>
     if (!action.$$responseChannel) return Rx.Observable.of(null)
     return bolt
       .directTransaction(action.query, action.params || undefined, {
-        ...getUserTxMetadata(action.queryType || null),
+        ...getUserTxMetadata(action.queryType),
         useDb: action.useDb
       })
       .then((r: any) => ({

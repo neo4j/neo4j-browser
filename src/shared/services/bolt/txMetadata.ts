@@ -23,6 +23,7 @@ import { version } from 'project-root/package.json'
 export const NEO4J_BROWSER_BACKGROUND_QUERY = 'system'
 export const NEO4J_BROWSER_USER_QUERY = 'user-direct'
 export const NEO4J_BROWSER_USER_ACTION_QUERY = 'user-action'
+const UNKOWN_SOURCE = 'no-info'
 export const NEO4J_BROWSER_APP_ID = `neo4j-browser_v${version}`
 
 export const backgroundTxMetadata = {
@@ -39,7 +40,7 @@ export const userDirectTxMetadata = {
   }
 }
 
-export const getUserTxMetadata = (type: any) => ({
+export const getUserTxMetadata = (type: string = UNKOWN_SOURCE) => ({
   txMetadata: {
     type,
     app: NEO4J_BROWSER_APP_ID
