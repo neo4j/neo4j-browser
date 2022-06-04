@@ -23,10 +23,8 @@
 import { isAura } from '../support/utils'
 
 describe(':debug command', () => {
-  before(function() {
-    cy.visit(Cypress.config('url'))
-      .title()
-      .should('include', 'Neo4j Browser')
+  before(function () {
+    cy.visit(Cypress.config('url')).title().should('include', 'Neo4j Browser')
     cy.wait(3000)
   })
   it('can `:debug` command when not connected', () => {
@@ -39,7 +37,6 @@ describe(':debug command', () => {
     frame
       .should('have.length', 1)
       .should('contain', 'serverConfig')
-      .should('contain', '"proceduresReadable": false')
       .should('contain', '"serverConfigReadable": false')
       .should('contain', '"browser.allow_outgoing_connections": false')
   })
@@ -61,7 +58,6 @@ describe(':debug command', () => {
       frame
         .should('have.length', 1)
         .should('contain', 'serverConfig')
-        .should('contain', '"proceduresReadable": true')
         .should('contain', '"serverConfigReadable": true')
         .should('contain', '"dbms.security.auth_enabled": true')
     })

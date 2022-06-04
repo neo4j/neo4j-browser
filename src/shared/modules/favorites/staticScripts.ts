@@ -117,12 +117,22 @@ ON (n.propertyName)
   {
     folder: 'procedures',
     content: '// List procedures\nCALL dbms.procedures()',
-    versionRange: '>=3'
+    versionRange: '>=3 <5'
+  },
+  {
+    folder: 'procedures',
+    content: '// List procedures\nSHOW PROCEDURES',
+    versionRange: '>=5'
   },
   {
     folder: 'procedures',
     content: '// List functions\nCALL dbms.functions()',
-    versionRange: '>=3'
+    versionRange: '>=3 <5'
+  },
+  {
+    folder: 'procedures',
+    content: '// List functions\nSHOW FUNCTIONS',
+    versionRange: '>=5'
   },
   {
     folder: 'procedures',

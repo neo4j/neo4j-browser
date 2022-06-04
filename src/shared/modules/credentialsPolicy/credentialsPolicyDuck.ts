@@ -43,4 +43,4 @@ export const credentialsTimeoutEpic = (action$: any, store: any) =>
         }
       }, cTimeout)
     })
-    .mapTo({ type: 'NOOP' })
+    .ignoreElements()

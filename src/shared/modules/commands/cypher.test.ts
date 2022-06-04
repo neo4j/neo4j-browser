@@ -53,7 +53,7 @@ jest.mock('shared/modules/dbMeta/state', () => {
   const orig = require.requireActual('shared/modules/dbMeta/state')
   return {
     ...orig,
-    getVersion: () => '3.5.0' // support for tx metadata
+    getRawVersion: () => '3.5.0' // support for tx metadata
   }
 })
 

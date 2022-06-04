@@ -23,7 +23,7 @@ import { createBus, createReduxMiddleware } from 'suber'
 
 import * as commands from './commandsDuck'
 import bolt from 'services/bolt/bolt'
-import { add as addFrame } from 'shared/modules/frames/framesDuck'
+import { ADD, add as addFrame } from 'shared/modules/frames/framesDuck'
 import { addHistory } from 'shared/modules/history/historyDuck'
 
 // jest.unmock('services/bolt/bolt')
@@ -69,14 +69,13 @@ describe('handleCommandEpic', () => {
     const id = 2
     const requestId = 'xxx'
     const action = commands.executeCommand(cmd, { id, requestId })
-    bus.take('NOOP', _currentAction => {
+    bus.take(commands.SINGLE_COMMAND_QUEUED, () => {
       // Then
       expect(store.getActions()).toEqual([
         action,
         commands.clearErrorMessage(),
         addHistory(action.cmd, maxHistory),
-        commands.executeSingleCommand(cmd, { id, requestId }),
-        { type: 'NOOP' }
+        commands.executeSingleCommand(cmd, { id, requestId })
       ])
       done()
     })
@@ -99,7 +98,7 @@ describe('handleCommandEpic', () => {
       parentId
     })
 
-    bus.take('NOOP', _currentAction => {
+    bus.take(ADD, () => {
       // Then
       expect(store.getActions()).toContainEqual(action)
       expect(store.getActions()).toContainEqual(
@@ -114,7 +113,6 @@ describe('handleCommandEpic', () => {
         } as any)
       )
       // Non deterministic id:s in the commands, so skip
-      expect(store.getActions()).toContainEqual({ type: 'NOOP' })
       done()
     })
     // When

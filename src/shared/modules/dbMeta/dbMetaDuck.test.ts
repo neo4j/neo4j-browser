@@ -61,34 +61,6 @@ describe('updating metadata', () => {
         return { data: ['prop1', 'prop2'] }
       }
     }
-    const returnedFunctions = {
-      result: { name: 'functions' },
-      get: () => {
-        return {
-          data: [
-            {
-              name: 'ns.functionName',
-              signature: 'functionSignature',
-              description: 'functionDescription'
-            }
-          ]
-        }
-      }
-    }
-    const returnedProcedures = {
-      result: { name: 'procedures' },
-      get: () => {
-        return {
-          data: [
-            {
-              name: 'ns.procedureName',
-              signature: 'procedureSignature',
-              description: 'procedureDescription'
-            }
-          ]
-        }
-      }
-    }
     const returnedNodes = {
       result: { name: 'nodes' },
       get: () => ({
@@ -109,8 +81,6 @@ describe('updating metadata', () => {
           returnedLabels,
           returnedRelationshipTypes,
           returnedProperties,
-          returnedFunctions,
-          returnedProcedures,
           returnedNodes,
           returnedRelationships
         ]
@@ -132,22 +102,6 @@ describe('updating metadata', () => {
       { val: 'prop1', context: 'mycontext' },
       { val: 'prop2', context: 'mycontext' }
     ])
-    expect(nextState.functions).toEqual([
-      {
-        val: 'ns.functionName',
-        context: 'mycontext',
-        signature: 'functionSignature',
-        description: 'functionDescription'
-      }
-    ])
-    expect(nextState.procedures).toEqual([
-      {
-        val: 'ns.procedureName',
-        context: 'mycontext',
-        signature: 'procedureSignature',
-        description: 'procedureDescription'
-      }
-    ])
     expect(nextState.nodes).toEqual(5)
     expect(nextState.relationships).toEqual(10)
   })
@@ -162,8 +116,6 @@ describe('updating metadata', () => {
           { result: { name: 'labels' }, get: returnNothing },
           { result: { name: 'relationshipTypes' }, get: returnNothing },
           { result: { name: 'properties' }, get: returnNothing },
-          { result: { name: 'functions' }, get: returnNothing },
-          { result: { name: 'procedures' }, get: returnNothing },
           { result: { name: 'nodes' }, get: returnNull },
           { result: { name: 'realtionships' }, get: returnNull }
         ]

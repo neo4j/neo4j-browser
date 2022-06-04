@@ -17,66 +17,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import reducer, * as features from './featuresDuck'
+import reducer from './featuresDuck'
 import { dehydrate } from 'services/duckUtils'
 
 describe('features reducer', () => {
   test('handles initial value', () => {
     const nextState = reducer(undefined, { type: '' })
     expect(dehydrate(nextState)).toEqual({
-      availableProcedures: [],
       browserSync: true,
       clientConfig: null,
       userCapabilities: {
-        proceduresReadable: false,
         serverConfigReadable: false
       }
     })
-  })
-
-  test('handles UPDATE_ALL_FEATURES without initial state', () => {
-    const action = {
-      type: features.UPDATE_ALL_FEATURES,
-      availableProcedures: ['proc']
-    }
-    const nextState = reducer(undefined, action)
-    expect(nextState.availableProcedures).toEqual(['proc'])
-    expect(nextState.browserSync).toEqual(true)
-  })
-
-  test('handles UPDATE_ALL_FEATURES', () => {
-    const initialState: any = { availableProcedures: ['a', 'b'] }
-    const action = {
-      type: features.UPDATE_ALL_FEATURES,
-      availableProcedures: ['c']
-    }
-    const nextState = reducer(initialState, action)
-    expect(nextState.availableProcedures).toEqual(['c'])
-  })
-})
-
-describe('feature getters', () => {
-  test('should return empty list of availableProcedures by default', () => {
-    const nextState = reducer(undefined, { type: '' })
-    expect(features.getAvailableProcedures({ features: nextState })).toEqual([])
-  })
-  test('should return list of availableProcedures', () => {
-    const nextState = reducer({ availableProcedures: ['foo.bar'] } as any, {
-      type: ''
-    })
-    expect(features.getAvailableProcedures({ features: nextState })).toContain(
-      'foo.bar'
-    )
-  })
-  test('should not be able to assign roles to user', () => {
-    const nextState = reducer(undefined, { type: '' })
-    expect(features.canAssignRolesToUser({ features: nextState })).toBe(false)
-  })
-  test('should be able to assign roles to user', () => {
-    const nextState = reducer(
-      { availableProcedures: ['dbms.security.addRoleToUser'] } as any,
-      { type: '' }
-    )
-    expect(features.canAssignRolesToUser({ features: nextState })).toBe(true)
   })
 })

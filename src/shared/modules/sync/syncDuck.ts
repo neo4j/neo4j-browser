@@ -273,7 +273,7 @@ export const syncItemsEpic = (action$: any, store: any) =>
       const userId = store.getState().sync.key
       syncResourceFor(userId, action.itemKey, action.items)
     })
-    .mapTo({ type: 'NOOP' })
+    .ignoreElements()
 
 export const clearSyncEpic = (action$: any) =>
   action$
@@ -296,14 +296,14 @@ export const syncFavoritesEpic = (action$: any, store: any) =>
         UPDATE_FAVORITES
       ].includes(action.type)
     )
-    .map(() => {
+    .do(() => {
       const syncValue = getSync(store.getState())
       if (syncValue && syncValue.syncObj !== undefined) {
         const documents = composeDocumentsToSync(store, syncValue)
-        return syncItems('documents', documents)
+        syncItems('documents', documents)
       }
-      return { type: 'NOOP' }
     })
+    .ignoreElements()
 
 export const loadFavoritesFromSyncEpic = (action$: any, store: any) =>
   action$
@@ -319,7 +319,7 @@ export const loadFavoritesFromSyncEpic = (action$: any, store: any) =>
         store.dispatch(syncFavorites(favoritesStatus.favorites))
       }
     })
-    .mapTo({ type: 'NOOP' })
+    .ignoreElements()
 
 export const loadGrassFromSyncEpic = (action$: any, store: any) =>
   action$
@@ -333,7 +333,7 @@ export const loadGrassFromSyncEpic = (action$: any, store: any) =>
         store.dispatch(syncGrass(grass.grass))
       }
     })
-    .mapTo({ type: 'NOOP' })
+    .ignoreElements()
 
 export const syncFoldersEpic = (action$: any, store: any) =>
   action$
@@ -342,30 +342,30 @@ export const syncFoldersEpic = (action$: any, store: any) =>
         action.type
       )
     )
-    .map(() => {
+    .do(() => {
       const syncValue = getSync(store.getState())
 
       if (syncValue && syncValue.syncObj) {
         const folders = composeFoldersToSync(store, syncValue)
-        return syncItems('folders', folders)
+        store.dispatch(syncItems('folders', folders))
       }
-      return { type: 'NOOP' }
     })
+    .ignoreElements()
 
 export const syncGrassEpic = (action$: any, store: any) =>
   action$
     .filter((action: any) =>
       [SYNC_GRASS, UPDATE_GRAPH_STYLE_DATA].includes(action.type)
     )
-    .map(() => {
+    .do(() => {
       const syncValue = getSync(store.getState())
 
       if (syncValue && syncValue.syncObj) {
         const grass = composeGrassToSync(store, syncValue)
-        return syncItems('grass', grass)
+        store.dispatch(syncItems('grass', grass))
       }
-      return { type: 'NOOP' }
     })
+    .ignoreElements()
 
 export const loadFoldersFromSyncEpic = (action$: any, store: any) =>
   action$
@@ -381,4 +381,4 @@ export const loadFoldersFromSyncEpic = (action$: any, store: any) =>
         store.dispatch(syncFolders(folderStatus.folders))
       }
     })
-    .mapTo({ type: 'NOOP' })
+    .ignoreElements()

@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import {
-  FETCH_SERVER_INFO,
   FORCE_FETCH,
   PARSE_META,
   UPDATE_META,
@@ -38,12 +37,6 @@ export function updateMeta(meta: any, context?: any) {
 export function fetchMetaData() {
   return {
     type: FORCE_FETCH
-  }
-}
-
-export function fetchServerInfo() {
-  return {
-    type: FETCH_SERVER_INFO
   }
 }
 

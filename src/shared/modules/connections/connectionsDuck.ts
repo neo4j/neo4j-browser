@@ -378,19 +378,16 @@ export const useDb = (db: any = null) => ({ type: USE_DB, useDb: db })
 export const resetUseDb = () => ({ type: USE_DB, useDb: null })
 
 // Epics
-export const useDbEpic = (action$: any) => {
-  return action$
+export const useDbEpic = (action$: any, store: any) =>
+  action$
     .ofType(USE_DB)
     .do((action: any) => {
       bolt.useDb(action.useDb)
-    })
-    .map((action: any) => {
-      if (!action.useDb) {
-        return { type: 'NOOP' }
+      if (action.useDb) {
+        store.dispatch(fetchMetaData())
       }
-      return fetchMetaData()
     })
-}
+    .ignoreElements()
 
 export const connectEpic = (action$: any, store: any) =>
   action$.ofType(CONNECT).mergeMap(async (action: any) => {
@@ -592,7 +589,7 @@ export const startupConnectionSuccessEpic = (action$: any, store: any) => {
         store.dispatch(executeSystemCommand(getInitCmd(store.getState())))
       }
     })
-    .mapTo({ type: 'NOOP' })
+    .ignoreElements()
 }
 export const startupConnectionFailEpic = (action$: any, store: any) => {
   return action$
@@ -600,7 +597,7 @@ export const startupConnectionFailEpic = (action$: any, store: any) => {
     .do(() => {
       store.dispatch(executeSystemCommand(`:server connect`))
     })
-    .mapTo({ type: 'NOOP' })
+    .ignoreElements()
 }
 
 let lastActiveConnectionId: string | null = null
@@ -751,7 +748,7 @@ export const connectionLostEpic = (action$: any, store: any) =>
           .map(() => Rx.Observable.of(null))
       )
     })
-    .mapTo({ type: 'NOOP' })
+    .ignoreElements()
 
 export const switchConnectionEpic = (action$: any, store: any) => {
   return action$
@@ -808,7 +805,7 @@ export const initialSwitchConnectionFailEpic = (action$: any, store: any) => {
         store.dispatch(executeSystemCommand(`:server switch fail`))
       }
     })
-    .mapTo({ type: 'NOOP' })
+    .ignoreElements()
 }
 
 export const retainCredentialsSettingsEpic = (action$: any, store: any) => {
@@ -844,5 +841,5 @@ export const retainCredentialsSettingsEpic = (action$: any, store: any) => {
         return store.dispatch(updateConnection(connection))
       }
     })
-    .mapTo({ type: 'NOOP' })
+    .ignoreElements()
 }

@@ -21,7 +21,6 @@
 export const UPDATE_META = 'meta/UPDATE_META'
 export const PARSE_META = 'meta/PARSE_META'
 export const UPDATE_SERVER = 'meta/UPDATE_SERVER'
-export const FETCH_SERVER_INFO = 'meta/FETCH_SERVER_INFO'
 export const UPDATE_SETTINGS = 'meta/UPDATE_SETTINGS'
 export const CLEAR_META = 'meta/CLEAR'
 export const FORCE_FETCH = 'meta/FORCE_FETCH'
@@ -40,15 +39,10 @@ UNION ALL
 CALL db.propertyKeys() YIELD propertyKey
 RETURN {name:'propertyKeys', data:COLLECT(propertyKey)[..1000]} AS result
 UNION ALL
-CALL dbms.functions() YIELD name, signature, description
-RETURN {name:'functions', data: collect({name: name, signature: signature, description: description})} AS result
-UNION ALL
-CALL dbms.procedures() YIELD name, signature, description
-RETURN {name:'procedures', data:collect({name: name, signature: signature, description: description})} AS result
-UNION ALL
 MATCH () RETURN { name:'nodes', data:count(*) } AS result
 UNION ALL
 MATCH ()-[]->() RETURN { name:'relationships', data: count(*)} AS result
 `
+
 export const serverInfoQuery =
   'CALL dbms.components() YIELD name, versions, edition'

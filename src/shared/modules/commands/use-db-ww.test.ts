@@ -45,7 +45,7 @@ jest.mock('shared/modules/dbMeta/state', () => {
   const orig = jest.requireActual('shared/modules/dbMeta/state')
   return {
     ...orig,
-    getVersion: () => '4.0.0'
+    getRawVersion: () => '4.0.0'
   }
 })
 

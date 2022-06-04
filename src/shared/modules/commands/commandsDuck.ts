@@ -277,7 +277,7 @@ export const handleCommandEpic = (action$: any, store: any) =>
 
       serialExecution(...jobs).catch(() => {})
     })
-    .mapTo({ type: 'NOOP' })
+    .ignoreElements()
 
 export const handleSingleCommandEpic = (action$: any, store: any) =>
   action$

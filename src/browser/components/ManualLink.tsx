@@ -24,7 +24,7 @@ import semver from 'semver'
 import { DrawerExternalLink } from './drawer/drawer-styled'
 import { formatDocVersion } from 'browser/modules/Sidebar/docsUtils'
 import { GlobalState } from 'project-root/src/shared/globalState'
-import { getVersion } from 'shared/modules/dbMeta/state'
+import { getRawVersion } from 'shared/modules/dbMeta/state'
 
 const movedPages: { [key: string]: { oldPage: string; oldContent: string } } = {
   '/administration/indexes-for-search-performance/': {
@@ -86,7 +86,7 @@ export function ManualLink({
 }
 
 const mapStateToProps = (state: GlobalState) => ({
-  neo4jVersion: getVersion(state)
+  neo4jVersion: getRawVersion(state)
 })
 
 export default connect(mapStateToProps)(ManualLink)

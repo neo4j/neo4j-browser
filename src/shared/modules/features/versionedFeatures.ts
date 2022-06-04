@@ -20,7 +20,7 @@
 import semver from 'semver'
 
 import { getUseDb } from '../connections/connectionsDuck'
-import { getActiveDbName, getVersion } from '../dbMeta/state'
+import { getActiveDbName, getRawVersion } from '../dbMeta/state'
 import { guessSemverVersion } from './featureDuck.utils'
 import { GlobalState } from 'project-root/src/shared/globalState'
 
@@ -46,7 +46,7 @@ export const getShowCurrentUserProcedure = (serverVersion: string) => {
 
 export const getDbClusterRole = (state: GlobalState) => {
   const pre4 = 'CALL dbms.cluster.role() YIELD role'
-  const serverVersion = guessSemverVersion(getVersion(state))
+  const serverVersion = guessSemverVersion(getRawVersion(state))
   if (!semver.valid(serverVersion)) {
     return pre4
   }
@@ -58,7 +58,7 @@ export const getDbClusterRole = (state: GlobalState) => {
 }
 
 export const hasMultiDbSupport = (state: GlobalState) => {
-  const serverVersion = guessSemverVersion(getVersion(state))
+  const serverVersion = guessSemverVersion(getRawVersion(state))
   if (!semver.valid(serverVersion)) {
     return false
   }
@@ -69,7 +69,7 @@ export const hasMultiDbSupport = (state: GlobalState) => {
 }
 
 export const getUsedDbName = (state: GlobalState) => {
-  const serverVersion = guessSemverVersion(getVersion(state))
+  const serverVersion = guessSemverVersion(getRawVersion(state))
   if (!semver.valid(serverVersion)) {
     return undefined
   }
@@ -96,7 +96,7 @@ export const changeUserPasswordQuery = (state: any, oldPw: any, newPw: any) => {
     query: 'CALL dbms.security.changePassword($password)',
     parameters: { password: newPw }
   }
-  const serverVersion = guessSemverVersion(getVersion(state))
+  const serverVersion = guessSemverVersion(getRawVersion(state))
   if (!semver.valid(serverVersion)) {
     return pre4
   }
@@ -111,7 +111,7 @@ export const changeUserPasswordQuery = (state: any, oldPw: any, newPw: any) => {
 
 export const driverDatabaseSelection = (state: GlobalState, database: any) => {
   const pre4 = undefined
-  const serverVersion = guessSemverVersion(getVersion(state))
+  const serverVersion = guessSemverVersion(getRawVersion(state))
   if (!semver.valid(serverVersion)) {
     return pre4
   }

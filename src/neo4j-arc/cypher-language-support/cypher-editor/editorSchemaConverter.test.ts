@@ -35,7 +35,7 @@ describe('editor meta to schema conversion', () => {
   test('convert meta function', () => {
     expect(
       convert.toFunction({
-        val: 'ns.functionName',
+        name: 'ns.functionName',
         signature: 'ns.functionName() :: (STRING?)'
       })
     ).toEqual({
@@ -47,7 +47,7 @@ describe('editor meta to schema conversion', () => {
   test('convert meta procedure with void return items', () => {
     expect(
       convert.toProcedure({
-        val: 'db.createLabel',
+        name: 'db.createLabel',
         signature: 'db.createLabel(newLabel :: STRING?) :: VOID'
       })
     ).toEqual({
@@ -60,7 +60,7 @@ describe('editor meta to schema conversion', () => {
   test('convert meta procedure with single return item', () => {
     expect(
       convert.toProcedure({
-        val: 'db.constraints',
+        name: 'db.constraints',
         signature: 'db.constraints() :: (description :: STRING?)'
       })
     ).toEqual({
@@ -73,7 +73,7 @@ describe('editor meta to schema conversion', () => {
   test('convert meta procedure with multiple return items', () => {
     expect(
       convert.toProcedure({
-        val: 'db.indexes',
+        name: 'db.indexes',
         signature:
           'db.indexes() :: (description :: STRING?, state :: STRING?, type :: STRING?)'
       })

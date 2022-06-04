@@ -30,6 +30,13 @@ import { versionHasEditorHistorySetting } from './utils'
 import { isConfigValFalsy } from 'services/bolt/boltHelpers'
 import { GlobalState } from 'shared/globalState'
 import { APP_START } from 'shared/modules/app/appDuck'
+import { coerce, SemVer } from 'semver'
+
+export type Procedure = {
+  name: string
+  description: string
+  signature: string
+}
 
 export const NAME = 'meta'
 // Initial state
@@ -104,8 +111,21 @@ export function getMetaInContext(state: any, context: any) {
   }
 }
 
-export const getVersion = (state: GlobalState): string | null =>
+export const getRawVersion = (state: GlobalState): string | null =>
   (state[NAME] || {}).server ? (state[NAME] || {}).server.version : null
+export const getSemanticVersion = (state: GlobalState): SemVer | null =>
+  coerce(getRawVersion(state))
+export const getAvailableProcedures = (state: GlobalState): Procedure[] =>
+  state[NAME].procedures
+export const hasProcedure = (
+  state: GlobalState,
+  procedureName: string
+): boolean =>
+  Boolean(getAvailableProcedures(state).find(p => p.name === procedureName))
+
+export const canAssignRolesToUser = (state: any): boolean =>
+  hasProcedure(state, 'dbms.security.addRoleToUser')
+
 export const getEdition = (state: GlobalState) => state[NAME].server.edition
 export const hasEdition = (state: any) =>
   state[NAME].server.edition !== initialState.server.edition
@@ -155,7 +175,7 @@ export const getActiveDbName = (state: any) =>
   ((state[NAME] || {}).settings || {})['dbms.active_database']
 
 export const supportsEditorHistorySetting = (state: any) =>
-  isEnterprise(state) && versionHasEditorHistorySetting(getVersion(state))
+  isEnterprise(state) && versionHasEditorHistorySetting(getRawVersion(state))
 
 export const shouldAllowOutgoingConnections = (state: any) =>
   (hasEdition(state) && !isEnterprise(state)) ||
@@ -173,8 +193,6 @@ function updateMetaForContext(state: any, meta: any, context: any) {
     return {
       labels: initialState.labels,
       relationshipTypes: initialState.relationshipTypes,
-      properties: initialState.properties,
-      functions: initialState.functions,
       procedures: initialState.procedures,
       nodes: initialState.nodes,
       relationships: initialState.relationships
@@ -188,16 +206,6 @@ function updateMetaForContext(state: any, meta: any, context: any) {
     context
   })
   const mapInteger = (r: any) => (neo4j.isInt(r) ? r.toNumber() || 0 : r || 0)
-  const mapInvocableValue = (r: any) => {
-    const { name, signature, description } = r
-    return {
-      val: name,
-      context,
-      signature,
-      description
-    }
-  }
-
   const compareMetaItems = (a: any, b: any) =>
     a.val < b.val ? -1 : a.val > b.val ? 1 : 0
 
@@ -213,25 +221,17 @@ function updateMetaForContext(state: any, meta: any, context: any) {
     .filter(notInCurrentContext)
     .concat(mapResult(2, mapSingleValue))
     .sort(compareMetaItems)
-  const functions = state.functions
-    .filter(notInCurrentContext)
-    .concat(mapResult(3, mapInvocableValue))
-  const procedures = state.procedures
-    .filter(notInCurrentContext)
-    .concat(mapResult(4, mapInvocableValue))
-  const nodes = meta.records[5]
-    ? mapInteger(meta.records[5].get(0).data)
+  const nodes = meta.records[3]
+    ? mapInteger(meta.records[3].get(0).data)
     : state.nodes
-  const relationships = meta.records[6]
-    ? mapInteger(meta.records[6].get(0).data)
+  const relationships = meta.records[4]
+    ? mapInteger(meta.records[4].get(0).data)
     : state.relationships
 
   return {
     labels,
     relationshipTypes,
     properties,
-    functions,
-    procedures,
     nodes,
     relationships
   }

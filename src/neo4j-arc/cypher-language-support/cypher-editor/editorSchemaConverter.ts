@@ -32,20 +32,20 @@ export function toPropertyKey(propertyKey: { val: string }): string {
 }
 
 export function toFunction(func: {
-  val: string
+  name: string
   signature: string
 }): FunctionSchema {
   return {
-    name: func.val,
-    signature: func.signature.replace(func.val, '')
+    name: func.name,
+    signature: func.signature.replace(func.name, '')
   }
 }
 export function toProcedure(procedure: {
-  val: string
+  name: string
   signature: string
 }): ProcedureSchema {
-  const name = procedure.val
-  const signature = procedure.signature.replace(procedure.val, '')
+  const name = procedure.name
+  const signature = procedure.signature.replace(procedure.name, '')
 
   let returnItems: FunctionSchema[] = []
   const matches = signature.match(/\([^)]*\) :: \((.*)\)/i)

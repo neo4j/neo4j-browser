@@ -227,7 +227,7 @@ export const udcStartupEpic: Epic<Action, GlobalState> = (action$, store) =>
         updateUdcData({ lastSnapshot: Math.round(Date.now() / 1000) })
       )
     })
-    .mapTo({ type: 'NOOP' })
+    .ignoreElements()
 
 export const trackCommandUsageEpic: Epic<Action, GlobalState> = action$ =>
   action$.ofType(COMMAND_QUEUED).map((action: any) => {
@@ -298,17 +298,23 @@ export const trackReduxActionsEpic: Epic<Action, GlobalState> = action$ =>
       return metricsEvent({ category, label })
     })
 
-export const trackErrorFramesEpic: Epic<Action, GlobalState> = action$ =>
-  action$.ofType(ADD).map((action: any) => {
-    const error = action.state.error
-    if (error) {
-      const { code, type } = error
-      return metricsEvent({
-        category: 'stream',
-        label: 'errorframe',
-        data: { code, type }
-      })
-    } else {
-      return { type: 'NOOP' }
-    }
-  })
+export const trackErrorFramesEpic: Epic<Action, GlobalState> = (
+  action$,
+  store
+) =>
+  action$
+    .ofType(ADD)
+    .do((action: any) => {
+      const error = action.state.error
+      if (error) {
+        const { code, type } = error
+        store.dispatch(
+          metricsEvent({
+            category: 'stream',
+            label: 'errorframe',
+            data: { code, type }
+          })
+        )
+      }
+    })
+    .ignoreElements()

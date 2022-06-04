@@ -57,8 +57,7 @@ import {
   killQueriesProcedure,
   listQueriesProcedure
 } from 'shared/modules/cypher/queriesProcedureHelper'
-import { getVersion } from 'shared/modules/dbMeta/state'
-import { getAvailableProcedures } from 'shared/modules/features/featuresDuck'
+import { getRawVersion, hasProcedure } from 'shared/modules/dbMeta/state'
 import { getDefaultBoltScheme } from 'shared/modules/features/versionedFeatures'
 import { isOnCausalCluster } from 'shared/utils/selectors'
 
@@ -73,7 +72,7 @@ type QueriesFrameState = {
 type QueriesFrameProps = {
   frame?: any
   bus: Bus
-  availableProcedures: any
+  canListQueries: boolean
   connectionState: number
   neo4jVersion: string | null
   isFullscreen: boolean
@@ -120,10 +119,6 @@ export class QueriesFrame extends Component<
     ) {
       this.getRunningQueries()
     }
-  }
-
-  canListQueries() {
-    return this.props.availableProcedures.includes('dbms.listQueries')
   }
 
   getRunningQueries(suppressQuerySuccessMessage = false) {
@@ -336,7 +331,7 @@ export class QueriesFrame extends Component<
     let aside
     let statusBar
 
-    if (this.canListQueries()) {
+    if (this.props.canListQueries) {
       frameContents = this.constructViewFromQueryList(
         this.state.queries,
         this.state.errors
@@ -384,13 +379,11 @@ export class QueriesFrame extends Component<
   }
 }
 
-const mapStateToProps = (state: GlobalState) => {
-  return {
-    availableProcedures: getAvailableProcedures(state) || [],
-    connectionState: getConnectionState(state),
-    neo4jVersion: getVersion(state),
-    isOnCausalCluster: isOnCausalCluster(state)
-  }
-}
+const mapStateToProps = (state: GlobalState) => ({
+  canListQueries: hasProcedure(state, 'dbms.listQueries'),
+  connectionState: getConnectionState(state),
+  neo4jVersion: getRawVersion(state),
+  isOnCausalCluster: isOnCausalCluster(state)
+})
 
 export default withBus(connect(mapStateToProps, null)(QueriesFrame))

@@ -43,7 +43,14 @@ describe('Data export', () => {
     })
     const tests = [
       { panel: 'Visualization', expected: ['PNG', 'SVG'] },
-      { panel: 'Plan', expected: ['PNG', 'SVG'] }, // This test will fail in 5.0 -> one more option is enabled then
+      {
+        panel: 'Plan',
+        expected: [
+          ...(Cypress.config('serverVersion') >= 5.0 ? ['TXT'] : []),
+          'PNG',
+          'SVG'
+        ]
+      },
       { panel: 'Table', expected: ['CSV', 'JSON'] },
       { panel: 'Ascii', expected: ['CSV', 'JSON'] },
       { panel: 'Code', expected: ['CSV', 'JSON'] }

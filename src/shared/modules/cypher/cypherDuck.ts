@@ -22,7 +22,7 @@ import Rx from 'rxjs'
 
 import { updateServerInfo } from '../dbMeta/actions'
 import { serverInfoQuery } from '../dbMeta/constants'
-import { getVersion } from '../dbMeta/state'
+import { getRawVersion } from '../dbMeta/state'
 import {
   FIRST_MULTI_DB_SUPPORT,
   FIRST_NO_MULTI_DB_SUPPORT,
@@ -252,7 +252,7 @@ export const handleForcePasswordChangeEpic = (some$: any, store: any) =>
             )
             .then(async driver => {
               // Let's establish what server version we're connected to if not in state
-              if (!getVersion(store.getState())) {
+              if (!getRawVersion(store.getState())) {
                 const versionRes: any = await queryAndResolve(
                   driver,
                   { ...action, query: serverInfoQuery, parameters: {} },

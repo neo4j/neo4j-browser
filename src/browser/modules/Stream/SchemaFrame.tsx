@@ -36,7 +36,7 @@ import Directives from 'browser-components/Directives'
 import { GlobalState } from 'project-root/src/shared/globalState'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import { getVersion } from 'shared/modules/dbMeta/state'
+import { getRawVersion } from 'shared/modules/dbMeta/state'
 
 type IndexesProps = {
   indexes: any
@@ -245,7 +245,7 @@ const Frame = (props: any) => {
 }
 
 const mapStateToProps = (state: GlobalState) => ({
-  neo4jVersion: getVersion(state)
+  neo4jVersion: getRawVersion(state)
 })
 
 export default withBus(connect(mapStateToProps, null)(Frame))
