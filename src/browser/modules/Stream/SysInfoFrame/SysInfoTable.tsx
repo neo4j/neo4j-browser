@@ -10,7 +10,7 @@ import {
   SysInfoTableContainer,
   SysInfoTableEntry
 } from 'browser-components/Tables'
-import { Database } from 'shared/modules/dbMeta/state'
+import { Database } from 'shared/modules/dbMeta/dbMetaDuck'
 
 type SysInfoFrameProps = {
   databases: Database[]

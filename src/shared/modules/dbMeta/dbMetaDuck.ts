@@ -17,19 +17,75 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import neo4j from 'neo4j-driver'
-
-import {
-  CLEAR_META,
-  PARSE_META,
-  UPDATE_META,
-  UPDATE_SERVER,
-  UPDATE_SETTINGS
-} from './constants'
 import { versionHasEditorHistorySetting } from './utils'
 import { isConfigValFalsy } from 'services/bolt/boltHelpers'
 import { GlobalState } from 'shared/globalState'
 import { APP_START } from 'shared/modules/app/appDuck'
+import { coerce, SemVer } from 'semver'
+
+export const UPDATE_META = 'meta/UPDATE_META'
+export const PARSE_META = 'meta/PARSE_META'
+export const UPDATE_SERVER = 'meta/UPDATE_SERVER'
+export const UPDATE_SETTINGS = 'meta/UPDATE_SETTINGS'
+export const CLEAR_META = 'meta/CLEAR'
+export const FORCE_FETCH = 'meta/FORCE_FETCH'
+export const DB_META_DONE = 'meta/DB_META_DONE'
+
+export const SYSTEM_DB = 'system'
+export const VERSION_FOR_EDITOR_HISTORY_SETTING = '4.3.0'
+
+export const metaQuery = `
+CALL db.labels() YIELD label
+RETURN {name:'labels', data:COLLECT(label)[..1000]} AS result
+UNION ALL
+CALL db.relationshipTypes() YIELD relationshipType
+RETURN {name:'relationshipTypes', data:COLLECT(relationshipType)[..1000]} AS result
+UNION ALL
+CALL db.propertyKeys() YIELD propertyKey
+RETURN {name:'propertyKeys', data:COLLECT(propertyKey)[..1000]} AS result
+UNION ALL
+MATCH () RETURN { name:'nodes', data:count(*) } AS result
+UNION ALL
+MATCH ()-[]->() RETURN { name:'relationships', data: count(*)} AS result
+`
+
+export const serverInfoQuery =
+  'CALL dbms.components() YIELD name, versions, edition'
+import { extractServerInfo } from './utils'
+
+export function fetchMetaData() {
+  return {
+    type: FORCE_FETCH
+  }
+}
+
+export const update = (obj: any) => {
+  return {
+    type: UPDATE_META,
+    ...obj
+  }
+}
+
+export const updateSettings = (settings: any) => {
+  return {
+    type: UPDATE_SETTINGS,
+    settings
+  }
+}
+
+export const updateServerInfo = (res: any) => {
+  const extrated = extractServerInfo(res)
+  return {
+    ...extrated,
+    type: UPDATE_SERVER
+  }
+}
+
+export type Procedure = {
+  name: string
+  description: string
+  signature: string
+}
 
 export const NAME = 'meta'
 // Initial state
@@ -86,26 +142,22 @@ export function findDatabaseByNameOrAlias(
       db.aliases?.find(alias => alias.toLowerCase() === lowerCaseName)
   )
 }
-export function getMetaInContext(state: any, context: any) {
-  const inCurrentContext = (e: any) => e.context === context
 
-  const labels = state.labels.filter(inCurrentContext)
-  const relationshipTypes = state.relationshipTypes.filter(inCurrentContext)
-  const properties = state.properties.filter(inCurrentContext)
-  const functions = state.functions.filter(inCurrentContext)
-  const procedures = state.procedures.filter(inCurrentContext)
-
-  return {
-    labels,
-    relationshipTypes,
-    properties,
-    functions,
-    procedures
-  }
-}
-
-export const getVersion = (state: GlobalState): string | null =>
+export const getRawVersion = (state: GlobalState): string | null =>
   (state[NAME] || {}).server ? (state[NAME] || {}).server.version : null
+export const getSemanticVersion = (state: GlobalState): SemVer | null =>
+  coerce(getRawVersion(state))
+export const getAvailableProcedures = (state: GlobalState): Procedure[] =>
+  state[NAME].procedures
+export const hasProcedure = (
+  state: GlobalState,
+  procedureName: string
+): boolean =>
+  Boolean(getAvailableProcedures(state).find(p => p.name === procedureName))
+
+export const canAssignRolesToUser = (state: any): boolean =>
+  hasProcedure(state, 'dbms.security.addRoleToUser')
+
 export const getEdition = (state: GlobalState) => state[NAME].server.edition
 export const hasEdition = (state: any) =>
   state[NAME].server.edition !== initialState.server.edition
@@ -155,7 +207,7 @@ export const getActiveDbName = (state: any) =>
   ((state[NAME] || {}).settings || {})['dbms.active_database']
 
 export const supportsEditorHistorySetting = (state: any) =>
-  isEnterprise(state) && versionHasEditorHistorySetting(getVersion(state))
+  isEnterprise(state) && versionHasEditorHistorySetting(getRawVersion(state))
 
 export const shouldAllowOutgoingConnections = (state: any) =>
   (hasEdition(state) && !isEnterprise(state)) ||
@@ -168,75 +220,6 @@ export const shouldRetainEditorHistory = (state: any) =>
   !supportsEditorHistorySetting(state) || getRetainEditorHistory(state)
 
 // Reducers
-function updateMetaForContext(state: any, meta: any, context: any) {
-  if (!meta || !meta.records || !meta.records.length) {
-    return {
-      labels: initialState.labels,
-      relationshipTypes: initialState.relationshipTypes,
-      properties: initialState.properties,
-      functions: initialState.functions,
-      procedures: initialState.procedures,
-      nodes: initialState.nodes,
-      relationships: initialState.relationships
-    }
-  }
-  const notInCurrentContext = (e: any) => e.context !== context
-  const mapResult = (metaIndex: any, mapFunction: any) =>
-    meta.records[metaIndex].get(0).data.map(mapFunction)
-  const mapSingleValue = (r: any) => ({
-    val: r,
-    context
-  })
-  const mapInteger = (r: any) => (neo4j.isInt(r) ? r.toNumber() || 0 : r || 0)
-  const mapInvocableValue = (r: any) => {
-    const { name, signature, description } = r
-    return {
-      val: name,
-      context,
-      signature,
-      description
-    }
-  }
-
-  const compareMetaItems = (a: any, b: any) =>
-    a.val < b.val ? -1 : a.val > b.val ? 1 : 0
-
-  const labels = state.labels
-    .filter(notInCurrentContext)
-    .concat(mapResult(0, mapSingleValue))
-    .sort(compareMetaItems)
-  const relationshipTypes = state.relationshipTypes
-    .filter(notInCurrentContext)
-    .concat(mapResult(1, mapSingleValue))
-    .sort(compareMetaItems)
-  const properties = state.properties
-    .filter(notInCurrentContext)
-    .concat(mapResult(2, mapSingleValue))
-    .sort(compareMetaItems)
-  const functions = state.functions
-    .filter(notInCurrentContext)
-    .concat(mapResult(3, mapInvocableValue))
-  const procedures = state.procedures
-    .filter(notInCurrentContext)
-    .concat(mapResult(4, mapInvocableValue))
-  const nodes = meta.records[5]
-    ? mapInteger(meta.records[5].get(0).data)
-    : state.nodes
-  const relationships = meta.records[6]
-    ? mapInteger(meta.records[6].get(0).data)
-    : state.relationships
-
-  return {
-    labels,
-    relationshipTypes,
-    properties,
-    functions,
-    procedures,
-    nodes,
-    relationships
-  }
-}
-
 const dbMetaReducer = (
   state = initialState,
   unalteredAction: any
@@ -265,11 +248,6 @@ const dbMetaReducer = (
     case UPDATE_META:
       const { type, ...rest } = action
       return { ...state, ...rest }
-    case PARSE_META:
-      return {
-        ...state,
-        ...updateMetaForContext(state, action.meta, action.context)
-      }
     case UPDATE_SERVER:
       const { type: serverType, ...serverRest } = action
       const serverState: any = {}

@@ -23,7 +23,7 @@ import 'rxjs/add/operator/do'
 import 'rxjs/add/operator/mapTo'
 import uuid from 'uuid'
 
-import { Database } from '../dbMeta/state'
+import { Database } from '../dbMeta/dbMetaDuck'
 import {
   UPDATE as SETTINGS_UPDATE,
   getMaxFrames,

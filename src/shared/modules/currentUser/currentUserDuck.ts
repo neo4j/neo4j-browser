@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { DB_META_DONE, SYSTEM_DB } from '../dbMeta/constants'
+import { DB_META_DONE, SYSTEM_DB } from '../dbMeta/dbMetaDuck'
 import {
   FIRST_MULTI_DB_SUPPORT,
   FIRST_NO_MULTI_DB_SUPPORT,

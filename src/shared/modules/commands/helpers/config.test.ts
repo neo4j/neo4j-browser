@@ -20,8 +20,7 @@
 import nock from 'nock'
 
 import * as config from './config'
-import { updateSettings } from 'shared/modules/dbMeta/actions'
-import dbMetaReducer from 'shared/modules/dbMeta/state'
+import dbMetaReducer, { updateSettings } from 'shared/modules/dbMeta/dbMetaDuck'
 import { replace, update } from 'shared/modules/settings/settingsDuck'
 
 function FetchError(message: any) {

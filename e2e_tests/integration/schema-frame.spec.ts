@@ -21,10 +21,8 @@
 /* global Cypress, cy, before */
 
 describe('Schema Frame', () => {
-  before(function() {
-    cy.visit(Cypress.config('url'))
-      .title()
-      .should('include', 'Neo4j Browser')
+  before(function () {
+    cy.visit(Cypress.config('url')).title().should('include', 'Neo4j Browser')
     cy.wait(3000)
   })
   it('can connect', () => {
@@ -32,7 +30,7 @@ describe('Schema Frame', () => {
     cy.connect('neo4j', password)
   })
   describe('renders schema', () => {
-    before(function() {
+    before(function () {
       cy.executeCommand(
         'CREATE (n:SchemaTest {{}prop1: "foo", prop2: "bar"{}})'
       )
@@ -45,20 +43,30 @@ describe('Schema Frame', () => {
         cy.executeCommand('CREATE INDEX ON :SchemaTest(prop1, prop2)')
       }
 
-      cy.executeCommand(
-        'CREATE CONSTRAINT ON (n:SchemaTest) ASSERT n.prop1 IS UNIQUE'
-      )
+      if (Cypress.config('serverVersion') >= 5.0) {
+        cy.executeCommand(
+          'CREATE CONSTRAINT testConstraint FOR (n:SchemaTest) REQUIRE n.prop1 IS UNIQUE'
+        )
+      } else {
+        cy.executeCommand(
+          'CREATE CONSTRAINT ON (n:SchemaTest) ASSERT n.prop1 IS UNIQUE'
+        )
+      }
     })
-    after(function() {
+    after(function () {
       if (Cypress.config('serverVersion') >= 4.0) {
         cy.executeCommand('DROP INDEX compositeIndex')
       } else {
         cy.executeCommand('DROP INDEX ON :SchemaTest(prop1, prop2)')
       }
 
-      cy.executeCommand(
-        'DROP CONSTRAINT ON (n:SchemaTest) ASSERT n.prop1 IS UNIQUE'
-      )
+      if (Cypress.config('serverVersion') >= 5.0) {
+        cy.executeCommand('DROP CONSTRAINT testConstraint')
+      } else {
+        cy.executeCommand(
+          'DROP CONSTRAINT ON (n:SchemaTest) ASSERT n.prop1 IS UNIQUE'
+        )
+      }
       cy.executeCommand('MATCH (n:SchemaTest ) DETACH DELETE n')
     })
 

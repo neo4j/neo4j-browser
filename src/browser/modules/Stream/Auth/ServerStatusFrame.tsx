@@ -34,7 +34,7 @@ import {
   getActiveConnectionData,
   isConnected
 } from 'shared/modules/connections/connectionsDuck'
-import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/state'
+import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
 
 export const ServerStatusFrame = (props: any) => {
   const { activeConnectionData, storeCredentials, isConnected } = props

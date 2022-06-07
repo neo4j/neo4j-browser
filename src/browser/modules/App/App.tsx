@@ -73,7 +73,7 @@ import {
   getEdition,
   isServerConfigDone,
   shouldAllowOutgoingConnections
-} from 'shared/modules/dbMeta/state'
+} from 'shared/modules/dbMeta/dbMetaDuck'
 import {
   CONNECTION_ID,
   INJECTED_DISCOVERY

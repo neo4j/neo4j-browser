@@ -70,14 +70,14 @@ import {
   getUseDb,
   useDb
 } from 'shared/modules/connections/connectionsDuck'
-import { fetchMetaData } from 'shared/modules/dbMeta/actions'
-import { SYSTEM_DB } from 'shared/modules/dbMeta/constants'
 import {
+  fetchMetaData,
   findDatabaseByNameOrAlias,
   getAvailableSettings,
   getDatabases,
-  getRemoteContentHostnameAllowlist
-} from 'shared/modules/dbMeta/state'
+  getRemoteContentHostnameAllowlist,
+  SYSTEM_DB
+} from 'shared/modules/dbMeta/dbMetaDuck'
 import { getUserCapabilities } from 'shared/modules/features/featuresDuck'
 import * as frames from 'shared/modules/frames/framesDuck'
 import {

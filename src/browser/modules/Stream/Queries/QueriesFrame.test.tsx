@@ -39,7 +39,6 @@ jest.mock('../../Frame/FrameBodyTemplate', () =>
 
 it('shows error message in statusBar when not connected', () => {
   const props = {
-    availableProcedures: ['dbms.listQueries'],
     connectionState: DISCONNECTED_STATE
   } as any
   const { getByText } = render(<QueriesFrame {...props} />)
@@ -77,13 +76,13 @@ it('can list and kill queries', () => {
     })
 
   const props = {
-    availableProcedures: ['dbms.listQueries'],
     connectionState: CONNECTED_STATE,
     bus,
     neo4jVersion: '4.0.0',
     isFullscreen: false,
     isCollapsed: false,
-    isOnCausalCluster: false
+    isOnCausalCluster: false,
+    canListQueries: true
   }
 
   const { getByText, getByTestId } = render(<QueriesFrame {...props} />)

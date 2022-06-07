@@ -45,8 +45,8 @@ import {
   getDatabases,
   getEdition,
   getStoreSize,
-  getVersion
-} from 'shared/modules/dbMeta/state'
+  getRawVersion
+} from 'shared/modules/dbMeta/dbMetaDuck'
 import { getUsedDbName } from 'shared/modules/features/versionedFeatures'
 
 type DatabaseKernelInfo = {
@@ -134,7 +134,7 @@ export const DatabaseKernelInfo = ({
 
 const mapStateToProps = (state: any) => {
   return {
-    version: getVersion(state),
+    version: getRawVersion(state),
     edition: getEdition(state),
     dbName: getUsedDbName(state),
     storeSize: getStoreSize(state),

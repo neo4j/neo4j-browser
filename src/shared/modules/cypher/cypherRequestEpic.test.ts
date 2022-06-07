@@ -37,8 +37,8 @@ jest.mock('services/bolt/bolt', () => {
 })
 const bolt = jest.requireMock('services/bolt/bolt')
 
-jest.mock('shared/modules/dbMeta/state')
-const dbMeta = jest.requireMock('shared/modules/dbMeta/state')
+jest.mock('shared/modules/dbMeta/dbMetaDuck')
+const dbMeta = jest.requireMock('shared/modules/dbMeta/dbMetaDuck')
 
 describe('cypherRequestEpic', () => {
   let store: any
@@ -60,7 +60,7 @@ describe('cypherRequestEpic', () => {
 
   test('cypherRequestEpic passes along tx metadata if a queryType exists on action', () => {
     // Given
-    dbMeta.getVersion.mockImplementation(() => '5.0.0') // has tx support
+    dbMeta.getRawVersion.mockImplementation(() => '5.0.0') // has tx support
     const action = {
       type: CYPHER_REQUEST,
       query: 'RETURN 1',
@@ -94,7 +94,7 @@ describe('cypherRequestEpic', () => {
   test('cypherRequestEpic handles actions without queryType', () => {
     // Given
     bolt.directTransaction.mockClear()
-    dbMeta.getVersion.mockImplementation(() => '5.0.0') // Has tx metadata support
+    dbMeta.getRawVersion.mockImplementation(() => '5.0.0') // Has tx metadata support
 
     // No queryType = no tx metadata
     const action = {

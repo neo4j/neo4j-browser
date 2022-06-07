@@ -21,10 +21,8 @@
 /* global Cypress, cy, before */
 
 describe('LOAD CSV', () => {
-  before(function() {
-    cy.visit(Cypress.config('url'))
-      .title()
-      .should('include', 'Neo4j Browser')
+  before(function () {
+    cy.visit(Cypress.config('url')).title().should('include', 'Neo4j Browser')
     cy.wait(3000)
   })
   it('can connect', () => {
@@ -49,7 +47,10 @@ describe('LOAD CSV', () => {
     cy.resultContains('"I like unicorns, and "flying unicorns""')
   })
   it('imports with periodic commit', () => {
-    if (!Cypress.config('includeImportTests')) {
+    if (
+      !Cypress.config('includeImportTests') &&
+      Cypress.config('serverVersion') < 5
+    ) {
       return
     }
     const periodicQuery = `USING PERIODIC COMMIT 1{shift}{enter}

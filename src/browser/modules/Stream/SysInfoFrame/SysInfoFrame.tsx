@@ -49,7 +49,7 @@ import {
   getMetricsNamespacesEnabled,
   getMetricsPrefix,
   isEnterprise
-} from 'shared/modules/dbMeta/state'
+} from 'shared/modules/dbMeta/dbMetaDuck'
 import { hasMultiDbSupport } from 'shared/modules/features/versionedFeatures'
 import { Frame } from 'shared/modules/frames/framesDuck'
 import { isOnCausalCluster } from 'shared/utils/selectors'

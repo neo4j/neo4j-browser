@@ -242,15 +242,13 @@ const PropertyItems = ({
   let propertyItems: any = <p>There are no properties in database</p>
   if (properties.length > 0) {
     const editorCommandTemplate = (text: any) => {
-      return `MATCH (n) WHERE EXISTS(n.${escapeCypherIdentifier(
+      return `MATCH (n) WHERE (n.${escapeCypherIdentifier(text)}) IS NOT NULL 
+RETURN DISTINCT "node" as entity, n.${escapeCypherIdentifier(
         text
-      )}) RETURN DISTINCT "node" as entity, n.${escapeCypherIdentifier(
-        text
-      )} AS ${escapeCypherIdentifier(
-        text
-      )} LIMIT 25 UNION ALL MATCH ()-[r]-() WHERE EXISTS(r.${escapeCypherIdentifier(
-        text
-      )}) RETURN DISTINCT "relationship" AS entity, r.${escapeCypherIdentifier(
+      )} AS ${escapeCypherIdentifier(text)} LIMIT 25 
+UNION ALL 
+MATCH ()-[r]-() WHERE (r.${escapeCypherIdentifier(text)}) IS NOT NULL 
+RETURN DISTINCT "relationship" AS entity, r.${escapeCypherIdentifier(
         text
       )} AS ${escapeCypherIdentifier(text)} LIMIT 25`
     }

@@ -23,7 +23,7 @@ import { splitStringOnFirst } from 'services/commandUtils'
 import { getJSON } from 'services/remote'
 import { hostIsAllowed } from 'services/utils'
 import { isValidUrl } from 'shared/modules/commands/helpers/http'
-import { getRemoteContentHostnameAllowlist } from 'shared/modules/dbMeta/state'
+import { getRemoteContentHostnameAllowlist } from 'shared/modules/dbMeta/dbMetaDuck'
 import {
   getSettings,
   replace,

@@ -58,8 +58,7 @@ import {
 import {
   clearMetaOnDisconnectEpic,
   dbMetaEpic,
-  serverConfigEpic,
-  serverInfoEpic
+  serverConfigEpic
 } from './modules/dbMeta/epics'
 import {
   discoveryOnStartupEpic,
@@ -70,10 +69,7 @@ import {
   populateEditorFromUrlEpic,
   updateEditorSupportSchemaEpic
 } from './modules/editor/editorDuck'
-import {
-  clearOnDisconnectEpic,
-  featuresDiscoveryEpic
-} from './modules/features/featuresDuck'
+import { clearOnDisconnectEpic } from './modules/features/featuresDuck'
 import { ensureMaxFramesEpic } from './modules/frames/framesDuck'
 import { fetchRemoteGuideEpic } from './modules/guides/guidesDuck'
 import { clearLocalstorageEpic } from './modules/localstorage/localstorageDuck'
@@ -118,7 +114,6 @@ export default combineEpics(
   detectActiveConnectionChangeEpic,
   dbMetaEpic,
   serverConfigEpic,
-  serverInfoEpic,
   clearMetaOnDisconnectEpic,
   cancelRequestEpic,
   discoveryOnStartupEpic,
@@ -130,7 +125,6 @@ export default combineEpics(
   clusterCypherRequestEpic,
   clearLocalstorageEpic,
   handleForcePasswordChangeEpic,
-  featuresDiscoveryEpic,
   clearOnDisconnectEpic,
   syncFavoritesEpic,
   loadFavoritesFromSyncEpic,

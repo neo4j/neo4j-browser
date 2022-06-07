@@ -22,7 +22,7 @@ import {
   disconnectAction,
   getActiveConnection
 } from 'shared/modules/connections/connectionsDuck'
-import { credentialsTimeout } from 'shared/modules/dbMeta/state'
+import { credentialsTimeout } from 'shared/modules/dbMeta/dbMetaDuck'
 import { USER_INTERACTION } from 'shared/modules/userInteraction/userInteractionDuck'
 
 // Local variables (used in epics)
@@ -43,4 +43,4 @@ export const credentialsTimeoutEpic = (action$: any, store: any) =>
         }
       }, cTimeout)
     })
-    .mapTo({ type: 'NOOP' })
+    .ignoreElements()

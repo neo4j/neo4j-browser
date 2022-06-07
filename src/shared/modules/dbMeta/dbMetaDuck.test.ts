@@ -17,16 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import neo4j from 'neo4j-driver'
-
-import {
+import reducer, {
   CLEAR_META,
-  PARSE_META,
   UPDATE_META,
   UPDATE_SERVER,
   UPDATE_SETTINGS
-} from './constants'
-import reducer from './state'
+} from './dbMetaDuck'
 import { APP_START } from 'shared/modules/app/appDuck'
 
 describe('hydrating state', () => {
@@ -40,147 +36,7 @@ describe('hydrating state', () => {
     // Then
     expect(hydratedState).toMatchSnapshot()
   })
-})
-describe('updating metadata', () => {
-  test('should update state when metadata is updated', () => {
-    const returnedLabels = {
-      result: { name: 'labels' },
-      get: () => {
-        return { data: ['label1', 'label2'] }
-      }
-    }
-    const returnedRelationshipTypes = {
-      result: { name: 'relationshipTypes' },
-      get: () => {
-        return { data: ['rel1', 'rel2'] }
-      }
-    }
-    const returnedProperties = {
-      result: { name: 'properties' },
-      get: () => {
-        return { data: ['prop1', 'prop2'] }
-      }
-    }
-    const returnedFunctions = {
-      result: { name: 'functions' },
-      get: () => {
-        return {
-          data: [
-            {
-              name: 'ns.functionName',
-              signature: 'functionSignature',
-              description: 'functionDescription'
-            }
-          ]
-        }
-      }
-    }
-    const returnedProcedures = {
-      result: { name: 'procedures' },
-      get: () => {
-        return {
-          data: [
-            {
-              name: 'ns.procedureName',
-              signature: 'procedureSignature',
-              description: 'procedureDescription'
-            }
-          ]
-        }
-      }
-    }
-    const returnedNodes = {
-      result: { name: 'nodes' },
-      get: () => ({
-        data: neo4j.int(5)
-      })
-    }
-    const returnedRelationships = {
-      result: { name: 'relationships' },
-      get: () => ({
-        data: neo4j.int(10)
-      })
-    }
 
-    const action = {
-      type: PARSE_META,
-      meta: {
-        records: [
-          returnedLabels,
-          returnedRelationshipTypes,
-          returnedProperties,
-          returnedFunctions,
-          returnedProcedures,
-          returnedNodes,
-          returnedRelationships
-        ]
-      },
-      context: 'mycontext'
-    }
-
-    const nextState = reducer(undefined, action)
-
-    expect(nextState.labels).toEqual([
-      { val: 'label1', context: 'mycontext' },
-      { val: 'label2', context: 'mycontext' }
-    ])
-    expect(nextState.relationshipTypes).toEqual([
-      { val: 'rel1', context: 'mycontext' },
-      { val: 'rel2', context: 'mycontext' }
-    ])
-    expect(nextState.properties).toEqual([
-      { val: 'prop1', context: 'mycontext' },
-      { val: 'prop2', context: 'mycontext' }
-    ])
-    expect(nextState.functions).toEqual([
-      {
-        val: 'ns.functionName',
-        context: 'mycontext',
-        signature: 'functionSignature',
-        description: 'functionDescription'
-      }
-    ])
-    expect(nextState.procedures).toEqual([
-      {
-        val: 'ns.procedureName',
-        context: 'mycontext',
-        signature: 'procedureSignature',
-        description: 'procedureDescription'
-      }
-    ])
-    expect(nextState.nodes).toEqual(5)
-    expect(nextState.relationships).toEqual(10)
-  })
-
-  test('should update state with empty metadata', () => {
-    const returnNothing = () => ({ data: [] })
-    const returnNull = () => ({ data: null })
-    const action = {
-      type: PARSE_META,
-      meta: {
-        records: [
-          { result: { name: 'labels' }, get: returnNothing },
-          { result: { name: 'relationshipTypes' }, get: returnNothing },
-          { result: { name: 'properties' }, get: returnNothing },
-          { result: { name: 'functions' }, get: returnNothing },
-          { result: { name: 'procedures' }, get: returnNothing },
-          { result: { name: 'nodes' }, get: returnNull },
-          { result: { name: 'realtionships' }, get: returnNull }
-        ]
-      },
-      context: 'mycontext'
-    }
-
-    const nextState = reducer(undefined, action)
-
-    expect(nextState.labels).toEqual([])
-    expect(nextState.relationshipTypes).toEqual([])
-    expect(nextState.properties).toEqual([])
-    expect(nextState.functions).toEqual([])
-    expect(nextState.procedures).toEqual([])
-    expect(nextState.nodes).toEqual(0)
-    expect(nextState.relationships).toEqual(0)
-  })
   test('can update server settings', () => {
     // Given
     const initState: any = {

@@ -21,12 +21,12 @@ import Rx from 'rxjs'
 import { v4 } from 'uuid'
 
 import { CONNECTION_SUCCESS } from '../connections/connectionsDuck'
-import { UPDATE_SETTINGS } from '../dbMeta/constants'
 import {
   getAvailableSettings,
   getDefaultRemoteContentHostnameAllowlist,
-  getRemoteContentHostnameAllowlist
-} from '../dbMeta/state'
+  getRemoteContentHostnameAllowlist,
+  UPDATE_SETTINGS
+} from '../dbMeta/dbMetaDuck'
 import { addHistory } from '../history/historyDuck'
 import {
   getMaxHistory,
@@ -277,7 +277,7 @@ export const handleCommandEpic = (action$: any, store: any) =>
 
       serialExecution(...jobs).catch(() => {})
     })
-    .mapTo({ type: 'NOOP' })
+    .ignoreElements()
 
 export const handleSingleCommandEpic = (action$: any, store: any) =>
   action$

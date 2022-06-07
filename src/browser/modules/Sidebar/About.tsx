@@ -30,7 +30,7 @@ import {
   DrawerSubHeader
 } from 'browser-components/drawer/drawer-styled'
 import { version as browserVersion } from 'project-root/package.json'
-import { getEdition, getVersion } from 'shared/modules/dbMeta/state'
+import { getEdition, getRawVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 import { getBuiltAt, getBuildNumber } from 'shared/modules/app/appDuck'
 import { copyToClipboard } from 'neo4j-arc/common'
 
@@ -207,7 +207,7 @@ const About = ({
 )
 const mapStateToProps = (state: any) => {
   return {
-    serverVersion: getVersion(state),
+    serverVersion: getRawVersion(state),
     serverEdition: getEdition(state),
     builtAt: getBuiltAt(state),
     buildNumber: getBuildNumber(state)

@@ -21,28 +21,30 @@ import { assign, reduce } from 'lodash-es'
 import Rx from 'rxjs/Rx'
 
 import {
-  FEATURE_DETECTION_DONE,
   USER_CAPABILITIES,
   hasClientConfig,
   setClientConfig,
   updateUserCapability
 } from '../features/featuresDuck'
 import { getDbClusterRole } from '../features/versionedFeatures'
-import { update, updateMeta, updateServerInfo, updateSettings } from './actions'
 import {
+  update,
+  updateServerInfo,
+  updateSettings,
   CLEAR_META,
   DB_META_DONE,
-  FETCH_SERVER_INFO,
   FORCE_FETCH,
   SYSTEM_DB,
   metaQuery,
   serverInfoQuery
-} from './constants'
+} from './dbMetaDuck'
 import {
+  Database,
   findDatabaseByNameOrAlias,
   getDatabases,
+  getSemanticVersion,
   shouldRetainEditorHistory
-} from './state'
+} from './dbMetaDuck'
 import bolt from 'services/bolt/bolt'
 import { isConfigValFalsy } from 'services/bolt/boltHelpers'
 import {
@@ -69,112 +71,152 @@ import {
 import { clearHistory } from 'shared/modules/history/historyDuck'
 import { backgroundTxMetadata } from 'shared/services/bolt/txMetadata'
 import { isOnCausalCluster } from 'shared/utils/selectors'
+import {
+  getListFunctionQuery,
+  getListProcedureQuery
+} from '../cypher/functionsAndProceduresHelper'
+import { isInt, Record } from 'neo4j-driver'
 
-const databaseList = (store: any) =>
-  Rx.Observable.fromPromise(
-    new Promise(async (resolve, reject) => {
-      try {
-        const supportsMultiDb = await bolt.hasMultiDbSupport()
-        if (!supportsMultiDb) {
-          return resolve(null)
-        }
-
-        const res = await bolt.directTransaction(
-          'SHOW DATABASES',
-          {},
-          {
-            ...backgroundTxMetadata,
-            useDb: SYSTEM_DB
-          }
-        )
-        resolve(res)
-      } catch (e) {
-        reject(e)
-      }
-    })
-  )
-    .catch(() => {
-      return Rx.Observable.of(null)
-    })
-    .do((res: any) => {
-      if (!res) return Rx.Observable.of(null)
-      const databases = res.records.map((record: any) => ({
-        ...reduce(
-          record.keys,
-          (agg, key) => assign(agg, { [key]: record.get(key) }),
-          {}
-        ),
-
-        status: record.get('currentStatus')
-      }))
-
-      store.dispatch(update({ databases }))
-
-      return Rx.Observable.of(null)
-    })
-
-const getLabelsAndTypes = (store: any) =>
-  Rx.Observable.of(null).mergeMap(() => {
-    const db = getUseDb(store.getState())
-
-    // System db, do nothing
-    if (db === SYSTEM_DB) {
-      store.dispatch(updateMeta([]))
-      return Rx.Observable.of(null)
+async function databaseList(store: any) {
+  try {
+    const supportsMultiDb = await bolt.hasMultiDbSupport()
+    if (!supportsMultiDb) {
+      return
     }
-    // Not system db, try and fetch meta data
-    return Rx.Observable.fromPromise(
-      bolt.routedReadTransaction(
-        metaQuery,
-        {},
-        {
-          onLostConnection: onLostConnection(store.dispatch),
-          ...backgroundTxMetadata
-        }
-      )
-    )
-      .do(res => {
-        if (res) {
-          store.dispatch(updateMeta(res))
-        }
-        return Rx.Observable.of(null)
-      })
-      .catch(() => {
-        store.dispatch(updateMeta([]))
-        return Rx.Observable.of(null)
-      })
-  })
 
-const clusterRole = (store: any) =>
-  Rx.Observable.fromPromise(
-    new Promise((resolve, reject) => {
-      if (!isOnCausalCluster(store.getState())) {
-        return resolve(null)
+    const res = await bolt.directTransaction(
+      'SHOW DATABASES',
+      {},
+      {
+        ...backgroundTxMetadata,
+        useDb: SYSTEM_DB
       }
-      bolt
-        .directTransaction(
-          getDbClusterRole(store.getState()),
-          {},
-          {
-            ...backgroundTxMetadata
-          }
-        )
-        .then(resolve)
-        .catch(reject)
-    })
+    )
+
+    if (!res) return
+
+    const databases = res.records.map((record: any) => ({
+      ...reduce(
+        record.keys,
+        (agg, key) => assign(agg, { [key]: record.get(key) }),
+        {}
+      ),
+
+      status: record.get('currentStatus')
+    }))
+
+    store.dispatch(update({ databases }))
+  } catch {}
+}
+
+async function getLabelsAndTypes(store: any) {
+  const db = getUseDb(store.getState())
+
+  // System db, do nothing
+  if (db === SYSTEM_DB) {
+    return
+  }
+
+  // Not system db, try and fetch meta data
+  try {
+    const res = await bolt.routedReadTransaction(
+      metaQuery,
+      {},
+      {
+        onLostConnection: onLostConnection(store.dispatch),
+        ...backgroundTxMetadata
+      }
+    )
+    if (res && res.records && res.records.length !== 0) {
+      const [
+        rawLabels,
+        rawRelTypes,
+        rawProperties,
+        rawNodeCount,
+        rawRelationshipCount
+      ] = res.records.map((r: Record) => r.get(0).data)
+
+      const compareMetaItems = (a: any, b: any) => (a < b ? -1 : a > b ? 1 : 0)
+      const labels = rawLabels.sort(compareMetaItems)
+      const relationshipTypes = rawRelTypes.sort(compareMetaItems)
+      const properties = rawProperties.sort(compareMetaItems)
+
+      const neo4jIntegerToNumber = (r: any) =>
+        isInt(r) ? r.toNumber() || 0 : r || 0
+
+      const nodes = neo4jIntegerToNumber(rawNodeCount)
+      const relationships = neo4jIntegerToNumber(rawRelationshipCount)
+      store.dispatch(
+        update({
+          labels,
+          nodes,
+          properties,
+          relationshipTypes,
+          relationships
+        })
+      )
+    }
+  } catch {}
+}
+
+async function getFunctionsAndProcedures(store: any) {
+  const version = getSemanticVersion(store.getState())
+  try {
+    const procedurePromise = bolt.routedReadTransaction(
+      getListProcedureQuery(version),
+      {},
+      backgroundTxMetadata
+    )
+    const functionPromise = bolt.routedReadTransaction(
+      getListFunctionQuery(version),
+      {},
+      backgroundTxMetadata
+    )
+    const [procedures, functions] = await Promise.all([
+      procedurePromise,
+      functionPromise
+    ])
+
+    store.dispatch(
+      update({
+        procedures: procedures.records.map(p => p.toObject()),
+        functions: functions.records.map(f => f.toObject())
+      })
+    )
+  } catch (e) {}
+}
+
+async function clusterRole(store: any) {
+  if (!isOnCausalCluster(store.getState())) {
+    return
+  }
+
+  const res = await bolt.directTransaction(
+    getDbClusterRole(store.getState()),
+    {},
+    backgroundTxMetadata
   )
-    .catch(() => {
-      return Rx.Observable.of(null)
-    })
-    .do((res: any) => {
-      if (!res) return Rx.Observable.of(null)
-      const role = res.records[0].get(0)
-      store.dispatch(update({ role }))
-      return Rx.Observable.of(null)
-    })
+
+  if (!res) return Rx.Observable.of(null)
+
+  const role = res.records[0].get(0)
+  store.dispatch(update({ role }))
+  return Rx.Observable.of(null)
+}
+
+async function fetchServerInfo(store: any) {
+  try {
+    const serverInfo = await bolt.directTransaction(
+      serverInfoQuery,
+      {},
+      backgroundTxMetadata
+    )
+    store.dispatch(updateServerInfo(serverInfo))
+  } catch {}
+}
 
 const switchToRequestedDb = (store: any) => {
-  if (getUseDb(store.getState())) return Rx.Observable.of(null)
+  if (getUseDb(store.getState())) return
 
   const databases = getDatabases(store.getState())
   const activeConnection = getActiveConnectionData(store.getState())
@@ -208,7 +250,8 @@ const switchToRequestedDb = (store: any) => {
 
   if (activeConnection && requestedUseDb) {
     const wantedDb = databases.find(
-      ({ name }: any) => name.toLowerCase() === requestedUseDb.toLowerCase()
+      ({ name }: Database) =>
+        name.toLowerCase() === requestedUseDb.toLowerCase()
     )
     store.dispatch(
       updateConnection({
@@ -219,7 +262,7 @@ const switchToRequestedDb = (store: any) => {
     if (wantedDb) {
       store.dispatch(useDb(wantedDb.name))
       // update labels and such for new db
-      return getLabelsAndTypes(store)
+      getLabelsAndTypes(store)
     } else {
       // this will show the db not found frame
       store.dispatch(executeCommand(`:use ${requestedUseDb}`), {
@@ -230,7 +273,6 @@ const switchToRequestedDb = (store: any) => {
   } else {
     switchToLastUsedOrDefaultDb()
   }
-  return Rx.Observable.of(null)
 }
 
 export const dbMetaEpic = (some$: any, store: any) =>
@@ -238,37 +280,41 @@ export const dbMetaEpic = (some$: any, store: any) =>
     .ofType(UPDATE_CONNECTION_STATE)
     .filter((s: any) => s.state === CONNECTED_STATE)
     .merge(some$.ofType(CONNECTION_SUCCESS))
-    .mergeMap(() => {
-      return (
-        Rx.Observable.timer(1, 20000)
-          .merge(some$.ofType(FORCE_FETCH))
-          // Throw away newly initiated calls until done
-          .throttle(() => some$.ofType(DB_META_DONE))
-          // Server version and edition
-          .do(store.dispatch({ type: FETCH_SERVER_INFO }))
-          .mergeMap(() => {
-            return Rx.Observable.forkJoin([
+    .mergeMap(() =>
+      Rx.Observable.fromPromise(
+        // Server version and edition
+        fetchServerInfo(store)
+      )
+    )
+    .mergeMap(() =>
+      Rx.Observable.timer(1, 20000)
+        .merge(some$.ofType(FORCE_FETCH))
+        // Throw away newly initiated calls until done
+        .throttle(() => some$.ofType(DB_META_DONE))
+        .mergeMap(() =>
+          Rx.Observable.fromPromise(
+            Promise.all([
               getLabelsAndTypes(store),
+              getFunctionsAndProcedures(store),
               clusterRole(store),
               databaseList(store)
             ])
-          })
-          .takeUntil(
-            some$
-              .ofType(LOST_CONNECTION)
-              .filter(connectionLossFilter)
-              .merge(some$.ofType(DISCONNECTION_SUCCESS))
-              .merge(some$.ofType(SILENT_DISCONNECT))
           )
-          .mergeMap(() => switchToRequestedDb(store))
-          .mapTo({ type: DB_META_DONE })
-      )
-    })
+        )
+        .takeUntil(
+          some$
+            .ofType(LOST_CONNECTION)
+            .filter(connectionLossFilter)
+            .merge(some$.ofType(DISCONNECTION_SUCCESS))
+            .merge(some$.ofType(SILENT_DISCONNECT))
+        )
+        .do(() => switchToRequestedDb(store))
+        .mapTo({ type: DB_META_DONE })
+    )
 
 export const serverConfigEpic = (some$: any, store: any) =>
   some$
-    .ofType(FEATURE_DETECTION_DONE)
-    .merge(some$.ofType(DB_META_DONE))
+    .ofType(DB_META_DONE)
     .mergeMap(() => {
       // Server configuration
       return Rx.Observable.fromPromise(
@@ -383,34 +429,6 @@ export const serverConfigEpic = (some$: any, store: any) =>
     })
     .do(() => store.dispatch(update({ serverConfigDone: true })))
     .mapTo({ type: 'SERVER_CONFIG_DONE' })
-
-export const serverInfoEpic = (some$: any, store: any) =>
-  some$
-    .ofType(FETCH_SERVER_INFO)
-    .mergeMap(() => {
-      const state = store.getState()
-      const db = getUseDb(state)
-      const query = db === SYSTEM_DB ? 'SHOW DATABASES' : serverInfoQuery
-      return Rx.Observable.fromPromise(
-        bolt.directTransaction(
-          query,
-          {},
-          {
-            ...backgroundTxMetadata
-          }
-        )
-      )
-        .catch(() => {
-          return Rx.Observable.of(null)
-        })
-        .do(res => {
-          if (!res) return Rx.Observable.of(null)
-
-          store.dispatch(updateServerInfo(res))
-          return Rx.Observable.of(null)
-        })
-    })
-    .mapTo({ type: 'NOOP' })
 
 export const clearMetaOnDisconnectEpic = (some$: any, store: any) =>
   some$
