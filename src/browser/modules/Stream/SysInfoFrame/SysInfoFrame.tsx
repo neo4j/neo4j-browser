@@ -48,11 +48,11 @@ import {
   getDatabases,
   getMetricsNamespacesEnabled,
   getMetricsPrefix,
-  isEnterprise
+  isEnterprise,
+  isOnCausalCluster
 } from 'shared/modules/dbMeta/dbMetaDuck'
 import { hasMultiDbSupport } from 'shared/modules/features/versionedFeatures'
 import { Frame } from 'shared/modules/frames/framesDuck'
-import { isOnCausalCluster } from 'shared/utils/selectors'
 
 export type DatabaseMetric = { label: string; value?: string }
 export type SysInfoFrameState = {

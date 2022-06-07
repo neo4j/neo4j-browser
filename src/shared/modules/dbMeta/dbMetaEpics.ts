@@ -37,7 +37,8 @@ import {
   SYSTEM_DB,
   metaQuery,
   serverInfoQuery,
-  VERSION_FOR_CLUSTER_ROLE_IN_SHOW_DB
+  VERSION_FOR_CLUSTER_ROLE_IN_SHOW_DB,
+  isOnCausalCluster
 } from './dbMetaDuck'
 import {
   Database,
@@ -71,7 +72,6 @@ import {
 } from 'shared/modules/connections/connectionsDuck'
 import { clearHistory } from 'shared/modules/history/historyDuck'
 import { backgroundTxMetadata } from 'shared/services/bolt/txMetadata'
-import { isOnCausalCluster } from 'shared/utils/selectors'
 import {
   getListFunctionQuery,
   getListProcedureQuery
