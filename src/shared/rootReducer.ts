@@ -27,7 +27,7 @@ import connectionsReducer, {
 import userReducer, {
   NAME as currentUser
 } from 'shared/modules/currentUser/currentUserDuck'
-import dbMetaReducer, { NAME as dbMeta } from 'shared/modules/dbMeta/state'
+import dbMetaReducer, { NAME as dbMeta } from 'shared/modules/dbMeta/dbMetaDuck'
 import experimentalFeaturesReducer, {
   NAME as experimentalFeatures
 } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'

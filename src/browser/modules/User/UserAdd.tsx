@@ -52,7 +52,10 @@ import {
   listRolesQuery
 } from 'shared/modules/cypher/boltUserHelper'
 import { ROUTED_CYPHER_WRITE_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import { canAssignRolesToUser, isEnterprise } from 'shared/modules/dbMeta/state'
+import {
+  canAssignRolesToUser,
+  isEnterprise
+} from 'shared/modules/dbMeta/dbMetaDuck'
 import { driverDatabaseSelection } from 'shared/modules/features/versionedFeatures'
 
 type UserAddState = any

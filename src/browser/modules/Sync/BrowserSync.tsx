@@ -46,7 +46,7 @@ import {
   DISCONNECTED_STATE,
   getConnectionState
 } from 'shared/modules/connections/connectionsDuck'
-import { shouldAllowOutgoingConnections } from 'shared/modules/dbMeta/state'
+import { shouldAllowOutgoingConnections } from 'shared/modules/dbMeta/dbMetaDuck'
 import { getBrowserSyncConfig } from 'shared/modules/settings/settingsDuck'
 import {
   DOWN,

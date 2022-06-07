@@ -27,7 +27,7 @@ import {
   DrawerSubHeader
 } from 'browser-components/drawer/drawer-styled'
 import { escapeCypherIdentifier } from 'services/utils'
-import { Database } from 'shared/modules/dbMeta/state'
+import { Database } from 'shared/modules/dbMeta/dbMetaDuck'
 
 const Select = styled.select`
   width: 100%;

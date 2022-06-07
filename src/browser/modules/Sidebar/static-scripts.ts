@@ -25,7 +25,7 @@ import {
   commandSources,
   executeCommand
 } from 'shared/modules/commands/commandsDuck'
-import { getRawVersion } from 'shared/modules/dbMeta/state'
+import { getRawVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 import * as editor from 'shared/modules/editor/editorDuck'
 
 const mapFavoritesStateToProps = (state: any) => {

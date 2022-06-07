@@ -37,7 +37,7 @@ import {
 import { Drawer, DrawerHeader } from 'browser-components/drawer/drawer-styled'
 import { CANNY_FEATURE_REQUEST_URL, cannyOptions } from 'browser-services/canny'
 import { GlobalState } from 'shared/globalState'
-import { getRawVersion } from 'shared/modules/dbMeta/state'
+import { getRawVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 import {
   TRACK_CANNY_CHANGELOG,
   TRACK_CANNY_FEATURE_REQUEST

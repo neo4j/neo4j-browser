@@ -22,7 +22,7 @@ import { clearRefreshTokenData } from 'neo4j-client-sso'
 import { getCommandAndParam } from 'services/commandUtils'
 import { UnknownCommandError } from 'services/exceptions'
 import * as connections from 'shared/modules/connections/connectionsDuck'
-import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/state'
+import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
 import { add as addFrameAction } from 'shared/modules/frames/framesDuck'
 
 export function handleServerCommand(action: any, put: any, store: any) {

@@ -29,7 +29,6 @@ import { NATIVE, NO_AUTH, SSO } from 'services/bolt/boltHelpers'
 import { GlobalState } from 'shared/globalState'
 import { APP_START, USER_CLEAR, inWebEnv } from 'shared/modules/app/appDuck'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
-import { fetchMetaData } from 'shared/modules/dbMeta/actions'
 import * as discovery from 'shared/modules/discovery/discoveryDuck'
 import {
   getConnectionTimeout,
@@ -38,6 +37,7 @@ import {
 } from 'shared/modules/settings/settingsDuck'
 import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
 import { isCloudHost } from 'shared/services/utils'
+import { fetchMetaData } from '../dbMeta/dbMetaDuck'
 
 export const NAME = 'connections'
 export const SET_ACTIVE = 'connections/SET_ACTIVE'

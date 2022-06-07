@@ -23,7 +23,7 @@ import { createBus, createReduxMiddleware } from 'suber'
 
 import * as commands from './commandsDuck'
 import { CONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
-import { UPDATE_SETTINGS } from 'shared/modules/dbMeta/constants'
+import { UPDATE_SETTINGS } from '../dbMeta/dbMetaDuck'
 
 describe('postConnectCmdEpic', () => {
   test('creates a SYSTEM_COMMAND_QUEUED if found', done => {

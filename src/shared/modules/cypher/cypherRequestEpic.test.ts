@@ -91,41 +91,6 @@ describe('cypherRequestEpic', () => {
     // Return
     return p
   })
-  test('cypherRequestEpic does NOT pass along tx metadata if no server support', () => {
-    // Given
-    bolt.directTransaction.mockClear()
-    dbMeta.getRawVersion.mockImplementation(() => '1.0.0') // No tx metadata support
-
-    const action = {
-      type: CYPHER_REQUEST,
-      query: 'RETURN 1',
-      queryType: NEO4J_BROWSER_USER_QUERY,
-      $$responseChannel: 'test-1'
-    }
-
-    const p = new Promise<void>((resolve, reject) => {
-      bus.take(action.$$responseChannel, () => {
-        // Then
-        try {
-          expect(bolt.directTransaction).toHaveBeenCalledTimes(1)
-          expect(bolt.directTransaction).toHaveBeenCalledWith(
-            action.query,
-            undefined,
-            {}
-          )
-          resolve()
-        } catch (e) {
-          reject(e)
-        }
-      })
-    })
-
-    // When
-    store.dispatch(action)
-
-    // Return
-    return p
-  })
   test('cypherRequestEpic handles actions without queryType', () => {
     // Given
     bolt.directTransaction.mockClear()

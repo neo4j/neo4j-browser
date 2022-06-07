@@ -27,22 +27,24 @@ import {
   updateUserCapability
 } from '../features/featuresDuck'
 import { getDbClusterRole } from '../features/versionedFeatures'
-import { update, updateMeta, updateServerInfo, updateSettings } from './actions'
 import {
+  update,
+  updateServerInfo,
+  updateSettings,
   CLEAR_META,
   DB_META_DONE,
   FORCE_FETCH,
   SYSTEM_DB,
   metaQuery,
   serverInfoQuery
-} from './constants'
+} from './dbMetaDuck'
 import {
   Database,
   findDatabaseByNameOrAlias,
   getDatabases,
   getSemanticVersion,
   shouldRetainEditorHistory
-} from './state'
+} from './dbMetaDuck'
 import bolt from 'services/bolt/bolt'
 import { isConfigValFalsy } from 'services/bolt/boltHelpers'
 import {
@@ -73,6 +75,7 @@ import {
   getListFunctionQuery,
   getListProcedureQuery
 } from '../cypher/functionsAndProceduresHelper'
+import { isInt, Record } from 'neo4j-driver'
 
 async function databaseList(store: any) {
   try {
@@ -111,7 +114,6 @@ async function getLabelsAndTypes(store: any) {
 
   // System db, do nothing
   if (db === SYSTEM_DB) {
-    store.dispatch(updateMeta([]))
     return
   }
 
@@ -125,16 +127,40 @@ async function getLabelsAndTypes(store: any) {
         ...backgroundTxMetadata
       }
     )
-    if (res) {
-      store.dispatch(updateMeta(res))
+    if (res && res.records && res.records.length !== 0) {
+      const [
+        rawLabels,
+        rawRelTypes,
+        rawProperties,
+        rawNodeCount,
+        rawRelationshipCount
+      ] = res.records.map((r: Record) => r.get(0).data)
+
+      const compareMetaItems = (a: any, b: any) => (a < b ? -1 : a > b ? 1 : 0)
+      const labels = rawLabels.sort(compareMetaItems)
+      const relationshipTypes = rawRelTypes.sort(compareMetaItems)
+      const properties = rawProperties.sort(compareMetaItems)
+
+      const neo4jIntegerToNumber = (r: any) =>
+        isInt(r) ? r.toNumber() || 0 : r || 0
+
+      const nodes = neo4jIntegerToNumber(rawNodeCount)
+      const relationships = neo4jIntegerToNumber(rawRelationshipCount)
+      store.dispatch(
+        update({
+          labels,
+          nodes,
+          properties,
+          relationshipTypes,
+          relationships
+        })
+      )
     }
-  } catch {
-    store.dispatch(updateMeta([]))
-  }
+  } catch {}
 }
 
 async function getFunctionsAndProcedures(store: any) {
-  const version = getSemanticVersion(store)
+  const version = getSemanticVersion(store.getState())
   try {
     const procedurePromise = bolt.routedReadTransaction(
       getListProcedureQuery(version),

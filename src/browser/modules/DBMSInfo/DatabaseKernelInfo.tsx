@@ -46,7 +46,7 @@ import {
   getEdition,
   getStoreSize,
   getRawVersion
-} from 'shared/modules/dbMeta/state'
+} from 'shared/modules/dbMeta/dbMetaDuck'
 import { getUsedDbName } from 'shared/modules/features/versionedFeatures'
 
 type DatabaseKernelInfo = {

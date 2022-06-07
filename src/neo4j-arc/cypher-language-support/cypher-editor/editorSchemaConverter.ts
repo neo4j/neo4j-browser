@@ -19,16 +19,12 @@
  */
 import { FunctionSchema, ProcedureSchema } from 'cypher-editor-support'
 
-export function toLabel(label: { val: string }): string {
-  return `:${label.val}`
+export function toLabel(label: string): string {
+  return `:${label}`
 }
 
-export function toRelationshipType(relationshipType: { val: string }): string {
-  return `:${relationshipType.val}`
-}
-
-export function toPropertyKey(propertyKey: { val: string }): string {
-  return propertyKey.val
+export function toRelationshipType(relationshipType: string): string {
+  return `:${relationshipType}`
 }
 
 export function toFunction(func: {

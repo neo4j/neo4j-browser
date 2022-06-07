@@ -57,7 +57,7 @@ import {
 } from 'services/cypherErrorsHelper'
 import { BrowserError } from 'services/exceptions'
 import { deepEquals } from 'neo4j-arc/common'
-import { getSemanticVersion } from 'shared/modules/dbMeta/state'
+import { getSemanticVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 import { SemVer } from 'semver'
 
 export type ErrorsViewProps = {

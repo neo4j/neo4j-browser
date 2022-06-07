@@ -45,7 +45,7 @@ import { fetchRemoteGuideAsync } from 'shared/modules/commands/helpers/playAndGu
 import {
   getDefaultRemoteContentHostnameAllowlist,
   getRemoteContentHostnameAllowlist
-} from 'shared/modules/dbMeta/state'
+} from 'shared/modules/dbMeta/dbMetaDuck'
 
 interface ResponseException extends Error {
   response: Response

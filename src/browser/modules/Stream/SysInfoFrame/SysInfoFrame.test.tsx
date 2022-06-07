@@ -25,7 +25,7 @@ import { Bus } from 'suber'
 
 import { SysInfoFrame, SysInfoFrameProps } from './SysInfoFrame'
 import reducers from 'project-root/src/shared/rootReducer'
-import { Database } from 'shared/modules/dbMeta/state'
+import { Database } from 'shared/modules/dbMeta/dbMetaDuck'
 import { Frame } from 'shared/modules/frames/framesDuck'
 
 const baseProps = {

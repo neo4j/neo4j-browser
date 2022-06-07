@@ -19,14 +19,13 @@
  */
 import neo4j from 'neo4j-driver'
 
-import {
+import reducer, {
   CLEAR_META,
   PARSE_META,
   UPDATE_META,
   UPDATE_SERVER,
   UPDATE_SETTINGS
-} from './constants'
-import reducer from './state'
+} from './dbMetaDuck'
 import { APP_START } from 'shared/modules/app/appDuck'
 
 describe('hydrating state', () => {

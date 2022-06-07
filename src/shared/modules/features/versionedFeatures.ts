@@ -20,7 +20,7 @@
 import semver from 'semver'
 
 import { getUseDb } from '../connections/connectionsDuck'
-import { getActiveDbName, getRawVersion } from '../dbMeta/state'
+import { getActiveDbName, getRawVersion } from '../dbMeta/dbMetaDuck'
 import { guessSemverVersion } from './featureDuck.utils'
 import { GlobalState } from 'project-root/src/shared/globalState'
 

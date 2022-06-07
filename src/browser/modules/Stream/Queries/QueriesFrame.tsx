@@ -57,7 +57,7 @@ import {
   killQueriesProcedure,
   listQueriesProcedure
 } from 'shared/modules/cypher/queriesProcedureHelper'
-import { getRawVersion, hasProcedure } from 'shared/modules/dbMeta/state'
+import { getRawVersion, hasProcedure } from 'shared/modules/dbMeta/dbMetaDuck'
 import { getDefaultBoltScheme } from 'shared/modules/features/versionedFeatures'
 import { isOnCausalCluster } from 'shared/utils/selectors'
 
@@ -365,7 +365,7 @@ export class QueriesFrame extends Component<
           subtitle="What edition are you running?"
         />
       )
-      frameContents = <EnterpriseOnlyFrame command={this.props.frame.cmd} />
+      frameContents = <EnterpriseOnlyFrame command=":queries" />
     }
     return (
       <FrameBodyTemplate

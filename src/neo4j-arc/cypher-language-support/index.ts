@@ -31,6 +31,5 @@ export {
   toFunction,
   toLabel,
   toProcedure,
-  toPropertyKey,
   toRelationshipType
 } from './cypher-editor/editorSchemaConverter'

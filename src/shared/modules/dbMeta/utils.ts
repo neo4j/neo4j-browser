@@ -20,7 +20,7 @@
 import semver from 'semver'
 
 import { guessSemverVersion } from '../features/featureDuck.utils'
-import { VERSION_FOR_EDITOR_HISTORY_SETTING } from './constants'
+import { VERSION_FOR_EDITOR_HISTORY_SETTING } from './dbMetaDuck'
 
 type ServerInfo = {
   version: string | null

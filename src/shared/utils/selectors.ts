@@ -8,14 +8,13 @@ import {
 } from 'shared/modules/connections/connectionsDuck'
 import {
   getAllowOutgoingConnections,
-  getAvailableProcedures,
   getClientsAllowTelemetry,
   getDatabases,
   getRawVersion,
   hasProcedure,
   isServerConfigDone,
   shouldAllowOutgoingConnections
-} from 'shared/modules/dbMeta/state'
+} from 'shared/modules/dbMeta/dbMetaDuck'
 import {
   getAllowCrashReports,
   getAllowUserStats
