@@ -59,7 +59,7 @@ import {
   clearMetaOnDisconnectEpic,
   dbMetaEpic,
   serverConfigEpic
-} from './modules/dbMeta/epics'
+} from './modules/dbMeta/dbMetaEpics'
 import {
   discoveryOnStartupEpic,
   injectDiscoveryEpic

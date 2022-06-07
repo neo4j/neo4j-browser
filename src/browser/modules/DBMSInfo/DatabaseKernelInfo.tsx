@@ -41,7 +41,7 @@ import {
 } from 'shared/modules/commands/commandsDuck'
 import {
   Database,
-  getClusterRole,
+  getClusterRoleForDb,
   getDatabases,
   getEdition,
   getStoreSize,
@@ -133,12 +133,13 @@ export const DatabaseKernelInfo = ({
 }
 
 const mapStateToProps = (state: any) => {
+  const dbName = getUsedDbName(state)
   return {
     version: getRawVersion(state),
     edition: getEdition(state),
-    dbName: getUsedDbName(state),
+    dbName,
     storeSize: getStoreSize(state),
-    role: getClusterRole(state),
+    role: getClusterRoleForDb(state, dbName),
     databases: getDatabases(state)
   }
 }

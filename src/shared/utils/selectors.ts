@@ -9,9 +9,6 @@ import {
 import {
   getAllowOutgoingConnections,
   getClientsAllowTelemetry,
-  getDatabases,
-  getRawVersion,
-  hasProcedure,
   isServerConfigDone,
   shouldAllowOutgoingConnections
 } from 'shared/modules/dbMeta/dbMetaDuck'
@@ -98,15 +95,4 @@ export const getTelemetrySettings = (state: GlobalState): TelemetrySettings => {
   }
 
   return { source, ...rules[source] }
-}
-
-export const isOnCausalCluster = (state: GlobalState): boolean => {
-  const version = semver.coerce(getRawVersion(state))
-  if (!version) return false
-
-  if (semver.gte(version, '4.3.0')) {
-    return getDatabases(state).some(database => database.role !== 'standalone')
-  } else {
-    return hasProcedure(state, 'dbms.cluster.overview')
-  }
 }
