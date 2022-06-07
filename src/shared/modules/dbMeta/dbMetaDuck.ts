@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import neo4j, { Record } from 'neo4j-driver'
 import { versionHasEditorHistorySetting } from './utils'
 import { isConfigValFalsy } from 'services/bolt/boltHelpers'
 import { GlobalState } from 'shared/globalState'
@@ -221,39 +220,6 @@ export const shouldRetainEditorHistory = (state: any) =>
   !supportsEditorHistorySetting(state) || getRetainEditorHistory(state)
 
 // Reducers
-function parseMeta(meta: any) {
-  if (!meta || !meta.records || !meta.records.length) {
-    return {}
-  }
-
-  const [
-    rawLabels,
-    rawRelTypes,
-    rawProperties,
-    rawNodeCount,
-    rawRelationshipCount
-  ] = meta.records.map((r: Record) => r.get(0).data)
-
-  const compareMetaItems = (a: any, b: any) => (a < b ? -1 : a > b ? 1 : 0)
-  const labels = rawLabels.sort(compareMetaItems)
-  const relationshipTypes = rawRelTypes.sort(compareMetaItems)
-  const properties = rawProperties.sort(compareMetaItems)
-
-  const neo4jIntegerToNumber = (r: any) =>
-    neo4j.isInt(r) ? r.toNumber() || 0 : r || 0
-
-  const nodes = neo4jIntegerToNumber(rawNodeCount)
-  const relationships = neo4jIntegerToNumber(rawRelationshipCount)
-
-  return {
-    labels,
-    relationshipTypes,
-    properties,
-    nodes,
-    relationships
-  }
-}
-
 const dbMetaReducer = (
   state = initialState,
   unalteredAction: any
@@ -282,11 +248,6 @@ const dbMetaReducer = (
     case UPDATE_META:
       const { type, ...rest } = action
       return { ...state, ...rest }
-    case PARSE_META:
-      return {
-        ...state,
-        ...parseMeta(action.meta)
-      }
     case UPDATE_SERVER:
       const { type: serverType, ...serverRest } = action
       const serverState: any = {}

@@ -21,15 +21,11 @@ import * as convert from './editorSchemaConverter'
 
 describe('editor meta to schema conversion', () => {
   test('convert meta label', () => {
-    expect(convert.toLabel({ val: 'label' })).toEqual(':label')
+    expect(convert.toLabel('label')).toEqual(':label')
   })
 
   test('convert meta relationship', () => {
-    expect(convert.toRelationshipType({ val: 'relType' })).toEqual(':relType')
-  })
-
-  test('convert meta propertyKey', () => {
-    expect(convert.toPropertyKey({ val: 'propertyKey' })).toEqual('propertyKey')
+    expect(convert.toRelationshipType('relType')).toEqual(':relType')
   })
 
   test('convert meta function', () => {

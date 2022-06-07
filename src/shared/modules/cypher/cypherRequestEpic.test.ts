@@ -37,8 +37,8 @@ jest.mock('services/bolt/bolt', () => {
 })
 const bolt = jest.requireMock('services/bolt/bolt')
 
-jest.mock('shared/modules/dbMeta/state')
-const dbMeta = jest.requireMock('shared/modules/dbMeta/state')
+jest.mock('shared/modules/dbMeta/dbMetaDuck')
+const dbMeta = jest.requireMock('shared/modules/dbMeta/dbMetaDuck')
 
 describe('cypherRequestEpic', () => {
   let store: any

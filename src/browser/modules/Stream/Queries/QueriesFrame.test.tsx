@@ -39,7 +39,7 @@ jest.mock('../../Frame/FrameBodyTemplate', () =>
 
 it('shows error message in statusBar when not connected', () => {
   const props = {
-    availableProcedures: ['dbms.listQueries'],
+    canListQueries: true,
     connectionState: DISCONNECTED_STATE
   } as any
   const { getByText } = render(<QueriesFrame {...props} />)
