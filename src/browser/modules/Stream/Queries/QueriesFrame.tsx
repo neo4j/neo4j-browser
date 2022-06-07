@@ -331,7 +331,10 @@ export class QueriesFrame extends Component<
     let aside
     let statusBar
 
-    if (this.props.canListQueries) {
+    if (
+      this.props.canListQueries ||
+      this.props.connectionState !== CONNECTED_STATE
+    ) {
       frameContents = this.constructViewFromQueryList(
         this.state.queries,
         this.state.errors
