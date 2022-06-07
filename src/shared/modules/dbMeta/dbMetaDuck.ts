@@ -90,6 +90,36 @@ export type Procedure = {
 }
 
 export const NAME = 'meta'
+
+export type ClientSettings = {
+  'browser.allow_outgoing_connections': boolean
+  'browser.credential_timeout': number | string // number (seconds) or duration string (support other units)
+  'browser.post_connect_cmd': string
+  'browser.remote_content_hostname_allowlist': string
+  'browser.retain_connection_credentials': boolean
+  'browser.retain_editor_history': boolean
+  'clients.allow_telemetry': boolean
+  'dbms.security.auth_enabled': boolean
+  'metrics.namespaces.enabled': boolean
+  'metrics.prefix': string
+}
+
+/**
+ * Initial client settings, used before the actual settings is loaded. Not to be
+ * confused with the default values for the setting, since not always the same.
+ */
+export const initialClientSettings: ClientSettings = {
+  'browser.allow_outgoing_connections': false, // default is true, but set to false until settings read
+  'browser.credential_timeout': 0,
+  'browser.post_connect_cmd': '',
+  'browser.remote_content_hostname_allowlist': 'guides.neo4j.com, localhost', // same as ..._whitelist, just an alias
+  'browser.retain_connection_credentials': false, // default is true, but set to false until settings read
+  'browser.retain_editor_history': false, // default is true, but set to false until settings read
+  'clients.allow_telemetry': true, // default is true. Renamed to client.allow_telemetry after 5.0
+  'dbms.security.auth_enabled': true, // default is true, but set to false until settings read
+  'metrics.namespaces.enabled': false, // default is false, Renamed to server.metrics.namespaces.enabled after 5.0
+  'metrics.prefix': 'neo4j' // default is 'neo4j', Renamed to server.metrics.prefix after 5.0
+}
 // Initial state
 export const initialState = {
   nodes: 0,
@@ -107,15 +137,7 @@ export const initialState = {
   },
   databases: [],
   serverConfigDone: false,
-  settings: {
-    'browser.allow_outgoing_connections': false,
-    'browser.remote_content_hostname_allowlist': 'guides.neo4j.com, localhost',
-    'browser.retain_connection_credentials': false,
-    'browser.retain_editor_history': false,
-    'clients.allow_telemetry': true,
-    'metrics.namespaces.enabled': false,
-    'metrics.prefix': 'neo4j'
-  }
+  settings: initialClientSettings
 }
 
 export type Database = {
@@ -172,7 +194,7 @@ export const getStoreId = (state: any) =>
 export const isServerConfigDone = (state: GlobalState): boolean =>
   state[NAME].serverConfigDone
 
-export const getAvailableSettings = (state: any) =>
+export const getAvailableSettings = (state: any): ClientSettings =>
   (state[NAME] || initialState).settings
 export const getAllowOutgoingConnections = (state: any) =>
   getAvailableSettings(state)['browser.allow_outgoing_connections']

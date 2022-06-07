@@ -160,7 +160,7 @@ export function getActiveConnectionData(state: GlobalState): Connection | null {
 
 export function getAuthEnabled(state: GlobalState): boolean {
   const data = getConnectionData(state, state[NAME].activeConnection)
-  return data?.authEnabled ?? false
+  return data?.authEnabled ?? true
 }
 
 export function getConnectedHost(state: GlobalState): string | null {
