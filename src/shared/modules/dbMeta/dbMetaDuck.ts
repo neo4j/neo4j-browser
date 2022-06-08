@@ -21,7 +21,9 @@ import { versionHasEditorHistorySetting } from './utils'
 import { isConfigValFalsy } from 'services/bolt/boltHelpers'
 import { GlobalState } from 'shared/globalState'
 import { APP_START } from 'shared/modules/app/appDuck'
+import { extractServerInfo } from './utils'
 import { coerce, SemVer } from 'semver'
+import { gte } from 'lodash-es'
 
 export const UPDATE_META = 'meta/UPDATE_META'
 export const PARSE_META = 'meta/PARSE_META'
@@ -33,6 +35,7 @@ export const DB_META_DONE = 'meta/DB_META_DONE'
 
 export const SYSTEM_DB = 'system'
 export const VERSION_FOR_EDITOR_HISTORY_SETTING = '4.3.0'
+export const VERSION_FOR_CLUSTER_ROLE_IN_SHOW_DB = '4.3.0'
 
 export const metaQuery = `
 CALL db.labels() YIELD label
@@ -51,7 +54,6 @@ MATCH ()-[]->() RETURN { name:'relationships', data: count(*)} AS result
 
 export const serverInfoQuery =
   'CALL dbms.components() YIELD name, versions, edition'
-import { extractServerInfo } from './utils'
 
 export function fetchMetaData() {
   return {
@@ -97,7 +99,7 @@ export const initialState = {
   properties: [],
   functions: [],
   procedures: [],
-  role: null,
+  role: null, // Used pre version 4.3 (before SHOW DATABASES had the role and we had to query for it)
   server: {
     version: null,
     edition: null,
@@ -162,7 +164,6 @@ export const getEdition = (state: GlobalState) => state[NAME].server.edition
 export const hasEdition = (state: any) =>
   state[NAME].server.edition !== initialState.server.edition
 export const getStoreSize = (state: any) => state[NAME].server.storeSize
-export const getClusterRole = (state: any) => state[NAME].role
 export const isEnterprise = (state: any) =>
   ['enterprise'].includes(state[NAME].server.edition)
 export const isBeta = (state: any) => /-/.test(state[NAME].server.version)
@@ -218,6 +219,28 @@ export const shouldRetainConnectionCredentials = (state: any) =>
 
 export const shouldRetainEditorHistory = (state: any) =>
   !supportsEditorHistorySetting(state) || getRetainEditorHistory(state)
+
+export const isOnCausalCluster = (state: GlobalState): boolean => {
+  const version = getSemanticVersion(state)
+  if (!version) return false
+
+  if (gte(version, VERSION_FOR_CLUSTER_ROLE_IN_SHOW_DB)) {
+    return getDatabases(state).some(database => database.role !== 'standalone')
+  } else {
+    return hasProcedure(state, 'dbms.cluster.overview')
+  }
+}
+export const getClusterRoleForDb = (state: GlobalState, activeDb: string) => {
+  const version = getSemanticVersion(state)
+  if (!version) return false
+
+  if (gte(version, VERSION_FOR_CLUSTER_ROLE_IN_SHOW_DB)) {
+    return getDatabases(state).find(database => database.name === activeDb)
+      ?.role
+  } else {
+    return state[NAME].role
+  }
+}
 
 // Reducers
 const dbMetaReducer = (

@@ -57,9 +57,12 @@ import {
   killQueriesProcedure,
   listQueriesProcedure
 } from 'shared/modules/cypher/queriesProcedureHelper'
-import { getRawVersion, hasProcedure } from 'shared/modules/dbMeta/dbMetaDuck'
+import {
+  getRawVersion,
+  hasProcedure,
+  isOnCausalCluster
+} from 'shared/modules/dbMeta/dbMetaDuck'
 import { getDefaultBoltScheme } from 'shared/modules/features/versionedFeatures'
-import { isOnCausalCluster } from 'shared/utils/selectors'
 
 type QueriesFrameState = {
   queries: any[]

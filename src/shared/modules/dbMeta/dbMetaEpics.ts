@@ -36,7 +36,9 @@ import {
   FORCE_FETCH,
   SYSTEM_DB,
   metaQuery,
-  serverInfoQuery
+  serverInfoQuery,
+  VERSION_FOR_CLUSTER_ROLE_IN_SHOW_DB,
+  isOnCausalCluster
 } from './dbMetaDuck'
 import {
   Database,
@@ -70,12 +72,12 @@ import {
 } from 'shared/modules/connections/connectionsDuck'
 import { clearHistory } from 'shared/modules/history/historyDuck'
 import { backgroundTxMetadata } from 'shared/services/bolt/txMetadata'
-import { isOnCausalCluster } from 'shared/utils/selectors'
 import {
   getListFunctionQuery,
   getListProcedureQuery
 } from '../cypher/functionsAndProceduresHelper'
 import { isInt, Record } from 'neo4j-driver'
+import { gte } from 'semver'
 
 async function databaseList(store: any) {
   try {
@@ -191,17 +193,22 @@ async function clusterRole(store: any) {
     return
   }
 
+  const version = getSemanticVersion(store.getState())
+  if (version && gte(version, VERSION_FOR_CLUSTER_ROLE_IN_SHOW_DB)) {
+    // No need to query for the cluster role anymore since it's available in the data from SHOW DATABASES
+    return
+  }
+
   const res = await bolt.directTransaction(
     getDbClusterRole(store.getState()),
     {},
     backgroundTxMetadata
   )
 
-  if (!res) return Rx.Observable.of(null)
+  if (!res) return
 
   const role = res.records[0].get(0)
   store.dispatch(update({ role }))
-  return Rx.Observable.of(null)
 }
 
 async function fetchServerInfo(store: any) {
