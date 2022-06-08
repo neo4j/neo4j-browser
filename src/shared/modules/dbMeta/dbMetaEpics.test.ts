@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { cleanupSettings } from './epics'
+import { cleanupSettings } from './dbMetaEpics'
 import { ClientSettings } from './dbMetaDuck'
 
 const defaultSettings: ClientSettings = {
