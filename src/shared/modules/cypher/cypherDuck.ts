@@ -34,7 +34,10 @@ import {
 import { getCausalClusterAddresses } from './queriesProcedureHelper'
 import bolt from 'services/bolt/bolt'
 import { buildTxFunctionByMode } from 'services/bolt/boltHelpers'
-import { getUserTxMetadata } from 'services/bolt/txMetadata'
+import {
+  getUserTxMetadata,
+  userActionTxMetadata
+} from 'services/bolt/txMetadata'
 import { flatten } from 'services/utils'
 import {
   Connection,
@@ -53,6 +56,7 @@ const queryAndResolve = async (
   driver: any,
   action: any,
   host: any,
+  metadata: { type: string; app: string },
   useDb = {}
 ) => {
   return new Promise(resolve => {
@@ -62,7 +66,7 @@ const queryAndResolve = async (
     })
     const txFn = buildTxFunctionByMode(session)
     txFn &&
-      txFn((tx: any) => tx.run(action.query, action.parameters))
+      txFn((tx: any) => tx.run(action.query, action.parameters), { metadata })
         .then((r: any) => {
           session.close()
           resolve({
@@ -90,7 +94,12 @@ const callClusterMember = async (connection: any, action: any) => {
     bolt
       .directConnect(connection, undefined, undefined, false) // Ignore validation errors
       .then(async driver => {
-        const res = await queryAndResolve(driver, action, connection.host)
+        const res = await queryAndResolve(
+          driver,
+          action,
+          connection.host,
+          userActionTxMetadata.txMetadata
+        )
         driver.close()
         resolve(res)
       })
@@ -168,7 +177,7 @@ export const clusterCypherRequestEpic = (some$: any, store: any) =>
     .mergeMap((action: any) => {
       if (!action.$$responseChannel) return Rx.Observable.of(null)
       return bolt
-        .directTransaction(getCausalClusterAddresses, {})
+        .directTransaction(getCausalClusterAddresses, {}, userActionTxMetadata)
         .then((res: any) => {
           const addresses = flatten(
             res.records.map((record: any) => record.get('addresses'))
@@ -258,7 +267,8 @@ export const handleForcePasswordChangeEpic = (some$: any, store: any) =>
                 const versionRes: any = await queryAndResolve(
                   driver,
                   { ...action, query: serverInfoQuery, parameters: {} },
-                  undefined
+                  undefined,
+                  userActionTxMetadata.txMetadata
                 )
                 // What does the driver say, does the server support multidb?
                 const supportsMultiDb = await driver.supportsMultiDb()
@@ -289,6 +299,7 @@ export const handleForcePasswordChangeEpic = (some$: any, store: any) =>
                 driver,
                 { ...action, ...queryObj },
                 undefined,
+                userActionTxMetadata.txMetadata,
                 driverDatabaseSelection(store.getState(), 'system') // target system db if it has multi-db support
               )
               driver.close()
