@@ -25,7 +25,7 @@ import { guessSemverVersion } from './featureDuck.utils'
 import { GlobalState } from 'project-root/src/shared/globalState'
 
 const NEO4J_4_0 = '4.0.0-alpha01'
-const NEO4J_5_0 = '4.0.0-alpha01'
+const NEO4J_5_0 = '5.0.0-alpha01'
 
 export const FIRST_MULTI_DB_SUPPORT = NEO4J_4_0
 // Keep the following as 3.4.0 as 3.5.X has a
