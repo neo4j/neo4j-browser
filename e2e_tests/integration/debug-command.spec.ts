@@ -38,7 +38,7 @@ describe(':debug command', () => {
       .should('have.length', 1)
       .should('contain', 'serverConfig')
       .should('contain', '"serverConfigReadable": false')
-      .should('contain', '"browser.allow_outgoing_connections": false')
+      .should('contain', '"allowOutgoingConnections": false')
   })
   // Now connect
   it('can connect', () => {
@@ -59,7 +59,7 @@ describe(':debug command', () => {
         .should('have.length', 1)
         .should('contain', 'serverConfig')
         .should('contain', '"serverConfigReadable": true')
-        .should('contain', '"dbms.security.auth_enabled": true')
+        .should('contain', '"authEnabled": true')
     })
   }
 })

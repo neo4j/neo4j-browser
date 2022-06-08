@@ -106,4 +106,12 @@ describe('cleanupSettings', () => {
     }
     expect(newSettings).toEqual(expectedSettings)
   })
+  test('server.metrics.prefix=""', () => {
+    const newSettings = cleanupSettings({ 'server.metrics.prefix': '' })
+    const expectedSettings: ClientSettings = {
+      ...defaultSettings,
+      metricsPrefix: ''
+    }
+    expect(newSettings).toEqual(expectedSettings)
+  })
 })

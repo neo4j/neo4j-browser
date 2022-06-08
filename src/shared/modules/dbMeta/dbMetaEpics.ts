@@ -397,9 +397,6 @@ export const serverConfigEpic = (some$: any, store: any) =>
 
           const settings: ClientSettings = cleanupSettings(rawSettings)
 
-          console.log('raw settings', rawSettings)
-          console.log('my settings2', settings)
-
           // side-effects
           store.dispatch(
             setRetainCredentials(settings.retainConnectionCredentials)
@@ -443,8 +440,8 @@ export const cleanupSettings = (rawSettings: any) => {
       isConfigValTruthy(rawSettings['metrics.namespaces.enabled']) ||
       isConfigValTruthy(rawSettings['server.metrics.namespaces.enabled']), // default false
     metricsPrefix:
-      rawSettings['metrics.prefix'] ||
-      rawSettings['server.metrics.prefix'] ||
+      rawSettings['metrics.prefix'] ??
+      rawSettings['server.metrics.prefix'] ??
       initialClientSettings.metricsPrefix
   }
 
