@@ -19,55 +19,56 @@
  */
 
 import { cleanupSettings } from './epics'
+import { ClientSettings } from './dbMetaDuck'
 
-const testSettings = {
-  'browser.allow_outgoing_connections': 'true',
-  'browser.credential_timeout': '0s',
-  'browser.post_connect_cmd': '',
-  'browser.remote_content_hostname_whitelist': 'guides.neo4j.com,localhost',
-  'browser.retain_connection_credentials': 'true',
-  'browser.retain_editor_history': 'true',
-  'client.allow_telemetry': 'true',
-  'dbms.default_database': 'neo4j',
-  'dbms.security.auth_enabled': 'true',
-  'server.metrics.namespaces.enabled': 'false',
-  'server.metrics.prefix': 'neo4j4j'
-}
-
-const defaultSettings = {
-  'browser.allow_outgoing_connections': true,
-  'browser.credential_timeout': 0,
-  'browser.post_connect_cmd': '',
-  'browser.remote_content_hostname_allowlist': 'guides.neo4j.com, localhost',
-  'browser.retain_connection_credentials': true,
-  'browser.retain_editor_history': true,
-  'clients.allow_telemetry': true,
-  'dbms.security.auth_enabled': true,
-  'metrics.namespaces.enabled': false,
-  'metrics.prefix': 'neo4j'
+const defaultSettings: ClientSettings = {
+  allowOutgoingConnections: true,
+  credentialTimeout: 0,
+  postConnectCmd: '',
+  remoteContentHostnameAllowlist: 'guides.neo4j.com, localhost',
+  retainConnectionCredentials: true,
+  retainEditorHistory: true,
+  allowTelemetry: true,
+  authEnabled: true,
+  metricsNamespacesEnabled: false,
+  metricsPrefix: 'neo4j'
 }
 
 describe('cleanupSettings', () => {
   test('should cleanup settings', () => {
-    const newSettings = cleanupSettings(testSettings)
-    const expectedSettings = {
-      'browser.allow_outgoing_connections': true,
+    const rawSettings = {
+      'browser.allow_outgoing_connections': 'true',
       'browser.credential_timeout': '0s',
-      'browser.post_connect_cmd': '',
-      'browser.remote_content_hostname_allowlist': 'guides.neo4j.com,localhost',
-      'browser.retain_connection_credentials': true,
-      'browser.retain_editor_history': true,
-      'clients.allow_telemetry': true,
-      'dbms.security.auth_enabled': true,
-      'metrics.namespaces.enabled': false,
-      'metrics.prefix': 'neo4j4j'
+      'browser.post_connect_cmd': 'match (n) return n',
+      'browser.remote_content_hostname_whitelist': 'guides.neo4j.com,localhost',
+      'browser.retain_connection_credentials': 'true',
+      'browser.retain_editor_history': 'true',
+      'client.allow_telemetry': 'true',
+      'dbms.default_database': 'neo4j',
+      'dbms.security.auth_enabled': 'true',
+      'server.metrics.namespaces.enabled': 'false',
+      'server.metrics.prefix': 'neo4j4j'
     }
+    const expectedSettings: ClientSettings = {
+      allowOutgoingConnections: true,
+      credentialTimeout: '0s',
+      postConnectCmd: 'match (n) return n',
+      remoteContentHostnameAllowlist: 'guides.neo4j.com,localhost',
+      retainConnectionCredentials: true,
+      retainEditorHistory: true,
+      allowTelemetry: true,
+      authEnabled: true,
+      metricsNamespacesEnabled: false,
+      metricsPrefix: 'neo4j4j'
+    }
+
+    const newSettings = cleanupSettings(rawSettings)
+
     expect(newSettings).toEqual(expectedSettings)
   })
   test('default values', () => {
     const newSettings = cleanupSettings({})
-    const expectedSettings = defaultSettings
-    expect(newSettings).toEqual(expectedSettings)
+    expect(newSettings).toEqual(defaultSettings)
   })
   test('browser.allow_outgoing_connections="false"', () => {
     const newSettings = cleanupSettings({
@@ -75,7 +76,7 @@ describe('cleanupSettings', () => {
     })
     const expectedSettings = {
       ...defaultSettings,
-      'browser.allow_outgoing_connections': false
+      allowOutgoingConnections: false
     }
     expect(newSettings).toEqual(expectedSettings)
   })
@@ -83,25 +84,25 @@ describe('cleanupSettings', () => {
     const newSettings = cleanupSettings({
       'browser.allow_outgoing_connections': 'true'
     })
-    const expectedSettings = {
+    const expectedSettings: ClientSettings = {
       ...defaultSettings,
-      'browser.allow_outgoing_connections': true
+      allowOutgoingConnections: true
     }
     expect(newSettings).toEqual(expectedSettings)
   })
   test('clients.allow_telemetry="false"', () => {
     const newSettings = cleanupSettings({ 'clients.allow_telemetry': 'false' })
-    const expectedSettings = {
+    const expectedSettings: ClientSettings = {
       ...defaultSettings,
-      'clients.allow_telemetry': false
+      allowTelemetry: false
     }
     expect(newSettings).toEqual(expectedSettings)
   })
   test('client.allow_telemetry="false"', () => {
     const newSettings = cleanupSettings({ 'client.allow_telemetry': 'false' })
-    const expectedSettings = {
+    const expectedSettings: ClientSettings = {
       ...defaultSettings,
-      'clients.allow_telemetry': false
+      allowTelemetry: false
     }
     expect(newSettings).toEqual(expectedSettings)
   })

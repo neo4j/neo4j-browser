@@ -402,11 +402,9 @@ export const serverConfigEpic = (some$: any, store: any) =>
 
           // side-effects
           store.dispatch(
-            setRetainCredentials(
-              settings['browser.retain_connection_credentials']
-            )
+            setRetainCredentials(settings.retainConnectionCredentials)
           )
-          store.dispatch(setAuthEnabled(settings['dbms.security.auth_enabled']))
+          store.dispatch(setAuthEnabled(settings.authEnabled))
 
           store.dispatch(
             updateUserCapability(USER_CAPABILITIES.serverConfigReadable, true)
@@ -420,37 +418,34 @@ export const serverConfigEpic = (some$: any, store: any) =>
 
 export const cleanupSettings = (rawSettings: any) => {
   const settings: ClientSettings = {
-    'browser.allow_outgoing_connections': !isConfigValFalsy(
+    allowOutgoingConnections: !isConfigValFalsy(
       rawSettings['browser.allow_outgoing_connections']
     ), // default true
-    'browser.credential_timeout':
-      rawSettings['browser.credential_timeout'] || 0,
-    'browser.post_connect_cmd': rawSettings['browser.post_connect_cmds'] || '',
-    'browser.remote_content_hostname_allowlist':
+    credentialTimeout: rawSettings['browser.credential_timeout'] || 0,
+    postConnectCmd: rawSettings['browser.post_connect_cmd'] || '',
+    remoteContentHostnameAllowlist:
       rawSettings['browser.remote_content_hostname_whitelist'] ||
-      initialClientSettings['browser.remote_content_hostname_allowlist'],
-    'browser.retain_connection_credentials': !isConfigValFalsy(
+      initialClientSettings.remoteContentHostnameAllowlist,
+    retainConnectionCredentials: !isConfigValFalsy(
       rawSettings['browser.retain_connection_credentials']
     ), // default true
-    'browser.retain_editor_history': !isConfigValFalsy(
+    retainEditorHistory: !isConfigValFalsy(
       rawSettings['browser.retain_editor_history']
     ), // default true
     // Info: clients.allow_telemetry in versions < 5.0, client.allow_telemetry in versions >= 5.0
-    'clients.allow_telemetry': !(
+    allowTelemetry: !(
       isConfigValFalsy(rawSettings['clients.allow_telemetry']) ||
       isConfigValFalsy(rawSettings['client.allow_telemetry'])
     ), // default true
-    'dbms.security.auth_enabled': !isConfigValFalsy(
-      rawSettings['dbms.security.auth_enabled']
-    ), // default true
+    authEnabled: !isConfigValFalsy(rawSettings['dbms.security.auth_enabled']), // default true
     // Info: metrics... in versions < 5.0, server.metrics... in versions >= 5.0
-    'metrics.namespaces.enabled':
+    metricsNamespacesEnabled:
       isConfigValTruthy(rawSettings['metrics.namespaces.enabled']) ||
       isConfigValTruthy(rawSettings['server.metrics.namespaces.enabled']), // default false
-    'metrics.prefix':
+    metricsPrefix:
       rawSettings['metrics.prefix'] ||
       rawSettings['server.metrics.prefix'] ||
-      initialClientSettings['metrics.prefix']
+      initialClientSettings.metricsPrefix
   }
 
   return settings

@@ -68,7 +68,7 @@ export const update = (obj: any) => {
   }
 }
 
-export const updateSettings = (settings: any) => {
+export const updateSettings = (settings: ClientSettings) => {
   return {
     type: UPDATE_SETTINGS,
     settings
@@ -92,16 +92,16 @@ export type Procedure = {
 export const NAME = 'meta'
 
 export type ClientSettings = {
-  'browser.allow_outgoing_connections': boolean
-  'browser.credential_timeout': number | string // number (seconds) or duration string (support other units)
-  'browser.post_connect_cmd': string
-  'browser.remote_content_hostname_allowlist': string
-  'browser.retain_connection_credentials': boolean
-  'browser.retain_editor_history': boolean
-  'clients.allow_telemetry': boolean
-  'dbms.security.auth_enabled': boolean
-  'metrics.namespaces.enabled': boolean
-  'metrics.prefix': string
+  allowOutgoingConnections: boolean
+  credentialTimeout: number | string // number (seconds) or duration string (support other units)
+  postConnectCmd: string
+  remoteContentHostnameAllowlist: string
+  retainConnectionCredentials: boolean
+  retainEditorHistory: boolean
+  allowTelemetry: boolean
+  authEnabled: boolean
+  metricsNamespacesEnabled: boolean
+  metricsPrefix: string
 }
 
 /**
@@ -109,16 +109,16 @@ export type ClientSettings = {
  * confused with the default values for the setting, since not always the same.
  */
 export const initialClientSettings: ClientSettings = {
-  'browser.allow_outgoing_connections': false, // default is true, but set to false until settings read
-  'browser.credential_timeout': 0,
-  'browser.post_connect_cmd': '',
-  'browser.remote_content_hostname_allowlist': 'guides.neo4j.com, localhost', // same as ..._whitelist, just an alias
-  'browser.retain_connection_credentials': false, // default is true, but set to false until settings read
-  'browser.retain_editor_history': false, // default is true, but set to false until settings read
-  'clients.allow_telemetry': true, // default is true. Renamed to client.allow_telemetry after 5.0
-  'dbms.security.auth_enabled': true, // default is true, but set to false until settings read
-  'metrics.namespaces.enabled': false, // default is false, Renamed to server.metrics.namespaces.enabled after 5.0
-  'metrics.prefix': 'neo4j' // default is 'neo4j', Renamed to server.metrics.prefix after 5.0
+  allowOutgoingConnections: false, // default is true, but set to false until settings read
+  credentialTimeout: 0,
+  postConnectCmd: '',
+  remoteContentHostnameAllowlist: 'guides.neo4j.com, localhost',
+  retainConnectionCredentials: false, // default is true, but set to false until settings read
+  retainEditorHistory: false, // default is true, but set to false until settings read
+  allowTelemetry: true, // default is true. Renamed to client.allow_telemetry after 5.0
+  authEnabled: true, // default is true, but set to false until settings read
+  metricsNamespacesEnabled: false, // default is false, Renamed to server.metrics.namespaces.enabled after 5.0
+  metricsPrefix: 'neo4j' // default is 'neo4j', Renamed to server.metrics.prefix after 5.0
 }
 // Initial state
 export const initialState = {
@@ -197,32 +197,32 @@ export const isServerConfigDone = (state: GlobalState): boolean =>
 export const getAvailableSettings = (state: any): ClientSettings =>
   (state[NAME] || initialState).settings
 export const getAllowOutgoingConnections = (state: any) =>
-  getAvailableSettings(state)['browser.allow_outgoing_connections']
+  getAvailableSettings(state).allowOutgoingConnections
 export const getClientsAllowTelemetry = (state: GlobalState): boolean =>
-  getAvailableSettings(state)['clients.allow_telemetry'] ??
-  initialState.settings['clients.allow_telemetry']
+  getAvailableSettings(state).allowTelemetry ??
+  initialState.settings.allowTelemetry
 export const credentialsTimeout = (state: any) =>
-  getAvailableSettings(state)['browser.credential_timeout'] || 0
+  getAvailableSettings(state).credentialTimeout || 0
 export const getRemoteContentHostnameAllowlist = (state: GlobalState): string =>
-  getAvailableSettings(state)['browser.remote_content_hostname_allowlist']
+  getAvailableSettings(state).remoteContentHostnameAllowlist
 export const getDefaultRemoteContentHostnameAllowlist = (): string =>
-  initialState.settings['browser.remote_content_hostname_allowlist']
+  initialState.settings.remoteContentHostnameAllowlist
 export const getRetainConnectionCredentials = (state: any) => {
   const settings = getAvailableSettings(state)
-  const conf = settings['browser.retain_connection_credentials']
+  const conf = settings.retainConnectionCredentials
   if (conf === null || typeof conf === 'undefined') return false
   return !isConfigValFalsy(conf)
 }
 export const getRetainEditorHistory = (state: any) => {
   const settings = getAvailableSettings(state)
-  const conf = settings['browser.retain_editor_history']
+  const conf = settings.retainEditorHistory
   if (conf === null || typeof conf === 'undefined') return false
   return !isConfigValFalsy(conf)
 }
 export const getMetricsNamespacesEnabled = (state: GlobalState): boolean =>
-  getAvailableSettings(state)['metrics.namespaces.enabled']
+  getAvailableSettings(state).metricsNamespacesEnabled
 export const getMetricsPrefix = (state: GlobalState): string =>
-  getAvailableSettings(state)['metrics.prefix']
+  getAvailableSettings(state).metricsPrefix
 
 export const getDatabases = (state: any): Database[] =>
   (state[NAME] || initialState).databases
@@ -267,26 +267,8 @@ export const getClusterRoleForDb = (state: GlobalState, activeDb: string) => {
 // Reducers
 const dbMetaReducer = (
   state = initialState,
-  unalteredAction: any
+  action: any
 ): typeof initialState => {
-  let action = unalteredAction
-  if (unalteredAction && unalteredAction.settings) {
-    const allowlist =
-      unalteredAction.settings['browser.remote_content_hostname_allowlist'] ||
-      unalteredAction.settings['browser.remote_content_hostname_whitelist']
-
-    action = allowlist
-      ? {
-          ...unalteredAction,
-          settings: {
-            ...unalteredAction.settings,
-            ['browser.remote_content_hostname_allowlist']: allowlist
-          }
-        }
-      : unalteredAction
-    delete action.settings['browser.remote_content_hostname_whitelist']
-  }
-
   switch (action.type) {
     case APP_START:
       return { ...initialState, ...state, serverConfigDone: false }
