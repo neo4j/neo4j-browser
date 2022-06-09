@@ -30,6 +30,7 @@ import {
 } from './globalDrivers'
 import { buildTxFunctionByMode } from 'services/bolt/boltHelpers'
 import { Connection } from 'shared/modules/connections/connectionsDuck'
+import { backgroundTxMetadata } from './txMetadata'
 
 export const DIRECT_CONNECTION = 'DIRECT_CONNECTION'
 export const ROUTED_WRITE_CONNECTION = 'ROUTED_WRITE_CONNECTION'
@@ -68,9 +69,9 @@ export const validateConnection = (
       })
       const txFn = buildTxFunctionByMode(session)
       txFn &&
-        txFn((tx: { run: (query: string) => void }) =>
-          tx.run('CALL db.indexes()')
-        )
+        txFn(tx => tx.run('CALL db.indexes()'), {
+          metadata: backgroundTxMetadata.txMetadata
+        })
           .then(() => {
             session.close()
             res(driver)

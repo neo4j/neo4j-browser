@@ -29,6 +29,7 @@ import {
 
 import bolt from '../../../services/bolt/bolt'
 import { recursivelyTypeGraphItems } from '../../../services/bolt/boltMappings'
+import { userDirectTxMetadata } from '../../../services/bolt/txMetadata'
 import arrayHasItems from '../../../utils/array-has-items'
 
 const FAT_ARROW = '=>'
@@ -83,7 +84,8 @@ export async function collectLambdaValues(
     {},
     {
       requestId,
-      cancelable: false
+      cancelable: false,
+      ...userDirectTxMetadata
     }
   )
 
