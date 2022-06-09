@@ -41,6 +41,8 @@ import {
   isOnCausalCluster
 } from './dbMetaDuck'
 import {
+  ClientSettings,
+  initialClientSettings,
   Database,
   findDatabaseByNameOrAlias,
   getDatabases,
@@ -48,7 +50,7 @@ import {
   shouldRetainEditorHistory
 } from './dbMetaDuck'
 import bolt from 'services/bolt/bolt'
-import { isConfigValFalsy } from 'services/bolt/boltHelpers'
+import { isConfigValFalsy, isConfigValTruthy } from 'services/bolt/boltHelpers'
 import {
   commandSources,
   executeCommand
@@ -386,47 +388,21 @@ export const serverConfigEpic = (some$: any, store: any) =>
         })
         .do((res: any) => {
           if (!res) return Rx.Observable.of(null)
-          const settings = res.records.reduce((all: any, record: any) => {
-            const name = record.get('name')
-            let value = record.get('value')
-            if (name === 'browser.retain_connection_credentials') {
-              let retainCredentials = true
-              // Check if we should wipe user creds from localstorage
-              if (typeof value !== 'undefined' && isConfigValFalsy(value)) {
-                retainCredentials = false
-              }
-              store.dispatch(setRetainCredentials(retainCredentials))
-              value = retainCredentials
-            } else if (name === 'browser.retain_editor_history') {
-              let retainHistory = true
-              // Check if we should wipe user history from localstorage
-              if (typeof value !== 'undefined' && isConfigValFalsy(value)) {
-                retainHistory = false
-              }
-              value = retainHistory
-            } else if (name === 'browser.allow_outgoing_connections') {
-              // Use isConfigValFalsy to cast undefined to true
-              value = !isConfigValFalsy(value)
-            } else if (name === 'clients.allow_telemetry') {
-              value = !isConfigValFalsy(value)
-            } else if (name === 'dbms.security.auth_enabled') {
-              let authEnabled = true
-              if (typeof value !== 'undefined' && isConfigValFalsy(value)) {
-                authEnabled = false
-              }
-              value = authEnabled
-              store.dispatch(setAuthEnabled(authEnabled))
-            } else if (name === 'metrics.namespaces.enabled') {
-              let metricsNamespacesEnabled = true
-              if (typeof value !== 'undefined' && isConfigValFalsy(value)) {
-                metricsNamespacesEnabled = false
-              }
-              value = metricsNamespacesEnabled
-            }
 
-            all[name] = value
+          const rawSettings = res.records.reduce((all: any, record: any) => {
+            const name = record.get('name')
+            all[name] = record.get('value')
             return all
           }, {})
+
+          const settings: ClientSettings = cleanupSettings(rawSettings)
+
+          // side-effects
+          store.dispatch(
+            setRetainCredentials(settings.retainConnectionCredentials)
+          )
+          store.dispatch(setAuthEnabled(settings.authEnabled))
+
           store.dispatch(
             updateUserCapability(USER_CAPABILITIES.serverConfigReadable, true)
           )
@@ -436,6 +412,41 @@ export const serverConfigEpic = (some$: any, store: any) =>
     })
     .do(() => store.dispatch(update({ serverConfigDone: true })))
     .mapTo({ type: 'SERVER_CONFIG_DONE' })
+
+export const cleanupSettings = (rawSettings: any) => {
+  const settings: ClientSettings = {
+    allowOutgoingConnections: !isConfigValFalsy(
+      rawSettings['browser.allow_outgoing_connections']
+    ), // default true
+    credentialTimeout: rawSettings['browser.credential_timeout'] || 0,
+    postConnectCmd: rawSettings['browser.post_connect_cmd'] || '',
+    remoteContentHostnameAllowlist:
+      rawSettings['browser.remote_content_hostname_whitelist'] ||
+      initialClientSettings.remoteContentHostnameAllowlist,
+    retainConnectionCredentials: !isConfigValFalsy(
+      rawSettings['browser.retain_connection_credentials']
+    ), // default true
+    retainEditorHistory: !isConfigValFalsy(
+      rawSettings['browser.retain_editor_history']
+    ), // default true
+    // Info: clients.allow_telemetry in versions < 5.0, client.allow_telemetry in versions >= 5.0
+    allowTelemetry: !(
+      isConfigValFalsy(rawSettings['clients.allow_telemetry']) ||
+      isConfigValFalsy(rawSettings['client.allow_telemetry'])
+    ), // default true
+    authEnabled: !isConfigValFalsy(rawSettings['dbms.security.auth_enabled']), // default true
+    // Info: metrics... in versions < 5.0, server.metrics... in versions >= 5.0
+    metricsNamespacesEnabled:
+      isConfigValTruthy(rawSettings['metrics.namespaces.enabled']) ||
+      isConfigValTruthy(rawSettings['server.metrics.namespaces.enabled']), // default false
+    metricsPrefix:
+      rawSettings['metrics.prefix'] ??
+      rawSettings['server.metrics.prefix'] ??
+      initialClientSettings.metricsPrefix
+  }
+
+  return settings
+}
 
 export const clearMetaOnDisconnectEpic = (some$: any, store: any) =>
   some$

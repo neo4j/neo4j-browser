@@ -276,12 +276,20 @@ export const parseTimeMillis = (timeWithOrWithoutUnit: any) => {
   const unit = readUnit === null ? 's' : readUnit[0] // Assume seconds
 
   switch (unit) {
+    case 'ns':
+      return Math.round(value / (1000 * 1000))
+    case 'μs':
+      return Math.round(value / 1000)
     case 'ms':
       return value
     case 's':
       return value * 1000
     case 'm':
       return value * 60 * 1000
+    case 'h':
+      return value * 60 * 60 * 1000
+    case 'd':
+      return value * 24 * 60 * 60 * 1000
     default:
       return 0
   }

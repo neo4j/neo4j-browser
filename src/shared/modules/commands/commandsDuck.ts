@@ -314,9 +314,9 @@ export const postConnectCmdEpic = (some$: any, store: any) =>
       .ofType(UPDATE_SETTINGS)
       .map(() => {
         const serverSettings = getAvailableSettings(store.getState())
-        if (serverSettings && serverSettings['browser.post_connect_cmd']) {
+        if (serverSettings && serverSettings.postConnectCmd) {
           const cmds = extractPostConnectCommandsFromServerConfig(
-            serverSettings['browser.post_connect_cmd']
+            serverSettings.postConnectCmd
           )
           const playImplicitInitCommands = getPlayImplicitInitCommands(
             store.getState()

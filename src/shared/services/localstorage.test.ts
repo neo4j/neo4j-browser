@@ -18,6 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import * as ls from './localstorage'
+import {
+  ClientSettings,
+  initialClientSettings
+} from '../modules/dbMeta/dbMetaDuck'
+import { GlobalState } from '../globalState'
 
 jest.mock('lodash-es/debounce', () => (fn: any) => fn)
 
@@ -108,6 +113,10 @@ describe('localstorage', () => {
         setItem: setItemMock
       } as Partial<Storage> as Storage)
 
+      const metaSettings: ClientSettings = {
+        ...initialClientSettings,
+        retainConnectionCredentials: retain
+      }
       const state = {
         connections: {
           connectionsById: { $$discovery: { password: 'secret password' } }
@@ -116,9 +125,7 @@ describe('localstorage', () => {
           server: {
             edition
           },
-          settings: {
-            'browser.retain_connection_credentials': retain
-          }
+          settings: metaSettings
         }
       }
 
@@ -161,7 +168,7 @@ describe('localstorage', () => {
     const existingHistory = ['history item']
 
     const createAndInvokeMiddlewareWithRetainHistoryFlag = ({
-      retain,
+      retain = false,
       edition = 'enterprise',
       version = '4.3.0'
     }: {
@@ -175,6 +182,10 @@ describe('localstorage', () => {
         setItem: setItemMock
       } as Partial<Storage> as Storage)
 
+      const metaSettings: ClientSettings = {
+        ...initialClientSettings,
+        retainEditorHistory: retain
+      }
       const state = {
         history: existingHistory,
         meta: {
@@ -182,9 +193,7 @@ describe('localstorage', () => {
             version,
             edition
           },
-          settings: {
-            'browser.retain_editor_history': retain
-          }
+          settings: metaSettings
         },
         connections: {
           connectionsById: { $$discovery: { password: 'secret password' } }
