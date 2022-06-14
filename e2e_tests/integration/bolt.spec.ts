@@ -49,7 +49,11 @@ describe('Bolt connections', () => {
       cy.connect('neo4j', password)
 
       cy.executeCommand(':queries')
-      cy.resultContains('dbms.listQueries')
+      if (Cypress.config('serverVersion') < 5.0) {
+        cy.resultContains('dbms.listQueries')
+      } else {
+        cy.resultContains('SHOW TRANSACTIONS')
+      }
     })
   }
 
