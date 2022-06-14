@@ -80,8 +80,12 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
   constructor(props: any) {
     super(props)
     const connection = this.getConnection()
+
+    const { searchParams } = new URL(window.location.href)
+    const searchParamAuthMethod = searchParams.get('preselectAuthMethod')
     const authenticationMethod =
-      (connection && connection.authenticationMethod) || NATIVE
+      searchParamAuthMethod ??
+      ((connection && connection.authenticationMethod) || NATIVE)
 
     const allowedSchemes = getAllowedSchemesForHost(
       connection.host,
@@ -94,10 +98,19 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
       host: generateBoltUrl(allowedSchemes, connection.host),
       authenticationMethod,
       isLoading: false,
+      connecting: false,
       passwordChangeNeeded: props.passwordChangeNeeded || false,
       forcePasswordChange: props.forcePasswordChange || false,
       successCallback: props.onSuccess || (() => {}),
       used: props.isConnected
+    }
+  }
+
+  componentDidMount() {
+    const { authenticationMethod } = this.state
+    if (authenticationMethod === NO_AUTH) {
+      this.connect(() => this.setState({ connecting: false }))
+      this.setState({ connecting: true })
     }
   }
 
@@ -395,6 +408,10 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
           onAuthenticationMethodChange={this.onAuthenticationMethodChange.bind(
             this
           )}
+          connecting={this.state.connecting}
+          setIsConnecting={(connecting: boolean) =>
+            this.setState({ connecting })
+          }
           host={host}
           SSOError={this.state.SSOError}
           SSOProviders={this.state.SSOProviders || []}
