@@ -32,15 +32,20 @@ export type StyleableNodeLabelProps = {
     count?: number
   }
   graphStyle: GraphStyleModel
+  /* The total number of nodes in returned graph */
+  allNodesCount?: number | null
 }
 export function StyleableNodeLabel({
   graphStyle,
-  selectedLabel
+  selectedLabel,
+  allNodesCount
 }: StyleableNodeLabelProps): JSX.Element {
   const labels = selectedLabel.label === '*' ? [] : [selectedLabel.label]
   const graphStyleForLabel = graphStyle.forNode({
     labels: labels
   })
+  const count =
+    selectedLabel.label === '*' ? allNodesCount : selectedLabel.count
 
   return (
     <Popup
@@ -57,8 +62,8 @@ export function StyleableNodeLabel({
           }}
           data-testid={`property-details-overview-node-label-${selectedLabel.label}`}
         >
-          {selectedLabel.count !== undefined
-            ? `${selectedLabel.label} (${selectedLabel.count})`
+          {count !== undefined
+            ? `${selectedLabel.label} (${count})`
             : `${selectedLabel.label}`}
         </StyledLabelChip>
       }
