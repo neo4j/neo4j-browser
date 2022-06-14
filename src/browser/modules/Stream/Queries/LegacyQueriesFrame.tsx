@@ -18,8 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { withBus } from 'react-suber'
 import { Bus } from 'suber'
 
 import FrameAside from '../../Frame/FrameAside'

@@ -68,7 +68,7 @@ type QueriesFrameState = {
 }
 
 type QueriesFrameProps = {
-  frame: Frame
+  frame?: Frame
   bus: Bus
   connectionState: number
   isFullscreen: boolean
@@ -123,7 +123,7 @@ export class QueriesFrame extends Component<
     }
     if (
       this.props.frame &&
-      this.props.frame.ts !== prevProps.frame.ts &&
+      this.props.frame.ts !== prevProps.frame?.ts &&
       this.props.frame.isRerun
     ) {
       this.getRunningQueries()
