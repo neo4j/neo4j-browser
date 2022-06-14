@@ -44,7 +44,9 @@ export const prepareForExport = (
 
   svg.selectAll('.overlay, .ring').remove()
   svg.selectAll('.context-menu-item').remove()
-  svg.selectAll('text').attr('font-family', 'sans-serif')
+  svg
+    .selectAll('text')
+    .attr('font-family', 'Helvetica Neue, Helvetica, Arial, sans-serif')
 
   svg.attr('width', dimensions.width)
   svg.attr('height', dimensions.height)
