@@ -26,7 +26,11 @@ import { CONNECT, CONNECTION_SUCCESS } from '../connections/connectionsDuck'
 import { isBuiltInGuide, isPlayChapter } from 'browser/documentation'
 import { extractStatementsFromString } from 'services/commandUtils'
 import { GlobalState } from 'shared/globalState'
-import { COMMAND_QUEUED } from 'shared/modules/commands/commandsDuck'
+import {
+  COMMAND_QUEUED,
+  CYPHER_FAILED,
+  CYPHER_SUCCEEDED
+} from 'shared/modules/commands/commandsDuck'
 import {
   ADD_FAVORITE,
   LOAD_FAVORITES,
@@ -288,7 +292,9 @@ const actionsOfInterest = [
   TRACK_OPT_OUT_USER_STATS,
   TRACK_OPT_OUT_CRASH_REPORTS,
   CONNECT,
-  CONNECTION_SUCCESS
+  CONNECTION_SUCCESS,
+  CYPHER_SUCCEEDED,
+  CYPHER_FAILED
 ]
 export const trackReduxActionsEpic: Epic<Action, GlobalState> = action$ =>
   action$

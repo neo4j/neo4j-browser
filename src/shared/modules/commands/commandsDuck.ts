@@ -59,9 +59,9 @@ export const SYSTEM_COMMAND_QUEUED = `${NAME}/SYSTEM_COMMAND_QUEUED`
 export const UNKNOWN_COMMAND = `${NAME}/UNKNOWN_COMMAND`
 export const SHOW_ERROR_MESSAGE = `${NAME}/SHOW_ERROR_MESSAGE`
 export const CLEAR_ERROR_MESSAGE = `${NAME}/CLEAR_ERROR_MESSAGE`
-export const CYPHER_SUCCEEDED = `${NAME}/CYPHER_SUCCEEDED`
-export const CYPHER_FAILED = `${NAME}/CYPHER_FAILED`
 export const FETCH_GUIDE_FROM_ALLOWLIST = `${NAME}FETCH_GUIDE_FROM_ALLOWLIST`
+export const CYPHER_SUCCEEDED = `cypher/CYPHER_SUCCEEDED`
+export const CYPHER_FAILED = `cypher/CYPHER_FAILED`
 
 export const useDbCommand = 'use'
 export const listDbsCommand = 'dbs'
