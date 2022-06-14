@@ -197,7 +197,7 @@ export class QueriesFrame extends Component<
           this.getRunningQueries(true)
         } else {
           this.setState(state => ({
-            errorMessages: state.errorMessages.concat([response.error]),
+            errorMessages: state.errorMessages.concat([response.error.message]),
             successMessage: null
           }))
         }
