@@ -21,7 +21,7 @@ import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 import { createBus } from 'suber'
 
-import { QueriesFrame } from './QueriesFrame'
+import { LegacyQueriesFrame } from './LegacyQueriesFrame'
 import {
   CONNECTED_STATE,
   DISCONNECTED_STATE
@@ -41,7 +41,7 @@ it('shows error message in statusBar when not connected', () => {
   const props = {
     connectionState: DISCONNECTED_STATE
   } as any
-  const { getByText } = render(<QueriesFrame {...props} />)
+  const { getByText } = render(<LegacyQueriesFrame {...props} />)
 
   expect(getByText(/Unable to connect to bolt server/i)).not.toBeNull()
 })
@@ -82,10 +82,12 @@ it('can list and kill queries', () => {
     isFullscreen: false,
     isCollapsed: false,
     isOnCausalCluster: false,
-    canListQueries: true
+    hasListQueriesProcedure: true,
+    versionOverFive: false,
+    frame: null
   }
 
-  const { getByText, getByTestId } = render(<QueriesFrame {...props} />)
+  const { getByText, getByTestId } = render(<LegacyQueriesFrame {...props} />)
 
   // Check that it's listed
   expect(getByText('neo4j://testhost.test')).not.toBeNull()
