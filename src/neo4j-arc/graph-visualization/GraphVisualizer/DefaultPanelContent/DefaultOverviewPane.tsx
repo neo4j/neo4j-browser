@@ -118,6 +118,7 @@ function DefaultOverviewPane({
                 <NodeLabel
                   key={label}
                   graphStyle={graphStyle}
+                  allNodesCount={nodeCount}
                   selectedLabel={{
                     label,
                     propertyKeys: Object.keys(labels[label].properties),

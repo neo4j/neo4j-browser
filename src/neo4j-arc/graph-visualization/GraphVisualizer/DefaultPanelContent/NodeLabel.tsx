@@ -30,15 +30,20 @@ export type NodeLabelProps = {
     count?: number
   }
   graphStyle: GraphStyleModel
+  /* The total number of nodes in returned graph */
+  allNodesCount?: number | null
 }
 export function NodeLabel({
   graphStyle,
-  selectedLabel
+  selectedLabel,
+  allNodesCount
 }: NodeLabelProps): JSX.Element {
   const labels = selectedLabel.label === '*' ? [] : [selectedLabel.label]
   const graphStyleForLabel = graphStyle.forNode({
     labels: labels
   })
+  const count =
+    selectedLabel.label === '*' ? allNodesCount : selectedLabel.count
 
   return (
     <NonClickableLabelChip
@@ -47,8 +52,8 @@ export function NodeLabel({
         color: graphStyleForLabel.get('text-color-internal')
       }}
     >
-      {selectedLabel.count !== undefined
-        ? `${selectedLabel.label} (${selectedLabel.count})`
+      {count !== undefined
+        ? `${selectedLabel.label} (${count})`
         : `${selectedLabel.label}`}
     </NonClickableLabelChip>
   )
