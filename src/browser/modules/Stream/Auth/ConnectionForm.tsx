@@ -109,7 +109,7 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
   componentDidMount() {
     const { authenticationMethod } = this.state
     if (authenticationMethod === NO_AUTH) {
-      this.connect()
+      this.connect(() => this.setState({ connecting: false }))
       this.setState({ connecting: true })
     }
   }
