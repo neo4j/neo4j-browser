@@ -27,18 +27,29 @@ http://localhost:7474/browser?dbms=[connectionURL]&db=[databaseName]
 
 .Connection URL and database
 ====
+[source, browser URL, role=noheader]
+----
+http://localhost:7474/browser?dbms=neo4j://alice@localhost:7687&db=neo4j123
+----
 This pre-populates the connection frame with:
 
 * Connect URL: `neo4j://localhost:7687`
 * Database: `neo4j123`
 * Username: `alice`
+====
+
+It is also possible to pre-populate the authorization method.
+
+The syntax is:
 
 [source, browser URL, role=noheader]
 ----
-http://localhost:7474/browser?dbms=neo4j://alice@localhost:7687&db=neo4j123
+http://localhost:7474/browser?preselectAuthMethod=[NATIVE]|[SSO]|[NO_AUTH]
 ----
-====
 
+** `[NATIVE]` is the regular username and password and is the default setting.
+** `[SSO]` lets you sign in using SSO.
+** `[NO_AUTH]` means that no authorization is required.
 
 == Pre-populate the editor
 
@@ -114,4 +125,3 @@ http://localhost:7474/browser?cmd=param&arg=example=>1
 http://localhost:7474/browser?cmd=params&arg={example:1,foo:"bar"}
 ----
 ====
-
