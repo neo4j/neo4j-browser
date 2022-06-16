@@ -48,7 +48,7 @@ http://localhost:7474/browser?preselectAuthMethod=[NATIVE]|[SSO]|[NO_AUTH]
 ----
 
 ** `[NATIVE]` is the regular username and password and is the default setting.
-** `[SSO]` allows for login with SSO.
+** `[SSO]` lets you sign in using SSO.
 ** `[NO_AUTH]` means that no authorization is required.
 
 == Pre-populate the editor
