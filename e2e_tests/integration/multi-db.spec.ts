@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { isEnterpriseEdition } from '../support/utils'
+import { isAura, isEnterpriseEdition } from '../support/utils'
 
 /* global Cypress, cy, expect, before */
 
@@ -145,7 +145,7 @@ describe('Multi database', () => {
       cy.executeCommand(':use system')
     })
 
-    if (Cypress.config('serverVersion') >= 4.4) {
+    if (Cypress.config('serverVersion') >= 4.4 && !isAura()) {
       it('lists aliases with :dbs command', () => {
         const password = Cypress.config('password')
         cy.connect('neo4j', password)
