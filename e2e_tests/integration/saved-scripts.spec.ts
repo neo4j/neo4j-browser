@@ -28,6 +28,7 @@ describe('Saved Scripts', () => {
   })
 
   it('can save a result as favorite', () => {
+    cy.executeCommand(':clear')
     cy.executeCommand('RETURN 1')
     cy.get('[data-testid=frame-Favorite]').click()
 
