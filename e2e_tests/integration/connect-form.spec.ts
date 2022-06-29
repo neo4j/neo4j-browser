@@ -37,10 +37,8 @@ const getFirstFrameCommand = () =>
   cy.get('[data-testid="frameCommand"]').first()
 
 describe('Connect form', () => {
-  before(function() {
-    cy.visit(Cypress.config('url'))
-      .title()
-      .should('include', 'Neo4j Browser')
+  before(function () {
+    cy.visit(Cypress.config('url')).title().should('include', 'Neo4j Browser')
     cy.wait(3000)
     cy.disconnect()
   })
@@ -129,6 +127,7 @@ describe('Connect form', () => {
         cy.executeCommand(':use system')
         cy.executeCommand('DROP DATABASE sidebartest IF EXISTS')
         cy.executeCommand('CREATE DATABASE sidebartest')
+        cy.wait(3000) // Wait for db to come online
         cy.contains('1 system update, no records')
         cy.executeCommand(':use sidebartest')
         cy.executeCommand('create (:TestLabel)')
@@ -137,9 +136,7 @@ describe('Connect form', () => {
 
         cy.executeCommand(':server disconnect')
         cy.visit('/?dbms=bolt://localhost:7687&db=sidebartest')
-        cy.get('[data-testid=username]')
-          .clear()
-          .type('neo4j')
+        cy.get('[data-testid=username]').clear().type('neo4j')
         cy.get('[data-testid=password]')
           .type(Cypress.config('password'))
           .type('{enter}')

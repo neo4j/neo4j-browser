@@ -96,6 +96,7 @@ describe('Multi database', () => {
         cy.executeCommand(':use system')
         cy.executeCommand('CREATE DATABASE `name-with-dash`')
         cy.resultContains('1 system update')
+        cy.wait(3000) // wait for db to come online
         cy.executeCommand(':clear')
 
         // Count items in list
