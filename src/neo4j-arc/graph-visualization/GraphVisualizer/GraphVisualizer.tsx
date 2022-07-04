@@ -74,7 +74,7 @@ type GraphVisualizerProps = GraphVisualizerDefaultProps & {
   nodeLimitHit?: boolean
   nodePropertiesExpandedByDefault?: boolean
   setNodePropertiesExpandedByDefault?: (expandedByDefault: boolean) => void
-  wheelZoomRequired?: boolean
+  wheelZoomRequiresModKey?: boolean
   wheelZoomInfoMessageEnabled?: boolean
   disableWheelZoomInfoMessage?: () => void
   DetailsPaneOverride?: React.FC<DetailsPaneProps>
@@ -263,7 +263,7 @@ export class GraphVisualizer extends Component<
           offset={
             (this.state.nodePropertiesExpanded ? this.state.width + 8 : 0) + 8
           }
-          wheelZoomRequired={this.props.wheelZoomRequired}
+          wheelZoomRequiresModKey={this.props.wheelZoomRequiresModKey}
           wheelZoomInfoMessageEnabled={this.props.wheelZoomInfoMessageEnabled}
           disableWheelZoomInfoMessage={this.props.disableWheelZoomInfoMessage}
         />

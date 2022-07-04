@@ -79,12 +79,12 @@ export class Visualization {
     private graph: GraphModel,
     public style: GraphStyleModel,
     public isFullscreen: boolean,
-    public wheelZoomRequired?: boolean
+    public wheelZoomRequiresModKey?: boolean
   ) {
     this.root = d3Select(element)
 
     this.isFullscreen = isFullscreen
-    this.wheelZoomRequired = wheelZoomRequired
+    this.wheelZoomRequiresModKey = wheelZoomRequiresModKey
 
     // Remove the base group element when re-creating the visualization
     this.root.selectAll('g').remove()
@@ -137,7 +137,7 @@ export class Visualization {
     ) => {
       const handleZoomOnShiftScroll = (e: WheelEvent) => {
         const modKeySelected = e.metaKey || e.ctrlKey || e.shiftKey
-        if (modKeySelected || !this.wheelZoomRequired) {
+        if (modKeySelected || !this.wheelZoomRequiresModKey) {
           e.preventDefault()
 
           // This is the default implementation of wheelDelta function in d3-zoom v3.0.0
@@ -365,10 +365,10 @@ export class Visualization {
     return this.container.node()?.getBBox()
   }
 
-  resize(isFullscreen: boolean, wheelZoomRequired: boolean): void {
+  resize(isFullscreen: boolean, wheelZoomRequiresModKey: boolean): void {
     const size = this.measureSize()
     this.isFullscreen = isFullscreen
-    this.wheelZoomRequired = wheelZoomRequired
+    this.wheelZoomRequiresModKey = wheelZoomRequiresModKey
 
     this.rect
       .attr('x', () => -Math.floor(size.width / 2))

@@ -57,7 +57,7 @@ export type GraphProps = {
   ) => void
   setGraph: (graph: GraphModel) => void
   offset: number
-  wheelZoomRequired?: boolean
+  wheelZoomRequiresModKey?: boolean
   wheelZoomInfoMessageEnabled?: boolean
   disableWheelZoomInfoMessage: () => void
 }
@@ -95,7 +95,7 @@ export class Graph extends React.Component<GraphProps, GraphState> {
       getAutoCompleteCallback,
       assignVisElement,
       isFullscreen,
-      wheelZoomRequired
+      wheelZoomRequiresModKey
     } = this.props
 
     if (!this.svgElement.current) return
@@ -114,7 +114,7 @@ export class Graph extends React.Component<GraphProps, GraphState> {
       graph,
       graphStyle,
       isFullscreen,
-      wheelZoomRequired
+      wheelZoomRequiresModKey
     )
 
     const graphEventHandler = new GraphEventHandlerModel(
@@ -128,7 +128,7 @@ export class Graph extends React.Component<GraphProps, GraphState> {
     graphEventHandler.bindEventHandlers()
 
     onGraphModelChange(getGraphStats(graph))
-    this.visualization.resize(isFullscreen, !!wheelZoomRequired)
+    this.visualization.resize(isFullscreen, !!wheelZoomRequiresModKey)
     this.visualization.init()
 
     if (setGraph) {
@@ -156,7 +156,7 @@ export class Graph extends React.Component<GraphProps, GraphState> {
     if (this.props.isFullscreen !== prevProps.isFullscreen) {
       this.visualization?.resize(
         this.props.isFullscreen,
-        !!this.props.wheelZoomRequired
+        !!this.props.wheelZoomRequiresModKey
       )
     }
 
@@ -180,7 +180,7 @@ export class Graph extends React.Component<GraphProps, GraphState> {
   handleDisplayZoomWheelInfoMessage = (): void => {
     if (
       !this.state.displayingWheelZoomInfoMessage &&
-      this.props.wheelZoomRequired &&
+      this.props.wheelZoomRequiresModKey &&
       this.props.wheelZoomInfoMessageEnabled
     ) {
       this.displayZoomWheelInfoMessage(true)
