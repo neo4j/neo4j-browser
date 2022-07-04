@@ -293,6 +293,7 @@ LIMIT ${maxNewNeighbours}`
           nodePropertiesExpandedByDefault={
             this.props.nodePropertiesExpandedByDefault
           }
+          wheelZoomRequired={!this.props.isFullscreen}
           wheelZoomInfoMessageEnabled={this.props.wheelZoomInfoMessageEnabled}
           disableWheelZoomInfoMessage={this.props.disableWheelZoomInfoMessage}
           DetailsPaneOverride={DetailsPane}
