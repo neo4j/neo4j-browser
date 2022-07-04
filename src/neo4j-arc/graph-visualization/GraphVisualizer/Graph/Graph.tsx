@@ -246,13 +246,11 @@ export class Graph extends React.Component<GraphProps, GraphState> {
             <ZoomToFitIcon large={isFullscreen} />
           </StyledZoomButton>
         </StyledZoomHolder>
-        {wheelZoomInfoMessageEnabled &&
-          !isFullscreen &&
-          displayingWheelZoomInfoMessage && (
-            <WheelZoomInfoOverlay
-              onDisableWheelZoomInfoMessage={disableWheelZoomInfoMessage}
-            />
-          )}
+        {wheelZoomInfoMessageEnabled && displayingWheelZoomInfoMessage && (
+          <WheelZoomInfoOverlay
+            onDisableWheelZoomInfoMessage={disableWheelZoomInfoMessage}
+          />
+        )}
       </StyledSvgWrapper>
     )
   }
