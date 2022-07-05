@@ -36,6 +36,7 @@ import { GraphStyleModel } from '../models/GraphStyle'
 import { GetNodeNeighboursFn, VizItem } from '../types'
 import { GraphStats } from '../utils/mapper'
 import { GraphModel } from '../models/Graph'
+import { GraphInteractionCallBack } from './Graph/GraphEventHandlerModel'
 
 const DEFAULT_MAX_NEIGHBOURS = 100
 
@@ -79,6 +80,7 @@ type GraphVisualizerProps = GraphVisualizerDefaultProps & {
   disableWheelZoomInfoMessage?: () => void
   DetailsPaneOverride?: React.FC<DetailsPaneProps>
   OverviewPaneOverride?: React.FC<OverviewPaneProps>
+  onGraphInteraction?: GraphInteractionCallBack
 }
 
 type GraphVisualizerState = {
@@ -266,6 +268,7 @@ export class GraphVisualizer extends Component<
           wheelZoomRequiresModKey={this.props.wheelZoomRequiresModKey}
           wheelZoomInfoMessageEnabled={this.props.wheelZoomInfoMessageEnabled}
           disableWheelZoomInfoMessage={this.props.disableWheelZoomInfoMessage}
+          onGraphInteraction={this.props.onGraphInteraction}
         />
         <NodeInspectorPanel
           graphStyle={graphStyle}

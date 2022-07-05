@@ -28,7 +28,10 @@ import {
 } from '../../../common'
 
 import { GraphModel } from '../../models/Graph'
-import { GraphEventHandlerModel } from './GraphEventHandlerModel'
+import {
+  GraphEventHandlerModel,
+  GraphInteractionCallBack
+} from './GraphEventHandlerModel'
 import { GraphStyleModel } from '../../models/GraphStyle'
 import { GetNodeNeighboursFn, VizItem, ZoomLimitsReached } from '../../types'
 import {
@@ -60,6 +63,7 @@ export type GraphProps = {
   wheelZoomRequiresModKey?: boolean
   wheelZoomInfoMessageEnabled?: boolean
   disableWheelZoomInfoMessage: () => void
+  onGraphInteraction?: GraphInteractionCallBack
 }
 
 type GraphState = {
@@ -91,6 +95,7 @@ export class Graph extends React.Component<GraphProps, GraphState> {
       onItemMouseOver,
       onItemSelect,
       onGraphModelChange,
+      onGraphInteraction,
       setGraph,
       getAutoCompleteCallback,
       assignVisElement,
@@ -123,7 +128,8 @@ export class Graph extends React.Component<GraphProps, GraphState> {
       getNodeNeighbours,
       onItemMouseOver,
       onItemSelect,
-      onGraphModelChange
+      onGraphModelChange,
+      onGraphInteraction
     )
     graphEventHandler.bindEventHandlers()
 
