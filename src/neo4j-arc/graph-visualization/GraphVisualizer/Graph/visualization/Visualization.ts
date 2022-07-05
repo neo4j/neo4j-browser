@@ -385,15 +385,15 @@ export class Visualization {
     )
   }
 
-  zoomInClick(): void {
+  handleZoomIn(): void {
     this.handleZoomByType(ZoomType.IN)
   }
 
-  zoomOutClick(): void {
+  handleZoomOut(): void {
     this.handleZoomByType(ZoomType.OUT)
   }
 
-  zoomToFitClick(): void {
+  handleZoomToFit(): void {
     this.handleZoomByType(ZoomType.FIT)
   }
 }
