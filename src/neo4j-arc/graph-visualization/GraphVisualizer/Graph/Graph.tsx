@@ -63,6 +63,7 @@ export type GraphProps = {
   wheelZoomRequiresModKey?: boolean
   wheelZoomInfoMessageEnabled?: boolean
   disableWheelZoomInfoMessage: () => void
+  initialZoomToFit?: boolean
   onGraphInteraction?: GraphInteractionCallBack
 }
 
@@ -100,7 +101,8 @@ export class Graph extends React.Component<GraphProps, GraphState> {
       getAutoCompleteCallback,
       assignVisElement,
       isFullscreen,
-      wheelZoomRequiresModKey
+      wheelZoomRequiresModKey,
+      initialZoomToFit
     } = this.props
 
     if (!this.svgElement.current) return
@@ -155,6 +157,12 @@ export class Graph extends React.Component<GraphProps, GraphState> {
     }
     if (assignVisElement) {
       assignVisElement(this.svgElement.current, this.visualization)
+    }
+
+    if (initialZoomToFit) {
+      setTimeout(() => {
+        this.visualization?.zoomToFitClick()
+      }, 1000)
     }
   }
 

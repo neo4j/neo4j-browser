@@ -245,7 +245,7 @@ export class Visualization {
     this.forceSim.updateRelationships(this.graph)
   }
 
-  private handleZoomClick = (zoomType: ZoomType): void => {
+  private handleZoomByType = (zoomType: ZoomType): void => {
     this.draw = true
     this.isZoomClick = true
 
@@ -386,14 +386,14 @@ export class Visualization {
   }
 
   zoomInClick(): void {
-    this.handleZoomClick(ZoomType.IN)
+    this.handleZoomByType(ZoomType.IN)
   }
 
   zoomOutClick(): void {
-    this.handleZoomClick(ZoomType.OUT)
+    this.handleZoomByType(ZoomType.OUT)
   }
 
   zoomToFitClick(): void {
-    this.handleZoomClick(ZoomType.FIT)
+    this.handleZoomByType(ZoomType.FIT)
   }
 }
