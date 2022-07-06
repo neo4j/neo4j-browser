@@ -300,6 +300,7 @@ LIMIT ${maxNewNeighbours}`
           disableWheelZoomInfoMessage={this.props.disableWheelZoomInfoMessage}
           DetailsPaneOverride={DetailsPane}
           OverviewPaneOverride={OverviewPane}
+          useGeneratedDefaultColors={false}
         />
       </StyledVisContainer>
     )

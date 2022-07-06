@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { calculateDefaultNodeColors } from '@neo4j-devtools/word-color'
 import { selectorArrayToString, selectorStringToArray } from '../utils/utils'
 
 export class Selector {
@@ -224,7 +225,7 @@ const DEFAULT_COLORS: DefaultColorType[] = [
 export class GraphStyleModel {
   rules: StyleRule[]
 
-  constructor() {
+  constructor(private useGeneratedDefaultColors: boolean = false) {
     this.rules = []
     try {
       this.loadRules()
@@ -338,9 +339,22 @@ export class GraphStyleModel {
       selector.classes.sort().slice(0, 1)
     )
     if (defaultColor) {
+      const calcColor = (label: Selector): DefaultColorType => {
+        const { backgroundColor, borderColor, textColor } =
+          calculateDefaultNodeColors(label.classes[0])
+
+        return {
+          'border-color': borderColor,
+          'text-color-internal': textColor,
+          color: backgroundColor
+        }
+      }
+
       this.changeForSelector(
         minimalSelector,
-        this.findAvailableDefaultColor(this.rules)
+        this.useGeneratedDefaultColors
+          ? calcColor(minimalSelector)
+          : this.findAvailableDefaultColor(this.rules)
       )
     }
     if (defaultCaption) {
