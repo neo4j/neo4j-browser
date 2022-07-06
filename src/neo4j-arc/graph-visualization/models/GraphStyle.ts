@@ -225,7 +225,7 @@ const DEFAULT_COLORS: DefaultColorType[] = [
 export class GraphStyleModel {
   rules: StyleRule[]
 
-  constructor(private enableNewColors: boolean = false) {
+  constructor(private useGeneratedDefaultColors: boolean = false) {
     this.rules = []
     try {
       this.loadRules()
@@ -352,7 +352,7 @@ export class GraphStyleModel {
 
       this.changeForSelector(
         minimalSelector,
-        this.enableNewColors
+        this.useGeneratedDefaultColors
           ? calcColor(minimalSelector)
           : this.findAvailableDefaultColor(this.rules)
       )
