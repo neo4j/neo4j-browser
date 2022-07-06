@@ -249,7 +249,7 @@ export class Visualization {
     this.forceSimulation.updateRelationships(this.graph)
   }
 
-  private handleZoomByType = (zoomType: ZoomType): void => {
+  zoomByType = (zoomType: ZoomType): void => {
     this.draw = true
     this.isZoomClick = true
 
@@ -258,11 +258,11 @@ export class Visualization {
     } else if (zoomType === ZoomType.OUT) {
       this.zoomBehavior.scaleBy(this.root, 0.7)
     } else if (zoomType === ZoomType.FIT) {
-      this.zoomToFit()
+      this.zoomToFitViewport()
     }
   }
 
-  private zoomToFit = () => {
+  private zoomToFitViewport = () => {
     const scaleAndOffset = this.getZoomScaleFactorToFitWholeGraph()
     if (scaleAndOffset) {
       const { scale, centerPointOffset } = scaleAndOffset
@@ -387,17 +387,5 @@ export class Visualization {
         size.height
       ].join(' ')
     )
-  }
-
-  handleZoomIn(): void {
-    this.handleZoomByType(ZoomType.IN)
-  }
-
-  handleZoomOut(): void {
-    this.handleZoomByType(ZoomType.OUT)
-  }
-
-  handleZoomToFit(): void {
-    this.handleZoomByType(ZoomType.FIT)
   }
 }

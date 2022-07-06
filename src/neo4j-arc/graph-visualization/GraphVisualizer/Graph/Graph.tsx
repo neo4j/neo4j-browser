@@ -33,7 +33,12 @@ import {
   GraphInteractionCallBack
 } from './GraphEventHandlerModel'
 import { GraphStyleModel } from '../../models/GraphStyle'
-import { GetNodeNeighboursFn, VizItem, ZoomLimitsReached } from '../../types'
+import {
+  GetNodeNeighboursFn,
+  VizItem,
+  ZoomLimitsReached,
+  ZoomType
+} from '../../types'
 import {
   GraphStats,
   createGraph,
@@ -161,7 +166,7 @@ export class Graph extends React.Component<GraphProps, GraphState> {
 
     if (initialZoomToFit) {
       this.visualization.endSimulationCallback = () =>
-        this.visualization?.handleZoomToFit()
+        this.visualization?.zoomByType(ZoomType.FIT)
     }
   }
 
@@ -205,21 +210,15 @@ export class Graph extends React.Component<GraphProps, GraphState> {
   }
 
   zoomInClicked = (): void => {
-    if (this.visualization) {
-      this.visualization.handleZoomIn()
-    }
+    this.visualization?.zoomByType(ZoomType.IN)
   }
 
   zoomOutClicked = (): void => {
-    if (this.visualization) {
-      this.visualization.handleZoomOut()
-    }
+    this.visualization?.zoomByType(ZoomType.OUT)
   }
 
   zoomToFitClicked = (): void => {
-    if (this.visualization) {
-      this.visualization.handleZoomToFit()
-    }
+    this.visualization?.zoomByType(ZoomType.FIT)
   }
 
   render(): JSX.Element {

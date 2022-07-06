@@ -64,7 +64,6 @@ export class ForceSimulation {
         render()
       })
       .on('end', () => {
-        console.log('end', this.endSimulationCallback !== null)
         this.endSimulationCallback && this.endSimulationCallback()
         this.endSimulationCallback = null
       })
