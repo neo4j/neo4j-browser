@@ -52,7 +52,8 @@ type GraphVisualizerDefaultProps = {
   hasTruncatedFields: boolean
   nodePropertiesExpandedByDefault: boolean
   setNodePropertiesExpandedByDefault: (expandedByDefault: boolean) => void
-  wheelZoomInfoMessageEnabled: boolean
+  wheelZoomInfoMessageEnabled?: boolean
+  initialZoomToFit?: boolean
   disableWheelZoomInfoMessage: () => void
   useGeneratedDefaultColors: boolean
 }
@@ -271,6 +272,7 @@ export class GraphVisualizer extends Component<
           wheelZoomRequiresModKey={this.props.wheelZoomRequiresModKey}
           wheelZoomInfoMessageEnabled={this.props.wheelZoomInfoMessageEnabled}
           disableWheelZoomInfoMessage={this.props.disableWheelZoomInfoMessage}
+          initialZoomToFit={this.props.initialZoomToFit}
           onGraphInteraction={this.props.onGraphInteraction}
         />
         <NodeInspectorPanel

@@ -165,8 +165,11 @@ export class Graph extends React.Component<GraphProps, GraphState> {
     }
 
     if (initialZoomToFit) {
-      this.visualization.endSimulationCallback = () =>
-        this.visualization?.zoomByType(ZoomType.FIT)
+      this.visualization.endSimulationCallback = () => {
+        setTimeout(() => {
+          this.visualization?.zoomByType(ZoomType.FIT)
+        }, 150)
+      }
     }
   }
 
