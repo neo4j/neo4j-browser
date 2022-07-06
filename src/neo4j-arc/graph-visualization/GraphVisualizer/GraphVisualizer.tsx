@@ -271,6 +271,7 @@ export class GraphVisualizer extends Component<
           wheelZoomRequiresModKey={this.props.wheelZoomRequiresModKey}
           wheelZoomInfoMessageEnabled={this.props.wheelZoomInfoMessageEnabled}
           disableWheelZoomInfoMessage={this.props.disableWheelZoomInfoMessage}
+          initialZoomToFit={true}
           onGraphInteraction={this.props.onGraphInteraction}
         />
         <NodeInspectorPanel

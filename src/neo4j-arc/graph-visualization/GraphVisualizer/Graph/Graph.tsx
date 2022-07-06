@@ -76,7 +76,6 @@ type GraphState = {
 export class Graph extends React.Component<GraphProps, GraphState> {
   svgElement: React.RefObject<SVGSVGElement>
   visualization: Visualization | null = null
-  private initialZoomToFitTimeout: number | undefined = undefined
 
   constructor(props: GraphProps) {
     super(props)
@@ -161,10 +160,8 @@ export class Graph extends React.Component<GraphProps, GraphState> {
     }
 
     if (initialZoomToFit) {
-      this.initialZoomToFitTimeout = setTimeout(() => {
+      this.visualization.endSimulationCallback = () =>
         this.visualization?.handleZoomToFit()
-        clearTimeout(this.initialZoomToFitTimeout)
-      }, 1000)
     }
   }
 

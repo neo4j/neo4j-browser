@@ -64,7 +64,7 @@ export class Visualization {
     undefined | Array<(...args: any[]) => void>
   > = {}
 
-  forceSim: ForceSimulation
+  forceSimulation: ForceSimulation
 
   // This flags that a panning is ongoing and won't trigger
   // 'canvasClick' event when panning ends.
@@ -166,7 +166,11 @@ export class Visualization {
       // Single click is not panning
       .on('click.zoom', () => (this.draw = false))
 
-    this.forceSim = new ForceSimulation(this.render.bind(this))
+    this.forceSimulation = new ForceSimulation(this.render.bind(this))
+  }
+
+  set endSimulationCallback(cb: null | (() => void)) {
+    this.forceSimulation.endSimulationCallback = cb
   }
 
   private render() {
@@ -207,7 +211,7 @@ export class Visualization {
       .join('g')
       .attr('class', 'node')
       .attr('aria-label', d => `graph-node${d.id}`)
-      .call(nodeEventHandlers, this.trigger, this.forceSim.simulation)
+      .call(nodeEventHandlers, this.trigger, this.forceSimulation.simulation)
       .classed('selected', node => node.selected)
 
     nodeRenderer.forEach(renderer =>
@@ -218,8 +222,8 @@ export class Visualization {
       nodeGroups.call(renderer.onGraphChange, this)
     )
 
-    this.forceSim.updateNodes(this.graph)
-    this.forceSim.updateRelationships(this.graph)
+    this.forceSimulation.updateNodes(this.graph)
+    this.forceSimulation.updateRelationships(this.graph)
   }
 
   private updateRelationships() {
@@ -242,7 +246,7 @@ export class Visualization {
       relationshipGroups.call(renderer.onGraphChange, this)
     )
 
-    this.forceSim.updateRelationships(this.graph)
+    this.forceSimulation.updateRelationships(this.graph)
   }
 
   private handleZoomByType = (zoomType: ZoomType): void => {
@@ -314,7 +318,7 @@ export class Visualization {
     }
   }
 
-  on = (event: string, callback: (...args: any[]) => void) => {
+  on = (event: string, callback: (...args: any[]) => void): this => {
     if (isNullish(this.callbacks[event])) {
       this.callbacks[event] = []
     }
@@ -323,7 +327,7 @@ export class Visualization {
     return this
   }
 
-  trigger = (event: string, ...args: any[]) => {
+  trigger = (event: string, ...args: any[]): void => {
     const callbacksForEvent = this.callbacks[event] ?? []
     callbacksForEvent.forEach(callback => callback.apply(null, args))
   }
@@ -337,7 +341,7 @@ export class Visualization {
 
     this.updateNodes()
     this.updateRelationships()
-    this.forceSim.precompute()
+    this.forceSimulation.precompute()
 
     this.adjustZoomMinScaleExtentToFitGraph()
   }
@@ -356,7 +360,7 @@ export class Visualization {
     }
 
     if (options.restartSimulation ?? true) {
-      this.forceSim.restart()
+      this.forceSimulation.restart()
     }
     this.trigger('updated')
   }

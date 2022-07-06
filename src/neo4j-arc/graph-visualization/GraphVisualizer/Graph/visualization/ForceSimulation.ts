@@ -51,6 +51,7 @@ const oneRelationshipPerPairOfNodes = (graph: GraphModel) =>
 export class ForceSimulation {
   simulation: Simulation<NodeModel, RelationshipModel>
   simulationTimeout: null | number = null
+  endSimulationCallback: null | (() => void) = null
 
   constructor(private render: () => void) {
     this.simulation = forceSimulation<NodeModel, RelationshipModel>()
@@ -62,10 +63,15 @@ export class ForceSimulation {
         this.simulation.tick(TICKS_PER_RENDER)
         render()
       })
+      .on('end', () => {
+        console.log('end', this.endSimulationCallback !== null)
+        this.endSimulationCallback && this.endSimulationCallback()
+        this.endSimulationCallback = null
+      })
       .stop()
   }
 
-  updateNodes(graph: GraphModel) {
+  updateNodes(graph: GraphModel): void {
     const nodes = graph.nodes()
 
     const radius = (nodes.length * LINK_DISTANCE) / (Math.PI * 2)
@@ -80,7 +86,7 @@ export class ForceSimulation {
       .force('collide', forceCollide<NodeModel>().radius(FORCE_COLLIDE_RADIUS))
   }
 
-  updateRelationships(graph: GraphModel) {
+  updateRelationships(graph: GraphModel): void {
     const relationships = oneRelationshipPerPairOfNodes(graph)
 
     this.simulation.force(
@@ -91,12 +97,12 @@ export class ForceSimulation {
     )
   }
 
-  precompute() {
+  precompute(): void {
     this.simulation.stop().tick(PRECOMPUTED_TICKS)
     this.render()
   }
 
-  restart() {
+  restart(): void {
     this.simulation.alphaMin(DEFAULT_ALPHA_MIN).alpha(DEFAULT_ALPHA).restart()
   }
 }
