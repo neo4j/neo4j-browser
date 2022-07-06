@@ -1723,6 +1723,11 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
+"@neo4j-devtools/word-color@^0.0.5":
+  version "0.0.5"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@neo4j-devtools/word-color/-/word-color-0.0.5.tgz#2a34161c0d4f6ce8791465e5ee3026f07c7f9f36"
+  integrity sha512-Xz1NKiNZxbwlF3C2hlmM9GZGjndhE49nJyaKBrzJxTgbseXpN7ABuWKcuCZ357l11LjOpUhwZCt4dAwJvqDBBA==
+
 "@neo4j-ndl/base@^0.1.2":
   version "0.1.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@neo4j-ndl/base/-/base-0.1.2.tgz#fa542746199aea852eef1e091e3b40e252290383"

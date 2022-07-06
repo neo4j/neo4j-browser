@@ -153,6 +153,11 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@juggle/resize-observer/-/resize-observer-3.3.1.tgz#b50a781709c81e10701004214340f25475a171a0"
   integrity sha512-zMM9Ds+SawiUkakS7y94Ymqx+S0ORzpG3frZirN3l+UlXUmSUR7hF4wxCVqW+ei94JzV5kt0uXBcoOEAuiydrw==
 
+"@neo4j-devtools/word-color@^0.0.5":
+  version "0.0.5"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@neo4j-devtools/word-color/-/word-color-0.0.5.tgz#2a34161c0d4f6ce8791465e5ee3026f07c7f9f36"
+  integrity sha512-Xz1NKiNZxbwlF3C2hlmM9GZGjndhE49nJyaKBrzJxTgbseXpN7ABuWKcuCZ357l11LjOpUhwZCt4dAwJvqDBBA==
+
 "@neo4j-ndl/base@^0.1.2", "@neo4j-ndl/base@^0.1.4":
   version "0.1.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@neo4j-ndl/base/-/base-0.1.4.tgz#fd807f444d9226a414967e4c7ee5a9436f1f81cd"

@@ -54,6 +54,7 @@ type GraphVisualizerDefaultProps = {
   setNodePropertiesExpandedByDefault: (expandedByDefault: boolean) => void
   wheelZoomInfoMessageEnabled: boolean
   disableWheelZoomInfoMessage: () => void
+  enableNewColors: boolean
 }
 type GraphVisualizerProps = GraphVisualizerDefaultProps & {
   relationships: BasicRelationship[]
@@ -81,6 +82,7 @@ type GraphVisualizerProps = GraphVisualizerDefaultProps & {
   DetailsPaneOverride?: React.FC<DetailsPaneProps>
   OverviewPaneOverride?: React.FC<OverviewPaneProps>
   onGraphInteraction?: GraphInteractionCallBack
+  enableNewColors?: boolean
 }
 
 type GraphVisualizerState = {
@@ -113,12 +115,13 @@ export class GraphVisualizer extends Component<
     nodePropertiesExpandedByDefault: true,
     setNodePropertiesExpandedByDefault: () => undefined,
     wheelZoomInfoMessageEnabled: false,
-    disableWheelZoomInfoMessage: () => undefined
+    disableWheelZoomInfoMessage: () => undefined,
+    enableNewColors: true
   }
 
   constructor(props: GraphVisualizerProps) {
     super(props)
-    const graphStyle = new GraphStyleModel()
+    const graphStyle = new GraphStyleModel(this.props.enableNewColors)
     this.defaultStyle = graphStyle.toSheet()
     const {
       nodeLimitHit,
@@ -244,7 +247,7 @@ export class GraphVisualizer extends Component<
     // If the legend component has the style it will ask the neoGraphStyle object for styling before the graph component,
     // and also doing this in a different order from the graph. This leads to different default colors being assigned to different labels.
     const graphStyle = this.state.freezeLegend
-      ? new GraphStyleModel()
+      ? new GraphStyleModel(this.props.enableNewColors)
       : this.state.graphStyle
 
     return (
