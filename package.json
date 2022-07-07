@@ -170,7 +170,7 @@
     "xml2js": "^0.4.19"
   },
   "dependencies": {
-    "@apollo/client": "^3.2.0",
+    "@apollo/client": "^3.6.8",
     "@juggle/resize-observer": "^3.3.1",
     "@neo4j-devtools/word-color": "^0.0.5",
     "@neo4j-ndl/base": "^0.1.2",
