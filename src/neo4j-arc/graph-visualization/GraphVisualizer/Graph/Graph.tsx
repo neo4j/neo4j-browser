@@ -33,7 +33,12 @@ import {
   GraphInteractionCallBack
 } from './GraphEventHandlerModel'
 import { GraphStyleModel } from '../../models/GraphStyle'
-import { GetNodeNeighboursFn, VizItem, ZoomLimitsReached } from '../../types'
+import {
+  GetNodeNeighboursFn,
+  VizItem,
+  ZoomLimitsReached,
+  ZoomType
+} from '../../types'
 import {
   GraphStats,
   createGraph,
@@ -63,6 +68,7 @@ export type GraphProps = {
   wheelZoomRequiresModKey?: boolean
   wheelZoomInfoMessageEnabled?: boolean
   disableWheelZoomInfoMessage: () => void
+  initialZoomToFit?: boolean
   onGraphInteraction?: GraphInteractionCallBack
 }
 
@@ -100,7 +106,8 @@ export class Graph extends React.Component<GraphProps, GraphState> {
       getAutoCompleteCallback,
       assignVisElement,
       isFullscreen,
-      wheelZoomRequiresModKey
+      wheelZoomRequiresModKey,
+      initialZoomToFit
     } = this.props
 
     if (!this.svgElement.current) return
@@ -156,6 +163,14 @@ export class Graph extends React.Component<GraphProps, GraphState> {
     if (assignVisElement) {
       assignVisElement(this.svgElement.current, this.visualization)
     }
+
+    if (initialZoomToFit) {
+      this.visualization.endSimulationCallback = () => {
+        setTimeout(() => {
+          this.visualization?.zoomByType(ZoomType.FIT)
+        }, 150)
+      }
+    }
   }
 
   componentDidUpdate(prevProps: GraphProps): void {
@@ -198,21 +213,15 @@ export class Graph extends React.Component<GraphProps, GraphState> {
   }
 
   zoomInClicked = (): void => {
-    if (this.visualization) {
-      this.visualization.zoomInClick()
-    }
+    this.visualization?.zoomByType(ZoomType.IN)
   }
 
   zoomOutClicked = (): void => {
-    if (this.visualization) {
-      this.visualization.zoomOutClick()
-    }
+    this.visualization?.zoomByType(ZoomType.OUT)
   }
 
   zoomToFitClicked = (): void => {
-    if (this.visualization) {
-      this.visualization.zoomToFitClick()
-    }
+    this.visualization?.zoomByType(ZoomType.FIT)
   }
 
   render(): JSX.Element {
