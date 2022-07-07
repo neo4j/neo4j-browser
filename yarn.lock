@@ -4684,7 +4684,12 @@ core-js-pure@^3.16.0:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/core-js-pure/-/core-js-pure-3.16.1.tgz#b997df2669c957a5b29f06e95813a171f993592e"
   integrity sha1-uZffJmnJV6WynwbpWBOhcfmTWS4=
 
-core-js@3, core-js@3.6.5:
+core-js@3.23.1:
+  version "3.23.1"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.23.1.tgz#9f9a9255115f62c512db56d567f636da32ca0b78"
+  integrity sha512-wfMYHWi1WQjpgZNC9kAlN4ut04TM9fUTdi7CqIoTVM7yaiOUQTklOzfb+oWH3r9edQcT3F887swuVmxrV+CC8w==
+
+core-js@3.6.5:
   version "3.6.5"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/core-js/-/core-js-3.6.5.tgz#7395dc273af37fb2e50e9bd3d9fe841285231d1a"
   integrity sha1-c5XcJzrzf7LlDpvT2f6EEoUjHRo=
