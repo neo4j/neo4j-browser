@@ -1862,11 +1862,6 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@react-dnd/shallowequal/-/shallowequal-2.0.0.tgz#a3031eb54129f2c66b2753f8404266ec7bf67f0a"
   integrity sha1-owMetUEp8sZrJ1P4QEJm7Hv2fwo=
 
-"@scarf/scarf@^0.1.5":
-  version "0.1.8"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@scarf/scarf/-/scarf-0.1.8.tgz#7e1e67563a9787de0d1779de96c1c4c84d22d16d"
-  integrity sha512-6iXObfLIy803IV2fikkxZoGuWduSVqlmOhU5mdak/9/k0x2ICdBvMh7p0D9Y36URlSkvv1CCn8TeZ5ZNiBkW5g==
-
 "@semantic-ui-react/event-stack@^3.1.0":
   version "3.1.1"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@semantic-ui-react/event-stack/-/event-stack-3.1.1.tgz#3263d17511db81a743167fe45281a24b3eb6b3c8"
@@ -12028,12 +12023,10 @@ react-svg-inline@^2.1.1:
     classnames "^2.2.1"
     prop-types "^15.5.8"
 
-react-table@7.0.4:
-  version "7.0.4"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-table/-/react-table-7.0.4.tgz#456838661982c83c3682f156c59a41b4339a2120"
-  integrity sha512-Uqpj+VnUIvsNWNtNFD1z2i7OCHdlhoJtQt0DWx3XOkZnvDyI/eCghK8YBfA9mY4TW7vEgCDLaRCcREC/fmcx6Q==
-  dependencies:
-    "@scarf/scarf" "^0.1.5"
+react-table@7.8.0:
+  version "7.8.0"
+  resolved "https://registry.yarnpkg.com/react-table/-/react-table-7.8.0.tgz#07858c01c1718c09f7f1aed7034fcfd7bda907d2"
+  integrity sha512-hNaz4ygkZO4bESeFfnfOft73iBUj8K5oKi1EcSHPAibEydfsX2MyU6Z8KCr3mv3C9Kqqh71U+DhZkFvibbnPbA==
 
 react-test-renderer@^17.0.2:
   version "17.0.2"

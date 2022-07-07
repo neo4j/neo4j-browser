@@ -216,7 +216,7 @@
     "react-resizable": "^3.0.4",
     "react-suber": "1.0.4",
     "react-svg-inline": "^2.1.1",
-    "react-table": "7.0.4",
+    "react-table": "7.8.0",
     "react-timeago": "^4.1.9",
     "redux": "^3.7.2",
     "redux-observable": "^0.16.0",
