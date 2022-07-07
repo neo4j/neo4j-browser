@@ -1,6 +1,6 @@
 {
   "name": "@neo4j-devtools/arc",
-  "version": "0.0.26",
+  "version": "0.0.27",
   "main": "dist/neo4j-arc.js",
   "author": "Neo4j Inc.",
   "license": "GPL-3.0",
@@ -21,12 +21,12 @@
     "LICENSE"
   ],
   "devDependencies": {
-    "@neo4j-ndl/base": "^0.1.2",
-    "@neo4j-ndl/react": "^0.1.2",
+    "@neo4j-ndl/base": "^0.6.0",
+    "@neo4j-ndl/react": "^0.6.0",
     "@rollup/plugin-alias": "^3.1.9",
     "@types/react": "^17.0.40",
     "esbuild": "^0.14.26",
-    "neo4j-driver-core": "^4.4.5",
+    "neo4j-driver-core": "^4.4.6",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "rollup": "^2.70.1",
@@ -69,9 +69,9 @@
     "styled-components": "^5.3.5"
   },
   "peerDependencies": {
-    "@neo4j-ndl/base": "^0.1.2",
-    "@neo4j-ndl/react": "^0.1.2",
-    "neo4j-driver-core": "^4.4.5",
+    "@neo4j-ndl/base": "^0.6.0",
+    "@neo4j-ndl/react": "^0.6.0",
+    "neo4j-driver-core": "^4.4.6",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   }

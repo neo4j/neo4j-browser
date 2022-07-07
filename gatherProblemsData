@@ -1,0 +1,11 @@
+#!/bin/bash
+
+echo "daysago, count" > problemsdata.txt
+for daysago in `seq 0 1 366`;
+do
+  echo $daysago
+  day=$(date -v-${daysago}d +"%Y-%m-%d")
+  git checkout `git rev-list -n 1 --first-parent --before="${day} 13:37" master`
+  count=$(npm run lint | grep "problems" | sed -E 's/^✖ ([0-9]*) problems.*$/\1/')
+  echo "${day}, ${count}" >> problemsdata.txt
+done;
