@@ -1896,15 +1896,6 @@
     "@sentry/utils" "5.29.0"
     tslib "^1.9.3"
 
-"@sentry/hub@5.27.0":
-  version "5.27.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@sentry/hub/-/hub-5.27.0.tgz#dcd7b36d216997f0283bd3334cbce8004d56ef89"
-  integrity sha1-3NezbSFpl/AoO9MzTLzoAE1W74k=
-  dependencies:
-    "@sentry/types" "5.27.0"
-    "@sentry/utils" "5.27.0"
-    tslib "^1.9.3"
-
 "@sentry/hub@5.29.0":
   version "5.29.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@sentry/hub/-/hub-5.29.0.tgz#d018b978fdffc6c8261744b0d08e8d25a3f4dc58"
@@ -1912,6 +1903,15 @@
   dependencies:
     "@sentry/types" "5.29.0"
     "@sentry/utils" "5.29.0"
+    tslib "^1.9.3"
+
+"@sentry/hub@5.30.0":
+  version "5.30.0"
+  resolved "https://registry.yarnpkg.com/@sentry/hub/-/hub-5.30.0.tgz#2453be9b9cb903404366e198bd30c7ca74cdc100"
+  integrity sha512-2tYrGnzb1gKz2EkMDQcfLrDTvmGcQPuWxLnJKXJvYTQDGLlEvi2tWz1VIHjunmOvJrB5aIQLhm+dcMRwFZDCqQ==
+  dependencies:
+    "@sentry/types" "5.30.0"
+    "@sentry/utils" "5.30.0"
     tslib "^1.9.3"
 
 "@sentry/integrations@^5.29.0":
@@ -1924,15 +1924,6 @@
     localforage "1.8.1"
     tslib "^1.9.3"
 
-"@sentry/minimal@5.27.0":
-  version "5.27.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@sentry/minimal/-/minimal-5.27.0.tgz#8c2fdcf9cd1e59d8ff1848a7905bac304f8e206b"
-  integrity sha1-jC/c+c0eWdj/GEinkFusME+OIGs=
-  dependencies:
-    "@sentry/hub" "5.27.0"
-    "@sentry/types" "5.27.0"
-    tslib "^1.9.3"
-
 "@sentry/minimal@5.29.0":
   version "5.29.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@sentry/minimal/-/minimal-5.29.0.tgz#bd8b52f388abcec2234dbbc6d6721ff65aa30e35"
@@ -1940,6 +1931,15 @@
   dependencies:
     "@sentry/hub" "5.29.0"
     "@sentry/types" "5.29.0"
+    tslib "^1.9.3"
+
+"@sentry/minimal@5.30.0":
+  version "5.30.0"
+  resolved "https://registry.yarnpkg.com/@sentry/minimal/-/minimal-5.30.0.tgz#ce3d3a6a273428e0084adcb800bc12e72d34637b"
+  integrity sha512-BwWb/owZKtkDX+Sc4zCSTNcvZUq7YcH3uAVlmh/gtR9rmUvbzAA3ewLuB3myi4wWRAMEtny6+J/FN/x+2wn9Xw==
+  dependencies:
+    "@sentry/hub" "5.30.0"
+    "@sentry/types" "5.30.0"
     tslib "^1.9.3"
 
 "@sentry/react@^5.29.0":
@@ -1954,34 +1954,26 @@
     hoist-non-react-statics "^3.3.2"
     tslib "^1.9.3"
 
-"@sentry/tracing@^5.27.0":
-  version "5.27.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@sentry/tracing/-/tracing-5.27.0.tgz#133b03a02640a0d63d11f341a00e96315c9d0303"
-  integrity sha1-EzsDoCZAoNY9EfNBoA6WMVydAwM=
+"@sentry/tracing@^5.30.0":
+  version "5.30.0"
+  resolved "https://registry.yarnpkg.com/@sentry/tracing/-/tracing-5.30.0.tgz#501d21f00c3f3be7f7635d8710da70d9419d4e1f"
+  integrity sha512-dUFowCr0AIMwiLD7Fs314Mdzcug+gBVo/+NCMyDw8tFxJkwWAKl7Qa2OZxLQ0ZHjakcj1hNKfCQJ9rhyfOl4Aw==
   dependencies:
-    "@sentry/hub" "5.27.0"
-    "@sentry/minimal" "5.27.0"
-    "@sentry/types" "5.27.0"
-    "@sentry/utils" "5.27.0"
+    "@sentry/hub" "5.30.0"
+    "@sentry/minimal" "5.30.0"
+    "@sentry/types" "5.30.0"
+    "@sentry/utils" "5.30.0"
     tslib "^1.9.3"
-
-"@sentry/types@5.27.0":
-  version "5.27.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@sentry/types/-/types-5.27.0.tgz#cea288d02c727ef83541768b8738e6a829dfc831"
-  integrity sha1-zqKI0Cxyfvg1QXaLhzjmqCnfyDE=
 
 "@sentry/types@5.29.0":
   version "5.29.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@sentry/types/-/types-5.29.0.tgz#af5cec98cde54316c14df3121f0e8106e56b578e"
   integrity sha1-r1zsmM3lQxbBTfMSHw6BBuVrV44=
 
-"@sentry/utils@5.27.0":
-  version "5.27.0"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@sentry/utils/-/utils-5.27.0.tgz#21c15401b43041b1208521465c09c64eafc2e0ff"
-  integrity sha1-IcFUAbQwQbEghSFGXAnGTq/C4P8=
-  dependencies:
-    "@sentry/types" "5.27.0"
-    tslib "^1.9.3"
+"@sentry/types@5.30.0":
+  version "5.30.0"
+  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-5.30.0.tgz#19709bbe12a1a0115bc790b8942917da5636f402"
+  integrity sha512-R8xOqlSTZ+htqrfteCWU5Nk0CDN5ApUTvrlvBuiH1DyP6czDZ4ktbZB0hAgBlVcK0U+qpD3ag3Tqqpa5Q67rPw==
 
 "@sentry/utils@5.29.0":
   version "5.29.0"
@@ -1989,6 +1981,14 @@
   integrity sha1-tMEiO6NiqUz0hQ6cosskZVsAa1M=
   dependencies:
     "@sentry/types" "5.29.0"
+    tslib "^1.9.3"
+
+"@sentry/utils@5.30.0":
+  version "5.30.0"
+  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-5.30.0.tgz#9a5bd7ccff85ccfe7856d493bffa64cabc41e980"
+  integrity sha512-zaYmoH0NWWtvnJjC9/CBseXMtKHm/tm40sz3YfJRxeQjyzRqNQPgivpd9R/oDJCYj999mzdW382p/qi2ypjLww==
+  dependencies:
+    "@sentry/types" "5.30.0"
     tslib "^1.9.3"
 
 "@sinonjs/commons@^1.7.0":
