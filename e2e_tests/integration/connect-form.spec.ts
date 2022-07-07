@@ -127,7 +127,7 @@ describe('Connect form', () => {
         cy.executeCommand(':use system')
         cy.executeCommand('DROP DATABASE sidebartest IF EXISTS')
         cy.executeCommand('CREATE DATABASE sidebartest')
-        cy.wait(3000) // Wait for db to come online
+        cy.wait(10000) // Wait for db to come online
         cy.contains('1 system update, no records')
         cy.executeCommand(':use sidebartest')
         cy.executeCommand('create (:TestLabel)')
