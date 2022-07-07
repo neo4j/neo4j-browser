@@ -165,6 +165,56 @@ export const StyledCarousel = styled.div`
     margin-left: 0;
     margin-right: 0;
   }
+
+  .paragraph {
+    margin-top: 16px;
+    margin-bottom: 16px;
+  }
+
+  img {
+    background-color: #fff;
+  }
+
+  ul {
+    margin: 16px 0 16px 16px;
+    list-style: initial;
+  }
+
+  li > p {
+    display: inline !important;
+  }
+
+  ol > p {
+    display: inline !important;
+  }
+
+  ol {
+    margin: 16px 0 16px 16px;
+    list-style: numeric;
+  }
+
+  .imageblock {
+    padding: 3px;
+  }
+
+  .content {
+    position: relative;
+  }
+
+  pre.code.runnable {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding-left: 22px !important; /* counteracts another important.. */
+  }
+
+  pre > .fa.fa-play-circle-o {
+    position: absolute;
+    left: 7px;
+    top: 15px;
+  }
+
+  .content img {
+    max-width: 100%;
+  }
 `
 
 export const GuideUl = styled.ul`
@@ -192,7 +242,6 @@ export const StyledGuideDrawerHeader = styled.h4`
   -webkit-font-smoothing: antialiased;
   text-shadow: rgba(0, 0, 0, 0.4) 0px 1px 0px;
   font-family: ${props => props.theme.drawerHeaderFontFamily};
-  cursor: pointer;
 `
 
 export const GuideTitle = styled.div`
