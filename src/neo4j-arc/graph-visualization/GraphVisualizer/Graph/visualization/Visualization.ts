@@ -341,7 +341,7 @@ export class Visualization {
 
     this.updateNodes()
     this.updateRelationships()
-    this.forceSimulation.precompute()
+    this.forceSimulation.restart()
 
     this.adjustZoomMinScaleExtentToFitGraph()
   }

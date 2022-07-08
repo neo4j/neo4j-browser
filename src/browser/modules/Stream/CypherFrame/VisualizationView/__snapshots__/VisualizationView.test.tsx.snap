@@ -39,7 +39,6 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
                 <g
                   aria-label="graph-node1"
                   class="node"
-                  transform="translate(0,0.9475741398926749)"
                 >
                   <circle
                     class="ring"
