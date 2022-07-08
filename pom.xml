@@ -147,7 +147,7 @@
       <id>releases@repo.neo4j.org</id>
       <uniqueVersion>true</uniqueVersion>
       <name>Neo4j Releases</name>
-      <url>http://m2.neo4j.org/content/repositories/releases/</url>
+      <url>https://m2.neo4j.org/content/repositories/releases/</url>
       <layout>default</layout>
     </repository>
   </distributionManagement>
