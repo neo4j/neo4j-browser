@@ -27,10 +27,8 @@ const Carousel = '[data-testid="carousel"]'
 const SubmitQueryButton = '[data-testid="editor-Run"]'
 
 describe('Neo4j Browser', () => {
-  before(function() {
-    cy.visit(Cypress.config('url'))
-      .title()
-      .should('include', 'Neo4j Browser')
+  before(function () {
+    cy.visit(Cypress.config('url')).title().should('include', 'Neo4j Browser')
     cy.wait(3000)
   })
 
@@ -42,9 +40,7 @@ describe('Neo4j Browser', () => {
 
   it(':server disconnect frame is rerunnable', () => {
     cy.get('[data-testid="disconnectedBannerCode"]').click()
-    cy.get('[data-testid="frameCommand"]')
-      .contains(':server connect')
-      .click()
+    cy.get('[data-testid="frameCommand"]').contains(':server connect').click()
     cy.typeInFrame(':play movies{enter}', 0)
     cy.get('[data-testid="frame"]').contains('the Bacon Path')
   })
@@ -71,38 +67,6 @@ describe('Neo4j Browser', () => {
         cy.get('[data-testid="documentDrawerCanny"]')
           .children('div')
           .should('have.class', 'Canny_BadgeContainer')
-      }
-    })
-  })
-
-  it('can show changelog and once it is shown the Canny badge will be disappeared', () => {
-    cy.window().then(win => {
-      if (win.Canny && win.IsCannyLoaded && typeof win.Canny === 'function') {
-        // Click the changelog button
-        cy.get('[data-testid="documentDrawerCanny"]').click()
-        cy.get('#canny-changelog-iframe')
-          .should('have.css', 'display')
-          .and('match', /\bblock\b/)
-
-        // Canny badges should be disappeared
-        cy.wait(500)
-        cy.get('[data-testid="documentDrawerCanny"]')
-          .children('div')
-          .should('not.exist')
-        cy.get('[data-testid="navigationCannyDocuments"]', {
-          timeout: 5000
-        })
-          .children('div')
-          .should('not.exist')
-
-        // Close changelog modal
-        cy.get('[data-testid="documentDrawerCanny"]').click()
-        cy.get('#canny-changelog-iframe')
-          .should('have.css', 'display')
-          .and('match', /\bnone\b/)
-
-        // Close sideber
-        cy.get('[data-testid="navigationDocuments"]').click()
       }
     })
   })
@@ -144,18 +108,10 @@ describe('Neo4j Browser', () => {
     const query = ':play movies'
     cy.executeCommand(query)
     cy.get('[data-testid="frameCommand"]').contains(query)
-    cy.get(Carousel)
-      .find('[data-testid="nextSlide"]')
-      .click()
-    cy.get(Carousel)
-      .find('[data-testid="nextSlide"]')
-      .click()
-    cy.get(Carousel)
-      .find('[data-testid="previousSlide"]')
-      .click()
-    cy.get(Carousel)
-      .find('.code')
-      .click()
+    cy.get(Carousel).find('[data-testid="nextSlide"]').click()
+    cy.get(Carousel).find('[data-testid="nextSlide"]').click()
+    cy.get(Carousel).find('[data-testid="previousSlide"]').click()
+    cy.get(Carousel).find('.code').click()
     cy.get(SubmitQueryButton).click()
     cy.waitForCommandResult()
     cy.get('[data-testid="frameCommand"]', { timeout: 10000 }).contains(
@@ -214,9 +170,7 @@ describe('Neo4j Browser', () => {
       cy.get(Editor).type(`RETURN 1{enter}`, { force: true })
 
       cy.get('[data-testid="frame-Favorite"]').click()
-      cy.get('[data-testid="savedScriptListItem"]')
-        .first()
-        .contains('RETURN 1')
+      cy.get('[data-testid="savedScriptListItem"]').first().contains('RETURN 1')
 
       cy.get('[data-testid="navigationSync"]').click()
       cy.get('[data-testid="clearLocalData"]').click()

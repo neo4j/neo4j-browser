@@ -8,7 +8,7 @@ exports[`GuideDrawer renders guide slide when a guide is selected 1`] = `
     id="guide-drawer"
   >
     <h4
-      class="sc-jIkXHa dBPPAF"
+      class="sc-jIkXHa bnwOFb"
     >
       <span
         class="sc-jOxtWs fCxqJj"
@@ -27,20 +27,13 @@ exports[`GuideDrawer renders guide slide when a guide is selected 1`] = `
           </span>
         </i>
       </span>
-      Neo4j Browser Guides
-       
+      Title
     </h4>
     <div
       class="sc-kHOZwM kpzyri"
     />
     <div
-      class="sc-ZOtfp iqtncb"
-      title="Title"
-    >
-      Title
-    </div>
-    <div
-      class="sc-fWCJzd bmKquF disable-font-ligatures"
+      class="sc-fWCJzd fHTfnf disable-font-ligatures"
     >
       <div>
         <div>
@@ -60,10 +53,9 @@ exports[`GuideDrawer renders list view including Remote Guides list 1`] = `
     id="guide-drawer"
   >
     <h4
-      class="sc-jIkXHa dBPPAF"
+      class="sc-jIkXHa bnwOFb"
     >
-      Neo4j Browser Guides
-       
+      Neo4j Browser Guides 
     </h4>
     <div
       class="sc-kHOZwM kpzyri"
@@ -241,10 +233,9 @@ exports[`GuideDrawer renders list view without Remote Guides 1`] = `
     id="guide-drawer"
   >
     <h4
-      class="sc-jIkXHa dBPPAF"
+      class="sc-jIkXHa bnwOFb"
     >
-      Neo4j Browser Guides
-       
+      Neo4j Browser Guides 
     </h4>
     <div
       class="sc-kHOZwM kpzyri"
