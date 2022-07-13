@@ -51,7 +51,6 @@ const oneRelationshipPerPairOfNodes = (graph: GraphModel) =>
 export class ForceSimulation {
   simulation: Simulation<NodeModel, RelationshipModel>
   simulationTimeout: null | number = null
-  endSimulationCallback: null | (() => void) = null
 
   constructor(private render: () => void) {
     this.simulation = forceSimulation<NodeModel, RelationshipModel>()
@@ -62,10 +61,6 @@ export class ForceSimulation {
       .on('tick', () => {
         this.simulation.tick(TICKS_PER_RENDER)
         render()
-      })
-      .on('end', () => {
-        this.endSimulationCallback && this.endSimulationCallback()
-        this.endSimulationCallback = null
       })
       .stop()
   }
