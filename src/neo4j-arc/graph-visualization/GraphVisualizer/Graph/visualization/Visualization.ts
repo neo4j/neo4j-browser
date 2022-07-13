@@ -70,6 +70,7 @@ export class Visualization {
   // 'canvasClick' event when panning ends.
   private draw = false
   private isZoomClick = false
+  public endInitCallback: null | (() => void) = null
 
   constructor(
     element: SVGElement,
@@ -167,10 +168,6 @@ export class Visualization {
       .on('click.zoom', () => (this.draw = false))
 
     this.forceSimulation = new ForceSimulation(this.render.bind(this))
-  }
-
-  set endSimulationCallback(cb: null | (() => void)) {
-    this.forceSimulation.endSimulationCallback = cb
   }
 
   private render() {
@@ -341,9 +338,12 @@ export class Visualization {
 
     this.updateNodes()
     this.updateRelationships()
-    this.forceSimulation.restart()
+    this.forceSimulation.precompute()
 
     this.adjustZoomMinScaleExtentToFitGraph()
+
+    this.endInitCallback && this.endInitCallback()
+    this.endInitCallback = null
   }
 
   update(options: {

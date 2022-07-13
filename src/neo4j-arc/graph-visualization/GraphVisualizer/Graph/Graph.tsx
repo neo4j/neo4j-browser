@@ -142,6 +142,13 @@ export class Graph extends React.Component<GraphProps, GraphState> {
 
     onGraphModelChange(getGraphStats(graph))
     this.visualization.resize(isFullscreen, !!wheelZoomRequiresModKey)
+    if (initialZoomToFit) {
+      this.visualization.endInitCallback = () => {
+        setTimeout(() => {
+          this.visualization?.zoomByType(ZoomType.FIT)
+        }, 150)
+      }
+    }
     this.visualization.init()
 
     if (setGraph) {
@@ -162,14 +169,6 @@ export class Graph extends React.Component<GraphProps, GraphState> {
     }
     if (assignVisElement) {
       assignVisElement(this.svgElement.current, this.visualization)
-    }
-
-    if (initialZoomToFit) {
-      this.visualization.endSimulationCallback = () => {
-        setTimeout(() => {
-          this.visualization?.zoomByType(ZoomType.FIT)
-        }, 150)
-      }
     }
   }
 
