@@ -1723,10 +1723,13 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@neo4j-devtools/word-color@^0.0.5":
-  version "0.0.5"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/@neo4j-devtools/word-color/-/word-color-0.0.5.tgz#2a34161c0d4f6ce8791465e5ee3026f07c7f9f36"
-  integrity sha512-Xz1NKiNZxbwlF3C2hlmM9GZGjndhE49nJyaKBrzJxTgbseXpN7ABuWKcuCZ357l11LjOpUhwZCt4dAwJvqDBBA==
+"@neo4j-devtools/word-color@^0.0.7":
+  version "0.0.7"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@neo4j-devtools/word-color/-/word-color-0.0.7.tgz#67b29df52e8b0ad3f39ec7f2c3f099ffad16d137"
+  integrity sha512-dfmxC7arxX8GThuNPl7XJUmsFmHwTXCQw87KK0qA5dJemLqNEDbTkFDYbb3J1i8aWbYJs5COpGpwakbHWBxPyQ==
+  dependencies:
+    "@types/chroma-js" "2.1.4"
+    chroma-js "2.4.2"
 
 "@neo4j-ndl/base@^0.1.2":
   version "0.1.2"
@@ -2114,6 +2117,11 @@
   integrity sha1-6Z2owHXU+wmMd0umXav33JlUvRM=
   dependencies:
     "@babel/types" "^7.3.0"
+
+"@types/chroma-js@2.1.4":
+  version "2.1.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/chroma-js/-/chroma-js-2.1.4.tgz#52e3a8453000cdb9ad76357c2c47dbed702d136f"
+  integrity sha512-l9hWzP7cp7yleJUI7P2acmpllTJNYf5uU6wh50JzSIZt3fFHe+w2FM6w9oZGBTYzjjm2qHdnQvI+fF/JF/E5jQ==
 
 "@types/color-name@^1.1.1":
   version "1.1.1"
@@ -4212,6 +4220,11 @@ chownr@^2.0.0:
   version "2.0.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/chownr/-/chownr-2.0.0.tgz#15bfbe53d2eab4cf70f18a8cd68ebe5b3cb1dece"
   integrity sha1-Fb++U9LqtM9w8YqM1o6+Wzyx3s4=
+
+chroma-js@2.4.2:
+  version "2.4.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/chroma-js/-/chroma-js-2.4.2.tgz#dffc214ed0c11fa8eefca2c36651d8e57cbfb2b0"
+  integrity sha512-U9eDw6+wt7V8z5NncY2jJfZa+hUH8XEj8FQHgFJTrUFnJfXYf4Ml4adI2vXZOjqRDpFWtYVWypDfZwnJ+HIR4A==
 
 chrome-trace-event@^1.0.2:
   version "1.0.2"

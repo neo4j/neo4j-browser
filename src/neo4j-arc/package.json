@@ -1,6 +1,6 @@
 {
   "name": "@neo4j-devtools/arc",
-  "version": "0.0.28",
+  "version": "0.0.29",
   "main": "dist/neo4j-arc.js",
   "author": "Neo4j Inc.",
   "license": "GPL-3.0",
@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "@juggle/resize-observer": "^3.3.1",
-    "@neo4j-devtools/word-color": "^0.0.5",
+    "@neo4j-devtools/word-color": "^0.0.7",
     "@types/d3-color": "^3.0.2",
     "@types/d3-drag": "^3.0.1",
     "@types/d3-ease": "^3.0.0",
