@@ -197,19 +197,13 @@ export const StyledCarousel = styled.div`
     padding: 3px;
   }
 
-  .content {
-    position: relative;
-  }
-
   pre.code.runnable {
     background-color: rgba(255, 255, 255, 0.1);
     padding-left: 22px !important; /* counteracts another important.. */
   }
 
   pre > .fa.fa-play-circle-o {
-    position: absolute;
-    left: 7px;
-    top: 15px;
+    margin-left: -15px;
   }
 
   .content img {
