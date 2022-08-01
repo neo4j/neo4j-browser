@@ -31,7 +31,7 @@ import {
   changeUserPasswordQuery,
   driverDatabaseSelection
 } from '../features/versionedFeatures'
-import { getCausalClusterAddresses } from './queriesProcedureHelper'
+import { getClusterAddresses } from './queriesProcedureHelper'
 import bolt from 'services/bolt/bolt'
 import { buildTxFunctionByMode } from 'services/bolt/boltHelpers'
 import {
@@ -177,7 +177,7 @@ export const clusterCypherRequestEpic = (some$: any, store: any) =>
     .mergeMap((action: any) => {
       if (!action.$$responseChannel) return Rx.Observable.of(null)
       return bolt
-        .directTransaction(getCausalClusterAddresses, {}, userActionTxMetadata)
+        .directTransaction(getClusterAddresses, {}, userActionTxMetadata)
         .then((res: any) => {
           const addresses = flatten(
             res.records.map((record: any) => record.get('addresses'))

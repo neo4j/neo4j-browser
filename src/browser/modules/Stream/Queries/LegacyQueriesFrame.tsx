@@ -71,7 +71,7 @@ export type LegacyQueriesFrameProps = {
   isFullscreen: boolean
   versionOverFive: boolean
   isCollapsed: boolean
-  isOnCausalCluster: boolean
+  isOnCluster: boolean
 }
 export class LegacyQueriesFrame extends Component<
   LegacyQueriesFrameProps,
@@ -109,7 +109,7 @@ export class LegacyQueriesFrame extends Component<
       (this.props.frame &&
         this.props.frame.ts !== prevProps.frame.ts &&
         this.props.frame.isRerun) ||
-      this.props.isOnCausalCluster !== prevProps.isOnCausalCluster
+      this.props.isOnCluster !== prevProps.isOnCluster
     ) {
       this.getRunningQueries()
     }
@@ -117,7 +117,7 @@ export class LegacyQueriesFrame extends Component<
 
   getRunningQueries(suppressQuerySuccessMessage = false) {
     this.props.bus.self(
-      this.props.isOnCausalCluster ? CLUSTER_CYPHER_REQUEST : CYPHER_REQUEST,
+      this.props.isOnCluster ? CLUSTER_CYPHER_REQUEST : CYPHER_REQUEST,
       {
         query: listQueriesProcedure(),
         queryType: NEO4J_BROWSER_USER_ACTION_QUERY
@@ -158,7 +158,7 @@ export class LegacyQueriesFrame extends Component<
 
   killQueries(host: any, queryIdList: any) {
     this.props.bus.self(
-      this.props.isOnCausalCluster ? AD_HOC_CYPHER_REQUEST : CYPHER_REQUEST,
+      this.props.isOnCluster ? AD_HOC_CYPHER_REQUEST : CYPHER_REQUEST,
       { host, query: killQueriesProcedure(queryIdList) },
       (response: any) => {
         if (response.success) {

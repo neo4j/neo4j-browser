@@ -30,7 +30,7 @@ const baseProps = {
   frame: null as any,
   isFullscreen: false,
   isCollapsed: false,
-  isACausalCluster: false
+  isOnCluster: false
 }
 
 describe('LegacySysInfoFrame', () => {

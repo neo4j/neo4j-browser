@@ -56,7 +56,7 @@ type LegacySysInfoProps = {
   isConnected: boolean
   isFullscreen: boolean
   isCollapsed: boolean
-  isACausalCluster: boolean
+  isOnCluster: boolean
 }
 
 export class LegacySysInfoFrame extends Component<
@@ -121,7 +121,7 @@ export class LegacySysInfoFrame extends Component<
         },
         legacyHelpers.responseHandler(this.setState.bind(this))
       )
-      if (this.props.isACausalCluster) {
+      if (this.props.isOnCluster) {
         this.props.bus.self(
           CYPHER_REQUEST,
           {
@@ -145,12 +145,11 @@ export class LegacySysInfoFrame extends Component<
   }
 
   render(): JSX.Element {
-    const { isFullscreen, isCollapsed, isConnected, isACausalCluster } =
-      this.props
+    const { isFullscreen, isCollapsed, isConnected, isOnCluster } = this.props
     const { error, success, lastFetch, autoRefresh } = this.state
 
     const content = isConnected ? (
-      <SysInfoDisplay {...this.state} isACausalCluster={isACausalCluster} />
+      <SysInfoDisplay {...this.state} isOnCluster={isOnCluster} />
     ) : (
       <ErrorsView
         result={{ code: 'No connection', message: 'No connection available' }}

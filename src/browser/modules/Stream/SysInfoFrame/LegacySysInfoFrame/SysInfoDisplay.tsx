@@ -34,7 +34,7 @@ export const SysInfoDisplay = ({
   idAllocation,
   pageCache,
   transactions,
-  isACausalCluster,
+  isOnCluster,
   cc,
   ha,
   haInstances
@@ -53,12 +53,12 @@ export const SysInfoDisplay = ({
       <StyledSysInfoTable key="Transactionss" header="Transactions">
         {buildTableData(transactions)}
       </StyledSysInfoTable>
-      {isACausalCluster && (
+      {isOnCluster && (
         <StyledSysInfoTable
           key="cc-table"
           header={
-            <span data-testid="sysinfo-casual-cluster-members-title">
-              Causal Cluster Members{' '}
+            <span data-testid="sysinfo-cluster-members-title">
+              Cluster Members{' '}
               <QuestionIcon title="Values shown in `:sysinfo` may differ between cluster members" />
             </span>
           }

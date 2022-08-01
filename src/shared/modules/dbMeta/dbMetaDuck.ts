@@ -22,8 +22,7 @@ import { isConfigValFalsy } from 'services/bolt/boltHelpers'
 import { GlobalState } from 'shared/globalState'
 import { APP_START } from 'shared/modules/app/appDuck'
 import { extractServerInfo } from './utils'
-import { coerce, SemVer } from 'semver'
-import { gte } from 'lodash-es'
+import { coerce, SemVer, gte } from 'semver'
 
 export const UPDATE_META = 'meta/UPDATE_META'
 export const PARSE_META = 'meta/PARSE_META'
@@ -242,7 +241,7 @@ export const shouldRetainConnectionCredentials = (state: any) =>
 export const shouldRetainEditorHistory = (state: any) =>
   !supportsEditorHistorySetting(state) || getRetainEditorHistory(state)
 
-export const isOnCausalCluster = (state: GlobalState): boolean => {
+export const isOnCluster = (state: GlobalState): boolean => {
   const version = getSemanticVersion(state)
   if (!version) return false
 
