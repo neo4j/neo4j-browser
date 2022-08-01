@@ -1736,6 +1736,11 @@
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@neo4j-ndl/base/-/base-0.1.2.tgz#fa542746199aea852eef1e091e3b40e252290383"
   integrity sha512-8ClB7yNF0j+F21WbSYPQsXgTMEDhYhWy0DMPPQEBOp/fGovLgwWX+kUAcDT9olFS+ViZx9/SSBx4fQKVJUfOSA==
 
+"@neo4j-ndl/base@^0.6.0":
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/@neo4j-ndl/base/-/base-0.6.1.tgz#9caecd475a77703e1536b0f967b06815446c027a"
+  integrity sha512-/FcflP174fhU+8XDeHTcvLjGM5b1Apf2TW7785XU/CUPlWtYuNlFkyYZ0VbLwFpLPW1/JOkC3pojEG/61C+8iA==
+
 "@neo4j-ndl/react@^0.1.2":
   version "0.1.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@neo4j-ndl/react/-/react-0.1.2.tgz#44e6ecca1d698e095947e470e284497417017a71"
