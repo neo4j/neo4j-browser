@@ -81,7 +81,7 @@ it('can list and kill queries', () => {
     neo4jVersion: '4.0.0',
     isFullscreen: false,
     isCollapsed: false,
-    isOnCausalCluster: false,
+    isOnCluster: false,
     hasListQueriesProcedure: true,
     versionOverFive: false,
     frame: null

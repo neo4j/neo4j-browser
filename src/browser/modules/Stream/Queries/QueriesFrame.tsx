@@ -55,7 +55,7 @@ import {
   getRawVersion,
   getSemanticVersion,
   hasProcedure,
-  isOnCausalCluster
+  isOnCluster
 } from 'shared/modules/dbMeta/dbMetaDuck'
 import { gte } from 'semver'
 
@@ -340,7 +340,7 @@ const mapStateToProps = (state: GlobalState) => {
     versionOverFive,
     connectionState: getConnectionState(state),
     neo4jVersion: getRawVersion(state),
-    isOnCausalCluster: isOnCausalCluster(state)
+    isOnCluster: isOnCluster(state)
   }
 }
 

@@ -278,7 +278,7 @@ export const responseHandler = (setState: (newState: any) => void) =>
 export const clusterResponseHandler = (setState: any) =>
   function (res: any) {
     if (!res.success) {
-      setState({ error: 'No causal cluster results', success: false })
+      setState({ error: 'No cluster results', success: false })
       return
     }
     const mappedResult = mapSysInfoRecords(res.result.records)
@@ -310,7 +310,7 @@ export const clusterResponseHandler = (setState: any) =>
       ]
     })
     setState({
-      casualClusterMembers: [{ value: mappedTableComponents }],
+      clusterMembers: [{ value: mappedTableComponents }],
       success: true
     })
   }

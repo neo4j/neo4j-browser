@@ -241,7 +241,7 @@ export const shouldRetainConnectionCredentials = (state: any) =>
 export const shouldRetainEditorHistory = (state: any) =>
   !supportsEditorHistorySetting(state) || getRetainEditorHistory(state)
 
-export const isOnCausalCluster = (state: GlobalState): boolean => {
+export const isOnCluster = (state: GlobalState): boolean => {
   const version = getSemanticVersion(state)
   if (!version) return false
 

@@ -45,8 +45,8 @@ const content = (
       </ul>
     </p>
     <p>
-      If bolt+routing is on and the provided URI points to a Core Causal Cluster
-      member Neo4j Browser will:
+      If bolt+routing is on and the provided URI points to a Core Cluster member
+      Neo4j Browser will:
     </p>
     <ul className="topic-bullets">
       <li>
@@ -59,9 +59,9 @@ const content = (
       </li>
     </ul>
     <p>
-      If bolt+routing is off or the provided URI does not point to a Causal
-      Cluster member or the provided URI points to a Read-Replica Causal Cluster
-      member, Neo4j Browser will:
+      If bolt+routing is off or the provided URI does not point to a Cluster
+      member or the provided URI points to a Read-Replica Cluster member, Neo4j
+      Browser will:
     </p>
     <ul className="topic-bullets">
       <li>

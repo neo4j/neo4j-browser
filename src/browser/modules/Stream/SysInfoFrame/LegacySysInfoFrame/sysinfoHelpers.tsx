@@ -173,7 +173,7 @@ export const responseHandler = (setState: any) =>
 export const clusterResponseHandler = (setState: any) =>
   function (res: any) {
     if (!res.success) {
-      setState({ error: 'No causal cluster results', success: false })
+      setState({ error: 'No cluster results', success: false })
       return
     }
     const mappedResult = mapLegacySysInfoRecords(res.result.records)

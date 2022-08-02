@@ -38,7 +38,7 @@ import {
   metaQuery,
   serverInfoQuery,
   VERSION_FOR_CLUSTER_ROLE_IN_SHOW_DB,
-  isOnCausalCluster
+  isOnCluster
 } from './dbMetaDuck'
 import {
   ClientSettings,
@@ -191,7 +191,7 @@ async function getFunctionsAndProcedures(store: any) {
 }
 
 async function clusterRole(store: any) {
-  if (!isOnCausalCluster(store.getState())) {
+  if (!isOnCluster(store.getState())) {
     return
   }
 
