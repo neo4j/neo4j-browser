@@ -125,10 +125,7 @@ describe('Connect form', () => {
       it('shows correct metadata when using db field', () => {
         cy.connect('neo4j', Cypress.config('password'))
         cy.executeCommand(':use system')
-        cy.executeCommand('DROP DATABASE sidebartest IF EXISTS')
-        cy.executeCommand('CREATE DATABASE sidebartest')
-        cy.wait(10000) // Wait for db to come online
-        cy.contains('1 system update, no records')
+        cy.createDatabase('sidebartest')
         cy.executeCommand(':use sidebartest')
         cy.executeCommand('create (:TestLabel)')
         cy.executeCommand(':use neo4j')

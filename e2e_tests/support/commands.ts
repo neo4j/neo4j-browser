@@ -189,3 +189,32 @@ Cypress.Commands.add(
     })
   }
 )
+
+Cypress.Commands.add('createDatabase', (dbName: string) => {
+  cy.executeCommand(`DROP DATABASE ${dbName} IF EXISTS;`)
+  cy.executeCommand(':clear')
+  cy.executeCommand(`CREATE DATABASE ${dbName}`)
+  cy.contains('1 system update, no records')
+
+  pollForDbOnline()
+
+  function pollForDbOnline(totalWaitMs = 0) {
+    if (totalWaitMs > 6000) {
+      throw new Error('Database did not come online')
+    }
+
+    cy.get('[data-testid="frameCommand"]').click()
+    cy.typeInFrame(`SHOW DATABASE ${dbName} YIELD currentStatus{enter}`)
+    cy.get('[data-testid="frameContents"] [role="cell"] span').then(
+      statusSpan => {
+        if (statusSpan.text().includes('online')) {
+          // started properly, clear stream & carry on.
+          cy.executeCommand(':clear')
+        } else {
+          cy.wait(500)
+          pollForDbOnline(totalWaitMs + 500)
+        }
+      }
+    )
+  }
+})
