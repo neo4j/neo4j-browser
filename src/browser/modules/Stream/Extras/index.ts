@@ -18,4 +18,5 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export { default as SnakeFrame } from './SnakeFrame'
+import SnakeFrame from './SnakeFrame'
+export default { SnakeFrame }

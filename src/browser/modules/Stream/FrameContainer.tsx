@@ -47,6 +47,7 @@ import StyleFrame from './StyleFrame'
 import SysInfoFrame from './SysInfoFrame/SysInfoFrame'
 import { Connection } from 'shared/modules/connections/connectionsDuck'
 import { FrameStack } from 'shared/modules/frames/framesDuck'
+import extras from './Extras/index'
 
 const nameToFrame: Record<string, React.ComponentType<any>> = {
   error: ErrorFrame,
@@ -78,14 +79,19 @@ const nameToFrame: Record<string, React.ComponentType<any>> = {
 
 const getFrameComponent = (frameData: FrameStack): React.ComponentType<any> => {
   const { cmd, type } = frameData.stack[0]
-  let MyFrame = nameToFrame[type]
+  let MyFrame = nameToFrame[type] ?? ErrorFrame
 
-  if (!MyFrame || type === 'error') {
-    try {
-      const command = cmd.replace(/^:/, '')
-      const Frame = command[0].toUpperCase() + command.slice(1) + 'Frame'
-      MyFrame = require('./Extras/index')[Frame] || nameToFrame['error']
-    } catch (e) {}
+  if (type === 'error') {
+    const command = cmd.replace(/^:/, '')
+    const frameName = command[0].toUpperCase() + command.slice(1) + 'Frame'
+    const isExtraFrame = (
+      frameName: string
+    ): frameName is keyof typeof extras =>
+      Object.keys(extras).includes(frameName)
+
+    if (isExtraFrame(frameName)) {
+      MyFrame = extras[frameName]
+    }
   }
   return MyFrame
 }
