@@ -84,9 +84,13 @@ const getFrameComponent = (frameData: FrameStack): React.ComponentType<any> => {
   if (type === 'error') {
     const command = cmd.replace(/^:/, '')
     const frameName = command[0].toUpperCase() + command.slice(1) + 'Frame'
-    const isExtra = Object.keys(extras).includes(frameName)
-    if (isExtra) {
-      MyFrame = extras.SnakeFrame
+    const isExtraFrame = (
+      frameName: string
+    ): frameName is keyof typeof extras =>
+      Object.keys(extras).includes(frameName)
+
+    if (isExtraFrame(frameName)) {
+      MyFrame = extras[frameName]
     }
   }
   return MyFrame
