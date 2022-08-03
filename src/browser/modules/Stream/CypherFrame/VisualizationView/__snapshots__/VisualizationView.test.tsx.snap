@@ -79,7 +79,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
         >
           <button
             aria-label="zoom-in"
-            class="sc-fFeiMQ cZIuss zoom-in"
+            class="sc-fFeiMQ fKuHSd zoom-in"
           >
             <svg
               aria-hidden="true"
@@ -100,7 +100,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
           </button>
           <button
             aria-label="zoom-out"
-            class="sc-fFeiMQ cZIuss zoom-out"
+            class="sc-fFeiMQ fKuHSd zoom-out"
           >
             <svg
               aria-hidden="true"
@@ -121,7 +121,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
           </button>
           <button
             aria-label="zoom-to-fit"
-            class="sc-fFeiMQ cZIuss"
+            class="sc-fFeiMQ fKuHSd"
           >
             <svg
               fill="none"
