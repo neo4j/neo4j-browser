@@ -40,14 +40,13 @@ describe('Multi database', () => {
   before(() => {
     cy.visit(Cypress.config('url')).title().should('include', 'Neo4j Browser')
     cy.wait(3000)
+    cy.ensureConnection()
   })
-  it('can connect', () => {
-    const password = Cypress.config('password')
-    cy.connect('neo4j', password)
-  })
-  if (Cypress.config('serverVersion') >= 4.0) {
+
+  if (Cypress.config('serverVersion') >= 4.1) {
     if (isEnterpriseEdition()) {
       it('shows a message indicating whether system updates have occurred', () => {
+        cy.executeCommand('DROP DATABASE test1 IF EXISTS')
         cy.executeCommand(':clear')
 
         cy.executeCommand(':use system')
@@ -94,10 +93,7 @@ describe('Multi database', () => {
       it('adds databases to the sidebar and adds backticks to special db names', () => {
         // Add db
         cy.executeCommand(':use system')
-        cy.executeCommand('CREATE DATABASE `name-with-dash`')
-        cy.resultContains('1 system update')
-        cy.wait(10000) // wait for db to come online
-        cy.executeCommand(':clear')
+        cy.createDatabase('`name-with-dash`')
 
         // Count items in list
         cy.get('[data-testid="navigationDBMS"]').click()
@@ -178,11 +174,8 @@ describe('Multi database', () => {
 
     if (isEnterpriseEdition()) {
       it('lists new databases with :dbs command', () => {
-        cy.executeCommand('CREATE DATABASE sidebartest')
+        cy.createDatabase('sidebartest')
 
-        cy.wait(3000) // CREATE database can take a sec
-
-        cy.executeCommand(':clear')
         cy.executeCommand(':dbs')
         databaseList().should('have.length', 3)
         databaseList().contains('system')

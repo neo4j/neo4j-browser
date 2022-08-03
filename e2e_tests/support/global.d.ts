@@ -45,6 +45,10 @@ declare global {
       ): Cypress.Chainable<void>
       waitForCommandResult(): Cypress.Chainable<void>
       /**
+       * Custom command to create a database and wait for it to come online
+       */
+      createDatabase(dbName: string): Cypress.Chainable<void>
+      /**
        * Custom command for testing content of frame
        */
       resultContains(str: string): Cypress.Chainable<boolean>
