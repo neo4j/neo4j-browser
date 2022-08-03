@@ -31,12 +31,8 @@ import {
 } from 'browser-components/drawer/drawer-styled'
 import { version as browserVersion } from 'project-root/package.json'
 import { getEdition, getRawVersion } from 'shared/modules/dbMeta/dbMetaDuck'
-import {
-  getBuiltAt,
-  getBuildNumber,
-  getGitHash
-} from 'shared/modules/app/appDuck'
 import { copyToClipboard } from 'neo4j-arc/common'
+import { GlobalState } from 'shared/globalState'
 
 function asChangeLogUrl(serverVersion: string): string | undefined {
   if (!serverVersion) {
@@ -52,18 +48,14 @@ function asChangeLogUrl(serverVersion: string): string | undefined {
 interface AboutProps {
   serverVersion: string | null
   serverEdition: string | null
-  builtAt: string | null
-  buildNumber: string | null
-  gitHash: string | null
 }
 
-const About = ({
-  serverVersion,
-  serverEdition,
-  builtAt,
-  buildNumber,
-  gitHash
-}: AboutProps) => (
+// Injected by webpack
+declare const __GIT_HASH__: string | undefined
+declare const __BUILD_NUMBER__: string | undefined
+declare const __BUILT_AT__: string | undefined
+
+const About = ({ serverVersion, serverEdition }: AboutProps) => (
   <Drawer id="db-about">
     <DrawerHeader>About Neo4j</DrawerHeader>
     <DrawerBody>
@@ -115,19 +107,19 @@ const About = ({
               Neo4j Browser Changelog
             </a>
           </p>
-          {buildNumber && (
-            <div onClick={() => copyToClipboard(buildNumber)}>
-              Build number: {buildNumber}
+          {__BUILD_NUMBER__ && (
+            <div onClick={() => copyToClipboard(__BUILD_NUMBER__)}>
+              Build number: {__BUILD_NUMBER__}
             </div>
           )}
-          {gitHash && (
-            <div onClick={() => copyToClipboard(gitHash)}>
-              Build hash: {gitHash.slice(0, 18)}
+          {__GIT_HASH__ && (
+            <div onClick={() => copyToClipboard(__GIT_HASH__)}>
+              Build hash: {__GIT_HASH__.slice(0, 18)}
             </div>
           )}
-          {builtAt && (
-            <div onClick={() => copyToClipboard(builtAt)}>
-              Build date: {new Date(builtAt).toLocaleDateString('se')}
+          {__BUILT_AT__ && (
+            <div onClick={() => copyToClipboard(__BUILT_AT__)}>
+              Build date: {new Date(__BUILT_AT__).toLocaleDateString('se')}
             </div>
           )}
         </DrawerSectionBody>
@@ -216,14 +208,10 @@ const About = ({
     <DrawerFooter>With &#9829; from Sweden.</DrawerFooter>
   </Drawer>
 )
-const mapStateToProps = (state: any) => {
-  return {
-    serverVersion: getRawVersion(state),
-    serverEdition: getEdition(state),
-    builtAt: getBuiltAt(state),
-    buildNumber: getBuildNumber(state),
-    gitHash: getGitHash(state)
-  }
-}
+
+const mapStateToProps = (state: GlobalState) => ({
+  serverVersion: getRawVersion(state),
+  serverEdition: getEdition(state)
+})
 
 export default connect(mapStateToProps)(About)
