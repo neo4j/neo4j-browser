@@ -54,10 +54,6 @@ export const inWebBrowser = (state: GlobalState): boolean =>
   [WEB, CLOUD].includes(getEnv(state))
 export const inDesktop = (state: GlobalState): boolean =>
   getEnv(state) === DESKTOP
-export const getBuildNumber = (state: GlobalState): string | null =>
-  state[NAME].buildNumber ?? null
-export const getBuiltAt = (state: GlobalState): string | null =>
-  state[NAME].builtAt ?? null
 
 export const getAllowedBoltSchemes = (
   state: GlobalState,
@@ -83,16 +79,6 @@ export const isRelateAvailable = (state: GlobalState): boolean =>
 export const getProjectId = (state: GlobalState): string | undefined =>
   state[NAME].relateProjectId
 
-// action creators
-export const updateBuildInfo = (action: {
-  buildNumber?: string
-  builtAt?: string
-}) => ({
-  type: UPDATE_BUILD_INFO,
-  buildNumber: action.buildNumber,
-  builtAt: action.builtAt
-})
-
 export type AppState = {
   hostedUrl?: string | null
   env?: Environment
@@ -100,8 +86,6 @@ export type AppState = {
   relateApiToken?: string
   relateProjectId?: string
   neo4jDesktopGraphAppId?: string
-  builtAt?: string | null
-  buildNumber?: string | null
 }
 
 // Reducer
@@ -119,12 +103,6 @@ export default function reducer(
         relateApiToken: action.relateApiToken,
         relateProjectId: action.relateProjectId,
         neo4jDesktopGraphAppId: action.neo4jDesktopGraphAppId
-      }
-    case UPDATE_BUILD_INFO:
-      return {
-        ...state,
-        builtAt: action.builtAt,
-        buildNumber: action.buildNumber
       }
     default:
       return state
