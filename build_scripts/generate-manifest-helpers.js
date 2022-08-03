@@ -44,13 +44,8 @@ function buildTargetObject(data, dataProp) {
   return out
 }
 
-function mergeObjects(source, target) {
-  return { ...target, ...source }
-}
-
 module.exports = {
   loadDataFromFile,
   writeDataToFile,
-  buildTargetObject,
-  mergeObjects
+  buildTargetObject
 }

@@ -51,7 +51,7 @@ import { version } from 'project-root/package.json'
 import { applyKeys, createReduxMiddleware, getAll } from 'services/localstorage'
 import { detectRuntimeEnv, isRunningE2ETest } from 'services/utils'
 import { GlobalState } from 'shared/globalState'
-import { APP_START, updateBuildInfo } from 'shared/modules/app/appDuck'
+import { APP_START } from 'shared/modules/app/appDuck'
 import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
 import { getUuid, updateUdcData } from 'shared/modules/udc/udcDuck'
 import epics from 'shared/rootEpic'
@@ -240,15 +240,6 @@ if (auraNtId) {
   removeSearchParamsInBrowserHistory(['ntid'])
 }
 store.dispatch(updateUdcData({ auraNtId }))
-
-fetch('./manifest.json')
-  .then(res => res.json())
-  .then(json => {
-    if (json.buildNumber || json.builtAt) {
-      store.dispatch(updateBuildInfo(json))
-    }
-  })
-  .catch(() => undefined)
 
 // typePolicies allow apollo cache to use these fields as 'id'
 // for automated cache updates when updating a single existing entity
