@@ -31,7 +31,11 @@ import {
 } from 'browser-components/drawer/drawer-styled'
 import { version as browserVersion } from 'project-root/package.json'
 import { getEdition, getRawVersion } from 'shared/modules/dbMeta/dbMetaDuck'
-import { getBuiltAt, getBuildNumber } from 'shared/modules/app/appDuck'
+import {
+  getBuiltAt,
+  getBuildNumber,
+  getGitHash
+} from 'shared/modules/app/appDuck'
 import { copyToClipboard } from 'neo4j-arc/common'
 
 function asChangeLogUrl(serverVersion: string): string | undefined {
@@ -50,13 +54,15 @@ interface AboutProps {
   serverEdition: string | null
   builtAt: string | null
   buildNumber: string | null
+  gitHash: string | null
 }
 
 const About = ({
   serverVersion,
   serverEdition,
   builtAt,
-  buildNumber
+  buildNumber,
+  gitHash
 }: AboutProps) => (
   <Drawer id="db-about">
     <DrawerHeader>About Neo4j</DrawerHeader>
@@ -87,16 +93,6 @@ const About = ({
               {browserVersion}
             </a>
           </p>
-          {buildNumber && (
-            <div onClick={() => copyToClipboard(buildNumber)}>
-              Build number: {buildNumber}
-            </div>
-          )}
-          {builtAt && (
-            <div onClick={() => copyToClipboard(builtAt)}>
-              Build date: {new Date(builtAt).toLocaleDateString('se')}
-            </div>
-          )}
           {serverVersion && serverEdition && (
             <p>
               Neo4j Server version:{' '}
@@ -119,6 +115,21 @@ const About = ({
               Neo4j Browser Changelog
             </a>
           </p>
+          {buildNumber && (
+            <div onClick={() => copyToClipboard(buildNumber)}>
+              Build number: {buildNumber}
+            </div>
+          )}
+          {gitHash && (
+            <div onClick={() => copyToClipboard(gitHash)}>
+              Build hash: {gitHash.slice(0, 18)}
+            </div>
+          )}
+          {builtAt && (
+            <div onClick={() => copyToClipboard(builtAt)}>
+              Build date: {new Date(builtAt).toLocaleDateString('se')}
+            </div>
+          )}
         </DrawerSectionBody>
       </DrawerSection>
       <DrawerSection>
@@ -210,7 +221,8 @@ const mapStateToProps = (state: any) => {
     serverVersion: getRawVersion(state),
     serverEdition: getEdition(state),
     builtAt: getBuiltAt(state),
-    buildNumber: getBuildNumber(state)
+    buildNumber: getBuildNumber(state),
+    gitHash: getGitHash(state)
   }
 }
 

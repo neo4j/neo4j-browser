@@ -244,7 +244,7 @@ store.dispatch(updateUdcData({ auraNtId }))
 fetch('./manifest.json')
   .then(res => res.json())
   .then(json => {
-    if (json.buildNumber || json.builtAt) {
+    if (json.buildNumber || json.gitHash || json.builtAt) {
       store.dispatch(updateBuildInfo(json))
     }
   })

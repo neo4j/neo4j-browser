@@ -62,11 +62,12 @@ module.exports = () => {
             )
 
             const mergedData = {
-              ...wantedData,
               ...JSON.parse(content),
+              ...wantedData,
               // This is so we can give better build info in the sidebar
               builtAt: new Date().toISOString(),
-              buildNumber: process.env.BUILD_NUMBER
+              buildNumber: process.env.BUILD_NUMBER,
+              gitHash: process.env.GIT_HASH
             }
             return JSON.stringify(mergedData, null, 2)
           }

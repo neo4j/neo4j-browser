@@ -56,6 +56,8 @@ export const inDesktop = (state: GlobalState): boolean =>
   getEnv(state) === DESKTOP
 export const getBuildNumber = (state: GlobalState): string | null =>
   state[NAME].buildNumber ?? null
+export const getGitHash = (state: GlobalState): string | null =>
+  state[NAME].gitHash ?? null
 export const getBuiltAt = (state: GlobalState): string | null =>
   state[NAME].builtAt ?? null
 
@@ -87,10 +89,12 @@ export const getProjectId = (state: GlobalState): string | undefined =>
 export const updateBuildInfo = (action: {
   buildNumber?: string
   builtAt?: string
+  gitHash?: string
 }) => ({
   type: UPDATE_BUILD_INFO,
   buildNumber: action.buildNumber,
-  builtAt: action.builtAt
+  builtAt: action.builtAt,
+  gitHash: action.gitHash
 })
 
 export type AppState = {
@@ -102,6 +106,7 @@ export type AppState = {
   neo4jDesktopGraphAppId?: string
   builtAt?: string | null
   buildNumber?: string | null
+  gitHash?: string | null
 }
 
 // Reducer
@@ -124,7 +129,8 @@ export default function reducer(
       return {
         ...state,
         builtAt: action.builtAt,
-        buildNumber: action.buildNumber
+        buildNumber: action.buildNumber,
+        gitHash: action.gitHash
       }
     default:
       return state
