@@ -43,7 +43,7 @@ describe('Multi database', () => {
     cy.ensureConnection()
   })
 
-  if (Cypress.config('serverVersion') >= 4.0) {
+  if (Cypress.config('serverVersion') >= 4.1) {
     if (isEnterpriseEdition()) {
       it('shows a message indicating whether system updates have occurred', () => {
         cy.executeCommand('DROP DATABASE test1 IF EXISTS')

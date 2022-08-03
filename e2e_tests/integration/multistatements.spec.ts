@@ -112,7 +112,7 @@ describe('Multi statements', () => {
       .first()
       .should('contain', 'ERROR')
   })
-  if (Cypress.config('serverVersion') >= 4.0) {
+  if (Cypress.config('serverVersion') >= 4.1) {
     if (isEnterpriseEdition()) {
       it('Can use :use command in multi-statements', () => {
         cy.executeCommand(':clear')

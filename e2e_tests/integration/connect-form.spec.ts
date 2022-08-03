@@ -113,7 +113,7 @@ describe('Connect form', () => {
       })
     }
   }
-  if (Cypress.config('serverVersion') >= 4.0) {
+  if (Cypress.config('serverVersion') >= 4.1) {
     it('can connect with the neo4j:// scheme', () => {
       cy.executeCommand(':clear')
       const boltUrl = 'neo4j://' + stripScheme(Cypress.config('boltUrl'))
