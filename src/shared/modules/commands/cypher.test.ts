@@ -80,7 +80,7 @@ describe('tx metadata with cypher', () => {
         'RETURN 1',
         {},
         expect.objectContaining({
-          txMetadata: { app: `neo4j-browser_v${version}`, type: 'user-direct' }
+          txMetadata: { app: 'neo4j-browser', version, type: 'user-direct' }
         })
       )
       done()
@@ -102,7 +102,7 @@ describe('tx metadata with cypher', () => {
         'RETURN 1',
         {},
         expect.objectContaining({
-          txMetadata: { app: `neo4j-browser_v${version}`, type: 'system' }
+          txMetadata: { app: 'neo4j-browser', version, type: 'system' }
         })
       )
       done()
