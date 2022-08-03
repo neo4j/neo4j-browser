@@ -112,7 +112,7 @@ describe('Multi statements', () => {
       .first()
       .should('contain', 'ERROR')
   })
-  if (Cypress.config('serverVersion') >= 4.0) {
+  if (Cypress.config('serverVersion') >= 4.1) {
     if (isEnterpriseEdition()) {
       it('Can use :use command in multi-statements', () => {
         cy.executeCommand(':clear')
@@ -122,25 +122,9 @@ describe('Multi statements', () => {
           'have.length',
           1
         )
-        cy.executeCommand('DROP DATABASE test1')
-        cy.executeCommand('DROP DATABASE test2')
-        cy.get('[data-testid="frame"]', { timeout: 10000 }).should(
-          'have.length',
-          3
-        )
-        cy.executeCommand(':clear')
 
-        cy.executeCommand('CREATE DATABASE test1')
-        cy.get('[data-testid="frame"]', { timeout: 10000 }).should(
-          'have.length',
-          1
-        )
-        cy.executeCommand('CREATE DATABASE test2')
-        cy.get('[data-testid="frame"]', { timeout: 10000 }).should(
-          'have.length',
-          2
-        )
-        cy.executeCommand(':clear')
+        cy.createDatabase('test1')
+        cy.createDatabase('test2')
 
         // Time to try it
         const query = ':use test1; CREATE(:Test1); :use test2; CREATE(:Test2);'
