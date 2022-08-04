@@ -256,6 +256,7 @@ export class Visualization {
       this.zoomBehavior.scaleBy(this.root, 0.7)
     } else if (zoomType === ZoomType.FIT) {
       this.zoomToFitViewport()
+      this.adjustZoomMinScaleExtentToFitGraph(1)
     }
   }
 
@@ -300,11 +301,12 @@ export class Visualization {
     return
   }
 
-  private adjustZoomMinScaleExtentToFitGraph = (): void => {
+  private adjustZoomMinScaleExtentToFitGraph = (
+    padding_factor = 0.75
+  ): void => {
     const scaleAndOffset = this.getZoomScaleFactorToFitWholeGraph()
-    const PADDING_FACTOR = 0.75
     const scaleToFitGraphWithPadding = scaleAndOffset
-      ? scaleAndOffset.scale * PADDING_FACTOR
+      ? scaleAndOffset.scale * padding_factor
       : this.zoomMinScaleExtent
     if (scaleToFitGraphWithPadding <= this.zoomMinScaleExtent) {
       this.zoomMinScaleExtent = scaleToFitGraphWithPadding
