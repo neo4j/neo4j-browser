@@ -124,6 +124,7 @@ describe('Types in Browser', () => {
       cy.resultContains('│"14:03:04"')
     })
     it('renders types in viz correctly', () => {
+      cy.executeCommand('MATCH (t:Types) DELETE t;')
       cy.executeCommand(':clear')
       const query =
         "CREATE (p:Types {{}location: point({{}crs: 'wgs-84', x: 12.78, y: 56.7}), date: duration.between(datetime('2014-07-21T21:40:36.143+0200'), date('2015-06-24'))}) RETURN p"
