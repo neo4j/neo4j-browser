@@ -142,7 +142,7 @@ export class Visualization {
       .filter(e => {
         if (e.type === 'wheel') {
           const modKeySelected = e.metaKey || e.ctrlKey || e.shiftKey
-          if (this.wheelZoomRequiresModKey && modKeySelected) {
+          if (this.wheelZoomRequiresModKey && !modKeySelected) {
             onDisplayZoomWheelInfoMessage()
             return false
           }

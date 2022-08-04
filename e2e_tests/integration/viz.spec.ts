@@ -28,11 +28,9 @@ describe('Viz rendering', () => {
   before(function () {
     cy.visit(Cypress.config('url')).title().should('include', 'Neo4j Browser')
     cy.wait(3000)
+    cy.ensureConnection()
   })
-  it('can connect', () => {
-    const password = Cypress.config('password')
-    cy.connect('neo4j', password)
-  })
+
   it('shows legend with rel types + node labels on first render', () => {
     cy.executeCommand(':clear')
     cy.executeCommand(
@@ -199,8 +197,7 @@ describe('Viz rendering', () => {
 
     // Enter fullscreen
     cy.get('article').find(`[title='Fullscreen']`).click()
-
-    cy.get(`#svg-vis`).trigger('mousewheel', { deltaY: 1000 })
+    cy.get(`#svg-vis`).trigger('wheel', { deltaY: 3000 })
 
     // zoom out limit is reached zoom so button is disabled
     cy.get(`[aria-label="zoom-out"]`).should('have.css', 'opacity', '0.3')
@@ -214,7 +211,7 @@ describe('Viz rendering', () => {
       parseSpecialCharSequences: false
     })
 
-    cy.get(`#svg-vis`).trigger('mousewheel', { deltaY: 1000 })
+    cy.get(`#svg-vis`).trigger('wheel', { deltaY: 3000 })
 
     // zoom out limit is reached zoom so button is disabled
     cy.get(`[aria-label="zoom-out"]`).should('have.css', 'opacity', '1')
@@ -225,12 +222,21 @@ describe('Viz rendering', () => {
       'CREATE (a:TestLabel)-[:CONNECTS]->(b:TestLabel) RETURN a, b'
     )
 
-    cy.get(`#svg-vis`).trigger('mousewheel', { deltaY: 1000 })
+    cy.get(`#svg-vis`).trigger('wheel', { deltaY: 3000 })
 
     cy.get('[data-testid=wheelZoomInfoCheckbox]').should('exist')
 
     cy.get('[data-testid=wheelZoomInfoCheckbox]').click()
 
     cy.get('[data-testid=wheelZoomInfoCheckbox]').should('not.exist')
+  })
+  it.only('can zoom out when holding down shift and scrolling', () => {
+    cy.executeCommand(':clear')
+    cy.executeCommand(`CREATE (a:TestLabel {name: 'testNode'}) RETURN a`, {
+      parseSpecialCharSequences: false
+    })
+
+    cy.get('#svg-vis').trigger('wheel', { deltaY: 3000, shiftKey: true })
+    cy.get(`[aria-label="zoom-out"]`).should('have.css', 'opacity', '0.3')
   })
 })
