@@ -136,6 +136,7 @@ export class Visualization {
       // For some reasons typescript complains when trying to get it by calling zoomBehaviour.wheelDelta() instead
       // but it should be the same (and indeed it works at runtime).
       // https://github.com/d3/d3-zoom/blob/1bccd3fd56ea24e9658bd7e7c24e9b89410c8967/README.md#zoom_wheelDelta
+      // Keps the zoom behavior constant for metam ctrl and shift key. Otherwise scrolling is faster with ctrl key.
       .wheelDelta(
         e => -e.deltaY * (e.deltaMode === 1 ? 0.05 : e.deltaMode ? 1 : 0.002)
       )
