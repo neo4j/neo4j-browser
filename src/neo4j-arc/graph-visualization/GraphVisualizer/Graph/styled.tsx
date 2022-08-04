@@ -128,13 +128,13 @@ export const StyledZoomButton = styled.button`
     background: ${props => props.theme.frameButtonHoverBackground};
     border-radius: 2px;
   }
-  &:active {
+  &:enabled:active {
     background: ${props => props.theme.frameButtonActiveBackground};
   }
   &:focus {
     outline: none;
   }
-  &.faded {
+  &:disabled {
     opacity: 0.3;
     cursor: auto;
   }

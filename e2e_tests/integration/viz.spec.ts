@@ -181,13 +181,13 @@ describe('Viz rendering', () => {
 
     // Multiple zoom will result in zoom reaching scale limit and the button to be disabled
     const zoomInButton = cy.get(`[aria-label="zoom-in"]`)
-    zoomInButton.click()
-    zoomInButton.click()
-    zoomInButton.click()
-    zoomInButton.click()
+    zoomInButton.click({ force: true })
+    zoomInButton.click({ force: true })
+    zoomInButton.click({ force: true })
+    zoomInButton.click({ force: true })
+    zoomInButton.click({ force: true })
 
-    // zoom in button has low opacity styling when it is disabled
-    cy.get(`[aria-label="zoom-in"]`).should('have.css', 'opacity', '0.3')
+    cy.get(`[aria-label="zoom-in"]`).should('be.disabled')
   })
   it('can zoom out with just mouse wheel in fullscreen', () => {
     cy.executeCommand(':clear')
@@ -199,8 +199,7 @@ describe('Viz rendering', () => {
     cy.get('article').find(`[title='Fullscreen']`).click()
     cy.get(`#svg-vis`).trigger('wheel', { deltaY: 3000 })
 
-    // zoom out limit is reached zoom so button is disabled
-    cy.get(`[aria-label="zoom-out"]`).should('have.css', 'opacity', '0.3')
+    cy.get(`[aria-label="zoom-out"]`).should('be.disabled')
 
     // Leave fullscreen
     cy.get('article').find(`[title='Close fullscreen']`).click()
@@ -213,8 +212,7 @@ describe('Viz rendering', () => {
 
     cy.get(`#svg-vis`).trigger('wheel', { deltaY: 3000 })
 
-    // zoom out limit is reached zoom so button is disabled
-    cy.get(`[aria-label="zoom-out"]`).should('have.css', 'opacity', '1')
+    cy.get(`[aria-label="zoom-out"]`).should('be.enabled')
   })
   it('displays wheel zoom info message which can be closed', () => {
     cy.executeCommand(':clear')

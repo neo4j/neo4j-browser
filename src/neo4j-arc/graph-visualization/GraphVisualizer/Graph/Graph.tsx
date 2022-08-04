@@ -241,14 +241,16 @@ export class Graph extends React.Component<GraphProps, GraphState> {
         <StyledZoomHolder offset={offset} isFullscreen={isFullscreen}>
           <StyledZoomButton
             aria-label={'zoom-in'}
-            className={zoomInLimitReached ? 'faded zoom-in' : 'zoom-in'}
+            className={'zoom-in'}
+            disabled={zoomInLimitReached}
             onClick={this.zoomInClicked}
           >
             <ZoomInIcon large={isFullscreen} />
           </StyledZoomButton>
           <StyledZoomButton
             aria-label={'zoom-out'}
-            className={zoomOutLimitReached ? 'faded zoom-out' : 'zoom-out'}
+            className={'zoom-out'}
+            disabled={zoomOutLimitReached}
             onClick={this.zoomOutClicked}
           >
             <ZoomOutIcon large={isFullscreen} />
