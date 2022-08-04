@@ -198,7 +198,7 @@ describe('Viz rendering', () => {
     // Enter fullscreen
     cy.get('article').find(`[title='Fullscreen']`).click()
     cy.get(`#svg-vis`).trigger('wheel', { deltaY: 3000 })
-
+    
     cy.get(`[aria-label="zoom-out"]`).should('be.disabled')
 
     // Leave fullscreen
