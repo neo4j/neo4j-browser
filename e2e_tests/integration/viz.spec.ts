@@ -228,7 +228,7 @@ describe('Viz rendering', () => {
 
     cy.get('[data-testid=wheelZoomInfoCheckbox]').should('not.exist')
   })
-  it.only('can zoom out when holding down shift and scrolling', () => {
+  it('can zoom out when holding down shift and scrolling', () => {
     cy.executeCommand(':clear')
     cy.executeCommand(`CREATE (a:TestLabel {name: 'testNode'}) RETURN a`, {
       parseSpecialCharSequences: false
