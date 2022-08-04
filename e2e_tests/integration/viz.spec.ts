@@ -215,7 +215,7 @@ describe('Viz rendering', () => {
 
     cy.get(`#svg-vis`).trigger('mousewheel', { deltaY: 1000 })
 
-    cy.get(`[aria-label="zoom-out"]`).should('be.disabled')
+    cy.get(`[aria-label="zoom-out"]`).should('be.enabled')
   })
   it('displays wheel zoom info message which can be closed', () => {
     cy.executeCommand(':clear')
