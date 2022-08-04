@@ -237,6 +237,6 @@ describe('Viz rendering', () => {
     })
 
     cy.get('#svg-vis').trigger('wheel', { deltaY: 3000, shiftKey: true })
-    cy.get(`[aria-label="zoom-out"]`).should('have.css', 'opacity', '0.3')
+    cy.get(`[aria-label="zoom-out"]`).should('be.disabled')
   })
 })
