@@ -127,7 +127,7 @@ export default function OverviewPane({
         {relTypes && visibleRelationshipKeys.length !== 0 && (
           <div>
             <PaneBodySectionHeader
-              title={'Relationship Types'}
+              title={'Relationship types'}
               numOfElementsVisible={visibleRelationshipKeys.length}
               totalNumOfElements={totalNumOfRelTypes}
             />

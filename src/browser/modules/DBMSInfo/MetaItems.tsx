@@ -155,7 +155,7 @@ const LabelItems = ({
   }
   return (
     <DrawerSection>
-      <DrawerSubHeader>Node Labels</DrawerSubHeader>
+      <DrawerSubHeader>Node labels</DrawerSubHeader>
       <DrawerSectionBody className={wrapperStyle}>
         {labelItems}
       </DrawerSectionBody>
@@ -211,7 +211,7 @@ const RelationshipItems = ({
   }
   return (
     <DrawerSection>
-      <DrawerSubHeader>Relationship Types</DrawerSubHeader>
+      <DrawerSubHeader>Relationship types</DrawerSubHeader>
       <DrawerSectionBody className={wrapperStyle}>
         {relationshipItems}
       </DrawerSectionBody>
@@ -262,7 +262,7 @@ RETURN DISTINCT "relationship" AS entity, r.${escapeCypherIdentifier(
   }
   return (
     <DrawerSection>
-      <DrawerSubHeader>Property Keys</DrawerSubHeader>
+      <DrawerSubHeader>Property keys</DrawerSubHeader>
       <DrawerSectionBody className={wrapperStyle}>
         {propertyItems}
       </DrawerSectionBody>

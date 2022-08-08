@@ -140,7 +140,7 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
       </div>
       <div
         class="sc-hiCibw nXgZj"
-        title="Collapse the Node Properties display"
+        title="Collapse the node properties display"
       >
         <svg
           aria-hidden="true"

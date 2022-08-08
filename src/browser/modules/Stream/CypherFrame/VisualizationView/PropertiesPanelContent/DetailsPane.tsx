@@ -54,7 +54,7 @@ export function DetailsPane({
     <>
       <PaneHeader>
         <PaneTitle>
-          <span>{`${upperFirst(vizItem.type)} Properties`}</span>
+          <span>{`${upperFirst(vizItem.type)} properties`}</span>
           <ClipboardCopier
             textToCopy={allItemProperties
               .map(prop => `${prop.key}: ${prop.value}`)

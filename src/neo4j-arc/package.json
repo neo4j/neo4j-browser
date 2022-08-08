@@ -1,6 +1,6 @@
 {
   "name": "@neo4j-devtools/arc",
-  "version": "0.0.30",
+  "version": "0.0.31",
   "main": "dist/neo4j-arc.js",
   "author": "Neo4j Inc.",
   "license": "GPL-3.0",
