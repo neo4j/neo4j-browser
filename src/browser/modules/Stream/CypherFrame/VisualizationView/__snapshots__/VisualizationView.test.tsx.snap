@@ -5,7 +5,7 @@ exports[`Visualization renders empty content 1`] = `<div />`;
 exports[`Visualization renders with result and escapes any HTML 1`] = `
 <div>
   <div
-    class="sc-cidDSM bJgiKu"
+    class="sc-cCcXHH jzoRmR"
   >
     <div
       class="sc-ikJyIC kpXvss"
@@ -159,55 +159,90 @@ exports[`Visualization renders with result and escapes any HTML 1`] = `
         class="sc-jJoQJp bdlJEB"
       >
         <div
-          class="sc-gWXbKe jJnEYo sc-cCcXHH iRMzhr react-resizable"
           data-testid="vizInspector"
+          style="position: relative; user-select: auto; width: 204.8px; height: 100%; box-sizing: border-box; flex-shrink: 0;"
         >
           <div
-            class="sc-hkgtus fYrIKh"
+            class="sc-gWXbKe jJnEYo"
           >
-            Overview
-          </div>
-          <div
-            class="sc-bSqaIl bqEILb"
-          >
-            <div>
-              <div
-                class="sc-iWBNLc iyniyo"
-              >
-                <span
-                  class="sc-edERGn jhjrMc"
-                >
-                  Node labels
-                </span>
-              </div>
-              <ul
-                class="sc-gIBqdA sc-dSfdvi ebPuUL fukQJW"
-              >
-                <div
-                  class="sc-dkPtRN sc-hKwDye jYhbHV gKvrSp"
-                  data-testid="property-details-overview-node-label-*"
-                  style="background-color: rgb(165, 171, 182); color: rgb(255, 255, 255);"
-                >
-                  * (1)
-                </div>
-                <div
-                  class="sc-dkPtRN sc-hKwDye jYhbHV gKvrSp"
-                  data-testid="property-details-overview-node-label-Person"
-                  style="background-color: rgb(201, 144, 192); color: rgb(255, 255, 255);"
-                >
-                  Person (1)
-                </div>
-              </ul>
+            <div
+              class="sc-jivBlf KkpTO"
+            >
+              Overview
             </div>
             <div
-              style="padding-bottom: 10px;"
+              class="sc-hkgtus bkjDMV"
             >
-              Displaying 1 nodes, 0 relationships.
+              <div>
+                <div
+                  class="sc-jlsrNB UKmYq"
+                >
+                  <span
+                    class="sc-jvvksu gdhUQk"
+                  >
+                    Node labels
+                  </span>
+                </div>
+                <ul
+                  class="sc-djWRfJ sc-tAExr fqkQTE tpipq"
+                >
+                  <div
+                    class="sc-dkPtRN sc-hKwDye jYhbHV gKvrSp"
+                    data-testid="property-details-overview-node-label-*"
+                    style="background-color: rgb(165, 171, 182); color: rgb(255, 255, 255);"
+                  >
+                    * (1)
+                  </div>
+                  <div
+                    class="sc-dkPtRN sc-hKwDye jYhbHV gKvrSp"
+                    data-testid="property-details-overview-node-label-Person"
+                    style="background-color: rgb(201, 144, 192); color: rgb(255, 255, 255);"
+                  >
+                    Person (1)
+                  </div>
+                </ul>
+              </div>
+              <div
+                style="padding-bottom: 10px;"
+              >
+                Displaying 1 nodes, 0 relationships.
+              </div>
             </div>
           </div>
-          <span
-            class="react-resizable-handle react-resizable-handle-w"
-          />
+          <div>
+            <div
+              class=""
+              style="position: absolute; user-select: none; width: 100%; height: 10px; top: -5px; left: 0px; cursor: row-resize;"
+            />
+            <div
+              class=""
+              style="position: absolute; user-select: none; width: 10px; height: 100%; top: 0px; cursor: col-resize; right: -5px;"
+            />
+            <div
+              class=""
+              style="position: absolute; user-select: none; width: 100%; height: 10px; left: 0px; cursor: row-resize; bottom: -5px;"
+            />
+            <div
+              class=""
+              style="position: absolute; user-select: none; width: 10px; height: 100%; top: 0px; left: -5px; cursor: col-resize;"
+            />
+            <div
+              class=""
+              style="position: absolute; user-select: none; width: 20px; height: 20px; right: -10px; top: -10px; cursor: ne-resize;"
+            />
+            <div
+              class=""
+              style="position: absolute; user-select: none; width: 20px; height: 20px; right: -10px; bottom: -10px; cursor: se-resize;"
+            />
+            <div
+              class=""
+              style="position: absolute; user-select: none; width: 20px; height: 20px; left: -10px; bottom: -10px; cursor: sw-resize;"
+            />
+            <div
+              class=""
+              style="position: absolute; user-select: none; width: 20px; height: 20px; left: -10px; top: -10px; cursor: nw-resize;"
+            />
+          </div>
         </div>
       </div>
     </div>

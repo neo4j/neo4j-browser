@@ -156,10 +156,15 @@ export const StyledCommand = styled(DrawerBrowserCommand)`
 `
 
 export const StyledCarousel = styled.div`
-  height: 100%;
-  padding-bottom: 50px;
   width: 100%;
   outline: none;
+  flex: 1;
+  overflow: auto;
+
+  div:first-child {
+    overflow: auto;
+    max-height: calc(100% - 50px);
+  }
 
   .row {
     margin-left: 0;
@@ -221,10 +226,11 @@ export const GuideUl = styled.ul`
 `
 
 export const StyledGuideDrawer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
   min-height: 100vh;
   position: relative;
-  width: ${LARGE_DRAWER_WIDTH}px;
-  /* width is set to avoid squashing during opening animation */
 `
 
 export const StyledGuideDrawerHeader = styled.h4`
@@ -254,9 +260,10 @@ export const BackIconContainer = styled.span`
 `
 
 export const GuideNavContainer = styled.div`
-  position: fixed;
+  position: absolute;
   bottom: 0;
-  left: 60px;
+  left: 0;
+  right: 0;
 
   color: ${props => props.theme.secondaryButtonText};
   background-color: ${dark.secondaryBackground};
@@ -266,8 +273,6 @@ export const GuideNavContainer = styled.div`
   justify-content: space-between;
 
   height: 40px;
-  width: 500px;
-  max-width: 500px;
   padding: 0 18px;
 
   z-index: 10;
