@@ -90,8 +90,8 @@ export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
           onClick={toggleExpanded}
           title={
             expanded
-              ? 'Collapse the Node Properties display'
-              : 'Expand the Node Properties display'
+              ? 'Collapse the node properties display'
+              : 'Expand the node properties display'
           }
         >
           {expanded ? <ChevronRightIcon /> : <ChevronLeftIcon />}
