@@ -67,6 +67,13 @@ export const EditorContainer = styled.div`
   min-width: 0;
   width: 0; // needed to prevent the editor from growing the text field
   min-width: 0;
+
+  /*  The monaco editor calculates width of the line number based on the max width of the digits 0-9 and no other characters.
+      This causes the line number to sometime line-break, nowrap fixes this.
+      The calculation also makes the line sometime be too long which makes the indent of the line number too large. */
+  & .active-line-number {
+    white-space: nowrap;
+  }
 `
 
 export const FlexContainer = styled.div`
