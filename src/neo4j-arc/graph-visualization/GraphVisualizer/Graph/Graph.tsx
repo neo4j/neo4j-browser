@@ -144,9 +144,7 @@ export class Graph extends React.Component<GraphProps, GraphState> {
     this.visualization.resize(isFullscreen, !!wheelZoomRequiresModKey)
     if (initialZoomToFit) {
       this.visualization.endInitCallback = () => {
-        setTimeout(() => {
-          this.visualization?.zoomByType(ZoomType.FIT)
-        }, 150)
+        this.visualization?.zoomByType(ZoomType.FIT)
       }
     }
     this.visualization.init()

@@ -301,6 +301,7 @@ LIMIT ${maxNewNeighbours}`
           DetailsPaneOverride={DetailsPane}
           OverviewPaneOverride={OverviewPane}
           useGeneratedDefaultColors={false}
+          initialZoomToFit={true}
         />
       </StyledVisContainer>
     )

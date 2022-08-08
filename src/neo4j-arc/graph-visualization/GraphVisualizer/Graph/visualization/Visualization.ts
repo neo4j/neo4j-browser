@@ -63,6 +63,7 @@ export class Visualization {
     string,
     undefined | Array<(...args: any[]) => void>
   > = {}
+  private waitForInitialSimulationInterval: number | null = null
 
   forceSimulation: ForceSimulation
 
@@ -158,6 +159,11 @@ export class Visualization {
       .on('dblclick.zoom', null)
 
     this.forceSimulation = new ForceSimulation(this.render.bind(this))
+  }
+
+  componentWillUnmount(): void {
+    this.waitForInitialSimulationInterval &&
+      clearInterval(this.waitForInitialSimulationInterval)
   }
 
   private render() {
@@ -321,7 +327,7 @@ export class Visualization {
     callbacksForEvent.forEach(callback => callback.apply(null, args))
   }
 
-  init(): void {
+  async init(): Promise<void> {
     this.container
       .selectAll('g.layer')
       .data(['relationships', 'nodes'])
@@ -333,6 +339,20 @@ export class Visualization {
     this.forceSimulation.precompute()
 
     this.adjustZoomMinScaleExtentToFitGraph()
+
+    //Wait for initial simulation before calling callback
+    await new Promise<void>(resolve => {
+      this.waitForInitialSimulationInterval = setInterval(() => {
+        if (
+          this.forceSimulation.simulation.alpha() <
+          this.forceSimulation.simulation.alphaMin()
+        ) {
+          this.waitForInitialSimulationInterval &&
+            clearInterval(this.waitForInitialSimulationInterval)
+          resolve()
+        }
+      }, 100)
+    })
 
     this.endInitCallback && this.endInitCallback()
     this.endInitCallback = null
