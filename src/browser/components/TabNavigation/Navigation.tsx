@@ -175,9 +175,9 @@ class Navigation extends Component<NavigationProps, NavigationState> {
 
     const drawerIsVisible = this.state.transitionState !== Closed
 
-    const guide_drawer_selected =
+    const guideDrawerSelected =
       this.props.selectedDrawerName === GUIDE_DRAWER_ID
-    const drawerWidth = guide_drawer_selected
+    const drawerWidth = guideDrawerSelected
       ? this.state.guideWidth
       : STANDARD_DRAWER_WIDTH
     const useFullWidth =
@@ -193,7 +193,7 @@ class Navigation extends Component<NavigationProps, NavigationState> {
         </StyledTabsWrapper>
 
         <Resizable
-          minWidth={guide_drawer_selected ? STANDARD_DRAWER_WIDTH : 0}
+          minWidth={guideDrawerSelected ? STANDARD_DRAWER_WIDTH : 0}
           maxWidth={'70vw'}
           size={{ width: width, height: '100%' }}
           onResizeStop={(_e, _direction, _ref, d) => {
@@ -201,7 +201,7 @@ class Navigation extends Component<NavigationProps, NavigationState> {
           }}
           enable={{
             top: false,
-            right: guide_drawer_selected,
+            right: guideDrawerSelected,
             bottom: false,
             left: false,
             topRight: false,
