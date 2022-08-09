@@ -32,9 +32,9 @@ import DefaultOverviewPane, {
 import {
   PaneContainer,
   StyledNodeInspectorTopMenuChevron,
-  panelMinWidth,
-  StyledResizable
+  panelMinWidth
 } from './styled'
+import { Resizable } from 're-resizable'
 import { GraphStats } from '../utils/mapper'
 import { GraphStyleModel } from '../models/GraphStyle'
 import { VizItem } from '../types'
@@ -98,12 +98,16 @@ export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
         </StyledNodeInspectorTopMenuChevron>
 
         <NodeInspectorDrawer width={width} isOpen={expanded}>
-          <StyledResizable
-            width={width}
+          <Resizable
+            size={{
+              width: width,
+              height: '100%'
+            }}
+            onResize={(_e, _direction, ref, _d) => {
+              const width = Number.parseInt(ref.style.width.slice(0, -2))
+              setWidth(width)
+            }}
             data-testid="vizInspector"
-            height={300 /*doesn't matter but required prop */}
-            resizeHandles={['w']}
-            onResize={(_e, { size }) => setWidth(size.width)}
           >
             <PaneContainer paneWidth={width}>
               {shownEl.type === 'node' || shownEl.type === 'relationship' ? (
@@ -131,7 +135,7 @@ export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
                 />
               )}
             </PaneContainer>
-          </StyledResizable>
+          </Resizable>
         </NodeInspectorDrawer>
       </>
     )
