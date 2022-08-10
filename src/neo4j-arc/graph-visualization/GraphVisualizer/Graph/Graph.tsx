@@ -81,6 +81,7 @@ type GraphState = {
 export class Graph extends React.Component<GraphProps, GraphState> {
   svgElement: React.RefObject<SVGSVGElement>
   visualization: Visualization | null = null
+  onResize: () => void
 
   constructor(props: GraphProps) {
     super(props)
@@ -90,6 +91,14 @@ export class Graph extends React.Component<GraphProps, GraphState> {
       displayingWheelZoomInfoMessage: false
     }
     this.svgElement = React.createRef()
+    this.onResize = (() => {
+      if (this.visualization) {
+        this.visualization.resize(
+          this.props.isFullscreen,
+          !!this.props.wheelZoomRequiresModKey
+        )
+      }
+    }).bind(this)
   }
 
   componentDidMount(): void {
@@ -170,6 +179,8 @@ export class Graph extends React.Component<GraphProps, GraphState> {
     if (assignVisElement) {
       assignVisElement(this.svgElement.current, this.visualization)
     }
+
+    window.addEventListener('resize', this.onResize, false)
   }
 
   componentDidUpdate(prevProps: GraphProps): void {
@@ -183,6 +194,10 @@ export class Graph extends React.Component<GraphProps, GraphState> {
     if (this.props.styleVersion !== prevProps.styleVersion) {
       this.visualization?.init()
     }
+  }
+
+  componentWillUnmount(): void {
+    window.removeEventListener('resize', this.onResize, false)
   }
 
   handleZoomEvent = (limitsReached: ZoomLimitsReached): void => {
