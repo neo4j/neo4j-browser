@@ -80,6 +80,8 @@ type GraphState = {
 
 export class Graph extends React.Component<GraphProps, GraphState> {
   svgElement: React.RefObject<SVGSVGElement>
+  wrapperElement: React.RefObject<HTMLDivElement>
+  wrapperResizeObserver: ResizeObserver
   visualization: Visualization | null = null
   onResize: () => void
 
@@ -91,6 +93,7 @@ export class Graph extends React.Component<GraphProps, GraphState> {
       displayingWheelZoomInfoMessage: false
     }
     this.svgElement = React.createRef()
+    this.wrapperElement = React.createRef()
     this.onResize = (() => {
       if (this.visualization) {
         this.visualization.resize(
@@ -180,7 +183,14 @@ export class Graph extends React.Component<GraphProps, GraphState> {
       assignVisElement(this.svgElement.current, this.visualization)
     }
 
-    window.addEventListener('resize', this.onResize, false)
+    this.wrapperResizeObserver = new ResizeObserver((entries, observer) => {
+      this.visualization.resize(
+        this.props.isFullscreen,
+        !!this.props.wheelZoomRequiresModKey
+      )
+    })
+
+    this.wrapperResizeObserver.observe(this.svgElement.current)
   }
 
   componentDidUpdate(prevProps: GraphProps): void {
@@ -197,7 +207,7 @@ export class Graph extends React.Component<GraphProps, GraphState> {
   }
 
   componentWillUnmount(): void {
-    window.removeEventListener('resize', this.onResize, false)
+    this.wrapperResizeObserver.disconnect()
   }
 
   handleZoomEvent = (limitsReached: ZoomLimitsReached): void => {
@@ -251,7 +261,7 @@ export class Graph extends React.Component<GraphProps, GraphState> {
       displayingWheelZoomInfoMessage
     } = this.state
     return (
-      <StyledSvgWrapper>
+      <StyledSvgWrapper ref={this.wrapperElement}>
         <svg className="neod3viz" ref={this.svgElement} />
         <StyledZoomHolder offset={offset} isFullscreen={isFullscreen}>
           <StyledZoomButton
