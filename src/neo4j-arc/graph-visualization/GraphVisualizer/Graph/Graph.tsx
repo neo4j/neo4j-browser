@@ -83,7 +83,6 @@ export class Graph extends React.Component<GraphProps, GraphState> {
   wrapperElement: React.RefObject<HTMLDivElement>
   wrapperResizeObserver: ResizeObserver
   visualization: Visualization | null = null
-  onResize: () => void
 
   constructor(props: GraphProps) {
     super(props)
@@ -94,14 +93,6 @@ export class Graph extends React.Component<GraphProps, GraphState> {
     }
     this.svgElement = React.createRef()
     this.wrapperElement = React.createRef()
-    this.onResize = (() => {
-      if (this.visualization) {
-        this.visualization.resize(
-          this.props.isFullscreen,
-          !!this.props.wheelZoomRequiresModKey
-        )
-      }
-    }).bind(this)
   }
 
   componentDidMount(): void {
@@ -184,6 +175,9 @@ export class Graph extends React.Component<GraphProps, GraphState> {
     }
 
     this.wrapperResizeObserver = new ResizeObserver((entries, observer) => {
+      if (!this.visualization) {
+        return
+      }
       this.visualization.resize(
         this.props.isFullscreen,
         !!this.props.wheelZoomRequiresModKey
