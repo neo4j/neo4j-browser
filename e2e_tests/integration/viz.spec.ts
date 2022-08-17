@@ -154,6 +154,10 @@ describe('Viz rendering', () => {
       parseSpecialCharSequences: false
     })
 
+    const zoomOutButton = cy.get(`[aria-label="zoom-out"]`)
+    zoomOutButton.click({ force: true })
+    cy.wait(1000)
+
     // Check that zoom in button increases the size of the node in the graph view
     cy.get('svg')
       .find(`[aria-label^="graph-node"]`)
@@ -164,7 +168,7 @@ describe('Viz rendering', () => {
 
         const zoomInButton = cy.get(`[aria-label="zoom-in"]`)
         zoomInButton.click()
-
+        cy.wait(1000)
         cy.get('svg')
           .find(`[aria-label^="graph-node"]`)
           .then($el => $el[0].getBoundingClientRect().width)
@@ -198,7 +202,7 @@ describe('Viz rendering', () => {
     // Enter fullscreen
     cy.get('article').find(`[title='Fullscreen']`).click()
     cy.get(`#svg-vis`).trigger('wheel', { deltaY: 3000 })
-    
+
     cy.get(`[aria-label="zoom-out"]`).should('be.disabled')
 
     // Leave fullscreen
