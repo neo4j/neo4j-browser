@@ -48,6 +48,7 @@ import {
 import { Visualization } from './visualization/Visualization'
 import { WheelZoomInfoOverlay } from './WheelZoomInfoOverlay'
 import { StyledSvgWrapper, StyledZoomButton, StyledZoomHolder } from './styled'
+import { ResizeObserver } from '@juggle/resize-observer'
 
 export type GraphProps = {
   isFullscreen: boolean
@@ -93,6 +94,16 @@ export class Graph extends React.Component<GraphProps, GraphState> {
     }
     this.svgElement = React.createRef()
     this.wrapperElement = React.createRef()
+
+    this.wrapperResizeObserver = new ResizeObserver((_entries, _observer) => {
+      if (!this.visualization) {
+        return
+      }
+      this.visualization.resize(
+        this.props.isFullscreen,
+        !!this.props.wheelZoomRequiresModKey
+      )
+    })
   }
 
   componentDidMount(): void {
@@ -173,16 +184,6 @@ export class Graph extends React.Component<GraphProps, GraphState> {
     if (assignVisElement) {
       assignVisElement(this.svgElement.current, this.visualization)
     }
-
-    this.wrapperResizeObserver = new ResizeObserver((entries, observer) => {
-      if (!this.visualization) {
-        return
-      }
-      this.visualization.resize(
-        this.props.isFullscreen,
-        !!this.props.wheelZoomRequiresModKey
-      )
-    })
 
     this.wrapperResizeObserver.observe(this.svgElement.current)
   }
