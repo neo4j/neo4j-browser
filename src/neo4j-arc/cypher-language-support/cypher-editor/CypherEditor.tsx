@@ -105,6 +105,8 @@ export class CypherEditor extends React.Component<
 
   constructor(props: CypherEditorProps) {
     super(props)
+
+    // Wrapped in requestAnimationFrame to avoid the error "ResizeObserver loop limit exceeded"
     this.resizeObserver = new ResizeObserver(() => {
       window.requestAnimationFrame(() => {
         this.editor?.layout()
