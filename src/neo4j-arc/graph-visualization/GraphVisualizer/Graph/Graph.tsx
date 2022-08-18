@@ -48,6 +48,7 @@ import {
 import { Visualization } from './visualization/Visualization'
 import { WheelZoomInfoOverlay } from './WheelZoomInfoOverlay'
 import { StyledSvgWrapper, StyledZoomButton, StyledZoomHolder } from './styled'
+import { ResizeObserver } from '@juggle/resize-observer'
 
 export type GraphProps = {
   isFullscreen: boolean
@@ -80,6 +81,8 @@ type GraphState = {
 
 export class Graph extends React.Component<GraphProps, GraphState> {
   svgElement: React.RefObject<SVGSVGElement>
+  wrapperElement: React.RefObject<HTMLDivElement>
+  wrapperResizeObserver: ResizeObserver
   visualization: Visualization | null = null
 
   constructor(props: GraphProps) {
@@ -90,6 +93,14 @@ export class Graph extends React.Component<GraphProps, GraphState> {
       displayingWheelZoomInfoMessage: false
     }
     this.svgElement = React.createRef()
+    this.wrapperElement = React.createRef()
+
+    this.wrapperResizeObserver = new ResizeObserver(() => {
+      this.visualization?.resize(
+        this.props.isFullscreen,
+        !!this.props.wheelZoomRequiresModKey
+      )
+    })
   }
 
   componentDidMount(): void {
@@ -170,6 +181,8 @@ export class Graph extends React.Component<GraphProps, GraphState> {
     if (assignVisElement) {
       assignVisElement(this.svgElement.current, this.visualization)
     }
+
+    this.wrapperResizeObserver.observe(this.svgElement.current)
   }
 
   componentDidUpdate(prevProps: GraphProps): void {
@@ -183,6 +196,10 @@ export class Graph extends React.Component<GraphProps, GraphState> {
     if (this.props.styleVersion !== prevProps.styleVersion) {
       this.visualization?.init()
     }
+  }
+
+  componentWillUnmount(): void {
+    this.wrapperResizeObserver.disconnect()
   }
 
   handleZoomEvent = (limitsReached: ZoomLimitsReached): void => {
@@ -236,7 +253,7 @@ export class Graph extends React.Component<GraphProps, GraphState> {
       displayingWheelZoomInfoMessage
     } = this.state
     return (
-      <StyledSvgWrapper>
+      <StyledSvgWrapper ref={this.wrapperElement}>
         <svg className="neod3viz" ref={this.svgElement} />
         <StyledZoomHolder offset={offset} isFullscreen={isFullscreen}>
           <StyledZoomButton

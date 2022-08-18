@@ -99,9 +99,20 @@ export class CypherEditor extends React.Component<
     currentHistoryIndex: UNRUN_CMD_HISTORY_INDEX,
     draft: ''
   }
-
+  resizeObserver: ResizeObserver
   editor?: monaco.editor.IStandaloneCodeEditor
   container?: HTMLElement
+
+  constructor(props: CypherEditorProps) {
+    super(props)
+
+    // Wrapped in requestAnimationFrame to avoid the error "ResizeObserver loop limit exceeded"
+    this.resizeObserver = new ResizeObserver(() => {
+      window.requestAnimationFrame(() => {
+        this.editor?.layout()
+      })
+    })
+  }
 
   static defaultProps = cypherEditorDefaultProps
 
@@ -383,13 +394,7 @@ export class CypherEditor extends React.Component<
       this.resize(this.props.isFullscreen)
     )
 
-    const resizeObserver = new ResizeObserver(() => {
-      // Wrapped in requestAnimationFrame to avoid the error "ResizeObserver loop limit exceeded"
-      window.requestAnimationFrame(() => {
-        this.editor?.layout()
-      })
-    })
-    resizeObserver.observe(this.container)
+    this.resizeObserver.observe(this.container)
 
     /*
      * This moves the the command palette widget out of of the overflow-guard div where overlay widgets
@@ -443,5 +448,6 @@ export class CypherEditor extends React.Component<
   componentWillUnmount = (): void => {
     this.editor?.dispose()
     this.debouncedUpdateCode?.cancel()
+    this.resizeObserver.disconnect()
   }
 }
