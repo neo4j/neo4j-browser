@@ -277,6 +277,7 @@ LIMIT ${maxNewNeighbours}`
           updateStyle={this.props.updateStyle}
           getNeighbours={this.getNeighbours.bind(this)}
           nodes={this.state.nodes}
+          autocompleteRelationships={this.props.autoComplete ?? false}
           relationships={this.state.relationships}
           isFullscreen={this.props.isFullscreen}
           assignVisElement={this.props.assignVisElement}
@@ -301,6 +302,7 @@ LIMIT ${maxNewNeighbours}`
           DetailsPaneOverride={DetailsPane}
           OverviewPaneOverride={OverviewPane}
           useGeneratedDefaultColors={false}
+          initialZoomToFit
         />
       </StyledVisContainer>
     )

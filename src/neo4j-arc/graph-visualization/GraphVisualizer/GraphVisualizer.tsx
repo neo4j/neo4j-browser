@@ -84,6 +84,7 @@ type GraphVisualizerProps = GraphVisualizerDefaultProps & {
   OverviewPaneOverride?: React.FC<OverviewPaneProps>
   onGraphInteraction?: GraphInteractionCallBack
   useGeneratedDefaultColors?: boolean
+  autocompleteRelationships: boolean
 }
 
 type GraphVisualizerState = {
@@ -265,6 +266,7 @@ export class GraphVisualizer extends Component<
           onGraphModelChange={this.onGraphModelChange.bind(this)}
           assignVisElement={this.props.assignVisElement}
           getAutoCompleteCallback={this.props.getAutoCompleteCallback}
+          autocompleteRelationships={this.props.autocompleteRelationships}
           setGraph={this.props.setGraph}
           offset={
             (this.state.nodePropertiesExpanded ? this.state.width + 8 : 0) + 8

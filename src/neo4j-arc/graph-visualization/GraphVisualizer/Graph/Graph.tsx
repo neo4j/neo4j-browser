@@ -61,6 +61,7 @@ export type GraphProps = {
   styleVersion: number
   onGraphModelChange: (stats: GraphStats) => void
   assignVisElement: (svgElement: any, graphElement: any) => void
+  autocompleteRelationships: boolean
   getAutoCompleteCallback: (
     callback: (internalRelationships: BasicRelationship[]) => void
   ) => void
@@ -105,20 +106,21 @@ export class Graph extends React.Component<GraphProps, GraphState> {
 
   componentDidMount(): void {
     const {
-      nodes,
-      relationships,
-      graphStyle,
+      assignVisElement,
+      autocompleteRelationships,
+      getAutoCompleteCallback,
       getNodeNeighbours,
+      graphStyle,
+      initialZoomToFit,
+      isFullscreen,
+      nodes,
+      onGraphInteraction,
+      onGraphModelChange,
       onItemMouseOver,
       onItemSelect,
-      onGraphModelChange,
-      onGraphInteraction,
+      relationships,
       setGraph,
-      getAutoCompleteCallback,
-      assignVisElement,
-      isFullscreen,
-      wheelZoomRequiresModKey,
-      initialZoomToFit
+      wheelZoomRequiresModKey
     } = this.props
 
     if (!this.svgElement.current) return
@@ -137,7 +139,8 @@ export class Graph extends React.Component<GraphProps, GraphState> {
       graph,
       graphStyle,
       isFullscreen,
-      wheelZoomRequiresModKey
+      wheelZoomRequiresModKey,
+      initialZoomToFit
     )
 
     const graphEventHandler = new GraphEventHandlerModel(
@@ -153,30 +156,28 @@ export class Graph extends React.Component<GraphProps, GraphState> {
 
     onGraphModelChange(getGraphStats(graph))
     this.visualization.resize(isFullscreen, !!wheelZoomRequiresModKey)
-    if (initialZoomToFit) {
-      this.visualization.endInitCallback = () => {
-        setTimeout(() => {
-          this.visualization?.zoomByType(ZoomType.FIT)
-        }, 150)
-      }
-    }
-    this.visualization.init()
 
     if (setGraph) {
       setGraph(graph)
     }
-    if (getAutoCompleteCallback) {
+    if (autocompleteRelationships) {
       getAutoCompleteCallback((internalRelationships: BasicRelationship[]) => {
+        this.visualization?.init()
         graph.addInternalRelationships(
           mapRelationships(internalRelationships, graph)
         )
         onGraphModelChange(getGraphStats(graph))
         this.visualization?.update({
           updateNodes: false,
-          updateRelationships: true
+          updateRelationships: true,
+          restartSimulation: false
         })
+        this.visualization?.precomputeAndStart()
         graphEventHandler.onItemMouseOut()
       })
+    } else {
+      this.visualization?.init()
+      this.visualization?.precomputeAndStart()
     }
     if (assignVisElement) {
       assignVisElement(this.svgElement.current, this.visualization)

@@ -70,17 +70,17 @@ export class Visualization {
   // 'canvasClick' event when panning ends.
   private draw = false
   private isZoomClick = false
-  public endInitCallback: null | (() => void) = null
 
   constructor(
     element: SVGElement,
     private measureSize: MeasureSizeFn,
-    private onZoomEvent: (limitsReached: ZoomLimitsReached) => void,
-    private onDisplayZoomWheelInfoMessage: () => void,
+    onZoomEvent: (limitsReached: ZoomLimitsReached) => void,
+    onDisplayZoomWheelInfoMessage: () => void,
     private graph: GraphModel,
     public style: GraphStyleModel,
     public isFullscreen: boolean,
-    public wheelZoomRequiresModKey?: boolean
+    public wheelZoomRequiresModKey?: boolean,
+    private initialZoomToFit?: boolean
   ) {
     this.root = d3Select(element)
 
@@ -330,12 +330,23 @@ export class Visualization {
 
     this.updateNodes()
     this.updateRelationships()
-    this.forceSimulation.precompute()
 
     this.adjustZoomMinScaleExtentToFitGraph()
+    this.setInitialZoom()
+  }
 
-    this.endInitCallback && this.endInitCallback()
-    this.endInitCallback = null
+  setInitialZoom(): void {
+    const count = this.graph.nodes().length
+
+    // chosen by *feel* (graph fitting guesstimate)
+    const scale = -0.02364554 + 1.913 / (1 + (count / 12.7211) ** 0.8156444)
+    this.zoomBehavior.scaleBy(this.root, Math.max(0, scale))
+  }
+
+  precomputeAndStart(): void {
+    this.forceSimulation.precomputeAndStart(
+      () => this.initialZoomToFit && this.zoomByType(ZoomType.FIT)
+    )
   }
 
   update(options: {

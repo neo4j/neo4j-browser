@@ -36,8 +36,8 @@ import {
   FORCE_COLLIDE_RADIUS,
   FORCE_LINK_DISTANCE,
   LINK_DISTANCE,
-  PRECOMPUTED_TICKS,
-  TICKS_PER_RENDER,
+  MAX_PRECOMPUTED_TICKS,
+  EXTRA_TICKS_PER_RENDER,
   VELOCITY_DECAY
 } from '../../../constants'
 import { GraphModel } from '../../../models/Graph'
@@ -52,14 +52,15 @@ export class ForceSimulation {
   simulation: Simulation<NodeModel, RelationshipModel>
   simulationTimeout: null | number = null
 
-  constructor(private render: () => void) {
+  constructor(render: () => void) {
     this.simulation = forceSimulation<NodeModel, RelationshipModel>()
       .velocityDecay(VELOCITY_DECAY)
       .force('charge', forceManyBody().strength(FORCE_CHARGE))
       .force('centerX', forceX(0).strength(FORCE_CENTER_X))
       .force('centerY', forceY(0).strength(FORCE_CENTER_Y))
+      .alphaMin(DEFAULT_ALPHA_MIN)
       .on('tick', () => {
-        this.simulation.tick(TICKS_PER_RENDER)
+        this.simulation.tick(EXTRA_TICKS_PER_RENDER)
         render()
       })
       .stop()
@@ -91,12 +92,26 @@ export class ForceSimulation {
     )
   }
 
-  precompute(): void {
-    this.simulation.stop().tick(PRECOMPUTED_TICKS)
-    this.render()
+  precomputeAndStart(onEnd: () => void = () => undefined): void {
+    this.simulation.stop()
+
+    let precomputeTicks = 0
+    const start = performance.now()
+    while (
+      performance.now() - start < 250 &&
+      precomputeTicks < MAX_PRECOMPUTED_TICKS
+    ) {
+      this.simulation.tick(1)
+      precomputeTicks += 1
+      if (this.simulation.alpha() <= this.simulation.alphaMin()) {
+        break
+      }
+    }
+
+    this.simulation.restart().on('end', onEnd)
   }
 
   restart(): void {
-    this.simulation.alphaMin(DEFAULT_ALPHA_MIN).alpha(DEFAULT_ALPHA).restart()
+    this.simulation.alpha(DEFAULT_ALPHA).restart()
   }
 }
