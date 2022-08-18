@@ -95,11 +95,8 @@ export class Graph extends React.Component<GraphProps, GraphState> {
     this.svgElement = React.createRef()
     this.wrapperElement = React.createRef()
 
-    this.wrapperResizeObserver = new ResizeObserver((_entries, _observer) => {
-      if (!this.visualization) {
-        return
-      }
-      this.visualization.resize(
+    this.wrapperResizeObserver = new ResizeObserver(() => {
+      this.visualization?.resize(
         this.props.isFullscreen,
         !!this.props.wheelZoomRequiresModKey
       )
