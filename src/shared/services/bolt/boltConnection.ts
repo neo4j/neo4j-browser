@@ -69,7 +69,7 @@ export const validateConnection = (
       })
       const txFn = buildTxFunctionByMode(session)
       txFn &&
-        txFn(tx => tx.run('CALL db.indexes()'), {
+        txFn(tx => tx.run('CALL db.info()'), {
           metadata: backgroundTxMetadata.txMetadata
         })
           .then(() => {
