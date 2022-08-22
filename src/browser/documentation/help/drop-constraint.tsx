@@ -49,27 +49,30 @@ const content = (
         </p>
       </div>
     </div>
-    <p>On neo4j version 4 and later</p>
     <section className="example">
+      <p>On neo4j version 4 and later</p>
       <figure>
-        <pre className="code runnable standalone-example">
-          DROP CONSTRAINT ConstraintName
-        </pre>
-        <figcaption>
-          Drop the unique constraint and index on the label Person and property
-          name.
-        </figcaption>
-      </figure>
-    </section>
-    <p>On neo4j version 3.X</p>
-    <section className="example">
-      <figure>
-        <pre className="code runnable standalone-example">SHOW CONSTRAINTS</pre>
         <pre className="code runnable standalone-example">
           DROP CONSTRAINT ConstraintName
         </pre>
         <figcaption>
           Drop the constraint named <code>ConstraintName</code>.
+        </figcaption>
+      </figure>
+      <figure>
+        <pre className="code runnable standalone-example">SHOW CONSTRAINTS</pre>
+        <figcaption>Show all constraints.</figcaption>
+      </figure>
+    </section>
+    <section className="example">
+      <p>On neo4j version 3.X</p>
+      <figure>
+        <pre className="code runnable standalone-example">
+          DROP CONSTRAINT ON (p:Person) ASSERT p.name IS UNIQUE
+        </pre>
+        <figcaption>
+          Drop the unique constraint and index on the label Person and property
+          name.
         </figcaption>
       </figure>
     </section>

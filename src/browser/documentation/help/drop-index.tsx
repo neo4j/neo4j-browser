@@ -51,19 +51,26 @@ const content = (
       </div>
     </div>
     <section className="example">
+      <p>On neo4j version 4 and later</p>
       <figure>
-        <p>On neo4j version 4 and later</p>
-        <pre className="code runnable standalone-example">SHOW INDEXES</pre>
         <pre className="code runnable standalone-example">
           DROP INDEX IndexName
-        </pre>
-        <p>On neo4j version 3.X</p>
-        <pre className="code runnable standalone-example">
-          DROP INDEX ON :Person(name)
         </pre>
         <figcaption>
           Drop the index named <code>IndexName</code>.
         </figcaption>
+      </figure>
+      <figure>
+        <pre className="code runnable standalone-example">SHOW INDEXES</pre>
+        <figcaption>Show all indexes.</figcaption>
+      </figure>
+    </section>
+    <section className="example">
+      <p>On neo4j version 3.X</p>
+      <figure>
+        <pre className="code runnable standalone-example">
+          DROP INDEX ON :Person(name)
+        </pre>
       </figure>
     </section>
   </>

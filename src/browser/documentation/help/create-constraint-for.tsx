@@ -54,12 +54,12 @@ const content = (
         </div>
       </div>
     </div>
-    <p>On neo4j version 4.4 and later</p>
     <section className="example">
+      <p>On neo4j version 4.4 and later</p>
       <figure>
         <pre className="code runnable standalone-example">
-          CREATE CONSTRAINT [optionalName] FOR (p:Person) REQUIRE p.name IS
-          UNIQUE
+          CREATE CONSTRAINT [optionalConstraintName] FOR (p:Person) REQUIRE
+          p.name IS UNIQUE
         </pre>
         <figcaption>
           Create a unique property constraint on the label Person and property
@@ -70,8 +70,8 @@ const content = (
     <section className="example">
       <figure>
         <pre className="code runnable standalone-example">
-          CREATE CONSTRAINT [optionalName] FOR (p:Person) REQUIRE p.name IS NOT
-          NULL
+          CREATE CONSTRAINT [optionalConstraintName] FOR (p:Person) REQUIRE
+          p.name IS NOT NULL
         </pre>
         <figcaption>
           Create a node property existence constraint on the label Person and
@@ -82,8 +82,8 @@ const content = (
     <section className=" example">
       <figure>
         <pre className="code runnable standalone-example">
-          CREATE CONSTRAINT [optionalName] FOR ()-[l:LIKED]-() REQUIRE l.when IS
-          NOT NULL
+          CREATE CONSTRAINT [optionalConstraintName] FOR ()-[l:LIKED]-() REQUIRE
+          l.when IS NOT NULL
         </pre>
         <figcaption>
           Create a relationship property existence constraint on the type LIKED
@@ -91,8 +91,8 @@ const content = (
         </figcaption>
       </figure>
     </section>
-    <p>On neo4j version 4.3 and earlier</p>
     <section className="example">
+      <p>On neo4j version 4.3 and earlier</p>
       <figure>
         <pre className="code runnable standalone-example">
           CREATE CONSTRAINT ON (p:Person) ASSERT p.name IS UNIQUE

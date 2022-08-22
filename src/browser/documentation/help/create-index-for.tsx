@@ -28,7 +28,7 @@ const content = (
   <>
     <p>
       The <code>CREATE INDEX FOR</code> clause will create and populate an index
-      on a property for all nodes that have a label.
+      on a property for all nodes that have a certain label.
     </p>
     <div className="links">
       <div className="link">
@@ -52,12 +52,19 @@ const content = (
       </div>
     </div>
     <section className="example">
+      <p>On neo4j version 4 and later</p>
       <figure>
-        <p>On neo4j version 4 and later</p>
         <pre className="code runnable standalone-example">
-          CREATE INDEX [optionalName] FOR (p:Person) ON (p.name)
+          CREATE INDEX [optionalIndexName] FOR (p:Person) ON (p.name)
         </pre>
-        <p>On neo4j version 3.X</p>
+        <figcaption>
+          Create index on name for all nodes with a Person label.
+        </figcaption>
+      </figure>
+    </section>
+    <section className="example">
+      <p>On neo4j version 3.X</p>
+      <figure>
         <pre className="code runnable standalone-example">
           CREATE INDEX ON :Person(name)
         </pre>
