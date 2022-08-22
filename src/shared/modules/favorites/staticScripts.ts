@@ -38,8 +38,11 @@ export const scripts = [
   {
     folder: 'basics',
     not_executable: true,
-    content:
-      "// Create an index\n// Replace:\n//   'LabelName' with label to index\n//   'propertyKey' with property to be indexed\nCREATE INDEX ON :<LabelName>(<propertyKey>)",
+    content: `// Create an index
+// Replace:
+//   'LabelName' with label to index
+//   'propertyKey' with property to be indexed
+CREATE INDEX ON :<LabelName>(<propertyKey>)`,
     versionRange: '>=3 <4'
   },
   {

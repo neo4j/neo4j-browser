@@ -21,13 +21,13 @@ import React from 'react'
 
 import ManualLink from 'browser-components/ManualLink'
 
-const title = 'CREATE INDEX ON'
+const title = 'CREATE INDEX FOR'
 const subtitle = 'Index labeled nodes by property'
 const category = 'schemaClauses'
 const content = (
   <>
     <p>
-      The <code>CREATE INDEX ON</code> clause will create and populate an index
+      The <code>CREATE INDEX FOR</code> clause will create and populate an index
       on a property for all nodes that have a label.
     </p>
     <div className="links">

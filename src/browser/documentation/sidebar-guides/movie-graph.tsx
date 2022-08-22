@@ -632,7 +632,7 @@ const slides = [
     <hr />
     <p>
       <a help-topic="help">:help</a> <a help-topic="cypher">cypher</a>{' '}
-      <a help-topic="create-index-on">CREATE INDEX FOR</a>
+      <a help-topic="create-index-for">CREATE INDEX FOR</a>
     </p>
   </BuiltInGuideSidebarSlide>,
   <BuiltInGuideSidebarSlide key="s5">

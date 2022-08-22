@@ -46,7 +46,7 @@ const content = (
       <div className="link">
         <p className="title">Related</p>
         <p className="content">
-          <a help-topic="create-index-on">:help CREATE INDEX ON</a>
+          <a help-topic="create-index-for">:help CREATE INDEX FOR</a>
           <a help-topic="cypher">:help Cypher</a>
         </p>
       </div>

@@ -33,7 +33,7 @@ import helpContains from './help/contains'
 import helpCreate from './help/create'
 import helpCreateConstraintOn from './help/create-constraint-on'
 import helpCreateDatabase from './help/create-database'
-import helpCreateIndexOn from './help/create-index-on'
+import helpCreateIndexFor from './help/create-index-for'
 import helpCreateRole from './help/create-role'
 import helpCreateUser from './help/create-user'
 import helpDelete from './help/delete'
@@ -185,7 +185,7 @@ type CypherChapter =
   | 'create'
   | 'createConstraintOn'
   | 'createDatabase'
-  | 'createIndexOn'
+  | 'createIndexFor'
   | 'createRole'
   | 'createUser'
   | 'delete'
@@ -280,7 +280,7 @@ const docs: AllDocumentation = {
       create: helpCreate,
       createConstraintOn: helpCreateConstraintOn,
       createDatabase: helpCreateDatabase,
-      createIndexOn: helpCreateIndexOn,
+      createIndexFor: helpCreateIndexFor,
       createRole: helpCreateRole,
       createUser: helpCreateUser,
       delete: helpDelete,
