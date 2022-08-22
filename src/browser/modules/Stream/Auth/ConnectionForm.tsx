@@ -141,6 +141,12 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
       },
       (res: any) => {
         if (res.success) {
+          //If credentials should not be stored, remove them from form
+          if (!this.props.storeCredentials)
+            this.setState({
+              username: '',
+              password: ''
+            })
           doneFn()
           this.saveAndStart()
         } else {
