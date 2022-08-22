@@ -36,7 +36,7 @@ const content = (
         <p className="content">
           <ManualLink
             chapter="cypher-manual"
-            page="/administration/indexes-for-search-performance/"
+            page="/indexes-for-search-performance/"
           >
             Indexes for search performance
           </ManualLink>{' '}

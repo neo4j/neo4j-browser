@@ -31,7 +31,7 @@ import helpBoltRouting from './help/bolt-routing'
 import helpClear from './help/clear'
 import helpContains from './help/contains'
 import helpCreate from './help/create'
-import helpCreateConstraintOn from './help/create-constraint-on'
+import helpCreateConstraintFor from './help/create-constraint-for'
 import helpCreateDatabase from './help/create-database'
 import helpCreateIndexFor from './help/create-index-for'
 import helpCreateRole from './help/create-role'
@@ -39,7 +39,7 @@ import helpCreateUser from './help/create-user'
 import helpDelete from './help/delete'
 import helpDeny from './help/deny'
 import helpDetachDelete from './help/detach-delete'
-import helpDropConstraintOn from './help/drop-constraint-on'
+import helpDropConstraint from './help/drop-constraint'
 import helpDropDatabase from './help/drop-database'
 import helpDropIndex from './help/drop-index'
 import helpDropRole from './help/drop-role'
@@ -183,7 +183,7 @@ type CypherChapter =
   | 'alterUser'
   | 'contains'
   | 'create'
-  | 'createConstraintOn'
+  | 'createConstraintFor'
   | 'createDatabase'
   | 'createIndexFor'
   | 'createRole'
@@ -191,7 +191,7 @@ type CypherChapter =
   | 'delete'
   | 'deny'
   | 'detachDelete'
-  | 'dropConstraintOn'
+  | 'dropConstraint'
   | 'dropDatabase'
   | 'dropIndex'
   | 'dropRole'
@@ -278,7 +278,7 @@ const docs: AllDocumentation = {
       alterUser: helpAlterUser,
       contains: helpContains,
       create: helpCreate,
-      createConstraintOn: helpCreateConstraintOn,
+      createConstraintFor: helpCreateConstraintFor,
       createDatabase: helpCreateDatabase,
       createIndexFor: helpCreateIndexFor,
       createRole: helpCreateRole,
@@ -286,7 +286,7 @@ const docs: AllDocumentation = {
       delete: helpDelete,
       deny: helpDeny,
       detachDelete: helpDetachDelete,
-      dropConstraintOn: helpDropConstraintOn,
+      dropConstraint: helpDropConstraint,
       dropDatabase: helpDropDatabase,
       dropIndex: helpDropIndex,
       dropRole: helpDropRole,

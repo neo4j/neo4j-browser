@@ -21,24 +21,20 @@ import React from 'react'
 
 import ManualLink from 'browser-components/ManualLink'
 
-const title = 'DROP CONSTRAINT ON'
+const title = 'DROP CONSTRAINT'
 const subtitle =
   'Drops a property constraint on a node label or relationship type'
 const category = 'schemaClauses'
 const content = (
   <>
     <p>
-      The <code>DROP CONSTRAINT ON</code> clause will delete a property
-      constraint
+      The <code>DROP CONSTRAINT</code> clause will delete a property constraint
     </p>
     <div className="links">
       <div className="link">
         <p className="title">Reference</p>
         <p className="content">
-          <ManualLink
-            chapter="cypher-manual"
-            page="/administration/constraints/"
-          >
+          <ManualLink chapter="cypher-manual" page="/constraints/">
             Constraints
           </ManualLink>{' '}
           manual page
@@ -47,20 +43,33 @@ const content = (
       <div className="link">
         <p className="title">Related</p>
         <p className="content">
-          <a help-topic="drop-constraint-on">:help CREATE CONSTRAINT ON</a>{' '}
+          <a help-topic="create-constraint-for">:help CREATE CONSTRAINT FOR</a>{' '}
           <a help-topic="schema">:help Schema</a>{' '}
           <a help-topic="cypher">:help Cypher</a>
         </p>
       </div>
     </div>
+    <p>On neo4j version 4 and later</p>
     <section className="example">
       <figure>
         <pre className="code runnable standalone-example">
-          DROP CONSTRAINT ON (p:Person) ASSERT p.name IS UNIQUE
+          DROP CONSTRAINT ConstraintName
         </pre>
         <figcaption>
           Drop the unique constraint and index on the label Person and property
           name.
+        </figcaption>
+      </figure>
+    </section>
+    <p>On neo4j version 3.X</p>
+    <section className="example">
+      <figure>
+        <pre className="code runnable standalone-example">SHOW CONSTRAINTS</pre>
+        <pre className="code runnable standalone-example">
+          DROP CONSTRAINT ConstraintName
+        </pre>
+        <figcaption>
+          Drop the constraint named <code>ConstraintName</code>.
         </figcaption>
       </figure>
     </section>

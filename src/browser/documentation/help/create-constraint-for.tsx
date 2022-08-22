@@ -21,14 +21,14 @@ import React from 'react'
 
 import ManualLink from 'browser-components/ManualLink'
 
-const title = 'CREATE CONSTRAINT ON'
+const title = 'CREATE CONSTRAINT FOR'
 const subtitle =
   'Create a property constraint on a node label or relationship type'
 const category = 'schemaClauses'
 const content = (
   <>
     <p>
-      The <code>CREATE CONSTRAINT ON</code> clause will create a property
+      The <code>CREATE CONSTRAINT FOR</code> clause will create a property
       constraint on all nodes/relationships that have the specified label/type.
     </p>
     <p>
@@ -39,10 +39,7 @@ const content = (
       <div className="link">
         <p className="title">Reference</p>
         <p className="content">
-          <ManualLink
-            chapter="cypher-manual"
-            page="/administration/constraints/"
-          >
+          <ManualLink chapter="cypher-manual" page="/constraints/">
             Constraints
           </ManualLink>{' '}
           manual page
@@ -51,12 +48,50 @@ const content = (
       <div className="link">
         <div className="title">Related</div>
         <div className="content">
-          <a help-topic="drop-constraint-on">:help DROP CONSTRAINT ON</a>{' '}
+          <a help-topic="drop-constraint">:help DROP CONSTRAINT</a>{' '}
           <a help-topic="schema">:help Schema</a>{' '}
           <a help-topic="cypher">:help Cypher</a>
         </div>
       </div>
     </div>
+    <p>On neo4j version 4.4 and later</p>
+    <section className="example">
+      <figure>
+        <pre className="code runnable standalone-example">
+          CREATE CONSTRAINT [optionalName] FOR (p:Person) REQUIRE p.name IS
+          UNIQUE
+        </pre>
+        <figcaption>
+          Create a unique property constraint on the label Person and property
+          name.
+        </figcaption>
+      </figure>
+    </section>
+    <section className="example">
+      <figure>
+        <pre className="code runnable standalone-example">
+          CREATE CONSTRAINT [optionalName] FOR (p:Person) REQUIRE p.name IS NOT
+          NULL
+        </pre>
+        <figcaption>
+          Create a node property existence constraint on the label Person and
+          property name.
+        </figcaption>
+      </figure>
+    </section>
+    <section className=" example">
+      <figure>
+        <pre className="code runnable standalone-example">
+          CREATE CONSTRAINT [optionalName] FOR ()-[l:LIKED]-() REQUIRE l.when IS
+          NOT NULL
+        </pre>
+        <figcaption>
+          Create a relationship property existence constraint on the type LIKED
+          and property when.
+        </figcaption>
+      </figure>
+    </section>
+    <p>On neo4j version 4.3 and earlier</p>
     <section className="example">
       <figure>
         <pre className="code runnable standalone-example">

@@ -35,7 +35,7 @@ const content = (
         <p className="content">
           <ManualLink
             chapter="cypher-manual"
-            page="/administration/indexes-for-search-performance/"
+            page="/indexes-for-search-performance/"
           >
             Indexes for search performance
           </ManualLink>{' '}
@@ -55,14 +55,14 @@ const content = (
         <p>On neo4j version 4 and later</p>
         <pre className="code runnable standalone-example">SHOW INDEXES</pre>
         <pre className="code runnable standalone-example">
-          DROP INDEX indexName
+          DROP INDEX IndexName
         </pre>
         <p>On neo4j version 3.X</p>
         <pre className="code runnable standalone-example">
           DROP INDEX ON :Person(name)
         </pre>
         <figcaption>
-          Drop an index named <code>indexName</code>
+          Drop the index named <code>IndexName</code>.
         </figcaption>
       </figure>
     </section>
