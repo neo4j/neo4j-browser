@@ -65,23 +65,10 @@ function renderWithRedux(children: JSX.Element) {
 const mockEmptyResult = {
   records: []
 }
-const node = new (neo4j.types.Node as any)('1', ['Person'], {
-  prop1: '<b>String</b> with HTML <strong>in</strong> it'
-})
-const mockResult = {
-  records: [{ keys: ['0'], __fields: [node], get: (_key: any) => node }]
-}
 
 test('Visualization renders empty content', () => {
   const { container } = renderWithRedux(
     <Visualization {...mockVizProps({ result: mockEmptyResult })} />
-  )
-  expect(container).toMatchSnapshot()
-})
-
-test('Visualization renders with result and escapes any HTML', () => {
-  const { container } = renderWithRedux(
-    <Visualization {...mockVizProps({ result: mockResult })} />
   )
   expect(container).toMatchSnapshot()
 })
