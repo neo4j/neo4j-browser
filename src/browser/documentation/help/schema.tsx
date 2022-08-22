@@ -40,7 +40,7 @@ const content = (
         <p className="title">Related</p>
         <p className="content">
           <a help-topic="create-index-for">:help CREATE INDEX FOR</a>
-          <a help-topic="drop-index-on">:help DROP INDEX ON</a>
+          <a help-topic="drop-index">:help DROP INDEX</a>
           <a help-topic="create-constraint-on">:help CREATE CONSTRAINT ON</a>
           <a help-topic="drop-constraint-on">:help DROP CONSTRAINT ON</a>
         </p>

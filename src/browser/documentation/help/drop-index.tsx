@@ -21,14 +21,13 @@ import React from 'react'
 
 import ManualLink from 'browser-components/ManualLink'
 
-const title = 'DROP INDEX ON'
+const title = 'DROP INDEX'
 const subtitle = 'Drop a schema index'
 const category = 'schemaClauses'
 const content = (
   <>
     <p>
-      The <code>DROP INDEX ON</code> clause will an index on all nodes that have
-      a label.
+      The <code>DROP INDEX</code> clause will drop an index using its name.
     </p>
     <div className="links">
       <div className="link">
@@ -52,8 +51,19 @@ const content = (
       </div>
     </div>
     <section className="example">
-      <figure className="runnable">
-        <pre>DROP INDEX ON :Person(name)</pre>
+      <figure>
+        <p>On neo4j version 4 and later</p>
+        <pre className="code runnable standalone-example">SHOW INDEXES</pre>
+        <pre className="code runnable standalone-example">
+          DROP INDEX indexName
+        </pre>
+        <p>On neo4j version 3.X</p>
+        <pre className="code runnable standalone-example">
+          DROP INDEX ON :Person(name)
+        </pre>
+        <figcaption>
+          Drop an index named <code>indexName</code>
+        </figcaption>
       </figure>
     </section>
   </>

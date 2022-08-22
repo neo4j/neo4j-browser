@@ -46,14 +46,14 @@ const content = (
       <div className="link">
         <p className="title">Related</p>
         <p className="content">
-          <a help-topic="drop-index-on">:help DROP INDEX ON</a>{' '}
+          <a help-topic="drop-index">:help DROP INDEX</a>{' '}
           <a help-topic="cypher">:help Cypher</a>
         </p>
       </div>
     </div>
     <section className="example">
       <figure>
-        <p>On neo4j version 4.X</p>
+        <p>On neo4j version 4 and later</p>
         <pre className="code runnable standalone-example">
           CREATE INDEX [optionalName] FOR (p:Person) ON (p.name)
         </pre>

@@ -41,7 +41,7 @@ import helpDeny from './help/deny'
 import helpDetachDelete from './help/detach-delete'
 import helpDropConstraintOn from './help/drop-constraint-on'
 import helpDropDatabase from './help/drop-database'
-import helpDropIndexOn from './help/drop-index-on'
+import helpDropIndex from './help/drop-index'
 import helpDropRole from './help/drop-role'
 import helpDropUser from './help/drop-user'
 import helpEndsWith from './help/ends-with'
@@ -193,7 +193,7 @@ type CypherChapter =
   | 'detachDelete'
   | 'dropConstraintOn'
   | 'dropDatabase'
-  | 'dropIndexOn'
+  | 'dropIndex'
   | 'dropRole'
   | 'dropUser'
   | 'endsWith'
@@ -288,7 +288,7 @@ const docs: AllDocumentation = {
       detachDelete: helpDetachDelete,
       dropConstraintOn: helpDropConstraintOn,
       dropDatabase: helpDropDatabase,
-      dropIndexOn: helpDropIndexOn,
+      dropIndex: helpDropIndex,
       dropRole: helpDropRole,
       dropUser: helpDropUser,
       endsWith: helpEndsWith,
