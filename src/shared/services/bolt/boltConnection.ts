@@ -49,6 +49,38 @@ export const hasMultiDbSupport = async (): Promise<boolean> => {
   return supportsMultiDb
 }
 
+const validateConnectionFallback = (
+  driver: Driver,
+  res: (driver: Driver) => void,
+  rej: (error?: any) => void,
+  multiDbSupport: boolean
+): void => {
+  const session = driver.session({
+    defaultAccessMode: neo4j.session.READ,
+    database: multiDbSupport ? 'system' : undefined
+  })
+  const txFn = buildTxFunctionByMode(session)
+  txFn &&
+    txFn(tx => tx.run('CALL db.indexes()'), {
+      metadata: backgroundTxMetadata.txMetadata
+    })
+      .then(() => {
+        session.close()
+        res(driver)
+      })
+      .catch((e: { code: string; message: string }) => {
+        session.close()
+        // Only invalidate the connection if not available
+        // or not authed
+        // or credentials have expired
+        if (!e.code || isBoltConnectionErrorCode(e.code)) {
+          rej(e)
+        } else {
+          res(driver)
+        }
+      })
+}
+
 export const validateConnection = (
   driver: Driver | null,
   res: (driver: Driver) => void,
@@ -69,7 +101,7 @@ export const validateConnection = (
       })
       const txFn = buildTxFunctionByMode(session)
       txFn &&
-        txFn(tx => tx.run('CALL db.info()'), {
+        txFn(tx => tx.run('SHOW PROCEDURES LIMIT 1'), {
           metadata: backgroundTxMetadata.txMetadata
         })
           .then(() => {
@@ -84,7 +116,9 @@ export const validateConnection = (
             if (!e.code || isBoltConnectionErrorCode(e.code)) {
               rej(e)
             } else {
-              res(driver)
+              // if connection could not be validated using SHOW PROCEDURES then try using
+              // CALL db.indexes()
+              validateConnectionFallback(driver, res, rej, multiDbSupport)
             }
           })
     })
