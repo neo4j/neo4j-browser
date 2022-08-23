@@ -24,28 +24,31 @@ import { Bus } from 'suber'
 import { throttle } from 'services/utils'
 import { USER_INTERACTION } from 'shared/modules/userInteraction/userInteractionDuck'
 
-const reportInteraction = (bus: any) => {
+const reportInteraction = (bus: Bus, action: 'keyup' | 'click' | 'scroll') => {
   if (!bus) return
-  bus.send(USER_INTERACTION)
+  bus.send(USER_INTERACTION, action)
 }
-const throttledReportInteraction = throttle(reportInteraction, 5000)
+const throttledReportInteraction: (
+  bus: Bus,
+  action: 'keyup' | 'click' | 'scroll'
+) => void = throttle(reportInteraction, 5000)
 
 export class UserInteraction extends Component<{ bus: Bus }> {
   componentDidMount() {
     document.addEventListener('keyup', () =>
-      throttledReportInteraction(this.props.bus)
+      throttledReportInteraction(this.props.bus, 'keyup')
     )
     document.addEventListener('click', () =>
-      throttledReportInteraction(this.props.bus)
+      throttledReportInteraction(this.props.bus, 'click')
     )
   }
 
   componentWillUnmount() {
     document.removeEventListener('keyup', () =>
-      throttledReportInteraction(this.props.bus)
+      throttledReportInteraction(this.props.bus, 'keyup')
     )
     document.removeEventListener('click', () =>
-      throttledReportInteraction(this.props.bus)
+      throttledReportInteraction(this.props.bus, 'click')
     )
   }
 

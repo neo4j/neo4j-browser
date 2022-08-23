@@ -80,6 +80,7 @@ import {
 } from '../cypher/functionsAndProceduresHelper'
 import { isInt, Record } from 'neo4j-driver'
 import { gte } from 'semver'
+import { USER_INTERACTION } from '../userInteraction/userInteractionDuck'
 
 async function databaseList(store: any) {
   try {
@@ -407,6 +408,11 @@ export const serverConfigEpic = (some$: any, store: any) =>
             updateUserCapability(USER_CAPABILITIES.serverConfigReadable, true)
           )
           store.dispatch(updateSettings(settings))
+
+          if (!store.getState().meta.serverConfigDone) {
+            store.dispatch({ type: USER_INTERACTION })
+          }
+
           return Rx.Observable.of(null)
         })
     })
