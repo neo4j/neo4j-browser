@@ -101,7 +101,7 @@ export const validateConnection = (
       //Can be any query, is used use to validate the connection and to get an error code if user has expired crdentails for example.
       //This query works for version 4.3 and above. For older versions, use the fallback function.
       session
-        .readTransaction(tx => tx.run('SHOW PROCEDURES LIMIT 1'), {
+        .readTransaction(tx => tx.run('SHOW PROCEDURES'), {
           metadata: backgroundTxMetadata.txMetadata
         })
         .then(() => {
