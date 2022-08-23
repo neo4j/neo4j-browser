@@ -108,7 +108,10 @@ export class ForceSimulation {
       }
     }
 
-    this.simulation.restart().on('end', onEnd)
+    this.simulation.restart().on('end', () => {
+      onEnd()
+      this.simulation.on('end', null)
+    })
   }
 
   restart(): void {
