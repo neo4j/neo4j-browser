@@ -22,14 +22,14 @@ import React from 'react'
 import ManualLink from 'browser-components/ManualLink'
 import VersionConditionalDoc from 'browser-components/VersionConditionalDoc'
 
-const title = 'CREATE CONSTRAINT FOR'
+const title = 'CREATE CONSTRAINT'
 const subtitle =
   'Create a property constraint on a node label or relationship type'
 const category = 'schemaClauses'
 const content = (
   <>
     <p>
-      The <code>CREATE CONSTRAINT FOR</code> clause will create a property
+      The <code>CREATE CONSTRAINT</code> clause will create a property
       constraint on all nodes/relationships that have the specified label/type.
     </p>
     <p>

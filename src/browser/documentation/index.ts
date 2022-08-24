@@ -31,9 +31,9 @@ import helpBoltRouting from './help/bolt-routing'
 import helpClear from './help/clear'
 import helpContains from './help/contains'
 import helpCreate from './help/create'
-import helpCreateConstraintFor from './help/create-constraint-for'
+import helpCreateConstraint from './help/create-constraint'
 import helpCreateDatabase from './help/create-database'
-import helpCreateIndexFor from './help/create-index-for'
+import helpCreateIndex from './help/create-index'
 import helpCreateRole from './help/create-role'
 import helpCreateUser from './help/create-user'
 import helpDelete from './help/delete'
@@ -183,9 +183,9 @@ type CypherChapter =
   | 'alterUser'
   | 'contains'
   | 'create'
-  | 'createConstraintFor'
+  | 'createConstraint'
   | 'createDatabase'
-  | 'createIndexFor'
+  | 'createIndex'
   | 'createRole'
   | 'createUser'
   | 'delete'
@@ -278,9 +278,9 @@ const docs: AllDocumentation = {
       alterUser: helpAlterUser,
       contains: helpContains,
       create: helpCreate,
-      createConstraintFor: helpCreateConstraintFor,
+      createConstraint: helpCreateConstraint,
       createDatabase: helpCreateDatabase,
-      createIndexFor: helpCreateIndexFor,
+      createIndex: helpCreateIndex,
       createRole: helpCreateRole,
       createUser: helpCreateUser,
       delete: helpDelete,

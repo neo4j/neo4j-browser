@@ -47,7 +47,7 @@ const content = (
       <div className="link">
         <p className="title">Related</p>
         <p className="content">
-          <a help-topic="create-constraint-for">:help CREATE CONSTRAINT FOR</a>{' '}
+          <a help-topic="create-constraint">:help CREATE CONSTRAINT</a>{' '}
           <a help-topic="schema">:help Schema</a>{' '}
           <a help-topic="cypher">:help Cypher</a>
         </p>

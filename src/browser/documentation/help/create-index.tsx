@@ -22,14 +22,14 @@ import React from 'react'
 import ManualLink from 'browser-components/ManualLink'
 import VersionConditionalDoc from 'browser-components/VersionConditionalDoc'
 
-const title = 'CREATE INDEX FOR'
+const title = 'CREATE INDEX'
 const subtitle = 'Index labeled nodes by property'
 const category = 'schemaClauses'
 const content = (
   <>
     <p>
-      The <code>CREATE INDEX FOR</code> clause will create and populate an index
-      on a property for all nodes that have a certain label.
+      The <code>CREATE INDEX</code> clause will create and populate an index on
+      a property for all nodes that have a certain label.
     </p>
     <div className="links">
       <div className="link">
