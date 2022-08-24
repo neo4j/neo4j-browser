@@ -90,15 +90,43 @@ const Indexes = ({ indexes, neo4jVersion }: IndexesProps) => {
   )
 }
 
-const Constraints = ({ constraints }: any) => {
-  const rows = constraints.map((constraint: any) => [
-    replace(constraint.description, 'CONSTRAINT', '')
-  ])
+const Constraints = ({
+  constraints,
+  neo4jVersion
+}: {
+  constraints: any
+  neo4jVersion: string
+}) => {
+  let rows = []
+  let header = []
+
+  if (semver.valid(neo4jVersion) && semver.satisfies(neo4jVersion, '<4.2.*')) {
+    rows = constraints.map((constraint: any) => [
+      replace(constraint.description, 'CONSTRAINT', '')
+    ])
+    header = ['Constraints']
+  } else {
+    rows = constraints.map((constraint: any) => [
+      constraint.name,
+      constraint.type,
+      constraint.entityType,
+      JSON.stringify(constraint.labelsOrTypes, null, 2),
+      JSON.stringify(constraint.properties, null, 2)
+    ])
+
+    header = [
+      'Constraint Name',
+      'Type',
+      'EntityType',
+      'LabelsOrTypes',
+      'Properties'
+    ]
+  }
 
   return (
     <SchemaTable
       testid="schemaFrameConstraintsTable"
-      header={['Constraints']}
+      header={header}
       rows={rows}
     />
   )
@@ -139,7 +167,7 @@ const SchemaTable = ({ testid, header, rows }: any) => {
 type SchemaFrameState = any
 
 export class SchemaFrame extends Component<any, SchemaFrameState> {
-  constructor(props: {}) {
+  constructor(props: { neo4jVersion: string }) {
     super(props)
     this.state = {
       indexes: [],
@@ -163,13 +191,17 @@ export class SchemaFrame extends Component<any, SchemaFrameState> {
     }
   }
 
-  fetchData() {
+  fetchData(neo4jVersion: string) {
     if (this.props.bus) {
       // Indexes
       this.props.bus.self(
         CYPHER_REQUEST,
         {
-          query: 'CALL db.indexes()',
+          query:
+            semver.valid(neo4jVersion) &&
+            semver.satisfies(neo4jVersion, '<4.2.*')
+              ? 'CALL db.indexes()'
+              : 'SHOW INDEXES',
           queryType: NEO4J_BROWSER_USER_ACTION_QUERY
         },
         this.responseHandler('indexes')
@@ -178,7 +210,11 @@ export class SchemaFrame extends Component<any, SchemaFrameState> {
       this.props.bus.self(
         CYPHER_REQUEST,
         {
-          query: 'CALL db.constraints()',
+          query:
+            semver.valid(neo4jVersion) &&
+            semver.satisfies(neo4jVersion, '<4.2.*')
+              ? 'CALL db.constraints()'
+              : 'SHOW CONSTRAINTS',
           queryType: NEO4J_BROWSER_USER_ACTION_QUERY
         },
         this.responseHandler('constraints')
@@ -186,7 +222,7 @@ export class SchemaFrame extends Component<any, SchemaFrameState> {
     }
   }
   componentDidMount() {
-    this.fetchData()
+    this.fetchData(this.props.neo4jVersion)
     if (this.props.indexes) {
       this.responseHandler('indexes')(this.props.indexes)
     }
@@ -200,11 +236,11 @@ export class SchemaFrame extends Component<any, SchemaFrameState> {
       this.props.frame &&
       this.props.frame.schemaRequestId !== prevProps.frame.schemaRequestId
     ) {
-      this.fetchData()
+      this.fetchData(this.props.neo4jVersion)
     }
   }
 
-  render() {
+  render(): JSX.Element {
     const { neo4jVersion } = this.props
     const { indexes, constraints } = this.state
     const schemaCommand =
@@ -215,7 +251,7 @@ export class SchemaFrame extends Component<any, SchemaFrameState> {
     const frame = (
       <Slide>
         <Indexes indexes={indexes} neo4jVersion={neo4jVersion} />
-        <Constraints constraints={constraints} />
+        <Constraints constraints={constraints} neo4jVersion={neo4jVersion} />
         <br />
         <p className="lead">
           Execute the following command to visualize what's related, and how
