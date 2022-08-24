@@ -80,7 +80,7 @@ import {
 } from '../cypher/functionsAndProceduresHelper'
 import { isInt, Record } from 'neo4j-driver'
 import { gte } from 'semver'
-import { FAKED_USER_INTERACTION } from '../userInteraction/userInteractionDuck'
+import { triggerCredentialsTimeout } from '../credentialsPolicy/credentialsPolicyDuck'
 
 async function databaseList(store: any) {
   try {
@@ -409,8 +409,8 @@ export const serverConfigEpic = (some$: any, store: any) =>
           )
           store.dispatch(updateSettings(settings))
           if (!store.getState().meta.serverConfigDone) {
-            // Send a faked user interaction, since the settings have just been read from the server for the first time.
-            store.dispatch({ type: FAKED_USER_INTERACTION })
+            // Trigger a credentials timeout since the settings have just been read from the server for the first time and might be different from the defaults.
+            store.dispatch(triggerCredentialsTimeout())
           }
 
           return Rx.Observable.of(null)
