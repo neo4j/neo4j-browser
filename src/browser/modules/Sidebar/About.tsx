@@ -23,6 +23,7 @@ import { connect } from 'react-redux'
 import {
   Drawer,
   DrawerBody,
+  DrawerExternalLink,
   DrawerFooter,
   DrawerHeader,
   DrawerSection,
@@ -62,9 +63,9 @@ const About = ({ serverVersion, serverEdition }: AboutProps) => (
       <DrawerSection>
         <DrawerSubHeader>
           Made by{' '}
-          <a target="_blank" rel="noreferrer" href="http://neo4j.com/">
+          <DrawerExternalLink href="http://neo4j.com/">
             Neo4j, Inc
-          </a>
+          </DrawerExternalLink>
         </DrawerSubHeader>
       </DrawerSection>
       <DrawerSection>
@@ -77,35 +78,25 @@ const About = ({ serverVersion, serverEdition }: AboutProps) => (
         <DrawerSectionBody>
           <p>
             Neo4j Browser version:{' '}
-            <a
+            <DrawerExternalLink
               href={`https://github.com/neo4j/neo4j-browser/releases/tag/${browserVersion}`}
-              target="_blank"
-              rel="noreferrer"
             >
               {browserVersion}
-            </a>
+            </DrawerExternalLink>
           </p>
           {serverVersion && serverEdition && (
             <p>
               Neo4j Server version:{' '}
-              <a
-                target="_blank"
-                rel="noreferrer"
-                href={asChangeLogUrl(serverVersion)}
-              >
+              <DrawerExternalLink href={asChangeLogUrl(serverVersion)}>
                 {serverVersion}
-              </a>{' '}
+              </DrawerExternalLink>{' '}
               ({serverEdition})
             </p>
           )}
           <p>
-            <a
-              href="https://github.com/neo4j/neo4j-browser/wiki/changelog"
-              target="_blank"
-              rel="noreferrer"
-            >
+            <DrawerExternalLink href="https://github.com/neo4j/neo4j-browser/wiki/changelog">
               Neo4j Browser Changelog
-            </a>
+            </DrawerExternalLink>
           </p>
           {__BUILD_NUMBER__ && (
             <div onClick={() => copyToClipboard(__BUILD_NUMBER__)}>
@@ -127,29 +118,17 @@ const About = ({ serverVersion, serverEdition }: AboutProps) => (
       <DrawerSection>
         <DrawerSubHeader>License</DrawerSubHeader>
         <DrawerSectionBody>
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href="http://www.gnu.org/licenses/gpl.html"
-          >
+          <DrawerExternalLink href="http://www.gnu.org/licenses/gpl.html">
             GPLv3
-          </a>{' '}
+          </DrawerExternalLink>{' '}
           or{' '}
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href="http://www.gnu.org/licenses/agpl-3.0.html"
-          >
+          <DrawerExternalLink href="http://www.gnu.org/licenses/agpl-3.0.html">
             AGPL
-          </a>{' '}
+          </DrawerExternalLink>{' '}
           for Open Source, and{' '}
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href="https://neo4j.com/licensing/"
-          >
+          <DrawerExternalLink href="https://neo4j.com/licensing/">
             NTCL
-          </a>{' '}
+          </DrawerExternalLink>{' '}
           Commercial.
         </DrawerSectionBody>
       </DrawerSection>
@@ -157,45 +136,33 @@ const About = ({ serverVersion, serverEdition }: AboutProps) => (
         <DrawerSubHeader>Participate</DrawerSubHeader>
         <DrawerSectionBody>
           Discuss on{' '}
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href="https://community.neo4j.com/"
-          >
+          <DrawerExternalLink href="https://community.neo4j.com/">
             Neo4j Community Forum
-          </a>{' '}
+          </DrawerExternalLink>{' '}
           <br />
           Ask questions at{' '}
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href="http://stackoverflow.com/questions/tagged/neo4j"
-          >
+          <DrawerExternalLink href="http://stackoverflow.com/questions/tagged/neo4j">
             Stack Overflow
-          </a>
+          </DrawerExternalLink>
           <br />
           Visit a local{' '}
-          <a target="_blank" rel="noreferrer" href="http://neo4j.meetup.com/">
+          <DrawerExternalLink href="http://neo4j.meetup.com/">
             Meetup Group
-          </a>
+          </DrawerExternalLink>
           <br />
           Contribute code to{' '}
-          <a target="_blank" rel="noreferrer" href="http://github.com/neo4j">
+          <DrawerExternalLink href="http://github.com/neo4j">
             Neo4j
-          </a>{' '}
+          </DrawerExternalLink>{' '}
           or{' '}
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href="http://github.com/neo4j/neo4j-browser"
-          >
+          <DrawerExternalLink href="http://github.com/neo4j/neo4j-browser">
             Neo4j Browser
-          </a>
+          </DrawerExternalLink>
           <br />
           Send us your Browser feedback via{' '}
-          <a href="mailto:browser@neotechnology.com?subject=Neo4j Browser feedback">
+          <DrawerExternalLink href="mailto:browser@neotechnology.com?subject=Neo4j Browser feedback">
             email
-          </a>
+          </DrawerExternalLink>
         </DrawerSectionBody>
       </DrawerSection>
       <DrawerSection>
