@@ -94,10 +94,20 @@ const movedPages: [
     }
   ],
   [
-    { page: '/administration/', neo4jVersion: null },
+    { neo4jVersion: null, page: '/administration/' },
     {
-      text: 'link to manual',
-      url: 'https://neo4j.com/docs/cypher-manual/current/administration/'
+      text: 'Cypher Manual',
+      url: 'https://neo4j.com/docs/cypher-manual/current/'
+    }
+  ],
+  [
+    {
+      neo4jVersion: '4.3.0',
+      page: '/administration/indexes-for-search-performance/'
+    },
+    {
+      text: 'Indexes',
+      url: 'https://neo4j.com/docs/cypher-manual/4.3/indexes-for-search-performance/'
     }
   ]
 ]

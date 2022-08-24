@@ -20,6 +20,7 @@
 import React from 'react'
 
 import ManualLink from 'browser-components/ManualLink'
+import VersionConditionalDoc from 'browser-components/VersionConditionalDoc'
 
 const title = 'CREATE INDEX FOR'
 const subtitle = 'Index labeled nodes by property'
@@ -36,7 +37,7 @@ const content = (
         <p className="content">
           <ManualLink
             chapter="cypher-manual"
-            page="/indexes-for-search-performance/"
+            page="/administration/indexes-for-search-performance/"
           >
             Indexes for search performance
           </ManualLink>{' '}
@@ -51,28 +52,34 @@ const content = (
         </p>
       </div>
     </div>
-    <section className="example">
-      <p>On neo4j version 4 and later</p>
-      <figure>
-        <pre className="code runnable standalone-example">
-          CREATE INDEX [optionalIndexName] FOR (p:Person) ON (p.name)
-        </pre>
-        <figcaption>
-          Create index on name for all nodes with a Person label.
-        </figcaption>
-      </figure>
-    </section>
-    <section className="example">
-      <p>On neo4j version 3.X</p>
-      <figure>
-        <pre className="code runnable standalone-example">
-          CREATE INDEX ON :Person(name)
-        </pre>
-        <figcaption>
-          Create index on name for all nodes with a Person label.
-        </figcaption>
-      </figure>
-    </section>
+    <VersionConditionalDoc versionCondition=">=4" includeCurrent={true}>
+      <>
+        <section className="example">
+          <figure>
+            <pre className="code runnable standalone-example">
+              CREATE INDEX [optionalIndexName] FOR (p:Person) ON (p.name)
+            </pre>
+            <figcaption>
+              Create index on name for all nodes with a Person label.
+            </figcaption>
+          </figure>
+        </section>
+      </>
+    </VersionConditionalDoc>
+    <VersionConditionalDoc versionCondition="<4" includeCurrent={false}>
+      <>
+        <section className="example">
+          <figure>
+            <pre className="code runnable standalone-example">
+              CREATE INDEX ON :Person(name)
+            </pre>
+            <figcaption>
+              Create index on name for all nodes with a Person label.
+            </figcaption>
+          </figure>
+        </section>
+      </>
+    </VersionConditionalDoc>
   </>
 )
 
