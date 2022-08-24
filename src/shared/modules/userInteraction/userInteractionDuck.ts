@@ -21,3 +21,4 @@
 // Constants
 export const NAME = 'userInteraction'
 export const USER_INTERACTION = `${NAME}/USER_INTERACTION`
+export const FAKED_USER_INTERACTION = `${NAME}/FAKED_USER_INTERACTION`

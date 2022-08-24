@@ -23,7 +23,10 @@ import {
   getActiveConnection
 } from 'shared/modules/connections/connectionsDuck'
 import { credentialsTimeout } from 'shared/modules/dbMeta/dbMetaDuck'
-import { USER_INTERACTION } from 'shared/modules/userInteraction/userInteractionDuck'
+import {
+  FAKED_USER_INTERACTION,
+  USER_INTERACTION
+} from 'shared/modules/userInteraction/userInteractionDuck'
 
 // Local variables (used in epics)
 let timer: any = null
@@ -32,6 +35,7 @@ let timer: any = null
 export const credentialsTimeoutEpic = (action$: any, store: any) =>
   action$
     .ofType(USER_INTERACTION)
+    .merge(action$.ofType(FAKED_USER_INTERACTION))
     .do(() => {
       const cTimeout = parseTimeMillis(credentialsTimeout(store.getState()))
       if (!cTimeout) return clearTimeout(timer)
