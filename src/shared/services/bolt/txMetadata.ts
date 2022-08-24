@@ -41,7 +41,7 @@ export const userDirectTxMetadata = {
 }
 export const userActionTxMetadata = {
   txMetadata: {
-    type: NEO4J_BROWSER_USER_QUERY,
+    type: NEO4J_BROWSER_USER_ACTION_QUERY,
     app: NEO4J_BROWSER_APP_ID
   }
 }
