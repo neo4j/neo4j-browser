@@ -24,13 +24,13 @@ import { Bus } from 'suber'
 import { throttle } from 'services/utils'
 import { USER_INTERACTION } from 'shared/modules/userInteraction/userInteractionDuck'
 
-const reportInteraction = (bus: Bus, action: 'keyup' | 'click' | 'scroll') => {
+const reportInteraction = (bus: Bus, action: 'keyup' | 'click') => {
   if (!bus) return
   bus.send(USER_INTERACTION, action)
 }
 const throttledReportInteraction: (
   bus: Bus,
-  action: 'keyup' | 'click' | 'scroll'
+  action: 'keyup' | 'click'
 ) => void = throttle(reportInteraction, 5000)
 
 export class UserInteraction extends Component<{ bus: Bus }> {

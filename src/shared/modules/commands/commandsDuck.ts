@@ -51,7 +51,6 @@ import {
 import { APP_START, USER_CLEAR } from 'shared/modules/app/appDuck'
 import { add as addFrame } from 'shared/modules/frames/framesDuck'
 import { update as updateQueryResult } from 'shared/modules/requests/requestsDuck'
-import { USER_INTERACTION } from '../userInteraction/userInteractionDuck'
 
 export const NAME = 'commands'
 export const SINGLE_COMMAND_QUEUED = `${NAME}/SINGLE_COMMAND_QUEUED`
