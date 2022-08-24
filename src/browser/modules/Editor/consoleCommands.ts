@@ -55,7 +55,7 @@ export default [
       { name: 'unwind' },
       { name: 'start' },
       { name: 'create-unique' },
-      { name: 'create-index-on' },
+      { name: 'create-index' },
       { name: 'starts-with' },
       { name: 'ends-with' },
       { name: 'contains' },

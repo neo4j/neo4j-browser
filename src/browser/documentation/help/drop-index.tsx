@@ -20,15 +20,15 @@
 import React from 'react'
 
 import ManualLink from 'browser-components/ManualLink'
+import VersionConditionalDoc from 'browser-components/VersionConditionalDoc'
 
-const title = 'CREATE INDEX ON'
-const subtitle = 'Index labeled nodes by property'
+const title = 'DROP INDEX'
+const subtitle = 'Drop a schema index'
 const category = 'schemaClauses'
 const content = (
   <>
     <p>
-      The <code>CREATE INDEX ON</code> clause will create and populate an index
-      on a property for all nodes that have a label.
+      The <code>DROP INDEX</code> clause will delete an index.
     </p>
     <div className="links">
       <div className="link">
@@ -46,26 +46,43 @@ const content = (
       <div className="link">
         <p className="title">Related</p>
         <p className="content">
-          <a help-topic="drop-index-on">:help DROP INDEX ON</a>{' '}
+          <a help-topic="create-index">:help CREATE INDEX</a>
           <a help-topic="cypher">:help Cypher</a>
         </p>
       </div>
     </div>
-    <section className="example">
-      <figure>
-        <p>On neo4j version 4.X</p>
-        <pre className="code runnable standalone-example">
-          CREATE INDEX [optionalName] FOR (p:Person) ON (p.name)
-        </pre>
-        <p>On neo4j version 3.X</p>
-        <pre className="code runnable standalone-example">
-          CREATE INDEX ON :Person(name)
-        </pre>
-        <figcaption>
-          Create index on name for all nodes with a Person label.
-        </figcaption>
-      </figure>
-    </section>
+    <VersionConditionalDoc versionCondition=">=4" includeCurrent={true}>
+      <>
+        <section className="example">
+          <figure>
+            <pre className="code runnable standalone-example">
+              DROP INDEX IndexName
+            </pre>
+            <figcaption>
+              Drop the index named <code>IndexName</code>.
+            </figcaption>
+          </figure>
+          <figure>
+            <pre className="code runnable standalone-example">SHOW INDEXES</pre>
+            <figcaption>Show all indexes and see their names.</figcaption>
+          </figure>
+        </section>
+      </>
+    </VersionConditionalDoc>
+    <VersionConditionalDoc versionCondition="<4" includeCurrent={false}>
+      <>
+        <section className="example">
+          <figure>
+            <pre className="code runnable standalone-example">
+              DROP INDEX ON :Person(name)
+            </pre>
+            <figcaption>
+              Drop the index on name for all nodes with a Person label.
+            </figcaption>
+          </figure>
+        </section>
+      </>
+    </VersionConditionalDoc>
   </>
 )
 

@@ -31,17 +31,17 @@ import helpBoltRouting from './help/bolt-routing'
 import helpClear from './help/clear'
 import helpContains from './help/contains'
 import helpCreate from './help/create'
-import helpCreateConstraintOn from './help/create-constraint-on'
+import helpCreateConstraint from './help/create-constraint'
 import helpCreateDatabase from './help/create-database'
-import helpCreateIndexOn from './help/create-index-on'
+import helpCreateIndex from './help/create-index'
 import helpCreateRole from './help/create-role'
 import helpCreateUser from './help/create-user'
 import helpDelete from './help/delete'
 import helpDeny from './help/deny'
 import helpDetachDelete from './help/detach-delete'
-import helpDropConstraintOn from './help/drop-constraint-on'
+import helpDropConstraint from './help/drop-constraint'
 import helpDropDatabase from './help/drop-database'
-import helpDropIndexOn from './help/drop-index-on'
+import helpDropIndex from './help/drop-index'
 import helpDropRole from './help/drop-role'
 import helpDropUser from './help/drop-user'
 import helpEndsWith from './help/ends-with'
@@ -183,17 +183,17 @@ type CypherChapter =
   | 'alterUser'
   | 'contains'
   | 'create'
-  | 'createConstraintOn'
+  | 'createConstraint'
   | 'createDatabase'
-  | 'createIndexOn'
+  | 'createIndex'
   | 'createRole'
   | 'createUser'
   | 'delete'
   | 'deny'
   | 'detachDelete'
-  | 'dropConstraintOn'
+  | 'dropConstraint'
   | 'dropDatabase'
-  | 'dropIndexOn'
+  | 'dropIndex'
   | 'dropRole'
   | 'dropUser'
   | 'endsWith'
@@ -278,17 +278,17 @@ const docs: AllDocumentation = {
       alterUser: helpAlterUser,
       contains: helpContains,
       create: helpCreate,
-      createConstraintOn: helpCreateConstraintOn,
+      createConstraint: helpCreateConstraint,
       createDatabase: helpCreateDatabase,
-      createIndexOn: helpCreateIndexOn,
+      createIndex: helpCreateIndex,
       createRole: helpCreateRole,
       createUser: helpCreateUser,
       delete: helpDelete,
       deny: helpDeny,
       detachDelete: helpDetachDelete,
-      dropConstraintOn: helpDropConstraintOn,
+      dropConstraint: helpDropConstraint,
       dropDatabase: helpDropDatabase,
-      dropIndexOn: helpDropIndexOn,
+      dropIndex: helpDropIndex,
       dropRole: helpDropRole,
       dropUser: helpDropUser,
       endsWith: helpEndsWith,

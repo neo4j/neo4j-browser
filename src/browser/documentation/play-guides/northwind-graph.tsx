@@ -102,22 +102,22 @@ SET n = row`}
       <h4>Create indexes</h4>
       <figure>
         <pre className="pre-scrollable code runnable">
-          CREATE INDEX ON :Product(productID)
+          CREATE INDEX FOR (p:Product) ON (p.productID)
         </pre>
       </figure>
       <figure>
         <pre className="pre-scrollable code runnable">
-          CREATE INDEX ON :Product(productName)
+          CREATE INDEX FOR (p:Product) ON (p.productName)
         </pre>
       </figure>
       <figure>
         <pre className="pre-scrollable code runnable">
-          CREATE INDEX ON :Category(categoryID)
+          CREATE INDEX FOR (c:Category) ON (c.categoryID)
         </pre>
       </figure>
       <figure>
         <pre className="pre-scrollable code runnable">
-          CREATE INDEX ON :Supplier(supplierID)
+          CREATE INDEX FOR (s:Supplier) ON (s.supplierID)
         </pre>
       </figure>
     </div>
@@ -250,12 +250,12 @@ SET n = row`}
       </figure>
       <figure>
         <pre className="pre-scrollable code runnable">
-          CREATE INDEX ON :Customer(customerID)
+          CREATE INDEX FOR (n:Customer) ON (n.customerID)
         </pre>
       </figure>
       <figure>
         <pre className="pre-scrollable code runnable">
-          CREATE INDEX ON :Order(orderID)
+          CREATE INDEX FOR (o:Order) ON (o.orderID)
         </pre>
       </figure>
       <h4>Create data relationships</h4>

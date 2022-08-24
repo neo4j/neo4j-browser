@@ -43,7 +43,7 @@ describe('Schema Frame', () => {
         cy.executeCommand('CREATE INDEX ON :SchemaTest(prop1, prop2)')
       }
 
-      if (Cypress.config('serverVersion') >= 5.0) {
+      if (Cypress.config('serverVersion') >= 4.4) {
         cy.executeCommand(
           'CREATE CONSTRAINT testConstraint FOR (n:SchemaTest) REQUIRE n.prop1 IS UNIQUE'
         )
@@ -60,7 +60,7 @@ describe('Schema Frame', () => {
         cy.executeCommand('DROP INDEX ON :SchemaTest(prop1, prop2)')
       }
 
-      if (Cypress.config('serverVersion') >= 5.0) {
+      if (Cypress.config('serverVersion') >= 4.4) {
         cy.executeCommand('DROP CONSTRAINT testConstraint')
       } else {
         cy.executeCommand(

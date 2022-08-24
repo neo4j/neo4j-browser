@@ -20,15 +20,16 @@
 import React from 'react'
 
 import ManualLink from 'browser-components/ManualLink'
+import VersionConditionalDoc from 'browser-components/VersionConditionalDoc'
 
-const title = 'DROP INDEX ON'
-const subtitle = 'Drop a schema index'
+const title = 'CREATE INDEX'
+const subtitle = 'Index labeled nodes by property'
 const category = 'schemaClauses'
 const content = (
   <>
     <p>
-      The <code>DROP INDEX ON</code> clause will an index on all nodes that have
-      a label.
+      The <code>CREATE INDEX</code> clause will create and populate an index on
+      a property for all nodes that have a certain label.
     </p>
     <div className="links">
       <div className="link">
@@ -46,16 +47,39 @@ const content = (
       <div className="link">
         <p className="title">Related</p>
         <p className="content">
-          <a help-topic="create-index-on">:help CREATE INDEX ON</a>
+          <a help-topic="drop-index">:help DROP INDEX</a>{' '}
           <a help-topic="cypher">:help Cypher</a>
         </p>
       </div>
     </div>
-    <section className="example">
-      <figure className="runnable">
-        <pre>DROP INDEX ON :Person(name)</pre>
-      </figure>
-    </section>
+    <VersionConditionalDoc versionCondition=">=4" includeCurrent={true}>
+      <>
+        <section className="example">
+          <figure>
+            <pre className="code runnable standalone-example">
+              CREATE INDEX [optionalIndexName] FOR (p:Person) ON (p.name)
+            </pre>
+            <figcaption>
+              Create index on name for all nodes with a Person label.
+            </figcaption>
+          </figure>
+        </section>
+      </>
+    </VersionConditionalDoc>
+    <VersionConditionalDoc versionCondition="<4" includeCurrent={false}>
+      <>
+        <section className="example">
+          <figure>
+            <pre className="code runnable standalone-example">
+              CREATE INDEX ON :Person(name)
+            </pre>
+            <figcaption>
+              Create index on name for all nodes with a Person label.
+            </figcaption>
+          </figure>
+        </section>
+      </>
+    </VersionConditionalDoc>
   </>
 )
 

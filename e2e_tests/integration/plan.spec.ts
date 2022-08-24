@@ -52,7 +52,11 @@ describe('Plan output', () => {
   if (Cypress.config('serverVersion') >= 3.5) {
     it('print Order in PROFILE', () => {
       cy.executeCommand(':clear')
-      cy.executeCommand('CREATE INDEX ON :Person(age)')
+      if (Cypress.config('serverVersion') < 4.0) {
+        cy.executeCommand('CREATE INDEX ON :Person(age)')
+      } else {
+        cy.executeCommand('CREATE INDEX FOR (p:Person) ON (p.age)')
+      }
       cy.executeCommand(
         'EXPLAIN MATCH (n:Person) WHERE n.age > 18 RETURN n.name ORDER BY n.age'
       )
@@ -64,7 +68,7 @@ describe('Plan output', () => {
   if (Cypress.config('serverVersion') >= 4.1 && isEnterpriseEdition()) {
     it('print total memory in PROFILE', () => {
       cy.executeCommand(':clear')
-      cy.executeCommand('CREATE INDEX ON :Person(age)')
+      cy.executeCommand('CREATE INDEX FOR (p:Person) ON (p.age)')
       cy.executeCommand(
         'PROFILE MATCH (n:Person) WHERE n.age > 18 RETURN n.name ORDER BY n.age'
       )
