@@ -373,6 +373,9 @@ export const StyledSidebarSlide = styled.div.attrs({
     text-decoration: ${props =>
       props.theme.name === 'dark' ? 'underline' : 'none'};
   }
+  & a:hover {
+    color: ${dark.linkHover};
+  }
   & kbd {
     color: ${dark.primaryBackground} !important; /* inverted */
     background-color: ${dark.primaryText} !important;
