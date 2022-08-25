@@ -43,7 +43,27 @@ exports[`SchemaFrame renders empty 1`] = `
               <th
                 class="sc-iUKqMP heOYnT table-header"
               >
-                Constraints
+                Constraint Name
+              </th>
+              <th
+                class="sc-iUKqMP heOYnT table-header"
+              >
+                Type
+              </th>
+              <th
+                class="sc-iUKqMP heOYnT table-header"
+              >
+                EntityType
+              </th>
+              <th
+                class="sc-iUKqMP heOYnT table-header"
+              >
+                LabelsOrTypes
+              </th>
+              <th
+                class="sc-iUKqMP heOYnT table-header"
+              >
+                Properties
               </th>
             </tr>
           </thead>
@@ -56,6 +76,18 @@ exports[`SchemaFrame renders empty 1`] = `
               >
                 None
               </td>
+              <td
+                class="sc-iAKWXU gkvwcC table-properties"
+              />
+              <td
+                class="sc-iAKWXU gkvwcC table-properties"
+              />
+              <td
+                class="sc-iAKWXU gkvwcC table-properties"
+              />
+              <td
+                class="sc-iAKWXU gkvwcC table-properties"
+              />
             </tr>
           </tbody>
         </table>
@@ -173,7 +205,27 @@ exports[`SchemaFrame renders empty for Neo4j >= 4.0 1`] = `
               <th
                 class="sc-iUKqMP heOYnT table-header"
               >
-                Constraints
+                Constraint Name
+              </th>
+              <th
+                class="sc-iUKqMP heOYnT table-header"
+              >
+                Type
+              </th>
+              <th
+                class="sc-iUKqMP heOYnT table-header"
+              >
+                EntityType
+              </th>
+              <th
+                class="sc-iUKqMP heOYnT table-header"
+              >
+                LabelsOrTypes
+              </th>
+              <th
+                class="sc-iUKqMP heOYnT table-header"
+              >
+                Properties
               </th>
             </tr>
           </thead>
@@ -186,6 +238,18 @@ exports[`SchemaFrame renders empty for Neo4j >= 4.0 1`] = `
               >
                 None
               </td>
+              <td
+                class="sc-iAKWXU gkvwcC table-properties"
+              />
+              <td
+                class="sc-iAKWXU gkvwcC table-properties"
+              />
+              <td
+                class="sc-iAKWXU gkvwcC table-properties"
+              />
+              <td
+                class="sc-iAKWXU gkvwcC table-properties"
+              />
             </tr>
           </tbody>
         </table>
@@ -267,6 +331,186 @@ exports[`SchemaFrame renders results for Neo4j < 4.0 1`] = `
                 class="sc-iAKWXU gkvwcC table-properties"
               >
                  ON ( book:Book ) ASSERT book.isbn IS UNIQUE
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <br />
+        <p
+          class="lead"
+        >
+          Execute the following command to visualize what's related, and how
+        </p>
+        <figure>
+          <pre
+            class="code runnable"
+          >
+            <i
+              class="fa fa-play-circle-o"
+              style="padding-right:4px"
+            />
+            CALL db.schema.visualization
+          </pre>
+        </figure>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`SchemaFrame renders results for Neo4j >= 4.2 1`] = `
+<div>
+  <div
+    style="width: 100%;"
+  >
+    <div>
+      <div
+        class="sc-iwjdpV EPaYX"
+      >
+        <table
+          class="sc-jcFjpl emSDdK"
+          data-testid="schemaFrameIndexesTable"
+        >
+          <thead>
+            <tr>
+              <th
+                class="sc-iUKqMP heOYnT table-header"
+              >
+                Index Name
+              </th>
+              <th
+                class="sc-iUKqMP heOYnT table-header"
+              >
+                Type
+              </th>
+              <th
+                class="sc-iUKqMP heOYnT table-header"
+              >
+                Uniqueness
+              </th>
+              <th
+                class="sc-iUKqMP heOYnT table-header"
+              >
+                EntityType
+              </th>
+              <th
+                class="sc-iUKqMP heOYnT table-header"
+              >
+                LabelsOrTypes
+              </th>
+              <th
+                class="sc-iUKqMP heOYnT table-header"
+              >
+                Properties
+              </th>
+              <th
+                class="sc-iUKqMP heOYnT table-header"
+              >
+                State
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              class="sc-caiLqq icfFcF table-row"
+            >
+              <td
+                class="sc-iAKWXU gkvwcC table-properties"
+              />
+              <td
+                class="sc-iAKWXU gkvwcC table-properties"
+              >
+                node_label_property
+              </td>
+              <td
+                class="sc-iAKWXU gkvwcC table-properties"
+              />
+              <td
+                class="sc-iAKWXU gkvwcC table-properties"
+              />
+              <td
+                class="sc-iAKWXU gkvwcC table-properties"
+              />
+              <td
+                class="sc-iAKWXU gkvwcC table-properties"
+              >
+                [
+  "released"
+]
+              </td>
+              <td
+                class="sc-iAKWXU gkvwcC table-properties"
+              >
+                ONLINE
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <table
+          class="sc-jcFjpl emSDdK"
+          data-testid="schemaFrameConstraintsTable"
+        >
+          <thead>
+            <tr>
+              <th
+                class="sc-iUKqMP heOYnT table-header"
+              >
+                Constraint Name
+              </th>
+              <th
+                class="sc-iUKqMP heOYnT table-header"
+              >
+                Type
+              </th>
+              <th
+                class="sc-iUKqMP heOYnT table-header"
+              >
+                EntityType
+              </th>
+              <th
+                class="sc-iUKqMP heOYnT table-header"
+              >
+                LabelsOrTypes
+              </th>
+              <th
+                class="sc-iUKqMP heOYnT table-header"
+              >
+                Properties
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              class="sc-caiLqq icfFcF table-row"
+            >
+              <td
+                class="sc-iAKWXU gkvwcC table-properties"
+              >
+                constraint_550b2518
+              </td>
+              <td
+                class="sc-iAKWXU gkvwcC table-properties"
+              >
+                UNIQUE
+              </td>
+              <td
+                class="sc-iAKWXU gkvwcC table-properties"
+              >
+                node
+              </td>
+              <td
+                class="sc-iAKWXU gkvwcC table-properties"
+              >
+                [
+  "Movie"
+]
+              </td>
+              <td
+                class="sc-iAKWXU gkvwcC table-properties"
+              >
+                [
+  "released"
+]
               </td>
             </tr>
           </tbody>

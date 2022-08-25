@@ -48,6 +48,71 @@ test('SchemaFrame renders empty for Neo4j >= 4.0', () => {
   expect(container).toMatchSnapshot()
 })
 
+test('SchemaFrame renders results for Neo4j >= 4.2', () => {
+  const indexResult = {
+    success: true,
+    result: {
+      records: [
+        {
+          _fields: [
+            'INDEX ON :Movie(released)',
+            'Movie',
+            ['released'],
+            'ONLINE',
+            'node_label_property',
+            {
+              version: '2.0',
+              key: 'lucene+native'
+            }
+          ],
+          keys: [
+            'description',
+            'label',
+            'properties',
+            'state',
+            'type',
+            'provider'
+          ]
+        }
+      ]
+    }
+  }
+  const firstIndexRecord: any = indexResult.result.records[0]
+  firstIndexRecord.get = (key: any) =>
+    firstIndexRecord._fields[firstIndexRecord.keys.indexOf(key)]
+
+  const constraintResult = {
+    success: true,
+    result: {
+      records: [
+        {
+          keys: ['name', 'type', 'entityType', 'labelsOrTypes', 'properties'],
+          _fields: [
+            'constraint_550b2518',
+            'UNIQUE',
+            'node',
+            ['Movie'],
+            ['released']
+          ]
+        }
+      ]
+    }
+  }
+  const firstConstraintRecord: any = constraintResult.result.records[0]
+  firstConstraintRecord.get = (key: any) =>
+    firstConstraintRecord._fields[firstConstraintRecord.keys.indexOf(key)]
+
+  const { container } = renderWithRedux(
+    <SchemaFrame
+      indexes={indexResult}
+      constraints={constraintResult}
+      neo4jVersion={'4.2.1'}
+    />
+  )
+
+  expect(container).toMatchSnapshot()
+})
+
 test('SchemaFrame renders results for Neo4j < 4.0', () => {
   const indexResult = {
     success: true,

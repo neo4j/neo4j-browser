@@ -103,9 +103,26 @@ describe('Schema Frame', () => {
       cy.executeCommand(':clear')
       cy.executeCommand(':schema')
 
-      cy.get('[data-testid="frameContents"]')
-        .should('contain', 'Constraints')
-        .and('contain', ':SchemaTest')
+      if (Cypress.config('serverVersion') >= 4.2) {
+        // Headers
+        cy.get('[data-testid="frameContents"]')
+          .should('contain', 'Constraint Name')
+          .and('contain', 'Type')
+          .and('contain', 'EntityType')
+          .and('contain', 'LabelsOrTypes')
+          .and('contain', 'Properties')
+
+        // Constraint info
+        cy.get('[data-testid="frameContents"]')
+          .should('contain', 'UNIQUENESS')
+          .and('contain', 'NODE')
+          .and('contain', '"SchemaTest"')
+          .and('contain', '"prop1"')
+      } else {
+        cy.get('[data-testid="frameContents"]')
+          .should('contain', 'Constraints')
+          .and('contain', ':SchemaTest')
+      }
     })
   })
 })
