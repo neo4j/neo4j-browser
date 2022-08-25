@@ -21,7 +21,7 @@ import { replace, toUpper } from 'lodash-es'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
-import semver from 'semver'
+import semver, { SemVer } from 'semver'
 import { v4 } from 'uuid'
 
 import Slide from '../Carousel/Slide'
@@ -36,11 +36,11 @@ import Directives from 'browser-components/Directives'
 import { GlobalState } from 'project-root/src/shared/globalState'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import { getRawVersion } from 'shared/modules/dbMeta/dbMetaDuck'
+import { getSemanticVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 
 type IndexesProps = {
   indexes: any
-  neo4jVersion: string | null
+  neo4jVersion: SemVer | null
 }
 const Indexes = ({ indexes, neo4jVersion }: IndexesProps) => {
   if (
@@ -192,7 +192,7 @@ export class SchemaFrame extends Component<any, SchemaFrameState> {
     }
   }
 
-  fetchData(neo4jVersion: string) {
+  fetchData(neo4jVersion: SemVer) {
     if (this.props.bus) {
       // Indexes
       this.props.bus.self(
@@ -282,7 +282,7 @@ const Frame = (props: any) => {
 }
 
 const mapStateToProps = (state: GlobalState) => ({
-  neo4jVersion: getRawVersion(state)
+  neo4jVersion: getSemanticVersion(state)
 })
 
 export default withBus(connect(mapStateToProps, null)(Frame))
