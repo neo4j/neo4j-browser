@@ -24,11 +24,14 @@ import { Bus } from 'suber'
 import { throttle } from 'services/utils'
 import { USER_INTERACTION } from 'shared/modules/userInteraction/userInteractionDuck'
 
-const reportInteraction = (bus: any) => {
+const reportInteraction = (bus: Bus) => {
   if (!bus) return
   bus.send(USER_INTERACTION)
 }
-const throttledReportInteraction = throttle(reportInteraction, 5000)
+const throttledReportInteraction: (bus: Bus) => void = throttle(
+  reportInteraction,
+  5000
+)
 
 export class UserInteraction extends Component<{ bus: Bus }> {
   componentDidMount() {

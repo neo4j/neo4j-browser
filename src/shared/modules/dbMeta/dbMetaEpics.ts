@@ -80,6 +80,7 @@ import {
 } from '../cypher/functionsAndProceduresHelper'
 import { isInt, Record } from 'neo4j-driver'
 import { gte } from 'semver'
+import { triggerCredentialsTimeout } from '../credentialsPolicy/credentialsPolicyDuck'
 
 async function databaseList(store: any) {
   try {
@@ -407,6 +408,11 @@ export const serverConfigEpic = (some$: any, store: any) =>
             updateUserCapability(USER_CAPABILITIES.serverConfigReadable, true)
           )
           store.dispatch(updateSettings(settings))
+          if (!store.getState().meta.serverConfigDone) {
+            // Trigger a credentials timeout since the settings have just been read from the server for the first time and might be different from the defaults.
+            store.dispatch(triggerCredentialsTimeout())
+          }
+
           return Rx.Observable.of(null)
         })
     })
