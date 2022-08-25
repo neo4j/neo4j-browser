@@ -101,19 +101,12 @@ const Constraints = ({
   let header = []
 
   if (semver.valid(neo4jVersion) && semver.satisfies(neo4jVersion, '<4.2.*')) {
+    header = ['Constraints']
+
     rows = constraints.map((constraint: any) => [
       replace(constraint.description, 'CONSTRAINT', '')
     ])
-    header = ['Constraints']
   } else {
-    rows = constraints.map((constraint: any) => [
-      constraint.name,
-      constraint.type,
-      constraint.entityType,
-      JSON.stringify(constraint.labelsOrTypes, null, 2),
-      JSON.stringify(constraint.properties, null, 2)
-    ])
-
     header = [
       'Constraint Name',
       'Type',
@@ -121,6 +114,14 @@ const Constraints = ({
       'LabelsOrTypes',
       'Properties'
     ]
+
+    rows = constraints.map((constraint: any) => [
+      constraint.name,
+      constraint.type,
+      constraint.entityType,
+      JSON.stringify(constraint.labelsOrTypes, null, 2),
+      JSON.stringify(constraint.properties, null, 2)
+    ])
   }
 
   return (
