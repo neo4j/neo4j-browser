@@ -588,7 +588,7 @@ export const recursivelyTypeGraphItems = (
     return tmp
   }
   if (typeof item === 'object') {
-    const typedObject: any = {}
+    const typedObject: Record<string, any> = {}
     const localItem = escapeReservedProps(item, reservedTypePropertyName)
     Object.keys(localItem).forEach(key => {
       typedObject[key] = recursivelyTypeGraphItems(localItem[key], types)
