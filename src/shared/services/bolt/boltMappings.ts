@@ -502,7 +502,7 @@ export const applyGraphTypes = (
         return item
     }
   } else if (typeof rawItem === 'object') {
-    let typedObject: Record<any, any> = {}
+    let typedObject: Record<string, any> = {}
     Object.keys(rawItem).forEach(key => {
       typedObject[key] = applyGraphTypes(rawItem[key], types)
     })
