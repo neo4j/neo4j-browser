@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { flatten, map, take } from 'lodash-es'
-import neo4j, { Record } from 'neo4j-driver'
+import neo4j from 'neo4j-driver'
 
 import { upperFirst, BasicNodesAndRels } from 'neo4j-arc/common'
 
@@ -172,7 +172,7 @@ const collectHits = function (operator: any) {
 }
 
 export function extractNodesAndRelationshipsFromRecords(
-  records: Record[],
+  records: Record<string, any>[],
   types = neo4j.types,
   maxFieldItems?: any
 ) {
@@ -224,7 +224,7 @@ const getTypeDisplayName = (val: any): string => {
 }
 
 export function extractNodesAndRelationshipsFromRecordsForOldVis(
-  records: Record[],
+  records: Record<string, any>[],
   types: any,
   filterRels: any,
   converters: Converters,
@@ -295,7 +295,7 @@ export const recursivelyExtractGraphItems = (types: any, item: any): any => {
 }
 
 export function extractRawNodesAndRelationShipsFromRecords(
-  records: Record[],
+  records: Record<string, any>[],
   types = neo4j.types,
   maxFieldItems: any
 ) {
@@ -502,10 +502,10 @@ export const applyGraphTypes = (
         return item
     }
   } else if (typeof rawItem === 'object') {
-    const fileds = Object.keys(rawItem).map(key =>
-      applyGraphTypes(rawItem[key], types)
-    )
-    let typedObject: Record = new Record(Object.keys(rawItem), fileds)
+    let typedObject: Record<any, any> = {}
+    Object.keys(rawItem).forEach(key => {
+      typedObject[key] = applyGraphTypes(rawItem[key], types)
+    })
 
     typedObject = unEscapeReservedProps(typedObject, reservedTypePropertyName)
     return typedObject
@@ -588,17 +588,19 @@ export const recursivelyTypeGraphItems = (
     return tmp
   }
   if (typeof item === 'object') {
+    const typedObject: any = {}
     const localItem = escapeReservedProps(item, reservedTypePropertyName)
-    const fields = Object.keys(localItem).map(key =>
-      recursivelyTypeGraphItems(localItem[key], types)
-    )
-    const typedObject: Record = new Record(Object.keys(localItem), fields)
+    Object.keys(localItem).forEach(key => {
+      typedObject[key] = recursivelyTypeGraphItems(localItem[key], types)
+    })
     return typedObject
   }
   return item
 }
 
 function copyAndType(any: any, types = neo4j.types) {
-  const fileds = Object.keys(any).map(key => applyGraphTypes(any[key], types))
-  return new Record(Object.keys(any), fileds)
+  const keys = Object.keys(any)
+  const tmp: any = {}
+  keys.forEach(key => (tmp[key] = recursivelyTypeGraphItems(any[key], types)))
+  return tmp
 }
