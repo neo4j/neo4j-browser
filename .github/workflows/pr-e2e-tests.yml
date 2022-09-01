@@ -1,0 +1,42 @@
+name: 'Pull request E2E tests'
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  e2e-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        neo4j-version:
+          #- 3.5
+          #- 4.2
+          #- 4.3
+          - 4.4
+        neo4j-edition:
+          #- community
+          - enterprise
+    services:
+      neo4j:
+        image: neo4j:${{ matrix.neo4j-version }}-${{ matrix.neo4j-edition }}
+        env:
+          NEO4J_AUTH: neo4j/password
+          NEO4J_ACCEPT_LICENSE_AGREEMENT: yes
+        ports:
+          - 7687:7687
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+      - run: npm -g install yarn serve
+      - run: yarn install --pure-lockfile
+      - run: yarn build
+      - run: apt-get update
+      - run: apt-get -y install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
+      - run: npx serve -l 8080 dist & npm run wait-on-neo4j && yarn wait-on-dev
+      - run: echo "Servers ready!"
+      - run: yarn e2e --env server=${{ matrix.neo4j-version }},browser-password=password
+# TODO upload screnshots
