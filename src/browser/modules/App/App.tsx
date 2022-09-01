@@ -23,7 +23,6 @@ import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { ThemeProvider } from 'styled-components'
 
-import DocTitle from '../DocTitle'
 import asTitleString from '../DocTitle/titleStringBuilder'
 import FeatureToggleProvider from '../FeatureToggle/FeatureToggleProvider'
 import Main from '../Main/Main'
@@ -176,6 +175,10 @@ export function App(props: any) {
     updateDesktopUDCSettings
   } = props
 
+  useEffect(() => {
+    document.title = titleString
+  }, [titleString])
+
   const wrapperClassNames = codeFontLigatures ? '' : 'disable-font-ligatures'
 
   return (
@@ -236,7 +239,6 @@ export function App(props: any) {
         <FeatureToggleProvider features={experimentalFeatures}>
           <FileDrop store={store}>
             <StyledWrapper className={wrapperClassNames}>
-              <DocTitle titleString={titleString} />
               <UserInteraction />
               {loadExternalScripts && (
                 <>

@@ -97,7 +97,6 @@ function FrameEditor({
   newProjectFile,
   cancelQuery,
   reRun,
-  onTitlebarCmdClick,
   frame,
   fullscreenToggle,
   exportItems,
@@ -123,6 +122,10 @@ function FrameEditor({
     } else {
       setRenderEditor(true)
     }
+  }
+
+  function onTitlebarCmdClick(cmd: string) {
+    bus.send(editor.SET_CONTENT, editor.setContent(cmd))
   }
 
   const titleBarRef = useRef<HTMLDivElement>(null)
