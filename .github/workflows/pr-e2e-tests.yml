@@ -10,12 +10,11 @@ jobs:
     strategy:
       matrix:
         neo4j-version:
-          #- 3.5
-          #- 4.2
-          #- 4.3
+          - 3.5
+          - 4.3
           - 4.4
         neo4j-edition:
-          #- community
+          - community
           - enterprise
     services:
       neo4j:
