@@ -66,7 +66,7 @@ const Main = React.memo(function Main(props: MainProps) {
 
   useEffect(() => {
     showUdcConsentBanner && incrementConsentBannerShownCount()
-  }, [showUdcConsentBanner, incrementConsentBannerShownCount])
+  }, [showUdcConsentBanner /* missing function from dep array but including it causes loop */])
 
   return (
     <StyledMain data-testid="main">
