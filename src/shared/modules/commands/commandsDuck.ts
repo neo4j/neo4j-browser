@@ -217,28 +217,37 @@ export const handleCommandEpic = (action$: any, store: any) =>
       const maxHistory = getMaxHistory(store.getState())
       store.dispatch(addHistory(action.cmd, maxHistory))
 
+      const { cmd } = action
+
+      // extractStatementsFromString is _very_ slow. So we check if we can
+      // skip it. If there are no semi colons apart from the final character
+      // it can't be a multistatement and we can bail out early
+      const couldBeMultistatement =
+        cmd.split(';').filter((a: string) => a.trim() !== '').length > 1
+
       // Semicolons in :style grass break parsing of multiline statements from codemirror.
       const useMultiStatement =
-        !action.cmd.startsWith(':style') &&
+        couldBeMultistatement &&
+        !cmd.startsWith(':style') &&
         shouldEnableMultiStatementMode(store.getState())
 
       const statements = useMultiStatement
-        ? extractStatementsFromString(action.cmd)
-        : [action.cmd]
+        ? extractStatementsFromString(cmd)
+        : [cmd]
 
       if (!statements.length || !statements[0]) {
         return
       }
       if (statements.length === 1) {
         // Single command
-        return store.dispatch(executeSingleCommand(action.cmd, action))
+        return store.dispatch(executeSingleCommand(cmd, action))
       }
       const parentId = (action.isRerun ? action.id : action.parentId) || v4()
       store.dispatch(
         addFrame({
           type: 'cypher-script',
           id: parentId,
-          cmd: action.cmd,
+          cmd,
           isRerun: action.isRerun
         } as any)
       )

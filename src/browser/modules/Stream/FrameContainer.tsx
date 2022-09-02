@@ -107,7 +107,7 @@ export function FrameContainer(props: FrameContainerProps): JSX.Element {
   const frame = props.frameData.stack[0]
   const [exportItems, setExportItems] = useState<ExportItem[]>([])
   const frameProps: BaseFrameProps = {
-    frame: { ...frame, isPinned: props.frameData.isPinned },
+    frame,
     activeConnectionData: props.activeConnectionData,
     stack: props.frameData.stack,
     isFullscreen,

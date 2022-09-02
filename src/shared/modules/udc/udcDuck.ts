@@ -24,7 +24,6 @@ import { v4 } from 'uuid'
 import { USER_CLEAR } from '../app/appDuck'
 import { CONNECT, CONNECTION_SUCCESS } from '../connections/connectionsDuck'
 import { isBuiltInGuide, isPlayChapter } from 'browser/documentation'
-import { extractStatementsFromString } from 'services/commandUtils'
 import { GlobalState } from 'shared/globalState'
 import {
   COMMAND_QUEUED,
@@ -235,19 +234,20 @@ export const udcStartupEpic: Epic<Action, GlobalState> = (action$, store) =>
 
 export const trackCommandUsageEpic: Epic<Action, GlobalState> = action$ =>
   action$.ofType(COMMAND_QUEUED).map((action: any) => {
-    const isCypher = !action.cmd.startsWith(':')
+    const cmd: string = action.cmd
+    const isCypher = !cmd.startsWith(':')
+    const estimatedNumberOfStatements = cmd.split(';').filter(a => a).length
     if (isCypher) {
-      const numberOfStatements =
-        extractStatementsFromString(action.cmd)?.length || 1
       return metricsEvent({
         category: 'command',
         label: 'cypher',
         data: {
           type: 'cypher',
           source: action.source || 'unknown',
-          averageWordCount: action.cmd.split(' ').length / numberOfStatements,
-          averageLineCount: action.cmd.split('\n').length / numberOfStatements,
-          numberOfStatements
+          averageWordCount: cmd.split(' ').length / estimatedNumberOfStatements,
+          averageLineCount:
+            cmd.split('\n').length / estimatedNumberOfStatements,
+          estimatedNumberOfStatements
         }
       })
     }
