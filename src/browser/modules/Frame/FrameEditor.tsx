@@ -288,10 +288,7 @@ const mapStateToProps = (
   }
 }
 
-const mapDispatchToProps = (
-  dispatch: Dispatch<Action>,
-  ownProps: FrameEditorBaseProps
-) => {
+const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
   return {
     newFavorite: (cmd: string) => {
       dispatch(addFavorite(cmd))
@@ -317,9 +314,6 @@ const mapDispatchToProps = (
           source: commands.commandSources.rerunFrame
         })
       )
-    },
-    onTitlebarCmdClick: (cmd: string) => {
-      ownProps.bus.send(editor.SET_CONTENT, editor.setContent(cmd))
     }
   }
 }
