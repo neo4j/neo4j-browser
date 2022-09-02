@@ -172,7 +172,7 @@ const collectHits = function (operator: any) {
 }
 
 export function extractNodesAndRelationshipsFromRecords(
-  records: typeof neo4j.types.Record[],
+  records: Record<string, any>[],
   types = neo4j.types,
   maxFieldItems?: any
 ) {
@@ -224,7 +224,7 @@ const getTypeDisplayName = (val: any): string => {
 }
 
 export function extractNodesAndRelationshipsFromRecordsForOldVis(
-  records: typeof neo4j.types.Record[],
+  records: Record<string, any>[],
   types: any,
   filterRels: any,
   converters: Converters,
@@ -295,7 +295,7 @@ export const recursivelyExtractGraphItems = (types: any, item: any): any => {
 }
 
 export function extractRawNodesAndRelationShipsFromRecords(
-  records: typeof neo4j.types.Record[],
+  records: Record<string, any>[],
   types = neo4j.types,
   maxFieldItems: any
 ) {
@@ -506,6 +506,7 @@ export const applyGraphTypes = (
     Object.keys(rawItem).forEach(key => {
       typedObject[key] = applyGraphTypes(rawItem[key], types)
     })
+
     typedObject = unEscapeReservedProps(typedObject, reservedTypePropertyName)
     return typedObject
   } else {
@@ -599,7 +600,7 @@ export const recursivelyTypeGraphItems = (
 
 function copyAndType(any: any, types = neo4j.types) {
   const keys = Object.keys(any)
-  const tmp: Record<string, any> = {}
+  const tmp: any = {}
   keys.forEach(key => (tmp[key] = recursivelyTypeGraphItems(any[key], types)))
   return tmp
 }
