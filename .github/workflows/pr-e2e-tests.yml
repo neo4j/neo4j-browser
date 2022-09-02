@@ -37,10 +37,12 @@ jobs:
       - run: sudo apt-get -y install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
       - run: npx serve -l 8080 dist & npm run wait-on-neo4j && yarn wait-on-dev
       - run: echo "Servers ready!"
-      - run: yarn e2e --env server=${{ matrix.neo4j-version }},browser-password=password
+      - run: yarn e2e --env server=${{ matrix.neo4j-version }},browser-password=password,serverEdition=${{ matrix.neo4j-edition }}
       - name: Upload test screenshots
         if: failure()
         uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # tag=v3
         with:
           name: test-screenshots-${{ matrix.neo4j-version }}
-          path: ./e2e_tests
+          path: |
+            ./e2e_tests/screenshots
+            ./e2e_tests/videos
