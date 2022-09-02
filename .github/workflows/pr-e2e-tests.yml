@@ -4,6 +4,10 @@ on:
   pull_request:
     branches: [master]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   e2e-tests:
     runs-on: ubuntu-latest
@@ -40,7 +44,7 @@ jobs:
       - run: yarn e2e --env server=${{ matrix.neo4j-version }},browser-password=password,edition=${{ matrix.neo4j-edition }}
       - name: Upload test screenshots
         if: failure()
-        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # tag=v3
+        uses: actions/upload-artifact@v3
         with:
           name: test-screenshots-${{ matrix.neo4j-version }}-${{ matrix.neo4j-edition }}
           path: |
