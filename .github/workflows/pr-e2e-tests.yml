@@ -1,4 +1,4 @@
-name: 'Pull request E2E tests'
+name: 'Browser PR e2e tests'
 
 on:
   pull_request:

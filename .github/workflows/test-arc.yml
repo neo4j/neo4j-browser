@@ -1,4 +1,4 @@
-name: 'Test @neo4j-devtools/arc'
+name: 'Arc PR e2e tests'
 
 defaults:
   run:

@@ -1,4 +1,4 @@
-name: 'Browser unit tests'
+name: 'Browser PR unit tests'
 
 on:
   pull_request:
