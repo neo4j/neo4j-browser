@@ -1,16 +1,13 @@
-name: 'Arc PR e2e tests'
-
-defaults:
-  run:
-    working-directory: src/neo4j-arc
+name: 'Browser PR unit tests'
 
 on:
   pull_request:
-    branches:
-      - master
+    branches: [master]
+
 jobs:
-  build:
+  run-tests:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -18,5 +15,7 @@ jobs:
           node-version-file: '.nvmrc'
       - run: npm -g install yarn
       - run: yarn install --frozen-lockfile
-      - run: yarn test
-      - run: yarn build
+      - name: run unit tests
+        env:
+          NODE_OPTIONS: '--max-old-space-size=8192'
+        run: yarn test
