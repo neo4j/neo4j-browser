@@ -50,8 +50,17 @@ describe('commandsDuck config helper', () => {
       }
     }
   }
+  beforeAll(() => {
+    nock.disableNetConnect()
+    if (!nock.isActive()) {
+      nock.activate()
+    }
+  })
   afterEach(() => {
     nock.cleanAll()
+  })
+  afterAll(() => {
+    nock.restore()
   })
   test('fails on :config x x x and shows error hint', () => {
     // Given
