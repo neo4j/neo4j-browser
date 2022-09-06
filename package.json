@@ -62,7 +62,7 @@
   },
   "engines": {
     "yarn": ">=1.10",
-    "node": ">= 16.17.0"
+    "node": ">= 16.10.0"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
