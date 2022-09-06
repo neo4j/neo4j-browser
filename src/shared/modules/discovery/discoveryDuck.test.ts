@@ -43,18 +43,11 @@ describe('discoveryOnStartupEpic', () => {
         env: WEB
       }
     })
-    nock.disableNetConnect()
-    if (!nock.isActive()) {
-      nock.activate()
-    }
   })
   afterEach(() => {
     nock.cleanAll()
     bus.reset()
     store.clearActions()
-  })
-  afterAll(() => {
-    nock.restore()
   })
 
   test('listens on APP_START and tries to find a bolt host and sets it to default when bolt discovery not found', done => {
@@ -381,18 +374,11 @@ describe('discoveryOnStartupEpic cloud env', () => {
         env: CLOUD
       }
     })
-    nock.disableNetConnect()
-    if (!nock.isActive()) {
-      nock.activate()
-    }
   })
   afterEach(() => {
     nock.cleanAll()
     bus.reset()
     store.clearActions()
-  })
-  afterAll(() => {
-    nock.restore()
   })
 
   test('listens on APP_START and finds a bolt host and passes on the found host in cloud env', done => {
@@ -434,18 +420,11 @@ describe('injectDiscoveryEpic', () => {
     store = mockStore({
       connections: {}
     })
-    nock.disableNetConnect()
-    if (!nock.isActive()) {
-      nock.activate()
-    }
   })
   afterEach(() => {
     nock.cleanAll()
     bus.reset()
     store.clearActions()
-  })
-  afterAll(() => {
-    nock.restore()
   })
   test('injectDiscoveryEpic takes passed properties and updates discovery endpoint', () => {
     // Given

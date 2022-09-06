@@ -47,12 +47,6 @@ describe('getAndMergeDiscoveryData', () => {
   beforeEach(() => {
     logs = []
   })
-  beforeAll(() => {
-    nock.disableNetConnect()
-    if (!nock.isActive()) {
-      nock.activate()
-    }
-  })
 
   afterEach(() => {
     nock.cleanAll()
@@ -60,7 +54,6 @@ describe('getAndMergeDiscoveryData', () => {
 
   afterAll(() => {
     console.log = logger
-    nock.restore()
   })
 
   test('finds host when only discovery endpoint (with SSO) is set up', async () => {
@@ -199,47 +192,47 @@ describe('getAndMergeDiscoveryData', () => {
     ])
     //expect(discoveryData?.source).toEqual(CONNECT_FORM)
   })
+})
 
-  test('finds sso providers from some providers and merges without overriding', async () => {
-    // Given
-    const hasDiscoveryEndpoint = true
-    ;[
-      { host: sessionStorageHost, providerIds: ['malmöstad'] },
-      { host: hostedUrl, providerIds: ['trelleborg'] },
-      { host: forceUrl, providerIds: ['göteborg'] },
-      { host: discoveryUrl, providerIds: ['petalburg'] }
-    ].forEach(({ host, providerIds }) => {
-      nock(host)
-        .get('/')
-        .reply(200, fakeDiscoveryResponse({ providerIds, host: 'bolthost' }))
-    })
-
-    const action = {
-      ...baseAction,
-      discoveryUrl: discoveryUrl,
-      forceUrl: forceUrl,
-      sessionStorageHost
-    }
-
-    // When
-    const discoveryData = await getAndMergeDiscoveryData({
-      action,
-      hostedUrl: hostedUrl,
-      generateBoltUrlWithAllowedScheme,
-      hasDiscoveryEndpoint
-    })
-
-    // Then
-    expect(discoveryData).toBeTruthy()
-    expect(discoveryData?.host).toEqual('bolthost')
-    expect(discoveryData?.SSOProviders?.map(p => p.id)).toEqual([
-      'malmöstad',
-      'göteborg',
-      'petalburg',
-      'trelleborg'
-    ])
-    //expect(discoveryData?.source).toEqual(CONNECT_FORM)
+test('finds sso providers from some providers and merges without overriding', async () => {
+  // Given
+  const hasDiscoveryEndpoint = true
+  ;[
+    { host: sessionStorageHost, providerIds: ['malmöstad'] },
+    { host: hostedUrl, providerIds: ['trelleborg'] },
+    { host: forceUrl, providerIds: ['göteborg'] },
+    { host: discoveryUrl, providerIds: ['petalburg'] }
+  ].forEach(({ host, providerIds }) => {
+    nock(host)
+      .get('/')
+      .reply(200, fakeDiscoveryResponse({ providerIds, host: 'bolthost' }))
   })
+
+  const action = {
+    ...baseAction,
+    discoveryUrl: discoveryUrl,
+    forceUrl: forceUrl,
+    sessionStorageHost
+  }
+
+  // When
+  const discoveryData = await getAndMergeDiscoveryData({
+    action,
+    hostedUrl: hostedUrl,
+    generateBoltUrlWithAllowedScheme,
+    hasDiscoveryEndpoint
+  })
+
+  // Then
+  expect(discoveryData).toBeTruthy()
+  expect(discoveryData?.host).toEqual('bolthost')
+  expect(discoveryData?.SSOProviders?.map(p => p.id)).toEqual([
+    'malmöstad',
+    'göteborg',
+    'petalburg',
+    'trelleborg'
+  ])
+  //expect(discoveryData?.source).toEqual(CONNECT_FORM)
 })
 
 // Tests yet not written:
