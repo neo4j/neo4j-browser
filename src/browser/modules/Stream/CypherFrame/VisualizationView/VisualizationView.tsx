@@ -230,8 +230,10 @@ LIMIT ${maxNewNeighbours}`
     rawExistingNodeIds: number[],
     rawNewNodeIds: number[]
   ): Promise<BasicNodesAndRels> {
-    const newNodeIds = rawNewNodeIds.map(neo4j.int)
-    const existingNodeIds = rawExistingNodeIds.map(neo4j.int).concat(newNodeIds)
+    const newNodeIds = rawNewNodeIds.map(n => neo4j.int(n))
+    const existingNodeIds = rawExistingNodeIds
+      .map(n => neo4j.int(n))
+      .concat(newNodeIds)
     const query =
       'MATCH (a)-[r]->(b) WHERE id(a) IN $existingNodeIds AND id(b) IN $newNodeIds RETURN r;'
     return new Promise((resolve, reject) => {
