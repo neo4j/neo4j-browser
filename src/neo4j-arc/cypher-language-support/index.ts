@@ -26,6 +26,12 @@ export {
   initalizeCypherSupport,
   getText
 } from './cypher-editor/editorSupport'
+export {
+  parse as parseQueryOrCommand,
+  extractStatements,
+  createCypherLexer
+} from 'cypher-editor-support'
+export type { QueryOrCommand, ConsoleCommand } from 'cypher-editor-support'
 
 export {
   toFunction,
