@@ -27,7 +27,7 @@ export {
   getText
 } from './cypher-editor/editorSupport'
 export {
-  parse,
+  parse as parseQueryOrCommand,
   extractStatements,
   createCypherLexer
 } from 'cypher-editor-support'
