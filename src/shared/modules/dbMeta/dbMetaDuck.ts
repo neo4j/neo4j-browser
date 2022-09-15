@@ -116,7 +116,7 @@ export const initialClientSettings: ClientSettings = {
   retainEditorHistory: false, // default is true, but set to false until settings read
   allowTelemetry: true, // default is true. Renamed to client.allow_telemetry after 5.0
   authEnabled: true, // default is true
-  metricsNamespacesEnabled: false, // default is false, Renamed to server.metrics.namespaces.enabled after 5.0
+  metricsNamespacesEnabled: false, // pre 5.0: default is false, from and after 5.0: settings removed, always true
   metricsPrefix: 'neo4j' // default is 'neo4j', Renamed to server.metrics.prefix after 5.0
 }
 // Initial state

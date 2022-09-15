@@ -109,7 +109,9 @@ export const SysInfoTableEntry = ({
   return mappedValue || !optional ? (
     <StyledTr>
       <StyledTdKey>{label}</StyledTdKey>
-      <StyledTd>{mappedValue || missingValuePlaceholder}</StyledTd>
+      <StyledTd data-testid={label}>
+        {mappedValue || missingValuePlaceholder}
+      </StyledTd>
     </StyledTr>
   ) : null
 }

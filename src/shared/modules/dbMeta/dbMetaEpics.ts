@@ -79,7 +79,7 @@ import {
   getListProcedureQuery
 } from '../cypher/functionsAndProceduresHelper'
 import { isInt, Record } from 'neo4j-driver'
-import { gte } from 'semver'
+import semver, { gte, SemVer } from 'semver'
 import { triggerCredentialsTimeout } from '../credentialsPolicy/credentialsPolicyDuck'
 
 async function databaseList(store: any) {
@@ -390,13 +390,18 @@ export const serverConfigEpic = (some$: any, store: any) =>
         .do((res: any) => {
           if (!res) return Rx.Observable.of(null)
 
+          const neo4jVersion = getSemanticVersion(store.getState())
+
           const rawSettings = res.records.reduce((all: any, record: any) => {
             const name = record.get('name')
             all[name] = record.get('value')
             return all
           }, {})
 
-          const settings: ClientSettings = cleanupSettings(rawSettings)
+          const settings: ClientSettings = cleanupSettings(
+            rawSettings,
+            neo4jVersion
+          )
 
           // side-effects
           store.dispatch(
@@ -419,7 +424,10 @@ export const serverConfigEpic = (some$: any, store: any) =>
     .do(() => store.dispatch(update({ serverConfigDone: true })))
     .mapTo({ type: 'SERVER_CONFIG_DONE' })
 
-export const cleanupSettings = (rawSettings: any) => {
+export const cleanupSettings = (
+  rawSettings: any,
+  neo4jVersion: SemVer | null
+) => {
   const settings: ClientSettings = {
     allowOutgoingConnections: !isConfigValFalsy(
       rawSettings['browser.allow_outgoing_connections']
@@ -441,10 +449,11 @@ export const cleanupSettings = (rawSettings: any) => {
       isConfigValFalsy(rawSettings['client.allow_telemetry'])
     ), // default true
     authEnabled: !isConfigValFalsy(rawSettings['dbms.security.auth_enabled']), // default true
-    // Info: metrics... in versions < 5.0, server.metrics... in versions >= 5.0
+    // Info: in versions < 5.0 exists and defaults to false, in versions >= 5.0 is removed and always true
     metricsNamespacesEnabled:
-      isConfigValTruthy(rawSettings['metrics.namespaces.enabled']) ||
-      isConfigValTruthy(rawSettings['server.metrics.namespaces.enabled']), // default false
+      neo4jVersion && semver.satisfies(neo4jVersion, '<5.0.0')
+        ? isConfigValTruthy(rawSettings['metrics.namespaces.enabled'])
+        : true,
     metricsPrefix:
       rawSettings['metrics.prefix'] ??
       rawSettings['server.metrics.prefix'] ??
