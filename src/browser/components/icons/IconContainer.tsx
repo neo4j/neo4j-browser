@@ -92,6 +92,7 @@ export const IconContainer = (props: IconContainerProps): JSX.Element => {
   ) : (
     <StyledIconWrapper
       {...rest}
+      title={title}
       style={{ fontSize: fontSize, lineHeight: 'inherit' }}
     />
   )
