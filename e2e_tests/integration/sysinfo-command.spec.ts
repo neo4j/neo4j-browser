@@ -31,7 +31,7 @@ describe(':sysinfo command', () => {
   })
 
   if (isEnterpriseEdition()) {
-    if (Cypress.config('serverVersion') >= 4.0) {
+    if (Cypress.config('serverVersion') >= 4.1) {
       it('sysinfo shows store size', () => {
         cy.executeCommand(':sysinfo')
 
