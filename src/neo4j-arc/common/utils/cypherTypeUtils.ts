@@ -24,10 +24,7 @@ import {
   Point,
   isDuration,
   isPoint,
-  types,
-  isNode,
-  isRelationship,
-  isPath
+  types
 } from 'neo4j-driver-core'
 import { Duration as luxonDuration } from 'luxon'
 import {
@@ -107,7 +104,7 @@ ${value
     }
 
     // Now we have nodes, relationships, paths and cypher maps left.
-    // No special care for them stringify them as if objects
+    // No special care for them stringify them as we would normal objects
     const entries = Object.entries(value)
     if (entries.length === 0) return '{}'
 

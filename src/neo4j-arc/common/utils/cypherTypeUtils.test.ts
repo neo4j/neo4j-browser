@@ -2,7 +2,6 @@ import {
   DateTime,
   Duration,
   int,
-  Integer,
   Node,
   Path,
   PathSegment,
@@ -34,7 +33,6 @@ describe('propertyToString', () => {
       propertyToString(new Duration(int(124), int(0), int(0), int(0)))
     ).toEqual('P10Y4M')
 
-    // TODO bestäm fnuttarna make sense.
     expect(
       propertyToString(
         new DateTime(
@@ -53,9 +51,10 @@ describe('propertyToString', () => {
     expect(propertyToString([12, 34])).toEqual('[12.0, 34.0]')
 
     // TODO not sure if we wan't to do double fnuttar eller not
+    // TODO fråga greg om detta x2 -> borde duttar vara på datum? och borde fnuttar vara på strängar
+    // todo kika på den duplicerade duration format och varför den finns.
     expect(propertyToString('Mothim')).toEqual('Mothim')
     expect(propertyToString('💎')).toEqual('💎')
-    // todo kika på den duplicerade duration format och varför den finns.
   })
 })
 
