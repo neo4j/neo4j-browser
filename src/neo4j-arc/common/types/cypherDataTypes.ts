@@ -130,6 +130,16 @@ export const isCypherBasicPropertyType = (
     isPoint(value)
   )
 }
+export const isCypherPropertyType = (value: any): value is CypherProperty => {
+  if (Array.isArray(value)) {
+    const firstItem = value[0]
+    if (firstItem === undefined) return true
+
+    return isCypherBasicPropertyType(firstItem)
+  } else {
+    return isCypherBasicPropertyType(value)
+  }
+}
 
 export const isCypherTemporalType = (
   anything: object

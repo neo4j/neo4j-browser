@@ -24,10 +24,18 @@ import {
   Point,
   isDuration,
   isPoint,
-  types
+  types,
+  isNode,
+  isRelationship,
+  isPath
 } from 'neo4j-driver-core'
 import { Duration as luxonDuration } from 'luxon'
-import { CypherProperty, isCypherTemporalType } from '../types/cypherDataTypes'
+import {
+  CypherDataType,
+  CypherProperty,
+  isCypherPropertyType,
+  isCypherTemporalType
+} from '../types/cypherDataTypes'
 
 const getDriverTypeName = (val: CypherProperty) => {
   const driverTypeMap = types
@@ -70,6 +78,54 @@ export const getPropertyTypeDisplayName = (val: CypherProperty): string => {
   return getDriverTypeName(val) || 'Unknown'
 }
 
+// todo testa med jobbigre strängar & objekt
+
+export const cypherDataToString = (map: CypherDataType): string => {
+  const recursiveStringify = (
+    value: CypherDataType,
+    indentationLevel = 0
+  ): string => {
+    const indentation = '  '.repeat(indentationLevel)
+
+    const nextIndentationLevel = indentationLevel + 1
+    const nextIdentation = '  '.repeat(nextIndentationLevel)
+
+    // temp override for nicer strings
+    if (typeof value === 'string') {
+      return `"${value}"`
+    }
+
+    if (isCypherPropertyType(value)) {
+      return propertyToString(value)
+    }
+
+    if (Array.isArray(value)) {
+      return `[
+${value
+  .map(v => `${nextIdentation}${recursiveStringify(v, nextIndentationLevel)}`)
+  .join(',\n')}\n${indentation}]`
+    }
+
+    // Now we have nodes, relationships, paths and cypher maps left.
+    // No special care for them stringify them as if objects
+    const entries = Object.entries(value)
+    if (entries.length === 0) return '{}'
+
+    return `{
+${entries
+  .map(([key, val]) => {
+    return `${nextIdentation}${key}: ${recursiveStringify(
+      val,
+      nextIndentationLevel
+    )}`
+  })
+  .join(',\n')}
+${indentation}}`
+  }
+
+  return recursiveStringify(map)
+}
+
 export function propertyToString(property: CypherProperty): string {
   if (Array.isArray(property)) {
     return `[${property.map(propertyToString).join(', ')}]`
@@ -98,12 +154,13 @@ export function propertyToString(property: CypherProperty): string {
   }
 
   if (isCypherTemporalType(property)) {
-    return `"${property.toString()}"`
+    if (isDuration(property)) {
+      return durationFormat(property)
+    } else {
+      return `"${property.toString()}"`
+    }
   }
 
-  if (isDuration(property)) {
-    return durationFormat(property)
-  }
   if (isPoint(property)) {
     return spacialFormat(property)
   }
