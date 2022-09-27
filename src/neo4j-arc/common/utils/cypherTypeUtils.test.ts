@@ -88,7 +88,7 @@ describe('propertyToString', () => {
   })
 })
 
-describe('stringifyCypher', () => {
+describe('cypherDataToString', () => {
   test('test cypher maps', () => {
     expect(
       cypherDataToString({
