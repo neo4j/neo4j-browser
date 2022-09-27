@@ -48,11 +48,11 @@ describe('extractNodesAndRels', () => {
     const graphNodeStart = nodes.filter(node => node.id === '1')[0]
     expect(graphNodeStart).toBeDefined()
     expect(graphNodeStart.labels).toEqual(['Person'])
-    expect(graphNodeStart.properties).toEqual({ prop1: 'prop1' })
+    expect(graphNodeStart.properties).toEqual({ prop1: '"prop1"' })
     const graphNodeEnd = nodes.filter(node => node.id === '2')[0]
     expect(graphNodeEnd).toBeDefined()
     expect(graphNodeEnd.labels).toEqual(['Movie'])
-    expect(graphNodeEnd.properties).toEqual({ prop2: 'prop2' })
+    expect(graphNodeEnd.properties).toEqual({ prop2: '"prop2"' })
     expect(relationships.length).toBe(1)
     expect(relationships[0].id).toEqual('3')
     expect(relationships[0].startNodeId).toEqual('1')
@@ -113,7 +113,7 @@ describe('extractNodesAndRels', () => {
     const graphNodeStart = nodes[0]
     expect(graphNodeStart).toBeDefined()
     expect(graphNodeStart.labels).toEqual(['Person'])
-    expect(graphNodeStart.properties).toEqual({ prop1: 'prop1' })
+    expect(graphNodeStart.properties).toEqual({ prop1: '"prop1"' })
     expect(relationships.length).toBe(0)
   })
 
@@ -147,7 +147,7 @@ describe('extractNodesAndRels', () => {
     const graphNodeStart = nodes[0]
     expect(graphNodeStart).toBeDefined()
     expect(graphNodeStart.labels).toEqual(['Person'])
-    expect(graphNodeStart.properties).toEqual({ prop1: 'prop1' })
+    expect(graphNodeStart.properties).toEqual({ prop1: '"prop1"' })
     expect(relationships.length).toBe(1)
   })
 })
