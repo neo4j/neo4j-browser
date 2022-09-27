@@ -1,12 +1,16 @@
 import {
+  Date,
   DateTime,
   Duration,
   int,
+  LocalDateTime,
+  LocalTime,
   Node,
   Path,
   PathSegment,
   Point,
-  Relationship
+  Relationship,
+  Time
 } from 'neo4j-driver'
 import { cypherDataToString, propertyToString } from './cypherTypeUtils'
 
@@ -28,15 +32,14 @@ describe('propertyToString', () => {
       'point({srid:1, x:3, y:4})'
     )
 
-    // TODO bestäm om normalisera
     expect(
       propertyToString(new Duration(int(124), int(0), int(0), int(0)))
-    ).toEqual('P10Y4M')
+    ).toEqual('P124M0DT0S')
 
     expect(
       propertyToString(
         new DateTime(
-          int(2000),
+          int(2003),
           int(3),
           int(3),
           int(3),
@@ -46,15 +49,42 @@ describe('propertyToString', () => {
           int(0)
         )
       )
-    ).toEqual('"2000-03-03T03:03:03.000000003Z"')
+    ).toEqual('2003-03-03T03:03:03.000000003Z')
+
+    expect(propertyToString(new Date(int(2003), int(12), int(25)))).toEqual(
+      '2003-12-25'
+    )
+
+    expect(
+      propertyToString(new Time(int(23), int(12), int(25), int(0), int(0)))
+    ).toEqual('23:12:25Z')
+
+    expect(
+      propertyToString(new Time(int(23), int(12), int(25), int(0), int(10)))
+    ).toEqual('23:12:25+00:00:10')
+
+    expect(
+      propertyToString(new LocalTime(int(23), int(12), int(25), int(0)))
+    ).toEqual('23:12:25')
+
+    expect(
+      propertyToString(
+        new LocalDateTime(
+          int(2003),
+          int(12),
+          int(25),
+          int(23),
+          int(12),
+          int(25),
+          int(0)
+        )
+      )
+    ).toEqual('2003-12-25T23:12:25')
 
     expect(propertyToString([12, 34])).toEqual('[12.0, 34.0]')
 
-    // TODO not sure if we wan't to do double fnuttar eller not
-    // TODO fråga greg om detta x2 -> borde duttar vara på datum? och borde fnuttar vara på strängar
-    // todo kika på den duplicerade duration format och varför den finns.
-    expect(propertyToString('Mothim')).toEqual('Mothim')
-    expect(propertyToString('💎')).toEqual('💎')
+    expect(propertyToString('Mothim')).toEqual('"Mothim"')
+    expect(propertyToString('💎')).toEqual('"💎"')
   })
 })
 
@@ -175,7 +205,7 @@ describe('stringifyCypher', () => {
 
     expect(cypherDataToString(startNode)).toEqual(`{
   identity: 1,
-  labels: [Person],
+  labels: ["Person"],
   properties: {
     prop1: "prop1"
   }
@@ -193,14 +223,14 @@ describe('stringifyCypher', () => {
       `{
   start: {
     identity: 1,
-    labels: [Person],
+    labels: ["Person"],
     properties: {
       prop1: "prop1"
     }
   },
   end: {
     identity: 2,
-    labels: [Movie],
+    labels: ["Movie"],
     properties: {
       prop2: "prop2"
     }
@@ -209,7 +239,7 @@ describe('stringifyCypher', () => {
     {
       start: {
         identity: 1,
-        labels: [Person],
+        labels: ["Person"],
         properties: {
           prop1: "prop1"
         }
@@ -223,7 +253,7 @@ describe('stringifyCypher', () => {
       },
       end: {
         identity: 2,
-        labels: [Movie],
+        labels: ["Movie"],
         properties: {
           prop2: "prop2"
         }

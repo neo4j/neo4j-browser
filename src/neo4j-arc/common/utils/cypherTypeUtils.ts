@@ -18,15 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  Duration,
-  isInt,
-  Point,
-  isDuration,
-  isPoint,
-  types
-} from 'neo4j-driver-core'
-import { Duration as luxonDuration } from 'luxon'
+import { isInt, Point, isPoint, types } from 'neo4j-driver-core'
 import {
   CypherDataType,
   CypherProperty,
@@ -75,8 +67,6 @@ export const getPropertyTypeDisplayName = (val: CypherProperty): string => {
   return getDriverTypeName(val) || 'Unknown'
 }
 
-// todo testa med jobbigre strängar & objekt
-
 export const cypherDataToString = (map: CypherDataType): string => {
   const recursiveStringify = (
     value: CypherDataType,
@@ -86,11 +76,6 @@ export const cypherDataToString = (map: CypherDataType): string => {
 
     const nextIndentationLevel = indentationLevel + 1
     const nextIdentation = '  '.repeat(nextIndentationLevel)
-
-    // temp override for nicer strings
-    if (typeof value === 'string') {
-      return `"${value}"`
-    }
 
     if (isCypherPropertyType(value)) {
       return propertyToString(value)
@@ -142,8 +127,9 @@ export function propertyToString(property: CypherProperty): string {
   if (typeof property === 'number') {
     return numberFormat(property)
   }
+
   if (typeof property === 'string') {
-    return property
+    return `"${property}"`
   }
 
   if (property.constructor === Int8Array) {
@@ -151,11 +137,7 @@ export function propertyToString(property: CypherProperty): string {
   }
 
   if (isCypherTemporalType(property)) {
-    if (isDuration(property)) {
-      return durationFormat(property)
-    } else {
-      return `"${property.toString()}"`
-    }
+    return property.toString()
   }
 
   if (isPoint(property)) {
@@ -165,13 +147,6 @@ export function propertyToString(property: CypherProperty): string {
   // This case shouldn't be used, but added as a fallback
   return String(property)
 }
-
-const durationFormat = (duration: Duration): string =>
-  luxonDuration
-    .fromISO(duration.toString())
-    .shiftTo('years', 'days', 'months', 'hours', 'minutes', 'seconds')
-    .normalize()
-    .toISO()
 
 const numberFormat = (anything: number) => {
   // Exclude false positives and return early
