@@ -38,6 +38,7 @@ const Select = styled.select`
 const EMPTY_OPTION = 'Select db to use'
 
 const HOUSE_EMOJI = '\u{1F3E0}'
+const HOUR_GLASS_EMOJI = '\u{231B}'
 const NBSP_CHAR = '\u{00A0}'
 
 type DatabaseSelectorProps = {
@@ -82,9 +83,14 @@ export const DatabaseSelector = ({
         >
           {uniqDatabases.map(db => {
             return (
-              <option key={db.name} value={db.name}>
+              <option
+                key={db.name}
+                value={db.name}
+                disabled={db.status === 'unknown'}
+              >
                 {db.name}
                 {db === homeDb ? NBSP_CHAR + HOUSE_EMOJI : ''}
+                {db.status === 'unknown' ? NBSP_CHAR + HOUR_GLASS_EMOJI : ''}
               </option>
             )
           })}
