@@ -132,10 +132,9 @@ export const isCypherBasicPropertyType = (
 }
 export const isCypherPropertyType = (value: any): value is CypherProperty => {
   if (Array.isArray(value)) {
-    const firstItem = value[0]
-    if (firstItem === undefined) return true
+    if (value.length === 0) return true
 
-    return isCypherBasicPropertyType(firstItem)
+    return isCypherBasicPropertyType(value[0])
   } else {
     return isCypherBasicPropertyType(value)
   }
