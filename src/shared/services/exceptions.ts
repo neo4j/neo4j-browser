@@ -136,7 +136,7 @@ export function DatabaseUnavailableError({
   dbName: string
   dbMeta: { status: string }
 }): BrowserError {
-  const type = 'DatabaseNotFoundError'
+  const type = 'DatabaseUnavailableError'
   return {
     type,
     code: type,
