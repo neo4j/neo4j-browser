@@ -208,7 +208,8 @@ describe('cypherDataToString', () => {
   labels: ["Person"],
   properties: {
     prop1: "prop1"
-  }
+  },
+  elementId: "1"
 }`)
 
     expect(cypherDataToString(relationship)).toEqual(`{
@@ -216,7 +217,10 @@ describe('cypherDataToString', () => {
   start: 1,
   end: 2,
   type: "ACTED_IN",
-  properties: {}
+  properties: {},
+  elementId: "3",
+  startNodeElementId: "1",
+  endNodeElementId: "2"
 }`)
 
     expect(cypherDataToString(path)).toEqual(
@@ -226,14 +230,16 @@ describe('cypherDataToString', () => {
     labels: ["Person"],
     properties: {
       prop1: "prop1"
-    }
+    },
+    elementId: "1"
   },
   end: {
     identity: 2,
     labels: ["Movie"],
     properties: {
       prop2: "prop2"
-    }
+    },
+    elementId: "2"
   },
   segments: [
     {
@@ -242,21 +248,26 @@ describe('cypherDataToString', () => {
         labels: ["Person"],
         properties: {
           prop1: "prop1"
-        }
+        },
+        elementId: "1"
       },
       relationship: {
         identity: 3,
         start: 1,
         end: 2,
         type: "ACTED_IN",
-        properties: {}
+        properties: {},
+        elementId: "3",
+        startNodeElementId: "1",
+        endNodeElementId: "2"
       },
       end: {
         identity: 2,
         labels: ["Movie"],
         properties: {
           prop2: "prop2"
-        }
+        },
+        elementId: "2"
       }
     }
   ],

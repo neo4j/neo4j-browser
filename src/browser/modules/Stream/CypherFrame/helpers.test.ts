@@ -765,6 +765,7 @@ describe('helpers', () => {
         const expected = {
           n: {
             identity: 1,
+            elementId: '1',
             elementType: 'node',
             labels: ['foo'],
             properties: {
@@ -784,6 +785,7 @@ describe('helpers', () => {
         const expected = {
           n: {
             identity: 1,
+            elementId: '1',
             elementType: 'node',
             labels: ['foo'],
             properties: {
@@ -803,6 +805,7 @@ describe('helpers', () => {
         const expected = {
           n: {
             identity: 1,
+            elementId: '1',
             elementType: 'node',
             labels: ['foo'],
             properties: {
@@ -822,6 +825,7 @@ describe('helpers', () => {
         const expected = {
           n: {
             identity: 1,
+            elementId: '1',
             elementType: 'node',
             labels: ['foo'],
             properties: {
@@ -841,6 +845,7 @@ describe('helpers', () => {
         const expected = {
           n: {
             identity: 1,
+            elementId: '1',
             elementType: 'node',
             labels: ['foo'],
             properties: {
@@ -860,6 +865,7 @@ describe('helpers', () => {
         const expected = {
           n: {
             identity: 1,
+            elementId: '1',
             elementType: 'node',
             labels: ['foo'],
             properties: {
@@ -879,6 +885,7 @@ describe('helpers', () => {
         const expected = {
           n: {
             identity: 1,
+            elementId: '1',
             elementType: 'node',
             labels: ['foo'],
             properties: {
@@ -898,6 +905,7 @@ describe('helpers', () => {
         const expected = {
           n: {
             identity: 1,
+            elementId: '1',
             elementType: 'node',
             labels: ['foo'],
             properties: {
@@ -917,6 +925,7 @@ describe('helpers', () => {
         const expected = {
           n: {
             identity: 1,
+            elementId: '1',
             elementType: 'node',
             labels: ['foo'],
             properties: {
@@ -935,6 +944,7 @@ describe('helpers', () => {
         const record = new (neo4j.types.Record as any)(['n'], [node])
         const expected = {
           n: {
+            elementId: '1',
             identity: 1,
             elementType: 'node',
             labels: ['foo'],
@@ -955,6 +965,7 @@ describe('helpers', () => {
         const expected = {
           n: {
             identity: 1,
+            elementId: '1',
             elementType: 'node',
             labels: ['foo'],
             properties: {
@@ -981,6 +992,9 @@ describe('helpers', () => {
         const record = new (neo4j.types.Record as any)(['r'], [relationship])
         const expected = {
           r: {
+            elementId: '1',
+            startNodeElementId: '2',
+            endNodeElementId: '3',
             identity: 1,
             start: 2,
             end: 3,
@@ -1008,9 +1022,12 @@ describe('helpers', () => {
         const record = new (neo4j.types.Record as any)(['r'], [relationship])
         const expected = {
           r: {
+            elementId: '1',
             identity: 1,
             start: 2,
             end: 3,
+            startNodeElementId: '2',
+            endNodeElementId: '3',
             elementType: 'relationship',
             type: 'foo',
             properties: {
@@ -1035,9 +1052,12 @@ describe('helpers', () => {
         const record = new (neo4j.types.Record as any)(['r'], [relationship])
         const expected = {
           r: {
+            elementId: '1',
             identity: 1,
             start: 2,
             end: 3,
+            startNodeElementId: '2',
+            endNodeElementId: '3',
             elementType: 'relationship',
             type: 'foo',
             properties: {
@@ -1065,6 +1085,9 @@ describe('helpers', () => {
             identity: 1,
             start: 2,
             end: 3,
+            elementId: '1',
+            startNodeElementId: '2',
+            endNodeElementId: '3',
             elementType: 'relationship',
             type: 'foo',
             properties: {
@@ -1092,6 +1115,9 @@ describe('helpers', () => {
             identity: 1,
             start: 2,
             end: 3,
+            elementId: '1',
+            startNodeElementId: '2',
+            endNodeElementId: '3',
             elementType: 'relationship',
             type: 'foo',
             properties: {
@@ -1120,6 +1146,9 @@ describe('helpers', () => {
             start: 2,
             end: 3,
             elementType: 'relationship',
+            elementId: '1',
+            startNodeElementId: '2',
+            endNodeElementId: '3',
             type: 'foo',
             properties: {
               bar: '1970-01-01T11:01:12Z'
@@ -1148,6 +1177,9 @@ describe('helpers', () => {
             end: 3,
             elementType: 'relationship',
             type: 'foo',
+            elementId: '1',
+            startNodeElementId: '2',
+            endNodeElementId: '3',
             properties: {
               bar: '1970-01-01T11:01:12'
             }
@@ -1173,6 +1205,9 @@ describe('helpers', () => {
             identity: 1,
             start: 2,
             end: 3,
+            elementId: '1',
+            startNodeElementId: '2',
+            endNodeElementId: '3',
             elementType: 'relationship',
             type: 'foo',
             properties: {
@@ -1197,9 +1232,12 @@ describe('helpers', () => {
         const record = new (neo4j.types.Record as any)(['r'], [relationship])
         const expected = {
           r: {
+            elementId: '1',
             identity: 1,
             start: 2,
+            startNodeElementId: '2',
             end: 3,
+            endNodeElementId: '3',
             elementType: 'relationship',
             type: 'foo',
             properties: {
@@ -1236,6 +1274,7 @@ describe('helpers', () => {
         const expected = {
           n1: {
             identity: 1,
+            elementId: '1',
             elementType: 'node',
             labels: ['foo'],
             properties: {
@@ -1243,17 +1282,21 @@ describe('helpers', () => {
             }
           },
           r1: {
-            identity: 3,
+            elementId: '3',
             elementType: 'relationship',
-            type: 'bom',
-            start: 1,
             end: 2,
+            endNodeElementId: '2',
+            identity: 3,
             properties: {
               bar: 'apa'
-            }
+            },
+            start: 1,
+            startNodeElementId: '1',
+            type: 'bom'
           },
           n2: {
             identity: 2,
+            elementId: '2',
             elementType: 'node',
             labels: ['bam'],
             properties: {
@@ -1292,6 +1335,7 @@ describe('helpers', () => {
             length: 1,
             start: {
               identity: 1,
+              elementId: '1',
               elementType: 'node',
               labels: ['foo'],
               properties: {
@@ -1300,6 +1344,7 @@ describe('helpers', () => {
             },
             end: {
               identity: 2,
+              elementId: '2',
               elementType: 'node',
               labels: ['bam'],
               properties: {
@@ -1310,6 +1355,7 @@ describe('helpers', () => {
               {
                 start: {
                   identity: 1,
+                  elementId: '1',
                   elementType: 'node',
                   labels: ['foo'],
                   properties: {
@@ -1318,16 +1364,20 @@ describe('helpers', () => {
                 },
                 relationship: {
                   identity: 3,
+                  elementId: '3',
                   elementType: 'relationship',
                   type: 'bom',
                   start: 1,
+                  startNodeElementId: '1',
                   end: 2,
+                  endNodeElementId: '2',
                   properties: {
                     bar: 'apa'
                   }
                 },
                 end: {
                   identity: 2,
+                  elementId: '2',
                   elementType: 'node',
                   labels: ['bam'],
                   properties: {
