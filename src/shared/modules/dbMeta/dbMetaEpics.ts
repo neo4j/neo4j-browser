@@ -70,7 +70,8 @@ import {
   setAuthEnabled,
   setRetainCredentials,
   updateConnection,
-  useDb
+  useDb,
+  getConnectedHost
 } from 'shared/modules/connections/connectionsDuck'
 import { clearHistory } from 'shared/modules/history/historyDuck'
 import { backgroundTxMetadata } from 'shared/services/bolt/txMetadata'
@@ -81,6 +82,7 @@ import {
 import { isInt, Record } from 'neo4j-driver'
 import semver, { gte, SemVer } from 'semver'
 import { triggerCredentialsTimeout } from '../credentialsPolicy/credentialsPolicyDuck'
+import { isNonRoutingScheme } from 'services/boltscheme.utils'
 
 async function databaseList(store: any) {
   try {
@@ -166,16 +168,23 @@ async function getLabelsAndTypes(store: any) {
 
 async function getFunctionsAndProcedures(store: any) {
   const version = getSemanticVersion(store.getState())
+  const supportsMultiDb = await bolt.hasMultiDbSupport()
   try {
     const procedurePromise = bolt.routedReadTransaction(
       getListProcedureQuery(version),
       {},
-      backgroundTxMetadata
+      {
+        ...backgroundTxMetadata,
+        useDb: supportsMultiDb ? SYSTEM_DB : undefined
+      }
     )
     const functionPromise = bolt.routedReadTransaction(
       getListFunctionQuery(version),
       {},
-      backgroundTxMetadata
+      {
+        ...backgroundTxMetadata,
+        useDb: supportsMultiDb ? SYSTEM_DB : undefined
+      }
     )
     const [procedures, functions] = await Promise.all([
       procedurePromise,
@@ -219,7 +228,10 @@ async function fetchServerInfo(store: any) {
     const serverInfo = await bolt.directTransaction(
       serverInfoQuery,
       {},
-      backgroundTxMetadata
+      {
+        ...backgroundTxMetadata,
+        useDb: (await bolt.hasMultiDbSupport()) ? SYSTEM_DB : undefined
+      }
     )
     store.dispatch(updateServerInfo(serverInfo))
   } catch {}
@@ -301,10 +313,15 @@ export const dbMetaEpic = (some$: any, store: any) =>
         .merge(some$.ofType(FORCE_FETCH))
         // Throw away newly initiated calls until done
         .throttle(() => some$.ofType(DB_META_DONE))
+        .do(() => {
+          // Cluster setups where the default database is unavailable,
+          // get labels and types takes a long time to finish and it shouldn't
+          // be blocking the rest of the bootup process, so we don't await the promise
+          getLabelsAndTypes(store)
+        })
         .mergeMap(() =>
           Rx.Observable.fromPromise(
             Promise.all([
-              getLabelsAndTypes(store),
               getFunctionsAndProcedures(store),
               clusterRole(store),
               databaseList(store)
