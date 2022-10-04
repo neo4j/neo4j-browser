@@ -70,7 +70,8 @@ import {
   setAuthEnabled,
   setRetainCredentials,
   updateConnection,
-  useDb
+  useDb,
+  getConnectedHost
 } from 'shared/modules/connections/connectionsDuck'
 import { clearHistory } from 'shared/modules/history/historyDuck'
 import { backgroundTxMetadata } from 'shared/services/bolt/txMetadata'
@@ -81,6 +82,7 @@ import {
 import { isInt, Record } from 'neo4j-driver'
 import semver, { gte, SemVer } from 'semver'
 import { triggerCredentialsTimeout } from '../credentialsPolicy/credentialsPolicyDuck'
+import { isNonRoutingScheme } from 'services/boltscheme.utils'
 
 async function databaseList(store: any) {
   try {
@@ -116,6 +118,15 @@ async function databaseList(store: any) {
 
 async function getLabelsAndTypes(store: any) {
   const db = getUseDb(store.getState())
+  const notRouted = isNonRoutingScheme(getConnectedHost(store.getState()) ?? '')
+
+  // Leaving db blank makes the driver use the default database which
+  // is not guaranteed to be reachable without routing.
+  // If it is not reachable, the query will fail and delay the
+  // rest of the metadata calls, so we play it safe and wait
+  if (!db && notRouted) {
+    return
+  }
 
   // System db, do nothing
   if (db === SYSTEM_DB) {
@@ -166,16 +177,23 @@ async function getLabelsAndTypes(store: any) {
 
 async function getFunctionsAndProcedures(store: any) {
   const version = getSemanticVersion(store.getState())
+  const supportsMultiDb = await bolt.hasMultiDbSupport()
   try {
     const procedurePromise = bolt.routedReadTransaction(
       getListProcedureQuery(version),
       {},
-      backgroundTxMetadata
+      {
+        ...backgroundTxMetadata,
+        useDb: supportsMultiDb ? SYSTEM_DB : undefined
+      }
     )
     const functionPromise = bolt.routedReadTransaction(
       getListFunctionQuery(version),
       {},
-      backgroundTxMetadata
+      {
+        ...backgroundTxMetadata,
+        useDb: supportsMultiDb ? SYSTEM_DB : undefined
+      }
     )
     const [procedures, functions] = await Promise.all([
       procedurePromise,
@@ -219,7 +237,10 @@ async function fetchServerInfo(store: any) {
     const serverInfo = await bolt.directTransaction(
       serverInfoQuery,
       {},
-      backgroundTxMetadata
+      {
+        ...backgroundTxMetadata,
+        useDb: (await bolt.hasMultiDbSupport()) ? SYSTEM_DB : undefined
+      }
     )
     store.dispatch(updateServerInfo(serverInfo))
   } catch {}
