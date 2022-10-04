@@ -128,11 +128,13 @@ export const handleBoltWorkerMessage =
       runningCypherQuery = true
       runCypherMessage(data, postMessage)
         .then(res => {
+          console.log('success', data.input, data, res)
           runningCypherQuery = false
           execCloseConnectionQueue()
           postMessage(cypherResponseMessage(res))
         })
         .catch(err => {
+          console.log('fail', data.input, data, err)
           runningCypherQuery = false
           execCloseConnectionQueue()
           postMessage(

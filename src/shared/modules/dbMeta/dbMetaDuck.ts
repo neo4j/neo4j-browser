@@ -23,6 +23,7 @@ import { GlobalState } from 'shared/globalState'
 import { APP_START } from 'shared/modules/app/appDuck'
 import { extractServerInfo } from './utils'
 import { coerce, SemVer, gte } from 'semver'
+import { QueryResult } from 'neo4j-driver'
 
 export const UPDATE_META = 'meta/UPDATE_META'
 export const PARSE_META = 'meta/PARSE_META'
@@ -74,7 +75,7 @@ export const updateSettings = (settings: ClientSettings) => {
   }
 }
 
-export const updateServerInfo = (res: any) => {
+export const updateServerInfo = (res: QueryResult) => {
   const extrated = extractServerInfo(res)
   return {
     ...extrated,
