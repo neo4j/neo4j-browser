@@ -118,15 +118,6 @@ async function databaseList(store: any) {
 
 async function getLabelsAndTypes(store: any) {
   const db = getUseDb(store.getState())
-  const notRouted = isNonRoutingScheme(getConnectedHost(store.getState()) ?? '')
-
-  // Leaving db blank makes the driver use the default database which
-  // is not guaranteed to be reachable without routing.
-  // If it is not reachable, the query will fail and delay the
-  // rest of the metadata calls, so we play it safe and wait
-  if (!db && notRouted) {
-    return
-  }
 
   // System db, do nothing
   if (db === SYSTEM_DB) {
@@ -322,10 +313,15 @@ export const dbMetaEpic = (some$: any, store: any) =>
         .merge(some$.ofType(FORCE_FETCH))
         // Throw away newly initiated calls until done
         .throttle(() => some$.ofType(DB_META_DONE))
+        .do(() => {
+          // Cluster setups where the default database is unavailable,
+          // get labels and types takes a long time to finish and it shouldn't
+          // be blocking the rest of the bootup process, so we don't await the promise
+          getLabelsAndTypes(store)
+        })
         .mergeMap(() =>
           Rx.Observable.fromPromise(
             Promise.all([
-              getLabelsAndTypes(store),
               getFunctionsAndProcedures(store),
               clusterRole(store),
               databaseList(store)
