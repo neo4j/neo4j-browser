@@ -68,7 +68,6 @@ export const PaneContainer = styled.div<{
   paneWidth: number
 }>`
   width: ${props => props.paneWidth}px;
-  padding: 0 14px;
   height: 100%;
   display: flex;
   flex-direction: column;

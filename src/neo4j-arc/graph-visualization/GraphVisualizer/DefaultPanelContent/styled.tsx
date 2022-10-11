@@ -44,6 +44,10 @@ export const NonClickableRelTypeChip = styled(StyledRelationshipChip)`
   cursor: default;
 `
 
+export const PaneWrapper = styled.div`
+  padding: 0 14px;
+`
+
 export const PaneHeader = styled.div`
   font-size: 16px;
   margin-top: 10px;
