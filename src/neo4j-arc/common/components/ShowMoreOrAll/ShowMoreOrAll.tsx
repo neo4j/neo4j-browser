@@ -37,11 +37,11 @@ export const ShowMoreOrAll = ({
   return shown < total ? (
     <div>
       <StyledShowMoreButton onClick={() => onMore(numMore)}>
-        Show {numMore} more
+        {`Show ${numMore} more`}
       </StyledShowMoreButton>
       &nbsp;|&nbsp;
       <StyledShowMoreButton onClick={() => onMore(total)}>
-        Show all
+        {`Show all`}
       </StyledShowMoreButton>
     </div>
   ) : null

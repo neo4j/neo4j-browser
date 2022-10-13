@@ -243,9 +243,9 @@ describe('Viz rendering', () => {
     cy.get('#svg-vis').trigger('wheel', { deltaY: 3000, shiftKey: true })
     cy.get(`[aria-label="zoom-out"]`).should('be.disabled')
   })
-  it.only('can handle lots of property values', () => {
+  it('can handle lots of property values and labels in node properties panel', () => {
     const numberOfProps = 50
-    const numberOfLabels = 1
+    const numberOfLabels = 50
     const queryLabels = Array.from({ length: numberOfLabels }, (x, i) => {
       return `:label${i}`
     }).join(' ')
@@ -265,13 +265,17 @@ describe('Viz rendering', () => {
       })
       .type(' {ENTER}')
 
+    // Check that can scroll overview panel
+    const showAllButtonText = 'Show all'
+    cy.get('button').contains(showAllButtonText).scrollIntoView()
+    cy.get('button').contains(showAllButtonText).should('be.visible')
+
     // Open node properties details panel
     const nodeSelector = '.node'
     cy.get(nodeSelector).click()
 
     const selectorPropsTable =
       '[data-testid="viz-details-pane-properties-table"]'
-
     cy.get(selectorPropsTable).should('be.visible')
 
     const lastPropName = 'prop9'
