@@ -41,7 +41,7 @@ const ConnectedView = ({
           <br />
         </span>
       ) : (
-        'You are connected'
+        'You are connected '
       )}
       {showHost && (
         <span>
