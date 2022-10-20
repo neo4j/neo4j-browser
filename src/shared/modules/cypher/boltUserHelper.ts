@@ -38,7 +38,7 @@ export function createDatabaseUser(
   is40 = false
 ) {
   if (is40) {
-    return `CREATE USER ${username} SET PASSWORD $password CHANGE ${
+    return `CREATE USER \`${username}\` SET PASSWORD $password CHANGE ${
       forcePasswordChange ? '' : 'NOT'
     } REQUIRED`
   }
@@ -47,35 +47,35 @@ export function createDatabaseUser(
 }
 export function deleteUser(username: any, is40 = false) {
   if (is40) {
-    return `DROP USER ${username}`
+    return `DROP USER \`${username}\``
   }
 
   return 'CALL dbms.security.deleteUser($username)'
 }
 export function addRoleToUser(username: any, role: any, is40 = false) {
   if (is40) {
-    return `GRANT ROLE ${role} TO ${username}`
+    return `GRANT ROLE \`${role}\` TO \`${username}\``
   }
 
   return 'CALL dbms.security.addRoleToUser($role, $username)'
 }
 export function removeRoleFromUser(role: any, username: any, is40 = false) {
   if (is40) {
-    return `REVOKE ROLE ${role} FROM ${username}`
+    return `REVOKE ROLE \`${role}\` FROM \`${username}\``
   }
 
   return 'CALL dbms.security.removeRoleFromUser($role, $username)'
 }
 export function activateUser(username: any, is40 = false) {
   if (is40) {
-    return `ALTER USER ${username} SET STATUS ACTIVE`
+    return `ALTER USER \`${username}\` SET STATUS ACTIVE`
   }
 
   return 'CALL dbms.security.activateUser($username, false)'
 }
 export function suspendUser(username: any, is40 = false) {
   if (is40) {
-    return `ALTER USER ${username} SET STATUS SUSPENDED`
+    return `ALTER USER \`${username}\` SET STATUS SUSPENDED`
   }
 
   return 'CALL dbms.security.suspendUser($username)'
