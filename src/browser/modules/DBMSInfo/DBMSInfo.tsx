@@ -87,10 +87,9 @@ export function DBMSInfo(props: any): JSX.Element {
         {!props.countAutoRefreshing && (
           <>
             <p>
-              The automatic refresh of the node and relationship counts has been
-              disabled due to long loading times.{' '}
+              Automatic updates of node and relationship counts have been disabled for performance reasons, likely due to{' '}
               <DrawerExternalLink href="https://neo4j.com/docs/cypher-manual/current/access-control/limitations/#access-control-limitations-db-operations">
-                Read more here.
+                RBAC configuration.
               </DrawerExternalLink>
             </p>
             <Button
