@@ -41,7 +41,7 @@ import { getCurrentUser } from 'shared/modules/currentUser/currentUserDuck'
 import {
   forceCount,
   getCountAutomaticRefreshLoading,
-  getCountAutomaticRefreshStatus,
+  getCountAutomaticRefreshEnabled,
   getDatabases
 } from 'shared/modules/dbMeta/dbMetaDuck'
 import { getGraphStyleData } from 'shared/modules/grass/grassDuck'
@@ -87,7 +87,8 @@ export function DBMSInfo(props: any): JSX.Element {
         {!props.countAutoRefreshing && (
           <>
             <p>
-              Automatic updates of node and relationship counts have been disabled for performance reasons, likely due to{' '}
+              Automatic updates of node and relationship counts have been
+              disabled for performance reasons, likely due to{' '}
               <DrawerExternalLink href="https://neo4j.com/docs/cypher-manual/current/access-control/limitations/#access-control-limitations-db-operations">
                 RBAC configuration.
               </DrawerExternalLink>
@@ -138,7 +139,7 @@ export function DBMSInfo(props: any): JSX.Element {
 const mapStateToProps = (state: any) => {
   const useDb = getUseDb(state)
   const databases = getDatabases(state)
-  const countAutoRefreshing = getCountAutomaticRefreshStatus(state)
+  const countAutoRefreshing = getCountAutomaticRefreshEnabled(state)
   const countLoading = getCountAutomaticRefreshLoading(state)
   return {
     graphStyleData: getGraphStyleData(state),

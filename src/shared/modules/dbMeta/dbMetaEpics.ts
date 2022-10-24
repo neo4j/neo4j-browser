@@ -40,7 +40,7 @@ import {
   VERSION_FOR_CLUSTER_ROLE_IN_SHOW_DB,
   isOnCluster,
   updateCountAutomaticRefresh,
-  getCondAutomaticRefreshEnabled,
+  getCountAutomaticRefreshEnabled,
   DB_META_FORCE_COUNT,
   DB_META_COUNT_DONE,
   metaCountQuery
@@ -86,7 +86,7 @@ import {
 import { isInt, Record } from 'neo4j-driver'
 import semver, { gte, SemVer } from 'semver'
 import { triggerCredentialsTimeout } from '../credentialsPolicy/credentialsPolicyDuck'
-
+getCountAutomaticRefreshEnabled
 async function databaseList(store: any) {
   try {
     const supportsMultiDb = await bolt.hasMultiDbSupport()
@@ -371,14 +371,14 @@ export const dbMetaEpic = (some$: any, store: any) =>
 export const dbCountEpic = (some$: any, store: any) =>
   some$
     .ofType(DB_META_DONE)
-    .filter(() => getCondAutomaticRefreshEnabled(store.getState()))
+    .filter(() => getCountAutomaticRefreshEnabled(store.getState()))
     .merge(some$.ofType(DB_META_FORCE_COUNT))
     .throttle(() => some$.ofType(DB_META_COUNT_DONE))
     .mergeMap(() =>
       Rx.Observable.fromPromise<void>(
         new Promise(async resolve => {
           store.dispatch(updateCountAutomaticRefresh({ loading: true }))
-          if (getCondAutomaticRefreshEnabled(store.getState())) {
+          if (getCountAutomaticRefreshEnabled(store.getState())) {
             const startTime = performance.now()
             await getNodeAndRelationshipCounts(store)
             const timeTaken = performance.now() - startTime
