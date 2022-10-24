@@ -97,7 +97,7 @@ export function DBMSInfo(props: any): JSX.Element {
               loading={props.countLoading}
               onClick={() => props.forceCount()}
             >
-              Manually refresh counts
+              Refresh counts
             </Button>
           </>
         )}
