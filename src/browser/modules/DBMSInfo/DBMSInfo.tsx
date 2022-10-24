@@ -28,6 +28,7 @@ import { UserDetails } from './UserDetails'
 import {
   Drawer,
   DrawerBody,
+  DrawerExternalLink,
   DrawerHeader
 } from 'browser-components/drawer/drawer-styled'
 import {
@@ -37,8 +38,14 @@ import {
 } from 'shared/modules/commands/commandsDuck'
 import { getUseDb } from 'shared/modules/connections/connectionsDuck'
 import { getCurrentUser } from 'shared/modules/currentUser/currentUserDuck'
-import { getDatabases } from 'shared/modules/dbMeta/dbMetaDuck'
+import {
+  forceCount,
+  getCountAutomaticRefreshLoading,
+  getCountAutomaticRefreshStatus,
+  getDatabases
+} from 'shared/modules/dbMeta/dbMetaDuck'
 import { getGraphStyleData } from 'shared/modules/grass/grassDuck'
+import { Button } from '@neo4j-ndl/react'
 
 export function DBMSInfo(props: any): JSX.Element {
   const moreStep = 50
@@ -77,6 +84,23 @@ export function DBMSInfo(props: any): JSX.Element {
           selectedDb={useDb}
           onChange={onDbSelect}
         />
+        {!props.countAutoRefreshing && (
+          <>
+            <p>
+              The automatic refresh of the node and relationship counts has been
+              disabled due to long loading times.{' '}
+              <DrawerExternalLink href="https://neo4j.com/docs/cypher-manual/current/access-control/limitations/#access-control-limitations-db-operations">
+                Read more here.
+              </DrawerExternalLink>
+            </p>
+            <Button
+              loading={props.countLoading}
+              onClick={() => props.forceCount()}
+            >
+              Manually refresh counts
+            </Button>
+          </>
+        )}
         <LabelItems
           count={nodes}
           labels={labels.slice(0, maxLabelsCount)}
@@ -115,12 +139,16 @@ export function DBMSInfo(props: any): JSX.Element {
 const mapStateToProps = (state: any) => {
   const useDb = getUseDb(state)
   const databases = getDatabases(state)
+  const countAutoRefreshing = getCountAutomaticRefreshStatus(state)
+  const countLoading = getCountAutomaticRefreshLoading(state)
   return {
     graphStyleData: getGraphStyleData(state),
     meta: state.meta,
     user: getCurrentUser(state),
     useDb,
-    databases
+    databases,
+    countAutoRefreshing,
+    countLoading
   }
 }
 const mapDispatchToProps = (dispatch: any, ownProps: any) => {
@@ -128,6 +156,9 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => {
     onItemClick: (cmd: any) => {
       const action = executeCommand(cmd, { source: commandSources.button })
       ownProps.bus.send(action.type, action)
+    },
+    forceCount: () => {
+      dispatch(forceCount())
     },
     onDbSelect: (dbName: any) =>
       dispatch(executeCommand(`:${useDbCommand} ${dbName || ''}`), {
