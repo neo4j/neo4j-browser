@@ -289,7 +289,7 @@ export const getClusterRoleForDb = (state: GlobalState, activeDb: string) => {
   }
 }
 
-export const getCountAutomaticRefreshStatus = (state: GlobalState): boolean => {
+export const getCondAutomaticRefreshEnabled = (state: GlobalState): boolean => {
   return state[NAME].countAutomaticRefresh.enabled
 }
 

@@ -40,7 +40,7 @@ import {
   VERSION_FOR_CLUSTER_ROLE_IN_SHOW_DB,
   isOnCluster,
   updateCountAutomaticRefresh,
-  getCountAutomaticRefreshStatus,
+  getCondAutomaticRefreshEnabled,
   DB_META_FORCE_COUNT,
   DB_META_COUNT_DONE,
   metaCountQuery
@@ -371,14 +371,14 @@ export const dbMetaEpic = (some$: any, store: any) =>
 export const dbCountEpic = (some$: any, store: any) =>
   some$
     .ofType(DB_META_DONE)
-    .filter(() => getCountAutomaticRefreshStatus(store.getState()))
+    .filter(() => getCondAutomaticRefreshEnabled(store.getState()))
     .merge(some$.ofType(DB_META_FORCE_COUNT))
     .throttle(() => some$.ofType(DB_META_COUNT_DONE))
     .mergeMap(() =>
       Rx.Observable.fromPromise<void>(
         new Promise(async resolve => {
           store.dispatch(updateCountAutomaticRefresh({ loading: true }))
-          if (getCountAutomaticRefreshStatus(store.getState())) {
+          if (getCondAutomaticRefreshEnabled(store.getState())) {
             const startTime = performance.now()
             await getNodeAndRelationshipCounts(store)
             const timeTaken = performance.now() - startTime
