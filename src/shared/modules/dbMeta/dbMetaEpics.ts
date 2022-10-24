@@ -384,7 +384,6 @@ export const dbCountEpic = (some$: any, store: any) =>
             const timeTaken = performance.now() - startTime
 
             if (timeTaken > 2000) {
-              console.log('turn off auto refresh')
               store.dispatch(updateCountAutomaticRefresh({ enabled: false }))
             }
           } else {
