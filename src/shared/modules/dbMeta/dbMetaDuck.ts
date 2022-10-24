@@ -311,10 +311,6 @@ const dbMetaReducer = (
       const { type, ...rest } = action
       return { ...state, ...rest }
     case UPDATE_COUNT_AUTOMATIC_REFRESH:
-      console.log(
-        'UPDATE_COUNT_AUTOMATIC_REFRESH',
-        action.countAutomaticRefresh
-      )
       return {
         ...state,
         countAutomaticRefresh: {
