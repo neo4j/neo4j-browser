@@ -35,10 +35,15 @@ import {
   DB_META_DONE,
   FORCE_FETCH,
   SYSTEM_DB,
-  metaQuery,
+  metaTypesQuery,
   serverInfoQuery,
   VERSION_FOR_CLUSTER_ROLE_IN_SHOW_DB,
-  isOnCluster
+  isOnCluster,
+  updateCountAutomaticRefresh,
+  getCountAutomaticRefreshEnabled,
+  DB_META_FORCE_COUNT,
+  DB_META_COUNT_DONE,
+  metaCountQuery
 } from './dbMetaDuck'
 import {
   ClientSettings,
@@ -70,8 +75,7 @@ import {
   setAuthEnabled,
   setRetainCredentials,
   updateConnection,
-  useDb,
-  getConnectedHost
+  useDb
 } from 'shared/modules/connections/connectionsDuck'
 import { clearHistory } from 'shared/modules/history/historyDuck'
 import { backgroundTxMetadata } from 'shared/services/bolt/txMetadata'
@@ -82,8 +86,7 @@ import {
 import { isInt, Record } from 'neo4j-driver'
 import semver, { gte, SemVer } from 'semver'
 import { triggerCredentialsTimeout } from '../credentialsPolicy/credentialsPolicyDuck'
-import { isNonRoutingScheme } from 'services/boltscheme.utils'
-
+getCountAutomaticRefreshEnabled
 async function databaseList(store: any) {
   try {
     const supportsMultiDb = await bolt.hasMultiDbSupport()
@@ -127,7 +130,7 @@ async function getLabelsAndTypes(store: any) {
   // Not system db, try and fetch meta data
   try {
     const res = await bolt.routedReadTransaction(
-      metaQuery,
+      metaTypesQuery,
       {},
       {
         onLostConnection: onLostConnection(store.dispatch),
@@ -135,18 +138,48 @@ async function getLabelsAndTypes(store: any) {
       }
     )
     if (res && res.records && res.records.length !== 0) {
-      const [
-        rawLabels,
-        rawRelTypes,
-        rawProperties,
-        rawNodeCount,
-        rawRelationshipCount
-      ] = res.records.map((r: Record) => r.get(0).data)
+      const [rawLabels, rawRelTypes, rawProperties] = res.records.map(
+        (r: Record) => r.get(0).data
+      )
 
       const compareMetaItems = (a: any, b: any) => (a < b ? -1 : a > b ? 1 : 0)
       const labels = rawLabels.sort(compareMetaItems)
       const relationshipTypes = rawRelTypes.sort(compareMetaItems)
       const properties = rawProperties.sort(compareMetaItems)
+
+      store.dispatch(
+        update({
+          labels,
+          properties,
+          relationshipTypes
+        })
+      )
+    }
+  } catch {}
+}
+
+async function getNodeAndRelationshipCounts(store: any) {
+  const db = getUseDb(store.getState())
+
+  // System db, do nothing
+  if (db === SYSTEM_DB) {
+    return
+  }
+
+  // Not system db, try and fetch meta data
+  try {
+    const res = await bolt.routedReadTransaction(
+      metaCountQuery,
+      {},
+      {
+        onLostConnection: onLostConnection(store.dispatch),
+        ...backgroundTxMetadata
+      }
+    )
+    if (res && res.records && res.records.length !== 0) {
+      const [rawNodeCount, rawRelationshipCount] = res.records.map(
+        (r: Record) => r.get(0).data
+      )
 
       const neo4jIntegerToNumber = (r: any) =>
         isInt(r) ? r.toNumber() || 0 : r || 0
@@ -155,10 +188,7 @@ async function getLabelsAndTypes(store: any) {
       const relationships = neo4jIntegerToNumber(rawRelationshipCount)
       store.dispatch(
         update({
-          labels,
           nodes,
-          properties,
-          relationshipTypes,
           relationships
         })
       )
@@ -338,6 +368,34 @@ export const dbMetaEpic = (some$: any, store: any) =>
         .do(() => switchToRequestedDb(store))
         .mapTo({ type: DB_META_DONE })
     )
+export const dbCountEpic = (some$: any, store: any) =>
+  some$
+    .ofType(DB_META_DONE)
+    .filter(() => getCountAutomaticRefreshEnabled(store.getState()))
+    .merge(some$.ofType(DB_META_FORCE_COUNT))
+    .throttle(() => some$.ofType(DB_META_COUNT_DONE))
+    .mergeMap(() =>
+      Rx.Observable.fromPromise<void>(
+        new Promise(async resolve => {
+          store.dispatch(updateCountAutomaticRefresh({ loading: true }))
+          if (getCountAutomaticRefreshEnabled(store.getState())) {
+            const startTime = performance.now()
+            await getNodeAndRelationshipCounts(store)
+            const timeTaken = performance.now() - startTime
+
+            if (timeTaken > 2000) {
+              store.dispatch(updateCountAutomaticRefresh({ enabled: false }))
+            }
+          } else {
+            await getNodeAndRelationshipCounts(store)
+          }
+
+          store.dispatch(updateCountAutomaticRefresh({ loading: false }))
+          resolve()
+        })
+      )
+    )
+    .mapTo({ type: DB_META_COUNT_DONE })
 
 export const serverConfigEpic = (some$: any, store: any) =>
   some$
