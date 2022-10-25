@@ -66,13 +66,15 @@ interface NavigationState {
   transitionState: DrawerTransitionState
   closingDrawerName: string | null
   guideWidth: number
+  isResizing: boolean
 }
 
 class Navigation extends Component<NavigationProps, NavigationState> {
   state: NavigationState = {
     transitionState: this.props.selectedDrawerName ? Open : Closed,
     closingDrawerName: null,
-    guideWidth: LARGE_DRAWER_WIDTH
+    guideWidth: LARGE_DRAWER_WIDTH,
+    isResizing: false
   }
 
   componentDidUpdate(
@@ -180,10 +182,10 @@ class Navigation extends Component<NavigationProps, NavigationState> {
     const drawerWidth = guideDrawerSelected
       ? this.state.guideWidth
       : STANDARD_DRAWER_WIDTH
-    const useFullWidth =
+    const isOpenOrOpening =
       this.state.transitionState === Open ||
       this.state.transitionState === Opening
-    const width = useFullWidth ? drawerWidth : 0
+    const width = isOpenOrOpening ? drawerWidth : 0
 
     return (
       <StyledSidebar>
@@ -192,32 +194,43 @@ class Navigation extends Component<NavigationProps, NavigationState> {
           <StyledBottomNav>{bottomNavItemsList}</StyledBottomNav>
         </StyledTabsWrapper>
 
-        <Resizable
-          minWidth={guideDrawerSelected ? STANDARD_DRAWER_WIDTH : 0}
-          maxWidth={'70vw'}
-          size={{ width: width, height: '100%' }}
-          onResizeStop={(_e, _direction, _ref, d) => {
-            this.setState({ guideWidth: this.state.guideWidth + d.width })
+        <StyledDrawer
+          onTransitionEnd={this.onTransitionEnd}
+          style={{
+            width: this.state.isResizing ? 'unset' : width
           }}
-          enable={{
-            top: false,
-            right: guideDrawerSelected,
-            bottom: false,
-            left: false,
-            topRight: false,
-            bottomRight: false,
-            bottomLeft: false,
-            topLeft: false
-          }}
-          style={{ zIndex: 100 }}
         >
-          <StyledDrawer onTransitionEnd={this.onTransitionEnd}>
+          <Resizable
+            minWidth={guideDrawerSelected ? STANDARD_DRAWER_WIDTH : 0}
+            maxWidth={'70vw'}
+            size={{ width: width, height: '100%' }}
+            onResizeStart={() => {
+              this.setState({ isResizing: true })
+            }}
+            onResizeStop={(_e, _direction, _ref, d) => {
+              this.setState({
+                guideWidth: this.state.guideWidth + d.width,
+                isResizing: false
+              })
+            }}
+            enable={{
+              top: false,
+              right: guideDrawerSelected,
+              bottom: false,
+              left: false,
+              topRight: false,
+              bottomRight: false,
+              bottomLeft: false,
+              topLeft: false
+            }}
+            style={{ zIndex: 100 }}
+          >
             {drawerIsVisible &&
               getContentToShow(
                 this.props.selectedDrawerName || this.state.closingDrawerName
               )}
-          </StyledDrawer>
-        </Resizable>
+          </Resizable>
+        </StyledDrawer>
       </StyledSidebar>
     )
   }

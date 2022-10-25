@@ -31,12 +31,16 @@ export const UPDATE_SETTINGS = 'meta/UPDATE_SETTINGS'
 export const CLEAR_META = 'meta/CLEAR'
 export const FORCE_FETCH = 'meta/FORCE_FETCH'
 export const DB_META_DONE = 'meta/DB_META_DONE'
+export const DB_META_COUNT_DONE = 'meta/DB_META_COUNT_DONE'
+export const DB_META_FORCE_COUNT = 'meta/DB_FORCE_COUNT'
+export const UPDATE_COUNT_AUTOMATIC_REFRESH =
+  'meta/UPDATE_COUNT_AUTOMATIC_REFRESH'
 
 export const SYSTEM_DB = 'system'
 export const VERSION_FOR_EDITOR_HISTORY_SETTING = '4.3.0'
 export const VERSION_FOR_CLUSTER_ROLE_IN_SHOW_DB = '4.3.0'
 
-export const metaQuery = `
+export const metaTypesQuery = `
 CALL db.labels() YIELD label
 RETURN {name:'labels', data:COLLECT(label)[..1000]} AS result
 UNION ALL
@@ -45,7 +49,9 @@ RETURN {name:'relationshipTypes', data:COLLECT(relationshipType)[..1000]} AS res
 UNION ALL
 CALL db.propertyKeys() YIELD propertyKey
 RETURN {name:'propertyKeys', data:COLLECT(propertyKey)[..1000]} AS result
-UNION ALL
+`
+
+export const metaCountQuery = `
 MATCH () RETURN { name:'nodes', data:count(*) } AS result
 UNION ALL
 MATCH ()-[]->() RETURN { name:'relationships', data: count(*)} AS result
@@ -57,6 +63,12 @@ export const serverInfoQuery =
 export function fetchMetaData() {
   return {
     type: FORCE_FETCH
+  }
+}
+
+export function forceCount() {
+  return {
+    type: DB_META_FORCE_COUNT
   }
 }
 
@@ -79,6 +91,16 @@ export const updateServerInfo = (res: any) => {
   return {
     ...extrated,
     type: UPDATE_SERVER
+  }
+}
+
+export const updateCountAutomaticRefresh = (countAutomaticRefresh: {
+  enabled?: boolean
+  loading?: boolean
+}) => {
+  return {
+    type: UPDATE_COUNT_AUTOMATIC_REFRESH,
+    countAutomaticRefresh
   }
 }
 
@@ -136,7 +158,11 @@ export const initialState = {
   },
   databases: [],
   serverConfigDone: false,
-  settings: initialClientSettings
+  settings: initialClientSettings,
+  countAutomaticRefresh: {
+    enabled: true,
+    loading: false
+  }
 }
 
 export type Database = {
@@ -263,6 +289,18 @@ export const getClusterRoleForDb = (state: GlobalState, activeDb: string) => {
   }
 }
 
+export const getCountAutomaticRefreshEnabled = (
+  state: GlobalState
+): boolean => {
+  return state[NAME].countAutomaticRefresh.enabled
+}
+
+export const getCountAutomaticRefreshLoading = (
+  state: GlobalState
+): boolean => {
+  return state[NAME].countAutomaticRefresh.loading
+}
+
 // Reducers
 const dbMetaReducer = (
   state = initialState,
@@ -274,6 +312,14 @@ const dbMetaReducer = (
     case UPDATE_META:
       const { type, ...rest } = action
       return { ...state, ...rest }
+    case UPDATE_COUNT_AUTOMATIC_REFRESH:
+      return {
+        ...state,
+        countAutomaticRefresh: {
+          ...state.countAutomaticRefresh,
+          ...action.countAutomaticRefresh
+        }
+      }
     case UPDATE_SERVER:
       const { type: serverType, ...serverRest } = action
       const serverState: any = {}

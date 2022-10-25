@@ -58,6 +58,7 @@ import {
 import {
   clearMetaOnDisconnectEpic,
   dbMetaEpic,
+  dbCountEpic,
   serverConfigEpic
 } from './modules/dbMeta/dbMetaEpics'
 import {
@@ -113,6 +114,7 @@ export default combineEpics(
   startupConnectionFailEpic,
   detectActiveConnectionChangeEpic,
   dbMetaEpic,
+  dbCountEpic,
   serverConfigEpic,
   clearMetaOnDisconnectEpic,
   cancelRequestEpic,
