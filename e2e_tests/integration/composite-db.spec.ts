@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { isAura } from '../support/utils'
+import { isAura, isEnterpriseEdition } from '../support/utils'
 
 describe('composite database', () => {
   before(function () {
@@ -27,7 +27,11 @@ describe('composite database', () => {
     cy.ensureConnection()
   })
 
-  if (Cypress.config('serverVersion') >= 5.0 && !isAura()) {
+  if (
+    Cypress.config('serverVersion') >= 5.0 &&
+    !isAura() &&
+    isEnterpriseEdition()
+  ) {
     it('can query composite db and show results', () => {
       cy.executeCommand(':clear')
       const query = `create database compdb1;create database compdb2;use compdb1 create (:Poke {{}name: "Treecko"{}})-[:EVOLVES_INTO]->(:Poke {{}name: "Grovyle"{}});CREATE COMPOSITE DATABASE both;CREATE ALIAS both.cd1 FOR DATABASE compdb1;CREATE ALIAS both.cd2 FOR DATABASE compdb2;`
