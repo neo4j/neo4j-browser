@@ -164,12 +164,10 @@ export class Visualization extends Component<
       const existingNodeIds = existingNodes.map(node => parseInt(node.id))
       const newNodeIds = newNodes.map(node => parseInt(node.id))
 
-      this.getInternalRelationships(existingNodeIds, newNodeIds)
-        .then(graph => {
-          this.autoCompleteCallback &&
-            this.autoCompleteCallback(graph.relationships)
-        })
-        .catch(() => undefined)
+      this.getInternalRelationships(existingNodeIds, newNodeIds).then(graph => {
+        this.autoCompleteCallback &&
+          this.autoCompleteCallback(graph.relationships)
+      })
     } else {
       this.autoCompleteCallback && this.autoCompleteCallback([])
     }
@@ -236,7 +234,7 @@ LIMIT ${maxNewNeighbours}`
       .concat(newNodeIds)
     const query =
       'MATCH (a)-[r]->(b) WHERE id(a) IN $existingNodeIds AND id(b) IN $newNodeIds RETURN r;'
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       this.props.bus &&
         this.props.bus.self(
           CYPHER_REQUEST,
@@ -247,7 +245,8 @@ LIMIT ${maxNewNeighbours}`
           },
           (response: any) => {
             if (!response.success) {
-              reject(new Error())
+              console.error(response.error)
+              resolve({ nodes: [], relationships: [] })
             } else {
               resolve({
                 ...bolt.extractNodesAndRelationshipsFromRecordsForOldVis(
