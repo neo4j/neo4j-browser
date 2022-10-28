@@ -59,6 +59,7 @@ type CypherEditorDefaultProps = {
   isFullscreen: boolean
   onChange: (value: string) => void
   onDisplayHelpKeys: () => void
+  isExecutable?: boolean
   onExecute: (value: string) => void
   sendCypherQuery: (query: string) => Promise<QueryResult>
   toggleFullscreen: () => void
@@ -76,6 +77,7 @@ const cypherEditorDefaultProps: CypherEditorDefaultProps = {
   isFullscreen: false,
   onChange: () => undefined,
   onDisplayHelpKeys: () => undefined,
+  isExecutable: true,
   onExecute: () => undefined,
   sendCypherQuery: () =>
     new Promise(res =>
@@ -349,13 +351,16 @@ export class CypherEditor extends React.Component<
     })
 
     const { KeyCode, KeyMod } = monaco
-    this.editor.addCommand(
-      KeyCode.Enter,
-      () => {
-        this.isMultiLine() ? this.newLine() : this.execute()
-      },
-      '!suggestWidgetVisible && !findWidgetVisible'
-    )
+    if (this.props.isExecutable) {
+      this.editor.addCommand(
+        KeyCode.Enter,
+        () => {
+          this.isMultiLine() ? this.newLine() : this.execute()
+        },
+        '!suggestWidgetVisible && !findWidgetVisible'
+      )
+    }
+
     this.editor.addCommand(
       KeyCode.UpArrow,
       this.handleUp,
@@ -367,8 +372,10 @@ export class CypherEditor extends React.Component<
       '!suggestWidgetVisible'
     )
     this.editor.addCommand(KeyMod.Shift | KeyCode.Enter, this.newLine)
-    this.editor.addCommand(KeyMod.CtrlCmd | KeyCode.Enter, this.execute)
-    this.editor.addCommand(KeyMod.WinCtrl | KeyCode.Enter, this.execute)
+    if (this.props.isExecutable) {
+      this.editor.addCommand(KeyMod.CtrlCmd | KeyCode.Enter, this.execute)
+      this.editor.addCommand(KeyMod.WinCtrl | KeyCode.Enter, this.execute)
+    }
     this.editor.addCommand(
       KeyMod.CtrlCmd | KeyCode.UpArrow,
       this.viewHistoryPrevious
