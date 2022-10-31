@@ -59,8 +59,7 @@ type CypherEditorDefaultProps = {
   isFullscreen: boolean
   onChange: (value: string) => void
   onDisplayHelpKeys: () => void
-  isExecutable?: boolean
-  onExecute: (value: string) => void
+  onExecute?: (value: string) => void
   sendCypherQuery: (query: string) => Promise<QueryResult>
   toggleFullscreen: () => void
   useDb: null | string
@@ -77,8 +76,6 @@ const cypherEditorDefaultProps: CypherEditorDefaultProps = {
   isFullscreen: false,
   onChange: () => undefined,
   onDisplayHelpKeys: () => undefined,
-  isExecutable: true,
-  onExecute: () => undefined,
   sendCypherQuery: () =>
     new Promise(res =>
       res({
@@ -351,7 +348,7 @@ export class CypherEditor extends React.Component<
     })
 
     const { KeyCode, KeyMod } = monaco
-    if (this.props.isExecutable) {
+    if (this.props.onExecute) {
       this.editor.addCommand(
         KeyCode.Enter,
         () => {
@@ -372,7 +369,7 @@ export class CypherEditor extends React.Component<
       '!suggestWidgetVisible'
     )
     this.editor.addCommand(KeyMod.Shift | KeyCode.Enter, this.newLine)
-    if (this.props.isExecutable) {
+    if (this.props.onExecute) {
       this.editor.addCommand(KeyMod.CtrlCmd | KeyCode.Enter, this.execute)
       this.editor.addCommand(KeyMod.WinCtrl | KeyCode.Enter, this.execute)
     }
