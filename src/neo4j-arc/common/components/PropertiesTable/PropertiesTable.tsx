@@ -87,7 +87,7 @@ export const PropertiesTable = ({
     <>
       <StyledInlineList>
         <AlternatingTable>
-          <tbody>
+          <tbody data-testid="viz-details-pane-properties-table">
             {visibleProperties.map(({ key, type, value }) => (
               <tr key={key} title={type}>
                 <KeyCell>
