@@ -89,6 +89,7 @@ import {
   FULLSCREEN_SHORTCUT,
   printShortcut
 } from 'browser/modules/App/keyboardShortcuts'
+import { KeyCode } from 'monaco-editor'
 
 type EditorFrameProps = {
   bus: Bus
@@ -285,7 +286,9 @@ export function MainEditor({
               }
               onExecute={createRunCommandFunction(commandSources.editor)}
               ref={editorRef}
-              toggleFullscreen={toggleFullscreen}
+              additionalCommands={{
+                [KeyCode.Escape]: toggleFullscreen
+              }}
               useDb={useDb}
               sendCypherQuery={(text: string) =>
                 new Promise((res, rej) =>
