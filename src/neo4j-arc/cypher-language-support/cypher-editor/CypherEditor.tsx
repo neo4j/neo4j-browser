@@ -61,7 +61,9 @@ type CypherEditorDefaultProps = {
   onDisplayHelpKeys: () => void
   onExecute?: (value: string) => void
   sendCypherQuery: (query: string) => Promise<QueryResult>
-  toggleFullscreen: () => void
+  additionalCommands: Partial<
+    Record<monaco.KeyCode, monaco.editor.ICommandHandler>
+  >
   useDb: null | string
   value: string
 }
@@ -82,7 +84,7 @@ const cypherEditorDefaultProps: CypherEditorDefaultProps = {
         result: { summary: { notifications: [] } }
       } as any)
     ),
-  toggleFullscreen: () => undefined,
+  additionalCommands: {},
   useDb: null,
   value: ''
 }
@@ -385,11 +387,21 @@ export class CypherEditor extends React.Component<
       KeyMod.CtrlCmd | KeyCode.US_DOT,
       this.props.onDisplayHelpKeys
     )
-    this.editor.addCommand(
-      KeyCode.Escape,
-      this.props.toggleFullscreen,
-      '!suggestWidgetVisible && !findWidgetVisible'
-    )
+
+    function keys<T>(object: T) {
+      return Object.keys(object) as Array<keyof T>
+    }
+
+    keys(this.props.additionalCommands).forEach(key => {
+      const command = this.props.additionalCommands[key]
+      if (!command) {
+        return
+      }
+
+      this?.editor?.addCommand(key, () => {
+        command()
+      })
+    })
 
     this.onContentUpdate()
 

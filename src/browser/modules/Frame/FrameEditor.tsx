@@ -67,6 +67,7 @@ import { base, stopIconColor } from 'browser-styles/themes'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { QueryResult } from 'neo4j-driver'
 import { CypherEditor } from 'neo4j-arc/cypher-language-support'
+import { KeyCode } from 'monaco-editor'
 
 type FrameEditorBaseProps = {
   frame: Frame
@@ -196,7 +197,9 @@ function FrameEditor({
               onChange={setEditorValue}
               onExecute={run}
               ref={editorRef}
-              toggleFullscreen={fullscreenToggle}
+              additionalCommands={{
+                [KeyCode.Escape]: fullscreenToggle
+              }}
               useDb={frame.useDb}
               value={editorValue}
               sendCypherQuery={(text: string) =>
