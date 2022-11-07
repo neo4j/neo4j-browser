@@ -26,6 +26,7 @@ import { QueryResult } from 'neo4j-driver-core'
 import React from 'react'
 import styled from 'styled-components'
 import { ResizeObserver } from '@juggle/resize-observer'
+import { keys } from '../../common/utils/objectUtils'
 
 const shouldCheckForHints = (code: string) =>
   code.trim().length > 0 &&
@@ -61,7 +62,9 @@ type CypherEditorDefaultProps = {
   onDisplayHelpKeys: () => void
   onExecute?: (value: string) => void
   sendCypherQuery: (query: string) => Promise<QueryResult>
-  toggleFullscreen: () => void
+  additionalCommands: Partial<
+    Record<monaco.KeyCode, monaco.editor.ICommandHandler>
+  >
   useDb: null | string
   value: string
 }
@@ -82,7 +85,7 @@ const cypherEditorDefaultProps: CypherEditorDefaultProps = {
         result: { summary: { notifications: [] } }
       } as any)
     ),
-  toggleFullscreen: () => undefined,
+  additionalCommands: {},
   useDb: null,
   value: ''
 }
@@ -385,11 +388,15 @@ export class CypherEditor extends React.Component<
       KeyMod.CtrlCmd | KeyCode.US_DOT,
       this.props.onDisplayHelpKeys
     )
-    this.editor.addCommand(
-      KeyCode.Escape,
-      this.props.toggleFullscreen,
-      '!suggestWidgetVisible && !findWidgetVisible'
-    )
+
+    keys(this.props.additionalCommands).forEach(key => {
+      const command = this.props.additionalCommands[key]
+      if (!command) {
+        return
+      }
+
+      this?.editor?.addCommand(key, command)
+    })
 
     this.onContentUpdate()
 
