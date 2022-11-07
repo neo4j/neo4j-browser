@@ -26,6 +26,7 @@ import { QueryResult } from 'neo4j-driver-core'
 import React from 'react'
 import styled from 'styled-components'
 import { ResizeObserver } from '@juggle/resize-observer'
+import { keys } from '../../common/utils/objectUtils'
 
 const shouldCheckForHints = (code: string) =>
   code.trim().length > 0 &&
@@ -388,19 +389,13 @@ export class CypherEditor extends React.Component<
       this.props.onDisplayHelpKeys
     )
 
-    function keys<T>(object: T) {
-      return Object.keys(object) as Array<keyof T>
-    }
-
     keys(this.props.additionalCommands).forEach(key => {
       const command = this.props.additionalCommands[key]
       if (!command) {
         return
       }
 
-      this?.editor?.addCommand(key, () => {
-        command()
-      })
+      this?.editor?.addCommand(key, command)
     })
 
     this.onContentUpdate()
