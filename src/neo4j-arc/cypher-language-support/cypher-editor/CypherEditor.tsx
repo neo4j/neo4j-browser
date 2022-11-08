@@ -65,7 +65,7 @@ type CypherEditorDefaultProps = {
   additionalCommands: Partial<
     Record<monaco.KeyCode, monaco.editor.ICommandHandler>
   >
-  tabIndex: number | undefined
+  tabIndex?: number
   useDb: null | string
   value: string
 }
@@ -87,7 +87,6 @@ const cypherEditorDefaultProps: CypherEditorDefaultProps = {
       } as any)
     ),
   additionalCommands: {},
-  tabIndex: undefined,
   useDb: null,
   value: ''
 }
