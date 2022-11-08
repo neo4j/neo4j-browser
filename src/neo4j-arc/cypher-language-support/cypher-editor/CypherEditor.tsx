@@ -65,6 +65,7 @@ type CypherEditorDefaultProps = {
   additionalCommands: Partial<
     Record<monaco.KeyCode, monaco.editor.ICommandHandler>
   >
+  tabIndex?: number
   useDb: null | string
   value: string
 }
@@ -347,7 +348,8 @@ export class CypherEditor extends React.Component<
       selectionHighlight: false,
       value: this.props.value,
       wordWrap: 'on',
-      wrappingStrategy: 'advanced'
+      wrappingStrategy: 'advanced',
+      tabIndex: this.props.tabIndex
     })
 
     const { KeyCode, KeyMod } = monaco
@@ -438,7 +440,8 @@ export class CypherEditor extends React.Component<
   }
 
   componentDidUpdate(prevProps: CypherEditorProps): void {
-    const { useDb, fontLigatures, enableMultiStatementMode } = this.props
+    const { useDb, fontLigatures, enableMultiStatementMode, tabIndex } =
+      this.props
     if (fontLigatures !== prevProps.fontLigatures) {
       this.editor?.updateOptions({ fontLigatures })
     }
@@ -453,6 +456,10 @@ export class CypherEditor extends React.Component<
     // If changing multistatement setting, add or remove warnings if needed
     if (enableMultiStatementMode !== prevProps.enableMultiStatementMode) {
       this.onContentUpdate()
+    }
+
+    if (tabIndex !== prevProps.tabIndex) {
+      this.editor?.updateOptions({ tabIndex: this.props.tabIndex })
     }
   }
 
