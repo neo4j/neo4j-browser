@@ -398,7 +398,7 @@ export class CypherEditor extends React.Component<
         return
       }
 
-      this?.editor?.addCommand(key, command, '!editorTabMovesFocus')
+      this?.editor?.addCommand(key, command)
     })
 
     this.onContentUpdate()
