@@ -63,7 +63,10 @@ export type GraphProps = {
   assignVisElement: (svgElement: any, graphElement: any) => void
   autocompleteRelationships: boolean
   getAutoCompleteCallback: (
-    callback: (internalRelationships: BasicRelationship[]) => void
+    callback: (
+      internalRelationships: BasicRelationship[],
+      initialRun: boolean
+    ) => void
   ) => void
   setGraph: (graph: GraphModel) => void
   offset: number
@@ -161,22 +164,36 @@ export class Graph extends React.Component<GraphProps, GraphState> {
       setGraph(graph)
     }
     if (autocompleteRelationships) {
-      getAutoCompleteCallback((internalRelationships: BasicRelationship[]) => {
-        this.visualization?.init(true)
-        graph.addInternalRelationships(
-          mapRelationships(internalRelationships, graph)
-        )
-        onGraphModelChange(getGraphStats(graph))
-        this.visualization?.update({
-          updateNodes: false,
-          updateRelationships: true,
-          restartSimulation: false
-        })
-        this.visualization?.precomputeAndStart()
-        graphEventHandler.onItemMouseOut()
-      })
+      getAutoCompleteCallback(
+        (internalRelationships: BasicRelationship[], initialRun: boolean) => {
+          if (initialRun) {
+            this.visualization?.init()
+            graph.addInternalRelationships(
+              mapRelationships(internalRelationships, graph)
+            )
+            onGraphModelChange(getGraphStats(graph))
+            this.visualization?.update({
+              updateNodes: false,
+              updateRelationships: true,
+              restartSimulation: false
+            })
+            this.visualization?.precomputeAndStart()
+            graphEventHandler.onItemMouseOut()
+          } else {
+            graph.addInternalRelationships(
+              mapRelationships(internalRelationships, graph)
+            )
+            onGraphModelChange(getGraphStats(graph))
+            this.visualization?.update({
+              updateNodes: false,
+              updateRelationships: true,
+              restartSimulation: false
+            })
+          }
+        }
+      )
     } else {
-      this.visualization?.init(true)
+      this.visualization?.init()
       this.visualization?.precomputeAndStart()
     }
     if (assignVisElement) {
@@ -195,7 +212,11 @@ export class Graph extends React.Component<GraphProps, GraphState> {
     }
 
     if (this.props.styleVersion !== prevProps.styleVersion) {
-      this.visualization?.init(false)
+      this.visualization?.update({
+        updateNodes: true,
+        updateRelationships: true,
+        restartSimulation: false
+      })
     }
   }
 
