@@ -162,7 +162,7 @@ export class Graph extends React.Component<GraphProps, GraphState> {
     }
     if (autocompleteRelationships) {
       getAutoCompleteCallback((internalRelationships: BasicRelationship[]) => {
-        this.visualization?.init()
+        this.visualization?.init(true)
         graph.addInternalRelationships(
           mapRelationships(internalRelationships, graph)
         )
@@ -176,7 +176,7 @@ export class Graph extends React.Component<GraphProps, GraphState> {
         graphEventHandler.onItemMouseOut()
       })
     } else {
-      this.visualization?.init()
+      this.visualization?.init(true)
       this.visualization?.precomputeAndStart()
     }
     if (assignVisElement) {
@@ -195,7 +195,7 @@ export class Graph extends React.Component<GraphProps, GraphState> {
     }
 
     if (this.props.styleVersion !== prevProps.styleVersion) {
-      this.visualization?.init()
+      this.visualization?.init(false)
     }
   }
 
