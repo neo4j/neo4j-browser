@@ -81,7 +81,10 @@ export class Visualization extends Component<
   VisualizationProps,
   VisualizationState
 > {
-  autoCompleteCallback: ((rels: BasicRelationship[]) => void) | undefined
+  autoCompleteCallback?: (
+    rels: BasicRelationship[],
+    initialRun: boolean
+  ) => void
   graph: GraphModel | undefined
   state: VisualizationState = {
     nodes: [],
@@ -158,7 +161,8 @@ export class Visualization extends Component<
 
   autoCompleteRelationships(
     existingNodes: { id: string }[],
-    newNodes: { id: string }[]
+    newNodes: { id: string }[],
+    initialRun: boolean
   ): void {
     if (this.props.autoComplete) {
       const existingNodeIds = existingNodes.map(node => parseInt(node.id))
@@ -166,10 +170,10 @@ export class Visualization extends Component<
 
       this.getInternalRelationships(existingNodeIds, newNodeIds).then(graph => {
         this.autoCompleteCallback &&
-          this.autoCompleteCallback(graph.relationships)
+          this.autoCompleteCallback(graph.relationships, initialRun)
       })
     } else {
-      this.autoCompleteCallback && this.autoCompleteCallback([])
+      this.autoCompleteCallback && this.autoCompleteCallback([], initialRun)
     }
   }
 
@@ -215,7 +219,8 @@ LIMIT ${maxNewNeighbours}`
                 )
               this.autoCompleteRelationships(
                 this.graph?.nodes() || [],
-                resultGraph.nodes
+                resultGraph.nodes,
+                false
               )
               resolve({ ...resultGraph, allNeighboursCount })
             }
@@ -261,7 +266,7 @@ LIMIT ${maxNewNeighbours}`
 
   setGraph(graph: GraphModel): void {
     this.graph = graph
-    this.autoCompleteRelationships([], this.graph.nodes())
+    this.autoCompleteRelationships([], this.graph.nodes(), true)
   }
 
   render(): React.ReactNode {
@@ -282,7 +287,7 @@ LIMIT ${maxNewNeighbours}`
           assignVisElement={this.props.assignVisElement}
           nodeLimitHit={this.state.nodeLimitHit}
           getAutoCompleteCallback={(
-            callback: (rels: BasicRelationship[]) => void
+            callback: (rels: BasicRelationship[], initialRun: boolean) => void
           ) => {
             this.autoCompleteCallback = callback
           }}

@@ -46,7 +46,7 @@ type GraphVisualizerDefaultProps = {
   isFullscreen: boolean
   assignVisElement: (svgElement: any, graphElement: any) => void
   getAutoCompleteCallback: (
-    callback: (rels: BasicRelationship[]) => void
+    callback: (rels: BasicRelationship[], initialRun: boolean) => void
   ) => void
   setGraph: (graph: GraphModel) => void
   hasTruncatedFields: boolean
@@ -70,7 +70,7 @@ type GraphVisualizerProps = GraphVisualizerDefaultProps & {
   isFullscreen?: boolean
   assignVisElement?: (svgElement: any, graphElement: any) => void
   getAutoCompleteCallback?: (
-    callback: (rels: BasicRelationship[]) => void
+    callback: (rels: BasicRelationship[], initialRun: boolean) => void
   ) => void
   setGraph?: (graph: GraphModel) => void
   hasTruncatedFields?: boolean

@@ -321,7 +321,7 @@ export class Visualization {
     callbacksForEvent.forEach(callback => callback.apply(null, args))
   }
 
-  init(zoomToInitialLevel?: boolean): void {
+  init(): void {
     this.container
       .selectAll('g.layer')
       .data(['relationships', 'nodes'])
@@ -332,9 +332,7 @@ export class Visualization {
     this.updateRelationships()
 
     this.adjustZoomMinScaleExtentToFitGraph()
-    if (zoomToInitialLevel) {
-      this.setInitialZoom()
-    }
+    this.setInitialZoom()
   }
 
   setInitialZoom(): void {
