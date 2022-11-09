@@ -37,7 +37,7 @@ const shouldCheckForHints = (code: string) =>
 const MonacoStyleWrapper = styled.div`
   height: 100%;
   width: 100%;
-  overflow-x: auto;
+  overflow-y: hidden;
 
   .margin .margin-view-overlays {
     margin-left: 10px;
