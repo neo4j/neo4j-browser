@@ -37,6 +37,7 @@ const shouldCheckForHints = (code: string) =>
 const MonacoStyleWrapper = styled.div`
   height: 100%;
   width: 100%;
+  overflow-x: auto;
 
   .margin .margin-view-overlays {
     margin-left: 10px;
@@ -91,7 +92,11 @@ const cypherEditorDefaultProps: CypherEditorDefaultProps = {
   value: ''
 }
 
-type CypherEditorState = { currentHistoryIndex: number; draft: string }
+type CypherEditorState = {
+  currentHistoryIndex: number
+  draft: string
+  isEditorFocusable: boolean
+}
 const UNRUN_CMD_HISTORY_INDEX = -1
 
 export class CypherEditor extends React.Component<
@@ -100,15 +105,17 @@ export class CypherEditor extends React.Component<
 > {
   state: CypherEditorState = {
     currentHistoryIndex: UNRUN_CMD_HISTORY_INDEX,
+    isEditorFocusable: true,
     draft: ''
   }
   resizeObserver: ResizeObserver
   editor?: monaco.editor.IStandaloneCodeEditor
   container?: HTMLElement
+  wrapperRef = React.createRef<HTMLDivElement>()
 
   constructor(props: CypherEditorProps) {
     super(props)
-
+    this.wrapperRef = React.createRef()
     // Wrapped in requestAnimationFrame to avoid the error "ResizeObserver loop limit exceeded"
     this.resizeObserver = new ResizeObserver(() => {
       window.requestAnimationFrame(() => {
@@ -391,6 +398,10 @@ export class CypherEditor extends React.Component<
       this.props.onDisplayHelpKeys
     )
 
+    this.editor.addCommand(KeyCode.Escape, () => {
+      this.wrapperRef.current?.focus()
+    })
+
     keys(this.props.additionalCommands).forEach(key => {
       const command = this.props.additionalCommands[key]
       if (!command) {
@@ -435,6 +446,14 @@ export class CypherEditor extends React.Component<
       <MonacoStyleWrapper
         id={this.getMonacoId()}
         className={this.props.className}
+        ref={this.wrapperRef}
+        tabIndex={-1}
+        onFocus={() => {
+          this.setState({ isEditorFocusable: false })
+        }}
+        onBlur={() => {
+          this.setState({ isEditorFocusable: true })
+        }}
       />
     )
   }
@@ -458,9 +477,9 @@ export class CypherEditor extends React.Component<
       this.onContentUpdate()
     }
 
-    if (tabIndex !== prevProps.tabIndex) {
-      this.editor?.updateOptions({ tabIndex: this.props.tabIndex })
-    }
+    this.editor?.updateOptions({
+      tabIndex: this.state.isEditorFocusable ? this.props.tabIndex : -1
+    })
   }
 
   componentWillUnmount = (): void => {
