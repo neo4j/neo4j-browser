@@ -37,7 +37,6 @@ const shouldCheckForHints = (code: string) =>
 const MonacoStyleWrapper = styled.div`
   height: 100%;
   width: 100%;
-  overflow-x: auto;
 
   .margin .margin-view-overlays {
     margin-left: 10px;
@@ -46,6 +45,10 @@ const MonacoStyleWrapper = styled.div`
   // hides the "Peek Problem" status bar on the warnings hover widgets
   .hover-row.status-bar {
     display: none !important;
+  }
+  // used to make the focus outline of the editor not be ugly. Don't think this breaks anything
+  .monaco-editor.rename-box {
+    display: none;
   }
 `
 
@@ -478,7 +481,7 @@ export class CypherEditor extends React.Component<
     }
 
     this.editor?.updateOptions({
-      tabIndex: this.state.isEditorFocusable ? this.props.tabIndex : -1
+      tabIndex: this.state.isEditorFocusable ? tabIndex : -1
     })
   }
 
