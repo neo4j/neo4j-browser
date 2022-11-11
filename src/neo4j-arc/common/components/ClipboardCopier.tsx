@@ -26,11 +26,15 @@ type ClipboardCopierProps = {
   textToCopy: string
   iconSize?: number
   titleText?: string
+  messageOnSuccess?: string
+  messageOnFailure?: string
 }
 export function ClipboardCopier({
   textToCopy: text,
   iconSize = 16,
-  titleText = 'Copy to clipboard'
+  titleText = 'Copy to clipboard',
+  messageOnSuccess = '✔️ Copied to clipboard',
+  messageOnFailure = 'Copying text failed'
 }: ClipboardCopierProps): JSX.Element {
   const [messageToShow, setMessageToShow] = useState<string | null>(null)
   function showPopup(text: string) {
@@ -42,8 +46,8 @@ export function ClipboardCopier({
     <CopyIconContainer
       onClick={() =>
         copyToClipboard(text)
-          .then(() => showPopup('✔️ Copied to clipboard'))
-          .catch(() => showPopup('Copying text failed'))
+          .then(() => showPopup(messageOnSuccess))
+          .catch(() => showPopup(messageOnFailure))
       }
       title={titleText}
     >
@@ -67,7 +71,7 @@ function InfoPopup({ text }: InfoPopupProps) {
 const PopupTextContainer = styled.span`
   position: absolute;
   white-space: nowrap;
-  right: 30px;
+  right: 20px;
   bottom: 0;
   border-radius: 2px;
   background-color: ${props => props.theme.frameSidebarBackground};
