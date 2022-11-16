@@ -267,8 +267,8 @@ describe('Viz rendering', () => {
 
     // Check that can scroll overview panel
     const showAllButtonText = 'Show all'
-    cy.get('button').contains(showAllButtonText).scrollIntoView()
-    cy.get('button').contains(showAllButtonText).should('be.visible')
+    cy.get(`button:contains("${showAllButtonText}")`).scrollIntoView()
+    cy.get(`button:contains("${showAllButtonText}")`).should('be.visible')
 
     // Open node properties details panel
     const nodeSelector = '.node'
