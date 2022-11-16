@@ -22,7 +22,6 @@ import jsonic from 'jsonic'
 import { collectLambdaValues, parseLambdaStatement } from './lambdas'
 import { splitStringOnFirst } from 'services/commandUtils'
 import { replace, update } from 'shared/modules/params/paramsDuck'
-import { SYSTEM_DB } from 'shared/modules/dbMeta/dbMetaDuck'
 
 export const extractParams = (param: string) => {
   // early bail, now handled by parser
@@ -79,13 +78,15 @@ export const getParamName = (input: any) => {
 export const handleParamsCommand = async (
   action: any,
   put: any,
-  targetDb?: string | null
+  onUnsupportedDatabase: boolean
 ): Promise<{
   result: any
   type: string
 }> => {
-  if (targetDb === SYSTEM_DB) {
-    throw new Error('Parameters cannot be declared when using system database.')
+  if (onUnsupportedDatabase) {
+    throw new Error(
+      'Parameters cannot be declared when using system or composite database.'
+    )
   }
   const strippedCmd = action.cmd.substr(1)
   const parts = splitStringOnFirst(strippedCmd, /\s/)

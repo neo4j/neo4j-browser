@@ -1,16 +1,19 @@
-import semver from 'semver'
-
 import { GlobalState } from 'shared/globalState'
 import { inDesktop } from 'shared/modules/app/appDuck'
 import {
+  getUseDb,
   isConnected,
-  isConnectedAuraHost
+  isConnectedAuraHost,
+  useDb
 } from 'shared/modules/connections/connectionsDuck'
 import {
+  Database,
+  findDatabaseByNameOrAlias,
   getAllowOutgoingConnections,
   getClientsAllowTelemetry,
   isServerConfigDone,
-  shouldAllowOutgoingConnections
+  shouldAllowOutgoingConnections,
+  SYSTEM_DB
 } from 'shared/modules/dbMeta/dbMetaDuck'
 import {
   getAllowCrashReports,
@@ -21,6 +24,19 @@ import {
   getAllowCrashReportsInDesktop,
   getAllowUserStatsInDesktop
 } from 'shared/modules/udc/udcDuck'
+
+export function getCurrentDatabase(state: GlobalState): Database | null {
+  const dbName = getUseDb(state)
+  if (dbName) {
+    return findDatabaseByNameOrAlias(state, dbName) ?? null
+  }
+
+  return null
+}
+
+export function isSystemOrCompositeDb(db: Database): boolean {
+  return db?.name === SYSTEM_DB || db?.type === 'composite'
+}
 
 export type TelemetrySettingSource =
   | 'AURA'

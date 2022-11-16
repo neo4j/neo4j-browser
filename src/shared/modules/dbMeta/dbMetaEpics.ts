@@ -86,6 +86,10 @@ import {
 import { isInt, Record } from 'neo4j-driver'
 import semver, { gte, SemVer } from 'semver'
 import { triggerCredentialsTimeout } from '../credentialsPolicy/credentialsPolicyDuck'
+import {
+  isSystemOrCompositeDb,
+  getCurrentDatabase
+} from 'shared/utils/selectors'
 getCountAutomaticRefreshEnabled
 async function databaseList(store: any) {
   try {
@@ -120,10 +124,10 @@ async function databaseList(store: any) {
 }
 
 async function getLabelsAndTypes(store: any) {
-  const db = getUseDb(store.getState())
+  const db = getCurrentDatabase(store.getState())
 
-  // System db, do nothing
-  if (db === SYSTEM_DB) {
+  // System or composite db, do nothing
+  if (db && isSystemOrCompositeDb(db)) {
     return
   }
 
@@ -159,10 +163,10 @@ async function getLabelsAndTypes(store: any) {
 }
 
 async function getNodeAndRelationshipCounts(store: any) {
-  const db = getUseDb(store.getState())
+  const db = getCurrentDatabase(store.getState())
 
-  // System db, do nothing
-  if (db === SYSTEM_DB) {
+  // System or composite db, do nothing
+  if (db && isSystemOrCompositeDb(db)) {
     return
   }
 
