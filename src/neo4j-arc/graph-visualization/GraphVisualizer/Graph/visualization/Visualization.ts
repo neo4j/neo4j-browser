@@ -234,6 +234,9 @@ export class Visualization {
     )
 
     this.forceSimulation.updateRelationships(this.graph)
+    // The onGraphChange handler does only repaint relationship color
+    // not width and caption. We work around that by doing an aditional full
+    // render to get the new stylings
     this.render()
   }
 
