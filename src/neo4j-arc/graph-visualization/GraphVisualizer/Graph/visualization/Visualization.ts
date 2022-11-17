@@ -234,6 +234,7 @@ export class Visualization {
     )
 
     this.forceSimulation.updateRelationships(this.graph)
+    this.render()
   }
 
   zoomByType = (zoomType: ZoomType): void => {
