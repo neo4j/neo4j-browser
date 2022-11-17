@@ -315,7 +315,7 @@ export const stringifyMod = (
   const indentation =
     prettyLevel && !skipOpeningIndentation ? '  '.repeat(prettyLevel - 1) : ''
   const nextIndentation = nextPrettyLevel
-    ? Array(nextPrettyLevel).join('  ')
+    ? '  '.repeat(nextPrettyLevel - 1)
     : ''
   const endIndentation = prettyLevel ? '  '.repeat(prettyLevel - 1) : ''
   const propSpacing = prettyLevel ? ' ' : ''
