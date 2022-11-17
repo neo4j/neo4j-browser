@@ -313,12 +313,11 @@ export const stringifyMod = (
   const nextPrettyLevel = prettyLevel ? prettyLevel + 1 : false
   const newLine = prettyLevel ? '\n' : ''
   const indentation =
-    prettyLevel && !skipOpeningIndentation ? Array(prettyLevel).join('  ') : ''
-  const nextIndentation =
-    nextPrettyLevel && !skipOpeningIndentation
-      ? Array(nextPrettyLevel).join('  ')
-      : ''
-  const endIndentation = prettyLevel ? Array(prettyLevel).join('  ') : ''
+    prettyLevel && !skipOpeningIndentation ? '  '.repeat(prettyLevel - 1) : ''
+  const nextIndentation = nextPrettyLevel
+    ? '  '.repeat(nextPrettyLevel - 1)
+    : ''
+  const endIndentation = prettyLevel ? '  '.repeat(prettyLevel - 1) : ''
   const propSpacing = prettyLevel ? ' ' : ''
   const toString = Object.prototype.toString
   const isArray =
