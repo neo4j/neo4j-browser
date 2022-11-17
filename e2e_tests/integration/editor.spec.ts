@@ -39,6 +39,12 @@ describe('Cypher Editor', () => {
     cy.getEditor().type('{backspace}call dbms.listC')
     cy.getEditor().contains('listConfig')
 
+    // It can take a little while for the label meta-data to update in the background
+    cy.getEditor().type(selectAllAndDelete)
+    cy.executeCommand('return extraTimeForMetadataupdate')
+    cy.resultContains('extraTimeForMetadataupdate')
+    cy.wait(5000)
+
     cy.getEditor().type(selectAllAndDelete)
     cy.getEditor().type('MATCH (:')
     cy.getEditor().contains(':AutocompeleteLabel')

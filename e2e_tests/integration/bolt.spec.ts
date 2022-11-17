@@ -63,7 +63,7 @@ describe('Bolt connections', () => {
       const password = Cypress.config('password')
       cy.connect('neo4j', password)
 
-      cy.createUser('noroles', 'pw', true)
+      cy.createUser('noroles', 'password123', true)
       cy.executeCommand(':server disconnect')
       cy.executeCommand(':clear')
       cy.executeCommand(':server connect')
@@ -71,7 +71,7 @@ describe('Bolt connections', () => {
       // Make sure initial pw set works
       cy.setInitialPassword(
         '.',
-        'pw',
+        'password123',
         'noroles',
         Cypress.config('boltUrl'),
         true
