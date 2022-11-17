@@ -75,8 +75,7 @@ import {
   findDatabaseByNameOrAlias,
   getAvailableSettings,
   getDatabases,
-  getRemoteContentHostnameAllowlist,
-  SYSTEM_DB
+  getRemoteContentHostnameAllowlist
 } from 'shared/modules/dbMeta/dbMetaDuck'
 import { getUserCapabilities } from 'shared/modules/features/featuresDuck'
 import * as frames from 'shared/modules/frames/framesDuck'
@@ -102,6 +101,10 @@ import {
 } from 'shared/services/bolt/txMetadata'
 import { objToCss, parseGrass } from 'shared/services/grassUtils'
 import { URL } from 'whatwg-url'
+import {
+  getCurrentDatabase,
+  isSystemOrCompositeDb
+} from 'shared/utils/selectors'
 
 const PLAY_FRAME_TYPES = ['play', 'play-remote']
 
@@ -150,7 +153,9 @@ const availableCommands = [
     name: 'set-params',
     match: (cmd: any) => /^params?\s/.test(cmd),
     exec(action: any, put: any, store: any) {
-      return handleParamsCommand(action, put, getUseDb(store.getState()))
+      const currDb = getCurrentDatabase(store.getState())
+      const onUnsupportedDb = Boolean(currDb && isSystemOrCompositeDb(currDb))
+      return handleParamsCommand(action, put, onUnsupportedDb)
         .then(res => {
           const params =
             res.type === 'param' ? res.result : getParams(store.getState())
@@ -350,15 +355,15 @@ const availableCommands = [
     name: 'sysinfo',
     match: (cmd: any) => /^sysinfo$/.test(cmd),
     exec(action: any, put: any, store: any) {
-      const useDb = getUseDb(store.getState())
-      if (useDb === SYSTEM_DB) {
+      const db = getCurrentDatabase(store.getState())
+      if (db && isSystemOrCompositeDb(db)) {
         put(
           frames.add({
             useDb,
             ...action,
             type: 'error',
             error: UnsupportedError(
-              'The :sysinfo command is not supported while using the system database.'
+              'The :sysinfo command is not supported while using the system or a composite database.'
             )
           })
         )

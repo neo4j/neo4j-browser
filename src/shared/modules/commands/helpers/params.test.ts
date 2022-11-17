@@ -34,7 +34,7 @@ describe('commandsDuck params helper', () => {
 
     // When
     return params
-      .handleParamsCommand(action, put)
+      .handleParamsCommand(action, put, false)
       .then(() => {
         throw Error('THIS SHOULD NEVER HAPPEN')
       })
@@ -49,7 +49,7 @@ describe('commandsDuck params helper', () => {
     const put = jest.fn()
 
     // When
-    const p = params.handleParamsCommand(action, put)
+    const p = params.handleParamsCommand(action, put, false)
 
     // Then
     return p.then(res => {
@@ -63,7 +63,7 @@ describe('commandsDuck params helper', () => {
     const put = jest.fn()
 
     // When
-    const p = params.handleParamsCommand(action, put)
+    const p = params.handleParamsCommand(action, put, false)
 
     // Then
     return p.then(res => {
@@ -77,7 +77,7 @@ describe('commandsDuck params helper', () => {
     const put = jest.fn()
 
     // When
-    const p = params.handleParamsCommand(action, put)
+    const p = params.handleParamsCommand(action, put, false)
 
     // Then
     return p.then(res => {
@@ -91,7 +91,7 @@ describe('commandsDuck params helper', () => {
     const put = jest.fn()
 
     // When
-    const p = params.handleParamsCommand(action, put)
+    const p = params.handleParamsCommand(action, put, false)
 
     // Then
     return p.then(res => {
@@ -105,7 +105,7 @@ describe('commandsDuck params helper', () => {
     const put = jest.fn()
 
     // When
-    const p = params.handleParamsCommand(action, put)
+    const p = params.handleParamsCommand(action, put, false)
 
     // Then
     return p.then(res => {
