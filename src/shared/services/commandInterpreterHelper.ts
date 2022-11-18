@@ -75,7 +75,9 @@ import {
   findDatabaseByNameOrAlias,
   getAvailableSettings,
   getDatabases,
-  getRemoteContentHostnameAllowlist
+  getRemoteContentHostnameAllowlist,
+  SYSTEM_DB,
+  update as updateMetadata
 } from 'shared/modules/dbMeta/dbMetaDuck'
 import { getUserCapabilities } from 'shared/modules/features/featuresDuck'
 import * as frames from 'shared/modules/frames/framesDuck'
@@ -217,22 +219,36 @@ const availableCommands = [
           throw UnsupportedError('No multi db support detected.')
         }
 
+        const currentDbName = getUseDb(store.getState())
         const normalizedName = dbName.toLowerCase()
         const cleanDbName = unescapeCypherIdentifier(normalizedName)
         const dbMeta = findDatabaseByNameOrAlias(store.getState(), cleanDbName)
 
+        // If switching to a new database reset metadata
+        if (cleanDbName !== currentDbName) {
+          put(
+            updateMetadata({
+              nodes: 0,
+              relationships: 0,
+              labels: [],
+              relationshipTypes: [],
+              properties: []
+            })
+          )
+        }
+
         if (!dbMeta) {
-          throw DatabaseNotFoundError({ dbName })
+          throw DatabaseNotFoundError({ dbName: cleanDbName })
         }
         if (dbMeta.status !== 'online') {
-          throw DatabaseUnavailableError({ dbName: dbMeta.name, dbMeta })
+          throw DatabaseUnavailableError({ dbName: cleanDbName, dbMeta })
         }
-        put(useDb(dbMeta.name))
+        put(useDb(cleanDbName))
         put(
           frames.add({
             ...action,
             type: 'use-db',
-            useDb: dbMeta.name
+            useDb: cleanDbName
           })
         )
         if (action.requestId) {
