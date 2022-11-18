@@ -234,6 +234,12 @@ export class Visualization {
     )
 
     this.forceSimulation.updateRelationships(this.graph)
+   // The onGraphChange handler does only repaint relationship color
+    // not width and caption, since it requires taking into account surrounding data
+    // since the arrows have different bending depending on how the nodes are 
+    // connected. We work around that by doing an additional full render to get the 
+// new stylings
+    this.render()
   }
 
   zoomByType = (zoomType: ZoomType): void => {

@@ -175,6 +175,7 @@ export type Database = {
   default: boolean
   home?: boolean // introduced in neo4j 4.3
   aliases?: string[] // introduced in neo4j 4.4
+  type?: 'system' | 'composite' | 'standard' // introduced in neo4j 5
   status: string
 }
 

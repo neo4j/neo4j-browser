@@ -45,7 +45,6 @@ const slides = [
           Graph visualization of query results containing nodes and
           relationships
         </li>
-        <li>Convenient exploration of Neo4j's REST API</li>
       </ul>
     </div>
   </Slide>,
