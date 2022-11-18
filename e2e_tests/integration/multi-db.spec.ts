@@ -159,14 +159,14 @@ describe('Multi database', () => {
           editor().contains('system$')
 
           cy.executeCommand(':use `Mossdeep-24.`')
-          editor().contains('neo4j$')
+          editor().contains('Mossdeep-24.$')
 
           cy.executeCommand(':use system')
           editor().contains('system$')
 
           cy.executeCommand(':dbs')
           cy.getFrames().eq(0).contains(':use `mossdeep-24.`').click()
-          editor().contains('neo4j$')
+          editor().contains('mossdeep-24.$')
 
           cy.executeCommand('drop alias `Mossdeep-24.` for database;')
           cy.resultContains('1 system update, no records')
