@@ -60,7 +60,7 @@ describe('Types in Browser', () => {
       cy.executeCommand(query)
       cy.waitForCommandResult()
 
-      if (Cypress.config('serverVersion') < 4.0) {
+      if (Cypress.config('serverVersion') < 4.3) {
         cy.resultContains('"2015-07-20T15:11:42[Europe/Stockholm]"')
         // Go to ascii view
         cy.get('[data-testid="cypherFrameSidebarAscii"]').first().click()
