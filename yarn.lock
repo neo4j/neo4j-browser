@@ -1075,12 +1075,19 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.5.5":
-  version "7.18.9"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.18.9.tgz#b4fcfce55db3d2e5e080d2490f608a3b9f407f4a"
-  integrity sha512-lkqXDcvlFT5rvEjiu6+QYO+1GXrEHRo2LOtS7E4GtX5ESIZOgepqsZBVIj6Pv+a6zqsya9VCgiK1KAK4BvJDAw==
+"@babel/runtime@^7.17.8":
+  version "7.19.0"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.19.0.tgz#22b11c037b094d27a8a2504ea4dcff00f50e2259"
+  integrity sha512-eR8Lo9hnDS7tqkO7NsV+mKvCmv5boaXFSZ70DnfhcgiEne8hv9oCEd36Klw74EtizEqLsy4YnW8UWwpBVolHZA==
   dependencies:
     regenerator-runtime "^0.13.4"
+
+"@babel/runtime@^7.5.5":
+  version "7.20.1"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.20.1.tgz#1148bb33ab252b165a06698fde7576092a78b4a9"
+  integrity sha512-mrzLkl6U9YLF8qpqI7TB82PESyEGjm/0Ly91jG575eVxMMlb8fYfOXFZIJ8XfLrJZQbm7dlKry2bJmXBUEkdFg==
+  dependencies:
+    regenerator-runtime "^0.13.10"
 
 "@babel/template@^7.10.4", "@babel/template@^7.3.3":
   version "7.10.4"
@@ -10558,29 +10565,29 @@ neo4j-client-sso@1.2.2:
     jwt-decode "^3.1.2"
     lodash.pick "^4.4.0"
 
-neo4j-driver-bolt-connection@^4.4.7:
-  version "4.4.7"
-  resolved "https://registry.yarnpkg.com/neo4j-driver-bolt-connection/-/neo4j-driver-bolt-connection-4.4.7.tgz#0582d54de1f213e60c374209193d1f645ba523ea"
-  integrity sha512-6Q4hCtvWE6gzN64N09UqZqf/3rDl7FUWZZXiVQL0ZRbaMkJpZNC2NmrDIgGXYE05XEEbRBexf2tVv5OTYZYrow==
+neo4j-driver-bolt-connection@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/neo4j-driver-bolt-connection/-/neo4j-driver-bolt-connection-5.2.0.tgz#322f2f9773d4e0c093b0049176b13a2f64a1f6fb"
+  integrity sha512-BKVs1fd54UrJGWWpxpzPclaHo46xUUwMRK5fHR8t6KSi5C0WgE0iCOh1tk3cReFQgqwS6D5OVKu2ihU2kzNLiA==
   dependencies:
     buffer "^6.0.3"
-    neo4j-driver-core "^4.4.7"
+    neo4j-driver-core "^5.2.0"
     string_decoder "^1.3.0"
 
-neo4j-driver-core@^4.4.7:
-  version "4.4.7"
-  resolved "https://registry.yarnpkg.com/neo4j-driver-core/-/neo4j-driver-core-4.4.7.tgz#d2475e107b3fea2b9d1c36b0c273da5c5a291c37"
-  integrity sha512-NhvVuQYgG7eO/vXxRaoJfkWUNkjvIpmCIS9UWU9Bbhb4V+wCOyX/MVOXqD0Yizhs4eyIkD7x90OXb79q+vi+oA==
+neo4j-driver-core@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/neo4j-driver-core/-/neo4j-driver-core-5.2.0.tgz#b465bea6580196f43945265b75961978de17e39e"
+  integrity sha512-USdA9u+V0VM7y4UwH4nrofBaROwp73iKx1hC6TNWQRKF5o7biDUt6Wc1x3+oO4YN4lCSC5JzB/tHlG4f1cYxsg==
 
-neo4j-driver@^4.4.2:
-  version "4.4.7"
-  resolved "https://registry.yarnpkg.com/neo4j-driver/-/neo4j-driver-4.4.7.tgz#51b3fb48241e66eb3be94e90032cc494c44e59f3"
-  integrity sha512-N7GddPhp12gVJe4eB84u5ik5SmrtRv8nH3rK47Qy7IUKnJkVEos/F1QjOJN6zt1jLnDXwDcGzCKK8XklYpzogw==
+neo4j-driver@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/neo4j-driver/-/neo4j-driver-5.2.0.tgz#954645aac5cd3975f2ca160417dbb2a513bb108f"
+  integrity sha512-jCKKSC6pumhjgn16X3tpSkQBvnwVdYHrudI1gU8RhKIOnKQjVEnj3OzcHAN2c8+BaFDx++qIln9FsssPLVOrXg==
   dependencies:
-    "@babel/runtime" "^7.5.5"
-    neo4j-driver-bolt-connection "^4.4.7"
-    neo4j-driver-core "^4.4.7"
-    rxjs "^6.6.3"
+    "@babel/runtime" "^7.17.8"
+    neo4j-driver-bolt-connection "^5.2.0"
+    neo4j-driver-core "^5.2.0"
+    rxjs "^7.5.5"
 
 nice-try@^1.0.4:
   version "1.0.5"
@@ -13157,7 +13164,7 @@ rxjs@^5.0.0-beta.11, rxjs@^5.4.2:
   dependencies:
     symbol-observable "1.0.1"
 
-rxjs@^6.4.0, rxjs@^6.6.3, rxjs@^6.6.7:
+rxjs@^6.4.0, rxjs@^6.6.7:
   version "6.6.7"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.6.7.tgz#90ac018acabf491bf65044235d5863c4dab804c9"
   integrity sha1-kKwBisq/SRv2UEQjXVhjxNq4BMk=
@@ -13170,6 +13177,13 @@ rxjs@^6.5.2:
   integrity sha1-jKhGNcTaqQDA05Z6buesYCce5VI=
   dependencies:
     tslib "^1.9.0"
+
+rxjs@^7.5.5:
+  version "7.5.6"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-7.5.6.tgz#0446577557862afd6903517ce7cae79ecb9662bc"
+  integrity sha512-dnyv2/YsXhnm461G+R/Pe5bWP41Nm6LBXEYWI6eiFP4fiwx6WRI/CD0zbdVAudd9xwLEF2IDcKXLHit0FYjUzw==
+  dependencies:
+    tslib "^2.1.0"
 
 sade@^1.7.3:
   version "1.8.1"
