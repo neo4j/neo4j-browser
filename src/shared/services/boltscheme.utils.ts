@@ -27,7 +27,8 @@ export const isNonSupportedRoutingSchemeError = (e: {
   message: string
 }) =>
   e.code === 'ServiceUnavailable' &&
-  e.message.includes('Could not perform discovery')
+  (e.message.includes('Could not perform discovery') ||
+    e.message.includes('routing'))
 
 export const isNonRoutingScheme = (url = '') =>
   typeof url === 'string' && url.startsWith(`${BOLT_DIRECT_SCHEME}://`)

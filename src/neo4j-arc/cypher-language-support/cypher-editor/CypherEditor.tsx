@@ -300,8 +300,8 @@ export class CypherEditor extends React.Component<
               ...monaco.editor.getModelMarkers({ owner: this.getMonacoId() }),
               ...result.summary.notifications.map(
                 ({ description, position, title }) => {
-                  const line = 'line' in position ? position.line : 0
-                  const column = 'column' in position ? position.column : 0
+                  const line = 'line' in position ? position.line ?? 0 : 0
+                  const column = 'column' in position ? position.column ?? 0 : 0
                   return {
                     startLineNumber: statementLineNumber + line,
                     startColumn:

@@ -23,6 +23,7 @@ import Rx from 'rxjs'
 import {
   getRawVersion,
   serverInfoQuery,
+  SYSTEM_DB,
   updateServerInfo
 } from '../dbMeta/dbMetaDuck'
 import {
@@ -270,37 +271,36 @@ export const handleForcePasswordChangeEpic = (some$: any, store: any) =>
                   undefined,
                   userActionTxMetadata.txMetadata
                 )
-                // What does the driver say, does the server support multidb?
-                const supportsMultiDb = await driver.supportsMultiDb()
-                if (!versionRes.success) {
-                  // This is just a placeholder version to figure out how to
-                  // change password. This will be updated to the correct server version
-                  // when we're connected and dbMetaEpic runs
-                  const fakeVersion = supportsMultiDb
-                    ? FIRST_MULTI_DB_SUPPORT
-                    : FIRST_NO_MULTI_DB_SUPPORT
-                  versionRes.result = {
-                    records: [],
-                    summary: {
-                      server: { version: `placeholder/${fakeVersion}` }
-                    }
-                  }
+
+                if (versionRes.success) {
+                  store.dispatch(updateServerInfo(versionRes.result))
                 }
-                store.dispatch(updateServerInfo(versionRes.result))
               }
+
+              let versionForPasswordQuery = getRawVersion(store.getState())
+
+              // if we failed to get a version by querying, do a best effort quess
+              const supportsMultiDb = await driver.supportsMultiDb()
+              if (!versionForPasswordQuery) {
+                versionForPasswordQuery = supportsMultiDb
+                  ? FIRST_MULTI_DB_SUPPORT
+                  : FIRST_NO_MULTI_DB_SUPPORT
+              }
+
               // Figure out how to change the pw on that server version
               const queryObj = changeUserPasswordQuery(
-                store.getState(),
+                versionForPasswordQuery,
                 action.password,
                 action.newPassword
               )
+
               // and then change the password
               const res = await queryAndResolve(
                 driver,
                 { ...action, ...queryObj },
                 undefined,
                 userActionTxMetadata.txMetadata,
-                driverDatabaseSelection(store.getState(), 'system') // target system db if it has multi-db support
+                supportsMultiDb ? { database: SYSTEM_DB } : undefined
               )
               driver.close()
               resolve(res)
