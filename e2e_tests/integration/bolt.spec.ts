@@ -70,7 +70,7 @@ describe('Bolt connections', () => {
 
       // Make sure initial pw set works
       cy.setInitialPassword(
-        '.',
+        'password1234',
         'password123',
         'noroles',
         Cypress.config('boltUrl'),
@@ -79,7 +79,7 @@ describe('Bolt connections', () => {
 
       // Try regular connect
       cy.executeCommand(':server disconnect')
-      cy.connect('noroles', '.')
+      cy.connect('noroles', 'password1234')
 
       // Check sidebar
       cy.get('[data-testid="navigationDBMS"]').click()
