@@ -159,7 +159,7 @@ describe('Multi database', () => {
           editor().contains('system$')
 
           cy.executeCommand(':use `Mossdeep-24.`')
-          editor().contains('Mossdeep-24.$')
+          editor().contains('mossdeep-24.$')
 
           cy.executeCommand(':use system')
           editor().contains('system$')
