@@ -68,12 +68,12 @@ describe('Types in Browser', () => {
       } else {
         //Split since the timezone is shown as 2015-07-20T15:11:42+02:00[Europe/Stockholm]
         //Which changes during daylight saving time
-        cy.resultContains('"2015-07-20T15:11:42')
-        cy.resultContains('[Europe/Stockholm]"')
+        cy.resultContains('"2015-07-20T15:11:42+0')
+        cy.resultContains(':00[Europe/Stockholm]"')
         // Go to ascii view
         cy.get('[data-testid="cypherFrameSidebarAscii"]').first().click()
-        cy.resultContains('│"2015-07-20T15:11:42')
-        cy.resultContains('[Europe/Stockholm]"')
+        cy.resultContains('│"2015-07-20T15:11:42+0')
+        cy.resultContains(':00[Europe/Stockholm]"')
       }
     })
     it('presents local datetime type correctly', () => {
