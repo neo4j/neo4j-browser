@@ -92,9 +92,7 @@ export const DatabaseSelector = ({
           onChange={selectionChange}
         >
           {!Boolean(selectedDb) && (
-            <option value={EMPTY_OPTION} disabled>
-              {EMPTY_OPTION}
-            </option>
+            <option value={EMPTY_OPTION}>{EMPTY_OPTION}</option>
           )}
 
           {databasesAndAliases.map(dbOrAlias => {
