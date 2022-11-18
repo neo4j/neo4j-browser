@@ -62,12 +62,8 @@ export const DatabaseSelector = ({
     }
   }
 
-  const databasesList: (Partial<Database> & {
-    name: string
-  })[] = selectedDb ? databases : [{ name: EMPTY_OPTION }, ...databases]
-
   // When connected to a cluster, we get duplicate dbs for each member
-  const uniqDatabases = uniqBy(databasesList, 'name')
+  const uniqDatabases = uniqBy(databases, 'name')
 
   const homeDb =
     uniqDatabases.find(db => db.home) || uniqDatabases.find(db => db.default)
@@ -95,6 +91,12 @@ export const DatabaseSelector = ({
           data-testid="database-selection-list"
           onChange={selectionChange}
         >
+          {!Boolean(selectedDb) && (
+            <option value={EMPTY_OPTION} disabled>
+              {EMPTY_OPTION}
+            </option>
+          )}
+
           {databasesAndAliases.map(dbOrAlias => {
             //If alias
             if ('databaseName' in dbOrAlias) {
