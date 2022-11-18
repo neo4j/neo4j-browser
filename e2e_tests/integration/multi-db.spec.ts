@@ -170,6 +170,9 @@ describe('Multi database', () => {
 
           cy.executeCommand('drop alias `Mossdeep-24.` for database;')
           cy.resultContains('1 system update, no records')
+
+          cy.executeCommand(':use system')
+          editor().contains('system$')
         })
       }
 
