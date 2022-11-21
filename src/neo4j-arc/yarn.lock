@@ -1280,7 +1280,7 @@ nano-css@^5.3.1:
     stacktrace-js "^2.0.2"
     stylis "^4.0.6"
 
-neo4j-driver-core@^5.0.1:
+neo4j-driver-core@^5.2.0:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/neo4j-driver-core/-/neo4j-driver-core-5.2.0.tgz#b465bea6580196f43945265b75961978de17e39e"
   integrity sha512-USdA9u+V0VM7y4UwH4nrofBaROwp73iKx1hC6TNWQRKF5o7biDUt6Wc1x3+oO4YN4lCSC5JzB/tHlG4f1cYxsg==

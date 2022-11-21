@@ -46,8 +46,6 @@ export function extractServerInfo(res: QueryResult): ServerInfo {
     serverInfo.edition = resultObj.edition
   }
 
-  // TODO se till att få rätt på den där temporära vesionummerna
-
   // Get server edition if available
   if (res.records.length && res.records[0].keys.includes('edition')) {
     serverInfo.edition = res.records[0].get('edition')
