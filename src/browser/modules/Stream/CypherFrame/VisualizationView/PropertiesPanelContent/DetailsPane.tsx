@@ -86,7 +86,7 @@ export function DetailsPane({
             )
           })}
       </PaneHeader>
-      <PaneBody>
+      <PaneBody data-testid="viz-details-pane-body">
         <PropertiesTable
           visibleProperties={visibleItemProperties}
           onMoreClick={handleMorePropertiesClick}
