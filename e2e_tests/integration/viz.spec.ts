@@ -267,8 +267,9 @@ describe('Viz rendering', () => {
 
     // Check that can scroll overview panel
     const showAllButtonText = 'Show all'
-    cy.get(`button:contains("${showAllButtonText}")`).scrollIntoView()
-    cy.get(`button:contains("${showAllButtonText}")`).should('be.visible')
+    cy.get(`button:contains("${showAllButtonText}")`)
+      .scrollIntoView()
+      .should('be.visible')
 
     // Open node properties details panel
     const nodeSelector = '.node'
@@ -281,8 +282,7 @@ describe('Viz rendering', () => {
     const lastPropName = 'prop9'
     cy.contains(lastPropName).should('exist')
 
-    // For some reason need to get to the td to be able to scroll to it, hence the parent()
-    cy.get('tr td span').contains(lastPropName).parent().scrollIntoView()
+    cy.get('[data-testid="viz-details-pane-body"]').scrollTo('bottom')
     cy.get('tr td span').contains(lastPropName).should('be.visible')
   })
 })
