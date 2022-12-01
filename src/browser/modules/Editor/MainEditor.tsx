@@ -287,7 +287,10 @@ export function MainEditor({
               onExecute={createRunCommandFunction(commandSources.editor)}
               ref={editorRef}
               additionalCommands={{
-                [KeyCode.Escape]: toggleFullscreen
+                [KeyCode.Escape]: {
+                  handler: toggleFullscreen,
+                  context: '!suggestWidgetVisible && !findWidgetVisible'
+                }
               }}
               useDb={useDb}
               sendCypherQuery={(text: string) =>

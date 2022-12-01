@@ -67,7 +67,10 @@ type CypherEditorDefaultProps = {
   onExecute?: (value: string) => void
   sendCypherQuery: (query: string) => Promise<QueryResult>
   additionalCommands: Partial<
-    Record<monaco.KeyCode, monaco.editor.ICommandHandler>
+    Record<
+      monaco.KeyCode,
+      { handler: monaco.editor.ICommandHandler; context?: string }
+    >
   >
   tabIndex?: number
   useDb: null | string
@@ -401,17 +404,20 @@ export class CypherEditor extends React.Component<
       this.props.onDisplayHelpKeys
     )
 
-    this.editor.addCommand(KeyCode.Escape, () => {
-      this.wrapperRef.current?.focus()
-    })
+    this.editor.addCommand(
+      KeyCode.Escape,
+      () => {
+        this.wrapperRef.current?.focus()
+      },
+      '!suggestWidgetVisible && !findWidgetVisible'
+    )
 
     keys(this.props.additionalCommands).forEach(key => {
       const command = this.props.additionalCommands[key]
       if (!command) {
         return
       }
-
-      this?.editor?.addCommand(key, command)
+      this?.editor?.addCommand(key, command.handler, command.context)
     })
 
     this.onContentUpdate()
