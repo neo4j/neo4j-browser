@@ -198,7 +198,10 @@ function FrameEditor({
               onExecute={run}
               ref={editorRef}
               additionalCommands={{
-                [KeyCode.Escape]: fullscreenToggle
+                [KeyCode.Escape]: {
+                  handler: fullscreenToggle,
+                  context: '!suggestWidgetVisible && !findWidgetVisible'
+                }
               }}
               useDb={frame.useDb}
               value={editorValue}
