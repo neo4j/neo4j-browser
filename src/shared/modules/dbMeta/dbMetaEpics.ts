@@ -43,7 +43,9 @@ import {
   getCountAutomaticRefreshEnabled,
   DB_META_FORCE_COUNT,
   DB_META_COUNT_DONE,
-  metaCountQuery
+  metaCountQuery,
+  trialStatusQuery,
+  updateTrialStatus
 } from './dbMetaDuck'
 import {
   ClientSettings,
@@ -258,6 +260,7 @@ async function clusterRole(store: any) {
 }
 
 async function fetchServerInfo(store: any) {
+  console.log('fetchServerInfo')
   try {
     const serverInfo = await bolt.directTransaction(
       serverInfoQuery,
@@ -268,6 +271,21 @@ async function fetchServerInfo(store: any) {
       }
     )
     store.dispatch(updateServerInfo(serverInfo))
+  } catch {}
+}
+
+async function fetchTrialStatus(store: any) {
+  try {
+    const trialStatus = await bolt.directTransaction(
+      trialStatusQuery,
+      {},
+      {
+        ...backgroundTxMetadata,
+        useDb: (await bolt.hasMultiDbSupport()) ? SYSTEM_DB : undefined
+      }
+    )
+    console.log('trialStatus', trialStatus)
+    store.dispatch(updateTrialStatus(trialStatus))
   } catch {}
 }
 
@@ -338,8 +356,12 @@ export const dbMetaEpic = (some$: any, store: any) =>
     .merge(some$.ofType(CONNECTION_SUCCESS))
     .mergeMap(() =>
       Rx.Observable.fromPromise(
-        // Server version and edition
-        fetchServerInfo(store)
+        Promise.all([
+          // Server version and edition
+          fetchServerInfo(store),
+          //If licence is accepted othwerwise how long remains of the trial
+          fetchTrialStatus(store)
+        ])
       )
     )
     .mergeMap(() =>

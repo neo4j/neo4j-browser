@@ -21,7 +21,7 @@ import { QueryResult } from 'neo4j-driver'
 import semver from 'semver'
 
 import { guessSemverVersion } from '../features/featureDuck.utils'
-import { VERSION_FOR_EDITOR_HISTORY_SETTING } from './dbMetaDuck'
+import { TrialStatus, VERSION_FOR_EDITOR_HISTORY_SETTING } from './dbMetaDuck'
 
 type ServerInfo = {
   version: string | null
@@ -46,8 +46,6 @@ export function extractServerInfo(res: QueryResult): ServerInfo {
     serverInfo.edition = resultObj.edition
   }
 
-  // TODO se till att få rätt på den där temporära vesionummerna
-
   // Get server edition if available
   if (res.records.length && res.records[0].keys.includes('edition')) {
     serverInfo.edition = res.records[0].get('edition')
@@ -59,6 +57,32 @@ export function extractServerInfo(res: QueryResult): ServerInfo {
   }
 
   return serverInfo
+}
+
+export const extractTrialStatus = (res: QueryResult): TrialStatus => {
+  const resultObj = res.records.map(res => res.toObject())[0]
+
+  const trialStatus: TrialStatus = {
+    commerialLicenseAccepted: null,
+    expired: null,
+    daysRemaing: null
+  }
+
+  if (!resultObj) {
+    return trialStatus
+  }
+
+  const value = resultObj.value[0] as number | 'yes' | 'no' | 'expired'
+  if (value) {
+    if (typeof value === 'number') {
+      trialStatus.daysRemaing = value
+    } else {
+      trialStatus.commerialLicenseAccepted = value === 'yes'
+      trialStatus.expired = value === 'expired'
+    }
+  }
+
+  return trialStatus
 }
 
 export const versionHasEditorHistorySetting = (version: string | null) => {

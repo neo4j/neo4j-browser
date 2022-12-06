@@ -70,6 +70,7 @@ import {
 import {
   findDatabaseByNameOrAlias,
   getEdition,
+  getTrialStatus,
   isServerConfigDone,
   shouldAllowOutgoingConnections
 } from 'shared/modules/dbMeta/dbMetaDuck'
@@ -180,7 +181,7 @@ export function App(props: any) {
   }, [titleString])
 
   const wrapperClassNames = codeFontLigatures ? '' : 'disable-font-ligatures'
-
+  console.log(props.trialStatus, 'trialStatus')
   return (
     <ErrorBoundary>
       <DesktopApi
@@ -282,6 +283,7 @@ export function App(props: any) {
                         setConsentBannerShownCount(consentBannerShownCount + 1)
                       }
                       openSettingsDrawer={openSettingsDrawer}
+                      trialStatus={props.trialStatus}
                     />
                   </StyledMainWrapper>
                 </StyledBody>
@@ -329,7 +331,8 @@ const mapStateToProps = (state: GlobalState) => {
       ? isConnectedAuraHost(state)
         ? 'AURA HOST'
         : 'NON-AURA HOST'
-      : 'NOT CONNECTED'
+      : 'NOT CONNECTED',
+    trialStatus: getTrialStatus(state)
   }
 }
 type DesktopTrackingSettings = {
