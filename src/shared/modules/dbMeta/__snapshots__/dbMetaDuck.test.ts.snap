@@ -33,6 +33,11 @@ Object {
     "retainConnectionCredentials": false,
     "retainEditorHistory": false,
   },
+  "trialStatus": Object {
+    "commerialLicenseAccepted": null,
+    "daysRemaing": null,
+    "expired": null,
+  },
 }
 `;
 
@@ -97,6 +102,11 @@ Object {
     "remoteContentHostnameAllowlist": "guides.neo4j.com, localhost",
     "retainConnectionCredentials": false,
     "retainEditorHistory": false,
+  },
+  "trialStatus": Object {
+    "commerialLicenseAccepted": null,
+    "daysRemaing": null,
+    "expired": null,
   },
 }
 `;
