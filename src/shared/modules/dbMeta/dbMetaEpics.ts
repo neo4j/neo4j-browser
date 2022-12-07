@@ -260,7 +260,6 @@ async function clusterRole(store: any) {
 }
 
 async function fetchServerInfo(store: any) {
-  console.log('fetchServerInfo')
   try {
     const serverInfo = await bolt.directTransaction(
       serverInfoQuery,
