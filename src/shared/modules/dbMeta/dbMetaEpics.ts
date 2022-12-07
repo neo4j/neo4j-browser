@@ -283,7 +283,6 @@ async function fetchTrialStatus(store: any) {
         useDb: (await bolt.hasMultiDbSupport()) ? SYSTEM_DB : undefined
       }
     )
-    console.log('trialStatus', trialStatus)
     store.dispatch(updateTrialStatus(trialStatus))
   } catch {}
 }

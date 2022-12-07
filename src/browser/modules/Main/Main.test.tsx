@@ -109,14 +109,10 @@ describe('<Main />', () => {
 
     expect(
       queryByText(
-        `Thank you for installing Neo4j. This is a time limited trial, and the
-      30 days has expired. Please contact sales@neo4j.com or
-      licensing@neo4j.com to continue using the software. Use of this
-      Software without a proper commercial or evaluation license with
-      Neo4j,Inc. or its affiliates is prohibited`,
+        `Thank you for installing Neo4j. This is a time limited trial, and the 30 days has expired. Please contact sales@neo4j.com or licensing@neo4j.com to continue using the software. Use of this Software without a proper commercial or evaluation license with Neo4j,Inc. or its affiliates is prohibited`,
         { exact: false }
       )
-    ).toBeFalsy()
+    ).toBeTruthy()
   })
 
   it('should not show WarningBanner if trial active', () => {
@@ -131,11 +127,9 @@ describe('<Main />', () => {
 
     expect(
       queryByText(
-        `Thank you for installing Neo4j. This is a time limited trial, you
-        have 19 days remaining out of 30 days. Please
-        contact sales@neo4j.com if you require more time.`,
+        `Thank you for installing Neo4j. This is a time limited trial, you have 19 days remaining out of 30 days. Please contact sales@neo4j.com if you require more time.`,
         { exact: false }
       )
-    ).toBeFalsy()
+    ).toBeTruthy()
   })
 })

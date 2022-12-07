@@ -181,7 +181,6 @@ export function App(props: any) {
   }, [titleString])
 
   const wrapperClassNames = codeFontLigatures ? '' : 'disable-font-ligatures'
-  console.log(props.trialStatus, 'trialStatus')
   return (
     <ErrorBoundary>
       <DesktopApi
