@@ -197,17 +197,15 @@ describe('Neo4j Browser', () => {
     cy.get('[data-testid="user-details-roles"]').should('have.length', 0)
     cy.get('[data-testid="navigationDBMS"]').click()
   })
-})
 
-it('does not show trial banner since we have licence or community', () => {
-  cy.connect('neo4j', Cypress.config('password'))
+  it('does not show trial banner since we have licence or community', () => {
+    cy.get(Editor).type(`RETURN 1{enter}`, { force: true })
 
-  cy.get(Editor).type(`RETURN 1{enter}`, { force: true })
-
-  cy.get('#MAIN_WRAPPER_DOM_ID')
-    .contains('30 days has expired')
-    .should('not.exist')
-  cy.get('#MAIN_WRAPPER_DOM_ID')
-    .contains(' This is a time limited trial')
-    .should('not.exist')
+    cy.get('#MAIN_WRAPPER_DOM_ID')
+      .contains('30 days has expired')
+      .should('not.exist')
+    cy.get('#MAIN_WRAPPER_DOM_ID')
+      .contains(' This is a time limited trial')
+      .should('not.exist')
+  })
 })
