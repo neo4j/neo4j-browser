@@ -24,7 +24,7 @@ import Stream from '../Stream/Stream'
 import AutoExecButton from '../Stream/auto-exec-button'
 import { useSlowConnectionState } from './main.hooks'
 import {
-  DismissConsentBanner,
+  DismissBanner,
   ErrorBanner,
   NotAuthedBanner,
   StyledMain,
@@ -38,6 +38,7 @@ import {
   DISCONNECTED_STATE,
   PENDING_STATE
 } from 'shared/modules/connections/connectionsDuck'
+import { TrialStatus } from 'shared/modules/dbMeta/dbMetaDuck'
 
 type MainProps = {
   connectionState: number
@@ -49,10 +50,13 @@ type MainProps = {
   dismissConsentBanner: () => void
   incrementConsentBannerShownCount: () => void
   openSettingsDrawer: () => void
+  trialStatus: TrialStatus
 }
 
 const Main = React.memo(function Main(props: MainProps) {
   const [past5Sec, past10Sec] = useSlowConnectionState(props)
+  const [showRemaningTrialBanner, setShowRemaningTrialBanner] =
+    React.useState(true)
   const {
     connectionState,
     isDatabaseUnavailable,
@@ -61,7 +65,8 @@ const Main = React.memo(function Main(props: MainProps) {
     useDb,
     dismissConsentBanner,
     incrementConsentBannerShownCount,
-    openSettingsDrawer
+    openSettingsDrawer,
+    trialStatus
   } = props
 
   useEffect(() => {
@@ -83,7 +88,7 @@ const Main = React.memo(function Main(props: MainProps) {
             </UnderlineClickable>{' '}
             at any time.
           </span>
-          <DismissConsentBanner onClick={dismissConsentBanner} />
+          <DismissBanner onClick={dismissConsentBanner} />
         </UdcConsentBanner>
       )}
       {useDb && isDatabaseUnavailable && (
@@ -118,6 +123,38 @@ const Main = React.memo(function Main(props: MainProps) {
           Server is taking a long time to respond...
         </WarningBanner>
       )}
+
+      {trialStatus.expired && (
+        <ErrorBanner>
+          Thank you for installing Neo4j. This is a time limited trial, and the
+          30 days has expired. Please contact sales@neo4j.com or
+          licensing@neo4j.com to continue using the software. Use of this
+          Software without a proper commercial or evaluation license with
+          Neo4j,Inc. or its affiliates is prohibited.
+        </ErrorBanner>
+      )}
+
+      {trialStatus.daysRemaing !== null &&
+        trialStatus.expired !== true &&
+        showRemaningTrialBanner && (
+          <WarningBanner>
+            Thank you for installing Neo4j. This is a time limited trial, you
+            have {trialStatus.daysRemaing} days remaining out of 30 days. Please
+            contact sales@neo4j.com if you require more time.
+            <div
+              style={{
+                position: 'absolute',
+                right: 20,
+                display: 'inline-block'
+              }}
+            >
+              <DismissBanner
+                onClick={() => setShowRemaningTrialBanner(false)}
+              />
+            </div>
+          </WarningBanner>
+        )}
+
       <ErrorBoundary>
         <Stream />
       </ErrorBoundary>

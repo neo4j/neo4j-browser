@@ -20,11 +20,18 @@
 import { render } from '@testing-library/react'
 import React from 'react'
 import configureMockStore from 'redux-mock-store'
+import { TrialStatus } from 'shared/modules/dbMeta/dbMetaDuck'
 
 import Main from './Main'
 
 const mockStore = configureMockStore()
 const store = mockStore({})
+
+const defaultTrialStatus: TrialStatus = {
+  commerialLicenseAccepted: null,
+  expired: null,
+  daysRemaing: null
+}
 
 jest.mock(
   '../Editor/MainEditor',
@@ -63,7 +70,11 @@ const mainBaseProps = {
 describe('<Main />', () => {
   it('should display an ErrorBanner when useDb is unavailable', () => {
     const { queryByText } = render(
-      <Main {...mainBaseProps} isDatabaseUnavailable={true} />
+      <Main
+        {...mainBaseProps}
+        isDatabaseUnavailable={true}
+        trialStatus={defaultTrialStatus}
+      />
     )
 
     expect(
@@ -73,11 +84,52 @@ describe('<Main />', () => {
 
   it('should not show Errorbanner before we have a useDb', () => {
     const { queryByText } = render(
-      <Main {...mainBaseProps} useDb={null} isDatabaseUnavailable={true} />
+      <Main
+        {...mainBaseProps}
+        useDb={null}
+        isDatabaseUnavailable={true}
+        trialStatus={defaultTrialStatus}
+      />
     )
 
     expect(
       queryByText(`Database '${useDb}' is unavailable.`, { exact: false })
     ).toBeFalsy()
+  })
+
+  it('should not show Errorbanner if trial expired', () => {
+    const { queryByText } = render(
+      <Main
+        {...mainBaseProps}
+        useDb={null}
+        isDatabaseUnavailable={true}
+        trialStatus={{ ...defaultTrialStatus, expired: true }}
+      />
+    )
+
+    expect(
+      queryByText(
+        `Thank you for installing Neo4j. This is a time limited trial, and the 30 days has expired. Please contact sales@neo4j.com or licensing@neo4j.com to continue using the software. Use of this Software without a proper commercial or evaluation license with Neo4j,Inc. or its affiliates is prohibited`,
+        { exact: false }
+      )
+    ).toBeTruthy()
+  })
+
+  it('should not show WarningBanner if trial active', () => {
+    const { queryByText } = render(
+      <Main
+        {...mainBaseProps}
+        useDb={null}
+        isDatabaseUnavailable={true}
+        trialStatus={{ ...defaultTrialStatus, daysRemaing: 19 }}
+      />
+    )
+
+    expect(
+      queryByText(
+        `Thank you for installing Neo4j. This is a time limited trial, you have 19 days remaining out of 30 days. Please contact sales@neo4j.com if you require more time.`,
+        { exact: false }
+      )
+    ).toBeTruthy()
   })
 })
