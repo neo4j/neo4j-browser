@@ -359,7 +359,7 @@ export const dbMetaEpic = (some$: any, store: any) =>
         Promise.all([
           // Server version and edition
           fetchServerInfo(store),
-          //If licence is accepted othwerwise how long remains of the trial
+          //If license is accepted otherwise how long remains of the trial
           fetchTrialStatus(store)
         ])
       )
