@@ -56,7 +56,7 @@ describe(':auto prefix in browser', () => {
         `:auto CALL {{} RETURN 2 as x {}} IN TRANSACTIONS RETURN 2;`
       )
       cy.getFrames().should('not.contain', 'ERROR')
-      cy.getFrames().contains('(no changes, no records)')
+      cy.getFrames().contains('Started streaming 1 rec')
     })
   }
 
