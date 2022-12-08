@@ -44,21 +44,19 @@ describe(':auto prefix in browser', () => {
     })
   }
 
-  if (Cypress.config('serverVersion') >= 4.4) {
+  if (Cypress.config('serverVersion') >= 5) {
     it('shows help link when running CALL IN TRANSACTIONS without :auto', () => {
-      cy.executeCommand(
-        `MATCH (n) WITH n CALL {{} CALL db.ping() YIELD success {}} IN TRANSACTIONS`
-      )
+      cy.executeCommand(`CALL {{} RETURN 2 as x {}} IN TRANSACTIONS RETURN 2;`)
       cy.getFrames().contains('ERROR')
       cy.getFrames().contains(':auto')
     })
 
     it('adding :auto enables running CALL IN TRANSACTIONS', () => {
       cy.executeCommand(
-        `:auto MATCH (n) WITH n CALL {{} CALL db.ping() YIELD success {}} IN TRANSACTIONS`
+        `:auto CALL {{} RETURN 2 as x {}} IN TRANSACTIONS RETURN 2;`
       )
       cy.getFrames().should('not.contain', 'ERROR')
-      cy.getFrames().contains('(no changes, no records)')
+      cy.getFrames().contains('Started streaming 1 rec')
     })
   }
 

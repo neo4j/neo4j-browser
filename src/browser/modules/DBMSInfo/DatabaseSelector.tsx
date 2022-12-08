@@ -95,35 +95,19 @@ export const DatabaseSelector = ({
             <option value={EMPTY_OPTION}>{EMPTY_OPTION}</option>
           )}
 
-          {databasesAndAliases.map(dbOrAlias => {
-            //If alias
-            if ('databaseName' in dbOrAlias) {
-              return (
-                <option
-                  key={dbOrAlias.name}
-                  value={dbOrAlias.databaseName}
-                  disabled={dbOrAlias.status === 'unknown'}
-                >
-                  {dbOrAlias.name}
-                </option>
-              )
-            }
-
-            //If database
-            return (
-              <option
-                key={dbOrAlias.name}
-                value={dbOrAlias.name}
-                disabled={dbOrAlias.status === 'unknown'}
-              >
-                {dbOrAlias.name}
-                {dbOrAlias === homeDb ? NBSP_CHAR + HOUSE_EMOJI : ''}
-                {dbOrAlias.status === 'unknown'
-                  ? NBSP_CHAR + HOUR_GLASS_EMOJI
-                  : ''}
-              </option>
-            )
-          })}
+          {databasesAndAliases.map(dbOrAlias => (
+            <option
+              key={dbOrAlias.name}
+              value={dbOrAlias.name}
+              disabled={dbOrAlias.status === 'unknown'}
+            >
+              {dbOrAlias.name}
+              {dbOrAlias === homeDb ? NBSP_CHAR + HOUSE_EMOJI : ''}
+              {dbOrAlias.status === 'unknown'
+                ? NBSP_CHAR + HOUR_GLASS_EMOJI
+                : ''}
+            </option>
+          ))}
         </Select>
       </DrawerSectionBody>
     </DrawerSection>

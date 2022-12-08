@@ -43,6 +43,18 @@ exports[`CodeViews CodeView displays request and response info if successful que
           <td
             class="sc-hiwPVj dBfpwL"
           >
+            Server version
+          </td>
+          <td
+            class="sc-ehCJOs"
+          />
+        </tr>
+        <tr
+          class="sc-nVkyK iDrzMo"
+        >
+          <td
+            class="sc-hiwPVj dBfpwL"
+          >
             Server address
           </td>
           <td

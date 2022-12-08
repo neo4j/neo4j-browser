@@ -46,10 +46,6 @@ const MonacoStyleWrapper = styled.div`
   .hover-row.status-bar {
     display: none !important;
   }
-  // used to make the focus outline of the editor not be ugly. Don't think this breaks anything
-  .monaco-editor.rename-box {
-    display: none;
-  }
 `
 
 const EXPLAIN_QUERY_PREFIX = 'EXPLAIN '

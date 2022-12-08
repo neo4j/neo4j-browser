@@ -95,6 +95,10 @@ export class CodeViewComponent extends Component<any> {
         <StyledTable>
           <StyledTBody>
             <StyledAlteringTr>
+              <StyledStrongTd>Server version</StyledStrongTd>
+              <StyledTd>{request.result.summary.server.agent}</StyledTd>
+            </StyledAlteringTr>
+            <StyledAlteringTr>
               <StyledStrongTd>Server address</StyledStrongTd>
               <StyledTd>{request.result.summary.server.address}</StyledTd>
             </StyledAlteringTr>
