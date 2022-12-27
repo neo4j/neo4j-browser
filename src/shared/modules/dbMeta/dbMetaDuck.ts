@@ -309,17 +309,6 @@ export const isOnCluster = (state: GlobalState): boolean => {
     return hasProcedure(state, 'dbms.cluster.overview')
   }
 }
-export const getClusterRoleForDb = (state: GlobalState, activeDb: string) => {
-  const version = getSemanticVersion(state)
-  if (!version) return false
-
-  if (gte(version, VERSION_FOR_CLUSTER_ROLE_IN_SHOW_DB)) {
-    return getDatabases(state).find(database => database.name === activeDb)
-      ?.role
-  } else {
-    return state[NAME].role
-  }
-}
 
 export const getCountAutomaticRefreshEnabled = (
   state: GlobalState
