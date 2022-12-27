@@ -156,8 +156,8 @@ const availableCommands = [
     match: (cmd: any) => /^params?\s/.test(cmd),
     exec(action: any, put: any, store: any) {
       const currDb = getCurrentDatabase(store.getState())
-      const onUnsupportedDb = Boolean(currDb && isSystemOrCompositeDb(currDb))
-      return handleParamsCommand(action, put, onUnsupportedDb)
+      const onSystemDb = currDb?.name === SYSTEM_DB
+      return handleParamsCommand(action, put, onSystemDb)
         .then(res => {
           const params =
             res.type === 'param' ? res.result : getParams(store.getState())
