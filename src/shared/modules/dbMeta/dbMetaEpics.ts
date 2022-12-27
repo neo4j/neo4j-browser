@@ -164,12 +164,14 @@ async function getLabelsAndTypes(store: any) {
   } catch {}
 }
 
-async function getNodeAndRelationshipCounts(store: any) {
+async function getNodeAndRelationshipCounts(
+  store: any
+): Promise<{ requestSucceeded: boolean }> {
   const db = getCurrentDatabase(store.getState())
 
   // System or composite db, do nothing
   if (db && isSystemOrCompositeDb(db)) {
-    return
+    return { requestSucceeded: false }
   }
 
   // Not system db, try and fetch meta data
@@ -199,7 +201,10 @@ async function getNodeAndRelationshipCounts(store: any) {
         })
       )
     }
-  } catch {}
+    return { requestSucceeded: true }
+  } catch {
+    return { requestSucceeded: false }
+  }
 }
 
 async function getFunctionsAndProcedures(store: any) {
@@ -402,16 +407,16 @@ export const dbCountEpic = (some$: any, store: any) =>
       Rx.Observable.fromPromise<void>(
         new Promise(async resolve => {
           store.dispatch(updateCountAutomaticRefresh({ loading: true }))
-          if (getCountAutomaticRefreshEnabled(store.getState())) {
-            const startTime = performance.now()
-            await getNodeAndRelationshipCounts(store)
-            const timeTaken = performance.now() - startTime
 
-            if (timeTaken > 2000) {
-              store.dispatch(updateCountAutomaticRefresh({ enabled: false }))
-            }
-          } else {
-            await getNodeAndRelationshipCounts(store)
+          const startTime = performance.now()
+          const { requestSucceeded } = await getNodeAndRelationshipCounts(store)
+          const timeTaken = performance.now() - startTime
+
+          const notAlreadyDisabled = getCountAutomaticRefreshEnabled(
+            store.getState()
+          )
+          if (requestSucceeded && timeTaken > 2000 && notAlreadyDisabled) {
+            store.dispatch(updateCountAutomaticRefresh({ enabled: false }))
           }
 
           store.dispatch(updateCountAutomaticRefresh({ loading: false }))
