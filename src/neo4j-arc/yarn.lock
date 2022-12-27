@@ -1280,10 +1280,10 @@ nano-css@^5.3.1:
     stacktrace-js "^2.0.2"
     stylis "^4.0.6"
 
-neo4j-driver-core@^5.2.0:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/neo4j-driver-core/-/neo4j-driver-core-5.2.0.tgz#b465bea6580196f43945265b75961978de17e39e"
-  integrity sha512-USdA9u+V0VM7y4UwH4nrofBaROwp73iKx1hC6TNWQRKF5o7biDUt6Wc1x3+oO4YN4lCSC5JzB/tHlG4f1cYxsg==
+neo4j-driver-core@^5.3.0:
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/neo4j-driver-core/-/neo4j-driver-core-5.3.0.tgz#c3bf55a5d36565ea76bab7673e0c579af4387011"
+  integrity sha512-MGxHCU0Pt13ElxYZkObWoxZ8O5y0Guf/R3rcogDUktG6cp69rc+lWxZAR7HbsL+gc8NrdJlIxR7dIud7B3bhAA==
 
 object-assign@^4.1.1:
   version "4.1.1"
