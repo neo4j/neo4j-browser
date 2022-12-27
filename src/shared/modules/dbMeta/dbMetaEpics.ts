@@ -421,7 +421,7 @@ export const dbCountEpic = (some$: any, store: any) =>
 
           if (
             res.requestSucceeded &&
-            res.timeTaken > 1500 &&
+            res.timeTaken > 1000 &&
             notAlreadyDisabled
           ) {
             store.dispatch(updateCountAutomaticRefresh({ enabled: false }))
