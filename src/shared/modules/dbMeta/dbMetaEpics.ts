@@ -85,14 +85,14 @@ import {
   getListFunctionQuery,
   getListProcedureQuery
 } from '../cypher/functionsAndProceduresHelper'
-import { isInt, Record } from 'neo4j-driver'
+import { isInt, Record, ResultSummary } from 'neo4j-driver'
 import semver, { gte, SemVer } from 'semver'
 import { triggerCredentialsTimeout } from '../credentialsPolicy/credentialsPolicyDuck'
 import {
   isSystemOrCompositeDb,
   getCurrentDatabase
 } from 'shared/utils/selectors'
-getCountAutomaticRefreshEnabled
+
 async function databaseList(store: any) {
   try {
     const supportsMultiDb = await bolt.hasMultiDbSupport()
@@ -166,7 +166,9 @@ async function getLabelsAndTypes(store: any) {
 
 async function getNodeAndRelationshipCounts(
   store: any
-): Promise<{ requestSucceeded: boolean }> {
+): Promise<
+  { requestSucceeded: false } | { requestSucceeded: true; timeTaken: number }
+> {
   const db = getCurrentDatabase(store.getState())
 
   // System or composite db, do nothing
@@ -200,11 +202,14 @@ async function getNodeAndRelationshipCounts(
           relationships
         })
       )
+      const summary = res.summary as ResultSummary
+      return {
+        requestSucceeded: true,
+        timeTaken: summary.resultAvailableAfter.toNumber()
+      }
     }
-    return { requestSucceeded: true }
-  } catch {
-    return { requestSucceeded: false }
-  }
+  } catch {}
+  return { requestSucceeded: false }
 }
 
 async function getFunctionsAndProcedures(store: any) {
@@ -405,23 +410,25 @@ export const dbCountEpic = (some$: any, store: any) =>
     .throttle(() => some$.ofType(DB_META_COUNT_DONE))
     .mergeMap(() =>
       Rx.Observable.fromPromise<void>(
-        new Promise(async resolve => {
+        (async () => {
           store.dispatch(updateCountAutomaticRefresh({ loading: true }))
 
-          const startTime = performance.now()
-          const { requestSucceeded } = await getNodeAndRelationshipCounts(store)
-          const timeTaken = performance.now() - startTime
+          const res = await getNodeAndRelationshipCounts(store)
 
           const notAlreadyDisabled = getCountAutomaticRefreshEnabled(
             store.getState()
           )
-          if (requestSucceeded && timeTaken > 2000 && notAlreadyDisabled) {
+
+          if (
+            res.requestSucceeded &&
+            res.timeTaken > 1500 &&
+            notAlreadyDisabled
+          ) {
             store.dispatch(updateCountAutomaticRefresh({ enabled: false }))
           }
 
           store.dispatch(updateCountAutomaticRefresh({ loading: false }))
-          resolve()
-        })
+        })()
       )
     )
     .mapTo({ type: DB_META_COUNT_DONE })
