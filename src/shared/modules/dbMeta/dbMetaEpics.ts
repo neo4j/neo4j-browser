@@ -210,6 +210,7 @@ async function getFunctionsAndProcedures(store: any) {
       getListProcedureQuery(version),
       {},
       {
+        onLostConnection: onLostConnection(store.dispatch),
         ...backgroundTxMetadata,
         useDb: supportsMultiDb ? SYSTEM_DB : undefined
       }
@@ -218,6 +219,7 @@ async function getFunctionsAndProcedures(store: any) {
       getListFunctionQuery(version),
       {},
       {
+        onLostConnection: onLostConnection(store.dispatch),
         ...backgroundTxMetadata,
         useDb: supportsMultiDb ? SYSTEM_DB : undefined
       }
@@ -247,16 +249,17 @@ async function clusterRole(store: any) {
     return
   }
 
-  const res = await bolt.directTransaction(
-    getDbClusterRole(store.getState()),
-    {},
-    backgroundTxMetadata
-  )
+  try {
+    const res = await bolt.directTransaction(
+      getDbClusterRole(store.getState()),
+      {},
+      backgroundTxMetadata
+    )
+    if (!res) return
 
-  if (!res) return
-
-  const role = res.records[0].get(0)
-  store.dispatch(update({ role }))
+    const role = res.records[0].get(0)
+    store.dispatch(update({ role }))
+  } catch {}
 }
 
 async function fetchServerInfo(store: any) {
