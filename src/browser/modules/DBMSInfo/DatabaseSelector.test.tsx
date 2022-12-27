@@ -44,7 +44,9 @@ describe('DatabaseSelector', () => {
     const databases: Database[] = []
 
     // When
-    const { container } = render(<DatabaseSelector databases={databases} />)
+    const { container } = render(
+      <DatabaseSelector selectedDb="" databases={databases} />
+    )
 
     // Then
     expect(container).toMatchInlineSnapshot('<div />')
@@ -87,7 +89,11 @@ describe('DatabaseSelector', () => {
 
     // When
     const { getByTestId } = render(
-      <DatabaseSelector databases={databases} onChange={onChange} />
+      <DatabaseSelector
+        databases={databases}
+        selectedDb=""
+        onChange={onChange}
+      />
     )
     const select = getByTestId(testId)
 
@@ -112,7 +118,11 @@ describe('DatabaseSelector', () => {
 
     // When
     const { getByTestId } = render(
-      <DatabaseSelector databases={databases} onChange={onChange} />
+      <DatabaseSelector
+        selectedDb=""
+        databases={databases}
+        onChange={onChange}
+      />
     )
     const select = getByTestId(testId)
 

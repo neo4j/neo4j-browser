@@ -73,7 +73,7 @@ export function DBMSInfo(props: any): JSX.Element {
     nodes,
     relationships
   } = props.meta
-  const { user, onItemClick, onDbSelect, useDb = '', databases = [] } = props
+  const { user, onItemClick, onDbSelect, useDb, databases = [] } = props
 
   return (
     <Drawer id="db-drawer">
@@ -81,7 +81,7 @@ export function DBMSInfo(props: any): JSX.Element {
       <DrawerBody>
         <DatabaseSelector
           databases={databases}
-          selectedDb={useDb}
+          selectedDb={useDb ?? ''}
           onChange={onDbSelect}
         />
         {!props.countAutoRefreshing && (

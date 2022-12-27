@@ -43,12 +43,12 @@ const NBSP_CHAR = '\u{00A0}'
 
 type DatabaseSelectorProps = {
   databases?: Database[]
-  selectedDb?: string
+  selectedDb: string
   onChange?: (dbName: string) => void
 }
 export const DatabaseSelector = ({
   databases = [],
-  selectedDb = '',
+  selectedDb,
   onChange = () => undefined
 }: DatabaseSelectorProps): JSX.Element | null => {
   if (databases.length === 0) {
