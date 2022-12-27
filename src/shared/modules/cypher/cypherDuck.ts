@@ -29,8 +29,7 @@ import {
 import {
   FIRST_MULTI_DB_SUPPORT,
   FIRST_NO_MULTI_DB_SUPPORT,
-  changeUserPasswordQuery,
-  driverDatabaseSelection
+  changeUserPasswordQuery
 } from '../features/versionedFeatures'
 import { getClusterAddresses } from './queriesProcedureHelper'
 import bolt from 'services/bolt/bolt'

@@ -204,8 +204,8 @@ async function getNodeAndRelationshipCounts(store: any) {
 
 async function getFunctionsAndProcedures(store: any) {
   const version = getSemanticVersion(store.getState())
-  const supportsMultiDb = await bolt.hasMultiDbSupport()
   try {
+    const supportsMultiDb = await bolt.hasMultiDbSupport()
     const procedurePromise = bolt.routedReadTransaction(
       getListProcedureQuery(version),
       {},
