@@ -414,7 +414,7 @@ const availableCommands = [
       // we need to strip that and attach to the actions object
       const query = action.cmd.trim()
 
-      const autoPrefix = `:${autoCommitTxCommand} `
+      const autoPrefix = `:${autoCommitTxCommand}`
       const blankedComments = query
         .replace(/\/\*(.|\n)*?\*\//g, (match: any) => ' '.repeat(match.length)) // mutliline comment
         .replace(/\/\/[^\n]*\n/g, (match: any) => ' '.repeat(match.length)) // singleline comment

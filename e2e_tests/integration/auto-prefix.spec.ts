@@ -58,6 +58,15 @@ describe(':auto prefix in browser', () => {
       cy.getFrames().should('not.contain', 'ERROR')
       cy.getFrames().contains('Started streaming 1 rec')
     })
+
+    it('newline is allowed after :auto', () => {
+      cy.executeCommand(':clear')
+      cy.executeCommand(
+        `:auto{shift}{enter}CALL {{} RETURN 2 as x {}} IN TRANSACTIONS RETURN 2;`
+      )
+      cy.getFrames().should('not.contain', 'ERROR')
+      cy.getFrames().contains('Started streaming 1 rec')
+    })
   }
 
   it('can use :auto command in multi-statements', () => {
