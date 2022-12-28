@@ -22,7 +22,7 @@ import { connect } from 'react-redux'
 
 import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
 import FrameError from '../../Frame/FrameError'
-import ConnectionForm from './ConnectionForm'
+import ConnectionFormController from './ConnectionFormController'
 import { StyledConnectionAside } from './styled'
 import { Lead } from 'browser-components/Text'
 import { H3 } from 'browser-components/headers'
@@ -71,7 +71,7 @@ class ChangePasswordFrame extends Component<any, ChangePasswordFrameState> {
         </StyledConnectionAside>
 
         {this.props.activeConnection && (
-          <ConnectionForm
+          <ConnectionFormController
             {...this.props}
             error={this.error}
             onSuccess={this.onSuccess}
