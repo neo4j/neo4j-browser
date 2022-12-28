@@ -20,7 +20,7 @@
 import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 
-import { ConnectionForm } from './ConnectionForm'
+import { ConnectionFormController } from './ConnectionFormController'
 import { NATIVE, NO_AUTH } from 'services/bolt/boltHelpers'
 
 test('should print correct state for retaining credentials', async () => {
@@ -41,7 +41,7 @@ test('should print correct state for retaining credentials', async () => {
 
   // When
   const { rerender, getByText, getByTestId } = render(
-    <ConnectionForm
+    <ConnectionFormController
       frame={frame}
       error={error}
       bus={bus}
@@ -74,7 +74,7 @@ test('should print correct state for retaining credentials', async () => {
     authEnabled: true
   }
   rerender(
-    <ConnectionForm
+    <ConnectionFormController
       frame={frame}
       bus={bus}
       activeConnectionData={activeConnectionData}
@@ -99,7 +99,7 @@ test('should print correct state for retaining credentials', async () => {
   // When not storing credentials anymore
   storeCredentials = false
   rerender(
-    <ConnectionForm
+    <ConnectionFormController
       frame={frame}
       bus={bus}
       activeConnectionData={activeConnectionData}
