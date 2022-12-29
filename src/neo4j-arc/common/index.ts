@@ -22,6 +22,7 @@ export { isMac } from './utils/platformUtils'
 export { extractUniqueNodesAndRels } from './utils/driverUtils'
 export {
   getPropertyTypeDisplayName,
+  cypherDataToString,
   propertyToString
 } from './utils/cypherTypeUtils'
 export { numberToUSLocale, toKeyString, upperFirst } from './utils/stringUtils'

@@ -25,11 +25,11 @@ import {
   commandSources,
   executeCommand
 } from 'shared/modules/commands/commandsDuck'
-import { getVersion } from 'shared/modules/dbMeta/state'
+import { getRawVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 import * as editor from 'shared/modules/editor/editorDuck'
 
 const mapFavoritesStateToProps = (state: any) => {
-  const version = semver.coerce(getVersion(state) || '0') ?? '0'
+  const version = semver.coerce(getRawVersion(state) || '0') ?? '0'
   const folders = getFolders(state).filter(folder => folder.isStatic)
   const scripts = favorites
     .getFavorites(state)

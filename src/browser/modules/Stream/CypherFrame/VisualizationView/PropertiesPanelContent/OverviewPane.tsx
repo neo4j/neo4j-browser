@@ -34,6 +34,7 @@ import {
   PaneBodySectionSmallText,
   PaneBodySectionTitle,
   PaneHeader,
+  PaneWrapper,
   StyledLegendInlineList
 } from './styled'
 
@@ -94,7 +95,7 @@ export default function OverviewPane({
   const totalNumOfRelTypes = relTypes ? Object.keys(relTypes).length : 0
 
   return (
-    <>
+    <PaneWrapper>
       <PaneHeader>{'Overview'}</PaneHeader>
       <PaneBody>
         {labels && visibleLabelKeys.length !== 0 && (
@@ -111,6 +112,7 @@ export default function OverviewPane({
                   nodes={nodes}
                   relationships={relationships}
                   graphStyle={graphStyle}
+                  allNodesCount={nodeCount}
                   selectedLabel={{
                     label,
                     propertyKeys: Object.keys(labels[label].properties),
@@ -130,7 +132,7 @@ export default function OverviewPane({
         {relTypes && visibleRelationshipKeys.length !== 0 && (
           <div>
             <PaneBodySectionHeader
-              title={'Relationship Types'}
+              title={'Relationship types'}
               numOfElementsVisible={visibleRelationshipKeys.length}
               totalNumOfElements={totalNumOfRelTypes}
             />
@@ -177,6 +179,6 @@ export default function OverviewPane({
             )} nodes, ${numberToUSLocale(relationshipCount)} relationships.`}
         </div>
       </PaneBody>
-    </>
+    </PaneWrapper>
   )
 }

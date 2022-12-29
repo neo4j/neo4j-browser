@@ -20,8 +20,8 @@
 import { NodeModel } from './models/Node'
 import { RelationshipModel } from './models/Relationship'
 
-export const PRECOMPUTED_TICKS = 300
-export const TICKS_PER_RENDER = 10
+export const MAX_PRECOMPUTED_TICKS = 300
+export const EXTRA_TICKS_PER_RENDER = 10
 
 // Friction.
 export const VELOCITY_DECAY = 0.4

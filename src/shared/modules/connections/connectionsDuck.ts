@@ -29,7 +29,6 @@ import { NATIVE, NO_AUTH, SSO } from 'services/bolt/boltHelpers'
 import { GlobalState } from 'shared/globalState'
 import { APP_START, USER_CLEAR, inWebEnv } from 'shared/modules/app/appDuck'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
-import { fetchMetaData } from 'shared/modules/dbMeta/actions'
 import * as discovery from 'shared/modules/discovery/discoveryDuck'
 import {
   getConnectionTimeout,
@@ -38,6 +37,7 @@ import {
 } from 'shared/modules/settings/settingsDuck'
 import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
 import { isCloudHost } from 'shared/services/utils'
+import { fetchMetaData } from '../dbMeta/dbMetaDuck'
 
 export const NAME = 'connections'
 export const SET_ACTIVE = 'connections/SET_ACTIVE'
@@ -160,7 +160,7 @@ export function getActiveConnectionData(state: GlobalState): Connection | null {
 
 export function getAuthEnabled(state: GlobalState): boolean {
   const data = getConnectionData(state, state[NAME].activeConnection)
-  return data?.authEnabled ?? false
+  return data?.authEnabled ?? true
 }
 
 export function getConnectedHost(state: GlobalState): string | null {
@@ -378,19 +378,16 @@ export const useDb = (db: any = null) => ({ type: USE_DB, useDb: db })
 export const resetUseDb = () => ({ type: USE_DB, useDb: null })
 
 // Epics
-export const useDbEpic = (action$: any) => {
-  return action$
+export const useDbEpic = (action$: any, store: any) =>
+  action$
     .ofType(USE_DB)
     .do((action: any) => {
       bolt.useDb(action.useDb)
-    })
-    .map((action: any) => {
-      if (!action.useDb) {
-        return { type: 'NOOP' }
+      if (action.useDb) {
+        store.dispatch(fetchMetaData())
       }
-      return fetchMetaData()
     })
-}
+    .ignoreElements()
 
 export const connectEpic = (action$: any, store: any) =>
   action$.ofType(CONNECT).mergeMap(async (action: any) => {
@@ -592,7 +589,7 @@ export const startupConnectionSuccessEpic = (action$: any, store: any) => {
         store.dispatch(executeSystemCommand(getInitCmd(store.getState())))
       }
     })
-    .mapTo({ type: 'NOOP' })
+    .ignoreElements()
 }
 export const startupConnectionFailEpic = (action$: any, store: any) => {
   return action$
@@ -600,7 +597,7 @@ export const startupConnectionFailEpic = (action$: any, store: any) => {
     .do(() => {
       store.dispatch(executeSystemCommand(`:server connect`))
     })
-    .mapTo({ type: 'NOOP' })
+    .ignoreElements()
 }
 
 let lastActiveConnectionId: string | null = null
@@ -751,7 +748,7 @@ export const connectionLostEpic = (action$: any, store: any) =>
           .map(() => Rx.Observable.of(null))
       )
     })
-    .mapTo({ type: 'NOOP' })
+    .ignoreElements()
 
 export const switchConnectionEpic = (action$: any, store: any) => {
   return action$
@@ -808,7 +805,7 @@ export const initialSwitchConnectionFailEpic = (action$: any, store: any) => {
         store.dispatch(executeSystemCommand(`:server switch fail`))
       }
     })
-    .mapTo({ type: 'NOOP' })
+    .ignoreElements()
 }
 
 export const retainCredentialsSettingsEpic = (action$: any, store: any) => {
@@ -844,5 +841,5 @@ export const retainCredentialsSettingsEpic = (action$: any, store: any) => {
         return store.dispatch(updateConnection(connection))
       }
     })
-    .mapTo({ type: 'NOOP' })
+    .ignoreElements()
 }

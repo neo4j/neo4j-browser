@@ -38,7 +38,7 @@ type StreamProps = {
 }
 
 export interface BaseFrameProps {
-  frame: Frame & { isPinned: boolean }
+  frame: Frame
   activeConnectionData: Connection | null
   stack: Frame[]
   isFullscreen: boolean

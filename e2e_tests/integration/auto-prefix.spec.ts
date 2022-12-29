@@ -28,24 +28,26 @@ describe(':auto prefix in browser', () => {
     cy.executeCommand(':clear')
   })
 
-  it('shows help link when running period commit without :auto', () => {
-    cy.executeCommand('USING PERIODIC COMMIT RETURN "Verdanturf"')
-    cy.getFrames().contains('ERROR')
-    cy.getFrames().contains(':auto')
-  })
+  if (Cypress.config('serverVersion') < 5) {
+    it('shows help link when running period commit without :auto', () => {
+      cy.executeCommand('USING PERIODIC COMMIT RETURN "Verdanturf"')
+      cy.getFrames().contains('ERROR')
+      cy.getFrames().contains(':auto')
+    })
 
-  it('adding :auto enables running periodic commit', () => {
-    cy.executeCommand(':auto USING PERIODIC COMMIT RETURN "Laverre";')
-    // the only valid PERIODIC COMMIT queries require csv files on
-    // the server, so as a shortcut we're just looking for a new error message
-    cy.getFrames().contains('ERROR')
-    cy.getFrames().contains(/LOAD/i)
-  })
+    it('adding :auto enables running periodic commit', () => {
+      cy.executeCommand(':auto USING PERIODIC COMMIT RETURN "Laverre";')
+      // the only valid PERIODIC COMMIT queries require csv files on
+      // the server, so as a shortcut we're just looking for a new error message
+      cy.getFrames().contains('ERROR')
+      cy.getFrames().contains(/LOAD/i)
+    })
+  }
 
   if (Cypress.config('serverVersion') >= 4.4) {
     it('shows help link when running CALL IN TRANSACTIONS without :auto', () => {
       cy.executeCommand(
-        'CALL {{} return "Dendemille" } IN TRANSACTIONS return "Dendemille";'
+        `MATCH (n) WITH n CALL {{} CALL db.ping() YIELD success {}} IN TRANSACTIONS`
       )
       cy.getFrames().contains('ERROR')
       cy.getFrames().contains(':auto')
@@ -53,10 +55,10 @@ describe(':auto prefix in browser', () => {
 
     it('adding :auto enables running CALL IN TRANSACTIONS', () => {
       cy.executeCommand(
-        ':auto CALL {{} return "Undella" } IN TRANSACTIONS return "Undella";'
+        `:auto MATCH (n) WITH n CALL {{} CALL db.ping() YIELD success {}} IN TRANSACTIONS`
       )
       cy.getFrames().should('not.contain', 'ERROR')
-      cy.getFrames().contains('"Undella"')
+      cy.getFrames().contains('(no changes, no records)')
     })
   }
 

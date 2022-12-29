@@ -77,7 +77,7 @@ const slides = [
       <h4>Load records</h4>
       <figure>
         <pre className="pre-scrollable code runnable">
-          {`LOAD CSV WITH HEADERS FROM "http://data.neo4j.com/northwind/products.csv" AS row
+          {`LOAD CSV WITH HEADERS FROM "https://data.neo4j.com/northwind/products.csv" AS row
 CREATE (n:Product)
 SET n = row,
 n.unitPrice = toFloat(row.unitPrice),
@@ -87,14 +87,14 @@ n.reorderLevel = toInteger(row.reorderLevel), n.discontinued = (row.discontinued
       </figure>
       <figure>
         <pre className="pre-scrollable code runnable">
-          {`LOAD CSV WITH HEADERS FROM "http://data.neo4j.com/northwind/categories.csv" AS row
+          {`LOAD CSV WITH HEADERS FROM "https://data.neo4j.com/northwind/categories.csv" AS row
 CREATE (n:Category)
 SET n = row`}
         </pre>
       </figure>
       <figure>
         <pre className="pre-scrollable code runnable">
-          {`LOAD CSV WITH HEADERS FROM "http://data.neo4j.com/northwind/suppliers.csv" AS row
+          {`LOAD CSV WITH HEADERS FROM "https://data.neo4j.com/northwind/suppliers.csv" AS row
 CREATE (n:Supplier)
 SET n = row`}
         </pre>
@@ -102,22 +102,22 @@ SET n = row`}
       <h4>Create indexes</h4>
       <figure>
         <pre className="pre-scrollable code runnable">
-          CREATE INDEX ON :Product(productID)
+          CREATE INDEX FOR (p:Product) ON (p.productID)
         </pre>
       </figure>
       <figure>
         <pre className="pre-scrollable code runnable">
-          CREATE INDEX ON :Product(productName)
+          CREATE INDEX FOR (p:Product) ON (p.productName)
         </pre>
       </figure>
       <figure>
         <pre className="pre-scrollable code runnable">
-          CREATE INDEX ON :Category(categoryID)
+          CREATE INDEX FOR (c:Category) ON (c.categoryID)
         </pre>
       </figure>
       <figure>
         <pre className="pre-scrollable code runnable">
-          CREATE INDEX ON :Supplier(supplierID)
+          CREATE INDEX FOR (s:Supplier) ON (s.supplierID)
         </pre>
       </figure>
     </div>
@@ -236,26 +236,26 @@ RETURN DISTINCT s.companyName as ProduceSuppliers`}
       <h4>Load and index records</h4>
       <figure>
         <pre className="pre-scrollable code runnable">
-          {`LOAD CSV WITH HEADERS FROM "http://data.neo4j.com/northwind/customers.csv" AS row
+          {`LOAD CSV WITH HEADERS FROM "https://data.neo4j.com/northwind/customers.csv" AS row
 CREATE (n:Customer)
 SET n = row`}
         </pre>
       </figure>
       <figure>
         <pre className="pre-scrollable code runnable">
-          {`LOAD CSV WITH HEADERS FROM "http://data.neo4j.com/northwind/orders.csv" AS row
+          {`LOAD CSV WITH HEADERS FROM "https://data.neo4j.com/northwind/orders.csv" AS row
 CREATE (n:Order)
 SET n = row`}
         </pre>
       </figure>
       <figure>
         <pre className="pre-scrollable code runnable">
-          CREATE INDEX ON :Customer(customerID)
+          CREATE INDEX FOR (n:Customer) ON (n.customerID)
         </pre>
       </figure>
       <figure>
         <pre className="pre-scrollable code runnable">
-          CREATE INDEX ON :Order(orderID)
+          CREATE INDEX FOR (o:Order) ON (o.orderID)
         </pre>
       </figure>
       <h4>Create data relationships</h4>
@@ -299,7 +299,7 @@ CREATE (c)-[:PURCHASED]->(o)`}
       <h4>Load and index records</h4>
       <figure>
         <pre className="pre-scrollable code runnable">
-          {`LOAD CSV WITH HEADERS FROM "http://data.neo4j.com/northwind/order-details.csv" AS row
+          {`LOAD CSV WITH HEADERS FROM "https://data.neo4j.com/northwind/order-details.csv" AS row
 MATCH (p:Product), (o:Order)
 WHERE p.productID = row.productID AND o.orderID = row.orderID
 CREATE (o)-[details:ORDERS]->(p)

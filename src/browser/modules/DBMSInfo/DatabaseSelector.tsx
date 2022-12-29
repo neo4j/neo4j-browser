@@ -27,7 +27,7 @@ import {
   DrawerSubHeader
 } from 'browser-components/drawer/drawer-styled'
 import { escapeCypherIdentifier } from 'services/utils'
-import { Database } from 'shared/modules/dbMeta/state'
+import { Database } from 'shared/modules/dbMeta/dbMetaDuck'
 
 const Select = styled.select`
   width: 100%;
@@ -38,6 +38,7 @@ const Select = styled.select`
 const EMPTY_OPTION = 'Select db to use'
 
 const HOUSE_EMOJI = '\u{1F3E0}'
+const HOUR_GLASS_EMOJI = '\u{231B}'
 const NBSP_CHAR = '\u{00A0}'
 
 type DatabaseSelectorProps = {
@@ -61,15 +62,25 @@ export const DatabaseSelector = ({
     }
   }
 
-  const databasesList: (Partial<Database> & {
-    name: string
-  })[] = selectedDb ? databases : [{ name: EMPTY_OPTION }, ...databases]
-
   // When connected to a cluster, we get duplicate dbs for each member
-  const uniqDatabases = uniqBy(databasesList, 'name')
+  const uniqDatabases = uniqBy(databases, 'name')
 
   const homeDb =
     uniqDatabases.find(db => db.home) || uniqDatabases.find(db => db.default)
+
+  const aliasList = uniqDatabases.flatMap(db =>
+    db.aliases
+      ? db.aliases.map(alias => ({
+          databaseName: db.name,
+          name: alias,
+          status: db.status
+        }))
+      : []
+  )
+
+  const databasesAndAliases = [...aliasList, ...uniqDatabases].sort((a, b) =>
+    a.name.localeCompare(b.name)
+  )
 
   return (
     <DrawerSection>
@@ -80,11 +91,36 @@ export const DatabaseSelector = ({
           data-testid="database-selection-list"
           onChange={selectionChange}
         >
-          {uniqDatabases.map(db => {
+          {!Boolean(selectedDb) && (
+            <option value={EMPTY_OPTION}>{EMPTY_OPTION}</option>
+          )}
+
+          {databasesAndAliases.map(dbOrAlias => {
+            //If alias
+            if ('databaseName' in dbOrAlias) {
+              return (
+                <option
+                  key={dbOrAlias.name}
+                  value={dbOrAlias.databaseName}
+                  disabled={dbOrAlias.status === 'unknown'}
+                >
+                  {dbOrAlias.name}
+                </option>
+              )
+            }
+
+            //If database
             return (
-              <option key={db.name} value={db.name}>
-                {db.name}
-                {db === homeDb ? NBSP_CHAR + HOUSE_EMOJI : ''}
+              <option
+                key={dbOrAlias.name}
+                value={dbOrAlias.name}
+                disabled={dbOrAlias.status === 'unknown'}
+              >
+                {dbOrAlias.name}
+                {dbOrAlias === homeDb ? NBSP_CHAR + HOUSE_EMOJI : ''}
+                {dbOrAlias.status === 'unknown'
+                  ? NBSP_CHAR + HOUR_GLASS_EMOJI
+                  : ''}
               </option>
             )
           })}

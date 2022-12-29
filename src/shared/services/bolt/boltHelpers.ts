@@ -41,7 +41,7 @@ export const isConfigValTruthy = (val: boolean | string | number): boolean =>
 export const isConfigValFalsy = (val: boolean | string | number): boolean =>
   [false, 'false', 'no', 0, '0'].indexOf(val) > -1
 
-export const buildTxFunctionByMode = (session?: Session): any => {
+export const buildTxFunctionByMode = (session?: Session) => {
   if (!session) {
     return null
   }

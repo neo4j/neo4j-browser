@@ -431,6 +431,12 @@ describe('utils', () => {
       { test: '100ms', expect: 100 },
       { test: '100s', expect: 100 * 1000 },
       { test: '100m', expect: 100 * 60 * 1000 },
+      { test: '6000ns', expect: 0 },
+      { test: '600000ns', expect: 1 },
+      { test: '600000μs', expect: 600 },
+      { test: '600μs', expect: 1 },
+      { test: '1h', expect: 3600000 },
+      { test: '1d', expect: 86400000 },
       { test: '100x', expect: 0 },
       { test: 'x', expect: 0 }
     ]

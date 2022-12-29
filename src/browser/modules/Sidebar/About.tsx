@@ -23,6 +23,7 @@ import { connect } from 'react-redux'
 import {
   Drawer,
   DrawerBody,
+  DrawerExternalLink,
   DrawerFooter,
   DrawerHeader,
   DrawerSection,
@@ -30,9 +31,9 @@ import {
   DrawerSubHeader
 } from 'browser-components/drawer/drawer-styled'
 import { version as browserVersion } from 'project-root/package.json'
-import { getEdition, getVersion } from 'shared/modules/dbMeta/state'
-import { getBuiltAt, getBuildNumber } from 'shared/modules/app/appDuck'
+import { getEdition, getRawVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 import { copyToClipboard } from 'neo4j-arc/common'
+import { GlobalState } from 'shared/globalState'
 
 function asChangeLogUrl(serverVersion: string): string | undefined {
   if (!serverVersion) {
@@ -48,25 +49,23 @@ function asChangeLogUrl(serverVersion: string): string | undefined {
 interface AboutProps {
   serverVersion: string | null
   serverEdition: string | null
-  builtAt: string | null
-  buildNumber: string | null
 }
 
-const About = ({
-  serverVersion,
-  serverEdition,
-  builtAt,
-  buildNumber
-}: AboutProps) => (
+// Injected by webpack
+declare const __GIT_HASH__: string | undefined
+declare const __BUILD_NUMBER__: string | undefined
+declare const __BUILT_AT__: string | undefined
+
+const About = ({ serverVersion, serverEdition }: AboutProps) => (
   <Drawer id="db-about">
     <DrawerHeader>About Neo4j</DrawerHeader>
     <DrawerBody>
       <DrawerSection>
         <DrawerSubHeader>
           Made by{' '}
-          <a target="_blank" rel="noreferrer" href="http://neo4j.com/">
+          <DrawerExternalLink href="http://neo4j.com/">
             Neo4j, Inc
-          </a>
+          </DrawerExternalLink>
         </DrawerSubHeader>
       </DrawerSection>
       <DrawerSection>
@@ -78,75 +77,58 @@ const About = ({
         <DrawerSubHeader>You are running</DrawerSubHeader>
         <DrawerSectionBody>
           <p>
-            Neo4j Browser version:{' '}
-            <a
+            Modified Neo4j Browser version:{' '}
+            <DrawerExternalLink
               href={`https://github.com/neo4j/neo4j-browser/releases/tag/${browserVersion}`}
-              target="_blank"
-              rel="noreferrer"
             >
               {browserVersion}
-            </a>
+            </DrawerExternalLink>
           </p>
-          {buildNumber && (
-            <div onClick={() => copyToClipboard(buildNumber)}>
-              Build number: {buildNumber}
-            </div>
-          )}
-          {builtAt && (
-            <div onClick={() => copyToClipboard(builtAt)}>
-              Build date: {new Date(builtAt).toLocaleDateString('se')}
-            </div>
-          )}
           {serverVersion && serverEdition && (
             <p>
               Neo4j Server version:{' '}
-              <a
-                target="_blank"
-                rel="noreferrer"
-                href={asChangeLogUrl(serverVersion)}
-              >
+              <DrawerExternalLink href={asChangeLogUrl(serverVersion)}>
                 {serverVersion}
-              </a>{' '}
+              </DrawerExternalLink>{' '}
               ({serverEdition})
             </p>
           )}
           <p>
-            <a
-              href="https://github.com/neo4j/neo4j-browser/wiki/changelog"
-              target="_blank"
-              rel="noreferrer"
-            >
+            <DrawerExternalLink href="https://github.com/neo4j/neo4j-browser/wiki/changelog">
               Neo4j Browser Changelog
-            </a>
+            </DrawerExternalLink>
           </p>
+          {__BUILD_NUMBER__ && (
+            <div onClick={() => copyToClipboard(__BUILD_NUMBER__)}>
+              Build number: {__BUILD_NUMBER__}
+            </div>
+          )}
+          {__GIT_HASH__ && (
+            <div onClick={() => copyToClipboard(__GIT_HASH__)}>
+              Build hash: {__GIT_HASH__.slice(0, 18)}
+            </div>
+          )}
+          {__BUILT_AT__ && (
+            <div onClick={() => copyToClipboard(__BUILT_AT__)}>
+              Build date: {new Date(__BUILT_AT__).toLocaleDateString('se')}
+            </div>
+          )}
         </DrawerSectionBody>
       </DrawerSection>
       <DrawerSection>
         <DrawerSubHeader>License</DrawerSubHeader>
         <DrawerSectionBody>
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href="http://www.gnu.org/licenses/gpl.html"
-          >
+          <DrawerExternalLink href="http://www.gnu.org/licenses/gpl.html">
             GPLv3
-          </a>{' '}
+          </DrawerExternalLink>{' '}
           or{' '}
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href="http://www.gnu.org/licenses/agpl-3.0.html"
-          >
+          <DrawerExternalLink href="http://www.gnu.org/licenses/agpl-3.0.html">
             AGPL
-          </a>{' '}
+          </DrawerExternalLink>{' '}
           for Open Source, and{' '}
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href="https://neo4j.com/licensing/"
-          >
+          <DrawerExternalLink href="https://neo4j.com/licensing/">
             NTCL
-          </a>{' '}
+          </DrawerExternalLink>{' '}
           Commercial.
         </DrawerSectionBody>
       </DrawerSection>
@@ -154,45 +136,33 @@ const About = ({
         <DrawerSubHeader>Participate</DrawerSubHeader>
         <DrawerSectionBody>
           Discuss on{' '}
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href="https://community.neo4j.com/"
-          >
+          <DrawerExternalLink href="https://community.neo4j.com/">
             Neo4j Community Forum
-          </a>{' '}
+          </DrawerExternalLink>{' '}
           <br />
           Ask questions at{' '}
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href="http://stackoverflow.com/questions/tagged/neo4j"
-          >
+          <DrawerExternalLink href="http://stackoverflow.com/questions/tagged/neo4j">
             Stack Overflow
-          </a>
+          </DrawerExternalLink>
           <br />
           Visit a local{' '}
-          <a target="_blank" rel="noreferrer" href="http://neo4j.meetup.com/">
+          <DrawerExternalLink href="http://neo4j.meetup.com/">
             Meetup Group
-          </a>
+          </DrawerExternalLink>
           <br />
           Contribute code to{' '}
-          <a target="_blank" rel="noreferrer" href="http://github.com/neo4j">
+          <DrawerExternalLink href="http://github.com/neo4j">
             Neo4j
-          </a>{' '}
+          </DrawerExternalLink>{' '}
           or{' '}
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href="http://github.com/neo4j/neo4j-browser"
-          >
+          <DrawerExternalLink href="http://github.com/neo4j/neo4j-browser">
             Neo4j Browser
-          </a>
+          </DrawerExternalLink>
           <br />
           Send us your Browser feedback via{' '}
-          <a href="mailto:browser@neotechnology.com?subject=Neo4j Browser feedback">
+          <DrawerExternalLink href="mailto:browser@neotechnology.com?subject=Neo4j Browser feedback">
             email
-          </a>
+          </DrawerExternalLink>
         </DrawerSectionBody>
       </DrawerSection>
       <DrawerSection>
@@ -205,13 +175,10 @@ const About = ({
     <DrawerFooter>With &#9829; from Sweden.</DrawerFooter>
   </Drawer>
 )
-const mapStateToProps = (state: any) => {
-  return {
-    serverVersion: getVersion(state),
-    serverEdition: getEdition(state),
-    builtAt: getBuiltAt(state),
-    buildNumber: getBuildNumber(state)
-  }
-}
+
+const mapStateToProps = (state: GlobalState) => ({
+  serverVersion: getRawVersion(state),
+  serverEdition: getEdition(state)
+})
 
 export default connect(mapStateToProps)(About)

@@ -21,12 +21,12 @@ import Rx from 'rxjs'
 import { v4 } from 'uuid'
 
 import { CONNECTION_SUCCESS } from '../connections/connectionsDuck'
-import { UPDATE_SETTINGS } from '../dbMeta/constants'
 import {
   getAvailableSettings,
   getDefaultRemoteContentHostnameAllowlist,
-  getRemoteContentHostnameAllowlist
-} from '../dbMeta/state'
+  getRemoteContentHostnameAllowlist,
+  UPDATE_SETTINGS
+} from '../dbMeta/dbMetaDuck'
 import { addHistory } from '../history/historyDuck'
 import {
   getMaxHistory,
@@ -60,9 +60,9 @@ export const SYSTEM_COMMAND_QUEUED = `${NAME}/SYSTEM_COMMAND_QUEUED`
 export const UNKNOWN_COMMAND = `${NAME}/UNKNOWN_COMMAND`
 export const SHOW_ERROR_MESSAGE = `${NAME}/SHOW_ERROR_MESSAGE`
 export const CLEAR_ERROR_MESSAGE = `${NAME}/CLEAR_ERROR_MESSAGE`
-export const CYPHER_SUCCEEDED = `${NAME}/CYPHER_SUCCEEDED`
-export const CYPHER_FAILED = `${NAME}/CYPHER_FAILED`
 export const FETCH_GUIDE_FROM_ALLOWLIST = `${NAME}FETCH_GUIDE_FROM_ALLOWLIST`
+export const CYPHER_SUCCEEDED = `cypher/CYPHER_SUCCEEDED`
+export const CYPHER_FAILED = `cypher/CYPHER_FAILED`
 
 export const useDbCommand = 'use'
 export const listDbsCommand = 'dbs'
@@ -218,28 +218,37 @@ export const handleCommandEpic = (action$: any, store: any) =>
       const maxHistory = getMaxHistory(store.getState())
       store.dispatch(addHistory(action.cmd, maxHistory))
 
+      const { cmd } = action
+
+      // extractStatementsFromString is _very_ slow. So we check if we can
+      // skip it. If there are no semi colons apart from the final character
+      // it can't be a multistatement and we can bail out early
+      const couldBeMultistatement =
+        cmd.split(';').filter((a: string) => a.trim() !== '').length > 1
+
       // Semicolons in :style grass break parsing of multiline statements from codemirror.
       const useMultiStatement =
-        !action.cmd.startsWith(':style') &&
+        couldBeMultistatement &&
+        !cmd.startsWith(':style') &&
         shouldEnableMultiStatementMode(store.getState())
 
       const statements = useMultiStatement
-        ? extractStatementsFromString(action.cmd)
-        : [action.cmd]
+        ? extractStatementsFromString(cmd)
+        : [cmd]
 
       if (!statements.length || !statements[0]) {
         return
       }
       if (statements.length === 1) {
         // Single command
-        return store.dispatch(executeSingleCommand(action.cmd, action))
+        return store.dispatch(executeSingleCommand(cmd, action))
       }
       const parentId = (action.isRerun ? action.id : action.parentId) || v4()
       store.dispatch(
         addFrame({
           type: 'cypher-script',
           id: parentId,
-          cmd: action.cmd,
+          cmd,
           isRerun: action.isRerun
         } as any)
       )
@@ -278,7 +287,7 @@ export const handleCommandEpic = (action$: any, store: any) =>
 
       serialExecution(...jobs).catch(() => {})
     })
-    .mapTo({ type: 'NOOP' })
+    .ignoreElements()
 
 export const handleSingleCommandEpic = (action$: any, store: any) =>
   action$
@@ -332,9 +341,9 @@ export const postConnectCmdEpic = (some$: any, store: any) =>
       .ofType(UPDATE_SETTINGS)
       .map(() => {
         const serverSettings = getAvailableSettings(store.getState())
-        if (serverSettings && serverSettings['browser.post_connect_cmd']) {
+        if (serverSettings && serverSettings.postConnectCmd) {
           const cmds = extractPostConnectCommandsFromServerConfig(
-            serverSettings['browser.post_connect_cmd']
+            serverSettings.postConnectCmd
           )
           const playImplicitInitCommands = getPlayImplicitInitCommands(
             store.getState()

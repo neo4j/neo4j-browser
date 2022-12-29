@@ -23,7 +23,11 @@ import { createBus, createReduxMiddleware } from 'suber'
 
 import * as commands from './commandsDuck'
 import { CONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
-import { UPDATE_SETTINGS } from 'shared/modules/dbMeta/constants'
+import {
+  ClientSettings,
+  initialClientSettings,
+  UPDATE_SETTINGS
+} from '../dbMeta/dbMetaDuck'
 
 describe('postConnectCmdEpic', () => {
   test('creates a SYSTEM_COMMAND_QUEUED if found', done => {
@@ -37,14 +41,16 @@ describe('postConnectCmdEpic', () => {
       createReduxMiddleware(bus)
     ])
     const command = 'play hello'
+    const metaSettings: ClientSettings = {
+      ...initialClientSettings,
+      postConnectCmd: command
+    }
     const store = mockStoreLocal({
       settings: {
         playImplicitInitCommands: true
       },
       meta: {
-        settings: {
-          'browser.post_connect_cmd': command
-        }
+        settings: metaSettings
       }
     })
     const action = { type: CONNECTION_SUCCESS }
@@ -77,14 +83,17 @@ describe('postConnectCmdEpic', () => {
       epicMiddlewareLocal,
       createReduxMiddleware(bus)
     ])
+
+    const metaSettings: ClientSettings = {
+      ...initialClientSettings,
+      postConnectCmd: command
+    }
     const store = mockStoreLocal({
       settings: {
         playImplicitInitCommands: true
       },
       meta: {
-        settings: {
-          'browser.post_connect_cmd': command
-        }
+        settings: metaSettings
       }
     })
     const action = { type: CONNECTION_SUCCESS }

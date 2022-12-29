@@ -23,7 +23,7 @@ import { ClipboardCopier, PropertiesTable, upperFirst } from 'neo4j-arc/common'
 
 import { StyleableNodeLabel } from './StyleableNodeLabel'
 import { StyleableRelType } from './StyleableRelType'
-import { PaneBody, PaneHeader, PaneTitle } from './styled'
+import { PaneBody, PaneHeader, PaneTitle, PaneWrapper } from './styled'
 import { DetailsPaneProps } from 'neo4j-arc'
 
 export const DETAILS_PANE_STEP_SIZE = 1000
@@ -53,10 +53,10 @@ export function DetailsPane({
   }
 
   return (
-    <>
+    <PaneWrapper>
       <PaneHeader>
         <PaneTitle>
-          <span>{`${upperFirst(vizItem.type)} Properties`}</span>
+          <span>{`${upperFirst(vizItem.type)} properties`}</span>
           <ClipboardCopier
             textToCopy={allItemProperties
               .map(prop => `${prop.key}: ${prop.value}`)
@@ -92,7 +92,7 @@ export function DetailsPane({
             )
           })}
       </PaneHeader>
-      <PaneBody>
+      <PaneBody data-testid="viz-details-pane-body">
         <PropertiesTable
           visibleProperties={visibleItemProperties}
           onMoreClick={handleMorePropertiesClick}
@@ -101,6 +101,6 @@ export function DetailsPane({
           nodeInspectorWidth={nodeInspectorWidth}
         />
       </PaneBody>
-    </>
+    </PaneWrapper>
   )
 }

@@ -64,7 +64,7 @@ export class Visualization {
     undefined | Array<(...args: any[]) => void>
   > = {}
 
-  forceSim: ForceSimulation
+  forceSimulation: ForceSimulation
 
   // This flags that a panning is ongoing and won't trigger
   // 'canvasClick' event when panning ends.
@@ -74,15 +74,18 @@ export class Visualization {
   constructor(
     element: SVGElement,
     private measureSize: MeasureSizeFn,
-    private onZoomEvent: (limitsReached: ZoomLimitsReached) => void,
-    private onDisplayZoomWheelInfoMessage: () => void,
+    onZoomEvent: (limitsReached: ZoomLimitsReached) => void,
+    onDisplayZoomWheelInfoMessage: () => void,
     private graph: GraphModel,
     public style: GraphStyleModel,
-    public isFullscreen: boolean
+    public isFullscreen: boolean,
+    public wheelZoomRequiresModKey?: boolean,
+    private initialZoomToFit?: boolean
   ) {
     this.root = d3Select(element)
 
     this.isFullscreen = isFullscreen
+    this.wheelZoomRequiresModKey = wheelZoomRequiresModKey
 
     // Remove the base group element when re-creating the visualization
     this.root.selectAll('g').remove()
@@ -129,42 +132,32 @@ export class Visualization {
           .call(sel => (isZoomClick ? sel.ease(easeCubic) : sel))
           .attr('transform', String(e.transform))
       })
-
-    const zoomEventHandler = (
-      selection: Selection<SVGElement, unknown, BaseType, unknown>
-    ) => {
-      const handleZoomOnShiftScroll = (e: WheelEvent) => {
-        const modKeySelected = e.metaKey || e.ctrlKey || e.shiftKey
-        if (modKeySelected || this.isFullscreen) {
-          e.preventDefault()
-
-          // This is the default implementation of wheelDelta function in d3-zoom v3.0.0
-          // For some reasons typescript complains when trying to get it by calling zoomBehaviour.wheelDelta() instead
-          // but it should be the same (and indeed it works at runtime).
-          // https://github.com/d3/d3-zoom/blob/1bccd3fd56ea24e9658bd7e7c24e9b89410c8967/README.md#zoom_wheelDelta
-          const delta =
-            -e.deltaY * (e.deltaMode === 1 ? 0.05 : e.deltaMode ? 1 : 0.002)
-
-          return this.zoomBehavior.scaleBy(this.root, 1 + delta)
-        } else {
-          onDisplayZoomWheelInfoMessage()
+      // This is the default implementation of wheelDelta function in d3-zoom v3.0.0
+      // For some reasons typescript complains when trying to get it by calling zoomBehaviour.wheelDelta() instead
+      // but it should be the same (and indeed it works at runtime).
+      // https://github.com/d3/d3-zoom/blob/1bccd3fd56ea24e9658bd7e7c24e9b89410c8967/README.md#zoom_wheelDelta
+      // Keps the zoom behavior constant for metam ctrl and shift key. Otherwise scrolling is faster with ctrl key.
+      .wheelDelta(
+        e => -e.deltaY * (e.deltaMode === 1 ? 0.05 : e.deltaMode ? 1 : 0.002)
+      )
+      .filter(e => {
+        if (e.type === 'wheel') {
+          const modKeySelected = e.metaKey || e.ctrlKey || e.shiftKey
+          if (this.wheelZoomRequiresModKey && !modKeySelected) {
+            onDisplayZoomWheelInfoMessage()
+            return false
+          }
         }
-      }
-
-      return selection
-        .on('dblclick.zoom', null)
-        .on('DOMMouseScroll.zoom', handleZoomOnShiftScroll)
-        .on('wheel.zoom', handleZoomOnShiftScroll)
-        .on('mousewheel.zoom', handleZoomOnShiftScroll)
-    }
+        return true
+      })
 
     this.root
       .call(this.zoomBehavior)
-      .call(zoomEventHandler)
       // Single click is not panning
       .on('click.zoom', () => (this.draw = false))
+      .on('dblclick.zoom', null)
 
-    this.forceSim = new ForceSimulation(this.render.bind(this))
+    this.forceSimulation = new ForceSimulation(this.render.bind(this))
   }
 
   private render() {
@@ -205,7 +198,7 @@ export class Visualization {
       .join('g')
       .attr('class', 'node')
       .attr('aria-label', d => `graph-node${d.id}`)
-      .call(nodeEventHandlers, this.trigger, this.forceSim.simulation)
+      .call(nodeEventHandlers, this.trigger, this.forceSimulation.simulation)
       .classed('selected', node => node.selected)
 
     nodeRenderer.forEach(renderer =>
@@ -216,8 +209,8 @@ export class Visualization {
       nodeGroups.call(renderer.onGraphChange, this)
     )
 
-    this.forceSim.updateNodes(this.graph)
-    this.forceSim.updateRelationships(this.graph)
+    this.forceSimulation.updateNodes(this.graph)
+    this.forceSimulation.updateRelationships(this.graph)
   }
 
   private updateRelationships() {
@@ -240,10 +233,16 @@ export class Visualization {
       relationshipGroups.call(renderer.onGraphChange, this)
     )
 
-    this.forceSim.updateRelationships(this.graph)
+    this.forceSimulation.updateRelationships(this.graph)
+    // The onGraphChange handler does only repaint relationship color
+    // not width and caption, since it requires taking into account surrounding data
+    // since the arrows have different bending depending on how the nodes are
+    // connected. We work around that by doing an additional full render to get the
+    // new stylings
+    this.render()
   }
 
-  private handleZoomClick = (zoomType: ZoomType): void => {
+  zoomByType = (zoomType: ZoomType): void => {
     this.draw = true
     this.isZoomClick = true
 
@@ -252,11 +251,12 @@ export class Visualization {
     } else if (zoomType === ZoomType.OUT) {
       this.zoomBehavior.scaleBy(this.root, 0.7)
     } else if (zoomType === ZoomType.FIT) {
-      this.zoomToFit()
+      this.zoomToFitViewport()
+      this.adjustZoomMinScaleExtentToFitGraph(1)
     }
   }
 
-  private zoomToFit = () => {
+  private zoomToFitViewport = () => {
     const scaleAndOffset = this.getZoomScaleFactorToFitWholeGraph()
     if (scaleAndOffset) {
       const { scale, centerPointOffset } = scaleAndOffset
@@ -297,11 +297,12 @@ export class Visualization {
     return
   }
 
-  private adjustZoomMinScaleExtentToFitGraph = (): void => {
+  private adjustZoomMinScaleExtentToFitGraph = (
+    padding_factor = 0.75
+  ): void => {
     const scaleAndOffset = this.getZoomScaleFactorToFitWholeGraph()
-    const PADDING_FACTOR = 0.75
     const scaleToFitGraphWithPadding = scaleAndOffset
-      ? scaleAndOffset.scale * PADDING_FACTOR
+      ? scaleAndOffset.scale * padding_factor
       : this.zoomMinScaleExtent
     if (scaleToFitGraphWithPadding <= this.zoomMinScaleExtent) {
       this.zoomMinScaleExtent = scaleToFitGraphWithPadding
@@ -312,7 +313,7 @@ export class Visualization {
     }
   }
 
-  on = (event: string, callback: (...args: any[]) => void) => {
+  on = (event: string, callback: (...args: any[]) => void): this => {
     if (isNullish(this.callbacks[event])) {
       this.callbacks[event] = []
     }
@@ -321,7 +322,7 @@ export class Visualization {
     return this
   }
 
-  trigger = (event: string, ...args: any[]) => {
+  trigger = (event: string, ...args: any[]): void => {
     const callbacksForEvent = this.callbacks[event] ?? []
     callbacksForEvent.forEach(callback => callback.apply(null, args))
   }
@@ -335,9 +336,23 @@ export class Visualization {
 
     this.updateNodes()
     this.updateRelationships()
-    this.forceSim.precompute()
 
     this.adjustZoomMinScaleExtentToFitGraph()
+    this.setInitialZoom()
+  }
+
+  setInitialZoom(): void {
+    const count = this.graph.nodes().length
+
+    // chosen by *feel* (graph fitting guesstimate)
+    const scale = -0.02364554 + 1.913 / (1 + (count / 12.7211) ** 0.8156444)
+    this.zoomBehavior.scaleBy(this.root, Math.max(0, scale))
+  }
+
+  precomputeAndStart(): void {
+    this.forceSimulation.precomputeAndStart(
+      () => this.initialZoomToFit && this.zoomByType(ZoomType.FIT)
+    )
   }
 
   update(options: {
@@ -354,7 +369,7 @@ export class Visualization {
     }
 
     if (options.restartSimulation ?? true) {
-      this.forceSim.restart()
+      this.forceSimulation.restart()
     }
     this.trigger('updated')
   }
@@ -363,9 +378,10 @@ export class Visualization {
     return this.container.node()?.getBBox()
   }
 
-  resize(isFullscreen: boolean): void {
+  resize(isFullscreen: boolean, wheelZoomRequiresModKey: boolean): void {
     const size = this.measureSize()
     this.isFullscreen = isFullscreen
+    this.wheelZoomRequiresModKey = wheelZoomRequiresModKey
 
     this.rect
       .attr('x', () => -Math.floor(size.width / 2))
@@ -380,17 +396,5 @@ export class Visualization {
         size.height
       ].join(' ')
     )
-  }
-
-  zoomInClick(): void {
-    this.handleZoomClick(ZoomType.IN)
-  }
-
-  zoomOutClick(): void {
-    this.handleZoomClick(ZoomType.OUT)
-  }
-
-  zoomToFitClick(): void {
-    this.handleZoomClick(ZoomType.FIT)
   }
 }

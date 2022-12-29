@@ -324,7 +324,7 @@ describe('retainCredentialsSettingsEpic', () => {
   test('Dispatches an action to remove credentials from localstorage', done => {
     // Given
     const action = connections.setRetainCredentials(false)
-    bus.take('NOOP', currentAction => {
+    bus.take(connections.MERGE, () => {
       // Then
       expect(store.getActions()).toEqual([
         action,
@@ -332,8 +332,7 @@ describe('retainCredentialsSettingsEpic', () => {
           id: 'xxx',
           username: '',
           password: ''
-        }),
-        currentAction
+        })
       ])
       done()
     })

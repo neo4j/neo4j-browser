@@ -15,7 +15,7 @@ For deployments other than with self-hosted Neo4j Server v4.4+, SSO can be confi
 See link:https://neo4j.com/professional-services/[^] for more information about Professional Services.
 ====
 
-Supported providers at this time include OpenID Connect (OIDC) OAuth 2.0 providers Keycloak, Microsoft Azure AD, and Okta.
+Supported providers at this time include OpenID Connect (OIDC) OAuth 2.0 providers Google, Keycloak, Microsoft Azure AD, and Okta.
 
 Browser supports two authorization flows:
 

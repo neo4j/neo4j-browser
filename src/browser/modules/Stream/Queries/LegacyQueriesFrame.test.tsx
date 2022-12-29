@@ -21,7 +21,7 @@ import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 import { createBus } from 'suber'
 
-import { QueriesFrame } from './QueriesFrame'
+import { LegacyQueriesFrame } from './LegacyQueriesFrame'
 import {
   CONNECTED_STATE,
   DISCONNECTED_STATE
@@ -39,10 +39,9 @@ jest.mock('../../Frame/FrameBodyTemplate', () =>
 
 it('shows error message in statusBar when not connected', () => {
   const props = {
-    availableProcedures: ['dbms.listQueries'],
     connectionState: DISCONNECTED_STATE
   } as any
-  const { getByText } = render(<QueriesFrame {...props} />)
+  const { getByText } = render(<LegacyQueriesFrame {...props} />)
 
   expect(getByText(/Unable to connect to bolt server/i)).not.toBeNull()
 })
@@ -77,16 +76,18 @@ it('can list and kill queries', () => {
     })
 
   const props = {
-    availableProcedures: ['dbms.listQueries'],
     connectionState: CONNECTED_STATE,
     bus,
     neo4jVersion: '4.0.0',
     isFullscreen: false,
     isCollapsed: false,
-    isOnCausalCluster: false
+    isOnCluster: false,
+    hasListQueriesProcedure: true,
+    versionOverFive: false,
+    frame: null
   }
 
-  const { getByText, getByTestId } = render(<QueriesFrame {...props} />)
+  const { getByText, getByTestId } = render(<LegacyQueriesFrame {...props} />)
 
   // Check that it's listed
   expect(getByText('neo4j://testhost.test')).not.toBeNull()

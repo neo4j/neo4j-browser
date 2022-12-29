@@ -21,7 +21,7 @@ import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 
 import { DatabaseSelector } from './DatabaseSelector'
-import { Database } from 'shared/modules/dbMeta/state'
+import { Database } from 'shared/modules/dbMeta/dbMetaDuck'
 
 const testId = 'database-selection-list'
 

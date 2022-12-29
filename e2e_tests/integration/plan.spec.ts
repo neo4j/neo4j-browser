@@ -23,10 +23,8 @@ import { isEnterpriseEdition } from '../support/utils'
 /* global Cypress, cy, before, after */
 
 describe('Plan output', () => {
-  before(function() {
-    cy.visit(Cypress.config('url'))
-      .title()
-      .should('include', 'Neo4j Browser')
+  before(function () {
+    cy.visit(Cypress.config('url')).title().should('include', 'Neo4j Browser')
     cy.wait(3000)
     const password = Cypress.config('password')
     cy.connect('neo4j', password)
@@ -54,7 +52,11 @@ describe('Plan output', () => {
   if (Cypress.config('serverVersion') >= 3.5) {
     it('print Order in PROFILE', () => {
       cy.executeCommand(':clear')
-      cy.executeCommand('CREATE INDEX ON :Person(age)')
+      if (Cypress.config('serverVersion') < 4.0) {
+        cy.executeCommand('CREATE INDEX ON :Person(age)')
+      } else {
+        cy.executeCommand('CREATE INDEX FOR (p:Person) ON (p.age)')
+      }
       cy.executeCommand(
         'EXPLAIN MATCH (n:Person) WHERE n.age > 18 RETURN n.name ORDER BY n.age'
       )
@@ -66,7 +68,7 @@ describe('Plan output', () => {
   if (Cypress.config('serverVersion') >= 4.1 && isEnterpriseEdition()) {
     it('print total memory in PROFILE', () => {
       cy.executeCommand(':clear')
-      cy.executeCommand('CREATE INDEX ON :Person(age)')
+      cy.executeCommand('CREATE INDEX FOR (p:Person) ON (p.age)')
       cy.executeCommand(
         'PROFILE MATCH (n:Person) WHERE n.age > 18 RETURN n.name ORDER BY n.age'
       )
@@ -96,17 +98,16 @@ describe('Plan output', () => {
     cy.executeCommand(':clear')
     cy.executeCommand('CREATE (:Tag)')
     cy.executeCommand(':clear')
-    cy.executeCommand(`PROFILE MATCH (tag:Tag){shift}{enter}
-    WHERE tag.name IN ["Eutheria"]
-    WITH tag
-    MATCH (publication)-[:HAS_TAG]->(tag)
-    WHERE SIZE((publication)-[:HAS_TAG]->()) = 1
-    WITH publication, tag
-    MATCH (expert)-[:PUBLISHED]->(publication)
-    WITH expert, collect(DISTINCT publication) AS publications, count(DISTINCT publication) AS relevantNumberOfPublications
-    RETURN expert.name, publications, relevantNumberOfPublications, 1 AS relevantNumberOfTags
-    ORDER BY relevantNumberOfPublications DESC
-    LIMIT 50;`)
+    cy.executeCommand(`PROFILE MATCH (tag:Tag){shift}{enter}WHERE tag.name IN ["Eutheria"]
+WITH tag
+MATCH (publication)-[:HAS_TAG]->(tag)
+WHERE SIZE([(publication)-[:HAS_TAG]->() | publication]) = 1
+WITH publication, tag
+MATCH (expert)-[:PUBLISHED]->(publication)
+WITH expert, collect(DISTINCT publication) AS publications, count(DISTINCT publication) AS relevantNumberOfPublications
+RETURN expert.name, publications, relevantNumberOfPublications, 1 AS relevantNumberOfTags
+ORDER BY relevantNumberOfPublications DESC
+LIMIT 50;`)
     cy.get('[data-testid="planExpandButton"]', { timeout: 10000 }).click()
     const el = cy.get('[data-testid="planSvg"]', { timeout: 10000 })
     el.then($el => {
@@ -136,7 +137,7 @@ describe('Plan output', () => {
 
       cy.executeCommand(':clear')
       cy.executeCommand(
-        'profile match (n:Person) with n where size ( (n)-[:Follows]->()) > 6 return n;'
+        'profile match (n:Person) with n where size ([(n)-[:Follows]->() | n]) > 6 return n;'
       )
       cy.get('[data-testid="planExpandButton"]', { timeout: 10000 }).click()
       const el2 = cy.get('[data-testid="planSvg"]', { timeout: 10000 })

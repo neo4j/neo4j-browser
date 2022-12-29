@@ -39,3 +39,8 @@ export function mapObjectValues<A, B>(
     {}
   )
 }
+
+export function keys<T>(object: T): Array<keyof T> {
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  return Object.keys(object as unknown as object) as Array<keyof T>
+}

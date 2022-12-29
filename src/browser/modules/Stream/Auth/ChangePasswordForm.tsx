@@ -136,7 +136,8 @@ export default class ChangePasswordForm extends Component<any, State> {
                         onChange: this.onExistingPasswordChange,
                         value: this.state.password,
                         ref: (ref: any) => setRefForIndex(0, ref),
-                        disabled: isLoading
+                        disabled: isLoading,
+                        autoComplete: 'off'
                       })}
                     />
                   </StyledConnectionFormEntry>
@@ -153,7 +154,8 @@ export default class ChangePasswordForm extends Component<any, State> {
                       setRef: (ref: any) => setRefForIndex(indexStart, ref),
                       disabled: isLoading,
                       isRevealed: this.state.revealNewPassword,
-                      toggleReveal: this.togglePasswordRevealed
+                      toggleReveal: this.togglePasswordRevealed,
+                      autoComplete: 'new-password'
                     })}
                   />
                   &nbsp;OR&nbsp;&nbsp;
@@ -174,7 +176,8 @@ export default class ChangePasswordForm extends Component<any, State> {
                       setRef: (ref: any) => setRefForIndex(indexStart + 1, ref),
                       disabled: isLoading,
                       isRevealed: this.state.revealNewPassword,
-                      toggleReveal: this.togglePasswordRevealed
+                      toggleReveal: this.togglePasswordRevealed,
+                      autoComplete: 'new-password'
                     })}
                   />
                 </StyledConnectionFormEntry>

@@ -48,11 +48,11 @@ import {
   getDatabases,
   getMetricsNamespacesEnabled,
   getMetricsPrefix,
-  isEnterprise
-} from 'shared/modules/dbMeta/state'
+  isEnterprise,
+  isOnCluster
+} from 'shared/modules/dbMeta/dbMetaDuck'
 import { hasMultiDbSupport } from 'shared/modules/features/versionedFeatures'
 import { Frame } from 'shared/modules/frames/framesDuck'
-import { isOnCausalCluster } from 'shared/utils/selectors'
 
 export type DatabaseMetric = { label: string; value?: string }
 export type SysInfoFrameState = {
@@ -61,7 +61,7 @@ export type SysInfoFrameState = {
   idAllocation: DatabaseMetric[]
   pageCache: DatabaseMetric[]
   transactions: DatabaseMetric[]
-  casualClusterMembers: DatabaseMetric[]
+  clusterMembers: DatabaseMetric[]
   errorMessage: string | null
   results: boolean
   autoRefresh: boolean
@@ -78,7 +78,7 @@ export type SysInfoFrameProps = {
   useDb: string | null
   isFullscreen: boolean
   isCollapsed: boolean
-  isOnCausalCluster: boolean
+  isOnCluster: boolean
   namespacesEnabled: boolean
   metricsPrefix: string
 }
@@ -94,7 +94,7 @@ export class SysInfoFrame extends Component<
     idAllocation: [],
     pageCache: [],
     transactions: [],
-    casualClusterMembers: [],
+    clusterMembers: [],
     errorMessage: null,
     results: false,
     autoRefresh: false,
@@ -160,7 +160,7 @@ export class SysInfoFrame extends Component<
         },
         responseHandler
       )
-      if (this.props.isOnCausalCluster) {
+      if (this.props.isOnCluster) {
         this.props.bus.self(
           CYPHER_REQUEST,
           {
@@ -190,7 +190,7 @@ export class SysInfoFrame extends Component<
       pageCache,
       storeSizes,
       transactions,
-      casualClusterMembers
+      clusterMembers
     } = this.state
     const {
       databases,
@@ -208,7 +208,7 @@ export class SysInfoFrame extends Component<
         idAllocation={idAllocation}
         transactions={transactions}
         databases={databases}
-        casualClusterMembers={casualClusterMembers}
+        clusterMembers={clusterMembers}
         isEnterpriseEdition={isEnterprise}
         hasMultiDbSupport={hasMultiDbSupport}
       />
@@ -247,12 +247,7 @@ export class SysInfoFrame extends Component<
 }
 const FrameVersionPicker = (props: SysInfoFrameProps) => {
   if (props.isConnected && props.isEnterprise && !props.hasMultiDbSupport) {
-    return (
-      <LegacySysInfoFrame
-        {...props}
-        isACausalCluster={props.isOnCausalCluster}
-      />
-    )
+    return <LegacySysInfoFrame {...props} isOnCluster={props.isOnCluster} />
   } else {
     return <SysInfoFrame {...props} />
   }
@@ -264,7 +259,7 @@ const mapStateToProps = (state: GlobalState) => ({
   isConnected: isConnected(state),
   databases: getDatabases(state),
   useDb: getUseDb(state),
-  isOnCausalCluster: isOnCausalCluster(state),
+  isOnCluster: isOnCluster(state),
   namespacesEnabled: getMetricsNamespacesEnabled(state),
   metricsPrefix: getMetricsPrefix(state)
 })

@@ -24,9 +24,12 @@ import { v4 } from 'uuid'
 import { USER_CLEAR } from '../app/appDuck'
 import { CONNECT, CONNECTION_SUCCESS } from '../connections/connectionsDuck'
 import { isBuiltInGuide, isPlayChapter } from 'browser/documentation'
-import { extractStatementsFromString } from 'services/commandUtils'
 import { GlobalState } from 'shared/globalState'
-import { COMMAND_QUEUED } from 'shared/modules/commands/commandsDuck'
+import {
+  COMMAND_QUEUED,
+  CYPHER_FAILED,
+  CYPHER_SUCCEEDED
+} from 'shared/modules/commands/commandsDuck'
 import {
   ADD_FAVORITE,
   LOAD_FAVORITES,
@@ -227,23 +230,24 @@ export const udcStartupEpic: Epic<Action, GlobalState> = (action$, store) =>
         updateUdcData({ lastSnapshot: Math.round(Date.now() / 1000) })
       )
     })
-    .mapTo({ type: 'NOOP' })
+    .ignoreElements()
 
 export const trackCommandUsageEpic: Epic<Action, GlobalState> = action$ =>
   action$.ofType(COMMAND_QUEUED).map((action: any) => {
-    const isCypher = !action.cmd.startsWith(':')
+    const cmd: string = action.cmd
+    const isCypher = !cmd.startsWith(':')
+    const estimatedNumberOfStatements = cmd.split(';').filter(a => a).length
     if (isCypher) {
-      const numberOfStatements =
-        extractStatementsFromString(action.cmd)?.length || 1
       return metricsEvent({
         category: 'command',
         label: 'cypher',
         data: {
           type: 'cypher',
           source: action.source || 'unknown',
-          averageWordCount: action.cmd.split(' ').length / numberOfStatements,
-          averageLineCount: action.cmd.split('\n').length / numberOfStatements,
-          numberOfStatements
+          averageWordCount: cmd.split(' ').length / estimatedNumberOfStatements,
+          averageLineCount:
+            cmd.split('\n').length / estimatedNumberOfStatements,
+          estimatedNumberOfStatements
         }
       })
     }
@@ -288,7 +292,9 @@ const actionsOfInterest = [
   TRACK_OPT_OUT_USER_STATS,
   TRACK_OPT_OUT_CRASH_REPORTS,
   CONNECT,
-  CONNECTION_SUCCESS
+  CONNECTION_SUCCESS,
+  CYPHER_SUCCEEDED,
+  CYPHER_FAILED
 ]
 export const trackReduxActionsEpic: Epic<Action, GlobalState> = action$ =>
   action$
@@ -298,17 +304,23 @@ export const trackReduxActionsEpic: Epic<Action, GlobalState> = action$ =>
       return metricsEvent({ category, label })
     })
 
-export const trackErrorFramesEpic: Epic<Action, GlobalState> = action$ =>
-  action$.ofType(ADD).map((action: any) => {
-    const error = action.state.error
-    if (error) {
-      const { code, type } = error
-      return metricsEvent({
-        category: 'stream',
-        label: 'errorframe',
-        data: { code, type }
-      })
-    } else {
-      return { type: 'NOOP' }
-    }
-  })
+export const trackErrorFramesEpic: Epic<Action, GlobalState> = (
+  action$,
+  store
+) =>
+  action$
+    .ofType(ADD)
+    .do((action: any) => {
+      const error = action.state.error
+      if (error) {
+        const { code, type } = error
+        store.dispatch(
+          metricsEvent({
+            category: 'stream',
+            label: 'errorframe',
+            data: { code, type }
+          })
+        )
+      }
+    })
+    .ignoreElements()

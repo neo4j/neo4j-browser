@@ -26,6 +26,7 @@ import { QueryResult } from 'neo4j-driver-core'
 import React from 'react'
 import styled from 'styled-components'
 import { ResizeObserver } from '@juggle/resize-observer'
+import { keys } from '../../common/utils/objectUtils'
 
 const shouldCheckForHints = (code: string) =>
   code.trim().length > 0 &&
@@ -45,6 +46,10 @@ const MonacoStyleWrapper = styled.div`
   .hover-row.status-bar {
     display: none !important;
   }
+  // used to make the focus outline of the editor not be ugly. Don't think this breaks anything
+  .monaco-editor.rename-box {
+    display: none;
+  }
 `
 
 const EXPLAIN_QUERY_PREFIX = 'EXPLAIN '
@@ -59,9 +64,12 @@ type CypherEditorDefaultProps = {
   isFullscreen: boolean
   onChange: (value: string) => void
   onDisplayHelpKeys: () => void
-  onExecute: (value: string) => void
+  onExecute?: (value: string) => void
   sendCypherQuery: (query: string) => Promise<QueryResult>
-  toggleFullscreen: () => void
+  additionalCommands: Partial<
+    Record<monaco.KeyCode, monaco.editor.ICommandHandler>
+  >
+  tabIndex?: number
   useDb: null | string
   value: string
 }
@@ -76,19 +84,22 @@ const cypherEditorDefaultProps: CypherEditorDefaultProps = {
   isFullscreen: false,
   onChange: () => undefined,
   onDisplayHelpKeys: () => undefined,
-  onExecute: () => undefined,
   sendCypherQuery: () =>
     new Promise(res =>
       res({
         result: { summary: { notifications: [] } }
       } as any)
     ),
-  toggleFullscreen: () => undefined,
+  additionalCommands: {},
   useDb: null,
   value: ''
 }
 
-type CypherEditorState = { currentHistoryIndex: number; draft: string }
+type CypherEditorState = {
+  currentHistoryIndex: number
+  draft: string
+  isEditorFocusable: boolean
+}
 const UNRUN_CMD_HISTORY_INDEX = -1
 
 export class CypherEditor extends React.Component<
@@ -97,11 +108,24 @@ export class CypherEditor extends React.Component<
 > {
   state: CypherEditorState = {
     currentHistoryIndex: UNRUN_CMD_HISTORY_INDEX,
+    isEditorFocusable: true,
     draft: ''
   }
-
+  resizeObserver: ResizeObserver
   editor?: monaco.editor.IStandaloneCodeEditor
   container?: HTMLElement
+  wrapperRef = React.createRef<HTMLDivElement>()
+
+  constructor(props: CypherEditorProps) {
+    super(props)
+    this.wrapperRef = React.createRef()
+    // Wrapped in requestAnimationFrame to avoid the error "ResizeObserver loop limit exceeded"
+    this.resizeObserver = new ResizeObserver(() => {
+      window.requestAnimationFrame(() => {
+        this.editor?.layout()
+      })
+    })
+  }
 
   static defaultProps = cypherEditorDefaultProps
 
@@ -276,8 +300,8 @@ export class CypherEditor extends React.Component<
               ...monaco.editor.getModelMarkers({ owner: this.getMonacoId() }),
               ...result.summary.notifications.map(
                 ({ description, position, title }) => {
-                  const line = 'line' in position ? position.line : 0
-                  const column = 'column' in position ? position.column : 0
+                  const line = 'line' in position ? position.line ?? 0 : 0
+                  const column = 'column' in position ? position.column ?? 0 : 0
                   return {
                     startLineNumber: statementLineNumber + line,
                     startColumn:
@@ -334,17 +358,21 @@ export class CypherEditor extends React.Component<
       selectionHighlight: false,
       value: this.props.value,
       wordWrap: 'on',
-      wrappingStrategy: 'advanced'
+      wrappingStrategy: 'advanced',
+      tabIndex: this.props.tabIndex
     })
 
     const { KeyCode, KeyMod } = monaco
-    this.editor.addCommand(
-      KeyCode.Enter,
-      () => {
-        this.isMultiLine() ? this.newLine() : this.execute()
-      },
-      '!suggestWidgetVisible && !findWidgetVisible'
-    )
+    if (this.props.onExecute) {
+      this.editor.addCommand(
+        KeyCode.Enter,
+        () => {
+          this.isMultiLine() ? this.newLine() : this.execute()
+        },
+        '!suggestWidgetVisible && !findWidgetVisible'
+      )
+    }
+
     this.editor.addCommand(
       KeyCode.UpArrow,
       this.handleUp,
@@ -356,8 +384,10 @@ export class CypherEditor extends React.Component<
       '!suggestWidgetVisible'
     )
     this.editor.addCommand(KeyMod.Shift | KeyCode.Enter, this.newLine)
-    this.editor.addCommand(KeyMod.CtrlCmd | KeyCode.Enter, this.execute)
-    this.editor.addCommand(KeyMod.WinCtrl | KeyCode.Enter, this.execute)
+    if (this.props.onExecute) {
+      this.editor.addCommand(KeyMod.CtrlCmd | KeyCode.Enter, this.execute)
+      this.editor.addCommand(KeyMod.WinCtrl | KeyCode.Enter, this.execute)
+    }
     this.editor.addCommand(
       KeyMod.CtrlCmd | KeyCode.UpArrow,
       this.viewHistoryPrevious
@@ -370,11 +400,19 @@ export class CypherEditor extends React.Component<
       KeyMod.CtrlCmd | KeyCode.US_DOT,
       this.props.onDisplayHelpKeys
     )
-    this.editor.addCommand(
-      KeyCode.Escape,
-      this.props.toggleFullscreen,
-      '!suggestWidgetVisible && !findWidgetVisible'
-    )
+
+    this.editor.addCommand(KeyCode.Escape, () => {
+      this.wrapperRef.current?.focus()
+    })
+
+    keys(this.props.additionalCommands).forEach(key => {
+      const command = this.props.additionalCommands[key]
+      if (!command) {
+        return
+      }
+
+      this?.editor?.addCommand(key, command)
+    })
 
     this.onContentUpdate()
 
@@ -383,13 +421,7 @@ export class CypherEditor extends React.Component<
       this.resize(this.props.isFullscreen)
     )
 
-    const resizeObserver = new ResizeObserver(() => {
-      // Wrapped in requestAnimationFrame to avoid the error "ResizeObserver loop limit exceeded"
-      window.requestAnimationFrame(() => {
-        this.editor?.layout()
-      })
-    })
-    resizeObserver.observe(this.container)
+    this.resizeObserver.observe(this.container)
 
     /*
      * This moves the the command palette widget out of of the overflow-guard div where overlay widgets
@@ -417,12 +449,21 @@ export class CypherEditor extends React.Component<
       <MonacoStyleWrapper
         id={this.getMonacoId()}
         className={this.props.className}
+        ref={this.wrapperRef}
+        tabIndex={-1}
+        onFocus={() => {
+          this.setState({ isEditorFocusable: false })
+        }}
+        onBlur={() => {
+          this.setState({ isEditorFocusable: true })
+        }}
       />
     )
   }
 
   componentDidUpdate(prevProps: CypherEditorProps): void {
-    const { useDb, fontLigatures, enableMultiStatementMode } = this.props
+    const { useDb, fontLigatures, enableMultiStatementMode, tabIndex } =
+      this.props
     if (fontLigatures !== prevProps.fontLigatures) {
       this.editor?.updateOptions({ fontLigatures })
     }
@@ -438,10 +479,15 @@ export class CypherEditor extends React.Component<
     if (enableMultiStatementMode !== prevProps.enableMultiStatementMode) {
       this.onContentUpdate()
     }
+
+    this.editor?.updateOptions({
+      tabIndex: this.state.isEditorFocusable ? tabIndex : -1
+    })
   }
 
   componentWillUnmount = (): void => {
     this.editor?.dispose()
     this.debouncedUpdateCode?.cancel()
+    this.resizeObserver.disconnect()
   }
 }

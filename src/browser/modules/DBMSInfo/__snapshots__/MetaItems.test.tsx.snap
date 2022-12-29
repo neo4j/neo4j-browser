@@ -8,7 +8,7 @@ exports[`LabelItems renders empty 1`] = `
     <h5
       class="sc-iUKqMP kWpjPs"
     >
-      Node Labels
+      Node labels
     </h5>
     <div
       class="sc-efQSVx ka-Dmgl"
@@ -29,7 +29,7 @@ exports[`LabelItems renders labels 1`] = `
     <h5
       class="sc-iUKqMP kWpjPs"
     >
-      Node Labels
+      Node labels
     </h5>
     <div
       class="sc-efQSVx ka-Dmgl"
@@ -65,7 +65,7 @@ exports[`PropertyItems renders empty 1`] = `
     <h5
       class="sc-iUKqMP kWpjPs"
     >
-      Property Keys
+      Property keys
     </h5>
     <div
       class="sc-efQSVx ka-Dmgl"
@@ -86,7 +86,7 @@ exports[`PropertyItems renders properties 1`] = `
     <h5
       class="sc-iUKqMP kWpjPs"
     >
-      Property Keys
+      Property keys
     </h5>
     <div
       class="sc-efQSVx ka-Dmgl"
@@ -116,7 +116,7 @@ exports[`RelationshipItems renders empty 1`] = `
     <h5
       class="sc-iUKqMP kWpjPs"
     >
-      Relationship Types
+      Relationship types
     </h5>
     <div
       class="sc-efQSVx ka-Dmgl"
@@ -137,7 +137,7 @@ exports[`RelationshipItems renders relationshipTypes 1`] = `
     <h5
       class="sc-iUKqMP kWpjPs"
     >
-      Relationship Types
+      Relationship types
     </h5>
     <div
       class="sc-efQSVx ka-Dmgl"

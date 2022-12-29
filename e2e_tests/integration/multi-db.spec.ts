@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { isEnterpriseEdition } from '../support/utils'
+import { isAura, isEnterpriseEdition } from '../support/utils'
 
 /* global Cypress, cy, expect, before */
 
@@ -40,14 +40,13 @@ describe('Multi database', () => {
   before(() => {
     cy.visit(Cypress.config('url')).title().should('include', 'Neo4j Browser')
     cy.wait(3000)
+    cy.ensureConnection()
   })
-  it('can connect', () => {
-    const password = Cypress.config('password')
-    cy.connect('neo4j', password)
-  })
-  if (Cypress.config('serverVersion') >= 4.0) {
+
+  if (Cypress.config('serverVersion') >= 4.1) {
     if (isEnterpriseEdition()) {
       it('shows a message indicating whether system updates have occurred', () => {
+        cy.executeCommand('DROP DATABASE test1 IF EXISTS')
         cy.executeCommand(':clear')
 
         cy.executeCommand(':use system')
@@ -94,9 +93,7 @@ describe('Multi database', () => {
       it('adds databases to the sidebar and adds backticks to special db names', () => {
         // Add db
         cy.executeCommand(':use system')
-        cy.executeCommand('CREATE DATABASE `name-with-dash`')
-        cy.resultContains('1 system update')
-        cy.executeCommand(':clear')
+        cy.createDatabase('`name-with-dash`')
 
         // Count items in list
         cy.get('[data-testid="navigationDBMS"]').click()
@@ -145,43 +142,43 @@ describe('Multi database', () => {
       cy.executeCommand(':use system')
     })
 
-    if (Cypress.config('serverVersion') >= 4.4) {
-      it('lists aliases with :dbs command', () => {
-        const password = Cypress.config('password')
-        cy.connect('neo4j', password)
-        cy.executeCommand(':clear')
-        // Drop alias in case it already exists
-        cy.executeCommand('drop alias `Mossdeep-24.` for database')
-
-        cy.executeCommand('create alias `Mossdeep-24.` for database neo4j')
-        cy.resultContains('1 system update, no records')
-
-        // Switch to system to see that using alias switches back to neo4j
-        cy.executeCommand(':use system')
-        editor().contains('system$')
-
-        cy.executeCommand(':use `Mossdeep-24.`')
-        editor().contains('neo4j$')
-
-        cy.executeCommand(':use system')
-        editor().contains('system$')
-
-        cy.executeCommand(':dbs')
-        cy.getFrames().eq(0).contains(':use `mossdeep-24.`').click()
-        editor().contains('neo4j$')
-
-        cy.executeCommand('drop alias `Mossdeep-24.` for database;')
-        cy.resultContains('1 system update, no records')
-      })
-    }
-
     if (isEnterpriseEdition()) {
+      if (Cypress.config('serverVersion') >= 4.4 && !isAura()) {
+        it('lists aliases with :dbs command', () => {
+          const password = Cypress.config('password')
+          cy.connect('neo4j', password)
+          cy.executeCommand(':clear')
+          // Drop alias in case it already exists
+          cy.executeCommand('drop alias `Mossdeep-24.` for database')
+
+          cy.executeCommand('create alias `Mossdeep-24.` for database neo4j')
+          cy.resultContains('1 system update, no records')
+
+          // Switch to system to see that using alias switches back to neo4j
+          cy.executeCommand(':use system')
+          editor().contains('system$')
+
+          cy.executeCommand(':use `Mossdeep-24.`')
+          editor().contains('mossdeep-24.$')
+
+          cy.executeCommand(':use system')
+          editor().contains('system$')
+
+          cy.executeCommand(':dbs')
+          cy.getFrames().eq(0).contains(':use `mossdeep-24.`').click()
+          editor().contains('mossdeep-24.$')
+
+          cy.executeCommand('drop alias `Mossdeep-24.` for database;')
+          cy.resultContains('1 system update, no records')
+
+          cy.executeCommand(':use system')
+          editor().contains('system$')
+        })
+      }
+
       it('lists new databases with :dbs command', () => {
-        cy.executeCommand('CREATE DATABASE sidebartest')
+        cy.createDatabase('sidebartest')
 
-        cy.wait(3000) // CREATE database can take a sec
-
-        cy.executeCommand(':clear')
         cy.executeCommand(':dbs')
         databaseList().should('have.length', 3)
         databaseList().contains('system')

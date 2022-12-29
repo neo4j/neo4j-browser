@@ -25,7 +25,7 @@ import { Bus } from 'suber'
 
 import { SysInfoFrame, SysInfoFrameProps } from './SysInfoFrame'
 import reducers from 'project-root/src/shared/rootReducer'
-import { Database } from 'shared/modules/dbMeta/state'
+import { Database } from 'shared/modules/dbMeta/dbMetaDuck'
 import { Frame } from 'shared/modules/frames/framesDuck'
 
 const baseProps = {
@@ -38,7 +38,7 @@ const baseProps = {
   useDb: 'neo4j',
   isFullscreen: false,
   isCollapsed: false,
-  isOnCausalCluster: true,
+  isOnCluster: true,
   namespacesEnabled: false,
   metricsPrefix: 'neo4j'
 }
@@ -54,15 +54,15 @@ const mountWithStore = (props: Partial<SysInfoFrameProps>) => {
 }
 
 describe('sysinfo component', () => {
-  test('should not render causal cluster table', () => {
+  test('should not render cluster table', () => {
     // Given
-    const props = { isACausalCluster: false, isConnected: true }
+    const props = { isOnCluster: false, isConnected: true }
 
     // When
     const { queryByTestId } = render(<SysInfoFrame {...baseProps} {...props} />)
 
     // Then
-    expect(queryByTestId('sysinfo-casual-cluster-members-title')).toBeNull()
+    expect(queryByTestId('sysinfo-cluster-members-title')).toBeNull()
   })
 
   test('should display error when there is no connection', () => {

@@ -607,15 +607,15 @@ const slides = [
       implicitly adds an index on that property.
     </p>
     <pre className="pre-scrollable code runnable">
-      CREATE CONSTRAINT ON (n:Movie) ASSERT (n.title) IS UNIQUE
+      CREATE CONSTRAINT FOR (n:Movie) REQUIRE (n.title) IS UNIQUE
     </pre>
     <pre className="pre-scrollable code runnable">
-      CREATE CONSTRAINT ON (n:Person) ASSERT (n.name) IS UNIQUE
+      CREATE CONSTRAINT FOR (n:Person) REQUIRE (n.name) IS UNIQUE
     </pre>
     <hr />
     <p>
       <a help-topic="help">:help</a> <a help-topic="cypher">cypher</a>{' '}
-      <a help-topic="create-constraint-on">CREATE CONSTRAINT ON</a>
+      <a help-topic="create-constraint">CREATE CONSTRAINT</a>
     </p>
   </BuiltInGuideSidebarSlide>,
   <BuiltInGuideSidebarSlide key="s4">
@@ -632,7 +632,7 @@ const slides = [
     <hr />
     <p>
       <a help-topic="help">:help</a> <a help-topic="cypher">cypher</a>{' '}
-      <a help-topic="create-index-on">CREATE INDEX FOR</a>
+      <a help-topic="create-index">CREATE INDEX</a>
     </p>
   </BuiltInGuideSidebarSlide>,
   <BuiltInGuideSidebarSlide key="s5">

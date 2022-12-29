@@ -140,6 +140,7 @@ image:guides.png[width=60%]
 [NOTE]
 ====
 There are also other Neo4j Browser guides created by Neo4j staff and community members to help others learn Neo4j or how to use the tools in its ecosystem.
+One of them is `:guide graph-data-science`, a remote guide also featured on Browser.
 You can check out the currently published list on the link:https://portal.graphgist.org/graph_guides[GraphGist Portal (Graph Guides section)^]. +
 For more information on how to create a custom Browser guide, see link:https://neo4j.com/developer/guide-create-neo4j-browser-guide/[creating a custom Browser guide^].
 ====

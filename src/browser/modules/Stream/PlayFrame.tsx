@@ -44,7 +44,7 @@ import { GlobalState } from 'shared/globalState'
 import { inDesktop } from 'shared/modules/app/appDuck'
 import { fetchGuideFromAllowlistAction } from 'shared/modules/commands/commandsDuck'
 import { isConnectedAuraHost } from 'shared/modules/connections/connectionsDuck'
-import { getEdition, isEnterprise } from 'shared/modules/dbMeta/state'
+import { getEdition, isEnterprise } from 'shared/modules/dbMeta/dbMetaDuck'
 import { DARK_THEME } from 'shared/modules/settings/settingsDuck'
 import { LAST_GUIDE_SLIDE } from 'shared/modules/udc/udcDuck'
 

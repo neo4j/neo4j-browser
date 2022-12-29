@@ -30,7 +30,7 @@ import {
 import {
   NAME as meta,
   initialState as metaInitialState
-} from './modules/dbMeta/state'
+} from './modules/dbMeta/dbMetaDuck'
 import {
   NAME as experimentalFeatures,
   initialState as experimentalFeaturesInitialState

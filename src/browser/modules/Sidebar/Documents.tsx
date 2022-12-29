@@ -37,7 +37,7 @@ import {
 import { Drawer, DrawerHeader } from 'browser-components/drawer/drawer-styled'
 import { CANNY_FEATURE_REQUEST_URL, cannyOptions } from 'browser-services/canny'
 import { GlobalState } from 'shared/globalState'
-import { getVersion } from 'shared/modules/dbMeta/state'
+import { getRawVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 import {
   TRACK_CANNY_CHANGELOG,
   TRACK_CANNY_FEATURE_REQUEST
@@ -203,7 +203,7 @@ const Documents = (props: DocumentsProps) => {
 }
 
 const mapStateToProps = (state: GlobalState) => {
-  const version = getVersion(state) || 'current'
+  const version = getRawVersion(state) || 'current'
   return {
     version,
     urlVersion: formatDocVersion(version)

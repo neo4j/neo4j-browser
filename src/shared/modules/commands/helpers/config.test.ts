@@ -20,8 +20,11 @@
 import nock from 'nock'
 
 import * as config from './config'
-import { updateSettings } from 'shared/modules/dbMeta/actions'
-import dbMetaReducer from 'shared/modules/dbMeta/state'
+import dbMetaReducer, {
+  ClientSettings,
+  initialClientSettings,
+  updateSettings
+} from 'shared/modules/dbMeta/dbMetaDuck'
 import { replace, update } from 'shared/modules/settings/settingsDuck'
 
 function FetchError(message: any) {
@@ -34,19 +37,30 @@ FetchError.prototype = Object.create(Error.prototype)
 FetchError.prototype.constructor = FetchError
 
 describe('commandsDuck config helper', () => {
+  const metaSettings: ClientSettings = {
+    ...initialClientSettings,
+    remoteContentHostnameAllowlist: 'okurl.com'
+  }
   const store = {
     getState: () => {
       return {
         meta: {
-          settings: {
-            'browser.remote_content_hostname_allowlist': 'okurl.com'
-          }
+          settings: metaSettings
         }
       }
     }
   }
+  beforeAll(() => {
+    nock.disableNetConnect()
+    if (!nock.isActive()) {
+      nock.activate()
+    }
+  })
   afterEach(() => {
     nock.cleanAll()
+  })
+  afterAll(() => {
+    nock.restore()
   })
   test('fails on :config x x x and shows error hint', () => {
     // Given
@@ -144,31 +158,6 @@ describe('commandsDuck config helper', () => {
 
     // When
     const p = config.handleUpdateConfigCommand(action, put, store)
-
-    // Then
-    return expect(p)
-      .rejects.toEqual(
-        new Error('Hostname is not allowed according to server allowlist')
-      )
-      .then(() => expect(put).not.toHaveBeenCalled())
-  })
-  test('allowlist and whitelist both update allowlist', () => {
-    // Given
-    const action = { cmd: ':config https://okurl.com/cnf.json' }
-    const put = jest.fn()
-
-    const updatedStore = {
-      getState: () => ({
-        meta: dbMetaReducer(
-          store.getState() as any,
-          updateSettings({
-            'browser.remote_content_hostname_whitelist': 'replaceUrl.com'
-          })
-        )
-      })
-    }
-    // When
-    const p = config.handleUpdateConfigCommand(action, put, updatedStore)
 
     // Then
     return expect(p)

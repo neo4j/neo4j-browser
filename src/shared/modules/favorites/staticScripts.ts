@@ -38,8 +38,11 @@ export const scripts = [
   {
     folder: 'basics',
     not_executable: true,
-    content:
-      "// Create an index\n// Replace:\n//   'LabelName' with label to index\n//   'propertyKey' with property to be indexed\nCREATE INDEX ON :<LabelName>(<propertyKey>)",
+    content: `// Create an index
+// Replace:
+//   'LabelName' with label to index
+//   'propertyKey' with property to be indexed
+CREATE INDEX ON :<LabelName>(<propertyKey>)`,
     versionRange: '>=3 <4'
   },
   {
@@ -59,9 +62,25 @@ ON (n.propertyName)
   {
     folder: 'basics',
     not_executable: true,
-    content:
-      "// Create unique property constraint\n// Replace:\n//   'LabelName' with node label\n//   'propertyKey' with property that should be unique\nCREATE CONSTRAINT ON (n:<LabelName>) ASSERT n.<propertyKey> IS UNIQUE",
-    versionRange: '>=3'
+    content: `// Create unique property constraint
+// Replace:
+//   'LabelName' with node label
+//   'propertyKey' with property that should be unique
+CREATE CONSTRAINT ON (n:<LabelName>) ASSERT n.<propertyKey> IS UNIQUE`,
+    versionRange: '>=3 <4.4'
+  },
+  {
+    folder: 'basics',
+    not_executable: true,
+    content: `// Create unique property constraint
+// Replace:
+//   'ConstraintName' with name of constraint (optional)
+//   'LabelName' with node label
+//   'propertyKey' with property that should be unique
+CREATE CONSTRAINT [ConstraintName]
+FOR (n:<LabelName>)
+REQUIRE n.<propertyKey> IS UNIQUE`,
+    versionRange: '>=4.4'
   },
   {
     folder: 'profile',
@@ -117,12 +136,22 @@ ON (n.propertyName)
   {
     folder: 'procedures',
     content: '// List procedures\nCALL dbms.procedures()',
-    versionRange: '>=3'
+    versionRange: '>=3 <5'
+  },
+  {
+    folder: 'procedures',
+    content: '// List procedures\nSHOW PROCEDURES',
+    versionRange: '>=5'
   },
   {
     folder: 'procedures',
     content: '// List functions\nCALL dbms.functions()',
-    versionRange: '>=3'
+    versionRange: '>=3 <5'
+  },
+  {
+    folder: 'procedures',
+    content: '// List functions\nSHOW FUNCTIONS',
+    versionRange: '>=5'
   },
   {
     folder: 'procedures',

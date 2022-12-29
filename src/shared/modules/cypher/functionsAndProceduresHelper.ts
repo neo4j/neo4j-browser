@@ -18,9 +18,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const DocTitle = ({ titleString }: any) => {
-  document.title = titleString
-  return null
+import { gte, SemVer } from 'semver'
+export const getListProcedureQuery = (version: SemVer | null): string => {
+  const versionOrFallback = version ?? '5.0.0'
+  return gte(versionOrFallback, '5.0.0')
+    ? 'SHOW PROCEDURES yield name, description, signature'
+    : 'CALL dbms.procedures()'
 }
 
-export default DocTitle
+export const getListFunctionQuery = (version: SemVer | null): string => {
+  const versionOrFallback = version ?? '5.0.0'
+  return gte(versionOrFallback, '5.0.0')
+    ? 'SHOW FUNCTIONS yield name, description, signature'
+    : 'CALL dbms.functions()'
+}

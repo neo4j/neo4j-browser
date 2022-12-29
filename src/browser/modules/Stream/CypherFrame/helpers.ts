@@ -254,7 +254,6 @@ export const transformResultRecordsToResultArray = (
   return records && records.length
     ? [records]
         .map(recs => extractRecordsToResultArray(recs, maxFieldItems))
-        // @ts-expect-error ts-migrate(2339) FIXME: Property 'flatMap' does not exist on type 'any[][]... Remove this comment to see the full error message
         .flatMap(
           flattenGraphItemsInResultArray.bind(null, neo4j.types, neo4j.isInt)
         )

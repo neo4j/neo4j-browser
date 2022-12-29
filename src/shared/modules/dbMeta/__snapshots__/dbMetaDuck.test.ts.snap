@@ -1,7 +1,75 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`hydrating state can CLEAR to reset state 1`] = `
+Object {
+  "countAutomaticRefresh": Object {
+    "enabled": true,
+    "loading": false,
+  },
+  "databases": Array [],
+  "functions": Array [],
+  "labels": Array [],
+  "nodes": 0,
+  "procedures": Array [],
+  "properties": Array [],
+  "relationshipTypes": Array [],
+  "relationships": 0,
+  "role": null,
+  "server": Object {
+    "edition": null,
+    "storeSize": null,
+    "version": null,
+  },
+  "serverConfigDone": false,
+  "settings": Object {
+    "allowOutgoingConnections": false,
+    "allowTelemetry": true,
+    "authEnabled": true,
+    "credentialTimeout": 0,
+    "metricsNamespacesEnabled": false,
+    "metricsPrefix": "neo4j",
+    "postConnectCmd": "",
+    "remoteContentHostnameAllowlist": "guides.neo4j.com, localhost",
+    "retainConnectionCredentials": false,
+    "retainEditorHistory": false,
+  },
+}
+`;
+
+exports[`hydrating state can update meta values with UPDATE 1`] = `
+Object {
+  "myKey": "yo",
+  "noKey": true,
+  "secondKey": true,
+}
+`;
+
+exports[`hydrating state can update server info 1`] = `
+Object {
+  "server": Object {
+    "edition": "enterprise",
+    "storeId": "xxxx",
+    "version": "3.2.0-RC2",
+  },
+  "shouldKeep": true,
+}
+`;
+
+exports[`hydrating state can update server settings 1`] = `
+Object {
+  "settings": Object {
+    "browser.test": 1,
+  },
+  "shouldKeep": true,
+}
+`;
+
 exports[`hydrating state should merge inital state and state on load 1`] = `
 Object {
+  "countAutomaticRefresh": Object {
+    "enabled": true,
+    "loading": false,
+  },
   "databases": Array [],
   "foo": "bar",
   "functions": Array [],
@@ -19,70 +87,16 @@ Object {
   },
   "serverConfigDone": false,
   "settings": Object {
-    "browser.allow_outgoing_connections": false,
-    "browser.remote_content_hostname_allowlist": "guides.neo4j.com, localhost",
-    "browser.retain_connection_credentials": false,
-    "browser.retain_editor_history": false,
-    "clients.allow_telemetry": true,
-    "metrics.namespaces.enabled": false,
-    "metrics.prefix": "neo4j",
+    "allowOutgoingConnections": false,
+    "allowTelemetry": true,
+    "authEnabled": true,
+    "credentialTimeout": 0,
+    "metricsNamespacesEnabled": false,
+    "metricsPrefix": "neo4j",
+    "postConnectCmd": "",
+    "remoteContentHostnameAllowlist": "guides.neo4j.com, localhost",
+    "retainConnectionCredentials": false,
+    "retainEditorHistory": false,
   },
-}
-`;
-
-exports[`updating metadata can CLEAR to reset state 1`] = `
-Object {
-  "databases": Array [],
-  "functions": Array [],
-  "labels": Array [],
-  "nodes": 0,
-  "procedures": Array [],
-  "properties": Array [],
-  "relationshipTypes": Array [],
-  "relationships": 0,
-  "role": null,
-  "server": Object {
-    "edition": null,
-    "storeSize": null,
-    "version": null,
-  },
-  "serverConfigDone": false,
-  "settings": Object {
-    "browser.allow_outgoing_connections": false,
-    "browser.remote_content_hostname_allowlist": "guides.neo4j.com, localhost",
-    "browser.retain_connection_credentials": false,
-    "browser.retain_editor_history": false,
-    "clients.allow_telemetry": true,
-    "metrics.namespaces.enabled": false,
-    "metrics.prefix": "neo4j",
-  },
-}
-`;
-
-exports[`updating metadata can update meta values with UPDATE 1`] = `
-Object {
-  "myKey": "yo",
-  "noKey": true,
-  "secondKey": true,
-}
-`;
-
-exports[`updating metadata can update server info 1`] = `
-Object {
-  "server": Object {
-    "edition": "enterprise",
-    "storeId": "xxxx",
-    "version": "3.2.0-RC2",
-  },
-  "shouldKeep": true,
-}
-`;
-
-exports[`updating metadata can update server settings 1`] = `
-Object {
-  "settings": Object {
-    "browser.test": 1,
-  },
-  "shouldKeep": true,
 }
 `;

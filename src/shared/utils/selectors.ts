@@ -1,20 +1,20 @@
-import semver from 'semver'
-
 import { GlobalState } from 'shared/globalState'
 import { inDesktop } from 'shared/modules/app/appDuck'
 import {
+  getUseDb,
   isConnected,
-  isConnectedAuraHost
+  isConnectedAuraHost,
+  useDb
 } from 'shared/modules/connections/connectionsDuck'
 import {
+  Database,
+  findDatabaseByNameOrAlias,
   getAllowOutgoingConnections,
   getClientsAllowTelemetry,
-  getDatabases,
-  getVersion,
   isServerConfigDone,
-  shouldAllowOutgoingConnections
-} from 'shared/modules/dbMeta/state'
-import { getAvailableProcedures } from 'shared/modules/features/featuresDuck'
+  shouldAllowOutgoingConnections,
+  SYSTEM_DB
+} from 'shared/modules/dbMeta/dbMetaDuck'
 import {
   getAllowCrashReports,
   getAllowUserStats
@@ -24,6 +24,19 @@ import {
   getAllowCrashReportsInDesktop,
   getAllowUserStatsInDesktop
 } from 'shared/modules/udc/udcDuck'
+
+export function getCurrentDatabase(state: GlobalState): Database | null {
+  const dbName = getUseDb(state)
+  if (dbName) {
+    return findDatabaseByNameOrAlias(state, dbName) ?? null
+  }
+
+  return null
+}
+
+export function isSystemOrCompositeDb(db: Database): boolean {
+  return db?.name === SYSTEM_DB || db?.type === 'composite'
+}
 
 export type TelemetrySettingSource =
   | 'AURA'
@@ -98,15 +111,4 @@ export const getTelemetrySettings = (state: GlobalState): TelemetrySettings => {
   }
 
   return { source, ...rules[source] }
-}
-
-export const isOnCausalCluster = (state: GlobalState): boolean => {
-  const version = semver.coerce(getVersion(state))
-  if (!version) return false
-
-  if (semver.gte(version, '4.3.0')) {
-    return getDatabases(state).some(database => database.role !== 'standalone')
-  } else {
-    return getAvailableProcedures(state).includes('dbms.cluster.overview')
-  }
 }

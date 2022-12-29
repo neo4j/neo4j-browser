@@ -37,10 +37,8 @@ const getFirstFrameCommand = () =>
   cy.get('[data-testid="frameCommand"]').first()
 
 describe('Connect form', () => {
-  before(function() {
-    cy.visit(Cypress.config('url'))
-      .title()
-      .should('include', 'Neo4j Browser')
+  before(function () {
+    cy.visit(Cypress.config('url')).title().should('include', 'Neo4j Browser')
     cy.wait(3000)
     cy.disconnect()
   })
@@ -115,7 +113,7 @@ describe('Connect form', () => {
       })
     }
   }
-  if (Cypress.config('serverVersion') >= 4.0) {
+  if (Cypress.config('serverVersion') >= 4.1) {
     it('can connect with the neo4j:// scheme', () => {
       cy.executeCommand(':clear')
       const boltUrl = 'neo4j://' + stripScheme(Cypress.config('boltUrl'))
@@ -127,9 +125,7 @@ describe('Connect form', () => {
       it('shows correct metadata when using db field', () => {
         cy.connect('neo4j', Cypress.config('password'))
         cy.executeCommand(':use system')
-        cy.executeCommand('DROP DATABASE sidebartest IF EXISTS')
-        cy.executeCommand('CREATE DATABASE sidebartest')
-        cy.contains('1 system update, no records')
+        cy.createDatabase('sidebartest')
         cy.executeCommand(':use sidebartest')
         cy.executeCommand('create (:TestLabel)')
         cy.executeCommand(':use neo4j')
@@ -137,9 +133,7 @@ describe('Connect form', () => {
 
         cy.executeCommand(':server disconnect')
         cy.visit('/?dbms=bolt://localhost:7687&db=sidebartest')
-        cy.get('[data-testid=username]')
-          .clear()
-          .type('neo4j')
+        cy.get('[data-testid=username]').clear().type('neo4j')
         cy.get('[data-testid=password]')
           .type(Cypress.config('password'))
           .type('{enter}')

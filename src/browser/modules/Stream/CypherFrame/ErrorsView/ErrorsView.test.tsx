@@ -32,7 +32,8 @@ const mount = (partOfProps: Partial<ErrorsViewProps>) => {
     bus: createBus(),
     params: {},
     executeCmd: jest.fn(),
-    setEditorContent: jest.fn()
+    setEditorContent: jest.fn(),
+    neo4jVersion: null
   }
   const props = {
     ...defaultProps,

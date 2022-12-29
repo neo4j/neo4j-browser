@@ -17,33 +17,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { QueryResult } from 'neo4j-driver'
 import semver from 'semver'
 
 import { guessSemverVersion } from '../features/featureDuck.utils'
-import { VERSION_FOR_EDITOR_HISTORY_SETTING } from './constants'
+import { VERSION_FOR_EDITOR_HISTORY_SETTING } from './dbMetaDuck'
 
 type ServerInfo = {
   version: string | null
   edition: string | null
 }
-export function extractServerInfo(res: any): ServerInfo {
+export function extractServerInfo(res: QueryResult): ServerInfo {
   const serverInfo: ServerInfo = {
     version: 'unknown',
     edition: ''
   }
 
-  if (!res) {
+  const resultObj = res.records.map(res => res.toObject())[0]
+  if (!resultObj) {
     return serverInfo
   }
 
-  // Always get server version
-  if (res.summary.server.version) {
-    if (res.summary.server.version.includes('/')) {
-      serverInfo.version = res.summary.server.version.split('/').pop()
-    } else {
-      serverInfo.version = res.summary.server.version
-    }
+  if (resultObj.versions[0]) {
+    serverInfo.version = resultObj.versions[0]
   }
+
+  if (resultObj.edition[0]) {
+    serverInfo.edition = resultObj.edition
+  }
+
+  // TODO se till att få rätt på den där temporära vesionummerna
 
   // Get server edition if available
   if (res.records.length && res.records[0].keys.includes('edition')) {

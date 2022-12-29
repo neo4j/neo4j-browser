@@ -17,48 +17,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import Rx from 'rxjs/Rx'
-
-import { SYSTEM_DB } from '../dbMeta/constants'
-import { canSendTxMetadata } from '../features/versionedFeatures'
-import bolt from 'services/bolt/bolt'
 import { APP_START, CLOUD, DESKTOP } from 'shared/modules/app/appDuck'
-import {
-  CONNECTION_SUCCESS,
-  DISCONNECTION_SUCCESS
-} from 'shared/modules/connections/connectionsDuck'
-import { getBackgroundTxMetadata } from 'shared/services/bolt/txMetadata'
+import { DISCONNECTION_SUCCESS } from 'shared/modules/connections/connectionsDuck'
 
 export const NAME = 'features'
 const CLEAR = 'features/CLEAR'
-export const UPDATE_ALL_FEATURES = 'features/UPDATE_ALL_FEATURES'
 export const UPDATE_USER_CAPABILITIES = 'features/UPDATE_USER_CAPABILITIES'
-export const FEATURE_DETECTION_DONE = 'features/FEATURE_DETECTION_DONE'
 export const DETECTED_CLIENT_CONFIG = 'features/DETECTED_CLIENT_CONFIG'
 
-export const getAvailableProcedures = (state: any) =>
-  state[NAME].availableProcedures
-
-export const isMultiDatabase = (state: any) =>
-  getAvailableProcedures(state).includes('dbms.databases.overview')
-export const canAssignRolesToUser = (state: any) =>
-  getAvailableProcedures(state).includes('dbms.security.addRoleToUser')
 export const hasClientConfig = (state: any) => state[NAME].clientConfig
 export const utilizeBrowserSync = (state: any) => !!state[NAME].browserSync
 export const getUserCapabilities = (state: any) => state[NAME].userCapabilities
 
 export const USER_CAPABILITIES = {
-  serverConfigReadable: 'serverConfigReadable',
-  proceduresReadable: 'proceduresReadable'
+  serverConfigReadable: 'serverConfigReadable'
 }
 
 export const initialState = {
-  availableProcedures: [] as any[],
   browserSync: true,
   clientConfig: null,
   userCapabilities: {
-    [USER_CAPABILITIES.serverConfigReadable]: false,
-    [USER_CAPABILITIES.proceduresReadable]: false
+    [USER_CAPABILITIES.serverConfigReadable]: false
   }
 }
 
@@ -70,8 +49,6 @@ export default function (state = initialState, action: any) {
         ...state,
         browserSync: shouldUtilizeBrowserSync(action)
       }
-    case UPDATE_ALL_FEATURES:
-      return { ...state, availableProcedures: [...action.availableProcedures] }
     case DETECTED_CLIENT_CONFIG:
       return { ...state, clientConfig: action.isAvailable }
     case UPDATE_USER_CAPABILITIES:
@@ -94,14 +71,6 @@ const shouldUtilizeBrowserSync = (action: any) => {
   return ![DESKTOP, CLOUD].includes(action.env)
 }
 
-// Action creators
-export const updateFeatures = (availableProcedures: any) => {
-  return {
-    type: UPDATE_ALL_FEATURES,
-    availableProcedures
-  }
-}
-
 export const updateUserCapability = (
   capabilityName: any,
   capabilityValue: any
@@ -118,47 +87,6 @@ export const setClientConfig = (isAvailable: any) => {
     type: DETECTED_CLIENT_CONFIG,
     isAvailable
   }
-}
-
-export const featuresDiscoveryEpic = (action$: any, store: any) => {
-  return action$
-    .ofType(CONNECTION_SUCCESS)
-    .mergeMap(() => {
-      return new Promise(async (resolve, reject) => {
-        try {
-          const supportsMultiDb = await bolt.hasMultiDbSupport()
-          const res = await bolt.routedReadTransaction(
-            'CALL dbms.procedures YIELD name',
-            {},
-            {
-              useDb: supportsMultiDb ? SYSTEM_DB : '',
-              ...getBackgroundTxMetadata({
-                hasServerSupport: canSendTxMetadata(store.getState())
-              })
-            }
-          )
-          resolve(res)
-        } catch (e) {
-          reject(e)
-        }
-      })
-        .then((res: any) => {
-          store.dispatch(
-            updateFeatures(res.records.map((record: any) => record.get('name')))
-          )
-          store.dispatch(
-            updateUserCapability(USER_CAPABILITIES.proceduresReadable, true)
-          )
-          return Rx.Observable.of(null)
-        })
-        .catch(() => {
-          store.dispatch(
-            updateUserCapability(USER_CAPABILITIES.proceduresReadable, false)
-          )
-          return Rx.Observable.of(null)
-        })
-    })
-    .mapTo({ type: FEATURE_DETECTION_DONE })
 }
 
 export const clearOnDisconnectEpic = (some$: any) =>

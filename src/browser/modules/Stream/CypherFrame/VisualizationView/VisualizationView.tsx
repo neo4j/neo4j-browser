@@ -56,7 +56,6 @@ type VisualizationState = {
   nodes: BasicNode[]
   relationships: BasicRelationship[]
   hasTruncatedFields: boolean
-  graph: GraphModel | undefined
   nodeLimitHit: boolean
 }
 
@@ -82,14 +81,17 @@ export class Visualization extends Component<
   VisualizationProps,
   VisualizationState
 > {
-  autoCompleteCallback: ((rels: BasicRelationship[]) => void) | undefined
+  autoCompleteCallback?: (
+    rels: BasicRelationship[],
+    initialRun: boolean
+  ) => void
+  graph: GraphModel | undefined
   state: VisualizationState = {
     nodes: [],
     relationships: [],
     updated: 0,
-    hasTruncatedFields: false,
-    graph: undefined,
-    nodeLimitHit: false
+    nodeLimitHit: false,
+    hasTruncatedFields: false
   }
 
   componentDidMount(): void {
@@ -110,8 +112,7 @@ export class Visualization extends Component<
       this.state.updated !== state.updated ||
       this.props.autoComplete !== props.autoComplete ||
       this.props.wheelZoomInfoMessageEnabled !==
-        props.wheelZoomInfoMessageEnabled ||
-      this.state.graph !== state.graph
+        props.wheelZoomInfoMessageEnabled
     )
   }
 
@@ -160,20 +161,19 @@ export class Visualization extends Component<
 
   autoCompleteRelationships(
     existingNodes: { id: string }[],
-    newNodes: { id: string }[]
+    newNodes: { id: string }[],
+    initialRun: boolean
   ): void {
     if (this.props.autoComplete) {
       const existingNodeIds = existingNodes.map(node => parseInt(node.id))
       const newNodeIds = newNodes.map(node => parseInt(node.id))
 
-      this.getInternalRelationships(existingNodeIds, newNodeIds)
-        .then(graph => {
-          this.autoCompleteCallback &&
-            this.autoCompleteCallback(graph.relationships)
-        })
-        .catch(() => undefined)
+      this.getInternalRelationships(existingNodeIds, newNodeIds).then(graph => {
+        this.autoCompleteCallback &&
+          this.autoCompleteCallback(graph.relationships, initialRun)
+      })
     } else {
-      this.autoCompleteCallback && this.autoCompleteCallback([])
+      this.autoCompleteCallback && this.autoCompleteCallback([], initialRun)
     }
   }
 
@@ -186,12 +186,15 @@ export class Visualization extends Component<
     const maxNewNeighbours =
       this.props.maxNeighbours - currentNeighbourIds.length
 
-    const query = `MATCH (a) WHERE id(a) = ${id}
+    const query =
+      maxNewNeighbours > 0
+        ? `MATCH (a) WHERE id(a) = ${id}
 WITH a, size([(a)--() | 1]) AS allNeighboursCount
 MATCH path = (a)--(o) WHERE NOT id(o) IN [${currentNeighbourIds.join(',')}]
 RETURN path, allNeighboursCount
 ORDER BY id(o)
 LIMIT ${withLimit ? maxNewNeighbours : 10000}`
+        : `MATCH p=(a)--() WHERE id(a) = ${id} RETURN count(p) as allNeighboursCount`
 
     return new Promise((resolve, reject) => {
       this.props.bus &&
@@ -218,8 +221,9 @@ LIMIT ${withLimit ? maxNewNeighbours : 10000}`
                 )
               if (shouldAutoCompleteRelationships) {
                 this.autoCompleteRelationships(
-                  this.state.graph?.nodes() || [],
-                  resultGraph.nodes
+                  this.graph?.nodes() || [],
+                  resultGraph.nodes,
+                  false
                 )
               }
               resolve({ ...resultGraph, allNeighboursCount })
@@ -234,7 +238,11 @@ LIMIT ${withLimit ? maxNewNeighbours : 10000}`
   ): Promise<BasicNodesAndRels & { allNeighboursCount: number }> {
     return this.fetchNeighbours(id, currentNeighbourIds, true, true).then(
       result => {
-        this.autoCompleteRelationships(this.state.graph!._nodes, result.nodes)
+        this.autoCompleteRelationships(
+          this.graph?.nodes() || [],
+          result.nodes,
+          false
+        )
         return result
       }
     )
@@ -244,11 +252,13 @@ LIMIT ${withLimit ? maxNewNeighbours : 10000}`
     rawExistingNodeIds: number[],
     rawNewNodeIds: number[]
   ): Promise<BasicNodesAndRels> {
-    const newNodeIds = rawNewNodeIds.map(neo4j.int)
-    const existingNodeIds = rawExistingNodeIds.map(neo4j.int).concat(newNodeIds)
+    const newNodeIds = rawNewNodeIds.map(n => neo4j.int(n))
+    const existingNodeIds = rawExistingNodeIds
+      .map(n => neo4j.int(n))
+      .concat(newNodeIds)
     const query =
       'MATCH (a)-[r]->(b) WHERE id(a) IN $existingNodeIds AND id(b) IN $newNodeIds RETURN r;'
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       this.props.bus &&
         this.props.bus.self(
           CYPHER_REQUEST,
@@ -259,7 +269,8 @@ LIMIT ${withLimit ? maxNewNeighbours : 10000}`
           },
           (response: any) => {
             if (!response.success) {
-              reject(new Error())
+              console.error(response.error)
+              resolve({ nodes: [], relationships: [] })
             } else {
               resolve({
                 ...bolt.extractNodesAndRelationshipsFromRecordsForOldVis(
@@ -275,8 +286,8 @@ LIMIT ${withLimit ? maxNewNeighbours : 10000}`
   }
 
   setGraph(graph: GraphModel): void {
-    this.setState({ graph })
-    this.autoCompleteRelationships([], graph.nodes())
+    this.graph = graph
+    this.autoCompleteRelationships([], this.graph.nodes(), true)
   }
 
   render(): React.ReactNode {
@@ -292,14 +303,15 @@ LIMIT ${withLimit ? maxNewNeighbours : 10000}`
           getNeighbours={this.getNeighbours.bind(this)}
           fetchNeighbours={this.fetchNeighbours.bind(this)}
           nodes={this.state.nodes}
-          graphNodes={this.state.graph?.nodes() ?? []}
-          graphRelationships={this.state.graph?.relationships() ?? []}
+          autocompleteRelationships={this.props.autoComplete ?? false}
+          graphNodes={this.graph?.nodes() ?? []}
+          graphRelationships={this.graph?.relationships() ?? []}
           relationships={this.state.relationships}
           isFullscreen={this.props.isFullscreen}
           assignVisElement={this.props.assignVisElement}
           nodeLimitHit={this.state.nodeLimitHit}
           getAutoCompleteCallback={(
-            callback: (rels: BasicRelationship[]) => void
+            callback: (rels: BasicRelationship[], initialRun: boolean) => void
           ) => {
             this.autoCompleteCallback = callback
           }}
@@ -310,10 +322,15 @@ LIMIT ${withLimit ? maxNewNeighbours : 10000}`
           nodePropertiesExpandedByDefault={
             this.props.nodePropertiesExpandedByDefault
           }
-          wheelZoomInfoMessageEnabled={this.props.wheelZoomInfoMessageEnabled}
+          wheelZoomRequiresModKey={!this.props.isFullscreen}
+          wheelZoomInfoMessageEnabled={
+            this.props.wheelZoomInfoMessageEnabled && !this.props.isFullscreen
+          }
           disableWheelZoomInfoMessage={this.props.disableWheelZoomInfoMessage}
           DetailsPaneOverride={DetailsPane}
           OverviewPaneOverride={OverviewPane}
+          useGeneratedDefaultColors={false}
+          initialZoomToFit
         />
       </StyledVisContainer>
     )

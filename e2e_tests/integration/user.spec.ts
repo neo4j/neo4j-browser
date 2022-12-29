@@ -23,7 +23,7 @@ import { isAura, isEnterpriseEdition } from '../support/utils'
 /* global Cypress, cy, before */
 
 describe('User: ', () => {
-  before(function() {
+  before(function () {
     cy.visit(Cypress.config('url'))
     cy.get('input[data-testid="boltaddress"]', { timeout: 40000 })
     const password = Cypress.config('password')
@@ -44,7 +44,7 @@ describe('User: ', () => {
       it('Add User', () => {
         cy.executeCommand(':clear')
         cy.executeCommand(':server user add')
-        cy.addUser('Bob', 'hi', 'editor', false)
+        cy.addUser('Bob', 'password2', 'editor', false)
         cy.executeCommand(':clear')
         cy.executeCommand(':server user list')
         cy.get('.user-info > .username').should('have.length', 2)
@@ -54,7 +54,7 @@ describe('User: ', () => {
       it('Add User with forced pw change', () => {
         cy.executeCommand(':clear')
         cy.executeCommand(':server user add')
-        cy.addUser('Rob', 'hi', 'editor', true)
+        cy.addUser('Rob', 'password2', 'editor', true)
         cy.executeCommand(':clear')
         cy.executeCommand(':server user list')
         cy.get('.user-info > .username').should('have.length', 3)

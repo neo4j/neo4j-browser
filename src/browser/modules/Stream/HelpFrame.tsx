@@ -31,8 +31,13 @@ import FrameAside from '../Frame/FrameAside'
 import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
 import { CarouselButton } from 'browser-components/buttons/index'
 import { transformCommandToHelpTopic } from 'services/commandUtils'
+import { BaseFrameProps } from './Stream'
 
-const HelpFrame = ({ stack = [], isFullscreen, isCollapsed }: any) => {
+const HelpFrame = ({
+  stack,
+  isFullscreen,
+  isCollapsed
+}: BaseFrameProps): JSX.Element => {
   const [currentFrameIndex, setCurrentFrameIndex] = useState(0)
   const currentFrame = stack[currentFrameIndex]
 

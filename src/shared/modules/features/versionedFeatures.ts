@@ -20,27 +20,17 @@
 import semver from 'semver'
 
 import { getUseDb } from '../connections/connectionsDuck'
-import { getActiveDbName, getVersion } from '../dbMeta/state'
+import { getActiveDbName, getRawVersion } from '../dbMeta/dbMetaDuck'
 import { guessSemverVersion } from './featureDuck.utils'
 import { GlobalState } from 'project-root/src/shared/globalState'
 
-const NEO4J_TX_METADATA_VERSION = '3.5.0-alpha01'
 const NEO4J_4_0 = '4.0.0-alpha01'
+const NEO4J_5_0 = '5.0.0-alpha01'
 
 export const FIRST_MULTI_DB_SUPPORT = NEO4J_4_0
 // Keep the following as 3.4.0 as 3.5.X has a
 // compatible bolt server.
 export const FIRST_NO_MULTI_DB_SUPPORT = '3.4.0'
-
-export const canSendTxMetadata = (state: GlobalState) => {
-  const serverVersion = guessSemverVersion(getVersion(state))
-
-  if (!serverVersion || !semver.valid(serverVersion)) {
-    return false
-  } else {
-    return semver.gt(serverVersion, NEO4J_TX_METADATA_VERSION)
-  }
-}
 
 export const getShowCurrentUserProcedure = (serverVersion: string) => {
   const serverVersionGuessed = guessSemverVersion(serverVersion)
@@ -57,9 +47,13 @@ export const getShowCurrentUserProcedure = (serverVersion: string) => {
 
 export const getDbClusterRole = (state: GlobalState) => {
   const pre4 = 'CALL dbms.cluster.role() YIELD role'
-  const serverVersion = guessSemverVersion(getVersion(state))
+  const serverVersion = guessSemverVersion(getRawVersion(state))
   if (!semver.valid(serverVersion)) {
     return pre4
+  }
+  if (serverVersion && semver.gte(serverVersion, NEO4J_5_0)) {
+    const db = getUseDb(state)
+    return `SHOW DATABASES YIELD role, name WHERE name = "${db}"`
   }
   if (serverVersion && semver.gte(serverVersion, NEO4J_4_0)) {
     const db = getUseDb(state)
@@ -69,7 +63,7 @@ export const getDbClusterRole = (state: GlobalState) => {
 }
 
 export const hasMultiDbSupport = (state: GlobalState) => {
-  const serverVersion = guessSemverVersion(getVersion(state))
+  const serverVersion = guessSemverVersion(getRawVersion(state))
   if (!semver.valid(serverVersion)) {
     return false
   }
@@ -80,7 +74,7 @@ export const hasMultiDbSupport = (state: GlobalState) => {
 }
 
 export const getUsedDbName = (state: GlobalState) => {
-  const serverVersion = guessSemverVersion(getVersion(state))
+  const serverVersion = guessSemverVersion(getRawVersion(state))
   if (!semver.valid(serverVersion)) {
     return undefined
   }
@@ -102,16 +96,20 @@ export const getDefaultBoltScheme = (serverVersion: string | null) => {
   return pre4
 }
 
-export const changeUserPasswordQuery = (state: any, oldPw: any, newPw: any) => {
+export const changeUserPasswordQuery = (
+  serverVersion: string,
+  oldPw: any,
+  newPw: any
+) => {
   const pre4 = {
     query: 'CALL dbms.security.changePassword($password)',
     parameters: { password: newPw }
   }
-  const serverVersion = guessSemverVersion(getVersion(state))
-  if (!semver.valid(serverVersion)) {
+  const semverVersion = guessSemverVersion(serverVersion)
+  if (!semver.valid(semverVersion)) {
     return pre4
   }
-  if (serverVersion && semver.gte(serverVersion, NEO4J_4_0)) {
+  if (semverVersion && semver.gte(semverVersion, NEO4J_4_0)) {
     return {
       query: 'ALTER CURRENT USER SET PASSWORD FROM $oldPw TO $newPw',
       parameters: { oldPw, newPw }
@@ -122,7 +120,7 @@ export const changeUserPasswordQuery = (state: any, oldPw: any, newPw: any) => {
 
 export const driverDatabaseSelection = (state: GlobalState, database: any) => {
   const pre4 = undefined
-  const serverVersion = guessSemverVersion(getVersion(state))
+  const serverVersion = guessSemverVersion(getRawVersion(state))
   if (!semver.valid(serverVersion)) {
     return pre4
   }

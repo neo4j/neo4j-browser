@@ -223,7 +223,7 @@ List of help commands available.
 * `:help commands`
 * `:help contains`
 * `:help create`
-* `:help create-index-on`
+* `:help create-index`
 * `:help create-unique`
 * `:help cypher`
 * `:help delete`

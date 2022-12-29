@@ -3,7 +3,7 @@
     "module": "commonjs",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "target": "ES6",
+    "target": "ES2019",
     "strict": true,
     "sourceMap": true,
     "noImplicitAny": true,
@@ -38,5 +38,5 @@
     }
   },
   "include": ["./src/**/*"],
-  "exclude": ["./src/neo4j-arc/dist*"]
+  "exclude": ["./src/neo4j-arc/dist*", "./src/browser/documentation/**"]
 }

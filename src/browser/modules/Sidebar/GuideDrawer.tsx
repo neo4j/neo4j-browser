@@ -72,13 +72,20 @@ export const GuideDrawer = ({
       data-testid="guidesDrawer"
       ref={scrollRef}
     >
-      <StyledGuideDrawerHeader onClick={backToAllGuides}>
-        {currentGuide !== null && (
-          <BackIconContainer data-testid="guidesBackButton">
-            <BackIcon width={16} />
-          </BackIconContainer>
+      <StyledGuideDrawerHeader>
+        {currentGuide !== null ? (
+          <>
+            <BackIconContainer
+              data-testid="guidesBackButton"
+              onClick={backToAllGuides}
+            >
+              <BackIcon width={16} />
+            </BackIconContainer>
+            {currentGuide.title}
+          </>
+        ) : (
+          'Neo4j Browser Guides '
         )}
-        Neo4j Browser Guides{' '}
       </StyledGuideDrawerHeader>
       <StyledDrawerSeparator />
       {currentGuide === null ? (
@@ -89,19 +96,14 @@ export const GuideDrawer = ({
           updateRemoteGuides={updateRemoteGuides}
         />
       ) : (
-        <>
-          <GuideTitle title={currentGuide.title}>
-            {currentGuide.title}
-          </GuideTitle>
-          <GuideCarousel
-            slides={currentGuide.slides}
-            currentSlideIndex={currentGuide.currentSlide}
-            gotoSlide={gotoSlide}
-            scrollToTop={() =>
-              scrollRef.current?.scrollIntoView({ block: 'start' })
-            }
-          />
-        </>
+        <GuideCarousel
+          slides={currentGuide.slides}
+          currentSlideIndex={currentGuide.currentSlide}
+          gotoSlide={gotoSlide}
+          scrollToTop={() =>
+            scrollRef.current?.scrollIntoView({ block: 'start' })
+          }
+        />
       )}
     </StyledGuideDrawer>
   )

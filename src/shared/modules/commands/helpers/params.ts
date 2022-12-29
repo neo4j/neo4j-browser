@@ -21,7 +21,6 @@ import jsonic from 'jsonic'
 
 import { collectLambdaValues, parseLambdaStatement } from './lambdas'
 import { splitStringOnFirst } from 'services/commandUtils'
-import { SYSTEM_DB } from 'shared/modules/dbMeta/constants'
 import { replace, update } from 'shared/modules/params/paramsDuck'
 
 export const extractParams = (param: string) => {
@@ -76,43 +75,48 @@ export const getParamName = (input: any) => {
   return parts[0].trim()
 }
 
-export const handleParamsCommand = (action: any, put: any, targetDb?: any) => {
-  if (targetDb === SYSTEM_DB) {
-    return Promise.reject(
-      new Error('Parameters cannot be declared when using system database.')
+export const handleParamsCommand = async (
+  action: any,
+  put: any,
+  onUnsupportedDatabase: boolean
+): Promise<{
+  result: any
+  type: string
+}> => {
+  if (onUnsupportedDatabase) {
+    throw new Error(
+      'Parameters cannot be declared when using system or composite database.'
     )
   }
   const strippedCmd = action.cmd.substr(1)
   const parts = splitStringOnFirst(strippedCmd, /\s/)
   const param = parts[1].trim()
 
-  return Promise.resolve().then(() => {
-    if (/^"?\{[\s\S]*\}"?$/.test(param)) {
-      // JSON object string {"x": 2, "y":"string"}
-      try {
-        const res = jsonic(param.replace(/^"/, '').replace(/"$/, '')) // Remove any surrounding quotes
-        put(replace(res))
-        return { result: res, type: 'params' }
-      } catch (e) {
-        throw new Error(
-          `Could not parse input. Usage: \`:params {"x":1,"y":"string"}\`. ${e}`
-        )
-      }
+  if (/^"?\{[\s\S]*\}"?$/.test(param)) {
+    // JSON object string {"x": 2, "y":"string"}
+    try {
+      const res = jsonic(param.replace(/^"/, '').replace(/"$/, '')) // Remove any surrounding quotes
+      put(replace(res))
+      return { result: res, type: 'params' }
+    } catch (e) {
+      throw new Error(
+        `Could not parse input. Usage: \`:params {"x":1,"y":"string"}\`. ${e}`
+      )
     }
+  }
 
-    // Single param
-    const { key, isFn } = extractParams(param)
+  // Single param
+  const { key, isFn } = extractParams(param)
 
-    if (!isFn && Boolean(key)) {
-      return resolveAndStoreJsonValue(param, put)
-    }
+  if (!isFn && Boolean(key)) {
+    return resolveAndStoreJsonValue(param, put)
+  }
 
-    return parseLambdaStatement(param)
-      .then(ast => collectLambdaValues(ast, action.requestId))
-      .then(result => {
-        put(update(result))
+  return parseLambdaStatement(param)
+    .then(ast => collectLambdaValues(ast, action.requestId))
+    .then(result => {
+      put(update(result))
 
-        return { result, type: 'param' }
-      })
-  })
+      return { result, type: 'param' }
+    })
 }

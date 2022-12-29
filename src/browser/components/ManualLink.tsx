@@ -24,9 +24,9 @@ import semver from 'semver'
 import { DrawerExternalLink } from './drawer/drawer-styled'
 import { formatDocVersion } from 'browser/modules/Sidebar/docsUtils'
 import { GlobalState } from 'project-root/src/shared/globalState'
-import { getVersion } from 'shared/modules/dbMeta/state'
+import { getRawVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 
-const movedPages: { [key: string]: { oldPage: string; oldContent: string } } = {
+const oldPages: { [key: string]: { oldPage: string; oldContent: string } } = {
   '/administration/indexes-for-search-performance/': {
     oldPage: 'schema/index/',
     oldContent: 'Schema indexes'
@@ -41,15 +41,40 @@ const movedPages: { [key: string]: { oldPage: string; oldContent: string } } = {
   }
 }
 
-const isPageMoved = (
+const newPages: { [key: string]: { newPage: string; newContent: string } } = {
+  '/administration/indexes-for-search-performance/': {
+    newPage: 'indexes-for-search-performance/',
+    newContent: 'Indexes'
+  },
+  '/administration/constraints/': {
+    newPage: 'constraints/',
+    newContent: 'Constraints'
+  },
+  '/administration/': {
+    newPage: '',
+    newContent: 'Cypher Manual'
+  }
+}
+
+const isPageOld = (
   chapter: string,
   page: string,
   neo4jVersion: string | null
 ) =>
   chapter === 'cypher-manual' &&
-  movedPages[page] &&
+  oldPages[page] &&
   neo4jVersion &&
   semver.satisfies(neo4jVersion, '<4.0.0-alpha.1')
+
+const isPageNew = (
+  chapter: string,
+  page: string,
+  neo4jVersion: string | null
+) =>
+  chapter === 'cypher-manual' &&
+  newPages[page] &&
+  ((neo4jVersion && semver.satisfies(neo4jVersion, '>=4.3')) ||
+    neo4jVersion === null) // if no version is available, we treat it like the newest version.
 
 export type ManualLinkProps = {
   chapter: string
@@ -67,9 +92,12 @@ export function ManualLink({
 }: ManualLinkProps): JSX.Element {
   let cleanPage = page.replace(/^\//, '')
   let content = children
-  if (isPageMoved(chapter, page, neo4jVersion)) {
-    cleanPage = movedPages[page].oldPage
-    content = movedPages[page].oldContent
+  if (isPageOld(chapter, page, neo4jVersion)) {
+    cleanPage = oldPages[page].oldPage
+    content = oldPages[page].oldContent
+  } else if (isPageNew(chapter, page, neo4jVersion)) {
+    cleanPage = newPages[page].newPage
+    content = newPages[page].newContent
   }
 
   let version = formatDocVersion(neo4jVersion)
@@ -86,7 +114,7 @@ export function ManualLink({
 }
 
 const mapStateToProps = (state: GlobalState) => ({
-  neo4jVersion: getVersion(state)
+  neo4jVersion: getRawVersion(state)
 })
 
 export default connect(mapStateToProps)(ManualLink)

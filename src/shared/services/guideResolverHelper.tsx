@@ -45,7 +45,7 @@ import { fetchRemoteGuideAsync } from 'shared/modules/commands/helpers/playAndGu
 import {
   getDefaultRemoteContentHostnameAllowlist,
   getRemoteContentHostnameAllowlist
-} from 'shared/modules/dbMeta/state'
+} from 'shared/modules/dbMeta/dbMetaDuck'
 
 interface ResponseException extends Error {
   response: Response
@@ -95,6 +95,14 @@ function mdTextToSlides(md: string): JSX.Element[] {
   ))
 }
 
+function getFirstHeaderText(html: string): string | null {
+  const tmpDiv = document.createElement('div')
+  tmpDiv.innerHTML = html
+  const header = tmpDiv.querySelectorAll('h1, h2, h3, h4, h5, h6')[0]
+
+  return header?.textContent?.trim() ?? null
+}
+
 function htmlTextToSlides(html: string): JSX.Element[] {
   const tmpDiv = document.createElement('div')
   tmpDiv.innerHTML = html
@@ -128,7 +136,11 @@ async function resolveRemoteGuideByUrl(
 
     const remoteGuide = await fetchRemoteGuideAsync(url, allowlist)
     const titleRegexMatch = remoteGuide.match(/<title>(.*?)<\/title>/)
-    const title = (titleRegexMatch && titleRegexMatch[1])?.trim() || url
+    const title =
+      (titleRegexMatch && titleRegexMatch[1])?.trim() ??
+      getFirstHeaderText(remoteGuide) ??
+      url
+
     if (['md', 'mdx'].includes(filenameExtension)) {
       return {
         slides: mdTextToSlides(remoteGuide),

@@ -33,7 +33,8 @@ import {
   PaneBodySectionHeaderWrapper,
   PaneBodySectionSmallText,
   PaneBodySectionTitle,
-  StyledLegendInlineList
+  StyledLegendInlineList,
+  PaneWrapper
 } from './styled'
 
 import { NodeLabel } from './NodeLabel'
@@ -107,7 +108,7 @@ function DefaultOverviewPane({
   const totalNumOfRelTypes = relTypes ? Object.keys(relTypes).length : 0
 
   return (
-    <>
+    <PaneWrapper>
       <PaneHeader>{'Overview'}</PaneHeader>
       <PaneBody>
         {labels && visibleLabelKeys.length !== 0 && (
@@ -122,6 +123,7 @@ function DefaultOverviewPane({
                 <NodeLabel
                   key={label}
                   graphStyle={graphStyle}
+                  allNodesCount={nodeCount}
                   selectedLabel={{
                     label,
                     propertyKeys: Object.keys(labels[label].properties),
@@ -141,7 +143,7 @@ function DefaultOverviewPane({
         {relTypes && visibleRelationshipKeys.length !== 0 && (
           <div>
             <PaneBodySectionHeader
-              title={'Relationship Types'}
+              title={'Relationship types'}
               numOfElementsVisible={visibleRelationshipKeys.length}
               totalNumOfElements={totalNumOfRelTypes}
             />
@@ -186,7 +188,7 @@ function DefaultOverviewPane({
             )} nodes, ${numberToUSLocale(relationshipCount)} relationships.`}
         </div>
       </PaneBody>
-    </>
+    </PaneWrapper>
   )
 }
 

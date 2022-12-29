@@ -23,7 +23,6 @@ import {
   toFunction,
   toLabel,
   toProcedure,
-  toPropertyKey,
   toRelationshipType
 } from 'neo4j-arc/cypher-language-support'
 import { Action } from 'redux'
@@ -39,9 +38,9 @@ import {
   executeCommand
 } from 'shared/modules/commands/commandsDuck'
 import { DISABLE_IMPLICIT_INIT_COMMANDS } from 'shared/modules/settings/settingsDuck'
-import { DB_META_DONE } from '../dbMeta/constants'
 import { UPDATE_PARAMS } from '../params/paramsDuck'
 import { isOfType } from 'shared/utils/typeSafeActions'
+import { DB_META_DONE } from '../dbMeta/dbMetaDuck'
 
 export const SET_CONTENT = 'editor/SET_CONTENT'
 export const EDIT_CONTENT = 'editor/EDIT_CONTENT'
@@ -181,7 +180,7 @@ export const updateEditorSupportSchemaEpic: Epic<Action, GlobalState> = (
         labels: meta.labels.map(toLabel),
         parameters: Object.keys(params),
         procedures: meta.procedures.map(toProcedure),
-        propertyKeys: meta.properties.map(toPropertyKey),
+        propertyKeys: meta.properties,
         relationshipTypes: meta.relationshipTypes.map(toRelationshipType)
       })
     })

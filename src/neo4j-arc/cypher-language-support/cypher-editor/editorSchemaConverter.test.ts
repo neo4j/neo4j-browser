@@ -21,21 +21,17 @@ import * as convert from './editorSchemaConverter'
 
 describe('editor meta to schema conversion', () => {
   test('convert meta label', () => {
-    expect(convert.toLabel({ val: 'label' })).toEqual(':label')
+    expect(convert.toLabel('label')).toEqual(':label')
   })
 
   test('convert meta relationship', () => {
-    expect(convert.toRelationshipType({ val: 'relType' })).toEqual(':relType')
-  })
-
-  test('convert meta propertyKey', () => {
-    expect(convert.toPropertyKey({ val: 'propertyKey' })).toEqual('propertyKey')
+    expect(convert.toRelationshipType('relType')).toEqual(':relType')
   })
 
   test('convert meta function', () => {
     expect(
       convert.toFunction({
-        val: 'ns.functionName',
+        name: 'ns.functionName',
         signature: 'ns.functionName() :: (STRING?)'
       })
     ).toEqual({
@@ -47,7 +43,7 @@ describe('editor meta to schema conversion', () => {
   test('convert meta procedure with void return items', () => {
     expect(
       convert.toProcedure({
-        val: 'db.createLabel',
+        name: 'db.createLabel',
         signature: 'db.createLabel(newLabel :: STRING?) :: VOID'
       })
     ).toEqual({
@@ -60,7 +56,7 @@ describe('editor meta to schema conversion', () => {
   test('convert meta procedure with single return item', () => {
     expect(
       convert.toProcedure({
-        val: 'db.constraints',
+        name: 'db.constraints',
         signature: 'db.constraints() :: (description :: STRING?)'
       })
     ).toEqual({
@@ -73,7 +69,7 @@ describe('editor meta to schema conversion', () => {
   test('convert meta procedure with multiple return items', () => {
     expect(
       convert.toProcedure({
-        val: 'db.indexes',
+        name: 'db.indexes',
         signature:
           'db.indexes() :: (description :: STRING?, state :: STRING?, type :: STRING?)'
       })

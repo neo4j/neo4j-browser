@@ -44,7 +44,7 @@ import {
   executeCommand,
   listDbsCommand
 } from 'project-root/src/shared/modules/commands/commandsDuck'
-import { listAvailableProcedures } from 'project-root/src/shared/modules/cypher/procedureFactory'
+import { getListProcedureQuery } from 'shared/modules/cypher/functionsAndProceduresHelper'
 import * as editor from 'project-root/src/shared/modules/editor/editorDuck'
 import { getParams } from 'project-root/src/shared/modules/params/paramsDuck'
 import { BrowserRequestResult } from 'project-root/src/shared/modules/requests/requestsDuck'
@@ -57,10 +57,13 @@ import {
 } from 'services/cypherErrorsHelper'
 import { BrowserError } from 'services/exceptions'
 import { deepEquals } from 'neo4j-arc/common'
+import { getSemanticVersion } from 'shared/modules/dbMeta/dbMetaDuck'
+import { SemVer } from 'semver'
 
 export type ErrorsViewProps = {
   result: BrowserRequestResult
   bus: Bus
+  neo4jVersion: SemVer | null
   params: Record<string, unknown>
   executeCmd: (cmd: string) => void
   setEditorContent: (cmd: string) => void
@@ -75,7 +78,8 @@ class ErrorsViewComponent extends Component<ErrorsViewProps> {
   }
 
   render(): null | JSX.Element {
-    const { bus, params, executeCmd, setEditorContent } = this.props
+    const { bus, params, executeCmd, setEditorContent, neo4jVersion } =
+      this.props
 
     const error = this.props.result as BrowserError
     if (!error || !error.code) {
@@ -101,7 +105,9 @@ class ErrorsViewComponent extends Component<ErrorsViewProps> {
           </StyledDiv>
           {isUnknownProcedureError(error) && (
             <StyledLinkContainer>
-              <StyledLink onClick={() => executeCmd(listAvailableProcedures)}>
+              <StyledLink
+                onClick={() => executeCmd(getListProcedureQuery(neo4jVersion))}
+              >
                 <PlayIcon />
                 &nbsp;List available procedures
               </StyledLink>
@@ -142,7 +148,8 @@ class ErrorsViewComponent extends Component<ErrorsViewProps> {
 
 const mapStateToProps = (state: GlobalState) => {
   return {
-    params: getParams(state)
+    params: getParams(state),
+    neo4jVersion: getSemanticVersion(state)
   }
 }
 const mapDispatchToProps = (

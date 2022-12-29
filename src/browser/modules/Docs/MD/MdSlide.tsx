@@ -17,13 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { StyledSidebarSlide } from 'browser/modules/Carousel/styled'
 import React from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
 import Slide from '../../Carousel/Slide'
 import { splitMdColumns, splitMdRows } from './splitMd'
-import { StyledColumn, StyledRow, StyledSlide } from './styled'
+import { StyledColumn, StyledRow } from './styled'
 
 type RowProps = { row: string }
 const MdRow = ({ row = '' }: RowProps) => (
@@ -71,11 +72,11 @@ const MdSlide = ({
   isSidebarSlide = false
 }: MdSlideProps): JSX.Element => (
   <Slide isSidebarSlide={isSidebarSlide}>
-    <StyledSlide>
+    <StyledSidebarSlide>
       {splitMdRows(md).map((row, index) => (
         <MdRow key={index} row={row} />
       ))}
-    </StyledSlide>
+    </StyledSidebarSlide>
   </Slide>
 )
 

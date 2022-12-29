@@ -20,6 +20,8 @@
 
 /* global Cypress, cy, before */
 
+import { SubmitQueryButton } from '../support/commands'
+
 const GREY = 'rgb(165, 171, 182)' // Default color for nodes and relationships
 const ORANGE = 'rgb(247, 151, 103)'
 const PURPLE = 'rgb(201, 144, 192)' // Default first color for a new node label
@@ -28,11 +30,9 @@ describe('Viz rendering', () => {
   before(function () {
     cy.visit(Cypress.config('url')).title().should('include', 'Neo4j Browser')
     cy.wait(3000)
+    cy.ensureConnection()
   })
-  it('can connect', () => {
-    const password = Cypress.config('password')
-    cy.connect('neo4j', password)
-  })
+
   it('shows legend with rel types + node labels on first render', () => {
     cy.executeCommand(':clear')
     cy.executeCommand(
@@ -156,6 +156,10 @@ describe('Viz rendering', () => {
       parseSpecialCharSequences: false
     })
 
+    const zoomOutButton = cy.get(`[aria-label="zoom-out"]`)
+    zoomOutButton.click({ force: true })
+    zoomOutButton.wait(3000)
+
     // Check that zoom in button increases the size of the node in the graph view
     cy.get('svg')
       .find(`[aria-label^="graph-node"]`)
@@ -183,13 +187,13 @@ describe('Viz rendering', () => {
 
     // Multiple zoom will result in zoom reaching scale limit and the button to be disabled
     const zoomInButton = cy.get(`[aria-label="zoom-in"]`)
-    zoomInButton.click()
-    zoomInButton.click()
-    zoomInButton.click()
-    zoomInButton.click()
+    zoomInButton.click({ force: true })
+    zoomInButton.click({ force: true })
+    zoomInButton.click({ force: true })
+    zoomInButton.click({ force: true })
+    zoomInButton.click({ force: true })
 
-    // zoom in button has low opacity styling when it is disabled
-    cy.get(`[aria-label="zoom-in"]`).should('have.css', 'opacity', '0.3')
+    cy.get(`[aria-label="zoom-in"]`).should('be.disabled')
   })
   it('can zoom out with just mouse wheel in fullscreen', () => {
     cy.executeCommand(':clear')
@@ -199,11 +203,9 @@ describe('Viz rendering', () => {
 
     // Enter fullscreen
     cy.get('article').find(`[title='Fullscreen']`).click()
+    cy.get(`#svg-vis`).trigger('wheel', { deltaY: 3000 })
 
-    cy.get(`#svg-vis`).trigger('mousewheel', { deltaY: 1000 })
-
-    // zoom out limit is reached zoom so button is disabled
-    cy.get(`[aria-label="zoom-out"]`).should('have.css', 'opacity', '0.3')
+    cy.get(`[aria-label="zoom-out"]`).should('be.disabled')
 
     // Leave fullscreen
     cy.get('article').find(`[title='Close fullscreen']`).click()
@@ -214,10 +216,9 @@ describe('Viz rendering', () => {
       parseSpecialCharSequences: false
     })
 
-    cy.get(`#svg-vis`).trigger('mousewheel', { deltaY: 1000 })
+    cy.get(`#svg-vis`).trigger('wheel', { deltaY: 3000 })
 
-    // zoom out limit is reached zoom so button is disabled
-    cy.get(`[aria-label="zoom-out"]`).should('have.css', 'opacity', '1')
+    cy.get(`[aria-label="zoom-out"]`).should('be.enabled')
   })
   it('displays wheel zoom info message which can be closed', () => {
     cy.executeCommand(':clear')
@@ -225,12 +226,64 @@ describe('Viz rendering', () => {
       'CREATE (a:TestLabel)-[:CONNECTS]->(b:TestLabel) RETURN a, b'
     )
 
-    cy.get(`#svg-vis`).trigger('mousewheel', { deltaY: 1000 })
+    cy.get(`#svg-vis`).trigger('wheel', { deltaY: 3000 })
 
     cy.get('[data-testid=wheelZoomInfoCheckbox]').should('exist')
 
     cy.get('[data-testid=wheelZoomInfoCheckbox]').click()
 
     cy.get('[data-testid=wheelZoomInfoCheckbox]').should('not.exist')
+  })
+  it('can zoom out when holding down shift and scrolling', () => {
+    cy.executeCommand(':clear')
+    cy.executeCommand(`CREATE (a:TestLabel {name: 'testNode'}) RETURN a`, {
+      parseSpecialCharSequences: false
+    })
+
+    cy.get('#svg-vis').trigger('wheel', { deltaY: 3000, shiftKey: true })
+    cy.get(`[aria-label="zoom-out"]`).should('be.disabled')
+  })
+  it('can handle lots of property values and labels in node properties panel', () => {
+    const numberOfProps = 50
+    const numberOfLabels = 50
+    const queryLabels = Array.from({ length: numberOfLabels }, (x, i) => {
+      return `:label${i}`
+    }).join(' ')
+    const queryProps = Array.from({ length: numberOfProps }, (x, i) => {
+      return `prop${i}: 'hejsan'`
+    }).join(', ')
+    const query = `CREATE (nodeWithLotsOfProps ${queryLabels} { ${queryProps} }) RETURN nodeWithLotsOfProps`
+    cy.executeCommand(':clear')
+
+    // Directly set text to avoid waiting for ever when typing all chars
+    const editorTextarea = '#monaco-main-editor textarea'
+    cy.get(editorTextarea).click()
+    cy.get(editorTextarea).focus()
+    cy.get(editorTextarea)
+      .then(elem => {
+        elem.val(query)
+      })
+      .type(' {ENTER}')
+
+    // Check that can scroll overview panel
+    const showAllButtonText = 'Show all'
+    cy.get(`button:contains("${showAllButtonText}")`)
+      .scrollIntoView()
+      .should('be.visible')
+
+    // Open node properties details panel
+    const nodeSelector = '.node'
+    cy.get(nodeSelector).click()
+
+    const selectorPropsTable =
+      '[data-testid="viz-details-pane-properties-table"]'
+    cy.get(selectorPropsTable).should('be.visible')
+
+    const lastPropName = 'prop9'
+    cy.contains(lastPropName).should('exist')
+
+    // For some reason need to get to the td to be able to scroll to it, hence the parent()
+    cy.get('[data-testid="viz-details-pane-body"]').scrollTo('bottom')
+    cy.get('tr td span').contains(lastPropName).should('be.visible')
   })
 })

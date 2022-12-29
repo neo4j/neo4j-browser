@@ -24,7 +24,7 @@ import { createBus, createReduxMiddleware } from 'suber'
 import { v4 as uuid } from 'uuid'
 
 import { BoltConnectionError } from '../../services/exceptions'
-import { fetchMetaData } from '../dbMeta/actions'
+import { fetchMetaData } from '../dbMeta/dbMetaDuck'
 import { update as updateQueryResult } from '../requests/requestsDuck'
 import * as commands from './commandsDuck'
 import bolt from 'services/bolt/bolt'

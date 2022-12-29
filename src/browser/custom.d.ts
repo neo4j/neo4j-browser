@@ -40,7 +40,7 @@ declare module 'suber' {
       fn: MessageHandler,
       filterFn?: FilterFn
     ) => UnsubscribeFn
-    send: (channel: string, message: any, source?: string) => void
+    send: (channel: string, message?: any, source?: string) => void
     self: (channel: string, message: any, fn: MessageHandler) => void
     reset: () => void
     applyMiddleware: (...args: ((_: never, source: object) => void)[]) => void

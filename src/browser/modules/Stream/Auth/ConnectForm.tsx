@@ -71,10 +71,11 @@ interface ConnectFormProps {
   SSOProviders: SSOProvider[]
   SSOLoading?: boolean
   onSSOProviderClicked: () => void
+  connecting: boolean
+  setIsConnecting: (c: boolean) => void
 }
 
 export default function ConnectForm(props: ConnectFormProps): JSX.Element {
-  const [connecting, setConnecting] = useState(false)
   const [scheme, setScheme] = useState(
     props.allowedSchemes ? `${getScheme(props.host)}://` : ''
   )
@@ -113,8 +114,8 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
 
   const onConnectClick = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setConnecting(true)
-    props.onConnectClick(() => setConnecting(false))
+    props.setIsConnecting(true)
+    props.onConnectClick(() => props.setIsConnecting(false))
   }
 
   const hasSecureSchemes = ['neo4j+s', 'bolt+s'].every(scheme =>
@@ -232,6 +233,7 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
                 onChange={props.onPasswordChange}
                 defaultValue={props.password}
                 type="password"
+                autoComplete="off"
               />
             </StyledConnectionLabel>
           </StyledConnectionFormEntry>
@@ -268,7 +270,7 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
             </StyledSSOError>
           )}
 
-        {connecting
+        {props.connecting
           ? 'Connecting...'
           : props.authenticationMethod !== SSO && (
               <FormButton

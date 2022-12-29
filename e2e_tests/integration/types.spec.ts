@@ -60,10 +60,21 @@ describe('Types in Browser', () => {
       cy.executeCommand(query)
       cy.waitForCommandResult()
 
-      cy.resultContains('"2015-07-20T15:11:42[Europe/Stockholm]"')
-      // Go to ascii view
-      cy.get('[data-testid="cypherFrameSidebarAscii"]').first().click()
-      cy.resultContains('│"2015-07-20T15:11:42[Europe/Stockholm]"')
+      if (Cypress.config('serverVersion') < 4.3) {
+        cy.resultContains('"2015-07-20T15:11:42[Europe/Stockholm]"')
+        // Go to ascii view
+        cy.get('[data-testid="cypherFrameSidebarAscii"]').first().click()
+        cy.resultContains('│"2015-07-20T15:11:42[Europe/Stockholm]"')
+      } else {
+        //Split since the timezone is shown as 2015-07-20T15:11:42+02:00[Europe/Stockholm]
+        //Which changes during daylight saving time
+        cy.resultContains('"2015-07-20T15:11:42+0')
+        cy.resultContains(':00[Europe/Stockholm]"')
+        // Go to ascii view
+        cy.get('[data-testid="cypherFrameSidebarAscii"]').first().click()
+        cy.resultContains('│"2015-07-20T15:11:42+0')
+        cy.resultContains(':00[Europe/Stockholm]"')
+      }
     })
     it('presents local datetime type correctly', () => {
       cy.executeCommand(':clear')
@@ -124,6 +135,7 @@ describe('Types in Browser', () => {
       cy.resultContains('│"14:03:04"')
     })
     it('renders types in viz correctly', () => {
+      cy.executeCommand('MATCH (t:Types) DELETE t;')
       cy.executeCommand(':clear')
       const query =
         "CREATE (p:Types {{}location: point({{}crs: 'wgs-84', x: 12.78, y: 56.7}), date: duration.between(datetime('2014-07-21T21:40:36.143+0200'), date('2015-06-24'))}) RETURN p"

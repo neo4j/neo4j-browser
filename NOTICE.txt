@@ -22,6 +22,11 @@ Full license texts are found in LICENSES.txt.
 
 Third-party licenses
 --------------------
+├─ (BSD-3-Clause AND Apache-2.0)
+│  └─ chroma-js@2.4.2
+│     ├─ URL: git://github.com/gka/chroma.js.git
+│     ├─ VendorName: Gregor Aisch
+│     └─ VendorUrl: https://github.com/gka/chroma.js
 ├─ (BSD-3-Clause OR GPL-2.0)
 │  └─ node-forge@0.10.0
 │     ├─ URL: https://github.com/digitalbazaar/forge
@@ -45,7 +50,7 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/Microsoft/tslib.git
 │  │  ├─ VendorName: Microsoft Corp.
 │  │  └─ VendorUrl: https://www.typescriptlang.org/
-│  └─ tslib@1.14.1
+│  └─ tslib@2.4.0
 │     ├─ URL: https://github.com/Microsoft/tslib.git
 │     ├─ VendorName: Microsoft Corp.
 │     └─ VendorUrl: https://www.typescriptlang.org/
@@ -218,25 +223,25 @@ Third-party licenses
 │  ├─ neo4j-client-sso@1.2.2
 │  │  ├─ URL: git+https://github.com/neo4j-devtools/neo4j-client-sso.git
 │  │  └─ VendorName: Neo4j Engineering
-│  ├─ neo4j-driver-bolt-connection@4.4.2
+│  ├─ neo4j-driver-bolt-connection@5.0.0
 │  │  ├─ URL: git://github.com/neo4j/neo4j-javascript-driver.git
 │  │  ├─ VendorName: Neo4j
 │  │  └─ VendorUrl: https://github.com/neo4j/neo4j-javascript-driver#readme
-│  ├─ neo4j-driver-core@4.4.2
+│  ├─ neo4j-driver-core@5.0.0
 │  │  ├─ URL: git://github.com/neo4j/neo4j-javascript-driver.git
 │  │  ├─ VendorName: Neo4j
 │  │  └─ VendorUrl: https://github.com/neo4j/neo4j-javascript-driver#readme
-│  ├─ neo4j-driver@4.4.2
+│  ├─ neo4j-driver@5.0.0
 │  │  ├─ URL: git://github.com/neo4j/neo4j-javascript-driver.git
 │  │  └─ VendorName: Neo4j
 │  ├─ rxjs@5.5.12
 │  │  ├─ URL: git@github.com:ReactiveX/RxJS.git
 │  │  ├─ VendorName: Ben Lesh
 │  │  └─ VendorUrl: https://github.com/ReactiveX/RxJS
-│  ├─ rxjs@6.6.3
+│  ├─ rxjs@7.5.6
 │  │  ├─ URL: https://github.com/reactivex/rxjs.git
 │  │  ├─ VendorName: Ben Lesh
-│  │  └─ VendorUrl: https://github.com/ReactiveX/RxJS
+│  │  └─ VendorUrl: https://rxjs.dev/
 │  ├─ websocket-driver@0.7.4
 │  │  ├─ URL: git://github.com/faye/websocket-driver-node.git
 │  │  ├─ VendorName: James Coglan
@@ -579,6 +584,10 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/babel/babel.git
 │  │  ├─ VendorName: Sebastian McKenzie
 │  │  └─ VendorUrl: https://babeljs.io/
+│  ├─ @babel/runtime@7.19.0
+│  │  ├─ URL: https://github.com/babel/babel.git
+│  │  ├─ VendorName: The Babel Team
+│  │  └─ VendorUrl: https://babel.dev/docs/en/next/babel-runtime
 │  ├─ @babel/template@7.16.7
 │  │  ├─ URL: https://github.com/babel/babel.git
 │  │  ├─ VendorName: The Babel Team
@@ -635,6 +644,9 @@ Third-party licenses
 │  │  └─ VendorUrl: https://github.com/stardust-ui/react/tree/master/packages/react-component-ref
 │  ├─ @types/antlr4@4.7.2
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
+│  ├─ @types/chroma-js@2.1.4
+│  │  ├─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
+│  │  └─ VendorUrl: https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/chroma-js
 │  ├─ @types/color-name@1.1.1
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
 │  ├─ @types/debug@4.1.7
@@ -758,10 +770,6 @@ Third-party licenses
 │  ├─ classnames@2.3.1
 │  │  ├─ URL: https://github.com/JedWatson/classnames.git
 │  │  └─ VendorName: Jed Watson
-│  ├─ clsx@1.1.1
-│  │  ├─ URL: https://github.com/lukeed/clsx.git
-│  │  ├─ VendorName: Luke Edwards
-│  │  └─ VendorUrl: https://lukeed.com
 │  ├─ color-convert@1.9.3
 │  │  ├─ URL: https://github.com/Qix-/color-convert.git
 │  │  └─ VendorName: Heather Arthur
@@ -1359,6 +1367,10 @@ Third-party licenses
 │  │  ├─ URL: git://github.com/fent/randexp.js.git
 │  │  ├─ VendorName: Roly Fentanes
 │  │  └─ VendorUrl: http://fent.github.io/randexp.js/
+│  ├─ re-resizable@6.9.9
+│  │  ├─ URL: https://github.com/bokuweb/react-resizable-box.git
+│  │  ├─ VendorName: bokuweb
+│  │  └─ VendorUrl: https://github.com/bokuweb/react-resizable-box
 │  ├─ react-dnd-html5-backend@11.1.3
 │  │  └─ URL: https://github.com/react-dnd/react-dnd.git
 │  ├─ react-dnd@11.1.3
@@ -1366,10 +1378,6 @@ Third-party licenses
 │  ├─ react-dom@17.0.2
 │  │  ├─ URL: https://github.com/facebook/react.git
 │  │  └─ VendorUrl: https://reactjs.org/
-│  ├─ react-draggable@4.4.4
-│  │  ├─ URL: https://github.com/react-grid-layout/react-draggable.git
-│  │  ├─ VendorName: Matt Zabriskie
-│  │  └─ VendorUrl: https://github.com/react-grid-layout/react-draggable
 │  ├─ react-is@16.13.1
 │  │  ├─ URL: https://github.com/facebook/react.git
 │  │  └─ VendorUrl: https://reactjs.org/
@@ -1389,10 +1397,6 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/reduxjs/react-redux.git
 │  │  ├─ VendorName: Dan Abramov
 │  │  └─ VendorUrl: https://github.com/reduxjs/react-redux
-│  ├─ react-resizable@3.0.4
-│  │  ├─ URL: git@github.com:react-grid-layout/react-resizable.git
-│  │  ├─ VendorName: Samuel Reed
-│  │  └─ VendorUrl: https://github.com/react-grid-layout/react-resizable
 │  ├─ react-suber@1.0.4
 │  │  ├─ URL: https://github.com/oskarhane/react-suber.git
 │  │  ├─ VendorName: Oskar Hane
@@ -1423,6 +1427,9 @@ Third-party licenses
 │  │  └─ VendorUrl: http://redux.js.org/
 │  ├─ regenerator-runtime@0.13.7
 │  │  ├─ URL: https://github.com/facebook/regenerator/tree/master/packages/regenerator-runtime
+│  │  └─ VendorName: Ben Newman
+│  ├─ regenerator-runtime@0.13.9
+│  │  ├─ URL: https://github.com/facebook/regenerator/tree/master/packages/runtime
 │  │  └─ VendorName: Ben Newman
 │  ├─ regexp.prototype.flags@1.3.0
 │  │  ├─ URL: git://github.com/es-shims/RegExp.prototype.flags.git
@@ -1636,7 +1643,10 @@ Third-party licenses
 │     ├─ URL: https://github.com/wooorm/zwitch.git
 │     ├─ VendorName: Titus Wormer
 │     └─ VendorUrl: https://wooorm.com
-└─ MIT OR SEE LICENSE IN FEEL-FREE.md
-   └─ rgbcolor@1.0.1
-      ├─ URL: https://github.com/yetzt/node-rgbcolor.git
-      └─ VendorName: Sebastian Vollnhals
+├─ MIT OR SEE LICENSE IN FEEL-FREE.md
+│  └─ rgbcolor@1.0.1
+│     ├─ URL: https://github.com/yetzt/node-rgbcolor.git
+│     └─ VendorName: Sebastian Vollnhals
+└─ UNKNOWN
+   └─ @neo4j-devtools/word-color@0.0.7
+      └─ URL: git@github.com:neo4j/nx.git

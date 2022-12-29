@@ -77,7 +77,7 @@ const slides = [
       <li>
         Load product data.
         <pre className="pre-scrollable code runnable">
-          {`LOAD CSV WITH HEADERS FROM "http://data.neo4j.com/northwind/products.csv" AS row
+          {`LOAD CSV WITH HEADERS FROM "https://data.neo4j.com/northwind/products.csv" AS row
 CREATE (n:Product)
 SET n = row,
 n.unitPrice = toFloat(row.unitPrice),
@@ -88,7 +88,7 @@ n.reorderLevel = toInteger(row.reorderLevel), n.discontinued = (row.discontinued
       <li>
         Load category data.
         <pre className="pre-scrollable code runnable">
-          {`LOAD CSV WITH HEADERS FROM "http://data.neo4j.com/northwind/categories.csv" AS row
+          {`LOAD CSV WITH HEADERS FROM "https://data.neo4j.com/northwind/categories.csv" AS row
 CREATE (n:Category)
 SET n = row`}
         </pre>
@@ -96,7 +96,7 @@ SET n = row`}
       <li>
         Load supplier data.
         <pre className="pre-scrollable code runnable">
-          {`LOAD CSV WITH HEADERS FROM "http://data.neo4j.com/northwind/suppliers.csv" AS row
+          {`LOAD CSV WITH HEADERS FROM "https://data.neo4j.com/northwind/suppliers.csv" AS row
 CREATE (n:Supplier)
 SET n = row`}
         </pre>
@@ -128,7 +128,7 @@ SET n = row`}
     <hr />
     <p>
       <a help-topic="help">:help</a> <a help-topic="cypher">cypher</a>{' '}
-      <a help-topic="create-index-on">CREATE INDEX FOR</a>
+      <a help-topic="create-index">CREATE INDEX</a>
     </p>
   </BuiltInGuideSidebarSlide>,
   <BuiltInGuideSidebarSlide key="s4">
@@ -208,7 +208,7 @@ RETURN DISTINCT s.companyName as ProduceSuppliers`}
       <li>
         Load customer data.
         <pre className="pre-scrollable code runnable">
-          {`LOAD CSV WITH HEADERS FROM "http://data.neo4j.com/northwind/customers.csv" AS row
+          {`LOAD CSV WITH HEADERS FROM "https://data.neo4j.com/northwind/customers.csv" AS row
 CREATE (n:Customer)
 SET n = row`}
         </pre>
@@ -216,7 +216,7 @@ SET n = row`}
       <li>
         Load order data.
         <pre className="pre-scrollable code runnable">
-          {`LOAD CSV WITH HEADERS FROM "http://data.neo4j.com/northwind/orders.csv" AS row
+          {`LOAD CSV WITH HEADERS FROM "https://data.neo4j.com/northwind/orders.csv" AS row
 CREATE (n:Order)
 SET n = row`}
         </pre>
@@ -242,7 +242,7 @@ SET n = row`}
     <hr />
     <p>
       <a help-topic="help">:help</a> <a help-topic="cypher">cypher</a>{' '}
-      <a help-topic="create-index-on">CREATE INDEX FOR</a>
+      <a help-topic="create-index">CREATE INDEX</a>
     </p>
   </BuiltInGuideSidebarSlide>,
   <BuiltInGuideSidebarSlide key="s8">
@@ -281,7 +281,7 @@ CREATE (n)-[:PURCHASED]->(o)`}
       className="img-responsive"
     />
     <pre className="pre-scrollable code runnable">
-      {`LOAD CSV WITH HEADERS FROM "http://data.neo4j.com/northwind/order-details.csv" AS row
+      {`LOAD CSV WITH HEADERS FROM "https://data.neo4j.com/northwind/order-details.csv" AS row
 MATCH (p:Product), (o:Order)
 WHERE p.productID = row.productID AND o.orderID = row.orderID
 CREATE (o)-[details:ORDERS]->(p)

@@ -35,6 +35,8 @@ export type StyleableNodeLabelProps = {
     count?: number
   }
   graphStyle: GraphStyleModel
+  /* The total number of nodes in returned graph */
+  allNodesCount?: number | null
   onClick?: () => void
   nodes: NodeModel[]
   relationships: RelationshipModel[]
@@ -42,6 +44,7 @@ export type StyleableNodeLabelProps = {
 export function StyleableNodeLabel({
   graphStyle,
   selectedLabel,
+  allNodesCount,
   onClick,
   nodes,
   relationships
@@ -50,6 +53,9 @@ export function StyleableNodeLabel({
   const graphStyleForLabel = graphStyle.forNode({
     labels: labels
   })
+  const count =
+    selectedLabel.label === '*' ? allNodesCount : selectedLabel.count
+
   const [open, wrapperRef, handleClick] = usePopupControlled(onClick)
   const theme = useTheme()
   // console.log(theme)
@@ -75,8 +81,8 @@ export function StyleableNodeLabel({
           }}
           data-testid={`property-details-overview-node-label-${selectedLabel.label}`}
         >
-          {selectedLabel.count !== undefined
-            ? `${selectedLabel.label} (${selectedLabel.count})`
+          {count !== undefined
+            ? `${selectedLabel.label} (${count})`
             : `${selectedLabel.label}`}
         </StyledLabelChip>
       }

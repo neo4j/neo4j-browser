@@ -23,6 +23,7 @@ import { v4 } from 'uuid'
 import { BoltConnectionError } from '../exceptions'
 import { buildTxFunctionByMode } from './boltHelpers'
 import { getGlobalDrivers } from './globalDrivers'
+import { defaultTxMetadata } from './txMetadata'
 
 const runningQueryRegister: Record<string, (cb?: () => void) => void> = {}
 
@@ -31,7 +32,7 @@ function _trackedTransaction(
   parameters = {},
   session?: Session,
   requestId = null,
-  txMetadata = undefined,
+  txMetadata = defaultTxMetadata.txMetadata,
   autoCommit = false
 ): [string, Promise<unknown>] {
   const id = requestId || v4()
@@ -63,7 +64,7 @@ function _trackedTransaction(
       txFn!(
         (tx: { run: (input: string, parameters: unknown) => unknown }) =>
           tx.run(input, parameters),
-        metadata
+        metadata as any
       )
   } else {
     // Auto-Commit transaction, only used for PERIODIC COMMIT etc.
@@ -86,14 +87,14 @@ function _transaction(
   input: string,
   parameters: unknown,
   session: any,
-  txMetadata = undefined
+  txMetadata = defaultTxMetadata.txMetadata
 ): Promise<unknown> {
   if (!session) return Promise.reject(BoltConnectionError())
 
   const metadata = txMetadata ? { metadata: txMetadata } : undefined
   const txFn = buildTxFunctionByMode(session)
 
-  return txFn((tx: any) => tx.run(input, parameters), metadata)
+  return txFn!((tx: any) => tx.run(input, parameters), metadata)
     .then((r: any) => {
       session.close()
       return r

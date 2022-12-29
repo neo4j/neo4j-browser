@@ -49,7 +49,11 @@ describe('Bolt connections', () => {
       cy.connect('neo4j', password)
 
       cy.executeCommand(':queries')
-      cy.resultContains('dbms.listQueries')
+      if (Cypress.config('serverVersion') < 5.0) {
+        cy.resultContains('dbms.listQueries')
+      } else {
+        cy.resultContains('SHOW TRANSACTIONS')
+      }
     })
   }
 
@@ -59,15 +63,15 @@ describe('Bolt connections', () => {
       const password = Cypress.config('password')
       cy.connect('neo4j', password)
 
-      cy.createUser('noroles', 'pw', true)
+      cy.createUser('noroles', 'password123', true)
       cy.executeCommand(':server disconnect')
       cy.executeCommand(':clear')
       cy.executeCommand(':server connect')
 
       // Make sure initial pw set works
       cy.setInitialPassword(
-        '.',
-        'pw',
+        'password1234',
+        'password123',
         'noroles',
         Cypress.config('boltUrl'),
         true
@@ -75,7 +79,7 @@ describe('Bolt connections', () => {
 
       // Try regular connect
       cy.executeCommand(':server disconnect')
-      cy.connect('noroles', '.')
+      cy.connect('noroles', 'password1234')
 
       // Check sidebar
       cy.get('[data-testid="navigationDBMS"]').click()

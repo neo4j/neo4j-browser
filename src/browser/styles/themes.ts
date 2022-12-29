@@ -168,6 +168,7 @@ export const dark = {
   headerText: '#f4f4f4',
   primaryHeaderText: '#f4f4f4',
   link: '#5CA6D9',
+  linkHover: '#1e70bf',
   topicText: '#fff',
   preText: '#fff',
   asideText: 'rgb(255, 255, 255, 0.87)',

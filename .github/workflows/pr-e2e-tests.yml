@@ -1,0 +1,53 @@
+name: 'Browser PR e2e tests'
+
+on:
+  pull_request:
+    branches: [master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  e2e-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        neo4j-version:
+          - 3.5
+          - 4.3
+          - 4.4
+          - 5
+        neo4j-edition:
+          - community
+          - enterprise
+    services:
+      neo4j:
+        image: neo4j:${{ matrix.neo4j-version }}-${{ matrix.neo4j-edition }}
+        env:
+          NEO4J_ACCEPT_LICENSE_AGREEMENT: yes
+        ports:
+          - 7687:7687
+          - 7474:7474
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+      - run: npm -g install yarn serve
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
+      - run: sudo apt-get update
+      - run: sudo apt-get -y install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
+      - run: npx serve -l 8080 dist & npm run wait-on-neo4j && yarn wait-on-dev
+      - run: echo "Servers ready!"
+      - run: yarn e2e --env server=${{ matrix.neo4j-version }},browser-password=password,edition=${{ matrix.neo4j-edition }}
+      - name: Upload test screenshots
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-screenshots-${{ matrix.neo4j-version }}-${{ matrix.neo4j-edition }}
+          path: |
+            ./e2e_tests/screenshots
+            ./e2e_tests/videos

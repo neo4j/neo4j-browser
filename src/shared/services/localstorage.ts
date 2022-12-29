@@ -23,7 +23,7 @@ import { Middleware } from 'redux'
 import {
   shouldRetainConnectionCredentials,
   shouldRetainEditorHistory
-} from '../modules/dbMeta/state'
+} from '../modules/dbMeta/dbMetaDuck'
 import { initialState as settingsInitialState } from '../modules/settings/settingsDuck'
 import { GlobalState } from 'shared/globalState'
 

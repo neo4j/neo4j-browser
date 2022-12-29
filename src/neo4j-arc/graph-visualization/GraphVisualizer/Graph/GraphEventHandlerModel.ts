@@ -30,6 +30,16 @@ import {
 } from '../../utils/mapper'
 import { Visualization } from './visualization/Visualization'
 
+export type GraphInteraction =
+  | 'NODE_EXPAND'
+  | 'NODE_UNPINNED'
+  | 'NODE_DISMISSED'
+
+export type GraphInteractionCallBack = (
+  event: GraphInteraction,
+  properties?: Record<string, unknown>
+) => void
+
 export class GraphEventHandlerModel {
   getNodeNeighbours: GetNodeNeighboursFn
   graph: GraphModel
@@ -37,6 +47,7 @@ export class GraphEventHandlerModel {
   onGraphModelChange: (stats: GraphStats) => void
   onItemMouseOver: (item: VizItem) => void
   onItemSelected: (item: VizItem) => void
+  onGraphInteraction: GraphInteractionCallBack
   selectedItem: NodeModel | RelationshipModel | null
   filterNodeNeighbours: (
     node: { id: string },
@@ -50,7 +61,8 @@ export class GraphEventHandlerModel {
     onItemMouseOver: (item: VizItem) => void,
     onItemSelected: (item: VizItem) => void,
     onGraphModelChange: (stats: GraphStats) => void,
-    filterNodeNeighbours: GraphEventHandlerModel['filterNodeNeighbours']
+    filterNodeNeighbours: GraphEventHandlerModel['filterNodeNeighbours'],
+    onGraphInteraction?: (event: GraphInteraction) => void
   ) {
     this.graph = graph
     this.visualization = visualization
@@ -58,6 +70,8 @@ export class GraphEventHandlerModel {
     this.selectedItem = null
     this.onItemMouseOver = onItemMouseOver
     this.onItemSelected = onItemSelected
+    this.onGraphInteraction = onGraphInteraction ?? (() => undefined)
+
     this.onGraphModelChange = onGraphModelChange
     this.filterNodeNeighbours = filterNodeNeighbours
   }
@@ -111,6 +125,7 @@ export class GraphEventHandlerModel {
       restartSimulation: true
     })
     this.graphModelChanged()
+    this.onGraphInteraction('NODE_DISMISSED')
   }
 
   nodeClicked(node: NodeModel): void {
@@ -138,6 +153,7 @@ export class GraphEventHandlerModel {
     d.fx = null
     d.fy = null
     this.deselectItem()
+    this.onGraphInteraction('NODE_UNPINNED')
   }
 
   nodeFilterClicked(d: any) {
@@ -189,6 +205,7 @@ export class GraphEventHandlerModel {
         graphModelChanged()
       }
     )
+    this.onGraphInteraction('NODE_EXPAND')
   }
 
   nodeCollapse(d: NodeModel): void {

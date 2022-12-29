@@ -10,7 +10,7 @@ import {
   SysInfoTableContainer,
   SysInfoTableEntry
 } from 'browser-components/Tables'
-import { Database } from 'shared/modules/dbMeta/state'
+import { Database } from 'shared/modules/dbMeta/dbMetaDuck'
 
 type SysInfoFrameProps = {
   databases: Database[]
@@ -18,7 +18,7 @@ type SysInfoFrameProps = {
   idAllocation: DatabaseMetric[]
   pageCache: DatabaseMetric[]
   transactions: DatabaseMetric[]
-  casualClusterMembers: DatabaseMetric[]
+  clusterMembers: DatabaseMetric[]
   isEnterpriseEdition: boolean
   hasMultiDbSupport: boolean
 }
@@ -30,7 +30,7 @@ export const SysInfoTable = ({
   idAllocation,
   transactions,
   isEnterpriseEdition,
-  casualClusterMembers,
+  clusterMembers,
   hasMultiDbSupport
 }: SysInfoFrameProps): JSX.Element => {
   const mappedDatabases = [
@@ -63,12 +63,12 @@ export const SysInfoTable = ({
         {buildTableData(transactions)}
       </StyledSysInfoTable>
       {hasMultiDbSupport && buildDatabaseTable(mappedDatabases)}
-      {casualClusterMembers.length > 0 && (
+      {clusterMembers.length > 0 && (
         <StyledSysInfoTable
           key="cc-table"
           header={
-            <span data-testid="sysinfo-casual-cluster-members-title">
-              Causal Cluster Members{' '}
+            <span data-testid="sysinfo-cluster-members-title">
+              Cluster Members{' '}
               <QuestionIcon title="Values shown in `:sysinfo` may differ between cluster members" />
             </span>
           }
@@ -78,7 +78,7 @@ export const SysInfoTable = ({
             key="cc-entry"
             headers={['Roles', 'Addresses', 'Actions']}
           />
-          {buildTableData(casualClusterMembers)}
+          {buildTableData(clusterMembers)}
         </StyledSysInfoTable>
       )}
     </SysInfoTableContainer>
