@@ -5,3 +5,4 @@ mvn
 cypress
 yarn-cache
 coverage/
+src/browser/documentation
