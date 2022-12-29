@@ -201,7 +201,7 @@ LIMIT ${withLimit ? maxNewNeighbours : 10000}`
         this.props.bus.self(
           CYPHER_REQUEST,
           { query: query, queryType: NEO4J_BROWSER_USER_ACTION_QUERY },
-          (response: any) => {
+          response => {
             if (!response.success) {
               reject(new Error())
             } else {

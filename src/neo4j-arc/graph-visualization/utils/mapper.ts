@@ -55,18 +55,20 @@ export function mapRelationships(
   relationships: BasicRelationship[],
   graph: GraphModel
 ): RelationshipModel[] {
-  return relationships.map(rel => {
-    const source = graph.findNode(rel.startNodeId)
-    const target = graph.findNode(rel.endNodeId)
-    return new RelationshipModel(
-      rel.id,
-      source,
-      target,
-      rel.type,
-      mapProperties(rel.properties),
-      rel.propertyTypes
-    )
-  })
+  return relationships
+    .map(rel => {
+      const source = graph.findNode(rel.startNodeId)
+      const target = graph.findNode(rel.endNodeId)
+      return new RelationshipModel(
+        rel.id,
+        source,
+        target,
+        rel.type,
+        mapProperties(rel.properties),
+        rel.propertyTypes
+      )
+    })
+    .filter(t => t.source != undefined && t.target != undefined)
 }
 
 export type GraphStatsLabels = Record<
