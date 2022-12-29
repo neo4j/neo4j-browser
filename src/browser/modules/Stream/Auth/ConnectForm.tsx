@@ -44,6 +44,10 @@ import {
   SSOProvider
 } from 'shared/modules/connections/connectionsDuck'
 import { AUTH_STORAGE_CONNECT_HOST } from 'shared/services/utils'
+import { hasReachableServer } from 'neo4j-driver'
+import { CheckedSquareIcon } from 'browser-components/icons/LegacyIcons'
+import { Button } from '@neo4j-ndl/react'
+import AutoExecButton from '../auto-exec-button'
 
 const readableauthenticationMethods: Record<AuthenticationMethod, string> = {
   [NATIVE]: 'Username / Password',
@@ -109,6 +113,11 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
 
   const onSchemeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const val = e.target.value
+
+    hasReachableServer(val + stripScheme(props.host))
+      .then(() => setIsReachable('succeeded'))
+      .catch(() => setIsReachable('failed'))
+
     props.onHostChange(getScheme(val), stripScheme(props.host))
   }
 
@@ -135,12 +144,38 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
   const { SSOError, SSOProviders, SSOLoading } = props
   const [SSORedirectError, setRedirectError] = useState('')
 
+  const [isReachable, setIsReachable] = useState<
+    'no_attempt' | 'failed' | 'succeeded'
+  >('no_attempt')
+
+  useEffect(() => {
+    let mounted = true
+    if (stripScheme(props.host)) {
+      hasReachableServer(props.host)
+        .then(() => {
+          if (mounted) {
+            setIsReachable('succeeded')
+          }
+        })
+        .catch(() => {
+          if (mounted) {
+            setIsReachable('failed')
+          }
+        })
+    }
+    return () => {
+      mounted = false
+    }
+  }, [])
+
   return (
     <StyledFormContainer>
       <StyledConnectionForm onSubmit={onConnectClick}>
         <StyledConnectionFormEntry>
           <StyledConnectionLabel htmlFor="url-input" title={hoverText}>
-            Connect URL
+            Connect URL{' '}
+            {isReachable === 'succeeded' && '- Reachable server detected ✅'}
+            {isReachable === 'failed' && <>- Could not reach server </>}
           </StyledConnectionLabel>
           {schemeRestriction ? (
             <>
@@ -160,11 +195,19 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
                   })}
                 </StyledConnectionSelect>
                 <StyledConnectionTextInput
+                  style={
+                    isReachable === 'failed' ? { outline: 'red 1px solid' } : {}
+                  }
                   onCopy={onCopyBoltUrl}
                   data-testid="boltaddress"
                   onChange={onHostChange}
                   value={stripScheme(props.host)}
                   id="url-input"
+                  onBlur={() =>
+                    hasReachableServer(props.host)
+                      .then(() => setIsReachable('succeeded'))
+                      .catch(() => setIsReachable('failed'))
+                  }
                 />
               </StyledSegment>
               <StyledBoltUrlHintText className="url-hint-text">
@@ -176,9 +219,27 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
               data-testid="boltaddress"
               onChange={onHostChange}
               defaultValue={props.host}
+              onBlur={() =>
+                hasReachableServer(props.host)
+                  .then(() => setIsReachable('succeeded'))
+                  .catch(() => setIsReachable('failed'))
+              }
             />
           )}
         </StyledConnectionFormEntry>
+
+        {isReachable === 'failed' && (
+          <StyledConnectionFormEntry>
+            <AutoExecButton cmd="debug connecitivity" />
+            {stripScheme(props.host) === window.location.host && (
+              <div>
+                Neo4j Browser connects to the server via the bolt protocol,
+                available by default on port 7687.
+              </div>
+            )}
+          </StyledConnectionFormEntry>
+        )}
+
         {props.supportsMultiDb && (
           <StyledConnectionFormEntry>
             <StyledConnectionLabel>
@@ -273,13 +334,22 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
         {props.connecting
           ? 'Connecting...'
           : props.authenticationMethod !== SSO && (
-              <FormButton
-                data-testid="connect"
-                type="submit"
-                style={{ marginRight: 0 }}
+              <span
+                title={
+                  isReachable !== 'succeeded'
+                    ? 'Make sure a neo4j server is reachable at the connect URL.'
+                    : 'Connect.'
+                }
               >
-                Connect
-              </FormButton>
+                <FormButton
+                  data-testid="connect"
+                  type="submit"
+                  style={{ marginRight: 0 }}
+                  disabled={isReachable !== 'succeeded'}
+                >
+                  Connect
+                </FormButton>
+              </span>
             )}
       </StyledConnectionForm>
     </StyledFormContainer>

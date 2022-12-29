@@ -120,6 +120,10 @@ const StyledFormButton = styled.button`
     color: ${props => props.theme.secondaryButtonTextHover};
     border: 1px solid ${props => props.theme.primary50};
   }
+  &:disabled {
+    opacity: 0.4;
+    pointer-events: none;
+  }
 `
 
 const StyledTagButton = styled(StyledFormButton)`
