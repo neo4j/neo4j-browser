@@ -5,7 +5,8 @@ import {
   DIRECT_CONNECTION,
   ROUTED_READ_CONNECTION,
   ROUTED_WRITE_CONNECTION,
-  closeGlobalConnection
+  closeGlobalConnection,
+  ensureConnection
 } from './boltConnection'
 import { isBoltConnectionErrorCode } from './boltConnectionErrors'
 import {
@@ -25,7 +26,6 @@ import {
   routedWriteTransaction
 } from './transactions'
 import { applyGraphTypes } from 'services/bolt/boltMappings'
-import { getGlobalDrivers } from './globalDrivers'
 
 type WorkerMessage = {
   data: {
@@ -88,41 +88,11 @@ const runCypherMessage = async (
   const onLostConnection = () =>
     postMessage(boltConnectionErrorMessage(BoltConnectionError()))
 
-  const driver = getGlobalDrivers()?.getDirectDriver()
-  /*
-  något sånt här istället kanske?
-  
-  class ConnectivityVerifier {
-  constructor(
-    private readonly _driver: Driver,
-    private readonly _intervalInMilliseconds: number,
-    private _lastVerification: number = 0,
-    private _lastVerificationFailed:  boolean = false) {
-
-  }
-
-  async execute (opts = {}): Promise<void> {
-    try {
-      if (!this._lastVerificationFailed || Date.now() - this._lastVerification > this._intervalInMilliseconds)
-        await this._driver.verifyConnectivity(opts)
-      this._lastVerificationFailed = false
-    } catch (e) {
-      this._lastVerificationFailed = true
-      throw e
-    } finally {
-      this._lastVerification = Date.now()
-    }
-  }
-}
-
-*/
-  if (driver) {
-    try {
-      await driver.verifyConnectivity()
-    } catch {
-      onLostConnection()
-    }
-  }
+  await ensureConnection(
+    connectionProperties as any,
+    connectionProperties.opts,
+    onLostConnection
+  )
 
   const transactionType = connectionTypeMap[connectionType]
   const res: any = transactionType(input, applyGraphTypes(parameters), {

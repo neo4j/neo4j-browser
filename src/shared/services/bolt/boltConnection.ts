@@ -185,3 +185,21 @@ export const closeGlobalConnection = (): void => {
     unsetGlobalDrivers()
   }
 }
+
+export const ensureConnection = (
+  props: Connection,
+  opts: Record<string, unknown>,
+  onLostConnection: () => void
+): Promise<unknown> => {
+  const session = getGlobalDrivers()
+    ?.getDirectDriver()
+    ?.session({ defaultAccessMode: neo4j.session.READ })
+  if (session) {
+    return new Promise<void>(resolve => {
+      session.close()
+      resolve()
+    })
+  } else {
+    return openConnection(props, opts, onLostConnection)
+  }
+}
