@@ -351,7 +351,7 @@ const availableCommands = [
     name: 'debug connectivity',
     match: (cmd: string) => /^debug connectivity/.test(cmd),
     exec: function (action: any, put: any, store: any) {
-      const debugURL = action.cmd.slice(':debug connectivity'.length)
+      const debugURL = action.cmd.slice(':debug connectivity'.length).trim()
 
       put(
         frames.add({

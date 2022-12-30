@@ -1,91 +1,162 @@
-import { hasReachableServer } from 'neo4j-driver'
+import { SpinnerIcon } from 'browser-components/icons/LegacyIcons'
+import { hasReachableServer, Neo4jError } from 'neo4j-driver'
 import React, { useEffect, useState } from 'react'
 import { stripScheme } from 'services/boltscheme.utils'
+import { isValidUrl } from 'shared/modules/commands/helpers/http'
+import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
+import { httpReachabilityCheck, HttpReachablityState } from './Auth/ConnectForm'
+import { StyledConnectionTextInput } from './Auth/styled'
 import { BaseFrameProps } from './Stream'
 
+httpReachabilityCheck
+/*  Detectable Edgecases
+
+Entering 7474
+SSL + bare IP 
+Pausad neo4j aura
+*/
+
+/* Docs
+- Websockets krävs. Discovery API krävs inte men bra för debugging.
+- Länk om self signed certs
+- Länk om let's encrypt
+- Mixing secure/unsecure generally does not work
+*/
+
+// always
+
+// Check if we found the HTTP connector
+
+/* TODO
+- e2e tests
+
+*/
+async function boltReachabilityCheck(url: string, secure: boolean) {
+  try {
+    //const url2 = url.split('+s').join()
+    // Explicitly turn on/off encryption
+    await hasReachableServer(url, {
+      encrypted: secure //url.startsWith('+s') ? 'ENCRYPTION_ON' : 'ENCRYPTION_OFF'
+    })
+    return true
+  } catch (e) {
+    console.log(e)
+    return e as Neo4jError
+  }
+}
+
+// Hantera https browser försöker ansluta till lokal grej...
+// Testa om kan göra en websocket och sen först.
+
+// TODO fråga om problematiskt att öppna ws
+// TODO fråga om det gör någon skillnad med bolt:// vs neo4j://
+// TODO jag är på HTTPs och försöker göra hasReachableServer(bolt://) men min websocket blir uppgraderad. hur kan jag upptäcka?
+// TODO Kolla så det inte börjar kasta oväntat i https elller så. Testing Matrix.
+
+const protocols = ['bolt://', 'bolt+s://'] as const
 const DebugConnectivityFrame = (props: BaseFrameProps) => {
-  // TODO If you're struggling with setting up certs -> link!
-
-  // TODO check for neo4j at default ports?
-
-  // TODO skriv med text att man behöver ha en websocket connection till neo4j för att fungera
-
-  // TODO om de använder SSL === make sure not writing IP? för det måste vara en domän
-
-  // TODO Aura instans -> Hur beter sig om den är pausad?
-
-  // TODO mention +SSC not working in browser. If you use self signed cert -> link.
   const [debugUrl, setDebugUrl] = useState(
     stripScheme(props.frame.urlToDebug ?? '')
   )
-  console.log(props.frame.urlToDebug, debugUrl)
+
   useEffect(() => {
     setDebugUrl(props.frame.urlToDebug ?? '')
   }, [props.frame.urlToDebug])
 
-  // I denna HTTP checken -> ge felet CORS === förmodligne inget där
+  const [httpReachable, setHttpReachable] =
+    useState<HttpReachablityState>('noRequest')
+  const [httpsReachable, setHttpsReachable] = useState<HttpReachablityState>()
 
-  // if neo4j is reachable. but you still get an odd websocket error -> what could be wrong? misconfigured SSL
-  // grå ut men låta en göra det ändå?
+  const [wsReachable, setWsReachable] = useState<boolean | undefined>()
+  const [wssReachable, setWssReachable] = useState<boolean | undefined>()
+  // TODO kolla 7687 grejern för includes inte superän
 
+  // TOdo man man explicit slå på conn
+  const [boltReachabilty, setBoltReachablity] = useState<
+    'loading' | Record<string, true | Neo4jError>
+  >('loading')
   useEffect(() => {
-    // TODO e2e tests
-    // kolla http vs https också
-    // TODO check that is valid URL
-    fetch(`https://${debugUrl}`)
-      .then(res => res.json())
-      .then(r => {
-        if ('auth_config' in r && 'oidc_providers' in r.auth_config) {
-          console.log('success')
-        } else {
-          console.log('fail')
+    try {
+      const hostname = stripScheme(debugUrl)
+      if (isValidUrl(`http://${hostname}`)) {
+        /*
+        // TODO timea ut också
+        const ws = new WebSocket(`ws://${hostname}`)
+        ws.onclose = e => {
+          setWsReachable(e.wasClean)
         }
-      })
-      .catch(e => console.log(e.cause))
+        ws.onopen = () => ws.close()
 
-    fetch(`http://${debugUrl}`)
-      .then(res => res.json())
-      .then(r => {
-        if ('auth_config' in r && 'oidc_providers' in r.auth_config) {
-          console.log('success')
-        } else {
-          console.log('fail')
+        const wss = new WebSocket(`wss://${hostname}`)
+        wss.onclose = e => {
+          setWssReachable(e.wasClean)
         }
-      })
-      .catch(e => console.log(e.cause))
+        wss.onopen = () => wss.close()
+        */
 
-    /*
-    hasReachableServer(`bolt://${debugUrl}`)
-      .then(console.log)
-      .catch(e => console.log(e.cause))
-      */
+        setBoltReachablity('loading')
+        Promise.all(
+          protocols.map(protocol =>
+            boltReachabilityCheck(
+              'bolt://' + hostname,
+              protocol === 'bolt+s://'
+            )
+          )
+        ).then(results =>
+          setBoltReachablity(
+            results.reduce(
+              (acc, curr, index) => ({ ...acc, [protocols[index]]: curr }),
+              {}
+            )
+          )
+        )
 
-    hasReachableServer(`neo4j://${debugUrl}`)
-      .then(console.log)
-      .catch(e => console.log(e.cause))
-
-    /*
-    hasReachableServer(`bolt+s://${debugUrl}`)
-      .then(console.log)
-      .catch(e => console.log(e.cause))
-
-    hasReachableServer(`neo4j+s://${debugUrl}`)
-      .then(console.log)
-      .catch(e => console.log(e.cause))
-      */
+        httpReachabilityCheck(`https://${hostname}`).then(setHttpsReachable)
+        httpReachabilityCheck(`http://${hostname}`).then(setHttpReachable)
+      }
+    } catch (e) {
+      console.log(e)
+    }
   }, [debugUrl])
 
+  const validUrl = isValidUrl(`http://${stripScheme(debugUrl)}`)
   return (
-    <div>
-      <h6>
-        Neo4j Browser communicates with Neo4j Server via websocket over the
-        bolt:// protocol by default done on port 7688. This{' '}
-      </h6>
-      <label>
-        Connect URL
-        <input value={debugUrl} onChange={e => setDebugUrl(e.target.value)} />
-      </label>
-    </div>
+    <FrameBodyTemplate
+      isCollapsed={props.isCollapsed}
+      isFullscreen={props.isFullscreen}
+      contents={
+        <div>
+          <div style={{ marginBottom: '10px' }}>
+            Browser hosted on:{' '}
+            <pre style={{ display: 'inline' }}>{window.location.protocol}</pre>{' '}
+          </div>
+          <label>
+            Connect URL
+            <StyledConnectionTextInput
+              value={debugUrl}
+              onChange={e => setDebugUrl(e.target.value)}
+            />
+          </label>
+          <div> {!validUrl && 'invalid URL format'} </div>
+          <div> Discover Api over HTTP status: {httpReachable} </div>
+          <div> Discover Api over HTTPS status: {httpsReachable} </div>
+          <div> wsReachable {wsReachable ? 'yes' : 'no'}</div>
+          <div> wssReachable {wssReachable ? 'yes' : 'no'}</div>
+          {boltReachabilty === 'loading' ? (
+            <SpinnerIcon />
+          ) : (
+            protocols.map(p => {
+              const res = boltReachabilty[p]
+              return (
+                <div key={p}>
+                  {p} {'->'} {res === true ? 'Reached' : res.code}{' '}
+                </div>
+              )
+            })
+          )}
+        </div>
+      }
+    />
   )
 }
 export default DebugConnectivityFrame

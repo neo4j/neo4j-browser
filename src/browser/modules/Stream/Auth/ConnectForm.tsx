@@ -78,14 +78,19 @@ interface ConnectFormProps {
   setIsConnecting: (c: boolean) => void
 }
 
+export type HttpReachablityState =
+  | 'noRequest'
+  | 'requestFailed'
+  | 'parsingJsonFailed'
+  | 'foundNeo4j'
+  | 'foundOtherJSON'
+
 export async function httpReachabilityCheck(
   url: string
-): Promise<
-  'requestFailed' | 'parsingJsonFailed' | 'foundNeo4j' | 'foundOtherJSON'
-> {
+): Promise<HttpReachablityState> {
   let res
   try {
-    res = await fetch(`http://${stripScheme(url)}`)
+    res = await fetch(url)
   } catch {
     return 'requestFailed'
   }
@@ -133,7 +138,7 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
 
   async function reachabilityCheck(url: string) {
     setReachablityState('loading')
-    const res = await httpReachabilityCheck(url)
+    const res = await httpReachabilityCheck(`http://${stripScheme(url)}`)
 
     // Being reachable by http is not a requirement, and not supported on 3.5
     // So we only short circuit if we know we found something that is not neo4j
@@ -141,7 +146,11 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
       setReachablityState('failed')
     } else {
       try {
-        await hasReachableServer(url)
+        const url2 = url.split('+s').join()
+        // Explicitly turn on/off encryption
+        await hasReachableServer(url2, {
+          encrypted: url.startsWith('+s') ? 'ENCRYPTION_ON' : 'ENCRYPTION_OFF'
+        })
         setReachablityState('succeeded')
       } catch {
         setReachablityState('failed')
@@ -208,6 +217,9 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
                 <>
                   {' '}
                   - Could not reach Neo4j.{' '}
+                  {props.host.includes('localhost') &&
+                    !props.host.includes('7687') &&
+                    '(default port is 7687) '}
                   <AutoExecButton
                     displayText=":debug"
                     cmd={`debug connectivity ${props.host}`}
@@ -260,17 +272,6 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
             />
           )}
         </StyledConnectionFormEntry>
-
-        {reachabilityState === 'failed' && (
-          <StyledConnectionFormEntry>
-            {stripScheme(props.host) === window.location.host && (
-              <div>
-                Neo4j Browser connects to the server via the bolt protocol,
-                available by default on port 7687.
-              </div>
-            )}
-          </StyledConnectionFormEntry>
-        )}
 
         {props.supportsMultiDb && (
           <StyledConnectionFormEntry>
