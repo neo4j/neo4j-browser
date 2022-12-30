@@ -45,8 +45,6 @@ import {
 } from 'shared/modules/connections/connectionsDuck'
 import { AUTH_STORAGE_CONNECT_HOST } from 'shared/services/utils'
 import { hasReachableServer } from 'neo4j-driver'
-import { CheckedSquareIcon } from 'browser-components/icons/LegacyIcons'
-import { Button } from '@neo4j-ndl/react'
 import AutoExecButton from '../auto-exec-button'
 
 const readableauthenticationMethods: Record<AuthenticationMethod, string> = {
@@ -114,6 +112,9 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
   const onSchemeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const val = e.target.value
 
+    // TOOD se till att inte få fel på bolt & bolt+s
+    // TODO gör en enkel fetch först för vi kan anta det är en modern NEO4J
+    // TODO loading grej under tiden
     hasReachableServer(val + stripScheme(props.host))
       .then(() => setIsReachable('succeeded'))
       .catch(() => setIsReachable('failed'))
@@ -145,7 +146,7 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
   const [SSORedirectError, setRedirectError] = useState('')
 
   const [isReachable, setIsReachable] = useState<
-    'no_attempt' | 'failed' | 'succeeded'
+    'no_attempt' | 'loading' | 'failed' | 'succeeded'
   >('no_attempt')
 
   useEffect(() => {
@@ -168,14 +169,24 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
     }
   }, [])
 
+  // TODO invalidate on change
   return (
     <StyledFormContainer>
       <StyledConnectionForm onSubmit={onConnectClick}>
         <StyledConnectionFormEntry>
           <StyledConnectionLabel htmlFor="url-input" title={hoverText}>
-            Connect URL{' '}
-            {isReachable === 'succeeded' && '- Reachable server detected ✅'}
-            {isReachable === 'failed' && <>- Could not reach server </>}
+            Connect URL
+            {isReachable === 'succeeded' && ' - neo4j server reachable ✅'}
+            {isReachable === 'failed' && (
+              <>
+                {' '}
+                - Could not reach neo4j.{' '}
+                <AutoExecButton
+                  displayText=":debug"
+                  cmd={`debug connectivity ${props.host}`}
+                />
+              </>
+            )}
           </StyledConnectionLabel>
           {schemeRestriction ? (
             <>
@@ -230,7 +241,6 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
 
         {isReachable === 'failed' && (
           <StyledConnectionFormEntry>
-            <AutoExecButton cmd="debug connecitivity" />
             {stripScheme(props.host) === window.location.host && (
               <div>
                 Neo4j Browser connects to the server via the bolt protocol,

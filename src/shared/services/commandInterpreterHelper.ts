@@ -348,8 +348,25 @@ const availableCommands = [
     }
   },
   {
+    name: 'debug connectivity',
+    match: (cmd: string) => /^debug connectivity/.test(cmd),
+    exec: function (action: any, put: any, store: any) {
+      const debugURL = action.cmd.slice(':debug connectivity'.length)
+
+      // TODO när löst alla andra TODOs prata med micheal hunger & phil.
+      put(
+        frames.add({
+          useDb: getUseDb(store.getState()),
+          ...action,
+          type: 'debug-connectivity',
+          urlToDebug: debugURL
+        })
+      )
+    }
+  },
+  {
     name: 'client-debug',
-    match: (cmd: any) => /^debug$/.test(cmd),
+    match: (cmd: string) => /^debug$/.test(cmd),
     exec: function (action: any, put: any, store: any) {
       const out = {
         userCapabilities: getUserCapabilities(store.getState()),
