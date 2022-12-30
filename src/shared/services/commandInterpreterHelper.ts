@@ -353,7 +353,6 @@ const availableCommands = [
     exec: function (action: any, put: any, store: any) {
       const debugURL = action.cmd.slice(':debug connectivity'.length)
 
-      // TODO när löst alla andra TODOs prata med micheal hunger & phil.
       put(
         frames.add({
           useDb: getUseDb(store.getState()),

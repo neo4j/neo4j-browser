@@ -26,6 +26,7 @@ const DebugConnectivityFrame = (props: BaseFrameProps) => {
   // I denna HTTP checken -> ge felet CORS === förmodligne inget där
 
   // if neo4j is reachable. but you still get an odd websocket error -> what could be wrong? misconfigured SSL
+  // grå ut men låta en göra det ändå?
 
   useEffect(() => {
     // TODO e2e tests

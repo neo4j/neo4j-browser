@@ -46,6 +46,7 @@ import {
 import { AUTH_STORAGE_CONNECT_HOST } from 'shared/services/utils'
 import { hasReachableServer } from 'neo4j-driver'
 import AutoExecButton from '../auto-exec-button'
+import { SmallSpinnerIcon } from 'browser-components/icons/LegacyIcons'
 
 const readableauthenticationMethods: Record<AuthenticationMethod, string> = {
   [NATIVE]: 'Username / Password',
@@ -77,6 +78,32 @@ interface ConnectFormProps {
   setIsConnecting: (c: boolean) => void
 }
 
+export async function httpReachabilityCheck(
+  url: string
+): Promise<
+  'requestFailed' | 'parsingJsonFailed' | 'foundNeo4j' | 'foundOtherJSON'
+> {
+  let res
+  try {
+    res = await fetch(`http://${stripScheme(url)}`)
+  } catch {
+    return 'requestFailed'
+  }
+
+  let json
+  try {
+    json = await res.json()
+  } catch {
+    return 'parsingJsonFailed'
+  }
+
+  if ('auth_config' in json && 'oidc_providers' in json.auth_config) {
+    return 'foundNeo4j'
+  } else {
+    return 'foundOtherJSON'
+  }
+}
+
 export default function ConnectForm(props: ConnectFormProps): JSX.Element {
   const [scheme, setScheme] = useState(
     props.allowedSchemes ? `${getScheme(props.host)}://` : ''
@@ -104,7 +131,26 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
     e.clipboardData?.setData('text', val)
   }
 
+  async function reachabilityCheck(url: string) {
+    setReachablityState('loading')
+    const res = await httpReachabilityCheck(url)
+
+    // Being reachable by http is not a requirement, and not supported on 3.5
+    // So we only short circuit if we know we found something that is not neo4j
+    if (res === 'parsingJsonFailed' || res === 'foundOtherJSON') {
+      setReachablityState('failed')
+    } else {
+      try {
+        await hasReachableServer(url)
+        setReachablityState('succeeded')
+      } catch {
+        setReachablityState('failed')
+      }
+    }
+  }
+
   const onHostChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setReachablityState('no_attempt')
     const val = e.target.value
     props.onHostChange(getScheme(scheme), val)
   }
@@ -112,13 +158,7 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
   const onSchemeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const val = e.target.value
 
-    // TOOD se till att inte få fel på bolt & bolt+s
-    // TODO gör en enkel fetch först för vi kan anta det är en modern NEO4J
-    // TODO loading grej under tiden
-    hasReachableServer(val + stripScheme(props.host))
-      .then(() => setIsReachable('succeeded'))
-      .catch(() => setIsReachable('failed'))
-
+    reachabilityCheck(val + stripScheme(props.host))
     props.onHostChange(getScheme(val), stripScheme(props.host))
   }
 
@@ -145,48 +185,36 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
   const { SSOError, SSOProviders, SSOLoading } = props
   const [SSORedirectError, setRedirectError] = useState('')
 
-  const [isReachable, setIsReachable] = useState<
+  const [reachabilityState, setReachablityState] = useState<
     'no_attempt' | 'loading' | 'failed' | 'succeeded'
   >('no_attempt')
 
   useEffect(() => {
-    let mounted = true
-    if (stripScheme(props.host)) {
-      hasReachableServer(props.host)
-        .then(() => {
-          if (mounted) {
-            setIsReachable('succeeded')
-          }
-        })
-        .catch(() => {
-          if (mounted) {
-            setIsReachable('failed')
-          }
-        })
-    }
-    return () => {
-      mounted = false
+    if (stripScheme(props.host) !== '') {
+      reachabilityCheck(props.host)
     }
   }, [])
 
-  // TODO invalidate on change
   return (
     <StyledFormContainer>
       <StyledConnectionForm onSubmit={onConnectClick}>
         <StyledConnectionFormEntry>
           <StyledConnectionLabel htmlFor="url-input" title={hoverText}>
             Connect URL
-            {isReachable === 'succeeded' && ' - neo4j server reachable ✅'}
-            {isReachable === 'failed' && (
-              <>
-                {' '}
-                - Could not reach neo4j.{' '}
-                <AutoExecButton
-                  displayText=":debug"
-                  cmd={`debug connectivity ${props.host}`}
-                />
-              </>
-            )}
+            <span style={{ fontStyle: 'italic' }} title="">
+              {reachabilityState === 'loading' && <SmallSpinnerIcon />}
+              {reachabilityState === 'succeeded' && ' - Neo4j Server reachable'}
+              {reachabilityState === 'failed' && (
+                <>
+                  {' '}
+                  - Could not reach Neo4j.{' '}
+                  <AutoExecButton
+                    displayText=":debug"
+                    cmd={`debug connectivity ${props.host}`}
+                  />
+                </>
+              )}
+            </span>
           </StyledConnectionLabel>
           {schemeRestriction ? (
             <>
@@ -207,18 +235,16 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
                 </StyledConnectionSelect>
                 <StyledConnectionTextInput
                   style={
-                    isReachable === 'failed' ? { outline: 'red 1px solid' } : {}
+                    reachabilityState === 'failed'
+                      ? { outline: 'red 1px solid' }
+                      : {}
                   }
                   onCopy={onCopyBoltUrl}
                   data-testid="boltaddress"
                   onChange={onHostChange}
                   value={stripScheme(props.host)}
                   id="url-input"
-                  onBlur={() =>
-                    hasReachableServer(props.host)
-                      .then(() => setIsReachable('succeeded'))
-                      .catch(() => setIsReachable('failed'))
-                  }
+                  onBlur={() => reachabilityCheck(props.host)}
                 />
               </StyledSegment>
               <StyledBoltUrlHintText className="url-hint-text">
@@ -230,16 +256,12 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
               data-testid="boltaddress"
               onChange={onHostChange}
               defaultValue={props.host}
-              onBlur={() =>
-                hasReachableServer(props.host)
-                  .then(() => setIsReachable('succeeded'))
-                  .catch(() => setIsReachable('failed'))
-              }
+              onBlur={() => reachabilityCheck(props.host)}
             />
           )}
         </StyledConnectionFormEntry>
 
-        {isReachable === 'failed' && (
+        {reachabilityState === 'failed' && (
           <StyledConnectionFormEntry>
             {stripScheme(props.host) === window.location.host && (
               <div>
@@ -346,7 +368,7 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
           : props.authenticationMethod !== SSO && (
               <span
                 title={
-                  isReachable !== 'succeeded'
+                  reachabilityState !== 'succeeded'
                     ? 'Make sure a neo4j server is reachable at the connect URL.'
                     : 'Connect.'
                 }
@@ -354,8 +376,10 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
                 <FormButton
                   data-testid="connect"
                   type="submit"
-                  style={{ marginRight: 0 }}
-                  disabled={isReachable !== 'succeeded'}
+                  style={{
+                    marginRight: 0,
+                    opacity: reachabilityState === 'succeeded' ? 1 : 0.4
+                  }}
                 >
                   Connect
                 </FormButton>
