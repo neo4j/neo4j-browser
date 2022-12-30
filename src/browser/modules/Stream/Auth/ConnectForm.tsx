@@ -44,7 +44,7 @@ import {
   SSOProvider
 } from 'shared/modules/connections/connectionsDuck'
 import { AUTH_STORAGE_CONNECT_HOST } from 'shared/services/utils'
-import { hasReachableServer } from 'neo4j-driver'
+import { hasReachableServer, Neo4jError } from 'neo4j-driver'
 import AutoExecButton from '../auto-exec-button'
 import { SmallSpinnerIcon } from 'browser-components/icons/LegacyIcons'
 
@@ -109,6 +109,17 @@ export async function httpReachabilityCheck(
   }
 }
 
+export async function boltReachabilityCheck(url: string, secure?: boolean) {
+  try {
+    // The encryption flag needs to be set explicitly to disable automatic switching to match hosting
+    // @ts-ignore signature is wrong
+    await hasReachableServer(url, { encrypted: secure })
+    return true
+  } catch (e) {
+    return e as Neo4jError
+  }
+}
+
 export default function ConnectForm(props: ConnectFormProps): JSX.Element {
   const [scheme, setScheme] = useState(
     props.allowedSchemes ? `${getScheme(props.host)}://` : ''
@@ -145,16 +156,8 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
     if (res === 'parsingJsonFailed' || res === 'foundOtherJSON') {
       setReachablityState('failed')
     } else {
-      try {
-        const url2 = url.split('+s').join()
-        // Explicitly turn on/off encryption
-        await hasReachableServer(url2, {
-          encrypted: url.startsWith('+s') ? 'ENCRYPTION_ON' : 'ENCRYPTION_OFF'
-        })
-        setReachablityState('succeeded')
-      } catch {
-        setReachablityState('failed')
-      }
+      const boltStatus = await boltReachabilityCheck(url)
+      setReachablityState(boltStatus === true ? 'succeeded' : 'failed')
     }
   }
 
@@ -218,7 +221,7 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
                   {' '}
                   - Could not reach Neo4j.{' '}
                   {props.host.includes('localhost') &&
-                    !props.host.includes('7687') &&
+                    !props.host.includes('localhost:7687') &&
                     '(default port is 7687) '}
                   <AutoExecButton
                     displayText=":debug"
