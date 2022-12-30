@@ -11,7 +11,6 @@ import {
 import { StyledConnectionTextInput } from './Auth/styled'
 import { BaseFrameProps } from './Stream'
 
-httpReachabilityCheck
 /*  Detectable Edgecases
 SSL + bare IP
 Pausad neo4j aura
@@ -41,9 +40,10 @@ const DebugConnectivityFrame = (props: BaseFrameProps) => {
   }, [props.frame.urlToDebug])
 
   const [httpReachable, setHttpReachable] =
-    useState<HttpReachablityState>('noRequest')
+    useState<HttpReachablityState>('loading')
 
-  const [httpsReachable, setHttpsReachable] = useState<HttpReachablityState>()
+  const [httpsReachable, setHttpsReachable] =
+    useState<HttpReachablityState>('loading')
 
   const [boltReachabilty, setBoltReachablity] = useState<
     'loading' | true | Neo4jError
@@ -66,7 +66,10 @@ const DebugConnectivityFrame = (props: BaseFrameProps) => {
         setSecureBoltReachability
       )
 
+      setHttpReachable('loading')
       httpReachabilityCheck(`http://${hostname}`).then(setHttpReachable)
+
+      setHttpsReachable('loading')
       httpReachabilityCheck(`https://${hostname}`).then(setHttpsReachable)
     } catch (e) {
       console.log('Something went wrong when checking reachability', e)

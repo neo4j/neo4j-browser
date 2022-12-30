@@ -80,6 +80,7 @@ interface ConnectFormProps {
 
 export type HttpReachablityState =
   | 'noRequest'
+  | 'loading'
   | 'requestFailed'
   | 'parsingJsonFailed'
   | 'foundNeo4j'
