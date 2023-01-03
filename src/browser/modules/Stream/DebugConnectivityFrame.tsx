@@ -1,7 +1,28 @@
+/*
+ * Copyright (c) "Neo4j"
+ * Neo4j Sweden AB [http://neo4j.com]
+ *
+ * This file is part of Neo4j.
+ *
+ * Neo4j is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { SpinnerIcon } from 'browser-components/icons/LegacyIcons'
 import { Neo4jError } from 'neo4j-driver'
 import React, { useEffect, useState } from 'react'
 import { stripScheme } from 'services/boltscheme.utils'
+import { isValidUrl } from 'shared/modules/commands/helpers/http'
 import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
 import {
   boltReachabilityCheck,
@@ -19,6 +40,7 @@ import { BaseFrameProps } from './Stream'
 
 /* TODO
 - e2e tests
+- duplication/reabability
 
 Testing matrix:
 Version: 3.5 4.4 5
@@ -26,12 +48,32 @@ Edition: Community Enterpise
 Environment: Aura Standalone Cluster
 Hosting: HTTP vs HTTPS
 Bolt Security: Bolt vs Bolt+s
+Target: 7474, 7687, 8080, 3423, random string
 */
 
+function toHttp(url: string) {
+  const hostname = stripScheme(url)
+  return `http://${hostname}`
+}
+
+function toHttps(url: string) {
+  const hostname = stripScheme(url)
+  return `https://${hostname}`
+}
+
+function removeSecureScheme(url: string) {
+  const [scheme, ...rest] = url.split('+s')
+  return [scheme, ...rest].join('')
+}
+
+type BoltReachabilty =
+  | { status: 'not_started' }
+  | { status: 'loading' }
+  | { status: 'succeeded' }
+  | { status: 'error'; error: Neo4jError }
+
 const DebugConnectivityFrame = (props: BaseFrameProps) => {
-  const [debugUrl, setDebugUrl] = useState(
-    stripScheme(props.frame.urlToDebug ?? '')
-  )
+  const [debugUrl, setDebugUrl] = useState(props.frame.urlToDebug ?? '')
 
   useEffect(() => {
     setDebugUrl(props.frame.urlToDebug ?? '')
@@ -44,44 +86,83 @@ const DebugConnectivityFrame = (props: BaseFrameProps) => {
     status: 'noRequest'
   })
 
-  const [boltReachabilty, setBoltReachablity] = useState<
-    'loading' | true | Neo4jError
-  >('loading')
+  const [boltReachabilty, setBoltReachablity] = useState<BoltReachabilty>({
+    status: 'not_started'
+  })
 
-  const [secureBoltReachability, setSecureBoltReachability] = useState<
-    'loading' | true | Neo4jError
-  >('loading')
+  const [secureBoltReachability, setSecureBoltReachability] =
+    useState<BoltReachabilty>({ status: 'not_started' })
+
+  const [error, setError] = useState<string>()
 
   useEffect(() => {
     try {
-      const hostname = stripScheme(debugUrl)
+      setError(undefined)
+      const validUrl = isValidUrl(toHttp(debugUrl))
+      const rightScheme =
+        debugUrl.startsWith('neo4j') || debugUrl.startsWith('bolt')
 
-      // TODO match protocol
-      setBoltReachablity('loading')
-      boltReachabilityCheck('bolt://' + hostname, false).then(
-        setBoltReachablity
-      )
+      if (validUrl && rightScheme) {
+        setBoltReachablity({ status: 'loading' })
+        boltReachabilityCheck(removeSecureScheme(debugUrl), false).then(r => {
+          if (r === true) {
+            setBoltReachablity({ status: 'succeeded' })
+          } else {
+            setBoltReachablity({ status: 'error', error: r })
+          }
+        })
 
-      // TODO match protocol
-      setSecureBoltReachability('loading')
-      boltReachabilityCheck('bolt://' + hostname, true).then(
-        setSecureBoltReachability
-      )
+        setSecureBoltReachability({ status: 'loading' })
+        boltReachabilityCheck(removeSecureScheme(debugUrl), true).then(r => {
+          if (r === true) {
+            setSecureBoltReachability({ status: 'succeeded' })
+          } else {
+            setSecureBoltReachability({ status: 'error', error: r })
+          }
+        })
 
-      setHttpReachable({ status: 'loading' })
-      httpReachabilityCheck(`http://${hostname}`).then(setHttpReachable)
+        setHttpReachable({ status: 'loading' })
+        httpReachabilityCheck(toHttp(debugUrl)).then(setHttpReachable)
 
-      setHttpsReachable({ status: 'loading' })
-      httpReachabilityCheck(`https://${hostname}`).then(setHttpsReachable)
+        setHttpsReachable({ status: 'loading' })
+        httpReachabilityCheck(toHttps(debugUrl)).then(setHttpsReachable)
+      } else {
+        setError('Invalid url, must be bolt:// or neo4j://')
+      }
     } catch (e) {
-      console.log('Something went wrong when checking reachability', e)
+      if (e instanceof Error) {
+        setError(e.message)
+      } else {
+        setError('Something went wrong')
+      }
     }
   }, [debugUrl])
 
-  const mixedSecurityWarning = false
-  const unreachableAuraInstance = false
-  const foundHTTPConnector = false
-  const isSecurelyHosted = false
+  const isAura = debugUrl.includes('neo4j.io')
+
+  const unreachableAuraInstance =
+    isAura && secureBoltReachability.status === 'error'
+
+  const advertisedAdress =
+    httpReachable.status === 'foundAdvertisedBoltAdress'
+      ? httpReachable.advertisedAdress
+      : httpsReachable.status === 'foundAdvertisedBoltAdress' &&
+        httpsReachable.advertisedAdress
+
+  const foundHTTPConnector =
+    advertisedAdress && stripScheme(advertisedAdress) !== stripScheme(debugUrl)
+
+  const isSecurelyHosted = (window?.location?.protocol ?? '')
+    .toLowerCase()
+    .includes('https')
+
+  const onlyReachableOnBolt =
+    boltReachabilty.status === 'succeeded' &&
+    secureBoltReachability.status === 'error'
+
+  const mixedSecurityWarning =
+    (isSecurelyHosted && onlyReachableOnBolt) ||
+    (!isSecurelyHosted && secureBoltReachability.status === 'succeeded')
 
   return (
     <FrameBodyTemplate
@@ -108,26 +189,32 @@ const DebugConnectivityFrame = (props: BaseFrameProps) => {
               knowledgebase article to help
             </div>
           )}
-          <div> Discover Api over HTTP status: {httpReachable} </div>
-          <div> Discover Api over HTTPS status: {httpsReachable} </div>
-          {boltReachabilty === 'loading' ? (
-            <SpinnerIcon />
-          ) : (
-            <div>
-              {'bolt handshake -> '}{' '}
-              {boltReachabilty === true ? 'Reached' : boltReachabilty.code}{' '}
-            </div>
-          )}
-          {secureBoltReachability === 'loading' ? (
-            <SpinnerIcon />
-          ) : (
-            <div>
-              {'secure bolt handshake -> '}{' '}
-              {secureBoltReachability === true
-                ? 'Reached'
-                : secureBoltReachability.code}{' '}
-            </div>
-          )}
+          {foundHTTPConnector && <div> </div>}
+          {mixedSecurityWarning && 'mixedSecurityWarning'}
+          {foundHTTPConnector && 'foundHTTPConnector'}
+          {unreachableAuraInstance && 'unreachableAuraInstance'}
+          {error && <div> {error} </div>}
+          <div>
+            GET {toHttp(debugUrl)}: {httpReachable.status}{' '}
+          </div>
+          <div>
+            GET {toHttps(debugUrl)}: {httpsReachable.status}{' '}
+          </div>
+          <div>
+            {boltReachabilty.status !== 'not_started' && 'bolt handshake -> '}
+            {boltReachabilty.status === 'loading' && <SpinnerIcon />}
+            {boltReachabilty.status === 'succeeded' && 'Reached'}
+            {boltReachabilty.status === 'error' &&
+              boltReachabilty.error.message}
+          </div>
+          <div>
+            {boltReachabilty.status !== 'not_started' &&
+              'secure bolt handshake -> '}
+            {secureBoltReachability.status === 'loading' && <SpinnerIcon />}
+            {secureBoltReachability.status === 'succeeded' && 'Reached'}
+            {secureBoltReachability.status === 'error' &&
+              secureBoltReachability.error.message}
+          </div>
         </div>
       }
     />

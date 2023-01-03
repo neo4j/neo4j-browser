@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 import { authLog, authRequestForSSO, downloadAuthLogs } from 'neo4j-client-sso'
 import React, { useEffect, useState } from 'react'
 
@@ -84,7 +85,11 @@ export type HttpReachablity =
   | { status: 'requestFailed'; error: Error }
   | { status: 'parsingJsonFailed'; error: Error }
   | { status: 'foundBoltPort' }
-  | { status: 'foundAdvertisedBoltAdress'; advertisedAdress: string }
+  | {
+      status: 'foundAdvertisedBoltAdress'
+      advertisedAdress: string
+      redirected: boolean
+    }
   | { status: 'foundOtherJSON'; json: Record<string, unknown> }
 
 export async function httpReachabilityCheck(
@@ -112,7 +117,11 @@ export async function httpReachabilityCheck(
   if ('auth_config' in json && 'oidc_providers' in json.auth_config) {
     const advertisedAdress = json.bolt_routing ?? json.bolt_direct
     if (advertisedAdress) {
-      return { status: 'foundAdvertisedBoltAdress', advertisedAdress }
+      return {
+        status: 'foundAdvertisedBoltAdress',
+        advertisedAdress,
+        redirected: res.redirected
+      }
     } else {
       return { status: 'foundBoltPort' }
     }
@@ -125,14 +134,14 @@ export async function boltReachabilityCheck(url: string, secure?: boolean) {
   try {
     // The encryption flag needs to be set explicitly to disable automatic switching to match hosting
     // @ts-ignore signature is wrong
-    await hasReachableServer(url, { encrypted: secure })
+    await hasReachableServer(url, {
+      ...(secure !== undefined ? { encrypted: secure } : undefined)
+    })
     return true
   } catch (e) {
     return e as Neo4jError
   }
 }
-
-// FETCH Request JSON -> hitta advertised bolt adress
 
 export default function ConnectForm(props: ConnectFormProps): JSX.Element {
   const [scheme, setScheme] = useState(
@@ -165,8 +174,9 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
     setReachablityState('loading')
     const res = await httpReachabilityCheck(`http://${stripScheme(url)}`)
 
-    // Being reachable by http is not a requirement, and not supported on 3.5
-    // So we only short circuit if we know we found something that is not neo4j
+    // Being reachable by http is not a requirement (you could have some really odd network setup)
+    // But if it doesn't work though, it is likely the connection will time out which can take a while
+    // we use this state to set a warning in the UI
     if (res.status === 'parsingJsonFailed' || res.status === 'foundOtherJSON') {
       setReachablityState('probablyFailed')
     }
@@ -226,10 +236,18 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
       <StyledConnectionForm onSubmit={onConnectClick}>
         <StyledConnectionFormEntry>
           <StyledConnectionLabel htmlFor="url-input" title={hoverText}>
-            Connect URL
-            <span style={{ fontStyle: 'italic' }} title="">
+            Connect URL{' '}
+            <span
+              style={{ fontStyle: 'italic' }}
+              title="" /* reset parent title */
+            >
               {reachabilityState === 'loading' && <SmallSpinnerIcon />}
-              {reachabilityState === 'succeeded' && ' - Neo4j Server reachable'}
+              {reachabilityState === 'probablyFailed' && (
+                <span style={{ color: 'orange' }}>
+                  <SmallSpinnerIcon /> Connection will probably time out.
+                </span>
+              )}
+              {reachabilityState === 'succeeded' && '- Neo4j Server reachable'}
               {reachabilityState === 'failed' && (
                 <>
                   {' '}
@@ -386,9 +404,9 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
           : props.authenticationMethod !== SSO && (
               <span
                 title={
-                  reachabilityState !== 'succeeded'
-                    ? 'Make sure a neo4j server is reachable at the connect URL.'
-                    : 'Connect.'
+                  reachabilityState === 'succeeded'
+                    ? 'Connect.'
+                    : 'Make sure a neo4j server is reachable at the connect URL.'
                 }
               >
                 <FormButton
