@@ -78,35 +78,46 @@ interface ConnectFormProps {
   setIsConnecting: (c: boolean) => void
 }
 
-export type HttpReachablityState =
-  | 'noRequest'
-  | 'loading'
-  | 'requestFailed'
-  | 'parsingJsonFailed'
-  | 'foundNeo4j'
-  | 'foundOtherJSON'
+export type HttpReachablity =
+  | { status: 'noRequest' }
+  | { status: 'loading' }
+  | { status: 'requestFailed'; error: Error }
+  | { status: 'parsingJsonFailed'; error: Error }
+  | { status: 'foundBoltPort' }
+  | { status: 'foundAdvertisedBoltAdress'; advertisedAdress: string }
+  | { status: 'foundOtherJSON'; json: Record<string, unknown> }
 
 export async function httpReachabilityCheck(
   url: string
-): Promise<HttpReachablityState> {
+): Promise<HttpReachablity> {
   let res
   try {
-    res = await fetch(url)
-  } catch {
-    return 'requestFailed'
+    res = await fetch(url, {
+      method: 'get',
+      headers: {
+        Accept: 'application/json'
+      }
+    })
+  } catch (error) {
+    return { status: 'requestFailed', error: error as Error }
   }
 
   let json
   try {
     json = await res.json()
-  } catch {
-    return 'parsingJsonFailed'
+  } catch (error) {
+    return { status: 'parsingJsonFailed', error: error as Error }
   }
 
   if ('auth_config' in json && 'oidc_providers' in json.auth_config) {
-    return 'foundNeo4j'
+    const advertisedAdress = json.bolt_routing ?? json.bolt_direct
+    if (advertisedAdress) {
+      return { status: 'foundAdvertisedBoltAdress', advertisedAdress }
+    } else {
+      return { status: 'foundBoltPort' }
+    }
   } else {
-    return 'foundOtherJSON'
+    return { status: 'foundOtherJSON', json }
   }
 }
 
@@ -120,6 +131,8 @@ export async function boltReachabilityCheck(url: string, secure?: boolean) {
     return e as Neo4jError
   }
 }
+
+// FETCH Request JSON -> hitta advertised bolt adress
 
 export default function ConnectForm(props: ConnectFormProps): JSX.Element {
   const [scheme, setScheme] = useState(
@@ -154,12 +167,12 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
 
     // Being reachable by http is not a requirement, and not supported on 3.5
     // So we only short circuit if we know we found something that is not neo4j
-    if (res === 'parsingJsonFailed' || res === 'foundOtherJSON') {
-      setReachablityState('failed')
-    } else {
-      const boltStatus = await boltReachabilityCheck(url)
-      setReachablityState(boltStatus === true ? 'succeeded' : 'failed')
+    if (res.status === 'parsingJsonFailed' || res.status === 'foundOtherJSON') {
+      setReachablityState('probablyFailed')
     }
+
+    const boltStatus = await boltReachabilityCheck(url)
+    setReachablityState(boltStatus === true ? 'succeeded' : 'failed')
   }
 
   const onHostChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -199,7 +212,7 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
   const [SSORedirectError, setRedirectError] = useState('')
 
   const [reachabilityState, setReachablityState] = useState<
-    'no_attempt' | 'loading' | 'failed' | 'succeeded'
+    'no_attempt' | 'loading' | 'probablyFailed' | 'failed' | 'succeeded'
   >('no_attempt')
 
   useEffect(() => {
