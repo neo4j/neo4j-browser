@@ -86,8 +86,8 @@ export type HttpReachablity =
   | { status: 'parsingJsonFailed'; error: Error }
   | { status: 'foundBoltPort' }
   | {
-      status: 'foundAdvertisedBoltAdress'
-      advertisedAdress: string
+      status: 'foundAdvertisedBoltAddress'
+      advertisedAddress: string
       redirected: boolean
     }
   | { status: 'foundOtherJSON'; json: Record<string, unknown> }
@@ -115,11 +115,11 @@ export async function httpReachabilityCheck(
   }
 
   if ('auth_config' in json && 'oidc_providers' in json.auth_config) {
-    const advertisedAdress = json.bolt_routing ?? json.bolt_direct
-    if (advertisedAdress) {
+    const advertisedAddress = json.bolt_routing ?? json.bolt_direct
+    if (advertisedAddress) {
       return {
-        status: 'foundAdvertisedBoltAdress',
-        advertisedAdress,
+        status: 'foundAdvertisedBoltAddress',
+        advertisedAddress,
         redirected: res.redirected
       }
     } else {

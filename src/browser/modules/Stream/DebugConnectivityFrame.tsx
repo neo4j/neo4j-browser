@@ -32,15 +32,11 @@ import {
 import { StyledConnectionTextInput } from './Auth/styled'
 import { BaseFrameProps } from './Stream'
 
-/* Docs
-- Websockets krävs. Discovery API krävs inte men bra för debugging.
-- Länk om self signed certs
-- Länk om let's encrypt
-*/
-
 /* TODO
 - e2e tests
 - duplication/reabability
+- TODO messaging is bad
+- TODO look over wording - encrypted ist för secure
 
 Testing matrix:
 Version: 3.5 4.4 5
@@ -48,7 +44,7 @@ Edition: Community Enterpise
 Environment: Aura Standalone Cluster
 Hosting: HTTP vs HTTPS
 Bolt Security: Bolt vs Bolt+s
-Target: 7474, 7687, 8080, 3423, random string
+Target: 7474, 7687, 8080, 3423, random string, aura paused
 */
 
 function toHttp(url: string) {
@@ -143,14 +139,11 @@ const DebugConnectivityFrame = (props: BaseFrameProps) => {
   const unreachableAuraInstance =
     isAura && secureBoltReachability.status === 'error'
 
-  const advertisedAdress =
-    httpReachable.status === 'foundAdvertisedBoltAdress'
-      ? httpReachable.advertisedAdress
-      : httpsReachable.status === 'foundAdvertisedBoltAdress' &&
-        httpsReachable.advertisedAdress
-
-  const foundHTTPConnector =
-    advertisedAdress && stripScheme(advertisedAdress) !== stripScheme(debugUrl)
+  const advertisedAddress =
+    httpReachable.status === 'foundAdvertisedBoltAddress'
+      ? httpReachable.advertisedAddress
+      : httpsReachable.status === 'foundAdvertisedBoltAddress' &&
+        httpsReachable.advertisedAddress
 
   const isSecurelyHosted = (window?.location?.protocol ?? '')
     .toLowerCase()
@@ -160,9 +153,10 @@ const DebugConnectivityFrame = (props: BaseFrameProps) => {
     boltReachabilty.status === 'succeeded' &&
     secureBoltReachability.status === 'error'
 
-  const mixedSecurityWarning =
-    (isSecurelyHosted && onlyReachableOnBolt) ||
-    (!isSecurelyHosted && secureBoltReachability.status === 'succeeded')
+  const secureHostingUnsecureBolt = isSecurelyHosted && onlyReachableOnBolt
+
+  const unsecureHostingSecureBolt =
+    !isSecurelyHosted && secureBoltReachability.status === 'succeeded'
 
   return (
     <FrameBodyTemplate
@@ -170,9 +164,10 @@ const DebugConnectivityFrame = (props: BaseFrameProps) => {
       isFullscreen={props.isFullscreen}
       contents={
         <div>
-          Browser connects to the Neo4j Server through websocket via the bolt://
-          protocol on the bolt connector port. This port also responds to HTTP
-          requests with limited server information.
+          Browser connects to the Neo4j Server over a websocket connection via
+          the bolt:// protocol on the bolt connector port. This port only
+          supports cypher queries via websocket connection but does responds to
+          HTTP GET requests with limited server information.
           <label>
             Connect URL
             <StyledConnectionTextInput
@@ -180,25 +175,44 @@ const DebugConnectivityFrame = (props: BaseFrameProps) => {
               onChange={e => setDebugUrl(e.target.value)}
             />
           </label>
+          {(secureHostingUnsecureBolt || unsecureHostingSecureBolt) && (
+            <div>
+              When browser is hosted on HTTPS an encrypted connection (bolt+s://
+              or neo4j+s://) to neo4j is required and conversely when it is
+              hosted on HTTP it needs an unencrypted connection (bolt:// or
+              neo4j://). A mismatch has been detected
+              {secureHostingUnsecureBolt &&
+                'Neo4j Browser is hosted on https, but only an an unencrypted bolt connector was detected. To connect you will either need to configure a bolt SSL on the server or switch to HTTP hosting of browser'}
+              {unsecureHostingSecureBolt &&
+                'Neo4j Browser is hosted on http, but only an an encrypted bolt connector was detected. To connect you will either need to configure https hosting of browser, use the centrally hosted browser neo4j has set up for you https://browser.neo4j.io or disable bolt encryption on on the server.'}
+            </div>
+          )}
           {isSecurelyHosted && (
             <div>
               When browser is hosted on HTTPS a secure connection to neo4j to
               neo4j is required. Therefore only the secure protocols bolt+s://
               and neo4j+s:// are enabled when Browser is hosted on HTTPS.
               Setting up SSL can be tricky to get right, here is a link to a
-              knowledgebase article to help
+              knowledgebase article to help.
             </div>
           )}
-          {foundHTTPConnector && <div> </div>}
-          {mixedSecurityWarning && 'mixedSecurityWarning'}
-          {foundHTTPConnector && 'foundHTTPConnector'}
-          {unreachableAuraInstance && 'unreachableAuraInstance'}
+          {advertisedAddress &&
+            stripScheme(advertisedAddress) !== stripScheme(debugUrl) && (
+              <div>
+                The neo4j server we reached advertised its bolt connector at
+                <a onClick={() => setDebugUrl(advertisedAddress)}>
+                  ({advertisedAddress}), try that instead?
+                </a>
+              </div>
+            )}
+          {unreachableAuraInstance &&
+            'Detected an unreachable Neo4j Aura instance, log into the aura console and double check that it is not paused or stopped and that the URL is correct'}
           {error && <div> {error} </div>}
           <div>
-            GET {toHttp(debugUrl)}: {httpReachable.status}{' '}
+            HTTP GET {toHttp(debugUrl)}: {httpReachable.status}{' '}
           </div>
           <div>
-            GET {toHttps(debugUrl)}: {httpsReachable.status}{' '}
+            HTTPS GET {toHttps(debugUrl)}: {httpsReachable.status}{' '}
           </div>
           <div>
             {boltReachabilty.status !== 'not_started' && 'bolt handshake -> '}
