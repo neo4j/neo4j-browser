@@ -83,10 +83,10 @@ type DebugConnectivityFrameProps = BaseFrameProps & {
 const DebugConnectivityFrame = (props: DebugConnectivityFrameProps) => {
   const debugUrl = props.frame.urlToDebug ?? ''
 
-  const [httpReachable, setHttpReachable] = useState<HttpReachablity>({
+  const [httpReachability, setHttpReachable] = useState<HttpReachablity>({
     status: 'noRequest'
   })
-  const [httpsReachable, setHttpsReachable] = useState<HttpReachablity>({
+  const [httpsReachability, setHttpsReachable] = useState<HttpReachablity>({
     status: 'noRequest'
   })
 
@@ -150,10 +150,10 @@ const DebugConnectivityFrame = (props: DebugConnectivityFrameProps) => {
     isAura && encryptedBoltReachability.status === 'error'
 
   const advertisedAddress =
-    httpReachable.status === 'foundAdvertisedBoltAddress'
-      ? httpReachable.advertisedAddress
-      : httpsReachable.status === 'foundAdvertisedBoltAddress' &&
-        httpsReachable.advertisedAddress
+    httpReachability.status === 'foundAdvertisedBoltAddress'
+      ? httpReachability.advertisedAddress
+      : httpsReachability.status === 'foundAdvertisedBoltAddress' &&
+        httpsReachability.advertisedAddress
 
   const isSecurelyHosted = (window?.location?.protocol ?? '')
     .toLowerCase()
@@ -177,10 +177,19 @@ const DebugConnectivityFrame = (props: DebugConnectivityFrameProps) => {
     (!isSecurelyHosted && boltReachability.status === 'succeeded')
 
   const onlyReachableViaHTTP =
-    (httpReachable.status === 'foundBoltPort' ||
-      httpsReachable.status === 'foundBoltPort') &&
+    (httpReachability.status === 'foundBoltPort' ||
+      httpsReachability.status === 'foundBoltPort') &&
     boltReachability.status === 'error' &&
     encryptedBoltReachability.status === 'error'
+
+  const somethingIsLoading = [
+    httpReachability.status,
+    httpsReachability.status,
+    boltReachability.status,
+    encryptedBoltReachability.status
+  ].includes('loading')
+
+  const httpStatuses = [httpReachability.status, httpsReachability.status]
 
   return (
     <FrameBodyTemplate
@@ -200,6 +209,35 @@ const DebugConnectivityFrame = (props: DebugConnectivityFrameProps) => {
       }
       contents={
         <div style={{ maxWidth: '700px' }}>
+          {somethingIsLoading ? (
+            <SpinnerIcon />
+          ) : (
+            noBoltReachable && (
+              <div>
+                {isSecurelyHosted && (
+                  <div>
+                    When browser is hosted on HTTPS a encrypted connection to
+                    neo4j is required. Therefore only the encrypted protocols
+                    bolt+s:// and neo4j+s:// are enabled when Browser is hosted
+                    on HTTPS. Setting up SSL can be tricky to get right, here is
+                    a link to a knowledgebase article to help.
+                  </div>
+                )}{' '}
+                {httpStatuses.every(s => s === 'requestFailed') &&
+                  'All debugging requests failed. Make sure neo4j is running and that you have a network connection if needed.'}
+                {httpStatuses.some(
+                  s => s === 'parsingJsonFailed' || 'foundOtherJSON'
+                ) && (
+                  <>
+                    Found a server at
+                    <pre style={{ display: 'inline' }}> {debugUrl} </pre>
+                    but it does not seem to be a Neo4j Server.
+                  </>
+                )}
+              </div>
+            )
+          )}
+
           {(secureHostingUnencryptedBolt || unsecureHostingEncyptedBolt) && (
             <Alert title="Encryption mismatch detected" type="warning" icon>
               When browser is hosted on HTTPS an encrypted connection (bolt+s://
@@ -238,15 +276,7 @@ const DebugConnectivityFrame = (props: DebugConnectivityFrameProps) => {
               )}
             </Alert>
           )}
-          {isSecurelyHosted && noBoltReachable && (
-            <div>
-              When browser is hosted on HTTPS a encrypted connection to neo4j is
-              required. Therefore only the encrypted protocols bolt+s:// and
-              neo4j+s:// are enabled when Browser is hosted on HTTPS. Setting up
-              SSL can be tricky to get right, here is a link to a knowledgebase
-              article to help.
-            </div>
-          )}
+
           {advertisedAddress &&
             stripScheme(advertisedAddress) !== stripScheme(debugUrl) && (
               <Alert title="Found server at different URL" icon>
@@ -288,7 +318,7 @@ const DebugConnectivityFrame = (props: DebugConnectivityFrameProps) => {
               Server at <pre>{debugUrl}</pre>
             </Alert>
           )}
-          <details open>
+          <details>
             <summary style={{ cursor: 'pointer', marginTop: '10px' }}>
               Full network debugging details
             </summary>
@@ -346,11 +376,11 @@ const DebugConnectivityFrame = (props: DebugConnectivityFrameProps) => {
               {[
                 {
                   header: `HTTP GET ${toHttp(debugUrl)}`,
-                  reachability: httpReachable
+                  reachability: httpReachability
                 },
                 {
                   header: `HTTPs GET ${toHttps(debugUrl)}`,
-                  reachability: httpsReachable
+                  reachability: httpsReachability
                 }
               ].map(({ header, reachability }) => (
                 <div key={header}>
@@ -377,8 +407,14 @@ const DebugConnectivityFrame = (props: DebugConnectivityFrameProps) => {
                     {reachability.status === 'foundBoltPort' && (
                       <SuccessText>Found bolt connector</SuccessText>
                     )}
-                    {reachability.status === 'foundAdvertisedBoltAddress' &&
-                      'Found http connector'}
+                    {reachability.status === 'foundAdvertisedBoltAddress' && (
+                      <>
+                        Found http connector advertising{' '}
+                        <pre style={{ display: 'inline' }}>
+                          {reachability.advertisedAddress}
+                        </pre>
+                      </>
+                    )}
                   </div>
                 </div>
               ))}
