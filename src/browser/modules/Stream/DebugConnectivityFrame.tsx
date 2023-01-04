@@ -239,13 +239,13 @@ const DebugConnectivityFrame = (props: DebugConnectivityFrameProps) => {
                 {unsecureHostingEncyptedBolt && (
                   <div>
                     Neo4j Browser is hosted on http but an encrypted bolt
-                    connector was detected. To connect you will need to either:
+                    connector was detected. It is recommended that you either:
                     <ul>
                       <ListItem>
                         Configure neo4j to serve Browser over HTTPS
                       </ListItem>
                       <ListItem>
-                        Use the centrally hosted browser{' '}
+                        Use the centrally hosted Browser available at{' '}
                         <StyledLink
                           href="https://browser.neo4j.io"
                           target="_blank"
@@ -255,7 +255,7 @@ const DebugConnectivityFrame = (props: DebugConnectivityFrameProps) => {
                         </StyledLink>
                       </ListItem>
                       <ListItem>
-                        Disable the bolt encryption on neo4j server
+                        Disable the bolt encryption on your Neo4j Server
                       </ListItem>
                     </ul>
                   </div>
