@@ -133,7 +133,9 @@ const DebugConnectivityFrame = (props: DebugConnectivityFrameProps) => {
         setHttpsReachable({ status: 'loading' })
         httpReachabilityCheck(toHttps(debugUrl)).then(setHttpsReachable)
       } else {
-        setError('Invalid url, must be bolt:// or neo4j://')
+        setError(
+          `Invalid url "${debugUrl}", must be a valid URL starting with bolt:// or neo4j://`
+        )
       }
     } catch (e) {
       if (e instanceof Error) {
@@ -209,35 +211,6 @@ const DebugConnectivityFrame = (props: DebugConnectivityFrameProps) => {
       }
       contents={
         <div style={{ maxWidth: '700px' }}>
-          {somethingIsLoading ? (
-            <SpinnerIcon />
-          ) : (
-            noBoltReachable && (
-              <div>
-                {isSecurelyHosted && (
-                  <div>
-                    When browser is hosted on HTTPS a encrypted connection to
-                    neo4j is required. Therefore only the encrypted protocols
-                    bolt+s:// and neo4j+s:// are enabled when Browser is hosted
-                    on HTTPS. Setting up SSL can be tricky to get right, here is
-                    a link to a knowledgebase article to help.
-                  </div>
-                )}{' '}
-                {httpStatuses.every(s => s === 'requestFailed') &&
-                  'All debugging requests failed. Make sure neo4j is running and that you have a network connection if needed.'}
-                {httpStatuses.some(
-                  s => s === 'parsingJsonFailed' || 'foundOtherJSON'
-                ) && (
-                  <>
-                    Found a server at
-                    <pre style={{ display: 'inline' }}> {debugUrl} </pre>
-                    but it does not seem to be a Neo4j Server.
-                  </>
-                )}
-              </div>
-            )
-          )}
-
           {(secureHostingUnencryptedBolt || unsecureHostingEncyptedBolt) && (
             <Alert title="Encryption mismatch detected" type="warning" icon>
               When browser is hosted on HTTPS an encrypted connection (bolt+s://
@@ -293,8 +266,17 @@ const DebugConnectivityFrame = (props: DebugConnectivityFrameProps) => {
             )}
           {unreachableAuraInstance && (
             <Alert title="Unreachable Aura instance" type="warning" icon>
-              Log into the aura console and double check that it is not paused
-              or stopped and that the URL is correct
+              Log into the{' '}
+              <StyledLink
+                href="https://console.neo4j.io"
+                target="_blank"
+                rel="noreferrer"
+              >
+                {' '}
+                aura console
+              </StyledLink>{' '}
+              and double check that it is not paused or stopped and that the URL
+              is correct.
             </Alert>
           )}
           {onlyReachableViaHTTP && (
@@ -317,6 +299,48 @@ const DebugConnectivityFrame = (props: DebugConnectivityFrameProps) => {
               Neo4j Driver successfully completed bolt handshake with Neo4j
               Server at <pre>{debugUrl}</pre>
             </Alert>
+          )}
+
+          {somethingIsLoading ? (
+            <SpinnerIcon />
+          ) : (
+            noBoltReachable && (
+              <div>
+                {isSecurelyHosted && (
+                  <div>
+                    When browser is hosted on HTTPS a encrypted connection to
+                    neo4j is required. Therefore only the encrypted protocols
+                    bolt+s:// and neo4j+s:// are enabled when Browser is hosted
+                    on HTTPS. Setting up SSL can be tricky to get right, here is
+                    a link to a knowledgebase article to help.
+                  </div>
+                )}{' '}
+                {httpStatuses.every(s => s === 'requestFailed') && !isAura && (
+                  <Alert
+                    title={
+                      <>
+                        All debugging requests failed against{' '}
+                        <pre style={{ display: 'inline' }}>{debugUrl}</pre>
+                      </>
+                    }
+                    type="danger"
+                    icon
+                  >
+                    Double check the URL, make sure neo4j is running and that
+                    you have a network connection if needed.
+                  </Alert>
+                )}
+                {httpStatuses.some(
+                  s => s === 'parsingJsonFailed' || s === 'foundOtherJSON'
+                ) && (
+                  <Alert title="Found non-neo4j server" type="warning" icon>
+                    Found a server at
+                    <pre style={{ display: 'inline' }}> {debugUrl} </pre>
+                    but it does not seem to be a Neo4j Server.
+                  </Alert>
+                )}
+              </div>
+            )
           )}
           <details>
             <summary style={{ cursor: 'pointer', marginTop: '10px' }}>
