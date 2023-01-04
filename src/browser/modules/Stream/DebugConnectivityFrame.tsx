@@ -39,6 +39,10 @@ import { StyledLink } from 'browser-components/buttons'
 import { Alert } from '@neo4j-ndl/react'
 import styled from 'styled-components'
 
+export const ListItem = styled.li`
+  list-style-type: disc;
+  margin: 0 0 0 16px;
+`
 const SuccessText = styled.span`
   color: ${props => props.theme.success};
 `
@@ -213,45 +217,56 @@ const DebugConnectivityFrame = (props: DebugConnectivityFrameProps) => {
         <div style={{ maxWidth: '700px' }}>
           {(secureHostingUnencryptedBolt || unsecureHostingEncyptedBolt) && (
             <Alert title="Encryption mismatch detected" type="warning" icon>
-              When browser is hosted on HTTPS an encrypted connection (bolt+s://
-              or neo4j+s://) to neo4j is required and conversely when it is
-              hosted on HTTP it needs an unencrypted connection (bolt:// or
-              neo4j://).
-              {secureHostingUnencryptedBolt && (
-                <div>
-                  Neo4j Browser is hosted on https, but only an unencrypted bolt
-                  connector was detected. To connect you will need to either:
-                  <ul>
-                    <li> Configure a SSL on the bolt connector - LINK</li>
-                    <li> Switch to running browser over HTTP </li>
-                  </ul>
-                </div>
-              )}
-              {unsecureHostingEncyptedBolt && (
-                <div>
-                  Neo4j Browser is hosted on http but an encrypted bolt
-                  connector was detected. To connect you will need to either:
-                  <ul>
-                    <li>Configure neo4j to serve Browser over HTTPS</li>
-                    <li>
-                      Use the centrally hosted browser{' '}
-                      <StyledLink
-                        href="https://browser.neo4j.io"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        browser.neo4j.io
-                      </StyledLink>
-                    </li>
-                    <li>Disable the bolt encryption on neo4j server</li>
-                  </ul>
-                </div>
-              )}
+              When hosted on HTTPS Browser requires an encrypted connection
+              (bolt+s:// or neo4j+s://) to neo4j. However when when it is hosted
+              on HTTP some web browsers allow both encrypted and unencrypted
+              connections, though it is not recommended.
+              <div style={{ marginTop: '10px' }}>
+                {secureHostingUnencryptedBolt && (
+                  <div>
+                    Neo4j Browser is hosted on https, but only an unencrypted
+                    bolt connector was detected. To connect you will need to
+                    either:
+                    <ul>
+                      <ListItem>
+                        {' '}
+                        Configure a SSL on the bolt connector - LINK
+                      </ListItem>
+                      <ListItem> Switch to running browser over HTTP </ListItem>
+                    </ul>
+                  </div>
+                )}
+                {unsecureHostingEncyptedBolt && (
+                  <div>
+                    Neo4j Browser is hosted on http but an encrypted bolt
+                    connector was detected. To connect you will need to either:
+                    <ul>
+                      <ListItem>
+                        Configure neo4j to serve Browser over HTTPS
+                      </ListItem>
+                      <ListItem>
+                        Use the centrally hosted browser{' '}
+                        <StyledLink
+                          href="https://browser.neo4j.io"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          browser.neo4j.io
+                        </StyledLink>
+                      </ListItem>
+                      <ListItem>
+                        Disable the bolt encryption on neo4j server
+                      </ListItem>
+                    </ul>
+                  </div>
+                )}
+              </div>
             </Alert>
           )}
 
           {advertisedAddress &&
-            stripScheme(advertisedAddress) !== stripScheme(debugUrl) && (
+            stripScheme(advertisedAddress) !== stripScheme(debugUrl) &&
+            !isAura && (
               <Alert title="Found server at different URL" icon>
                 The neo4j server we reached advertised its bolt connector at
                 <StyledLink
