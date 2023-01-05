@@ -49,6 +49,8 @@ const SuccessText = styled.span`
 
 /* TODO
 - e2e tests
+- feedback
+- visa inte "successmeddelandet" behövs ej
 
 Testing matrix:
 Version: 3.5 4.4 5
@@ -359,7 +361,7 @@ const DebugConnectivityFrame = (props: DebugConnectivityFrameProps) => {
           )}
           <details>
             <summary style={{ cursor: 'pointer', marginTop: '10px' }}>
-              Full network debugging details
+              Full diagnostic details
             </summary>
             Browser will attempt to open a websocket connection to{' '}
             <pre style={{ display: 'inline' }}>{debugUrl}</pre> and do an
