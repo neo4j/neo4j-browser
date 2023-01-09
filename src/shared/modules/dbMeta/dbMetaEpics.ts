@@ -423,7 +423,6 @@ export const dbCountEpic = (some$: any, store: any) =>
           const notAlreadyDisabled = getCountAutomaticRefreshEnabled(
             store.getState()
           )
-          console.log(res.requestSucceeded ? res.timeTaken : 'failed')
           if (
             res.requestSucceeded &&
             res.timeTaken > 1000 &&
