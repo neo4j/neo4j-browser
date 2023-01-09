@@ -259,7 +259,8 @@ Separate multiple commands with a semicolon (`;`).
 
 
 [[rbac-note]]
-== A note on Role-Based Access Control
+== Node and relationship counts with role-based access control
 
-Normally Neo4j Browser can look up node and relationship counts quickly as they are cached in the database, but if link:https://neo4j.com/docs/operations-manual/current/authentication-authorization/access-control/[role-based access control^] is configured Neo4j count the nodes and relationships the current user has access to on-demand which is computationally expensive. 
-If Neo4j Browser detects that the counts are slow, it will stop automatically polling counts and instead show a button for manual refresh. 
+Normally Neo4j Browser can look up node and relationship counts quickly, as they are cached in the database.
+However, if link:https://neo4j.com/docs/operations-manual/current/authentication-authorization/access-control/[role-based access control^] is configured, Neo4j counts the nodes and relationships the current user has access to on-demand, which is computationally expensive and thus potentially time-consuming. 
+If Neo4j Browser detects that the counts are slow, it automatically stops polling counts and instead show a button for manual refresh. 
