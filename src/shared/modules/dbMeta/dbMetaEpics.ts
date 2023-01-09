@@ -205,7 +205,9 @@ async function getNodeAndRelationshipCounts(
       const summary = res.summary as ResultSummary
       return {
         requestSucceeded: true,
-        timeTaken: summary.resultAvailableAfter.toNumber()
+        timeTaken:
+          summary.resultAvailableAfter.toNumber() +
+          summary.resultConsumedAfter.toNumber()
       }
     }
   } catch {}
@@ -418,7 +420,7 @@ export const dbCountEpic = (some$: any, store: any) =>
           const notAlreadyDisabled = getCountAutomaticRefreshEnabled(
             store.getState()
           )
-
+          console.log(res.requestSucceeded ? res.timeTaken : 'failed')
           if (
             res.requestSucceeded &&
             res.timeTaken > 1000 &&
