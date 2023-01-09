@@ -85,14 +85,14 @@ import {
   getListFunctionQuery,
   getListProcedureQuery
 } from '../cypher/functionsAndProceduresHelper'
-import { isInt, Record } from 'neo4j-driver'
+import { isInt, Record, ResultSummary } from 'neo4j-driver'
 import semver, { gte, SemVer } from 'semver'
 import { triggerCredentialsTimeout } from '../credentialsPolicy/credentialsPolicyDuck'
 import {
   isSystemOrCompositeDb,
   getCurrentDatabase
 } from 'shared/utils/selectors'
-getCountAutomaticRefreshEnabled
+
 async function databaseList(store: any) {
   try {
     const supportsMultiDb = await bolt.hasMultiDbSupport()
@@ -164,12 +164,16 @@ async function getLabelsAndTypes(store: any) {
   } catch {}
 }
 
-async function getNodeAndRelationshipCounts(store: any) {
+async function getNodeAndRelationshipCounts(
+  store: any
+): Promise<
+  { requestSucceeded: false } | { requestSucceeded: true; timeTaken: number }
+> {
   const db = getCurrentDatabase(store.getState())
 
   // System or composite db, do nothing
   if (db && isSystemOrCompositeDb(db)) {
-    return
+    return { requestSucceeded: false }
   }
 
   // Not system db, try and fetch meta data
@@ -198,8 +202,16 @@ async function getNodeAndRelationshipCounts(store: any) {
           relationships
         })
       )
+      const summary = res.summary as ResultSummary
+      return {
+        requestSucceeded: true,
+        timeTaken:
+          summary.resultAvailableAfter.toNumber() +
+          summary.resultConsumedAfter.toNumber()
+      }
     }
   } catch {}
+  return { requestSucceeded: false }
 }
 
 async function getFunctionsAndProcedures(store: any) {
@@ -403,23 +415,25 @@ export const dbCountEpic = (some$: any, store: any) =>
     .throttle(() => some$.ofType(DB_META_COUNT_DONE))
     .mergeMap(() =>
       Rx.Observable.fromPromise<void>(
-        new Promise(async resolve => {
+        (async () => {
           store.dispatch(updateCountAutomaticRefresh({ loading: true }))
-          if (getCountAutomaticRefreshEnabled(store.getState())) {
-            const startTime = performance.now()
-            await getNodeAndRelationshipCounts(store)
-            const timeTaken = performance.now() - startTime
 
-            if (timeTaken > 2000) {
-              store.dispatch(updateCountAutomaticRefresh({ enabled: false }))
-            }
-          } else {
-            await getNodeAndRelationshipCounts(store)
+          const res = await getNodeAndRelationshipCounts(store)
+
+          const notAlreadyDisabled = getCountAutomaticRefreshEnabled(
+            store.getState()
+          )
+          console.log(res.requestSucceeded ? res.timeTaken : 'failed')
+          if (
+            res.requestSucceeded &&
+            res.timeTaken > 1000 &&
+            notAlreadyDisabled
+          ) {
+            store.dispatch(updateCountAutomaticRefresh({ enabled: false }))
           }
 
           store.dispatch(updateCountAutomaticRefresh({ loading: false }))
-          resolve()
-        })
+        })()
       )
     )
     .mapTo({ type: DB_META_COUNT_DONE })
