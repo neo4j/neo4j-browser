@@ -142,7 +142,7 @@
     "ncp": "^2.0.0",
     "nock": "^12.0.3",
     "postcss": "^6.0.11",
-    "postcss-cssnext": "^3.0.2",
+    "postcss-preset-env": "^3.0.2",
     "postcss-loader": "^3.0.0",
     "precss": "^2.0.0",
     "prettier-eslint": "^13.0.0",
