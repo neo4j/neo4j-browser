@@ -20,8 +20,6 @@
 
 /* global Cypress, cy, before */
 
-import { SubmitQueryButton } from '../support/commands'
-
 const GREY = 'rgb(165, 171, 182)' // Default color for nodes and relationships
 const ORANGE = 'rgb(247, 151, 103)'
 const PURPLE = 'rgb(201, 144, 192)' // Default first color for a new node label
@@ -265,7 +263,13 @@ describe('Viz rendering', () => {
       })
       .type(' {ENTER}')
 
-    // Check that can scroll overview panel
+    // Scroll to bottom after labels loaded
+    const lastLabel = `label${numberOfLabels - 1}`
+    cy.get('[data-testid="vizInspector"]', { timeout: 5000 })
+      .contains(lastLabel)
+      .scrollIntoView()
+      .should('be.visible')
+
     const showAllButtonText = 'Show all'
     cy.get(`button:contains("${showAllButtonText}")`)
       .scrollIntoView()
