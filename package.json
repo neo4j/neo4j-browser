@@ -1,6 +1,6 @@
 {
   "name": "neo4j-browser",
-  "version": "5.3.0",
+  "version": "5.4.0",
   "description": "Neo4j Browser is the general purpose user interface for working with Neo4j. Query, visualize, administer and monitor the database.",
   "neo4jDesktop": {
     "apiVersion": "^1.4.0"
