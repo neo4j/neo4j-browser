@@ -27,9 +27,13 @@ import {
   lowerCase,
   map,
   reduce,
-  some,
-  take
+  some
 } from 'lodash-es'
+import {
+  CypherDataType,
+  propertyToString,
+  isCypherPropertyType
+} from 'neo4j-arc/common'
 import neo4j from 'neo4j-driver'
 
 import bolt from 'services/bolt/bolt'
@@ -243,57 +247,6 @@ export const stringifyResultArray = (
 }
 
 /**
- * Transforms an array of neo4j driver records to an array of objects.
- * Flattens graph items so only their props are left.
- * Leaves Neo4j Integers as they were.
- */
-export const transformResultRecordsToResultArray = (
-  records: any,
-  maxFieldItems?: any
-) => {
-  return records && records.length
-    ? [records]
-        .map(recs => extractRecordsToResultArray(recs, maxFieldItems))
-        .flatMap(
-          flattenGraphItemsInResultArray.bind(null, neo4j.types, neo4j.isInt)
-        )
-    : undefined
-}
-
-/**
- * Transforms an array of neo4j driver records to an array of objects.
- * Leaves all values as they were, just changing the data structure.
- */
-export const extractRecordsToResultArray = (
-  records: any[] = [],
-  maxFieldItems?: any
-) => {
-  records = Array.isArray(records) ? records : []
-  const keys = records[0] ? [records[0].keys] : undefined
-  return (keys || []).concat(
-    records.map(record => {
-      return record.keys.map((_key: any, i: any) => {
-        const val = record._fields[i]
-
-        if (!maxFieldItems || !Array.isArray(val)) {
-          return val
-        }
-
-        return take(val, maxFieldItems)
-      })
-    })
-  )
-}
-
-export const flattenGraphItemsInResultArray = (
-  types = neo4j.types,
-  intChecker = neo4j.isInt,
-  result: any[] = []
-) => {
-  return result.map(flattenGraphItems.bind(null, types, intChecker))
-}
-
-/**
  * Recursively looks for graph items and elevates their properties if found.
  * Leaves everything else (including neo4j integers) as is
  */
@@ -472,4 +425,83 @@ function isNeo4jValue(value: any) {
     default:
       return false
   }
+}
+export const cypherDataToStringArray = (map: CypherDataType): string[][] => {
+  const recursiveStringify = (
+    value: CypherDataType
+  ): string[][] | string[] | string => {
+    if (isCypherPropertyType(value)) {
+      return propertyToString(value)
+    }
+
+    if (Array.isArray(value)) {
+      if (value.length === 0) return ''
+      console.log('array', value)
+      return value.map(v => recursiveStringify(v) as string[])
+    }
+
+    // We have nodes, relationships, paths and cypher maps left.
+    const entries = Object.entries(value)
+    if (entries.length === 0) return ''
+
+    if (value instanceof neo4j.types.Node) {
+      const labels = value.labels.length > 0 ? `:${value.labels.join(':')}` : ''
+      const properties = Object.entries(value.properties).map(
+        ([key, value]) => {
+          return `${key}: ${recursiveStringify(value)}`
+        }
+      )
+      const propertiesString = properties.length > 0 ? `{${properties}}` : ''
+
+      const space = labels.length > 0 && propertiesString.length > 0 ? ' ' : ''
+      return `(${labels}${space}${propertiesString})`
+    } else if (value instanceof neo4j.types.Relationship) {
+      const type = value.type ? `:${value.type}` : ''
+
+      const properties = Object.entries(value.properties).map(
+        ([key, value]) => {
+          return `${key}: ${recursiveStringify(value)}`
+        }
+      )
+      const propertiesString = properties.length > 0 ? ` {${properties}}` : ''
+
+      return `[${type}${propertiesString}]`
+    } else if (value instanceof neo4j.types.Path) {
+      if (value.segments.length === 0) return recursiveStringify(value.start)
+
+      const result = [recursiveStringify(value.start)]
+      let lastId = value.start.elementId
+      value.segments.forEach(segment => {
+        let node = segment.start
+        let prefix = ''
+        let suffix = ''
+        if (segment.start.elementId === lastId) {
+          prefix = '-'
+          suffix = '->'
+          node = segment.end
+        } else {
+          prefix = '<-'
+          suffix = '-'
+        }
+        result.push(prefix)
+        result.push(recursiveStringify(segment.relationship))
+        result.push(suffix)
+        result.push(recursiveStringify(node))
+        lastId = node.elementId
+      })
+
+      return result.join('')
+    } else if (value instanceof neo4j.types.Record) {
+      console.log('record', value)
+      if (value.keys.length === 0) return ''
+      return value.map(v => recursiveStringify(v) as string)
+    } else {
+      return ''
+    }
+  }
+
+  if (!map) return []
+  const result = recursiveStringify(map)
+  if (!Array.isArray(result)) return []
+  return result.some(v => v.length === 0) ? [] : (result as string[][])
 }

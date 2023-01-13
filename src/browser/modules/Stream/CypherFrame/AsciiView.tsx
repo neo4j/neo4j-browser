@@ -33,14 +33,12 @@ import {
   StyledWidthSliderContainer
 } from '../styled'
 import {
+  cypherDataToStringArray,
   getBodyAndStatusBarMessages,
   getRecordsToDisplayInTable,
-  resultHasTruncatedFields,
-  stringifyResultArray,
-  transformResultRecordsToResultArray
+  resultHasTruncatedFields
 } from './helpers'
 import Ellipsis from 'browser-components/Ellipsis'
-import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 import { shallowEquals } from 'services/utils'
 import { GlobalState } from 'shared/globalState'
 import { BrowserRequestResult } from 'shared/modules/requests/requestsDuck'
@@ -110,13 +108,18 @@ export class AsciiViewComponent extends Component<
     const hasRecords = result && 'records' in result && result.records.length
     if (!hasRecords) return
 
-    const records = getRecordsToDisplayInTable(props.result, props.maxRows)
-    const serializedRows =
-      stringifyResultArray(
-        stringModifier,
-        transformResultRecordsToResultArray(records, maxFieldItems),
-        true
-      ) || []
+    const records = getRecordsToDisplayInTable(result, maxRows) || []
+
+    const serializedRows: string[][] = []
+    const cypherString = cypherDataToStringArray(
+      records.slice(0, maxFieldItems)
+    )
+    if (cypherString.length > 0) {
+      serializedRows.push(records[0].keys)
+      serializedRows.push(...cypherString)
+    } else {
+      serializedRows.push([])
+    }
     this.setState({ serializedRows })
     const maxColWidth = asciitable.maxColumnWidth(serializedRows)
 

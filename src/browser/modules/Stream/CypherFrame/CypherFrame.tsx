@@ -51,6 +51,7 @@ import RelatableView, {
 import { VisualizationConnectedBus } from './VisualizationView/VisualizationView'
 import { WarningsStatusbar, WarningsView } from './WarningsView'
 import {
+  cypherDataToStringArray,
   initialView,
   recordToJSONMapper,
   resultHasNodes,
@@ -58,8 +59,7 @@ import {
   resultHasRows,
   resultHasWarnings,
   resultIsError,
-  stringifyResultArray,
-  transformResultRecordsToResultArray
+  stringifyResultArray
 } from './helpers'
 import Centered from 'browser-components/Centered'
 import Display from 'browser-components/Display'
@@ -421,10 +421,9 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
 
   exportCSV = (): void => {
     const records = this.getRecords()
-    const exportData = stringifyResultArray(
-      csvFormat,
-      transformResultRecordsToResultArray(records)
-    )
+    const exportdataRaw = [records[0].keys]
+    exportdataRaw.push(...(cypherDataToStringArray(records as any) as any))
+    const exportData = stringifyResultArray(csvFormat, exportdataRaw)
     const data = exportData.slice()
     const csv = CSVSerializer(data.shift())
     csv.appendRows(data)
