@@ -581,7 +581,7 @@ describe('helpers', () => {
       // Then
       expect(res).toEqual([
         ['"x"', '"y"', '(:Person {prop1: "prop1"})'],
-        ['"xx"', '"yy"', '(:X {x: 1.0})<-(:Y {y: 1})']
+        ['"xx"', '"yy"', '(:X {x: 1.0})-[:REL {rel: 1.0}]->(:Y {y: 1})']
       ])
     })
   })
