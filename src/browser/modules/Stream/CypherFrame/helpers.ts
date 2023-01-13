@@ -427,16 +427,13 @@ function isNeo4jValue(value: any) {
   }
 }
 export const cypherDataToStringArray = (map: CypherDataType): string[][] => {
-  const recursiveStringify = (
-    value: CypherDataType
-  ): string[][] | string[] | string => {
+  const recursiveStringify = (value: CypherDataType): any => {
     if (isCypherPropertyType(value)) {
       return propertyToString(value)
     }
 
     if (Array.isArray(value)) {
       if (value.length === 0) return ''
-      console.log('array', value)
       return value.map(v => recursiveStringify(v) as string[])
     }
 
@@ -492,12 +489,18 @@ export const cypherDataToStringArray = (map: CypherDataType): string[][] => {
 
       return result.join('')
     } else if (value instanceof neo4j.types.Record) {
-      console.log('record', value)
       if (value.keys.length === 0) return ''
       return value.map(v => recursiveStringify(v) as string)
-    } else {
-      return ''
     }
+
+    //Else is cypher map
+    const entriesString = entries
+      .map(([key, value]) => {
+        return `${key}: ${recursiveStringify(value)}`
+      })
+      .join(', ')
+
+    return `{${entriesString}}`
   }
 
   if (!map) return []
