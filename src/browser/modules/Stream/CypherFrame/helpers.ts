@@ -503,5 +503,7 @@ export const cypherDataToStringArray = (map: CypherDataType): string[][] => {
   if (!map) return []
   const result = recursiveStringify(map)
   if (!Array.isArray(result)) return []
-  return result.some(v => v.length === 0) ? [] : (result as string[][])
+  return result.some((v: string | string[]) => v.length === 0)
+    ? []
+    : (result as string[][])
 }
