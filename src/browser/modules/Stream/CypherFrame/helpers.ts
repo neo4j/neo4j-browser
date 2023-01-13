@@ -427,7 +427,10 @@ function isNeo4jValue(value: any) {
   }
 }
 export const cypherDataToStringArray = (map: CypherDataType): string[][] => {
-  const recursiveStringify = (value: CypherDataType): any => {
+  const recursiveStringify = (
+    value: CypherDataType
+  ): string | string[] | string[][] => {
+    console.log(value)
     if (isCypherPropertyType(value)) {
       return propertyToString(value)
     }
@@ -506,6 +509,8 @@ export const cypherDataToStringArray = (map: CypherDataType): string[][] => {
   if (!map) return []
   const result = recursiveStringify(map)
   if (!Array.isArray(result)) return []
+  if (!Array.isArray(result[0])) return [result as string[]]
+
   return result.some((v: string | string[]) => v.length === 0)
     ? []
     : (result as string[][])

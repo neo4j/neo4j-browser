@@ -58,11 +58,15 @@ exports[`AsciiViews AsciiView does not display bodyMessage if rows 1`] = `
   <div
     class="sc-hiCibw icznka"
   >
-    <div
-      class="sc-lcepkR kjtMmT"
+    <pre
+      class="sc-nVkyK eSroYp"
     >
-      nullcompleted after 10 ms.
-    </div>
+      ╒════════════════════════════════════╕
+│x                                   │
+╞════════════════════════════════════╡
+│{keys: ["x"], _fields: ["y"], get: }│
+└────────────────────────────────────┘
+    </pre>
   </div>
 </div>
 `;
