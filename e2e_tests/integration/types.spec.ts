@@ -86,7 +86,7 @@ describe('Types in Browser', () => {
       cy.resultContains('"2015-07-20T15:11:42"')
       // Go to ascii view
       cy.get('[data-testid="cypherFrameSidebarAscii"]').first().click()
-      cy.resultContains('│"2015-07-20T15:11:42"')
+      cy.resultContains('│2015-07-20T15:11:42')
     })
     it('presents date type correctly', () => {
       cy.executeCommand(':clear')
