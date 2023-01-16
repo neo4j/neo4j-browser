@@ -432,7 +432,7 @@ export const cypherDataToStringArray = (map: CypherDataType): string[][] => {
   ): string | string[] | string[][] => {
     console.log(value)
     if (isCypherPropertyType(value)) {
-      return propertyToString(value)
+      return stringifyMod(value, stringModifier, true)
     }
 
     if (Array.isArray(value)) {

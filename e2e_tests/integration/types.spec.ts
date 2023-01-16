@@ -64,7 +64,7 @@ describe('Types in Browser', () => {
         cy.resultContains('"2015-07-20T15:11:42[Europe/Stockholm]"')
         // Go to ascii view
         cy.get('[data-testid="cypherFrameSidebarAscii"]').first().click()
-        cy.resultContains('│2015-07-20T15:11:42[Europe/Stockholm]')
+        cy.resultContains('│"2015-07-20T15:11:42[Europe/Stockholm]')
       } else {
         //Split since the timezone is shown as 2015-07-20T15:11:42+02:00[Europe/Stockholm]
         //Which changes during daylight saving time
@@ -86,7 +86,7 @@ describe('Types in Browser', () => {
       cy.resultContains('"2015-07-20T15:11:42"')
       // Go to ascii view
       cy.get('[data-testid="cypherFrameSidebarAscii"]').first().click()
-      cy.resultContains('│2015-07-20T15:11:42')
+      cy.resultContains('│"2015-07-20T15:11:42')
     })
     it('presents date type correctly', () => {
       cy.executeCommand(':clear')
