@@ -109,7 +109,15 @@ export class AsciiViewComponent extends Component<
     const hasRecords = result && 'records' in result && result.records.length
     if (!hasRecords) return
 
-    const records = getRecordsToDisplayInTable(result, maxRows) || []
+    const records = getRecordsToDisplayInTable(result, maxRows)
+
+    if (records.length === 0) {
+      const serializedRows: string[][] = []
+      this.setState({ serializedRows })
+      const maxColWidth = asciitable.maxColumnWidth([])
+      this.props.setAsciiMaxColWidth(maxColWidth)
+      return
+    }
 
     const cypherString = records.slice(0, maxFieldItems).map(record => {
       return recordToStringArray(record)

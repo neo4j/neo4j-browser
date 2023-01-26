@@ -429,8 +429,6 @@ function isNeo4jValue(value: any) {
 
 export const recordToStringArray = (record: Record): string[] => {
   const recursiveStringify = (value: CypherDataType): string => {
-    console.log('value', value)
-
     if (Array.isArray(value)) {
       if (value.length === 0) return ''
       return `[${value.map(v => recursiveStringify(v)).join(', ')}]`
@@ -489,28 +487,36 @@ export const recordToStringArray = (record: Record): string[] => {
 
       return `[${type}${propertiesString}]`
     } else {
-      console.log('value2', value)
       if (value.segments.length === 0) return recursiveStringify(value.start)
 
       return value.segments
-        .map(segment => {
+        .map((segment, index) => {
+          const result = []
+
+          if (index === 0) {
+            result.push(recursiveStringify(segment.start))
+          }
+
           if (
             segment.start.elementId === segment.relationship.startNodeElementId
           ) {
-            return `${recursiveStringify(segment.start)}-${recursiveStringify(
-              segment.relationship
-            )}->${recursiveStringify(segment.end)}`
+            result.push('-')
+            result.push(recursiveStringify(segment.relationship))
+            result.push('->')
+            result.push(recursiveStringify(segment.end))
           } else {
-            return `${recursiveStringify(segment.end)}-${recursiveStringify(
-              segment.relationship
-            )}->${recursiveStringify(segment.start)}`
+            result.push('<-')
+            result.push(recursiveStringify(segment.relationship))
+            result.push('-')
+            result.push(recursiveStringify(segment.end))
           }
+
+          return result.join('')
         })
         .join('')
     }
   }
 
   if (record.length === 0) return []
-
-  return record.map(v => recursiveStringify(v))
+  return record.keys.map(key => recursiveStringify(record.get(key)))
 }

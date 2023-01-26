@@ -546,7 +546,7 @@ describe('helpers', () => {
     })
   })
   describe('record transformations', () => {
-    test('extractRecordsToResultArray handles empty records', () => {
+    test('recordToStringArray handles empty records', () => {
       // Given
       const records: Record[] = []
 
@@ -556,7 +556,7 @@ describe('helpers', () => {
       // Then
       expect(res).toEqual([])
     })
-    test('extractRecordsToResultArray handles regular records', () => {
+    test('recordToStringArray handles regular records', () => {
       // Given
       const start = new (neo4j.types.Node as any)(1, ['X'], { x: 1 })
       const end = new (neo4j.types.Node as any)(2, ['Y'], {
@@ -587,6 +587,60 @@ describe('helpers', () => {
         ['"x"', '"y"', '(:Person {prop1: "prop1"})'],
         ['"xx"', '"yy"', '(:X {x: 1.0})-[:REL {rel: 1.0}]->(:Y {y: 1})']
       ])
+    })
+
+    test('recordToStringArray handles two way path', () => {
+      // Given
+      const start = new (neo4j.types.Node as any)(1, ['X'], { x: 1 })
+      const middle = new (neo4j.types.Node as any)(2, ['Y'], {
+        y: new (neo4j.int as any)(1)
+      })
+      const end = new (neo4j.types.Node as any)(3, ['Z'], { z: '1' })
+      const rel1 = new (neo4j.types.Relationship as any)(4, 1, 2, 'REL', {
+        rel: 1
+      })
+      const rel2 = new (neo4j.types.Relationship as any)(5, 3, 2, 'REL', {
+        rel: 2
+      })
+
+      const segments = [
+        new (neo4j.types.PathSegment as any)(start, rel1, middle),
+        new (neo4j.types.PathSegment as any)(middle, rel2, end)
+      ]
+      const path = new (neo4j.types.Path as any)(start, end, segments)
+
+      const records = [
+        new Record(
+          ['"n"'],
+          [new (neo4j.types.Node as any)('1', ['Person'], { prop1: 'prop1' })]
+        ) as any,
+        new Record(['"n"'], [path]) as any
+      ]
+      // When
+      const res = records.map(record => recordToStringArray(record))
+
+      // Then
+      expect(res).toEqual([
+        ['(:Person {prop1: "prop1"})'],
+        [
+          '(:X {x: 1.0})-[:REL {rel: 1.0}]->(:Y {y: 1})<-[:REL {rel: 2.0}]-(:Z {z: "1"})'
+        ]
+      ])
+    })
+
+    test('recordToStringArray handles duration', () => {
+      // Given
+      const records = [
+        new Record(
+          ['"n"'],
+          [new (neo4j.types.Duration as any)(1, 2, 3, 4)]
+        ) as any
+      ]
+      // When
+      const res = records.map(record => recordToStringArray(record))
+
+      // Then
+      expect(res).toEqual([['P1M2DT3S']])
     })
   })
 
