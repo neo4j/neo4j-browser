@@ -422,7 +422,7 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
   exportCSV = (): void => {
     const records = this.getRecords()
     const firstRecord = records[0]
-    const keys = firstRecord.length > 0 ? firstRecord.keys : []
+    const keys = firstRecord?.length > 0 ? firstRecord.keys : []
 
     const exportdataRaw = [keys]
     exportdataRaw.push(
