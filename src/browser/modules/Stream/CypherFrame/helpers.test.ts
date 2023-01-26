@@ -20,7 +20,7 @@
 import neo4j, { Record } from 'neo4j-driver'
 
 import {
-  cypherDataToStringArray,
+  recordToStringArray,
   getRecordsToDisplayInTable,
   initialView,
   recordToJSONMapper,
@@ -31,6 +31,7 @@ import {
   resultIsError
 } from './helpers'
 import * as viewTypes from 'shared/modules/frames/frameViewTypes'
+import { BrowserRequestResult } from 'shared/modules/requests/requestsDuck'
 
 describe('helpers', () => {
   test('getRecordsToDisplayInTable should report if there are rows or not in the result', () => {
@@ -46,7 +47,10 @@ describe('helpers', () => {
     // Then
     items.forEach(item => {
       expect(
-        getRecordsToDisplayInTable(item.request.result, maxRows).length
+        getRecordsToDisplayInTable(
+          item.request.result as BrowserRequestResult,
+          maxRows
+        ).length
       ).toEqual(item.expect)
     })
   })
@@ -544,10 +548,10 @@ describe('helpers', () => {
   describe('record transformations', () => {
     test('extractRecordsToResultArray handles empty records', () => {
       // Given
-      const records: any = null
+      const records: Record[] = []
 
       // When
-      const res = cypherDataToStringArray(records)
+      const res = records.map(record => recordToStringArray(record))
 
       // Then
       expect(res).toEqual([])
@@ -576,7 +580,7 @@ describe('helpers', () => {
         new Record(['"x"', '"y"', '"n"'], ['xx', 'yy', path]) as any
       ]
       // When
-      const res = cypherDataToStringArray(records)
+      const res = records.map(record => recordToStringArray(record))
 
       // Then
       expect(res).toEqual([

@@ -29,12 +29,8 @@ import {
   reduce,
   some
 } from 'lodash-es'
-import {
-  CypherDataType,
-  propertyToString,
-  isCypherPropertyType
-} from 'neo4j-arc/common'
-import neo4j from 'neo4j-driver'
+import { CypherDataType, isCypherPropertyType } from 'neo4j-arc/common'
+import neo4j, { Path, Record, Node, Relationship } from 'neo4j-driver'
 
 import bolt from 'services/bolt/bolt'
 import { recursivelyExtractGraphItems } from 'services/bolt/boltMappings'
@@ -44,6 +40,7 @@ import {
 } from 'services/bolt/cypherTypesFormatting'
 import { stringifyMod, unescapeDoubleQuotesForDisplay } from 'services/utils'
 import * as viewTypes from 'shared/modules/frames/frameViewTypes'
+import { BrowserRequestResult } from 'shared/modules/requests/requestsDuck'
 
 /**
  * Checks if a results has records which fields will be truncated when displayed
@@ -122,8 +119,11 @@ export function getBodyAndStatusBarMessages(
   }
 }
 
-export const getRecordsToDisplayInTable = (result: any, maxRows: any) => {
-  if (!result) return []
+export const getRecordsToDisplayInTable = (
+  result: BrowserRequestResult,
+  maxRows: number
+): Record[] => {
+  if (!result || !('records' in result)) return []
   return result && result.records && result.records.length > maxRows
     ? result.records.slice(0, maxRows)
     : result.records
@@ -426,24 +426,46 @@ function isNeo4jValue(value: any) {
       return false
   }
 }
-export const cypherDataToStringArray = (map: CypherDataType): string[][] => {
-  const recursiveStringify = (
-    value: CypherDataType
-  ): string | string[] | string[][] => {
-    console.log(value)
-    if (isCypherPropertyType(value)) {
-      return stringifyMod(value, stringModifier, true)
-    }
+
+export const recordToStringArray = (record: Record): string[] => {
+  const recursiveStringify = (value: CypherDataType): string => {
+    console.log('value', value)
 
     if (Array.isArray(value)) {
       if (value.length === 0) return ''
-      return value.map(v => recursiveStringify(v) as string[])
+      return `[${value.map(v => recursiveStringify(v)).join(', ')}]`
+    }
+
+    if (isCypherPropertyType(value)) {
+      //Note: later we should use propertyToString here but needs to be updated to show year in durations.
+      return stringifyMod(value, stringModifier, true)
     }
 
     // We have nodes, relationships, paths and cypher maps left.
     const entries = Object.entries(value)
     if (entries.length === 0) return ''
 
+    if (
+      value instanceof Node ||
+      value instanceof Relationship ||
+      value instanceof Path
+    ) {
+      return stringifyNodeRelationshipOrPath(value)
+    }
+
+    //Else is cypher map
+    const entriesString = entries
+      .map(([key, value]) => {
+        return `${key}: ${recursiveStringify(value)}`
+      })
+      .join(', ')
+
+    return `{${entriesString}}`
+  }
+
+  const stringifyNodeRelationshipOrPath = (
+    value: Node | Relationship | Path
+  ): string => {
     if (value instanceof neo4j.types.Node) {
       const labels = value.labels.length > 0 ? `:${value.labels.join(':')}` : ''
       const properties = Object.entries(value.properties).map(
@@ -466,52 +488,29 @@ export const cypherDataToStringArray = (map: CypherDataType): string[][] => {
       const propertiesString = properties.length > 0 ? ` {${properties}}` : ''
 
       return `[${type}${propertiesString}]`
-    } else if (value instanceof neo4j.types.Path) {
+    } else {
+      console.log('value2', value)
       if (value.segments.length === 0) return recursiveStringify(value.start)
 
-      const result = [recursiveStringify(value.start)]
-      let lastId = value.start.elementId
-      value.segments.forEach(segment => {
-        let node = segment.start
-        let prefix = ''
-        let suffix = ''
-        if (segment.start.elementId === lastId) {
-          prefix = '-'
-          suffix = '->'
-          node = segment.end
-        } else {
-          prefix = '<-'
-          suffix = '-'
-        }
-        result.push(prefix)
-        result.push(recursiveStringify(segment.relationship))
-        result.push(suffix)
-        result.push(recursiveStringify(node))
-        lastId = node.elementId
-      })
-
-      return result.join('')
-    } else if (value instanceof neo4j.types.Record) {
-      if (value.keys.length === 0) return ''
-      return value.map(v => recursiveStringify(v) as string)
+      return value.segments
+        .map(segment => {
+          if (
+            segment.start.elementId === segment.relationship.startNodeElementId
+          ) {
+            return `${recursiveStringify(segment.start)}-${recursiveStringify(
+              segment.relationship
+            )}->${recursiveStringify(segment.end)}`
+          } else {
+            return `${recursiveStringify(segment.end)}-${recursiveStringify(
+              segment.relationship
+            )}->${recursiveStringify(segment.start)}`
+          }
+        })
+        .join('')
     }
-
-    //Else is cypher map
-    const entriesString = entries
-      .map(([key, value]) => {
-        return `${key}: ${recursiveStringify(value)}`
-      })
-      .join(', ')
-
-    return `{${entriesString}}`
   }
 
-  if (!map) return []
-  const result = recursiveStringify(map)
-  if (!Array.isArray(result)) return []
-  if (!Array.isArray(result[0])) return [result as string[]]
+  if (record.length === 0) return []
 
-  return result.some((v: string | string[]) => v.length === 0)
-    ? []
-    : (result as string[][])
+  return record.map(v => recursiveStringify(v))
 }

@@ -33,9 +33,9 @@ import {
   StyledWidthSliderContainer
 } from '../styled'
 import {
-  cypherDataToStringArray,
   getBodyAndStatusBarMessages,
   getRecordsToDisplayInTable,
+  recordToStringArray,
   resultHasTruncatedFields
 } from './helpers'
 import Ellipsis from 'browser-components/Ellipsis'
@@ -43,11 +43,12 @@ import { shallowEquals } from 'services/utils'
 import { GlobalState } from 'shared/globalState'
 import { BrowserRequestResult } from 'shared/modules/requests/requestsDuck'
 import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
+import { Record } from 'neo4j-driver'
 
 interface BaseAsciiViewComponentProps {
   result: BrowserRequestResult
   updated?: number
-  maxRows: unknown
+  maxRows: number
   asciiSetColWidth?: string
   setAsciiMaxColWidth: { (asciiMaxColWidth: number): void }
 }
@@ -110,12 +111,12 @@ export class AsciiViewComponent extends Component<
 
     const records = getRecordsToDisplayInTable(result, maxRows) || []
 
+    const cypherString = records.slice(0, maxFieldItems).map(record => {
+      return recordToStringArray(record)
+    })
     const serializedRows: string[][] = []
-    const cypherString = cypherDataToStringArray(
-      records.slice(0, maxFieldItems)
-    )
     if (cypherString.length > 0) {
-      serializedRows.push(records[0].keys)
+      serializedRows.push(records[0].keys as string[])
       serializedRows.push(...cypherString)
     } else {
       serializedRows.push([])
