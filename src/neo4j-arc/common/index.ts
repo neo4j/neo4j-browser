@@ -45,7 +45,8 @@ export type {
 
 export {
   isCypherTemporalType,
-  isCypherBasicPropertyType
+  isCypherBasicPropertyType,
+  isCypherPropertyType
 } from './types/cypherDataTypes'
 
 export { ClickableUrls } from './components/ClickableUrls'

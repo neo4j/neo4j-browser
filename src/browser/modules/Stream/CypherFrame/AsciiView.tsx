@@ -35,21 +35,20 @@ import {
 import {
   getBodyAndStatusBarMessages,
   getRecordsToDisplayInTable,
-  resultHasTruncatedFields,
-  stringifyResultArray,
-  transformResultRecordsToResultArray
+  recordToStringArray,
+  resultHasTruncatedFields
 } from './helpers'
 import Ellipsis from 'browser-components/Ellipsis'
-import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 import { shallowEquals } from 'services/utils'
 import { GlobalState } from 'shared/globalState'
 import { BrowserRequestResult } from 'shared/modules/requests/requestsDuck'
 import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
+import { Record } from 'neo4j-driver'
 
 interface BaseAsciiViewComponentProps {
   result: BrowserRequestResult
   updated?: number
-  maxRows: unknown
+  maxRows: number
   asciiSetColWidth?: string
   setAsciiMaxColWidth: { (asciiMaxColWidth: number): void }
 }
@@ -110,13 +109,26 @@ export class AsciiViewComponent extends Component<
     const hasRecords = result && 'records' in result && result.records.length
     if (!hasRecords) return
 
-    const records = getRecordsToDisplayInTable(props.result, props.maxRows)
-    const serializedRows =
-      stringifyResultArray(
-        stringModifier,
-        transformResultRecordsToResultArray(records, maxFieldItems),
-        true
-      ) || []
+    const records = getRecordsToDisplayInTable(result, maxRows)
+
+    if (records.length === 0) {
+      const serializedRows: string[][] = []
+      this.setState({ serializedRows })
+      const maxColWidth = asciitable.maxColumnWidth([])
+      this.props.setAsciiMaxColWidth(maxColWidth)
+      return
+    }
+
+    const cypherString = records.slice(0, maxFieldItems).map(record => {
+      return recordToStringArray(record)
+    })
+    const serializedRows: string[][] = []
+    if (cypherString.length > 0) {
+      serializedRows.push(records[0].keys as string[])
+      serializedRows.push(...cypherString)
+    } else {
+      serializedRows.push([])
+    }
     this.setState({ serializedRows })
     const maxColWidth = asciitable.maxColumnWidth(serializedRows)
 
