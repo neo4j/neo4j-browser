@@ -247,7 +247,6 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
                   <SmallSpinnerIcon /> Connection will probably time out.
                 </span>
               )}
-              {reachabilityState === 'succeeded' && '- Neo4j Server reachable'}
               {reachabilityState === 'failed' && (
                 <>
                   {' '}

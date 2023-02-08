@@ -50,7 +50,9 @@ const SuccessText = styled.span`
 /* TODO
 - e2e tests
 - feedback
-- visa inte "successmeddelandet" behövs ej
+- links to docs!
+- neo4j browser version, web browser and operating system.
+- Display time (and timezone)
 
 Testing matrix:
 Version: 3.5 4.4 5
