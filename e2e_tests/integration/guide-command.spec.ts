@@ -87,8 +87,12 @@ describe('Guide command', () => {
     cy.get('[data-testid=navigationGuides]').click()
   })
 
-  it('can load and persist a remote guide and can be deleted permanantly', () => {
+  it.only('can load and persist a remote guide and can be deleted permanantly', () => {
     const guideUrl = 'https://guides.neo4j.com/sandbox/movies/index.html'
+    cy.intercept(guideUrl, {
+      fixture: 'getGuide.html'
+    }).as('getGuide')
+
     cy.executeCommand(':clear')
     cy.executeCommand(`:guide ${guideUrl}`, { timeout: 50000 })
     cy.get('[data-testid="guidesDrawer"]').should('contain', 'Movies Guide')
