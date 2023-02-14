@@ -127,9 +127,9 @@ const Main = React.memo(function Main(props: MainProps) {
       {trialStatus.expired && (
         <ErrorBanner>
           Thank you for installing Neo4j. This is a time limited trial, and the
-          30 days has expired. Please contact sales@neo4j.com or
-          licensing@neo4j.com to continue using the software. Use of this
-          Software without a proper commercial or evaluation license with
+          30 days has expired. Please contact us at
+          https://neo4j.com/contact-us/ to continue using the software. Use of
+          this Software without a proper commercial or evaluation license with
           Neo4j,Inc. or its affiliates is prohibited.
         </ErrorBanner>
       )}
@@ -140,7 +140,8 @@ const Main = React.memo(function Main(props: MainProps) {
           <WarningBanner>
             Thank you for installing Neo4j. This is a time limited trial, you
             have {trialStatus.daysRemaing} days remaining out of 30 days. Please
-            contact sales@neo4j.com if you require more time.
+            contact us at https://neo4j.com/contact-us/ if you require more
+            time.
             <div
               style={{
                 position: 'absolute',
