@@ -87,7 +87,7 @@ describe('Guide command', () => {
     cy.get('[data-testid=navigationGuides]').click()
   })
 
-  it.only('can load and persist a remote guide and can be deleted permanantly', () => {
+  it('can load and persist a remote guide and can be deleted permanantly', () => {
     const guideUrl = 'https://guides.neo4j.com/sandbox/movies/index.html'
     cy.intercept(guideUrl, {
       fixture: 'getGuide.html'
