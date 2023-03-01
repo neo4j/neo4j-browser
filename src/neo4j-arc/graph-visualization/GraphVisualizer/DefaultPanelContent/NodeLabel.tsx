@@ -52,9 +52,7 @@ export function NodeLabel({
         color: graphStyleForLabel.get('text-color-internal')
       }}
     >
-      {count !== undefined
-        ? `${selectedLabel.label} (${count})`
-        : `${selectedLabel.label}`}
+      {`${selectedLabel.label}${count || count === 0 ? ` (${count})` : ''}`}
     </NonClickableLabelChip>
   )
 }
