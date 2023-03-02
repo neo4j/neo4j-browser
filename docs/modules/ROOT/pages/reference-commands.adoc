@@ -55,7 +55,12 @@ The editor in Neo4j Browser understands a few client-side commands, which begin 
 m| +:auto <Cypher query>+
 a|
 Send the Cypher query in an auto-commit transaction. +
-In general, this is not recommended because of the lack of support for retrying the Cypher query on errors.
+
+[NOTE]
+====
+In general, auto-committing transactions is not recommended because of the lack of support for retrying the Cypher query on errors.
+However, some query types need to be sent in auto-committing transactions, such as `CALL { ... } IN TRANSACTIONS`.
+====
 
 m| :clear
 a| Remove all frames from the stream.
