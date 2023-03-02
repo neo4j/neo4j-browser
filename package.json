@@ -222,7 +222,7 @@
     "regenerator-runtime": "^0.13.2",
     "remark-gfm": "^3.0.1",
     "rxjs": "^5.4.2",
-    "semantic-ui-react": "^0.88.0",
+    "semantic-ui-react": "^2.1.4",
     "semver": "^5.5.0",
     "styled-components": "^5.3.3",
     "suber": "^5.0.1",
