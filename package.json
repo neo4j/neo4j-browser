@@ -217,7 +217,7 @@
     "react-svg-inline": "^2.1.1",
     "react-table": "7.0.4",
     "react-timeago": "^4.1.9",
-    "redux": "^3.7.2",
+    "redux": "^4.2.1",
     "redux-observable": "^0.16.0",
     "regenerator-runtime": "^0.13.2",
     "remark-gfm": "^3.0.1",
