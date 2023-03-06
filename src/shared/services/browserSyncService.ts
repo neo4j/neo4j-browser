@@ -17,9 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import firebase from 'firebase/app'
-import 'firebase/auth'
-import 'firebase/database'
+import firebase from 'firebase/compat/app'
+import 'firebase/compat/auth'
+import 'firebase/compat/database'
 
 const appIsInitialized = () => firebase.apps.length && firebase.apps.length > 0
 
