@@ -1,0 +1,143 @@
+:description: Customize the graph query result.
+
+
+[[browser-styling]]
+= Browser styling
+
+You can customize your graph query result either in place or by using Graph Stylesheet (GraSS).
+
+
+[[graph-style]]
+== Style your graph visualization in place
+
+Neo4j Browser also provides functionality for styling with color and size, based on node labels and relationship types.
+
+.Label and type overview
+[caption="Label and type overview"]
+image:browser-style1.png[]
+
+If you select a node label in the _Overview_, there are several styling options available:
+
+* Color -- set the color for nodes of the selected label.
+* Size  -- set the size for nodes of the selected label.
+* Caption -- set what should be displayed as the caption for nodes of the selected label.
+
+.Set node style
+[caption="Label and type overview"]
+image:browser-style2.png[]
+
+If you select a relationship type in the _Overview_, there are several styling options available:
+
+* Color -- set the color for relationships of the selected type.
+* Line width  -- set the line width for relationships of the selected type.
+* Caption -- set what should be displayed as the caption for relationships of the selected type.
+
+.Set relationship style
+[caption="Label and type overview"]
+image:browser-style3.png[]
+
+If you select a node in the _graph result frame_, the _Node Properties_ shows labels and properties; selecting a node label works the same as in the _Overview_.
+
+.Styling for selected node labels
+=====
+You can click the `Movie` label in the graph and change the color, size, and captions of all nodes labeled with `Movie`.
+
+.Changes to nodes labeled `Movie`
+[caption="Changes to nodes labeled `Movie`"]
+image:browser-style4.png[]
+=====
+
+If you select a relationship in the _graph result frame_, the _Relationship Properties_ shows the type and properties; selecting the type works the same as in the _Overview_.
+
+.Styling for selected relationship types
+=====
+You can click a relationship in the graph and change the color, line width, and captions of all relationships with the same type.
+For example the `ACTED_IN` is selected.
+
+.Changes to relationships with type `ACTED_IN`
+[caption="Changes to relationships with type `ACTED_IN`"]
+image:browser-style5.png[]
+=====
+
+
+[[grass]]
+== Style your graph visualization using a GraSS file
+
+Alternatively, follow the steps to customize your styles by importing a graph stylesheet (GraSS) file for Neo4j Browser to reference.
+
+. Run the command `:style` and download your current graph style by using the *Export GraSS* option.
++
+[NOTE]
+====
+Neo4j supports both CSS and JSON format as a _.grass_ file contents.
+====
++
+.Sample of a _.grass_ file contents
+====
+[source,css]
+----
+node {
+  diameter: 50px; #<1>
+  color: #A5ABB6; #<2>
+  border-color: #9AA1AC;  #<3>
+  border-width: 2px; #<4>
+  text-color-internal: #FFFFFF; #<5>
+  font-size: 10px;
+}
+relationship {
+  color: #A5ABB6;
+  shaft-width: 1px; #<6>
+  font-size: 8px;
+  padding: 3px;
+  text-color-external: #000000;
+  text-color-internal: #FFFFFF;
+  caption: "<type>"; #<7>
+}
+node.* {
+  color: #C990C0;
+  border-color: #b261a5;
+  text-color-internal: #FFFFFF;
+  defaultCaption: "<id>";
+}
+node.Status {
+  color: #F79767;
+  border-color: #f36924;
+  text-color-internal: #FFFFFF;
+  defaultCaption: "<id>"; #<8>
+  caption: "{name}";
+}
+node.Person {
+  color: #DA7194;
+  border-color: #cc3c6c;
+  text-color-internal: #FFFFFF;
+  defaultCaption: "<id>";
+  caption: "{name}";
+}
+node.Movie {
+  caption: "{title}";
+}
+----
+<1> Diameter of a node circle.
+<2> The color of the circle.
+<3> The color of the circle border.
+<4> The width of the circle border.
+<5> The color of the text that is displayed.
+<6> Diameter of a relationship circle.
+<7> The text that is displayed.
+<8> The default caption if no specific caption is set.
+====
++
+[NOTE]
+====
+If a node has 2 styled labels, only the first (closest to top) style is applied.
+If a node does not have a label that is in the GraSS, `node` is used as the default.
+Same applies to relationships.
+====
++
+. Edit the downloaded file locally using your favourite editor and use drag & drop it to the designated drop area.
+
+
+[TIP]
+====
+The link:https://github.com/neo4j/neo4j-browser/blob/master/src/shared/services/grassUtils.ts[GraSS parser^] is open source.
+====

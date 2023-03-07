@@ -14,7 +14,7 @@ image:home-screen.png[]
 [[uri-scheme]]
 == Connection URI schemes
 
-By default, Neo4j Browser communicates with a Neo4j DBMS via the link:https://7687.org/[Bolt Protocol^] using the link:https://neo4j.com/docs/javascript-manual/current/[Neo4j JavaScript Driver^] to execute Cypher queries.
+Neo4j Browser requires a connection to a Neo4j DBMS via the link:https://7687.org/[Bolt Protocol^] using the link:{neo4j-docs-base-uri}/javascript-manual/current/[Neo4j JavaScript Driver^] to execute Cypher queries.
 
 Neo4j Browser supports the following connection URI schemes:
 
