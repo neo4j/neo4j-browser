@@ -95,7 +95,7 @@ export function RelatableViewComponent({
 function getColumns(records: Record[], maxFieldItems: number) {
   const keys = get(head(records), 'keys', [])
   return map(keys, key => ({
-    Header: key !== '' ? key : "''",
+    Header: key !== '' ? key : '``',
     accessor: (record: Record) => {
       const fieldItem = record.get(key)
 
