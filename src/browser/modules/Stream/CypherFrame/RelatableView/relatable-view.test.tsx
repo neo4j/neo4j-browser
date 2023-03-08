@@ -66,6 +66,25 @@ describe('RelatableViews', () => {
       // Then
       expect(container).toMatchSnapshot()
     })
+
+    test('does not crash if key is empty string', () => {
+      const value = 'String value'
+      const result = {
+        records: [{ keys: [``], _fields: [value], get: () => value }] as any,
+        summary: {
+          resultAvailableAfter: neo4j.int(5),
+          resultConsumedAfter: neo4j.int(5)
+        } as any
+      }
+
+      // When
+      const { container } = render(
+        <RelatableView result={result} maxFieldItems={1000} maxRows={1000} />
+      )
+
+      // Then
+      expect(container).toMatchSnapshot()
+    })
   })
   describe('TableStatusbar', () => {
     test('displays no statusBarMessage', () => {
