@@ -45,7 +45,7 @@ exports[`RelatableViews RelatableView does not crash if key is empty string 1`] 
               colspan="1"
               role="columnheader"
             >
-              ``
+              \`\`
             </th>
           </tr>
         </thead>
