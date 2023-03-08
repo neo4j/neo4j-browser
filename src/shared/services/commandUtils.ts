@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { extractStatements } from 'cypher-editor-support'
+import { extractStatements } from '@neo4j-cypher/extract-statements'
 
 export function cleanCommand(cmd: string): string {
   const noComments = stripCommandComments(cmd)

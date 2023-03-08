@@ -17,8 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { CypherEditorSupport, EditorSupportSchema } from 'cypher-editor-support'
-import type { EditorSupportCompletionItem } from 'cypher-editor-support'
+import {
+  CypherEditorSupport,
+  EditorSupportSchema
+} from '@neo4j-cypher/editor-support'
+import type { EditorSupportCompletionItem } from '@neo4j-cypher/editor-support'
 import { editor, languages } from 'monaco-editor/esm/vs/editor/editor.api'
 
 import { CypherTokensProvider } from '../language/CypherTokensProvider'

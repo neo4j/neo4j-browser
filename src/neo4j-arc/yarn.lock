@@ -88,6 +88,13 @@
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.17.7.tgz#fc19b645a5456c8d6fdb6cecd3c66c0173902800"
   integrity sha512-bm3AQf45vR4gKggRfvJdYJ0gFLoCbsPxiFLSH6hTVYABptNHY6l9NrhnucVjQ/X+SPtLANT9lc0fFhikj+VBRA==
 
+"@babel/runtime@^7.20.13":
+  version "7.21.0"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.21.0.tgz#5b55c9d394e5fcf304909a8b00c07dc217b56673"
+  integrity sha512-xwII0//EObnq89Ji5AKYQaRYiW/nZ3llSv29d49IuxPhKbtJoLP+9QUUZ4nVragQVtaVGeZrpB+ZtG/Pdy/POw==
+  dependencies:
+    regenerator-runtime "^0.13.11"
+
 "@babel/template@^7.16.7":
   version "7.16.7"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.16.7.tgz#8d126c8701fde4d66b264b3eba3d96f07666d155"
@@ -153,6 +160,50 @@
   resolved "https://registry.yarnpkg.com/@juggle/resize-observer/-/resize-observer-3.3.1.tgz#b50a781709c81e10701004214340f25475a171a0"
   integrity sha512-zMM9Ds+SawiUkakS7y94Ymqx+S0ORzpG3frZirN3l+UlXUmSUR7hF4wxCVqW+ei94JzV5kt0uXBcoOEAuiydrw==
 
+"@neo4j-cypher/antlr4-browser@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@neo4j-cypher/antlr4-browser/-/antlr4-browser-1.0.0.tgz#bc17fe0f112a21b9ae71d3708897980902ce27d5"
+  integrity sha512-nd9zDNVfJ1npMxqDfYvsuPidmBwQNgwnrii0EQPTc4JNL+YxCFiH3WmrOrxUl2VYcZVhtYZn/aAnkjIiiOBpeA==
+  dependencies:
+    "@babel/runtime" "^7.20.13"
+    antlr4 "4.10.1"
+
+"@neo4j-cypher/antlr4-simple@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@neo4j-cypher/antlr4-simple/-/antlr4-simple-1.0.0.tgz#626ff1344177d11bd5303ca555b48c96341ba3e6"
+  integrity sha512-aByRb2gAx6AQeaJp7CaWqHXUOa0Fes1wbWW6JdMFVMIfHl2BpQu1/DQ/UWNZD6GK06wEknH8tEqs10FzWTN0mA==
+  dependencies:
+    "@babel/runtime" "^7.20.13"
+    "@neo4j-cypher/antlr4-browser" "1.0.0"
+
+"@neo4j-cypher/antlr4@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@neo4j-cypher/antlr4/-/antlr4-1.0.0.tgz#c00e0f23bb5696dda9e46d79011a06c5b763d2cb"
+  integrity sha512-IwHqZMf79Vf+0xNceCoA1cg3B+v90Q/2zngv7kJgEXViuJrDp7d9ocP62Mp28faJ0rrjoSzByj6XK8Sfxu+Iiw==
+  dependencies:
+    "@babel/runtime" "^7.20.13"
+    "@neo4j-cypher/antlr4-browser" "1.0.0"
+
+"@neo4j-cypher/editor-support@1.0.0", "@neo4j-cypher/editor-support@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@neo4j-cypher/editor-support/-/editor-support-1.0.0.tgz#c50851ab6c3751c0a46cfcd6996f04704481e557"
+  integrity sha512-8Poyps1/aluDJI7yTMVybz8KfdZokEFpRz+ACNhAI4/89HIQcqAFtob73iTNni3ACZBoCMB/rxRmaYCEnrv+6g==
+  dependencies:
+    "@babel/runtime" "^7.20.13"
+    "@neo4j-cypher/antlr4" "1.0.0"
+    fuse.js "^6.6.2"
+    lodash.find "^4.6.0"
+    lodash.includes "^4.3.0"
+
+"@neo4j-cypher/extract-statements@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@neo4j-cypher/extract-statements/-/extract-statements-1.0.0.tgz#3c55f3853d97c210c5afe9e442309e7fd9f80061"
+  integrity sha512-q+4UrIWBfBxW5iWnm7IT8+2cO9XQh2HDb+5EOB53hlKxwU4+Qrp7gK22Br8Js6xm5dTAOjaOcj1hgmPzSmfRVA==
+  dependencies:
+    "@babel/runtime" "^7.20.13"
+    "@neo4j-cypher/antlr4-simple" "1.0.0"
+    "@neo4j-cypher/editor-support" "1.0.0"
+
 "@neo4j-devtools/word-color@^0.0.7":
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/@neo4j-devtools/word-color/-/word-color-0.0.7.tgz#67b29df52e8b0ad3f39ec7f2c3f099ffad16d137"
@@ -175,11 +226,6 @@
   dependencies:
     estree-walker "^2.0.1"
     picomatch "^2.2.2"
-
-"@types/antlr4@^4.7.2":
-  version "4.7.2"
-  resolved "https://registry.yarnpkg.com/@types/antlr4/-/antlr4-4.7.2.tgz#8cfbbcea13d45c42e9a326aa0e55df816cdd07f5"
-  integrity sha512-v6NASzZa4pUgO2QJJqGHTRRBfZDTOk2savuugSfCLatRTd2q+UtW0I7ub9mjzERhm7aWqGxBi886HnJkLYiIEA==
 
 "@types/chroma-js@2.1.4":
   version "2.1.4"
@@ -314,10 +360,10 @@ ansi-styles@^3.2.1:
   dependencies:
     color-convert "^1.9.0"
 
-antlr4@4.7.0:
-  version "4.7.0"
-  resolved "https://registry.yarnpkg.com/antlr4/-/antlr4-4.7.0.tgz#297f956ddc06f83397fc0990ecf2e0cf20bfbbee"
-  integrity sha1-KX+VbdwG+DOX/AmQ7PLgzyC/u+4=
+antlr4@4.10.1:
+  version "4.10.1"
+  resolved "https://registry.yarnpkg.com/antlr4/-/antlr4-4.10.1.tgz#6be8e3e1ead19ca82419ef0ffe974ef4efe4a793"
+  integrity sha512-fmxidcOwmktzHUD+tz8y/zKLI/NfVAB0+MOvnFUBzo8ToFnphK8JY88oOJeRdhnTrAhjtu45bvxddzbb8nMeIA==
 
 "babel-plugin-styled-components@>= 1.12.0":
   version "2.0.6"
@@ -384,16 +430,6 @@ csstype@^3.0.2:
   version "3.0.11"
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.0.11.tgz#d66700c5eacfac1940deb4e3ee5642792d85cd33"
   integrity sha512-sa6P2wJ+CAbgyy4KFssIb/JNMLxFvKF1pCYCSXS8ZMuqZnMsrxqI2E5sPyoTpxoPU/gVZMzr2zjOfg8GIZOMsw==
-
-cypher-editor-support@1.1.10:
-  version "1.1.10"
-  resolved "https://registry.yarnpkg.com/cypher-editor-support/-/cypher-editor-support-1.1.10.tgz#d3cfda36836af19ede9b82f329540fc0b8e302a4"
-  integrity sha512-Sol1PI35rgD9kuQUmYtY7Yrshh4wqDNPSHOv6OWmSRc/Tu4MDIPM5+nGeIpAqmZG1pezPFcqQpUEQNgJY8kCYg==
-  dependencies:
-    "@types/antlr4" "^4.7.2"
-    antlr4 "4.7.0"
-    fuzzaldrin "2.1.0"
-    lodash "4.17.15"
 
 "d3-array@2 - 3", "d3-array@2.10.0 - 3":
   version "3.1.1"
@@ -678,10 +714,10 @@ fsevents@~2.3.2:
   resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-2.3.2.tgz#8a526f78b8fdf4623b709e0b975c52c24c02fd1a"
   integrity sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==
 
-fuzzaldrin@2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/fuzzaldrin/-/fuzzaldrin-2.1.0.tgz#90204c3e2fdaa6941bb28d16645d418063a90e9b"
-  integrity sha1-kCBMPi/appQbso0WZF1BgGOpDps=
+fuse.js@^6.6.2:
+  version "6.6.2"
+  resolved "https://registry.yarnpkg.com/fuse.js/-/fuse.js-6.6.2.tgz#fe463fed4b98c0226ac3da2856a415576dc9a111"
+  integrity sha512-cJaJkxCCxC8qIIcPBF9yGxY0W/tVZS3uEISDxhYIdtk8OL93pe+6Zj7LjCqVV4dzbqcriOZ+kQ/NE4RXZHsIGA==
 
 globals@^11.1.0:
   version "11.12.0"
@@ -730,10 +766,15 @@ lodash-es@^4.17.21:
   resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.21.tgz#43e626c46e6591b7750beb2b50117390c609e3ee"
   integrity sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==
 
-lodash@4.17.15:
-  version "4.17.15"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
-  integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
+lodash.find@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/lodash.find/-/lodash.find-4.6.0.tgz#cb0704d47ab71789ffa0de8b97dd926fb88b13b1"
+  integrity sha512-yaRZoAV3Xq28F1iafWN1+a0rflOej93l1DQUejs3SZ41h2O9UJBoS9aueGjPDgAl4B6tPC0NuuchLKaDQQ3Isg==
+
+lodash.includes@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/lodash.includes/-/lodash.includes-4.3.0.tgz#60bb98a87cb923c68ca1e51325483314849f553f"
+  integrity sha512-W3Bx6mdkRTGtlJISOvVD/lbqjTlPPUDTMnlXZFnVwi9NKJ6tiAk6LVdlhZMm17VZisqhKcgzpO5Wz91PCt5b0w==
 
 lodash@^4.17.11:
   version "4.17.21"
@@ -815,6 +856,11 @@ react@^17.0.2:
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
+
+regenerator-runtime@^0.13.11:
+  version "0.13.11"
+  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.11.tgz#f6dca3e7ceec20590d07ada785636a90cdca17f9"
+  integrity sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==
 
 rollup-plugin-dts@^4.2.0:
   version "4.2.0"

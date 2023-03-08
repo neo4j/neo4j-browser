@@ -60,3 +60,8 @@ declare module 'shared/services/bolt/boltWorker' {
 
   export default WebpackWorker
 }
+
+// TODO this should not be needed
+declare module '@neo4j-cypher/extract-statements' {
+  export function extractStatements(query: string): any
+}
