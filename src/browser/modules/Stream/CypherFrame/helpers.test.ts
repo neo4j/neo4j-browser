@@ -556,6 +556,12 @@ describe('helpers', () => {
       // Then
       expect(res).toEqual([])
     })
+    test('recordToStringArray handles record with empty object and array', () => {
+      const records = [new Record(['"x"', '"y"', '[]', '{}'], [[], {}, [], {}])]
+      const res = records.map(record => recordToStringArray(record))
+      expect(res).toEqual([['[]', '{}', '[]', '{}']])
+    })
+
     test('recordToStringArray handles regular records', () => {
       // Given
       const start = new (neo4j.types.Node as any)(1, ['X'], { x: 1 })
