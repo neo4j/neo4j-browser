@@ -428,9 +428,10 @@ function isNeo4jValue(value: any) {
 }
 
 export const recordToStringArray = (record: Record): string[] => {
+  console.log('record', record)
   const recursiveStringify = (value: CypherDataType): string => {
     if (Array.isArray(value)) {
-      if (value.length === 0) return ''
+      if (value.length === 0) return '[]'
       return `[${value.map(v => recursiveStringify(v)).join(', ')}]`
     }
 
@@ -441,7 +442,7 @@ export const recordToStringArray = (record: Record): string[] => {
 
     // We have nodes, relationships, paths and cypher maps left.
     const entries = Object.entries(value)
-    if (entries.length === 0) return ''
+    if (entries.length === 0) return '{}'
 
     if (
       value instanceof Node ||
