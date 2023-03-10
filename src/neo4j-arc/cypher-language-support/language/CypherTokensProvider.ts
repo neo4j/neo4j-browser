@@ -57,29 +57,35 @@ export class CypherTokensProvider implements languages.TokensProvider {
     // @ts-ignore
     this.c.update(line, this.v++)
 
-    const items: {
-      element: {
-        start: { start: number; stop: number; line: number; column: number }
-        stop: { start: number; stop: number; line: number; column: number }
-      }
-      type: CypherPart
-    }[] = []
+    const items: languages.IToken[] = []
 
     // @ts-ignore
     this.c.applyHighlighthing((element: any, type: CypherPart) => {
       element.colorType = type
-      items.push({ element, type })
+      items.push({
+        scopes: type.toLowerCase(),
+        startIndex: element.start.column
+      })
     })
-    const all: any[] = []
 
     function traverse(element: any) {
       if (element.colorType) return
 
       const c = element.getChildCount()
       if (c === 0) {
-        all.push(element)
+        if (element.symbol !== undefined && element.symbol.type !== -1) {
+          items.push({
+            scopes: (
+              CypherLexer.symbolicNames[element.symbol.type] ??
+              CypherLexer.literalNames[element.symbol.type] ??
+              ''
+            ).toLowerCase(),
+            startIndex: element.symbol.column
+          })
+        }
         return
       }
+
       for (let i = 0; i < c; i += 1) {
         traverse(element.getChild(i))
       }
@@ -88,27 +94,9 @@ export class CypherTokensProvider implements languages.TokensProvider {
     // @ts-ignore
     traverse(this.c.parseTree)
 
-    const tokens = all
-      .filter(t => t.symbol !== undefined && t.symbol.type !== -1)
-      .map(token => ({
-        scopes: (
-          CypherLexer.symbolicNames[token.symbol.type] ??
-          CypherLexer.literalNames[token.symbol.type] ??
-          ''
-        ).toLowerCase(),
-        startIndex: token.symbol.column
-      }))
-      .concat(
-        items.map(item => ({
-          scopes: item.type.toLowerCase(),
-          startIndex: item.element.start.column
-        }))
-      )
-      .sort((a, b) => (a.startIndex > b.startIndex ? 1 : -1))
-
     return {
       endState: new CypherState(),
-      tokens: tokens
+      tokens: items.sort((a, b) => (a.startIndex > b.startIndex ? 1 : -1))
     }
   }
 }
