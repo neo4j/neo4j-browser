@@ -17,10 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-// @ts-ignore
 import { CypherLexer } from '@neo4j-cypher/antlr4'
 import { languages } from 'monaco-editor/esm/vs/editor/editor.api'
-// @ts-ignore
 import { createCypherLexer } from '@neo4j-cypher/editor-support'
 
 class CypherState implements languages.IState {
@@ -39,16 +37,13 @@ export class CypherTokensProvider implements languages.TokensProvider {
   }
 
   tokenize(line: string): languages.ILineTokens {
-    const lexer = createCypherLexer(line)
+    const lexer = createCypherLexer(line) as unknown as CypherLexer
 
     return {
       endState: new CypherState(),
       tokens: lexer
-        // @ts-ignore
         .getAllTokens()
-        // @ts-ignore
         .filter(token => token !== null && token.type !== -1)
-        // @ts-ignore
         .map(token => ({
           scopes:
             (
@@ -58,7 +53,6 @@ export class CypherTokensProvider implements languages.TokensProvider {
             ).toLowerCase() + '.cypher',
           startIndex: token.column
         }))
-        // @ts-ignore
         .sort((a, b) => (a.startIndex > b.startIndex ? 1 : -1))
     }
   }
