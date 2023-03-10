@@ -1944,7 +1944,7 @@
     "@babel/runtime" "^7.20.13"
     "@neo4j-cypher/antlr4-browser" "1.0.0"
 
-"@neo4j-cypher/antlr4@1.0.0":
+"@neo4j-cypher/antlr4@1.0.0", "@neo4j-cypher/antlr4@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@neo4j-cypher/antlr4/-/antlr4-1.0.0.tgz#c00e0f23bb5696dda9e46d79011a06c5b763d2cb"
   integrity sha512-IwHqZMf79Vf+0xNceCoA1cg3B+v90Q/2zngv7kJgEXViuJrDp7d9ocP62Mp28faJ0rrjoSzByj6XK8Sfxu+Iiw==
