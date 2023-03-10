@@ -39,6 +39,8 @@ import { StyledLink } from 'browser-components/buttons'
 import { Alert } from '@neo4j-ndl/react'
 import styled from 'styled-components'
 
+import { version as browserVersion } from 'project-root/package.json'
+
 export const ListItem = styled.li`
   list-style-type: disc;
   margin: 0 0 0 16px;
@@ -46,22 +48,6 @@ export const ListItem = styled.li`
 const SuccessText = styled.span`
   color: ${props => props.theme.success};
 `
-
-/* TODO
-- e2e tests
-- feedback
-- links to docs!
-- neo4j browser version, web browser and operating system.
-- Display time (and timezone)
-
-Testing matrix:
-Version: 3.5 4.4 5
-Edition: Community Enterpise
-Environment: Aura Standalone Cluster
-Hosting: HTTP vs HTTPS
-Bolt Security: Bolt vs Bolt+s
-Target: 7474, 7687, 8080, 3423, random string, aura paused
-*/
 
 function toHttp(url: string) {
   const hostname = stripScheme(url)
@@ -232,10 +218,7 @@ const DebugConnectivityFrame = (props: DebugConnectivityFrameProps) => {
                     bolt connector was detected. To connect you will need to
                     either:
                     <ul>
-                      <ListItem>
-                        {' '}
-                        Configure a SSL on the bolt connector - LINK
-                      </ListItem>
+                      <ListItem> Configure SSL on the bolt connector</ListItem>
                       <ListItem> Switch to running browser over HTTP </ListItem>
                     </ul>
                   </div>
@@ -330,8 +313,7 @@ const DebugConnectivityFrame = (props: DebugConnectivityFrameProps) => {
                     When browser is hosted on HTTPS a encrypted connection to
                     neo4j is required. Therefore only the encrypted protocols
                     bolt+s:// and neo4j+s:// are enabled when Browser is hosted
-                    on HTTPS. Setting up SSL can be tricky to get right, here is
-                    a link to a knowledgebase article to help.
+                    on HTTPS.
                   </div>
                 )}{' '}
                 {httpStatuses.every(s => s === 'requestFailed') && !isAura && (
@@ -462,6 +444,11 @@ const DebugConnectivityFrame = (props: DebugConnectivityFrameProps) => {
                 </div>
               ))}
             </div>
+            <pre>
+              <div>Neo4j Browser Version: {browserVersion}</div>
+              <div>User Agent: {navigator?.userAgent}</div>
+              <div>Current time: {new Date().toISOString()} </div>
+            </pre>
           </details>
         </div>
       }
