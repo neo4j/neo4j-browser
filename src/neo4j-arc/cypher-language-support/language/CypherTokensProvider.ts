@@ -46,7 +46,6 @@ export type CypherPart =
   | 'consoleCommand'
   | 'property'
 
-const lexer = new CypherLexer()
 export class CypherTokensProvider implements languages.TokensProvider {
   getInitialState(): CypherState {
     return new CypherState()
@@ -67,16 +66,18 @@ export class CypherTokensProvider implements languages.TokensProvider {
     }[] = []
 
     // @ts-ignore
-    this.c.applyHighlighthing((element, type: CypherPart) => {
+    this.c.applyHighlighthing((element: any, type: CypherPart) => {
+      element.colorType = type
       items.push({ element, type })
     })
     const all: any[] = []
 
     function traverse(element: any) {
+      if (element.colorType) return
+
       const c = element.getChildCount()
       if (c === 0) {
         all.push(element)
-
         return
       }
       for (let i = 0; i < c; i += 1) {
@@ -87,24 +88,7 @@ export class CypherTokensProvider implements languages.TokensProvider {
     // @ts-ignore
     traverse(this.c.parseTree)
 
-    // @ts-ignore
-    window.c = this.c
-
-    console.log(
-      items.map(item => ({
-        scopes: item.type,
-        startIndex: item.element.start.start,
-        endIndex: item.element.stop.stop
-      }))
-    )
-    console.log(items)
-    const fancyTokens = items.map(item => ({
-      scopes: item.type,
-      startIndex: item.element.start.column,
-      endIndex: item.element.stop.stop
-    }))
-
-    const basicTokens = all
+    const tokens = all
       .filter(t => t.symbol !== undefined && t.symbol.type !== -1)
       .map(token => ({
         scopes: (
@@ -114,22 +98,17 @@ export class CypherTokensProvider implements languages.TokensProvider {
         ).toLowerCase(),
         startIndex: token.symbol.column
       }))
-
-    const combined = basicTokens.filter(
-      basic =>
-        !fancyTokens.find(
-          f =>
-            basic.startIndex >= f.startIndex && basic.startIndex <= f.endIndex
-        )
-    )
-    console.log(basicTokens, combined, fancyTokens)
+      .concat(
+        items.map(item => ({
+          scopes: item.type.toLowerCase(),
+          startIndex: item.element.start.column
+        }))
+      )
+      .sort((a, b) => (a.startIndex > b.startIndex ? 1 : -1))
 
     return {
       endState: new CypherState(),
-      // @ts-ignore
-      tokens: combined
-        .concat(fancyTokens)
-        .sort((a, b) => (a.startIndex > b.startIndex ? 1 : -1))
+      tokens: tokens
     }
   }
 }
