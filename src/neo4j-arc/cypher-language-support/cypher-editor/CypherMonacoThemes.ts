@@ -290,15 +290,15 @@ const keywords: string[] = [
   'xor',
   'yield'
 ]
-const labels: string[] = ['label']
-const relationshipTypes: string[] = ['relationshiptype']
-const variables: string[] = ['variable']
-const procedures: string[] = ['procedure']
-const functions: string[] = ['function']
-const parameters: string[] = ['parameter']
-const properties: string[] = ['property']
-const consoleCommands: string[] = ['consolecommand']
-const procedureOutput: string[] = ['procedureoutput']
+const labels: string[] = []
+const relationshipTypes: string[] = []
+const variables: string[] = []
+const procedures: string[] = []
+const functions: string[] = []
+const parameters: string[] = []
+const properties: string[] = []
+const consoleCommands: string[] = []
+const procedureOutput: string[] = []
 const tokensWithoutSyntaxHighlighting: string[] = [
   'escapedchar',
   'unescapedsymbolicname',
@@ -317,7 +317,7 @@ export const getMonacoThemes = (
   const cypherColor = color || cypherColorFallback
 
   const makeCypherTokenThemeRule = (token: string, foreground: string) => ({
-    token,
+    token: `${token}.cypher`,
     foreground
   })
 
