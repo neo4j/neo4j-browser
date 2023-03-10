@@ -176,7 +176,7 @@
     "@babel/runtime" "^7.20.13"
     "@neo4j-cypher/antlr4-browser" "1.0.0"
 
-"@neo4j-cypher/antlr4@1.0.0":
+"@neo4j-cypher/antlr4@1.0.0", "@neo4j-cypher/antlr4@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@neo4j-cypher/antlr4/-/antlr4-1.0.0.tgz#c00e0f23bb5696dda9e46d79011a06c5b763d2cb"
   integrity sha512-IwHqZMf79Vf+0xNceCoA1cg3B+v90Q/2zngv7kJgEXViuJrDp7d9ocP62Mp28faJ0rrjoSzByj6XK8Sfxu+Iiw==
@@ -184,10 +184,10 @@
     "@babel/runtime" "^7.20.13"
     "@neo4j-cypher/antlr4-browser" "1.0.0"
 
-"@neo4j-cypher/editor-support@1.0.0", "@neo4j-cypher/editor-support@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@neo4j-cypher/editor-support/-/editor-support-1.0.0.tgz#c50851ab6c3751c0a46cfcd6996f04704481e557"
-  integrity sha512-8Poyps1/aluDJI7yTMVybz8KfdZokEFpRz+ACNhAI4/89HIQcqAFtob73iTNni3ACZBoCMB/rxRmaYCEnrv+6g==
+"@neo4j-cypher/editor-support@1.0.1", "@neo4j-cypher/editor-support@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@neo4j-cypher/editor-support/-/editor-support-1.0.1.tgz#1449a57d36fb72b30766bd096ccb1fa85477a4f4"
+  integrity sha512-3F4J1YezeNF9zTLdN/bYw+tXgfjGPSvPYHY3GhExTZSoPs4ngPpMpTCUnPDIas5mOs4OF3QlpTrdVjMqk8ryRw==
   dependencies:
     "@babel/runtime" "^7.20.13"
     "@neo4j-cypher/antlr4" "1.0.0"
@@ -195,14 +195,14 @@
     lodash.find "^4.6.0"
     lodash.includes "^4.3.0"
 
-"@neo4j-cypher/extract-statements@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@neo4j-cypher/extract-statements/-/extract-statements-1.0.0.tgz#3c55f3853d97c210c5afe9e442309e7fd9f80061"
-  integrity sha512-q+4UrIWBfBxW5iWnm7IT8+2cO9XQh2HDb+5EOB53hlKxwU4+Qrp7gK22Br8Js6xm5dTAOjaOcj1hgmPzSmfRVA==
+"@neo4j-cypher/extract-statements@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@neo4j-cypher/extract-statements/-/extract-statements-1.0.1.tgz#6effe576f36a8a1d5aa9b6ee63cbb859e37113bd"
+  integrity sha512-TIr+A4sPOTtpKEgz1UqtfWlJtSXexYPHpuQ5Y08P2TYFwimTJtqrE/twuFM6d7UL24d1cXrAzEKGx2g+WcjVjw==
   dependencies:
     "@babel/runtime" "^7.20.13"
     "@neo4j-cypher/antlr4-simple" "1.0.0"
-    "@neo4j-cypher/editor-support" "1.0.0"
+    "@neo4j-cypher/editor-support" "1.0.1"
 
 "@neo4j-devtools/word-color@^0.0.7":
   version "0.0.7"
