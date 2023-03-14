@@ -116,7 +116,6 @@ function FrameEditor({
   function run(cmd: string) {
     reRun(frame, cmd)
   }
-
   function onPreviewClick(e: React.MouseEvent) {
     if (e.ctrlKey || e.metaKey) {
       onTitlebarCmdClick(editorValue)

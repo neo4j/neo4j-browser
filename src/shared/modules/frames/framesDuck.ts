@@ -256,6 +256,7 @@ export interface Frame {
   useDb: string | null
   history?: string[]
   dbs?: Database[]
+  urlToDebug?: string
 }
 
 export interface FrameStack {
