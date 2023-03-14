@@ -26,8 +26,7 @@ export const cannyOptions = {
   position: 'right',
   align: 'top'
 }
-export const CANNY_FEATURE_REQUEST_URL =
-  'https://neo4j-browser.canny.io/feature-requests'
+export const CANNY_FEATURE_REQUEST_URL = 'https://feedback.neo4j.com/browser'
 
 export interface CannyOptions {
   appID: string
