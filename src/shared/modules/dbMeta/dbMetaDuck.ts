@@ -66,7 +66,7 @@ MATCH ()-[]->() RETURN { name:'relationships', data: count(*)} AS result
 export const serverInfoQuery =
   'CALL dbms.components() YIELD name, versions, edition'
 
-export const trialStatusQuery = 'CALL dbms.acceptedLicenseAgreement()'
+export const trialStatusQuery = 'CALL dbms.licenseAgreementDetails()'
 export const oldTrialStatusQuery = 'CALL dbms.acceptedLicenseAgreement()'
 
 export function fetchMetaData() {
