@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { QueryResult } from 'neo4j-driver'
+import { Integer, QueryResult } from 'neo4j-driver'
 import semver from 'semver'
 
 import { guessSemverVersion } from '../features/featureDuck.utils'
@@ -62,27 +62,53 @@ export function extractServerInfo(res: QueryResult): ServerInfo {
 export const extractTrialStatus = (res: QueryResult): TrialStatus => {
   const resultObj = res.records.map(res => res.toObject())[0]
 
-  const trialStatus: TrialStatus = {
-    commerialLicenseAccepted: null,
-    expired: null,
-    daysRemaing: null
+  if (!resultObj) {
+    return { status: 'unknown' }
   }
+
+  const status = resultObj.status as 'yes' | 'no' | 'eval' | 'expired'
+  console.log('status', status)
+  if (status === 'yes') {
+    return { status: 'accepted' }
+  } else if (status === 'eval') {
+    const daysRemaining = resultObj.daysLeftOnTrial as Integer
+    const totalDays = resultObj.totalTrialDays as Integer
+    return {
+      status: 'eval',
+      daysRemaining: daysRemaining.toNumber(),
+      totalDays: totalDays.toNumber()
+    }
+  }
+  if (status === 'no') {
+    return { status: 'unaccepted' }
+  } else if (status === 'expired') {
+    const totalDays = resultObj.totalTrialDays as Integer
+    return { status: 'expired', totalDays: totalDays.toNumber() }
+  }
+  return { status: 'unknown' }
+}
+
+export const extractTrialStatusOld = (res: QueryResult): TrialStatus => {
+  const resultObj = res.records.map(res => res.toObject())[0]
 
   if (!resultObj) {
-    return trialStatus
+    return { status: 'unknown' }
   }
 
-  const value = resultObj.value[0] as number | 'yes' | 'no' | 'expired'
+  const value = resultObj.value as Integer | 'yes' | 'no' | 'expired'
   if (value) {
-    if (typeof value === 'number') {
-      trialStatus.daysRemaing = value
+    if (value === 'no') {
+      return { status: 'unaccepted' }
+    } else if (value === 'expired') {
+      return { status: 'expired', totalDays: 30 }
+    } else if (value === 'yes') {
+      return { status: 'accepted' }
     } else {
-      trialStatus.commerialLicenseAccepted = value === 'yes'
-      trialStatus.expired = value === 'expired'
+      return { status: 'eval', daysRemaining: value.toNumber(), totalDays: 30 }
     }
   }
 
-  return trialStatus
+  return { status: 'unknown' }
 }
 
 export const versionHasEditorHistorySetting = (version: string | null) => {

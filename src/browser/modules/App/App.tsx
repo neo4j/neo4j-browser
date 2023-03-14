@@ -282,7 +282,11 @@ export function App(props: any) {
                         setConsentBannerShownCount(consentBannerShownCount + 1)
                       }
                       openSettingsDrawer={openSettingsDrawer}
-                      trialStatus={props.trialStatus}
+                      trialStatus={{
+                        status: 'eval',
+                        daysRemaining: 19,
+                        totalDays: 30
+                      }}
                     />
                   </StyledMainWrapper>
                 </StyledBody>

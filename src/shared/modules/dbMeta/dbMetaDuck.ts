@@ -18,7 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import {
-  extractTrialStatus as extractTrialStatus,
+  extractTrialStatus,
+  extractTrialStatusOld,
   versionHasEditorHistorySetting
 } from './utils'
 import { isConfigValFalsy } from 'services/bolt/boltHelpers'
@@ -102,10 +103,19 @@ export const updateServerInfo = (res: QueryResult) => {
 }
 
 export const updateTrialStatus = (res: QueryResult) => {
-  const extrated = extractTrialStatus(res)
+  const extracted = extractTrialStatus(res)
+  console.log('extracted', extracted)
   return {
     type: UPDATE_TRIAL_STATUS,
-    ...extrated
+    trailStatus: extracted
+  }
+}
+
+export const updateTrialStatusOld = (res: QueryResult) => {
+  const extracted = extractTrialStatusOld(res)
+  return {
+    type: UPDATE_TRIAL_STATUS,
+    ...extracted
   }
 }
 
@@ -140,18 +150,27 @@ export type ClientSettings = {
   metricsPrefix: string
 }
 
-export type TrialStatus = {
-  commerialLicenseAccepted: boolean | null
-  expired: boolean | null
-  daysRemaing: number | null
-}
+export type TrialStatus =
+  | {
+      status: 'accepted'
+    }
+  | { status: 'unknown' }
+  | {
+      status: 'expired'
+      totalDays: number
+    }
+  | {
+      status: 'eval'
+      daysRemaining: number | null
+      totalDays: number
+    }
+  | {
+      status: 'unaccepted'
+    }
 
-const initialTrialStatus = {
-  commerialLicenseAccepted: null,
-  expired: null,
-  daysRemaing: null
+const initialTrialStatus: TrialStatus = {
+  status: 'unknown'
 }
-
 /**
  * Initial client settings, used before the actual settings is loaded. Not to be
  * confused with the default values for the setting, since not always the same.
@@ -355,6 +374,9 @@ const dbMetaReducer = (
       return { ...state, settings: { ...action.settings } }
     case CLEAR_META:
       return { ...initialState }
+    case UPDATE_TRIAL_STATUS:
+      console.log('UPDATE_TRIAL_STATUS', action)
+      return { ...state, trialStatus: action.trailStatus }
     default:
       return state
   }
