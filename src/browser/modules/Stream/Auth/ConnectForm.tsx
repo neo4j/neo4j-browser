@@ -114,19 +114,22 @@ export async function httpReachabilityCheck(
     return { status: 'parsingJsonFailed', error: error as Error }
   }
 
-  if ('auth_config' in json && 'oidc_providers' in json.auth_config) {
-    const advertisedAddress = json.bolt_routing ?? json.bolt_direct
-    if (advertisedAddress) {
-      return {
-        status: 'foundAdvertisedBoltAddress',
-        advertisedAddress,
-        redirected: res.redirected
-      }
-    } else {
-      return { status: 'foundBoltPort' }
+  const isNeo4jDiscoveryData =
+    'auth_config' in json && 'oidc_providers' in json.auth_config
+
+  if (!isNeo4jDiscoveryData) {
+    return { status: 'foundOtherJSON', json }
+  }
+
+  const advertisedAddress = json.bolt_routing ?? json.bolt_direct
+  if (advertisedAddress) {
+    return {
+      status: 'foundAdvertisedBoltAddress',
+      advertisedAddress,
+      redirected: res.redirected
     }
   } else {
-    return { status: 'foundOtherJSON', json }
+    return { status: 'foundBoltPort' }
   }
 }
 
