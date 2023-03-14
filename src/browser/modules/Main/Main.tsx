@@ -136,7 +136,6 @@ const Main = React.memo(function Main(props: MainProps) {
           prohibited.
         </ErrorBanner>
       )}
-      {console.log(trialStatus)}
       {trialStatus.status === 'eval' && showRemainingTrialBanner && (
         <WarningBanner style={{ overflow: 'auto' }}>
           Thank you for installing Neo4j. This is a time limited trial. You have{' '}

@@ -67,6 +67,7 @@ export const serverInfoQuery =
   'CALL dbms.components() YIELD name, versions, edition'
 
 export const trialStatusQuery = 'CALL dbms.acceptedLicenseAgreement()'
+export const oldTrialStatusQuery = 'CALL dbms.acceptedLicenseAgreement()'
 
 export function fetchMetaData() {
   return {
@@ -104,7 +105,6 @@ export const updateServerInfo = (res: QueryResult) => {
 
 export const updateTrialStatus = (res: QueryResult) => {
   const extracted = extractTrialStatus(res)
-  console.log('extracted', extracted)
   return {
     type: UPDATE_TRIAL_STATUS,
     trailStatus: extracted
@@ -375,7 +375,6 @@ const dbMetaReducer = (
     case CLEAR_META:
       return { ...initialState }
     case UPDATE_TRIAL_STATUS:
-      console.log('UPDATE_TRIAL_STATUS', action)
       return { ...state, trialStatus: action.trailStatus }
     default:
       return state

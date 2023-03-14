@@ -46,7 +46,8 @@ import {
   metaCountQuery,
   trialStatusQuery,
   updateTrialStatus,
-  updateTrialStatusOld
+  updateTrialStatusOld,
+  oldTrialStatusQuery
 } from './dbMetaDuck'
 import {
   ClientSettings,
@@ -292,27 +293,25 @@ async function fetchServerInfo(store: any) {
 async function fetchTrialStatus(store: any) {
   try {
     const trialStatus = await bolt.directTransaction(
-      'CALL dbms.licenseAgreementDetails()',
+      trialStatusQuery,
       {},
       {
         ...backgroundTxMetadata,
         useDb: (await bolt.hasMultiDbSupport()) ? SYSTEM_DB : undefined
       }
     )
-    console.log('trialStatus1', trialStatus)
     store.dispatch(updateTrialStatus(trialStatus))
   } catch {
     // Fallback to old query
     try {
       const trialStatus = await bolt.directTransaction(
-        trialStatusQuery,
+        oldTrialStatusQuery,
         {},
         {
           ...backgroundTxMetadata,
           useDb: (await bolt.hasMultiDbSupport()) ? SYSTEM_DB : undefined
         }
       )
-      console.log('trialStatus2', trialStatus)
       store.dispatch(updateTrialStatusOld(trialStatus))
     } catch {}
   }

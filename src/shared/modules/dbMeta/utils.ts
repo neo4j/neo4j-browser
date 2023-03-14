@@ -67,7 +67,6 @@ export const extractTrialStatus = (res: QueryResult): TrialStatus => {
   }
 
   const status = resultObj.status as 'yes' | 'no' | 'eval' | 'expired'
-  console.log('status', status)
   if (status === 'yes') {
     return { status: 'accepted' }
   } else if (status === 'eval') {
