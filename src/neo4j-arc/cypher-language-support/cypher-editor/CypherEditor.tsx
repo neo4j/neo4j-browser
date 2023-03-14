@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { QueryOrCommand, parse } from 'cypher-editor-support'
+import { QueryOrCommand, parse } from '@neo4j-cypher/editor-support'
 import { debounce } from 'lodash-es'
 import { QuickInputList } from 'monaco-editor/esm/vs/base/parts/quickinput/browser/quickInputList'
 import 'monaco-editor/esm/vs/editor/editor.all.js'
