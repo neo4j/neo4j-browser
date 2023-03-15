@@ -428,3 +428,11 @@ export const StyledParamsTemplateClickableArea = styled.a`
 export const StyledSpecifyParamsText = styled.span`
   color: ${props => props.theme.primaryText};
 `
+
+export const StyledCode = styled.code`
+  background-color: ${props => props.theme.frameSidebarBackground};
+  border-radius: 2px;
+  cursor: auto;
+  border: none;
+  padding: 2px 4px;
+`

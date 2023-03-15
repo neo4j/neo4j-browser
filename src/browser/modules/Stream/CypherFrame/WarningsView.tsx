@@ -29,7 +29,9 @@ import {
   StyledHelpContent,
   StyledHelpDescription,
   StyledHelpFrame,
-  StyledPreformattedArea
+  StyledPreformattedArea,
+  StyledCode,
+  StyledCypherInfoMessage
 } from '../styled'
 import { deepEquals } from 'neo4j-arc/common'
 
@@ -38,6 +40,8 @@ const getWarningComponent = (severity: any) => {
     return <StyledCypherErrorMessage>{severity}</StyledCypherErrorMessage>
   } else if (severity === 'WARNING') {
     return <StyledCypherWarningMessage>{severity}</StyledCypherWarningMessage>
+  } else if (severity === 'INFORMATION') {
+    return <StyledCypherInfoMessage>{severity}</StyledCypherInfoMessage>
   } else {
     return <StyledCypherMessage>{severity}</StyledCypherMessage>
   }
@@ -82,6 +86,9 @@ export class WarningsView extends Component<any> {
                 {Array(position.offset + 1).join(' ')}^
               </StyledPreformattedArea>
             </StyledDiv>
+          </StyledDiv>
+          <StyledDiv style={{ marginTop: '10px' }}>
+            <StyledCode>{notification.code}</StyledCode>
           </StyledDiv>
         </StyledHelpContent>
       )
