@@ -115,7 +115,7 @@ export const updateTrialStatusOld = (res: QueryResult) => {
   const extracted = extractTrialStatusOld(res)
   return {
     type: UPDATE_TRIAL_STATUS,
-    ...extracted
+    trailStatus: extracted
   }
 }
 
