@@ -6,7 +6,7 @@ exports[`RelatableViews RelatableView displays bodyMessage if no rows 1`] = `
     class="sc-jeraig dxzVkG"
   >
     <div
-      class="sc-dtDOqo djbEJX"
+      class="sc-dkYRCH excEGN"
     >
       (no changes, no records)
     </div>
@@ -17,10 +17,10 @@ exports[`RelatableViews RelatableView displays bodyMessage if no rows 1`] = `
 exports[`RelatableViews RelatableView does not crash if key is empty string 1`] = `
 <div>
   <div
-    class="sc-brSvTw iHVSPL"
+    class="sc-gIDmLj dMzYfk"
   >
     <div
-      class="sc-ctqQKy hgjWJZ relatable"
+      class="sc-dFtzxp hhiaao relatable"
     >
       <table
         class="ui basic table relatable__table "
@@ -73,7 +73,7 @@ exports[`RelatableViews RelatableView does not crash if key is empty string 1`] 
               role="cell"
             >
               <span
-                class="sc-evcjhq kRdrLI"
+                class="sc-fHeRUh bpnhlL"
               >
                 "String value"
               </span>
@@ -89,10 +89,10 @@ exports[`RelatableViews RelatableView does not crash if key is empty string 1`] 
 exports[`RelatableViews RelatableView does not display bodyMessage if rows, and escapes HTML 1`] = `
 <div>
   <div
-    class="sc-brSvTw iHVSPL"
+    class="sc-gIDmLj dMzYfk"
   >
     <div
-      class="sc-ctqQKy hgjWJZ relatable"
+      class="sc-dFtzxp hhiaao relatable"
     >
       <table
         class="ui basic table relatable__table "
@@ -145,7 +145,7 @@ exports[`RelatableViews RelatableView does not display bodyMessage if rows, and 
               role="cell"
             >
               <span
-                class="sc-evcjhq kRdrLI"
+                class="sc-fHeRUh bpnhlL"
               >
                 "String with HTML &lt;strong&gt;in&lt;/strong&gt; it"
               </span>
@@ -172,7 +172,7 @@ exports[`RelatableViews TableStatusbar displays statusBarMessage 1`] = `
     class="sc-jeraig dxzVkG"
   >
     <div
-      class="sc-dtDOqo djbEJX"
+      class="sc-dkYRCH excEGN"
     >
       <span>
         Started streaming 1 records after 5 ms and completed after 10  ms.

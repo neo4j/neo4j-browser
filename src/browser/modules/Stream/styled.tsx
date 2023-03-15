@@ -430,6 +430,7 @@ export const StyledSpecifyParamsText = styled.span`
 `
 
 export const StyledCode = styled.code`
+  font-family: ${props => props.theme.codeBlockFont};
   background-color: ${props => props.theme.frameSidebarBackground};
   border-radius: 2px;
   cursor: auto;

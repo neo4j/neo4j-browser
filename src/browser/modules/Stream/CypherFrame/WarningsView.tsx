@@ -88,7 +88,7 @@ export class WarningsView extends Component<any> {
             </StyledDiv>
           </StyledDiv>
           <StyledDiv style={{ marginTop: '10px' }}>
-            <StyledCode>{notification.code}</StyledCode>
+            Status code: <StyledCode>{notification.code}</StyledCode>
           </StyledDiv>
         </StyledHelpContent>
       )

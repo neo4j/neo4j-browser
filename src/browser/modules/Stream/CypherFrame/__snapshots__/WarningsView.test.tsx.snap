@@ -47,6 +47,14 @@ exports[`WarningsViews WarningsView does displays a warning 1`] = `
           </pre>
         </div>
       </div>
+      <div
+        class="sc-fKVqWL"
+        style="margin-top: 10px;"
+      >
+        <code
+          class="sc-ZOtfp koHcGf"
+        />
+      </div>
     </div>
   </div>
 </div>
@@ -97,6 +105,14 @@ exports[`WarningsViews WarningsView does displays multiple warnings 1`] = `
           </pre>
         </div>
       </div>
+      <div
+        class="sc-fKVqWL"
+        style="margin-top: 10px;"
+      >
+        <code
+          class="sc-ZOtfp koHcGf"
+        />
+      </div>
     </div>
     <div
       class="sc-dlVxhl fwhZkz"
@@ -137,6 +153,14 @@ exports[`WarningsViews WarningsView does displays multiple warnings 1`] = `
             ^
           </pre>
         </div>
+      </div>
+      <div
+        class="sc-fKVqWL"
+        style="margin-top: 10px;"
+      >
+        <code
+          class="sc-ZOtfp koHcGf"
+        />
       </div>
     </div>
   </div>
