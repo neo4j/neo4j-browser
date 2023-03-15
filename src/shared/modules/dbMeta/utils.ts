@@ -94,7 +94,8 @@ export const extractTrialStatusOld = (res: QueryResult): TrialStatus => {
     return { status: 'unknown' }
   }
 
-  const value = resultObj.value as Integer | 'yes' | 'no' | 'expired'
+  //The last string type is a number as a string
+  const value = resultObj.value as 'yes' | 'no' | 'expired' | string
   if (value) {
     if (value === 'no') {
       return { status: 'unaccepted' }
@@ -103,7 +104,7 @@ export const extractTrialStatusOld = (res: QueryResult): TrialStatus => {
     } else if (value === 'yes') {
       return { status: 'accepted' }
     } else {
-      return { status: 'eval', daysRemaining: value.toNumber(), totalDays: 30 }
+      return { status: 'eval', daysRemaining: parseInt(value), totalDays: 30 }
     }
   }
 
