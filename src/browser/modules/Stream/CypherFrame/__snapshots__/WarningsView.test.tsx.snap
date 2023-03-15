@@ -51,6 +51,7 @@ exports[`WarningsViews WarningsView does displays a warning 1`] = `
         class="sc-fKVqWL"
         style="margin-top: 10px;"
       >
+        Status code: 
         <code
           class="sc-ZOtfp koHcGf"
         />
@@ -109,6 +110,7 @@ exports[`WarningsViews WarningsView does displays multiple warnings 1`] = `
         class="sc-fKVqWL"
         style="margin-top: 10px;"
       >
+        Status code: 
         <code
           class="sc-ZOtfp koHcGf"
         />
@@ -158,6 +160,7 @@ exports[`WarningsViews WarningsView does displays multiple warnings 1`] = `
         class="sc-fKVqWL"
         style="margin-top: 10px;"
       >
+        Status code: 
         <code
           class="sc-ZOtfp koHcGf"
         />
