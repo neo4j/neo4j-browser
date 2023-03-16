@@ -40,9 +40,9 @@ export function StyleableRelType({
     <Popup
       on="click"
       basic
-      pinned
       key={selectedRelType.relType}
-      position="top center"
+      position="left center"
+      offset={[0, 0]}
       trigger={
         <StyledRelationshipChip
           style={{
