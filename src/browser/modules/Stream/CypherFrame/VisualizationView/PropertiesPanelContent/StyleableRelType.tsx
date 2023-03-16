@@ -42,6 +42,7 @@ export function StyleableRelType({
       basic
       pinned
       key={selectedRelType.relType}
+      position="top center"
       trigger={
         <StyledRelationshipChip
           style={{

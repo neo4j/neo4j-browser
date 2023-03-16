@@ -54,6 +54,7 @@ export function StyleableNodeLabel({
       pinned
       key={selectedLabel.label}
       wide
+      position="top center"
       trigger={
         <StyledLabelChip
           style={{
