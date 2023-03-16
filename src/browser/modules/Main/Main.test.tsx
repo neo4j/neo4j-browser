@@ -27,12 +27,6 @@ import Main from './Main'
 const mockStore = configureMockStore()
 const store = mockStore({})
 
-const defaultTrialStatus: TrialStatus = {
-  commerialLicenseAccepted: null,
-  expired: null,
-  daysRemaing: null
-}
-
 jest.mock(
   '../Editor/MainEditor',
   () =>
@@ -73,7 +67,7 @@ describe('<Main />', () => {
       <Main
         {...mainBaseProps}
         isDatabaseUnavailable={true}
-        trialStatus={defaultTrialStatus}
+        trialStatus={{ status: 'unknown' }}
       />
     )
 
@@ -88,7 +82,7 @@ describe('<Main />', () => {
         {...mainBaseProps}
         useDb={null}
         isDatabaseUnavailable={true}
-        trialStatus={defaultTrialStatus}
+        trialStatus={{ status: 'unknown' }}
       />
     )
 
@@ -97,37 +91,55 @@ describe('<Main />', () => {
     ).toBeFalsy()
   })
 
-  it('should not show Errorbanner if trial expired', () => {
+  it('should show Errorbanner if trial expired', () => {
     const { queryByText } = render(
       <Main
         {...mainBaseProps}
         useDb={null}
         isDatabaseUnavailable={true}
-        trialStatus={{ ...defaultTrialStatus, expired: true }}
+        trialStatus={{ status: 'expired', totalDays: 120 }}
       />
     )
 
     expect(
       queryByText(
-        `Thank you for installing Neo4j. This is a time limited trial, and the 30 days has expired. Please contact us at https://neo4j.com/contact-us/ to continue using the software. Use of this Software without a proper commercial or evaluation license with Neo4j,Inc. or its affiliates is prohibited`,
+        `Thank you for installing Neo4j. This is a time limited trial, and the 120 days have expired. Please contact us at `,
         { exact: false }
       )
     ).toBeTruthy()
   })
 
-  it('should not show WarningBanner if trial active', () => {
+  it('should not show Errorbanner if trial accepted', () => {
     const { queryByText } = render(
       <Main
         {...mainBaseProps}
         useDb={null}
         isDatabaseUnavailable={true}
-        trialStatus={{ ...defaultTrialStatus, daysRemaing: 19 }}
+        trialStatus={{ status: 'accepted' }}
       />
     )
 
     expect(
       queryByText(
-        `Thank you for installing Neo4j. This is a time limited trial, you have 19 days remaining out of 30 days. Please contact us at https://neo4j.com/contact-us/ if you require more time.`,
+        `Thank you for installing Neo4j. This is a time limited trial, and the 120 days have expired. Please contact us at`,
+        { exact: false }
+      )
+    ).toBeFalsy()
+  })
+
+  it('should show WarningBanner if trial active', () => {
+    const { queryByText } = render(
+      <Main
+        {...mainBaseProps}
+        useDb={null}
+        isDatabaseUnavailable={true}
+        trialStatus={{ status: 'eval', daysRemaining: 19, totalDays: 30 }}
+      />
+    )
+
+    expect(
+      queryByText(
+        `Thank you for installing Neo4j. This is a time limited trial. You have 19 days remaining out of 30 days. Please contact us at`,
         { exact: false }
       )
     ).toBeTruthy()

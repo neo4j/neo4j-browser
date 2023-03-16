@@ -55,7 +55,7 @@ type MainProps = {
 
 const Main = React.memo(function Main(props: MainProps) {
   const [past5Sec, past10Sec] = useSlowConnectionState(props)
-  const [showRemaningTrialBanner, setShowRemaningTrialBanner] =
+  const [showRemainingTrialBanner, setShowRemainingTrialBanner] =
     React.useState(true)
   const {
     connectionState,
@@ -124,37 +124,64 @@ const Main = React.memo(function Main(props: MainProps) {
         </WarningBanner>
       )}
 
-      {trialStatus.expired && (
-        <ErrorBanner>
-          Thank you for installing Neo4j. This is a time limited trial, and the
-          30 days has expired. Please contact us at
-          https://neo4j.com/contact-us/ to continue using the software. Use of
-          this Software without a proper commercial or evaluation license with
-          Neo4j,Inc. or its affiliates is prohibited.
+      {trialStatus.status === 'expired' && (
+        <ErrorBanner style={{ overflow: 'auto' }}>
+          Thank you for installing Neo4j. This is a time limited trial, and the{' '}
+          {trialStatus.totalDays} days have expired. Please contact us at{' '}
+          <a href="https://neo4j.com/contact-us/">
+            https://neo4j.com/contact-us/
+          </a>{' '}
+          to continue using the software. Use of this Software without a proper
+          commercial or evaluation license with Neo4j, Inc. or its affiliates is
+          prohibited.
         </ErrorBanner>
       )}
+      {trialStatus.status === 'eval' && showRemainingTrialBanner && (
+        <WarningBanner style={{ overflow: 'auto' }}>
+          Thank you for installing Neo4j. This is a time limited trial. You have{' '}
+          {trialStatus.daysRemaining} days remaining out of{' '}
+          {trialStatus.totalDays} days. Please contact us at{' '}
+          <a href="https://neo4j.com/contact-us/">
+            https://neo4j.com/contact-us/
+          </a>{' '}
+          if you require more time.
+          <div
+            style={{
+              position: 'absolute',
+              right: 20,
+              display: 'inline-block'
+            }}
+          >
+            <DismissBanner onClick={() => setShowRemainingTrialBanner(false)} />
+          </div>
+        </WarningBanner>
+      )}
 
-      {trialStatus.daysRemaing !== null &&
-        trialStatus.expired !== true &&
-        showRemaningTrialBanner && (
-          <WarningBanner>
-            Thank you for installing Neo4j. This is a time limited trial, you
-            have {trialStatus.daysRemaing} days remaining out of 30 days. Please
-            contact us at https://neo4j.com/contact-us/ if you require more
-            time.
-            <div
-              style={{
-                position: 'absolute',
-                right: 20,
-                display: 'inline-block'
-              }}
-            >
-              <DismissBanner
-                onClick={() => setShowRemaningTrialBanner(false)}
-              />
-            </div>
-          </WarningBanner>
-        )}
+      {trialStatus.status === 'unaccepted' && showRemainingTrialBanner && (
+        <WarningBanner style={{ overflow: 'auto' }}>
+          A Neo4j license has not been accepted. To accept the commercial
+          license agreement, run neo4j-admin server license --accept-commercial.
+          To accept the terms of the evaluation agreement, run neo4j-admin
+          server license --accept-evaluation. (c) Neo4j Sweden AB. All Rights
+          Reserved. Use of this Software without a proper commercial license, or
+          evaluation license with Neo4j, Inc. or its affiliates is prohibited.
+          Neo4j has the right to terminate your usage if you are not compliant.
+          Please contact us about licensing via{' '}
+          <a href="https://neo4j.com/contact-us/">
+            https://neo4j.com/contact-us/
+          </a>
+          .
+          <div
+            style={{
+              position: 'absolute',
+              right: 20,
+              display: 'inline-block'
+            }}
+          >
+            <DismissBanner onClick={() => setShowRemainingTrialBanner(false)} />
+          </div>
+        </WarningBanner>
+      )}
 
       <ErrorBoundary>
         <Stream />

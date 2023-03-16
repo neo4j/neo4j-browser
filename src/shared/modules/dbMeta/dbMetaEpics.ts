@@ -45,7 +45,9 @@ import {
   DB_META_COUNT_DONE,
   metaCountQuery,
   trialStatusQuery,
-  updateTrialStatus
+  updateTrialStatus,
+  updateTrialStatusOld,
+  oldTrialStatusQuery
 } from './dbMetaDuck'
 import {
   ClientSettings,
@@ -299,7 +301,20 @@ async function fetchTrialStatus(store: any) {
       }
     )
     store.dispatch(updateTrialStatus(trialStatus))
-  } catch {}
+  } catch {
+    // Fallback to old query
+    try {
+      const trialStatus = await bolt.directTransaction(
+        oldTrialStatusQuery,
+        {},
+        {
+          ...backgroundTxMetadata,
+          useDb: (await bolt.hasMultiDbSupport()) ? SYSTEM_DB : undefined
+        }
+      )
+      store.dispatch(updateTrialStatusOld(trialStatus))
+    } catch {}
+  }
 }
 
 const switchToRequestedDb = (store: any) => {

@@ -34,9 +34,7 @@ Object {
     "retainEditorHistory": false,
   },
   "trialStatus": Object {
-    "commerialLicenseAccepted": null,
-    "daysRemaing": null,
-    "expired": null,
+    "status": "unknown",
   },
 }
 `;
@@ -104,9 +102,7 @@ Object {
     "retainEditorHistory": false,
   },
   "trialStatus": Object {
-    "commerialLicenseAccepted": null,
-    "daysRemaing": null,
-    "expired": null,
+    "status": "unknown",
   },
 }
 `;
