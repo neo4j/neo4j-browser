@@ -51,9 +51,10 @@ export function StyleableNodeLabel({
     <Popup
       on="click"
       basic
-      pinned
       key={selectedLabel.label}
       wide
+      position="left center"
+      offset={[0, 0]}
       trigger={
         <StyledLabelChip
           style={{
