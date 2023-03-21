@@ -22,9 +22,10 @@ import { Component, ReactNode } from 'react'
 import { canUseDOM } from 'services/utils'
 
 export const cannyOptions = {
-  appID: '601d00fb7a41e3035f75e1e8',
+  appID: '5eb66d2ff9f4665cc1bed233',
   position: 'right',
-  align: 'top'
+  align: 'top',
+  labelIDs: ['6239a0c787c34c6baebda0fd']
 }
 export const CANNY_FEATURE_REQUEST_URL = 'https://feedback.neo4j.com/browser'
 
