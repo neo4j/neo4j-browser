@@ -91,7 +91,7 @@ export const MissingParamsTemplateLink = ({
           'Set editor content with template to be used for setting the missing parameters'
         }
       >
-        :params{'{'}
+        :params{' {'}
         <StyledSpecifyParamsText>specify params</StyledSpecifyParamsText>
         {'}'}
       </StyledParamsTemplateClickableArea>
