@@ -1,6 +1,6 @@
 name: browser-manual
 title: Neo4j Browser
-version: '4.4'
+version: '5'
 start_page: ROOT:index.adoc
 nav:
 - modules/ROOT/content-nav.adoc
