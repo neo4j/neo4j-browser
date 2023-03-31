@@ -141,12 +141,6 @@ export class ConnectionFormController extends Component<any, any> {
       },
       (res: any) => {
         if (res.success) {
-          //If credentials should not be stored, remove them from form
-          if (!this.props.storeCredentials)
-            this.setState({
-              username: '',
-              password: ''
-            })
           doneFn()
           this.saveAndStart()
         } else {
@@ -348,6 +342,9 @@ export class ConnectionFormController extends Component<any, any> {
     if (this.props.playImplicitInitCommands) {
       this.props.executeInitCmd()
     }
+    //We don't know if credentials should be stored yet
+    // so we remove them from the form
+    this.setState({ username: '', password: '' })
   }
 
   saveCredentials(): void {
