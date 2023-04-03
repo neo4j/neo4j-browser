@@ -48,6 +48,8 @@ export const ListItem = styled.li`
 const SuccessText = styled.span`
   color: ${props => props.theme.success};
 `
+// need to set text color to avoid unreadable text in dark mode
+const textStyle = { color: 'rgb(51, 51, 51)' }
 
 function toHttp(url: string) {
   const hostname = stripScheme(url)
@@ -93,9 +95,22 @@ const DebugConnectivityFrame = (props: DebugConnectivityFrameProps) => {
 
   const [error, setError] = useState<string>()
 
+  const resetState = () => {
+    setHttpReachable({ status: 'noRequest' })
+    setHttpsReachable({ status: 'noRequest' })
+    setBoltReachablity({ status: 'not_started' })
+    setEncryptedBoltReachability({ status: 'not_started' })
+    setError(undefined)
+  }
+
   useEffect(() => {
     try {
-      setError(undefined)
+      resetState()
+
+      if (debugUrl === '') {
+        setError('Missing url argument. Usage  :debug connectivity [url]')
+        return
+      }
       const validUrl = isValidUrl(toHttp(debugUrl))
       const rightScheme =
         debugUrl.startsWith('neo4j') || debugUrl.startsWith('bolt')
@@ -206,7 +221,12 @@ const DebugConnectivityFrame = (props: DebugConnectivityFrameProps) => {
       contents={
         <div style={{ maxWidth: '700px' }}>
           {(secureHostingUnencryptedBolt || unsecureHostingEncyptedBolt) && (
-            <Alert title="Encryption mismatch detected" type="warning" icon>
+            <Alert
+              title="Encryption mismatch detected"
+              type="warning"
+              icon
+              style={textStyle}
+            >
               When hosted on HTTPS Browser requires an encrypted connection
               (bolt+s:// or neo4j+s://) to neo4j. However when when it is hosted
               on HTTP some web browsers allow both encrypted and unencrypted
@@ -254,7 +274,11 @@ const DebugConnectivityFrame = (props: DebugConnectivityFrameProps) => {
           {advertisedAddress &&
             stripScheme(advertisedAddress) !== stripScheme(debugUrl) &&
             !isAura && (
-              <Alert title="Found server at different URL" icon>
+              <Alert
+                title="Found server at different URL"
+                icon
+                style={textStyle}
+              >
                 The neo4j server we reached advertised its bolt connector at
                 <StyledLink
                   onClick={() =>
@@ -267,7 +291,12 @@ const DebugConnectivityFrame = (props: DebugConnectivityFrameProps) => {
               </Alert>
             )}
           {unreachableAuraInstance && (
-            <Alert title="Unreachable Aura instance" type="warning" icon>
+            <Alert
+              title="Unreachable Aura instance"
+              type="warning"
+              icon
+              style={textStyle}
+            >
               Log into the{' '}
               <StyledLink
                 href="https://console.neo4j.io"
@@ -282,7 +311,12 @@ const DebugConnectivityFrame = (props: DebugConnectivityFrameProps) => {
             </Alert>
           )}
           {onlyReachableViaHTTP && (
-            <Alert title="Neo4j reachable via HTTP only" type="danger" icon>
+            <Alert
+              title="Neo4j reachable via HTTP only"
+              type="danger"
+              icon
+              style={textStyle}
+            >
               Browser was able to reach{' '}
               <pre style={{ display: 'inline' }}>{debugUrl}</pre> with a HTTP
               request, but failed to do so via WebSocket. Browser requires a
@@ -292,12 +326,17 @@ const DebugConnectivityFrame = (props: DebugConnectivityFrameProps) => {
             </Alert>
           )}
           {error && (
-            <Alert title="Error" type="danger" icon>
+            <Alert title="Error" type="danger" icon style={textStyle}>
               {error}
             </Alert>
           )}
           {shouldWork && (
-            <Alert title="Neo4j Server Reached" type="success" icon>
+            <Alert
+              title="Neo4j Server Reached"
+              type="success"
+              icon
+              style={textStyle}
+            >
               Neo4j Driver successfully completed bolt handshake with Neo4j
               Server at <pre>{debugUrl}</pre>
             </Alert>
@@ -326,6 +365,7 @@ const DebugConnectivityFrame = (props: DebugConnectivityFrameProps) => {
                     }
                     type="danger"
                     icon
+                    style={textStyle}
                   >
                     Double check the URL, make sure neo4j is running and that
                     you have a network connection if needed.
@@ -334,7 +374,12 @@ const DebugConnectivityFrame = (props: DebugConnectivityFrameProps) => {
                 {httpStatuses.some(
                   s => s === 'parsingJsonFailed' || s === 'foundOtherJSON'
                 ) && (
-                  <Alert title="Found non-neo4j server" type="warning" icon>
+                  <Alert
+                    title="Found non-neo4j server"
+                    type="warning"
+                    icon
+                    style={textStyle}
+                  >
                     Found a server at
                     <pre style={{ display: 'inline' }}> {debugUrl} </pre>
                     but it does not seem to be a Neo4j Server.
