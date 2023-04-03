@@ -313,7 +313,8 @@ export const shouldAllowOutgoingConnections = (state: any) =>
   getAllowOutgoingConnections(state)
 
 export const shouldRetainConnectionCredentials = (state: any) =>
-  !isEnterprise(state) || getRetainConnectionCredentials(state)
+  (hasEdition(state) && !isEnterprise(state)) ||
+  getRetainConnectionCredentials(state)
 
 export const shouldRetainEditorHistory = (state: any) =>
   !supportsEditorHistorySetting(state) || getRetainEditorHistory(state)
