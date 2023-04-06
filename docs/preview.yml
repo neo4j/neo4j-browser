@@ -50,5 +50,7 @@ asciidoc:
     sectnums: true,
     sectnumlevel: 3,
     experimental: ''
-    copyright: 2021
+    copyright: 2023
     common-license-page-uri: https://neo4j.com/docs/license/
+     docs-base-uri: https://neo4j.com/docs
+    neo4j-docs-base-uri: https://neo4j.com/docs
