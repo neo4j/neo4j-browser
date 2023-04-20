@@ -78,6 +78,12 @@ const attachContextEvent = (
   })
 }
 
+/**
+ * When a node is clicked, this function is triggered.
+ *
+ * There is a D3 data join in this function that only binds visual element when {@link !getSelectedNode} evaluates to
+ * true, i.e. only "mouse-clicked" node will have the menu rendering executed
+ */
 const createMenuItem = function (
   selection: Selection<SVGGElement, NodeModel, BaseType, unknown>,
   viz: Visualization,

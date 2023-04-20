@@ -1,0 +1,34 @@
+# Copyright 2023 Jiaqi Liu
+# Licensed under the terms of the GNU General Public License. Please see LICENSE file distributed with this work for terms.
+---
+name: Release
+
+"on":
+  push:
+    branches:
+      - master
+
+jobs:
+  release-documentation:
+    name: Deploy Documentation to GitHub Pages
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    defaults:
+      run:
+        working-directory: docs
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: npm install
+      - run: npm run build
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/build/site
+          user_name: QubitPi
+          user_email: jack20191124@proton.me

@@ -10,3 +10,24 @@ BEFORE YOU SUBMIT make sure you've done the following:
 More details on contributing can be found in CONTRIBUTING.md in the root of this repository. Thank you for your time and interest in the Neo4j Browser! 
 -->
 
+Changelog
+---------
+
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+Checklist
+---------
+
+* [ ] Test
+* [ ] Self-review
+* [ ] Documentation
