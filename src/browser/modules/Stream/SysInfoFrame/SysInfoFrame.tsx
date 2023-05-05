@@ -17,12 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React, { Component, ReactNode } from 'react'
+import React, { Component, ReactNode, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { Bus } from 'suber'
 
-import { ExclamationTriangleIcon } from 'browser-components/icons/LegacyIcons'
+import {
+  ExclamationTriangleIcon,
+  SpinnerIcon
+} from 'browser-components/icons/LegacyIcons'
 
 import {
   AutoRefreshSpan,
@@ -53,6 +56,12 @@ import {
 } from 'shared/modules/dbMeta/dbMetaDuck'
 import { hasMultiDbSupport } from 'shared/modules/features/versionedFeatures'
 import { Frame } from 'shared/modules/frames/framesDuck'
+import {
+  commandSources,
+  executeCommand
+} from 'shared/modules/commands/commandsDuck'
+import { Action, Dispatch } from 'redux'
+import { SpinnerContainer } from './styled'
 
 export type DatabaseMetric = { label: string; value?: string }
 export type SysInfoFrameState = {
@@ -75,12 +84,13 @@ export type SysInfoFrameProps = {
   hasMultiDbSupport: boolean
   isConnected: boolean
   isEnterprise: boolean
-  useDb: string | null
+  fallbackDb: string | null
   isFullscreen: boolean
   isCollapsed: boolean
   isOnCluster: boolean
   namespacesEnabled: boolean
   metricsPrefix: string
+  rerunWithDb: (cmd: { useDb: string; id: string }) => void
 }
 
 export class SysInfoFrame extends Component<
@@ -121,7 +131,7 @@ export class SysInfoFrame extends Component<
     }
 
     if (
-      prevProps.useDb !== this.props.useDb ||
+      prevProps.frame.useDb !== this.props.frame.useDb ||
       prevProps.namespacesEnabled !== this.props.namespacesEnabled ||
       prevProps.metricsPrefix !== this.props.metricsPrefix
     ) {
@@ -130,13 +140,13 @@ export class SysInfoFrame extends Component<
   }
 
   getSysInfo = (): void => {
-    const { useDb, hasMultiDbSupport, metricsPrefix, namespacesEnabled } =
+    const { frame, hasMultiDbSupport, metricsPrefix, namespacesEnabled } =
       this.props
 
-    if (hasMultiDbSupport && useDb) {
+    if (hasMultiDbSupport && frame.useDb) {
       this.runCypherQuery(
         helpers.sysinfoQuery({
-          databaseName: useDb,
+          databaseName: frame.useDb,
           namespacesEnabled,
           metricsPrefix
         }),
@@ -156,7 +166,8 @@ export class SysInfoFrame extends Component<
         CYPHER_REQUEST,
         {
           query,
-          queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+          queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
+          useDb: this.props.frame.useDb
         },
         responseHandler
       )
@@ -165,7 +176,8 @@ export class SysInfoFrame extends Component<
           CYPHER_REQUEST,
           {
             query: 'CALL dbms.cluster.overview',
-            queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+            queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
+            useDb: this.props.frame.useDb
           },
           helpers.clusterResponseHandler(this.setState.bind(this))
         )
@@ -245,10 +257,32 @@ export class SysInfoFrame extends Component<
     )
   }
 }
-const FrameVersionPicker = (props: SysInfoFrameProps) => {
-  if (props.isConnected && props.isEnterprise && !props.hasMultiDbSupport) {
+const FrameVersionPicker = (
+  props: SysInfoFrameProps & { fallbackDb: string | null }
+) => {
+  const useLegacySysInfoFrame =
+    props.isConnected && props.isEnterprise && !props.hasMultiDbSupport
+
+  // Handle the case where sysinfo was run before we had loaded the db list
+  // by rerunning when db has loaded
+  useEffect(() => {
+    if (!useLegacySysInfoFrame) {
+      if (!props.frame.useDb && props.fallbackDb) {
+        props.rerunWithDb({ id: props.frame.id, useDb: props.fallbackDb })
+      }
+    }
+  }, [useLegacySysInfoFrame, props])
+
+  if (useLegacySysInfoFrame) {
     return <LegacySysInfoFrame {...props} isOnCluster={props.isOnCluster} />
   } else {
+    if (!props.frame.useDb) {
+      return (
+        <SpinnerContainer>
+          <SpinnerIcon />
+        </SpinnerContainer>
+      )
+    }
     return <SysInfoFrame {...props} />
   }
 }
@@ -258,10 +292,24 @@ const mapStateToProps = (state: GlobalState) => ({
   isEnterprise: isEnterprise(state),
   isConnected: isConnected(state),
   databases: getDatabases(state),
-  useDb: getUseDb(state),
+  fallbackDb: getUseDb(state),
   isOnCluster: isOnCluster(state),
   namespacesEnabled: getMetricsNamespacesEnabled(state),
   metricsPrefix: getMetricsPrefix(state)
 })
+const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
+  rerunWithDb: ({ useDb, id }: { useDb: string; id: string }) => {
+    dispatch(
+      executeCommand(':sysinfo', {
+        id,
+        useDb,
+        isRerun: true,
+        source: commandSources.rerunFrame
+      })
+    )
+  }
+})
 
-export default withBus(connect(mapStateToProps)(FrameVersionPicker))
+export default withBus(
+  connect(mapStateToProps, mapDispatchToProps)(FrameVersionPicker)
+)
