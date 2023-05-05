@@ -28,19 +28,19 @@ import reducers from 'project-root/src/shared/rootReducer'
 import { Database } from 'shared/modules/dbMeta/dbMetaDuck'
 import { Frame } from 'shared/modules/frames/framesDuck'
 
-const baseProps = {
+const baseProps: SysInfoFrameProps = {
   databases: [],
   bus: { self: () => undefined } as unknown as Bus,
   frame: {} as Frame,
   hasMultiDbSupport: true,
   isConnected: true,
   isEnterprise: true,
-  useDb: 'neo4j',
   isFullscreen: false,
   isCollapsed: false,
   isOnCluster: true,
   namespacesEnabled: false,
-  metricsPrefix: 'neo4j'
+  metricsPrefix: 'neo4j',
+  rerunWithDb: () => undefined
 }
 
 const mountWithStore = (props: Partial<SysInfoFrameProps>) => {

@@ -391,8 +391,8 @@ const availableCommands = [
       if (db && isSystemOrCompositeDb(db)) {
         put(
           frames.add({
-            useDb,
             ...action,
+            useDb: db.name,
             type: 'error',
             error: UnsupportedError(
               'The :sysinfo command is not supported while using the system or a composite database.'
@@ -402,8 +402,8 @@ const availableCommands = [
       } else {
         put(
           frames.add({
-            useDb,
             ...action,
+            useDb: db?.name,
             type: 'sysinfo'
           })
         )
