@@ -84,7 +84,6 @@ export type SysInfoFrameProps = {
   hasMultiDbSupport: boolean
   isConnected: boolean
   isEnterprise: boolean
-  fallbackDb: string | null
   isFullscreen: boolean
   isCollapsed: boolean
   isOnCluster: boolean
