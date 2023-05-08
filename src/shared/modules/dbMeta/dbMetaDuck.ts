@@ -37,6 +37,7 @@ export const UPDATE_SETTINGS = 'meta/UPDATE_SETTINGS'
 export const CLEAR_META = 'meta/CLEAR'
 export const FORCE_FETCH = 'meta/FORCE_FETCH'
 export const DB_META_DONE = 'meta/DB_META_DONE'
+export const SERVER_VERSION_READ = 'meta/SERVER_VERSION_READ'
 export const DB_META_COUNT_DONE = 'meta/DB_META_COUNT_DONE'
 export const DB_META_FORCE_COUNT = 'meta/DB_FORCE_COUNT'
 export const UPDATE_COUNT_AUTOMATIC_REFRESH =
