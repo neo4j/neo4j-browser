@@ -46,8 +46,9 @@ import {
   metaCountQuery,
   trialStatusQuery,
   updateTrialStatus,
+  oldTrialStatusQuery,
   updateTrialStatusOld,
-  oldTrialStatusQuery
+  isEnterprise
 } from './dbMetaDuck'
 import {
   ClientSettings,
@@ -291,29 +292,32 @@ async function fetchServerInfo(store: any) {
 }
 
 async function fetchTrialStatus(store: any) {
-  try {
-    const trialStatus = await bolt.directTransaction(
-      trialStatusQuery,
-      {},
-      {
-        ...backgroundTxMetadata,
-        useDb: (await bolt.hasMultiDbSupport()) ? SYSTEM_DB : undefined
-      }
-    )
-    store.dispatch(updateTrialStatus(trialStatus))
-  } catch {
-    // Fallback to old query
-    try {
-      const trialStatus = await bolt.directTransaction(
-        oldTrialStatusQuery,
-        {},
-        {
-          ...backgroundTxMetadata,
-          useDb: (await bolt.hasMultiDbSupport()) ? SYSTEM_DB : undefined
-        }
-      )
-      store.dispatch(updateTrialStatusOld(trialStatus))
-    } catch {}
+  const version = getSemanticVersion(store.getState())
+  const enterprise = isEnterprise(store.getState())
+
+  const VERSION_FOR_TRIAL_STATUS = '5.7.0'
+  const VERSION_FOR_TRIAL_STATUS_OLD = '5.3.0'
+
+  if (version && enterprise) {
+    if (gte(version, VERSION_FOR_TRIAL_STATUS)) {
+      try {
+        const trialStatus = await bolt.directTransaction(
+          trialStatusQuery,
+          {},
+          { ...backgroundTxMetadata }
+        )
+        store.dispatch(updateTrialStatus(trialStatus))
+      } catch {}
+    } else if (gte(version, VERSION_FOR_TRIAL_STATUS_OLD)) {
+      try {
+        const oldTrialStatus = await bolt.directTransaction(
+          oldTrialStatusQuery,
+          {},
+          { ...backgroundTxMetadata }
+        )
+        store.dispatch(updateTrialStatusOld(oldTrialStatus))
+      } catch {}
+    }
   }
 }
 
@@ -383,15 +387,11 @@ export const dbMetaEpic = (some$: any, store: any) =>
     .filter((s: any) => s.state === CONNECTED_STATE)
     .merge(some$.ofType(CONNECTION_SUCCESS))
     .mergeMap(() =>
-      Rx.Observable.fromPromise(
-        Promise.all([
-          // Server version and edition
-          fetchServerInfo(store),
-          //If license is accepted otherwise how long remains of the trial
-          fetchTrialStatus(store)
-        ])
-      )
+      // Server version and edition
+      Rx.Observable.fromPromise(fetchServerInfo(store))
     )
+    // we don't need to block bootup on fetching trial status, dispatch as side effect
+    .do(() => fetchTrialStatus(store))
     .mergeMap(() =>
       Rx.Observable.timer(1, 20000)
         .merge(some$.ofType(FORCE_FETCH))
@@ -422,6 +422,7 @@ export const dbMetaEpic = (some$: any, store: any) =>
         .do(() => switchToRequestedDb(store))
         .mapTo({ type: DB_META_DONE })
     )
+
 export const dbCountEpic = (some$: any, store: any) =>
   some$
     .ofType(DB_META_DONE)
