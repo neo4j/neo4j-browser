@@ -48,7 +48,8 @@ import {
   updateTrialStatus,
   oldTrialStatusQuery,
   updateTrialStatusOld,
-  isEnterprise
+  isEnterprise,
+  SERVER_VERSION_READ
 } from './dbMetaDuck'
 import {
   ClientSettings,
@@ -391,7 +392,10 @@ export const dbMetaEpic = (some$: any, store: any) =>
       Rx.Observable.fromPromise(fetchServerInfo(store))
     )
     // we don't need to block bootup on fetching trial status, dispatch as side effect
-    .do(() => fetchTrialStatus(store))
+    .do(() => {
+      fetchTrialStatus(store)
+      store.dispatch({ type: SERVER_VERSION_READ })
+    })
     .mergeMap(() =>
       Rx.Observable.timer(1, 20000)
         .merge(some$.ofType(FORCE_FETCH))
@@ -455,7 +459,7 @@ export const dbCountEpic = (some$: any, store: any) =>
 
 export const serverConfigEpic = (some$: any, store: any) =>
   some$
-    .ofType(DB_META_DONE)
+    .ofType(SERVER_VERSION_READ)
     .mergeMap(() => {
       // Server configuration
       return Rx.Observable.fromPromise(
