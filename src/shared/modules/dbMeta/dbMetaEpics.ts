@@ -78,6 +78,7 @@ import {
   getActiveConnectionData,
   getLastUseDb,
   getUseDb,
+  onLostConnection,
   setAuthEnabled,
   setRetainCredentials,
   updateConnection,
@@ -353,6 +354,27 @@ const switchToRequestedDb = (store: any) => {
   }
 }
 
+async function pollDbMeta(store: any) {
+  // Verify connectivity by asking for the server for multidb support
+  try {
+    await bolt.hasMultiDbSupport()
+  } catch {
+    onLostConnection(store.dispatch)
+    return
+  }
+
+  // Cluster setups where the default database is unavailable,
+  // get labels and types takes a long time to finish and it shouldn't
+  // be blocking the rest of the bootup process, so we don't await the promise
+  getLabelsAndTypes(store)
+
+  await Promise.all([
+    getFunctionsAndProcedures(store),
+    clusterRole(store),
+    databaseList(store)
+  ])
+}
+
 export const dbMetaEpic = (some$: any, store: any) =>
   some$
     .ofType(UPDATE_CONNECTION_STATE)
@@ -372,21 +394,7 @@ export const dbMetaEpic = (some$: any, store: any) =>
         .merge(some$.ofType(FORCE_FETCH))
         // Throw away newly initiated calls until done
         .throttle(() => some$.ofType(DB_META_DONE))
-        .do(() => {
-          // Cluster setups where the default database is unavailable,
-          // get labels and types takes a long time to finish and it shouldn't
-          // be blocking the rest of the bootup process, so we don't await the promise
-          getLabelsAndTypes(store)
-        })
-        .mergeMap(() =>
-          Rx.Observable.fromPromise(
-            Promise.all([
-              getFunctionsAndProcedures(store),
-              clusterRole(store),
-              databaseList(store)
-            ])
-          )
-        )
+        .mergeMap(() => Rx.Observable.fromPromise(pollDbMeta(store)))
         .takeUntil(
           some$
             .ofType(LOST_CONNECTION)
@@ -461,7 +469,6 @@ export const serverConfigEpic = (some$: any, store: any) =>
                 // Store that dbms.clientConfig isn't available
                 store.dispatch(setClientConfig(false))
 
-                // med denna ändring. se till vi fortfarande hittar tappade connections?
                 bolt
                   .backgroundWorkerlessRoutedRead(`CALL dbms.listConfig()`, {
                     useDb

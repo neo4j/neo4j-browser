@@ -28,7 +28,6 @@ import {
   setGlobalDrivers,
   unsetGlobalDrivers
 } from './globalDrivers'
-import { buildTxFunctionByMode } from 'services/bolt/boltHelpers'
 import { Connection } from 'shared/modules/connections/connectionsDuck'
 import { backgroundTxMetadata } from './txMetadata'
 
