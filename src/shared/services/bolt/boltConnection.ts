@@ -48,6 +48,19 @@ export const hasMultiDbSupport = async (): Promise<boolean> => {
   return supportsMultiDb
 }
 
+export const quickVerifyConnectivity = async (): Promise<void> => {
+  if (!getGlobalDrivers()) {
+    throw Error('No driver')
+  }
+  const drivers = getGlobalDrivers()
+  const tmpDriver = drivers && drivers.getRoutedDriver()
+  if (!tmpDriver) {
+    throw Error('No driver')
+  }
+
+  await tmpDriver.verifyConnectivity()
+}
+
 const validateConnectionFallback = (
   driver: Driver,
   res: (driver: Driver) => void,

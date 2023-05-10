@@ -204,6 +204,7 @@ const closeConnectionInWorkers = (): void => {
 
 export default {
   backgroundWorkerlessRoutedRead,
+  quickVerifyConnectivity: boltConnection.quickVerifyConnectivity,
   hasMultiDbSupport: boltConnection.hasMultiDbSupport,
   useDb: (db: any) => (_useDb = db),
   directConnect: boltConnection.directConnect,
