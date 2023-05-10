@@ -69,26 +69,20 @@ module.exports = {
         splitChunks: {
           cacheGroups: {
             vendor: {
-              test: /[\\/]node_modules[\\/](react|react-dom|@firebase|d3)[\\/]/,
+              test: /[\\/]node_modules[\\/](@firebase|react-markdown|@apollo)[\\/]/,
               name: 'vendor',
               chunks: 'all',
               enforce: true
             },
             'cypher-editor': {
-              test: /[\\/]node_modules[\\/](antlr4|cypher-editor-support|monaco-editor)[\\/]/,
+              test: /[\\/]node_modules[\\/](antlr4|cypher-editor-support|monaco-editor-core|@neo4j-cypher)[\\/]/,
               name: 'cypher-editor',
               chunks: 'all',
               enforce: true
             },
-            'semantic-ui': {
-              test: /[\\/]node_modules[\\/](semantic-ui-react)[\\/]/,
-              name: 'semantic-ui',
-              chunks: 'all',
-              enforce: true
-            },
-            'neo4j-driver': {
-              test: /[\\/]node_modules[\\/](text-encoding|neo4j-driver)[\\/]/,
-              name: 'neo4j-driver',
+            'neo4j-ndl': {
+              test: /[\\/]node_modules[\\/](semantic-ui-react|@neo4j-ndl|refractor|@heroicons)[\\/]/,
+              name: 'ui-libs',
               chunks: 'all',
               enforce: true
             }

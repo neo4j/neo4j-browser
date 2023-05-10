@@ -104,14 +104,9 @@ async function databaseList(store: any) {
       return
     }
 
-    const res = await bolt.directTransaction(
-      'SHOW DATABASES',
-      {},
-      {
-        ...backgroundTxMetadata,
-        useDb: SYSTEM_DB
-      }
-    )
+    const res = await bolt.backgroundWorkerlessRoutedRead('SHOW DATABASES', {
+      useDb: SYSTEM_DB
+    })
 
     if (!res) return
 
@@ -139,14 +134,9 @@ async function getLabelsAndTypes(store: any) {
 
   // Not system db, try and fetch meta data
   try {
-    const res = await bolt.routedReadTransaction(
-      metaTypesQuery,
-      {},
-      {
-        onLostConnection: onLostConnection(store.dispatch),
-        ...backgroundTxMetadata
-      }
-    )
+    const res = await bolt.backgroundWorkerlessRoutedRead(metaTypesQuery, {
+      useDb: db?.name
+    })
     if (res && res.records && res.records.length !== 0) {
       const [rawLabels, rawRelTypes, rawProperties] = res.records.map(
         (r: Record) => r.get(0).data
@@ -182,14 +172,9 @@ async function getNodeAndRelationshipCounts(
 
   // Not system db, try and fetch meta data
   try {
-    const res = await bolt.routedReadTransaction(
-      metaCountQuery,
-      {},
-      {
-        onLostConnection: onLostConnection(store.dispatch),
-        ...backgroundTxMetadata
-      }
-    )
+    const res = await bolt.backgroundWorkerlessRoutedRead(metaCountQuery, {
+      useDb: db?.name
+    })
     if (res && res.records && res.records.length !== 0) {
       const [rawNodeCount, rawRelationshipCount] = res.records.map(
         (r: Record) => r.get(0).data
@@ -222,23 +207,13 @@ async function getFunctionsAndProcedures(store: any) {
   const version = getSemanticVersion(store.getState())
   try {
     const supportsMultiDb = await bolt.hasMultiDbSupport()
-    const procedurePromise = bolt.routedReadTransaction(
+    const procedurePromise = bolt.backgroundWorkerlessRoutedRead(
       getListProcedureQuery(version),
-      {},
-      {
-        onLostConnection: onLostConnection(store.dispatch),
-        ...backgroundTxMetadata,
-        useDb: supportsMultiDb ? SYSTEM_DB : undefined
-      }
+      { useDb: supportsMultiDb ? SYSTEM_DB : undefined }
     )
-    const functionPromise = bolt.routedReadTransaction(
+    const functionPromise = bolt.backgroundWorkerlessRoutedRead(
       getListFunctionQuery(version),
-      {},
-      {
-        onLostConnection: onLostConnection(store.dispatch),
-        ...backgroundTxMetadata,
-        useDb: supportsMultiDb ? SYSTEM_DB : undefined
-      }
+      { useDb: supportsMultiDb ? SYSTEM_DB : undefined }
     )
     const [procedures, functions] = await Promise.all([
       procedurePromise,
@@ -280,13 +255,9 @@ async function clusterRole(store: any) {
 
 async function fetchServerInfo(store: any) {
   try {
-    const serverInfo = await bolt.directTransaction(
+    const serverInfo = await bolt.backgroundWorkerlessRoutedRead(
       serverInfoQuery,
-      {},
-      {
-        ...backgroundTxMetadata,
-        useDb: (await bolt.hasMultiDbSupport()) ? SYSTEM_DB : undefined
-      }
+      { useDb: (await bolt.hasMultiDbSupport()) ? SYSTEM_DB : undefined }
     )
     store.dispatch(updateServerInfo(serverInfo))
   } catch {}
@@ -302,19 +273,18 @@ async function fetchTrialStatus(store: any) {
   if (version && enterprise) {
     if (gte(version, VERSION_FOR_TRIAL_STATUS)) {
       try {
-        const trialStatus = await bolt.directTransaction(
+        const trialStatus = await bolt.backgroundWorkerlessRoutedRead(
           trialStatusQuery,
-          {},
-          { ...backgroundTxMetadata }
+          // System database is available from v4
+          { useDb: SYSTEM_DB }
         )
         store.dispatch(updateTrialStatus(trialStatus))
       } catch {}
     } else if (gte(version, VERSION_FOR_TRIAL_STATUS_OLD)) {
       try {
-        const oldTrialStatus = await bolt.directTransaction(
+        const oldTrialStatus = await bolt.backgroundWorkerlessRoutedRead(
           oldTrialStatusQuery,
-          {},
-          { ...backgroundTxMetadata }
+          { useDb: SYSTEM_DB }
         )
         store.dispatch(updateTrialStatusOld(oldTrialStatus))
       } catch {}
@@ -474,17 +444,13 @@ export const serverConfigEpic = (some$: any, store: any) =>
           }
 
           bolt
-            .directTransaction(
+            .backgroundWorkerlessRoutedRead(
               `CALL ${
                 hasClientConfig(store.getState()) !== false
                   ? 'dbms.clientConfig()'
                   : 'dbms.listConfig()'
               }`,
-              {},
-              {
-                useDb: supportsMultiDb ? SYSTEM_DB : '',
-                ...backgroundTxMetadata
-              }
+              { useDb: supportsMultiDb ? SYSTEM_DB : undefined }
             )
             .then((r: any) => {
               // This is not set yet
@@ -499,15 +465,11 @@ export const serverConfigEpic = (some$: any, store: any) =>
                 // Store that dbms.clientConfig isn't available
                 store.dispatch(setClientConfig(false))
 
+                // med denna ändring. se till vi fortfarande hittar tappade connections?
                 bolt
-                  .directTransaction(
-                    `CALL dbms.listConfig()`,
-                    {},
-                    {
-                      useDb: supportsMultiDb ? SYSTEM_DB : '',
-                      ...backgroundTxMetadata
-                    }
-                  )
+                  .backgroundWorkerlessRoutedRead(`CALL dbms.listConfig()`, {
+                    useDb: supportsMultiDb ? SYSTEM_DB : undefined
+                  })
                   .then(resolve)
                   .catch(reject)
               } else {
