@@ -29,6 +29,7 @@ import { extractServerInfo } from './utils'
 import { coerce, SemVer, gte } from 'semver'
 import { QueryResult } from 'neo4j-driver'
 import { uniq } from 'lodash-es'
+import { FIRST_MULTI_DB_SUPPORT } from '../features/versionedFeatures'
 
 export const UPDATE_META = 'meta/UPDATE_META'
 export const PARSE_META = 'meta/PARSE_META'
@@ -270,6 +271,12 @@ export const getRawVersion = (state: GlobalState): string | null =>
   (state[NAME] || {}).server ? (state[NAME] || {}).server.version : null
 export const getSemanticVersion = (state: GlobalState): SemVer | null =>
   coerce(getRawVersion(state))
+
+export const supportsMultiDb = (state: GlobalState): boolean => {
+  const version = getSemanticVersion(state)
+  return version ? gte(version, FIRST_MULTI_DB_SUPPORT) : false
+}
+
 export const getAvailableProcedures = (state: GlobalState): Procedure[] =>
   state[NAME].procedures
 export const hasProcedure = (

@@ -49,7 +49,8 @@ import {
   oldTrialStatusQuery,
   updateTrialStatusOld,
   isEnterprise,
-  SERVER_VERSION_READ
+  SERVER_VERSION_READ,
+  supportsMultiDb
 } from './dbMetaDuck'
 import {
   ClientSettings,
@@ -77,7 +78,6 @@ import {
   getActiveConnectionData,
   getLastUseDb,
   getUseDb,
-  onLostConnection,
   setAuthEnabled,
   setRetainCredentials,
   updateConnection,
@@ -99,8 +99,8 @@ import {
 
 async function databaseList(store: any) {
   try {
-    const supportsMultiDb = await bolt.hasMultiDbSupport()
-    if (!supportsMultiDb) {
+    const hasMultidb = supportsMultiDb(store.getState())
+    if (!hasMultidb) {
       return
     }
 
@@ -206,14 +206,14 @@ async function getNodeAndRelationshipCounts(
 async function getFunctionsAndProcedures(store: any) {
   const version = getSemanticVersion(store.getState())
   try {
-    const supportsMultiDb = await bolt.hasMultiDbSupport()
+    const useDb = supportsMultiDb(store.getState()) ? SYSTEM_DB : undefined
     const procedurePromise = bolt.backgroundWorkerlessRoutedRead(
       getListProcedureQuery(version),
-      { useDb: supportsMultiDb ? SYSTEM_DB : undefined }
+      { useDb }
     )
     const functionPromise = bolt.backgroundWorkerlessRoutedRead(
       getListFunctionQuery(version),
-      { useDb: supportsMultiDb ? SYSTEM_DB : undefined }
+      { useDb }
     )
     const [procedures, functions] = await Promise.all([
       procedurePromise,
@@ -257,6 +257,7 @@ async function fetchServerInfo(store: any) {
   try {
     const serverInfo = await bolt.backgroundWorkerlessRoutedRead(
       serverInfoQuery,
+      // We use the bolt method for multi db support, since don't have the version in redux yet
       { useDb: (await bolt.hasMultiDbSupport()) ? SYSTEM_DB : undefined }
     )
     store.dispatch(updateServerInfo(serverInfo))
@@ -434,14 +435,9 @@ export const serverConfigEpic = (some$: any, store: any) =>
       // Server configuration
       return Rx.Observable.fromPromise(
         new Promise(async (resolve, reject) => {
-          let supportsMultiDb: boolean
-          try {
-            supportsMultiDb = await bolt.hasMultiDbSupport()
-          } catch (e) {
-            // if hasMultiDbSupport throws there's no instance of neo4j running anymore
-            onLostConnection(store.dispatch)(e)
-            return reject(e)
-          }
+          const useDb = supportsMultiDb(store.getState())
+            ? SYSTEM_DB
+            : undefined
 
           bolt
             .backgroundWorkerlessRoutedRead(
@@ -450,7 +446,7 @@ export const serverConfigEpic = (some$: any, store: any) =>
                   ? 'dbms.clientConfig()'
                   : 'dbms.listConfig()'
               }`,
-              { useDb: supportsMultiDb ? SYSTEM_DB : undefined }
+              { useDb }
             )
             .then((r: any) => {
               // This is not set yet
@@ -468,7 +464,7 @@ export const serverConfigEpic = (some$: any, store: any) =>
                 // med denna ändring. se till vi fortfarande hittar tappade connections?
                 bolt
                   .backgroundWorkerlessRoutedRead(`CALL dbms.listConfig()`, {
-                    useDb: supportsMultiDb ? SYSTEM_DB : undefined
+                    useDb
                   })
                   .then(resolve)
                   .catch(reject)
