@@ -29,7 +29,7 @@ This allows you to run a modified version of Neo4j Browser.
 [TIP]
 ====
 If you have installed Neo4j on your system, then disable the browser module (`BROWSER`) from running. +
-For more information, see link:https://neo4j.com/docs/operations-manual/current/reference/configuration-settings/#config_dbms.http_enabled_modules[dbms.http_enabled_modules^] configuration setting.
+For more information, see link:https://neo4j.com/docs/operations-manual/current/configuration/configuration-settings/#config_dbms.http_enabled_modules[dbms.http_enabled_modules^] configuration setting.
 ====
 
 
