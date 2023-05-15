@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { uniqBy } from 'lodash'
 import React from 'react'
 import styled from 'styled-components'
 
@@ -42,16 +41,16 @@ const HOUR_GLASS_EMOJI = '\u{231B}'
 const NBSP_CHAR = '\u{00A0}'
 
 type DatabaseSelectorProps = {
-  databases?: Database[]
+  uniqueDatabases?: Database[]
   selectedDb: string
   onChange?: (dbName: string) => void
 }
 export const DatabaseSelector = ({
-  databases = [],
+  uniqueDatabases = [],
   selectedDb,
   onChange = () => undefined
 }: DatabaseSelectorProps): JSX.Element | null => {
-  if (databases.length === 0) {
+  if (uniqueDatabases.length === 0) {
     return null
   }
   const selectionChange = ({
@@ -62,13 +61,11 @@ export const DatabaseSelector = ({
     }
   }
 
-  // When connected to a cluster, we get duplicate dbs for each member
-  const uniqDatabases = uniqBy(databases, 'name')
-
   const homeDb =
-    uniqDatabases.find(db => db.home) || uniqDatabases.find(db => db.default)
+    uniqueDatabases.find(db => db.home) ||
+    uniqueDatabases.find(db => db.default)
 
-  const aliasList = uniqDatabases.flatMap(db =>
+  const aliasList = uniqueDatabases.flatMap(db =>
     db.aliases
       ? db.aliases.map(alias => ({
           databaseName: db.name,
@@ -78,7 +75,7 @@ export const DatabaseSelector = ({
       : []
   )
 
-  const databasesAndAliases = [...aliasList, ...uniqDatabases].sort((a, b) =>
+  const databasesAndAliases = [...aliasList, ...uniqueDatabases].sort((a, b) =>
     a.name.localeCompare(b.name)
   )
 
