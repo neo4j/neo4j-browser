@@ -26,21 +26,21 @@ import { toHumanReadableBytes } from 'services/utils'
 
 /*
 The database provides a number of ways to monitor it's health, we use JMX MBeans.
-JMX MBeans is a java extension that allows us to query the database for stats and is enabled by default since neo4j 4.2.2. 
+JMX MBeans is a java extension that allows us to query the database for stats and is enabled by default since neo4j 4.2.2.
 It's used through the `dbms.queryJmx(<searchprefix>=<metric_name>)` where the searchprefix is '<userDefinedPrefix>.metrics:name'
- and the metric_name name has a few variations and depends on the following: 
+ and the metric_name name has a few variations and depends on the following:
 - If it's a "global" or "database" metric (global meaning the entire dbms in this context)
 - What `metrics.prefix` is set to in neo4j.conf (default is neo4j)
 - If `metrics.namespaces.enabled` is true of false in neo4j.conf (this setting was introduced when multidb was added)
 
-An example using the `store.size.total` metric with the following config: 
-- which is a "database" metric, 
-- with namespaces.enabled=false, 
-- against a database called foo and 
+An example using the `store.size.total` metric with the following config:
+- which is a "database" metric,
+- with namespaces.enabled=false,
+- against a database called foo and
 - metrics.prefix=abc
 
 The metric name will be :
-abc.foo.store.size.total 
+abc.foo.store.size.total
 
 And the full query:
 CALL dbms.queryJmx("abc.metrics:name=abc.foo.store.size.total")
@@ -49,7 +49,7 @@ When a query is malformed, or the specific metric is filtered out an empty array
 So to debug a jmx query make sure to read the docs on the exact syntax and check the metrics.filter setting.
 
 See docs for reference on what metrics exist & how to correctly query jmx: https://neo4j.com/docs/operations-manual/current/monitoring/metrics/reference/
-See docs for what metrics are filtered out by default and other for relevant settings: https://neo4j.com/docs/operations-manual/current/reference/configuration-settings/#config_metrics.namespaces.enabled
+See docs for what metrics are filtered out by default and other for relevant settings: https://neo4j.com/docs/operations-manual/current/configuration/configuration-settings/#config_metrics.namespaces.enabled
 */
 type SysInfoMetrics = {
   group: string
@@ -161,7 +161,7 @@ function flatten<T>(acc: T[], curr: T[]): T[] {
 }
 
 export const responseHandler = (setState: (newState: any) => void) =>
-  function (res: any): void {
+  function(res: any): void {
     if (!res || !res.result || !res.result.records) {
       setState({ errorMessage: 'Call to dbms.queryJmx failed' })
       return
@@ -176,7 +176,10 @@ export const responseHandler = (setState: (newState: any) => void) =>
           }
         }
         const mappedRecord = {
-          name: record.get('name').split('.').pop(),
+          name: record
+            .get('name')
+            .split('.')
+            .pop(),
           value: (
             record.get('attributes').Count || record.get('attributes').Value
           ).value
@@ -276,7 +279,7 @@ export const responseHandler = (setState: (newState: any) => void) =>
   }
 
 export const clusterResponseHandler = (setState: any) =>
-  function (res: any) {
+  function(res: any) {
     if (!res.success) {
       setState({ error: 'No cluster results', success: false })
       return
