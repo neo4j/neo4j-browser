@@ -28,6 +28,7 @@ import { APP_START } from 'shared/modules/app/appDuck'
 import { extractServerInfo } from './utils'
 import { coerce, SemVer, gte } from 'semver'
 import { QueryResult } from 'neo4j-driver'
+import { uniq } from 'lodash-es'
 
 export const UPDATE_META = 'meta/UPDATE_META'
 export const PARSE_META = 'meta/PARSE_META'
@@ -234,11 +235,35 @@ export function findDatabaseByNameOrAlias(
 ): Database | undefined {
   const lowerCaseName = name.toLowerCase()
 
-  return state[NAME].databases.find(
+  const matchingDatabases = state[NAME].databases.filter(
     (db: Database) =>
       db.name.toLowerCase() === lowerCaseName ||
       db.aliases?.find(alias => alias.toLowerCase() === lowerCaseName)
   )
+
+  // Each cluster member can have it's own copy of a database, if we have multiples we prefer the online one
+  return (
+    matchingDatabases.find((db: Database) => db.status === 'online') ??
+    matchingDatabases[0]
+  )
+}
+
+export function getUniqueDatbases(state: GlobalState): Database[] {
+  const uniqueDatabaseNames = uniq(
+    state[NAME].databases.map((db: Database) => db.name)
+  )
+
+  return uniqueDatabaseNames.map((name: string) => {
+    const matchingDatabases = state[NAME].databases.filter(
+      (db: Database) => db.name === name
+    )
+
+    // Each cluster member can have it's own copy of a database, if we have multiples we prefer the online one
+    return (
+      matchingDatabases.find((db: Database) => db.status === 'online') ??
+      matchingDatabases[0]
+    )
+  })
 }
 
 export const getRawVersion = (state: GlobalState): string | null =>
