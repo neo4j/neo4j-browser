@@ -356,10 +356,6 @@ const switchToRequestedDb = (store: any) => {
 
 async function pollDbMeta(store: any) {
   try {
-    // TODO check this works in multuple browers / aura / neo4j versions
-    // check that all behaviour from previous polling mechanism make sense
-    // check if we can verify connectivity when running queries better?
-    // check if it ties back to
     await bolt.quickVerifyConnectivity()
   } catch {
     onLostConnection(store.dispatch)
