@@ -10,6 +10,7 @@ on:
       - master
 jobs:
   build:
+    if: github.repository != 'QubitPi/neo4j-browser'
     runs-on: ubuntu-latest
     environment: Publish
     steps:
