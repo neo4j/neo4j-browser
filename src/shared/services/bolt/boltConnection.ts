@@ -30,6 +30,7 @@ import {
 } from './globalDrivers'
 import { Connection } from 'shared/modules/connections/connectionsDuck'
 import { backgroundTxMetadata } from './txMetadata'
+import { BoltConnectionError } from 'services/exceptions'
 
 export const DIRECT_CONNECTION = 'DIRECT_CONNECTION'
 export const ROUTED_WRITE_CONNECTION = 'ROUTED_WRITE_CONNECTION'
@@ -50,12 +51,12 @@ export const hasMultiDbSupport = async (): Promise<boolean> => {
 
 export const quickVerifyConnectivity = async (): Promise<void> => {
   if (!getGlobalDrivers()) {
-    throw Error('No driver connection established')
+    throw BoltConnectionError()
   }
   const drivers = getGlobalDrivers()
   const tmpDriver = drivers && drivers.getRoutedDriver()
   if (!tmpDriver) {
-    throw Error('No driver connection established')
+    throw BoltConnectionError()
   }
 
   await tmpDriver.verifyConnectivity()
