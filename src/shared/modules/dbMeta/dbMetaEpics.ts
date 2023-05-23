@@ -357,8 +357,8 @@ const switchToRequestedDb = (store: any) => {
 async function pollDbMeta(store: any) {
   try {
     await bolt.quickVerifyConnectivity()
-  } catch {
-    onLostConnection(store.dispatch)
+  } catch (e) {
+    onLostConnection(store.dispatch)(e)
     return
   }
 

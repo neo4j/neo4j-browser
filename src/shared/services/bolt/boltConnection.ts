@@ -50,12 +50,12 @@ export const hasMultiDbSupport = async (): Promise<boolean> => {
 
 export const quickVerifyConnectivity = async (): Promise<void> => {
   if (!getGlobalDrivers()) {
-    throw Error('No driver')
+    throw Error('No driver connection established')
   }
   const drivers = getGlobalDrivers()
   const tmpDriver = drivers && drivers.getRoutedDriver()
   if (!tmpDriver) {
-    throw Error('No driver')
+    throw Error('No driver connection established')
   }
 
   await tmpDriver.verifyConnectivity()
