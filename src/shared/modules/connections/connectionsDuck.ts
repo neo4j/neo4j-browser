@@ -635,9 +635,10 @@ export const silentDisconnectEpic = (action$: any, store: any) => {
     .do(() => store.dispatch(resetUseDb()))
     .mapTo(setActiveConnection(null, true))
 }
-export const disconnectSuccessEpic = (action$: any) => {
+export const disconnectSuccessEpic = (action$: any, store: any) => {
   return action$
     .ofType(DISCONNECTION_SUCCESS)
+    .do(() => store.dispatch(resetUseDb()))
     .mapTo(executeSystemCommand(':server connect'))
 }
 
