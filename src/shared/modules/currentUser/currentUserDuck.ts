@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { DB_META_DONE, SYSTEM_DB } from '../dbMeta/dbMetaDuck'
+import { DB_META_DONE, SYSTEM_DB, supportsMultiDb } from '../dbMeta/dbMetaDuck'
 import {
   FIRST_MULTI_DB_SUPPORT,
   FIRST_NO_MULTI_DB_SUPPORT,
@@ -94,14 +94,12 @@ export const getCurrentUserEpic = (some$: any, store: any) =>
           return resolve(null)
         }
         try {
-          const supportsMultiDb = await bolt.hasMultiDbSupport()
+          const hasMultidb = supportsMultiDb(store.getState())
           const res = await bolt.backgroundWorkerlessRoutedRead(
             getShowCurrentUserProcedure(
-              supportsMultiDb
-                ? FIRST_MULTI_DB_SUPPORT
-                : FIRST_NO_MULTI_DB_SUPPORT
+              hasMultidb ? FIRST_MULTI_DB_SUPPORT : FIRST_NO_MULTI_DB_SUPPORT
             ),
-            { useDb: supportsMultiDb ? SYSTEM_DB : '' }
+            { useDb: hasMultidb ? SYSTEM_DB : undefined }
           )
 
           return resolve(res)
