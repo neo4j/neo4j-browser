@@ -19,7 +19,6 @@
  */
 import neo4j, { Driver } from 'neo4j-driver'
 
-import { isBoltConnectionErrorCode } from './boltConnectionErrors'
 import { createDriverOrFailFn } from './driverFactory'
 import {
   buildAuthObj,
@@ -29,7 +28,6 @@ import {
   unsetGlobalDrivers
 } from './globalDrivers'
 import { Connection } from 'shared/modules/connections/connectionsDuck'
-import { backgroundTxMetadata } from './txMetadata'
 import { BoltConnectionError } from 'services/exceptions'
 
 export const DIRECT_CONNECTION = 'DIRECT_CONNECTION'
@@ -62,37 +60,6 @@ export const quickVerifyConnectivity = async (): Promise<void> => {
   await tmpDriver.verifyConnectivity()
 }
 
-const validateConnectionFallback = (
-  driver: Driver,
-  res: (driver: Driver) => void,
-  rej: (error?: any) => void,
-  multiDbSupport: boolean
-): void => {
-  const session = driver.session({
-    defaultAccessMode: neo4j.session.READ,
-    database: multiDbSupport ? 'system' : undefined
-  })
-  session
-    .readTransaction(tx => tx.run('CALL db.indexes()'), {
-      metadata: backgroundTxMetadata.txMetadata
-    })
-    .then(() => {
-      session.close()
-      res(driver)
-    })
-    .catch((e: { code: string; message: string }) => {
-      session.close()
-      // Only invalidate the connection if not available
-      // or not authed
-      // or credentials have expired
-      if (!e.code || isBoltConnectionErrorCode(e.code)) {
-        rej(e)
-      } else {
-        res(driver)
-      }
-    })
-}
-
 export const validateConnection = (
   driver: Driver | null,
   res: (driver: Driver) => void,
@@ -104,37 +71,8 @@ export const validateConnection = (
   }
 
   driver
-    .supportsMultiDb()
-    .then((multiDbSupport: boolean) => {
-      if (!driver || !driver.session) return rej('No connection')
-      const session = driver.session({
-        defaultAccessMode: neo4j.session.READ,
-        database: multiDbSupport ? 'system' : undefined
-      })
-      //Can be any query, is used use to validate the connection and to get an error code if user has expired crdentails for example.
-      //This query works for version 4.3 and above. For older versions, use the fallback function.
-      session
-        .readTransaction(tx => tx.run('SHOW DATABASES'), {
-          metadata: backgroundTxMetadata.txMetadata
-        })
-        .then(() => {
-          session.close()
-          res(driver)
-        })
-        .catch((e: { code: string; message: string }) => {
-          session.close()
-          // Only invalidate the connection if not available
-          // or not authed
-          // or credentials have expired
-          if (!e.code || isBoltConnectionErrorCode(e.code)) {
-            rej(e)
-          } else {
-            // if connection could not be validated using SHOW PROCEDURES then try using CALL db.indexes()
-            //Remove this fallback function when we drop support for older versions and replace with "res(driver)".
-            validateConnectionFallback(driver, res, rej, multiDbSupport)
-          }
-        })
-    })
+    .verifyConnectivity()
+    .then(() => res(driver))
     .catch(rej)
 }
 
@@ -175,7 +113,7 @@ export function openConnection(
       opts,
       onConnectFail
     )
-    const driver = driversObj.getDirectDriver()
+    const driver = driversObj.getRoutedDriver()
     const myResolve = (driver: Driver): void => {
       setGlobalDrivers(driversObj)
       resolve(driver)
