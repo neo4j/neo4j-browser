@@ -400,7 +400,15 @@ export const connectEpic = (action$: any, store: any) =>
       .openConnection(action, {
         connectionTimeout: getConnectionTimeout(store.getState())
       })
-      .then(() => {
+      .then(async () => {
+        // we know we can reach the server but when connecting via the form
+        // we need to make sure the initial credentails have been changed
+        const supportsMultiDb = await bolt.hasMultiDbSupport()
+        await bolt.backgroundWorkerlessRoutedRead(
+          supportsMultiDb ? 'SHOW DATABASES' : 'call db.indexes()',
+          { useDb: supportsMultiDb ? 'SYSTEM' : undefined }
+        )
+
         if (action.requestedUseDb) {
           store.dispatch(
             updateConnection({
