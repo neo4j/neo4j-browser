@@ -29,6 +29,7 @@ import {
 } from './globalDrivers'
 import { Connection } from 'shared/modules/connections/connectionsDuck'
 import { BoltConnectionError } from 'services/exceptions'
+import { SYSTEM_DB } from 'shared/modules/dbMeta/dbMetaDuck'
 
 export const DIRECT_CONNECTION = 'DIRECT_CONNECTION'
 export const ROUTED_WRITE_CONNECTION = 'ROUTED_WRITE_CONNECTION'
@@ -57,7 +58,13 @@ export const quickVerifyConnectivity = async (): Promise<void> => {
     throw BoltConnectionError()
   }
 
-  await tmpDriver.verifyConnectivity()
+  try {
+    // For browser to work on 4+ versions we need access to system db. Otherwise we can't list dbs.
+    await tmpDriver.verifyConnectivity({ database: SYSTEM_DB })
+  } catch {
+    // This checks connectivity for <4 versions.
+    await tmpDriver.verifyConnectivity()
+  }
 }
 
 export const validateConnection = (
@@ -71,9 +78,14 @@ export const validateConnection = (
   }
 
   driver
-    .verifyConnectivity()
+    .verifyConnectivity({ database: SYSTEM_DB })
     .then(() => res(driver))
-    .catch(rej)
+    .catch(() => {
+      driver
+        .verifyConnectivity()
+        .then(() => res(driver))
+        .catch(rej)
+    })
 }
 
 export function directConnect(
