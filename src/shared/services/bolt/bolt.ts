@@ -33,6 +33,9 @@ import { cancelTransaction as globalCancelTransaction } from './transactions'
 import { NATIVE } from 'services/bolt/boltHelpers'
 import { Connection } from 'shared/modules/connections/connectionsDuck'
 import BoltWorkerModule from 'shared/services/bolt/boltWorker'
+import { backgroundTxMetadata } from './txMetadata'
+import { getGlobalDrivers } from './globalDrivers'
+import { BoltConnectionError } from 'services/exceptions'
 
 let connectionProperties: {} | null = null
 let _useDb: string | null = null
@@ -177,11 +180,31 @@ function directTransaction(
   return workerPromise
 }
 
+async function backgroundWorkerlessRoutedRead(
+  input: string,
+  { useDb }: { useDb?: string }
+): Promise<QueryResult> {
+  const session = getGlobalDrivers()
+    ?.getRoutedDriver()
+    ?.session({
+      defaultAccessMode: neo4j.session.READ,
+      database: useDb ?? undefined
+    })
+
+  if (!session) return Promise.reject(BoltConnectionError())
+
+  return session
+    .executeRead(tx => tx.run(input), { metadata: backgroundTxMetadata })
+    .finally(() => session.close())
+}
+
 const closeConnectionInWorkers = (): void => {
   boltWorkPool.messageAllWorkers(closeConnectionMessage())
 }
 
 export default {
+  backgroundWorkerlessRoutedRead,
+  quickVerifyConnectivity: boltConnection.quickVerifyConnectivity,
   hasMultiDbSupport: boltConnection.hasMultiDbSupport,
   useDb: (db: any) => (_useDb = db),
   directConnect: boltConnection.directConnect,

@@ -17,7 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { DB_META_DONE, SYSTEM_DB } from '../dbMeta/dbMetaDuck'
+import {
+  DB_META_DONE,
+  SERVER_VERSION_READ,
+  SYSTEM_DB,
+  supportsMultiDb
+} from '../dbMeta/dbMetaDuck'
 import {
   FIRST_MULTI_DB_SUPPORT,
   FIRST_NO_MULTI_DB_SUPPORT,
@@ -26,11 +31,9 @@ import {
 import bolt from 'services/bolt/bolt'
 import { APP_START } from 'shared/modules/app/appDuck'
 import {
-  CONNECTION_SUCCESS,
   DISCONNECTION_SUCCESS,
   getAuthEnabled
 } from 'shared/modules/connections/connectionsDuck'
-import { backgroundTxMetadata } from 'shared/services/bolt/txMetadata'
 
 export const NAME = 'user'
 export const UPDATE_CURRENT_USER = `${NAME}/UPDATE_CURRENT_USER`
@@ -85,8 +88,9 @@ export function forceFetch() {
 // Epics
 export const getCurrentUserEpic = (some$: any, store: any) =>
   some$
-    .ofType(CONNECTION_SUCCESS)
+    .ofType(SERVER_VERSION_READ)
     .merge(some$.ofType(DB_META_DONE))
+    .throttleTime(5000)
     .mergeMap(() => {
       return new Promise(async resolve => {
         const authEnabled = getAuthEnabled(store.getState())
@@ -94,18 +98,12 @@ export const getCurrentUserEpic = (some$: any, store: any) =>
           return resolve(null)
         }
         try {
-          const supportsMultiDb = await bolt.hasMultiDbSupport()
-          const res = await bolt.directTransaction(
+          const hasMultidb = supportsMultiDb(store.getState())
+          const res = await bolt.backgroundWorkerlessRoutedRead(
             getShowCurrentUserProcedure(
-              supportsMultiDb
-                ? FIRST_MULTI_DB_SUPPORT
-                : FIRST_NO_MULTI_DB_SUPPORT
+              hasMultidb ? FIRST_MULTI_DB_SUPPORT : FIRST_NO_MULTI_DB_SUPPORT
             ),
-            {},
-            {
-              ...backgroundTxMetadata,
-              useDb: supportsMultiDb ? SYSTEM_DB : ''
-            }
+            { useDb: hasMultidb ? SYSTEM_DB : undefined }
           )
 
           return resolve(res)
