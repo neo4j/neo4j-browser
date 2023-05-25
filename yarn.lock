@@ -10521,28 +10521,28 @@ neo4j-client-sso@1.2.2:
     jwt-decode "^3.1.2"
     lodash.pick "^4.4.0"
 
-neo4j-driver-bolt-connection@^5.3.0:
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/neo4j-driver-bolt-connection/-/neo4j-driver-bolt-connection-5.3.0.tgz#ce8e2bfbb00b421d6c989e3586470d7095d2d627"
-  integrity sha512-/JMlyf2nBjyqNBBHmXh0eHkkUu+PHok5A0wUh+lcwcXKAzR95tHvDYPthlPp1zXVfK2XbaiV4iO2rVQuzpbCVA==
+neo4j-driver-bolt-connection@5.3.1:
+  version "5.3.1"
+  resolved "https://registry.yarnpkg.com/neo4j-driver-bolt-connection/-/neo4j-driver-bolt-connection-5.3.1.tgz#d99065b7d0f51769a918e6c3aa22268982eae58a"
+  integrity sha512-pKDGd7bKUoZavf7Rc3Y45a2BVVuRjZpVSkkUHeGvSRMFdTU02w3+wB4tykSGj1w7+Hx7lYCBBbXtqfnx1g9GeQ==
   dependencies:
     buffer "^6.0.3"
-    neo4j-driver-core "^5.3.0"
+    neo4j-driver-core "5.3.1"
     string_decoder "^1.3.0"
 
-neo4j-driver-core@^5.3.0:
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/neo4j-driver-core/-/neo4j-driver-core-5.3.0.tgz#c3bf55a5d36565ea76bab7673e0c579af4387011"
-  integrity sha512-MGxHCU0Pt13ElxYZkObWoxZ8O5y0Guf/R3rcogDUktG6cp69rc+lWxZAR7HbsL+gc8NrdJlIxR7dIud7B3bhAA==
+neo4j-driver-core@5.3.1:
+  version "5.3.1"
+  resolved "https://registry.yarnpkg.com/neo4j-driver-core/-/neo4j-driver-core-5.3.1.tgz#658c1756ffdbc0256e4fbf9969f572ea6c46ca26"
+  integrity sha512-wGhZOM9TzoO71TCtwB7qYHF19kJ6XttCtQbeXHxclVHPXD5XPYJ24FUvkjpAHFZYrQC4L+44VqbFWhMETRfoSw==
 
-neo4j-driver@^5.3.0:
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/neo4j-driver/-/neo4j-driver-5.3.0.tgz#7bbf0697809706eb3f82d3c177cdb7cd5d58e973"
-  integrity sha512-u3+idq50BZj4zN9kVBbWA7u5H5/v837PP+iWbHElWgUbCCD1LX7E4V5Yq3g25XHm/CJu8Qfq9gfWCBbYCxgWBw==
+neo4j-driver@5.3.1:
+  version "5.3.1"
+  resolved "https://registry.yarnpkg.com/neo4j-driver/-/neo4j-driver-5.3.1.tgz#114c068933b89c9e111f1fac2bdf7ca61209287d"
+  integrity sha512-nhcxPN4puNyYriXAIdU4WTZWhxnn2jl0sHpElifgnrW1gLuBMn5ysWRv1nNZICx+eowbyO9ztnarbsS4GimdXg==
   dependencies:
     "@babel/runtime" "^7.17.8"
-    neo4j-driver-bolt-connection "^5.3.0"
-    neo4j-driver-core "^5.3.0"
+    neo4j-driver-bolt-connection "5.3.1"
+    neo4j-driver-core "5.3.1"
     rxjs "^7.5.5"
 
 nice-try@^1.0.4:
