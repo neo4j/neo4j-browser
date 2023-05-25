@@ -410,7 +410,8 @@ export const connectEpic = (action$: any, store: any) =>
             supportsMultiDb ? 'SHOW DATABASES' : 'call db.indexes()',
             { useDb: supportsMultiDb ? 'SYSTEM' : undefined }
           )
-        } catch (e: any) {
+        } catch (error) {
+          const e: any = error
           // if we got a connection error throw, otherwise continue
           if (!e.code || isBoltConnectionErrorCode(e.code)) {
             throw e
