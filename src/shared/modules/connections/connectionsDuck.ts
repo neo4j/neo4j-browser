@@ -23,7 +23,8 @@ import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
 import {
   TokenExpiredDriverError,
-  UnauthorizedDriverError
+  UnauthorizedDriverError,
+  isBoltConnectionErrorCode
 } from 'services/bolt/boltConnectionErrors'
 import { NATIVE, NO_AUTH, SSO } from 'services/bolt/boltHelpers'
 import { GlobalState } from 'shared/globalState'
@@ -404,10 +405,17 @@ export const connectEpic = (action$: any, store: any) =>
         // we know we can reach the server but when connecting via the form
         // we need to make sure the initial credentails have been changed
         const supportsMultiDb = await bolt.hasMultiDbSupport()
-        await bolt.backgroundWorkerlessRoutedRead(
-          supportsMultiDb ? 'SHOW DATABASES' : 'call db.indexes()',
-          { useDb: supportsMultiDb ? 'SYSTEM' : undefined }
-        )
+        try {
+          await bolt.backgroundWorkerlessRoutedRead(
+            supportsMultiDb ? 'SHOW DATABASES' : 'call db.indexes()',
+            { useDb: supportsMultiDb ? 'SYSTEM' : undefined }
+          )
+        } catch (e: any) {
+          // if we got a connection error throw, otherwise continue
+          if (!e.code || isBoltConnectionErrorCode(e.code)) {
+            throw e
+          }
+        }
 
         if (action.requestedUseDb) {
           store.dispatch(
