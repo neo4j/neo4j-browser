@@ -214,11 +214,6 @@ const availableCommands = [
     async exec(action: any, put: any, store: any): Promise<any> {
       const [dbName] = getCommandAndParam(action.cmd.substr(1))
       try {
-        const supportsMultiDb = await bolt.hasMultiDbSupport()
-        if (!supportsMultiDb) {
-          throw UnsupportedError('No multi db support detected.')
-        }
-
         const currentDbName = getUseDb(store.getState())
         const normalizedName = dbName.toLowerCase()
         const cleanDbName = unescapeCypherIdentifier(normalizedName)
