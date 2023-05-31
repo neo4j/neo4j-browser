@@ -34,7 +34,7 @@ describe('composite database', () => {
   ) {
     it('can query composite db and show results', () => {
       cy.executeCommand(':clear')
-      const query = `create database compdb1;create database compdb2;use compdb1 create (:Poke {{}name: "Treecko"{}})-[:EVOLVES_INTO]->(:Poke {{}name: "Grovyle"{}});CREATE COMPOSITE DATABASE both;CREATE ALIAS both.cd1 FOR DATABASE compdb1;CREATE ALIAS both.cd2 FOR DATABASE compdb2;`
+      const query = `create database compdb1 if not exists;create database compdb2 if not exists;use compdb1 create (:Poke {{}name: "Treecko"{}})-[:EVOLVES_INTO]->(:Poke {{}name: "Grovyle"{}});CREATE COMPOSITE DATABASE both;CREATE ALIAS both.cd1 FOR DATABASE compdb1;CREATE ALIAS both.cd2 FOR DATABASE compdb2;`
 
       cy.executeCommand(query)
       cy.get('[data-testid="multi-statement-list-icon"]')
