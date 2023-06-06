@@ -1,0 +1,24 @@
+:description: This section describes the neo4j-browser internals, including its architecture and components
+
+
+[[internals]]
+= Neo4J Browser Internals
+
+The Neo4J Browser is logically composed of 2 parts:
+
+1. A slightly coupled graphing module
+2. A user-interface that combines the graph rendering (supported by the graphing module), database, and user
+   interaction together
+
+The graphing is based on D3 but pretty much developed from scratch by building everything on top of D3 and implementing
+its own layout, coloring, and link drawing. For example, the calculation of arrow (e.g. node links) between nodes
+uses some very complicated math along with very prelimiary MDN standard basic shap specification.
+
+[WARNING]
+====
+We will not have any TypeDoc documentation, because the TypeScript version used in Neo4J Browser is not supprted by it
+====
+
+== Component Diagram (WIP)
+
+image:neo4j-browser.png[width=300]

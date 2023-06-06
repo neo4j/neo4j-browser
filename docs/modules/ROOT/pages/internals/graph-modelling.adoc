@@ -1,0 +1,41 @@
+:description: The basic building blocks of how Neo4J Browser models a graph
+
+
+[[graph-modeling]]
+= Graph Modeling
+
+Neo4J Browser first defines 3 of its own language-independent models:
+
+1. Graph
+2. Graph Node
+3. Graph links
+
+The node and relationship are implemented as TypeScript classes.
+
+
+== Node Modeling
+
+https://github.com/QubitPi/neo4j-browser/blob/master/src/neo4j-arc/graph-visualization/models/Node.ts[NodeModel] models
+a node/vertex in a graph. It also encapsulates styling information, such as node radius and caption text. The styling
+fields of this node are all "effectively uninitialized" and will be determined later
+
+To initialize a node, the following information is needed
+
+- An unique identifier of this node. This is also the surrogate key of that node in database
+- labels  The name of the group under which all nodes with the same label are counted together and displayed
+  as a single node type on UI. The name is a bit of misleading. In Neo4J browser, a `label` is NOT the text displayed on
+  a node but rather the "type" of that node. This is used to distinguish the different types of node displayed on UI
+- A mapping containig all node properties where the key is the propery name and value is the
+  property value
+- propertyTypes An object that maps the property name to the data type (in string) of the propery value
+
+== Link Modeling
+
+A link is modeled as a
+https://github.com/QubitPi/neo4j-browser/blob/master/src/neo4j-arc/graph-visualization/models/Relationship.ts[Relationship]
+in Neo4J Broswer. 
+
+== Graph Modeling
+
+Graph.ts basically implements the Graph ADS
+

@@ -27,3 +27,6 @@
 ** xref:operations/product-analytics.adoc[]
 
 * xref:reference-commands.adoc[Command reference]
+
+* xref:internals/index.adoc[Internals]
+** xref:internals/graph-modelling.adoc[]
