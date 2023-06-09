@@ -47,7 +47,6 @@ asciidoc:
     # page-cdn: /static/assets
     includePDF: false
     nonhtmloutput: ""
-    sectnums: true,
     sectnumlevel: 3,
     experimental: ''
     copyright: 2023
