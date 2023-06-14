@@ -260,7 +260,7 @@ function FrameEditor({
           title="Save as Favorite"
           dataTestId="frame-Favorite"
           onClick={() => {
-            newFavorite(frame.cmd)
+            newFavorite(editorValue)
           }}
         >
           <SaveFavoriteIcon />
