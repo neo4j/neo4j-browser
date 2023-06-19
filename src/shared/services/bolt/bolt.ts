@@ -194,7 +194,9 @@ async function backgroundWorkerlessRoutedRead(
   if (!session) return Promise.reject(BoltConnectionError())
 
   return session
-    .executeRead(tx => tx.run(input), { metadata: backgroundTxMetadata })
+    .executeRead(tx => tx.run(input), {
+      metadata: backgroundTxMetadata.txMetadata
+    })
     .finally(() => session.close())
 }
 
