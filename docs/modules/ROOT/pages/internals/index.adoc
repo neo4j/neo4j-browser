@@ -22,3 +22,31 @@ We will not have any TypeDoc documentation, because the TypeScript version used 
 == Component Diagram (WIP)
 
 image:neo4j-browser.png[width=300]
+
+* Sentry.io is initialized in the top index.tsx
+* AppInit.tsx is responsible for several initializations:
++
+--
+** Redux
+** Suber: The reason suber is used is sharing states between Neo4J database data and React components is not supported
+   by Redux. As its doc (https://github.com/oskarhane/suber#in-combination-with-redux) points out, Redux is for two-way
+   communications between components. Suber is for one-way comm. between component and DB.
+** Apollo GraphQL Client
+** Drag & Drop Plugin
+--
++
+The initialization assumes provider pattern around regular App component:
+[source,typescript]
+----
+<Provider store={store as any}>
+  <BusProvider bus={bus}>
+    <ApolloProvider client={client}>
+      <DndProvider backend={HTML5Backend}>
+        <App />
+      </DndProvider>
+    </ApolloProvider>
+  </BusProvider>
+</Provider>
+----
+
+* Neo4J Browser styling is implemented via https://styled-components.com/[styled-components] and is initialized in App.tsx
