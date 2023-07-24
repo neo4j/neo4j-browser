@@ -77,3 +77,16 @@ CYPRESS_BASE_URL=<url to reach the browser to test> (default http://localhost:80
 ```
 
 Example: `CYPRESS_E2E_TEST_ENV="local" CYPRESS_BASE_URL=http://localhost:30000 cypress open --env server=4.2`
+
+## Import svg-File with node positions
+This fork implements the feature requested here: https://github.com/neo4j/neo4j-browser/issues/858
+and was written by petra.schanz@deutschebahn.com
+
+Svgs exported by neo4j contain the positions of the drawn nodes.
+If you show the same nodes in the neo4j-browser you can use the new upload-button 
+(below the zoom buttons because this is all about visualization) and upload your svg:
+The nodes will be dragged automatically to the positions shown in the svg. 
+You can interact with them and use them as you are used to.
+
+If you need to re-import the database data you should set a uuid before exporting the svg and after importing the data
+by using something along "MATCH (n) SET n.uuid = n.myEternalAndUniqeAttribute RETURN n"

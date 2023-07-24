@@ -93,4 +93,12 @@ export class NodeModel {
       .relationships()
       .some(rel => rel.source === this || rel.target === this)
   }
+
+  moveNodePosition(x: number, y: number): void {
+    // added by petra.schanz@deutschebahn.com
+    this.x = x
+    this.y = y
+    this.fx = x // by setting the f attrs we lock the node
+    this.fy = y // by setting the f attrs we lock the node
+  }
 }

@@ -48,6 +48,7 @@ import {
 } from './renderers/init'
 import { nodeMenuRenderer } from './renderers/menu'
 import { ZoomLimitsReached, ZoomType } from '../../../types'
+import { mapRelationships } from '../../../utils/mapper'
 
 type MeasureSizeFn = () => { width: number; height: number }
 
@@ -196,8 +197,13 @@ export class Visualization {
       .selectAll<SVGGElement, NodeModel>('g.node')
       .data(nodes, d => d.id)
       .join('g')
-      .attr('class', 'node')
+      .attr('class', d =>
+        d.propertyMap.hasOwnProperty('uuid')
+          ? 'node uuid_' + d.propertyMap.uuid.replace(/[^a-z0-9]/gi, '')
+          : 'node'
+      )
       .attr('aria-label', d => `graph-node${d.id}`)
+      .attr('transform', d => `translate(${d.x}, ${d.y})`)
       .call(nodeEventHandlers, this.trigger, this.forceSimulation.simulation)
       .classed('selected', node => node.selected)
 
@@ -234,11 +240,11 @@ export class Visualization {
     )
 
     this.forceSimulation.updateRelationships(this.graph)
-   // The onGraphChange handler does only repaint relationship color
+    // The onGraphChange handler does only repaint relationship color
     // not width and caption, since it requires taking into account surrounding data
-    // since the arrows have different bending depending on how the nodes are 
-    // connected. We work around that by doing an additional full render to get the 
-// new stylings
+    // since the arrows have different bending depending on how the nodes are
+    // connected. We work around that by doing an additional full render to get the
+    // new stylings
     this.render()
   }
 
@@ -396,5 +402,14 @@ export class Visualization {
         size.height
       ].join(' ')
     )
+  }
+
+  updateNodePositions(): void {
+    this.updateNodes()
+    this.updateRelationships()
+  }
+
+  public getGraph(): GraphModel {
+    return this.graph
   }
 }

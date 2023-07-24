@@ -49,6 +49,7 @@ import { Visualization } from './visualization/Visualization'
 import { WheelZoomInfoOverlay } from './WheelZoomInfoOverlay'
 import { StyledSvgWrapper, StyledZoomButton, StyledZoomHolder } from './styled'
 import { ResizeObserver } from '@juggle/resize-observer'
+import SvgUploadButton from './SvgUploadButton'
 
 export type GraphProps = {
   isFullscreen: boolean
@@ -299,6 +300,9 @@ export class Graph extends React.Component<GraphProps, GraphState> {
             onClick={this.zoomToFitClicked}
           >
             <ZoomToFitIcon large={isFullscreen} />
+          </StyledZoomButton>
+          <StyledZoomButton aria-label={'upload-node-positions'}>
+            <SvgUploadButton visualization={this.visualization} />
           </StyledZoomButton>
         </StyledZoomHolder>
         {wheelZoomInfoMessageEnabled && displayingWheelZoomInfoMessage && (

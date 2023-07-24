@@ -42,6 +42,7 @@ export class GraphModel {
     this.addInternalRelationships = this.addInternalRelationships.bind(this)
     this.pruneInternalRelationships = this.pruneInternalRelationships.bind(this)
     this.findNode = this.findNode.bind(this)
+    this.findNodeByUuid = this.findNodeByUuid.bind(this)
     this.findNodeNeighbourIds = this.findNodeNeighbourIds.bind(this)
     this.findRelationship = this.findRelationship.bind(this)
     this.findAllRelationshipToNode = this.findAllRelationshipToNode.bind(this)
@@ -171,6 +172,15 @@ export class GraphModel {
 
   findNode(id: string): NodeModel {
     return this.nodeMap[id]
+  }
+
+  findNodeByUuid = function (
+    this: GraphModel,
+    uuid: string
+  ): NodeModel | undefined {
+    return Object.values(this.nodeMap).find(
+      obj => obj.propertyMap.uuid.replace(/[^a-z0-9]/gi, '') === uuid
+    )
   }
 
   findNodeNeighbourIds(id: string): string[] {

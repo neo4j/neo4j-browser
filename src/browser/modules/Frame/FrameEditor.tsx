@@ -27,7 +27,8 @@ import { isMac } from 'neo4j-arc/common'
 import {
   SaveFavoriteIcon,
   RunIcon,
-  StopIcon
+  StopIcon,
+  RightArrowIcon
 } from 'browser-components/icons/LegacyIcons'
 
 import { MAIN_WRAPPER_DOM_ID } from '../App/App'
