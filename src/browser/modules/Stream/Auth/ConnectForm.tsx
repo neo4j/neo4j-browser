@@ -392,13 +392,15 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
         {props.authenticationMethod === SSO &&
           !SSOLoading &&
           (SSOError || SSORedirectError) && (
-            <StyledSSOError>
-              <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>
-              <div>{SSOError || SSORedirectError}</div>
+            <>
+              <StyledSSOError>
+                <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>
+                <div>{SSOError || SSORedirectError}</div>
+              </StyledSSOError>
               <StyledSSOLogDownload onClick={downloadAuthLogs}>
-                Download logs
+                Download browser SSO logs
               </StyledSSOLogDownload>
-            </StyledSSOError>
+            </>
           )}
 
         {props.connecting
