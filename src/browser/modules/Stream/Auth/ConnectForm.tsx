@@ -391,7 +391,7 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
           ))}
         {props.authenticationMethod === SSO &&
           !SSOLoading &&
-          (SSOError || SSORedirectError || true) && (
+          (SSOError || SSORedirectError) && (
             <>
               <StyledSSOError>
                 <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>

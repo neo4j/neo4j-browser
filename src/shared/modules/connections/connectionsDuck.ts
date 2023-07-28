@@ -561,6 +561,11 @@ export const startupConnectEpic = (action$: any, store: any) => {
                 resolve({ type: STARTUP_CONNECTION_SUCCESS })
               })
               .catch(() => {
+                if (discovered.attemptSSOLogin) {
+                  authLog(
+                    'client side SSO flow completed but Neo4j Browser failed to connect to neo4j. Server side logs (security.log or debug.log) may contain more information.'
+                  )
+                }
                 store.dispatch(setActiveConnection(null))
                 store.dispatch(
                   discovery.updateDiscoveryConnection({
@@ -694,6 +699,12 @@ export const connectionLostEpic = (action$: any, store: any) =>
                     )
                   } catch (e) {
                     authLog(`Failed to refresh token: ${e}`)
+                    authLog(
+                      'This could be due to the refresh token not being available, which happens if Neo4j Browser accessed via stored credentials rather than redoing the SSO flow. ' +
+                        'If you have a short lived access token, it may be beneficial to set `browser.retain_connection_credentials=false` in neo4j.conf to make sure the refresh token is always available.'
+                    )
+                    // if refreshing the token failed, don't retry
+                    return resolve({ type: UnauthorizedDriverError })
                   }
                 }
               } else {
