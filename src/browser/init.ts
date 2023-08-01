@@ -32,6 +32,10 @@ import 'browser-styles/relate-by-ui/relate-by-PARTS.css'
 
 import '@neo4j-ndl/base/lib/neo4j-ds-styles.css'
 
+// Make sure the bolt worker module is fetched early
+import BoltWorkerModule from 'shared/services/bolt/boltWorker'
+new BoltWorkerModule()
+
 // non web env (just for tests)
 if (typeof btoa === 'undefined') {
   global.btoa = function (str) {

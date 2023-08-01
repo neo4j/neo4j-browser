@@ -126,7 +126,7 @@ describe('Implicit vs explicit transactions', () => {
     flushPromises().then(() => {
       expect(bolt.routedWriteTransaction).toHaveBeenCalledTimes(1)
       expect(bolt.routedWriteTransaction).toHaveBeenCalledWith(
-        'RETURN 1',
+        ' RETURN 1',
         {},
         expect.objectContaining({
           autoCommit: true
@@ -163,7 +163,7 @@ multiline comment
 // comment
 
 // comment
-/*:auto*/RETURN ":auto"`,
+/*:auto*/ RETURN ":auto"`,
         {},
         expect.objectContaining({
           autoCommit: true

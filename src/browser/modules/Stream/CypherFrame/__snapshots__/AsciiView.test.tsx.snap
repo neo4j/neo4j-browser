@@ -6,7 +6,7 @@ exports[`AsciiViews AsciiStatusbar displays statusBarMessage if no rows 1`] = `
     class="sc-jeraig dxzVkG"
   >
     <div
-      class="sc-ctqQKy bDKTPj"
+      class="sc-dFtzxp fjFdHi"
     >
       Completed after 10  ms.
     </div>
@@ -62,7 +62,7 @@ exports[`AsciiViews AsciiView does not display bodyMessage if rows 1`] = `
       class="sc-nVkyK eSroYp"
     >
       ╒═══╕
-│"x"│
+│x  │
 ╞═══╡
 │"y"│
 └───┘

@@ -28,10 +28,14 @@ export {
 } from './cypher-editor/editorSupport'
 export {
   parse as parseQueryOrCommand,
-  extractStatements,
   createCypherLexer
-} from 'cypher-editor-support'
-export type { QueryOrCommand, ConsoleCommand } from 'cypher-editor-support'
+} from '@neo4j-cypher/editor-support'
+export { extractStatements } from '@neo4j-cypher/extract-statements'
+
+export type {
+  QueryOrCommand,
+  ConsoleCommand
+} from '@neo4j-cypher/editor-support'
 
 export {
   toFunction,

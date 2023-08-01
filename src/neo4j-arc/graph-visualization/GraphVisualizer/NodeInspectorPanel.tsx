@@ -90,6 +90,11 @@ export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
     return (
       <>
         <StyledNodeInspectorTopMenuChevron
+          aria-label={
+            expanded
+              ? 'Collapse the node properties display'
+              : 'Expand the node properties display'
+          }
           expanded={expanded}
           onClick={toggleExpanded}
           title={

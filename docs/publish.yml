@@ -7,7 +7,7 @@ content:
   sources:
   - url: https://github.com/neo4j/neo4j-browser.git
     start_path: docs
-    branches: 
+    branches:
     - master
     include: docs/
     exclude:
@@ -26,7 +26,7 @@ urls:
 antora:
   extensions:
   - require: "@neo4j-antora/antora-modify-sitemaps"
-    sitemap_version: '4.4'
+    sitemap_version: '5'
     sitemap_loc_version: 'current'
     move_sitemaps_to_components: true
 
@@ -48,8 +48,9 @@ asciidoc:
     # page-cdn: /static/assets
     includePDF: false
     nonhtmloutput: ""
-    sectnums: true,
     sectnumlevel: 3,
     experimental: ''
-    copyright: 2021
+    copyright: 2023
     common-license-page-uri: https://neo4j.com/docs/license/
+    docs-base-uri: https://neo4j.com/docs
+    neo4j-docs-base-uri: https://neo4j.com/docs

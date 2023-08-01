@@ -64,8 +64,8 @@ import {
   stripScheme
 } from 'shared/services/boltscheme.utils'
 import { isCloudHost } from 'shared/services/utils'
-
-type ConnectionFormState = any
+import { Neo4jError } from 'neo4j-driver'
+import { GlobalState } from 'shared/globalState'
 
 const isAuraHost = (host: string) => isCloudHost(host, NEO4J_CLOUD_DOMAINS)
 
@@ -76,7 +76,7 @@ function getAllowedAuthMethodsForHost(host: string): AuthenticationMethod[] {
 const getAllowedSchemesForHost = (host: string, allowedSchemes: string[]) =>
   isAuraHost(host) ? CLOUD_SCHEMES : allowedSchemes
 
-export class ConnectionForm extends Component<any, ConnectionFormState> {
+export class ConnectionFormController extends Component<any, any> {
   constructor(props: any) {
     super(props)
     const connection = this.getConnection()
@@ -106,7 +106,7 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
     }
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     const { authenticationMethod } = this.state
     if (authenticationMethod === NO_AUTH) {
       this.connect(() => this.setState({ connecting: false }))
@@ -141,12 +141,6 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
       },
       (res: any) => {
         if (res.success) {
-          //If credentials should not be stored, remove them from form
-          if (!this.props.storeCredentials)
-            this.setState({
-              username: '',
-              password: ''
-            })
           doneFn()
           this.saveAndStart()
         } else {
@@ -269,11 +263,17 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
     this.props.error({})
   }
 
-  onChangePasswordChange() {
+  onChangePasswordChange(): void {
     this.props.error({})
   }
 
-  onChangePassword({ newPassword, error }: any) {
+  onChangePassword({
+    newPassword,
+    error
+  }: {
+    newPassword: string
+    error?: Neo4jError
+  }): void {
     this.setState({ isLoading: true })
     if (error && error.code) {
       this.setState({ isLoading: false })
@@ -332,7 +332,7 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
     )
   }
 
-  saveAndStart() {
+  saveAndStart(): void {
     this.setState({ forcePasswordChange: false, used: true })
     this.state.successCallback()
     this.props.bus && this.props.bus.send(FOCUS)
@@ -342,9 +342,12 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
     if (this.props.playImplicitInitCommands) {
       this.props.executeInitCmd()
     }
+    //We don't know if credentials should be stored yet
+    // so we remove them from the form
+    this.setState({ username: '', password: '' })
   }
 
-  saveCredentials() {
+  saveCredentials(): void {
     this.props.updateConnection({
       id: CONNECTION_ID,
       host: this.state.host,
@@ -440,7 +443,7 @@ export class ConnectionForm extends Component<any, ConnectionFormState> {
   }
 }
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: GlobalState) => {
   return {
     discoveredData: getConnectionData(state, CONNECTION_ID),
     initCmd: getInitCmd(state),
@@ -458,7 +461,7 @@ const mapDispatchToProps = (dispatch: any) => {
     updateConnection: (connection: any) => {
       dispatch(updateConnection(connection))
     },
-    setActiveConnection: (id: any) => dispatch(setActiveConnection(id)),
+    setActiveConnection: (id: string) => dispatch(setActiveConnection(id)),
     dispatchInitCmd: (initCmd: any) => dispatch(executeSystemCommand(initCmd))
   }
 }
@@ -481,5 +484,9 @@ const mergeProps = (stateProps: any, dispatchProps: any, ownProps: any) => {
 }
 
 export default withBus(
-  connect(mapStateToProps, mapDispatchToProps, mergeProps)(ConnectionForm)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+    mergeProps
+  )(ConnectionFormController)
 )

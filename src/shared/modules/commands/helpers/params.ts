@@ -78,15 +78,13 @@ export const getParamName = (input: any) => {
 export const handleParamsCommand = async (
   action: any,
   put: any,
-  onUnsupportedDatabase: boolean
+  onSystemDatabase: boolean
 ): Promise<{
   result: any
   type: string
 }> => {
-  if (onUnsupportedDatabase) {
-    throw new Error(
-      'Parameters cannot be declared when using system or composite database.'
-    )
+  if (onSystemDatabase) {
+    throw new Error('Parameters cannot be declared when using system database.')
   }
   const strippedCmd = action.cmd.substr(1)
   const parts = splitStringOnFirst(strippedCmd, /\s/)

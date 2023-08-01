@@ -152,9 +152,27 @@ export const StyledDbsRow = styled.li``
 export const StyledFormContainer = styled.div`
   display: flex;
 `
-export const StyledSSOLogDownload = styled.a`
+export const StyledSSOLogDownload = styled.button`
+  color: ${props => props.theme.primaryButtonText};
+  background-color: ${props => props.theme.primary};
+  border: 1px solid ${props => props.theme.primary};
+  font-family: ${props => props.theme.primaryFontFamily};
+  padding: 6px 18px;
+  font-weight: 600;
+  font-size: 14px;
+  text-align: center;
+  vertical-align: middle;
   cursor: pointer;
+  border-radius: 4px;
+  line-height: 20px;
+
+  &:hover {
+    background-color: ${props => props.theme.primary50};
+    color: ${props => props.theme.secondaryButtonTextHover};
+    border: 1px solid ${props => props.theme.primary50};
+  }
 `
+
 export const StyledSSOButtonContainer = styled.div`
   margin-bottom: 12px;
 `
@@ -162,4 +180,5 @@ export const StyledSSOError = styled.div`
   margin-top: 30px;
   padding: 3px;
   white-space: pre-line;
+  display: flex;
 `

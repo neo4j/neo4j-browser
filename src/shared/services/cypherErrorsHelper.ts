@@ -8,7 +8,8 @@ export const isNoDbAccessError = ({ code, message }: BrowserError): boolean =>
   /Database access is not allowed/i.test(message)
 
 const isCallInTransactionError = ({ code, message }: BrowserError) =>
-  code === 'Neo.DatabaseError.Statement.ExecutionFailed' &&
+  (code === 'Neo.DatabaseError.Statement.ExecutionFailed' ||
+    code === 'Neo.DatabaseError.Transaction.TransactionStartFailed') &&
   /in an implicit transaction/.test(message)
 
 const isPeriodicCommitError = ({ code, message }: BrowserError) =>

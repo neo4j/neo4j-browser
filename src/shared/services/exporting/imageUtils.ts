@@ -43,7 +43,7 @@ export const downloadPNGFromSVG = (svg: any, graph: any, type: any) => {
     //@ts-ignore
     const v = canvg.fromString(ctx, svgData)
     // Resize down to smaller canvas, but higher resolution
-    v.resize(canvas.width / devicePixelRatio, canvas.width / devicePixelRatio)
+    v.resize(canvas.width / devicePixelRatio, canvas.height / devicePixelRatio)
     v.render()
       .then(() =>
         downloadWithDataURI(`${type}.png`, canvas.toDataURL('image/png'))

@@ -166,7 +166,7 @@ REQUIRE n.<propertyKey> IS UNIQUE`,
   {
     folder: 'procedures',
     content: '// List running queries\nCALL dbms.listQueries()',
-    versionRange: '>=3'
+    versionRange: '>=3 <5'
   },
   {
     folder: 'procedures',

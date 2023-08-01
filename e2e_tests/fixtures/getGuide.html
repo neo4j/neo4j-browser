@@ -1,0 +1,698 @@
+<style type="text/css" media="screen">
+    /*
+    .nodes-image {
+        margin:-100;
+    }
+    */	
+    @import url("//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css");
+    
+    .imageblock .content img, .image img {max-width: 100%;}
+    .deck h3, .deck h4 {display: block !important;margin-bottom:8px;margin-top:5px;}
+    .listingblock {margin:8px;}
+    .pull-bottom {position:relative;bottom:1em;}
+    .admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
+    .admonitionblock td.icon .icon-note:before{content:"\f05a";color:#19407c}
+    .admonitionblock td.icon .icon-tip:before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
+    .admonitionblock td.icon .icon-warning:before{content:"\f071";color:#bf6900}
+    .admonitionblock td.icon .icon-caution:before{content:"\f06d";color:#bf3400}
+    .admonitionblock td.icon .icon-important:before{content:"\f06a";color:#bf0000}
+    .admonitionblock.note.speaker { display:none; }
+    </style>
+    <style type="text/css" media="screen">
+    /* #editor.maximize-editor .CodeMirror-code { font-size:24px; line-height:26px; } */
+    </style>
+    <article class="guide" ng-controller="AdLibDataController">
+      <carousel class="deck container-fluid">
+        <!--slide class="row-fluid">
+          <div class="col-sm-3">
+            <h3>What is Cypher?</h3>
+            <p class="lead">Information</p>
+                <!dl>
+                    
+                    
+                    
+                    
+                    
+                </dl>
+            </div>
+          <div class="col-sm-9">
+            <figure>
+              <img style="width:300px" src=""/>
+            </figure>
+          </div>
+        </slide-->
+        <style type="text/css">
+    .smallest {
+       font-size:0.6em;
+    }
+    </style>
+    <title>Movies Guide</title>
+    
+    
+    
+    <slide class="row-fluid">
+      <div class="col-sm-12">
+        <h3>What is Cypher?</h3>
+        <br/>
+        <div>
+          <div class="paragraph">
+    <p>Cypher is a graph query language that is used to query the Neo4j Database. Just like you use SQL to query a MySQL database,
+    you would use Cypher to query the Neo4j Database.</p>
+    </div>
+    <div class="paragraph">
+    <p>A simple Cypher query can look something like this</p>
+    </div>
+    <div class="exampleblock">
+    <div class="content">
+    <div class="paragraph">
+    <p>This content is only revealed when the user clicks the block title.</p>
+    </div>
+    </div>
+    </div>
+    <div class="listingblock">
+    <div class="content">
+    <pre mode="cypher"  class="highlight pre-scrollable programlisting cm-s-neo code runnable standalone-example ng-binding" data-lang="cypher" lang="cypher"><!--code class="cypher language-cypher"-->MATCH (m:Movie)
+    WHERE m.released &gt; 2000
+    RETURN m LIMIT 5<!--/code--></pre>
+    </div>
+    </div>
+    <div style="background: #5CA6D9EE; padding: 12px; color: white; border-radius: 2px">
+    Hint: You can click on the query above to populate it in the editor.
+    </div>
+    <div class="paragraph">
+    <p><strong>Expected Result</strong>: The above query will return all the movies that were released after the year 2000 limiting the result to 5 items.</p>
+    </div>
+    <div class="imageblock">
+    <div class="content">
+    <img src="https://guides.neo4j.com/sandbox/movies/img/5-movies.svg" alt="5 movies" width="100%">
+    </div>
+    </div>
+    <div class="paragraph">
+    <p><strong>Try</strong></p>
+    </div>
+    <div class="olist arabic">
+    <ol class="arabic">
+    <li>
+    <p>Write a query to retrieve all the movies released after the year 2005.</p>
+    <div class="exampleblock">
+    <div class="content">
+    <div class="listingblock">
+    <div class="content">
+    <pre mode="cypher"  class="highlight pre-scrollable programlisting cm-s-neo code runnable standalone-example ng-binding" data-lang="cypher" lang="cypher"><!--code class="cypher language-cypher"-->MATCH (m:Movie)
+    WHERE m.released &gt; 2005
+    RETURN m<!--/code--></pre>
+    </div>
+    </div>
+    </div>
+    </div>
+    </li>
+    <li>
+    <p>Write a query to return the count of movies released after the year 2005. (Hint: you can use the <code>COUNT(m)</code> function to return the count)</p>
+    <div class="exampleblock">
+    <div class="content">
+    <div class="listingblock">
+    <div class="content">
+    <pre mode="cypher"  class="highlight pre-scrollable programlisting cm-s-neo code runnable standalone-example ng-binding" data-lang="cypher" lang="cypher"><!--code class="cypher language-cypher"-->MATCH (m:Movie)
+    WHERE m.released &gt; 2005
+    RETURN count(m)<!--/code--></pre>
+    </div>
+    </div>
+    </div>
+    </div>
+    </li>
+    </ol>
+    </div>
+        </div>
+      </div>
+    </slide>
+    
+    
+    
+    <slide class="row-fluid">
+      <div class="col-sm-12">
+        <h3>Nodes and Relationships</h3>
+        <br/>
+        <div>
+          <div class="paragraph">
+    <p>Nodes and Relationships are the basic building blocks of a graph database.</p>
+    </div>
+    <div class="paragraph">
+    <p><strong>Nodes</strong></p>
+    </div>
+    <div class="paragraph">
+    <p>Nodes represent entities. A node in graph database is similar to a row in a relational database.
+    In the picture below we can see 2 kinds of nodes - <code>Person</code> and <code>Movie</code>. In writing a Cypher query, a node is enclosed between a</p>
+    </div>
+    <div class="paragraph">
+    <p>parenthesis — like <code>(p:Person)</code> where <code>p</code> is a variable and <code>Person</code> is the type of node it is referring to.</p>
+    </div>
+    <div class="imageblock">
+    <div class="content">
+    <img src="https://guides.neo4j.com/sandbox/movies/img/schema.svg" alt="schema" width="100%">
+    </div>
+    </div>
+    <div class="paragraph">
+    <p><strong>Relationship</strong></p>
+    </div>
+    <div class="paragraph">
+    <p>Two nodes can be connected with a relationship. In the above image <code>ACTED_IN</code>, <code>REVIEWED</code>, <code>PRODUCED</code>, <code>WROTE</code> and <code>DIRECTED</code> are all
+    relationships connecting the corresponding types of nodes.</p>
+    </div>
+    <div class="paragraph">
+    <p>In writing a cypher query, relationships are enclosed in square brackets - like <code>[w:WORKS_FOR]</code> where <code>w</code> is a variable and <code>WORKS_FOR</code> is
+    the type of relationship it is referring to.</p>
+    </div>
+    <div class="paragraph">
+    <p>Two nodes can be connected with more than one relationships.</p>
+    </div>
+    <div class="listingblock">
+    <div class="content">
+    <pre mode="cypher"  class="highlight pre-scrollable programlisting cm-s-neo code runnable standalone-example ng-binding" data-lang="cypher" lang="cypher"><!--code class="cypher language-cypher"-->MATCH (p:Person)-[d:DIRECTED]-(m:Movie)
+    WHERE m.released &gt; 2010
+    RETURN p,d,m<!--/code--></pre>
+    </div>
+    </div>
+    <div style="background: #5CA6D9EE; padding: 12px; color: white; border-radius: 2px">
+    Hint: You can click on the query above to populate it in the editor.
+    </div>
+    <div class="paragraph">
+    <p><strong>Expected Result</strong>: The above query will return all Person nodes who directed a movie that was released after 2010.</p>
+    </div>
+    <div class="imageblock">
+    <div class="content">
+    <img src="https://guides.neo4j.com/sandbox/movies/img/movies-after-2010.svg" alt="movies after 2010" width="100%">
+    </div>
+    </div>
+    <div class="paragraph">
+    <p><strong>Try</strong></p>
+    </div>
+    <div class="olist arabic">
+    <ol class="arabic">
+    <li>
+    <p>Query to get all the people who acted in a movie that was released after 2010.</p>
+    <div class="exampleblock">
+    <div class="content">
+    <div class="listingblock">
+    <div class="content">
+    <pre mode="cypher"  class="highlight pre-scrollable programlisting cm-s-neo code runnable standalone-example ng-binding" data-lang="cypher" lang="cypher"><!--code class="cypher language-cypher"-->MATCH (p:Person)-[r:ACTED_IN]-(m:Movie)
+    WHERE m.released &gt; 2010
+    RETURN p,r,m<!--/code--></pre>
+    </div>
+    </div>
+    </div>
+    </div>
+    </li>
+    </ol>
+    </div>
+        </div>
+      </div>
+    </slide>
+    
+    
+    
+    <slide class="row-fluid">
+      <div class="col-sm-12">
+        <h3>Labels</h3>
+        <br/>
+        <div>
+          <div class="paragraph">
+    <p>Labels is a name or identifier of a Node or a Relationship. In the image below <code>Movie</code> and <code>Person</code> are Node labels and <code>ACTED_IN</code>, <code>REVIEWED</code>, etc are Relationship types.</p>
+    </div>
+    <div class="imageblock">
+    <div class="content">
+    <img src="https://guides.neo4j.com/sandbox/movies/img/schema.svg" alt="schema" width="100%">
+    </div>
+    </div>
+    <div class="paragraph">
+    <p>In writing a Cypher query, Labels are prefixed with a colon - like <code>:Person</code> or <code>:ACTED_IN</code>. You can assign the node label to a variable by prefixing the syntax with the variable name. Like <code>(p:Person)</code> means <code>p</code> variable denoted <code>Person</code> labeled nodes.</p>
+    </div>
+    <div class="paragraph">
+    <p>Labels are used when you want to perform operations only on a specific types of Nodes. Like</p>
+    </div>
+    <div class="listingblock">
+    <div class="content">
+    <pre mode="cypher"  class="highlight pre-scrollable programlisting cm-s-neo code runnable standalone-example ng-binding" data-lang="cypher" lang="cypher"><!--code class="cypher language-cypher"-->MATCH (p:Person)
+    RETURN p
+    LIMIT 20<!--/code--></pre>
+    </div>
+    </div>
+    <div class="paragraph">
+    <p>will return only <code>Person</code> Nodes (limiting to 20 items) while</p>
+    </div>
+    <div class="listingblock">
+    <div class="content">
+    <pre mode="cypher"  class="highlight pre-scrollable programlisting cm-s-neo code runnable standalone-example ng-binding" data-lang="cypher" lang="cypher"><!--code class="cypher language-cypher"-->MATCH (n)
+    RETURN n
+    LIMIT 20<!--/code--></pre>
+    </div>
+    </div>
+    <div class="paragraph">
+    <p>will return all kinds of nodes (limiting to 20 items).</p>
+    </div>
+        </div>
+      </div>
+    </slide>
+    
+    
+    
+    <slide class="row-fluid">
+      <div class="col-sm-12">
+        <h3>Properties</h3>
+        <br/>
+        <div>
+          <div class="paragraph">
+    <p>Properties are name-value pairs that are used to add attributes to nodes and relationships.</p>
+    </div>
+    <div class="paragraph">
+    <p>To return specific properties of a node you can write</p>
+    </div>
+    <div class="listingblock">
+    <div class="content">
+    <pre mode="cypher"  class="highlight pre-scrollable programlisting cm-s-neo code runnable standalone-example ng-binding" data-lang="cypher" lang="cypher"><!--code class="cypher language-cypher"-->MATCH (m:Movie)
+    RETURN m.title, m.released<!--/code--></pre>
+    </div>
+    </div>
+    <div class="imageblock">
+    <div class="content">
+    <img src="https://guides.neo4j.com/sandbox/movies/img/movies-properties.jpg" alt="movies properties" width="100%">
+    </div>
+    </div>
+    <div class="paragraph">
+    <p><strong>Expected Result</strong> - This will return Movie nodes but with only the <code>title</code> and <code>released</code> properties.</p>
+    </div>
+    <div class="paragraph">
+    <p><strong>Try</strong></p>
+    </div>
+    <div class="olist arabic">
+    <ol class="arabic">
+    <li>
+    <p>Write a query to get <code>name</code> and <code>born</code> properties of the Person node.</p>
+    <div class="exampleblock">
+    <div class="content">
+    <div class="listingblock">
+    <div class="content">
+    <pre mode="cypher"  class="highlight pre-scrollable programlisting cm-s-neo code runnable standalone-example ng-binding" data-lang="cypher" lang="cypher"><!--code class="cypher language-cypher"-->MATCH (p:Person)
+    RETURN p.name, p.born<!--/code--></pre>
+    </div>
+    </div>
+    </div>
+    </div>
+    </li>
+    </ol>
+    </div>
+        </div>
+      </div>
+    </slide>
+    
+    
+    
+    <slide class="row-fluid">
+      <div class="col-sm-12">
+        <h3>Create a Node</h3>
+        <br/>
+        <div>
+          <div class="paragraph">
+    <p><code>CREATE</code> clause can be used to create a new node or a relationship.</p>
+    </div>
+    <div class="listingblock">
+    <div class="content">
+    <pre mode="cypher"  class="highlight pre-scrollable programlisting cm-s-neo code runnable standalone-example ng-binding" data-lang="cypher" lang="cypher"><!--code class="cypher language-cypher"-->CREATE (p:Person {name: 'John Doe'})
+    RETURN p<!--/code--></pre>
+    </div>
+    </div>
+    <div class="paragraph">
+    <p>The above statement will create a new <code>Person</code> node with property <code>name</code> having value <code>John Doe</code>.</p>
+    </div>
+    <div class="paragraph">
+    <p><strong>Try</strong></p>
+    </div>
+    <div class="olist arabic">
+    <ol class="arabic">
+    <li>
+    <p>Create a new <code>Person</code> node with a property <code>name</code> having the value of your name.</p>
+    <div class="exampleblock">
+    <div class="content">
+    <div class="listingblock">
+    <div class="content">
+    <pre mode="cypher"  class="highlight pre-scrollable programlisting cm-s-neo code runnable standalone-example ng-binding" data-lang="cypher" lang="cypher"><!--code class="cypher language-cypher"-->CREATE (p:Person {name: '&lt;Your Name&gt;'})
+    RETURN p<!--/code--></pre>
+    </div>
+    </div>
+    </div>
+    </div>
+    </li>
+    </ol>
+    </div>
+        </div>
+      </div>
+    </slide>
+    
+    
+    
+    <slide class="row-fluid">
+      <div class="col-sm-12">
+        <h3>Finding Nodes with <strong>Match</strong> and <strong>Where</strong> Clause</h3>
+        <br/>
+        <div>
+          <div class="paragraph">
+    <p><code>Match</code> clause is used to find nodes that match a particular pattern. This is the primary way of getting data from a Neo4j database.</p>
+    </div>
+    <div class="paragraph">
+    <p>In most cases, a <code>Match</code> is used along with certain conditions to narrow down the result.</p>
+    </div>
+    <div class="listingblock">
+    <div class="content">
+    <pre mode="cypher"  class="highlight pre-scrollable programlisting cm-s-neo code runnable standalone-example ng-binding" data-lang="cypher" lang="cypher"><!--code class="cypher language-cypher"-->MATCH (p:Person {name: 'Tom Hanks'})
+    RETURN p<!--/code--></pre>
+    </div>
+    </div>
+    <div class="paragraph">
+    <p>This is one way of doing it. Although you can only do basic string match based filtering this way (without using <code>WHERE</code> clause).</p>
+    </div>
+    <div class="paragraph">
+    <p>Another way would be to use a <code>WHERE</code> clause which allows for more complex filtering including <code>&gt;</code>, <code>&lt;</code>, <code>STARTS WITH</code>, <code>ENDS WITH</code>, etc</p>
+    </div>
+    <div class="listingblock">
+    <div class="content">
+    <pre mode="cypher"  class="highlight pre-scrollable programlisting cm-s-neo code runnable standalone-example ng-binding" data-lang="cypher" lang="cypher"><!--code class="cypher language-cypher"-->MATCH (p:Person)
+    WHERE p.name = "Tom Hanks"
+    RETURN p<!--/code--></pre>
+    </div>
+    </div>
+    <div class="paragraph">
+    <p>Both of the above queries will return the same results.</p>
+    </div>
+    <div class="paragraph">
+    <p>You can read more about Where clause and list of all filters here - <a href="https://neo4j.com/docs/cypher-manual/current/clauses/where/" class="bare">https://neo4j.com/docs/cypher-manual/current/clauses/where/</a></p>
+    </div>
+    <div class="paragraph">
+    <p><strong>Try</strong></p>
+    </div>
+    <div class="olist arabic">
+    <ol class="arabic">
+    <li>
+    <p>Find the movie with title "Cloud Atlas"</p>
+    <div class="exampleblock">
+    <div class="content">
+    <div class="listingblock">
+    <div class="content">
+    <pre mode="cypher"  class="highlight pre-scrollable programlisting cm-s-neo code runnable standalone-example ng-binding" data-lang="cypher" lang="cypher"><!--code class="cypher language-cypher"-->MATCH (m:Movie {title: "Cloud Atlas"})
+    RETURN m<!--/code--></pre>
+    </div>
+    </div>
+    </div>
+    </div>
+    </li>
+    <li>
+    <p>Get all the movies that were released between 2010 and 2015.</p>
+    <div class="exampleblock">
+    <div class="content">
+    <div class="listingblock">
+    <div class="content">
+    <pre mode="cypher"  class="highlight pre-scrollable programlisting cm-s-neo code runnable standalone-example ng-binding" data-lang="cypher" lang="cypher"><!--code class="cypher language-cypher"-->MATCH (m:Movie)
+    WHERE m.released &gt; 2010 AND m.released &lt; 2015
+    RETURN m<!--/code--></pre>
+    </div>
+    </div>
+    </div>
+    </div>
+    </li>
+    </ol>
+    </div>
+        </div>
+      </div>
+    </slide>
+    
+    
+    
+    <slide class="row-fluid">
+      <div class="col-sm-12">
+        <h3>Merge Clause</h3>
+        <br/>
+        <div>
+          <div class="paragraph">
+    <p>The <code>MERGE</code> clause is used to either</p>
+    </div>
+    <div class="olist arabic">
+    <ol class="arabic">
+    <li>
+    <p>match the existing nodes and bind them or</p>
+    </li>
+    <li>
+    <p>create new node(s) and bind them</p>
+    </li>
+    </ol>
+    </div>
+    <div class="paragraph">
+    <p>It is a combination of <code>MATCH</code> and <code>CREATE</code> and additionally allows to specify additional actions if the data was matched or created.</p>
+    </div>
+    <div class="listingblock">
+    <div class="content">
+    <pre mode="cypher"  class="highlight pre-scrollable programlisting cm-s-neo code runnable standalone-example ng-binding" data-lang="cypher" lang="cypher"><!--code class="cypher language-cypher"-->MERGE (p:Person {name: 'John Doe'})
+    ON CREATE SET p.createdAt = timestamp()
+    ON MATCH SET p.lastLoggedInAt = timestamp()
+    RETURN p<!--/code--></pre>
+    </div>
+    </div>
+    <div class="paragraph">
+    <p>The above statement will create the Person node if it does not exist. If the node already exists, then it will set the property <code>lastLoggedInAt</code> to the current timestamp. If the node did not exist and was newly created instead, then it will set the <code>createdAt</code> property to the current timestamp.</p>
+    </div>
+    <div class="paragraph">
+    <p><strong>Try</strong></p>
+    </div>
+    <div class="olist arabic">
+    <ol class="arabic">
+    <li>
+    <p>Write a query using Merge to create a movie node with title "Greyhound". If the node does not exist then set its <code>released</code> property to 2020 and <code>lastUpdatedAt</code> property to the current time stamp. If the node already exists, then only set <code>lastUpdatedAt</code> to the current time stamp. Return the movie node.</p>
+    <div class="exampleblock">
+    <div class="content">
+    <div class="listingblock">
+    <div class="content">
+    <pre mode="cypher"  class="highlight pre-scrollable programlisting cm-s-neo code runnable standalone-example ng-binding" data-lang="cypher" lang="cypher"><!--code class="cypher language-cypher"-->MERGE (m:Movie {title: 'Greyhound'})
+    ON CREATE SET m.released = "2020", m.lastUpdatedAt = timestamp()
+    ON MATCH SET m.lastUpdatedAt = timestamp()
+    RETURN m<!--/code--></pre>
+    </div>
+    </div>
+    </div>
+    </div>
+    </li>
+    </ol>
+    </div>
+        </div>
+      </div>
+    </slide>
+    
+    
+    
+    <slide class="row-fluid">
+      <div class="col-sm-12">
+        <h3>Create a Relationship</h3>
+        <br/>
+        <div>
+          <div class="paragraph">
+    <p>A Relationship connects 2 nodes.</p>
+    </div>
+    <div class="listingblock">
+    <div class="content">
+    <pre mode="cypher"  class="highlight pre-scrollable programlisting cm-s-neo code runnable standalone-example ng-binding" data-lang="cypher" lang="cypher"><!--code class="cypher language-cypher"-->MATCH (p:Person), (m:Movie)
+    WHERE p.name = "Tom Hanks" AND m.title = "Cloud Atlas"
+    
+    CREATE (p)-[w:WATCHED]-&gt;(m)
+    RETURN type(w)<!--/code--></pre>
+    </div>
+    </div>
+    <div class="paragraph">
+    <p>The above statement will create a relationship <code>:WATCHED</code> between the existing <code>Person</code> and <code>Movie</code> nodes and return the type of relationship (i.e <code>WATCHED</code>).</p>
+    </div>
+    <div class="paragraph">
+    <p><strong>Try</strong></p>
+    </div>
+    <div class="olist arabic">
+    <ol class="arabic">
+    <li>
+    <p>Create a relationship <code>:WATCHED</code> between the node you created for yourself previously in step 6 and the movie <strong>Cloud Atlas</strong> and then return the type of created relationship</p>
+    <div class="exampleblock">
+    <div class="content">
+    <div class="listingblock">
+    <div class="content">
+    <pre mode="cypher"  class="highlight pre-scrollable programlisting cm-s-neo code runnable standalone-example ng-binding" data-lang="cypher" lang="cypher"><!--code class="cypher language-cypher"-->MATCH (p:Person), (m:Movie)
+    WHERE p.name = "&lt;Your Name&gt;" AND m.title = "Cloud Atlas"
+    
+    CREATE (p)-[w:WATCHED]-&gt;(m)
+    RETURN type(w)<!--/code--></pre>
+    </div>
+    </div>
+    </div>
+    </div>
+    </li>
+    </ol>
+    </div>
+        </div>
+      </div>
+    </slide>
+    
+    
+    
+    <slide class="row-fluid">
+      <div class="col-sm-12">
+        <h3>Relationship Types</h3>
+        <br/>
+        <div>
+          <div class="paragraph">
+    <p>In Neo4j, there can be 2 kinds of relationships - <strong>incoming</strong> and <strong>outgoing</strong>.</p>
+    </div>
+    <div class="imageblock">
+    <div class="content">
+    <img src="https://guides.neo4j.com/sandbox/movies/img/relationship-types.svg" alt="relationship types" width="400">
+    </div>
+    </div>
+    <div class="paragraph">
+    <p>In the above picture, the Tom Hanks node is said to have an outgoing relationship while the Cloud Atlas node is said to have an incoming relationship.</p>
+    </div>
+    <div class="paragraph">
+    <p>Relationships always have a direction. However, you only have to pay attention to the direction where it is useful.</p>
+    </div>
+    <div class="paragraph">
+    <p>To denote an outgoing or an incoming relationship in cypher, we use <code>&#8594;</code> or <code>&#8592;</code>.</p>
+    </div>
+    <div class="paragraph">
+    <p>Example -</p>
+    </div>
+    <div class="listingblock">
+    <div class="content">
+    <pre mode="cypher"  class="highlight pre-scrollable programlisting cm-s-neo code runnable standalone-example ng-binding" data-lang="cypher" lang="cypher"><!--code class="cypher language-cypher"-->MATCH (p:Person)-[r:ACTED_IN]-&gt;(m:Movie)
+    RETURN p,r,m<!--/code--></pre>
+    </div>
+    </div>
+    <div class="paragraph">
+    <p>In the above query, Person has an outgoing relationship and movie has an incoming relationship.</p>
+    </div>
+    <div class="paragraph">
+    <p>Although, in the case of the movies dataset, the direction of the relationship is not that important and
+    even without denoting the direction in the query, it will return the same result. So the query</p>
+    </div>
+    <div class="listingblock">
+    <div class="content">
+    <pre mode="cypher"  class="highlight pre-scrollable programlisting cm-s-neo code runnable standalone-example ng-binding" data-lang="cypher" lang="cypher"><!--code class="cypher language-cypher"-->MATCH (p:Person)-[r:ACTED_IN]-(m:Movie)
+    RETURN p,r,m<!--/code--></pre>
+    </div>
+    </div>
+    <div class="paragraph">
+    <p>will return the same reuslt as the above one.</p>
+    </div>
+    <div class="paragraph">
+    <p><strong>Try</strong></p>
+    </div>
+    <div class="olist arabic">
+    <ol class="arabic">
+    <li>
+    <p>Write a query to find the nodes <code>Person</code> and <code>Movie</code> which are connected by <code>REVIEWED</code> relationship and is outgoing from the <code>Person</code> node and incoming to the <code>Movie</code> node.</p>
+    <div class="exampleblock">
+    <div class="content">
+    <div class="listingblock">
+    <div class="content">
+    <pre mode="cypher"  class="highlight pre-scrollable programlisting cm-s-neo code runnable standalone-example ng-binding" data-lang="cypher" lang="cypher"><!--code class="cypher language-cypher"-->MATCH (p:Person)-[r:REVIEWED]-(m:Movie)
+    RETURN p,r,m<!--/code--></pre>
+    </div>
+    </div>
+    </div>
+    </div>
+    </li>
+    </ol>
+    </div>
+        </div>
+      </div>
+    </slide>
+    
+    
+    
+    <slide class="row-fluid">
+      <div class="col-sm-12">
+        <h3>Advanced Cypher queries</h3>
+        <br/>
+        <div>
+          <div class="paragraph">
+    <p>Let&#8217;s look at some questions that you can answer with Cypher queries.</p>
+    </div>
+    <div class="olist arabic">
+    <ol class="arabic">
+    <li>
+    <p><strong>Finding who directed Cloud Atlas movie</strong></p>
+    <div class="listingblock">
+    <div class="content">
+    <pre mode="cypher"  class="highlight pre-scrollable programlisting cm-s-neo code runnable standalone-example ng-binding" data-lang="cypher" lang="cypher"><!--code class="cypher language-cypher"-->MATCH (m:Movie {title: 'Cloud Atlas'})&lt;-[d:DIRECTED]-(p:Person)
+    RETURN p.name<!--/code--></pre>
+    </div>
+    </div>
+    </li>
+    <li>
+    <p><strong>Finding all people who have co-acted with Tom Hanks in any movie</strong></p>
+    <div class="listingblock">
+    <div class="content">
+    <pre mode="cypher"  class="highlight pre-scrollable programlisting cm-s-neo code runnable standalone-example ng-binding" data-lang="cypher" lang="cypher"><!--code class="cypher language-cypher"-->MATCH (tom:Person {name: "Tom Hanks"})-[:ACTED_IN]-&gt;(:Movie)&lt;-[:ACTED_IN]-(p:Person)
+    RETURN p.name<!--/code--></pre>
+    </div>
+    </div>
+    </li>
+    <li>
+    <p><strong>Finding all people related to the movie Cloud Atlas in any way</strong></p>
+    <div class="listingblock">
+    <div class="content">
+    <pre mode="cypher"  class="highlight pre-scrollable programlisting cm-s-neo code runnable standalone-example ng-binding" data-lang="cypher" lang="cypher"><!--code class="cypher language-cypher"-->MATCH (p:Person)-[relatedTo]-(m:Movie {title: "Cloud Atlas"})
+    RETURN p.name, type(relatedTo)<!--/code--></pre>
+    </div>
+    </div>
+    <div class="paragraph">
+    <p>In the above query, we only used the variable <code>relatedTo</code> which will try to find all the relationships between any <code>Person</code> node and the movie node "Cloud Atlas"</p>
+    </div>
+    </li>
+    <li>
+    <p>Finding Movies and Actors that are 3 hops away from Kevin Bacon.</p>
+    <div class="listingblock">
+    <div class="content">
+    <pre mode="cypher"  class="highlight pre-scrollable programlisting cm-s-neo code runnable standalone-example ng-binding" data-lang="cypher" lang="cypher"><!--code class="cypher language-cypher"-->MATCH (p:Person {name: 'Kevin Bacon'})-[*1..3]-(hollywood)
+    RETURN DISTINCT p, hollywood<!--/code--></pre>
+    </div>
+    </div>
+    </li>
+    </ol>
+    </div>
+    <div class="paragraph">
+    <p>Note: in the above query, <code>hollywood</code> refers to any node in the database (in this case <code>Person</code> and <code>Movie</code> nodes)</p>
+    </div>
+        </div>
+      </div>
+    </slide>
+    
+    
+    
+    <slide class="row-fluid">
+      <div class="col-sm-12">
+        <h3>Great Job!</h3>
+        <br/>
+        <div>
+          <div class="paragraph">
+    <p>Now you know the basics of writing Cypher queries. You are on your way to becoming a graphista! Congratulations.</p>
+    </div>
+    <div class="paragraph">
+    <p>Feel free to play around with the data by writing more Cypher queries. If you want to learn more about Cypher,</p>
+    </div>
+    <div class="paragraph">
+    <p>you can use one of the below resources</p>
+    </div>
+    <div class="olist arabic">
+    <ol class="arabic">
+    <li>
+    <p><a href="https://neo4j.com/docs/cypher-manual/">Cypher Manual</a> - detailed manual on Cypher syntax</p>
+    </li>
+    <li>
+    <p><a href="https://graphacademy.neo4j.com/">Online Training - Introduction to Neo4j</a> - If you are new to Neo4j and like to learn through an online class, this is the best place to get started.</p>
+    </li>
+    </ol>
+    </div>
+        </div>
+      </div>
+    </slide>
+      </carousel>
+    </article>

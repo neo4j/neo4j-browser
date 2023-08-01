@@ -23,6 +23,7 @@
 ** xref:operations/query-parameters.adoc[]
 ** xref:operations/browser-url-parameters.adoc[]
 ** xref:operations/rest-requests.adoc[]
+** xref:operations/browser-rbac-count.adoc[]
 ** xref:operations/product-analytics.adoc[]
 
 * xref:reference-commands.adoc[Command reference]

@@ -157,8 +157,8 @@ const availableCommands = [
     match: (cmd: any) => /^params?\s/.test(cmd),
     exec(action: any, put: any, store: any) {
       const currDb = getCurrentDatabase(store.getState())
-      const onUnsupportedDb = Boolean(currDb && isSystemOrCompositeDb(currDb))
-      return handleParamsCommand(action, put, onUnsupportedDb)
+      const onSystemDb = currDb?.name === SYSTEM_DB
+      return handleParamsCommand(action, put, onSystemDb)
         .then(res => {
           const params =
             res.type === 'param' ? res.result : getParams(store.getState())
@@ -215,11 +215,6 @@ const availableCommands = [
     async exec(action: any, put: any, store: any): Promise<any> {
       const [dbName] = getCommandAndParam(action.cmd.substr(1))
       try {
-        const supportsMultiDb = await bolt.hasMultiDbSupport()
-        if (!supportsMultiDb) {
-          throw UnsupportedError('No multi db support detected.')
-        }
-
         const currentDbName = getUseDb(store.getState())
         const normalizedName = dbName.toLowerCase()
         const cleanDbName = unescapeCypherIdentifier(normalizedName)
@@ -355,8 +350,24 @@ const availableCommands = [
     }
   },
   {
+    name: 'debug connectivity',
+    match: (cmd: string) => /^debug connectivity/.test(cmd),
+    exec: function (action: any, put: any, store: any) {
+      const debugURL = action.cmd.slice(':debug connectivity'.length).trim()
+
+      put(
+        frames.add({
+          useDb: getUseDb(store.getState()),
+          ...action,
+          type: 'debug-connectivity',
+          urlToDebug: debugURL
+        })
+      )
+    }
+  },
+  {
     name: 'client-debug',
-    match: (cmd: any) => /^debug$/.test(cmd),
+    match: (cmd: string) => /^debug$/.test(cmd),
     exec: function (action: any, put: any, store: any) {
       const out = {
         userCapabilities: getUserCapabilities(store.getState()),
@@ -382,8 +393,8 @@ const availableCommands = [
       if (db && isSystemOrCompositeDb(db)) {
         put(
           frames.add({
-            useDb,
             ...action,
+            useDb: db.name,
             type: 'error',
             error: UnsupportedError(
               'The :sysinfo command is not supported while using the system or a composite database.'
@@ -393,8 +404,8 @@ const availableCommands = [
       } else {
         put(
           frames.add({
-            useDb,
             ...action,
+            useDb: db?.name,
             type: 'sysinfo'
           })
         )
@@ -421,7 +432,7 @@ const availableCommands = [
       // we need to strip that and attach to the actions object
       const query = action.cmd.trim()
 
-      const autoPrefix = `:${autoCommitTxCommand} `
+      const autoPrefix = `:${autoCommitTxCommand}`
       const blankedComments = query
         .replace(/\/\*(.|\n)*?\*\//g, (match: any) => ' '.repeat(match.length)) // mutliline comment
         .replace(/\/\/[^\n]*\n/g, (match: any) => ' '.repeat(match.length)) // singleline comment

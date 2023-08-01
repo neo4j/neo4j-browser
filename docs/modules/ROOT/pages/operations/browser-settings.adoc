@@ -256,4 +256,3 @@ Separate multiple commands with a semicolon (`;`).
 | `true`
 | Configure the Neo4j Browser to store or not store editor history.
 |===
-

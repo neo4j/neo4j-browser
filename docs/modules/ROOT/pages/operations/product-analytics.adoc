@@ -22,7 +22,7 @@ A message informs users that they are allowing product analytics to be collected
 
 [NOTE]
 ====
-The Neo4j DBMS configuration setting link:https://neo4j.com/docs/operations-manual/current/reference/configuration-settings/#config_clients.allow_telemetry[`clients.allow_telemetry`^] configures the initial state for allowing product analytics.
+The Neo4j DBMS configuration setting link:https://neo4j.com/docs/operations-manual/current/configuration/configuration-settings/#config_clients.allow_telemetry[`clients.allow_telemetry`^] configures the initial state for allowing product analytics.
 ====
 
 .Product analytics settings

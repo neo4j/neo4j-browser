@@ -20,8 +20,6 @@
 
 /* global Cypress, cy, before */
 
-import { SubmitQueryButton } from '../support/commands'
-
 const GREY = 'rgb(165, 171, 182)' // Default color for nodes and relationships
 const ORANGE = 'rgb(247, 151, 103)'
 const PURPLE = 'rgb(201, 144, 192)' // Default first color for a new node label
@@ -242,48 +240,5 @@ describe('Viz rendering', () => {
 
     cy.get('#svg-vis').trigger('wheel', { deltaY: 3000, shiftKey: true })
     cy.get(`[aria-label="zoom-out"]`).should('be.disabled')
-  })
-  it('can handle lots of property values and labels in node properties panel', () => {
-    const numberOfProps = 50
-    const numberOfLabels = 50
-    const queryLabels = Array.from({ length: numberOfLabels }, (x, i) => {
-      return `:label${i}`
-    }).join(' ')
-    const queryProps = Array.from({ length: numberOfProps }, (x, i) => {
-      return `prop${i}: 'hejsan'`
-    }).join(', ')
-    const query = `CREATE (nodeWithLotsOfProps ${queryLabels} { ${queryProps} }) RETURN nodeWithLotsOfProps`
-    cy.executeCommand(':clear')
-
-    // Directly set text to avoid waiting for ever when typing all chars
-    const editorTextarea = '#monaco-main-editor textarea'
-    cy.get(editorTextarea).click()
-    cy.get(editorTextarea).focus()
-    cy.get(editorTextarea)
-      .then(elem => {
-        elem.val(query)
-      })
-      .type(' {ENTER}')
-
-    // Check that can scroll overview panel
-    const showAllButtonText = 'Show all'
-    cy.get(`button:contains("${showAllButtonText}")`)
-      .scrollIntoView()
-      .should('be.visible')
-
-    // Open node properties details panel
-    const nodeSelector = '.node'
-    cy.get(nodeSelector).click()
-
-    const selectorPropsTable =
-      '[data-testid="viz-details-pane-properties-table"]'
-    cy.get(selectorPropsTable).should('be.visible')
-
-    const lastPropName = 'prop9'
-    cy.contains(lastPropName).should('exist')
-
-    // For some reason need to get to the td to be able to scroll to it, hence the parent()
-    cy.get('[data-testid="viz-details-pane-body"]').scrollTo('bottom')
-    cy.get('tr td span').contains(lastPropName).should('be.visible')
   })
 })

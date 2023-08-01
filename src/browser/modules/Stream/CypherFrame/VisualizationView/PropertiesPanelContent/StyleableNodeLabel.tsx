@@ -68,9 +68,10 @@ export function StyleableNodeLabel({
       )}
       on="click"
       basic
-      pinned
       key={selectedLabel.label}
       wide
+      position="left center"
+      offset={[0, 0]}
       open={open}
       trigger={
         <StyledLabelChip
@@ -81,9 +82,7 @@ export function StyleableNodeLabel({
           }}
           data-testid={`property-details-overview-node-label-${selectedLabel.label}`}
         >
-          {count !== undefined
-            ? `${selectedLabel.label} (${count})`
-            : `${selectedLabel.label}`}
+          {`${selectedLabel.label}${count || count === 0 ? ` (${count})` : ''}`}
         </StyledLabelChip>
       }
     >

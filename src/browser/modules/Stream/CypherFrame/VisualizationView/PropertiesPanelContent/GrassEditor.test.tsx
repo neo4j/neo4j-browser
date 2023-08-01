@@ -35,6 +35,8 @@ describe('<GrassEditor />', () => {
     const { container } = render(
       <Provider store={store}>
         <GrassEditor
+          nodes={[]}
+          relationships={[]}
           selectedLabel={{
             label: 'foo',
             propertyKeys: []

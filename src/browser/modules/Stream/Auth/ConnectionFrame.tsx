@@ -21,19 +21,17 @@ import React, { Component } from 'react'
 
 import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
 import FrameError from '../../Frame/FrameError'
-import ConnectionForm from './ConnectionForm'
+import ConnectionForm from './ConnectionFormController'
 import { StyledConnectionAside, StyledConnectionBodyContainer } from './styled'
 import { Lead } from 'browser-components/Text'
 import { H3 } from 'browser-components/headers'
+import { BaseFrameProps } from '../Stream'
+import { Neo4jError } from 'neo4j-driver'
 
-type State = any
-
-class ConnectionFrame extends Component<any, State> {
-  constructor(props: {}) {
-    super(props)
-    this.state = {
-      error: {}
-    }
+type ConnectionFrameState = { error: Partial<Neo4jError>; success?: true }
+class ConnectionFrame extends Component<BaseFrameProps, ConnectionFrameState> {
+  state: ConnectionFrameState = {
+    error: {}
   }
 
   error(e: any) {

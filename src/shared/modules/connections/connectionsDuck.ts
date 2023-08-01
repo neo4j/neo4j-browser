@@ -23,7 +23,8 @@ import Rx from 'rxjs/Rx'
 import bolt from 'services/bolt/bolt'
 import {
   TokenExpiredDriverError,
-  UnauthorizedDriverError
+  UnauthorizedDriverError,
+  isBoltConnectionErrorCode
 } from 'services/bolt/boltConnectionErrors'
 import { NATIVE, NO_AUTH, SSO } from 'services/bolt/boltHelpers'
 import { GlobalState } from 'shared/globalState'
@@ -400,7 +401,23 @@ export const connectEpic = (action$: any, store: any) =>
       .openConnection(action, {
         connectionTimeout: getConnectionTimeout(store.getState())
       })
-      .then(() => {
+      .then(async () => {
+        // we know we can reach the server but when connecting via the form
+        // we need to make sure the initial credentails have been changed
+        const supportsMultiDb = await bolt.hasMultiDbSupport()
+        try {
+          await bolt.backgroundWorkerlessRoutedRead(
+            supportsMultiDb ? 'SHOW DATABASES' : 'call db.indexes()',
+            { useDb: supportsMultiDb ? 'SYSTEM' : undefined }
+          )
+        } catch (error) {
+          const e: any = error
+          // if we got a connection error throw, otherwise continue
+          if (!e.code || isBoltConnectionErrorCode(e.code)) {
+            throw e
+          }
+        }
+
         if (action.requestedUseDb) {
           store.dispatch(
             updateConnection({
@@ -544,6 +561,11 @@ export const startupConnectEpic = (action$: any, store: any) => {
                 resolve({ type: STARTUP_CONNECTION_SUCCESS })
               })
               .catch(() => {
+                if (discovered.attemptSSOLogin) {
+                  authLog(
+                    'client side SSO flow completed but Neo4j Browser failed to connect to neo4j. Server side logs (security.log or debug.log) may contain more information.'
+                  )
+                }
                 store.dispatch(setActiveConnection(null))
                 store.dispatch(
                   discovery.updateDiscoveryConnection({
@@ -635,9 +657,10 @@ export const silentDisconnectEpic = (action$: any, store: any) => {
     .do(() => store.dispatch(resetUseDb()))
     .mapTo(setActiveConnection(null, true))
 }
-export const disconnectSuccessEpic = (action$: any) => {
+export const disconnectSuccessEpic = (action$: any, store: any) => {
   return action$
     .ofType(DISCONNECTION_SUCCESS)
+    .do(() => store.dispatch(resetUseDb()))
     .mapTo(executeSystemCommand(':server connect'))
 }
 
@@ -676,6 +699,12 @@ export const connectionLostEpic = (action$: any, store: any) =>
                     )
                   } catch (e) {
                     authLog(`Failed to refresh token: ${e}`)
+                    authLog(
+                      'This could be due to the refresh token not being available, which happens if Neo4j Browser accessed via stored credentials rather than redoing the SSO flow. ' +
+                        'If you have a short lived access token, it may be beneficial to set `browser.retain_connection_credentials=false` in neo4j.conf to make sure the refresh token is always available.'
+                    )
+                    // if refreshing the token failed, don't retry
+                    return resolve({ type: UnauthorizedDriverError })
                   }
                 }
               } else {

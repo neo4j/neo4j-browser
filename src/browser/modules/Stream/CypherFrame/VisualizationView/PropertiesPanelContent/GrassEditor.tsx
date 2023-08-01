@@ -595,7 +595,7 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
 })
 
 // @ts-ignore
-export const GrassEditor = connect(
+export const GrassEditor: any = connect(
   mapStateToProps,
   mapDispatchToProps
 )(GrassEditorComponent)

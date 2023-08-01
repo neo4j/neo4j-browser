@@ -17,11 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import neo4j from 'neo4j-driver'
+import neo4j, { Record } from 'neo4j-driver'
 
 import {
-  extractRecordsToResultArray,
-  flattenGraphItemsInResultArray,
+  recordToStringArray,
   getRecordsToDisplayInTable,
   initialView,
   recordToJSONMapper,
@@ -29,11 +28,10 @@ import {
   resultHasPlan,
   resultHasRows,
   resultHasWarnings,
-  resultIsError,
-  stringifyResultArray
+  resultIsError
 } from './helpers'
-import { csvFormat, stringModifier } from 'services/bolt/cypherTypesFormatting'
 import * as viewTypes from 'shared/modules/frames/frameViewTypes'
+import { BrowserRequestResult } from 'shared/modules/requests/requestsDuck'
 
 describe('helpers', () => {
   test('getRecordsToDisplayInTable should report if there are rows or not in the result', () => {
@@ -49,7 +47,10 @@ describe('helpers', () => {
     // Then
     items.forEach(item => {
       expect(
-        getRecordsToDisplayInTable(item.request.result, maxRows).length
+        getRecordsToDisplayInTable(
+          item.request.result as BrowserRequestResult,
+          maxRows
+        ).length
       ).toEqual(item.expect)
     })
   })
@@ -545,17 +546,23 @@ describe('helpers', () => {
     })
   })
   describe('record transformations', () => {
-    test('extractRecordsToResultArray handles empty records', () => {
+    test('recordToStringArray handles empty records', () => {
       // Given
-      const records: any = null
+      const records: Record[] = []
 
       // When
-      const res = extractRecordsToResultArray(records)
+      const res = records.map(record => recordToStringArray(record))
 
       // Then
       expect(res).toEqual([])
     })
-    test('extractRecordsToResultArray handles regular records', () => {
+    test('recordToStringArray handles record with empty object and array', () => {
+      const records = [new Record(['"x"', '"y"', '[]', '{}'], [[], {}, [], {}])]
+      const res = records.map(record => recordToStringArray(record))
+      expect(res).toEqual([['[]', '{}', '[]', '{}']])
+    })
+
+    test('recordToStringArray handles regular records', () => {
       // Given
       const start = new (neo4j.types.Node as any)(1, ['X'], { x: 1 })
       const end = new (neo4j.types.Node as any)(2, ['Y'], {
@@ -568,188 +575,78 @@ describe('helpers', () => {
       const path = new (neo4j.types.Path as any)(start, end, segments)
 
       const records = [
-        {
-          keys: ['"x"', '"y"', '"n"'],
-          _fields: [
+        new Record(
+          ['"x"', '"y"', '"n"'],
+          [
             'x',
             'y',
             new (neo4j.types.Node as any)('1', ['Person'], { prop1: 'prop1' })
           ]
-        },
-        {
-          keys: ['"x"', '"y"', '"n"'],
-          _fields: ['xx', 'yy', path]
-        }
+        ) as any,
+        new Record(['"x"', '"y"', '"n"'], ['xx', 'yy', path]) as any
       ]
-
       // When
-      const res = extractRecordsToResultArray(records)
+      const res = records.map(record => recordToStringArray(record))
 
       // Then
       expect(res).toEqual([
-        ['"x"', '"y"', '"n"'],
-        [
-          'x',
-          'y',
-          new (neo4j.types.Node as any)('1', ['Person'], { prop1: 'prop1' })
-        ],
-        ['xx', 'yy', path]
+        ['"x"', '"y"', '(:Person {prop1: "prop1"})'],
+        ['"xx"', '"yy"', '(:X {x: 1.0})-[:REL {rel: 1.0}]->(:Y {y: 1})']
       ])
     })
-    test('flattenGraphItemsInResultArray extracts props from graph items', () => {
+
+    test('recordToStringArray handles two way path', () => {
       // Given
       const start = new (neo4j.types.Node as any)(1, ['X'], { x: 1 })
-      const end = new (neo4j.types.Node as any)(2, ['Y'], { y: 1 })
-      const rel = new (neo4j.types.Relationship as any)(3, 1, 2, 'REL', {
+      const middle = new (neo4j.types.Node as any)(2, ['Y'], {
+        y: new (neo4j.int as any)(1)
+      })
+      const end = new (neo4j.types.Node as any)(3, ['Z'], { z: '1' })
+      const rel1 = new (neo4j.types.Relationship as any)(4, 1, 2, 'REL', {
         rel: 1
       })
-      const segments = [new (neo4j.types.PathSegment as any)(start, rel, end)]
+      const rel2 = new (neo4j.types.Relationship as any)(5, 3, 2, 'REL', {
+        rel: 2
+      })
+
+      const segments = [
+        new (neo4j.types.PathSegment as any)(start, rel1, middle),
+        new (neo4j.types.PathSegment as any)(middle, rel2, end)
+      ]
       const path = new (neo4j.types.Path as any)(start, end, segments)
 
       const records = [
-        {
-          keys: ['"x"', '"y"', '"n"'],
-          _fields: [
-            'x',
-            'y',
-            new (neo4j.types.Node as any)('1', ['Person'], { prop1: 'prop1' })
-          ]
-        },
-        {
-          keys: ['"x"', '"y"', '"n"'],
-          _fields: ['xx', 'yy', { prop: path }]
-        }
+        new Record(
+          ['"n"'],
+          [new (neo4j.types.Node as any)('1', ['Person'], { prop1: 'prop1' })]
+        ) as any,
+        new Record(['"n"'], [path]) as any
       ]
-
       // When
-      const step1 = extractRecordsToResultArray(records)
-      const res = flattenGraphItemsInResultArray(
-        neo4j.types,
-        neo4j.isInt,
-        step1
-      )
+      const res = records.map(record => recordToStringArray(record))
 
       // Then
       expect(res).toEqual([
-        ['"x"', '"y"', '"n"'],
-        ['x', 'y', { prop1: 'prop1' }],
-        ['xx', 'yy', { prop: [{ x: 1 }, { rel: 1 }, { y: 1 }] }]
-      ])
-    })
-    test('stringifyResultArray uses stringifyMod to serialize', () => {
-      // Given
-      const records = [
-        {
-          keys: ['"neoInt"', '"int"', '"any"', '"backslash"'],
-          _fields: [
-            new (neo4j.int as any)('882573709873217509'),
-            100,
-            0.5,
-            '"\\"'
-          ]
-        },
-        {
-          keys: ['"neoInt"', '"int"', '"any"'],
-          _fields: [new (neo4j.int as any)(300), 100, 'string']
-        }
-      ]
-
-      // When
-      const step1 = extractRecordsToResultArray(records)
-      const step2 = flattenGraphItemsInResultArray(
-        neo4j.types,
-        neo4j.isInt,
-        step1
-      )
-      const res = stringifyResultArray(stringModifier, step2, true)
-      // Then
-      expect(res).toEqual([
-        ['""neoInt""', '""int""', '""any""', '""backslash""'],
-        ['882573709873217509', '100.0', '0.5', '""\\""'],
-        ['300', '100.0', '"string"']
-      ])
-    })
-    test('stringifyResultArray can take different formatter function (csvFormat)', () => {
-      // Given
-      const records = [
-        {
-          keys: ['"neoInt"', '"int"', '"any"', '"backslash"', '"bool"'],
-          _fields: [
-            new (neo4j.int as any)('882573709873217509'),
-            100,
-            0.5,
-            '"\\"',
-            false
-          ]
-        },
-        {
-          keys: ['"neoInt"', '"int"', '"any"', '"string with comma"'],
-          _fields: [new (neo4j.int as any)(300), 100, 'string', 'my, string']
-        }
-      ]
-
-      // When
-      const step1 = extractRecordsToResultArray(records)
-      const step2 = flattenGraphItemsInResultArray(
-        neo4j.types,
-        neo4j.isInt,
-        step1
-      )
-      const res = stringifyResultArray(csvFormat, step2)
-      // Then
-      expect(res).toEqual([
-        ['"neoInt"', '"int"', '"any"', '"backslash"', '"bool"'],
-        ['882573709873217509', '100.0', '0.5', '"\\"', 'false'],
-        ['300', '100.0', 'string', 'my, string']
-      ])
-    })
-    test('stringifyResultArray handles neo4j integers nested within graph items', () => {
-      // Given
-      const start = new (neo4j.types.Node as any)(1, ['X'], {
-        x: new (neo4j.int as any)(1)
-      })
-      const end = new (neo4j.types.Node as any)(2, ['Y'], {
-        y: new (neo4j.int as any)(2)
-      })
-      const rel = new (neo4j.types.Relationship as any)(3, 1, 2, 'REL', {
-        rel: new (neo4j.int as any)(1)
-      })
-      const segments = [new (neo4j.types.PathSegment as any)(start, rel, end)]
-      const path = new (neo4j.types.Path as any)(start, end, segments)
-
-      const records = [
-        {
-          keys: ['"x"', '"y"', '"n"'],
-          _fields: [
-            'x',
-            'y',
-            new (neo4j.types.Node as any)('1', ['Person'], { prop1: 'prop1' })
-          ]
-        },
-        {
-          keys: ['"x"', '"y"', '"n"'],
-          _fields: ['xx', 'yy', { prop: path }]
-        }
-      ]
-
-      // When
-      const step1 = extractRecordsToResultArray(records)
-      const step2 = flattenGraphItemsInResultArray(
-        neo4j.types,
-        neo4j.isInt,
-        step1
-      )
-      const res = stringifyResultArray(stringModifier, step2, true)
-      // Then
-      expect(res).toEqual([
-        ['""x""', '""y""', '""n""'],
-        ['"x"', '"y"', JSON.stringify({ prop1: 'prop1' })],
+        ['(:Person {prop1: "prop1"})'],
         [
-          '"xx"',
-          '"yy"',
-          JSON.stringify({ prop: [{ x: 1 }, { rel: 1 }, { y: 2 }] })
-        ] // <--
+          '(:X {x: 1.0})-[:REL {rel: 1.0}]->(:Y {y: 1})<-[:REL {rel: 2.0}]-(:Z {z: "1"})'
+        ]
       ])
+    })
+
+    test('recordToStringArray handles duration', () => {
+      // Given
+      const records = [
+        new Record(
+          ['"n"'],
+          [new (neo4j.types.Duration as any)(1, 2, 3, 4)]
+        ) as any
+      ]
+      // When
+      const res = records.map(record => recordToStringArray(record))
+
+      // Then
+      expect(res).toEqual([['P1M2DT3S']])
     })
   })
 
