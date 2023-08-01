@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { QueryOrCommand, parse } from 'cypher-editor-support'
+import { QueryOrCommand, parse } from '@neo4j-cypher/editor-support'
 import { debounce } from 'lodash-es'
 import { QuickInputList } from 'monaco-editor/esm/vs/base/parts/quickinput/browser/quickInputList'
 import 'monaco-editor/esm/vs/editor/editor.all.js'
@@ -46,10 +46,6 @@ const MonacoStyleWrapper = styled.div`
   .hover-row.status-bar {
     display: none !important;
   }
-  // used to make the focus outline of the editor not be ugly. Don't think this breaks anything
-  .monaco-editor.rename-box {
-    display: none;
-  }
 `
 
 const EXPLAIN_QUERY_PREFIX = 'EXPLAIN '
@@ -67,7 +63,10 @@ type CypherEditorDefaultProps = {
   onExecute?: (value: string) => void
   sendCypherQuery: (query: string) => Promise<QueryResult>
   additionalCommands: Partial<
-    Record<monaco.KeyCode, monaco.editor.ICommandHandler>
+    Record<
+      monaco.KeyCode,
+      { handler: monaco.editor.ICommandHandler; context?: string }
+    >
   >
   tabIndex?: number
   useDb: null | string
@@ -401,17 +400,20 @@ export class CypherEditor extends React.Component<
       this.props.onDisplayHelpKeys
     )
 
-    this.editor.addCommand(KeyCode.Escape, () => {
-      this.wrapperRef.current?.focus()
-    })
+    this.editor.addCommand(
+      KeyCode.Escape,
+      () => {
+        this.wrapperRef.current?.focus()
+      },
+      '!suggestWidgetVisible && !findWidgetVisible'
+    )
 
     keys(this.props.additionalCommands).forEach(key => {
       const command = this.props.additionalCommands[key]
       if (!command) {
         return
       }
-
-      this?.editor?.addCommand(key, command)
+      this?.editor?.addCommand(key, command.handler, command.context)
     })
 
     this.onContentUpdate()

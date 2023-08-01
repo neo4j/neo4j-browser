@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { EditorSupportCompletionItem } from 'cypher-editor-support'
+import { EditorSupportCompletionItem } from '@neo4j-cypher/editor-support'
 import configureMockStore from 'redux-mock-store'
 import { createEpicMiddleware } from 'redux-observable'
 import { createBus, createReduxMiddleware } from 'suber'
@@ -193,7 +193,7 @@ describe('editorDuck Epics', () => {
   })
 })
 
-describe('getting expected text from cypher-editor-support', () => {
+describe('getting expected text from cypher editor support', () => {
   test('item with procedure type strips surrounding backticks', () => {
     const item: EditorSupportCompletionItem = {
       type: 'procedure',

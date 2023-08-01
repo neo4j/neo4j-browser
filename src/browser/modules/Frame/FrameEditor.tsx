@@ -116,7 +116,6 @@ function FrameEditor({
   function run(cmd: string) {
     reRun(frame, cmd)
   }
-
   function onPreviewClick(e: React.MouseEvent) {
     if (e.ctrlKey || e.metaKey) {
       onTitlebarCmdClick(editorValue)
@@ -198,7 +197,10 @@ function FrameEditor({
               onExecute={run}
               ref={editorRef}
               additionalCommands={{
-                [KeyCode.Escape]: fullscreenToggle
+                [KeyCode.Escape]: {
+                  handler: fullscreenToggle,
+                  context: '!suggestWidgetVisible && !findWidgetVisible'
+                }
               }}
               useDb={frame.useDb}
               value={editorValue}
@@ -258,7 +260,7 @@ function FrameEditor({
           title="Save as Favorite"
           dataTestId="frame-Favorite"
           onClick={() => {
-            newFavorite(frame.cmd)
+            newFavorite(editorValue)
           }}
         >
           <SaveFavoriteIcon />

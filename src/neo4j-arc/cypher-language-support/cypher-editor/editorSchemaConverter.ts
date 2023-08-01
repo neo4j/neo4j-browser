@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { FunctionSchema, ProcedureSchema } from 'cypher-editor-support'
+import { FunctionSchema, ProcedureSchema } from '@neo4j-cypher/editor-support'
 
 export function toLabel(label: string): string {
   return `:${label}`

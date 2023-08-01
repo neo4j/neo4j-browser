@@ -22,7 +22,7 @@ Keep in mind that you will need to connect to an instance of Neo4j (the database
 
 Found a bug or some other problem with Neo4j Browser? Please [**open an issue**](https://github.com/neo4j/neo4j-browser/issues).
 
-Have an idea for a new feature? You're welcome to leave suggestions and ideas [here](https://neo4j-browser.canny.io/feature-requests).
+Have an idea for a new feature? You're welcome to leave suggestions and ideas [here](https://feedback.neo4j.com/browser).
 
 Contributions welcome! More information in our [CONTRIBUTING.md](CONTRIBUTING.md).
 

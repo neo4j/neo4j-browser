@@ -75,6 +75,8 @@ describe('<DetailsPane />', () => {
         graphStyle={mockGraphStyle}
         vizItem={mockVizItem}
         nodeInspectorWidth={width}
+        relationships={[]}
+        nodes={[]}
       />
     )
   }

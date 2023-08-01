@@ -14,7 +14,7 @@ exports[`CodeViews CodeStatusbar displays statusBarMessage 1`] = `
     class="sc-jcFjpl cdUBmZ"
   >
     <div
-      class="sc-dtDOqo djbEJX"
+      class="sc-dkYRCH excEGN"
     >
       <span>
         Started streaming 1 records after 5 ms and completed after 10  ms.
@@ -37,6 +37,18 @@ exports[`CodeViews CodeView displays request and response info if successful que
       <tbody
         class="sc-jeraig geBIAF"
       >
+        <tr
+          class="sc-nVkyK iDrzMo"
+        >
+          <td
+            class="sc-hiwPVj dBfpwL"
+          >
+            Server version
+          </td>
+          <td
+            class="sc-ehCJOs"
+          />
+        </tr>
         <tr
           class="sc-nVkyK iDrzMo"
         >

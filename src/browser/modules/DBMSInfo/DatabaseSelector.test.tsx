@@ -44,7 +44,9 @@ describe('DatabaseSelector', () => {
     const databases: Database[] = []
 
     // When
-    const { container } = render(<DatabaseSelector databases={databases} />)
+    const { container } = render(
+      <DatabaseSelector selectedDb="" uniqueDatabases={databases} />
+    )
 
     // Then
     expect(container).toMatchInlineSnapshot('<div />')
@@ -56,7 +58,7 @@ describe('DatabaseSelector', () => {
 
     // When
     const { getByDisplayValue, queryByDisplayValue, rerender } = render(
-      <DatabaseSelector databases={databases} selectedDb={selected} />
+      <DatabaseSelector uniqueDatabases={databases} selectedDb={selected} />
     )
 
     // Then
@@ -65,7 +67,9 @@ describe('DatabaseSelector', () => {
 
     // When
     selected = 'molly'
-    rerender(<DatabaseSelector databases={databases} selectedDb={selected} />)
+    rerender(
+      <DatabaseSelector uniqueDatabases={databases} selectedDb={selected} />
+    )
 
     // Then
     expect(getByDisplayValue(/molly/i)).toBeDefined()
@@ -73,7 +77,9 @@ describe('DatabaseSelector', () => {
 
     // When
     selected = ''
-    rerender(<DatabaseSelector databases={databases} selectedDb={selected} />)
+    rerender(
+      <DatabaseSelector uniqueDatabases={databases} selectedDb={selected} />
+    )
 
     // Then select db text should be shown
     expect(getByDisplayValue(/select db/i)).toBeDefined()
@@ -87,7 +93,11 @@ describe('DatabaseSelector', () => {
 
     // When
     const { getByTestId } = render(
-      <DatabaseSelector databases={databases} onChange={onChange} />
+      <DatabaseSelector
+        uniqueDatabases={databases}
+        selectedDb=""
+        onChange={onChange}
+      />
     )
     const select = getByTestId(testId)
 
@@ -112,7 +122,11 @@ describe('DatabaseSelector', () => {
 
     // When
     const { getByTestId } = render(
-      <DatabaseSelector databases={databases} onChange={onChange} />
+      <DatabaseSelector
+        selectedDb=""
+        uniqueDatabases={databases}
+        onChange={onChange}
+      />
     )
     const select = getByTestId(testId)
 

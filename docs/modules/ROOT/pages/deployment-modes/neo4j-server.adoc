@@ -15,7 +15,7 @@ The `BROWSER` module is avaialable in Community Edition and Enterprise Edition.
 
 [NOTE]
 ====
-If you do not want to host Neo4j Browser when you start Neo4j, remove `BROWSER` from the comma-separated list of the configuration setting https://neo4j.com/docs/operations-manual/current/reference/configuration-settings/#config_dbms.http_enabled_modules[dbms.http_enabled_modules^].
+If you do not want to host Neo4j Browser when you start Neo4j, remove `BROWSER` from the comma-separated list of the configuration setting https://neo4j.com/docs/operations-manual/current/configuration/configuration-settings/#config_dbms.http_enabled_modules[dbms.http_enabled_modules^].
 ====
 
 .Start Neo4j

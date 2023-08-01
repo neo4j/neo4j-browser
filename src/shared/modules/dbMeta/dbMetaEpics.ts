@@ -43,7 +43,14 @@ import {
   getCountAutomaticRefreshEnabled,
   DB_META_FORCE_COUNT,
   DB_META_COUNT_DONE,
-  metaCountQuery
+  metaCountQuery,
+  trialStatusQuery,
+  updateTrialStatus,
+  oldTrialStatusQuery,
+  updateTrialStatusOld,
+  isEnterprise,
+  SERVER_VERSION_READ,
+  supportsMultiDb
 } from './dbMetaDuck'
 import {
   ClientSettings,
@@ -83,29 +90,24 @@ import {
   getListFunctionQuery,
   getListProcedureQuery
 } from '../cypher/functionsAndProceduresHelper'
-import { isInt, Record } from 'neo4j-driver'
+import { isInt, Record, ResultSummary } from 'neo4j-driver'
 import semver, { gte, SemVer } from 'semver'
 import { triggerCredentialsTimeout } from '../credentialsPolicy/credentialsPolicyDuck'
 import {
   isSystemOrCompositeDb,
   getCurrentDatabase
 } from 'shared/utils/selectors'
-getCountAutomaticRefreshEnabled
+
 async function databaseList(store: any) {
   try {
-    const supportsMultiDb = await bolt.hasMultiDbSupport()
-    if (!supportsMultiDb) {
+    const hasMultidb = supportsMultiDb(store.getState())
+    if (!hasMultidb) {
       return
     }
 
-    const res = await bolt.directTransaction(
-      'SHOW DATABASES',
-      {},
-      {
-        ...backgroundTxMetadata,
-        useDb: SYSTEM_DB
-      }
-    )
+    const res = await bolt.backgroundWorkerlessRoutedRead('SHOW DATABASES', {
+      useDb: SYSTEM_DB
+    })
 
     if (!res) return
 
@@ -133,14 +135,9 @@ async function getLabelsAndTypes(store: any) {
 
   // Not system db, try and fetch meta data
   try {
-    const res = await bolt.routedReadTransaction(
-      metaTypesQuery,
-      {},
-      {
-        onLostConnection: onLostConnection(store.dispatch),
-        ...backgroundTxMetadata
-      }
-    )
+    const res = await bolt.backgroundWorkerlessRoutedRead(metaTypesQuery, {
+      useDb: db?.name
+    })
     if (res && res.records && res.records.length !== 0) {
       const [rawLabels, rawRelTypes, rawProperties] = res.records.map(
         (r: Record) => r.get(0).data
@@ -162,24 +159,23 @@ async function getLabelsAndTypes(store: any) {
   } catch {}
 }
 
-async function getNodeAndRelationshipCounts(store: any) {
+async function getNodeAndRelationshipCounts(
+  store: any
+): Promise<
+  { requestSucceeded: false } | { requestSucceeded: true; timeTaken: number }
+> {
   const db = getCurrentDatabase(store.getState())
 
   // System or composite db, do nothing
   if (db && isSystemOrCompositeDb(db)) {
-    return
+    return { requestSucceeded: false }
   }
 
   // Not system db, try and fetch meta data
   try {
-    const res = await bolt.routedReadTransaction(
-      metaCountQuery,
-      {},
-      {
-        onLostConnection: onLostConnection(store.dispatch),
-        ...backgroundTxMetadata
-      }
-    )
+    const res = await bolt.backgroundWorkerlessRoutedRead(metaCountQuery, {
+      useDb: db?.name
+    })
     if (res && res.records && res.records.length !== 0) {
       const [rawNodeCount, rawRelationshipCount] = res.records.map(
         (r: Record) => r.get(0).data
@@ -196,29 +192,29 @@ async function getNodeAndRelationshipCounts(store: any) {
           relationships
         })
       )
+      const summary = res.summary as ResultSummary
+      return {
+        requestSucceeded: true,
+        timeTaken:
+          summary.resultAvailableAfter.toNumber() +
+          summary.resultConsumedAfter.toNumber()
+      }
     }
   } catch {}
+  return { requestSucceeded: false }
 }
 
 async function getFunctionsAndProcedures(store: any) {
   const version = getSemanticVersion(store.getState())
-  const supportsMultiDb = await bolt.hasMultiDbSupport()
   try {
-    const procedurePromise = bolt.routedReadTransaction(
+    const useDb = supportsMultiDb(store.getState()) ? SYSTEM_DB : undefined
+    const procedurePromise = bolt.backgroundWorkerlessRoutedRead(
       getListProcedureQuery(version),
-      {},
-      {
-        ...backgroundTxMetadata,
-        useDb: supportsMultiDb ? SYSTEM_DB : undefined
-      }
+      { useDb }
     )
-    const functionPromise = bolt.routedReadTransaction(
+    const functionPromise = bolt.backgroundWorkerlessRoutedRead(
       getListFunctionQuery(version),
-      {},
-      {
-        ...backgroundTxMetadata,
-        useDb: supportsMultiDb ? SYSTEM_DB : undefined
-      }
+      { useDb }
     )
     const [procedures, functions] = await Promise.all([
       procedurePromise,
@@ -245,30 +241,57 @@ async function clusterRole(store: any) {
     return
   }
 
-  const res = await bolt.directTransaction(
-    getDbClusterRole(store.getState()),
-    {},
-    backgroundTxMetadata
-  )
+  try {
+    const res = await bolt.directTransaction(
+      getDbClusterRole(store.getState()),
+      {},
+      backgroundTxMetadata
+    )
+    if (!res) return
 
-  if (!res) return
-
-  const role = res.records[0].get(0)
-  store.dispatch(update({ role }))
+    const role = res.records[0].get(0)
+    store.dispatch(update({ role }))
+  } catch {}
 }
 
 async function fetchServerInfo(store: any) {
   try {
-    const serverInfo = await bolt.directTransaction(
+    const serverInfo = await bolt.backgroundWorkerlessRoutedRead(
       serverInfoQuery,
-      {},
-      {
-        ...backgroundTxMetadata,
-        useDb: (await bolt.hasMultiDbSupport()) ? SYSTEM_DB : undefined
-      }
+      // We use the bolt method for multi db support, since don't have the version in redux yet
+      { useDb: (await bolt.hasMultiDbSupport()) ? SYSTEM_DB : undefined }
     )
     store.dispatch(updateServerInfo(serverInfo))
   } catch {}
+}
+
+async function fetchTrialStatus(store: any) {
+  const version = getSemanticVersion(store.getState())
+  const enterprise = isEnterprise(store.getState())
+
+  const VERSION_FOR_TRIAL_STATUS = '5.7.0'
+  const VERSION_FOR_TRIAL_STATUS_OLD = '5.3.0'
+
+  if (version && enterprise) {
+    if (gte(version, VERSION_FOR_TRIAL_STATUS)) {
+      try {
+        const trialStatus = await bolt.backgroundWorkerlessRoutedRead(
+          trialStatusQuery,
+          // System database is available from v4
+          { useDb: SYSTEM_DB }
+        )
+        store.dispatch(updateTrialStatus(trialStatus))
+      } catch {}
+    } else if (gte(version, VERSION_FOR_TRIAL_STATUS_OLD)) {
+      try {
+        const oldTrialStatus = await bolt.backgroundWorkerlessRoutedRead(
+          oldTrialStatusQuery,
+          { useDb: SYSTEM_DB }
+        )
+        store.dispatch(updateTrialStatusOld(oldTrialStatus))
+      } catch {}
+    }
+  }
 }
 
 const switchToRequestedDb = (store: any) => {
@@ -331,37 +354,46 @@ const switchToRequestedDb = (store: any) => {
   }
 }
 
+async function pollDbMeta(store: any) {
+  try {
+    await bolt.quickVerifyConnectivity()
+  } catch (e) {
+    onLostConnection(store.dispatch)(e)
+    return
+  }
+
+  // Cluster setups where the default database is unavailable,
+  // get labels and types takes a long time to finish and it shouldn't
+  // be blocking the rest of the bootup process, so we don't await the promise
+  getLabelsAndTypes(store)
+
+  await Promise.all([
+    getFunctionsAndProcedures(store),
+    clusterRole(store),
+    databaseList(store)
+  ])
+}
+
 export const dbMetaEpic = (some$: any, store: any) =>
   some$
     .ofType(UPDATE_CONNECTION_STATE)
     .filter((s: any) => s.state === CONNECTED_STATE)
     .merge(some$.ofType(CONNECTION_SUCCESS))
     .mergeMap(() =>
-      Rx.Observable.fromPromise(
-        // Server version and edition
-        fetchServerInfo(store)
-      )
+      // Server version and edition
+      Rx.Observable.fromPromise(fetchServerInfo(store))
     )
+    // we don't need to block bootup on fetching trial status, dispatch as side effect
+    .do(() => {
+      fetchTrialStatus(store)
+      store.dispatch({ type: SERVER_VERSION_READ })
+    })
     .mergeMap(() =>
       Rx.Observable.timer(1, 20000)
         .merge(some$.ofType(FORCE_FETCH))
         // Throw away newly initiated calls until done
         .throttle(() => some$.ofType(DB_META_DONE))
-        .do(() => {
-          // Cluster setups where the default database is unavailable,
-          // get labels and types takes a long time to finish and it shouldn't
-          // be blocking the rest of the bootup process, so we don't await the promise
-          getLabelsAndTypes(store)
-        })
-        .mergeMap(() =>
-          Rx.Observable.fromPromise(
-            Promise.all([
-              getFunctionsAndProcedures(store),
-              clusterRole(store),
-              databaseList(store)
-            ])
-          )
-        )
+        .mergeMap(() => Rx.Observable.fromPromise(pollDbMeta(store)))
         .takeUntil(
           some$
             .ofType(LOST_CONNECTION)
@@ -372,6 +404,7 @@ export const dbMetaEpic = (some$: any, store: any) =>
         .do(() => switchToRequestedDb(store))
         .mapTo({ type: DB_META_DONE })
     )
+
 export const dbCountEpic = (some$: any, store: any) =>
   some$
     .ofType(DB_META_DONE)
@@ -380,55 +413,47 @@ export const dbCountEpic = (some$: any, store: any) =>
     .throttle(() => some$.ofType(DB_META_COUNT_DONE))
     .mergeMap(() =>
       Rx.Observable.fromPromise<void>(
-        new Promise(async resolve => {
+        (async () => {
           store.dispatch(updateCountAutomaticRefresh({ loading: true }))
-          if (getCountAutomaticRefreshEnabled(store.getState())) {
-            const startTime = performance.now()
-            await getNodeAndRelationshipCounts(store)
-            const timeTaken = performance.now() - startTime
 
-            if (timeTaken > 2000) {
-              store.dispatch(updateCountAutomaticRefresh({ enabled: false }))
-            }
-          } else {
-            await getNodeAndRelationshipCounts(store)
+          const res = await getNodeAndRelationshipCounts(store)
+
+          const notAlreadyDisabled = getCountAutomaticRefreshEnabled(
+            store.getState()
+          )
+          if (
+            res.requestSucceeded &&
+            res.timeTaken > 1000 &&
+            notAlreadyDisabled
+          ) {
+            store.dispatch(updateCountAutomaticRefresh({ enabled: false }))
           }
 
           store.dispatch(updateCountAutomaticRefresh({ loading: false }))
-          resolve()
-        })
+        })()
       )
     )
     .mapTo({ type: DB_META_COUNT_DONE })
 
 export const serverConfigEpic = (some$: any, store: any) =>
   some$
-    .ofType(DB_META_DONE)
+    .ofType(SERVER_VERSION_READ)
     .mergeMap(() => {
       // Server configuration
       return Rx.Observable.fromPromise(
         new Promise(async (resolve, reject) => {
-          let supportsMultiDb: boolean
-          try {
-            supportsMultiDb = await bolt.hasMultiDbSupport()
-          } catch (e) {
-            // if hasMultiDbSupport throws there's no instance of neo4j running anymore
-            onLostConnection(store.dispatch)(e)
-            return reject(e)
-          }
+          const useDb = supportsMultiDb(store.getState())
+            ? SYSTEM_DB
+            : undefined
 
           bolt
-            .directTransaction(
+            .backgroundWorkerlessRoutedRead(
               `CALL ${
                 hasClientConfig(store.getState()) !== false
                   ? 'dbms.clientConfig()'
                   : 'dbms.listConfig()'
               }`,
-              {},
-              {
-                useDb: supportsMultiDb ? SYSTEM_DB : '',
-                ...backgroundTxMetadata
-              }
+              { useDb }
             )
             .then((r: any) => {
               // This is not set yet
@@ -444,14 +469,9 @@ export const serverConfigEpic = (some$: any, store: any) =>
                 store.dispatch(setClientConfig(false))
 
                 bolt
-                  .directTransaction(
-                    `CALL dbms.listConfig()`,
-                    {},
-                    {
-                      useDb: supportsMultiDb ? SYSTEM_DB : '',
-                      ...backgroundTxMetadata
-                    }
-                  )
+                  .backgroundWorkerlessRoutedRead(`CALL dbms.listConfig()`, {
+                    useDb
+                  })
                   .then(resolve)
                   .catch(reject)
               } else {

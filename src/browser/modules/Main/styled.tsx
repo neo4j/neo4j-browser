@@ -70,7 +70,7 @@ export const UdcConsentBanner = styled(Banner)`
   display: flex;
   justify-content: space-between;
 `
-export const DismissConsentBanner = styled.span`
+export const DismissBanner = styled.span`
   &:hover {
     cursor: pointer;
   }

@@ -23,7 +23,7 @@ import nock from 'nock'
 // Add extra expect functions to be used in tests
 
 // polyfill for jsdom (for tests only)
-// tests with cypher-editor-support breaks without it
+// tests with cypher editor support break without it
 global.document.createRange = () => {
   return {
     setEnd: () => {},

@@ -55,8 +55,9 @@ export function StyleableRelType({
       )}
       on="click"
       basic
-      pinned
       key={selectedRelType.relType}
+      position="left center"
+      offset={[0, 0]}
       open={open}
       trigger={
         <StyledRelationshipChip

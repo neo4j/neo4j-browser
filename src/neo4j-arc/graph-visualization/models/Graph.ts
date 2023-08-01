@@ -203,6 +203,7 @@ export class GraphModel {
     this._nodes = []
     this.relationshipMap = {}
     this._relationships = []
+    this.expandedNodeMap = {}
   }
 }
 

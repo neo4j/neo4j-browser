@@ -4,10 +4,11 @@ import alias from '@rollup/plugin-alias'
 import pkg from './package.json'
 
 const importsWithPaths = [
-  '@neo4j-ndl/base/lib/tokens/js/tokens',
   'monaco-editor/esm/vs/base/parts/quickinput/browser/quickInputList',
   'monaco-editor/esm/vs/editor/editor.api',
-  'monaco-editor/esm/vs/editor/editor.all.js'
+  'monaco-editor/esm/vs/editor/editor.all.js',
+  '@heroicons/react/24/solid',
+  '@heroicons/react/24/outline'
 ]
 
 const dependenciesNotToBundle = Object.keys({
