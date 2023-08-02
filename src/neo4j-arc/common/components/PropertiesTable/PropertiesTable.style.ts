@@ -67,7 +67,9 @@ export const KeyCell = styled.td`
   padding: 2px;
   width: 30%;
 `
-
+export const CypherExecDiv = styled.div`
+  margin-top: 10px;
+`
 export const CopyCell = styled.td`
   padding: 2px 5px;
   display: flex;

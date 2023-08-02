@@ -22,7 +22,7 @@ import React, { useState } from 'react'
 import { ClickableUrls } from '../ClickableUrls'
 import {
   AlternatingTable,
-  CopyCell,
+  CypherExecDiv,
   KeyCell,
   StyledExpandValueButton,
   StyledInlineList,
@@ -75,13 +75,15 @@ type PropertiesViewProps = {
   totalNumItems: number
   moreStep: number
   nodeInspectorWidth: number
+  executeCypher?: (cmd: string) => any
 }
 export const PropertiesTable = ({
   visibleProperties,
   totalNumItems,
   onMoreClick,
   moreStep,
-  nodeInspectorWidth
+  nodeInspectorWidth,
+  executeCypher
 }: PropertiesViewProps): JSX.Element => {
   return (
     <>
@@ -100,13 +102,30 @@ export const PropertiesTable = ({
                     type={type}
                   />
                 </ValueCell>
-                <CopyCell>
+                <td>
                   <ClipboardCopier
                     titleText={'Copy key and value'}
                     textToCopy={`${key}: ${value}`}
                     iconSize={12}
                   />
-                </CopyCell>
+                  {key === 'cypher' && executeCypher && value && (
+                    <CypherExecDiv>
+                      <button
+                        title={'Execute cypher'}
+                        onClick={() => {
+                          if (executeCypher && value) {
+                            executeCypher(value)
+                          }
+                        }}
+                      >
+                        <i
+                          className="fa fa-external-link"
+                          aria-hidden="true"
+                        ></i>
+                      </button>
+                    </CypherExecDiv>
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>

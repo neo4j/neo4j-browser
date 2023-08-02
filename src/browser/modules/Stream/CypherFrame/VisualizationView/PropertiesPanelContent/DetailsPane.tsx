@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 
 import { ClipboardCopier, PropertiesTable, upperFirst } from 'neo4j-arc/common'
 
@@ -25,15 +25,22 @@ import { StyleableNodeLabel } from './StyleableNodeLabel'
 import { StyleableRelType } from './StyleableRelType'
 import { PaneBody, PaneHeader, PaneTitle, PaneWrapper } from './styled'
 import { DetailsPaneProps } from 'neo4j-arc'
+import { withBus } from 'react-suber'
+import {
+  commandSources,
+  executeCommand
+} from 'project-root/src/shared/modules/commands/commandsDuck'
 
 export const DETAILS_PANE_STEP_SIZE = 1000
-export function DetailsPane({
+
+function DetailsPaneRender({
   vizItem,
   graphStyle,
   nodeInspectorWidth,
   nodes,
-  relationships
-}: DetailsPaneProps): JSX.Element {
+  relationships,
+  bus
+}: DetailsPaneProps & { bus: any }): JSX.Element {
   const [maxPropertiesCount, setMaxPropertiesCount] = useState(
     DETAILS_PANE_STEP_SIZE
   )
@@ -51,7 +58,14 @@ export function DetailsPane({
   const handleMorePropertiesClick = (numMore: number) => {
     setMaxPropertiesCount(maxPropertiesCount + numMore)
   }
+  const executeCypher = useCallback(
+    (cmd: string) => {
+      const action = executeCommand(cmd, { source: commandSources.button })
 
+      bus.send(action.type, action)
+    },
+    [bus]
+  )
   return (
     <PaneWrapper>
       <PaneHeader>
@@ -99,8 +113,15 @@ export function DetailsPane({
           moreStep={DETAILS_PANE_STEP_SIZE}
           totalNumItems={allItemProperties.length}
           nodeInspectorWidth={nodeInspectorWidth}
+          executeCypher={executeCypher}
         />
       </PaneBody>
     </PaneWrapper>
   )
+}
+
+const DetailsPaneWithBus = withBus(DetailsPaneRender)
+
+export function DetailsPane(props: DetailsPaneProps) {
+  return <DetailsPaneWithBus {...props} />
 }
