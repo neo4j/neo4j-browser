@@ -97,6 +97,13 @@ import {
   isSystemOrCompositeDb,
   getCurrentDatabase
 } from 'shared/utils/selectors'
+import { isBoltConnectionErrorCode } from 'services/bolt/boltConnectionErrors'
+
+function handleConnectionError(store: any, e: any) {
+  if (!e.code || isBoltConnectionErrorCode(e.code)) {
+    onLostConnection(store.dispatch)(e)
+  }
+}
 
 async function databaseList(store: any) {
   try {
@@ -122,7 +129,9 @@ async function databaseList(store: any) {
     }))
 
     store.dispatch(update({ databases }))
-  } catch {}
+  } catch (e) {
+    handleConnectionError(store, e)
+  }
 }
 
 async function getLabelsAndTypes(store: any) {
@@ -156,7 +165,9 @@ async function getLabelsAndTypes(store: any) {
         })
       )
     }
-  } catch {}
+  } catch (e) {
+    handleConnectionError(store, e)
+  }
 }
 
 async function getNodeAndRelationshipCounts(
@@ -200,7 +211,9 @@ async function getNodeAndRelationshipCounts(
           summary.resultConsumedAfter.toNumber()
       }
     }
-  } catch {}
+  } catch (e) {
+    handleConnectionError(store, e)
+  }
   return { requestSucceeded: false }
 }
 
@@ -227,7 +240,9 @@ async function getFunctionsAndProcedures(store: any) {
         functions: functions.records.map(f => f.toObject())
       })
     )
-  } catch (e) {}
+  } catch (e) {
+    handleConnectionError(store, e)
+  }
 }
 
 async function clusterRole(store: any) {
@@ -251,7 +266,9 @@ async function clusterRole(store: any) {
 
     const role = res.records[0].get(0)
     store.dispatch(update({ role }))
-  } catch {}
+  } catch (e) {
+    handleConnectionError(store, e)
+  }
 }
 
 async function fetchServerInfo(store: any) {
@@ -262,7 +279,9 @@ async function fetchServerInfo(store: any) {
       { useDb: (await bolt.hasMultiDbSupport()) ? SYSTEM_DB : undefined }
     )
     store.dispatch(updateServerInfo(serverInfo))
-  } catch {}
+  } catch (e) {
+    handleConnectionError(store, e)
+  }
 }
 
 async function fetchTrialStatus(store: any) {
@@ -281,7 +300,9 @@ async function fetchTrialStatus(store: any) {
           { useDb: SYSTEM_DB }
         )
         store.dispatch(updateTrialStatus(trialStatus))
-      } catch {}
+      } catch (e) {
+        handleConnectionError(store, e)
+      }
     } else if (gte(version, VERSION_FOR_TRIAL_STATUS_OLD)) {
       try {
         const oldTrialStatus = await bolt.backgroundWorkerlessRoutedRead(
@@ -289,7 +310,9 @@ async function fetchTrialStatus(store: any) {
           { useDb: SYSTEM_DB }
         )
         store.dispatch(updateTrialStatusOld(oldTrialStatus))
-      } catch {}
+      } catch (e) {
+        handleConnectionError(store, e)
+      }
     }
   }
 }
