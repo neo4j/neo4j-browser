@@ -529,6 +529,9 @@ export const startupConnectEpic = (action$: any, store: any) => {
             onLostConnection(store.dispatch)
           )
           store.dispatch(setActiveConnection(discovery.CONNECTION_ID))
+          authLog(
+            'Neo4j Browser successfully connected to Neo4j Server with stored credentials'
+          )
           return { type: STARTUP_CONNECTION_SUCCESS }
         } catch {}
       }
@@ -548,6 +551,12 @@ export const startupConnectEpic = (action$: any, store: any) => {
 
         if (shouldTryAutoconnecting(connUpdatedWithDiscovery)) {
           // Try connecting
+
+          if (discovered.attemptSSOLogin) {
+            authLog(
+              'Attempting to establish SSO connection to Neo4j with assembled credentials.'
+            )
+          }
           return new Promise(resolve => {
             // Try to connect with stored creds
             bolt
@@ -558,12 +567,16 @@ export const startupConnectEpic = (action$: any, store: any) => {
               )
               .then(() => {
                 store.dispatch(setActiveConnection(discovery.CONNECTION_ID))
+                if (discovered.attemptSSOLogin) {
+                  authLog('SSO Connection to Neo4j successfully established.')
+                }
                 resolve({ type: STARTUP_CONNECTION_SUCCESS })
               })
               .catch(() => {
+                // what error??
                 if (discovered.attemptSSOLogin) {
                   authLog(
-                    'client side SSO flow completed but Neo4j Browser failed to connect to neo4j. Server side logs (security.log or debug.log) may contain more information.'
+                    'SSO Connection to Neo4j failed, although the client side SSO flow succeeded. Server side logs (security.log or debug.log) may contain more information.'
                   )
                 }
                 store.dispatch(setActiveConnection(null))
@@ -673,6 +686,7 @@ export const connectionLostEpic = (action$: any, store: any) =>
     .throttleTime(5000)
     .do(() => store.dispatch(updateConnectionState(PENDING_STATE)))
     .mergeMap((action: any) => {
+      authLog('Detected loss of connectitivity, attempting to recover.')
       return (
         Rx.Observable.of(1)
           .mergeMap(() => {
@@ -737,6 +751,7 @@ export const connectionLostEpic = (action$: any, store: any) =>
                       onLostConnection(store.dispatch)
                     )
                     .then(() => {
+                      authLog('Connection recovered successfully.')
                       store.dispatch(updateConnectionState(CONNECTED_STATE))
                       resolve({ type: 'Success' })
                     })
@@ -759,6 +774,7 @@ export const connectionLostEpic = (action$: any, store: any) =>
           .catch(() => {
             bolt.closeConnection()
             store.dispatch(setActiveConnection(null))
+            authLog('Failed to recover connectivity.')
             return Rx.Observable.of(null)
           })
           // It can be resolved for a number of reasons:
