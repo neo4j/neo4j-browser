@@ -31,11 +31,15 @@ import {
 import { addTypesAsField, setupBoltWorker } from './setup-bolt-worker'
 import { cancelTransaction as globalCancelTransaction } from './transactions'
 import { NATIVE } from 'services/bolt/boltHelpers'
-import { Connection } from 'shared/modules/connections/connectionsDuck'
+import {
+  Connection,
+  onLostConnection
+} from 'shared/modules/connections/connectionsDuck'
 import BoltWorkerModule from 'shared/services/bolt/boltWorker'
 import { backgroundTxMetadata } from './txMetadata'
 import { getGlobalDrivers } from './globalDrivers'
 import { BoltConnectionError } from 'services/exceptions'
+import { isBoltConnectionErrorCode } from './boltConnectionErrors'
 
 let connectionProperties: {} | null = null
 let _useDb: string | null = null
@@ -182,7 +186,8 @@ function directTransaction(
 
 async function backgroundWorkerlessRoutedRead(
   input: string,
-  { useDb }: { useDb?: string }
+  { useDb }: { useDb?: string },
+  store: any
 ): Promise<QueryResult> {
   const session = getGlobalDrivers()
     ?.getRoutedDriver()
@@ -196,6 +201,12 @@ async function backgroundWorkerlessRoutedRead(
   return session
     .executeRead(tx => tx.run(input), {
       metadata: backgroundTxMetadata.txMetadata
+    })
+    .catch(e => {
+      if (!e.code || isBoltConnectionErrorCode(e.code)) {
+        onLostConnection(store.dispatch)(e)
+      }
+      throw e
     })
     .finally(() => session.close())
 }

@@ -103,7 +103,8 @@ export const getCurrentUserEpic = (some$: any, store: any) =>
             getShowCurrentUserProcedure(
               hasMultidb ? FIRST_MULTI_DB_SUPPORT : FIRST_NO_MULTI_DB_SUPPORT
             ),
-            { useDb: hasMultidb ? SYSTEM_DB : undefined }
+            { useDb: hasMultidb ? SYSTEM_DB : undefined },
+            store
           )
 
           return resolve(res)

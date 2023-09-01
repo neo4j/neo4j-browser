@@ -408,7 +408,8 @@ export const connectEpic = (action$: any, store: any) =>
         try {
           await bolt.backgroundWorkerlessRoutedRead(
             supportsMultiDb ? 'SHOW DATABASES' : 'call db.indexes()',
-            { useDb: supportsMultiDb ? 'SYSTEM' : undefined }
+            { useDb: supportsMultiDb ? 'SYSTEM' : undefined },
+            store
           )
         } catch (error) {
           const e: any = error
