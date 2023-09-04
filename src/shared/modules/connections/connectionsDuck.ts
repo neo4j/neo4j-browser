@@ -101,6 +101,7 @@ export type Connection = {
   restApi?: string
   SSOError?: string
   SSOProviders?: SSOProvider[]
+  attemptSSOLogin?: boolean
 }
 
 export const initialState: ConnectionReduxState = {
@@ -761,7 +762,40 @@ export const connectionLostEpic = (action$: any, store: any) =>
                 .catch(e => {
                   // Don't retry if auth failed
                   if (e.code === UnauthorizedDriverError) {
-                    resolve({ type: e.code })
+                    // except in rare cases where the auth token has expired
+                    // but we didn't catch the auth token expired exception.
+                    // if we signed in with SSO, try to refresh the token here as well
+                    if (connection?.attemptSSOLogin) {
+                      authLog(
+                        'Conection error could be due to access token expiry, starting refresh attempt'
+                      )
+                      const SSOProviders = getActiveConnectionData(
+                        store.getState()
+                      )?.SSOProviders
+                      if (SSOProviders) {
+                        handleRefreshingToken(SSOProviders)
+                          .then(credentials => {
+                            store.dispatch(
+                              discovery.updateDiscoveryConnection(credentials)
+                            )
+                            connection = getActiveConnectionData(
+                              store.getState()
+                            )
+                            authLog(
+                              'Successfully refreshed token, attempting to reconnect'
+                            )
+                            return reject(new Error('Try again with new token'))
+                          })
+                          .catch(e => {
+                            console.log(e)
+                            authLog('Token refresh attempt failed')
+                            // if refreshing the token failed, don't retry
+                            return resolve({ type: UnauthorizedDriverError })
+                          })
+                      }
+                    } else {
+                      resolve({ type: e.code })
+                    }
                   } else {
                     setTimeout(
                       () => reject(new Error('Couldnt reconnect.')),
