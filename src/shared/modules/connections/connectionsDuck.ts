@@ -767,7 +767,7 @@ export const connectionLostEpic = (action$: any, store: any) =>
                     // if we signed in with SSO, try to refresh the token here as well
                     if (connection?.attemptSSOLogin) {
                       authLog(
-                        'Conection error could be due to access token expiry, starting refresh attempt'
+                        'Client was unauthorized, could be due to access token expiry, starting refresh attempt'
                       )
                       const SSOProviders = getActiveConnectionData(
                         store.getState()
@@ -787,13 +787,18 @@ export const connectionLostEpic = (action$: any, store: any) =>
                             return reject(new Error('Try again with new token'))
                           })
                           .catch(e => {
-                            console.log(e)
-                            authLog('Token refresh attempt failed')
-                            // if refreshing the token failed, don't retry
+                            // sso-lib throws errors with simple strings
+                            authLog(
+                              'Token refresh attempt failed: ' + String(e)
+                            )
+                            // if refreshing the token failed, don't retry connectivity recover
                             return resolve({ type: UnauthorizedDriverError })
                           })
                       }
                     } else {
+                      authLog(
+                        'Client was unauthorized, stopping reconnection attempts'
+                      )
                       resolve({ type: e.code })
                     }
                   } else {

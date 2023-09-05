@@ -239,7 +239,6 @@ export const discoveryOnStartupEpic = (some$: any, store: any) => {
           if (SSOError) {
             discoveryData.SSOError = SSOError
           }
-          console.log(creds)
 
           return {
             type: DONE,
