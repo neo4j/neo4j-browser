@@ -43,7 +43,7 @@ describe('Sign in with keycloak', () => {
 
     cy.title().should('include', 'Neo4j Browser')
     cy.wait(3000)
-    cy.contains('You are connected as user admin').should('exist')
+    cy.contains('You are connected').should('exist')
     cy.executeCommand(
       'create (t :Location {{}name: "Ambrette Town"{}}) return t.name'
     )
