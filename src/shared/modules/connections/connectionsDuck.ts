@@ -575,7 +575,6 @@ export const startupConnectEpic = (action$: any, store: any) => {
                 resolve({ type: STARTUP_CONNECTION_SUCCESS })
               })
               .catch(() => {
-                // what error??
                 if (discovered.attemptSSOLogin) {
                   authLog(
                     'SSO Connection to Neo4j failed, although the client side SSO flow succeeded. Server side logs (security.log or debug.log) may contain more information.'
