@@ -353,14 +353,6 @@ export const onLostConnection = (dispatch: any) => (e: any) => {
   dispatch({ type: LOST_CONNECTION, error: e })
 }
 
-export const connectionLossFilter = (action: any) => {
-  const notLostCodes = [
-    'Neo.ClientError.Security.Unauthorized',
-    'Neo.ClientError.Security.AuthenticationRateLimit'
-  ]
-  return notLostCodes.indexOf(action.error.code) < 0
-}
-
 export const setRetainCredentials = (shouldRetain: any) => {
   return {
     type: UPDATE_RETAIN_CREDENTIALS,
@@ -681,13 +673,12 @@ export const disconnectSuccessEpic = (action$: any, store: any) => {
 export const connectionLostEpic = (action$: any, store: any) =>
   action$
     .ofType(LOST_CONNECTION)
-    .filter(connectionLossFilter)
     // Only retry in web env and if we're supposed to be connected
     .filter(() => inWebEnv(store.getState()) && isConnected(store.getState()))
     .throttleTime(5000)
     .do(() => store.dispatch(updateConnectionState(PENDING_STATE)))
     .mergeMap((action: any) => {
-      authLog('Detected loss of connectitivity, attempting to recover.')
+      authLog('Detected loss of connectitivity, attempting to recover')
       return (
         Rx.Observable.of(1)
           .mergeMap(() => {

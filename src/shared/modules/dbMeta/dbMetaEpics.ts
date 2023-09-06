@@ -74,7 +74,6 @@ import {
   LOST_CONNECTION,
   SILENT_DISCONNECT,
   UPDATE_CONNECTION_STATE,
-  connectionLossFilter,
   getActiveConnectionData,
   getLastUseDb,
   getUseDb,
@@ -423,7 +422,6 @@ export const dbMetaEpic = (some$: any, store: any) =>
         .takeUntil(
           some$
             .ofType(LOST_CONNECTION)
-            .filter(connectionLossFilter)
             .merge(some$.ofType(DISCONNECTION_SUCCESS))
             .merge(some$.ofType(SILENT_DISCONNECT))
         )
