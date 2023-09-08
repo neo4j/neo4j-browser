@@ -101,6 +101,7 @@ export type Connection = {
   restApi?: string
   SSOError?: string
   SSOProviders?: SSOProvider[]
+  attemptSSOLogin?: boolean
 }
 
 export const initialState: ConnectionReduxState = {
@@ -352,14 +353,6 @@ export const onLostConnection = (dispatch: any) => (e: any) => {
   dispatch({ type: LOST_CONNECTION, error: e })
 }
 
-export const connectionLossFilter = (action: any) => {
-  const notLostCodes = [
-    'Neo.ClientError.Security.Unauthorized',
-    'Neo.ClientError.Security.AuthenticationRateLimit'
-  ]
-  return notLostCodes.indexOf(action.error.code) < 0
-}
-
 export const setRetainCredentials = (shouldRetain: any) => {
   return {
     type: UPDATE_RETAIN_CREDENTIALS,
@@ -408,7 +401,8 @@ export const connectEpic = (action$: any, store: any) =>
         try {
           await bolt.backgroundWorkerlessRoutedRead(
             supportsMultiDb ? 'SHOW DATABASES' : 'call db.indexes()',
-            { useDb: supportsMultiDb ? 'SYSTEM' : undefined }
+            { useDb: supportsMultiDb ? 'SYSTEM' : undefined },
+            store
           )
         } catch (error) {
           const e: any = error
@@ -529,6 +523,9 @@ export const startupConnectEpic = (action$: any, store: any) => {
             onLostConnection(store.dispatch)
           )
           store.dispatch(setActiveConnection(discovery.CONNECTION_ID))
+          authLog(
+            'Neo4j Browser successfully connected to Neo4j Server with stored credentials'
+          )
           return { type: STARTUP_CONNECTION_SUCCESS }
         } catch {}
       }
@@ -548,6 +545,12 @@ export const startupConnectEpic = (action$: any, store: any) => {
 
         if (shouldTryAutoconnecting(connUpdatedWithDiscovery)) {
           // Try connecting
+
+          if (discovered.attemptSSOLogin) {
+            authLog(
+              'Attempting to establish SSO connection to Neo4j with assembled credentials.'
+            )
+          }
           return new Promise(resolve => {
             // Try to connect with stored creds
             bolt
@@ -558,12 +561,15 @@ export const startupConnectEpic = (action$: any, store: any) => {
               )
               .then(() => {
                 store.dispatch(setActiveConnection(discovery.CONNECTION_ID))
+                if (discovered.attemptSSOLogin) {
+                  authLog('SSO Connection to Neo4j successfully established.')
+                }
                 resolve({ type: STARTUP_CONNECTION_SUCCESS })
               })
               .catch(() => {
                 if (discovered.attemptSSOLogin) {
                   authLog(
-                    'client side SSO flow completed but Neo4j Browser failed to connect to neo4j. Server side logs (security.log or debug.log) may contain more information.'
+                    'SSO Connection to Neo4j failed, although the client side SSO flow succeeded. Server side logs (security.log or debug.log) may contain more information.'
                   )
                 }
                 store.dispatch(setActiveConnection(null))
@@ -667,12 +673,12 @@ export const disconnectSuccessEpic = (action$: any, store: any) => {
 export const connectionLostEpic = (action$: any, store: any) =>
   action$
     .ofType(LOST_CONNECTION)
-    .filter(connectionLossFilter)
     // Only retry in web env and if we're supposed to be connected
     .filter(() => inWebEnv(store.getState()) && isConnected(store.getState()))
     .throttleTime(5000)
     .do(() => store.dispatch(updateConnectionState(PENDING_STATE)))
     .mergeMap((action: any) => {
+      authLog('Detected loss of connectitivity, attempting to recover')
       return (
         Rx.Observable.of(1)
           .mergeMap(() => {
@@ -737,6 +743,7 @@ export const connectionLostEpic = (action$: any, store: any) =>
                       onLostConnection(store.dispatch)
                     )
                     .then(() => {
+                      authLog('Connection recovered successfully.')
                       store.dispatch(updateConnectionState(CONNECTED_STATE))
                       resolve({ type: 'Success' })
                     })
@@ -745,7 +752,45 @@ export const connectionLostEpic = (action$: any, store: any) =>
                 .catch(e => {
                   // Don't retry if auth failed
                   if (e.code === UnauthorizedDriverError) {
-                    resolve({ type: e.code })
+                    // except in rare cases where the auth token has expired
+                    // but we didn't catch the auth token expired exception.
+                    // if we signed in with SSO, try to refresh the token here as well
+                    if (connection?.attemptSSOLogin) {
+                      authLog(
+                        'Client was unauthorized, could be due to access token expiry, starting refresh attempt'
+                      )
+                      const SSOProviders = getActiveConnectionData(
+                        store.getState()
+                      )?.SSOProviders
+                      if (SSOProviders) {
+                        handleRefreshingToken(SSOProviders)
+                          .then(credentials => {
+                            store.dispatch(
+                              discovery.updateDiscoveryConnection(credentials)
+                            )
+                            connection = getActiveConnectionData(
+                              store.getState()
+                            )
+                            authLog(
+                              'Successfully refreshed token, attempting to reconnect'
+                            )
+                            return reject(new Error('Try again with new token'))
+                          })
+                          .catch(e => {
+                            // sso-lib throws errors with simple strings
+                            authLog(
+                              'Token refresh attempt failed: ' + String(e)
+                            )
+                            // if refreshing the token failed, don't retry connectivity recover
+                            return resolve({ type: UnauthorizedDriverError })
+                          })
+                      }
+                    } else {
+                      authLog(
+                        'Client was unauthorized, stopping reconnection attempts'
+                      )
+                      resolve({ type: e.code })
+                    }
                   } else {
                     setTimeout(
                       () => reject(new Error('Couldnt reconnect.')),
@@ -759,6 +804,7 @@ export const connectionLostEpic = (action$: any, store: any) =>
           .catch(() => {
             bolt.closeConnection()
             store.dispatch(setActiveConnection(null))
+            authLog('Failed to recover connectivity.')
             return Rx.Observable.of(null)
           })
           // It can be resolved for a number of reasons:

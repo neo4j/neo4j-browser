@@ -74,7 +74,6 @@ import {
   LOST_CONNECTION,
   SILENT_DISCONNECT,
   UPDATE_CONNECTION_STATE,
-  connectionLossFilter,
   getActiveConnectionData,
   getLastUseDb,
   getUseDb,
@@ -97,6 +96,13 @@ import {
   isSystemOrCompositeDb,
   getCurrentDatabase
 } from 'shared/utils/selectors'
+import { isBoltConnectionErrorCode } from 'services/bolt/boltConnectionErrors'
+
+function handleConnectionError(store: any, e: any) {
+  if (!e.code || isBoltConnectionErrorCode(e.code)) {
+    onLostConnection(store.dispatch)(e)
+  }
+}
 
 async function databaseList(store: any) {
   try {
@@ -105,9 +111,13 @@ async function databaseList(store: any) {
       return
     }
 
-    const res = await bolt.backgroundWorkerlessRoutedRead('SHOW DATABASES', {
-      useDb: SYSTEM_DB
-    })
+    const res = await bolt.backgroundWorkerlessRoutedRead(
+      'SHOW DATABASES',
+      {
+        useDb: SYSTEM_DB
+      },
+      store
+    )
 
     if (!res) return
 
@@ -135,9 +145,13 @@ async function getLabelsAndTypes(store: any) {
 
   // Not system db, try and fetch meta data
   try {
-    const res = await bolt.backgroundWorkerlessRoutedRead(metaTypesQuery, {
-      useDb: db?.name
-    })
+    const res = await bolt.backgroundWorkerlessRoutedRead(
+      metaTypesQuery,
+      {
+        useDb: db?.name
+      },
+      store
+    )
     if (res && res.records && res.records.length !== 0) {
       const [rawLabels, rawRelTypes, rawProperties] = res.records.map(
         (r: Record) => r.get(0).data
@@ -173,9 +187,13 @@ async function getNodeAndRelationshipCounts(
 
   // Not system db, try and fetch meta data
   try {
-    const res = await bolt.backgroundWorkerlessRoutedRead(metaCountQuery, {
-      useDb: db?.name
-    })
+    const res = await bolt.backgroundWorkerlessRoutedRead(
+      metaCountQuery,
+      {
+        useDb: db?.name
+      },
+      store
+    )
     if (res && res.records && res.records.length !== 0) {
       const [rawNodeCount, rawRelationshipCount] = res.records.map(
         (r: Record) => r.get(0).data
@@ -210,11 +228,13 @@ async function getFunctionsAndProcedures(store: any) {
     const useDb = supportsMultiDb(store.getState()) ? SYSTEM_DB : undefined
     const procedurePromise = bolt.backgroundWorkerlessRoutedRead(
       getListProcedureQuery(version),
-      { useDb }
+      { useDb },
+      store
     )
     const functionPromise = bolt.backgroundWorkerlessRoutedRead(
       getListFunctionQuery(version),
-      { useDb }
+      { useDb },
+      store
     )
     const [procedures, functions] = await Promise.all([
       procedurePromise,
@@ -227,7 +247,7 @@ async function getFunctionsAndProcedures(store: any) {
         functions: functions.records.map(f => f.toObject())
       })
     )
-  } catch (e) {}
+  } catch {}
 }
 
 async function clusterRole(store: any) {
@@ -251,7 +271,9 @@ async function clusterRole(store: any) {
 
     const role = res.records[0].get(0)
     store.dispatch(update({ role }))
-  } catch {}
+  } catch (e) {
+    handleConnectionError(store, e)
+  }
 }
 
 async function fetchServerInfo(store: any) {
@@ -259,7 +281,8 @@ async function fetchServerInfo(store: any) {
     const serverInfo = await bolt.backgroundWorkerlessRoutedRead(
       serverInfoQuery,
       // We use the bolt method for multi db support, since don't have the version in redux yet
-      { useDb: (await bolt.hasMultiDbSupport()) ? SYSTEM_DB : undefined }
+      { useDb: (await bolt.hasMultiDbSupport()) ? SYSTEM_DB : undefined },
+      store
     )
     store.dispatch(updateServerInfo(serverInfo))
   } catch {}
@@ -278,7 +301,8 @@ async function fetchTrialStatus(store: any) {
         const trialStatus = await bolt.backgroundWorkerlessRoutedRead(
           trialStatusQuery,
           // System database is available from v4
-          { useDb: SYSTEM_DB }
+          { useDb: SYSTEM_DB },
+          store
         )
         store.dispatch(updateTrialStatus(trialStatus))
       } catch {}
@@ -286,7 +310,8 @@ async function fetchTrialStatus(store: any) {
       try {
         const oldTrialStatus = await bolt.backgroundWorkerlessRoutedRead(
           oldTrialStatusQuery,
-          { useDb: SYSTEM_DB }
+          { useDb: SYSTEM_DB },
+          store
         )
         store.dispatch(updateTrialStatusOld(oldTrialStatus))
       } catch {}
@@ -397,7 +422,6 @@ export const dbMetaEpic = (some$: any, store: any) =>
         .takeUntil(
           some$
             .ofType(LOST_CONNECTION)
-            .filter(connectionLossFilter)
             .merge(some$.ofType(DISCONNECTION_SUCCESS))
             .merge(some$.ofType(SILENT_DISCONNECT))
         )
@@ -453,7 +477,8 @@ export const serverConfigEpic = (some$: any, store: any) =>
                   ? 'dbms.clientConfig()'
                   : 'dbms.listConfig()'
               }`,
-              { useDb }
+              { useDb },
+              store
             )
             .then((r: any) => {
               // This is not set yet
@@ -469,9 +494,13 @@ export const serverConfigEpic = (some$: any, store: any) =>
                 store.dispatch(setClientConfig(false))
 
                 bolt
-                  .backgroundWorkerlessRoutedRead(`CALL dbms.listConfig()`, {
-                    useDb
-                  })
+                  .backgroundWorkerlessRoutedRead(
+                    `CALL dbms.listConfig()`,
+                    {
+                      useDb
+                    },
+                    store
+                  )
                   .then(resolve)
                   .catch(reject)
               } else {

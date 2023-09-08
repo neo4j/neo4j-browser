@@ -1,0 +1,81 @@
+version: '3.7'
+services:
+  neo4j:
+    image: neo4j:${NEO4J_VERSION}
+    ports:
+      - '7474:7474'
+      - '7687:7687'
+    environment:
+      - NEO4J_ACCEPT_LICENSE_AGREEMENT=yes
+      - NEO4J_AUTH=neo4j/${NEO4J_PASSWORD:-password}
+      - NEO4J_dbms_connector_bolt_advertised__address=0.0.0.0:7687
+      - NEO4J_apoc_trigger_enabled=true
+      - NEO4J_dbms_security_authentication__providers=oidc-keycloak,native
+      - NEO4J_dbms_security_authorization__providers=oidc-keycloak,native
+      - NEO4J_dbms_security_oidc_keycloak_display__name=Keycloak
+      - NEO4J_dbms_security_oidc_keycloak_.auth__flow=pkce
+      - NEO4J_dbms_security_oidc_keycloak_auth__endpoint=http://127.0.0.1:8180/realms/my-realm/protocol/openid-connect/auth
+      - NEO4J_dbms_security_oidc_keycloak_token__endpoint=http://127.0.0.1:8180/realms/my-realm/protocol/openid-connect/token
+      - NEO4J_dbms_security_oidc_keycloak_jwks__uri=http://keycloak:8180/realms/my-realm/protocol/openid-connect/certs
+      - NEO4J_dbms_security_oidc_keycloak_params=client_id=neo4j-sso;response_type=code;scope=openid email roles
+      - NEO4J_dbms_security_oidc_keycloak_audience=account
+      - NEO4J_dbms_security_oidc_keycloak_issuer=http://127.0.0.1:8180/realms/my-realm
+      - NEO4J_dbms_security_oidc_keycloak_client__id=neo4j-sso
+      - NEO4J_dbms_security_oidc_keycloak_claims_username=preferred_username
+      - NEO4J_dbms_security_oidc_keycloak_claims_groups=roles
+      - NEO4J_browser_allow__outgoing__connections=false
+    volumes:
+      - 'neo4j_data:/data'
+  neo4j-config-cli:
+    image: graphaware/neo4j-config-cli:2.5.0
+    environment:
+      - NEO4J_USER=neo4j
+      - NEO4J_PASSWORD=password
+      - NEO4J_URI=bolt://neo4j:7687
+      - IMPORT_PATH=/config
+    volumes:
+      - './resources/neo4j-config:/config'
+  keycloak:
+    image: quay.io/keycloak/keycloak:${KEYCLOAK_VERSION}
+    environment:
+      - KEYCLOAK_ADMIN=${KEYCLOAK_ADMIN_USER}
+      - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
+      - KC_DB_URL=jdbc:postgresql://postgres/keycloak
+      - KC_DB_USERNAME=keycloak
+      - KC_DB_PASSWORD=password
+      - KC_HTTP_ENBALED=true
+      - KC_HTTP_PORT=8180
+      - KC_HOSTNAME=127.0.0.1
+      - KC_HOSTNAME_PORT=8180
+      - KC_HOSTNAME_ADMIN=localhost
+    command:
+      - start-dev --db=postgres
+    ports:
+      - '8180:8180'
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: password
+    command: -p 5432
+    expose:
+      - '5433' # Publishes 5433 to other containers but NOT to host machine
+    volumes:
+      - 'keycloak_data:/var/lib/postgresql@15/data'
+  keycloak-config:
+    image: adorsys/keycloak-config-cli:${KEYCLOAK_CONFIG_VERSION}
+    environment:
+      - KEYCLOAK_URL=http://keycloak:8180
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=password
+      - KEYCLOAK_AVAILABILITYCHECK_ENABLED=true
+      - KEYCLOAK_AVAILABILITYCHECK_TIMEOUT=90s
+      - IMPORT_PATH=/config
+    volumes:
+      - ./resources/keycloak-config:/config
+volumes:
+  neo4j_data:
+  keycloak_data:

@@ -1,0 +1,39 @@
+name: 'Browser PR single sign on tests'
+
+on:
+  pull_request:
+    branches: [master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  e2e-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+      - run: npm -g install yarn serve
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
+      - run: sudo apt-get update
+      - run: sudo apt-get -y install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
+      - name: Setup Keycloak and Neo4j
+        working-directory: ./docker/sso-keycloak
+        run: docker-compose -f docker-compose.yml up -d --remove-orphans
+      - name: Wait for Keycloak and Neo4j config containers to finish
+        run: sleep 90
+      - run: npx serve -l 8080 dist & npm run wait-on-neo4j && yarn wait-on-dev
+      - run: echo "Servers ready!"
+      - run: yarn e2e-sso
+      - name: Upload test screenshots
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-screenshots-sso
+          path: |
+            ./e2e_tests/screenshots
+            ./e2e_tests/videos

@@ -29,6 +29,8 @@
     "e2e-aura-open": "CYPRESS_E2E_TEST_ENV=\"aura\" CYPRESS_BASE_URL=\"https://localhost:8080\" cypress open",
     "e2e-local": "CYPRESS_E2E_TEST_ENV=\"local\" cypress run",
     "e2e-local-open": "CYPRESS_E2E_TEST_ENV=\"local\" cypress open",
+    "e2e-sso": "cypress run --config integrationFolder=\"./e2e_tests/sso/\"",
+    "e2e-sso-open": "cypress open --config integrationFolder=\"./e2e_tests/sso/\"",
     "format": "prettier-eslint --write 'src/**/!(*.min).{js,jsx,ts,tsx,css,json}' 'e2e_tests/**/*.{js,jsx,ts,tsx,css,json}' 'scripts/**/*.{js,jsx,ts,tsx,css,json}' 'build_scripts/**/*.{js,jsx,ts,tsx,css,json}'",
     "jest": "jest",
     "jest-cov": "jest --coverage",
