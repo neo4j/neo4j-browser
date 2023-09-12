@@ -31,7 +31,11 @@ import {
   StyledHelpFrame,
   StyledPreformattedArea
 } from './styled'
-import { UnknownCommandError, createErrorObject } from 'services/exceptions'
+import {
+  DatabaseUnavailableErrorType,
+  UnknownCommandError,
+  createErrorObject
+} from 'services/exceptions'
 
 export const ErrorView = ({ frame }: any) => {
   if (!frame) return null
@@ -67,6 +71,12 @@ export const ErrorView = ({ frame }: any) => {
       {errorCode === UnknownCommandError.name ? (
         <>
           Use <AutoExecButton cmd="help commands" /> to list available commands.
+        </>
+      ) : null}
+      {errorCode === DatabaseUnavailableErrorType ? (
+        <>
+          Run <AutoExecButton cmd="SHOW DATABASES" isCypher /> or{' '}
+          <AutoExecButton cmd="sysinfo" /> for more information.
         </>
       ) : null}
     </StyledHelpFrame>

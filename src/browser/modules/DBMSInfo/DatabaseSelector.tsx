@@ -80,15 +80,6 @@ export const DatabaseSelector = ({
     a.name.localeCompare(b.name)
   )
 
-  const unavailableStatuses = [
-    'unknown',
-    'starting',
-    'stopping',
-    'store copying',
-    'offline'
-  ]
-  const errorStatuses = ['dirty', 'quarantined']
-
   return (
     <DrawerSection>
       <DrawerSubHeader>Use database</DrawerSubHeader>
@@ -102,26 +93,24 @@ export const DatabaseSelector = ({
             <option value={EMPTY_OPTION}>{EMPTY_OPTION}</option>
           )}
 
-          {databasesAndAliases.map(dbOrAlias => (
-            <option
-              key={dbOrAlias.name}
-              value={dbOrAlias.name}
-              disabled={
-                unavailableStatuses.includes(dbOrAlias.status) ||
-                errorStatuses.includes(dbOrAlias.status)
-              }
-              title={`status: ${dbOrAlias.status}`}
-            >
-              {dbOrAlias.name}
-              {dbOrAlias === homeDb ? NBSP_CHAR + HOUSE_EMOJI : ''}
-              {unavailableStatuses.includes(dbOrAlias.status)
-                ? NBSP_CHAR + HOUR_GLASS_EMOJI
-                : ''}
-              {errorStatuses.includes(dbOrAlias.status)
-                ? NBSP_CHAR + RED_EXCLAIMATION_EMOJI
-                : ''}
-            </option>
-          ))}
+          {databasesAndAliases.map(dbOrAlias => {
+            // When deduplicating the list of databases and aliases
+            // we prefer to find on that is "online", so if the status is not online
+            // it means none of the databases on the cluster with that name
+            const dbNotOnline = dbOrAlias.status !== 'online'
+
+            return (
+              <option
+                key={dbOrAlias.name}
+                value={dbOrAlias.name}
+                disabled={dbNotOnline}
+              >
+                {dbOrAlias.name}
+                {dbOrAlias === homeDb ? NBSP_CHAR + HOUSE_EMOJI : ''}
+                {dbNotOnline && ` [${dbOrAlias.status}]`}
+              </option>
+            )
+          })}
         </Select>
       </DrawerSectionBody>
     </DrawerSection>
