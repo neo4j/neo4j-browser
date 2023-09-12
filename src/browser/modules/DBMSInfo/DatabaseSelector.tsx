@@ -38,6 +38,7 @@ const EMPTY_OPTION = 'Select db to use'
 
 const HOUSE_EMOJI = '\u{1F3E0}'
 const HOUR_GLASS_EMOJI = '\u{231B}'
+const RED_EXCLAIMATION_EMOJI = '\u{2757}'
 const NBSP_CHAR = '\u{00A0}'
 
 type DatabaseSelectorProps = {
@@ -79,6 +80,15 @@ export const DatabaseSelector = ({
     a.name.localeCompare(b.name)
   )
 
+  const unavailableStatuses = [
+    'unknown',
+    'starting',
+    'stopping',
+    'store copying',
+    'offline'
+  ]
+  const errorStatuses = ['dirty', 'quarantined']
+
   return (
     <DrawerSection>
       <DrawerSubHeader>Use database</DrawerSubHeader>
@@ -96,12 +106,19 @@ export const DatabaseSelector = ({
             <option
               key={dbOrAlias.name}
               value={dbOrAlias.name}
-              disabled={dbOrAlias.status === 'unknown'}
+              disabled={
+                unavailableStatuses.includes(dbOrAlias.status) ||
+                errorStatuses.includes(dbOrAlias.status)
+              }
+              title={`status: ${dbOrAlias.status}`}
             >
               {dbOrAlias.name}
               {dbOrAlias === homeDb ? NBSP_CHAR + HOUSE_EMOJI : ''}
-              {dbOrAlias.status === 'unknown'
+              {unavailableStatuses.includes(dbOrAlias.status)
                 ? NBSP_CHAR + HOUR_GLASS_EMOJI
+                : ''}
+              {errorStatuses.includes(dbOrAlias.status)
+                ? NBSP_CHAR + RED_EXCLAIMATION_EMOJI
                 : ''}
             </option>
           ))}
