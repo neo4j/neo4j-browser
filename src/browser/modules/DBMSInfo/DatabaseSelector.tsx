@@ -37,8 +37,6 @@ const Select = styled.select`
 const EMPTY_OPTION = 'Select db to use'
 
 const HOUSE_EMOJI = '\u{1F3E0}'
-const HOUR_GLASS_EMOJI = '\u{231B}'
-const RED_EXCLAIMATION_EMOJI = '\u{2757}'
 const NBSP_CHAR = '\u{00A0}'
 
 type DatabaseSelectorProps = {
