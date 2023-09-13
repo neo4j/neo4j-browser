@@ -27,7 +27,6 @@ import GuideCarousel from '../GuideCarousel/GuideCarousel'
 import GuidePicker from './GuidePicker'
 import {
   BackIconContainer,
-  GuideTitle,
   StyledDrawerSeparator,
   StyledGuideDrawer,
   StyledGuideDrawerHeader

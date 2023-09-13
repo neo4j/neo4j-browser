@@ -37,7 +37,6 @@ const Select = styled.select`
 const EMPTY_OPTION = 'Select db to use'
 
 const HOUSE_EMOJI = '\u{1F3E0}'
-const HOUR_GLASS_EMOJI = '\u{231B}'
 const NBSP_CHAR = '\u{00A0}'
 
 type DatabaseSelectorProps = {
@@ -92,19 +91,28 @@ export const DatabaseSelector = ({
             <option value={EMPTY_OPTION}>{EMPTY_OPTION}</option>
           )}
 
-          {databasesAndAliases.map(dbOrAlias => (
-            <option
-              key={dbOrAlias.name}
-              value={dbOrAlias.name}
-              disabled={dbOrAlias.status === 'unknown'}
-            >
-              {dbOrAlias.name}
-              {dbOrAlias === homeDb ? NBSP_CHAR + HOUSE_EMOJI : ''}
-              {dbOrAlias.status === 'unknown'
-                ? NBSP_CHAR + HOUR_GLASS_EMOJI
-                : ''}
-            </option>
-          ))}
+          {databasesAndAliases.map(dbOrAlias => {
+            /* When deduplicating the list of databases and aliases on clusters
+             we prefer to find ones that are "online". If our deduplicated
+             db is not online, it means none of the databases on the cluster with
+             that name is online, so we should disable it in the list and show 
+             one of the statuses as a simplification (even though they could 
+              technically be different)
+             */
+            const dbNotOnline = dbOrAlias.status !== 'online'
+
+            return (
+              <option
+                key={dbOrAlias.name}
+                value={dbOrAlias.name}
+                disabled={dbNotOnline}
+              >
+                {dbOrAlias.name}
+                {dbOrAlias === homeDb ? NBSP_CHAR + HOUSE_EMOJI : ''}
+                {dbNotOnline && ` [${dbOrAlias.status}]`}
+              </option>
+            )
+          })}
         </Select>
       </DrawerSectionBody>
     </DrawerSection>
