@@ -361,6 +361,12 @@ export class CypherEditor extends React.Component<
       tabIndex: this.props.tabIndex
     })
 
+    // Set the details to be visible by default
+    this.editor
+      .getContribution('editor.contrib.suggestController')
+      // @ts-ignore this is an internal API
+      ?.widget?.value?._setDetailsVisible(true)
+
     const { KeyCode, KeyMod } = monaco
     if (this.props.onExecute) {
       this.editor.addCommand(
