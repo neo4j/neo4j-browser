@@ -125,10 +125,26 @@ export function extractPlan(result: any, calculateTotalDbHits = false) {
   if (result.summary && (result.summary.plan || result.summary.profile)) {
     const rawPlan = result.summary.profile || result.summary.plan
     const boltPlanToRESTPlanShared = (plan: any) => {
+      // `dbHits` and `Rows` are available both on the plan object and on plan.arguments
+      // there is a bug numbers that are larger than signed 32 bit integers overflow and become negative
+      // if we find that the value on arguments is available and above the max signed 32 bit integer
+      // we do a workaround and use that instead. Otherwise we prefer the original value
+
+      // sidenote: It is called "dbHits" in the plan object and "DbHits" in plan.arguments,
+      // it's not a typo, just a little confusing
+      const SIGNED_INT32_MAX = 2147483647
       return {
         operatorType: plan.operatorType,
-        DbHits: plan.dbHits,
-        Rows: plan.rows,
+        DbHits:
+          plan?.arguments?.DbHits?.toNumber() > SIGNED_INT32_MAX
+            ? plan?.arguments?.DbHits?.toNumber()
+            : plan.dbHits,
+
+        Rows:
+          plan?.arguments?.Rows?.toNumber() > SIGNED_INT32_MAX
+            ? plan?.arguments?.Rows?.toNumber()
+            : plan.rows,
+
         identifiers: plan.identifiers,
         children: plan.children.map((_: any) => ({
           ...transformPlanArguments(_.arguments),
