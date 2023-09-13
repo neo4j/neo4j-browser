@@ -92,11 +92,13 @@ export const DatabaseSelector = ({
           )}
 
           {databasesAndAliases.map(dbOrAlias => {
-            // When deduplicating the list of databases and aliases
-            // we prefer to find on that is "online", so if out deduplicated
-            // db is not online, it means none of the databases on the cluster with
-            // that name is online, so we should disable it in the list
-            // and show one of the statuses as a simplification (they are likely all the same)
+            /* When deduplicating the list of databases and aliases on clusters
+             we prefer to find ones that are "online". If our deduplicated
+             db is not online, it means none of the databases on the cluster with
+             that name is online, so we should disable it in the list and show 
+             one of the statuses as a simplification (even though they could 
+              technically be different)
+             */
             const dbNotOnline = dbOrAlias.status !== 'online'
 
             return (
