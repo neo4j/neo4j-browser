@@ -177,9 +177,12 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
     const textDownloadEnabled = () =>
       this.getRecords().length > 0 &&
       this.state.openView &&
-      [ViewTypes.TEXT, ViewTypes.TABLE, ViewTypes.CODE].includes(
-        this.state.openView
-      )
+      [
+        ViewTypes.TEXT,
+        ViewTypes.TABLE,
+        ViewTypes.CODE,
+        ViewTypes.VISUALIZATION
+      ].includes(this.state.openView)
     const graphicsDownloadEnabled = () =>
       this.visElement &&
       this.state.openView &&
