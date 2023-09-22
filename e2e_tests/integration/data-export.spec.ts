@@ -42,7 +42,7 @@ describe('Data export', () => {
       cy.executeCommand('MATCH (n:ExportTest) DETACH DELETE n')
     })
     const tests = [
-      { panel: 'Visualization', expected: ['PNG', 'SVG'] },
+      { panel: 'Visualization', expected: ['CSV', 'JSON', 'PNG', 'SVG'] },
       {
         panel: 'Plan',
         expected: [
