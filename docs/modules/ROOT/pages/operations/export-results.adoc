@@ -15,6 +15,16 @@ The following download options available:
 
 Depending on the result frame these options can vary.
 
+[TIP]
+====
+In order to export both nodes and links, the graph query should reflect both of them. For example:
+
+[source, shell]
+----
+MATCH (n)-[r]->(m) RETURN r, m, n
+----
+====
+
 
 .Export result, _graph result frame_.
 [#download_graph]
