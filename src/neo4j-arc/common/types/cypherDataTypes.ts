@@ -141,8 +141,14 @@ export const isCypherPropertyType = (value: any): value is CypherProperty => {
 }
 
 export const isCypherTemporalType = (
-  anything: object
-): anything is CypherTemporalType =>
-  [isDate, isTime, isDateTime, isLocalTime, isLocalDateTime, isDuration].some(
-    tester => tester(anything)
+  anything: unknown
+): anything is CypherTemporalType => {
+  return (
+    isDate(anything) ||
+    isTime(anything) ||
+    isDateTime(anything) ||
+    isLocalTime(anything) ||
+    isLocalDateTime(anything) ||
+    isDuration(anything)
   )
+}

@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { flatten, map, take } from 'lodash-es'
-import neo4j from 'neo4j-driver'
+import neo4j, { Record as Neo4jRecord, Path as Neo4jPath } from 'neo4j-driver'
 
 import { upperFirst, BasicNodesAndRels } from 'neo4j-arc/common'
 
@@ -39,10 +39,7 @@ interface Converters {
   objectConverter?: (item: {}, converters: Converters) => any
 }
 
-export function toObjects(
-  records: typeof neo4j.Record[],
-  converters: Converters
-) {
+export function toObjects(records: Neo4jRecord[], converters: Converters) {
   const recordValues = records.map(record => {
     const out: string[] = []
     record.forEach((val: {}) => out.push(itemIntToString(val, converters)))
@@ -52,7 +49,7 @@ export function toObjects(
 }
 
 export function recordsToTableArray(
-  records: typeof neo4j.Record[],
+  records: Neo4jRecord[],
   converters: Converters
 ) {
   const recordValues = toObjects(records, converters)
@@ -103,10 +100,7 @@ export function extractFromNeoObjects(obj: any, converters: Converters) {
   return obj
 }
 
-const extractPathForRows = (
-  path: typeof neo4j.Path,
-  converters: Converters
-) => {
+const extractPathForRows = (path: Neo4jPath, converters: Converters) => {
   let segments = path.segments
   // Zero length path. No relationship, end === start
   if (!Array.isArray(path.segments) || path.segments.length < 1) {

@@ -805,10 +805,10 @@ ms@2.1.2:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
-neo4j-driver-core@^5.3.0:
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/neo4j-driver-core/-/neo4j-driver-core-5.3.0.tgz#c3bf55a5d36565ea76bab7673e0c579af4387011"
-  integrity sha512-MGxHCU0Pt13ElxYZkObWoxZ8O5y0Guf/R3rcogDUktG6cp69rc+lWxZAR7HbsL+gc8NrdJlIxR7dIud7B3bhAA==
+neo4j-driver-core@5.9.2:
+  version "5.9.2"
+  resolved "https://registry.yarnpkg.com/neo4j-driver-core/-/neo4j-driver-core-5.9.2.tgz#354a2a4cb967c3202acb4e7a2d2335d3d609cb3b"
+  integrity sha512-z8ZsEEH8e86RsbFUbIrz+YOU/38D316C1b6OqSOoT93IhSzRNQNnrI0pKYKUDKPvI8Ud9acmhQvtIlisZ1gQkA==
 
 object-assign@^4.1.1:
   version "4.1.1"
