@@ -367,6 +367,47 @@ export const setAuthEnabled = (authEnabled: any) => {
   }
 }
 
+function currentTokenExpiresSeconds(state: GlobalState) {
+  const activeConnection = getActiveConnectionData(state)
+  const token = activeConnection?.password
+
+  if (!token) return
+
+  // Get the expiration from the JWT's payload, which is a JSON string encoded
+  // using base64. You could also use a JWT parsing lib
+  const [, payloadBase64] = token.split('.')
+  const payload: { exp: number } = JSON.parse(window.atob(payloadBase64 ?? ''))
+
+  if (typeof payload?.exp !== 'number') {
+    return
+  }
+
+  return payload.exp - Date.now() / 1000
+}
+
+// Typically the refresh flow is triggered through a query failing
+// with the "token expired error". We schedule a refresh to happen
+// before the expiration to avoid the error.
+// We still have the old flow since settimeout is not 100% reliable
+export function scheduleTokenAuthTokenRefresh(store: any) {
+  const expiresIn = currentTokenExpiresSeconds(store.getState())
+  if (expiresIn) {
+    authLog('Schedule token refresh 60 seconds before expiration')
+    const refreshIn = expiresIn - 60
+    setTimeout(() => {
+      // check if the token has been refreshed or switched in the meantime
+      const expiresIn = currentTokenExpiresSeconds(store.getState())
+
+      if (expiresIn && expiresIn <= 60) {
+        authLog('Scheduled token refresh triggered')
+        onLostConnection(store.dispatch)({
+          code: TokenExpiredDriverError
+        })
+      }
+    }, [refreshIn * 1000])
+  }
+}
+
 export const useDb = (db: any = null) => ({ type: USE_DB, useDb: db })
 
 export const resetUseDb = () => ({ type: USE_DB, useDb: null })
@@ -563,6 +604,7 @@ export const startupConnectEpic = (action$: any, store: any) => {
                 store.dispatch(setActiveConnection(discovery.CONNECTION_ID))
                 if (discovered.attemptSSOLogin) {
                   authLog('SSO Connection to Neo4j successfully established.')
+                  scheduleTokenAuthTokenRefresh(store)
                 }
                 resolve({ type: STARTUP_CONNECTION_SUCCESS })
               })
@@ -703,6 +745,7 @@ export const connectionLostEpic = (action$: any, store: any) =>
                     authLog(
                       'Successfully refreshed token, attempting to reconnect'
                     )
+                    scheduleTokenAuthTokenRefresh(store)
                   } catch (e) {
                     authLog(`Failed to refresh token: ${e}`)
                     authLog(
