@@ -101,11 +101,17 @@ export class Visualization {
       .attr('width', '100%')
       .attr('height', '100%')
       .attr('transform', 'scale(1)')
+      .attr('data-testid', 'graphCanvas')
       // Background click event
       // Check if panning is ongoing
       .on('click', () => {
         if (!this.draw) {
           return this.trigger('canvasClicked')
+        }
+      })
+      .on('dblclick', () => {
+        if (!this.draw) {
+          return this.trigger('canvasDblClicked')
         }
       })
 
@@ -166,6 +172,7 @@ export class Visualization {
     const nodeGroups = this.container
       .selectAll<SVGGElement, NodeModel>('g.node')
       .attr('transform', d => `translate(${d.x},${d.y})`)
+      .attr('data-testid', 'nodeGroups')
 
     nodeRenderer.forEach(renderer => nodeGroups.call(renderer.onTick, this))
 

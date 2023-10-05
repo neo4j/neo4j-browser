@@ -10,19 +10,23 @@ The Neo4J Browser is logically composed of 2 parts:
 2. A user-interface that combines the graph rendering (supported by the graphing module), database, and user
    interaction together
 
-The graphing is based on D3 but pretty much developed from scratch by building everything on top of D3 and implementing
-its own layout, coloring, and link drawing. For example, the calculation of arrow (e.g. node links) between nodes
-uses some very complicated math along with very prelimiary MDN standard basic shap specification.
+The graphing is based on D3 and implements its own layout, coloring, and link drawing. For example, the calculation of
+arrow, i.e. links, between nodes uses some
+https://github.com/QubitPi/neo4j-browser/blob/master/src/neo4j-arc/graph-visualization/utils/ArcArrow.ts[very complicated math]
+along with very prelimiary MDN standard basic shap specification.
 
 [WARNING]
 ====
-We will not have any TypeDoc documentation, because the TypeScript version used in Neo4J Browser is not supprted by it
+We will not have any TypeDoc documentation, because the TypeScript version used in Neo4J Browser is not supprted by the
+TypeDoc
 ====
 
 == Component Diagram (WIP)
 
-image:neo4j-browser.png[width=300]
+image:neo4j-browser.png[width=900]
 
+* The orange triangle labled with "On Canvas Interaction" is discussed in detail in
+  link:internals/graph-interactions[graph interactions] section
 * Sentry.io is initialized in the top index.tsx
 * AppInit.tsx is responsible for several initializations:
 +

@@ -30,10 +30,14 @@ import {
 } from '../../utils/mapper'
 import { Visualization } from './visualization/Visualization'
 
+export const NODE_ON_CANVAS_CREATE = 'NODE_ON_CANVAS_CREATE'
+
 export type GraphInteraction =
   | 'NODE_EXPAND'
   | 'NODE_UNPINNED'
   | 'NODE_DISMISSED'
+  | 'NODE_ON_CANVAS_CREATE'
+  | typeof NODE_ON_CANVAS_CREATE
 
 export type GraphInteractionCallBack = (
   event: GraphInteraction,
@@ -225,6 +229,30 @@ export class GraphEventHandlerModel {
     this.deselectItem()
   }
 
+  onCanvasDblClicked(): void {
+    const maxId: number = Math.max(
+      ...this.graph.nodes().map(node => parseInt(node.id))
+    )
+    const newId = maxId + 1
+
+    this.graph.addNodes([
+      new NodeModel(
+        newId.toString(),
+        ['Undefined'],
+        { name: 'New Node' },
+        { name: 'string' }
+      )
+    ])
+    this.visualization.update({ updateNodes: true, updateRelationships: true })
+    this.graphModelChanged()
+
+    this.onGraphInteraction(NODE_ON_CANVAS_CREATE, {
+      id: newId,
+      name: 'New Node',
+      labels: ['Undefined']
+    })
+  }
+
   onItemMouseOut(): void {
     this.onItemMouseOver({
       type: 'canvas',
@@ -245,6 +273,7 @@ export class GraphEventHandlerModel {
       .on('relMouseOut', this.onItemMouseOut.bind(this))
       .on('relationshipClicked', this.onRelationshipClicked.bind(this))
       .on('canvasClicked', this.onCanvasClicked.bind(this))
+      .on('canvasDblClicked', this.onCanvasDblClicked.bind(this))
       .on('nodeClose', this.nodeClose.bind(this))
       .on('nodeClicked', this.nodeClicked.bind(this))
       .on('nodeDblClicked', this.nodeDblClicked.bind(this))

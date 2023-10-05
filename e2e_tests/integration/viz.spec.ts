@@ -241,4 +241,22 @@ describe('Viz rendering', () => {
     cy.get('#svg-vis').trigger('wheel', { deltaY: 3000, shiftKey: true })
     cy.get(`[aria-label="zoom-out"]`).should('be.disabled')
   })
+
+  it('can create a new node by double clicking the canvas', () => {
+    cy.executeCommand(':clear')
+    cy.executeCommand(`CREATE (a:TestLabel {name: 'testNode'}) RETURN a`, {
+      parseSpecialCharSequences: false
+    })
+
+    cy.get('[data-testid="graphCanvas"]')
+      .trigger('click', 200, 200, { force: true })
+      .trigger('dblclick', 200, 200, { force: true })
+
+    cy.get('[data-testid="nodeGroups"]', { timeout: 5000 }).contains('New Node')
+    cy.get('[data-testid="vizInspector"]', { timeout: 5000 }).contains(
+      'Undefined'
+    )
+
+    cy.executeCommand('MATCH (n) DETACH DELETE n')
+  })
 })

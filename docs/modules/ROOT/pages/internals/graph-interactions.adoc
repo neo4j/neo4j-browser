@@ -1,0 +1,130 @@
+:description: How graph interations take effect on displayed graph and backing database
+
+
+[[user-interactions]]
+= How Graph Interations Take Effect on Displayed Graph and Backing Database
+
+We define *graph interactions* as any https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent[mouse] and
+https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent[keyboard] events on the
+link:../../visual-tour/index.html#frame-views[_Graph_ frame view]
+
+There are basically 3 components involved in handling users' interactions:
+
+1. *GraphEventHandlerModel* contains implementations on how to operate on the displayed graph for various interactions
+2. *Visualization* triggers the implementations via D3 callbacks
+3. *VisualizationView* is involved if a certain type of user interaction involves database changes
+
+[NOTE] 
+====
+
+In the case 3. above, _VisualizationView_
+https://react.dev/learn/passing-data-deeply-with-context#the-problem-with-passing-props[prop-drilling] a callback
+called **GraphInteractionCallBack** all they way to the _GraphEventHandlerModel_. Since database operations should not
+be defined in neo4j-arc module, _GraphEventHandlerModel_ can simply pass any argument to the callback function and let
+the upper level component (recall the component diagram in link:../index.html[overview section]) _VisualizationView_ handle
+the database connection, query issuing, and response handling, etc. 
+
+====
+
+== How to Implement a User Interaction
+
+1. Implement an event handler function in GraphEventHandlerModel
+2. Bind the handler function in `GraphEventHandlerModel.bindEventHandlers()`
+3. Trigger the handler function in `Visualization`
+4. If the interaction involves database changes, add the corresponding logic to `GraphInteractionCallBack`, and
+5. trigger the `GraphInteractionCallBack` in the handler function
+
+For example, let's say we'd like to support easy on-graph editing by allowing us to create a new node when we double
+click on canvas. We will follow the steps above by first defining the event handler function:
+
+[source,typescript]
+----
+  onCanvasDblClicked(): void {
+    this.graph.addNodes([ new NodeModel(...) ])
+    this.visualization.update({ updateNodes: true, updateRelationships: true })
+    this.graphModelChanged()
+
+    this.onGraphInteraction(NODE_ON_CANVAS_CREATE, { id: newNodeId, name: 'New Node', labels: ['Undefined'] })
+  }
+----
+
+[NOTE] 
+==== 
+
+When we add a new node to the graph, it is important to update the visual of the graph using `visualization.update()`
+and the stats panel with `graphModelChanged()`
+
+We would also like to persist the new node to database so that refreshing the page or re-login shall still render this
+node. Therefore we invoke `onGraphInteraction()` above. The details of this method will be disucssed below 
+
+====
+
+Next, we bind the function so that `Visualization.ts` component can delegte any canvas double click callbacks to this
+function
+
+[source,typescript]
+----
+bindEventHandlers(): void {
+  this.visualization
+    ...
+    .on('canvasDblClicked', this.onCanvasDblClicked.bind(this))
+    ...
+  this.onItemMouseOut()
+}
+----
+
+When `Visualization.ts` recrives a canvas double click from user, it invoke the event handler function via
+https://www.d3indepth.com/selections/#event-handling[D3 event handlers]:
+
+[source,typescript]
+----
+this.rect = this.baseGroup
+  .append('rect')
+  ...
+  .on('dblclick', () => {
+    if (!this.draw) {
+      return this.trigger('canvasDblClicked')
+    }
+  })
+----
+
+This is how we trigger the handler function in `Visualization`.
+
+As we've mentioned earlier, we would like to persist this new node to database. They way to do that is by modifying
+*VisualizationView.onGraphInteraction()* method:
+
+[source,typescript]
+----
+  onGraphInteraction: GraphInteractionCallBack = (event, properties) => {
+    if (event == NODE_ON_CANVAS_CREATE) {
+      if (properties == null) {
+        throw new Error(
+          'A property map with id, name, and labels keys are required'
+        )
+      }
+
+      const id = properties['id']
+      const name = properties['name']
+      const variableName = `node${id}`
+      const labels = (properties['labels'] as string[]).map(label => `\`${label}\``).join(':')
+
+      const query = `CREATE (${variableName}:${labels} { id: ${id}, name: "${name}" });`
+
+      this.props.bus.self(
+        CYPHER_REQUEST,
+        {
+          query,
+          params: { labels, id, name },
+          queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+        },
+        (response: any) => {
+          if (!response.success) {
+            throw new Error(response.error)
+          }
+        }
+      )
+    }
+  }
+----
+
+The complete implementation is in https://github.com/QubitPi/neo4j-browser/pull/7[this PR] as a reference

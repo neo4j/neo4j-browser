@@ -24,7 +24,12 @@ import { withBus } from 'react-suber'
 import { Action, Dispatch } from 'redux'
 import { Bus } from 'suber'
 
-import { GraphModel, GraphVisualizer } from 'neo4j-arc/graph-visualization'
+import {
+  GraphInteractionCallBack,
+  GraphModel,
+  GraphVisualizer,
+  NODE_ON_CANVAS_CREATE
+} from 'neo4j-arc/graph-visualization'
 
 import { StyledVisContainer } from './VisualizationView.styled'
 import { resultHasTruncatedFields } from 'browser/modules/Stream/CypherFrame/helpers'
@@ -271,6 +276,39 @@ LIMIT ${maxNewNeighbours}`
     this.autoCompleteRelationships([], this.graph.nodes(), true)
   }
 
+  onGraphInteraction: GraphInteractionCallBack = (event, properties) => {
+    if (event == NODE_ON_CANVAS_CREATE) {
+      if (properties == null) {
+        throw new Error(
+          'A property map with id, name, and labels keys are required'
+        )
+      }
+
+      const id = properties['id']
+      const name = properties['name']
+      const variableName = `node${id}`
+      const labels = (properties['labels'] as string[])
+        .map(label => `\`${label}\``)
+        .join(':')
+
+      const query = `CREATE (${variableName}:${labels} { id: ${id}, name: "${name}" });`
+
+      this.props.bus.self(
+        CYPHER_REQUEST,
+        {
+          query,
+          params: { labels, id, name },
+          queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+        },
+        (response: any) => {
+          if (!response.success) {
+            throw new Error(response.error)
+          }
+        }
+      )
+    }
+  }
+
   render(): React.ReactNode {
     if (!this.state.nodes.length) return null
 
@@ -309,6 +347,7 @@ LIMIT ${maxNewNeighbours}`
           OverviewPaneOverride={OverviewPane}
           useGeneratedDefaultColors={false}
           initialZoomToFit
+          onGraphInteraction={this.onGraphInteraction}
         />
       </StyledVisContainer>
     )

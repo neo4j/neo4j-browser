@@ -30,3 +30,4 @@
 
 * xref:internals/index.adoc[Internals]
 ** xref:internals/graph-modelling.adoc[]
+** xref:internals/graph-interactions.adoc[]
