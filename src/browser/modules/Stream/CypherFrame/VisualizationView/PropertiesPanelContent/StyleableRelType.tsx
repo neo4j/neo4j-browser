@@ -21,44 +21,67 @@ import React from 'react'
 import { Popup } from 'semantic-ui-react'
 
 import { StyledRelationshipChip } from 'neo4j-arc/common'
-import { GraphStyleModel } from 'neo4j-arc/graph-visualization'
+import {
+  GraphInteractionCallBack,
+  GraphStyleModel,
+  REL_TYPE_UPDATE
+} from 'neo4j-arc/graph-visualization'
 
 import { GrassEditor } from './GrassEditor'
 
 export type StyleableRelTypeProps = {
   graphStyle: GraphStyleModel
   selectedRelType: { relType: string; propertyKeys: string[]; count?: number }
+  onGraphInteraction?: GraphInteractionCallBack
+  sourceNodeId?: string
+  targetNodeId?: string
 }
 export function StyleableRelType({
   selectedRelType,
-  graphStyle
+  graphStyle,
+  onGraphInteraction = () => undefined,
+  sourceNodeId,
+  targetNodeId
 }: StyleableRelTypeProps): JSX.Element {
   const styleForRelType = graphStyle.forRelationship({
     type: selectedRelType.relType
   })
   return (
-    <Popup
-      on="click"
-      basic
-      key={selectedRelType.relType}
-      position="left center"
-      offset={[0, 0]}
-      trigger={
-        <StyledRelationshipChip
-          style={{
-            backgroundColor: styleForRelType.get('color'),
-            color: styleForRelType.get('text-color-internal')
-          }}
-          data-testid={`property-details-overview-relationship-type-${selectedRelType.relType}`}
-        >
-          {selectedRelType.count !== undefined
-            ? `${selectedRelType.relType} (${selectedRelType.count})`
-            : `${selectedRelType.relType}`}
-        </StyledRelationshipChip>
+    <div
+      suppressContentEditableWarning={true}
+      contentEditable="true"
+      onInput={e =>
+        onGraphInteraction(REL_TYPE_UPDATE, {
+          sourceNodeId: sourceNodeId,
+          targetNodeId: targetNodeId,
+          oldType: selectedRelType.relType,
+          newType: e.currentTarget.textContent
+        })
       }
-      wide
     >
-      <GrassEditor selectedRelType={selectedRelType} />
-    </Popup>
+      <Popup
+        on="click"
+        basic
+        key={selectedRelType.relType}
+        position="left center"
+        offset={[0, 0]}
+        trigger={
+          <StyledRelationshipChip
+            style={{
+              backgroundColor: styleForRelType.get('color'),
+              color: styleForRelType.get('text-color-internal')
+            }}
+            data-testid={`property-details-overview-relationship-type-${selectedRelType.relType}`}
+          >
+            {selectedRelType.count !== undefined
+              ? `${selectedRelType.relType} (${selectedRelType.count})`
+              : `${selectedRelType.relType}`}
+          </StyledRelationshipChip>
+        }
+        wide
+      >
+        <GrassEditor selectedRelType={selectedRelType} />
+      </Popup>
+    </div>
   )
 }

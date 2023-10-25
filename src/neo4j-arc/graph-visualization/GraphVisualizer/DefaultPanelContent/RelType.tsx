@@ -21,28 +21,54 @@ import React from 'react'
 
 import { GraphStyleModel } from '../../models/GraphStyle'
 import { NonClickableRelTypeChip } from './styled'
+import {
+  GraphInteractionCallBack,
+  REL_TYPE_UPDATE
+} from '../Graph/GraphEventHandlerModel'
 
 export type RelTypeProps = {
   graphStyle: GraphStyleModel
   selectedRelType: { relType: string; propertyKeys: string[]; count?: number }
+  onGraphInteraction?: GraphInteractionCallBack
+  sourceNodeId?: string
+  targetNodeId?: string
+}
+RelType.defaultProps = {
+  onGraphInteraction: () => undefined
 }
 export function RelType({
   selectedRelType,
-  graphStyle
+  graphStyle,
+  onGraphInteraction = () => undefined,
+  sourceNodeId,
+  targetNodeId
 }: RelTypeProps): JSX.Element {
   const styleForRelType = graphStyle.forRelationship({
     type: selectedRelType.relType
   })
   return (
-    <NonClickableRelTypeChip
-      style={{
-        backgroundColor: styleForRelType.get('color'),
-        color: styleForRelType.get('text-color-internal')
-      }}
+    <div
+      suppressContentEditableWarning={true}
+      contentEditable="true"
+      onInput={e =>
+        onGraphInteraction(REL_TYPE_UPDATE, {
+          sourceNodeId: sourceNodeId,
+          targetNodeId: targetNodeId,
+          oldType: selectedRelType.relType,
+          newType: e.currentTarget.textContent
+        })
+      }
     >
-      {selectedRelType.count !== undefined
-        ? `${selectedRelType.relType} (${selectedRelType.count})`
-        : `${selectedRelType.relType}`}
-    </NonClickableRelTypeChip>
+      <NonClickableRelTypeChip
+        style={{
+          backgroundColor: styleForRelType.get('color'),
+          color: styleForRelType.get('text-color-internal')
+        }}
+      >
+        {selectedRelType.count !== undefined
+          ? `${selectedRelType.relType} (${selectedRelType.count})`
+          : `${selectedRelType.relType}`}
+      </NonClickableRelTypeChip>
+    </div>
   )
 }

@@ -27,6 +27,7 @@ import {
 import { VizItemProperty } from 'neo4j-arc/common'
 import { GraphStyleModel } from '../../models/GraphStyle'
 import { VizItem } from '../../types'
+import { NodeModel } from 'neo4j-arc/graph-visualization'
 
 describe('<DetailsPane />', () => {
   const mockGraphStyle = new GraphStyleModel()
@@ -72,7 +73,9 @@ describe('<DetailsPane />', () => {
             id: 'abc',
             elementId: 'elementId',
             type: 'abc2',
-            propertyList
+            propertyList,
+            source: new NodeModel('1', [], {}, {}),
+            target: new NodeModel('2', [], {}, {})
           }
         }
     }

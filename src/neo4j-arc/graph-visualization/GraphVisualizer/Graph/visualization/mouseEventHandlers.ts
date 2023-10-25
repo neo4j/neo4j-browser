@@ -66,6 +66,12 @@ export const nodeEventHandlers = (
     trigger('nodeMouseOut', node)
   }
 
+  const onNodeMouseDown = (_event: KeyboardEvent, node: NodeModel) => {
+    if (_event.altKey || _event.ctrlKey || _event.metaKey || _event.shiftKey) {
+      trigger('nodeAltDown', node)
+    }
+  }
+
   const dragstarted = (event: D3DragEvent<SVGGElement, NodeModel, any>) => {
     initialDragPosition = [event.x, event.y]
     restartedSimulation = false
@@ -115,6 +121,7 @@ export const nodeEventHandlers = (
     .on('mouseout', onNodeMouseOut)
     .on('click', onNodeClick)
     .on('dblclick', onNodeDblClick)
+    .on('mousedown', onNodeMouseDown)
 }
 
 export const relationshipEventHandlers = (

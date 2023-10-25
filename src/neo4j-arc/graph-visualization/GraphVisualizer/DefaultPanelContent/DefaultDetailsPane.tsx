@@ -86,6 +86,9 @@ export function DefaultDetailsPane({
               relType: vizItem.item.type
             }}
             graphStyle={graphStyle}
+            onGraphInteraction={onGraphInteraction}
+            sourceNodeId={vizItem.item.source.id}
+            targetNodeId={vizItem.item.target.id}
           />
         )}
         {vizItem.type === 'node' &&

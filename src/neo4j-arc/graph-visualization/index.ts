@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+export { NodeModel } from './models/Node'
 export { GraphModel } from './models/Graph'
 export { GraphStyleModel, Selector } from './models/GraphStyle'
 
@@ -35,8 +36,10 @@ export type { DetailsPaneProps } from './GraphVisualizer/DefaultPanelContent/Def
 export type { OverviewPaneProps } from './GraphVisualizer/DefaultPanelContent/DefaultOverviewPane'
 
 export {
+  REL_ON_CANVAS_CREATE,
   NODE_ON_CANVAS_CREATE,
   NODE_PROP_UPDATE,
-  NODE_LABEL_UPDATE
+  NODE_LABEL_UPDATE,
+  REL_TYPE_UPDATE
 } from './GraphVisualizer/Graph/GraphEventHandlerModel'
 export type { GraphInteractionCallBack } from './GraphVisualizer/Graph/GraphEventHandlerModel'

@@ -28,9 +28,11 @@ import {
   GraphInteractionCallBack,
   GraphModel,
   GraphVisualizer,
+  REL_ON_CANVAS_CREATE,
   NODE_ON_CANVAS_CREATE,
   NODE_PROP_UPDATE,
-  NODE_LABEL_UPDATE
+  NODE_LABEL_UPDATE,
+  REL_TYPE_UPDATE
 } from 'neo4j-arc/graph-visualization'
 
 import { StyledVisContainer } from './VisualizationView.styled'
@@ -279,6 +281,37 @@ LIMIT ${maxNewNeighbours}`
   }
 
   onGraphInteraction: GraphInteractionCallBack = (event, properties) => {
+    if (event == REL_TYPE_UPDATE) {
+      if (properties == null) {
+        throw new Error(
+          'A property map with sourceNodeId, targetNodeId, oldType, and newType keys are required'
+        )
+      }
+
+      const sourceNodeId = properties['sourceNodeId']
+      const targetNodeId = properties['targetNodeId']
+      const oldType = properties['oldType']
+      const newType = properties['newType']
+
+      const type = `\`${oldType}\``
+
+      const query = `MATCH (source)-[rel:${type}]->(target) WHERE ID(source) = ${sourceNodeId} AND ID(target) = ${targetNodeId} CALL apoc.refactor.setType(rel, '${newType}') YIELD input, output RETURN input, output;`
+
+      this.props.bus.self(
+        CYPHER_REQUEST,
+        {
+          query,
+          params: { sourceNodeId, targetNodeId, oldType, newType },
+          queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+        },
+        (response: any) => {
+          if (!response.success) {
+            throw new Error(response.error)
+          }
+        }
+      )
+    }
+
     if (event == NODE_LABEL_UPDATE) {
       if (properties == null) {
         throw new Error(
@@ -291,7 +324,7 @@ LIMIT ${maxNewNeighbours}`
       const newLabel = `\`${properties['newLabel']}\``
 
       const query = `MATCH(n) WHERE ID(n) = ${nodeId} REMOVE n:${oldLabel} SET n:${newLabel}`
-      console.log(query)
+
       this.props.bus.self(
         CYPHER_REQUEST,
         {
@@ -309,7 +342,9 @@ LIMIT ${maxNewNeighbours}`
 
     if (event == NODE_PROP_UPDATE) {
       if (properties == null) {
-        throw new Error('')
+        throw new Error(
+          'A property map with nodeId, propKey, and propVal keys are required'
+        )
       }
 
       const nodeId = properties['nodeId']
@@ -324,6 +359,34 @@ LIMIT ${maxNewNeighbours}`
         {
           query,
           params: { nodeId, propKey, propVal },
+          queryType: NEO4J_BROWSER_USER_ACTION_QUERY
+        },
+        (response: any) => {
+          if (!response.success) {
+            throw new Error(response.error)
+          }
+        }
+      )
+    }
+
+    if (event == REL_ON_CANVAS_CREATE) {
+      if (properties == null) {
+        throw new Error(
+          'A property map with sourceNodeId, targetNodeId, and type keys are required'
+        )
+      }
+
+      const sourceNodeId = properties['sourceNodeId']
+      const targetNodeId = properties['targetNodeId']
+      const type = properties['type']
+
+      const query = `MATCH (source), (target) WHERE ID(source) = ${sourceNodeId} AND ID(target) = ${targetNodeId} CREATE (source)-[r:\`${type}\` {name: "new link"}]->(target) RETURN type(r);`
+
+      this.props.bus.self(
+        CYPHER_REQUEST,
+        {
+          query,
+          params: { sourceNodeId, targetNodeId, type },
           queryType: NEO4J_BROWSER_USER_ACTION_QUERY
         },
         (response: any) => {

@@ -33,6 +33,8 @@ import { Visualization } from './visualization/Visualization'
 export const NODE_ON_CANVAS_CREATE = 'NODE_ON_CANVAS_CREATE'
 export const NODE_PROP_UPDATE = 'NODE_PROP_UPDATE'
 export const NODE_LABEL_UPDATE = 'NODE_LABEL_UPDATE'
+export const REL_ON_CANVAS_CREATE = 'REL_ON_CANVAS_CREATE'
+export const REL_TYPE_UPDATE = 'REL_TYPE_UPDATE'
 
 export type GraphInteraction =
   | 'NODE_EXPAND'
@@ -42,6 +44,8 @@ export type GraphInteraction =
   | typeof NODE_ON_CANVAS_CREATE
   | typeof NODE_PROP_UPDATE
   | typeof NODE_LABEL_UPDATE
+  | typeof REL_ON_CANVAS_CREATE
+  | typeof REL_TYPE_UPDATE
 
 export type GraphInteractionCallBack = (
   event: GraphInteraction,
@@ -57,6 +61,9 @@ export class GraphEventHandlerModel {
   onItemSelected: (item: VizItem) => void
   onGraphInteraction: GraphInteractionCallBack
   selectedItem: NodeModel | RelationshipModel | null
+
+  private altCreatedRelSourceNode: any
+  private altCreatedRelTargetNode: any
 
   constructor(
     graph: GraphModel,
@@ -76,6 +83,9 @@ export class GraphEventHandlerModel {
     this.onGraphInteraction = onGraphInteraction ?? (() => undefined)
 
     this.onGraphModelChange = onGraphModelChange
+
+    this.altCreatedRelSourceNode = null
+    this.altCreatedRelTargetNode = null
   }
 
   graphModelChanged(): void {
@@ -274,6 +284,56 @@ export class GraphEventHandlerModel {
     })
   }
 
+  nodeAltDown(node: NodeModel): void {
+    if (!node) {
+      return
+    }
+
+    if (
+      this.altCreatedRelSourceNode == null &&
+      this.altCreatedRelTargetNode == null
+    ) {
+      this.altCreatedRelSourceNode = node
+    } else if (
+      this.altCreatedRelSourceNode != null &&
+      this.altCreatedRelTargetNode == null
+    ) {
+      this.altCreatedRelTargetNode = node
+
+      const maxId: number = Math.max(
+        ...this.graph
+          .relationships()
+          .map(relationship => parseInt(relationship.id))
+      )
+      const newId = maxId + 1
+
+      const altCreatedRel: RelationshipModel = new RelationshipModel(
+        newId.toString(),
+        this.altCreatedRelSourceNode,
+        this.altCreatedRelTargetNode,
+        newId.toString(),
+        { name: 'new link' },
+        { name: 'string' }
+      )
+
+      this.graph.addRelationships([altCreatedRel])
+      this.visualization.update({
+        updateNodes: true,
+        updateRelationships: true
+      })
+      this.graphModelChanged()
+
+      this.onGraphInteraction(REL_ON_CANVAS_CREATE, {
+        type: newId,
+        sourceNodeId: this.altCreatedRelSourceNode.id,
+        targetNodeId: this.altCreatedRelTargetNode.id
+      })
+
+      this.altCreatedRelSourceNode = null
+      this.altCreatedRelTargetNode = null
+    }
+  }
+
   bindEventHandlers(): void {
     this.visualization
       .on('nodeMouseOver', this.onNodeMouseOver.bind(this))
@@ -289,6 +349,7 @@ export class GraphEventHandlerModel {
       .on('nodeClicked', this.nodeClicked.bind(this))
       .on('nodeDblClicked', this.nodeDblClicked.bind(this))
       .on('nodeUnlock', this.nodeUnlock.bind(this))
+      .on('nodeAltDown', this.nodeAltDown.bind(this))
     this.onItemMouseOut()
   }
 }

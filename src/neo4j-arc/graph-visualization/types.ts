@@ -49,7 +49,10 @@ type StatusItem = {
 
 export type RelationshipItem = {
   type: 'relationship'
-  item: Pick<RelationshipModel, 'id' | 'elementId' | 'type' | 'propertyList'>
+  item: Pick<
+    RelationshipModel,
+    'id' | 'elementId' | 'type' | 'propertyList' | 'source' | 'target'
+  >
 }
 
 type CanvasItem = {
