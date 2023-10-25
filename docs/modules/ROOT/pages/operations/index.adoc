@@ -17,4 +17,4 @@
 * xref:operations/rest-requests.adoc[] -- HTTP REST commands.
 * xref:operations/browser-rbac-count.adoc[] -- Manual refresh of counts due to RBAC.
 * xref:operations/product-analytics.adoc[] -- Configure consent for anonymous usage statistics.
-
+* xref:operations/on-canvas-operations.adoc[] -- On-Canvas Operations.

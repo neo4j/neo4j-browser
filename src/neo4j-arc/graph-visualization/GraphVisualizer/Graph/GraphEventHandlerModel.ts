@@ -31,6 +31,8 @@ import {
 import { Visualization } from './visualization/Visualization'
 
 export const NODE_ON_CANVAS_CREATE = 'NODE_ON_CANVAS_CREATE'
+export const NODE_PROP_UPDATE = 'NODE_PROP_UPDATE'
+export const NODE_LABEL_UPDATE = 'NODE_LABEL_UPDATE'
 
 export type GraphInteraction =
   | 'NODE_EXPAND'
@@ -38,6 +40,8 @@ export type GraphInteraction =
   | 'NODE_DISMISSED'
   | 'NODE_ON_CANVAS_CREATE'
   | typeof NODE_ON_CANVAS_CREATE
+  | typeof NODE_PROP_UPDATE
+  | typeof NODE_LABEL_UPDATE
 
 export type GraphInteractionCallBack = (
   event: GraphInteraction,
@@ -239,8 +243,14 @@ export class GraphEventHandlerModel {
       new NodeModel(
         newId.toString(),
         ['Undefined'],
-        { name: 'New Node' },
-        { name: 'string' }
+        {
+          name: 'New Node',
+          description: 'New Node'
+        },
+        {
+          name: 'string',
+          description: 'string'
+        }
       )
     ])
     this.visualization.update({ updateNodes: true, updateRelationships: true })
@@ -249,6 +259,7 @@ export class GraphEventHandlerModel {
     this.onGraphInteraction(NODE_ON_CANVAS_CREATE, {
       id: newId,
       name: 'New Node',
+      description: 'New Node',
       labels: ['Undefined']
     })
   }

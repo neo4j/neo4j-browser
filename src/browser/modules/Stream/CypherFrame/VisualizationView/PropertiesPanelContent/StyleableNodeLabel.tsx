@@ -21,7 +21,11 @@ import React from 'react'
 import { Popup } from 'semantic-ui-react'
 
 import { StyledLabelChip } from 'neo4j-arc/common'
-import { GraphStyleModel } from 'neo4j-arc/graph-visualization'
+import {
+  GraphInteractionCallBack,
+  GraphStyleModel,
+  NODE_LABEL_UPDATE
+} from 'neo4j-arc/graph-visualization'
 
 import { GrassEditor } from './GrassEditor'
 
@@ -34,11 +38,15 @@ export type StyleableNodeLabelProps = {
   graphStyle: GraphStyleModel
   /* The total number of nodes in returned graph */
   allNodesCount?: number | null
+  onGraphInteraction?: GraphInteractionCallBack
+  nodeId?: string
 }
 export function StyleableNodeLabel({
   graphStyle,
   selectedLabel,
-  allNodesCount
+  allNodesCount,
+  onGraphInteraction = () => undefined,
+  nodeId
 }: StyleableNodeLabelProps): JSX.Element {
   const labels = selectedLabel.label === '*' ? [] : [selectedLabel.label]
   const graphStyleForLabel = graphStyle.forNode({
@@ -48,26 +56,40 @@ export function StyleableNodeLabel({
     selectedLabel.label === '*' ? allNodesCount : selectedLabel.count
 
   return (
-    <Popup
-      on="click"
-      basic
-      key={selectedLabel.label}
-      wide
-      position="left center"
-      offset={[0, 0]}
-      trigger={
-        <StyledLabelChip
-          style={{
-            backgroundColor: graphStyleForLabel.get('color'),
-            color: graphStyleForLabel.get('text-color-internal')
-          }}
-          data-testid={`property-details-overview-node-label-${selectedLabel.label}`}
-        >
-          {`${selectedLabel.label}${count || count === 0 ? ` (${count})` : ''}`}
-        </StyledLabelChip>
+    <div
+      suppressContentEditableWarning={true}
+      contentEditable="true"
+      onInput={e =>
+        onGraphInteraction(NODE_LABEL_UPDATE, {
+          nodeId: nodeId,
+          oldLabel: labels[0],
+          newLabel: e.currentTarget.textContent
+        })
       }
     >
-      <GrassEditor selectedLabel={selectedLabel} />
-    </Popup>
+      <Popup
+        on="click"
+        basic
+        key={selectedLabel.label}
+        wide
+        position="left center"
+        offset={[0, 0]}
+        trigger={
+          <StyledLabelChip
+            style={{
+              backgroundColor: graphStyleForLabel.get('color'),
+              color: graphStyleForLabel.get('text-color-internal')
+            }}
+            data-testid={`property-details-overview-node-label-${selectedLabel.label}`}
+          >
+            {`${selectedLabel.label}${
+              count || count === 0 ? ` (${count})` : ''
+            }`}
+          </StyledLabelChip>
+        }
+      >
+        <GrassEditor selectedLabel={selectedLabel} />
+      </Popup>
+    </div>
   )
 }

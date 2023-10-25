@@ -38,6 +38,7 @@ import { Resizable } from 're-resizable'
 import { GraphStats } from '../utils/mapper'
 import { GraphStyleModel } from '../models/GraphStyle'
 import { VizItem } from '../types'
+import { GraphInteractionCallBack } from './Graph/GraphEventHandlerModel'
 
 interface NodeInspectorPanelProps {
   expanded: boolean
@@ -51,6 +52,7 @@ interface NodeInspectorPanelProps {
   width: number
   DetailsPaneOverride?: React.FC<DetailsPaneProps>
   OverviewPaneOverride?: React.FC<OverviewPaneProps>
+  onGraphInteraction?: GraphInteractionCallBack
 }
 
 export const defaultPanelWidth = (): number =>
@@ -68,7 +70,8 @@ export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
       toggleExpanded,
       width,
       DetailsPaneOverride,
-      OverviewPaneOverride
+      OverviewPaneOverride,
+      onGraphInteraction
     } = this.props
     const relevantItems = ['node', 'relationship']
     const hoveringNodeOrRelationship =
@@ -120,6 +123,7 @@ export class NodeInspectorPanel extends Component<NodeInspectorPanelProps> {
                   vizItem={shownEl}
                   graphStyle={graphStyle}
                   nodeInspectorWidth={width}
+                  onGraphInteraction={onGraphInteraction}
                 />
               ) : (
                 <OverviewPane

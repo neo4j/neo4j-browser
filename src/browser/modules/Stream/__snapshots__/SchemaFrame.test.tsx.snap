@@ -7,16 +7,16 @@ exports[`SchemaFrame renders empty 1`] = `
   >
     <div>
       <div
-        class="sc-iwjdpV EPaYX"
+        class="sc-AjmGg bNpNxT"
       >
         <table
-          class="sc-jcFjpl emSDdK"
+          class="sc-clIzBv cnmjir"
           data-testid="schemaFrameIndexesTable"
         >
           <thead>
             <tr>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 Indexes
               </th>
@@ -24,10 +24,10 @@ exports[`SchemaFrame renders empty 1`] = `
           </thead>
           <tbody>
             <tr
-              class="sc-caiLqq icfFcF table-row"
+              class="sc-faUpoM eqdrKW table-row"
             >
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               >
                 None
               </td>
@@ -35,33 +35,33 @@ exports[`SchemaFrame renders empty 1`] = `
           </tbody>
         </table>
         <table
-          class="sc-jcFjpl emSDdK"
+          class="sc-clIzBv cnmjir"
           data-testid="schemaFrameConstraintsTable"
         >
           <thead>
             <tr>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 Constraint Name
               </th>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 Type
               </th>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 EntityType
               </th>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 LabelsOrTypes
               </th>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 Properties
               </th>
@@ -69,24 +69,24 @@ exports[`SchemaFrame renders empty 1`] = `
           </thead>
           <tbody>
             <tr
-              class="sc-caiLqq icfFcF table-row"
+              class="sc-faUpoM eqdrKW table-row"
             >
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               >
                 None
               </td>
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               />
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               />
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               />
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               />
             </tr>
           </tbody>
@@ -121,46 +121,46 @@ exports[`SchemaFrame renders empty for Neo4j >= 4.0 1`] = `
   >
     <div>
       <div
-        class="sc-iwjdpV EPaYX"
+        class="sc-AjmGg bNpNxT"
       >
         <table
-          class="sc-jcFjpl emSDdK"
+          class="sc-clIzBv cnmjir"
           data-testid="schemaFrameIndexesTable"
         >
           <thead>
             <tr>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 Index Name
               </th>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 Type
               </th>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 Uniqueness
               </th>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 EntityType
               </th>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 LabelsOrTypes
               </th>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 Properties
               </th>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 State
               </th>
@@ -168,62 +168,62 @@ exports[`SchemaFrame renders empty for Neo4j >= 4.0 1`] = `
           </thead>
           <tbody>
             <tr
-              class="sc-caiLqq icfFcF table-row"
+              class="sc-faUpoM eqdrKW table-row"
             >
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               >
                 None
               </td>
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               />
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               />
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               />
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               />
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               />
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               />
             </tr>
           </tbody>
         </table>
         <table
-          class="sc-jcFjpl emSDdK"
+          class="sc-clIzBv cnmjir"
           data-testid="schemaFrameConstraintsTable"
         >
           <thead>
             <tr>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 Constraint Name
               </th>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 Type
               </th>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 EntityType
               </th>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 LabelsOrTypes
               </th>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 Properties
               </th>
@@ -231,24 +231,24 @@ exports[`SchemaFrame renders empty for Neo4j >= 4.0 1`] = `
           </thead>
           <tbody>
             <tr
-              class="sc-caiLqq icfFcF table-row"
+              class="sc-faUpoM eqdrKW table-row"
             >
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               >
                 None
               </td>
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               />
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               />
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               />
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               />
             </tr>
           </tbody>
@@ -283,16 +283,16 @@ exports[`SchemaFrame renders results for Neo4j < 4.0 1`] = `
   >
     <div>
       <div
-        class="sc-iwjdpV EPaYX"
+        class="sc-AjmGg bNpNxT"
       >
         <table
-          class="sc-jcFjpl emSDdK"
+          class="sc-clIzBv cnmjir"
           data-testid="schemaFrameIndexesTable"
         >
           <thead>
             <tr>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 Indexes
               </th>
@@ -300,10 +300,10 @@ exports[`SchemaFrame renders results for Neo4j < 4.0 1`] = `
           </thead>
           <tbody>
             <tr
-              class="sc-caiLqq icfFcF table-row"
+              class="sc-faUpoM eqdrKW table-row"
             >
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               >
                  ON :Movie(released) ONLINE 
               </td>
@@ -311,13 +311,13 @@ exports[`SchemaFrame renders results for Neo4j < 4.0 1`] = `
           </tbody>
         </table>
         <table
-          class="sc-jcFjpl emSDdK"
+          class="sc-clIzBv cnmjir"
           data-testid="schemaFrameConstraintsTable"
         >
           <thead>
             <tr>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 Constraints
               </th>
@@ -325,10 +325,10 @@ exports[`SchemaFrame renders results for Neo4j < 4.0 1`] = `
           </thead>
           <tbody>
             <tr
-              class="sc-caiLqq icfFcF table-row"
+              class="sc-faUpoM eqdrKW table-row"
             >
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               >
                  ON ( book:Book ) ASSERT book.isbn IS UNIQUE
               </td>
@@ -365,46 +365,46 @@ exports[`SchemaFrame renders results for Neo4j >= 4.2 1`] = `
   >
     <div>
       <div
-        class="sc-iwjdpV EPaYX"
+        class="sc-AjmGg bNpNxT"
       >
         <table
-          class="sc-jcFjpl emSDdK"
+          class="sc-clIzBv cnmjir"
           data-testid="schemaFrameIndexesTable"
         >
           <thead>
             <tr>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 Index Name
               </th>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 Type
               </th>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 Uniqueness
               </th>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 EntityType
               </th>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 LabelsOrTypes
               </th>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 Properties
               </th>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 State
               </th>
@@ -412,34 +412,34 @@ exports[`SchemaFrame renders results for Neo4j >= 4.2 1`] = `
           </thead>
           <tbody>
             <tr
-              class="sc-caiLqq icfFcF table-row"
+              class="sc-faUpoM eqdrKW table-row"
             >
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               />
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               >
                 node_label_property
               </td>
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               />
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               />
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               />
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               >
                 [
   "released"
 ]
               </td>
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               >
                 ONLINE
               </td>
@@ -447,33 +447,33 @@ exports[`SchemaFrame renders results for Neo4j >= 4.2 1`] = `
           </tbody>
         </table>
         <table
-          class="sc-jcFjpl emSDdK"
+          class="sc-clIzBv cnmjir"
           data-testid="schemaFrameConstraintsTable"
         >
           <thead>
             <tr>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 Constraint Name
               </th>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 Type
               </th>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 EntityType
               </th>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 LabelsOrTypes
               </th>
               <th
-                class="sc-iUKqMP heOYnT table-header"
+                class="sc-Galmp gvuvWT table-header"
               >
                 Properties
               </th>
@@ -481,32 +481,32 @@ exports[`SchemaFrame renders results for Neo4j >= 4.2 1`] = `
           </thead>
           <tbody>
             <tr
-              class="sc-caiLqq icfFcF table-row"
+              class="sc-faUpoM eqdrKW table-row"
             >
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               >
                 constraint_550b2518
               </td>
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               >
                 UNIQUE
               </td>
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               >
                 node
               </td>
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               >
                 [
   "Movie"
 ]
               </td>
               <td
-                class="sc-iAKWXU gkvwcC table-properties"
+                class="sc-fWCJzd khtPdV table-properties"
               >
                 [
   "released"

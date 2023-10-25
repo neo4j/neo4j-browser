@@ -26,17 +26,20 @@ import { PaneBody, PaneHeader, PaneTitle, PaneWrapper } from './styled'
 import { NodeLabel } from './NodeLabel'
 import { RelType } from './RelType'
 import { GraphStyleModel } from '../../models/GraphStyle'
+import { GraphInteractionCallBack } from '../Graph/GraphEventHandlerModel'
 
 export const DETAILS_PANE_STEP_SIZE = 1000
 export type DetailsPaneProps = {
   vizItem: NodeItem | RelationshipItem
   graphStyle: GraphStyleModel
   nodeInspectorWidth: number
+  onGraphInteraction?: GraphInteractionCallBack
 }
 export function DefaultDetailsPane({
   vizItem,
   graphStyle,
-  nodeInspectorWidth
+  nodeInspectorWidth,
+  onGraphInteraction
 }: DetailsPaneProps): JSX.Element {
   const [maxPropertiesCount, setMaxPropertiesCount] = useState(
     DETAILS_PANE_STEP_SIZE
@@ -106,6 +109,7 @@ export function DefaultDetailsPane({
           moreStep={DETAILS_PANE_STEP_SIZE}
           totalNumItems={allItemProperties.length}
           nodeInspectorWidth={nodeInspectorWidth}
+          onGraphInteraction={onGraphInteraction}
         />
       </PaneBody>
     </PaneWrapper>

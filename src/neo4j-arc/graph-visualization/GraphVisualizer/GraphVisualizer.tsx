@@ -297,6 +297,7 @@ export class GraphVisualizer extends Component<
           }}
           DetailsPaneOverride={this.props.DetailsPaneOverride}
           OverviewPaneOverride={this.props.OverviewPaneOverride}
+          onGraphInteraction={this.props.onGraphInteraction}
         />
       </StyledFullSizeContainer>
     )

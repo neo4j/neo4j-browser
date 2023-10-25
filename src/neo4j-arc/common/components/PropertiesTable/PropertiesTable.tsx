@@ -31,17 +31,31 @@ import {
 import { ClipboardCopier } from '../ClipboardCopier'
 import { ShowMoreOrAll } from '../ShowMoreOrAll/ShowMoreOrAll'
 import { VizItemProperty } from 'neo4j-arc/common'
+import {
+  GraphInteractionCallBack,
+  NODE_PROP_UPDATE
+} from '../../../graph-visualization'
 
 export const ELLIPSIS = '\u2026'
 export const WIDE_VIEW_THRESHOLD = 900
 export const MAX_LENGTH_NARROW = 150
 export const MAX_LENGTH_WIDE = 300
 type ExpandableValueProps = {
+  nodeId: string
+  propKey: string
   value: string
   width: number
   type: string
+  onGraphInteraction: GraphInteractionCallBack
 }
-function ExpandableValue({ value, width, type }: ExpandableValueProps) {
+function ExpandableValue({
+  nodeId,
+  propKey,
+  value,
+  width,
+  type,
+  onGraphInteraction
+}: ExpandableValueProps) {
   const [expanded, setExpanded] = useState(false)
 
   const maxLength =
@@ -56,7 +70,17 @@ function ExpandableValue({ value, width, type }: ExpandableValueProps) {
   valueShown += valueIsTrimmed ? ELLIPSIS : ''
 
   return (
-    <>
+    <div
+      suppressContentEditableWarning={true}
+      contentEditable="true"
+      onInput={e =>
+        onGraphInteraction(NODE_PROP_UPDATE, {
+          nodeId: nodeId,
+          propKey: propKey,
+          propVal: e.currentTarget.textContent
+        })
+      }
+    >
       {type.startsWith('Array') && '['}
       <ClickableUrls text={valueShown} />
       {valueIsTrimmed && (
@@ -65,7 +89,7 @@ function ExpandableValue({ value, width, type }: ExpandableValueProps) {
         </StyledExpandValueButton>
       )}
       {type.startsWith('Array') && ']'}
-    </>
+    </div>
   )
 }
 
@@ -75,14 +99,23 @@ type PropertiesViewProps = {
   totalNumItems: number
   moreStep: number
   nodeInspectorWidth: number
+  onGraphInteraction?: GraphInteractionCallBack
 }
 export const PropertiesTable = ({
   visibleProperties,
   totalNumItems,
   onMoreClick,
   moreStep,
-  nodeInspectorWidth
+  nodeInspectorWidth,
+  onGraphInteraction
 }: PropertiesViewProps): JSX.Element => {
+  let id = ''
+  for (let i = 0; i < visibleProperties.length; i++) {
+    if (visibleProperties[i].key == '<id>') {
+      id = visibleProperties[i].value
+    }
+  }
+
   return (
     <>
       <StyledInlineList>
@@ -95,9 +128,12 @@ export const PropertiesTable = ({
                 </KeyCell>
                 <ValueCell>
                   <ExpandableValue
+                    nodeId={id}
+                    propKey={key}
                     value={value}
                     width={nodeInspectorWidth}
                     type={type}
+                    onGraphInteraction={onGraphInteraction ?? (() => undefined)}
                   />
                 </ValueCell>
                 <CopyCell>

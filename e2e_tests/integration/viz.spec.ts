@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { should } from 'chai'
+
 /* global Cypress, cy, before */
 
 const GREY = 'rgb(165, 171, 182)' // Default color for nodes and relationships
@@ -256,6 +258,27 @@ describe('Viz rendering', () => {
     cy.get('[data-testid="vizInspector"]', { timeout: 5000 }).contains(
       'Undefined'
     )
+
+    cy.executeCommand('MATCH (n) DETACH DELETE n')
+  })
+
+  it('new node by double-clicking the canvas has "description" and "name" property fields', () => {
+    cy.executeCommand(':clear')
+    cy.executeCommand(`CREATE (a:TestLabel {name: 'testNode'}) RETURN a`, {
+      parseSpecialCharSequences: false
+    })
+
+    cy.get('[data-testid="graphCanvas"]')
+      .trigger('click', 200, 200, { force: true })
+      .trigger('dblclick', 200, 200, { force: true })
+
+    cy.get('[data-testid="nodeGroups"]', { timeout: 5000 })
+      .contains('New Node')
+      .trigger('mouseover', { force: true })
+      .trigger('mouseenter', { force: true })
+      .get('[data-testid="viz-details-pane-properties-table"]')
+      .find('td:nth-child(1)')
+      .should('have.text', '<id>descriptionname')
 
     cy.executeCommand('MATCH (n) DETACH DELETE n')
   })

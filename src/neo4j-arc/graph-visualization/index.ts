@@ -34,5 +34,9 @@ export { GraphVisualizer } from './GraphVisualizer/GraphVisualizer'
 export type { DetailsPaneProps } from './GraphVisualizer/DefaultPanelContent/DefaultDetailsPane'
 export type { OverviewPaneProps } from './GraphVisualizer/DefaultPanelContent/DefaultOverviewPane'
 
-export { NODE_ON_CANVAS_CREATE } from './GraphVisualizer/Graph/GraphEventHandlerModel'
+export {
+  NODE_ON_CANVAS_CREATE,
+  NODE_PROP_UPDATE,
+  NODE_LABEL_UPDATE
+} from './GraphVisualizer/Graph/GraphEventHandlerModel'
 export type { GraphInteractionCallBack } from './GraphVisualizer/Graph/GraphEventHandlerModel'

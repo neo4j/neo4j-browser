@@ -25,6 +25,7 @@
 ** xref:operations/rest-requests.adoc[]
 ** xref:operations/browser-rbac-count.adoc[]
 ** xref:operations/product-analytics.adoc[]
+** xref:operations/on-canvas-operations.adoc[]
 
 * xref:reference-commands.adoc[Command reference]
 

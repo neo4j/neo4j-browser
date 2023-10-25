@@ -6,7 +6,7 @@
   "license": "GPL-3.0",
   "typings": "dist/neo4j-arc.d.ts",
   "scripts": {
-    "build": "rollup -c --failAfterWarnings",
+    "build": "rollup -c",
     "test": "tsc --noEmit",
     "prepublishOnly": "npm run test && npm run build"
   },

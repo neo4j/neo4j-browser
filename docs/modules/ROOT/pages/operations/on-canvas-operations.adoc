@@ -1,0 +1,31 @@
+:description: On-Canvas Operations
+
+
+[[on-canvas-operations]]
+= On-Canvas Operations
+
+== Double-Clicking the Canvas
+
+*Double clicking the white area* on canvas will automatically generate a new node with
+
+1. an auto-incremented ID, i.e. (the max ID of nodes on canvas) + 1
+2. a label of "Undefined"
+3. the node caption of "New Node"
+
+== Editing the Node Label and Properties in Inspector Panel
+
+[NOTE]
+====
+Make sure APOC plugin is enabled in Neo4J database:
+
+image:enable-apoc.png[width=600]
+====
+
+*Clicking the property value* in node inspector panel will make that property editable and un-clicking the text box
+(by for example clicking somewhere else) will persist the new value into Neo4J database:
+
+image:modifying-node-properties-example.png[width=600]
+
+Similary, we can modify node label:
+
+image:modifying-node-label-example.png[width=600]
