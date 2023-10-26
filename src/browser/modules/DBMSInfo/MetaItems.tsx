@@ -139,7 +139,7 @@ const LabelItems = ({
   if (labels.length) {
     const editorCommandTemplate = (text: any, i: any) => {
       if (i === 0) {
-        return 'MATCH (n)-[r]->(m) RETURN r, m, n'
+        return 'MATCH (n)-[r]->(m) MATCH (isolatedNode) RETURN r, m, n, isolatedNode'
       }
       return `MATCH (n:${escapeCypherIdentifier(text)}) RETURN n LIMIT 25`
     }
