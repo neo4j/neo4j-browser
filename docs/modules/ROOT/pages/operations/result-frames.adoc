@@ -30,6 +30,11 @@ Nodes are represented as circles and relationships as lines and is especially us
 
 image:graph-result-frame.png[]
 
+[NOTE]
+====
+If you see a yellow squiggly line anywhere in your query, there is an error.
+Hover over the underlined segment to see an explanation of the error.
+====
 
 .Handy tips
 [TIP]
