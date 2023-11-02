@@ -26,7 +26,7 @@ import {
   DrawerSubHeader
 } from 'browser-components/drawer/drawer-styled'
 import { escapeCypherIdentifier } from 'services/utils'
-import { Database } from 'shared/modules/dbMeta/dbMetaDuck'
+import { Alias, Database } from 'shared/modules/dbMeta/dbMetaDuck'
 
 const Select = styled.select`
   width: 100%;
@@ -43,10 +43,12 @@ type DatabaseSelectorProps = {
   uniqueDatabases?: Database[]
   selectedDb: string
   onChange?: (dbName: string) => void
+  aliases: Alias[]
 }
 export const DatabaseSelector = ({
   uniqueDatabases = [],
   selectedDb,
+  aliases,
   onChange = () => undefined
 }: DatabaseSelectorProps): JSX.Element | null => {
   if (uniqueDatabases.length === 0) {
@@ -64,15 +66,23 @@ export const DatabaseSelector = ({
     uniqueDatabases.find(db => db.home) ||
     uniqueDatabases.find(db => db.default)
 
-  const aliasList = uniqueDatabases.flatMap(db =>
-    db.aliases
-      ? db.aliases.map(alias => ({
-          databaseName: db.name,
-          name: alias,
-          status: db.status
-        }))
-      : []
-  )
+  const aliasList = aliases.flatMap(alias => {
+    const aliasedDb = uniqueDatabases.find(db => db.name === alias.database)
+
+    // Don't show composite aliases since they can't be queried directly
+    if (alias.composite) {
+      return []
+    }
+
+    if (aliasedDb === undefined) {
+      return []
+    }
+
+    return {
+      name: alias.name,
+      status: aliasedDb.status
+    }
+  })
 
   const databasesAndAliases = [...aliasList, ...uniqueDatabases].sort((a, b) =>
     a.name.localeCompare(b.name)
