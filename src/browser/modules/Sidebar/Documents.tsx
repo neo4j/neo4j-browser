@@ -72,7 +72,7 @@ const getReferences = (version: string, v: string) => {
 
   const docs = [
     {
-      name: 'Getting Started',
+      name: 'Getting Started with Neo4j',
       url: 'https://neo4j.com/docs/getting-started/'
     },
     ...(shouldLinkToNewRefs(version) ? newRefs : oldRefs),
