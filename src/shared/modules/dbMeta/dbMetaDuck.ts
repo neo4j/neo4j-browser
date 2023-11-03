@@ -235,7 +235,7 @@ export type Alias = {
   name: string
   database: string
   location: string
-  composite?: boolean // introduced in neo4j 5.11
+  composite?: string | null // introduced in neo4j 5.11
 }
 
 // Selectors
