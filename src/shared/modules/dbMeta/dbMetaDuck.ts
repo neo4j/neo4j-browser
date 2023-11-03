@@ -206,7 +206,7 @@ export const initialState = {
     storeSize: null
   },
   databases: [],
-  aliases: null,
+  aliases: [],
   serverConfigDone: false,
   settings: initialClientSettings,
   countAutomaticRefresh: {
