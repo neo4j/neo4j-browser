@@ -51,10 +51,6 @@ export const shouldLinkToNewRefs = (v: string): boolean => {
 const getReferences = (version: string, v: string) => {
   const newRefs = [
     {
-      name: 'Getting Started with Neo4j',
-      url: `https://neo4j.com/docs/getting-started/${v}`
-    },
-    {
       name: 'Neo4j Browser Manual',
       url: 'https://neo4j.com/docs/browser-manual/current/'
     },
@@ -65,10 +61,6 @@ const getReferences = (version: string, v: string) => {
   ]
   const oldRefs = [
     {
-      name: 'Getting Started',
-      url: `https://neo4j.com/docs/developer-manual/${v}/get-started/`
-    },
-    {
       name: 'Developer Manual',
       url: `https://neo4j.com/docs/developer-manual/${v}/`
     },
@@ -77,42 +69,39 @@ const getReferences = (version: string, v: string) => {
       url: `https://neo4j.com/docs/developer-manual/${v}/cypher/`
     }
   ]
-  const common = [
+
+  const docs = [
+    {
+      name: 'Getting Started with Neo4j',
+      url: 'https://neo4j.com/docs/getting-started/'
+    },
+    ...(shouldLinkToNewRefs(version) ? newRefs : oldRefs),
     {
       name: 'Cypher Refcard',
       url: `https://neo4j.com/docs/cypher-refcard/${v}/`
     }
   ]
 
-  const docs = [
-    ...(shouldLinkToNewRefs(version) ? newRefs : oldRefs),
-    ...common
-  ]
-
   const graphAcademy = [
     {
       name: 'Neo4j Fundamentals',
-      url: `https://graphacademy.neo4j.com/courses/neo4j-fundamentals/`
+      url: 'https://graphacademy.neo4j.com/courses/neo4j-fundamentals/'
     },
     {
       name: 'Cypher Fundamentals',
-      url: `https://graphacademy.neo4j.com/courses/cypher-fundamentals/`
+      url: 'https://graphacademy.neo4j.com/courses/cypher-fundamentals/'
     },
     {
       name: 'Graph Data Modeling Fundamentals',
-      url: `https://graphacademy.neo4j.com/courses/modeling-fundamentals/`
+      url: 'https://graphacademy.neo4j.com/courses/modeling-fundamentals/'
     },
     {
       name: 'Importing CSV Data',
-      url: `https://graphacademy.neo4j.com/courses/importing-data/`
+      url: 'https://graphacademy.neo4j.com/courses/importing-cypher/'
     },
     {
-      name: 'Courses for Developers',
-      url: `https://graphacademy.neo4j.com/category/developer/`
-    },
-    {
-      name: 'Courses for Data Scientists',
-      url: `https://graphacademy.neo4j.com/category/data-scientist/`
+      name: 'Full Course Catalog',
+      url: 'https://graphacademy.neo4j.com/categories/'
     }
   ]
 
@@ -128,10 +117,6 @@ const getReferences = (version: string, v: string) => {
     {
       name: 'Knowledge Base',
       url: 'https://neo4j.com/developer/kb/'
-    },
-    {
-      name: 'Neo4j Browser Developer Pages',
-      url: 'https://neo4j.com/developer/neo4j-browser/'
     }
   ]
   return { docs, other, graphAcademy }

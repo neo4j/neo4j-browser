@@ -94,7 +94,7 @@ const About = ({ serverVersion, serverEdition }: AboutProps) => (
             </p>
           )}
           <p>
-            <DrawerExternalLink href="https://github.com/neo4j/neo4j-browser/wiki/changelog">
+            <DrawerExternalLink href="https://github.com/neo4j/neo4j-browser/releases">
               Neo4j Browser Changelog
             </DrawerExternalLink>
           </p>
