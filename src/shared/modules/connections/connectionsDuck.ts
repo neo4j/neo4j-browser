@@ -477,6 +477,7 @@ export type SSOProvider = {
   }
   auth_endpoint: string
   well_known_discovery_uri: string
+  visible: boolean
 }
 
 export type DiscoverDataAction = {

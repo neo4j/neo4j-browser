@@ -21,7 +21,6 @@ import { pick } from 'lodash'
 import {
   DiscoveryResult,
   FetchError,
-  NoProviderError,
   authLog,
   fetchDiscoveryDataFromUrl
 } from 'neo4j-client-sso'
@@ -93,7 +92,7 @@ type TaggedDiscoveryData = DiscoverableData & {
   source: DiscoveryDataSource
   urlMissing: boolean
   host: string
-  onlyCheckForHost?: boolean
+  onlyCheckForHost: boolean
 }
 
 type DiscoveryDataSource =

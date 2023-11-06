@@ -373,7 +373,6 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
         {props.authenticationMethod === SSO &&
           !SSOLoading &&
           SSOProviders.filter(provider => {
-            // @ts-ignore types outdated
             return 'visible' in provider ? provider.visible : true
           }).map((provider: SSOProvider) => (
             <StyledSSOButtonContainer key={provider.id}>

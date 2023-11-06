@@ -10500,10 +10500,10 @@ neo-async@^2.5.0, neo-async@^2.6.1:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha1-tKr7k+OustgXTKU88WOrfXMIMF8=
 
-neo4j-client-sso@1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/neo4j-client-sso/-/neo4j-client-sso-1.2.2.tgz#146f96ca8e23654c70e5bd5a7f98a3acb286ce2c"
-  integrity sha1-FG+Wyo4jZUxw5b1af5ijrLKGziw=
+neo4j-client-sso@1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/neo4j-client-sso/-/neo4j-client-sso-1.2.3.tgz#e53da35442c57b76fa1d7a53bbbc9501f7b4de17"
+  integrity sha512-F/bZ8VfuNPNL68M6DiD3V4S6/ihdnAD8iEeR2rxqaZPPbch7KRO0PPGQqgkO7H+SaO1ayz9Q9ZYLifzxohossg==
   dependencies:
     file-saver "^2.0.5"
     jwt-decode "^3.1.2"
