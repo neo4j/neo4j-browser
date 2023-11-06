@@ -206,6 +206,7 @@ export const initialState = {
     storeSize: null
   },
   databases: [],
+  aliases: [],
   serverConfigDone: false,
   settings: initialClientSettings,
   countAutomaticRefresh: {
@@ -229,6 +230,14 @@ export type Database = {
   status: string
 }
 
+export const ALIAS_COMPOSITE_FIELD_FIRST_VERSION = '5.11.0'
+export type Alias = {
+  name: string
+  database: string
+  location: string
+  composite?: string | null // introduced in neo4j 5.11
+}
+
 // Selectors
 export function findDatabaseByNameOrAlias(
   state: GlobalState,
@@ -249,7 +258,7 @@ export function findDatabaseByNameOrAlias(
   )
 }
 
-export function getUniqueDatbases(state: GlobalState): Database[] {
+export function getUniqueDatabases(state: GlobalState): Database[] {
   const uniqueDatabaseNames = uniq(
     state[NAME].databases.map((db: Database) => db.name)
   )
@@ -335,6 +344,10 @@ export const getMetricsPrefix = (state: GlobalState): string =>
 
 export const getDatabases = (state: any): Database[] =>
   (state[NAME] || initialState).databases
+
+export const getAliases = (state: any): null | Alias[] =>
+  (state[NAME] || initialState).aliases
+
 export const getActiveDbName = (state: any) =>
   ((state[NAME] || {}).settings || {})['dbms.active_database']
 
