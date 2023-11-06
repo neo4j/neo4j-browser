@@ -145,6 +145,7 @@ describe('Types in Browser', () => {
       cy.get('[data-testid="vizInspector"]')
         .should('contain', 'P11M2DT2H19')
         .and('contain', 'srid:4326')
+        .and('contain', 'elementId')
     })
     it('renders types in paths in viz correctly', () => {
       cy.executeCommand(':clear')

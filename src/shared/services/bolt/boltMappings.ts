@@ -276,7 +276,6 @@ export function extractNodesAndRelationshipsFromRecordsForOldVis(
     return {
       id: item.identity.toString(),
       elementId: item.elementId,
-      // end node element ID?
       startNodeId: item.start.toString(),
       endNodeId: item.end.toString(),
       type: item.type,
