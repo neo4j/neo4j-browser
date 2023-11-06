@@ -43,7 +43,6 @@ import { shallowEquals } from 'services/utils'
 import { GlobalState } from 'shared/globalState'
 import { BrowserRequestResult } from 'shared/modules/requests/requestsDuck'
 import { getMaxFieldItems } from 'shared/modules/settings/settingsDuck'
-import { Record } from 'neo4j-driver'
 
 interface BaseAsciiViewComponentProps {
   result: BrowserRequestResult
