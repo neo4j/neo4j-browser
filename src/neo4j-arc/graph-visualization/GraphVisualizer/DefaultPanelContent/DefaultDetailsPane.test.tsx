@@ -59,7 +59,7 @@ describe('<DetailsPane />', () => {
           type: type,
           item: {
             id: 'abc',
-            elementId: 'abc',
+            elementId: 'elementId',
             labels,
             propertyList
           }
@@ -70,7 +70,7 @@ describe('<DetailsPane />', () => {
           type: type,
           item: {
             id: 'abc',
-            elementId: 'abc',
+            elementId: 'elementId',
             type: 'abc2',
             propertyList
           }
@@ -90,8 +90,8 @@ describe('<DetailsPane />', () => {
 
     expect(screen.getByRole('button', { name: 'Show all' })).toBeInTheDocument()
     expect(
-      screen.getByRole('button', { name: 'Show 2 more' })
-    ).toBeInTheDocument() // id is added to list of properties so only showing 999
+      screen.getByRole('button', { name: 'Show 3 more' })
+    ).toBeInTheDocument() // id & elementId is added to list of properties so only showing 998
     expect(screen.queryByText('prop1000')).not.toBeInTheDocument()
 
     const showAllButton = screen.getByText('Show all')
@@ -123,7 +123,7 @@ describe('<DetailsPane />', () => {
       screen.queryByRole('button', { name: 'Show all' })
     ).toBeInTheDocument()
     expect(
-      screen.getByRole('button', { name: 'Show 2 more' })
+      screen.getByRole('button', { name: 'Show 3 more' })
     ).toBeInTheDocument()
   })
 })
