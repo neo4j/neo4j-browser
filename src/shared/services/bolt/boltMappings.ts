@@ -252,6 +252,7 @@ export function extractNodesAndRelationshipsFromRecordsForOldVis(
   const nodes = rawNodes.map(item => {
     return {
       id: item.identity.toString(),
+      elementId: item.elementId,
       labels: item.labels,
       properties: itemIntToString(item.properties, converters),
       propertyTypes: Object.entries(item.properties).reduce(
@@ -274,6 +275,8 @@ export function extractNodesAndRelationshipsFromRecordsForOldVis(
   relationships = relationships.map(item => {
     return {
       id: item.identity.toString(),
+      elementId: item.elementId,
+      // end node element ID?
       startNodeId: item.start.toString(),
       endNodeId: item.end.toString(),
       type: item.type,
@@ -427,7 +430,8 @@ export const applyGraphTypes = (
         return new types[className](
           applyGraphTypes(tmpItem.identity, types),
           tmpItem.labels,
-          applyGraphTypes(tmpItem.properties, types)
+          applyGraphTypes(tmpItem.properties, types),
+          tmpItem.elementId
         )
       case 'Relationship':
         return new types[className](
@@ -435,7 +439,10 @@ export const applyGraphTypes = (
           applyGraphTypes(item.start, types),
           applyGraphTypes(item.end, types),
           item.type,
-          applyGraphTypes(item.properties, types)
+          applyGraphTypes(item.properties, types),
+          tmpItem.elementId,
+          tmpItem.startNodeElementId,
+          tmpItem.endNodeElementId
         )
       case 'PathSegment':
         return new types[className](

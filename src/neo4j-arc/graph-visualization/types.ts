@@ -30,7 +30,7 @@ export type VizItem =
 
 export type NodeItem = {
   type: 'node'
-  item: Pick<NodeModel, 'id' | 'labels' | 'propertyList'>
+  item: Pick<NodeModel, 'id' | 'elementId' | 'labels' | 'propertyList'>
 }
 
 type ContextMenuItem = {
@@ -49,7 +49,7 @@ type StatusItem = {
 
 export type RelationshipItem = {
   type: 'relationship'
-  item: Pick<RelationshipModel, 'id' | 'type' | 'propertyList'>
+  item: Pick<RelationshipModel, 'id' | 'elementId' | 'type' | 'propertyList'>
 }
 
 type CanvasItem = {

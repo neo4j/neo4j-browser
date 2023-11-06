@@ -30,6 +30,7 @@ export type NodeCaptionLine = {
 
 export class NodeModel {
   id: string
+  elementId: string
   labels: string[]
   propertyList: VizItemProperty[]
   propertyMap: NodeProperties
@@ -55,7 +56,8 @@ export class NodeModel {
     id: string,
     labels: string[],
     properties: NodeProperties,
-    propertyTypes: Record<string, string>
+    propertyTypes: Record<string, string>,
+    elementId: string
   ) {
     this.id = id
     this.labels = labels
@@ -76,6 +78,7 @@ export class NodeModel {
     this.y = 0
     this.hoverFixed = false
     this.initialPositionCalculated = false
+    this.elementId = elementId
   }
 
   toJSON(): NodeProperties {

@@ -41,9 +41,16 @@ export function DetailsPane({
     value: `${vizItem.item.id}`,
     type: 'String'
   }
-  const allItemProperties = [idProperty, ...vizItem.item.propertyList].sort(
-    (a, b) => (a.key < b.key ? -1 : 1)
-  )
+  const elementIdProperty = {
+    key: '<elementId>',
+    value: `${vizItem.item.elementId}`,
+    type: 'String'
+  }
+  const allItemProperties = [
+    idProperty,
+    elementIdProperty,
+    ...vizItem.item.propertyList
+  ].sort((a, b) => (a.key < b.key ? -1 : 1))
   const visibleItemProperties = allItemProperties.slice(0, maxPropertiesCount)
 
   const handleMorePropertiesClick = (numMore: number) => {
