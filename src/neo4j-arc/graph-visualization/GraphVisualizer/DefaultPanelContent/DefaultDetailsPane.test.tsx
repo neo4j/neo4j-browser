@@ -59,6 +59,7 @@ describe('<DetailsPane />', () => {
           type: type,
           item: {
             id: 'abc',
+            elementId: 'abc',
             labels,
             propertyList
           }
@@ -69,6 +70,7 @@ describe('<DetailsPane />', () => {
           type: type,
           item: {
             id: 'abc',
+            elementId: 'abc',
             type: 'abc2',
             propertyList
           }
