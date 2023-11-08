@@ -134,8 +134,8 @@ If a node does not have a label that is in the GraSS, `node` is used as the defa
 Same applies to relationships.
 ====
 +
-. Edit the downloaded file locally using your favourite editor and use drag & drop it to the designated drop area.
-
+. Edit the downloaded file locally using your favourite editor.
+. Drag and drop the file to Neo4j Browser's window.
 
 [TIP]
 ====
