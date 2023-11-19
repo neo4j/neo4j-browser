@@ -10,21 +10,15 @@ on:
       - master
 jobs:
   build:
-    if: github.repository != 'QubitPi/neo4j-browser'
     runs-on: ubuntu-latest
-    environment: Publish
     steps:
       - uses: actions/checkout@v2
         with:
-          repository: neo4j/neo4j-browser
-      # Setup .npmrc file to publish to npm
+          repository: QubitPi/neo4j-browser
       - uses: actions/setup-node@v2
         with:
           registry-url: 'https://registry.npmjs.org'
-          # Defaults to the user or organization that owns the workflow file
-          scope: '@neo4j-devtools'
       - run: npm -g install yarn
-      # - run: yarn test
       - run: yarn install --frozen-lockfile
       - run: yarn build
       - uses: JS-DevTools/npm-publish@v1
