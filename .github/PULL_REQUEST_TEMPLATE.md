@@ -31,3 +31,4 @@ Checklist
 * [ ] Test
 * [ ] Self-review
 * [ ] Documentation
+* [ ] (neo4j-arc) Manually bump version
