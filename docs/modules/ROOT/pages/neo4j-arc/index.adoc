@@ -1,0 +1,146 @@
+:description: This section describes the neo4j-arc, including its architecture and components
+
+[[neo4j-arc]]
+= Neo4J Arc
+
+== Installing Library
+
+Neo4j Arc has a https://blog.bitsrc.io/understanding-peer-dependencies-in-javascript-dbdb4ab5a7be[peer dependency] of
+neo4j-driver-core 5.9.2, so we will also install it along the way:
+
+[source,bash]
+----
+yarn add neo4j-devtools-arc neo4j-driver-core@5.9.2
+----
+
+== Basic Usage
+
+[source,typescript]
+----
+import { BasicNode, BasicRelationship, GraphVisualizer } from "neo4j-devtools-arc";
+
+export default function MyGraphComponent(): JSX.Element {
+
+  const isFullscreen = true;
+  const graphData = selectGraphData();
+
+  const [hasVis, setHasVis] = useState<boolean>(true);
+  const [visElement, setVisElement] = useState<null | {
+    svgElement: unknown;
+    graphElement: unknown;
+    type: "plan" | "graph";
+  }>(null); 
+
+  const nodes: BasicNode[] = [
+    {
+      id: "1",
+      labels: ["Person"],
+      properties: {
+        name: "Jack",
+        age: "20"
+      },
+      propertyTypes: {
+        name: "string",
+        age: "number"
+      }
+    },
+    {
+      id: "2",
+      labels: ["React"],
+      properties: {
+        name: "ReactJS"
+      },
+      propertyTypes: {
+        name: "string",
+      }
+    }
+  ]
+
+  const links: BasicRelationship[] = [
+    {
+      id: "3",
+      startNodeId: "1",
+      endNodeId: "2",
+      type: "likes",
+      properties: {},
+      propertyTypes: {}
+    }
+  ]
+
+  return (
+    <GraphVisualizer
+      maxNeighbours={100}
+      hasTruncatedFields={false}
+      nodes={nodes}
+      autocompleteRelationships={false}
+      relationships={links}
+      isFullscreen={isFullscreen}
+      assignVisElement={(svgElement: any, graphElement: any) => {
+        setVisElement({ svgElement, graphElement, type: "graph" });
+        setHasVis(true);
+      }}
+      nodeLimitHit={false}
+      getAutoCompleteCallback={undefined}
+      wheelZoomRequiresModKey={!isFullscreen}
+      wheelZoomInfoMessageEnabled={false}
+      useGeneratedDefaultColors={false}
+      initialZoomToFit={true}
+    />
+  );
+}
+----
+
+image:basic-example.png[width=900]
+
+= Neo4J Browser Internals
+
+The Neo4J Browser is logically composed of 2 parts:
+
+1. A slightly coupled graphing module
+2. A user-interface that combines the graph rendering (supported by the graphing module), database, and user
+   interaction together
+
+The graphing is based on D3 and implements its own layout, coloring, and link drawing. For example, the calculation of
+arrow, i.e. links, between nodes uses some
+https://github.com/QubitPi/neo4j-browser/blob/master/src/neo4j-arc/graph-visualization/utils/ArcArrow.ts[very complicated math]
+along with very prelimiary MDN standard basic shap specification.
+
+[WARNING]
+====
+We will not have any TypeDoc documentation, because the TypeScript version used in Neo4J Browser is not supprted by the
+TypeDoc
+====
+
+== Component Diagram (WIP)
+
+image:neo4j-browser.png[width=900]
+
+* The orange triangle labled with "On Canvas Interaction" is discussed in detail in
+  link:neo4j-arc/graph-interactions[graph interactions] section
+* Sentry.io is initialized in the top index.tsx
+* AppInit.tsx is responsible for several initializations:
++
+--
+** Redux
+** Suber: The reason suber is used is sharing states between Neo4J database data and React components is not supported
+   by Redux. As its doc (https://github.com/oskarhane/suber#in-combination-with-redux) points out, Redux is for two-way
+   communications between components. Suber is for one-way comm. between component and DB.
+** Apollo GraphQL Client
+** Drag & Drop Plugin
+--
++
+The initialization assumes provider pattern around regular App component:
+[source,typescript]
+----
+<Provider store={store as any}>
+  <BusProvider bus={bus}>
+    <ApolloProvider client={client}>
+      <DndProvider backend={HTML5Backend}>
+        <App />
+      </DndProvider>
+    </ApolloProvider>
+  </BusProvider>
+</Provider>
+----
+
+* Neo4J Browser styling is implemented via https://styled-components.com/[styled-components] and is initialized in App.tsx

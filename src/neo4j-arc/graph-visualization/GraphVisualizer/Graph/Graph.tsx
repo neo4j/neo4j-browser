@@ -24,7 +24,8 @@ import {
   BasicRelationship,
   ZoomInIcon,
   ZoomOutIcon,
-  ZoomToFitIcon
+  ZoomToFitIcon,
+  deepEquals
 } from '../../../common'
 
 import { GraphModel } from '../../models/Graph'
@@ -217,6 +218,18 @@ export class Graph extends React.Component<GraphProps, GraphState> {
         updateRelationships: true,
         restartSimulation: false
       })
+    }
+
+    if (
+      !deepEquals(this.props.nodes, prevProps.nodes) ||
+      !deepEquals(this.props.relationships, prevProps.relationships)
+    ) {
+      this.visualization?.update({
+        updateNodes: true,
+        updateRelationships: true,
+        restartSimulation: false
+      })
+      this.componentDidMount()
     }
   }
 

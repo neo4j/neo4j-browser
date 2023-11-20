@@ -242,6 +242,14 @@ export class GraphVisualizer extends Component<
         )
       }
     }
+
+    if (!deepEquals(prevProps.nodes, this.props.nodes)) {
+      this.setState({ nodes: this.props.nodes })
+    }
+
+    if (!deepEquals(prevProps.relationships, this.props.relationships)) {
+      this.setState({ relationships: this.props.relationships })
+    }
   }
 
   render(): JSX.Element {

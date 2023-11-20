@@ -29,6 +29,6 @@
 
 * xref:reference-commands.adoc[Command reference]
 
-* xref:internals/index.adoc[Internals]
-** xref:internals/graph-modelling.adoc[]
-** xref:internals/graph-interactions.adoc[]
+* xref:neo4j-arc/index.adoc[Neo4J Arc]
+** xref:neo4j-arc/graph-modelling.adoc[]
+** xref:neo4j-arc/graph-interactions.adoc[]
