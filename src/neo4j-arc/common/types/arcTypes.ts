@@ -19,12 +19,14 @@
  */
 export type BasicNode = {
   id: string
+  elementId: string
   labels: string[]
   properties: Record<string, string>
   propertyTypes: Record<string, string>
 }
 export type BasicRelationship = {
   id: string
+  elementId: string
   startNodeId: string
   endNodeId: string
   type: string

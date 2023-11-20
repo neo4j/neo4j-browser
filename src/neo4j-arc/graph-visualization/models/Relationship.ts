@@ -26,6 +26,7 @@ import { NodeModel } from './Node'
 export type RelationshipCaptionLayout = 'internal' | 'external'
 export class RelationshipModel {
   id: string
+  elementId: string
   propertyList: VizItemProperty[]
   propertyMap: Record<string, string>
   source: NodeModel
@@ -52,7 +53,8 @@ export class RelationshipModel {
     target: NodeModel,
     type: string,
     properties: Record<string, string>,
-    propertyTypes: Record<string, string>
+    propertyTypes: Record<string, string>,
+    elementId: string
   ) {
     this.id = id
     this.source = source
@@ -73,6 +75,8 @@ export class RelationshipModel {
     this.captionHeight = 0
     this.captionLayout = 'internal'
     this.centreDistance = 0
+
+    this.elementId = elementId
   }
 
   toJSON(): Record<string, string> {
