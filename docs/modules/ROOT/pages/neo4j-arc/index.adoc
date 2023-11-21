@@ -21,16 +21,6 @@ import { BasicNode, BasicRelationship, GraphVisualizer } from "neo4j-devtools-ar
 
 export default function MyGraphComponent(): JSX.Element {
 
-  const isFullscreen = true;
-  const graphData = selectGraphData();
-
-  const [hasVis, setHasVis] = useState<boolean>(true);
-  const [visElement, setVisElement] = useState<null | {
-    svgElement: unknown;
-    graphElement: unknown;
-    type: "plan" | "graph";
-  }>(null); 
-
   const nodes: BasicNode[] = [
     {
       id: "1",
@@ -67,6 +57,8 @@ export default function MyGraphComponent(): JSX.Element {
     }
   ]
 
+  const isFullscreen = true;
+
   return (
     <GraphVisualizer
       maxNeighbours={100}
@@ -75,10 +67,6 @@ export default function MyGraphComponent(): JSX.Element {
       autocompleteRelationships={false}
       relationships={links}
       isFullscreen={isFullscreen}
-      assignVisElement={(svgElement: any, graphElement: any) => {
-        setVisElement({ svgElement, graphElement, type: "graph" });
-        setHasVis(true);
-      }}
       nodeLimitHit={false}
       getAutoCompleteCallback={undefined}
       wheelZoomRequiresModKey={!isFullscreen}
@@ -91,6 +79,23 @@ export default function MyGraphComponent(): JSX.Element {
 ----
 
 image:basic-example.png[width=900]
+
+=== Options
+
+==== Turnning Off Inspection Panel
+
+[source,typescript]
+----
+export default function MyGraphComponent(): JSX.Element {
+
+  return (
+    <GraphVisualizer
+      ...
+      showNodeInspectorPanel={false}
+    />
+  );
+}
+----
 
 = Neo4J Browser Internals
 

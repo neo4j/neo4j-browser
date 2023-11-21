@@ -56,6 +56,7 @@ type GraphVisualizerDefaultProps = {
   initialZoomToFit?: boolean
   disableWheelZoomInfoMessage: () => void
   useGeneratedDefaultColors: boolean
+  showNodeInspectorPanel: boolean
 }
 type GraphVisualizerProps = GraphVisualizerDefaultProps & {
   relationships: BasicRelationship[]
@@ -118,7 +119,8 @@ export class GraphVisualizer extends Component<
     setNodePropertiesExpandedByDefault: () => undefined,
     wheelZoomInfoMessageEnabled: false,
     disableWheelZoomInfoMessage: () => undefined,
-    useGeneratedDefaultColors: true
+    useGeneratedDefaultColors: true,
+    showNodeInspectorPanel: true
   }
 
   constructor(props: GraphVisualizerProps) {
@@ -285,28 +287,30 @@ export class GraphVisualizer extends Component<
           initialZoomToFit={this.props.initialZoomToFit}
           onGraphInteraction={this.props.onGraphInteraction}
         />
-        <NodeInspectorPanel
-          graphStyle={graphStyle}
-          hasTruncatedFields={this.props.hasTruncatedFields}
-          hoveredItem={this.state.hoveredItem}
-          selectedItem={this.state.selectedItem}
-          stats={this.state.stats}
-          width={this.state.width}
-          setWidth={(width: number) =>
-            this.setState({ width: Math.max(panelMinWidth, width) })
-          }
-          expanded={this.state.nodePropertiesExpanded}
-          toggleExpanded={() => {
-            const { nodePropertiesExpanded } = this.state
-            this.props.setNodePropertiesExpandedByDefault(
-              !nodePropertiesExpanded
-            )
-            this.setState({ nodePropertiesExpanded: !nodePropertiesExpanded })
-          }}
-          DetailsPaneOverride={this.props.DetailsPaneOverride}
-          OverviewPaneOverride={this.props.OverviewPaneOverride}
-          onGraphInteraction={this.props.onGraphInteraction}
-        />
+        {this.props.showNodeInspectorPanel && (
+          <NodeInspectorPanel
+            graphStyle={graphStyle}
+            hasTruncatedFields={this.props.hasTruncatedFields}
+            hoveredItem={this.state.hoveredItem}
+            selectedItem={this.state.selectedItem}
+            stats={this.state.stats}
+            width={this.state.width}
+            setWidth={(width: number) =>
+              this.setState({ width: Math.max(panelMinWidth, width) })
+            }
+            expanded={this.state.nodePropertiesExpanded}
+            toggleExpanded={() => {
+              const { nodePropertiesExpanded } = this.state
+              this.props.setNodePropertiesExpandedByDefault(
+                !nodePropertiesExpanded
+              )
+              this.setState({ nodePropertiesExpanded: !nodePropertiesExpanded })
+            }}
+            DetailsPaneOverride={this.props.DetailsPaneOverride}
+            OverviewPaneOverride={this.props.OverviewPaneOverride}
+            onGraphInteraction={this.props.onGraphInteraction}
+          />
+        )}
       </StyledFullSizeContainer>
     )
   }
