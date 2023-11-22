@@ -244,7 +244,7 @@ describe('Viz rendering', () => {
     cy.get(`[aria-label="zoom-out"]`).should('be.disabled')
   })
 
-  it('can create a new node by double clicking the canvas', () => {
+  it('can create a new node by double clicking the canvas and the new node has "description" and "name" property fields', () => {
     cy.executeCommand(':clear')
     cy.executeCommand(`CREATE (a:TestLabel {name: 'testNode'}) RETURN a`, {
       parseSpecialCharSequences: false
@@ -253,32 +253,22 @@ describe('Viz rendering', () => {
     cy.get('[data-testid="graphCanvas"]')
       .trigger('click', 200, 200, { force: true })
       .trigger('dblclick', 200, 200, { force: true })
-
-    cy.get('[data-testid="nodeGroups"]', { timeout: 5000 }).contains('New Node')
-    cy.get('[data-testid="vizInspector"]', { timeout: 5000 }).contains(
-      'Undefined'
-    )
-
-    cy.executeCommand('MATCH (n) DETACH DELETE n')
-  })
-
-  it('new node by double-clicking the canvas has "description" and "name" property fields', () => {
-    cy.executeCommand(':clear')
-    cy.executeCommand(`CREATE (a:TestLabel {name: 'testNode'}) RETURN a`, {
-      parseSpecialCharSequences: false
-    })
-
-    cy.get('[data-testid="graphCanvas"]')
-      .trigger('click', 200, 200, { force: true })
-      .trigger('dblclick', 200, 200, { force: true })
-
-    cy.get('[data-testid="nodeGroups"]', { timeout: 5000 })
+      .executeCommand(
+        `MATCH (n:TestLabel {name: "testNode"}) DETACH DELETE n`,
+        { parseSpecialCharSequences: false }
+      )
+      .executeCommand(`MATCH (n) RETURN n`, {
+        parseSpecialCharSequences: false
+      })
+      .get('[data-testid="nodeGroups"]', { timeout: 10000 })
       .contains('New Node')
       .trigger('mouseover', { force: true })
       .trigger('mouseenter', { force: true })
       .get('[data-testid="viz-details-pane-properties-table"]')
       .find('td:nth-child(1)')
       .should('have.text', '<elementId><id>descriptionname')
+      .get('[data-testid="vizInspector"]', { timeout: 5000 })
+      .contains('Undefined')
 
     cy.executeCommand('MATCH (n) DETACH DELETE n')
   })

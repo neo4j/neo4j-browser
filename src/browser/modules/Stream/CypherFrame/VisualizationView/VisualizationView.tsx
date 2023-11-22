@@ -59,6 +59,10 @@ import {
 } from 'shared/modules/frames/framesDuck'
 import { DetailsPane } from './PropertiesPanelContent/DetailsPane'
 import OverviewPane from './PropertiesPanelContent/OverviewPane'
+import {
+  commandSources,
+  executeCommand
+} from 'shared/modules/commands/commandsDuck'
 
 type VisualizationState = {
   updated: number
@@ -399,9 +403,7 @@ LIMIT ${maxNewNeighbours}`
 
     if (event == NODE_ON_CANVAS_CREATE) {
       if (properties == null) {
-        throw new Error(
-          'A property map with name, and labels keys are required'
-        )
+        throw new Error('NODE_ON_CANVAS_CREATE: properties map is required')
       }
 
       const name = properties['name']
@@ -426,6 +428,10 @@ LIMIT ${maxNewNeighbours}`
           }
         }
       )
+
+      const cmd = 'MATCH (n) RETURN n;'
+      const action = executeCommand(cmd, { source: commandSources.rerunFrame })
+      this.props.bus.send(action.type, action)
     }
   }
 

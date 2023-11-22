@@ -1,10 +1,9 @@
 :description: How graph interations take effect on displayed graph and backing database
 
-
 [[user-interactions]]
 = How Graph Interations Take Effect on Displayed Graph and Backing Database
 
-We define *graph interactions* as any https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent[mouse] and
+We define *graph interactions* as any https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent[mouse] or
 https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent[keyboard] events on the
 link:../../visual-tour/index.html#frame-views[_Graph_ frame view]
 
@@ -40,23 +39,18 @@ click on canvas. We will follow the steps above by first defining the event hand
 [source,typescript]
 ----
   onCanvasDblClicked(): void {
-    this.graph.addNodes([ new NodeModel(...) ])
-    this.visualization.update({ updateNodes: true, updateRelationships: true })
-    this.graphModelChanged()
-
     this.onGraphInteraction(NODE_ON_CANVAS_CREATE, { name: 'New Node', labels: ['Undefined'] })
   }
 ----
 
 [NOTE] 
 ==== 
+When we add a new node to the graph, we do not update the visual of the graph on current canvas, because this update
+process involves lots of organic parts and taking care all of them is error-prone
 
-When we add a new node to the graph, it is important to update the visual of the graph using `visualization.update()`
-and the stats panel with `graphModelChanged()`
-
-We would also like to persist the new node to database so that refreshing the page or re-login shall still render this
-node. Therefore we invoke `onGraphInteraction()` above. The details of this method will be disucssed below 
-
+In stead, we persist the new node to database first (by invoking `onGraphInteraction()` above. The details of this
+method will be disucssed below) and later we trigger a new frame so all the refreshed data will be put onto a new
+canvas, including the new node. 
 ====
 
 Next, we bind the function so that `Visualization.ts` component can delegte any canvas double click callbacks to this
@@ -95,6 +89,14 @@ As we've mentioned earlier, we would like to persist this new node to database. 
 
 [source,typescript]
 ----
+import {
+  commandSources,
+  executeCommand
+} from 'shared/modules/commands/commandsDuck'
+
+...
+
+
   onGraphInteraction: GraphInteractionCallBack = (event, properties) => {
     if (event == NODE_ON_CANVAS_CREATE) {
       if (properties == null) {
@@ -122,8 +124,18 @@ As we've mentioned earlier, we would like to persist this new node to database. 
           }
         }
       )
+
+      const cmd = 'MATCH (n) RETURN n;'
+      const action = executeCommand(cmd, { source: commandSources.rerunFrame })
+      this.props.bus.send(action.type, action)
     }
   }
 ----
 
-The complete implementation is in https://github.com/QubitPi/neo4j-browser/pull/7[this PR] as a reference
+[NOTE] 
+==== 
+We trigger the aforementioned new fram using the last 3 lines above 
+====
+
+The complete implementation is in https://github.com/QubitPi/neo4j-browser/pull/7[this PR] and
+https://github.com/QubitPi/neo4j-browser/pull/26[this PR (optimization)] as references
