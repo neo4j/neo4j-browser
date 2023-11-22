@@ -1,6 +1,6 @@
 {
   "name": "neo4j-devtools-arc",
-  "version": "0.0.54",
+  "version": "0.0.55",
   "main": "dist/neo4j-arc.js",
   "author": "Neo4j Inc.",
   "license": "GPL-3.0",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/neo4j/neo4j-browser.git"
+    "url": "https://github.com/QubitPi/neo4j-browser.git"
   },
   "files": [
     "dist",
