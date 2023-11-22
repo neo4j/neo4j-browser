@@ -244,14 +244,12 @@ export class GraphEventHandlerModel {
   }
 
   onCanvasDblClicked(): void {
-    const maxId: number = Math.max(
-      ...this.graph.nodes().map(node => parseInt(node.id))
-    )
-    const newId = maxId + 1
+    const transientId: string =
+      'transient-' + Math.random().toString(36).slice(2)
 
     this.graph.addNodes([
       new NodeModel(
-        newId.toString(),
+        transientId,
         ['Undefined'],
         {
           name: 'New Node',
@@ -267,7 +265,6 @@ export class GraphEventHandlerModel {
     this.graphModelChanged()
 
     this.onGraphInteraction(NODE_ON_CANVAS_CREATE, {
-      id: newId,
       name: 'New Node',
       description: 'New Node',
       labels: ['Undefined']
@@ -300,18 +297,14 @@ export class GraphEventHandlerModel {
     ) {
       this.altCreatedRelTargetNode = node
 
-      const maxId: number = Math.max(
-        ...this.graph
-          .relationships()
-          .map(relationship => parseInt(relationship.id))
-      )
-      const newId = maxId + 1
+      const transientId: string =
+        'transient-' + Math.random().toString(36).slice(2)
 
       const altCreatedRel: RelationshipModel = new RelationshipModel(
-        newId.toString(),
+        transientId,
         this.altCreatedRelSourceNode,
         this.altCreatedRelTargetNode,
-        newId.toString(),
+        transientId,
         { name: 'new link' },
         { name: 'string' }
       )
@@ -324,7 +317,7 @@ export class GraphEventHandlerModel {
       this.graphModelChanged()
 
       this.onGraphInteraction(REL_ON_CANVAS_CREATE, {
-        type: newId,
+        type: transientId,
         sourceNodeId: this.altCreatedRelSourceNode.id,
         targetNodeId: this.altCreatedRelTargetNode.id
       })

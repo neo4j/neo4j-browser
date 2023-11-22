@@ -400,25 +400,24 @@ LIMIT ${maxNewNeighbours}`
     if (event == NODE_ON_CANVAS_CREATE) {
       if (properties == null) {
         throw new Error(
-          'A property map with id, name, and labels keys are required'
+          'A property map with name, and labels keys are required'
         )
       }
 
-      const id = properties['id']
       const name = properties['name']
       const description = properties['description']
-      const variableName = `node${id}`
+      const variableName = `node`
       const labels = (properties['labels'] as string[])
         .map(label => `\`${label}\``)
         .join(':')
 
-      const query = `CREATE (${variableName}:${labels} { id: ${id}, name: "${name}", description: "${description}" });`
+      const query = `CREATE (${variableName}:${labels} { name: "${name}", description: "${description}" });`
 
       this.props.bus.self(
         CYPHER_REQUEST,
         {
           query,
-          params: { labels, id, name, description },
+          params: { labels, name, description },
           queryType: NEO4J_BROWSER_USER_ACTION_QUERY
         },
         (response: any) => {

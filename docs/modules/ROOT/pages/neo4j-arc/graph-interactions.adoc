@@ -44,7 +44,7 @@ click on canvas. We will follow the steps above by first defining the event hand
     this.visualization.update({ updateNodes: true, updateRelationships: true })
     this.graphModelChanged()
 
-    this.onGraphInteraction(NODE_ON_CANVAS_CREATE, { id: newNodeId, name: 'New Node', labels: ['Undefined'] })
+    this.onGraphInteraction(NODE_ON_CANVAS_CREATE, { name: 'New Node', labels: ['Undefined'] })
   }
 ----
 
@@ -99,22 +99,21 @@ As we've mentioned earlier, we would like to persist this new node to database. 
     if (event == NODE_ON_CANVAS_CREATE) {
       if (properties == null) {
         throw new Error(
-          'A property map with id, name, and labels keys are required'
+          'A property map with name, and labels keys are required'
         )
       }
 
-      const id = properties['id']
       const name = properties['name']
-      const variableName = `node${id}`
+      const variableName = `node`
       const labels = (properties['labels'] as string[]).map(label => `\`${label}\``).join(':')
 
-      const query = `CREATE (${variableName}:${labels} { id: ${id}, name: "${name}" });`
+      const query = `CREATE (${variableName}:${labels} { name: "${name}" });`
 
       this.props.bus.self(
         CYPHER_REQUEST,
         {
           query,
-          params: { labels, id, name },
+          params: { labels, name },
           queryType: NEO4J_BROWSER_USER_ACTION_QUERY
         },
         (response: any) => {
