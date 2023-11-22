@@ -33,7 +33,8 @@ describe('<GraphVisualizer />', () => {
       propertyTypes: {
         name: 'string',
         age: 'number'
-      }
+      },
+      elementId: '1'
     },
     {
       id: '2',
@@ -43,7 +44,8 @@ describe('<GraphVisualizer />', () => {
       },
       propertyTypes: {
         name: 'string'
-      }
+      },
+      elementId: '2'
     }
   ]
   const links: BasicRelationship[] = [
@@ -53,7 +55,8 @@ describe('<GraphVisualizer />', () => {
       endNodeId: '2',
       type: 'likes',
       properties: {},
-      propertyTypes: {}
+      propertyTypes: {},
+      elementId: '3'
     }
   ]
 

@@ -1,6 +1,6 @@
 # Neo4j Browser <sup>![Node Version Badge is Missing][node version badge]</sup>
 
-[![npm registry][npm registry]](https://img.shields.io/npm/v/neo4j-devtools-arc?logo=npm&style=for-the-badge)
+[![npm registry][npm registry]](https://www.npmjs.com/package/neo4j-devtools-arc)
 
 Neo4j Browser is the general purpose graphical user interface for Neo4j. Query, visualize, administer and monitor the database with modern and easy-to-use tools.
 

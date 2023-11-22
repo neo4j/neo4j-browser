@@ -258,7 +258,8 @@ export class GraphEventHandlerModel {
         {
           name: 'string',
           description: 'string'
-        }
+        },
+        transientId
       )
     ])
     this.visualization.update({ updateNodes: true, updateRelationships: true })
@@ -306,7 +307,8 @@ export class GraphEventHandlerModel {
         this.altCreatedRelTargetNode,
         transientId,
         { name: 'new link' },
-        { name: 'string' }
+        { name: 'string' },
+        transientId
       )
 
       this.graph.addRelationships([altCreatedRel])

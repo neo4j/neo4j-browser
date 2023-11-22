@@ -278,7 +278,7 @@ describe('Viz rendering', () => {
       .trigger('mouseenter', { force: true })
       .get('[data-testid="viz-details-pane-properties-table"]')
       .find('td:nth-child(1)')
-      .should('have.text', '<id>descriptionname')
+      .should('have.text', '<elementId><id>descriptionname')
 
     cy.executeCommand('MATCH (n) DETACH DELETE n')
   })

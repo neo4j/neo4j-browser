@@ -74,8 +74,8 @@ describe('<DetailsPane />', () => {
             elementId: 'elementId',
             type: 'abc2',
             propertyList,
-            source: new NodeModel('1', [], {}, {}),
-            target: new NodeModel('2', [], {}, {})
+            source: new NodeModel('1', [], {}, {}, '1'),
+            target: new NodeModel('2', [], {}, {}, '2')
           }
         }
     }
