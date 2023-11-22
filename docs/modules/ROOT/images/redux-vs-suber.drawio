@@ -1,0 +1,81 @@
+<mxfile host="app.diagrams.net" modified="2023-11-22T08:50:41.601Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36" etag="4f750IJMlx4wg1Adnw_5" version="22.1.3" type="device">
+  <diagram name="Page-1" id="yI2_bbRLoR0CGLotLe0P">
+    <mxGraphModel dx="1481" dy="821" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="XDQ285Tv6tWhBn1Cl0IR-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=3;" edge="1" parent="1" source="XDQ285Tv6tWhBn1Cl0IR-1" target="XDQ285Tv6tWhBn1Cl0IR-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XDQ285Tv6tWhBn1Cl0IR-1" value="&lt;font face=&quot;Ubuntu&quot; style=&quot;font-size: 20px;&quot;&gt;Redux&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=none;fillColor=#7248B6;fontColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="360" y="320" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="XDQ285Tv6tWhBn1Cl0IR-2" value="&lt;font face=&quot;ubuntu&quot; style=&quot;font-size: 20px;&quot;&gt;&lt;font color=&quot;#00aa00&quot;&gt;&lt;b&gt;Shared&lt;/b&gt;&lt;/font&gt; States&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="345" y="280" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="XDQ285Tv6tWhBn1Cl0IR-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=3;" edge="1" parent="1" source="XDQ285Tv6tWhBn1Cl0IR-3" target="XDQ285Tv6tWhBn1Cl0IR-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XDQ285Tv6tWhBn1Cl0IR-3" value="&lt;font face=&quot;Ubuntu&quot; style=&quot;font-size: 20px;&quot;&gt;Component A&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=none;fillColor=#5FD3F2;fontColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="80" y="320" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="XDQ285Tv6tWhBn1Cl0IR-5" value="&lt;font face=&quot;Ubuntu&quot; style=&quot;font-size: 20px;&quot;&gt;Component B&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=none;fillColor=#5FD3F2;fontColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="640" y="320" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="XDQ285Tv6tWhBn1Cl0IR-8" value="&lt;font face=&quot;ubuntu&quot; style=&quot;font-size: 20px;&quot;&gt;dispatch(S)&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="210" y="310" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="XDQ285Tv6tWhBn1Cl0IR-9" value="&lt;font face=&quot;ubuntu&quot; style=&quot;font-size: 20px;&quot;&gt;selector(S)&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="490" y="310" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="XDQ285Tv6tWhBn1Cl0IR-10" value="&lt;font face=&quot;ubuntu&quot; style=&quot;font-size: 20px;&quot;&gt;update state S&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="70" y="240" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="XDQ285Tv6tWhBn1Cl0IR-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;curved=1;strokeWidth=3;" edge="1" parent="1" source="XDQ285Tv6tWhBn1Cl0IR-3" target="XDQ285Tv6tWhBn1Cl0IR-3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="110" y="280" />
+              <mxPoint x="170" y="280" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XDQ285Tv6tWhBn1Cl0IR-13" value="&lt;font face=&quot;Ubuntu&quot; style=&quot;font-size: 20px;&quot;&gt;Suber&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=none;fillColor=#000000;fontColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="365" y="500" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="XDQ285Tv6tWhBn1Cl0IR-14" value="&lt;font face=&quot;ubuntu&quot; style=&quot;font-size: 20px;&quot;&gt;&lt;font color=&quot;#00aa00&quot;&gt;&lt;b&gt;No&lt;/b&gt;&lt;/font&gt; States&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="355" y="460" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="XDQ285Tv6tWhBn1Cl0IR-16" value="&lt;font face=&quot;Ubuntu&quot; style=&quot;font-size: 20px;&quot;&gt;Component A&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=none;fillColor=#5FD3F2;fontColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="85" y="500" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="XDQ285Tv6tWhBn1Cl0IR-17" value="&lt;font face=&quot;Ubuntu&quot; style=&quot;font-size: 20px;&quot;&gt;Component B&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=none;fillColor=#5FD3F2;fontColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="645" y="500" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="XDQ285Tv6tWhBn1Cl0IR-23" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;strokeWidth=3;width=23.47826086956522;endSize=10.304347826086957;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="XDQ285Tv6tWhBn1Cl0IR-16" target="XDQ285Tv6tWhBn1Cl0IR-17">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="410" y="440" as="sourcePoint" />
+            <mxPoint x="460" y="390" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XDQ285Tv6tWhBn1Cl0IR-30" value="&lt;font face=&quot;ubuntu&quot; style=&quot;font-size: 20px;&quot;&gt;bus&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="210" y="514" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="XDQ285Tv6tWhBn1Cl0IR-32" value="" style="endArrow=none;dashed=1;html=1;rounded=0;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="340" y="640" as="sourcePoint" />
+            <mxPoint x="340" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XDQ285Tv6tWhBn1Cl0IR-33" value="" style="endArrow=none;dashed=1;html=1;rounded=0;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="500" y="640" as="sourcePoint" />
+            <mxPoint x="500" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XDQ285Tv6tWhBn1Cl0IR-34" value="&lt;font face=&quot;ubuntu&quot;&gt;&lt;span style=&quot;font-size: 20px;&quot;&gt;&lt;b style=&quot;&quot;&gt;Components&lt;br&gt;Decoupling&lt;br&gt;&lt;/b&gt;&lt;/span&gt;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="345" y="200" width="150" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
