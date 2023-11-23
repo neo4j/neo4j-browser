@@ -8,31 +8,10 @@
 
 *Double clicking the white area* on canvas will automatically generate a new node with
 
-1. a transient ID prefixed with "transient-" followed by a random string. For example "transient-rxnnzr6t4x"
+1. a label of "Undefined"
+2. the node caption of "New Node"
 
-   [NOTE]
-   ====
-
-   The reason that the ID being transient is due to the fact that this ID won't be persisted into database. Refreshing
-   the browser will replace this transient ID with a database-generated ID (in the form of a number, such as 65).
-
-   Normally, neo4j-browser feeds into neo4j-arc, which is the graphing module of neo4j-browser, with a set of
-   fully-hydrated set of nodes and relationships. This results in the design in neo4j-arc which is: to render a node or
-   relationship, the ID of it must be provided (i.e. a required argument to node/rel constructor).
-
-   Generating a new node by double-clicking, however, is an operation manged by neo4j-arc, which by design is not
-   responsible for generating and managing node/relationship ID's. But to implement the "realtime editing" effect, the
-   new node/rel ID has to be genreated at the beginning. 
-
-   To resolve the conflict between original neo4j-browser design and on-canvas operation, any node/rel generated
-   "on-canvas" will have this transient ID.
-
-   ====
-
-2. a label of "Undefined"
-3. the node caption of "New Node"
-
-== Editing the Node Label and Properties in Inspector Panel
+== Editing the Node Label and Properties in Node Inspection Panel
 
 [NOTE]
 ====
