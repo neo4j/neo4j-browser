@@ -55,7 +55,9 @@ Neo4j Browser has both unit and end to end tests running automatically on every 
 `yarn e2e-open` to open the Cypress test runner (requires a **fresh** installation of Neo4j to run against, expects neo4j 3.5 by default). See details below on how to configure database version.
 
 `yarn e2e-local-open` to run against an existing server (with a password already set). We use `newpassword` as the default password here, make sure to pass your password:
-`yarn e2e-local-open --env browser-password=<your-password-here>`
+`yarn e2e-local-open --env browser-password=<your-password-here>`. The name `browser-password` is a bit misleading. It's actually the password for connecting to Neo4j we just mentioned via bolt portocol, i.e. the "password" input in the image below:
+
+![browser password screenshot](./browser-password.png)
 
 To avoid opening the Cypress test runner and just run the tests in the terminal, remove the "-open" suffix from the previous two commands (so `yarn e2e` and `yarn e2e-local` respectively).
 
