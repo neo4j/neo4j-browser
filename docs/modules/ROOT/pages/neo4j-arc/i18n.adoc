@@ -1,13 +1,13 @@
 :description: This section describes how i18n is implemented in neo4j-arc and how to use it
 
 [[neo4j-arc-i18n]]
-= Neo4J Arc Internationalization
+= Internationalization
 
 Default displaed text is in English if left un-translated
 
-== How to Enable i18n in neo4j-ard
+== How to Enable i18n in neo4j-arc
 
-=== Intalling react-i18next[https://qubitpi.gitbook.io/react-i18next/]
+=== Intalling https://qubitpi.gitbook.io/react-i18next/[react-i18next]
 
 [source,javascript]
 ----
