@@ -1,4 +1,4 @@
-# Neo4j Browser <sup>![Node Version Badge is Missing][node version badge]</sup>
+# Neo4j Browser <sup>![Node Version Badge is Missing][node version badge] ![Ts Version Badge is Missing][ts version badge]</sup>
 
 [![npm registry][npm registry]](https://www.npmjs.com/package/neo4j-devtools-arc)
 
@@ -24,10 +24,19 @@ Contributions welcome! More information in our [CONTRIBUTING.md](CONTRIBUTING.md
 
 Browser has a subproject of re-usable components bundled together and exposed as `neo4j-arc`. Rather than set up mono-repo tooling the we've set up eslint to isolate `neo4j-arc` and given it a seperate build step. Code in browser can only to import code from `neo4j-arc` through `neo4j-arc` aliases (as if it was a seperate project) and `neo4j-arc` is not allowed to import any code from outside it's own folder.
 
-## Development
+## Development <sup>![Ts Version Badge is Missing][ts version badge]</sup>
 
-Running Neo4j Browser locally requires Node.js (^12.4.0, below 18) and for dependencies we use yarn
-(`npm install -g yarn`). To install dependencies and then start the development server at `http://localhost:8080`:
+> There are 2 parts within this project
+> 
+> 1. [browser](./src/browser)
+> 2. re-usable graphing library, i.e. [neo4j-arc](./src/neo4j-arc)
+>
+> Each mantains a separate TS version. **Browser's TS version has to align with neo4j-arc's by setting a fixed version
+> at latter's lower bound**. For example, if neo4j-arc's typescript version is `"typescript": "^4.6.2"`, then the
+> browser's has be to the exact version of `"typescript": "4.6.2"`
+
+Running Neo4j Browser locally requires Node.js 16 and for dependencies we use yarn (`npm install -g yarn`). To install 
+dependencies and then start the development server at `http://localhost:8080`:
 
 > To switch node version with a version manager, please try [nvm](https://qubitpi.github.io/hashicorp-aws/blog/nvm)
 
@@ -89,5 +98,7 @@ CYPRESS_BASE_URL=<url to reach the browser to test> (default http://localhost:80
 
 Example: `CYPRESS_E2E_TEST_ENV="local" CYPRESS_BASE_URL=http://localhost:30000 cypress open --env server=4.2`
 
-[node version badge]: https://img.shields.io/badge/NODE-≥12.4.0%20<18.0.0-339933?logo=Node.js&logoColor=white&labelColor=66cc33&style=for-the-badge
+[node version badge]: https://img.shields.io/badge/NODE-≥16%20<18.0.0-339933?logo=Node.js&logoColor=white&labelColor=66cc33&style=for-the-badge
 [npm registry]: https://img.shields.io/npm/v/neo4j-devtools-arc?logo=npm&style=for-the-badge
+
+[ts version badge]: https://img.shields.io/badge/TypeScript-≥4.6.2-3178C6?style=for-the-badge&logo=typescript&logoColor=white&labelColor=358EF1

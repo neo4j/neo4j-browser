@@ -33,7 +33,7 @@ export const createDriverOrFailFn = (
   try {
     const res = neo4j.driver(url, auth, spreadOpts)
     return res
-  } catch (e) {
+  } catch (e: any) {
     failFn(e)
     return null
   }

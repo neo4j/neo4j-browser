@@ -63,7 +63,7 @@ export const buildGlobalDriversObject = async (
       )
       routed && (await routed.verifyConnectivity())
       routingSupported = true
-    } catch (e) {
+    } catch (e: any) {
       if (e && isNonSupportedRoutingSchemeError(e)) {
         routingSupported = false
         failFn(e)

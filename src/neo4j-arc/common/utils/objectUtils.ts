@@ -41,5 +41,5 @@ export function mapObjectValues<A, B>(
 }
 
 export function keys<T>(object: T): Array<keyof T> {
-  return Object.keys(object) as Array<keyof T>
+  return Object.keys(object as any) as Array<keyof T>
 }
