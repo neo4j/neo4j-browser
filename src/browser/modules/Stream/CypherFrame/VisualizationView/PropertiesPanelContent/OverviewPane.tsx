@@ -38,6 +38,8 @@ import {
   StyledLegendInlineList
 } from './styled'
 
+import { useTranslation } from 'react-i18next'
+
 type PaneBodySectionHeaderProps = {
   title: string
   numOfElementsVisible: number
@@ -70,6 +72,8 @@ export default function OverviewPane({
   stats,
   infoMessage
 }: OverviewPaneProps): JSX.Element {
+  const { t } = useTranslation()
+
   const [maxLabelsCount, setMaxLabelsCount] = useState(OVERVIEW_STEP_SIZE)
   const [maxRelationshipsCount, setMaxRelationshipsCount] =
     useState(OVERVIEW_STEP_SIZE)
@@ -99,7 +103,7 @@ export default function OverviewPane({
         {labels && visibleLabelKeys.length !== 0 && (
           <div>
             <PaneBodySectionHeader
-              title={'Node labels'}
+              title={t('Node labels')}
               numOfElementsVisible={visibleLabelKeys.length}
               totalNumOfElements={totalNumOfLabelTypes}
             />
@@ -128,7 +132,7 @@ export default function OverviewPane({
         {relTypes && visibleRelationshipKeys.length !== 0 && (
           <div>
             <PaneBodySectionHeader
-              title={'Relationship types'}
+              title={t('Relationship types')}
               numOfElementsVisible={visibleRelationshipKeys.length}
               totalNumOfElements={totalNumOfRelTypes}
             />
@@ -168,9 +172,10 @@ export default function OverviewPane({
           )}
           {nodeCount !== null &&
             relationshipCount !== null &&
-            `Displaying ${numberToUSLocale(
-              nodeCount
-            )} nodes, ${numberToUSLocale(relationshipCount)} relationships.`}
+            t('graph summary', {
+              nodeCount: numberToUSLocale(nodeCount),
+              relationshipCount: numberToUSLocale(relationshipCount)
+            })}
         </div>
       </PaneBody>
     </PaneWrapper>

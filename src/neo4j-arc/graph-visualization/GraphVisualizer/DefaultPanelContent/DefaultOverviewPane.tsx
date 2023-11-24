@@ -40,6 +40,8 @@ import {
 import { NodeLabel } from './NodeLabel'
 import { RelType } from './RelType'
 
+import { useTranslation } from 'react-i18next'
+
 type PaneBodySectionHeaderProps = {
   title: string
   numOfElementsVisible: number
@@ -81,6 +83,8 @@ function DefaultOverviewPane({
   stats,
   infoMessage
 }: OverviewPaneProps): JSX.Element {
+  const { t } = useTranslation()
+
   const [maxLabelsCount, setMaxLabelsCount] = useState(OVERVIEW_STEP_SIZE)
   const [maxRelationshipsCount, setMaxRelationshipsCount] =
     useState(OVERVIEW_STEP_SIZE)
@@ -110,7 +114,7 @@ function DefaultOverviewPane({
         {labels && visibleLabelKeys.length !== 0 && (
           <div>
             <PaneBodySectionHeader
-              title={'Node labels'}
+              title={t('Node labels')}
               numOfElementsVisible={visibleLabelKeys.length}
               totalNumOfElements={totalNumOfLabelTypes}
             />
@@ -139,7 +143,7 @@ function DefaultOverviewPane({
         {relTypes && visibleRelationshipKeys.length !== 0 && (
           <div>
             <PaneBodySectionHeader
-              title={'Relationship types'}
+              title={t('Relationship types')}
               numOfElementsVisible={visibleRelationshipKeys.length}
               totalNumOfElements={totalNumOfRelTypes}
             />
@@ -179,9 +183,10 @@ function DefaultOverviewPane({
           )}
           {nodeCount !== null &&
             relationshipCount !== null &&
-            `Displaying ${numberToUSLocale(
-              nodeCount
-            )} nodes, ${numberToUSLocale(relationshipCount)} relationships.`}
+            t('graph summary', {
+              nodeCount: numberToUSLocale(nodeCount),
+              relationshipCount: numberToUSLocale(relationshipCount)
+            })}
         </div>
       </PaneBody>
     </PaneWrapper>

@@ -1,6 +1,6 @@
 {
   "name": "neo4j-devtools-arc",
-  "version": "0.0.63",
+  "version": "0.0.64",
   "main": "dist/neo4j-arc.js",
   "author": "Neo4j Inc.",
   "license": "GPL-3.0",
@@ -60,9 +60,11 @@
     "d3-transition": "^3.0.1",
     "d3-zoom": "^3.0.0",
     "deepmerge": "^4.2.2",
+    "i18next": "^23.7.6",
     "lodash-es": "^4.17.21",
     "monaco-editor": "0.23.0",
     "re-resizable": "^6.9.9",
+    "react-i18next": "^13.5.0",
     "react-is": "^17.0.2",
     "styled-components": "^5.3.5"
   },

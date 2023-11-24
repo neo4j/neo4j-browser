@@ -59,6 +59,10 @@ import reducers from 'shared/rootReducer'
 import { getTelemetrySettings } from 'shared/utils/selectors'
 import { URL } from 'whatwg-url'
 
+import { I18nextProvider } from 'react-i18next'
+
+import i18n from './i18n'
+
 // Configure localstorage sync
 applyKeys(
   'connections',
@@ -277,15 +281,17 @@ const client = new ApolloClient({
 
 const AppInit = (): JSX.Element => {
   return (
-    <Provider store={store as any}>
-      <BusProvider bus={bus}>
-        <ApolloProvider client={client}>
-          <DndProvider backend={HTML5Backend}>
-            <App />
-          </DndProvider>
-        </ApolloProvider>
-      </BusProvider>
-    </Provider>
+    <I18nextProvider i18n={i18n}>
+      <Provider store={store as any}>
+        <BusProvider bus={bus}>
+          <ApolloProvider client={client}>
+            <DndProvider backend={HTML5Backend}>
+              <App />
+            </DndProvider>
+          </ApolloProvider>
+        </BusProvider>
+      </Provider>
+    </I18nextProvider>
   )
 }
 export default AppInit

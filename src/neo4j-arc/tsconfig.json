@@ -3,6 +3,7 @@
     "target": "esnext",
     "jsx": "react",
     "sourceMap": true,
+    "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "paths": {

@@ -1,6 +1,7 @@
 # Neo4j Browser <sup>![Node Version Badge is Missing][node version badge] ![Ts Version Badge is Missing][ts version badge]</sup>
 
 [![npm registry][npm registry]](https://www.npmjs.com/package/neo4j-devtools-arc)
+![Translation Badge is Missing][translation badge]
 
 Neo4j Browser is the general purpose graphical user interface for Neo4j. Query, visualize, administer and monitor the database with modern and easy-to-use tools.
 
@@ -102,3 +103,5 @@ Example: `CYPRESS_E2E_TEST_ENV="local" CYPRESS_BASE_URL=http://localhost:30000 c
 [npm registry]: https://img.shields.io/npm/v/neo4j-devtools-arc?logo=npm&style=for-the-badge
 
 [ts version badge]: https://img.shields.io/badge/TypeScript-≥4.6.2-3178C6?style=for-the-badge&logo=typescript&logoColor=white&labelColor=358EF1
+
+[translation badge]: https://img.shields.io/badge/Languages%20Supported-en,zh--cn-brightgreen?style=for-the-badge&logo=googletranslate&logoColor=white&labelColor=4285F4
