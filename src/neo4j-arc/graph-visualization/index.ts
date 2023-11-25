@@ -43,3 +43,21 @@ export {
   REL_TYPE_UPDATE
 } from './GraphVisualizer/Graph/GraphEventHandlerModel'
 export type { GraphInteractionCallBack } from './GraphVisualizer/Graph/GraphEventHandlerModel'
+
+export const resources = {
+  en: {
+    translation: {
+      'graph summary':
+        'Displaying {{nodeCount}} nodes, {{relationshipCount}} relationships.',
+      'Relationship types': 'Relationship types',
+      'Node labels': 'Node labels'
+    }
+  },
+  zh: {
+    translation: {
+      'graph summary': '总计 {{nodeCount}} 个节点, {{relationshipCount}} 条边.',
+      'Relationship types': '关系类型',
+      'Node labels': '节点类型'
+    }
+  }
+}
