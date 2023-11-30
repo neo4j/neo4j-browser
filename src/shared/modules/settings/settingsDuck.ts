@@ -70,6 +70,8 @@ export const shouldEnableMultiStatementMode = (state: any) =>
   state[NAME].enableMultiStatementMode
 export const shouldShowPerformanceOverlay = (state: any): boolean =>
   state[NAME].showPerformanceOverlay === true
+export const shouldUseReadTransactions = (state: any) =>
+  state[NAME].useReadTransactions || initialState.useReadTransactions
 
 const browserSyncConfig = (host = 'https://auth.neo4j.com') => ({
   authWindowUrl: `${host}/indexNewBrowser.html`,
@@ -122,6 +124,7 @@ export type SettingsState = {
   allowCrashReports: boolean
   allowUserStats: boolean
   showWheelZoomInfo: boolean
+  useReadTransactions: boolean
 }
 
 export const initialState: SettingsState = {
@@ -146,7 +149,8 @@ export const initialState: SettingsState = {
   showPerformanceOverlay: false,
   allowCrashReports: true,
   allowUserStats: true,
-  showWheelZoomInfo: true
+  showWheelZoomInfo: true,
+  useReadTransactions: false
 }
 
 export default function settings(state = initialState, action: any) {

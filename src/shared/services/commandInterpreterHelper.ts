@@ -95,7 +95,10 @@ import {
   getRequest,
   update as updateQueryResult
 } from 'shared/modules/requests/requestsDuck'
-import { getSettings } from 'shared/modules/settings/settingsDuck'
+import {
+  getSettings,
+  shouldUseReadTransactions
+} from 'shared/modules/settings/settingsDuck'
 import { open } from 'shared/modules/sidebar/sidebarDuck'
 import {
   backgroundTxMetadata,
@@ -439,6 +442,7 @@ const availableCommands = [
         query.substring(prefixIndex + autoPrefix.length)
 
       action.query = isAutocommit ? withoutAutoPrefix : query
+      action.useReadTransaction = shouldUseReadTransactions(state)
 
       const [id, request] = handleCypherCommand(
         action,

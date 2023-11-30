@@ -23,6 +23,7 @@ import bolt from 'services/bolt/bolt'
 import { applyGraphTypes } from 'services/bolt/boltMappings'
 import { arrayToObject } from 'services/utils'
 import { send } from 'shared/modules/requests/requestsDuck'
+import { v4 } from 'uuid'
 
 export const applyParamGraphTypes = (params = {} as any) =>
   arrayToObject(
@@ -38,17 +39,20 @@ export const handleCypherCommand = (
   txMetadata = {},
   autoCommit = false
 ): [string, Promise<QueryResult>] => {
-  const [id, request] = bolt.routedWriteTransaction(
-    action.query,
-    applyParamGraphTypes(params),
-    {
-      requestId: action.requestId,
-      cancelable: true,
-      ...txMetadata,
-      autoCommit,
-      useDb: action.useDb
-    }
-  )
+  const parameters = applyParamGraphTypes(params)
+  const requestMetaData = {
+    requestId: action.requestId || v4(),
+    cancelable: true,
+    ...txMetadata,
+    autoCommit,
+    useDb: action.useDb
+  }
+
+  const id = requestMetaData.requestId
+  const request = action.useReadTransaction
+    ? bolt.routedReadTransaction(action.query, parameters, requestMetaData)
+    : bolt.routedWriteTransaction(action.query, parameters, requestMetaData)[1]
+
   put(send(id))
   return [id, request]
 }

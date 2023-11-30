@@ -102,6 +102,14 @@ const visualSettings = [
             'The timeout in milliseconds when establishing a connection to Neo4j.',
           type: 'input'
         }
+      },
+      {
+        useReadTransactions: {
+          displayName: 'Use read transactions for user cypher queries.',
+          tooltip:
+            'This setting can be useful in a cluster environment where you want to ensure that read queries are sent to secondaries.',
+          type: 'checkbox'
+        }
       }
     ]
   },
