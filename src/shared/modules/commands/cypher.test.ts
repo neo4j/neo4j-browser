@@ -57,6 +57,14 @@ jest.mock('shared/modules/dbMeta/dbMetaDuck', () => {
   }
 })
 
+jest.mock('shared/modules/settings/settingsDuck', () => {
+  const orig = require.requireActual('shared/modules/dbMeta/dbMetaDuck')
+  return {
+    ...orig,
+    shouldUseReadTransactions: () => false
+  }
+})
+
 describe('tx metadata with cypher', () => {
   afterEach(() => {
     bolt.routedWriteTransaction.mockClear()
@@ -153,10 +161,11 @@ multiline comment
     action.$$responseChannel = $$responseChannel
 
     bus.send(action.type, action)
-    flushPromises().then(() => {
-      expect(bolt.routedWriteTransaction).toHaveBeenCalledTimes(1)
-      expect(bolt.routedWriteTransaction).toHaveBeenCalledWith(
-        `// comment
+    flushPromises()
+      .then(() => {
+        expect(bolt.routedWriteTransaction).toHaveBeenCalledTimes(1)
+        expect(bolt.routedWriteTransaction).toHaveBeenCalledWith(
+          `// comment
 /*
 multiline comment
 */
@@ -164,13 +173,14 @@ multiline comment
 
 // comment
 /*:auto*/ RETURN ":auto"`,
-        {},
-        expect.objectContaining({
-          autoCommit: true
-        })
-      )
-      done()
-    })
+          {},
+          expect.objectContaining({
+            autoCommit: true
+          })
+        )
+        done()
+      })
+      .catch(e => console.error(e))
   })
   test('it sends the autoCommit flag = false to tx functions on regular cypher', done => {
     // Given
