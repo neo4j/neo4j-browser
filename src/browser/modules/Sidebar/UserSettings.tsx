@@ -105,7 +105,7 @@ const visualSettings = [
       },
       {
         useReadTransactions: {
-          displayName: 'Use read transactions for user cypher queries.',
+          displayName: 'Use read transactions for cypher queries.',
           tooltip:
             'This setting can be useful in a cluster environment where you want to ensure that read queries are sent to secondaries.',
           type: 'checkbox'
