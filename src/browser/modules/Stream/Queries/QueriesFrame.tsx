@@ -169,7 +169,7 @@ export class QueriesFrame extends Component<
                 ...data,
                 host: `neo4j://${nonNullHost}`,
                 query: data.currentQuery,
-                elapsedTimeMillis: data.elapsedTime,
+                elapsedTimeMillis: prettyPrintDuration(data.elapsedTime),
                 queryId: data.transactionId
               }
             }
@@ -283,7 +283,7 @@ export class QueriesFrame extends Component<
                   <Code>{JSON.stringify(query.metaData, null, 2)}</Code>
                 </StyledTd>
                 <StyledTd key="time" width={tableHeaderSizes[5][1]}>
-                  {prettyPrintDuration(query.elapsedTimeMillis)}
+                  {query.elapsedTimeMillis}
                 </StyledTd>
                 <StyledTd key="actions" width={tableHeaderSizes[6][1]}>
                   <ConfirmationButton

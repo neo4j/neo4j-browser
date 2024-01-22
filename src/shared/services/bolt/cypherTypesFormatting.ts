@@ -30,9 +30,7 @@ export const stringModifier = (anything: any) => {
     return spacialFormat(anything)
   }
   if (isTemporalType(anything)) {
-    if (isDuration(anything)) {
-      return `"${anything.toString()}"`
-    }
+    return `"${anything.toString()}"`
   }
   return undefined
 }
