@@ -30,14 +30,11 @@ import {
   some
 } from 'lodash-es'
 import { CypherDataType, isCypherPropertyType } from 'neo4j-arc/common'
-import neo4j, { Path, Record, Node, Relationship } from 'neo4j-driver'
+import neo4j, { Node, Path, Record, Relationship } from 'neo4j-driver'
 
 import bolt from 'services/bolt/bolt'
 import { recursivelyExtractGraphItems } from 'services/bolt/boltMappings'
-import {
-  durationFormat,
-  stringModifier
-} from 'services/bolt/cypherTypesFormatting'
+import { stringModifier } from 'services/bolt/cypherTypesFormatting'
 import { stringifyMod, unescapeDoubleQuotesForDisplay } from 'services/utils'
 import * as viewTypes from 'shared/modules/frames/frameViewTypes'
 import { BrowserRequestResult } from 'shared/modules/requests/requestsDuck'
@@ -396,7 +393,6 @@ export function mapNeo4jValuesToPlainValues(values: any): any {
 function neo4jValueToPlainValue(value: any) {
   switch (get(value, 'constructor')) {
     case neo4j.types.Duration:
-      return durationFormat(value)
     case neo4j.types.Date:
     case neo4j.types.DateTime:
     case neo4j.types.LocalDateTime:
