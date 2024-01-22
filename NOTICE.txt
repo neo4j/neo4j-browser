@@ -239,25 +239,25 @@ Third-party licenses
 │  ├─ long@4.0.0
 │  │  ├─ URL: https://github.com/dcodeIO/long.js.git
 │  │  └─ VendorName: Daniel Wirtz
-│  ├─ neo4j-client-sso@1.2.2
+│  ├─ neo4j-client-sso@1.2.3
 │  │  ├─ URL: git+https://github.com/neo4j-devtools/neo4j-client-sso.git
 │  │  └─ VendorName: Neo4j Engineering
-│  ├─ neo4j-driver-bolt-connection@5.3.0
+│  ├─ neo4j-driver-bolt-connection@5.9.2
 │  │  ├─ URL: git://github.com/neo4j/neo4j-javascript-driver.git
 │  │  ├─ VendorName: Neo4j
 │  │  └─ VendorUrl: https://github.com/neo4j/neo4j-javascript-driver#readme
-│  ├─ neo4j-driver-core@5.3.0
+│  ├─ neo4j-driver-core@5.9.2
 │  │  ├─ URL: git://github.com/neo4j/neo4j-javascript-driver.git
 │  │  ├─ VendorName: Neo4j
 │  │  └─ VendorUrl: https://github.com/neo4j/neo4j-javascript-driver#readme
-│  ├─ neo4j-driver@5.3.0
+│  ├─ neo4j-driver@5.9.2
 │  │  ├─ URL: git://github.com/neo4j/neo4j-javascript-driver.git
 │  │  └─ VendorName: Neo4j
 │  ├─ rxjs@5.5.12
 │  │  ├─ URL: git@github.com:ReactiveX/RxJS.git
 │  │  ├─ VendorName: Ben Lesh
 │  │  └─ VendorUrl: https://github.com/ReactiveX/RxJS
-│  ├─ rxjs@7.5.6
+│  ├─ rxjs@7.8.1
 │  │  ├─ URL: https://github.com/reactivex/rxjs.git
 │  │  ├─ VendorName: Ben Lesh
 │  │  └─ VendorUrl: https://rxjs.dev/
@@ -274,10 +274,6 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/terser/terser
 │  │  ├─ VendorName: Mihai Bazon
 │  │  └─ VendorUrl: https://terser.org/
-│  ├─ webidl-conversions@3.0.1
-│  │  ├─ URL: https://github.com/jsdom/webidl-conversions.git
-│  │  ├─ VendorName: Domenic Denicola
-│  │  └─ VendorUrl: https://domenic.me/
 │  └─ webidl-conversions@7.0.0
 │     ├─ URL: https://github.com/jsdom/webidl-conversions.git
 │     ├─ VendorName: Domenic Denicola
@@ -550,10 +546,10 @@ Third-party licenses
 │  │  ├─ URL: git+https://github.com/isaacs/yallist.git
 │  │  ├─ VendorName: Isaac Z. Schlueter
 │  │  └─ VendorUrl: http://blog.izs.me/
-│  ├─ yaml@1.10.2
+│  ├─ yaml@1.10.0
 │  │  ├─ URL: https://github.com/eemeli/yaml.git
 │  │  ├─ VendorName: Eemeli Aro
-│  │  └─ VendorUrl: https://eemeli.org/yaml/v1/
+│  │  └─ VendorUrl: https://eemeli.org/yaml/
 │  └─ yargs-parser@18.1.3
 │     ├─ URL: https://github.com/yargs/yargs-parser.git
 │     └─ VendorName: Ben Coe
@@ -562,47 +558,23 @@ Third-party licenses
 │  │  ├─ URL: git+https://github.com/apollographql/apollo-client.git
 │  │  ├─ VendorName: opensource@apollographql.com
 │  │  └─ VendorUrl: https://www.apollographql.com/
-│  ├─ @babel/code-frame@7.16.0
+│  ├─ @babel/code-frame@7.12.11
 │  │  ├─ URL: https://github.com/babel/babel.git
-│  │  ├─ VendorName: The Babel Team
-│  │  └─ VendorUrl: https://babel.dev/docs/en/next/babel-code-frame
-│  ├─ @babel/code-frame@7.16.7
+│  │  ├─ VendorName: Sebastian McKenzie
+│  │  └─ VendorUrl: https://babeljs.io/
+│  ├─ @babel/generator@7.11.6
 │  │  ├─ URL: https://github.com/babel/babel.git
-│  │  ├─ VendorName: The Babel Team
-│  │  └─ VendorUrl: https://babel.dev/docs/en/next/babel-code-frame
-│  ├─ @babel/generator@7.17.7
-│  │  ├─ URL: https://github.com/babel/babel.git
-│  │  ├─ VendorName: The Babel Team
-│  │  └─ VendorUrl: https://babel.dev/docs/en/next/babel-generator
+│  │  ├─ VendorName: Sebastian McKenzie
+│  │  └─ VendorUrl: https://babeljs.io/
 │  ├─ @babel/helper-annotate-as-pure@7.16.7
 │  │  ├─ URL: https://github.com/babel/babel.git
 │  │  ├─ VendorName: The Babel Team
 │  │  └─ VendorUrl: https://babel.dev/docs/en/next/babel-helper-annotate-as-pure
-│  ├─ @babel/helper-environment-visitor@7.16.7
-│  │  ├─ URL: https://github.com/babel/babel.git
-│  │  ├─ VendorName: The Babel Team
-│  │  └─ VendorUrl: https://babel.dev/docs/en/next/babel-helper-environment-visitor
-│  ├─ @babel/helper-function-name@7.16.7
-│  │  ├─ URL: https://github.com/babel/babel.git
-│  │  ├─ VendorName: The Babel Team
-│  │  └─ VendorUrl: https://babel.dev/docs/en/next/babel-helper-function-name
-│  ├─ @babel/helper-get-function-arity@7.16.7
-│  │  ├─ URL: https://github.com/babel/babel.git
-│  │  ├─ VendorName: The Babel Team
-│  │  └─ VendorUrl: https://babel.dev/docs/en/next/babel-helper-get-function-arity
-│  ├─ @babel/helper-hoist-variables@7.16.7
-│  │  ├─ URL: https://github.com/babel/babel.git
-│  │  ├─ VendorName: The Babel Team
-│  │  └─ VendorUrl: https://babel.dev/docs/en/next/babel-helper-hoist-variables
-│  ├─ @babel/helper-module-imports@7.10.4
-│  │  ├─ URL: https://github.com/babel/babel.git
-│  │  ├─ VendorName: Logan Smyth
-│  │  └─ VendorUrl: https://babeljs.io/
+│  ├─ @babel/helper-function-name@7.10.4
+│  │  └─ URL: https://github.com/babel/babel.git
+│  ├─ @babel/helper-get-function-arity@7.10.4
+│  │  └─ URL: https://github.com/babel/babel.git
 │  ├─ @babel/helper-module-imports@7.16.7
-│  │  ├─ URL: https://github.com/babel/babel.git
-│  │  ├─ VendorName: The Babel Team
-│  │  └─ VendorUrl: https://babel.dev/docs/en/next/babel-helper-module-imports
-│  ├─ @babel/helper-module-imports@7.18.6
 │  │  ├─ URL: https://github.com/babel/babel.git
 │  │  ├─ VendorName: The Babel Team
 │  │  └─ VendorUrl: https://babel.dev/docs/en/next/babel-helper-module-imports
@@ -610,23 +582,9 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/babel/babel.git
 │  │  ├─ VendorName: The Babel Team
 │  │  └─ VendorUrl: https://babel.dev/docs/en/next/babel-helper-plugin-utils
-│  ├─ @babel/helper-split-export-declaration@7.16.7
-│  │  ├─ URL: https://github.com/babel/babel.git
-│  │  ├─ VendorName: The Babel Team
-│  │  └─ VendorUrl: https://babel.dev/docs/en/next/babel-helper-split-export-declaration
-│  ├─ @babel/helper-string-parser@7.19.4
-│  │  ├─ URL: https://github.com/babel/babel.git
-│  │  ├─ VendorName: The Babel Team
-│  │  └─ VendorUrl: https://babel.dev/docs/en/next/babel-helper-string-parser
-│  ├─ @babel/helper-validator-identifier@7.15.7
-│  │  ├─ URL: https://github.com/babel/babel.git
-│  │  ├─ VendorName: The Babel Team
-│  │  └─ VendorUrl: https://babel.dev/team
+│  ├─ @babel/helper-split-export-declaration@7.11.0
+│  │  └─ URL: https://github.com/babel/babel.git
 │  ├─ @babel/helper-validator-identifier@7.16.7
-│  │  ├─ URL: https://github.com/babel/babel.git
-│  │  ├─ VendorName: The Babel Team
-│  │  └─ VendorUrl: https://babel.dev/team
-│  ├─ @babel/helper-validator-identifier@7.19.1
 │  │  ├─ URL: https://github.com/babel/babel.git
 │  │  ├─ VendorName: The Babel Team
 │  │  └─ VendorUrl: https://babel.dev/team
@@ -634,63 +592,30 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/babel/babel.git
 │  │  ├─ VendorName: The Babel Team
 │  │  └─ VendorUrl: https://babel.dev/docs/en/next/babel-highlight
-│  ├─ @babel/highlight@7.16.10
+│  ├─ @babel/parser@7.11.5
 │  │  ├─ URL: https://github.com/babel/babel.git
-│  │  ├─ VendorName: The Babel Team
-│  │  └─ VendorUrl: https://babel.dev/docs/en/next/babel-highlight
-│  ├─ @babel/parser@7.17.7
-│  │  ├─ URL: https://github.com/babel/babel.git
-│  │  ├─ VendorName: The Babel Team
-│  │  └─ VendorUrl: https://babel.dev/docs/en/next/babel-parser
+│  │  ├─ VendorName: Sebastian McKenzie
+│  │  └─ VendorUrl: https://babeljs.io/
 │  ├─ @babel/plugin-syntax-jsx@7.18.6
 │  │  ├─ URL: https://github.com/babel/babel.git
 │  │  ├─ VendorName: The Babel Team
 │  │  └─ VendorUrl: https://babel.dev/docs/en/next/babel-plugin-syntax-jsx
-│  ├─ @babel/runtime-corejs3@7.15.3
+│  ├─ @babel/runtime-corejs3@7.11.2
 │  │  ├─ URL: https://github.com/babel/babel.git
-│  │  ├─ VendorName: The Babel Team
-│  │  └─ VendorUrl: https://babel.dev/team
-│  ├─ @babel/runtime@7.11.2
-│  │  ├─ URL: https://github.com/babel/babel.git
-│  │  ├─ VendorName: Sebastian McKenzie
-│  │  └─ VendorUrl: https://babeljs.io/
-│  ├─ @babel/runtime@7.16.3
-│  │  ├─ URL: https://github.com/babel/babel.git
-│  │  ├─ VendorName: The Babel Team
-│  │  └─ VendorUrl: https://babel.dev/docs/en/next/babel-runtime
-│  ├─ @babel/runtime@7.19.0
-│  │  ├─ URL: https://github.com/babel/babel.git
-│  │  ├─ VendorName: The Babel Team
-│  │  └─ VendorUrl: https://babel.dev/docs/en/next/babel-runtime
-│  ├─ @babel/runtime@7.20.0
-│  │  ├─ URL: https://github.com/babel/babel.git
-│  │  ├─ VendorName: The Babel Team
-│  │  └─ VendorUrl: https://babel.dev/docs/en/next/babel-runtime
-│  ├─ @babel/runtime@7.20.1
-│  │  ├─ URL: https://github.com/babel/babel.git
-│  │  ├─ VendorName: The Babel Team
-│  │  └─ VendorUrl: https://babel.dev/docs/en/next/babel-runtime
+│  │  └─ VendorName: Denis Pushkarev
 │  ├─ @babel/runtime@7.21.0
 │  │  ├─ URL: https://github.com/babel/babel.git
 │  │  ├─ VendorName: The Babel Team
 │  │  └─ VendorUrl: https://babel.dev/docs/en/next/babel-runtime
-│  ├─ @babel/template@7.16.7
+│  ├─ @babel/template@7.10.4
 │  │  ├─ URL: https://github.com/babel/babel.git
-│  │  ├─ VendorName: The Babel Team
-│  │  └─ VendorUrl: https://babel.dev/docs/en/next/babel-template
-│  ├─ @babel/traverse@7.17.3
-│  │  ├─ URL: https://github.com/babel/babel.git
-│  │  ├─ VendorName: The Babel Team
-│  │  └─ VendorUrl: https://babel.dev/docs/en/next/babel-traverse
-│  ├─ @babel/types@7.11.5
+│  │  ├─ VendorName: Sebastian McKenzie
+│  │  └─ VendorUrl: https://babeljs.io/
+│  ├─ @babel/traverse@7.11.5
 │  │  ├─ URL: https://github.com/babel/babel.git
 │  │  ├─ VendorName: Sebastian McKenzie
 │  │  └─ VendorUrl: https://babeljs.io/
 │  ├─ @babel/types@7.17.0
-│  │  ├─ URL: https://github.com/babel/babel.git
-│  │  ├─ VendorName: The Babel Team
-│  │  └─ VendorUrl: https://babel.dev/docs/en/next/babel-types
-│  ├─ @babel/types@7.20.0
 │  │  ├─ URL: https://github.com/babel/babel.git
 │  │  ├─ VendorName: The Babel Team
 │  │  └─ VendorUrl: https://babel.dev/docs/en/next/babel-types
@@ -807,8 +732,12 @@ Third-party licenses
 │  ├─ @types/react-transition-group@4.4.5
 │  │  ├─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
 │  │  └─ VendorUrl: https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/react-transition-group
-│  ├─ @types/react@17.0.2
-│  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
+│  ├─ @types/react@17.0.40
+│  │  ├─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
+│  │  └─ VendorUrl: https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/react
+│  ├─ @types/scheduler@0.16.2
+│  │  ├─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
+│  │  └─ VendorUrl: https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/scheduler
 │  ├─ @types/unist@2.0.3
 │  │  └─ URL: https://github.com/DefinitelyTyped/DefinitelyTyped.git
 │  ├─ @types/zen-observable@0.8.1
@@ -833,7 +762,7 @@ Third-party licenses
 │  │  ├─ URL: git://github.com/TooTallNate/node-agent-base.git
 │  │  ├─ VendorName: Nathan Rajlich
 │  │  └─ VendorUrl: http://n8.io/
-│  ├─ ansi-regex@5.0.0
+│  ├─ ansi-regex@5.0.1
 │  │  ├─ URL: https://github.com/chalk/ansi-regex.git
 │  │  ├─ VendorName: Sindre Sorhus
 │  │  └─ VendorUrl: sindresorhus.com
@@ -875,10 +804,6 @@ Third-party licenses
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
 │  ├─ base64-js@1.3.1
-│  │  ├─ URL: git://github.com/beatgammit/base64-js.git
-│  │  ├─ VendorName: T. Jameson Little
-│  │  └─ VendorUrl: https://github.com/beatgammit/base64-js
-│  ├─ base64-js@1.5.1
 │  │  ├─ URL: git://github.com/beatgammit/base64-js.git
 │  │  ├─ VendorName: T. Jameson Little
 │  │  └─ VendorUrl: https://github.com/beatgammit/base64-js
@@ -927,9 +852,6 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/wooorm/character-reference-invalid.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
-│  ├─ classnames@2.2.6
-│  │  ├─ URL: https://github.com/JedWatson/classnames.git
-│  │  └─ VendorName: Jed Watson
 │  ├─ classnames@2.3.1
 │  │  ├─ URL: https://github.com/JedWatson/classnames.git
 │  │  └─ VendorName: Jed Watson
@@ -962,15 +884,17 @@ Third-party licenses
 │  ├─ commander@2.20.3
 │  │  ├─ URL: https://github.com/tj/commander.js.git
 │  │  └─ VendorName: TJ Holowaychuk
-│  ├─ convert-source-map@1.9.0
+│  ├─ convert-source-map@1.7.0
 │  │  ├─ URL: git://github.com/thlorenz/convert-source-map.git
 │  │  ├─ VendorName: Thorsten Lorenz
 │  │  └─ VendorUrl: https://github.com/thlorenz/convert-source-map
 │  ├─ copy-to-clipboard@3.3.2
 │  │  ├─ URL: git+https://github.com/sudodoki/copy-to-clipboard
 │  │  └─ VendorName: sudodoki
-│  ├─ core-js-pure@3.16.1
-│  │  └─ URL: https://github.com/zloirock/core-js.git
+│  ├─ core-js-pure@3.29.0
+│  │  ├─ URL: https://github.com/zloirock/core-js.git
+│  │  ├─ VendorName: Denis Pushkarev
+│  │  └─ VendorUrl: http://zloirock.ru
 │  ├─ core-js@2.6.11
 │  │  └─ URL: https://github.com/zloirock/core-js.git
 │  ├─ core-js@3.6.5
@@ -997,15 +921,9 @@ Third-party licenses
 │  ├─ csstype@3.0.6
 │  │  ├─ URL: https://github.com/frenic/csstype
 │  │  └─ VendorName: Fredrik Nicol
-│  ├─ csstype@3.1.1
-│  │  ├─ URL: https://github.com/frenic/csstype
-│  │  └─ VendorName: Fredrik Nicol
 │  ├─ debug@4.1.1
 │  │  ├─ URL: git://github.com/visionmedia/debug.git
 │  │  └─ VendorName: TJ Holowaychuk
-│  ├─ debug@4.3.3
-│  │  ├─ URL: git://github.com/debug-js/debug.git
-│  │  └─ VendorName: Josh Junon
 │  ├─ decamelize@1.2.0
 │  │  ├─ URL: https://github.com/sindresorhus/decamelize.git
 │  │  ├─ VendorName: Sindre Sorhus
@@ -1157,10 +1075,10 @@ Third-party licenses
 │  │  └─ VendorUrl: http://n8.io/
 │  ├─ immediate@3.0.6
 │  │  └─ URL: git://github.com/calvinmetcalf/immediate.git
-│  ├─ import-fresh@3.2.1
+│  ├─ import-fresh@3.3.0
 │  │  ├─ URL: https://github.com/sindresorhus/import-fresh.git
 │  │  ├─ VendorName: Sindre Sorhus
-│  │  └─ VendorUrl: sindresorhus.com
+│  │  └─ VendorUrl: https://sindresorhus.com
 │  ├─ inline-style-parser@0.1.1
 │  │  └─ URL: https://github.com/remarkablemark/inline-style-parser
 │  ├─ inline-style-prefixer@6.0.1
@@ -1270,10 +1188,6 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/sindresorhus/locate-path.git
 │  │  ├─ VendorName: Sindre Sorhus
 │  │  └─ VendorUrl: sindresorhus.com
-│  ├─ lodash-es@4.17.15
-│  │  ├─ URL: https://github.com/lodash/lodash.git
-│  │  ├─ VendorName: John-David Dalton
-│  │  └─ VendorUrl: https://lodash.com/custom-builds
 │  ├─ lodash-es@4.17.21
 │  │  ├─ URL: https://github.com/lodash/lodash.git
 │  │  ├─ VendorName: John-David Dalton
@@ -1294,10 +1208,6 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/lodash/lodash.git
 │  │  ├─ VendorName: John-David Dalton
 │  │  └─ VendorUrl: https://lodash.com/
-│  ├─ lodash@4.17.20
-│  │  ├─ URL: https://github.com/lodash/lodash.git
-│  │  ├─ VendorName: John-David Dalton
-│  │  └─ VendorUrl: https://lodash.com/
 │  ├─ lodash@4.17.21
 │  │  ├─ URL: https://github.com/lodash/lodash.git
 │  │  ├─ VendorName: John-David Dalton
@@ -1314,9 +1224,6 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/wooorm/lowlight.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
-│  ├─ luxon@2.5.2
-│  │  ├─ URL: https://github.com/moment/luxon
-│  │  └─ VendorName: Isaac Cambron
 │  ├─ markdown-table@3.0.2
 │  │  ├─ URL: https://github.com/wooorm/markdown-table.git
 │  │  ├─ VendorName: Titus Wormer
@@ -1500,18 +1407,12 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/lukeed/mri.git
 │  │  ├─ VendorName: Luke Edwards
 │  │  └─ VendorUrl: https://lukeed.com
-│  ├─ ms@2.1.2
-│  │  └─ URL: https://github.com/zeit/ms.git
 │  ├─ ms@2.1.3
 │  │  └─ URL: https://github.com/vercel/ms.git
 │  ├─ nearley@2.18.0
 │  │  ├─ URL: https://github.com/hardmath123/nearley.git
 │  │  └─ VendorName: Hardmath123
 │  ├─ node-fetch@2.6.1
-│  │  ├─ URL: https://github.com/bitinn/node-fetch.git
-│  │  ├─ VendorName: David Frank
-│  │  └─ VendorUrl: https://github.com/bitinn/node-fetch
-│  ├─ node-fetch@2.6.9
 │  │  ├─ URL: https://github.com/bitinn/node-fetch.git
 │  │  ├─ VendorName: David Frank
 │  │  └─ VendorUrl: https://github.com/bitinn/node-fetch
@@ -1584,9 +1485,6 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/taylorhakes/promise-polyfill.git
 │  │  ├─ VendorName: Taylor Hakes
 │  │  └─ VendorUrl: https://github.com/taylorhakes/promise-polyfill
-│  ├─ prop-types@15.7.2
-│  │  ├─ URL: https://github.com/facebook/prop-types.git
-│  │  └─ VendorUrl: https://facebook.github.io/react/
 │  ├─ prop-types@15.8.1
 │  │  ├─ URL: https://github.com/facebook/prop-types.git
 │  │  └─ VendorUrl: https://facebook.github.io/react/
@@ -1632,9 +1530,6 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/facebook/react.git
 │  │  └─ VendorUrl: https://reactjs.org/
 │  ├─ react-is@17.0.2
-│  │  ├─ URL: https://github.com/facebook/react.git
-│  │  └─ VendorUrl: https://reactjs.org/
-│  ├─ react-is@18.2.0
 │  │  ├─ URL: https://github.com/facebook/react.git
 │  │  └─ VendorUrl: https://reactjs.org/
 │  ├─ react-lifecycles-compat@3.0.4
@@ -1692,17 +1587,11 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/wooorm/refractor.git
 │  │  ├─ VendorName: Titus Wormer
 │  │  └─ VendorUrl: https://wooorm.com
-│  ├─ regenerator-runtime@0.13.10
-│  │  ├─ URL: https://github.com/facebook/regenerator/tree/master/packages/runtime
-│  │  └─ VendorName: Ben Newman
 │  ├─ regenerator-runtime@0.13.11
 │  │  ├─ URL: https://github.com/facebook/regenerator/tree/main/packages/runtime
 │  │  └─ VendorName: Ben Newman
 │  ├─ regenerator-runtime@0.13.7
 │  │  ├─ URL: https://github.com/facebook/regenerator/tree/master/packages/regenerator-runtime
-│  │  └─ VendorName: Ben Newman
-│  ├─ regenerator-runtime@0.13.9
-│  │  ├─ URL: https://github.com/facebook/regenerator/tree/master/packages/runtime
 │  │  └─ VendorName: Ben Newman
 │  ├─ remark-gfm@3.0.1
 │  │  ├─ URL: https://github.com/remarkjs/remark-gfm.git
@@ -1771,7 +1660,7 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/dashed/shallowequal.git
 │  │  ├─ VendorName: Alberto Leal
 │  │  └─ VendorUrl: github.com/dashed
-│  ├─ source-map-support@0.5.19
+│  ├─ source-map-support@0.5.21
 │  │  └─ URL: https://github.com/evanw/node-source-map-support
 │  ├─ sourcemap-codec@1.4.8
 │  │  ├─ URL: https://github.com/Rich-Harris/sourcemap-codec
@@ -1792,9 +1681,6 @@ Third-party licenses
 │  │  ├─ URL: https://github.com/flozz/StackBlur.git
 │  │  ├─ VendorName: Mario Klingemann
 │  │  └─ VendorUrl: http://www.quasimondo.com/StackBlurForCanvas/StackBlurDemo.html
-│  ├─ stackframe@1.2.0
-│  │  ├─ URL: git://github.com/stacktracejs/stackframe.git
-│  │  └─ VendorUrl: https://www.stacktracejs.com/
 │  ├─ stackframe@1.3.4
 │  │  ├─ URL: git://github.com/stacktracejs/stackframe.git
 │  │  └─ VendorUrl: https://www.stacktracejs.com/
@@ -1869,10 +1755,6 @@ Third-party licenses
 │  │  ├─ URL: git+https://github.com/sudodoki/toggle-selection
 │  │  ├─ VendorName: sudodoki
 │  │  └─ VendorUrl: sudodoki.name
-│  ├─ tr46@0.0.3
-│  │  ├─ URL: git+https://github.com/Sebmaster/tr46.js.git
-│  │  ├─ VendorName: Sebastian Mayr
-│  │  └─ VendorUrl: https://github.com/Sebmaster/tr46.js#readme
 │  ├─ tr46@3.0.0
 │  │  ├─ URL: https://github.com/jsdom/tr46
 │  │  └─ VendorName: Sebastian Mayr
@@ -1951,9 +1833,6 @@ Third-party licenses
 │  ├─ whatwg-fetch@3.6.2
 │  │  └─ URL: https://github.com/github/fetch.git
 │  ├─ whatwg-url@11.0.0
-│  │  ├─ URL: https://github.com/jsdom/whatwg-url.git
-│  │  └─ VendorName: Sebastian Mayr
-│  ├─ whatwg-url@5.0.0
 │  │  ├─ URL: https://github.com/jsdom/whatwg-url.git
 │  │  └─ VendorName: Sebastian Mayr
 │  ├─ wrap-ansi@6.2.0
