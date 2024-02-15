@@ -19,7 +19,7 @@ To view all currently configured settings, run `:config`.
 [source, shell, role=noheader]
 ----
 {
-  "maxHistory": 20,
+  "maxHistory": 30,
   "theme": "auto",
   "initCmd": ":play start",
   "playImplicitInitCommands": true,
@@ -29,16 +29,23 @@ To view all currently configured settings, run `:config`.
   "browserSyncDebugServer": null,
   "maxRows": 1000,
   "maxFieldItems": 500,
-  "shouldReportUdc": true,
   "autoComplete": true,
   "scrollToTop": true,
   "maxFrames": 30,
   "codeFontLigatures": true,
   "useBoltRouting": false,
   "editorLint": false,
-  "enableMultiStatementMode": true,
+  "enableMultiStatementMode": false,
   "connectionTimeout": 30000,
-  "showPerformanceOverlay": false
+  "showPerformanceOverlay": false,
+  "allowCrashReports": true,
+  "allowUserStats": true,
+  "showWheelZoomInfo": true,
+  "useReadTransactions": false,
+  "useCypherThread": true,
+  "shouldReportUdc": true,
+  "cmdchar": ":",
+  "editorAutocomplete": true
 }
 ----
 ====
@@ -106,10 +113,6 @@ Possible values: `auto`, `normal`, `outline`, and `dark`.
 For example, if a node has 1000 labels, the list will be cut off to the value set in `maxFieldItems`.
 | no
 
-| `shouldReportUdc`
-| `true`
-| Report less user metrics (user data collection).
-| no
 
 | `autoComplete`
 | `true`
@@ -160,6 +163,42 @@ The Bolt+routing feature on Neo4j drivers discovers a cluster member (drivers ha
 | `false`
 | Internal setting, used for showing a performance overlay (FPS and memory usage).
 | no
+
+| `allowCrashReports`
+| `true`
+| Allow crash reports to be sent, can be changed from Desktop.
+| no
+
+| `allowUserStats`
+| `true`
+| Allow product usage statistics to be sent, can be changed from Desktop
+| no
+
+| `showWheelZoomInfo`
+| `true`
+| Show zoom interactions hint.
+| yes
+
+| `useReadTransactions`
+| `false`
+| Use only read transactions for Cypher queries, preventing writing to the database.
+| yes
+
+| `useCypherThread`
+| `true`
+|
+|
+
+| `shouldReportUdc`
+| `true`
+| Report less user metrics (user data collection).
+| no
+
+| `cmdchar`
+| `:`
+|
+|
+
 
 | `editorAutocomplete`
 | `true`
