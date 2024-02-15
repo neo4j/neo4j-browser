@@ -184,21 +184,10 @@ The Bolt+routing feature on Neo4j drivers discovers a cluster member (drivers ha
 | Use only read transactions for Cypher queries, preventing writing to the database.
 | yes
 
-| `useCypherThread`
-| `true`
-|
-|
-
 | `shouldReportUdc`
 | `true`
 | Report less user metrics (user data collection).
 | no
-
-| `cmdchar`
-| `:`
-|
-|
-
 
 | `editorAutocomplete`
 | `true`
