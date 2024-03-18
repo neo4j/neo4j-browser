@@ -427,11 +427,10 @@ export class CypherFrame extends Component<CypherFrameProps, CypherFrameState> {
     const firstRecord = records[0]
     const keys = firstRecord?.length > 0 ? firstRecord.keys : []
 
-    const exportdataRaw = [keys]
-    exportdataRaw.push(
-      ...(records.map(record => recordToStringArray(record)) as any)
+    const exportData = stringifyResultArray(
+      csvFormat,
+      [keys].concat(records.map(record => recordToStringArray(record)))
     )
-    const exportData = stringifyResultArray(csvFormat, exportdataRaw)
     const data = exportData.slice()
     const csv = CSVSerializer(data.shift())
     csv.appendRows(data)
