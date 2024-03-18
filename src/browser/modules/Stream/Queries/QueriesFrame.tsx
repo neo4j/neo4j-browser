@@ -22,6 +22,23 @@ import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { Bus } from 'suber'
 
+import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
+import { Duration } from 'neo4j-driver'
+import { GlobalState } from 'project-root/src/shared/globalState'
+import { gte } from 'semver'
+import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
+import {
+  CONNECTED_STATE,
+  getConnectionState
+} from 'shared/modules/connections/connectionsDuck'
+import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import {
+  getRawVersion,
+  getSemanticVersion,
+  hasProcedure,
+  isOnCluster
+} from 'shared/modules/dbMeta/dbMetaDuck'
+import { Frame } from 'shared/modules/frames/framesDuck'
 import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
 import FrameError from '../../Frame/FrameError'
 import {
@@ -30,6 +47,9 @@ import {
   StatusbarWrapper,
   StyledStatusBar
 } from '../AutoRefresh/styled'
+import LegacyQueriesFrame, {
+  LegacyQueriesFrameProps
+} from './LegacyQueriesFrame'
 import {
   Code,
   StyledHeaderRow,
@@ -38,26 +58,6 @@ import {
   StyledTd,
   StyledTh
 } from './styled'
-import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
-import { GlobalState } from 'project-root/src/shared/globalState'
-import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
-import {
-  CONNECTED_STATE,
-  getConnectionState
-} from 'shared/modules/connections/connectionsDuck'
-import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import { durationFormat } from 'services/bolt/cypherTypesFormatting'
-import { Frame } from 'shared/modules/frames/framesDuck'
-import LegacyQueriesFrame, {
-  LegacyQueriesFrameProps
-} from './LegacyQueriesFrame'
-import {
-  getRawVersion,
-  getSemanticVersion,
-  hasProcedure,
-  isOnCluster
-} from 'shared/modules/dbMeta/dbMetaDuck'
-import { gte } from 'semver'
 
 type QueriesFrameState = {
   queries: any[]
@@ -82,6 +82,22 @@ function constructOverviewMessage(queries: any, errors: string[]) {
   return errors.length > 0
     ? `${successMessage} (${errors.length} unsuccessful)`
     : successMessage
+}
+
+function prettyPrintDuration(duration: Duration) {
+  const { months, days, seconds, nanoseconds } = duration
+
+  let resultsString = ''
+  if (months.toNumber() > 0) {
+    resultsString += `${months} months, `
+  }
+  if (days.toNumber() > 0) {
+    resultsString += `${days} days, `
+  }
+  const millis = seconds.toNumber() * 1000 + nanoseconds.toNumber() / 1000000
+  resultsString += `${millis} ms`
+
+  return resultsString
 }
 
 export class QueriesFrame extends Component<
@@ -153,7 +169,7 @@ export class QueriesFrame extends Component<
                 ...data,
                 host: `neo4j://${nonNullHost}`,
                 query: data.currentQuery,
-                elapsedTimeMillis: durationFormat(data.elapsedTime),
+                elapsedTimeMillis: prettyPrintDuration(data.elapsedTime),
                 queryId: data.transactionId
               }
             }
@@ -267,7 +283,7 @@ export class QueriesFrame extends Component<
                   <Code>{JSON.stringify(query.metaData, null, 2)}</Code>
                 </StyledTd>
                 <StyledTd key="time" width={tableHeaderSizes[5][1]}>
-                  {query.elapsedTimeMillis} ms
+                  {query.elapsedTimeMillis}
                 </StyledTd>
                 <StyledTd key="actions" width={tableHeaderSizes[6][1]}>
                   <ConfirmationButton
