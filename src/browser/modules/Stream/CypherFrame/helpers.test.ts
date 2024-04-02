@@ -646,7 +646,7 @@ describe('helpers', () => {
       const res = records.map(record => recordToStringArray(record))
 
       // Then
-      expect(res).toEqual([['P1M2DT3.000000004S']])
+      expect(res).toEqual([['"P1M2DT3.000000004S"']])
     })
   })
 

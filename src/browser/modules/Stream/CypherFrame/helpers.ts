@@ -29,11 +29,7 @@ import {
   reduce,
   some
 } from 'lodash-es'
-import {
-  CypherDataType,
-  isCypherPropertyType,
-  propertyToString
-} from 'neo4j-arc/common'
+import { CypherDataType, isCypherPropertyType } from 'neo4j-arc/common'
 import neo4j, { Node, Path, Record, Relationship } from 'neo4j-driver'
 
 import bolt from 'services/bolt/bolt'
@@ -435,7 +431,8 @@ export const recordToStringArray = (record: Record): string[] => {
     }
 
     if (isCypherPropertyType(value)) {
-      return propertyToString(value)
+      //Note: later we should use propertyToString here but needs to be updated to show year in durations.
+      return stringifyMod(value, stringModifier, true)
     }
 
     // We have nodes, relationships, paths and cypher maps left.
