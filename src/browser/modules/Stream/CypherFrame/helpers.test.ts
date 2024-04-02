@@ -19,19 +19,19 @@
  */
 import neo4j, { Record } from 'neo4j-driver'
 
+import * as viewTypes from 'shared/modules/frames/frameViewTypes'
+import { BrowserRequestResult } from 'shared/modules/requests/requestsDuck'
 import {
-  recordToStringArray,
   getRecordsToDisplayInTable,
   initialView,
   recordToJSONMapper,
+  recordToStringArray,
   resultHasNodes,
   resultHasPlan,
   resultHasRows,
   resultHasWarnings,
   resultIsError
 } from './helpers'
-import * as viewTypes from 'shared/modules/frames/frameViewTypes'
-import { BrowserRequestResult } from 'shared/modules/requests/requestsDuck'
 
 describe('helpers', () => {
   test('getRecordsToDisplayInTable should report if there are rows or not in the result', () => {
@@ -646,7 +646,7 @@ describe('helpers', () => {
       const res = records.map(record => recordToStringArray(record))
 
       // Then
-      expect(res).toEqual([['P1M2DT3S']])
+      expect(res).toEqual([['P1M2DT3.000000004S']])
     })
   })
 
@@ -846,7 +846,7 @@ describe('helpers', () => {
             elementType: 'node',
             labels: ['foo'],
             properties: {
-              bar: 'P2012Y2M2DT14H37M21.545S'
+              bar: 'P24146M2DT52641.545000000S'
             }
           }
         }
@@ -866,7 +866,7 @@ describe('helpers', () => {
             elementType: 'node',
             labels: ['foo'],
             properties: {
-              bar: 'PT1M40S'
+              bar: 'P0M0DT100S'
             }
           }
         }
