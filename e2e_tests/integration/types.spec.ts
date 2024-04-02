@@ -64,7 +64,7 @@ describe('Types in Browser', () => {
         cy.resultContains('"2015-07-20T15:11:42[Europe/Stockholm]"')
         // Go to ascii view
         cy.get('[data-testid="cypherFrameSidebarAscii"]').first().click()
-        cy.resultContains('│"2015-07-20T15:11:42[Europe/Stockholm]"')
+        cy.resultContains('|2015-07-20T15:11:42[Europe/Stockholm]"')
       } else {
         //Split since the timezone is shown as 2015-07-20T15:11:42+02:00[Europe/Stockholm]
         //Which changes during daylight saving time
@@ -72,7 +72,7 @@ describe('Types in Browser', () => {
         cy.resultContains(':00[Europe/Stockholm]"')
         // Go to ascii view
         cy.get('[data-testid="cypherFrameSidebarAscii"]').first().click()
-        cy.resultContains('│"2015-07-20T15:11:42+0')
+        cy.resultContains('│2015-07-20T15:11:42+0')
         cy.resultContains(':00[Europe/Stockholm]"')
       }
     })
@@ -86,7 +86,7 @@ describe('Types in Browser', () => {
       cy.resultContains('"2015-07-20T15:11:42"')
       // Go to ascii view
       cy.get('[data-testid="cypherFrameSidebarAscii"]').first().click()
-      cy.resultContains('│"2015-07-20T15:11:42"')
+      cy.resultContains('│2015-07-20T15:11:42"')
     })
     it('presents date type correctly', () => {
       cy.executeCommand(':clear')
@@ -97,7 +97,7 @@ describe('Types in Browser', () => {
       cy.resultContains('"2015-07-20"')
       // Go to ascii view
       cy.get('[data-testid="cypherFrameSidebarAscii"]').first().click()
-      cy.resultContains('│"2015-07-20"')
+      cy.resultContains('|2015-07-20"')
     })
     it('presents duration type correctly', () => {
       cy.executeCommand(':clear')
@@ -121,7 +121,7 @@ describe('Types in Browser', () => {
       cy.resultContains('"14:03:04')
       // Go to ascii view
       cy.get('[data-testid="cypherFrameSidebarAscii"]').first().click()
-      cy.resultContains('│"14:03:04')
+      cy.resultContains('|14:03:04')
     })
     it('presents localtime type correctly', () => {
       cy.executeCommand(':clear')
@@ -132,7 +132,7 @@ describe('Types in Browser', () => {
       cy.resultContains('"14:03:04"')
       // Go to ascii view
       cy.get('[data-testid="cypherFrameSidebarAscii"]').first().click()
-      cy.resultContains('│"14:03:04"')
+      cy.resultContains('|14:03:04"')
     })
     it('renders types in viz correctly', () => {
       cy.executeCommand('MATCH (t:Types) DELETE t;')
