@@ -106,10 +106,10 @@ describe('Types in Browser', () => {
       cy.executeCommand(query)
       cy.waitForCommandResult()
 
-      cy.resultContains('P1Y2M3DT4H5M6S')
+      cy.resultContains('P14M3DT14706S')
       // Go to ascii view
       cy.get('[data-testid="cypherFrameSidebarAscii"]').first().click()
-      cy.resultContains('│P1Y2M3DT4H5M6S')
+      cy.resultContains('P14M3DT14706S')
     })
     it('presents time type correctly', () => {
       cy.executeCommand(':clear')

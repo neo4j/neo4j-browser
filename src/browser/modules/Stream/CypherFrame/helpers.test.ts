@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import neo4j, { Record } from 'neo4j-driver'
+import neo4j, { Integer, Record } from 'neo4j-driver'
 
 import * as viewTypes from 'shared/modules/frames/frameViewTypes'
 import { BrowserRequestResult } from 'shared/modules/requests/requestsDuck'
@@ -847,6 +847,33 @@ describe('helpers', () => {
             labels: ['foo'],
             properties: {
               bar: 'P24146M2DT52641.545000000S'
+            }
+          }
+        }
+
+        expect(recordToJSONMapper(record)).toEqual(expected)
+      })
+
+      test('handles duration above js safe number', () => {
+        const node = new (neo4j.types.Node as any)(1, ['foo'], {
+          bar: new neo4j.types.Duration(
+            new Integer(0),
+            new Integer(0),
+            // RETURN 9223372036854775807 which is maxiumum integer in neo4j
+            new Integer(-1, 2147483647),
+            new Integer(0)
+          )
+        })
+        const record = new (neo4j.types.Record as any)(['n'], [node])
+        const expected = {
+          n: {
+            elementId: '1',
+            identity: 1,
+            elementType: 'node',
+            labels: ['foo'],
+            properties: {
+              // get same number as above
+              bar: 'P0M0DT9223372036854775807S'
             }
           }
         }
