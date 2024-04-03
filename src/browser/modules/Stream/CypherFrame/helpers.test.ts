@@ -17,21 +17,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import neo4j, { Record } from 'neo4j-driver'
+import neo4j, { Integer, Record } from 'neo4j-driver'
 
+import * as viewTypes from 'shared/modules/frames/frameViewTypes'
+import { BrowserRequestResult } from 'shared/modules/requests/requestsDuck'
 import {
-  recordToStringArray,
   getRecordsToDisplayInTable,
   initialView,
   recordToJSONMapper,
+  recordToStringArray,
   resultHasNodes,
   resultHasPlan,
   resultHasRows,
   resultHasWarnings,
   resultIsError
 } from './helpers'
-import * as viewTypes from 'shared/modules/frames/frameViewTypes'
-import { BrowserRequestResult } from 'shared/modules/requests/requestsDuck'
 
 describe('helpers', () => {
   test('getRecordsToDisplayInTable should report if there are rows or not in the result', () => {
@@ -646,7 +646,7 @@ describe('helpers', () => {
       const res = records.map(record => recordToStringArray(record))
 
       // Then
-      expect(res).toEqual([['P1M2DT3S']])
+      expect(res).toEqual([['"P1M2DT3.000000004S"']])
     })
   })
 
@@ -846,7 +846,34 @@ describe('helpers', () => {
             elementType: 'node',
             labels: ['foo'],
             properties: {
-              bar: 'P2012Y2M2DT14H37M21.545S'
+              bar: 'P24146M2DT52641.545000000S'
+            }
+          }
+        }
+
+        expect(recordToJSONMapper(record)).toEqual(expected)
+      })
+
+      test('handles duration above js safe number', () => {
+        const node = new (neo4j.types.Node as any)(1, ['foo'], {
+          bar: new neo4j.types.Duration(
+            new Integer(0),
+            new Integer(0),
+            // RETURN 9223372036854775807 which is maxiumum integer in neo4j
+            new Integer(-1, 2147483647),
+            new Integer(0)
+          )
+        })
+        const record = new (neo4j.types.Record as any)(['n'], [node])
+        const expected = {
+          n: {
+            elementId: '1',
+            identity: 1,
+            elementType: 'node',
+            labels: ['foo'],
+            properties: {
+              // get same number as above
+              bar: 'P0M0DT9223372036854775807S'
             }
           }
         }
@@ -866,7 +893,7 @@ describe('helpers', () => {
             elementType: 'node',
             labels: ['foo'],
             properties: {
-              bar: 'PT1M40S'
+              bar: 'P0M0DT100S'
             }
           }
         }

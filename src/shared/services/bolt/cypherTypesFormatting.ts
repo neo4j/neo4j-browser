@@ -1,4 +1,3 @@
-import { Duration } from 'luxon'
 import neo4j from 'neo4j-driver'
 
 export const csvFormat = (anything: any) => {
@@ -31,20 +30,10 @@ export const stringModifier = (anything: any) => {
     return spacialFormat(anything)
   }
   if (isTemporalType(anything)) {
-    if (isDuration(anything)) {
-      return durationFormat(anything)
-    } else {
-      return `"${anything.toString()}"`
-    }
+    return `"${anything.toString()}"`
   }
   return undefined
 }
-
-export const durationFormat = (duration: typeof neo4j.types.Duration): string =>
-  Duration.fromISO(duration.toString())
-    .shiftTo('years', 'days', 'months', 'hours', 'minutes', 'seconds')
-    .normalize()
-    .toISO()
 
 const numberFormat = (anything: any) => {
   // Exclude false positives and return early

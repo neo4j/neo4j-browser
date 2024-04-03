@@ -106,10 +106,10 @@ describe('Types in Browser', () => {
       cy.executeCommand(query)
       cy.waitForCommandResult()
 
-      cy.resultContains('P1Y2M3DT4H5M6S')
+      cy.resultContains('P14M3DT14706S')
       // Go to ascii view
       cy.get('[data-testid="cypherFrameSidebarAscii"]').first().click()
-      cy.resultContains('│P1Y2M3DT4H5M6S')
+      cy.resultContains('│"P14M3DT14706S')
     })
     it('presents time type correctly', () => {
       cy.executeCommand(':clear')
@@ -143,7 +143,7 @@ describe('Types in Browser', () => {
       // cy.waitForCommandResult()
       cy.get('circle.b-outline', { timeout: 10000 }).click()
       cy.get('[data-testid="vizInspector"]')
-        .should('contain', 'P11M2DT2H19')
+        .should('contain', 'P11M2DT8363.857000000S')
         .and('contain', 'srid:4326')
         .and('contain', 'elementId')
     })
@@ -154,7 +154,7 @@ describe('Types in Browser', () => {
       // cy.waitForCommandResult()
       cy.get('circle.b-outline', { timeout: 10000 }).click()
       cy.get('[data-testid="vizInspector"]')
-        .should('contain', 'P11M2DT2H19')
+        .should('contain', 'P11M2DT8363.857000000S')
         .and('contain', 'srid:4326')
         .and('contain', 'date')
         .and('contain', 'location')
