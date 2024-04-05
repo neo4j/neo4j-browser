@@ -45,11 +45,7 @@ describe('DatabaseSelector', () => {
 
     // When
     const { container } = render(
-      <DatabaseSelector
-        selectedDb=""
-        uniqueDatabases={databases}
-        aliases={[]}
-      />
+      <DatabaseSelector selectedDb="" uniqueDatabases={databases} />
     )
 
     // Then
@@ -62,11 +58,7 @@ describe('DatabaseSelector', () => {
 
     // When
     const { getByDisplayValue, queryByDisplayValue, rerender } = render(
-      <DatabaseSelector
-        uniqueDatabases={databases}
-        selectedDb={selected}
-        aliases={[]}
-      />
+      <DatabaseSelector uniqueDatabases={databases} selectedDb={selected} />
     )
 
     // Then
@@ -76,11 +68,7 @@ describe('DatabaseSelector', () => {
     // When
     selected = 'molly'
     rerender(
-      <DatabaseSelector
-        uniqueDatabases={databases}
-        selectedDb={selected}
-        aliases={[]}
-      />
+      <DatabaseSelector uniqueDatabases={databases} selectedDb={selected} />
     )
 
     // Then
@@ -90,11 +78,7 @@ describe('DatabaseSelector', () => {
     // When
     selected = ''
     rerender(
-      <DatabaseSelector
-        uniqueDatabases={databases}
-        selectedDb={selected}
-        aliases={[]}
-      />
+      <DatabaseSelector uniqueDatabases={databases} selectedDb={selected} />
     )
 
     // Then select db text should be shown
@@ -113,7 +97,6 @@ describe('DatabaseSelector', () => {
         uniqueDatabases={databases}
         selectedDb=""
         onChange={onChange}
-        aliases={[]}
       />
     )
     const select = getByTestId(testId)
@@ -143,7 +126,6 @@ describe('DatabaseSelector', () => {
         selectedDb=""
         uniqueDatabases={databases}
         onChange={onChange}
-        aliases={[]}
       />
     )
     const select = getByTestId(testId)

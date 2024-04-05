@@ -2,7 +2,6 @@
 
 exports[`hydrating state can CLEAR to reset state 1`] = `
 Object {
-  "aliases": Array [],
   "countAutomaticRefresh": Object {
     "enabled": true,
     "loading": false,
@@ -70,7 +69,6 @@ Object {
 
 exports[`hydrating state should merge inital state and state on load 1`] = `
 Object {
-  "aliases": Array [],
   "countAutomaticRefresh": Object {
     "enabled": true,
     "loading": false,
