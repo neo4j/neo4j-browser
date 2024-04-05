@@ -17,19 +17,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { uniq } from 'lodash-es'
+import { QueryResult } from 'neo4j-driver'
+import { SemVer, coerce, gte } from 'semver'
+import { isConfigValFalsy } from 'services/bolt/boltHelpers'
+import { GlobalState } from 'shared/globalState'
+import { APP_START } from 'shared/modules/app/appDuck'
+import { FIRST_MULTI_DB_SUPPORT } from '../features/versionedFeatures'
 import {
+  extractServerInfo,
   extractTrialStatus,
   extractTrialStatusOld,
   versionHasEditorHistorySetting
 } from './utils'
-import { isConfigValFalsy } from 'services/bolt/boltHelpers'
-import { GlobalState } from 'shared/globalState'
-import { APP_START } from 'shared/modules/app/appDuck'
-import { extractServerInfo } from './utils'
-import { coerce, SemVer, gte } from 'semver'
-import { QueryResult } from 'neo4j-driver'
-import { uniq } from 'lodash-es'
-import { FIRST_MULTI_DB_SUPPORT } from '../features/versionedFeatures'
 
 export const UPDATE_META = 'meta/UPDATE_META'
 export const PARSE_META = 'meta/PARSE_META'
@@ -226,6 +226,7 @@ export type Database = {
   home?: boolean // introduced in neo4j 4.3
   aliases?: string[] // introduced in neo4j 4.4
   type?: 'system' | 'composite' | 'standard' // introduced in neo4j 5
+  constituents?: string[] // introduced in neo4j 5
   status: string
 }
 

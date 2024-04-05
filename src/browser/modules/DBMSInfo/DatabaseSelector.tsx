@@ -66,11 +66,22 @@ export const DatabaseSelector = ({
 
   const aliasList = uniqueDatabases.flatMap(db =>
     db.aliases
-      ? db.aliases.map(alias => ({
-          databaseName: db.name,
-          name: alias,
-          status: db.status
-        }))
+      ? db.aliases
+          .map(alias => ({
+            databaseName: db.name,
+            name: alias,
+            status: db.status
+          }))
+          .filter(
+            // If the alias points to a composite database and the alias is listed as
+            // one of the constituents, we don't want to show it as it's not directly queryable
+            alias =>
+              !uniqueDatabases.some(
+                db =>
+                  db.type === 'composite' &&
+                  db.constituents?.includes(alias.name)
+              )
+          )
       : []
   )
 
