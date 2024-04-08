@@ -135,27 +135,6 @@ async function databaseList(store: any) {
   } catch {}
 }
 
-async function aliasList(store: any) {
-  try {
-    const hasMultidb = supportsMultiDb(store.getState())
-    if (!hasMultidb) {
-      return
-    }
-
-    const res = await bolt.backgroundWorkerlessRoutedRead(
-      'SHOW ALIASES FOR DATABASE',
-      { useDb: SYSTEM_DB },
-      store
-    )
-
-    if (!res) return
-
-    const aliases = res.records.map((record: any) => record.toObject())
-
-    store.dispatch(update({ aliases }))
-  } catch {}
-}
-
 async function getLabelsAndTypes(store: any) {
   const db = getCurrentDatabase(store.getState())
 
@@ -416,8 +395,7 @@ async function pollDbMeta(store: any) {
   await Promise.all([
     getFunctionsAndProcedures(store),
     clusterRole(store),
-    databaseList(store),
-    aliasList(store)
+    databaseList(store)
   ])
 }
 
