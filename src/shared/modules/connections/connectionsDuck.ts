@@ -193,7 +193,7 @@ export function getConnectionData(
     return { ...data, username: memoryUsername, password: memoryPassword }
   }
 
-  return data
+  return { ...data, username: data.username ? data.username : memoryUsername }
 }
 
 const removeConnectionHelper = (
@@ -652,9 +652,10 @@ export const disconnectEpic = (action$: any, store: any) => {
     .merge(action$.ofType(USER_CLEAR))
     .do(() => bolt.closeConnection())
     .do(() => store.dispatch(resetUseDb()))
-    .do((action: any) =>
+    .do((action: any) => {
+      memoryPassword = ''
       store.dispatch(updateConnection({ id: action.id, password: '' }))
-    )
+    })
     .map(() => setActiveConnection(null))
 }
 export const silentDisconnectEpic = (action$: any, store: any) => {
