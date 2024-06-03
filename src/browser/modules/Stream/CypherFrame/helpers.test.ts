@@ -648,6 +648,31 @@ describe('helpers', () => {
       // Then
       expect(res).toEqual([['"P1M2DT3.000000004S"']])
     })
+
+    test('recordToStringArray handles strings correctly when double quotes are disabled', () => {
+      const records = [
+        new Record(
+          ['x', 'y', 'n', 'z', '{}'],
+          [
+            'xRecord',
+            neo4j.int(10),
+            new neo4j.types.Duration(1, 2, 3, 4),
+            new (neo4j.types.Node as any)('1', ['Person'], { prop1: 'prop1' }),
+            {}
+          ]
+        )
+      ]
+      const res = records.map(record => recordToStringArray(record, true))
+      expect(res).toEqual([
+        [
+          'xRecord',
+          '10',
+          'P1M2DT3.000000004S',
+          '(:Person {prop1: prop1})',
+          '{}'
+        ]
+      ])
+    })
   })
 
   describe('recordToJSONMapper', () => {

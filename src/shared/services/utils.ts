@@ -307,7 +307,8 @@ export const stringifyMod = (
   value: any,
   modFn: any = null,
   pretty: boolean | number = false,
-  skipOpeningIndentation = false
+  skipOpeningIndentation = false,
+  discardDoubleQuotes = false
 ): string => {
   const prettyLevel = isNumber(pretty) ? pretty : +pretty
   const nextPrettyLevel = prettyLevel ? prettyLevel + 1 : false
@@ -386,7 +387,9 @@ export const stringifyMod = (
       )}${newLine}${endIndentation}}`
     }
   }
-  return `${indentation}"${value.toString().replace(escRE, escFunc)}"`
+  return discardDoubleQuotes
+    ? `${indentation}${value.toString().replace(escRE, escFunc)}`
+    : `${indentation}"${value.toString().replace(escRE, escFunc)}"`
 }
 
 export const unescapeDoubleQuotesForDisplay = (str: any) =>
