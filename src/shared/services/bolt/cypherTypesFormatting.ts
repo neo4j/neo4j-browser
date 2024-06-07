@@ -19,7 +19,10 @@ export const csvFormat = (anything: any) => {
   return undefined
 }
 
-export const stringModifier = (anything: any) => {
+export const stringModifier = (
+  anything: any,
+  discardDoubleQuotes?: boolean
+) => {
   if (typeof anything === 'number') {
     return numberFormat(anything)
   }
@@ -30,7 +33,9 @@ export const stringModifier = (anything: any) => {
     return spacialFormat(anything)
   }
   if (isTemporalType(anything)) {
-    return `"${anything.toString()}"`
+    return discardDoubleQuotes
+      ? anything.toString()
+      : `"${anything.toString()}"`
   }
   return undefined
 }

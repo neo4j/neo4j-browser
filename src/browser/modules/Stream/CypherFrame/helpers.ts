@@ -35,7 +35,7 @@ import neo4j, { Node, Path, Record, Relationship } from 'neo4j-driver'
 import bolt from 'services/bolt/bolt'
 import { recursivelyExtractGraphItems } from 'services/bolt/boltMappings'
 import { stringModifier } from 'services/bolt/cypherTypesFormatting'
-import { stringifyMod, unescapeDoubleQuotesForDisplay } from 'services/utils'
+import { stringifyMod } from 'services/utils'
 import * as viewTypes from 'shared/modules/frames/frameViewTypes'
 import { BrowserRequestResult } from 'shared/modules/requests/requestsDuck'
 
@@ -231,14 +231,13 @@ export const initialView = (props: any, state: any = {}) => {
  */
 export const stringifyResultArray = (
   formatter = stringModifier,
-  arr: any[] = [],
-  unescapeDoubleQuotes = false
+  arr: any[] = []
 ) => {
   return arr.map(col => {
     if (!col) return col
     return col.map((fVal: any) => {
       const res = stringifyMod(fVal, formatter)
-      return unescapeDoubleQuotes ? unescapeDoubleQuotesForDisplay(res) : res
+      return res
     })
   })
 }
@@ -423,7 +422,10 @@ function isNeo4jValue(value: any) {
   }
 }
 
-export const recordToStringArray = (record: Record): string[] => {
+export const recordToStringArray = (
+  record: Record,
+  discardDoubleQuotes?: boolean
+): string[] => {
   const recursiveStringify = (value: CypherDataType): string => {
     if (Array.isArray(value)) {
       if (value.length === 0) return '[]'
@@ -432,7 +434,13 @@ export const recordToStringArray = (record: Record): string[] => {
 
     if (isCypherPropertyType(value)) {
       //Note: later we should use propertyToString here but needs to be updated to show year in durations.
-      return stringifyMod(value, stringModifier, true)
+      return stringifyMod(
+        value,
+        (v: any) => stringModifier(v, discardDoubleQuotes),
+        true,
+        false,
+        discardDoubleQuotes
+      )
     }
 
     // We have nodes, relationships, paths and cypher maps left.
