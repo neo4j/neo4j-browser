@@ -24,6 +24,7 @@ import { StyledLabelChip } from 'neo4j-arc/common'
 import { GraphStyleModel } from 'neo4j-arc/graph-visualization'
 
 import { GrassEditor } from './GrassEditor'
+import { StyledPopup } from './styled'
 
 export type StyleableNodeLabelProps = {
   selectedLabel: {
@@ -48,7 +49,7 @@ export function StyleableNodeLabel({
     selectedLabel.label === '*' ? allNodesCount : selectedLabel.count
 
   return (
-    <Popup
+    <StyledPopup
       on="click"
       basic
       key={selectedLabel.label}
@@ -68,6 +69,6 @@ export function StyleableNodeLabel({
       }
     >
       <GrassEditor selectedLabel={selectedLabel} />
-    </Popup>
+    </StyledPopup>
   )
 }

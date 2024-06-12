@@ -17,9 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { Popup, PopupProps } from 'semantic-ui-react'
 import styled from 'styled-components'
 
 export const legendRowHeight = 32
+
+export const StyledPopup = styled<React.ComponentType<PopupProps>>(Popup)`
+  && {
+    background: ${props => props.theme.editorBackground};
+  }
+`
 
 export const StyledInlineList = styled.ul`
   list-style: none;
