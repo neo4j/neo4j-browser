@@ -49,3 +49,6 @@ The following areas of Neo4j Browser are covered in this manual:
 _Who should read this?_
 
 This manual is written for developers, database administrators, quality engineers, data scientists, and data architects, who may or may not be familiar with Neo4j.
+
+// Edit at: https://github.com/neo4j-graphacademy/courses/blob/main/asciidoc/courses/cypher-fundamentals/promo.adoc
+include::https://raw.githubusercontent.com/neo4j-graphacademy/courses/main/asciidoc/courses/cypher-fundamentals/promo.adoc[]
