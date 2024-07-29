@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import neo4j from 'neo4j-driver'
+import neo4j, { QueryResult } from 'neo4j-driver'
 import Rx from 'rxjs'
 
 import {
@@ -46,6 +46,7 @@ import {
 
 const NAME = 'cypher'
 export const CYPHER_REQUEST = `${NAME}/REQUEST`
+export const ROUTED_CYPHER_READ_REQUEST = `${NAME}/ROUTED_READ_REQUEST`
 export const ROUTED_CYPHER_WRITE_REQUEST = `${NAME}/ROUTED_WRITE_REQUEST`
 export const AD_HOC_CYPHER_REQUEST = `${NAME}/AD_HOC_REQUEST`
 export const CLUSTER_CYPHER_REQUEST = `${NAME}/CLUSTER_REQUEST`
@@ -113,6 +114,22 @@ const callClusterMember = async (connection: any, action: any) => {
       })
   })
 }
+const routedCypherQueryResultResolver = async (
+  action: any,
+  promise: Promise<QueryResult>
+) => {
+  return promise
+    .then((result: any) => ({
+      type: action.$$responseChannel,
+      success: true,
+      result
+    }))
+    .catch((error: any) => ({
+      type: action.$$responseChannel,
+      success: false,
+      error
+    }))
+}
 
 // Epics
 export const cypherRequestEpic = (some$: any) =>
@@ -135,7 +152,20 @@ export const cypherRequestEpic = (some$: any) =>
       }))
   })
 
-export const routedCypherRequestEpic = (some$: any) =>
+export const routedCypherReadRequestEpic = (some$: any) =>
+  some$.ofType(ROUTED_CYPHER_READ_REQUEST).mergeMap((action: any) => {
+    if (!action.$$responseChannel) return Rx.Observable.of(null)
+
+    const promise = bolt.routedReadTransaction(action.query, action.params, {
+      ...getUserTxMetadata(action.queryType || null),
+      cancelable: true,
+      useDb: action.useDb
+    })
+
+    return routedCypherQueryResultResolver(action, promise)
+  })
+
+export const routedCypherWriteRequestEpic = (some$: any) =>
   some$.ofType(ROUTED_CYPHER_WRITE_REQUEST).mergeMap((action: any) => {
     if (!action.$$responseChannel) return Rx.Observable.of(null)
 
@@ -148,17 +178,8 @@ export const routedCypherRequestEpic = (some$: any) =>
         useDb: action.useDb
       }
     )
-    return promise
-      .then((result: any) => ({
-        type: action.$$responseChannel,
-        success: true,
-        result
-      }))
-      .catch((error: any) => ({
-        type: action.$$responseChannel,
-        success: false,
-        error
-      }))
+
+    return routedCypherQueryResultResolver(action, promise)
   })
 
 export const adHocCypherRequestEpic = (some$: any, store: any) =>

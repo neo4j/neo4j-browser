@@ -53,7 +53,8 @@ import {
   clusterCypherRequestEpic,
   cypherRequestEpic,
   handleForcePasswordChangeEpic,
-  routedCypherRequestEpic
+  routedCypherReadRequestEpic,
+  routedCypherWriteRequestEpic
 } from './modules/cypher/cypherDuck'
 import {
   clearMetaOnDisconnectEpic,
@@ -122,7 +123,8 @@ export default combineEpics(
   injectDiscoveryEpic,
   populateEditorFromUrlEpic,
   adHocCypherRequestEpic,
-  routedCypherRequestEpic,
+  routedCypherReadRequestEpic,
+  routedCypherWriteRequestEpic,
   cypherRequestEpic,
   clusterCypherRequestEpic,
   clearLocalstorageEpic,
