@@ -37,7 +37,7 @@ import {
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { deepEquals } from 'neo4j-arc/common'
 import { GlobalState } from 'shared/globalState'
-import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
+import { ROUTED_CYPHER_READ_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import * as grassActions from 'shared/modules/grass/grassDuck'
 import {
   getMaxFieldItems,
@@ -197,7 +197,7 @@ LIMIT ${maxNewNeighbours}`
     return new Promise((resolve, reject) => {
       this.props.bus &&
         this.props.bus.self(
-          CYPHER_REQUEST,
+          ROUTED_CYPHER_READ_REQUEST,
           { query: query, queryType: NEO4J_BROWSER_USER_ACTION_QUERY },
           (response: any) => {
             if (!response.success) {
@@ -242,7 +242,7 @@ LIMIT ${maxNewNeighbours}`
     return new Promise(resolve => {
       this.props.bus &&
         this.props.bus.self(
-          CYPHER_REQUEST,
+          ROUTED_CYPHER_READ_REQUEST,
           {
             query,
             params: { existingNodeIds, newNodeIds },
