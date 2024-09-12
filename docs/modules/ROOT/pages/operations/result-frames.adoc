@@ -45,7 +45,7 @@ Additionally, you can zoom using trackpad zoom gestures or a mouse wheel in comb
 (If you are in full-screen view, the modifier key is not needed to zoom.)
 On Mac, use `⌘ + scroll` and on Windows and Linux, use `Ctrl + scroll` to trigger zoom.
 You can also use the _Fit to screen_ button to fit all query results into the view.
-* Expand the Cypher editor area by selecting the image:expand.svg[width=3%] icon at the right corner of the query area.
+* Expand the Cypher editor area with the image:expand.svg[width=3%] icon next to the play button in the editor.
 * Click a node or a relationship to view its properties.
 The nodes already have sensible captions assigned by the Browser, which auto-selects a property from the property list to use as a caption.
 To change how your graph looks like, see xref:operations/browser-styling.adoc[].
