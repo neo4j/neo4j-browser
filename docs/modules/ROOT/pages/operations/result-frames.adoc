@@ -45,17 +45,18 @@ Additionally, you can zoom using trackpad zoom gestures or a mouse wheel in comb
 (If you are in full-screen view, the modifier key is not needed to zoom.)
 On Mac, use `⌘ + scroll` and on Windows and Linux, use `Ctrl + scroll` to trigger zoom.
 You can also use the _Fit to screen_ button to fit all query results into the view.
-* Click a node or a relationship to view its properties.
+* Expand the Cypher editor area with the image:expand.svg[width=3%] icon next to the play button in the editor.
+* Select a node or a relationship to view its properties.
 The nodes already have sensible captions assigned by the Browser, which auto-selects a property from the property list to use as a caption.
-To change how your graph looks like, see xref:operations/browser-styling.adoc[].
-* Click a node to get a halo, where you can:
-** Dismiss/hide a node by clicking the image:dismiss-node.png[width=3%] icon.
-** Expand/collapse child relationships by clicking the icon image:expand-collapse.png[width=3%] icon.
+To change how your graph looks, see xref:operations/browser-styling.adoc[].
+* Select a node to get a halo, where you can:
+** Dismiss/hide a node with the image:dismiss-node.png[width=3%] icon.
+** Expand/collapse child relationships with the icon image:expand-collapse.png[width=3%] icon.
 Alternatively, you can double-click a node.
 ** Unlock the node to re-layout it by clicking the image:unlock-relayout.png[width=3%] icon.
-Alternatively, you can click the node and drag it around.
+Alternatively, you can select and hold the node to drag it around.
 * If you cannot see the whole graph or the results display too close together, you can adjust by moving the visual view and dragging nodes to rearrange them.
-* To move the view to see more parts of the graph, click an empty spot within the graph pane and drag it.
+* To move the view to see more parts of the graph, use an empty spot within the graph pane and drag it.
 ====
 
 
