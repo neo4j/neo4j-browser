@@ -151,5 +151,4 @@ Example for Browser: +
 // |`idp_id` | `idp_id=<idp_id>`	| `idp_id=keycloak-oidc` 	| The user arrives with a URL param named idp_id, mapped to the information in the discovery data to figure out how to proceed.
 // |===
 
-For convenience you can use the `sso_redirect=<idp_id>` url parameter to automatically trigger the SSO flow without needing to click the 
-"Login with SSO" button in the Browser UI.
+For convenience, the `sso_redirect=<idp_id>` URL parameter can be used to automatically trigger the SSO flow without needing to click the "Login with SSO" button in the Browser UI.
