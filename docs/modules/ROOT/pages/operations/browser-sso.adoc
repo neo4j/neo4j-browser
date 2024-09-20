@@ -150,3 +150,5 @@ Example for Browser: +
 // |`auth_flow_step` | `auth_flow_step=<arg>`	| `auth_flow_step=redirect_uri`	| If the user arrives back to the client application with the URL param `auth_flow_step=redirect_uri`, this indicates that it is time to proceed in the auth process.
 // |`idp_id` | `idp_id=<idp_id>`	| `idp_id=keycloak-oidc` 	| The user arrives with a URL param named idp_id, mapped to the information in the discovery data to figure out how to proceed.
 // |===
+
+For convenience, the `sso_redirect=<idp_id>` URL parameter can be used to automatically trigger the SSO flow without needing to click the "Login with SSO" button in the Browser UI.

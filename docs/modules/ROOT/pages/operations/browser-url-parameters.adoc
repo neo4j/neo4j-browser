@@ -51,6 +51,19 @@ http://localhost:7474/browser?preselectAuthMethod=[NATIVE]|[SSO]|[NO_AUTH]
 ** `[SSO]` lets you sign in using SSO.
 ** `[NO_AUTH]` means that no authorization is required.
 
+Additionally, it is also possible to automatically redirect to an SSO provider, as if a user clicked the corresponding SSO button in the UI with the `sso_redirect` url parameter.
+
+The syntax is:
+
+[source, browser URL, role=noheader]
+----
+http://localhost:7474/browser?sso_redirect=<idp_id>
+----
+
+The `idp_id` in the example is the `id` of the SSO provider.
+To ensure Browser finds the correct SSO providers, it's recommended to also pass the `connectURL`.
+
+
 == Pre-populate the editor
 
 Pre-populate the editor with a command when Neo4j Browser starts.
