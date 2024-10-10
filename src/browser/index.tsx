@@ -24,4 +24,19 @@ import AppInit, { setupSentry } from './AppInit'
 import './init'
 
 setupSentry()
-ReactDOM.render(<AppInit />, document.getElementById('mount'))
+;(async () => {
+  const doesPreferQuery = localStorage.getItem('prefersOldBrowser') === 'false'
+
+  const response = await fetch('/preview/manifest.json')
+  if (response.status === 200) {
+    if (doesPreferQuery) {
+      window.location.pathname = '/preview/'
+    } else {
+      localStorage.setItem('previewAvailable', 'true')
+    }
+  } else {
+    localStorage.setItem('previewAvailable', 'false')
+  }
+
+  ReactDOM.render(<AppInit />, document.getElementById('mount'))
+})()
