@@ -9,6 +9,7 @@ export const showFeature = (state: any, name: any) =>
   !!(state[NAME][name] || {}).on
 
 export const experimentalFeatureSelfName = 'showSelf'
+export const experimentalFeaturePreviewName = 'advertisePreview'
 
 export const initialState = {
   [experimentalFeatureSelfName]: {
@@ -16,6 +17,12 @@ export const initialState = {
     on: true,
     displayName: 'Show experimental features',
     tooltip: 'Show feature section in settings drawer'
+  },
+  [experimentalFeaturePreviewName]: {
+    name: experimentalFeaturePreviewName,
+    on: false,
+    displayName: 'Advertise preview of new browser',
+    tooltip: 'Enable the advertisement tile of the new browser'
   }
 }
 
