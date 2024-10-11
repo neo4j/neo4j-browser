@@ -22,19 +22,23 @@ import ReactDOM from 'react-dom'
 
 import AppInit, { setupSentry } from './AppInit'
 import './init'
+import { navigateToPreview } from './modules/Stream/StartPreviewFrame'
 
 setupSentry()
 ;(async () => {
   const doesPreferQuery = localStorage.getItem('prefersOldBrowser') === 'false'
-
-  const response = await fetch('/preview/manifest.json')
-  if (response.status === 200) {
-    if (doesPreferQuery) {
-      window.location.pathname = '/preview/'
+  try {
+    const response = await fetch('./preview/manifest.json')
+    if (response.status === 200) {
+      if (doesPreferQuery) {
+        navigateToPreview()
+      } else {
+        localStorage.setItem('previewAvailable', 'true')
+      }
     } else {
-      localStorage.setItem('previewAvailable', 'true')
+      localStorage.setItem('previewAvailable', 'false')
     }
-  } else {
+  } catch (e) {
     localStorage.setItem('previewAvailable', 'false')
   }
 

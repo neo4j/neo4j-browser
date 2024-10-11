@@ -19,6 +19,13 @@
  */
 import React from 'react'
 
+export const navigateToPreview = (): void => {
+  const path = window.location.pathname
+  if (!path.endsWith('/preview/')) {
+    window.location.pathname = `${path}${path.endsWith('/') ? '' : '/'}preview/`
+  }
+}
+
 export const PreviewFrame = () => {
   return (
     <>
@@ -27,15 +34,10 @@ export const PreviewFrame = () => {
           <img src="./assets/images/clusters.svg" className="img-advertise" />
           <h3>Discover the new Browser experience! ✨</h3>
           <p>
-            Take a tour of our redesigned interface, built for faster navigation
-            and ease of use.
+            Switch to our redesigned interface, built for faster navigation and
+            ease of use.
           </p>
-          <button
-            onClick={() => {
-              window.location.pathname = '/preview/'
-            }}
-            className="btn btn-advertise"
-          >
+          <button onClick={navigateToPreview} className="btn btn-advertise">
             Switch to new experience
           </button>
         </div>

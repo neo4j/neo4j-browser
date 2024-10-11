@@ -48,10 +48,6 @@ import { getEdition, isEnterprise } from 'shared/modules/dbMeta/dbMetaDuck'
 import { DARK_THEME } from 'shared/modules/settings/settingsDuck'
 import { LAST_GUIDE_SLIDE } from 'shared/modules/udc/udcDuck'
 import { PreviewFrame } from './StartPreviewFrame'
-import {
-  experimentalFeaturePreviewName,
-  showFeature
-} from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
 
 const AuraPromotion = () => {
   const theme = useContext(ThemeContext)
@@ -93,15 +89,13 @@ type PlayFrameProps = {
   showPromotion: boolean
   isFullscreen: boolean
   isCollapsed: boolean
-  isAdvertiseFlagOn: boolean
 }
 export function PlayFrame({
   stack,
   bus,
   showPromotion,
   isFullscreen,
-  isCollapsed,
-  isAdvertiseFlagOn
+  isCollapsed
 }: PlayFrameProps): JSX.Element {
   const [stackIndex, setStackIndex] = useState(0)
   const [atSlideStart, setAtSlideStart] = useState<boolean | null>(null)
@@ -130,8 +124,7 @@ export function PlayFrame({
         bus,
         onSlide,
         initialPlay,
-        showPromotion,
-        isAdvertiseFlagOn
+        showPromotion
       )
       if (stillMounted) {
         setInitialPlay(false)
@@ -214,8 +207,7 @@ function generateContent(
   bus: Bus,
   onSlide: any,
   shouldUseSlidePointer: boolean,
-  showPromotion = false,
-  isAdvertiseFlagOn: boolean
+  showPromotion = false
 ): Content | Promise<Content> {
   // Not found
   if (stackFrame.response && stackFrame.response.status === 404) {
@@ -298,17 +290,16 @@ function generateContent(
   if (isPlayChapter(guideName)) {
     const isPreviewAvailable =
       localStorage.getItem('previewAvailable') === 'true'
-    const showAdvertiseTile = isAdvertiseFlagOn && isPreviewAvailable
     const { content, title, subtitle, slides = null } = chapters[guideName]
 
     const isPlayStart = stackFrame.cmd.trim() === ':play start'
     const updatedContent =
       isPlayStart && showPromotion ? (
         <>
-          {showAdvertiseTile ? <PreviewFrame /> : content}
+          {isPreviewAvailable ? <PreviewFrame /> : content}
           <AuraPromotion />
         </>
-      ) : showAdvertiseTile ? (
+      ) : isPreviewAvailable ? (
         <PreviewFrame />
       ) : (
         content
@@ -392,8 +383,7 @@ const mapStateToProps = (state: GlobalState) => ({
     (getEdition(state) !== null &&
       !isEnterprise(state) &&
       !isConnectedAuraHost(state)) ||
-    inDesktop(state),
-  isAdvertiseFlagOn: showFeature(state, experimentalFeaturePreviewName)
+    inDesktop(state)
 })
 
 export default connect(mapStateToProps)(withBus(PlayFrame))
