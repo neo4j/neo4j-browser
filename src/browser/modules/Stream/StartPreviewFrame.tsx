@@ -32,13 +32,12 @@ export const PreviewFrame = () => {
       <div className="teasers">
         <div className="teaser teaser-advertise teaser-3">
           <img src="./assets/images/clusters.svg" className="img-advertise" />
-          <h3>Discover the new Browser experience! ✨</h3>
+          <h3>🚀 Try the new Browser preview!</h3>
           <p>
-            Switch to our redesigned interface, built for faster navigation and
-            ease of use.
+            Switch to the preview experience to access all the latest features.
           </p>
           <button onClick={navigateToPreview} className="btn btn-advertise">
-            Switch to new experience
+            {"Let's go"}
           </button>
         </div>
 

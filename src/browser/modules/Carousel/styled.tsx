@@ -310,6 +310,7 @@ export const StyledSlide = styled.div`
       left: 0;
       bottom: -10px;
       opacity: 0.15;
+      pointer-events: none;
     }
   }
 
