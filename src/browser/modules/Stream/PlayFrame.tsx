@@ -47,6 +47,7 @@ import { isConnectedAuraHost } from 'shared/modules/connections/connectionsDuck'
 import { getEdition, isEnterprise } from 'shared/modules/dbMeta/dbMetaDuck'
 import { DARK_THEME } from 'shared/modules/settings/settingsDuck'
 import { LAST_GUIDE_SLIDE } from 'shared/modules/udc/udcDuck'
+import { PreviewFrame } from './StartPreviewFrame'
 
 const AuraPromotion = () => {
   const theme = useContext(ThemeContext)
@@ -287,15 +288,19 @@ function generateContent(
 
   // Check if content exists locally
   if (isPlayChapter(guideName)) {
+    const isPreviewAvailable =
+      localStorage.getItem('previewAvailable') === 'true'
     const { content, title, subtitle, slides = null } = chapters[guideName]
 
     const isPlayStart = stackFrame.cmd.trim() === ':play start'
     const updatedContent =
       isPlayStart && showPromotion ? (
         <>
-          {content}
+          {isPreviewAvailable ? <PreviewFrame /> : content}
           <AuraPromotion />
         </>
+      ) : isPreviewAvailable ? (
+        <PreviewFrame />
       ) : (
         content
       )

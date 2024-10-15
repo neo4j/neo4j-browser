@@ -301,6 +301,19 @@ export const StyledSlide = styled.div`
     background-color: ${props => props.theme.teaserCardBackground} !important;
   }
 
+  &.slide .teaser-advertise {
+    color: white !important;
+    background-color: #0a6190 !important;
+
+    & .img-advertise {
+      position: absolute;
+      left: 0;
+      bottom: -10px;
+      opacity: 0.15;
+      pointer-events: none;
+    }
+  }
+
   &.slide input {
     color: ${props => props.theme.inputText};
   }
