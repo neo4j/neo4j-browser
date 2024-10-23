@@ -9993,28 +9993,28 @@ neo4j-client-sso@1.2.3:
     jwt-decode "^3.1.2"
     lodash.pick "^4.4.0"
 
-neo4j-driver-bolt-connection@5.9.2:
-  version "5.9.2"
-  resolved "https://registry.npmjs.org/neo4j-driver-bolt-connection/-/neo4j-driver-bolt-connection-5.9.2.tgz"
-  integrity sha512-P73QJ6zba9TCVHfdJi82fZUUK3xqdnXbr2eyL7cQmfaKyTAExpUnYSmQL7Iy5XBoHjmrpY888Tor8KXRXgirPg==
+neo4j-driver-bolt-connection@5.26.0:
+  version "5.26.0"
+  resolved "https://registry.yarnpkg.com/neo4j-driver-bolt-connection/-/neo4j-driver-bolt-connection-5.26.0.tgz#071444c8ae1300d31210ddc1de9d2bca7c9c454c"
+  integrity sha512-Tq548RNZJoQdmZhTRcUxDntU1DkNhhKF8oWWuCQ7OtX20EIYpIgVkQYWJu75bSiYyUGxmuSk4U02oXNBdggjgg==
   dependencies:
     buffer "^6.0.3"
-    neo4j-driver-core "5.9.2"
+    neo4j-driver-core "5.26.0"
     string_decoder "^1.3.0"
 
-neo4j-driver-core@5.9.2:
-  version "5.9.2"
-  resolved "https://registry.npmjs.org/neo4j-driver-core/-/neo4j-driver-core-5.9.2.tgz"
-  integrity sha512-z8ZsEEH8e86RsbFUbIrz+YOU/38D316C1b6OqSOoT93IhSzRNQNnrI0pKYKUDKPvI8Ud9acmhQvtIlisZ1gQkA==
+neo4j-driver-core@5.26.0:
+  version "5.26.0"
+  resolved "https://registry.yarnpkg.com/neo4j-driver-core/-/neo4j-driver-core-5.26.0.tgz#6ac836dc944941e11f06ba7dabf1b50b6335ac41"
+  integrity sha512-S3nHbqGuKPktWkRGenfx8Dt4MuqqrrUQjo4COhRj9r9P6WOjd0jzF/wyZb8H44pW5Qx/gmqn9B3If+7gfiaRmw==
 
-neo4j-driver@5.9.2:
-  version "5.9.2"
-  resolved "https://registry.npmjs.org/neo4j-driver/-/neo4j-driver-5.9.2.tgz"
-  integrity sha512-yuoqA3TmR5zLky0wRSLJqLIiSglBOvc1f1sbQwgJwoLVC7AP5ucjrqs27qcAAxduolaTj2KQeLFqY3UQMYiTuA==
+neo4j-driver@5.26.0:
+  version "5.26.0"
+  resolved "https://registry.yarnpkg.com/neo4j-driver/-/neo4j-driver-5.26.0.tgz#1642814062ed58152fa0c537a2680f2526631e43"
+  integrity sha512-cQEzXHmUxWb2uBOqsvjs3/GxyVtOgP6WsOpozqTvI47Zzopzw/4b/E4uCJQR5bIn1UXdcUfZKJ60jOmAzEvM8A==
   dependencies:
-    neo4j-driver-bolt-connection "5.9.2"
-    neo4j-driver-core "5.9.2"
-    rxjs "^7.8.0"
+    neo4j-driver-bolt-connection "5.26.0"
+    neo4j-driver-core "5.26.0"
+    rxjs "^7.8.1"
 
 nice-try@^1.0.4:
   version "1.0.5"
@@ -12463,9 +12463,9 @@ rxjs@^6.5.2:
   dependencies:
     tslib "^1.9.0"
 
-rxjs@^7.8.0:
+rxjs@^7.8.1:
   version "7.8.1"
-  resolved "https://registry.npmjs.org/rxjs/-/rxjs-7.8.1.tgz"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-7.8.1.tgz#6f6f3d99ea8044291efd92e7c7fcf562c4057543"
   integrity sha512-AA3TVj+0A2iuIoQkWEK/tqFjBq2j+6PO6Y0zJcvzLAFhEFIO3HL0vls9hWLncZbAAbK0mar7oZ4V079I/qPMxg==
   dependencies:
     tslib "^2.1.0"
