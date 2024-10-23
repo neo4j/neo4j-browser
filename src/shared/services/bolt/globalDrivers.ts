@@ -27,6 +27,7 @@ import {
   toNonRoutingScheme
 } from 'services/boltscheme.utils'
 import { Connection } from 'shared/modules/connections/connectionsDuck'
+import { isBrowserError, isError } from 'shared/utils/typeguards'
 
 interface GlobalDriversObject {
   getDirectDriver: () => Driver | null
@@ -64,8 +65,11 @@ export const buildGlobalDriversObject = async (
       routed && (await routed.verifyConnectivity())
       routingSupported = true
     } catch (e) {
-      if (e && isNonSupportedRoutingSchemeError(e)) {
+      if (e && isBrowserError(e) && isNonSupportedRoutingSchemeError(e)) {
         routingSupported = false
+      }
+
+      if (isError(e)) {
         failFn(e)
       }
     }

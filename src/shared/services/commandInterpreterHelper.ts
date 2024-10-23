@@ -110,6 +110,7 @@ import {
   getCurrentDatabase,
   isSystemOrCompositeDb
 } from 'shared/utils/selectors'
+import { isBrowserError } from 'shared/utils/typeguards'
 
 const PLAY_FRAME_TYPES = ['play', 'play-remote']
 
@@ -264,7 +265,7 @@ const availableCommands = [
             })
           )
         }
-        if (action.requestId) {
+        if (action.requestId && isBrowserError(error)) {
           put(updateQueryResult(action.requestId, error, 'error'))
         }
       }
