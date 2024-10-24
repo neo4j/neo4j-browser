@@ -5,5 +5,5 @@ export function isError(error: unknown): error is Error {
 }
 
 export function isBrowserError(error: unknown): error is BrowserError {
-  return error instanceof Error && 'code' in error && 'message' in error
+  return error instanceof Error && 'code' in error
 }
