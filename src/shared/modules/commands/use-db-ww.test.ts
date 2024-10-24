@@ -42,7 +42,7 @@ jest.mock('shared/modules/params/paramsDuck', () => {
 })
 
 jest.mock('shared/modules/settings/settingsDuck', () => {
-  const orig = require.requireActual('shared/modules/dbMeta/dbMetaDuck')
+  const orig = jest.requireActual('shared/modules/dbMeta/dbMetaDuck')
   return {
     ...orig,
     shouldUseReadTransactions: () => false
