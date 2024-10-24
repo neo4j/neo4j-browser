@@ -78,12 +78,15 @@
         "@typescript-eslint/no-this-alias": "warn",
         "@typescript-eslint/no-unused-vars": "warn",
         "@typescript-eslint/no-var-requires": "warn",
+        "@typescript-eslint/no-unnecessary-type-constraint": "warn",
+        "@typescript-eslint/no-loss-of-precision": "warn",
         "no-var": "warn",
         "prefer-rest-params": "warn",
         "prefer-spread": "warn",
         "react-hooks/exhaustive-deps": "warn",
         "react-hooks/rules-of-hooks": "warn",
         "react/no-unescaped-entities": "warn",
+        "react/no-unknown-property": "warn",
         "react/prop-types": "error"
       }
     },

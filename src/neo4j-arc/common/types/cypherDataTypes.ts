@@ -72,7 +72,7 @@ export type CypherBasicPropertyType =
   | number
   | string
   | Integer
-  | BigInt
+  | bigint
   | Int8Array
   | CypherTemporalType
   | Point
