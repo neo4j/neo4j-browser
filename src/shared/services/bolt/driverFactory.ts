@@ -20,6 +20,7 @@
 import neo4j, { AuthToken, Config, Driver } from 'neo4j-driver'
 
 import { version } from 'project-root/package.json'
+import { isError } from 'shared/utils/typeguards'
 
 export const createDriverOrFailFn = (
   url: string,
@@ -34,7 +35,9 @@ export const createDriverOrFailFn = (
     const res = neo4j.driver(url, auth, spreadOpts)
     return res
   } catch (e) {
-    failFn(e)
+    if (isError(e)) {
+      failFn(e)
+    }
     return null
   }
 }

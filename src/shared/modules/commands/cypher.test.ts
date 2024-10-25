@@ -30,7 +30,7 @@ import { version } from 'project-root/package.json'
 import { flushPromises } from 'services/utils'
 
 jest.mock('services/bolt/bolt', () => {
-  const orig = require.requireActual('services/bolt/bolt')
+  const orig = jest.requireActual('services/bolt/bolt')
   return {
     ...orig,
     routedWriteTransaction: jest.fn(() => [
@@ -39,10 +39,10 @@ jest.mock('services/bolt/bolt', () => {
     ])
   }
 })
-const bolt = require.requireMock('services/bolt/bolt')
+const bolt = jest.requireMock('services/bolt/bolt')
 
 jest.mock('shared/modules/params/paramsDuck', () => {
-  const orig = require.requireActual('shared/modules/params/paramsDuck')
+  const orig = jest.requireActual('shared/modules/params/paramsDuck')
   return {
     ...orig,
     getParams: () => ({})
@@ -50,7 +50,7 @@ jest.mock('shared/modules/params/paramsDuck', () => {
 })
 
 jest.mock('shared/modules/dbMeta/dbMetaDuck', () => {
-  const orig = require.requireActual('shared/modules/dbMeta/dbMetaDuck')
+  const orig = jest.requireActual('shared/modules/dbMeta/dbMetaDuck')
   return {
     ...orig,
     getRawVersion: () => '3.5.0' // support for tx metadata
@@ -58,7 +58,7 @@ jest.mock('shared/modules/dbMeta/dbMetaDuck', () => {
 })
 
 jest.mock('shared/modules/settings/settingsDuck', () => {
-  const orig = require.requireActual('shared/modules/dbMeta/dbMetaDuck')
+  const orig = jest.requireActual('shared/modules/dbMeta/dbMetaDuck')
   return {
     ...orig,
     shouldUseReadTransactions: () => false
