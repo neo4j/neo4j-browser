@@ -149,6 +149,20 @@ export function App(props: any) {
     props.bus && props.bus.send(initAction.type, initAction)
   }, [props.bus])
 
+  useEffect(() => {
+    if (!isRunningE2ETest() && props.telemetrySettings.allowUserStats) {
+      const hasTriedPreviewUI =
+        localStorage.getItem('hasTriedPreviewUI') === 'true'
+      segmentTrackCallback &&
+        segmentTrackCallback.current &&
+        segmentTrackCallback.current({
+          category: 'preview',
+          label: 'PREVIEW_PAGE_LOAD',
+          data: { previewUI: false, hasTriedPreviewUI }
+        })
+    }
+  }, [props.telemetrySettings.allowUserStats])
+
   const {
     browserSyncAuthStatus,
     browserSyncConfig,
