@@ -1,5 +1,5 @@
 {
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "extends": ["plugin:react/recommended", "prettier"],
   "parserOptions": {
     "sourceType": "module"
