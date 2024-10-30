@@ -19,27 +19,21 @@
  */
 export const PREVIEW_EVENT = 'preview/PREVIEW_EVENT'
 
-interface PreviewUiSwitchAction {
+interface PreviewEventAction {
   type: typeof PREVIEW_EVENT
-  category: 'preview'
   label: string
-  data: {
-    switchedTo: 'preview' | 'classic'
-    timeSinceLastSwitch: number | null
-  }
+  data:
+    | {
+        switchedTo: 'preview' | 'classic'
+        timeSinceLastSwitch: number | null
+      }
+    | {
+        previewUI: boolean
+        hasTriedPreviewUI: boolean
+      }
 }
 
-interface PreviewPageLoadAction {
-  type: typeof PREVIEW_EVENT
-  category: 'preview'
-  label: string
-  data: {
-    previewUI: boolean
-    hasTriedPreviewUI: boolean
-  }
-}
-
-export const trackNavigateToPreview = (): PreviewUiSwitchAction => {
+export const trackNavigateToPreview = (): PreviewEventAction => {
   const now = Date.now()
   localStorage.setItem('hasTriedPreviewUI', 'true')
 
@@ -53,7 +47,6 @@ export const trackNavigateToPreview = (): PreviewUiSwitchAction => {
 
   return {
     type: PREVIEW_EVENT,
-    category: 'preview',
     label: 'ui-switch',
     data: {
       switchedTo: 'preview',
@@ -62,12 +55,11 @@ export const trackNavigateToPreview = (): PreviewUiSwitchAction => {
   }
 }
 
-export const trackPageLoad = (): PreviewPageLoadAction => {
+export const trackPageLoad = (): PreviewEventAction => {
   const hasTriedPreviewUI = localStorage.getItem('hasTriedPreviewUI') === 'true'
 
   return {
     type: PREVIEW_EVENT,
-    category: 'preview',
     label: 'page-load',
     data: { previewUI: false, hasTriedPreviewUI }
   }
