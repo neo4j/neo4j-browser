@@ -96,6 +96,7 @@ import {
   updateUdcData
 } from 'shared/modules/udc/udcDuck'
 import { getTelemetrySettings } from 'shared/utils/selectors'
+import { trackPageLoad } from 'shared/modules/preview/previewDuck'
 
 export const MAIN_WRAPPER_DOM_ID = 'MAIN_WRAPPER_DOM_ID'
 
@@ -148,6 +149,11 @@ export function App(props: any) {
     const initAction = udcInit()
     props.bus && props.bus.send(initAction.type, initAction)
   }, [props.bus])
+
+  useEffect(() => {
+    const pageLoadAction = trackPageLoad()
+    props.bus && props.bus.send(pageLoadAction.type, pageLoadAction)
+  }, [props.bus, props.telemetrySettings.allowUserStats])
 
   const {
     browserSyncAuthStatus,
