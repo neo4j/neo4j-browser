@@ -17,10 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React, { useRef } from 'react'
-import { isRunningE2ETest } from 'services/utils'
-import { TelemetrySettings } from 'shared/utils/selectors'
-import { MetricsData } from '../Segment'
+import React, { Dispatch } from 'react'
+import { Action } from 'redux'
+import { trackNavigateToPreview } from 'shared/modules/preview/previewDuck'
+import { connect } from 'react-redux'
+import { withBus } from 'react-suber'
 
 export const navigateToPreview = (): void => {
   const path = window.location.pathname
@@ -29,50 +30,14 @@ export const navigateToPreview = (): void => {
   }
 }
 
-const useTrackAndNavigateToPreview = (
-  telemetrySettings: TelemetrySettings
-): (() => void) => {
-  const segmentTrackCallback = useRef((_: MetricsData) => _)
-  const path = window.location.pathname
-
-  return () => {
-    if (!path.endsWith('/preview/')) {
-      if (!isRunningE2ETest() && telemetrySettings.allowUserStats) {
-        const now = Date.now()
-        localStorage.setItem('hasTriedPreviewUI', 'true')
-
-        const timeSinceLastSwitchMs =
-          localStorage.getItem('timeSinceLastSwitchMs') ?? null
-        localStorage.setItem('timeSinceLastSwitchMs', now.toString())
-
-        let timeSinceLastSwitch = null
-        if (timeSinceLastSwitchMs !== null) {
-          timeSinceLastSwitch = now - parseInt(timeSinceLastSwitchMs)
-        }
-
-        segmentTrackCallback &&
-          segmentTrackCallback.current &&
-          segmentTrackCallback.current({
-            category: 'preview',
-            label: 'PREVIEW_UI_SWITCH',
-            data: {
-              switchedTo: 'preview',
-              timeSinceLastSwitch: timeSinceLastSwitch ?? 0
-            }
-          })
-      }
-
-      navigateToPreview()
-    }
-  }
-}
-
 type PreviewFrameProps = {
-  telemetrySettings: TelemetrySettings
+  executeTrackNavigateToPreview: () => void
 }
-export const PreviewFrame = ({ telemetrySettings }: PreviewFrameProps) => {
-  const trackAndNavigateToPreview =
-    useTrackAndNavigateToPreview(telemetrySettings)
+const PreviewFrame = ({ executeTrackNavigateToPreview }: PreviewFrameProps) => {
+  function trackAndNavigateToPreview() {
+    executeTrackNavigateToPreview()
+    navigateToPreview()
+  }
 
   return (
     <>
@@ -136,3 +101,15 @@ export const PreviewFrame = ({ telemetrySettings }: PreviewFrameProps) => {
     </>
   )
 }
+
+const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
+  return {
+    executeTrackNavigateToPreview: () => dispatch(trackNavigateToPreview())
+  }
+}
+
+export default withBus(
+  connect(() => {
+    return {}
+  }, mapDispatchToProps)(PreviewFrame)
+)

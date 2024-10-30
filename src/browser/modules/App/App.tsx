@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { setEditorTheme } from 'neo4j-arc/cypher-language-support'
-import React, { useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { ThemeProvider } from 'styled-components'
@@ -96,6 +96,10 @@ import {
   updateUdcData
 } from 'shared/modules/udc/udcDuck'
 import { getTelemetrySettings } from 'shared/utils/selectors'
+import {
+  PREVIEW_EVENT,
+  trackPageLoad
+} from 'shared/modules/preview/previewDuck'
 
 export const MAIN_WRAPPER_DOM_ID = 'MAIN_WRAPPER_DOM_ID'
 
@@ -119,30 +123,45 @@ export function App(props: any) {
   const eventMetricsCallback = useRef((_: MetricsData) => _)
   const segmentTrackCallback = useRef((_: MetricsData) => _)
 
+  const invokeTrackingCallbacks = useCallback(
+    ({ category, label, data }: MetricsData) => {
+      if (!isRunningE2ETest() && props.telemetrySettings.allowUserStats) {
+        const extendedData = {
+          browserVersion: version,
+          neo4jEdition: props.edition,
+          connectedTo: props.connectedTo,
+          ...data
+        }
+
+        eventMetricsCallback &&
+          eventMetricsCallback.current &&
+          eventMetricsCallback.current({ category, label, data: extendedData })
+
+        segmentTrackCallback &&
+          segmentTrackCallback.current &&
+          segmentTrackCallback.current({ category, label, data: extendedData })
+      }
+    },
+    [props.telemetrySettings.allowUserStats]
+  )
+
   useEffect(() => {
     const unsub =
       props.bus &&
-      props.bus.take(
-        METRICS_EVENT,
-        ({ category, label, data: originalData }: MetricsData) => {
-          if (!isRunningE2ETest() && props.telemetrySettings.allowUserStats) {
-            const data = {
-              browserVersion: version,
-              neo4jEdition: props.edition,
-              connectedTo: props.connectedTo,
-              ...originalData
-            }
-            eventMetricsCallback &&
-              eventMetricsCallback.current &&
-              eventMetricsCallback.current({ category, label, data })
-            segmentTrackCallback &&
-              segmentTrackCallback.current &&
-              segmentTrackCallback.current({ category, label, data })
-          }
-        }
-      )
+      props.bus.take(METRICS_EVENT, (metricsData: MetricsData) => {
+        invokeTrackingCallbacks(metricsData)
+      })
     return () => unsub && unsub()
-  }, [props.telemetrySettings.allowUserStats, props.bus])
+  }, [props.bus, invokeTrackingCallbacks])
+
+  useEffect(() => {
+    const unsub =
+      props.bus &&
+      props.bus.take(PREVIEW_EVENT, (metricsData: MetricsData) => {
+        invokeTrackingCallbacks(metricsData)
+      })
+    return () => unsub && unsub()
+  }, [props.bus, invokeTrackingCallbacks])
 
   useEffect(() => {
     const initAction = udcInit()
@@ -150,18 +169,9 @@ export function App(props: any) {
   }, [props.bus])
 
   useEffect(() => {
-    if (!isRunningE2ETest() && props.telemetrySettings.allowUserStats) {
-      const hasTriedPreviewUI =
-        localStorage.getItem('hasTriedPreviewUI') === 'true'
-      segmentTrackCallback &&
-        segmentTrackCallback.current &&
-        segmentTrackCallback.current({
-          category: 'preview',
-          label: 'PREVIEW_PAGE_LOAD',
-          data: { previewUI: false, hasTriedPreviewUI }
-        })
-    }
-  }, [props.telemetrySettings.allowUserStats])
+    const pageLoadAction = trackPageLoad()
+    props.bus && props.bus.send(pageLoadAction.type, pageLoadAction)
+  }, [props.bus, props.telemetrySettings.allowUserStats])
 
   const {
     browserSyncAuthStatus,
@@ -195,6 +205,7 @@ export function App(props: any) {
   }, [titleString])
 
   const wrapperClassNames = codeFontLigatures ? '' : 'disable-font-ligatures'
+
   return (
     <ErrorBoundary>
       <DesktopApi
