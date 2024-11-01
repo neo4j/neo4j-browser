@@ -48,7 +48,7 @@ describe('previewDuck tests', () => {
       const [action] = store.getActions()
       expect(action).toEqual({
         type: PREVIEW_EVENT,
-        label: 'ui-switch',
+        label: 'PREVIEW_UI_SWITCH',
         data: {
           switchedTo: 'preview',
           timeSinceLastSwitch: null
@@ -113,7 +113,7 @@ describe('previewDuck tests', () => {
       const [action] = store.getActions()
       expect(action).toEqual({
         type: PREVIEW_EVENT,
-        label: 'page-load',
+        label: 'PREVIEW_PAGE_LOAD',
         data: { previewUI: false, hasTriedPreviewUI: false }
       })
       done()

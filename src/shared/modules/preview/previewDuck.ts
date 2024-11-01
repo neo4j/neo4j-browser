@@ -47,7 +47,7 @@ export const trackNavigateToPreview = (): PreviewEventAction => {
 
   return {
     type: PREVIEW_EVENT,
-    label: 'ui-switch',
+    label: 'PREVIEW_UI_SWITCH',
     data: {
       switchedTo: 'preview',
       timeSinceLastSwitch: timeSinceLastSwitch
@@ -60,7 +60,7 @@ export const trackPageLoad = (): PreviewEventAction => {
 
   return {
     type: PREVIEW_EVENT,
-    label: 'page-load',
+    label: 'PREVIEW_PAGE_LOAD',
     data: { previewUI: false, hasTriedPreviewUI }
   }
 }
