@@ -108,8 +108,4 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
   }
 }
 
-export default withBus(
-  connect(() => {
-    return {}
-  }, mapDispatchToProps)(PreviewFrame)
-)
+export default withBus(connect(null, mapDispatchToProps)(PreviewFrame))
