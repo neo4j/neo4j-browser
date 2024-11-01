@@ -17,7 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React from 'react'
+import React, { Dispatch } from 'react'
+import { Action } from 'redux'
+import { trackNavigateToPreview } from 'shared/modules/preview/previewDuck'
+import { connect } from 'react-redux'
+import { withBus } from 'react-suber'
 
 export const navigateToPreview = (): void => {
   const path = window.location.pathname
@@ -26,7 +30,15 @@ export const navigateToPreview = (): void => {
   }
 }
 
-export const PreviewFrame = () => {
+type PreviewFrameProps = {
+  executeTrackNavigateToPreview: () => void
+}
+const PreviewFrame = ({ executeTrackNavigateToPreview }: PreviewFrameProps) => {
+  function trackAndNavigateToPreview() {
+    executeTrackNavigateToPreview()
+    navigateToPreview()
+  }
+
   return (
     <>
       <div className="teasers">
@@ -36,7 +48,10 @@ export const PreviewFrame = () => {
           <p>
             Switch to the preview experience to access all the latest features.
           </p>
-          <button onClick={navigateToPreview} className="btn btn-advertise">
+          <button
+            onClick={trackAndNavigateToPreview}
+            className="btn btn-advertise"
+          >
             {"Let's go"}
           </button>
         </div>
@@ -86,3 +101,11 @@ export const PreviewFrame = () => {
     </>
   )
 }
+
+const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
+  return {
+    executeTrackNavigateToPreview: () => dispatch(trackNavigateToPreview())
+  }
+}
+
+export default withBus(connect(null, mapDispatchToProps)(PreviewFrame))

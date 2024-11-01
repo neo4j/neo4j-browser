@@ -97,6 +97,7 @@ import {
   getCurrentDatabase
 } from 'shared/utils/selectors'
 import { isBoltConnectionErrorCode } from 'services/bolt/boltConnectionErrors'
+import { trackPageLoad } from '../preview/previewDuck'
 
 function handleConnectionError(store: any, e: any) {
   if (!e.code || isBoltConnectionErrorCode(e.code)) {
@@ -545,6 +546,12 @@ export const serverConfigEpic = (some$: any, store: any) =>
             // Trigger a credentials timeout since the settings have just been read from the server for the first time and might be different from the defaults.
             store.dispatch(triggerCredentialsTimeout())
           }
+
+          setTimeout(() => {
+            // Track page load after server config is done
+            // setTimeout ensures telemetry settings have been propagated to the App
+            store.dispatch(trackPageLoad())
+          })
 
           return Rx.Observable.of(null)
         })

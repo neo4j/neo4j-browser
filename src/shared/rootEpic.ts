@@ -89,6 +89,7 @@ import {
 import {
   trackCommandUsageEpic,
   trackErrorFramesEpic,
+  trackPreviewEpic,
   trackReduxActionsEpic,
   udcStartupEpic
 } from './modules/udc/udcDuck'
@@ -148,5 +149,6 @@ export default combineEpics(
   trackReduxActionsEpic,
   initializeCypherEditorEpic,
   updateEditorSupportSchemaEpic,
-  fetchRemoteGuideEpic
+  fetchRemoteGuideEpic,
+  trackPreviewEpic
 )

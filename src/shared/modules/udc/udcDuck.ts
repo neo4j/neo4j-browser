@@ -57,6 +57,7 @@ import {
   TRACK_CANNY_FEATURE_REQUEST
 } from 'shared/modules/sidebar/sidebarDuck'
 import cmdHelper from 'shared/services/commandInterpreterHelper'
+import { PREVIEW_EVENT } from '../preview/previewDuck'
 
 // Action types
 export const NAME = 'udc'
@@ -324,3 +325,13 @@ export const trackErrorFramesEpic: Epic<Action, GlobalState> = (
       }
     })
     .ignoreElements()
+
+export const trackPreviewEpic: Epic<Action, GlobalState> = action$ => {
+  return action$.ofType(PREVIEW_EVENT).map((action: any) => {
+    return metricsEvent({
+      category: 'preview',
+      label: action.label,
+      data: action.data
+    })
+  })
+}

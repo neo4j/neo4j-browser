@@ -47,7 +47,7 @@ import { isConnectedAuraHost } from 'shared/modules/connections/connectionsDuck'
 import { getEdition, isEnterprise } from 'shared/modules/dbMeta/dbMetaDuck'
 import { DARK_THEME } from 'shared/modules/settings/settingsDuck'
 import { LAST_GUIDE_SLIDE } from 'shared/modules/udc/udcDuck'
-import { PreviewFrame } from './StartPreviewFrame'
+import PreviewFrame from './StartPreviewFrame'
 
 const AuraPromotion = () => {
   const theme = useContext(ThemeContext)
