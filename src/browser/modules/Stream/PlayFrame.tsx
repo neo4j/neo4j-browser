@@ -28,13 +28,6 @@ import {
   StackPreviousIcon
 } from 'browser-components/icons/LegacyIcons'
 
-import docs, { DocItem, isPlayChapter } from '../../documentation'
-import Docs from '../Docs/Docs'
-import { splitMdSlides } from '../Docs/MD/splitMd'
-import FrameAside from '../Frame/FrameAside'
-import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
-import { ErrorsView } from './CypherFrame/ErrorsView/ErrorsView'
-import { AuraPromoLink, PromotionContainer } from './styled'
 import { CarouselButton } from 'browser-components/buttons'
 import {
   splitStringOnFirst,
@@ -47,7 +40,14 @@ import { isConnectedAuraHost } from 'shared/modules/connections/connectionsDuck'
 import { getEdition, isEnterprise } from 'shared/modules/dbMeta/dbMetaDuck'
 import { DARK_THEME } from 'shared/modules/settings/settingsDuck'
 import { LAST_GUIDE_SLIDE } from 'shared/modules/udc/udcDuck'
+import docs, { DocItem, isPlayChapter } from '../../documentation'
+import Docs from '../Docs/Docs'
+import { splitMdSlides } from '../Docs/MD/splitMd'
+import FrameAside from '../Frame/FrameAside'
+import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
+import { ErrorsView } from './CypherFrame/ErrorsView/ErrorsView'
 import PreviewFrame from './StartPreviewFrame'
+import { AuraPromoLink, PromotionContainer } from './styled'
 
 const AuraPromotion = () => {
   const theme = useContext(ThemeContext)
@@ -207,7 +207,8 @@ function generateContent(
   bus: Bus,
   onSlide: any,
   shouldUseSlidePointer: boolean,
-  showPromotion = false
+  showPromotion = false,
+  inDesktop = false
 ): Content | Promise<Content> {
   // Not found
   if (stackFrame.response && stackFrame.response.status === 404) {
@@ -289,7 +290,8 @@ function generateContent(
   // Check if content exists locally
   if (isPlayChapter(guideName)) {
     const isPreviewAvailable =
-      localStorage.getItem('previewAvailable') === 'true'
+      localStorage.getItem('previewAvailable') === 'true' && !inDesktop
+
     const { content, title, subtitle, slides = null } = chapters[guideName]
 
     const isPlayStart = stackFrame.cmd.trim() === ':play start'
@@ -383,7 +385,8 @@ const mapStateToProps = (state: GlobalState) => ({
     (getEdition(state) !== null &&
       !isEnterprise(state) &&
       !isConnectedAuraHost(state)) ||
-    inDesktop(state)
+    inDesktop(state),
+  inDesktop: inDesktop(state)
 })
 
 export default connect(mapStateToProps)(withBus(PlayFrame))
