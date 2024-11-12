@@ -89,13 +89,15 @@ type PlayFrameProps = {
   showPromotion: boolean
   isFullscreen: boolean
   isCollapsed: boolean
+  inDesktop: boolean
 }
 export function PlayFrame({
   stack,
   bus,
   showPromotion,
   isFullscreen,
-  isCollapsed
+  isCollapsed,
+  inDesktop
 }: PlayFrameProps): JSX.Element {
   const [stackIndex, setStackIndex] = useState(0)
   const [atSlideStart, setAtSlideStart] = useState<boolean | null>(null)
@@ -124,7 +126,8 @@ export function PlayFrame({
         bus,
         onSlide,
         initialPlay,
-        showPromotion
+        showPromotion,
+        inDesktop
       )
       if (stillMounted) {
         setInitialPlay(false)
