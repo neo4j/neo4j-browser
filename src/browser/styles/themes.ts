@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { tokens } from '@neo4j-ndl/base/lib/tokens'
+import { tokens } from '@neo4j-ndl/base';
 import { baseArcTheme } from 'neo4j-arc/common'
 
 import {
