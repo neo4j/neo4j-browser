@@ -112,3 +112,24 @@ export default framesSlice.reducer
 export const getFrame = (state: GlobalState, id: string) => state[NAME].byId[id]
 export const getFrames = (state: GlobalState) => state[NAME].allIds.map((id: string) => state[NAME].byId[id])
 export const getRecentView = (state: GlobalState) => state[NAME].recentView
+
+// Frame actions
+export const ADD = 'frames/ADD'
+export const REMOVE = 'frames/REMOVE'
+export const PIN = 'frames/PIN'
+export const UNPIN = 'frames/UNPIN'
+
+// Tracking actions
+export const TRACK_COLLAPSE_TOGGLE = 'frames/TRACK_COLLAPSE_TOGGLE'
+export const TRACK_FULLSCREEN_TOGGLE = 'frames/TRACK_FULLSCREEN_TOGGLE'
+export const TRACK_SAVE_AS_PROJECT_FILE = 'frames/TRACK_SAVE_AS_PROJECT_FILE'
+
+// Selector functions
+export const getNodePropertiesExpandedByDefault = (state: any) => 
+  state.frames.nodePropertiesExpandedByDefault
+
+// Action creators
+export const setNodePropertiesExpandedByDefault = (expanded: boolean) => ({
+  type: 'frames/SET_NODE_PROPERTIES_EXPANDED',
+  payload: expanded
+})

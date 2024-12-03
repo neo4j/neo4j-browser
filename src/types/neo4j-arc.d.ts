@@ -81,4 +81,15 @@ declare module 'neo4j-arc/cypher-language-support' {
   }
   
   export const CypherEditor: React.FC<CypherEditorProps> & { prototype: CypherEditor }
+}
+
+declare module 'neo4j-arc/graph-visualization' {
+  export interface GraphModel {
+    nodes(): any[]
+    // Add other methods as needed
+  }
+  
+  export interface GraphVisualizer {
+    // Add props interface as needed
+  }
 } 

@@ -17,8 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { tokens } from '@neo4j-ndl/base';
-import { baseArcTheme } from 'neo4j-arc/common'
+
 
 import {
   DARK_THEME,
@@ -26,8 +25,8 @@ import {
   OUTLINE_THEME
 } from 'shared/modules/settings/settingsDuck'
 
-// Currently hard code values for svgs, to be replaced with proper theme colors from NDL
-export const stopIconColor = tokens.colors.red[60]
+// Temporarily hardcode until we find correct token path
+export const stopIconColor = '#E74C3C' // Standard red color
 export const primaryLightColor = '#68BDF4'
 
 // These and colors in dark theme from light palette are to be translated to corresponding
@@ -41,8 +40,25 @@ const NDLColors = {
   }
 }
 
+const needlePalette = {
+  light: {
+    neutral: {
+      text: { weaker: '#717172', weakest: '#A5ABB6' },
+      bg: { default: '#FFFFFF', strongest: '#F9FCFF', weak: '#E8ECF5' },
+      hover: '#F5F8FA',
+      pressed: '#E8ECF5'
+    },
+    primary: {
+      text: '#0C1A25',
+      bg: { weak: '#F5F8FA' },
+      border: { weak: '#D7E5F1' },
+      icon: '#428BCA',
+      hover: { weak: '#E8ECF5' }
+    }
+  }
+}
+
 export const base = {
-  ...baseArcTheme,
   name: 'base',
   // Text colors
   primaryText: '#333',
