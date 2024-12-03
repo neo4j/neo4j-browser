@@ -19,6 +19,7 @@
  */
 import React, { useEffect } from 'react'
 import { withBus } from 'react-suber'
+import { saveAs } from 'file-saver'
 
 import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
 import HistoryRow from './HistoryRow'

@@ -265,8 +265,8 @@ const uploadLink = createUploadLink({
   credentials: 'same-origin',
   headers: {
     'keep-alive': 'true',
-    'X-API-Token': relateApiToken,
-    'X-Client-Id': neo4jDesktopGraphAppId
+    'X-API-Token': relateApiToken || '',
+    'X-Client-Id': neo4jDesktopGraphAppId || ''
   }
 })
 

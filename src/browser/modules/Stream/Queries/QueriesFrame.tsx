@@ -104,7 +104,7 @@ export class QueriesFrame extends Component<
   QueriesFrameProps,
   QueriesFrameState
 > {
-  timer: number | undefined
+  timer: NodeJS.Timeout | undefined
   state: QueriesFrameState = {
     queries: [],
     autoRefresh: false,

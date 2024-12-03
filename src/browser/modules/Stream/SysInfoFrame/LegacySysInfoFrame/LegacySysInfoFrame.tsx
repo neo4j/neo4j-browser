@@ -63,7 +63,7 @@ export class LegacySysInfoFrame extends Component<
   LegacySysInfoProps,
   LegacySysInfoFrameState
 > {
-  timer: number | undefined
+  timer: NodeJS.Timeout | undefined
   constructor(props: LegacySysInfoProps) {
     super(props)
     this.state = {
