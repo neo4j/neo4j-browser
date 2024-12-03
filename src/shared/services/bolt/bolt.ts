@@ -35,7 +35,6 @@ import {
   Connection,
   connectionLost
 } from '../../../shared/modules/connections/connectionsDuck'
-import BoltWorkerModule from './boltWorker'
 import { backgroundTxMetadata } from './txMetadata'
 import { getGlobalDrivers } from './globalDrivers'
 import { BoltConnectionError } from 'services/exceptions'

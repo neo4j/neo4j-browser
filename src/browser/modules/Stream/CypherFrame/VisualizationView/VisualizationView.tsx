@@ -21,6 +21,7 @@ import neo4j from 'neo4j-driver'
 import React, { useEffect, useRef, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 import { Action, Dispatch } from 'redux'
+import { ThunkDispatch } from 'redux-thunk'
 
 import { GraphModel, GraphVisualizer } from 'neo4j-arc/graph-visualization'
 
@@ -29,7 +30,6 @@ import {
   BasicNode,
   BasicNodesAndRels,
   BasicRelationship,
-  deepEquals
 } from 'neo4j-arc/common'
 import bolt from 'services/bolt/bolt'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
@@ -74,13 +74,17 @@ export type VisualizationProps = {
   disableWheelZoomInfoMessage: () => void
 }
 
-const executeCypherQuery = (query: string, params: any = {}, database?: string) => ({
-  type: ROUTED_CYPHER_READ_REQUEST,
-  query,
-  params,
-  queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
-  useDb: database
-})
+const executeCypherQueryAsync = (query: string, params: any = {}, database?: string) => 
+  async (dispatch: ThunkDispatch<any, any, any>) => {
+    const action = {
+      type: ROUTED_CYPHER_READ_REQUEST,
+      query,
+      params,
+      queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
+      useDb: database
+    }
+    return dispatch(action)
+  }
 
 export const Visualization: React.FC<VisualizationProps> = props => {
   const dispatch = useDispatch()
@@ -181,7 +185,7 @@ LIMIT ${maxNewNeighbours}`
         : `MATCH p=(a)--() WHERE id(a) = ${id} RETURN count(p) as allNeighboursCount`
 
     return new Promise((resolve, reject) => {
-      dispatch(executeCypherQuery(query, {}, props.result.summary.database.name))
+      executeCypherQueryAsync(query, {}, props.result.summary.database.name)(dispatch)
         .then((response: any) => {
           if (!response.success) {
             reject(new Error())
@@ -230,7 +234,7 @@ LIMIT ${maxNewNeighbours}`
     const query =
       'MATCH (a)-[r]->(b) WHERE id(a) IN $existingNodeIds AND id(b) IN $newNodeIds RETURN r;'
     return new Promise(resolve => {
-      dispatch(executeCypherQuery(query, { existingNodeIds, newNodeIds }, props.result.summary.database.name))
+      executeCypherQueryAsync(query, { existingNodeIds, newNodeIds }, props.result.summary.database.name)(dispatch)
         .then((response: any) => {
           if (!response.success) {
             console.error(response.error)
@@ -244,10 +248,6 @@ LIMIT ${maxNewNeighbours}`
               )
             })
           }
-        })
-        .catch((error: any) => {
-          console.error(error)
-          resolve({ nodes: [], relationships: [] })
         })
     })
   }

@@ -86,10 +86,32 @@ declare module 'neo4j-arc/cypher-language-support' {
 declare module 'neo4j-arc/graph-visualization' {
   export interface GraphModel {
     nodes(): any[]
-    // Add other methods as needed
   }
   
-  export interface GraphVisualizer {
-    // Add props interface as needed
+  export interface GraphVisualizerProps {
+    maxNeighbours: number
+    hasTruncatedFields: boolean
+    graphStyleData: any
+    updateStyle: (style: any) => void
+    getNeighbours: (id: string, currentNeighbourIds?: string[]) => Promise<any>
+    nodes: any[]
+    relationships: any[]
+    isFullscreen: boolean
+    assignVisElement: (v: any) => void
+    nodeLimitHit: boolean
+    getAutoCompleteCallback: (callback: any) => void
+    setGraph: (graph: GraphModel) => void
+    setNodePropertiesExpandedByDefault: (expanded: boolean) => void
+    nodePropertiesExpandedByDefault: boolean
+    wheelZoomRequiresModKey: boolean
+    wheelZoomInfoMessageEnabled: boolean
+    disableWheelZoomInfoMessage: () => void
+    DetailsPaneOverride: React.ComponentType<any>
+    OverviewPaneOverride: React.ComponentType<any>
+    useGeneratedDefaultColors: boolean
+    initialZoomToFit?: boolean
+    autocompleteRelationships?: boolean
   }
+
+  export const GraphVisualizer: React.FC<GraphVisualizerProps>
 } 
