@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { palette as needlePalette } from '@neo4j-ndl/base/lib/tokens/js/tokens'
+import { tokens } from '@neo4j-ndl/base/lib/tokens'
 import { baseArcTheme } from 'neo4j-arc/common'
 
 import {
@@ -27,7 +27,7 @@ import {
 } from 'shared/modules/settings/settingsDuck'
 
 // Currently hard code values for svgs, to be replaced with proper theme colors from NDL
-export const stopIconColor = '#FD766E'
+export const stopIconColor = tokens.colors.red[60]
 export const primaryLightColor = '#68BDF4'
 
 // These and colors in dark theme from light palette are to be translated to corresponding

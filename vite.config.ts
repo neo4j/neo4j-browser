@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import react from '@vitejs/plugin-react-swc'
 import { fileURLToPath } from 'node:url'
 import { dirname, resolve } from 'node:path'
 
@@ -8,11 +8,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 export default defineConfig({
-  plugins: [
-    react({
-      jsxRuntime: 'automatic'
-    })
-  ],
+  plugins: [react()],
   resolve: {
     alias: {
       'browser-components': resolve(__dirname, 'src/browser/components'),
@@ -30,19 +26,12 @@ export default defineConfig({
   optimizeDeps: {
     include: [
       'neo4j-driver',
-      'neo4j-driver-core',
-      'lodash-es',
-      'whatwg-url'
-    ],
-    esbuildOptions: {
-      target: 'es2020'
-    }
+      'lodash-es'
+    ]
   },
   server: {
     port: 8080,
-    hmr: {
-      overlay: true
-    }
+    hmr: false
   },
   build: {
     sourcemap: true,
@@ -68,7 +57,6 @@ export default defineConfig({
   },
   define: {
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-    'global': 'globalThis',
-    'Buffer.isBuffer': 'undefined'
+    'global': 'globalThis'
   }
 }) 

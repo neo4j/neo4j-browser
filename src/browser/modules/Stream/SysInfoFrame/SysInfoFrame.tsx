@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React, { Component, ReactNode, useEffect } from 'react'
+import { Component, ReactNode, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { Bus } from 'suber'
@@ -60,8 +60,8 @@ import {
   commandSources,
   executeCommand
 } from 'shared/modules/commands/commandsDuck'
-import { Action, Dispatch } from 'redux'
 import { SpinnerContainer } from './styled'
+import type { AppDispatch } from 'shared/store/configureStore'
 
 export type DatabaseMetric = { label: string; value?: string }
 export type SysInfoFrameState = {
@@ -296,7 +296,7 @@ const mapStateToProps = (state: GlobalState) => ({
   namespacesEnabled: getMetricsNamespacesEnabled(state),
   metricsPrefix: getMetricsPrefix(state)
 })
-const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
   rerunWithDb: ({ useDb, id }: { useDb: string; id: string }) => {
     dispatch(
       executeCommand(':sysinfo', {

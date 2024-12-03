@@ -17,8 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { Buffer } from 'buffer'
 import 'core-js/stable'
 import 'regenerator-runtime/runtime'
+import React from 'react'
+import { createRoot } from 'react-dom/client'
+import AppInit from './AppInit'
+
+// Make buffer available globally
+globalThis.Buffer = Buffer
 
 import './styles/bootstrap.grid-only.min.css'
 import './styles/streamline.css'
@@ -29,7 +36,6 @@ import './styles/open-sans.css'
 import './styles/util-classes.css'
 
 import 'browser-styles/relate-by-ui/relate-by-PARTS.css'
-
 import '@neo4j-ndl/base/lib/neo4j-ds-styles.css'
 
 // Make sure the bolt worker module is fetched early
@@ -43,4 +49,19 @@ if (typeof btoa === 'undefined') {
   global.btoa = function (str) {
     return Buffer.from(str, 'binary').toString('base64')
   }
+}
+
+export function mount(container: HTMLElement): void {
+  const root = createRoot(container)
+  root.render(
+    <React.StrictMode>
+      <AppInit />
+    </React.StrictMode>
+  )
+}
+
+// Mount React app
+const container = document.getElementById('root')
+if (container) {
+  mount(container)
 }

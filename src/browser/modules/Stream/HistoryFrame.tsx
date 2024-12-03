@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { withBus } from 'react-suber'
 import { saveAs } from 'file-saver'
 
@@ -25,11 +25,13 @@ import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
 import HistoryRow from './HistoryRow'
 import { PaddedDiv, UnstyledList } from './styled'
 import * as editor from 'shared/modules/editor/editorDuck'
+import { useDispatch } from 'react-redux'
 
 export const HistoryFrame = (props: any) => {
-  const { frame, bus, setExportItems } = props
+  const { frame, setExportItems } = props
+  const dispatch = useDispatch()
   const onHistoryClick = (cmd: string) => {
-    bus.send(editor.SET_CONTENT, editor.setContent(cmd))
+    dispatch(editor.setContent(cmd))
   }
   useEffect(() => {
     setExportItems([
