@@ -5,7 +5,7 @@ import { neo4jApi } from '../services/neo4jApi'
 export const store = configureStore({
   reducer: {
     [neo4jApi.reducerPath]: neo4jApi.reducer,
-    // ... other reducers
+    // Add other reducers here
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(neo4jApi.middleware)

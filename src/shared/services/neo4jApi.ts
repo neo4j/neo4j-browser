@@ -1,48 +1,33 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { createApi, fetchBaseQuery, BaseQueryFn } from '@reduxjs/toolkit/query/react'
 
-export interface Query {
-  host: string
+interface Query {
   queryId: string
   query: string
   parameters: Record<string, unknown>
-  elapsedTimeMillis: number
+  host: string
+  elapsedTimeMillis?: number
   requestId?: string
 }
 
 export const neo4jApi = createApi({
   reducerPath: 'neo4jApi',
-  baseQuery: fetchBaseQuery({ baseUrl: '/' }),
+  baseQuery: fetchBaseQuery({ baseUrl: '/api' }) as BaseQueryFn,
   endpoints: (builder) => ({
     listQueries: builder.query<Query[], void>({
-      query: () => ({
-        url: 'db/manage/queries',
-        method: 'POST',
-        body: {
-          query: 'CALL dbms.listQueries()',
-          queryType: 'system'
-        }
-      }),
-      transformResponse: (response: any) => 
-        response.result.records.map(({ host, _fields }: any) => ({
-          host,
-          ...(_fields[0] || {})
-        }))
+      query: () => 'queries',
+      keepUnusedDataFor: 20
     }),
     killQuery: builder.mutation<void, { queryId: string }>({
       query: ({ queryId }) => ({
-        url: 'db/manage/kill-query',
-        method: 'POST',
-        body: {
-          query: 'CALL dbms.killQuery($id)',
-          parameters: { id: queryId },
-          queryType: 'system'
-        }
+        url: `queries/${queryId}`,
+        method: 'DELETE'
       })
     })
   })
 })
 
 export const { 
-  useListQueriesQuery,
-  useKillQueryMutation
+  useListQueriesQuery, 
+  useKillQueryMutation,
+  usePrefetch: usePrefetchQueries 
 } = neo4jApi 

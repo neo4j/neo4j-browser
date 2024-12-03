@@ -17,22 +17,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { useEffect, useState } from 'react'
-import { connect } from 'react-redux'
+import React, { useCallback, useMemo, useRef } from 'react'
+import { useSelector } from 'react-redux'
 import { useListQueriesQuery, useKillQueryMutation } from 'shared/services/neo4jApi'
 import { CONNECTED_STATE } from 'shared/modules/connections/connectionsDuck'
 import { useVirtualizer } from '@tanstack/react-virtual'
-
+import type { VirtualItem } from '@tanstack/react-virtual'
 import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
-import { GlobalState } from 'project-root/src/shared/globalState'
+import { RootState } from 'shared/store/configureStore'
 import {
   Code,
   StyledHeaderRow,
   StyledTable,
   StyledTableWrapper,
-  StyledTd,
   StyledTh,
-  VirtualTableBody
+  VirtualTableBody,
+  VirtualRow,
+  VirtualCell,
+  MetaInfo
 } from './styled'
 import {
   AutoRefreshSpan,
@@ -43,82 +45,118 @@ import {
 import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
 import FrameError from '../../Frame/FrameError'
 
-type QueriesFrameState = {
-  queries: any[]
-  autoRefresh: boolean
-  autoRefreshInterval: number
-  successMessage: null | string
-  errorMessages: string[]
-}
-
-type QueriesFrameProps = {
-  frame?: Frame
-  connectionState: number
+interface QueriesFrameProps {
   isFullscreen: boolean
   isCollapsed: boolean
 }
 
-export function QueriesFrame({
-  frame,
-  connectionState,
-  isFullscreen,
-  isCollapsed
-}: QueriesFrameProps) {
-  const [autoRefresh, setAutoRefresh] = useState(false)
-  const [autoRefreshInterval] = useState(20) // seconds
-  const parentRef = React.useRef<HTMLDivElement>(null)
+const formatDuration = (milliseconds: number): string => {
+  const seconds = Math.floor(milliseconds / 1000)
+  const minutes = Math.floor(seconds / 60)
+  const hours = Math.floor(minutes / 60)
+  const days = Math.floor(hours / 24)
+
+  if (days > 0) return `${days}d ${hours % 24}h`
+  if (hours > 0) return `${hours}h ${minutes % 60}m`
+  if (minutes > 0) return `${minutes}m ${seconds % 60}s`
+  if (seconds > 0) return `${seconds}s`
+  return `${milliseconds}ms`
+}
+
+export function QueriesFrame({ isFullscreen, isCollapsed }: QueriesFrameProps) {
+  const [autoRefresh, setAutoRefresh] = React.useState(false)
+  const parentRef = useRef<HTMLDivElement>(null)
+  const connectionState = useSelector((state: RootState) => state.connections.connectionState)
 
   const { 
     data: queries = [], 
     error, 
     refetch 
   } = useListQueriesQuery(undefined, {
-    pollingInterval: autoRefresh ? autoRefreshInterval * 1000 : 0,
+    pollingInterval: autoRefresh ? 20000 : 0,
     skip: connectionState !== CONNECTED_STATE
-  })
-
-  const rowVirtualizer = useVirtualizer({
-    count: queries.length,
-    getScrollElement: () => parentRef.current,
-    estimateSize: () => 50, // estimated row height
-    overscan: 10
   })
 
   const [killQuery] = useKillQueryMutation()
 
-  const formatDuration = (milliseconds: number): string => {
-    const seconds = Math.floor(milliseconds / 1000)
-    const minutes = Math.floor(seconds / 60)
-    const hours = Math.floor(minutes / 60)
-    const days = Math.floor(hours / 24)
+  const rowVirtualizer = useVirtualizer({
+    count: queries.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 60,
+    overscan: 5,
+    paddingStart: 8,
+    paddingEnd: 8
+  })
 
-    if (days > 0) return `${days}d ${hours % 24}h`
-    if (hours > 0) return `${hours}h ${minutes % 60}m`
-    if (minutes > 0) return `${minutes}m ${seconds % 60}s`
-    if (seconds > 0) return `${seconds}s`
-    return `${milliseconds}ms`
-  }
-
-  const handleAutoRefreshChange = (newValue: boolean) => {
+  const handleAutoRefreshChange = useCallback((newValue: boolean) => {
     setAutoRefresh(newValue)
     if (newValue) {
       refetch()
     }
-  }
+  }, [refetch])
 
-  const handleKillQuery = async (queryId: string) => {
+  const handleKillQuery = useCallback(async (queryId: string) => {
     try {
       await killQuery({ queryId })
       refetch()
     } catch (err) {
       console.error('Failed to kill query:', err)
     }
-  }
+  }, [killQuery, refetch])
+
+  const virtualRows = useMemo(() => 
+    rowVirtualizer.getVirtualItems().map((virtualRow: VirtualItem) => {
+      const query = queries[virtualRow.index]
+      return (
+        <div
+          key={virtualRow.key}
+          data-index={virtualRow.index}
+          ref={rowVirtualizer.measureElement}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            transform: `translateY(${virtualRow.start}px)`
+          }}
+        >
+          <VirtualRow isEven={virtualRow.index % 2 === 0}>
+            <VirtualCell width="15%">
+              <Code title={query.host}>{query.host}</Code>
+            </VirtualCell>
+            <VirtualCell width="35%">
+              <Code title={query.query}>{query.query}</Code>
+            </VirtualCell>
+            <VirtualCell width="20%">
+              <Code title={JSON.stringify(query.parameters, null, 2)}>
+                {JSON.stringify(query.parameters)}
+              </Code>
+            </VirtualCell>
+            <VirtualCell width="20%">
+              <MetaInfo>
+                {query.elapsedTimeMillis && (
+                  <Code>
+                    Elapsed: {formatDuration(query.elapsedTimeMillis)}
+                  </Code>
+                )}
+                {query.requestId && (
+                  <Code>ID: {query.requestId}</Code>
+                )}
+              </MetaInfo>
+            </VirtualCell>
+            <VirtualCell width="10%">
+              <ConfirmationButton
+                onConfirmed={() => handleKillQuery(query.queryId)}
+              />
+            </VirtualCell>
+          </VirtualRow>
+        </div>
+      )
+    }), [rowVirtualizer, queries, handleKillQuery])
 
   if (error) {
     return (
       <FrameError
-        frame={frame}
         message="Error: Unable to load queries"
         details={error.toString()}
       />
@@ -135,11 +173,11 @@ export function QueriesFrame({
             <StyledTable>
               <thead>
                 <StyledHeaderRow>
-                  <StyledTh>Host</StyledTh>
-                  <StyledTh>Query</StyledTh>
-                  <StyledTh>Params</StyledTh>
-                  <StyledTh>Meta</StyledTh>
-                  <StyledTh>Kill Query</StyledTh>
+                  <StyledTh width="15%">Host</StyledTh>
+                  <StyledTh width="35%">Query</StyledTh>
+                  <StyledTh width="20%">Params</StyledTh>
+                  <StyledTh width="20%">Meta</StyledTh>
+                  <StyledTh width="10%">Kill Query</StyledTh>
                 </StyledHeaderRow>
               </thead>
             </StyledTable>
@@ -151,49 +189,7 @@ export function QueriesFrame({
                   position: 'relative'
                 }}
               >
-                {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-                  const query = queries[virtualRow.index]
-                  return (
-                    <div
-                      key={query.queryId}
-                      style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: `${virtualRow.size}px`,
-                        transform: `translateY(${virtualRow.start}px)`
-                      }}
-                    >
-                      <div style={{ display: 'flex', padding: '8px' }}>
-                        <div style={{ flex: '1' }} title={query.host}>
-                          <Code>{query.host}</Code>
-                        </div>
-                        <div style={{ flex: '2' }} title={query.query}>
-                          <Code>{query.query}</Code>
-                        </div>
-                        <div style={{ flex: '1' }} title={JSON.stringify(query.parameters, null, 2)}>
-                          <Code>{JSON.stringify(query.parameters)}</Code>
-                        </div>
-                        <div style={{ flex: '1' }}>
-                          {query.elapsedTimeMillis ? (
-                            <Code>
-                              Elapsed time: {formatDuration(query.elapsedTimeMillis)}
-                            </Code>
-                          ) : null}
-                          {query.requestId ? (
-                            <Code>Request id: {query.requestId}</Code>
-                          ) : null}
-                        </div>
-                        <div style={{ width: '80px' }}>
-                          <ConfirmationButton
-                            onConfirmed={() => handleKillQuery(query.queryId)}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  )
-                })}
+                {virtualRows}
               </div>
             </VirtualTableBody>
           </StyledTableWrapper>
@@ -214,8 +210,4 @@ export function QueriesFrame({
   )
 }
 
-const mapStateToProps = (state: GlobalState) => ({
-  connectionState: getConnectionState(state)
-})
-
-export default connect(mapStateToProps)(QueriesFrame)
+export default QueriesFrame

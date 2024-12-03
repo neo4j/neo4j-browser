@@ -20,11 +20,11 @@
 
 /* eslint-env serviceworker */
 import 'core-js/stable'
-
 import { handleBoltWorkerMessage } from './handleBoltWorkerMessage'
 
-declare const self: ServiceWorker
-self.addEventListener(
-  'message',
-  handleBoltWorkerMessage(self.postMessage) as any
-)
+declare const self: Worker
+
+self.addEventListener('message', handleBoltWorkerMessage(self.postMessage))
+
+// This is needed for Vite to treat this as a module
+export {}
