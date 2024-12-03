@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component } from 'react'
+import { Component, lazy } from 'react'
 import { connect } from 'react-redux'
 
 import { BrowserSyncAuthIframe } from './BrowserSyncAuthIframes'

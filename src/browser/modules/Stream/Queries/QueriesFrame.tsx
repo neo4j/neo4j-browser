@@ -17,47 +17,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React, { Component } from 'react'
+import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import { withBus } from 'react-suber'
-import { Bus } from 'suber'
+import { useListQueriesQuery, useKillQueryMutation } from 'shared/services/neo4jApi'
+import { CONNECTED_STATE } from 'shared/modules/connections/connectionsDuck'
+import { useVirtualizer } from '@tanstack/react-virtual'
 
 import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
-import { Duration } from 'neo4j-driver'
 import { GlobalState } from 'project-root/src/shared/globalState'
-import { gte } from 'semver'
-import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
-import {
-  CONNECTED_STATE,
-  getConnectionState
-} from 'shared/modules/connections/connectionsDuck'
-import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import {
-  getRawVersion,
-  getSemanticVersion,
-  hasProcedure,
-  isOnCluster
-} from 'shared/modules/dbMeta/dbMetaDuck'
-import { Frame } from 'shared/modules/frames/framesDuck'
-import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
-import FrameError from '../../Frame/FrameError'
-import {
-  AutoRefreshSpan,
-  AutoRefreshToggle,
-  StatusbarWrapper,
-  StyledStatusBar
-} from '../AutoRefresh/styled'
-import LegacyQueriesFrame, {
-  LegacyQueriesFrameProps
-} from './LegacyQueriesFrame'
 import {
   Code,
   StyledHeaderRow,
   StyledTable,
   StyledTableWrapper,
   StyledTd,
-  StyledTh
+  StyledTh,
+  VirtualTableBody
 } from './styled'
+import {
+  AutoRefreshSpan,
+  AutoRefreshToggle,
+  StatusbarWrapper,
+  StyledStatusBar
+} from '../AutoRefresh/styled'
+import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
+import FrameError from '../../Frame/FrameError'
 
 type QueriesFrameState = {
   queries: any[]
@@ -69,303 +53,169 @@ type QueriesFrameState = {
 
 type QueriesFrameProps = {
   frame?: Frame
-  bus: Bus
   connectionState: number
   isFullscreen: boolean
   isCollapsed: boolean
 }
 
-function constructOverviewMessage(queries: any, errors: string[]) {
-  const numQueriesMsg = queries.length > 1 ? 'queries' : 'query'
-  const successMessage = `Found ${queries.length} ${numQueriesMsg} on one server (neo4j 5.0 clusters not yet supported).`
+export function QueriesFrame({
+  frame,
+  connectionState,
+  isFullscreen,
+  isCollapsed
+}: QueriesFrameProps) {
+  const [autoRefresh, setAutoRefresh] = useState(false)
+  const [autoRefreshInterval] = useState(20) // seconds
+  const parentRef = React.useRef<HTMLDivElement>(null)
 
-  return errors.length > 0
-    ? `${successMessage} (${errors.length} unsuccessful)`
-    : successMessage
-}
+  const { 
+    data: queries = [], 
+    error, 
+    refetch 
+  } = useListQueriesQuery(undefined, {
+    pollingInterval: autoRefresh ? autoRefreshInterval * 1000 : 0,
+    skip: connectionState !== CONNECTED_STATE
+  })
 
-function prettyPrintDuration(duration: Duration) {
-  const { months, days, seconds, nanoseconds } = duration
+  const rowVirtualizer = useVirtualizer({
+    count: queries.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 50, // estimated row height
+    overscan: 10
+  })
 
-  let resultsString = ''
-  if (months.toNumber() > 0) {
-    resultsString += `${months} months, `
+  const [killQuery] = useKillQueryMutation()
+
+  const formatDuration = (milliseconds: number): string => {
+    const seconds = Math.floor(milliseconds / 1000)
+    const minutes = Math.floor(seconds / 60)
+    const hours = Math.floor(minutes / 60)
+    const days = Math.floor(hours / 24)
+
+    if (days > 0) return `${days}d ${hours % 24}h`
+    if (hours > 0) return `${hours}h ${minutes % 60}m`
+    if (minutes > 0) return `${minutes}m ${seconds % 60}s`
+    if (seconds > 0) return `${seconds}s`
+    return `${milliseconds}ms`
   }
-  if (days.toNumber() > 0) {
-    resultsString += `${days} days, `
-  }
-  const millis = seconds.toNumber() * 1000 + nanoseconds.toNumber() / 1000000
-  resultsString += `${millis} ms`
 
-  return resultsString
-}
-
-export class QueriesFrame extends Component<
-  QueriesFrameProps,
-  QueriesFrameState
-> {
-  timer: NodeJS.Timeout | undefined
-  state: QueriesFrameState = {
-    queries: [],
-    autoRefresh: false,
-    autoRefreshInterval: 20, // seconds
-    successMessage: null,
-    errorMessages: []
-  }
-
-  componentDidMount(): void {
-    if (this.props.connectionState === CONNECTED_STATE) {
-      this.getRunningQueries()
-    } else {
-      this.setState({
-        errorMessages: ['Unable to connect to neo4j']
-      })
+  const handleAutoRefreshChange = (newValue: boolean) => {
+    setAutoRefresh(newValue)
+    if (newValue) {
+      refetch()
     }
   }
 
-  componentDidUpdate(
-    prevProps: QueriesFrameProps,
-    prevState: QueriesFrameState
-  ): void {
-    if (prevState.autoRefresh !== this.state.autoRefresh) {
-      if (this.state.autoRefresh) {
-        this.timer = setInterval(
-          this.getRunningQueries,
-          this.state.autoRefreshInterval * 1000
-        )
-      } else {
-        clearInterval(this.timer)
-      }
-    }
-    if (
-      this.props.frame &&
-      this.props.frame.ts !== prevProps.frame?.ts &&
-      this.props.frame.isRerun
-    ) {
-      this.getRunningQueries()
+  const handleKillQuery = async (queryId: string) => {
+    try {
+      await killQuery({ queryId })
+      refetch()
+    } catch (err) {
+      console.error('Failed to kill query:', err)
     }
   }
 
-  getRunningQueries = (suppressQuerySuccessMessage = false): void => {
-    this.props.bus.self(
-      CYPHER_REQUEST,
-      {
-        query:
-          'SHOW TRANSACTIONS YIELD currentQuery, username, metaData, parameters, status, elapsedTime, database, transactionId',
-        queryType: NEO4J_BROWSER_USER_ACTION_QUERY
-      },
-      resp => {
-        if (resp.success) {
-          const queries = resp.result.records.map(
-            ({ host, keys, _fields, error }: any) => {
-              if (error) return { error }
-              const nonNullHost = host ?? resp.result.summary.server.address
-              const data: any = {}
-              keys.forEach((key: string, idx: number) => {
-                data[key] = _fields[idx]
-              })
-
-              return {
-                ...data,
-                host: `neo4j://${nonNullHost}`,
-                query: data.currentQuery,
-                elapsedTimeMillis: prettyPrintDuration(data.elapsedTime),
-                queryId: data.transactionId
-              }
-            }
-          )
-
-          const errors = queries
-            .filter((_: any) => _.error)
-            .map((e: any) => ({
-              ...e.error
-            }))
-          const validQueries = queries.filter((_: any) => !_.error)
-          const resultMessage = constructOverviewMessage(validQueries, errors)
-
-          this.setState((prevState: QueriesFrameState) => ({
-            queries: validQueries,
-            errorMessages: errors,
-            successMessage: suppressQuerySuccessMessage
-              ? prevState.successMessage
-              : resultMessage
-          }))
-        }
-      }
-    )
-  }
-
-  killQueries(queryIdList: string[]): void {
-    this.props.bus.self(
-      CYPHER_REQUEST,
-      {
-        query: `TERMINATE TRANSACTIONS ${queryIdList
-          .map(q => `"${q}"`)
-          .join(',')}`,
-        queryType: NEO4J_BROWSER_USER_ACTION_QUERY
-      },
-      (response: any) => {
-        if (response.success) {
-          this.setState({
-            successMessage: 'Query successfully cancelled',
-            errorMessages: []
-          })
-          this.getRunningQueries(true)
-        } else {
-          this.setState(state => ({
-            errorMessages: state.errorMessages.concat([response.error.message]),
-            successMessage: null
-          }))
-        }
-      }
-    )
-  }
-
-  killQuery(queryId: string): void {
-    this.killQueries([queryId])
-  }
-
-  constructViewFromQueryList = (): JSX.Element | null => {
-    const { queries, errorMessages: errors } = this.state
-    if (queries.length === 0) {
-      return null
-    }
-    const tableHeaderSizes = [
-      ['Database', '8%'],
-      ['User', '8%'],
-      ['Query', 'auto'],
-      ['Params', '7%'],
-      ['Meta', 'auto'],
-      ['Elapsed time', '95px'],
-      ['Kill', '95px']
-    ]
-
+  if (error) {
     return (
-      <StyledTableWrapper>
-        <StyledTable>
-          <thead>
-            <StyledHeaderRow>
-              {tableHeaderSizes.map(heading => (
-                <StyledTh width={heading[1]} key={heading[0]}>
-                  {heading[0]}
-                </StyledTh>
-              ))}
-            </StyledHeaderRow>
-          </thead>
-          <tbody>
-            {queries.map((query: any, i: number) => (
-              <tr key={`rows${i}`}>
-                <StyledTd
-                  key="db"
-                  title={query.database}
-                  width={tableHeaderSizes[0][1]}
-                >
-                  <Code>{query.database}</Code>
-                </StyledTd>
-                <StyledTd key="username" width={tableHeaderSizes[1][1]}>
-                  {query.username}
-                </StyledTd>
-                <StyledTd
-                  key="query"
-                  title={query.query}
-                  width={tableHeaderSizes[2][1]}
-                >
-                  <Code>{query.query}</Code>
-                </StyledTd>
-                <StyledTd key="params" width={tableHeaderSizes[3][1]}>
-                  <Code>{JSON.stringify(query.parameters, null, 2)}</Code>
-                </StyledTd>
-                <StyledTd
-                  key="meta"
-                  title={JSON.stringify(query.metaData, null, 2)}
-                  width={tableHeaderSizes[4][1]}
-                >
-                  <Code>{JSON.stringify(query.metaData, null, 2)}</Code>
-                </StyledTd>
-                <StyledTd key="time" width={tableHeaderSizes[5][1]}>
-                  {query.elapsedTimeMillis}
-                </StyledTd>
-                <StyledTd key="actions" width={tableHeaderSizes[6][1]}>
-                  <ConfirmationButton
-                    onConfirmed={() => this.killQuery(query.queryId)}
-                  />
-                </StyledTd>
-              </tr>
-            ))}
-
-            {errors.map((error: any, i: number) => (
-              <tr key={`error${i}`}>
-                <StyledTd colSpan={7} title={error.message}>
-                  <Code>Error connecting to: {error.host}</Code>
-                </StyledTd>
-              </tr>
-            ))}
-          </tbody>
-        </StyledTable>
-      </StyledTableWrapper>
-    )
-  }
-
-  setAutoRefresh(autoRefresh: boolean): void {
-    this.setState({ autoRefresh })
-
-    if (autoRefresh) {
-      this.getRunningQueries()
-    }
-  }
-
-  render(): JSX.Element {
-    const { isCollapsed, isFullscreen } = this.props
-    const { errorMessages, successMessage, autoRefresh } = this.state
-
-    return (
-      <FrameBodyTemplate
-        isCollapsed={isCollapsed}
-        isFullscreen={isFullscreen}
-        contents={this.constructViewFromQueryList()}
-        statusBar={
-          <StatusbarWrapper>
-            {successMessage ? (
-              <StyledStatusBar>
-                {successMessage}
-                <AutoRefreshSpan>
-                  <AutoRefreshToggle
-                    checked={autoRefresh}
-                    onChange={e => this.setAutoRefresh(e.target.checked)}
-                  />
-                </AutoRefreshSpan>
-              </StyledStatusBar>
-            ) : (
-              errorMessages && <FrameError message={errorMessages.join(',')} />
-            )}
-          </StatusbarWrapper>
-        }
+      <FrameError
+        frame={frame}
+        message="Error: Unable to load queries"
+        details={error.toString()}
       />
     )
   }
+
+  return (
+    <FrameBodyTemplate
+      isCollapsed={isCollapsed}
+      isFullscreen={isFullscreen}
+      contents={
+        <>
+          <StyledTableWrapper>
+            <StyledTable>
+              <thead>
+                <StyledHeaderRow>
+                  <StyledTh>Host</StyledTh>
+                  <StyledTh>Query</StyledTh>
+                  <StyledTh>Params</StyledTh>
+                  <StyledTh>Meta</StyledTh>
+                  <StyledTh>Kill Query</StyledTh>
+                </StyledHeaderRow>
+              </thead>
+            </StyledTable>
+            <VirtualTableBody ref={parentRef}>
+              <div
+                style={{
+                  height: `${rowVirtualizer.getTotalSize()}px`,
+                  width: '100%',
+                  position: 'relative'
+                }}
+              >
+                {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+                  const query = queries[virtualRow.index]
+                  return (
+                    <div
+                      key={query.queryId}
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: `${virtualRow.size}px`,
+                        transform: `translateY(${virtualRow.start}px)`
+                      }}
+                    >
+                      <div style={{ display: 'flex', padding: '8px' }}>
+                        <div style={{ flex: '1' }} title={query.host}>
+                          <Code>{query.host}</Code>
+                        </div>
+                        <div style={{ flex: '2' }} title={query.query}>
+                          <Code>{query.query}</Code>
+                        </div>
+                        <div style={{ flex: '1' }} title={JSON.stringify(query.parameters, null, 2)}>
+                          <Code>{JSON.stringify(query.parameters)}</Code>
+                        </div>
+                        <div style={{ flex: '1' }}>
+                          {query.elapsedTimeMillis ? (
+                            <Code>
+                              Elapsed time: {formatDuration(query.elapsedTimeMillis)}
+                            </Code>
+                          ) : null}
+                          {query.requestId ? (
+                            <Code>Request id: {query.requestId}</Code>
+                          ) : null}
+                        </div>
+                        <div style={{ width: '80px' }}>
+                          <ConfirmationButton
+                            onConfirmed={() => handleKillQuery(query.queryId)}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </VirtualTableBody>
+          </StyledTableWrapper>
+          <StatusbarWrapper>
+            <StyledStatusBar>
+              <div>Found {queries.length} queries</div>
+              <AutoRefreshSpan>
+                <AutoRefreshToggle
+                  checked={autoRefresh}
+                  onChange={(e) => handleAutoRefreshChange(e.target.checked)}
+                />
+              </AutoRefreshSpan>
+            </StyledStatusBar>
+          </StatusbarWrapper>
+        </>
+      }
+    />
+  )
 }
 
-const mapStateToProps = (state: GlobalState) => {
-  const version = getSemanticVersion(state)
-  const versionOverFive = version
-    ? gte(version, '5.0.0')
-    : true /* assume we're 5.0 */
+const mapStateToProps = (state: GlobalState) => ({
+  connectionState: getConnectionState(state)
+})
 
-  return {
-    hasListQueriesProcedure: hasProcedure(state, 'dbms.listQueries'),
-    versionOverFive,
-    connectionState: getConnectionState(state),
-    neo4jVersion: getRawVersion(state),
-    isOnCluster: isOnCluster(state)
-  }
-}
-
-export default withBus(
-  connect(mapStateToProps)((props: LegacyQueriesFrameProps) => {
-    return props.versionOverFive ? (
-      <QueriesFrame {...props} />
-    ) : (
-      <LegacyQueriesFrame {...props} />
-    )
-  })
-)
+export default connect(mapStateToProps)(QueriesFrame)

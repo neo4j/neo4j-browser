@@ -96,7 +96,7 @@ export class SysInfoFrame extends Component<
   SysInfoFrameProps,
   SysInfoFrameState
 > {
-  timer: NodeJS.Timeout | undefined
+  timer: ReturnType<typeof setInterval> | undefined
   state: SysInfoFrameState = {
     lastFetch: null,
     storeSizes: [],

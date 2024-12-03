@@ -27,7 +27,6 @@ import {
   restoreSearchAndHashParams,
   wasRedirectedBackFromSSOServer
 } from 'neo4j-client-sso'
-import React from 'react'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { Provider } from 'react-redux'
@@ -133,11 +132,11 @@ const store = createStore<GlobalState>(
 
 // Send everything from suber into Redux
 bus.applyMiddleware(
-  (_, origin) => (channel: string, message: AnyAction, source: string) => {
+  (_: unknown, origin: unknown) => (channel: string, message: AnyAction, source: string) => {
     // No loop-backs
     if (source === 'redux') return
     // Send to Redux with the channel as the action type
-    store.dispatch({ ...message, type: channel, ...origin })
+    store.dispatch(message)
   }
 )
 
