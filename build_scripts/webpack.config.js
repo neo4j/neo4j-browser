@@ -96,7 +96,7 @@ module.exports = {
       },
   devtool: helpers.isProduction ? false : 'eval-cheap-module-source-map',
   devServer: {
-    host: '0.0.0.0',
+    host: 'localhost',
     port: 8080,
     disableHostCheck: true,
     hot: !helpers.isProduction
