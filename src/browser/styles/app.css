@@ -1,0 +1,24 @@
+/* Base imports */
+@import './base/reset.css';
+@import './base/variables.css';
+@import './base/fonts.css';
+
+/* Component styles */
+@import './components/buttons.css';
+@import './components/forms.css';
+@import './components/icons.css';
+
+/* Theme styles - loaded dynamically based on theme */
+@import './themes/light.css' (prefers-color-scheme: light);
+@import './themes/dark.css' (prefers-color-scheme: dark);
+
+/* Essential utility classes that extend Tailwind */
+.neo4j-mono {
+  font-family: var(--font-mono);
+}
+
+.neo4j-sans {
+  font-family: var(--font-sans);
+}
+
+/* Add any other app-wide styles here */ 

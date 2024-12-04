@@ -34,7 +34,7 @@ export const LIGHT_THEME = 'normal'
 export const OUTLINE_THEME = 'outline'
 export const DARK_THEME = 'dark'
 
-export const NEO4J_CLOUD_DOMAINS = ['neo4j.io']
+export const NEO4J_CLOUD_DOMAINS = ['neo4j.io', 'graphenedb.com']
 
 const toNumber = (num: number | string): number =>
   typeof num === 'number' ? num : parseInt(num, 10)

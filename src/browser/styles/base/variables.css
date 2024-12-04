@@ -1,0 +1,18 @@
+:root {
+  /* Colors */
+  --neo4j-primary: #018bff;
+  --neo4j-secondary: #37474f;
+  --neo4j-error: #da4433;
+  --neo4j-success: #4caf50;
+  --neo4j-warning: #ff9800;
+
+  /* Typography */
+  --font-mono: 'Fira Code', monospace;
+  --font-sans: 'Open Sans', sans-serif;
+  
+  /* Spacing */
+  --spacing-base: 0.25rem;
+  
+  /* Transitions */
+  --transition-base: 200ms ease-in-out;
+} 

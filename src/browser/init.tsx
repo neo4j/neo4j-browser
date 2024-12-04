@@ -17,45 +17,44 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Buffer } from 'buffer'
-import 'core-js/stable'
-import 'regenerator-runtime/runtime'
-import React from 'react'
+import React, { Suspense } from 'react'
 import { createRoot } from 'react-dom/client'
-import AppInit from './AppInit'
+import { ErrorBoundary } from 'react-error-boundary'
 
-// Make buffer available globally
-globalThis.Buffer = Buffer
-
-import './styles/bootstrap.grid-only.min.css'
-import './styles/streamline.css'
-import './styles/neo4j-world.css'
-import './styles/font-awesome.min.css'
-import './styles/fira-code.css'
-import './styles/open-sans.css'
-import './styles/util-classes.css'
-
-import 'browser-styles/relate-by-ui/relate-by-PARTS.css'
+// Import styles
 import '@neo4j-ndl/base/lib/neo4j-ds-styles.css'
+import 'tailwindcss/tailwind.css'
+import './styles/app.css'
 
-// Make sure the bolt worker module is fetched early
-export const worker = new Worker(
-  new URL('../shared/services/bolt/boltWorker.ts', import.meta.url),
-  { type: 'module' }
-)
+// Lazy load main app
+const AppInit = React.lazy(() => import('./AppInit'))
 
-// non web env (just for tests)
-if (typeof btoa === 'undefined') {
-  global.btoa = function (str) {
-    return Buffer.from(str, 'binary').toString('base64')
-  }
+function ErrorFallback({ error }: { error: Error }) {
+  return (
+    <div className="p-4 bg-red-50 dark:bg-red-900/20">
+      <h2 className="text-red-700 dark:text-red-300">Something went wrong:</h2>
+      <pre className="mt-2 text-sm">{error.message}</pre>
+    </div>
+  )
+}
+
+function LoadingSpinner() {
+  return (
+    <div className="flex items-center justify-center h-screen">
+      <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary" />
+    </div>
+  )
 }
 
 export function mount(container: HTMLElement): void {
   const root = createRoot(container)
   root.render(
     <React.StrictMode>
-      <AppInit />
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <Suspense fallback={<LoadingSpinner />}>
+          <AppInit />
+        </Suspense>
+      </ErrorBoundary>
     </React.StrictMode>
   )
 }
@@ -65,3 +64,24 @@ const container = document.getElementById('root')
 if (container) {
   mount(container)
 }
+
+// Modern base64 polyfill
+if (typeof window.btoa === 'undefined') {
+  window.btoa = (str: string): string => {
+    try {
+      return window.btoa(unescape(encodeURIComponent(str)))
+    } catch (e) {
+      console.error('Base64 encoding failed:', e)
+      return '' // Return empty string on error
+    }
+  }
+}
+
+// Type-safe worker
+export const worker = new Worker(
+  new URL('../shared/services/bolt/boltWorker.ts', import.meta.url),
+  { 
+    type: 'module',
+    name: 'bolt-worker'
+  }
+) as Worker

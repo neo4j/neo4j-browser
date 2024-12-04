@@ -1,0 +1,6 @@
+/* Font imports */
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Open+Sans:wght@400;500;600&display=swap');
+
+/* Font utilities */
+.font-mono { font-family: var(--font-mono); }
+.font-sans { font-family: var(--font-sans); } 

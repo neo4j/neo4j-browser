@@ -17,11 +17,11 @@
 import { assign, flatMap, map, omit, reduce, values } from 'lodash-es'
 import { useCallback, useMemo, useState } from 'react'
 import {
-  UseRowSelectInstanceProps,
-  UseRowSelectOptions,
-  UseRowSelectState,
-  useRowSelect
-} from 'react-table'
+  RowSelectionState,
+  TableOptions,
+  getCoreRowModel,
+  getFilteredRowModel,
+} from '@tanstack/react-table'
 
 import {
   IRelatableStateInstance,
@@ -31,40 +31,44 @@ import {
 import arrayHasItems from '../utils/array-has-items'
 
 export interface IWithSelectionOptions<Data extends object = any>
-  extends UseRowSelectOptions<Data> {
+  extends Partial<TableOptions<Data>> {
   onSelectionChange?: SelectSetter<Data>
-
-  // react-table state override https://react-table.js.org/api/useRowSelect
-  selectedRowIds?: { [id: string]: boolean }
+  selectedRowIds?: RowSelectionState
 }
 
-export type IWithSelectionState<Data extends object = any> =
-  UseRowSelectState<Data>
+export type IWithSelectionState = {
+  rowSelection: RowSelectionState
+}
 
 export interface IWithSelectionInstance<Data extends object = any>
-  extends UseRowSelectInstanceProps<Data>,
-    IRelatableStateInstance<Data, IWithSelectionState<Data>> {
+  extends IRelatableStateInstance<Data, IWithSelectionState> {
   onCustomSelectionChange: SelectSetter<Data>
+  state: { rowSelection: RowSelectionState }
+  getToggleAllRowsSelectedProps: () => any
+  getToggleAllPageRowsSelectedProps: () => any
+  toggleRowSelected: (rowId: string) => void
+  enableRowSelection?: boolean
+  getCoreRowModel?: typeof getCoreRowModel
+  getFilteredRowModel?: typeof getFilteredRowModel
 }
 
 export default function withSelection<Data extends object = any>(
   options: IWithSelectionOptions<Data> = {}
 ): TableAddOnReturn {
   const {
-    selectedRowIds: theirSelectedRowIds,
+    selectedRowIds: initialRowSelection,
     onSelectionChange,
     ...tableParams
   } = options
-  const [ourSelectedRowIds, setOurSelectedRowIds] = useState<{
-    [id: string]: boolean
-  }>({})
-  const selectedRowIds = theirSelectedRowIds || ourSelectedRowIds
-  const stateParams = { selectedRowIds }
+  
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>(
+    initialRowSelection ?? {}
+  )
+
   const onCustomSelectionChange: SelectSetter = useCallback(
     (rows, select) => {
       if (onSelectionChange) {
         onSelectionChange(rows, select)
-
         return
       }
 
@@ -72,19 +76,18 @@ export default function withSelection<Data extends object = any>(
         arrayHasItems(subRows) ? map(subRows, subRow => subRow.id) : [id]
       )
 
-      if (select) {
-        setOurSelectedRowIds(
-          reduce(newIds, (agg, id) => assign(agg, { [id]: true }), {
-            ...selectedRowIds
-          })
-        )
-
-        return
-      }
-
-      setOurSelectedRowIds(omit(selectedRowIds, newIds))
+      setRowSelection(old => {
+        if (select) {
+          return reduce(
+            newIds,
+            (agg, id) => assign(agg, { [id]: true }),
+            { ...old }
+          )
+        }
+        return omit(old, newIds)
+      })
     },
-    [onSelectionChange, selectedRowIds]
+    [onSelectionChange, rowSelection]
   )
 
   return [
@@ -93,13 +96,17 @@ export default function withSelection<Data extends object = any>(
     () => true,
     () =>
       useMemo(
-        (): Partial<IWithSelectionInstance> => ({
+        (): Partial<IWithSelectionInstance<Data>> => ({
           ...tableParams,
-          onCustomSelectionChange
+          onCustomSelectionChange,
+          state: { rowSelection },
+          enableRowSelection: true,
+          getCoreRowModel,
+          getFilteredRowModel
         }),
-        [onCustomSelectionChange, ...values(tableParams)]
+        [onCustomSelectionChange, rowSelection, ...values(tableParams)]
       ),
-    () => useMemo(() => stateParams, [selectedRowIds]),
-    useRowSelect
+    () => useMemo(() => ({ rowSelection }), [rowSelection]),
+    undefined
   ]
 }

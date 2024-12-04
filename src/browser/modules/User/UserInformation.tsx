@@ -17,12 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { withBus } from 'react-suber'
-import uuid, { v4 } from 'uuid'
-
-import { CloseIcon } from 'browser-components/icons/LegacyIcons'
+import { useDispatch, useSelector } from 'react-redux'
+import { v4 as uuid } from 'uuid'
+import { Icons } from 'browser/components/icons'
 
 import RolesSelector from './RolesSelector'
 import {
@@ -43,204 +40,125 @@ import {
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
 import { driverDatabaseSelection } from 'shared/modules/features/versionedFeatures'
 
-type UserInformationState = any
+interface UserInformationProps {
+  user: {
+    username: string
+    roles: string[]
+    active: boolean
+    passwordChangeRequired: boolean
+  }
+  availableRoles: string[]
+  refresh: () => void
+}
 
-export class UserInformation extends Component<any, UserInformationState> {
-  constructor(props: {}) {
-    super(props)
-    this.state = {
-      edit: false,
-      availableRoles: this.props.availableRoles || [],
-      roles: this.props.user.roles || [],
-      username: this.props.user.username
-    }
+export function UserInformation({ user, availableRoles = [], refresh }: UserInformationProps) {
+  const dispatch = useDispatch()
+  const useSystemDb = useSelector((state: any) => {
+    const { database } = driverDatabaseSelection(state, 'system') || {}
+    return database
+  })
+
+  const dispatchCypherRequest = (query: string, params = {}) => {
+    dispatch({
+      type: CYPHER_REQUEST,
+      query,
+      params,
+      queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
+      useDb: useSystemDb
+    })
+    refresh()
   }
 
-  removeClick() {
-    this.props.bus.self(
-      CYPHER_REQUEST,
-      {
-        query: deleteUser(this.state.username, Boolean(this.props.useSystemDb)),
-        params: {
-          username: this.state.username
-        },
-        queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
-        useDb: this.props.useSystemDb
-      },
-      this.handleResponse.bind(this)
+  const onRemoveClick = () => {
+    dispatchCypherRequest(
+      deleteUser(user.username, Boolean(useSystemDb)),
+      { username: user.username }
     )
   }
 
-  suspendUser() {
-    this.props.bus.self(
-      CYPHER_REQUEST,
-      {
-        query: suspendUser(
-          this.state.username,
-          Boolean(this.props.useSystemDb)
-        ),
-        params: {
-          username: this.state.username
-        },
-        queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
-        useDb: this.props.useSystemDb
-      },
-      this.handleResponse.bind(this)
+  const onSuspendUser = () => {
+    dispatchCypherRequest(
+      suspendUser(user.username, Boolean(useSystemDb)),
+      { username: user.username }
     )
   }
 
-  activateUser() {
-    this.props.bus.self(
-      CYPHER_REQUEST,
-      {
-        query: activateUser(
-          this.state.username,
-          Boolean(this.props.useSystemDb)
-        ),
-        params: {
-          username: this.state.username
-        },
-        queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
-        useDb: this.props.useSystemDb
-      },
-      this.handleResponse.bind(this)
+  const onActivateUser = () => {
+    dispatchCypherRequest(
+      activateUser(user.username, Boolean(useSystemDb)),
+      { username: user.username }
     )
   }
 
-  status = () => (!this.props.user.active ? 'Suspended' : 'Active')
-  statusButton() {
-    return !this.props.user.active ? (
-      <FormButton label="Activate" onClick={this.activateUser.bind(this)} />
-    ) : (
-      <FormButton label="Suspend" onClick={this.suspendUser.bind(this)} />
+  const onRoleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    dispatchCypherRequest(
+      addRoleToUser(user.username, event.target.value, Boolean(useSystemDb)),
+      { username: user.username, role: event.target.value }
     )
   }
 
-  passwordChange = () =>
-    this.props.user.passwordChangeRequired ? 'Required' : '-'
+  const onRemoveRole = (role: string) => {
+    dispatchCypherRequest(
+      removeRoleFromUser(role, user.username, Boolean(useSystemDb)),
+      { username: user.username, role }
+    )
+  }
 
-  listRoles() {
-    return (
-      !!this.state.roles.length && (
-        <StyleRolesContainer>
-          {this.state.roles.map((role: any) => {
-            return (
+  const status = !user.active ? 'Suspended' : 'Active'
+  const passwordChange = user.passwordChangeRequired ? 'Required' : '-'
+  const availableRolesList = availableRoles.filter(role => !user.roles.includes(role))
+
+  return (
+    <StyledBodyTr className="user-info">
+      <StyledUserTd className="username">
+        <StyledButtonContainer>{user.username}</StyledButtonContainer>
+      </StyledUserTd>
+      <StyledUserTd className="roles">
+        <RolesSelector
+          id={`roles-selector-${uuid()}`}
+          roles={availableRolesList}
+          onChange={onRoleSelect}
+        />
+      </StyledUserTd>
+      <StyledUserTd className="current-roles">
+        {user.roles.length > 0 && (
+          <StyleRolesContainer>
+            {user.roles.map(role => (
               <FormButton
-                key={v4()}
+                key={uuid()}
                 label={role}
-                icon={<CloseIcon />}
+                icon={<Icons.Close className="icon icon-sm" />}
                 buttonType="tag"
-                onClick={() => {
-                  this.props.bus.self(
-                    CYPHER_REQUEST,
-                    {
-                      query: removeRoleFromUser(
-                        role,
-                        this.state.username,
-                        Boolean(this.props.useSystemDb)
-                      ),
-                      params: {
-                        username: this.state.username,
-                        role
-                      },
-                      queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
-                      useDb: this.props.useSystemDb
-                    },
-                    this.handleResponse.bind(this)
-                  )
-                }}
+                onClick={() => onRemoveRole(role)}
               />
-            )
-          })}
-        </StyleRolesContainer>
-      )
-    )
-  }
-
-  onRoleSelect(event: any) {
-    this.props.bus.self(
-      CYPHER_REQUEST,
-      {
-        query: addRoleToUser(
-          this.state.username,
-          event.target.value,
-          Boolean(this.props.useSystemDb)
-        ),
-        params: {
-          username: this.state.username,
-          role: event.target.value
-        },
-        queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
-        useDb: this.props.useSystemDb
-      },
-      this.handleResponse.bind(this)
-    )
-  }
-
-  handleResponse(response: any) {
-    if (!response.success) return this.setState({ errors: [response.error] })
-    return this.props.refresh()
-  }
-
-  availableRoles() {
-    return this.state.availableRoles.filter(
-      (role: any) => this.props.user.roles.indexOf(role) < 0
-    )
-  }
-
-  render() {
-    return (
-      <StyledBodyTr className="user-info">
-        <StyledUserTd className="username" aria-labelledby="username">
-          <StyledButtonContainer>
-            {this.props.user.username}
-          </StyledButtonContainer>
-        </StyledUserTd>
-        <StyledUserTd className="roles" aria-labelledby="roles">
-          <RolesSelector
-            // @ts-expect-error ts-migrate(2349) FIXME: This expression is not callable.
-            id={`roles-selector-${uuid()}`}
-            roles={this.availableRoles()}
-            onChange={this.onRoleSelect.bind(this)}
-          />
-        </StyledUserTd>
-        <StyledUserTd className="current-roles" aria-labelledby="current-roles">
-          <span>{this.listRoles()}</span>
-        </StyledUserTd>
-        <StyledUserTd className="status" aria-labelledby="status">
-          <StyledButtonContainer
-            className={`status-indicator status-${this.status().toLowerCase()}`}
-          >
-            {this.status()}
-          </StyledButtonContainer>
-        </StyledUserTd>
-        <StyledUserTd className="status-action" aria-labelledby="status-action">
-          {this.statusButton()}
-        </StyledUserTd>
-        <StyledUserTd
-          className="password-change"
-          aria-labelledby="password-change"
-        >
-          <StyledButtonContainer>{this.passwordChange()}</StyledButtonContainer>
-        </StyledUserTd>
-        <StyledUserTd className="delete" aria-labelledby="delete">
-          <FormButton
-            className="delete"
-            label="Remove"
-            buttonType="destructive"
-            onClick={this.removeClick.bind(this)}
-          />
-        </StyledUserTd>
-      </StyledBodyTr>
-    )
-  }
-}
-const mapStateToProps = (state: any) => {
-  const { database } = driverDatabaseSelection(state, 'system') || {}
-
-  return {
-    useSystemDb: database
-  }
+            ))}
+          </StyleRolesContainer>
+        )}
+      </StyledUserTd>
+      <StyledUserTd className="status">
+        <StyledButtonContainer className={`status-indicator status-${status.toLowerCase()}`}>
+          {status}
+        </StyledButtonContainer>
+      </StyledUserTd>
+      <StyledUserTd className="status-action">
+        <FormButton
+          label={user.active ? 'Suspend' : 'Activate'}
+          onClick={user.active ? onSuspendUser : onActivateUser}
+        />
+      </StyledUserTd>
+      <StyledUserTd className="password-change">
+        <StyledButtonContainer>{passwordChange}</StyledButtonContainer>
+      </StyledUserTd>
+      <StyledUserTd className="delete">
+        <FormButton
+          className="delete"
+          label="Remove"
+          buttonType="destructive"
+          onClick={onRemoveClick}
+        />
+      </StyledUserTd>
+    </StyledBodyTr>
+  )
 }
 
-export default withBus(connect(mapStateToProps, null)(UserInformation))
+export default UserInformation

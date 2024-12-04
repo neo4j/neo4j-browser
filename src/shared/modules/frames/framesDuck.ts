@@ -34,6 +34,8 @@ export interface Frame {
   type: string
   cmd: string
   result?: any
+  requestId?: string
+  history?: string[]
   // Add other frame properties as needed
 }
 

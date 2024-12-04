@@ -17,11 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { setEditorTheme } from 'neo4j-arc/cypher-language-support'
-import React, { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
-import { ThemeProvider } from 'styled-components'
+import { ThemeProvider } from 'browser/styles/ThemeProvider'
+import { editor as monacoEditor } from 'monaco-editor'
+import { useTheme } from 'browser/styles/ThemeProvider'
 
 import asTitleString from '../DocTitle/titleStringBuilder'
 import FeatureToggleProvider from '../FeatureToggle/FeatureToggleProvider'
@@ -47,7 +48,6 @@ import {
 } from 'browser-components/desktop-api/desktop-api.handlers'
 import useDerivedTheme from 'browser-hooks/useDerivedTheme'
 import { CannyLoader } from 'browser-services/canny'
-import * as themes from 'browser/styles/themes'
 import { version } from 'project-root/package.json'
 import { isRunningE2ETest } from 'services/utils'
 import { GlobalState } from 'shared/globalState'
@@ -75,7 +75,7 @@ import {
   shouldAllowOutgoingConnections
 } from 'shared/modules/dbMeta/dbMetaDuck'
 import {
-  CONNECTION_ID,
+ 
   INJECTED_DISCOVERY
 } from 'shared/modules/discovery/discoveryDuck'
 import { getExperimentalFeatures } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
@@ -102,16 +102,12 @@ export const MAIN_WRAPPER_DOM_ID = 'MAIN_WRAPPER_DOM_ID'
 declare let SEGMENT_KEY: string
 
 export function App(props: any) {
-  const [derivedTheme, setEnvironmentTheme] = useDerivedTheme(
-    props.theme,
-    LIGHT_THEME
-  )
-  // @ts-expect-error ts-migrate(7053) FIXME: No index signature with a parameter of type 'strin... Remove this comment to see the full error message
-  const themeData = themes[derivedTheme] || themes[LIGHT_THEME]
+  const { theme, setTheme } = useTheme()
 
-  // update cypher editor theme
+  const [derivedTheme] = useDerivedTheme(theme, LIGHT_THEME)
+
   useEffect(() => {
-    setEditorTheme(derivedTheme)
+    monacoEditor.setTheme(derivedTheme === 'dark' ? 'vs-dark' : 'vs-light')
   }, [derivedTheme])
 
   useKeyboardShortcuts(props.bus)
@@ -181,61 +177,66 @@ export function App(props: any) {
   }, [titleString])
 
   const wrapperClassNames = codeFontLigatures ? '' : 'disable-font-ligatures'
+
+  const handleDesktopTheme = (newTheme: string) => {
+    setTheme(newTheme)
+  }
+
   return (
     <ErrorBoundary>
-      <DesktopApi
-        onMount={(...args: any[]) => {
-          const { allowSendStats, allowSendReports, trackingId } = args[1]
-            ?.global?.settings || {
-            allowSendReports: false,
-            allowSendStats: false
-          }
-          updateDesktopUDCSettings({
-            allowCrashReportsInDesktop: allowSendReports,
-            allowUserStatsInDesktop: allowSendStats,
-            desktopTrackingId: trackingId
-          })
+      <ThemeProvider>
+        <DesktopApi
+          onMount={(...args: any[]) => {
+            const { allowSendStats, allowSendReports, trackingId } = args[1]
+              ?.global?.settings || {
+              allowSendReports: false,
+              allowSendStats: false
+            }
+            updateDesktopUDCSettings({
+              allowCrashReportsInDesktop: allowSendReports,
+              allowUserStatsInDesktop: allowSendStats,
+              desktopTrackingId: trackingId
+            })
 
-          buildConnectionCreds(...args, { defaultConnectionData })
-            .then(creds => bus.send(INJECTED_DISCOVERY, creds))
-            .catch(() => bus.send(INITIAL_SWITCH_CONNECTION_FAILED))
+            buildConnectionCreds(...args, { defaultConnectionData })
+              .then(creds => bus.send(INJECTED_DISCOVERY, creds))
+              .catch(() => bus.send(INITIAL_SWITCH_CONNECTION_FAILED))
 
-          getDesktopTheme(...args)
-            .then(theme => setEnvironmentTheme(theme))
-            .catch(setEnvironmentTheme(null))
-        }}
-        onGraphActive={(...args: any[]) => {
-          buildConnectionCreds(...args, { defaultConnectionData })
-            .then(creds => bus.send(SWITCH_CONNECTION, creds))
-            .catch(() => bus.send(SWITCH_CONNECTION_FAILED))
-        }}
-        onGraphInactive={() => bus.send(SILENT_DISCONNECT)}
-        onColorSchemeUpdated={(...args: any[]) =>
-          getDesktopTheme(...args)
-            .then(theme => setEnvironmentTheme(theme))
-            .catch(setEnvironmentTheme(null))
-        }
-        onArgumentsChange={(argsString: any) => {
-          bus.send(URL_ARGUMENTS_CHANGE, { url: `?${argsString}` })
-        }}
-        onApplicationSettingsSaved={(...args: any[]) => {
-          const { allowSendStats, allowSendReports, trackingId } = args[1]
-            ?.global?.settings || {
-            allowSendReports: false,
-            allowSendStats: false
+            getDesktopTheme(...args)
+              .then(handleDesktopTheme)
+              .catch(() => setTheme('system'))
+          }}
+          onGraphActive={(...args: any[]) => {
+            buildConnectionCreds(...args, { defaultConnectionData })
+              .then(creds => bus.send(SWITCH_CONNECTION, creds))
+              .catch(() => bus.send(SWITCH_CONNECTION_FAILED))
+          }}
+          onGraphInactive={() => bus.send(SILENT_DISCONNECT)}
+          onColorSchemeUpdated={(...args: any[]) =>
+            getDesktopTheme(...args)
+              .then(handleDesktopTheme)
+              .catch(() => setTheme('system'))
           }
-          updateDesktopUDCSettings({
-            allowCrashReportsInDesktop: allowSendReports,
-            allowUserStatsInDesktop: allowSendStats,
-            desktopTrackingId: trackingId
-          })
-        }}
-        setEventMetricsCallback={(fn: any) =>
-          (eventMetricsCallback.current = fn)
-        }
-      />
-      <PerformanceOverlay />
-      <ThemeProvider theme={themeData}>
+          onArgumentsChange={(argsString: any) => {
+            bus.send(URL_ARGUMENTS_CHANGE, { url: `?${argsString}` })
+          }}
+          onApplicationSettingsSaved={(...args: any[]) => {
+            const { allowSendStats, allowSendReports, trackingId } = args[1]
+              ?.global?.settings || {
+              allowSendReports: false,
+              allowSendStats: false
+            }
+            updateDesktopUDCSettings({
+              allowCrashReportsInDesktop: allowSendReports,
+              allowUserStatsInDesktop: allowSendStats,
+              desktopTrackingId: trackingId
+            })
+          }}
+          setEventMetricsCallback={(fn: any) =>
+            (eventMetricsCallback.current = fn)
+          }
+        />
+        <PerformanceOverlay />
         <FeatureToggleProvider features={experimentalFeatures}>
           <FileDrop store={store}>
             <StyledWrapper className={wrapperClassNames}>
@@ -314,7 +315,7 @@ const mapStateToProps = (state: GlobalState) => {
     loadExternalScripts:
       shouldAllowOutgoingConnections(state) !== false && isConnected(state),
     titleString: asTitleString(connectionData),
-    defaultConnectionData: getConnectionData(state, CONNECTION_ID),
+    defaultConnectionData: getConnectionData(state),
     syncConsent: state.syncConsent.consented,
     browserSyncMetadata: getMetadata(state),
     browserSyncConfig: getBrowserSyncConfig(state),

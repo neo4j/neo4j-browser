@@ -17,16 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { combineReducers } from '@reduxjs/toolkit'
+import { neo4jApi } from './services/neo4jApi'
+import { authApi } from './services/authApi'
+import editorReducer from './modules/editor/editorDuck'
+import connectionsReducer from './modules/connections/connectionsDuck'
+import authReducer from './modules/auth/authSlice'
 import appReducer, { NAME as app } from 'shared/modules/app/appDuck'
 import commandsReducer, {
   NAME as commands
 } from 'shared/modules/commands/commandsDuck'
-import connectionsReducer, {
-  NAME as connections
-} from 'shared/modules/connections/connectionsDuck'
-import userReducer, {
-  NAME as currentUser
-} from 'shared/modules/currentUser/currentUserDuck'
 import dbMetaReducer, { NAME as dbMeta } from 'shared/modules/dbMeta/dbMetaDuck'
 import experimentalFeaturesReducer, {
   NAME as experimentalFeatures
@@ -64,10 +64,14 @@ import {
   NAME_META as syncMetadata,
   syncReducer
 } from 'shared/modules/sync/syncDuck'
-import udcReducer, { NAME as udc } from 'shared/modules/udc/udcDuck'
+import userReducer, { NAME as currentUser } from 'shared/modules/currentUser/currentUserDuck'
 
-export default {
-  [connections]: connectionsReducer,
+const rootReducer = combineReducers({
+  [neo4jApi.reducerPath]: neo4jApi.reducer,
+  [authApi.reducerPath]: authApi.reducer,
+  editor: editorReducer,
+  connections: connectionsReducer,
+  auth: authReducer,
   [stream]: streamReducer,
   [settings]: settingsReducer,
   [features]: featuresReducer,
@@ -84,8 +88,10 @@ export default {
   [syncConsent]: syncConsentReducer,
   [syncMetadata]: syncMetaDataReducer,
   [commands]: commandsReducer,
-  [udc]: udcReducer,
   [app]: appReducer,
   [guides]: guideReducer,
   [experimentalFeatures]: experimentalFeaturesReducer
-}
+})
+
+export type RootState = ReturnType<typeof rootReducer>
+export default rootReducer

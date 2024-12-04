@@ -22,30 +22,13 @@ import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { Action, Dispatch } from 'redux'
 import { Bus } from 'suber'
-
-import { isMac } from 'neo4j-arc/common'
-import {
-  SaveFavoriteIcon,
-  RunIcon,
-  StopIcon
-} from 'browser-components/icons/LegacyIcons'
-
+import { Icons } from 'browser/components/icons'
 import { MAIN_WRAPPER_DOM_ID } from '../App/App'
-import { EditorContainer, Header } from '../Editor/styled'
-import { DottedLineHover } from '../Stream/styled'
-import ExportButton, { ExportItem } from './ExportButton'
-import {
-  StyledFrameCommand,
-  StyledFrameEditorContainer,
-  StyledFrameTitlebarButtonSection
-} from './styled'
-import { FrameButton, StyledEditorButton } from 'browser-components/buttons'
+import { ExportItem } from './ExportButton'
 import { GlobalState } from 'shared/globalState'
 import * as app from 'shared/modules/app/appDuck'
 import * as commands from 'shared/modules/commands/commandsDuck'
-import { applyParamGraphTypes } from 'shared/modules/commands/helpers/cypher'
-import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import * as editor from 'shared/modules/editor/editorDuck'
+import * as editorDuck from 'shared/modules/editor/editorDuck'
 import { addFavorite } from 'shared/modules/favorites/favoritesDuck'
 import {
   Frame,
@@ -54,7 +37,6 @@ import {
 import { getParams } from 'shared/modules/params/paramsDuck'
 import {
   BrowserRequest,
-  REQUEST_STATUS_PENDING,
   cancel as cancelRequest,
   getRequest
 } from 'shared/modules/requests/requestsDuck'
@@ -63,11 +45,16 @@ import {
   shouldEnableMultiStatementMode
 } from 'shared/modules/settings/settingsDuck'
 import * as sidebar from 'shared/modules/sidebar/sidebarDuck'
-import { base, stopIconColor } from 'browser-styles/themes'
-import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
-import { QueryResult } from 'neo4j-driver'
-import { CypherEditor } from 'neo4j-arc/cypher-language-support'
-import { KeyCode } from 'monaco-editor'
+
+import { MonacoEditor } from 'browser/components/Editor/MonacoEditor'
+import { KeyCode, editor } from 'monaco-editor'
+import { Button } from 'browser/components/base/Button'
+import styled from 'styled-components'
+
+const EditorContainer = styled.div`
+  width: 100%;
+  height: 100%;
+`
 
 type FrameEditorBaseProps = {
   frame: Frame
@@ -90,28 +77,22 @@ type FrameEditorProps = FrameEditorBaseProps & {
 }
 
 function FrameEditor({
-  request,
-  isRelateAvailable,
   codeFontLigatures,
-  enableMultiStatementMode,
-  newFavorite,
-  newProjectFile,
-  cancelQuery,
   reRun,
   frame,
   fullscreenToggle,
-  exportItems,
-  bus,
-  params
+  onTitlebarCmdClick,
 }: FrameEditorProps) {
   const [editorValue, setEditorValue] = useState(frame.cmd)
   const [renderEditor, setRenderEditor] = useState(frame.isRerun)
 
   useEffect(() => {
-    // makes sure the frame is updated as links in frame is followed
-    editorRef.current?.setValue(frame.cmd)
+    const editor = editorRef.current
+    if (editor) {
+      editor.setValue(frame.cmd)
+    }
   }, [frame.cmd])
-  const editorRef = useRef<CypherEditor>(null)
+  const editorRef = useRef<editor.IStandaloneCodeEditor>(null)
 
   function run(cmd: string) {
     reRun(frame, cmd)
@@ -120,12 +101,8 @@ function FrameEditor({
     if (e.ctrlKey || e.metaKey) {
       onTitlebarCmdClick(editorValue)
     } else {
-      setRenderEditor(true)
+      startTransition()
     }
-  }
-
-  function onTitlebarCmdClick(cmd: string) {
-    bus.send(editor.SET_CONTENT, editor.setContent(cmd))
   }
 
   const titleBarRef = useRef<HTMLDivElement>(null)
@@ -166,15 +143,20 @@ function FrameEditor({
 
   useEffect(() => {
     if (renderEditor) {
-      editorRef.current?.focus()
-
-      // Jump cursor to end
-      const lines = (editorRef.current?.getValue() || '').split('\n')
-      const linesLength = lines.length
-      editorRef.current?.setPosition({
-        lineNumber: linesLength,
-        column: lines[linesLength - 1].length + 1
-      })
+      const editor = editorRef.current
+      if (editor) {
+        editor.focus()
+        
+        const content = editor.getValue()
+        const lines = content.split('\n')
+        const lastLine = lines.length
+        const lastColumn = lines[lastLine - 1].length + 1
+        
+        editor.setPosition({
+          lineNumber: lastLine,
+          column: lastColumn
+        })
+      }
     }
   }, [renderEditor])
 
@@ -182,97 +164,63 @@ function FrameEditor({
   // don't show it as history as well
   const history = (frame.history || []).slice(1)
 
+
+
+  const additionalCommands = {
+    [KeyCode.Escape]: {
+      handler: fullscreenToggle,
+      context: '!suggestWidgetVisible && !findWidgetVisible'
+    }
+  }
+
+  const onRunClick = () => {
+    run(editorValue)
+  }
+
+  const startTransition = () => {
+    if (document.startViewTransition) {
+      document.startViewTransition(() => {
+        setRenderEditor(true)
+      })
+    } else {
+      setRenderEditor(true)
+    }
+  }
+
   return (
-    <StyledFrameEditorContainer ref={titleBarRef}>
-      <Header>
-        {renderEditor ? (
-          <EditorContainer onClick={onPreviewClick} data-testid="frameCommand">
-            <CypherEditor
-              enableMultiStatementMode={enableMultiStatementMode}
-              fontLigatures={codeFontLigatures}
-              history={history}
-              id={`editor-${frame.id}`}
-              isFullscreen={false}
-              onChange={setEditorValue}
-              onExecute={run}
-              ref={editorRef}
-              additionalCommands={{
-                [KeyCode.Escape]: {
-                  handler: fullscreenToggle,
-                  context: '!suggestWidgetVisible && !findWidgetVisible'
-                }
-              }}
-              useDb={frame.useDb}
-              value={editorValue}
-              sendCypherQuery={(text: string) =>
-                new Promise((res, rej) =>
-                  bus.self(
-                    CYPHER_REQUEST,
-                    {
-                      query: text,
-                      queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
-                      params: applyParamGraphTypes(params)
-                    },
-                    (response: { result: QueryResult; success?: boolean }) => {
-                      if (response.success === true) {
-                        res(response.result)
-                      } else {
-                        rej(response.result)
-                      }
-                    }
-                  )
-                )
-              }
-            />
-          </EditorContainer>
-        ) : (
-          <StyledFrameCommand
-            selectedDb={frame.useDb}
-            onClick={onPreviewClick}
-            data-testid="frameCommand"
-            title={`${isMac ? 'Cmd' : 'Ctrl'}+click to copy to main editor`}
+    <div className="flex flex-col view-transition-new">
+      <div className="flex items-center justify-between p-2 bg-surface-secondary dark:bg-surface-secondary-dark">
+        {/* Frame header */}
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onRunClick}
+            className="flex items-center space-x-1"
           >
-            <DottedLineHover>
-              {editorValue.split('\n').join(' ')}
-            </DottedLineHover>
-          </StyledFrameCommand>
-        )}
-        {request?.status === REQUEST_STATUS_PENDING ? (
-          <StyledEditorButton
-            data-testid="stopRunFrameButton"
-            onClick={() => cancelQuery(frame.requestId)}
-            color={stopIconColor}
-          >
-            <StopIcon width={16} title={'Stop'} />
-          </StyledEditorButton>
-        ) : (
-          <StyledEditorButton
-            data-testid="rerunFrameButton"
-            onClick={() => run(editorValue)}
-            color={base.primary}
-          >
-            <RunIcon width={16} title={'Rerun'} />
-          </StyledEditorButton>
-        )}
-      </Header>
-      <StyledFrameTitlebarButtonSection>
-        <FrameButton
-          title="Save as Favorite"
-          dataTestId="frame-Favorite"
-          onClick={() => {
-            newFavorite(editorValue)
-          }}
-        >
-          <SaveFavoriteIcon />
-        </FrameButton>
-        <ExportButton
-          frame={frame}
-          exportItems={exportItems}
-          isRelateAvailable={isRelateAvailable}
-          newProjectFile={newProjectFile}
-        />
-      </StyledFrameTitlebarButtonSection>
-    </StyledFrameEditorContainer>
+            <Icons.Play className="icon icon-sm" />
+            <span>Run</span>
+          </Button>
+        </div>
+      </div>
+
+      {/* Editor area */}
+      <div className="flex-1 min-h-0">
+        <EditorContainer onClick={onPreviewClick} data-testid="frameCommand">
+          <MonacoEditor
+            value={editorValue}
+            onChange={setEditorValue}
+            onExecute={run}
+            className="h-full"
+            id={`editor-${frame.id}`}
+            ref={editorRef}
+            additionalCommands={additionalCommands}
+            fontLigatures={codeFontLigatures}
+            history={history}
+          />
+        </EditorContainer>
+      </div>
+    </div>
   )
 }
 
@@ -319,6 +267,9 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
           source: commands.commandSources.rerunFrame
         })
       )
+    },
+    onTitlebarCmdClick: (cmd: string) => {
+      dispatch(editorDuck.setContent(cmd))
     }
   }
 }

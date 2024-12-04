@@ -26,6 +26,8 @@ import {
 } from '../modules/dbMeta/dbMetaDuck'
 import { initialState as settingsInitialState } from '../modules/settings/settingsDuck'
 import { GlobalState } from 'shared/globalState'
+import { AuthState } from '../modules/auth/authSlice'
+import type { Connection } from 'shared/modules/connections/connectionsDuck'
 
 export const keyPrefix = 'neo4j.'
 let storage = window.localStorage
@@ -38,9 +40,9 @@ export type LocalStorageKey =
   | 'folders'
   | 'grass'
   | 'syncConsent'
-  | 'udc'
   | 'experimentalFeatures'
   | 'guides'
+  | 'auth'
 const keys: LocalStorageKey[] = []
 
 export function getItem(
@@ -84,10 +86,13 @@ export function getAll(): Partial<GlobalState> {
   return out
 }
 
+interface StorableConnection extends Omit<Connection, 'id'> {
+  [key: string]: unknown
+}
+
 function storeReduxInLocalStorage(state: GlobalState) {
   keys.forEach(key => {
     if (key === 'connections' && !shouldRetainConnectionCredentials(state)) {
-      // if browser.retain_connection_credentials is not true, overwrite password value on all connections
       setItem(key, {
         ...state[key],
         connectionsById: Object.assign(
@@ -95,7 +100,7 @@ function storeReduxInLocalStorage(state: GlobalState) {
           ...Object.entries(state[key].connectionsById).map(
             ([id, connection]) => ({
               [id]: {
-                ...(connection as Record<string, unknown>),
+                ...(connection as unknown as StorableConnection),
                 password: ''
               }
             })
@@ -106,6 +111,10 @@ function storeReduxInLocalStorage(state: GlobalState) {
       setItem(key, [])
     } else if (key === 'guides') {
       setItem(key, { ...state[key], currentGuide: null })
+    } else if (key === 'auth') {
+      // Don't store sensitive auth data
+      const { token, ...safeAuthData } = state[key]
+      setItem(key, safeAuthData)
     } else {
       setItem(key, state[key])
     }

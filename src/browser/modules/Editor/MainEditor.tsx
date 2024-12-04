@@ -17,11 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { CypherEditor, type CypherEditor as CypherEditorType } from 'neo4j-arc/cypher-language-support'
-import { QueryResult } from 'neo4j-driver'
+import { editor as monacoEditor, KeyCode } from 'monaco-editor'
 import React, { useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { KeyCode } from 'monaco-editor'
+import type { QueryResult } from 'neo4j-driver'
 
 import {
   ContractIcon,
@@ -44,7 +43,8 @@ import {
   StyledMainEditorButtonsContainer
 } from 'browser-components/buttons'
 
-import * as editor from 'shared/modules/editor/editorDuck'
+import { MonacoEditor } from 'browser/components/Editor/MonacoEditor'
+import { contract, expand } from 'shared/modules/editor/editorDuck'
 
 interface Props {
   codeFontLigatures: boolean
@@ -56,18 +56,17 @@ interface Props {
 
 const MainEditor: React.FC<Props> = ({
   codeFontLigatures,
-  enableMultiStatementMode,
   history,
   sendCypherQuery,
-  useDb
 }) => {
   const dispatch = useDispatch()
-  const editorRef = useRef<CypherEditorType>(null)
+  const editorRef = useRef<monacoEditor.IStandaloneCodeEditor>(null)
   const [isFullscreen, setFullscreen] = useState(false)
+  const [editorContent, setEditorContent] = useState('')
 
   const toggleFullscreen = () => {
     setFullscreen(fs => !fs)
-    dispatch(isFullscreen ? editor.contract() : editor.expand())
+    dispatch(isFullscreen ? contract() : expand())
   }
 
   const onRunClick = () => {
@@ -75,14 +74,6 @@ const MainEditor: React.FC<Props> = ({
     if (content) {
       sendCypherQuery(content)
     }
-  }
-
-  const onChange = () => {
-    // Handle editor content changes
-  }
-
-  const onDisplayHelpKeys = () => {
-    // Handle help keys display
   }
 
   const additionalCommands = {
@@ -123,19 +114,16 @@ const MainEditor: React.FC<Props> = ({
         </StyledMainEditorButtonsContainer>
       </Header>
       <EditorContainer>
-        <CypherEditor
-          enableMultiStatementMode={enableMultiStatementMode}
-          fontLigatures={codeFontLigatures}
-          history={history}
-          id={'main-editor'}
-          isFullscreen={isFullscreen}
-          onChange={onChange}
-          onDisplayHelpKeys={onDisplayHelpKeys}
+        <MonacoEditor
+          value={editorContent}
+          onChange={setEditorContent}
           onExecute={onRunClick}
+          id="main-editor"
+          isFullscreen={isFullscreen}
           ref={editorRef}
           additionalCommands={additionalCommands}
-          useDb={useDb}
-          sendCypherQuery={sendCypherQuery}
+          fontLigatures={codeFontLigatures}
+          history={history}
         />
       </EditorContainer>
     </MainEditorWrapper>

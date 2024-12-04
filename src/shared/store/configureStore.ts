@@ -1,18 +1,24 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
 import { neo4jApi } from '../services/neo4jApi'
-import editorReducer from '../modules/editor/editorDuck'
+import { authApi } from '../services/authApi'
+import rootReducer from '../rootReducer'
+import { createReduxMiddleware as createLocalStorageMiddleware } from '../services/localstorage'
+import { authMiddleware, rehydrateAuth } from '../modules/auth/authMiddleware'
 
 export const store = configureStore({
-  reducer: {
-    [neo4jApi.reducerPath]: neo4jApi.reducer,
-    editor: editorReducer
-  },
+  reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(neo4jApi.middleware)
+    getDefaultMiddleware()
+      .concat(neo4jApi.middleware)
+      .concat(authApi.middleware)
+      .concat(createLocalStorageMiddleware())
+      .concat(authMiddleware)
 })
 
 setupListeners(store.dispatch)
 
-export type RootState = ReturnType<typeof store.getState>
+// Rehydrate auth state
+store.dispatch(rehydrateAuth())
+
 export type AppDispatch = typeof store.dispatch 

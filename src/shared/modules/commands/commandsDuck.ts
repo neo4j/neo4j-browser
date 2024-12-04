@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import Rx from 'rxjs'
 import { v4 } from 'uuid'
+import { of } from 'rxjs'
 
 import { CONNECTION_SUCCESS } from '../connections/connectionsDuck'
 import {
@@ -97,10 +97,16 @@ export interface ExecuteSingleCommandAction {
   isRerun?: boolean
 }
 
-export interface ExecuteCommandAction extends ExecuteSingleCommandAction {
+export interface ExecuteCommandAction {
   type: typeof COMMAND_QUEUED
+  cmd: string
+  id?: string | number
+  requestId?: string
   parentId?: string
+  useDb?: string | null
+  isRerun?: boolean
   source?: string
+  [key: string]: string | number | boolean | null | undefined
 }
 
 export const commandSources = {
@@ -344,7 +350,7 @@ export const postConnectCmdEpic = (some$: any, store: any) =>
 export const fetchGuideFromAllowlistEpic = (some$: any, store: any) =>
   some$.ofType(FETCH_GUIDE_FROM_ALLOWLIST).mergeMap((action: any) => {
     if (!action.$$responseChannel || !action.url) {
-      return Rx.Observable.of({ type: 'NOOP' })
+      return of({ type: 'NOOP' })
     }
     const allowlistStr = getRemoteContentHostnameAllowlist(store.getState())
     const allowlist = extractAllowlistFromConfigString(allowlistStr)

@@ -21,39 +21,15 @@ export const PREVIEW_EVENT = 'preview/PREVIEW_EVENT'
 
 interface PreviewEventAction {
   type: typeof PREVIEW_EVENT
-  label: string
-  data:
-    | {
-        switchedTo: 'preview' | 'classic'
-        timeSinceLastSwitch: number | null
-      }
-    | {
-        previewUI: boolean
-        hasTriedPreviewUI: boolean
-      }
+  label?: string
+  data?: Record<string, unknown>
+  [key: string]: unknown
 }
 
-export const trackNavigateToPreview = (): PreviewEventAction => {
-  const now = Date.now()
-  localStorage.setItem('hasTriedPreviewUI', 'true')
-
-  const timeSinceLastSwitchMs = localStorage.getItem('timeSinceLastSwitchMs')
-  localStorage.setItem('timeSinceLastSwitchMs', now.toString())
-
-  let timeSinceLastSwitch = null
-  if (timeSinceLastSwitchMs !== null) {
-    timeSinceLastSwitch = now - parseInt(timeSinceLastSwitchMs)
-  }
-
-  return {
-    type: PREVIEW_EVENT,
-    label: 'PREVIEW_UI_SWITCH',
-    data: {
-      switchedTo: 'preview',
-      timeSinceLastSwitch: timeSinceLastSwitch
-    }
-  }
-}
+export const trackNavigateToPreview = (): PreviewEventAction => ({
+  type: PREVIEW_EVENT,
+  label: 'PREVIEW_UI_SWITCH'
+})
 
 export const trackPageLoad = (): PreviewEventAction => {
   const hasTriedPreviewUI = localStorage.getItem('hasTriedPreviewUI') === 'true'

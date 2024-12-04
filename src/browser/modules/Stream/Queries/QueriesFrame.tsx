@@ -44,6 +44,11 @@ import {
 } from '../AutoRefresh/styled'
 import FrameBodyTemplate from '../../Frame/FrameBodyTemplate'
 import FrameError from '../../Frame/FrameError'
+import {
+  createColumnHelper,
+  getCoreRowModel,
+  useReactTable
+} from '@tanstack/react-table'
 
 interface QueriesFrameProps {
   isFullscreen: boolean
@@ -63,10 +68,24 @@ const formatDuration = (milliseconds: number): string => {
   return `${milliseconds}ms`
 }
 
+// Outside component: types and helpers
+interface Query {
+  host: string
+  query: string
+  parameters: Record<string, any>
+  queryId: string
+  elapsedTimeMillis?: number
+  requestId?: string
+}
+
+const columnHelper = createColumnHelper<Query>()
+
 export function QueriesFrame({ isFullscreen, isCollapsed }: QueriesFrameProps) {
   const [autoRefresh, setAutoRefresh] = React.useState(false)
   const parentRef = useRef<HTMLDivElement>(null)
-  const connectionState = useSelector((state: RootState) => state.connections.connectionState)
+  const connectionState = useSelector((state: RootState) => 
+    state.connections.connectionState
+  )
 
   const { 
     data: queries = [], 
@@ -78,6 +97,62 @@ export function QueriesFrame({ isFullscreen, isCollapsed }: QueriesFrameProps) {
   })
 
   const [killQuery] = useKillQueryMutation()
+
+  const handleKillQuery = useCallback((queryId: string) => {
+    killQuery({ queryId })
+    refetch()
+  }, [killQuery, refetch])
+
+  // Move columns definition after handleKillQuery
+  const columns = useMemo(() => [
+    columnHelper.accessor('host', {
+      header: 'Host',
+      cell: info => <Code title={info.getValue()}>{info.getValue()}</Code>,
+      size: 15
+    }),
+    columnHelper.accessor('query', {
+      header: 'Query',
+      cell: info => <Code title={info.getValue()}>{info.getValue()}</Code>,
+      size: 35
+    }),
+    columnHelper.accessor('parameters', {
+      header: 'Params',
+      cell: info => (
+        <Code title={JSON.stringify(info.getValue(), null, 2)}>
+          {JSON.stringify(info.getValue())}
+        </Code>
+      ),
+      size: 20
+    }),
+    columnHelper.accessor(row => ({ 
+      elapsedTimeMillis: row.elapsedTimeMillis,
+      requestId: row.requestId 
+    }), {
+      header: 'Meta',
+      cell: info => (
+        <MetaInfo>
+          {info.getValue().elapsedTimeMillis !== undefined && (
+            <Code>
+              Elapsed: {formatDuration(info.getValue().elapsedTimeMillis ?? 0)}
+            </Code>
+          )}
+          {info.getValue().requestId && (
+            <Code>ID: {info.getValue().requestId}</Code>
+          )}
+        </MetaInfo>
+      ),
+      size: 20
+    }),
+    columnHelper.accessor('queryId', {
+      header: 'Kill Query',
+      cell: info => (
+        <ConfirmationButton
+          onConfirmed={() => handleKillQuery(info.getValue())}
+        />
+      ),
+      size: 10
+    })
+  ], [handleKillQuery])
 
   const rowVirtualizer = useVirtualizer({
     count: queries.length,
@@ -94,15 +169,6 @@ export function QueriesFrame({ isFullscreen, isCollapsed }: QueriesFrameProps) {
       refetch()
     }
   }, [refetch])
-
-  const handleKillQuery = useCallback(async (queryId: string) => {
-    try {
-      await killQuery({ queryId })
-      refetch()
-    } catch (err) {
-      console.error('Failed to kill query:', err)
-    }
-  }, [killQuery, refetch])
 
   const virtualRows = useMemo(() => 
     rowVirtualizer.getVirtualItems().map((virtualRow: VirtualItem) => {
@@ -154,6 +220,13 @@ export function QueriesFrame({ isFullscreen, isCollapsed }: QueriesFrameProps) {
       )
     }), [rowVirtualizer, queries, handleKillQuery])
 
+  // Add table configuration
+  const table = useReactTable({
+    data: queries,
+    columns,
+    getCoreRowModel: getCoreRowModel()
+  })
+
   if (error) {
     return (
       <FrameError
@@ -172,13 +245,22 @@ export function QueriesFrame({ isFullscreen, isCollapsed }: QueriesFrameProps) {
           <StyledTableWrapper>
             <StyledTable>
               <thead>
-                <StyledHeaderRow>
-                  <StyledTh width="15%">Host</StyledTh>
-                  <StyledTh width="35%">Query</StyledTh>
-                  <StyledTh width="20%">Params</StyledTh>
-                  <StyledTh width="20%">Meta</StyledTh>
-                  <StyledTh width="10%">Kill Query</StyledTh>
-                </StyledHeaderRow>
+                {table.getHeaderGroups().map(headerGroup => (
+                  <StyledHeaderRow key={headerGroup.id}>
+                    {headerGroup.headers.map(header => (
+                      <StyledTh 
+                        key={header.id} 
+                        width={`${header.column.columnDef.size}px`}
+                      >
+                        {header.isPlaceholder ? null : (
+                          typeof header.column.columnDef.header === 'string' 
+                            ? header.column.columnDef.header 
+                            : null
+                        )}
+                      </StyledTh>
+                    ))}
+                  </StyledHeaderRow>
+                ))}
               </thead>
             </StyledTable>
             <VirtualTableBody ref={parentRef}>

@@ -62,6 +62,8 @@ import {
 } from 'shared/modules/commands/commandsDuck'
 import { SpinnerContainer } from './styled'
 import type { AppDispatch } from 'shared/store/configureStore'
+import { Action } from '@reduxjs/toolkit'
+import { BrowserError, ErrorType } from 'services/exceptions'
 
 export type DatabaseMetric = { label: string; value?: string }
 export type SysInfoFrameState = {
@@ -225,7 +227,12 @@ export class SysInfoFrame extends Component<
       />
     ) : (
       <ErrorsView
-        result={{ code: 'No connection', message: 'No connection available' }}
+        result={{
+          // @ts-ignore
+          type: ErrorTypes.Error,
+          code: 'No connection',
+          message: 'No connection available'
+        } as BrowserError}
       />
     )
 
@@ -298,14 +305,12 @@ const mapStateToProps = (state: GlobalState) => ({
 })
 const mapDispatchToProps = (dispatch: AppDispatch) => ({
   rerunWithDb: ({ useDb, id }: { useDb: string; id: string }) => {
-    dispatch(
-      executeCommand(':sysinfo', {
-        id,
-        useDb,
-        isRerun: true,
-        source: commandSources.rerunFrame
-      })
-    )
+    dispatch(executeCommand(':sysinfo', {
+      id,
+      useDb,
+      isRerun: true,
+      source: commandSources.rerunFrame
+    }) as Action)
   }
 })
 

@@ -1,0 +1,22 @@
+// Action type constants
+export const settings = 'settings' as const
+export const connections = 'connections' as const
+export const history = 'history' as const
+export const requests = 'requests' as const
+export const sidebar = 'sidebar' as const
+export const frames = 'frames' as const
+export const features = 'features' as const
+export const user = 'user' as const
+export const meta = 'meta' as const
+export const documents = 'documents' as const
+export const params = 'params' as const
+export const grass = 'grass' as const
+export const sync = 'sync' as const
+export const syncMetadata = 'syncMetadata' as const
+export const syncConsent = 'syncConsent' as const
+export const folders = 'folders' as const
+export const commands = 'commands' as const
+export const udc = 'udc' as const
+export const app = 'app' as const
+export const experimentalFeatures = 'experimentalFeatures' as const
+export const guides = 'guides' as const 

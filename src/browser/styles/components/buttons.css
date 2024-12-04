@@ -1,0 +1,17 @@
+.neo4j-btn {
+  padding: var(--spacing-base) calc(var(--spacing-base) * 2);
+  border-radius: 4px;
+  transition: var(--transition-base);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.neo4j-btn-primary {
+  background: var(--button-bg);
+  color: var(--button-text);
+}
+
+.neo4j-btn-secondary {
+  background: var(--button-secondary-bg);
+  color: var(--button-secondary-text);
+} 

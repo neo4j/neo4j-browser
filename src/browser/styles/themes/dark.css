@@ -1,0 +1,12 @@
+[data-theme='dark'] {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --text-primary: #ffffff;
+  --text-secondary: #b3b3b3;
+  
+  /* Component colors */
+  --button-bg: var(--neo4j-primary);
+  --button-text: #ffffff;
+  --input-bg: #2d2d2d;
+  --input-text: #ffffff;
+} 

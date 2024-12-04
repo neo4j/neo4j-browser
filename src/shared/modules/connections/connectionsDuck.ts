@@ -21,11 +21,11 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import bolt from 'services/bolt/bolt'
 import { GlobalState } from 'shared/globalState'
 import * as discovery from 'shared/modules/discovery/discoveryDuck'
+import { AuthenticationMethod } from 'shared/types/auth'
 
 export const NAME = 'connections'
 
 // Action Types
-export const CONNECT = 'connections/CONNECT'
 export const CONNECTION_SUCCESS = 'connections/CONNECTION_SUCCESS'
 export const DISCONNECTION_SUCCESS = 'connections/DISCONNECTION_SUCCESS'
 export const SILENT_DISCONNECT = 'connections/SILENT_DISCONNECT'
@@ -42,31 +42,40 @@ export const CONNECTING_STATE = 'connecting'
 
 // Add these interfaces near the top of the file
 export interface Connection {
-  id: string
-  host?: string
-  username?: string
-  password?: string
+  id?: string
+  host: string
+  username: string
+  password: string
+  authenticationMethod: AuthenticationMethod
   encrypted?: boolean
-  authenticationMethod?: string
-  // Add other connection properties as needed
 }
 
-interface ConnectionsState {
+// Add this interface for the updateConnection action
+export interface UpdateConnectionPayload {
+  id: string
+  host: string
+  username: string
+  password: string
+  authenticationMethod: AuthenticationMethod
+  encrypted?: boolean
+}
+
+export interface ConnectionState {
+  connectionsById: Record<string, Connection>
   activeConnection: string | null
-  connections: Record<string, Connection>
-  connectionState: string
   lastUpdate: number
+  connectionState: string
   host: string | null
   useDb: string | null
   authEnabled: boolean
 }
 
 // Update the initial state with the interface
-const initialState: ConnectionsState = {
+const initialState: ConnectionState = {
   activeConnection: null,
-  connections: {},
-  connectionState: DISCONNECTED_STATE,
+  connectionsById: {},
   lastUpdate: 0,
+  connectionState: DISCONNECTED_STATE,
   host: null,
   useDb: null,
   authEnabled: true
@@ -75,18 +84,20 @@ const initialState: ConnectionsState = {
 // Async Thunks
 export const switchConnection = createAsyncThunk(
   'connections/switchConnection',
-  async (connectionInfo: any, { dispatch }) => {
-    bolt.closeConnection()
-    const info = { id: discovery.CONNECTION_ID, ...connectionInfo }
-    dispatch(updateConnection(info))
-
+  async (connectionInfo: Omit<Connection, 'id'>, { dispatch }) => {
     try {
-      await bolt.openConnection(
-        connectionInfo,
-        { encrypted: connectionInfo.encrypted },
+      const connectionWithId = {
+        ...connectionInfo,
+        id: discovery.CONNECTION_ID
+      }
+      dispatch(updateConnection(connectionWithId))
+      
+      const result = await bolt.openConnection(
+        connectionWithId,
+        { encrypted: true },
         (error: Error) => dispatch(connectionLost(error))
       )
-      return connectionInfo
+      return result
     } catch (error) {
       throw error
     }
@@ -98,9 +109,11 @@ const connectionsSlice = createSlice({
   name: NAME,
   initialState,
   reducers: {
-    updateConnection(state, action: { payload: Connection }) {
+    updateConnection(state, action: { payload: UpdateConnectionPayload }) {
       const { id, ...connectionData } = action.payload
-      state.connections[id] = { id, ...connectionData }
+      if (id) {
+        state.connectionsById[id] = { id, ...connectionData }
+      }
     },
     setActiveConnection(state, action: { payload: string | null }) {
       state.activeConnection = action.payload
@@ -147,9 +160,11 @@ export const {
 
 // Selectors
 export const getActiveConnection = (state: GlobalState) => state[NAME].activeConnection
-export const getActiveConnectionData = (state: GlobalState) => 
-  state[NAME].connections[getActiveConnection(state)]
-export const getConnectionData = (state: GlobalState) => state[NAME].connections
+export const getActiveConnectionData = (state: GlobalState) => {
+  const activeId = getActiveConnection(state)
+  return activeId ? state[NAME].connectionsById[activeId] : null
+}
+export const getConnectionData = (state: GlobalState) => state[NAME].connectionsById
 export const getConnectionState = (state: GlobalState) => state[NAME].connectionState
 export const getLastConnectionUpdate = (state: GlobalState) => state[NAME].lastUpdate
 export const getConnectedHost = (state: GlobalState) => state[NAME].host
@@ -161,6 +176,6 @@ export const isConnectedAuraHost = (state: GlobalState) => {
   const host = getConnectedHost(state)
   return host?.includes('neo4j.io') || false
 }
-export const getConnection = (state: GlobalState, id: string) => state[NAME].connections[id]
+export const getConnection = (state: GlobalState, id: string) => state[NAME].connectionsById[id]
 
 export default connectionsSlice.reducer

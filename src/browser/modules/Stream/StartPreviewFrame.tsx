@@ -17,11 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React, { Dispatch } from 'react'
-import { Action } from 'redux'
+import { useDispatch } from 'react-redux'
 import { trackNavigateToPreview } from 'shared/modules/preview/previewDuck'
-import { connect } from 'react-redux'
-import { withBus } from 'react-suber'
 
 export const navigateToPreview = (): void => {
   const path = window.location.pathname
@@ -30,12 +27,11 @@ export const navigateToPreview = (): void => {
   }
 }
 
-type PreviewFrameProps = {
-  executeTrackNavigateToPreview: () => void
-}
-const PreviewFrame = ({ executeTrackNavigateToPreview }: PreviewFrameProps) => {
+const PreviewFrame = () => {
+  const dispatch = useDispatch()
+
   function trackAndNavigateToPreview() {
-    executeTrackNavigateToPreview()
+    dispatch(trackNavigateToPreview())
     navigateToPreview()
   }
 
@@ -102,10 +98,4 @@ const PreviewFrame = ({ executeTrackNavigateToPreview }: PreviewFrameProps) => {
   )
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
-  return {
-    executeTrackNavigateToPreview: () => dispatch(trackNavigateToPreview())
-  }
-}
-
-export default withBus(connect(null, mapDispatchToProps)(PreviewFrame))
+export default PreviewFrame
