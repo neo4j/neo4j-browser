@@ -28,6 +28,7 @@ import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
 import { getSemanticVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 import FrameBodyTemplate from '../Frame/FrameBodyTemplate'
+import { upperFirst, toKeyString } from 'shared/utils/stringUtils'
 
 const NEO4J_4_0 = '4.0.0'
 const NEO4J_4_2 = '4.2.0'
