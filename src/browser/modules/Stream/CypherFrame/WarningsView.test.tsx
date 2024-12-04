@@ -36,6 +36,7 @@ describe('WarningsViews', () => {
       // Then
       expect(container).toMatchSnapshot()
     })
+
     test('does displays a warning', () => {
       // Given
       const props = {
@@ -43,13 +44,14 @@ describe('WarningsViews', () => {
           summary: {
             notifications: [
               {
-                severity: 'WARNING xx0',
+                severity: 'WARNING',
                 title: 'My xx1 warning',
                 description: 'This is xx2 warning',
                 position: {
                   offset: 7,
                   line: 1
-                }
+                },
+                code: 'xx3.Warning'
               }
             ],
             query: {
@@ -65,25 +67,106 @@ describe('WarningsViews', () => {
       // Then
       expect(container).toMatchSnapshot()
     })
-    test('does displays multiple warnings', () => {
+
+    test('does display a warning for GQL status codes', () => {
+      // Given
+      const props = {
+        result: {
+          summary: {
+            server: {
+              protocolVersion: 5.6
+            },
+            gqlStatusObjects: [
+              {
+                severity: 'WARNING',
+                gqlStatus: '03N90',
+                statusDescription:
+                  "info: cartesian product. The disconnected pattern 'p = ()--(), q = ()--()' builds a cartesian product. A cartesian product may produce a large amount of data and slow down query processing.",
+                position: {
+                  offset: 7,
+                  line: 1
+                }
+              }
+            ],
+            query: {
+              text: 'MATCH p=()--(), q=()--() RETURN p, q'
+            }
+          }
+        }
+      }
+
+      // When
+      const { container } = render(<WarningsView {...props} />)
+
+      // Then
+      expect(container).toMatchSnapshot()
+    })
+
+    test('does display multiple warnings', () => {
       // Given
       const props = {
         result: {
           summary: {
             notifications: [
               {
-                severity: 'WARNING xx0',
+                severity: 'WARNING',
                 title: 'My xx1 warning',
                 description: 'This is xx2 warning',
+                position: {
+                  offset: 7,
+                  line: 1
+                },
+                code: 'xx3.Warning'
+              },
+              {
+                severity: 'WARNING',
+                title: 'My yy1 warning',
+                description: 'This is yy2 warning',
+                position: {
+                  offset: 3,
+                  line: 1
+                },
+                code: 'yy3.Warning'
+              }
+            ],
+            query: {
+              text: 'EXPLAIN MATCH zz3'
+            }
+          }
+        }
+      }
+
+      // When
+      const { container } = render(<WarningsView {...props} />)
+
+      // Then
+      expect(container).toMatchSnapshot()
+    })
+
+    test('does display multiple warnings for GQL status codes', () => {
+      // Given
+      const props = {
+        result: {
+          summary: {
+            server: {
+              protocolVersion: 5.6
+            },
+            gqlStatusObjects: [
+              {
+                severity: 'WARNING',
+                gqlStatus: '03N90',
+                statusDescription:
+                  "info: cartesian product. The disconnected pattern 'p = ()--(), q = ()--()' builds a cartesian product. A cartesian product may produce a large amount of data and slow down query processing.",
                 position: {
                   offset: 7,
                   line: 1
                 }
               },
               {
-                severity: 'WARNING yy0',
-                title: 'My yy1 warning',
-                description: 'This is yy2 warning',
+                severity: 'WARNING',
+                gqlStatus: '01N50',
+                statusDescription:
+                  'warn: label does not exist. The label `A` does not exist. Verify that the spelling is correct.',
                 position: {
                   offset: 3,
                   line: 1
@@ -91,7 +174,7 @@ describe('WarningsViews', () => {
               }
             ],
             query: {
-              text: 'EXPLAIN MATCH zz3'
+              text: 'MATCH p=()--(), q=()--() RETURN p, q'
             }
           }
         }
