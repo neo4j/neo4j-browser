@@ -34,8 +34,13 @@ import {
   StyledCypherInfoMessage
 } from '../styled'
 import { deepEquals } from 'neo4j-arc/common'
+import {
+  formatNotificationsFromSummary,
+  FormattedNotification
+} from './warningUtilts'
+import { NotificationSeverityLevel } from 'neo4j-driver-core'
 
-const getWarningComponent = (severity: any) => {
+const getWarningComponent = (severity?: string | NotificationSeverityLevel) => {
   if (severity === 'ERROR') {
     return <StyledCypherErrorMessage>{severity}</StyledCypherErrorMessage>
   } else if (severity === 'WARNING') {
@@ -56,43 +61,47 @@ export class WarningsView extends Component<any> {
   render() {
     if (this.props.result === undefined) return null
     const { summary = {} } = this.props.result
-    const { notifications = [], query = {} } = summary
+    const { query = {} } = summary
+    const notifications = formatNotificationsFromSummary(summary)
     const { text: cypher = '' } = query
     if (!notifications || !cypher) {
       return null
     }
     const cypherLines = cypher.split('\n')
-    const notificationsList = notifications.map((notification: any) => {
-      // Detect generic warning without position information
-      const position = Object.keys(notification.position).length
-        ? notification.position
-        : { line: 1, offset: 0 }
-      return (
-        <StyledHelpContent
-          key={notification.title + position.line + position.offset}
-        >
-          <StyledHelpDescription>
-            {getWarningComponent(notification.severity)}
-            <StyledH4>{notification.title}</StyledH4>
-          </StyledHelpDescription>
-          <StyledDiv>
+    const notificationsList = notifications.map(
+      (notification: FormattedNotification) => {
+        // Detect generic warning without position information
+        const { code, description, severity } = notification
+        const position = notification.position ?? { line: 1, offset: 0 }
+        const title = notification.title ?? ''
+        const line = position.line ?? 1
+        const offset = position.offset ?? 0
+
+        return (
+          <StyledHelpContent key={title + line + position.offset}>
             <StyledHelpDescription>
-              {notification.description}
+              {getWarningComponent(severity)}
+              <StyledH4>{title}</StyledH4>
             </StyledHelpDescription>
             <StyledDiv>
-              <StyledPreformattedArea>
-                {cypherLines[position.line - 1]}
-                <StyledBr />
-                {Array(position.offset + 1).join(' ')}^
-              </StyledPreformattedArea>
+              <StyledHelpDescription>{description}</StyledHelpDescription>
+              <StyledDiv>
+                <StyledPreformattedArea>
+                  {cypherLines[line - 1]}
+                  <StyledBr />
+                  {Array(offset + 1).join(' ')}^
+                </StyledPreformattedArea>
+              </StyledDiv>
             </StyledDiv>
-          </StyledDiv>
-          <StyledDiv style={{ marginTop: '10px' }}>
-            Status code: <StyledCode>{notification.code}</StyledCode>
-          </StyledDiv>
-        </StyledHelpContent>
-      )
-    })
+            {code && (
+              <StyledDiv style={{ marginTop: '10px' }}>
+                Status code: <StyledCode>{code}</StyledCode>
+              </StyledDiv>
+            )}
+          </StyledHelpContent>
+        )
+      }
+    )
     return <StyledHelpFrame>{notificationsList}</StyledHelpFrame>
   }
 }
