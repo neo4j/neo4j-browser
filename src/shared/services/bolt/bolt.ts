@@ -33,9 +33,8 @@ import { cancelTransaction as globalCancelTransaction } from './transactions'
 import { NATIVE } from 'services/bolt/boltHelpers'
 import {
   Connection,
-  onLostConnection
-} from 'shared/modules/connections/connectionsDuck'
-import BoltWorkerModule from 'shared/services/bolt/boltWorker'
+  connectionLost
+} from '../../../shared/modules/connections/connectionsDuck'
 import { backgroundTxMetadata } from './txMetadata'
 import { getGlobalDrivers } from './globalDrivers'
 import { BoltConnectionError } from 'services/exceptions'
@@ -43,16 +42,16 @@ import { isBoltConnectionErrorCode } from './boltConnectionErrors'
 
 let connectionProperties: {} | null = null
 let _useDb: string | null = null
-const boltWorkPool = new WorkPool(() => new BoltWorkerModule(), 10)
+const boltWorkPool = new WorkPool(() => new Worker(new URL('./boltWorker.ts', import.meta.url)), 10)
 
 function openConnection(
   props: Connection,
   opts = {},
-  onLostConnection?: (error: Error) => void
+  onLostConnectionCallback?: (error: Error) => void
 ): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     boltConnection
-      .openConnection(props, opts, onLostConnection)
+      .openConnection(props, opts, onLostConnectionCallback)
       .then(() => {
         connectionProperties = {
           authenticationMethod: props.authenticationMethod || NATIVE,
@@ -204,7 +203,7 @@ async function backgroundWorkerlessRoutedRead(
     })
     .catch(e => {
       if (!e.code || isBoltConnectionErrorCode(e.code)) {
-        onLostConnection(store.dispatch)(e)
+        store.dispatch(connectionLost(e))
       }
       throw e
     })

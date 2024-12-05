@@ -20,6 +20,7 @@
 
 import { authLog, authRequestForSSO, downloadAuthLogs } from 'neo4j-client-sso'
 import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 
 import { toKeyString } from 'neo4j-arc/common'
 
@@ -48,6 +49,7 @@ import { AUTH_STORAGE_CONNECT_HOST } from 'shared/services/utils'
 import { hasReachableServer, Neo4jError } from 'neo4j-driver'
 import AutoExecButton from '../auto-exec-button'
 import { SmallSpinnerIcon } from 'browser-components/icons/LegacyIcons'
+import { switchConnection } from 'shared/modules/connections/connectionsDuck'
 
 const readableauthenticationMethods: Record<AuthenticationMethod, string> = {
   [NATIVE]: 'Username / Password',
@@ -55,28 +57,16 @@ const readableauthenticationMethods: Record<AuthenticationMethod, string> = {
   [SSO]: 'Single Sign On'
 }
 
-interface ConnectFormProps {
-  allowedSchemes: string[]
-  allowedAuthMethods: AuthenticationMethod[]
-  authenticationMethod: string
+export interface ConnectFormProps {
   host: string
-  onAuthenticationMethodChange: (event: any) => void
-  onConnectClick: (doneFn?: () => void) => void
-  onHostChange: (fallbackScheme: string, newHost: string) => void
-  onUsernameChange: (event: any) => void
-  onPasswordChange: (event: any) => void
-  onDatabaseChange: (event: any) => void
-  database: string
-  password: string
   username: string
-  used: boolean
-  supportsMultiDb: boolean
-  SSOError?: string
-  SSOProviders: SSOProvider[]
-  SSOLoading?: boolean
-  onSSOProviderClicked: () => void
-  connecting: boolean
-  setIsConnecting: (c: boolean) => void
+  password: string
+  authenticationMethod: AuthenticationMethod
+  onHostChange: (host: string) => void
+  onUsernameChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  onPasswordChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  onAuthMethodChange: (event: React.ChangeEvent<HTMLSelectElement>) => void
+  onConnect: () => void
 }
 
 export type HttpReachablity =
@@ -233,6 +223,22 @@ export default function ConnectForm(props: ConnectFormProps): JSX.Element {
       reachabilityCheck(props.host)
     }
   }, [])
+
+  const dispatch = useDispatch()
+
+  const handleConnect = async () => {
+    try {
+      await dispatch(switchConnection({
+        host: props.host,
+        username: props.username,
+        password: props.password,
+        authenticationMethod: props.authenticationMethod
+      })).unwrap()
+      // Handle success
+    } catch (error) {
+      // Handle error
+    }
+  }
 
   return (
     <StyledFormContainer>

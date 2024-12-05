@@ -18,43 +18,52 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React from 'react'
-import { withBus } from 'react-suber'
+import { useDispatch } from 'react-redux'
 
 import { StyledCodeBlock } from './styled'
 import {
   commandSources,
   executeCommand
 } from 'shared/modules/commands/commandsDuck'
-import { SET_CONTENT, setContent } from 'shared/modules/editor/editorDuck'
+import { setContent } from 'shared/modules/editor/editorDuck'
 
-const setOnClick = (bus: any, code: any) => {
-  code = Array.isArray(code) ? code.join('') : code
-  bus.send(SET_CONTENT, setContent(code))
-}
-const execOnClick = (bus: any, code: any) => {
-  const cmd = executeCommand(code, { source: commandSources.button })
-  bus.send(cmd.type, cmd)
+interface ClickToCodeProps {
+  CodeComponent?: React.ComponentType<any>
+  code?: string | string[]
+  execute?: boolean
+  children?: React.ReactNode
+  className?: string
+  [key: string]: any
 }
 
-export const ClickToCode = ({
+export const ClickToCode: React.FC<ClickToCodeProps> = ({
   CodeComponent = StyledCodeBlock,
-  bus,
   code,
   execute = false,
   children,
   className,
   ...rest
-}: any) => {
-  if (!children || children.length === 0) return null
-  code = code || children
-  const fn = !execute
-    ? () => setOnClick(bus, code)
-    : () => execOnClick(bus, code)
+}) => {
+  const dispatch = useDispatch()
+
+  if (!children || React.Children.count(children) === 0) return null
+  
+  const codeToUse = code || children
+  const finalCode = Array.isArray(codeToUse) ? codeToUse.join('') : codeToUse
+
+  const handleClick = () => {
+    if (!execute) {
+      dispatch(setContent(finalCode))
+    } else {
+      dispatch(executeCommand(finalCode, { source: commandSources.button }))
+    }
+  }
+
   return (
-    <CodeComponent {...rest} onClick={fn}>
+    <CodeComponent {...rest} onClick={handleClick}>
       {children}
     </CodeComponent>
   )
 }
 
-export default withBus(ClickToCode)
+export default ClickToCode

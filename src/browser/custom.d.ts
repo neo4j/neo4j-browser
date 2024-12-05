@@ -11,25 +11,31 @@ declare module '@neo4j/browser-lambda-parser'
 
 interface Window {
   Cypress?: unknown
+  __REDUX_DEVTOOLS_EXTENSION__?: any
 }
 
 declare module 'react-suber' {
+  import { Bus } from 'suber'
+  import { ComponentType } from 'react'
+
   interface BusProps {
     bus: Bus
   }
-  const withBus: (
-    comp: React.ComponentType<P>
-  ) => React.ComponentType<P & BusProps>
-  const BusProvider: React.ComponentType<BusProps>
-  export { withBus, BusProvider, BusProps }
+  
+  export function withBus<P extends object>(
+    comp: ComponentType<P & BusProps>
+  ): ComponentType<P>
+  
+  export const BusProvider: ComponentType<BusProps>
 }
 
 declare module 'suber' {
   type UnsubscribeFn = () => void
   type FilterFn = (data: any) => boolean
   type MessageHandler = (message: any) => void
+  type MiddlewareFunction = (_: any, source: any) => (channel: string, message: any, source: string) => void
 
-  interface Bus {
+  export interface Bus {
     take: (
       channel: string,
       fn: MessageHandler,
@@ -43,20 +49,38 @@ declare module 'suber' {
     send: (channel: string, message?: any, source?: string) => void
     self: (channel: string, message: any, fn: MessageHandler) => void
     reset: () => void
-    applyMiddleware: (...args: ((_: never, source: object) => void)[]) => void
+    applyMiddleware: (...args: MiddlewareFunction[]) => void
     applyReduxMiddleware: any
   }
 
-  const createBus: () => Bus
-  const createReduxMiddleware: (bus: Bus) => () => (next) => (action) => action
-
-  export { Bus, createBus, createReduxMiddleware }
+  export function createBus(): Bus
+  export function createReduxMiddleware(bus: Bus): () => (next: any) => (action: any) => any
 }
 
 declare module 'shared/services/bolt/boltWorker' {
   class WebpackWorker extends Worker {
     constructor()
   }
-
   export default WebpackWorker
 }
+
+declare module '*?worker' {
+  const workerConstructor: {
+    new (): Worker
+  }
+  export default workerConstructor
+}
+
+declare global {
+  namespace NodeJS {
+    interface Timeout extends globalThis.Timer {}
+    interface ProcessEnv {
+      NODE_ENV: 'development' | 'production' | 'test'
+    }
+  }
+  interface Window {
+    __REDUX_DEVTOOLS_EXTENSION__?: any
+  }
+}
+
+export {}

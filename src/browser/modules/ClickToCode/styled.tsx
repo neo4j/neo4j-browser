@@ -17,13 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import styled from 'styled-components'
+import React from 'react'
 
-export const StyledCodeBlock = styled.code`
-  background-color: black;
-  color: white;
-  cursor: pointer;
-  border: none;
-  border-radius: 4px;
-  padding: 2px 4px;
-`
+export function StyledCodeBlock({ children, className = '', onClick }: React.HTMLProps<HTMLElement>) {
+  return (
+    <code 
+      className={`bg-black text-white cursor-pointer rounded px-1 py-0.5 ${className}`}
+      onClick={onClick}
+    >
+      {children}
+    </code>
+  )
+}

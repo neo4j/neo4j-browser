@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React, { useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 
 import Editor from '../Editor/MainEditor'
 import Stream from '../Stream/Stream'
@@ -39,21 +40,25 @@ import {
   PENDING_STATE
 } from 'shared/modules/connections/connectionsDuck'
 import { TrialStatus } from 'shared/modules/dbMeta/dbMetaDuck'
+import { codeFontLigatures } from 'shared/modules/settings/settingsDuck'
+import { shouldEnableMultiStatementMode } from 'shared/modules/settings/settingsDuck'
+import { getHistory } from 'shared/modules/history/historyDuck'
+import { getUseDb } from 'shared/modules/connections/connectionsDuck'
+import { QueryResult } from 'neo4j-driver'
+import { executeCommand } from 'shared/modules/commands/commandsDuck'
 
-type MainProps = {
-  connectionState: number
-  isDatabaseUnavailable: boolean
-  errorMessage?: string
-  lastConnectionUpdate: number
-  showUdcConsentBanner: boolean
-  useDb: string | null
-  dismissConsentBanner: () => void
-  incrementConsentBannerShownCount: () => void
-  openSettingsDrawer: () => void
-  trialStatus: TrialStatus
+interface MainProps {
+  connectionState: any
+  lastConnectionUpdate: any
+  errorMessage: any
+  useDb: any
+  isDatabaseUnavailable: any
+  openSettingsDrawer: any
+  trialStatus: any
 }
 
 const Main = React.memo(function Main(props: MainProps) {
+  const dispatch = useDispatch()
   const [past5Sec, past10Sec] = useSlowConnectionState(props)
   const [showRemainingTrialBanner, setShowRemainingTrialBanner] =
     React.useState(true)
@@ -61,36 +66,30 @@ const Main = React.memo(function Main(props: MainProps) {
     connectionState,
     isDatabaseUnavailable,
     errorMessage,
-    showUdcConsentBanner,
-    useDb,
-    dismissConsentBanner,
-    incrementConsentBannerShownCount,
     openSettingsDrawer,
     trialStatus
   } = props
 
-  useEffect(() => {
-    showUdcConsentBanner && incrementConsentBannerShownCount()
-  }, [showUdcConsentBanner /* missing function from dep array but including it causes loop */])
+  const fontLigatures = useSelector(codeFontLigatures)
+  const multiStatementMode = useSelector(shouldEnableMultiStatementMode)
+  const history = useSelector(getHistory)
+  const useDb = useSelector(getUseDb)
+
+  const sendCypherQuery = async (text: string): Promise<QueryResult> => {
+    return dispatch(executeCommand(text)) as unknown as Promise<QueryResult>
+  }
 
   return (
     <StyledMain data-testid="main">
       <ErrorBoundary>
-        <Editor />
+        <Editor 
+          codeFontLigatures={fontLigatures}
+          enableMultiStatementMode={multiStatementMode}
+          history={history}
+          sendCypherQuery={sendCypherQuery}
+          useDb={useDb}
+        />
       </ErrorBoundary>
-      {showUdcConsentBanner && (
-        <UdcConsentBanner>
-          <span>
-            To help make Neo4j Browser better we collect information on product
-            usage. Review your{' '}
-            <UnderlineClickable onClick={openSettingsDrawer}>
-              settings
-            </UnderlineClickable>{' '}
-            at any time.
-          </span>
-          <DismissBanner onClick={dismissConsentBanner} />
-        </UdcConsentBanner>
-      )}
       {useDb && isDatabaseUnavailable && (
         <ErrorBanner>
           {`Database '${useDb}' is unavailable. Run `}
@@ -100,7 +99,7 @@ const Main = React.memo(function Main(props: MainProps) {
       {errorMessage && (
         <ErrorBanner data-testid="errorBanner">{errorMessage}</ErrorBanner>
       )}
-      {connectionState === DISCONNECTED_STATE && (
+      {connectionState === Number(DISCONNECTED_STATE) && (
         <NotAuthedBanner data-testid="disconnectedBanner">
           Database access not available. Please use&nbsp;
           <AutoExecButton
@@ -110,12 +109,12 @@ const Main = React.memo(function Main(props: MainProps) {
           {` to establish connection. There's a graph waiting for you.`}
         </NotAuthedBanner>
       )}
-      {connectionState === PENDING_STATE && !past10Sec && (
+      {connectionState === Number(PENDING_STATE) && !past10Sec && (
         <WarningBanner data-testid="reconnectBanner">
           Connection to server lost. Reconnecting...
         </WarningBanner>
       )}
-      {connectionState === CONNECTING_STATE && past5Sec && !past10Sec && (
+      {connectionState === Number(CONNECTING_STATE) && past5Sec && !past10Sec && (
         <NotAuthedBanner>Still connecting...</NotAuthedBanner>
       )}
       {past10Sec && (

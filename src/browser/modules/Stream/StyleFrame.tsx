@@ -19,6 +19,7 @@
  */
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
+import { saveAs } from 'file-saver'
 
 import { FireExtinguisherIcon } from 'browser-components/icons/LegacyIcons'
 

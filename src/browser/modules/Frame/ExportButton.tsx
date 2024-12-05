@@ -17,9 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React from 'react'
-
-import { DownloadIcon } from 'browser-components/icons/LegacyIcons'
+import { Icons } from 'browser/components/icons'
 
 import {
   DropDownItemDivider,
@@ -53,7 +51,7 @@ function ExportButton({
     <>
       {canExport && (
         <DropdownButton title="Exports" data-testid="frame-export-dropdown">
-          <DownloadIcon />
+          <Icons.Download className="icon icon-sm" />
           {canExport && (
             <DropdownList>
               <DropdownContent>

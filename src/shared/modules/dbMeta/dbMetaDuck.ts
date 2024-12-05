@@ -138,7 +138,7 @@ export type Procedure = {
   signature: string
 }
 
-export const NAME = 'meta'
+export const NAME = 'dbMeta'
 
 export type ClientSettings = {
   allowOutgoingConnections: boolean

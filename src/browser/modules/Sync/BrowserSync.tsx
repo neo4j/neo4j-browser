@@ -17,9 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
-import TimeAgo from 'react-timeago'
+import { getRelativeTimeString } from 'browser/utils/time'
 
 import { BinIcon } from 'browser-components/icons/LegacyIcons'
 
@@ -158,7 +158,7 @@ export class BrowserSync extends Component<any, BrowserSyncState> {
           <br />
           <SmallHeaderText>
             Synced{' '}
-            <TimeAgo date={new Date(this.props.lastSyncedAt)} minPeriod="5" />
+            <span>{getRelativeTimeString(this.props.lastSyncedAt)}</span>
           </SmallHeaderText>
         </DrawerToppedHeader>
       )

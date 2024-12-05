@@ -17,134 +17,105 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React, { Component } from 'react'
-import styled from 'styled-components'
+import React from 'react'
 
-export const StyledSelect = styled.select`
-  background-color: #fff;
-  border: ${props => props.theme.formButtonBorder};
-  border-radius: 4px;
-  color: ${props => props.theme.inputText};
-  display: block;
-  height: 34px;
-  font-size: 14px;
-  padding: 6px 12px;
-  min-width: 120px;
-  width: 100%;
-`
-export const StyledInput = styled.input`
-  background-color: #fff;
-  border: ${props => props.theme.formButtonBorder};
-  border-radius: 4px;
-  color: ${props => props.theme.inputText};
-  display: block;
-  height: 34px;
-  font-size: 14px;
-  padding: 6px 12px;
-  width: 100%;
+export function Input({ className = '', type, ...props }: React.InputHTMLAttributes<HTMLInputElement>) {
+  const baseClasses = type === 'checkbox' 
+    ? 'mr-2 align-middle w-auto'
+    : 'w-full px-3 py-2 border border-border rounded bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent'
+    
+  return (
+    <input 
+      className={`${baseClasses} ${className}`}
+      type={type}
+      {...props}
+    />
+  )
+}
 
-  &[type='checkbox'] {
-    display: inline-block;
-    margin-right: 5px;
-    vertical-align: middle;
-    width: auto;
-  }
-`
+export function Select({ className = '', ...props }: React.SelectHTMLAttributes<HTMLSelectElement>) {
+  return (
+    <select 
+      className={`w-full px-3 py-2 border border-border rounded bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent ${className}`}
+      {...props}
+    />
+  )
+}
 
-export const StyledForm = styled.form`
-  width: 100%;
-`
+export function Label({ className = '', ...props }: React.LabelHTMLAttributes<HTMLLabelElement>) {
+  return (
+    <label 
+      className={`block text-sm font-medium text-foreground capitalize mb-1 ${className}`}
+      {...props}
+    />
+  )
+}
 
-export const StyledFormElement = styled.div`
-  margin: 0 0 10px 0;
-`
+export function Form({ className = '', ...props }: React.FormHTMLAttributes<HTMLFormElement>) {
+  return (
+    <form 
+      className={`w-full ${className}`}
+      {...props}
+    />
+  )
+}
 
-export const StyledFormElementWrapper = styled.div`
-  display: flex;
-  > div {
-    flex-grow: 1;
-    &:not(:last-child) {
-      margin-right: 10px;
-    }
-  }
-`
+export function FormElement({ className = '', ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div 
+      className={`mb-4 ${className}`}
+      {...props}
+    />
+  )
+}
 
-const StyledSettingTextInput = styled(StyledInput)`
-  height: 34px;
-  color: #555;
-  font-size: 14px;
-  padding: 6px 12px;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 192px;
-`
+export function FormElementWrapper({ className = '', ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div 
+      className={`flex space-x-2.5 [&>div]:flex-grow ${className}`}
+      {...props}
+    />
+  )
+}
 
-const StyledCheckbox = styled.input`
-  margin-right: 10px;
-`
-const StyledRadio = styled.input`
-  margin-right: 10px;
-`
-export const StyledLabel = styled.label`
-  /* margin-left: 10px; */
-  display: inline-block;
-  font-weight: 600;
-  vertical-align: middle;
+interface RadioSelectorProps {
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  options: string[]
+  selectedValue?: string
+  className?: string
+}
 
-  input[type='radio'] + & {
-    font-weight: 400;
-  }
+export function RadioSelector({ onChange, options, selectedValue, className = '' }: RadioSelectorProps) {
+  return (
+    <form className={className}>
+      {options.map(option => (
+        <div key={option} className="my-2.5">
+          <input
+            type="radio"
+            value={option}
+            id={option}
+            checked={option === selectedValue}
+            onChange={onChange}
+            className="mr-2.5"
+          />
+          <label 
+            htmlFor={option}
+            className="inline-block font-normal capitalize"
+          >
+            {option}
+          </label>
+        </div>
+      ))}
+    </form>
+  )
+}
 
-  &:first-letter {
-    text-transform: uppercase;
-  }
-`
-const StyledRadioEntry = styled.div`
-  margin: 10px 0;
-`
-
-export const CheckboxSelector = (props: any) => (
-  <StyledCheckbox type="checkbox" {...props} />
-)
-
-type RadioSelectorState = any
-
-export class RadioSelector extends Component<
-  { onChange?: any; options: any[]; selectedValue?: string },
-  RadioSelectorState
-> {
-  state: RadioSelectorState = {}
-  constructor(props: {} = { options: [] }) {
-    super(props as any)
-    this.state.selectedValue = this.props.selectedValue || null
-  }
-
-  isSelectedValue(option: any) {
-    return option === this.state.selectedValue
-  }
-
-  render() {
-    return (
-      <form>
-        {this.props.options.map((option: any) => {
-          return (
-            <StyledRadioEntry key={option}>
-              <StyledRadio
-                type="radio"
-                value={option}
-                id={option}
-                checked={this.isSelectedValue(option)}
-                onChange={event => {
-                  this.setState({ selectedValue: option })
-                  this.props.onChange(event)
-                }}
-              />
-              <StyledLabel htmlFor={option}>{option}</StyledLabel>
-            </StyledRadioEntry>
-          )
-        })}
-      </form>
-    )
-  }
+export function CheckboxSelector({ className = '', ...props }: React.InputHTMLAttributes<HTMLInputElement>) {
+  return (
+    <input 
+      type="checkbox" 
+      className={`mr-2.5 ${className}`}
+      {...props}
+    />
+  )
 }

@@ -21,7 +21,6 @@ import React from 'react'
 
 // The reason we have this file is to define classnames
 // used in our templates and externally defined guides
-import styles from './style.less'
 import { StyledSidebarSlide, StyledSlide } from './styled'
 
 type SlideBaseProps = {
@@ -34,6 +33,9 @@ type SlideProps = SlideBaseProps & {
   isSidebarSlide?: boolean
 }
 
+// Move slideClasses to module scope
+const slideClasses = "p-4 overflow-auto"
+
 const Slide = React.forwardRef(
   (
     { children, content, html, isSidebarSlide }: SlideProps,
@@ -43,7 +45,7 @@ const Slide = React.forwardRef(
 
     if (children) {
       return (
-        <SlideComponent ref={ref} className={styles.slide}>
+        <SlideComponent ref={ref} className={slideClasses}>
           {children}
         </SlideComponent>
       )
@@ -51,7 +53,7 @@ const Slide = React.forwardRef(
 
     if (content) {
       return (
-        <SlideComponent ref={ref} className={styles.slide}>
+        <SlideComponent ref={ref} className={slideClasses}>
           {content}
         </SlideComponent>
       )
@@ -61,7 +63,7 @@ const Slide = React.forwardRef(
       return (
         <SlideComponent
           ref={ref}
-          className={styles.slide}
+          className={slideClasses}
           dangerouslySetInnerHTML={{ __html: html }}
         />
       )
@@ -86,7 +88,7 @@ const SidebarSlide = React.forwardRef(
 const BuiltInGuideSidebarSlide = (props: {
   children: React.ReactNode
 }): JSX.Element => (
-  <StyledSidebarSlide className={styles.slide} style={{ padding: '0 15px' }}>
+  <StyledSidebarSlide className={slideClasses} style={{ padding: '0 15px' }}>
     {props.children}
   </StyledSidebarSlide>
 )

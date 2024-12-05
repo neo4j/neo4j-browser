@@ -17,41 +17,91 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import styled from 'styled-components'
+import React from 'react'
 
-export const Code = styled.code`
-  white-space: nowrap;
-  overflow: hidden;
-  color: #fd766e;
-  background-color: ${props => props.theme.frameSidebarBackground};
-  border-radius: 2px;
-  padding: 4px;
+export function Code({ children, className = '' }: React.HTMLProps<HTMLElement>) {
+  return (
+    <code className={`whitespace-nowrap overflow-hidden text-ellipsis text-red-500 bg-secondary rounded px-1 py-0.5 block w-full text-xs ${className}`}>
+      {children}
+    </code>
+  )
+}
 
-  a {
-    color: #c7254e !important;
-  }
-`
-export const StyledTableWrapper = styled.div`
-  margin: 20px 10px;
-`
-export const StyledTable = styled.table`
-  width: 100%;
-  table-layout: fixed;
-`
-export const StyledTh = styled.th<{ width?: string }>`
-  text-align: left;
-  height: 30px;
-  vertical-align: top;
-  padding: 5px;
-  width: ${props => props.width || 'auto'};
-`
-export const StyledTd = styled.td<{ width?: string }>`
-  padding: 5px;
-  width: ${props => props.width || 'auto'};
-  text-overflow: ellipsis;
-  overflow: hidden;
-`
-export const StyledHeaderRow = styled.tr`
-  border-top: ${props => props.theme.inFrameBorder};
-  border-bottom: ${props => props.theme.inFrameBorder};
-`
+export function StyledTableWrapper({ children, className = '' }: React.HTMLProps<HTMLDivElement>) {
+  return (
+    <div className={`my-5 mx-2.5 ${className}`}>
+      {children}
+    </div>
+  )
+}
+
+export function StyledTable({ children, className = '' }: React.HTMLProps<HTMLTableElement>) {
+  return (
+    <table className={`w-full table-fixed ${className}`}>
+      {children}
+    </table>
+  )
+}
+
+interface CellProps extends React.HTMLProps<HTMLTableCellElement> {
+  width?: string
+}
+
+export function StyledTh({ width = 'auto', children, className = '' }: CellProps) {
+  return (
+    <th className={`text-left h-[30px] align-top p-1.5 ${className}`} style={{ width }}>
+      {children}
+    </th>
+  )
+}
+
+export function StyledTd({ width = 'auto', children, className = '' }: CellProps) {
+  return (
+    <td className={`p-1.5 truncate ${className}`} style={{ width }}>
+      {children}
+    </td>
+  )
+}
+
+export function VirtualTableBody({ children, className = '' }: React.HTMLProps<HTMLDivElement>) {
+  return (
+    <div className={`h-[400px] overflow-auto border border-border border-t-0 bg-background 
+      scrollbar-thin scrollbar-track-secondary scrollbar-thumb-primary scrollbar-thumb-rounded-md ${className}`}>
+      {children}
+    </div>
+  )
+}
+
+interface VirtualRowProps extends React.HTMLProps<HTMLDivElement> {
+  isEven: boolean
+}
+
+export function VirtualRow({ isEven, children, className = '' }: VirtualRowProps) {
+  return (
+    <div className={`flex p-3 border-b border-border transition-colors
+      ${isEven ? 'bg-background' : 'bg-secondary'}
+      hover:bg-primary/20 ${className}`}>
+      {children}
+    </div>
+  )
+}
+
+interface VirtualCellProps extends React.HTMLProps<HTMLDivElement> {
+  width: string
+}
+
+export function VirtualCell({ width, children, className = '' }: VirtualCellProps) {
+  return (
+    <div className={`pr-2 overflow-hidden ${className}`} style={{ width }}>
+      {children}
+    </div>
+  )
+}
+
+export function MetaInfo({ children, className = '' }: React.HTMLProps<HTMLDivElement>) {
+  return (
+    <div className={`flex flex-col gap-1 ${className}`}>
+      {children}
+    </div>
+  )
+}

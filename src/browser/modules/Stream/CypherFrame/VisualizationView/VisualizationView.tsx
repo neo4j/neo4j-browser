@@ -18,11 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import neo4j from 'neo4j-driver'
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { withBus } from 'react-suber'
+import React, { useEffect, useRef, useState } from 'react'
+import { connect, useDispatch } from 'react-redux'
 import { Action, Dispatch } from 'redux'
-import { Bus } from 'suber'
+import { ThunkDispatch } from 'redux-thunk'
 
 import { GraphModel, GraphVisualizer } from 'neo4j-arc/graph-visualization'
 
@@ -31,7 +30,6 @@ import {
   BasicNode,
   BasicNodesAndRels,
   BasicRelationship,
-  deepEquals
 } from 'neo4j-arc/common'
 import bolt from 'services/bolt/bolt'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
@@ -65,7 +63,6 @@ export type VisualizationProps = {
   updated: number
   autoComplete: boolean
   maxNeighbours: number
-  bus: Bus
   maxFieldItems: number
   initialNodeDisplay: number
   isFullscreen: boolean
@@ -77,55 +74,48 @@ export type VisualizationProps = {
   disableWheelZoomInfoMessage: () => void
 }
 
-export class Visualization extends Component<
-  VisualizationProps,
-  VisualizationState
-> {
-  autoCompleteCallback?: (
-    rels: BasicRelationship[],
-    initialRun: boolean
-  ) => void
-  graph: GraphModel | undefined
-  state: VisualizationState = {
+const executeCypherQueryAsync = (query: string, params: any = {}, database?: string) => 
+  async (dispatch: ThunkDispatch<any, any, any>) => {
+    const action = {
+      type: ROUTED_CYPHER_READ_REQUEST,
+      query,
+      params,
+      queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
+      useDb: database
+    }
+    return dispatch(action)
+  }
+
+export const Visualization: React.FC<VisualizationProps> = props => {
+  const dispatch = useDispatch()
+  const [state, setState] = useState<VisualizationState>({
     nodes: [],
     relationships: [],
     updated: 0,
     nodeLimitHit: false,
     hasTruncatedFields: false
-  }
+  })
 
-  componentDidMount(): void {
-    const { records = [] } = this.props.result
+  const autoCompleteCallbackRef = useRef<(
+    rels: BasicRelationship[],
+    initialRun: boolean
+  ) => void>()
+  const graphRef = useRef<GraphModel>()
+
+  useEffect(() => {
+    const { records = [] } = props.result
     if (records && records.length > 0) {
-      this.populateDataToStateFromProps(this.props)
+      populateDataToStateFromProps()
     }
-  }
+  }, [props.result])
 
-  shouldComponentUpdate(
-    props: VisualizationProps,
-    state: VisualizationState
-  ): boolean {
-    return (
-      this.props.updated !== props.updated ||
-      this.props.isFullscreen !== props.isFullscreen ||
-      !deepEquals(props.graphStyleData, this.props.graphStyleData) ||
-      this.state.updated !== state.updated ||
-      this.props.autoComplete !== props.autoComplete ||
-      this.props.wheelZoomInfoMessageEnabled !==
-        props.wheelZoomInfoMessageEnabled
-    )
-  }
-
-  componentDidUpdate(prevProps: VisualizationProps): void {
-    if (
-      this.props.updated !== prevProps.updated ||
-      this.props.autoComplete !== prevProps.autoComplete
-    ) {
-      this.populateDataToStateFromProps(this.props)
+  useEffect(() => {
+    if (props.updated !== props.updated || props.autoComplete !== props.autoComplete) {
+      populateDataToStateFromProps()
     }
-  }
+  }, [props.updated, props.autoComplete])
 
-  populateDataToStateFromProps(props: VisualizationProps): void {
+  const populateDataToStateFromProps = () => {
     const { nodes, relationships } =
       bolt.extractNodesAndRelationshipsFromRecordsForOldVis(
         props.result.records,
@@ -135,7 +125,7 @@ export class Visualization extends Component<
 
     const { nodes: uniqNodes, nodeLimitHit } = deduplicateNodes(
       nodes,
-      this.props.initialNodeDisplay
+      props.initialNodeDisplay
     )
 
     const uniqRels = nodeLimitHit
@@ -150,7 +140,7 @@ export class Visualization extends Component<
       props.result,
       props.maxFieldItems
     )
-    this.setState({
+    setState({
       nodes: uniqNodes,
       relationships: uniqRels,
       nodeLimitHit,
@@ -159,30 +149,30 @@ export class Visualization extends Component<
     })
   }
 
-  autoCompleteRelationships(
+  const autoCompleteRelationships = (
     existingNodes: { id: string }[],
     newNodes: { id: string }[],
     initialRun: boolean
-  ): void {
-    if (this.props.autoComplete) {
+  ) => {
+    if (props.autoComplete) {
       const existingNodeIds = existingNodes.map(node => parseInt(node.id))
       const newNodeIds = newNodes.map(node => parseInt(node.id))
 
-      this.getInternalRelationships(existingNodeIds, newNodeIds).then(graph => {
-        this.autoCompleteCallback &&
-          this.autoCompleteCallback(graph.relationships, initialRun)
+      getInternalRelationships(existingNodeIds, newNodeIds).then(graph => {
+        autoCompleteCallbackRef.current &&
+          autoCompleteCallbackRef.current(graph.relationships, initialRun)
       })
     } else {
-      this.autoCompleteCallback && this.autoCompleteCallback([], initialRun)
+      autoCompleteCallbackRef.current && autoCompleteCallbackRef.current([], initialRun)
     }
   }
 
-  getNeighbours(
+  const getNeighbours = (
     id: string,
     currentNeighbourIds: string[] = []
-  ): Promise<BasicNodesAndRels & { allNeighboursCount: number }> {
+  ): Promise<BasicNodesAndRels & { allNeighboursCount: number }> => {
     const maxNewNeighbours =
-      this.props.maxNeighbours - currentNeighbourIds.length
+      props.maxNeighbours - currentNeighbourIds.length
 
     const query =
       maxNewNeighbours > 0
@@ -195,48 +185,48 @@ LIMIT ${maxNewNeighbours}`
         : `MATCH p=(a)--() WHERE id(a) = ${id} RETURN count(p) as allNeighboursCount`
 
     return new Promise((resolve, reject) => {
-      this.props.bus &&
-        this.props.bus.self(
-          ROUTED_CYPHER_READ_REQUEST,
-          {
-            query: query,
-            queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
-            useDb: this.props.result.summary.database.name
-          },
-          (response: any) => {
-            if (!response.success) {
-              reject(new Error())
-            } else {
-              const allNeighboursCount =
-                response.result.records.length > 0
-                  ? parseInt(
-                      response.result.records[0]
-                        .get('allNeighboursCount')
-                        .toString()
-                    )
-                  : 0
-              const resultGraph =
-                bolt.extractNodesAndRelationshipsFromRecordsForOldVis(
-                  response.result.records,
-                  false,
-                  this.props.maxFieldItems
-                )
-              this.autoCompleteRelationships(
-                this.graph?.nodes() || [],
-                resultGraph.nodes,
-                false
+      executeCypherQueryAsync(query, {}, props.result.summary.database.name)(dispatch)
+        .then((response: any) => {
+          if (!response.success) {
+            reject(new Error())
+          } else {
+            const allNeighboursCount =
+              response.result.records.length > 0
+                ? parseInt(
+                    response.result.records[0]
+                      .get('allNeighboursCount')
+                      .toString()
+                  )
+                : 0
+            const resultGraph =
+              bolt.extractNodesAndRelationshipsFromRecordsForOldVis(
+                response.result.records,
+                false,
+                props.maxFieldItems
               )
-              resolve({ ...resultGraph, allNeighboursCount })
-            }
+            autoCompleteRelationships(
+              graphRef.current?.nodes() || [],
+              resultGraph.nodes,
+              false
+            )
+            resolve({ ...resultGraph, allNeighboursCount })
           }
-        )
+        })
+        .catch((error: any) => {
+          console.error(error)
+          resolve({ 
+            nodes: [], 
+            relationships: [], 
+            allNeighboursCount: 0 
+          })
+        })
     })
   }
 
-  getInternalRelationships(
+  const getInternalRelationships = (
     rawExistingNodeIds: number[],
     rawNewNodeIds: number[]
-  ): Promise<BasicNodesAndRels> {
+  ): Promise<BasicNodesAndRels> => {
     const newNodeIds = rawNewNodeIds.map(n => neo4j.int(n))
     const existingNodeIds = rawExistingNodeIds
       .map(n => neo4j.int(n))
@@ -244,80 +234,67 @@ LIMIT ${maxNewNeighbours}`
     const query =
       'MATCH (a)-[r]->(b) WHERE id(a) IN $existingNodeIds AND id(b) IN $newNodeIds RETURN r;'
     return new Promise(resolve => {
-      this.props.bus &&
-        this.props.bus.self(
-          ROUTED_CYPHER_READ_REQUEST,
-          {
-            query,
-            params: { existingNodeIds, newNodeIds },
-            queryType: NEO4J_BROWSER_USER_ACTION_QUERY,
-            useDb: this.props.result.summary.database.name
-          },
-          (response: any) => {
-            if (!response.success) {
-              console.error(response.error)
-              resolve({ nodes: [], relationships: [] })
-            } else {
-              resolve({
-                ...bolt.extractNodesAndRelationshipsFromRecordsForOldVis(
-                  response.result.records,
-                  false,
-                  this.props.maxFieldItems
-                )
-              })
-            }
+      executeCypherQueryAsync(query, { existingNodeIds, newNodeIds }, props.result.summary.database.name)(dispatch)
+        .then((response: any) => {
+          if (!response.success) {
+            console.error(response.error)
+            resolve({ nodes: [], relationships: [] })
+          } else {
+            resolve({
+              ...bolt.extractNodesAndRelationshipsFromRecordsForOldVis(
+                response.result.records,
+                false,
+                props.maxFieldItems
+              )
+            })
           }
-        )
+        })
     })
   }
 
-  setGraph(graph: GraphModel): void {
-    this.graph = graph
-    this.autoCompleteRelationships([], this.graph.nodes(), true)
+  const setGraph = (graph: GraphModel) => {
+    graphRef.current = graph
+    autoCompleteRelationships([], graphRef.current.nodes(), true)
   }
 
-  render(): React.ReactNode {
-    if (!this.state.nodes.length) return null
-
-    return (
-      <StyledVisContainer isFullscreen={this.props.isFullscreen}>
-        <GraphVisualizer
-          maxNeighbours={this.props.maxNeighbours}
-          hasTruncatedFields={this.state.hasTruncatedFields}
-          graphStyleData={this.props.graphStyleData}
-          updateStyle={this.props.updateStyle}
-          getNeighbours={this.getNeighbours.bind(this)}
-          nodes={this.state.nodes}
-          autocompleteRelationships={this.props.autoComplete ?? false}
-          relationships={this.state.relationships}
-          isFullscreen={this.props.isFullscreen}
-          assignVisElement={this.props.assignVisElement}
-          nodeLimitHit={this.state.nodeLimitHit}
-          getAutoCompleteCallback={(
-            callback: (rels: BasicRelationship[], initialRun: boolean) => void
-          ) => {
-            this.autoCompleteCallback = callback
-          }}
-          setGraph={this.setGraph.bind(this)}
-          setNodePropertiesExpandedByDefault={
-            this.props.setNodePropertiesExpandedByDefault
-          }
-          nodePropertiesExpandedByDefault={
-            this.props.nodePropertiesExpandedByDefault
-          }
-          wheelZoomRequiresModKey={!this.props.isFullscreen}
-          wheelZoomInfoMessageEnabled={
-            this.props.wheelZoomInfoMessageEnabled && !this.props.isFullscreen
-          }
-          disableWheelZoomInfoMessage={this.props.disableWheelZoomInfoMessage}
-          DetailsPaneOverride={DetailsPane}
-          OverviewPaneOverride={OverviewPane}
-          useGeneratedDefaultColors={false}
-          initialZoomToFit
-        />
-      </StyledVisContainer>
-    )
-  }
+  return (
+    <StyledVisContainer isFullscreen={props.isFullscreen}>
+      <GraphVisualizer
+        maxNeighbours={props.maxNeighbours}
+        hasTruncatedFields={state.hasTruncatedFields}
+        graphStyleData={props.graphStyleData}
+        updateStyle={props.updateStyle}
+        getNeighbours={getNeighbours.bind(this)}
+        nodes={state.nodes}
+        autocompleteRelationships={props.autoComplete ?? false}
+        relationships={state.relationships}
+        isFullscreen={props.isFullscreen}
+        assignVisElement={props.assignVisElement}
+        nodeLimitHit={state.nodeLimitHit}
+        getAutoCompleteCallback={(
+          callback: (rels: BasicRelationship[], initialRun: boolean) => void
+        ) => {
+          autoCompleteCallbackRef.current = callback
+        }}
+        setGraph={setGraph.bind(this)}
+        setNodePropertiesExpandedByDefault={
+          props.setNodePropertiesExpandedByDefault
+        }
+        nodePropertiesExpandedByDefault={
+          props.nodePropertiesExpandedByDefault
+        }
+        wheelZoomRequiresModKey={!props.isFullscreen}
+        wheelZoomInfoMessageEnabled={
+          props.wheelZoomInfoMessageEnabled && !props.isFullscreen
+        }
+        disableWheelZoomInfoMessage={props.disableWheelZoomInfoMessage}
+        DetailsPaneOverride={DetailsPane}
+        OverviewPaneOverride={OverviewPane}
+        useGeneratedDefaultColors={false}
+        initialZoomToFit
+      />
+    </StyledVisContainer>
+  )
 }
 
 const mapStateToProps = (state: GlobalState) => ({
@@ -338,9 +315,7 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
   }
 })
 
-export const VisualizationConnectedBus = withBus(
-  connect(mapStateToProps, mapDispatchToProps)(Visualization)
-)
+export const VisualizationConnectedBus = connect(mapStateToProps, mapDispatchToProps)(Visualization)
 
 type DeduplicateHelper = {
   nodes: BasicNode[]

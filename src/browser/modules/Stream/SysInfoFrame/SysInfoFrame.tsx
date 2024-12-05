@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React, { Component, ReactNode, useEffect } from 'react'
+import { Component, ReactNode, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { Bus } from 'suber'
@@ -60,8 +60,10 @@ import {
   commandSources,
   executeCommand
 } from 'shared/modules/commands/commandsDuck'
-import { Action, Dispatch } from 'redux'
 import { SpinnerContainer } from './styled'
+import type { AppDispatch } from 'shared/store/configureStore'
+import { Action } from '@reduxjs/toolkit'
+import { BrowserError, ErrorType } from 'services/exceptions'
 
 export type DatabaseMetric = { label: string; value?: string }
 export type SysInfoFrameState = {
@@ -96,7 +98,7 @@ export class SysInfoFrame extends Component<
   SysInfoFrameProps,
   SysInfoFrameState
 > {
-  timer: number | null = null
+  timer: ReturnType<typeof setInterval> | undefined
   state: SysInfoFrameState = {
     lastFetch: null,
     storeSizes: [],
@@ -225,7 +227,12 @@ export class SysInfoFrame extends Component<
       />
     ) : (
       <ErrorsView
-        result={{ code: 'No connection', message: 'No connection available' }}
+        result={{
+          // @ts-ignore
+          type: ErrorTypes.Error,
+          code: 'No connection',
+          message: 'No connection available'
+        } as BrowserError}
       />
     )
 
@@ -296,16 +303,14 @@ const mapStateToProps = (state: GlobalState) => ({
   namespacesEnabled: getMetricsNamespacesEnabled(state),
   metricsPrefix: getMetricsPrefix(state)
 })
-const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
   rerunWithDb: ({ useDb, id }: { useDb: string; id: string }) => {
-    dispatch(
-      executeCommand(':sysinfo', {
-        id,
-        useDb,
-        isRerun: true,
-        source: commandSources.rerunFrame
-      })
-    )
+    dispatch(executeCommand(':sysinfo', {
+      id,
+      useDb,
+      isRerun: true,
+      source: commandSources.rerunFrame
+    }) as Action)
   }
 })
 

@@ -17,27 +17,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import styled from 'styled-components'
+import { tableStyles } from '../styles/commonStyles'
 
-export const StyledTable = styled.table`
-  width: 100%;
-  margin-bottom: 0;
-`
-export const StyledBodyTr = styled.tr`
-  background-color: ${props => props.theme.secondaryBackground};
-  color: ${props => props.theme.secondaryText};
-`
-export const StyledTh = styled.th`
-  text-align: left;
-  height: 39px;
-  font-weight: bold;
-  padding: 10px 16px 10px 0;
-  line-height: 39px;
-  border-bottom: ${props => props.theme.inFrameBorder};
-`
-export const StyledTd = styled.td`
-  border-bottom: ${props => props.theme.inFrameBorder};
-  vertical-align: top;
-  line-height: 26px;
-  padding: 10px 16px 10px 0;
-`
+export function Table({ children, className = '', ...props }: React.TableHTMLAttributes<HTMLTableElement>) {
+  return (
+    <div className={tableStyles.container}>
+      <table className={`${tableStyles.table} ${className}`} {...props}>
+        {children}
+      </table>
+    </div>
+  )
+}
+
+export function Th({ children, className = '', ...props }: React.ThHTMLAttributes<HTMLTableHeaderCellElement>) {
+  return (
+    <th className={`${tableStyles.th} ${className}`} {...props}>
+      {children}
+    </th>
+  )
+}
+
+export function Td({ children, className = '', ...props }: React.TdHTMLAttributes<HTMLTableDataCellElement>) {
+  return (
+    <td className={`${tableStyles.td} ${className}`} {...props}>
+      {children}
+    </td>
+  )
+}

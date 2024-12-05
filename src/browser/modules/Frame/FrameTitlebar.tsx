@@ -17,18 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React from 'react'
 import { connect } from 'react-redux'
 import { Action, Dispatch } from 'redux'
 
-import {
-  CloseIcon,
-  ContractIcon,
-  DownIcon,
-  ExpandIcon,
-  PinIcon,
-  UpIcon
-} from 'browser-components/icons/LegacyIcons'
+import { Icons } from 'browser/components/icons'
 
 import { TitleBarHeader } from './styled'
 import { FrameControlButton } from 'browser-components/buttons'
@@ -80,14 +72,14 @@ function FrameTitlebar({
   trackCollapseToggle
 }: FrameTitleBarProps) {
   const fullscreenIcon = isFullscreen ? (
-    <ContractIcon width={10} />
+    <Icons.Maximize className="icon icon-sm" />
   ) : (
-    <ExpandIcon width={10} />
+    <Icons.Minimize className="icon icon-sm" />
   )
   const expandCollapseIcon = isCollapsed ? (
-    <DownIcon width={10} />
+    <Icons.Down className="icon icon-sm" />
   ) : (
-    <UpIcon width={10} />
+    <Icons.Up className="icon icon-sm" />
   )
 
   return (
@@ -101,7 +93,7 @@ function FrameTitlebar({
         }}
         pressed={pinned}
       >
-        <PinIcon width={10} />
+        <Icons.Pin className="icon icon-sm" />
       </FrameControlButton>
       <FrameControlButton
         title={isCollapsed ? 'Expand' : 'Collapse'}
@@ -122,7 +114,7 @@ function FrameTitlebar({
         {fullscreenIcon}
       </FrameControlButton>
       <FrameControlButton title="Close" onClick={onCloseClick}>
-        <CloseIcon width={10} />
+        <Icons.Close className="icon icon-sm" />
       </FrameControlButton>
     </TitleBarHeader>
   )
@@ -157,9 +149,9 @@ const mapDispatchToProps = (
     dispatch({ type: TRACK_COLLAPSE_TOGGLE })
   },
   closeAndCancelRequest: async (request: BrowserRequest | null) => {
-    if (request && request.status === REQUEST_STATUS_PENDING) {
+    if (request && request.status === REQUEST_STATUS_PENDING && ownProps.frame.requestId) {
       dispatch(cancelRequest(ownProps.frame.requestId))
-      await sleep(3000) // sleep for 3000 ms to let user read the cancel info
+      await sleep(3000)
     }
     dispatch(remove(ownProps.frame.id))
   },

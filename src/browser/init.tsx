@@ -17,28 +17,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import 'core-js/stable'
-import 'regenerator-runtime/runtime'
+import React from 'react'
+import { createRoot } from 'react-dom/client'
+import { ThemeProvider } from './components/ThemeProvider'
+import AppInit from './AppInit'
 
+// Import base styles
+import './styles/app.css'
 import './styles/bootstrap.grid-only.min.css'
-import './styles/streamline.css'
-import './styles/neo4j-world.css'
 import './styles/font-awesome.min.css'
 import './styles/fira-code.css'
+import './styles/neo4j-world.css'
 import './styles/open-sans.css'
-import './styles/util-classes.css'
+import './styles/inconsolata.css'
 
-import 'browser-styles/relate-by-ui/relate-by-PARTS.css'
+const container = document.getElementById('mount')!
+const root = createRoot(container)
 
-import '@neo4j-ndl/base/lib/neo4j-ds-styles.css'
+root.render(
+  <React.StrictMode>
+    <ThemeProvider>
+      <AppInit />
+    </ThemeProvider>
+  </React.StrictMode>
+)
 
-// Make sure the bolt worker module is fetched early
-import BoltWorkerModule from 'shared/services/bolt/boltWorker'
-new BoltWorkerModule()
-
-// non web env (just for tests)
-if (typeof btoa === 'undefined') {
-  global.btoa = function (str) {
-    return Buffer.from(str, 'binary').toString('base64')
+// Type-safe worker
+export const worker = new Worker(
+  new URL('../shared/services/bolt/boltWorker.ts', import.meta.url),
+  { 
+    type: 'module',
+    name: 'bolt-worker'
   }
-}
+) as Worker
