@@ -12,7 +12,6 @@ export const useAuth = () => {
   const { 
     loginWithRedirect, 
     logout: auth0Logout,
-    getAccessTokenSilently,
     user: auth0User,
     isAuthenticated: isAuth0Authenticated
   } = useAuth0()

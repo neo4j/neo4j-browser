@@ -40,28 +40,31 @@ const validCommandTypes: { [key: string]: (args: string[]) => string } = {
   params: args => `:params ${args.join(' ')}`
 }
 
-interface EditorState {
+export interface EditorState {
   content: string
-  error: string | null
-  expanded: boolean
-  focused: boolean
-  id: string
-  name: string | null
-  isProjectFile: boolean
-  isStatic: boolean
-  directory: string | null
+  history: string[]
+  draft: string | null
+  position: {
+    line: number
+    column: number
+  }
+  id?: string
+  name?: string | null
+  isStatic?: boolean
+  isProjectFile?: boolean
+  focused?: boolean
+  expanded?: boolean
+  error?: string
 }
 
 const initialState: EditorState = {
   content: '',
-  error: null,
-  expanded: false,
-  focused: false,
-  id: '',
-  name: null,
-  isProjectFile: false,
-  isStatic: false,
-  directory: null
+  history: [],
+  draft: null,
+  position: {
+    line: 0,
+    column: 0
+  }
 }
 
 // Thunks

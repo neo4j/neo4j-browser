@@ -17,65 +17,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React, { Suspense } from 'react'
+import React from 'react'
 import { createRoot } from 'react-dom/client'
-import { ErrorBoundary } from 'react-error-boundary'
+import { ThemeProvider } from './components/ThemeProvider'
+import AppInit from './AppInit'
 
-// Import styles
-import '@neo4j-ndl/base/lib/neo4j-ds-styles.css'
-import 'tailwindcss/tailwind.css'
+// Import base styles
 import './styles/app.css'
+import './styles/bootstrap.grid-only.min.css'
+import './styles/font-awesome.min.css'
+import './styles/fira-code.css'
+import './styles/neo4j-world.css'
+import './styles/open-sans.css'
+import './styles/inconsolata.css'
 
-// Lazy load main app
-const AppInit = React.lazy(() => import('./AppInit'))
+const container = document.getElementById('mount')!
+const root = createRoot(container)
 
-function ErrorFallback({ error }: { error: Error }) {
-  return (
-    <div className="p-4 bg-red-50 dark:bg-red-900/20">
-      <h2 className="text-red-700 dark:text-red-300">Something went wrong:</h2>
-      <pre className="mt-2 text-sm">{error.message}</pre>
-    </div>
-  )
-}
-
-function LoadingSpinner() {
-  return (
-    <div className="flex items-center justify-center h-screen">
-      <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary" />
-    </div>
-  )
-}
-
-export function mount(container: HTMLElement): void {
-  const root = createRoot(container)
-  root.render(
-    <React.StrictMode>
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <Suspense fallback={<LoadingSpinner />}>
-          <AppInit />
-        </Suspense>
-      </ErrorBoundary>
-    </React.StrictMode>
-  )
-}
-
-// Mount React app
-const container = document.getElementById('root')
-if (container) {
-  mount(container)
-}
-
-// Modern base64 polyfill
-if (typeof window.btoa === 'undefined') {
-  window.btoa = (str: string): string => {
-    try {
-      return window.btoa(unescape(encodeURIComponent(str)))
-    } catch (e) {
-      console.error('Base64 encoding failed:', e)
-      return '' // Return empty string on error
-    }
-  }
-}
+root.render(
+  <React.StrictMode>
+    <ThemeProvider>
+      <AppInit />
+    </ThemeProvider>
+  </React.StrictMode>
+)
 
 // Type-safe worker
 export const worker = new Worker(

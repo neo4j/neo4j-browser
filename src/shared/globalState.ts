@@ -19,7 +19,7 @@
  */
 import { AppState } from './modules/app/appDuck'
 import { ConnectionState } from './modules/connections/connectionsDuck'
-import { Frame } from './modules/frames/framesDuck'
+import { FramesState } from './modules/frames/framesDuck'
 import { GuideState } from './modules/guides/guidesDuck'
 import { AuthState } from './modules/auth/authSlice'
 import { SettingsState } from './modules/settings/settingsDuck'
@@ -27,28 +27,70 @@ import { RequestState } from './modules/requests/requestsDuck'
 import { SidebarState } from './modules/sidebar/sidebarDuck'
 import { Favorite } from './modules/favorites/favoritesDuck'
 import { Folder } from './modules/favorites/foldersDuck'
-import * as constants from './modules/constants'
+import { neo4jApi } from './services/neo4jApi'
+import { authApi } from './services/authApi'
+import { EditorState } from './modules/editor/editorDuck'
+import type { Database, ClientSettings, TrialStatus } from './modules/dbMeta/dbMetaDuck'
+
+interface DbMetaState {
+  nodes: number
+  relationships: number
+  labels: never[]
+  relationshipTypes: never[]
+  properties: never[]
+  functions: never[]
+  procedures: never[]
+  role: null
+  server: {
+    version: null
+    edition: null
+    storeSize: null
+  }
+  databases: never[]
+  serverConfigDone: boolean
+  settings: ClientSettings
+  countAutomaticRefresh: {
+    enabled: boolean
+    loading: boolean
+  }
+  trialStatus: {
+    status: "unknown"
+  }
+}
 
 export interface GlobalState {
+  [neo4jApi.reducerPath]: ReturnType<typeof neo4jApi.reducer>
+  [authApi.reducerPath]: ReturnType<typeof authApi.reducer>
+  editor: EditorState
   settings: SettingsState
   connections: ConnectionState
   history: string[]
   requests: RequestState
   sidebar: SidebarState
-  frames: Frame[]
-  features: unknown
-  user: unknown
+  frames: FramesState
+  features: {
+    clientConfig: any
+    browserSync: boolean
+    userCapabilities: { [key: string]: boolean }
+  }
+  user: {
+    username: any
+    roles: any
+  }
   meta: unknown
   documents: Favorite[]
   params: Record<string, unknown>
   grass: unknown
   sync: unknown
   syncMetadata: unknown
-  syncConsent: unknown
+  syncConsent: {
+    consented: boolean
+  }
   folders: Folder[]
-  commands: unknown
+  commands: Record<string, never>
   app: AppState
   experimentalFeatures: unknown
   guides: GuideState
   auth: AuthState
+  dbMeta: DbMetaState
 }

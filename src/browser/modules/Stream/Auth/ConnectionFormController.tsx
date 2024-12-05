@@ -41,7 +41,7 @@ import {
 import { isCloudHost as isAuraHost } from 'shared/services/utils'
 import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
 import { fetchBrowserDiscoveryDataFromUrl } from 'shared/modules/discovery/discoveryHelpers'
-import type { Neo4jError } from 'neo4j-driver'
+import { Neo4jError } from 'neo4j-driver'
 
 interface ConnectionFormProps {
   frame?: any
@@ -110,7 +110,6 @@ export function ConnectionFormController({
   showExistingPasswordInput = true
 }: ConnectionFormProps) {
   const { login } = useAuth()
-  const { isAuthenticated: isAuth0User } = useAuth0()
   const allowedSchemes = useSelector(getAllowedBoltSchemes)
   const dispatch = useDispatch()
 
@@ -189,7 +188,11 @@ export function ConnectionFormController({
       })
       onSuccess()
     } catch (err) {
-      error(err instanceof Error ? err : new Error('Connection failed'))
+      if (err instanceof Neo4jError) {
+        handleConnectionError({ error: err })
+      } else {
+        error(err instanceof Error ? err : new Error('Connection failed'))
+      }
     }
   }
 

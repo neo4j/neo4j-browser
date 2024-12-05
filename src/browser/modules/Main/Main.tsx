@@ -47,17 +47,14 @@ import { getUseDb } from 'shared/modules/connections/connectionsDuck'
 import { QueryResult } from 'neo4j-driver'
 import { executeCommand } from 'shared/modules/commands/commandsDuck'
 
-type MainProps = {
-  connectionState: number
-  isDatabaseUnavailable: boolean
-  errorMessage?: string
-  lastConnectionUpdate: number
-  showUdcConsentBanner: boolean
-  useDb: string | null
-  dismissConsentBanner: () => void
-  incrementConsentBannerShownCount: () => void
-  openSettingsDrawer: () => void
-  trialStatus: TrialStatus
+interface MainProps {
+  connectionState: any
+  lastConnectionUpdate: any
+  errorMessage: any
+  useDb: any
+  isDatabaseUnavailable: any
+  openSettingsDrawer: any
+  trialStatus: any
 }
 
 const Main = React.memo(function Main(props: MainProps) {
@@ -69,9 +66,6 @@ const Main = React.memo(function Main(props: MainProps) {
     connectionState,
     isDatabaseUnavailable,
     errorMessage,
-    showUdcConsentBanner,
-    dismissConsentBanner,
-    incrementConsentBannerShownCount,
     openSettingsDrawer,
     trialStatus
   } = props
@@ -80,10 +74,6 @@ const Main = React.memo(function Main(props: MainProps) {
   const multiStatementMode = useSelector(shouldEnableMultiStatementMode)
   const history = useSelector(getHistory)
   const useDb = useSelector(getUseDb)
-
-  useEffect(() => {
-    showUdcConsentBanner && incrementConsentBannerShownCount()
-  }, [showUdcConsentBanner /* missing function from dep array but including it causes loop */])
 
   const sendCypherQuery = async (text: string): Promise<QueryResult> => {
     return dispatch(executeCommand(text)) as unknown as Promise<QueryResult>
@@ -100,19 +90,6 @@ const Main = React.memo(function Main(props: MainProps) {
           useDb={useDb}
         />
       </ErrorBoundary>
-      {showUdcConsentBanner && (
-        <UdcConsentBanner>
-          <span>
-            To help make Neo4j Browser better we collect information on product
-            usage. Review your{' '}
-            <UnderlineClickable onClick={openSettingsDrawer}>
-              settings
-            </UnderlineClickable>{' '}
-            at any time.
-          </span>
-          <DismissBanner onClick={dismissConsentBanner} />
-        </UdcConsentBanner>
-      )}
       {useDb && isDatabaseUnavailable && (
         <ErrorBanner>
           {`Database '${useDb}' is unavailable. Run `}

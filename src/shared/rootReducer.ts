@@ -65,6 +65,7 @@ import {
   syncReducer
 } from 'shared/modules/sync/syncDuck'
 import userReducer, { NAME as currentUser } from 'shared/modules/currentUser/currentUserDuck'
+import udcReducer from './modules/udc/udcDuck'
 
 const rootReducer = combineReducers({
   [neo4jApi.reducerPath]: neo4jApi.reducer,
@@ -90,7 +91,8 @@ const rootReducer = combineReducers({
   [commands]: commandsReducer,
   [app]: appReducer,
   [guides]: guideReducer,
-  [experimentalFeatures]: experimentalFeaturesReducer
+  [experimentalFeatures]: experimentalFeaturesReducer,
+  udc: udcReducer
 })
 
 export type RootState = ReturnType<typeof rootReducer>

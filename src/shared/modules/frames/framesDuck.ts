@@ -39,17 +39,17 @@ export interface Frame {
   // Add other frame properties as needed
 }
 
-interface FramesState {
+export interface FramesState {
   allIds: string[]
   byId: Record<string, Frame>
-  recentView: null | FrameView
+  recentView: string[]
   nodePropertiesCollapsedByDefault: boolean
 }
 
 const initialState: FramesState = {
   allIds: [],
   byId: {},
-  recentView: null,
+  recentView: [],
   nodePropertiesCollapsedByDefault: false
 }
 
@@ -77,7 +77,7 @@ const framesSlice = createSlice({
     clearAll: (state) => {
       state.allIds = []
       state.byId = {}
-      state.recentView = null
+      state.recentView = []
     },
     pin: (state, action: { payload: string }) => {
       const id = action.payload

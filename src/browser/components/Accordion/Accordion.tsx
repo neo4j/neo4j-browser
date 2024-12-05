@@ -17,77 +17,59 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React, { Component } from 'react'
+import { useState } from 'react'
 
-import { BorderedWrapper, ContentArea, TitleBar } from './styled'
-
-type AccordionState = any
-
-class Accordion extends Component<{ render: any }, AccordionState> {
-  static Title: any
-
-  static Content: any
-
-  state = {
-    activeIndex: -1,
-    initialLoad: true
-  }
-
-  titleClick = (index: any) => {
-    const newIndex = this.state.activeIndex === index ? -1 : index
-    this.setState({ activeIndex: newIndex, initialLoad: false })
-  }
-
-  getChildProps = ({
-    index,
-    defaultActive = false,
-    forceActive = false
-  }: any) => {
-    const props: any = {
-      titleProps: {
-        onClick: () => this.titleClick(index)
-      },
-      contentProps: {}
-    }
-    if (forceActive) {
-      props.titleProps.onClick = () => {}
-    }
-    if (defaultActive && this.state.initialLoad) {
-      props.titleProps.onClick = () => this.titleClick(-1)
-    }
-    if (
-      index === this.state.activeIndex ||
-      (this.state.initialLoad && defaultActive) ||
-      forceActive
-    ) {
-      props.titleProps.active = true
-      props.contentProps.active = true
-      return props
-    }
-    props.titleProps.active = false
-    props.contentProps.active = false
-    return props
-  }
-
-  render() {
-    const { getChildProps } = this
-    const { render: renderProp, ...rest } = this.props
-    return (
-      <BorderedWrapper {...rest}>
-        {renderProp({ getChildProps })}
-      </BorderedWrapper>
-    )
-  }
+interface AccordionProps {
+  children: React.ReactNode
+  defaultActive?: boolean
+  forceOpen?: boolean
 }
 
-const Title = ({ children, ...rest }: any) => {
-  return <TitleBar {...rest}>{children}</TitleBar>
+export function Accordion({ children, defaultActive = false, forceOpen = false }: AccordionProps) {
+  const [isActive, setIsActive] = useState(defaultActive)
+
+  return (
+    <div className="border border-border-neutral dark:border-border-neutral-dark rounded-md">
+      {React.Children.map(children, child => {
+        if (!React.isValidElement(child)) return null
+        return React.cloneElement(child, {
+          active: forceOpen || isActive,
+          onClick: () => !forceOpen && setIsActive(!isActive)
+        })
+      })}
+    </div>
+  )
+}
+
+interface TitleProps {
+  children: React.ReactNode
+  onClick?: () => void
+}
+
+function Title({ children, onClick }: TitleProps) {
+  return (
+    <div 
+      onClick={onClick}
+      className="px-4 py-2 border-t border-border-neutral dark:border-border-neutral-dark cursor-pointer hover:bg-surface-neutral-hover dark:hover:bg-surface-neutral-hover-dark"
+    >
+      {children}
+    </div>
+  )
 }
 Accordion.Title = Title
 
-const Content = ({ children, active, ...rest }: any) => {
+interface ContentProps {
+  children: React.ReactNode
+  active?: boolean
+}
+
+function Content({ children, active }: ContentProps) {
   if (!active) return null
-  return <ContentArea {...rest}>{children}</ContentArea>
+  return (
+    <div className="px-4 py-3 bg-surface-neutral dark:bg-surface-neutral-dark">
+      {children}
+    </div>
+  )
 }
 Accordion.Content = Content
 

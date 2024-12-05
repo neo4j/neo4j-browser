@@ -17,8 +17,103 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import styled from 'styled-components'
+import React from 'react'
 
-export const PlanSVG = styled.svg`
-  width: 100%;
-`
+export function PlanSvgWrapper({ children, className = '', ...props }: React.HTMLProps<HTMLDivElement>) {
+  return (
+    <div 
+      className={`w-full overflow-x-auto bg-background ${className}`}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
+
+export function PlanStatusBar({ children, className = '', ...props }: React.HTMLProps<HTMLDivElement>) {
+  return (
+    <div 
+      className={`flex items-center min-h-[39px] px-4 py-2 text-sm text-secondary-foreground ${className}`}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
+
+export function WarningMessage({ children, className = '', ...props }: React.HTMLProps<HTMLDivElement>) {
+  return (
+    <div 
+      className={`text-warning font-medium ${className}`}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
+
+export function PlanSvg({ children, className = '', ...props }: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg 
+      className={`w-full h-full ${className}`}
+      {...props}
+    >
+      {children}
+    </svg>
+  )
+}
+
+export function StyledInspectorFooter({ children, className = '', ...props }: React.HTMLProps<HTMLDivElement>) {
+  return (
+    <div 
+      className={`flex items-center justify-between px-4 py-2 border-t border-border ${className}`}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
+
+export function StyledInspectorFooterRow({ children, className = '', ...props }: React.HTMLProps<HTMLDivElement>) {
+  return (
+    <div 
+      className={`flex items-center gap-2 ${className}`}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
+
+export function StyledInspectorFooterRowText({ children, className = '', ...props }: React.HTMLProps<HTMLSpanElement>) {
+  return (
+    <span 
+      className={`text-sm text-secondary-foreground ${className}`}
+      {...props}
+    >
+      {children}
+    </span>
+  )
+}
+
+export function StyledPlanInspectorContainer({ children, className = '', ...props }: React.HTMLProps<HTMLDivElement>) {
+  return (
+    <div 
+      className={`flex flex-col h-full bg-background ${className}`}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
+
+export function StyledPlanInspectorContent({ children, className = '', ...props }: React.HTMLProps<HTMLDivElement>) {
+  return (
+    <div 
+      className={`flex-1 overflow-auto p-4 ${className}`}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}

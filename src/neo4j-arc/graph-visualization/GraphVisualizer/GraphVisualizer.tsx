@@ -17,8 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import deepmerge from 'deepmerge'
-import { debounce } from 'lodash-es'
+import { debounce, merge } from 'lodash-es'
 import React, { Component } from 'react'
 
 import { Graph } from './Graph/Graph'
@@ -146,10 +145,7 @@ export class GraphVisualizer extends Component<
         }
 
     if (this.props.graphStyleData) {
-      const rebasedStyle = deepmerge(
-        this.defaultStyle,
-        this.props.graphStyleData
-      )
+      const rebasedStyle = merge({}, this.defaultStyle, this.props.graphStyleData)
       graphStyle.loadRules(rebasedStyle)
     }
     this.state = {
@@ -222,10 +218,7 @@ export class GraphVisualizer extends Component<
   componentDidUpdate(prevProps: GraphVisualizerProps): void {
     if (!deepEquals(prevProps.graphStyleData, this.props.graphStyleData)) {
       if (this.props.graphStyleData) {
-        const rebasedStyle = deepmerge(
-          this.defaultStyle,
-          this.props.graphStyleData
-        )
+        const rebasedStyle = merge({}, this.defaultStyle, this.props.graphStyleData)
         this.state.graphStyle.loadRules(rebasedStyle)
         this.setState({
           graphStyle: this.state.graphStyle,
