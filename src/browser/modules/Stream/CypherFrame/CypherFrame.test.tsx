@@ -62,7 +62,8 @@ describe('CypherFrame', () => {
         maxRows: 1000,
         maxFieldItems: 1000
       },
-      app: {}
+      app: {},
+      connections: {}
     })
   }
   test('renders accordingly from pending to success to error to success', () => {

@@ -27,7 +27,12 @@ import { BrowserError } from 'services/exceptions'
 
 export function isBrowserError(object: unknown): object is BrowserError {
   if (object !== null && typeof object === 'object') {
-    return 'type' in object || 'gqlStatus' in object
+    return (
+      'type' in object ||
+      'message' in object ||
+      'code' in object ||
+      'gqlStatus' in object
+    )
   }
 
   return false

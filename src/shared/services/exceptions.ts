@@ -38,6 +38,7 @@ export type BrowserError = {
   code: string
   gqlStatus?: string
   gqlStatusDescription?: string
+  cause?: Pick<BrowserError, 'gqlStatus' | 'gqlStatusDescription' | 'cause'>
 }
 
 // All errors except bolt errors have their type as their error code

@@ -19,14 +19,18 @@
  */
 import { render } from '@testing-library/react'
 import React from 'react'
-import { combineReducers, createStore } from 'redux'
 import { createBus } from 'suber'
 
 import { ErrorsView, ErrorsViewProps } from './ErrorsView'
-import reducers from 'project-root/src/shared/rootReducer'
 import { BrowserError } from 'services/exceptions'
+import { Provider } from 'react-redux'
+import { initialState as initialConnectionsState } from 'shared/modules/connections/connectionsDuck'
 
-const mount = (partOfProps: Partial<ErrorsViewProps>) => {
+const withProvider = (store: any, children: any) => {
+  return <Provider store={store}>{children}</Provider>
+}
+
+const mount = (partOfProps: Partial<ErrorsViewProps>, state?: any) => {
   const defaultProps: ErrorsViewProps = {
     result: null,
     bus: createBus(),
@@ -36,13 +40,25 @@ const mount = (partOfProps: Partial<ErrorsViewProps>) => {
     neo4jVersion: null,
     protocolVersion: null
   }
+
   const props = {
     ...defaultProps,
     ...partOfProps
   }
-  const reducer = combineReducers({ ...(reducers as any) })
-  const store: any = createStore(reducer)
-  return render(<ErrorsView store={store} {...props} />)
+
+  state = state ?? {
+    connections: initialConnectionsState
+  }
+
+  const store = {
+    subscribe: () => {},
+    dispatch: () => {},
+    getState: () => ({
+      ...state
+    })
+  }
+
+  return render(withProvider(store, <ErrorsView {...props} />))
 }
 
 describe('ErrorsView', () => {
@@ -58,7 +74,8 @@ describe('ErrorsView', () => {
     // Then
     expect(container).toMatchSnapshot()
   })
-  test('does displays an error', () => {
+
+  test('does display an error', () => {
     // Given
     const error: BrowserError = {
       code: 'Test.Error',
@@ -75,6 +92,84 @@ describe('ErrorsView', () => {
     // Then
     expect(container).toMatchSnapshot()
   })
+
+  test('does display an error for gql status codes', () => {
+    // Given
+    const error: BrowserError = {
+      code: 'Test.Error',
+      message: 'Test error description',
+      type: 'Neo4jError',
+      gqlStatus: '22N14',
+      gqlStatusDescription:
+        "error: data exception - invalid temporal value combination. Cannot select both epochSeconds and 'datetime'.",
+      cause: undefined
+    }
+
+    const props = {
+      result: error
+    }
+
+    const state = {
+      connections: {
+        activeConnection: 'test',
+        connectionsById: {
+          test: {
+            protocolVersion: 5.7
+          }
+        }
+      }
+    }
+
+    // When
+    const { container } = mount(props, state)
+
+    // Then
+    expect(container).toMatchSnapshot()
+  })
+
+  test('does display a nested error for gql status codes', () => {
+    // Given
+    const error: BrowserError = {
+      code: 'Test.Error',
+      message: 'Test error description',
+      type: 'Neo4jError',
+      gqlStatus: '42N51',
+      gqlStatusDescription:
+        'error: syntax error or access rule violation - invalid parameter. Invalid parameter $`param`. ',
+      cause: {
+        gqlStatus: '22G03',
+        gqlStatusDescription: 'error: data exception - invalid value type',
+        cause: {
+          gqlStatus: '22N27',
+          gqlStatusDescription:
+            "error: data exception - invalid entity type. Invalid input '******' for $`param`. Expected to be STRING.",
+          cause: undefined
+        }
+      }
+    }
+
+    const props = {
+      result: error
+    }
+
+    const state = {
+      connections: {
+        activeConnection: 'test',
+        connectionsById: {
+          test: {
+            protocolVersion: 5.7
+          }
+        }
+      }
+    }
+
+    // When
+    const { container } = mount(props, state)
+
+    // Then
+    expect(container).toMatchSnapshot()
+  })
+
   test('displays procedure link if unknown procedure', () => {
     // Given
     const error: BrowserError = {
@@ -93,6 +188,7 @@ describe('ErrorsView', () => {
     expect(container).toMatchSnapshot()
     expect(getByText('List available procedures')).not.toBeUndefined()
   })
+
   test('displays procedure link if periodic commit error', () => {
     // Given
     const error: BrowserError = {

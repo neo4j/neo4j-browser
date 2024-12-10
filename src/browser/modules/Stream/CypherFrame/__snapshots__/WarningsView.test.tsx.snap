@@ -5,7 +5,7 @@ exports[`WarningsViews WarningsView displays nothing if no notifications 1`] = `
 exports[`WarningsViews WarningsView does display a warning for GQL status codes 1`] = `
 <div>
   <div
-    class="sc-hGPBjI kJlknP"
+    class="sc-hGPBjI kgdIGh"
   >
     <div
       class="sc-dlVxhl fwhZkz"
@@ -55,7 +55,7 @@ exports[`WarningsViews WarningsView does display a warning for GQL status codes 
 exports[`WarningsViews WarningsView does display multiple warnings 1`] = `
 <div>
   <div
-    class="sc-hGPBjI kJlknP"
+    class="sc-hGPBjI kgdIGh"
   >
     <div
       class="sc-dlVxhl fwhZkz"
@@ -168,7 +168,7 @@ exports[`WarningsViews WarningsView does display multiple warnings 1`] = `
 exports[`WarningsViews WarningsView does display multiple warnings for GQL status codes 1`] = `
 <div>
   <div
-    class="sc-hGPBjI kJlknP"
+    class="sc-hGPBjI kgdIGh"
   >
     <div
       class="sc-dlVxhl fwhZkz"
@@ -259,7 +259,7 @@ exports[`WarningsViews WarningsView does display multiple warnings for GQL statu
 exports[`WarningsViews WarningsView does displays a warning 1`] = `
 <div>
   <div
-    class="sc-hGPBjI kJlknP"
+    class="sc-hGPBjI kgdIGh"
   >
     <div
       class="sc-dlVxhl fwhZkz"
