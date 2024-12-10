@@ -25,7 +25,6 @@ import { Bus } from 'suber'
 
 import { PlayIcon } from 'browser-components/icons/LegacyIcons'
 
-import { errorMessageFormater } from '../../errorMessageFormater'
 import {
   StyledCypherErrorMessage,
   StyledDiv,
@@ -59,14 +58,18 @@ import { BrowserError } from 'services/exceptions'
 import { deepEquals } from 'neo4j-arc/common'
 import { getSemanticVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 import { SemVer } from 'semver'
+import { getProtocolVersion } from 'shared/modules/connections/connectionsDuck'
+import { formatError } from '../errorUtils'
 
 export type ErrorsViewProps = {
   result: BrowserRequestResult
   bus: Bus
   neo4jVersion: SemVer | null
+  protocolVersion: number | null
   params: Record<string, unknown>
   executeCmd: (cmd: string) => void
   setEditorContent: (cmd: string) => void
+  depth?: number
 }
 
 class ErrorsViewComponent extends Component<ErrorsViewProps> {
@@ -78,31 +81,50 @@ class ErrorsViewComponent extends Component<ErrorsViewProps> {
   }
 
   render(): null | JSX.Element {
-    const { bus, params, executeCmd, setEditorContent, neo4jVersion } =
-      this.props
+    const {
+      bus,
+      params,
+      executeCmd,
+      setEditorContent,
+      neo4jVersion,
+      protocolVersion,
+      depth = 0
+    } = this.props
 
     const error = this.props.result as BrowserError
-    if (!error || !error.code) {
+    if (!error) {
       return null
     }
-    const fullError = errorMessageFormater(null, error.message)
+
+    const formattedError = formatError(protocolVersion, error)
+
+    if (!formattedError?.title) {
+      return null
+    }
 
     const handleSetMissingParamsTemplateHelpMessageClick = () => {
       bus.send(GENERATE_SET_MISSING_PARAMS_TEMPLATE, undefined)
     }
 
     return (
-      <StyledHelpFrame>
+      <StyledHelpFrame nested={depth > 0}>
         <StyledHelpContent>
           <StyledHelpDescription>
-            <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>
-            <StyledErrorH4>{error.code}</StyledErrorH4>
+            {depth === 0 && (
+              <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>
+            )}
+            <StyledErrorH4>{formattedError.title}</StyledErrorH4>
           </StyledHelpDescription>
-          <StyledDiv>
-            <StyledPreformattedArea data-testid={'cypherFrameErrorMessage'}>
-              {fullError.message}
-            </StyledPreformattedArea>
-          </StyledDiv>
+          {formattedError.description && (
+            <StyledDiv>
+              <StyledPreformattedArea data-testid={'cypherFrameErrorMessage'}>
+                {formattedError?.description}
+              </StyledPreformattedArea>
+            </StyledDiv>
+          )}
+          {formattedError.innerError && (
+            <ErrorsView result={formattedError.innerError} depth={depth + 1} />
+          )}
           {isUnknownProcedureError(error) && (
             <StyledLinkContainer>
               <StyledLink
@@ -149,7 +171,8 @@ class ErrorsViewComponent extends Component<ErrorsViewProps> {
 const mapStateToProps = (state: GlobalState) => {
   return {
     params: getParams(state),
-    neo4jVersion: getSemanticVersion(state)
+    neo4jVersion: getSemanticVersion(state),
+    protocolVersion: getProtocolVersion(state)
   }
 }
 const mapDispatchToProps = (

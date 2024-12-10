@@ -219,6 +219,7 @@ export default {
   backgroundWorkerlessRoutedRead,
   quickVerifyConnectivity: boltConnection.quickVerifyConnectivity,
   hasMultiDbSupport: boltConnection.hasMultiDbSupport,
+  protocolVersion: boltConnection.protocolVersion,
   useDb: (db: any) => (_useDb = db),
   directConnect: boltConnection.directConnect,
   openConnection,

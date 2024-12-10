@@ -102,6 +102,7 @@ export type Connection = {
   SSOError?: string
   SSOProviders?: SSOProvider[]
   attemptSSOLogin?: boolean
+  protocolVersion?: number | null
 }
 
 export const initialState: ConnectionReduxState = {
@@ -194,6 +195,11 @@ export function getConnectionData(
   }
 
   return { ...data, username: data.username ? data.username : memoryUsername }
+}
+
+export function getProtocolVersion(state: GlobalState): number | null {
+  const currentConnection = getActiveConnectionData(state)
+  return currentConnection?.protocolVersion ?? null
 }
 
 const removeConnectionHelper = (
@@ -410,6 +416,16 @@ export const connectEpic = (action$: any, store: any) =>
           if (!e.code || isBoltConnectionErrorCode(e.code)) {
             throw e
           }
+        }
+
+        const protocolVersion = await bolt.protocolVersion()
+        if (protocolVersion) {
+          store.dispatch(
+            updateConnection({
+              id: action.id,
+              protocolVersion
+            })
+          )
         }
 
         if (action.requestedUseDb) {
@@ -695,9 +711,8 @@ export const connectionLostEpic = (action$: any, store: any) =>
                 )?.SSOProviders
                 if (SSOProviders) {
                   try {
-                    const credentials = await handleRefreshingToken(
-                      SSOProviders
-                    )
+                    const credentials =
+                      await handleRefreshingToken(SSOProviders)
                     store.dispatch(
                       discovery.updateDiscoveryConnection(credentials)
                     )
