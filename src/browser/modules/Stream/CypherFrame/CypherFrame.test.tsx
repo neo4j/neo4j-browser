@@ -28,6 +28,8 @@ import {
   BrowserRequestResult
 } from 'shared/modules/requests/requestsDuck'
 
+import { initialState as initialExperimentalFeatureState } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
+
 const createProps = (
   status: string,
   result: BrowserRequestResult
@@ -63,7 +65,8 @@ describe('CypherFrame', () => {
         maxFieldItems: 1000
       },
       app: {},
-      connections: {}
+      connections: {},
+      experimentalFeatures: initialExperimentalFeatureState
     })
   }
   test('renders accordingly from pending to success to error to success', () => {

@@ -41,7 +41,10 @@ export function isBrowserError(object: unknown): object is BrowserError {
 type FormattedError = {
   title?: string
   description?: string
-  innerError?: BrowserError
+  innerError?: Pick<
+    BrowserError,
+    'gqlStatus' | 'gqlStatusDescription' | 'cause'
+  >
 }
 
 const mapBrowserErrorToFormattedError = (
@@ -61,7 +64,7 @@ const mapBrowserErrorToFormattedError = (
   }
 }
 
-const hasPopulatedGqlFields = (
+export const hasPopulatedGqlFields = (
   error: BrowserError | Error
 ): error is BrowserError & {
   gqlStatus: string
@@ -77,28 +80,20 @@ const hasPopulatedGqlFields = (
   )
 }
 
-export const formatError = (
-  protocolVersion: number | null,
+export const formatErrorGqlStatusObject = (
   error: BrowserError
-): FormattedError | undefined => {
-  if (isBrowserError(error)) {
-    if (
-      protocolVersion !== null &&
-      protocolVersion >= 5.7 &&
-      hasPopulatedGqlFields(error)
-    ) {
-      return {
-        ...mapBrowserErrorToFormattedError(error),
-        innerError: error.cause
-      }
-    }
-
-    const { code: title, message: description } = error
-    return {
-      title,
-      description
-    }
+): FormattedError => {
+  return {
+    ...mapBrowserErrorToFormattedError(error),
+    innerError: error.cause
   }
+}
 
-  return undefined
+export const formatError = (error: BrowserError): FormattedError => {
+  const { code: title, message: description } = error
+
+  return {
+    title,
+    description
+  }
 }

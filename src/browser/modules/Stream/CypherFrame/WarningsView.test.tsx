@@ -20,171 +20,237 @@
 import { render } from '@testing-library/react'
 import React from 'react'
 
-import { WarningsView } from './WarningsView'
+import { WarningsView, WarningsViewProps } from './WarningsView'
+import { Provider } from 'react-redux'
 
-describe('WarningsViews', () => {
-  describe('WarningsView', () => {
-    test('displays nothing if no notifications', () => {
-      // Given
-      const props = {
-        result: {}
-      }
+import { initialState as initialConnectionsState } from 'shared/modules/connections/connectionsDuck'
+import { initialState as initialExperimentalFeatureState } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
+import { createBus } from 'suber'
+import { DeepPartial } from 'shared/utils/deepPartial'
+import { notificationFilterMinimumSeverityLevel } from 'neo4j-driver-core'
 
-      // When
-      const { container } = render(<WarningsView {...props} />)
+const withProvider = (store: any, children: any) => {
+  return <Provider store={store}>{children}</Provider>
+}
 
-      // Then
-      expect(container).toMatchSnapshot()
+const mount = (props: DeepPartial<WarningsViewProps>, state?: any) => {
+  const defaultProps: WarningsViewProps = {
+    result: null,
+    bus: createBus(),
+    gqlWarningsEnabled: false
+  }
+
+  const combinedProps = {
+    ...defaultProps,
+    ...props
+  }
+
+  const initialState = {
+    settings: {
+      maxRows: 1000,
+      maxFieldItems: 1000
+    },
+    app: {},
+    connections: initialConnectionsState,
+    experimentalFeatures: initialExperimentalFeatureState
+  }
+
+  const combinedState = { ...initialState, ...state }
+
+  const store = {
+    subscribe: () => {},
+    dispatch: () => {},
+    getState: () => ({
+      ...combinedState
     })
+  }
 
-    test('does displays a warning', () => {
-      // Given
-      const props = {
-        result: {
-          summary: {
-            notifications: [
-              {
-                severity: 'WARNING',
-                title: 'My xx1 warning',
-                description: 'This is xx2 warning',
-                position: {
-                  offset: 7,
-                  line: 1
-                },
-                code: 'xx3.Warning'
-              }
-            ],
-            query: {
-              text: 'EXPLAIN MATCH xx3'
-            }
-          }
-        }
-      }
+  return render(withProvider(store, <WarningsView {...combinedProps} />))
+}
 
-      // When
-      const { container } = render(<WarningsView {...props} />)
+describe('WarningsView', () => {
+  test('displays nothing if no notifications', () => {
+    // Given
+    const props = {
+      result: null
+    }
 
-      // Then
-      expect(container).toMatchSnapshot()
-    })
+    // When
+    const { container } = mount(props)
 
-    test('does display a warning for GQL status codes', () => {
-      // Given
-      const props = {
-        result: {
-          summary: {
-            server: {
-              protocolVersion: 5.6
-            },
-            gqlStatusObjects: [
-              {
-                severity: 'WARNING',
-                gqlStatus: '03N90',
-                statusDescription:
-                  "info: cartesian product. The disconnected pattern 'p = ()--(), q = ()--()' builds a cartesian product. A cartesian product may produce a large amount of data and slow down query processing.",
-                position: {
-                  offset: 7,
-                  line: 1
-                }
-              }
-            ],
-            query: {
-              text: 'MATCH p=()--(), q=()--() RETURN p, q'
-            }
-          }
-        }
-      }
+    // Then
+    expect(container).toMatchSnapshot()
+  })
 
-      // When
-      const { container } = render(<WarningsView {...props} />)
-
-      // Then
-      expect(container).toMatchSnapshot()
-    })
-
-    test('does display multiple warnings', () => {
-      // Given
-      const props = {
-        result: {
-          summary: {
-            notifications: [
-              {
-                severity: 'WARNING',
-                title: 'My xx1 warning',
-                description: 'This is xx2 warning',
-                position: {
-                  offset: 7,
-                  line: 1
-                },
-                code: 'xx3.Warning'
+  test('does displays a warning', () => {
+    // Given
+    const props = {
+      result: {
+        summary: {
+          notifications: [
+            {
+              severity: 'WARNING',
+              title: 'My xx1 warning',
+              description: 'This is xx2 warning',
+              position: {
+                offset: 7,
+                line: 1
               },
-              {
-                severity: 'WARNING',
-                title: 'My yy1 warning',
-                description: 'This is yy2 warning',
-                position: {
-                  offset: 3,
-                  line: 1
-                },
-                code: 'yy3.Warning'
-              }
-            ],
-            query: {
-              text: 'EXPLAIN MATCH zz3'
+              code: 'xx3.Warning'
             }
+          ],
+          query: {
+            text: 'EXPLAIN MATCH xx3'
           }
         }
       }
+    }
 
-      // When
-      const { container } = render(<WarningsView {...props} />)
+    // When
+    const { container } = mount(props)
 
-      // Then
-      expect(container).toMatchSnapshot()
-    })
+    // Then
+    expect(container).toMatchSnapshot()
+  })
 
-    test('does display multiple warnings for GQL status codes', () => {
-      // Given
-      const props = {
-        result: {
-          summary: {
-            server: {
-              protocolVersion: 5.6
-            },
-            gqlStatusObjects: [
-              {
-                severity: 'WARNING',
-                gqlStatus: '03N90',
-                statusDescription:
-                  "info: cartesian product. The disconnected pattern 'p = ()--(), q = ()--()' builds a cartesian product. A cartesian product may produce a large amount of data and slow down query processing.",
-                position: {
-                  offset: 7,
-                  line: 1
-                }
+  test('does display a warning for GQL status codes', () => {
+    // Given
+    const props = {
+      result: {
+        summary: {
+          server: {
+            protocolVersion: 5.6
+          },
+          gqlStatusObjects: [
+            {
+              severity: notificationFilterMinimumSeverityLevel.WARNING,
+              gqlStatus: '03N90',
+              statusDescription:
+                "info: cartesian product. The disconnected pattern 'p = ()--(), q = ()--()' builds a cartesian product. A cartesian product may produce a large amount of data and slow down query processing.",
+              position: {
+                offset: 7,
+                line: 1
+              }
+            }
+          ],
+          query: {
+            text: 'MATCH p=()--(), q=()--() RETURN p, q'
+          }
+        }
+      }
+    }
+
+    const state = {
+      connections: {
+        activeConnection: 'test',
+        connectionsById: {
+          test: {
+            protocolVersion: 5.6
+          }
+        }
+      }
+    }
+
+    // When
+    const { container } = mount(props, state)
+
+    // Then
+    expect(container).toMatchSnapshot()
+  })
+
+  test('does display multiple warnings', () => {
+    // Given
+    const props = {
+      result: {
+        summary: {
+          notifications: [
+            {
+              severity: 'WARNING',
+              title: 'My xx1 warning',
+              description: 'This is xx2 warning',
+              position: {
+                offset: 7,
+                line: 1
               },
-              {
-                severity: 'WARNING',
-                gqlStatus: '01N50',
-                statusDescription:
-                  'warn: label does not exist. The label `A` does not exist. Verify that the spelling is correct.',
-                position: {
-                  offset: 3,
-                  line: 1
-                }
-              }
-            ],
-            query: {
-              text: 'MATCH p=()--(), q=()--() RETURN p, q'
+              code: 'xx3.Warning'
+            },
+            {
+              severity: 'WARNING',
+              title: 'My yy1 warning',
+              description: 'This is yy2 warning',
+              position: {
+                offset: 3,
+                line: 1
+              },
+              code: 'yy3.Warning'
             }
+          ],
+          query: {
+            text: 'EXPLAIN MATCH zz3'
           }
         }
       }
+    }
 
-      // When
-      const { container } = render(<WarningsView {...props} />)
+    // When
+    const { container } = mount(props)
 
-      // Then
-      expect(container).toMatchSnapshot()
-    })
+    // Then
+    expect(container).toMatchSnapshot()
+  })
+
+  test('does display multiple warnings for GQL status codes', () => {
+    // Given
+    const props = {
+      result: {
+        summary: {
+          server: {
+            protocolVersion: 5.6
+          },
+          gqlStatusObjects: [
+            {
+              severity: notificationFilterMinimumSeverityLevel.WARNING,
+              gqlStatus: '03N90',
+              statusDescription:
+                "info: cartesian product. The disconnected pattern 'p = ()--(), q = ()--()' builds a cartesian product. A cartesian product may produce a large amount of data and slow down query processing.",
+              position: {
+                offset: 7,
+                line: 1
+              }
+            },
+            {
+              severity: notificationFilterMinimumSeverityLevel.WARNING,
+              gqlStatus: '01N50',
+              statusDescription:
+                'warn: label does not exist. The label `A` does not exist. Verify that the spelling is correct.',
+              position: {
+                offset: 3,
+                line: 1
+              }
+            }
+          ],
+          query: {
+            text: 'MATCH p=()--(), q=()--() RETURN p, q'
+          }
+        }
+      }
+    }
+
+    const state = {
+      connections: {
+        activeConnection: 'test',
+        connectionsById: {
+          test: {
+            protocolVersion: 5.6
+          }
+        }
+      }
+    }
+
+    // When
+    const { container } = mount(props, state)
+
+    // Then
+    expect(container).toMatchSnapshot()
   })
 })

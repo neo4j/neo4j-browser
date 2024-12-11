@@ -25,12 +25,13 @@ import { ErrorsView, ErrorsViewProps } from './ErrorsView'
 import { BrowserError } from 'services/exceptions'
 import { Provider } from 'react-redux'
 import { initialState as initialConnectionsState } from 'shared/modules/connections/connectionsDuck'
+import { initialState as initialExperimentalFeatureState } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
 
 const withProvider = (store: any, children: any) => {
   return <Provider store={store}>{children}</Provider>
 }
 
-const mount = (partOfProps: Partial<ErrorsViewProps>, state?: any) => {
+const mount = (props: Partial<ErrorsViewProps>, state?: any) => {
   const defaultProps: ErrorsViewProps = {
     result: null,
     bus: createBus(),
@@ -38,27 +39,30 @@ const mount = (partOfProps: Partial<ErrorsViewProps>, state?: any) => {
     executeCmd: jest.fn(),
     setEditorContent: jest.fn(),
     neo4jVersion: null,
-    protocolVersion: null
+    gqlErrorsEnabled: true
   }
 
-  const props = {
+  const combinedProps = {
     ...defaultProps,
-    ...partOfProps
+    ...props
   }
 
-  state = state ?? {
-    connections: initialConnectionsState
+  const initialState = {
+    connections: initialConnectionsState,
+    experimentalFeatures: initialExperimentalFeatureState
   }
+
+  const combinedState = { ...initialState, ...state }
 
   const store = {
     subscribe: () => {},
     dispatch: () => {},
     getState: () => ({
-      ...state
+      ...combinedState
     })
   }
 
-  return render(withProvider(store, <ErrorsView {...props} />))
+  return render(withProvider(store, <ErrorsView {...combinedProps} />))
 }
 
 describe('ErrorsView', () => {
@@ -117,6 +121,11 @@ describe('ErrorsView', () => {
             protocolVersion: 5.7
           }
         }
+      },
+      experimentalFeatures: {
+        enableGqlErrors: {
+          on: true
+        }
       }
     }
 
@@ -159,6 +168,11 @@ describe('ErrorsView', () => {
           test: {
             protocolVersion: 5.7
           }
+        }
+      },
+      experimentalFeatures: {
+        enableGqlErrors: {
+          on: true
         }
       }
     }

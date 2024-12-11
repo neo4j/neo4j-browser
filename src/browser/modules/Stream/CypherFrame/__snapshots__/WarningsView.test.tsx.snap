@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`WarningsViews WarningsView displays nothing if no notifications 1`] = `<div />`;
+exports[`WarningsView displays nothing if no notifications 1`] = `<div />`;
 
-exports[`WarningsViews WarningsView does display a warning for GQL status codes 1`] = `
+exports[`WarningsView does display a warning for GQL status codes 1`] = `
 <div>
   <div
     class="sc-hGPBjI kgdIGh"
@@ -52,7 +52,7 @@ exports[`WarningsViews WarningsView does display a warning for GQL status codes 
 </div>
 `;
 
-exports[`WarningsViews WarningsView does display multiple warnings 1`] = `
+exports[`WarningsView does display multiple warnings 1`] = `
 <div>
   <div
     class="sc-hGPBjI kgdIGh"
@@ -165,7 +165,7 @@ exports[`WarningsViews WarningsView does display multiple warnings 1`] = `
 </div>
 `;
 
-exports[`WarningsViews WarningsView does display multiple warnings for GQL status codes 1`] = `
+exports[`WarningsView does display multiple warnings for GQL status codes 1`] = `
 <div>
   <div
     class="sc-hGPBjI kgdIGh"
@@ -256,7 +256,7 @@ exports[`WarningsViews WarningsView does display multiple warnings for GQL statu
 </div>
 `;
 
-exports[`WarningsViews WarningsView does displays a warning 1`] = `
+exports[`WarningsView does displays a warning 1`] = `
 <div>
   <div
     class="sc-hGPBjI kgdIGh"

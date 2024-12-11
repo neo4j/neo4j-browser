@@ -59,17 +59,25 @@ import { deepEquals } from 'neo4j-arc/common'
 import { getSemanticVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 import { SemVer } from 'semver'
 import { getProtocolVersion } from 'shared/modules/connections/connectionsDuck'
-import { formatError } from '../errorUtils'
+import {
+  formatError,
+  formatErrorGqlStatusObject,
+  hasPopulatedGqlFields
+} from '../errorUtils'
+import {
+  enableGqlErrors,
+  showFeature
+} from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
 
 export type ErrorsViewProps = {
   result: BrowserRequestResult
   bus: Bus
   neo4jVersion: SemVer | null
-  protocolVersion: number | null
   params: Record<string, unknown>
   executeCmd: (cmd: string) => void
   setEditorContent: (cmd: string) => void
   depth?: number
+  gqlErrorsEnabled: boolean
 }
 
 class ErrorsViewComponent extends Component<ErrorsViewProps> {
@@ -87,8 +95,8 @@ class ErrorsViewComponent extends Component<ErrorsViewProps> {
       executeCmd,
       setEditorContent,
       neo4jVersion,
-      protocolVersion,
-      depth = 0
+      depth = 0,
+      gqlErrorsEnabled
     } = this.props
 
     const error = this.props.result as BrowserError
@@ -96,7 +104,10 @@ class ErrorsViewComponent extends Component<ErrorsViewProps> {
       return null
     }
 
-    const formattedError = formatError(protocolVersion, error)
+    const formattedError =
+      gqlErrorsEnabled && hasPopulatedGqlFields(error)
+        ? formatErrorGqlStatusObject(error)
+        : formatError(error)
 
     if (!formattedError?.title) {
       return null
@@ -168,13 +179,20 @@ class ErrorsViewComponent extends Component<ErrorsViewProps> {
   }
 }
 
-const mapStateToProps = (state: GlobalState) => {
-  return {
-    params: getParams(state),
-    neo4jVersion: getSemanticVersion(state),
-    protocolVersion: getProtocolVersion(state)
-  }
+const gqlErrorsEnabled = (state: GlobalState): boolean => {
+  const featureEnabled = showFeature(state, enableGqlErrors)
+  const protocolVersion = getProtocolVersion(state)
+  const protocolVersionSupported =
+    protocolVersion !== null && protocolVersion >= 5.7
+  return featureEnabled && protocolVersionSupported
 }
+
+const mapStateToProps = (state: GlobalState) => ({
+  params: getParams(state),
+  neo4jVersion: getSemanticVersion(state),
+  gqlErrorsEnabled: gqlErrorsEnabled(state)
+})
+
 const mapDispatchToProps = (
   _dispatch: Dispatch<Action>,
   ownProps: ErrorsViewProps

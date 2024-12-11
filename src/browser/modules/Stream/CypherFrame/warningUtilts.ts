@@ -73,22 +73,24 @@ const mapNotificationsToFormattedNotifications = (
   }))
 }
 
-export const formatNotificationsFromSummary = (
-  resultSummary: Partial<ResultSummary>
-): FormattedNotification[] => {
-  const { protocolVersion } = resultSummary.server ?? {}
-  const severityLevels = ['ERROR', 'WARNING', 'INFORMATION']
-  if (protocolVersion === undefined || protocolVersion < 5.6) {
-    const filteredNotifications =
-      resultSummary.notifications?.filter(x =>
-        severityLevels.includes(x.severity)
-      ) ?? []
-    return mapNotificationsToFormattedNotifications(filteredNotifications)
-  }
+const SEVERITY_LEVELS = ['ERROR', 'WARNING', 'INFORMATION']
 
+export const formatSummaryFromNotifications = (
+  resultSummary?: Partial<ResultSummary>
+): FormattedNotification[] => {
+  const filteredNotifications =
+    resultSummary?.notifications?.filter(x =>
+      SEVERITY_LEVELS.includes(x.severity)
+    ) ?? []
+  return mapNotificationsToFormattedNotifications(filteredNotifications)
+}
+
+export const formatSummaryFromGqlStatusObjects = (
+  resultSummary?: Partial<ResultSummary>
+): FormattedNotification[] => {
   const filteredStatusObjects =
-    resultSummary.gqlStatusObjects?.filter(x =>
-      severityLevels.includes(x.severity)
+    resultSummary?.gqlStatusObjects?.filter(x =>
+      SEVERITY_LEVELS.includes(x.severity)
     ) ?? []
   return mapGqlStatusObjectsToFormattedNotifications(filteredStatusObjects)
 }

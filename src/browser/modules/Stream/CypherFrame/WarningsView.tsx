@@ -35,10 +35,16 @@ import {
 } from '../styled'
 import { deepEquals } from 'neo4j-arc/common'
 import {
-  formatNotificationsFromSummary,
+  formatSummaryFromGqlStatusObjects,
+  formatSummaryFromNotifications,
   FormattedNotification
 } from './warningUtilts'
-import { NotificationSeverityLevel } from 'neo4j-driver-core'
+import { NotificationSeverityLevel, QueryResult } from 'neo4j-driver-core'
+import { connect } from 'react-redux'
+import { withBus } from 'react-suber'
+import { GlobalState } from 'shared/globalState'
+import { getProtocolVersion } from 'shared/modules/connections/connectionsDuck'
+import { Bus } from 'suber'
 
 const getWarningComponent = (severity?: string | NotificationSeverityLevel) => {
   if (severity === 'ERROR') {
@@ -52,21 +58,36 @@ const getWarningComponent = (severity?: string | NotificationSeverityLevel) => {
   }
 }
 
-export class WarningsView extends Component<any> {
-  shouldComponentUpdate(props: any) {
+export type WarningsViewProps = {
+  result?: QueryResult | null
+  bus: Bus
+  gqlWarningsEnabled: boolean
+}
+
+class WarningsViewComponent extends Component<WarningsViewProps> {
+  shouldComponentUpdate(props: WarningsViewProps) {
     if (!this.props.result) return true
-    return !deepEquals(props.result.summary, this.props.result.summary)
+    return !deepEquals(props.result?.summary, this.props.result.summary)
   }
 
   render() {
-    if (this.props.result === undefined) return null
-    const { summary = {} } = this.props.result
-    const { query = {} } = summary
-    const notifications = formatNotificationsFromSummary(summary)
-    const { text: cypher = '' } = query
+    if (
+      this.props.result === undefined ||
+      this.props.result === null ||
+      this.props.result.summary === undefined
+    )
+      return null
+
+    const { summary } = this.props.result
+    const notifications = this.props.gqlWarningsEnabled
+      ? formatSummaryFromGqlStatusObjects(summary)
+      : formatSummaryFromNotifications(summary)
+    const { text: cypher = '' } = summary.query
+
     if (!notifications || !cypher) {
       return null
     }
+
     const cypherLines = cypher.split('\n')
     const notificationsList = notifications.map(
       (notification: FormattedNotification) => {
@@ -105,6 +126,21 @@ export class WarningsView extends Component<any> {
     return <StyledHelpFrame>{notificationsList}</StyledHelpFrame>
   }
 }
+
+const gqlWarningsEnabled = (state: GlobalState): boolean => {
+  const protocolVersion = getProtocolVersion(state)
+  const protocolVersionSupported =
+    protocolVersion !== null && protocolVersion >= 5.6
+  return protocolVersionSupported
+}
+
+const mapStateToProps = (state: GlobalState) => ({
+  gqlWarningsEnabled: gqlWarningsEnabled(state)
+})
+
+export const WarningsView = withBus(
+  connect(mapStateToProps, null)(WarningsViewComponent)
+)
 
 export class WarningsStatusbar extends Component<any> {
   shouldComponentUpdate() {

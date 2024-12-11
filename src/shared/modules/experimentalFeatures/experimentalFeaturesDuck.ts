@@ -9,6 +9,7 @@ export const showFeature = (state: any, name: any) =>
   !!(state[NAME][name] || {}).on
 
 export const experimentalFeatureSelfName = 'showSelf'
+export const enableGqlErrors = 'enableGqlErrors'
 
 export const initialState = {
   [experimentalFeatureSelfName]: {
@@ -16,6 +17,12 @@ export const initialState = {
     on: true,
     displayName: 'Show experimental features',
     tooltip: 'Show feature section in settings drawer'
+  },
+  [enableGqlErrors]: {
+    name: enableGqlErrors,
+    on: false,
+    displayName: 'Enable GQL errors',
+    tooltip: 'Enables GQL compliant errors'
   }
 }
 
