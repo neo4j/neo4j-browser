@@ -22,7 +22,7 @@ export const initialState = {
     name: enableGqlErrors,
     on: false,
     displayName: 'Enable GQL errors',
-    tooltip: 'Enables GQL compliant errors'
+    tooltip: 'Enables GQL compliant errors for servers that support them'
   }
 }
 
