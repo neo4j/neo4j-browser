@@ -49,8 +49,10 @@ export const DottedLineHover = styled.span`
   text-overflow: ellipsis;
 `
 
-export const StyledHelpFrame = styled.div`
-  padding: 30px;
+export const StyledHelpFrame = styled.div<{ nested?: boolean }>`
+  padding: 0 30px 30px 0;
+  padding-top: ${props => (props.nested ? '0' : '30px')};
+  padding-left: ${props => (props.nested ? '80px' : '30px')};
 `
 export const StyledHelpContent = styled.div`
   padding-top: 10px;
@@ -100,6 +102,8 @@ export const StyledCypherErrorMessage = styled(StyledCypherMessage)`
   background-color: ${props => props.theme.error};
   color: #ffffff;
   display: inline-block;
+  position: relative;
+  top: -4px;
 `
 
 export const StyledCypherSuccessMessage = styled(StyledCypherMessage)`

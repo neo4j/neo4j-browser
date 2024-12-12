@@ -32,7 +32,14 @@ export type ErrorType =
   | 'DatabaseNotFoundError'
   | 'DatabaseUnavailableError'
 
-export type BrowserError = { type: ErrorType; message: string; code: string }
+export type BrowserError = {
+  type: ErrorType
+  message: string
+  code: string
+  gqlStatus?: string
+  gqlStatusDescription?: string
+  cause?: Pick<BrowserError, 'gqlStatus' | 'gqlStatusDescription' | 'cause'>
+}
 
 // All errors except bolt errors have their type as their error code
 export function BoltConnectionError(): BrowserError {

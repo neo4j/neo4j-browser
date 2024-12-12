@@ -695,9 +695,8 @@ export const connectionLostEpic = (action$: any, store: any) =>
                 )?.SSOProviders
                 if (SSOProviders) {
                   try {
-                    const credentials = await handleRefreshingToken(
-                      SSOProviders
-                    )
+                    const credentials =
+                      await handleRefreshingToken(SSOProviders)
                     store.dispatch(
                       discovery.updateDiscoveryConnection(credentials)
                     )

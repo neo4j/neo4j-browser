@@ -94,6 +94,8 @@ export const getAllowUserStats = (state: GlobalState): boolean =>
   state[NAME].allowUserStats ?? initialState.allowUserStats
 export const shouldShowWheelZoomInfo = (state: GlobalState) =>
   state[NAME].showWheelZoomInfo
+export const shouldShowGqlErrorsAndNotifications = (state: any) =>
+  state[NAME].enableGqlErrorsAndNotifications
 
 // Ideally the string | number types would be only numbers
 // but they're saved as strings in the settings component

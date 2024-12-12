@@ -136,7 +136,13 @@ export const handleBoltWorkerMessage =
           runningCypherQuery = false
           execCloseConnectionQueue()
           postMessage(
-            maybeCypherErrorMessage({ code: err.code, message: err.message })
+            maybeCypherErrorMessage({
+              code: err.code,
+              message: err.message,
+              gqlStatus: err.gqlStatus,
+              gqlStatusDescription: err.gqlStatusDescription,
+              cause: err.cause
+            })
           )
         })
     } else if (messageType === CANCEL_TRANSACTION_MESSAGE) {
@@ -150,7 +156,10 @@ export const handleBoltWorkerMessage =
       postMessage(
         cypherErrorMessage({
           code: -1,
-          message: `Unknown message to Bolt Worker: ${messageType}`
+          message: `Unknown message to Bolt Worker: ${messageType}`,
+          gqlStatus: null,
+          gqlStatusDescription: null,
+          cause: null
         })
       )
     }

@@ -63,13 +63,28 @@ export const cypherResponseMessage = (result: unknown): AnyAction => {
   }
 }
 
-export const cypherErrorMessage = (error: {
+type CypherError = {
   code: number
   message: string
-}): AnyAction => {
+  gqlStatus: string | null
+  gqlStatusDescription: string | null
+  cause: CypherError | null
+}
+
+const flattenError = (error: CypherError): CypherError => {
+  return {
+    code: error.code,
+    message: error.message,
+    gqlStatus: error.gqlStatus,
+    gqlStatusDescription: error.gqlStatusDescription,
+    cause: error.cause ? flattenError(error.cause) : null
+  }
+}
+
+export const cypherErrorMessage = (error: CypherError): AnyAction => {
   return {
     type: CYPHER_ERROR_MESSAGE,
-    error
+    error: flattenError(error)
   }
 }
 

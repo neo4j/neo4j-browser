@@ -34,8 +34,22 @@ import {
   StyledCypherInfoMessage
 } from '../styled'
 import { deepEquals } from 'neo4j-arc/common'
+import {
+  formatSummaryFromGqlStatusObjects,
+  formatSummaryFromNotifications,
+  FormattedNotification
+} from './warningUtilts'
+import { NotificationSeverityLevel, QueryResult } from 'neo4j-driver-core'
+import { connect } from 'react-redux'
+import { withBus } from 'react-suber'
+import { GlobalState } from 'shared/globalState'
+import { Bus } from 'suber'
+import { getSemanticVersion } from 'shared/modules/dbMeta/dbMetaDuck'
+import { gte } from 'semver'
+import { FIRST_GQL_NOTIFICATIONS_SUPPORT } from 'shared/modules/features/versionedFeatures'
+import { shouldShowGqlErrorsAndNotifications } from 'shared/modules/settings/settingsDuck'
 
-const getWarningComponent = (severity: any) => {
+const getWarningComponent = (severity?: string | NotificationSeverityLevel) => {
   if (severity === 'ERROR') {
     return <StyledCypherErrorMessage>{severity}</StyledCypherErrorMessage>
   } else if (severity === 'WARNING') {
@@ -47,55 +61,90 @@ const getWarningComponent = (severity: any) => {
   }
 }
 
-export class WarningsView extends Component<any> {
-  shouldComponentUpdate(props: any) {
+export type WarningsViewProps = {
+  result?: QueryResult | null
+  bus: Bus
+  gqlWarningsEnabled: boolean
+}
+
+class WarningsViewComponent extends Component<WarningsViewProps> {
+  shouldComponentUpdate(props: WarningsViewProps) {
     if (!this.props.result) return true
-    return !deepEquals(props.result.summary, this.props.result.summary)
+    return !deepEquals(props.result?.summary, this.props.result.summary)
   }
 
   render() {
-    if (this.props.result === undefined) return null
-    const { summary = {} } = this.props.result
-    const { notifications = [], query = {} } = summary
-    const { text: cypher = '' } = query
+    if (
+      this.props.result === undefined ||
+      this.props.result === null ||
+      this.props.result.summary === undefined
+    )
+      return null
+
+    const { summary } = this.props.result
+    const notifications = this.props.gqlWarningsEnabled
+      ? formatSummaryFromGqlStatusObjects(summary)
+      : formatSummaryFromNotifications(summary)
+    const { text: cypher = '' } = summary.query
+
     if (!notifications || !cypher) {
       return null
     }
+
     const cypherLines = cypher.split('\n')
-    const notificationsList = notifications.map((notification: any) => {
-      // Detect generic warning without position information
-      const position = Object.keys(notification.position).length
-        ? notification.position
-        : { line: 1, offset: 0 }
-      return (
-        <StyledHelpContent
-          key={notification.title + position.line + position.offset}
-        >
-          <StyledHelpDescription>
-            {getWarningComponent(notification.severity)}
-            <StyledH4>{notification.title}</StyledH4>
-          </StyledHelpDescription>
-          <StyledDiv>
+    const notificationsList = notifications.map(
+      (notification: FormattedNotification) => {
+        // Detect generic warning without position information
+        const { code, description, severity } = notification
+        const position = notification.position ?? { line: 1, offset: 0 }
+        const title = notification.title ?? ''
+        const line = position.line ?? 1
+        const offset = position.offset ?? 0
+
+        return (
+          <StyledHelpContent key={title + line + position.offset}>
             <StyledHelpDescription>
-              {notification.description}
+              {getWarningComponent(severity)}
+              <StyledH4>{title}</StyledH4>
             </StyledHelpDescription>
             <StyledDiv>
-              <StyledPreformattedArea>
-                {cypherLines[position.line - 1]}
-                <StyledBr />
-                {Array(position.offset + 1).join(' ')}^
-              </StyledPreformattedArea>
+              <StyledHelpDescription>{description}</StyledHelpDescription>
+              <StyledDiv>
+                <StyledPreformattedArea>
+                  {cypherLines[line - 1]}
+                  <StyledBr />
+                  {Array(offset + 1).join(' ')}^
+                </StyledPreformattedArea>
+              </StyledDiv>
             </StyledDiv>
-          </StyledDiv>
-          <StyledDiv style={{ marginTop: '10px' }}>
-            Status code: <StyledCode>{notification.code}</StyledCode>
-          </StyledDiv>
-        </StyledHelpContent>
-      )
-    })
+            {code && (
+              <StyledDiv style={{ marginTop: '10px' }}>
+                Status code: <StyledCode>{code}</StyledCode>
+              </StyledDiv>
+            )}
+          </StyledHelpContent>
+        )
+      }
+    )
     return <StyledHelpFrame>{notificationsList}</StyledHelpFrame>
   }
 }
+
+const gqlWarningsEnabled = (state: GlobalState): boolean => {
+  const featureEnabled = shouldShowGqlErrorsAndNotifications(state)
+  const version = getSemanticVersion(state)
+  return version
+    ? featureEnabled && gte(version, FIRST_GQL_NOTIFICATIONS_SUPPORT)
+    : false
+}
+
+const mapStateToProps = (state: GlobalState) => ({
+  gqlWarningsEnabled: gqlWarningsEnabled(state)
+})
+
+export const WarningsView = withBus(
+  connect(mapStateToProps, null)(WarningsViewComponent)
+)
 
 export class WarningsStatusbar extends Component<any> {
   shouldComponentUpdate() {
