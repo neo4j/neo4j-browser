@@ -23,8 +23,8 @@ import React from 'react'
 import { WarningsView, WarningsViewProps } from './WarningsView'
 import { Provider } from 'react-redux'
 
-import { initialState as initialConnectionsState } from 'shared/modules/connections/connectionsDuck'
-import { initialState as initialExperimentalFeatureState } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
+import { initialState as initialMetaState } from 'shared/modules/dbMeta/dbMetaDuck'
+import { initialState as initialSettingsState } from 'shared/modules/settings/settingsDuck'
 import { createBus } from 'suber'
 import { DeepPartial } from 'shared/utils/deepPartial'
 import { notificationFilterMinimumSeverityLevel } from 'neo4j-driver-core'
@@ -46,13 +46,9 @@ const mount = (props: DeepPartial<WarningsViewProps>, state?: any) => {
   }
 
   const initialState = {
-    settings: {
-      maxRows: 1000,
-      maxFieldItems: 1000
-    },
     app: {},
-    connections: initialConnectionsState,
-    experimentalFeatures: initialExperimentalFeatureState
+    meta: initialMetaState,
+    settings: initialSettingsState
   }
 
   const combinedState = { ...initialState, ...state }
@@ -82,7 +78,7 @@ describe('WarningsView', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('does displays a warning', () => {
+  test('does display a warning', () => {
     // Given
     const props = {
       result: {
@@ -141,13 +137,13 @@ describe('WarningsView', () => {
     }
 
     const state = {
-      connections: {
-        activeConnection: 'test',
-        connectionsById: {
-          test: {
-            protocolVersion: 5.6
-          }
+      meta: {
+        server: {
+          version: '5.23.0'
         }
+      },
+      settings: {
+        enableGqlErrorsAndNotifications: true
       }
     }
 
@@ -237,13 +233,13 @@ describe('WarningsView', () => {
     }
 
     const state = {
-      connections: {
-        activeConnection: 'test',
-        connectionsById: {
-          test: {
-            protocolVersion: 5.6
-          }
+      meta: {
+        server: {
+          version: '5.23.0'
         }
+      },
+      settings: {
+        enableGqlErrorsAndNotifications: true
       }
     }
 

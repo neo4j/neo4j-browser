@@ -9,7 +9,6 @@ export const showFeature = (state: any, name: any) =>
   !!(state[NAME][name] || {}).on
 
 export const experimentalFeatureSelfName = 'showSelf'
-export const enableGqlErrors = 'enableGqlErrors'
 
 export const initialState = {
   [experimentalFeatureSelfName]: {

@@ -24,8 +24,8 @@ import { createBus } from 'suber'
 import { ErrorsView, ErrorsViewProps } from './ErrorsView'
 import { BrowserError } from 'services/exceptions'
 import { Provider } from 'react-redux'
-import { initialState as initialConnectionsState } from 'shared/modules/connections/connectionsDuck'
-import { initialState as initialExperimentalFeatureState } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
+import { initialState as initialMetaState } from 'shared/modules/dbMeta/dbMetaDuck'
+import { initialState as initialSettingsState } from 'shared/modules/settings/settingsDuck'
 
 const withProvider = (store: any, children: any) => {
   return <Provider store={store}>{children}</Provider>
@@ -48,8 +48,8 @@ const mount = (props: Partial<ErrorsViewProps>, state?: any) => {
   }
 
   const initialState = {
-    connections: initialConnectionsState,
-    experimentalFeatures: initialExperimentalFeatureState
+    meta: initialMetaState,
+    settings: initialSettingsState
   }
 
   const combinedState = { ...initialState, ...state }
@@ -114,18 +114,13 @@ describe('ErrorsView', () => {
     }
 
     const state = {
-      connections: {
-        activeConnection: 'test',
-        connectionsById: {
-          test: {
-            protocolVersion: 5.7
-          }
+      meta: {
+        server: {
+          version: '5.26.0'
         }
       },
-      experimentalFeatures: {
-        enableGqlErrors: {
-          on: true
-        }
+      settings: {
+        enableGqlErrorsAndNotifications: true
       }
     }
 
@@ -162,18 +157,13 @@ describe('ErrorsView', () => {
     }
 
     const state = {
-      connections: {
-        activeConnection: 'test',
-        connectionsById: {
-          test: {
-            protocolVersion: 5.7
-          }
+      meta: {
+        server: {
+          version: '5.26.0'
         }
       },
-      experimentalFeatures: {
-        enableGqlErrors: {
-          on: true
-        }
+      settings: {
+        enableGqlErrorsAndNotifications: true
       }
     }
 
