@@ -17,12 +17,6 @@ export const initialState = {
     on: true,
     displayName: 'Show experimental features',
     tooltip: 'Show feature section in settings drawer'
-  },
-  [enableGqlErrors]: {
-    name: enableGqlErrors,
-    on: false,
-    displayName: 'Enable GQL errors',
-    tooltip: 'Enables GQL compliant errors for servers that support them'
   }
 }
 

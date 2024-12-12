@@ -57,17 +57,14 @@ import {
 import { BrowserError } from 'services/exceptions'
 import { deepEquals } from 'neo4j-arc/common'
 import { getSemanticVersion } from 'shared/modules/dbMeta/dbMetaDuck'
-import { SemVer } from 'semver'
-import { getProtocolVersion } from 'shared/modules/connections/connectionsDuck'
+import { gte, SemVer } from 'semver'
 import {
   formatError,
   formatErrorGqlStatusObject,
   hasPopulatedGqlFields
 } from '../errorUtils'
-import {
-  enableGqlErrors,
-  showFeature
-} from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
+import { FIRST_GQL_ERRORS_SUPPORT } from 'shared/modules/features/versionedFeatures'
+import { shouldShowGqlErrorsAndNotifications } from 'shared/modules/settings/settingsDuck'
 
 export type ErrorsViewProps = {
   result: BrowserRequestResult
@@ -180,11 +177,11 @@ class ErrorsViewComponent extends Component<ErrorsViewProps> {
 }
 
 const gqlErrorsEnabled = (state: GlobalState): boolean => {
-  const featureEnabled = showFeature(state, enableGqlErrors)
-  const protocolVersion = getProtocolVersion(state)
-  const protocolVersionSupported =
-    protocolVersion !== null && protocolVersion >= 5.7
-  return featureEnabled && protocolVersionSupported
+  const featureEnabled = shouldShowGqlErrorsAndNotifications(state)
+  const version = getSemanticVersion(state)
+  return version
+    ? featureEnabled && gte(version, FIRST_GQL_ERRORS_SUPPORT)
+    : false
 }
 
 const mapStateToProps = (state: GlobalState) => ({

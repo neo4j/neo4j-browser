@@ -47,19 +47,6 @@ export const hasMultiDbSupport = async (): Promise<boolean> => {
   return supportsMultiDb
 }
 
-export const protocolVersion = async (): Promise<number> => {
-  if (!getGlobalDrivers()) {
-    throw BoltConnectionError()
-  }
-  const drivers = getGlobalDrivers()
-  const tmpDriver = drivers && drivers.getRoutedDriver()
-  if (!tmpDriver) {
-    throw BoltConnectionError()
-  }
-  const serverInfo = await tmpDriver.getServerInfo()
-  return serverInfo?.protocolVersion ?? -1
-}
-
 export const quickVerifyConnectivity = async (): Promise<void> => {
   if (!getGlobalDrivers()) {
     throw BoltConnectionError()
