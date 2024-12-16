@@ -1,11 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`WarningsViews WarningsView displays nothing if no notifications 1`] = `<div />`;
+exports[`WarningsView displays nothing if no notifications 1`] = `<div />`;
 
-exports[`WarningsViews WarningsView does displays a warning 1`] = `
+exports[`WarningsView does display a warning 1`] = `
 <div>
   <div
-    class="sc-hGPBjI jLpNLK"
+    class="sc-hGPBjI kgdIGh"
   >
     <div
       class="sc-dlVxhl fwhZkz"
@@ -14,9 +14,9 @@ exports[`WarningsViews WarningsView does displays a warning 1`] = `
         class="sc-kfPuZi lgMZCo"
       >
         <div
-          class="sc-cxpSdN cnlYxc"
+          class="sc-cxpSdN sc-llYSUQ cnlYxc eNTkBC"
         >
-          WARNING xx0
+          WARNING
         </div>
         <h4
           class="sc-kLwhqv"
@@ -54,17 +54,19 @@ exports[`WarningsViews WarningsView does displays a warning 1`] = `
         Status code: 
         <code
           class="sc-ZOtfp koHcGf"
-        />
+        >
+          xx3.Warning
+        </code>
       </div>
     </div>
   </div>
 </div>
 `;
 
-exports[`WarningsViews WarningsView does displays multiple warnings 1`] = `
+exports[`WarningsView does display a warning for GQL status codes 1`] = `
 <div>
   <div
-    class="sc-hGPBjI jLpNLK"
+    class="sc-hGPBjI kgdIGh"
   >
     <div
       class="sc-dlVxhl fwhZkz"
@@ -73,9 +75,59 @@ exports[`WarningsViews WarningsView does displays multiple warnings 1`] = `
         class="sc-kfPuZi lgMZCo"
       >
         <div
-          class="sc-cxpSdN cnlYxc"
+          class="sc-cxpSdN sc-llYSUQ cnlYxc eNTkBC"
         >
-          WARNING xx0
+          WARNING
+        </div>
+        <h4
+          class="sc-kLwhqv"
+        >
+          03N90: Cartesian product
+        </h4>
+      </div>
+      <div
+        class="sc-fKVqWL"
+      >
+        <div
+          class="sc-kfPuZi lgMZCo"
+        >
+          The disconnected pattern 'p = ()--(), q = ()--()' builds a cartesian product. A cartesian product may produce a large amount of data and slow down query processing.
+        </div>
+        <div
+          class="sc-fKVqWL"
+        >
+          <pre
+            class="sc-hiCibw jvxLJD"
+          >
+            MATCH p=()--(), q=()--() RETURN p, q
+            <br
+              class="sc-jJoQJp"
+            />
+                   
+            ^
+          </pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`WarningsView does display multiple warnings 1`] = `
+<div>
+  <div
+    class="sc-hGPBjI kgdIGh"
+  >
+    <div
+      class="sc-dlVxhl fwhZkz"
+    >
+      <div
+        class="sc-kfPuZi lgMZCo"
+      >
+        <div
+          class="sc-cxpSdN sc-llYSUQ cnlYxc eNTkBC"
+        >
+          WARNING
         </div>
         <h4
           class="sc-kLwhqv"
@@ -113,7 +165,9 @@ exports[`WarningsViews WarningsView does displays multiple warnings 1`] = `
         Status code: 
         <code
           class="sc-ZOtfp koHcGf"
-        />
+        >
+          xx3.Warning
+        </code>
       </div>
     </div>
     <div
@@ -123,9 +177,9 @@ exports[`WarningsViews WarningsView does displays multiple warnings 1`] = `
         class="sc-kfPuZi lgMZCo"
       >
         <div
-          class="sc-cxpSdN cnlYxc"
+          class="sc-cxpSdN sc-llYSUQ cnlYxc eNTkBC"
         >
-          WARNING yy0
+          WARNING
         </div>
         <h4
           class="sc-kLwhqv"
@@ -163,7 +217,100 @@ exports[`WarningsViews WarningsView does displays multiple warnings 1`] = `
         Status code: 
         <code
           class="sc-ZOtfp koHcGf"
-        />
+        >
+          yy3.Warning
+        </code>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`WarningsView does display multiple warnings for GQL status codes 1`] = `
+<div>
+  <div
+    class="sc-hGPBjI kgdIGh"
+  >
+    <div
+      class="sc-dlVxhl fwhZkz"
+    >
+      <div
+        class="sc-kfPuZi lgMZCo"
+      >
+        <div
+          class="sc-cxpSdN sc-llYSUQ cnlYxc eNTkBC"
+        >
+          WARNING
+        </div>
+        <h4
+          class="sc-kLwhqv"
+        >
+          03N90: Cartesian product
+        </h4>
+      </div>
+      <div
+        class="sc-fKVqWL"
+      >
+        <div
+          class="sc-kfPuZi lgMZCo"
+        >
+          The disconnected pattern 'p = ()--(), q = ()--()' builds a cartesian product. A cartesian product may produce a large amount of data and slow down query processing.
+        </div>
+        <div
+          class="sc-fKVqWL"
+        >
+          <pre
+            class="sc-hiCibw jvxLJD"
+          >
+            MATCH p=()--(), q=()--() RETURN p, q
+            <br
+              class="sc-jJoQJp"
+            />
+                   
+            ^
+          </pre>
+        </div>
+      </div>
+    </div>
+    <div
+      class="sc-dlVxhl fwhZkz"
+    >
+      <div
+        class="sc-kfPuZi lgMZCo"
+      >
+        <div
+          class="sc-cxpSdN sc-llYSUQ cnlYxc eNTkBC"
+        >
+          WARNING
+        </div>
+        <h4
+          class="sc-kLwhqv"
+        >
+          01N50: Label does not exist
+        </h4>
+      </div>
+      <div
+        class="sc-fKVqWL"
+      >
+        <div
+          class="sc-kfPuZi lgMZCo"
+        >
+          The label \`A\` does not exist. Verify that the spelling is correct.
+        </div>
+        <div
+          class="sc-fKVqWL"
+        >
+          <pre
+            class="sc-hiCibw jvxLJD"
+          >
+            MATCH p=()--(), q=()--() RETURN p, q
+            <br
+              class="sc-jJoQJp"
+            />
+               
+            ^
+          </pre>
+        </div>
       </div>
     </div>
   </div>
