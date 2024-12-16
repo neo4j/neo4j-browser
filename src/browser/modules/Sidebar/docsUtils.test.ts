@@ -26,7 +26,9 @@ test('formatDocVersion', () => {
     { test: '1.1.0', expect: '1.1' },
     { test: '1.1.0-beta01', expect: '1.1-preview' },
     { test: '1.1.2', expect: '1.1' },
-    { test: '2.1.10', expect: '2.1' }
+    { test: '2.1.10', expect: '2.1' },
+    { test: '2025.01.0', expect: 'current' },
+    { test: '2024.11.10', expect: 'current' }
   ]
 
   tests.forEach(t => expect(formatDocVersion(t.test)).toEqual(t.expect))

@@ -109,6 +109,16 @@ const movedPages: [
       text: 'Indexes',
       url: 'https://neo4j.com/docs/cypher-manual/4.3/indexes-for-search-performance/'
     }
+  ],
+  [
+    {
+      neo4jVersion: '2025.01.0',
+      page: '/administration/indexes-for-search-performance/'
+    },
+    {
+      text: 'Indexes',
+      url: 'https://neo4j.com/docs/cypher-manual/current/indexes-for-search-performance/'
+    }
   ]
 ]
 

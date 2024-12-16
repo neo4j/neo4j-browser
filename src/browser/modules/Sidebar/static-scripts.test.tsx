@@ -35,8 +35,8 @@ describe('<Favorites />', () => {
     content: !script.content.includes('Show meta-graph')
       ? script.content
       : script.versionRange === '>=3 <4'
-      ? script.content.replace('Show meta-graph', 'Show meta-graph v3')
-      : script.content.replace('Show meta-graph', 'Show meta-graph v4')
+        ? script.content.replace('Show meta-graph', 'Show meta-graph v3')
+        : script.content.replace('Show meta-graph', 'Show meta-graph v4')
   }))
 
   const renderWithDBMSVersion = (version: any) => {
@@ -76,6 +76,16 @@ describe('<Favorites />', () => {
 
   it('lists only the v4 version of the "Show meta-graph" example when version is 4', () => {
     const version = '4.0.3'
+    const { queryByText } = renderWithDBMSVersion(version)
+
+    fireEvent.click(queryByText('Common Procedures') as HTMLElement)
+
+    expect(queryByText('Show meta-graph v3')).toBeFalsy()
+    expect(queryByText('Show meta-graph v4')).toBeTruthy()
+  })
+
+  it('lists examples correctly when using calendar version', () => {
+    const version = '2025.01.0'
     const { queryByText } = renderWithDBMSVersion(version)
 
     fireEvent.click(queryByText('Common Procedures') as HTMLElement)
