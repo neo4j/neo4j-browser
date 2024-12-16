@@ -24,7 +24,9 @@ export const formatDocVersion = (v: string | null = ''): string => {
     // All non-strings return
     return 'current'
   }
-  if (semver.prerelease(v)) {
+  if (semver.compareLoose(v, '6.0.0') === 1) {
+    return 'current'
+  } else if (semver.prerelease(v)) {
     return `${semver.major(v)}.${semver.minor(v)}-preview`
   }
   return `${semver.major(v)}.${semver.minor(v)}` || 'current'

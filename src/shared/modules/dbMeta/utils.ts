@@ -52,7 +52,7 @@ export function extractServerInfo(res: QueryResult): ServerInfo {
   }
 
   // Some aura servers self report versions that need coercing (eg. 3.5 or 4.3-aura)
-  if (!semver.valid(serverInfo.version)) {
+  if (!semver.valid(semver.clean(serverInfo.version || '', true))) {
     serverInfo.version = guessSemverVersion(serverInfo.version)
   }
 
@@ -113,5 +113,10 @@ export const extractTrialStatusOld = (res: QueryResult): TrialStatus => {
 
 export const versionHasEditorHistorySetting = (version: string | null) => {
   if (!version) return false
-  return semver.gte(version, VERSION_FOR_EDITOR_HISTORY_SETTING)
+  const cleanedVersion = semver.clean(version, true)
+  return (
+    cleanedVersion &&
+    semver.valid(cleanedVersion) &&
+    semver.gte(cleanedVersion, VERSION_FOR_EDITOR_HISTORY_SETTING)
+  )
 }

@@ -192,13 +192,14 @@ export class SchemaFrame extends Component<any, SchemaFrameState> {
     }
   }
 
-  fetchData(neo4jVersion: SemVer) {
+  fetchData(neo4jVersion: SemVer | null) {
     if (this.props.bus) {
       // Indexes
       this.props.bus.self(
         CYPHER_REQUEST,
         {
           query:
+            neo4jVersion &&
             semver.valid(neo4jVersion) &&
             semver.satisfies(neo4jVersion, '<4.2.*')
               ? 'CALL db.indexes()'
@@ -212,6 +213,7 @@ export class SchemaFrame extends Component<any, SchemaFrameState> {
         CYPHER_REQUEST,
         {
           query:
+            neo4jVersion &&
             semver.valid(neo4jVersion) &&
             semver.satisfies(neo4jVersion, '<4.2.*')
               ? 'CALL db.constraints()'
@@ -244,8 +246,11 @@ export class SchemaFrame extends Component<any, SchemaFrameState> {
   render(): JSX.Element {
     const { neo4jVersion } = this.props
     const { indexes, constraints } = this.state
+    const cleanedVersion = semver.clean(neo4jVersion || '', true)
     const schemaCommand =
-      semver.valid(neo4jVersion) && semver.satisfies(neo4jVersion, '<=3.4.*')
+      cleanedVersion &&
+      semver.valid(cleanedVersion) &&
+      semver.satisfies(cleanedVersion, '<=3.4.*')
         ? 'CALL db.schema()'
         : 'CALL db.schema.visualization'
 

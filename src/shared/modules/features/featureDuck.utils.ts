@@ -23,8 +23,10 @@ export const guessSemverVersion = (versionString: string | null) => {
   if (!versionString) {
     return null
   }
-  if (semver.valid(versionString)) {
-    return versionString
+  const cleanedVersion =
+    typeof versionString === 'string' ? semver.clean(versionString, true) : null
+  if (semver.valid(cleanedVersion)) {
+    return cleanedVersion
   }
 
   const coerceVersion = semver.coerce(versionString)

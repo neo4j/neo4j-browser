@@ -36,11 +36,12 @@ export function VersionConditionalDoc({
   neo4jVersion,
   includeCurrent = false
 }: VersionConditionalDocProps): JSX.Element {
+  const cleanedVersion = semver.clean(neo4jVersion || '', true)
   if (
     (includeCurrent && neo4jVersion === null) ||
-    (neo4jVersion !== null &&
-      semver.valid(neo4jVersion) &&
-      semver.satisfies(neo4jVersion, versionCondition))
+    (cleanedVersion &&
+      semver.valid(cleanedVersion) &&
+      semver.satisfies(cleanedVersion, versionCondition))
   ) {
     return <>{children}</>
   } else {
