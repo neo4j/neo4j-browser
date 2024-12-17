@@ -36,7 +36,10 @@ import Directives from 'browser-components/Directives'
 import { GlobalState } from 'project-root/src/shared/globalState'
 import { NEO4J_BROWSER_USER_ACTION_QUERY } from 'services/bolt/txMetadata'
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
-import { getSemanticVersion } from 'shared/modules/dbMeta/dbMetaDuck'
+import {
+  getCleanedVersion,
+  getSemanticVersion
+} from 'shared/modules/dbMeta/dbMetaDuck'
 
 type IndexesProps = {
   indexes: any
@@ -246,11 +249,10 @@ export class SchemaFrame extends Component<any, SchemaFrameState> {
   render(): JSX.Element {
     const { neo4jVersion } = this.props
     const { indexes, constraints } = this.state
-    const cleanedVersion = semver.clean(neo4jVersion || '', true)
+    const cleanedVersion =
+      typeof neo4jVersion === 'string' ? getCleanedVersion(neo4jVersion) : null
     const schemaCommand =
-      cleanedVersion &&
-      semver.valid(cleanedVersion) &&
-      semver.satisfies(cleanedVersion, '<=3.4.*')
+      cleanedVersion && semver.satisfies(cleanedVersion, '<=3.4.*')
         ? 'CALL db.schema()'
         : 'CALL db.schema.visualization'
 

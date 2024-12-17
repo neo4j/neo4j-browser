@@ -24,7 +24,10 @@ import semver from 'semver'
 import { DrawerExternalLink } from './drawer/drawer-styled'
 import { formatDocVersion } from 'browser/modules/Sidebar/docsUtils'
 import { GlobalState } from 'project-root/src/shared/globalState'
-import { getRawVersion } from 'shared/modules/dbMeta/dbMetaDuck'
+import {
+  getCleanedVersion,
+  getRawVersion
+} from 'shared/modules/dbMeta/dbMetaDuck'
 
 const oldPages: { [key: string]: { oldPage: string; oldContent: string } } = {
   '/administration/indexes-for-search-performance/': {
@@ -63,12 +66,8 @@ const isPageOld = (
 ) => {
   if (chapter !== 'cypher-manual' || !oldPages[page] || !neo4jVersion)
     return false
-  const cleanedVersion = semver.clean(neo4jVersion, true)
-  return (
-    cleanedVersion &&
-    semver.valid(cleanedVersion) &&
-    semver.satisfies(cleanedVersion, '<4.0.0-alpha.1')
-  )
+  const cleanedVersion = getCleanedVersion(neo4jVersion)
+  return cleanedVersion && semver.satisfies(cleanedVersion, '<4.0.0-alpha.1')
 }
 
 const isPageNew = (
@@ -77,11 +76,9 @@ const isPageNew = (
   neo4jVersion: string | null
 ) => {
   if (chapter !== 'cypher-manual' || !newPages[page]) return false
-  const cleanedVersion = semver.clean(neo4jVersion || '', true)
+  const cleanedVersion = getCleanedVersion(neo4jVersion)
   return (
-    (cleanedVersion &&
-      semver.valid(cleanedVersion) &&
-      semver.satisfies(cleanedVersion, '>=4.3')) ||
+    (cleanedVersion && semver.satisfies(cleanedVersion, '>=4.3')) ||
     neo4jVersion === null
   )
 }

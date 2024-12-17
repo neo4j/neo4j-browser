@@ -22,7 +22,10 @@ import { connect } from 'react-redux'
 import semver from 'semver'
 
 import { GlobalState } from 'project-root/src/shared/globalState'
-import { getRawVersion } from 'shared/modules/dbMeta/dbMetaDuck'
+import {
+  getCleanedVersion,
+  getRawVersion
+} from 'shared/modules/dbMeta/dbMetaDuck'
 
 export type VersionConditionalDocProps = {
   versionCondition: string
@@ -36,12 +39,10 @@ export function VersionConditionalDoc({
   neo4jVersion,
   includeCurrent = false
 }: VersionConditionalDocProps): JSX.Element {
-  const cleanedVersion = semver.clean(neo4jVersion || '', true)
+  const cleanedVersion = getCleanedVersion(neo4jVersion)
   if (
     (includeCurrent && neo4jVersion === null) ||
-    (cleanedVersion &&
-      semver.valid(cleanedVersion) &&
-      semver.satisfies(cleanedVersion, versionCondition))
+    (cleanedVersion && semver.satisfies(cleanedVersion, versionCondition))
   ) {
     return <>{children}</>
   } else {
