@@ -21,7 +21,11 @@ import { Integer, QueryResult } from 'neo4j-driver'
 import semver from 'semver'
 
 import { guessSemverVersion } from '../features/featureDuck.utils'
-import { TrialStatus, VERSION_FOR_EDITOR_HISTORY_SETTING } from './dbMetaDuck'
+import {
+  getCleanedVersion,
+  TrialStatus,
+  VERSION_FOR_EDITOR_HISTORY_SETTING
+} from './dbMetaDuck'
 
 type ServerInfo = {
   version: string | null
@@ -52,7 +56,7 @@ export function extractServerInfo(res: QueryResult): ServerInfo {
   }
 
   // Some aura servers self report versions that need coercing (eg. 3.5 or 4.3-aura)
-  if (!semver.valid(serverInfo.version)) {
+  if (!getCleanedVersion(serverInfo.version)) {
     serverInfo.version = guessSemverVersion(serverInfo.version)
   }
 
@@ -113,5 +117,9 @@ export const extractTrialStatusOld = (res: QueryResult): TrialStatus => {
 
 export const versionHasEditorHistorySetting = (version: string | null) => {
   if (!version) return false
-  return semver.gte(version, VERSION_FOR_EDITOR_HISTORY_SETTING)
+  const cleanedVersion = getCleanedVersion(version)
+  return (
+    cleanedVersion &&
+    semver.gte(cleanedVersion, VERSION_FOR_EDITOR_HISTORY_SETTING)
+  )
 }

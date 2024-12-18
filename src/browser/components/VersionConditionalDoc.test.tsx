@@ -46,6 +46,22 @@ const tests: [Omit<VersionConditionalDocProps, 'children'>, boolean][] = [
       includeCurrent: false
     },
     true
+  ],
+  [
+    {
+      neo4jVersion: '2025.03.0',
+      versionCondition: '>=4.3',
+      includeCurrent: false
+    },
+    true
+  ],
+  [
+    {
+      neo4jVersion: '2025.03.0',
+      versionCondition: '<4.3',
+      includeCurrent: true
+    },
+    false
   ]
 ]
 

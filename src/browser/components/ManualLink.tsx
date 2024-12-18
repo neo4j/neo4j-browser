@@ -24,7 +24,10 @@ import semver from 'semver'
 import { DrawerExternalLink } from './drawer/drawer-styled'
 import { formatDocVersion } from 'browser/modules/Sidebar/docsUtils'
 import { GlobalState } from 'project-root/src/shared/globalState'
-import { getRawVersion } from 'shared/modules/dbMeta/dbMetaDuck'
+import {
+  getCleanedVersion,
+  getRawVersion
+} from 'shared/modules/dbMeta/dbMetaDuck'
 
 const oldPages: { [key: string]: { oldPage: string; oldContent: string } } = {
   '/administration/indexes-for-search-performance/': {
@@ -60,21 +63,25 @@ const isPageOld = (
   chapter: string,
   page: string,
   neo4jVersion: string | null
-) =>
-  chapter === 'cypher-manual' &&
-  oldPages[page] &&
-  neo4jVersion &&
-  semver.satisfies(neo4jVersion, '<4.0.0-alpha.1')
+) => {
+  if (chapter !== 'cypher-manual' || !oldPages[page] || !neo4jVersion)
+    return false
+  const cleanedVersion = getCleanedVersion(neo4jVersion)
+  return cleanedVersion && semver.satisfies(cleanedVersion, '<4.0.0-alpha.1')
+}
 
 const isPageNew = (
   chapter: string,
   page: string,
   neo4jVersion: string | null
-) =>
-  chapter === 'cypher-manual' &&
-  newPages[page] &&
-  ((neo4jVersion && semver.satisfies(neo4jVersion, '>=4.3')) ||
-    neo4jVersion === null) // if no version is available, we treat it like the newest version.
+) => {
+  if (chapter !== 'cypher-manual' || !newPages[page]) return false
+  const cleanedVersion = getCleanedVersion(neo4jVersion)
+  return (
+    (cleanedVersion && semver.satisfies(cleanedVersion, '>=4.3')) ||
+    neo4jVersion === null
+  )
+}
 
 export type ManualLinkProps = {
   chapter: string
@@ -103,7 +110,7 @@ export function ManualLink({
   let version = formatDocVersion(neo4jVersion)
   if (
     minVersion &&
-    (!neo4jVersion || semver.cmp(neo4jVersion, '<', minVersion))
+    (!neo4jVersion || semver.compareLoose(neo4jVersion, minVersion) === -1)
   ) {
     version = formatDocVersion(minVersion)
   }

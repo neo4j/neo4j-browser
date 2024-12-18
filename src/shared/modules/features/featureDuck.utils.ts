@@ -18,13 +18,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import semver from 'semver'
+import { getCleanedVersion } from '../dbMeta/dbMetaDuck'
 
 export const guessSemverVersion = (versionString: string | null) => {
   if (!versionString) {
     return null
   }
-  if (semver.valid(versionString)) {
-    return versionString
+  const cleanedVersion =
+    typeof versionString === 'string' ? getCleanedVersion(versionString) : null
+  if (cleanedVersion) {
+    return cleanedVersion
   }
 
   const coerceVersion = semver.coerce(versionString)

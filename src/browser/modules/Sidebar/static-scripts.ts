@@ -29,7 +29,8 @@ import { getRawVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 import * as editor from 'shared/modules/editor/editorDuck'
 
 const mapFavoritesStateToProps = (state: any) => {
-  const version = semver.coerce(getRawVersion(state) || '0') ?? '0'
+  const version =
+    semver.coerce(semver.clean(getRawVersion(state) || '', true) ?? '0') ?? '0'
   const folders = getFolders(state).filter(folder => folder.isStatic)
   const scripts = favorites
     .getFavorites(state)
@@ -37,6 +38,7 @@ const mapFavoritesStateToProps = (state: any) => {
       fav =>
         fav.isStatic &&
         fav.versionRange &&
+        version &&
         semver.satisfies(version, fav.versionRange)
     )
 

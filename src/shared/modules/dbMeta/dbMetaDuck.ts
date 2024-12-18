@@ -19,7 +19,7 @@
  */
 import { uniq } from 'lodash-es'
 import { QueryResult } from 'neo4j-driver'
-import { SemVer, coerce, gte } from 'semver'
+import { SemVer, clean, coerce, gte, valid } from 'semver'
 import { isConfigValFalsy } from 'services/bolt/boltHelpers'
 import { GlobalState } from 'shared/globalState'
 import { APP_START } from 'shared/modules/app/appDuck'
@@ -270,8 +270,17 @@ export function getUniqueDatbases(state: GlobalState): Database[] {
 
 export const getRawVersion = (state: GlobalState): string | null =>
   (state[NAME] || {}).server ? (state[NAME] || {}).server.version : null
+
 export const getSemanticVersion = (state: GlobalState): SemVer | null =>
-  coerce(getRawVersion(state))
+  coerce(clean(getRawVersion(state) || '', true))
+
+export const getCleanedVersion = (version: string | null): string | null => {
+  const cleanedVersion = clean(version || '', true)
+  if (valid(cleanedVersion)) {
+    return cleanedVersion
+  }
+  return null
+}
 
 export const supportsMultiDb = (state: GlobalState): boolean => {
   const version = getSemanticVersion(state)
