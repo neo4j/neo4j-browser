@@ -39,6 +39,8 @@ import {
 import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
 import { isCloudHost } from 'shared/services/utils'
 import { fetchMetaData } from '../dbMeta/dbMetaDuck'
+import { isError } from 'shared/utils/typeguards'
+import forceResetPasswordQueryHelper from './forceResetPasswordQueryHelper'
 
 export const NAME = 'connections'
 export const SET_ACTIVE = 'connections/SET_ACTIVE'
@@ -53,6 +55,7 @@ export const STARTUP_CONNECTION_SUCCESS =
 export const STARTUP_CONNECTION_FAILED = 'connections/STARTUP_CONNECTION_FAILED'
 export const CONNECTION_SUCCESS = 'connections/CONNECTION_SUCCESS'
 export const DISCONNECTION_SUCCESS = 'connections/DISCONNECTION_SUCCESS'
+export const FORCE_CHANGE_PASSWORD = 'connections/FORCE_CHANGE_PASSWORD'
 export const LOST_CONNECTION = 'connections/LOST_CONNECTION'
 export const UPDATE_CONNECTION_STATE = 'connections/UPDATE_CONNECTION_STATE'
 export const UPDATE_RETAIN_CREDENTIALS = `connections/UPDATE_RETAIN_CREDENTIALS`
@@ -919,3 +922,106 @@ export const retainCredentialsSettingsEpic = (action$: any, store: any) => {
     })
     .ignoreElements()
 }
+
+/**
+ * Epic to handle a FORCE_CHANGE_PASSWORD event.
+ *
+ * We need this because this is the only case where we still
+ * want to execute cypher even though we get an connection error back.
+ *
+ * Previously, we were attempting to read the version of Neo4j in state, falling
+ * back to querying the database if it was not present. This was problematic, because
+ * if the user was logging in for the first time, this request would fail since they
+ * were not authorized to execute queries against the database.
+ *
+ * This problem was further compounded if the default (neo4j) database did not exist.
+ *
+ * In this approach, we simply attempt to change the password using current syntax,
+ * falling back to the legacy DBMS function if this fails with a specific error message.
+ */
+export const handleForcePasswordChangeEpic = (some$: any) =>
+  some$
+    .ofType(FORCE_CHANGE_PASSWORD)
+    .mergeMap(
+      (
+        action: Connection & { $$responseChannel: string; newPassword: string }
+      ) => {
+        if (!action.$$responseChannel) return Rx.Observable.of(null)
+
+        return new Promise(resolve => {
+          bolt
+            .directConnect(
+              action,
+              {},
+              undefined,
+              false // Ignore validation errors
+            )
+            .then(async driver => {
+              try {
+                const supportsMultiDb = await driver.supportsMultiDb()
+
+                const res = await forceResetPasswordQueryHelper
+                  .executeAlterCurrentUserQuery(driver, action, supportsMultiDb)
+                  .then((res: any) => {
+                    resolve({
+                      type: action.$$responseChannel,
+                      success: true,
+                      result: {
+                        ...res,
+                        meta: action.host
+                      }
+                    })
+                  })
+                  .catch(e => {
+                    return e
+                  })
+
+                if (isError(res)) {
+                  if (
+                    /(Invalid input 'A': expected <init>)/.test(res.message)
+                  ) {
+                    await forceResetPasswordQueryHelper
+                      .executeCallChangePasswordQuery(
+                        driver,
+                        action,
+                        supportsMultiDb
+                      )
+                      .then((res: any) => {
+                        resolve({
+                          type: action.$$responseChannel,
+                          success: true,
+                          result: {
+                            ...res,
+                            meta: action.host
+                          }
+                        })
+                      })
+                      .catch(e =>
+                        resolve({
+                          type: action.$$responseChannel,
+                          success: false,
+                          error: e
+                        })
+                      )
+                  } else {
+                    resolve({
+                      type: action.$$responseChannel,
+                      success: false,
+                      error: res
+                    })
+                  }
+                }
+              } finally {
+                driver.close()
+              }
+            })
+            .catch(e =>
+              resolve({
+                type: action.$$responseChannel,
+                success: false,
+                error: e
+              })
+            )
+        })
+      }
+    )

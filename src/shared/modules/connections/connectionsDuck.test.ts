@@ -28,11 +28,22 @@ import {
   DONE as DISCOVERY_DONE,
   updateDiscoveryConnection
 } from 'shared/modules/discovery/discoveryDuck'
+import forceResetPasswordQueryHelper from './forceResetPasswordQueryHelper'
+import { buildTxFunctionByMode } from 'services/bolt/boltHelpers'
 
 jest.mock('services/bolt/bolt', () => {
   return {
     closeConnection: jest.fn(),
-    openConnection: jest.fn()
+    openConnection: jest.fn(),
+    directConnect: jest.fn()
+  }
+})
+
+jest.mock('services/bolt/boltHelpers', () => {
+  const orig = jest.requireActual('services/bolt/boltHelpers')
+  return {
+    ...orig,
+    buildTxFunctionByMode: jest.fn()
   }
 })
 
@@ -450,6 +461,368 @@ describe('switchConnectionEpic', () => {
 
     // When
     epicMiddleware.replaceEpic(connections.switchConnectionEpic)
+    store.clearActions()
+    store.dispatch(action)
+
+    // Return
+    return p
+  })
+})
+
+describe('handleForcePasswordChangeEpic', () => {
+  const bus = createBus()
+  const epicMiddleware = createEpicMiddleware(
+    connections.handleForcePasswordChangeEpic
+  )
+  const mockStore = configureMockStore([
+    epicMiddleware,
+    createReduxMiddleware(bus)
+  ])
+
+  let store: any
+
+  const $$responseChannel = 'test-channel'
+  const action = {
+    type: connections.FORCE_CHANGE_PASSWORD,
+    password: 'changeme',
+    newPassword: 'password1',
+    $$responseChannel
+  }
+
+  const executePasswordResetQuerySpy = jest.spyOn(
+    forceResetPasswordQueryHelper,
+    'executePasswordResetQuery'
+  )
+
+  const executeAlterCurrentUserQuerySpy = jest.spyOn(
+    forceResetPasswordQueryHelper,
+    'executeAlterCurrentUserQuery'
+  )
+
+  const executeCallChangePasswordQuerySpy = jest.spyOn(
+    forceResetPasswordQueryHelper,
+    'executeCallChangePasswordQuery'
+  )
+
+  const mockSessionClose = jest.fn()
+
+  const mockDriver = {
+    supportsMultiDb: () => true,
+    session: jest.fn().mockReturnValue({
+      close: mockSessionClose
+    }),
+    close: jest.fn().mockReturnValue(true)
+  }
+
+  beforeAll(() => {
+    store = mockStore({})
+  })
+
+  beforeEach(() => {
+    ;(bolt.directConnect as jest.Mock).mockResolvedValue(mockDriver)
+  })
+
+  afterEach(() => {
+    store.clearActions()
+    bus.reset()
+    jest.clearAllMocks()
+  })
+
+  test('handleForcePasswordChangeEpic resolves with an error if directConnect fails', () => {
+    // Given
+    ;(bolt.directConnect as jest.Mock).mockRejectedValue(
+      new Error('An error occurred.')
+    )
+
+    const p = new Promise<void>((resolve, reject) => {
+      bus.take($$responseChannel, currentAction => {
+        // Then
+        const actions = store.getActions()
+        try {
+          expect(actions).toEqual([action, currentAction])
+
+          expect(executeAlterCurrentUserQuerySpy).not.toHaveBeenCalled()
+
+          expect(executeCallChangePasswordQuerySpy).not.toHaveBeenCalled()
+
+          expect(executePasswordResetQuerySpy).not.toHaveBeenCalled()
+
+          expect(currentAction).toEqual(
+            expect.objectContaining({
+              error: expect.objectContaining({
+                message: 'An error occurred.'
+              }),
+              success: false,
+              type: $$responseChannel
+            })
+          )
+
+          resolve()
+
+          expect(mockDriver.close).not.toHaveBeenCalled()
+        } catch (e) {
+          reject(e)
+        }
+      })
+    })
+
+    // When
+    epicMiddleware.replaceEpic(connections.handleForcePasswordChangeEpic)
+    store.clearActions()
+    store.dispatch(action)
+
+    // Return
+    return p
+  })
+
+  test('handleForcePasswordChangeEpic resolves when successfully executing cypher query', () => {
+    // Given
+    ;(buildTxFunctionByMode as jest.Mock).mockReturnValue(() =>
+      Promise.resolve()
+    )
+
+    const p = new Promise<void>((resolve, reject) => {
+      bus.take($$responseChannel, currentAction => {
+        // Then
+        const actions = store.getActions()
+        try {
+          expect(actions).toEqual([action, currentAction])
+
+          expect(executeAlterCurrentUserQuerySpy).toHaveBeenCalledTimes(1)
+
+          expect(executeCallChangePasswordQuerySpy).not.toHaveBeenCalled()
+
+          expect(executePasswordResetQuerySpy).toHaveBeenCalledTimes(1)
+
+          expect(executePasswordResetQuerySpy).toHaveBeenCalledWith(
+            expect.anything(),
+            expect.objectContaining({
+              parameters: { newPw: 'password1', oldPw: 'changeme' },
+              query: 'ALTER CURRENT USER SET PASSWORD FROM $oldPw TO $newPw'
+            }),
+            expect.anything(),
+            { database: 'system' }
+          )
+
+          expect(currentAction).toEqual(
+            expect.objectContaining({
+              result: expect.anything(),
+              success: true,
+              type: $$responseChannel
+            })
+          )
+
+          resolve()
+
+          expect(mockDriver.close).toHaveBeenCalledTimes(1)
+          expect(mockSessionClose).toHaveBeenCalledTimes(1)
+        } catch (e) {
+          reject(e)
+        }
+      })
+    })
+
+    // When
+    epicMiddleware.replaceEpic(connections.handleForcePasswordChangeEpic)
+    store.clearActions()
+    store.dispatch(action)
+
+    // Return
+    return p
+  })
+
+  test('handleForcePasswordChangeEpic resolves with an error if cypher query fails', () => {
+    // Given
+    ;(buildTxFunctionByMode as jest.Mock)
+      .mockReturnValueOnce(() =>
+        Promise.reject(new Error('A password must be at least 8 characters.'))
+      )
+      .mockReturnValue(() => Promise.resolve())
+
+    const p = new Promise<void>((resolve, reject) => {
+      bus.take($$responseChannel, currentAction => {
+        // Then
+        const actions = store.getActions()
+        try {
+          expect(actions).toEqual([action, currentAction])
+
+          expect(executeAlterCurrentUserQuerySpy).toHaveBeenCalledTimes(1)
+
+          expect(executeCallChangePasswordQuerySpy).not.toHaveBeenCalled()
+
+          expect(executePasswordResetQuerySpy).toHaveBeenCalledTimes(1)
+
+          expect(currentAction).toEqual(
+            expect.objectContaining({
+              error: expect.objectContaining({
+                message: 'A password must be at least 8 characters.'
+              }),
+              success: false,
+              type: $$responseChannel
+            })
+          )
+
+          resolve()
+
+          expect(mockDriver.close).toHaveBeenCalledTimes(1)
+          expect(mockSessionClose).toHaveBeenCalledTimes(1)
+        } catch (e) {
+          reject(e)
+        }
+      })
+    })
+
+    // When
+    epicMiddleware.replaceEpic(connections.handleForcePasswordChangeEpic)
+    store.clearActions()
+    store.dispatch(action)
+
+    // Return
+    return p
+  })
+
+  test('handleForcePasswordChangeEpic resolves when successfully falling back to dbms function call', () => {
+    // Given
+    ;(buildTxFunctionByMode as jest.Mock)
+      .mockReturnValueOnce(() =>
+        Promise.reject(new Error("Invalid input 'A': expected <init>"))
+      )
+      .mockReturnValue(() => Promise.resolve())
+
+    const p = new Promise<void>((resolve, reject) => {
+      bus.take($$responseChannel, currentAction => {
+        // Then
+        const actions = store.getActions()
+        try {
+          expect(actions).toEqual([action, currentAction])
+
+          expect(executeAlterCurrentUserQuerySpy).toHaveBeenCalledTimes(1)
+
+          expect(executeCallChangePasswordQuerySpy).toHaveBeenCalledTimes(1)
+
+          expect(executePasswordResetQuerySpy).toHaveBeenCalledTimes(2)
+
+          expect(executePasswordResetQuerySpy).toHaveBeenLastCalledWith(
+            expect.anything(),
+            expect.objectContaining({
+              parameters: { password: 'password1' },
+              query: 'CALL dbms.security.changePassword($password)'
+            }),
+            expect.anything(),
+            { database: 'system' }
+          )
+
+          expect(currentAction).toEqual(
+            expect.objectContaining({
+              result: expect.anything(),
+              success: true,
+              type: $$responseChannel
+            })
+          )
+
+          resolve()
+
+          expect(mockDriver.close).toHaveBeenCalledTimes(1)
+          expect(mockSessionClose).toHaveBeenCalledTimes(2)
+        } catch (e) {
+          reject(e)
+        }
+      })
+    })
+
+    // When
+    epicMiddleware.replaceEpic(connections.handleForcePasswordChangeEpic)
+    store.clearActions()
+    store.dispatch(action)
+
+    // Return
+    return p
+  })
+
+  test('handleForcePasswordChangeEpic does not execute against system database when unavailable', () => {
+    // Given
+    ;(bolt.directConnect as jest.Mock).mockClear()
+    ;(bolt.directConnect as jest.Mock).mockResolvedValue({
+      supportsMultiDb: () => false,
+      close: () => true
+    })
+
+    const p = new Promise<void>((resolve, reject) => {
+      bus.take($$responseChannel, currentAction => {
+        // Then
+        const actions = store.getActions()
+
+        try {
+          expect(actions).toEqual([action, currentAction])
+
+          expect(executePasswordResetQuerySpy).toHaveBeenCalledWith(
+            expect.anything(),
+            expect.anything(),
+            expect.anything(),
+            undefined
+          )
+
+          resolve()
+        } catch (e) {
+          reject(e)
+        }
+      })
+    })
+
+    // When
+    epicMiddleware.replaceEpic(connections.handleForcePasswordChangeEpic)
+    store.clearActions()
+    store.dispatch(action)
+
+    // Return
+    return p
+  })
+
+  test('handleForcePasswordChangeEpic resolves with an error if dbms function call fails', () => {
+    // Given
+    ;(buildTxFunctionByMode as jest.Mock)
+      .mockReturnValueOnce(() =>
+        Promise.reject(new Error("Invalid input 'A': expected <init>"))
+      )
+      .mockReturnValue(() =>
+        Promise.reject(new Error('A password must be at least 8 characters.'))
+      )
+
+    const p = new Promise<void>((resolve, reject) => {
+      bus.take($$responseChannel, currentAction => {
+        // Then
+        const actions = store.getActions()
+        try {
+          expect(actions).toEqual([action, currentAction])
+
+          expect(executeAlterCurrentUserQuerySpy).toHaveBeenCalledTimes(1)
+
+          expect(executeCallChangePasswordQuerySpy).toHaveBeenCalledTimes(1)
+
+          expect(executePasswordResetQuerySpy).toHaveBeenCalledTimes(2)
+
+          expect(currentAction).toEqual(
+            expect.objectContaining({
+              error: expect.objectContaining({
+                message: 'A password must be at least 8 characters.'
+              }),
+              success: false,
+              type: $$responseChannel
+            })
+          )
+
+          resolve()
+
+          expect(mockDriver.close).toHaveBeenCalledTimes(1)
+          expect(mockSessionClose).toHaveBeenCalledTimes(2)
+        } catch (e) {
+          reject(e)
+        }
+      })
+    })
+
+    // When
+    epicMiddleware.replaceEpic(connections.handleForcePasswordChangeEpic)
     store.clearActions()
     store.dispatch(action)
 

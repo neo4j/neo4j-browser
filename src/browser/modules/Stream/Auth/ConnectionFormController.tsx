@@ -47,8 +47,10 @@ import {
   setActiveConnection,
   updateConnection
 } from 'shared/modules/connections/connectionsDuck'
-import { AuthenticationMethod } from 'shared/modules/connections/connectionsDuck'
-import { FORCE_CHANGE_PASSWORD } from 'shared/modules/cypher/cypherDuck'
+import {
+  AuthenticationMethod,
+  FORCE_CHANGE_PASSWORD
+} from 'shared/modules/connections/connectionsDuck'
 import { shouldRetainConnectionCredentials } from 'shared/modules/dbMeta/dbMetaDuck'
 import { CONNECTION_ID } from 'shared/modules/discovery/discoveryDuck'
 import { fetchBrowserDiscoveryDataFromUrl } from 'shared/modules/discovery/discoveryHelpers'
