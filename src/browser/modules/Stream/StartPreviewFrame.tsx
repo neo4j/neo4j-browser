@@ -22,21 +22,48 @@ import { Action } from 'redux'
 import { trackNavigateToPreview } from 'shared/modules/preview/previewDuck'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
+import { GlobalState } from 'shared/globalState'
+import {
+  Connection,
+  getActiveConnectionData
+} from 'shared/modules/connections/connectionsDuck'
 
-export const navigateToPreview = (): void => {
-  const path = window.location.pathname
-  if (!path.endsWith('/preview/')) {
-    window.location.pathname = `${path}${path.endsWith('/') ? '' : '/'}preview/`
+export const navigateToPreview = (
+  db?: string | null,
+  dbms?: string | null
+): void => {
+  const url = new URL(window.location.href)
+
+  if (
+    dbms &&
+    !url.searchParams.has('dbms') &&
+    !url.searchParams.get('connectURL')
+  ) {
+    url.searchParams.set('dbms', dbms)
+  }
+
+  if (db && !url.searchParams.has('db')) {
+    url.searchParams.set('db', db)
+  }
+
+  const previewPath = '/preview/'
+  if (!url.pathname.endsWith(previewPath)) {
+    url.pathname = url.pathname.replace(/\/?$/, previewPath)
+    window.location.href = decodeURIComponent(url.toString())
   }
 }
 
 type PreviewFrameProps = {
+  connectionData: Connection | null
   executeTrackNavigateToPreview: () => void
 }
-const PreviewFrame = ({ executeTrackNavigateToPreview }: PreviewFrameProps) => {
+const PreviewFrame = ({
+  connectionData,
+  executeTrackNavigateToPreview
+}: PreviewFrameProps) => {
   function trackAndNavigateToPreview() {
     executeTrackNavigateToPreview()
-    navigateToPreview()
+    navigateToPreview(connectionData?.db, connectionData?.host)
   }
 
   return (
@@ -108,4 +135,10 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
   }
 }
 
-export default withBus(connect(null, mapDispatchToProps)(PreviewFrame))
+const mapStateToProps = (state: GlobalState) => ({
+  connectionData: getActiveConnectionData(state)
+})
+
+export default withBus(
+  connect(mapStateToProps, mapDispatchToProps)(PreviewFrame)
+)
