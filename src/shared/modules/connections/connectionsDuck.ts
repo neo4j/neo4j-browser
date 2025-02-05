@@ -40,7 +40,9 @@ import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
 import { isCloudHost } from 'shared/services/utils'
 import { fetchMetaData } from '../dbMeta/dbMetaDuck'
 import { isError } from 'shared/utils/typeguards'
-import forceResetPasswordQueryHelper from './forceResetPasswordQueryHelper'
+import forceResetPasswordQueryHelper, {
+  MultiDatabaseNotSupportedError
+} from './forceResetPasswordQueryHelper'
 
 export const NAME = 'connections'
 export const SET_ACTIVE = 'connections/SET_ACTIVE'
@@ -949,6 +951,22 @@ export const handleForcePasswordChangeEpic = (some$: any) =>
         if (!action.$$responseChannel) return Rx.Observable.of(null)
 
         return new Promise(resolve => {
+          const resolveResponse = (error?: Error) => {
+            resolve({
+              type: action.$$responseChannel,
+              success: error === undefined,
+              ...(error === undefined
+                ? {
+                    result: {
+                      meta: action.host
+                    }
+                  }
+                : {
+                    error
+                  })
+            })
+          }
+
           bolt
             .directConnect(
               action,
@@ -958,64 +976,28 @@ export const handleForcePasswordChangeEpic = (some$: any) =>
             )
             .then(async driver => {
               try {
-                const res = await forceResetPasswordQueryHelper
+                const result = await forceResetPasswordQueryHelper
                   .executeAlterCurrentUserQuery(driver, action)
-                  .then((res: any) => {
-                    resolve({
-                      type: action.$$responseChannel,
-                      success: true,
-                      result: {
-                        ...res,
-                        meta: action.host
-                      }
-                    })
-                  })
-                  .catch(e => {
-                    return e
-                  })
+                  .then(() => resolveResponse())
+                  .catch(error => error)
 
-                if (isError(res)) {
-                  if (
-                    /(Invalid input 'A': expected <init>)/.test(res.message)
-                  ) {
+                if (isError(result)) {
+                  if (result instanceof MultiDatabaseNotSupportedError) {
+                    // If we get a multi database not supported error, fall back to the legacy function
                     await forceResetPasswordQueryHelper
                       .executeCallChangePasswordQuery(driver, action)
-                      .then((res: any) => {
-                        resolve({
-                          type: action.$$responseChannel,
-                          success: true,
-                          result: {
-                            ...res,
-                            meta: action.host
-                          }
-                        })
-                      })
-                      .catch(e =>
-                        resolve({
-                          type: action.$$responseChannel,
-                          success: false,
-                          error: e
-                        })
-                      )
+                      .then(() => resolveResponse())
+                      .catch(resolveResponse)
                   } else {
-                    resolve({
-                      type: action.$$responseChannel,
-                      success: false,
-                      error: res
-                    })
+                    // Otherwise, return the error for the UI to handle e.g. invalid password
+                    resolveResponse(result)
                   }
                 }
               } finally {
                 driver.close()
               }
             })
-            .catch(e =>
-              resolve({
-                type: action.$$responseChannel,
-                success: false,
-                error: e
-              })
-            )
+            .catch(resolveResponse)
         })
       }
     )

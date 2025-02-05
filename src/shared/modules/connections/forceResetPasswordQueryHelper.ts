@@ -3,7 +3,12 @@ import { Driver } from 'neo4j-driver'
 import { userActionTxMetadata } from 'services/bolt/txMetadata'
 import { Connection } from './connectionsDuck'
 import { SYSTEM_DB } from '../dbMeta/dbMetaDuck'
-import { buildTxFunctionByMode } from 'services/bolt/boltHelpers'
+import { isError } from 'shared/utils/typeguards'
+
+const MULTIDATABASE_NOT_SUPPORTED_ERROR_MESSAGE =
+  'Driver is connected to the database that does not support multiple databases.'
+
+export class MultiDatabaseNotSupportedError extends Error {}
 
 export default {
   executePasswordResetQuery: async (
@@ -20,22 +25,21 @@ export default {
       ...useDb
     })
 
-    const txFn = buildTxFunctionByMode(session)
-
-    txFn &&
-      (await txFn(
-        async (tx: { run: (input: string, parameters: unknown) => unknown }) =>
-          await tx.run(action.query, action.parameters),
+    try {
+      await session.executeWrite(
+        tx => tx.run(action.query, action.parameters),
         {
           metadata
         }
       )
-        .catch(e => {
-          throw e
-        })
-        .finally(() => {
-          session.close()
-        }))
+    } catch (e) {
+      throw isError(e) &&
+        e.message.startsWith(MULTIDATABASE_NOT_SUPPORTED_ERROR_MESSAGE)
+        ? new MultiDatabaseNotSupportedError(e.message)
+        : e
+    } finally {
+      session.close()
+    }
   },
   /**
    * Executes a query to change the user's password using Cypher available

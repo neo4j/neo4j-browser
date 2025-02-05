@@ -28,22 +28,15 @@ import {
   DONE as DISCOVERY_DONE,
   updateDiscoveryConnection
 } from 'shared/modules/discovery/discoveryDuck'
-import forceResetPasswordQueryHelper from './forceResetPasswordQueryHelper'
-import { buildTxFunctionByMode } from 'services/bolt/boltHelpers'
+import forceResetPasswordQueryHelper, {
+  MultiDatabaseNotSupportedError
+} from './forceResetPasswordQueryHelper'
 
 jest.mock('services/bolt/bolt', () => {
   return {
     closeConnection: jest.fn(),
     openConnection: jest.fn(),
     directConnect: jest.fn()
-  }
-})
-
-jest.mock('services/bolt/boltHelpers', () => {
-  const orig = jest.requireActual('services/bolt/boltHelpers')
-  return {
-    ...orig,
-    buildTxFunctionByMode: jest.fn()
   }
 })
 
@@ -505,10 +498,12 @@ describe('handleForcePasswordChangeEpic', () => {
   )
 
   const mockSessionClose = jest.fn()
+  const mockSessionExecuteWrite = jest.fn()
 
   const mockDriver = {
     session: jest.fn().mockReturnValue({
-      close: mockSessionClose
+      close: mockSessionClose,
+      executeWrite: mockSessionExecuteWrite
     }),
     close: jest.fn().mockReturnValue(true)
   }
@@ -576,9 +571,7 @@ describe('handleForcePasswordChangeEpic', () => {
 
   test('handleForcePasswordChangeEpic resolves when successfully executing cypher query', () => {
     // Given
-    ;(buildTxFunctionByMode as jest.Mock).mockReturnValue(() =>
-      Promise.resolve()
-    )
+    mockSessionExecuteWrite.mockResolvedValue(true)
 
     const p = new Promise<void>((resolve, reject) => {
       bus.take($$responseChannel, currentAction => {
@@ -632,11 +625,11 @@ describe('handleForcePasswordChangeEpic', () => {
 
   test('handleForcePasswordChangeEpic resolves with an error if cypher query fails', () => {
     // Given
-    ;(buildTxFunctionByMode as jest.Mock)
-      .mockReturnValueOnce(() =>
-        Promise.reject(new Error('A password must be at least 8 characters.'))
+    mockSessionExecuteWrite
+      .mockRejectedValueOnce(
+        new Error('A password must be at least 8 characters.')
       )
-      .mockReturnValue(() => Promise.resolve())
+      .mockResolvedValue(true)
 
     const p = new Promise<void>((resolve, reject) => {
       bus.take($$responseChannel, currentAction => {
@@ -682,11 +675,9 @@ describe('handleForcePasswordChangeEpic', () => {
 
   test('handleForcePasswordChangeEpic resolves when successfully falling back to dbms function call', () => {
     // Given
-    ;(buildTxFunctionByMode as jest.Mock)
-      .mockReturnValueOnce(() =>
-        Promise.reject(new Error("Invalid input 'A': expected <init>"))
-      )
-      .mockReturnValue(() => Promise.resolve())
+    mockSessionExecuteWrite
+      .mockRejectedValueOnce(new MultiDatabaseNotSupportedError())
+      .mockResolvedValue(true)
 
     const p = new Promise<void>((resolve, reject) => {
       bus.take($$responseChannel, currentAction => {
@@ -740,13 +731,9 @@ describe('handleForcePasswordChangeEpic', () => {
 
   test('handleForcePasswordChangeEpic resolves with an error if dbms function call fails', () => {
     // Given
-    ;(buildTxFunctionByMode as jest.Mock)
-      .mockReturnValueOnce(() =>
-        Promise.reject(new Error("Invalid input 'A': expected <init>"))
-      )
-      .mockReturnValue(() =>
-        Promise.reject(new Error('A password must be at least 8 characters.'))
-      )
+    mockSessionExecuteWrite
+      .mockRejectedValueOnce(new MultiDatabaseNotSupportedError())
+      .mockRejectedValue(new Error('A password must be at least 8 characters.'))
 
     const p = new Promise<void>((resolve, reject) => {
       bus.take($$responseChannel, currentAction => {
