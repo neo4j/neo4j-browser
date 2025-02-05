@@ -958,10 +958,8 @@ export const handleForcePasswordChangeEpic = (some$: any) =>
             )
             .then(async driver => {
               try {
-                const supportsMultiDb = await driver.supportsMultiDb()
-
                 const res = await forceResetPasswordQueryHelper
-                  .executeAlterCurrentUserQuery(driver, action, supportsMultiDb)
+                  .executeAlterCurrentUserQuery(driver, action)
                   .then((res: any) => {
                     resolve({
                       type: action.$$responseChannel,
@@ -981,11 +979,7 @@ export const handleForcePasswordChangeEpic = (some$: any) =>
                     /(Invalid input 'A': expected <init>)/.test(res.message)
                   ) {
                     await forceResetPasswordQueryHelper
-                      .executeCallChangePasswordQuery(
-                        driver,
-                        action,
-                        supportsMultiDb
-                      )
+                      .executeCallChangePasswordQuery(driver, action)
                       .then((res: any) => {
                         resolve({
                           type: action.$$responseChannel,

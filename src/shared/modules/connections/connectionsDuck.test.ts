@@ -507,7 +507,6 @@ describe('handleForcePasswordChangeEpic', () => {
   const mockSessionClose = jest.fn()
 
   const mockDriver = {
-    supportsMultiDb: () => true,
     session: jest.fn().mockReturnValue({
       close: mockSessionClose
     }),
@@ -709,7 +708,7 @@ describe('handleForcePasswordChangeEpic', () => {
               query: 'CALL dbms.security.changePassword($password)'
             }),
             expect.anything(),
-            { database: 'system' }
+            undefined
           )
 
           expect(currentAction).toEqual(
@@ -724,45 +723,6 @@ describe('handleForcePasswordChangeEpic', () => {
 
           expect(mockDriver.close).toHaveBeenCalledTimes(1)
           expect(mockSessionClose).toHaveBeenCalledTimes(2)
-        } catch (e) {
-          reject(e)
-        }
-      })
-    })
-
-    // When
-    epicMiddleware.replaceEpic(connections.handleForcePasswordChangeEpic)
-    store.clearActions()
-    store.dispatch(action)
-
-    // Return
-    return p
-  })
-
-  test('handleForcePasswordChangeEpic does not execute against system database when unavailable', () => {
-    // Given
-    ;(bolt.directConnect as jest.Mock).mockClear()
-    ;(bolt.directConnect as jest.Mock).mockResolvedValue({
-      supportsMultiDb: () => false,
-      close: () => true
-    })
-
-    const p = new Promise<void>((resolve, reject) => {
-      bus.take($$responseChannel, currentAction => {
-        // Then
-        const actions = store.getActions()
-
-        try {
-          expect(actions).toEqual([action, currentAction])
-
-          expect(executePasswordResetQuerySpy).toHaveBeenCalledWith(
-            expect.anything(),
-            expect.anything(),
-            expect.anything(),
-            undefined
-          )
-
-          resolve()
         } catch (e) {
           reject(e)
         }

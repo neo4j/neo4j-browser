@@ -43,8 +43,7 @@ export default {
    */
   executeAlterCurrentUserQuery: function (
     driver: Driver,
-    action: Connection & { newPassword: string },
-    supportsMultiDb: boolean
+    action: Connection & { newPassword: string }
   ): Promise<void> {
     const payload = {
       query: 'ALTER CURRENT USER SET PASSWORD FROM $oldPw TO $newPw',
@@ -58,7 +57,7 @@ export default {
       driver,
       payload,
       userActionTxMetadata.txMetadata,
-      supportsMultiDb ? { database: SYSTEM_DB } : undefined
+      { database: SYSTEM_DB }
     )
   },
   /**
@@ -67,8 +66,7 @@ export default {
    */
   executeCallChangePasswordQuery: function (
     driver: Driver,
-    action: { newPassword: string },
-    supportsMultiDb: boolean
+    action: { newPassword: string }
   ): Promise<void> {
     const payload = {
       query: 'CALL dbms.security.changePassword($password)',
@@ -79,7 +77,7 @@ export default {
       driver,
       payload,
       userActionTxMetadata.txMetadata,
-      supportsMultiDb ? { database: SYSTEM_DB } : undefined
+      undefined
     )
   }
 }
