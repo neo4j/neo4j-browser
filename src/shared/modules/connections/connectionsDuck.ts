@@ -951,7 +951,7 @@ export const handleForcePasswordChangeEpic = (some$: any) =>
         if (!action.$$responseChannel) return Rx.Observable.of(null)
 
         return new Promise(resolve => {
-          const resolveResponse = (error?: Error) => {
+          const resolveAction = (error?: Error | void) => {
             resolve({
               type: action.$$responseChannel,
               success: error === undefined,
@@ -976,28 +976,30 @@ export const handleForcePasswordChangeEpic = (some$: any) =>
             )
             .then(async driver => {
               try {
+                // Attempt to change the password using Cypher syntax
                 const result = await forceResetPasswordQueryHelper
                   .executeAlterCurrentUserQuery(driver, action)
-                  .then(() => resolveResponse())
+                  .then(resolveAction)
                   .catch(error => error)
 
                 if (isError(result)) {
                   if (result instanceof MultiDatabaseNotSupportedError) {
-                    // If we get a multi database not supported error, fall back to the legacy function
+                    // If we get a multi database not supported error,
+                    // fall back to the legacy dbms function
                     await forceResetPasswordQueryHelper
                       .executeCallChangePasswordQuery(driver, action)
-                      .then(() => resolveResponse())
-                      .catch(resolveResponse)
+                      .then(resolveAction)
+                      .catch(resolveAction)
                   } else {
                     // Otherwise, return the error for the UI to handle e.g. invalid password
-                    resolveResponse(result)
+                    resolveAction(result)
                   }
                 }
               } finally {
                 driver.close()
               }
             })
-            .catch(resolveResponse)
+            .catch(resolveAction)
         })
       }
     )

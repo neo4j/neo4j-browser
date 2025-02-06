@@ -476,6 +476,7 @@ describe('handleForcePasswordChangeEpic', () => {
 
   const $$responseChannel = 'test-channel'
   const action = {
+    host: 'bolt://localhost:7687',
     type: connections.FORCE_CHANGE_PASSWORD,
     password: 'changeme',
     newPassword: 'password1',
@@ -524,9 +525,8 @@ describe('handleForcePasswordChangeEpic', () => {
 
   test('handleForcePasswordChangeEpic resolves with an error if directConnect fails', () => {
     // Given
-    ;(bolt.directConnect as jest.Mock).mockRejectedValue(
-      new Error('An error occurred.')
-    )
+    const message = 'An error occurred.'
+    ;(bolt.directConnect as jest.Mock).mockRejectedValue(new Error(message))
 
     const p = new Promise<void>((resolve, reject) => {
       bus.take($$responseChannel, currentAction => {
@@ -541,19 +541,18 @@ describe('handleForcePasswordChangeEpic', () => {
 
           expect(executePasswordResetQuerySpy).not.toHaveBeenCalled()
 
-          expect(currentAction).toEqual(
-            expect.objectContaining({
-              error: expect.objectContaining({
-                message: 'An error occurred.'
-              }),
-              success: false,
-              type: $$responseChannel
-            })
-          )
+          expect(currentAction).toEqual({
+            error: expect.objectContaining({
+              message
+            }),
+            success: false,
+            type: $$responseChannel
+          })
 
           resolve()
 
           expect(mockDriver.close).not.toHaveBeenCalled()
+          expect(mockSessionClose).not.toHaveBeenCalled()
         } catch (e) {
           reject(e)
         }
@@ -596,13 +595,11 @@ describe('handleForcePasswordChangeEpic', () => {
             { database: 'system' }
           )
 
-          expect(currentAction).toEqual(
-            expect.objectContaining({
-              result: expect.anything(),
-              success: true,
-              type: $$responseChannel
-            })
-          )
+          expect(currentAction).toEqual({
+            result: { meta: 'bolt://localhost:7687' },
+            success: true,
+            type: $$responseChannel
+          })
 
           resolve()
 
@@ -625,10 +622,9 @@ describe('handleForcePasswordChangeEpic', () => {
 
   test('handleForcePasswordChangeEpic resolves with an error if cypher query fails', () => {
     // Given
+    const message = 'A password must be at least 8 characters.'
     mockSessionExecuteWrite
-      .mockRejectedValueOnce(
-        new Error('A password must be at least 8 characters.')
-      )
+      .mockRejectedValueOnce(new Error(message))
       .mockResolvedValue(true)
 
     const p = new Promise<void>((resolve, reject) => {
@@ -644,15 +640,13 @@ describe('handleForcePasswordChangeEpic', () => {
 
           expect(executePasswordResetQuerySpy).toHaveBeenCalledTimes(1)
 
-          expect(currentAction).toEqual(
-            expect.objectContaining({
-              error: expect.objectContaining({
-                message: 'A password must be at least 8 characters.'
-              }),
-              success: false,
-              type: $$responseChannel
-            })
-          )
+          expect(currentAction).toEqual({
+            error: expect.objectContaining({
+              message
+            }),
+            success: false,
+            type: $$responseChannel
+          })
 
           resolve()
 
@@ -702,13 +696,11 @@ describe('handleForcePasswordChangeEpic', () => {
             undefined
           )
 
-          expect(currentAction).toEqual(
-            expect.objectContaining({
-              result: expect.anything(),
-              success: true,
-              type: $$responseChannel
-            })
-          )
+          expect(currentAction).toEqual({
+            result: { meta: 'bolt://localhost:7687' },
+            success: true,
+            type: $$responseChannel
+          })
 
           resolve()
 
@@ -731,9 +723,10 @@ describe('handleForcePasswordChangeEpic', () => {
 
   test('handleForcePasswordChangeEpic resolves with an error if dbms function call fails', () => {
     // Given
+    const message = 'A password must be at least 8 characters.'
     mockSessionExecuteWrite
       .mockRejectedValueOnce(new MultiDatabaseNotSupportedError())
-      .mockRejectedValue(new Error('A password must be at least 8 characters.'))
+      .mockRejectedValue(new Error(message))
 
     const p = new Promise<void>((resolve, reject) => {
       bus.take($$responseChannel, currentAction => {
@@ -748,15 +741,13 @@ describe('handleForcePasswordChangeEpic', () => {
 
           expect(executePasswordResetQuerySpy).toHaveBeenCalledTimes(2)
 
-          expect(currentAction).toEqual(
-            expect.objectContaining({
-              error: expect.objectContaining({
-                message: 'A password must be at least 8 characters.'
-              }),
-              success: false,
-              type: $$responseChannel
-            })
-          )
+          expect(currentAction).toEqual({
+            error: expect.objectContaining({
+              message
+            }),
+            success: false,
+            type: $$responseChannel
+          })
 
           resolve()
 
