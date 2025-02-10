@@ -99,28 +99,6 @@ export const getDefaultBoltScheme = (serverVersion: string | null) => {
   return pre4
 }
 
-export const changeUserPasswordQuery = (
-  serverVersion: string,
-  oldPw: any,
-  newPw: any
-) => {
-  const pre4 = {
-    query: 'CALL dbms.security.changePassword($password)',
-    parameters: { password: newPw }
-  }
-  const semverVersion = guessSemverVersion(serverVersion)
-  if (!semver.valid(semverVersion)) {
-    return pre4
-  }
-  if (semverVersion && semver.gte(semverVersion, NEO4J_4_0)) {
-    return {
-      query: 'ALTER CURRENT USER SET PASSWORD FROM $oldPw TO $newPw',
-      parameters: { oldPw, newPw }
-    }
-  }
-  return pre4
-}
-
 export const driverDatabaseSelection = (state: GlobalState, database: any) => {
   const pre4 = undefined
   const serverVersion = guessSemverVersion(getRawVersion(state))

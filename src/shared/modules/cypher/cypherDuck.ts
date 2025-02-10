@@ -20,17 +20,6 @@
 import neo4j, { QueryResult } from 'neo4j-driver'
 import Rx from 'rxjs'
 
-import {
-  getRawVersion,
-  serverInfoQuery,
-  SYSTEM_DB,
-  updateServerInfo
-} from '../dbMeta/dbMetaDuck'
-import {
-  FIRST_MULTI_DB_SUPPORT,
-  FIRST_NO_MULTI_DB_SUPPORT,
-  changeUserPasswordQuery
-} from '../features/versionedFeatures'
 import { getClusterAddresses } from './queriesProcedureHelper'
 import bolt from 'services/bolt/bolt'
 import { buildTxFunctionByMode } from 'services/bolt/boltHelpers'
@@ -39,10 +28,7 @@ import {
   userActionTxMetadata
 } from 'services/bolt/txMetadata'
 import { flatten } from 'services/utils'
-import {
-  Connection,
-  getActiveConnectionData
-} from 'shared/modules/connections/connectionsDuck'
+import { getActiveConnectionData } from 'shared/modules/connections/connectionsDuck'
 
 const NAME = 'cypher'
 export const CYPHER_REQUEST = `${NAME}/REQUEST`
@@ -50,7 +36,6 @@ export const ROUTED_CYPHER_READ_REQUEST = `${NAME}/ROUTED_READ_REQUEST`
 export const ROUTED_CYPHER_WRITE_REQUEST = `${NAME}/ROUTED_WRITE_REQUEST`
 export const AD_HOC_CYPHER_REQUEST = `${NAME}/AD_HOC_REQUEST`
 export const CLUSTER_CYPHER_REQUEST = `${NAME}/CLUSTER_REQUEST`
-export const FORCE_CHANGE_PASSWORD = `${NAME}/FORCE_CHANGE_PASSWORD`
 
 // Helpers
 const queryAndResolve = async (
@@ -262,76 +247,3 @@ export const clusterCypherRequestEpic = (some$: any, store: any) =>
         result: { records }
       }
     })
-
-// We need this because this is the only case where we still
-// want to execute cypher even though we get an connection error back
-export const handleForcePasswordChangeEpic = (some$: any, store: any) =>
-  some$
-    .ofType(FORCE_CHANGE_PASSWORD)
-    .mergeMap(
-      (
-        action: Connection & { $$responseChannel: string; newPassword: string }
-      ) => {
-        if (!action.$$responseChannel) return Rx.Observable.of(null)
-
-        return new Promise(resolve => {
-          bolt
-            .directConnect(
-              action,
-              {},
-              undefined,
-              false // Ignore validation errors
-            )
-            .then(async driver => {
-              // Let's establish what server version we're connected to if not in state
-              if (!getRawVersion(store.getState())) {
-                const versionRes: any = await queryAndResolve(
-                  driver,
-                  { ...action, query: serverInfoQuery, parameters: {} },
-                  undefined,
-                  userActionTxMetadata.txMetadata
-                )
-
-                if (versionRes.success) {
-                  store.dispatch(updateServerInfo(versionRes.result))
-                }
-              }
-
-              let versionForPasswordQuery = getRawVersion(store.getState())
-
-              // if we failed to get a version by querying, do a best effort quess
-              const supportsMultiDb = await driver.supportsMultiDb()
-              if (!versionForPasswordQuery) {
-                versionForPasswordQuery = supportsMultiDb
-                  ? FIRST_MULTI_DB_SUPPORT
-                  : FIRST_NO_MULTI_DB_SUPPORT
-              }
-
-              // Figure out how to change the pw on that server version
-              const queryObj = changeUserPasswordQuery(
-                versionForPasswordQuery,
-                action.password,
-                action.newPassword
-              )
-
-              // and then change the password
-              const res = await queryAndResolve(
-                driver,
-                { ...action, ...queryObj },
-                undefined,
-                userActionTxMetadata.txMetadata,
-                supportsMultiDb ? { database: SYSTEM_DB } : undefined
-              )
-              driver.close()
-              resolve(res)
-            })
-            .catch(e =>
-              resolve({
-                type: action.$$responseChannel,
-                success: false,
-                error: e
-              })
-            )
-        })
-      }
-    )

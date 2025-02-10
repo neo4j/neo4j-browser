@@ -31,6 +31,7 @@ import {
   detectActiveConnectionChangeEpic,
   disconnectEpic,
   disconnectSuccessEpic,
+  handleForcePasswordChangeEpic,
   initialSwitchConnectionFailEpic,
   retainCredentialsSettingsEpic,
   silentDisconnectEpic,
@@ -52,7 +53,6 @@ import {
   adHocCypherRequestEpic,
   clusterCypherRequestEpic,
   cypherRequestEpic,
-  handleForcePasswordChangeEpic,
   routedCypherReadRequestEpic,
   routedCypherWriteRequestEpic
 } from './modules/cypher/cypherDuck'

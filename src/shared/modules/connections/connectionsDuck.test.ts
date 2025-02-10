@@ -28,11 +28,15 @@ import {
   DONE as DISCOVERY_DONE,
   updateDiscoveryConnection
 } from 'shared/modules/discovery/discoveryDuck'
+import forceResetPasswordQueryHelper, {
+  MultiDatabaseNotSupportedError
+} from './forceResetPasswordQueryHelper'
 
 jest.mock('services/bolt/bolt', () => {
   return {
     closeConnection: jest.fn(),
-    openConnection: jest.fn()
+    openConnection: jest.fn(),
+    directConnect: jest.fn()
   }
 })
 
@@ -450,6 +454,313 @@ describe('switchConnectionEpic', () => {
 
     // When
     epicMiddleware.replaceEpic(connections.switchConnectionEpic)
+    store.clearActions()
+    store.dispatch(action)
+
+    // Return
+    return p
+  })
+})
+
+describe('handleForcePasswordChangeEpic', () => {
+  const bus = createBus()
+  const epicMiddleware = createEpicMiddleware(
+    connections.handleForcePasswordChangeEpic
+  )
+  const mockStore = configureMockStore([
+    epicMiddleware,
+    createReduxMiddleware(bus)
+  ])
+
+  let store: any
+
+  const $$responseChannel = 'test-channel'
+  const action = {
+    host: 'bolt://localhost:7687',
+    type: connections.FORCE_CHANGE_PASSWORD,
+    password: 'changeme',
+    newPassword: 'password1',
+    $$responseChannel
+  }
+
+  const executePasswordResetQuerySpy = jest.spyOn(
+    forceResetPasswordQueryHelper,
+    'executePasswordResetQuery'
+  )
+
+  const executeAlterCurrentUserQuerySpy = jest.spyOn(
+    forceResetPasswordQueryHelper,
+    'executeAlterCurrentUserQuery'
+  )
+
+  const executeCallChangePasswordQuerySpy = jest.spyOn(
+    forceResetPasswordQueryHelper,
+    'executeCallChangePasswordQuery'
+  )
+
+  const mockSessionClose = jest.fn()
+  const mockSessionExecuteWrite = jest.fn()
+
+  const mockDriver = {
+    session: jest.fn().mockReturnValue({
+      close: mockSessionClose,
+      executeWrite: mockSessionExecuteWrite
+    }),
+    close: jest.fn().mockReturnValue(true)
+  }
+
+  beforeAll(() => {
+    store = mockStore({})
+  })
+
+  beforeEach(() => {
+    ;(bolt.directConnect as jest.Mock).mockResolvedValue(mockDriver)
+  })
+
+  afterEach(() => {
+    store.clearActions()
+    bus.reset()
+    jest.clearAllMocks()
+  })
+
+  test('handleForcePasswordChangeEpic resolves with an error if directConnect fails', () => {
+    // Given
+    const message = 'An error occurred.'
+    ;(bolt.directConnect as jest.Mock).mockRejectedValue(new Error(message))
+
+    const p = new Promise<void>((resolve, reject) => {
+      bus.take($$responseChannel, currentAction => {
+        // Then
+        const actions = store.getActions()
+        try {
+          expect(actions).toEqual([action, currentAction])
+
+          expect(executeAlterCurrentUserQuerySpy).not.toHaveBeenCalled()
+
+          expect(executeCallChangePasswordQuerySpy).not.toHaveBeenCalled()
+
+          expect(executePasswordResetQuerySpy).not.toHaveBeenCalled()
+
+          expect(currentAction).toEqual({
+            error: expect.objectContaining({
+              message
+            }),
+            success: false,
+            type: $$responseChannel
+          })
+
+          resolve()
+
+          expect(mockDriver.close).not.toHaveBeenCalled()
+          expect(mockSessionClose).not.toHaveBeenCalled()
+        } catch (e) {
+          reject(e)
+        }
+      })
+    })
+
+    // When
+    epicMiddleware.replaceEpic(connections.handleForcePasswordChangeEpic)
+    store.clearActions()
+    store.dispatch(action)
+
+    // Return
+    return p
+  })
+
+  test('handleForcePasswordChangeEpic resolves when successfully executing cypher query', () => {
+    // Given
+    mockSessionExecuteWrite.mockResolvedValue(true)
+
+    const p = new Promise<void>((resolve, reject) => {
+      bus.take($$responseChannel, currentAction => {
+        // Then
+        const actions = store.getActions()
+        try {
+          expect(actions).toEqual([action, currentAction])
+
+          expect(executeAlterCurrentUserQuerySpy).toHaveBeenCalledTimes(1)
+
+          expect(executeCallChangePasswordQuerySpy).not.toHaveBeenCalled()
+
+          expect(executePasswordResetQuerySpy).toHaveBeenCalledTimes(1)
+
+          expect(executePasswordResetQuerySpy).toHaveBeenCalledWith(
+            expect.anything(),
+            expect.objectContaining({
+              parameters: { newPw: 'password1', oldPw: 'changeme' },
+              query: 'ALTER CURRENT USER SET PASSWORD FROM $oldPw TO $newPw'
+            }),
+            expect.anything(),
+            { database: 'system' }
+          )
+
+          expect(currentAction).toEqual({
+            result: { meta: 'bolt://localhost:7687' },
+            success: true,
+            type: $$responseChannel
+          })
+
+          resolve()
+
+          expect(mockDriver.close).toHaveBeenCalledTimes(1)
+          expect(mockSessionClose).toHaveBeenCalledTimes(1)
+        } catch (e) {
+          reject(e)
+        }
+      })
+    })
+
+    // When
+    epicMiddleware.replaceEpic(connections.handleForcePasswordChangeEpic)
+    store.clearActions()
+    store.dispatch(action)
+
+    // Return
+    return p
+  })
+
+  test('handleForcePasswordChangeEpic resolves with an error if cypher query fails', () => {
+    // Given
+    const message = 'A password must be at least 8 characters.'
+    mockSessionExecuteWrite
+      .mockRejectedValueOnce(new Error(message))
+      .mockResolvedValue(true)
+
+    const p = new Promise<void>((resolve, reject) => {
+      bus.take($$responseChannel, currentAction => {
+        // Then
+        const actions = store.getActions()
+        try {
+          expect(actions).toEqual([action, currentAction])
+
+          expect(executeAlterCurrentUserQuerySpy).toHaveBeenCalledTimes(1)
+
+          expect(executeCallChangePasswordQuerySpy).not.toHaveBeenCalled()
+
+          expect(executePasswordResetQuerySpy).toHaveBeenCalledTimes(1)
+
+          expect(currentAction).toEqual({
+            error: expect.objectContaining({
+              message
+            }),
+            success: false,
+            type: $$responseChannel
+          })
+
+          resolve()
+
+          expect(mockDriver.close).toHaveBeenCalledTimes(1)
+          expect(mockSessionClose).toHaveBeenCalledTimes(1)
+        } catch (e) {
+          reject(e)
+        }
+      })
+    })
+
+    // When
+    epicMiddleware.replaceEpic(connections.handleForcePasswordChangeEpic)
+    store.clearActions()
+    store.dispatch(action)
+
+    // Return
+    return p
+  })
+
+  test('handleForcePasswordChangeEpic resolves when successfully falling back to dbms function call', () => {
+    // Given
+    mockSessionExecuteWrite
+      .mockRejectedValueOnce(new MultiDatabaseNotSupportedError())
+      .mockResolvedValue(true)
+
+    const p = new Promise<void>((resolve, reject) => {
+      bus.take($$responseChannel, currentAction => {
+        // Then
+        const actions = store.getActions()
+        try {
+          expect(actions).toEqual([action, currentAction])
+
+          expect(executeAlterCurrentUserQuerySpy).toHaveBeenCalledTimes(1)
+
+          expect(executeCallChangePasswordQuerySpy).toHaveBeenCalledTimes(1)
+
+          expect(executePasswordResetQuerySpy).toHaveBeenCalledTimes(2)
+
+          expect(executePasswordResetQuerySpy).toHaveBeenLastCalledWith(
+            expect.anything(),
+            expect.objectContaining({
+              parameters: { password: 'password1' },
+              query: 'CALL dbms.security.changePassword($password)'
+            }),
+            expect.anything(),
+            undefined
+          )
+
+          expect(currentAction).toEqual({
+            result: { meta: 'bolt://localhost:7687' },
+            success: true,
+            type: $$responseChannel
+          })
+
+          resolve()
+
+          expect(mockDriver.close).toHaveBeenCalledTimes(1)
+          expect(mockSessionClose).toHaveBeenCalledTimes(2)
+        } catch (e) {
+          reject(e)
+        }
+      })
+    })
+
+    // When
+    epicMiddleware.replaceEpic(connections.handleForcePasswordChangeEpic)
+    store.clearActions()
+    store.dispatch(action)
+
+    // Return
+    return p
+  })
+
+  test('handleForcePasswordChangeEpic resolves with an error if dbms function call fails', () => {
+    // Given
+    const message = 'A password must be at least 8 characters.'
+    mockSessionExecuteWrite
+      .mockRejectedValueOnce(new MultiDatabaseNotSupportedError())
+      .mockRejectedValue(new Error(message))
+
+    const p = new Promise<void>((resolve, reject) => {
+      bus.take($$responseChannel, currentAction => {
+        // Then
+        const actions = store.getActions()
+        try {
+          expect(actions).toEqual([action, currentAction])
+
+          expect(executeAlterCurrentUserQuerySpy).toHaveBeenCalledTimes(1)
+
+          expect(executeCallChangePasswordQuerySpy).toHaveBeenCalledTimes(1)
+
+          expect(executePasswordResetQuerySpy).toHaveBeenCalledTimes(2)
+
+          expect(currentAction).toEqual({
+            error: expect.objectContaining({
+              message
+            }),
+            success: false,
+            type: $$responseChannel
+          })
+
+          resolve()
+
+          expect(mockDriver.close).toHaveBeenCalledTimes(1)
+          expect(mockSessionClose).toHaveBeenCalledTimes(2)
+        } catch (e) {
+          reject(e)
+        }
+      })
+    })
+
+    // When
+    epicMiddleware.replaceEpic(connections.handleForcePasswordChangeEpic)
     store.clearActions()
     store.dispatch(action)
 

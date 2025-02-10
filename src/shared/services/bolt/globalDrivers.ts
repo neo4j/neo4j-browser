@@ -62,7 +62,7 @@ export const buildGlobalDriversObject = async (
         opts,
         () => {}
       )
-      routed && (await routed.verifyConnectivity())
+      routed && (await routed.verifyConnectivity({ database: 'system' }))
       routingSupported = true
     } catch (e) {
       if (e && isError(e)) {
