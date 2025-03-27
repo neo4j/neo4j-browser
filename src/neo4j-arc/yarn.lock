@@ -204,10 +204,10 @@
     "@neo4j-cypher/antlr4-simple" "1.0.0"
     "@neo4j-cypher/editor-support" "1.0.1"
 
-"@neo4j-devtools/word-color@^0.0.7":
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@neo4j-devtools/word-color/-/word-color-0.0.7.tgz#67b29df52e8b0ad3f39ec7f2c3f099ffad16d137"
-  integrity sha512-dfmxC7arxX8GThuNPl7XJUmsFmHwTXCQw87KK0qA5dJemLqNEDbTkFDYbb3J1i8aWbYJs5COpGpwakbHWBxPyQ==
+"@neo4j-devtools/word-color@^0.0.8":
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/@neo4j-devtools/word-color/-/word-color-0.0.8.tgz#48b181022659de01e251073e5967423fc922c053"
+  integrity sha512-0fC2PXU1M0wL72lVil/2JnUccpEoPaiNJsNAc8fgRUysVeZ/OLKFvZAeOnufJ4X5OKkImaL1lvoGyhfKfOKfzw==
   dependencies:
     "@types/chroma-js" "2.1.4"
     chroma-js "2.4.2"
@@ -805,10 +805,10 @@ ms@2.1.2:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
-neo4j-driver-core@5.9.2:
-  version "5.9.2"
-  resolved "https://registry.yarnpkg.com/neo4j-driver-core/-/neo4j-driver-core-5.9.2.tgz#354a2a4cb967c3202acb4e7a2d2335d3d609cb3b"
-  integrity sha512-z8ZsEEH8e86RsbFUbIrz+YOU/38D316C1b6OqSOoT93IhSzRNQNnrI0pKYKUDKPvI8Ud9acmhQvtIlisZ1gQkA==
+neo4j-driver-core@5.26.0:
+  version "5.26.0"
+  resolved "https://registry.yarnpkg.com/neo4j-driver-core/-/neo4j-driver-core-5.26.0.tgz#6ac836dc944941e11f06ba7dabf1b50b6335ac41"
+  integrity sha512-S3nHbqGuKPktWkRGenfx8Dt4MuqqrrUQjo4COhRj9r9P6WOjd0jzF/wyZb8H44pW5Qx/gmqn9B3If+7gfiaRmw==
 
 object-assign@^4.1.1:
   version "4.1.1"

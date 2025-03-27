@@ -2135,10 +2135,10 @@
     "@neo4j-cypher/antlr4-simple" "1.0.0"
     "@neo4j-cypher/editor-support" "1.0.1"
 
-"@neo4j-devtools/word-color@^0.0.7":
-  version "0.0.7"
-  resolved "https://registry.npmjs.org/@neo4j-devtools/word-color/-/word-color-0.0.7.tgz"
-  integrity sha512-dfmxC7arxX8GThuNPl7XJUmsFmHwTXCQw87KK0qA5dJemLqNEDbTkFDYbb3J1i8aWbYJs5COpGpwakbHWBxPyQ==
+"@neo4j-devtools/word-color@^0.0.8":
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/@neo4j-devtools/word-color/-/word-color-0.0.8.tgz#48b181022659de01e251073e5967423fc922c053"
+  integrity sha512-0fC2PXU1M0wL72lVil/2JnUccpEoPaiNJsNAc8fgRUysVeZ/OLKFvZAeOnufJ4X5OKkImaL1lvoGyhfKfOKfzw==
   dependencies:
     "@types/chroma-js" "2.1.4"
     chroma-js "2.4.2"

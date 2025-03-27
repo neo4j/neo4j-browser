@@ -24,7 +24,7 @@
     "@rollup/plugin-alias": "^3.1.9",
     "@types/react": "^17.0.40",
     "esbuild": "^0.14.26",
-    "neo4j-driver-core": "5.9.2",
+    "neo4j-driver-core": "5.26.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "rollup": "^2.70.1",
@@ -38,7 +38,7 @@
     "@neo4j-cypher/antlr4": "^1.0.0",
     "@neo4j-cypher/editor-support": "^1.0.1",
     "@neo4j-cypher/extract-statements": "^1.0.1",
-    "@neo4j-devtools/word-color": "^0.0.7",
+    "@neo4j-devtools/word-color": "^0.0.8",
     "@types/d3-color": "^3.0.2",
     "@types/d3-drag": "^3.0.1",
     "@types/d3-ease": "^3.0.0",
@@ -67,7 +67,7 @@
     "styled-components": "^5.3.5"
   },
   "peerDependencies": {
-    "neo4j-driver-core": "5.9.2",
+    "neo4j-driver-core": "5.26.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   }
