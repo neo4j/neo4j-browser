@@ -24,7 +24,7 @@ import { ClipboardCopier, PropertiesTable, upperFirst } from 'neo4j-arc/common'
 import { StyleableNodeLabel } from './StyleableNodeLabel'
 import { StyleableRelType } from './StyleableRelType'
 import { PaneBody, PaneHeader, PaneTitle, PaneWrapper } from './styled'
-import { DetailsPaneProps } from 'neo4j-arc'
+import { DetailsPaneProps } from 'neo4j-arc/graph-visualization'
 
 export const DETAILS_PANE_STEP_SIZE = 1000
 export function DetailsPane({

@@ -1,9 +1,5 @@
 name: 'Arc PR e2e tests'
 
-defaults:
-  run:
-    working-directory: src/neo4j-arc
-
 on:
   pull_request:
     branches:
@@ -18,5 +14,4 @@ jobs:
           node-version-file: '.nvmrc'
       - run: npm -g install yarn
       - run: yarn install --frozen-lockfile
-      - run: yarn test
-      - run: yarn build
+      - run: yarn test-arc
