@@ -41,7 +41,7 @@ const EU_LOCALES = [
 
 const OPTED_IN_LOCALES = [...EU_LOCALES]
 
-const userPrefersQuery = (): boolean => {
+const userHasNotOptedOutOfPreview = (): boolean => {
   const prefersOldBrowser = localStorage.getItem('prefersOldBrowser')
   const doesPreferQuery = prefersOldBrowser === 'false'
   return doesPreferQuery || prefersOldBrowser === null
@@ -50,6 +50,6 @@ const userPrefersQuery = (): boolean => {
 export const optedInByRegion = (): boolean => {
   return (
     OPTED_IN_LOCALES.includes(navigator.language.toLowerCase()) &&
-    userPrefersQuery()
+    userHasNotOptedOutOfPreview()
   )
 }
