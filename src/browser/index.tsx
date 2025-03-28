@@ -23,14 +23,16 @@ import ReactDOM from 'react-dom'
 import AppInit, { setupSentry } from './AppInit'
 import './init'
 import { navigateToPreview } from './modules/Stream/StartPreviewFrame'
+import { optedInByRegion } from './services/preview-optin-service'
 
 setupSentry()
+
 ;(async () => {
-  const doesPreferQuery = localStorage.getItem('prefersOldBrowser') === 'false'
+  const optedInToPreview = optedInByRegion()
   try {
     const response = await fetch('./preview/manifest.json')
     if (response.status === 200) {
-      if (doesPreferQuery) {
+      if (optedInToPreview) {
         navigateToPreview()
       } else {
         localStorage.setItem('previewAvailable', 'true')
