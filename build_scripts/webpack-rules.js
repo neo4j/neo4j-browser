@@ -44,7 +44,8 @@ module.exports = [
     test: /\.(js|jsx)$/,
     include: [
       path.resolve('src'),
-      path.resolve('node_modules/@neo4j/browser-lambda-parser')
+      path.resolve('node_modules/@neo4j/browser-lambda-parser'),
+      path.resolve('node_modules/@neo4j-devtools/word-color')
     ],
     use: 'babel-loader'
   },
