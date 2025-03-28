@@ -1867,7 +1867,7 @@ Third-party licenses
 │  └─ react-universal-interface@0.6.2
 │     └─ URL: https://github.com/streamich/react-universal-interface.git
 ├─ UNKNOWN
-│  └─ @neo4j-devtools/word-color@0.0.7
+│  └─ @neo4j-devtools/word-color@0.0.8
 │     └─ URL: git@github.com:neo4j/nx.git
 └─ Unlicense
    ├─ nano-css@5.3.5
