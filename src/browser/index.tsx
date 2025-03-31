@@ -23,12 +23,14 @@ import ReactDOM from 'react-dom'
 import AppInit, { setupSentry } from './AppInit'
 import './init'
 import { navigateToPreview } from './modules/Stream/StartPreviewFrame'
-import { optedInByUtcOffset } from './services/preview-optin-service'
 
 setupSentry()
 
 ;(async () => {
-  const optedInToPreview = optedInByUtcOffset()
+  const prefersOldBrowser = localStorage.getItem('prefersOldBrowser')
+  const doesPreferQuery = prefersOldBrowser === 'false'
+  const optedInToPreview = doesPreferQuery || prefersOldBrowser === null
+
   try {
     const response = await fetch('./preview/manifest.json')
     if (response.status === 200) {
