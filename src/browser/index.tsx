@@ -23,12 +23,12 @@ import ReactDOM from 'react-dom'
 import AppInit, { setupSentry } from './AppInit'
 import './init'
 import { navigateToPreview } from './modules/Stream/StartPreviewFrame'
-import { optedInByRegion } from './services/preview-optin-service'
+import { optedInByUtcOffset } from './services/preview-optin-service'
 
 setupSentry()
 
 ;(async () => {
-  const optedInToPreview = optedInByRegion()
+  const optedInToPreview = optedInByUtcOffset()
   try {
     const response = await fetch('./preview/manifest.json')
     if (response.status === 200) {
