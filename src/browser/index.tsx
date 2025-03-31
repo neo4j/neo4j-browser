@@ -25,12 +25,16 @@ import './init'
 import { navigateToPreview } from './modules/Stream/StartPreviewFrame'
 
 setupSentry()
+
 ;(async () => {
-  const doesPreferQuery = localStorage.getItem('prefersOldBrowser') === 'false'
+  const prefersOldBrowser = localStorage.getItem('prefersOldBrowser')
+  const doesPreferQuery = prefersOldBrowser === 'false'
+  const optedInToPreview = doesPreferQuery || prefersOldBrowser === null
+
   try {
     const response = await fetch('./preview/manifest.json')
     if (response.status === 200) {
-      if (doesPreferQuery) {
+      if (optedInToPreview) {
         navigateToPreview()
       } else {
         localStorage.setItem('previewAvailable', 'true')
