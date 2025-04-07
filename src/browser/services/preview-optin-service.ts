@@ -6,7 +6,5 @@ const notOptedOutOfPreview = (): boolean => {
 }
 
 export const optedInByLocalhost = (): boolean => {
-  console.log('notOptedOutOfPreview', notOptedOutOfPreview())
-  console.log('window.location.hostname', window.location.hostname)
   return notOptedOutOfPreview() && window.location.hostname === 'localhost'
 }
