@@ -50,7 +50,7 @@ asciidoc:
     nonhtmloutput: ""
     sectnumlevel: 3,
     experimental: ''
-    copyright: 2023
+    copyright: 2025
     common-license-page-uri: https://neo4j.com/docs/license/
     docs-base-uri: https://neo4j.com/docs
     neo4j-docs-base-uri: https://neo4j.com/docs

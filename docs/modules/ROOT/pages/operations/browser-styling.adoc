@@ -21,6 +21,7 @@ If you select a node label in the _Overview_, there are several styling options 
 * Color -- set the color for nodes of the selected label.
 * Size  -- set the size for nodes of the selected label.
 * Caption -- set what should be displayed as the caption for nodes of the selected label.
+You can use the node id or the node label.
 
 .Set node style
 [caption="Label and type overview"]
