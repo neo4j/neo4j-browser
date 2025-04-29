@@ -30,7 +30,7 @@ If you select a relationship type in the _Overview_, there are several styling o
 
 * Color -- set the color for relationships of the selected type.
 * Line width  -- set the line width for relationships of the selected type.
-* Caption -- set what should be displayed as the caption for relationships of the selected type.
+* Caption -- set which property should be displayed as the caption for relationships of the selected type.
 
 .Set relationship style
 [caption="Label and type overview"]
