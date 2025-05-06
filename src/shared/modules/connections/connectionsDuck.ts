@@ -28,18 +28,18 @@ import {
 } from 'services/bolt/boltConnectionErrors'
 import { NATIVE, NO_AUTH, SSO } from 'services/bolt/boltHelpers'
 import { GlobalState } from 'shared/globalState'
-import { APP_START, USER_CLEAR, inWebEnv } from 'shared/modules/app/appDuck'
+import { APP_START, USER_CLEAR, inDesktop } from 'shared/modules/app/appDuck'
 import { executeSystemCommand } from 'shared/modules/commands/commandsDuck'
 import * as discovery from 'shared/modules/discovery/discoveryDuck'
 import {
+  NEO4J_CLOUD_DOMAINS,
   getConnectionTimeout,
   getInitCmd,
   getPlayImplicitInitCommands
 } from 'shared/modules/settings/settingsDuck'
-import { NEO4J_CLOUD_DOMAINS } from 'shared/modules/settings/settingsDuck'
 import { isCloudHost } from 'shared/services/utils'
-import { fetchMetaData } from '../dbMeta/dbMetaDuck'
 import { isError } from 'shared/utils/typeguards'
+import { fetchMetaData } from '../dbMeta/dbMetaDuck'
 import forceResetPasswordQueryHelper, {
   MultiDatabaseNotSupportedError
 } from './forceResetPasswordQueryHelper'
@@ -680,8 +680,8 @@ export const disconnectSuccessEpic = (action$: any, store: any) => {
 export const connectionLostEpic = (action$: any, store: any) =>
   action$
     .ofType(LOST_CONNECTION)
-    // Only retry in web env and if we're supposed to be connected
-    .filter(() => inWebEnv(store.getState()) && isConnected(store.getState()))
+    // Only retry outside desktop and if we're supposed to be connected
+    .filter(() => !inDesktop(store.getState()) && isConnected(store.getState()))
     .throttleTime(5000)
     .do(() => store.dispatch(updateConnectionState(PENDING_STATE)))
     .mergeMap((action: any) => {
