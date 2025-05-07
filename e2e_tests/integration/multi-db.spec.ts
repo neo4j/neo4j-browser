@@ -125,6 +125,8 @@ describe('Multi database', () => {
         // Cleanup
         cy.executeCommand(':use system')
         cy.executeCommand('DROP DATABASE `name-with-dash`')
+        cy.wait(1000)
+        cy.resultContains('1 system update, no records')
         databaseOptionListOptions().should('have.length', 2)
         cy.get('[data-testid="navigationDBMS"]').click()
       })
