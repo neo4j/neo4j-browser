@@ -58,19 +58,37 @@ describe('gql status formatting', () => {
     )
   })
 
-  test('formats a title from a gql status description with no matches correctly', () => {
-    const gqlStatusDescription =
-      'Unfortunately, no one can be told what the Matrix is. You have to see it for yourself'
-    const result = formatTitleFromGqlStatusDescription(gqlStatusDescription)
+  test('formats a description with line breaks correctly', () => {
+    const gqlStatusDescription = `error: general processing exception - unexpected error. The shortest path algorithm does not work when the start and end nodes are the same. This can happen if you
+perform a shortestPath search after a cartesian product that might have the same start and end nodes for some
+of the rows passed to shortestPath.`
 
-    expect(result).toEqual('')
-  })
-
-  test('formats a description from a gql status description with no matches correctly', () => {
-    const gqlStatusDescription = 'Believe the unbelievable'
     const result =
       formatDescriptionFromGqlStatusDescription(gqlStatusDescription)
 
-    expect(result).toEqual('')
+    expect(result)
+      .toEqual(`The shortest path algorithm does not work when the start and end nodes are the same. This can happen if you
+perform a shortestPath search after a cartesian product that might have the same start and end nodes for some
+of the rows passed to shortestPath.`)
+  })
+
+  test('formats a title from a gql status description with no error|info|warn prefix correctly', () => {
+    const gqlStatusDescription =
+      'Unfortunately, no one can be told what the Matrix is. You have to see it for yourself.'
+
+    const result = formatTitleFromGqlStatusDescription(gqlStatusDescription)
+
+    expect(result).toEqual(
+      'Unfortunately, no one can be told what the Matrix is'
+    )
+  })
+
+  test('formats a description from a gql status description with no error|info|warn correctly', () => {
+    const gqlStatusDescription =
+      'Unfortunately, no one can be told what the Matrix is. You have to see it for yourself.'
+
+    const result = formatTitleFromGqlStatusDescription(gqlStatusDescription)
+
+    expect(result).toEqual('You have to see it for yourself.')
   })
 })
