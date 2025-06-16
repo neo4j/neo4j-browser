@@ -38,8 +38,7 @@ const mount = (props: Partial<ErrorsViewProps>, state?: any) => {
     params: {},
     executeCmd: jest.fn(),
     setEditorContent: jest.fn(),
-    neo4jVersion: null,
-    gqlErrorsEnabled: true
+    neo4jVersion: null
   }
 
   const combinedProps = {
@@ -118,9 +117,6 @@ describe('ErrorsView', () => {
         server: {
           version: '5.26.0'
         }
-      },
-      settings: {
-        enableGqlErrorsAndNotifications: true
       }
     }
 
@@ -161,9 +157,6 @@ describe('ErrorsView', () => {
         server: {
           version: '5.26.0'
         }
-      },
-      settings: {
-        enableGqlErrorsAndNotifications: true
       }
     }
 

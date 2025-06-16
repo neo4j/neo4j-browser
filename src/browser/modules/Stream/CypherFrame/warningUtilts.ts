@@ -75,6 +75,18 @@ const mapNotificationsToFormattedNotifications = (
 
 const SEVERITY_LEVELS = ['ERROR', 'WARNING', 'INFORMATION']
 
+export const hasPopulatedGqlFields = (
+  resultSummary: Partial<ResultSummary>
+): resultSummary is Partial<ResultSummary> & {
+  gqlStatusObjects: GqlStatusObject[]
+  notifications: Notification[]
+} => {
+  return (
+    'gqlStatusObjects' in resultSummary &&
+    resultSummary.gqlStatusObjects !== undefined
+  )
+}
+
 export const formatSummaryFromNotifications = (
   resultSummary?: Partial<ResultSummary>
 ): FormattedNotification[] => {

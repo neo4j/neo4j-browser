@@ -57,14 +57,12 @@ import {
 import { BrowserError } from 'services/exceptions'
 import { deepEquals } from 'neo4j-arc/common'
 import { getSemanticVersion } from 'shared/modules/dbMeta/dbMetaDuck'
-import { gte, SemVer } from 'semver'
+import { SemVer } from 'semver'
 import {
   formatError,
   formatErrorGqlStatusObject,
   hasPopulatedGqlFields
 } from '../errorUtils'
-import { FIRST_GQL_ERRORS_SUPPORT } from 'shared/modules/features/versionedFeatures'
-import { shouldShowGqlErrorsAndNotifications } from 'shared/modules/settings/settingsDuck'
 
 export type ErrorsViewProps = {
   result: BrowserRequestResult
@@ -74,7 +72,6 @@ export type ErrorsViewProps = {
   executeCmd: (cmd: string) => void
   setEditorContent: (cmd: string) => void
   depth?: number
-  gqlErrorsEnabled: boolean
 }
 
 class ErrorsViewComponent extends Component<ErrorsViewProps> {
@@ -92,8 +89,7 @@ class ErrorsViewComponent extends Component<ErrorsViewProps> {
       executeCmd,
       setEditorContent,
       neo4jVersion,
-      depth = 0,
-      gqlErrorsEnabled
+      depth = 0
     } = this.props
 
     const error = this.props.result as BrowserError
@@ -101,10 +97,9 @@ class ErrorsViewComponent extends Component<ErrorsViewProps> {
       return null
     }
 
-    const formattedError =
-      gqlErrorsEnabled && hasPopulatedGqlFields(error)
-        ? formatErrorGqlStatusObject(error)
-        : formatError(error)
+    const formattedError = hasPopulatedGqlFields(error)
+      ? formatErrorGqlStatusObject(error)
+      : formatError(error)
 
     if (!formattedError?.title) {
       return null
@@ -176,18 +171,9 @@ class ErrorsViewComponent extends Component<ErrorsViewProps> {
   }
 }
 
-const gqlErrorsEnabled = (state: GlobalState): boolean => {
-  const featureEnabled = shouldShowGqlErrorsAndNotifications(state)
-  const version = getSemanticVersion(state)
-  return version
-    ? featureEnabled && gte(version, FIRST_GQL_ERRORS_SUPPORT)
-    : false
-}
-
 const mapStateToProps = (state: GlobalState) => ({
   params: getParams(state),
-  neo4jVersion: getSemanticVersion(state),
-  gqlErrorsEnabled: gqlErrorsEnabled(state)
+  neo4jVersion: getSemanticVersion(state)
 })
 
 const mapDispatchToProps = (

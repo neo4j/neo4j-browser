@@ -32,9 +32,6 @@ export const FIRST_MULTI_DB_SUPPORT = NEO4J_4_0
 // compatible bolt server.
 export const FIRST_NO_MULTI_DB_SUPPORT = '3.4.0'
 
-export const FIRST_GQL_NOTIFICATIONS_SUPPORT = '5.23.0'
-export const FIRST_GQL_ERRORS_SUPPORT = '5.26.0'
-
 export const getShowCurrentUserProcedure = (serverVersion: string) => {
   const serverVersionGuessed = guessSemverVersion(serverVersion)
 

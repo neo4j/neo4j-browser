@@ -37,17 +37,13 @@ import { deepEquals } from 'neo4j-arc/common'
 import {
   formatSummaryFromGqlStatusObjects,
   formatSummaryFromNotifications,
-  FormattedNotification
+  FormattedNotification,
+  hasPopulatedGqlFields
 } from './warningUtilts'
 import { NotificationSeverityLevel, QueryResult } from 'neo4j-driver-core'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
-import { GlobalState } from 'shared/globalState'
 import { Bus } from 'suber'
-import { getSemanticVersion } from 'shared/modules/dbMeta/dbMetaDuck'
-import { gte } from 'semver'
-import { FIRST_GQL_NOTIFICATIONS_SUPPORT } from 'shared/modules/features/versionedFeatures'
-import { shouldShowGqlErrorsAndNotifications } from 'shared/modules/settings/settingsDuck'
 
 const getWarningComponent = (severity?: string | NotificationSeverityLevel) => {
   if (severity === 'ERROR') {
@@ -64,7 +60,6 @@ const getWarningComponent = (severity?: string | NotificationSeverityLevel) => {
 export type WarningsViewProps = {
   result?: QueryResult | null
   bus: Bus
-  gqlWarningsEnabled: boolean
 }
 
 class WarningsViewComponent extends Component<WarningsViewProps> {
@@ -82,7 +77,7 @@ class WarningsViewComponent extends Component<WarningsViewProps> {
       return null
 
     const { summary } = this.props.result
-    const notifications = this.props.gqlWarningsEnabled
+    const notifications = hasPopulatedGqlFields(summary)
       ? formatSummaryFromGqlStatusObjects(summary)
       : formatSummaryFromNotifications(summary)
     const { text: cypher = '' } = summary.query
@@ -130,21 +125,7 @@ class WarningsViewComponent extends Component<WarningsViewProps> {
   }
 }
 
-const gqlWarningsEnabled = (state: GlobalState): boolean => {
-  const featureEnabled = shouldShowGqlErrorsAndNotifications(state)
-  const version = getSemanticVersion(state)
-  return version
-    ? featureEnabled && gte(version, FIRST_GQL_NOTIFICATIONS_SUPPORT)
-    : false
-}
-
-const mapStateToProps = (state: GlobalState) => ({
-  gqlWarningsEnabled: gqlWarningsEnabled(state)
-})
-
-export const WarningsView = withBus(
-  connect(mapStateToProps, null)(WarningsViewComponent)
-)
+export const WarningsView = withBus(connect(null, null)(WarningsViewComponent))
 
 export class WarningsStatusbar extends Component<any> {
   shouldComponentUpdate() {
