@@ -150,8 +150,8 @@ testData.forEach(testData => {
     it('can generate a set params template to use if query is missing params', () => {
       cy.executeCommand(':clear')
       cy.executeCommand('return $test1, $test2')
-      const expectedMessage = `Expected parameter(s): test1, test2`
-      cy.get('[data-testid="cypherFrameErrorMessage"]', { timeout: 20000 })
+      const expectedMessage = `Use this template to add missing parameter(s):`
+      cy.get('[data-testid="frameContents"]', { timeout: 20000 })
         .first()
         .should('contain', expectedMessage)
 
