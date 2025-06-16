@@ -31,7 +31,7 @@ const formatPropertyFromStatusDescripton = (
 ): string | undefined => {
   const matches =
     gqlStatusDescription?.match(
-      /^(?:(?:error|info|warn):\s)?(.+?)(?:\.(.+?))?\.?$/s
+      /^(?:(?:error|info|warn):\s)?([\s\S]+?)(?:\.([\s\S]+?))?\.?$/
     ) ?? []
 
   return matches[index] === undefined
