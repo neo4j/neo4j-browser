@@ -87,7 +87,8 @@ of the rows passed to shortestPath.`)
     const gqlStatusDescription =
       'Unfortunately, no one can be told what the Matrix is. You have to see it for yourself.'
 
-    const result = formatTitleFromGqlStatusDescription(gqlStatusDescription)
+    const result =
+      formatDescriptionFromGqlStatusDescription(gqlStatusDescription)
 
     expect(result).toEqual('You have to see it for yourself.')
   })

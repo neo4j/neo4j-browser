@@ -59,7 +59,10 @@ const mapBrowserErrorToFormattedError = (
   )
   const title = isNonEmptyString(gqlStatusTitle) ? gqlStatusTitle : description
   return {
-    title: isNonEmptyString(title) ? `${gqlStatus}: ${title}` : gqlStatus,
+    title:
+      isNonEmptyString(title) && title !== gqlStatus
+        ? `${gqlStatus}: ${title}`
+        : gqlStatus,
     description
   }
 }
