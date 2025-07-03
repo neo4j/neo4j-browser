@@ -138,7 +138,7 @@ describe('WarningsView', () => {
     const state = {
       meta: {
         server: {
-          version: '5.23.0'
+          version: '5.27.0'
         }
       }
     }
@@ -231,7 +231,7 @@ describe('WarningsView', () => {
     const state = {
       meta: {
         server: {
-          version: '5.23.0'
+          version: '5.27.0'
         }
       }
     }

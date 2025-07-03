@@ -96,7 +96,7 @@ describe('ErrorsView', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('does display an error for gql status codes', () => {
+  test('does display an error for GQL status codes', () => {
     // Given
     const error: BrowserError = {
       code: 'Test.Error',
@@ -115,7 +115,7 @@ describe('ErrorsView', () => {
     const state = {
       meta: {
         server: {
-          version: '5.26.0'
+          version: '5.27.0'
         }
       }
     }
@@ -127,7 +127,7 @@ describe('ErrorsView', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('does display a nested error for gql status codes', () => {
+  test('does display a nested error for GQL status codes', () => {
     // Given
     const error: BrowserError = {
       code: 'Test.Error',
@@ -155,7 +155,7 @@ describe('ErrorsView', () => {
     const state = {
       meta: {
         server: {
-          version: '5.26.0'
+          version: '5.27.0'
         }
       }
     }

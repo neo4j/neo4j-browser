@@ -34,16 +34,13 @@ import {
   StyledCypherInfoMessage
 } from '../styled'
 import { deepEquals } from 'neo4j-arc/common'
-import {
-  formatSummaryFromGqlStatusObjects,
-  formatSummaryFromNotifications,
-  FormattedNotification,
-  hasPopulatedGqlFields
-} from './warningUtilts'
+import { formatSummary, FormattedNotification } from './warningUtilts'
 import { NotificationSeverityLevel, QueryResult } from 'neo4j-driver-core'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
 import { Bus } from 'suber'
+import { gqlErrorsAndNotificationsEnabled } from 'services/gqlUtils'
+import { GlobalState } from 'shared/globalState'
 
 const getWarningComponent = (severity?: string | NotificationSeverityLevel) => {
   if (severity === 'ERROR') {
@@ -60,6 +57,7 @@ const getWarningComponent = (severity?: string | NotificationSeverityLevel) => {
 export type WarningsViewProps = {
   result?: QueryResult | null
   bus: Bus
+  gqlErrorsAndNotificationsEnabled?: boolean
 }
 
 class WarningsViewComponent extends Component<WarningsViewProps> {
@@ -76,10 +74,12 @@ class WarningsViewComponent extends Component<WarningsViewProps> {
     )
       return null
 
+    const { gqlErrorsAndNotificationsEnabled = false } = this.props
     const { summary } = this.props.result
-    const notifications = hasPopulatedGqlFields(summary)
-      ? formatSummaryFromGqlStatusObjects(summary)
-      : formatSummaryFromNotifications(summary)
+    const notifications = formatSummary(
+      summary,
+      gqlErrorsAndNotificationsEnabled
+    )
     const { text: cypher = '' } = summary.query
 
     if (!notifications || !cypher) {
@@ -125,7 +125,13 @@ class WarningsViewComponent extends Component<WarningsViewProps> {
   }
 }
 
-export const WarningsView = withBus(connect(null, null)(WarningsViewComponent))
+const mapStateToProps = (state: GlobalState) => ({
+  gqlErrorsAndNotificationsEnabled: gqlErrorsAndNotificationsEnabled(state)
+})
+
+export const WarningsView = withBus(
+  connect(mapStateToProps, null)(WarningsViewComponent)
+)
 
 export class WarningsStatusbar extends Component<any> {
   shouldComponentUpdate() {

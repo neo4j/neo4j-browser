@@ -23,12 +23,9 @@ import {
   notificationCategory,
   notificationSeverityLevel
 } from 'neo4j-driver-core'
-import {
-  formatSummaryFromGqlStatusObjects,
-  formatSummaryFromNotifications
-} from './warningUtilts'
+import { formatSummary } from './warningUtilts'
 
-describe('format rseult summary', () => {
+describe('format result summary', () => {
   test('formats result summary for notifications', () => {
     const resultSummary = {
       server: {
@@ -63,7 +60,7 @@ describe('format rseult summary', () => {
       ]
     }
 
-    const result = formatSummaryFromNotifications(resultSummary)
+    const result = formatSummary(resultSummary, false)
 
     expect(result).toEqual([
       {
@@ -139,7 +136,7 @@ describe('format rseult summary', () => {
       gqlStatusObjects
     }
 
-    const result = formatSummaryFromGqlStatusObjects(resultSummary)
+    const result = formatSummary(resultSummary, true)
 
     expect(result).toEqual([
       {

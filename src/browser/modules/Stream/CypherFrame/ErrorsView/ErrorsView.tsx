@@ -59,10 +59,48 @@ import { deepEquals } from 'neo4j-arc/common'
 import { getSemanticVersion } from 'shared/modules/dbMeta/dbMetaDuck'
 import { SemVer } from 'semver'
 import {
+  flattenAndInvertErrors,
   formatError,
-  formatErrorGqlStatusObject,
-  hasPopulatedGqlFields
+  FormattedError
 } from '../errorUtils'
+import { gqlErrorsAndNotificationsEnabled } from 'services/gqlUtils'
+import styled from 'styled-components'
+
+const StyledErrorsViewInnerComponentContent = styled.div<{ nested: boolean }>`
+  padding-left: ${props => (props.nested ? '20px' : '0')};
+`
+
+type ErrorsViewInnerProps = {
+  formattedError: FormattedError
+  nested?: boolean
+}
+
+class ErrorsViewInnerComponent extends Component<ErrorsViewInnerProps> {
+  render(): null | JSX.Element {
+    const { formattedError, nested = false } = this.props
+
+    return (
+      <StyledErrorsViewInnerComponentContent nested={nested}>
+        <StyledHelpDescription>
+          {!nested && (
+            <React.Fragment>
+              <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>
+              <StyledErrorH4>{formattedError.title}</StyledErrorH4>
+            </React.Fragment>
+          )}
+          {nested && <h6>{formattedError.title}</h6>}
+        </StyledHelpDescription>
+        {formattedError.description && (
+          <StyledDiv>
+            <StyledPreformattedArea data-testid={'cypherFrameErrorMessage'}>
+              {formattedError?.description}
+            </StyledPreformattedArea>
+          </StyledDiv>
+        )}
+      </StyledErrorsViewInnerComponentContent>
+    )
+  }
+}
 
 export type ErrorsViewProps = {
   result: BrowserRequestResult
@@ -72,13 +110,26 @@ export type ErrorsViewProps = {
   executeCmd: (cmd: string) => void
   setEditorContent: (cmd: string) => void
   depth?: number
+  gqlErrorsAndNotificationsEnabled?: boolean
 }
 
-class ErrorsViewComponent extends Component<ErrorsViewProps> {
-  shouldComponentUpdate(props: ErrorsViewProps): boolean {
+type ErrorsViewState = {
+  nestedErrorsToggled: boolean
+}
+
+class ErrorsViewComponent extends Component<ErrorsViewProps, ErrorsViewState> {
+  state = {
+    nestedErrorsToggled: false
+  }
+
+  shouldComponentUpdate(
+    props: ErrorsViewProps,
+    state: ErrorsViewState
+  ): boolean {
     return (
       !deepEquals(props.result, this.props.result) ||
-      !deepEquals(props.params, this.props.params)
+      !deepEquals(props.params, this.props.params) ||
+      !deepEquals(state, this.state)
     )
   }
 
@@ -89,17 +140,32 @@ class ErrorsViewComponent extends Component<ErrorsViewProps> {
       executeCmd,
       setEditorContent,
       neo4jVersion,
-      depth = 0
+      gqlErrorsAndNotificationsEnabled = false
     } = this.props
 
     const error = this.props.result as BrowserError
+
+    const invertedErrors = flattenAndInvertErrors(
+      error,
+      gqlErrorsAndNotificationsEnabled
+    )
+    const [deepestError] = invertedErrors
+    const nestedErrors = invertedErrors.slice(1)
+    const togglable = nestedErrors.length > 0
+    const setNestedErrorsToggled = (toggled: boolean) => {
+      this.setState({
+        nestedErrorsToggled: toggled
+      })
+    }
+
     if (!error) {
       return null
     }
 
-    const formattedError = hasPopulatedGqlFields(error)
-      ? formatErrorGqlStatusObject(error)
-      : formatError(error)
+    const formattedError = formatError(
+      deepestError,
+      gqlErrorsAndNotificationsEnabled
+    )
 
     if (!formattedError?.title) {
       return null
@@ -110,24 +176,9 @@ class ErrorsViewComponent extends Component<ErrorsViewProps> {
     }
 
     return (
-      <StyledHelpFrame nested={depth > 0}>
+      <StyledHelpFrame>
         <StyledHelpContent>
-          <StyledHelpDescription>
-            {depth === 0 && (
-              <StyledCypherErrorMessage>ERROR</StyledCypherErrorMessage>
-            )}
-            <StyledErrorH4>{formattedError.title}</StyledErrorH4>
-          </StyledHelpDescription>
-          {formattedError.description && (
-            <StyledDiv>
-              <StyledPreformattedArea data-testid={'cypherFrameErrorMessage'}>
-                {formattedError?.description}
-              </StyledPreformattedArea>
-            </StyledDiv>
-          )}
-          {formattedError.innerError && (
-            <ErrorsView result={formattedError.innerError} depth={depth + 1} />
-          )}
+          <ErrorsViewInnerComponent formattedError={formattedError} />
           {isUnknownProcedureError(error) && (
             <StyledLinkContainer>
               <StyledLink
@@ -165,6 +216,29 @@ class ErrorsViewComponent extends Component<ErrorsViewProps> {
               }
             />
           )}
+          {togglable && (
+            <StyledLinkContainer>
+              <StyledLink
+                onClick={() =>
+                  setNestedErrorsToggled(!this.state.nestedErrorsToggled)
+                }
+              >
+                &nbsp;
+                {this.state.nestedErrorsToggled ? 'Show less' : 'Show more'}
+              </StyledLink>
+            </StyledLinkContainer>
+          )}
+          {this.state.nestedErrorsToggled &&
+            nestedErrors.map((nestedError, index) => (
+              <ErrorsViewInnerComponent
+                key={index}
+                nested={true}
+                formattedError={formatError(
+                  nestedError,
+                  gqlErrorsAndNotificationsEnabled
+                )}
+              />
+            ))}
         </StyledHelpContent>
       </StyledHelpFrame>
     )
@@ -173,7 +247,8 @@ class ErrorsViewComponent extends Component<ErrorsViewProps> {
 
 const mapStateToProps = (state: GlobalState) => ({
   params: getParams(state),
-  neo4jVersion: getSemanticVersion(state)
+  neo4jVersion: getSemanticVersion(state),
+  gqlErrorsAndNotificationsEnabled: gqlErrorsAndNotificationsEnabled(state)
 })
 
 const mapDispatchToProps = (
@@ -192,6 +267,7 @@ const mapDispatchToProps = (
     }
   }
 }
+
 export const ErrorsView = withBus(
   connect(mapStateToProps, mapDispatchToProps)(ErrorsViewComponent)
 )

@@ -24,6 +24,7 @@ import {
   formatTitleFromGqlStatusDescription
 } from './gqlStatusUtils'
 import { BrowserError } from 'services/exceptions'
+import { cloneDeep } from 'lodash-es'
 
 export function isBrowserError(object: unknown): object is BrowserError {
   if (object !== null && typeof object === 'object') {
@@ -38,7 +39,7 @@ export function isBrowserError(object: unknown): object is BrowserError {
   return false
 }
 
-type FormattedError = {
+export type FormattedError = {
   title?: string
   description?: string
   innerError?: Pick<
@@ -67,7 +68,7 @@ const mapBrowserErrorToFormattedError = (
   }
 }
 
-export const hasPopulatedGqlFields = (
+const hasPopulatedGqlFields = (
   error: BrowserError | Error
 ): error is BrowserError & {
   gqlStatus: string
@@ -83,20 +84,59 @@ export const hasPopulatedGqlFields = (
   )
 }
 
-export const formatErrorGqlStatusObject = (
-  error: BrowserError
-): FormattedError => {
+const formatErrorGqlStatusObject = (error: BrowserError): FormattedError => {
   return {
     ...mapBrowserErrorToFormattedError(error),
     innerError: error.cause
   }
 }
 
-export const formatError = (error: BrowserError): FormattedError => {
+const formatLegacyError = (error: BrowserError): FormattedError => {
   const { code: title, message: description } = error
 
   return {
     title,
     description
   }
+}
+
+export const formatError = (
+  error: BrowserError,
+  gqlErrorsAndNotificationsEnabled: boolean
+): FormattedError => {
+  if (hasPopulatedGqlFields(error) && gqlErrorsAndNotificationsEnabled) {
+    return formatErrorGqlStatusObject(error)
+  }
+
+  return formatLegacyError(error)
+}
+
+export const flattenAndInvertErrors = (
+  error: BrowserError,
+  gqlErrorsAndNotificationsEnabled: boolean
+): BrowserError[] => {
+  const flattenErrorsToArray = (
+    currentError: BrowserError,
+    errors: BrowserError[] = []
+  ): BrowserError[] => {
+    const causeIsGqlError =
+      hasPopulatedGqlFields(currentError) &&
+      currentError.cause !== undefined &&
+      currentError.cause !== null &&
+      hasPopulatedGqlFields(currentError.cause)
+    const cause = causeIsGqlError ? currentError.cause : undefined
+
+    errors.push(currentError)
+
+    if (cause !== undefined && cause !== null) {
+      return flattenErrorsToArray(cause, errors)
+    }
+
+    return errors
+  }
+
+  const errors = gqlErrorsAndNotificationsEnabled
+    ? flattenErrorsToArray(cloneDeep(error))
+    : [error]
+  return errors.reverse()
 }
