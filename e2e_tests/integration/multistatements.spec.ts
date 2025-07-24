@@ -32,6 +32,7 @@ describe('Multi statements', () => {
   after(() => {
     cy.disableMultiStatement()
   })
+
   it('can connect', () => {
     const password = Cypress.config('password')
     cy.connect('neo4j', password)
@@ -69,7 +70,7 @@ describe('Multi statements', () => {
     )
     cy.get('[data-testid="frameContents"]', { timeout: 10000 })
       .first()
-      .should('contain', 'Error')
+      .should('contain', 'ERROR')
 
     cy.get('[data-testid="navigationSettings"]').click()
     cy.get('[data-testid="setting-enableMultiStatementMode"]').click()
@@ -94,6 +95,7 @@ describe('Multi statements', () => {
       .first()
       .should('contain', 'ERROR')
   })
+
   it('Takes any statements (not just valid cypher and client commands)', () => {
     cy.executeCommand(':clear')
     const query = 'RETURN 1; hello1; RETURN 2; hello2;'
@@ -112,6 +114,7 @@ describe('Multi statements', () => {
       .first()
       .should('contain', 'ERROR')
   })
+
   if (Cypress.config('serverVersion') >= 4.1) {
     if (isEnterpriseEdition()) {
       it('Can use :use command in multi-statements', () => {

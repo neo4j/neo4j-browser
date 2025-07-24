@@ -75,8 +75,21 @@ const mapNotificationsToFormattedNotifications = (
 
 const SEVERITY_LEVELS = ['ERROR', 'WARNING', 'INFORMATION']
 
-export const formatSummaryFromNotifications = (
-  resultSummary?: Partial<ResultSummary>
+const hasPopulatedGqlFields = (
+  resultSummary: Partial<ResultSummary> | undefined
+): resultSummary is Partial<ResultSummary> & {
+  gqlStatusObjects: GqlStatusObject[]
+  notifications: Notification[]
+} => {
+  return (
+    resultSummary !== undefined &&
+    'gqlStatusObjects' in resultSummary &&
+    resultSummary.gqlStatusObjects !== undefined
+  )
+}
+
+const formatSummaryFromNotifications = (
+  resultSummary: Partial<ResultSummary> | undefined
 ): FormattedNotification[] => {
   const filteredNotifications =
     resultSummary?.notifications?.filter(x =>
@@ -85,12 +98,22 @@ export const formatSummaryFromNotifications = (
   return mapNotificationsToFormattedNotifications(filteredNotifications)
 }
 
-export const formatSummaryFromGqlStatusObjects = (
-  resultSummary?: Partial<ResultSummary>
+const formatSummaryFromGqlStatusObjects = (
+  resultSummary: Partial<ResultSummary> | undefined
 ): FormattedNotification[] => {
   const filteredStatusObjects =
     resultSummary?.gqlStatusObjects?.filter(x =>
       SEVERITY_LEVELS.includes(x.severity)
     ) ?? []
   return mapGqlStatusObjectsToFormattedNotifications(filteredStatusObjects)
+}
+
+export const formatSummary = (
+  resultSummary: Partial<ResultSummary> | undefined,
+  gqlErrorsAndNotificationsEnabled: boolean
+): FormattedNotification[] => {
+  return hasPopulatedGqlFields(resultSummary) &&
+    gqlErrorsAndNotificationsEnabled
+    ? formatSummaryFromGqlStatusObjects(resultSummary)
+    : formatSummaryFromNotifications(resultSummary)
 }

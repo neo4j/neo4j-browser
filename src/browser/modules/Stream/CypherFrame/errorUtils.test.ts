@@ -19,9 +19,23 @@
  */
 
 import { ErrorType } from 'services/exceptions'
-import { formatError, formatErrorGqlStatusObject } from './errorUtils'
+import { formatError } from './errorUtils'
 
 describe('error formatting', () => {
+  test('formats a legacy error with no gql fields correctly', () => {
+    const error = {
+      type: 'Neo4jError' as ErrorType,
+      message: 'epochSeconds cannot be selected together with datetime.',
+      code: 'Neo.ClientError.Statement.ArgumentError'
+    }
+
+    const result = formatError(error, false)
+    expect(result).toEqual({
+      description: 'epochSeconds cannot be selected together with datetime.',
+      title: 'Neo.ClientError.Statement.ArgumentError'
+    })
+  })
+
   test('formats an error with no gql fields correctly', () => {
     const error = {
       type: 'Neo4jError' as ErrorType,
@@ -29,7 +43,7 @@ describe('error formatting', () => {
       code: 'Neo.ClientError.Statement.ArgumentError'
     }
 
-    const result = formatError(error)
+    const result = formatError(error, true)
     expect(result).toEqual({
       description: 'epochSeconds cannot be selected together with datetime.',
       title: 'Neo.ClientError.Statement.ArgumentError'
@@ -44,11 +58,37 @@ describe('error formatting', () => {
       code: 'Neo.DatabaseError.Statement.ExecutionFailed'
     }
 
-    const result = formatError(error)
+    const result = formatError(error, true)
     expect(result).toEqual({
       description:
         'The shortest path algorithm does not work when the start and end nodes are the same. This can happen if you perform a shortestPath search after a cartesian product that might have the same start and end nodes for some of the rows passed to shortestPath. If you would rather not experience this exception, and can accept the possibility of missing results for those rows, disable this in the Neo4j configuration by setting `dbms.cypher.forbid_shortestpath_common_nodes` to false. If you cannot accept missing results, and really want the shortestPath between two common nodes, then re-write the query using a standard Cypher variable length pattern expression followed by ordering by path length and limiting to one result.',
       title: 'Neo.DatabaseError.Statement.ExecutionFailed'
+    })
+  })
+
+  test('formats a legacy error with gql fields correctly', () => {
+    const error = {
+      type: 'Neo4jError' as ErrorType,
+      message: 'Expected parameter(s): param',
+      code: 'Neo.ClientError.Statement.ParameterMissing',
+      gqlStatus: '42N51',
+      gqlStatusDescription:
+        'error: syntax error or access rule violation - invalid parameter. Invalid parameter $`param`.',
+      cause: {
+        gqlStatus: '22G03',
+        gqlStatusDescription: '22G03',
+        cause: {
+          gqlStatus: '22N27',
+          gqlStatusDescription:
+            "error: data exception - invalid entity type. Invalid input '******' for $`param`. Expected to be STRING."
+        }
+      }
+    }
+
+    const result = formatError(error, false)
+    expect(result).toEqual({
+      description: 'Expected parameter(s): param',
+      title: 'Neo.ClientError.Statement.ParameterMissing'
     })
   })
 
@@ -71,7 +111,7 @@ describe('error formatting', () => {
       }
     }
 
-    const result = formatErrorGqlStatusObject(error)
+    const result = formatError(error, true)
     expect(result).toEqual({
       description: 'Invalid parameter $`param`.',
       innerError: {
@@ -102,7 +142,7 @@ describe('error formatting', () => {
       }
     }
 
-    const result = formatErrorGqlStatusObject(error)
+    const result = formatError(error, true)
     expect(result).toEqual({
       description: '',
       title: '22007: Data exception - invalid date, time, or datetime format',
@@ -124,7 +164,7 @@ describe('error formatting', () => {
       cause: undefined
     }
 
-    const result = formatErrorGqlStatusObject(error)
+    const result = formatError(error, true)
     expect(result).toEqual({
       description: '',
       title: '22G03',
@@ -143,7 +183,7 @@ describe('error formatting', () => {
       cause: undefined
     }
 
-    const result = formatErrorGqlStatusObject(error)
+    const result = formatError(error, true)
     expect(result).toEqual({
       description:
         "Invalid input '******' for $`param`. Expected to be STRING.",
@@ -164,7 +204,7 @@ describe('error formatting', () => {
       cause: undefined
     }
 
-    const result = formatErrorGqlStatusObject(error)
+    const result = formatError(error, true)
     expect(result).toEqual({
       description:
         "Cannot find the shortest path when the start and end nodes are the same. To enable this behavior, set 'dbms.cypher.forbid_shortestpath_common_nodes' to false.",
