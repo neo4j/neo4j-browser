@@ -292,19 +292,16 @@ function generateContent(
 
   // Check if content exists locally
   if (isPlayChapter(guideName)) {
-    const isPreviewAvailable =
-      localStorage.getItem('previewAvailable') === 'true' && !inDesktop
-
     const { content, title, subtitle, slides = null } = chapters[guideName]
 
     const isPlayStart = stackFrame.cmd.trim() === ':play start'
     const updatedContent =
       isPlayStart && showPromotion ? (
         <>
-          {isPreviewAvailable ? <PreviewFrame /> : content}
+          {!inDesktop ? <PreviewFrame /> : content}
           <AuraPromotion />
         </>
-      ) : isPreviewAvailable ? (
+      ) : !inDesktop ? (
         <PreviewFrame />
       ) : (
         content

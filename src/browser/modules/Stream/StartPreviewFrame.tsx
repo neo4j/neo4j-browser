@@ -18,39 +18,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React, { Dispatch } from 'react'
-import { Action } from 'redux'
-import { trackNavigateToPreview } from 'shared/modules/preview/previewDuck'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
+import { Action } from 'redux'
 import { GlobalState } from 'shared/globalState'
 import {
   Connection,
   getActiveConnectionData
 } from 'shared/modules/connections/connectionsDuck'
+import { trackNavigateToPreview } from 'shared/modules/preview/previewDuck'
 
-export const navigateToPreview = (
-  db?: string | null,
-  dbms?: string | null
-): void => {
-  const url = new URL(window.location.href)
+const navigateToPreview = (db?: string | null, dbms?: string | null): void => {
+  const url = new URL('https://browser.neo4j.io/')
 
-  if (
-    dbms &&
-    !url.searchParams.has('dbms') &&
-    !url.searchParams.get('connectURL')
-  ) {
+  if (dbms) {
     url.searchParams.set('dbms', dbms)
   }
 
-  if (db && !url.searchParams.has('db')) {
+  if (db) {
     url.searchParams.set('db', db)
   }
 
-  const previewPath = '/preview/'
-  if (!url.pathname.endsWith(previewPath)) {
-    url.pathname = url.pathname.replace(/\/?$/, previewPath)
-    window.location.href = decodeURIComponent(url.toString())
-  }
+  window.open(url.toString(), '_blank')
 }
 
 type PreviewFrameProps = {
@@ -71,10 +60,8 @@ const PreviewFrame = ({
       <div className="teasers">
         <div className="teaser teaser-advertise teaser-3">
           <img src="./assets/images/clusters.svg" className="img-advertise" />
-          <h3>🚀 Try the new Browser preview!</h3>
-          <p>
-            Switch to the preview experience to access all the latest features.
-          </p>
+          <h3>🚀 Try the new Browser!</h3>
+          <p>Switch to the hosted Browser to access all the latest features.</p>
           <button
             onClick={trackAndNavigateToPreview}
             className="btn btn-advertise"
