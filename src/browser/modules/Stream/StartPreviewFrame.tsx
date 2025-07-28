@@ -39,7 +39,7 @@ const navigateToPreview = (db?: string | null, dbms?: string | null): void => {
     url.searchParams.set('db', db)
   }
 
-  window.open(url.toString(), '_blank')
+  window.open(url.toString(), '_blank', 'noreferrer')
 }
 
 type PreviewFrameProps = {
