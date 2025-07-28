@@ -61,7 +61,9 @@ const PreviewFrame = ({
         <div className="teaser teaser-advertise teaser-3">
           <img src="./assets/images/clusters.svg" className="img-advertise" />
           <h3>🚀 Try the new hosted Browser!</h3>
-          <p>Switch to the hosted Browser to access all the latest features.</p>
+          <p>
+            Switch to the hosted Browser to access all of the latest features.
+          </p>
           <button
             onClick={trackAndNavigateToPreview}
             className="btn btn-advertise"
