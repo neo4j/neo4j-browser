@@ -38,8 +38,7 @@ const mount = (props: Partial<ErrorsViewProps>, state?: any) => {
     params: {},
     executeCmd: jest.fn(),
     setEditorContent: jest.fn(),
-    neo4jVersion: null,
-    gqlErrorsEnabled: true
+    neo4jVersion: null
   }
 
   const combinedProps = {
@@ -97,7 +96,7 @@ describe('ErrorsView', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('does display an error for gql status codes', () => {
+  test('does display an error for GQL status codes', () => {
     // Given
     const error: BrowserError = {
       code: 'Test.Error',
@@ -116,11 +115,8 @@ describe('ErrorsView', () => {
     const state = {
       meta: {
         server: {
-          version: '5.26.0'
+          version: '5.27.0'
         }
-      },
-      settings: {
-        enableGqlErrorsAndNotifications: true
       }
     }
 
@@ -131,7 +127,7 @@ describe('ErrorsView', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('does display a nested error for gql status codes', () => {
+  test('does display a nested error for GQL status codes', () => {
     // Given
     const error: BrowserError = {
       code: 'Test.Error',
@@ -159,11 +155,8 @@ describe('ErrorsView', () => {
     const state = {
       meta: {
         server: {
-          version: '5.26.0'
+          version: '5.27.0'
         }
-      },
-      settings: {
-        enableGqlErrorsAndNotifications: true
       }
     }
 

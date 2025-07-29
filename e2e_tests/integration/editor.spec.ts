@@ -42,7 +42,7 @@ describe('Cypher Editor', () => {
     // It can take a little while for the label meta-data to update in the background
     cy.getEditor().type(selectAllAndDelete)
     cy.executeCommand('return extraTimeForMetadataupdate')
-    cy.resultContains('extraTimeForMetadataupdate')
+    cy.resultContains('ERROR')
     cy.wait(5000)
 
     cy.getEditor().type(selectAllAndDelete)

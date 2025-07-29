@@ -34,20 +34,13 @@ import {
   StyledCypherInfoMessage
 } from '../styled'
 import { deepEquals } from 'neo4j-arc/common'
-import {
-  formatSummaryFromGqlStatusObjects,
-  formatSummaryFromNotifications,
-  FormattedNotification
-} from './warningUtilts'
+import { formatSummary, FormattedNotification } from './warningUtilts'
 import { NotificationSeverityLevel, QueryResult } from 'neo4j-driver-core'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
-import { GlobalState } from 'shared/globalState'
 import { Bus } from 'suber'
-import { getSemanticVersion } from 'shared/modules/dbMeta/dbMetaDuck'
-import { gte } from 'semver'
-import { FIRST_GQL_NOTIFICATIONS_SUPPORT } from 'shared/modules/features/versionedFeatures'
-import { shouldShowGqlErrorsAndNotifications } from 'shared/modules/settings/settingsDuck'
+import { gqlErrorsAndNotificationsEnabled } from 'services/gqlUtils'
+import { GlobalState } from 'shared/globalState'
 
 const getWarningComponent = (severity?: string | NotificationSeverityLevel) => {
   if (severity === 'ERROR') {
@@ -64,7 +57,7 @@ const getWarningComponent = (severity?: string | NotificationSeverityLevel) => {
 export type WarningsViewProps = {
   result?: QueryResult | null
   bus: Bus
-  gqlWarningsEnabled: boolean
+  gqlErrorsAndNotificationsEnabled?: boolean
 }
 
 class WarningsViewComponent extends Component<WarningsViewProps> {
@@ -81,10 +74,12 @@ class WarningsViewComponent extends Component<WarningsViewProps> {
     )
       return null
 
+    const { gqlErrorsAndNotificationsEnabled = false } = this.props
     const { summary } = this.props.result
-    const notifications = this.props.gqlWarningsEnabled
-      ? formatSummaryFromGqlStatusObjects(summary)
-      : formatSummaryFromNotifications(summary)
+    const notifications = formatSummary(
+      summary,
+      gqlErrorsAndNotificationsEnabled
+    )
     const { text: cypher = '' } = summary.query
 
     if (!notifications || !cypher) {
@@ -130,16 +125,8 @@ class WarningsViewComponent extends Component<WarningsViewProps> {
   }
 }
 
-const gqlWarningsEnabled = (state: GlobalState): boolean => {
-  const featureEnabled = shouldShowGqlErrorsAndNotifications(state)
-  const version = getSemanticVersion(state)
-  return version
-    ? featureEnabled && gte(version, FIRST_GQL_NOTIFICATIONS_SUPPORT)
-    : false
-}
-
 const mapStateToProps = (state: GlobalState) => ({
-  gqlWarningsEnabled: gqlWarningsEnabled(state)
+  gqlErrorsAndNotificationsEnabled: gqlErrorsAndNotificationsEnabled(state)
 })
 
 export const WarningsView = withBus(

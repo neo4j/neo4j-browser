@@ -36,8 +36,7 @@ const withProvider = (store: any, children: any) => {
 const mount = (props: DeepPartial<WarningsViewProps>, state?: any) => {
   const defaultProps: WarningsViewProps = {
     result: null,
-    bus: createBus(),
-    gqlWarningsEnabled: false
+    bus: createBus()
   }
 
   const combinedProps = {
@@ -139,11 +138,8 @@ describe('WarningsView', () => {
     const state = {
       meta: {
         server: {
-          version: '5.23.0'
+          version: '5.27.0'
         }
-      },
-      settings: {
-        enableGqlErrorsAndNotifications: true
       }
     }
 
@@ -235,11 +231,8 @@ describe('WarningsView', () => {
     const state = {
       meta: {
         server: {
-          version: '5.23.0'
+          version: '5.27.0'
         }
-      },
-      settings: {
-        enableGqlErrorsAndNotifications: true
       }
     }
 
