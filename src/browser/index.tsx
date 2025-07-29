@@ -22,27 +22,7 @@ import ReactDOM from 'react-dom'
 
 import AppInit, { setupSentry } from './AppInit'
 import './init'
-import { navigateToPreview } from './modules/Stream/StartPreviewFrame'
-import { optedInByLocalhost } from 'browser-services/preview-optin-service'
 
 setupSentry()
 
-;(async () => {
-  const optedInToPreview = optedInByLocalhost()
-  try {
-    const response = await fetch('./preview/manifest.json')
-    if (response.status === 200) {
-      if (optedInToPreview) {
-        navigateToPreview()
-      } else {
-        localStorage.setItem('previewAvailable', 'true')
-      }
-    } else {
-      localStorage.setItem('previewAvailable', 'false')
-    }
-  } catch (e) {
-    localStorage.setItem('previewAvailable', 'false')
-  }
-
-  ReactDOM.render(<AppInit />, document.getElementById('mount'))
-})()
+ReactDOM.render(<AppInit />, document.getElementById('mount'))
