@@ -202,7 +202,7 @@
     "isomorphic-fetch": "^3.0.0",
     "jsonic": "^0.3.0",
     "jszip": "3.8.0",
-    "lodash-es": "^4.17.21",
+    "lodash-es": "^4.17.23",
     "memoize-one": "^5.2.1",
     "monaco-editor": "0.23.0",
     "neo4j-client-sso": "1.2.3",
