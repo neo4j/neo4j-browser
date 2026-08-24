@@ -2,11 +2,15 @@
 
 Neo4j Browser is the general purpose graphical user interface for Neo4j. Query, visualize, administer and monitor the database with modern and easy-to-use tools.
 
+> **⚠️ The new Neo4j Browser is not built or maintained from this repository.**
+>
+> The current Neo4j Browser, hosted at [browser.neo4j.io](https://browser.neo4j.io/), is built and released from closed-source artefacts that are shared with Neo4j Console and Neo4j Desktop. This repository holds the classic Neo4j Browser. It is still bundled with Neo4j server as a fallback, but is no longer the default UI and receives limited maintenance.
+
 ![neo4j browser screenshot](./.github/neo4j-browser-screenshot.png)
 
 ## Demo
 
-You can try out the latest (unreleased) version of Neo4j Browser at [http://browser-canary.graphapp.io/](http://browser-canary.graphapp.io/).
+You can try out the latest (unreleased) version of the classic Neo4j Browser built from this repository at [http://browser-canary.graphapp.io/](http://browser-canary.graphapp.io/).
 
 Keep in mind that you will need to connect to an instance of Neo4j (the database) for most operations in Neo4j Browser. A simple way to get started is through [Neo4j Desktop](https://neo4j.com/download/). Once you've started a database it's by default available for Neo4j Browser to connect to on **localhost:7687**.
 
