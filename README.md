@@ -4,7 +4,7 @@ Neo4j Browser is the general purpose graphical user interface for Neo4j. Query, 
 
 > **⚠️ The new Neo4j Browser is not built or maintained from this repository.**
 >
-> The current Neo4j Browser, hosted at [browser.neo4j.io](https://browser.neo4j.io/), is built and released from closed-source artefacts that are shared with Neo4j Console and Neo4j Desktop. This repository holds the classic Neo4j Browser. It is still bundled with Neo4j server as a fallback, but is no longer the default UI and receives limited maintenance.
+> The current Neo4j Browser, hosted at [browser.neo4j.io](https://browser.neo4j.io/), is built and released from closed-source artefacts that are shared with Neo4j Console and Neo4j Desktop. This repository holds the classic Neo4j Browser. It is no longer bundled with Neo4j server or available as a fallback from the new Browser, and receives limited maintenance.
 
 ![neo4j browser screenshot](./.github/neo4j-browser-screenshot.png)
 
@@ -16,9 +16,9 @@ Keep in mind that you will need to connect to an instance of Neo4j (the database
 
 ## Feedback & Contributing
 
-Found a bug or some other problem with Neo4j Browser? Please [**open an issue**](https://github.com/neo4j/neo4j-browser/issues).
+Found a bug or some other problem with the classic Neo4j Browser? Please [**open an issue**](https://github.com/neo4j/neo4j-browser/issues).
 
-Have an idea for a new feature? You're welcome to leave suggestions and ideas [here](https://feedback.neo4j.com/browser).
+Have an idea for a new feature or feedback on the new Browser? You're welcome to leave suggestions and ideas [here](https://feedback.neo4j.com/query).
 
 Contributions welcome! More information in our [CONTRIBUTING.md](CONTRIBUTING.md).
 
